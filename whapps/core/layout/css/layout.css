@@ -10,22 +10,22 @@ body {
     height: 100%;
 }
 
-body > .topbar {
+body > .navbar {
     position: absolute;
     height: 72px;
     min-width: 1029px;
     box-shadow: 0px 2px 2px #222;
 }
 
-body > .topbar .topbar-inner {
+body > .navbar .navbar-inner {
     background: none;
 }
 
-body > .topbar .topbar-inner > .container-fluid {
+body > .navbar .navbar-inner > .container-fluid {
     padding-right: 0px;
 }
 
-#ws-topbar .brand.logo {
+#ws-navbar .brand.logo {
     width: 150px;
 	height: 52px;
     padding: 10px 21px;
@@ -34,39 +34,41 @@ body > .topbar .topbar-inner > .container-fluid {
 	background-position: center center;
 }
 
-#ws-topbar .nav > li a {
+#ws-navbar .nav > li a {
     white-space: nowrap;
 }
 
-#ws-topbar .nav > li .dropdown-menu {
+#ws-navbar .nav > li .dropdown-menu {
     max-width: none;
 }
 
-#ws-topbar .nav > li > .dropdown-menu {
+#ws-navbar .nav > li > .dropdown-menu {
     top: 72px;
     text-align: left;
 }
 
-#ws-topbar .nav > li .category > .dropdown-menu {
+#ws-navbar .nav > li .category > .dropdown-menu {
     top: -6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
 }
 
-#ws-topbar .links {
+#ws-navbar .links {
     margin: 0px;
 }
 
-#ws-topbar .links > .link {
+#ws-navbar .links > .link {
     height: 72px;
 }
 
-#ws-topbar .links > .link > a {
+#ws-navbar .links > .link > a {
     line-height: 51px;
 }
 
 .container-fluid.page {
+    /* added */
+    margin-top: 72px;
     padding-left: 0px;
     padding-right: 0px;
     height: 100%;

@@ -1,5 +1,5 @@
 /*
-#ws-topbar .whapps > .divider {
+#ws-navbar .whapps > .divider {
     height: 72px;
     width: 2px;
     background-image: url(../img/nav_line.jpg);
@@ -7,11 +7,11 @@
 }
 */
 
-#ws-topbar .links > .link > .dropdown-toggle::after {
+#ws-navbar .links > .link > .dropdown-toggle::after {
     display: none;
 }
 
-#ws-topbar .links > .link .category > .dropdown-toggle::before {
+#ws-navbar .links > .link .category > .dropdown-toggle::before {
     content: "&larr;";
     margin-top: 6px;
     border-right: 4px solid white;
@@ -19,11 +19,11 @@
     border-bottom: 4px solid transparent;
 }
 
-#ws-topbar .links > .link .category > .dropdown-menu {
+#ws-navbar .links > .link .category > .dropdown-menu {
     left: -160px;
 }
 
-#ws-topbar .links > .divider {
+#ws-navbar .links > .divider {
     height: 72px;
     width: 2px;
     background-image: url(../img/nav_line.jpg);

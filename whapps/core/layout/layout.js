@@ -51,22 +51,22 @@ winkstart.module('core', 'layout', {
             winkstart.publish('nav.get_started');
         });*/
 
-        $('#ws-topbar .links .help').click(function() {
+        $('#ws-navbar .links .help').click(function() {
             winkstart.publish('nav.my_help_click');
         });
 
-        $('#ws-topbar .links .logout').click(function() {
+        $('#ws-navbar .links .logout').click(function() {
             winkstart.publish('nav.my_logout_click');
         });
 
         if('nav' in winkstart.config) {
             if('help' in winkstart.config.nav || 'my_help' in winkstart.config.nav) {
-                $('#ws-topbar .links .help').unbind('click')
+                $('#ws-navbar .links .help').unbind('click')
                                             .attr('href', winkstart.config.nav.help || winkstart.config.nav.my_help);
             }
 
             if('logout' in winkstart.config.nav || 'my_logout' in winkstart.config.nav) {
-                $('#ws-topbar .links .logout').unbind('click')
+                $('#ws-navbar .links .logout').unbind('click')
                                               .attr('href', winkstart.config.nav.logout || winkstart.config.nav.my_logout);
             }
 
@@ -97,7 +97,7 @@ winkstart.module('core', 'layout', {
                 $('.footer_wrapper .tag_version').html('('+version.replace(/\s/g,'')+')');
             });
 
-            $('#ws-topbar .brand.logo', layout_html).click(function() {
+            $('#ws-navbar .brand.logo', layout_html).click(function() {
                 $('.whapps .whapp > a').removeClass('activate');
                 winkstart.publish('auth.landing');
             });
@@ -107,14 +107,14 @@ winkstart.module('core', 'layout', {
                     domain: domain
                 },
                 function(_data, status) {
-                    $('#ws-topbar .brand.logo', layout_html).css('background-image', 'url(' + api_url + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+                    $('#ws-navbar .brand.logo', layout_html).css('background-image', 'url(' + api_url + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
                 },
                 function(_data, status) {
                     if(status != 404) {
-                        $('#ws-topbar .brand.logo', layout_html).css('background-image', '');
+                        $('#ws-navbar .brand.logo', layout_html).css('background-image', '');
                     }
                     else {
-                        $('#ws-topbar .brand.logo', layout_html).css('background-image', 'url(config/images/logo.png)');
+                        $('#ws-navbar .brand.logo', layout_html).css('background-image', 'url(config/images/logo.png)');
                     }
                 }
             );
