@@ -1,0 +1,73 @@
+
+<div>
+    <div class="inline_popup popup_register">
+         <div class="inline_content main_content">
+            <div class="row">
+                <form name="form">
+                    <div class="pill-content">
+                        <div class="clearfix">
+                            <label for="username">Username</label>
+                            <div class="input">
+                                <input class="span4" id="username" name="username" type="text" placeholder="Username" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="password">Password</label>
+                            <div class="input">
+                                <input class="span4" id="password" name="password" type="password" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="password2">Confirm Password</label>
+                            <div class="input">
+                                <input class="span4" id="password2" name="password2" type="password" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="email">Email</label>
+                            <div class="input">
+                                <input class="span4" id="email" name="email" type="text" placeholder="Email" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="first_name">First Name</label>
+                            <div class="input">
+                                <input class="span4" id="first_name" name="first_name" type="text" placeholder="First Name"/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="last_name">Last Name</label>
+                            <div class="input">
+                                <input class="span4" id="last_name" name="last_name" type="text" placeholder="Last Name" />
+                            </div>
+                        </div>
+                        
+                        <div class="clearfix">
+                            <label for="name">Account Name</label>
+                            <div class="input">
+                                <input class="span4" id="name" name="name" type="text" placeholder="Account Name" />
+                            </div>
+                        </div>
+
+                        {{if request_realm}}
+                            <div class="clearfix">
+                                <label for="realm">Domain name</label>
+                                <div class="input">
+                                    <input class="span4" id="realm" name="realm" type="text" placeholder="Domain name" />
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+                </form>
+                <div class="buttons-right">
+                    <button class="btn primary register">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

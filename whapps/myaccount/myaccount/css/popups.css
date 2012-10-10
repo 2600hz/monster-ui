@@ -1,0 +1,486 @@
+.add_credits {
+    width:600px;
+    overflow:hidden;
+}
+
+.popup .resize {
+    background-color: #F9F9F9;
+}
+
+/*.ui-dialog {
+    border: 4px solid #A6A6A6;
+}*/
+
+.popup h2 {
+    color: #05AFDC;
+    font-size: 18px;
+    text-align: center;
+    margin: 0px 0 20px 0;
+}
+
+.popup h3 {
+    font-size: 14.5px;
+    font-weight: bold;
+    margin: 0 20px 9px;
+    clear: both;
+    letter-spacing: 0.05em;
+    float: left;
+}
+
+.popup p {
+    text-align: left;
+    padding: 0 20px; /*0 17px*/
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+/*************** SUBMIT BTN, REGISTER BTN *****************/
+.popup a.submit_btn {
+    background-image: url("../images/regular_btn.png");
+    bottom: -14px;
+    display: block;
+    font-weight: bold;
+    height: 27px;
+    line-height: 27px;
+    right: 34px;
+    text-align: center;
+    width: 81px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.btn_wrapper {
+    text-align: center;
+}
+
+.popup a.register_btn {
+    background: url("../images/regular_btn.png") no-repeat;
+    /*bottom: -10px;*/
+    display: block;
+    font-weight: bold;
+    /*height: 27px;*/
+    line-height: 27px;
+    /*right: 34px;*/
+    text-align: center;
+    width: 81px;
+    clear: both;
+    margin: 0 0 20px 150px;
+}
+
+.popup .ctr_btn {
+    background: url("../images/regular_btn.png") no-repeat;
+    display: block;
+    font-weight: bold;
+    /*height: 27px;*/
+    width: 81px;
+    line-height: 27px;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.popup .form {
+    margin: 0 auto;
+    margin-left: 5px;
+    /*padding-top: 25px;*/
+}
+
+.popup .center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.popup .inline {
+    width: 200px;
+    height: 30px;
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+.popup .inline>label {
+    clear: none;
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 4px;
+    width: 300px;
+    font-weight: bold;
+}
+
+.popup .stack {
+    clear: both;
+    margin-left: 137px;
+}
+
+.popup .stack label {
+    clear: none;
+    text-align: left;
+    margin-left: 10px;
+    margin-top: -15px;
+}
+
+.popup .stack input[type="radio"] {
+    margin-top: -15px;
+}
+
+.popup .lg {
+    width: 425px;
+    padding: 1px 10px;
+}
+
+.popup .inline>label.failover {
+    width: 174px;
+}
+
+
+/*************** POPUP REGISTER *****************/
+/* ----------- My Form ----------- */
+
+/*.ui-dialog { margin-bottom: 25px; }
+
+.ui-dialog .ui-dialog-titlebar {
+    background: url(../images/titlebar.png) repeat-x scroll 50% 50% #6B6B6B;
+    color: #FFF;
+    font-weight: bold;
+    height: 22px;
+    padding: 0 1em;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    background-image: url("../images/cancel_btn.png");
+    background-position: 0 0;
+    display: block;
+    float: right;
+    height: 15px;
+    width: 15px;
+    text-indent: -9999px;
+}*/
+
+
+
+
+
+
+.popup .myform_myaccount{
+    margin: 0 auto;
+    padding: 5px;
+    height: auto;
+}
+
+.popup .small{
+    width: 410px;
+}
+
+.popup .popup_bar {
+    margin-bottom: 25px;
+}
+
+.popup h1 {
+    line-height: 25px;
+/*    background: url(../images/titlebar.png) repeat-x scroll 50% 50% #6B6B6B;*/
+    color: #FFF;
+    font-weight: bold;
+}
+
+.popup a.cancel {
+    background-image: url("../images/cancel_btn.png");
+    background-position: 0 0;
+    display: block;
+    /*float: right;*/
+    height: 15px;
+    width: 15px;
+    margin: -28px 5px 0 0;
+    text-indent: -9999px;
+}
+
+.popup a.cancel:hover {
+    background-position: 0 -15px;
+}
+
+.popup .focusField{
+    border: solid 1px #09F;
+    background: #FFF;
+    color: #000;
+}
+.popup .idleField{
+    background: #EEE;
+    color: #BEBEBE;
+    border: solid 1px #999 !important;
+}
+
+/* ----------- stylized ----------- */
+.popup .myform_myaccount h1 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+
+.myform_myaccount label {
+    display: block;
+    text-align: right;
+    width: 140px;
+    float: left;
+    clear: both;
+    height: 30px;
+    line-height: 30px;
+}
+
+.myform_myaccount input {
+    float: left;
+    font-size: 12px;
+    padding: 4px 2px;
+    border: solid 1px #09F;
+    width: 200px;
+    margin: 2px 0 5px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.popup input.field_round {
+    width: 50px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 2px;
+}
+
+.popup .checkbox {
+    float: left;
+    padding: 4px 2px;
+    border: solid 1px #09f;
+    width: 200px;
+    margin: 2px 0 5px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+
+/* ----------- LOGIN ----------- */
+
+.popup a.popup_link {
+    color: #424242;
+}
+
+.popup a.popup_link:hover, .ctr_btn:hover, a.submit_btn:hover {
+    color: #05AFDC;
+}
+
+.popup .popup_bottom {
+    margin: 20px 0 auto;
+    text-align: center;
+}
+
+.popup .popup_bottom>h3 {
+    /*margin: 20px 0 auto;*/
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.popup .popup_bottom>hr {
+    width: 95%;
+    margin-bottom: 25px;
+    clear: both;
+}
+
+.popup .popup_content {
+    padding: 0 10px;
+    margin: 0 auto;
+    width: 75%;
+    clear: both;
+}
+
+.popup .ctr {
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.myaccount_popup .note_box {
+    background-color: #777777;
+    color: #FFFFFF;
+    padding: 15px 10px;
+    font-size: 12px;
+    line-height:15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border: 2px solid #A6A6A6;
+    text-align: center;
+}
+
+.popup p.terms {
+    background-color: #E7E7E7;
+    padding: 15px 10px;
+    font-size: 12px;
+    line-height:15px;
+    margin-bottom: 20px;
+    border: 2px solid #A6A6A6;
+}
+
+/* ----------- 3 COLUMN CC ADD BILLING ----------- */
+
+.popup .popup_cleft {
+    float: left;
+    width: 165px;
+}
+
+.popup .popup_cmiddle {
+    float: left;
+    width: 165px;
+}
+
+.popup .popup_cright {
+    float: right;
+    width: auto;
+    text-align: center;
+}
+
+.popup .popup_cright a {
+    color: #424242;
+    text-decoration: underline;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+
+.popup .col_wrapper {
+    margin-bottom: 20px;
+    height: auto;
+}
+
+.popup .stylized input[type=checkbox] {
+    width: 15px;
+    height: 15px;
+    margin-top: 5px; /*webkit: 7px*/
+}
+
+.popup select.styled {
+    width: 250px;
+    margin: 4px 0 0 1px;
+    /*border: 1px solid #424242;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+    */
+}
+
+.popup .select {
+    background: url("../images/bar.png") no-repeat scroll 0 0 transparent;
+    font: 12px/21px arial,sans-serif;
+    height: 28px;
+    overflow: hidden;
+    padding: 4px 10px 0 8px;
+    position: absolute;
+    width: 250px;
+    letter-spacing: 1px;
+}
+
+
+.stylized input[type=radio] {
+    width: 15px;
+    height: 15px;
+    margin-top: 6px;
+    /*position: absolute;*/
+}
+
+.popup .radio {
+    margin-left: 10px;
+}
+
+.popup .form>p {
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.popup .form>p>input {
+    float: left;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+}
+
+
+.popup .form>p>label {
+    -moz-transition: color 1s ease 0s;
+    float: left;
+    line-height: 16px;
+    margin-left: -10px;
+    width: 50px;
+}
+
+.popup .col {
+    width: 100px;
+}
+
+.popup .radio_wrap {
+    width: 100px;
+    display: inline;
+}
+
+.box1, .box2, .box3, .box4, .box5, .box6 {
+    float: left;
+    padding: 0 0 20px 0;
+    width: 85px;
+}
+
+.box1 p, .box2 p, .box3 p, .box4 p, .box5 p, .box6 p {
+    text-align: left;
+    padding: 0 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.box1 input[type="radio"], .box2 input[type="radio"], .box3 input[type="radio"], .box4 input[type="radio"], .box5 input[type="radio"], .box6 input[type="radio"] {
+    float: left;
+    position: relative;
+    text-align: right;
+}
+
+.box1 label, .box2 label, .box3 label, .box4 label, .box5 label, .box6 label {
+    margin: -20px 0 0 30px;
+    text-align: left;
+}
+
+p label {
+    margin: 0 33px 0 0;
+}
+
+.stylized input.field_last {
+    margin-bottom: 20px;
+}
+
+/************** TABLE ************/
+
+.popup table {
+    border-collapse: collapse;
+    border-style: hidden hidden none;
+    color: #424242;
+    margin: 20px;
+}
+
+.popup table th {
+    border-bottom: thin solid;
+    border-left: thin solid;
+    border-right: thin solid;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.popup table td {
+    border-left: thin solid;
+    border-right: thin solid;
+    padding: 7px;
+    vertical-align: top;
+}
+
+.stylized label.label_right {
+    float: right;
+    text-align: left;
+    clear: both;
+}
+

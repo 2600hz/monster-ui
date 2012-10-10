@@ -1,0 +1,46 @@
+<div>
+    <form name="form">
+        <div class="list_fields">
+            <div class="row_welcome_field">
+                <label>Login / Email</label>
+                <input type="text" name="login" id="login" value="${username}"/>
+            </div>
+            <div class="row_welcome_field">
+                <label>Password</label>
+                <input type="password" name="password" id="password" />
+            </div>
+            {{if request_account_name}}
+                 <div class="row_welcome_field">
+                    <label>Account Name</label>
+                    <input type="text" name="account_name" id="account_name" value="${account_name}"/>
+                </div>
+            {{/if}}
+            <div class="login_div">
+                {{if remember_me}}
+                    <input type="checkbox" id="remember_me" CHECKED="CHECKED"/>
+                {{else}}
+                    <input type="checkbox" id="remember_me"/>
+                {{/if}}
+                Remember me&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="recover_password">Forgot your password?</a>
+                <button class="btn primary login">LOG IN</button>
+                <div class="clear"/>
+            </div>
+            <div class="clear"/>
+        </div>
+        {{if !register_btn}}
+        <div class="register_div">
+            <div class="left_part">
+                <span class="new_user_text">Are you a new user?</span>
+                <button class="register"></button>
+            </div>
+            <div class="free_text">
+                <div>Easy to start</div>
+                <div>Free demo account</div>
+                <div>Make calls in minutes!</div>
+            </div>
+            <div class="clear"/>
+        </div>
+        {{/if}}
+    </form>
+</div>

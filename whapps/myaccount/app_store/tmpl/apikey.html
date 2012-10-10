@@ -1,0 +1,9 @@
+<div>
+    {{each api}}
+    <form class="stylized myform" action="#" id="${$value}" class="api">
+        <label>${$value}</label><input type="text" name="${$value}" value="" />
+    </form>
+    {{/each}}
+    <div class="clear">
+    <a class="save-btn ctr_btn" href="#">Save</a>
+</div>

@@ -1,0 +1,48 @@
+<div>
+    <div id="edit_number" class="trunkstore_popup add_number">
+        <div class="header_nav">
+            <div class="area_code_wrapper">
+                #&nbsp;(<input type="text" class="area_code_input"  id="sdid_npa" maxlength="3" placeholder="Area Code" pattern="^[2-9][0-8][0-9]$"/>)&nbsp;-&nbsp;<input type="text" class="area_code_input"  id="sdid_nxx" maxlength="3" placeholder="Prefix" pattern="^[2-9]\d\d$"/>
+                <span id="search_numbers_button" class="search_number"/>
+            </div>
+            <div class="help_wrapper">
+                <a class="find_area_code" href="http://www.whitepages.com/area-codes" target="_blank">Find area code</a>
+                <span class="optional_field">(Optional)</span>
+            </div>
+        </div>
+        <div class="content">
+            <div>
+                <div class="fancy_help">
+                    <div class="wrapper_icon"><span class="note_icon"/></div>
+                    <div class="help_text">You can specify the area code and up to 3 numbers of the local prefix. For Toll Free number please enter 800, 888, 877, 866, 855 in the area code field.</div>
+                    <div class="clear"/>
+                </div>
+            </div>
+
+            <div class="toggle_div">
+                <h2>Select numbers to add</h2>
+                <div class="split_div">
+                    <div class="left">
+                        <div id="foundDIDList"/>
+                    </div>
+
+                    <div class="right">
+                        <div class="fancy_help small">
+                            <div class="wrapper_icon"><span class="note_icon"/></div>
+                            <div class="help_text">Each number you select will be charged to your monthly invoice</div>
+                            <div class="clear"/>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stats_left title_stats">Selected numbers</div> <div class="selected_numbers stat_number stats_right">0</div>
+                            <div class="stats_left title_stats">Monthly charge</div> <div class="cost_numbers stat_number stats_right">$0.00</div>
+                            <div class="stats_left">&nbsp;</div> <div class="stats_right"><button id="add_numbers_button" class="btn primary submit_btn">Add</button></div>
+                            <div class="clear"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"/>
+            </div>
+        </div>
+    </div>
+</div>

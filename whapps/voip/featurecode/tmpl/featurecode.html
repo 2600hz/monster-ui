@@ -1,0 +1,54 @@
+<div> 
+    <div id="featurecode-content" class="container-fluid page">
+        <div class="content">
+        	<div id="featurecode-view"  class="main_content">
+        		<div class="row">
+					<div class="whapp-header">
+						<h1>Feature Codes</h1>
+						<div class="buttons-right">
+							<button class="btn black basic toggle-all">Show All</button>
+						</div>
+					</div>
+				</div>
+				<div class="row pill-content">
+					<form>
+						{{each(i, actions) categories}}
+							<div class="row">
+								<div class="whapp-header">
+									<h3>${i}</h3>
+									<div class="buttons-right">
+										<button class="btn black basic toggle" data-toggle="${i}">Show</button>
+									</div>
+								</div>
+							</div>
+							<hr />
+							<div class="row toggled" id="${i}">
+								{{each(j, action) actions}}
+									<div class="clearfix action_wrapper" data-id=${id} data-action=${tag} data-number=${number} data-type=${number_type} data-enabled=${enabled}>
+							            <label for="${name}">${name}</label>
+							            <div class="input">
+							            	<div class="input-append">
+							            		<span class="add-on">*</span>
+							                	<input class="featurecode_number mini" id="${name}" name="${name}" size="16" type="text" value=${number} rel="popover" data-content="The star is mandatory for any feature code, that's why it has been added by default.">
+							                	<label class="add-on">
+							                		{{if enabled}}
+				                                        <input type="checkbox" class="featurecode_enabled" checked="checked">
+				                                    {{else}}
+				                                        <input type="checkbox" class="featurecode_enabled">
+				                                    {{/if}}
+							                	</label>
+							              	</div>
+							            </div>
+							        </div>
+						        {{/each}}
+							</div>
+						{{/each}}
+					</form>
+				</div>
+				<div class="buttons-right">
+		            <button class="btn success featurecode-save">Save</button>
+				</div>
+        	</div>
+        </div>
+    </div>
+</div>

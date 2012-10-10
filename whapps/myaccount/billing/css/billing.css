@@ -1,0 +1,65 @@
+.inline_popup.billing .tabs {
+    display: block !important;
+}
+
+.inline_popup.billing {
+    font-family: Helvetica;
+}
+
+.inline_popup.billing .main_content {
+    width: 960px;
+}
+
+.inline_popup.billing #subscriptions-grid .sorting_asc, .inline_popup.billing #subscriptions-grid .sorting_desc, .inline_popup.billing #subscriptions-grid .sorting {
+    background: #222;
+}
+
+.inline_popup.billing #billing-form .clearfix {
+    display: block;
+}
+
+.inline_popup.billing #billing-form .card {
+    display: inline-block;
+    background-repeat: no-repeat;
+    height: 25px;
+    width: 40px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    opacity: 0.2;
+}
+
+.inline_popup.billing #billing-form #visa {
+    background-image: url('../img/visa.png');
+}
+
+.inline_popup.billing #billing-form #mastercard {
+    background-image: url('../img/mastercard.png');
+}
+
+.inline_popup.billing #billing-form #amex {
+    background-image: url('../img/amex.png');
+}
+
+.inline_popup.billing #billing-form #discover {
+    background-image: url('../img/discover.png');
+}
+
+.inline_popup.billing #billing-form hr {
+    margin: 20px 0 19px;
+}
+
+.inline_popup.billing #billing-form span {
+    color: #E6E6E6;
+}
+
+.inline_popup.billing #billing-form span.uneditable-input {
+    border: none;
+    background-color: transparent;
+    display: inline-block;
+    width: auto;
+    color: #05ADDC;
+}
+
+.inline_popup.billing #billing-form .hide {
+    display: none;
+}

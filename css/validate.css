@@ -1,0 +1,14 @@
+.validated {
+    padding-right: 23px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.validated.valid {
+    background-image: none;
+}
+
+.validated.invalid {
+    background-image: url('../img/invalid.png');
+}

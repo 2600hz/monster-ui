@@ -1,0 +1,169 @@
+#onboarding-view {
+    text-align: center;
+}
+
+#onboarding-view .form_wrapper {
+    box-shadow: 1px 1px 10px #333333;
+    background: #575757;
+    background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(#888888));
+    background: -moz-linear-gradient(top,  #333333,  #888888);
+    border: 1px solid #363636;
+    display: inline-block;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: left;
+    width: 400px;
+}
+
+#onboarding-view .onboarding_title {
+    background-image: url("img/onboarding_title_bg.jpg");
+    background-position: center center;
+    background-repeat: repeat-x;
+    height: 36px;
+    text-align: center;
+}
+
+#onboarding-view .onboarding_title_text {
+    color: #05ADDC;
+    font-size: 22px;
+    line-height: 36px;
+    text-shadow: 1px 1px #000000;
+}
+
+#onboarding-view #steps {
+    list-style: none;
+    width: 100%;
+    overflow: hidden;
+    padding: 0px;
+    border-bottom: 1px solid #363636;
+}
+
+#onboarding-view #steps li {
+    font-size: 24px;
+    float: left;
+    color: #ffffff;
+    text-shadow: 1px 1px #000000;
+    width: 130px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+#onboarding-view #steps li span {
+    font-size: 11px;
+    display: block;
+}
+
+#onboarding-view #steps li.current {
+    color: #05addc;
+}
+
+#onboarding-view #steps li:focus {
+    color: #05addc;
+}
+
+#fast_onboarding_form {
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+#fast_onboarding_form legend {
+    color: #ffffff;
+}
+
+#fast_onboarding_form .help_text {
+    background-color: #999999;
+    border: 1px solid #363636;
+    font-style: italic;
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    box-shadow: 1px 1px 1px #333333
+}
+
+#fast_onboarding_form ul.controls li:first-child {
+    border-top: 0;
+}
+
+#fast_onboarding_form .prev {
+    float: left;
+}
+
+#fast_onboarding_form .next {
+    float: right;
+    margin-right: 10px;
+}
+
+#fast_onboarding_form #change_number {
+    margin-left: 5px;
+}
+
+#fast_onboarding_form .number_wrapper {
+    padding-top: 5px;
+}
+
+#fast_onboarding_form .picked_number {
+    font-size: 22px;
+    color: #05addc;
+    text-shadow: 1px 1px #000;
+    vertical-align: middle;
+}
+
+#fast_onboarding_form .column {
+    float:left;
+    text-align: center;
+}
+
+#fast_onboarding_form .column:not(:last-child) {
+    border-right: 1px solid #b0b1b3;
+}
+
+#fast_onboarding_form .user_tab {
+    padding-bottom: 10px;
+}
+
+#fast_onboarding_form .title_bar {
+    border-bottom: 1px solid #b0b1b3;
+    height: 22px;
+}
+
+#fast_onboarding_form #expiration_month {
+    width: 120px;
+}
+
+#fast_onboarding_form .column.first {
+    width: 20px;
+    min-width: 20px;
+    padding: 5px;
+}
+#fast_onboarding_form .column.second {
+    width: 110px;
+    min-width: 110px;
+    padding: 5px;
+}
+#fast_onboarding_form .column.third {
+    width: 255px;
+    min-width: 255px;
+    padding: 5px;
+}
+#fast_onboarding_form .column.fourth {
+    width: 50px;
+    min-width: 50px;
+    padding: 5px 15px;
+}
+
+#fast_onboarding_form .extension_input {
+    width: 50px;
+}
+
+#fast_onboarding_form .first_name_input {
+    width: 100px;
+}
+
+#fast_onboarding_form .last_name_input {
+    width: 235px;
+}
+

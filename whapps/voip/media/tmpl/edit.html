@@ -1,0 +1,83 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit Media</h1>
+            {{else}}
+                <h1>Create Media</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		 	<li><a href="#options"><span class="icon wrench_screw"></span>Options</a></li>
+		</ul>
+		 <form id="media-form" action="" enctype="multipart/form-data" method="post">
+		 	<div class="pill-content">
+				<div class="active basic_view" id="basic">
+					<div class="clearfix">
+						<label for="name">Name</label>
+						<div class="input">
+							<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this media file"/>
+						</div>
+					</div>
+
+					<div class="clearfix">
+			            <label for="fileInput">File input</label>
+			            <div id="upload_div" class="input">
+				            <input class="input-file" id="file" name="upload_media" type="file">
+				        </div>
+				        {{if data.id }}
+			            	<div class="input player_file">
+			            		<span class="uneditable-input">${data.description}</span>
+				            </div>
+				    </div>
+				        <div class="clearfix player_file">
+				        	<div class="input">
+				        		<button class="btn" id="change_link">Change File</button>
+				            	<button class="btn" id="download_link">Download File</button>
+				        	</div>
+				        </div>
+				        {{else}}
+				    </div>
+			            {{/if}}
+          			
+
+          			<input name="auth_token" id="auth_token" type="hidden" value="${auth_token}"/>
+				</div>
+
+				<div id="options">
+					<div class="clearfix">
+						<div class="input">
+							<ul class="inputs-list">
+								<li>
+									<label>
+										<span rel="popover" data-content="Check to enable streaming of media.">
+											{{if data.streamable}}
+							                    <input type="checkbox" id="streamable" name="streamable" checked="checked" />
+							                {{else}}
+							                    <input type="checkbox" id="streamable" name="streamable" />
+							                {{/if}}
+							                <span>Streamable</span>
+						                </span>
+						            </label>
+						        </li>
+						    </ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		 </form>
+		 <div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger media-delete">Delete</button>
+	        {{/if}}
+            <button class="btn success media-save">Save</button>
+		</div>
+	</div>
+</div>

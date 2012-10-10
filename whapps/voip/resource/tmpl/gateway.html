@@ -1,0 +1,66 @@
+<div>
+    <fieldset>
+        <legend>Gateway</legend>
+        <ul class="controls">
+            <li>
+                <span class="tooltip-wrapper" tooltip="The authentication realm used if challenged by the server">
+                    <span class="tooltip"/>
+                    <label for="gateways_realm">Realm</label>
+                </span>
+                <input id="gateways_realm" name="gateways[${index}].realm" type="text" value="${data.realm}" />
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="The authentication username used if challenged by the server">
+                    <span class="tooltip"/>
+                    <label for="gateways_username">Username</label>
+                </span>
+                <input id="gateways_username" name="gateways[${index}].username" type="text" value="${data.username}" />
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="The authentication password used if challenged by the server">
+                    <span class="tooltip"/>
+                    <label for="gateways_password">Password</label>
+                </span>
+                <input id="gateways_password" name="gateways[${index}].password" type="password" value="${data.password}" />
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="The format of the request URI used in the SIP invite">
+                    <span class="tooltip"/>
+                    <label for="gateways_invite_format">Invite Format</label>
+                </span>
+                <select name="gateways[${index}].invite_format" id="gateways_invite_format">
+                    {{each(key, val) field_data.gateways.invite_formats}}
+                        {{if data.invite_format == key}}
+                            <option value="${key}" selected="selected">${val}</option>
+                        {{else}}
+                            <option value="${key}">${val}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="Additional characters to prepend to the front of the dialed number">
+                    <span class="tooltip"/>
+                    <label for="gateway_prefix">Prefix</label>
+                </span>
+                <input id="gateways_prefix" name="gateways[${index}].prefix" type="text" value="${data.prefix}" />
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="Additional characters to append to the front of the dialed number">
+                    <span class="tooltip"/>
+                    <label for="gateway_suffix">Suffix</label>
+                </span>
+                <input id="gateways_suffix" name="gateways[${index}].suffix" type="text" value="${data.suffix}" />
+            </li>
+            <li>
+                <span class="tooltip-wrapper" tooltip="In secs, the maximum time to wait for media from a resource gateway.">
+                    <span class="tooltip"/>
+                    <label for="gateway_progress_timeout">Progress Timeout</label>
+                </span>
+                <input id="gateways_progress_timeout" name="gateways[${index}].progress_timeout" type="text" value="${data.progress_timeout}" />
+            </li>
+        </ul>
+    </fieldset>
+
+    <div class="clear"></div>
+</div>

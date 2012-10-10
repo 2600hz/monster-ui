@@ -1,0 +1,31 @@
+<div>
+    <div class="dialog_popup add_number_popup">
+        <h1>Add a number</h1>
+        <form style="margin-bottom: 0">
+            <div class="form_content">
+                <div class="popup_field">
+                    <input type="radio" name="number_type" value="your_numbers" checked="checked"></input>
+                    <label id="list_numbers_label">Available Numbers</label>
+                    <div class="list_numbers_content">
+                        <select id="list_numbers">
+                            {{each(k,v) phone_numbers}}
+                                <option value="${v}">${v}</option>
+                            {{/each}}
+                        </select>
+                        <div id="number_manager_fields"></div>
+                    </div>
+                </div>
+                <div class="popup_field">
+                    <input type="radio" name="number_type" value="extension"></input>
+                    <label id="add_number_label" for="add_number_text">Extension</label>
+                    <div class="extensions_content">
+                        <input id="add_number_text" placeholder="2001" type="text" name="number" id="number"/>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons-center">
+                <button class="btn primary add_number" id="add_number_button">Add</button>
+            </div>
+        </form>
+    </div>
+</div>

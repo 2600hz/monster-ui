@@ -1,0 +1,19 @@
+<div>
+    <div class="dialog_popup">
+        <h1>DISA</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="disa_pin_input">PIN: </label>
+                    <input type="text" id="disa_pin_input" class="medium" value="${data_disa.pin}"/>
+                </div>
+                <div class="popup_field">
+                    Allow a maximum of <input class="size2" type="text" id="disa_retries_input" value="${data_disa.retries}"/> retries.
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,222 @@
+/*List Panel*/
+
+.list_panel {
+    width: 190px;
+    box-shadow: 2px 2px 2px #222222;
+}
+
+.add_flow {
+    padding-top: 5px;
+    height: 60px;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #222222;
+    text-align: center;
+    cursor: pointer;
+    background: rgb(90,90,90); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(90,90,90,1) 0%, rgba(68,68,68,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(90,90,90,1)), color-stop(100%,rgba(68,68,68,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(90,90,90,1) 0%,rgba(68,68,68,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(90,90,90,1) 0%,rgba(68,68,68,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(90,90,90,1) 0%,rgba(68,68,68,1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(90,90,90,1) 0%,rgba(68,68,68,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5a5a5a', endColorstr='#444444',GradientType=0 ); /* IE6-9 */
+}
+
+.add_flow:hover {
+    color: #05ADDC;
+}
+
+.add_flow:hover .plus_btn {
+     background-position: 0px 25px;
+}
+
+.add_flow span{
+    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 60px;
+}
+
+.plus_btn {
+    background-image: url(../images/plus_btn.png);
+    width: 25px;
+    height: 25px;
+    background-position: 0px 0px;
+    margin-top: -4px;
+    margin-right: 7px;
+    vertical-align: middle;
+}
+
+.search_box {
+    height: 28px;
+    background-color:#444444;
+    padding-top: 7px;
+    border-bottom: 1px solid #222;
+}
+
+.search_box .searchsubmit1 {
+    float: left;
+    background: url(../images/search_left.png  ) no-repeat top left;
+    height: 20px;
+    width: 23px;
+}
+.search_box .searchsubmit2 {
+    float: left;
+    background: url(../images/search_right.png  ) no-repeat top right;
+    height: 20px;
+    width: 26px;
+}
+
+.search_box .searchfield {
+    background: url(../images/search_mid.png) repeat-x;
+    border: medium none;
+    float: left;
+    height: 14px;
+    width: 130px;
+    border-radius: 0px;
+}
+
+.search_box .searchfield:focus {
+    border: none;
+    border-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+/* New design for search button
+   We keep the old design for some templates (like ring groups, tables etc...) */
+.new_search_box {
+    height: 28px;
+    background-color:#444444;
+    padding: 10px 0 8px;
+    border-bottom: 1px solid #222;
+    text-align: center;
+}
+
+.new_search_box .icon_wrapper {
+    width: 34px;
+    height: 26px;
+    float: left;
+    border-radius: 0px 5px 5px 0px;
+    background: rgb(0,0,0); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, rgba(34,34,34,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,1)), color-stop(100%,rgba(34,34,34,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#222222',GradientType=0 ); /* IE6-9 */
+}
+
+.new_search_box .icon_wrapper .search_icon {
+    width: 24px;
+    height: 24px;
+    padding: 0 5px;
+    display: block;
+    background: url(../images/new_search.png) no-repeat center center transparent;
+}
+
+.new_search_box .new_searchfield {
+    width: 141px;
+    margin-left: 5px;
+    border: medium none;
+    color: #fff;
+    float: left;
+    border-radius: 5px 0 0 5px;
+    background: rgb(0,0,0); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, rgba(34,34,34,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,1)), color-stop(100%,rgba(34,34,34,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(0,0,0,1) 0%,rgba(34,34,34,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#222222',GradientType=0 ); /* IE6-9 */
+}
+
+.new_search_box .new_searchfield::-webkit-input-placeholder {
+    color: #888;
+    font-size: 11px;
+}
+.new_search_box .new_searchfield:-moz-placeholder {
+    color: #888;
+    font-size: 11px;
+}
+
+.new_search_box .new_searchfield:focus {
+    box-shadow: none !important;
+    border: none;
+    border-color: transparent;
+}
+/* End new search field design for list panel */
+
+.list-panel-anchor {
+    filter:alpha(opacity=80);
+    -moz-opacity:0.8;
+    -khtml-opacity: 0.8;
+    opacity: 0.8;
+    background: #333;
+    /*height: 490px;*/
+    overflow: auto;
+    outline: none;
+}
+
+.list-panel-anchor .jspPane {
+    left: 0px !important;
+}
+
+.list-panel-anchor ul{
+    background-color:#989898;
+
+}
+
+.list-panel-anchor ul li{
+    height:27px;
+    border-bottom: 1px solid #666666;
+    list-style-type: none;
+    background-color:#333333;
+}
+
+.list-panel-anchor ul li:first-child{
+    border-top: none;
+}
+
+.list-panel-anchor ul li:hover, .list-panel-anchor ul li.selected {
+    background-color: #05addc;
+}
+
+.list-panel-anchor ul li a {
+    line-height:26px;
+    display:block;
+    height: 27px;
+    padding-left: 35px;
+    margin-right: 5px;
+    overflow: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+    /*border-right: 1px solid #7a7a7a;*/
+}
+
+
+.list-panel-anchor ul li .row_arrow a{
+    display: block;
+    width: 28px !important;
+    height: 27px !important;
+    background-image:url(../images/account_arrow.png) !important;
+    background-color:#989898;
+    float: left;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.list-panel-anchor ul li .row_arrow a:hover{
+    background-color: #bebebe !important;
+}
+
+.ui-listpanel li a.action { position: absolute; right: 2px; top: 2px; }
+
+.ui-listpanel input.search { height: 14px; padding: 1px; opacity: 0.5; margin: 4px; width: 90%; }

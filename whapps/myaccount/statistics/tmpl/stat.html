@@ -1,0 +1,20 @@
+<div>
+    {{if stat.clickable}}
+    <div class="stat_wrapper clickable" data-name="${stat.name}">
+    {{else}}
+    <div class="stat_wrapper" data-name="${stat.name}">
+    {{/if}}
+        <div class="notification">
+            {{if stat.active}}
+                <div class="bubble ${stat.color} active">${stat.number}</div>
+            {{else}}
+                <div class="bubble ${stat.color} inactive">${stat.number}</div>
+            {{/if}}
+        </div>
+        {{if stat.active}}
+            <div class="icon medium ${stat.icon} blue"></div>
+        {{else}}
+            <div class="icon medium ${stat.icon}"></div>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div>
+    <div class="dialog_popup">
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="timezone_selector">Timezone</label>
+                    <div class="select_wrapper">
+                        <select id="timezone_selector">
+                            {{each(i, item) items}}
+                                {{if selected == item.id}}
+                                    <option value="${item.id}" SELECTED>${item.name}</option>
+                                {{else}}
+                                    <option value="${item.id}">${item.name}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

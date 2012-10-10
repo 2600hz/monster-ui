@@ -1,0 +1,24 @@
+<div>
+    <div class="row" id="${id}">
+        {{if id}}
+            <div class="column first">${name}</div>
+            <div class="column second">${display_type}</div>
+            {{if not_enabled}}
+                <div class="column third ${device_type} disabled"></div>
+            {{else}}
+                <div class="column third ${device_type}"></div>
+            {{/if}}
+            <div class="column fourth">
+                {{if not_enabled}}
+                    <input type="checkbox" class="enabled_checkbox" data-device_id="${id}"/>
+                {{else}}
+                    <input type="checkbox" class="enabled_checkbox" data-device_id="${id}" checked="checked"/>
+                {{/if}}
+            </div>
+            <div class="column fifth"><a class="action_device edit icon medium pencil" data-id="${id}"></a><a class="action_device delete icon medium trash" data-id="${id}"></a></div>
+        {{else}}
+            <div class="column merged">There is currently no devices linked to this user</div>
+        {{/if}}
+        <div class="clear"/>
+    </div>
+</div>

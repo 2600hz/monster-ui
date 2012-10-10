@@ -1,0 +1,110 @@
+<div>
+    <div id="edit_server">
+        <div class="row">
+            <div class="whapp-header">
+                {{if server_name}}
+                <h1>Edit settings for ${server_name}</h1>
+                {{else}}
+                <h1>Set your PBX</h1>
+                {{/if}}
+            </div>
+        </div>
+        <div class="row">
+            <form action="#" id="endpoint">
+                <div class="pill-content">
+                    <h3>We support all top IP-PBX Manufacturers. Select one below.</h3>
+                    <div class="info_pbx">
+                        {{if server_type}}
+                        <div class="selected_pbx_block">Currently selected: <span class="selected_pbx">${server_type}</span></div>
+                        {{else}}
+                        <div class="selected_pbx_block" style="display:none;">Currently selected: <span class="selected_pbx"></span></div>
+                        {{/if}}
+                        <div class="other_name_wrapper">Please specify the name of this PBX: <input name="extra.other_name" type="text" id="other_name"></input></div>
+                    </div>
+                    <div class="pbxs">
+                        <div class="pbx bluebox" data-pbx_name="blue.box">&nbsp;</div>
+                        <div class="pbx freeswitch" data-pbx_name="FreeSWITCH">&nbsp;</div>
+                        <div class="pbx threecom" data-pbx_name="threecom">&nbsp;</div>
+                        <div class="pbx allworks" data-pbx_name="allworks">&nbsp;</div>
+                        <div class="pbx altigen" data-pbx_name="AltiGen">&nbsp;</div>
+                        <div class="pbx asterisk" data-pbx_name="Asterisk">&nbsp;</div>
+                        <div class="pbx avaya" data-pbx_name="Avaya">&nbsp;</div>
+                        <div class="pbx cisco" data-pbx_name="Cisco">&nbsp;</div>
+                        <div class="pbx digium" data-pbx_name="digium">&nbsp;</div>
+                        <div class="pbx epygi" data-pbx_name="epygi">&nbsp;</div>
+                        <div class="pbx freepbx" data-pbx_name="FreePBX">&nbsp;</div>
+                        <div class="pbx mitel" data-pbx_name="Mitel">&nbsp;</div>
+                        <div class="pbx objectworld" data-pbx_name="ObjectWorld">&nbsp;</div>
+                        <div class="pbx pingtel" data-pbx_name="pingtel">&nbsp;</div>
+                        <div class="pbx responsepoint" data-pbx_name="Response Point">&nbsp;</div>
+                        <div class="pbx samsung" data-pbx_name="Samsung">&nbsp;</div>
+                        <div class="pbx shoretel" data-pbx_name="ShoreTel">&nbsp;</div>
+                        <div class="pbx sutus" data-pbx_name="Sutus">&nbsp;</div>
+                        <div class="pbx talkswitch" data-pbx_name="talkswitch">&nbsp;</div>
+                        <div class="pbx taridium" data-pbx_name="taridium">&nbsp;</div>
+                        <div class="pbx other" data-pbx_name="other">Other PBX</div>
+                    </div>
+
+                    <hr/>
+
+                    <h3>Set up your PBX<!--<a class="instructions" href="http://www.2600hz.com/instructions" target="_blank">See Instructions</a>--></h3>
+                    <div class="clearfix">
+                        <label for="auth_auth_user">Create a Username</label>
+                        <div class="input">
+                            <input class="span4" placeholder="Username" type="text" name="auth.auth_user" value="${auth.auth_user}" id="auth_auth_user"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="auth_auth_password">Create a Password</label>
+                        <div class="input">
+                            <input class="span4" type="text" name="auth.auth_password" id="auth_auth_password" value="${auth.auth_password}"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="compatibility_mode">Compatibility mode</label>
+                        <div class="input">
+                            <select id="compatibility_mode" name="options.media_handling" class="small">
+                                {{if options.media_handling === 'process'}}
+                                    <option value="process" selected="selected">Enabled</option>
+                                    <option value="bypass">Disabled</option>
+                                {{else}}
+                                    <option value="process">Enabled</option>
+                                    <option value="bypass" selected="selected">Disabled</option>
+                                {{/if}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="realm">Server/Realm</label>
+                        <div class="input realm_wrapper">
+                            ${extra.realm}
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="auth.auth_method" value="Password" />
+                    <input type="hidden" name="extra.serverid" value="${extra.id}" />
+
+                    <hr/>
+
+                    <h3>Name your PBX</h3>
+
+                    <div class="clearfix">
+                        <label for="server_name">This PBX will be known as </label>
+                        <div class="input">
+                            <input type="text" class="span4" id="server_name" name="server_name" value="${server_name}"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="buttons-right">
+                {{if server_name}}
+                    <button class="btn danger endpoint delete">Delete</button>
+                {{/if}}
+                <button class="btn success endpoint edit">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

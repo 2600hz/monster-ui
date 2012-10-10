@@ -1,0 +1,60 @@
+#resource-form .priority_wrapper {
+    height: 50px;
+}
+
+.main_content_resource {
+    text-align: center;
+}
+
+.main_content_resource .landing_btn_wrapper {
+    display: inline-block;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.main_content_resource .landing_btn_wrapper .title {
+    padding-bottom: 30px;
+}
+
+.main_content_resource .landing_btn_wrapper .title h1 {
+    padding-left: 0px;
+    text-shadow: none;
+}
+
+.main_content_resource .landing_btn_wrapper .wrapper_div {
+    width: 320px;
+    height: 204px;
+    float: left;
+    margin: 0px 20px 0px 40px;
+}
+
+.main_content_resource .landing_btn_wrapper .wrapper_div:last-child {
+    margin-right: 0px;
+}
+
+.main_content_resource .landing_btn_wrapper .resource_btn {
+    display: table-cell;
+    vertical-align: middle;
+    width: 319px;
+    height: 203px;
+    text-align: center;
+    background: url('images/button.png');
+    cursor: pointer;
+}
+
+.main_content_resource .landing_btn_wrapper .resource_btn .button_text {
+    width: 200px;
+    font-size: 28px;
+    margin: auto;
+    margin-bottom: 5px;
+    line-height: 28px;
+}
+
+.main_content_resource .landing_btn_wrapper .resource_btn:hover {
+    background: url('images/button_hover.png');
+}
+
+.main_content_resource .landing_btn_wrapper .resource_btn.pressed {
+    background: url('images/button_pressed.png');
+}
+

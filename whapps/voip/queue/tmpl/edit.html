@@ -1,0 +1,93 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit Queue</h1>
+            {{else}}
+                <h1>Create Queue</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		 	<li><a href="#options"><span class="icon wrench_screw"></span>Options</a></li>
+		</ul>
+		 <form id="queue-form" action="" method="post" >
+			<div class="pill-content">
+				<div class="active basic_view" id="basic">
+					<div class="clearfix">
+						<label for="name">Name</label>
+						<div class="input">
+							<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this Queue"/>
+						</div>
+					</div>
+
+					<div class="row">
+						<div id="tab_users">
+	                        <div class="row title">
+	                            <div class="column first">User&nbsp;&nbsp;<span class="icon medium user"/></div>
+	                            <div class="column third">Actions</div>
+	                        </div>
+	                        <div class="rows">
+	                        </div>
+	                    </div>
+	                    <div class="add_user">
+	                        <div class="add_user_title">Add User</div>
+	                        <div class="add_content_wrapper">
+	                            <div class="add_user_fields">
+	                                <ul class="controls">
+	                                    <div id="user_list_select">
+	                                        <li>
+	                                            <label>User</label>
+	                                            <select name="user_id" id="user_id">
+	                                                <option id="empty_option_user" value="empty_option_user">-- Select --</option>
+	                                                {{each field_data.users}}
+	                                                    <option value="${id}" id="option_user_${id}">${first_name} ${last_name}</option>
+	                                                {{/each}}
+	                                            </select>
+	                                        </li>
+	                                        <div class="clear"/>
+	                                    </div>
+	                                    <div class="clear"/>
+	                                </ul>
+	                            </div>
+	                            <div class="add_user_div">
+	                                <span class="add_user_icon"/>
+	                                <a class="add_user_link" href="javascript:void(0);" data-queue_id="${data.id}">Add this user to the queue</a>
+	                                <div class="clear"/>
+	                            </div>
+	                        </div>
+	                    </div>
+					</div>
+				</div>
+
+				<div id="options">
+					<div class="clearfix">
+						<label for="connection_timeout">Queue timeout (s)</label>
+						<div class="input">
+							<input class="span4" id="connection_timeout" name="connection_timeout" type="text" placeholder="Queue timeout (s)" value="${data.connection_timeout}" rel="popover" data-content="How long caller stays in queue, in seconds"/>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="member_timeout">Member timeout (s)</label>
+						<div class="input">
+							<input class="span4" id="member_timeout" name="member_timeout" type="text" placeholder="Member timeout (s)" value="${data.member_timeout}" rel="popover" data-content="How long to ring an agent's phone before moving to the next agent"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger queue-delete">Delete</button>
+	        {{/if}}
+            <button class="btn success queue-save">Save</button>
+		</div>
+	</div>
+</div>

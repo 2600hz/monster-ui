@@ -1,0 +1,31 @@
+/*
+#ws-topbar .whapps > .divider {
+    height: 72px;
+    width: 2px;
+    background-image: url(../img/nav_line.jpg);
+    background-repeat: repeat-y;
+}
+*/
+
+#ws-topbar .links > .link > .dropdown-toggle::after {
+    display: none;
+}
+
+#ws-topbar .links > .link .category > .dropdown-toggle::before {
+    content: "&larr;";
+    margin-top: 6px;
+    border-right: 4px solid white;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+}
+
+#ws-topbar .links > .link .category > .dropdown-menu {
+    left: -160px;
+}
+
+#ws-topbar .links > .divider {
+    height: 72px;
+    width: 2px;
+    background-image: url(../img/nav_line.jpg);
+    background-repeat: repeat-y;
+}

@@ -1,0 +1,48 @@
+<div>
+    <div class="trunkstore_popup e911">
+        <div>
+            <form id="e911" action="#">
+                <div class="e911_text">
+                    When you dial <span class="big_blue_text">911</span> from your number,<br/> show this as your address on 911 operator console.
+                </div>
+
+                <div class="split_div">
+                    <div class="left_part">
+                        <div class="inline_field">
+                            <label>*Postal Code</label>
+                            <input id="postal_code" type="text" name="postal_code" value="${postal_code}"/>
+                        </div>
+                        <div class="inline_field">
+                            <label>*Address line 1</label>
+                            <input type="text" name="street_address" value="${street_address}" />
+                        </div>
+                        <div class="inline_field">
+                            <label>*Address line 2</label>
+                            <input type="text" name="extended_address" value="${extended_address}" />
+                        </div>
+                        <div class="inline_field">
+                            <label>*City</label>
+                            <input id="locality" type="text" name="locality" value="${locality}" />
+                        </div>
+                        <div class="inline_field">
+                            <label>*State</label>
+                            <input id="region" type="text" name="region" value="${region}" />
+                        </div>
+                        {{if status}}
+                            <div class="inline_field gmap_link_div" style="display: none;">
+                                <a id="gmap_link" href="http://maps.google.com/maps?q=${latitude},+${longitude}+(Your+E911+Location)&iwloc=A&hl=en" target="_blank">Verify location with Google Maps</a>
+                            </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="right_part">
+                        <div class="e911_image"/>
+                        <button class="btn primary submit_btn">Submit</button>
+                    </div>
+
+                    <div class="clear"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

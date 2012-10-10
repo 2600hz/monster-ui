@@ -1,0 +1,70 @@
+#pbxs_manager-view {
+    width: 90%;
+    margin: auto;
+}
+
+#pbxs_manager-view .dataTables_wrapper {
+    margin-top: 30px;
+}
+
+#pbxs_manager-view a.active {
+    color: #11DD33;
+    text-decoration: underline;
+}
+
+#pbxs_manager-view a.inactive {
+    color: #05addc;
+    text-decoration: underline;
+}
+
+#pbxs_manager-view a.active:hover {
+    color: #33ff55;
+}
+
+#pbxs_manager-view a.inactive:hover {
+    color: #27cffe;
+}
+
+#pbxs_manager-view .action_number {
+    float: left;
+}
+
+#pbxs_manager-view .action_number button:not(:first-child) {
+    margin-left: 5px;
+}
+
+#pbxs_manager-view h1 {
+    float: left;
+}
+
+#pbxs_manager-view .detail_pbx {
+    float: left;
+    margin: 3px 15px;
+}
+
+#pbxs_manager-content .list-panel-anchor ul li {
+    height: 57px;
+}
+
+#pbxs_manager-content .list-panel-anchor ul li a{
+    height: 57px;
+    line-height: 57px;
+    padding-left: 10px;
+}
+
+#pbxs_manager-content .list-panel-anchor .img_style {
+    float: left;
+    margin-left: 5px;
+    padding: 7px 2px;
+}
+
+.inline_popup.assign_number  {
+    padding: 30px;
+    font-family: helvetica;
+    overflow-y: auto;
+    max-height: 700px;
+}
+
+.inline_popup.assign_number .buttons-right  {
+    margin-bottom: 15px;
+}

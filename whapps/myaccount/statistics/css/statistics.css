@@ -1,0 +1,41 @@
+#statistics_navbar .stat_wrapper {
+    float: left;
+    margin: 0 10px;
+    cursor: default;
+}
+
+#statistics_navbar .stat_wrapper.clickable {
+    cursor: pointer;
+}
+
+#statistics_navbar .stat_wrapper .notification {
+    line-height: 22px;
+    padding-bottom: 5px;
+    height: 22px;
+    width: 22px;
+    display: block;
+    margin: auto;
+}
+
+#statistics_navbar .stat_wrapper .notification .bubble {
+    border-radius: 11px;
+    color: #000;
+    font-size: 10px;
+    box-shadow: 1px 1px 1px #000;
+}
+
+#statistics_navbar .stat_wrapper .notification .bubble.inactive {
+    display: none;
+}
+
+#statistics_navbar .stat_wrapper .notification .bubble.orange {
+    background: #ff9933;
+}
+
+#statistics_navbar .stat_wrapper .notification .bubble.red {
+    background: #ff3322;
+}
+
+#statistics_navbar .stat_wrapper .notification .bubble.green {
+    background: #33cc44;
+}

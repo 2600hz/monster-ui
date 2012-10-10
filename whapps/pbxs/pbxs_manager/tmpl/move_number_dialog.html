@@ -1,0 +1,25 @@
+<div>
+    <div class="switch_account_popup inline_popup">
+        <div class="inline_content main_content">
+            <form id="move-form">
+                <div class="row">
+                    <div class="pill-content">
+                        <div class="clearfix">
+                            <label for="select_pbxs">Choose the new PBX</label>
+                            <div class="input">
+                                <select id="select_pbxs">
+                                    {{each(k, v) servers}}
+                                        <option value="${k}">${v.server_name}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="buttons-right">
+                <button class="btn primary move">Move</button>
+            </div>
+        </div>
+    </div>
+</div>

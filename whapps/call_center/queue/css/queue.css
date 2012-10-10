@@ -1,0 +1,113 @@
+#agents-form .buttons_div {
+    width: 300px;
+    float: left;
+}
+
+.add_agents_popup {
+    padding: 15px;
+    min-height: 300px;
+    width: 884px;
+    color: #eee;
+    font-family: Verdana;
+}
+
+.add_agents_popup .left_part {
+    float: left;
+    width: 220px;
+    border: 1px solid #05addc;
+    margin-right: 10px;
+    background: #222;
+}
+
+.add_agents_popup .left_part .list_agents {
+    min-height: 300px;
+    max-height: 300px;
+    overflow: auto;
+    padding: 10px;
+}
+
+.add_agents_popup .left_part .list_agents .queue_agent {
+    height: 25px;
+    font-size: 12px;
+    color: #05addc;
+    padding: 5px 0px;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.add_agents_popup .right_part {
+    float: left;
+    width: 650px;
+    padding-bottom: 10px;
+}
+
+.add_agents_popup .right_part .unassigned_users {
+    border: 1px solid #05addc;
+    min-height: 300px;
+    max-height: 300px;
+    overflow: auto;
+    padding: 10px;
+    background: #222;
+}
+
+.add_agents_popup .right_part .unassigned_users .user_box {
+    width: 190px;
+    float: left;
+    padding: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.add_agents_popup .box_header {
+    height: 30px;
+    line-height: 30px;
+    padding: 10px 0px;
+}
+
+.add_agents_popup .left_part .box_header {
+    text-align: center;
+    border-bottom: 1px solid #05addc;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.add_agents_popup .left_part .box_header .count_agents {
+    font-size: 16px;
+    color: #05addc;
+    display: inline-block;
+}
+
+.add_agents_popup .right_part .box_header {
+    padding-top: 9px;
+    padding-bottom: 12px;
+}
+
+.add_agents_popup .right_part .box_header > * {
+    float: left;
+}
+
+.add_agents_popup .right_part .box_header .new_search_box {
+    background: none;
+    border-bottom: none;
+    padding: 3px 0px 3px 6px;
+}
+
+.add_agents_popup .right_part .box_header .new_search_box .new_searchfield {
+    width: 464px;
+}
+
+#queue-view #agents-form #reports-grid_wrapper .dataTables_length{
+    width: 30%;
+}
+
+#queue-view #agents-form #reports-grid_wrapper .dataTables_paginate{
+    width: 40%;
+}

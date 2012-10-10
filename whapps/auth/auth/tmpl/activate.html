@@ -1,0 +1,15 @@
+<%args>
+$uid
+$reg_key
+</%args>
+<%init>
+	my $errs=[];
+	if (my $uE = TS::getUser($db, $errs, {userID =>  $uid})) {
+		if ($uE->{activation_key} eq $reg_key && length $reg_key > 50 ) {
+			$uE->{verified}=\1;
+			$db->save_doc($uE, TS::db_opts())->recv;
+			$m->redirect('/login.html?activated=true');
+		}
+	}
+			$m->redirect('/login.html?activated=false');
+</%init>

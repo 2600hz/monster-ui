@@ -1,0 +1,42 @@
+<div>
+    <div class="popup popup_login">
+        <form name="form">
+            <ul class="controls">
+                <li>
+                    <label>Username</label>
+                    <input type="text" name="login" id="login" value="${username}"/>
+                </li>
+
+                <li>
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" />
+                </li>
+
+                {{if request_account_name}}
+                    <li>
+                        <label>Account Name</label>
+                        <input type="text" name="account_name" id="account_name" value="${account_name}"/>
+                    </li>
+                    <li style="font-size:10px !important;">
+                        (Account name is optional if you have logged in without it before)
+                    </li>
+                {{/if}}
+                <div class="clear"/>
+            </ul>
+
+            <div class="clear"/>
+
+            <div class="wrapper_login_button center">
+                <button class="fancy_button blue login" href="javascript:void(0);">Login</button>
+            </div>
+
+            <div class="login_bottom_links center">
+                <hr />
+                <!--<a class="recover_password">Forgot Your Password?</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;-->
+                <a class="register">Register New Account</a>
+                <div class="clear"/>
+            </div>
+        </form>
+    </div>
+</div>

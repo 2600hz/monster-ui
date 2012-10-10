@@ -1,0 +1,100 @@
+<div>
+    <div class="main_content_resource">
+        <div class="landing_btn_wrapper">
+            {{if resource_type === 'offnet'}}
+                <div class="title">
+                    {{if company_name}}
+                    <h1>Congratulations! You're now using ${company_name} as your global carrier!</h1>
+                    {{else}}
+                    <h1>Congratulations! You're now using your provider as your global carrier!</h1>
+                    {{/if}}
+                    <div class="help_text">
+                        If you want to manage your own carriers, click on "Use a different carrier" button.
+                    </div>
+                </div>
+                <div class="resource_buttons">
+                    <div class="wrapper_div">
+                        <div class="hosted_btn resource_btn pressed">
+                            <div class="button_text">
+                            {{if company_name}}
+                                Use ${company_name} as my phone company
+                            {{else}}
+                                Use my provider
+                            {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper_div">
+                        <div class="different_carrier_btn resource_btn">
+                            <div class="button_text">
+                            Use a different carrier
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                {{if resource_type === 'resources'}}
+                    <div class="title">
+                        <h1>Your account is currently using an external carrier</h1>
+                        <div class="help_text">
+                            You can manage your own carriers by adding/editing or removing carriers from the list on the left side.
+                        </div>
+                    </div>
+                    <div class="resource_buttons">
+                        <div class="wrapper_div">
+                            <div class="hosted_btn resource_btn">
+                                <div class="button_text">
+                                {{if company_name}}
+                                    Use ${company_name} as my phone company
+                                {{else}}
+                                    Use my provider
+                                {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrapper_div">
+                            <div class="different_carrier_btn resource_btn pressed">
+                                <div class="button_text">
+                                Use a different carrier
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{else}}
+                    {{if resource_type === 'none'}}
+                        <div class="title">
+                            <h1>Select the type of Resources you would like to use</h1>
+                        </div>
+                        <div class="resource_buttons">
+                            <div class="wrapper_div">
+                                <div class="hosted_btn resource_btn">
+                                    <div class="button_text">
+                                    {{if company_name}}
+                                        Use ${company_name} as my phone company
+                                    {{else}}
+                                        Use my provider
+                                    {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wrapper_div">
+                                <div class="different_carrier_btn resource_btn">
+                                    <div class="button_text">
+                                    Use a different carrier
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="title">
+                            <h2>This module is meant to help users to create their no_match route.</h2>
+                            <h2>As you're already using a customized one, this module is disabled!</h2>
+                            <h3>In order to re-enable this module, you would need to delete the no_match route under the Callflows submodule.</h3>
+                        </div>
+                        </div>
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+</div>

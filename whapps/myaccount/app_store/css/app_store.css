@@ -1,0 +1,130 @@
+.app-store {
+    width: 866px;
+}
+
+#app_store {
+    height: 152px;
+    background: -moz-linear-gradient(top,  #494949 0%, #515151 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#494949), color-stop(100%,#515151));
+    background: -webkit-linear-gradient(top,  #494949 0%,#515151 100%);
+    background: -o-linear-gradient(top,  #494949 0%,#515151 100%);
+    background: -ms-linear-gradient(top,  #494949 0%,#515151 100%);
+    background: linear-gradient(top,  #494949 0%,#515151 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#494949', endColorstr='#515151',GradientType=0 );
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px #363636;
+}
+
+#app_store .app-store-inner {
+    float: left; /* important for inline positioning */
+    width: 800px; /* important (this width = width of list item(including margin) * items shown */ 
+    overflow: hidden;  /* important (hide the items outside the div) */
+    border: 1px solid #525252;
+}
+
+#app_store #left_scroll, #right_scroll {
+    float: left; 
+    width: 32px; 
+    height: 152px;
+    background: #525252;
+    cursor: pointer;
+}
+
+#app_store #left_scroll:hover, #right_scroll:hover {
+    box-shadow: inset 1px 1px 4px 1px #353535;
+}
+
+#app_store #left_scroll {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+#app_store #right_scroll {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#app_store #left_scroll > .icon, #right_scroll > .icon {
+  margin-top: 62px;
+}
+
+#app_store .app-store-inner .app-store-ul {
+    position: relative;
+    left: 0px; /* important (this should be negative number of list items width(including margin) */
+    list-style-type: none; /* removing the default styling for unordered list items */
+    margin: 0px;
+    padding: 0px;
+    width: 9999px; /* important */
+}
+
+#app_store .app-store-inner .app-store-ul li {
+    float: left; /* important for inline positioning of the list items */                                    
+    width: 160px;  /* fixed width, important */
+    height: 150px;
+    border-left: 1px solid #525252;
+    border-right: 1px solid #353535;
+    text-align: center;
+}
+
+#app_store .app-store-inner .app-store-ul li:hover {
+    box-shadow: inset 0px 0px 70px 10px #353535;
+}
+
+#app_store .app-store-inner .app-store-ul li .img {
+    width: 58px;
+    height: 54px;
+    background-repeat: no-repeat;
+    margin: 2px auto 0 auto;
+}
+
+
+#app_store .app-store-inner .app-store-ul li .img.voip {
+    background-image: url('../images/HostedPBX.png');
+}
+
+
+#app_store .app-store-inner .app-store-ul li .img.cluster {
+    background-image: url('../images/CloudManager.png');
+}
+
+
+#app_store .app-store-inner .app-store-ul li .img.pbxs {
+    background-image: url('../images/PBXConnector.png');
+}
+
+#app_store .app-store-inner .app-store-ul li .img.numbers {
+    background-image: url('../images/NumberManager.png');
+}
+
+#app_store .app-store-inner .app-store-ul li .img.userportal {
+    background-image: url('../images/UserPortal.png');
+}
+
+
+#app_store .app-store-inner .app-store-ul li .img.accounts {
+    background-image: url('../images/AccountManager.png');
+}
+
+
+#app_store .app-store-inner .app-store-ul li .img.developer {
+    background-image: url('../images/DevelopersTool.png');
+}
+
+
+#app_store .app-store-inner .app-store-ul li .on-off {
+    width: 94px;
+    margin: 0 auto 0 auto;
+}
+
+.app-store-btn {
+    margin: 20px auto 0 auto;
+    text-align: center;
+}
+
+
+
+
+
+
+
+

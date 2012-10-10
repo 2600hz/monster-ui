@@ -1,0 +1,11 @@
+<div>
+    {{if stat.clickable}}
+    <div class="stat_wrapper clickable" data-name="credits">
+    {{else}}
+    <div class="stat_wrapper" data-name="credits">
+    {{/if}}
+        <div class="amount_wrapper">
+            <div id="credits_label" class="${stat.color}">${stat.number}</div><div class="add_credits_label">(add credit)</div>
+        </div>
+    </div>
+</div>

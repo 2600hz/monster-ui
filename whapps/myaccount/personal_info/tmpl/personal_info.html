@@ -1,0 +1,79 @@
+<div>
+	<div  id="personal_info" class="row">
+		<form>
+			<div class="pill-content">
+				<div class="clearfix">
+					<label for="infos_email">Change your email</label>
+					<div class="input">
+						<input class="span4" id="infos_email" name="infos_email" type="text" placeholder="Email" value="${data.email}" rel="popover" data-content=""/>
+					</div>
+				</div>
+				<div class="clearfix">
+					<div class="buttons-right">
+				        <button class="btn success" id="btnEmail">Save</button>
+					</div>
+				</div>
+				<hr />
+
+				<div class="clearfix">
+					<label for="infos_pwd1">Change your password</label>
+					<div class="input">
+						<input class="span4" id="infos_pwd1" name="infos_pwd1" type="password" value="" rel="popover" data-content=""/>
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="infos_pwd2">Confirm your password</label>
+					<div class="input">
+						<input class="span4" id="infos_pwd2" name="infos_pwd2" type="password" value="" rel="popover" data-content=""/>
+					</div>
+				</div>
+				<div class="clearfix">
+					<div class="buttons-right">
+				        <button class="btn success" id="btnPwd">Save</button>
+					</div>
+				</div>	
+				<hr />
+
+				<div class="clearfix">
+					<div class="input">
+						<ul class="inputs-list">
+							<li>
+								<label>
+									<span rel="popover" data-content="Click if you want to see the advanced view by default.">
+										{{if data.advanced}}
+						                    <input type="checkbox" id="advanced" name="advanced" checked="checked"/>
+						                {{else}}
+						                    <input type="checkbox" id="advanced" name="advanced"/>
+						                {{/if}}
+						                <span>Advanced View</span>
+					                </span>
+					            </label>
+					        </li>
+					    </ul>
+					</div>
+				</div>
+
+				<div class="clearfix">
+						<label for="primary_app">Primary App</label>
+						<div class="input">
+							<span rel="popover" data-content="Select the app you want to display at login.">
+								<select name="primary_app" id="primary_app" class="medium">
+									<option value="false">None</option>
+									{{each(i, app) data.apps}}
+	                                    {{if app.default}}
+	                                    	<option value="${i}" selected="selected">${app.label}</option>
+	                                    {{else}}
+	                                    	<option value="${i}">${app.label}</option>
+	                                    {{/if}}
+	                            	{{/each}}
+								</select>
+							</span>
+						</div>
+					</div>
+			</div>
+		</form>
+		<div class="button-center">
+			<button class="btn primary personal_info-close">Close</button>
+		</div>
+	</div>
+</div>

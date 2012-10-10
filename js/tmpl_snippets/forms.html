@@ -1,0 +1,19 @@
+<div>
+    <div class="scripts">
+        <script>
+            function isChecked( item, array ) {
+                return ($.inArray( item, array ) >= 0) ? 'checked="checked"' : '';
+            }
+        </script>
+        <script id="optionList" type="text/x-jquery-tmpl">
+            <option {{if value === $item.selectedVal}}selected="selected"{{/if}} value="${value}">${value}</option>
+        </script>  
+        <script id="checkboxList" type="text/x-jquery-tmpl">
+            <li>
+                <label for="${field_id}">${label}</label>
+                <input id="${field_id}" name="${field_name}" type="checkbox" value="${value}" ${isChecked(value, $item.selectedValues)}/>
+                <span>${caption}</span>
+            </li>
+        </script>  
+    </div>
+</div>

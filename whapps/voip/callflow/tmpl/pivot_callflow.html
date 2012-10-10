@@ -1,0 +1,42 @@
+<div>
+    <div class="dialog_popup">
+        <h1>Pivot</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="pivot_voiceurl_input">Voice URL: </label>
+                    <input type="text" id="pivot_voiceurl_input" class="medium" value="${data_pivot.voice_url}"/>
+                </div>
+
+                <div class="popup_field">
+                    <label for="pivot_method_input">Method: </label>
+                    <select id="pivot_method_input" style="width: 100px; height: 28px;">
+                        {{if data_pivot.method === 'POST'}}
+                            <option value="POST" selected="selected">POST</option>
+                            <option value="GET">GET</option>
+                        {{else}}
+                            <option value="POST">POST</option>
+                            <option value="GET" selected="selected">GET</option>
+                        {{/if}}
+                    </select>
+                </div>
+
+                <div class="popup_field">
+                    <label for="pivot_format_input">Format: </label>
+                    <select id="pivot_format_input" style="width: 100px; height: 28px;">
+                        {{if data_pivot.req_format === 'twiml'}}
+                            <option value="twiml" selected="selected">twiml</option>
+                            <option value="kazoo">Kazoo</option>
+                        {{else}}
+                            <option value="twiml">twiml</option>
+                            <option value="kazoo" selected="selected">Kazoo</option>
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

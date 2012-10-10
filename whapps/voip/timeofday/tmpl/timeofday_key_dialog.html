@@ -1,0 +1,31 @@
+<div>
+    <div class="dialog_popup">
+        <h1>Time of Day</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="timeofday_selector">Which Time of Day?</label>
+                    <div class="select_wrapper">
+                        <select id="timeofday_selector">
+                            {{each(i, item) items}}
+                                {{if selected == item.id}}
+                                    <option value="${item.id}" SELECTED>${item.name}</option>
+                                {{else}}
+                                    <option value="${item.id}">${item.name}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                        <div class="action_links_div">
+                            <div id="edit_link"><a class="inline_action" data-action="edit" href="#">Edit time of day options</a></div>
+                            <div><a class="inline_action" data-action="create" href="#">Add a time of day</a></div>
+                        </div>
+                    </div>
+                    <div class="clear"/>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

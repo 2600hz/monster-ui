@@ -1,0 +1,153 @@
+<div>
+    <div class="row">
+        <div class="whapp-header">
+            <h1>Billing information and History</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <ul class="tabs" data-tabs="tabs">
+            <li class="active"><a href="#credit_card"><span class="icon credit_card"/>Credit Card Information</a></li>
+            <li><a href="#transactions"><span class="icon price_tag"/>One-time transactions</a></li>
+            <li><a href="#subscriptions"><span class="icon refresh"/>Recurring Payments</a></li>
+        </ul>
+
+         <form id="billing-form" action="" method="post">
+            <div class="pill-content">
+                <div class="active basic_view" id="credit_card">
+                    {{if data.credit_cards[0]}}
+                        <div class="clearfix">
+                            <label for="cardnbr">Card Number</label>
+                            <div class="input">
+                                <input class="span4 hide" id="cardnbr" name="credit_card.number" type="text" placeholder="Card Number" value="************${data.credit_cards[0].last_four}" />
+                                <span class="uneditable-input">************${data.credit_cards[0].last_four}</span>
+                                <div class="hide">
+                                    <span class="card" id="visa"></span>
+                                    <span class="card" id="mastercard"></span>
+                                    <span class="card" id="amex"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="expiration_date">Expiration Date</label>
+                            <div class="input">
+                                <input class="span1 hide" id="expiration_date" name="credit_card.expiration_date.month" type="text" placeholder="MM" value="${data.credit_cards[0].expiration_month}"/>
+                                <span class="uneditable-input">${data.credit_cards[0].expiration_month}</span>
+                                <input class="span1 hide" id="expiration_date" name="credit_card.expiration_date.year" type="text" placeholder="YYYY" value="${data.credit_cards[0].expiration_year}"/>
+                                <span class="uneditable-input">${data.credit_cards[0].expiration_year}</span>
+                                <span class="hide"> - </span>
+                                <input class="span2 hide" id="cvv" name="credit_card.cvv" type="text" placeholder="Secure Code" value="${data.credit_cards[0].cvv}"/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="firstname">Name On Card</label>
+                            <div class="input">
+                                <input class="span3 hide" id="firstname" name="first_name" type="text" placeholder="First Name" value="${data.first_name}"/><span class="uneditable-input">${data.first_name}</span>
+                                <input class="span3 hide" id="lastname" name="last_name" type="text" placeholder="Last Name" value="${data.last_name}" />
+                                <span class="uneditable-input">${data.last_name}</span>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="clearfix">
+                            <label for="postal_code">Postal Code</label>
+                            <div class="input">
+                                <input class="span3 hide" id="postal_code" name="credit_card.billing_address.postal_code" type="text" placeholder="Postal Code" value="${data.credit_cards[0].billing_address.postal_code}"/>
+                                <span class="uneditable-input">${data.credit_cards[0].billing_address.postal_code}</span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="company">Company</label>
+                            <div class="input">
+                                <input class="span4 hide" id="company" name="company" type="text" placeholder="Company Name" value="${data.company}"/>
+                                <span class="uneditable-input">${data.company}</span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="phone">Phone</label>
+                            <div class="input">
+                                <input class="span4 hide" id="phone" name="phone" type="text" placeholder="Phone" value="${data.phone}"/>
+                                <span class="uneditable-input">${data.phone}</span>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="clearfix">
+                            <label for="cardnbr">Card Number</label>
+                            <div class="input">
+                                <input class="span4" id="cardnbr" name="credit_card.number" type="text" placeholder="Card Number" value=""/>
+                                <span class="card" id="visa"></span>
+                                <span class="card" id="mastercard"></span>
+                                <span class="card" id="amex"></span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="expiration_date">Expiration Date</label>
+                            <div class="input">
+                                <input class="span1" id="expiration_date" name="credit_card.expiration_date.month" type="text" placeholder="MM" value=""/>
+                                <input class="span1" id="expiration_date" name="credit_card.expiration_date.year" type="text" placeholder="YYYY" value=""/>
+                                <span> - </span>
+                                <input class="span2" id="cvv" name="credit_card.cvv" type="text" placeholder="Secure Code" value=""/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="firstname">Name On Card</label>
+                            <div class="input">
+                                <input class="span3" id="firstname" name="first_name" type="text" placeholder="First Name" value=""/>
+                                <input class="span3" id="lastname" name="last_name" type="text" placeholder="Last Name" value=""/>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="clearfix">
+                            <label for="postal_code">Postal Code</label>
+                            <div class="input">
+                                <input class="span3" id="postal_code" name="credit_card.billing_address.postal_code" type="text" placeholder="Postal Code" value=""/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="company">Company</label>
+                            <div class="input">
+                                <input class="span4" id="company" name="company" type="text" placeholder="Company Name" value=""/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="phone">Phone</label>
+                            <div class="input">
+                                <input class="span4" id="phone" name="phone" type="text" placeholder="Phone" value=""/>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    <div class="clearfix">
+                        <div class="buttons-right">
+                            {{if data.credit_cards[0]}}
+                                <button class="btn " id="edit-billing">Edit</button>
+                                <button class="btn success disabled" id="save-billing"  disabled="disabled">Save</button>
+                            {{else}}
+                                <button class="btn success" id="save-billing">Save</button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="transactions">
+                    <table id="transactions-grid" class="display"></table>
+                </div>
+
+                <div id="subscriptions">
+                    <table id="subscriptions-grid" class="display"></table>
+                </div>
+            </div>
+         </form>
+    </div>
+</div>

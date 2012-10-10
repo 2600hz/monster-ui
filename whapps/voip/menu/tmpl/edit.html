@@ -1,0 +1,166 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit Menu</h1>
+            {{else}}
+                <h1>Create Menu</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		 	<li><a href="#extension_dialing"><span class="icon sip"></span>Extension Dialing</a></li>
+		 	<li><a href="#options"><span class="icon wrench_screw"></span>Options</a></li>
+		</ul>
+
+		 <form id="menu-form" action="" method="post">
+		 	<div class="pill-content">
+		 		<div class="active basic_view" id="basic">
+		 			<div class="clearfix">
+		 				<label for="name">Name</label>
+		 				<div class="input">
+		 					<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this Menu"/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<label for="record_pin">Prompt Record PIN</label>
+		 				<div class="input">
+		 					<input class="span4" id="record_pin" name="record_pin" type="text" placeholder="Record PIN" value="${data.record_pin}" rel="popover" data-content="PIN to enter in order to allow users to record their own greetings"/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<div class="input">
+		 					<ul class="inputs-list">
+		 						<li>
+		 							<label>
+		 								<span rel="popover" data-content="Check to allow the user to dial extensions from this menu">
+			 								{{if data.hunt}}
+			 				                    <input type="checkbox" id="hunt" name="hunt" checked="checked" />
+			 				                {{else}}
+			 				                    <input type="checkbox" id="hunt" name="hunt" />
+			 				                {{/if}}
+			 				                <span>Allow caller to dial extensions</span>
+		 				                </span>
+		 				            </label>
+		 				        </li>
+		 				    </ul>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+						<label for="media_greeting">Greeting Message</label>
+						<div class="input">
+							<span rel="popover" data-content="Select the Greeting message that you want to use for this menu. If you select - Not set -, then no media file will be played.">
+								<select name="media.greeting" id="media_greeting" class="medium">
+									{{each field_data.media}}
+	                                    {{if data.media.greeting == id}}
+	                                    <option id="${id}" value="${id}" selected="selected">${name}</option>
+	                                    {{else}}
+	                                    <option id="${id}" value="${id}">${name}</option>
+	                                    {{/if}}
+	                            	{{/each}}
+								</select>
+								<div class="edit_create">
+									<a id="edit_link_media" class="inline_action_media" data-action="edit" href="#">Edit</a>
+	                            	<a class="inline_action_media" data-action="create" href="#">Create</a>
+								</div>
+							</span>
+						</div>
+					</div>
+		 		</div>
+
+		 		<div id="extension_dialing">
+		 			<div class="clearfix">
+		 				<label for="hunt_allow">Whitelist of numbers</label>
+		 				<div class="input">
+		 					<input class="span4" id="hunt_allow" name="hunt_allow" type="text" placeholder="Regex" value="${data.hunt_allow}" rel="popover" data-content="List of numbers that users are allowed to dial when hunting (ex: ^[0-9]{0,11}$ is a simple regex catching a group of 0 to 11 numbers)"/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<label for="hunt_deny">Blacklist of numbers</label>
+		 				<div class="input">
+		 					<input class="span4" id="hunt_deny" name="hunt_deny" type="text" placeholder="Regex" value="${data.hunt_deny}" rel="popover" data-content="List of numbers that users are not allowed to dial when hunting (ex: ^[0-9]{0,11}$ is a simple regex catching a group of 0 to 11 numbers)"/>
+		 				</div>
+		 			</div>
+		 		</div>
+
+		 		<div id="options">
+		 			<div class="clearfix">
+		 				<label for="retries">Number of retries on misdial</label>
+		 				<div class="input">
+		 					<input class="span4" id="retries" name="retries" type="text" placeholder="Retries" value="${data.retries}" rel="popover" data-content="Number of allowed retries when misdialing in this menu."/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<label for="timeout">Timeout for dialing (s)</label>
+		 				<div class="input">
+		 					<input class="span4" id="timeout" name="timeout" type="text" placeholder="Timeout in seconds" value="${data.timeout / 1000}" rel="popover" data-content="Number of seconds allowed without pressing any key."/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<label for="max_extension_length">Extension Number Length</label>
+		 				<div class="input">
+		 					<input class="span4" id="max_extension_length" name="max_extension_length" type="text" placeholder="Length" value="${data.max_extension_length}" rel="popover" data-content="The maximum length of an extension. By default, it is set to the Record PIN number length."/>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<div class="input">
+		 					<ul class="inputs-list">
+		 						<li>
+		 							<label>
+		 								<span rel="popover" data-content="This option allows someone to dial into a menu from an outside number (i.e. their cell phone, landline, etc.) and enter the PIN for the menu to be able to re-record it.">
+		 								{{if data.allow_record_from_offnet}}
+		 				                    <input type="checkbox" id="allow_record_from_offnet" name="allow_record_from_offnet" checked="checked" />
+		 				                {{else}}
+		 				                    <input type="checkbox" id="allow_record_from_offnet" name="allow_record_from_offnet" />
+		 				                {{/if}}
+		 				                <span>Allow outside recording</span>
+		 				                </span>
+		 				            </label>
+		 				        </li>
+		 				    </ul>
+		 				</div>
+		 			</div>
+
+		 			<div class="clearfix">
+		 				<div class="input">
+		 					<ul class="inputs-list">
+		 						<li>
+		 							<label>
+		 								<span rel="popover" data-content="This option, when checked, will suppress the playing of 'Invalid Entry'.">
+			 								{{if data.suppress_media}}
+			 				                    <input type="checkbox" id="suppress_media" name="suppress_media" checked="checked" />
+			 				                {{else}}
+			 				                    <input type="checkbox" id="suppress_media" name="suppress_media" />
+			 				                {{/if}}
+			 				                <span>Suppress playing of Invalid Entry</span>
+		 				                </span>
+		 				            </label>
+		 				        </li>
+		 				    </ul>
+		 				</div>
+		 			</div>
+		 		</div>
+		 	</div>
+		 </form>
+		 <div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger menu-delete">Delete</button>
+	        {{/if}}
+            <button class="btn success menu-save">Save</button>
+		</div>
+	</div>
+</div>

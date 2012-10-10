@@ -1,0 +1,119 @@
+<div>
+	{{if hide}}
+		<div class="hide">
+	{{/if}}
+	{{each(i, input) schema}}
+		{{if input.type == "string"}}
+			<div class="clearfix">
+				<label for="${input.input_name}">
+					{{if input.name}}
+						${input.name}
+					{{else}}
+						${input.id}
+					{{/if}}
+				</label>
+				<div class="input">
+					<input class="span4" id="${input.input_name}" name="${input.input_name}" type="text" placeholder="" rel="popover" data-content="${input.description}"/>
+				</div>
+			</div>
+		{{/if}}
+		{{if input.type == "boolean"}}
+			<div class="clearfix">
+				<div class="input">
+					<ul class="inputs-list">
+						<li>
+							<label>
+								<span rel="popover" data-content="${input.description}">
+					                <input type="checkbox" id="${input.input_name}" name="${input.input_name}"/>
+					                <span>
+					                	{{if input.name}}
+											${input.name}
+										{{else}}
+											${input.id}
+										{{/if}}
+					                </span>
+				                </span>
+				            </label>
+				        </li>
+				    </ul>
+				</div>
+			</div>
+		{{/if}}
+		{{if input.type == "array"}}
+			{{if input.enum}}
+				<div class="clearfix">
+					<label for="">
+						{{if input.name}}
+							${input.name}
+						{{else}}
+							${i}
+						{{/if}}
+					</label>
+					<div class="input">
+						<ul class="inputs-list">
+							{{each(i, tmp) input.enum}}
+								<li>
+									<label>
+										<span rel="popover" data-content="${input.description}">
+							                <input type="checkbox" id="${input.input_name}.${tmp}" name="${input.input_name}[]" value="${tmp}"/>
+							                <span>${tmp}</span>
+						                </span>
+						            </label>
+					        	</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			{{else}}
+				{{if input.items}}
+					<div class="clearfix">
+						<label for="${input.input_name}">
+							{{if input.name}}
+								${input.name}
+							{{else}}
+								${input.id}
+							{{/if}}
+						</label>
+						<div class="input">
+							<input class="span4" id="${input.input_name}" name="${input.input_name}[]" type="text" placeholder="" rel="popover" data-content="${input.description}"/>
+						</div>
+					</div>
+				{{else}}
+					{{each(index, field) input}}
+						{{if field.type}}
+							<div class="clearfix">
+								<label for="${index}">
+									{{if field.name}}
+										${field.name}
+									{{else}}
+										${index} (${input.input_name})
+									{{/if}}
+								</label>
+								<div class="input">
+									<input class="span4" id="${input.input_name}_${index}" name="${input.input_name}[${index}]" type="text" placeholder="" rel="popover" data-content="${field.description}"/>
+								</div>
+							</div>
+						{{/if}}
+					{{/each}}
+				{{/if}}
+			{{/if}}
+		{{/if}}
+		{{if input.type == "integer"}}
+			<div class="clearfix">
+				<label for="${input.input_name}">
+					{{if input.name}}
+						${input.name}
+					{{else}}
+						${input.id}
+					{{/if}}
+				</label>
+				<div class="input">
+					<input class="span4" id="${input.input_name}" name="${input.input_name}" type="text" placeholder="" rel="popover" data-content="${input.description}"/>
+				</div>
+			</div>
+		{{/if}}
+	{{/each}}
+	{{if hide}}
+		</div>
+	{{/if}}
+</div>

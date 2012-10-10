@@ -1,0 +1,165 @@
+.help_recover {
+    color: #eeeeee;
+    font-style: normal;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 370px;
+}
+
+.wrapper_login_button {
+    padding: 10px;
+}
+
+.wrapper_login_button button {
+    height: 35px;
+    padding-bottom: 7px;
+}
+
+.code-page {
+    margin-top: 50px;
+}
+
+#content_welcome_page .right_div {
+    width: 420px;
+    padding-top: 10px;
+    float: left;
+    height: 370px;
+    text-shadow: 1px 1px #333333;
+}
+
+#content_welcome_page .right_div .list_fields {
+    border: 1px solid #353535;
+    border-radius: 5px;
+    background: #484848;
+    padding: 10px 20px 10px 25px;
+}
+
+#content_welcome_page .right_div .row_welcome_field {
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+#content_welcome_page .right_div .row_welcome_field > label {
+    font-size: 16px;
+    padding: 0 10px;
+    text-align: right;
+    width: 120px;
+    margin-right: 20px;
+    line-height: 30px;
+    color: #eee;
+}
+
+#content_welcome_page .right_div .row_welcome_field > input {
+    border: 1px solid #444;
+    border-radius: 5px 5px 5px 5px;
+    height: 18px;
+    width: 190px;
+    padding: 5px;
+}
+
+#content_welcome_page .right_div .row_welcome_field > input:focus {
+    border: 1px solid #05addc;
+    outline: none; /* In order to get rid of Chrome's border */
+}
+
+#content_welcome_page .right_div .login_div {
+    text-align: center;
+    padding: 10px 10px 10px 0px;
+}
+
+#content_welcome_page .right_div .login_div .login {
+    height: 34px;
+    width: 105px;
+    text-shadow: 1px 1px #333333;
+    font-family: trebuchet MS;
+    margin: 10px 0 0 0;
+}
+
+#content_welcome_page .right_div .login_div .recover_password {
+    color: #eee;
+    text-shadow: none;
+    text-decoration: underline;
+    margin-right: 10px;
+}
+
+#content_welcome_page .right_div .login_div .recover_password:hover {
+    text-decoration: underline;
+    color: #05addc;
+}
+
+#content_welcome_page .right_div .register_div {
+    border: 1px solid #353535;
+    border-radius: 5px;
+    background: #484848;
+    padding: 10px 20px 15px 25px;
+    margin-top: 20px;
+}
+
+#content_welcome_page .right_div .register_div .new_user_text {
+    float: left;
+    font-size: 18.5px;
+    margin: 0 10px 10px 0;
+}
+
+#content_welcome_page .right_div .register_div .register {
+    background: url('img/signup_button.png') no-repeat;
+    width: 169px;
+    height: 48px;
+}
+
+#content_welcome_page .right_div .register_div .register:hover {
+    background: url('img/signup_button_hover.png') no-repeat;
+}
+
+#content_welcome_page .right_div .register_div .left_part {
+    float: left;
+    width: 60%;
+}
+
+#content_welcome_page .right_div .register_div .free_text {
+    float: left;
+    width: 40%;
+}
+
+#content_welcome_page .right_div .register_div .free_text > div {
+    width: 100%;
+    font-size: 14px;
+}
+
+#content_welcome_page .right_div .register_div .free_text > div:not(:first-child) {
+    margin-top: 15px;
+}
+
+.popup_recover_password div, .popup_register div, .popup_new_password div {
+    display: block;
+}
+
+.popup_recover_password .main_content, .popup_register .main_content, .popup_new_password .main_content{
+    width: auto;
+}
+
+.code-page {
+    text-align: center;
+}
+
+.code-page .content {
+    border: 1px solid #444;
+    padding: 10px;
+    width: 500px;
+    margin: auto;
+    border-radius: 4px;
+    background-color: #555;
+}
+
+.code-page .content a {
+    color: #05ADDC;
+}
+
+#landing_page {
+    margin: 30px auto auto;
+    width: 850px;
+}
+
+#landing_page .title p {
+    width: 853px;
+}

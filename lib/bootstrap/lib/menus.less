@@ -1,0 +1,320 @@
+/* menus.less
+ * A hacked version of patterns.less
+ * ---------------------------------------------------------------------------- */
+
+
+// TOPBAR
+// ------
+
+// Topbar for Branding and Nav
+.topbar {
+  height: 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  overflow: visible;
+
+  // Links get text shadow
+  a {
+    color: @grayLight;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  }
+
+  // Hover and active states
+  // h3 for backwards compatibility
+  h3 a:hover,
+  .brand:hover,
+  ul .active > a {
+    background-color: #333;
+    background-color: rgba(255,255,255,.05);
+    color: @white;
+    text-decoration: none;
+  }
+
+  // Website name
+  // h3 left for backwards compatibility
+  h3 {
+    position: relative;
+  }
+  h3 a,
+  .brand {
+    float: left;
+    display: block;
+    padding: 8px 20px 12px;
+    margin-left: -20px; // negative indent to left-align the text down the page
+    color: @white;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 1;
+  }
+
+  // Plain text in topbar
+  p {
+    margin: 0;
+    line-height: 40px;
+    a:hover {
+      background-color: transparent;
+      color: @white;
+    }
+  }
+
+  // Search Form
+  form {
+    float: left;
+    margin: 5px 0 0 0;
+    position: relative;
+    .opacity(100);
+  }
+  // Todo: remove from v2.0 when ready, added for legacy
+  form.pull-right {
+    float: right;
+  }
+  input {
+    background-color: #444;
+    background-color: rgba(255,255,255,.3);
+    #font > .sans-serif(13px, normal, 1);
+    padding: 4px 9px;
+    color: @white;
+    color: rgba(255,255,255,.75);
+    border: 1px solid #111;
+    .border-radius(4px);
+    @shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0px rgba(255,255,255,.25);
+    .box-shadow(@shadow);
+    .transition(none);
+
+    // Placeholder text gets special styles; can't be bundled together though for some reason
+    &:-moz-placeholder {
+      color: @grayLighter;
+    }
+    &::-webkit-input-placeholder {
+      color: @grayLighter;
+    }
+    // Hover states
+    &:hover {
+      background-color: @grayLight;
+      background-color: rgba(255,255,255,.5);
+      color: @white;
+    }
+    // Focus states (we use .focused since IE8 and down doesn't support :focus)
+    &:focus,
+    &.focused {
+      outline: 0;
+      background-color: @white;
+      color: @grayDark;
+      text-shadow: 0 1px 0 @white;
+      border: 0;
+      padding: 5px 10px;
+      .box-shadow(0 0 3px rgba(0,0,0,.15));
+    }
+  }
+}
+
+// gradient is applied to it's own element because overflow visible is not honored by ie when filter is present
+// For backwards compatibility, include .topbar .fill
+.topbar-inner,
+.topbar .fill {
+  background-color: #222;
+  #gradient > .vertical(#333, #222);
+  @shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+  .box-shadow(@shadow);
+}
+
+
+// NAVIGATION
+// ----------
+
+// Topbar Nav
+// ul.nav for all topbar based navigation to avoid inheritance issues and over-specificity
+// For backwards compatibility, leave in .topbar div > ul
+.topbar div > ul,
+.nav {
+  display: block;
+  float: left;
+  margin: 0 10px 0 0;
+  position: relative;
+  left: 0;
+  > li {
+    display: block;
+    float: left;
+  }
+  a {
+    display: block;
+    float: none;
+    padding: 10px 10px 11px;
+    line-height: 19px;
+    text-decoration: none;
+    &:hover {
+      color: @white;
+      text-decoration: none;
+    }
+  }
+  .active > a {
+    background-color: #222;
+    background-color: rgba(0,0,0,.5);
+  }
+
+  // Secondary (floated right) nav in topbar
+  &.secondary-nav {
+    float: right;
+    margin-left: 10px;
+    margin-right: 0;
+    // backwards compatibility
+    .menu-dropdown,
+    .dropdown-menu {
+      right: 0;
+      border: 0;
+    }
+  }
+  // Dropdowns within the .nav
+  // a.menu:hover and li.open .menu for backwards compatibility
+  a.menu:hover,
+  li.open .menu,
+  .dropdown-toggle:hover,
+  .dropdown.open > .dropdown-toggle {
+    background: #444;
+    background: rgba(255,255,255,.05);
+  }
+  // .menu-dropdown for backwards compatibility
+  .menu-dropdown,
+  .dropdown-menu {
+    background-color: #333;
+    // a.menu for backwards compatibility
+    &>a.menu,
+    &>.dropdown-toggle {
+      color: @white;
+      &.open {
+        background: #444;
+        background: rgba(255,255,255,.05);
+      }
+    }
+    li a {
+      color: #999;
+      text-shadow: 0 1px 0 rgba(0,0,0,.5);
+      &:hover {
+        #gradient > .vertical(#292929,#191919);
+        color: @white;
+      }
+    }
+    .active a {
+      color: @white;
+    }
+    .divider {
+      background-color: #222;
+      border-color: #444;
+    }
+  }
+}
+
+// For backwards compatibility with new dropdowns, redeclare dropdown link padding
+.topbar ul .menu-dropdown li a,
+.topbar ul .dropdown-menu li a {
+  padding: 4px 15px;
+}
+
+// Dropdown Menus
+// Use the .menu class on any <li> element within the topbar or ul.tabs and you'll get some superfancy dropdowns
+// li.menu for backwards compatibility
+li.menu,
+.dropdown {
+  position: relative;
+}
+// The link that is clicked to toggle the dropdown
+// a.menu for backwards compatibility
+a.menu:after,
+.dropdown-toggle:after {
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "&darr;";
+  text-indent: -99999px;
+  vertical-align: top;
+  margin-top: 8px;
+  margin-left: 4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid @white;
+  .opacity(50);
+}
+// The dropdown menu (ul)
+// .menu-dropdown for backwards compatibility
+.menu-dropdown,
+.dropdown-menu {
+  background-color: @white;
+  float: left;
+  display: none; // None by default, but block on "open" of the menu
+  position: absolute;
+  top: 40px;
+  z-index: 900;
+  min-width: 160px;
+  max-width: 220px;
+  _width: 160px;
+  margin-left: 0; // override default ul styles
+  margin-right: 0;
+  padding: 6px 0;
+  zoom: 1; // do we need this?
+  border-color: #999;
+  border-color: rgba(0,0,0,.2);
+  border-style: solid;
+  border-width: 0 1px 1px;
+  .border-radius(0 0 6px 6px);
+  .box-shadow(0 2px 4px rgba(0,0,0,.2));
+  .background-clip(padding-box);
+
+  // Unfloat any li's to make them stack
+  li {
+    float: none;
+    display: block;
+    background-color: none;
+  }
+  // Dividers (basically an hr) within the dropdown
+  .divider {
+    height: 1px;
+    margin: 5px 0;
+    overflow: hidden;
+    background-color: #eee;
+    border-bottom: 1px solid @white;
+  }
+}
+
+.topbar .dropdown-menu,
+.dropdown-menu {
+  // Links within the dropdown menu
+  a {
+    display: block;
+    padding: 4px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: @gray;
+    text-shadow: 0 1px 0 @white;
+    // Hover state
+    &:hover,
+    &.hover {
+      #gradient > .vertical(#eeeeee, #dddddd);
+      color: @grayDark;
+      text-decoration: none;
+      @shadow: inset 0 1px 0 rgba(0,0,0,.025), inset 0 -1px rgba(0,0,0,.025);
+      .box-shadow(@shadow);
+    }
+  }
+}
+
+// Open state for the dropdown
+// .open for backwards compatibility
+.open,
+.dropdown.open {
+  // .menu for backwards compatibility
+  &>.menu,
+  &>.dropdown-toggle {
+    color: @white;
+    background: #ccc;
+    background: rgba(0,0,0,.3);
+  }
+  // .menu-dropdown for backwards compatibility
+  &>.menu-dropdown,
+  &>.dropdown-menu {
+    display: block;
+  }
+}

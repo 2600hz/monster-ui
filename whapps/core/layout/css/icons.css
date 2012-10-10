@@ -1,0 +1,1326 @@
+/*
+    Document   : icons
+    Created on : Jun 6, 2011, 7:19:19 AM
+    Author     : Darren Schreiber
+    Description:
+        This stylesheet allows you to load a single image map and specify an icon type and color to have it appear.
+
+        Examples include
+        <div class="icon phone" />      <-- Show a picture of a phone -->
+        <div class="icon phone current" />      <-- Show a picture of a phone, as current selection (typically blue) -->
+        <div class="icon darkgrey phone" />     <-- Show a picture of a phone and explicitly force it to appear in dark grey -->
+*/
+
+.icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-image: url(../images/icons/icons_32x32_gradient.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    vertical-align: middle;
+}
+
+.icon.medium {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icons/icons_24x24_gradient.png);
+}
+
+/* Color overrides */
+.icon.gradient {
+    background-image: url(../images/icons/icons_32x32_gradient.png);
+}
+
+.icon.blue {
+    background-image: url(../images/icons/icons_32x32_blue.png);
+}
+
+.icon.darkgrey {
+    background-image: url(../images/icons/icons_32x32_darkgrey.png);
+}
+
+.icon.green {
+    background-image: url(../images/icons/icons_32x32_green.png);
+}
+
+.icon.lightgrey {
+    background-image: url(../images/icons/icons_32x32_lightgrey.png);
+}
+
+.icon.red {
+    background-image: url(../images/icons/icons_32x32_red.png);
+}
+
+.icon.white {
+    background-image: url(../images/icons/icons_32x32_white.png);
+}
+
+.icon.yellow {
+    background-image: url(../images/icons/icons_32x32_yellow.png);
+}
+
+.icon.medium.blue {
+    background-image: url(../images/icons/icons_24x24_blue.png);
+}
+
+.icon.medium.red {
+    background-image: url(../images/icons/icons_24x24_blue.png);
+}
+
+.icon.medium.gradient {
+    background-image: url(../images/icons/icons_24x24_blue.png);
+}
+
+/************** ICONS APPNAV *****/
+
+.icon.voip_services { /* 4, 5 */
+    background-position: -128px -160px;
+}
+
+.icon.cluster_manager { /* 23, 0 */
+    background-position: -730px 0px;
+}
+
+.icon.connectivity { /* 8, 13 */
+    background-position: -256px -416px;
+}
+
+.icon.dashboard { /* 10, 13 */
+    background-position: -320px -416px;
+}
+
+.icon.user_portal {
+    background-position: -478px -192px;
+}
+
+.icon.userportal {
+    background-position: -478px -192px;
+}
+
+/************** ICONS SUBNAV *****/
+
+.icon.account { /* 0, 11 */
+    background-position: 0 -357px;
+}
+
+.icon.callflow { /* 5, 0 */
+    background-position: -160px -5px;
+}
+
+.icon.conference { /* 14, 3 */
+    background-position: -448px -101px;
+}
+
+.icon.device { /* 16, 5 */
+    background-position: -512px -165px;
+}
+
+.icon.media { /* 10, 9 */
+    background-position: -320px -293px;
+}
+
+.icon.play { /* 10, 9 */
+    background-position: -320px -293px;
+}
+
+.icon.menu1 { /* 20, 5 */
+    background-position: -640px -165px;
+}
+
+.icon.registration { /* 18, 7 */
+    background-position: -576px -229px;
+}
+
+.icon.resource { /* 0, 7 */
+    background-position: 0 -229px ;
+}
+
+.icon.offnet { /* 0, 7 */
+    background-position: 0 -229px ;
+}
+
+.icon.user { /* 17, 6 */
+    background-position: -544px -197px;
+}
+
+.icon.vmbox { /* 30, 5 */
+    background-position: -960px -160px;
+}
+
+.icon.voicemail { /* 30, 5 */
+    background-position: -960px -165px;
+}
+
+.icon.timeofday { /* 15, 8 */
+    background-position: -448px -229px;
+}
+
+.icon.temporal_route { /* 15, 8 */
+    background-position: -448px -229px;
+}
+
+.icon.ring_group { /* 10, 5 Needs to change to a better one */
+    background-position: -320px -165px;
+}
+
+.icon.settings {
+    background-position: -480px -131px;
+}
+
+.icon.advanced {
+    background-position: -576px -421px;
+}
+
+/************** ICONS ************/
+.icon.phone {
+    background-position: -507px -161px;
+}
+
+.icon.active_phone {
+    background-position: -192px -163px;
+}
+
+.icon.cellphone {
+    background-position: 5px -163px;
+}
+
+.icon.landline {
+    background-position: -192px -165px;
+}
+
+.icon.sip_device {
+    background-position: -511px -165px;
+}
+
+.icon.softphone {
+    background-position: -640px -165px;
+}
+
+.icon.legal {
+    background-position: -736px -323px;
+}
+
+.icon.help {
+    background-position: -608px -195px;
+}
+
+.icon.book {
+    background-position: -320px -355px;
+}
+
+.icon.small_edit {
+    background-position: -368px -64px;
+}
+
+.icon.download {
+    background-position: -732px -0px;
+}
+
+.icon.trash {
+    background-position: -32px -64px;
+}
+
+.icon.queue {
+    background-position: -384px -418px;
+}
+
+.icon.support {
+    background-position: -416px -195px;
+}
+
+.icon.price_tag {
+    background-position: -416px -259px;
+}
+
+.icon.sip {
+    background-position: -705px -160px;
+}
+
+.icon.audio {
+    background-position: -320px -293px;
+}
+
+.icon.video {
+    background-position: -96px -389px;
+}
+
+.icon.fax {
+    background-position: -512px -353px;
+}
+
+.icon.cc {
+    background-position: -577px -357px;
+}
+
+.icon.cdr {
+    background-position: -192px -165px;
+}
+
+.icon.billing {
+    background-position: -769px -357px;
+}
+
+.icon.location {
+    background-position: -24px -255px;
+}
+
+.icon.limit {
+    background-position: -830px -290px;
+}
+
+.icon.charge {
+    background-position: -192px -356px;
+}
+
+.icon.monitoring {
+    background-position: -321px -419px;
+}
+
+.icon.robot {
+    background-position: -736px -387px;
+}
+
+.icon.rightarrow {
+    background-position: -860px -2px;
+}
+
+.icon.cart {
+    background-position: -700px -292px;
+}
+
+.icon.authentication {
+    background-position: 0 -290px;
+}
+
+.icon.recharge {
+    background-position: -473px 0;
+}
+
+.icon.dollar {
+    background-position: -960px -419px;
+}
+
+.icon.search {
+    background-position: -895px -424px;
+}
+
+.icon.question {
+    background-position: -131px -40px;
+}
+
+.icon.puzzle {
+    background-position: -480px -451px;
+}
+
+.icon.account {
+    background-position: 0 -357px;
+}
+
+.icon.credit_card {
+    background-position: -577px -357px;
+}
+
+.icon.billing {
+    background-position: -769px -357px;
+}
+
+
+.icon.authentication {
+    background-position: 0 -290px;
+}
+
+.icon.location {
+    background-position: -32px -260px;
+}
+
+.icon.limit {
+    background-position: -830px -290px;
+}
+
+.icon.monitoring {
+    background-position: -321px -419px;
+}
+
+.icon.robot {
+    background-position: -736px -387px;
+}
+
+.icon.search {
+    background-position: -895px -424px;
+}
+
+.icon.v_phone {
+    background-position: -448px -163px;
+}
+
+.icon.hotdesk_login {
+    background-position: -64px -288px;
+}
+
+.icon.hotdesk_logout {
+    background-position: 0 -288px;
+}
+
+.icon.hotdesk_toggle {
+    background-position: -288px 0px;
+}
+
+/**** The 'real' icons ****/
+
+.icon.crossed_arrow {
+    background-position: -32px 0px;
+}
+
+.icon.loop1 {
+    background-position: -96px 0px;
+}
+
+.icon.squiggly_arrow {
+    background-position: -160px 0px;
+}
+
+.icon.crossed_loop {
+    background-position: -224px 0px;
+}
+
+.icon.refresh {
+    background-position: -288px 0px;
+}
+
+.icon.stair_arrow {
+    background-position: -352px 0px;
+}
+
+.icon.uturn_arrow {
+    background-position: -416px 0px;
+}
+
+.icon.loop2 {
+    background-position: -480px 0px;
+}
+
+.icon.loop3 {
+    background-position: -544px 0px;
+}
+
+.icon.to_cloud {
+    background-position: -608px 0px;
+}
+
+.icon.from_cloud {
+    background-position: -672px 0px;
+}
+
+.icon.box_arrow_down {
+    background-position: -736px 0px;
+}
+
+.icon.map_arrow {
+    background-position: -800px 0px;
+}
+
+.icon.right_arrow {
+    background-position: -864px 0px;
+}
+
+.icon.left_arrow {
+    background-position: -928px 0px;
+}
+
+.icon.right_turn {
+    background-position: -992px 0px;
+}
+
+.icon.magnify {
+    background-position: 0px -32px;
+}
+
+.icon.magnify_circle {
+    background-position: -64px -32px;
+}
+
+.icon.question_circle {
+    background-position: -128px -32px;
+}
+
+.icon.minus_circle {
+    background-position: -192px -32px;
+}
+
+.icon.plus_circle {
+    background-position: -256px -32px;
+}
+
+.icon.wifi_circle {
+    background-position: -320px -32px;
+}
+
+.icon.exclaim_circle {
+    background-position: -384px -32px;
+}
+
+.icon.info_circle {
+    background-position: -448px -32px;
+}
+
+.icon.right_arrow_circle {
+    background-position: -512px -32px;
+}
+
+.icon.down_arrow_circle {
+    background-position: -576px -32px;
+}
+
+.icon.left_arrow_circle {
+    background-position: -640px -32px;
+}
+
+.icon.up_arrow_circle {
+    background-position: -704px -32px;
+}
+
+.icon.short_right_arrow_circle {
+    background-position: -768px -32px;
+}
+
+.icon.short_left_arrow_circle {
+    background-position: -832px -32px;
+}
+
+.icon.check_circle {
+    background-position: -896px -32px;
+}
+
+.icon.x_circle {
+    background-position: -960px -32px;
+}
+
+.icon.trash1 {
+    background-position: -32px -64px;
+}
+
+.icon.recycle {
+    background-position: -96px -64px;
+}
+
+.icon.trash2 {
+    background-position: -160px -64px;
+}
+
+.icon.wind {
+    background-position: -224px -64px;
+}
+
+.icon.bluetooth {
+    background-position: -288px -64px;
+}
+
+.icon.home1 {
+    background-position: -352px -64px;
+}
+
+.icon.home2 {
+    background-position: -416px -64px;
+}
+
+.icon.speaker_off {
+    background-position: -480px -64px;
+}
+
+.icon.speaker_on {
+    background-position: -544px -64px;
+}
+
+.icon.battery_empty {
+    background-position: -608px -64px;
+}
+
+.icon.battery_full {
+    background-position: -672px -64px;
+}
+
+.icon.power {
+    background-position: -736px -64px;
+}
+
+.icon.on {
+    background-position: -800px -64px;
+}
+
+.icon.check_box {
+    background-position: -864px -64px;
+}
+
+.icon.check {
+    background-position: -928px -64px;
+}
+
+.icon.x {
+    background-position: -992px -64px;
+}
+
+.icon.human_chat {
+    background-position: 0px -96px;
+}
+
+.icon.chat1 {
+    background-position: -64px -96px;
+}
+
+.icon.dot_chat {
+    background-position: -128px -96px;
+}
+
+.icon.chat_box {
+    background-position: -192px -96px;
+}
+
+.icon.chat_circle {
+    background-position: -256px -96px;
+}
+
+.icon.chat_bubble {
+    background-position: -320px -96px;
+}
+
+.icon.chat_bubble2 {
+    background-position: -384px -96px;
+}
+
+.icon.convo_chat {
+    background-position: -448px -96px;
+}
+
+.icon.line_globe {
+    background-position: -512px -96px;
+}
+
+.icon.saturn {
+    background-position: -576px -96px;
+}
+
+.icon.earth {
+    background-position: -640px -96px;
+}
+
+.icon.globe_stand {
+    background-position: -704px -96px;
+}
+
+.icon.thumb_up {
+    background-position: -768px -96px;
+}
+
+.icon.thumb_down {
+    /* background-position: -832px -96px; */
+    background-position: -832px -99px;
+}
+
+.icon.peace_sign {
+    background-position: -896px -96px;
+}
+
+.icon.hand {
+    /* background-position: -960px -96px; */
+    background-position: -960px -99px;
+}
+
+.icon.wrench_left {
+    background-position: -32px -128px;
+}
+
+.icon.wrench_right {
+    background-position: -96px -128px;
+}
+
+.icon.wrench3 {
+    background-position: -160px -128px;
+}
+
+.icon.gavel {
+    background-position: -224px -128px;
+}
+
+.icon.wrench_hammer {
+    background-position: -288px -128px;
+}
+
+.icon.hammer {
+    background-position: -352px -128px;
+}
+
+.icon.wrench_screw {
+    background-position: -416px -128px;
+}
+
+.icon.settings1 {
+    background-position: -480px -128px;
+}
+
+.icon.settings2 {
+    background-position: -544px -128px;
+}
+
+.icon.settings3 {
+    background-position: -608px -128px;
+}
+
+.icon.comb {
+    background-position: -672px -128px;
+}
+
+.icon.pencil {
+    background-position: -736px -128px;
+}
+
+.icon.paperclip1 {
+    background-position: -800px -128px;
+}
+
+.icon.paperclip2 {
+    background-position: -864px -128px;
+}
+
+.icon.scissors {
+    background-position: -928px -128px;
+}
+
+.icon.bow_arrow {
+    background-position: -992px -128px;
+}
+
+.icon.iphone {
+    background-position: 0px -160px;
+}
+
+.icon.handset1 {
+    background-position: -64px -160px;
+}
+
+.icon.handset2 {
+    background-position: -128px -160px;
+}
+
+.icon.handset3 {
+    background-position: -192px -160px;
+}
+
+.icon.phone_set1 {
+    background-position: -256px -160px;
+}
+
+.icon.phone_trio {
+    background-position: -320px -160px;
+}
+
+.icon.handset4 {
+    background-position: -384px -160px;
+}
+
+.icon.cordless1 {
+    background-position: -448px -160px;
+}
+
+.icon.cordless2 {
+    background-position: -512px -160px;
+}
+
+.icon.mobile1 {
+    background-position: -576px -160px;
+}
+
+.icon.dial_pad1 {
+    background-position: -640px -160px;
+}
+
+.icon.dial_pad2 {
+    background-position: -704px -160px;
+}
+
+.icon.two_circles {
+    background-position: -768px -160px;
+}
+
+.icon.headset {
+    background-position: -832px -160px;
+}
+
+.icon.mail1 {
+    background-position: -896px -160px;
+}
+
+.icon.mail2 {
+    background-position: -960px -160px;
+}
+
+.icon.person_run {
+    background-position: -32px -192px;
+}
+
+.icon.person_walk {
+    background-position: -96px -192px;
+}
+
+.icon.man_stand {
+    background-position: -160px -192px;
+}
+
+.icon.woman_stand {
+    background-position: -224px -192px;
+}
+
+.icon.person_yay {
+    background-position: -288px -192px;
+}
+
+.icon.open_arms {
+    background-position: -352px -192px;
+}
+
+.icon.tech_support {
+    background-position: -416px -192px;
+}
+
+.icon.head1 {
+    /* background-position: -480px -192px; */
+    background-position: -478px -196px;
+}
+
+.icon.head2 {
+    background-position: -544px -192px;
+}
+
+.icon.head3 {
+    background-position: -608px -192px;
+}
+
+.icon.smiley {
+    background-position: -672px -192px;
+}
+
+.icon.skull1 {
+    background-position: -736px -192px;
+}
+
+.icon.skull2 {
+    background-position: -800px -192px;
+}
+
+.icon.baby {
+    background-position: -864px -192px;
+}
+
+.icon.mouth_face {
+    background-position: -928px -192px;
+}
+
+.icon.sad_face {
+    background-position: -992px -192px;
+}
+
+.icon.internet_box {
+    background-position: 0px -224px;
+}
+
+.icon.black_box {
+    background-position: -64px -224px;
+}
+
+.icon.scale {
+    background-position: -128px -224px;
+}
+
+.icon.compass {
+    background-position: -192px -224px;
+}
+
+.icon.stopwatch1 {
+    background-position: -256px -224px;
+}
+
+.icon.stopwatch2 {
+    background-position: -320px -224px;
+}
+
+.icon.clock1 {
+    background-position: -384px -224px;
+}
+
+.icon.clock2 {
+    background-position: -448px -224px;
+}
+
+.icon.internet1 {
+    background-position: -512px -224px;
+}
+
+.icon.internet2 {
+    background-position: -576px -224px;
+}
+
+.icon.internet3 {
+    background-position: -640px -224px;
+}
+
+.icon.outlet1 {
+    background-position: -704px -224px;
+}
+
+.icon.outlet2 {
+    background-position: -768px -224px;
+}
+
+.icon.lightbulb_off {
+    background-position: -832px -224px;
+}
+
+.icon.lightbulb_on {
+    background-position: -896px -224px;
+}
+
+.icon.semi_circle {
+    background-position: -960px -224px;
+}
+
+.icon.place {
+    background-position: -32px -256px;
+}
+
+.icon.bell1 {
+    background-position: -96px -256px;
+}
+
+.icon.bell2 {
+    background-position: -160px -256px;
+}
+
+.icon.flag1 {
+    background-position: -224px -256px;
+}
+
+.icon.arrow_sign {
+    background-position: -288px -256px;
+}
+
+.icon.tag1 {
+    background-position: -352px -256px;
+}
+
+.icon.price_tag {
+    background-position: -416px -256px;
+}
+
+.icon.piggy_bank {
+    background-position: -480px -256px;
+}
+
+.icon.eyelash {
+    background-position: -544px -256px;
+}
+
+.icon.glasses {
+    background-position: -608px -256px;
+}
+
+.icon.plane {
+    background-position: -672px -256px;
+}
+
+.icon.luggage1 {
+    background-position: -736px -256px;
+}
+
+.icon.luggage2 {
+    background-position: -800px -256px;
+}
+
+.icon.exclamation1 {
+    background-position: -864px -256px;
+}
+
+.icon.storm1 {
+    background-position: -928px -256px;
+}
+
+.icon.shirt1 {
+    background-position: -992px -256px;
+}
+
+.icon.lock {
+    background-position: 0px -288px;
+}
+
+.icon.unlock {
+    background-position: -64px -288px;
+}
+
+.icon.key {
+    background-position: -128px -288px;
+}
+
+.icon.lightning1 {
+    background-position: -192px -288px;
+}
+
+.icon.music1 {
+    background-position: -256px -288px;
+}
+
+.icon.music2 {
+    background-position: -320px -288px;
+}
+
+.icon.music3 {
+    background-position: -384px -288px;
+}
+
+.icon.infinity {
+    background-position: -448px -288px;
+}
+
+.icon.mic1 {
+    background-position: -512px -288px;
+}
+
+.icon.speaker1 {
+    background-position: -576px -288px;
+}
+
+.icon.mic2 {
+    background-position: -640px -288px;
+}
+
+.icon.shop_cart {
+    background-position: -704px -288px;
+}
+
+.icon.toxic1 {
+    background-position: -768px -288px;
+}
+
+.icon.exclamation2 {
+    background-position: -832px -288px;
+}
+
+.icon.gift1 {
+    background-position: -896px -288px;
+}
+
+.icon.bird_fly {
+    background-position: -960px -288px;
+}
+
+.icon.bird_stand {
+    background-position: -32px -320px;
+}
+
+.icon.ying_yang {
+    background-position: -96px -320px;
+}
+
+.icon.hand_out {
+    background-position: -160px -320px;
+}
+
+.icon.thumb_up2 {
+    background-position: -224px -320px;
+}
+
+.icon.tree {
+    background-position: -288px -320px;
+}
+
+.icon.plant {
+    background-position: -352px -320px;
+}
+
+.icon.paint_roller {
+    background-position: -416px -320px;
+}
+
+.icon.paint1 {
+    background-position: -480px -320px;
+}
+
+.icon.winners_cup {
+    background-position: -544px -320px;
+}
+
+.icon.stein {
+    background-position: -608px -320px;
+}
+
+.icon.martini {
+    background-position: -672px -320px;
+}
+
+.icon.scale1 {
+    background-position: -736px -320px;
+}
+
+.icon.dice {
+    background-position: -800px -320px;
+}
+
+.icon.weight {
+    background-position: -864px -320px;
+}
+
+.icon.guitar {
+    background-position: -928px -320px;
+}
+
+.icon.tie {
+    background-position: -992px -320px;
+}
+
+.icon.polaroid {
+    background-position: 0px -352px;
+}
+
+.icon.painting {
+    background-position: -64px -352px;
+}
+
+.icon.calendar {
+    background-position: -128px -352px;
+}
+
+.icon.receipt {
+    background-position: -192px -352px;
+}
+
+.icon.calculator1 {
+    background-position: -256px -352px;
+}
+
+.icon.book {
+    background-position: -320px -352px;
+}
+
+.icon.upload {
+    background-position: -384px -352px;
+}
+
+.icon.black_paper {
+    background-position: -448px -352px;
+}
+
+.icon.printer1 {
+    background-position: -512px -352px;
+}
+
+.icon.credit_card {
+    background-position: -576px -352px;
+}
+
+.icon.right_arrow_box {
+    background-position: -640px -352px;
+}
+
+.icon.hand_box {
+    background-position: -704px -352px;
+}
+
+.icon.id {
+    background-position: -768px -352px;
+}
+
+.icon.arrow_up_box {
+    background-position: -832px -352px;
+}
+
+.icon.arrow_down_box {
+    background-position: -896px -352px;
+}
+
+.icon.notepad {
+    background-position: -960px -352px;
+}
+
+.icon.camera1 {
+    background-position: -32px -384px;
+}
+
+.icon.camera2 {
+    background-position: -96px -384px;
+}
+
+.icon.ipod {
+    background-position: -160px -384px;
+}
+
+.icon.ipad {
+    background-position: -224px -384px;
+}
+
+.icon.laptop {
+    background-position: -288px -384px;
+}
+
+.icon.monitor1 {
+    background-position: -352px -384px;
+}
+
+.icon.monitor2 {
+    background-position: -416px -384px;
+}
+
+.icon.monitor3 {
+    background-position: -480px -384px;
+}
+
+.icon.television {
+    background-position: -544px -384px;
+}
+
+.icon.keyboard {
+    background-position: -608px -384px;
+}
+
+.icon.calculator2 {
+    background-position: -672px -384px;
+}
+
+.icon.robot {
+    background-position: -736px -384px;
+}
+
+.icon.usb_drive {
+    background-position: -800px -384px;
+}
+
+.icon.printer2 {
+    background-position: -864px -384px;
+}
+
+.icon.floppy {
+    background-position: -928px -384px;
+}
+
+.icon.graph1_box {
+    /*background-position: 0px -416px;*/
+    background-position: -3px -420px;
+}
+
+.icon.barcode {
+    background-position: -64px -416px;
+}
+
+.icon.outline1 {
+    background-position: -128px -416px;
+}
+
+.icon.outline2 {
+    background-position: -192px -416px;
+}
+
+.icon.graph2 {
+    background-position: -256px -416px;
+}
+
+.icon.graph3 {
+    background-position: -320px -416px;
+}
+
+.icon.circle_graph {
+    background-position: -384px -416px;
+}
+
+.icon.display1 {
+    background-position: -448px -416px;
+}
+
+.icon.outline3 {
+    background-position: -512px -416px;
+}
+
+.icon.connector1 {
+    background-position: -576px -416px;
+}
+
+.icon.graph4_box {
+    background-position: -640px -416px;
+}
+
+.icon.graph5_box {
+    background-position: -704px -416px;
+}
+
+.icon.circle_stack {
+    background-position: -768px -416px;
+}
+
+.icon.square_stack {
+    background-position: -832px -416px;
+}
+
+.icon.rolodex {
+    background-position: -896px -416px;
+}
+
+.icon.heart {
+    background-position: -32px -448px;
+}
+
+.icon.eye {
+    background-position: -96px -448px;
+}
+
+.icon.target1 {
+    background-position: -160px -448px;
+}
+
+.icon.bold_target {
+    background-position: -224px -448px;
+}
+
+.icon.star {
+    background-position: -288px -448px;
+}
+
+.icon.line_circle {
+    background-position: -352px -448px;
+}
+
+.icon.star_burst1 {
+    background-position: -416px -448px;
+}
+
+.icon.puzzle1 {
+    background-position: -480px -448px;
+}
+
+.icon.puzzle2 {
+    background-position: -544px -448px;
+}
+
+.icon.puzzle3 {
+    background-position: -608px -448px;
+}
+
+.icon.puzzle4 {
+    background-position: -672px -448px;
+}
+
+.icon.black_cloud {
+    background-position: -736px -448px;
+}
+
+.icon.outline_cloud {
+    background-position: -800px -448px;
+}
+
+.icon.asterisk1 {
+    background-position: -864px -448px;
+}
+
+.icon.asterisk2 {
+    background-position: -928px -448px;
+}
+
+.icon.starburst2 {
+    background-position: -992px -448px;
+}
+

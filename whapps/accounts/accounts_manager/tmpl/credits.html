@@ -1,0 +1,71 @@
+<div>
+    <div class="manage_credits trunkstore_popup">
+        <div>
+            <form id="credits_form" name="credits">
+                <ul class="settings_tabs settings1">
+                    <li id="per_minute_link" class="current"><a href="javascript:void(0);">Per-Minute Calling</a></li>
+                    <li id="flat_rate_link"><a href="javascript:void(0);">Flat-Rate Calling</a></li>
+                </ul>
+
+                <div class="clear"></div>
+
+                <div class="panes">
+                    <div id="per_minute" class="pane_content">
+                        <span>Pay-per-minute allows you to pay only for what you use. Deposit money into your account to get started, then pay-as-you-go for usage.</span>
+                        <div class="current_balance_wrapper">
+                            <span class="icon price_tag"/>  Your Current Balance: <span class="price_wrapper">$<span class="current_balance">${credits.toFixed(2)}</span></span>
+                        </div>
+                        <div class="add_credits_wrapper">
+                            I would like to add $<input id="add_credits" type="text" size="4"/> to my current balance
+                            <button class="btn primary purchase_credits">Purchase</button>
+                        </div>
+                    </div>
+
+                    <div class="pane_content" id="flat_rate" style="display: none;">
+                        <div class="description">Flat-Rate calling allows you to pay a monthly, predictable fee that never changes, regardless of your usage.</div>
+
+                        <div class="trunk_block">
+                            <h2><span class="icon right_arrow"/>  Flat-Rate Two-Way Calling</h2>
+                            <div class="trunk_line">
+                                <div class="left">Allow up to
+                                    {{if limits.twoway_trunks != -1}}
+                                    <input type="text" id="outbound_calls" size="2" value="${limits.twoway_trunks}"/>
+                                    {{else}}
+                                    <span class="infinity_icon"></span>
+                                    {{/if}}
+                                </div>
+                                <div class="right">simultaneous two-way calls to the US-48 at <div class="price">${extra.twoway_trunks_price}/month per line</div></div>
+                                <div class="clear"/>
+                            </div>
+                        </div>
+
+                        <div class="trunk_block">
+                            <h2><span class="icon left_arrow"/>  Flat-Rate Inbound Calling</h2>
+                            <div class="trunk_line">
+                                <div class="left">Allow up to
+                                    {{if limits.inbound_trunks != -1}}
+                                    <input type="text" id="inbound_calls" size="2" value="${limits.inbound_trunks}"/>
+                                    {{else}}
+                                    <span class="infinity_icon"></span>
+                                    {{/if}}
+                                </div>
+                                <div class="right">simultaneous inbound calls at <div class="price">${extra.inbound_trunks_price}/month per line</div></div>
+                                <div class="clear"/>
+                            </div>
+                        </div>
+
+                        <div class="fancy_help border">
+                            <div class="wrapper_icon"><span class="note_icon"/></div>
+                            <div class="help_text">If you don't want flat-rate, your account will default to pay-per-minute</div>
+                        </div>
+
+                        <div class="buttons_centered">
+                            <button class="btn primary submit_channels">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

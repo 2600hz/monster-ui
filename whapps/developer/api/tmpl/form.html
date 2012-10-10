@@ -1,0 +1,91 @@
+<div>
+	<div class="row">
+		<h1 class="api-urls">
+			${title.toUpperCase()}
+			<small>
+				Click to get info ...
+			</small>
+		</h1>
+		<div class="buttons-right">
+			<button class="btn black toggle-all">Show All</button>
+		</div>
+	</div>
+
+	{{each(k, api) apis}}
+		{{each(i, verb) api.verbs}}
+			<div class="row">
+				<div class="whapp-header">
+					<button class="btn ${rests[verb].btn} toggle" data-toggle="${k}_${verb}">
+						{{if verb == "get_all"}}
+							GET
+						{{else}}
+							${verb.toUpperCase()}
+						{{/if}}
+					</button>
+					<small>${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
+					<small>
+						{{if verb == "get_all"}}
+							Get All
+						{{/if}}
+						{{if verb == "post"}}
+							Update
+						{{/if}}
+						{{if verb == "put"}}
+							Add
+						{{/if}}
+						{{if verb == "delete"}}
+							Delete
+						{{/if}}
+						{{if verb == "get"}}
+							Get
+						{{/if}}
+						${api.title}
+					</small>
+				</div>
+				<div class="toggled" id="${k}_${verb}">
+					<form action="#" id="${k}_${verb}_form">
+						<div class="pill-content">
+							<h3>${api.title}</h3>
+							<p>
+								${description}
+							</p>
+
+							{{if api.rest}}
+								{{if api.rest[verb]}}
+									{{each(index, class_type)  api.rest[verb]}}
+										<div class="${class_type}"></div>
+										{{if class_type == "schema"}}
+											<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+										{{/if}}
+									{{/each}}
+								{{/if}}
+							{{/if}}
+							
+							{{if rests[verb].class}}
+								{{each(index, class_type) rests[verb].class}}
+									<div class="${class_type}"></div>
+									{{if class_type == "schema"}}
+										<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+									{{/if}}
+								{{/each}}
+							{{/if}}
+							
+							<div class="result">
+								<div class="clean icon gradient x_circle" data-id="${k}_${verb}"></div>
+								<div class="result_content">
+									
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="buttons-right">
+						<button class="btn success try" data-id="${k}" data-verb="${verb}">Try It</button>
+					</div>
+					
+				</div>
+			</div>
+		{{/each}}
+	{{/each}}
+	
+</div>

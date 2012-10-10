@@ -1,0 +1,12 @@
+#personal_info .clearfix {
+	display: block;
+}
+
+#personal_info hr {
+	margin-bottom: 20px;
+}
+
+#personal_info .button-center {
+	text-align: center;
+	margin-bottom: -25px;
+}

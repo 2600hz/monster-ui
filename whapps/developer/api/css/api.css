@@ -1,0 +1,123 @@
+#api-content .plus_btn {
+	display: none;
+}
+
+#api-view > .row {
+	margin-bottom: 20px;
+}
+
+#api-view h1 {
+	float: left;
+	margin-bottom: 0;
+}
+
+#api-view h1.api-urls {
+	cursor: pointer;
+}
+
+#api-view h3 {
+	text-align: left;
+}
+
+#api-view table {
+	margin-bottom: 0;
+}
+
+#api-view h1 > small {
+	font-size: 12px;
+	margin-left: 10px;
+} 
+
+#api-view .hide {
+	display: none;
+}
+
+#api-view .toggle-all {
+	margin-top: 6px;
+}
+
+#api-view .details {
+	margin-left: 150px;
+	cursor: pointer;
+	color: #0AC9FF;
+}
+
+#api-view form .clearfix:last-child {
+	margin-bottom: 18px;
+}
+
+#api-view .whapp-header {
+	border: 1px solid #252525;
+	border-radius: 4px;
+
+	background: #424242;
+	background: -moz-linear-gradient(top,  #424242 0%, #444444 50%, #464646 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#424242), color-stop(50%,#444444), color-stop(100%,#464646));
+	background: -webkit-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
+	background: -o-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
+	background: -ms-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
+	background: linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#464646',GradientType=0 );
+}
+
+#api-view .whapp-header.active {
+	background: #373737;
+	background: -moz-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
+	background: -webkit-gradient(linear,left top,left bottom,color-stop(0%, #373737),color-stop(50%, #2E2E2E),color-stop(100%, #2F2F2F));
+	background: -webkit-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
+	background: -o-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
+	background: -ms-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
+	background: linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
+	filter: progid:dximagetransform.microsoft.gradient(startColorstr='#373737',endColorstr='#2f2f2f',GradientType=0);
+}
+
+#api-view .whapp-header small {
+	margin-left: 20px;
+	font-size: 14px;
+}
+
+#api-view .whapp-header small:last-child {
+	margin-left: 0;
+	float: right;
+	margin-top: 6px;
+	margin-right: 20px;
+	color: #0AC9FF;
+}
+
+#api-view .clean {
+	width: 32px;
+	height: 32px;
+	float: right;
+	cursor: pointer;
+}
+
+#api-view .toggled {
+	margin-top: 5px;
+	margin-bottom: 0;
+}
+
+#api-view .pill-content > div:not(.result) {
+	display: block;
+}
+
+#api-view pre {
+	color: #404040;
+	margin-top: 20px;
+}
+
+#api-view .id {
+	margin-bottom: 18px;
+}
+
+#api-view .details_clean {
+	float: left;
+}
+
+
+.info-popup {
+	background: none;
+}
+
+.info-popup .main_content {
+	width: auto;
+}

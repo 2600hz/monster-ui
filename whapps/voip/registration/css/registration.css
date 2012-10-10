@@ -1,0 +1,12 @@
+#registration-view {
+    width: 90%;
+    margin : auto;
+}
+
+#registration-view .dataTables_wrapper {
+    margin-top: 30px;
+}
+
+#registration-view .buttons-right {
+    margin-bottom: 30px;
+}

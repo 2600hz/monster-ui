@@ -1,0 +1,103 @@
+<div>
+    <div id="dashboard-content" class="container-fluid page">
+        <div id="dashboard-topbar">
+            <div class="topbar-right">
+                <div class="list_queues">
+                    <ul class="list_queues_inner">
+                        {{each queues}}
+                            <li id="${id}" data-current_calls="${current_calls}" data-total_calls="${max_calls}">
+                                <div class="box_title">
+                                    ${name} <span class="icon edit_queue medium wrench_screw" style="display: none;" rel="popover" data-content="Clicking here will send you to the Edit Queue page, where you can update settings for this queue, manage its agents and look at this queue reports."></span>
+                                </div>
+                                <div class="grid_bottom">
+                                    <div class="first_row">
+                                        <div class="box calls">
+                                            <div class="icon_wrapper"><span class="icon medium active_phone"></span></div>
+                                            <div class="stat">
+                                                <span class="blue">${current_calls}</span> / ${max_calls}
+                                            </div>
+                                        </div>
+                                        <div class="box users">
+                                            <div class="icon_wrapper"><span class="icon medium user"></span></div>
+                                            <div class="stat">
+                                                <span class="blue">${current_agents}</span> / ${max_agents}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="second_row">
+                                        <div class="box dropped_calls">
+                                            <div class="icon_wrapper"><span class="icon medium thumb_down"></span></div>
+                                            <div class="red">${dropped_calls}</div>
+                                        </div>
+                                        <div class="box hold_time">
+                                            <div class="icon_wrapper"><span class="icon medium hand"></div>
+                                            <div class="orange">${average_hold_time}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="callwaiting-list" class="sidebar list_panel"></div>
+        <div class="dashboard-bottom-right">
+            <div class="content">
+                <div id="dashboard-view">
+                    <div id="agents-view">
+                        {{each agents}}
+                            <div class="agent_wrapper ${status}" id="${id}" data-queues="${queues}">
+                                <div class="agent_header">
+                                    <span class="icon medium head1"/>
+                                    ${first_name} ${last_name}
+                                </div>
+                                <div class="agent_data">
+                                    <div class="row_data call_time">
+                                        {{if status === 'off' || status === 'ready' || status === 'ringing'}}
+                                            <div class="data_title">Call Time</div>
+                                            <div class="data_value">-</div>
+                                        {{else status === 'paused'}}
+                                            <div class="data_title">Break Time</div>
+                                            <div class="data_value" data-seconds="${break_time}"></div>
+                                        {{else status === 'wrapup'}}
+                                            <div class="data_title">Wrapping up</div>
+                                            <div class="data_value"></div>
+                                        {{else}}
+                                            <div class="data_title">Call Time</div>
+                                            <div class="data_value" data-seconds="${call_time}"></div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="all_data">
+                                        <div class="row_data call_hours">
+                                            <div class="data_title">Call last hour</div>
+                                            <div class="data_value">${call_per_hour}</div>
+                                        </div>
+                                        <div class="row_data call_day">
+                                            <div class="data_title">Calls today</div>
+                                            <div class="data_value">${call_per_day}</div>
+                                        </div>
+                                    </div>
+                                    <div class="queue_data" style="display: none;">
+                                        {{each(k, v) queues_list}}
+                                            <div class="queue_stat" data-id="${k}">
+                                                <div class="row_data call_hours">
+                                                    <div class="data_title">Call last hour</div>
+                                                    <div class="data_value">${call_per_hour}</div>
+                                                </div>
+                                                <div class="row_data call_day">
+                                                    <div class="data_title">Calls today</div>
+                                                    <div class="data_value">${call_per_day}</div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

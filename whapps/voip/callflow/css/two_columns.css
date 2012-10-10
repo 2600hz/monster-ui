@@ -1,0 +1,133 @@
+#two_columns {
+    padding-bottom: 20px;
+}
+
+#two_columns .wrapper {
+    clear: left;
+    width: 520px;
+    padding: 10px;
+}
+
+#two_columns .wrapper_form {
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+#two_columns .wrapper .column {
+    width: 220px;
+    padding: 6px 0px 5px;
+    background: #444;
+    border-radius: 6px;
+}
+
+#two_columns .wrapper .column.right {
+    float: right;
+    margin-left: 10px;
+}
+
+#two_columns .wrapper .column.left {
+    float: left;
+    margin-right: 10px;
+}
+
+#two_columns .wrapper .title_column {
+    background-color: #AFAFAF;
+    height: 28px;
+    line-height: 28px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 3px;
+}
+
+#two_columns .wrapper .left ul.connect {
+    background-color: #444444;
+    height: 289px;
+    width: 220px;
+    overflow: auto;
+}
+
+#two_columns .wrapper .connect {
+    min-height: 289px;
+}
+
+#two_columns .wrapper .right ul.connect {
+    background-color: #444444;
+    height: 289px;
+    width: 220px;
+    overflow: auto;
+}
+
+#two_columns .wrapper li {
+    list-style-type: none;
+    background-color: #AFAFAF;
+    color: #444;
+    display: block;
+    height: 28px;
+    line-height: 28px;
+    list-style-type: none;
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+}
+
+#two_columns .wrapper li:not(:first-child) {
+    border-top: 1px solid #444;
+}
+
+#two_columns .item_name {
+    float:left;
+    overflow: hidden;
+    height: 28px;
+    line-height: 28px;
+    width: 155px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+#two_columns .item_name.right {
+    width: 120px;
+}
+
+#two_columns .wrapper li:hover {
+    background-color: #cccccc;
+}
+
+#two_columns .wrapper li a.drag_btn{
+    background-image: url("../images/drag_btn_28.png");
+    float: left;
+    height: 28px;
+    width: 7px;
+    margin-right: 5px;
+    margin-left: 1px;
+}
+
+/* Ring group specific css */
+#two_columns .options {
+    float: right;
+    margin-right: 2px;
+    padding-left: 4px;
+    border-left: 1px solid #444444;
+    height: 28px;
+}
+
+#two_columns .options .option {
+    width: 30px;
+    font-size: 12px;
+    margin-top: 2px;
+    height: 20px;
+}
+
+#two_columns .ring_group_form_wrapper {
+    display: block;
+    margin: auto;
+    width: 260px;
+}
+
+#two_columns .form_field_div {
+    width: 260px;
+}
+
+#two_columns .button_field_div {
+    margin: 20px 0px 5px;
+    text-align: center;
+}

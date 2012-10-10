@@ -1,0 +1,37 @@
+#content_welcome_page {
+    margin: 75px auto auto;
+    width: 1000px;
+}
+
+#content_welcome_page .left_div {
+    width: 480px;
+    padding: 10px 25px 0 0;
+    float: left;
+    height: 370px;
+}
+
+#content_welcome_page .left_div .title {
+    color: #c4db4c;
+    line-height: 35px;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 1px 1px #333;
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+#content_welcome_page .left_div .learn_more {
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 1px 1px #333;
+    text-align: center;
+}
+
+#content_welcome_page .left_div .learn_more > a {
+    color: #EEEEEE;
+}
+
+#content_welcome_page .left_div .learn_more > a:hover {
+    color: #05addc;
+    text-decoration: underline;
+}

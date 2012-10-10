@@ -1,0 +1,16 @@
+#skeleton-view {
+    width: 50%;
+    margin : 100px auto;
+    padding: 50px;
+    background: #05addc;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+
+#skeleton-view h1, #skeleton-view h2 {
+    color: #333;
+}
+
+#skeleton-view a {
+    text-decoration: underline;
+}

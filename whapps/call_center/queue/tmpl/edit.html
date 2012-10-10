@@ -1,0 +1,112 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit Queue</h1>
+            {{else}}
+                <h1>Create Queue</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		 	<li><a href="#options"><span class="icon wrench_screw"></span>Queue Configuration</a></li>
+		 	<li><a href="#notifications"><span class="icon lightbulb_on"></span>Notifications</a></li>
+		</ul>
+		 <form id="queue-form" action="" method="post" >
+			<div class="pill-content">
+				<div class="active basic_view" id="basic">
+					<div class="clearfix">
+						<label for="name">Name</label>
+						<div class="input">
+							<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this Queue"/>
+						</div>
+					</div>
+				</div>
+
+				<div id="options">
+                    <div class="clearfix">
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        <span rel="popover" data-content="You can also change individual agent's recording settings under the Agent's section">
+                                            {{if data.record_caller === true}}
+                                                <input type="checkbox" id="record_caller" name="record_caller" checked="checked" />
+                                            {{else}}
+                                                <input type="checkbox" id="record_caller" name="record_caller" />
+                                            {{/if}}
+                                            <span>Call Recording</span>
+                                        </span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+						<label for="agent_wrapup_time">Call Wrap-up Time (s)</label>
+						<div class="input">
+							<input class="span2" id="agent_wrapup_time" name="agent_wrapup_time" type="text" placeholder="30" value="${data.agent_wrapup_time}" rel="popover" data-content="Automatic break time between calls for the agents in this queue."/>
+						</div>
+					</div>
+
+                    <div class="clearfix">
+						<label for="max_queue_size">Max Number of Calls:</label>
+						<div class="input">
+							<input class="span2" id="max_queue_size" name="max_queue_size" type="text" placeholder="10000" value="${data.max_queue_size}" rel="popover" data-content="How many callers are allowed to wait on hold in the queue (0 for no limit)."/>
+						</div>
+					</div>
+
+                    <div class="clearfix">
+						<label for="connection_timeout">Max Hold Time (s)</label>
+						<div class="input">
+							<input class="span2" id="connection_timeout" name="connection_timeout" type="text" placeholder="30" value="${data.connection_timeout}" rel="popover" data-content="In seconds, how long to try to connect the caller before progressing past the queue callflow action (0 for no limit)."/>
+						</div>
+					</div>
+
+                    <div class="clearfix">
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        <span rel="popover" data-content="">
+                                            {{if data.enter_when_empty === true}}
+                                                <input type="checkbox" id="enter_when_empty" name="enter_when_empty" checked="checked" />
+                                            {{else}}
+                                                <input type="checkbox" id="enter_when_empty" name="enter_when_empty" />
+                                            {{/if}}
+                                            <span>Allows a caller to enter this queue when no agents are available.</span>
+                                        </span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="notifications">
+                    <div class="clearfix">
+                        <label for="cdr_url">Notification on Hangup</label>
+                        <div class="input">
+                            <input class="span4" id="cdr_url" name="cdr_url" type="text" placeholder="http://xxx.yyy/script_hangup.php" value="${data.cdr_url}" rel="popover" data-content="URL for a callback when the call ends to tell the customer on their own servers that a call has ended."/>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</form>
+		<div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger queue-delete">Delete</button>
+                <button class="btn success queue-save">Save</button>
+	        {{else}}
+                <button class="btn success queue-save">Add Agents</button>
+            {{/if}}
+		</div>
+	</div>
+</div>

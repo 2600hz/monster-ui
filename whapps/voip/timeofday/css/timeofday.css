@@ -1,0 +1,41 @@
+#timeofday-form {
+    color: #EBEBEB;
+}
+
+#timeofday-form .time_wrapper_field {
+    height: 50px;
+    padding: 10px 20px 0 0;
+}
+
+#timeofday-form #days_checkboxes .fake_checkbox {
+    float: left;
+    color: #eeeeee;
+    width: 15px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    border-right: 1px solid #000000;
+    background-color: #989898;
+    cursor: pointer;
+}
+
+#timeofday-form #days_checkboxes .fake_checkbox:first-child {
+    border-left: 1px solid #000000;
+    border-radius: 5px 0 0 5px;
+}
+
+#timeofday-form #days_checkboxes .fake_checkbox:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+#timeofday-form #days_checkboxes .fake_checkbox:hover {
+    background-color: #BEBEBE;
+}
+
+#timeofday-form #days_checkboxes .fake_checkbox.checked {
+    background-color: #05ADDC;
+}

@@ -1,0 +1,31 @@
+<div>
+	<div class="row" id="app_store">
+		<div id='left_scroll'>
+			<span class="icon left_arrow_circle"></span>
+		</div>
+		<div class="app-store-inner">
+			<ul class="app-store-ul">
+				{{each(i, app) available_apps}}
+					<li class="app" data-id="${app.id}" rel="popover" data-content="${app.desc}">
+						<div class="img ${app.id}"></div>
+						<h3>${app.label}</h3>
+						<div class="on-off">
+							{{if apps[app.id]}}
+								<input type="checkbox" name="${app.id}" class="switch" checked="checked" />
+							{{else}}
+								<input type="checkbox" name="${app.id}" class="switch" />
+							{{/if}}
+						</div>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
+		<div id='right_scroll'>
+			<span class="icon right_arrow_circle"></span>
+		</div>
+	</div>
+
+	<div class="row app-store-btn">
+		<button class="btn success" id="app_store_save">Save</button>
+	</div>
+</div>

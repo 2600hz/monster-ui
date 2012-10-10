@@ -1,0 +1,20 @@
+<div>
+    <div class="dialog_popup">
+        <h1>Prepend Caller ID</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="cid_name_prefix">Caller-ID Name Prefix: </label>
+                    <input type="text" id="cid_name_prefix" value="${data_cid.caller_id_name_prefix}"/>
+                </div>
+                <div class="popup_field">
+                    <label for="cid_number_prefix">Caller-ID Number Prefix: </label>
+                    <input type="text" id="cid_number_prefix" value="${data_cid.caller_id_number_prefix}"/>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

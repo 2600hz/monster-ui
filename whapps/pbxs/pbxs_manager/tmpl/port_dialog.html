@@ -1,0 +1,197 @@
+<div>
+    <div id="port_number" class="trunkstore_popup">
+        <div class="wizard_nav">
+            <div class="steps_image">
+                <div class="round_circle current">
+                    Step 1
+                </div>
+                <div class="round_circle">
+                    Step 2
+                </div>
+                <div class="round_circle">
+                    Step 3
+                </div>
+                <div class="round_circle">
+                    Step 4
+                </div>
+            </div>
+            <div class="steps_text">
+                <ul id="steps">
+                    <li id="step_title_1" class="step_title current">
+                        Porting Numbers
+                    </li>
+                    <li id="step_title_2" class="step_title">
+                        Current Service Info
+                    </li>
+                    <li id="step_title_3" class="step_title">
+                        Verification
+                    </li>
+                    <li id="step_title_4" class="step_title">
+                        Terms & Conditions
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"/>
+        </div>
+        <div class="wizard_content">
+            <form id="port">
+                <div class="step_div first">
+                    <div class="split_div">
+                        <div class="left_part">
+                            <span class="icon resource"/> Current carrier
+                        </div>
+
+                        <div class="right_part">
+                            <select class="carrier_dropdown" name="port.service_provider">
+                                <option value="empty">-- Select --</option>
+                                <option value="AT&T">AT&T</option>
+                                <option value="T-Mobile">T-Mobile</option>
+                                <option value="Verizon">Verizon</option>
+                                <option value="Sprint">Sprint</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" name="extra.other_carrier" class="other_carrier" placeholder="Carrier's Name"/>
+                        </div>
+                        <div class="clear"/>
+                    </div>
+
+                    <div class="split_div">
+                        <div class="left_part text_only">
+                            Main number to port
+                        </div>
+
+                        <div class="right_part">
+                            <input type="text" name="port.main_number" class="main_number" placeholder="415-111-2222"/>
+                        </div>
+
+                        <div class="clear"/>
+                    </div>
+
+                    <div class="split_div last">
+                        <div class="left_part">
+                            Additional numbers to port
+                            <div class="numbers_example">Must be on same bill</div>
+                        </div>
+
+                        <div class="right_part">
+                            <textarea class="numbers_text" name="phone_numbers" placeholder="One number per line"></textarea>
+                        </div>
+                        <div class="clear"/>
+                    </div>
+
+                    <div class="fancy_help border">
+                        <div class="wrapper_icon"><span class="note_icon"/></div>
+                        <div class="help_text">All numbers should be on the same bill from your current carrier. While you can port regular phone numbers (DIDs) and toll-free numbers, they cannot be listed on the same port request. If you have multiple bills or more than one carrier you'd like to port numbers away from please submit each request separately.</div>
+                        <div class="clear"/>
+                    </div>
+                </div>
+
+                <div class="step_div second">
+                    <div class="title">
+                        <span class="icon receipt"/>Please tell us your billing information with your current service provider.
+                    </div>
+
+                    <div class="split_div last">
+                        <div class="left_part">
+                            <div class="field"><label>Name on Account</label><input type="text" name="port.billing_name"/></div>
+                            <div class="field"><label>Account Id</label><input type="text" name="port.billing_account_id" /></div>
+                            <div class="field"><label>Postal Code</label><input id="postal_code" type="text" name="port.billing_postal_code"/></div>
+                            <div class="field"><label>Address</label><input type="text" name="port.billing_street_address"/></div>
+                            <div class="field"><label>Ext. Address</label><input type="text" name="port.billing_extended_address"/></div>
+                            <div class="field"><label>City</label><input id="locality" type="text" name="port.billing_locality"/></div>
+                            <div class="field"><label>State</label><input id="region" type="text" name="port.billing_region" /></div>
+                        </div>
+
+                        <div class="right_part">
+                            <div class="bill_image">
+                            </div>
+
+                            <div class="upload_bill">
+                                Upload your current phone bill
+                                <input type="file" name="files" class="files"/>
+                            </div>
+                        </div>
+
+                        <div class="clear"/>
+                    </div>
+
+                    <div class="fancy_help border">
+                        <div class="wrapper_icon"><span class="note_icon"/></div>
+                        <div class="help_text">To process your order we need a copy of your most recent phone bill with at least the main phone number listed on it.</div>
+                        <div class="clear"/>
+                    </div>
+                </div>
+
+                <div class="step_div third">
+                    <div class="title">
+                        <span class="icon receipt"/>Please submit a letter of authorization
+                    </div>
+
+                    <div class="loa_block">
+                        1. Download <a id="loa_link" href="http://www.2600hz.com/loa" target="_blank">LoA form</a> / <a id="resporg_link" href="http://wwww.2600hz.com/resporg" target="_blank">Resporg form</a>
+                        <div class="fancy_help">
+                            <div class="wrapper_icon"><span class="note_icon"/></div>
+                            <div class="help_text">
+                                If you are porting a regular phone number (DID) please fill out the Letter of Authorization (LoA).<br/>
+                                If you are porting a toll-free number, please fill out the Resporg form. (Toll-free numbers are numbers that begin with one of the following three-digit codes: 800, 888, 877, 866 or 855).
+                            </div>
+                            <div class="clear"/>
+                        </div>
+                    </div>
+
+                    <div class="loa_block">
+                        2. Fill out the information and sign it
+                        <div class="fancy_help">
+                            <div class="wrapper_icon"><span class="note_icon"/></div>
+                            <div class="help_text">The port will fail if the address or authorized signature on the bill and the LoA/Resporg form do not match what the carrier has on file.</div>
+                            <div class="clear"/>
+                        </div>
+                    </div>
+
+                    <div class="loa_block">
+                        3. Upload it here
+                        <div class="upload_block">Upload signed Letter of Authorization / Resporg form:&nbsp;&nbsp;<input name="loa" class="loa" type="file"/></div>
+                        <div class="fancy_help">
+                            <div class="wrapper_icon"><span class="note_icon"/></div>
+                            <div class="help_text">Having trouble uploading a PDF? Please contact ${company_name} at ${support_email}</div>
+                            <div class="clear"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="step_div fourth">
+                    <div class="block">
+                        <div class="title"><span class="icon down_arrow_circle"/>&nbsp;Please confirm the following</div>
+                        <div class="checkbox_line"><input name="extra.cb.cost_porting" type="checkbox"/>I understand the cost of porting is $5/number</div>
+                        <div class="checkbox_line"><input name="extra.cb.cancel" type="checkbox"/>I will not cancel my old service until the port is complete</div>
+                        <div class="checkbox_line"><input name="extra.cb.porting_length" type="checkbox"/>I understand the porting process can take from 3 to 30 days</div>
+                        <div class="checkbox_line"><input name="extra.cb.termination_charge" type="checkbox"/>I understand my old carrier may charge an early termination fee</div>
+                        <div class="checkbox_line"><input name="extra.cb.standard_numbers" type="checkbox"/>These numbers are standard phone numbers, not <a id="features_link" href="http://www.2600hz.com/features" target="_blank">features</a> (like star-ring)</div>
+                    </div>
+                    <div class="block">
+                        <div class="title"><span class="icon check_circle"/>&nbsp;Terms and Conditions. <a id="terms_link" href="http://www.2600hz.com/terms" target="_blank">Read Here</a></div>
+                        <div class="checkbox_line"><input name="extra.agreed" type="checkbox"/>I accept the Terms and Conditions. I have read it and understand it.</div>
+                    </div>
+                </div>
+                <!--
+                <div class="step_div fifth">
+                    <h1>What happens next?</h1>
+                    What happens next?<br/>
+                    <br/>
+                    1. We will verify all your information<br/>
+                    2. We will submit the request to your old provider<br/>
+                    3. They will authorize the release of your number and we will schedule a cut-over date<br/>
+                        OR<br/>
+                       They will deny the release of your number due to a problem, and we'll contact you to resolve the problem<br/>
+                    <br/>
+                    REMEMBER: The porting process varies by carrier and can take up to 30 days to complete. DO NOT CANCEL YOUR OLD SERVICE.<br/>
+                </div>
+                -->
+            </form>
+        </div>
+        <div class="wizard_buttons">
+            <button class="prev_step"/>
+            <button class="submit_btn btn success">Submit</button>
+            <button class="next_step"/>
+        </div>
+    </div>
+</div>

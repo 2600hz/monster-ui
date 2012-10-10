@@ -1,0 +1,119 @@
+.trunkstore_popup {
+	padding: 15px;
+    font-family: Helvetica;
+    cursor: default;
+}
+
+.trunkstore_popup label{
+    color: #333;
+}
+
+.trunkstore_popup a {
+    text-decoration: underline;
+    color: #0be;
+}
+
+.trunkstore_popup a:hover {
+    color: #05addc;
+}
+
+.trunkstore_popup h2 {
+    color: #333333;
+    text-shadow: none;
+}
+
+.trunkstore_popup .note_icon {
+    background: url('../images/note.png') no-repeat;
+    width: 23px;
+    height: 23px;
+    display: inline-block;
+}
+
+.trunkstore_popup p.note_box {
+	background-color: #E7E7E7;
+    padding: 15px 10px;
+    font-size: 12px;
+    line-height:15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border: 2px solid #A6A6A6;
+    text-align: center;
+}
+
+.trunkstore_popup .help {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 10px;
+    line-height: 16px;
+    display: block;
+    font-weight: normal;
+}
+
+.trunkstore_popup .fancy_help {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: normal;
+    margin: 5px 2% 5px 2%;
+    padding: 1%;
+    display: inline-block;
+    width: 93%;
+}
+
+.trunkstore_popup .fancy_help.small {
+    width: 250px;
+}
+
+.trunkstore_popup .fancy_help.small .wrapper_icon {
+    width: 23px;
+}
+
+.trunkstore_popup .fancy_help.small .help_text {
+    width: 220px;
+}
+
+.trunkstore_popup .fancy_help.border {
+    background: #ddd;
+    border: 1px solid #adadad;
+}
+
+.trunkstore_popup .fancy_help .wrapper_icon {
+    text-align: center;
+    padding-right: 1%;
+    width: 5%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.trunkstore_popup .fancy_help .help_text {
+    width: 93%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.trunkstore_popup .buttons {
+    text-align: right;
+    padding: 15px 0 0;
+    width: auto;
+    height: 30px;
+}
+
+.trunkstore_popup .buttons_centered {
+	width: auto;
+    padding: 15px 15px 0 15px;
+    text-align: center;
+}
+
+.trunkstore_popup .inline_field {
+    margin-top: 20px;
+    line-height: 30px;
+}
+
+.trunkstore_popup .inline_field label {
+    width: auto;
+    text-align: right;
+    margin-right: 10px;
+    line-height: 24px;
+    min-width: 80px;
+}

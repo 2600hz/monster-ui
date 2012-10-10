@@ -1,0 +1,27 @@
+<div>
+    <div class="dialog_popup">
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="menu_key_selector">Menu option</label>
+                    <div class="select_wrapper">
+                        <select id="menu_key_selector">
+                            {{each(key, val) items}}
+                                {{if selected == key}}
+                                    <option value="${key}" SELECTED>${val}</option>
+                                {{else}}
+                                    {{if val != '#'}}
+                                    <option value="${key}">${val}</option>
+                                    {{/if}}
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

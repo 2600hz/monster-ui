@@ -1,0 +1,35 @@
+#numbers_manager-view {
+    width: 90%;
+    margin: auto;
+}
+
+#numbers_manager-view .dataTables_wrapper {
+    margin-top: 30px;
+}
+
+#numbers_manager-view a.active {
+    color: #11DD33;
+    text-decoration: underline;
+}
+
+#numbers_manager-view a.inactive {
+    color: #05addc;
+    text-decoration: underline;
+}
+
+#numbers_manager-view a.active:hover {
+    color: #33ff55;
+}
+
+#numbers_manager-view a.inactive:hover {
+    color: #27cffe;
+}
+
+#numbers_manager-view .action_number {
+    float: left;
+}
+
+#numbers_manager-view .action_number button:not(:first-child) {
+    margin-left: 5px;
+}
+

@@ -1,0 +1,39 @@
+<div>
+    <div class="list_queues">
+        <ul class="list_queues_inner">
+            {{each queues}}
+                <li id="${id}" data-current_calls="${current_calls}" data-total_calls="${max_calls}">
+                    <div class="box_title">
+                        ${name} <span class="icon edit_queue medium wrench_screw" style="display: none;" rel="popover" data-content="Clicking here will send you to the Edit Queue page, where you can update settings for this queue, manage its agents and look at this queue reports."></span>
+                    </div>
+                    <div class="grid_bottom">
+                        <div class="first_row">
+                            <div class="box calls">
+                                <div class="icon_wrapper"><span class="icon medium active_phone"></span></div>
+                                <div class="stat">
+                                    <span class="blue">${current_calls}</span> / ${max_calls}
+                                </div>
+                            </div>
+                            <div class="box users">
+                                <div class="icon_wrapper"><span class="icon medium user"></span></div>
+                                <div class="stat">
+                                    <span class="blue">${current_agents}</span> / ${max_agents}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="second_row">
+                            <div class="box dropped_calls">
+                                <div class="icon_wrapper"><span class="icon medium thumb_down"></span></div>
+                                <div class="red">${dropped_calls}</div>
+                            </div>
+                            <div class="box hold_time">
+                                <div class="icon_wrapper"><span class="icon medium hand"></div>
+                                <div class="orange">${average_hold_time}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,148 @@
+#queue-form #basic #tab_users  {
+    border: 2px solid #666666;
+    border-radius: 15px 15px 0px 0px;
+    color: #666666;
+    margin: 20px auto auto;
+    width: 500px;
+    max-height: 342px;
+    float: left;
+}
+
+#queue-form #basic #tab_users .rows {
+    max-height: 310px;
+    overflow: auto;
+}
+
+#queue-form #basic #tab_users .action_user {
+    color: #666666;
+    cursor: pointer;
+    text-decoration: underline;
+    line-height: 30px;
+}
+
+#queue-form #basic #tab_users .action_user:not(:first-child) {
+    margin-left: 10px;
+}
+#queue-form #basic #tab_users .action_user:hover {
+    color: #05addc;
+}
+
+#queue-form #basic #tab_users .column.first:not(:last-child) {
+    border-right: 1px solid #A6A6A6;
+}
+
+#queue-form #basic #tab_users .column {
+    float: left;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+}
+
+#queue-form #basic #tab_users .column.first {
+    width: 409px;
+    overflow: hidden;
+    text-align:center;
+}
+
+#queue-form #basic #tab_users .column.third {
+    width: 69px;
+}
+
+#queue-form #basic #tab_users .column.merged {
+    width: 500px;
+}
+
+#queue-form #basic #tab_users .row {
+    height: 30px;
+    margin-left: 0px;
+}
+
+#queue-form #basic #tab_users .row.title {
+    background-color: #dddddd !important;
+    border-bottom: 2px solid #666666 !important;
+    border-radius: 13px 13px 0px 0px;
+    font-weight: bold;
+}
+
+#queue-form #basic #tab_users .row:not(:last-child) {
+    border-bottom: 1px solid #A6A6A6;
+}
+
+#queue-form #basic #tab_users .row:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+#queue-form #basic #tab_users .row:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#queue-form #basic .add_user {
+    margin: 20px 0 0 20px;
+    color: #666666;
+    background: #666666;
+    width: 230px;
+    border-radius: 15px 15px 15px 15px;
+    float: left;
+}
+
+#queue-form #basic .add_user label {
+    color: #404040;
+    width: auto;
+}
+
+
+
+#queue-form #basic .add_user .add_content_wrapper {
+    background: #EEEEEE;
+    border-radius: 0 0 15px 15px;
+}
+
+#queue-form #basic .add_user .add_user_title {
+    color: #eeeeee;
+    font-weight: bold;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+#queue-form #basic .add_user select {
+    width: 180px;
+}
+
+#queue-form #basic .add_user .add_user_fields {
+    margin: auto;
+    width: 200px;
+}
+
+#queue-form #basic .add_user .add_user_fields .tooltip-wrapper {
+    margin-left: 0px;
+}
+#queue-form #basic .add_user .add_user_div {
+    margin: auto;
+    width: 200px;
+    padding-bottom: 15px;
+}
+
+#queue-form #basic .add_user .add_user_div a {
+    color: #333333;
+}
+
+#queue-form #basic .add_user .add_user_div:hover a {
+    color: #05addc;
+}
+
+#queue-form #basic .add_user .add_user_div:hover .add_user_icon {
+    background-position: 0 -24px;
+    cursor: pointer;
+}
+
+#queue-form #basic .add_user .add_user_div .add_user_icon {
+    background-image: url("../../../core/layout/images/plus_btn.png");
+    background-position: 0 0;
+    display: inline-block;
+    height: 25px;
+    margin-top: -4px;
+    vertical-align: middle;
+    width: 25px;
+}

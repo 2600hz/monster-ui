@@ -1,0 +1,205 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit Fax</h1>
+            {{else}}
+            	<h1>Create Fax</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		 	<li><a href="#caller_id">Caller ID</a></li>
+		 	<li><a href="#sip_settings">SIP Settings</a></li>
+		</ul>
+		<form id="device-form" action="" method="post">
+			<div class="pill-content">
+				<div class="active basic_view" id="basic">
+					<div class="clearfix">
+						<label for="name">Device Nickname</label>
+						<div class="input">
+							<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this device"/>
+						</div>
+					</div>
+
+					{{if field_data.hide_owner}}
+                    {{else}}
+						<div class="clearfix">
+							<label for="owner_id">Assign To</label>
+							<div class="input">
+								<span rel="popover" data-content="Select the owner of this device">
+									<select name="owner_id" id="owner_id" class="medium">
+										{{each field_data.users}}
+		                                    {{if data.owner_id == id}}
+		                                        <option value="${id}" id="${id}" selected="selected">${first_name} ${last_name}</option>
+		                                    {{else}}
+		                                        <option value="${id}" id="${id}">${first_name} ${last_name}</option>
+		                                    {{/if}}
+		                                {{/each}}
+									</select>
+									<div class="edit_create">
+		                            	<a id="edit_link"  class="inline_action" data-action="edit" href="#">Edit</a>
+		                                <a class="inline_action" data-action="create" href="#">Create</a>
+									</div>
+								</span>
+							</div>
+						</div>
+					{{/if}}
+
+					<div class="clearfix">
+						<label for="mac_address">Device MAC Address</label>
+						<div class="input">
+							<input class="span4" id="mac_address" name="mac_address" type="text" placeholder="01:23:45:67:89:AB" value="${data.mac_address}" rel="popover" data-content="Enter the MAC Address of this device formatted like: 1A:B2:C6:78:F0:3B"/>
+                            <span class="provisioner"></span>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<div class="input">
+							<ul class="inputs-list">
+								<li>
+									<label>
+										<span rel="popover" data-content="Do you want this device enabled">
+											{{if data.enabled == true}}
+							                    <input type="checkbox" id="enabled" name="enabled" checked="checked" />
+							                {{else}}
+							                    <input type="checkbox" id="enabled" name="enabled" />
+							                {{/if}}
+							                <span>Enabled</span>
+						                </span>
+						            </label>
+						        </li>
+						    </ul>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<div class="input">
+							<ul class="inputs-list">
+								<li>
+									<label>
+										<span rel="popover" data-content="Do you want to notify the administrator each time this device unregisters">
+											{{if data.suppress_unregister_notifications === false}}
+							                    <input type="checkbox" id="suppress_unregister_notifications" name="extra.notify_unregister" checked="checked" />
+							                {{else}}
+							                    <input type="checkbox" id="suppress_unregister_notifications" name="extra.notify_unregister" />
+							                {{/if}}
+							                <span>Notify when unregistered</span>
+						                </span>
+						            </label>
+						        </li>
+						    </ul>
+						</div>
+					</div>
+				</div>
+
+				<div id="caller_id">
+					<h3>In-House Calls</h3>
+					<div class="clearfix">
+						<label for="caller_id_name_internal">Caller ID Name</label>
+						<div class="input">
+							<input class="span4" id="caller_id_name_internal" name="caller_id.internal.name" type="text" placeholder="Name" value="${data.caller_id.internal.name}"  rel="popover" data-content="Define the Caller ID Name of this User for In-House Calls. If the Caller ID Name of the device and of the user is not set, this Caller ID Name will be used." />
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="caller_id_number_internal">Caller ID Number</label>
+						<div class="input">
+							<input class="span4" id="caller_id_number_internal" name="caller_id.internal.number" type="text" placeholder="555-555-5555" value="${data.caller_id.internal.number}" rel="popover" data-content="Define the Caller ID Number of this User for In-House Calls. If the Caller ID Number of the device and of the user is not set, this Caller ID Number will be used."/>
+						</div>
+					</div>
+					<hr />
+
+					<h3>Outbound Calls</h3>
+					<div class="clearfix">
+						<label for="caller_id_name_external">Caller ID Name</label>
+						<div class="input">
+							<input class="span4" id="caller_id_name_external" name="caller_id.external.name" type="text" placeholder="Name" value="${data.caller_id.external.name}" rel="popover" data-content="Define the Caller ID Name of this User for Outbound Calls. If the Caller ID Name of the device and of the user is not set, this Caller ID Name will be used." />
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="caller_id_number_external">Caller ID Number</label>
+						<div class="input">
+							<input class="span4" id="caller_id_number_external" name="caller_id.external.number" type="text" placeholder="555-555-5555" value="${data.caller_id.external.number}" rel="popover" data-content="Define the Caller ID Number of this User for Outbound Calls. If the Caller ID Number of the device and of the user is not set, this Caller ID Number will be used."/>
+						</div>
+					</div>
+				</div>
+
+				<div id="sip_settings">
+					<div class="clearfix">
+						<label for="sip_realm">Realm</label>
+						<div class="input">
+							<span class="uneditable-input">${field_data.sip.realm}</span>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="sip_method">Authentication Method</label>
+						<div class="input">
+							<select name="sip.method" id="sip_method" class="medium" rel="popover" data-content="Select your authentication method">
+								{{each(key, val) field_data.sip.methods}}
+                                    {{if data.sip.method == key}}
+                                        <option value="${key}" selected="selected">${val}</option>
+                                    {{else}}
+                                        <option value="${key}">${val}</option>
+                                    {{/if}}
+                                {{/each}}
+							</select>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="sip_username">Username</label>
+						<div class="input">
+							<input class="span4" id="sip_username" name="sip.username" type="text" placeholder="Username" value="${data.sip.username}" rel="popover" data-content="Enter your SIP Username"/>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="sip_password">Password</label>
+						<div class="input">
+							<input class="span4" id="sip_password" name="sip.password" type="password" placeholder="" value="${data.sip.password}"/>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="sip_invite_format">Invite Format</label>
+						<div class="input">
+							<select name="sip.invite_format" id="sip_invite_format" class="medium" rel="popover" data-content="Enter your SIP Invite Format">
+								{{each(key, val) field_data.sip.invite_formats}}
+                                    {{if data.sip.invite_format == key}}
+                                        <option value="${key}" selected="selected">${val}</option>
+                                    {{else}}
+                                        <option value="${key}">${val}</option>
+                                    {{/if}}
+                                {{/each}}
+							</select>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="sip_expire_seconds">Expire Seconds</label>
+						<div class="input">
+							<input class="span4" id="sip_expire_seconds" name="sip.expire_seconds" type="text" placeholder="Expire Seconds" value="${data.sip.expire_seconds}" rel="popover" data-content="Enter the expiration time of this device (in seconds)"/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<input type="hidden" value="true" name="media.fax.option"/>
+		</form>
+		<div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger device-delete">Delete</button>
+	        {{/if}}
+            <button class="btn success device-save">Save</button>
+		</div>
+	</div>
+</div>

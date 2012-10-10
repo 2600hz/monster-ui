@@ -1,0 +1,523 @@
+#onboarding-view {
+    text-align: center;
+    width: 750px;
+    display: block;
+    margin: auto;
+}
+
+#onboarding-view .step_buttons {
+    height: 50px;
+    margin: auto;
+    width: 620px;
+}
+
+#onboarding-view .form_content {
+    margin-top: 20px;
+    margin: auto;
+    width: 620px;
+}
+
+#onboarding-view .step_buttons > a.right {
+    float: right;
+}
+
+#onboarding-view .step_buttons > a.left {
+    float: left;
+}
+
+#onboarding-view .form_wrapper {
+    box-shadow: 1px 1px 10px #333333;
+    background: #575757;
+    background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(#888888));
+    background: -moz-linear-gradient(top,  #333333,  #888888);
+    border: 1px solid #363636;
+    display: inline-block;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: left;
+    width: 420px;
+}
+
+#onboarding-view .onboarding_title {
+    margin-top: 20px;
+    padding-bottom: 20px;
+    color: #05ADDC;
+    height: 36px;
+    line-height: 36px;
+    font-size: 20px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #000000;
+}
+
+#onboarding-view .steps_nav {
+    padding-bottom: 30px;
+}
+
+#onboarding-view .steps_img {
+    background: url('img/steps.png') no-repeat;
+    width: 601px;
+    height: 81px;
+    margin: auto;
+}
+
+#onboarding-view #steps {
+    list-style: none;
+    width: 800px;
+    overflow: hidden;
+    padding: 0px;
+    margin: auto;
+    display: block;
+}
+
+#onboarding-view #steps li {
+    font-size: 24px;
+    float: left;
+    color: #05addc;
+    text-shadow: 1px 1px #000000;
+    width: 234px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-right: 25px;
+    text-align: center;
+}
+
+#onboarding-view #steps li span {
+    font-size: 11px;
+    color: #eeeeee;
+    display: block;
+}
+
+#onboarding-view #steps li.current {
+    color: #C4DB4C;
+}
+
+/*#fast_onboarding_form legend {
+    color: #ffffff;
+}
+
+#fast_onboarding_form ul.controls li:first-child {
+    border-top: 0;
+}*/
+
+/* Buttons */
+#onboarding-view .step_buttons .prev_step {
+    float: left;
+    background: url('img/back.png') no-repeat center;
+    width: 67px;
+    height: 18px;
+}
+
+#onboarding-view .step_buttons .prev_step:hover {
+    background: url('img/back_hover.png') no-repeat center;
+}
+
+#onboarding-view .step_buttons .next_step {
+    float: right;
+    margin-right: 10px;
+    background: url('img/next.png') no-repeat center;
+    width: 67px;
+    height: 18px;
+}
+
+#onboarding-view .step_buttons .next_step:hover {
+    background: url('img/next_hover.png') no-repeat center;
+}
+
+#onboarding-view .step_buttons .submit_account {
+    background: url('img/submit.png') no-repeat center;
+    width: 97px;
+    height: 28px;
+    float: right;
+}
+
+#onboarding-view .step_buttons .submit_account:hover {
+    background: url('img/submit_hover.png') no-repeat center;
+}
+
+#fast_onboarding_form .help_onboarding {
+    font-size: 10px;
+    color: #cccccc;
+    margin-top: 20px;
+}
+
+#fast_onboarding_form .onboarding_div_left {
+    float: left;
+    width: 160px;
+}
+
+#fast_onboarding_form .onboarding_div_right {
+    float: left;
+    width: 420px;
+    padding-left: 40px;
+}
+
+#fast_onboarding_form .onboarding_block {
+    padding-top: 20px;
+}
+
+#fast_onboarding_form .help_onboarding.link {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+}
+
+#fast_onboarding_form .help_onboarding.link:hover {
+    color: #05addc;
+}
+
+#fast_onboarding_form .wrapping_div {
+    border: 1px solid #333333;
+    background: #555555;
+    border-radius: 10px 10px 10px 10px;
+    padding: 10px;
+}
+
+#onboarding-view .hr {
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #999999;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#fast_onboarding_form .onboarding_field {
+    float: left;
+    width: 210px;
+    padding-bottom: 20px;
+}
+
+#fast_onboarding_form .onboarding_field > label{
+    text-align: left;
+    width: 170px;
+}
+
+#fast_onboarding_form .onboarding_field select {
+    border: 0 none;
+    border-radius: 5px 5px 5px 5px;
+    float: left;
+    margin: 0 2px 0;
+    max-width: 175px;
+    padding: 6px;
+    width: 175px;
+}
+
+#fast_onboarding_form .onboarding_field input {
+    border: 0 none;
+    border-radius: 5px 5px 5px 5px;
+    height: 20px;
+    max-width: 170px;
+    width: 170px;
+    padding: 4px;
+}
+/* Individual Steps */
+
+/* Step 1 */
+#fast_onboarding_form .change_number {
+    background: url('img/btn_search.png') no-repeat;
+    width: 154px;
+    height: 45px;
+}
+
+#fast_onboarding_form .change_number:hover {
+    background: url('img/btn_search_hover.png') no-repeat;
+}
+
+#fast_onboarding_form #change_number_link {
+    font-size: 14px;
+}
+
+#fast_onboarding_form .pick_number_left {
+    margin: auto;
+    width: 380px;
+}
+
+#fast_onboarding_form .pick_number_right {
+    float: left;
+    width: 220px;
+}
+
+#fast_onboarding_form .area_code_wrapper {
+    float: left;
+    color: #05ADDC;
+    font-size: 35px;
+    font-weight: bold;
+    line-height: 20px;
+    text-shadow: 1px 1px 1px #333333;
+}
+
+#fast_onboarding_form .area_code_wrapper #area_code {
+    border-radius: 10px 10px 10px 10px;
+    color: #05ADDC;
+    font-size: 28px;
+    font-weight: bold;
+    height: 30px;
+    margin: 0 5px;
+    padding: 5px 0;
+    text-align: center;
+    vertical-align: middle;
+    width: 90px;
+}
+
+#fast_onboarding_form .area_code_wrapper input::-webkit-input-placeholder {
+    color:    #CCCCCC !important;
+    font-size: 12px !important;
+}
+
+#fast_onboarding_form .area_code_wrapper input:-moz-placeholder {
+    color:    #CCCCCC !important;
+    font-size: 12px !important;
+}
+
+#fast_onboarding_form .picked_number {
+    color: #C4DB4C;
+    font-size: 22px;
+    font-weight: bold;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #333333;
+}
+
+#fast_onboarding_form .help_area_code {
+    float: left;
+}
+
+#fast_onboarding_form .e911_block {
+    padding-top: 15px;
+}
+
+#fast_onboarding_form .help_e911 {
+    background-image: url('img/help_e911.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 80px;
+    width: 133px;
+}
+
+/* Step 2 */
+#fast_onboarding_form .help_card {
+    background-image: url('img/help_card.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 133px;
+}
+
+#fast_onboarding_form .billing_as_911 {
+    font-weight: bold;
+    color: #cccccc;
+    width: 140px;
+    float: left;
+    font-size: 15px;
+}
+
+#fast_onboarding_form #use_e911 {
+    margin-left: 5px;
+    margin-top: 13px;
+}
+
+#fast_onboarding_form .cvv_help {
+    display: none;
+    background: url('img/help_cvv.png') no-repeat center;
+    height: 194px;
+    width: 167px;
+}
+
+#fast_onboarding_form .onboarding_field_merged {
+    width: 420px;
+}
+
+#fast_onboarding_form .valid_credit_cards {
+    background: url('img/credit_cards.png') no-repeat center;
+    height: 85px;
+    width: 397px;
+}
+
+#fast_onboarding_form #expiration_month {
+    width: 51px;
+}
+
+#fast_onboarding_form #expiration_year {
+    width: 70px;
+}
+
+/* Step 3 */
+#fast_onboarding_form .help_account {
+    background-image: url('img/help_account.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 133px;
+}
+
+/* New role layout */
+#fast_onboarding_form .type_title_bar {
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 1px #333333;
+}
+
+#fast_onboarding_form .type_title_bar .type_title {
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+#fast_onboarding_form .role_div .role_row {
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+}
+
+#fast_onboarding_form .role_div .role_row > * {
+    float: left;
+    height: 56px;
+    line-height: 56px;
+}
+
+#fast_onboarding_form .role_div .role_icon {
+    width: 56px;
+    height: 56px;
+    margin: 0px 25px 0px 5px;
+    background: no-repeat center transparent;
+}
+
+#fast_onboarding_form .role_div .role_icon.small_office {
+    background-image: url('img/roles/small_office.png');
+}
+
+#fast_onboarding_form .role_div .role_icon.reseller {
+    background-image: url('img/roles/reseller.png');
+}
+
+#fast_onboarding_form .role_div .role_icon.api_developer {
+    background-image: url('img/roles/api_developer.png');
+}
+
+#fast_onboarding_form .role_div .role_icon.voip_minutes {
+    background-image: url('img/roles/voip_minutes.png');
+}
+
+#fast_onboarding_form .role_div .role_icon.single_phone {
+    background-image: url('img/roles/single_phone.png');
+}
+
+#fast_onboarding_form .role_div .role_title {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: left;
+    width: 130px;
+    line-height: 56px;
+}
+
+#fast_onboarding_form .role_div .role_radio {
+    width: 20px;
+    margin-right: 40px;
+    margin-left: 10px;
+}
+
+#fast_onboarding_form .role_div .role_description_wrapper {
+    display: table;
+    height: 56px;
+    width: 330px;
+}
+
+#fast_onboarding_form .role_div .role_description {
+    font-size: 12px;
+    line-height: 18px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+#fast_onboarding_form .role_div .role_content {
+    padding-top: 40px;
+    display: none;
+}
+
+#fast_onboarding_form .radio_block .radio_div_left {
+    float: left;
+    width: 186px;
+    padding-right: 100px;
+}
+
+#fast_onboarding_form .radio_block .radio_div_right {
+    float: left;
+    width: 330px;
+}
+
+#fast_onboarding_form .radio_block .radio_div_left .headline {
+    color: #dddddd;
+    text-shadow: 1px 1px 1px #333333;
+    width: 180px;
+    margin-left: 30px;
+    font-size: 18px;
+}
+
+#fast_onboarding_form .radio_block .radio_div_left .help_roles {
+    font-size: 12px;
+    margin-left: 30px;
+    margin-top: 20px;
+    width: 180px;
+}
+
+/* Extension Array */
+#fast_onboarding_form .user_tab {
+    padding-bottom: 10px;
+    display: block;
+    margin: auto;
+    width: 270px;
+}
+
+#fast_onboarding_form .user_tab .title_bar {
+    border-bottom: 1px solid #333333;
+}
+
+#fast_onboarding_form .user_tab .first_row {
+    border-top: 1px solid #999999;
+}
+
+#fast_onboarding_form .user_tab .column {
+    float:left;
+    text-align: center;
+    height: 30px;
+}
+
+#fast_onboarding_form .user_tab .column:not(.title) {
+    padding-top: 10px;
+}
+
+#fast_onboarding_form .user_tab .column.first {
+    width: 170px;
+    padding-right: 30px;
+}
+
+#fast_onboarding_form .user_tab .column.first > span {
+    height: 30px;
+    line-height: 30px;
+}
+
+#fast_onboarding_form .user_tab .column.second {
+    width: 70px;
+}
+
+#fast_onboarding_form .user_tab .column.title {
+    font-weight: bold;
+    font-size: 12px;
+    height: 15px;
+    text-align: left;
+}
+
+#fast_onboarding_form .user_tab .extension_input {
+    width: 50px;
+}
+
+#fast_onboarding_form .user_tab .name_input {
+    width: 235px;
+}

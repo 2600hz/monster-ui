@@ -1,0 +1,29 @@
+@white: #FFFFFF;
+@background-color: #212121;
+@black: #000000;
+
+/*  POPOVER */
+
+.popover.right .arrow { 
+	border-right-color: lighten(@black, 10%);
+}
+
+.popover > .inner {
+	color: #E6E6E6;
+	background-color: @background-color;
+	border-radius: 0;
+	border: 1px solid lighten(@black, 10%);
+}
+
+.popover > .inner > .title > {
+	display: none;
+}
+
+.popover > .inner > .content {
+	background-color: @background-color;
+	padding: 0px 10px 0px 10px;
+}
+
+.popover > .inner > .content > p {
+	font-size: 11px;
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset='utf-8'>
+        <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+        <!-- Awesome URL Parsing -->
+        <script type="text/javascript">
+            var URL_PARTS = window.location.href.match(/^([^\?#]+)[\?#]*([^#]*).*$/).slice(1),
+                URL = URL_PARTS[0],
+                URL_DATA = function() {
+                    var url_data_parts = (URL_PARTS[1]) ? URL_PARTS[1].split('&') : [],
+                        url_data = {},
+                        data;
+
+                    for(var i = 0; i < url_data_parts.length; i++) {
+                        data = url_data_parts[i].split('=');
+                        url_data[data[0]] = data[1];
+                    }
+
+                    return url_data;
+                }();
+        </script>
+
+        <script type="text/javascript" src="js/external/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="js/external/jquery-ui-1.8.7.custom.min.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+        <link type="text/css" href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-alerts.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-buttons.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-modal.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-twipsy.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-popover.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-scrollspy.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-tabs.js"></script>
+
+        <link type="text/css" href="css/validate.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="css/tables.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="css/jslider/jslider.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.8.custom.css" rel="Stylesheet" />
+
+        <link type="text/css" href="js/external/ui-listpanel/css/ui.listpanel.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="js/external/ui-listpanel/css/jquery.jscrollpane.css" rel="stylesheet" media="screen" />
+
+        <link type="text/css" href="css/jquery.tooltip.css" rel="stylesheet" media="screen" />
+        <script type="text/javascript" src="js/external/jquery.cors.js"></script>
+        <script type="text/javascript" src="js/external/underscore-min.js"></script>
+
+        <script type="text/javascript" src="js/external/form2object.js"></script>
+        <script type="text/javascript" src="js/external/formToWizard.js"></script>
+        <script type="text/javascript" src="js/external/md5_generator.js"></script>
+        <script type="text/javascript" src="js/external/jstz.min.js"></script>
+        <script type="text/javascript" src="js/external/tmpl/jquery.tmpl.js"></script>
+        <script type="text/javascript" src="js/external/tmpl/jquery.tmplPlus.js"></script>
+        <script type="text/javascript" src="js/external/jquery.isObject.js"></script>
+        <script type="text/javascript" src="js/external/jquery.mousewheel.js"></script>
+        <script type="text/javascript" src="js/external/jquery.jscrollpane.min.js"></script>
+        <!--<script type="text/javascript" src="js/external/jquery.tools.min.js"></script>-->
+        <script type="text/javascript" src="js/external/jquery.hoverIntent.minified.js"></script>
+        <script type="text/javascript" src="js/external/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="js/external/jquery.slider.js"></script>
+        <script type="text/javascript" src="js/external/jquery.dependClass.js"></script>
+        <script type="text/javascript" src="js/external/jquery.dataset.js"></script>
+        <script type="text/javascript" src="js/external/ui-listpanel/ui.listpanel.js"></script>
+        <script type="text/javascript" src="js/external/lab.js"></script>
+        <script type="text/javascript" src="js/external/jquery.tooltip.js"></script>
+        <script type="text/javascript" src="js/external/jquery.cookie.js"></script>
+        <script type="text/javascript" src="js/external/jquery.masonry.min.js"></script>
+        <script type="text/javascript" src="js/external/jquery.switch.js"></script>
+
+        <script type="text/javascript" src="js/amplify/_amplify.js"></script>
+        <script>var _amplify = amplify;</script>
+        <script type="text/javascript" src="js/amplify/amplify.core.js"></script>
+        <script>$.extend( amplify, _amplify );</script>
+        <script type="text/javascript" src="js/amplify/amplify.request.js"></script>
+        <script type="text/javascript" src="js/amplify/amplify.request.poll.js"></script>
+
+        <script type="text/javascript" src="config/config.js"></script>
+        <script type="text/javascript" src="js/winkstart-request.js"></script>
+        <script type="text/javascript" src="js/winkstart-util.js"></script>
+        <script type="text/javascript" src="js/winkstart-tables.js"></script>
+        <script type="text/javascript" src="js/winkstart-validate.js"></script>
+        <script type="text/javascript" src="js/winkstart-timezone.js"></script>
+        <script type="text/javascript" src="js/winkstart.js"></script>
+
+        <script type="text/javascript">
+            var favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.href = winkstart.config.favicon || 'img/wsLogo.png';
+            document.getElementsByTagName('head')[0].appendChild(favicon);
+        </script>
+    </head>
+    <body class="background">
+    </body>
+</html>
+

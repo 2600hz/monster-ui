@@ -1,0 +1,44 @@
+/* 
+    Document   : jquery.override
+    Created on : Jul 31, 2011, 8:49:28 AM
+    Author     : Darren Schreiber
+    Description:
+        jQuery UI and other default overrides for this layout/theme
+*/
+.ui-datepicker {
+    z-index: 99999 !important;
+}
+
+.ui-dialog {
+    padding: 0em;
+    box-shadow: 7px 7px 7px #222222;
+}
+
+.ui-dialog-titlebar.ui-widget-header {
+    padding: 0em 1em 0.4em
+}
+
+.ui-dialog-titlebar.ui-corner-all {
+    border-radius: 0;
+}
+
+a.ui-dialog-titlebar-close {
+    margin: -15px 0 0 !important;
+}
+
+.ui-widget-header {
+    background: #2ab9e1;
+}
+
+.ui-widget-content {
+    border: 10px solid #2ab9e1;
+}
+
+.ui-dialog-title {
+    font-family: Verdana;
+    font-weight: normal;
+}
+
+.ui-widget-overlay {
+    background: none repeat scroll 0 0 #222222 !important;
+}

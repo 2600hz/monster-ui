@@ -1,0 +1,27 @@
+<div>
+    <div class="dialog_popup">
+        <h1>Connect a caller to another callflow...</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="object-selector">Which callflow?</label>
+                    <div class="select_wrapper">
+                        <select id="object-selector">
+                            {{each(i,obj) objects.items}}
+                                {{if objects.selected == obj.id}}
+                                    <option value="${obj.id}" SELECTED>${obj.name}</option>
+                                {{else}}
+                                    <option value="${obj.id}">${obj.name}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                        <div class="clear"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+    </div>
+</div>

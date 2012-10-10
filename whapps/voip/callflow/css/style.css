@@ -1,0 +1,355 @@
+#ws_callflow {
+    width: 1024px;
+    margin: 0 auto 10px;
+}
+
+#ws_callflow > .callflow {
+    float: left;
+    width: 85%;
+}
+#ws_callflow .callflow .root {
+    width: 322px;
+}
+
+#ws_callflow .callflow .root > .top_bar {
+    background-image: url(../images/blue_bar.png);
+    height: 25px;
+    text-align: left;
+}
+
+#ws_callflow .callflow .root > .top_bar > span {
+    line-height: 25px;
+}
+
+#ws_callflow .callflow .root > .top_bar .name {
+    float: left;
+    margin-left: 10px;
+    font-weight: bold;
+    cursor: default;
+}
+
+#ws_callflow .callflow .root > .top_bar .add_number {
+    float: right;
+}
+
+#ws_callflow .callflow .root > .content .number_row {
+    background-image: url(../../../core/layout/images/nav_line_horizontal.jpg);
+    background-position: bottom;
+    background-repeat: repeat-x;
+    height: 32px;
+    background-color: #424242;
+}
+
+#ws_callflow .callflow .root > .content .number_row:last-child {
+    background: none;
+    background-color: #424242;
+    height: 30px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+#ws_callflow .callflow .root > .content .number_column {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    font-size: 11px;
+    text-indent: 15px;
+    text-align: left;
+    position: relative;
+}
+
+#ws_callflow .callflow .root > .content .number_column.full {
+    width: 312px;
+    text-align: center;
+}
+
+#ws_callflow .callflow .root > .content .number_column.second {
+    width: 163px;
+    background-image: url(../../../core/layout/images/nav_line.jpg);
+    background-position: left;
+    background-repeat: repeat-y;
+}
+
+#ws_callflow .callflow .root > .content .number_column.first {
+    width: 159px;
+}
+
+#ws_callflow .callflow .root > .content .number_column.empty {
+    color: #A0A0A0;
+    cursor: default;
+}
+
+#ws_callflow .callflow .root > .content .number_column .delete {
+    background-image: url(../images/btn_delete.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    position: absolute;
+    padding: 5px;
+    right: 0px;
+    top: 0px;
+    cursor: pointer;
+}
+
+#ws_callflow .callflow .root > .content .number_column .delete:hover {
+    background-image: url(../images/btn_delete_blue.png);
+}
+
+#ws_callflow .callflow .node {
+    display: inline-block;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+#ws_callflow .callflow .node[name="root"] {
+    cursor: default;
+}
+
+#ws_callflow .callflow .node .node-options .delete {
+    background-image: url(../images/btn_delete.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#ws_callflow .callflow .node .node-options .delete:hover {
+    background-image: url(../images/btn_delete_blue.png);
+}
+
+#ws_callflow .tool .icon {
+    margin: 2px;
+    display: inline-block;
+}
+
+#ws_callflow .toolbox {
+    width: 172px;
+}
+
+#ws_callflow .tools {
+    float: left;
+}
+
+#ws_callflow .tools .category {
+    text-align: center;
+    background: url(../images/background_category.png) no-repeat;
+    background-position: top center;
+    cursor: default;
+}
+
+#ws_callflow .tools .category .content {
+    background-color: #777777;
+    border: 1px solid #333333;
+}
+
+#ws_callflow .tools .open {
+    font-size: 12px;
+    height: 26px;
+    line-height: 26px;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+}
+
+#ws_callflow .tools .active .open {
+    background-image: url(../images/arrow_active.png);
+    color: #05ADDC;
+}
+
+#ws_callflow .tools .inactive .open{
+    background-image: url(../images/arrow_inactive.png);
+}
+
+#ws_callflow .tools .tool {
+    background: #777777;
+    float: left;
+    width: 82px;
+    padding-left: 1px;
+    padding-top: 1px;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+#ws_callflow .destination {
+    border-radius: 5px;
+    border: 3px solid #05addc;
+}
+
+#ws_callflow .tools .tool .action {
+    z-index: 9000;
+    height:56px;
+    background: url(../images/blackbox_small.png) no-repeat;
+}
+
+#ws_callflow .tools .app_list_nav {
+    background: #777777;
+    padding-top: 1px;
+}
+
+#ws_callflow .callflow .icons_black.node {
+    width: 143px;
+    height: 84px;
+    background: url(../images/blackbox.png) no-repeat;
+}
+
+#ws_callflow #ws_cf_flow .children .child:last-child:not(:first-child) {
+    padding-right: 10px;
+}
+
+#ws_callflow #ws_cf_flow .children .child:first-child:not(:last-child) {
+    padding-left: 10px;
+}
+
+#ws_callflow .children > .child > .div_line {
+    display: inline-block;
+    height: 6px;
+    width: 100%;
+    background-image: url(../images/line_callflow.png);
+    background-repeat: repeat-x;
+    margin-top: -33px;
+    margin-right: 0px;
+    margin-left: 0px;
+    padding: 0px;
+    float: left;
+}
+#ws_callflow .children > .child:first-child > .div_line {
+    width: 50%;
+    float: right;
+}
+#ws_callflow .children > .child:last-child > .div_line {
+    width: 50%;
+    float: left;
+}
+
+#ws_callflow .children > .child:first-child:last-child > .div_line {
+    display: none;
+}
+
+#ws_callflow .children > .child > .span_arrow {
+    display: inline-block;
+    width: 145px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin: 2px 0px 2px;
+    padding: 0px;
+    position: relative;
+}
+
+#ws_callflow .children > .child > .span_arrow.small {
+    height: 31px;
+    background-image: url(../images/center_arrow.png);
+}
+
+#ws_callflow .children > .child:first-child > .span_arrow.small {
+    background-image: url(../images/left_arrow.png);
+}
+
+#ws_callflow .children > .child:last-child > .span_arrow.small {
+    background-image: url(../images/right_arrow.png);
+}
+
+#ws_callflow .children > .child:first-child:last-child > .span_arrow.small {
+    background-image: url(../images/small_arrow.png);
+}
+
+#ws_callflow .children > .child > .span_arrow.large {
+    height: 48px;
+    background-image: url(../images/tall_arrow.png);
+}
+
+#ws_callflow .a_link_option {
+    font-size: 11px;
+}
+#ws_callflow .div_option {
+    display: inline-block;
+    height: 15px;
+    width: 131px;
+    background-color: #474747;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #303030;
+    border-radius: 5px;
+}
+
+#ws_callflow .div_icon {
+    height: 50px;
+}
+
+#ws_callflow .div_icon > span {
+    display: inline-block;
+    max-width: 100px;
+    vertical-align: middle;
+}
+
+#ws_callflow .module {
+    font-size: 13px;
+    height: 59px;
+    margin-top: 25px;
+    cursor: default;
+}
+
+#ws_callflow .div_icon .module_name {
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#ws_callflow .details {
+    font-size: 10px;
+    margin-top: -10px;
+    overflow: hidden;
+}
+
+.add_number_popup {
+    min-width: 400px;
+}
+
+.add_number_popup .popup_field {
+    height: 30px;
+}
+
+.add_number_popup input[type=radio] {
+    margin: 8px 5px 0 0;
+    float: left;
+}
+
+.add_number_popup #list_numbers {
+    width: 157px;
+    float: left;
+}
+
+.add_number_popup #add_number_text {
+    width: 172px;
+}
+
+.add_number_popup .extensions_content, .add_number_popup .list_numbers_content {
+    display: inline-block;
+}
+
+.add_number_popup #number_manager_fields {
+    float: right;
+    line-height: 27px;
+    height: 27px;
+    margin-left: 5px;
+}
+
+#callflow-content .ui-draggable-dragging {
+    cursor: -moz-grabbing !important;
+    cursor: -webkit-grabbing !important;
+    cursor: grabbing !important;
+}
+
+#ws_callflow .root .top_bar .edit_icon {
+    background: url('../images/edit_icon.png') no-repeat scroll center center transparent;
+    cursor: pointer;
+    display: inline-block;
+    height: 18px;
+    margin: 3px 0px 0px 7px;
+    width: 20px;
+}

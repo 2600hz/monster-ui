@@ -1,0 +1,343 @@
+<div>
+    <div class="row">
+        <div class="whapp-header">
+            {{if data.id}}
+            <h1>Edit Account</h1>
+            {{else}}
+            <h1>Create Account</h1>
+            {{/if}}
+            <div class="buttons-right pasted view-buttons">
+                <button class="btn black basic activate">Basic</button>
+                <button class="btn black advanced">Advanced</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <ul class="tabs" data-tabs="tabs">
+            <li class="active"><a href="#basic">Basic</a></li>
+            <li><a href="#voicemail_to_email"><span class="icon vmbox"></span>Voicemail To Email Template</a></li>
+            <li><a href="#monitoring"><span class="icon fax"></span>Monitoring</a></li>
+            <li><a href="#billing"><span class="icon sip"></span>Billing</a></li>
+            <li><a href="#applications"><span class="icon sip"></span>Available Apps</a></li>
+            <li><a href="#white_labeling"><span class="icon sip"></span>White labeling</a></li>
+        </ul>
+        <form action="#" id="accounts_manager-form">
+            <div class="pill-content">
+                <div class="active basic_view" id="basic">
+                    <div class="clearfix">
+                        <label for="name">Name</label>
+                        <div class="input">
+                            <input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Name of this account"/>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label for="realm">Realm</label>
+                        <div class="input">
+                            <input class="span4" id="realm" name="realm" type="text" placeholder="Realm (unique)" value="${data.realm}"
+                             rel="popover" data-content="Realm of this account" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="voicemail_to_email">
+                    <h3>Template fields</h3>
+                    <div class="clearfix">
+                        <label for="vm_to_email_support_number">Support Number</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_support_number" name="notifications.voicemail_to_email.support_number" type="text" placeholder="Support Number" value="${data.notifications.voicemail_to_email.support_number}" rel="popover" data-content="Input the support number that will be inserted in the voicemail-to-email template"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="vm_to_email_support_email">Support Email</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_support_email" name="notifications.voicemail_to_email.support_email" type="text" placeholder="Support Email" value="${data.notifications.voicemail_to_email.support_email}" rel="popover" data-content="Input the support email address that will be inserted in the voicemail-to-email template"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="vm_to_email_send_from">Send From</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_send_from" name="notifications.voicemail_to_email.send_from" type="text" placeholder="Send From" value="${data.notifications.voicemail_to_email.send_from}" rel="popover" data-content="This will be displayed as the Send form field in the Voicemail-To-Email template"/>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <h3>Template fields for sub-accounts</h3>
+                    <div class="clearfix">
+                        <label for="vm_to_email_service_url">Service URL</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_service_url" name="notifications.voicemail_to_email.service_url" type="text" placeholder="Service URL" value="${data.notifications.voicemail_to_email.service_url}" rel="popover" data-content="Input the Service URL"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="vm_to_email_service_name">Service Name</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_service_name" name="notifications.voicemail_to_email.service_name" type="text" placeholder="Service Name" value="${data.notifications.voicemail_to_email.service_name}" rel="popover" data-content="Input the service name"/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="vm_to_email_service_provider">Service Provider</label>
+                        <div class="input">
+                            <input class="span4" id="vm_to_email_service_provider" name="notifications.voicemail_to_email.service_provider" type="text" placeholder="Service Provider" value="${data.notifications.voicemail_to_email.service_provider}" rel="popover" data-content="Input the service provider"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="monitoring">
+                    <div class="clearfix">
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        {{if field_data.deregister}}
+                                        <input id="deregister" type="checkbox" name="extra.deregistration_notify" checked="checked" rel="popover" data-content="By checking this option, an email will be sent to the specified e-mail address each time a device of this account unregisters."/>
+                                        {{else}}
+                                        <input id="deregister" type="checkbox" name="extra.deregistration_notify" rel="popover" data-content="By checking this option, an email will be sent to the specified e-mail address each time a device of this account unregisters." />
+                                        {{/if}}
+                                        <span>Notify on de-register</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="clearfix deregister_email">
+                        <label for="deregister_email">Email to notify</label>
+                        <div class="input">
+                            {{if field_data.deregister}}
+                            <input id="deregister_email" placeholder="name@email.com" type="text" name="notifications.deregister.send_to" value="${data.notifications.deregister.send_to}" rel="popover" data-content="Email to notify"/>
+                            {{else}}
+                            <input id="deregister_email" placeholder="name@email.com" type="text" name="notifications.deregister.send_to" rel="popover" data-content="Email to notify"/>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="billing">
+                    <div class="clearfix">
+                        <label>Billing Account</label>
+                        <div class="input">
+                            <span rel="popover" data-content="Who is paying for calls made and phone numbers purchased on this account">
+                                <select name="extra.billing_account">
+                                    {{if field_data.billing_account === 'self'}}
+                                        <option value="parent">This Parent Account</option>
+                                        <option value="self" selected="selected">This Account itself</option>
+                                    {{else}}
+                                        {{if field_data.billing_account === 'parent'}}
+                                            <option value="parent" selected="selected">This Parent Account</option>
+                                            <option value="self">This Account itself</option>
+                                        {{else}}
+                                            <option value="parent">This Parent Account</option>
+                                            <option value="self">This Account itself</option>
+                                            <option value="other" selected="selected">Other</option>
+                                        {{/if}}
+                                    {{/if}}
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+
+                    {{if data.id}}
+
+                        <h3>Credit / Limits</h3>
+
+                        <div class="clearfix">
+                            <label for="billing_balance">Balance</label>
+                            <div class="input">
+                                <span class="uneditable-input mini">${credits.amount}</span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="billing_inbound_trunks">Inbound Calling</label>
+                            <div class="input">
+                                <span class="uneditable-input mini">${limits.inbound_trunks}</span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label for="billing_twoway_trunks">Two-Way Calling</label>
+                            <div class="input">
+                                <span class="uneditable-input mini">${limits.twoway_trunks}</span>
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <label></label>
+                            <div class="input">
+                                <button id="manage" class="btn small"> Manage Credit / Limits</button>
+                            </div>
+                        </div>
+
+                    {{/if}}
+                </div>
+
+                <div id="applications">
+
+                    <div class="clearfix">
+                        <label for="">Available Apps</label>
+                        <div class="input">
+                            <ul class="inputs-list">
+                                {{each(i, app) field_data.available_apps}}
+                                    <li>
+                                        <label>
+                                            <span rel="popover" data-content="${app.desc}">
+                                                {{if app.enabled}}
+                                                    <input type="checkbox" id="available_apps_${app.id}" name="available_apps[]" value="${app.id}" checked="checked"/>
+                                                {{else}}
+                                                    <input type="checkbox" id="available_apps_${app.id}" name="available_apps[]" value="${app.id}"/>
+                                                {{/if}}
+                                                <span>${app.label}</span>
+                                            </span>
+                                        </label>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="white_labeling">
+                    <h3>General</h3>
+                    <div class="clearfix">
+                        <label for="white_label_company_name">Company Name</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_company_name" name="whitelabel.company_name" type="text" placeholder="Company Name" value="${field_data.whitelabel.company_name}" rel="popover" data-content="The company name that you want to display wherever a company name is used in the GUI."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_nav_help">Help link</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_nav_help" name="whitelabel.nav.help" type="text" placeholder="http://mycompany.com/help" value="${field_data.whitelabel.nav.help}" rel="popover" data-content="The link you want to go to when a user click on the top right Help image."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_nav_help">Learn More link</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_nav_help" name="whitelabel.nav.learn_more" type="text" placeholder="http://mycompany.com/learn_more" value="${field_data.whitelabel.nav.learn_more}" rel="popover" data-content="The link you want to go to when a user click learn_more link on the front page before login."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        {{if field_data.whitelabel.hide_registration}}
+                                        <input id="hide_registration" type="checkbox" name="whitelabel.hide_registration" checked="checked" rel="popover" data-content="Check to hide Signup button on login page."/>
+                                        {{else}}
+                                        <input id="hide_registration" type="checkbox" name="whitelabel.hide_registration" rel="popover" data-content="Check to hide Signup button on login page." />
+                                        {{/if}}
+                                        <span>Hide Signup</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_domain">Domain</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_domain" name="whitelabel.domain" type="text" placeholder="Domain" value="${field_data.whitelabel.domain}" rel="popover" data-content="The domain you want to use for this account."/>
+                        </div>
+                    </div>
+
+                     <div class="clearfix">
+                         <label for="fileInput">Logo (190x72px)</label>
+                         <div id="upload_div" class="input">
+                             <input class="input-file" id="file" name="extra.upload_media" type="file">
+                         </div>
+                         {{if field_data.whitelabel.description}}
+                         <div class="input player_file">
+                             <span class="uneditable-input">${field_data.whitelabel.description}</span>
+                             <div class="logo_div"></div>
+                         </div>
+                    </div>
+                    <div class="clearfix player_file">
+                        <div class="input">
+                            <button class="btn primary" id="change_link">Change File</button>
+                            <button class="btn primary" id="download_link">Download File</button>
+                        </div>
+                    </div>
+                    {{else}}
+                    </div>
+                    {{/if}}
+
+                    <hr/>
+                    <h3>Porting</h3>
+
+                    <div class="clearfix">
+                        <label for="white_label_port_loa">Letter of Authorization</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_port_loa" name="whitelabel.port.loa" type="text" placeholder="http://mycompany.com/loa" value="${field_data.whitelabel.port.loa}" rel="popover" data-content="The link to access the letter of authorization in order to port a number (from PBX Connector or Number Manager)."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_port_resporg">Resporg</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_port_resporg" name="whitelabel.port.resporg" type="text" placeholder="http://mycompany.com/resporg" value="${field_data.whitelabel.port.resporg}" rel="popover" data-content="The link to access the Resporg form in order to port a number (from PBX Connector or Number Manager)."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_port_support_email">Support Email</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_port_support_email" name="whitelabel.port.support_email" type="text" placeholder="support@mycompany.com" value="${field_data.whitelabel.port.support_email}" rel="popover" data-content="Support Email to display in the Port Number popup."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_port_features">Features</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_port_features" name="whitelabel.port.features" type="text" placeholder="http://mycompany.com/features" value="${field_data.whitelabel.port.features}" rel="popover" data-content="Address explaining what is a feature in the Port Number popup."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_port_terms">Terms</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_port_terms" name="whitelabel.port.terms" type="text" placeholder="http://mycompany.com/terms" value="${field_data.whitelabel.port.terms}" rel="popover" data-content="The link to access the Terms and Conditions related to porting."/>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <h3>Trunks</h3>
+
+                    <div class="clearfix">
+                        <label for="white_label_inbound_trunks_price">Inbound Trunks Price</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_inbound_trunks_price" name="whitelabel.inbound_trunks_price" type="text" placeholder="$6.99" value="${field_data.whitelabel.inbound_trunks_price}" rel="popover" data-content="Price displayed for inbound trunks in the popup to manage your limits."/>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="white_label_twoway_trunks_price">Twoway Trunks Price</label>
+                        <div class="input">
+                            <input class="span4" id="white_label_twoway_trunks_price" name="whitelabel.twoway_trunks_price" type="text" placeholder="$29.99" value="${field_data.whitelabel.twoway_trunks_price}" rel="popover" data-content="Price displayed for twoway trunks in the popup to manage your limits."/>
+                        </div>
+                    </div>
+
+                    <div class="refresh_text clearfix">
+                        In order to see these changes, refresh the page once you saved this account!
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div class="buttons-right">
+            {{if data.id}}
+                <button class="btn primary accounts_manager-switch">Use Account</button>
+                <button class="btn danger accounts_manager-delete">Delete</button>
+            {{/if}}
+            <button class="btn success accounts_manager-save">Save</button>
+        </div>
+    </div>
+</div>

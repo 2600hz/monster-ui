@@ -1,0 +1,120 @@
+<div>
+    <fieldset id="step1" class="step_content">
+        <div style="padding: 0px; margin: 0px;">
+            <div id="pick_number_block">
+                <div class="pick_number_left">
+                    <div class="area_code_wrapper">
+                        #&nbsp;(<input type="text" class="area_code_input" name="field_data.area_code" id="area_code" maxlength="3" placeholder="Area Code"/>)
+                    </div>
+                    <button class="change_number" id="change_number"/>
+                    <span class="help_onboarding help_area_code">* Search a number by area code, digits only.</span>
+                    <div class="clear"/>
+                </div>
+                <div class="pick_number_right">
+                    <div class="wrapping_div picked_number" id="picked_number" data-number=""/>
+                    <div class="help_onboarding link" id="change_number_link">I don't like this number</span>
+                    <div class="clear"/>
+                </div>
+                <div class="clear"/>
+            </div>
+            <div class="clear"/>
+            <div class="e911_block" id="e911_block">
+                <div class="hr" style="margin-bottom: 25px;"/>
+                <div class="onboarding_div_left">
+                    <div class="help_e911 wrapping_div"/>
+                    <div class="help_onboarding">* Your accurate address is required to make emergency calls (E911). </div>
+                </div>
+                <div class="onboarding_div_right">
+                    <div class="onboarding_field" style="padding-bottom: 8px;">
+                        <label>*Country</label>
+                        <select name="e911.country" id="e911_country">
+                            <option value="Other">Other country...</option>
+                            <option value="AD"> Andorra</option>
+                            <option value="AR"> Argentina</option>
+                            <option value="AU"> Australia</option>
+                            <option value="AT"> Austria</option>
+                            <option value="BD"> Bangladesh</option>
+                            <option value="BE"> Belgium</option>
+                            <option value="BR"> Brazil</option>
+                            <option value="BG"> Bulgaria</option>
+                            <option value="CA"> Canada</option>
+                            <option value="HR"> Croatia</option>
+                            <option value="CZ"> Czech Republic</option>
+                            <option value="DK"> Denmark</option>
+                            <option value="DO"> Dominican Republic</option>
+                            <option value="FO"> Faroe Islands</option>
+                            <option value="FI"> Finland</option>
+                            <option value="FR"> France</option>
+                            <option value="GF"> French Guiana</option>
+                            <option value="DE"> Germany</option>
+                            <option value="GL"> Greenland</option>
+                            <option value="GP"> Guadeloupe</option>
+                            <option value="GT"> Guatemala</option>
+                            <option value="HU"> Hungary</option>
+                            <option value="IS"> Iceland</option>
+                            <option value="IN"> India</option>
+                            <option value="IT"> Italy</option>
+                            <option value="JP"> Japan</option>
+                            <option value="LI"> Liechtenstein</option>
+                            <option value="LT"> Lithuania</option>
+                            <option value="LU"> Luxembourg</option>
+                            <option value="MK"> Macedonia</option>
+                            <option value="MY"> Malaysia</option>
+                            <option value="MQ"> Martinique</option>
+                            <option value="YT"> Mayotte</option>
+                            <option value="MX"> Mexico</option>
+                            <option value="MD"> Moldova</option>
+                            <option value="MC"> Monaco</option>
+                            <option value="NL"> Netherlands</option>
+                            <option value="NZ"> New Zealand</option>
+                            <option value="NO"> Norway</option>
+                            <option value="PK"> Pakistan</option>
+                            <option value="PH"> Philippines</option>
+                            <option value="PL"> Poland</option>
+                            <option value="PT"> Portugal</option>
+                            <option value="RU"> Russia</option>
+                            <option value="RE"> Réion</option>
+                            <option value="SM"> San Marino</option>
+                            <option value="SK"> Slovakia</option>
+                            <option value="SI"> Slovenia</option>
+                            <option value="ZA"> South Africa</option>
+                            <option value="ES"> Spain</option>
+                            <option value="LK"> Sri Lanka</option>
+                            <option value="SE"> Sweden</option>
+                            <option value="CH"> Switzerland</option>
+                            <option value="TH"> Thailand</option>
+                            <option value="TR"> Turkey</option>
+                            <option value="GB"> United Kingdom</option>
+                            <option value="US" selected="selected"> United States</option>
+                            <option value="VA"> Vatican City</option>
+                            <option value="WF"> Wallis and Futuna</option>
+                        </select>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Postal Code</label>
+                        <input type="text" name="e911.postal_code" id="e911_postal_code"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Address</label>
+                        <input type="text" name="e911.street_address" id="e911_street_address"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>Apartment/Unit</label>
+                        <input type="text" name="e911.extended_address" id="e911_extended_address"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*State</label>
+                        <input type="text" name="e911.region" id="e911_region" />
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*City</label>
+                        <input type="text" name="e911.locality" id="e911_locality" class="field_last"/>
+                    </div>
+                    <div class="clear"/>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="clear"/>
+</div>
+

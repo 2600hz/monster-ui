@@ -1,0 +1,120 @@
+#cdr-view {
+    margin: auto;
+    width: 90%;
+}
+
+#cdr-view table.display td {
+    padding: 6px 3px;
+}
+
+#cdr-view .table-wrapper {
+    margin-top: 30px;
+}
+
+#cdr-view .date {
+    width: 65%;
+    float: left;
+    margin-bottom: 18px;
+}
+
+#cdr-view .date input{
+    font-size: 11px;
+    padding: 4px 2px;
+    border: solid 1px #999;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#cdr-view .date input:focus {
+    background: #FFF;
+    border: solid 1px #09f;
+    color: #000;
+}
+
+#cdr-view .date a {
+    vertical-align: middle;
+}
+
+#cdr-view .date input[type="text"] {
+    height: 12px;
+    width: 100px;
+}
+
+#cdr-view .date label.call_duration {
+    float: right;
+    text-align: right;
+    width: 300px;
+    color: #05addc;
+    overflow: hidden;
+}
+
+#cdr-view .dataTables_filter {
+    width: 30%;
+}
+
+#cdr-view #cdr-grid a {
+    color: #cccccc;
+    text-decoration: underline;
+}
+
+#cdr-view #cdr-grid a:hover {
+    color: #ffffff;
+}
+
+#detail_cdr_content #tab_cdrs  {
+    border: 2px solid #666666;
+    border-radius: 15px 15px 15px 15px;
+    color: #666666;
+    margin: 20px;
+    width: 780px;
+}
+
+#detail_cdr_content #tab_cdrs .column:not(.first) {
+    border-left: 1px solid #A6A6A6;
+}
+
+#detail_cdr_content #tab_cdrs .column {
+    float: left;
+    text-align: center;
+}
+
+#detail_cdr_content #tab_cdrs .column.first {
+    width: 200px;
+    overflow: hidden;
+    text-align:center;
+}
+
+#detail_cdr_content #tab_cdrs .column.second {
+    width: 570px;
+}
+
+#detail_cdr_content #tab_cdrs .row {
+    margin-left: 0px;
+}
+
+#detail_cdr_content #tab_cdrs .row.title {
+    background-color: #dddddd !important;
+    border-bottom: 2px solid #666666 !important;
+    border-radius: 15px 15px 0px 0px;
+    font-weight: bold;
+}
+
+#detail_cdr_content #tab_cdrs .row:not(:last-child) {
+    border-bottom: 1px solid #A6A6A6;
+}
+
+#detail_cdr_content #tab_cdrs .row:last-child {
+    border-radius: 0px 0px 15px 15px;
+}
+
+#detail_cdr_content #tab_cdrs .row:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+#detail_cdr_content #tab_cdrs .row:nth-child(even) {
+    background-color: #dddddd;
+}

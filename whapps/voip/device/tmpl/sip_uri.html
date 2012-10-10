@@ -1,0 +1,92 @@
+<div>
+	<div class="row">
+		<div class="whapp-header">
+			{{if data.id}}
+                <h1>Edit SIP URI</h1>
+            {{else}}
+            	<h1>Add a SIP URI</h1>
+            {{/if}}
+			<div class="buttons-right pasted view-buttons">
+				<button class="btn black basic activate">Basic</button>
+				<button class="btn black advanced">Advanced</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<ul class="tabs" data-tabs="tabs">
+		 	<li class="active"><a href="#basic">Basic</a></li>
+		</ul>
+		<form id="device-form" action="" method="post">
+			<div class="pill-content">
+				<div class="active basic_view" id="basic">
+					<div class="clearfix">
+						<label for="name">Name</label>
+						<div class="input">
+							<input class="span4" id="name" name="name" type="text" placeholder="Name" value="${data.name}" rel="popover" data-content="Friendly name for this device"/>
+						</div>
+					</div>
+
+					{{if field_data.hide_owner}}
+                    {{else}}
+						<div class="clearfix">
+							<label for="owner_id">Belongs To</label>
+							<div class="input">
+								<span rel="popover" data-content="Select the owner of this device">
+									<select name="owner_id" id="owner_id" class="medium">
+										{{each field_data.users}}
+		                                    {{if data.owner_id == id}}
+		                                        <option value="${id}" id="${id}" selected="selected">${first_name} ${last_name}</option>
+		                                    {{else}}
+		                                        <option value="${id}" id="${id}">${first_name} ${last_name}</option>
+		                                    {{/if}}
+		                                {{/each}}
+									</select>
+									<div class="edit_create">
+		                            	<a id="edit_link"  class="inline_action" data-action="edit" href="#">Edit</a>
+		                                <a class="inline_action" data-action="create" href="#">Create</a>
+									</div>
+								</span>
+							</div>
+						</div>
+					{{/if}}
+
+                    <div class="clearfix">
+						<label for="sip_url">URL</label>
+						<div class="input">
+							<input class="span4" id="sip_url" name="sip.route" type="text" placeholder="sip:support@company.com" value="${data.sip.route}" rel="popover" data-content="Enter the SIP url. Must look like 'sip:support@company.com'" />
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<div class="input">
+							<ul class="inputs-list">
+								<li>
+									<label>
+										<span  rel="popover" data-content="Check to enable device.">
+											{{if data.enabled == true}}
+							                    <input type="checkbox" id="enabled" name="enabled" checked="checked"/>
+							                {{else}}
+							                    <input type="checkbox" id="enabled" name="enabled" />
+							                {{/if}}
+							                <span>Enabled</span>
+						                </span>
+						            </label>
+						        </li>
+						    </ul>
+						</div>
+					</div>
+					<input type="hidden" value="${data.device_type}" name="device_type"/>
+					<input type="hidden" value="${data.sip.invite_format}" name="sip.invite_format"/>
+	                <input type="hidden" value="false" name="media.fax.option"/>
+	                <input type="hidden" value="false" name="extra.notify_unregister"/>
+				</div>
+			</div>
+		</form>
+		<div class="buttons-right">
+	        {{if data.id}}
+	            <button class="btn danger device-delete">Delete</button>
+	        {{/if}}
+            <button class="btn success device-save">Save</button>
+		</div>
+	</div>
+</div>

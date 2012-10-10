@@ -1,0 +1,169 @@
+<div>
+    <fieldset id="step2" class="step_content">
+        <div style="padding: 0px; margin: 0px;">
+            <div class="onboarding_block">
+                <div class="onboarding_div_left">
+                    <div class="credit_card_help">
+                        <div class="help_card wrapping_div"/>
+                        <div class="help_onboarding">* This helps us prevent fraud. We will not charge your card without notifying you once you've purchased our paid services.</div>
+                    </div>
+                    <div class="cvv_help"></div>
+                </div>
+                <div class="onboarding_div_right">
+                    <div class="onboarding_field_merged valid_credit_cards"/>
+                    <div class="onboarding_field">
+                        <label>*Name on Card</label>
+                        <input type="text" name="braintree.credit_card.cardholder_name" id="cardholder_name"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Card Number</label>
+                        <input type="text" name="braintree.credit_card.number" id="card_number" />
+                    </div>
+                    <div class="onboarding_field">
+                        <label style="width: 50px;">*CVV</label><span class="tooltip-wrapper cvv_help_icon"><span class="tooltip"/></span>
+                        <input type="text" name="braintree.credit_card.cvv" id="cvv" maxlength="4"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Expiration Date</label>
+                        <select name="extra.expiration_month" id="expiration_month">
+                            <option value="01">01 - January</option>
+                            <option value="02">02 - February</option>
+                            <option value="03">03 - March</option>
+                            <option value="04">04 - April</option>
+                            <option value="05">05 - May</option>
+                            <option value="06">06 - June</option>
+                            <option value="07">07 - July</option>
+                            <option value="08">08 - August</option>
+                            <option value="09">09 - September</option>
+                            <option value="10">10 - October</option>
+                            <option value="11">11 - November</option>
+                            <option value="12">12 - December</option>
+                        </select>
+                        <select name="extra.expiration_year" id="expiration_year">
+                            <option value="2012">2012</option>
+                            <option value="2013">2013</option>
+                            <option value="2014">2014</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clear"/>
+            </div>
+            <div class="hr"/>
+            <div class="onboarding_block">
+                <div class="onboarding_div_left">
+                    <div class="billing_as_911">Billing Address is the same as 911?</div>
+                    <input type="checkbox" name="field_data.use_e911" id="use_e911"/>
+                </div>
+                <div class="onboarding_div_right">
+                    <div class="onboarding_field">
+                        <label>*Country</label>
+                        <select name="braintree.credit_card.billing_address.country" id="country">
+                            <option value="Other">Other country...</option>
+                            <option value="AD"> Andorra</option>
+                            <option value="AR"> Argentina</option>
+                            <option value="AU"> Australia</option>
+                            <option value="AT"> Austria</option>
+                            <option value="BD"> Bangladesh</option>
+                            <option value="BE"> Belgium</option>
+                            <option value="BR"> Brazil</option>
+                            <option value="BG"> Bulgaria</option>
+                            <option value="CA"> Canada</option>
+                            <option value="HR"> Croatia</option>
+                            <option value="CZ"> Czech Republic</option>
+                            <option value="DK"> Denmark</option>
+                            <option value="DO"> Dominican Republic</option>
+                            <option value="FO"> Faroe Islands</option>
+                            <option value="FI"> Finland</option>
+                            <option value="FR"> France</option>
+                            <option value="GF"> French Guiana</option>
+                            <option value="DE"> Germany</option>
+                            <option value="GL"> Greenland</option>
+                            <option value="GP"> Guadeloupe</option>
+                            <option value="GT"> Guatemala</option>
+                            <option value="HU"> Hungary</option>
+                            <option value="IS"> Iceland</option>
+                            <option value="IN"> India</option>
+                            <option value="IT"> Italy</option>
+                            <option value="JP"> Japan</option>
+                            <option value="LI"> Liechtenstein</option>
+                            <option value="LT"> Lithuania</option>
+                            <option value="LU"> Luxembourg</option>
+                            <option value="MK"> Macedonia</option>
+                            <option value="MY"> Malaysia</option>
+                            <option value="MQ"> Martinique</option>
+                            <option value="YT"> Mayotte</option>
+                            <option value="MX"> Mexico</option>
+                            <option value="MD"> Moldova</option>
+                            <option value="MC"> Monaco</option>
+                            <option value="NL"> Netherlands</option>
+                            <option value="NZ"> New Zealand</option>
+                            <option value="NO"> Norway</option>
+                            <option value="PK"> Pakistan</option>
+                            <option value="PH"> Philippines</option>
+                            <option value="PL"> Poland</option>
+                            <option value="PT"> Portugal</option>
+                            <option value="RU"> Russia</option>
+                            <option value="RE"> Réion</option>
+                            <option value="SM"> San Marino</option>
+                            <option value="SK"> Slovakia</option>
+                            <option value="SI"> Slovenia</option>
+                            <option value="ZA"> South Africa</option>
+                            <option value="ES"> Spain</option>
+                            <option value="LK"> Sri Lanka</option>
+                            <option value="SE"> Sweden</option>
+                            <option value="CH"> Switzerland</option>
+                            <option value="TH"> Thailand</option>
+                            <option value="TR"> Turkey</option>
+                            <option value="GB"> United Kingdom</option>
+                            <option value="US" selected="selected"> United States</option>
+                            <option value="VA"> Vatican City</option>
+                            <option value="WF"> Wallis and Futuna</option>
+                        </select>
+                    </div>
+                    <div id="billing_country_text">
+                        <label>*Country</label>
+                        <input type="text" name="extra.braintree_country_other" id="country_other" />
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Postal Code</label>
+                        <input type="text" name="braintree.credit_card.billing_address.postal_code" id="postal_code"/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*Address</label>
+                        <input type="text" name="braintree.credit_card.billing_address.street_address" id="street_address" value=""/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>Apartment/Unit</label>
+                        <input type="text" name="braintree.credit_card.billing_address.extended_address" id="extended_address" value=""/>
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*State</label>
+                        <input type="text" name="braintree.credit_card.billing_address.region" id="region" />
+                    </div>
+                    <div class="onboarding_field">
+                        <label>*City</label>
+                        <input type="text" name="braintree.credit_card.billing_address.locality" id="locality"/>
+                    </div>
+                </div>
+                <div class="clear"/>
+            </div>
+        </div>
+    </fieldset>
+    <div class="clear"/>
+</div>
+

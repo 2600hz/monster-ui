@@ -1,0 +1,65 @@
+/* Add your custom CSS here */
+
+/* If you are building a widget that could be used by EVERYONE, please consider adding your CSS
+ * to the global CSS stylesheet (talk to Dhruvi). Otherwise, add it here only */
+
+/* DO NOT USE IDs FOR CSS! CLASSES ONLY! 
+
+.list-skeleton {
+    cursor: pointer;
+}
+
+#myaccount_popup #content {
+    margin-top: 10px;
+}
+
+#myaccount_popup .myform_myaccount {
+    padding-top: 15px;
+}
+
+#myaccount_popup #tabs .pane {
+    background-color: #3D3D3D;
+    width: 670px;
+}
+
+#myaccount_popup .pane {
+    color: #2CB9E1;
+    margin: 0px;
+}
+
+#myaccount_popup .popup_buttons_wrapper {
+    margin-top: 10px;
+}
+
+#myaccount_popup ul.settings_tabs {
+    margin-top: 0px;
+}
+
+#myaccount_popup ul.settings_tabs a.current, #myaccount_popup ul.settings_tabs a.current:hover, #myaccount_popup ul.settings_tabs li.current a {
+    background-position: 0 -23px;
+    color: #FFFFFF !important;
+    cursor: default !important;
+}
+
+#myaccount_popup ul.settings_tabs a {
+    background-image: url("../images/settings_tabs.png");
+    background-position: 0 0;
+    width: 218px;
+}
+
+#myaccount_popup .active {
+  border : 1px inset black;
+  background-color : #666666;
+  height: 98px;
+}
+
+#myaccount_popup .myaccount_popup h3 {
+    text-align: center;
+    font-weight: bold;
+    clear: both;
+    float: left;
+    font-size: 14.5px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    margin: 15px 5px 10px 20px;
+}*/

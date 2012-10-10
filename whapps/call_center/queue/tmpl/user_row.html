@@ -1,0 +1,12 @@
+<div>
+    {{if user_name}}
+        <div class="row" id="row_user_${user_id}" data-id="${user_id}">
+            <div class="column first">${user_name}</div>
+            <div class="column third"><a class="action_user edit icon medium pencil" data-id="${user_id}"></a><a class="action_user delete icon medium trash" data-id="${user_id}"></a></div>
+        </div>
+    {{else}}
+        <div class="row" id="row_no_data">
+            <div class="column merged">There is currently no user in this queue</div>
+        </div>
+    {{/if}}
+</div>

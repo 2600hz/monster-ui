@@ -1,0 +1,45 @@
+<div>
+    <div class="dialog_popup">
+        <h1>Connect a caller to a device...</h1>
+        <form name="form" method="post" action="#">
+            <div class="form_content">
+                <div class="popup_field">
+                    <label for="device_selector">Which Device?</label>
+                    <div class="select_wrapper">
+                        <select id="device_selector">
+                            {{each(i, item) objects.items}}
+                                {{if objects.selected == item.id}}
+                                    <option value="${item.id}" SELECTED>${item.name}</option>
+                                {{else}}
+                                    <option value="${item.id}">${item.name}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                        <div class="action_links_div">
+                            <div id="edit_link"><a class="inline_action" data-action="edit" href="#">Edit phone options</a></div>
+                            <div><a class="inline_action" data-action="create" href="#">Add a new device</a></div>
+                        </div>
+                    </div>
+                    <div class="clear"/>
+                </div>
+            </div>
+            <div class="parameter_div">
+                Ring this device for <input type="text" class="size2" name="parameter_input" id="parameter_input" value="${parameter.value}"/> seconds.
+            </div>
+            <div class="parameter_div">
+                {{if can_call_self}}
+                <input type="checkbox" checked="checked" id="device_can_call_self">
+                {{else}}
+                <input type="checkbox" id="device_can_call_self">
+                {{/if}}
+                Allow this device to call itself.
+                <div class="parameter_description">When you check this box, calls from the user's own extension to themselves will not ring the extension. This allows them to dial their own number to get to voicemail.</div>
+            </div>
+        </form>
+        <div class="buttons-center">
+            <button id="add" class="btn primary">OK</button>
+        </div>
+        <div class="clear"/>
+    </div>
+</div>
+

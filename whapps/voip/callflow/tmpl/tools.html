@@ -1,0 +1,22 @@
+<div>
+    <div>
+        <div class="title">Actions<div class="tooltip"/></div>
+        {{each(category, actions) categories}}
+            <div id="${category.toLowerCase().replace(/\s/,'')}" name="${category.toLowerCase().replace(/\s/,'')}" class="category inactive">
+                <div class="open">${category}</div>
+                <div class="content">
+                    {{each(i, action) actions}}
+                        <div class="tool" help="${nodes[action].tip}">
+                            <div name="${action}" class="action">
+                                <div class="icon medium app_sm ${nodes[action].icon}"></div>
+                                <div class="tool_name">${nodes[action].name}</div>
+                            </div>
+                        </div>
+                    {{/each}}
+                    <div class="clear"></div>
+                    <div class="app_list_nav"></div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

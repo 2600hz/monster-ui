@@ -1,0 +1,180 @@
+#statistics_navbar .stat_wrapper[data-name="credits"] #credits_label {
+    height: 18px;
+}
+
+#statistics_navbar .stat_wrapper[data-name="credits"] .add_credits_label {
+    height: 10px;
+    font-size: 10px;
+    color: #919191;
+}
+
+#statistics_navbar .stat_wrapper[data-name="credits"] .green {
+    color: #33cc44;
+}
+
+#statistics_navbar .stat_wrapper[data-name="credits"] .orange {
+    color: #ff9933;
+}
+
+#statistics_navbar .stat_wrapper[data-name="credits"] .red {
+    color: #ff3322;
+}
+
+#statistics_navbar .stat_wrapper[data-name="credits"] .amount_wrapper {
+    height: 51px;
+    max-height: 51px;
+}
+
+#credit_form .dollar {
+    margin-bottom: 10px;
+}
+
+.manage_credits {
+    width: 520px;
+    background-color: #555;
+    cursor: default;
+}
+
+.manage_credits #credits_form {
+    margin: 15px 0px 0px 0px;
+}
+
+.manage_credits .panes {
+    width: 430px;
+    color: #333;
+    background-color: #eee;
+    margin-bottom: 15px;
+    padding: 20px;
+    margin-left: 18px;
+    border: 1px solid #727272;
+}
+
+.manage_credits .panes .buttons_centered {
+    padding-bottom: 0px;
+}
+
+.manage_credits .current_balance_wrapper {
+    margin: 20px 0 20px 0;
+    text-align: left;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.manage_credits .current_balance_wrapper button {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.manage_credits .trunk_line .right {
+    float: left;
+    max-width: 251px;
+    margin-left: 5px;
+    line-height: 24px;
+}
+
+.manage_credits .trunk_line .left {
+    float: left;
+    line-height: 24px;
+}
+
+.manage_credits .note {
+    margin-top: 15px;
+    font-size: 10px;
+    line-height: 13px;
+}
+
+.manage_credits .price {
+    font-weight: bold;
+}
+
+.manage_credits .infinity_icon {
+    background: url(images/small_infinity_sign.png) center center no-repeat;
+    width: 44px;
+    height: 10px;
+    display: inline-block;
+}
+
+.manage_credits #inbound_calls, .manage_credits #outbound_calls, .manage_credits #add_credits {
+    width: 30px;
+    height: 16px;
+    font-weight: bold;
+    color: #05addc;
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+.manage_credits #add_credits {
+    width: 60px;
+}
+
+.manage_credits .description {
+    margin-bottom: 20px;
+}
+
+.manage_credits .trunk_block {
+    padding-bottom: 15px;
+}
+
+.manage_credits .price_wrapper {
+    font-size: 24px;
+}
+
+.manage_credits .purchase_credits {
+    margin-left: 5px;
+    float: right;
+}
+
+/* TO REMOVE ONCE TABS ARE REDONE */
+.manage_credits .settings_tabs li > a:hover {
+    color: #fff;
+}
+
+.manage_credits .settings_tabs {
+    margin: 5px 0 0 31px;
+    list-style: none;
+}
+
+.manage_credits .settings_tabs > li {
+    width: 150px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #555;
+    border-left: none;
+    float: left;
+    border-radius: 0px 5px 0px 0px;
+    color: #fff;
+    text-align: center;
+    background: #b2b2b2; /* Old browsers */
+    background: -moz-linear-gradient(top, #b2b2b2 1%, #7c7c7c 50%, #333333 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#b2b2b2), color-stop(50%,#7c7c7c), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #b2b2b2 1%,#7c7c7c 50%,#333333 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #b2b2b2 1%,#7c7c7c 50%,#333333 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #b2b2b2 1%,#7c7c7c 50%,#333333 100%); /* IE10+ */
+    background: linear-gradient(top, #b2b2b2 1%,#7c7c7c 50%,#333333 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2b2b2', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+}
+
+.manage_credits .settings_tabs > li:first-child {
+    border-radius: 5px 0px 0px 0px;
+    border-left: 1px solid #555;
+}
+
+.manage_credits .settings_tabs > li.current{
+    background: #05addc; /* Old browsers */
+    background: -moz-linear-gradient(top, #05addc 0%, #2989d8 50%, #203838 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#05addc), color-stop(50%,#2989d8), color-stop(100%,#203838)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #05addc 0%,#2989d8 50%,#203838 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #05addc 0%,#2989d8 50%,#203838 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #05addc 0%,#2989d8 50%,#203838 100%); /* IE10+ */
+    background: linear-gradient(top, #05addc 0%,#2989d8 50%,#203838 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05addc', endColorstr='#203838',GradientType=0 ); /* IE6-9 */
+}
+
+.manage_credits .settings_tabs > li > a{
+    outline: none;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    width: 150px;
+    height: 22px;
+}

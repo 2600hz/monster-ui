@@ -1,0 +1,42 @@
+<div>
+    <div class="number_row">
+        {{if numbers[1] || numbers[1] === ''}}
+            <div class="number_column first" data-number="${numbers[0]}">
+                {{if numbers[0] == 'no_match'}}
+                    Catch all
+                {{else numbers[0] == ''}}
+                    (no number)
+                {{else}}
+                    ${numbers[0]}
+                {{/if}}
+                <span class="delete"/>
+            </div>
+
+            <div class="number_column second" data-number="${numbers[1]}">
+                {{if numbers[1] == "no_match"}}
+                    Catch all
+                {{else numbers[1] == ''}}
+                    (no number)
+                {{else}}
+                    ${numbers[1]}
+                {{/if}}
+                <span class="delete"/>
+            </div>
+        {{else numbers[0] || numbers[0] === ''}}
+            <div class="number_column first" data-number="${numbers[0]}">
+                {{if numbers[0] == 'no_match'}}
+                    Catch all
+                {{else numbers[0] == ''}}
+                    (no number)
+                {{else}}
+                    ${numbers[0]}
+                {{/if}}
+                <span class="delete"/>
+            </div>
+            <div class="number_column empty second">Click to add number</div>
+        {{else}}
+            <div class="number_column empty full">Click to add number</div>
+        {{/if}}
+        <div class="clear"/>
+    </div>
+</div>
