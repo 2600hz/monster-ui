@@ -1,0 +1,23 @@
+{
+    "login": "Identifiant",
+    "password": "Mot de Passe",
+    "remember_me": "Se souvenir de moi",
+    "btn_login": "S'identifier",
+    "forgot_password": "Mot de passe oubli&eacute;?",
+    "are_you_a_new_user": "&Ecirc;tes-vous un nouvel utilisateur?",
+    "easy_to_start": "Facile a utiliser",
+    "free_demo_account": "&Eacute;ssayez gratuitement",
+    "make_calls_in_minutes": "Appelez d&egrave;s les premi&egrave;res minutes!",
+    "account_name": "Nom de compte",
+    "account_realm": "Royaume du compte",
+    "phone_number": "Num&eacute;ro de telephone",
+    "send_a_link": "Nous vous enverrons un e-mail pour restaurer votre mot de passe",
+    "recover_password_directions": "Veuillez taper votre identifiant ainsi que le nom ou royaume du compte ou encore un num&eacute;ro de t&eacute;l&eacute;phone appartenant a ce compte.",
+    "username": "Nom d'utilisateur",
+    "login_placeholder": "michel_dupont",
+    "account_realm_placeholder": "mon_royaume",
+    "account_name_placeholder": "mon_nom_de_compte",
+    "phone_number_placeholder": "+33149882171",
+    "recover": "R&eacute;cup&eacute;rer",
+    "recover_popup_title": "R&eacute;cup&eacute;rer mon mot de passe"
+}

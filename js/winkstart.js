@@ -42,19 +42,76 @@
         }
 
         return ret;
-    }
+    },
 
     winkstart.subscribe   = amplify.subscribe;
     winkstart.unsubscribe = amplify.unsubscribe;
 
     winkstart.templates = {};
     winkstart.css = {};
+    winkstart.locales = {};
+
+    /* First we need to load translation of the config folder */
+    var default_languages = [winkstart.config.language || 'en', winkstart.config.fallback_language || 'en'];
+    $.each(default_languages, function(k, language) {
+        var namespace = 'translation';
+        $.ajax({
+            url : 'config/locales/' + language +'/'+namespace+'.json',
+            cache: false,
+            success : function(data) {
+                var parsed_data = {};
+                parsed_data[language] = {};
+                parsed_data[language][namespace] = {};
+                parsed_data[language][namespace]['config'] = JSON.parse(data);
+
+                $.extend(true, winkstart.locales || {}, parsed_data);
+
+                i18n.init({
+                        ns: { namespaces: [namespace], defaultNs: namespace },
+                        resStore: winkstart.locales,
+                        lng: winkstart.config.language || 'en',
+                        fallbackLng: winkstart.config.fallback_language || 'en'
+                    }
+                );
+            }
+        });
+    });
 
     winkstart.module = amplify.module;
     amplify.module.constructor = function(args, callback) {
         var completed = 0, THIS = this;
 
-        if ( this.config.templates ) {
+        if(this.config.locales) {
+            var parsed_data = {},
+                namespace = 'translation';
+
+            $.each(this.config.locales, function(k, language) {
+                if(language === (winkstart.config.language || 'en') || language === (winkstart.config.fallback_language || 'en')) {
+                    $.ajax({
+                        url : 'whapps/' + THIS.__whapp + '/' + THIS.__module + '/locales/' + language +'/'+namespace+'.json',
+                        cache: false,
+                        success : function(data) {
+                            parsed_data[language] = {};
+                            parsed_data[language][namespace] = {};
+                            parsed_data[language][namespace][THIS.__whapp] = {};
+                            parsed_data[language][namespace][THIS.__whapp][THIS.__module] = JSON.parse(data);
+
+                            $.extend(true, winkstart.locales || {}, parsed_data);
+
+                            i18n.init({
+                                    ns: { namespaces: [namespace], defaultNs: namespace },
+                                    resStore: winkstart.locales,
+                                    lng: winkstart.config.language || 'en',
+                                    fallbackLng: winkstart.config.fallback_language || 'en'
+                                }
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+        if(this.config.templates) {
             this.templates = {};
             $.each(this.config.templates, function(name, url) {
                 completed++;
@@ -70,13 +127,22 @@
                         cache: false,
                         success: function(template) {
                             completed--;
-                            THIS.templates[name] = $(template);
-                        }});
+
+                            /* TODO remove jQuery template support */
+                            if(url.indexOf('handlebars') >= 0) {
+                                THIS.templates[name] = Handlebars.compile(template);
+                                THIS.templates[name].tmpl = function(data) { return $(this(data)); };
+                            }
+                            else {
+                                THIS.templates[name] = $(template);
+                            }
+                        }
+                    });
                 }
             });
         }
 
-        if ( this.config.requires ) {
+        if(this.config.requires) {
             $.each(this.config.requires, function(k, module) {
                                 winkstart.log('Loading dependency ' + k + ' ' + module);
                 completed++;
@@ -86,7 +152,7 @@
             });
         }
 
-        if ( this.config.css ) {
+        if(this.config.css) {
             this.css = {};
             $.each(this.config.css, function(name, url) {
                 if(THIS.__module + '/' + url in (winkstart.css[THIS.__whapp] || {})) {
@@ -101,7 +167,7 @@
             });
         }
 
-        if ( this.config.subscribe ) {
+        if(this.config.subscribe) {
             $.each(this.config.subscribe, function(k, v) {
                 winkstart.subscribe(k, function() {
                     var ret = true;

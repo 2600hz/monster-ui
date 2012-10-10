@@ -3,9 +3,11 @@ winkstart.module('voip', 'user', {
             'css/user.css'
         ],
 
+        locales: ['en', 'fr', 'de'],
+
         templates: {
             user: 'tmpl/user.html',
-            edit: 'tmpl/edit.html',
+            edit: 'tmpl/edit.handlebars',
             user_callflow: 'tmpl/user_callflow.html',
             device_row: 'tmpl/device_row.html'
         },

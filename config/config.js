@@ -4,6 +4,10 @@
         /* Was winkstart.debug */
         debug: false,
 
+        /* Language settings */
+        language: 'fr',
+        fallback_language: 'en',
+
         advancedView: false,
 
         /* Registration Type */

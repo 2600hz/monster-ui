@@ -4,10 +4,12 @@ winkstart.module('auth', 'auth',
             'css/auth.css'
         ],
 
+        locales: ['en', 'fr', 'en-US'],
+
         templates: {
-            recover_password: 'tmpl/recover_password.html',
+            recover_password: 'tmpl/recover_password.handlebars',
             login: 'tmpl/login.html',
-            new_login: 'tmpl/new_login.html',
+            new_login: 'tmpl/new_login.handlebars',
             register: 'tmpl/register.html',
             new_password: 'tmpl/new_password.html',
             code: 'tmpl/code.html',
@@ -155,7 +157,7 @@ winkstart.module('auth', 'auth',
                        winkstart.publish('auth.welcome', {username: data.data.user.username});
                    });
 
-                   if(data.auth_token != '' && data.auth_token != 'null' && data.auth_token != 'undefined'){
+                   if(data.auth_token != '' && data.auth_token != 'null'){
                         winkstart.apps['auth'].account_id = data.data.account.id;
                         winkstart.apps['auth'].auth_token = data.auth_token;
                         winkstart.apps['auth'].user_id = data.data.user.id;
@@ -280,12 +282,16 @@ winkstart.module('auth', 'auth',
                 realm = THIS.get_realm_from_url(),
                 cookie_login = $.parseJSON($.cookie('c_winkstart.login')) || {},
                 data_tmpl = {
+                    label: {
+                        login: 'Login:'
+                    },
                     username: username || cookie_login.login || '',
                     request_account_name: (realm || account_name) ? false : true,
                     account_name: account_name || cookie_login.account_name || '',
                     remember_me: cookie_login.login || cookie_login.account_name ? true : false,
                     register_btn: winkstart.config.hide_registration || false
                 },
+                //login_html = winkstart.get_template(THIS.templates_hb.new_login, data_tmpl),
                 login_html = THIS.templates.new_login.tmpl(data_tmpl),
                 code_html = THIS.templates.code.tmpl(),
                 contentDiv = $('.welcome-page-top .right_div', '#content_welcome_page')
@@ -694,7 +700,7 @@ winkstart.module('auth', 'auth',
             var THIS = this;
 
             var dialogRecover = winkstart.dialog(THIS.templates.recover_password.tmpl({}), {
-                title: 'Recover Password'
+                title: i18n.t('auth.auth.recover_popup_title')
             });
 
             winkstart.validate.set(THIS.config.validation_recover, dialogRecover);

@@ -13,7 +13,8 @@ winkstart.module('core', 'layout', {
         templates: {
             layout: 'tmpl/layout.html',
             layout_welcome: 'tmpl/layout_welcome.html',
-            left_welcome: '../../../config/tmpl/left_welcome.html',
+            //left_welcome: '../../../config/tmpl/left_welcome.html',
+            left_welcome: '../../../config/tmpl/left_welcome.handlebars',
             not_supported_browsers: 'tmpl/not_supported_browsers.html'
         },
 
@@ -126,8 +127,8 @@ winkstart.module('core', 'layout', {
             }
             else {
                 layout_welcome_html = THIS.templates.layout_welcome.tmpl().appendTo($('#ws-content'));
-                var data_welcome = { 
-                    company_name: winkstart.config.company_name, 
+                var data_welcome = {
+                    company_name: winkstart.config.company_name,
                     company_website: winkstart.config.company_website,
                     learn_more: winkstart.config.nav.learn_more || "http://www.2600hz.com/"
                 };

@@ -1,0 +1,9 @@
+{
+    "edit_user": "Benutzereinstellungen bearbeiten",
+    "create_user": "Benutzer erstellen",
+    "basic": "Grund",
+    "advanced": "fortgeschritten",
+    "username": "Benutzername",
+    "username_placeholder": "Hans Lehmann",
+    "username_popover": "Dies ist die Hilfe des Benutzernamens"
+}
