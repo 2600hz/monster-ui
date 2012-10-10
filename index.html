@@ -3,6 +3,8 @@
     <head>
         <meta charset='utf-8'>
         <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <!-- Awesome URL Parsing -->
         <script type="text/javascript">
             var URL_PARTS = window.location.href.match(/^([^\?#]+)[\?#]*([^#]*).*$/).slice(1),
@@ -21,65 +23,72 @@
                 }();
         </script>
 
-        <script type="text/javascript" src="js/external/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="js/external/jquery-ui-1.8.7.custom.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-        <link type="text/css" href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-
-        <script type="text/javascript" src="js/external/handlebars-1.0.rc.1.js"></script>
-        <script type="text/javascript" src="js/external/i18next-1.5.7.min.js"></script>
-
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-alerts.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-buttons.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-modal.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-twipsy.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-popover.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-scrollspy.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap-tabs.js"></script>
-
+        <!-- CSS -->
         <link type="text/css" href="css/validate.css" rel="stylesheet" media="screen" />
         <link type="text/css" href="css/tables.css" rel="stylesheet" media="screen" />
         <link type="text/css" href="css/jslider/jslider.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.8.custom.css" rel="Stylesheet" />
 
-        <link type="text/css" href="js/external/ui-listpanel/css/ui.listpanel.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="js/external/ui-listpanel/css/jquery.jscrollpane.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="css/jquery.tooltip.css" rel="stylesheet" media="screen" />
-        <script type="text/javascript" src="js/external/jquery.cors.js"></script>
+        <!-- Google JS-->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-        <script type="text/javascript" src="js/external/form2object.js"></script>
-        <script type="text/javascript" src="js/external/md5_generator.js"></script>
-        <script type="text/javascript" src="js/external/jstz.min.js"></script>
-        <script type="text/javascript" src="js/external/tmpl/jquery.tmpl.js"></script>
-        <script type="text/javascript" src="js/external/tmpl/jquery.tmplPlus.js"></script>
-        <script type="text/javascript" src="js/external/jquery.dataset.js"></script>
-        <script type="text/javascript" src="js/external/jquery.isObject.js"></script>
-        <script type="text/javascript" src="js/external/jquery.mousewheel.js"></script>
-        <script type="text/javascript" src="js/external/jquery.jscrollpane.min.js"></script>
-        <script type="text/javascript" src="js/external/jquery.hoverIntent.minified.js"></script>
-        <script type="text/javascript" src="js/external/jquery.dataTables.js"></script>
-        <script type="text/javascript" src="js/external/jquery.slider.js"></script>
-        <script type="text/javascript" src="js/external/ui-listpanel/ui.listpanel.js"></script>
-        <script type="text/javascript" src="js/external/lab.js"></script>
-        <script type="text/javascript" src="js/external/jquery.cookie.js"></script>
-        <script type="text/javascript" src="js/external/jquery.switch.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="lib/jquery/jquery-1.8.2.min.js"></script>
 
-        <script type="text/javascript" src="js/amplify/_amplify.js"></script>
+         <!-- jQuery UI-->
+        <script type="text/javascript" src="lib/jquery/UI/jquery-ui-1.9.0.custom.min.js"></script>
+        <link type="text/css" href="lib/jquery/UI/ui-lightness/jquery-ui-1.8.8.custom.css" rel="Stylesheet" />
+
+        <!-- lib/bootstrap -->
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+        <link type="text/css" href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen" />
+
+        <!-- listpanel -->
+        <script type="text/javascript" src="lib/ui-listpanel/ui.listpanel.js"></script>
+        <link type="text/css" href="lib/ui-listpanel/css/ui.listpanel.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="lib/ui-listpanel/css/jquery.jscrollpane.css" rel="stylesheet" media="screen" />
+
+        <!-- External libs -->
+        <script type="text/javascript" src="lib/external/handlebars-1.0.rc.1.js"></script>
+        <script type="text/javascript" src="lib/external/i18next-1.5.7.min.js"></script>
+        <script type="text/javascript" src="lib/external/form2object.js"></script>
+        <script type="text/javascript" src="lib/external/md5_generator.js"></script>
+        <script type="text/javascript" src="lib/external/jstz.min.js"></script>
+        <script type="text/javascript" src="lib/external/lab.js"></script>
+        
+        
+        <!-- jQuery plugins -->
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.cors.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/tmpl/jquery.tmpl.min.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/tmpl/jquery.tmplPlus.min.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.dataset.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.isObject.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.mousewheel.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.jscrollpane.min.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.hoverIntent.minified.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.slider.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.cookie.js"></script>
+        <script type="text/javascript" src="lib/jquery/plugins/jquery.switch.js"></script>
+
+        
+        <!-- Amplify -->
+        <script type="text/javascript" src="lib/amplify/_amplify.js"></script>
         <script>var _amplify = amplify;</script>
-        <script type="text/javascript" src="js/amplify/amplify.core.js"></script>
+        <script type="text/javascript" src="lib/amplify/amplify.core.js"></script>
         <script>$.extend( amplify, _amplify );</script>
-        <script type="text/javascript" src="js/amplify/amplify.request.js"></script>
-        <script type="text/javascript" src="js/amplify/amplify.request.poll.js"></script>
+        <script type="text/javascript" src="lib/amplify/amplify.request.js"></script>
+        <script type="text/javascript" src="lib/amplify/amplify.request.poll.js"></script>
 
+        <!-- Winkstart -->
         <script type="text/javascript" src="config/config.js"></script>
-        <script type="text/javascript" src="js/winkstart-bootstrap.js"></script>
-        <script type="text/javascript" src="js/winkstart-request.js"></script>
-        <script type="text/javascript" src="js/winkstart-util.js"></script>
-        <script type="text/javascript" src="js/winkstart-tables.js"></script>
-        <script type="text/javascript" src="js/winkstart-validate.js"></script>
-        <script type="text/javascript" src="js/winkstart-timezone.js"></script>
-        <script type="text/javascript" src="js/winkstart.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-bootstrap.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-request.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-util.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-tables.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-validate.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart-timezone.js"></script>
+        <script type="text/javascript" src="lib/winkstart/winkstart.js"></script>
 
         <script type="text/javascript">
             var favicon = document.createElement('link');
