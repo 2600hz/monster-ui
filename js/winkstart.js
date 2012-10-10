@@ -59,15 +59,13 @@
             url : 'config/locales/' + language +'/'+namespace+'.json',
             cache: false,
             success : function(data) {
-                console.log(data);
-                console.log(JSON.stringify(data))
-                console.log(JSON.parse(data))
-
-                var parsed_data = {};
+                /* On different browser/OS sometimes the data is a string and sometimes an object... */
+                var data = typeof data === 'object' ? data : JSON.parse(data),
+                    parsed_data = {};
 
                 parsed_data[language] = {};
                 parsed_data[language][namespace] = {};
-                parsed_data[language][namespace]['config'] = JSON.parse(data);
+                parsed_data[language][namespace]['config'] = data;
 
                 $.extend(true, winkstart.locales || {}, parsed_data);
 
@@ -95,16 +93,14 @@
                         url : 'whapps/' + THIS.__whapp + '/' + THIS.__module + '/locales/' + language +'/'+namespace+'.json',
                         cache: false,
                         success : function(data) {
-                            console.log(data);
-                            console.log(JSON.stringify(data))
-                            console.log(JSON.parse(data))
-
-                            var parsed_data = {};
+                            /* On different browser/OS sometimes the data is a string and sometimes an object... */
+                            var data = typeof data === 'object' ? data : JSON.parse(data),
+                                parsed_data = {};
 
                             parsed_data[language] = {};
                             parsed_data[language][namespace] = {};
                             parsed_data[language][namespace][THIS.__whapp] = {};
-                            parsed_data[language][namespace][THIS.__whapp][THIS.__module] = JSON.parse(data);
+                            parsed_data[language][namespace][THIS.__whapp][THIS.__module] = data;
 
                             $.extend(true, winkstart.locales || {}, parsed_data);
 
