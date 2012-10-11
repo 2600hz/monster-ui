@@ -60,8 +60,10 @@
             cache: false,
             success : function(data) {
                 console.log(data);
-                var data = JSON.parse(JSON.stringify(data)),
-                    parsed_data = {};
+                console.log(JSON.stringify(data))
+                console.log(JSON.parse(data))
+
+                var parsed_data = {};
 
                 parsed_data[language] = {};
                 parsed_data[language][namespace] = {};
@@ -93,8 +95,11 @@
                         url : 'whapps/' + THIS.__whapp + '/' + THIS.__module + '/locales/' + language +'/'+namespace+'.json',
                         cache: false,
                         success : function(data) {
-                            var data = JSON.parse(JSON.stringify(data)),
-                                parsed_data = {};
+                            console.log(data);
+                            console.log(JSON.stringify(data))
+                            console.log(JSON.parse(data))
+
+                            var parsed_data = {};
 
                             parsed_data[language] = {};
                             parsed_data[language][namespace] = {};
