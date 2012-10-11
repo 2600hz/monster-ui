@@ -27,6 +27,8 @@ winkstart.module('voip', 'menu', {
             { name: '#hunt_deny',            regex: /^.*$/ }
         ],
 
+        schemas: ['menus'],
+
         resources: {
             'menu.list': {
                 url: '{api_url}/accounts/{account_id}/menus',
@@ -84,44 +86,78 @@ winkstart.module('voip', 'menu', {
             var THIS = this,
                 normalized_data = THIS.normalize_data($.extend(true, {}, data.data, form_data));
 
-            if (typeof data.data == 'object' && data.data.id) {
-                winkstart.request(true, 'menu.update', {
-                        account_id: winkstart.apps['voip'].account_id,
-                        api_url: winkstart.apps['voip'].api_url,
-                        menu_id: data.data.id,
-                        data: normalized_data
-                    },
-                    function(_data, status) {
-                        if(typeof success == 'function') {
-                            success(_data, status, 'update');
-                        }
-                    },
-                    function(_data, status) {
-                        if(typeof error == 'function') {
-                            error(_data, status, 'update');
-                        }
-                    }
-                );
-            }
-            else {
-                winkstart.request(true, 'menu.create', {
-                        account_id: winkstart.apps['voip'].account_id,
-                        api_url: winkstart.apps['voip'].api_url,
-                        data: normalized_data
-                    },
-                    function (_data, status) {
-                        if(typeof success == 'function') {
-                            success(_data, status, 'create');
-                        }
-                    },
-                    function(_data, status) {
-                        if(typeof error == 'function') {
-                            error(_data, status, 'update');
-                        }
-                    }
+             //HACK
+            THIS.schemas['menus'].properties.name.required = true;
 
-                );
-            }
+            winkstart.validate(normalized_data, THIS.schemas['menus'], 
+                function() {
+                    if (typeof data.data == 'object' && data.data.id) {
+                        winkstart.request(true, 'menu.update', {
+                                account_id: winkstart.apps['voip'].account_id,
+                                api_url: winkstart.apps['voip'].api_url,
+                                menu_id: data.data.id,
+                                data: normalized_data
+                            },
+                            function(_data, status) {
+                                if(typeof success == 'function') {
+                                    success(_data, status, 'update');
+                                }
+                            },
+                            function(_data, status) {
+                                if(typeof error == 'function') {
+                                    error(_data, status, 'update');
+                                }
+                            }
+                        );
+                    }
+                    else {
+                        winkstart.request(true, 'menu.create', {
+                                account_id: winkstart.apps['voip'].account_id,
+                                api_url: winkstart.apps['voip'].api_url,
+                                data: normalized_data
+                            },
+                            function (_data, status) {
+                                if(typeof success == 'function') {
+                                    success(_data, status, 'create');
+                                }
+                            },
+                            function(_data, status) {
+                                if(typeof error == 'function') {
+                                    error(_data, status, 'update');
+                                }
+                            }
+
+                        );
+                    }
+                },
+                function(errors, obj) {
+                    console.log(obj);
+                    console.log(errors);
+
+                    $.each(errors, function(k, err) {
+                        var tmp = err.uri.split('#'),
+                            selector = "";
+
+                        tmp = tmp[1].split('/').splice(1);
+
+                        $.each(tmp, function(i, v) {
+                            if(i == 0){
+                                selector += v;
+                            } else {
+                                selector += '.' + v;
+                            }
+                        });
+
+                        $selector = $('[name="' + selector + '"]')
+                                        .parents('.clearfix')
+                                        .addClass('error')
+                                        .find('.help-inline')
+                                        .text(err.message + ' (' + err.details + ')');
+                        console.log(selector, $selector);
+                    });
+                    
+                }
+            );
         },
 
         edit_menu: function(data, _parent, _target, _callbacks, data_defaults){
@@ -227,7 +263,7 @@ winkstart.module('voip', 'menu', {
             var THIS = this,
                 menu_html = THIS.templates.edit.tmpl(data);
 
-            winkstart.validate.set(THIS.config.validation, menu_html);
+            //winkstart.validate.set(THIS.config.validation, menu_html);
 
             $('*[rel=popover]:not([type="text"])', menu_html).popover({
                 trigger: 'hover'
@@ -278,7 +314,7 @@ winkstart.module('voip', 'menu', {
             $('.menu-save', menu_html).click(function(ev) {
                 ev.preventDefault();
 
-                winkstart.validate.is_valid(THIS.config.validation, menu_html, function() {
+                //winkstart.validate.is_valid(THIS.config.validation, menu_html, function() {
                         var form_data = form2object('menu-form');
 
                         THIS.clean_form_data(form_data);
@@ -288,11 +324,11 @@ winkstart.module('voip', 'menu', {
                         }
 
                         THIS.save_menu(form_data, data, callbacks.save_success, winkstart.error_message.process_error(callbacks.save_error));
-                    },
+                /*    },
                     function() {
                         winkstart.alert('There were errors on the form, please correct!');
                     }
-                );
+                );*/
             });
 
             $('.menu-delete', menu_html).click(function(ev) {
@@ -309,6 +345,22 @@ winkstart.module('voip', 'menu', {
         },
 
         normalize_data: function(form_data) {
+            if(form_data.retries) {
+                form_data.retries = parseInt(form_data.retries);
+            }
+
+            if(form_data.retries == '') {
+                delete form_data.retries;
+            }
+
+            if(form_data.max_extension_length) {
+                form_data.max_extension_length = parseInt(form_data.max_extension_length);
+            }
+
+            if(form_data.max_extension_length == '') {
+                delete form_data.max_extension_length;
+            }
+
             if(!form_data.media.greeting) {
                 delete form_data.media.greeting;
             }

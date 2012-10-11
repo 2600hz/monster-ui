@@ -187,6 +187,42 @@
             });
         }
 
+        //Validation engine
+        if(this.config.schemas) {
+
+            winkstart.validate = function(obj, schema, success, failure) {
+                var env = JSV.createEnvironment("json-schema-draft-03"),
+                    res = env.validate(obj, schema);
+
+                if(res.errors.length === 0) {
+                    if(typeof success == 'function') {
+                        success(obj);
+                    }
+                } else {
+                    if(typeof failure == 'function') {
+                        failure(res.errors, obj);
+                    }
+                }
+            };
+
+            THIS.schemas = {};
+
+            $.each(this.config.schemas, function(k, schema) {
+                completed++;
+                $.ajax({
+                    url: winkstart.apps[THIS.__whapp].api_url + '/schemas' + '/' + schema,
+                    type: 'GET',
+                    success: function(data) {
+                        THIS.schemas[schema] = {
+                            type: 'object',
+                            properties: data.data.properties
+                        }
+                        completed--;
+                    }
+                });
+            });
+        }
+
         setTimeout(function() {
             completed = 0;
         }, 3000);
