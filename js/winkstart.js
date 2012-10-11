@@ -59,7 +59,10 @@
             url : 'config/locales/' + language +'/'+namespace+'.json',
             cache: false,
             success : function(data) {
-                var parsed_data = {};
+                console.log(data);
+                var data = JSON.parse(JSON.stringify(data)),
+                    parsed_data = {};
+
                 parsed_data[language] = {};
                 parsed_data[language][namespace] = {};
                 parsed_data[language][namespace]['config'] = JSON.parse(data);
@@ -82,8 +85,7 @@
         var completed = 0, THIS = this;
 
         if(this.config.locales) {
-            var parsed_data = {},
-                namespace = 'translation';
+            var namespace = 'translation';
 
             $.each(this.config.locales, function(k, language) {
                 if(language === (winkstart.config.language || 'en') || language === (winkstart.config.fallback_language || 'en')) {
@@ -91,6 +93,9 @@
                         url : 'whapps/' + THIS.__whapp + '/' + THIS.__module + '/locales/' + language +'/'+namespace+'.json',
                         cache: false,
                         success : function(data) {
+                            var data = JSON.parse(JSON.stringify(data)),
+                                parsed_data = {};
+
                             parsed_data[language] = {};
                             parsed_data[language][namespace] = {};
                             parsed_data[language][namespace][THIS.__whapp] = {};
