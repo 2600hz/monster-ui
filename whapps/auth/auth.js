@@ -580,6 +580,15 @@ winkstart.module('auth', 'auth',
                             }
 
                             var landing = true;
+
+
+                            var uri = winkstart.history();
+                            if(uri == false) {
+                                landing = true;
+                            } else {
+                                landing = false;
+                            }
+
                             $.each(json.data.apps, function(k, v) {
                                 if(v['default']) {
                                     landing = false;

@@ -235,19 +235,19 @@
 
                     var uri = winkstart.history();
 
-                    if(uri.length == 1) {
-                        if(THIS.__whapp == uri[0] && THIS.__module == uri[0]) {
-                            winkstart.publish(uri[0] + '.activate', {});
-                        }
-                    } else {
-                        if(THIS.__whapp == uri[0]) {
-                            if(THIS.__module == uri[1]) {
-                                winkstart.publish(uri[0] + '.module_activate', {name: uri[1]});
+                    if(uri) {
+                        if(uri.length == 1) {
+                            if(THIS.__whapp == uri[0] && THIS.__module == uri[0]) {
+                                winkstart.publish(uri[0] + '.activate', {});
+                            }
+                        } else {
+                            if(THIS.__whapp == uri[0]) {
+                                if(THIS.__module == uri[1]) {
+                                    winkstart.publish(uri[0] + '.module_activate', {name: uri[1]});
+                                }
                             }
                         }
                     }
-
-                    
                 }
                 return;
             }
