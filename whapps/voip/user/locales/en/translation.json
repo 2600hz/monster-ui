@@ -1,8 +1,8 @@
 {
-    "edit_user": "Edit User",
-    "create_user": "Create User",
-    "basic": "Basic",
     "advanced": "Advanced",
+    "basic": "Basic",
+    "create_user": "Create User",
+    "edit_user": "Edit User",
     "username": "Username",
     "username_placeholder": "John Doe",
     "username_popover": "This is the help of the username"

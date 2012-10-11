@@ -1,8 +1,8 @@
 {
-    "edit_user": "Editer Utilisateur",
-    "create_user": "Creer Utilisateur",
-    "basic": "Basique",
     "advanced": "Avance",
+    "basic": "Basique",
+    "create_user": "Creer Utilisateur",
+    "edit_user": "Editer Utilisateur",
     "username": "Nom d'utilisateur",
     "username_placeholder": "Jean-Roch Maitre",
     "username_popover": "Ceci est l'aide de l'utilisateur"
