@@ -46,12 +46,12 @@ winkstart.module('core', 'whappnav', {
                 whapp_divider_html = THIS.templates.whapp_divider.tmpl();
 
             $('> a', whapp_html).click(function(ev) {
-                ev.preventDefault();
+                //ev.preventDefault();
 
                 if(!(whapp_html.hasClass('disabled'))) {
                     $('.whapps .whapp > a').removeClass('activate');
                     $(this).addClass('activate');
-                    winkstart.publish(args.name + '.activate', {});
+                    //winkstart.publish(args.name + '.activate', {});
                 }
             });
 
@@ -159,12 +159,12 @@ winkstart.module('core', 'whappnav', {
             THIS.ensure_dropdown(whapp_html);
 
             $('> a', whapp_module_html).click(function(ev) {
-                ev.preventDefault();
+                //ev.preventDefault();
 
                 $('.whapps .whapp > a').removeClass('activate');
                 $(this).parents('.whapp').find('a').addClass('activate');
 
-                winkstart.publish(data.whapp + '.module_activate', { name: data.module });
+                //winkstart.publish(data.whapp + '.module_activate', { name: data.module });
             });
 
             (whapp_module_list_html).each(function(index) {
