@@ -190,7 +190,7 @@
         //Validation engine
         if(this.config.schemas) {
 
-            winkstart.validate = function(obj, schema, form, success, failure) {
+            winkstart.validate = function(obj, schema, $form, success, failure) {
                 var env = JSV.createEnvironment("json-schema-draft-03"),
                     res = env.validate(obj, schema);
 
@@ -199,6 +199,11 @@
                         success(obj);
                     }
                 } else {
+                    $('.clearfix.error', $form)
+                            .removeClass('error')
+                            .find('.help-inline')
+                            .text('');
+
                     $.each(res.errors, function(k, err) {
                         var properties = err.uri.split('#'),
                             selector = "";
