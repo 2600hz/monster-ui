@@ -89,7 +89,7 @@ winkstart.module('voip', 'menu', {
              //HACK
             THIS.schemas['menus'].properties.name.required = true;
 
-            winkstart.validate(normalized_data, THIS.schemas['menus'], 
+            winkstart.validate(normalized_data, THIS.schemas['menus'], $('#menu-form'),
                 function() {
                     if (typeof data.data == 'object' && data.data.id) {
                         winkstart.request(true, 'menu.update', {
@@ -133,29 +133,6 @@ winkstart.module('voip', 'menu', {
                 function(errors, obj) {
                     console.log(obj);
                     console.log(errors);
-
-                    $.each(errors, function(k, err) {
-                        var tmp = err.uri.split('#'),
-                            selector = "";
-
-                        tmp = tmp[1].split('/').splice(1);
-
-                        $.each(tmp, function(i, v) {
-                            if(i == 0){
-                                selector += v;
-                            } else {
-                                selector += '.' + v;
-                            }
-                        });
-
-                        $selector = $('[name="' + selector + '"]')
-                                        .parents('.clearfix')
-                                        .addClass('error')
-                                        .find('.help-inline')
-                                        .text(err.message + ' (' + err.details + ')');
-                        console.log(selector, $selector);
-                    });
-                    
                 }
             );
         },
