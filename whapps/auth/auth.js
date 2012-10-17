@@ -8,8 +8,7 @@ winkstart.module('auth', 'auth',
 
         templates: {
             recover_password: 'tmpl/recover_password.handlebars',
-            login: 'tmpl/login.html',
-            new_login: 'tmpl/new_login.handlebars',
+            login: 'tmpl/login.handlebars',
             register: 'tmpl/register.html',
             new_password: 'tmpl/new_password.html',
             code: 'tmpl/code.html',
@@ -18,8 +17,8 @@ winkstart.module('auth', 'auth',
 
         subscribe: {
             'auth.activate' : 'activate',
-            'auth.login' : 'login_popup', //popup login process
-            'auth.welcome' : 'login', //login from the welcome page
+            'auth.login' : 'login_popup',
+            'auth.welcome' : 'login',
             'auth.load_account' : 'load_account',
             'auth.recover_password' : 'recover_password',
             'auth.new_password': 'new_password',
@@ -30,24 +29,6 @@ winkstart.module('auth', 'auth',
             'auth.landing': 'landing',
             'core.loaded': 'core_loaded'
         },
-
-        validation: [
-            { name: '#username', regex: /^[a-zA-Z0-9\_\-]{3,16}$/ },
-            { name: '#email', regex: /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/ }
-        ],
-
-        validation_recover: [
-            { name: '#username', regex: /^.+$/ },
-            { name: '#account_name', regex: /^.*$/ },
-            { name: '#account_realm', regex: /^.*$/ },
-            { name: '#phone_number', regex: /^.*$/ }
-        ],
-
-        validation_new_password: [
-            { name: '#old_password', regex: '.+' },
-            { name: '#new_password1', regex: '.+' },
-            { name: '#new_password2', regex: '.+' }
-        ],
 
         resources: {
             'auth.user_auth': {
@@ -291,7 +272,7 @@ winkstart.module('auth', 'auth',
                     remember_me: cookie_login.login || cookie_login.account_name ? true : false,
                     register_btn: winkstart.config.hide_registration || false
                 },
-                login_html = THIS.templates.new_login.tmpl(data_tmpl),
+                login_html = THIS.templates.login.tmpl(data_tmpl),
                 code_html = THIS.templates.code.tmpl(),
                 contentDiv = $('.welcome-page-top .right_div', '#content_welcome_page')
                                 .empty()

@@ -113,7 +113,7 @@ winkstart.module('core', 'layout', {
                         $('#ws-navbar .logo', layout_html).css('background-image', '');
                     }
                     else {
-                        $('#ws-navbar .logo', layout_html).css('background-image', 'url(config/images/logo.png)');
+                        $('#ws-navbar .logo', layout_html).css('background-image', 'url(config/home/images/logo.png)');
                     }
                 }
             );
@@ -140,7 +140,7 @@ winkstart.module('core', 'layout', {
                 host_parts = host.split('.'),
                 partial_host = host_parts.slice(1).join('.'),
                 logo_html = $('.header > .logo > .img'),
-                img_prefix = 'config/images/logos/',
+                img_prefix = 'config/home/images/logos/',
                 img;
 
             if(typeof winkstart.config.base_urls == 'object') {
@@ -161,7 +161,7 @@ winkstart.module('core', 'layout', {
             }
 
             /* Unfortunately we have to use the old path for the default logo (to not break other installs) */
-            logo_html.css('background-image', 'url(config/images/logo.png)');
+            logo_html.css('background-image', 'url(config/home/images/logo.png)');
         }
     }
 );
