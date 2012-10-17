@@ -274,7 +274,7 @@ winkstart.module('auth', 'auth',
                 },
                 login_html = THIS.templates.login.tmpl(data_tmpl),
                 code_html = THIS.templates.code.tmpl(),
-                contentDiv = $('.welcome-page-top .right_div', '#content_welcome_page')
+                contentDiv = $('.right_div', '#welcome_page')
                                 .empty()
                                 .append(login_html);
 

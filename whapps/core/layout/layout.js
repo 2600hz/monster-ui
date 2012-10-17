@@ -3,11 +3,6 @@ winkstart.module('core', 'layout', {
             '../../../config/home/css/welcome.css',
             'css/layout.css',
             'css/icons.css',
-            'css/popups.css',
-            'css/trunkstore_popups.css',
-            'css/jquery.override.css',
-            'css/popover.css',
-            'css/whapp.css'
         ],
 
         templates: {
@@ -131,7 +126,7 @@ winkstart.module('core', 'layout', {
                     company_website: winkstart.config.company_website,
                     learn_more: winkstart.config.nav.learn_more || "http://www.2600hz.com/"
                 };
-                THIS.templates.left_welcome.tmpl(data_welcome).appendTo($('.welcome-page-top .left_div', layout_welcome_html));
+                THIS.templates.left_welcome.tmpl(data_welcome).appendTo($('.left_div', layout_welcome_html));
             }
         },
 

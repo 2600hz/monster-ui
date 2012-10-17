@@ -6,24 +6,18 @@
     width: 370px;
 }
 
-.content.welcome-page .login-block {
-    border: 1px solid #333;
-    padding-top: 20px;
-    background: #333;
-}
-
 @media all and (max-width: 767px) {
-    .content.welcome-page .login-block{
+    .welcome-page .login-block{
         padding: 30px;
     }
 }
 
 @media all and (min-width: 768px) and (max-width: 979px){
-    .content.welcome-page .left_div {
+    .welcome-page .left_div {
         width: 100%;
     }
 
-    .content.welcome-page .right_div {
+    .welcome-page .right_div {
         width: 100%;
         margin: 20px 0 0 0;
     }
@@ -32,9 +26,6 @@
 @media all and (min-width: 980px) {
     .content.welcome-page {
         text-align: center;
-    }
-
-    .content.welcome-page .welcome-page-top{
         width: 950px;
         display: inline-block;
         text-align: left;
