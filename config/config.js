@@ -225,16 +225,8 @@
 
     winkstart.apps = {
         'auth' : {
-            //api_url: 'http://api.2600hz.com:8000/v1',
-            api_url: 'http://198.101.222.119:8000/v1',
-            /* These are some settings that are set automatically. You are free to override them here.
-            account_id: null,
-            auth_token: null,
-            user_id: null,
-            realm: null
-            */
-        },
-        'myaccount': {}
+            api_url: 'http://api.2600hz.com:8000/v1',
+        }
     };
 
     amplify.cache = false;

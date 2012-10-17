@@ -1,6 +1,6 @@
 winkstart.module('core', 'layout', {
         css: [
-            '../../../config/css/welcome.css',
+            '../../../config/home/css/welcome.css',
             'css/layout.css',
             'css/icons.css',
             'css/popups.css',
@@ -13,8 +13,7 @@ winkstart.module('core', 'layout', {
         templates: {
             layout: 'tmpl/layout.html',
             layout_welcome: 'tmpl/layout_welcome.html',
-            //left_welcome: '../../../config/tmpl/left_welcome.html',
-            left_welcome: '../../../config/tmpl/left_welcome.handlebars',
+            left_welcome: '../../../config/home/tmpl/left_welcome.handlebars',
             not_supported_browsers: 'tmpl/not_supported_browsers.html'
         },
 
