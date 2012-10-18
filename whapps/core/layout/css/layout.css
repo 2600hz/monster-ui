@@ -10,78 +10,42 @@ body {
     height: 100%;
 }
 
+body > .navbar .light-color-bar {
+    background: #05addc;
+    height: 5px;
+    width: 100%;
+    margin-top: 2px;
+}
+
 body > .navbar {
-    position: absolute;
-    height: 72px;
-    min-width: 1029px;
-    box-shadow: 0px 2px 2px #222;
+    width: 100%;
+    margin-bottom: 2%;
 }
 
 body > .navbar .navbar-inner {
-    background: none;
+    max-height: 80px;
+
+    background: rgb(17,17,17); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
+    background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
+
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 0 0;
 }
 
-body > .navbar .navbar-inner > .container-fluid {
-    padding-right: 0px;
-}
-
-#ws-navbar .brand.logo {
-    width: 150px;
-	height: 52px;
-    padding: 10px 21px;
-	/*background-image: url(../../../../config/images/logo.png);*/
+body > .navbar .navbar-inner .logo {
+    float: left;
+    width: 192px;
+    height: 62px;
 	background-repeat: no-repeat;
 	background-position: center center;
-}
-
-#ws-navbar .nav > li a {
-    white-space: nowrap;
-}
-
-#ws-navbar .nav > li .dropdown-menu {
-    max-width: none;
-}
-
-#ws-navbar .nav > li > .dropdown-menu {
-    top: 72px;
-    text-align: left;
-}
-
-#ws-navbar .nav > li .category > .dropdown-menu {
-    top: -6px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-}
-
-#ws-navbar .links {
-    margin: 0px;
-}
-
-#ws-navbar .links > .link {
-    height: 72px;
-}
-
-#ws-navbar .links > .link > a {
-    line-height: 51px;
-}
-
-.container-fluid.page {
-    /* added */
-    margin-top: 72px;
-    padding-left: 0px;
-    padding-right: 0px;
-    height: 100%;
-}
-
-#ws-content {
-    padding-top: 72px;
-    height: auto;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
 }
 
 .main_content {
@@ -102,41 +66,14 @@ body > .navbar .navbar-inner > .container-fluid {
     left: 0;
     position: absolute;
     height: auto;
-    top: 0;
-}
-
-.container-fluid > .content {
-    margin-left: 212px;
+    top: 80px;
 }
 
 .background {
-    background-image: url(../images/bg.jpg);
-    background-repeat: repeat-x;
-    background-color: #6E7377;
+    background: #ccc;
 }
 
 .footer_wrapper {
-    position: fixed;
-    bottom: 2px;
-    text-align: right;
-    right: 0;
-}
-
-.footer_wrapper .powered_by a {
-    margin-right: 5px;
-    text-shadow: 1px 1px 3px #333;
-    font-size: 11px;
-    text-decoration: none;
-    color: #BFBFBF;
-}
-
-.footer_wrapper .powered_by a:hover {
-    color: #ffffff;
-}
-
-.footer_wrapper .tag_version {
-    font-size: 10px;
-    color: #bfbfbf;
 }
 
 #loading {
@@ -210,101 +147,6 @@ body > .navbar .navbar-inner > .container-fluid {
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#05addc', endColorstr='#036884') !important;
     border-radius: 10px 10px 10px 10px;
 }
-
-/* fancy_button */
-.fancy_button {
-    color: #dfdfdf !important;
-    border: solid 1px #333333;
-    border-radius: 5px;
-    padding: 5px 10px;
-    text-decoration: none;
-    user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    box-shadow: 1px 1px 2px #555555;
-    margin-left: 5px;
-    height: 18px;
-    line-height: 18px;
-}
-
-.fancy_button:hover, .fancy_button:focus {
-    cursor: default;
-    color: #dfdfdf !important;
-    background: #333333 !important;
-    background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(#000000)) !important;
-    background: -moz-linear-gradient(top,  #333333,  #000000) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333', endColorstr='#000000') !important;
-    box-shadow: 0px 0px 0px #555555;
-    text-decoration: none;
-}
-
-.fancy_button:active {
-    color: #dfdfdf !important;
-    position:relative;
-    top:1px;
-}
-
-button.fancy_button {
-    height: 27px;
-    line-height: none;
-}
-
-/* block display  */
-.fancy_button.block {
-    display: block;
-    font-weight: bold;
-    height: 18px;
-    line-height: 18px;
-    margin: 0 auto;
-    text-align: center;
-    width: 81px;
-}
-
-/* BLUE */
-.fancy_button.blue {
-    background: #05addc;
-    background: -webkit-gradient(linear, left top, left bottom, from(#05addc), to(#036884)) !important;
-    background: -moz-linear-gradient(top,  #05addc,  #036884) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#05addc', endColorstr='#036884') !important;
-}
-
-.fancy_button.blue:hover, .fancy_button.blue:focus {
-    background: #048AB0;
-    background: -webkit-gradient(linear, left top, left bottom, from(#05addc), to(#0783a6)) !important;
-    background: -moz-linear-gradient(top, #05addc, #0783a6) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#05addc', endColorstr='#0783a6') !important;
-}
-
-/* GREEN */
-.fancy_button.green {
-    background: #2EB82E;
-    background: -webkit-gradient(linear, left top, left bottom, from(#2EB82E), to(#1f7a1f)) !important;
-    background: -moz-linear-gradient(top, #2EB82E, #1f7a1f) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#2EB82E', endColorstr='#1f7a1f') !important;
-}
-
-.fancy_button.green:hover, .fancy_button.green:focus {
-    background: #2eb82e;
-    background: -webkit-gradient(linear, left top, left bottom, from(#2eb82e), to(#1e941e)) !important;
-    background: -moz-linear-gradient(top, #2eb82e, #1e941e) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#2eb82e', endColorstr='#1e941e') !important;
-}
-
-/* RED */
-.fancy_button.red {
-    background: #e60000;
-    background: -webkit-gradient(linear, left top, left bottom, from(#e60000), to(#8a0000)) !important;
-    background: -moz-linear-gradient(top,  #e60000,  #8a0000) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#e60000', endColorstr='#8a0000') !important;
-}
-
-.fancy_button.red:hover, .fancy_button.red:focus {
-    background: #e60000 !important;
-    background: -webkit-gradient(linear, left top, left bottom, from(#e60000), to(#a80000)) !important;
-    background: -moz-linear-gradient(top,  #e60000,  #a80000) !important;
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#e60000', endColorstr='#a80000') !important;
-}
-
 /* GENERIC ALERT CSS */
 .alert_buttons_wrapper {
     text-align: center;
@@ -367,60 +209,4 @@ button.fancy_button {
 
 .alert_buttons_wrapper .confirm_button {
     margin: 0 40px;
-}
-
-/* Not supported browser template */
-#not_supported_browsers_div {
-    background-color: #6C6C6C;
-    border: 1px solid #363636;
-    display: inline-block;
-    margin-top: 50px;
-    text-align: center;
-    width: 600px;
-}
-
-#not_supported_browsers_div a {
-    color: #05addc;
-    height: 32px;
-    line-height: 32px;
-    text-decoration: underline;
-}
-
-#not_supported_browsers_div a:hover {
-    color: #eeeeee;
-}
-
-#not_supported_browsers_div .list_browsers {
-    display: block;
-    padding-bottom: 30px;
-    padding-top: 10px;
-}
-
-#not_supported_browsers_div ul {
-    list-style-type: none;
-}
-
-#not_supported_browsers_div .li_text {
-    display: inline-block;
-    text-align: left;
-}
-
-#not_supported_browsers_div .li_text > a {
-    margin-left: 40px;
-}
-
-#not_supported_browsers_div .safari-icon {
-    background: url('../images/icon_safari.png') no-repeat;
-}
-
-#not_supported_browsers_div .firefox-icon {
-    background: url('../images/icon_firefox.png') no-repeat;
-}
-
-#not_supported_browsers_div .chrome-icon {
-    background: url('../images/icon_chrome.png') no-repeat;
-}
-
-#not_supported_browsers_div .opera-icon {
-    background: url('../images/icon_opera.png') no-repeat;
 }

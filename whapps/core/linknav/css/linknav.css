@@ -7,6 +7,10 @@
 }
 */
 
+#ws-navbar .links {
+    float: right;
+}
+
 #ws-navbar .links > .link > .dropdown-toggle::after {
     display: none;
 }

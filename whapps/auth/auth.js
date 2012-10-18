@@ -291,7 +291,6 @@ winkstart.module('auth', 'auth',
                     remember_me: cookie_login.login || cookie_login.account_name ? true : false,
                     register_btn: winkstart.config.hide_registration || false
                 },
-                //login_html = winkstart.get_template(THIS.templates_hb.new_login, data_tmpl),
                 login_html = THIS.templates.new_login.tmpl(data_tmpl),
                 code_html = THIS.templates.code.tmpl(),
                 contentDiv = $('.welcome-page-top .right_div', '#content_welcome_page')

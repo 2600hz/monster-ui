@@ -26,11 +26,12 @@ winkstart.module('core', 'whappnav', {
     },
 
     function() {
-        var THIS = this,
+        var THIS = this;
+        /*,
             whapp_list_html = $(THIS.config.targets.nav_bar),
             whapp_divider_html = THIS.templates.whapp_divider.tmpl();
 
-        (whapp_list_html).append(whapp_divider_html);
+        (whapp_list_html).append(whapp_divider_html);*/
     },
 
     {

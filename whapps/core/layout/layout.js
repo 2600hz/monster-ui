@@ -97,7 +97,7 @@ winkstart.module('core', 'layout', {
                 $('.footer_wrapper .tag_version').html('('+version.replace(/\s/g,'')+')');
             });
 
-            $('#ws-navbar .brand.logo', layout_html).click(function() {
+            $('#ws-navbar .logo', layout_html).click(function() {
                 $('.whapps .whapp > a').removeClass('activate');
                 winkstart.publish('auth.landing');
             });
@@ -107,14 +107,14 @@ winkstart.module('core', 'layout', {
                     domain: domain
                 },
                 function(_data, status) {
-                    $('#ws-navbar .brand.logo', layout_html).css('background-image', 'url(' + api_url + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+                    $('#ws-navbar .logo', layout_html).css('background-image', 'url(' + api_url + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
                 },
                 function(_data, status) {
                     if(status != 404) {
-                        $('#ws-navbar .brand.logo', layout_html).css('background-image', '');
+                        $('#ws-navbar .logo', layout_html).css('background-image', '');
                     }
                     else {
-                        $('#ws-navbar .brand.logo', layout_html).css('background-image', 'url(config/images/logo.png)');
+                        $('#ws-navbar .logo', layout_html).css('background-image', 'url(config/images/logo.png)');
                     }
                 }
             );
