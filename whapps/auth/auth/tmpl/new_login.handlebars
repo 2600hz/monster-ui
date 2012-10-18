@@ -1,35 +1,44 @@
 <div>
-    <form name="form">
+    <form class="form-horizontal" name="form">
         <div class="list_fields">
-            <div class="row_welcome_field">
-                <label>{{t "auth.auth.login"}}</label>
-                <input type="text" name="login" id="login" value="{{username}}"/>
+            <div class="control-group">
+                <label class="control-label" for="login">{{t "auth.auth.login"}}</label>
+                <div class="controls">
+                    <input type="text" class="span11" id="login" name="login" value="{{username}}">
+                </div>
             </div>
-            <div class="row_welcome_field">
-                <label>{{t "auth.auth.password"}}</label>
-                <input type="password" name="password" id="password" />
+            <div class="control-group">
+                <label class="control-label" for="password">{{t "auth.auth.password"}}</label>
+                <div class="controls">
+                    <input type="password" class="span11" name="password" id="password"/>
+                </div>
             </div>
             {{#if request_account_name}}
-                 <div class="row_welcome_field">
-                    <label>{{t "auth.auth.account_name"}}</label>
-                    <input type="text" name="account_name" id="account_name" value="{{account_name}}"/>
+                <div class="control-group">
+                    <label class="control-label" for="account_name">{{t "auth.auth.account_name"}}</label>
+                    <div class="controls">
+                        <input type="text" class="span11" id="account_name" name="account_name" value="{{account_name}}"/>
+                    </div>
                 </div>
             {{/if}}
-            <div class="login_div">
-                {{#if remember_me}}
-                    <input type="checkbox" id="remember_me" CHECKED="CHECKED"/>
-                {{else}}
-                    <input type="checkbox" id="remember_me"/>
-                {{/if}}
-                {{t "auth.auth.remember_me"}}&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="javascript:void(0);" class="recover_password">{{t "auth.auth.forgot_password"}}</a>
-                <button class="btn primary login">{{t "auth.auth.btn_login"}}</button>
-                <div class="clear"/>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox">
+                        {{#if remember_me}}
+                            <input id="remember_me" type="checkbox" CHECKED="CHECKED"/>
+                        {{else}}
+                            <input id="remember_me" type="checkbox"/>
+                        {{/if}}
+                        {{t "auth.auth.remember_me"}}&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a href="javascript:void(0);" class="recover_password">{{t "auth.auth.forgot_password"}}</a>
+                    </label>
+                    <button class="btn btn-primary login">{{t "auth.auth.btn_login"}}</button>
+                </div>
             </div>
-            <div class="clear"/>
         </div>
         {{#unless register_btn}}
-        <div class="register_div">
+        <!--<div class="register_div">
             <div class="left_part">
                 <span class="new_user_text">{{t "auth.auth.are_you_a_new_user"}}</span>
                 <button class="register"></button>
@@ -40,7 +49,7 @@
                 <div>{{t "auth.auth.make_calls_in_minutes"}}</div>
             </div>
             <div class="clear"/>
-        </div>
+        </div>-->
         {{/unless}}
     </form>
 </div>

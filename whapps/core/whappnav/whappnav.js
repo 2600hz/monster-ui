@@ -21,16 +21,17 @@ winkstart.module('core', 'whappnav', {
         },
 
         targets: {
-            nav_bar: '#ws-topbar .whapps'
+            nav_bar: '#ws-navbar .whapps'
         }
     },
 
     function() {
-        var THIS = this,
+        var THIS = this;
+        /*,
             whapp_list_html = $(THIS.config.targets.nav_bar),
             whapp_divider_html = THIS.templates.whapp_divider.tmpl();
 
-        (whapp_list_html).append(whapp_divider_html);
+        (whapp_list_html).append(whapp_divider_html);*/
     },
 
     {
@@ -99,13 +100,13 @@ winkstart.module('core', 'whappnav', {
                     .prepend(whapp_divider_html);
             }
 
-            var topbar = $('body > .topbar'),
-                nb = topbar.data('nb') || 0;
+            var navbar = $('body > .navbar'),
+                nb = navbar.data('nb') || 0;
 
-            topbar.data('nb', nb + 1);
+            navbar.data('nb', nb + 1);
 
-            if(topbar.data('nb') > 6) {
-                topbar.css({
+            if(navbar.data('nb') > 6) {
+                navbar.css({
                     'min-width': '+= 140'
                 });
             }
