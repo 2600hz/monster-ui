@@ -52,9 +52,31 @@ body > .navbar .btn-navbar .icon-bar{
     background-color: #05addc;
 }
 
+body > .navbar .nav > li > a {
+    text-shadow: none;
+    color: whiteSmoke;
+    padding-top: 21px;
+    font-size: 20px;
+}
+
 body > .navbar .nav-collapse .nav > li > a:hover, 
 body > .navbar .nav-collapse .dropdown-menu a:hover {
     background-color: transparent;
+}
+
+body > .navbar .nav > li > a:focus, 
+body > .navbar .nav > li > a:hover {
+    color: #05ADDC;
+}
+
+.nav .dropdown-toggle .caret {
+    border-top-color: whiteSmoke;
+    border-bottom-color: whiteSmoke;
+}
+
+.nav .dropdown-toggle:hover .caret {
+    border-top-color: #05addc;
+    border-bottom-color: #05addc;
 }
 
 

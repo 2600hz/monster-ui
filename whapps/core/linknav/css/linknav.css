@@ -1,35 +1,5 @@
-/*
-#ws-navbar .whapps > .divider {
-    height: 72px;
-    width: 2px;
-    background-image: url(../img/nav_line.jpg);
-    background-repeat: repeat-y;
-}
-*/
-
-#ws-navbar .links {
-    float: right;
-}
-
-#ws-navbar .links > .link > .dropdown-toggle::after {
-    display: none;
-}
-
-#ws-navbar .links > .link .category > .dropdown-toggle::before {
-    content: "&larr;";
-    margin-top: 6px;
-    border-right: 4px solid white;
-    border-top: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-}
-
-#ws-navbar .links > .link .category > .dropdown-menu {
-    left: -160px;
-}
-
-#ws-navbar .links > .divider {
-    height: 72px;
-    width: 2px;
-    background-image: url(../img/nav_line.jpg);
-    background-repeat: repeat-y;
+.navbar .nav.links > li.divider-vertical {
+	border-right-color: #222;
+	border-left-color: #333;
+	height: 61px;
 }
