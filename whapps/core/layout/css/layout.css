@@ -20,7 +20,6 @@ body > .navbar {
 }
 
 body > .navbar .navbar-inner {
-    max-height: 80px;
 
     background: rgb(17,17,17); /* Old browsers */
     background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
@@ -44,3 +43,18 @@ body > .navbar .navbar-inner .logo {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+
+body > .navbar .btn-navbar { 
+    margin-top: 15px;
+}
+
+body > .navbar .btn-navbar .icon-bar{ 
+    background-color: #05addc;
+}
+
+body > .navbar .nav-collapse .nav > li > a:hover, 
+body > .navbar .nav-collapse .dropdown-menu a:hover {
+    background-color: transparent;
+}
+
+
