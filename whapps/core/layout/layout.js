@@ -6,10 +6,10 @@ winkstart.module('core', 'layout', {
         ],
 
         templates: {
-            layout: 'tmpl/layout.html',
-            layout_welcome: 'tmpl/layout_welcome.html',
+            layout: 'tmpl/layout.handlebars',
+            layout_welcome: 'tmpl/layout_welcome.handlebars',
             left_welcome: '../../../config/home/tmpl/left_welcome.handlebars',
-            not_supported_browsers: 'tmpl/not_supported_browsers.html'
+            not_supported_browsers: 'tmpl/not_supported_browsers.handlebars'
         },
 
         subscribe: {
