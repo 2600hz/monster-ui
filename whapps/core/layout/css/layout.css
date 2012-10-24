@@ -1,4 +1,3 @@
-
 html {
     height: 100%;
 }
@@ -8,15 +7,8 @@ body {
 }
 
 /* NAVBAR */
-body > .navbar .light-color-bar {
-    background: #05addc;
-    height: 5px;
-    width: 100%;
-}
-
-body > .navbar {
-    width: 100%;
-    margin-bottom: 2%;
+body > .navbar  {
+    border-top: 5px solid #05addc;
 }
 
 body > .navbar .navbar-inner {
@@ -48,7 +40,7 @@ body > .navbar .btn-navbar {
     margin-top: 15px;
 }
 
-body > .navbar .btn-navbar .icon-bar{ 
+body > .navbar .btn-navbar .icon-bar { 
     background-color: #05addc;
 }
 

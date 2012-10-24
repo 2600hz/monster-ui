@@ -1,33 +1,32 @@
-.help_recover {
-    color: #eeeeee;
-    font-style: normal;
-    margin-bottom: 20px;
-    padding: 10px;
-    width: 370px;
+.login-block {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
-@media all and (max-width: 767px) {
-    .welcome-page .login-block{
-        padding: 30px;
-    }
+.login-block .btn.login {
+	height: 30px;
 }
 
-@media all and (min-width: 768px) and (max-width: 979px){
-    .welcome-page .left_div {
-        width: 100%;
-    }
-
-    .welcome-page .right_div {
-        width: 100%;
-        margin: 20px 0 0 0;
-    }
+/* desktop */
+@media (min-width: 979px) {
+	
 }
+ 
+/* Portrait tablet to landscape */
+@media (min-width: 768px) and (max-width: 979px) {
+	.row-fluid .span6.left_div {
+		width: 95%;
+	}
 
-@media all and (min-width: 980px) {
-    .content.welcome-page {
-        text-align: center;
-        width: 950px;
-        display: inline-block;
-        text-align: left;
-    }
+	.row-fluid .span6.right_div {
+		width: 95%;
+	}
+}
+ 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+	.login-block #password {
+		width: 45%;
+	}
 }
