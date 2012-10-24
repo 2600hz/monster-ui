@@ -438,7 +438,7 @@ winkstart.module('auth', 'onboarding', {
 
         move_to_step: function(step_number, parent, error) {
             var $form = $('#fast_onboarding_form', parent),
-                max_step = parseFloat($form.dataset('maxstep'));
+                max_step = parseFloat($form.data('maxstep'));
 
             $form.attr('data-step', step_number);
 
@@ -497,7 +497,7 @@ winkstart.module('auth', 'onboarding', {
             var THIS = this,
                 onboard_html = THIS.templates.new_onboarding.tmpl({}),
                 $form = $('#fast_onboarding_form', onboard_html),
-                max_step = $form.dataset('max-step'),
+                max_step = $form.data('max-step'),
                 current_step = 1;
 
             THIS.load_step(1, onboard_html);
@@ -568,7 +568,7 @@ winkstart.module('auth', 'onboarding', {
 
                         var form_data = form2object('fast_onboarding_form');
 
-                        number = $('#picked_number', onboard_html).dataset('number');
+                        number = $('#picked_number', onboard_html).data('number');
                         form_data.extra.number = number;
 
                         THIS.clean_form_data(form_data, onboard_html);
