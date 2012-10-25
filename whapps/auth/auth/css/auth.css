@@ -8,6 +8,22 @@
 	height: 30px;
 }
 
+.login-block form {
+	margin: 0;
+}
+
+.login-block form .control-group:last-child {
+	margin-bottom: 0;
+}
+
+/* Responsive design */
+/* Large desktop */
+@media (min-width: 1200px) {
+	.login-block #password {
+		width: 75%;
+	}
+}
+
 /* desktop */
 @media (min-width: 979px) {
 	
@@ -22,11 +38,20 @@
 	.row-fluid .span6.right_div {
 		width: 95%;
 	}
+
+	.login-block #password {
+		width: 74%;
+	}
 }
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
 	.login-block #password {
 		width: 45%;
+	}
+
+	.login-block #account_name,
+	.login-block #login {
+		width: 55%;
 	}
 }

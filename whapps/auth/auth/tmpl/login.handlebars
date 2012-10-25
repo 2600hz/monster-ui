@@ -1,61 +1,64 @@
-<form class="form-horizontal" name="form">
+<div class="login-block well well-dark">
+    <form class="form-horizontal" name="form">
 
-    <div class="control-group">
-        <label class="control-label" for="login">{{t "auth.auth.login"}}</label>
-        <div class="controls">
-            <div class="input-prepend">
-                <span class="add-on"><i class="icon-user"></i></span><input type="text" class="span10" id="login" name="login" value="{{username}}" >
-            </div>
-            
-        </div>
-    </div>
-
-    {{#if request_account_name}}
         <div class="control-group">
-            <label class="control-label" for="account_name">{{t "auth.auth.account_name"}}</label>
+            <label class="control-label" for="login">{{t "auth.auth.login"}}</label>
             <div class="controls">
                 <div class="input-prepend">
-                    <span class="add-on"><i class="icon-bookmark"></i></span><input type="text" class="span10" id="account_name" name="account_name" value="{{account_name}}">
+                    <span class="add-on"><i class="icon-user"></i></span><input type="text" class="span10" id="login" name="login" value="{{username}}" >
+                </div>
+                
+            </div>
+        </div>
+
+        {{#if request_account_name}}
+            <div class="control-group">
+                <label class="control-label" for="account_name">{{t "auth.auth.account_name"}}</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-bookmark"></i></span><input type="text" class="span10" id="account_name" name="account_name" value="{{account_name}}">
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+
+        <div class="control-group">
+            <label class="control-label" for="password">{{t "auth.auth.password"}}</label>
+            <div class="controls">
+                <div class="input-prepend input-append">
+                    <span class="add-on"><i class="icon-wrench"></i></span><input type="password" class="span8" name="password" id="password" ><button class="btn login" type="button"><i class="icon-chevron-right"></i></button>
                 </div>
             </div>
         </div>
-    {{/if}}
 
-    <div class="control-group">
-        <label class="control-label" for="password">{{t "auth.auth.password"}}</label>
-        <div class="controls">
-            <div class="input-prepend input-append">
-                <span class="add-on"><i class="icon-wrench"></i></span><input type="password" class="span9" name="password" id="password" ><button class="btn login" type="button"><i class="icon-chevron-right"></i></button>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    {{#if remember_me}}
+                        <input id="remember_me" type="checkbox" CHECKED="CHECKED"/>
+                    {{else}}
+                        <input id="remember_me" type="checkbox"/>
+                    {{/if}}
+                    {{t "auth.auth.remember_me"}}&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="javascript:void(0);" class="recover_password">{{t "auth.auth.forgot_password"}}</a>
+                </label>
             </div>
         </div>
-    </div>
+        
+        {{#unless register_btn}}
+        <!--<div class="register_div">
+            <div class="left_part">
+                <span class="new_user_text">{{t "auth.auth.are_you_a_new_user"}}</span>
+                <button class="register"></button>
+            </div>
+            <div class="free_text">
+                <div>{{t "auth.auth.easy_to_start"}}</div>
+                <div>{{t "auth.auth.free_demo_account"}}</div>
+                <div>{{t "auth.auth.make_calls_in_minutes"}}</div>
+            </div>
+            <div class="clear"/>
+        </div>-->
+        {{/unless}}
+    </form>
 
-    <div class="control-group">
-        <div class="controls">
-            <label class="checkbox">
-                {{#if remember_me}}
-                    <input id="remember_me" type="checkbox" CHECKED="CHECKED"/>
-                {{else}}
-                    <input id="remember_me" type="checkbox"/>
-                {{/if}}
-                {{t "auth.auth.remember_me"}}&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="javascript:void(0);" class="recover_password">{{t "auth.auth.forgot_password"}}</a>
-            </label>
-        </div>
-    </div>
-    
-    {{#unless register_btn}}
-    <!--<div class="register_div">
-        <div class="left_part">
-            <span class="new_user_text">{{t "auth.auth.are_you_a_new_user"}}</span>
-            <button class="register"></button>
-        </div>
-        <div class="free_text">
-            <div>{{t "auth.auth.easy_to_start"}}</div>
-            <div>{{t "auth.auth.free_demo_account"}}</div>
-            <div>{{t "auth.auth.make_calls_in_minutes"}}</div>
-        </div>
-        <div class="clear"/>
-    </div>-->
-    {{/unless}}
-</form>
+</div>

@@ -9,6 +9,7 @@ body {
 /* NAVBAR */
 body > .navbar  {
     border-top: 5px solid #05addc;
+    margin-bottom: 40px;
 }
 
 body > .navbar .navbar-inner {
@@ -34,6 +35,10 @@ body > .navbar .navbar-inner .logo {
     height: 62px;
 	background-repeat: no-repeat;
 	background-position: center center;
+}
+
+body > .navbar .navbar-inner .home {
+    float: left;
 }
 
 body > .navbar .btn-navbar { 
