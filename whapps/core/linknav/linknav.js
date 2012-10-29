@@ -25,11 +25,16 @@ winkstart.module('core', 'linknav', {
     {
         add: function(id, html, _class, _callbacks) {
             var THIS = this,
-                $linknav_html = $(THIS.config.targets.linknav),
-                $link_html = THIS.templates.link.tmpl({
+                $linknav_html = $(THIS.config.targets.linknav);
+
+            if(typeof html == 'object') {
+                html = $('<div/>').append(html).html();
+            }
+
+            var $link_html = THIS.templates.link.tmpl({
                     id: id,
                     html: html,
-                    class: _class
+                    'class': _class
                 });
 
             if(_callbacks) {
