@@ -132,7 +132,7 @@ body > .navbar .navbar-inner .help i {
  
 }
  
-/*  Phone to portrait tablet */
+/* Phone to portrait tablet */
 @media (max-width: 767px) {
     body > .navbar .navbar-inner .logo {
         width: 100px;
