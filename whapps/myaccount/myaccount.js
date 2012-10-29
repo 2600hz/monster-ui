@@ -13,6 +13,7 @@ winkstart.module('myaccount', 'myaccount', {
         subscribe: {
             'myaccount.initialized' : 'initialized',
             'myaccount.module_activate': 'module_activate',
+            'myaccount.display': 'show',
             'auth.account.loaded': 'activate'
         }
     },
@@ -139,7 +140,11 @@ winkstart.module('myaccount', 'myaccount', {
              winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link');
 
             console.log(user_data);
-        }, 
+        },
+
+        show: function() {
+             $('body .my-account').slideToggle();
+        },
 
         render_myaccount: function() {
             var THIS = this;
