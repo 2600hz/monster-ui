@@ -6,6 +6,19 @@ body {
     height: 100%;
 }
 
+/* My account */
+ body > .my-account {
+    width: 100%;
+    height: 350px;
+    background-color: red;
+    margin-top: -40px;
+    display: none;
+    border-top: 5px solid #05ADDC;
+    border-bottom: 5px solid #05ADDC;
+    position: absolute;
+    z-index: 2;
+ }
+
 /* NAVBAR */
 body > .navbar  {
     border-top: 5px solid #05addc;
@@ -29,20 +42,13 @@ body > .navbar .navbar-inner {
     padding: 0 0 0 0;
 }
 
-body > .navbar .navbar-inner .logo {
-    float: left;
-    width: 192px;
-    height: 62px;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-body > .navbar .navbar-inner .home {
-    float: left;
+body > .navbar .navbar-inner .container-fluid > a:hover {
+    background-color: rgba(5, 173, 220, 0.25);
 }
 
 body > .navbar .btn-navbar { 
     margin-top: 15px;
+    margin-right: 10px;
 }
 
 body > .navbar .btn-navbar .icon-bar { 
@@ -76,4 +82,76 @@ body > .navbar .nav > li > a:hover {
     border-bottom-color: #05addc;
 }
 
+body > .navbar .navbar-inner .logo {
+    float: left;
+    width: 192px;
+    height: 62px;
+    background-repeat: no-repeat;
+    background-position: center center;
 
+    border-left: 1px solid #353535;
+    border-right: 1px solid #353535;
+}
+
+body > .navbar .navbar-inner .home {
+    padding: 0 10px;
+    height: 62px;
+    width: 42px;
+    text-align: center;
+    margin-left: -20px;
+}
+
+body > .navbar .navbar-inner .home i {
+    margin-top: 25px;
+}
+
+body > .navbar .navbar-inner .help {
+    padding: 0 10px;
+    height: 62px;
+    width: 42px;
+    text-align: center;
+    margin-right: -20px;
+    border-left: 1px solid #353535;
+}
+
+body > .navbar .navbar-inner .help i {
+    margin-top: 23px;
+}
+
+@media (min-width: 1200px) {
+
+}
+
+/* desktop */
+@media (min-width: 979px) {
+    
+}
+ 
+/* Portrait tablet to landscape */
+@media (min-width: 768px) and (max-width: 979px) {
+ 
+}
+ 
+/*  Phone to portrait tablet */
+@media (max-width: 767px) {
+    body > .navbar .navbar-inner .logo {
+        width: 100px;
+        border: none;
+        
+    }
+
+    body > .navbar .navbar-inner .help {
+        border-left: none;
+        margin-right: 0;
+    }
+
+    body > .navbar .navbar-inner .home {
+        border-left: none;
+        margin-left: 0;
+    }
+
+    body > .ws-content {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}

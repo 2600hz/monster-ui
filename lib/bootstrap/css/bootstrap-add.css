@@ -24,3 +24,11 @@ form.form-horizontal .input-append {
 		padding-top: 5px;
 	}
 }
+
+@media (max-width: 767px) {
+	body {
+		padding-right: 0;
+		padding-left: 0;
+	}
+}
+
