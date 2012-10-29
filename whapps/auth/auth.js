@@ -562,7 +562,7 @@ winkstart.module('auth', 'auth',
                             var landing = true;
 
 
-                            var uri = winkstart.history();
+                            var uri = winkstart.rooting.get_hashtag();
                             if(uri == false) {
                                 landing = true;
                             } else {
