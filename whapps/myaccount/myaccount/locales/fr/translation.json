@@ -1,3 +1,4 @@
 {
-    "hello": "Bonjour"
+    "hello": "Bonjour",
+    "signout": "Deconnection"
 }

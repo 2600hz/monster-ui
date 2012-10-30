@@ -143,7 +143,7 @@ winkstart.module('myaccount', 'myaccount', {
         },
 
         show: function() {
-             $('body .my-account').slideToggle();
+             $('body .myaccount').slideToggle();
         },
 
         render_myaccount: function() {

@@ -101,10 +101,6 @@ body > .navbar .navbar-inner .help i {
     margin-top: 23px;
 }
 
-@media (min-width: 1200px) {
-
-}
-
 /* desktop */
 @media (min-width: 979px) {
     

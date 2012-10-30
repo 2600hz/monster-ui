@@ -41,18 +41,6 @@ winkstart.module('core', 'layout', {
             THIS.render_welcome();
         }
 
-        /*$('#ws-content .welcomediv').click(function() {
-            winkstart.publish('nav.get_started');
-        });*/
-
-        $('#ws-navbar .links .help').click(function() {
-            winkstart.publish('nav.my_help_click');
-        });
-
-        $('#ws-navbar .links .logout').click(function() {
-            winkstart.publish('nav.my_logout_click');
-        });
-
         if('nav' in winkstart.config) {
             if('help' in winkstart.config.nav || 'my_help' in winkstart.config.nav) {
                 $('#ws-navbar .links .help').unbind('click')

@@ -1,5 +1,10 @@
+/* navbar myaccount*/
+.navbar .links .myaccount-link a {
+ 	font-size: 14px;
+}
+
 /* My account */
- body > .my-account {
+body > .myaccount {
     width: 100%;
     height: 350px;
     background-color: white;
@@ -8,8 +13,127 @@
     border-bottom: 5px solid #05ADDC;
     position: absolute;
     z-index: 2;
- }
+}
 
- .navbar .links .myaccount-link a {
- 	font-size: 14px;
- }
+.myaccount > .container-fluid {
+ 	height: 100%;
+ 	padding: 0;
+}
+
+.myaccount > .container-fluid > .row-fluid {
+ 	height: 100%;
+}
+
+.myaccount > .container-fluid > .row-fluid > [class*="span"]{
+ 	height: 100%;
+} 
+
+/* MYACCOUNT MENU */
+.myaccount .myaccount-menu {
+	background-color: #E0E0E0;
+	-webkit-box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
+	box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
+}
+
+.myaccount .myaccount-menu .nav {
+	color: #777;
+	height: 80%;
+}
+
+.myaccount .myaccount-menu .nav li {
+	line-height: 30px;
+}
+
+.myaccount .myaccount-menu .nav li.divider {
+	margin: 0;
+	border-bottom: 1px solid #BBB;
+}
+
+.myaccount .myaccount-menu .nav li.nav-header {
+	text-align: center;
+	color: #555;
+	text-transform: none;
+	font-size: 20px;
+	font-weight: normal;
+	letter-spacing: 5px;
+}
+
+.myaccount .myaccount-menu .nav a {
+	color: #777;
+}
+
+ 
+.myaccount .myaccount-menu .nav > li.active i {
+	background-image: url("../../../../lib/bootstrap/img/glyphicons-halflings.png");
+}
+
+.myaccount .myaccount-menu .nav > li > a:hover, 
+.myaccount .myaccount-menu .nav > li.active > a {
+	background-color: rgba(255, 255, 255, 0.75);
+	color: #777;
+}
+
+
+
+.myaccount .myaccount-menu .menu-bottom {
+	height: 20%;
+	width: 99%;
+	border-top: 2px solid #05ADDC;
+}
+
+.myaccount .myaccount-menu .menu-bottom .store,
+.myaccount .myaccount-menu .menu-bottom .signout {
+	width: 50%;
+	float: left;
+	text-align: center;
+	text-transform: uppercase;
+	line-height: 60px;
+}
+
+.myaccount .myaccount-menu .menu-bottom .signout {
+	width: 40%;
+}
+
+
+/* MYACCOUNT CONTENT */
+.myaccount .myaccount-content {
+	background-color: white;
+}
+
+
+/* desktop */
+@media (min-width: 979px) {
+    
+}
+ 
+/* Portrait tablet to landscape */
+@media (min-width: 768px) and (max-width: 979px) {
+	.myaccount .myaccount-menu .nav li.nav-header {
+		letter-spacing: 0;
+	}
+}
+ 
+/* Phone to portrait tablet */
+@media (max-width: 767px) {
+	.myaccount .myaccount-menu {
+		width: 30%;
+		float: left;
+   	}
+
+   	.myaccount .myaccount-menu .nav li.nav-header {
+		letter-spacing: 0;
+	}
+
+   	.myaccount .myaccount-menu .menu-bottom .store,
+	.myaccount .myaccount-menu .menu-bottom .signout {
+		width: 100%;
+		float: none;
+		line-height: 30px;
+	}
+
+   	.myaccount .myaccount-content {
+		width: 70%;
+		float: left;
+   	}	
+}
