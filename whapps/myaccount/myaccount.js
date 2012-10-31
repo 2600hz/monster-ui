@@ -14,6 +14,7 @@ winkstart.module('myaccount', 'myaccount', {
             'myaccount.initialized' : 'initialized',
             'myaccount.module_activate': 'module_activate',
             'myaccount.display': 'show',
+            'myaccount.add_submodule': 'add_submodule',
             'auth.account.loaded': 'activate'
         }
     },
@@ -142,6 +143,16 @@ winkstart.module('myaccount', 'myaccount', {
             THIS.render_myaccount($myaccount_html);
         },
 
+        render_myaccount: function($myaccount_html) {
+            var THIS = this;
+
+            $('.myaccount-close', $myaccount_html).on('click', function() {
+                winkstart.publish('myaccount.display');
+            });
+
+            winkstart.publish('myaccount.loaded', $myaccount_html);
+        },
+
         show: function() {
             var $body = $('body'),
                 $myaccount = $body.find('.myaccount'),
@@ -154,12 +165,17 @@ winkstart.module('myaccount', 'myaccount', {
             }
         },
 
-        render_myaccount: function($myaccount_html) {
-            var THIS = this;
+        add_submodule: function($menu, $content) {
+            var THIS = this,
+                $myaccount = $('body .myaccount');
 
-            $('.myaccount-close', $myaccount_html).on('click', function() {
-                winkstart.publish('myaccount.display');
-            });
+            $('.myaccount-menu .nav', $myaccount)
+                .append($menu)
+                .append('<li class="divider"></li>');
+
+
+            $('.myaccount-content', $myaccount)
+                .html($content);
         }
     }
 );
