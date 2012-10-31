@@ -27,7 +27,8 @@ winkstart.module('auth', 'auth',
             'auth.register' : 'register',
             'auth.save_registration' : 'save_registration',
             'auth.landing': 'landing',
-            'core.loaded': 'core_loaded'
+            'core.loaded': 'core_loaded',
+            'auth.logout': 'logout'
         },
 
         resources: {
@@ -739,6 +740,29 @@ winkstart.module('auth', 'auth',
                 _t.session.expires       = data.expires;
                 winkstart.alert('User authenticated');
             });
+        },
+
+        logout: function() {
+            if(confirm('Are you sure that you want to log out?')) {
+                console.log('TEST');
+
+                // Remove any individual keys
+                $.each(winkstart.apps, function(k, v) {
+                    // TODO: ADD APP UNLOADING CODE HERE. Remove CSS and scripts. This should inherently delete apps.
+
+                    winkstart.apps[k].realm = null;
+                    winkstart.apps[k].auth_token = null;
+                    winkstart.apps[k].user_id = null;
+                    winkstart.apps[k].account_id = null;
+                });
+
+                $.cookie('c_winkstart_auth', null);
+
+                $('#ws-content').empty();
+
+                // Temporary hack until module unloading works properly
+                window.location.reload();
+            };
         },
 
         init: function() {
