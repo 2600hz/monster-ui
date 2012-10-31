@@ -34,7 +34,7 @@ body > .myaccount {
 
 /* MYACCOUNT MENU */
 .myaccount .myaccount-menu {
-	background-color: #E0E0E0;
+	background-color: #e9e9e9;
 	-webkit-box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
 	-moz-box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
 	box-shadow: inset -3px 0px 11px rgba(50, 50, 50, 0.75);
@@ -78,8 +78,6 @@ body > .myaccount {
 	color: #777;
 }
 
-
-
 .myaccount .myaccount-menu .menu-bottom {
 	height: 20%;
 	width: 99%;
@@ -105,6 +103,30 @@ body > .myaccount {
 	background-color: white;
 }
 
+
+.myaccount .myaccount-content .myaccount-close {
+	position: absolute;
+	top: 0px;
+	right: 5%;
+	padding: 2px 5px;
+	width: 100px;
+	text-align: center;
+	cursor: pointer;
+	background-color: #05ADDC;
+	border-radius: 0 0 50px 50px;
+	-webkit-border-radius: 0 0 50px 50px;
+	-moz-border-radius: 0 0 50px 50px;
+	-webkit-box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.5);
+	box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.5);
+
+
+	/* in case we want to do trapeze
+	border: 0px solid #E9E9E9;
+	border-color: #E9E9E9 transparent transparent transparent;
+	border-width: 25px;
+	*/
+}
 
 /* desktop */
 @media (min-width: 979px) {

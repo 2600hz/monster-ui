@@ -137,9 +137,9 @@ winkstart.module('myaccount', 'myaccount', {
 
             $('body .navbar').after($myaccount_html);
 
-             winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link');
+            winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link');
 
-            console.log(user_data);
+            THIS.render_myaccount($myaccount_html);
         },
 
         show: function() {
@@ -152,13 +152,14 @@ winkstart.module('myaccount', 'myaccount', {
             } else {
                 $myaccount.slideUp(500);    
             }
-
-
-            
         },
 
-        render_myaccount: function() {
+        render_myaccount: function($myaccount_html) {
             var THIS = this;
+
+            $('.myaccount-close', $myaccount_html).on('click', function() {
+                winkstart.publish('myaccount.display');
+            });
         }
     }
 );
