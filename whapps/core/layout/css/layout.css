@@ -3,7 +3,6 @@ html {
 }
 
 body {
-    height: 100%;
 }
 
 /* NAVBAR */
@@ -99,6 +98,10 @@ body > .navbar .navbar-inner .help {
 
 body > .navbar .navbar-inner .help i {
     margin-top: 23px;
+}
+
+body > .ws-content {
+    margin-top: 20px;
 }
 
 /* desktop */

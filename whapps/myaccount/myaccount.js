@@ -143,7 +143,18 @@ winkstart.module('myaccount', 'myaccount', {
         },
 
         show: function() {
-             $('body .myaccount').slideToggle();
+            var $body = $('body'),
+                $myaccount = $body.find('.myaccount'),
+                $navbar = $body.find('.navbar');
+
+            if($myaccount.is(':hidden')) {
+                 $myaccount.slideDown(500);
+            } else {
+                $myaccount.slideUp(500);    
+            }
+
+
+            
         },
 
         render_myaccount: function() {
