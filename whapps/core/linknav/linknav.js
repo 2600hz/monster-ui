@@ -11,7 +11,6 @@ winkstart.module('core', 'linknav', {
             'linknav.add': 'add',
             'linknav.remove': 'remove',
             'linknav.remove_all': 'remove_all'
-
         },
 
         targets: {
@@ -49,12 +48,12 @@ winkstart.module('core', 'linknav', {
             $linknav_html.append($link_html);
         },
 
-        remove: function(id) {
+        remove: function(_id) {
             var THIS = this,
                 $linknav_html = $(THIS.config.targets.linknav);
 
-            if(id) {    
-                $('[data-link="' + id + '"]', $linknav_html).remove();
+            if(_id) {    
+                $('[data-link="' + _id + '"]', $linknav_html).remove();
             } else {
                 $('li:last-child', $linknav_html).remove();
                 $('li:last-child', $linknav_html).remove();

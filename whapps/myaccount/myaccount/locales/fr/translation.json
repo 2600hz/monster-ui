@@ -1,4 +1,6 @@
 {
     "hello": "Bonjour",
-    "signout": "Deconnection"
+    "signout": "Deconnection",
+    "myaccount": "Mon Compte",
+    "close": "Fermer"
 }

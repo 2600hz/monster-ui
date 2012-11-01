@@ -1,4 +1,6 @@
 {
     "hello": "Hello",
-    "signout": "Sign Out"
+    "signout": "Sign Out",
+    "myaccount": "My Account",
+    "close": "Close"
 }

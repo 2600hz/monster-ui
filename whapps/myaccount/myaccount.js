@@ -155,8 +155,7 @@ winkstart.module('myaccount', 'myaccount', {
 
         show: function() {
             var $body = $('body'),
-                $myaccount = $body.find('.myaccount'),
-                $navbar = $body.find('.navbar');
+                $myaccount = $body.find('.myaccount');
 
             if($myaccount.is(':hidden')) {
                  $myaccount.slideDown(500);
@@ -165,17 +164,18 @@ winkstart.module('myaccount', 'myaccount', {
             }
         },
 
-        add_submodule: function($menu, $content) {
+        add_submodule: function($menu) {
             var THIS = this,
                 $myaccount = $('body .myaccount');
+
+            $menu.on('click', function() {
+                $('.myaccount-menu .nav li', $myaccount).removeClass('active');
+                $menu.addClass('active');
+            });
 
             $('.myaccount-menu .nav', $myaccount)
                 .append($menu)
                 .append('<li class="divider"></li>');
-
-
-            $('.myaccount-content', $myaccount)
-                .html($content);
         }
     }
 );

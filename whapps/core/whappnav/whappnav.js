@@ -10,8 +10,7 @@ winkstart.module('core', 'whappnav', {
         subscribe: {
             'whappnav.add': 'add',
             'whappnav.remove': 'remove',
-            'whappnav.remove_all': 'remove_all',
-
+            'whappnav.remove_all': 'remove_all'
         },
 
         targets: {
