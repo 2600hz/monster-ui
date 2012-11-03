@@ -2,5 +2,6 @@
     "hello": "Hello",
     "signout": "Sign Out",
     "myaccount": "My Account",
-    "close": "Close"
+    "close": "Close",
+    "store": "Store"
 }

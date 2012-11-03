@@ -2,5 +2,6 @@
     "hello": "Bonjour",
     "signout": "Deconnection",
     "myaccount": "Mon Compte",
-    "close": "Fermer"
+    "close": "Fermer",
+    "store": "Boutique"
 }

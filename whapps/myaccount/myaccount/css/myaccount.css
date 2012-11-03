@@ -139,6 +139,19 @@ body > .myaccount {
 	.myaccount .myaccount-menu .nav li.nav-header {
 		letter-spacing: 0;
 	}
+
+	.myaccount .myaccount-menu .menu-bottom .store,
+	.myaccount .myaccount-menu .menu-bottom .signout {
+		width: 100%;
+		float: none;
+		line-height: 30px;
+	}
+
+   	.myaccount .myaccount-content {
+		width: 68%;
+		margin-left: 2%;
+		float: left;
+   	}
 }
  
 /* Phone to portrait tablet */
@@ -176,4 +189,11 @@ body > .myaccount {
 	.myaccount .myaccount-content .myaccount-close .icon-remove {
 		margin-top: 5px;
 	}
+}
+
+/* Mini */
+@media (max-width: 400px) {
+	.myaccount .myaccount-menu {
+		font-size: 80%;
+   	}
 }

@@ -164,18 +164,46 @@ winkstart.module('myaccount', 'myaccount', {
             }
         },
 
-        add_submodule: function($menu) {
+        add_submodule: function($menu, _weight) {
             var THIS = this,
-                $myaccount = $('body .myaccount');
+                inserted = false,
+                $myaccount = $('body .myaccount'),
+                $divider = $('<li class="divider"></li>'),
+                $nav_list = $('.myaccount-menu .nav', $myaccount);
 
             $menu.on('click', function() {
                 $('.myaccount-menu .nav li', $myaccount).removeClass('active');
                 $menu.addClass('active');
             });
 
-            $('.myaccount-menu .nav', $myaccount)
-                .append($menu)
-                .append('<li class="divider"></li>');
+            if(_weight) {
+                $menu.data('weight', _weight);
+
+                $('li:not(.divider)', $nav_list).each(function(index) {
+                    var weight = $(this).data('weight');
+
+                    console.log($(this), weight);
+
+                    if(_weight < weight) {
+                        $(this)
+                            .before($menu)
+                            .before($divider);
+                        inserted = true;
+                    }
+                    else if(index >= $('li:not(.divider)', $nav_list).length - 1) {
+                        $(this)
+                            .after($menu)
+                            .after($divider);
+                        inserted = true;
+                    }
+                });
+            }
+
+            if(!inserted) {
+                $('.myaccount-menu .nav', $myaccount)
+                    .append($menu)
+                    .append($divider);
+            }
         }
     }
 );
