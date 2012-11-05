@@ -105,9 +105,6 @@ winkstart.module('auth', 'auth',
                 }
             }
         }
-        winkstart.module(THIS.__module, 'onboarding').init(function() {
-            winkstart.log('Core: Loaded Onboarding');
-        });
     },
 
     {
