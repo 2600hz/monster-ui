@@ -1,5 +1,15 @@
 /* More class for bootstrap */
 
+.hero-unit.hero-unit-small {
+	padding: 30px;
+}
+
+.hero-unit.hero-unit-blue {
+	background-color: #05ADDC;
+	color: whiteSmoke;
+	text-shadow: 1px 1px #333;
+}
+
 .well-dark {
 	color: #787878;
 	background: #202020;

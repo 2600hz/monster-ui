@@ -186,8 +186,6 @@ winkstart.module('myaccount', 'myaccount', {
                 $('li:not(.divider)', $nav_list).each(function(index) {
                     var weight = $(this).data('weight');
 
-                    console.log($(this), weight);
-
                     if(_weight < weight) {
                         $(this)
                             .before($menu)

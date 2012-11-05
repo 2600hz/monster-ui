@@ -1,15 +1,18 @@
 winkstart.module('myaccount', 'billing', {
         css: [
-           
+           'css/billing.css'
         ],
 
         templates: {
-           
+           menu: 'tmpl/menu.handlebars',
+           billing: 'tmpl/billing.handlebars'
         },
+
+        locales: ['en', 'fr'],
 
         subscribe: {
             'myaccount.loaded': 'myaccount_loaded',
-            'myaccount.billing.test': 'test'
+            'myaccount.billing.render': 'render'
         },
 
         resources: {
@@ -23,14 +26,19 @@ winkstart.module('myaccount', 'billing', {
         winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
-        test: function() {
-            console.log('TEST SUCCESS !!!');
+        render: function() {
+            var THIS = this,
+                $billing_html = THIS.templates.billing.tmpl();
+
+            $('.myaccount .myaccount-content').append($billing_html); 
+
         },
 
         myaccount_loaded: function($myaccount_html) {
-            var $billing_menu_html = $('<li><a href="#myaccount/billing/test"><i class="icon-tag"></i> Billing</a></li>');
+            var THIS = this,
+                $billing_menu_html = THIS.templates.menu.tmpl(); 
 
-            winkstart.publish('myaccount.add_submodule', $billing_menu_html);   
+            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 1);   
         }
     }
 );
