@@ -138,7 +138,11 @@ winkstart.module('myaccount', 'myaccount', {
 
             $('body .navbar').after($myaccount_html);
 
-            winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link');
+            winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link', {
+                click: function() {
+                    winkstart.publish('myaccount.display');
+                }
+            });
 
             THIS.render_myaccount($myaccount_html);
         },
