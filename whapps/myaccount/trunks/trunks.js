@@ -30,6 +30,8 @@ winkstart.module('myaccount', 'trunks', {
             var THIS = this,
                 $trunks_html = THIS.templates.trunks.tmpl();
 
+            winkstart.publish('myaccount.select_menu', THIS.__module);
+
             $('.myaccount .myaccount-content .container-fluid').html($trunks_html); 
 
         },

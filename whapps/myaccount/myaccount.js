@@ -15,6 +15,7 @@ winkstart.module('myaccount', 'myaccount', {
             'myaccount.module_activate': 'module_activate',
             'myaccount.display': 'show',
             'myaccount.add_submodule': 'add_submodule',
+            'myaccount.select_menu': 'select_menu',
             'auth.account.loaded': 'activate'
         }
     },
@@ -169,6 +170,16 @@ winkstart.module('myaccount', 'myaccount', {
             } else {
                 $myaccount.slideUp(500);    
             }
+        },
+
+        select_menu: function(submodule) {
+            var THIS = this,
+                $myaccount = $('body .myaccount');
+
+                if(!$('.' + submodule , $myaccount).hasClass('active')) {
+                    $('.myaccount-menu .nav > li', $myaccount).removeClass('active');
+                    $('.' + submodule , $myaccount).addClass('active')
+                }
         },
 
         add_submodule: function($menu, _weight) {

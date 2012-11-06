@@ -30,6 +30,8 @@ winkstart.module('myaccount', 'balance', {
             var THIS = this,
                 $balance_html = THIS.templates.balance.tmpl();
 
+            winkstart.publish('myaccount.select_menu', THIS.__module);
+
             $('.myaccount .myaccount-content .container-fluid').html($balance_html); 
 
         },
