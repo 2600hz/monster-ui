@@ -1,3 +1,7 @@
+.billing-title {
+	margin-bottom: 10px;
+}
+
 .billing-title .page-header {
 	padding-bottom: 0;
 	margin: 20px 0 15px;
@@ -7,11 +11,32 @@
 	color: #05ADDC;
 	font-size: 25px;
 	margin: 0;
+	font-weight: normal;
+	letter-spacing: 3px;
 }
 
-.billing-title .page-header h1 small {
-	font-size: 18px;
+.billing-title .page-header h1 small a {
+	color: #444;
+	letter-spacing: 2px;
+	text-decoration: underline;
+	font-size: 15px;
 }
+
+.billing-content form.change-card {
+	text-align: center;
+}
+
+.billing-content form.change-card label {
+	font-size: 20px;
+	letter-spacing: 2px;
+	color: #333;
+}
+
+.billing-content form.change-card a {
+	color: #616161;
+	text-decoration: underline;
+}
+
 
 .billing-content #card {
 	margin: 0 10px;
@@ -20,12 +45,17 @@
 .billing-content .hero-unit.billing-cycle h2 {
 	text-align: center;
 	letter-spacing: 5px;
+	font-weight: normal;
+	color: #797979;
+	width: 80%;
+	margin-left: 10%;
 }
 
 .billing-content .hero-unit.billing-cycle .days-left {
-	width: 100%;
+	width: 80%;
 	height: 20px;
 	padding: 10px 0;
+	margin-left: 10%;
 }
 
 .billing-content .hero-unit.billing-cycle .days-left .progress {
@@ -40,12 +70,25 @@
 .billing-content .hero-unit.billing-cycle .days-left h4 {
 	width: 20%;
 	float: left;
-	margin: 0 0 0 10%;
+	margin: -1px 0 0 10%;
 }
 
 .billing-content .hero-unit.charge {
 	text-align: center;
+	padding: 10px;
 }
 
+.billing-content .hero-unit.charge h1 {
+	margin-bottom: 10px;
+	text-shadow: 2px 2px #333;
+	font-weight: normal;
+	letter-spacing: 5px;
+}
+
+.billing-content .hero-unit.charge a {
+	color: whiteSmoke;
+	font-size: 15px;
+	text-decoration: underline;
+}
 
 

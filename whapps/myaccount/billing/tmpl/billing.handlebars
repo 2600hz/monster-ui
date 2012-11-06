@@ -1,21 +1,21 @@
 <div class="row-fluid billing-title">
 	<div class="span12">
 	  	<div class="page-header">
-		 	<h1>{{t "myaccount.billing.title"}} <small> <a href="#"> {{t "myaccount.billing.history"}}</a></small></h1>
+		 	<h1>{{t "myaccount.billing.title"}} <small> <a href="#myaccount/billing/history"> {{t "myaccount.billing.history"}}</a></small></h1>
 		</div>
   	</div>
 </div> 
 
 <div class="row-fluid billing-content">
 	<div class="span8">
-		<form class="form-inline">
+		<form class="form-inline change-card">
 		  	<label for="card">Billing Account</label>
 		  	<select name="card" id="card">
 			  	<option value="1">**** **** **** **** 1111</option>
 			  	<option value="2">**** **** **** **** 2222</option>
 			  	<option value="3">**** **** **** **** 3333</option>
 		  	</select>
-		  	<a href="#">Change</a>
+		  	<a href="#myaccount/billing/change-card">Change</a>
 		</form>
 
 		<div class="hero-unit hero-unit-small billing-cycle">
@@ -32,12 +32,15 @@
 
   	<div class="span4">
   		<div class="hero-unit hero-unit-small hero-unit-blue charge">
-		  <h3>
-		  	Current Charges
-		  </h3>
-		  <h3>
+		  <p>
+		  	Your Monthly and Prorated charges as of 07/03/89
+		  </p>
+		  <h1>
 		  	$ 250
-		  </h3>
+		  </h1>
+		  <p>
+		  	<a href="#myaccount/billing/history">View Payment Breakdown</a>
+		  </p>
 		</div>
   	</div>
 </div>
