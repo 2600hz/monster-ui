@@ -106,9 +106,11 @@ winkstart.module('myaccount', 'profile', {
             });
         },
 
-        myaccount_loaded: function($myaccount_html) {
+        myaccount_loaded: function($myaccount_html, account) {
             var THIS = this,
-                $profile_menu_html = THIS.templates.menu.tmpl(); 
+                $profile_menu_html = THIS.templates.menu.tmpl({
+                    'account_name': account.name || "Account Name"
+                }); 
 
             winkstart.publish('myaccount.add_submodule', $profile_menu_html, 1);   
         }

@@ -17,12 +17,22 @@ winkstart.module('myaccount', 'myaccount', {
             'myaccount.add_submodule': 'add_submodule',
             'myaccount.select_menu': 'select_menu',
             'auth.account.loaded': 'activate'
+        },
+
+        resources: {
+            'myaccount.account_get': {
+                url: '{api_url}/accounts/{account_id}',
+                contentType: 'application/json',
+                verb: 'GET'
+            }
         }
     },
 
     function() {
         var THIS = this,
             count = 0;
+
+        winkstart.registerResources(THIS.__whapp, THIS.config.resources);
 
         if('modules' in winkstart.apps[THIS.__module]) {
             if('whitelist' in winkstart.apps[THIS.__module].modules) {
@@ -158,7 +168,14 @@ winkstart.module('myaccount', 'myaccount', {
                 winkstart.publish('myaccount.display');
             });
 
-            winkstart.publish('myaccount.loaded', $myaccount_html);
+            winkstart.request('myaccount.account_get', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url
+                },
+                function(data, status) {
+                    winkstart.publish('myaccount.loaded', $myaccount_html, data.data);
+                }
+            );
         },
 
         show: function() {
