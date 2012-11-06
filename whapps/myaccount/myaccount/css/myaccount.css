@@ -47,6 +47,11 @@ body > .myaccount {
 	padding-left: 0;
 }
 
+.myaccount .myaccount-menu .badge {
+	margin-right: 15px;
+	margin-top: 6px;
+}
+
 .myaccount .myaccount-menu .nav li {
 	line-height: 30px;
 	padding-left: 15px;
@@ -81,6 +86,11 @@ body > .myaccount {
 .myaccount .myaccount-menu .nav > li.active > a {
 	background-color: white;
 	color: #777;
+}
+
+.myaccount .myaccount-menu .nav > li > a:hover .badge, 
+.myaccount .myaccount-menu .nav > li.active .badge {
+	background-color: #05ADDC;
 }
 
 .myaccount .myaccount-menu .menu-bottom {
@@ -151,12 +161,6 @@ body > .myaccount {
 		float: none;
 		line-height: 30px;
 	}
-
-   	.myaccount .myaccount-content {
-		width: 68%;
-		margin-left: 2%;
-		float: left;
-   	}
 }
  
 /* Phone to portrait tablet */
