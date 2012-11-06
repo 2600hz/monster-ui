@@ -1,18 +1,18 @@
-winkstart.module('myaccount', 'billing', {
+winkstart.module('myaccount', 'profile', {
         css: [
-           'css/billing.css'
+           'css/profile.css'
         ],
 
         templates: {
            menu: 'tmpl/menu.handlebars',
-           billing: 'tmpl/billing.handlebars'
+           profile: 'tmpl/profile.handlebars'
         },
 
         locales: ['en', 'fr'],
 
         subscribe: {
             'myaccount.loaded': 'myaccount_loaded',
-            'myaccount.billing.render': 'render'
+            'myaccount.profile.render': 'render'
         },
 
         resources: {
@@ -28,17 +28,17 @@ winkstart.module('myaccount', 'billing', {
     {
         render: function() {
             var THIS = this,
-                $billing_html = THIS.templates.billing.tmpl();
+                $profile_html = THIS.templates.profile.tmpl();
 
-            $('.myaccount .myaccount-content .container-fluid').html($billing_html); 
+            $('.myaccount .myaccount-content .container-fluid').html($profile_html); 
 
         },
 
         myaccount_loaded: function($myaccount_html) {
             var THIS = this,
-                $billing_menu_html = THIS.templates.menu.tmpl(); 
+                $profile_menu_html = THIS.templates.menu.tmpl(); 
 
-            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 5);   
+            winkstart.publish('myaccount.add_submodule', $profile_menu_html, 1);   
         }
     }
 );

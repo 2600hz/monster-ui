@@ -53,7 +53,8 @@ winkstart.module('myaccount', 'myaccount', {
     },
     {
         modules: {
-            'billing': false
+            'billing': false,
+            'profile': false
         },
 
         is_initialized: false,
