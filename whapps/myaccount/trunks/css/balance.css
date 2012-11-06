@@ -1,0 +1,14 @@
+.balance-title .page-header {
+	padding-bottom: 0;
+	margin: 20px 0 15px;
+}
+
+.balance-title .page-header h1 {
+	color: #05ADDC;
+	font-size: 25px;
+	margin: 0;
+}
+
+.balance-title .page-header h1 small {
+	font-size: 18px;
+}
