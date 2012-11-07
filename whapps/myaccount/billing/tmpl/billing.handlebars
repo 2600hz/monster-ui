@@ -9,22 +9,22 @@
 <div class="row-fluid billing-content">
 	<div class="span8">
 		<form class="form-inline change-card">
-		  	<label for="card">Billing Account</label>
+		  	<label for="card">{{t "myaccount.billing.billing_account"}}</label>
 		  	<select name="card" id="card">
 			  	<option value="1">**** **** **** **** 1111</option>
 			  	<option value="2">**** **** **** **** 2222</option>
 			  	<option value="3">**** **** **** **** 3333</option>
 		  	</select>
-		  	<a href="#myaccount/billing/change-card">Change</a>
+		  	<a href="#myaccount/billing/change-card">{{t "myaccount.billing.change_card"}}</a>
 		</form>
 
 		<div class="hero-unit hero-unit-small billing-cycle">
-		  <h2>Billing Cycle Ends 07/03/89</h2>
+		  <h2>{{t "myaccount.billing.billing_cycle"}} 07/03/89</h2>
 		  <div class="days-left">
 		  	<div class="progress progress-success">
 			 	<div class="bar" style="width: 60%;"></div>
 			</div>
-			<h4>9 Days left</h4>
+			<h4>9 {{t "myaccount.billing.days_left"}}</h4>
 		  </div>
 		</div>
 
@@ -33,13 +33,13 @@
   	<div class="span4">
   		<div class="hero-unit hero-unit-small hero-unit-blue charge">
 		  <p>
-		  	Your Monthly and Prorated charges as of 07/03/89
+		  	{{t "myaccount.billing.monthly_charges"}}
 		  </p>
 		  <h1>
 		  	$ 250
 		  </h1>
 		  <p>
-		  	<a href="#myaccount/billing/history">View Payment Breakdown</a>
+		  	<a href="#myaccount/billing/history">{{t "myaccount.billing.payment_breakdown"}}</a>
 		  </p>
 		</div>
   	</div>

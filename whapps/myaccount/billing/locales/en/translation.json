@@ -1,5 +1,11 @@
 {
 	"billing": "Billing",
 	"title": "Billing Details",
-	"history": "billing history"
+	"history": "billing history",
+	"billing_account": "Billing Account",
+	"change_card": "Change",
+	"billing_cycle": "Billing Cycles Ends",
+	"days_left": "Days left",
+	"monthly_charges": "Your Monthly and Prorated charges as of",
+	"payment_breakdown": "View Payment Breakdown"
 }

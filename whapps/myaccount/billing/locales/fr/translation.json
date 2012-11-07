@@ -1,5 +1,11 @@
 {
 	"billing": "Facturation",
 	"title": "Details de Facturation",
-	"history": "Historique de paiement"
+	"history": "Historique de paiement",
+	"billing_account": "Carte Facturee",
+	"change_card": "Changer",
+	"billing_cycle": "Prochaine Facture",
+	"days_left": "Jours restant",
+	"monthly_charges": "Vos frais mensuels et au prorata a compter du",
+	"payment_breakdown": "Voir l'historique des paiements"
 }
