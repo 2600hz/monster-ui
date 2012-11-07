@@ -81,6 +81,14 @@ winkstart.module('myaccount', 'balance', {
             );
         },
 
+        update_menu: function(data) {
+            var THIS = this;
+
+            if(data) {
+                $('.myaccount .' + THIS.__module + ' .amount').html(data);
+            }
+        },
+
         render: function() {
             var THIS = this;
 
@@ -96,7 +104,9 @@ winkstart.module('myaccount', 'balance', {
                         var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
 
                         THIS.balance_add(credits_to_add, function() {
-                            $('.amount').html((parseFloat($('.amount', $balance_html).html()) + credits_to_add).toFixed(2));
+                            THIS.update_menu((parseFloat($('#amount', $balance_html).val()) + credits_to_add).toFixed(2));
+                            winkstart.publish('myaccount.balance.render');
+                            alert('Your changes have been saved!');
                         });
                     }
                 });

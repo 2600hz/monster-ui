@@ -75,6 +75,7 @@ winkstart.module('myaccount', 'profile', {
                         email: $('#email', $profile_html).val()
                     },
                     function() {
+                        winkstart.publish('myaccount.profile.render');
                         alert('Email address updated!');
                     });
                 });
