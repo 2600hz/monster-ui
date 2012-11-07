@@ -16,7 +16,16 @@ winkstart.module('myaccount', 'balance', {
         },
 
         resources: {
-            
+            'balance.get': {
+                url: '{api_url}/accounts/{account_id}/{billing_provider}/credits',
+                contentType: 'application/json',
+                verb: 'GET'
+            },
+            'balance.update': {
+                url: '{api_url}/accounts/{account_id}/{billing_provider}/credits',
+                contentType: 'application/json',
+                verb: 'PUT'
+            },
         }
     },
 
@@ -26,21 +35,88 @@ winkstart.module('myaccount', 'balance', {
         winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
+        balance_get: function(success, error) {
+            var THIS = this;
+
+            winkstart.request('balance.get', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url,
+                    billing_provider: winkstart.apps['myaccount'].billing_provider
+                },
+                function(data, status) {
+                    if(typeof success == 'function') {
+                        success(data, status);
+                    }
+                },
+                function(data, status) {
+                    if(typeof error == 'function') {
+                        error(data, status);
+                    }
+                }
+            );
+        },
+
+        balance_add: function(credits, success, error) {
+            var THIS = this;
+
+            winkstart.request('balance.update', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url,
+                    billing_provider: winkstart.apps['myaccount'].billing_provider,
+                    data: {
+                        'amount': credits
+                    }
+                },
+                function(data, status) {
+                    if(typeof success == 'function') {
+                        success(data, status);
+                    }
+                },
+                function(data, status) {
+                    console.log(data);
+                    if(typeof error == 'function') {
+                        error(data, status);
+                    }
+                }
+            );
+        },
+
         render: function() {
-            var THIS = this,
-                $balance_html = THIS.templates.balance.tmpl();
+            var THIS = this;
 
-            winkstart.publish('myaccount.select_menu', THIS.__module);
+            THIS.balance_get(function(data) {
+               var $balance_html = THIS.templates.balance.tmpl({
+                    'amount': data.data.amount || '0.00'
+                });
 
-            $('.myaccount .myaccount-content .container-fluid').html($balance_html); 
+                $('.add-credit', $balance_html).on('click', function(ev) {
+                    ev.preventDefault();
+                    
+                    if(confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?')) {
+                        var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
+
+                        THIS.balance_add(credits_to_add, function() {
+                            $('.amount').html((parseFloat($('.amount', $balance_html).html()) + credits_to_add).toFixed(2));
+                        });
+                    }
+                });
+
+                winkstart.publish('myaccount.select_menu', THIS.__module);
+                $('.myaccount .myaccount-content .container-fluid').html($balance_html);
+            }); 
 
         },
 
         myaccount_loaded: function($myaccount_html) {
-            var THIS = this,
-                $balance_menu_html = THIS.templates.menu.tmpl(); 
+            var THIS = this;
 
-            winkstart.publish('myaccount.add_submodule', $balance_menu_html, 2);   
+            THIS.balance_get(function(data) {
+                var $balance_menu_html = THIS.templates.menu.tmpl({
+                    'amount': data.data.amount || '0.00'
+                });
+
+                winkstart.publish('myaccount.add_submodule', $balance_menu_html, 2);
+            });       
         }
     }
 );

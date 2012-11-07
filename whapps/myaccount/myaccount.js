@@ -70,6 +70,10 @@ winkstart.module('myaccount', 'myaccount', {
             'trunks': false
         },
 
+        whapp_vars: {
+            billing_provider: 'braintree'
+        },
+
         is_initialized: false,
 
         uninitialized_count: 1337,
@@ -141,6 +145,8 @@ winkstart.module('myaccount', 'myaccount', {
                 account_id: winkstart.apps['auth'].account_id,
                 user_id: winkstart.apps['auth'].user_id
             }, THIS.orig_whapp_config);
+
+            $.extend(winkstart.apps[THIS.__module], THIS.whapp_vars);
         },
 
         setup_page: function(user_data) {
