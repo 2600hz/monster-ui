@@ -1,0 +1,24 @@
+<div>
+    <div>
+        {{if data.length == 0}}
+            <div class="errMsg">
+                    There are no numbers available in the specified NPA.
+            </div>
+        {{else}}
+            <div id="addDIDForm">
+                <div class="user_tab">
+                    <div class="row_table">
+                        <div class="first column">Select</div>
+                        <div class="second column">Number</div>
+                    </div>
+                    {{each(i, phone_number) data}}
+                        <div class="row_table">
+                            <div class="first column"><input type="checkbox" class="checkbox_number" data-price="1" data-phone_number="${phone_number}"/></div>
+                            <div class="second column">${phone_number}</div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+<div>

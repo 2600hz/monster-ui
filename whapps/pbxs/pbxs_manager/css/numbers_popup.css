@@ -1,0 +1,734 @@
+/* Add DID Popup */
+#edit_number {
+    padding: 0px;
+}
+
+#edit_number .help {
+    margin-top: 0px;
+    font-size: 11px;
+}
+
+#edit_number .header_nav {
+    padding: 40px 0 30px;
+    background: #444;
+}
+
+#edit_number input[type="checkbox"]{
+    margin-top: 7px;
+}
+
+#edit_number .header_nav .help_wrapper {
+    width: 490px;
+    margin: 10px auto 0;
+}
+
+#edit_number .header_nav .help_wrapper .find_area_code {
+    margin-left: 50px;
+}
+
+#edit_number .header_nav .help_wrapper .optional_field {
+    margin-left: 70px;
+    color: #999;
+}
+
+#edit_number .header_nav .area_code_wrapper {
+    color: #05ADDC;
+    font-size: 35px;
+    font-weight: bold;
+    line-height: 20px;
+    text-shadow: 1px 1px 1px #333333;
+    margin: auto;
+    width: 490px;
+}
+
+#edit_number .header_nav .area_code_wrapper .area_code_input {
+    border-radius: 5px;
+    color: #05ADDC;
+    font-size: 24px;
+    font-weight: bold;
+    height: 26px;
+    margin: 0 5px;
+    padding: 5px 0;
+    text-align: center;
+    vertical-align: middle;
+    width: 90px;
+}
+
+#edit_number .header_nav .area_code_wrapper .search_number {
+    background: url('images/btn_search.png') no-repeat;
+    width: 154px;
+    height: 45px;
+    display: inline-block;
+    margin: 0 0 -13px 25px;
+}
+
+#edit_number .header_nav .area_code_wrapper .search_number:hover {
+    background: url('images/btn_search_hover.png');
+}
+
+#edit_number .header_nav .area_code_wrapper input::-webkit-input-placeholder {
+    color: #CCCCCC !important;
+    font-size: 12px !important;
+}
+
+#edit_number .header_nav .area_code_wrapper input:-moz-placeholder {
+    color: #CCCCCC !important;
+    font-size: 12px !important;
+}
+
+#edit_number .content {
+    padding: 15px;
+}
+
+#edit_number .toggle_div {
+    padding: 30px 20px 10px;
+}
+
+#edit_number .split_div {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#edit_number .split_div .left {
+    width: 47%;
+    padding-right: 3%;
+    float: left;
+}
+
+#edit_number .split_div .right {
+    width: 47%;
+    padding-left: 3%;
+    float: left;
+}
+
+#edit_number .content .stats {
+    border-top: 1px solid #ccc;
+    text-align: left;
+    margin: 20px 0 0 0;
+}
+
+#edit_number .content .stats .stats_left{
+    float: left;
+    width: 70%;
+    margin-top: 28px;
+}
+
+#edit_number .content .stats .stats_right{
+    float: left;
+    width: 30%;
+    margin-top: 28px;
+}
+
+#edit_number .content .stats .stats_right .submit_btn {
+    margin-left: 0;
+    width: 71px;
+}
+
+#edit_number .content .stats .title_stats {
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#edit_number .content .stats .stat_number {
+    font-size: 26px;
+    color: #05addc;
+    font-weight: bold;
+}
+
+#edit_number #sdiddiv {
+    display: block;
+    text-align: center;
+}
+
+#edit_number #foundDIDList {
+    border: 1px solid #888;
+    max-height: 206px;
+    overflow-y: scroll;
+    font-weight: bold;
+}
+
+#edit_number #addDIDForm .column:not(:last-child) {
+    border-right: 1px solid #A6A6A6;
+}
+
+#edit_number #addDIDForm .column {
+    float: left;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 10px;
+}
+
+#edit_number #addDIDForm .column.first {
+    width: 50px;
+}
+
+#edit_number #addDIDForm .row_table {
+    height: 25px
+}
+
+#edit_number #addDIDForm .row_table:not(:last-child) {
+    border-bottom: 1px solid #A6A6A6;
+}
+
+#edit_number #addDIDForm .row_table:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+#edit_number #addDIDForm .row_table:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#edit_number #addDIDForm .row_table .select_number {
+    margin-top: 4px;
+}
+
+/* Port Number */
+#port_number {
+    background-color: #fff;
+    padding: 0px;
+    cursor: default;
+}
+
+#port_number .wizard_buttons {
+    height: 30px;
+    text-align: right;
+    padding: 15px 20px 0;
+}
+
+#port_number .wizard_buttons .prev_step {
+    height: 18px;
+    width: 67px;
+    background: url('images/prev_step.png');
+    float: left;
+}
+
+#port_number .wizard_buttons .prev_step:hover {
+    background: url('images/prev_step_hover.png');
+}
+
+#port_number .wizard_buttons .next_step {
+    height: 18px;
+    width: 67px;
+    background: url('images/next_step.png');
+}
+
+#port_number .wizard_buttons .next_step:hover {
+    background: url('images/next_step_hover.png');
+}
+
+#port_number .wizard_buttons .submit_btn {
+    margin-top: -5px;
+}
+
+#port_number .wizard_content {
+    margin-top: 20px;
+    margin: auto;
+    background: #fff;
+    width: 588px;
+    padding: 10px;
+}
+
+#port_number .wizard_content form {
+    margin-bottom: 0px;
+}
+
+#port_number .wizard_nav {
+    background: #444;
+}
+
+#port_number .wizard_nav .steps_text {
+    list-style: none;
+    overflow: hidden;
+    padding: 0px;
+    margin: auto;
+    display: block;
+    float: left;
+    font-size: 12px;
+}
+
+#port_number .wizard_nav .steps_text ul {
+    list-style: none;
+}
+
+#port_number .wizard_nav .steps_image .round_circle {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    font-size: 20px;
+    color: #eee;
+    border-radius: 55px;
+    margin: 10px 30px;
+    border: 1px solid #222;
+    float: left;
+    text-align: center;
+    background: rgb(34,34,34); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(34,34,34,1) 0%, rgba(57,57,57,1) 40%, rgba(57,57,57,1) 60%, rgba(34,34,34,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(34,34,34,1)), color-stop(40%,rgba(57,57,57,1)), color-stop(60%,rgba(57,57,57,1)), color-stop(100%,rgba(34,34,34,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(34,34,34,1) 0%,rgba(57,57,57,1) 40%,rgba(57,57,57,1) 60%,rgba(34,34,34,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(34,34,34,1) 0%,rgba(57,57,57,1) 40%,rgba(57,57,57,1) 60%,rgba(34,34,34,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(34,34,34,1) 0%,rgba(57,57,57,1) 40%,rgba(57,57,57,1) 60%,rgba(34,34,34,1) 100%); /* IE10+ */
+    background: linear-gradient(-45deg,  rgba(34,34,34,1) 0%,rgba(57,57,57,1) 40%,rgba(57,57,57,1) 60%,rgba(34,34,34,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222222', endColorstr='#222222',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#port_number .wizard_nav .steps_image .round_circle.current {
+    background: rgb(3,157,209); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(3,157,209,1) 25%, rgba(0,133,192,1) 75%, rgba(2,132,190,1) 87%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(25%,rgba(3,157,209,1)), color-stop(75%,rgba(0,133,192,1)), color-stop(87%,rgba(2,132,190,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(3,157,209,1) 25%,rgba(0,133,192,1) 75%,rgba(2,132,190,1) 87%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(3,157,209,1) 25%,rgba(0,133,192,1) 75%,rgba(2,132,190,1) 87%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(3,157,209,1) 25%,rgba(0,133,192,1) 75%,rgba(2,132,190,1) 87%); /* IE10+ */
+    background: linear-gradient(-45deg,  rgba(3,157,209,1) 25%,rgba(0,133,192,1) 75%,rgba(2,132,190,1) 87%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#039dd1', endColorstr='#0284be',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#port_number .wizard_nav .steps_text li {
+    font-size: 12px;
+    float: left;
+    color: #fff;
+    width: 132px;
+    padding: 0 10px 10px;
+    text-align: center;
+}
+
+#port_number .wizard_nav .steps_text li span {
+    font-size: 11px;
+    color: #eeeeee;
+    display: block;
+}
+
+#port_number .wizard_nav .steps_text li.current {
+    color: #05addc;
+}
+
+#port_number .port_help {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 10px;
+    line-height: 16px;
+    display: block;
+    font-weight: normal;
+}
+
+#port_number .step_div {
+    display: block;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+}
+
+#port_number .step_div .title {
+    font-weight: bold;
+    font-size: 14px;
+    margin: 10px 0px 25px 15px;
+    text-align: left;
+}
+
+#port_number .step_div .left_part {
+    float: left;
+    text-align: right;
+    width: 48%;
+}
+
+#port_number .step_div .left_part.text_only {
+    line-height: 22px;
+}
+
+#port_number .step_div .right_part {
+    float: left;
+    text-align: left;
+    margin-left: 4%;
+    width: 48%;
+}
+
+/* Step 1 */
+#port_number .step_div.first {
+    width: 95%;
+    font-weight: bold;
+}
+
+#port_number .step_div .split_div.last {
+    margin-bottom: 20px;
+}
+
+#port_number .step_div.first .split_div {
+    width: 100%;
+    margin-top: 20px;
+    min-height: 30px;
+}
+
+#port_number .step_div.first .split_div .left_part {
+    width: 48%;
+    float: left;
+    text-align: right;
+}
+
+#port_number .step_div.first .split_div .right_part {
+    width: 48%;
+    float: left;
+    text-align: left;
+    margin-left: 4%;
+}
+
+#port_number .step_div.first .numbers_text {
+    height: 160px;
+    width: 210px;
+}
+
+#port_number .step_div.first .carrier_dropdown {
+    margin-top: 5px;
+    width: 220px;
+    max-width: 235px;
+}
+
+#port_number .step_div.first .numbers_example {
+    color: #05addc;
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+#port_number .step_div.first .other_carrier {
+    margin-top: 5px;
+    width: 229px;
+}
+
+/* Step 2*/
+#port_number .step_div.second .left_part {
+    width: 48%;
+}
+
+#port_number .step_div.second .left_part .field {
+    margin-bottom: 5px;
+}
+
+#port_number .step_div.second .left_part .field label {
+    width: 110px;
+}
+
+#port_number .step_div.second .left_part .field input {
+    width: 150px;
+}
+
+#port_number .step_div.second .right_part .bill_image {
+    width: 266px;
+    height: 129px;
+    background: url('images/bill.jpg');
+    box-shadow: 1px 3px 3px #444;
+    margin: 0 0 24px;
+}
+
+#port_number .step_div.second .right_part .files {
+    margin-top: 10px;
+}
+
+/* Step 3 */
+#port_number .step_div.third .loa_block {
+    margin: 20px 15px 0px 15px;
+    padding-bottom: 20px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+#port_number .step_div.third .loa_block .upload_block {
+    font-size: 11px;
+    float: left;
+    margin: 10px 0 0 0;
+    width: 100%;
+}
+
+/* Step 4 */
+#port_number .step_div.fourth .block:not(:last-child) {
+    padding-bottom: 30px;
+}
+
+#port_number .step_div.fourth .block .checkbox_line {
+    text-align: left;
+    margin: 10px;
+}
+
+#port_number .step_div.fourth .block .checkbox_line input {
+    margin: 0 5px 0 15px;
+}
+
+#number_list {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Old Trunkstore Popup */
+.trunkstore_popup {
+    padding: 15px;
+    font-family: Helvetica;
+    cursor: default;
+}
+
+.trunkstore_popup label{
+    color: #333;
+}
+
+.trunkstore_popup a {
+    text-decoration: underline;
+    color: #0be;
+}
+
+.trunkstore_popup a:hover {
+    color: #05addc;
+}
+
+.trunkstore_popup h2 {
+    color: #333333;
+    text-shadow: none;
+}
+
+.trunkstore_popup .note_icon {
+    background: url('images/note.png') no-repeat;
+    width: 23px;
+    height: 23px;
+    display: inline-block;
+}
+
+.trunkstore_popup p.note_box {
+    background-color: #E7E7E7;
+    padding: 15px 10px;
+    font-size: 12px;
+    line-height:15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border: 2px solid #A6A6A6;
+    text-align: center;
+}
+
+.trunkstore_popup .help {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 10px;
+    line-height: 16px;
+    display: block;
+    font-weight: normal;
+}
+
+.trunkstore_popup .fancy_help {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: normal;
+    margin: 5px 2% 5px 2%;
+    padding: 1%;
+    display: inline-block;
+    width: 93%;
+}
+
+.trunkstore_popup .fancy_help.small {
+    width: 250px;
+}
+
+.trunkstore_popup .fancy_help.small .wrapper_icon {
+    width: 23px;
+}
+
+.trunkstore_popup .fancy_help.small .help_text {
+    width: 220px;
+}
+
+.trunkstore_popup .fancy_help.border {
+    background: #ddd;
+    border: 1px solid #adadad;
+}
+
+.trunkstore_popup .fancy_help .wrapper_icon {
+    text-align: center;
+    padding-right: 1%;
+    width: 5%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.trunkstore_popup .fancy_help .help_text {
+    width: 93%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.trunkstore_popup .buttons {
+    text-align: right;
+    padding: 15px 0 0;
+    width: auto;
+    height: 30px;
+}
+
+.trunkstore_popup .buttons_centered {
+    width: auto;
+    padding: 15px 15px 0 15px;
+    text-align: center;
+}
+
+.trunkstore_popup .inline_field {
+    margin-top: 20px;
+    line-height: 30px;
+}
+
+.trunkstore_popup .inline_field label {
+    width: auto;
+    text-align: right;
+    margin-right: 10px;
+    line-height: 24px;
+    min-width: 80px;
+}
+
+/* FAILOVER POPUP */
+.trunkstore_popup.failover {
+    padding: 0px;
+}
+
+.trunkstore_popup.failover form{
+    margin-bottom: 0;
+    padding: 15px 5px 10px 5px;
+}
+
+.trunkstore_popup.failover .header {
+    background: url('images/failover_header.png') no-repeat center #444;
+    width: 640px;
+    height: 136px;
+}
+
+.trunkstore_popup.failover .header.number {
+    background: url('images/failover_e164.png') no-repeat center #444;
+}
+
+.trunkstore_popup.failover .header.sip {
+    background: url('images/failover_sip.png') no-repeat center #444;
+}
+
+.trunkstore_popup.failover .buttons > button:last-child {
+    margin-right: 17px;
+}
+
+.trunkstore_popup.failover h2 {
+    margin-left: 20px;
+}
+
+.trunkstore_popup.failover .radio_block {
+    padding: 0 20px 20px;
+}
+
+.trunkstore_popup.failover .radio_block .inline_field {
+    display: block;
+    margin: 10px 10px 10px 10px;
+    font-size: 16px;
+    line-height: 32px;
+}
+
+
+.trunkstore_popup.failover .radio_block .inline_field input {
+    vertical-align: middle;
+    font-size: 16px;
+    margin-left: 15px;
+}
+
+/* e911 POPUP */
+.trunkstore_popup.e911 form {
+    margin-bottom: 10px;
+}
+
+.trunkstore_popup.e911 .split_div {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.trunkstore_popup.e911 .split_div .left_part {
+    float: left;
+    text-align: right;
+}
+
+.trunkstore_popup.e911 .split_div .right_part {
+    width: 100px;
+    float: left;
+    margin-left: 15px;
+    text-align: center;
+}
+
+.trunkstore_popup.e911 .split_div .right_part .e911_image {
+    background: url('images/e911_image.png') no-repeat center;
+    width: 100px;
+    height: 193px;
+    margin-bottom: 10px;
+}
+
+.trunkstore_popup.e911 .split_div .left_part .inline_field:first-child {
+    margin-top: 0px;
+}
+
+.trunkstore_popup.e911 .split_div .left_part .inline_field {
+    margin-top: 20px;
+}
+
+.trunkstore_popup.e911 .split_div .left_part .inline_field input {
+    height: 24px;
+}
+
+.trunkstore_popup.e911 .e911_text {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 30px;
+    margin-left: 20px;
+    text-align: left;
+    padding-bottom: 10px;
+}
+
+.trunkstore_popup.e911 .e911_text .big_blue_text {
+    color: #05addc;
+    font-size: 32px;
+}
+
+.trunkstore_popup.e911 .submit_btn {
+    margin-top: 15px;
+}
+
+/* CNAM POPUP */
+.trunkstore_popup.cnam form {
+    margin-bottom: 0;
+}
+
+.trunkstore_popup.cnam .right_form .caller_id_text {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 40px 10px;
+    line-height: 40px;
+}
+
+.trunkstore_popup.cnam .right_form .buttons {
+    margin: 5px;
+}
+
+.trunkstore_popup.cnam .inline_field label {
+    font-size: 16px;
+}
+
+.trunkstore_popup.cnam .left_image {
+    background: url('images/cid_phone.jpg') center no-repeat;
+    float: left;
+    width: 152px;
+    height: 290px;
+    margin-right: 20px;
+}
+
+.trunkstore_popup.cnam .right_form {
+    float: left;
+    width: 400px;
+}
+
+.trunkstore_popup.cnam .custom .help_text {
+    width: 90%;
+    margin-left: 7px;
+}
+
+.trunkstore_popup.cnam .custom .wrapper_icon {
+    margin-left: 3px;
+}
