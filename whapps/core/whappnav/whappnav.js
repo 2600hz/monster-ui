@@ -29,16 +29,27 @@ winkstart.module('core', 'whappnav', {
                 $whapp_html = THIS.templates.whapp.tmpl({
                     id: id,
                     name: (_options && _options.name) ? _options.name.toUpperCase() : id.toUpperCase(),
-                    link: (_options && _options.link) ? _options.link : "#" + id
+                    link: (_options && _options.link) ? _options.link : '#' + id
                 });
 
             if(_callbacks) {
-                if (typeof _callbacks.click == "function") {
+                if (typeof _callbacks.click == 'function') {
                     $whapp_html.on('click', _callbacks.click);
                 }
-                if (typeof _callbacks.hover == "function") {
+                if (typeof _callbacks.hover == 'function') {
                     $whapp_html.on('hover', _callbacks.hover);
                 }
+            }
+
+            /* In order to allow the refresh of a whapp */
+            if(!_callbacks || typeof _callbacks.click !== 'function') {
+                $whapp_html.on('click', function() {
+                    /* We only need to manually activate the whapp again if the URI is the same
+                       because the URI listener handles it otherwise */
+                    if(winkstart.rooting.get_hashtag().publish === id) {
+                        winkstart.publish(id + '.activate');
+                    }
+                });
             }
 
             $whappnav_html.append($whapp_html);

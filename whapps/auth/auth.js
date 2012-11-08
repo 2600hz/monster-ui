@@ -741,8 +741,6 @@ winkstart.module('auth', 'auth',
 
         logout: function() {
             if(confirm('Are you sure that you want to log out?')) {
-                console.log('TEST');
-
                 // Remove any individual keys
                 $.each(winkstart.apps, function(k, v) {
                     // TODO: ADD APP UNLOADING CODE HERE. Remove CSS and scripts. This should inherently delete apps.

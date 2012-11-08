@@ -65,13 +65,16 @@ winkstart.module('core', 'layout', {
                 layout_html = THIS.templates.layout.tmpl().appendTo(THIS.parent),
                 api_url = winkstart.config.whitelabel_api_url || winkstart.apps['auth'].api_url;
 
-            $("#loading").ajaxStart(function(){
-                $(this).show();
-            }).ajaxStop(function(){
-                $(this).hide();
-            }).ajaxError(function(){
+            $('#home_link').ajaxStart(function() {
+                $('i', $(this)).hide();
+                $('#loading', $(this)).show();
+            }).ajaxStop(function() {
+                $('i', $(this)).show();
+                $('#loading', $(this)).hide();
+            }).ajaxError(function() {
                 if($.active === 0) {
-                    $(this).hide();
+                    $('i', $(this)).show();
+                    $('#loading', $(this)).hide();
                 }
             });
 

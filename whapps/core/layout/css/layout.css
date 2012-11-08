@@ -28,11 +28,11 @@ body > .navbar .navbar-inner {
     padding: 0 0 0 0;
 }
 
-body > .navbar .btn-navbar { 
+body > .navbar .btn-navbar {
     margin-top: 15px;
 }
 
-body > .navbar .btn-navbar .icon-bar { 
+body > .navbar .btn-navbar .icon-bar {
     background-color: #05addc;
 }
 
@@ -43,12 +43,12 @@ body > .navbar .nav > li > a {
     font-size: 20px;
 }
 
-body > .navbar .nav-collapse .nav > li > a:hover, 
+body > .navbar .nav-collapse .nav > li > a:hover,
 body > .navbar .nav-collapse .dropdown-menu a:hover {
     background-color: transparent;
 }
 
-body > .navbar .nav > li > a:focus, 
+body > .navbar .nav > li > a:focus,
 body > .navbar .nav > li > a:hover {
     color: #05ADDC;
 }
@@ -86,6 +86,10 @@ body > .navbar .navbar-inner .home i {
     margin-top: 25px;
 }
 
+body > .navbar .navbar-inner .home #loading {
+    margin-top: 25px;
+}
+
 body > .navbar .navbar-inner .help {
     padding: 0 10px;
     height: 62px;
@@ -106,22 +110,22 @@ body > .ws-content {
 
 /* desktop */
 @media (min-width: 979px) {
-    
+
 }
- 
+
 /* Portrait tablet to landscape */
 @media (min-width: 768px) and (max-width: 979px) {
     body > .navbar .navbar-inner .help {
         border-left: none;
     }
 }
- 
+
 /* Phone to portrait tablet */
 @media (max-width: 767px) {
     body > .navbar .navbar-inner .logo {
         width: 100px;
         border: none;
-        
+
     }
 
     body > .navbar .navbar-inner .help {
