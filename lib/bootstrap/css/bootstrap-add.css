@@ -1,5 +1,13 @@
 /* More class for bootstrap */
 
+a {
+    color: #05addc;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
 .hero-unit.hero-unit-small {
 	padding: 30px;
 }

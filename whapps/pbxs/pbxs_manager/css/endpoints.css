@@ -1,25 +1,3 @@
-#pbxs_manager-view {
-    padding-bottom: 115px;
-}
-
-#edit_server {
-    padding: 10px 30px;
-}
-
-#edit_server form > div:not(:last-child) {
-    margin: 10px 0;
-}
-
-#edit_server .pill-content > div {
-    display: block;
-}
-
-#edit_server .title {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 0 0 10px 0;
-}
-
 #edit_server .note {
     font-size: 12px;
     font-weight: normal;
@@ -33,10 +11,6 @@
     overflow-x: auto;
     white-space: nowrap;
     margin: 20px 0;
-}
-
-#edit_server #endpoints {
-    margin: 0px;
 }
 
 #edit_server .instructions {
@@ -63,10 +37,6 @@
     height: 28px;
     line-height: 28px;
     font-weight: bold;
-}
-
-.ui-dialog #edit_server .pbxs {
-    width: 614px;
 }
 
 #edit_server .pbxs .pbx.selected {
@@ -167,4 +137,3 @@
 #edit_server .pbxs .taridium {
     background: url('images/endpoints/taridium.png');
 }
-

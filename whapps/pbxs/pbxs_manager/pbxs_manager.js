@@ -5,18 +5,20 @@ winkstart.module('pbxs', 'pbxs_manager', {
             'css/endpoints.css'
         ],
 
+        locales: ['en', 'fr'],
+
         templates: {
-            pbxs_manager: 'tmpl/pbxs_manager.html',
-            pbxs_list_element: 'tmpl/pbxs_list_element.html',
+            pbxs_manager: 'tmpl/pbxs_manager.handlebars',
+            pbxs_list_element: 'tmpl/pbxs_list_element.handlebars',
+            endpoint: 'tmpl/endpoint.handlebars',
+            endpoint_numbers: 'tmpl/endpoint_numbers.handlebars',
             failover_dialog: 'tmpl/failover_dialog.html',
             cnam_dialog: 'tmpl/cnam_dialog.html',
             e911_dialog: 'tmpl/e911_dialog.html',
             assign_number_dialog: 'tmpl/assign_number_dialog.html',
             move_number_dialog: 'tmpl/move_number_dialog.html',
             add_number_dialog: 'tmpl/add_number_dialog.html',
-            add_number_search_results: 'tmpl/add_number_search_results.html',
-            endpoint: 'tmpl/endpoint.html',
-            endpoint_numbers: 'tmpl/endpoint_numbers.html'
+            add_number_search_results: 'tmpl/add_number_search_results.html'
         },
 
         subscribe: {
@@ -267,7 +269,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             var THIS = this,
                 //parent = _parent || $('#pbxs_manager-content'),
                 parent = _parent || $('#ws-content'),
-                target = _target || $('#pbxs_manager-view', parent),
+                target = _target || $('#pbxs_manager_view', parent),
                 _callbacks = _callbacks || {},
                 callbacks = {
                     save_success: _callbacks.save_success || function(_data) {
@@ -466,12 +468,18 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
         popup_endpoint_settings: function(data, endpoint_data, callbacks) {
             var THIS = this,
-                popup = winkstart.dialog($('<div class="inline_popup"><div class="inline_content main_content"/></div>'), {
+                popup = winkstart.dialog($('<div></div>'), {
+                    title: 'Edit Settings of '+ endpoint_data.server_name,
+                    width: '80%',
+                    position: { my: 'top', at: 'top', of: $('#ws-content') },
+                    maxWidth: 1000
+                });
+                /*popup = winkstart.dialog($('<div class="inline_popup"><div class="inline_content"/></div>'), {
                     title: 'Edit Settings of '+ endpoint_data.server_name,
                     position: ['center', 100]
-                });
+                });*/
 
-            THIS.render_endpoint(data, endpoint_data, $('.main_content', popup), {
+            THIS.render_endpoint(data, endpoint_data, $(popup), {
                 save_success: function(_data) {
                     popup.dialog('destroy').remove();
 
@@ -966,7 +974,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     if(data.length > 0) {
                         var i = 0;
                         $.each(data, function(key, val) {
-                            console.log(val);
                             new_list.push({
                                 id: i,
                                 name: val.server_name || '(no name)'
@@ -982,18 +989,18 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     return new_list;
                 };
 
-                $('#list_pbxs_navbar #pbxs_manager-listpanel', parent).empty();
+                $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).empty();
 
                 $.each(map_crossbar_data(data), function(k, v) {
-                    $('#list_pbxs_navbar #pbxs_manager-listpanel', parent).append(THIS.templates.pbxs_list_element.tmpl(v));
+                    $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).append(THIS.templates.pbxs_list_element.tmpl(v));
                 });
 
                 if(id && id > -1) {
-                    $('#list_pbxs_navbar #pbxs_manager-listpanel .pbx-wrapper[data-id='+id+']', parent).addClass('selected');
+                    $('#list_pbxs_navbar #pbxs_manager_listpanel .pbx-wrapper[data-id='+id+']', parent).addClass('selected');
                 }
 
-                $('#pbxs_manager-listpanel .pbx-wrapper', parent).on('click', function() {
-                    $('#pbxs_manager-listpanel .pbx-wrapper', parent).removeClass('selected');
+                $('#pbxs_manager_listpanel .pbx-wrapper', parent).on('click', function() {
+                    $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
                     winkstart.publish('pbxs_manager.edit', { id: $(this).data('id') });
                     $(this).addClass('selected');
                 });
@@ -1007,7 +1014,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                     $.inArray(img_link, THIS.list_available_pbxs()) < 0 ? img_link = 'other' : true;
 
-                    $('#pbxs_manager-listpanel .pbx-wrapper[data-id="'+k+'"]', parent).prepend('<span><img class="img_style" src="whapps/pbxs/pbxs_manager/css/images/endpoints/'+ img_link +'.png" height="44" width=62"/></span>');
+                    $('#pbxs_manager_listpanel .pbx-wrapper[data-id="'+k+'"]', parent).prepend('<span><img class="img_style" src="whapps/pbxs/pbxs_manager/css/images/endpoints/'+ img_link +'.png" height="44" width=62"/></span>');
                 });
             });
         },
@@ -1042,7 +1049,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                     failover = $.inArray('failover', _data_numbers.data[k].features) > -1 ? true : false;
                                     dash_e911 = $.inArray('dash_e911', _data_numbers.data[k].features) > -1 ? true : false;
                                     if(k != 'id' && _data_numbers.data[k]) {
-                                        tab_data.push(['lol', k, failover, cnam, dash_e911, _data_numbers.data[k].state]);
+                                        tab_data.push(['lol', k/*, failover, cnam, dash_e911*/, _data_numbers.data[k].state]);
                                     }
                                 }
                             });
@@ -1152,7 +1159,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 {
                     'sTitle': 'Phone Number'
                 },
-                {
+                /*{
                     'sTitle': 'Failover',
                     'fnRender': function(obj) {
                         var failover = 'failover ' + (obj.aData[obj.iDataColumn] ? 'active' : 'inactive');
@@ -1175,7 +1182,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                         return '<a class="'+ e911  +'">E911</a>';
                     },
                     'bSortable': false
-                },
+                },*/
                 {
                     'sTitle': 'State',
                     'fnRender': function(obj) {

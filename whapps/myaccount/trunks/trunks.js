@@ -95,42 +95,67 @@ winkstart.module('myaccount', 'trunks', {
                     twoway: data.data.twoway_trunks || 0
                 });
 
+                $('#slider_twoway', $trunks_html).slider({
+                    min: 0,
+                    max: 100,
+                    range: 'min',
+                    value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
+                    slide: function( event, ui ) {
+                        $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
+                    }
+                });
+
+                $('#slider_inbound', $trunks_html).slider({
+                    min: 0,
+                    max: 100,
+                    range: 'min',
+                    value: data.data.inbound_trunks > 0 ? data.data.inbound_trunks : 0,
+                    slide: function( event, ui ) {
+                        $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
+                    }
+                });
+
                 $('.update-limits', $trunks_html).on('click', function(e) {
                     e.preventDefault();
 
                     if(confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?')) {
-                         var limits_data = {
+                         /*var limits_data = {
                             twoway_trunks: $('#twoway', $trunks_html).size() > 0 ? parseInt($('#twoway', $trunks_html).val() || 0) : -1,
                             inbound_trunks: $('#inbound', $trunks_html).size() > 0 ? parseInt($('#inbound', $trunks_html).val() || 0) : -1
+                        };*/
+
+                        var limits_data = {
+                            twoway_trunks: $('#slider_twoway', $trunks_html).slider('value'),
+                            inbound_trunks: $('#slider_inbound', $trunks_html).slider('value')
                         };
 
                         limits_data = $.extend({}, data.limits, limits_data);
-
-                        THIS.limits_update(limits_data, function(_data) {
+                        console.log(limits_data);
+                        /*THIS.limits_update(limits_data, function(_data) {
                             THIS.update_menu(limits_data.inbound_trunks + '/' + limits_data.twoway_trunks);
                             winkstart.publish('myaccount.trunks.render');
                             alert('Your changes have been saved!');
-                        });
+                        });*/
                     }
                 });
 
-                $('.myaccount .myaccount-content .container-fluid').html($trunks_html); 
+                $('.myaccount .myaccount-content .container-fluid').html($trunks_html);
             });
         },
 
         myaccount_loaded: function($myaccount_html) {
             var THIS = this;
-            
+
             THIS.limits_get(function(data) {
                 var $trunks_menu_html = THIS.templates.menu.tmpl({
                     inbound: data.data.inbound_trunks || 0,
                     twoway: data.data.twoway_trunks || 0
-                }); 
+                });
 
                 winkstart.publish('myaccount.add_submodule', $trunks_menu_html, 3);
             });
 
-               
+
         }
     }
 );

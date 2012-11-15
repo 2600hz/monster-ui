@@ -1,3 +1,10 @@
 {
-	"trunks": "Limites"
+    "trunks": "Trunks",
+    "flat_rate_description": "Flat-Rate calling allows you to pay a monthly, predictable fee that never changes, regardless of your usage.",
+    "two_way_calling": "Flat-Rate Two-Way Calling",
+    "inbound_calling": "Flat-Rate Inbound Calling",
+    "allow_up_to": "Allow up to",
+    "simultaneous_twoway": "simultaneous two-way calls to the US-48 at $__variable__/month per line",
+    "simultaneous_inbound": "simultaneous inbound calls at $__variable__/month per line",
+    "update_limits": "Update Limits"
 }

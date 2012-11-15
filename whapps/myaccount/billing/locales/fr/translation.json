@@ -1,11 +1,13 @@
 {
 	"billing": "Facturation",
-	"title": "Details de Facturation",
+	"title": "D&eacute;tails de Facturation",
 	"history": "Historique de paiement",
-	"billing_account": "Carte Facturee",
+	"billing_account": "Carte Factur&eacute;e",
 	"change_card": "Changer",
 	"billing_cycle": "Prochaine Facture",
-	"days_left": "Jours restant",
-	"monthly_charges": "Vos frais mensuels et au prorata a compter du",
-	"payment_breakdown": "Voir l'historique des paiements"
+	"days_left": "Jour(s) restant(s)",
+	"monthly_charges": "Frais Mensuels",
+	"payment_breakdown": "Voir la facture d&eacute;taill&eacute;e",
+    "will_be_charged": "Le montant de votre abonnement sera d&eacute;bit&eacute; le __variable__",
+    "rate_plan": "Mon abonnement"
 }

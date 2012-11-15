@@ -1,48 +1,51 @@
-<div class="row-fluid balance-title">
-	<div class="span12">
-	  	<div class="page-header">
-		 	<h1>{{t "myaccount.trunks.trunks"}}</h1>
-		</div>
-  	</div>
-</div>
-<div class="row-fluid">
-	<div class="span12">
-		<div class="alert alert-info">
-			<p>
-				Flat-Rate calling allows you to pay a monthly, predictable fee that never changes, regardless of your usage.
-			</p>
-		</div>
-	</div>
-</div>
+<div class="trunks-content">
+    <div class="row-fluid balance-title">
+        <div class="span12">
+            <div class="page-header">
+                <h1>{{t "myaccount.trunks.trunks"}}</h1>
+            </div>
+        </div>
+    </div>
 
-<div class="row-fluid">
-	<div class="span12">
-		<form class="form-horizontal">
-			<h5>Flat-Rate Two-Way Calling</h5>
-			<div class="control-group">
-		    	<label class="control-label" for="twoway">Allow up to</label>
-		    	<div class="controls">
-		      		<input type="text" id="twoway" name="twoway" class="span1" value="{{twoway}}" />
-		      		<span class="help-inline">
-		      			simultaneous two-way calls to the US-48 at $29.99/month per line
-		      		</span>
-		    	</div>
-		  	</div>
-		  	<h5>Flat-Rate Inbound Calling</h5>
-		  	<div class="control-group">
-		    	<label class="control-label" for="inbound">Allow up to</label>
-		    	<div class="controls">
-		      		<input type="text" id="inbound" name="inbound" class="span1" value="{{inbound}}" />
-		      		<span class="help-inline">
-		      			simultaneous inbound calls at $6.99/month per line
-		      		</span>
-		    	</div>
-		  	</div>
-	  		<div class="control-group">
-			    <div class="controls">
-			    	<button type="submit" class="btn btn-success update-limits">Update Limits</button>
-			    </div>
-	  		</div>
-		</form>
-	</div>
+    <div class="row-fluid trunk-container twoway-calling">
+        <div class="span12">
+            <div class="span1 offset1">
+                <i class="icon-retweet"></i>
+            </div>
+            <div class="span4 text-wrapper">
+                <div class="title">{{t "myaccount.trunks.two_way_calling"}}</div>
+                <div class="price">{{t "myaccount.trunks.simultaneous_twoway" "29.99"}}</div>
+            </div>
+            <div class="span6">
+                <div class="span9 slider-wrapper">
+                    <div id="slider_twoway"></div>
+                </div>
+                <div class="span3 slider-value">{{twoway}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid trunk-container inbound-calling">
+        <div class="span1 offset1">
+            <i class="icon-arrow-right"></i>
+        </div>
+        <div class="span4 text-wrapper">
+            <div class="title">{{t "myaccount.trunks.inbound_calling"}}</div>
+            <div class="price">{{t "myaccount.trunks.simultaneous_inbound" "6.99"}}</div>
+        </div>
+        <div class="span6">
+            <div class="row-fluid">
+                <div class="span9 slider-wrapper">
+                    <div id="slider_inbound"></div>
+                </div>
+                <div class="span3 slider-value">{{inbound}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid trunk-container">
+        <div class="span4 offset2">
+            <button type="submit" class="btn btn-success update-limits">{{t "myaccount.trunks.update_limits"}}</button>
+        </div>
+    </div>
 </div>

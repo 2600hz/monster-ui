@@ -1,14 +1,38 @@
-.balance-title .page-header {
-	padding-bottom: 0;
-	margin: 20px 0 15px;
+.myaccount-content .trunks-content .trunk-container {
+    min-height: 50px;
+    height: 100%;
+    margin-top: 20px;
 }
 
-.balance-title .page-header h1 {
-	color: #05ADDC;
-	font-size: 25px;
-	margin: 0;
+.myaccount-content .trunks-content .trunk-container .text-wrapper .title {
+    font-weight: bold;
+    font-size: 18px;
 }
 
-.balance-title .page-header h1 small {
-	font-size: 18px;
+.myaccount-content .trunks-content .trunk-container .text-wrapper .price {
+    color: #05addc;
+    font-size: 14px;
+}
+
+.myaccount-content .trunks-content .trunk-container i {
+    margin-top: 10px;
+    float: right;
+}
+
+.myaccount-content .trunks-content .slider-wrapper {
+    margin-top: 10px;
+}
+
+.myaccount-content .trunks-content .slider-value {
+    background: #ddd;
+    color: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.myaccount-content .trunks-content #slider_twoway .ui-slider-range, .myaccount-content .trunks-content #slider_twoway .ui-slider-handle, .myaccount-content .trunks-content #slider_inbound .ui-slider-range, .myaccount-content .trunks-content #slider_inbound .ui-slider-handle {
+    background-color: #5bb75b;
 }

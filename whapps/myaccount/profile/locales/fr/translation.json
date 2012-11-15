@@ -1,7 +1,7 @@
 {
-	"profile": "Profile",
+	"profile": "Profil",
 	"change_email": "Changer email",
 	"password": "Mot de passe",
-	"change_password": "Changer mdp",
-	"confirm_password": "Confirmer mdp"
+	"change_password": "Changer mot de passe",
+	"confirm_password": "Confirmer mot de passe"
 }

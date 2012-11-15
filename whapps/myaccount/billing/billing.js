@@ -16,7 +16,16 @@ winkstart.module('myaccount', 'billing', {
         },
 
         resources: {
-            
+            'billing.get': {
+                url: '{api_url}/accounts/{account_id}/braintree/customer',
+                contentType: 'application/json',
+                verb: 'GET'
+            },
+            'billing.update': {
+                url: '{api_url}/accounts/{account_id}/braintree/customer',
+                contentType: 'application/json',
+                verb: 'POST'
+            }
         }
     },
 
@@ -26,21 +35,64 @@ winkstart.module('myaccount', 'billing', {
         winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
-        render: function() {
+        update_billing: function(data, new_data, success, error) {
+            winkstart.request('billing.update', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url,
+                    data: $.extend(true, {}, data, new_data)
+                },
+                function(_data, status) {
+                    if(typeof success == 'function') {
+                        success(_data, status);
+                    }
+                },
+                function(_data, status) {
+                    if(typeof error == 'function') {
+                        error(_data, status);
+                    }
+                }
+            );
+        },
+
+        get_billing: function(success, error) {
+            winkstart.request('billing.get', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url
+                },
+                function(_data, status) {
+                    if(typeof success == 'function') {
+                        success(_data, status);
+                    }
+                },
+                function(_data, status) {
+                    if(typeof error == 'function') {
+                        error(_data, status);
+                    }
+                }
+            );
+        },
+
+        render: function(_parent) {
             var THIS = this,
                 $billing_html = THIS.templates.billing.tmpl();
 
             winkstart.publish('myaccount.select_menu', THIS.__module);
 
-            $('.myaccount .myaccount-content .container-fluid').html($billing_html); 
+            $('.myaccount .myaccount-content .container-fluid').html($billing_html);
+
+            $('#card', $billing_html).change(function() {
+                THIS.get_billing(function(_data) {
+                    console.log(_data);
+                });
+            });
 
         },
 
         myaccount_loaded: function($myaccount_html) {
             var THIS = this,
-                $billing_menu_html = THIS.templates.menu.tmpl(); 
+                $billing_menu_html = THIS.templates.menu.tmpl();
 
-            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 5);   
+            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 5);
         }
     }
 );

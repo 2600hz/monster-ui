@@ -6,6 +6,8 @@
 	"change_card": "Change",
 	"billing_cycle": "Billing Cycles Ends",
 	"days_left": "Days left",
-	"monthly_charges": "Your Monthly and Prorated charges as of",
-	"payment_breakdown": "View Payment Breakdown"
+	"monthly_charges": "Monthly Charges",
+	"payment_breakdown": "View Payment Breakdown",
+    "will_be_charged": "Your monthly charges will be debited on the __variable__",
+    "rate_plan": "My Rate Plan"
 }

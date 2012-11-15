@@ -5,6 +5,32 @@ html {
 body {
 }
 
+body a, button {
+    outline: none !important;
+}
+
+body h1 {
+    color: #05addc;
+}
+
+/* Links Classes */
+body a.monster_link {
+    color: #616161;
+    text-decoration: underline;
+}
+
+body a.monster_link:hover {
+    opacity: 0.8;
+}
+
+body a.monster_link.blue {
+    color: #05addc;
+}
+
+body a.monster_link.white {
+    color: #fff;
+}
+
 /* NAVBAR */
 body > .navbar  {
     border-top: 5px solid #05addc;
@@ -106,6 +132,48 @@ body > .navbar .navbar-inner .help i {
 
 body > .ws-content {
     margin-top: 20px;
+}
+
+/* + Btn used to add elements */
+.plus-btn {
+    background-image: url(../images/plus_btn.png);
+    background-position: 0px 0px;
+    height: 25px;
+    margin: auto;
+    vertical-align: middle;
+    width: 25px;
+}
+
+.plus-btn:hover {
+    background-position: 0px 25px;
+    cursor: pointer;
+}
+
+/* jQuery Popup Customization */
+.ui-dialog {
+    border-left: 4px solid #05addc;
+    border-right: 4px solid #05addc;
+    border-bottom: 4px solid #05addc;
+    border-top: 1px solid #05addc;
+    border-radius: 4px;
+    padding: 0px;
+}
+
+.ui-dialog .ui-dialog-content {
+    padding: 10px 20px;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    background: #05addc;
+    border-radius: 0px;
+}
+
+.ui-widget {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* desktop */

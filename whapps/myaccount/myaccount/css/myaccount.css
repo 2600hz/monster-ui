@@ -12,7 +12,7 @@ body > .myaccount {
     border-top: 5px solid #05ADDC;
     border-bottom: 5px solid #05ADDC;
     position: absolute;
-    z-index: 2;
+    z-index: 2000;
 
     -webkit-box-shadow: 0px 5px 5px rgba(50, 50, 50, 0.75);
 	-moz-box-shadow:    0px 5px 5px rgba(50, 50, 50, 0.75);
@@ -30,7 +30,7 @@ body > .myaccount {
 
 .myaccount > .container-fluid > .row-fluid > [class*="span"]{
  	height: 100%;
-} 
+}
 
 /* MYACCOUNT MENU */
 .myaccount .myaccount-menu {
@@ -69,7 +69,6 @@ body > .myaccount {
 	text-transform: none;
 	font-size: 20px;
 	font-weight: normal;
-	letter-spacing: 5px;
 	padding: 10px 15px;
 }
 
@@ -77,25 +76,24 @@ body > .myaccount {
 	color: #777;
 }
 
- 
+
 .myaccount .myaccount-menu .nav > li.active i {
 	background-image: url("../../../../lib/bootstrap/img/glyphicons-halflings.png");
 }
 
-.myaccount .myaccount-menu .nav > li > a:hover, 
+.myaccount .myaccount-menu .nav > li > a:hover,
 .myaccount .myaccount-menu .nav > li.active > a {
 	background-color: white;
 	color: #777;
 }
 
-.myaccount .myaccount-menu .nav > li > a:hover .badge, 
+.myaccount .myaccount-menu .nav > li > a:hover .badge,
 .myaccount .myaccount-menu .nav > li.active .badge {
 	background-color: #05ADDC;
 }
 
 .myaccount .myaccount-menu .menu-bottom {
 	height: 20%;
-	width: 99%;
 	border-top: 2px solid #05ADDC;
 }
 
@@ -105,7 +103,7 @@ body > .myaccount {
 	float: left;
 	text-align: center;
 	text-transform: uppercase;
-	line-height: 60px;
+	line-height: 70px;
 }
 
 .myaccount .myaccount-menu .menu-bottom .signout {
@@ -119,6 +117,20 @@ body > .myaccount {
 	overflow-y: auto;
 }
 
+.myaccount .myaccount-content .page-header {
+    padding-bottom: 0;
+    margin: 10px 0 15px;
+}
+
+.myaccount .myaccount-content .page-header h1 {
+    color: #05ADDC;
+    font-size: 25px;
+    margin: 0;
+}
+
+.myaccount .myaccount-content .page-header h1 small {
+    font-size: 16px;
+}
 
 .myaccount .myaccount-content .myaccount-close {
 	position: absolute;
@@ -146,15 +158,11 @@ body > .myaccount {
 
 /* desktop */
 @media (min-width: 979px) {
-    
+
 }
- 
+
 /* Portrait tablet to landscape */
 @media (min-width: 768px) and (max-width: 979px) {
-	.myaccount .myaccount-menu .nav li.nav-header {
-		letter-spacing: 0;
-	}
-
 	.myaccount .myaccount-menu .menu-bottom .store,
 	.myaccount .myaccount-menu .menu-bottom .signout {
 		width: 100%;
@@ -162,17 +170,13 @@ body > .myaccount {
 		line-height: 30px;
 	}
 }
- 
+
 /* Phone to portrait tablet */
 @media (max-width: 767px) {
 	.myaccount .myaccount-menu {
 		width: 30%;
 		float: left;
    	}
-
-   	.myaccount .myaccount-menu .nav li.nav-header {
-		letter-spacing: 0;
-	}
 
    	.myaccount .myaccount-menu .menu-bottom .store,
 	.myaccount .myaccount-menu .menu-bottom .signout {

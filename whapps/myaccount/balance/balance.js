@@ -85,7 +85,7 @@ winkstart.module('myaccount', 'balance', {
             var THIS = this;
 
             if(data) {
-                $('.myaccount .' + THIS.__module + ' .amount').html(data);
+                $('.myaccount .' + THIS.__module + ' .amount').html(data.toFixed(2));
             }
         },
 
@@ -99,7 +99,7 @@ winkstart.module('myaccount', 'balance', {
 
                 $('.add-credit', $balance_html).on('click', function(ev) {
                     ev.preventDefault();
-                    
+
                     if(confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?')) {
                         var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
 
@@ -113,7 +113,7 @@ winkstart.module('myaccount', 'balance', {
 
                 winkstart.publish('myaccount.select_menu', THIS.__module);
                 $('.myaccount .myaccount-content .container-fluid').html($balance_html);
-            }); 
+            });
 
         },
 
@@ -126,7 +126,7 @@ winkstart.module('myaccount', 'balance', {
                 });
 
                 winkstart.publish('myaccount.add_submodule', $balance_menu_html, 2);
-            });       
+            });
         }
     }
 );
