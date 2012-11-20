@@ -25,14 +25,51 @@
 
 .myaccount-content .trunks-content .slider-value {
     background: #ddd;
-    color: #333;
-    width: 40px;
-    height: 40px;
     border-radius: 20px;
+    color: #333;
+    height: 40px;
     line-height: 40px;
     text-align: center;
+    width: 40px;
+    margin: 0 10px 0 20px;
+}
+
+.myaccount-content .trunks-content .total-amount {
+    font-weight: bold;
+    line-height: 40px;
+}
+
+.myaccount-content .trunks-content .total-amount-value {
+    font-size: 18px;
+    line-height: 35px;
+    color: #05addc;
 }
 
 .myaccount-content .trunks-content #slider_twoway .ui-slider-range, .myaccount-content .trunks-content #slider_twoway .ui-slider-handle, .myaccount-content .trunks-content #slider_inbound .ui-slider-range, .myaccount-content .trunks-content #slider_inbound .ui-slider-handle {
-    background-color: #5bb75b;
+    background-color: #05addc;
+}
+
+.myaccount-content .trunks-content .update-limits {
+    margin-left: 10px;
+}
+
+/* Landscape phone to portrait tablet */
+@media(max-width: 767px) {
+    .myaccount-content .trunks-content .slider-wrapper{
+        padding: 0 10px;
+    }
+
+    .myaccount-content .trunks-content .slider-value{
+        float: left;
+    }
+
+    .myaccount-content .trunks-content .total-amount{
+        float: left;
+    }
+
+    .myaccount-content .trunks-content .slider-wrapper{
+        float: left;
+        width: 70%;
+
+    }
 }

@@ -90,28 +90,45 @@ winkstart.module('myaccount', 'trunks', {
             winkstart.publish('myaccount.select_menu', THIS.__module);
 
             THIS.limits_get(function(data) {
-                var $trunks_html = THIS.templates.trunks.tmpl({
-                    inbound: data.data.inbound_trunks || 0,
-                    twoway: data.data.twoway_trunks || 0
-                });
+                var amount_inbound = winkstart.config.amount_inbound || 6.99,
+                    amount_twoway = winkstart.config.amount_twoway || 29.99,
+                    inbound = data.data.inbound_trunks || 0,
+                    twoway = data.data.twoway_trunks || 0,
+                    total_amount_inbound = amount_inbound * inbound,
+                    total_amount_twoway = amount_twoway * twoway;
+                    $trunks_html = THIS.templates.trunks.tmpl({
+                        inbound: inbound,
+                        twoway: twoway,
+                        amount_inbound: amount_inbound,
+                        amount_twoway: amount_twoway,
+                        total_amount_inbound: total_amount_inbound,
+                        total_amount_twoway: total_amount_twoway,
+                        monthly_charges: total_amount_inbound + total_amount_twoway
+                    });
 
                 $('#slider_twoway', $trunks_html).slider({
                     min: 0,
-                    max: 100,
+                    max: winkstart.config.max_twoway_trunks || 20,
                     range: 'min',
                     value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
                     slide: function( event, ui ) {
                         $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
+                        total_amount_twoway = ui.value*amount_twoway;
+                        $('.total-amount .total-amount-value', $(this).parents('.trunk-container').first()).html(total_amount_twoway.toFixed(2));
+                        $('#monthly_charges', $trunks_html).html((total_amount_inbound + total_amount_twoway).toFixed(2));
                     }
                 });
 
                 $('#slider_inbound', $trunks_html).slider({
                     min: 0,
-                    max: 100,
+                    max: winkstart.config.max_inbound_trunks || 100,
                     range: 'min',
                     value: data.data.inbound_trunks > 0 ? data.data.inbound_trunks : 0,
                     slide: function( event, ui ) {
                         $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
+                        total_amount_inbound = ui.value*amount_inbound;
+                        $('.total-amount .total-amount-value', $(this).parents('.trunk-container').first()).html(total_amount_inbound.toFixed(2));
+                        $('#monthly_charges', $trunks_html).html((total_amount_inbound + total_amount_twoway).toFixed(2));
                     }
                 });
 

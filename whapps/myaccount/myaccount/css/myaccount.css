@@ -48,7 +48,7 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .badge {
-	margin-right: 15px;
+	margin-right: 10px;
 	margin-top: 6px;
 }
 
@@ -156,9 +156,11 @@ body > .myaccount {
 	*/
 }
 
-/* desktop */
-@media (min-width: 979px) {
-
+/* tablet and phone */
+@media (max-width: 979px) {
+    .myaccount-content {
+        padding-top: 30px
+    }
 }
 
 /* Portrait tablet to landscape */
@@ -186,8 +188,8 @@ body > .myaccount {
 	}
 
    	.myaccount .myaccount-content {
-		width: 68%;
-		margin-left: 2%;
+		width: 66%;
+        margin-left: 4%;
 		float: left;
    	}
 

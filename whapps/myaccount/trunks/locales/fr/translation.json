@@ -1,10 +1,11 @@
 {
-    "trunks": "Trunks",
-    "flat_rate_description": "Flat-Rate calling allows you to pay a monthly, predictable fee that never changes, regardless of your usage.",
-    "two_way_calling": "Flat-Rate Two-Way Calling",
-    "inbound_calling": "Flat-Rate Inbound Calling",
-    "allow_up_to": "Allow up to",
-    "simultaneous_twoway": "simultaneous two-way calls to the US-48 at $__variable__/month per line",
-    "simultaneous_inbound": "simultaneous inbound calls at $__variable__/month per line",
-    "update_limits": "Update Limits"
+    "inbound_calling": "Appels interne &agrave; prix fixe",
+    "simultaneous_twoway": "$__variable__/mois",
+    "simultaneous_inbound": "$__variable__/mois",
+    "trunks": "Limites",
+    "currency": "$",
+	"per_month": "/mois",
+    "two_way_calling": "Appels externe &agrave; prix fixe",
+    "update_limits": "Mettre &agrave; jour",
+    "monthly_charges": "Frais Mensuels"
 }

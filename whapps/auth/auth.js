@@ -557,16 +557,10 @@ winkstart.module('auth', 'auth',
                                 winkstart.publish('auth.new_password', json.data);
                             }
 
-                            var landing = true;
+                            /* If no hashtag, then we want to go to the landing page (ie: set landing to true)*/
+                            var landing = !winkstart.rooting.get_hashtag();
 
-
-                            var uri = winkstart.rooting.get_hashtag();
-                            if(uri == false) {
-                                landing = true;
-                            } else {
-                                landing = false;
-                            }
-
+                            /* We check if there are no default application */
                             $.each(json.data.apps, function(k, v) {
                                 if(v['default']) {
                                     landing = false;
