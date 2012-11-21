@@ -338,8 +338,26 @@
 .ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em .7em; }
 .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
-.ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
-.ui-accordion .ui-accordion-content-active { display: block; }/*
+.ui-accordion .ui-accordion-content { padding: 1em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
+.ui-accordion .ui-accordion-content-active { display: block; border-color: #05addc;}
+/*Add padding to h3 that is removed by our reset.css*/
+.ui-accordion .ui-icon { display: none; }
+.ui-accordion h3 { line-height: 1.9; color: #333333; padding-left: 1em; font-weight: bold; }
+.ui-accordion h3.ui-state-active { color: #05addc; border-color: #05addc; }
+.ui-accordion h3:hover { color: #05addc; }
+.ui-accordion .ui-accordion-content { border-radius: 0px !important; padding: 0; }
+.ui-accordion .ui-accordion-header {
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(223,223,223,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(223,223,223,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dfdfdf',GradientType=0 ); /* IE6-9 */
+}
+
+/*
  * jQuery UI Autocomplete 1.8.8
  *
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)

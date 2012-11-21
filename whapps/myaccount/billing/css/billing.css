@@ -7,8 +7,8 @@
 }
 
 .billing-content form.change-card label {
-	font-size: 20px;
 	color: #333;
+	font-size: 20px;
 }
 
 .billing-content #card {
@@ -21,31 +21,31 @@
 }
 
 .billing-content .hero-unit.billing-cycle h2 {
-	text-align: center;
 	font-weight: normal;
     margin-top: 0px;
+	text-align: center;
 }
 
 .billing-content .hero-unit.billing-cycle .days-left {
-	width: 80%;
 	height: 20px;
-	padding: 10px 0;
 	margin-left: 10%;
+	padding: 10px 0;
+	width: 80%;
 }
 
 .billing-content .hero-unit.billing-cycle .days-left .progress {
-	width: 65%;
 	float: left;
 	margin-bottom: 0;
+	width: 65%;
 	-webkit-box-shadow: inset -1px 2px 2px rgba(50, 50, 50, 0.4);
 	-moz-box-shadow: inset -1px 2px 2px rgba(50, 50, 50, 0.4);
 	box-shadow: inset -1px 2px 2px rgba(50, 50, 50, 0.4);
 }
 
 .billing-content .hero-unit.billing-cycle .days-left h4 {
-	width: 25%;
 	float: left;
 	margin: -1px 0 0 10%;
+	width: 25%;
 }
 
 .billing-content .hero-unit.charge {
@@ -59,10 +59,10 @@
 }
 
 .billing-content .hero-unit.charge h1 {
-	margin-bottom: 10px;
-	text-shadow: 2px 2px #333;
 	font-weight: normal;
 	letter-spacing: 5px;
+	margin-bottom: 10px;
+	text-shadow: 2px 2px #333;
 }
 
 .billing-content .hero-unit.charge a {
@@ -73,4 +73,43 @@
 
 .billing-content .hero-unit {
     margin-bottom: 5px;
+}
+
+.billing-content .ui-accordion .ui-accordion-header .sub_amount {
+    position: absolute;
+    right: 50px;
+}
+
+.billing-content .ui-accordion {
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin: auto auto 20px auto;
+}
+
+.billing-content .ui-accordion .ui-accordion-content {
+    background: #ffffff;
+}
+
+.billing-content .table.table-accordion {
+    margin-bottom: 0;
+}
+
+.billing-content .table.table-accordion tr.gray {
+    background: #eee;
+}
+
+.billing-content .table.table-accordion tr > th, .billing-content .table.table-accordion tr > td {
+    text-align: left;
+}
+
+.billing-content .table.table-accordion tr > th:nth-child(3), .billing-content .table.table-accordion tr > th:nth-child(6), .billing-content .table.table-accordion tr > td:nth-child(3), .billing-content .table.table-accordion tr > td:nth-child(6) {
+    text-align: right;
+}
+
+.billing-content .table.table-accordion tr > th:nth-child(1), .billing-content .table.table-accordion tr > td:nth-child(1), .billing-content .table.table-accordion tr > td:nth-child(4) {
+    font-weight: bold;
+    opacity: 0.5;
+    text-align: center;
+    vertical-align: middle;
+    width: 5%;
 }

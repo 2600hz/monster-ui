@@ -80,6 +80,22 @@ winkstart.module('myaccount', 'billing', {
 
             $('.myaccount .myaccount-content .container-fluid').html($billing_html);
 
+            $('#accordion', $billing_html).accordion({
+                collapsible: true,
+                heightStyle: 'content'
+            });
+            $('#billing_history', $billing_html).hide();
+
+            $('#billing_history_link', $billing_html).on('click', function() {
+                $('#billing_overview', $billing_html).slideUp();
+                $('#billing_history', $billing_html).slideDown();
+            });
+
+            $('#billing_overview_link', $billing_html).on('click', function() {
+                $('#billing_history', $billing_html).slideUp();
+                $('#billing_overview', $billing_html).slideDown();
+            });
+
             $('#card', $billing_html).change(function() {
                 THIS.get_billing(function(_data) {
                     console.log(_data);

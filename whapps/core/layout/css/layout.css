@@ -13,9 +13,30 @@ body h1 {
     color: #05addc;
 }
 
+/* Accordion */
+.ui-accordion h3 i {
+    margin: 8px 8px 0 0;
+}
+
+.ui-accordion h3:hover i {
+    opacity: 0.8;
+}
+
+.ui-accordion .ui-accordion-header i.icon-chevron-down {
+    display: none;
+}
+
+.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-right {
+    display: none;
+}
+
+.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-down {
+    display: inline-block;
+}
+
 /* Links Classes */
 body a.monster_link {
-    color: #616161;
+    color: #777;
     text-decoration: underline;
 }
 

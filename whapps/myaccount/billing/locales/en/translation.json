@@ -1,13 +1,18 @@
 {
 	"billing": "Billing",
-	"title": "Billing Details",
-	"history": "billing history",
+	"billing_cycle": "Billing Cycles Ends",
+    "billing_history": "Billing History",
+    "billing_overview": "Billing Overview",
 	"billing_account": "Billing Account",
 	"change_card": "Change",
-	"billing_cycle": "Billing Cycles Ends",
 	"days_left": "Days left",
 	"monthly_charges": "Monthly Charges",
+    "monthly_charges_tab": "Monthly Plan / Charges",
+    "one_time_charges_tab": "One-Time Charges",
 	"payment_breakdown": "View Payment Breakdown",
-    "will_be_charged": "Your monthly charges will be debited on the __variable__",
-    "rate_plan": "My Rate Plan"
+    "prorated_charges_tab": "Prorated Charges",
+    "rate_plan": "My Rate Plan",
+	"view_billing_history": "View Billing History",
+	"view_billing_overview": "Go back to Billing Overview",
+    "will_be_charged": "Your monthly charges will be debited on the __variable__"
 }

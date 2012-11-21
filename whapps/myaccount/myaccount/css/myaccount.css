@@ -6,7 +6,7 @@
 /* My account */
 body > .myaccount {
     width: 100%;
-    height: 350px;
+    height: 500px;
     background-color: white;
     display: none;
     border-top: 5px solid #05ADDC;
@@ -133,21 +133,22 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-content .myaccount-close {
-	position: absolute;
-	top: 0px;
-	right: 5%;
-	padding: 1px 5px;
-	width: 100px;
-	text-align: center;
-	cursor: pointer;
 	background-color: #E9E9E9;
 	border-radius: 0 0 50px 50px;
+	cursor: pointer;
+	padding: 1px 5px;
+	position: absolute;
+	right: 5%;
+	text-align: center;
+	top: 0px;
+	width: 100px;
 	-webkit-border-radius: 0 0 50px 50px;
 	-moz-border-radius: 0 0 50px 50px;
 	-webkit-box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.3);
 	-moz-box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.3);
 	box-shadow: 0px 2px 5px rgba(50, 50, 50, 0.3);
 
+    z-index: 100;
 
 	/* in case we want to do trapeze
 	border: 0px solid #E9E9E9;
