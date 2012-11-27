@@ -26,9 +26,9 @@
 
 /* desktop */
 @media (min-width: 979px) {
-	
+
 }
- 
+
 /* Portrait tablet to landscape */
 @media (min-width: 768px) and (max-width: 979px) {
 	.row-fluid .span6.left_div {
@@ -43,7 +43,7 @@
 		width: 74%;
 	}
 }
- 
+
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
 	.login-block #password {
