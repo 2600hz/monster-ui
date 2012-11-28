@@ -49,8 +49,9 @@
 }
 
 .billing-content .hero-unit.charge {
-	text-align: center;
 	padding: 10px;
+	text-align: center;
+	text-shadow: 1px 1px #000;
 }
 
 .billing-content .hero-unit p {
@@ -60,8 +61,10 @@
 
 .billing-content .hero-unit.charge h1 {
 	font-weight: normal;
+    font-size: 45px;
+    line-height: 60px;
 	margin-bottom: 10px;
-	text-shadow: 2px 2px #333;
+    white-space: nowrap;
 }
 
 .billing-content .hero-unit.charge a {
@@ -127,4 +130,19 @@
     text-align: center;
     vertical-align: middle;
     width: 5%;
+}
+
+@media(max-width: 979px) {
+    .billing-content .fluid-tablet > *{
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .billing-content .hero-unit.billing-cycle .days-left .progress {
+        width: 45%;
+    }
+
+    .billing-content .hero-unit.billing-cycle .days-left h6{
+        width: 45%;
+    }
 }

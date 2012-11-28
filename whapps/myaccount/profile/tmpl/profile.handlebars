@@ -8,12 +8,19 @@
 
 <div class="row-fluid">
 	<div class="span12">
-		<form class="form-inline">
-		  	<label for="email">Email </label>
-		  	<input type="text" placeholder="john.doe@email.com" id="email" name="email" value="{{email}}"/>
-		  	<button class="btn btn-success change-email">{{t "myaccount.profile.change_email"}}</button>
-		</form>
-
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="email">Email </label>
+                <div class="controls">
+                    <input type="text" placeholder="john.doe@email.com" id="email" name="email" value="{{email}}"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                <button class="btn btn-success change-email">{{t "myaccount.profile.change_email"}}</button>
+                </div>
+            </div>
+        </form>
 		<hr />
 	</div>
 </div>

@@ -42,7 +42,7 @@ body > .myaccount {
 
 .myaccount .myaccount-menu .nav {
 	color: #777;
-	height: 80%;
+	height: 85%;
 	padding-right: 0;
 	padding-left: 0;
 }
@@ -55,6 +55,15 @@ body > .myaccount {
 .myaccount .myaccount-menu .nav li {
 	line-height: 30px;
 	padding-left: 15px;
+
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(223,223,223,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(223,223,223,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(223,223,223,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dfdfdf',GradientType=0 ); /* IE6-9 */
 }
 
 .myaccount .myaccount-menu .nav li.divider {
@@ -64,16 +73,19 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .nav li.nav-header {
-	text-align: center;
+    background: none !important;
 	color: #555;
-	text-transform: none;
 	font-size: 20px;
 	font-weight: normal;
-	padding: 10px 15px;
+    margin: 0;
+	padding: 10px 0;
+	text-align: center;
+	text-transform: none;
 }
 
 .myaccount .myaccount-menu .nav a {
 	color: #777;
+    background: none !important;
 }
 
 
@@ -81,10 +93,16 @@ body > .myaccount {
 	background-image: url("../../../../lib/bootstrap/img/glyphicons-halflings.png");
 }
 
-.myaccount .myaccount-menu .nav > li > a:hover,
-.myaccount .myaccount-menu .nav > li.active > a {
-	background-color: white;
-	color: #777;
+.myaccount .myaccount-menu .nav > li:hover,
+.myaccount .myaccount-menu .nav > li.active {
+    background: rgb(223,223,223); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(223,223,223,1) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(223,223,223,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(223,223,223,1) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(223,223,223,1) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(223,223,223,1) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(223,223,223,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dfdfdf', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 
 .myaccount .myaccount-menu .nav > li > a:hover .badge,
@@ -93,8 +111,10 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .menu-bottom {
-	height: 20%;
+    bottom: 0;
 	border-top: 2px solid #05ADDC;
+    position: absolute;
+    margin-left: 0;
 }
 
 .myaccount .myaccount-menu .menu-bottom .store,
@@ -105,11 +125,6 @@ body > .myaccount {
 	text-transform: uppercase;
 	line-height: 70px;
 }
-
-.myaccount .myaccount-menu .menu-bottom .signout {
-	width: 40%;
-}
-
 
 /* MYACCOUNT CONTENT */
 .myaccount .myaccount-content {
@@ -157,10 +172,27 @@ body > .myaccount {
 	*/
 }
 
+.myaccount .myaccount-content .myaccount-close:hover {
+    color: #05addc;
+}
+
 /* tablet and phone */
 @media (max-width: 979px) {
     .myaccount-content {
         padding-top: 30px
+    }
+
+    .myaccount .myaccount-menu .nav li {
+        line-height: 50px;
+    }
+
+    .myaccount .myaccount-menu .badge {
+        margin-top: 16px;
+    }
+
+    .myaccount .myaccount-menu .menu-bottom {
+        position: relative;
+        width: 100%;
     }
 }
 
