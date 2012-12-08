@@ -1,0 +1,23 @@
+{{#eachkeys DIDs}}
+<div class="number-wrapper" data-phone_number="{{this.key}}">
+    <input type="checkbox"></input>
+    <span class="phone-number">{{this.key}}</span>
+
+    <div class="number-options pull-right">
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="cnam-number" href="#"><i class="icon-user"></i>{{t "pbxs.pbxs_manager.cnam"}}</a></li>
+                        <li><a class="e911-number" href="#"><i class="icon-fire"></i>{{t "pbxs.pbxs_manager.e911"}}</a></li>
+                        <li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{t "pbxs.pbxs_manager.failover"}}</a></li>
+                        <li class="divider"></li>
+                        <li><a class="delete-number" href="#"><i class="icon-trash"></i>{{t "pbxs.pbxs_manager.delete_number"}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{{/eachkeys}}

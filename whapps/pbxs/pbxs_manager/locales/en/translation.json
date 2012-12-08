@@ -1,3 +1,20 @@
 {
-    "add_pbx": "Add PBX"
+    "add_pbx": "Add PBX",
+    "numbers": "Numbers",
+    "move": "Move",
+    "remove": "Unassign",
+    "buy": "Buy",
+    "port": "Port",
+    "search": "Search",
+    "no_number": "There is currently no number assigned to this PBX, you can add, buy or port numbers to this PBX via the action bar.",
+    "no_results": "There is currently no number matching your research, make sure you typed the number correctly.",
+    "count_result": "__variable__ phone numbers matched your research.",
+    "brand_selection": "Change PBX Brand",
+    "ip_configuration": "IP Configuration",
+    "testing": "Testing",
+    "delete_pbx": "Delete PBX",
+    "cnam": "CNAM configuration",
+    "e911": "E911",
+    "failover": "Failover",
+    "delete_number": "Delete Number"
 }

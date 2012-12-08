@@ -113,10 +113,11 @@ winkstart.module('core', 'layout', {
             else {
                 layout_welcome_html = THIS.templates.layout_welcome.tmpl().appendTo($('#ws-content'));
                 var data_welcome = {
-                    company_name: winkstart.config.company_name,
-                    company_website: winkstart.config.company_website,
-                    learn_more: winkstart.config.nav.learn_more || "http://www.2600hz.com/"
+                    company_name: winkstart.config.company_name || '-',
+                    company_website: winkstart.config.company_website || '',
+                    learn_more: winkstart.config.nav.learn_more || 'http://www.2600hz.com/'
                 };
+                console.log(data_welcome);
                 THIS.templates.left_welcome.tmpl(data_welcome).appendTo($('.left_div', layout_welcome_html));
             }
         },

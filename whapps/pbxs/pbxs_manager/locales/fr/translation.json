@@ -1,3 +1,20 @@
 {
-    "add_pbx": "Ajouter PBX"
+    "add_pbx": "Ajouter PBX",
+    "numbers": "Num&eacute;ros",
+    "move": "Transf&eacute;rer",
+    "remove": "D&eacute;saffecter",
+    "buy": "Acheter",
+    "port": "Porter",
+    "search": "Chercher",
+    "no_number": "Aucun num&eacute;ro n'est assign&eacute; &agrave; ce PBX pour le moment, utilisez la barre d'actions pour ajouter, acheter ou porter des num&eacute;ros.",
+    "no_results": "Aucun num&eacute;ro correspondant &agrave; votre recherche n'a &eacute;t&eacute; trouv&eacute;.",
+    "count_result": "__variable__ num&eacute;ro(s) correspondent &agrave; votre recherche.",
+    "brand_selection": "Changer marque du PBX",
+    "ip_configuration": "Configuration IP",
+    "testing": "Tester",
+    "delete_pbx": "Supprimer PBX",
+    "cnam": "Configuration CNAM",
+    "e911": "E911",
+    "failover": "Failover",
+    "delete_number": "Supprimer ce num&eacute;ro"
 }

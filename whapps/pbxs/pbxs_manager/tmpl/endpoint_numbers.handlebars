@@ -1,17 +1,42 @@
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div id="detail_pbx" class="span12">
-            <h1>Phone numbers for {{server_name}}</h1>
-            <button class="btn btn-primary detail_pbx">Edit settings</button>
-            <button class="btn btn-success" id="assign_number">Assign Numbers</button>
-            <button class="btn btn-info" id="move_numbers">Move to another PBX</button>
-            <button class="btn btn-danger" id="delete_number">Unassign selected Numbers</button>
+<div id="pbx_connector_container">
+    <div class="pbx-title">
+        <img width="80" height="56" src="whapps/pbxs/pbxs_manager/css/images/endpoints/{{img_link}}.png" class="img-style">{{server_name}}
+        <span class="pull-right">
+            <div class="navbar">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="icon-edit"></i>{{t "pbxs.pbxs_manager.brand_selection"}}</a></li>
+                            <li><a href="#"><i class="icon-signal"></i>{{t "pbxs.pbxs_manager.ip_configuration"}}</a></li>
+                            <li><a href="#"><i class="icon-wrench"></i>{{t "pbxs.pbxs_manager.testing"}}</a></li>
+                            <li class="divider"></li>
+                            <li><a id="delete_pbx" href="#"><i class="icon-trash"></i>{{t "pbxs.pbxs_manager.delete_pbx"}}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </span>
+    </div>
+    <div id="actions_wrapper">
+        <form class="form-inline">
+            <label>{{t "pbxs.pbxs_manager.numbers"}}</label>
+            <label id="count_phones"></label>
+            <span id="trigger_links">
+                <a href="#" id="remove_numbers"><i class="icon-remove"></i>{{t "pbxs.pbxs_manager.remove"}}</a>
+                <a href="#" id="move_numbers"><i class="icon-share-alt"></i>{{t "pbxs.pbxs_manager.move"}}</a>
+            </span>
+            <a href="#" id="buy_numbers"><i class="icon-shopping-cart"></i>{{t "pbxs.pbxs_manager.buy"}}</a>
+            <a href="#" id="port_numbers"><i class="icon-random"></i>{{t "pbxs.pbxs_manager.port"}}</a>
 
-            <table id="pbxs_manager-grid" class="display"></table>
-        </div>
+            <span class="search-box pull-right">
+                <i class="icon-search"></i>
+                <input type="text" class="search-query" placeholder="{{t "pbxs.pbxs_manager.search"}}..."></input>
+            </span>
+        </form>
     </div>
 
-    <div class="row-fluid">
-        <div id="unassigned_numbers" class="row-fluid">
+    <div id="numbers_wrapper" class="numbers-wrapper">
     </div>
+    <div id="search_results"></div>
 </div>

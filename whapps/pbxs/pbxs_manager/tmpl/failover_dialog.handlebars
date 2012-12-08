@@ -1,0 +1,42 @@
+<div class="trunkstore_popup failover">
+    <div class="header {{radio}}"></div>
+
+    <form id="failover" action="#">
+        <div class="row-fluid">
+            <h2>Choose a type of failover:</h2>
+
+            <div class="radio-block">
+                {{#compare radio '===' 'number'}}
+                    <input type="radio" name="failover_type" value="number" CHECKED/>Alternative Number #
+                    <input placeholder="+1 415-222-5555" type="text" name="raw_input" value="{{failover}}" class="text_field failover_number">
+                {{else}}
+                    <input type="radio" name="failover_type" value="number"/>Alternative Number #
+                    <input placeholder="+1 415-222-5555" type="text" name="raw_input" style="display: none;" class="text_field failover_number">
+                {{/compare}}
+            </div>
+
+            <div class="radio-block">
+                {{#compare radio '===' 'sip'}}
+                    <input type="radio" name="failover_type" value="sip" CHECKED/>Failover SIP Address
+                    <input placeholder="sip:jon@doe.com" type="text" name="raw_input" value="{{failover}}" class="text_field failover_sip">
+                {{else}}
+                    <input type="radio" name="failover_type" value="sip"/>Failover SIP Address
+                    <input placeholder="sip:jon@doe.com" type="text" name="raw_input" style="display: none;" class="text_field failover_sip">
+                {{/compare}}
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="well well-small">
+                <i class="icon-info-sign"></i> If your phone system is unreachable for any reason, we can redirect a caller to an alternate phone number or VoIP device. If the Failover number is an external number this call will cost you for both inbound and outbound.
+            </div>
+        </div>
+
+        <div class="row-fluid buttons">
+            {{#if radio}}
+                <button class="btn btn-danger remove_failover">Remove</button>
+            {{/if}}
+            <button class="btn btn-primary submit_btn">Activate</button>
+        </div>
+    </form>
+</div>

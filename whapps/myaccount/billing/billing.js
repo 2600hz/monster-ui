@@ -84,6 +84,7 @@ winkstart.module('myaccount', 'billing', {
                 collapsible: true,
                 heightStyle: 'content'
             });
+
             $('#billing_history', $billing_html).hide();
 
             $('#billing_history_link', $billing_html).on('click', function() {

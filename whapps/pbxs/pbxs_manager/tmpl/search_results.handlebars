@@ -1,0 +1,27 @@
+<div id="count_result">{{t "pbxs.pbxs_manager.count_result" count}}</div>
+
+<div class="numbers-wrapper">
+    {{#each matches}}
+        <div class="number-wrapper {{#if this.selected}}selected{{/if}}" data-phone_number="{{this.phone_number}}">
+            <input type="checkbox" {{#if this.selected}}CHECKED="CHECKED"{{/if}}></input>
+            <span class="phone-number">{{this.phone_number}}</span>
+
+            <div class="number-options pull-right">
+                <div class="navbar">
+                    <ul class="nav pull-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="cnam-number" href="#"><i class="icon-user"></i>{{t "pbxs.pbxs_manager.cnam"}}</a></li>
+                                <li><a class="e911-number" href="#"><i class="icon-fire"></i>{{t "pbxs.pbxs_manager.e911"}}</a></li>
+                                <li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{t "pbxs.pbxs_manager.failover"}}</a></li>
+                                <li class="divider"></li>
+                                <li><a class="delete-number" href="#"><i class="icon-trash"></i>{{t "pbxs.pbxs_manager.delete_number"}}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>

@@ -10,11 +10,15 @@ body a, button {
 }
 
 body h1 {
-    color: #05addc;
+    color: #22ccff;
+}
+
+body h1.lobster {
+    font-family: 'Lobster', cursive;
 }
 
 /* Accordion */
-.ui-accordion h3 i {
+.ui-accordion h3 .pull-right i {
     margin: 8px 8px 0 0;
 }
 
@@ -45,7 +49,7 @@ body a.monster_link:hover {
 }
 
 body a.monster_link.blue {
-    color: #05addc;
+    color: #22ccff;
 }
 
 body a.monster_link.white {
@@ -54,7 +58,7 @@ body a.monster_link.white {
 
 /* NAVBAR */
 body > .navbar  {
-    border-top: 5px solid #05addc;
+    border-top: 5px solid #22ccff;
     margin-bottom: 0;
 }
 
@@ -80,7 +84,7 @@ body > .navbar .btn-navbar {
 }
 
 body > .navbar .btn-navbar .icon-bar {
-    background-color: #05addc;
+    background-color: #22ccff;
 }
 
 body > .navbar .nav > li > a {
@@ -106,8 +110,8 @@ body > .navbar .nav > li > a:hover {
 }
 
 .nav .dropdown-toggle:hover .caret {
-    border-top-color: #05addc;
-    border-bottom-color: #05addc;
+    border-top-color: #22ccff;
+    border-bottom-color: #22ccff;
 }
 
 body > .navbar .navbar-inner .logo {
@@ -172,29 +176,34 @@ body > .ws-content {
 
 /* jQuery Popup Customization */
 .ui-dialog {
-    border-left: 4px solid #05addc;
-    border-right: 4px solid #05addc;
-    border-bottom: 4px solid #05addc;
-    border-top: 1px solid #05addc;
+    border-left: 4px solid #22ccff;
+    border-right: 4px solid #22ccff;
+    border-bottom: 4px solid #22ccff;
+    border-top: 1px solid #22ccff;
     border-radius: 4px;
     padding: 0px;
-}
 
-.ui-dialog .ui-dialog-content {
-    padding: 10px 20px;
+    background: #fff;
 }
 
 .ui-dialog .ui-dialog-titlebar {
-    background: #05addc;
+    background: #22ccff;
     border-radius: 0px;
 }
 
-.ui-widget {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    font-family: 'Maven Pro', Helvetica, sans-serif;
 }
 
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+/* Search Box */
+.search-box > i.icon-search {
+    position: absolute;
+    margin: 9px 0 0 9px;
+    opacity: 0.5;
+}
+
+.search-box .search-query {
+    padding-left: 26px;
 }
 
 /* desktop */

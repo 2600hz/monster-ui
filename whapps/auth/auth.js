@@ -550,6 +550,7 @@ winkstart.module('auth', 'auth',
                                 winkstart.module.loadApp(k, function() {
                                     this.init();
                                     winkstart.log('WhApps: Initializing ' + k);
+                                    console.log(k + ' init');
                                 });
                             });
 
