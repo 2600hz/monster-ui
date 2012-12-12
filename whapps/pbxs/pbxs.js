@@ -58,11 +58,12 @@ winkstart.module('pbxs', 'pbxs', {
 
             THIS.is_initialized = true;
 
-            //Hack to load by default
-            //if(winkstart.apps['pbxs']['default']) {
-                $('[data-whapp="pbxs"] > a').addClass('activate');
-                THIS.setup_page();
-            //}
+            if(winkstart.apps['pbxs']['default']) {
+                //if(history.empty()) {
+                    $('[data-whapp="pbxs"] > a').addClass('activate');
+                    THIS.setup_page();
+                //}
+            }
         },
 
         activate: function() {

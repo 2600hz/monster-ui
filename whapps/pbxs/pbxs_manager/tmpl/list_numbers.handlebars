@@ -1,7 +1,7 @@
 {{#eachkeys DIDs}}
-<div class="number-wrapper" data-phone_number="{{this.key}}">
+<div class="number-wrapper number-box" data-phone_number="{{this.key}}">
     <input type="checkbox"></input>
-    <span class="phone-number">{{this.key}}</span>
+    <span class="phone-number">{{format_phone_number this.key}}</span>
 
     <div class="number-options pull-right">
         <div class="navbar">

@@ -10,6 +10,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
         templates: {
             pbxs_manager: 'tmpl/pbxs_manager.handlebars',
             pbxs_list_element: 'tmpl/pbxs_list_element.handlebars',
+            pbxs_unassigned_numbers: 'tmpl/pbxs_unassigned_numbers.handlebars',
             list_numbers: 'tmpl/list_numbers.handlebars',
             no_numbers: 'tmpl/no_numbers.handlebars',
             no_results: 'tmpl/no_results.handlebars',
@@ -1190,7 +1191,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                 });
 
                                 THIS.update_old_trunkstore(_global_data.data,
-                                    function() {;
+                                    function() {
+                                        THIS.refresh_unassigned_list($('#list_pbxs_navbar'));
                                         THIS.list_numbers_by_pbx(server_id, callback_listing);
                                     },
                                     function() {
@@ -1227,7 +1229,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
             var popup_html = THIS.templates.move_number_dialog.tmpl({ servers: servers });
 
-            console.log(data);
             $('.move', popup_html).click(function(ev) {
                 ev.preventDefault();
 
@@ -1235,14 +1236,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                 THIS.get_account(function(global_data) {
                     $.each(list_numbers, function(k, v) {
-                        console.log(global_data.data.servers[new_index].DIDs[v]);
-                        console.log(global_data.data.servers[index].DIDs[v]);
-
                         global_data.data.servers[new_index].DIDs[v] = global_data.data.servers[index].DIDs[v];
                         delete global_data.data.servers[index].DIDs[v];
-
-                        console.log(global_data.data.servers[new_index].DIDs[v]);
-                        console.log(global_data.data.servers[index].DIDs[v]);
                     });
 
                     console.log(global_data);
@@ -1693,72 +1688,197 @@ winkstart.module('pbxs', 'pbxs_manager', {
             });
         },
 
-        render_list: function(_id, _parent) {
-            var THIS = this,
-                parent = _parent || $('#ws-content'),
-                id = _id || -1;;
+        refresh_unassigned_list: function(parent, _callback) {
+            var THIS = this;
 
-            THIS.list_servers(function(data, status) {
-                var map_crossbar_data = function(data) {
-                    var new_list = [];
+            THIS.list_available_numbers(function(unassigned_numbers) {
+                $('#unassigned_numbers_wrapper', parent).empty()
+                                                        .append(THIS.templates.pbxs_unassigned_numbers.tmpl({ unassigned_numbers: unassigned_numbers}));
 
-                    if(data.length > 0) {
-                        var i = 0;
-                        $.each(data, function(key, val) {
-                            new_list.push({
-                                id: i,
-                                name: val.server_name || '(no name)'
+                $('#unassigned_numbers_count', parent).empty()
+                                                      .html(unassigned_numbers.length);
+
+                if(typeof _callback === 'function') {
+                    _callback();
+                }
+            });
+
+        },
+
+        bind_events: function(parent) {
+            var THIS = this;
+
+            $('#unassigned_numbers_header', parent).on('click', function() {
+                $('#unassigned_numbers', parent).toggleClass('open');
+            });
+
+            $(parent).on('click', '#unassigned_numbers .unassigned-number', function(event) {
+                $(this).toggleClass('selected');
+
+                if(!$(event.target).is('input:checkbox')) {
+                    var $current_cb = $('input[type="checkbox"]', $(this)),
+                        cb_value = $current_cb.prop('checked');
+
+                    $current_cb.prop('checked', !cb_value);
+                }
+            });
+
+            $('#pbxs_manager_listpanel .pbx-wrapper', parent).on('click', function() {
+                $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
+                winkstart.publish('pbxs_manager.edit', { id: $(this).data('id') });
+                $(this).addClass('selected');
+            });
+
+            $('#add_pbx', parent).on('click', function() {
+                winkstart.publish('pbxs_manager.edit', {});
+            });
+
+            $('.link-box.delete', parent).on('click', function() {
+                var data_phone_number,
+                    phone_number,
+                    $selected_numbers = $('.unassigned-number.selected', parent),
+                    nb_numbers = $selected_numbers.size(),
+                    refresh_list = function() {
+                        nb_numbers--;
+                        if(nb_numbers === 0) {
+                            THIS.refresh_unassigned_list(parent);
+                        }
+                    };
+
+                if(nb_numbers > 0) {
+                    winkstart.confirm('Are you sure you want to delete the '+nb_numbers+' number(s) selected?', function() {
+                            $selected_numbers.each(function() {
+                                data_phone_number = $(this).data('phone_number'),
+                                phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
+
+                                if(phone_number[1]) {
+                                    THIS.delete_number(phone_number[1],
+                                        function() {
+                                            refresh_list();
+                                        },
+                                        function() {
+                                            refresh_list();
+                                        }
+                                    );
+                                }
                             });
-                            i++;
-                        });
-                    }
+                        },
+                        function() {
 
-                    new_list.sort(function(a, b) {
-                        return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+                            console.log('delete error');
+                        }
+                    );
+                }
+                else {
+                    winkstart.alert('You didn\'t select any number to delete');
+                }
+            });
+
+            $('#unassigned_numbers .search-query', parent).keyup(function() {
+                var input = $(this),
+                    rows = $('#unassigned_numbers .content .unassigned-number', parent),
+                    search_string = $.trim(input.val().toLowerCase()),
+                    matches = [],
+                    cache = {};
+
+                $.each(rows, function(k, v) {
+                    var data = $(this).data(),
+                        key = data.phone_number;
+
+                    cache[key] = $(this);
+                });
+
+                $('#empty_search', parent).hide();
+
+                if (!search_string) {
+                    rows.show();
+                }
+                else {
+                    rows.hide();
+                    $.each(cache, function(phone_number, row_array) {
+                        if (phone_number.indexOf(search_string)>-1) {
+                            matches.push(row_array);
+                        }
                     });
 
-                    return new_list;
-                };
-
-                $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).empty();
-
-                $.each(map_crossbar_data(data), function(k, v) {
-                    $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).append(THIS.templates.pbxs_list_element.tmpl(v));
-                });
-
-                if(id && id > -1) {
-                    $('#list_pbxs_navbar #pbxs_manager_listpanel .pbx-wrapper[data-id='+id+']', parent).addClass('selected');
+                    if(matches.length > 0) {
+                        $.each(matches, function(k, v) {
+                            $(v).show();
+                        });
+                    }
+                    else {
+                        $('#empty_search', parent).show();
+                    }
                 }
+            });
+        },
 
-                $('#pbxs_manager_listpanel .pbx-wrapper', parent).on('click', function() {
-                    $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
-                    winkstart.publish('pbxs_manager.edit', { id: $(this).data('id') });
-                    $(this).addClass('selected');
-                });
+        render_list: function(_id, _parent, _callback) {
+            var THIS = this,
+                callback = _callback,
+                parent = _parent || $('#ws-content'),
+                id = _id || -1;
 
-                $('#add_pbx', parent).on('click', function() {
-                    winkstart.publish('pbxs_manager.edit', {});
-                });
+            THIS.list_servers(function(data, status) {
+                THIS.refresh_unassigned_list(parent, function() {
+                    $('#unassigned_numbers', parent).show();
 
-                $.each(data, function(k, v) {
-                    var img_link = v.server_type ? v.server_type.replace('.','').toLowerCase() : 'other';
+                    var map_crossbar_data = function(data) {
+                        var new_list = [];
 
-                    $.inArray(img_link, THIS.list_available_pbxs()) < 0 ? img_link = 'other' : true;
+                        if(data.length > 0) {
+                            var i = 0;
+                            $.each(data, function(key, val) {
+                                new_list.push({
+                                    id: i,
+                                    name: val.server_name || '(no name)'
+                                });
+                                i++;
+                            });
+                        }
 
-                    $('#pbxs_manager_listpanel .pbx-wrapper[data-id="'+k+'"] .img-wrapper', parent).append('<img class="img_style" src="whapps/pbxs/pbxs_manager/css/images/endpoints/'+ img_link +'.png" height="49" width=72"/>');
+                        new_list.sort(function(a, b) {
+                            return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+                        });
+
+                        return new_list;
+                    };
+
+                    $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).empty()
+                                                                          .append(THIS.templates.pbxs_list_element.tmpl({numbers: map_crossbar_data(data)}));
+
+                    if(id && id > -1) {
+                        $('#list_pbxs_navbar #pbxs_manager_listpanel .pbx-wrapper[data-id='+id+']', parent).addClass('selected');
+                    }
+
+                    $.each(data, function(k, v) {
+                        var img_link = v.server_type ? v.server_type.replace('.','').toLowerCase() : 'other';
+
+                        $.inArray(img_link, THIS.list_available_pbxs()) < 0 ? img_link = 'other' : true;
+
+                        $('#pbxs_manager_listpanel .pbx-wrapper[data-id="'+k+'"] .img-wrapper', parent).append('<img class="img_style" src="whapps/pbxs/pbxs_manager/css/images/endpoints/'+ img_link +'.png" height="49" width=72"/>');
+                    });
+
+                    if(typeof callback === 'function') {
+                        callback();
+                    }
                 });
             });
         },
 
-        activate: function(parent) {
+        activate: function(_parent) {
             var THIS = this,
-                pbxs_manager_html = THIS.templates.pbxs_manager.tmpl();
+                pbxs_manager_html = THIS.templates.pbxs_manager.tmpl(),
+                parent = _parent || $('#ws-content');
 
-            (parent || $('#ws-content'))
+            (parent)
                 .empty()
                 .append(pbxs_manager_html);
 
-            THIS.render_list();
+            THIS.render_list(-1, parent, function() {
+                THIS.bind_events(parent);
+            });
+
         },
 
         list_numbers_by_pbx: function(id, callback) {
@@ -1805,9 +1925,9 @@ winkstart.module('pbxs', 'pbxs_manager', {
             THIS.list_all_numbers(function(_data_numbers) {
                 THIS.get_account(function(_data) {
                     THIS.list_callflows(function(_data_callflows) {
-                        //winkstart.table.assign_number.fnClearTable();
-
                         var tab_data = [];
+
+                        console.log(_data);
 
                         //Remove numbers used in trunkstore
                         $.each(_data.data.servers, function(k, v) {
@@ -1828,14 +1948,14 @@ winkstart.module('pbxs', 'pbxs_manager', {
                         //Build available numbers list
                         $.each(_data_numbers.data, function(k, v) {
                             if(k !== 'id') {
-                                tab_data.push(['lol', k]);
+                                tab_data.push(k);
                             }
                         });
 
                         //winkstart.table.assign_number.fnAddData(tab_data);
 
                         if(typeof callback === 'function') {
-                            callback();
+                            callback(tab_data);
                         }
                     });
                 });

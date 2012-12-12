@@ -1,6 +1,47 @@
 <div id="pbxs_manager_view" class="main-content"></div>
 
 <div id="list_pbxs_navbar" class="navbar navbar-fixed-bottom">
+    <div id="unassigned_numbers">
+        <div id="unassigned_numbers_header">
+            <i class="icon-th icon-white"></i>
+            <span>Unassigned Numbers</span>
+            <span id="unassigned_numbers_count">13</span>
+
+            <span id="icon_right">
+                <i class="icon-chevron-right icon-white"></i>
+                <i class="icon-chevron-down icon-white"></i>
+            </span>
+        </div>
+
+        <div class="content">
+            <div class="row-fluid">
+                <span class="span12 search-box pull-right">
+                    <i class="icon-search"></i>
+                    <input type="text" placeholder="Search..." class="search-query">
+                </span>
+            </div>
+
+            <div id="unassigned_actions" class="row-fluid">
+                <div class="span6 link-box assign">
+                    <div class="span3 wrapper-icon"><i class="icon-check"></i></div>
+                    <div class="span9"><a class="monster_link" id="assign_selected">Assign</a></div>
+                </div>
+
+                <div class="span6 link-box delete">
+                    <div class="span3 wrapper-icon"><i class="icon-trash"></i></div>
+                    <div class="span9"><a class="monster_link" id="assign_selected">Delete</a></div>
+                </div>
+            </div>
+
+            <div id="unassigned_numbers_wrapper">
+            </div>
+
+            <div id="empty_search">
+                No number available.
+            </div>
+        </div>
+    </div>
+
     <div id="add_pbx" class="pbx-wrapper">
         <div class="img-wrapper">
             <div class="plus-btn"></div>
