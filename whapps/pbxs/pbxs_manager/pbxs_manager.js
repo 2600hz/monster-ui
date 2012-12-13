@@ -869,7 +869,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
         refresh_list_numbers: function(DIDs_list, _parent) {
             console.log(DIDs_list);
-            var parent = _parent || $('#numbers_wrapper'),
+            var parent = _parent || $('#pbx_connector_container'),
                 THIS = this,
                 count_DIDs = 0;
 
@@ -899,7 +899,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             var pbxs_manager_html = THIS.templates.endpoint_numbers.tmpl(endpoint_data),
                 server_id = endpoint_data.extra.id,
                 callback_listing = function(data_cb) {
-                    THIS.refresh_list_numbers(data_cb, pbxs_manager_html)
+                    THIS.refresh_list_numbers(data_cb, pbxs_manager_html);
                 };
 
             THIS.refresh_list_numbers(endpoint_data.DIDs, pbxs_manager_html);
@@ -1192,7 +1192,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                                 THIS.update_old_trunkstore(_global_data.data,
                                     function() {
-                                        THIS.refresh_unassigned_list($('#list_pbxs_navbar'));
+                                        THIS.refresh_unassigned_list();
                                         THIS.list_numbers_by_pbx(server_id, callback_listing);
                                     },
                                     function() {
@@ -1688,8 +1688,9 @@ winkstart.module('pbxs', 'pbxs_manager', {
             });
         },
 
-        refresh_unassigned_list: function(parent, _callback) {
-            var THIS = this;
+        refresh_unassigned_list: function(_parent, _callback) {
+            var THIS = this,
+                parent = _parent || $('#list_pbxs_navbar');
 
             THIS.list_available_numbers(function(unassigned_numbers) {
                 $('#unassigned_numbers_wrapper', parent).empty()
@@ -1706,13 +1707,45 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         bind_events: function(parent) {
-            var THIS = this;
+            var THIS = this,
+                server_id;
+
+            //$('#unassigned_numbers_wrapper .unassigned-number', parent).draggable();
+            $('.link-box.assign', parent).click(function() {
+                var numbers_data = [];
+
+                $('#unassigned_numbers .unassigned-number.selected', parent).each(function(k, v) {
+                    if($(v).data('phone_number')) {
+                        numbers_data.push($(this).data('phone_number'));
+                    }
+                });
+
+                console.log(numbers_data);
+
+                if(server_id >= 0) {
+                    THIS.get_account(function(global_data) {
+                        $.each(numbers_data, function(k, v) {
+                            global_data.data.servers[server_id].DIDs[v] = {};
+                        });
+
+                        THIS.update_old_trunkstore(global_data.data, function() {
+                            THIS.refresh_unassigned_list();
+                            THIS.list_numbers_by_pbx(server_id, function(cb_data) {
+                                THIS.refresh_list_numbers(cb_data, parent);
+                            });
+                        });
+                    });
+                }
+                else {
+                    alert('You didn\'t select any PBX');
+                }
+            });
 
             $('#unassigned_numbers_header', parent).on('click', function() {
                 $('#unassigned_numbers', parent).toggleClass('open');
             });
 
-            $(parent).on('click', '#unassigned_numbers .unassigned-number', function(event) {
+            $('#unassigned_numbers', parent).on('click', '.unassigned-number', function(event) {
                 $(this).toggleClass('selected');
 
                 if(!$(event.target).is('input:checkbox')) {
@@ -1725,7 +1758,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
             $('#pbxs_manager_listpanel .pbx-wrapper', parent).on('click', function() {
                 $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
-                winkstart.publish('pbxs_manager.edit', { id: $(this).data('id') });
+                server_id = $(this).data('id');
+                winkstart.publish('pbxs_manager.edit', { id: server_id });
                 $(this).addClass('selected');
             });
 
