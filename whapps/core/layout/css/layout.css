@@ -17,13 +17,14 @@ body h1.lobster {
     font-family: 'Lobster', cursive;
 }
 
+/* Hack to remove iPad clipping onclick */
+body div {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 /* Accordion */
 .ui-accordion h3 .pull-right i {
     margin: 8px 8px 0 0;
-}
-
-.ui-accordion h3:hover i {
-    opacity: 0.8;
 }
 
 .ui-accordion .ui-accordion-header i.icon-chevron-down {
@@ -42,10 +43,6 @@ body h1.lobster {
 body a.monster_link {
     color: #777;
     text-decoration: underline;
-}
-
-body a.monster_link:hover {
-    opacity: 0.8;
 }
 
 body a.monster_link.blue {
@@ -134,7 +131,7 @@ body > .navbar .navbar-inner .home {
 }
 
 body > .navbar .navbar-inner .home i {
-    margin-top: 25px;
+    margin-top: 20px;
 }
 
 body > .navbar .navbar-inner .home #loading {
@@ -176,19 +173,66 @@ body > .ws-content {
 
 /* jQuery Popup Customization */
 .ui-dialog {
-    border-left: 4px solid #22ccff;
-    border-right: 4px solid #22ccff;
-    border-bottom: 4px solid #22ccff;
-    border-top: 1px solid #22ccff;
-    border-radius: 4px;
+    background: #444;
+    border-width: 1px 20px 20px;
+    border-color: #444;
+    border-top: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 1px 1px 3px #333;
     padding: 0px;
+}
 
-    background: #fff;
+.ui-dialog .ui-dialog-content {
+    background: #f9f9f9;
+    border-radius: 4px;
 }
 
 .ui-dialog .ui-dialog-titlebar {
-    background: #22ccff;
+    background: rgb(68,68,68); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(68,68,68,1) 0%, rgba(89,89,89,1) 50%, rgba(68,68,68,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(68,68,68,1)), color-stop(50%,rgba(89,89,89,1)), color-stop(100%,rgba(68,68,68,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* IE10+ */
+    background: linear-gradient(to right,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#444444', endColorstr='#444444',GradientType=1 ); /* IE6-9 */
+
     border-radius: 0px;
+    padding: 5px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    color: #ccc;
+    line-height: 14px;
+    font-size: 14px;
+    font-weight: normal;
+    width: 52px;
+    white-space: nowrap;
+    word-spacing: 8px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close.ui-state-hover {
+    text-decoration: none;
+    font-weight: bold;
+    color: #ddd;
+    padding: 1px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close .ui-icon-closethick {
+    background: none !important;
+}
+
+.ui-dialog .ui-dialog-title {
+    margin-right: 70px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close span {
+    overflow: visible;
+    text-indent: 0px;
+}
+
+.ui-widget-overlay {
+    background: #333;
 }
 
 .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
@@ -198,12 +242,89 @@ body > .ws-content {
 /* Search Box */
 .search-box > i.icon-search {
     position: absolute;
-    margin: 9px 0 0 9px;
-    opacity: 0.5;
+    margin: 6px 0 0 9px;
 }
 
 .search-box .search-query {
     padding-left: 26px;
+}
+
+/* Help Box */
+.gray-box {
+    border: 1px solid #ddd;
+    background: #eee;
+}
+
+.yellow-box {
+    border: 1px solid yellow;
+    background: yellow;
+}
+
+.orange-box {
+    background: #efe5db;
+}
+
+.red-box {
+    border: 1px solid red;
+    background: red;
+}
+
+.blue-box {
+    border: 1px solid blue;
+    background: blue;
+}
+
+.help-box {
+    box-shadow: 1px 1px 2px #ddd;
+    border-radius: 4px;
+    min-height: 20px;
+    margin: 10px 0 20px 0;
+}
+
+.help-box .icon-wrapper {
+    background: #eee;
+    border-radius: 15px;
+    box-shadow: 1px 1px 2px #888 inset;
+    height: 30px;
+    line-height: 30px;
+    left: -10px;
+    position: relative;
+    text-align: center;
+    top: -10px;
+    width: 30px;
+}
+
+.help-box .icon-wrapper > i {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.help-box .text-wrapper {
+    margin-top: -30px;
+    padding: 20px;
+}
+
+.help-box p:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Confirm Box */
+.alert-dialog {
+    max-width: 440px;
+    padding: 20px;
+}
+
+.alert-dialog .alert-buttons-wrapper {
+    margin-top: 20px;
+}
+
+.alert-dialog .alert-buttons-wrapper > button {
+    width: 48%;
+}
+
+.alert-dialog .alert-buttons-wrapper > button:first-child {
+    margin-right: 4%;
 }
 
 /* desktop */

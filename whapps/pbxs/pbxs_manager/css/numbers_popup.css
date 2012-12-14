@@ -601,15 +601,17 @@
 
 /* CNAM POPUP */
 .trunkstore_popup.cnam {
-    padding: 10px 10px 0 10px;
+    padding: 15px 15px 0 15px;
+    width: 440px;
 }
 
-.trunkstore_popup.cnam .right_part #cnam {
+.trunkstore_popup.cnam .right_part{
     line-height: 40px;
+    font-size: 18px;
 }
 
 .trunkstore_popup.cnam .left_image {
-    background: url('images/cid_phone.jpg') center no-repeat;
+    background: url('images/cid_phone.png') center no-repeat;
     float: left;
     height: 290px;
     width: 152px;
@@ -619,4 +621,22 @@
     float: left;
     margin: 0 10px 0 30px;
     max-width: 300px;
+}
+
+.trunkstore_popup.cnam input.caller_id {
+    padding: 10px 5px;
+}
+
+.trunkstore_popup.cnam .btn.btn-success {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.trunkstore_popup.cnam .right_part .row-fluid {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.trunkstore_popup.cnam .right_part .row-fluid form {
+    margin: 0;
 }

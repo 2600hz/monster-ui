@@ -1194,6 +1194,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                     function() {
                                         THIS.refresh_unassigned_list();
                                         THIS.list_numbers_by_pbx(server_id, callback_listing);
+
+                                        $('#trigger_links', pbxs_manager_html).hide();
                                     },
                                     function() {
                                         THIS.list_numbers_by_pbx(server_id, callback_listing);
@@ -1298,7 +1300,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 popup_html = THIS.templates.cnam_dialog.tmpl(cnam_data || {}),
                 popup;
 
-            $('.submit_btn', popup_html).click(function(ev) {
+            $('button.btn.btn-success', popup_html).click(function(ev) {
                 ev.preventDefault();
 
                 var cnam_form_data = form2object('cnam');
@@ -1311,7 +1313,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             });
 
             popup = winkstart.dialog(popup_html, {
-                title: 'Edit CID'
+                title: 'Caller ID'
             });
         },
 
@@ -1737,7 +1739,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     });
                 }
                 else {
-                    alert('You didn\'t select any PBX');
+                    winkstart.alert('You didn\'t select any PBX');
                 }
             });
 

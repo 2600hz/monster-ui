@@ -735,7 +735,7 @@ winkstart.module('auth', 'auth',
         },
 
         logout: function() {
-            if(confirm('Are you sure that you want to log out?')) {
+            winkstart.confirm('Are you sure that you want to log out?', function() {
                 // Remove any individual keys
                 $.each(winkstart.apps, function(k, v) {
                     // TODO: ADD APP UNLOADING CODE HERE. Remove CSS and scripts. This should inherently delete apps.
@@ -752,7 +752,7 @@ winkstart.module('auth', 'auth',
 
                 // Temporary hack until module unloading works properly
                 window.location.reload();
-            };
+            });
         },
 
         init: function() {

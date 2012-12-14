@@ -61,6 +61,44 @@ a:hover {
     filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22a5ff',endColorstr='#ff22ccff',GradientType=0)
 }
 
+/* Defaults for Font Awesome */
+i {
+    font-size: 18px;
+    color: #555555;
+}
+
+i.icon-small {
+    font-size: 14px;
+}
+
+i.icon-white {
+    color: #fff;
+}
+
+i.icon-blue {
+    color: #22ccff;
+}
+
+i.icon-green {
+    color: #44cc44;
+}
+
+i.icon-red {
+    color: #ee1212;
+}
+
+i.icon-orange {
+    color: #f89406;
+}
+
+i.icon-yellow {
+    color: #ffc40d;
+}
+
+i.icon-info-sign2:before { content: "i"; }
+i.icon-question-sign2:before { content: "?"; }
+i.icon-warning-sign2:before { content: "!"; }
+
 /* FIX BOOTSTRAP OR CHANGE*/
 
 form.form-horizontal .input-prepend,

@@ -29,6 +29,7 @@ winkstart.module('core', 'layout', {
     function(args) {
         var THIS = this;
 
+        console.log(THIS.templates);
         winkstart.registerResources('auth', THIS.config.resources);
 
         THIS.parent = args.parent || $('body');

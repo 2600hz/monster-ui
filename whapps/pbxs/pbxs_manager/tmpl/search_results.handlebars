@@ -4,7 +4,7 @@
     {{#each matches}}
         <div class="number-wrapper number-box {{#if this.selected}}selected{{/if}}" data-phone_number="{{this.phone_number}}">
             <input type="checkbox" {{#if this.selected}}CHECKED="CHECKED"{{/if}}></input>
-            <span class="phone-number">{{this.phone_number}}</span>
+            <span class="phone-number">{{format_phone_number this.phone_number}}</span>
 
             <div class="number-options pull-right">
                 <div class="navbar">
