@@ -206,7 +206,7 @@ body > .ws-content {
     line-height: 14px;
     font-size: 14px;
     font-weight: normal;
-    width: 52px;
+    width: 82px;
     white-space: nowrap;
     word-spacing: 8px;
 }
@@ -228,7 +228,9 @@ body > .ws-content {
 
 .ui-dialog .ui-dialog-titlebar-close span {
     overflow: visible;
+    text-align: right;
     text-indent: 0px;
+    width: 80px;
 }
 
 .ui-widget-overlay {
@@ -278,7 +280,7 @@ body > .ws-content {
     box-shadow: 1px 1px 2px #ddd;
     border-radius: 4px;
     min-height: 20px;
-    margin: 10px 0 20px 0;
+    margin: 10px 0 10px 0;
 }
 
 .help-box .icon-wrapper {
