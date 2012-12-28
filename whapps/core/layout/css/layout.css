@@ -98,7 +98,7 @@ body > .navbar .nav-collapse .dropdown-menu a:hover {
 
 body > .navbar .nav > li > a:focus,
 body > .navbar .nav > li > a:hover {
-    color: #05ADDC;
+    color: #22ccff;
 }
 
 .nav .dropdown-toggle .caret {
@@ -267,8 +267,7 @@ body > .ws-content {
 }
 
 .red-box {
-    border: 1px solid red;
-    background: red;
+    background: #fce3e3;
 }
 
 .blue-box {
@@ -307,13 +306,19 @@ body > .ws-content {
     padding: 20px;
 }
 
+.help-box .text-wrapper > pre {
+    max-height: 300px;
+    overflow: auto;
+}
+
 .help-box p:last-of-type {
     margin-bottom: 0;
 }
 
 /* Confirm Box */
 .alert-dialog {
-    max-width: 440px;
+    max-width: 400px;
+    width: 400px;
     padding: 20px;
 }
 

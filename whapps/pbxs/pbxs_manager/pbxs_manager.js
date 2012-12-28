@@ -821,14 +821,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 });
             });
 
-            $('.endpoint.delete', endpoint_html).click(function(ev) {
-                ev.preventDefault();
-
-                data.data.servers.splice(endpoint_data.extra.id, 1);
-
-                THIS.update_old_trunkstore(data.data, callbacks.delete_success);
-            });
-
             $('.pbxs .pbx', endpoint_html).click(function() {
                 $('.info_pbx', endpoint_html).show();
                 $('.pbxs .pbx', endpoint_html).removeClass('selected').css('opacity', '0.5');
@@ -973,10 +965,12 @@ winkstart.module('pbxs', 'pbxs_manager', {
             });
 
             $('#delete_pbx', pbxs_manager_html).click(function() {
-                THIS.get_account(function(_global_data) {
-                    _global_data.data.servers.splice(endpoint_data.extra.id, 1);
+                winkstart.confirm('Are you sure you would like to delete this PBX?', function() {
+                    THIS.get_account(function(_global_data) {
+                        _global_data.data.servers.splice(endpoint_data.extra.id, 1);
 
-                    THIS.update_old_trunkstore(_global_data.data, callbacks.delete_success);
+                        THIS.update_old_trunkstore(_global_data.data, callbacks.delete_success);
+                    });
                 });
             });
             /*$('#select_all_numbers', pbxs_manager_html).click(function() {
@@ -1758,7 +1752,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 }
             });
 
-            $('#pbxs_manager_listpanel .pbx-wrapper', parent).on('click', function() {
+            $(parent).on('click', '#pbxs_manager_listpanel .pbx-wrapper', function() {
                 $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
                 server_id = $(this).data('id');
                 winkstart.publish('pbxs_manager.edit', { id: server_id });

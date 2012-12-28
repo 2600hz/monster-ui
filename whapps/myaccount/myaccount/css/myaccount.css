@@ -172,8 +172,8 @@ body > .myaccount {
 	*/
 }
 
-.myaccount .myaccount-content .myaccount-close:hover {
-    color: #05addc;
+.myaccount .myaccount-content .myaccount-close:hover span > * {
+    color: #22ccff;
 }
 
 /* tablet and phone */

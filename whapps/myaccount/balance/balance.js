@@ -100,15 +100,20 @@ winkstart.module('myaccount', 'balance', {
                 $('.add-credit', $balance_html).on('click', function(ev) {
                     ev.preventDefault();
 
-                    if(confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?')) {
-                        var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
+                    winkstart.confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?',
+                        function() {
+                            var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
 
-                        THIS.balance_add(credits_to_add, function() {
-                            THIS.update_menu((parseFloat($('#amount', $balance_html).val()) + credits_to_add).toFixed(2));
-                            winkstart.publish('myaccount.balance.render');
-                            alert('Your changes have been saved!');
-                        });
-                    }
+                            THIS.balance_add(credits_to_add,
+                                function() {
+                                    THIS.update_menu((parseFloat($('#amount', $balance_html).val()) + credits_to_add).toFixed(2));
+                                    winkstart.publish('myaccount.balance.render');
+                                    winkstart.alert('Your changes have been saved!');
+                                },
+                                winkstart.error_message.process_error()
+                            );
+                        }
+                    );
                 });
 
                 winkstart.publish('myaccount.select_menu', THIS.__module);
