@@ -1,0 +1,49 @@
+<div>
+    <div id="edit_number" class="trunkstore_popup add_number">
+        <div class="content">
+            <div class="row-fluid row-popup">
+                {{t "pbxs.pbxs_manager.search_numbers"}}
+            </div>
+
+            <div class="row-fluid row-popup">
+                <input type="text" class="area_code_input"  id="sdid_npa" maxlength="3" placeholder="{{t "pbxs.pbxs_manager.placeholder_area_code"}}" pattern="^[2-9][0-8][0-9]$"/>
+                <button class="btn btn-large btn-primary" type="submit" id="search_numbers_button"><i class="icon-search icon-white"></i>&nbsp;&nbsp;{{t "pbxs.pbxs_manager.search"}}</button>
+            </div>
+
+            <div class="row-fluid">
+                <div class="help-box gray-box">
+                    <div class="icon-wrapper">
+                        <i class="icon-info-sign2"></i>
+                    </div>
+                    <div class="text-wrapper">
+                        <p>{{t "pbxs.pbxs_manager.help_toll_free"}} (<a class="monster_link" href="http://www.whitepages.com/area-codes" target="_blank">{{t "pbxs.pbxs_manager.link_area_code"}}</a>)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toggle_div">
+                <h4>{{t "pbxs.pbxs_manager.search_results"}}</h4>
+                <div class="row-fluid">
+                    <div class="span5">
+                        <div id="foundDIDList"/>
+                    </div>
+
+                    <div class="span7 right-div">
+                        <div class="stats row-fluid">
+                            <div class="span8 title_stats">{{t "pbxs.pbxs_manager.selected_numbers"}}</div> <div class="selected_numbers stat_number span4">0</div>
+                        </div>
+                        <div class="stats row-fluid">
+                            <div class="span8 title_stats">{{t "pbxs.pbxs_manager.monthly_charges"}}</div> <div class="cost_numbers stat_number span4">$0.00</div>
+                        </div>
+                        <div class="row-fluid centered">
+                            {{t "pbxs.pbxs_manager.charges_help"}}
+                        </div>
+                        <div class="row-fluid centered">
+                            <button id="add_numbers_button" class="btn btn-success btn-large">{{t "pbxs.pbxs_manager.add"}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

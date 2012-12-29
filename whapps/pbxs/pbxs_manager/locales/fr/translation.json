@@ -1,4 +1,6 @@
 {
+    "pbx_connector": "Connecteur de PBX",
+
     "add_pbx": "Ajouter PBX",
     "numbers": "Num&eacute;ros",
     "move": "Transf&eacute;rer",
@@ -14,7 +16,57 @@
     "testing": "Tester",
     "delete_pbx": "Supprimer PBX",
     "cnam": "Configuration CNAM",
-    "e911": "E911",
-    "failover": "Failover",
-    "delete_number": "Supprimer ce num&eacute;ro"
+    "e911": "Addresse d'urgence",
+    "failover": "Num&eacute;ro de d&eacute;pannage",
+    "delete_number": "Supprimer ce num&eacute;ro",
+    "error_acquire": "Impossible d'ajouter le num&eacute;o suivant: __variable__. Souhaitez-vous r&eacute;essayer?",
+    "delete_pbx_confirmation": "&Ecirc;tes-vous s&ucirc;r de vouloir supprimer ce PBX?",
+    "delete_numbers_confirmation": "&Ecirc;tes-vous s&ucirc;r de vouloir supprimer ce(s) num&eacute;ro(s?)",
+    "remove_number_confirmation": "&Ecirc;tes-vous s&ucirc;r de vouloir retirer le(s) num&eacute;ro(s) s&eacute;lectionn&eacute;(s) de ce PBX?",
+    "no_number_selected": "Aucun num&eacute;ro s&eacute;lectionn&eacute;!",
+
+    "move_dialog_title": "D&eacute;placer ce num&eacute;ro...",
+
+    "charge_reminder_line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
+    "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
+
+    "unassigned_numbers": "Num&eacute;ros non assign&eacute;s",
+    "search": "Chercher",
+    "assign": "Assigner",
+    "delete": "Supprimer",
+    "no_number_available": "Pas de num&eacute;ros disponibles",
+
+    "caller_id_dialog_title": "Choisissez le nom &agrave; pr&eacute;senter",
+    "caller_id_name": "Nom affich&eacute;",
+    "caller_id_placeholder": "Jean Dupont",
+    "add": "Ajouter",
+    "help_first_line": "Le nom rentr&eacute; sera affich&eacute; lors de vos appels sur les t&eacute;l&eacute;phones permettant son affichage",
+    "help_second_line": "Il faut environ 72h pour que la requ&ecirc;te soit prise en compte, et cette requ&ecirc;te ne peut &ecirc;tre faite qu'une fois toutes les 72 heures.",
+    "error_update_caller_id": "Erreur lors de la mise  &agrave; jour du nom d'affichage pour ce num&eacute;ro",
+
+    "e911_dialog_title": "&Eacute;ditez votre adresse d'urgence",
+    "gmap_pin_label": "Votre+Adresse+d'urgence",
+    "when_you_dial": "Lorsque vous composez le ",
+    "emergency_number": "18",
+    "from": "depuis ce num&eacute;ro,",
+    "end_when_you_dial": "cette adresse sera celle affich&eacute;e au service d'urgence.",
+    "postal_code": "Code Postal",
+    "address_line_1": "Adresse",
+    "address_line_2": "Adresse (suite)",
+    "city": "Ville",
+    "state": "&Eacute;tat/Region",
+    "verify_location": "V&eacute;rifier l'adresse avec Google Maps",
+    "submit": "Envoyer",
+    "error_update_caller_id": "Erreur lors de la mise &agrave; jour de l'adresse d'urgence pour ce num&eacute;ro",
+
+    "buy_dialog_title": "Acheter num&eacute;ros",
+    "search_numbers": "Recherche de num&eacute;ros par indicatif t&eacute;l&eacute;phonique",
+    "placeholder_area_code": "Indicatif",
+    "help_toll_free": "Pour les num&eacute;ros verts veuillez rentrer 800, 855, 866, 877 ou 888 dans le champ texte.",
+    "link_area_code": "Trouver son indicatif",
+    "search_results": "R&eacute;sultats de la recherche",
+    "selected_numbers": "Num&eacute;ros s&eacute;lectionn&eacute;s",
+    "monthly_charges": "Montant mensuel",
+    "charges_help": "Ces charges appara&icirc;tront dans votre facture mensuelle.",
+    "add": "Acheter"
 }

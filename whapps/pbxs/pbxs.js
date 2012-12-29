@@ -34,7 +34,7 @@ winkstart.module('pbxs', 'pbxs', {
 
         THIS.whapp_auth(function() {
             winkstart.publish('whappnav.add', THIS.__module, {
-                name: 'PBX Connector'
+                name: i18n.t('core.layout.whapp_pbx_connector')
             });
 
             THIS.initialization_check();

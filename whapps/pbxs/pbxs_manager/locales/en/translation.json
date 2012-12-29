@@ -1,4 +1,6 @@
 {
+    "pbx_connector": "PBX Connector",
+
     "add_pbx": "Add PBX",
     "numbers": "Numbers",
     "move": "Move",
@@ -16,5 +18,55 @@
     "cnam": "CNAM configuration",
     "e911": "E911",
     "failover": "Failover",
-    "delete_number": "Delete Number"
+    "delete_number": "Delete Number",
+    "error_acquire": "There was an error when trying to acquire __variable__, would you like to retry?",
+    "delete_pbx_confirmation": "Are you sure you would like to delete this PBX?",
+    "delete_numbers_confirmation": "Are you sure you would like to delete the number(s) selected?",
+    "remove_number_confirmation": "Are you sure you want to remove the selected number(s) from this PBX?",
+    "no_number_selected": "You didn't select any number!",
+
+    "move_dialog_title": "Move selected numbers...",
+
+    "charge_reminder_line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+    "charge_reminder_line2": "Are you sure you want to continue?'",
+
+    "unassigned_numbers": "Unassigned Numbers",
+    "search": "Search",
+    "assign": "Assign",
+    "delete": "Delete",
+    "no_number_available": "No number available",
+
+    "caller_id_dialog_title": "Caller ID Name Selection",
+    "caller_id_name": "Caller ID Name",
+    "caller_id_placeholder": "John Doe",
+    "add": "Add",
+    "help_first_line": "This name will show up when you call someone on their Caller ID device.",
+    "help_second_line": "This request takes up to 72 hours to process and can only be placed once every 72 hours.",
+    "error_update_caller_id": "Failed to update the Caller ID for this phone number",
+
+    "e911_dialog_title": "Edit 911 Location",
+    "gmap_pin_label": "Your+E911+Location",
+    "when_you_dial": "When you dial",
+    "emergency_number": "911",
+    "from": "from your number,",
+    "end_when_you_dial": " show this as your address on 911 operator console.",
+    "postal_code": "Postal Code",
+    "address_line_1": "Address Line 1",
+    "address_line_2": "Address Line 2",
+    "city": "City",
+    "state": "State",
+    "verify_location": "Verify Location with Google Maps",
+    "submit": "Submit",
+    "error_update_e911": "Failed to update the e911 for this phone number",
+
+    "buy_dialog_title": "Buy Numbers",
+    "search_numbers": "Search numbers",
+    "placeholder_area_code": "Area Code",
+    "help_toll_free": "For Toll Free Number please enter 800, 855, 866, 877 or 888 in the area code field.",
+    "link_area_code": "Don't know area code",
+    "search_results": "Search Results",
+    "selected_numbers": "Selected Numbers",
+    "monthly_charges": "Monthly Charges",
+    "charges_help": "Charges will show up in monthly invoice.",
+    "add": "Add"
 }

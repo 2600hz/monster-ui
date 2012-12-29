@@ -5,17 +5,17 @@
         <div class="right_part">
             <div class="row-fluid">
                 <div class="row-fluid">
-                    Caller ID Name
+                    {{t "pbxs.pbxs_manager.caller_id_name"}}
                 </div>
 
                 <div class="row-fluid">
                     <form id="cnam">
-                        <input type="text" class="caller_id" name="display_name" value="{{display_name}}" placeholder="John Doe"/>
+                        <input type="text" class="caller_id" name="display_name" value="{{display_name}}" placeholder="{{t "pbxs.pbxs_manager.caller_id_placeholder"}}"/>
                     </form>
                 </div>
 
                 <div class="row-fluid">
-                    <button class="btn btn-success">Add</button>
+                    <button class="btn btn-success">{{t "pbxs.pbxs_manager.add"}}</button>
                 </div>
             </div>
         </div>
@@ -27,8 +27,8 @@
                 <i class="icon-info-sign2"></i>
             </div>
             <div class="text-wrapper">
-                <p>This name will show up when you call someone on their Caller ID device.</p>
-                <p>This request takes up to 72 hours to process and can only be placed once every 72 hours.</p>
+                <p>{{t "pbxs.pbxs_manager.help_first_line"}}</p>
+                <p>{{t "pbxs.pbxs_manager.help_second_line"}}</p>
             </div>
         </div>
     </div>

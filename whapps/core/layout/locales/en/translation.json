@@ -1,0 +1,11 @@
+{
+    "close": "X Close",
+
+    "dialog_show_error": "Show Error",
+
+    "dialog_confirm_ok": "OK",
+    "dialog_confirm_cancel": "Cancel",
+    "dialog_confirm_title": "Confirmation",
+
+    "whapp_pbx_connector": "PBX Connector"
+}

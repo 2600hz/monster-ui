@@ -4,8 +4,8 @@
     <div id="unassigned_numbers">
         <div id="unassigned_numbers_header">
             <i class="icon-th icon-white"></i>
-            <span>Unassigned Numbers</span>
-            <span id="unassigned_numbers_count">13</span>
+            <span>{{t "pbxs.pbxs_manager.unassigned_numbers"}}</span>
+            <span id="unassigned_numbers_count"></span>
 
             <i class="pull-right icon-chevron-right icon-white"></i>
             <i class="pull-right icon-chevron-down icon-white"></i>
@@ -15,17 +15,17 @@
             <div class="row-fluid">
                 <span class="span12 search-box pull-right">
                     <i class="icon-search"></i>
-                    <input type="text" placeholder="Search..." class="search-query">
+                    <input type="text" placeholder="{{t "pbxs.pbxs_manager.search"}}..." class="search-query">
                 </span>
             </div>
 
             <div id="unassigned_actions" class="row-fluid">
                 <div class="span6 link-box assign">
-                    <div class="span12"><i class="icon-check"></i>Assign</div>
+                    <div class="span12"><i class="icon-check"></i>{{t "pbxs.pbxs_manager.assign"}}</div>
                 </div>
 
                 <div class="span6 link-box delete">
-                    <div class="span12"><i class="icon-trash"></i>Delete</div>
+                    <div class="span12"><i class="icon-trash"></i>{{t "pbxs.pbxs_manager.delete"}}</div>
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
             </div>
 
             <div id="empty_search">
-                No number available.
+                {{t "pbxs.pbxs_manager.no_number"}}
             </div>
         </div>
     </div>

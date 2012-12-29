@@ -5,6 +5,8 @@ winkstart.module('core', 'layout', {
             'css/icons.css',
         ],
 
+        locales: ['en', 'fr'],
+
         templates: {
             layout: 'tmpl/layout.handlebars',
             layout_welcome: 'tmpl/layout_welcome.handlebars',
