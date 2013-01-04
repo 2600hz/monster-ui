@@ -214,7 +214,7 @@ body > .ws-content {
 
 .ui-dialog .ui-dialog-titlebar-close.ui-state-hover {
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 500;
     color: #ddd;
     padding: 1px;
 }
@@ -225,6 +225,7 @@ body > .ws-content {
 
 .ui-dialog .ui-dialog-title {
     margin-right: 70px;
+    font-weight: 500;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -245,7 +246,7 @@ body > .ws-content {
 /* Search Box */
 .search-box > i.icon-search {
     position: absolute;
-    margin: 6px 0 0 9px;
+    margin: 4px 0 0 8px;
 }
 
 .search-box .search-query {
@@ -283,7 +284,7 @@ body > .ws-content {
     margin: 10px 0 10px 0;
 }
 
-.help-box .icon-wrapper {
+.help-box .wrapper-icon {
     background: #eee;
     border-radius: 15px;
     box-shadow: 1px 1px 2px #888 inset;
@@ -296,13 +297,15 @@ body > .ws-content {
     width: 30px;
 }
 
-.help-box .icon-wrapper > i {
+.help-box .wrapper-icon > i {
     font-size: 20px;
     font-weight: bold;
     margin: 4px 0;
 }
 
 .help-box .text-wrapper {
+    font-size: 12px;
+    text-align: left;
     margin-top: -30px;
     padding: 20px;
 }

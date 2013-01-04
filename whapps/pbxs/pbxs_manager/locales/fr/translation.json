@@ -3,7 +3,7 @@
 
     "add_pbx": "Ajouter PBX",
     "numbers": "Num&eacute;ros",
-    "move": "Transf&eacute;rer",
+    "move": "Transf&eacute;rer vers",
     "remove": "D&eacute;saffecter",
     "buy": "Acheter",
     "port": "Porter",
@@ -25,7 +25,7 @@
     "remove_number_confirmation": "&Ecirc;tes-vous s&ucirc;r de vouloir retirer le(s) num&eacute;ro(s) s&eacute;lectionn&eacute;(s) de ce PBX?",
     "no_number_selected": "Aucun num&eacute;ro s&eacute;lectionn&eacute;!",
 
-    "move_dialog_title": "D&eacute;placer ce num&eacute;ro...",
+    "confirm_move": "&Ecirc;tes-vous s&ucirc;r de vouloir d&eacute;placer ces num&eacute;ros vers  __variable__ ?",
 
     "charge_reminder_line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
     "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
@@ -58,6 +58,14 @@
     "verify_location": "V&eacute;rifier l'adresse avec Google Maps",
     "submit": "Envoyer",
     "error_update_caller_id": "Erreur lors de la mise &agrave; jour de l'adresse d'urgence pour ce num&eacute;ro",
+
+    "port_name_on_account": "Nom",
+    "port_account_id": "Num&eacute;ro de compte",
+    "port_postal_code": "Code Postal",
+    "port_address": "Adresse",
+    "port_extended_address": "Adresse 2",
+    "port_city": "Ville",
+    "port_state": "&Eacute;/R&eacute;gion",
 
     "buy_dialog_title": "Acheter num&eacute;ros",
     "search_numbers": "Recherche de num&eacute;ros par indicatif t&eacute;l&eacute;phonique",

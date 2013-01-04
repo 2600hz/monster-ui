@@ -27,8 +27,13 @@
         </div>
 
         <div class="row-fluid">
-            <div class="well well-small">
-                <i class="icon-info-sign"></i> If your phone system is unreachable for any reason, we can redirect a caller to an alternate phone number or VoIP device. If the Failover number is an external number this call will cost you for both inbound and outbound.
+            <div class="help-box gray-box">
+                <div class="wrapper-icon">
+                    <i class="icon-info-sign2"></i>
+                </div>
+                <div class="text-wrapper">
+                    <p>If your phone system is unreachable for any reason, we can redirect a caller to an alternate phone number or VoIP device. If the Failover number is an external number this call will cost you for both inbound and outbound.</p>
+                </div>
             </div>
         </div>
 
@@ -36,7 +41,7 @@
             {{#if radio}}
                 <button class="btn btn-danger remove_failover">Remove</button>
             {{/if}}
-            <button class="btn btn-primary submit_btn">Activate</button>
+            <button class="btn btn-success submit_btn">Activate</button>
         </div>
     </form>
 </div>

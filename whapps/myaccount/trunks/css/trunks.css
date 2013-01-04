@@ -5,7 +5,7 @@
 }
 
 .myaccount-content .trunks-content .trunk-container .text-wrapper .title {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 18px;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .myaccount-content .trunks-content .total-amount {
-    font-weight: bold;
+    font-weight: 500;
     line-height: 40px;
 }
 

@@ -25,7 +25,7 @@
     border-radius: 4px;
     color: #666;
     display: inline-block;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 69px;
     margin: auto;
     background: #fff;
@@ -36,7 +36,7 @@
     font-size: 14px;
     height: 28px;
     line-height: 28px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #edit_server .pbxs .pbx.selected {
@@ -50,7 +50,7 @@
 }
 
 #edit_server .selected_pbx {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 15px;
 }
 

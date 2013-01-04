@@ -3,7 +3,7 @@
 
     "add_pbx": "Add PBX",
     "numbers": "Numbers",
-    "move": "Move",
+    "move": "Move To",
     "remove": "Unassign",
     "buy": "Buy",
     "port": "Port",
@@ -25,12 +25,12 @@
     "remove_number_confirmation": "Are you sure you want to remove the selected number(s) from this PBX?",
     "no_number_selected": "You didn't select any number!",
 
-    "move_dialog_title": "Move selected numbers...",
+    "confirm_move": "Are you sure you would like to move the selected numbers to __variable__ ?",
 
     "charge_reminder_line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
     "charge_reminder_line2": "Are you sure you want to continue?'",
 
-    "unassigned_numbers": "Unassigned Numbers",
+    "unassigned_numbers": "Spare Numbers",
     "search": "Search",
     "assign": "Assign",
     "delete": "Delete",
@@ -59,6 +59,14 @@
     "submit": "Submit",
     "error_update_e911": "Failed to update the e911 for this phone number",
 
+    "port_name_on_account": "Name on Account",
+    "port_account_id": "Account ID",
+    "port_postal_code": "Postal Code",
+    "port_address": "Address",
+    "port_extended_address": "Extended Address",
+    "port_city": "City",
+    "port_state": "State",
+
     "buy_dialog_title": "Buy Numbers",
     "search_numbers": "Search numbers",
     "placeholder_area_code": "Area Code",
@@ -67,6 +75,6 @@
     "search_results": "Search Results",
     "selected_numbers": "Selected Numbers",
     "monthly_charges": "Monthly Charges",
-    "charges_help": "Charges will show up in monthly invoice.",
+    "charges_help": "Charges will show up in your monthly invoice.",
     "add": "Add"
 }

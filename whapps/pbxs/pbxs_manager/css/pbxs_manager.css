@@ -45,7 +45,7 @@
     color: #eee;
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 500;
     height: 40px;
     line-height: 38px;
     min-width: 250px;
@@ -71,6 +71,8 @@
 
 #ws-content #list_pbxs_navbar #unassigned_numbers #unassigned_numbers_header #unassigned_numbers_count {
     font-size: 18px;
+    line-height: 40px;
+    margin-right: 15px;
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers.open  #unassigned_numbers_header i.icon-chevron-down {
@@ -120,6 +122,7 @@
     cursor: pointer;
     padding: 0 10px;
     margin: 0;
+    width: 50%;
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_actions a{
@@ -191,20 +194,24 @@
     opacity: 0.9;
     height: 51px;
     width: 76px;
+    font-size: 60px;
+    font-weight: 500;
+    line-height: 42px;
+    color: #22ccff;
 }
 
 #ws-content #list_pbxs_navbar .pbx-wrapper:hover .img-wrapper{
     border: 3px solid #22ccff;
     color: #22ccff;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
     opacity: 1;
 }
 
 #ws-content #list_pbxs_navbar .pbx-wrapper.selected .img-wrapper{
     border: 3px solid #22ccff;
     color: #22ccff;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #ws-content #list_pbxs_navbar #add_pbx {
@@ -246,7 +253,11 @@
 }
 
 #ws-content #pbx_connector_container .pbx-title .dropdown-toggle i {
-    margin-top: 24px;
+    font-size: 26px;
+}
+
+#ws-content #pbx_connector_container .pbx-title .dropdown-toggle {
+    padding: 27.5px 15px 0;
 }
 
 #ws-content #pbx_connector_container .dropdown-menu{
@@ -254,7 +265,7 @@
 }
 
 #ws-content #pbx_connector_container .dropdown-menu i {
-    margin-right: 6px;
+    margin-right: 10px;
 }
 
 #ws-content #pbx_connector_container #actions_wrapper {
@@ -274,10 +285,10 @@
 
 #ws-content #pbx_connector_container #actions_wrapper label{
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
-#ws-content #pbx_connector_container #actions_wrapper a {
+#ws-content #pbx_connector_container #actions_wrapper a.action-number {
     margin-right: 20px;
     color: #666666;
     white-space: nowrap;
@@ -285,6 +296,21 @@
 
 #ws-content #pbx_connector_container #actions_wrapper a i{
     margin-right: 5px;
+}
+
+#ws-content #pbx_connector_container #actions_wrapper .dropdown-move {
+    list-style: none;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+#ws-content #pbx_connector_container #actions_wrapper .dropdown-move img {
+    margin-right: 10px;
+}
+
+#ws-content #pbx_connector_container #actions_wrapper .dropdown-move a {
+    margin-right: 0;
+    line-height: 32px;
 }
 
 #ws-content #pbx_connector_container .numbers-wrapper{
@@ -305,7 +331,7 @@
     background: #f5f5f5;
     border-top: 1px solid #22ccff !important;
     box-shadow: inset 0 0 5px #cccccc;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #ws-content #pbxs_manager_view .number-box:hover, #ws-content #list_pbxs_navbar .number-box:hover, #ws-content #list_pbxs_navbar .link-box:hover  {
@@ -370,7 +396,7 @@
     margin-right: 0;
 }
 
-#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .dropdown-toggle i {
+#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .number-options {
     margin-top: 6px;
 }
 
