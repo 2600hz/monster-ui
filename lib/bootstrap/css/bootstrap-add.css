@@ -6,6 +6,10 @@
 }
 
 /* More class for bootstrap */
+.content-centered {
+    text-align: center;
+}
+
 body, input, button, select, textarea {
     font-family: 'Maven Pro', Helvetica, sans-serif;
 }
@@ -166,6 +170,10 @@ i.icon-yellow {
 
 i.icon-grey {
     color: #333;
+}
+
+i.icon-lightgrey {
+    color: #999;
 }
 
 i.icon-info-sign2:before { content: "i"; }

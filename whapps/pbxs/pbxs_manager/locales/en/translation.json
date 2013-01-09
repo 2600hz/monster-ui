@@ -1,6 +1,32 @@
 {
     "pbx_connector": "PBX Connector",
 
+    "pbx_brand": "PBX Brand",
+    "ip": "IP",
+    "config": "Config",
+    "please_correct": "Please correct the following errors:",
+
+    "which_pbx": "Which PBX system do you own?",
+    "pbx_missing_help": "Let us know if your PBX isn't listed",
+    "no_pbx_selected": "You didn't select any PBX",
+    "friendly_name": "Name thix PBX",
+
+    "is_static_ip": "Is your __variable__ PBX on Static IP?",
+    "yes": "Yes",
+    "no": "No",
+    "np": "No Problem!",
+    "username": "Username",
+    "password": "Password",
+    "realm": "Realm/Domain",
+    "registration_servers": "Registration Servers",
+    "please_follow_link": "Please follow these directions",
+    "please_follow_text": " to configure your PBX and allow traffic from the servers listed above. We will send you calls from these IPS.",
+    "great": "Great!",
+    "what_is_your_ip": "What is the static IP of this PBX?",
+    "outbound_servers": "Outbound Servers",
+    "currently_selected": "Currently Selected",
+    "edit_settings": "Edit Settings of __variable__",
+
     "add_pbx": "Add PBX",
     "numbers": "Numbers",
     "move": "Move To",

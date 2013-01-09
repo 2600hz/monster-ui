@@ -156,6 +156,27 @@ body > .ws-content {
     margin-top: 20px;
 }
 
+/* Default Blue Gradient */
+.blue-gradient {
+    background-color:#22a5ff;
+    background-image:linear-gradient(to bottom,#22a5ff,#22ccff);
+    background-image:-moz-linear-gradient(top,#22a5ff,#22ccff);
+    background-image:-webkit-gradient(linear,0 0,0 100%,from(#22a5ff),to(#22ccff));
+    background-image:-webkit-linear-gradient(top,#22a5ff,#22ccff);
+    background-image:-o-linear-gradient(top,#22a5ff,#22ccff);
+    filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22a5ff',endColorstr='#ff22ccff',GradientType=0);
+}
+
+.blue-gradient-reverse {
+    background-color:#22ccff;
+    background-image:linear-gradient(to bottom,#22ccff,#22a5ff);
+    background-image:-moz-linear-gradient(top,#22ccff,#22a5ff);
+    background-image:-webkit-gradient(linear,0 0,0 100%,from(#22ccff),to(#22a5ff));
+    background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
+    background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
+    filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+}
+
 /* + Btn used to add elements */
 .plus-btn {
     background-image: url(../images/plus_btn.png);
@@ -338,6 +359,93 @@ body > .ws-content {
     margin-right: 4%;
 }
 
+/* Wizard Layout */
+.wizard .wizard-top-bar {
+    border-bottom: 10px solid #333;
+    text-align: center;
+    margin: -20px -20px 0 -20px;
+}
+
+.wizard .wizard-top-bar .steps-wrapper {
+    display: inline-block;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step {
+    color: #fff;
+    display: inline-block;
+    padding: 10px 30px;
+    text-align: center;
+    cursor: pointer
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step.active {
+    box-shadow: 1px 1px 25px #444 inset;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step.inactive {
+    cursor: not-allowed;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step .step-title {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 150px;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step .wrapper-icon {
+    background: #fff;
+    border-radius: 50px;
+    border: 1px solid #777;
+    display: inline-block;
+    height: 50px;
+    margin-bottom: 10px;
+    padding: 15px;
+    width: 50px;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step .wrapper-icon > i {
+    font-size: 50px;
+    color: #aaa;
+}
+
+.wizard .wizard-top-bar .steps-wrapper .step.active .wrapper-icon > i, .wizard .wizard-top-bar .steps-wrapper .step.completed .wrapper-icon > i {
+    color: #22ccff;
+}
+
+.wizard .wizard-buttons {
+    margin: auto;
+    text-align: right;
+    width: 60%;
+}
+
+.wizard .wizard-buttons > button > i{
+    margin-right: 10px;
+}
+
+.wizard .wizard-buttons > button.next-step > i{
+    margin-left: 10px;
+    margin-right: 0px;
+}
+
+.wizard .wizard-content-wrapper {
+    text-align: center;
+}
+
+.wizard .wizard-content-wrapper .wizard-content {
+    display: inline-block;
+    min-width: 70%;
+}
+
+.wizard .wizard-content-wrapper .wizard-content .wizard-content-step {
+    text-align: left;
+    padding: 30px 0px;
+}
+
+.wizard .wizard-content-wrapper .wizard-content .wizard-content-step h4 {
+    font-size: 16px;
+    font-weight: 500;
+}
 /* desktop */
 @media (min-width: 979px) {
 

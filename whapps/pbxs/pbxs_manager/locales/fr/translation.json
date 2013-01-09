@@ -1,6 +1,31 @@
 {
     "pbx_connector": "Connecteur de PBX",
 
+    "pbx_brand": "Marque du PBX",
+    "ip": "IP",
+    "config": "Configuration",
+
+    "which_pbx": "S&eacute;lectionnez votre PBX",
+    "pbx_missing_help": "Votre PBX n'appara&icirc;t pas dans la liste? Faites-le nous savoir!",
+    "no_pbx_selected": "Vous n'avez pas S&eacute;lectionn&eacute; de PBX",
+    "friendly_name": "Nom de ce PBX",
+
+    "is_static_ip": "Est-ce que votre PBX:  __variable__ utilise une IP statique?",
+    "yes": "Oui",
+    "no": "Non",
+    "np": "Pas de probl&egrave;mes!",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de Passe",
+    "realm": "Nom de domaine",
+    "registration_servers": "Registration Servers",
+    "please_follow_link": "Cliquez ici",
+    "please_follow_text": " pour acc&eacute;der &agrave; l'aide pour configurer votre PBX et autoriser les &eacute;changes avec les serveurs list&eacute;s ci-dessus.",
+    "great": "Super!",
+    "what_is_your_ip": "Quelle est l'IP statique de ce PBX?",
+    "outbound_servers": "Outbound Servers",
+    "currently_selected": "Vous avez s&eacute;lectionn&eacute;",
+    "edit_settings": "Edit Settings of __variable__",
+
     "add_pbx": "Ajouter PBX",
     "numbers": "Num&eacute;ros",
     "move": "Transf&eacute;rer vers",
@@ -76,5 +101,5 @@
     "selected_numbers": "Num&eacute;ros s&eacute;lectionn&eacute;s",
     "monthly_charges": "Montant mensuel",
     "charges_help": "Ces charges appara&icirc;tront dans votre facture mensuelle.",
-    "add": "Acheter"
+    "add": "Ajouter"
 }

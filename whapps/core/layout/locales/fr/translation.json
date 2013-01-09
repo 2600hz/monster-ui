@@ -7,5 +7,10 @@
     "dialog_confirm_cancel": "Annuler",
     "dialog_confirm_title": "Confirmation",
 
+    "previous": "Pr&eacute;c&eacute;dent",
+    "next": "Suivant",
+    "submit": "Valider",
+    "cancel": "Annuler",
+
     "whapp_pbx_connector": "Connecteur de PBX"
 }

@@ -1,3 +1,9 @@
+/* For some reason the check icon is not really aligned like the other, hack to slightly change the offset to center it visually */
+#pbxs_manager_view #edit_server .wizard-top-bar .steps-wrapper .step[data-step="1"] .wrapper-icon {
+    padding: 17px 13px 13px 17px;
+}
+
+/* General Layout */
 #ws-content #pbxs_manager_view {
     margin-bottom: 130px;
 }
@@ -270,7 +276,7 @@
 
 #ws-content #pbx_connector_container #actions_wrapper {
     margin: 30px 0 0 0;
-    line-height: 30px;
+    line-height: 40px;
 }
 
 #ws-content #pbx_connector_container #actions_wrapper #count_phones {

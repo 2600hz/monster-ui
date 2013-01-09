@@ -7,5 +7,10 @@
     "dialog_confirm_cancel": "Cancel",
     "dialog_confirm_title": "Confirmation",
 
+    "previous": "Previous",
+    "next": "Next",
+    "submit": "Submit",
+    "cancel": "Cancel",
+
     "whapp_pbx_connector": "PBX Connector"
 }

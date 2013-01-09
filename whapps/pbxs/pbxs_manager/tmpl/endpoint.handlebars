@@ -1,5 +1,176 @@
-<div id="edit_server">
+<div id="edit_server" class="wizard">
     <div class="row-fluid">
+        <div class="wizard-top-bar blue-gradient-reverse" data-max_step="3">
+            <div class="steps-wrapper">
+                <div class="step active" data-step="1">
+                    <div class="wrapper-icon">
+                        <i class="icon-check"></i>
+                    </div>
+                    <div class="step-title">
+                        {{t "pbxs.pbxs_manager.pbx_brand"}}
+                    </div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="wrapper-icon">
+                        <i class="icon-hdd"></i>
+                    </div>
+                    <div class="step-title">
+                        {{t "pbxs.pbxs_manager.ip"}}
+                    </div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="wrapper-icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="step-title">
+                        {{t "pbxs.pbxs_manager.config"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <form id="endpoint">
+            <div class="wizard-content-wrapper">
+                <div class="wizard-content">
+                    <div class="wizard-content-step pbx-selection" data-step="1">
+                        <div class="row-fluid">
+                            <div class="content-centered">
+                                <h4><i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.which_pbx"}}</h4>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid content-centered">
+                            <div class="info_pbx">
+                                <div class="selected-pbx-block">
+                                    {{t "pbxs.pbxs_manager.currently_selected"}}: <span class="selected-pbx">{{server_type}}</span>
+                                    <input type="text" placeholder="{{t "pbxs.pbxs_manager.friendly_name"}}" id="server_name" name="server_name" value="{{server_name}}"></input>
+                                </div>
+                            </div>
+
+                            <div class="pbx-brand-list content-centered">
+                                <div class="pbx bluebox" data-pbx_name="blue.box">&nbsp;</div>
+                                <div class="pbx freeswitch" data-pbx_name="FreeSWITCH">&nbsp;</div>
+                                <div class="pbx threecom" data-pbx_name="threecom">&nbsp;</div>
+                                <div class="pbx allworks" data-pbx_name="allworks">&nbsp;</div>
+                                <div class="pbx altigen" data-pbx_name="AltiGen">&nbsp;</div>
+                                <div class="pbx asterisk" data-pbx_name="Asterisk">&nbsp;</div>
+                                <div class="pbx avaya" data-pbx_name="Avaya">&nbsp;</div>
+                                <div class="pbx cisco" data-pbx_name="Cisco">&nbsp;</div>
+                                <div class="pbx digium" data-pbx_name="digium">&nbsp;</div>
+                                <div class="pbx epygi" data-pbx_name="epygi">&nbsp;</div>
+                                <div class="pbx freepbx" data-pbx_name="FreePBX">&nbsp;</div>
+                                <div class="pbx mitel" data-pbx_name="Mitel">&nbsp;</div>
+                                <div class="pbx objectworld" data-pbx_name="ObjectWorld">&nbsp;</div>
+                                <div class="pbx pingtel" data-pbx_name="pingtel">&nbsp;</div>
+                                <div class="pbx responsepoint" data-pbx_name="Response Point">&nbsp;</div>
+                                <div class="pbx samsung" data-pbx_name="Samsung">&nbsp;</div>
+                                <div class="pbx shoretel" data-pbx_name="ShoreTel">&nbsp;</div>
+                                <div class="pbx sutus" data-pbx_name="Sutus">&nbsp;</div>
+                                <div class="pbx talkswitch" data-pbx_name="talkswitch">&nbsp;</div>
+                                <div class="pbx taridium" data-pbx_name="taridium">&nbsp;</div>
+                                <div class="pbx other" data-pbx_name="other">Other PBX</div>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid">
+                            <div class="content-centered">
+                                <a class="monster_link" href="#" target="_blank">{{t "pbxs.pbxs_manager.pbx_missing_help"}}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wizard-content-step" data-step="2">
+                        <div class="row-fluid">
+                            <div class="content-centered title-step">
+                                <h4>
+                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.is_static_ip" "test"}}
+
+                                    <div class="radio-wrapper">
+                                        <label class="radio inline">
+                                            <input type="radio" name="auth.auth_method" value="IP" {{#compare auth.auth_method "===" "IP"}}checked{{/compare}}>
+                                            {{t "pbxs.pbxs_manager.yes"}}
+                                        </label>
+                                        <label class="radio inline">
+                                            <input type="radio" name="auth.auth_method" value="Password" {{#compare auth.auth_method "===" "Password"}}checked{{/compare}}>
+                                            {{t "pbxs.pbxs_manager.no"}}
+                                        </label>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                                        <!-- Hidden fields -->
+                                        <input type="hidden" name="extra.serverid" value="{{extra.id}}" />
+                                        <!-- End Hidden fields -->
+                        <div class="row-fluid content-centered">
+                            <div class="well">
+                                <div class="static-ip-block" data-value="IP">
+                                    <div class="well-title">
+                                        {{t "pbxs.pbxs_manager.great"}}
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.what_is_your_ip"}}</div>
+                                        <div class="span6 offset1"><input type="text" name="auth.ip" value="{{auth.ip}}"></input></div>
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.outbound_servers"}}</div>
+                                        <div class="span6 offset1"><span class="registration-server-ip">10.10.10.10</span><span class="registration-server-ip">10.10.10.10</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="static-ip-block" data-value="Password">
+                                    <div class="well-title">
+                                        {{t "pbxs.pbxs_manager.np"}}
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.username"}}</div>
+                                        <div class="span6 offset1"><input type="text" name="auth.auth_username" value="{{auth.auth_user}}"></input></div>
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.password"}}</div>
+                                        <div class="span6 offset1"><input type="text" name="auth.auth_password" value="{{auth.auth_password}}"></input></div>
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.realm"}}</div>
+                                        <div class="span6 offset1">{{extra.realm}}</div>
+                                    </div>
+
+                                    <div class="row-fluid">
+                                        <div class="field-name span5">{{t "pbxs.pbxs_manager.registration_servers"}}</div>
+                                        <div class="span6 offset1"><span class="registration-server-ip">10.10.10.10</span><span class="registration-server-ip">10.10.10.10</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="help-registration">
+                                <a href="#" target="_blank" class="help-registration-link">{{t "pbxs.pbxs_manager.please_follow_link"}}</a>{{t "pbxs.pbxs_manager.please_follow_text"}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wizard-content-step" data-step="3">
+                        Step 3, you're done
+                    </div>
+
+                    <div class="wizard-buttons">
+                        <button class="cancel btn btn-danger pull-left"><i class="icon-double-angle-left"></i>{{t "core.layout.cancel"}}</button>
+                        <button class="prev-step btn btn-primary pull-left"><i class="icon-double-angle-left"></i>{{t "core.layout.previous"}}</button>
+                        <button class="submit-btn btn btn-success"><i class="icon-ok"></i>{{t "core.layout.submit"}}</button>
+                        <button class="next-step btn btn-primary">{{t "core.layout.next"}}<i class="icon-double-angle-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--<div class="row-fluid">
         <div class="whapp-header">
             {{#if server_name}}
             <h1>Edit settings for {{server_name}}</h1>
@@ -46,7 +217,7 @@
 
                 <hr/>
 
-                <h3>Set up your PBX<!--<a class="instructions" href="http://www.2600hz.com/instructions" target="_blank">See Instructions</a>--></h3>
+                <h3>Set up your PBX--><!--<a class="instructions" href="http://www.2600hz.com/instructions" target="_blank">See Instructions</a>--><!--</h3>
                 <div class="clearfix">
                     <label for="auth_auth_user">Create a Username</label>
                     <div class="input">
@@ -105,4 +276,5 @@
             <button class="btn btn-success endpoint edit">Save</button>
         </div>
     </div>
+    -->
 </div>
