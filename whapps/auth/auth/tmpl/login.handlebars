@@ -11,6 +11,15 @@
             </div>
         </div>
 
+        <div class="control-group">
+            <label class="control-label" for="password">{{t "auth.auth.password"}}</label>
+            <div class="controls">
+                <div class="input-prepend">
+                    <span class="add-on"><i class="icon-wrench"></i></span><input type="password" class="span11" name="password" id="password" >
+                </div>
+            </div>
+        </div>
+
         {{#if request_account_name}}
             <div class="control-group">
                 <label class="control-label" for="account_name">{{t "auth.auth.account_name"}}</label>
@@ -21,15 +30,6 @@
                 </div>
             </div>
         {{/if}}
-
-        <div class="control-group">
-            <label class="control-label" for="password">{{t "auth.auth.password"}}</label>
-            <div class="controls">
-                <div class="input-prepend">
-                    <span class="add-on"><i class="icon-wrench"></i></span><input type="password" class="span11" name="password" id="password" >
-                </div>
-            </div>
-        </div>
 
         <div class="control-group">
             <div class="controls">

@@ -2,9 +2,9 @@
 #edit_server .pbx-brand-list {
     /*width: 530px;*/
     display: inline-block;
-    line-height: 80px;
+    line-height: 100px;
     margin: 20px 0;
-    max-width: 880px;
+    max-width: 680px;
 }
 
 #edit_server .pbx-brand-list .pbx {
@@ -13,10 +13,11 @@
     border: 2px solid #666;
     border-radius: 4px;
     color: #666;
+    cursor: pointer;
     display: inline-block;
     font-weight: 500;
     line-height: 69px;
-    margin-right: 10px;
+    margin-right: 20px;
     background: #fff;
     text-align: center;
 }
@@ -155,6 +156,10 @@
     margin: 20px auto auto;
 }
 
+.ui-dialog #edit_server .wizard-content-step .well {
+    margin: 20px 20px 0px 20px;
+}
+
 #edit_server .wizard-content-step .well .row-fluid {
     line-height: 40px;
     text-align: left;
@@ -177,4 +182,61 @@
     line-height: 30px;
     margin: 10px auto auto;
     max-width: 650px;
+}
+
+/* Step 3 */
+#edit_server .wizard-content-step .testing-block .configure-line {
+    margin-top: 25px;
+}
+
+#edit_server .wizard-content-step .testing-block .configure-line input[type="text"] {
+    width: auto;
+}
+
+#edit_server .wizard-content-step .testing-block .configure-line .btn-group {
+    margin-top: 5px;
+}
+
+#edit_server .wizard-content-step .testing-block .configure-line .title > label{
+    color: #22ccff;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: right;
+}
+
+#edit_server .wizard-content-step .testing-block .testing-progress {
+    height: 55px;
+}
+
+#edit_server .wizard-content-step .testing-block .testing-step {
+    color: #22ccff;
+    padding: 7px 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#edit_server .wizard-content-step .testing-block .testing-step.title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+}
+
+#edit_server .wizard-content-step .testing-block .testing-step .testing-step-title i{
+    margin-right: 10px;
+    display: none;
+}
+
+#edit_server .wizard-automatic-step-title {
+    font-size: 22px;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+#edit_server .wizard-automatic-step-title i{
+    background: #44cc44;
+    border-radius: 22px 22px 22px 22px;
+    color: #EEEEEE;
+    font-size: 22px;
+    margin-right: 10px;
+    padding: 6px 10px;
 }

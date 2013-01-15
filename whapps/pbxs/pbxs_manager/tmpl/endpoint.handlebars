@@ -70,7 +70,7 @@
                                 <div class="pbx sutus" data-pbx_name="Sutus">&nbsp;</div>
                                 <div class="pbx talkswitch" data-pbx_name="talkswitch">&nbsp;</div>
                                 <div class="pbx taridium" data-pbx_name="taridium">&nbsp;</div>
-                                <div class="pbx other" data-pbx_name="other">Other PBX</div>
+<!--                                <div class="pbx other" data-pbx_name="other">Other PBX</div>-->
                             </div>
                         </div>
 
@@ -85,7 +85,7 @@
                         <div class="row-fluid">
                             <div class="content-centered title-step">
                                 <h4>
-                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.is_static_ip" "test"}}
+                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.is_static_ip"}}
 
                                     <div class="radio-wrapper">
                                         <label class="radio inline">
@@ -101,9 +101,9 @@
                             </div>
                         </div>
 
-                                        <!-- Hidden fields -->
-                                        <input type="hidden" name="extra.serverid" value="{{extra.id}}" />
-                                        <!-- End Hidden fields -->
+                        <!-- Hidden fields -->
+                        <input type="hidden" name="extra.serverid" value="{{extra.id}}" />
+
                         <div class="row-fluid content-centered">
                             <div class="well">
                                 <div class="static-ip-block" data-value="IP">
@@ -113,7 +113,7 @@
 
                                     <div class="row-fluid">
                                         <div class="field-name span5">{{t "pbxs.pbxs_manager.what_is_your_ip"}}</div>
-                                        <div class="span6 offset1"><input type="text" name="auth.ip" value="{{auth.ip}}"></input></div>
+                                        <div class="span6 offset1"><input type="text" id="auth_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" name="auth.ip" value="{{auth.ip}}"></input></div>
                                     </div>
 
                                     <div class="row-fluid">
@@ -129,7 +129,7 @@
 
                                     <div class="row-fluid">
                                         <div class="field-name span5">{{t "pbxs.pbxs_manager.username"}}</div>
-                                        <div class="span6 offset1"><input type="text" name="auth.auth_username" value="{{auth.auth_user}}"></input></div>
+                                        <div class="span6 offset1"><input type="text" name="auth.auth_user" value="{{auth.auth_user}}"></input></div>
                                     </div>
 
                                     <div class="row-fluid">
@@ -156,7 +156,268 @@
                     </div>
 
                     <div class="wizard-content-step" data-step="3">
-                        Step 3, you're done
+                        <div class="row-fluid">
+                            <div class="content-centered title-step">
+                                <h4>
+                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.how_to_configure"}}
+
+                                    <div class="radio-wrapper">
+                                        <label class="radio inline">
+                                            <input type="radio" name="extra.configure" value="automatically" {{#compare extra.configure "===" "automatically"}}checked{{/compare}}>
+                                            {{t "pbxs.pbxs_manager.automatically"}}
+                                        </label>
+                                        <label class="radio inline">
+                                            <input type="radio" name="extra.configure" value="manually" {{#compare extra.configure "===" "manually"}}checked{{/compare}}>
+                                            {{t "pbxs.pbxs_manager.manually"}}
+                                        </label>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid">
+                            <div class="well">
+                                <div class="testing-block" data-value="automatically">
+                                    <!-- content -->
+                                    <div class="wizard-automatic">
+                                        <div class="header-step">
+                                            {{t "pbxs.pbxs_manager.running_test"}} <span id="phone_number_test"></span>
+                                        </div>
+                                        <div class="wizard-automatic-step" data-value="1">
+                                            <div class="row-fluid content-centered">
+                                                {{t "pbxs.pbxs_manager.tell_us_a_number"}}
+                                            </div>
+                                            <div class="row-fluid content-centered">
+                                                <input type="text" id="test_number" placeholder="555-555-5555"></input>
+                                            </div>
+                                            <div class="row-fluid">
+                                                <div class="help-box gray-box">
+                                                    <div class="wrapper-icon">
+                                                        <i class="icon-info-sign2"></i>
+                                                    </div>
+                                                    <div class="text-wrapper">
+                                                        <p>{{t "pbxs.pbxs_manager.help_simulate_call"}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row-fluid">
+                                                <button class="btn btn-success next-automatic-step">{{t "pbxs.pbxs_manager.start_test"}}</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="wizard-automatic-step" data-value="2">
+                                            <div class="well">
+                                                <div class="wizard-automatic-step-title">
+                                                    <i class="icon-rss"></i>{{t "pbxs.pbxs_manager.firewall_settings"}}
+                                                </div>
+
+                                                <div class="wizard-automatic-step-content">
+                                                    <div class="row-fluid">
+                                                        <div class="span6">
+                                                            <table>
+                                                                <tr>
+                                                                    <td><i class="icon-ok icon-green"></i></td>
+                                                                    <td>{{t "pbxs.pbxs_manager.valid_registration"}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><i class="icon-ok icon-green"></i></td>
+                                                                    <td>{{t "pbxs.pbxs_manager.respond_to"}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><i class="icon-ok icon-green"></i></td>
+                                                                    <td>{{t "pbxs.pbxs_manager.continues_responding"}}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="span6">
+                                                            <div class="row-fluid">
+                                                                <div class="help-box gray-box">
+                                                                    <div class="wrapper-icon">
+                                                                        <i class="icon-info-sign2"></i>
+                                                                    </div>
+                                                                    <div class="text-wrapper">
+                                                                        <p>{{t "pbxs.pbxs_manager.help_automatic_step_1"}}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row-fluid">
+                                                                <div class="progress-title">{{t "pbxs.pbxs_manager.testing"}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- navbar -->
+                                    <div class="testing-progress navbar navbar-fixed-bottom">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <div class="testing-step title">
+                                                    {{t "pbxs.pbxs_manager.testing_wizard_title"}}
+                                                </div>
+                                            </div>
+
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="1">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.firewall"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="2">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.phone_calls"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="3">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.hd_audio_video"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="4">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.dtmf"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="5">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.call_transfer"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="span2">
+                                                        <div class="testing-step" data-step="6">
+                                                            <div class="testing-step-title">
+                                                                <i class="icon-ok icon-green"></i>
+                                                                {{t "pbxs.pbxs_manager.faxing"}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="testing-block" data-value="manually">
+                                    <div class="help-box gray-box">
+                                        <div class="wrapper-icon">
+                                            <i class="icon-info-sign2"></i>
+                                        </div>
+                                        <div class="text-wrapper">
+                                            <p>{{t "pbxs.pbxs_manager.help_manual_config"}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.firewall"}}</label>
+                                        </div>
+                                        <div class="span4 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.register_time"}}</label>
+                                            <input type="text" name="cfg.register_time" placeholder="360" pattern="^[0-9]+$" value="{{cfg.register_time}}"></input>
+                                        </div>
+                                        <div class="span4">
+                                            <label>{{t "pbxs.pbxs_manager.opening_pings"}}</label>
+                                            <div class="btn-group" data-type="opening_pings">
+                                                <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
+                                                <button class="btn" data-value="false">{{t "pbxs.pbxs_manager.no"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.phone_calls"}}</label>
+                                        </div>
+                                        <div class="span8 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.caller_id_header"}}</label>
+                                            <div class="btn-group" data-type="caller_id_header">
+                                                <button class="btn" data-value="p-asserted">{{t "pbxs.pbxs_manager.p_asserted_option"}}</button>
+                                                <button class="btn" data-value="remote-party-id">{{t "pbxs.pbxs_manager.remote_party_id_option"}}</button>
+                                                <button class="btn" data-value="from">{{t "pbxs.pbxs_manager.from_option"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.hd_audio_video"}}</label>
+                                        </div>
+                                        <div class="span8 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.supported_codecs"}}</label>
+                                            <div class="btn-group" data-type="supported_codecs">
+                                                <button class="btn" data-value="g722">{{t "pbxs.pbxs_manager.g722"}}</button>
+                                                <button class="btn" data-value="g711">{{t "pbxs.pbxs_manager.g711"}}</button>
+                                                <button class="btn" data-value="g729">{{t "pbxs.pbxs_manager.g729"}}</button>
+                                                <button class="btn" data-value="gsm">{{t "pbxs.pbxs_manager.gsm"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.dtmf"}}</label>
+                                        </div>
+                                        <div class="span8 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.signaling_type"}}</label>
+                                            <div class="btn-group" data-type="signaling_type">
+                                                <button class="btn" data-value="rfc_2833">{{t "pbxs.pbxs_manager.rfc_2833"}}</button>
+                                                <button class="btn" data-value="in_band">{{t "pbxs.pbxs_manager.in_band"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.call_transfer"}}</label>
+                                        </div>
+                                        <div class="span8 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.allow_refer"}}</label>
+                                            <div class="btn-group" data-type="allow_refer">
+                                                <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
+                                                <button class="btn" data-value="false">{{t "pbxs.pbxs_manager.no"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="configure-line row-fluid">
+                                        <div class="span3 title">
+                                            <label>{{t "pbxs.pbxs_manager.faxing"}}</label>
+                                        </div>
+                                        <div class="span8 offset1">
+                                            <label for="register_time">{{t "pbxs.pbxs_manager.use_t38"}}</label>
+                                            <div class="btn-group" data-type="use_t38">
+                                                <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
+                                                <button class="btn" data-value="false">{{t "pbxs.pbxs_manager.no"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="wizard-buttons">
@@ -169,112 +430,4 @@
             </div>
         </form>
     </div>
-
-    <!--<div class="row-fluid">
-        <div class="whapp-header">
-            {{#if server_name}}
-            <h1>Edit settings for {{server_name}}</h1>
-            {{else}}
-            <h1>Set your PBX</h1>
-            {{/if}}
-        </div>
-    </div>
-    <div class="row-fluid">
-        <form action="#" id="endpoint">
-            <div class="pill-content">
-                <h3>We support all top IP-PBX Manufacturers. Select one below.</h3>
-                <div class="info_pbx">
-                    {{#if server_type}}
-                    <div class="selected_pbx_block">Currently selected: <span class="selected_pbx">{{server_type}}</span></div>
-                    {{else}}
-                    <div class="selected_pbx_block" style="display:none;">Currently selected: <span class="selected_pbx"></span></div>
-                    {{/if}}
-                    <div class="other_name_wrapper">Please specify the name of this PBX: <input name="extra.other_name" type="text" id="other_name"></input></div>
-                </div>
-                <div class="pbxs">
-                    <div class="pbx bluebox" data-pbx_name="blue.box">&nbsp;</div>
-                    <div class="pbx freeswitch" data-pbx_name="FreeSWITCH">&nbsp;</div>
-                    <div class="pbx threecom" data-pbx_name="threecom">&nbsp;</div>
-                    <div class="pbx allworks" data-pbx_name="allworks">&nbsp;</div>
-                    <div class="pbx altigen" data-pbx_name="AltiGen">&nbsp;</div>
-                    <div class="pbx asterisk" data-pbx_name="Asterisk">&nbsp;</div>
-                    <div class="pbx avaya" data-pbx_name="Avaya">&nbsp;</div>
-                    <div class="pbx cisco" data-pbx_name="Cisco">&nbsp;</div>
-                    <div class="pbx digium" data-pbx_name="digium">&nbsp;</div>
-                    <div class="pbx epygi" data-pbx_name="epygi">&nbsp;</div>
-                    <div class="pbx freepbx" data-pbx_name="FreePBX">&nbsp;</div>
-                    <div class="pbx mitel" data-pbx_name="Mitel">&nbsp;</div>
-                    <div class="pbx objectworld" data-pbx_name="ObjectWorld">&nbsp;</div>
-                    <div class="pbx pingtel" data-pbx_name="pingtel">&nbsp;</div>
-                    <div class="pbx responsepoint" data-pbx_name="Response Point">&nbsp;</div>
-                    <div class="pbx samsung" data-pbx_name="Samsung">&nbsp;</div>
-                    <div class="pbx shoretel" data-pbx_name="ShoreTel">&nbsp;</div>
-                    <div class="pbx sutus" data-pbx_name="Sutus">&nbsp;</div>
-                    <div class="pbx talkswitch" data-pbx_name="talkswitch">&nbsp;</div>
-                    <div class="pbx taridium" data-pbx_name="taridium">&nbsp;</div>
-                    <div class="pbx other" data-pbx_name="other">Other PBX</div>
-                </div>
-
-                <hr/>
-
-                <h3>Set up your PBX--><!--<a class="instructions" href="http://www.2600hz.com/instructions" target="_blank">See Instructions</a>--><!--</h3>
-                <div class="clearfix">
-                    <label for="auth_auth_user">Create a Username</label>
-                    <div class="input">
-                        <input class="span4" placeholder="Username" type="text" name="auth.auth_user" value="{{auth.auth_user}}" id="auth_auth_user"/>
-                    </div>
-                </div>
-
-                <div class="clearfix">
-                    <label for="auth_auth_password">Create a Password</label>
-                    <div class="input">
-                        <input class="span4" type="text" name="auth.auth_password" id="auth_auth_password" value="{{auth.auth_password}}"/>
-                    </div>
-                </div>
-
-                <div class="clearfix">
-                    <label for="compatibility_mode">Compatibility mode</label>
-                    <div class="input">
-                        <select id="compatibility_mode" name="options.media_handling" class="small">
-                            {{#compare options.media_handling '===' 'process'}}
-                                <option value="process" selected="selected">Enabled</option>
-                                <option value="bypass">Disabled</option>
-                            {{else}}
-                                <option value="process">Enabled</option>
-                                <option value="bypass" selected="selected">Disabled</option>
-                            {{/compare}}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="clearfix">
-                    <label for="realm">Server/Realm</label>
-                    <div class="input realm_wrapper">
-                        {{extra.realm}}
-                    </div>
-                </div>
-
-                <input type="hidden" name="auth.auth_method" value="Password" />
-                <input type="hidden" name="extra.serverid" value="{{extra.id}}" />
-
-                <hr/>
-
-                <h3>Name your PBX</h3>
-
-                <div class="clearfix">
-                    <label for="server_name">This PBX will be known as </label>
-                    <div class="input">
-                        <input type="text" class="span4" id="server_name" name="server_name" value="{{server_name}}"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <div class="pull-right">
-            {{#if server_name}}
-                <button class="btn btn-danger endpoint delete">Delete</button>
-            {{/if}}
-            <button class="btn btn-success endpoint edit">Save</button>
-        </div>
-    </div>
-    -->
 </div>

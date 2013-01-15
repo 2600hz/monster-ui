@@ -25,7 +25,7 @@ body, input, button, select, textarea {
 }
 
 a {
-    color: #05addc;
+    color: #22ccff;
 }
 
 a:hover {
@@ -36,7 +36,7 @@ a:hover {
 }
 
 .hero-unit.hero-unit-blue {
-	background-color: #05ADDC;
+	background-color: #22ccff;
 	color: whiteSmoke;
 }
 

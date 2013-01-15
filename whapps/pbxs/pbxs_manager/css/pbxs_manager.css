@@ -8,27 +8,6 @@
     margin-bottom: 130px;
 }
 
-#ws-content #list_pbxs_navbar {
-    background: rgb(17,17,17); /* Old browsers */
-    background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
-    background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
-
-    border-top: 5px solid #22ccff;
-    border-radius: 0;
-    box-shadow: none;
-    height: 85px;
-    margin: 20px 0 0;
-    padding: 15px 5px;
-    position: fixed !important;
-    width: auto;
-    z-index: 999;
-}
-
 /* Unassigned Numbers */
 #ws-content #list_pbxs_navbar #unassigned_numbers {
     color: #333;
@@ -272,6 +251,10 @@
 
 #ws-content #pbx_connector_container .dropdown-menu i {
     margin-right: 10px;
+}
+
+#ws-content #pbx_connector_container .dropdown-menu .pbx-dropdown.empty {
+    padding: 5px;
 }
 
 #ws-content #pbx_connector_container #actions_wrapper {

@@ -11,6 +11,11 @@
     "next": "Next",
     "submit": "Submit",
     "cancel": "Cancel",
+    "select_label": "Select",
+
+    "error": "Error",
+    "info": "Info",
+    "warning": "Warning",
 
     "whapp_pbx_connector": "PBX Connector"
 }

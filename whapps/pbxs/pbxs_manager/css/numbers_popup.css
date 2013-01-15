@@ -451,41 +451,67 @@
     vertical-align: middle;
 }
 
-.trunkstore_popup .buttons {
-    text-align: right;
-}
 /* FAILOVER POPUP */
 .trunkstore_popup.failover {
     padding: 0px;
 }
 
-.trunkstore_popup.failover form{
-    padding: 10px 20px;
-    margin: 0;
+.trunkstore_popup.failover .buttons {
+    text-align: center;
+    margin-top: 15px;
 }
 
-.trunkstore_popup.failover .radio-block {
-    height: 40px;
-    line-height: 40px;
-    margin: 0 0 10px 20px;
-}
-
-.trunkstore_popup.failover .radio-block input[type="radio"]{
-    margin: -2px 4px 0 0;
+.trunkstore_popup.failover .buttons > button {
+    width: 150px;
+    padding: 10px;
 }
 
 .trunkstore_popup.failover .header {
-    background: url('images/failover_header.png') no-repeat center #444;
-    width: 640px;
+    background: url('images/failover_header.png') no-repeat center;
+    width: 540px;
     height: 136px;
 }
 
-.trunkstore_popup.failover .header.number {
-    background: url('images/failover_e164.png') no-repeat center #444;
+.trunkstore_popup.failover .block-container {
+    margin-top: 30px;
+    margin: 30px 0;
 }
 
-.trunkstore_popup.failover .header.sip {
-    background: url('images/failover_sip.png') no-repeat center #444;
+.trunkstore_popup.failover .block-container .wrapper-phone-icon {
+    margin-bottom: 10px;
+}
+
+.trunkstore_popup.failover .block-container label {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+}
+
+.trunkstore_popup.failover .block-container input {
+    padding: 10px 15px;
+    text-align: center;
+    width: 150px;
+}
+
+.trunkstore_popup.failover .block-container > .span2 {
+    margin-top: 87px;
+}
+
+.trunkstore_popup.failover .icon-phone {
+    background-color: #BBBBBB;
+    border-radius: 22px 22px 22px 22px;
+    color: #EEEEEE;
+    font-size: 32px;
+    padding: 6px 10px;
+}
+
+.trunkstore_popup.failover .failover-block.selected .icon-phone {
+    background-color: #44cc44;
+}
+
+.trunkstore_popup.failover form {
+    margin:  0 20px;
+    padding: 0 0 10px;
 }
 /* e911 POPUP */
 .trunkstore_popup.e911 {

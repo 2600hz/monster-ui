@@ -24,16 +24,15 @@
             <label id="count_phones"></label>
             <span id="trigger_links">
                 <a href="#" id="remove_numbers" class="action-number"><i class="icon-remove icon-red"></i>{{t "pbxs.pbxs_manager.remove"}}</a>
-                <!--<a href="#" id="move_numbers"><i class="icon-share-alt icon-orange"></i>{{t "pbxs.pbxs_manager.move"}}</a>-->
 
                 <li class="dropdown dropdown-move">
                     <a href="#" id="move_numbers" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-share-alt icon-orange"></i>{{t "pbxs.pbxs_manager.move"}}</a>
                     <ul class="dropdown-menu">
                         {{#each servers_list}}
                             <li class="pbx-dropdown" data-index="{{index}}"><a href="#"><img width="45" height="32" src="whapps/pbxs/pbxs_manager/css/images/endpoints/{{img_link}}.png" class="img_style"/>{{server_name}}</a></li>
+                        {{else}}
+                            <li class="pbx-dropdown empty">{{t "pbxs.pbxs_manager.no_pbx"}}</li>
                         {{/each}}
-                        <!--<li class="pbx-dropdown" data-index="1"><a href="#"><img width="45" height="32" src="whapps/pbxs/pbxs_manager/css/images/endpoints/digium.png" class="img_style"/>PBX 1</a></li>
-                        <li class="pbx-dropdown" data-index="2"><a href="#"><img width="45" height="32" src="whapps/pbxs/pbxs_manager/css/images/endpoints/allworks.png" class="img_style"/>PBX 3</a></li>-->
                     </ul>
                 </li>
             </span>
