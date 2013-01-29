@@ -550,7 +550,6 @@ winkstart.module('auth', 'auth',
                                 winkstart.module.loadApp(k, function() {
                                     this.init();
                                     winkstart.log('WhApps: Initializing ' + k);
-                                    console.log(k + ' init');
                                 });
                             });
 
@@ -558,8 +557,9 @@ winkstart.module('auth', 'auth',
                                 winkstart.publish('auth.new_password', json.data);
                             }
 
-                            /* If no hashtag, then we want to go to the landing page (ie: set landing to true)*/
-                            var landing = !winkstart.rooting.get_hashtag();
+                            /* TODO rooting: If no hashtag, then we want to go to the landing page (ie: set landing to true)*/
+                            //var landing = !winkstart.rooting.get_hashtag();
+                            var landing = true;
 
                             /* We check if there are no default application */
                             $.each(json.data.apps, function(k, v) {

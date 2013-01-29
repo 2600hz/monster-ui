@@ -14,7 +14,7 @@
     display: none;
     position: absolute;
     right: 30px;
-    bottom: 119px;
+    bottom: 120px;
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers #unassigned_numbers_header {
@@ -68,10 +68,6 @@
     display: none;
 }
 
-#ws-content #list_pbxs_navbar #unassigned_numbers.open .content{
-    display: block;
-}
-
 #ws-content #list_pbxs_navbar #unassigned_numbers .content{
     background: #f9f9f9;
     border-left: 1px solid #ccc;
@@ -86,11 +82,13 @@
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers .content #empty_search {
-    padding: 5px;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #FFFFFF;
+    display: none;
     height: 50px;
     line-height: 50px;
+    padding: 5px;
     text-align: center;
-    display: none;
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_actions {
@@ -105,8 +103,8 @@
     border-right: 1px solid #ccc;
     border-left: 1px solid #fff;
     cursor: pointer;
-    padding: 0 10px;
     margin: 0;
+    padding: 0 10px;
     width: 50%;
 }
 
@@ -156,9 +154,9 @@
 #ws-content #list_pbxs_navbar .pbx-wrapper {
     display: inline-block;
     height: 87px;
+    margin-right: 15px;
     text-align: center;
     width: 115px;
-    margin-right: 15px;
 }
 
 #ws-content #list_pbxs_navbar .pbx-wrapper .pbx-name {
@@ -175,14 +173,14 @@
     background: #fff;
     border: 3px solid #333;
     border-radius: 4px;
-    margin: auto;
-    opacity: 0.9;
-    height: 51px;
-    width: 76px;
+    color: #22ccff;
     font-size: 60px;
     font-weight: 500;
+    height: 51px;
     line-height: 42px;
-    color: #22ccff;
+    margin: auto;
+    opacity: 0.9;
+    width: 76px;
 }
 
 #ws-content #list_pbxs_navbar .pbx-wrapper:hover .img-wrapper{
@@ -201,8 +199,8 @@
 
 #ws-content #list_pbxs_navbar #add_pbx {
     cursor: pointer;
-    margin: auto 5px auto 10px;
     float: right;
+    margin: auto 5px auto 10px;
 }
 
 #ws-content #list_pbxs_navbar #add_pbx .plus-btn{
@@ -224,12 +222,12 @@
 }
 
 #ws-content #pbx_connector_container .pbx-title{
-    margin: 0;
     background: #f9f9f9;
     border: 1px solid #ddd;
     border-top: 5px solid #22ccff;
     box-shadow: 0 1px 2px #ccc;
     font-size: 18px;
+    margin: 0;
 }
 
 #ws-content #pbx_connector_container .pbx-title .img-style {

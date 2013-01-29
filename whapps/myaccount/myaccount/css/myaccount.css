@@ -117,9 +117,10 @@ body > .myaccount {
     margin-left: 0;
 }
 
-.myaccount .myaccount-menu .menu-bottom .store,
+/*.myaccount .myaccount-menu .menu-bottom .store,*/
 .myaccount .myaccount-menu .menu-bottom .signout {
-	width: 50%;
+	/*width: 50%;*/
+	width: 100%;
 	float: left;
 	text-align: center;
 	text-transform: uppercase;

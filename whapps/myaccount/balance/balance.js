@@ -73,7 +73,6 @@ winkstart.module('myaccount', 'balance', {
                     }
                 },
                 function(data, status) {
-                    console.log(data);
                     if(typeof error == 'function') {
                         error(data, status);
                     }
@@ -94,7 +93,7 @@ winkstart.module('myaccount', 'balance', {
 
             THIS.balance_get(function(data) {
                var $balance_html = THIS.templates.balance.tmpl({
-                    'amount': data.data.amount || '0.00'
+                    'amount': data.data.amount.toFixed(2) || '0.00'
                 });
 
                 $('.add-credit', $balance_html).on('click', function(ev) {
@@ -127,7 +126,7 @@ winkstart.module('myaccount', 'balance', {
 
             THIS.balance_get(function(data) {
                 var $balance_menu_html = THIS.templates.menu.tmpl({
-                    'amount': data.data.amount || '0.00'
+                    'amount': data.data.amount.toFixed(2) || '0.00'
                 });
 
                 winkstart.publish('myaccount.add_submodule', $balance_menu_html, 2);

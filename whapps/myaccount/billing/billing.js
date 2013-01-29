@@ -99,7 +99,6 @@ winkstart.module('myaccount', 'billing', {
 
             $('#card', $billing_html).change(function() {
                 THIS.get_billing(function(_data) {
-                    console.log(_data);
                 });
             });
 

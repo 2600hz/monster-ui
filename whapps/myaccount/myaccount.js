@@ -64,7 +64,7 @@ winkstart.module('myaccount', 'myaccount', {
     },
     {
         modules: {
-            'billing': false,
+            //'billing': false,
             'profile': false,
             'balance': false,
             'trunks': false
@@ -185,13 +185,12 @@ winkstart.module('myaccount', 'myaccount', {
         },
 
         show: function() {
-            var $body = $('body'),
-                $myaccount = $body.find('.myaccount');
+            var $myaccount = $('.myaccount', 'body');
 
             if($myaccount.is(':hidden')) {
                  $myaccount.slideDown(500);
             } else {
-                $myaccount.slideUp(500);    
+                $myaccount.slideUp(500);
             }
         },
 

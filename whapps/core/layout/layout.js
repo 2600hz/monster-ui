@@ -31,7 +31,6 @@ winkstart.module('core', 'layout', {
     function(args) {
         var THIS = this;
 
-        console.log(THIS.templates);
         winkstart.registerResources('auth', THIS.config.resources);
 
         THIS.parent = args.parent || $('body');
@@ -81,13 +80,21 @@ winkstart.module('core', 'layout', {
                 }
             });
 
+            $('#home_link').on('click', function() {
+                if($.cookie('c_winkstart_auth')) {
+                    winkstart.publish('auth.landing');
+                }
+            });
+
             winkstart.get_version(function(version) {
                 $('.footer_wrapper .tag_version').html('('+version.replace(/\s/g,'')+')');
             });
 
             $('#ws-navbar .logo', layout_html).click(function() {
                 $('.whapps .whapp > a').removeClass('activate');
-                winkstart.publish('auth.landing');
+                if($.cookie('c_winkstart_auth')) {
+                    winkstart.publish('auth.landing');
+                }
             });
 
             winkstart.request('layout.get_logo', {
@@ -120,7 +127,6 @@ winkstart.module('core', 'layout', {
                     company_website: winkstart.config.company_website || '',
                     learn_more: winkstart.config.nav.learn_more || 'http://www.2600hz.com/'
                 };
-                console.log(data_welcome);
                 THIS.templates.left_welcome.tmpl(data_welcome).appendTo($('.left_div', layout_welcome_html));
             }
         },

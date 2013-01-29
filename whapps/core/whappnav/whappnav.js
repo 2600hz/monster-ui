@@ -41,11 +41,10 @@ winkstart.module('core', 'whappnav', {
                 }
             }
 
-            /* In order to allow the refresh of a whapp */
+            // In order to allow the refresh of a whapp */
             if(!_callbacks || typeof _callbacks.click !== 'function') {
                 $whapp_html.on('click', function() {
-                    /* We only need to manually activate the whapp again if the URI is the same
-                       because the URI listener handles it otherwise */
+                    // We only need to manually activate the whapp again if the URI is the same because the URI listener handles it otherwise
                     if(winkstart.rooting.get_hashtag().publish === id) {
                         winkstart.publish(id + '.activate');
                     }

@@ -443,7 +443,7 @@ body > .ws-content {
 .wizard .wizard-buttons {
     margin: auto;
     text-align: right;
-    width: 60%;
+    height: 30px;
 }
 
 .wizard .wizard-buttons > button > i{
@@ -455,13 +455,17 @@ body > .ws-content {
     margin-right: 0px;
 }
 
+.wizard .wizard-buttons > button.prev-step {
+    float: left;
+}
+
 .wizard .wizard-content-wrapper {
     text-align: center;
 }
 
 .wizard .wizard-content-wrapper .wizard-content {
     display: inline-block;
-    min-width: 70%;
+    min-width: 680px;
 }
 
 .wizard .wizard-content-wrapper .wizard-content .wizard-content-step {
