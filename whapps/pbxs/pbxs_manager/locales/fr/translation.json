@@ -1,5 +1,5 @@
 {
-    "pbx_connector": "Connecteur de PBX",
+    "pbx_connector": "SIP Trunking",
 
     "pbx_brand": "Marque du PBX",
     "ip": "IP",
@@ -7,7 +7,7 @@
     "please_correct": "Veuillez corriger les erreurs suivantes:",
 
     "which_pbx": "S&eacute;lectionnez votre PBX",
-    "pbx_missing_help": "Votre PBX n'appara&icirc;t pas dans la liste? Faites-le nous savoir!",
+    "pbx_missing_help": "Votre PBX n'appara&icirc;t pas dans la liste? Faites-le nous savoir en contactant __variable__ !",
     "no_pbx_selected": "Vous n'avez pas s&eacute;lectionn&eacute; de PBX",
     "friendly_name": "Nom de ce PBX",
 
@@ -55,6 +55,8 @@
     "help_simulate_call": "Nous allons simuler des appels vers un num&eacute;ro depuis votre PBX (via SIP). Ce num&eacute;ro do&icirc;t &ecirc;tre r&eacute;el et fonctionner correctement depuis votre PBX. Veuillez vous assurer que ce num&eacute; est joignable. Nous allons appeler ce num&eacute;ro quelques fois afin de tester les r&eacute;glages. Ce processus peut prendre jusqu'&agrave; 15 minutes et requiert une pr&eacute;sence humaine.",
     "tell_us_a_number": "Veuillez indiquer un num&eacute;ro que nous enverrons des appels de test.",
     "start_test": "Commencer les tests",
+    "cancel_test": "Annuler les tests",
+    "stop": "STOP",
     "running_test": "Tests en cours sur ",
     "valid_registration": "Registration valide",
     "respond_to": "R&eacute;pond aux pings OPTIONS",
@@ -137,9 +139,6 @@
 
     "confirm_move": "&Ecirc;tes-vous s&ucirc;r de vouloir d&eacute;placer ces num&eacute;ros vers  __variable__ ?",
 
-    "charge_reminder_line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
-    "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
-
     "unassigned_numbers": "Num&eacute;ros non assign&eacute;s",
     "search": "Chercher",
     "assign": "Assigner",
@@ -183,6 +182,8 @@
     "invalid_number": "ce num&eacute;ro de t&eacute;l&eacute;phone est invalide.",
     "upload_bill": "Veuillez uploader une facture (&Eacute;tape 2) afin de continuer.",
     "upload_loa": "Veuillez uploader la 'Letter of Authorization / Resporg Form' (fournie &Eacute;tape 3) afin de continuer",
+    "error_toll_free": "Ces num&eacute;ros sont des num&eacute;ros verts.<br/>Comme le num&eacute;ro principal &agrave; porter est un num&eacute;ro standard, vous devez faire une autre demande de port pour ces num&eacute;ros.<br/>Afin d'en finir avec cette demande, veuillez retirer ces num&eacute;ros de l'&eacute;tape 1.<br/>",
+    "error_not_toll_free": "Ces num&eacute;ros ne sont pas des num&eacute;ros verts.<br/>Comme le num&eacute;ro principal &agrave; porter est un num&eacute;ro vert, vous devez faire une autre demande de port pour ces num&eacute;ros.<br/>Afin d'en finir avec cette demande, veuillez retirer ces num&eacute;ros de l'&eacute;tape 1.<br/>",
     "error_signup": "Une erreur est survenue lors de la cr&eacute;tion du compte, veuillez r&eacute;essayer dans quelques instants! (Error: __variable__)",
     "step": "&Eacute;tape __variable__",
     "step1_title": "S&eacute;l&eacute;ction num&eacute;ro",

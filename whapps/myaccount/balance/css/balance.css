@@ -1,0 +1,12 @@
+.myaccount .myaccount-content .amount-wrapper {
+    font-size: 30px;
+    line-height: 60px;
+}
+
+.myaccount .myaccount-content #amount {
+    width: 70px;
+}
+
+.myaccount .myaccount-content #add_credit_form {
+    margin-top: 15px;
+}

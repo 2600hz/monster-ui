@@ -84,7 +84,7 @@ winkstart.module('myaccount', 'balance', {
             var THIS = this;
 
             if(data) {
-                $('.myaccount .' + THIS.__module + ' .amount').html(data.toFixed(2));
+                $('.myaccount .' + THIS.__module + ' .amount').html(parseFloat(data).toFixed(2));
             }
         },
 
@@ -92,14 +92,17 @@ winkstart.module('myaccount', 'balance', {
             var THIS = this;
 
             THIS.balance_get(function(data) {
-               var $balance_html = THIS.templates.balance.tmpl({
-                    'amount': data.data.amount.toFixed(2) || '0.00'
-                });
+                var amount = data.data.amount.toFixed(2) || '0.00',
+                    $balance_html = THIS.templates.balance.tmpl({
+                        'amount': amount
+                    });
+
+                THIS.update_menu(amount);
 
                 $('.add-credit', $balance_html).on('click', function(ev) {
                     ev.preventDefault();
 
-                    winkstart.confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?',
+                    winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                         function() {
                             var credits_to_add = parseFloat($('#amount', $balance_html).val().replace(',','.'));
 

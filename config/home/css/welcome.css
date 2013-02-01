@@ -1,4 +1,20 @@
 .hello {
 	text-align: center;
-	margin-bottom: 50px;
+}
+
+.hello > .lobster {
+    font-size: 70px;
+    font-weight: normal;
+}
+
+@media (min-width: 979px) {
+    .hello {
+        margin-top: 95px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+    .hello {
+        margin: 30px 0;
+    }
 }

@@ -1,5 +1,5 @@
 {
-    "pbx_connector": "PBX Connector",
+    "pbx_connector": "SIP Trunking",
 
     "pbx_brand": "PBX Brand",
     "ip": "IP",
@@ -7,7 +7,7 @@
     "please_correct": "Please correct the following errors:",
 
     "which_pbx": "Which PBX system do you own?",
-    "pbx_missing_help": "Let us know if your PBX isn't listed",
+    "pbx_missing_help": "Please contact us at __variable__ if your PBX isn't listed",
     "no_pbx_selected": "You didn't select any PBX",
     "friendly_name": "Name thix PBX",
 
@@ -55,6 +55,8 @@
     "help_simulate_call": "We're going to simulate calling a number on your PBX (via SIP). This must be a real, working number on your PBX. Please make sure the number you provided routes to you so you can answer it. We'll call that number a few times to test the settings. This process takes from 10 to 15 minutes and it requires human interaction.",
     "tell_us_a_number": "Tell us a working number on your PBX where we can send a test call.",
     "start_test": "Start tests",
+    "cancel_test": "Cancel tests",
+    "stop": "STOP",
     "running_test": "Currently running test on ",
     "valid_registration": "Valid Registration",
     "respond_to": "Responds to OPTIONS pings",
@@ -138,9 +140,6 @@
 
     "confirm_move": "Are you sure you would like to move the selected numbers to __variable__ ?",
 
-    "charge_reminder_line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
-    "charge_reminder_line2": "Are you sure you want to continue?'",
-
     "unassigned_numbers": "Spare Numbers",
     "search": "Search",
     "assign": "Assign",
@@ -182,6 +181,8 @@
     "confirm_conditions": "You must confirm the first conditions before continuing.",
     "enter_main_number": "You need to enter a main number.",
     "invalid_number": "this Phone Number is not valid",
+    "error_toll_free": "these numbers are toll-free numbers.<br/>As the main number is a regular phone number, you need to file another port request for these numbers.<br/>To complete this port request, please remove those numbers from (Step 1).<br/>",
+    "error_not_toll_free": "these numbers are not toll-free numbers.<br/>As the main number is a toll-free number, you need to file another port request for these numbers.<br/>To complete this port request, please remove those numbers (Step 1).<br/>",
     "upload_bill": "You need to upload a bill (Step 2) in order to submit a port request",
     "upload_loa": "You need to upload a Letter of Authorization / Resporg form (Step 3) in order to submit a port request",
     "error_signup": "An error occured during the signup process, please try again later! (Error: __variable__)",

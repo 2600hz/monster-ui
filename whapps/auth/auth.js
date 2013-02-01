@@ -324,13 +324,13 @@ winkstart.module('auth', 'auth',
                             var cookie_login = {};
                             login_username ? cookie_login.login = login_username : true;
                             login_data.account_name ? cookie_login.account_name = login_data.account_name : true;
-                            $.cookie('c_winkstart_login', JSON.stringify(cookie_login));
+                            $.cookie('c_winkstart_login', JSON.stringify(cookie_login), {expires: 30});
                         }
                         else{
                             $.cookie('c_winkstart_login', null);
                         }
 
-                        $.cookie('c_winkstart_auth', JSON.stringify(winkstart.apps['auth']));
+                        $.cookie('c_winkstart_auth', JSON.stringify(winkstart.apps['auth']), {expires: 30});
 
                         winkstart.publish('auth.load_account');
                     },
@@ -468,7 +468,7 @@ winkstart.module('auth', 'auth',
                         // Deleting the welcome message
                         $('#ws-content').empty();
 
-                        $.cookie('c_winkstart_auth', JSON.stringify(winkstart.apps['auth']));
+                        $.cookie('c_winkstart_auth', JSON.stringify(winkstart.apps['auth']), {expires: 30});
 
                         winkstart.publish('auth.load_account');
                     },
@@ -769,7 +769,6 @@ winkstart.module('auth', 'auth',
                 winkstart.postJSON('auth.activate', rest_data, function (json, xhr) {
                     winkstart.log(json);
                     REALM_LOGIN = json.data.account.realm;
-                    alert('You are now registered');
                 });
                 ACTIVATION_KEY = null;
             }

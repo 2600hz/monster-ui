@@ -17,5 +17,8 @@
     "info": "Info",
     "warning": "Avertissement",
 
+    "charge_reminder_line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
+    "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
+
     "whapp_pbx_connector": "Connecteur de PBX"
 }

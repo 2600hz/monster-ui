@@ -45,14 +45,9 @@ body a.monster_link {
     text-decoration: underline;
 }
 
-body a.monster_link.blue {
-    color: #22ccff;
+body a.monster_link:hover {
+    color: #555;
 }
-
-body a.monster_link.white {
-    color: #fff;
-}
-
 /* NAVBAR */
 body > .navbar  {
     border-top: 5px solid #22ccff;
@@ -112,14 +107,14 @@ body > .navbar .nav > li > a:hover {
 }
 
 body > .navbar .navbar-inner .logo {
-    float: left;
-    width: 192px;
-    height: 62px;
     background-repeat: no-repeat;
     background-position: center center;
-
     border-left: 1px solid #353535;
     border-right: 1px solid #353535;
+    float: left;
+    height: 62px;
+    padding: 0 15px;
+    width: 192px;
 }
 
 body > .navbar .navbar-inner .home {
@@ -492,7 +487,6 @@ body > .ws-content {
 /* Phone to portrait tablet */
 @media (max-width: 767px) {
     body > .navbar .navbar-inner .logo {
-        width: 100px;
         border: none;
 
     }

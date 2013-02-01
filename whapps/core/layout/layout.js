@@ -45,8 +45,8 @@ winkstart.module('core', 'layout', {
 
         if('nav' in winkstart.config) {
             if('help' in winkstart.config.nav || 'my_help' in winkstart.config.nav) {
-                $('#ws-navbar .links .help').unbind('click')
-                                            .attr('href', winkstart.config.nav.help || winkstart.config.nav.my_help);
+                $('#ws-navbar a.help').unbind('click')
+                                      .attr('href', winkstart.config.nav.help || winkstart.config.nav.my_help);
             }
 
             if('logout' in winkstart.config.nav || 'my_logout' in winkstart.config.nav) {

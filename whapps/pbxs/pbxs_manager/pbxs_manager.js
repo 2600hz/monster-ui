@@ -323,8 +323,18 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                 options: {
                                     e911_info: {}
                                 },
-                                cfg: {},
+                                cfg: {
+                                    register_time: '360',
+                                    opening_pings: true,
+                                    caller_id_header: 'p-asserted',
+                                    supported_codecs: 'g722',
+                                    signaling_type: 'rfc_2833',
+                                    allow_refer: true,
+                                    use_t38: true
+                                },
                                 extra: {
+                                    support_email: (winkstart.config.port || {}).support_email || 'support@trunking.io',
+                                    pbx_help_link: winkstart.config.pbx_help_link || 'https://2600hz.atlassian.net/wiki/display/docs/Trunking.io',
                                     configure: 'manually',
                                     realm: _data_account.data.realm,
                                     id: data.id || (data.id === 0 ? 0 : 'new')
@@ -797,6 +807,10 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('.cancel', parent).show();
             $('.submit-btn', parent).show();
 
+            if(step_index === 3) {
+                $('#list_pbxs_navbar').hide();
+            }
+
             $('.cancel', parent).off()
                                 .on('click', function(ev) {
                 ev.preventDefault();
@@ -994,19 +1008,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     { current_step: 0, total_step: 1},
                     { current_step: 0, total_step: 2}
                 ],
-                cfg = {
-                    register_time: '360',
-                    opening_pings: true,
-                    caller_id_header: 'p-asserted',
-                    supported_codecs: 'g722',
-                    signaling_type: 'rfc_2833',
-                    allow_refer: true,
-                    use_t38: true,
-                };
-
-            endpoint_data.cfg = $.extend(true, cfg, endpoint_data.cfg || {});
-
-            var endpoint_html = THIS.templates.endpoint.tmpl(endpoint_data);
+                cfg = {},
+                endpoint_html = THIS.templates.endpoint.tmpl(endpoint_data);
 
             $.each(endpoint_data.cfg, function(k, v) {
                 $('button[data-value="'+v+'"]', $('.btn-group[data-type="'+k+'"]', endpoint_html)).addClass('btn-primary');
@@ -1061,6 +1064,14 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 $('.wizard-automatic-step', endpoint_html).hide();
                 $('.wizard-automatic-step[data-value="'+ ++current_automatic_step +'"]', endpoint_html).show();
                 $('.header-step', endpoint_html).show();
+            });
+
+            $('#cancel_test', endpoint_html).click(function(ev) {
+                ev.preventDefault();
+
+                if('cancel_success' in callbacks && typeof callbacks.cancel_success === 'function') {
+                    callbacks.cancel_success();
+                }
             });
 
             $('input[type="radio"][name="auth.auth_method"]', endpoint_html).on('click', function() {
@@ -1170,6 +1181,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             THIS.refresh_list_numbers(endpoint_data.DIDs, pbxs_manager_html);
 
             $('#search_results', pbxs_manager_html).hide();
+            $('#list_pbxs_navbar').show();
 
             $('.search-query', pbxs_manager_html).keyup(function() {
                 var input = $(this),
@@ -1306,7 +1318,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 ev.preventDefault();
 
                 THIS.render_port_dialog(function(port_data, popup) {
-                    winkstart.confirm(i18n.t('pbxs.pbxs_manager.charge_reminder_line1') + '<br/><br/>' + i18n.t('pbxs.pbxs_manager.charge_reminder_line2'),
+                    winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                         function() {
                             THIS.get_account(function(global_data) {
                                 var ports_done = 0;
@@ -1367,7 +1379,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                             THIS.clean_phone_number_data(_data.data);
 
-                            winkstart.confirm(i18n.t('pbxs.pbxs_manager.charge_reminder_line1') + '<br/><br/>' + i18n.t('pbxs.pbxs_manager.charge_reminder_line2'),
+                            winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                                 function() {
                                     THIS.update_number(phone_number[1], _data.data, function(_data_update) {
                                             //TODO add lil icons for failover e911 cnam
@@ -1397,7 +1409,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                             THIS.clean_phone_number_data(_data.data);
 
-                            winkstart.confirm(i18n.t('pbxs.pbxs_manager.charge_reminder_line1') + '<br/><br/>' + i18n.t('pbxs.pbxs_manager.charge_reminder_line2'),
+                            winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                                 function() {
                                     THIS.update_number(phone_number[1], _data.data, function(_data_update) {
                                             !($.isEmptyObject(_data.data.cnam)) ? $cnam_cell.removeClass('inactive').addClass('active') : $cnam_cell.removeClass('active').addClass('inactive');
@@ -1426,7 +1438,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
                             THIS.clean_phone_number_data(_data.data);
 
-                            winkstart.confirm(i18n.t('pbxs.pbxs_manager.charge_reminder_line1') + '<br/><br/>' + i18n.t('pbxs.pbxs_manager.charge_reminder_line2'),
+                            winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                                 function() {
                                     THIS.update_number(phone_number[1], _data.data, function(_data_update) {
                                             !($.isEmptyObject(_data.data.dash_e911)) ? $e911_cell.removeClass('inactive').addClass('active') : $e911_cell.removeClass('active').addClass('inactive');
@@ -1669,7 +1681,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('#add_numbers_button', popup_html).click(function(ev) {
                 ev.preventDefault();
 
-                winkstart.confirm(i18n.t('pbxs.pbxs_manager.charge_reminder_line1') + '<br/><br/>' + i18n.t('pbxs.pbxs_manager.charge_reminder_line2'),
+                winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                     function() {
                         $('#foundDIDList .number-box.selected', popup_html).each(function() {
                             numbers_data.push($(this).data());
@@ -1723,7 +1735,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 port_form_data = {},
                 popup_html = THIS.templates.port_dialog.tmpl({
                     company_name: winkstart.config.company_name || '2600hz',
-                    support_email: (winkstart.config.port || {}).support_email || 'support@2600hz.com',
+                    support_email: (winkstart.config.port || {}).support_email || 'support@trunking.io',
                     support_file_upload: (File && FileReader)
                 }),
                 popup,
@@ -1737,8 +1749,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 $submit_btn = $('.submit_btn', popup_html);
 
             /* White label links, have to do it in JS because template doesn't eval variables in href :( */
-            $('#loa_link', popup_html).attr('href', ((winkstart.config.port || {}).loa) || 'http://www.2600hz.com/loa');
-            $('#resporg_link', popup_html).attr('href', ((winkstart.config.port || {}).resporg) || 'http://www.2600hz.com/resporg');
+            $('#loa_link', popup_html).attr('href', ((winkstart.config.port || {}).loa) || 'http://2600hz.com/porting/2600hz_loa.pdf');
+            $('#resporg_link', popup_html).attr('href', ((winkstart.config.port || {}).resporg) || 'http://2600hz.com/porting/2600hz_resporg.pdf');
             $('#features_link', popup_html).attr('href', ((winkstart.config.port || {}).features) || 'http://www.2600hz.com/features');
             $('#terms_link', popup_html).attr('href', ((winkstart.config.port || {}).terms) || 'http://www.2600hz.com/terms');
 
@@ -1876,6 +1888,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 res ? port_form_data.port.main_number = '+1' + res[1] : string_alert += i18n.t('pbxs.pbxs_manager.enter_main_number') + '<br/>';
 
                 var is_toll_free_main = THIS.check_toll_free(port_form_data.port.main_number);
+
                 port_form_data.phone_numbers.push(port_form_data.port.main_number);
 
                 phone_numbers = [];
@@ -1904,10 +1917,10 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     });
 
                     if(is_toll_free_main) {
-                        string_alert += 'these numbers are not toll-free numbers.<br/>As the main number is a toll-free number, you need to file another port request for these numbers.<br/>To complete this port request, please remove those numbers (Step 1).<br/><br/>';
+                        string_alert += i18n.t('pbxs.pbxs_manager.error_not_toll_free');
                     }
                     else {
-                        string_alert += 'these numbers are toll-free numbers.<br/>As the main number is a regular phone number, you need to file another port request for these numbers.<br/>To complete this port request, please remove those numbers from (Step 1).<br/><br/>';
+                        string_alert += i18n.t('pbxs.pbxs_manager.error_toll_free');
                     }
                 }
 

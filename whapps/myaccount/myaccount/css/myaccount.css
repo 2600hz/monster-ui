@@ -1,6 +1,7 @@
 /* navbar myaccount*/
 .navbar .links .myaccount-link a {
  	font-size: 14px;
+    font-weight: normal;
 }
 
 /* My account */

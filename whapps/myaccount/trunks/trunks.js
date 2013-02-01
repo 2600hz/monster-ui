@@ -135,19 +135,21 @@ winkstart.module('myaccount', 'trunks', {
                 $('.update-limits', $trunks_html).on('click', function(e) {
                     e.preventDefault();
 
-                    if(confirm('Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.<br/><br/>Are you sure you want to continue?')) {
-                        var limits_data = {
-                            twoway_trunks: $('#slider_twoway', $trunks_html).slider('value'),
-                            inbound_trunks: $('#slider_inbound', $trunks_html).slider('value')
-                        };
+                    winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
+                        function() {
+                            var limits_data = {
+                                twoway_trunks: $('#slider_twoway', $trunks_html).slider('value'),
+                                inbound_trunks: $('#slider_inbound', $trunks_html).slider('value')
+                            };
 
-                        limits_data = $.extend({}, data.limits, limits_data);
-                        /*THIS.limits_update(limits_data, function(_data) {
-                            THIS.update_menu(limits_data.inbound_trunks + '/' + limits_data.twoway_trunks);
-                            winkstart.publish('myaccount.trunks.render');
-                            alert('Your changes have been saved!');
-                        });*/
-                    }
+                            limits_data = $.extend({}, data.limits, limits_data);
+                            THIS.limits_update(limits_data, function(_data) {
+                                THIS.update_menu(limits_data.inbound_trunks + '/' + limits_data.twoway_trunks);
+                                winkstart.publish('myaccount.trunks.render');
+                                //TODO biscotte saved
+                            });
+                        }
+                    );
                 });
 
                 $('.myaccount .myaccount-content .container-fluid').html($trunks_html);

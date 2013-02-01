@@ -191,6 +191,11 @@
 }
 
 /* Step 3 */
+#edit_server .wizard-content-step .testing-block #stop_tests {
+    margin-left: 5px;
+    text-decoration: none;
+}
+
 #edit_server .wizard-content-step .testing-block {
     width: 680px;
     margin: auto;
@@ -217,6 +222,7 @@
 
 #edit_server .wizard-content-step .testing-block .testing-progress {
     height: 55px;
+    line-height: 40px;
 }
 
 #edit_server .wizard-content-step .testing-block .testing-step {

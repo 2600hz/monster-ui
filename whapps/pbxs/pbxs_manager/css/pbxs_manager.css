@@ -120,6 +120,10 @@
     border-left: 0px;
 }
 
+#ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_actions .link-box {
+    float: left;
+}
+
 #ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_actions .link-box i {
     margin: 0 10px;
 }
