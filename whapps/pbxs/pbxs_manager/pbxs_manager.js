@@ -1979,8 +1979,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             var THIS = this,
                 server_id;
 
-            //$('#unassigned_numbers_wrapper .unassigned-number', parent).draggable();
-            $('.link-box.assign', parent).click(function() {
+            $('.link-box.assign', parent).on('click', function() {
                 var numbers_data = [];
 
                 $('#unassigned_numbers .unassigned-number.selected', parent).each(function(k, v) {
@@ -2082,7 +2081,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 }
             });
 
-            $('#unassigned_numbers .search-query', parent).keyup(function() {
+            $('#unassigned_numbers .search-query', parent).on('keyup', function() {
                 var input = $(this),
                     rows = $('#unassigned_numbers .content .unassigned-number', parent),
                     search_string = $.trim(input.val().toLowerCase()),
@@ -2186,7 +2185,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 .append(pbxs_manager_html);
 
             THIS.render_list(-1, parent, function(data) {
-                THIS.bind_events(parent);
+                THIS.bind_events(pbxs_manager_html);
 
                 if(data.length === 0) {
                     winkstart.publish('pbxs_manager.edit', {});
@@ -2194,7 +2193,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 else if(data.length === 1) {
                     winkstart.publish('pbxs_manager.edit', { id: 0 });
 
-                    $('.pbx-wrapper', parent).addClass('selected');
+                    $('.pbx-wrapper', pbxs_manager_html).addClass('selected');
                 }
             });
 

@@ -33,9 +33,9 @@ winkstart.module('pbxs', 'pbxs', {
         THIS.uninitialized_count = THIS._count(THIS.modules);
 
         THIS.whapp_auth(function() {
-            winkstart.publish('whappnav.add', THIS.__module, {
+            /*winkstart.publish('whappnav.add', THIS.__module, {
                 name: i18n.t('core.layout.whapp_pbx_connector')
-            });
+            });*/
 
             THIS.initialization_check();
         });
