@@ -35,7 +35,7 @@ winkstart.module('core', 'layout', {
 
         THIS.parent = args.parent || $('body');
 
-        document.title = winkstart.config.company_name || '' + ' WinkStart';
+        document.title = 'Trunking.io';
 
         THIS.attach();
 

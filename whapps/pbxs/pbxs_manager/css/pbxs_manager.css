@@ -350,6 +350,10 @@
     background: transparent;
 }
 
+#ws-content #pbx_connector_container .dropdown-toggle i:hover {
+    color: #333;
+}
+
 #ws-content #pbx_connector_container .no-number {
     background: #f9f9f9;
 

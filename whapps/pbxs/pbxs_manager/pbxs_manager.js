@@ -1186,7 +1186,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('.search-query', pbxs_manager_html).keyup(function() {
                 var input = $(this),
                     rows = $('#numbers_wrapper .number-wrapper', pbxs_manager_html),
-                    search_string = $.trim(input.val().toLowerCase()),
+                    search_string = $.trim(input.val().toLowerCase().replace(/[^0-9]/g, '')),
                     matches = [],
                     cache = {};
 
@@ -2010,13 +2010,16 @@ winkstart.module('pbxs', 'pbxs_manager', {
             });
 
             $('#unassigned_numbers_header', parent).on('click', function() {
-                if($('#unassigned_numbers', parent).hasClass('open')) {
-                    $('#unassigned_numbers', parent).removeClass('open');
-                    $('#unassigned_numbers .content', parent).hide();
+                var $this = $(this),
+                    $content = $('#unassigned_numbers .content', parent);
+
+                if($this.hasClass('open')) {
+                    $this.removeClass('open');
+                    $content.hide();
                 }
                 else {
-                    $('#unassigned_numbers', parent).addClass('open');
-                    $('#unassigned_numbers .content', parent).slideDown();
+                    $this.addClass('open');
+                    $content.slideDown();
                 }
             });
 
@@ -2084,7 +2087,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('#unassigned_numbers .search-query', parent).on('keyup', function() {
                 var input = $(this),
                     rows = $('#unassigned_numbers .content .unassigned-number', parent),
-                    search_string = $.trim(input.val().toLowerCase()),
+                    search_string = $.trim(input.val().toLowerCase().replace(/[^0-9]/g, '')),
                     matches = [],
                     cache = {};
 

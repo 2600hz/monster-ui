@@ -187,10 +187,11 @@ winkstart.module('myaccount', 'myaccount', {
         show: function() {
             var $myaccount = $('.myaccount', 'body');
 
-            if($myaccount.is(':hidden')) {
-                 $myaccount.slideDown(500);
-            } else {
-                $myaccount.slideUp(500);
+            if($myaccount.hasClass('myaccount-open')) {
+                $myaccount.slideUp(300).removeClass('myaccount-open');
+            }
+            else {
+                $myaccount.slideDown(300).addClass('myaccount-open');
             }
         },
 
