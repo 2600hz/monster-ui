@@ -37,7 +37,7 @@
                     <div class="wizard-content-step pbx-selection" data-step="1">
                         <div class="row-fluid">
                             <div class="content-centered">
-                                <h4><i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.which_pbx"}}</h4>
+                                <h4>{{t "pbxs.pbxs_manager.which_pbx"}}</h4>
                             </div>
                         </div>
 
@@ -85,8 +85,8 @@
                         <div class="row-fluid">
                             <div class="content-centered title-step">
                                 <h4>
-                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.is_static_ip"}}
-
+                                    <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_static_ip"}}"></i>
+                                    {{t "pbxs.pbxs_manager.is_static_ip"}}
                                     <div class="radio-wrapper">
                                         <label class="radio inline">
                                             <input type="radio" name="auth.auth_method" value="IP" {{#compare auth.auth_method "===" "IP"}}checked{{/compare}}>
@@ -159,7 +159,8 @@
                         <div class="row-fluid">
                             <div class="content-centered title-step">
                                 <h4>
-                                    <i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.how_to_configure"}}
+                                    {{t "pbxs.pbxs_manager.title_settings"}}
+                                    <!--<i class="icon-question-sign"></i> {{t "pbxs.pbxs_manager.how_to_configure"}}
 
                                     <div class="radio-wrapper">
                                         <label class="radio inline">
@@ -171,6 +172,7 @@
                                             {{t "pbxs.pbxs_manager.manually"}}
                                         </label>
                                     </div>
+                                    -->
                                 </h4>
                             </div>
                         </div>
@@ -629,10 +631,12 @@
                                             <label>{{t "pbxs.pbxs_manager.firewall"}}</label>
                                         </div>
                                         <div class="span4 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_register_time"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.register_time"}}</label>
                                             <input type="text" name="cfg.register_time" placeholder="360" pattern="^[0-9]+$" value="{{cfg.register_time}}"></input>
                                         </div>
                                         <div class="span4">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_options_ping"}}"></i>
                                             <label>{{t "pbxs.pbxs_manager.opening_pings"}}</label>
                                             <div class="btn-group" data-type="opening_pings">
                                                 <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
@@ -646,6 +650,7 @@
                                             <label>{{t "pbxs.pbxs_manager.phone_calls"}}</label>
                                         </div>
                                         <div class="span8 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_caller_id"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.caller_id_header"}}</label>
                                             <div class="btn-group" data-type="caller_id_header">
                                                 <button class="btn" data-value="p-asserted">{{t "pbxs.pbxs_manager.p_asserted_option"}}</button>
@@ -660,6 +665,7 @@
                                             <label>{{t "pbxs.pbxs_manager.hd_audio_video"}}</label>
                                         </div>
                                         <div class="span8 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_supported_codecs"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.supported_codecs"}}</label>
                                             <div class="btn-group" data-type="supported_codecs">
                                                 <button class="btn" data-value="g722">{{t "pbxs.pbxs_manager.g722"}}</button>
@@ -675,6 +681,7 @@
                                             <label>{{t "pbxs.pbxs_manager.dtmf"}}</label>
                                         </div>
                                         <div class="span8 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_dtmf"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.signaling_type"}}</label>
                                             <div class="btn-group" data-type="signaling_type">
                                                 <button class="btn" data-value="rfc_2833">{{t "pbxs.pbxs_manager.rfc_2833"}}</button>
@@ -688,6 +695,7 @@
                                             <label>{{t "pbxs.pbxs_manager.call_transfer"}}</label>
                                         </div>
                                         <div class="span8 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_call_transfer"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.allow_refer"}}</label>
                                             <div class="btn-group" data-type="allow_refer">
                                                 <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
@@ -701,6 +709,7 @@
                                             <label>{{t "pbxs.pbxs_manager.faxing"}}</label>
                                         </div>
                                         <div class="span8 offset1">
+                                            <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "pbxs.pbxs_manager.help_faxing"}}"></i>
                                             <label for="register_time">{{t "pbxs.pbxs_manager.use_t38"}}</label>
                                             <div class="btn-group" data-type="use_t38">
                                                 <button class="btn" data-value="true">{{t "pbxs.pbxs_manager.yes"}}</button>
@@ -709,6 +718,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="help-registration">
+                                <a href="{{extra.pbx_help_configuration_link}}" target="_blank" class="help-configuration-link">{{t "pbxs.pbxs_manager.please_follow_link"}}</a>{{t "pbxs.pbxs_manager.help_configuration"}}
                             </div>
                         </div>
                     </div>

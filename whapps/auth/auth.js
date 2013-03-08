@@ -31,6 +31,13 @@ winkstart.module('auth', 'auth',
             'auth.logout': 'logout'
         },
 
+        validation_recover: [
+            { name: '#username', regex: /^.+$/ },
+            { name: '#account_name', regex: /^.*$/ },
+            { name: '#account_realm', regex: /^.*$/ },
+            { name: '#phone_number', regex: /^.*$/ }
+        ],
+
         resources: {
             'auth.user_auth': {
                 url: '{api_url}/user_auth',
@@ -682,7 +689,8 @@ winkstart.module('auth', 'auth',
             var THIS = this;
 
             var dialogRecover = winkstart.dialog(THIS.templates.recover_password.tmpl({}), {
-                title: i18n.t('auth.auth.recover_popup_title')
+                title: i18n.t('auth.auth.recover_popup_title'),
+                width: '400px'
             });
 
             winkstart.validate.set(THIS.config.validation_recover, dialogRecover);

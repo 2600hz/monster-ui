@@ -472,6 +472,31 @@ body > .ws-content {
     font-size: 16px;
     font-weight: 500;
 }
+/* Tooltips */
+.icon-question-sign[data-toggle="tooltip"] {
+    font-size: 14px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.tooltip.left .tooltip-arrow {
+    border-left-color: #333;
+}
+.tooltip.right .tooltip-arrow {
+    border-right-color: #333;
+}
+
+.tooltip .tooltip-inner {
+    background: #333;
+    line-height: 15px;
+    text-align: left;
+}
+
+[data-toggle="tooltip"] {
+    cursor: default;
+    margin-right: 5px;
+}
+
 /* desktop */
 @media (min-width: 979px) {
 

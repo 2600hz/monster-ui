@@ -106,6 +106,8 @@ winkstart.module('myaccount', 'trunks', {
                         monthly_charges: total_amount_inbound + total_amount_twoway
                     });
 
+                $('.icon-question-sign[data-toggle="tooltip"]', $trunks_html).tooltip();
+
                 $('#slider_twoway', $trunks_html).slider({
                     min: 0,
                     max: winkstart.config.max_twoway_trunks || 20,

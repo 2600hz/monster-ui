@@ -5,7 +5,9 @@
     "per_month": "/month",
     "currency": "$",
 	"trunks": "Trunks",
-    "two_way_calling": "Unlimited Two way Trunks",
+    "two_way_calling": "Unlimited Outbound Trunks",
     "update_limits": "Update Limits",
+    "help_twoway": "This controls the number of simultaneous calls you can make from the system calling external numbers",
+    "help_inbound": "This controls the number of simultaneous calls you can receive to your phone system",
     "monthly_charges": "Monthly Charges"
 }

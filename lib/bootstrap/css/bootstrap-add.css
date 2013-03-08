@@ -145,35 +145,35 @@ i.icon-small {
 }
 
 i.icon-white {
-    color: #fff;
+    color: #fff !important;
 }
 
 i.icon-blue {
-    color: #22ccff;
+    color: #22ccff !important;
 }
 
 i.icon-green {
-    color: #44cc44;
+    color: #44cc44 !important;
 }
 
 i.icon-red {
-    color: #ee1212;
+    color: #ee1212 !important;
 }
 
 i.icon-orange {
-    color: #f89406;
+    color: #f89406 !important;
 }
 
 i.icon-yellow {
-    color: #ffc40d;
+    color: #ffc40d !important;
 }
 
 i.icon-grey {
-    color: #333;
+    color: #333 !important;
 }
 
 i.icon-lightgrey {
-    color: #999;
+    color: #999 !important;
 }
 
 i.icon-info-sign2:before { content: "i"; }

@@ -7,6 +7,12 @@
     font-weight: normal;
 }
 
+.hello .hello-subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 20px;
+}
+
 @media (min-width: 979px) {
     .hello {
         margin-top: 95px;

@@ -34,6 +34,12 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         resources: {
+            'pbxs_manager.get_automatic_status': {
+                url: 'http://74.82.47.147/sipspector/{sip_id}/{settings_step}/',
+                contentType: 'application/json',
+                trigger_events: false,
+                verb: 'GET'
+            },
             'pbxs_manager.list_callflows': {
                 url: '{api_url}/accounts/{account_id}/callflows',
                 contentType: 'application/json',
@@ -239,6 +245,40 @@ winkstart.module('pbxs', 'pbxs_manager', {
             );
         },
 
+        get_automatic_status: function(data) {
+            var list_steps = [
+                    'init',
+                    'registration',
+                    'options',
+                    'options_period',
+                    'outbound_call',
+                    'inbound_call',
+                    'dtmf_test',
+                    'reset_dtmf',
+                    'fax_test',
+                    'settings'
+                ],
+                sip_id = winkstart.config.sip_id ? winkstart.config.sip_id : (winkstart.config.sip_id = winkstart.random_string(20));
+
+            var step = list_steps.indexOf(data.step) > -1 ? data.step : 'init';
+
+            winkstart.request('pbxs_manager.get_automatic_status', {
+                    sip_id: sip_id,
+                    settings_step: step
+                },
+                function(data, status) {
+                    if(typeof success == 'function') {
+                        success(data, status);
+                    }
+                },
+                function(data, status) {
+                    if(typeof error == 'function') {
+                        error(data, status);
+                    }
+                }
+            );
+        },
+
         list_servers: function(success, error) {
             var THIS = this,
                 get_account = function() {
@@ -335,6 +375,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                 extra: {
                                     support_email: (winkstart.config.port || {}).support_email || 'support@trunking.io',
                                     pbx_help_link: winkstart.config.pbx_help_link || 'https://2600hz.atlassian.net/wiki/display/docs/Trunking.io',
+                                    pbx_help_configuration_link: winkstart.config.pbx_help_configuration_link || 'https://2600hz.atlassian.net/wiki/display/docs/Trunking_config.io',
                                     configure: 'manually',
                                     realm: _data_account.data.realm,
                                     id: data.id || (data.id === 0 ? 0 : 'new')
@@ -957,8 +998,10 @@ winkstart.module('pbxs', 'pbxs_manager', {
             }
 
             var THIS = this,
-                //max_step = 3,
+                interval,
+                interval_bar,
                 current_automatic_step = 1,
+                pause_polling = false,
                 submit_wizard_callback = function() {
                     var form_data = form2object('endpoint');
 
@@ -975,41 +1018,80 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     });
                 },
                 automatic_wizard_success = function() {
-                    for(var i = 0; i<6; i++) {
-                        if(array_substep[i].current_step < array_substep[i].total_step) {
-                            var step_success = ++array_substep[i].current_step,
-                                total_step = array_substep[i].total_step;
+                    array_substep[current_automatic_step - 2].current_step++;
+                    var i = current_automatic_step - 2;
+                    if(array_substep[i].current_step <= array_substep[i].total_step) {
+                        var step_success = array_substep[i].current_step - 1,
+                            total_step = array_substep[i].total_step,
+                            displayed_pct = (step_success / total_step)*100;
 
-                            $('.wizard-automatic-step[data-value='+ current_automatic_step +'] tr:nth-child('+ step_success +') .icon-ok-sign', endpoint_html).show();
-                            $('.wizard-automatic-step[data-value='+ current_automatic_step +'] .progress .bar', endpoint_html).css('width', (step_success / total_step)*100 + '%');
-                            return;
-                        }
-                        else if(i+2 >= current_automatic_step) {
-                            go_to_next_step();
-                        }
+                        array_substep[i].displayed_pct = displayed_pct;
+
+                        $('.wizard-automatic-step[data-value='+ current_automatic_step +'] tr:nth-child('+ step_success +') .icon-ok-sign', endpoint_html).show();
+                        $('.wizard-automatic-step[data-value='+ current_automatic_step +'] .progress .bar', endpoint_html).css('width', displayed_pct + '%');
+                        return;
+                    }
+                    else if(i+2 >= current_automatic_step) {
+                        $('.wizard-automatic-step[data-value='+ current_automatic_step +'] tr .icon-ok-sign', endpoint_html).show();
+                        $('.wizard-automatic-step[data-value='+ current_automatic_step +'] .progress .bar', endpoint_html).css('width', '100%');
+                        array_substep[i].displayed_pct = 100;
+                        setTimeout(function() {
+                            $('.wizard-automatic-step[data-value="' + current_automatic_step + '"]', endpoint_html).hide();
+                            $('.wizard-automatic-step[data-value="' + ++current_automatic_step +'"]', endpoint_html).show();
+                            $('.testing-progress .testing-step[data-step="' + (current_automatic_step - 2) + '"] .icon-ok-sign', endpoint_html).show();
+                        }, 2000);
+
+                        return;
                     }
                 },
-                go_to_next_step = function() {
-                    array_substep[current_automatic_step-2].current_step = array_substep[current_automatic_step-2].total_step;
-                    $('.wizard-automatic-step[data-value="' + current_automatic_step + '"]', endpoint_html).hide();
-                    $('.wizard-automatic-step[data-value="' + ++current_automatic_step +'"]', endpoint_html).show();
-                },
                 reset_auto_step = function() {
+                    clear_intervals();
+                    $('.wizard-automatic-step[data-value='+ current_automatic_step +'] .progress .bar', endpoint_html).css('width', '0%');
                     $('td .icon-ok-sign:not(.result)', endpoint_html).hide();
                     $.each(array_substep, function(k, v) {
-                        v.current_step = 0;
+                        v.current_step = 1;
                     });
                 },
+                clear_intervals = function(_interval) {
+                    if(typeof _interval !== 'undefined') {
+                        clearInterval(_interval);
+                    }
+                    else {
+                        clearInterval(interval);
+                        clearInterval(interval_bar);
+                    }
+                },
+                move_bar = function() {
+                    var array_index = array_substep[current_automatic_step-2],
+                        current_step = array_index.current_step,
+                        total_step = array_index.total_step;
+
+                    if(!('displayed_pct' in array_substep[current_automatic_step-2])) {
+                        array_substep[current_automatic_step-2].displayed_pct = ((current_step - 1) / total_step) * 100;
+                    }
+
+                    array_index = array_substep[current_automatic_step-2];
+
+                    var next_pct = ((current_step) / total_step) * 100,
+                        current_pct = array_index.displayed_pct,
+                        new_pct = current_pct + ((next_pct - current_pct) / 10);
+
+                    array_substep[current_automatic_step-2].displayed_pct = new_pct;
+
+                    $('.wizard-automatic-step[data-value='+ current_automatic_step +'] .progress .bar', endpoint_html).css('width', new_pct + '%');
+                },
                 array_substep = [
-                    { current_step: 0, total_step: 3},
-                    { current_step: 0, total_step: 4},
-                    { current_step: 0, total_step: 4},
-                    { current_step: 0, total_step: 2},
-                    { current_step: 0, total_step: 1},
-                    { current_step: 0, total_step: 2}
+                    { current_step: 1, total_step: 3, api: ['registration', 'options', 'options_period']},
+                    { current_step: 1, total_step: 4, api: ['outbound_call', 'inbound_call', 'dtmf_test']},
+                    { current_step: 1, total_step: 4, api: []},
+                    { current_step: 1, total_step: 2, api: []},
+                    { current_step: 1, total_step: 1, api: []},
+                    { current_step: 1, total_step: 2, api: []}
                 ],
                 cfg = {},
                 endpoint_html = THIS.templates.endpoint.tmpl(endpoint_data);
+
+            $('.icon-question-sign[data-toggle="tooltip"]', endpoint_html).tooltip();
 
             $.each(endpoint_data.cfg, function(k, v) {
                 $('button[data-value="'+v+'"]', $('.btn-group[data-type="'+k+'"]', endpoint_html)).addClass('btn-primary');
@@ -1022,8 +1104,30 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('.static-ip-block[data-value="'+ endpoint_data.auth.auth_method +'"]', endpoint_html).show();
             $('.testing-block[data-value="'+ endpoint_data.extra.configure +'"]', endpoint_html).show();
 
+            $('#stop_tests', endpoint_html).on('click', function() {
+                pause_polling = true;
+                winkstart.confirm(i18n.t('pbxs.pbxs_manager.stop_test_warning'), function() {
+                    reset_auto_step();
+                    $('.testing-block', endpoint_html).hide();
+                    $('.testing-block[data-value="manually"]', endpoint_html).slideDown();
+                    $('.wizard-automatic-step', endpoint_html).hide();
+                    $('input[type="radio"][value="manually"]', endpoint_html).prop('checked', true);
+
+                    current_automatic_step = 1;
+                    $('.wizard-buttons', endpoint_html).show();
+                }, function() {
+                    pause_polling = false;
+                });
+            });
+
             $('.skip_test', endpoint_html).on('click', function() {
-                go_to_next_step();
+                array_substep[current_automatic_step - 2].current_step = array_substep[current_automatic_step - 2].total_step + 1;
+                $('.wizard-automatic-step[data-value="' + current_automatic_step + '"]', endpoint_html).hide();
+
+                var $automatic_step = $('.wizard-automatic-step[data-value='+ ++current_automatic_step +']', endpoint_html);
+                $automatic_step.show();
+                $('tr .icon-ok-sign', $automatic_step).hide();
+                $('.progress .bar', $automatic_step).css('width', '0%');
             });
 
             $('.btn-group .btn', endpoint_html).on('click', function() {
@@ -1059,6 +1163,63 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
             $('#start_test', endpoint_html).click(function(ev) {
                 ev.preventDefault();
+                if(!('sip_id' in winkstart.config)) {
+                    winkstart.config.sip_id = winkstart.random_string(32);
+                }
+
+                reset_auto_step();
+                pause_polling = false;
+
+                var polling_interval = 2,
+                    move_bar_interval = 0.5,
+                    stop_polling = false,
+                    function_move_bar = function() {
+                        if(Math.floor((Math.random()*10)+1) > 3) {
+                            move_bar();
+                        }
+                    },
+                    function_polling = function() {
+                        if($('.testing-block[data-value="automatically"]:visible', endpoint_html).size() > 0) {
+                            if(pause_polling === false) {
+                                var api_name = '',
+                                    v = array_substep[current_automatic_step - 2];
+
+                                if(v.current_step <= v.total_step) {
+                                    if(v.api[v.current_step - 1] !== undefined) {
+                                        api_name = v.api[v.current_step-1];
+                                    }
+                                    else {
+                                        stop_polling = true;
+                                    }
+                                }
+
+                                if(stop_polling) {
+                                    clear_intervals();
+                                }
+                                else {
+                                    winkstart.request('pbxs_manager.get_automatic_status', {
+                                            sip_id: winkstart.config.sip_id,
+                                            settings_step: api_name
+                                        },
+                                        function(_data) {
+                                            if(_data.status === 'success' || _data.status === 'succes') {
+                                                automatic_wizard_success();
+                                            }
+                                        },
+                                        function(_data) {
+
+                                        }
+                                    );
+                                }
+                            }
+                        }
+                        else {
+                            clear_intervals();
+                        }
+                    };
+
+                interval = setInterval(function_polling, polling_interval * 1000);
+                interval_bar = setInterval(function_move_bar, move_bar_interval * 1000);
 
                 $('#phone_number_test', endpoint_html).html(winkstart.format_phone_number($('#test_number', endpoint_html).val()));
                 $('.wizard-automatic-step', endpoint_html).hide();
@@ -1609,6 +1770,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 popup_html = THIS.templates.e911_dialog.tmpl(e911_data || {}),
                 popup;
 
+            $('.icon-question-sign[data-toggle="tooltip"]', popup_html).tooltip();
+
             $('#postal_code', popup_html).blur(function() {
                 $.getJSON('http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?', { postalcode: $(this).val() }, function(response) {
                     if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
@@ -2023,6 +2186,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 }
             });
 
+            $('.icon-question-sign[data-toggle="tooltip"]', parent).tooltip();
+
             $('#unassigned_numbers', parent).on('click', '.unassigned-number', function(event) {
                 $(this).toggleClass('selected');
 
@@ -2193,10 +2358,10 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 if(data.length === 0) {
                     winkstart.publish('pbxs_manager.edit', {});
                 }
-                else if(data.length === 1) {
+                else if(data.length >= 1) {
                     winkstart.publish('pbxs_manager.edit', { id: 0 });
 
-                    $('.pbx-wrapper', pbxs_manager_html).addClass('selected');
+                    $('.pbx-wrapper[data-id="0"]', pbxs_manager_html).addClass('selected');
                 }
             });
 

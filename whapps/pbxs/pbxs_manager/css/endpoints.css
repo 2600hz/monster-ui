@@ -205,6 +205,10 @@
     margin-top: 25px;
 }
 
+#edit_server .wizard-content-step .testing-block .configure-line [data-toggle="tooltip"] {
+    float: left;
+}
+
 #edit_server .wizard-content-step .testing-block .configure-line input[type="text"] {
     width: auto;
 }

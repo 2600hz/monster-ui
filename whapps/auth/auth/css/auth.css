@@ -21,7 +21,18 @@
 }
 
 .popup_recover_password form {
-    margin-top: 20px;
+    margin: 20px 0 40px 0;
+}
+
+.popup_recover_password form input {
+    width: 166px;
+}
+
+.popup_recover_password .group-or {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
 }
 
 /* Responsive design */

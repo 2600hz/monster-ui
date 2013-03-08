@@ -12,6 +12,13 @@
 .myaccount-content .trunks-content .trunk-container .text-wrapper .price {
     color: #05addc;
     font-size: 14px;
+    display: inline-block;
+}
+.myaccount-content .trunks-content .trunk-container .icon-question-sign[data-toggle="tooltip"] {
+    display: inline-block;
+    float: none;
+    margin-left: 5px;
+    margin-top: 0;
 }
 
 .myaccount-content .trunks-content .trunk-container i {
