@@ -1094,7 +1094,14 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('.icon-question-sign[data-toggle="tooltip"]', endpoint_html).tooltip();
 
             $.each(endpoint_data.cfg, function(k, v) {
-                $('button[data-value="'+v+'"]', $('.btn-group[data-type="'+k+'"]', endpoint_html)).addClass('btn-primary');
+                if(typeof v === 'object') {
+                    $.each(v, function(k2, v2) {
+                        $('button[data-value="'+v2+'"]', $('.btn-group[data-type="'+k+'"]', endpoint_html)).addClass('btn-primary');
+                    });
+                }
+                else {
+                    $('button[data-value="'+v+'"]', $('.btn-group[data-type="'+k+'"]', endpoint_html)).addClass('btn-primary');
+                }
             });
 
             THIS.initialize_wizard(endpoint_html, submit_wizard_callback);
@@ -1130,8 +1137,28 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 $('.progress .bar', $automatic_step).css('width', '0%');
             });
 
-            $('.btn-group .btn', endpoint_html).on('click', function() {
-                cfg[$(this).parent('.btn-group').data('type')] = $(this).data('value');
+            $('.btn-group .btn', endpoint_html).on('click', function(ev) {
+                ev.preventDefault();
+
+                var $btn_group = $(this).parent('.btn-group');
+                if($btn_group.data('select') === 'multi') {
+                    $(this).toggleClass('btn-primary');
+
+                    cfg[$btn_group.data('type')] = [];
+                    $('.btn', $btn_group).each(function(k, v) {
+                        if($(v).hasClass('btn-primary')) {
+                            cfg[$btn_group.data('type')].push($(v).data('value'));
+                        }
+                    });
+                }
+                else {
+                    if(!($(this).hasClass('btn-primary'))) {
+                        $('.btn', $(this).parent()).removeClass('btn-primary');
+                        $(this).addClass('btn-primary');
+                    }
+
+                    cfg[$btn_group.data('type')] = $(this).data('value');
+                }
             });
 
             $('#submit_settings', endpoint_html).on('click', function(ev) {
@@ -1238,18 +1265,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
             $('input[type="radio"][name="auth.auth_method"]', endpoint_html).on('click', function() {
                 $('.static-ip-block', endpoint_html).hide();
                 $('.static-ip-block[data-value="'+$(this).val()+'"]', endpoint_html).slideDown();
-            });
-
-            $('.btn-group .btn', endpoint_html).on('click', function(ev) {
-                ev.preventDefault();
-
-                if($(this).hasClass('btn-primary')) {
-                    $(this).removeClass('btn-primary');
-                }
-                else {
-                    $('.btn', $(this).parent()).removeClass('btn-primary');
-                    $(this).toggleClass('btn-primary');
-                }
             });
 
             $('.pbx-brand-list .pbx', endpoint_html).each(function() {

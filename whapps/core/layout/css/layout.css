@@ -490,6 +490,7 @@ body > .ws-content {
     background: #333;
     line-height: 15px;
     text-align: left;
+    padding: 10px;
 }
 
 [data-toggle="tooltip"] {
