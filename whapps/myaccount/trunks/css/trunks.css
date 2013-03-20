@@ -9,6 +9,18 @@
     width: 50px;
 }
 
+.myaccount-content .trunks-content .slider-value:after {
+    border-color: #22CCFF transparent;
+    border-style: solid;
+    border-width: 7px 7px 0;
+    bottom: -47px;
+    content: "";
+    display: block;
+    left: 104px;
+    position: absolute;
+    width: 0;
+}
+
 .myaccount-content .trunks-content .total-amount {
     font-weight: 500;
 }
