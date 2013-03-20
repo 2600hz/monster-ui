@@ -1,82 +1,129 @@
-.myaccount-content .trunks-content .trunk-container {
-    min-height: 50px;
-    height: 100%;
-    margin-top: 20px;
-}
-
-.myaccount-content .trunks-content .trunk-container .text-wrapper .title {
-    font-weight: 500;
-    font-size: 18px;
-}
-
-.myaccount-content .trunks-content .trunk-container .text-wrapper .price {
-    color: #05addc;
-    font-size: 14px;
-    display: inline-block;
-}
-.myaccount-content .trunks-content .trunk-container .icon-question-sign[data-toggle="tooltip"] {
-    display: inline-block;
-    float: none;
-    margin-left: 5px;
-    margin-top: 0;
-}
-
-.myaccount-content .trunks-content .trunk-container i {
-    margin-top: 10px;
-    float: right;
-}
-
-.myaccount-content .trunks-content .slider-wrapper {
-    margin-top: 10px;
-}
-
 .myaccount-content .trunks-content .slider-value {
-    background: #ddd;
-    border-radius: 20px;
-    color: #333;
+    background: #22ccff;
+    border: 1px solid #FFFFFF;
+    box-shadow: 1px 1px 4px #CCCCCC;
+    color: #FFFFFF;
     height: 40px;
-    line-height: 40px;
+    margin: 0 10px 0 85px;
     text-align: center;
-    width: 40px;
-    margin: 0 10px 0 20px;
+    width: 50px;
 }
 
 .myaccount-content .trunks-content .total-amount {
     font-weight: 500;
-    line-height: 40px;
-}
-
-.myaccount-content .trunks-content .total-amount-value {
-    font-size: 18px;
-    line-height: 35px;
-    color: #05addc;
 }
 
 .myaccount-content .trunks-content #slider_twoway .ui-slider-range, .myaccount-content .trunks-content #slider_twoway .ui-slider-handle, .myaccount-content .trunks-content #slider_inbound .ui-slider-range, .myaccount-content .trunks-content #slider_inbound .ui-slider-handle {
-    background-color: #05addc;
+    background-color: #22ccff;
 }
 
-.myaccount-content .trunks-content .update-limits {
-    margin-left: 10px;
+.myaccount-content .trunks-content .trunk-container-block.section-button {
+    text-align: right;
 }
 
-/* Landscape phone to portrait tablet */
-@media(max-width: 767px) {
-    .myaccount-content .trunks-content .slider-wrapper{
-        padding: 0 10px;
-    }
+.myaccount-content .trunks-content .trunk-container-block.section-button .update-limits {
+    margin-top: 50px;
+}
 
-    .myaccount-content .trunks-content .slider-value{
-        float: left;
-    }
+.myaccount-content .trunks-content .trunk-container-block {
+    display: block;
+    max-width: 500px;
+    margin: 20px auto 40px;
+}
 
-    .myaccount-content .trunks-content .total-amount{
-        float: left;
-    }
+.myaccount-content .trunks-content .trunk-container-block.section-slider-value{
+    max-width: 580px;
+}
 
-    .myaccount-content .trunks-content .slider-wrapper{
-        float: left;
-        width: 70%;
+.myaccount-content .trunks-content .trunk-container-block.section-slider {
+    margin-top: 100px;
+}
 
-    }
+.myaccount-content .trunks-content .trunk-container-block.section-slider .slider-title {
+    width: 60px;
+    float: left;
+    margin: -5px 10px 0 0;
+}
+
+.myaccount-content .trunks-content .trunk-container-block.section-slider .slider-wrapper {
+    width: 430px;
+    float: left;
+}
+
+.myaccount-content .trunks-content .slider-value-wrapper {
+    display: block;
+    position: relative;
+}
+
+.myaccount-content .trunks-content .slider-value-wrapper > * {
+    float: left;
+    line-height: 40px;
+}
+
+.myaccount-content .trunks-content .trunk-bar {
+    border: 3px solid #dddddd;
+    box-shadow: -1px 1px 5px #ddd;
+    height: 80px;
+}
+
+.myaccount-content .trunks-content .trunk-bar .image-block {
+    border-right: 1px solid #FFFFFF;
+    float: left;
+    height: 60px;
+    padding: 10px;
+    width: 49px;
+}
+
+.myaccount-content .trunks-content .trunk-bar .image-block i {
+    font-size: 60px;
+    color: #ddd;
+    text-shadow: 1px 1px 1px #eee;
+    float: left;
+}
+
+.myaccount-content .trunks-content .trunk-bar .title-block {
+    border-left: 1px solid #ddd;
+    float: left;
+    line-height: 80px;
+    padding-left: 20px;
+    width: 409px;
+}
+
+.myaccount-content .trunks-content .trunk-bar .numbers-block {
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: -1px -1px 3px #DDDDDD;
+    display: inline-block;
+    float: none;
+    height: 100px;
+    left: 340px;
+    position: relative;
+    top: -90px;
+    width: 150px;
+}
+
+.myaccount-content .trunks-content .trunk-bar .numbers-block .numbers-wrapper{
+    background: #eee;
+    height: 80px;
+    margin: 10px;
+    text-align: center;
+}
+
+.myaccount-content .trunks-content .trunk-bar .numbers-block .numbers-wrapper .trunk-number {
+    color: #22CCFF;
+    font-size: 55px;
+    height: 55px;
+    line-height: 55px;
+    text-shadow: 1px 1px 1px #666666;
+}
+
+.myaccount-content .trunks-content .trunk-bar .numbers-block .numbers-wrapper .trunk-amount {
+    font-size: 12px;
+    line-height: 25px;
+    height: 25px;
+}
+
+.myaccount-content .trunks-content .trunk-container-block .value-slider {
+    position: relative;
+    display: block;
 }

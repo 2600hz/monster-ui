@@ -173,7 +173,7 @@ body > .ws-content {
     z-index: 999;
 }
 
-/* Default Blue Gradient */
+/* Default Gradients */
 .blue-gradient {
     background-color:#22a5ff;
     background-image:linear-gradient(to bottom,#22a5ff,#22ccff);
@@ -192,6 +192,28 @@ body > .ws-content {
     background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
     background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
     filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+}
+
+.gray-gradient {
+    background: #e8e8e8; /* Old browsers */
+    background: -moz-linear-gradient(top,  hsl(0,0%,91%) 0%, hsl(0,0%,100%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,91%)), color-stop(100%,hsl(0,0%,100%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+.gray-gradient-reverse {
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,91%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,91%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
 }
 
 /* + Btn used to add elements */

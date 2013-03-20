@@ -103,7 +103,7 @@ winkstart.module('myaccount', 'profile', {
                 });
 
                 winkstart.publish('myaccount.select_menu', THIS.__module);
-                $('.myaccount .myaccount-content .container-fluid').html($profile_html);
+                $('.myaccount .myaccount-right .myaccount-content').html($profile_html);
             });
         },
 
@@ -113,7 +113,7 @@ winkstart.module('myaccount', 'profile', {
                     'account_name': account.name || "Account Name"
                 });
 
-            winkstart.publish('myaccount.add_submodule', $profile_menu_html, 1);
+            winkstart.publish('myaccount.add_submodule', $profile_menu_html, 1, 'account_category');
         }
     }
 );

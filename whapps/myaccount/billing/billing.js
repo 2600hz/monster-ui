@@ -78,7 +78,7 @@ winkstart.module('myaccount', 'billing', {
 
             winkstart.publish('myaccount.select_menu', THIS.__module);
 
-            $('.myaccount .myaccount-content .container-fluid').html($billing_html);
+            $('.myaccount .myaccount-right .myaccount-content').html($billing_html);
 
             $('#accordion', $billing_html).accordion({
                 collapsible: true,
@@ -108,7 +108,7 @@ winkstart.module('myaccount', 'billing', {
             var THIS = this,
                 $billing_menu_html = THIS.templates.menu.tmpl();
 
-            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 5);
+            winkstart.publish('myaccount.add_submodule', $billing_menu_html, 40, 'billing_category');
         }
     }
 );

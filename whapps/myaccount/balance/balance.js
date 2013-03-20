@@ -119,7 +119,9 @@ winkstart.module('myaccount', 'balance', {
                 });
 
                 winkstart.publish('myaccount.select_menu', THIS.__module);
-                $('.myaccount .myaccount-content .container-fluid').html($balance_html);
+                $('.myaccount .myaccount-right .myaccount-content').html($balance_html);
+
+                $('.myaccount .myaccount-right .myaccount-titlebar .myaccount-module-title').html(i18n.t('myaccount.balance.balance'));
             });
 
         },
@@ -132,7 +134,7 @@ winkstart.module('myaccount', 'balance', {
                     'amount': data.data.amount.toFixed(2) || '0.00'
                 });
 
-                winkstart.publish('myaccount.add_submodule', $balance_menu_html, 2);
+                winkstart.publish('myaccount.add_submodule', $balance_menu_html, 20, 'billing_category');
             });
         }
     }

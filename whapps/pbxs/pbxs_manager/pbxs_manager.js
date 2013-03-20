@@ -803,42 +803,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
             );
         },
 
-        /*popup_endpoint_settings: function(data, endpoint_data, callbacks, step) {
-            var THIS = this,
-                popup = winkstart.dialog($('<div></div>'), {
-                    position: ['center', 50],
-                    width: '700px',
-                    title: i18n.t('pbxs.pbxs_manager.edit_settings', {variable: endpoint_data.server_name})
-                });
-
-            endpoint_data.load_step = step;
-
-            THIS.render_endpoint(data, endpoint_data, $(popup), {
-                save_success: function(_data) {
-                    popup.dialog('destroy').remove();
-
-                    if(callbacks && typeof callbacks.save_success == 'function') {
-                        callbacks.save_success(_data);
-                    }
-                },
-                render_popup: function() {
-                    winkstart.dialog($(container), {
-                        title: i18n.t('pbxs.pbxs_manager.edit_settings', {variable: endpoint_data.server_name})
-                    });
-                },
-                cancel_success: function() {
-                    popup.dialog('destroy').remove();
-                },
-                delete_success: function() {
-                    popup.dialog('destroy').remove();
-
-                    if(callbacks && typeof callbacks.delete_success == 'function') {
-                        callbacks.delete_success();
-                    }
-                }
-            });
-        },*/
-
         load_specific_step: function(step_index, callbacks, parent) {
             $('.wizard-top-bar', parent).hide();
             $('.wizard-content-step', parent).hide();

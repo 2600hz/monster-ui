@@ -1,4 +1,5 @@
 {
+    "title": "Balance",
 	"balance": "Balance",
     "pay_per_minute": "Le paiement &agrave; la minute vous permet de ne payer que ce que vous utilisez. D&eacute;posez de l'argent sur votre compte pour commencer et payer en fonction de votre utilisation ensuite.",
     "current_balance": "Balance actuelle: $",

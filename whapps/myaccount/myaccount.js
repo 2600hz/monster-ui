@@ -70,6 +70,8 @@ winkstart.module('myaccount', 'myaccount', {
             'trunks': false
         },
 
+        groups: {},
+
         whapp_vars: {
             billing_provider: 'braintree'
         },
@@ -164,6 +166,24 @@ winkstart.module('myaccount', 'myaccount', {
                 }
             });
 
+            THIS.groups = {
+                'account_category': {
+                    id: 'account_category',
+                    friendly_name: i18n.t('myaccount.myaccount.account_category'),
+                    weight: 0
+                },
+                'billing_category': {
+                    id: 'billing_category',
+                    friendly_name: i18n.t('myaccount.myaccount.billing_category'),
+                    weight: 10
+                },
+                'trunking_category': {
+                    id: 'trunking_category',
+                    friendly_name: i18n.t('myaccount.myaccount.trunking_category'),
+                    weight: 20
+                }
+            };
+
             THIS.render_myaccount($myaccount_html);
         },
 
@@ -172,6 +192,10 @@ winkstart.module('myaccount', 'myaccount', {
 
             $('.myaccount-close', $myaccount_html).on('click', function() {
                 winkstart.publish('myaccount.display');
+            });
+
+            $('.signout', $myaccount_html).on('click', function() {
+                winkstart.publish('auth.logout');
             });
 
             winkstart.request('myaccount.account_get', {
@@ -195,53 +219,77 @@ winkstart.module('myaccount', 'myaccount', {
             }
         },
 
-        select_menu: function(submodule) {
+        select_menu: function(submodule, _key) {
             var THIS = this,
-                $myaccount = $('body .myaccount');
+                $myaccount = $('body .myaccount'),
+                key = _key ? 'myaccount.' + _key : 'myaccount.' + submodule + '.title';
 
                 if(!$('.' + submodule , $myaccount).hasClass('active')) {
                     $('.myaccount-menu .nav > li', $myaccount).removeClass('active');
                     $('.' + submodule , $myaccount).addClass('active')
                 }
+
+                $('.myaccount-module-title').html(i18n.t(key));
         },
 
-        add_submodule: function($menu, _weight) {
+        add_submodule: function($menu, _weight, _category) {
             var THIS = this,
                 inserted = false,
                 $myaccount = $('body .myaccount'),
-                $divider = $('<li class="divider"></li>'),
-                $nav_list = $('.myaccount-menu .nav', $myaccount);
+                $nav_list = $('.myaccount-menu .nav', $myaccount),
+                category = _category || 'account_category';
 
             $menu.on('click', function() {
                 $('.myaccount-menu .nav li', $myaccount).removeClass('active');
                 $menu.addClass('active');
             });
 
-            if(_weight) {
-                $menu.data('weight', _weight);
+            category = THIS.groups[category];
 
-                $('li:not(.divider)', $nav_list).each(function(index) {
-                    var weight = $(this).data('weight');
-
-                    if(_weight < weight) {
-                        $(this)
-                            .before($menu)
-                            .before($divider);
-                        inserted = true;
-                    }
-                    else if(index >= $('li:not(.divider)', $nav_list).length - 1) {
-                        $(this)
-                            .after($menu)
-                            .after($divider);
+            if($('#'+category.id, $nav_list).size() === 0) {
+                var inserted = false;
+                $('li.nav-header', $nav_list).each(function(k, v) {
+                    if($(this).data('weight') > category.weight) {
+                        $(this).before('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendly_name +'</li>');
                         inserted = true;
                     }
                 });
+
+                if(inserted === false) {
+                    $nav_list.append('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendly_name +'</li>');
+                }
             }
 
-            if(!inserted) {
-                $('.myaccount-menu .nav', $myaccount)
-                    .append($menu)
-                    .append($divider);
+            if(_weight) {
+                $menu.data('weight', _weight);
+
+                var category_reached = false;
+
+                $('li', $nav_list).each(function(index,v) {
+                    if(category_reached) {
+                        var weight = $(this).data('weight');
+
+                        if(_weight < weight || $(v).hasClass('nav-header')) {
+                            $(this)
+                                .before($menu);
+
+                            return false;
+                        }
+                    }
+
+                    if($(v).attr('id') === category.id) {
+                        category_reached = true;
+                    }
+
+                    if(index >= ($('li', $nav_list).length - 1)) {
+                        $(this).after($menu);
+
+                        return false;
+                    }
+                });
+            }
+            else {
+                $('#'+category.id, $nav_list).after($menu);
             }
         }
     }

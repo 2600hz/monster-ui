@@ -1,5 +1,11 @@
 {
+    "title": "Trunks",
+    "inbound": "Entrants",
+    "outbound": "Sortants",
+    "outbound_title": "Trunks Sortants",
+    "inbound_title": "Trunks Entrants",
     "inbound_calling": "Appels interne &agrave; prix fixe",
+    "quantity": "Quantit&eacute;",
     "simultaneous_twoway": "$__variable__/mois",
     "simultaneous_inbound": "$__variable__/mois",
     "trunks": "Limites",

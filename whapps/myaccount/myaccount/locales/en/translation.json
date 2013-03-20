@@ -1,7 +1,11 @@
 {
     "hello": "Hello",
     "signout": "Sign Out",
-    "myaccount": "My Account",
+    "myaccount": "Account",
     "close": "Close",
-    "store": "Store"
+    "store": "Store",
+
+    "account_category": "Account",
+    "billing_category": "Billing",
+    "trunking_category": "Trunking"
 }

@@ -217,7 +217,7 @@
 }
 
 #port_number .wizard_nav .steps_text li.current {
-    color: #05addc;
+    color: #22ccff;
 }
 
 #port_number .port_help {
@@ -301,7 +301,7 @@
 }
 
 #port_number .step_div.first .numbers_example {
-    color: #05addc;
+    color: #22ccff;
     margin-top: 5px;
     font-size: 10px;
     font-weight: 500;

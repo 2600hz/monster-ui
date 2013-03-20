@@ -4,15 +4,18 @@ winkstart.module('myaccount', 'trunks', {
         ],
 
         templates: {
-           menu: 'tmpl/menu.handlebars',
-           trunks: 'tmpl/trunks.handlebars'
+           menu_inbound: 'tmpl/menu_inbound.handlebars',
+           menu_outbound: 'tmpl/menu_outbound.handlebars',
+           trunks_inbound: 'tmpl/trunks_inbound.handlebars',
+           trunks_outbound: 'tmpl/trunks_outbound.handlebars'
         },
 
         locales: ['en', 'fr'],
 
         subscribe: {
             'myaccount.loaded': 'myaccount_loaded',
-            'myaccount.trunks.render': 'render'
+            'myaccount.trunks_inbound.render': 'render_inbound',
+            'myaccount.trunks_outbound.render': 'render_outbound'
         },
 
         resources: {
@@ -76,101 +79,148 @@ winkstart.module('myaccount', 'trunks', {
             );
         },
 
-        update_menu: function(data) {
+        update_menu: function(type, data) {
             var THIS = this;
 
             if(data) {
-                $('.myaccount .' + THIS.__module + ' .badge').html(data);
+                $('.myaccount .' + THIS.__module + '-'+type+' .badge').html(data);
             }
         },
 
-        render: function() {
+        render_inbound: function() {
             var THIS = this;
-
-            winkstart.publish('myaccount.select_menu', THIS.__module);
 
             THIS.limits_get(function(data) {
                 var amount_inbound = winkstart.config.amount_inbound || 6.99,
-                    amount_twoway = winkstart.config.amount_twoway || 29.99,
                     inbound = data.data.inbound_trunks || 0,
-                    twoway = data.data.twoway_trunks || 0,
                     total_amount_inbound = amount_inbound * inbound,
-                    total_amount_twoway = amount_twoway * twoway;
-                    $trunks_html = THIS.templates.trunks.tmpl({
+                    $trunks_inbound_html = THIS.templates.trunks_inbound.tmpl({
                         inbound: inbound,
-                        twoway: twoway,
-                        amount_inbound: amount_inbound,
-                        amount_twoway: amount_twoway,
-                        total_amount_inbound: total_amount_inbound,
-                        total_amount_twoway: total_amount_twoway,
-                        monthly_charges: total_amount_inbound + total_amount_twoway
+                        amount_inbound: amount_inbound.toFixed(2),
+                        total_amount_inbound: total_amount_inbound.toFixed(2)
                     });
 
-                $('.icon-question-sign[data-toggle="tooltip"]', $trunks_html).tooltip();
+                $('.icon-question-sign[data-toggle="tooltip"]', $trunks_inbound_html).tooltip();
 
-                $('#slider_twoway', $trunks_html).slider({
-                    min: 0,
-                    max: winkstart.config.max_twoway_trunks || 20,
-                    range: 'min',
-                    value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
-                    slide: function( event, ui ) {
-                        $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
-                        total_amount_twoway = ui.value*amount_twoway;
-                        $('.total-amount .total-amount-value', $(this).parents('.trunk-container').first()).html(total_amount_twoway.toFixed(2));
-                        $('#monthly_charges', $trunks_html).html((total_amount_inbound + total_amount_twoway).toFixed(2));
-                    }
-                });
-
-                $('#slider_inbound', $trunks_html).slider({
+                $('#slider_inbound', $trunks_inbound_html).slider({
                     min: 0,
                     max: winkstart.config.max_inbound_trunks || 100,
                     range: 'min',
                     value: data.data.inbound_trunks > 0 ? data.data.inbound_trunks : 0,
                     slide: function( event, ui ) {
-                        $('.slider-value', $(this).parents('.trunk-container').first()).html(ui.value);
+                        $('.slider-value', $trunks_inbound_html).html(ui.value);
                         total_amount_inbound = ui.value*amount_inbound;
-                        $('.total-amount .total-amount-value', $(this).parents('.trunk-container').first()).html(total_amount_inbound.toFixed(2));
-                        $('#monthly_charges', $trunks_html).html((total_amount_inbound + total_amount_twoway).toFixed(2));
+                        $('.total-amount .total-amount-value', $trunks_inbound_html).html(total_amount_inbound.toFixed(2));
+                        $('.slider-value-wrapper', $trunks_inbound_html).css('left', $('#slider_inbound .ui-slider-handle', $trunks_inbound_html).css('left'));
+                    },
+                    change: function(event, ui) {
+                        $('.slider-value-wrapper', $trunks_inbound_html).css('left', $('#slider_inbound .ui-slider-handle', $trunks_inbound_html).css('left'));
                     }
                 });
 
-                $('.update-limits', $trunks_html).on('click', function(e) {
+                $('.update-limits', $trunks_inbound_html).on('click', function(e) {
                     e.preventDefault();
 
                     winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                         function() {
                             var limits_data = {
-                                twoway_trunks: $('#slider_twoway', $trunks_html).slider('value'),
-                                inbound_trunks: $('#slider_inbound', $trunks_html).slider('value')
+                                inbound_trunks: $('#slider_inbound', $trunks_inbound_html).slider('value'),
+                                twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
                             };
 
-                            limits_data = $.extend({}, data.limits, limits_data);
                             THIS.limits_update(limits_data, function(_data) {
-                                THIS.update_menu(limits_data.inbound_trunks + '/' + limits_data.twoway_trunks);
-                                winkstart.publish('myaccount.trunks.render');
+                                THIS.update_menu('inbound', limits_data.inbound_trunks);
+                                winkstart.publish('myaccount.trunks_inbound.render');
                                 //TODO biscotte saved
                             });
                         }
                     );
                 });
 
-                $('.myaccount .myaccount-content .container-fluid').html($trunks_html);
+                winkstart.publish('myaccount.select_menu', THIS.__module +'-inbound', 'trunks.inbound_title');
+
+                $('.myaccount .myaccount-right .myaccount-content').html($trunks_inbound_html);
+
+                $('.slider-value-wrapper', $trunks_inbound_html).css('left', $('#slider_inbound .ui-slider-handle', $trunks_inbound_html).css('left'));
             });
+        },
+
+        render_outbound: function() {
+            var THIS = this;
+
+            THIS.limits_get(function(data) {
+                var amount_twoway = winkstart.config.amount_twoway || 29.99,
+                    twoway = data.data.twoway_trunks || 0,
+                    total_amount_twoway = amount_twoway * twoway;
+                    $trunks_outbound_html = THIS.templates.trunks_outbound.tmpl({
+                        twoway: twoway,
+                        amount_twoway: amount_twoway.toFixed(2),
+                        total_amount_twoway: total_amount_twoway.toFixed(2)
+                    });
+
+                $('.icon-question-sign[data-toggle="tooltip"]', $trunks_outbound_html).tooltip();
+
+                $('#slider_twoway', $trunks_outbound_html).slider({
+                    min: 0,
+                    max: winkstart.config.max_twoway_trunks || 20,
+                    range: 'min',
+                    value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
+                    slide: function( event, ui ) {
+                        $('.slider-value', $trunks_outbound_html).html(ui.value);
+                        total_amount_twoway = ui.value*amount_twoway;
+                        $('.total-amount .total-amount-value', $trunks_outbound_html).html(total_amount_twoway.toFixed(2));
+                        $('.slider-value-wrapper', $trunks_outbound_html).css('left', $('#slider_twoway .ui-slider-handle', $trunks_outbound_html).css('left'));
+                    },
+                    change: function(event, ui) {
+                        $('.slider-value-wrapper', $trunks_outbound_html).css('left', $('#slider_twoway .ui-slider-handle', $trunks_outbound_html).css('left'));
+                    }
+                });
+
+                $('.update-limits', $trunks_outbound_html).on('click', function(e) {
+                    e.preventDefault();
+
+                    winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
+                        function() {
+                            var limits_data = {
+                                twoway_trunks: $('#slider_twoway', $trunks_outbound_html).slider('value'),
+                                inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+                            };
+
+                            THIS.limits_update(limits_data, function(_data) {
+                                THIS.update_menu('outbound', limits_data.twoway_trunks);
+                                winkstart.publish('myaccount.trunks_outbound.render');
+                                //TODO biscotte saved
+                            });
+                        }
+                    );
+                });
+
+                winkstart.publish('myaccount.select_menu', THIS.__module + '-outbound', 'trunks.outbound_title');
+
+                $('.myaccount .myaccount-right .myaccount-content').html($trunks_outbound_html);
+
+                $('.slider-value-wrapper', $trunks_outbound_html).css('left', $('#slider_twoway .ui-slider-handle', $trunks_outbound_html).css('left'));
+            });
+
         },
 
         myaccount_loaded: function($myaccount_html) {
             var THIS = this;
 
             THIS.limits_get(function(data) {
-                var $trunks_menu_html = THIS.templates.menu.tmpl({
+                var $trunks_menu_outbound_html = THIS.templates.menu_outbound.tmpl({
                     inbound: data.data.inbound_trunks || 0,
                     twoway: data.data.twoway_trunks || 0
                 });
 
-                winkstart.publish('myaccount.add_submodule', $trunks_menu_html, 3);
+                var $trunks_menu_inbound_html = THIS.templates.menu_inbound.tmpl({
+                    inbound: data.data.inbound_trunks || 0,
+                    twoway: data.data.twoway_trunks || 0
+                });
+
+                winkstart.publish('myaccount.add_submodule', $trunks_menu_inbound_html, 20, 'trunking_category');
+                winkstart.publish('myaccount.add_submodule', $trunks_menu_outbound_html, 40, 'trunking_category');
             });
-
-
         }
     }
 );
