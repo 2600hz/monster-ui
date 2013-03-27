@@ -1,8 +1,23 @@
 {
-    "title": "Balance",
-	"balance": "Balance",
+    "title": "Par Minute",
+    "add_credit_one": "Ajout de cr&eacute;dits",
+    "help_add_credit_one": "Rajouter des cr&eacute;dits &agrave; votre balance actuelle afin de pouvoir activer l'e911 ou le Caller-ID sur des num&eacute;ros, ou bien pour placer des appels Par Minute.",
+    "auto_recharge": "Recharge automatique",
+    "when_balance_falls": "Quand votre balance est en dessous de",
+    "recharge": "Recharger ce compte avec",
+    "help_auto_recharge": "En autorisant l'Auto Recharge, vous d&eacute;finissez combien de cr&eacute;dits vous voulez rajouter une fois qu'un palier minimum est franchi. Cela vous permettra de ne plus avoir &agrave; rajouter des cr&eacute;dits manuellement.",
+    "help_when_balance_falls": "Entrez le palier minimum de cr&eacute;dits &agrave; atteindre avant de devoir recharger ce compte",
+    "help_recharge": "Entrez combien de cr&eacute;dits vous souhaitez rajouter &agrave; ce compte lorsque le palier est atteint.",
+    "credit_balance": "Balance actuelle",
+    "credit_balance": "Balance actuelle",
     "pay_per_minute": "Le paiement &agrave; la minute vous permet de ne payer que ce que vous utilisez. D&eacute;posez de l'argent sur votre compte pour commencer et payer en fonction de votre utilisation ensuite.",
     "current_balance": "Balance actuelle: $",
+    "turnoff_recharge_confirm": "En supprimant la recharge automatique, vous devrez rajouter des cr&eacute;dits &agrave; votre compte manuellement afin de continuer &agrave; placer des appels par-minute ou pour activer des fonctionnalit&eacute;s comme l'e911 ou le Caller-ID. Continuer quand m&ecirc;me?",
     "amount": "Montant",
-    "add_credit": "Ajouter de l'argent"
+    "confirm": "Confirmer",
+    "placeholder_threshold_recharge": "5.00",
+    "placeholder_recharge": "50.00",
+    "placeholder_amount": "10.00",
+    "add_credit": "Ajouter de l'argent",
+    "invalid_amount": "Le montant de cr&eacute;dits &agrave; rajouter est invalide!"
 }

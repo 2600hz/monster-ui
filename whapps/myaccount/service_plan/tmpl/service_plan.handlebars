@@ -1,0 +1,49 @@
+<div class="service-plan-content-wrapper">
+    <div class="fancy-header">
+        <div class="left-image">
+            <i class="icon-calendar"></i>
+        </div>
+
+        <div class="title-block">
+            {{t "myaccount.service_plan.title_header"}}
+        </div>
+
+        <div class="right-block">
+            <div class="content">
+                <div class="main-title">
+                    {{t "core.layout.currency_used"}}{{total_amount}}
+                </div>
+                <div class="sub-title">
+                    Due on April 01, 2013
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{t "myaccount.service_plan.service_title"}}</th>
+                    <th>{{t "core.layout.currency_used"}}{{t "myaccount.service_plan.rate_title"}}</th>
+                    <th></th>
+                    <th>{{t "myaccount.service_plan.quantity_title"}}</th>
+                    <th>{{t "myaccount.service_plan.monthly_charges_title"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each service_plan_array}}
+                    <tr>
+                        <td>{{this.service}}</td>
+                        <td>{{t "core.layout.currency_used"}}{{this.rate}}</td>
+                        <td>X</td>
+                        <td>{{this.quantity}}</td>
+                        <td>{{t "core.layout.currency_used"}}{{this.monthly_charges}}</td>
+                    </tr>
+                {{else}}
+                    <tr>NO DATA TO DISPLAY TODO</tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

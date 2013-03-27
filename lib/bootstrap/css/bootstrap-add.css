@@ -144,35 +144,35 @@ i.icon-small {
     font-size: 14px;
 }
 
-i.icon-white {
+.icon-white {
     color: #fff !important;
 }
 
-i.icon-blue {
+.icon-blue {
     color: #22ccff !important;
 }
 
-i.icon-green {
+.icon-green {
     color: #44cc44 !important;
 }
 
-i.icon-red {
+.icon-red {
     color: #ee1212 !important;
 }
 
-i.icon-orange {
+.icon-orange {
     color: #f89406 !important;
 }
 
-i.icon-yellow {
+.icon-yellow {
     color: #ffc40d !important;
 }
 
-i.icon-grey {
+.icon-grey {
     color: #333 !important;
 }
 
-i.icon-lightgrey {
+.icon-lightgrey {
     color: #999 !important;
 }
 

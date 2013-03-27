@@ -76,10 +76,6 @@ winkstart.module('myaccount', 'billing', {
             var THIS = this,
                 $billing_html = THIS.templates.billing.tmpl();
 
-            winkstart.publish('myaccount.select_menu', THIS.__module);
-
-            $('.myaccount .myaccount-right .myaccount-content').html($billing_html);
-
             $('#accordion', $billing_html).accordion({
                 collapsible: true,
                 heightStyle: 'content'
@@ -102,6 +98,7 @@ winkstart.module('myaccount', 'billing', {
                 });
             });
 
+            winkstart.publish('myaccount.render_submodule', $billing_html);
         },
 
         myaccount_loaded: function($myaccount_html) {

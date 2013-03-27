@@ -102,8 +102,7 @@ winkstart.module('myaccount', 'profile', {
                     }
                 });
 
-                winkstart.publish('myaccount.select_menu', THIS.__module);
-                $('.myaccount .myaccount-right .myaccount-content').html($profile_html);
+                winkstart.publish('myaccount.render_submodule', $profile_html);
             });
         },
 

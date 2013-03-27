@@ -79,14 +79,6 @@ winkstart.module('myaccount', 'trunks', {
             );
         },
 
-        update_menu: function(type, data) {
-            var THIS = this;
-
-            if(data) {
-                $('.myaccount .' + THIS.__module + '-'+type+' .badge').html(data);
-            }
-        },
-
         render_inbound: function() {
             var THIS = this;
 
@@ -123,23 +115,25 @@ winkstart.module('myaccount', 'trunks', {
 
                     winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                         function() {
-                            var limits_data = {
-                                inbound_trunks: $('#slider_inbound', $trunks_inbound_html).slider('value'),
-                                twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-                            };
+                            THIS.limits_get(function(_data_limits) {
+                                var limits_data = {
+                                    inbound_trunks: $('#slider_inbound', $trunks_inbound_html).slider('value'),
+                                    twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+                                };
 
-                            THIS.limits_update(limits_data, function(_data) {
-                                THIS.update_menu('inbound', limits_data.inbound_trunks);
-                                winkstart.publish('myaccount.trunks_inbound.render');
-                                //TODO biscotte saved
+                                limits_data = $.extend(true, _data_limits.data, limits_data);
+
+                                THIS.limits_update(limits_data, function(_data) {
+                                    winkstart.publish('myaccount.update_menu', THIS.__module, limits_data.inbound_trunks, 'inbound_title');
+                                    winkstart.publish('myaccount.trunks_inbound.render');
+                                    //TODO toastr saved
+                                });
                             });
                         }
                     );
                 });
 
-                winkstart.publish('myaccount.select_menu', THIS.__module +'-inbound', 'trunks.inbound_title');
-
-                $('.myaccount .myaccount-right .myaccount-content').html($trunks_inbound_html);
+                winkstart.publish('myaccount.render_submodule', $trunks_inbound_html);
 
                 $('.slider-value-wrapper', $trunks_inbound_html).css('left', $('#slider_inbound .ui-slider-handle', $trunks_inbound_html).css('left'));
             });
@@ -181,23 +175,25 @@ winkstart.module('myaccount', 'trunks', {
 
                     winkstart.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
                         function() {
-                            var limits_data = {
-                                twoway_trunks: $('#slider_twoway', $trunks_outbound_html).slider('value'),
-                                inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
-                            };
+                            THIS.limits_get(function(_data_limits) {
+                                var limits_data = {
+                                    twoway_trunks: $('#slider_twoway', $trunks_outbound_html).slider('value'),
+                                    inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+                                };
 
-                            THIS.limits_update(limits_data, function(_data) {
-                                THIS.update_menu('outbound', limits_data.twoway_trunks);
-                                winkstart.publish('myaccount.trunks_outbound.render');
-                                //TODO biscotte saved
+                                limits_data = $.extend(true, _data_limits.data, limits_data);
+
+                                THIS.limits_update(limits_data, function(_data) {
+                                    winkstart.publish('myaccount.update_menu', THIS.__module, limits_data.twoway_trunks, 'outbound_title');
+                                    winkstart.publish('myaccount.trunks_outbound.render');
+                                    //TODO biscotte saved
+                                });
                             });
                         }
                     );
                 });
 
-                winkstart.publish('myaccount.select_menu', THIS.__module + '-outbound', 'trunks.outbound_title');
-
-                $('.myaccount .myaccount-right .myaccount-content').html($trunks_outbound_html);
+                winkstart.publish('myaccount.render_submodule', $trunks_outbound_html);
 
                 $('.slider-value-wrapper', $trunks_outbound_html).css('left', $('#slider_twoway .ui-slider-handle', $trunks_outbound_html).css('left'));
             });

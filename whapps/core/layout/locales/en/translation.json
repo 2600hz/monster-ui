@@ -20,5 +20,6 @@
     "charge_reminder_line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
     "charge_reminder_line2": "Are you sure you want to continue?'",
 
-    "whapp_pbx_connector": "SIP Trunking"
+    "whapp_pbx_connector": "SIP Trunking",
+    "currency_used": "$"
 }

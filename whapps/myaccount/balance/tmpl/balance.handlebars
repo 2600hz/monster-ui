@@ -1,23 +1,66 @@
-<div class="row-fluid">
-	<div class="span12">
-        <div class="help-box gray-box">
-            <div class="wrapper-icon">
-                &nbsp;<i class="icon-info-sign2"></i>&nbsp;
+<div class="balance-content-wrapper">
+    <div class="fancy-header">
+        <div class="left-image">{{t "core.layout.currency_used"}}</div>
+        <div class="title-block">{{t "myaccount.balance.credit_balance"}}</div>
+        <div class="right-block"><div class="content"><div class="main-title">{{t "core.layout.currency_used"}}{{amount}}</div></div></div>
+    </div>
+
+    <div class="box-content gray-box">
+        <div class="line-content">
+            <div class="line-label">
+                <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "myaccount.balance.help_add_credit_one"}}"></i>
+                {{t "myaccount.balance.add_credit_one"}}
             </div>
-            <div class="text-wrapper">
-                <p>{{t "myaccount.balance.pay_per_minute"}}</p>
-                <div class="amount-wrapper">{{t "myaccount.balance.current_balance"}}<span class="amount">{{amount}}</span></div>
+            <div class="line-value">
+                <div class="fancy-dollar-sign">{{t "core.layout.currency_used"}}</div>
+                <input type="text" pattern="\d+(\.\d{2})?" id="amount" placeholder="{{t "myaccount.balance.placeholder_amount"}}" name="amount"/>
+            </div>
+            <div class="line-button">
+                <button class="btn btn-success add-credit">{{t "myaccount.balance.add_credit"}}</button>
             </div>
         </div>
-	</div>
-</div>
 
-<div class="row-fluid">
-	<div class="span12">
-		<form id="add_credit_form" class="form-inline">
-		  	<label for="amount">{{t "myaccount.balance.amount"}} :</label>
-		  	<input type="text" id="amount" name="amount" />
-		  	<button class="btn btn-success add-credit">{{t "myaccount.balance.add_credit"}}</button>
-		</form>
-	</div>
+        <hr/>
+
+        <div class="line-content">
+            <div class="line-label">
+                <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "myaccount.balance.help_auto_recharge"}}"></i>
+                {{t "myaccount.balance.auto_recharge"}}
+            </div>
+            <div class="line-value">
+            </div>
+            <div class="line-button">
+                <div class="switch">
+                    <input type="checkbox" id="auto-recharge-trigger">
+                </div>
+            </div>
+        </div>
+        <div id="recharge_content" {{#unless limits.auto_recharge}}style="display: none;"{{/unless}}>
+            <div class="line-content">
+                <div class="line-label smaller">
+                    <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "myaccount.balance.help_when_balance_falls"}}"></i>
+                    {{t "myaccount.balance.when_balance_falls"}}
+                </div>
+                <div class="line-value">
+                    <div class="fancy-dollar-sign">{{t "core.layout.currency_used"}}</div>
+                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{t "myaccount.balance.placeholder_threshold_recharge"}}" id="threshold_recharge" name="threshold_recharge" value="{{limits.threshold_recharge}}"/>
+                </div>
+                <div class="line-button">
+                </div>
+            </div>
+            <div class="line-content">
+                <div class="line-label smaller">
+                    <i class="icon-question-sign" data-toggle="tooltip" data-placement="left" data-original-title="{{t "myaccount.balance.help_recharge"}}"></i>
+                    {{t "myaccount.balance.recharge"}}
+                </div>
+                <div class="line-value">
+                    <div class="fancy-dollar-sign">{{t "core.layout.currency_used"}}</div>
+                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{t "myaccount.balance.placeholder_recharge"}}" id="recharge_amount" name="recharge_amount" value="{{limits.recharge_amount}}"/>
+                </div>
+                <div class="line-button">
+                    <button id="confirm_recharge" class="btn btn-success">{{t "myaccount.balance.confirm"}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

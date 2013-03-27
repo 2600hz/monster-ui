@@ -520,6 +520,117 @@ body > .ws-content {
     margin-right: 5px;
 }
 
+/* General Layout */
+.box-top-blue {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-top: 5px solid #22ccff;
+    box-shadow: 0 1px 2px #ccc;
+    font-size: 18px;
+}
+
+.gray-box {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 2px #ccc;
+}
+
+/* Tables Style */
+table.table {
+    border: 1px solid #aaa;
+}
+
+table.table thead th {
+    background: #999;
+    color: #fff;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+table.table tr {
+    background: #eee;
+}
+
+table.table tbody tr:nth-child(odd) {
+    background: #FDFDFD;
+}
+
+table.table tr td {
+    line-height: 30px;
+}
+
+/* Fancy Headers */
+.fancy-header {
+    border: 3px solid #DDDDDD;
+    box-shadow: -1px 1px 5px #DDDDDD;
+    margin-bottom: 20px;
+    height: 80px;
+
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,91%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,91%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+}
+
+.fancy-header .left-image {
+    border-right: 1px solid #dddddd;
+    float: left;
+    height: 60px;
+    margin-right: 10px;
+    padding: 10px;
+    width: 49px;
+}
+
+.fancy-header .left-image i {
+    color: #DDDDDD;
+    font-size: 60px;
+    text-shadow: 1px 1px 1px #EEEEEE;
+}
+
+.fancy-header .title-block {
+    font-weight: 500;
+    line-height: 80px;
+    width: 100%;
+}
+
+.fancy-header .right-block {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: -1px -1px 3px #DDDDDD;
+    display: inline-block;
+    float: right;
+    height: 100px;
+    position: relative;
+    right: 10px;
+    top: -90px;
+}
+
+.fancy-header .right-block .content {
+    background: none repeat scroll 0 0 #EEEEEE;
+    height: 80px;
+    margin: 10px;
+    padding: 0 15px;
+    text-align: center;
+}
+
+.fancy-header .right-block .content .main-title {
+    color: #22CCFF;
+    font-size: 55px;
+    height: 55px;
+    line-height: 55px;
+    text-shadow: 1px 1px 1px #666666;
+}
+
+.fancy-header .right-block .content .sub-title {
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+}
+
 /* desktop */
 @media (min-width: 979px) {
 

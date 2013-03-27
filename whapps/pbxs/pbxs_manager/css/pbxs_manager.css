@@ -227,11 +227,6 @@
 }
 
 #ws-content #pbx_connector_container .pbx-title{
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-top: 5px solid #22ccff;
-    box-shadow: 0 1px 2px #ccc;
-    font-size: 18px;
     margin: 0;
 }
 

@@ -3,10 +3,88 @@
     line-height: 60px;
 }
 
-.myaccount .myaccount-content #amount {
+.myaccount .myaccount-content #add_credit_form {
+    margin-top: 15px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper {
+    display: block;
+    margin: auto;
+    width: 500px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .fancy-header .left-image {
+    font-weight: bold;
+    text-align: center;
+    width: 77px;
+    color: #DDDDDD;
+    font-size: 60px;
+    text-shadow: 1px 1px 1px #EEEEEE;
+    line-height: 55px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .fancy-header .right-block .main-title {
+    font-size: 35px;
+    height: 80px;
+    line-height: 75px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content {
+    padding: 20px 10px;
+    position: absolute;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content {
+    height: 50px;
+    line-height: 50px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content > * {
+    float: left;
+    height: 50px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-label {
+    font-weight: 500;
+    width: 200px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-label.smaller {
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+    width: 196px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-value {
+    width: 120px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-value > * {
+    float: left;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-value .fancy-dollar-sign {
+    color: #ccc;
+    font-size: 28px;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-value input {
+    margin: 10px 0 0 5px;
     width: 70px;
 }
 
-.myaccount .myaccount-content #add_credit_form {
-    margin-top: 15px;
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-button {
+    width: 138px;
+    padding: 0 10px;
+    text-align: right;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-button button {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.myaccount .myaccount-content .balance-content-wrapper .box-content .line-content .line-button .switch {
+    margin-top: 10px;
 }

@@ -15,7 +15,8 @@ winkstart.module('myaccount', 'myaccount', {
             'myaccount.module_activate': 'module_activate',
             'myaccount.display': 'show',
             'myaccount.add_submodule': 'add_submodule',
-            'myaccount.select_menu': 'select_menu',
+            'myaccount.render_submodule': 'render_submodule',
+            'myaccount.update_menu': 'update_menu',
             'auth.account.loaded': 'activate'
         },
 
@@ -64,8 +65,9 @@ winkstart.module('myaccount', 'myaccount', {
     },
     {
         modules: {
-            'billing': false,
+            //'billing': false,
             'profile': false,
+            'service_plan': false,
             'balance': false,
             'trunks': false
         },
@@ -187,6 +189,23 @@ winkstart.module('myaccount', 'myaccount', {
             THIS.render_myaccount($myaccount_html);
         },
 
+        update_menu: function(module, data, key) {
+            var THIS = this;
+
+            if(data) {
+                if(key) {
+                    $('[data-key="'+key+'"] .badge').html(data);
+                }
+                else {
+                    $('[data-module="'+module+'"] .badge').html(data);
+                }
+            }
+        },
+
+        render_submodule: function($submodule_html) {
+            $('.myaccount .myaccount-right .myaccount-content').html($submodule_html);
+        },
+
         render_myaccount: function($myaccount_html) {
             var THIS = this;
 
@@ -219,19 +238,6 @@ winkstart.module('myaccount', 'myaccount', {
             }
         },
 
-        select_menu: function(submodule, _key) {
-            var THIS = this,
-                $myaccount = $('body .myaccount'),
-                key = _key ? 'myaccount.' + _key : 'myaccount.' + submodule + '.title';
-
-                if(!$('.' + submodule , $myaccount).hasClass('active')) {
-                    $('.myaccount-menu .nav > li', $myaccount).removeClass('active');
-                    $('.' + submodule , $myaccount).addClass('active')
-                }
-
-                $('.myaccount-module-title').html(i18n.t(key));
-        },
-
         add_submodule: function($menu, _weight, _category) {
             var THIS = this,
                 inserted = false,
@@ -242,6 +248,13 @@ winkstart.module('myaccount', 'myaccount', {
             $menu.on('click', function() {
                 $('.myaccount-menu .nav li', $myaccount).removeClass('active');
                 $menu.addClass('active');
+
+                var key = 'myaccount.' + $menu.data('module') + '.title';
+                if($menu.data('key')) {
+                    key = 'myaccount.' + $menu.data('module') + '.' + $menu.data('key');
+                }
+
+                $('.myaccount-module-title').html(i18n.t(key));
             });
 
             category = THIS.groups[category];
