@@ -31,7 +31,7 @@
     font-size: 12px !important;
 }
 
-#edit_number .area_code_input:-moz-placeholder {
+#edit_number .area_code_input::-moz-placeholder {
     color: #CCCCCC !important;
     font-size: 12px !important;
 }
@@ -55,30 +55,8 @@
 }
 
 #edit_number .number-box {
-    background: #fcfcfc;
     height: 35px;
     line-height: 35px;
-    padding: 5px 0px 5px 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #f1f1f1;
-}
-
-#edit_number .number-box.selected {
-    background: #f7f7f7;
-    border-top: 1px solid #22ccff !important;
-    box-shadow: inset 0 0 5px #cccccc;
-    font-weight: 500;
-}
-
-#edit_number .number-box:hover {
-    background: rgb(240,240,240); /* Old browsers */
-    background: -moz-linear-gradient(top,  rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(240,240,240,1)), color-stop(100%,rgba(249,249,249,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 
 #edit_number .number-box input[type="checkbox"] {
