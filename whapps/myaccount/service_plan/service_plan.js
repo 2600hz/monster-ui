@@ -18,17 +18,13 @@ winkstart.module('myaccount', 'service_plan', {
         resources: {
             'service_plan.get': {
                 url: '{api_url}/accounts/{account_id}/service_plans/current',
-                contentType: 'application/json',
                 verb: 'GET'
             },
-            'service_plan.get_csv': {
+            'service_plan.download_csv_test': {
                 url: '{api_url}/accounts/{account_id}/service_plans/current',
-                contentType: 'application/json',
-                /*headers: {
-                    'Accept': 'application/octet-stream'
-                },*/
+                headers: { 'Accept': 'text/csv' },
                 verb: 'GET'
-            },
+            }
         }
     },
 
@@ -38,9 +34,9 @@ winkstart.module('myaccount', 'service_plan', {
         winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
-        service_plan_get_csv: function(success, error) {
+        download_csv: function(success, error) {
             var THIS = this;
-            winkstart.request('service_plan.get_csv', {
+            winkstart.request('service_plan.download_csv_test', {
                     account_id: winkstart.apps['myaccount'].account_id,
                     api_url: winkstart.apps['myaccount'].api_url
                 },
@@ -89,7 +85,7 @@ winkstart.module('myaccount', 'service_plan', {
                         $.each(category, function(item_name, item) {
                             var monthly_charges = (item.rate * item.quantity) || 0;
 
-                            //if(monthly_charges > 0) {
+                            if(monthly_charges > 0) {
                                 data_array.push({
                                     service: item_name,
                                     rate: item.rate || 0,
@@ -98,24 +94,23 @@ winkstart.module('myaccount', 'service_plan', {
                                 });
 
                                 total_amount += monthly_charges;
-                            //}
+                            }
                         });
                     });
                 }
 
-                /*var sort_by_price = function(a, b) {
+                var sort_by_price = function(a, b) {
                     return ((a.monthly_charges >= b.monthly_charges) ? -1 : 1);
                 }
 
-                data_array.sort(sort_by_price);*/
+                data_array.sort(sort_by_price);
 
                 var $service_plan_html = THIS.templates.service_plan.tmpl({ service_plan_array: data_array, total_amount: parseFloat(total_amount).toFixed(2) });
 
                 $('.icon-question-sign[data-toggle="tooltip"]', $service_plan_html).tooltip();
 
                 $('#get_csv', $service_plan_html).on('click', function() {
-                    THIS.service_plan_get_csv(function(data) {
-                        console.log(data);
+                    THIS.download_csv(function(data) {
                     });
                 });
 
