@@ -108,8 +108,8 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .nav a i {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .myaccount .myaccount-menu .menu-bottom {
@@ -171,7 +171,7 @@ body > .myaccount {
 .myaccount .myaccount-right .myaccount-titlebar .myaccount-close {
     background: #fff;
 	cursor: pointer;
-	padding: 1px 5px;
+	padding: 0px 5px;
 	text-align: center;
 	width: 100px;
     position: absolute;

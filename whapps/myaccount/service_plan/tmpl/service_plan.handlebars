@@ -13,11 +13,25 @@
                 <div class="main-title">
                     {{t "core.layout.currency_used"}}{{total_amount}}
                 </div>
-                <div class="sub-title">
-                    Due on April 01, 2013
-                </div>
+                <!--<div class="sub-title">
+
+                </div>-->
             </div>
         </div>
+    </div>
+
+    <div class="action-bar">
+        <div class="date-selection">
+            Go To: <select><option>March</option><option>April</option><option>May</option></select>
+        </div>
+
+        <li class="dropdown dropdown-download">
+            <a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download icon-green"></i>Download</a>
+            <ul class="dropdown-menu">
+                <li id="get_excel" class="pbx-dropdown"><a href="#">Excel</a></li>
+                <li id="get_csv" class="pbx-dropdown"><a href="#">CSV</a></li>
+            </ul>
+        </li>
     </div>
 
     <div class="table-content">

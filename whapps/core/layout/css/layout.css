@@ -537,7 +537,7 @@ body > .ws-content {
 
 /* Tables Style */
 table.table {
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
 }
 
 table.table thead th {
@@ -607,6 +607,7 @@ table.table tr td {
     position: relative;
     right: 10px;
     top: -90px;
+    margin-bottom: -90px;
 }
 
 .fancy-header .right-block .content {

@@ -158,7 +158,7 @@ winkstart.module('myaccount', 'balance', {
                         }),
                         state_switch = 'manual';
 
-                    winkstart.publish('myaccount.update_menu', THIS.__module, amount);
+                    winkstart.publish('myaccount.update_menu', THIS.__module, parseFloat(amount).toFixed(0));
 
                     $('.switch', $balance_html).bootstrapSwitch()
                                                .on('switch-change', function (e, data) {
@@ -211,7 +211,7 @@ winkstart.module('myaccount', 'balance', {
                                     THIS.balance_add(credits_to_add,
                                         function() {
                                             var amount = (parseFloat($('#amount', $balance_html).val()) + credits_to_add).toFixed(2);
-                                            winkstart.publish('myaccount.update_menu', THIS.__module, amount);
+                                            winkstart.publish('myaccount.update_menu', THIS.__module, amount.toFixed(0));
                                             winkstart.publish('myaccount.balance.render');
                                             //TODO toastr saved
                                         },
@@ -258,7 +258,7 @@ winkstart.module('myaccount', 'balance', {
 
             THIS.balance_get(function(data) {
                 var $balance_menu_html = THIS.templates.menu.tmpl({
-                    'amount': data.data.amount.toFixed(2) || '0.00'
+                    'amount': data.data.amount.toFixed(0) || '0'
                 });
 
                 winkstart.publish('myaccount.add_submodule', $balance_menu_html, 20, 'billing_category');
