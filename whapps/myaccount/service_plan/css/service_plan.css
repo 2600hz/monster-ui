@@ -50,6 +50,15 @@
     text-align: left;
 }
 .service-plan-content-wrapper table.table thead th:nth-child(5), .service-plan-content-wrapper table.table tbody td:nth-child(5) {
+    width: 100px;
+    text-align: right;
+}
+.service-plan-content-wrapper table.table tbody td:nth-child(5) {
+    color: #44cc44;
+    font-weight: 500;
+}
+
+.service-plan-content-wrapper table.table thead th:nth-child(6), .service-plan-content-wrapper table.table tbody td:nth-child(6) {
     text-align: right;
     padding-right: 10%;
 }

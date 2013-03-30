@@ -3,7 +3,18 @@
     "title_header": "Service Plan",
 
     "service_title": "Service",
+    "discount": "Discount",
     "rate_title": "Rate",
     "quantity_title": "Quantity",
-    "monthly_charges_title": "Monthly Charges"
+    "monthly_charges_title": "Monthly Charges",
+
+    "twoway_trunks": "Twoway Trunks",
+    "inbound_trunks": "Inbound Trunks",
+    "did_us": "US DIDs",
+    "sip_devices": "SIP Devices",
+    "inbound_cnam": "Inbound CNAM",
+    "e911": "E911",
+    "cnam": "CNAM",
+    "port": "Port",
+    "tollfree_us": "US Tollfree"
 }

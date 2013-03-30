@@ -83,24 +83,28 @@ winkstart.module('myaccount', 'service_plan', {
                 if('items' in data.data) {
                     $.each(data.data.items, function(category_name, category) {
                         $.each(category, function(item_name, item) {
-                            var monthly_charges = (item.rate * item.quantity) || 0;
+                            var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
+                                monthly_charges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
+
+                            var translated_key = i18n.t('myaccount.service_plan.'+item_name);
 
                             if(monthly_charges > 0) {
                                 data_array.push({
-                                    service: item_name,
+                                    service: translated_key === 'myaccount.service_plan.' + item_name ? item_name : translated_key,
                                     rate: item.rate || 0,
                                     quantity: item.quantity || 0,
+                                    discount: discount > 0 ? '-'+i18n.t('core.layout.currency_used')+ parseFloat(discount).toFixed(2) : '',
                                     monthly_charges: monthly_charges
                                 });
 
-                                total_amount += monthly_charges;
+                                total_amount += parseFloat(monthly_charges);
                             }
                         });
                     });
                 }
 
                 var sort_by_price = function(a, b) {
-                    return ((a.monthly_charges >= b.monthly_charges) ? -1 : 1);
+                    return parseFloat(a.monthly_charges) >= parseFloat(b.monthly_charges) ? -1 : 1;
                 }
 
                 data_array.sort(sort_by_price);

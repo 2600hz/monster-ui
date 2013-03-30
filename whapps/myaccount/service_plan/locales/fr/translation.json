@@ -3,7 +3,18 @@
     "title_header": "Abonnement",
 
     "service_title": "Service",
+    "discount": "Promotion",
     "rate_title": "Tarif",
     "quantity_title": "Quantit&eacute;",
-    "monthly_charges_title": "Prix Mensuel"
+    "monthly_charges_title": "Prix Mensuel",
+
+    "twoway_trunks": "Outbound Trunks",
+    "inbound_trunks": "Inbound Trunks",
+    "did_us": "US DIDs",
+    "sip_devices": "Appareils SIP",
+    "inbound_cnam": "CNAM Entrant",
+    "e911": "E911",
+    "cnam": "CNAM",
+    "port": "Transfert de num&eacute;ro",
+    "tollfree_us": "Num&eacute;ro vert US"
 }

@@ -20,6 +20,7 @@
         </div>
     </div>
 
+    <!--
     <div class="action-bar">
         <div class="date-selection">
             Go To: <select><option>March</option><option>April</option><option>May</option></select>
@@ -28,20 +29,22 @@
         <li class="dropdown dropdown-download">
             <a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download icon-green"></i>Download</a>
             <ul class="dropdown-menu">
-                <!--<li id="get_excel" class="pbx-dropdown"><a href="#">Excel</a></li>-->
+                <li id="get_excel" class="pbx-dropdown"><a href="#">Excel</a></li>
                 <li id="get_csv" class="pbx-dropdown"><a href="#">CSV</a></li>
             </ul>
         </li>
     </div>
+    -->
 
     <div class="table-content">
         <table class="table">
             <thead>
                 <tr>
                     <th>{{t "myaccount.service_plan.service_title"}}</th>
-                    <th>{{t "core.layout.currency_used"}}{{t "myaccount.service_plan.rate_title"}}</th>
+                    <th>{{t "myaccount.service_plan.rate_title"}}</th>
                     <th></th>
                     <th>{{t "myaccount.service_plan.quantity_title"}}</th>
+                    <th>{{t "myaccount.service_plan.discount"}}</th>
                     <th>{{t "myaccount.service_plan.monthly_charges_title"}}</th>
                 </tr>
             </thead>
@@ -52,6 +55,7 @@
                         <td>{{t "core.layout.currency_used"}}{{this.rate}}</td>
                         <td>X</td>
                         <td>{{this.quantity}}</td>
+                        <td>{{this.discount}}</td>
                         <td>{{t "core.layout.currency_used"}}{{this.monthly_charges}}</td>
                     </tr>
                 {{else}}
