@@ -189,3 +189,13 @@ body > .myaccount {
         white-space: nowrap;
     }
 }
+
+@media (min-height: 700px) {
+    body > .myaccount {
+        height: 573px;
+    }
+
+    .myaccount .myaccount-content {
+        height: 492px;
+    }
+}

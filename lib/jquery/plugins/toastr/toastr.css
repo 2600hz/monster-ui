@@ -9,17 +9,16 @@
     word-wrap: break-word;
 }
 
-    .toast-message a,
-    .toast-message label
-    {
-        color: #FFF;
-    }
+.toast-message a, .toast-message label
+{
+    color: #FFF;
+}
 
-        .toast-message a:hover
-        {
-            color: #CCC;
-            text-decoration: none;
-        }
+.toast-message a:hover
+{
+    color: #CCC;
+    text-decoration: none;
+}
 
 .toast-top-left
 {
@@ -48,7 +47,7 @@
 #toast-container
 {
     position: fixed;
-    z-index: 9999;
+    z-index: 999999;
 }
 
 #toast-container > div

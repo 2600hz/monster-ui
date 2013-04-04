@@ -1,4 +1,8 @@
 {
+    "available_credits": "Cr&eacute;dits disponibles",
+    "minutes_used": "Minutes utilis&eacute;es",
+    "call_charges": "Frais d'appels",
+
     "title": "Par Minute",
     "add_credit_one": "Ajout de cr&eacute;dits",
     "help_add_credit_one": "Rajouter des cr&eacute;dits &agrave; votre balance actuelle afin de pouvoir activer l'e911 ou le Caller-ID sur des num&eacute;ros, ou bien pour placer des appels Par Minute.",
@@ -19,5 +23,9 @@
     "placeholder_recharge": "50.00",
     "placeholder_amount": "10.00",
     "add_credit": "Ajouter de l'argent",
-    "invalid_amount": "Le montant de cr&eacute;dits &agrave; rajouter est invalide!"
+    "invalid_amount": "Le montant de cr&eacute;dits &agrave; rajouter est invalide!",
+    "credits_added": "Vous venez d'ajouter __variable__ &agrave; votre balance!",
+    "auto_recharge_enabled": "La recharge automatique de vos cr&eacute;dits est d&eacute;sormais activ&eacute;e!",
+    "auto_recharge_cancelled": "Vous avez annul&eacute; la recharge automatique de cr&eacute;dits avec succ&egrave;s.",
+    "add_credit_dialog_title": "Add Credits"
 }

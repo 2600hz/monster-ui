@@ -538,10 +538,11 @@ body > .ws-content {
 /* Tables Style */
 table.table {
     border: 1px solid #ddd;
+    width: 100% !important;
 }
 
 table.table thead th {
-    background: #999;
+    background-color: #999;
     color: #fff;
     font-weight: 500;
     line-height: 30px;
@@ -557,6 +558,21 @@ table.table tbody tr:nth-child(odd) {
 
 table.table tr td {
     line-height: 30px;
+}
+
+/* Box with white borders */
+.box-white-border {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: -1px -1px 3px #DDDDDD;
+    display: inline-block;
+}
+
+.box-white-border .box-white-content {
+    background: none repeat scroll 0 0 #EEEEEE;
+    margin: 10px;
+    padding: 0px 15px;
+    text-align: center;
 }
 
 /* Fancy Headers */
@@ -598,10 +614,6 @@ table.table tr td {
 }
 
 .fancy-header .right-block {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #CCCCCC;
-    box-shadow: -1px -1px 3px #DDDDDD;
-    display: inline-block;
     float: right;
     height: 100px;
     position: relative;
@@ -611,11 +623,7 @@ table.table tr td {
 }
 
 .fancy-header .right-block .content {
-    background: none repeat scroll 0 0 #EEEEEE;
     height: 80px;
-    margin: 10px;
-    padding: 0 15px;
-    text-align: center;
 }
 
 .fancy-header .right-block .content .main-title {

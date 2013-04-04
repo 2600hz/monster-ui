@@ -65,7 +65,7 @@ winkstart.module('myaccount', 'myaccount', {
     },
     {
         modules: {
-            //'billing': false,
+            'transactions': false,
             'profile': false,
             'service_plan': false,
             'balance': false,
@@ -160,7 +160,8 @@ winkstart.module('myaccount', 'myaccount', {
                     name: user_data.first_name + ' ' + user_data.last_name
                 });
 
-            $('body .navbar').after($myaccount_html);
+
+            $('body > .navbar').after($myaccount_html);
 
             winkstart.publish('linknav.add', 'myaccount', $nav_html, 'myaccount-link', {
                 click: function() {

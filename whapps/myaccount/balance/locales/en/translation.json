@@ -1,4 +1,8 @@
 {
+    "available_credits": "Available Credits",
+    "minutes_used": "Minutes Used",
+    "call_charges": "Call Charges",
+
     "title": "Per Minute",
     "credit_balance": "Credit Balance",
     "add_credit_one": "Add Credit One Time",
@@ -18,5 +22,9 @@
     "placeholder_recharge": "50.00",
     "placeholder_amount": "10.00",
     "add_credit": "Add Credit",
-    "invalid_amount": "There is an error with the amount you typed! Please make sure to type a number using only digits '.' or ','"
+    "invalid_amount": "There is an error with the amount you typed! Please make sure to type a number using only digits '.' or ','",
+    "auto_recharge_enabled": "The Automatic Recharge of credits is now enabled!",
+    "auto_recharge_cancelled": "You successfully cancelled the Automatic Recharge of your credits.",
+    "credits_added": "You successfully added __variable__ to your balance!",
+    "add_credit_dialog_title": "Add Credits"
 }

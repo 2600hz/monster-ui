@@ -21,7 +21,7 @@ winkstart.module('myaccount', 'service_plan', {
                 verb: 'GET'
             },
             'service_plan.download_csv_test': {
-                url: '{api_url}/accounts/{account_id}/service_plans/current',
+                url: '{api_url}/accounts/{account_id}/service_plans/current?depth=4&identifier=items',
                 headers: { 'Accept': 'text/csv' },
                 verb: 'GET'
             }
@@ -73,7 +73,6 @@ winkstart.module('myaccount', 'service_plan', {
         },
 
         render: function() {
-            console.log('dsa');
             var THIS = this;
 
             THIS.service_plan_get(function(data) {
@@ -117,6 +116,10 @@ winkstart.module('myaccount', 'service_plan', {
                     THIS.download_csv(function(data) {
                     });
                 });
+                $('#get_pdf', $service_plan_html).on('click', function() {
+                    window.location.href = winkstart.apps['myaccount'].api_url + '/accounts/' +
+                                       winkstart.apps['myaccount'].account_id + '/service_plans/current?identifier=items&depth=4&auth_token=' + winkstart.apps['myaccount'].auth_token;
+                });
 
                 winkstart.publish('myaccount.render_submodule', $service_plan_html);
             });
@@ -127,7 +130,7 @@ winkstart.module('myaccount', 'service_plan', {
             var THIS = this,
                 $service_plan_menu_html = THIS.templates.menu.tmpl({});
 
-            winkstart.publish('myaccount.add_submodule', $service_plan_menu_html, 30, 'billing_category');
+            winkstart.publish('myaccount.add_submodule', $service_plan_menu_html, 20, 'billing_category');
         }
     }
 );
