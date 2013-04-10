@@ -2,6 +2,10 @@
     "available_credits": "Available Credits",
     "minutes_used": "Minutes Used",
     "call_charges": "Call Charges",
+    "filter": "Filter",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "active_call": "active",
 
     "title": "Per Minute",
     "credit_balance": "Credit Balance",
@@ -26,5 +30,13 @@
     "auto_recharge_enabled": "The Automatic Recharge of credits is now enabled!",
     "auto_recharge_cancelled": "You successfully cancelled the Automatic Recharge of your credits.",
     "credits_added": "You successfully added __variable__ to your balance!",
-    "add_credit_dialog_title": "Add Credits"
+    "add_credit_dialog_title": "Add Credits",
+
+    "date_column": "Date",
+    "duration_column": "Minutes",
+    "amount_column": "Amount",
+    "from_column": "From",
+    "to_column": "To",
+    "direction_column": " ",
+    "account_column": "Account"
 }

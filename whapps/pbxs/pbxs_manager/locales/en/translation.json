@@ -137,7 +137,7 @@
     "delete_number": "Delete Number",
     "error_acquire": "There was an error when trying to acquire __variable__, would you like to retry?",
     "delete_pbx_confirmation": "Are you sure you would like to delete this PBX?",
-    "delete_numbers_confirmation": "Are you sure you would like to delete the number(s) selected?",
+    "delete_numbers_confirmation": "Clicking Delete will permanently Delete this number from your account. Are you sure you want to permanently Delete this number?",
     "remove_number_confirmation": "Are you sure you want to remove the selected number(s) from this PBX?",
     "no_number_selected": "You didn't select any number!",
 

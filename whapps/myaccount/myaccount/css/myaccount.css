@@ -74,6 +74,7 @@ body > .myaccount {
     line-height: 60px;
     font-weight: 700;
     font-size: 16px;
+    overflow: hidden;
 }
 
 .myaccount .myaccount-menu .nav > li.active {
@@ -159,7 +160,7 @@ body > .myaccount {
 	background-color: #E9E9E9;
     height: 41px;
     line-height: 41px;
-    box-shadow: 2px 0px 3px #bbb inset;
+    box-shadow: 1px 0px 3px #bbb inset;
 }
 
 .myaccount .myaccount-right .myaccount-titlebar .myaccount-module-title {

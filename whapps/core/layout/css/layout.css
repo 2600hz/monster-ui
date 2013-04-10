@@ -538,6 +538,7 @@ body > .ws-content {
 /* Tables Style */
 table.table {
     border: 1px solid #ddd;
+    border-top: 0px solid; /* hack infinite scroll */
     width: 100% !important;
 }
 
@@ -546,6 +547,7 @@ table.table thead th {
     color: #fff;
     font-weight: 500;
     line-height: 30px;
+    text-shadow: 1px 1px 1px #666666;
 }
 
 table.table tr {
@@ -558,6 +560,26 @@ table.table tbody tr:nth-child(odd) {
 
 table.table tr td {
     line-height: 30px;
+    white-space: nowrap;
+}
+
+.dataTables_scroll .dataTables_scrollBody {
+    height: auto !important;
+}
+
+.dataTables_scroll tr td, .dataTables_scroll tr th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dataTables_wrapper .table-custom-actions {
+    margin-bottom: 15px;
+    float: left;
+}
+
+.dataTables_wrapper .table-custom-actions input {
+    width: 80px;
+    margin-bottom: 0;
 }
 
 /* Box with white borders */

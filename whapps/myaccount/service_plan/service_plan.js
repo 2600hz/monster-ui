@@ -21,8 +21,7 @@ winkstart.module('myaccount', 'service_plan', {
                 verb: 'GET'
             },
             'service_plan.download_csv_test': {
-                url: '{api_url}/accounts/{account_id}/service_plans/current?depth=4&identifier=items',
-                headers: { 'Accept': 'text/csv' },
+                url: '{api_url}/accounts/{account_id}/service_plans/current?depth=4&identifier=items&accept=csv',
                 verb: 'GET'
             }
         }
@@ -113,8 +112,7 @@ winkstart.module('myaccount', 'service_plan', {
                 $('.icon-question-sign[data-toggle="tooltip"]', $service_plan_html).tooltip();
 
                 $('#get_csv', $service_plan_html).on('click', function() {
-                    THIS.download_csv(function(data) {
-                    });
+                        window.location.href = winkstart.apps['myaccount'].api_url+'/accounts/'+winkstart.apps['myaccount'].account_id+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + winkstart.apps['myaccount'].auth_token;
                 });
                 $('#get_pdf', $service_plan_html).on('click', function() {
                     window.location.href = winkstart.apps['myaccount'].api_url + '/accounts/' +

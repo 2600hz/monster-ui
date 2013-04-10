@@ -28,8 +28,8 @@ winkstart.module('myaccount', 'balance', {
                 contentType: 'application/json',
                 verb: 'PUT'
             },
-            'transactions.get': {
-                url: '{api_url}/accounts/{account_id}/transactions',
+            'filtered_transactions.get': {
+                url: '{api_url}/accounts/{account_id}/transactions?created_from={from}&created_to={to}',
                 contentType: 'application/json',
                 verb: 'GET'
             }
@@ -42,6 +42,8 @@ winkstart.module('myaccount', 'balance', {
         winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
+        transactions_range: 30,
+
         limits_get: function(success, error) {
             var THIS = this;
 
@@ -62,12 +64,26 @@ winkstart.module('myaccount', 'balance', {
             );
         },
 
-        transactions_get: function(success, error) {
+        transactions_get: function(params, success, error) {
             var THIS = this;
 
-            winkstart.request('transactions.get', {
+            if(typeof params === 'function') {
+                success = params;
+                error = success;
+
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+
+                var params = {};
+                params.to = Math.floor(tomorrow.getTime()/1000) + 62167219200;
+                params.from = params.to - (THIS.transactions_range*24*60*60);
+            }
+
+            winkstart.request('filtered_transactions.get', {
                     account_id: winkstart.apps['myaccount'].account_id,
                     api_url: winkstart.apps['myaccount'].api_url,
+                    from: params.from,
+                    to: params.to
                 },
                 function(data, status) {
                     if(typeof success == 'function') {
@@ -174,22 +190,56 @@ winkstart.module('myaccount', 'balance', {
             var transactions_html = parent,
                 columns = [
                 {
-                    'sTitle': 'test',
+                    'sTitle': 'timestamp',
+                    'bVisible': false
                 },
                 {
-                    'sTitle': 'Name'
+                    'sTitle': 'call_id',
+                    'bVisible': false
                 },
                 {
-                    'sTitle': 'Endpoint Type',
+                    'sTitle': i18n.t('myaccount.balance.direction_column'),
+                    'fnRender': function(obj) {
+                        var icon = '<i class="icon-arrow-right icon-orange"></i>';
+                        if(obj.aData[obj.iDataColumn] === 'inbound') {
+                            icon = '<i class="icon-arrow-left icon-green"></i>'
+                        }
+                        return icon;
+                    },
+                    'sWidth': '5%'
+
                 },
                 {
-                    'sTitle': 'bulk_id'
+                    'sTitle': i18n.t('myaccount.balance.date_column'),
+                    'sWidth': '20%'
+
                 },
+                {
+                    'sTitle': i18n.t('myaccount.balance.from_column'),
+                    'sWidth': '20%'
+                },
+                {
+                    'sTitle': i18n.t('myaccount.balance.to_column'),
+                    'sWidth': '20%'
+                },
+                {
+                    'sTitle': i18n.t('myaccount.balance.account_column'),
+                    'sWidth': '25%'
+                },
+                {
+                    'sTitle': i18n.t('myaccount.balance.duration_column'),
+                    'sWidth': '5%'
+
+                },
+                {
+                    'sTitle': i18n.t('myaccount.balance.amount_column'),
+                    'sWidth': '5%'
+                }
             ];
 
             winkstart.table.create('transactions', $('#transactions_grid', transactions_html), columns, {}, {
-                sDom: '<"date">frtlip',
-                aaSorting: [[7, 'desc']]
+                sDom: '<"table-custom-actions">frtlip',
+                aaSorting: [[0, 'desc']]
             });
 
             $('.cancel-search', transactions_html).click(function(){
@@ -198,81 +248,115 @@ winkstart.module('myaccount', 'balance', {
             });
         },
 
+        refresh_transactions_table: function(parent, from_timestamp, to_timestamp) {
+            var THIS = this,
+                params = {
+                    from: from_timestamp,
+                    to: to_timestamp,
+                };
+
+            THIS.transactions_get(params, function(_data_transactions) {
+                var data = THIS.transactions_to_table_data(_data_transactions.data);
+
+                winkstart.table.transactions.fnAddData(data.tab_data);
+
+                $('#call_charges', parent).html(data.total_charges.toFixed(2));
+                $('#minutes_used', parent).html(data.total_minutes);
+            });
+        },
+
+        transactions_to_table_data: function(data_request) {
+            var data = {
+                tab_data: [],
+                total_minutes: 0,
+                total_charges: 0.00
+            };
+
+            $.each(data_request, function(k, v) {
+                v.metadata = v.metadata || {
+                    to: '-',
+                    from: '-',
+                    account_id: '1234',
+                    direction: 'inbound'
+                };
+
+                if(v.reason === 'per_minute_call') {
+                    var duration = i18n.t('myaccount.balance.active_call'),
+                        friendly_date = winkstart.parse_date(v.created);
+
+                    if('end' in v) {
+                        console.log(v.end, v.created, v.end - v.created);
+                        duration = Math.ceil((v.end - v.created)/60),
+                        data.total_minutes += duration;
+                    }
+
+                    data.total_charges += v.amount;
+
+                    data.tab_data.push([
+                        v.created,
+                        v.call_id,
+                        v.metadata.direction,
+                        friendly_date,
+                        winkstart.format_phone_number(v.metadata.from),
+                        winkstart.format_phone_number(v.metadata.to),
+                        v.metadata.account_id,
+                        duration,
+                        i18n.t('core.layout.currency_used') + v.amount
+                    ]);
+                }
+            });
+
+            return data;
+        },
+
         render: function() {
             var THIS = this;
 
             THIS.transactions_get(function(_data_transactions) {
                 THIS.balance_get(function(data) {
-                    var $balance_html = THIS.templates.balance.tmpl({
-                        amount: parseFloat(data.data.amount).toFixed(2),
-                        minutes_used: 12,
-                        call_charges: 45.55
-                    });
+                    var data_table = THIS.transactions_to_table_data(_data_transactions.data),
+                        parsed_amount = parseFloat(data.data.amount).toFixed(2),
+                        $balance_html = THIS.templates.balance.tmpl({
+                            amount: parsed_amount,
+                            minutes_used: data_table.total_minutes,
+                            call_charges: data_table.total_charges.toFixed(2)
+                        });
+
+                    winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parsed_amount);
 
                     $('#add_credits', $balance_html).on('click', function() {
                         THIS.render_add_credits_dialog($balance_html, function(amount) {
-                            winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parseFloat(amount).toFixed(0));
-                            $('#amount', $balance_html).html(parseFloat(amount).toFixed(2));
+                            var new_amount = parseFloat(amount).toFixed(2);
+                            winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + new_amount);
+                            $('#amount', $balance_html).html(new_amount);
                         });
                     });
 
                     winkstart.publish('myaccount.render_submodule', $balance_html);
 
-                    var tab_data = [
-                        ["nyw2cx3352","y7x79je2qu","yas72p3cgr","y5u6h7k8b5"],
-                        ["w2jy2nuhj8","k6bxastj42","k98qs5m4nc","dmmpf5ham7"],
-                        ["xdzutg5x5m","as5q3pw98p","6bwwk6cg6q","fgdh9bcdyr"],
-                        ["wy86mdyzwe","3hhcx4fdxq","mpdgezftcw","hx73nnkyfx"],
-                        ["94n27mb6kn","vxfy6q8mbw","udzgyzxw84","5sx3m7esqz"],
-                        ["chzggfutvs","83bpkd665d","d3233gq8r7","n6w73cfkv5"],
-                        ["vypweqx243","z2vr859rgu","66tc4s7bst","z3zpqzejgc"],
-                        ["xdeeuxepv3","sfjhvmk38q","sj356auu9e","hgk95wgq9q"],
-                        ["n3twwa4gfe","ravb9ppc5z","m9prnwh87b","fspn77ewnh"],
-                        ["s6phbzemx5","gpc9pmvfsa","hycfh4vmbe","vykt6qygye"],
-                        ["vbac6wc7n3","d5u7vtdj53","9yxz4teycj","gpb56rj4xu"],
-                        ["u3na3bdn3m","7purmm4n3w","7y9bwg54ug","czurp8g55f"],
-                        ["m6xmbwhenw","ntruarvkwm","sa7bx4g94x","nuhkt9rwe7"],
-                        ["3nh6v6hmkm","g334j2subd","4ptf453f72","u36dp6zu3c"],
-                        ["qsyya5bkbt","jqkmjn5k72","b8wkgp4pkj","5kcjnn4jph"],
-                        ["rj8yfuesq2","nw65j99pbf","jas2n9dpn8","vmyzg7pd5n"],
-                        ["e6tv3ard5b","5ecz6jft4r","5k26ztvwuf","57nh457t72"],
-                        ["g5qeu7xddj","rgwwppxfv9","ssxec9nus5","86u7q2tbyr"],
-                        ["4u6rggxtwu","2kkh8hqwtw","72v9kaxvgz","6qqap2ynjb"],
-                        ["f9v9t7gcfm","76sw62te3s","dmu6nmhasb","kk3cenzsv7"],
-                        ["7hum7dveke","nqg9w6jpqt","gfw62eudbe","3ky9r3z4as"],
-                        ["52tv4beur2","6fp28v4r9p","6z4qp9j37c","v84akyvkh4"],
-                        ["t6ake9v774","2caz34nh4r","vgeab2x2rh","ty9tqx2qmh"],
-                        ["ynzy24dgb6","g8e3b4np2a","qzz2agpkqp","wk6ec24jtz"],
-                        ["n425a4u7h6","zfk58z3hkr","uphbz36meh","z5vv4m24vg"],
-                        ["mjmct5w878","hymk5eqdmr","ms9dpn43d7","ehz86uaf65"],
-                        ["n9t8p7jexu","gyeccvuyuz","n4d29xc5ha","68s5yk3wwr"],
-                        ["tgt8gtmjmy","u86dctzkt6","58y7k2vyjt","a7z4xvh7b4"],
-                        ["wyb9ectntq","jbe4f7ex34","yrfr4kk6ey","8wfy6vvmks"],
-                        ["wpxja9mkpy","gu3xz96kfp","vek84s46gc","gbsxmcewwr"],
-                        ["xudrcngvte","t9736tq3ak","7pc9cfzdrr","778watg579"],
-                        ["56g3bnkkvy","6dw639zfq7","y3kynwnfjy","sh726y2u2m"],
-                        ["dm89fp35dk","h2pnqa4nau","zhcun4qzk4","zdc9nazp2e"],
-                        ["v3c99gbagc","fgdhw2j3yd","gfgc7bgzpa","r5s6pqj6sd"],
-                        ["vjswu9mkjh","njf5dmcxmw","b8cue32f9y","ac85unapwm"],
-                        ["b9ncur2vqm","pzsarwwuzn","6z274qsqdw","bs2vcxyf2u"],
-                        ["r7guxv86jn","3xykpvp62w","dzvadtj76r","hkh4chqwgq"],
-                        ["6d4rxy3h9g","srduqhpa4a","gscbdpy7kt","qu4ax3g7bq"],
-                        ["pv3gugqm6u","gpdzvfdydp","s72hy47h3a","x77zh85mpe"],
-                        ["qwyrwxqqgn","depw9u46ac","bpdpfkbps6","mspqfun4vt"],
-                        ["eavgfhrvw3","v5jxuxzact","ffaq3ef4sh","43knp8rvkn"],
-                        ["ufb9cj2cms","gumbyfvh92","9zjd6kmnvw","yn3tp6g7s9"],
-                        ["by8n5kjzpf","cxh6mpsssj","9u364xma55","35cqt78xtn"],
-                        ["nf8tzc36v5","xjtgq8ydun","7w8ehj5btq","y7gu7dgzb6"],
-                        ["w3ef2tqk99","nnz8j5pr6t","w8hr27rn74","97gc62wv84"],
-                        ["v4tu93sarq","rmca9hp7w6","a4t4rytvbv","g9fdmc78gy"],
-                        ["hkcfrvk7ec","25usbn2cdh","qjq2vr47wy","ua7x9ht428"],
-                        ["v9nbqrt6zs","4tvr9ttzv4","3tjttyykph","4mpvrmwujm"]
-                    ];
-
                     THIS.init_table($balance_html);
+
                     $.fn.dataTableExt.afnFiltering.pop();
 
-                    winkstart.table.transactions.fnAddData(tab_data);
+                    $('div.table-custom-actions', $balance_html).html(i18n.t('myaccount.balance.start_date') + ': <input id="startDate" readonly="readonly" type="text"/>&nbsp;&nbsp;'+i18n.t('myaccount.balance.end_date')+': <input id="endDate" readonly="readonly" type="text"/>&nbsp;&nbsp;<button class="btn btn-primary button-search" id="filter_transactions">'+i18n.t('myaccount.balance.filter')+'</button>');
+
+                    winkstart.init_range_datepicker(THIS.transactions_range, $balance_html);
+
+                    $('#filter_transactions', $balance_html).on('click', function() {
+                        var start_date = $('#startDate', $balance_html).val(),
+                            end_date = $('#endDate', $balance_html).val(),
+                            regex = /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/,
+                            start_date_sec = (new Date(start_date).getTime()/1000) + 62167219200,
+                            end_date_sec = (new Date(end_date).getTime()/1000) + 62167219200;
+
+                        /* Bug because of Infinite scrolling... we need to manually remove tr */
+                        $('tbody tr', winkstart.table.transactions).remove();
+                        winkstart.table.transactions.fnClearTable();
+
+                        THIS.refresh_transactions_table($balance_html, start_date_sec, end_date_sec);
+                    });
+
+                    winkstart.table.transactions.fnAddData(data_table.tab_data);
                 });
             });
         },
@@ -295,10 +379,10 @@ winkstart.module('myaccount', 'balance', {
                         state_switch = 'manual',
                         auto_recharge = 'recharge' in _data_limits.data ? _data_limits.data.recharge.enabled || false : false;
 
-                    winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parseFloat(amount).toFixed(0));
+                    winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parseFloat(amount).toFixed(2));
 
                     $('.switch', $popup_html).bootstrapSwitch()
-                                               .on('switch-change', function (e, data) {
+                                             .on('switch-change', function (e, data) {
                         if(state_switch === 'manual') {
                             state_switch = 'event';
                         }
@@ -400,7 +484,7 @@ winkstart.module('myaccount', 'balance', {
 
             THIS.balance_get(function(data) {
                 var $balance_menu_html = THIS.templates.menu.tmpl({
-                    'amount': data.data.amount.toFixed(0) || '0'
+                    'amount': data.data.amount.toFixed(2) || '0.00'
                 });
 
                 winkstart.publish('myaccount.add_submodule', $balance_menu_html, 30, 'billing_category');

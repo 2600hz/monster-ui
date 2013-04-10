@@ -193,7 +193,7 @@ winkstart.module('myaccount', 'myaccount', {
         update_menu: function(module, data, key) {
             var THIS = this;
 
-            if(data) {
+            if(data !== undefined) {
                 if(key) {
                     $('[data-key="'+key+'"] .badge').html(data);
                 }

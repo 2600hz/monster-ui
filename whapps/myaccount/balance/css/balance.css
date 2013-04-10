@@ -1,3 +1,7 @@
+.dataTables_scroll .dataTables_scrollBody {
+    max-height: 300px;
+}
+
 .balance-content-wrapper .title-bar > *:not(.pull-right) {
     float: left;
 }

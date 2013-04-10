@@ -21,5 +21,18 @@
     "charge_reminder_line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
     "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
 
-    "whapp_pbx_connector": "Connecteur de PBX"
+    "whapp_pbx_connector": "Connecteur de PBX",
+
+    "table_empty": "Aucune donn&eacute;e &agrave; afficher",
+    "table_processing": "Traitement en cours...",
+    "table_show_entries": "Montre _MENU_ entr&eacute;es",
+    "table_showing_start_end": "Affichage des lignes _START_ &agrave; _END_ sur un total de _TOTAL_ entr&eacute;es",
+    "table_zero_records": "Aucune donn&eacute;e ne correspond &agrave; votre recherche",
+    "table_showing_empty": "0 ligne &agrave; afficher",
+    "table_loading": "Chargement...",
+    "table_filtered": "(filtr&eacute;es d'un total de _MAX_ lignes)",
+    "table_paginate_first": "Premier",
+    "table_paginate_previous": "Pr&eacute;c&eacute;dent",
+    "table_paginate_next": "Suivant",
+    "table_paginate_last": "Dernier"
 }

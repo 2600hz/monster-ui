@@ -22,5 +22,18 @@
     "charge_reminder_line2": "Are you sure you want to continue?'",
 
     "whapp_pbx_connector": "SIP Trunking",
-    "currency_used": "$"
+    "currency_used": "$",
+
+    "table_empty": "No data available in table",
+    "table_processing": "Processing...",
+    "table_show_entries": "Show _MENU_ entries",
+    "table_showing_start_end": "Showing _START_ to _END_ of _TOTAL_ entries",
+    "table_zero_records": "No matching records found",
+    "table_showing_empty": "Showing 0 to 0 of 0 entries",
+    "table_loading": "Loading...",
+    "table_filtered": "(filtered from _MAX_ total entries)",
+    "table_paginate_first": "First",
+    "table_paginate_previous": "First",
+    "table_paginate_next": "Next",
+    "table_paginate_last": "Last"
 }

@@ -2,6 +2,10 @@
     "available_credits": "Cr&eacute;dits disponibles",
     "minutes_used": "Minutes utilis&eacute;es",
     "call_charges": "Frais d'appels",
+    "filter": "Filtrer",
+    "start_date": "Date D&eacute;but",
+    "end_date": "Date Fin",
+    "active_call": "en cours",
 
     "title": "Par Minute",
     "add_credit_one": "Ajout de cr&eacute;dits",
@@ -27,5 +31,13 @@
     "credits_added": "Vous venez d'ajouter __variable__ &agrave; votre balance!",
     "auto_recharge_enabled": "La recharge automatique de vos cr&eacute;dits est d&eacute;sormais activ&eacute;e!",
     "auto_recharge_cancelled": "Vous avez annul&eacute; la recharge automatique de cr&eacute;dits avec succ&egrave;s.",
-    "add_credit_dialog_title": "Add Credits"
+    "add_credit_dialog_title": "Add Credits",
+
+    "date_column": "Date",
+    "direction_column": "Direction",
+    "duration_column": "Minutes",
+    "amount_column": "Montant",
+    "from_column": "De",
+    "to_column": "&Agrave;",
+    "account_column": "Compte"
 }
