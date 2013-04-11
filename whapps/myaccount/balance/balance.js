@@ -4,9 +4,10 @@ winkstart.module('myaccount', 'balance', {
         ],
 
         templates: {
-           menu: 'tmpl/menu.handlebars',
-           balance: 'tmpl/balance.handlebars',
-           add_credits_dialog: 'tmpl/add_credits.handlebars'
+            menu: 'tmpl/menu.handlebars',
+            balance: 'tmpl/balance.handlebars',
+            table_action_bar: 'tmpl/table_action_bar.handlebars',
+            add_credits_dialog: 'tmpl/add_credits.handlebars'
         },
 
         locales: ['en', 'fr'],
@@ -32,6 +33,11 @@ winkstart.module('myaccount', 'balance', {
                 url: '{api_url}/accounts/{account_id}/transactions?created_from={from}&created_to={to}',
                 contentType: 'application/json',
                 verb: 'GET'
+            },
+            'transactions.get_accounts': {
+                url: '{api_url}/accounts/{account_id}/descendants',
+                contentType: 'application/json',
+                verb: 'GET'
             }
         }
     },
@@ -43,6 +49,27 @@ winkstart.module('myaccount', 'balance', {
     },
     {
         transactions_range: 30,
+
+        get_accounts: function(success, error) {
+            var THIS = this;
+
+            winkstart.request('transactions.get_accounts', {
+                    account_id: winkstart.apps['myaccount'].account_id,
+                    api_url: winkstart.apps['myaccount'].api_url,
+                },
+                function(data, status) {
+                    if(typeof success == 'function') {
+                        success(data, status);
+                    }
+                },
+                function(data, status) {
+                    if(typeof error == 'function') {
+                        error(data, status);
+                    }
+                }
+            );
+
+        },
 
         limits_get: function(success, error) {
             var THIS = this;
@@ -248,7 +275,7 @@ winkstart.module('myaccount', 'balance', {
             });
         },
 
-        refresh_transactions_table: function(parent, from_timestamp, to_timestamp) {
+        refresh_transactions_table: function(parent, from_timestamp, to_timestamp, map_accounts) {
             var THIS = this,
                 params = {
                     from: from_timestamp,
@@ -256,7 +283,7 @@ winkstart.module('myaccount', 'balance', {
                 };
 
             THIS.transactions_get(params, function(_data_transactions) {
-                var data = THIS.transactions_to_table_data(_data_transactions.data);
+                var data = THIS.transactions_to_table_data(_data_transactions.data, map_accounts);
 
                 winkstart.table.transactions.fnAddData(data.tab_data);
 
@@ -265,7 +292,7 @@ winkstart.module('myaccount', 'balance', {
             });
         },
 
-        transactions_to_table_data: function(data_request) {
+        transactions_to_table_data: function(data_request, map_accounts) {
             var data = {
                 tab_data: [],
                 total_minutes: 0,
@@ -276,18 +303,21 @@ winkstart.module('myaccount', 'balance', {
                 v.metadata = v.metadata || {
                     to: '-',
                     from: '-',
-                    account_id: '1234',
                     direction: 'inbound'
                 };
 
                 if(v.reason === 'per_minute_call') {
                     var duration = i18n.t('myaccount.balance.active_call'),
-                        friendly_date = winkstart.parse_date(v.created);
+                        friendly_date = winkstart.parse_date(v.created),
+                        account_name = '-';
 
-                    if('end' in v) {
-                        console.log(v.end, v.created, v.end - v.created);
-                        duration = Math.ceil((v.end - v.created)/60),
+                    if('duration' in v.metadata) {
+                        duration = Math.ceil((parseInt(v.metadata.duration))/60),
                         data.total_minutes += duration;
+                    }
+
+                    if('account_id' in v.metadata) {
+                        account_name = map_accounts[v.metadata.account_id].name;
                     }
 
                     data.total_charges += v.amount;
@@ -299,7 +329,7 @@ winkstart.module('myaccount', 'balance', {
                         friendly_date,
                         winkstart.format_phone_number(v.metadata.from),
                         winkstart.format_phone_number(v.metadata.to),
-                        v.metadata.account_id,
+                        account_name,
                         duration,
                         i18n.t('core.layout.currency_used') + v.amount
                     ]);
@@ -312,51 +342,69 @@ winkstart.module('myaccount', 'balance', {
         render: function() {
             var THIS = this;
 
-            THIS.transactions_get(function(_data_transactions) {
-                THIS.balance_get(function(data) {
-                    var data_table = THIS.transactions_to_table_data(_data_transactions.data),
-                        parsed_amount = parseFloat(data.data.amount).toFixed(2),
-                        $balance_html = THIS.templates.balance.tmpl({
-                            amount: parsed_amount,
-                            minutes_used: data_table.total_minutes,
-                            call_charges: data_table.total_charges.toFixed(2)
+            THIS.get_accounts(function(_data_accounts) {
+                var map_accounts = {};
+
+                $.each(_data_accounts.data, function(k, v) {
+                    map_accounts[v.id] = v;
+                });
+
+                THIS.transactions_get(function(_data_transactions) {
+                    THIS.balance_get(function(data) {
+                        var data_table = THIS.transactions_to_table_data(_data_transactions.data, map_accounts),
+                            parsed_amount = parseFloat(data.data.amount).toFixed(2),
+                            $balance_html = THIS.templates.balance.tmpl({
+                                amount: parsed_amount,
+                                minutes_used: data_table.total_minutes,
+                                call_charges: data_table.total_charges.toFixed(2)
+                            });
+
+                        winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parsed_amount);
+
+                        $('#add_credits', $balance_html).on('click', function() {
+                            THIS.render_add_credits_dialog($balance_html, function(amount) {
+                                var new_amount = parseFloat(amount).toFixed(2);
+                                winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + new_amount);
+                                $('#amount', $balance_html).html(new_amount);
+                            });
                         });
 
-                    winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parsed_amount);
+                        winkstart.publish('myaccount.render_submodule', $balance_html);
 
-                    $('#add_credits', $balance_html).on('click', function() {
-                        THIS.render_add_credits_dialog($balance_html, function(amount) {
-                            var new_amount = parseFloat(amount).toFixed(2);
-                            winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + new_amount);
-                            $('#amount', $balance_html).html(new_amount);
-                        });
-                    });
+                        THIS.init_table($balance_html);
 
-                    winkstart.publish('myaccount.render_submodule', $balance_html);
+                        $.fn.dataTableExt.afnFiltering.pop();
 
-                    THIS.init_table($balance_html);
+                        $('div.table-custom-actions', $balance_html).html(THIS.templates.table_action_bar.tmpl());
 
-                    $.fn.dataTableExt.afnFiltering.pop();
+                        winkstart.init_range_datepicker(THIS.transactions_range, $balance_html);
 
-                    $('div.table-custom-actions', $balance_html).html(i18n.t('myaccount.balance.start_date') + ': <input id="startDate" readonly="readonly" type="text"/>&nbsp;&nbsp;'+i18n.t('myaccount.balance.end_date')+': <input id="endDate" readonly="readonly" type="text"/>&nbsp;&nbsp;<button class="btn btn-primary button-search" id="filter_transactions">'+i18n.t('myaccount.balance.filter')+'</button>');
-
-                    winkstart.init_range_datepicker(THIS.transactions_range, $balance_html);
-
-                    $('#filter_transactions', $balance_html).on('click', function() {
                         var start_date = $('#startDate', $balance_html).val(),
                             end_date = $('#endDate', $balance_html).val(),
-                            regex = /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/,
-                            start_date_sec = (new Date(start_date).getTime()/1000) + 62167219200,
-                            end_date_sec = (new Date(end_date).getTime()/1000) + 62167219200;
+                            created_from = (new Date(start_date).getTime()/1000) + 62167219200,
+                            created_to = (new Date(end_date).getTime()/1000) + 62167219200;
 
-                        /* Bug because of Infinite scrolling... we need to manually remove tr */
-                        $('tbody tr', winkstart.table.transactions).remove();
-                        winkstart.table.transactions.fnClearTable();
+                        $('#filter_transactions', $balance_html).on('click', function() {
+                            var start_date = $('#startDate', $balance_html).val(),
+                                end_date = $('#endDate', $balance_html).val(),
+                                regex = /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/;
 
-                        THIS.refresh_transactions_table($balance_html, start_date_sec, end_date_sec);
+                            created_from = (new Date(start_date).getTime()/1000) + 62167219200;
+                            created_to = (new Date(end_date).getTime()/1000) + 62167219200;
+
+                            /* Bug because of Infinite scrolling... we need to manually remove tr */
+                            $('tbody tr', winkstart.table.transactions).remove();
+                            winkstart.table.transactions.fnClearTable();
+
+                            THIS.refresh_transactions_table($balance_html, created_from, created_to, map_accounts);
+                        });
+
+                        $('#get_csv', $balance_html).on('click', function() {
+                            window.location.href = winkstart.apps['myaccount'].api_url+'/accounts/'+winkstart.apps['myaccount'].account_id+'/transactions?created_from='+created_from+'&created_to='+created_to+'&depth=2&identifier=metadata&accept=csv&auth_token=' + winkstart.apps['myaccount'].auth_token;
+                        });
+
+                        winkstart.table.transactions.fnAddData(data_table.tab_data);
                     });
-
-                    winkstart.table.transactions.fnAddData(data_table.tab_data);
                 });
             });
         },

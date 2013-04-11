@@ -41,6 +41,9 @@
     width: 100%;
 }
 
+.balance-content-wrapper .action-bar-wrapper .dropdown-download {
+    display: inline-block;
+}
 
 /* ADD CREDITS POPUP */
 .add-credits-content-wrapper {
