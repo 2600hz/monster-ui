@@ -296,7 +296,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     );
                 };
 
-            if(winkstart.apps['pbxs'].connectivy_id) {
+            if(winkstart.apps['pbxs'].connectivity_id) {
                 get_account();
             }
             else {
@@ -1478,8 +1478,8 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                 delete global_data.data.servers[server_id].DIDs[v];
                             });
 
-                            THIS.update_old_trunkstore(global_data.data, function() {
-                                THIS.list_numbers_by_pbx(server_id, callback_listing);
+                            THIS.update_old_trunkstore(global_data.data, function(data_trunkstore) {
+                                THIS.list_numbers_by_pbx(server_id, callback_listing, data_trunkstore.data);
                             });
                         });
                     });
@@ -1657,9 +1657,9 @@ winkstart.module('pbxs', 'pbxs_manager', {
                                 });
 
                                 THIS.update_old_trunkstore(_global_data.data,
-                                    function() {
+                                    function(data_trunkstore) {
                                         THIS.refresh_unassigned_list();
-                                        THIS.list_numbers_by_pbx(server_id, callback_listing);
+                                        THIS.list_numbers_by_pbx(server_id, callback_listing, data_trunkstore.data);
                                     },
                                     function() {
                                         THIS.list_numbers_by_pbx(server_id, callback_listing);
@@ -2182,11 +2182,11 @@ winkstart.module('pbxs', 'pbxs_manager', {
                             global_data.data.servers[server_id].DIDs[v] = {};
                         });
 
-                        THIS.update_old_trunkstore(global_data.data, function() {
+                        THIS.update_old_trunkstore(global_data.data, function(data_trunkstore) {
                             THIS.refresh_unassigned_list();
                             THIS.list_numbers_by_pbx(server_id, function(cb_data) {
                                 THIS.refresh_list_numbers(cb_data, parent);
-                            });
+                            }, data_trunkstore.data);
                         });
                     });
                 }
