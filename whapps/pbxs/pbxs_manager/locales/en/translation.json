@@ -157,7 +157,6 @@
     "help_call_transfer": "This setting determines whether your system will send us REFERs or not for call transfers.",
     "help_faxing": "This controls whether T.38 (Fax Signaling) is supported by your system.",
     "help_static_ip": "Your PBX is on a static IP if you can access the address of your pbx from an external device, like your cellphone. If you have to log into your corporate network or if the IP address of your PBX beings with 192 or 10, you are not on a static IP.",
-    "help_e911": "Power Tip: Failure to populate e911 information will result in fees and, more importantly, delayed emergency services. To repeat, if you don't fill out the e911 information, and someone dials 911, the response will be delayed and you will be charged a fee.",
     "help_spare_numbers": "These are available numbers not currently attached to an account. Use this menu to assign numbers to a specific phone system.",
 
     "caller_id_dialog_title": "Caller ID Name Selection",
@@ -170,10 +169,6 @@
 
     "e911_dialog_title": "Edit 911 Location",
     "gmap_pin_label": "Your+E911+Location",
-    "when_you_dial": "When you dial",
-    "emergency_number": "911",
-    "from": "from your number,",
-    "end_when_you_dial": " show this as your address on 911 operator console.",
     "postal_code": "Zip Code",
     "address_line_1": "Address Line 1",
     "address_line_2": "Address Line 2",
