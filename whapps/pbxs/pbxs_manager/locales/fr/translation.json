@@ -169,7 +169,10 @@
     "city": "Ville",
     "state": "&Eacute;tat/Region",
     "verify_location": "V&eacute;rifier l'adresse avec Google Maps",
-    "submit": "Envoyer",
+    "e911_submit_btn": "Ajouter",
+    "e911_title": "Adresse E911",
+    "e911_rotated_text": "Pour les services d'urgence",
+    "e911_info_box": "Cette adresse apparait aux services d'urgence quand vous les appelez avec votre num&eacute;ro",
     "error_update_caller_id": "Erreur lors de la mise &agrave; jour de l'adresse d'urgence pour ce num&eacute;ro",
 
     "port_name_on_account": "Nom",

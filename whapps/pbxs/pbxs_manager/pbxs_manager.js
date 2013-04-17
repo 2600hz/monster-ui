@@ -1809,7 +1809,7 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 $('.gmap_link_div', popup_html).show();
             }
 
-            $('.submit_btn', popup_html).click(function(ev) {
+            $('#submit_btn', popup_html).click(function(ev) {
                 ev.preventDefault();
 
                 var e911_form_data = form2object('e911');
@@ -1824,6 +1824,12 @@ winkstart.module('pbxs', 'pbxs_manager', {
             popup = winkstart.dialog(popup_html, {
                 title: i18n.t('pbxs.pbxs_manager.e911_dialog_title')
             });
+
+            // Fixing the position of the rotated text using its width
+            var $rotated_text = $('#e911_rotated_text', popup_html),
+                rotated_text_offset = $rotated_text.width()/2;
+            $rotated_text.css('top', 40+rotated_text_offset +'px')
+                         .css('left', 25-rotated_text_offset +'px');
         },
 
         render_add_number_dialog: function(global_data, index, callback) {
