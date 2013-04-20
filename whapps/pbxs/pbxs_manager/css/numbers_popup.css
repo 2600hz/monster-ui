@@ -493,34 +493,67 @@
 }
 /* e911 POPUP */
 .trunkstore_popup.e911 {
-    text-align: center;
+    padding:15px 15px 5px 15px;
+    width: 480px
 }
 
-.trunkstore_popup.e911 form#e911 {
-    text-align: left;
+.trunkstore_popup.e911 .e911-title {
+    margin-left: 320px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
 }
 
-.trunkstore_popup.e911 .row-fluid:not(:first-child) {
-    margin-top: 25px;
+.trunkstore_popup.e911 .rotated-text {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    text-transform: uppercase;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #ccc;
 }
 
 .trunkstore_popup.e911 .e911_image {
     background: url('images/e911_image.png') no-repeat center;
-    width: 100px;
-    height: 193px;
+    width: 80px;
+    height: 265px;
+    margin: 0 10px 0 30px;
+}
+
+.trunkstore_popup.e911 form.form-horizontal {
+    margin-bottom: 0px;
+}
+
+.trunkstore_popup.e911 form.form-horizontal .control-group {
     margin-bottom: 10px;
-    display: inline-block;
+}
+
+.trunkstore_popup.e911 form.form-horizontal .control-group .control-label {
+    width: 140px;
+    padding-top: 10px;
+}
+
+.trunkstore_popup.e911 form.form-horizontal .control-group .controls {
+    margin-left: 160px;
+}
+
+.trunkstore_popup.e911 form.form-horizontal .control-group .controls input {
+    width: 186px;
+    padding: 10px 5px;
+}
+
+.trunkstore_popup.e911 form.form-horizontal .control-group .controls button {
+    width: 200px;
+    text-transform: uppercase;
 }
 
 .trunkstore_popup.e911 .e911_text {
     font-weight: 500;
     font-size: 16px;
     line-height: 30px;
-}
-
-.trunkstore_popup.e911 .e911_text .big_blue_text {
-    color: #22ccff;
-    font-size: 32px;
 }
 
 /* CNAM POPUP */
