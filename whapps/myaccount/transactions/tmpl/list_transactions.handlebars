@@ -1,0 +1,60 @@
+{{#each list_transactions}}
+    <div class="box-top-blue transaction">
+        {{#compare this.type '===' 'charges'}}
+                <div class="expand-box">
+                </div>
+                <div class="text-box">
+                    <div class="title">{{t "myaccount.transactions.one_time_charge"}}</div>
+                    <div class="date">{{this.created}}</div>
+                    <div class="price">{{t "core.layout.currency_used"}}{{this.amount}}</div>
+                </div>
+            </div>
+        {{else}}
+                 <div class="expand-box">
+                    <div class="expand">+</div>
+                </div>
+                <div class="text-box">
+                    <div class="title">
+                        {{#compare this.type '===' 'monthly'}}
+                            {{t "myaccount.transactions.monthly_charge"}}
+                        {{else}}
+                            {{t "myaccount.transactions.service_charge"}}
+                        {{/compare}}
+                    </div>
+                    <div class="date">{{this.created}}</div>
+                    <div class="price">{{t "core.layout.currency_used"}}{{this.amount}}</div>
+                </div>
+                <div class="expandable">
+                    <div class="table-content">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="blue-gradient-reverse">{{t "myaccount.service_plan.service_title"}}</th>
+                                    <th class="blue-gradient-reverse">{{t "myaccount.service_plan.rate_title"}}</th>
+                                    <th class="blue-gradient-reverse"></th>
+                                    <th class="blue-gradient-reverse">{{t "myaccount.service_plan.quantity_title"}}</th>
+                                    <th class="blue-gradient-reverse">{{t "myaccount.service_plan.discount"}}</th>
+                                    <th class="blue-gradient-reverse">{{t "myaccount.service_plan.monthly_charges_title"}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#services}}
+                                    <tr>
+                                        <td>{{service}}</td>
+                                        <td>{{t "core.layout.currency_used"}}{{rate}}</td>
+                                        <td>X</td>
+                                        <td>{{quantity}}</td>
+                                        <td>{{discount}}</td>
+                                        <td>{{t "core.layout.currency_used"}}{{monthly_charges}}</td>
+                                    </tr>
+                                {{/services}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {{/compare}}
+    </div>
+{{else}}
+    <div class="no-data">No Data</div>
+{{/each}}

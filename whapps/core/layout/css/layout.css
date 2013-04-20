@@ -632,7 +632,7 @@ table.table tr td {
 .fancy-header .title-block {
     font-weight: 500;
     line-height: 80px;
-    width: 100%;
+    float: left;
 }
 
 .fancy-header .right-block {
@@ -640,8 +640,7 @@ table.table tr td {
     height: 100px;
     position: relative;
     right: 10px;
-    top: -90px;
-    margin-bottom: -90px;
+    top: -10px;
 }
 
 .fancy-header .right-block .content {

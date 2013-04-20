@@ -130,7 +130,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_all_numbers: function(success, error) {
-            console.log('list_all_numbers');
             winkstart.request('pbxs_manager.list_numbers', {
                     account_id: winkstart.apps['pbxs'].account_id,
                     api_url: winkstart.apps['pbxs'].api_url
@@ -149,7 +148,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_callflows: function(success, error) {
-            console.log('list_callflows');
             winkstart.request('pbxs_manager.list_callflows', {
                     account_id: winkstart.apps['pbxs'].account_id,
                     api_url: winkstart.apps['pbxs'].api_url
@@ -168,7 +166,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         create_account: function(success, error) {
-            console.log('create_account');
             winkstart.request('pbxs_manager.get_account', {
                     account_id: winkstart.apps['pbxs'].account_id,
                     api_url: winkstart.apps['pbxs'].api_url
@@ -210,7 +207,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_accounts: function(success, error) {
-            console.log('list_accounts');
             winkstart.request('old_trunkstore.list', {
                     account_id: winkstart.apps['pbxs'].account_id,
                     api_url: winkstart.apps['pbxs'].api_url
@@ -229,7 +225,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         get_account: function(success, error) {
-            console.log('get_account');
             var THIS = this;
 
             winkstart.request('old_trunkstore.get', {
@@ -251,7 +246,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         get_automatic_status: function(data) {
-            console.log('get_automatic_status');
             var list_steps = [
                     'init',
                     'registration',
@@ -286,7 +280,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_servers: function(success, error) {
-            console.log('list_servers');
             var THIS = this,
                 get_account = function() {
                     THIS.get_account(
@@ -324,11 +317,10 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         edit_server: function(data, _parent, _target, _callbacks, data_defaults) {
-            console.log('edit_server');
             var THIS = this;
                 //parent = _parent || $('#pbxs_manager-content'),
 
-            async.parallel({
+            winkstart.parallel({
                 realm: function(callback){
                      winkstart.request('pbxs_manager.get_account', {
                             account_id: winkstart.apps['pbxs'].account_id,
@@ -411,7 +403,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         get_number: function(phone_number, success, error) {
-            console.log('get_number');
             winkstart.request('pbxs_manager.get', {
                     api_url: winkstart.apps['pbxs'].api_url,
                     account_id: winkstart.apps['pbxs'].account_id,
@@ -431,7 +422,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         update_number: function(phone_number, data, success, error) {
-            console.log('update_number');
             winkstart.request('pbxs_manager.update', {
                     api_url: winkstart.apps['pbxs'].api_url,
                     account_id: winkstart.apps['pbxs'].account_id,
@@ -452,7 +442,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         port_number: function(data, success, error) {
-            console.log('port_number');
             var THIS = this;
 
             winkstart.request('pbxs_manager.port', {
@@ -475,7 +464,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         create_number: function(phone_number, success, error) {
-            console.log('create_number');
             var THIS = this;
 
             winkstart.request(false, 'pbxs_manager.create', {
@@ -498,7 +486,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         activate_number: function(phone_number, success, error) {
-            console.log('activate_number');
             var THIS = this;
 
             winkstart.request(false, 'pbxs_manager.activate', {
@@ -521,7 +508,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         delete_number: function(phone_number, success, error) {
-            console.log('delete_number');
             var THIS = this;
 
             winkstart.request('pbxs_manager.delete', {
@@ -543,7 +529,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         search_numbers: function(data, success, error) {
-            console.log('search_numbers');
             var THIS = this;
 
             winkstart.request(true, 'pbxs_manager.search', {
@@ -565,7 +550,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         create_number_doc: function(data, success, error) {
-            console.log('create_number_doc');
             var THIS = this;
 
             winkstart.request('pbxs_manager.create_doc', {
@@ -589,7 +573,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         submit_port: function(port_data, number_data, callback) {
-            console.log('submit_port');
             var THIS = this,
                 uploads_done = 0,
                 put_port_data = function() {
@@ -632,7 +615,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         add_freeform_numbers: function(numbers_data, callback) {
-            console.log('add_freeform_numbers');
             var THIS = this,
                 number_data;
 
@@ -678,7 +660,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         add_numbers: function(global_data, index, numbers_data, callback) {
-            console.log('add_numbers');
             var THIS = this,
                 number_data;
 
@@ -720,7 +701,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         clean_phone_number_data: function(data) {
-            console.log('clean_phone_number_data');
             /* Clean Failover */
             if('failover' in data && 'sip' in data.failover && data.failover.sip === '') {
                 delete data.failover.sip;
@@ -745,7 +725,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         normalize_endpoint_data: function(data) {
-            console.log('normalize_endpoint_data');
             if(data.server_name === '' || !('server_name' in data)) {
                 data.server_name = "PBX " + data.extra.serverid;
             }
@@ -756,7 +735,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         save_endpoint: function(endpoint_data, data, success, error) {
-            console.log('save_endpoint');
             var THIS = this,
                 index = endpoint_data.extra.serverid,
                 new_data = $.extend(true, {}, data.data);
@@ -811,7 +789,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         update_old_trunkstore: function(data, success, error) {
-            console.log('update_old_trunkstore');
             winkstart.request('old_trunkstore.update', {
                     account_id: winkstart.apps['pbxs'].account_id,
                     api_url: winkstart.apps['pbxs'].api_url,
@@ -832,7 +809,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         load_specific_step: function(step_index, callbacks, parent) {
-            console.log('load_specific_step');
             $('.wizard-top-bar', parent).hide();
             $('.wizard-content-step', parent).hide();
             $('.wizard-content-step[data-step="'+ step_index +'"]', parent).show();
@@ -856,7 +832,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         initialize_wizard: function(parent, callback_submit) {
-            console.log('initialize_wizard');
             var THIS = this,
                 max_step = parseInt($('.wizard-top-bar', parent).attr('data-max_step'));
 
@@ -917,7 +892,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         change_step: function(step_index, max_step, parent) {
-            console.log('change_step');
             var THIS = this;
 
             $('.step', parent).removeClass('active');
@@ -949,7 +923,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         validate_step: function(step, parent, callback) {
-            console.log('validate_step');
             var validated = true,
                 step = parseInt(step),
                 error_message = i18n.t('pbxs.pbxs_manager.please_correct');
@@ -989,7 +962,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_endpoint: function(data, endpoint_data, target, callbacks, parent) {
-            console.log('render_endpoint');
             if(!endpoint_data.server_name) {
                 endpoint_data.server_name = null;
             }
@@ -1302,7 +1274,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         refresh_list_numbers: function(DIDs_list, _parent) {
-            console.log('refresh_list_numbers');
             var parent = _parent || $('#pbx_connector_container'),
                 THIS = this,
                 count_DIDs = 0;
@@ -1325,7 +1296,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_pbxs_manager: function(data, endpoint_data, target, callbacks) {
-            console.log('render_pbxs_manager');
             var THIS = this,
                 server_id = endpoint_data.extra.id,
                 img_link = endpoint_data.server_type ? endpoint_data.server_type.replace('.','').toLowerCase() : 'other';
@@ -1683,7 +1653,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_cnam_dialog: function(cnam_data, callback) {
-            console.log('render_cnam_dialog');
             var THIS = this,
                 popup_html = THIS.templates.cnam_dialog.tmpl(cnam_data || {}),
                 popup;
@@ -1706,7 +1675,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_failover_dialog: function(failover_data, callback) {
-            console.log('render_failover_dialog');
 
             var THIS = this,
                 radio = (failover_data || {}).e164 ? 'number' : ((failover_data || {}).sip ? 'sip' : ''),
@@ -1783,7 +1751,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_e911_dialog: function(e911_data, callback) {
-            console.log('render_e911_dialog');
             var THIS = this,
                 popup_html = THIS.templates.e911_dialog.tmpl(e911_data || {}),
                 popup;
@@ -1827,7 +1794,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_add_number_dialog: function(global_data, index, callback) {
-            console.log('render_add_number_dialog');
             var THIS = this,
                 numbers_data = [],
                 popup_html = THIS.templates.add_number_dialog.tmpl(),
@@ -1913,7 +1879,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_port_dialog: function(callback) {
-            console.log('render_port_dialog');
             var THIS = this,
                 port_form_data = {},
                 popup_html = THIS.templates.port_dialog.tmpl({
@@ -2130,7 +2095,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         check_toll_free: function(number) {
-            console.log('check_toll_free');
             var toll_free = false,
                 toll_free_number = number.match(/^(\+?1)?(8(00|55|66|77|88)[2-9]\d{6})$/);
 
@@ -2142,7 +2106,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         refresh_unassigned_list: function(_parent, _callback) {
-            console.log('refresh_unassigned_list');
             var THIS = this,
                 parent = _parent || $('#list_pbxs_navbar');
 
@@ -2161,7 +2124,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         bind_events: function(parent) {
-            console.log('bind_events');
             var THIS = this,
                 server_id;
 
@@ -2312,7 +2274,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         render_list: function(_id, _parent, _callback, _data) {
-            console.log('render_list');
             var THIS = this,
                 callback = _callback,
                 parent = _parent || $('#ws-content'),
@@ -2374,7 +2335,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         activate: function(_parent) {
-            console.log('activate');
             var THIS = this,
                 pbxs_manager_html = THIS.templates.pbxs_manager.tmpl(),
                 parent = _parent || $('#ws-content');
@@ -2401,18 +2361,16 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_numbers_by_pbx: function(id, callback, _optional_data) {
-            console.log('list_numbers_by_pbx');
             var THIS = this;
 
             if(id || id > -1) {
                 if(_optional_data) {
-                    console.log(_optional_data);
                     if(typeof callback === 'function') {
                         callback(_optional_data.servers[id].DIDs);
                     }
                 }
                 else {
-                    async.parallel({
+                    winkstart.parallel({
                         list_numbers: function(callback){
                             THIS.list_all_numbers(function(_data_numbers) {
                                 callback(null, _data_numbers.data);
@@ -2444,12 +2402,11 @@ winkstart.module('pbxs', 'pbxs_manager', {
         },
 
         list_available_numbers: function(callback) {
-            console.log('list_available_numbers');
             var THIS = this;
 
             var start_timestamp = (new Date()).getTime();
 
-            async.parallel({
+            winkstart.parallel({
                 list_numbers: function(callback){
                     THIS.list_all_numbers(function(_data_numbers) {
                         callback(null, _data_numbers.data);

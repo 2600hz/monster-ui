@@ -1,11 +1,11 @@
 <span class="action-bar-wrapper">
-    {{t "myaccount.balance.start_date"}}: <input id="startDate" readonly="readonly" type="text"/>
-    {{t "myaccount.balance.end_date"}}: <input id="endDate" readonly="readonly" type="text"/>
-    <button class="btn btn-primary button-search" id="filter_transactions">{{t "myaccount.balance.filter"}}</button>
+    {{t "core.layout.start_date"}}: <input id="startDate" readonly="readonly" type="text"/>
+    {{t "core.layout.end_date"}}: <input id="endDate" readonly="readonly" type="text"/>
+    <button class="btn btn-primary button-search" id="filter_transactions">{{t "core.layout.filter"}}</button>
     <li class="dropdown dropdown-download">
-        <a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download icon-green"></i>Download</a>
+        <a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download icon-green"></i>{{t "core.layout.download"}}</a>
         <ul class="dropdown-menu">
-            <li id="get_csv"><a href="#">CSV</a></li>
+            <li id="get_csv"><a href="#">{{t "core.layout.csv"}}</a></li>
         </ul>
     </li>
 </span>

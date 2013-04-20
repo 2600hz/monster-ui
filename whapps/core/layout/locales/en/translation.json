@@ -23,6 +23,12 @@
 
     "whapp_pbx_connector": "SIP Trunking",
     "currency_used": "$",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "filter": "Filter",
+    "download": "Download",
+    "csv": "CSV",
+    "pdf": "PDF",
 
     "table_empty": "No data available in table",
     "table_processing": "Processing...",

@@ -1,64 +1,83 @@
-.service-plan-content-wrapper .fancy-header .left-image {
-    width: 57px;
+.transactions-content-wrapper .fancy-header .left-image {
+    width: 65px;
 }
 
-.service-plan-content-wrapper  .fancy-header .right-block .main-title {
+.transactions-content-wrapper .fancy-header .right-block .content .main-title {
     font-size: 30px;
     font-weight: bold;
-    line-height: 70px;
+    line-height: 75px;
+    height: 80px;
 }
 
-.service-plan-content-wrapper .action-bar {
-    height: 40px;
-    width: 100%;
+.transactions-content-wrapper .fancy-header .title-block .billing-date {
+    color: #22ccff;
+    font-weight: bold;
 }
 
-.service-plan-content-wrapper .action-bar > * {
+.transactions-content-wrapper .action-bar-wrapper input {
+    margin-bottom: 0;
+    width: 80px;
+}
+
+.transactions-content-wrapper .action-bar-wrapper .dropdown {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.transactions-content-wrapper .list-transactions {
+    margin-top: 25px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction {
+    line-height: 65px;
+    margin-bottom: 15px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction > *:not(.expandable) {
+    line-height: 65px;
+    height: 65px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction .expandable .table {
+    margin-bottom: 0;
+}
+
+.transactions-content-wrapper .list-transactions .transaction .expand-box {
     float: left;
+    border-right: 1px solid #DDDDDD;
+    text-align: center;
+    width: 80px;
 }
 
-.service-plan-content-wrapper .action-bar .date-selection select {
-    margin-bottom: 0px;
+.transactions-content-wrapper .list-transactions .transaction .expand-box > * {
+    color: #CCCCCC;
+    cursor: pointer;
+    font-size: 110px;
+    height: 65px;
+    line-height: 50px;
+    text-align: center;
+    text-shadow: 0 -1px 1px #777777;
 }
 
-.service-plan-content-wrapper .action-bar li.dropdown-download {
-    margin-left: 20px;
-    margin-top: 5px;
-    list-style: none;
+.transactions-content-wrapper .list-transactions .transaction .text-box {
+    margin-left: 120px;
 }
 
-.service-plan-content-wrapper .action-bar li.dropdown-download > a {
-    color: #666666;
-    margin-right: 20px;
+.transactions-content-wrapper .list-transactions .transaction .text-box > * {
+    float: left;
+    width: 33%;
+    overflow: hidden;
     white-space: nowrap;
 }
 
-/* Table Customization */
-.service-plan-content-wrapper table.table thead th:first-child, .service-plan-content-wrapper table.table tbody td:first-child {
-    padding-left: 10%;
-}
-.service-plan-content-wrapper table.table thead th:nth-child(2), .service-plan-content-wrapper table.table tbody td:nth-child(2) {
-    width: 100px;
-    text-align: right;
-}
-.service-plan-content-wrapper table.table thead th:nth-child(3), .service-plan-content-wrapper table.table tbody td:nth-child(3) {
-    width: 40px;
+.transactions-content-wrapper .list-transactions .transaction .date {
     text-align: center;
-}
-.service-plan-content-wrapper table.table thead th:nth-child(4), .service-plan-content-wrapper table.table tbody td:nth-child(4) {
-    width: 20px;
-    text-align: left;
-}
-.service-plan-content-wrapper table.table thead th:nth-child(5), .service-plan-content-wrapper table.table tbody td:nth-child(5) {
-    width: 100px;
-    text-align: right;
-}
-.service-plan-content-wrapper table.table tbody td:nth-child(5) {
-    color: #44cc44;
-    font-weight: 500;
+    color: #22ccff;
+    font-weight: bold;
 }
 
-.service-plan-content-wrapper table.table thead th:nth-child(6), .service-plan-content-wrapper table.table tbody td:nth-child(6) {
+.transactions-content-wrapper .list-transactions .transaction .text-box .price {
+    font-weight: bold;
+    font-size: 16px;
     text-align: right;
-    padding-right: 10%;
 }

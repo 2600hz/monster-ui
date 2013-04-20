@@ -22,6 +22,12 @@
     "charge_reminder_line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?",
 
     "whapp_pbx_connector": "Connecteur de PBX",
+    "start_date": "Date de d&eacute;but",
+    "end_date": "Date de fin",
+    "filter": "Filtrer",
+    "download": "T&eacute;l&eacute;charger",
+    "csv": "CSV",
+    "pdf": "PDF",
 
     "table_empty": "Aucune donn&eacute;e &agrave; afficher",
     "table_processing": "Traitement en cours...",

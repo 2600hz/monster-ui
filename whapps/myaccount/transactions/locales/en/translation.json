@@ -1,4 +1,9 @@
 {
     "title": "Transactions",
-    "title_header": "Transaction History"
+    "title_header": "Transaction History",
+    "billing_cycle": "Billing Cycle",
+    "to": "to",
+    "one_time_charge": "One-Time Charge",
+    "monthly_charge": "Monthly Charge",
+    "service_charge": "Service Charge"
 }
