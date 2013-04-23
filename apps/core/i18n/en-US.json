@@ -1,3 +1,45 @@
 {
-	"close" : "Close"
+    "close": "X Close",
+
+    "dialog_show_error": "Show Error",
+
+    "dialog_confirm_ok": "OK",
+    "dialog_confirm_cancel": "Cancel",
+    "dialog_confirm_title": "Confirmation",
+
+    "previous": "Previous",
+    "next": "Next",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "search": "Search",
+    "select_label": "Select",
+
+    "error": "Error",
+    "info": "Info",
+    "warning": "Warning",
+
+    "charge_reminder_line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+    "charge_reminder_line2": "Are you sure you want to continue?'",
+
+    "whapp_pbx_connector": "SIP Trunking",
+    "currency_used": "$",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "filter": "Filter",
+    "download": "Download",
+    "csv": "CSV",
+    "pdf": "PDF",
+
+    "table_empty": "No data available in table",
+    "table_processing": "Processing...",
+    "table_show_entries": "Show _MENU_ entries",
+    "table_showing_start_end": "Showing _START_ to _END_ of _TOTAL_ entries",
+    "table_zero_records": "No matching records found",
+    "table_showing_empty": "Showing 0 to 0 of 0 entries",
+    "table_loading": "Loading...",
+    "table_filtered": "(filtered from _MAX_ total entries)",
+    "table_paginate_first": "First",
+    "table_paginate_previous": "First",
+    "table_paginate_next": "Next",
+    "table_paginate_last": "Last"
 }

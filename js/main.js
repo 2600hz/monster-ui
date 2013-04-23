@@ -29,8 +29,11 @@ require(["jquery", "monster"], function($, monster){
 
 	$.support.cors = true;
 	$(function(){ 
-		monster._loadApp("core", function(){
+		monster._loadApp("core", function(app){
 			console.log("core loaded");
+			app.render(function(template){
+				$('#main section').append(template);
+			});
 		});
 	});
 

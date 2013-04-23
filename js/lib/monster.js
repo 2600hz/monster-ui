@@ -32,7 +32,7 @@ define(function(require){
 				
 				console.log("define:", path);
 
-				_.extend(app, { appPath: appPath });
+				_.extend(app, { appPath: '/' + appPath, data: {} });
 
 				_.each(app.requests, function(request, id){
 					self._defineRequest(id, request);
@@ -44,12 +44,28 @@ define(function(require){
 					self.sub(topic, cb, app);
 				});
 
+				_.extend(app.data, { i18n: {} });
+
+				_.each(app.i18n, function(locale){
+					self._loadLocale(app, locale)
+				});
+
 				if(self._fileExists(css)){
 					self.css(css);
 				}
 
 				app.load(callback);
 			})
+		},
+
+		_loadLocale: function(app, name){
+			$.ajax({
+				url: app.appPath + '/i18n/' + name + '.json',
+				dataType: 'json',
+				success: function(data){
+					app.data.i18n[name] = data;
+				}
+			});
 		},
 
 		// adds the oauth headers and data
@@ -171,34 +187,61 @@ define(function(require){
 			}
 		},
 
-		template: function(name, data, raw, ignoreCache){
+		shift: function(chain){
+			var next = chain.shift();
+			next && next();
+		},	
+
+		template: function(app, name, data, raw, ignoreCache){
 
 			raw = raw || false;
 			ignoreCache = ignoreCache || false;
 
 			var conical = (this.name || "global") + "." + name, // this should always be a module instance
-				_template;
+				_template,
+				result;
 
-			if(cache.templates[conical] && !ignoreCache){
-				return cache.templates[conical];
+			if(monster.cache.templates[conical] && !ignoreCache){
+				_template = monster.cache.templates[conical];
 			}
+			else {
 
-			// fetch template
-			if($(name).length){ // template is in the dom. eg. <script type="text/html" />
-				_template = $(name).html();
+				// fetch template
+				if($(name).length){ // template is in the dom. eg. <script type="text/html" />
+					_template = $(name).html();
+				}
+				else if(name.substring(0, 1) === "!"){ // ! indicates that it's a string template
+					_template = name.substring(1);
+				}
+				else{
+					$.ajax({
+						url: app.appPath + '/views/' + name + '.html',
+						dataType: 'text',
+						async: false,
+						success: function(result){
+							_template = result;
+						},
+						error: function(xhr, status, err){
+							_template = status + ': ' + err;
+						}
+					});
+				}
 			}
-			else if(name.substring(0, 1) === "!"){ // ! indicates that it's a string template
-				_template = name.substring(1);
+				
+			if(!raw){
+				_template = handlebars.compile(_template);
+
+				if(data){
+					result = _template(data);
+				}
 			}
 			else{
-				// fetch via ajax
-			}
-			
-			if(!raw){
-				_template = handlebars.compile(template);
+				result = _template;
 			}
 
-			return _template;
+			monster.cache.templates[conical] = _template;
+
+			return result;
 		}
 
 	};
