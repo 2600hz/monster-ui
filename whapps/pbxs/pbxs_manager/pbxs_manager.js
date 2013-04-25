@@ -2163,7 +2163,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     _callback();
                 }
             });
-
         },
 
         bind_events: function(parent) {
@@ -2203,15 +2202,17 @@ winkstart.module('pbxs', 'pbxs_manager', {
 
             $('#unassigned_numbers_header', parent).on('click', function() {
                 var $this = $(this),
-                    $content = $('#unassigned_numbers .content', parent);
+                    $content = $('#unassigned_numbers .content', parent),
+                    nice_scrollbar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];
 
                 if($this.hasClass('open')) {
                     $this.removeClass('open');
                     $content.hide();
+                    nice_scrollbar.resize();
                 }
                 else {
                     $this.addClass('open');
-                    $content.slideDown();
+                    $content.slideDown(nice_scrollbar.resize);
                 }
             });
 
@@ -2404,6 +2405,16 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 });
             });
 
+            $('#pbxs_manager_listpanel',pbxs_manager_html).niceScroll({
+                cursorcolor:"#333", 
+                autohidemode:false, 
+                cursorborder:"1px solid #666"
+            }).railh.addClass('pbx-fixed-hscroll');
+            $('#unassigned_numbers_wrapper',pbxs_manager_html).niceScroll({
+                cursorcolor:"#333", 
+                cursoropacitymin:0.5, 
+                hidecursordelay:1000
+            }).rail.addClass('unassigned-number-fixed-vscroll');
         },
 
         list_numbers_by_pbx: function(id, callback, _optional_data) {
