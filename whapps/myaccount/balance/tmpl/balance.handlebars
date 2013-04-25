@@ -16,18 +16,18 @@
         <div class="box-white-border pull-right visible-desktop">
             <div class="box-white-content">
                 <div class="title">{{t "myaccount.balance.call_charges"}}</div>
-                <div class="value">{{t "core.layout.currency_used"}}<span id="call_charges">{{call_charges}}</span></div>
+                <div class="value">{{t "core.layout.currency_used"}}<span id="call_charges">{{total_charges}}</span></div>
             </div>
         </div>
         <div class="box-white-border pull-right visible-desktop">
             <div class="box-white-content">
                 <div class="title">{{t "myaccount.balance.minutes_used"}}</div>
-                <div class="value"><span id="minutes_used">{{minutes_used}}</span></div>
+                <div class="value"><span id="minutes_used">{{total_minutes}}</span></div>
             </div>
         </div>
         <div class="box-data pull-right hidden-desktop">
-            <div class="data-line">{{t "myaccount.balance.minutes_used"}}: <span class="value">{{minutes_used}}</span></div>
-            <div class="data-line">{{t "myaccount.balance.call_charges"}}: <span class="value">{{t "core.layout.currency_used"}}{{call_charges}}</span></div>
+            <div class="data-line">{{t "myaccount.balance.minutes_used"}}: <span class="value">{{total_minutes}}</span></div>
+            <div class="data-line">{{t "myaccount.balance.call_charges"}}: <span class="value">{{t "core.layout.currency_used"}}{{total_charges}}</span></div>
             <button class="btn btn-success" id="add_credits">{{t "myaccount.balance.add_credit"}}</button>
         </div>
     </div>

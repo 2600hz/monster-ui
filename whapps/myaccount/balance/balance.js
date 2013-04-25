@@ -340,73 +340,84 @@ winkstart.module('myaccount', 'balance', {
         },
 
         render: function() {
-            var THIS = this;
+            var THIS = this,
+                defaults = {
+                    field_data: {
+                        accounts: {}
+                    }
+                };
 
-            THIS.get_accounts(function(_data_accounts) {
-                var map_accounts = {};
-
-                $.each(_data_accounts.data, function(k, v) {
-                    map_accounts[v.id] = v;
-                });
-
-                THIS.transactions_get(function(_data_transactions) {
-                    THIS.balance_get(function(data) {
-                        var data_table = THIS.transactions_to_table_data(_data_transactions.data, map_accounts),
-                            parsed_amount = parseFloat(data.data.amount).toFixed(2),
-                            $balance_html = THIS.templates.balance.tmpl({
-                                amount: parsed_amount,
-                                minutes_used: data_table.total_minutes,
-                                call_charges: data_table.total_charges.toFixed(2)
+            winkstart.parallel({
+                    accounts: function(callback) {
+                        THIS.get_accounts(function(_data_accounts) {
+                            $.each(_data_accounts.data, function(k, v) {
+                                defaults.field_data.accounts[v.id] = v;
                             });
 
-                        winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + parsed_amount);
-
-                        $('#add_credits', $balance_html).on('click', function() {
-                            THIS.render_add_credits_dialog($balance_html, function(amount) {
-                                var new_amount = parseFloat(amount).toFixed(2);
-                                winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + new_amount);
-                                $('#amount', $balance_html).html(new_amount);
-                            });
+                            callback(null, defaults);
                         });
+                    },
+                    balance: function(callback) {
+                        THIS.balance_get(function(data) {
+                            defaults.amount = parseFloat(data.data.amount).toFixed(2);
 
-                        winkstart.publish('myaccount.render_submodule', $balance_html);
-
-                        THIS.init_table($balance_html);
-
-                        $.fn.dataTableExt.afnFiltering.pop();
-
-                        $('div.table-custom-actions', $balance_html).html(THIS.templates.table_action_bar.tmpl());
-
-                        winkstart.init_range_datepicker(THIS.transactions_range, $balance_html);
-
-                        var start_date = $('#startDate', $balance_html).val(),
-                            end_date = $('#endDate', $balance_html).val(),
-                            created_from = (new Date(start_date).getTime()/1000) + 62167219200,
-                            created_to = (new Date(end_date).getTime()/1000) + 62167219200;
-
-                        $('#filter_transactions', $balance_html).on('click', function() {
-                            var start_date = $('#startDate', $balance_html).val(),
-                                end_date = $('#endDate', $balance_html).val(),
-                                regex = /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/;
-
-                            created_from = (new Date(start_date).getTime()/1000) + 62167219200;
-                            created_to = (new Date(end_date).getTime()/1000) + 62167219200;
-
-                            /* Bug because of Infinite scrolling... we need to manually remove tr */
-                            $('tbody tr', winkstart.table.transactions).remove();
-                            winkstart.table.transactions.fnClearTable();
-
-                            THIS.refresh_transactions_table($balance_html, created_from, created_to, map_accounts);
+                            callback(null, data)
                         });
-
-                        $('#get_csv', $balance_html).on('click', function() {
-                            window.location.href = winkstart.apps['myaccount'].api_url+'/accounts/'+winkstart.apps['myaccount'].account_id+'/transactions?created_from='+created_from+'&created_to='+created_to+'&depth=2&identifier=metadata&accept=csv&auth_token=' + winkstart.apps['myaccount'].auth_token;
+                    },
+                    transactions: function(callback) {
+                        THIS.transactions_get(function(_data_transactions) {
+                            callback(null, _data_transactions)
                         });
+                    }
+                },
+                function(err, results) {
+                    var render_data = $.extend(true, {}, defaults, THIS.transactions_to_table_data(results.transactions.data, defaults.field_data.accounts)),
+                        $balance_html = THIS.templates.balance.tmpl(render_data);
 
-                        winkstart.table.transactions.fnAddData(data_table.tab_data);
+                    $('#add_credits', $balance_html).on('click', function() {
+                        THIS.render_add_credits_dialog($balance_html, function(amount) {
+                            var new_amount = parseFloat(amount).toFixed(2);
+                            winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + new_amount);
+                            $('#amount', $balance_html).html(new_amount);
+                        });
                     });
-                });
-            });
+
+                    winkstart.publish('myaccount.update_menu', THIS.__module, '$ ' + render_data.amount);
+                    winkstart.publish('myaccount.render_submodule', $balance_html);
+
+                    THIS.init_table($balance_html);
+
+                    $.fn.dataTableExt.afnFiltering.pop();
+
+                    $('div.table-custom-actions', $balance_html).html(THIS.templates.table_action_bar.tmpl());
+
+                    winkstart.init_range_datepicker(THIS.transactions_range, $balance_html);
+
+                    var start_date = $('#startDate', $balance_html).val(),
+                        end_date = $('#endDate', $balance_html).val(),
+                        created_from = (new Date(start_date).getTime()/1000) + 62167219200,
+                        created_to = (new Date(end_date).getTime()/1000) + 62167219200;
+
+                    $('#filter_transactions', $balance_html).on('click', function() {
+                        start_date = $('#startDate', $balance_html).val();
+                        end_date = $('#endDate', $balance_html).val();
+                        created_from = (new Date(start_date).getTime()/1000) + 62167219200;
+                        created_to = (new Date(end_date).getTime()/1000) + 62167219200;
+
+                        /* Bug because of Infinite scrolling... we need to manually remove tr */
+                        $('tbody tr', winkstart.table.transactions).remove();
+                        winkstart.table.transactions.fnClearTable();
+
+                        THIS.refresh_transactions_table($balance_html, created_from, created_to, defaults.field_data.accounts);
+                    });
+
+                    $('#get_csv', $balance_html).on('click', function() {
+                        window.location.href = winkstart.apps['myaccount'].api_url+'/accounts/'+winkstart.apps['myaccount'].account_id+'/transactions?created_from='+created_from+'&created_to='+created_to+'&depth=2&identifier=metadata&accept=csv&auth_token=' + winkstart.apps['myaccount'].auth_token;
+                    });
+
+                    winkstart.table.transactions.fnAddData(render_data.tab_data)
+                }
+            );
         },
 
         render_add_credits_dialog: function(parent, callback) {
