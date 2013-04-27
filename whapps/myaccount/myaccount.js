@@ -233,14 +233,22 @@ winkstart.module('myaccount', 'myaccount', {
             var $myaccount = $('.myaccount', 'body'),
                 THIS = this,
                 default_submodule = 'profile';
+                $scrolling_ul = $('ul.nav.nav-list', $myaccount),
+                nice_scrollbar = $scrolling_ul.getNiceScroll()[0] || $scrolling_ul.niceScroll({
+                                                                        cursorcolor:"#333",
+                                                                        cursoropacitymin:0.5,
+                                                                        hidecursordelay:1000
+                                                                    });
 
             if($myaccount.hasClass('myaccount-open')) {
-                $myaccount.slideUp(300).removeClass('myaccount-open');
+                nice_scrollbar.hide();
+                $myaccount.slideUp(300, nice_scrollbar.resize).removeClass('myaccount-open');
             }
             else {
                 winkstart.publish('myaccount.'+default_submodule+'.render', function() {
                     THIS.click_submodule(default_submodule);
-                    $myaccount.slideDown(300).addClass('myaccount-open');
+                    nice_scrollbar.show();
+                    $myaccount.slideDown(300, nice_scrollbar.resize).addClass('myaccount-open');
                 });
             }
         },
