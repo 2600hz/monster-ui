@@ -30,6 +30,9 @@
     "csv": "CSV",
     "pdf": "PDF",
 
+    "bad_password_standard": "Password invalid. The password must contain at least 6 characters and include a letter and a number.",
+    "bad_password_strong": "Password invalid. The password must contain at least 8 characters including a non-capitalized letter, a capitalized letter, a number and a special character (!%$...)",
+
     "table_empty": "No data available in table",
     "table_processing": "Processing...",
     "table_show_entries": "Show _MENU_ entries",

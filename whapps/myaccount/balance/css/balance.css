@@ -45,6 +45,11 @@
     display: inline-block;
 }
 
+.balance-content-wrapper .clickover {
+    width: 270px;
+    font-size: 12px;
+}
+
 /* ADD CREDITS POPUP */
 .add-credits-content-wrapper {
     display: block;

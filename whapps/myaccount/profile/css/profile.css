@@ -1,0 +1,118 @@
+.profile-content-wrapper .list-settings {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-content-wrapper .list-settings .settings-item:not(:first-child) {
+    border-top: 1px solid #dcdcdc;
+
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link {
+    color: #333;
+    cursor: pointer;
+    display: block;
+    font-weight: 500;
+    padding: 20px 15px;
+    text-decoration: none;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link:hover {
+    background-color: #eeeeee;
+}
+
+.profile-content-wrapper .list-settings .settings-item .title {
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    width: 220px;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link .description {
+    font-weight: 500;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link .description .number {
+    font-weight: bold;
+    color: #22ccff;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link .update {
+    color: #22ccff;
+    float: right;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link .changes-saved {
+    float: right;
+    display: none;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link:hover .update .text {
+    text-decoration: underline;
+}
+
+.profile-content-wrapper .list-settings .settings-item-content {
+    background-color: #ffffff;
+    border-top: 1px solid #22ccff;
+    display: none;
+    padding: 20px 15px 0;
+}
+
+.profile-content-wrapper .list-settings .settings-item-content .form-horizontal {
+    margin: 0;
+}
+
+.profile-content-wrapper .list-settings .settings-item-content label.uneditable {
+    color: #22ccff;
+    cursor: default;
+    font-weight: 500;
+    padding-top: 5px;
+}
+
+.profile-content-wrapper .list-settings .settings-item-content .edition {
+    display: none;
+}
+
+.profile-content-wrapper .list-settings .card-type {
+    display: inline-block;
+    margin-bottom: -9px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    height: 25px;
+    width: 40px;
+}
+
+.profile-content-wrapper .list-settings .input-prepend .add-on {
+    padding: 1px 7px;
+    height: 26px;
+}
+
+.profile-content-wrapper .list-settings .input-prepend .add-on i {
+    margin: 0 5px;
+    font-size: 24px;
+}
+
+.profile-content-wrapper .list-settings .input-prepend .add-on .card-type {
+    margin: 0;
+}
+
+.profile-content-wrapper .list-settings .settings-item-content .edition .card-type {
+    display: none;
+}
+
+.profile-content-wrapper .list-settings .card-type.visa {
+    background: url(../images/visa.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.amex {
+    background: url(../images/amex.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.discover {
+    background: url(../images/discover.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.mastercard {
+    background: url(../images/mastercard.png);
+}

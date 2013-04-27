@@ -227,9 +227,9 @@ winkstart.module('myaccount', 'balance', {
                 {
                     'sTitle': i18n.t('myaccount.balance.direction_column'),
                     'fnRender': function(obj) {
-                        var icon = '<i class="icon-arrow-right icon-orange"></i>';
-                        if(obj.aData[obj.iDataColumn] === 'inbound') {
-                            icon = '<i class="icon-arrow-left icon-green"></i>'
+                        var icon = '<i class="icon-arrow-right icon-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
+                        if(obj.aData[obj.iDataColumn].direction === 'inbound') {
+                            icon = '<i class="icon-arrow-left icon-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
                         }
                         return icon;
                     },
@@ -302,9 +302,10 @@ winkstart.module('myaccount', 'balance', {
             $.each(data_request, function(k, v) {
                 v.metadata = v.metadata || {
                     to: '-',
-                    from: '-',
-                    direction: 'inbound'
+                    from: '-'
                 };
+
+                v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
                 if(v.reason === 'per_minute_call') {
                     var duration = i18n.t('myaccount.balance.active_call'),
@@ -325,7 +326,7 @@ winkstart.module('myaccount', 'balance', {
                     data.tab_data.push([
                         v.created,
                         v.call_id,
-                        v.metadata.direction,
+                        v.metadata.call,
                         friendly_date,
                         winkstart.format_phone_number(v.metadata.from),
                         winkstart.format_phone_number(v.metadata.to),
@@ -415,7 +416,9 @@ winkstart.module('myaccount', 'balance', {
                         window.location.href = winkstart.apps['myaccount'].api_url+'/accounts/'+winkstart.apps['myaccount'].account_id+'/transactions?created_from='+created_from+'&created_to='+created_to+'&depth=2&identifier=metadata&accept=csv&auth_token=' + winkstart.apps['myaccount'].auth_token;
                     });
 
-                    winkstart.table.transactions.fnAddData(render_data.tab_data)
+                    winkstart.table.transactions.fnAddData(render_data.tab_data);
+
+                    $('.popup-marker', $balance_html).clickover();
                 }
             );
         },

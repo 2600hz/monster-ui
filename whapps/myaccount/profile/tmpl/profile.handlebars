@@ -1,43 +1,302 @@
-<div class="row-fluid">
+<div class="row-fluid profile-content-wrapper">
 	<div class="span12">
-        <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label" for="email">Email </label>
-                <div class="controls">
-                    <input type="text" placeholder="john.doe@email.com" id="email" name="email" value="{{email}}"/>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                <button class="btn btn-success change-email">{{t "myaccount.profile.change_email"}}</button>
-                </div>
-            </div>
-        </form>
-		<hr />
-	</div>
-</div>
+        <ul class="nav nav-tabs" id="profile_settings">
+            <li class="active"><a href="#user"><i class="icon-user"></i>{{t "myaccount.profile.user_settings"}}</a></li>
+            <li><a href="#account"><i class="icon-cogs"></i>{{t "myaccount.profile.account_settings"}}</a></li>
+            <li><a href="#billing"><i class="icon-credit-card"></i>{{t "myaccount.profile.billing_settings"}}</a></li>
+        </ul>
 
+        <div class="tab-content">
+            <div class="tab-pane active" id="user">
+                <ul class="list-settings">
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="email">
+                            <span class="title">{{t "myaccount.profile.email"}}</span>
+                            <span class="description">{{user.email}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form class="form-horizontal" id="form_email">
+                                        <div class="control-group">
+                                            <label class="control-label" for="email">{{t "myaccount.profile.email"}}</label>
+                                            <div class="controls">
+                                                <input type="email" placeholder="{{t "myaccount.profile.placeholder_email"}}" id="email" name="email" value="{{user.email}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button class="btn btn-success change" data-module="user" data-field="email">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="password">
+                            <span class="title">{{t "myaccount.profile.password"}}</span>
+                            <span class="description">*************</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form class="form-horizontal" id="form_password">
+                                        <div class="control-group">
+                                            <label class="control-label" for="password">{{t "myaccount.profile.password"}}</label>
+                                            <div class="controls">
+                                                <input type="password" id="password" name="password"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="confirm_password">{{t "myaccount.profile.confirm_password"}}</label>
+                                            <div class="controls">
+                                                <input type="password" id="confirm_password" name="confirm_password"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-success change" data-module="user" data-field="password">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-<div class="row-fluid">
-	<div class="span12">
-		<form class="form-horizontal">
-			<div class="control-group">
-			    <label class="control-label" for="password">{{t "myaccount.profile.password"}}</label>
-			    <div class="controls">
-			      	<input type="password" id="password" name="password"/>
-			    </div>
-			</div>
-		  	<div class="control-group">
-			    <label class="control-label" for="confirm_password">{{t "myaccount.profile.confirm_password"}}</label>
-			    <div class="controls">
-			      	<input type="password" id="confirm_password" name="confirm_password"/>
-			    </div>
-			</div>
-		  	<div class="control-group">
-		    	<div class="controls">
-		      	<button type="submit" class="btn btn-success change-password">{{t "myaccount.profile.change_password"}}</button>
-		    	</div>
-		  	</div>
-		</form>
+            <div class="tab-pane" id="account">
+                <ul class="list-settings">
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="account_name">
+                            <span class="title">{{t "myaccount.profile.account_name"}}</span>
+                            <span class="description">{{account.name}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form class="form-horizontal" id="form_account_name">
+                                        <div class="control-group">
+                                            <label class="control-label" for="account_name">{{t "myaccount.profile.account_name"}}</label>
+                                            <div class="controls">
+                                                <input type="text" id="account_name" name="name" value="{{account.name}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-success change" data-module="account" data-field="account_name">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="account_realm">
+                            <span class="title">{{t "myaccount.profile.account_realm"}}</span>
+                            <span class="description">{{account.realm}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form class="form-horizontal" id="form_account_realm">
+                                        <div class="control-group">
+                                            <label class="control-label" for="password">{{t "myaccount.profile.account_realm"}}</label>
+                                            <div class="controls">
+                                                <input type="text" id="account_realm" name="realm" value="{{account.realm}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-success change" data-module="account" data-field="account_realm">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="account_administrator">
+                            <span class="title">{{t "myaccount.profile.account_administrator"}}</span>
+                            <span class="description">{{account.contact.billing.email}}{{#if account.contact.billing.number}}&nbsp;&nbsp;(<span class="number">{{format_phone_number account.contact.billing.number}}</span>){{/if}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form id="form_account_administrator" class="form-horizontal">
+                                        <div class="control-group">
+                                            <label class="control-label" for="account_administrator_email">{{t "myaccount.profile.account_administrator_email"}}</label>
+                                            <div class="controls">
+                                                <input type="email" id="account_administrator_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{t "myaccount.profile.placeholder_email"}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="account_administrator_number">{{t "myaccount.profile.account_administrator_number"}}</label>
+                                            <div class="controls">
+                                                <input type="text" id="account_administrator_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{t "myaccount.profile.placeholder_number"}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-success change" data-module="account" data-field="account_administrator">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="technical_contact">
+                            <span class="title">{{t "myaccount.profile.technical_contact"}}</span>
+                            <span class="description">{{account.contact.technical.email}}{{#if account.contact.technical.number}}&nbsp;&nbsp;(<span class="number">{{format_phone_number account.contact.technical.number}}</span>){{/if}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form id="form_technical_contact" class="form-horizontal">
+                                        <div class="control-group">
+                                            <label class="control-label" for="technical_contact_email">{{t "myaccount.profile.technical_contact_email"}}</label>
+                                            <div class="controls">
+                                                <input type="email" id="technical_contact_email" name="contact.technical.email" value="{{account.contact.technical.email}}" placeholder="{{t "myaccount.profile.placeholder_email"}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="technical_contact_number">{{t "myaccount.profile.technical_contact_number"}}</label>
+                                            <div class="controls">
+                                                <input type="text" id="technical_contact_number" name="contact.technical.number" value="{{account.contact.technical.number}}" placeholder="{{t "myaccount.profile.placeholder_number"}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-success change" data-module="account" data-field="technical_contact">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane" id="billing">
+                <ul class="list-settings">
+                    <li class="settings-item clearfix">
+                        <a class="settings-link clearfix" data-name="credit_card">
+                            <span class="title">{{t "myaccount.profile.card_on_file"}}</span>
+                            <span class="description"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</span>
+                            <span class="update">
+                                <i class="icon-cog icon-small"></i>
+                                <span class="text">{{t "myaccount.profile.edit_settings"}}</span>
+                            </span>
+                            <span class="changes-saved">{{t "myaccount.profile.changes_saved"}}</span>
+                        </a>
+                        <div class="settings-item-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <form id="form_credit_card" class="form-horizontal">
+                                        <div class="control-group">
+                                            <label class="control-label" for="first_name">{{t "myaccount.profile.billing_name"}}</label>
+                                            <div class="controls">
+                                                <label class="uneditable">{{billing.first_name}} {{billing.last_name}}</label>
+                                                <div class="edition">
+                                                    <input type="text" class="input-medium" id="first_name" name="first_name" value="{{billing.first_name}}" placeholder="{{t "myaccount.profile.first_name"}}"/>
+                                                    <input type="text" class="input-medium" id="last_name" name="last_name" value="{{billing.last_name}}" placeholder="{{t "myaccount.profile.last_name"}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="credit_card_number">{{t "myaccount.profile.credit_card_number"}}</label>
+                                            <div class="controls">
+                                                <label class="uneditable"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</label>
+                                                <div class="edition">
+                                                    <div class="input-prepend">
+                                                        <span class="add-on">
+                                                            <i class="icon-credit-card"></i>
+                                                            <span class="card-type amex"></span>
+                                                            <span class="card-type visa"></span>
+                                                            <span class="card-type mastercard"></span>
+                                                            <span class="card-type discover"></span>
+                                                        </span>
+                                                        <input type="number" id="credit_card_number" name="credit_card.number" class="input-medium"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="expiration_date_month">{{t "myaccount.profile.expiration_date"}}</label>
+                                            <div class="controls">
+                                                <label class="uneditable">{{billing.credit_card.expiration_month}}/{{billing.credit_card.expiration_year}}</label>
+                                                <div class="edition">
+                                                    <input type="number" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{t "myaccount.profile.month"}}"/>
+                                                    <input type="number" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{t "myaccount.profile.year"}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="security_code">{{t "myaccount.profile.security_code"}}</label>
+                                            <div class="controls">
+                                                <label class="uneditable">{{billing.credit_card.fake_cvv}}</label>
+                                                <div class="edition">
+                                                    <input type="number" class="input-mini" id="security_code" name="credit_card.cvv" maxLength="4"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn edition btn-success change" data-module="billing" data-field="credit_card">{{t "myaccount.profile.save_changes"}}</button>
+                                                <button class="btn btn-primary edit-credit-card uneditable">{{t "myaccount.profile.change_card"}}</button>
+                                                <button class="btn btn-danger cancel">{{t "core.layout.cancel"}}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 	</div>
 </div>

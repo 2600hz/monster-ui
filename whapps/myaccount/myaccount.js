@@ -65,8 +65,8 @@ winkstart.module('myaccount', 'myaccount', {
     },
     {
         modules: {
-            'transactions': false,
             'profile': false,
+            'transactions': false,
             'service_plan': false,
             'balance': false,
             'trunks': false
@@ -188,6 +188,7 @@ winkstart.module('myaccount', 'myaccount', {
             };
 
             THIS.render_myaccount($myaccount_html);
+
         },
 
         update_menu: function(module, data, key) {
@@ -229,14 +230,30 @@ winkstart.module('myaccount', 'myaccount', {
         },
 
         show: function() {
-            var $myaccount = $('.myaccount', 'body');
+            var $myaccount = $('.myaccount', 'body'),
+                THIS = this,
+                default_submodule = 'profile';
 
             if($myaccount.hasClass('myaccount-open')) {
                 $myaccount.slideUp(300).removeClass('myaccount-open');
             }
             else {
-                $myaccount.slideDown(300).addClass('myaccount-open');
+                winkstart.publish('myaccount.'+default_submodule+'.render', function() {
+                    THIS.click_submodule(default_submodule);
+                    $myaccount.slideDown(300).addClass('myaccount-open');
+                });
             }
+        },
+
+        click_submodule: function(submodule, key) {
+            var $myaccount = $('.myaccount', 'body'),
+                $submodule = key ? $('[data-module="'+submodule+'"][data-key="'+key+'"]', $myaccount) : $('[data-module="'+submodule+'"]', $myaccount);
+                key = 'myaccount.' + $submodule.data('module') + '.'  + (key ? key : 'title');
+
+            $('.myaccount-menu .nav li', $myaccount).removeClass('active');
+            $submodule.addClass('active');
+
+            $('.myaccount-module-title').html(i18n.t(key));
         },
 
         add_submodule: function($menu, _weight, _category) {
@@ -247,15 +264,7 @@ winkstart.module('myaccount', 'myaccount', {
                 category = _category || 'account_category';
 
             $menu.on('click', function() {
-                $('.myaccount-menu .nav li', $myaccount).removeClass('active');
-                $menu.addClass('active');
-
-                var key = 'myaccount.' + $menu.data('module') + '.title';
-                if($menu.data('key')) {
-                    key = 'myaccount.' + $menu.data('module') + '.' + $menu.data('key');
-                }
-
-                $('.myaccount-module-title').html(i18n.t(key));
+                THIS.click_submodule($menu.data('module'), $menu.data('key') || '');
             });
 
             category = THIS.groups[category];

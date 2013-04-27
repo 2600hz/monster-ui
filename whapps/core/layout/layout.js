@@ -1,8 +1,7 @@
 winkstart.module('core', 'layout', {
         css: [
             '../../../config/home/css/welcome.css',
-            'css/layout.css',
-            'css/icons.css',
+            'css/layout.css'
         ],
 
         locales: ['en', 'fr'],
@@ -68,15 +67,12 @@ winkstart.module('core', 'layout', {
                 api_url = winkstart.config.whitelabel_api_url || winkstart.apps['auth'].api_url;
 
             $('#home_link').ajaxStart(function() {
-                $('i', $(this)).hide();
-                $('#loading', $(this)).show();
+                $('i', $(this)).removeClass('icon-home').addClass('icon-spinner icon-spin');
             }).ajaxStop(function() {
-                $('i', $(this)).show();
-                $('#loading', $(this)).hide();
+                $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-home');
             }).ajaxError(function() {
                 if($.active === 0) {
-                    $('i', $(this)).show();
-                    $('#loading', $(this)).hide();
+                    $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-home');
                 }
             });
 
