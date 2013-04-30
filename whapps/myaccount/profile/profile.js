@@ -95,13 +95,10 @@ winkstart.module('myaccount', 'profile', {
                 }
             }
 
-            console.log(data);
-
             return data;
         },
 
         clean_form_data: function(module, data) {
-            console.log(data);
             if(module === 'billing') {
                 data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
             }
@@ -130,7 +127,7 @@ winkstart.module('myaccount', 'profile', {
                 },
                 success_updating = function(key, parent) {
                     $profile_html = parent;
-                    var $link = $('a[data-name='+key+']', $profile_html);
+                    var $link = $('li[data-name='+key+']', $profile_html);
 
                     if(key === 'credit_card') {
                         $('.edition', $profile_html).hide();
@@ -202,6 +199,7 @@ winkstart.module('myaccount', 'profile', {
 
                 var $this = $(this),
                     module = $this.data('module'),
+                    ui_tab_to_render = $this.parents('.tab-pane').first().attr('id'),
                     field_name = $this.data('field'),
                     new_data = THIS.clean_form_data(module, form2object('form_'+field_name));
 
@@ -214,7 +212,7 @@ winkstart.module('myaccount', 'profile', {
                                     if(typeof callback_update === 'function') {
                                         callback_update();
                                     }
-                                }, module);
+                                }, ui_tab_to_render);
                             },
                             function(data) {
                                 if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
@@ -234,31 +232,32 @@ winkstart.module('myaccount', 'profile', {
 
                 $('.edition', $profile_html).show();
                 $('.uneditable', $profile_html).hide();
+                display_card_type('');
             });
 
-            var display_card_type = function($this) {
-                var type = get_card_type($this.val());
+            var display_card_type = function(card_number) {
+                var type = get_card_type(card_number);
 
                 if(type === false) {
-                    $('.card-type', $profile_html).hide();
+                    $('.edition .card-type', $profile_html).hide();
                     $('.add-on i', $profile_html).show();
                 }
                 else if(!($('.card-type.'+type, $profile_html).is(':visible'))) {
-                    $('.card-type', $profile_html).hide();
+                    $('.edition .card-type', $profile_html).hide();
                     $('.add-on i', $profile_html).hide();
-                    $('.card-type.'+type, $profile_html).css('display', 'inline-block');
+                    $('.edition .card-type.'+type, $profile_html).css('display', 'inline-block');
                 }
             };
 
             $('#credit_card_number', $profile_html).on('keyup', function(e) {
-                display_card_type($(this));
+                display_card_type($(this).val());
             });
 
             $('#credit_card_number', $profile_html).on('paste', function(e) {
                 var $this = $(this);
                 //Hack for paste event: w/o timeout, the value is set to undefined...
                 setTimeout(function() {
-                    display_card_type($this);
+                    display_card_type($this.val());
                 }, 0);
             });
 
@@ -276,14 +275,26 @@ winkstart.module('myaccount', 'profile', {
                     close_content();
 
                     $this.addClass('open');
-                    $('a.settings-link', $(this)).hide();
+                    $('a.settings-link', $this).hide();
                     $('.settings-item-content', $this).slideDown('fast');
+
+                    if($this.data('name') === 'credit_card') {
+                        /* If there is no credit-card data, we skip the step that just displays the creditcard info */
+                        if($.isEmptyObject(data.billing.credit_card)) {
+                            $('.uneditable', $this).hide();
+                            $('.edition', $this).show();
+                        }
+                    }
                 }
             });
 
             $('button.cancel', $profile_html).on('click', function(e) {
                 e.preventDefault();
                 close_content();
+
+                $('input', $(this).parents('form').first()).each(function(k, v) {
+                    $(v).val($(v).data('original_value'));
+                });
 
                 e.stopPropagation();
             });

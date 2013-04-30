@@ -61,15 +61,15 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .nav li:not(.nav-header) {
-    border-top: 1px solid #bbb;
+    border-top: 1px solid #ccc;
 }
 
 .myaccount .myaccount-menu .nav li:last-child {
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #ccc;
 }
 
 .myaccount .myaccount-menu .nav li {
-    border-right: 1px solid #bbb;
+    border-right: 1px solid #ccc;
     height: 60px;
     line-height: 60px;
     font-weight: 700;
