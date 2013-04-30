@@ -6,6 +6,8 @@ define(function(require){
 	var app = {
 		
 		name: "scaffold",
+
+		i18n: [ 'en-US', 'fr-FR' ],
 		
 		requests: {
 			'scaffold.data': {
@@ -30,6 +32,10 @@ define(function(require){
 		load: function(callback){
 			var self = this;
 			callback && callback(self);
+		},
+
+		render: function(container){
+
 		}
 		
 	};

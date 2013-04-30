@@ -38,7 +38,7 @@ define(function(require){
 					self._defineRequest(id, request);
 				});
 
-				_.each(app.subscribe, function(topic, callback){
+				_.each(app.subscribe, function(callback, topic){
 					var cb = typeof callback === "string" ? app[callback] : callback;
 
 					self.sub(topic, cb, app);
@@ -54,6 +54,8 @@ define(function(require){
 					self.css(css);
 				}
 
+				monster.apps[name] = app;
+
 				app.load(callback);
 			})
 		},
@@ -62,8 +64,12 @@ define(function(require){
 			$.ajax({
 				url: app.appPath + '/i18n/' + name + '.json',
 				dataType: 'json',
+				async: false,
 				success: function(data){
 					app.data.i18n[name] = data;
+				},
+				error: function(data, status, error){
+					console.log('_loadLocale error: ', status, error);
 				}
 			});
 		},
@@ -145,6 +151,8 @@ define(function(require){
 			amplify.request.define(id, 'ajax', settings);
 		},
 
+		apps: {},
+
 		cache: {
 			templates: {}
 		},
@@ -160,9 +168,31 @@ define(function(require){
 			return matches.length > 1 ? matches[1] : "";
 		},
 
+		getVersion: function(callback) {
+			$.ajax({
+				url: 'VERSION',
+				cache: false,
+				success: function(template) {
+					callback(template);
+				}
+			});
+		},
+
 		pub: function(topic, data){
-			this._channel.publish(topic, data);
-		},		
+			//this._channel.publish(topic, data || {});
+			postal.publish({
+				channel: 'monster',
+				topic: topic,
+				data: data || {}
+			});
+		},
+
+		querystring: function (key) {
+			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+			var results = [], match;
+			while ((match = re.exec(document.location.search)) != null) results.push(match[1]);
+			return results.length ? results[0] : null;
+		},
 
 		request: function(options){
 
@@ -232,7 +262,9 @@ define(function(require){
 				_template = handlebars.compile(_template);
 
 				if(data){
-					result = _template(data);
+					var i18n = app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {};
+						context = _.extend({}, data, { i18n: i18n });
+					result = _template(context);
 				}
 			}
 			else{
@@ -240,6 +272,8 @@ define(function(require){
 			}
 
 			monster.cache.templates[conical] = _template;
+
+			result = result.replace(/(\r\n|\n|\r|\t)/gm,"");
 
 			return result;
 		}
