@@ -17,5 +17,21 @@
             </ul>
         </div>
     </div>
+
+    {{#if this.value.features}}
+        <div class="features pull-right">
+            {{#each this.value.features}}
+                {{#compare this "dash_e911"}}
+                <i class="icon-green icon-ambulance"></i>
+                {{/compare}}
+                {{#compare this "failover"}}
+                <i class="icon-green icon-thumbs-down"></i>
+                {{/compare}}
+                {{#compare this "outbound_cnam"}}
+                <i class="icon-green icon-user"></i>
+                {{/compare}}
+            {{/each}}
+        </div>
+    {{/if}}
 </div>
 {{/eachkeys}}

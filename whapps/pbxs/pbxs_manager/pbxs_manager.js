@@ -335,6 +335,11 @@ winkstart.module('pbxs', 'pbxs_manager', {
                     THIS.get_account(function(_data) {
                         callback(null, _data);
                     });
+                },
+                numbers: function(callback) {
+                    THIS.list_all_numbers(function(_data) {
+                        callback(null, _data);
+                    });
                 }
             },
             function(err, results){
@@ -392,6 +397,16 @@ winkstart.module('pbxs', 'pbxs_manager', {
                             id: data.id || (data.id === 0 ? 0 : 'new')
                         }
                     }, data_defaults || {});
+
+                if(results.account.data.servers) {
+                    $.each(results.account.data.servers, function(k, server) {
+                        $.each(server.DIDs, function(did, v) {
+                            if(did in results.numbers.data) {
+                                results.account.data.servers[k].DIDs[did].features = results.numbers.data[did].features;
+                            }
+                        });
+                    });
+                }
 
                 if(typeof data === 'object' && (data.id || data.id === 0)) {
                     THIS.render_pbxs_manager(results.account, $.extend(true, defaults, results.account.data.servers[data.id]), target, callbacks);
@@ -2303,10 +2318,6 @@ winkstart.module('pbxs', 'pbxs_manager', {
                             });
                         }
 
-                        new_list.sort(function(a, b) {
-                            return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
-                        });
-
                         return new_list;
                     };
 
@@ -2365,14 +2376,15 @@ winkstart.module('pbxs', 'pbxs_manager', {
                 });
             });
 
-            $('#pbxs_manager_listpanel',pbxs_manager_html).niceScroll({
-                cursorcolor:"#333", 
-                autohidemode:false, 
+            $('#pbxs_manager_listpanel', pbxs_manager_html).niceScroll({
+                cursorcolor:"#333",
+                autohidemode:false,
                 cursorborder:"1px solid #666"
             }).railh.addClass('pbx-fixed-hscroll');
-            $('#unassigned_numbers_wrapper',pbxs_manager_html).niceScroll({
-                cursorcolor:"#333", 
-                cursoropacitymin:0.5, 
+
+            $('#unassigned_numbers_wrapper', pbxs_manager_html).niceScroll({
+                cursorcolor:"#333",
+                cursoropacitymin:0.5,
                 hidecursordelay:1000
             }).rail.addClass('unassigned-number-fixed-vscroll');
         },
@@ -2381,40 +2393,36 @@ winkstart.module('pbxs', 'pbxs_manager', {
             var THIS = this;
 
             if(id || id > -1) {
-                if(_optional_data) {
-                    if(typeof callback === 'function') {
-                        callback(_optional_data.servers[id].DIDs);
-                    }
-                }
-                else {
-                    winkstart.parallel({
-                        list_numbers: function(callback){
-                            THIS.list_all_numbers(function(_data_numbers) {
-                                callback(null, _data_numbers.data);
-                            });
-                        },
-                        account: function(callback){
+                winkstart.parallel({
+                    list_numbers: function(callback){
+                        THIS.list_all_numbers(function(_data_numbers) {
+                            callback(null, _data_numbers.data);
+                        });
+                    },
+                    account: function(callback){
+                        if(_optional_data) {
+                            callback(null, _optional_data);
+                        }
+                        else {
                             THIS.get_account(function(_data) {
                                 callback(null, _data.data);
                             });
                         }
-                    },
-                    function(err, results){
-                        var json_data = {};
+                    }
+                },
+                function(err, results){
+                    var json_data = {};
 
-                        $.each(results.account.servers[id].DIDs, function(k, v) {
-                            if(results.list_numbers[k]) {
-                                if(k != 'id' && results.list_numbers[k]) {
-                                    json_data[k] = results.list_numbers[k].state;
-                                }
-                            }
-                        });
-
-                        if(typeof callback === 'function') {
-                            callback(json_data);
+                    $.each(results.account.servers[id].DIDs, function(k, v) {
+                        if(k in results.list_numbers) {
+                            json_data[k] = results.list_numbers[k];
                         }
                     });
-                }
+
+                    if(typeof callback === 'function') {
+                        callback(json_data);
+                    }
+                });
             }
         },
 

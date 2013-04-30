@@ -376,6 +376,15 @@
     margin-top: 6px;
 }
 
+#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .features {
+    cursor: default;
+    margin-top: 16px;
+}
+
+#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .features i{
+    margin-left: 10px;
+}
+
 #ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper input[type="checkbox"] {
     margin: -2px 4px 0 4px;
 }
