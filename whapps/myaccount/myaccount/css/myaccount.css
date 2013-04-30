@@ -53,11 +53,15 @@ body > .myaccount {
 }
 
 .myaccount .myaccount-menu .badge {
-    background: #eee;
+    background: #fff;
     border: 1px solid #ccc;
     color: #22ccff;
 	margin-right: 10px;
 	margin-top: 10px;
+}
+
+.myaccount .myaccount-menu li.active .badge {
+    background: #f3f3f3;
 }
 
 .myaccount .myaccount-menu .nav li:not(.nav-header) {
@@ -119,7 +123,6 @@ body > .myaccount {
 
 .myaccount .myaccount-menu .nav li .active-highlight {
     border-left: 3px solid #e9e9e9;
-    white-space: nowrap;
 }
 
 .myaccount .myaccount-menu .nav li .active-highlight i{

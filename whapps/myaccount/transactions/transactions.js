@@ -133,10 +133,6 @@ winkstart.module('myaccount', 'transactions', {
                                             monthly_charges: add_on.monthly_charges
                                         });
                                     });
-/*
-                                    $.each(v.discounts, function(k, v) {
-
-                                    });*/
                                 }
 
                                 v.amount = parseFloat(v.amount).toFixed(2);
@@ -150,23 +146,6 @@ winkstart.module('myaccount', 'transactions', {
                             callback(null, array_transactions);
                         });
                     },
-                    /*subscriptions: function(callback) {
-                        THIS.transactions_get_subscriptions(function(data_subscriptions) {
-                            var array_subscriptions = [];
-
-                            $.each(data_subscriptions.data, function(k, v) {
-                                v.type = 'subscription';
-                                array_subscriptions.push(v);
-
-                                if(k === 0) {
-                                    defaults.billing_start_date = v.billing_start_date;
-                                    defaults.billing_end_date = v.billing_end_date;
-                                }
-                            });
-
-                            callback(null, array_subscriptions);
-                        });
-                    },*/
                     charges: function(callback) {
                         THIS.transactions_get_charges(from, to, function(data_charges) {
                             var array_charges = [];
@@ -187,21 +166,32 @@ winkstart.module('myaccount', 'transactions', {
                 function(err, results) {
                     var render_data = defaults;
 
-                    render_data.amount = parseFloat(render_data.amount).toFixed(2);
-
-                    //render_data.list_transactions = ((results.charges).concat((results.subscriptions))).concat(results.monthly);
                     render_data.list_transactions = (results.charges).concat(results.monthly);
+
+                    render_data = THIS.format_data(render_data);
 
                     callback(render_data);
                 }
             );
         },
 
+        format_data: function(data) {
+            data.amount = parseFloat(data.amount).toFixed(2);
+
+            if(data.list_transactions) {
+                $.each(data.list_transactions, function(k, v) {
+                    v.reason = i18n.t('myaccount.transactions.' + (v.reason ? v.reason : 'one_time_charge'));
+                });
+            }
+
+            return data;
+        },
+
         render: function() {
             var THIS = this,
-                range = 90,
+                range = 31,
                 now = new Date(),
-                to = winkstart.date_to_gregorian(new Date(now.setDate(now.getDate() + 1))),//parseInt(((new Date()).getTime() / 1000) + 62167219200),
+                to = winkstart.date_to_gregorian(new Date(now.setDate(now.getDate() + 1))),
                 from = to - (range * 60 * 60 * 24);
 
             THIS.list_transactions(from, to, function(data) {

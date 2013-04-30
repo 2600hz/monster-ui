@@ -1,10 +1,16 @@
+.myaccount-content .trunks-content {
+    display: block;
+    margin: auto;
+    width: 500px;
+}
+
 .myaccount-content .trunks-content .slider-value {
     background: #22ccff;
     border: 1px solid #FFFFFF;
     box-shadow: 1px 1px 4px #CCCCCC;
     color: #FFFFFF;
     height: 40px;
-    margin: 0 10px 0 85px;
+    margin: 0 10px 0 46px;
     text-align: center;
     width: 50px;
 }
@@ -13,11 +19,10 @@
     border-color: #22CCFF transparent;
     border-style: solid;
     border-width: 7px 7px 0;
-    bottom: -47px;
     content: "";
     display: block;
-    left: 104px;
-    position: absolute;
+    left: 18px;
+    position: relative;
     width: 0;
 }
 
@@ -29,35 +34,29 @@
     background-color: #22ccff;
 }
 
-.myaccount-content .trunks-content .trunk-container-block.section-button {
+.myaccount-content .trunks-content .section-button {
     text-align: right;
 }
 
-.myaccount-content .trunks-content .trunk-container-block.section-button .update-limits {
+.myaccount-content .trunks-content .section-button .update-limits {
     margin-top: 50px;
 }
 
-.myaccount-content .trunks-content .trunk-container-block {
-    display: block;
-    max-width: 500px;
-    margin: 0 auto 40px;
-}
-
-.myaccount-content .trunks-content .trunk-container-block.section-slider-value{
+.myaccount-content .trunks-content .section-slider-value{
     max-width: 580px;
 }
 
-.myaccount-content .trunks-content .trunk-container-block.section-slider {
-    margin-top: 100px;
+.myaccount-content .trunks-content .section-slider {
+    margin-top: 20px;
 }
 
-.myaccount-content .trunks-content .trunk-container-block.section-slider .slider-title {
+.myaccount-content .trunks-content  .slider-title {
     width: 60px;
     float: left;
     margin: -5px 10px 0 0;
 }
 
-.myaccount-content .trunks-content .trunk-container-block.section-slider .slider-wrapper {
+.myaccount-content .trunks-content .section-slider .slider-wrapper {
     width: 430px;
     float: left;
 }
@@ -72,7 +71,7 @@
     line-height: 40px;
 }
 
-.myaccount-content .trunks-content .trunk-container-block .value-slider {
+.myaccount-content .trunks-content  .value-slider {
     position: relative;
     display: block;
 }

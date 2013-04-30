@@ -3,6 +3,7 @@ html {
 }
 
 body {
+    min-width: 600px;
 }
 
 body a, button {
@@ -689,9 +690,6 @@ table.table tr td {
 
 /* Portrait tablet to landscape */
 @media (min-width: 768px) and (max-width: 979px) {
-    body > .navbar .navbar-inner .help {
-        border-left: none;
-    }
 }
 
 /* Phone to portrait tablet */
@@ -702,7 +700,6 @@ table.table tr td {
     }
 
     body > .navbar .navbar-inner .help {
-        border-left: none;
         margin-right: 0;
         margin-left: 0;
     }
