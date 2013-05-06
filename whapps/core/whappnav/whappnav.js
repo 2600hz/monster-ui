@@ -51,7 +51,8 @@ winkstart.module('core', 'whappnav', {
                 });
             }
 
-            $whappnav_html.append($whapp_html);
+            $whappnav_html.empty()
+                          .append($whapp_html);
         },
 
         remove: function(id) {

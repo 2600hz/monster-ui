@@ -14,6 +14,7 @@ winkstart.module('myaccount', 'myaccount', {
             'myaccount.initialized' : 'initialized',
             'myaccount.module_activate': 'module_activate',
             'myaccount.display': 'show',
+            'myaccount.hide': 'hide',
             'myaccount.add_submodule': 'add_submodule',
             'myaccount.render_submodule': 'render_submodule',
             'myaccount.update_menu': 'update_menu',
@@ -242,14 +243,29 @@ winkstart.module('myaccount', 'myaccount', {
 
             if($myaccount.hasClass('myaccount-open')) {
                 nice_scrollbar.hide();
-                $myaccount.slideUp(300, nice_scrollbar.resize).removeClass('myaccount-open');
+                $myaccount.slideUp(300, nice_scrollbar.resize)
+                          .removeClass('myaccount-open');
             }
             else {
                 winkstart.publish('myaccount.'+default_submodule+'.render', function() {
                     THIS.click_submodule(default_submodule);
-                    nice_scrollbar.show();
-                    $myaccount.slideDown(300, nice_scrollbar.resize).addClass('myaccount-open');
+                    winkstart.publish('appnav.hide');
+                    $myaccount.slideDown(300, function() {
+                        nice_scrollbar.show().resize();
+                    }).addClass('myaccount-open');
                 });
+            }
+        },
+
+        /* Although the 'show' function allows to hide as well, this function hides myaccount without any animation */
+        hide: function() {
+            var $myaccount = $('.myaccount', 'body'),
+                nice_scrollbar = $('ul.nav.nav-list', $myaccount).getNiceScroll()[0];
+
+            if($myaccount.hasClass('myaccount-open')) {
+                if(nice_scrollbar) { nice_scrollbar.hide(); }
+                $myaccount.hide()
+                          .removeClass('myaccount-open');
             }
         },
 

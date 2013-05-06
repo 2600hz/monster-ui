@@ -1,9 +1,9 @@
-winkstart.module('pbxs', 'pbxs', {
+winkstart.module('app_manager', 'app_manager', {
         subscribe: {
-            'pbxs': 'activate',
-            'pbxs.activate' : 'activate',
-            'pbxs.initialized' : 'initialized',
-            'pbxs.module_activate': 'module_activate',
+            'app_manager': 'activate',
+            'app_manager.activate' : 'activate',
+            'app_manager.initialized' : 'initialized',
+            'app_manager.module_activate': 'module_activate',
         }
     },
     /* The code in this initialization function is required for
@@ -42,7 +42,7 @@ winkstart.module('pbxs', 'pbxs', {
     },
     {
         modules: {
-            'pbxs_manager': false
+            'appnav': false
         },
 
         is_initialized: false,
@@ -54,15 +54,14 @@ winkstart.module('pbxs', 'pbxs', {
 
             THIS.is_initialized = true;
 
-            if(winkstart.apps['pbxs']['default']) {
-                $('[data-whapp="pbxs"] > a').addClass('activate');
+            if(winkstart.apps['app_manager']['default']) {
+                $('[data-whapp="app_manager"] > a').addClass('activate');
                 THIS.setup_page();
             }
         },
 
         activate: function() {
             var THIS = this;
-
             THIS.whapp_auth(function() {
                 THIS.initialization_check();
             });
@@ -124,20 +123,16 @@ winkstart.module('pbxs', 'pbxs', {
         },
 
         setup_page: function() {
-            var THIS = this;
-
-            winkstart.publish('pbxs.module_activate', {name: 'pbxs_manager'});
-            winkstart.publish('whappnav.add', THIS.__module, {
-                name: i18n.t('core.layout.whapp_pbx_connector')
-            });
+            // var THIS = this;
+            // winkstart.publish('app_manager.module_activate', {name: 'appnav'});
         },
 
         whapp_config: function() {
             var THIS = this;
 
-            winkstart.apps['pbxs'] = $.extend(true, {
+            winkstart.apps['app_manager'] = $.extend(true, {
                 is_masqueradable: true
-            }, winkstart.apps['pbxs']);
+            }, winkstart.apps['app_manager']);
         }
     }
 );

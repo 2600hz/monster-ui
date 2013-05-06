@@ -78,7 +78,7 @@ winkstart.module('core', 'layout', {
 
             $('#home_link').on('click', function() {
                 if($.cookie('c_winkstart_auth')) {
-                    winkstart.publish('auth.landing');
+                    winkstart.publish('appnav.activate');
                 }
             });
 

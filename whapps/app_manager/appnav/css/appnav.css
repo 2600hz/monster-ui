@@ -1,0 +1,117 @@
+#appnav {
+	width: 320px;
+    max-height: 501px;
+    background-color: white;
+    display: none;
+    border-bottom: 5px solid #22ccff;
+    border-right: 1px solid #ccc;
+    position: absolute;
+    z-index: 2000;
+	box-shadow: 0px 5px 5px rgba(50, 50, 50, 0.75);
+}
+
+#appnav .applist-filter {
+	height: 50px;
+}
+
+#appnav .applist-filter > input {
+	margin: 10px 20px;
+	width: 220px;
+}
+
+#appnav .applist {
+	max-height: 375px;
+	overflow-y: auto;
+	color: #777;
+	background-color: #f3f3f3;
+	list-style: none;
+	margin: 0;
+}
+
+#appnav .applist .applist-elem {
+	padding: 10px 0px;
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+}
+
+#appnav .applist .applist-elem.active-app {
+	background-color: #fff;
+}
+
+#appnav .applist .applist-elem:hover {
+	background-color: #eee;
+}
+
+#appnav .applist .applist-elem > div {
+	display: inline-block;
+	vertical-align: top;
+	height: 40px;
+}
+
+#appnav .applist .applist-elem .app-icon {
+	width: 40px;
+	padding-left: 10px;
+	background-size: 36px 36px;
+	background-repeat: no-repeat;
+	background-position: right;
+}
+
+#appnav .applist .applist-elem.active-app .app-icon {
+	padding-left: 7px;
+	border-left: 3px solid #22CCFF;
+}
+
+#appnav .applist .applist-elem .app-name {
+	margin-left: 5px;
+	line-height: 40px;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+#appnav .trunking {
+	background-image: url(images/trunking.png);
+}
+
+#appnav .simple-pbx {
+	background-image: url(images/simple_pbx.png);
+}
+
+#appnav .number-manager {
+	background-image: url(images/number_manager.png);
+}
+
+#appnav .applist .applist-notfound {
+	padding: 10px 15px;
+	line-height: 40px;
+	font-size: 18px;
+	font-weight: 500;
+	font-style: italic;
+	text-align: center;
+}
+
+#appnav .appstore-link {	
+	background: #333;
+	color: #fff;
+	height: 75px;
+	line-height: 75px;
+	padding: 0 20px;
+	cursor: pointer;
+}
+
+#appnav .appstore-link > i {
+	float: left;
+	line-height: 75px;
+	display: list-item;
+	list-style: none;
+}
+
+#appnav .appstore-link .appstore-label {
+	text-transform: uppercase;
+	font-size: 20px;
+	margin-left: 20px;
+}
+
+#appnav .appstore-link .appstore-count {
+	font-size: 14px;
+	float: right;
+}
