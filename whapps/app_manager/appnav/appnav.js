@@ -40,44 +40,32 @@ winkstart.module('app_manager', 'appnav', {
             var THIS = this;
 
             if(!THIS.is_rendered) {
-                THIS.render(function() { THIS.toggle(); });
+                winkstart.request('appnav.user_get', {
+                        account_id: winkstart.apps['app_manager'].account_id,
+                        api_url: winkstart.apps['app_manager'].api_url,
+                        user_id: winkstart.apps['app_manager'].user_id
+                    },
+                    function(data, status) {
+                        var app_list = $.map(data.data.apps, function(val, key) {
+                            return {
+                                app_name: val.label,
+                                app_id: val.id,
+                                app_class: val.icon
+                            };
+                        });
+                        THIS.render(app_list, function() { THIS.toggle(); });
+                    }
+                );
             } else {
                 THIS.toggle();
             }
             
         },
 
-        render: function(callback) {
+        render: function(_app_list, callback) {
             var THIS = this,
                 $appnav_html = THIS.templates.appnav.tmpl(),
-                app_list = [
-                    {
-                        app_name: 'Trunking',
-                        app_id: 'pbxs',
-                        app_class: 'trunking'
-                    },
-                    {
-                        app_name: 'Simple PBX',
-                        app_id: 'test1',
-                        app_class: 'simple-pbx'
-                    },
-                    {
-                        app_name: 'Number Manager',
-                        app_id: 'test2',
-                        app_class: 'number-manager'
-                    }
-                ];
-
-            winkstart.request('profile.user_get', {
-                    account_id: winkstart.apps['app_manager'].account_id,
-                    api_url: winkstart.apps['app_manager'].api_url,
-                    user_id: winkstart.apps['app_manager'].user_id
-                },
-                function(data, status) {
-                    console.log(data);
-                    //TODO: Load the list of apps from user. Work in progress...
-                }
-            );
+                app_list = _app_list;
 
             THIS.render_applist(app_list, $appnav_html);
 
@@ -94,6 +82,7 @@ winkstart.module('app_manager', 'appnav', {
                 THIS.render_applist(new_app_list, $appnav_html);
             });
 
+            $('#total_available_apps', $appnav_html).html(Object.keys(winkstart.config.available_apps).length);
             $('#appstore_link', $appnav_html).click(function() {
                 winkstart.alert('info','App Store currently under construction.');
             });
@@ -104,7 +93,7 @@ winkstart.module('app_manager', 'appnav', {
             // Search bar disabled for now
             $('.applist-filter', $appnav_html).hide();
             // Appstore disabled for now
-            // $('#appstore_link', $appnav_html).hide();
+            $('#appstore_link', $appnav_html).hide();
 
             THIS.is_rendered = true;
             if(typeof callback === 'function') { callback(); }

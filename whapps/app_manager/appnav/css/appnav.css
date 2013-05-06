@@ -68,15 +68,11 @@
 	font-weight: 500;
 }
 
-#appnav .trunking {
+#appnav .device {
 	background-image: url(images/trunking.png);
 }
 
-#appnav .simple-pbx {
-	background-image: url(images/simple_pbx.png);
-}
-
-#appnav .number-manager {
+#appnav .menu1 {
 	background-image: url(images/number_manager.png);
 }
 
@@ -100,15 +96,14 @@
 
 #appnav .appstore-link > i {
 	float: left;
-	line-height: 75px;
-	display: list-item;
-	list-style: none;
+	margin-top: 26px;
 }
 
 #appnav .appstore-link .appstore-label {
 	text-transform: uppercase;
 	font-size: 20px;
 	margin-left: 20px;
+	float: left;
 }
 
 #appnav .appstore-link .appstore-count {
