@@ -249,7 +249,6 @@ winkstart.module('myaccount', 'myaccount', {
             else {
                 winkstart.publish('myaccount.'+default_submodule+'.render', function() {
                     THIS.click_submodule(default_submodule);
-                    winkstart.publish('appnav.hide');
                     $myaccount.slideDown(300, function() {
                         nice_scrollbar.show().resize();
                     }).addClass('myaccount-open');

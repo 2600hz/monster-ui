@@ -54,10 +54,11 @@ winkstart.module('pbxs', 'pbxs', {
 
             THIS.is_initialized = true;
 
-            if(winkstart.apps['pbxs']['default']) {
+            /* Hack to load PBX anyway since it's going to be the only whapp */
+            // if(winkstart.apps['pbxs']['default']) {
                 $('[data-whapp="pbxs"] > a').addClass('activate');
                 THIS.setup_page();
-            }
+            // }
         },
 
         activate: function() {
@@ -127,9 +128,6 @@ winkstart.module('pbxs', 'pbxs', {
             var THIS = this;
 
             winkstart.publish('pbxs.module_activate', {name: 'pbxs_manager'});
-            winkstart.publish('whappnav.add', THIS.__module, {
-                name: i18n.t('core.layout.whapp_pbx_connector')
-            });
         },
 
         whapp_config: function() {
