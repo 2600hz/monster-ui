@@ -34,12 +34,23 @@
 	cursor: pointer;
 }
 
+#appnav .applist .applist-elem:not(.active-app):hover {
+	background-color: #eee;
+}
+
 #appnav .applist .applist-elem.active-app {
 	background-color: #fff;
 }
 
-#appnav .applist .applist-elem:hover {
-	background-color: #eee;
+#appnav .applist .applist-elem.active-app > i {
+	float: right;
+	margin: 12px;
+	opacity: 0.75;
+	display: none;
+}
+
+#appnav .applist .applist-elem.active-app:hover i {
+	display: inline-block;
 }
 
 #appnav .applist .applist-elem > div {

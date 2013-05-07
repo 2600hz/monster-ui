@@ -12,15 +12,8 @@ winkstart.module('app_manager', 'appnav', {
 
         subscribe: {
             'appnav.activate': 'activate',
+            'appnav.toggle': 'toggle',
             'appnav.hide': 'hide'
-        },
-
-        resources: {
-            'appnav.user_get': {
-                url: '{api_url}/accounts/{account_id}/users/{user_id}',
-                contentType: 'application/json',
-                verb: 'GET'
-            }
         }
     },
     /* The code in this initialization function is required for
@@ -36,28 +29,18 @@ winkstart.module('app_manager', 'appnav', {
         is_rendered: false,
         current_app_id: undefined,
 
-        activate: function() {
+        activate: function(user_data) {
             var THIS = this;
 
             if(!THIS.is_rendered) {
-                winkstart.request('appnav.user_get', {
-                        account_id: winkstart.apps['app_manager'].account_id,
-                        api_url: winkstart.apps['app_manager'].api_url,
-                        user_id: winkstart.apps['app_manager'].user_id
-                    },
-                    function(data, status) {
-                        var app_list = $.map(data.data.apps, function(val, key) {
-                            return {
-                                app_name: val.label,
-                                app_id: val.id,
-                                app_class: val.icon
-                            };
-                        });
-                        THIS.render(app_list, function() { THIS.toggle(); });
-                    }
-                );
-            } else {
-                THIS.toggle();
+                var app_list = $.map(user_data.apps, function(val, key) {
+                    return {
+                        app_name: val.label,
+                        app_id: val.id,
+                        app_class: val.icon
+                    };
+                });
+                THIS.render(app_list);
             }
             
         },

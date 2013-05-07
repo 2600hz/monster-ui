@@ -58,15 +58,15 @@ winkstart.module('app_manager', 'app_manager', {
             }
         },
 
-        activate: function() {
+        activate: function(user_data) {
             var THIS = this;
 
             THIS.whapp_auth(function() {
-                THIS.initialization_check();
+                THIS.initialization_check(user_data);
             });
         },
 
-        initialization_check: function() {
+        initialization_check: function(user_data) {
             var THIS = this;
 
             if (!THIS.is_initialized) {
@@ -85,7 +85,7 @@ winkstart.module('app_manager', 'app_manager', {
                 });
             }
             else {
-                THIS.setup_page();
+                THIS.setup_page(user_data);
             }
         },
 
@@ -122,9 +122,10 @@ winkstart.module('app_manager', 'app_manager', {
             return count;
         },
 
-        setup_page: function() {
+        setup_page: function(user_data) {
             // var THIS = this;
             // winkstart.publish('app_manager.module_activate', {name: 'appnav'});
+            winkstart.publish('appnav.activate', user_data);
         },
 
         whapp_config: function() {

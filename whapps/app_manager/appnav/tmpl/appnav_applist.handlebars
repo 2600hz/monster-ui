@@ -5,6 +5,9 @@
 		<div class="app-name">
 			{{this.app_name}}
 		</div>
+		{{#compare this.app_id '===' ../active}}
+			<i class="icon-refresh"></i>
+		{{/compare}}
 	</li>
 {{else}}
 	<li class="applist-notfound">

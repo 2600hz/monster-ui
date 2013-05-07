@@ -67,18 +67,18 @@ winkstart.module('core', 'layout', {
                 api_url = winkstart.config.whitelabel_api_url || winkstart.apps['auth'].api_url;
 
             $('#home_link').ajaxStart(function() {
-                $('i', $(this)).removeClass('icon-home').addClass('icon-spinner icon-spin');
+                $('i', $(this)).removeClass('icon-reorder').addClass('icon-spinner icon-spin');
             }).ajaxStop(function() {
-                $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-home');
+                $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-reorder');
             }).ajaxError(function() {
                 if($.active === 0) {
-                    $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-home');
+                    $('i', $(this)).removeClass('icon-spinner icon-spin').addClass('icon-reorder');
                 }
             });
 
             $('#home_link').on('click', function() {
                 if($.cookie('c_winkstart_auth')) {
-                    winkstart.publish('appnav.activate');
+                    winkstart.publish('appnav.toggle');
                 }
             });
 
