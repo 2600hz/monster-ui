@@ -4,6 +4,7 @@ winkstart.module('app_manager', 'app_manager', {
             'app_manager.activate' : 'activate',
             'app_manager.initialized' : 'initialized',
             'app_manager.module_activate': 'module_activate',
+            'auth.account.loaded' : 'activate'
         }
     },
     /* The code in this initialization function is required for
@@ -130,6 +131,7 @@ winkstart.module('app_manager', 'app_manager', {
             var THIS = this;
 
             winkstart.apps['app_manager'] = $.extend(true, {
+                api_url: winkstart.apps['auth'].api_url,
                 is_masqueradable: true
             }, winkstart.apps['app_manager']);
         }
