@@ -12,6 +12,7 @@ winkstart.module('app_manager', 'app_manager', {
     function() {
         var THIS = this;
 
+        winkstart.registerResources(THIS.__whapp, THIS.config.resources);
         if('modules' in winkstart.apps[THIS.__module]) {
             if('whitelist' in winkstart.apps[THIS.__module].modules) {
                 THIS.modules = {};
@@ -32,13 +33,9 @@ winkstart.module('app_manager', 'app_manager', {
 
         THIS.uninitialized_count = THIS._count(THIS.modules);
 
-        THIS.whapp_auth(function() {
-            THIS.initialization_check();
-        });
+        THIS.initialization_check();
 
         THIS.whapp_config();
-
-        winkstart.registerResources(THIS.__whapp, THIS.config.resources);
     },
     {
         modules: {
@@ -62,6 +59,7 @@ winkstart.module('app_manager', 'app_manager', {
 
         activate: function() {
             var THIS = this;
+
             THIS.whapp_auth(function() {
                 THIS.initialization_check();
             });
@@ -99,6 +97,7 @@ winkstart.module('app_manager', 'app_manager', {
         },
 
         whapp_auth: function(callback) {
+
             var THIS = this;
 
             if('auth_token' in winkstart.apps[THIS.__module] && winkstart.apps[THIS.__module].auth_token) {

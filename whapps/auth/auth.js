@@ -613,7 +613,7 @@ winkstart.module('auth', 'auth',
                 }
             };
 
-            var get_user_fn = function(auth_token, app_name, callback) {
+            var init_app = function(auth_token, app_name, callback) {
                 var options = {
                     account_id: winkstart.apps['auth'].account_id,
                     api_url : winkstart.apps['auth'].api_url,
@@ -623,21 +623,19 @@ winkstart.module('auth', 'auth',
                 winkstart.apps[app_name] = $.extend(true, {}, options, winkstart.apps[app_name]);
                 winkstart.apps[app_name]['auth_token'] = auth_token;
 
-                winkstart.getJSON('auth.get_user', options, function(json, xhr) {
-                    if(typeof callback == 'function') {
-                        callback();
-                    }
-                });
+                if(typeof callback == 'function') {
+                    callback();
+                }
             };
 
             if(winkstart.apps['auth'].api_url != winkstart.apps[args.app_name].api_url) {
                 winkstart.putJSON('auth.shared_auth', rest_data, function (json, xhr) {
                     // If this is successful, we'll get a server-specific auth token back
-                    get_user_fn(json.auth_token, args.app_name, args.callback);
+                    init_app(json.auth_token, args.app_name, args.callback);
                 });
             }
             else {
-                get_user_fn(winkstart.apps['auth'].auth_token, args.app_name, args.callback);
+                init_app(winkstart.apps['auth'].auth_token, args.app_name, args.callback);
             }
         },
 
