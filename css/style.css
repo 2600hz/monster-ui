@@ -1,3 +1,10 @@
 @import url('/css/boilertplate.css');
 @import url('/css/normalize.css');
+@import url('/css/bootstrap/bootstrap.min.css');
+@import url('/css/bootstrap/bootstrapSwitch.css');
+@import url('/css/bootstrap/bootstrap-add.css');
+
+@import url('/css/bootstrap/font-awesome.min.css');
+@import url('http://fonts.googleapis.com/css?family=Lobster|Maven+Pro:400,500,700,900');
+
 @import url('/css/main.css');

@@ -80,6 +80,7 @@ define(function(require){
 			'auth.landing': '_landing',
 			'auth.loadAccount' : '_loadAccount',
 			'auth.login' : '_loginPopup',
+			'auth.login-click': '_loginClick',
 			'auth.logout': '_logout',
 			'auth.newPassword': '_newPassword',
 			'auth.recoverPassword' : '_recover',
@@ -125,7 +126,7 @@ define(function(require){
 
 		_activate: function() {
 			if(monster.apps['auth'].auth_token == null) {
-				monster.publish('auth.login');
+				monster.pub('auth.login');
 			}
 			else {
 				monster.confirm('Are you sure that you want to log out?', function() {
@@ -158,7 +159,7 @@ define(function(require){
 					self.session.authenticated = true;
 					self.session.token         = data.auth_token;
 					self.session.expires       = data.expires;
-					monster.alert('User authenticated');
+					monster.ui.alert('User authenticated');
 				}
 			});
 		},		
@@ -175,8 +176,8 @@ define(function(require){
 
 				monster.postJSON('auth.activate', data, function(data) {
 
-					monster.alert('info','You are now registered! Please log in.', function() {
-						monster.publish('auth.welcome', {username: data.data.user.username});
+					monster.ui.alert('info','You are now registered! Please log in.', function() {
+						monster.pub('auth.welcome', {username: data.data.user.username});
 					});
 
 					if(data.authToken != '' && data.authToken != 'null'){
@@ -184,18 +185,18 @@ define(function(require){
 						monster.apps['auth'].authToken = data.authToken;
 						monster.apps['auth'].user_id = data.data.user.id;
 						monster.apps['auth'].realm = data.data.account.realm;
-						monster.publish('auth.load_account');
+						monster.pub('auth.load_account');
 					}
 				});
 			}
 			else if(monster.querystring('recover_password')) {
-				monster.alert('info','You are in the Recover Password tool.');
+				monster.ui.alert('You are in the Recover Password tool.');
 			}
 
 			if(cookie_data = $.cookie('monster-auth')) {
 				$('#ws-content').empty();
 				eval('monster.apps["auth"] = ' + cookie_data);
-				monster.publish('auth.load_account');
+				monster.pub('auth.load_account');
 			}
 		},
 
@@ -226,7 +227,7 @@ define(function(require){
 						json.data.account_name = (_data.data || {}).name || monster.config.company_name;
 						json.data.apps = json.data.apps || {};
 
-						monster.publish('auth.account.loaded', json.data);
+						monster.pub('auth.account.loaded', json.data);
 
 						$.each(json.data.apps, function(k, v) {
 							monster.log('WhApps: Loading ' + k + ' from URL ' + v.api_url);
@@ -247,7 +248,7 @@ define(function(require){
 						});
 
 						if(json.data.require_password_update) {
-							monster.publish('auth.new_password', json.data);
+							monster.pub('auth.new_password', json.data);
 						}
 
 						var landing = true;
@@ -260,23 +261,21 @@ define(function(require){
 						});
 
 						if(landing) {
-							monster.publish('auth.landing', $('.ws-content'));
+							monster.pub('auth.landing', $('.ws-content'));
 						}
 
 					},
 					function(data, status) {
-						monster.alert('error', 'An error occurred while loading your account.',
-							function() {
-								$.cookie('c_monster_auth', null);
-								window.location.reload();
-							}
-							);
+						monster.ui.alert('error', 'An error occurred while loading your account.', function() {
+							$.cookie('c_monster_auth', null);
+							window.location.reload();
+						});
 					}
 					);
 			};
 
 			function failure(data){
-				monster.alert('error', 'An error occurred while loading your account.', function() {
+				monster.ui.alert('error', 'An error occurred while loading your account.', function() {
 					$.cookie('c_monster_auth', null);
 					window.location.reload();
 				});
@@ -300,10 +299,10 @@ define(function(require){
 				accountName: account_name || cookie_login.account_name || '',
 				rememberMe: cookie_login.login || cookie_login.account_name ? true : false,
 				showRegister: monster.config.hide_registration || false
-			},
-			loginHtml = monster.template(self, templates.login, templateData),
-			codeHtml = monster.template(self, templates.code, templateData),
-			content = $('.right_div', '#welcome_page');
+			};
+			var loginHtml = monster.template(self, templates.login, templateData);
+			var codeHtml = monster.template(self, templates.code, templateData);
+			var content = $('.right_div', '#welcome_page');
 
 			content.empty().append(loginHtml);
 
@@ -314,7 +313,15 @@ define(function(require){
 				content.find('#login').focus();
 			}
 
-			content.find('.login').click(self.loginClick);
+			content.find('.login').click(function(event){
+
+				event.preventDefault();
+
+				monster.pub('auth.login-click', { 
+					realm: realm,
+					accountName: account_name
+				});
+			});
 			content.find('a.recover_password').click(self.recoverClick);
 
 			content.find('button.register').click(function(e) {
@@ -331,7 +338,7 @@ define(function(require){
 						.append(code);
 					}
 					else {
-						monster.publish('auth.register');
+						monster.pub('auth.register');
 					}
 				}
 				else {
@@ -369,7 +376,7 @@ define(function(require){
 			$('a.register', dialogDiv).click(function(event) {
 				event.preventDefault();
 
-				monster.publish('auth.register');
+				monster.pub('auth.register');
 
 				$(dialogDiv).dialog('close');
 			});
@@ -377,7 +384,7 @@ define(function(require){
 			$('a.recover_password', dialogDiv).click(function(event) {
 				event.preventDefault();
 
-				monster.publish('auth.recover_password');
+				monster.pub('auth.recover_password');
 
 				$(dialogDiv).dialog('close');
 			});
@@ -434,27 +441,29 @@ define(function(require){
 				data_recover.phone_number == '' ? delete data_recover.phone_number : true;
 
 				monster.validate.is_valid(THIS.config.validation_recover, dialog, function() {
-					monster.request(true, 'auth.recover_password', {
-						api_url: monster.apps['auth'].api_url,
-						data: data_recover
-					},
-					function(_data, status) {
-						monster.alert('info', _data.data);
-						dialog.dialog('close');
-					},
-					function(_data, status) {
-						var msg_error = 'Error ' + status + '<br/>';
-						if(_data.data) {
-							$.each(_data.data, function(k, v) {
-								$.each(_data.data[k], function(key, msg) {
-									msg_error += '<br/>' + msg;
+					monster.request({
+						resource: 'auth.recover_password', 
+						data: {
+							api_url: monster.apps['auth'].api_url,
+							data: data_recover
+						},
+						success: function(_data, status) {
+							monster.ui.alert('info', _data.data);
+							dialog.dialog('close');
+						},
+						error: function(_data, status) {
+							var msg_error = 'Error ' + status + '<br/>';
+							if(_data.data) {
+								$.each(_data.data, function(k, v) {
+									$.each(_data.data[k], function(key, msg) {
+										msg_error += '<br/>' + msg;
+									});
 								});
-							});
-						}
+							}
 
-						monster.alert('error', msg_error);
-					}
-					);
+							monster.ui.alert('error', msg_error);
+						}
+					});
 				});
 			});
 		},
@@ -570,20 +579,20 @@ define(function(require){
 
 		// event handlers
 
-		loginClick: function(event) {
-			event.preventDefault(); 
+		_loginClick: function(data) {
+			
+			var login_username = $('#login').val(),
+				login_password = $('#password').val(),
+				login_account_name = $('#account_name').val(),
+				hashed_creds = $.md5(login_username + ':' + login_password),
+				login_data = {};
 
-			var login_username = $('#login', contentDiv).val(),
-			login_password = $('#password', contentDiv).val(),
-			login_account_name = $('#account_name', contentDiv).val(),
-			hashed_creds = $.md5(login_username + ':' + login_password),
-			login_data = {};
 
-			if(realm) {
-				login_data.realm = realm;
+			if(data.realm) {
+				login_data.realm = data.realm;
 			}
-			else if(account_name) {
-				login_data.account_name = account_name;
+			else if(data.accountName) {
+				login_data.account_name = data.accountName;
 			}
 			else if(login_account_name) {
 				login_data.account_name = login_account_name;
@@ -592,50 +601,47 @@ define(function(require){
 				login_data.realm = login_username + (typeof monster.config.realm_suffix === 'object' ? monster.config.realm_suffix.login : monster.config.realm_suffix);
 			}
 
-			monster.putJSON('auth.user_auth', {
-				api_url: monster.apps['auth'].api_url,
-				data: $.extend(true, {
-					credentials: hashed_creds
-				}, login_data)
-			},
-			function (data, status) {
-				monster.apps['auth'].account_id = data.data.account_id;
-				monster.apps['auth'].auth_token = data.auth_token;
-				monster.apps['auth'].user_id = data.data.owner_id;
-				monster.apps['auth'].realm = realm;
+			monster.request({
+				resource: 'auth.user_auth', 
+				data: _.extend({ credentials: hashed_creds }, login_data),
+				success: function (data, status) {
+					monster.apps['auth'].account_id = data.data.account_id;
+					monster.apps['auth'].auth_token = data.auth_token;
+					monster.apps['auth'].user_id = data.data.owner_id;
+					monster.apps['auth'].realm = realm;
 
-	      // Deleting the welcome message
-	      $('#ws-content').empty();
+		      // Deleting the welcome message
+		      $('#ws-content').empty();
 
-	      if($('#remember_me', contentDiv).is(':checked')) {
-	      	var cookie_login = {};
-	      	login_username ? cookie_login.login = login_username : true;
-	      	login_data.account_name ? cookie_login.account_name = login_data.account_name : true;
-	      	$.cookie('c_monster_login', JSON.stringify(cookie_login), {expires: 30});
-	      }
-	      else{
-	      	$.cookie('c_monster_login', null);
-	      }
+		      if($('#remember_me').is(':checked')) {
+		      	var cookie_login = {};
+		      	login_username ? cookie_login.login = login_username : true;
+		      	login_data.account_name ? cookie_login.account_name = login_data.account_name : true;
+		      	$.cookie('c_monster_login', JSON.stringify(cookie_login), {expires: 30});
+		      }
+		      else{
+		      	$.cookie('c_monster_login', null);
+		      }
 
-	      $.cookie('c_monster_auth', JSON.stringify(monster.apps['auth']), {expires: 30});
+		      $.cookie('c_monster_auth', JSON.stringify(monster.apps['auth']), {expires: 30});
 
-	      monster.publish('auth.load_account');
-	    },
-	    function(data, status) {
-	    	if(status === 400) {
-	    		monster.alert('Invalid credentials, please check that your username and account name are correct.');
-	    	}
-	    	else if($.inArray(status, [401, 403]) > -1) {
-	    		monster.alert('Invalid credentials, please check that your password and account name are correct.');
-	    	}
-	    	else if(status === 'error') {
-	    		monster.alert('Oh no! We are having trouble contacting the server, please try again later...');
-	    	}
-	    	else {
-	    		monster.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
-	    	}
-	    }
-	    );
+		      monster.pub('auth.load_account');
+		    },
+		    error: function(data, status) {
+		    	if(status === 400) {
+		    		monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
+		    	}
+		    	else if($.inArray(status, [401, 403]) > -1) {
+		    		monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
+		    	}
+		    	else if(status === 'error') {
+		    		monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
+		    	}
+		    	else {
+		    		monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
+		    	}
+		    }
+	    });
 		},
 
 		loginRegisterClick: function(e) {
@@ -643,29 +649,31 @@ define(function(require){
 			var code = $('input#code', code_html).val();
 
 			if(code != "" && code != null) {
-				monster.request('auth.invite_code', {
-					api_url: monster.apps.auth.api_url,
-					invite_code: code,
-				},
-				function(_data, status) {
-					monster.publish('onboard.register', {
-						invite_code: code
-					});
-				},
-				function(_data, status) {
-					switch(_data['error']) {
-						case '404':
-						monster.alert('error', 'Invalid invite code !');
-						break;
-						case '410':
-						monster.alert('error', 'Invite code already used !');
-						break;
-						default:
-						monster.alert('error', '<p>An error occurred</p>' + monster.print_r(_data));
-						break;
+				monster.request({
+					resource: 'auth.invite_code', 
+					data: {
+						api_url: monster.apps.auth.api_url,
+						invite_code: code,
+					},
+					success: function(_data, status) {
+						monster.pub('onboard.register', {
+							invite_code: code
+						});
+					},
+					error: function(_data, status) {
+						switch(_data['error']) {
+							case '404':
+							monster.ui.alert('error', 'Invalid invite code !');
+							break;
+							case '410':
+							monster.ui.alert('error', 'Invite code already used !');
+							break;
+							default:
+							monster.ui.alert('error', '<p>An error occurred</p>' + monster.print_r(_data));
+							break;
+						}
 					}
-				}
-				);
+				});
 			}
 		},
 
@@ -678,25 +686,27 @@ define(function(require){
 					user_data.password = data_new_password.new_password1;
 					user_data.require_password_update = false;
 
-					monster.request(true, 'auth.user.update', {
-						api_url: monster.apps.auth.api_url,
-						account_id: monster.apps.auth.account_id,
-						user_id: user_data.id,
-						data: user_data
-					},
-					function(_data, status) {
-						monster.alert('info', 'Password updated !');
-						dialog_new_password.dialog('close');
-					},
-					function(_data, status) {
-						monster.alert('error', 'Error :' + status);
-					}
-					);
+					monster.request({
+						resource: 'auth.user.update', 
+						data: {
+							api_url: monster.apps.auth.api_url,
+							account_id: monster.apps.auth.account_id,
+							user_id: user_data.id,
+							data: user_data
+						},
+						success: function(_data, status) {
+							monster.ui.alert('info', 'Password updated !');
+							dialog_new_password.dialog('close');
+						},
+						error: function(_data, status) {
+							monster.ui.alert('error', 'Error :' + status);
+						}
+					});
 				}
 				else {
 					$('#new_password1', dialog_new_password).val('');
 					$('#new_password2', dialog_new_password).val('');
-					monster.alert('Password typed don\'t match. Please retype your new password');
+					monster.ui.alert('Password typed don\'t match. Please retype your new password');
 				}
 			});
 		},
@@ -742,20 +752,20 @@ define(function(require){
 
 					$.cookie('c_monster_auth', JSON.stringify(monster.apps['auth']), {expires: 30});
 
-					monster.publish('auth.load_account');
+					monster.pub('auth.load_account');
 				},
 				function(data, status) {
 					if(status === 400) {
-						monster.alert('Invalid credentials, please check that your username and account name are correct.');
+						monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
 					}
 					else if($.inArray(status, [401, 403]) > -1) {
-						monster.alert('Invalid credentials, please check that your password and account name are correct.');
+						monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
 					}
 					else if(status === 'error') {
-						monster.alert('Oh no! We are having trouble contacting the server, please try again later...');
+						monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
 					}
 					else {
-						monster.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
+						monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
 					}
 				}
 			);
@@ -764,7 +774,7 @@ define(function(require){
 		recoverClick: function(e) {
 			e.preventDefault();
 
-			monster.publish('auth.recover_password');
+			monster.pub('auth.recover_password');
 		},
 
 		registerClick: function(event) {
@@ -810,17 +820,17 @@ define(function(require){
 							
 						monster.putJSON('auth.register', rest_data, function (json, xhr) {
 							$.cookie('c_monster.login', null);
-							monster.alert('info','Registered successfully. Please check your e-mail to activate your account!');
+							monster.ui.alert('info','Registered successfully. Please check your e-mail to activate your account!');
 							dialogRegister.dialog('close');
 						});
 					}
 				}
 				else {
-					monster.alert('Please confirm your password');		
+					monster.ui.alert('Please confirm your password');		
 				}
 			},
 			function() {
-				monster.alert('There were errors on the form, please correct!');
+				monster.ui.alert('There were errors on the form, please correct!');
 			});
 		}
 

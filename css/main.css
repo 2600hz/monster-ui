@@ -599,3 +599,14 @@ table.table tr td {
         padding-left: 20px;
     }
 }
+
+.ui-datepicker th { font-weight: 500; }
+.ui-state-default, 
+.ui-widget-content .ui-state-default, 
+.ui-widget-header .ui-state-default { font-weight: 500; color: #333; }
+
+.ui-widget-header { background: #22ccff; }
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #22ccff; text-decoration: none; }
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { font-weight: bold; color: #22ccff; }
+.ui-state-hover a, .ui-state-hover a:hover { color: #22ccff; text-decoration: none; }

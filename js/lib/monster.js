@@ -180,6 +180,7 @@ define(function(require){
 
 		pub: function(topic, data){
 			//this._channel.publish(topic, data || {});
+			console.log('monster: publishing: ' + topic)
 			postal.publish({
 				channel: 'monster',
 				topic: topic,
@@ -257,6 +258,8 @@ define(function(require){
 					});
 				}
 			}
+
+			monster.cache.templates[conical] = _template;
 				
 			if(!raw){
 				_template = handlebars.compile(_template);
@@ -270,8 +273,6 @@ define(function(require){
 			else{
 				result = _template;
 			}
-
-			monster.cache.templates[conical] = _template;
 
 			result = result.replace(/(\r\n|\n|\r|\t)/gm,"");
 

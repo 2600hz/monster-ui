@@ -10,11 +10,11 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-			"cors.test": {
-				url: "phone_numbers?prefix=415&quantity=15",
-				type: "text/plain",
-				verb: "GET"
-			},
+			// "cors.test": {
+			// 	url: "phone_numbers?prefix=415&quantity=15",
+			// 	type: "text/plain",
+			// 	verb: "GET"
+			// },
 			'layout.getLogo': {
 				url: 'whitelabel/{domain}/logo',
 				type: 'application/json',
@@ -50,7 +50,7 @@ define(function(require){
 			// 	}
 			// })
 
-			self._load(callback);
+			callback(this);
 		},
 
 		render: function(container){
@@ -83,15 +83,18 @@ define(function(require){
 			}
 
 			self._logo(content);
+
+			self._load(); // do this here because subsequent apps are dependent upon core layout
+
+			monster.ui.alert('Testing');
 		},
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
 
-		_load: function(callback){
+		_load: function(){
 			var self = this;
 
 			if(!self._apps.length){
-				callback(this);
 				return;
 			}
 
@@ -99,7 +102,7 @@ define(function(require){
 
 			monster._loadApp(appName, function(app){
 				app.render($('#ws-content'));
-				self._load(callback);
+				self._load();
 			});
 		},
 
@@ -109,18 +112,15 @@ define(function(require){
 				apiUrl = monster.config.api.default || monster.apps['auth'].apiUrl,
 				homeLink = $('#home_link')
 
-			$('#home_link').ajaxStart(function() {
-				homeLink.find('i').hide();
-				homeLInk.find('#loading').show();
+			homeLink.ajaxStart(function() {
+				homeLink.find('i').addClass('icon-spinner icon-spin');
 			})
 			.ajaxStop(function() {
-				homeLink.find('i').show();
-				homeLink.find('#loading').hide();
+				homeLink.find('i').removeClass('icon-spinner icon-spin');
 			})
 			.ajaxError(function() {
 				if($.active === 0) {
-					homeLink.find('i').show();
-					homeLink.find('#loading').hide();
+					homeLink.find('i').removeClass('icon-spinner icon-spin');
 				}
 			});
 
