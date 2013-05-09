@@ -143,6 +143,7 @@ define(function(require){
 				method: request.verb || 'get',
 				contentType: request.type || 'application/json',
 				crossOrigin: true,
+				processData: false,
 				error: request.error,
 				success: request.success
 			};
@@ -234,14 +235,16 @@ define(function(require){
 				delete data[name];
 			});
 
-			settings = _.extend(settings, { processData: false, data: { verb: settings.method, data: data }});
+			if(settings.method.toLowerCase() !== 'get'){
+				var postData = {
+					verb: settings.method.toUpperCase(),
+					data: data
+				};
 
-            if(settings.method === 'GET') {
-                delete settings.data;
-            }
-            else {
-                settings.data = JSON.stringify(settings.data);
-            }
+				settings = _.extend(settings, { 
+					data: JSON.stringify(postData)
+				});
+			}
 
 			return reqwest(settings);
 
