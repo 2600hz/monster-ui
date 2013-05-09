@@ -81,9 +81,7 @@ define(function(require){
 
 			}
 
-			self._load(); // do this here because subsequent apps are dependent upon core layout
-
-			monster.ui.alert('Testing');
+			//self._load(); // do this here because subsequent apps are dependent upon core layout
 		},
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
@@ -141,13 +139,13 @@ define(function(require){
 			monster.request({
 				resource: 'layout.getLogo',
 				data: {
-					domain: domain
+					domain: domain === "localhost" ? "2600hz.com" : domain
 				},
-				success: function(_data, status) {
+				success: function(_data) {
 					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
-				error: function(_data, status) {
-					var logo = status != /*404*/ 'fail' ? '' : 'url("apps/core/static/images/logo.png")';
+				error: function(error) {
+					var logo = 'url("apps/core/static/images/logo.png")';
 
 					container.find('#ws-navbar .logo').css('background-image', logo);
 				}

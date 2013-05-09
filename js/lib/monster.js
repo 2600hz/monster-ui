@@ -3,7 +3,7 @@ define(function(require){
 	var $ = require("jquery"),
 		_ = require("underscore"),
 		postal = require("postal"),
-		amplify = require("amplify"),
+		reqwest = require("reqwest"),
 		handlebars = require("handlebars"),
 		config = require("js/config");
 
@@ -75,80 +75,79 @@ define(function(require){
 		},
 
 		// adds the oauth headers and data
-		_beforeRequest: function(xhr, settings) {
-			xhr.setRequestHeader('X-Auth-Token', monster.config.user.authToken);
+		// _beforeRequest: function(xhr, settings) {
+		// 	xhr.setRequestHeader('X-Auth-Token', monster.config.user.authToken);
 
-			if(typeof settings.data == 'object' && 'headers' in settings.data) {
-				$.each(settings.data.headers, function(key, val) {
-					switch(key) {
-						case 'Content-Type':
-							xhr.overrideMimeType(val);
-							break;
+		// 	if(typeof settings.data == 'object' && 'headers' in settings.data) {
+		// 		$.each(settings.data.headers, function(key, val) {
+		// 			switch(key) {
+		// 				case 'Content-Type':
+		// 					xhr.overrideMimeType(val);
+		// 					break;
 
-						default:
-							xhr.setRequestHeader(key, val);
-					}
-				});
+		// 				default:
+		// 					xhr.setRequestHeader(key, val);
+		// 			}
+		// 		});
 
-				delete settings.data.headers;
-			}
+		// 		delete settings.data.headers;
+		// 	}
 
-			if(settings.contentType == 'application/json') {
-				if(settings.type == 'PUT' || settings.type == 'POST') {
-					settings.data.verb = settings.type;
-					settings.data = JSON.stringify(settings.data);
-				}
-				else if(settings.type =='GET' || settings.type == 'DELETE') {
-					settings.data = '';
-				}
-			}
-			else if(typeof settings.data == 'object' && settings.data.data) {
-				settings.data = settings.data.data;
-			}
+		// 	if(settings.contentType == 'application/json') {
+		// 		if(settings.type == 'PUT' || settings.type == 'POST') {
+		// 			settings.data.verb = settings.type;
+		// 			settings.data = JSON.stringify(settings.data);
+		// 		}
+		// 		else if(settings.type =='GET' || settings.type == 'DELETE') {
+		// 			settings.data = '';
+		// 		}
+		// 	}
+		// 	else if(typeof settings.data == 'object' && settings.data.data) {
+		// 		settings.data = settings.data.data;
+		// 	}
 
-			// Without returning true, our decoder will not run.
-			return true;
-		},
+		// 	// Without returning true, our decoder will not run.
+		// 	return true;
+		// },
 
-		_decodeRequest: function ( data, status, xhr, success, error ) {
-			data = data || { status: "fail", message: "fatal" };
+		// _decodeRequest: function ( data, status, xhr, success, error ) {
+		// 	data = data || { status: "fail", message: "fatal" };
 
-			if ( data.status === "success" ) {
-				success( data.data );
-			}
-			else{
-				var payload;
+		// 	if ( data.status === "success" ) {
+		// 		success( data.data );
+		// 	}
+		// 	else{
+		// 		var payload;
 
-				try {
-					payload = JSON.parse(ampXHR.responseText);
-				}
-				catch(e) {}
+		// 		try {
+		// 			payload = JSON.parse(ampXHR.responseText);
+		// 		}
+		// 		catch(e) {}
 
-				if ( data.status === "fail" || data.status === "error" ) {
-					error( payload || data.message, data.status );
-				}
-				else {
-					error( payload || data.message , "fatal" );
-				}
-			}
-		},
+		// 		if ( data.status === "fail" || data.status === "error" ) {
+		// 			error( payload || data.message, data.status );
+		// 		}
+		// 		else {
+		// 			error( payload || data.message , "fatal" );
+		// 		}
+		// 	}
+		// },
+
+		_requests: {},
 
 		_defineRequest: function(id, request){
 
-			var self = this,
-				settings = {
-					//beforeSend: self._beforeRequest,
-					cache: 'cache' in request ? request.cache : false,
-					contentType: request.type || 'application/json',
-					dataType: request.dataType || 'json',
-					decoder: self._decodeRequest,
-					headers: request.headers || {},
-					processData: request.verb == 'GET',
-					type: request.verb,
-					url: self.config.api.default + request.url
-				};
+			var settings = {
+				url: (request.apiRoot || this.config.api.default) + request.url,
+				type: request.dataType || 'json',
+				method: request.verb || 'get',
+				contentType: request.type || 'application/json',
+				crossOrigin: true,
+				error: request.error,
+				success: request.success
+			};
 
-			amplify.request.define(id, 'ajax', settings);
+			this._requests[id] = settings;
 		},
 
 		apps: {},
@@ -197,16 +196,58 @@ define(function(require){
 
 		request: function(options){
 
-			return amplify.request({
-				resourceId: options.resource,
-				data: options.data,
-				success: function(data){
-					options.success && options.success(data);
-				},
-				error: function(message, level){
-					options.error && options.error(message, level);
-				}				
-			});			
+			var settings = this._requests[options.resource];
+
+			if(!settings){
+				throw("The resource requested could not be found.", options.resource);				
+			}
+
+			var errorHandler = settings.error,
+				successHandler = settings.success,
+				mappedKeys = [],
+				rurlData = /\{([^\}]+)\}/g,
+				data = _.extend({}, options.data || {});
+
+			settings.error = function requestError (error, one, two, three) { 
+
+				console.warn("reqwest failure on: " + options.resource, error)
+
+				errorHandler && errorHandler(error);
+				options.error && options.error(error);
+			};
+
+			settings.success = function requestSuccess (resp) {
+
+				successHandler && successHandler(resp);
+				options.success && options.success(resp);
+			};
+
+			settings.url = settings.url.replace(rurlData, function (m, key) {
+				if (key in data) {
+					mappedKeys.push(key);
+					return data[key];
+				}
+			});
+
+			// We delete the keys later so duplicates are still replaced
+			_.each(mappedKeys, function (name, index) {
+				delete data[name];
+			});
+
+			settings = _.extend(settings, {data: data});
+
+			return reqwest(settings);
+
+			// return amplify.request({
+			// 	resourceId: options.resource,
+			// 	data: options.data,
+			// 	success: function(data){
+			// 		options.success && options.success(data);
+			// 	},
+			// 	error: function(message, level){
+			// 		options.error && options.error(message, level);
+			// 	}				
+			// });			
 
 		},
 

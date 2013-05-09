@@ -1,6 +1,9 @@
 
 require.config({
 	paths: {
+		bootstrap: "js/lib/bootstrap-2012.min",
+		"bootstrap-switch": "js/lib/bootstrapSwitch-1.2",
+		"bootstrap-clickover": "js/lib/bootstrapx-clickover-1.0",		
 		handlebars: "js/lib/handlebars-1.0.10",
 		jquery: "js/lib/jquery-1.9.1.min",
 		jqueryui: "js/lib/jquery-ui-1.10.3.custom.min",
@@ -8,20 +11,14 @@ require.config({
 		"monster-ui": "js/lib/monster.ui",
 		plugins: "js/plugins",
 		postal: "js/lib/postal-0.8.2",
-		amplify: "js/lib/amplify-1.1.0.min",
-		underscore: "js/lib/underscore-1.4.4.min",
-		bootstrap: "js/lib/bootstrap-2012.min",
-		"bootstrap-switch": "js/lib/bootstrapSwitch-1.2",
-		"bootstrap-clickover": "js/lib/bootstrapx-clickover-1.0"
+		reqwest: "js/lib/reqwest-0.7.3.min",
+		underscore: "js/lib/underscore-1.4.4.min"
 	},
   shim: {
-		amplify: {
-			deps: ["jquery", "jqueryui"],
-			exports: "amplify"
-		}, 	
-  	bootstrap: ["jquery"],
+  	bootstrap: ["jqueryui"],
   	"bootstrap-switch": ["bootstrap"],
   	"bootstrap-clickover": ["bootstrap"],
+  	jqueryui: ["jquery"],
 		handlebars: {
 			exports: "Handlebars"
 		},
