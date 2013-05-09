@@ -4,9 +4,9 @@ define(function(require){
 		monster = require("monster");
 
 	var app = {
-		
+
 		name: "core",
-		
+
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
@@ -20,21 +20,20 @@ define(function(require){
 				type: 'application/json',
 				dataType: 'text',
 				verb: 'GET'
-			}			
+			}
 		},
-		
+
 		subscribe: {
 			"app.nav.add": function(data){
 				console.log(data);
 			},
 			"app.nav.context.add": function(data){
 				console.log(data);
-			},
-			'layout.detect_logo': '_logo'			
+			}
 		},
-	
+
 		load: function(callback){
-			
+
 			var self = this;
 
 			// monster.request({
@@ -62,7 +61,7 @@ define(function(require){
 
 			container.append(content);
 
-			self._render(content);
+			self._render(container);
 
 
 			if(!$.cookie('monster-auth')) {
@@ -81,8 +80,6 @@ define(function(require){
 				}
 
 			}
-
-			self._logo(content);
 
 			self._load(); // do this here because subsequent apps are dependent upon core layout
 
@@ -142,17 +139,16 @@ define(function(require){
 			});
 
 			monster.request({
-				resource: 'layout.getLogo', 
+				resource: 'layout.getLogo',
 				data: {
-					api_url: apiUrl,
 					domain: domain
 				},
 				success: function(_data, status) {
-					container.find('#ws-navbar .logo').css('background-image', 'url(' + api_url + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
 				error: function(_data, status) {
-					var logo = status != 404 ? '' : 'url(config/home/images/logo.png)';
-					
+					var logo = status != /*404*/ 'fail' ? '' : 'url("apps/core/static/images/logo.png")';
+
 					container.find('#ws-navbar .logo').css('background-image', logo);
 				}
 			});
@@ -174,32 +170,7 @@ define(function(require){
 			content = $(template);
 
 			container.find('.left_div').append(content);
-		},
-
-		_logo: function() {
-			var host = window.location.hostname,
-				logo = $('.header > .logo > .img'),
-				prefix = '/images/logos/',
-				image;
-
-			if(typeof monster.config.baseUrls == 'object') {
-
-				if(host in monster.config.baseUrls && monster.config.baseUrls[host].logo) {
-					image = prefix + host.replace('.', '_') + '.png';
-				}
-				else if(host in monster.config.baseUrls && monster.config.baseUrls[partial_host].logo) {
-					image = prefix + host.replace('.', '_') + '.png';
-				}
-			}
-
-			if(image){
-				logo.css('background-image', 'url(' + image + ')');
-				return true;
-			}
-
-			logo.css('background-image', 'url(/images/logo.png)');
-		}		
-		
+		}
 	};
 
 	return app;
