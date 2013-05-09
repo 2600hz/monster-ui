@@ -81,7 +81,7 @@ define(function(require){
 
 			}
 
-			//self._load(); // do this here because subsequent apps are dependent upon core layout
+			self._load(); // do this here because subsequent apps are dependent upon core layout
 		},
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',

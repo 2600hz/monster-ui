@@ -274,7 +274,7 @@ define(function(require){
 					);
 			};
 
-			function failure(data){
+			function failure(error){
 				monster.ui.alert('error', 'An error occurred while loading your account.', function() {
 					$.cookie('c_monster_auth', null);
 					window.location.reload();
@@ -447,21 +447,14 @@ define(function(require){
 							api_url: monster.apps['auth'].api_url,
 							data: data_recover
 						},
-						success: function(_data, status) {
+						success: function(_data) {
 							monster.ui.alert('info', _data.data);
 							dialog.dialog('close');
 						},
-						error: function(_data, status) {
-							var msg_error = 'Error ' + status + '<br/>';
-							if(_data.data) {
-								$.each(_data.data, function(k, v) {
-									$.each(_data.data[k], function(key, msg) {
-										msg_error += '<br/>' + msg;
-									});
-								});
-							}
-
-							monster.ui.alert('error', msg_error);
+						error: function(error) {
+							var message = 'Error ' + error.statusText + '<br/>';
+							message.data = error.responseText;
+							monster.ui.alert('error', message);
 						}
 					});
 				});
@@ -517,14 +510,14 @@ define(function(require){
 					api_url: monster.apps['auth'].api_url,
 					account_id: monster.apps['auth'].account_id
 				},
-				success: function(_data, status) {
+				success: function(_data) {
 				 if(typeof success === 'function') {
 				  success(_data);
 				 }
 				},
-				error: function(_data, status) {
+				error: function(err) {
 					if(typeof error === 'function') {
-						error(_data);
+						error(err);
 					}
 				}
 			});
@@ -627,14 +620,14 @@ define(function(require){
 
 		      monster.pub('auth.load_account');
 		    },
-		    error: function(data, status) {
-		    	if(status === 400) {
+		    error: function(error) {
+		    	if(error.status === 400) {
 		    		monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
 		    	}
-		    	else if($.inArray(status, [401, 403]) > -1) {
+		    	else if($.inArray(error.status, [401, 403]) > -1) {
 		    		monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
 		    	}
-		    	else if(status === 'error') {
+		    	else if(error.statusText === 'error') {
 		    		monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
 		    	}
 		    	else {
@@ -660,8 +653,8 @@ define(function(require){
 							invite_code: code
 						});
 					},
-					error: function(_data, status) {
-						switch(_data['error']) {
+					error: function(error) {
+						switch(error.status) {
 							case '404':
 							monster.ui.alert('error', 'Invalid invite code !');
 							break;
@@ -698,8 +691,8 @@ define(function(require){
 							monster.ui.alert('info', 'Password updated !');
 							dialog_new_password.dialog('close');
 						},
-						error: function(_data, status) {
-							monster.ui.alert('error', 'Error :' + status);
+						error: function(error) {
+							monster.ui.alert('error', 'Error :' + error.status);
 						}
 					});
 				}
