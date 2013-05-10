@@ -29,7 +29,7 @@ define(function(require){
 			console.log("_loadApp", name, path);
 
 			require([path], function(app){
-				
+
 				console.log("define:", path);
 
 				_.extend(app, { appPath: '/' + appPath, data: {} });
@@ -199,7 +199,7 @@ define(function(require){
 			var settings = this._requests[options.resource];
 
 			if(!settings){
-				throw("The resource requested could not be found.", options.resource);				
+				throw("The resource requested could not be found.", options.resource);
 			}
 
 			var errorHandler = settings.error,
@@ -208,7 +208,7 @@ define(function(require){
 				rurlData = /\{([^\}]+)\}/g,
 				data = _.extend({}, options.data || {});
 
-			settings.error = function requestError (error, one, two, three) { 
+			settings.error = function requestError (error, one, two, three) {
 
 				console.warn("reqwest failure on: " + options.resource, error)
 
@@ -234,7 +234,14 @@ define(function(require){
 				delete data[name];
 			});
 
-			settings = _.extend(settings, {data: data});
+			settings = _.extend(settings, { processData: false, data: { verb: settings.method, data: data }});
+
+            if(settings.method === 'GET') {
+                delete settings.data;
+            }
+            else {
+                settings.data = JSON.stringify(settings.data);
+            }
 
 			return reqwest(settings);
 
@@ -246,8 +253,8 @@ define(function(require){
 			// 	},
 			// 	error: function(message, level){
 			// 		options.error && options.error(message, level);
-			// 	}				
-			// });			
+			// 	}
+			// });
 
 		},
 
@@ -262,7 +269,7 @@ define(function(require){
 		shift: function(chain){
 			var next = chain.shift();
 			next && next();
-		},	
+		},
 
 		template: function(app, name, data, raw, ignoreCache){
 
@@ -301,7 +308,7 @@ define(function(require){
 			}
 
 			monster.cache.templates[conical] = _template;
-				
+
 			if(!raw){
 				_template = handlebars.compile(_template);
 

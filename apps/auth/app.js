@@ -20,61 +20,52 @@ define(function(require){
 		];
 
 	var app = {
-		
+
 		name: "auth",
 
 		i18n: [ 'en-US' ],
-		
+
 		requests: {
 			'auth.user_auth': {
 				url: 'user_auth',
-				type: 'application/json',
 				verb: 'PUT'
 			},
 			'auth.shared_auth': {
 				url: 'shared_auth',
-				type: 'application/json',
 				verb: 'PUT'
 			},
 			'auth.register': {
 				url: 'signup',
-				type: 'application/json',
 				verb: 'PUT'
 			},
 			'auth.activate': {
 				url: 'signup/{activation_key}',
-				type: 'application/json',
 				verb: 'POST'
 			},
 			'auth.get_user': {
 				url: 'accounts/{account_id}/users/{user_id}',
-				type: 'application/json',
 				verb: 'GET'
 			},
 			'auth.user.update': {
 				url: 'accounts/{account_id}/users/{user_id}',
-				type: 'application/json',
 				verb: 'POST'
 			},
 			'auth.recover_password': {
 				url: 'user_auth/recovery',
-				type: 'application/json',
 				verb: 'PUT'
 			},
 			'auth.invite_code': {
 				url: 'onboard/invite/{invite_code}',
-				type: 'application/json',
 				verb: 'GET'
 			},
 			'auth.get_account': {
 				url: 'accounts/{account_id}',
-				type: 'application/json',
 				verb: 'GET'
-			}			
+			}
 		},
-		
+
 		subscribe: {
-		
+
 			'auth.activate' : '_activate',
 			'auth.authenticate' : '_authenticate',
 			'auth.landing': '_landing',
@@ -92,7 +83,7 @@ define(function(require){
 
 			//'auth.saveRegistration' : 'save_registration',
 		},
-	
+
 		load: function(callback){
 			var self = this,
 				accountName = monster.querystring('account_name'),
@@ -162,15 +153,15 @@ define(function(require){
 					monster.ui.alert('User authenticated');
 				}
 			});
-		},		
+		},
 
 		_coreLoaded: function () {
 
 			if(monster.querystring('activation_key')) {
 				var data = {
-					crossbar: true, 
-					api_url : monster.apps['auth'].api_url, 
-					activation_key: monster.querystring('activation_key'), 
+					crossbar: true,
+					api_url : monster.apps['auth'].api_url,
+					activation_key: monster.querystring('activation_key'),
 					data: {}
 				};
 
@@ -317,7 +308,7 @@ define(function(require){
 
 				event.preventDefault();
 
-				monster.pub('auth.login-click', { 
+				monster.pub('auth.login-click', {
 					realm: realm,
 					accountName: account_name
 				});
@@ -345,7 +336,7 @@ define(function(require){
 					window.location.href = monster.config.nav.register;
 				}
 			});
-			
+
 		},
 
 		_loginPopup: function(args) {
@@ -392,7 +383,7 @@ define(function(require){
 
 		_logout: function() {
 			monster.confirm('Are you sure that you want to log out?', function() {
-		  
+
 				_.each(monster.apps, function(k, v) { // Remove any individual keys
 				// TODO: ADD APP UNLOADING CODE HERE. Remove CSS and scripts. This should inherently delete apps.
 
@@ -442,7 +433,7 @@ define(function(require){
 
 				monster.validate.is_valid(THIS.config.validation_recover, dialog, function() {
 					monster.request({
-						resource: 'auth.recover_password', 
+						resource: 'auth.recover_password',
 						data: {
 							api_url: monster.apps['auth'].api_url,
 							data: data_recover
@@ -475,8 +466,8 @@ define(function(require){
 			monster.validate.set(monster.config.validation, dialogRegister);
 
 			$('button.register', dialogRegister).click(self._registerClick);
-		},			
-		
+		},
+
 		_sharedAuth: function (args) {
 				var THIS = this;
 
@@ -505,7 +496,7 @@ define(function(require){
 
 		_getAccount: function(success, error) {
 			monster.request({
-				resource: 'auth.get_account', 
+				resource: 'auth.get_account',
 				data: {
 					api_url: monster.apps['auth'].api_url,
 					account_id: monster.apps['auth'].account_id
@@ -573,7 +564,7 @@ define(function(require){
 		// event handlers
 
 		_loginClick: function(data) {
-			
+
 			var login_username = $('#login').val(),
 				login_password = $('#password').val(),
 				login_account_name = $('#account_name').val(),
@@ -595,7 +586,7 @@ define(function(require){
 			}
 
 			monster.request({
-				resource: 'auth.user_auth', 
+				resource: 'auth.user_auth',
 				data: _.extend({ credentials: hashed_creds }, login_data),
 				success: function (data, status) {
 					monster.apps['auth'].account_id = data.data.account_id;
@@ -643,7 +634,7 @@ define(function(require){
 
 			if(code != "" && code != null) {
 				monster.request({
-					resource: 'auth.invite_code', 
+					resource: 'auth.invite_code',
 					data: {
 						api_url: monster.apps.auth.api_url,
 						invite_code: code,
@@ -680,7 +671,7 @@ define(function(require){
 					user_data.require_password_update = false;
 
 					monster.request({
-						resource: 'auth.user.update', 
+						resource: 'auth.user.update',
 						data: {
 							api_url: monster.apps.auth.api_url,
 							account_id: monster.apps.auth.account_id,
@@ -810,7 +801,7 @@ define(function(require){
 								}
 							}
 						};
-							
+
 						monster.putJSON('auth.register', rest_data, function (json, xhr) {
 							$.cookie('c_monster.login', null);
 							monster.ui.alert('info','Registered successfully. Please check your e-mail to activate your account!');
@@ -819,7 +810,7 @@ define(function(require){
 					}
 				}
 				else {
-					monster.ui.alert('Please confirm your password');		
+					monster.ui.alert('Please confirm your password');
 				}
 			},
 			function() {

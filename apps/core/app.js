@@ -17,8 +17,7 @@ define(function(require){
 			// },
 			'layout.getLogo': {
 				url: 'whitelabel/{domain}/logo',
-				type: 'application/json',
-				dataType: 'text',
+				dataType: '*',
 				verb: 'GET'
 			}
 		},
