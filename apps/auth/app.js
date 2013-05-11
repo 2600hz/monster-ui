@@ -85,26 +85,19 @@ define(function(require){
 		},
 
 		load: function(callback){
-			var self = this,
-				accountName = monster.querystring('account_name'),
-				authUrl = monster.querystring('auth_url');
+			var self = this;
 
 			if(!$.cookie('monster-auth')) {
 				monster.pub('auth.welcome');
 			}
+            else {
+                monster.apps['auth'] = $.parseJSON($.cookie('monster-auth'));
+                monster.pub('auth.load_account');
+            }
 
-			if(authUrl) {
-				monster.apps['auth'].api_url = authUrl;
-			}
-			else {
-				var host = window.location.hostname; //URL.match(/^(?:https?:\/\/)*([^\/?#]+).*$/)[1];
-
-				if(typeof monster.config.base_urls == 'object' && host in monster.config.base_urls) {
-					if('auth_url' in monster.config.base_urls[host]) {
-						monster.apps['auth'].api_url = monster.config.base_urls[host].auth_url;
-					}
-				}
-			}
+            if(monster.querystring('recover_password')) {
+                monster.ui.alert('You are in the Recover Password tool.');
+            }
 
 			callback && callback(self);
 		},
@@ -258,7 +251,7 @@ define(function(require){
 					},
 					function(data, status) {
 						monster.ui.alert('error', 'An error occurred while loading your account.', function() {
-							$.cookie('c_monster_auth', null);
+							$.cookie('monster-auth', null);
 							window.location.reload();
 						});
 					}
@@ -267,7 +260,7 @@ define(function(require){
 
 			function failure(error){
 				monster.ui.alert('error', 'An error occurred while loading your account.', function() {
-					$.cookie('c_monster_auth', null);
+					$.cookie('monster-auth', null);
 					window.location.reload();
 				});
 			};
@@ -291,6 +284,7 @@ define(function(require){
 				rememberMe: cookie_login.login || cookie_login.account_name ? true : false,
 				showRegister: monster.config.hide_registration || false
 			};
+
 			var loginHtml = monster.template(self, templates.login, templateData);
 			var codeHtml = monster.template(self, templates.code, templateData);
 			var content = $('.right_div', '#welcome_page');
@@ -304,8 +298,7 @@ define(function(require){
 				content.find('#login').focus();
 			}
 
-			content.find('.login').click(function(event){
-
+			content.find('.login').on('click', function(event){
 				event.preventDefault();
 
 				monster.pub('auth.login-click', {
@@ -564,7 +557,6 @@ define(function(require){
 		// event handlers
 
 		_loginClick: function(data) {
-
 			var login_username = $('#login').val(),
 				login_password = $('#password').val(),
 				login_account_name = $('#account_name').val(),
@@ -592,40 +584,38 @@ define(function(require){
 					monster.apps['auth'].account_id = data.data.account_id;
 					monster.apps['auth'].auth_token = data.auth_token;
 					monster.apps['auth'].user_id = data.data.owner_id;
-					monster.apps['auth'].realm = realm;
 
-		      // Deleting the welcome message
-		      $('#ws-content').empty();
+                    $('#ws-content').empty();
 
-		      if($('#remember_me').is(':checked')) {
-		      	var cookie_login = {};
-		      	login_username ? cookie_login.login = login_username : true;
-		      	login_data.account_name ? cookie_login.account_name = login_data.account_name : true;
-		      	$.cookie('c_monster_login', JSON.stringify(cookie_login), {expires: 30});
-		      }
-		      else{
-		      	$.cookie('c_monster_login', null);
-		      }
+                    if($('#remember_me').is(':checked')) {
+                        var cookie_login = {};
+                        login_username ? cookie_login.login = login_username : true;
+                        login_data.account_name ? cookie_login.account_name = login_data.account_name : true;
+                        $.cookie('c_monster_login', JSON.stringify(cookie_login), {expires: 30});
+                    }
+                    else{
+                        $.cookie('c_monster_login', null);
+                    }
 
-		      $.cookie('c_monster_auth', JSON.stringify(monster.apps['auth']), {expires: 30});
+                    $.cookie('monster-auth', JSON.stringify(monster.apps['auth']), {expires: 30});
 
-		      monster.pub('auth.load_account');
-		    },
-		    error: function(error) {
-		    	if(error.status === 400) {
-		    		monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
-		    	}
-		    	else if($.inArray(error.status, [401, 403]) > -1) {
-		    		monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
-		    	}
-		    	else if(error.statusText === 'error') {
-		    		monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
-		    	}
-		    	else {
-		    		monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
-		    	}
-		    }
-	    });
+                    monster.pub('auth.load_account');
+                },
+                error: function(error) {
+                    if(error.status === 400) {
+                        monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
+                    }
+                    else if($.inArray(error.status, [401, 403]) > -1) {
+                        monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
+                    }
+                    else if(error.statusText === 'error') {
+                        monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
+                    }
+                    else {
+                        monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
+                    }
+                }
+            });
 		},
 
 		loginRegisterClick: function(e) {
@@ -727,14 +717,13 @@ define(function(require){
 				monster.apps['auth'].account_id = data.data.account_id;
 				monster.apps['auth'].auth_token = data.auth_token;
 				monster.apps['auth'].user_id = data.data.owner_id;
-				monster.apps['auth'].realm = realm;
 
 				$(dialogDiv).dialog('close');
 
 					// Deleting the welcome message
 					$('#ws-content').empty();
 
-					$.cookie('c_monster_auth', JSON.stringify(monster.apps['auth']), {expires: 30});
+					$.cookie('monster-auth', JSON.stringify(monster.apps['auth']), {expires: 30});
 
 					monster.pub('auth.load_account');
 				},

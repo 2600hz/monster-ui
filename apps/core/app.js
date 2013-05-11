@@ -62,7 +62,6 @@ define(function(require){
 
 			self._render(container);
 
-
 			if(!$.cookie('monster-auth')) {
 				self._welcome(content);
 			}
@@ -129,7 +128,6 @@ define(function(require){
 			});
 
 			container.find('#ws-navbar .logo').click(function() {
-				$('.whapps .whapp > a').removeClass('activate');
 				if($.cookie('monster-auth')) {
 					monster.publish('auth.landing');
 				}

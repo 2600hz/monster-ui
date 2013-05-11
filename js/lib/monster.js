@@ -237,11 +237,10 @@ define(function(require){
 
 			if(settings.method.toLowerCase() !== 'get'){
 				var postData = {
-					verb: settings.method.toUpperCase(),
 					data: data
 				};
 
-				settings = _.extend(settings, { 
+				settings = _.extend(settings, {
 					data: JSON.stringify(postData)
 				});
 			}
