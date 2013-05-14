@@ -78,9 +78,10 @@ body h1.lobster {
 #main section > .navbar .navbar-inner .home {
     padding: 0 10px;
     height: 62px;
-    width: 42px;
-    text-align: center;
+    line-height: 62px;
     margin-left: -20px;
+    text-align: center;
+    width: 42px;
 }
 
 #main section > .navbar .navbar-inner .home i {
@@ -94,6 +95,7 @@ body h1.lobster {
 #main section > .navbar .navbar-inner .help {
     padding: 0 10px;
     height: 62px;
+    line-height: 62px;
     width: 42px;
     text-align: center;
     margin-right: -20px;

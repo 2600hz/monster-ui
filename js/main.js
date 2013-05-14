@@ -1,9 +1,10 @@
 
 require.config({
 	paths: {
-		bootstrap: "js/lib/bootstrap-2012.min",
+		//bootstrap: "js/lib/bootstrap-2012.min",
+		bootstrap: "js/lib/bootstrap-2.3.1.min",
 		"bootstrap-switch": "js/lib/bootstrapSwitch-1.2",
-		"bootstrap-clickover": "js/lib/bootstrapx-clickover-1.0",		
+		"bootstrap-clickover": "js/lib/bootstrapx-clickover-1.0",
 		handlebars: "js/lib/handlebars-1.0.10",
 		jquery: "js/lib/jquery-1.9.1.min",
 		jqueryui: "js/lib/jquery-ui-1.10.3.custom.min",
@@ -38,7 +39,7 @@ require(["jquery", "monster", "plugins", "bootstrap", "bootstrap-switch", "boots
 
 		monster.ui = ui;
 
-		$(function(){ 
+		$(function(){
 			monster._loadApp("core", function(app){
 				console.log("core loaded");
 				app.render($("#main section"));
