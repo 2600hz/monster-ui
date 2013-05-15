@@ -82,7 +82,7 @@ define(function(require){
 			}
             else {
                 monster.apps['auth'] = $.parseJSON($.cookie('monster-auth'));
-                monster.pub('auth.load_account');
+                monster.pub('auth.loadAccount');
             }
 
 			callback && callback(self);
@@ -95,7 +95,7 @@ define(function(require){
 		// subscription handlers
 
 		_activate: function() {
-			if(monster.apps['auth'].auth_token == null) {
+			if(monster.apps['auth'].authToken == null) {
 				monster.pub('auth.login');
 			}
 			else {
@@ -105,7 +105,7 @@ define(function(require){
 						// TODO: ADD APP UNLOADING CODE HERE. Remove CSS and scripts. This should inherently delete apps.
 
 						monster.apps[k].realm = null;
-						monster.apps[k].auth_token = null;
+						monster.apps[k].authToken = null;
 						monster.apps[k].user_id = null;
 						monster.apps[k].account_id = null;
 					});
@@ -123,7 +123,7 @@ define(function(require){
 				data: data,
 				success: function (data, status) {
 					monster.apps['auth'].account_id = data.data.account_id;
-					monster.apps['auth'].auth_token = data.auth_token;
+					monster.apps['auth'].authToken = data.auth_token;
 					monster.apps['auth'].user_id = data.data.owner_id;
 
                     $('#ws-content').empty();
@@ -140,7 +140,7 @@ define(function(require){
 
                     $.cookie('monster-auth', JSON.stringify(monster.apps['auth']), {expires: 30});
 
-                    monster.pub('auth.load_account');
+                    monster.pub('auth.loadAccount');
                 },
                 error: function(error) {
                     if(error.status === 400) {
@@ -176,10 +176,10 @@ define(function(require){
 			});
 		},*/
 
-		_landing: function(parent) {
+		_landing: function(args) {
 			var self = this,
-			parent = parent || $('.ws-content'),
-			html = monster.template(self, templates.landing);
+			parent = args.parent || $('.ws-content'),
+			html = monster.template(self, templates.landing, args.data);
 
 			parent
 				.empty()
@@ -187,26 +187,23 @@ define(function(require){
 		},
 
 		_loadAccount: function(args) {
-			monster.log('Loading your apps!');
-
 			var self = this,
 				authData = {
-					crossbar : true,
 					account_id : monster.apps['auth'].account_id,
-					api_url : monster.apps['auth'].api_url,
 					user_id : monster.apps['auth'].user_id
 				};
 
 			function success(data){
-				monster.getJSON('auth.get_user', rest_data,
-					function (json, xhr) {
-						json.data.account_name = (_data.data || {}).name || monster.config.company_name;
+                monster.request({
+                    resource: 'auth.get_user',
+                    data: authData,
+                    success: function(json, xhr) {
+						json.data.account_name = (data.data || {}).name || monster.config.company_name;
 						json.data.apps = json.data.apps || {};
 
 						monster.pub('auth.account.loaded', json.data);
 
 						$.each(json.data.apps, function(k, v) {
-							monster.log('WhApps: Loading ' + k + ' from URL ' + v.api_url);
 							monster.apps[k] = v;
 
 							if(!('account_id' in v)) {
@@ -217,10 +214,10 @@ define(function(require){
 								monster.apps[k].user_id = monster.apps['auth'].user_id;
 							}
 
-							monster.module.loadApp(k, function() {
+							/*monster.module.loadApp(k, function() {
 								this.init();
 								monster.log('WhApps: Initializing ' + k);
-							});
+							});*/
 						});
 
 						if(json.data.require_password_update) {
@@ -237,17 +234,19 @@ define(function(require){
 						});
 
 						if(landing) {
-							monster.pub('auth.landing', $('.ws-content'));
+							monster.pub('auth.landing', {
+                                parent: $('.ws-content'),
+                                data: json.data
+                            });
 						}
-
 					},
-					function(data, status) {
+					error: function(data, status) {
 						monster.ui.alert('error', 'An error occurred while loading your account.', function() {
 							$.cookie('monster-auth', null);
 							window.location.reload();
 						});
 					}
-                );
+                });
 			};
 
 			function failure(error){
@@ -405,29 +404,34 @@ define(function(require){
 			$('button.register', dialogRegister).click(self._registerClick);
 		},
 
+        /* Function used to set the auth_token for each app
+        ** We have to do that to allow apps using different api_url
+        */
 		_sharedAuth: function (args) {
-				var self = this;
+            var self = this;
 
-				var rest_data = {
-					api_url : monster.apps[args.appName].api_url,
-					data: {
-						realm : monster.apps['auth'].realm,                     // Treat auth as global
-						account_id : monster.apps['auth'].account_id,           // Treat auth as global
-						shared_token : monster.apps['auth'].authToken          // Treat auth as global
-					}
-				};
+            var rest_data = {
+                api_url : monster.apps[args.appName].api_url,
+                data: {
+                    realm : monster.apps['auth'].realm,                     // Treat auth as global
+                    account_id : monster.apps['auth'].account_id,           // Treat auth as global
+                    shared_token : monster.apps['auth'].authToken          // Treat auth as global
+                }
+            };
 
-				if(monster.apps['auth'].api_url != monster.apps[args.appName].api_url) {
-					monster.putJSON('auth.shared_auth', rest_data, function (json, xhr) {
-                    // If this is successful, we'll get a server-specific auth token back
-                    _getUser(json.authToken, args.appName, args.callback);
-                  });
-				}
-				else {
-					_getUser(monster.apps['auth'].authToken, args.appName, args.callback);
-				}
+            if(monster.apps['auth'].api_url != monster.apps[args.appName].api_url) {
+                monster.putJSON('auth.shared_auth', rest_data, function (json, xhr) {
+                    monster.apps[args.appName].authToken = json.auth_token;
+
+                    args.callback && args.callback();
+                });
+            }
+            else {
+                monster.apps[args.appName].authToken = monster.apps['auth'].authToken;
+
+                args.callback && args.callback();
+            }
 		},
-
 
 		// util methods
 
@@ -439,9 +443,9 @@ define(function(require){
 					account_id: monster.apps['auth'].account_id
 				},
 				success: function(_data) {
-				 if(typeof success === 'function') {
-				  success(_data);
-				 }
+                    if(typeof success === 'function') {
+                        success(_data);
+                    }
 				},
 				error: function(err) {
 					if(typeof error === 'function') {
@@ -479,23 +483,6 @@ define(function(require){
 			}
 
 			return realm;
-		},
-
-		_getUser: function(authToken, appName, callback) {
-			var options = {
-				account_id: monster.apps['auth'].account_id,
-				api_url : monster.apps['auth'].api_url,
-				user_id: monster.apps['auth'].user_id
-			};
-
-			monster.apps[appName] = $.extend(true, {}, options, monster.apps[appName]);
-			monster.apps[appName]['authToken'] = authToken;
-
-			monster.getJSON('auth.get_user', options, function(json, xhr) {
-				if(typeof callback == 'function') {
-					callback();
-				}
-			});
 		},
 
 		// event handlers

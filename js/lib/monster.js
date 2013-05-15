@@ -20,7 +20,6 @@ define(function(require){
 		},
 
 		_loadApp: function(name, callback){
-
 			var self = this,
 				appPath = "apps/" + name,
 				path = appPath + "/app",
@@ -35,7 +34,7 @@ define(function(require){
 				_.extend(app, { appPath: '/' + appPath, data: {} });
 
 				_.each(app.requests, function(request, id){
-					self._defineRequest(id, request);
+					self._defineRequest(id, request, name);
 				});
 
 				_.each(app.subscribe, function(callback, topic){
@@ -135,7 +134,7 @@ define(function(require){
 
 		_requests: {},
 
-		_defineRequest: function(id, request){
+		_defineRequest: function(id, request, appName){
 
 			var settings = {
 				url: (request.apiRoot || this.config.api.default) + request.url,
@@ -144,6 +143,11 @@ define(function(require){
 				contentType: request.type || 'application/json',
 				crossOrigin: true,
 				processData: false,
+                before: function(ampXHR, settings) {
+                    ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
+
+                    return true;
+                },
 				error: request.error,
 				success: request.success
 			};
@@ -255,6 +259,7 @@ define(function(require){
 				});
 			}
 
+
 			return reqwest(settings);
 
 			// return amplify.request({
@@ -324,11 +329,10 @@ define(function(require){
 			if(!raw){
 				_template = handlebars.compile(_template);
 
-				if(data){
-					var i18n = app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {};
-						context = _.extend({}, data, { i18n: i18n });
-					result = _template(context);
-				}
+                var i18n = app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {},
+                    context = _.extend({}, data || {}, { i18n: i18n });
+
+                result = _template(context);
 			}
 			else{
 				result = _template;
