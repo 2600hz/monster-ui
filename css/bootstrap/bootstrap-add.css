@@ -87,9 +87,6 @@ a {
     color: #22ccff;
 }
 
-a:hover {
-}
-
 .hero-unit.hero-unit-small {
 	padding: 30px;
 }
@@ -244,7 +241,6 @@ i.icon-question-sign2:before { content: "?"; }
 i.icon-warning-sign2:before { content: "!"; }
 
 /* FIX BOOTSTRAP OR CHANGE*/
-
 form.form-horizontal .input-prepend,
 form.form-horizontal .input-append {
     display: block;

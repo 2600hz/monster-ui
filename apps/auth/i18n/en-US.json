@@ -8,6 +8,7 @@
 	"password": "Password",
 	"rememberMe": "Remember me",
 	"username": "Username",
+    "or": "OR",
 
 	"account": {
 		"name": "Account Name",

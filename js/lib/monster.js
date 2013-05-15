@@ -168,6 +168,16 @@ define(function(require){
 			return matches.length > 1 ? matches[1] : "";
 		},
 
+        i18n: function(obj, key) {
+            var translation = '';
+
+            if('data' in obj && 'i18n' in obj.data) {
+                translation = monster.config.i18n.active in obj.data.i18n ? eval('obj.data.i18n[monster.config.i18n.active].' + key) : eval('obj.data.i18n[monster.config.i18n.default].' + key);
+            }
+
+            return translation;
+        },
+
 		getVersion: function(callback) {
 			$.ajax({
 				url: 'VERSION',
