@@ -232,7 +232,7 @@ i.icon-small {
     color: #999 !important;
 }
 
-.icon-spin {
+i.icon-spin {
     animation: 1s linear 0s normal none infinite spin;
 }
 

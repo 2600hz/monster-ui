@@ -76,13 +76,17 @@ body h1.lobster {
     width: 192px;
 }
 #main section > .navbar .navbar-inner .home {
-    padding: 0 10px;
     height: 62px;
     line-height: 62px;
     margin-left: -20px;
+    padding: 0 10px;
     text-align: center;
     text-decoration: none;
     width: 42px;
+}
+
+#main section > .navbar .navbar-inner i {
+    display: inline-block;
 }
 
 #main section > .navbar .navbar-inner .help {

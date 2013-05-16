@@ -1,22 +1,21 @@
 define(function(require){
-
 	var $ = require("jquery"),
 		_ = require("underscore"),
 		postal = require("postal"),
 		reqwest = require("reqwest"),
 		handlebars = require("handlebars"),
+		async = require("async"),
 		config = require("js/config");
 
 	var monster = {
-
 		_channel: postal.channel("monster"),
 
 		// ping the server to see if a file exists. this is not an exhaustive or intensive operation.
 		_fileExists: function(url){
-	    var http = new XMLHttpRequest();
-	    http.open("HEAD", url, false);
-	    http.send();
-	    return http.status != 404;
+            var http = new XMLHttpRequest();
+            http.open("HEAD", url, false);
+            http.send();
+            return http.status != 404;
 		},
 
 		_loadApp: function(name, callback){
@@ -73,83 +72,42 @@ define(function(require){
 			});
 		},
 
-		// adds the oauth headers and data
-		// _beforeRequest: function(xhr, settings) {
-		// 	xhr.setRequestHeader('X-Auth-Token', monster.config.user.authToken);
-
-		// 	if(typeof settings.data == 'object' && 'headers' in settings.data) {
-		// 		$.each(settings.data.headers, function(key, val) {
-		// 			switch(key) {
-		// 				case 'Content-Type':
-		// 					xhr.overrideMimeType(val);
-		// 					break;
-
-		// 				default:
-		// 					xhr.setRequestHeader(key, val);
-		// 			}
-		// 		});
-
-		// 		delete settings.data.headers;
-		// 	}
-
-		// 	if(settings.contentType == 'application/json') {
-		// 		if(settings.type == 'PUT' || settings.type == 'POST') {
-		// 			settings.data.verb = settings.type;
-		// 			settings.data = JSON.stringify(settings.data);
-		// 		}
-		// 		else if(settings.type =='GET' || settings.type == 'DELETE') {
-		// 			settings.data = '';
-		// 		}
-		// 	}
-		// 	else if(typeof settings.data == 'object' && settings.data.data) {
-		// 		settings.data = settings.data.data;
-		// 	}
-
-		// 	// Without returning true, our decoder will not run.
-		// 	return true;
-		// },
-
-		// _decodeRequest: function ( data, status, xhr, success, error ) {
-		// 	data = data || { status: "fail", message: "fatal" };
-
-		// 	if ( data.status === "success" ) {
-		// 		success( data.data );
-		// 	}
-		// 	else{
-		// 		var payload;
-
-		// 		try {
-		// 			payload = JSON.parse(ampXHR.responseText);
-		// 		}
-		// 		catch(e) {}
-
-		// 		if ( data.status === "fail" || data.status === "error" ) {
-		// 			error( payload || data.message, data.status );
-		// 		}
-		// 		else {
-		// 			error( payload || data.message , "fatal" );
-		// 		}
-		// 	}
-		// },
-
 		_requests: {},
 
 		_defineRequest: function(id, request, appName){
+            var apiUrl;
+
+            if(appName in monster.apps && 'apiUrl' in monster.apps[appName]) {
+                apiUrl = monster.apps[appName].apiUrl;
+            }
+            else {
+                apiUrl = request.apiRoot || this.config.api.default;
+            }
 
 			var settings = {
-				url: (request.apiRoot || this.config.api.default) + request.url,
+				url: apiUrl + request.url,
 				type: request.dataType || 'json',
 				method: request.verb || 'get',
 				contentType: request.type || 'application/json',
 				crossOrigin: true,
 				processData: false,
                 before: function(ampXHR, settings) {
+                    monster.pub('monster.requestStart');
+
                     ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
 
                     return true;
                 },
-				error: request.error,
-				success: request.success
+				error: function() {
+                    monster.pub('monster.requestEnd');
+
+                    request.error && request.error();
+                },
+				success: function() {
+                    monster.pub('monster.requestEnd');
+
+                    request.success && request.success();
+                },
 			};
 
 			this._requests[id] = settings;
@@ -182,6 +140,17 @@ define(function(require){
             return translation;
         },
 
+        /* If we want to limit the # of simultaneous request, we can use async.parallelLimit(list_functions, LIMIT_# (ex: 3), callback) */
+        parallel: function(list_functions, callback) {
+            async.parallel(
+                list_functions,
+                function(err, results) {
+                    //TODO we could add an error handler
+                    callback(err, results);
+                }
+            );
+        },
+
 		getVersion: function(callback) {
 			$.ajax({
 				url: 'VERSION',
@@ -210,7 +179,6 @@ define(function(require){
 		},
 
 		request: function(options){
-
 			var settings = this._requests[options.resource];
 
 			if(!settings){
@@ -224,7 +192,6 @@ define(function(require){
 				data = _.extend({}, options.data || {});
 
 			settings.error = function requestError (error, one, two, three) {
-
 				console.warn("reqwest failure on: " + options.resource, error)
 
 				errorHandler && errorHandler(error);
@@ -232,7 +199,6 @@ define(function(require){
 			};
 
 			settings.success = function requestSuccess (resp) {
-
 				successHandler && successHandler(resp);
 				options.success && options.success(resp);
 			};
@@ -259,20 +225,7 @@ define(function(require){
 				});
 			}
 
-
 			return reqwest(settings);
-
-			// return amplify.request({
-			// 	resourceId: options.resource,
-			// 	data: options.data,
-			// 	success: function(data){
-			// 		options.success && options.success(data);
-			// 	},
-			// 	error: function(message, level){
-			// 		options.error && options.error(message, level);
-			// 	}
-			// });
-
 		},
 
 		sub: function(topic, callback, context){
@@ -289,7 +242,6 @@ define(function(require){
 		},
 
 		template: function(app, name, data, raw, ignoreCache){
-
 			raw = raw || false;
 			ignoreCache = ignoreCache || false;
 
@@ -301,7 +253,6 @@ define(function(require){
 				_template = monster.cache.templates[conical];
 			}
 			else {
-
 				// fetch template
 				if($(name).length){ // template is in the dom. eg. <script type="text/html" />
 					_template = $(name).html();
@@ -342,7 +293,6 @@ define(function(require){
 
 			return result;
 		}
-
 	};
 
 	return monster;

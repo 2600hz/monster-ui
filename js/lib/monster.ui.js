@@ -4,6 +4,27 @@ define(function(require){
 		_ = require("underscore"),
 		monster = require("monster");
 
+    var requestAmount = 0,
+        homeIcon;
+
+    monster.sub('monster.requestStart', function() {
+        requestAmount++;
+
+        homeIcon = homeIcon || $('#home_link > i');
+
+        if(homeIcon.hasClass('icon-home')) {
+            homeIcon .removeClass('icon-home')
+                     .addClass('icon-spin icon-spinner');
+        }
+    });
+
+    monster.sub('monster.requestEnd', function() {
+        if(--requestAmount === 0) {
+            homeIcon.removeClass('icon-spin icon-spinner')
+                    .addClass('icon-home');
+        }
+    });
+
 	var ui = {
 
 		alert: function(type, content, callback){

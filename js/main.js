@@ -1,6 +1,7 @@
 
 require.config({
 	paths: {
+        async: "js/lib/async",
 		bootstrap: "js/lib/bootstrap-2.3.1.min",
 		"bootstrap-switch": "js/lib/bootstrapSwitch-1.2",
 		"bootstrap-clickover": "js/lib/bootstrapx-clickover-1.0",
