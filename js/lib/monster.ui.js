@@ -25,6 +25,70 @@ define(function(require){
         }
     });
 
+    Handlebars.registerHelper('eachkeys', function(context, options) {
+        var fn = options.fn,
+            inverse = options.inverse,
+            ret = '',
+            empty = true;
+
+        for (key in context) { empty = false; break; }
+
+        if (!empty) {
+            for (key in context) {
+                ret = ret + fn({ 'key': key, 'value': context[key]});
+            }
+        }
+        else {
+            ret = inverse(this);
+        }
+
+        return ret;
+    });
+
+    Handlebars.registerHelper('formatPhoneNumber', function(phone_number) {
+        phone_number = phone_number.toString();
+
+        return monster.ui.formatPhoneNumber(phone_number);
+    });
+
+    Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
+        var operators, result;
+
+        if (arguments.length < 3) {
+            throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+        }
+
+        if (options === undefined) {
+            options = rvalue;
+            rvalue = operator;
+            operator = "===";
+        }
+
+        operators = {
+            '==': function (l, r) { return l == r; },
+            '===': function (l, r) { return l === r; },
+            '!=': function (l, r) { return l != r; },
+            '!==': function (l, r) { return l !== r; },
+            '<': function (l, r) { return l < r; },
+            '>': function (l, r) { return l > r; },
+            '<=': function (l, r) { return l <= r; },
+            '>=': function (l, r) { return l >= r; },
+            'typeof': function (l, r) { return typeof l == r; }
+        };
+
+        if (!operators[operator]) {
+            throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+        }
+
+        result = operators[operator](lvalue, rvalue);
+
+        if (result) {
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    });
+
 	var ui = {
 
 		alert: function(type, content, callback){
@@ -63,6 +127,36 @@ define(function(require){
 
 			return dialog;
 		},
+
+        confirm: function(content, callbackOk, callbackCancel) {
+            var THIS = this,
+                dialog,
+                coreApp = monster.apps['core'],
+                i18n = coreApp.data.i18n[monster.config.i18n.active] || coreApp.data.i18n['en-US'];
+				template = monster.template(coreApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
+                confirmBox = $(template),
+                options = {
+                    closeOnEscape: false,
+                    title: i18n['dialog_confirm_title'],
+                    onClose: function() {
+                        ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
+                    }
+                },
+                ok = false;
+
+            dialog = this.dialog(confirmBox, options);
+
+            confirmBox.find('#confirm_button').on('click', function() {
+                ok = true;
+                dialog.dialog('close');
+            });
+
+            confirmBox.find('#cancel_button').on('click', function() {
+                dialog.dialog('close');
+            });
+
+            return dialog;
+        },
 
 		dialog: function(content, options) {
 			var dialog = $("<div />").append(content),
@@ -114,7 +208,29 @@ define(function(require){
             dialog.siblings().find('.ui-dialog-titlebar-close').text(i18n['close'] || 'X');
 
 			return dialog;       // Return the new div as an object, so that the caller can destroy it when they're ready.'
-		}
+		},
+
+        formatPhoneNumber: function(phoneNumber){
+            if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
+                phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
+            }
+            else if(phoneNumber.length === 10) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '+1 ($1) $2-$3');
+            }
+
+            return phoneNumber;
+        },
+
+        randomString: function(length, _chars) {
+            var chars = _chars || "23456789abcdefghjkmnpqrstuvwxyz",
+                randomString = '';
+
+            for(var i = length; i > 0; i--) {
+                randomString += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            return randomString;
+        }
 	};
 
 	return ui;

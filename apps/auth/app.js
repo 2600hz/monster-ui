@@ -117,10 +117,12 @@ define(function(require){
 			}
 		},
 
-        _authenticate: function(data) {
+        _authenticate: function(login_data) {
             monster.request({
 				resource: 'auth.user_auth',
-				data: data,
+				data: {
+                    data: login_data
+                },
 				success: function (data, status) {
 					monster.apps['auth'].account_id = data.data.account_id;
 					monster.apps['auth'].authToken = data.auth_token;
@@ -191,7 +193,8 @@ define(function(require){
                     }
                 },
                 function(err, results) {
-                    var hasDefaultApp = false;
+                    var hasDefaultApp = false,
+                        defaultApp;
 
                     if(err) {
 						monster.ui.alert('error', 'An error occurred while loading your account.', function() {
@@ -212,7 +215,8 @@ define(function(require){
 
                             if(v['default']) {
                                 hasDefaultApp = true;
-                                var default_app = v;
+                                v.id = k;
+                                defaultApp = v;
                             }
 
                             if(!('account_id' in v)) {
@@ -235,8 +239,9 @@ define(function(require){
                             });
                         }
                         else {
-                            //load default app
-                            console.log('load ', default_app);
+                            monster.pub('auth.loadApps', {
+                                defaultApp: defaultApp
+                            });
                         }
                     }
                 }
@@ -260,7 +265,7 @@ define(function(require){
                 },
 			    loginHtml = monster.template(self, templates.login, templateData),
 			    codeHtml = monster.template(self, templates.code, templateData),
-			    content = $('.right_div', '#welcome_page');
+			    content = $('#welcome_page .right_div');
 
 			content.empty().append(loginHtml);
 

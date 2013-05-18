@@ -24,13 +24,8 @@ define(function(require){
 				path = appPath + "/app",
 				css = path + ".css";
 
-			console.log("_loadApp", name, path);
-
 			require([path], function(app){
-
-				console.log("define:", path);
-
-				_.extend(app, { appPath: '/' + appPath, data: {} });
+				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
 
 				_.each(app.requests, function(request, id){
 					self._defineRequest(id, request, name);
@@ -74,8 +69,21 @@ define(function(require){
 
 		_requests: {},
 
+        _cacheString: function(request) {
+            var cacheString = '';
+
+            if(!request.cache && request.verb.toLowerCase() === 'get') {
+                var charQueryString = request.url.indexOf('?') >= 0 ? '&' : '?';
+
+                cacheString = charQueryString + '_=' + (new Date()).getTime();;
+            }
+
+            return cacheString;
+        },
+
 		_defineRequest: function(id, request, appName){
-            var apiUrl;
+            var self = this,
+                apiUrl;
 
             if(appName in monster.apps && 'apiUrl' in monster.apps[appName]) {
                 apiUrl = monster.apps[appName].apiUrl;
@@ -85,7 +93,8 @@ define(function(require){
             }
 
 			var settings = {
-				url: apiUrl + request.url,
+                cache: request.cache || false,
+				url: apiUrl + request.url + self._cacheString(request),
 				type: request.dataType || 'json',
 				method: request.verb || 'get',
 				contentType: request.type || 'application/json',
@@ -96,21 +105,63 @@ define(function(require){
 
                     ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
 
+                    this.url = apiUrl + request.url + self._cacheString(request);
+
                     return true;
-                },
-				error: function() {
-                    monster.pub('monster.requestEnd');
-
-                    request.error && request.error();
-                },
-				success: function() {
-                    monster.pub('monster.requestEnd');
-
-                    request.success && request.success();
-                },
+                }
 			};
 
 			this._requests[id] = settings;
+		},
+
+		request: function(options){
+
+			var settings = this._requests[options.resource];
+
+			if(!settings){
+				throw("The resource requested could not be found.", options.resource);
+			}
+
+            var mappedKeys = [],
+				rurlData = /\{([^\}]+)\}/g,
+				data = _.extend({}, options.data || {});
+
+			settings.error = function requestError (error, one, two, three) {
+				//console.warn("reqwest failure on: " + options.resource, error)
+                monster.pub('monster.requestEnd');
+
+				options.error && options.error(error);
+			};
+
+			settings.success = function requestSuccess (resp) {
+                monster.pub('monster.requestEnd');
+
+				options.success && options.success(resp);
+			};
+
+			settings.url = settings.url.replace(rurlData, function (m, key) {
+				if (key in data) {
+					mappedKeys.push(key);
+					return data[key];
+				}
+			});
+
+			// We delete the keys later so duplicates are still replaced
+			_.each(mappedKeys, function (name, index) {
+				delete data[name];
+			});
+
+            var postData = {
+                data: data.data
+            };
+
+			if(settings.method.toLowerCase() !== 'get'){
+				settings = _.extend(settings, {
+                    data: JSON.stringify(postData)
+                });
+			}
+
+			return reqwest(settings);
 		},
 
 		apps: {},
@@ -140,92 +191,12 @@ define(function(require){
             return translation;
         },
 
-        /* If we want to limit the # of simultaneous request, we can use async.parallelLimit(list_functions, LIMIT_# (ex: 3), callback) */
-        parallel: function(list_functions, callback) {
-            async.parallel(
-                list_functions,
-                function(err, results) {
-                    //TODO we could add an error handler
-                    callback(err, results);
-                }
-            );
-        },
-
-		getVersion: function(callback) {
-			$.ajax({
-				url: 'VERSION',
-				cache: false,
-				success: function(template) {
-					callback(template);
-				}
-			});
-		},
-
-		pub: function(topic, data){
-			//this._channel.publish(topic, data || {});
-			console.log('monster: publishing: ' + topic)
+        pub: function(topic, data){
 			postal.publish({
 				channel: 'monster',
 				topic: topic,
 				data: data || {}
 			});
-		},
-
-		querystring: function (key) {
-			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
-			var results = [], match;
-			while ((match = re.exec(document.location.search)) != null) results.push(match[1]);
-			return results.length ? results[0] : null;
-		},
-
-		request: function(options){
-			var settings = this._requests[options.resource];
-
-			if(!settings){
-				throw("The resource requested could not be found.", options.resource);
-			}
-
-			var errorHandler = settings.error,
-				successHandler = settings.success,
-				mappedKeys = [],
-				rurlData = /\{([^\}]+)\}/g,
-				data = _.extend({}, options.data || {});
-
-			settings.error = function requestError (error, one, two, three) {
-				console.warn("reqwest failure on: " + options.resource, error)
-
-				errorHandler && errorHandler(error);
-				options.error && options.error(error);
-			};
-
-			settings.success = function requestSuccess (resp) {
-				successHandler && successHandler(resp);
-				options.success && options.success(resp);
-			};
-
-			settings.url = settings.url.replace(rurlData, function (m, key) {
-				if (key in data) {
-					mappedKeys.push(key);
-					return data[key];
-				}
-			});
-
-			// We delete the keys later so duplicates are still replaced
-			_.each(mappedKeys, function (name, index) {
-				delete data[name];
-			});
-
-			if(settings.method.toLowerCase() !== 'get'){
-				var postData = {
-					data: data
-				};
-
-				settings = _.extend(settings, {
-					data: JSON.stringify(postData)
-				});
-			}
-
-			return reqwest(settings);
 		},
 
 		sub: function(topic, callback, context){
@@ -234,11 +205,6 @@ define(function(require){
 			if(context){
 				sub.withContext(context);
 			}
-		},
-
-		shift: function(chain){
-			var next = chain.shift();
-			next && next();
 		},
 
 		template: function(app, name, data, raw, ignoreCache){
@@ -292,6 +258,39 @@ define(function(require){
 			result = result.replace(/(\r\n|\n|\r|\t)/gm,"");
 
 			return result;
+		},
+
+        /* If we want to limit the # of simultaneous request, we can use async.parallelLimit(list_functions, LIMIT_# (ex: 3), callback) */
+        parallel: function(list_functions, callback) {
+            async.parallel(
+                list_functions,
+                function(err, results) {
+                    //TODO we could add an error handler
+                    callback(err, results);
+                }
+            );
+        },
+
+		shift: function(chain){
+			var next = chain.shift();
+			next && next();
+		},
+
+        getVersion: function(callback) {
+			$.ajax({
+				url: 'VERSION',
+				cache: false,
+				success: function(template) {
+					callback(template);
+				}
+			});
+		},
+
+		querystring: function (key) {
+			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+			var results = [], match;
+			while ((match = re.exec(document.location.search)) != null) results.push(match[1]);
+			return results.length ? results[0] : null;
 		}
 	};
 

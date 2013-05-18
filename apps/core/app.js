@@ -1,20 +1,15 @@
 define(function(require){
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster");
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster');
 
 	var app = {
 
-		name: "core",
+		name: 'core',
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-			// "cors.test": {
-			// 	url: "phone_numbers?prefix=415&quantity=15",
-			// 	type: "text/plain",
-			// 	verb: "GET"
-			// },
 			'layout.getLogo': {
 				url: 'whitelabel/{domain}/logo',
 				dataType: '*',
@@ -23,30 +18,17 @@ define(function(require){
 		},
 
 		subscribe: {
-			"app.nav.add": function(data){
+            'auth.loadApps': '_loadApps',
+			'app.nav.add': function(data){
 				console.log(data);
 			},
-			"app.nav.context.add": function(data){
+			'app.nav.context.add': function(data){
 				console.log(data);
 			}
 		},
 
 		load: function(callback){
-
 			var self = this;
-
-			// monster.request({
-			// 	resource: "cors.test",
-			// 	data: { foo: "bar" },
-			// 	success: function(data){
-			// 		callback(self);
-			// 	},
-			// 	error: function(message, level){
-			// 		console.log(message, level);
-			// 		monster.config.companyName = "unknown";
-			// 		callback(self);
-			// 	}
-			// })
 
 			callback(this);
 		},
@@ -56,7 +38,7 @@ define(function(require){
 				template = monster.template(self, 'app', {}),
 				content = $(template);
 
-			document.title = 'Monster Mash - He did the mash.';
+			document.title = 'Monster UI - ' + monster.config.company.name;
 
 			container.append(content);
 
@@ -84,6 +66,12 @@ define(function(require){
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
 
+        //List of apps required once the user is logged in
+        _baseApps: [],//['myaccount', 'app_store'],
+
+        //Default app to render if the user is logged in, can be changed by setting a default app
+        _defaultApp: 'app_store',
+
 		_load: function(){
 			var self = this;
 
@@ -99,27 +87,34 @@ define(function(require){
 			});
 		},
 
+        _loadApps: function(args) {
+            var self = this;
+
+            if(!self._baseApps.length) {
+                var defaultApp = args.defaultApp.id || self._defaultApp;
+
+                monster._loadApp(defaultApp, function(app) {
+                    app.render($('#ws-content'));
+                });
+            }
+            else {
+                var appName = self._baseApps.pop();
+
+                monster._loadApp(appName, function(app) {
+                    self._loadApps(args);
+                });
+            }
+        },
+
 		_render: function(container) {
 			var self = this,
 				domain = window.location.hostname,
-				apiUrl = monster.config.api.default || monster.apps['auth'].apiUrl,
-				homeLink = $('#home_link')
-
-			homeLink.ajaxStart(function() {
-				homeLink.find('i').addClass('icon-spinner icon-spin');
-			})
-			.ajaxStop(function() {
-				homeLink.find('i').removeClass('icon-spinner icon-spin');
-			})
-			.ajaxError(function() {
-				if($.active === 0) {
-					homeLink.find('i').removeClass('icon-spinner icon-spin');
-				}
-			});
+				apiUrl = monster.config.api.default,
+				homeLink = $('#home_link');
 
 			homeLink.on('click', function() {
 				if($.cookie('monster-auth')) {
-					monster.publish('auth.landing');
+					monster.pub('auth.landing');
 				}
 			});
 
@@ -129,22 +124,20 @@ define(function(require){
 
 			container.find('#ws-navbar .logo').click(function() {
 				if($.cookie('monster-auth')) {
-					monster.publish('auth.landing');
+					monster.pub('auth.landing');
 				}
 			});
 
 			monster.request({
 				resource: 'layout.getLogo',
 				data: {
-					domain: domain === "localhost" ? "2600hz.com" : domain
+					domain: domain
 				},
 				success: function(_data) {
 					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
 				error: function(error) {
-					var logo = 'url("apps/core/static/images/logo.png")';
-
-					container.find('#ws-navbar .logo').css('background-image', logo);
+					container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/static/images/logo.png")');
 				}
 			});
 		},

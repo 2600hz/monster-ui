@@ -210,6 +210,7 @@ body a.monster_link:hover {
     background: #f9f9f9;
     border-radius: 4px;
     min-width: 300px;
+    padding: 0;
 }
 
 .ui-dialog .ui-dialog-titlebar {
@@ -261,6 +262,10 @@ body a.monster_link:hover {
 }
 
 /* Search Box */
+.search-box {
+    line-height: 26px;
+}
+
 .search-box > i.icon-search {
     position: absolute;
     margin: 4px 0 0 8px;
@@ -354,6 +359,7 @@ body a.monster_link:hover {
 
 .alert-dialog .alert-buttons-wrapper > button {
     width: 48%;
+    float: left;
 }
 
 .alert-dialog .alert-buttons-wrapper > button:first-child {

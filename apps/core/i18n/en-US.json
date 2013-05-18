@@ -22,7 +22,7 @@
 
 	"dialog" : {
 		"showError": "Show Error",
-		"confirmOK": "OK",
+		"confirmOk": "OK",
 		"confirmCancel" : "Cancel",
 		"confirmTitle" : "Confirmation"
 	},
