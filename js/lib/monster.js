@@ -1,28 +1,29 @@
 define(function(require){
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		postal = require("postal"),
-		reqwest = require("reqwest"),
-		handlebars = require("handlebars"),
-		async = require("async"),
-		config = require("js/config");
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		postal = require('postal'),
+		reqwest = require('reqwest'),
+		handlebars = require('handlebars'),
+		async = require('async'),
+        form2object = require('form2object'),
+		config = require('js/config');
 
 	var monster = {
-		_channel: postal.channel("monster"),
+		_channel: postal.channel('monster'),
 
 		// ping the server to see if a file exists. this is not an exhaustive or intensive operation.
 		_fileExists: function(url){
             var http = new XMLHttpRequest();
-            http.open("HEAD", url, false);
+            http.open('HEAD', url, false);
             http.send();
             return http.status != 404;
 		},
 
 		_loadApp: function(name, callback){
 			var self = this,
-				appPath = "apps/" + name,
-				path = appPath + "/app",
-				css = path + ".css";
+				appPath = 'apps/' + name,
+				path = appPath + '/app',
+				css = path + '.css';
 
 			require([path], function(app){
 				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
@@ -32,7 +33,7 @@ define(function(require){
 				});
 
 				_.each(app.subscribe, function(callback, topic){
-					var cb = typeof callback === "string" ? app[callback] : callback;
+					var cb = typeof callback === 'string' ? app[callback] : callback;
 
 					self.sub(topic, cb, app);
 				});
@@ -72,7 +73,7 @@ define(function(require){
         _cacheString: function(request) {
             var cacheString = '';
 
-            if(!request.cache && request.verb.toLowerCase() === 'get') {
+            if(!request.cache && request.method.toLowerCase() === 'get') {
                 var charQueryString = request.url.indexOf('?') >= 0 ? '&' : '?';
 
                 cacheString = charQueryString + '_=' + (new Date()).getTime();;
@@ -94,7 +95,7 @@ define(function(require){
 
 			var settings = {
                 cache: request.cache || false,
-				url: apiUrl + request.url + self._cacheString(request),
+				url: apiUrl + request.url,
 				type: request.dataType || 'json',
 				method: request.verb || 'get',
 				contentType: request.type || 'application/json',
@@ -105,8 +106,6 @@ define(function(require){
 
                     ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
 
-                    this.url = apiUrl + request.url + self._cacheString(request);
-
                     return true;
                 }
 			};
@@ -115,11 +114,13 @@ define(function(require){
 		},
 
 		request: function(options){
+			var self = this,
+                settings =  _.extend({}, this._requests[options.resource]);
 
-			var settings = this._requests[options.resource];
+            settings.url += self._cacheString(settings);
 
 			if(!settings){
-				throw("The resource requested could not be found.", options.resource);
+				throw('The resource requested could not be found.', options.resource);
 			}
 
             var mappedKeys = [],
@@ -127,7 +128,7 @@ define(function(require){
 				data = _.extend({}, options.data || {});
 
 			settings.error = function requestError (error, one, two, three) {
-				//console.warn("reqwest failure on: " + options.resource, error)
+				//console.warn('reqwest failure on: ' + options.resource, error)
                 monster.pub('monster.requestEnd');
 
 				options.error && options.error(error);
@@ -161,7 +162,7 @@ define(function(require){
                 });
 			}
 
-			return reqwest(settings);
+            return reqwest(settings);
 		},
 
 		apps: {},
@@ -173,19 +174,25 @@ define(function(require){
 		config: _.extend({}, config),
 
 		css: function(href){
-			$("<link/>", { rel: "stylesheet", href: href }).appendTo("head");
+			$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
 		},
 
 		domain: function(){
 			var matches = location.href.match(/^(?:https?:\/\/)*([^\/?#]+).*$/);
-			return matches.length > 1 ? matches[1] : "";
+			return matches.length > 1 ? matches[1] : '';
 		},
 
-        i18n: function(obj, key) {
+        i18n: function(obj, key, variables) {
             var translation = '';
 
             if('data' in obj && 'i18n' in obj.data) {
                 translation = monster.config.i18n.active in obj.data.i18n ? eval('obj.data.i18n[monster.config.i18n.active].' + key) : eval('obj.data.i18n[monster.config.i18n.default].' + key);
+            }
+
+            if(typeof variables === 'object') {
+                _.each(variables, function(value, key) {
+                    translation = translation.replace('{{'+ key +'}}', value);
+                });
             }
 
             return translation;
@@ -211,7 +218,7 @@ define(function(require){
 			raw = raw || false;
 			ignoreCache = ignoreCache || false;
 
-			var conical = (this.name || "global") + "." + name, // this should always be a module instance
+			var conical = (this.name || 'global') + '.' + name, // this should always be a module instance
 				_template,
 				result;
 
@@ -220,10 +227,10 @@ define(function(require){
 			}
 			else {
 				// fetch template
-				if($(name).length){ // template is in the dom. eg. <script type="text/html" />
+				if($(name).length){ // template is in the dom. eg. <script type='text/html' />
 					_template = $(name).html();
 				}
-				else if(name.substring(0, 1) === "!"){ // ! indicates that it's a string template
+				else if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
 					_template = name.substring(1);
 				}
 				else{
@@ -255,7 +262,13 @@ define(function(require){
 				result = _template;
 			}
 
-			result = result.replace(/(\r\n|\n|\r|\t)/gm,"");
+			result = result.replace(/(\r\n|\n|\r|\t)/gm,'');
+
+            if(typeof data === 'object') {
+                _.each(data.i18n, function(value, key) {
+                    result = result.replace('{{'+ key +'}}', value);
+                });
+            }
 
 			return result;
 		},

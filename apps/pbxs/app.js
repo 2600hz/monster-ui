@@ -171,6 +171,7 @@ define(function(require){
                             account_id: monster.apps['pbxs'].account_id,
                         },
                         success: function(_data_account, status) {
+
                             callback(null, _data_account.data.realm);
                         }
                     });
@@ -192,9 +193,9 @@ define(function(require){
                     _callbacks = args.callbacks || {},
                     callbacks = {
                         save_success: _callbacks.save_success || function(_data) {
-                            var saved_id = (data.id === 0 || data.id) ? data.id : _data.data.servers.length-1;
+                            var saved_id = (args.id === 0 || args.id) ? args.id : _data.data.servers.length-1;
                             self.renderList(saved_id, parent, function() {
-                                self.render_pbxs_manager(_data, $.extend(true, defaults, _data.data.servers[data.id]), target, callbacks);
+                                self.render_pbxs_manager(_data, $.extend(true, defaults, _data.data.servers[args.id]), target, callbacks);
                             }, _data.data.servers);
                         },
 
@@ -208,7 +209,7 @@ define(function(require){
 
                         cancel_success: _callbacks.cancel_success || function() {
                             monster.pub('pbxsManager.edit', {
-                                id: data.id,
+                                id: args.id,
                                 parent: parent,
                                 target: target,
                                 callbacks: callbacks
@@ -459,7 +460,7 @@ define(function(require){
                                 });
                             },
                             function(_data, status) {
-                                monster.alert(monster.i18n(self, 'error_signup', {variable: status}));
+                                monster.alert(monster.i18n(self, 'error_signup', { status: status }));
                             }
                         );
                     }
@@ -1135,7 +1136,7 @@ define(function(require){
                     { current_step: 1, total_step: 2, api: []}
                 ],
                 cfg = {},
-                endpoint_html = monster.template(self, templates.endpoint, endpoint_data);
+                endpoint_html = $(monster.template(self, templates.endpoint, _.extend({ i18n: { supportEmail: endpoint_data.extra.support_email }}, endpoint_data)));
 
             $('.icon-question-sign[data-toggle="tooltip"]', endpoint_html).tooltip();
 
@@ -1430,7 +1431,7 @@ define(function(require){
                     searchResults.empty().hide();
                 }
                 else {
-                    searchResults.empty();
+                    searchResults.show().empty();
 
                     $.each(cache, function(phone_number, row_array) {
                         if (phone_number.indexOf(search_string)>-1) {
@@ -1439,14 +1440,13 @@ define(function(require){
                     });
 
                     if(matches.length > 0) {
-                        searchResults.append(monster.template(self, templates.searchResults, {matches: matches, count: matches.length}));
+                        searchResults.append(monster.template(self, templates.searchResults, _.extend({ i18n: { amountNumbers: matches.length }}, {matches: matches})));
                     }
                     else {
                         searchResults.append(monster.template(self, templates.noResults));
                     }
 
                     numbersWrapper.hide();
-                    searchResults.hide();
                 }
             });
 
@@ -1513,7 +1513,7 @@ define(function(require){
                     var new_index = $(this).data('index');
 
                     self.get_account(function(global_data) {
-                        monster.ui.confirm(monster.i18n(self, 'confirm_move', {variable: global_data.data.servers[new_index].server_name}), function() {
+                        monster.ui.confirm(monster.i18n(self, 'confirm_move', { serverName: global_data.data.servers[new_index].server_name}), function() {
                             $.each(list_numbers, function(k, v) {
                                 global_data.data.servers[new_index].DIDs[v] = global_data.data.servers[server_id].DIDs[v];
                                 delete global_data.data.servers[server_id].DIDs[v];
@@ -2409,7 +2409,7 @@ define(function(require){
             }
         },
 
-        listNumbersByPbx: function(id, callback, _optional_data) {
+        listNumbersByPbx: function(id, _callback, _optional_data) {
             var self = this;
 
             if(id || id > -1) {
@@ -2439,9 +2439,7 @@ define(function(require){
                         }
                     });
 
-                    if(typeof callback === 'function') {
-                        callback(json_data);
-                    }
+                    _callback && _callback(json_data);
                 });
             }
         },
@@ -2493,9 +2491,7 @@ define(function(require){
                     }
                 });
 
-                if(typeof _callback === 'function') {
-                    _callback(tab_data);
-                }
+                _callback && _callback(tab_data);
             });
         }
 	};
