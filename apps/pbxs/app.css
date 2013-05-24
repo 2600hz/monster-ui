@@ -1322,7 +1322,7 @@
     padding: 6px 10px;
 }
 
-.trunkstore_popup.failover .failover-block.selected .icon-phone {
+.trunkstore_popup.failover .wrapper-phone-icon.selected .icon-phone {
     background-color: #44cc44;
 }
 

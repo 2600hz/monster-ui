@@ -35,7 +35,7 @@
     <div class="wizard_content">
         <form id="port" class="form-horizontal">
             <div class="step_div first">
-                <div class="split_div">
+                <div class="split_div clearfix">
                     <div class="left_part">
                         <span class="icon resource"/> {{ i18n.current_carrier }}
                     </div>
@@ -54,7 +54,7 @@
                     <div class="clear"/>
                 </div>
 
-                <div class="split_div">
+                <div class="split_div clearfix">
                     <div class="left_part text_only">
                         {{ i18n.main_number }}
                     </div>
@@ -66,7 +66,7 @@
                     <div class="clear"/>
                 </div>
 
-                <div class="split_div last">
+                <div class="split_div last clearfix">
                     <div class="left_part">
                         {{ i18n.additional_numbers }}
                         <div class="numbers_example">{{ i18n.must_be_on_bill }}</div>
@@ -93,7 +93,7 @@
                     <span class="icon receipt"/>{{ i18n.step2_text_title }}
                 </div>
 
-                <div class="split_div last">
+                <div class="split_div last clearfix">
                     <div class="left_part">
                         <div class="field"><label>{{ i18n.port_name_on_account }}</label><input type="text" name="port.billing_name"/></div>
                         <div class="field"><label>{{ i18n.port_account_id }}</label><input type="text" name="port.billing_account_id" /></div>

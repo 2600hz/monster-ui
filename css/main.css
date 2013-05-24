@@ -208,7 +208,7 @@ body a.monster_link:hover {
 
 .ui-dialog .ui-dialog-content {
     background: #f9f9f9;
-    border-radius: 4px;
+    border-radius: 0px;
     min-width: 300px;
     padding: 0;
 }

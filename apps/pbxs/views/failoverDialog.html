@@ -1,29 +1,51 @@
 <div class="trunkstore_popup failover">
-    <div class="header"></div>
+    <div class="header {{radio}}"></div>
 
     <form id="failover" action="#">
         <div class="row-fluid">
             <h4 class="content-centered">{{ i18n.failover_text }}</h4>
 
-            <div class="row-fluid block-container">
-                <div data-type="number" class="failover-block span5 content-centered">
-                    <div class="wrapper-phone-icon">
-                        <i class="icon-phone"></i>
+            {{#compare radio '===' 'number'}}
+                <div class="row-fluid block-container">
+                    <div data-type="number" class="failover-block span5 content-centered">
+                        <div class="wrapper-phone-icon selected">
+                            <i class="icon-phone"></i>
+                        </div>
+                        <label>{{ i18n.alternate_number }}</label>
+                        <input placeholder="+1 415-222-5555" type="text" name="raw_input" class="failover_number" value="{{failover}}"/>
                     </div>
-                    <label>{{ i18n.alternate_number }}</label>
-                    <input placeholder="+1 415-222-5555" type="text" name="raw_input" class="failover_number" value="{{failover}}"/>
-                </div>
-                <div class="span2 content-centered">
-                    {{ i18n.or }}
-                </div>
-                <div data-type="sip" class="failover-block span5 content-centered">
-                    <div class="wrapper-phone-icon">
-                        <i class="icon-phone"></i>
+                    <div class="span2 content-centered">
+                        {{ i18n.or }}
                     </div>
-                    <label>{{ i18n.sip_address }}</label>
-                    <input placeholder="sip:jon@doe.com" type="text" name="raw_input" value="{{failover}}" class="failover_sip"/>
+                    <div data-type="sip" class="failover-block span5 content-centered">
+                        <div class="wrapper-phone-icon">
+                            <i class="icon-phone"></i>
+                        </div>
+                        <label>{{ i18n.sip_address }}</label>
+                        <input placeholder="sip:jon@doe.com" type="text" name="raw_input" value="" class="failover_sip"/>
+                    </div>
                 </div>
-            </div>
+            {{else}}
+                <div class="row-fluid block-container">
+                    <div data-type="number" class="failover-block span5 content-centered">
+                        <div class="wrapper-phone-icon">
+                            <i class="icon-phone"></i>
+                        </div>
+                        <label>{{ i18n.alternate_number }}</label>
+                        <input placeholder="+1 415-222-5555" type="text" name="raw_input" class="failover_number" value=""/>
+                    </div>
+                    <div class="span2 content-centered">
+                        {{ i18n.or }}
+                    </div>
+                    <div data-type="sip" class="failover-block span5 content-centered">
+                        <div class="wrapper-phone-icon selected">
+                            <i class="icon-phone"></i>
+                        </div>
+                        <label>{{ i18n.sip_address }}</label>
+                        <input placeholder="sip:jon@doe.com" type="text" name="raw_input" value="{{failover}}" class="failover_sip"/>
+                    </div>
+                </div>
+            {{/compare}}
         </div>
 
         <div class="row-fluid">

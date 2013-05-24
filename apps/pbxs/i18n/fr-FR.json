@@ -1,6 +1,11 @@
 {
     "pbx_connector": "SIP Trunking",
 
+    "chargeReminder" : {
+        "line1": "Votre carte bancaire li&eacute; &agrave; ce compte sera charg&eacute; imm&eacute;diatement.",
+        "line2": "&Ecirc;tes-vous s&ucirc;rs de vouloir continuer?"
+    },
+
     "pbx_brand": "Marque du PBX",
     "ip": "IP",
     "config": "Configuration",

@@ -6,6 +6,7 @@ require.config({
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
         form2object: 'js/lib/form2object',
+        toastr: 'js/lib/toastr.min',
 		handlebars: 'js/lib/handlebars-1.0.10',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',

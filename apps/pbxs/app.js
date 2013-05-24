@@ -1,7 +1,8 @@
 define(function(require){
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster"),
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster'),
+        toastr = require('toastr'),
 
 		templates = {
             pbxsManager: 'pbxsManager',
@@ -1534,7 +1535,7 @@ define(function(require){
                 ev.preventDefault();
 
                 self.render_port_dialog(function(port_data, popup) {
-                    monster.ui.confirm(monster.i18n(self, 'charge_reminder_line1') + '<br/><br/>' + monster.i18n(self, 'charge_reminder_line2'),
+                    monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
                         function() {
                             self.get_account(function(global_data) {
                                 var ports_done = 0;
@@ -1595,7 +1596,7 @@ define(function(require){
 
                             self.clean_phone_number_data(_data.data);
 
-                            monster.ui.confirm(monster.i18n(self, 'charge_reminder_line1') + '<br/><br/>' + monster.i18n(self, 'charge_reminder_line2'),
+                            monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
                                 function() {
                                     self.update_number(phone_number[1], _data.data, function(_data_update) {
                                             //TODO add lil icons for failover e911 cnam
@@ -1625,7 +1626,7 @@ define(function(require){
 
                             self.clean_phone_number_data(_data.data);
 
-                            monster.ui.confirm(monster.i18n(self, 'charge_reminder_line1') + '<br/><br/>' + monster.i18n(self, 'charge_reminder_line2'),
+                            monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
                                 function() {
                                     self.update_number(phone_number[1], _data.data, function(_data_update) {
                                             !($.isEmptyObject(_data.data.cnam)) ? $cnam_cell.removeClass('inactive').addClass('active') : $cnam_cell.removeClass('active').addClass('inactive');
@@ -1654,7 +1655,7 @@ define(function(require){
 
                             self.clean_phone_number_data(_data.data);
 
-                            monster.ui.confirm(monster.i18n(self, 'charge_reminder_line1') + '<br/><br/>' + monster.i18n(self, 'charge_reminder_line2'),
+                            monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
                                 function() {
                                     self.update_number(phone_number[1], _data.data, function(_data_update) {
                                             !($.isEmptyObject(_data.data.dash_e911)) ? $e911_cell.removeClass('inactive').addClass('active') : $e911_cell.removeClass('active').addClass('inactive');
@@ -1726,7 +1727,7 @@ define(function(require){
 
         render_cnam_dialog: function(cnam_data, callback) {
             var self = this,
-                popup_html = monster.template(self, templates.cnamDialog, cnam_data || {}),
+                popup_html = $(monster.template(self, templates.cnamDialog, cnam_data || {})),
                 popup;
 
             $('button.btn.btn-success', popup_html).click(function(ev) {
@@ -1755,7 +1756,7 @@ define(function(require){
                     failover: (failover_data || {}).e164 || (failover_data || {}).sip || '',
                     phone_number: failover_data.phone_number || ''
                 },
-                popup_html = monster.template(self, templates.failoverDialog, tmpl_data),
+                popup_html = $(monster.template(self, templates.failoverDialog, tmpl_data)),
                 popup,
                 result,
                 popup_title = monster.i18n(self, 'failover_title');
@@ -1824,7 +1825,7 @@ define(function(require){
 
         render_e911_dialog: function(e911_data, callback) {
             var self = this,
-                popup_html = monster.template(self, templates.e911Dialog, e911_data || {}),
+                popup_html = $(monster.template(self, templates.e911Dialog, e911_data || {})),
                 popup;
 
             $('.icon-question-sign[data-toggle="tooltip"]', popup_html).tooltip();
@@ -1867,14 +1868,14 @@ define(function(require){
             // Fixing the position of the rotated text using its width
             var $rotated_text = $('#e911_rotated_text', popup_html),
                 rotated_text_offset = $rotated_text.width()/2;
-            $rotated_text.css('top', 40+rotated_text_offset +'px')
-                         .css('left', 25-rotated_text_offset +'px');
+
+            $rotated_text.css({'top': 40+rotated_text_offset +'px', 'left': 25-rotated_text_offset +'px'});
         },
 
         render_add_number_dialog: function(global_data, index, callback) {
             var self = this,
                 numbers_data = [],
-                popup_html = monster.template(self, templates.addNumberDialog),
+                popup_html = $(monster.template(self, templates.addNumberDialog)),
                 popup;
 
             $('.toggle_div', popup_html).hide();
@@ -1891,7 +1892,7 @@ define(function(require){
                 npa_data.prefix = npa;// + nxx;
 
                 self.search_numbers(npa_data, function(results_data) {
-                    var results_html = monster.template(self, templates.addNumberSearchResults, {numbers: results_data.data});
+                    var results_html = $(monster.template(self, templates.addNumberSearchResults, {numbers: results_data.data}));
 
                     $('#foundDIDList', popup_html)
                         .empty()
@@ -1907,7 +1908,7 @@ define(function(require){
             $('#add_numbers_button', popup_html).click(function(ev) {
                 ev.preventDefault();
 
-                monster.ui.confirm(i18n.t('core.layout.charge_reminder_line1') + '<br/><br/>' + i18n.t('core.layout.charge_reminder_line2'),
+                monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
                     function() {
                         $('#foundDIDList .number-box.selected', popup_html).each(function() {
                             numbers_data.push($(this).data());
@@ -1959,11 +1960,11 @@ define(function(require){
         render_port_dialog: function(callback) {
             var self = this,
                 port_form_data = {},
-                popup_html = monster.template(self, templates.portDialog, {
+                popup_html = $(monster.template(self, templates.portDialog, {
                     company_name: monster.config.company_name || '2600hz',
                     support_email: (monster.config.port || {}).support_email || 'support@trunking.io',
                     support_file_upload: (File && FileReader)
-                }),
+                })),
                 popup,
                 files,
                 loa,

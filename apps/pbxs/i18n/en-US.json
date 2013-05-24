@@ -1,6 +1,11 @@
 {
     "pbx_connector": "SIP Trunking",
 
+    "chargeReminder" : {
+        "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+        "line2": "Are you sure you want to continue?"
+    },
+
     "pbx_brand": "PBX Brand",
     "ip": "IP",
     "config": "Config",
@@ -176,6 +181,7 @@
     "help_second_line": "Please note Cellular devices do not display this field and it may take up to 72 hours to update.",
     "error_update_caller_id": "Failed to update the Caller ID for this phone number",
 
+    "e911": "e911",
     "e911_dialog_title": "Edit 911 Location",
     "gmap_pin_label": "Your+E911+Location",
     "postal_code": "Zip Code",
@@ -183,7 +189,7 @@
     "address_line_2": "Address Line 2",
     "city": "City",
     "state": "State",
-    "verify_location": "Verify Location with Google Maps",
+    "verify_location": "Verify Location",
     "e911_submit_btn": "Add",
     "e911_title": "E911 Address",
     "e911_rotated_text": "For emergency services",
