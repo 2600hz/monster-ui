@@ -1,12 +1,8 @@
-{{#compare numbers.length "===" 0}}
-    <div class="errMsg">
-            There are no numbers available in the specified NPA.
-    </div>
+{{#each numbers}}
+<div class="number-wrapper number-box" data-price="1" data-phone_number="{{this}}">
+    <input type="checkbox"/></input>
+    <span class="phone-number">{{formatPhoneNumber this}}</div>
+</div>
 {{else}}
-    {{#each numbers}}
-        <div class="number-wrapper number-box" data-price="1" data-phone_number="{{this}}">
-            <input type="checkbox"/></input>
-            <span class="phone-number">{{formatPhoneNumber this}}</div>
-        </div>
-    {{/each}}
-{{/compare}}
+<div class="errMsg">There are no numbers available in the specified NPA.</div>
+{{/each}}

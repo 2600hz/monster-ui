@@ -196,7 +196,7 @@ define(function(require){
                         save_success: _callbacks.save_success || function(_data) {
                             var saved_id = (args.id === 0 || args.id) ? args.id : _data.data.servers.length-1;
                             self.renderList(saved_id, parent, function() {
-                                self.render_pbxs_manager(_data, $.extend(true, defaults, _data.data.servers[args.id]), target, callbacks);
+                                self.renderPbxsManager(_data, $.extend(true, defaults, _data.data.servers[args.id]), target, callbacks);
                             }, _data.data.servers);
                         },
 
@@ -260,7 +260,7 @@ define(function(require){
                 }
 
                 if(typeof args === 'object' && (args.id || args.id === 0)) {
-                    self.render_pbxs_manager(results.account, $.extend(true, defaults, results.account.data.servers[args.id]), target, callbacks);
+                    self.renderPbxsManager(results.account, $.extend(true, defaults, results.account.data.servers[args.id]), target, callbacks);
                 }
                 else {
                     self.render_endpoint(results.accounts, defaults, target, callbacks, parent);
@@ -270,7 +270,7 @@ define(function(require){
 
 		// util methods
 
-        list_available_pbxs: function() {
+        listAvailablePbxs: function() {
             return ['allworks', 'altigen', 'asterisk', 'avaya', 'bluebox', 'cisco', 'digium', 'epygi', 'freepbx', 'freeswitch', 'mitel', 'objectworld', 'other', 'pingtel', 'responsepoint', 'samsung', 'shoretel', 'sutus', 'talkswitch', 'threecom', 'taridium'];
         },
 
@@ -769,7 +769,7 @@ define(function(require){
                 }
             }
             else {
-                self.update_old_trunkstore(global_data.data, function() {
+                self.updateOldTrunkstore(global_data.data, function() {
                     if(typeof callback === 'function') {
                         callback();
                     }
@@ -866,7 +866,7 @@ define(function(require){
             }
         },
 
-        update_old_trunkstore: function(data, success, error) {
+        updateOldTrunkstore: function(data, success, error) {
             monster.request({
                 resource: 'old_trunkstore.update',
                 data: {
@@ -1354,34 +1354,35 @@ define(function(require){
                 .append(endpoint_html);
         },
 
-        refreshListNumbers: function(DIDs_list, _parent) {
+        refreshListNumbers: function(didsList, _parent) {
             var parent = _parent || $('#pbx_connector_container'),
                 self = this,
-                count_DIDs = 0;
+                countDids = 0,
+                numberWrapper = parent.find('#numbers_wrapper');
 
-            $('#numbers_wrapper', parent).empty();
+            numberWrapper.empty();
 
-            if($.isEmptyObject(DIDs_list)) {
-                $('#numbers_wrapper', parent).append(monster.template(self, templates.noNumbers));
+            if($.isEmptyObject(didsList)) {
+                numberWrapper.append(monster.template(self, templates.noNumbers));
             }
             else {
-                $('#numbers_wrapper', parent).append(monster.template(self, templates.listNumbers, { DIDs: DIDs_list }));
+                numberWrapper.append(monster.template(self, templates.listNumbers, { DIDs: didsList }));
 
-                $.each(DIDs_list, function() {
-                    count_DIDs++;
+                $.each(didsList, function() {
+                    countDids++;
                 });
             }
 
-            $('#count_phones', parent).html(count_DIDs);
+            $('#count_phones', parent).html(countDids);
             $('#trigger_links', parent).hide();
         },
 
-        render_pbxs_manager: function(data, endpoint_data, target, callbacks) {
+        renderPbxsManager: function(data, endpoint_data, target, callbacks) {
             var self = this,
                 server_id = endpoint_data.extra.id,
                 img_link = endpoint_data.server_type ? endpoint_data.server_type.replace('.','').toLowerCase() : 'other';
 
-            $.inArray(img_link, self.list_available_pbxs()) < 0 ? img_link = 'other' : true;
+            $.inArray(img_link, self.listAvailablePbxs()) < 0 ? img_link = 'other' : true;
             endpoint_data.img_link = img_link;
 
             endpoint_data.servers_list = [];
@@ -1389,7 +1390,7 @@ define(function(require){
             $.each(data.data.servers, function(k, v) {
                 if(k !== server_id) {
                     var temp_img_link = v.server_type ? v.server_type.replace('.','').toLowerCase() : 'other';
-                    $.inArray(temp_img_link, self.list_available_pbxs()) < 0 ? temp_img_link = 'other' : true;
+                    $.inArray(temp_img_link, self.listAvailablePbxs()) < 0 ? temp_img_link = 'other' : true;
 
                     endpoint_data.servers_list.push({
                         index: k,
@@ -1453,31 +1454,29 @@ define(function(require){
 
             pbxsManager.on('click', '.number-wrapper', function(event) {
                 if($(event.target).closest('.number-options').size() < 1) {
-                    var toggle_number_selected = function($element, update_cb) {
-                        var $current_cb = $('input[type="checkbox"]', $element),
-                            cb_value = $current_cb.prop('checked');
+                    var toggleNumberSelected = function(element, updateCb) {
+                            var currentCb = element.find('input[type="checkbox"]'),
+                                cbValue = currentCb.prop('checked');
 
-                        if(update_cb) {
-                            $current_cb.prop('checked', !cb_value);
-                        }
+                            if(updateCb) {
+                                currentCb.prop('checked', !cbValue);
+                            }
 
-                        $element.toggleClass('selected');
-                    };
+                            element.toggleClass('selected');
+                        },
+                        currentNumberWrapper = $(this);
 
-                    toggle_number_selected($(this), !$(event.target).is('input:checkbox'));
+                    toggleNumberSelected(currentNumberWrapper, !$(event.target).is('input:checkbox'));
 
-                     if($(this).parents('#search_results').size() > 0) {
-                        var $wrapper = $('#numbers_wrapper .number-wrapper[data-phone_number="'+$(this).data('phone_number')+'"]', pbxsManager);
+                    if(currentNumberWrapper.parents('#search_results').size() > 0) {
+                        var $wrapper = pbxsManager.find('#numbers_wrapper .number-wrapper[data-phone_number="'+currentNumberWrapper.data('phone_number')+'"]');
 
-                        toggle_number_selected($wrapper, true);
+                        toggleNumberSelected($wrapper, true);
                     }
 
-                    if($('.number-wrapper.selected', pbxsManager).size() > 0) {
-                        $('#trigger_links', pbxsManager).show('fast');
-                    }
-                    else {
-                        $('#trigger_links', pbxsManager).hide();
-                    }
+                    var links = pbxsManager.find('#trigger_links');
+
+                    pbxsManager.find('.number-wrapper.selected').size() > 0 ? links.show('fast') : links.hide();
                 }
             });
 
@@ -1486,7 +1485,7 @@ define(function(require){
                     self.get_account(function(_global_data) {
                         _global_data.data.servers.splice(endpoint_data.extra.id, 1);
 
-                        self.update_old_trunkstore(_global_data.data, callbacks.delete_success);
+                        self.updateOldTrunkstore(_global_data.data, callbacks.delete_success);
                     });
                 });
             });
@@ -1520,7 +1519,7 @@ define(function(require){
                                 delete global_data.data.servers[server_id].DIDs[v];
                             });
 
-                            self.update_old_trunkstore(global_data.data, function(data_trunkstore) {
+                            self.updateOldTrunkstore(global_data.data, function(data_trunkstore) {
                                 self.listNumbersByPbx(server_id, callback_listing, data_trunkstore.data);
                             });
                         });
@@ -1547,7 +1546,7 @@ define(function(require){
 
                                     var check_update_trunkstore = function() {
                                         if(++ports_done > port_data.phone_numbers.length - 1) {
-                                            self.update_old_trunkstore(global_data.data, function(_data) {
+                                            self.updateOldTrunkstore(global_data.data, function(_data) {
                                                 _data.data.servers[server_id].extra = { id: server_id };
 
                                                 if(callbacks && 'save_success' in callbacks && typeof callbacks.save_success == 'function') {
@@ -1659,7 +1658,7 @@ define(function(require){
                                 function() {
                                     self.update_number(phone_number[1], _data.data, function(_data_update) {
                                             !($.isEmptyObject(_data.data.dash_e911)) ? $e911_cell.removeClass('inactive').addClass('active') : $e911_cell.removeClass('active').addClass('inactive');
-                                            toastr.success(monster.i18n(self, 'success_e911', {variable: monster.ui.formatPhoneNumber(phone_number[1])}));
+                                            toastr.success(monster.i18n(self, 'success_e911', { phoneNumber: monster.ui.formatPhoneNumber(phone_number[1])}));
                                         },
                                         function(_data_update) {
                                             monster.alert(monster.i18n(self, 'error_update_e911') + '' + _data_update.message);
@@ -1698,7 +1697,7 @@ define(function(require){
                                     }
                                 });
 
-                                self.update_old_trunkstore(_global_data.data,
+                                self.updateOldTrunkstore(_global_data.data,
                                     function(data_trunkstore) {
                                         self.refreshUnassignedList(function() {
                                             self.listNumbersByPbx(server_id, callback_listing, data_trunkstore.data);
@@ -2114,7 +2113,7 @@ define(function(require){
                 var res = port_form_data.port.main_number.match(/^\+?1?([2-9]\d{9})$/);
                 res ? port_form_data.port.main_number = '+1' + res[1] : string_alert += monster.i18n(self, 'enter_main_number') + '<br/>';
 
-                var is_toll_free_main = self.check_toll_free(port_form_data.port.main_number);
+                var is_toll_free_main = self.checkTollFree(port_form_data.port.main_number);
 
                 port_form_data.phone_numbers.push(port_form_data.port.main_number);
 
@@ -2124,7 +2123,7 @@ define(function(require){
                     var result = val.match(/^\+?1?([2-9]\d{9})$/);
 
                     if(result) {
-                        if(self.check_toll_free(result[1]) === is_toll_free_main) {
+                        if(self.checkTollFree(result[1]) === is_toll_free_main) {
                             phone_numbers.push('+1' + result[1]);
                         }
                         else {
@@ -2173,7 +2172,7 @@ define(function(require){
             });
         },
 
-        check_toll_free: function(number) {
+        checkTollFree: function(number) {
             var toll_free = false,
                 toll_free_number = number.match(/^(\+?1)?(8(00|55|66|77|88)[2-9]\d{6})$/);
 
@@ -2187,12 +2186,16 @@ define(function(require){
         refreshUnassignedList: function(_callback) {
             var self = this;
 
-            self.listAvailableNumbers(function(unassigned_numbers) {
+            self.listAvailableNumbers(function(unassignedNumbers) {
+                var data = {
+                    unassignedNumbers: unassignedNumbers
+                };
+
                 $('#unassigned_numbers_wrapper').empty()
-                                                .append(monster.template(self, templates.pbxsUnassignedNumbers, { unassigned_numbers: unassigned_numbers}));
+                                                .append(monster.template(self, templates.pbxsUnassignedNumbers, data));
 
                 $('#unassigned_numbers_count').empty()
-                                              .html(unassigned_numbers.length);
+                                              .html(unassignedNumbers.length);
 
                 if(typeof _callback === 'function') {
                     _callback();
@@ -2204,24 +2207,26 @@ define(function(require){
             var self = this,
                 server_id;
 
-            $('.link-box.assign', parent).on('click', function() {
-                var numbers_data = [];
+            parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
 
-                $('#unassigned_numbers .unassigned-number.selected', parent).each(function(k, v) {
+            parent.find('.link-box.assign').on('click', function() {
+                var numbersData = [];
+
+                parent.find('#unassigned_numbers .unassigned-number.selected').each(function(k, v) {
                     if($(v).data('phone_number')) {
-                        numbers_data.push($(this).data('phone_number'));
+                        numbersData.push($(this).data('phone_number'));
                     }
                 });
 
-                server_id = parseInt($('#pbx_connector_container', parent).data('id'));
+                server_id = parseInt(parent.find('#pbx_connector_container').data('id'));
 
                 if(server_id >= 0) {
                     self.get_account(function(global_data) {
-                        $.each(numbers_data, function(k, v) {
+                        $.each(numbersData, function(k, v) {
                             global_data.data.servers[server_id].DIDs[v] = {};
                         });
 
-                        self.update_old_trunkstore(global_data.data, function(data_trunkstore) {
+                        self.updateOldTrunkstore(global_data.data, function(data_trunkstore) {
                             self.refreshUnassignedList(function() {
                                 self.listNumbersByPbx(server_id, function(cb_data) {
                                     self.refreshListNumbers(cb_data, parent);
@@ -2235,9 +2240,9 @@ define(function(require){
                 }
             });
 
-            $('#unassigned_numbers_header', parent).on('click', function() {
+            parent.find('#unassigned_numbers_header').on('click', function() {
                 var $this = $(this),
-                    $content = $('#unassigned_numbers .content', parent)/*,
+                    $content = parent.find('#unassigned_numbers .content');/*,
                     nice_scrollbar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];*/
 
                 if($this.hasClass('open')) {
@@ -2251,31 +2256,30 @@ define(function(require){
                 }
             });
 
-            $('.icon-question-sign[data-toggle="tooltip"]', parent).tooltip();
-
-            $('#unassigned_numbers', parent).on('click', '.unassigned-number', function(event) {
-                $(this).toggleClass('selected');
+            parent.on('click', '.unassigned-number', function(event) {
+                var $this = $(this);
+                $this.toggleClass('selected');
 
                 if(!$(event.target).is('input:checkbox')) {
-                    var $current_cb = $('input[type="checkbox"]', $(this)),
+                    var $current_cb = $this.find('input[type="checkbox"]'),
                         cb_value = $current_cb.prop('checked');
 
                     $current_cb.prop('checked', !cb_value);
                 }
             });
 
-            $(parent).on('click', '#pbxs_manager_listpanel .pbx-wrapper', function() {
+            parent.on('click', '#pbxs_manager_listpanel .pbx-wrapper', function() {
                 $('#pbxs_manager_listpanel .pbx-wrapper', parent).removeClass('selected');
                 server_id = $(this).data('id');
                 monster.pub('pbxsManager.edit', { id: server_id });
                 $(this).addClass('selected');
             });
 
-            $('#add_pbx', parent).on('click', function() {
+            parent.find('#add_pbx').on('click', function() {
                 monster.pub('pbxsManager.edit', {});
             });
 
-            $('.link-box.delete', parent).on('click', function() {
+            parent.find('.link-box.delete').on('click', function() {
                 var data_phone_number,
                     phone_number,
                     $selected_numbers = $('.unassigned-number.selected', parent),
@@ -2314,7 +2318,7 @@ define(function(require){
                 }
             });
 
-            $('#unassigned_numbers .search-query', parent).on('keyup', function() {
+            parent.find('#unassigned_numbers .search-query').on('keyup', function() {
                 var input = $(this),
                     rows = $('#unassigned_numbers .content .unassigned-number', parent),
                     search_string = $.trim(input.val().toLowerCase().replace(/[^0-9]/g, '')),
@@ -2362,25 +2366,28 @@ define(function(require){
                     $('#list_pbxs_navbar', parent).show();
                     $('#unassigned_numbers', parent).show();
 
-                    var map_crossbar_data = function(data) {
-                        var new_list = [];
+                    var mapCrossbarData = function(data) {
+                            var newList = [];
 
-                        if(data.length > 0) {
-                            var i = 0;
-                            $.each(data, function(key, val) {
-                                new_list.push({
-                                    id: i,
-                                    name: val.server_name || '(no name)'
+                            if(data.length > 0) {
+                                var i = 0;
+                                $.each(data, function(key, val) {
+                                    newList.push({
+                                        id: i,
+                                        name: val.server_name || '(no name)'
+                                    });
+                                    i++;
                                 });
-                                i++;
-                            });
-                        }
+                            }
 
-                        return new_list;
-                    };
+                            return newList;
+                        },
+                        dataTemplate = {
+                            numbers: mapCrossbarData(data)
+                        };
 
                     $('#list_pbxs_navbar #pbxs_manager_listpanel', parent).empty()
-                                                                          .append(monster.template(self, templates.pbxsListElement, {numbers: map_crossbar_data(data)}))
+                                                                          .append(monster.template(self, templates.pbxsListElement, dataTemplate))
                                                                           .show();
 
                     if(id && id > -1) {
@@ -2388,11 +2395,11 @@ define(function(require){
                     }
 
                     $.each(data, function(k, v) {
-                        var img_link = v.server_type ? v.server_type.replace('.','').toLowerCase() : 'other';
+                        var imgLink = v.server_type ? v.server_type.replace('.','').toLowerCase() : 'other';
 
-                        $.inArray(img_link, self.list_available_pbxs()) < 0 ? img_link = 'other' : true;
+                        $.inArray(imgLink, self.listAvailablePbxs()) < 0 ? imgLink = 'other' : true;
 
-                        $('#pbxs_manager_listpanel .pbx-wrapper[data-id="'+k+'"] .img-wrapper', parent).append('<img class="img_style" src="apps/pbxs/static/images/endpoints/'+ img_link +'.png" height="49" width=72"/>');
+                        $('#pbxs_manager_listpanel .pbx-wrapper[data-id="'+k+'"] .img-wrapper', parent).append('<img class="img_style" src="apps/pbxs/static/images/endpoints/'+ imgLink +'.png" height="49" width=72"/>');
                     });
 
                     if(typeof callback === 'function') {
@@ -2449,9 +2456,9 @@ define(function(require){
             var self = this;
 
             monster.parallel({
-                list_numbers: function(callback){
-                    self.listAllNumbers(function(_data_numbers) {
-                        callback(null, _data_numbers.data);
+                listNumbers: function(callback){
+                    self.listAllNumbers(function(_dataNumbers) {
+                        callback(null, _dataNumbers.data);
                     });
                 },
                 account: function(callback){
@@ -2459,40 +2466,39 @@ define(function(require){
                         callback(null, _data.data);
                     });
                 },
-                list_callflows: function(callback) {
-                    self.list_callflows(function(_data_callflows) {
-                        callback(null, _data_callflows.data);
+                listCallflows: function(callback) {
+                    self.list_callflows(function(_dataCallflows) {
+                        callback(null, _dataCallflows.data);
                     });
                 }
             },
             function(err, results){
-                var json_data = {},
-                    tab_data = [];
+                var tabData = [];
 
                 //Remove numbers used in trunkstore
                 $.each(results.account.servers, function(k, v) {
                     $.each(this.DIDs, function(k2, v2) {
-                        delete results.list_numbers[k2];
+                        delete results.listNumbers[k2];
                     });
                 });
 
                 //Remove numbers used in callflows
-                $.each(results.list_callflows, function(k, v) {
+                $.each(results.listCallflows, function(k, v) {
                     if(this.numbers) {
                         $.each(this.numbers, function(k2, v2) {
-                            delete results.list_numbers[v2];
+                            delete results.listNumbers[v2];
                         });
                     }
                 });
 
                 //Build available numbers list
-                $.each(results.list_numbers, function(k, v) {
+                $.each(results.listNumbers, function(k, v) {
                     if(k !== 'id') {
-                        tab_data.push(k);
+                        tabData.push(k);
                     }
                 });
 
-                _callback && _callback(tab_data);
+                _callback && _callback(tabData);
             });
         }
 	};
