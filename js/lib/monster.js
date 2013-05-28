@@ -78,15 +78,13 @@ define(function(require){
 		_requests: {},
 
 		_cacheString: function(request) {
-			var cacheString = '';
-
-			if(!request.cache && request.method.toLowerCase() === 'get') {
-				var charQueryString = request.url.indexOf('?') >= 0 ? '&' : '?';
-
-				cacheString = charQueryString + '_=' + (new Date()).getTime();
+			if(request.cache || request.method.toLowerCase() !== 'get') {
+				return '';
 			}
 
-			return cacheString;
+			var prepend = request.url.indexOf('?') >= 0 ? '&' : '?';
+
+			return prepend + '_=' + (new Date()).getTime();
 		},
 
 		_defineRequest: function(id, request, app){
