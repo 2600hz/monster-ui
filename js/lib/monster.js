@@ -29,7 +29,7 @@ define(function(require){
 				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
 
 				_.each(app.requests, function(request, id){
-					self._defineRequest(id, request, name);
+					self._defineRequest(id, request, app);
 				});
 
 				_.each(app.subscribe, function(callback, topic){
@@ -83,24 +83,16 @@ define(function(require){
 			if(!request.cache && request.method.toLowerCase() === 'get') {
 				var charQueryString = request.url.indexOf('?') >= 0 ? '&' : '?';
 
-				cacheString = charQueryString + '_=' + (new Date()).getTime();;
+				cacheString = charQueryString + '_=' + (new Date()).getTime();
 			}
 
 			return cacheString;
 		},
 
-		_defineRequest: function(id, request, appName){
+		_defineRequest: function(id, request, app){
 			var self = this,
-			apiUrl;
-
-			if(appName in monster.apps && 'apiUrl' in monster.apps[appName]) {
-				apiUrl = monster.apps[appName].apiUrl;
-			}
-			else {
-				apiUrl = request.apiRoot || this.config.api.default;
-			}
-
-			var settings = {
+			apiUrl = app.apiUrl ? app.apiUrl : (request.apiRoot || this.config.api.default),
+			settings = {
 				cache: request.cache || false,
 				url: apiUrl + request.url,
 				type: request.dataType || 'json',
@@ -111,7 +103,7 @@ define(function(require){
 				before: function(ampXHR, settings) {
 					monster.pub('monster.requestStart');
 
-					ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
+					ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
 
 					return true;
 				}

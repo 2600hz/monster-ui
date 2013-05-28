@@ -1,12 +1,11 @@
 
 require.config({
 	paths: {
-        async: 'js/lib/async',
+		async: 'js/lib/async',
 		bootstrap: 'js/lib/bootstrap-2.3.1.min',
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
-        form2object: 'js/lib/form2object',
-        toastr: 'js/lib/toastr.min',
+		form2object: 'js/lib/form2object',
 		handlebars: 'js/lib/handlebars-1.0.10',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
@@ -15,22 +14,23 @@ require.config({
 		plugins: 'js/plugins',
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
+		toastr: 'js/lib/toastr.min',
 		underscore: 'js/lib/underscore-1.4.4.min'
 	},
-  shim: {
-  	bootstrap: ['jqueryui'],
-  	'bootstrap-switch': ['bootstrap'],
-  	'bootstrap-clickover': ['bootstrap'],
-  	jqueryui: ['jquery'],
+	shim: {
+		bootstrap: ['jqueryui'],
+		'bootstrap-switch': ['bootstrap'],
+		'bootstrap-clickover': ['bootstrap'],
+		jqueryui: ['jquery'],
 		handlebars: {
 			exports: 'Handlebars'
 		},
-  	plugins: ['jquery'],
-  	underscore: {
-  		exports: '_'
+		plugins: ['jquery'],
+		underscore: {
+			exports: '_'
 		}
-  },
-  //urlArgs: 'bust=' + (new Date()).getTime()
+	},
+	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){

@@ -1,7 +1,8 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toaster = require('toastr');
 
 	var app = {
 
