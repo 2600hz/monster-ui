@@ -112,17 +112,17 @@ define(function(require){
 
 		request: function(options){
 			var self = this,
-			settings =  _.extend({}, this._requests[options.resource]);
-
-			settings.url += self._cacheString(settings);
+				settings =  _.extend({}, this._requests[options.resource]);
 
 			if(!settings){
 				throw('The resource requested could not be found.', options.resource);
 			}
 
+			settings.url += self._cacheString(settings);
+
 			var mappedKeys = [],
-			rurlData = /\{([^\}]+)\}/g,
-			data = _.extend({}, options.data || {});
+				rurlData = /\{([^\}]+)\}/g,
+				data = _.extend({}, options.data || {});
 
 			settings.error = function requestError (error, one, two, three) {
 				//console.warn('reqwest failure on: ' + options.resource, error)
@@ -207,63 +207,57 @@ define(function(require){
 				_template = monster.cache.templates[conical];
 			}
 			else {
-				// fetch template
 				if($(name).length){ // template is in the dom. eg. <script type='text/html' />
 					_template = $(name).html();
-			}
+				}
 				else if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
 					_template = name.substring(1);
+				}
+				else{
+					$.ajax({
+						url: app.appPath + '/views/' + name + '.html',
+						dataType: 'text',
+						async: false,
+						success: function(result){
+							_template = result;
+						},
+						error: function(xhr, status, err){
+							_template = status + ': ' + err;
+						}
+					});
+				}
+			}
+
+			monster.cache.templates[conical] = _template;
+
+			if(!raw){
+				_template = handlebars.compile(_template);
+
+				var i18n = app.i18n.active(),
+				context = _.extend({}, data || {}, { i18n: i18n });
+
+				result = _template(context);
 			}
 			else{
-				$.ajax({
-					url: app.appPath + '/views/' + name + '.html',
-					dataType: 'text',
-					async: false,
-					success: function(result){
-						_template = result;
-					},
-					error: function(xhr, status, err){
-						_template = status + ': ' + err;
-					}
+				result = _template;
+			}
+
+			result = result.replace(/(\r\n|\n|\r|\t)/gm,'');
+
+			if(typeof data === 'object') {
+				_.each(data.i18n, function(value, key) {
+					result = result.replace('{{'+ key +'}}', value);
 				});
 			}
-		}
 
-		monster.cache.templates[conical] = _template;
+			return result;
+		},
 
-		if(!raw){
-			_template = handlebars.compile(_template);
-
-			var i18n = app.i18n.active(),
-			context = _.extend({}, data || {}, { i18n: i18n });
-
-			result = _template(context);
-		}
-		else{
-			result = _template;
-		}
-
-		result = result.replace(/(\r\n|\n|\r|\t)/gm,'');
-
-		if(typeof data === 'object') {
-			_.each(data.i18n, function(value, key) {
-				result = result.replace('{{'+ key +'}}', value);
+		parallel: function(methods, callback) {
+			async.parallel(methods, function(err, results) {
+				callback(err, results);
 			});
-		}
-
-		return result;
-	},
-
-	/* If we want to limit the # of simultaneous request, we can use async.parallelLimit(list_functions, LIMIT_# (ex: 3), callback) */
-	parallel: function(list_functions, callback) {
-		async.parallel(
-			list_functions,
-			function(err, results) {
-                    //TODO we could add an error handler
-                    callback(err, results);
-                  }
-                  );
-	},
+		},
 
 	shift: function(chain){
 		var next = chain.shift();
