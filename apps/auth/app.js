@@ -457,11 +457,11 @@ define(function(require){
 				host,
 				host_parts;
 
-			if(monster.querystring('name').length) {
-				name = monster.querystring('name')[0];
+			if(monster.querystring('name') != null) {
+				name = monster.querystring('name');
 			}			
 			else {
-				host = URL.match(/^(?:https?:\/\/)*([^\/?#]+).*$/)[1];
+				host = window.location.href.match(/^(?:https?:\/\/)*([^\/?#]+).*$/)[1];
 				host_parts = host.split('.');
 
 				if(typeof monster.config.base_urls == 'object' && host_parts.slice(1).join('.') in monster.config.base_urls) {
@@ -475,8 +475,8 @@ define(function(require){
 		_getRealm: function() {
 			var realm = '';
 
-			if(monster.querystring('realm').length) {
-				realm = monster.querystring('realm')[0];
+			if(monster.querystring('realm') != null) {
+				realm = monster.querystring('realm');
 			}
 
 			return realm;
@@ -595,8 +595,8 @@ define(function(require){
 							realm = $('#username', dialogRegister).val() + (typeof monster.config.realm_suffix === 'object' ? monster.config.realm_suffix.register : monster.config.realm_suffix);
 						}
 
-						if(monster.querystring('realm').length) {
-							realm = monster.querystring('realm')[0];
+						if(monster.querystring('realm') != null) {
+							realm = monster.querystring('realm');
 						}
 
 						var rest_data = {
