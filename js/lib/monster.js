@@ -1,12 +1,12 @@
 define(function(require){
 	var $ = require('jquery'),
-	_ = require('underscore'),
-	postal = require('postal'),
-	reqwest = require('reqwest'),
-	handlebars = require('handlebars'),
-	async = require('async'),
-	form2object = require('form2object'),
-	config = require('js/config');
+		_ = require('underscore'),
+		postal = require('postal'),
+		reqwest = require('reqwest'),
+		handlebars = require('handlebars'),
+		async = require('async'),
+		form2object = require('form2object'),
+		config = require('js/config');
 
 	var monster = {
 		_channel: postal.channel('monster'),
@@ -21,9 +21,9 @@ define(function(require){
 
 		_loadApp: function(name, callback){
 			var self = this,
-			appPath = 'apps/' + name,
-			path = appPath + '/app',
-			css = path + '.css';
+				appPath = 'apps/' + name,
+				path = appPath + '/app',
+				css = path + '.css';
 
 			require([path], function(app){
 				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
@@ -89,23 +89,23 @@ define(function(require){
 
 		_defineRequest: function(id, request, app){
 			var self = this,
-			apiUrl = app.apiUrl ? app.apiUrl : (request.apiRoot || this.config.api.default),
-			settings = {
-				cache: request.cache || false,
-				url: apiUrl + request.url,
-				type: request.dataType || 'json',
-				method: request.verb || 'get',
-				contentType: request.type || 'application/json',
-				crossOrigin: true,
-				processData: false,
-				before: function(ampXHR, settings) {
-					monster.pub('monster.requestStart');
+				apiUrl = app.apiUrl ? app.apiUrl : (request.apiRoot || this.config.api.default),
+				settings = {
+					cache: request.cache || false,
+					url: apiUrl + request.url,
+					type: request.dataType || 'json',
+					method: request.verb || 'get',
+					contentType: request.type || 'application/json',
+					crossOrigin: true,
+					processData: false,
+					before: function(ampXHR, settings) {
+						monster.pub('monster.requestStart');
 
-					ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
+						ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
 
-					return true;
-				}
-			};
+						return true;
+					}
+				};
 
 			this._requests[id] = settings;
 		},
@@ -200,8 +200,8 @@ define(function(require){
 			ignoreCache = ignoreCache || false;
 
 			var conical = (this.name || 'global') + '.' + name, // this should always be a module instance
-			_template,
-			result;
+				_template,
+				result;
 
 			if(monster.cache.templates[conical] && !ignoreCache){
 				_template = monster.cache.templates[conical];
@@ -259,28 +259,31 @@ define(function(require){
 			});
 		},
 
-	shift: function(chain){
-		var next = chain.shift();
-		next && next();
-	},
+		shift: function(chain){
+			var next = chain.shift();
+			next && next();
+		},
 
-	getVersion: function(callback) {
-		$.ajax({
-			url: 'VERSION',
-			cache: false,
-			success: function(template) {
-				callback(template);
+		getVersion: function(callback) {
+			$.ajax({
+				url: 'VERSION',
+				cache: false,
+				success: function(template) {
+					callback(template);
+				}
+			});
+		},
+
+		querystring: function (key) {
+			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi'),
+				results = [], 
+				match;
+			while ((match = re.exec(document.location.search)) != null){
+				results.push(match[1]);
 			}
-		});
-	},
+			return results.length ? results[0] : null;
+		}
+	};
 
-	querystring: function (key) {
-		var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
-		var results = [], match;
-		while ((match = re.exec(document.location.search)) != null) results.push(match[1]);
-		return results.length ? results[0] : null;
-	}
-};
-
-return monster;
+	return monster;
 });
