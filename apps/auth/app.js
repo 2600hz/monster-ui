@@ -341,7 +341,7 @@ define(function(require){
 			var self = this;
 
 			var dialog = monster.ui.dialog(monster.template(self, templates.recover, {}), {
-				title: monster.i18n(self, 'recover.title'),
+				title: self.i18n.active().recover.title,
 				width: '400px'
 			});
 
