@@ -1609,7 +1609,7 @@ define(function(require){
 											}
 
 											var phoneNumber = monster.ui.formatPhoneNumber(phone_number[1]),
-												template = monster.template(this, this.i18n.active().success_failover, { phoneNumber: phoneNumber });
+												template = monster.template(self, '!' + self.i18n.active().success_failover, { phoneNumber: phoneNumber });
 											
 											toastr.success(template);
 										},
