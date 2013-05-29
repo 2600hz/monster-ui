@@ -207,11 +207,11 @@ define(function(require){
 				_template = monster.cache.templates[conical];
 			}
 			else {
-				if($(name).length){ // template is in the dom. eg. <script type='text/html' />
-					_template = $(name).html();
-				}
-				else if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
+				if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
 					_template = name.substring(1);
+				}				
+				else if($(name).length){ // template is in the dom. eg. <script type='text/html' />
+					_template = $(name).html();
 				}
 				else{
 					$.ajax({
