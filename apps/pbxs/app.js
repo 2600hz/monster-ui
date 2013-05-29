@@ -1000,13 +1000,13 @@ define(function(require){
 		validate_step: function(step, parent, callback) {
 			var validated = true,
 				step = parseInt(step),
-				error_message = monster.i18n(self, 'please_correct');
+				error_message = self.i18n.active().please_correct;
 
 			var form_data = form2object('endpoint');
 
 			if(step === 1) {
 				if($('.pbx-brand-list .pbx.selected', parent).size() === 0) {
-					error_message += '<br/>- ' + monster.i18n(self, 'no_pbx_selected');
+					error_message += '<br/>- ' self.i18n.active().no_pbx_selected;
 					validated = false;
 				}
 			}
@@ -1015,7 +1015,7 @@ define(function(require){
 				if($('input[type="radio"][name="auth.auth_method"]:checked', parent).val() === 'IP') {
 					if(!($('#auth_ip', parent).val().match(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/) !== null)) {
 						validated = false;
-						error_message += '<br/>- ' + monster.i18n(self, 'not_valid_ip');
+						error_message += '<br/>- ' + self.i18n.active().not_valid_ip;
 					}
 				}
 				/* Auth */
@@ -1157,7 +1157,7 @@ define(function(require){
 
 			$('#stop_tests', endpoint_html).on('click', function() {
 				pause_polling = true;
-				monster.ui.confirm(monster.i18n(self, 'stop_test_warning'), function() {
+				monster.ui.confirm(self.i18n.active().stop_test_warning, function() {
 					reset_auto_step();
 					$('.testing-block', endpoint_html).hide();
 					$('.testing-block[data-value="manually"]', endpoint_html).slideDown();
@@ -1479,7 +1479,7 @@ define(function(require){
 			});
 
 			pbxsManager.find('#delete_pbx').on('click', function() {
-				monster.ui.confirm(monster.i18n(self, 'delete_pbx_confirmation'), function() {
+				monster.ui.confirm(self.i18n.active().delete_pbx_confirmation, function() {
 					self.getAccount(function(_global_data) {
 						_global_data.data.servers.splice(endpoint_data.extra.id, 1);
 
@@ -1524,7 +1524,7 @@ define(function(require){
 					});
 				}
 				else {
-					monster.alert(monster.i18n(self, 'no_number_selected'));
+					monster.alert(self.i18n.active().no_number_selected);
 				}
 			});
 
@@ -1532,7 +1532,7 @@ define(function(require){
 				ev.preventDefault();
 
 				self.renderPortDialog(function(port_data, popup) {
-					monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
+					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 						function() {
 							self.getAccount(function(global_data) {
 								var ports_done = 0;
@@ -1593,7 +1593,7 @@ define(function(require){
 
 							self.cleanPhoneNumberData(_data.data);
 
-							monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
+							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 								function() {
 									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
 											//TODO add lil icons for failover e911 cnam
@@ -1601,7 +1601,7 @@ define(function(require){
 											toastr.success(monster.i18n(self, 'success_failover', {phoneNumber: monster.ui.formatPhoneNumber(phone_number[1])}));
 										},
 										function(_data_update) {
-											monster.alert(monster.i18n(self, 'failed_update_failover') + '<br/>' + _data_update.message);
+											monster.alert(self.i18n.active().failed_update_failover + '<br/>' + _data_update.message);
 										}
 									);
 								}
@@ -1623,14 +1623,14 @@ define(function(require){
 
 							self.cleanPhoneNumberData(_data.data);
 
-							monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
+							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 								function() {
 									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
 											!($.isEmptyObject(_data.data.cnam)) ? $cnam_cell.removeClass('inactive').addClass('active') : $cnam_cell.removeClass('active').addClass('inactive');
 											toastr.success(monster.i18n(self, 'success_cnam', {phoneNumber: monster.ui.formatPhoneNumber(phone_number[1])}));
 										},
 										function(_data_update) {
-											monster.alert(monster.i18n(self, 'error_update_caller_id') + '' + _data_update.message);
+											monster.alert(self.i18n.active().error_update_caller_id + '' + _data_update.message);
 										}
 									);
 								}
@@ -1652,14 +1652,14 @@ define(function(require){
 
 							self.cleanPhoneNumberData(_data.data);
 
-							monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
+							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 								function() {
 									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
 											!($.isEmptyObject(_data.data.dash_e911)) ? $e911_cell.removeClass('inactive').addClass('active') : $e911_cell.removeClass('active').addClass('inactive');
 											toastr.success(monster.i18n(self, 'success_e911', { phoneNumber: monster.ui.formatPhoneNumber(phone_number[1])}));
 										},
 										function(_data_update) {
-											monster.alert(monster.i18n(self, 'error_update_e911') + '' + _data_update.message);
+											monster.alert(self.i18n.active().error_update_e911 + '' + _data_update.message);
 										}
 									);
 								}
@@ -1676,7 +1676,7 @@ define(function(require){
 					nb_numbers = $selected_numbers.size();
 
 				if(nb_numbers > 0) {
-					monster.ui.confirm(monster.i18n(self, 'remove_number_confirmation'), function() {
+					monster.ui.confirm(self.i18n.active().remove_number_confirmation, function() {
 							var array_DIDs = [];
 
 							$selected_numbers.each(function() {
@@ -1713,7 +1713,7 @@ define(function(require){
 					);
 				}
 				else {
-					monster.alert(monster.i18n(self, 'no_number_selected'));
+					monster.alert(self.i18n.active().no_number_selected);
 				}
 			});
 
@@ -1740,7 +1740,7 @@ define(function(require){
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: monster.i18n(self, 'caller_id_dialog_title')
+				title: self.i18n.active().caller_id_dialog_title
 			});
 		},
 
@@ -1755,7 +1755,7 @@ define(function(require){
 				popup_html = $(monster.template(self, templates.failoverDialog, tmpl_data)),
 				popup,
 				result,
-				popup_title = monster.i18n(self, 'failover_title');
+				popup_title = self.i18n.active().failover_title;
 
 			$('.failover-block input', popup_html).on('keyup', function() {
 				$('.failover-block', popup_html).removeClass('selected');
@@ -1796,11 +1796,11 @@ define(function(require){
 						popup.dialog('destroy').remove();
 					}
 					else {
-						monster.alert(monster.i18n(self, 'invalid_failover_number'));
+						monster.alert(self.i18n.active().invalid_failover_number);
 					}
 				}
 				else {
-					monster.alert(monster.i18n(self, 'no_data_failover'));
+					monster.alert(self.i18n.active().no_data_failover);
 				}
 			 });
 
@@ -1840,7 +1840,7 @@ define(function(require){
 			});
 
 			if(e911_data.latitude && e911_data.longitude) {
-				var href = 'http://maps.google.com/maps?q='+ e911_data.latitude + ',+' + e911_data.longitude + '+(' + monster.i18n(self, 'gmap_pin_label') + ')&iwloc=A&hl=en';
+				var href = 'http://maps.google.com/maps?q='+ e911_data.latitude + ',+' + e911_data.longitude + '+(' + self.i18n.active().gmap_pin_label + ')&iwloc=A&hl=en';
 				$('#gmap_link', popup_html).attr('href', href);
 				$('.gmap_link_div', popup_html).show();
 			}
@@ -1858,7 +1858,7 @@ define(function(require){
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: monster.i18n(self, 'e911_dialog_title')
+				title: self.i18n.active().e911_dialog_title
 			});
 
 			// Fixing the position of the rotated text using its width
@@ -1904,7 +1904,7 @@ define(function(require){
 			$('#add_numbers_button', popup_html).click(function(ev) {
 				ev.preventDefault();
 
-				monster.ui.confirm(monster.i18n(self, 'chargeReminder.line1') + '<br/><br/>' + monster.i18n(self, 'chargeReminder.line2'),
+				monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 					function() {
 						$('#foundDIDList .number-box.selected', popup_html).each(function() {
 							numbers_data.push($(this).data());
@@ -1947,7 +1947,7 @@ define(function(require){
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: monster.i18n(self, 'buy_dialog_title'),
+				title: self.i18n.active().buy_dialog_title,
 				width: '600px',
 				position: ['center', 20]
 			});
@@ -2092,12 +2092,12 @@ define(function(require){
 				}
 
 				if(!port_form_data.extra.agreed) {
-					string_alert += monster.i18n(self, 'agree_to_the_terms') + '<br/>';
+					string_alert += self.i18n.active().agree_to_the_terms + '<br/>';
 				}
 
 				$.each(port_form_data.extra.cb, function(k, v) {
 					if(v === false) {
-						string_alert += monster.i18n(self, 'confirm_conditions') + '<br/>';
+						string_alert += self.i18n.active().confirm_conditions + '<br/>';
 						return false;
 					}
 				});
@@ -2108,7 +2108,7 @@ define(function(require){
 				port_form_data.port.main_number = port_form_data.port.main_number.replace(/[\s-\(\)\.]/g, '');
 
 				var res = port_form_data.port.main_number.match(/^\+?1?([2-9]\d{9})$/);
-				res ? port_form_data.port.main_number = '+1' + res[1] : string_alert += monster.i18n(self, 'enter_main_number') + '<br/>';
+				res ? port_form_data.port.main_number = '+1' + res[1] : string_alert += self.i18n.active().enter_main_number + '<br/>';
 
 				var is_toll_free_main = self.checkTollFree(port_form_data.port.main_number);
 
@@ -2129,7 +2129,7 @@ define(function(require){
 					}
 					else {
 						if(val !== '') {
-							string_alert += val + ' : '+ monster.i18n(self, 'invalid_number') + '<br/>';
+							string_alert += val + ' : '+ self.i18n.active().invalid_number + '<br/>';
 						}
 					}
 				});
@@ -2140,17 +2140,17 @@ define(function(require){
 					});
 
 					if(is_toll_free_main) {
-						string_alert += monster.i18n(self, 'error_not_toll_free');
+						string_alert += self.i18n.active().error_not_toll_free;
 					}
 					else {
-						string_alert += monster.i18n(self, 'error_toll_free');
+						string_alert += self.i18n.active().error_toll_free;
 					}
 				}
 
 				port_form_data.phone_numbers = phone_numbers;
 
-				files ? port_form_data.files = files : string_alert += monster.i18n(self, 'upload_bill') + '<br/>';
-				loa ? port_form_data.loa = loa : string_alert += monster.i18n(self, 'upload_loa') + '<br/>';
+				files ? port_form_data.files = files : string_alert += self.i18n.active().upload_bill + '<br/>';
+				loa ? port_form_data.loa = loa : string_alert += self.i18n.active().upload_loa + '<br/>';
 
 				if(string_alert === '') {
 					delete port_form_data.extra;
@@ -2165,7 +2165,7 @@ define(function(require){
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: monster.i18n(self, 'port_dialog_title')
+				title: self.i18n.active().port_dialog_title
 			});
 		},
 
@@ -2233,7 +2233,7 @@ define(function(require){
 					});
 				}
 				else {
-					monster.alert(monster.i18n(self, 'no_pbx_selected'));
+					monster.alert(self.i18n.active().no_pbx_selected);
 				}
 			});
 
@@ -2289,7 +2289,7 @@ define(function(require){
 					};
 
 				if(nb_numbers > 0) {
-					monster.ui.confirm(monster.i18n(self, 'delete_numbers_confirmation'), function() {
+					monster.ui.confirm(self.i18n.active().delete_numbers_confirmation, function() {
 							$selected_numbers.each(function() {
 								data_phone_number = $(this).data('phone_number'),
 								phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
@@ -2311,7 +2311,7 @@ define(function(require){
 					);
 				}
 				else {
-					monster.alert(monster.i18n(self, 'no_number_selected'));
+					monster.alert(self.i18n.active().no_number_selected);
 				}
 			});
 
