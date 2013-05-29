@@ -1597,8 +1597,21 @@ define(function(require){
 								function() {
 									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
 											//TODO add lil icons for failover e911 cnam
-											!($.isEmptyObject(_data.data.failover)) ? $failover_cell.removeClass('inactive').addClass('active') : $failover_cell.removeClass('active').addClass('inactive');
-											toastr.success(monster.i18n(self, 'success_failover', {phoneNumber: monster.ui.formatPhoneNumber(phone_number[1])}));
+											if(!($.isEmptyObject(_data.data.failover)){
+												$failover_cell
+													.removeClass('inactive')
+													.addClass('active');
+											}
+											else{
+												$failover_cell
+													.removeClass('active')
+													.addClass('inactive');
+											}
+
+											var phoneNumber = monster.ui.formatPhoneNumber(phone_number[1]),
+												template = monster.template(this, this.i18n.active().success_failover, { phoneNumber: phoneNumber });
+											
+											toastr.success(template);
 										},
 										function(_data_update) {
 											monster.alert(self.i18n.active().failed_update_failover + '<br/>' + _data_update.message);

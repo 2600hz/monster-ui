@@ -146,7 +146,7 @@
 	"or": "OR",
 	"sip_address": "SIP Address",
 	"invalid_failover_number": "Invalid Failover Number, please type it again",
-	"success_failover": "You successfully updated the failover number of {{phoneNumber}}",
+	"success_failover": "You successfully updated the failover number of {{ phoneNumber }}",
 	"no_data_failover": "No data entered, please type it again",
 	"delete_number": "Delete Number",
 	"error_acquire": "There was an error when trying to acquire {{phoneNumber}}, would you like to retry?",
