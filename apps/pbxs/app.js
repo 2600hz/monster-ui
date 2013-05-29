@@ -2,25 +2,25 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-        toastr = require('toastr'),
+		toastr = require('toastr'),
 
 		templates = {
-            pbxsManager: 'pbxsManager',
-            pbxsListElement: 'pbxsListElement',
-            pbxsUnassignedNumbers: 'pbxsUnassignedNumbers',
-            listNumbers: 'listNumbers',
-            noNumbers: 'noNumbers',
-            noResults: 'noResults',
-            searchResults: 'searchResults',
-            endpoint: 'endpoint',
-            endpointNumbers: 'endpointNumbers',
+			pbxsManager: 'pbxsManager',
+			pbxsListElement: 'pbxsListElement',
+			pbxsUnassignedNumbers: 'pbxsUnassignedNumbers',
+			listNumbers: 'listNumbers',
+			noNumbers: 'noNumbers',
+			noResults: 'noResults',
+			searchResults: 'searchResults',
+			endpoint: 'endpoint',
+			endpointNumbers: 'endpointNumbers',
 
-            addNumberDialog: 'addNumberDialog',
-            failoverDialog: 'failoverDialog',
-            cnamDialog: 'cnamDialog',
-            e911Dialog: 'e911Dialog',
-            addNumberSearchResults: 'addNumberSearchResults',
-            portDialog: 'portDialog'
+			addNumberDialog: 'addNumberDialog',
+			failoverDialog: 'failoverDialog',
+			cnamDialog: 'cnamDialog',
+			e911Dialog: 'e911Dialog',
+			addNumberSearchResults: 'addNumberSearchResults',
+			portDialog: 'portDialog'
 		};
 
 	var app = {
@@ -30,72 +30,72 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-            'pbxs_manager.list_callflows': {
-                url: 'accounts/{account_id}/callflows',
-                verb: 'GET'
-            },
-            'pbxs_manager.get_account': {
-                url: 'accounts/{account_id}',
-                verb: 'GET'
-            },
-            'pbxs_manager.list_numbers': {
-                url: 'accounts/{account_id}/phone_numbers',
-                verb: 'GET'
-            },
-            'pbxs_manager.get': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-                verb: 'GET'
-            },
-            'pbxs_manager.update': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-                verb: 'POST'
-            },
-            'pbxs_manager.activate': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}/activate',
-                verb: 'PUT'
-            },
-            'pbxs_manager.search': {
-                url: 'phone_numbers?prefix={prefix}&quantity={quantity}',
-                verb: 'GET'
-            },
-            'pbxs_manager.delete': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-                verb: 'DELETE'
-            },
-            'pbxs_manager.create': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
-                verb: 'PUT'
-            },
-            'pbxs_manager.port': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}/port',
-                verb: 'PUT'
-            },
-            'pbxs_manager.create_doc': {
-                url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
-                verb: 'PUT'
-            },
-            'old_trunkstore.create': {
-                url: 'accounts/{account_id}/connectivity',
-                verb: 'PUT'
-            },
-            'old_trunkstore.list': {
-                url: 'accounts/{account_id}/connectivity',
-                verb: 'GET'
-            },
-            'old_trunkstore.get': {
-                url: 'accounts/{account_id}/connectivity/{connectivity_id}',
-                verb: 'GET'
-            },
-            'old_trunkstore.update': {
-                url: 'accounts/{account_id}/connectivity/{connectivity_id}',
-                verb: 'POST'
-            }
+			'pbxs_manager.list_callflows': {
+				url: 'accounts/{account_id}/callflows',
+				verb: 'GET'
+			},
+			'pbxs_manager.get_account': {
+				url: 'accounts/{account_id}',
+				verb: 'GET'
+			},
+			'pbxs_manager.list_numbers': {
+				url: 'accounts/{account_id}/phone_numbers',
+				verb: 'GET'
+			},
+			'pbxs_manager.get': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
+				verb: 'GET'
+			},
+			'pbxs_manager.update': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
+				verb: 'POST'
+			},
+			'pbxs_manager.activate': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}/activate',
+				verb: 'PUT'
+			},
+			'pbxs_manager.search': {
+				url: 'phone_numbers?prefix={prefix}&quantity={quantity}',
+				verb: 'GET'
+			},
+			'pbxs_manager.delete': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
+				verb: 'DELETE'
+			},
+			'pbxs_manager.create': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
+				verb: 'PUT'
+			},
+			'pbxs_manager.port': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}/port',
+				verb: 'PUT'
+			},
+			'pbxs_manager.create_doc': {
+				url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
+				verb: 'PUT'
+			},
+			'old_trunkstore.create': {
+				url: 'accounts/{account_id}/connectivity',
+				verb: 'PUT'
+			},
+			'old_trunkstore.list': {
+				url: 'accounts/{account_id}/connectivity',
+				verb: 'GET'
+			},
+			'old_trunkstore.get': {
+				url: 'accounts/{account_id}/connectivity/{connectivity_id}',
+				verb: 'GET'
+			},
+			'old_trunkstore.update': {
+				url: 'accounts/{account_id}/connectivity/{connectivity_id}',
+				verb: 'POST'
+			}
 		},
 
 		subscribe: {
-            'pbxsManager.activate': '_render',
-            'pbxsManager.edit': 'editServer',
-            'auth.landing': '_render'
+			'pbxsManager.activate': '_render',
+			'pbxsManager.edit': 'editServer',
+			'auth.landing': '_render'
 		},
 
 		load: function(callback){
@@ -106,19 +106,19 @@ define(function(require){
             });
 		},
 
-        whappAuth: function(callback) {
-            var self = this;
+		whappAuth: function(callback) {
+			var self = this;
 
-            monster.pub('auth.sharedAuth', {
-                appName: self.name,
-                callback: callback
-            });
-        },
+			monster.pub('auth.sharedAuth', {
+				appName: self.name,
+				callback: callback
+			});
+		},
 
 		render: function(container){
-            var self = this;
+			var self = this;
 
-            self._render(container);
+			self._render(container);
 		},
 
 		// subscription handlers

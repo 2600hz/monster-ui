@@ -5,7 +5,7 @@ define(function(require){
 		reqwest = require('reqwest'),
 		handlebars = require('handlebars'),
 		async = require('async'),
-        form2object = require('form2object'),
+		form2object = require('form2object'),
 		config = require('js/config');
 
 	var monster = {
@@ -13,10 +13,10 @@ define(function(require){
 
 		// ping the server to see if a file exists. this is not an exhaustive or intensive operation.
 		_fileExists: function(url){
-            var http = new XMLHttpRequest();
-            http.open('HEAD', url, false);
-            http.send();
-            return http.status != 404;
+			var http = new XMLHttpRequest();
+			http.open('HEAD', url, false);
+			http.send();
+			return http.status != 404;
 		},
 
 		_loadApp: function(name, callback){
@@ -29,7 +29,7 @@ define(function(require){
 				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
 
 				_.each(app.requests, function(request, id){
-					self._defineRequest(id, request, name);
+					self._defineRequest(id, request, app);
 				});
 
 				_.each(app.subscribe, function(callback, topic){
@@ -42,6 +42,13 @@ define(function(require){
 
 				_.each(app.i18n, function(locale){
 					self._loadLocale(app, locale)
+				});
+
+				// add an active property method to the i18n array within the app.
+				_.extend(app.i18n, {
+					active: function(){
+						return app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {}
+					}
 				});
 
 				if(self._fileExists(css)){
@@ -70,72 +77,62 @@ define(function(require){
 
 		_requests: {},
 
-        _cacheString: function(request) {
-            var cacheString = '';
+		_cacheString: function(request) {
+			if(request.cache || request.method.toLowerCase() !== 'get') {
+				return '';
+			}
 
-            if(!request.cache && request.method.toLowerCase() === 'get') {
-                var charQueryString = request.url.indexOf('?') >= 0 ? '&' : '?';
+			var prepend = request.url.indexOf('?') >= 0 ? '&' : '?';
 
-                cacheString = charQueryString + '_=' + (new Date()).getTime();;
-            }
+			return prepend + '_=' + (new Date()).getTime();
+		},
 
-            return cacheString;
-        },
+		_defineRequest: function(id, request, app){
+			var self = this,
+				apiUrl = app.apiUrl ? app.apiUrl : (request.apiRoot || this.config.api.default),
+				settings = {
+					cache: request.cache || false,
+					url: apiUrl + request.url,
+					type: request.dataType || 'json',
+					method: request.verb || 'get',
+					contentType: request.type || 'application/json',
+					crossOrigin: true,
+					processData: false,
+					before: function(ampXHR, settings) {
+						monster.pub('monster.requestStart');
 
-		_defineRequest: function(id, request, appName){
-            var self = this,
-                apiUrl;
+						ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
 
-            if(appName in monster.apps && 'apiUrl' in monster.apps[appName]) {
-                apiUrl = monster.apps[appName].apiUrl;
-            }
-            else {
-                apiUrl = request.apiRoot || this.config.api.default;
-            }
-
-			var settings = {
-                cache: request.cache || false,
-				url: apiUrl + request.url,
-				type: request.dataType || 'json',
-				method: request.verb || 'get',
-				contentType: request.type || 'application/json',
-				crossOrigin: true,
-				processData: false,
-                before: function(ampXHR, settings) {
-                    monster.pub('monster.requestStart');
-
-                    ampXHR.setRequestHeader('X-Auth-Token', monster.apps[appName].authToken);
-
-                    return true;
-                }
-			};
+						return true;
+					}
+				};
 
 			this._requests[id] = settings;
 		},
 
 		request: function(options){
 			var self = this,
-                settings =  _.extend({}, this._requests[options.resource]);
-
-            settings.url += self._cacheString(settings);
+				settings =  _.extend({}, this._requests[options.resource]);
 
 			if(!settings){
 				throw('The resource requested could not be found.', options.resource);
 			}
 
-            var mappedKeys = [],
+			settings.url += self._cacheString(settings);
+
+			var mappedKeys = [],
 				rurlData = /\{([^\}]+)\}/g,
 				data = _.extend({}, options.data || {});
 
 			settings.error = function requestError (error, one, two, three) {
 				//console.warn('reqwest failure on: ' + options.resource, error)
-                monster.pub('monster.requestEnd');
+				monster.pub('monster.requestEnd');
 
 				options.error && options.error(error);
 			};
 
 			settings.success = function requestSuccess (resp) {
-                monster.pub('monster.requestEnd');
+				monster.pub('monster.requestEnd');
 
 				options.success && options.success(resp);
 			};
@@ -152,17 +149,17 @@ define(function(require){
 				delete data[name];
 			});
 
-            var postData = {
-                data: data.data
-            };
+			var postData = {
+				data: data.data
+			};
 
 			if(settings.method.toLowerCase() !== 'get'){
 				settings = _.extend(settings, {
-                    data: JSON.stringify(postData)
-                });
+					data: JSON.stringify(postData)
+				});
 			}
 
-            return reqwest(settings);
+			return reqwest(settings);
 		},
 
 		apps: {},
@@ -182,23 +179,7 @@ define(function(require){
 			return matches.length > 1 ? matches[1] : '';
 		},
 
-        i18n: function(obj, key, variables) {
-            var translation = '';
-
-            if('data' in obj && 'i18n' in obj.data) {
-                translation = monster.config.i18n.active in obj.data.i18n ? eval('obj.data.i18n[monster.config.i18n.active].' + key) : eval('obj.data.i18n[monster.config.i18n.default].' + key);
-            }
-
-            if(typeof variables === 'object') {
-                _.each(variables, function(value, key) {
-                    translation = translation.replace('{{'+ key +'}}', value);
-                });
-            }
-
-            return translation;
-        },
-
-        pub: function(topic, data){
+		pub: function(topic, data){
 			postal.publish({
 				channel: 'monster',
 				topic: topic,
@@ -226,7 +207,6 @@ define(function(require){
 				_template = monster.cache.templates[conical];
 			}
 			else {
-				// fetch template
 				if($(name).length){ // template is in the dom. eg. <script type='text/html' />
 					_template = $(name).html();
 				}
@@ -253,10 +233,10 @@ define(function(require){
 			if(!raw){
 				_template = handlebars.compile(_template);
 
-                var i18n = app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {},
-                    context = _.extend({}, data || {}, { i18n: i18n });
+				var i18n = app.i18n.active(),
+				context = _.extend({}, data || {}, { i18n: i18n });
 
-                result = _template(context);
+				result = _template(context);
 			}
 			else{
 				result = _template;
@@ -264,32 +244,27 @@ define(function(require){
 
 			result = result.replace(/(\r\n|\n|\r|\t)/gm,'');
 
-            if(typeof data === 'object') {
-                _.each(data.i18n, function(value, key) {
-                    result = result.replace('{{'+ key +'}}', value);
-                });
-            }
+			if(typeof data === 'object') {
+				_.each(data.i18n, function(value, key) {
+					result = result.replace('{{'+ key +'}}', value);
+				});
+			}
 
 			return result;
 		},
 
-        /* If we want to limit the # of simultaneous request, we can use async.parallelLimit(list_functions, LIMIT_# (ex: 3), callback) */
-        parallel: function(list_functions, callback) {
-            async.parallel(
-                list_functions,
-                function(err, results) {
-                    //TODO we could add an error handler
-                    callback(err, results);
-                }
-            );
-        },
+		parallel: function(methods, callback) {
+			async.parallel(methods, function(err, results) {
+				callback(err, results);
+			});
+		},
 
 		shift: function(chain){
 			var next = chain.shift();
 			next && next();
 		},
 
-        getVersion: function(callback) {
+		getVersion: function(callback) {
 			$.ajax({
 				url: 'VERSION',
 				cache: false,
@@ -300,9 +275,12 @@ define(function(require){
 		},
 
 		querystring: function (key) {
-			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
-			var results = [], match;
-			while ((match = re.exec(document.location.search)) != null) results.push(match[1]);
+			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi'),
+				results = [], 
+				match;
+			while ((match = re.exec(document.location.search)) != null){
+				results.push(match[1]);
+			}
 			return results.length ? results[0] : null;
 		}
 	};

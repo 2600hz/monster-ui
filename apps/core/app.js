@@ -2,7 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
-
+		
 	var app = {
 
 		name: 'core',
@@ -18,7 +18,7 @@ define(function(require){
 		},
 
 		subscribe: {
-            'auth.loadApps': '_loadApps',
+			'auth.loadApps': '_loadApps',
 			'app.nav.add': function(data){
 				console.log(data);
 			},
@@ -66,11 +66,11 @@ define(function(require){
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
 
-        //List of apps required once the user is logged in
-        _baseApps: [],//['myaccount', 'app_store'],
+			//List of apps required once the user is logged in
+			_baseApps: [],//['myaccount', 'app_store'],
 
-        //Default app to render if the user is logged in, can be changed by setting a default app
-        _defaultApp: 'app_store',
+			//Default app to render if the user is logged in, can be changed by setting a default app
+			_defaultApp: 'app_store',
 
 		_load: function(){
 			var self = this;
@@ -87,24 +87,24 @@ define(function(require){
 			});
 		},
 
-        _loadApps: function(args) {
-            var self = this;
+		_loadApps: function(args) {
+			var self = this;
 
-            if(!self._baseApps.length) {
-                var defaultApp = args.defaultApp.id || self._defaultApp;
+			if(!self._baseApps.length) {
+				var defaultApp = args.defaultApp.id || self._defaultApp;
 
-                monster._loadApp(defaultApp, function(app) {
-                    app.render($('#ws-content'));
-                });
-            }
-            else {
-                var appName = self._baseApps.pop();
+				monster._loadApp(defaultApp, function(app) {
+					app.render($('#ws-content'));
+				});
+			}
+			else {
+				var appName = self._baseApps.pop();
 
-                monster._loadApp(appName, function(app) {
-                    self._loadApps(args);
-                });
-            }
-        },
+				monster._loadApp(appName, function(app) {
+					self._loadApps(args);
+				});
+			}
+		},
 
 		_render: function(container) {
 			var self = this,
