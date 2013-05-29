@@ -3,6 +3,7 @@ define(function(require){
 	return {
 		api: {
             default: 'https://api.2600hz.com:8443/v1/'
+            //default: 'http://192.168.1.42:8000/v1/'
 		},
 
 		company: {

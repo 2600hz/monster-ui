@@ -30,66 +30,66 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-			'pbxs_manager.list_callflows': {
-				url: 'accounts/{account_id}/callflows',
-				verb: 'GET'
-			},
-			'pbxs_manager.get_account': {
-				url: 'accounts/{account_id}',
-				verb: 'GET'
-			},
-			'pbxs_manager.list_numbers': {
-				url: 'accounts/{account_id}/phone_numbers',
-				verb: 'GET'
-			},
-			'pbxs_manager.get': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-				verb: 'GET'
-			},
-			'pbxs_manager.update': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-				verb: 'POST'
-			},
-			'pbxs_manager.activate': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}/activate',
-				verb: 'PUT'
-			},
-			'pbxs_manager.search': {
-				url: 'phone_numbers?prefix={prefix}&quantity={quantity}',
-				verb: 'GET'
-			},
-			'pbxs_manager.delete': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}',
-				verb: 'DELETE'
-			},
-			'pbxs_manager.create': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
-				verb: 'PUT'
-			},
-			'pbxs_manager.port': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}/port',
-				verb: 'PUT'
-			},
-			'pbxs_manager.create_doc': {
-				url: 'accounts/{account_id}/phone_numbers/{phone_number}/docs/{file_name}',
-				verb: 'PUT'
-			},
-			'old_trunkstore.create': {
-				url: 'accounts/{account_id}/connectivity',
-				verb: 'PUT'
-			},
-			'old_trunkstore.list': {
-				url: 'accounts/{account_id}/connectivity',
-				verb: 'GET'
-			},
-			'old_trunkstore.get': {
-				url: 'accounts/{account_id}/connectivity/{connectivity_id}',
-				verb: 'GET'
-			},
-			'old_trunkstore.update': {
-				url: 'accounts/{account_id}/connectivity/{connectivity_id}',
-				verb: 'POST'
-			}
+            'pbxsManager.listCallflows': {
+                url: 'accounts/{accountId}/callflows',
+                verb: 'GET'
+            },
+            'pbxsManager.getAccount': {
+                url: 'accounts/{accountId}',
+                verb: 'GET'
+            },
+            'pbxsManager.listNumbers': {
+                url: 'accounts/{accountId}/phone_numbers',
+                verb: 'GET'
+            },
+            'pbxsManager.get': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+                verb: 'GET'
+            },
+            'pbxsManager.update': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+                verb: 'POST'
+            },
+            'pbxsManager.activate': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/activate',
+                verb: 'PUT'
+            },
+            'pbxsManager.search': {
+                url: 'phone_numbers?prefix={prefix}&quantity={quantity}',
+                verb: 'GET'
+            },
+            'pbxsManager.delete': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+                verb: 'DELETE'
+            },
+            'pbxsManager.create': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/docs/{fileName}',
+                verb: 'PUT'
+            },
+            'pbxsManager.port': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/port',
+                verb: 'PUT'
+            },
+            'pbxsManager.createDoc': {
+                url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/docs/{fileName}',
+                verb: 'PUT'
+            },
+            'old_trunkstore.create': {
+                url: 'accounts/{accountId}/connectivity',
+                verb: 'PUT'
+            },
+            'old_trunkstore.list': {
+                url: 'accounts/{accountId}/connectivity',
+                verb: 'GET'
+            },
+            'old_trunkstore.get': {
+                url: 'accounts/{accountId}/connectivity/{connectivityId}',
+                verb: 'GET'
+            },
+            'old_trunkstore.update': {
+                url: 'accounts/{accountId}/connectivity/{connectivityId}',
+                verb: 'POST'
+            }
 		},
 
 		subscribe: {
@@ -146,7 +146,7 @@ define(function(require){
                 });
             });
 
-            /*pbxsManager.find('#pbxs_manager_listpanel').niceScroll({
+            /*pbxsManager.find('#pbxsManager_listpanel').niceScroll({
                 cursorcolor:"#333",
                 autohidemode:false,
                 cursorborder:"1px solid #666"
@@ -165,9 +165,9 @@ define(function(require){
             monster.parallel({
                 realm: function(callback){
                      monster.request({
-                        resource: 'pbxs_manager.get_account',
+                        resource: 'pbxsManager.getAccount',
                         data: {
-                            account_id: monster.apps['pbxs'].account_id,
+                            accountId: monster.apps['pbxs'].account_id,
                         },
                         success: function(_data_account, status) {
 
@@ -272,9 +272,9 @@ define(function(require){
 
         listAllNumbers: function(success, error) {
             monster.request({
-                resource: 'pbxs_manager.list_numbers',
+                resource: 'pbxsManager.listNumbers',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
+                    accountId: monster.apps['pbxs'].account_id,
                 },
                 success: function(data, status) {
                     if(typeof success == 'function') {
@@ -291,9 +291,9 @@ define(function(require){
 
         listCallflows: function(success, error) {
             monster.request({
-                resource: 'pbxs_manager.list_callflows',
+                resource: 'pbxsManager.listCallflows',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
+                    accountId: monster.apps['pbxs'].account_id,
                 },
                 success: function(data, status) {
                     if(typeof success == 'function') {
@@ -310,9 +310,9 @@ define(function(require){
 
         createAccount: function(success, error) {
             monster.request({
-                resource: 'pbxs_manager.get_account',
+                resource: 'pbxsManager.getAccount',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
+                    accountId: monster.apps['pbxs'].account_id,
                 },
                 success: function(_data, status) {
                     var self = this,
@@ -333,7 +333,7 @@ define(function(require){
                     monster.request({
                         resource: 'old_trunkstore.create',
                         data: {
-                            account_id: monster.apps['pbxs'].account_id,
+                            accountId: monster.apps['pbxs'].account_id,
                             data: account_data
                         },
                         success: function(data, status) {
@@ -355,7 +355,7 @@ define(function(require){
             monster.request({
                 resource: 'old_trunkstore.list',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
+                    accountId: monster.apps['pbxs'].account_id,
                 },
                 success: function(data, status) {
                     if(typeof success == 'function') {
@@ -376,8 +376,8 @@ define(function(require){
             monster.request({
                 resource: 'old_trunkstore.get',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    connectivity_id: monster.apps['pbxs'].connectivity_id
+                    accountId: monster.apps['pbxs'].account_id,
+                    connectivityId: monster.apps['pbxs'].connectivity_id
                 },
                 success: function(data, status) {
                     if(typeof success == 'function') {
@@ -410,7 +410,7 @@ define(function(require){
             var step = list_steps.indexOf(data.step) > -1 ? data.step : 'init';
 
             monster.request({
-                resource: 'pbxs_manager.get_automatic_status',
+                resource: 'pbxsManager.get_automatic_status',
                 data: {
                     sip_id: sip_id,
                     settings_step: step
@@ -467,10 +467,10 @@ define(function(require){
 
         getNumber: function(phone_number, success, error) {
             monster.request({
-                resource: 'pbxs_manager.get',
+                resource: 'pbxsManager.get',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(phone_number)
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(phone_number)
                 },
                 success: function(_data, status) {
                     if(typeof success === 'function') {
@@ -487,10 +487,10 @@ define(function(require){
 
         updateNumber: function(phone_number, data, success, error) {
             monster.request({
-                resource: 'pbxs_manager.update',
+                resource: 'pbxsManager.update',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(phone_number),
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(phone_number),
                     data: data
                 },
                 success: function(_data, status) {
@@ -510,10 +510,10 @@ define(function(require){
             var self = this;
 
             monster.request({
-                resource: 'pbxs_manager.port',
+                resource: 'pbxsManager.port',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(data.phone_number),
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(data.phone_number),
                     data: data.options || {}
                 },
                 success: function(_data, status) {
@@ -534,10 +534,10 @@ define(function(require){
 
             //TODO flag request Check to avoid multiple creation
             monster.request({
-                resource: 'pbxs_manager.create',
+                resource: 'pbxsManager.create',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(phone_number),
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(phone_number),
                     data: {}
                 },
                 success: function(_data, status) {
@@ -558,10 +558,10 @@ define(function(require){
 
             //TODO flag request Check to avoid multiple creation
             monster.request({
-                resource: 'pbxs_manager.activate',
+                resource: 'pbxsManager.activate',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(phone_number),
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(phone_number),
                     data: {}
                 },
                 success: function(_data, status) {
@@ -581,10 +581,10 @@ define(function(require){
             var self = this;
 
             monster.request({
-                resource: 'pbxs_manager.delete',
+                resource: 'pbxsManager.delete',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(phone_number)
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(phone_number)
                 },
                 success: function(data, status) {
                     if(typeof success == 'function') {
@@ -603,7 +603,7 @@ define(function(require){
             var self = this;
 
             monster.request({
-                resource: 'pbxs_manager.search',
+                resource: 'pbxsManager.search',
                 data: {
                     prefix: data.prefix,
                     quantity: data.quantity || 15
@@ -625,11 +625,11 @@ define(function(require){
             var self = this;
 
             monster.request({
-                resource: 'pbxs_manager.create_doc',
+                resource: 'pbxsManager.createDoc',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    phone_number: encodeURIComponent(data.phone_number),
-                    file_name: data.file_name,
+                    accountId: monster.apps['pbxs'].account_id,
+                    phoneNumber: encodeURIComponent(data.phone_number),
+                    fileName: data.file_name,
                     data: data.file_data
                 },
                 success: function(_data, status) {
@@ -662,7 +662,7 @@ define(function(require){
                     /* Add files */
                     self.createNumberDoc({
                             phone_number: number_data.phone_number,
-                            file_name: port_data.loa[0].file_name,
+                            fileName: port_data.loa[0].file_name,
                             file_data: port_data.loa[0].file_data
                         },
                         function(_data, status) {
@@ -841,8 +841,8 @@ define(function(require){
                 monster.request({
                     resource: 'old_trunkstore.update',
                     data: {
-                        account_id: monster.apps['pbxs'].account_id,
-                        connectivity_id: monster.apps['pbxs'].connectivity_id,
+                        accountId: monster.apps['pbxs'].account_id,
+                        connectivityId: monster.apps['pbxs'].connectivity_id,
                         data: new_data
                     },
                     success: function(_data, status) {
@@ -866,8 +866,8 @@ define(function(require){
             monster.request({
                 resource: 'old_trunkstore.update',
                 data: {
-                    account_id: monster.apps['pbxs'].account_id,
-                    connectivity_id: monster.apps['pbxs'].connectivity_id,
+                    accountId: monster.apps['pbxs'].account_id,
+                    connectivityId: monster.apps['pbxs'].connectivity_id,
                     data: data
                 },
                 success: function(_data, status) {
@@ -1006,7 +1006,7 @@ define(function(require){
 
             if(step === 1) {
                 if($('.pbx-brand-list .pbx.selected', parent).size() === 0) {
-                    error_message += '<br/>- ' + monster.i18n(self, 'pbxs.pbxs_manager.no_pbx_selected');
+                    error_message += '<br/>- ' + monster.i18n(self, 'no_pbx_selected');
                     validated = false;
                 }
             }
@@ -1157,7 +1157,7 @@ define(function(require){
 
             $('#stop_tests', endpoint_html).on('click', function() {
                 pause_polling = true;
-                monster.ui.confirm(monster.i18n(self, 'pbxs.pbxs_manager.stop_test_warning'), function() {
+                monster.ui.confirm(monster.i18n(self, 'stop_test_warning'), function() {
                     reset_auto_step();
                     $('.testing-block', endpoint_html).hide();
                     $('.testing-block[data-value="manually"]', endpoint_html).slideDown();
@@ -1269,7 +1269,7 @@ define(function(require){
                                 }
                                 else {
                                     monster.request({
-                                        resource: 'pbxs_manager.get_automatic_status',
+                                        resource: 'pbxsManager.get_automatic_status',
                                         data: {
                                             sip_id: monster.config.sip_id,
                                             settings_step: api_name
@@ -1431,12 +1431,14 @@ define(function(require){
                 else {
                     searchResults.show().empty();
 
+                    console.log(cache);
                     $.each(cache, function(phone_number, row_array) {
                         if (phone_number.indexOf(search_string)>-1) {
                             matches.push({phone_number: phone_number, selected: $(row_array).hasClass('selected')});
                         }
                     });
 
+                    console.log(matches);
                     if(matches.length > 0) {
                         searchResults.append(monster.template(self, templates.searchResults, _.extend({ i18n: { amountNumbers: matches.length }}, {matches: matches})));
                     }
@@ -1522,7 +1524,7 @@ define(function(require){
                     });
                 }
                 else {
-                    monster.alert(monster.i18n(self, 'pbxs.pbxs_manager.no_number_selected'));
+                    monster.alert(monster.i18n(self, 'no_number_selected'));
                 }
             });
 

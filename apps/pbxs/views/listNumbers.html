@@ -1,5 +1,5 @@
 {{#eachkeys DIDs}}
-<div class="number-wrapper number-box" data-phone_number="{{this.key}}">
+<div class="number-wrapper number-box" data-phone_number="{{this.key}}" data-features="{{#each this.value.features}}{{this}},{{/each}}">
     <input type="checkbox"></input>
     <span class="phone-number">{{ formatPhoneNumber this.key }}</span>
 
