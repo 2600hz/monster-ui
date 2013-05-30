@@ -192,9 +192,10 @@ define(function(require){
 					_callbacks = args.callbacks || {},
 					callbacks = {
 						saveSuccess: _callbacks.saveSuccess || function(_data) {
-							var saved_id = (args.id === 0 || args.id) ? args.id : _data.data.servers.length-1;
-							self.renderList(saved_id, parent, function() {
-								self.renderPbxsManager(_data, $.extend(true, defaults, _data.data.servers[args.id]), target, callbacks);
+							var savedId = (args.id === 0 || args.id) ? args.id : _data.data.servers.length-1;
+
+							self.renderList(savedId, parent, function() {
+								self.renderPbxsManager(_data, $.extend(true, defaults, _data.data.servers[savedId]), target, callbacks);
 							}, _data.data.servers);
 						},
 
@@ -1030,7 +1031,8 @@ define(function(require){
 		},
 
 		validate_step: function(step, parent, callback) {
-			var validated = true,
+			var self = this,
+				validated = true,
 				step = parseInt(step),
 				error_message = self.i18n.active().please_correct;
 
