@@ -39,7 +39,7 @@ define(function(require){
 				verb: 'PUT'
 			},
 			'auth.user.update': {
-				url: 'accounts/{account_id}/users/{user_id}',
+				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'POST'
 			},
 			'auth.recover_password': {
@@ -51,11 +51,11 @@ define(function(require){
 				verb: 'GET'
 			},
 			'auth.getUser': {
-				url: 'accounts/{account_id}/users/{user_id}',
+				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
 			},
 			'auth.getAccount': {
-				url: 'accounts/{account_id}',
+				url: 'accounts/{accountId}',
 				verb: 'GET'
 			}
 		},
@@ -81,7 +81,13 @@ define(function(require){
 				monster.pub('auth.welcome');
 			}
 			else {
-				monster.apps['auth'] = $.parseJSON($.cookie('monster-auth'));
+				var cookieData = $.parseJSON($.cookie('monster-auth'));
+
+				self.authToken = cookieData.authToken;
+				self.accountId = cookieData.accountId;
+				self.userId = cookieData.userId;
+
+
 				monster.pub('auth.loadAccount');
 			}
 
@@ -93,20 +99,13 @@ define(function(require){
 		},
 
 		_activate: function() {
-			if(monster.apps['auth'].authToken == null) {
+			var self = this;
+
+			if(self.authToken == null) {
 				monster.pub('auth.login');
 			}
 			else {
 				monster.confirm('Are you sure that you want to log out?', function() {
-
-					_.each(monster.apps, function(k, v) {
-
-						monster.apps[k].realm = null;
-						monster.apps[k].authToken = null;
-						monster.apps[k].user_id = null;
-						monster.apps[k].account_id = null;
-					});
-
 					$.cookie('monster-auth', null);
 
 					$('#ws-content').empty();
@@ -115,15 +114,17 @@ define(function(require){
 		},
 
 		_authenticate: function(login_data) {
+			var self = this;
+
 			monster.request({
 				resource: 'auth.user_auth',
 				data: {
 					data: login_data
 				},
 				success: function (data, status) {
-					monster.apps['auth'].account_id = data.data.account_id;
-					monster.apps['auth'].authToken = data.auth_token;
-					monster.apps['auth'].user_id = data.data.owner_id;
+					self.accountId = data.data.account_id;
+					self.authToken = data.auth_token;
+					self.userId = data.data.owner_id;
 
 					$('#ws-content').empty();
 
@@ -137,7 +138,7 @@ define(function(require){
 						$.cookie('c_monster_login', null);
 					}
 
-					$.cookie('monster-auth', JSON.stringify(monster.apps['auth']), {expires: 30});
+					$.cookie('monster-auth', JSON.stringify(self, {expires: 30}));
 
 					monster.pub('auth.loadAccount');
 				},
@@ -200,7 +201,7 @@ define(function(require){
 					});
 				}
 				else {
-					monster.apps['auth'].accountName = results.account.name;
+					self.accountName = results.account.name;
 
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
@@ -208,20 +209,10 @@ define(function(require){
 					monster.pub('auth.account.loaded', results.user);
 
 					$.each(results.user.apps, function(k, v) {
-						monster.apps[k] = v;
-
 						if(v['default']) {
 							hasDefaultApp = true;
 							v.id = k;
 							defaultApp = v;
-						}
-
-						if(!('account_id' in v)) {
-							monster.apps[k].account_id = monster.apps['auth'].account_id;
-						}
-
-						if(!('user_id' in v)) {
-							monster.apps[k].user_id = monster.apps['auth'].user_id;
 						}
 					});
 
@@ -303,15 +294,6 @@ define(function(require){
 
 		_logout: function() {
 			monster.confirm('Are you sure that you want to log out?', function() {
-
-				_.each(monster.apps, function(k, v) {
-
-					monster.apps[k].realm = null;
-					monster.apps[k].authToken = null;
-					monster.apps[k].user_id = null;
-					monster.apps[k].account_id = null;
-				});
-
 				$.cookie('monster-auth', null);
 
 				$('#ws-content').empty();
@@ -387,37 +369,45 @@ define(function(require){
 		_sharedAuth: function (args) {
 			var self = this;
 
-			var rest_data = {
-				data: {
-					realm : monster.apps['auth'].realm,                     
-					account_id : monster.apps['auth'].account_id,           
-					shared_token : monster.apps['auth'].authToken          
-				}
-			};
-
-			if(monster.apps['auth'].apiUrl != monster.apps[args.appName].apiUrl) {
-				monster.request({
-					resource: 'auth.shared_auth',
-					data: rest_data,
-					success: function (json, xhr) {
-						monster.apps[args.appName].authToken = json.auth_token;
-
-						args.callback && args.callback();
+			var restData = {
+					data: {
+						realm : self.realm,
+						accountId : self.accountId,
+						shared_token : self.authToken
 					}
-				});
+				},
+				success = function(app) {
+					app.accountId = self.accountId;
+					app.userId = self.userId;
+
+                    args.callback && args.callback();
+				};
+
+			if(self.apiUrl !== args.app.apiUrl) {
+				monster.request({
+                    resource: 'auth.shared_auth',
+                    data: restData,
+                    success: function (json, xhr) {
+						args.app.authToken = json.auth_token;
+
+						success(args.app);
+                    }
+                });
 			}
 			else {
-				monster.apps[args.appName].authToken = monster.apps['auth'].authToken;
+				args.app.authToken = this.authToken;
 
-				args.callback && args.callback();
+				success(args.app);
 			}
 		},
 
 		_getAccount: function(success, error) {
+			var self = this;
+
 			monster.request({
 				resource: 'auth.getAccount',
 				data: {
-					account_id: monster.apps['auth'].account_id
+					accountId: self.accountId
 				},
 				success: function(_data) {
 					if(typeof success === 'function') {
@@ -433,11 +423,13 @@ define(function(require){
 		},
 
 		_getUser: function(success, error) {
+			var self = this;
+
 			monster.request({
 				resource: 'auth.getUser',
 				data: {
-					account_id: monster.apps['auth'].account_id,
-					user_id: monster.apps['auth'].user_id,
+					accountId: self.accountId,
+					userId: self.userId,
 				},
 				success: function(_data) {
 					if(typeof success === 'function') {
@@ -459,7 +451,7 @@ define(function(require){
 
 			if(monster.querystring('name') != null) {
 				name = monster.querystring('name');
-			}			
+			}
 			else {
 				host = window.location.href.match(/^(?:https?:\/\/)*([^\/?#]+).*$/)[1];
 				host_parts = host.split('.');
@@ -473,7 +465,8 @@ define(function(require){
 		},
 
 		_getRealm: function() {
-			var realm = '';
+			var self = this,
+				realm = '';
 
 			if(monster.querystring('realm') != null) {
 				realm = monster.querystring('realm');
@@ -483,7 +476,8 @@ define(function(require){
 		},
 
 		_loginClick: function(data) {
-			var loginUsername = $('#login').val(),
+			var self = this,
+				loginUsername = $('#login').val(),
 				loginPassword = $('#password').val(),
 				loginAccountName = $('#account_name').val(),
 				hashedCreds = $.md5(loginUsername + ':' + loginPassword),
@@ -507,13 +501,14 @@ define(function(require){
 
 		loginRegisterClick: function(e) {
 			e.preventDefault();
-			var code = $('input#code', code_html).val();
+
+			var self = this,
+				code = $('input#code', code_html).val();
 
 			if(code != "" && code != null) {
 				monster.request({
 					resource: 'auth.invite_code',
 					data: {
-						api_url: monster.apps.auth.api_url,
 						invite_code: code,
 					},
 					success: function(_data, status) {
@@ -540,6 +535,7 @@ define(function(require){
 
 		newPasswordClick: function(event) {
 			event.preventDefault();
+
 			var self = this,
 				data_new_password = form2object('new_password_form');
 
@@ -551,9 +547,8 @@ define(function(require){
 					monster.request({
 						resource: 'auth.user.update',
 						data: {
-							api_url: monster.apps.auth.api_url,
-							account_id: monster.apps.auth.account_id,
-							user_id: user_data.id,
+							accountId: self.accountId,
+							userId: user_data.id,
 							data: user_data
 						},
 						success: function(_data, status) {
@@ -580,8 +575,9 @@ define(function(require){
 		},
 
 		registerClick: function(event) {
-
 			event.preventDefault();
+
+			var self = this;
 
 			monster.validate.is_valid(monster.config.validation, dialogRegister, function() {
 				if ($('#password', dialogRegister).val() == $('#password2', dialogRegister).val()) {
@@ -601,7 +597,6 @@ define(function(require){
 
 						var rest_data = {
 							crossbar : true,
-							api_url : monster.apps['auth'].api_url,
 							data : {
 								'account': {
 									'realm': realm,
