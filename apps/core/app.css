@@ -55,5 +55,5 @@
     padding: 15px 5px;
     position: fixed;
     width: auto;
-    z-index: 999;
+    z-index: 10;
 }

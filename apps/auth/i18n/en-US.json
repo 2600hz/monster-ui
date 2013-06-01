@@ -10,6 +10,8 @@
 	"username": "Username",
     "or": "OR",
 
+    "confirmLogout": "Are you sure that you want to log out?",
+
 	"account": {
 		"name": "Account Name",
 		"namePlaceholder": "Company Name",

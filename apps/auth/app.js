@@ -105,7 +105,7 @@ define(function(require){
 				monster.pub('auth.login');
 			}
 			else {
-				monster.confirm('Are you sure that you want to log out?', function() {
+				monster.ui.confirm('Are you sure that you want to log out?', function() {
 					$.cookie('monster-auth', null);
 
 					$('#ws-content').empty();
@@ -206,7 +206,8 @@ define(function(require){
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
 
-					monster.pub('auth.account.loaded', results.user);
+					monster.apps['auth'].currentUser = results.user;
+					monster.apps['auth'].currentAccount = results.account;
 
 					$.each(results.user.apps, function(k, v) {
 						if(v['default']) {
@@ -215,6 +216,7 @@ define(function(require){
 							defaultApp = v;
 						}
 					});
+
 
 					if(results.user.require_password_update) {
 						monster.pub('auth.new_password', json.data);
@@ -227,7 +229,7 @@ define(function(require){
 						});
 					}
 					else {
-						monster.pub('auth.loadApps', {
+						monster.pub('core.loadApps', {
 							defaultApp: defaultApp
 						});
 					}
@@ -293,10 +295,12 @@ define(function(require){
 		},
 
 		_logout: function() {
-			monster.confirm('Are you sure that you want to log out?', function() {
+			var self = this;
+
+			monster.ui.confirm(self.i18n.active().confirmLogout, function() {
 				$.cookie('monster-auth', null);
 
-				$('#ws-content').empty();
+				window.location.reload();
 			});
 		},
 

@@ -1,0 +1,192 @@
+/* My account */
+#myaccount {
+	width: 100%;
+	height: 501px;
+	background-color: white;
+	display: none;
+	border-bottom: 5px solid #22ccff;
+	position: absolute;
+	z-index: 20;
+
+	box-shadow:		 0px 5px 5px rgba(50, 50, 50, 0.75);
+}
+
+#myaccount > .container-fluid {
+ 	height: 100%;
+ 	padding: 0;
+}
+
+#myaccount > .container-fluid > .row-fluid {
+ 	height: 100%;
+}
+
+#myaccount > .container-fluid > .row-fluid > [class*="span"]{
+ 	height: 100%;
+}
+
+/* MYACCOUNT MENU */
+#myaccount .myaccount-menu {
+	background-color: #f3f3f3;
+	float: left;
+	height: 100%;
+	width: 20%;
+	box-shadow: 1px 0px 1px #bbb;
+}
+#myaccount .myaccount-right {
+	float: left;
+	width: 80%;
+}
+
+#myaccount .myaccount-menu .nav {
+	color: #777;
+	height: 85%;
+	padding-right: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding-left: 0;
+}
+
+#myaccount .myaccount-menu .badge {
+	background: #fff;
+	border: 1px solid #ccc;
+	color: #22ccff;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+#myaccount .myaccount-menu li.active .badge {
+	background: #f3f3f3;
+}
+
+#myaccount .myaccount-menu .nav li:not(.nav-header) {
+	border-top: 1px solid #ccc;
+}
+
+#myaccount .myaccount-menu .nav li:last-child {
+	border-bottom: 1px solid #ccc;
+}
+
+#myaccount .myaccount-menu .nav li {
+	border-right: 1px solid #ccc;
+	height: 60px;
+	line-height: 60px;
+	font-weight: 700;
+	font-size: 16px;
+	overflow: hidden;
+}
+
+#myaccount .myaccount-menu .nav > li.active {
+	background-color: #fff !important;
+	border-right: 1px solid #fff;
+}
+
+#myaccount .myaccount-menu .nav > li:hover {
+	background-color: #eee;
+}
+
+#myaccount .myaccount-menu .nav li.nav-header {
+	color: #FFFFFF;
+	font-size: 16px;
+	font-weight: bold;
+	height: 20px;
+	letter-spacing: 2px;
+	line-height: 20px;
+	margin: 0;
+	padding: 10px 30px;
+	text-shadow: 1px 0 1px #333333;
+	text-transform: uppercase
+}
+
+#myaccount .myaccount-menu .nav a {
+	background: none !important;
+	color: #777777;
+	height: 40px;
+	line-height: 40px;
+	padding: 10px 0;
+	margin: 0;
+}
+
+#myaccount .myaccount-menu .nav a i {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#myaccount .myaccount-menu .menu-bottom {
+	height: 15%;
+}
+
+#myaccount .myaccount-menu .nav li .active-highlight {
+	border-left: 3px solid #e9e9e9;
+}
+
+#myaccount .myaccount-menu .nav li .active-highlight i{
+	font-size: 20px;
+}
+
+#myaccount .myaccount-menu .nav li.active .active-highlight {
+	border-left: 3px solid #22CCFF;
+}
+
+#myaccount .myaccount-menu .menu-bottom .signout {
+	text-transform: uppercase;
+	background: #333;
+	color: #fff;
+	height: 100%;
+}
+
+#myaccount .myaccount-menu .menu-bottom .signout-text {
+	padding: 33px 10% 0;
+	line-height: 20px;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+#myaccount .myaccount-menu .menu-bottom .signout:hover {
+	cursor: pointer;
+	color: #22ccff;
+}
+
+/* MYACCOUNT CONTENT */
+#myaccount .myaccount-content {
+	background-color: white;
+	height: 420px;
+	padding: 20px 30px;
+	overflow-x: hidden;
+}
+
+#myaccount .myaccount-titlebar {
+	background-color: #E9E9E9;
+	height: 41px;
+	line-height: 41px;
+	box-shadow: 1px 0px 3px #bbb inset;
+}
+
+#myaccount .myaccount-right .myaccount-titlebar .myaccount-module-title {
+	margin-left: 30px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+#myaccount .myaccount-right .myaccount-titlebar .myaccount-close {
+	background: #fff;
+	cursor: pointer;
+	padding: 0px 5px;
+	text-align: center;
+	width: 100px;
+	position: absolute;
+	right: 5%;
+	top: 0;
+}
+
+#myaccount .myaccount-right .myaccount-titlebar .myaccount-close:hover span > * {
+	color: #22ccff;
+}
+@media (min-height: 700px) {
+	#myaccount {
+		height: 573px;
+	}
+
+	#myaccount .myaccount-content {
+		height: 492px;
+	}
+}

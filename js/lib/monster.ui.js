@@ -137,7 +137,7 @@ define(function(require){
                 confirmBox = $(template),
                 options = {
                     closeOnEscape: false,
-                    title: i18n['dialog_confirm_title'],
+                    title: i18n.dialog.confirmTitle,
                     onClose: function() {
                         ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
                     }

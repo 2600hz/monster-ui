@@ -1,0 +1,11 @@
+{
+	"hello": "Hello",
+    "signout": "Sign Out",
+    "myaccount": "Account",
+    "close": "Close",
+    "store": "Store",
+
+    "accountCategory": "Account",
+    "billingCategory": "Billing",
+    "trunkingCategory": "Trunking"
+}

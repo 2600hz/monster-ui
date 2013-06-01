@@ -2,7 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
-		
+
 	var app = {
 
 		name: 'core',
@@ -18,7 +18,7 @@ define(function(require){
 		},
 
 		subscribe: {
-			'auth.loadApps': '_loadApps',
+			'core.loadApps': '_loadApps',
 			'app.nav.add': function(data){
 				console.log(data);
 			},
@@ -66,11 +66,11 @@ define(function(require){
 
 		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
 
-			//List of apps required once the user is logged in
-			_baseApps: [],//['myaccount', 'app_store'],
+		//List of apps required once the user is logged in
+		_baseApps: ['myaccount'],//['myaccount', 'app_store'],
 
-			//Default app to render if the user is logged in, can be changed by setting a default app
-			_defaultApp: 'app_store',
+		//Default app to render if the user is logged in, can be changed by setting a default app
+		_defaultApp: 'app_store',
 
 		_load: function(){
 			var self = this;
