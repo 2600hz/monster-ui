@@ -67,9 +67,14 @@ define(function(require){
 				dataTemplate = {
 					accountName: monster.apps['auth'].currentAccount.name || ''
 				},
-				profileMenu = $(monster.template(self, 'menu', dataTemplate));
+				profileMenu = $(monster.template(self, 'menu', dataTemplate)),
+			    args = {
+					menu: profileMenu,
+					weight: 1,
+					category: 'accountCategory'
+				};
 
-			monster.pub('myaccount.addSubmodule', profileMenu, 1, 'accountCategory');
+			monster.pub('myaccount.addSubmodule', args);
 		},
 
 		_renderContent: function(args) {
@@ -292,7 +297,7 @@ define(function(require){
 									}
 								};
 
-								monster.pub('profile.renderContent', args);
+								monster.pub('myaccount-profile.renderContent', args);
 							},
 							function(dataError) {
 								if(dataError && dataError.data && 'api_error' in dataError.data && 'message' in dataError.data.api_error) {

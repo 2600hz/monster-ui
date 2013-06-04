@@ -23,6 +23,7 @@ define(function(require){
 
 		subscribe: {
 			'myaccount.display': '_show',
+			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
 			'myaccount.clickSubmodule': '_clickSubmodule'
@@ -38,7 +39,7 @@ define(function(require){
 			});
 		},
 
-		_apps: ['myaccount-profile'/*, 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-balance', 'myaccount-trunks'*/],
+		_apps: ['myaccount-profile', 'myaccount-balance'/*, 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'*/],
 
 		_defaultApp: 'myaccount-profile',
 
@@ -170,12 +171,25 @@ define(function(require){
 			args.callback && args.callback();
 		},
 
-		_addSubmodule: function(menu, _weight, _category) {
+		_updateMenu: function(params) {
+			if(params.data !== undefined) {
+				if(params.key) {
+					$('[data-key="'+params.key+'"] .badge').html(params.data);
+				}
+				else {
+					$('[data-module="'+params.module+'"] .badge').html(params.data);
+				}
+			}
+		},
+
+		_addSubmodule: function(params) {
 			var self = this,
 				inserted = false,
 				myaccount = $('body #myaccount'),
 				navList = myaccount.find('.myaccount-menu .nav'),
-				category = _category || 'accountCategory';
+				category = params.category || 'accountCategory',
+				menu = params.menu,
+				_weight = params.weight;
 
 			menu.on('click', function() {
 				var args = {

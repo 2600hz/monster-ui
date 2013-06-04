@@ -5,6 +5,7 @@ require.config({
 		bootstrap: 'js/lib/bootstrap-2.3.1.min',
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
+		datatables: 'js/lib/tables/jquery.dataTables-1.8',
 		form2object: 'js/lib/form2object',
 		handlebars: 'js/lib/handlebars-1.0.10',
 		jquery: 'js/lib/jquery-1.9.1.min',
@@ -21,6 +22,7 @@ require.config({
 		bootstrap: ['jqueryui'],
 		'bootstrap-switch': ['bootstrap'],
 		'bootstrap-clickover': ['bootstrap'],
+		datatables: ['jquery'],
 		jqueryui: ['jquery'],
 		handlebars: {
 			exports: 'Handlebars'

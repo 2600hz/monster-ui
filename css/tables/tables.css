@@ -1,0 +1,334 @@
+/*
+ *  File:         demo_table.css
+ *  CVS:          $Id$
+ *  Description:  CSS descriptions for DataTables demo pages
+ *  Author:       Allan Jardine
+ *  Created:      Tue May 12 06:47:22 BST 2009
+ *  Modified:     $Date$ by $Author$
+ *  Language:     CSS
+ *  Project:      DataTables
+ *
+ *  Copyright 2009 Allan Jardine. All Rights Reserved.
+ *
+ * ***************************************************************************
+ * DESCRIPTION
+ *
+ * The styles given here are suitable for the demos that are used with the standard DataTables
+ * distribution (see www.datatables.net). You will most likely wish to modify these styles to
+ * meet the layout requirements of your site.
+ *
+ * Common issues:
+ *   'full_numbers' pagination - I use an extra selector on the body tag to ensure that there is
+ *     no conflict between the two pagination types. If you want to use full_numbers pagination
+ *     ensure that you either have "example_alt_pagination" as a body class name, or better yet,
+ *     modify that selector.
+ *   Note that the path used for Images is relative. All images are by default located in
+ *     ../img/ - relative to this CSS file.
+ */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables features
+ */
+
+/* Fix bootstrap for tables */
+.tooltip.top, .tooltip.bottom {
+    background-color: transparent;
+    border: medium none;
+    padding: 5px;
+}
+/* END CUSTOMIZATION */
+
+.dataTables_wrapper {
+	position: relative;
+	clear: both;
+	zoom: 1; /* Feeling sorry for IE */
+    margin-bottom: 63px;
+}
+
+.dataTables_processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 250px;
+	height: 30px;
+	margin-left: -125px;
+	margin-top: -15px;
+	padding: 14px 0 2px 0;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: #999;
+	font-size: 14px;
+	background-color: white;
+}
+
+.dataTables_length {
+	width: 40%;
+	float: left;
+    margin: 5px 0 18px 0;
+    color: #BCB5AB;
+}
+
+.dataTables_length select {
+    width: auto;
+}
+
+.dataTables_filter {
+	float: right;
+    margin-bottom: 18px;
+	/*width: 50%;
+	text-align: right;*/
+}
+
+/*.dataTables_filter input[type="text"] {
+    background: url(img/search_mid.png) repeat-x;
+    border: medium none;
+    color: #666;
+    height: 20px;
+    width: 200px;
+}
+
+.dataTables_filter input {
+    float: right;
+    height: auto;
+    line-height: auto;
+    padding: 0;
+    width: auto;
+    border: none;
+    border-radius: 0px;
+}
+
+.dataTables_filter input:focus {
+    box-shadow: none;
+}
+*/
+
+.dataTables_info {
+    color: #BCB5AB;
+	width: 30%;
+	float: left;
+    margin-top: 10px;
+}
+
+.dataTables_paginate {
+	width: 44px;
+	* width: 50px;
+	float: right;
+	text-align: right;
+    margin-top: 10px;
+}
+
+/* Pagination nested */
+.paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
+	height: 19px;
+	width: 19px;
+	margin-left: 3px;
+	float: left;
+}
+
+.paginate_disabled_previous {
+	/*background-image: url('img/back_disabled.jpg');*/
+}
+
+.paginate_enabled_previous {
+	background-image: url('img/back_enabled.jpg');
+}
+
+.paginate_disabled_next {
+	/*background-image: url('img/forward_disabled.jpg');*/
+}
+
+.paginate_enabled_next {
+	background-image: url('img/forward_enabled.jpg');
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
+table.display {
+	margin: 0 auto 10px auto;
+	clear: both;
+	width: 100%;
+    /*border: 1px solid #05addc;
+    border-radius: 5px;
+    border-collapse: separate;*/
+
+	/* Note Firefox 3.5 and before have a bug with border-collapse
+	 * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 )
+	 * border-spacing: 0; is one possible option. Conditional-css.com is
+	 * useful for this kind of thing
+	 *
+	 * Further note IE 6/7 has problems when calculating widths with border width.
+	 * It subtracts one px relative to the other browsers from the first column, and
+	 * adds one to the end...
+	 *
+	 * If you want that effect I'd suggest setting a border-top/left on th/td's and
+	 * then filling in the gaps with other borders.
+	 */
+}
+
+/*table.display thead {
+    border: 1px solid #05addc;
+}
+*/
+table.display thead th {
+/*	padding: 7px 0px;
+	font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    color: #BCB5AB;
+    background-color: #222222;
+	cursor: pointer;
+	* cursor: hand;
+    border-bottom: 1px solid #05addc;*/
+    background-color:#22ccff;
+    background-image:linear-gradient(to bottom,#22ccff,#22a5ff);
+    background-image:-moz-linear-gradient(top,#22ccff,#22a5ff);
+    background-image:-webkit-gradient(linear,0 0,0 100%,from(#22ccff),to(#22a5ff));
+    background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
+    background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
+    filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+}
+/*
+table.display thead th:first-child {
+    border-radius: 5px 0 0 0;
+}
+
+table.display thead th:last-child {
+    border-right: none;
+    border-radius: 0 5px 0 0;
+}
+
+table.display tfoot th {
+	padding: 3px 18px 3px 10px;
+	font-weight: bold;
+}
+
+table.display td {
+	padding: 6px 10px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 12px;
+    color: #BCB5AB;
+    border-top: 1px solid #313131;
+}
+
+table.display tr td:last-child {
+    border-right: none;
+}
+
+table.display td a {
+    cursor: pointer;
+}
+*/
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables sorting
+ */
+
+.sorting_asc {
+    cursor: pointer;
+	background: url('img/sort_desc.png') no-repeat center right;
+}
+
+.sorting_desc {
+    cursor: pointer;
+	background: url('img/sort_asc.png') no-repeat center right;
+}
+
+.sorting:hover {
+    cursor: pointer;
+	/*background: url('img/sort_desc_disabled.png') no-repeat center right;*/
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables row classes
+ */
+/*
+tr.odd {
+    background-color: #353535;
+    border-bottom: none;
+}
+
+tr.even {
+    background-color: #3c3c3c;
+    border-bottom: none;
+}
+*/
+
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Misc
+ */
+.dataTables_scroll {
+	clear: both;
+}
+
+.dataTables_scrollBody {
+	*margin-top: -1px;
+}
+
+.top, .bottom {
+	padding: 15px;
+	background-color: #F5F5F5;
+	border: 1px solid #CCCCCC;
+}
+
+.top .dataTables_info {
+	float: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.dataTables_empty {
+	text-align: center;
+}
+
+.paging_full_numbers {
+	width: 30%;
+	height: 22px;
+	line-height: 22px;
+}
+
+.paging_full_numbers span.paginate_button,
+ 	.paging_full_numbers span.paginate_active {
+	padding: 2px 5px;
+	cursor: pointer;
+	*cursor: hand;
+    color: #BCB5AB;
+
+	border-top: 1px solid #05addc;
+    border-left: 1px solid #05addc;
+    border-bottom: 1px solid #05addc;
+}
+
+.paging_full_numbers .first {
+    -moz-border-radius: 3px 0px 0px 3px;
+    -webkit-border-radius-left: 3px 0px 0px 3px;
+    border-radius: 3px 0px 0px 3px;
+}
+
+.paging_full_numbers .last {
+    -moz-border-radius: 0px 3px 3px 0px;
+    -webkit-border-radius-left: 0px 3px 3px 0px;
+    border-radius: 0px 3px 3px 0px;
+    border-right: 1px solid #05addc;
+}
+
+.paging_full_numbers span.paginate_button {
+    background-color: #353535;
+}
+
+.paging_full_numbers span.paginate_button:hover {
+    background-color: #454545;
+}
+
+.paging_full_numbers span.paginate_active {
+    font-weight: bold;
+    background-color: #555;
+}

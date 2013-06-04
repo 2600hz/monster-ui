@@ -199,7 +199,7 @@ define(function(require){
 			raw = raw || false;
 			ignoreCache = ignoreCache || false;
 
-			var conical = (this.name || 'global') + '.' + name, // this should always be a module instance
+			var conical = (app.name || 'global') + '.' + name, // this should always be a module instance
 				_template,
 				result;
 
@@ -209,7 +209,7 @@ define(function(require){
 			else {
 				if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
 					_template = name.substring(1);
-				}				
+				}
 				else if($(name).length){ // template is in the dom. eg. <script type='text/html' />
 					_template = $(name).html();
 				}
@@ -276,7 +276,7 @@ define(function(require){
 
 		querystring: function (key) {
 			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi'),
-				results = [], 
+				results = [],
 				match;
 			while ((match = re.exec(document.location.search)) != null){
 				results.push(match[1]);
