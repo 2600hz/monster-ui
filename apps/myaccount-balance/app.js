@@ -78,6 +78,8 @@ define(function(require){
 					},
 					balanceMenu = $(monster.template(self, 'menu', dataTemplate));
 					args = {
+						name: self.name,
+						title: self.i18n.active().title,
 						menu: balanceMenu,
 						weight: 30,
 						category: 'billingCategory'
@@ -151,8 +153,8 @@ define(function(require){
 						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
 
 						/* Bug because of Infinite scrolling... we need to manually remove tr */
-						monster.ui.table.transactions.find('tbody tr').remove();
-						monster.ui.table.transactions.fnClearTable();
+						monster.ui.table.balance.find('tbody tr').remove();
+						monster.ui.table.balance.fnClearTable();
 
 						self.refreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
 					});
@@ -161,7 +163,7 @@ define(function(require){
 						window.location.href = self.apiUrl+'/accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 					});
 
-					monster.ui.table.transactions.fnAddData(renderData.tabData);
+					monster.ui.table.balance.fnAddData(renderData.tabData);
 
 					balance.find('.popup-marker').clickover();
 				}
@@ -179,31 +181,31 @@ define(function(require){
 
 					dataLimits.data.recharge = $.extend(true, {}, rechargeDefault, dataLimits.data.recharge);
 
-		var templateData = {
+					var templateData = {
 							amount: amount,
 							limits: dataLimits.data
-			},
-			addCreditDialog = $(monster.template(self, 'addCreditDialog', templateData)),
-			dataUpdate = {
-				module: self.name,
-				data: self.i18n.active().currencyUsed + parseFloat(amount).toFixed(2)
-			};
+						},
+						addCreditDialog = $(monster.template(self, 'addCreditDialog', templateData)),
+						dataUpdate = {
+							module: self.name,
+							data: parseFloat(amount).toFixed(2)
+						};
 
-		monster.pub('myaccount.updateMenu', dataUpdate);
+					monster.pub('myaccount.updateMenu', dataUpdate);
 
 					popup = monster.ui.dialog(addCreditDialog, {
 						width: '600px',
 						title: self.i18n.active().addCreditDialogTitle
 					});
 
-		var argsDialog = {
-			parent: popup,
-			data: data,
-			dataLimits: dataLimits,
-			callback: args.callback
-		};
+					var argsDialog = {
+						parent: popup,
+						data: data,
+						dataLimits: dataLimits,
+						callback: args.callback
+					};
 
-		self.bindEventsDialog(argsDialog);
+					self.bindEventsDialog(argsDialog);
 				});
 			});
 		},
@@ -218,7 +220,7 @@ define(function(require){
 			self.getTransactions(params, function(dataTransactions) {
 				var data = self.formatTableData(dataTransactions.data, mapAccounts);
 
-				monster.ui.table.transactions.addData(data.tabData);
+				monster.ui.table.balance.addData(data.tabData);
 
 				parent.find('#call_charges').html(data.totalCharges.toFixed(2));
 				parent.find('#minutes_used').html(data.totalMinutes);
@@ -325,7 +327,7 @@ define(function(require){
 					}
 				];
 
-			monster.ui.table.create('transactions', parent.find('#transactions_grid'), columns, {}, {
+			monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
 				sDom: '<"table-custom-actions">frtlip',
 				aaSorting: [[0, 'desc']]
 			});
@@ -449,14 +451,15 @@ define(function(require){
 			parent.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {
-						var newAmount = self.i18n.active().currencyUsed + parseFloat(amount).toFixed(2),
-						args = {
-							module: self.name,
-							data: newAmount
-						};
+						var formattedAmount =  parseFloat(amount).toFixed(2),
+						    newAmount = self.i18n.active().currencyUsed + formattedAmount,
+							argsEvent = {
+								module: self.name,
+								data: newAmount
+							};
 
-						monster.pub('myaccount.updateMenu', args);
-						parent.find('#amount').html(newAmount);
+						monster.pub('myaccount.updateMenu', argsEvent);
+						parent.find('#amount').html(formattedAmount);
 					}
 				};
 

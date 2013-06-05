@@ -50,6 +50,7 @@
 
 .profile-content-wrapper .list-settings .settings-item .settings-link:hover .update .text {
     text-decoration: underline;
+	margin-left: 5px;
 }
 
 .profile-content-wrapper .list-settings .settings-item-content {

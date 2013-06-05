@@ -1,0 +1,25 @@
+{
+	"title": "Transactions",
+	"titleHeader": "Transaction History",
+	"billingCycle": "Billing Cycle",
+	"to": "to",
+	"oneTimeCharge": "One-Time Charge",
+	"monthlyCharge": "Monthly Charge",
+	"serviceCharge": "Service Charge (Prorated)",
+
+	"currencyUsed": "$",
+	"startDate": "Start Date",
+	"endDate": "End Date",
+	"filter": "Filter",
+	"noData": "No Data",
+
+	"per_minute_call": "Per-Minute Call",
+	"sub_account_per_minute_call": "Per-Minute Call (Sub-Account)",
+	"feature_activation": "Feature Activation",
+	"sub_account_feature_activation": "Feature Activation (Sub-Account)",
+	"number_activation": "Number Activation",
+	"sub_account_number_activation": "Number Activation (Sub-Account)",
+	"manual_addition": "Manual Addition",
+	"sub_account_manual_addition": "Manual Addition (Sub-Account)",
+	"admin_discretion": "Admin Discretion"
+}

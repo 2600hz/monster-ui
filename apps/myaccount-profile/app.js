@@ -69,6 +69,8 @@ define(function(require){
 				},
 				profileMenu = $(monster.template(self, 'menu', dataTemplate)),
 			    args = {
+			    	name: self.name,
+			    	title: self.i18n.active().title,
 					menu: profileMenu,
 					weight: 1,
 					category: 'accountCategory'

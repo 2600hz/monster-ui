@@ -26,7 +26,7 @@ define(function(require){
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
-			'myaccount.clickSubmodule': '_clickSubmodule'
+			'myaccount.activateSubmodule': '_activateSubmodule'
 		},
 
 		load: function(callback){
@@ -39,9 +39,11 @@ define(function(require){
 			});
 		},
 
-		_apps: ['myaccount-profile', 'myaccount-balance'/*, 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'*/],
+		_apps: ['myaccount-profile', 'myaccount-balance', 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'],
 
-		_defaultApp: 'myaccount-profile',
+		_defaultApp: {
+			name: 'myaccount-profile'
+		},
 
 		_loadApps: function(callback) {
 			var self = this;
@@ -94,12 +96,12 @@ define(function(require){
 
 			self.groups = {
 				'accountCategory': {
-					id: 'accountCcategory',
+					id: 'accountCategory',
 					friendlyName: self.i18n.active().accountCategory,
 					weight: 0
 				},
 				'billingCategory': {
-					id: 'billing_category',
+					id: 'billingCategory',
 					friendlyName: self.i18n.active().billingCategory,
 					weight: 10
 				},
@@ -139,7 +141,8 @@ define(function(require){
 			}
 			else {
 				var args = {
-					module: self._defaultApp,
+					title: self._defaultApp.title,
+					module: self._defaultApp.name,
 					callback: function() {
 						myaccount
 							.slideDown(300)
@@ -147,7 +150,7 @@ define(function(require){
 					}
 				};
 
-				monster.pub('myaccount.clickSubmodule', args);
+				monster.pub('myaccount.activateSubmodule', args);
 			}
 		},
 
@@ -155,18 +158,18 @@ define(function(require){
 			$('#myaccount .myaccount-right .myaccount-content').html(template);
 		},
 
-		_clickSubmodule: function(args) {
+		_activateSubmodule: function(args) {
 			var self = this,
 				myaccount = $('#myaccount'),
-				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]'),
-				key = 'myaccount.' + submodule.data('module') + '.'  + (args.key ? args.key : 'title');
+				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
 
 			myaccount.find('.myaccount-menu .nav li').removeClass('active');
 			submodule.addClass('active');
 
-			myaccount.find('.myaccount-module-title').html(self.i18n.active()[key]);
+			myaccount.find('.myaccount-module-title').html(args.title);
+			myaccount.find('.myaccount-content').empty();
 
-			monster.pub(args.module + '.renderContent');
+			monster.pub(args.module + '.renderContent', args);
 
 			args.callback && args.callback();
 		},
@@ -189,15 +192,21 @@ define(function(require){
 				navList = myaccount.find('.myaccount-menu .nav'),
 				category = params.category || 'accountCategory',
 				menu = params.menu,
-				_weight = params.weight;
+				_weight = params.weight,
+				module = params.name;
+
+			if(module === self._defaultApp.name) {
+				self._defaultApp.title = params.title;
+			}
 
 			menu.on('click', function() {
 				var args = {
-					module: menu.data('module'),
+					module: module,
+					title: params.title,
 					key: menu.data('key') || ''
 				};
 
-				monster.pub('myaccount.clickSubmodule', args);
+				monster.pub('myaccount.activateSubmodule', args);
 			});
 
 			category = self.groups[category];
@@ -208,6 +217,7 @@ define(function(require){
 					if($(this).data('weight') > category.weight) {
 						$(this).before('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
 						inserted = true;
+						return false;
 					}
 				});
 

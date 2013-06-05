@@ -135,7 +135,12 @@ define(function(require){
 				if(type === 'short') {
 					parsedDate = humanDate;
 				}
+				else {
+					parsedDate = humanDate + ' - ' + humanTime;
+				}
 			}
+
+			return parsedDate;
 		},
 
 		gregorianToDate: function(timestamp) {

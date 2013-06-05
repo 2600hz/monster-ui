@@ -1,0 +1,60 @@
+{{#each listTransactions}}
+	<div class="box-top-blue transaction">
+		{{#compare this.type '===' 'charges'}}
+				<div class="expand-box">
+				</div>
+				<div class="text-box">
+					<div class="title">{{ this.reason }}</div>
+					<div class="date">{{ this.created }}</div>
+					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
+				</div>
+			</div>
+		{{else}}
+				 <div class="expand-box">
+					<div class="expand">+</div>
+				</div>
+				<div class="text-box">
+					<div class="title">
+						{{#compare this.type '===' 'monthly'}}
+							{{ ../../i18n.monthlyCharge }}
+						{{else}}
+							{{ ../../i18n.serviceCharge }}
+						{{/compare}}
+					</div>
+					<div class="date">{{ this.created }}</div>
+					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
+				</div>
+				<div class="expandable">
+					<div class="table-content">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="blue-gradient-reverse">{{ ../../i18n.serviceTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.rateTitle }}</th>
+									<th class="blue-gradient-reverse"></th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.quantityTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.discount }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.monthlyChargesTitle }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#services}}
+									<tr>
+										<td>{{ service }}</td>
+										<td>{{ ../../i18n.currencyUsed }}{{ rate }}</td>
+										<td>X</td>
+										<td>{{ quantity }}</td>
+										<td>{{ discount }}</td>
+										<td>{{ ../../i18n.currencyUsed }}{{ monthly_charges }}</td>
+									</tr>
+								{{/services}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+	</div>
+{{else}}
+	<div class="no-data">{{ i18n.noData }}</div>
+{{/each}}

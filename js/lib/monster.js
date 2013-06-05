@@ -51,6 +51,8 @@ define(function(require){
 					}
 				});
 
+				app.apiUrl = app.apiUrl || monster.config.api.default;
+
 				if(self._fileExists(css)){
 					self.css(css);
 				}
