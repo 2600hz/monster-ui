@@ -2,26 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		toastr = require('toastr'),
-
-		templates = {
-			pbxsManager: 'pbxsManager',
-			pbxsListElement: 'pbxsListElement',
-			pbxsUnassignedNumbers: 'pbxsUnassignedNumbers',
-			listNumbers: 'listNumbers',
-			noNumbers: 'noNumbers',
-			noResults: 'noResults',
-			searchResults: 'searchResults',
-			endpoint: 'endpoint',
-			endpointNumbers: 'endpointNumbers',
-
-			addNumberDialog: 'addNumberDialog',
-			failoverDialog: 'failoverDialog',
-			cnamDialog: 'cnamDialog',
-			e911Dialog: 'e911Dialog',
-			addNumberSearchResults: 'addNumberSearchResults',
-			portDialog: 'portDialog'
-		};
+		toastr = require('toastr');
 
 	var app = {
 
@@ -95,7 +76,6 @@ define(function(require){
 		subscribe: {
 			'pbxsManager.activate': '_render',
 			'pbxsManager.edit': 'editServer',
-			'auth.landing': '_render'
 		},
 
 		load: function(callback){
@@ -124,7 +104,7 @@ define(function(require){
 		// subscription handlers
 		_render: function(container) {
 			var self = this,
-				pbxsManager = $(monster.template(self, templates.pbxsManager)),
+				pbxsManager = $(monster.template(self, 'pbxsManager')),
 				parent = container || $('#ws-content');
 
 			(parent)
@@ -1168,7 +1148,7 @@ define(function(require){
 				],
 				cfg = {},
 				dataTemplate = _.extend({ i18n: { supportEmail: endpointData.extra.support_email }}, endpointData),
-				endpointHtml = $(monster.template(self, templates.endpoint, dataTemplate));
+				endpointHtml = $(monster.template(self, 'endpoint', dataTemplate));
 
 			$('.icon-question-sign[data-toggle="tooltip"]', endpointHtml).tooltip();
 
@@ -1394,10 +1374,10 @@ define(function(require){
 			numberWrapper.empty();
 
 			if($.isEmptyObject(didsList)) {
-				numberWrapper.append(monster.template(self, templates.noNumbers));
+				numberWrapper.append(monster.template(self, 'noNumbers'));
 			}
 			else {
-				numberWrapper.append(monster.template(self, templates.listNumbers, { DIDs: didsList }));
+				numberWrapper.append(monster.template(self, 'listNumbers', { DIDs: didsList }));
 
 				$.each(didsList, function() {
 					countDids++;
@@ -1431,7 +1411,7 @@ define(function(require){
 				}
 			});
 
-			var pbxsManager = $(monster.template(self, templates.endpointNumbers, endpointData)),
+			var pbxsManager = $(monster.template(self, 'endpointNumbers', endpointData)),
 				callback_listing = function(data_cb) {
 					self.refreshListNumbers(data_cb, pbxsManager);
 				};
@@ -1473,10 +1453,10 @@ define(function(require){
 					});
 
 					if(matches.length > 0) {
-						searchResults.append(monster.template(self, templates.searchResults, _.extend({ i18n: { amountNumbers: matches.length }}, {matches: matches})));
+						searchResults.append(monster.template(self, 'searchResults', _.extend({ i18n: { amountNumbers: matches.length }}, {matches: matches})));
 					}
 					else {
-						searchResults.append(monster.template(self, templates.noResults));
+						searchResults.append(monster.template(self, 'noResults'));
 					}
 
 					numbersWrapper.hide();
@@ -1798,7 +1778,7 @@ define(function(require){
 
 		renderCnamDialog: function(cnam_data, callback) {
 			var self = this,
-				popup_html = $(monster.template(self, templates.cnamDialog, cnam_data || {})),
+				popup_html = $(monster.template(self, 'cnamDialog', cnam_data || {})),
 				popup;
 
 			$('button.btn.btn-success', popup_html).click(function(ev) {
@@ -1826,7 +1806,7 @@ define(function(require){
 					failover: (failover_data || {}).e164 || (failover_data || {}).sip || '',
 					phone_number: failover_data.phone_number || ''
 				},
-				popup_html = $(monster.template(self, templates.failoverDialog, tmpl_data)),
+				popup_html = $(monster.template(self, 'failoverDialog', tmpl_data)),
 				popup,
 				result,
 				popup_title = self.i18n.active().failover_title;
@@ -1895,7 +1875,7 @@ define(function(require){
 
 		renderE911Dialog: function(e911_data, callback) {
 			var self = this,
-				popup_html = $(monster.template(self, templates.e911Dialog, e911_data || {})),
+				popup_html = $(monster.template(self, 'e911Dialog', e911_data || {})),
 				popup;
 
 			$('.icon-question-sign[data-toggle="tooltip"]', popup_html).tooltip();
@@ -1945,7 +1925,7 @@ define(function(require){
 		renderAddNumberDialog: function(globalData, index, callback) {
 			var self = this,
 				numbers_data = [],
-				popup_html = $(monster.template(self, templates.addNumberDialog)),
+				popup_html = $(monster.template(self, 'addNumberDialog')),
 				popup;
 
 			$('.toggle_div', popup_html).hide();
@@ -1962,7 +1942,7 @@ define(function(require){
 				npa_data.prefix = npa;// + nxx;
 
 				self.searchNumbers(npa_data, function(results_data) {
-					var results_html = $(monster.template(self, templates.addNumberSearchResults, {numbers: results_data.data}));
+					var results_html = $(monster.template(self, 'addNumberSearchResults', {numbers: results_data.data}));
 
 					$('#foundDIDList', popup_html)
 						.empty()
@@ -2030,7 +2010,7 @@ define(function(require){
 		renderPortDialog: function(callback) {
 			var self = this,
 				port_form_data = {},
-				popup_html = $(monster.template(self, templates.portDialog, {
+				popup_html = $(monster.template(self, 'portDialog', {
 					company_name: monster.config.company_name || '2600hz',
 					support_email: (monster.config.port || {}).support_email || 'support@trunking.io',
 					support_file_upload: (File && FileReader)
@@ -2263,7 +2243,7 @@ define(function(require){
 				};
 
 				$('#unassigned_numbers_wrapper').empty()
-												.append(monster.template(self, templates.pbxsUnassignedNumbers, data));
+												.append(monster.template(self, 'pbxsUnassignedNumbers', data));
 
 				$('#unassigned_numbers_count').empty()
 											  .html(unassignedNumbers.length);
@@ -2458,7 +2438,7 @@ define(function(require){
 						};
 
 					$('#list_pbxs_navbar #pbxs_manager_listpanel', parent).empty()
-																		  .append(monster.template(self, templates.pbxsListElement, dataTemplate))
+																		  .append(monster.template(self, 'pbxsListElement', dataTemplate))
 																		  .show();
 
 					if(id && id > -1) {

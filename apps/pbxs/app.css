@@ -606,6 +606,11 @@
 	margin-right: 20px;
 	color: #666666;
 	white-space: nowrap;
+	text-decoration: none !important;
+}
+
+#ws-content #pbx_connector_container #actions_wrapper a.action-number:hover .action-text {
+	text-decoration: underline;
 }
 
 #ws-content #pbx_connector_container #actions_wrapper a i{

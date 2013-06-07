@@ -42,7 +42,7 @@ define(function(require){
 		_apps: ['myaccount-profile', 'myaccount-balance', 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'],
 
 		_defaultApp: {
-			name: 'myaccount-profile'
+			name: 'myaccount-balance'
 		},
 
 		_loadApps: function(callback) {

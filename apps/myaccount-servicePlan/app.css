@@ -20,6 +20,10 @@
 	margin-bottom: 0px;
 }
 
+.service-plan-content-wrapper .action-bar li.dropdown-download i {
+	margin-right: 5px;
+}
+
 .service-plan-content-wrapper .action-bar li.dropdown-download {
 	margin-left: 20px;
 	margin-top: 5px;

@@ -1,14 +1,9 @@
 {
-
-	"callTagline": "Make calls in minutes!",
-	"demoAccount": "Free demo account",
-	"easy": "Easy to start",
-	"newUser": "Are you a new user?",
-	"login": "LOG IN",
 	"password": "Password",
 	"rememberMe": "Remember me",
 	"username": "Username",
     "or": "OR",
+    "errorLoadingAccount": "An error occured while loading your account",
 
     "confirmLogout": "Are you sure that you want to log out?",
 
@@ -22,18 +17,5 @@
 	"login":{
 		"label": "Login",
 		"placeholder": "Username"
-	},
-
-	"phone": {
-		"label": "Phone number",
-		"placeholder": "+1 (415) 666-6666"
-	},
-
-	"recover": {
-		"label": "Recover",
-		"directions": "Please input a login, and either an account name, an account realm or a phone number linked to your account",
-		"forgotPassword": "Forgot Password?",
-		"sendLink": "We'll send you a link to reset your password",
-		"title": "Recover my password"
 	}
 }

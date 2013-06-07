@@ -19,12 +19,7 @@ define(function(require){
 
 		subscribe: {
 			'core.loadApps': '_loadApps',
-			'app.nav.add': function(data){
-				console.log(data);
-			},
-			'app.nav.context.add': function(data){
-				console.log(data);
-			}
+			'core.landing': '_landing'
 		},
 
 		load: function(callback){
@@ -70,7 +65,7 @@ define(function(require){
 		_baseApps: ['myaccount'],//['myaccount', 'app_store'],
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
-		_defaultApp: 'app_store',
+		_defaultApp: 'pbxs',
 
 		_load: function(){
 			var self = this;
@@ -91,11 +86,20 @@ define(function(require){
 			var self = this;
 
 			if(!self._baseApps.length) {
-				var defaultApp = args.defaultApp.id || self._defaultApp;
+				var defaultApp = (args.defaultApp || {}).id || self._defaultApp;
 
-				monster._loadApp(defaultApp, function(app) {
-					app.render($('#ws-content'));
-				});
+				if(defaultApp !== '') {
+					monster._loadApp(defaultApp, function(app) {
+						app.render($('#ws-content'));
+					});
+				}
+				else {
+					var args = {
+						data: monster.apps.auth.currentUser
+					};
+
+					monster.pub('core.landing', args);
+				}
 			}
 			else {
 				var appName = self._baseApps.pop();
@@ -110,22 +114,27 @@ define(function(require){
 			var self = this,
 				domain = window.location.hostname,
 				apiUrl = monster.config.api.default,
-				homeLink = $('#home_link');
+				homeLink = $('#home_link'),
+				renderLanding = function() {
+					if($.cookie('monster-auth')) {
+						var args = {
+							data: monster.apps.auth.currentUser
+						};
+
+						monster.pub('core.landing', args);
+					}
+				};
 
 			homeLink.on('click', function() {
-				if($.cookie('monster-auth')) {
-					monster.pub('auth.landing');
-				}
+				renderLanding();
+			});
+
+			container.find('#ws-navbar .logo').on('click', function() {
+				renderLanding();
 			});
 
 			monster.getVersion(function(version) {
 				$('.footer_wrapper .tag_version').html('('+version.replace(/\s/g,'')+')');
-			});
-
-			container.find('#ws-navbar .logo').click(function() {
-				if($.cookie('monster-auth')) {
-					monster.pub('auth.landing');
-				}
 			});
 
 			monster.request({
@@ -158,6 +167,16 @@ define(function(require){
 			content = $(template);
 
 			container.find('.left_div').append(content);
+		},
+
+		_landing: function(args) {
+			var self = this,
+				parent = args.parent || $('.ws-content'),
+				html = monster.template(self, 'landing', args.data);
+
+			parent
+				.empty()
+				.append(html);
 		}
 	};
 
