@@ -88,6 +88,7 @@ define(function(require){
 					self.accountId = data.data.account_id;
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
+					self.isReseller = data.data.is_reseller;
 
 					$('#ws-content').empty();
 

@@ -1,0 +1,23 @@
+{
+	"edit_settings": "Modifier",
+	"save_changes": "Sauvegarder les changements",
+	"cancel": "Annuler",
+	"disable": "D&eacute;sactiver",
+	"enable": "Activer",
+	"disable_account": "D&eacute;sactiver ce compte",
+	"enable_account": "Activer ce compte",
+	"changes_saved": "Changements Sauvegard&eacute;s!",
+	"account_status": "&Eacute;tat du compte",
+	"account_name": "Nom du compte",
+	"account_realm": "Royaume du compte",
+	"account_admins": "Administrateurs du compte",
+	"billing_contact": "Contact Facturation",
+	"billing_contact_name": "Nom Contact Facturation",
+	"billing_contact_email": "Email Contact Facturation",
+	"billing_contact_number": "Num&eacute;ro de t&eacute;l&eacute;phone",
+	"technical_contact": "Contact Technique",
+	"technical_contact_name": "Nom Contact Technique",
+	"technical_contact_email": "Email Contact Technique",
+	"technical_contact_number": "Num&eacute;ro de t&eacute;l&eacute;phone",
+	"account_timezone": "Fuseau horaire"
+}

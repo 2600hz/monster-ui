@@ -464,7 +464,38 @@ define(function(require){
 
 				return month+'/'+day+'/'+year;
 			}
-		}
+		}, 
+
+		accountArrayToTree: function(accountArray, rootAccountId) {
+	        var result = {};
+
+	        $.each(accountArray, function(k, v) {
+	            if(v.id === rootAccountId) {
+	                if(!result[v.id]) { result[v.id] = {}; }
+	                result[v.id].name = v.name;
+	                result[v.id].realm = v.realm;
+	            } else {
+	                var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
+	                    currentAcc;
+	                for(var i=0; i<parents.length; i++) {
+	                    if(!currentAcc) { 
+	                        if(!result[parents[i]]) { result[parents[i]] = {}; }
+	                        currentAcc = result[parents[i]]; 
+	                    } else { 
+	                        if(!currentAcc.children) { currentAcc.children = {}; }
+	                        if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
+	                        currentAcc = currentAcc.children[parents[i]]; 
+	                    }
+	                }
+	                if(!currentAcc.children) { currentAcc.children = {}; }
+	                if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
+	                currentAcc.children[v.id].name = v.name;
+	                currentAcc.children[v.id].realm = v.realm;
+	            }
+	        });
+
+	        return result;
+	    }
 	};
 
 	return ui;

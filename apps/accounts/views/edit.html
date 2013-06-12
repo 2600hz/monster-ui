@@ -1,0 +1,350 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="nav nav-tabs account-tabs">
+			<li class="active"><a href="#accountsmanager_overview_tab">Overview</a></li>
+			<li class=""><a href="#accountsmanager_serviceplans_tab">Service Plans</a></li>
+			<li class=""><a href="#accountsmanager_limits_tab">Limits</a></li>
+			<li class=""><a href="#accountsmanager_restrictions_tab">Restrictions</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="accountsmanager_overview_tab">
+				<ul class="list-settings">
+					<!-- Account Status -->
+					<li class="settings-item" data-name="accountsmanager_account_status">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.account_status }}</span>
+							<span class="description">
+								{{#if account.enabled}}
+								Active
+								{{else}}
+								Disabled
+								{{/if}}
+								<span class="date">(Created on {{account.created}})</span>
+							</span>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_account_status">
+										<div class="control-group">
+										{{#if account.enabled}}
+											<label class="control-label">{{ i18n.disable_account }}</label>
+											<div class="controls">
+												<input type="hidden" name="enabled" value="false"/>
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button data-field="accountsmanager_account_status" class="btn btn-warning change">
+													{{ i18n.disable }}
+												</button>
+											</div>
+										{{else}}
+											<label class="control-label">{{ i18n.enable_account }}</label>
+											<div class="controls">
+												<input type="hidden" name="enabled" value="true"/>
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button data-field="accountsmanager_account_status" class="btn btn-success change">
+													{{ i18n.enable }}
+												</button>
+											</div>
+										{{/if}}
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Account name -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_name">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.account_name }}</span>
+							<span class="description">{{account.name}}</span>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_account_name">
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_account_name">{{ i18n.account_name }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_account_name" name="name" value="{{account.name}}" data-original_value="{{account.name}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_name">{{ i18n.save_changes }}</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Account realm -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_realm">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.account_realm }}</span>
+							<span class="description">{{account.realm}}</span>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_account_realm">
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.account_realm }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_account_realm" name="realm" value="{{account.realm}}" data-original_value="{{account.realm}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_realm">{{ i18n.save_changes }}</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Account admins -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_admins">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.account_admins }} ({{accountAdmins.length}})</span>
+							{{#if accountAdmins.length}}
+								<div class="description">
+									<ul>
+										<li>{{accountAdmins.0.first_name}}&nbsp;{{accountAdmins.0.last_name}}</li>
+										<li>{{accountAdmins.0.email}}</li>
+										{{#if accountAdmins.0.contact_number}}
+										<li>{{formatPhoneNumber accountAdmins.0.contact_number}}</li>
+										{{/if}}
+									</ul>
+								</div>
+							{{else}}
+								<span class="description">-</span>
+							{{/if}}
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<div id="form_accountsmanager_account_admins">
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Technical Contact -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_technical_contact">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.technical_contact }}</span>
+							<div class="description">
+								<ul>
+								{{#if account.contact.technical.name}}
+									<li>{{account.contact.technical.name}}</li>
+								{{/if}}
+								{{#if account.contact.technical.email}}
+									<li>{{account.contact.technical.email}}</li>
+								{{/if}}
+								{{#if account.contact.technical.number}}
+									<li>{{formatPhoneNumber account.contact.technical.number}}</li>
+								{{/if}}
+								</ul>
+							</div>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_technical_contact">
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technical_contact_name }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_technical_contact_name" name="contact.technical.name" value="{{account.contact.technical.name}}" data-original_value="{{account.contact.technical.name}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_technical_contact_email">{{ i18n.technical_contact_email }}</label>
+											<div class="controls">
+												<input type="email" id="accountsmanager_technical_contact_email" name="contact.technical.email" value="{{account.contact.technical.email}}" data-original_value="{{account.contact.technical.email}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_technical_contact_number">{{ i18n.technical_contact_number }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_technical_contact_number" name="contact.technical.number" value="{{account.contact.technical.number}}" data-original_value="{{account.contact.technical.number}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_technical_contact">{{ i18n.save_changes }}</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Billing Contact -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_billing_contact">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.billing_contact }}</span>
+							<div class="description">
+								<ul>
+								{{#if account.contact.billing.name}}
+									<li>{{account.contact.billing.name}}</li>
+								{{/if}}
+								{{#if account.contact.billing.email}}
+									<li>{{account.contact.billing.email}}</li>
+								{{/if}}
+								{{#if account.contact.billing.number}}
+									<li>{{formatPhoneNumber account.contact.billing.number}}</li>
+								{{/if}}
+								</ul>
+							</div>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_billing_contact">
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billing_contact_name }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_billing_contact_name" name="contact.billing.name" value="{{account.contact.billing.name}}" data-original_value="{{account.contact.billing.name}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_billing_contact_email">{{ i18n.billing_contact_email }}</label>
+											<div class="controls">
+												<input type="email" id="accountsmanager_billing_contact_email" name="contact.billing.email" value="{{account.contact.billing.email}}" data-original_value="{{account.contact.billing.email}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_billing_contact_number">{{ i18n.billing_contact_number }}</label>
+											<div class="controls">
+												<input type="text" id="accountsmanager_billing_contact_number" name="contact.billing.number" value="{{account.contact.billing.number}}" data-original_value="{{account.contact.billing.number}}"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_billing_contact">{{ i18n.save_changes }}</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Account timezone -->
+					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_timezone">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.account_timezone }}</span>
+							<span class="description">{{account.timezone}}</span>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.edit_settings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_accountsmanager_account_timezone">
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.account_timezone }}</label>
+											<div class="controls">
+												<select id="accountsmanager_account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_timezone">{{ i18n.save_changes }}</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="tab-pane" id="accountsmanager_serviceplans_tab">
+				<div class="serviceplans-container">
+					<div class="serviceplans-update clearfix">
+						<form>
+							<legend>Active service plan</legend>
+							<div class="controls-group">
+								<div class="controls">
+									<select id="accountsmanager_serviceplan_select" {{#compare isReseller "!==" true}}disabled{{/compare}}>
+										<option value="" {{#unless accountServicePlans.currentId}}selected{{/unless}} >- None -</option>
+										{{#each accountServicePlans.list}}
+										<option value="{{this.id}}" {{#compare ../accountServicePlans.currentId "===" this.id}}selected{{/compare}}>{{this.name}}</option>
+										{{/each}}
+									</select>
+								</div>
+							</div>
+							{{#compare isReseller "===" true}}
+							<div class="controls-group">
+								<div class="controls">
+									<button id="accountsmanager_serviceplan_save" class="btn btn-success pull-right">Save</button>
+								</div>
+							</div>
+							{{/compare}}
+						</form>
+					</div>
+					{{#compare isReseller "===" true}}
+					<div class="serviceplans-maintenance clearfix">
+						<form>
+							<legend>Service plan maintenance</legend>
+							<div class="controls-group">
+								<div class="controls">
+									<button id="accountsmanager_serviceplan_reconciliation" class="btn btn-primary">Reconciliation</button>
+									<button id="accountsmanager_serviceplan_synchronization" class="btn btn-primary">Synchronization</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					{{/compare}}
+				</div>
+			</div>
+
+			<div class="tab-pane" id="accountsmanager_limits_tab">
+
+			</div>
+			
+			<div class="tab-pane" id="accountsmanager_restrictions_tab">d</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,23 @@
+{
+	"edit_settings": "Edit",
+	"save_changes": "Save Changes",
+	"cancel": "Cancel",
+	"disable": "Disable",
+	"enable": "Enable",
+	"disable_account": "Disable this Account",
+	"enable_account": "Enable this Account",
+	"changes_saved": "Changes Saved!",
+	"account_status": "Account Status",
+	"account_name": "Account Name",
+	"account_realm": "Account Realm",
+	"account_admins": "Account Administrators",
+	"billing_contact": "Billing Contact",
+	"billing_contact_name": "Billing Contact Name",
+	"billing_contact_email": "Billing Contact Email",
+	"billing_contact_number": "Phone Number",
+	"technical_contact": "Technical Contact",
+	"technical_contact_name": "Technical Contact Name",
+	"technical_contact_email": "Technical Contact Email",
+	"technical_contact_number": "Phone Number",
+	"account_timezone": "Timezone"
+}
