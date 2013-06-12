@@ -486,6 +486,7 @@
 	margin-right: 15px;
 	text-align: center;
 	width: 115px;
+	margin-top: -20px
 }
 
 #ws-content #list_pbxs_navbar .pbx-wrapper .pbx-name {
@@ -509,6 +510,7 @@
 	margin: auto;
 	opacity: 0.9;
 	width: 76px;
+	z-index: 3
 }
 
 #ws-content #list_pbxs_navbar #add_pbx .img-wrapper {
@@ -529,10 +531,26 @@
 	font-weight: 500;
 }
 
+
+#ws-content .notif-phones {
+	background: rgb(61,183,226); ;
+	border-radius:50%;
+	width:23px;
+	height:23px;
+	border:2px solid rgb(61,183,226);
+	z-index: 4;
+	position: relative;
+	top: 20px;
+	left: 84px;
+	color: white;
+	text-align: center;
+	line-height: 23px;
+}
+
 #ws-content #list_pbxs_navbar #add_pbx {
 	cursor: pointer;
 	float: right;
-	margin: auto 5px auto 10px;
+	margin: 0px 5px auto 10px;
 }
 
 #ws-content #list_pbxs_navbar #add_pbx .plus-btn{

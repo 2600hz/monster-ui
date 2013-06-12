@@ -2424,9 +2424,16 @@ define(function(require){
 							if(data.length > 0) {
 								var i = 0;
 								$.each(data, function(key, val) {
+									var countDids = 0;
+
+									$.each(val.DIDs, function(number,obj){
+										countDids ++
+									});
+
 									newList.push({
 										id: i,
-										name: val.server_name || '(no name)'
+										name: val.server_name || '(no name)',
+										count: countDids
 									});
 									i++;
 								});
