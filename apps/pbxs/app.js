@@ -2,7 +2,8 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		nicescroll = require('nicescroll');
 
 	var app = {
 
@@ -126,7 +127,7 @@ define(function(require){
 				});
 			});
 
-			/*pbxsManager.find('#pbxsManager_listpanel').niceScroll({
+			pbxsManager.find('#pbxs_manager_listpanel').niceScroll({
 				cursorcolor:"#333",
 				autohidemode:false,
 				cursorborder:"1px solid #666"
@@ -136,7 +137,7 @@ define(function(require){
 				cursorcolor:"#333",
 				cursoropacitymin:0.5,
 				hidecursordelay:1000
-			}).rail.addClass('unassigned-number-fixed-vscroll');*/
+			}).rail.addClass('unassigned-number-fixed-vscroll');
 		},
 
 		editServer: function(args) {
@@ -2293,17 +2294,17 @@ define(function(require){
 
 			parent.find('#unassigned_numbers_header').on('click', function() {
 				var $this = $(this),
-					$content = parent.find('#unassigned_numbers .content');/*,
-					nice_scrollbar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];*/
+					$content = parent.find('#unassigned_numbers .content'),
+					nice_scrollbar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];
 
 				if($this.hasClass('open')) {
 					$this.removeClass('open');
 					$content.hide();
-					//nice_scrollbar.resize();
+					nice_scrollbar.resize();
 				}
 				else {
 					$this.addClass('open');
-					$content.slideDown(/*nice_scrollbar.resize*/);
+					$content.slideDown(nice_scrollbar.resize);
 				}
 			});
 
