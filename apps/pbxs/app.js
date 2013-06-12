@@ -2295,16 +2295,16 @@ define(function(require){
 			parent.find('#unassigned_numbers_header').on('click', function() {
 				var $this = $(this),
 					$content = parent.find('#unassigned_numbers .content'),
-					nice_scrollbar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];
+					niceScrollBar = $('#unassigned_numbers_wrapper', parent).getNiceScroll()[0];
 
 				if($this.hasClass('open')) {
 					$this.removeClass('open');
 					$content.hide();
-					nice_scrollbar.resize();
+					niceScrollBar.resize();
 				}
 				else {
 					$this.addClass('open');
-					$content.slideDown(nice_scrollbar.resize);
+					$content.slideDown(niceScrollBar.resize);
 				}
 			});
 

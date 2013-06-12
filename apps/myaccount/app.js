@@ -130,13 +130,19 @@ define(function(require){
 		// events
 		_show: function() {
 			var self = this,
-				myaccount = $('#myaccount');
+				myaccount = $('#myaccount'),
+				scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
+                niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
+                                                                    cursorcolor:"#333",
+                                                                    cursoropacitymin:0.5,
+                                                                    hidecursordelay:1000
+                                                                });
 
 			if(myaccount.hasClass('myaccount-open')) {
 				myaccount.find('.myaccount-right .myaccount-content').empty();
-
+				niceScrollBar.hide();
 				myaccount
-					.slideUp(300)
+					.slideUp(300, niceScrollBar.resize)
 					.removeClass('myaccount-open');
 			}
 			else {
@@ -145,7 +151,9 @@ define(function(require){
 					module: self._defaultApp.name,
 					callback: function() {
 						myaccount
-							.slideDown(300)
+							.slideDown(300, function() {
+								niceScrollBar.show().resize();
+							})
 							.addClass('myaccount-open');
 					}
 				};
