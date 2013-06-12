@@ -26,7 +26,7 @@ define(function(require){
 				css = path + '.css';
 
 			require([path], function(app){
-				_.extend(app, { appPath: '/' + appPath, data: {} }, monster.apps[name]);
+				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
 
 				_.each(app.requests, function(request, id){
 					self._defineRequest(id, request, app);
