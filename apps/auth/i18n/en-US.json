@@ -1,0 +1,21 @@
+{
+	"password": "Password",
+	"rememberMe": "Remember me",
+	"username": "Username",
+    "or": "OR",
+    "errorLoadingAccount": "An error occured while loading your account",
+
+    "confirmLogout": "Are you sure that you want to log out?",
+
+	"account": {
+		"name": "Account Name",
+		"namePlaceholder": "Company Name",
+		"realm": "Account Realm",
+		"realmPlaceholder": "Account Realm"
+	},
+
+	"login":{
+		"label": "Login",
+		"placeholder": "Username"
+	}
+}

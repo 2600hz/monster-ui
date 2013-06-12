@@ -1,0 +1,71 @@
+.login-block {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.login-block .btn.login {
+	height: 30px;
+}
+
+.login-block form {
+	margin: 0;
+}
+
+.login-block form .control-group:last-child {
+	margin-bottom: 0;
+}
+
+.popup_recover_password form {
+    margin: 20px 0 40px 0;
+}
+
+.popup_recover_password form input {
+    width: 166px;
+}
+
+.popup_recover_password .group-or {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Responsive design */
+/* Large desktop */
+@media (min-width: 1200px) {
+    #ws-content #welcome_page {
+        display: block;
+        margin: auto;
+        width: 1140px;
+    }
+}
+
+/* desktop */
+@media (min-width: 979px) {
+}
+
+/* Portrait tablet to landscape */
+@media (min-width: 768px) and (max-width: 979px) {
+	.row-fluid .span6.left_div {
+		width: 95%;
+	}
+
+	.row-fluid .span6.right_div {
+		width: 95%;
+	}
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+
+    .login-block .btn.login {
+        width: 97%;
+    }
+
+	.login-block #password,
+	.login-block #account_name,
+	.login-block #login {
+		width: 90%;
+	}
+}

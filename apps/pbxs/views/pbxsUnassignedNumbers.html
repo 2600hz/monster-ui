@@ -1,0 +1,8 @@
+{{#each unassignedNumbers}}
+	<div class="unassigned-number number-box" data-phone_number="{{this}}">
+		<input type="checkbox"></input>
+		<span class="phone-number">{{formatPhoneNumber this}}</span>
+	</div>
+{{else}}
+	<div class="unassigned-number no-number">{{ i18n.no_number_available }}</div>
+{{/each}}

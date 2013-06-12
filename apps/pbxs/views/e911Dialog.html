@@ -1,0 +1,68 @@
+<div class="trunkstore_popup e911">
+	<div class="row-fluid">
+		<div class="e911-title">{{ i18n.e911_title }}</div>
+	</div>
+	<div class="row-fluid">
+		<div class="pull-left">
+			<div id="e911_rotated_text" class="rotated-text">{{ i18n.e911_rotated_text }}</div>
+			<div class="e911_image"/>
+		</div>
+
+		<div class="pull-left">
+			<form id="e911" class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="postal_code">{{ i18n.postal_code }}</label>
+					<div class="controls">
+						<input id="postal_code" type="text" placeholder='{{ i18n.postal_code }}' name="postal_code" value="{{postal_code}}"/>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="street_address">{{ i18n.address_line_1 }}</label>
+					<div class="controls">
+						<input id="street_address" type="text" placeholder='{{ i18n.address_line_1 }}' name="street_address" value="{{street_address}}" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="extended_address">{{ i18n.address_line_2 }}</label>
+					<div class="controls">
+						<input id="extended_address" type="text" placeholder='{{ i18n.address_line_2 }}' name="extended_address" value="{{extended_address}}" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="locality">{{ i18n.city }}</label>
+					<div class="controls">
+						<input id="locality" type="text" name="locality" placeholder='{{ i18n.city }}' value="{{locality}}" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="region">{{ i18n.state }}</label>
+					<div class="controls">
+						<input id="region" type="text" name="region" placeholder='{{ i18n.state }}' value="{{region}}" />
+					</div>
+				</div>
+				{{#if status}}
+					<div class="control-group gmap_link_div" style="display: none;">
+						<div class="controls">
+							<a class="monster_link" id="gmap_link" href="http://maps.google.com/maps?q=${latitude},+${longitude}+(Your+E911+Location)&iwloc=A&hl=en" target="_blank">{{ i18n.verify_location }}</a>
+						</div>
+					</div>
+				{{/if}}
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn btn-success btn-large" id="submit_btn">{{ i18n.e911_submit_btn }}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="help-box gray-box">
+			<div class="wrapper-icon">
+				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+			</div>
+			<div class="text-wrapper">
+				<p>{{ i18n.e911_info_box }}</p>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,49 @@
+<div id="edit_number" class="trunkstore_popup add_number">
+	<div class="content">
+		<div class="row-fluid row-popup">
+			{{ i18n.search_numbers }}
+		</div>
+
+		<div class="row-fluid row-popup">
+			<input type="text" class="area_code_input"  id="sdid_npa" maxlength="3" placeholder="{{ i18n.placeholder_area_code }}" pattern="^[2-9][0-8][0-9]$"/>
+			<button class="btn btn-large btn-primary" type="submit" id="search_numbers_button"><i class="icon-search icon-white"></i>&nbsp;&nbsp;{{ i18n.search }}</button>
+		</div>
+
+		<div class="row-fluid">
+			<div class="help-box gray-box">
+				<div class="wrapper-icon">
+					&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+				</div>
+				<div class="text-wrapper">
+					<p>{{ i18n.help_toll_free }} (<a class="monster_link" href="http://www.whitepages.com/area-codes" target="_blank">{{ i18n.link_area_code }}</a>)</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="toggle_div">
+			<h4>{{ i18n.search_results }}</h4>
+			<div class="row-fluid">
+				<div class="span5">
+					<div id="foundDIDList">
+
+					</div>
+				</div>
+
+				<div class="span7 right-div">
+					<div class="stats row-fluid">
+						<div class="span8 title_stats">{{ i18n.selected_numbers }}</div> <div class="selected_numbers stat_number span4">0</div>
+					</div>
+					<div class="stats row-fluid">
+						<div class="span8 title_stats">{{ i18n.monthly_charges }}</div> <div class="cost_numbers stat_number span4">$0.00</div>
+					</div>
+					<div class="row-fluid centered">
+						{{ i18n.charges_help }}
+					</div>
+					<div class="row-fluid centered">
+						<button id="add_numbers_button" class="btn btn-success btn-large">{{ i18n.add }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

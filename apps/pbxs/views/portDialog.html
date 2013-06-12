@@ -1,0 +1,194 @@
+<div id="port_number" class="trunkstore_popup">
+	<div class="wizard_nav clearfix">
+		<div class="steps_image">
+			<div class="round_circle current">
+				{{ i18n.step }} 1
+			</div>
+			<div class="round_circle">
+				{{ i18n.step }} 2
+			</div>
+			<div class="round_circle">
+				{{ i18n.step }} 3
+			</div>
+			<div class="round_circle">
+				{{ i18n.step }} 4
+			</div>
+		</div>
+		<div class="steps_text">
+			<ul id="steps">
+				<li id="step_title_1" class="step_title current">
+					{{ i18n.step1_title }}
+				</li>
+				<li id="step_title_2" class="step_title">
+					{{ i18n.step2_title }}
+				</li>
+				<li id="step_title_3" class="step_title">
+					{{ i18n.step3_title }}
+				</li>
+				<li id="step_title_4" class="step_title">
+					{{ i18n.step4_title }}
+				</li>
+			</ul>
+		</div>
+		<div class="clear"/>
+	</div>
+	<div class="wizard_content">
+		<form id="port" class="form-horizontal">
+			<div class="step_div first">
+				<div class="split_div clearfix">
+					<div class="left_part">
+						<span class="icon resource"/> {{ i18n.current_carrier }}
+					</div>
+
+					<div class="right_part">
+						<select class="carrier_dropdown" name="port.service_provider">
+							<option value="empty">-- {{ i18n.select_label }} --</option>
+							<option value="AT&T">AT&T</option>
+							<option value="T-Mobile">T-Mobile</option>
+							<option value="Verizon">Verizon</option>
+							<option value="Sprint">Sprint</option>
+							<option value="Other">{{ i18n.other }}</option>
+						</select>
+						<input type="text" name="extra.other_carrier" class="other_carrier" placeholder="{{ i18n.carrier_name }}"/>
+					</div>
+					<div class="clear"/>
+				</div>
+
+				<div class="split_div clearfix">
+					<div class="left_part text_only">
+						{{ i18n.main_number }}
+					</div>
+
+					<div class="right_part">
+						<input type="text" name="port.main_number" class="main_number" placeholder="{{ i18n.main_number_placeholder }}"/>
+					</div>
+
+					<div class="clear"/>
+				</div>
+
+				<div class="split_div last clearfix">
+					<div class="left_part">
+						{{ i18n.additional_numbers }}
+						<div class="numbers_example">{{ i18n.must_be_on_bill }}</div>
+					</div>
+
+					<div class="right_part">
+						<textarea class="numbers_text" name="phone_numbers" placeholder="{{ i18n.one_number_line }}"></textarea>
+					</div>
+					<div class="clear"/>
+				</div>
+
+				<div class="help-box gray-box">
+					<div class="wrapper-icon">
+						&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+					</div>
+					<div class="text-wrapper">
+						{{ i18n.help_step_1 }}
+					</div>
+				</div>
+			</div>
+
+			<div class="step_div second">
+				<div class="title">
+					<span class="icon receipt"/>{{ i18n.step2_text_title }}
+				</div>
+
+				<div class="split_div last clearfix">
+					<div class="left_part">
+						<div class="field"><label>{{ i18n.port_name_on_account }}</label><input type="text" name="port.billing_name"/></div>
+						<div class="field"><label>{{ i18n.port_account_id }}</label><input type="text" name="port.billing_account_id" /></div>
+						<div class="field"><label>{{ i18n.port_postal_code }}</label><input id="postal_code" type="text" name="port.billing_postal_code"/></div>
+						<div class="field"><label>{{ i18n.port_address }}</label><input type="text" name="port.billing_street_address"/></div>
+						<div class="field"><label>{{ i18n.port_extended_address }}</label><input type="text" name="port.billing_extended_address"/></div>
+						<div class="field"><label>{{ i18n.port_city }}</label><input id="locality" type="text" name="port.billing_locality"/></div>
+						<div class="field"><label>{{ i18n.port_state }}</label><input id="region" type="text" name="port.billing_region" /></div>
+					</div>
+
+					<div class="right_part">
+						<div class="bill_image">
+						</div>
+
+						<div class="upload_bill">
+							{{ i18n.upload_bill }}
+							<input type="file" name="files" class="files"/>
+						</div>
+					</div>
+
+					<div class="clear"/>
+				</div>
+
+				<div class="help-box gray-box">
+					<div class="wrapper-icon">
+						&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+					</div>
+					<div class="text-wrapper">
+						{{ i18n.process_order }}
+					</div>
+				</div>
+			</div>
+
+			<div class="step_div third">
+				<div class="title">
+					<span class="icon receipt"/>{{ i18n.submit_loa }}
+				</div>
+
+				<div class="loa_block">
+					1. {{ i18n.download }} <a id="loa_link" href="http://www.2600hz.com/loa" target="_blank">{{ i18n.loa_form }}</a> / <a id="resporg_link" href="http://wwww.2600hz.com/resporg" target="_blank">{{ i18n.resporg_form }}</a>
+					<div class="help-box gray-box">
+						<div class="wrapper-icon">
+							&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+						</div>
+						<div class="text-wrapper">
+							{{ i18n.help_loa1 }}<br/>
+							{{ i18n.help_loa2 }}
+						</div>
+					</div>
+				</div>
+
+				<div class="loa_block">
+					2. {{ i18n.fill_out }}
+					<div class="help-box gray-box">
+						<div class="wrapper-icon">
+							&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+						</div>
+						<div class="text-wrapper">
+							{{ i18n.help_port }}
+						</div>
+					</div>
+				</div>
+
+				<div class="loa_block">
+					3. {{ i18n.upload }}
+					<div class="upload_block">{{ i18n.upload_title }}&nbsp;&nbsp;<input name="loa" class="loa" type="file"/></div>
+					<div class="help-box gray-box">
+						<div class="wrapper-icon">
+							&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+						</div>
+						<div class="text-wrapper">
+							{{ i18n.trouble_uploading }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="step_div fourth">
+				<div class="block">
+					<div class="title"><span class="icon down_arrow_circle"/>&nbsp;{{ i18n.please_confirm }}</div>
+					<div class="checkbox_line"><input name="extra.cb.cost_porting" type="checkbox"/>{{ i18n.understand_price }}</div>
+					<div class="checkbox_line"><input name="extra.cb.cancel" type="checkbox"/>{{ i18n.i_wont_cancel }}</div>
+					<div class="checkbox_line"><input name="extra.cb.porting_length" type="checkbox"/>{{ i18n.understand_duration }}</div>
+					<div class="checkbox_line"><input name="extra.cb.termination_charge" type="checkbox"/>{{ i18n.understand_old_carrier }}</div>
+					<div class="checkbox_line"><input name="extra.cb.standard_numbers" type="checkbox"/>{{ i18n.standard_numbers }}</div>
+				</div>
+				<div class="block">
+					<div class="title"><span class="icon check_circle"/>&nbsp;{{ i18n.terms_and_conditions }}. <a id="terms_link" href="http://www.2600hz.com/terms" target="_blank">{{ i18n.read_here }}</a></div>
+					<div class="checkbox_line"><input name="extra.agreed" type="checkbox"/>{{ i18n.accept_terms }}</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="wizard_buttons">
+		<button class="prev_step btn btn-primary"><i class="icon-double-angle-left"></i>{{ i18n.previous }}</button>
+		<button class="submit_btn btn btn-success"><i class="icon-ok"></i>{{ i18n.submit }}</button>
+		<button class="next_step btn btn-primary">{{ i18n.next }}<i class="icon-double-angle-right"></i></button>
+	</div>
+</div>

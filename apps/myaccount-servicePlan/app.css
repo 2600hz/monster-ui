@@ -1,0 +1,67 @@
+.service-plan-content-wrapper .fancy-header .left-image {
+	width: 57px;
+}
+
+.service-plan-content-wrapper  .fancy-header .right-block .main-title {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.service-plan-content-wrapper .action-bar {
+	height: 40px;
+	width: 100%;
+}
+
+.service-plan-content-wrapper .action-bar > * {
+	float: left;
+}
+
+.service-plan-content-wrapper .action-bar .date-selection select {
+	margin-bottom: 0px;
+}
+
+.service-plan-content-wrapper .action-bar li.dropdown-download i {
+	margin-right: 5px;
+}
+
+.service-plan-content-wrapper .action-bar li.dropdown-download {
+	margin-left: 20px;
+	margin-top: 5px;
+	list-style: none;
+}
+
+.service-plan-content-wrapper .action-bar li.dropdown-download > a {
+	color: #666666;
+	margin-right: 20px;
+	white-space: nowrap;
+}
+
+/* Table Customization */
+.service-plan-content-wrapper table.table thead th:first-child, .service-plan-content-wrapper table.table tbody td:first-child {
+	padding-left: 10%;
+}
+.service-plan-content-wrapper table.table thead th:nth-child(2), .service-plan-content-wrapper table.table tbody td:nth-child(2) {
+	width: 100px;
+	text-align: right;
+}
+.service-plan-content-wrapper table.table thead th:nth-child(3), .service-plan-content-wrapper table.table tbody td:nth-child(3) {
+	width: 40px;
+	text-align: center;
+}
+.service-plan-content-wrapper table.table thead th:nth-child(4), .service-plan-content-wrapper table.table tbody td:nth-child(4) {
+	width: 20px;
+	text-align: left;
+}
+.service-plan-content-wrapper table.table thead th:nth-child(5), .service-plan-content-wrapper table.table tbody td:nth-child(5) {
+	width: 100px;
+	text-align: right;
+}
+.service-plan-content-wrapper table.table tbody td:nth-child(5) {
+	color: #44cc44;
+	font-weight: 500;
+}
+
+.service-plan-content-wrapper table.table thead th:nth-child(6), .service-plan-content-wrapper table.table tbody td:nth-child(6) {
+	text-align: right;
+	padding-right: 10%;
+}

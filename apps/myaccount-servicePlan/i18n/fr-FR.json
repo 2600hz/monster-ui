@@ -1,0 +1,21 @@
+{
+	"title": "Abonnement",
+	"titleHeader": "Abonnement",
+	"dueOn": "&Agrave; payer le",
+
+	"serviceTitle": "Service",
+	"discount": "Promotion",
+	"rateTitle": "Tarif",
+	"quantityTitle": "Quantit&eacute;",
+	"monthlyChargesTitle": "Prix Mensuel",
+
+	"twowayTrunks": "Outbound Trunks",
+	"inboundTrunks": "Inbound Trunks",
+	"didUs": "US DIDs",
+	"sipDevices": "Appareils SIP",
+	"inboundCnam": "CNAM Entrant",
+	"e911": "E911",
+	"cnam": "CNAM",
+	"port": "Transfert de num&eacute;ro",
+	"tollfreeUs": "Num&eacute;ro vert US"
+}

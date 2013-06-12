@@ -1,109 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset='utf-8'>
-        <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title></title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
 
-        <!-- Awesome URL Parsing -->
-        <script type="text/javascript">
-            var URL_PARTS = window.location.href.match(/^([^\?#]+)[\?#]*([^#]*).*$/).slice(1),
-                URL = URL_PARTS[0],
-                URL_DATA = function() {
-                    var url_data_parts = (URL_PARTS[1]) ? URL_PARTS[1].split('&') : [],
-                        url_data = {},
-                        data;
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.custom.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/lib/modernizr-2.6.2.min.js"></script>
+	</head>
+	<body>
+		<div id="main">
+			<section>
+				<div id="topbar" class="navbar navbar-inverse">
+					<div id="ws-navbar" class="navbar-inner">
+						<div class="container-fluid">
+							<a target="_blank" class="pull-right help" href="https://2600hz.atlassian.net/wiki/display/docs/Trunking.io"><i class="icon-question-sign icon-white"></i></a>
+							<a id="home_link" class="pull-left home" href="#home">
+								<i class="icon-home icon-white icon-large"></i>
+							</a>
+							<a class="logo" href="#home"></a>
+							<ul class="nav whapps">
+							</ul>
+                        	<ul class="nav pull-right links">
+                        	</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<script src="js/lib/require-2.1.5.min.js"></script>
+		<script src="js/main.js"></script>
 
-                    for(var i = 0; i < url_data_parts.length; i++) {
-                        data = url_data_parts[i].split('=');
-                        url_data[data[0]] = data[1];
-                    }
-
-                    return url_data;
-                }();
-        </script>
-
-        <!-- Google Fonts -->
-        <link href='http://fonts.googleapis.com/css?family=Lobster|Maven+Pro:400,500,700,900' rel='stylesheet' type='text/css'>
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="lib/jquery/jquery-1.8.2.min.js"></script>
-
-         <!-- jQuery UI-->
-        <script type="text/javascript" src="lib/jquery/UI/jquery-ui-1.9.1.custom.min.js"></script>
-        <link type="text/css" href="lib/jquery/UI/ui-lightness/jquery-ui-1.8.8.custom.css" rel="Stylesheet" />
-        <link type="text/css" href="lib/jquery/UI/ui-lightness/jquery-ui-override.css" rel="Stylesheet" />
-
-        <!-- Font Awesome -->
-        <link type="text/css" href="lib/bootstrap/css/font-awesome.min.css" rel="stylesheet" media="screen" />
-
-        <!-- lib/bootstrap -->
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrapSwitch.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/js/bootstrapx-clickover.js"></script>
-        <link type="text/css" href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="lib/bootstrap/css/bootstrapSwitch.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="lib/bootstrap/css/bootstrap-add.css" rel="stylesheet" media="screen" />
-
-        <!-- toast / growl notification plugin -->
-        <link href="lib/jquery/plugins/toastr/toastr.css" rel="stylesheet"/>
-        <script src="lib/jquery/plugins/toastr/toastr.js"></script>
-
-        <!-- listpanel -->
-        <script type="text/javascript" src="lib/ui-listpanel/ui.listpanel.js"></script>
-        <link type="text/css" href="lib/ui-listpanel/css/ui.listpanel.css" rel="stylesheet" media="screen" />
-        <link type="text/css" href="lib/ui-listpanel/css/jquery.jscrollpane.css" rel="stylesheet" media="screen" />
-
-        <!-- External libs -->
-        <script type="text/javascript" src="lib/external/handlebars-1.0.rc.1.js"></script>
-        <script type="text/javascript" src="lib/external/i18next-1.5.7.min.js"></script>
-        <script type="text/javascript" src="lib/external/form2object.js"></script>
-        <script type="text/javascript" src="lib/external/md5_generator.js"></script>
-        <script type="text/javascript" src="lib/external/jstz.min.js"></script>
-        <script type="text/javascript" src="lib/external/lab.js"></script>
-        <script type="text/javascript" src="lib/external/jsv.js"></script>
-        <script type="text/javascript" src="lib/external/async.js"></script>
-        <script type="text/javascript" src="lib/external/json-schema-draft-03.js"></script>
-
-        <!-- jQuery plugins -->
-        <script type="text/javascript" src="lib/jquery/plugins/jquery.ui.touch-punch.min.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/jquery.cors.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/tmpl/jquery.tmpl.min.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/tmpl/jquery.tmplPlus.min.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/jquery.jscrollpane.min.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/jquery.cookie.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/table/jquery.dataTables.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/table/plugins/sort.js"></script>
-        <script type="text/javascript" src="lib/jquery/plugins/jquery.nicescroll.min.js"></script>
-
-        <link type="text/css" href="lib/jquery/plugins/table/tables.css" rel="stylesheet" media="screen" />
-
-        <script type="text/javascript" src="lib/amplify/_amplify.js"></script>
-        <script>var _amplify = amplify;</script>
-        <script type="text/javascript" src="lib/amplify/amplify.core.js"></script>
-        <script>$.extend( amplify, _amplify );</script>
-        <script type="text/javascript" src="lib/amplify/amplify.request.js"></script>
-        <script type="text/javascript" src="lib/amplify/amplify.request.poll.js"></script>
-
-        <!-- Winkstart -->
-        <script type="text/javascript" src="config/config.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-bootstrap.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-request.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-util.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-tables.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-validate.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-timezone.js"></script>
-        <script type="text/javascript" src="lib/winkstart/winkstart-rooting.js"></script>
-
-        <script type="text/javascript">
-            var favicon = document.createElement('link');
-            favicon.rel = 'icon';
-            favicon.href = winkstart.config.favicon || 'img/wsLogo.png';
-            document.getElementsByTagName('head')[0].appendChild(favicon);
-        </script>
-    </head>
-    <body>
-    </body>
+	</body>
 </html>
-

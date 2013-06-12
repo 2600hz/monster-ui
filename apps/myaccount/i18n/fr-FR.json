@@ -1,0 +1,11 @@
+{
+	"hello": "Bonjour",
+    "signout": "Deconnexion",
+    "myaccount": "Compte",
+    "close": "Fermer",
+    "store": "Boutique",
+
+    "accountCategory": "Compte",
+    "billingCategory": "Facturation",
+    "trunkingCategory": "Trunking"
+}
