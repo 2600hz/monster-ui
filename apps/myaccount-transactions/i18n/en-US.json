@@ -7,10 +7,6 @@
 	"monthlyCharge": "Monthly Charge",
 	"serviceCharge": "Service Charge (Prorated)",
 
-	"currencyUsed": "$",
-	"startDate": "Start Date",
-	"endDate": "End Date",
-	"filter": "Filter",
 	"noData": "No Data",
 
 	"per_minute_call": "Per-Minute Call",

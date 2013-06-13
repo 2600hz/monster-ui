@@ -9,15 +9,10 @@
 	"simultaneousInbound": "$_Variable__/month",
 	"perMonth": "/month",
 	"quantity": "Quantity",
-	"currencyUsed": "$",
 	"trunks": "Trunks",
 	"twoWayCalling": "Unlimited Outbound Trunks",
 	"updateLimits": "Update Limits",
 	"helpTwoway": "This controls the number of simultaneous calls you can make from the system calling external numbers",
 	"helpInbound": "This controls the number of simultaneous calls you can receive to your phone system",
-	"monthlyCharges": "Monthly Charges",
-	"chargeReminder" : {
-		"line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
-		"line2": "Are you sure you want to continue?"
-	}
+	"monthlyCharges": "Monthly Charges"
 }

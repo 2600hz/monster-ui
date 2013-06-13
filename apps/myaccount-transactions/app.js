@@ -13,7 +13,7 @@ define(function(require){
 
 		name: 'myaccount-transactions',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		i18n: [ 'en-US' ],
 
 		requests: {
 			'transactions.getMonthly': {
@@ -38,6 +38,8 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
+				monster.ui.addCommonI18n(self);
+
 				callback && callback(self);
 			});
 		},

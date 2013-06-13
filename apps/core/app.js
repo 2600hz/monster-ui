@@ -59,7 +59,7 @@ define(function(require){
 			self._load(); // do this here because subsequent apps are dependent upon core layout
 		},
 
-		_apps: ['auth'], // FILO //'pbxs', 'myaccount',
+		_apps: ['common', 'auth'],
 
 		//List of apps required once the user is logged in
 		_baseApps: ['myaccount'],//['myaccount', 'app_store'],

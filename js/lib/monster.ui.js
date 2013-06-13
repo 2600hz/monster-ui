@@ -90,6 +90,12 @@ define(function(require){
 	});
 
 	var ui = {
+		addCommonI18n: function(app) {
+			var i18n = monster.apps['common'].data.i18n;
+
+			//We have to use jQuery deep copy
+			$.extend(true, app.data.i18n, i18n);
+		},
 
 		toFriendlyDate: function(timestamp, type) {
 			var self = this,
@@ -157,10 +163,10 @@ define(function(require){
 				type = "info";
 			}
 
-			var coreApp = monster.apps['core'],
-				template = monster.template(coreApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
+			var commonApp = monster.apps['common'],
+				template = monster.template(commonApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
 				content = $(template),
-				i18n = coreApp.data.i18n[monster.config.i18n.active] || coreApp.data.i18n['en-US'],
+				i18n = commonApp.i18n.active(),
 				options = {
 					title: i18n[type],
 					onClose: function(){
@@ -190,9 +196,9 @@ define(function(require){
 		confirm: function(content, callbackOk, callbackCancel) {
 			var self = this,
 				dialog,
-				coreApp = monster.apps['core'],
-				i18n = coreApp.data.i18n[monster.config.i18n.active] || coreApp.data.i18n['en-US'];
-				template = monster.template(coreApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
+				commonApp = monster.apps['common'],
+				i18n = commonApp.i18n.active();
+				template = monster.template(commonApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
 				confirmBox = $(template),
 				options = {
 					closeOnEscape: false,
@@ -218,9 +224,10 @@ define(function(require){
 		},
 
 		dialog: function(content, options) {
+			console.log(monster.apps.common);
 			var dialog = $("<div />").append(content),
-				coreApp = monster.apps['core'],
-				i18n = coreApp.data.i18n[monster.config.i18n.active] || coreApp.data.i18n['en-US'];
+				commonApp = monster.apps['common'],
+				i18n = commonApp.i18n.active();
 
 			$('input', content).keypress(function(e) {
 				if(e.keyCode == 13) {
@@ -295,7 +302,7 @@ define(function(require){
 			create: function(name, element, columns, data, options) {
 				var self = this,
 					tableObj,
-					i18n = monster.apps['core'].i18n.active(),
+					i18n = monster.apps['common'].i18n.active(),
 					defaultOptions = {
                     	sDom: '<f>t<ip>',
                     	sPaginationType: 'full_numbers',
@@ -353,7 +360,7 @@ define(function(require){
 					search = search_wrapper.find('input[type="text"]'),
 					btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
 					btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
-					i18n = monster.apps['core'].i18n.active();
+					i18n = monster.apps['common'].i18n.active();
 
 				search.attr('placeholder', i18n.table.search);
 

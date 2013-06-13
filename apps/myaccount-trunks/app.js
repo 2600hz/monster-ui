@@ -14,7 +14,7 @@ define(function(require){
 
 		name: 'myaccount-trunks',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		i18n: [ 'en-US' ],
 
 		requests: {
 			'trunks.getLimits': {
@@ -35,6 +35,8 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
+				monster.ui.addCommonI18n(self);
+
 				callback && callback(self);
 			});
 		},

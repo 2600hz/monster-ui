@@ -1,0 +1,52 @@
+{
+	"close" : "X Close",
+
+	"previous": "Previous",
+	"next": "Next",
+	"submit": "Submit",
+	"cancel": "Cancel",
+	"search": "Search",
+	"select": "Select",
+	"error": "Error",
+	"info": "Info",
+	"warning": "Warning!",
+
+	"chargeReminder" : {
+        "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+        "line2": "Are you sure you want to continue?"
+    },
+
+	"currencyUsed": "$",
+	"startDate": "Start Date",
+	"endDate": "End Date",
+	"filter": "Filter",
+	"download": "Download",
+	"csv": "CSV",
+	"pdf": "PDF",
+
+	"dialog" : {
+		"showError": "Show Error",
+		"confirmOk": "OK",
+		"confirmCancel" : "Cancel",
+		"confirmTitle" : "Confirmation"
+	},
+
+	"table" : {
+		"search": "Search...",
+		"empty" : "No data available in table",
+		"processing" : "Processing...",
+		"showEntries": "Show _MENU_ entries",
+		"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries3",
+		"zeroRecords": "No matching records found",
+		"loading": "Loading...",
+		"filtered": "(filtered from _MAX_ total entries)",
+		"infoEmpty": ""
+	},
+
+	"paging" : {
+		"first": "First",
+		"previous": "Previous",
+		"next": "Next",
+		"last": "Last"
+	}
+}
