@@ -533,11 +533,11 @@
 
 
 #ws-content .notif-phones {
-	background: rgb(61,183,226); ;
+	background: #22ccff; 
 	border-radius:50%;
 	width:23px;
 	height:23px;
-	border:2px solid rgb(61,183,226);
+	border:2px solid #22ccff;
 	z-index: 4;
 	position: relative;
 	top: 20px;
@@ -545,6 +545,9 @@
 	color: white;
 	text-align: center;
 	line-height: 23px;
+	font-size: 12px;
+	font-weight: bold;
+
 }
 
 #ws-content #list_pbxs_navbar #add_pbx {

@@ -752,7 +752,7 @@ define(function(require){
 						);
 					};
 
-				if(phone_number[1]) {
+				if(phoneNumber[1]) {
 					self.activateNumber(phoneNumber[1],
 						function(_data, status) {
 							globalData.data.servers[index].DIDs[_data.data.id] = {
@@ -773,7 +773,8 @@ define(function(require){
 				}
 			}
 			else {
-				self.updateOldTrunkstore(globalData.data, function() {
+				self.updateOldTrunkstore(globalData.data, function(updatedData) {
+					self.renderList(index, undefined, undefined, updatedData.data.servers);
 					if(typeof callback === 'function') {
 						callback();
 					}
@@ -1754,6 +1755,8 @@ define(function(require){
 									function(dataTrunkstore) {
 										self.refreshUnassignedList(function() {
 											self.listNumbersByPbx(serverId, callback_listing, dataTrunkstore.data);
+
+											self.renderList(serverId, undefined, undefined, dataTrunkstore.data.servers);
 										});
 									},
 									function() {
@@ -2282,6 +2285,7 @@ define(function(require){
 							self.refreshUnassignedList(function() {
 								self.listNumbersByPbx(serverId, function(cb_data) {
 									self.refreshListNumbers(cb_data, parent);
+									self.renderList(serverId, undefined, undefined, dataTrunkstore.data.servers);
 								}, dataTrunkstore.data);
 							});
 						});
