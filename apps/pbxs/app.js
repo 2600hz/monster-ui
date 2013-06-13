@@ -203,8 +203,8 @@ define(function(require){
 					},
 					defaults = $.extend(true, {
 						auth: {
-							auth_user: 'user_' + monster.ui.randomString(8),
-							auth_password: monster.ui.randomString(12),
+							auth_user: 'user_' + monster.util.randomString(8),
+							auth_password: monster.util.randomString(12),
 							auth_method: 'IP'
 						},
 						options: {
@@ -396,7 +396,7 @@ define(function(require){
 					'fax_test',
 					'settings'
 				],
-				sip_id = monster.config.sip_id ? monster.config.sip_id : (monster.config.sip_id = monster.ui.randomString(20));
+				sip_id = monster.config.sip_id ? monster.config.sip_id : (monster.config.sip_id = monster.util.randomString(20));
 
 			var step = list_steps.indexOf(data.step) > -1 ? data.step : 'init';
 
@@ -1251,7 +1251,7 @@ define(function(require){
 			$('#start_test', endpointHtml).click(function(ev) {
 				ev.preventDefault();
 				if(!('sip_id' in monster.config)) {
-					monster.config.sip_id = monster.ui.randomString(32);
+					monster.config.sip_id = monster.util.randomString(32);
 				}
 
 				reset_auto_step();
@@ -1310,7 +1310,7 @@ define(function(require){
 				interval = setInterval(function_polling, polling_interval * 1000);
 				interval_bar = setInterval(function_move_bar, move_bar_interval * 1000);
 
-				$('#phone_number_test', endpointHtml).html(monster.ui.formatPhoneNumber($('#test_number', endpointHtml).val()));
+				$('#phone_number_test', endpointHtml).html(monster.util.formatPhoneNumber($('#test_number', endpointHtml).val()));
 				$('.wizard-automatic-step', endpointHtml).hide();
 				$('.wizard-automatic-step[data-value="'+ ++current_automatic_step +'"]', endpointHtml).show();
 				$('.header-step', endpointHtml).show();
@@ -1624,7 +1624,7 @@ define(function(require){
 													.addClass('inactive');
 											}
 
-											var phoneNumber = monster.ui.formatPhoneNumber(phone_number[1]),
+											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
 											    template = monster.template(self, '!' + self.i18n.active().success_failover, { phoneNumber: phoneNumber });
 
 											toastr.success(template);
@@ -1666,7 +1666,7 @@ define(function(require){
 													.addClass('inactive');
 											}
 
-											var phoneNumber = monster.ui.formatPhoneNumber(phone_number[1]),
+											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
 											    template = monster.template(self, '!' + self.i18n.active().success_cnam, { phoneNumber: phoneNumber });
 
 											toastr.success(template);
@@ -1708,7 +1708,7 @@ define(function(require){
 													.addClass('inactive');
 											}
 
-											var phoneNumber = monster.ui.formatPhoneNumber(phone_number[1]),
+											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
 											    template = monster.template(self, '!' + self.i18n.active().success_e911, { phoneNumber: phoneNumber });
 
 											toastr.success(template);

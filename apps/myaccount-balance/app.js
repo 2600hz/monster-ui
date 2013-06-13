@@ -56,7 +56,7 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
-				monster.ui.addCommonI18n(self);
+				monster.util.addCommonI18n(self);
 
 				callback && callback(self);
 			});
@@ -247,7 +247,7 @@ define(function(require){
 
 					if(v.reason === 'per_minute_call') {
 						var duration = self.i18n.active().active_call,
-							friendlyDate = monster.ui.toFriendlyDate(v.created),
+							friendlyDate = monster.util.toFriendlyDate(v.created),
 							accountName = '-';
 
 						if('duration' in v.metadata) {
@@ -266,8 +266,8 @@ define(function(require){
 							v.call_id,
 							v.metadata.call,
 							friendlyDate,
-							monster.ui.formatPhoneNumber(v.metadata.from),
-							monster.ui.formatPhoneNumber(v.metadata.to),
+							monster.util.formatPhoneNumber(v.metadata.from),
+							monster.util.formatPhoneNumber(v.metadata.to),
 							accountName,
 							duration,
 							self.i18n.active().currencyUsed + v.amount

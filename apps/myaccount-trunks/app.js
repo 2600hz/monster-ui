@@ -35,7 +35,7 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
-				monster.ui.addCommonI18n(self);
+				monster.util.addCommonI18n(self);
 
 				callback && callback(self);
 			});
