@@ -3,7 +3,8 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		toastr = require('toastr'),
-		timezone = require('monster-timezone');
+		timezone = require('monster-timezone'),
+		nicescroll = require('nicescroll');
 
 	var app = {
 
@@ -76,13 +77,33 @@ define(function(require){
 				url: 'accounts/{accountId}/service_plans/synchronization',
 				verb: 'POST'
 			},
+			'accountsManager.limits.get': {
+				url: 'accounts/{accountId}/limits',
+				verb: 'GET'
+			},
+			'accountsManager.limits.update': {
+				url: 'accounts/{accountId}/limits',
+				verb: 'POST'
+			},
+			'accountsManager.classifiers.get': {
+				url: 'accounts/{accountId}/phone_numbers/classifiers',
+				verb: 'GET'
+			},
+			'accountsManager.balance.get': {
+				url: 'accounts/{accountId}/transactions/current_balance',
+				verb: 'GET'
+			},
+			'accountsManager.balance.add': {
+				url: 'accounts/{accountId}/braintree/credits',
+				verb: 'PUT'
+			}
 		},
 
 		subscribe: {
 			'accountsManager.activate': '_render'
 		},
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.whappAuth(function() {
@@ -118,9 +139,6 @@ define(function(require){
 			self.loadAccountList(function() {
 				self.renderAccountsManager(accountsManager);
 			});
-
-			console.log(self);
-			console.log(monster);
 		},
 
 		loadAccountList: function(callback) {
@@ -177,12 +195,11 @@ define(function(require){
 			self.renderList(originalAccountList, parent);
 			$('#main_account_link').html(self.accountTree[self.accountId].name);
 
-			// TODO bring back nicescroll
-			// parent.find('.account-list').niceScroll({
-			// 	cursorcolor:"#333",
-			// 	cursoropacitymin:0.5,
-			// 	hidecursordelay:1000
-			// });
+			parent.find('.account-list').niceScroll({
+				cursorcolor:"#333",
+				cursoropacitymin:0.5,
+				hidecursordelay:1000
+			});
 		},
 
 		renderList: function(accountList, parent, slide) {
@@ -300,6 +317,8 @@ define(function(require){
 								$this.find('i').removeClass('icon-caret-down').addClass('icon-caret-up');
 								$newAdminElem.slideDown();
 							}
+						} else {
+							e.stopPropagation();
 						}
 					});
 
@@ -343,7 +362,10 @@ define(function(require){
 
 					$adminElements.each(function() {
 						var $adminElement = $(this),
-							userId = $adminElement.data('user_id');
+							userId = $adminElement.data('user_id'),
+							$adminPasswordDiv = $adminElement.find('.edit-admin-password-div');
+
+						$adminPasswordDiv.hide();
 						
 						$adminElement.find('.admin-cancel-btn').click(function(e) {
 							e.preventDefault();
@@ -354,15 +376,40 @@ define(function(require){
 							$adminElement.find('.admin-element-edit').hide();
 							$newAdminBtn.removeClass('disabled');
 						});
+
+						$adminElement.find('input[name="email"]').change(function() { $(this).keyup(); });
+						$adminElement.find('input[name="email"]').keyup(function(e) {
+							var $this = $(this);
+							if($this.val() !== $this.data('original_value')) {
+								$adminPasswordDiv.slideDown();
+							} else {
+								$adminPasswordDiv.slideUp(function() {
+									$adminPasswordDiv.find('input[type="password"]').val("");
+								});
+							}
+						})
 						
 						$adminElement.find('.admin-save-btn').click(function(e) {
 							e.preventDefault();
 							var formData = form2object($adminElement.find('form')[0]);
-							console.log(formData);
+							
 							if(!(formData.first_name && formData.last_name && formData.email)) {
 								monster.alert('error','Name and Email fields are mandatory!');
+							} else if($adminPasswordDiv.is(":visible")
+									&& (formData.password.length < 6 
+										|| /\s/.test(formData.password) 
+										|| !/\d/.test(formData.password) 
+										|| !/[A-Za-z]/.test(formData.password) 
+										)
+									) {
+								monster.alert('error','The password must contain at least 6 characters and include a letter and a number.');
+							} else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
+								monster.alert('error','The password and confirmation do not match!');
 							} else {
-								formData.username = formData.email;
+								formData = self.cleanFormData(formData);
+								if(!$adminPasswordDiv.is(":visible")) {
+									delete formData.password;
+								}
 								monster.request({
 									resource: 'accountsManager.users.get', 
 									data: {
@@ -370,6 +417,9 @@ define(function(require){
 										userId: userId
 									},
 									success: function(data, status) {
+										if(data.data.email !== formData.email) {
+											formData.username = formData.email;
+										}
 										var newData = $.extend(true, {}, data.data, formData);
 										monster.request({
 											resource: 'accountsManager.users.update', 
@@ -511,33 +561,112 @@ define(function(require){
 								callback(null, data.data);
 							}
 						});
+					},
+					limits: function(callback) {
+						monster.request({
+							resource: 'accountsManager.limits.get', 
+							data: {
+								accountId: accountId
+							},
+							success: function(data, status) {
+								callback(null, data.data);
+							}
+						});
+					},
+					classifiers: function(callback) {
+						monster.request({
+							resource: 'accountsManager.classifiers.get', 
+							data: {
+								accountId: accountId
+							},
+							success: function(data, status) {
+								callback(null, data.data);
+							}
+						});
+					},
+					currentBalance: function(callback) {
+						monster.request({
+							resource: 'accountsManager.balance.get', 
+							data: {
+								accountId: accountId
+							},
+							success: function(data, status) {
+								callback(null, data.data);
+							}
+						});
 					}
 				},
 				function(err, results) {
 					var servicePlans = {
-						currentId: Object.keys(results.currentServicePlan.plans)[0],
-						list: results.listServicePlans
-					};
-					self.editAccount(results.account, results.users, servicePlans, parent);
+							currentId: Object.keys(results.currentServicePlan.plans)[0],
+							list: results.listServicePlans
+						},
+						params = {
+							accountData: results.account,
+							accountUsers: results.users,
+							servicePlans: servicePlans,
+							accountLimits: results.limits,
+							classifiers: results.classifiers,
+							accountBalance: 'balance' in results.currentBalance ? results.currentBalance.balance : 0,
+							parent: parent
+						};
+
+					self.editAccount(params);
 				}
 			);
 		},
 
-		editAccount: function(accountData, accountUsers, servicePlans, parent, callback) {
+		/** Expected params:
+			- accountData
+			- accountUsers
+			- servicePlans
+			- accountLimits
+			- classifiers (call restriction)
+			- parent
+			- callback [optional]
+		*/
+		editAccount: function(params) {
 			var self = this,
+				accountData = params.accountData,
+				accountUsers = params.accountUsers,
+				servicePlans = params.servicePlans,
+				accountLimits = params.accountLimits,
+				accountBalance = params.accountBalance,
+				parent = params.parent,
+				callback = params.callback,
 				admins = $.map(accountUsers, function(val) {
 					return val.priv_level === "admin" ? val : null;
 				}),
 				regularUsers = $.map(accountUsers, function(val) {
 					return val.priv_level !== "admin" ? val : null;
 				}),
-				contentHtml = $(monster.template(self, 'edit', {
-					account: accountData,
+				classifiers = $.map(params.classifiers, function(val, key) {
+					var ret = {
+						id: key,
+						name: val.friendly_name,
+						checked: true
+					};
+					if(accountData.call_restriction 
+						&& key in accountData.call_restriction 
+						&& accountData.call_restriction[key].action === "deny") {
+						ret.checked = false;
+					}
+					return ret;
+				}),
+				templateData = {
+					account: $.extend(true, {}, accountData),
 					accountAdmins: admins,
 					accountUsers: regularUsers,
 					accountServicePlans: servicePlans,
-					isReseller: monster.apps['auth'].isReseller
-				})),
+					classifiers: classifiers,
+					isReseller: monster.apps['auth'].currentAccount.reseller
+				};
+
+			if($.isNumeric(templateData.account.created)) {
+				templateData.account.created = monster.ui.toFriendlyDate(accountData.created, "short");
+			}			
+
+			var contentHtml = $(monster.template(self, 'edit', templateData)),
 				$liSettings = contentHtml.find('li.settings-item'),
 				$liContent = $liSettings.find('.settings-item-content'),
 				$aSettings = $liSettings.find('a.settings-link'),
@@ -549,8 +678,10 @@ define(function(require){
 
 			contentHtml.find('.account-tabs a').click(function(e) {
 				e.preventDefault();
-				closeTabsContent();
-				$(this).tab('show');
+				if(!$(this).parent().hasClass('disabled')) {
+					closeTabsContent();
+					$(this).tab('show');
+				}
 			});
 
 			contentHtml.find('li.settings-item').on('click', function(e) {
@@ -588,24 +719,29 @@ define(function(require){
 
 				self.updateData(accountData, newData,
 					function(data) {
-						self.editAccount(data.data, accountUsers, servicePlans, parent, function(parent) {
-							var $link = parent.find('li[data-name='+fieldName+']');
+						self.editAccount(
+							$.extend(true, params, {
+								accountData: data.data,
+								callback: function(parent) {
+									var $link = parent.find('li[data-name='+fieldName+']');
 
-							$link.find('.update').hide();
-							$link.find('.changes-saved').show()
-													  .fadeOut(1500, function() {
-														  $link.find('.update').fadeIn(500);
-													  });
+									$link.find('.update').hide();
+									$link.find('.changes-saved').show()
+															  .fadeOut(1500, function() {
+																  $link.find('.update').fadeIn(500);
+															  });
 
-							$link.css('background-color', '#22ccff')
-								   .animate({
-									backgroundColor: '#eee'
-								}, 2000
-							);
+									$link.css('background-color', '#22ccff')
+										   .animate({
+											backgroundColor: '#eee'
+										}, 2000
+									);
 
-							parent.find('.settings-item-content').hide();
-							parent.find('a.settings-link').show();
-						});
+									parent.find('.settings-item-content').hide();
+									parent.find('a.settings-link').show();
+								}
+							})
+						);
 					},
 					function(data) {
 						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
@@ -616,7 +752,7 @@ define(function(require){
 			});
 
 			// If reseller
-			if(monster.apps['auth'].isReseller) {
+			if(monster.apps['auth'].currentAccount.reseller) {
 				var $btn_save = contentHtml.find('#accountsmanager_serviceplan_save'),
 					$btn_rec = contentHtml.find('#accountsmanager_serviceplan_reconciliation'),
 					$btn_sync = contentHtml.find('#accountsmanager_serviceplan_synchronization');
@@ -627,11 +763,11 @@ define(function(require){
 						$btn_save.addClass('disabled');
 						var newPlanId = contentHtml.find('#accountsmanager_serviceplan_select').val(),
 							success = function() {
-								toastr.success('Active service plan updated successfully!', '', {"timeOut": 1500});
+								toastr.success('Active service plan updated successfully!', '', {"timeOut": 5000});
 								$btn_save.removeClass('disabled');
 							},
 							error = function() {
-								toastr.error('An unexpected error occurred! Please try again.', '', {"timeOut": 2500});
+								toastr.error('An unexpected error occurred! Please try again.', '', {"timeOut": 5000});
 								$btn_save.removeClass('disabled');
 							};
 						if(servicePlans.currentId) {
@@ -681,6 +817,8 @@ define(function(require){
 									error();
 								}
 							});
+						} else {
+							$btn_save.removeClass('disabled');
 						}
 					}
 				});
@@ -697,12 +835,12 @@ define(function(require){
 								data: {}
 							},
 							success: function(data, status) {
-								toastr.success('Reconciliation completed successfully!', '', {"timeOut": 1500});
+								toastr.success('Reconciliation completed successfully!', '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							},
 							error: function(data, status) {
-								toastr.error('An error occurred during reconciliation process! Please try again later.', '', {"timeOut": 2500});
+								toastr.error('An error occurred during reconciliation process! Please try again later.', '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							}
@@ -723,12 +861,12 @@ define(function(require){
 								data: {}
 							},
 							success: function(data, status) {
-								toastr.success('Synchronization completed successfully!', '', {"timeOut": 1500});
+								toastr.success('Synchronization completed successfully!', '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							},
 							error: function(data, status) {
-								toastr.error('An error occurred during synchronization process! Please try again later.', '', {"timeOut": 2500});
+								toastr.error('An error occurred during synchronization process! Please try again later.', '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							}
@@ -739,6 +877,13 @@ define(function(require){
 
 			timezone.populateDropdown(contentHtml.find('#accountsmanager_account_timezone'), accountData.timezone);
 
+			self.renderLimitsTab({
+				accountData: accountData,
+				limits: accountLimits,
+				balance: accountBalance,
+				parent: contentHtml.find('#accountsmanager_limits_tab')
+			});
+
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
@@ -747,6 +892,146 @@ define(function(require){
 			if(typeof callback === 'function') {
 				callback(contentHtml);
 			}
+		},
+
+		/** Expected params:
+			- accountData
+			- limits
+			- balance
+			- parent
+		*/
+		renderLimitsTab: function(params) {
+			var self = this,
+				parent = params.parent,
+				limits = params.limits,
+				balance = params.balance,
+				accountData = params.accountData,
+				amountTwoway = 29.99,
+				twoway = limits.twoway_trunks || 0,
+				totalAmountTwoway = amountTwoway * twoway,
+				twowayTrunksDiv = parent.find('.trunks-div.twoway'),
+				amountInbound = 6.99,
+				inbound = limits.inbound_trunks || 0,
+				totalAmountInbound = amountInbound * inbound,
+				inboundTrunksDiv = parent.find('.trunks-div.inbound'),
+				adjustHandle = function(trunksDiv) {
+					trunksDiv.find('.slider-value-wrapper').css('left', trunksDiv.find('.slider-div .ui-slider-handle').css('left'));
+				};
+
+			twowayTrunksDiv.find('.slider-div').slider({
+				min: 0,
+				max: 20,
+				range: 'min',
+				value: twoway,
+				slide: function( event, ui ) {
+					twowayTrunksDiv.find('.slider-value').html(ui.value);
+					totalAmountTwoway = ui.value * amountTwoway;
+					twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
+
+					adjustHandle(twowayTrunksDiv);
+				},
+				change: function(event, ui) {
+					adjustHandle(twowayTrunksDiv);
+				}
+			});
+
+			inboundTrunksDiv.find('.slider-div').slider({
+				min: 0,
+				max: 100,
+				range: 'min',
+				value: inbound,
+				slide: function( event, ui ) {
+					inboundTrunksDiv.find('.slider-value').html(ui.value);
+					totalAmountInbound = ui.value * amountInbound;
+					inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
+
+					adjustHandle(inboundTrunksDiv);
+				},
+				change: function(event, ui) {
+					adjustHandle(inboundTrunksDiv);
+				}
+			});
+
+			twowayTrunksDiv.find('.slider-value').html(twoway);
+			twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
+			adjustHandle(twowayTrunksDiv);
+			inboundTrunksDiv.find('.slider-value').html(inbound);
+			inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
+			adjustHandle(inboundTrunksDiv);
+
+			//TODO get currency
+			parent.find('.manage-credit-div .credit-balance').html('$'+balance);
+
+			parent.find('#accountsmanager_limits_save').click(function(e) {
+				e.preventDefault();
+
+				var newTwowayValue = twowayTrunksDiv.find('.slider-div').slider('value'),
+					newInboundValue = inboundTrunksDiv.find('.slider-div').slider('value'),
+					callRestrictions = form2object('accountsmanager_callrestrictions_form'),
+					addCredit = parent.find('#accountsmanager_add_credit').val(),
+					allowPrepay = parent.find('#accountsmanager_allow_prepay').is(':checked');
+
+				if(addCredit.match(/^(\d+(\.\d{1,2})?)?$/)) {
+
+					$.each(callRestrictions.call_restriction, function(k, v) {
+						if(v.action === false) { v.action = "deny"; }
+					});
+
+					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
+						function() {
+
+							monster.request({
+								resource: 'accountsManager.limits.update',
+								data: {
+									accountId: accountData.id,
+									data: $.extend(true, {}, limits, {
+										twoway_trunks: newTwowayValue,
+										inbound_trunks: newInboundValue,
+										allow_prepay: allowPrepay
+									})
+								},
+								success: function(data, status) {
+									toastr.success('Trunk limits updated successfully!', '', {"timeOut": 5000});
+								},
+								error: function(data, status) {
+									toastr.error('An unexpected error occured when updating the trunks, please try again later.', '', {"timeOut": 5000});
+								}
+							});
+
+							self.updateData(accountData, callRestrictions,
+								function(data, status) {
+									toastr.success('Call restrictions updated successfully!', '', {"timeOut": 5000});
+								},
+								function(data, status) {
+									toastr.error('An unexpected error occured when updating the call restrictions, please try again later.', '', {"timeOut": 5000});
+								}
+							);
+
+							if(addCredit) {
+								monster.request({
+									resource: 'accountsManager.balance.add',
+									data: {
+										accountId: accountData.id,
+										data: {
+											amount: parseFloat(addCredit)
+										}
+									},
+									success: function(data, status) {
+										toastr.success('Credit successfully added to the current balance!', '', {"timeOut": 5000});
+									},
+									error: function(data, status) {
+										toastr.error('An unexpected error occured when adding credit, please try again later.', '', {"timeOut": 5000});
+									}
+								});
+							}
+						}
+					);
+
+				} else {
+					monster.ui.alert('Incorrect format for balance credit, you can only enter a number with up to 2 decimals.');
+				}
+
+			});
 		},
 
 		adjustTabsWidth: function($tabs) {

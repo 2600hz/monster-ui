@@ -22,7 +22,6 @@
 }
 
 #accounts_manager_view .left-menu .account-list-container {
-	min-height: 300px;
 	width: 480px;
 }
 
@@ -89,7 +88,8 @@
 }
 
 #accounts_manager_view .left-menu .account-children-link > i {
-	margin: 22px 0 0 10px;
+	vertical-align: middle;
+	margin-left: 17px;
 }
 
 /***** Top bar *****/
@@ -131,7 +131,6 @@
 /***** Main content *****/
 
 #accounts_manager_view .main-content {
-	min-height: 300px;
 	padding: 20px 30px;
 	overflow-y: auto;
 	-moz-box-sizing: border-box; 
@@ -145,6 +144,10 @@
 
 #accounts_manager_view .main-content .controls .input-prepend span.add-on {
 	width: 16px;
+}
+
+#accounts_manager_view .main-content .controls .input-prepend > input {
+	width: 85%;
 }
 
 /***** Edit: Overview *****/
@@ -187,6 +190,7 @@
 	font-weight: 500;
 	padding: 0px 15px;
 	text-decoration: none;
+	height: 60px;
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item.disabled .settings-link {
@@ -226,6 +230,10 @@
 	float: right;
 }
 
+#accounts_manager_view .main-content .list-settings .settings-item .settings-link .update .text {
+	margin-left: 5px;
+}
+
 #accounts_manager_view .main-content .list-settings .settings-item .settings-link .changes-saved {
 	float: right;
 	display: none;
@@ -248,6 +256,21 @@
 
 #form_accountsmanager_account_admins form {
 	margin-bottom: 0px;
+}
+
+#form_accountsmanager_account_admins .close-admin-settings > span {
+	margin-left: 5px;
+}
+
+#form_accountsmanager_account_admins .close-admin-settings:hover,
+#form_accountsmanager_account_admins .close-admin-settings:focus {
+	text-decoration: none;
+	color: #22CCFF;
+}
+
+#form_accountsmanager_account_admins .close-admin-settings:hover > span,
+#form_accountsmanager_account_admins .close-admin-settings:focus {
+	text-decoration: underline;
 }
 
 #form_accountsmanager_account_admins .admin-btn-div {
@@ -380,4 +403,151 @@
 
 #accountsmanager_serviceplans_tab .serviceplans-container select {
 	width: 100%;
+}
+
+
+
+
+
+#accountsmanager_limits_tab .limits-tab-container {
+	padding:20px;
+}
+
+#accountsmanager_limits_tab .limits-tab-container > div {
+	margin-bottom: 10px;
+}
+
+#accountsmanager_limits_tab .trunks-div {
+	margin: 15px 10px;
+}
+
+#accountsmanager_limits_tab .slider-value {
+	background: #22ccff;
+	border: 1px solid #FFFFFF;
+	box-shadow: 1px 1px 4px #CCCCCC;
+	color: #FFFFFF;
+	height: 40px;
+	margin: 0 10px 0 171px;
+	text-align: center;
+	width: 50px;
+}
+
+#accountsmanager_limits_tab .slider-value:after {
+	border-color: #22CCFF transparent;
+	border-style: solid;
+	border-width: 7px 7px 0;
+	content: "";
+	display: block;
+	left: 18px;
+	position: relative;
+	width: 0;
+}
+
+#accountsmanager_limits_tab .total-amount {
+	font-weight: 500;
+}
+
+#accountsmanager_limits_tab .slider-div .ui-slider-range, 
+#accountsmanager_limits_tab .slider-div .ui-slider-handle {
+	background-color: #22ccff;
+}
+
+#accountsmanager_limits_tab .section-button {
+	text-align: right;
+}
+
+#accountsmanager_limits_tab .section-button .update-limits {
+	margin-top: 50px;
+}
+
+#accountsmanager_limits_tab .section-slider-value{
+	max-width: 580px;
+}
+
+#accountsmanager_limits_tab .section-slider {
+	margin-top: 20px;
+}
+
+#accountsmanager_limits_tab  .slider-title {
+	width: 175px;
+	float: left;
+	margin: -5px 20px 0 0;
+}
+
+#accountsmanager_limits_tab .section-slider .slider-wrapper {
+	width: 300px;
+	float: left;
+}
+
+#accountsmanager_limits_tab .slider-value-wrapper {
+	display: block;
+	position: relative;
+}
+
+#accountsmanager_limits_tab .slider-value-wrapper > * {
+	float: left;
+	line-height: 40px;
+}
+
+#accountsmanager_limits_tab  .value-slider {
+	position: relative;
+	display: block;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div > div {
+	background-color: #FFF;
+	border: solid 1px #ccc;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div > div:not(:first-child) {
+	margin-left: 20px;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .title {
+	font-size: 16px;
+	margin-bottom: 10px;
+	font-weight: 500;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .call-restrictions-list {
+	list-style: none;
+	margin: 0;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .call-restrictions-element input {
+	margin: 0 5px 0 0;
+}
+
+#accountsmanager_callrestrictions_form {
+	margin: 0;
+}
+
+#accountsmanager_add_credit {
+	width: 50px;
+	margin-bottom: 0;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .manage-credit-div > div {
+	margin-bottom: 10px;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .manage-credit-div label.allow-prepay {
+	width: 270px;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .manage-credit-div label.allow-prepay > div {
+	margin-left: 20px;
+	text-align: justify;
+}
+
+#accountsmanager_limits_tab .call-restrictions-div .credit-balance {
+	font-size: 20px;
+    font-weight: bold;
+    color: #22ccff;
+}
+
+#accountsmanager_limits_tab .buttons-div {
+	margin: 20px 0 0 0;
 }

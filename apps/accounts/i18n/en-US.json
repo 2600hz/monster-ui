@@ -19,5 +19,9 @@
 	"technical_contact_name": "Technical Contact Name",
 	"technical_contact_email": "Technical Contact Email",
 	"technical_contact_number": "Phone Number",
-	"account_timezone": "Timezone"
+	"account_timezone": "Timezone",
+	"chargeReminder" : {
+		"line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+		"line2": "Are you sure you want to continue?"
+	}
 }
