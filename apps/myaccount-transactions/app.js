@@ -13,7 +13,7 @@ define(function(require){
 
 		name: 'myaccount-transactions',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		i18n: [ 'en-US' ],
 
 		requests: {
 			'transactions.getMonthly': {
@@ -38,6 +38,8 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
+				monster.util.addCommonI18n(self);
+
 				callback && callback(self);
 			});
 		},
@@ -69,7 +71,7 @@ define(function(require){
 			var self = this,
 				range = 31,
 				now = new Date(),
-				to = monster.ui.dateToGregorian(new Date(now.setDate(now.getDate() + 1))),
+				to = monster.util.dateToGregorian(new Date(now.setDate(now.getDate() + 1))),
 				from = to - (range * 60 * 60 * 24);
 
 			self.listTransactions(from, to, function(data) {
@@ -121,8 +123,8 @@ define(function(require){
 			});
 
 			parent.find('#filter_transactions').on('click', function() {
-				from = monster.ui.dateToGregorian(new Date(parent.find('#startDate').val()));
-				to = monster.ui.dateToGregorian(new Date(parent.find('#endDate').val()));
+				from = monster.util.dateToGregorian(new Date(parent.find('#startDate').val()));
+				to = monster.util.dateToGregorian(new Date(parent.find('#endDate').val()));
 
 				self.listTransactions(from, to, function(data) {
 					var listTransactions = parent.find('.list-transactions').empty();
@@ -143,8 +145,8 @@ define(function(require){
 			var self = this,
 				defaults = {
 					amount: 0.00,
-					billingStartDate: monster.ui.toFriendlyDate(from, 'short'),
-					billingEndDate: monster.ui.toFriendlyDate(to, 'short')
+					billingStartDate: monster.util.toFriendlyDate(from, 'short'),
+					billingEndDate: monster.util.toFriendlyDate(to, 'short')
 				};
 
 			monster.parallel({
@@ -176,7 +178,7 @@ define(function(require){
 								}
 
 								v.amount = parseFloat(v.amount).toFixed(2);
-								v.created = monster.ui.toFriendlyDate(v.created_at, 'short');
+								v.created = monster.util.toFriendlyDate(v.created_at, 'short');
 								arrayTransactions.push(v);
 
 								defaults.amount += parseFloat(v.amount);
@@ -192,7 +194,7 @@ define(function(require){
 							$.each(dataCharges.data, function(k, v) {
 								v.type = 'charges';
 								v.amount = parseFloat(v.amount).toFixed(2);
-								v.created = monster.ui.toFriendlyDate(v.created, 'short');
+								v.created = monster.util.toFriendlyDate(v.created, 'short');
 								arrayCharges.push(v);
 
 								defaults.amount += parseFloat(v.amount);

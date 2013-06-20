@@ -14,6 +14,7 @@ require.config({
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
+		'monster-util': 'js/lib/monster.util',
 		nicescroll: 'js/lib/jquery.nicescroll.min',
 		plugins: 'js/plugins',
 		postal: 'js/lib/postal-0.8.2',
@@ -41,7 +42,8 @@ require.config({
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
 	$.support.cors = true;
 
-	require(['monster-ui'], function(ui){
+	require(['monster-util', 'monster-ui'], function(util, ui){
+		monster.util = util;
 		monster.ui = ui;
 
 		$(function(){

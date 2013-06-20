@@ -5,21 +5,14 @@ define(function(require){
 
 	var app = {
 
-		name: 'scaffold',
+		name: 'common',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		i18n: [ 'en-US' ],
 
 		requests: {
-			'scaffold.data': {
-				url: ..,
-				verb: ..
-			}
 		},
 
 		subscribe: {
-			'scaffold.event': function(data){
-				console.log(data);
-			}
 		},
 
 		load: function(callback){

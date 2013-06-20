@@ -1,48 +1,4 @@
 {
-	"close": "X Close",
-	"previous": "Previous",
-	"next": "Next",
-	"submit": "Submit",
-	"cancel": "Cancel",
-	"search": "Search",
-	"select": "Select",
-	"error": "Error",
-	"info": "Info",
 	"hello": "Welcome!",
-	"warning": "Warning",
-	"pbxConnector": "SIP Trunking",
-	"currencyFormat": "$",
-	"startDate": "Start Date",
-	"endDate": "End Date",
-	"filter": "Filter",
-	"download": "Download",
-	"csv": "CSV",
-	"pdf": "PDF",
-	"welcome": "SIP Trunking Made Easy",
-
-	"dialog" : {
-		"showError": "Show Error",
-		"confirmOk": "OK",
-		"confirmCancel" : "Cancel",
-		"confirmTitle" : "Confirmation"
-	},
-
-	"table" : {
-		"search": "Search...",
-		"empty" : "No data available in table",
-		"processing" : "Processing...",
-		"showEntries": "Show _MENU_ entries",
-		"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries3",
-		"zeroRecords": "No matching records found",
-		"loading": "Loading...",
-		"filtered": "(filtered from _MAX_ total entries)",
-		"infoEmpty": ""
-	},
-
-	"paging" : {
-		"first": "First",
-		"previous": "First",
-		"next": "Next",
-		"last": "Last"
-	}
+	"welcome": "SIP Trunking Made Easy"
 }

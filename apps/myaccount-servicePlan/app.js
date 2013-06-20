@@ -12,7 +12,7 @@ define(function(require){
 
 		name: 'myaccount-servicePlan',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		i18n: [ 'en-US' ],
 
 		requests: {
 			'servicePlan.get': {
@@ -37,6 +37,8 @@ define(function(require){
 			var self = this;
 
 			self.whappAuth(function() {
+				monster.util.addCommonI18n(self);
+
 				callback && callback(self);
 			});
 		},
@@ -114,7 +116,7 @@ define(function(require){
 					subscription: function(callback) {
 						self.getSubscription(function(data) {
 							if(data.data.length > 0) {
-								renderData.dueDate = monster.ui.toFriendlyDate(data.data[0].next_bill_date, 'short');
+								renderData.dueDate = monster.util.toFriendlyDate(data.data[0].next_bill_date, 'short');
 							}
 
 							callback(null, data);
