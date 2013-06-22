@@ -82,15 +82,15 @@ define(function(require){
 		load: function(callback){
 			var self = this;
 
-			self.whappAuth(function() {
+			self.initApp(function() {
 				callback && callback(self);
 			});
 		},
 
-		whappAuth: function(callback) {
+		initApp: function(callback) {
 			var self = this;
 
-			monster.pub('auth.sharedAuth', {
+			monster.pub('auth.initApp', {
 				app: self,
 				callback: callback
 			});
