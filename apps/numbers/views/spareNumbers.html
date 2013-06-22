@@ -1,0 +1,14 @@
+{{#each spareNumbers}}
+    <div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
+        <input type="checkbox"></input>
+        <span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>
+        <span class="locality">
+            <span class="flag"></span>
+            <span class="city"></span>
+        </span>
+    </div>
+{{else}}
+    <div class="number-box no-data">
+    	{{ i18n.noNumber }}
+    </div>
+{{/each}}

@@ -1,0 +1,50 @@
+<!--
+	<div id="used_numbers">
+		<div id="actions_wrapper_used">
+			<form class="form-inline">
+				<span class="search-box pull-right">
+					<i class="icon-search"></i>
+					<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+				</span>
+			</form>
+		</div>
+
+		{{#each accounts}}
+			<div class="account-header" data-id="{{ id }}">
+				<div class="title">{{ name }}</div>
+				<div class="countNumbers"> {{ countNumbers }} </div>
+
+				<span class="pull-right">
+            		<div class="navbar">
+                		<ul class="nav pull-right">
+                    		<li class="dropdown">
+                        		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+                        		<ul class="dropdown-menu">
+                            		<li class="settings-number-link"><a href="#"><i class="icon-user"></i>{{ ../i18n.cnam }}</a></li>
+                            		<li class="settings-number-link"><a href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911 }}</a></li>
+                            		<li class="settings-number-link"><a href="#"><i class="icon-thumbs-down"></i>{{ ../i18n.failover }}</a></li>
+                        		</ul>
+                    		</li>
+                		</ul>
+            		</div>
+        		</span>
+			</div>
+
+			{{#each numbers}}
+				<div class="number-box">
+					<input type="checkbox"></input>
+					<span class="phone-number">{{#formatPhoneNumber this.key}}</span>
+					<span class="locality">
+						<span class="flag"></span>
+						<span class="city"></span>
+					</span>
+					<span class="assigned-to">{{ this.used_by }}</span>
+					<span class="features">
+						{{each features}}
+							{{this}}
+						{{/each}}
+					</span>
+					<span class="pull-right">
+            			<div class="navbar">
+                			<ul class="nav pull-right">
+                    			<li class="dropdown">

@@ -1,0 +1,14 @@
+{
+	"buy": "Buy",
+	"port": "Port",
+	"assignTo": "Assign To",
+	"delete": "Delete",
+	"addNumbers": "Add Numbers",
+	"moveNumbers": "Move Numbers",
+	"deleteNumbers": "Delete Numbers",
+	"noNumber": "There are no number in this account.",
+	"spareNumbers": "Spare Numbers",
+	"usedNumbers": "Numbers in use",
+	"helpSpareNumbers": "This shows the list of numbers not used anywhere in this account. You can assign those numbers to your sub-accounts or delete these numbers from your account.",
+	"helpUsedNumbers": "This list displays where are used your numbers. You can also see the list of numbers used by your sub-accounts."
+}
