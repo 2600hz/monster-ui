@@ -1666,14 +1666,9 @@ define(function(require){
 						}
 					};
 
-					if(!('callerId' in monster.apps)) {
-						monster._loadApp('callerId', function(app) {
-							monster.pub('callerId.editPopup', args);
-						});
-					}
-					else {
+					monster.apps.load('callerId', function(app) {
 						monster.pub('callerId.editPopup', args);
-					}
+					});
                 }
 			});
 

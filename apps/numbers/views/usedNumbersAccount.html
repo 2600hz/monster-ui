@@ -22,8 +22,8 @@
             <span class="city">{{ this.friendlyLocality }}</span>
         </span>
 
-        {{#if this.features}}
-            <div class="features pull-right">
+        <div class="features pull-right">
+        	{{#if this.features}}
                 {{#each this.features}}
                     {{#compare this "dash_e911"}}
                     <i class="icon-green icon-ambulance"></i>
@@ -38,9 +38,8 @@
                     <i class="icon-purple icon-android"></i>
                     {{/compare}}
                 {{/each}}
-            </div>
-        {{/if}}
-
+        	{{/if}}
+        </div>
     </div>
 {{else}}
 	<div class="number-box no-data">
