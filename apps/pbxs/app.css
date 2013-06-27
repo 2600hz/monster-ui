@@ -533,7 +533,7 @@
 
 
 #ws-content .notif-phones {
-	background: #22ccff; 
+	background: #22ccff;
 	border-radius:50%;
 	width:23px;
 	height:23px;
@@ -1419,46 +1419,4 @@
 	font-weight: 500;
 	font-size: 16px;
 	line-height: 30px;
-}
-
-/* CNAM POPUP */
-.trunkstore_popup.cnam {
-	padding: 15px 15px 0 15px;
-	width: 440px;
-}
-
-.trunkstore_popup.cnam .right_part{
-	line-height: 40px;
-	font-size: 18px;
-}
-
-.trunkstore_popup.cnam .left_image {
-	background: url('static/images/cid_phone.png') center no-repeat;
-	float: left;
-	height: 290px;
-	width: 152px;
-}
-
-.trunkstore_popup.cnam .right_part {
-	float: left;
-	margin: 0 10px 0 30px;
-	max-width: 300px;
-}
-
-.trunkstore_popup.cnam input.caller_id {
-	padding: 10px 5px;
-}
-
-.trunkstore_popup.cnam .btn.btn-success {
-	width: 100%;
-	padding: 10px 0;
-}
-
-.trunkstore_popup.cnam .right_part .row-fluid {
-	text-align: center;
-	margin: 25px 0;
-}
-
-.trunkstore_popup.cnam .right_part .row-fluid form {
-	margin: 0;
 }

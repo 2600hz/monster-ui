@@ -75,15 +75,41 @@
 	float: right;
 }
 
+#numbers_container .actions-wrapper .dropdown-move {
+	display: inline-block;
+	list-style: none;
+}
+
+#numbers_container .actions-wrapper .dropdown-move .dropdown-menu {
+	max-height: 300px;
+	overflow-y: auto;
+}
+
 #numbers_container .account-section .numbers-wrapper {
 	display: none;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box {
-
 	border: 1px solid #ccc;
     border-bottom-width: 0px;
     margin-top: -1px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .number-options .dropdown {
+	margin-top: 4px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .phone-number {
+	display: inline-block;
+	width: 150px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .locality {
+	margin-left: 30px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .locality .flag {
+	margin-right: 10px;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box.no-data:hover {
@@ -101,9 +127,9 @@
     border-top: 1px solid #CCCCCC;
     cursor: pointer;
     font-size: 20px;
-    height: 60px;
-    line-height: 60px;
-    padding: 5px 0 5px 10px;
+    height: 70px;
+    line-height: 70px;
+    padding-left: 10px;
 }
 
 #numbers_container .account-section .account-header:hover {
@@ -128,7 +154,7 @@
 	cursor: pointer !important;
 }
 
-#numbers_container .account-section .account-header .account-actions .dropdown-toggle {
+#numbers_container .dropdown-toggle {
 	background: transparent !important;
 }
 
@@ -176,13 +202,9 @@
 }
 
 #numbers_container .actions-wrapper {
-	margin: 30px 0 10px 0;
+	height: 40px;
 	line-height: 40px;
-}
-
-#numbers_container .actions-wrapper {
-    margin: 30px 0 0 0;
-    line-height: 40px;
+	margin: 30px 0 10px 0;
 }
 
 #numbers_container .actions-wrapper #trigger_links {
@@ -208,4 +230,10 @@
 
 #numbers_container .actions-wrapper a i{
     margin-right: 5px;
+}
+
+@media (min-width: 663px) and (max-width: 962px) {
+    #numbers_container {
+        width: 682px; /* 2 columns of 300px + padding and borders */
+    }
 }

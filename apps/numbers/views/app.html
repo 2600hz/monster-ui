@@ -14,44 +14,8 @@
 	</div>
 
 	<div class="list-numbers clearfix" data-type="spare">
-		<div id="actions_wrapper_spare" class="actions-wrapper">
-			<form class="form-inline">
-				<label>{{ i18n.addNumbers }}</label>
-            	<a href="#" id="buy_numbers" class="action-number"><i class="icon-shopping-cart icon-green"></i><span class="action-text">{{ i18n.buy }}</span></a>
-            	<a href="#" id="port_numbers" class="action-number"><i class="icon-random icon-blue"></i><span class="action-text">{{ i18n.port }}</span></a>
-
-            	<span id="trigger_links">
-                	<a href="#" id="delete_numbers" class="action-number"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.deleteNumbers }}</span></a>
-            	</span>
-
-            	<span class="search-box pull-right">
-                	<i class="icon-search"></i>
-                	<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
-            	</span>
-        	</form>
-		</div>
-
-		<div class="accounts-numbers">
-		{{#each listAccounts}}
-			<div class="account-section" data-id="{{ id }}">
-				<div class="account-header">
-					<div class="left-part">
-						<input type="checkbox"></input>
-					</div>
-					<div class="expandable">
-						{{ name }}
-						<span class="count"></span>
-					</div>
-
-				</div>
-				<div class="numbers-wrapper">
-				</div>
-			</div>
-		{{/each}}
-		</div>
 	</div>
 
 	<div class="list-numbers clearfix" data-type="used">
-
 	</div>
 </div>

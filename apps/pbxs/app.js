@@ -1642,45 +1642,39 @@ define(function(require){
 			});
 
 			pbxsManager.on('click', '.cnam-number', function() {
-				var $cnam_cell = $(this),
-					data_phone_number = $cnam_cell.parents('.number-wrapper').first().data('phone_number'),
-					phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
+                var cnamCell = $(this).parents('.number-wrapper').first(),
+                    phoneNumber = cnamCell.data('phone_number');
 
-				if(phone_number[1]) {
-					self.getNumber(phone_number[1], function(_data) {
-						self.renderCnamDialog(_data.data.cnam || {}, function(cnam_data) {
-							_data.data.cnam = $.extend({}, _data.data.cnam, cnam_data);
+                if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.cnam))) {
+									if(cnamCell.find('.features i.icon-user').size() === 0) {
+                                		cnamCell
+                                			.find('.features')
+                                			.append('<i class="icon-green icon-user"></i>')
+									}
+                            	}
+                            	else {
+                                	cnamCell
+                                		.find('.features i.icon-user')
+                                		.remove()
+                            	}
+                            }
+						}
+					};
 
-							self.cleanPhoneNumberData(_data.data);
-
-							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-								function() {
-									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
-											if(!($.isEmptyObject(_data.data.cnam))) {
-												$cnam_cell
-													.removeClass('inactive')
-													.addClass('active');
-											}
-											else {
-												$cnam_cell
-													.removeClass('active')
-													.addClass('inactive');
-											}
-
-											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
-											    template = monster.template(self, '!' + self.i18n.active().success_cnam, { phoneNumber: phoneNumber });
-
-											toastr.success(template);
-										},
-										function(_data_update) {
-											monster.ui.alert(self.i18n.active().error_update_caller_id + '' + _data_update.message);
-										}
-									);
-								}
-							);
+					if(!('callerId' in monster.apps)) {
+						monster._loadApp('callerId', function(app) {
+							monster.pub('callerId.editPopup', args);
 						});
-					});
-				}
+					}
+					else {
+						monster.pub('callerId.editPopup', args);
+					}
+                }
 			});
 
 			pbxsManager.on('click', '.e911-number', function() {
@@ -1780,29 +1774,7 @@ define(function(require){
 				.append(pbxsManager);
 		},
 
-		renderCnamDialog: function(cnam_data, callback) {
-			var self = this,
-				popup_html = $(monster.template(self, 'cnamDialog', cnam_data || {})),
-				popup;
-
-			$('button.btn.btn-success', popup_html).click(function(ev) {
-				ev.preventDefault();
-
-				var cnam_form_data = form2object('cnam');
-
-				if(typeof callback === 'function') {
-					callback(cnam_form_data);
-				}
-
-				popup.dialog('destroy').remove();
-			});
-
-			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().caller_id_dialog_title
-			});
-		},
-
-		 renderFailoverDialog: function(failover_data, callback) {
+		renderFailoverDialog: function(failover_data, callback) {
 			var self = this,
 				radio = (failover_data || {}).e164 ? 'number' : ((failover_data || {}).sip ? 'sip' : ''),
 				tmpl_data = {

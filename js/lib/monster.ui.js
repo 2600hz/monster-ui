@@ -45,10 +45,10 @@ define(function(require){
 		return ret;
 	});
 
-	Handlebars.registerHelper('formatPhoneNumber', function(phone_number) {
-		phone_number = phone_number.toString();
+	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
+		phoneNumber = phoneNumber.toString();
 
-		return monster.util.formatPhoneNumber(phone_number);
+		return monster.util.formatPhoneNumber(phoneNumber);
 	});
 
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {

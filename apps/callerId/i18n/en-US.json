@@ -1,0 +1,12 @@
+{
+	"dialogTitle": "Caller ID Name Selection",
+	"callerIdName": "Caller ID Name",
+	"callerIdPlaceholder": "John Doe",
+	"add": "Add",
+	"help": {
+		"firstLine": "Whatever text you put here will show up on the Caller ID Name field.",
+		"secondLine": "Please note Cellular devices do not display this field and it may take up to 72 hours to update."
+	},
+	"errorUpdate": "Failed to update the Caller ID for this phone number",
+	"successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}"
+}

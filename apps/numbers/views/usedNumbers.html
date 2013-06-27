@@ -1,0 +1,72 @@
+<div id="actions_wrapper_spare" class="actions-wrapper">
+    <form class="form-inline">
+        <label>{{ i18n.bulkActions }}</label>
+    </form>
+</div>
+
+<div class="accounts-numbers">
+	{{#each listAccounts}}
+    	<div class="account-section" data-id="{{ id }}">
+        	<div class="account-header">
+            	<div class="left-part">
+                	<input type="checkbox"></input>
+            	</div>
+            	<div class="expandable">
+                	{{ name }}
+                	<span class="count">{{ countUsedNumbers }}</span>
+            	</div>
+        	</div>
+        	<div class="numbers-wrapper">
+				{{#each usedNumbers}}
+					<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
+						<div class="number-options pull-right">
+        					<div class="navbar">
+            					<ul class="nav pull-right">
+                					<li class="dropdown">
+                    					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+                    					<ul class="dropdown-menu">
+                        					<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../../i18n.cnam }}</a></li>
+                        					<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../../i18n.e911 }}</a></li>
+                        					<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../i18n.failover }}</a></li>
+                    					</ul>
+                					</li>
+            					</ul>
+        					</div>
+    					</div>
+
+						<input type="checkbox"></input>
+						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
+						<span class="locality">
+							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
+							<span class="city">{{ this.friendlyLocality }}</span>
+						</span>
+
+						{{#if this.features}}
+        					<div class="features pull-right">
+            					{{#each this.features}}
+                					{{#compare this "dash_e911"}}
+                					<i class="icon-green icon-ambulance"></i>
+                					{{/compare}}
+                					{{#compare this "failover"}}
+                					<i class="icon-green icon-thumbs-down"></i>
+                					{{/compare}}
+                					{{#compare this "outbound_cnam"}}
+                					<i class="icon-green icon-user"></i>
+                					{{/compare}}
+                					{{#compare this "local"}}
+                					<i class="icon-purple icon-android"></i>
+                					{{/compare}}
+            					{{/each}}
+        					</div>
+    					{{/if}}
+
+					</div>
+				{{else}}
+					<div class="number-box no-data">
+						{{ ../../i18n.noUsedNumber }}
+					</div>
+				{{/each}}
+        	</div>
+    	</div>
+	{{/each}}
+</div>

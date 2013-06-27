@@ -1,7 +1,8 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toastr = require('toastr');
 
 	var app = {
 
@@ -17,6 +18,10 @@ define(function(require){
 			'numbers.delete': {
 				url: 'accounts/{accountId}/phone_numbers/collection',
 				verb: 'DELETE'
+			},
+			'numbers.move': {
+				url: 'accounts/{accountId}/phone_numbers/collection/activate',
+				verb: 'PUT'
 			},
 			'accounts.list': {
 				url: 'accounts/{accountId}/children',
@@ -50,17 +55,14 @@ define(function(require){
 			self.getData(function(data) {
 				data = self.formatData(data);
 
-				var numbersView = $(monster.template(self, 'app', data));
+				var numbersView = $(monster.template(self, 'app', data)),
+					spareView = monster.template(self, 'spareNumbers', data),
+					usedView = monster.template(self, 'usedNumbers', data);
 
-				/* Append list of spare numbers for our account, and the count */
-				numbersView
-					.find('.account-section[data-id="' + self.accountId + '"] .numbers-wrapper')
-					.append(monster.template(self, 'spareNumbers', data.listAccounts[0]))
-					.parent()
-					.find('.count')
-					.html('('+ data.listAccounts[0].spareNumbers.length + ')');
+				numbersView.find('.list-numbers[data-type="spare"]').append(spareView);
+				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
 
-				self.bindEvents(numbersView);
+				self.bindEvents(numbersView, data);
 
 				$('#ws-content')
 					.empty()
@@ -81,7 +83,7 @@ define(function(require){
 				};
 
 			/* Initializing accounts metadata */
-			mapAccounts[self.accountId] = _.extend(monster.apps['auth'].currentAccount, templateLists);
+			var thisAccount = _.extend(monster.apps['auth'].currentAccount, templateLists);
 
 			_.each(data.accounts, function(account) {
 				mapAccounts[account.id] = account;
@@ -92,9 +94,15 @@ define(function(require){
 				if(phoneNumber !== 'id') {
 					value.phoneNumber = phoneNumber;
 
-					value.used_by ? mapAccounts[self.accountId].usedNumbers.push(value) : mapAccounts[self.accountId].spareNumbers.push(value);
+					value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
 				}
 			});
+
+			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
+			thisAccount.countSpareNumbers = thisAccount.spareNumbers.length;
+			thisAccount.open = 'open';
+
+			mapAccounts[self.accountId] = thisAccount;
 
 			/* order all the list of numbers to display last updated number first */
 			var sortByDate = function(a,b) {
@@ -123,7 +131,7 @@ define(function(require){
 			return templateData;
 		},
 
-		bindEvents: function(parent) {
+		bindEvents: function(parent, dataNumbers) {
 			var self = this,
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
@@ -137,11 +145,26 @@ define(function(require){
 
 			/* On init */
 			parent.find('[data-toggle="tooltip"]').tooltip();
-			parent.find('.account-section').first().addClass('open searched');
+			parent.find('.list-numbers[data-type="used"]').hide();
 
 			/* Events */
+			/* Toggle between spare/used numbers view */
+			parent.find('.half-box').on('click', function() {
+				var box = $(this),
+					type = box.data('type');
+
+				if(!box.hasClass('selected')) {
+					parent.find('.half-box').removeClass('selected');
+					parent.find('.list-numbers').hide();
+
+					box.addClass('selected');
+					parent.find('.list-numbers[data-type="'+ type + '"]').show();
+				}
+			});
+
+
 			/* Select all numbers when clicking on the account checkbox */
-			parent.find('.account-header input[type="checkbox"]').on('click', function(event) {
+			parent.on('click', '.account-header input[type="checkbox"]', function(event) {
 				var checkboxes = $(this).parents('.account-section').first().find('.number-box input[type="checkbox"]'),
 					isChecked = $(this).prop('checked');
 
@@ -153,29 +176,30 @@ define(function(require){
 			});
 
 			/* Click on an account header, open list of numbers of this account. Send an API call to search it if it has not been searched already */
-			parent.find('.expandable').on('click', function(event) {
+			parent.on('click', '.expandable', function(event) {
 				var section = $(this).parents('.account-section'),
 				    accountId = section.data('id'),
-					target = $(event.target),
-					openIfNotCheckbox = function() {
-						if(!target.is('input:checkbox')) {
-							if(section.hasClass('open')) {
-								parent.find('.account-section').removeClass('open');
-							}
-							else {
-								parent.find('.account-section').removeClass('open');
-								section.addClass('open');
-							}
+					toggle = function() {
+						section.toggleClass('open');
 
-							parent.find('input[type="checkbox"]:checked').prop('checked', false);
-							parent.find('.number-box.selected').removeClass('selected');
+						if(!section.hasClass('open')) {
+							section.find('input[type="checkbox"]:checked').prop('checked', false);
+							section.find('.number-box.selected').removeClass('selected');
 						}
+
+						_.each(dataNumbers.listAccounts, function(account) {
+							if(account.id === accountId) {
+								account.open = section.hasClass('open') ? 'open' : '';
+							}
+						});
 					};
 
 				if(_.indexOf(listSearchedAccounts, accountId) === -1) {
 					self.listNumbers(accountId, function(numbers) {
 						var spareNumbers = [],
 							usedNumbers = [];
+
+						listSearchedAccounts.push(accountId);
 
 						_.each(numbers, function(value, phoneNumber) {
                 			if(phoneNumber !== 'id') {
@@ -185,22 +209,39 @@ define(function(require){
                 			}
             			});
 
-						listSearchedAccounts.push(accountId);
+						_.each(dataNumbers.listAccounts, function(value) {
+							//TODO Sort
+							if(value.id === accountId) {
+								value.spareNumbers = spareNumbers;
+								value.usedNumbers = usedNumbers;
+								value.countSpareNumbers = spareNumbers.length;
+								value.countUsedNumbers = usedNumbers.length;
 
-						section
-							.addClass('searched')
-							.find('.numbers-wrapper')
-							.empty()
-							.append(monster.template(self, 'spareNumbers', { spareNumbers: spareNumbers }))
-							.parent()
-							.find('.count')
-							.html('(' + spareNumbers.length + ')');
+								parent
+									.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+									.empty()
+									.append(monster.template(self, 'spareNumbersAccount', { spareNumbers: spareNumbers }))
+									.parent()
+									.find('.count')
+									.html('('+ spareNumbers.length +')');
 
-						openIfNotCheckbox();
+								parent
+									.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+									.empty()
+									.append(monster.template(self, 'usedNumbersAccount', { usedNumbers: usedNumbers }))
+									.parent()
+									.find('.count')
+									.html('('+ usedNumbers.length +')');
+
+								return false;
+							}
+						});
+
+						toggle();
 					});
 				}
 				else {
-					openIfNotCheckbox();
+					toggle();
 				}
 
 				showLinks();
@@ -235,58 +276,142 @@ define(function(require){
 				showLinks();
 			});
 
-			/* Toggle between spare/used numbers view */
-			parent.find('.half-box').on('click', function() {
-				var box = $(this),
-					type = box.data('type');
-
-				if(!box.hasClass('selected')) {
-					parent.find('.half-box').removeClass('selected');
-					parent.find('.list-numbers').hide();
-
-					box.addClass('selected');
-					parent.find('.list-numbers[data-type="'+ type + '"]').show();
-				}
-			});
-
 			/* Delete Numbers */
-			parent.find('#delete_numbers').on('click', function(event) {
-				var listNumbers = [];
+			parent.on('click', '#delete_numbers', function(event) {
+				var listNumbers = [],
+					mapAccounts = {};
 
 				parent.find('.number-box.selected').each(function(k, v) {
-					listNumbers.push($(v).data('phonenumber'));
+					var box = $(v),
+						number = box.data('phonenumber');
+						accountId = box.parents('.account-section').data('id');
+
+					if(!(accountId in mapAccounts)) {
+						mapAccounts[accountId] = {};
+					}
+
+					mapAccounts[accountId][number] = true;
+					listNumbers.push(number);
 				});
 
-				var section = parent.find('.number-box.selected').first().parents('.account-section')
-					accountId = section.data('id'),
-				    requestData = {
-						numbers: listNumbers,
-						accountId: accountId
-					};
+				var requestData = {
+					numbers: listNumbers,
+					accountId: self.accountId
+				};
 
-				self.deleteNumbers(requestData, function(data) {
-					self.listNumbers(accountId, function(numbers) {
-                        var spareNumbers = [],
-                            usedNumbers = [];
+				monster.ui.confirm(self.i18n.active().confirmDelete, function() {
+					self.deleteNumbers(requestData, function(data) {
+						var countDelete = 0;
 
-                        _.each(numbers, function(value, phoneNumber) {
-                            if(phoneNumber !== 'id') {
-                                value.phoneNumber = phoneNumber;
+						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+							if(account.id in mapAccounts) {
+								var newList = [];
+								_.each(account.spareNumbers, function(number, indexNumber) {
+									if(!(number.phoneNumber in data.success)) {
+										newList.push(number);
+									}
+									else {
+										countDelete++;
+									}
+								});
 
-                                value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
-                            }
-                        });
+								dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+								dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+							}
+						});
 
-                        section
-                            .find('.numbers-wrapper')
-                            .empty()
-                            .append(monster.template(self, 'spareNumbers', { spareNumbers: spareNumbers }))
-                            .parent()
-                            .find('.count')
-                            .html('(' + spareNumbers.length + ')');
-                    });
+						self.paintSpareNumbers(parent, dataNumbers, function() {
+							var template = monster.template(self, '!' + self.i18n.active().successDelete, { count: countDelete });
+
+							toastr.success(template);
+						});
+					});
 				});
 			});
+
+			/* Move Numbers */
+			parent.on('click', '.account-dropdown', function(event) {
+                var listNumbers = [],
+					destinationAccountId = $(this).data('id'),
+					destinationIndex = -1,
+					mapAccounts = {};
+
+				parent.find('.number-box.selected').each(function(k, v) {
+                    var box = $(v),
+                        number = box.data('phonenumber');
+                        accountId = box.parents('.account-section').data('id');
+
+                    if(!(accountId in mapAccounts)) {
+                        mapAccounts[accountId] = {};
+                    }
+
+                    mapAccounts[accountId][number] = true;
+                    listNumbers.push(number);
+                });
+
+				var requestData = {
+					numbers: listNumbers,
+					accountId: destinationAccountId
+				};
+
+                self.moveNumbers(requestData, function(data) {
+					var countMove = 0;
+
+					_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+						if(account.id === destinationAccountId) {
+							destinationIndex = indexAccount;
+						}
+
+                        if(account.id in mapAccounts) {
+                            var newList = [];
+                            _.each(account.spareNumbers, function(number, indexNumber) {
+                                if(!(number.phoneNumber in data.success)) {
+                                    newList.push(number);
+                                }
+                                else {
+									data.success[number.phoneNumber] = number;
+                                    countMove++;
+                                }
+                            });
+
+                            dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+                            dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+                        }
+                    });
+
+					/* If we didn't open it yet, it will be automatically updated when we click on it */
+					if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
+						_.each(data.success, function(value, number) {
+							dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
+						});
+
+						dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
+					}
+
+					//TODO Sort date
+                    self.paintSpareNumbers(parent, dataNumbers, function() {
+                    	var dataTemplate = {
+								count: countMove,
+								accountName: dataNumbers.listAccounts[destinationIndex].name
+                    		},
+                        	template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
+
+                        toastr.success(template);
+                    });
+                });
+            });
+		},
+
+		paintSpareNumbers: function(parent, dataNumbers, callback) {
+			var self = this,
+				template = monster.template(self, 'spareNumbers', dataNumbers);
+
+			parent
+				.find('.list-numbers[data-type="spare"]')
+				.empty()
+				.append(template);
+
+			callback && callback();
 		},
 
 		getData: function(callback) {
@@ -310,6 +435,23 @@ define(function(require){
             );
 		},
 
+		moveNumbers: function(args, callback) {
+			var self = this;
+
+            monster.request({
+                resource: 'numbers.move',
+                data: {
+                    accountId: args.accountId,
+                    data: {
+                        numbers: args.numbers
+                    }
+                },
+                success: function(_dataNumbers, status) {
+                    callback && callback(_dataNumbers.data);
+                }
+            });
+		},
+
 		deleteNumbers: function(args, callback) {
 			var self = this;
 
@@ -328,7 +470,21 @@ define(function(require){
 		},
 
 		listNumbers: function(accountId, callback) {
-			var self = this;
+			var self = this,
+				mapCountry = {
+					'FR': 'Paris, France',
+					'DE': 'Berlin, Germany',
+					'US': 'San Francisco, CA',
+					'IN': 'Mumbai, India',
+					'IT': 'Roma, Italy',
+					'GB': 'London, Great-Britain',
+					'IE': 'Dublin, Ireland',
+					'BR': 'Rio de Jainero, Brazil',
+					'RU': 'Moscow, Russia,',
+					'NZ': 'Wellington, New-Zealand',
+					'UA': 'Kiev, Ukraine'
+				},
+				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];
 
 			monster.request({
 				resource: 'numbers.list',
@@ -336,6 +492,12 @@ define(function(require){
 					accountId: accountId
 				},
 				success: function(_dataNumbers, status) {
+					/* TODO REMOVE */
+					$.each(_dataNumbers.data, function(k, v) {
+						v.isoCountry = randomArray[Math.floor((Math.random()*100)%(randomArray.length))];
+						v.friendlyLocality = mapCountry[v.isoCountry];
+					});
+
 					callback && callback(_dataNumbers.data);
 				}
 			});

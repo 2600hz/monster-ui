@@ -130,11 +130,8 @@
 	"testing": "Settings",
 	"title_settings": "Manually set up your PBX",
 	"delete_pbx": "Delete PBX",
-	"cnam": "Caller-ID",
-	"success_cnam": "You successfully updated the Caller-ID of {{phoneNumber}}",
 
 	"success_e911": "You successfully updated the e911 address of {{phoneNumber}}",
-	"failover": "Failover",
 	"failed_update_failover": "Failed to update the Failover for this phone number.",
 	"failover_title": "Setup Failover",
 	"failover_text": "When Inbound call is unreachable, place your call to",
@@ -173,15 +170,6 @@
 	"help_static_ip": "Your PBX is on a static IP if you can access the address of your pbx from an external device, like your cellphone. If you have to log into your corporate network or if the IP address of your PBX beings with 192 or 10, you are not on a static IP.",
 	"help_spare_numbers": "These are available numbers not currently attached to an account. Use this menu to assign numbers to a specific phone system.",
 
-	"caller_id_dialog_title": "Caller ID Name Selection",
-	"caller_id_name": "Caller ID Name",
-	"caller_id_placeholder": "John Doe",
-	"add": "Add",
-	"help_first_line": "Whatever text you put here will show up on the Caller ID Name field.",
-	"help_second_line": "Please note Cellular devices do not display this field and it may take up to 72 hours to update.",
-	"error_update_caller_id": "Failed to update the Caller ID for this phone number",
-
-	"e911": "e911",
 	"e911_dialog_title": "Edit 911 Location",
 	"gmap_pin_label": "Your+E911+Location",
 	"postal_code": "Zip Code",
