@@ -13,6 +13,7 @@ require.config({
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-util': 'js/lib/monster.util',
+		'monster-apps': 'js/lib/monster.apps',
 		plugins: 'js/plugins',
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
@@ -40,12 +41,13 @@ require.config({
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
 	$.support.cors = true;
 
-	require(['monster-util', 'monster-ui'], function(util, ui){
+	require(['monster-util', 'monster-ui', 'monster-apps'], function(util, ui, apps){
 		monster.util = util;
 		monster.ui = ui;
+		monster.apps = apps;
 
 		$(function(){
-			monster._loadApp('core', function(app){
+			monster.apps.load('core', function(app){
 				app.render($('#main section'));
 			});
 		});

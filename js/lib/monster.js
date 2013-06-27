@@ -19,52 +19,6 @@ define(function(require){
 			return http.status != 404;
 		},
 
-		_loadApp: function(name, callback){
-			var self = this,
-				appPath = 'apps/' + name,
-				path = appPath + '/app',
-				css = path + '.css';
-
-			require([path], function(app){
-				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
-
-				_.each(app.requests, function(request, id){
-					self._defineRequest(id, request, app);
-				});
-
-				_.each(app.subscribe, function(callback, topic){
-					var cb = typeof callback === 'string' ? app[callback] : callback;
-
-					self.sub(topic, cb, app);
-				});
-
-				_.extend(app.data, { i18n: {} });
-
-				_.each(app.i18n, function(locale){
-					self._loadLocale(app, locale)
-				});
-
-				monster.util.addCommonI18n(app);
-
-				// add an active property method to the i18n array within the app.
-				_.extend(app.i18n, {
-					active: function(){
-						return app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {}
-					}
-				});
-
-				app.apiUrl = app.apiUrl || monster.config.api.default;
-
-				if(self._fileExists(css)){
-					self.css(css);
-				}
-
-				monster.apps[name] = app;
-
-				app.load(callback);
-			})
-		},
-
 		_loadLocale: function(app, name){
 			$.ajax({
 				url: app.appPath + '/i18n/' + name + '.json',

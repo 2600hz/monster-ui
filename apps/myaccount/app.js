@@ -57,7 +57,7 @@ define(function(require){
 				var appName = self._apps.pop();
 
 				/* We first load all the required apps */
-				monster._loadApp(appName, function(app) {
+				monster.apps.load(appName, function(app) {
 					app.render();
 
 					self._loadApps(callback);

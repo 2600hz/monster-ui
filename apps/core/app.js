@@ -76,7 +76,7 @@ define(function(require){
 
 			var appName = self._apps.pop();
 
-			monster._loadApp(appName, function(app){
+			monster.apps.load(appName, function(app){
 				app.render($('#ws-content'));
 				self._load();
 			});
@@ -89,7 +89,7 @@ define(function(require){
 				var defaultApp = (args.defaultApp || {}).id || self._defaultApp;
 
 				if(defaultApp !== '') {
-					monster._loadApp(defaultApp, function(app) {
+					monster.apps.load(defaultApp, function(app) {
 						app.render($('#ws-content'));
 					});
 				}
@@ -104,7 +104,7 @@ define(function(require){
 			else {
 				var appName = self._baseApps.pop();
 
-				monster._loadApp(appName, function(app) {
+				monster.apps.load(appName, function(app) {
 					self._loadApps(args);
 				});
 			}
