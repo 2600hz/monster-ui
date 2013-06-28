@@ -26,7 +26,7 @@
         	<div class="features pull-right">
                 {{#if this.viewFeatures}}
                     {{#each this.viewFeatures}}
-                        <i class="{{icon}} {{active}}"></i>
+                        <i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
                     {{/each}}
                 {{/if}}
             </div>

@@ -18,5 +18,10 @@
 	"helpSpareNumbers": "This shows the list of numbers not used anywhere in this account. You can assign those numbers to your sub-accounts or delete these numbers from your account.",
 	"helpUsedNumbers": "This list displays where are used your numbers. You can also see the list of numbers used by your sub-accounts.",
 	"callflow": "Callflows",
-	"trunkstore": "Trunking"
+	"trunkstore": "Trunking",
+
+	"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
+	"cnamIconHelp": "This icon means that you set up the Caller-ID for this phone number",
+	"e911IconHelp": "This icon means that you set up e911 for this phone number",
+	"localIconHelp": "This icon means that this number is a local number"
 }

@@ -75,10 +75,10 @@ define(function(require){
 			var self = this;
 
 			value.viewFeatures = {
-                failover: { icon: 'icon-green icon-thumbs-down feature-failover' },
-                outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam' },
-                dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911' },
-                local: { icon: 'icon-purple icon-android feature-local' }
+                failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().failoverIconHelp },
+                outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().cnamIconHelp },
+                dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().e911IconHelp },
+                local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp }
             };
 
             _.each(value.features, function(feature) {
