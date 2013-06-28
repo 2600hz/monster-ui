@@ -62,7 +62,7 @@
 	"servicePlanWizardLegend": "Choose a service plan for this account:",
 	"servicePlanResellerOnly": "Only resellers are allowed to manage service plans.",
 	"trunksLegend": "Set limits for included simultaneous inbound and outbound calls",
-	"twowayTrunks": "Unlimited two way trunks",
+	"twowayTrunks": "Unlimited outbound trunks",
 	"inboundTrunks": "Unlimited inbound trunks",
 	"callRestrictionsLegend": "Call restrictions",
 	"callRestrictionsTitle": "This account can place calls to...",
@@ -127,6 +127,32 @@
 			"adminError": "The account administrator could not be created.",
 			"limitsError": "An error occured while setting up the limits.",
 			"creditError": "An error occured while adding credit to the account."
+		},
+		"uiRestrictionsUpdateSuccess": "UI restrictions updated successfully!",
+		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later."
+	},
+	"uiRestrictionsLegend": "Select what your customer can view",
+	"uiRestrictionsMenu": {
+		"account": "Account",
+		"settings": "Settings",
+		"billing": "Billing",
+		"transactions": "Transactions",
+		"servicePlan": "Service Plan",
+		"perMinute": "Per Minute",
+		"trunking": "Trunking",
+		"inbound": "Inbound",
+		"outbound": "Outbound"
+	},
+	"uiRestrictionsExtraSettings": {
+		"profile": {
+			"legend":"More Account Settings",
+			"showUserTab":"Show User Settings Tab",
+			"showAccountTab":"Show Account Settings Tab",
+			"showBillingTab":"Show Billing Settings Tab"
+		},
+		"perMinute": {
+			"legend":"More Balance Settings",
+			"showCreditInfo":"Show Credit Information"
 		}
 	}
 }

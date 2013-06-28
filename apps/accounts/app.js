@@ -432,12 +432,6 @@ define(function(require){
 										callback();
 									}
 								}
-							},
-							function(err, results) {
-								console.log('SUCCESS!');
-							},
-							function(err, results) {
-								console.log('ERROR!');
 							});
 
 							self.render();
@@ -513,12 +507,12 @@ define(function(require){
 
 		renderRestrictionsStep: function(params) {
 			var self = this,
-				parent = params.parent;/*,
+				parent = params.parent,
 				stepTemplate = self.getRestrictionsTabContent({
 					parent: parent
 				})
-				//TODO create getRestrictionsTabContent
-				parent.append(stepTemplate);*/
+
+				parent.append(stepTemplate);
 		},
 
 		renderLimitsStep: function(params) {
@@ -1338,6 +1332,11 @@ define(function(require){
 				parent: contentHtml.find('#accountsmanager_limits_tab')
 			});
 
+			self.renderRestrictionsTab({
+				accountData: accountData,
+				parent: contentHtml.find('#accountsmanager_restrictions_tab')
+			});
+
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
@@ -1498,6 +1497,90 @@ define(function(require){
 			inboundTrunksDiv.find('.slider-value').html(inbound);
 			inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
 			adjustHandle(inboundTrunksDiv);
+
+			return template;
+		},
+
+		/** Expected params:
+			- accountData
+			- parent
+		*/
+		renderRestrictionsTab: function(params) {
+			var self = this,
+				parent = params.parent,
+				accountData = params.accountData,
+				tabContentTemplate = self.getRestrictionsTabContent(params);
+
+			parent.find('#accountsmanager_uirestrictions_form').append(tabContentTemplate);
+
+			parent.find('#accountsmanager_uirestrictions_save').click(function(event) {
+				event.preventDefault();
+
+				var UIRestrictions = form2object('accountsmanager_uirestrictions_form').account;
+				
+				self.updateData(accountData, UIRestrictions,
+					function(data, status) {
+						toastr.success(self.i18n.active().toastrMessages.uiRestrictionsUpdateSuccess, '', {"timeOut": 5000});
+					},
+					function(data, status) {
+						toastr.error(self.i18n.active().toastrMessages.uiRestrictionsUpdateError, '', {"timeOut": 5000});
+					}
+				);
+			});
+		},
+
+		getRestrictionsTabContent: function(params) {
+			var self = this,
+				template = $(monster.template(self, 'restrictionsTabContent', {
+					account: params.accountData
+				}));
+
+			template.find('.restrictions-element input').each(function() {
+				if ($(this).is(':checked')) {
+					$(this).closest('a').addClass('enabled');
+				} else {
+					$(this).closest('a').removeClass('enabled');
+				};
+			});
+
+			template.find('.restrictions-element input').click(function(event) {
+				var $this = $(this),
+					restrictionType = ($this.closest('li').data('content')) ? $this.closest('li').data('content') : false;
+				if ($this.is(':checked')) {
+					$this.closest('a').addClass('enabled');
+
+					template.find('.restrictions-right .' + restrictionType + ' input').each(function() {
+						$(this).prop('checked', true);
+					});
+					event.stopPropagation();
+				} else {
+					$this.closest('a').removeClass('enabled');
+
+					template.find('.restrictions-right .' + restrictionType + ' input').each(function() {
+						$(this).prop('checked', false);
+					});
+				};
+			});
+
+			template.find('.restrictions-element[data-content]').click(function() {
+				var $this = $(this),
+					restrictionType = $this.data('content');
+
+				if ($this.find('input').is(':checked')) {
+					template.find('.restrictions-menu .restrictions-element').each(function() {
+						$(this).removeClass('active');
+					});
+					template.find('.restrictions-right > div').each(function() {
+						$(this).removeClass('active');
+					});
+
+					template.find('.restrictions-right .' + restrictionType).addClass('active');
+					$this.addClass('active');
+				} else {
+					template.find('.restrictions-right .' + restrictionType).removeClass('active');
+					$this.removeClass('active');
+				}
+			});
 
 			return template;
 		},
