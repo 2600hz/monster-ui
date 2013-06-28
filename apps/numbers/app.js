@@ -71,6 +71,27 @@ define(function(require){
 		},
 
 		//_util
+		formatNumber: function(value) {
+			var self = this;
+
+			value.viewFeatures = {
+                failover: { icon: 'icon-green icon-thumbs-down feature-failover' },
+                outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam' },
+                dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911' },
+                local: { icon: 'icon-purple icon-android feature-local' }
+            };
+
+            _.each(value.features, function(feature) {
+                value.viewFeatures[feature].active = 'active';
+            });
+
+            if('used_by' in value) {
+                value.friendlyUsedBy = self.i18n.active()[value.used_by];
+            }
+
+			return value;
+		},
+
 		formatData: function(data) {
 			var self = this,
 				mapAccounts = {},
@@ -90,12 +111,12 @@ define(function(require){
 			});
 
 			/* assign each number to spare numbers or used numbers for main account */
-			_.each(data.numbers, function(value, phoneNumber) {
-				if(phoneNumber !== 'id') {
-					value.phoneNumber = phoneNumber;
+			_.each(data.numbers.numbers, function(value, phoneNumber) {
+				value.phoneNumber = phoneNumber;
 
-					value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
-				}
+				value = self.formatNumber(value);
+
+                value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
 			});
 
 			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
@@ -201,9 +222,11 @@ define(function(require){
 
 						listSearchedAccounts.push(accountId);
 
-						_.each(numbers, function(value, phoneNumber) {
-                			if(phoneNumber !== 'id') {
+						_.each(numbers.numbers, function(value, phoneNumber) {
+                			if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
                     			value.phoneNumber = phoneNumber;
+
+								value = self.formatNumber(value);
 
                     			value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
                 			}
@@ -400,6 +423,81 @@ define(function(require){
                     });
                 });
             });
+
+            parent.on('click', '.cnam-number', function() {
+				var cnamCell = $(this).parents('.number-box').first(),
+                    phoneNumber = cnamCell.data('phonenumber');
+
+                if(phoneNumber) {
+                    var args = {
+                        phoneNumber: phoneNumber,
+                        callbacks: {
+                            success: function(data) {
+                                if(!($.isEmptyObject(data.data.cnam))) {
+                                    cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
+                                }
+                                else {
+                                    cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+                                }
+                            }
+                        }
+                    };
+
+                    monster.apps.load('callerId', function(app) {
+                        monster.pub('callerId.editPopup', args);
+                    });
+                }
+            });
+
+			parent.on('click', '.e911-number', function() {
+				var e911Cell = $(this).parents('.number-box').first(),
+                    phoneNumber = e911Cell.data('phonenumber');
+
+                if(phoneNumber) {
+                    var args = {
+                        phoneNumber: phoneNumber,
+                        callbacks: {
+                            success: function(data) {
+                                if(!($.isEmptyObject(data.data.dash_e911))) {
+                                    e911Cell.find('.features i.feature-dash_e911').addClass('active');
+                                }
+                                else {
+                                    e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+                                }
+                            }
+                        }
+                    };
+
+                    monster.apps.load('e911', function(app) {
+                        monster.pub('e911.editPopup', args);
+                    });
+                }
+			});
+
+			parent.on('click', '.failover-number', function() {
+                var failoverCell = $(this).parents('.number-box').first(),
+                    phoneNumber = failoverCell.data('phonenumber');
+
+                if(phoneNumber) {
+                    var args = {
+                        phoneNumber: phoneNumber,
+                        callbacks: {
+                            success: function(data) {
+                                if(!($.isEmptyObject(data.data.failover))) {
+                                    failoverCell.find('.features i.feature-failover').addClass('active');
+                                }
+                                else {
+                                    failoverCell.find('.features i.feature-failover').removeClass('active');
+                                }
+                            }
+                        }
+                    };
+
+                    monster.apps.load('failover', function(app) {
+                        monster.pub('failover.editPopup', args);
+                    });
+                }
+            });
 		},
 
 		paintSpareNumbers: function(parent, dataNumbers, callback) {
@@ -493,7 +591,7 @@ define(function(require){
 				},
 				success: function(_dataNumbers, status) {
 					/* TODO REMOVE */
-					$.each(_dataNumbers.data, function(k, v) {
+					$.each(_dataNumbers.data.numbers, function(k, v) {
 						v.isoCountry = randomArray[Math.floor((Math.random()*100)%(randomArray.length))];
 						v.friendlyLocality = mapCountry[v.isoCountry];
 					});

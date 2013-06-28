@@ -86,7 +86,18 @@ define(function(require){
 				//console.warn('reqwest failure on: ' + options.resource, error)
 				monster.pub('monster.requestEnd');
 
-				options.error && options.error(error);
+				var response = '',
+					status = undefined;
+
+				if('response' in error) {
+					response = JSON.parse(error.response);
+				}
+
+				if('status' in error) {
+					status = error.status;
+				}
+
+				options.error && options.error(response, status);
 			};
 
 			settings.success = function requestSuccess (resp) {

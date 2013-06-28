@@ -55,11 +55,13 @@ define(function(require){
 
 			if(!(name in monster.apps)) {
 				self._loadApp(name, function(app) {
+					console.log(app);
 					callback && callback(app);
 				});
 			}
 			else {
-				callback && callback(app);
+				console.log(monster.apps[name]);
+				callback && callback(monster.apps[name]);
 			}
 		}
 	};

@@ -1,0 +1,66 @@
+/* FAILOVER POPUP */
+.trunkstore_popup.failover {
+    padding: 0px;
+}
+
+.trunkstore_popup.failover .buttons {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.trunkstore_popup.failover .buttons > button {
+    width: 150px;
+    padding: 10px;
+}
+
+.trunkstore_popup.failover .buttons > button:not(:last-child) {
+	margin-right: 10px;
+}
+
+.trunkstore_popup.failover .header {
+    background: url('static/images/failover_header.png') no-repeat center;
+    width: 540px;
+    height: 136px;
+}
+
+.trunkstore_popup.failover .block-container {
+    margin-top: 30px;
+    margin: 30px 0;
+}
+
+.trunkstore_popup.failover .block-container .wrapper-phone-icon {
+    margin-bottom: 10px;
+}
+
+.trunkstore_popup.failover .block-container label {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+}
+
+.trunkstore_popup.failover .block-container input {
+    padding: 10px 15px;
+    text-align: center;
+    width: 150px;
+}
+
+.trunkstore_popup.failover .block-container > .span2 {
+    margin-top: 87px;
+}
+
+.trunkstore_popup.failover .icon-phone {
+    background-color: #BBBBBB;
+    border-radius: 22px 22px 22px 22px;
+    color: #EEEEEE;
+    font-size: 32px;
+    padding: 6px 10px;
+}
+
+.trunkstore_popup.failover .wrapper-phone-icon.selected .icon-phone {
+    background-color: #44cc44;
+}
+
+.trunkstore_popup.failover form {
+    margin:  0 20px;
+    padding: 0 0 10px;
+}

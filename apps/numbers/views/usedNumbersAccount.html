@@ -23,22 +23,13 @@
         </span>
 
         <div class="features pull-right">
-        	{{#if this.features}}
-                {{#each this.features}}
-                    {{#compare this "dash_e911"}}
-                    <i class="icon-green icon-ambulance"></i>
-                    {{/compare}}
-                    {{#compare this "failover"}}
-                    <i class="icon-green icon-thumbs-down"></i>
-                    {{/compare}}
-                    {{#compare this "outbound_cnam"}}
-                    <i class="icon-green icon-user"></i>
-                    {{/compare}}
-                    {{#compare this "local"}}
-                    <i class="icon-purple icon-android"></i>
-                    {{/compare}}
-                {{/each}}
-        	{{/if}}
+        	<div class="features pull-right">
+                {{#if this.viewFeatures}}
+                    {{#each this.viewFeatures}}
+                        <i class="{{icon}} {{active}}"></i>
+                    {{/each}}
+                {{/if}}
+            </div>
         </div>
     </div>
 {{else}}

@@ -105,7 +105,12 @@
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality {
+	width: 300px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .locality, #numbers_container .account-section .numbers-wrapper .number-box .used-by {
 	margin-left: 30px;
+	display: inline-block;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality .flag {
@@ -230,6 +235,14 @@
 
 #numbers_container .actions-wrapper a i{
     margin-right: 5px;
+}
+
+#numbers_container .features i {
+	display: none;
+}
+
+#numbers_container .features i.active {
+	display: inline-block;
 }
 
 @media (min-width: 663px) and (max-width: 962px) {
