@@ -21,18 +21,18 @@ define(function(require){
 				url: 'accounts/{accountId}',
 				verb: 'GET'
 			},
-			// 'accountsManager.create': {
-			// 	url: 'accounts/{accountId}',
-			// 	verb: 'PUT'
-			// },
+			'accountsManager.create': {
+				url: 'accounts',
+				verb: 'PUT'
+			},
 			'accountsManager.update': {
 				url: 'accounts/{accountId}',
 				verb: 'POST'
 			},
-			// 'accountsManager.delete': {
-			// 	url: 'accounts/{accountId}',
-			// 	verb: 'DELETE'
-			// },
+			'accountsManager.delete': {
+				url: 'accounts/{accountId}',
+				verb: 'DELETE'
+			},
 			'accountsManager.users.list': {
 				url: 'accounts/{accountId}/users',
 				verb: 'GET'
@@ -59,6 +59,10 @@ define(function(require){
 			},
 			'accountsManager.servicePlans.current': {
 				url: 'accounts/{accountId}/service_plans/current',
+				verb: 'GET'
+			},
+			'accountsManager.servicePlans.get': {
+				url: 'accounts/{accountId}/service_plans/{planId}',
 				verb: 'GET'
 			},
 			'accountsManager.servicePlans.add': {
@@ -171,7 +175,7 @@ define(function(require){
 			});
 			$(window).resize();
 
-			$('#account_search_input').keyup(function(e) {
+			parent.find('#account_search_input').keyup(function(e) {
 				var search = $(this).val();
 				if(search) {
 					$.each(parent.find('.account-list-element'), function() {
@@ -186,14 +190,20 @@ define(function(require){
 				}
 			});
 
-			$('#main_account_link').click(function(e) {
+			parent.find('#main_account_link').click(function(e) {
 				e.preventDefault();
-				self.renderList(originalAccountList, parent);
-				parent.find('.account-breadcrumb').remove();
+				self.render();
+			});
+
+			parent.find('#add_account_link').click(function(e) {
+				e.preventDefault();
+				self.renderNewAccountWizard({
+					parent: parent
+				});
 			});
 
 			self.renderList(originalAccountList, parent);
-			$('#main_account_link').html(self.accountTree[self.accountId].name);
+			parent.find('#main_account_link').html(self.accountTree[self.accountId].name);
 
 			parent.find('.account-list').niceScroll({
 				cursorcolor:"#333",
@@ -232,6 +242,7 @@ define(function(require){
 									$(this).remove();
 								}
 							});
+							parent.find('.main-content').empty();
 						});
 
 						self.renderList(accountList[acc_id].children, parent, true);
@@ -263,6 +274,400 @@ define(function(require){
 			}
 
 			$('#account_search_input').val("").keyup();
+		},
+
+		renderNewAccountWizard: function(params) {
+			var self = this,
+				parent = params.parent,
+				newAccountWizard = $(monster.template(self, 'newAccountWizard', {
+
+				})),
+				maxStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('max_step'));
+
+			newAccountWizard.find('.wizard-top-bar').data('active_step', '1');
+
+			newAccountWizard.find('.wizard-content-step').hide();
+			newAccountWizard.find('.wizard-content-step[data-step="1"]').show();
+
+			if(maxStep > 1) {
+				newAccountWizard.find('.submit-btn').hide();
+			}
+			else {
+				newAccountWizard.find('.next-step').hide();
+			}
+
+			newAccountWizard.find('.prev-step').hide();
+
+			newAccountWizard.find('.step').on('click', function() {
+				var currentStep = newAccountWizard.find('.wizard-top-bar').data('active_step'),
+					newStep = $(this).data('step');
+				if($(this).hasClass('completed')) {
+					self.validateStep(currentStep, 
+									  newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), 
+									  function() {
+						self.changeStep(newStep, maxStep, newAccountWizard);
+					});
+				}
+			});
+
+			newAccountWizard.find('.next-step').on('click', function(ev) {
+				ev.preventDefault();
+
+				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
+				self.validateStep(currentStep, newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), function() {
+					self.changeStep(++currentStep, maxStep, newAccountWizard);
+				});
+			});
+
+			newAccountWizard.find('.prev-step').on('click', function(ev) {
+				ev.preventDefault();
+
+				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
+				self.changeStep(--currentStep, maxStep, newAccountWizard);
+			});
+
+			newAccountWizard.find('.cancel').on('click', function(ev) {
+				ev.preventDefault();
+
+				parent.find('.edition-view').show();
+				parent.find('.account-list').getNiceScroll()[0].resize();
+
+				parent.find('.creation-view').empty();
+			});
+
+			newAccountWizard.find('.submit-btn').on('click', function(ev) {
+				ev.preventDefault();
+
+				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
+				self.validateStep(currentStep, newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), function() {
+
+					var formData = form2object('accountsmanager_new_account_form');
+
+					$.each(formData.limits.call_restriction, function(k, v) {
+						if(v.action === false) { v.action = "deny"; }
+					});
+
+					//TODO: submit new account
+					monster.request({
+						resource: 'accountsManager.create', 
+						data: {
+							data: formData.account
+						},
+						success: function(data, status) {
+							var newAccountId = data.data.id;
+							monster.parallel({
+								admin: function(callback) {
+									if(formData.user.email) {
+										if(formData.extra.autogenPassword === true) {
+											formData.user.password = self.autoGeneratePassword();
+										}
+										formData.user.username = formData.user.email;
+										formData.user.priv_level = "admin";
+										monster.request({
+											resource: 'accountsManager.users.create', 
+											data: {
+												accountId: newAccountId,
+												data: formData.user
+											},
+											success: function(data, status) {
+												callback(null, data.data);
+											},
+											error: function(data, status) {
+												toastr.error(self.i18n.active().toastrMessages.newAccount.adminError, '', {"timeOut": 5000});
+											}
+										});
+									} else {
+										callback();
+									}
+								},
+								limits: function(callback) {
+									monster.request({
+										resource: 'accountsManager.limits.get', 
+										data: {
+											accountId: newAccountId
+										},
+										success: function(data, status) {
+											var newLimits = {
+												allow_prepay: formData.limits.allow_prepay,
+												inbound_trunks: parseInt(formData.limits.inbound_trunks, 10),
+												twoway_trunks: parseInt(formData.limits.twoway_trunks, 10)
+											};
+											monster.request({
+												resource: 'accountsManager.limits.update',
+												data: {
+													accountId: newAccountId,
+													data: $.extend(true, {}, data.data, newLimits)
+												},
+												success: function(data, status) {
+													callback(null, data.data);
+												},
+												error: function(data, status) {
+													toastr.error(self.i18n.active().toastrMessages.newAccount.limitsError, '', {"timeOut": 5000});
+												}
+											});
+										},
+										error: function(data, status) {
+											console.log('get limits error');
+										}
+									});
+								},
+								credit: function(callback) {
+									if(formData.addCreditBalance) {
+										monster.request({
+											resource: 'accountsManager.balance.add',
+											data: {
+												accountId: newAccountId,
+												data: {
+													amount: parseFloat(formData.addCreditBalance)
+												}
+											},
+											success: function(data, status) {
+												callback(null, data.data);
+											},
+											error: function(data, status) {
+												toastr.error(self.i18n.active().toastrMessages.newAccount.creditError, '', {"timeOut": 5000});
+											}
+										});
+									} else {
+										callback();
+									}
+								}
+							},
+							function(err, results) {
+								console.log('SUCCESS!');
+							},
+							function(err, results) {
+								console.log('ERROR!');
+							});
+
+							self.render();
+						},
+						error: function(data, status) {
+							toastr.error(self.i18n.active().toastrMessages.newAccount.accountError, '', {"timeOut": 5000});
+						}
+					});
+
+				});
+			});
+
+			self.renderWizardSteps(newAccountWizard);
+
+
+			parent.find('.edition-view').hide();
+			parent.find('.creation-view').append(newAccountWizard);
+			parent.find('.account-list').getNiceScroll()[0].resize();
+		},
+
+		renderWizardSteps: function(parent) {
+			var self = this;
+
+			monster.parallel({
+					servicePlans: function(callback) {
+						if(monster.apps['auth'].isReseller) {
+							monster.request({
+								resource: 'accountsManager.servicePlans.list', 
+								data: {
+									accountId: self.accountId
+								},
+								success: function(data, status) {
+									callback(null, data.data);
+								}
+							});
+						} else {
+							callback(null, {});
+						}
+					},
+					classifiers: function(callback) {
+						monster.request({
+							resource: 'accountsManager.classifiers.get', 
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data, status) {
+								callback(null, data.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					self.renderAccountInfoStep({
+						parent: parent.find('.wizard-content-step[data-step="1"]')
+					});
+
+					self.renderServicePlanStep({
+						parent: parent.find('.wizard-content-step[data-step="2"]'),
+						servicePlans: results.servicePlans
+					});
+
+					self.renderLimitsStep({
+						parent: parent.find('.wizard-content-step[data-step="3"]'),
+						classifiers: results.classifiers
+					});
+
+					self.renderRestrictionsStep({
+						parent: parent.find('.wizard-content-step[data-step="4"]')
+					});
+				}
+			);
+		},
+
+		renderRestrictionsStep: function(params) {
+			var self = this,
+				parent = params.parent;/*,
+				stepTemplate = self.getRestrictionsTabContent({
+					parent: parent
+				})
+				//TODO create getRestrictionsTabContent
+				parent.append(stepTemplate);*/
+		},
+
+		renderLimitsStep: function(params) {
+			var self = this,
+				parent = params.parent,
+				formattedClassifiers = $.map(params.classifiers, function(val, key) {
+					return {
+						id: key,
+						name: val.friendly_name,
+						checked: true
+					};
+				}),
+				stepTemplate = self.getLimitsTabContent({
+					parent: parent,
+					formattedClassifiers: formattedClassifiers
+				})
+
+				parent.append(stepTemplate);
+		},
+
+		renderServicePlanStep: function(params) {
+			var self = this,
+				parent = params.parent,
+				stepTemplate = $(monster.template(self, 'servicePlanWizardStep', {
+					servicePlans: params.servicePlans,
+					isReseller: monster.apps['auth'].isReseller
+				}));
+
+				parent.append(stepTemplate);
+		},
+
+		renderAccountInfoStep: function(params) {
+			var self = this,
+				parent = params.parent,
+				autogenSwitch = parent.find('#accountsmanager_autogen_switch');
+
+			timezone.populateDropdown(parent.find('#accountsmanager_new_account_timezone'));
+
+			parent.find('.add-admin-toggle > a').on('click', function(e) {
+				e.preventDefault();
+				var newAdminDiv = parent.find('.new-admin-div');
+				if(newAdminDiv.hasClass('active')) {
+					newAdminDiv.slideUp();
+					newAdminDiv.removeClass('active');
+					newAdminDiv.find('input[type="text"], input[type="email"]').val('');
+					autogenSwitch.bootstrapSwitch('setState', true);
+				} else {
+					newAdminDiv.slideDown();
+					newAdminDiv.addClass('active');
+				}
+			});
+
+			autogenSwitch.bootstrapSwitch();
+			autogenSwitch.on('switch-change', function(e, data) {
+				var pwdToggleDiv = parent.find('.password-toggle-div');
+				if(data.value) {
+					pwdToggleDiv.find('input[type=password]').val('');
+					pwdToggleDiv.slideUp();
+				} else {
+					pwdToggleDiv.slideDown();
+				}
+			});
+		},
+
+		changeStep: function(stepIndex, maxStep, parent) {
+			var self = this;
+
+			parent.find('.step').removeClass('active');
+			parent.find('.step[data-step="'+stepIndex+'"]').addClass('active');
+
+			for(var i = stepIndex; i >= 1; --i) {
+				parent.find('.step[data-step="'+i+'"]').addClass('completed');
+			}
+
+			parent.find('.wizard-content-step').hide();
+			parent.find('.wizard-content-step[data-step="'+ stepIndex +'"]').show();
+
+			parent.find('.cancel').hide();
+			parent.find('.prev-step').show();
+			parent.find('.next-step').show();
+			parent.find('.submit-btn').hide();
+
+			if(stepIndex === maxStep) {
+				parent.find('.next-step').hide();
+				parent.find('.submit-btn').show();
+			}
+
+			if(stepIndex === 1) {
+				parent.find('.prev-step').hide();
+				parent.find('.cancel').show();
+			}
+
+			parent.find('.wizard-top-bar').data('active_step', stepIndex);
+		},
+
+		validateStep: function(step, parent, callback) {
+			var self = this,
+				validated = true,
+				step = parseInt(step),
+				errorMessage = self.i18n.active().wizardErrorMessages.pleaseCorrect,
+				formData = form2object('accountsmanager_new_account_form');
+
+			switch(step) {
+				case 1: 
+					if(!formData.account.name || !formData.account.realm) {
+						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.accountMandatoryFields;
+						validated = false;
+					}
+					if(parent.find('.new-admin-div').hasClass('active')) {
+						if(!formData.user.first_name || !formData.user.last_name || !formData.user.email) {
+							errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminMandatoryFields;
+							validated = false;
+						}
+						if(!formData.extra.autogenPassword) {
+							if(formData.user.password.length < 6 || !/[A-Za-z]/.test(formData.user.password) || !/[0-9]/.test(formData.user.password)) {
+								errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordError;
+								validated = false;
+							} else if(!formData.user.password || formData.user.password !== formData.extra.confirmPassword) {
+								errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordConfirmError;
+								validated = false;
+							}
+						}
+					}
+					break;
+				case 2:
+					break;
+				case 3: 
+					if(!/^(\d+(\.\d{1,2})?)?$/.test(formData.addCreditBalance)) {
+						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.incorrectBalanceFormat;
+						validated = false;
+					} else {
+						if(formData.addCreditBalance && parseFloat(formData.addCreditBalance) < 5.0) {
+							errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.balanceMinimumAmount;
+							validated = false;
+						}
+					}
+					break;
+				case 4:
+					break;
+				default:
+					validated = false;
+					break;
+			}
+
+			if(validated) {
+				callback && callback();
+			} else {
+				monster.ui.alert(errorMessage);
+			}
 		},
 
 		renderEditAdminsForm: function(parent) {
@@ -329,7 +734,7 @@ define(function(require){
 					contentHtml.find('.admin-element-link.delete').click(function(e) {
 						e.preventDefault();
 						var userId = $(this).parent().parent().data('user_id');
-						monster.confirm('This user will be permanently deleted. Continue?', function() {
+						monster.ui.confirm(self.i18n.active().deleteUserConfirm, function() {
 							monster.request({
 								resource: 'accountsManager.users.delete', 
 								data: {
@@ -394,7 +799,7 @@ define(function(require){
 							var formData = form2object($adminElement.find('form')[0]);
 							
 							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.alert('error','Name and Email fields are mandatory!');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
 							} else if($adminPasswordDiv.is(":visible")
 									&& (formData.password.length < 6 
 										|| /\s/.test(formData.password) 
@@ -402,9 +807,9 @@ define(function(require){
 										|| !/[A-Za-z]/.test(formData.password) 
 										)
 									) {
-								monster.alert('error','The password must contain at least 6 characters and include a letter and a number.');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
 							} else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
-								monster.alert('error','The password and confirmation do not match!');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
 							} else {
 								formData = self.cleanFormData(formData);
 								if(!$adminPasswordDiv.is(":visible")) {
@@ -450,7 +855,7 @@ define(function(require){
 							var formData = form2object('accountsmanager_add_admin_form'),
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
 							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.alert('error','Name and Email fields are mandatory!');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
 							} else if(!autoGen 
 									&& (formData.password.length < 6 
 										|| /\s/.test(formData.password) 
@@ -458,15 +863,15 @@ define(function(require){
 										|| !/[A-Za-z]/.test(formData.password) 
 										)
 									) {
-								monster.alert('error','The password must contain at least 6 characters and include a letter and a number.');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
 							} else if(!autoGen && formData.password !== formData.extra.password_confirm) {
-								monster.alert('error','The password and confirmation do not match!');
+								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
 							} else {
 								formData = self.cleanFormData(formData);
 								formData.priv_level = "admin";
 								formData.username = formData.email;
 								if(autoGen) {
-									formData.password = monster.ui.randomString(4,'abcdefghjkmnpqrstuvwxyz')+monster.ui.randomString(4,'0123456789');
+									formData.password = self.autoGeneratePassword();
 								}
 
 								monster.request({
@@ -558,7 +963,23 @@ define(function(require){
 								accountId: accountId
 							},
 							success: function(data, status) {
-								callback(null, data.data);
+								if(!$.isEmptyObject(data.data.plans)) {
+									monster.request({
+										resource: 'accountsManager.servicePlans.get', 
+										data: {
+											accountId: accountId,
+											planId: Object.keys(data.data.plans)[0]
+										},
+										success: function(data, status) {
+											callback(null, {
+												id: data.data.id,
+												name: data.data.name
+											});
+										}
+									});
+								} else {
+									callback(null, {});
+								}
 							}
 						});
 					},
@@ -598,7 +1019,7 @@ define(function(require){
 				},
 				function(err, results) {
 					var servicePlans = {
-							currentId: Object.keys(results.currentServicePlan.plans)[0],
+							current: results.currentServicePlan,
 							list: results.listServicePlans
 						},
 						params = {
@@ -640,15 +1061,15 @@ define(function(require){
 				regularUsers = $.map(accountUsers, function(val) {
 					return val.priv_level !== "admin" ? val : null;
 				}),
-				classifiers = $.map(params.classifiers, function(val, key) {
+				formattedClassifiers = $.map(params.classifiers, function(val, key) {
 					var ret = {
 						id: key,
 						name: val.friendly_name,
 						checked: true
 					};
-					if(accountData.call_restriction 
-						&& key in accountData.call_restriction 
-						&& accountData.call_restriction[key].action === "deny") {
+					if(accountLimits.call_restriction 
+						&& key in accountLimits.call_restriction 
+						&& accountLimits.call_restriction[key].action === "deny") {
 						ret.checked = false;
 					}
 					return ret;
@@ -658,8 +1079,7 @@ define(function(require){
 					accountAdmins: admins,
 					accountUsers: regularUsers,
 					accountServicePlans: servicePlans,
-					classifiers: classifiers,
-					isReseller: monster.apps['auth'].currentAccount.reseller
+					isReseller: monster.apps['auth'].isReseller
 				};
 
 			if($.isNumeric(templateData.account.created)) {
@@ -694,7 +1114,9 @@ define(function(require){
 					$this.find('a.settings-link').hide();
 					$this.find('.settings-item-content').slideDown('fast');
 
-					self.renderEditAdminsForm(parent);
+					if($this.data('name') === 'accountsmanager_account_admins') {
+						self.renderEditAdminsForm(parent);
+					}
 				}
 			});
 
@@ -705,6 +1127,37 @@ define(function(require){
 				$(this).parents('form').first().find('input, select').each(function(k, v) {
 					$(v).val($(v).data('original_value'));
 				});
+
+				e.stopPropagation();
+			});
+
+			contentHtml.find('#accountsmanager_delete_account_btn').on('click', function(e) {
+				e.preventDefault();
+
+				monster.ui.confirm(self.i18n.active().deleteAccountConfirm, function() {
+					monster.request({
+						resource: 'accountsManager.delete', 
+						data: {
+							accountId: accountData.id,
+							data: {}
+						},
+						success: function(data, status) {
+							self.render();
+						},
+						error: function(data, status) {
+							toastr.error(self.i18n.active().toastrMessages.deleteAccountError, '', {"timeOut": 5000});
+						}
+					});
+				});
+
+				e.stopPropagation();
+			});
+
+			contentHtml.find('#accountsmanager_use_account_btn').on('click', function(e) {
+				e.preventDefault();
+
+				//TODO: handle masquerading
+				console.log(monster.apps);
 
 				e.stopPropagation();
 			});
@@ -752,7 +1205,7 @@ define(function(require){
 			});
 
 			// If reseller
-			if(monster.apps['auth'].currentAccount.reseller) {
+			if(monster.apps['auth'].isReseller) {
 				var $btn_save = contentHtml.find('#accountsmanager_serviceplan_save'),
 					$btn_rec = contentHtml.find('#accountsmanager_serviceplan_reconciliation'),
 					$btn_sync = contentHtml.find('#accountsmanager_serviceplan_synchronization');
@@ -763,11 +1216,11 @@ define(function(require){
 						$btn_save.addClass('disabled');
 						var newPlanId = contentHtml.find('#accountsmanager_serviceplan_select').val(),
 							success = function() {
-								toastr.success('Active service plan updated successfully!', '', {"timeOut": 5000});
+								toastr.success(self.i18n.active().toastrMessages.servicePlanUpdateSuccess, '', {"timeOut": 5000});
 								$btn_save.removeClass('disabled');
 							},
 							error = function() {
-								toastr.error('An unexpected error occurred! Please try again.', '', {"timeOut": 5000});
+								toastr.error(self.i18n.active().toastrMessages.servicePlanUpdateError, '', {"timeOut": 5000});
 								$btn_save.removeClass('disabled');
 							};
 						if(servicePlans.currentId) {
@@ -835,12 +1288,12 @@ define(function(require){
 								data: {}
 							},
 							success: function(data, status) {
-								toastr.success('Reconciliation completed successfully!', '', {"timeOut": 5000});
+								toastr.success(self.i18n.active().toastrMessages.servicePlanReconciliationSuccess, '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							},
 							error: function(data, status) {
-								toastr.error('An error occurred during reconciliation process! Please try again later.', '', {"timeOut": 5000});
+								toastr.error(self.i18n.active().toastrMessages.servicePlanReconciliationError, '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							}
@@ -861,12 +1314,12 @@ define(function(require){
 								data: {}
 							},
 							success: function(data, status) {
-								toastr.success('Synchronization completed successfully!', '', {"timeOut": 5000});
+								toastr.success(self.i18n.active().toastrMessages.servicePlanSynchronizationSuccess, '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							},
 							error: function(data, status) {
-								toastr.error('An error occurred during synchronization process! Please try again later.', '', {"timeOut": 5000});
+								toastr.error(self.i18n.active().toastrMessages.servicePlanSynchronizationError, '', {"timeOut": 5000});
 								$btn_rec.removeClass('disabled');
 								$btn_sync.removeClass('disabled');
 							}
@@ -881,6 +1334,7 @@ define(function(require){
 				accountData: accountData,
 				limits: accountLimits,
 				balance: accountBalance,
+				formattedClassifiers: formattedClassifiers,
 				parent: contentHtml.find('#accountsmanager_limits_tab')
 			});
 
@@ -898,6 +1352,7 @@ define(function(require){
 			- accountData
 			- limits
 			- balance
+			- formattedClassifiers
 			- parent
 		*/
 		renderLimitsTab: function(params) {
@@ -906,74 +1361,23 @@ define(function(require){
 				limits = params.limits,
 				balance = params.balance,
 				accountData = params.accountData,
-				amountTwoway = 29.99,
-				twoway = limits.twoway_trunks || 0,
-				totalAmountTwoway = amountTwoway * twoway,
-				twowayTrunksDiv = parent.find('.trunks-div.twoway'),
-				amountInbound = 6.99,
-				inbound = limits.inbound_trunks || 0,
-				totalAmountInbound = amountInbound * inbound,
-				inboundTrunksDiv = parent.find('.trunks-div.inbound'),
-				adjustHandle = function(trunksDiv) {
-					trunksDiv.find('.slider-value-wrapper').css('left', trunksDiv.find('.slider-div .ui-slider-handle').css('left'));
-				};
-
-			twowayTrunksDiv.find('.slider-div').slider({
-				min: 0,
-				max: 20,
-				range: 'min',
-				value: twoway,
-				slide: function( event, ui ) {
-					twowayTrunksDiv.find('.slider-value').html(ui.value);
-					totalAmountTwoway = ui.value * amountTwoway;
-					twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
-
-					adjustHandle(twowayTrunksDiv);
-				},
-				change: function(event, ui) {
-					adjustHandle(twowayTrunksDiv);
-				}
-			});
-
-			inboundTrunksDiv.find('.slider-div').slider({
-				min: 0,
-				max: 100,
-				range: 'min',
-				value: inbound,
-				slide: function( event, ui ) {
-					inboundTrunksDiv.find('.slider-value').html(ui.value);
-					totalAmountInbound = ui.value * amountInbound;
-					inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
-
-					adjustHandle(inboundTrunksDiv);
-				},
-				change: function(event, ui) {
-					adjustHandle(inboundTrunksDiv);
-				}
-			});
-
-			twowayTrunksDiv.find('.slider-value').html(twoway);
-			twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
-			adjustHandle(twowayTrunksDiv);
-			inboundTrunksDiv.find('.slider-value').html(inbound);
-			inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
-			adjustHandle(inboundTrunksDiv);
+				tabContentTemplate = self.getLimitsTabContent(params);
 
 			//TODO get currency
-			parent.find('.manage-credit-div .credit-balance').html('$'+balance);
+			tabContentTemplate.find('.manage-credit-div .credit-balance').html('$'+balance);
 
 			parent.find('#accountsmanager_limits_save').click(function(e) {
 				e.preventDefault();
 
 				var newTwowayValue = twowayTrunksDiv.find('.slider-div').slider('value'),
 					newInboundValue = inboundTrunksDiv.find('.slider-div').slider('value'),
-					callRestrictions = form2object('accountsmanager_callrestrictions_form'),
-					addCredit = parent.find('#accountsmanager_add_credit').val(),
-					allowPrepay = parent.find('#accountsmanager_allow_prepay').is(':checked');
+					callRestrictions = form2object('accountsmanager_callrestrictions_form').limits.call_restriction,
+					addCredit = tabContentTemplate.find('.add-credit-input').val(),
+					allowPrepay = tabContentTemplate.find('.allow-prepay-ckb').is(':checked');
 
-				if(addCredit.match(/^(\d+(\.\d{1,2})?)?$/)) {
+				if(/^(\d+(\.\d{1,2})?)?$/.test(addCredit)) {
 
-					$.each(callRestrictions.call_restriction, function(k, v) {
+					$.each(callRestrictions, function(k, v) {
 						if(v.action === false) { v.action = "deny"; }
 					});
 
@@ -987,25 +1391,17 @@ define(function(require){
 									data: $.extend(true, {}, limits, {
 										twoway_trunks: newTwowayValue,
 										inbound_trunks: newInboundValue,
-										allow_prepay: allowPrepay
+										allow_prepay: allowPrepay,
+										call_restriction: callRestrictions
 									})
 								},
 								success: function(data, status) {
-									toastr.success('Trunk limits updated successfully!', '', {"timeOut": 5000});
+									toastr.success(self.i18n.active().toastrMessages.limitsUpdateSuccess, '', {"timeOut": 5000});
 								},
 								error: function(data, status) {
-									toastr.error('An unexpected error occured when updating the trunks, please try again later.', '', {"timeOut": 5000});
+									toastr.error(self.i18n.active().toastrMessages.limitsUpdateError, '', {"timeOut": 5000});
 								}
 							});
-
-							self.updateData(accountData, callRestrictions,
-								function(data, status) {
-									toastr.success('Call restrictions updated successfully!', '', {"timeOut": 5000});
-								},
-								function(data, status) {
-									toastr.error('An unexpected error occured when updating the call restrictions, please try again later.', '', {"timeOut": 5000});
-								}
-							);
 
 							if(addCredit) {
 								monster.request({
@@ -1017,10 +1413,10 @@ define(function(require){
 										}
 									},
 									success: function(data, status) {
-										toastr.success('Credit successfully added to the current balance!', '', {"timeOut": 5000});
+										toastr.success(self.i18n.active().toastrMessages.creditAddSuccess, '', {"timeOut": 5000});
 									},
 									error: function(data, status) {
-										toastr.error('An unexpected error occured when adding credit, please try again later.', '', {"timeOut": 5000});
+										toastr.error(self.i18n.active().toastrMessages.creditAddError, '', {"timeOut": 5000});
 									}
 								});
 							}
@@ -1028,10 +1424,82 @@ define(function(require){
 					);
 
 				} else {
-					monster.ui.alert('Incorrect format for balance credit, you can only enter a number with up to 2 decimals.');
+					monster.ui.alert(self.i18n.active().wizardErrorMessages.balanceMinimumAmount);
 				}
 
 			});
+
+			parent.find('#accountsmanager_callrestrictions_form').append(tabContentTemplate);
+		},
+
+		/**
+		 * This function is shared by both the edition tab and the creation wizard step.
+		 */
+		getLimitsTabContent: function(params) {
+			var self = this,
+				formattedClassifiers = params.formattedClassifiers,
+				limits = params.limits || {};
+				template = $(monster.template(self, 'limitsTabContent', {
+					classifiers: formattedClassifiers
+				})),
+				amountTwoway = 29.99,
+				twoway = limits.twoway_trunks || 0,
+				totalAmountTwoway = amountTwoway * twoway,
+				twowayTrunksDiv = template.find('.trunks-div.twoway'),
+				amountInbound = 6.99,
+				inbound = limits.inbound_trunks || 0,
+				totalAmountInbound = amountInbound * inbound,
+				inboundTrunksDiv = template.find('.trunks-div.inbound'),
+				adjustHandle = function(trunksDiv) {
+					trunksDiv.find('.slider-value-wrapper').css('left', trunksDiv.find('.slider-div .ui-slider-handle').css('left'));
+				},
+				createSlider = function(args) {
+					var trunksDiv = args.trunksDiv,
+						sliderValue = trunksDiv.find('.slider-value'),
+						totalAmountValue = trunksDiv.find('.total-amount .total-amount-value'),
+						trunksValue = trunksDiv.find('.trunks-value');
+					trunksDiv.find('.slider-div').slider({
+						min: args.minValue,
+						max: args.maxValue,
+						range: 'min',
+						value: args.currentValue,
+						slide: function(event, ui) {
+							var totalAmount = ui.value * args.amount;
+							sliderValue.html(ui.value);
+							totalAmountValue.html(totalAmount.toFixed(2));
+							trunksValue.val(ui.value);
+							adjustHandle(trunksDiv);
+						},
+						change: function(event, ui) {
+							adjustHandle(trunksDiv);
+						}
+					});
+				};
+
+			createSlider({
+				trunksDiv: twowayTrunksDiv,
+				minValue: 0,
+				maxValue: 20,
+				currentValue: twoway,
+				amount: amountTwoway
+			});
+
+			createSlider({
+				trunksDiv: inboundTrunksDiv,
+				minValue: 0,
+				maxValue: 100,
+				currentValue: inbound,
+				amount: amountInbound
+			});
+
+			twowayTrunksDiv.find('.slider-value').html(twoway);
+			twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
+			adjustHandle(twowayTrunksDiv);
+			inboundTrunksDiv.find('.slider-value').html(inbound);
+			inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
+			adjustHandle(inboundTrunksDiv);
+
+			return template;
 		},
 
 		adjustTabsWidth: function($tabs) {
@@ -1053,6 +1521,10 @@ define(function(require){
 		},
 
 		updateData: function(data, newData, success, error) {
+			var dataToUpdate = $.extend(true, {}, data, newData);
+			if('reseller' in dataToUpdate) {
+				delete dataToUpdate.reseller;
+			}
 			monster.request({
 				resource: 'accountsManager.update', 
 				data: {
@@ -1060,16 +1532,16 @@ define(function(require){
 					data: $.extend(true, {}, data, newData)
 				},
 				success: function(_data, status) {
-					if(typeof success == 'function') {
-						success(_data, status);
-					}
+					success && success(_data, status);
 				},
 				error: function(_data, status) {
-					if(typeof error == 'function') {
-						error(_data, status);
-					}
+					error && error(_data, status);
 				}
 			});
+		},
+
+		autoGeneratePassword: function() {
+			return monster.util.randomString(4,'abcdefghjkmnpqrstuvwxyz')+monster.util.randomString(4,'0123456789');
 		}
 
 

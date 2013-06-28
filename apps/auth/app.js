@@ -49,7 +49,7 @@ define(function(require){
 				self.authToken = cookieData.authToken;
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
-
+				self.isReseller = cookieData.isReseller;
 
 				monster.pub('auth.loadAccount');
 			}

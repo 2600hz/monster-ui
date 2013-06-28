@@ -2,8 +2,9 @@ define(function(require) {
 
 	var $ = require("jquery"),
 		_ = require("underscore"),
-		monster = require("monster"),
-		jstz = require("jstz");
+		monster = require("monster");
+
+	require("jstz");
 
 	var timezone = {
 

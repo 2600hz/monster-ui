@@ -1,10 +1,10 @@
 <div class="row-fluid">
 	<div class="span12">
 		<ul class="nav nav-tabs account-tabs">
-			<li class="active"><a href="#accountsmanager_overview_tab">Overview</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">Service Plans</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">Limits</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">Restrictions</a></li>
+			<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
+			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
+			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">{{ i18n.tabTitles.limits }}</a></li>
+			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">{{ i18n.tabTitles.restrictions }}</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="accountsmanager_overview_tab">
@@ -12,47 +12,59 @@
 					<!-- Account Status -->
 					<li class="settings-item" data-name="accountsmanager_account_status">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.account_status }}</span>
+							<span class="title">{{ i18n.accountStatus }}</span>
 							<span class="description">
 								{{#if account.enabled}}
-								Active
+									{{ i18n.active }}
 								{{else}}
-								Disabled
+									{{ i18n.disabled }}
 								{{/if}}
 								{{#if account.created}}
-								<span class="date">(Created on {{account.created}})</span>
+								<span class="date">({{ i18n.createdOn }} {{account.created}})</span>
 								{{/if}}
 							</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_status">
 										<div class="control-group">
-										{{#if account.enabled}}
-											<label class="control-label">{{ i18n.disable_account }}</label>
+											<label class="control-label">
+												{{ i18n.accountId }}
+											</label>
 											<div class="controls">
-												<input type="hidden" name="enabled" value="false"/>
+												<div class="plain-text">{{account.id}}</div>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label">
+												{{#if account.enabled}}
+													{{ i18n.disableAccount }}
+												{{else}}
+													{{ i18n.enableAccount }}
+												{{/if}}
+											</label>
+											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button id="accountsmanager_use_account_btn" class="btn btn-primary">{{ i18n.useAccount }}</button>
+												{{#if account.enabled}}
+												<input type="hidden" name="enabled" value="false"/>
 												<button data-field="accountsmanager_account_status" class="btn btn-warning change">
 													{{ i18n.disable }}
 												</button>
-											</div>
-										{{else}}
-											<label class="control-label">{{ i18n.enable_account }}</label>
-											<div class="controls">
+												{{else}}
 												<input type="hidden" name="enabled" value="true"/>
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button data-field="accountsmanager_account_status" class="btn btn-success change">
 													{{ i18n.enable }}
 												</button>
+												{{/if}}
+												<button id="accountsmanager_delete_account_btn" class="btn btn-danger">{{ i18n.delete }}</button>
 											</div>
-										{{/if}}
 										</div>
 									</form>
 								</div>
@@ -62,20 +74,20 @@
 					<!-- Account name -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_name">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.account_name }}</span>
+							<span class="title">{{ i18n.accountName }}</span>
 							<span class="description">{{account.name}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_name">
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_account_name">{{ i18n.account_name }}</label>
+											<label class="control-label" for="accountsmanager_account_name">{{ i18n.accountName }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_account_name" name="name" value="{{account.name}}" data-original_value="{{account.name}}"/>
 											</div>
@@ -83,7 +95,7 @@
 										<div class="control-group">
 											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_name">{{ i18n.save_changes }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_name">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
 									</form>
@@ -94,20 +106,20 @@
 					<!-- Account realm -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_realm">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.account_realm }}</span>
+							<span class="title">{{ i18n.accountRealm }}</span>
 							<span class="description">{{account.realm}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_realm">
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.account_realm }}</label>
+											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.accountRealm }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_account_realm" name="realm" value="{{account.realm}}" data-original_value="{{account.realm}}"/>
 											</div>
@@ -115,7 +127,7 @@
 										<div class="control-group">
 											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_realm">{{ i18n.save_changes }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_realm">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
 									</form>
@@ -126,14 +138,14 @@
 					<!-- Account admins -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_admins">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.account_admins }} ({{accountAdmins.length}})</span>
+							<span class="title">{{ i18n.accountAdmins }} ({{accountAdmins.length}})</span>
 							{{#if accountAdmins.length}}
 								<div class="description">
 									<ul>
-										<li>{{accountAdmins.0.first_name}}&nbsp;{{accountAdmins.0.last_name}}</li>
+										<li>{{accountAdmins.0.firstName}}&nbsp;{{accountAdmins.0.lastName}}</li>
 										<li>{{accountAdmins.0.email}}</li>
-										{{#if accountAdmins.0.contact_number}}
-										<li>{{formatPhoneNumber accountAdmins.0.contact_number}}</li>
+										{{#if accountAdmins.0.contactNumber}}
+										<li>{{formatPhoneNumber accountAdmins.0.contactNumber}}</li>
 										{{/if}}
 									</ul>
 								</div>
@@ -142,9 +154,9 @@
 							{{/if}}
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
@@ -158,7 +170,7 @@
 					<!-- Technical Contact -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_technical_contact">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.technical_contact }}</span>
+							<span class="title">{{ i18n.technicalContact.label }}</span>
 							<div class="description">
 								<ul>
 								{{#if account.contact.technical.name}}
@@ -174,28 +186,28 @@
 							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_technical_contact">
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technical_contact_name }}</label>
+											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technicalContact.name }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_technical_contact_name" name="contact.technical.name" value="{{account.contact.technical.name}}" data-original_value="{{account.contact.technical.name}}"/>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_technical_contact_email">{{ i18n.technical_contact_email }}</label>
+											<label class="control-label" for="accountsmanager_technical_contact_email">{{ i18n.technicalContact.email }}</label>
 											<div class="controls">
 												<input type="email" id="accountsmanager_technical_contact_email" name="contact.technical.email" value="{{account.contact.technical.email}}" data-original_value="{{account.contact.technical.email}}"/>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_technical_contact_number">{{ i18n.technical_contact_number }}</label>
+											<label class="control-label" for="accountsmanager_technical_contact_number">{{ i18n.technicalContact.number }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_technical_contact_number" name="contact.technical.number" value="{{account.contact.technical.number}}" data-original_value="{{account.contact.technical.number}}"/>
 											</div>
@@ -203,7 +215,7 @@
 										<div class="control-group">
 											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button type="submit" class="btn btn-success change" data-field="accountsmanager_technical_contact">{{ i18n.save_changes }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_technical_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
 									</form>
@@ -214,7 +226,7 @@
 					<!-- Billing Contact -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_billing_contact">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.billing_contact }}</span>
+							<span class="title">{{ i18n.billingContact.label }}</span>
 							<div class="description">
 								<ul>
 								{{#if account.contact.billing.name}}
@@ -230,28 +242,28 @@
 							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_billing_contact">
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billing_contact_name }}</label>
+											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billingContact.name }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_billing_contact_name" name="contact.billing.name" value="{{account.contact.billing.name}}" data-original_value="{{account.contact.billing.name}}"/>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_billing_contact_email">{{ i18n.billing_contact_email }}</label>
+											<label class="control-label" for="accountsmanager_billing_contact_email">{{ i18n.billingContact.email }}</label>
 											<div class="controls">
 												<input type="email" id="accountsmanager_billing_contact_email" name="contact.billing.email" value="{{account.contact.billing.email}}" data-original_value="{{account.contact.billing.email}}"/>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_billing_contact_number">{{ i18n.billing_contact_number }}</label>
+											<label class="control-label" for="accountsmanager_billing_contact_number">{{ i18n.billingContact.number }}</label>
 											<div class="controls">
 												<input type="text" id="accountsmanager_billing_contact_number" name="contact.billing.number" value="{{account.contact.billing.number}}" data-original_value="{{account.contact.billing.number}}"/>
 											</div>
@@ -259,7 +271,7 @@
 										<div class="control-group">
 											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button type="submit" class="btn btn-success change" data-field="accountsmanager_billing_contact">{{ i18n.save_changes }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_billing_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
 									</form>
@@ -270,20 +282,20 @@
 					<!-- Account timezone -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_timezone">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.account_timezone }}</span>
+							<span class="title">{{ i18n.accountTimezone }}</span>
 							<span class="description">{{account.timezone}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.edit_settings }}</span>
+								<span class="text">{{ i18n.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changes_saved }}</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_timezone">
 										<div class="control-group">
-											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.account_timezone }}</label>
+											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.accountTimezone }}</label>
 											<div class="controls">
 												<select id="accountsmanager_account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
 											</div>
@@ -291,7 +303,7 @@
 										<div class="control-group">
 											<div class="controls">
 												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_timezone">{{ i18n.save_changes }}</button>
+												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_timezone">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
 									</form>
@@ -305,35 +317,43 @@
 			<div class="tab-pane" id="accountsmanager_serviceplans_tab">
 				<div class="serviceplans-container">
 					<div class="serviceplans-update clearfix">
+						<legend>{{ i18n.activeServicePlan }}</legend>
+						{{#compare isReseller "===" true}}
 						<form>
-							<legend>Active service plan</legend>
 							<div class="controls-group">
 								<div class="controls">
-									<select id="accountsmanager_serviceplan_select" {{#compare isReseller "!==" true}}disabled{{/compare}}>
-										<option value="" {{#unless accountServicePlans.currentId}}selected{{/unless}} >- None -</option>
+									<select id="accountsmanager_serviceplan_select">
+										<option value="" {{#unless accountServicePlans.current.id}}selected{{/unless}} >- {{ i18n.none }} -</option>
 										{{#each accountServicePlans.list}}
-										<option value="{{this.id}}" {{#compare ../accountServicePlans.currentId "===" this.id}}selected{{/compare}}>{{this.name}}</option>
+										<option value="{{this.id}}" {{#compare ../accountServicePlans.current.id "===" this.id}}selected{{/compare}}>{{this.name}}</option>
 										{{/each}}
 									</select>
 								</div>
 							</div>
-							{{#compare isReseller "===" true}}
 							<div class="controls-group">
 								<div class="controls">
-									<button id="accountsmanager_serviceplan_save" class="btn btn-success pull-right">Save</button>
+									<button id="accountsmanager_serviceplan_save" class="btn btn-success pull-right">{{ i18n.save }}</button>
 								</div>
 							</div>
-							{{/compare}}
 						</form>
+						{{else}}
+							<span>
+								{{#if accountServicePlans.current.id}}
+									{{accountServicePlans.current.name}}
+								{{else}}
+									- {{ i18n.none }} -
+								{{/if}}
+							</span>
+						{{/compare}}
 					</div>
 					{{#compare isReseller "===" true}}
 					<div class="serviceplans-maintenance clearfix">
 						<form>
-							<legend>Service plan maintenance</legend>
+							<legend>{{ i18n.servicePlanMaintenance }}</legend>
 							<div class="controls-group">
 								<div class="controls">
-									<button id="accountsmanager_serviceplan_reconciliation" class="btn btn-primary">Reconciliation</button>
-									<button id="accountsmanager_serviceplan_synchronization" class="btn btn-primary">Synchronization</button>
+									<button id="accountsmanager_serviceplan_reconciliation" class="btn btn-primary">{{ i18n.servicePlanReconciliation }}</button>
+									<button id="accountsmanager_serviceplan_synchronization" class="btn btn-primary">{{ i18n.servicePlanSynchronization }}</button>
 								</div>
 							</div>
 						</form>
@@ -343,77 +363,10 @@
 			</div>
 
 			<div class="tab-pane" id="accountsmanager_limits_tab">
-				<div class="limits-tab-container">
-					<div class="clearfix">
-						<legend>Set limits for included simultaneous inbound and outbound calls</legend>
-						<div class="trunks-div twoway clearfix">
-							<div class="section-slider-value clearfix">
-								<div class="slider-value-wrapper clearfix">
-									<div class="slider-value">N/A</div>
-									<div class="total-amount">$<span class="total-amount-value">N/A</span>/month</div>
-								</div>
-							</div>
-
-							<div class="section-slider clearfix">
-								<div class="slider-title">Unlimited two way trunks</div>
-								<div class="slider-wrapper">
-									<div class="slider-div"></div>
-								</div>
-							</div>
-						</div>
-
-						<div class="trunks-div inbound clearfix">
-							<div class="section-slider-value clearfix">
-								<div class="slider-value-wrapper clearfix">
-									<div class="slider-value">N/A</div>
-									<div class="total-amount">$<span class="total-amount-value">N/A</span>/month</div>
-								</div>
-							</div>
-
-							<div class="section-slider clearfix">
-								<div class="slider-title">Unlimited inbound trunks</div>
-								<div class="slider-wrapper">
-									<div class="slider-div"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="clearfix call-restrictions-div">
-						<legend>Call restrictions</legend>
-						<div class="pull-left">
-							<div class="title">This account can place calls to...</div>
-							<form id="accountsmanager_callrestrictions_form">
-								<ul class="call-restrictions-list">
-									{{#each classifiers}}
-									<li class="call-restrictions-element">
-										<label>
-											<input type="checkbox" {{#if this.checked}}checked{{/if}} name="call_restriction.{{this.id}}.action" value="allow" />
-											{{this.name}}
-										</label>
-									</li>
-									{{/each}}
-								</ul>
-							</form>
-						</div>
-						<div class="manage-credit-div pull-left">
-							<div class="title">Manage credit balance</div>
-							<div>
-								Per minute credit balance: <span class="credit-balance">N/A</span>
-							</div>
-							<div>Add to the current balance: <input id="accountsmanager_add_credit" pattern="\d+(\.\d{1,2})?" type="text" /></div>
-							<label class="allow-prepay">
-								<input id="accountsmanager_allow_prepay" class="pull-left" type="checkbox" />
-								<div>
-									Allow customers to make per-minute calls that go over the above limit, and bill them the per-minute cost of the call
-								</div>
-							</label>
-						</div>
-					</div>
-
-					<div class="clearfix buttons-div">
-						<button id="accountsmanager_limits_save" class="btn btn-success">Update</button>
-					</div>
+				<form id="accountsmanager_callrestrictions_form">
+				</form>
+				<div class="clearfix buttons-div">
+					<button id="accountsmanager_limits_save" class="btn btn-success">{{ i18n.update }}</button>
 				</div>
 			</div>
 			
