@@ -551,3 +551,111 @@
 #accountsmanager_limits_tab .buttons-div {
 	margin: 20px 0 0 0;
 }
+
+/***************************************/
+
+#accountsmanager_restrictions_tab .restrictions-tab-container {
+	padding:20px;
+}
+
+/* RESTRICTIONS MENU */
+#accountsmanager_restrictions_tab .restrictions-menu {
+	float: left;
+	width: 240px;
+}
+
+#accountsmanager_restrictions_tab .restrictions-right {
+	margin-left: 240px;
+	min-width: 340px;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav {
+	margin-bottom: 0;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li.nav-header {
+	border-right: solid 1px #22ccff;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li:not(.nav-header) {
+	background-color: #eceaeb;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li:not(.nav-header):last-child {
+	border-bottom: 1px solid #ccc;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li {
+	height: 60px;
+	line-height: 60px;
+	font-weight: 700;
+	font-size: 16px;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav > li.active {
+	background-color: #fff !important;
+	border-right: 1px solid #fff;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav > li:not(.nav-header):hover {
+	color: #777777;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li.nav-header {
+	color: #FFFFFF;
+	font-size: 16px;
+	font-weight: bold;
+	height: 20px;
+	letter-spacing: 2px;
+	line-height: 20px;
+	margin: 0;
+	padding: 10px 30px;
+	text-shadow: 1px 0 1px #333333;
+	text-transform: uppercase
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav a {
+	color: #bbbbbb;
+	height: 40px;
+	line-height: 40px;
+	padding: 10px 0;
+	margin: 0;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li[data-content] a:hover {
+	background-color: #fff;
+	color: #777;
+}
+
+ #accountsmanager_restrictions_tab .restrictions-menu .nav a.enabled {
+	color: #777777;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav li[data-content] a.enabled {
+	color: #22ccff;
+}
+
+#accountsmanager_restrictions_tab .restrictions-menu .nav a input[type="checkbox"] {
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 0;
+}
+
+/* RESTRICTIONS CONTENT */
+
+#accountsmanager_restrictions_tab .restrictions-right > div {
+	display: none;
+}
+
+#accountsmanager_restrictions_tab .restrictions-right > div.active {
+	display: block;
+	height: 445px;
+	padding: 20px 30px;
+	background-color: #fff;
+	border-top:  1px solid #ccc;
+	border-bottom:  1px solid #ccc;
+	border-right:  1px solid #ccc;
+}

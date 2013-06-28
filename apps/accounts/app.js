@@ -884,6 +884,11 @@ define(function(require){
 				parent: contentHtml.find('#accountsmanager_limits_tab')
 			});
 
+			self.renderRestrictionsTab({
+				accountData: accountData,
+				parent: contentHtml.find('#accountsmanager_restrictions_tab')
+			});
+
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
@@ -972,7 +977,6 @@ define(function(require){
 					allowPrepay = parent.find('#accountsmanager_allow_prepay').is(':checked');
 
 				if(addCredit.match(/^(\d+(\.\d{1,2})?)?$/)) {
-
 					$.each(callRestrictions.call_restriction, function(k, v) {
 						if(v.action === false) { v.action = "deny"; }
 					});
@@ -1031,6 +1035,78 @@ define(function(require){
 					monster.ui.alert('Incorrect format for balance credit, you can only enter a number with up to 2 decimals.');
 				}
 
+			});
+		},
+
+		/** Expected params:
+			- accountData
+			- parent
+		*/
+		renderRestrictionsTab: function(params) {
+			var self = this,
+				parent = params.parent,
+				accountData = params.accountData;
+
+			parent.find('.restrictions-element input').each(function() {
+				if ($(this).is(':checked')) {
+					$(this).closest('a').addClass('enabled');
+				} else {
+					$(this).closest('a').removeClass('enabled');
+				};
+			});
+
+			parent.find('.restrictions-element input').click(function(event) {
+				var $this = $(this),
+					restrictionType = ($this.closest('li').data('content')) ? $this.closest('li').data('content') : false;
+				if ($this.is(':checked')) {
+					$this.closest('a').addClass('enabled');
+
+					$('.restrictions-right .' + restrictionType + ' input').each(function() {
+						$(this).prop('checked', true);
+					});
+					event.stopPropagation();
+				} else {
+					$this.closest('a').removeClass('enabled');
+
+					$('.restrictions-right .' + restrictionType + ' input').each(function() {
+						$(this).prop('checked', false);
+					});
+				};
+			});
+
+			parent.find('.restrictions-element[data-content]').click(function() {
+				var $this = $(this),
+					restrictionType = $this.data('content');
+
+				if ($this.find('input').is(':checked')) {
+					parent.find('.restrictions-menu .restrictions-element').each(function() {
+						$(this).removeClass('active');
+					});
+					parent.find('.restrictions-right > div').each(function() {
+						$(this).removeClass('active');
+					});
+
+					parent.find('.restrictions-right .' + restrictionType).addClass('active');
+					$this.addClass('active');
+				} else {
+					parent.find('.restrictions-right .' + restrictionType).removeClass('active');
+					$this.removeClass('active');
+				}
+			});
+
+			parent.find('#accountsmanager_uirestrictions_save').click(function(event) {
+				event.preventDefault();
+
+				var UIRestrictions = form2object('accountsmanager_uirestrictions_form');
+
+				self.updateData(accountData, UIRestrictions,
+					function(data, status) {
+						toastr.success('UI restrictions updated successfully!', '', {"timeOut": 5000});
+					},
+					function(data, status) {
+						toastr.error('An unexpected error occured when updating the UI restrictions, please try again later.', '', {"timeOut": 5000});
+					}
+				);
 			});
 		},
 

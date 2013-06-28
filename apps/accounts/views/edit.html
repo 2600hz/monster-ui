@@ -418,7 +418,71 @@
 			</div>
 			
 			<div class="tab-pane" id="accountsmanager_restrictions_tab">
-				<h1>Work in progress...</h1>
+				<div class="restrictions-tab-container">
+					<legend>Select what your customer can view</legend>
+					<form class="clearfix" id="accountsmanager_uirestrictions_form">
+						<div class="restrictions-menu">
+							<ul class="nav">
+								<li id="accountCategory" class="nav-header blue-gradient-reverse">{{ i18n.account }}</li>
+								<li class="restrictions-element" data-content="restrictions-profile">
+									<a href="javascript:void(0);">
+										<input type="checkbox" name="ui_restrictions.account.settings.settings_tab" {{#compare account.ui_restrictions.account.settings.settings_tab '!==' false }}checked{{/compare}}>Settings
+									</a>
+								</li>
+								<li id="billingCategory" class="nav-header blue-gradient-reverse">{{ i18n.billing }}</li>
+								<li class="restrictions-element">
+									<a>
+										<input type="checkbox" name="ui_restrictions.billing.transactions_tab" {{#compare account.ui_restrictions.billing.transactions_tab '!==' false }}checked{{/compare}}>Transactions
+									</a>
+								</li>
+								<li class="restrictions-element">
+									<a>
+										<input type="checkbox" name="ui_restrictions.billing.service_plan_tab" {{#compare account.ui_restrictions.billing.service_plan_tab '!==' false }}checked{{/compare}}>Service Plan
+									</a>
+								</li>
+								<li class="restrictions-element" data-content="restrictions-balance">
+									<a href="javascript:void(0);">
+										<input type="checkbox" name="ui_restrictions.billing.balance.balance_tab" {{#compare account.ui_restrictions.billing.balance.balance_tab '!==' false }}checked{{/compare}}>Per Minutes
+									</a>
+								</li>
+								<li id="trunkingCategory" class="nav-header blue-gradient-reverse">Trunking</li>
+								<li class="restrictions-element">
+									<a>
+										<input type="checkbox" name="ui_restrictions.trunking.inbound_tab" {{#compare account.ui_restrictions.trunking.inbound_tab '!==' false }}checked{{/compare}}>Inbound
+									</a>
+								</li>
+								<li class="restrictions-element">
+									<a>
+										<input type="checkbox" name="ui_restrictions.trunking.outbound_tab" {{#compare account.ui_restrictions.trunking.outbound_tab '!==' false }}checked{{/compare}}>Outbound
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="restrictions-right">
+							<div class="restrictions-profile container-fluid">
+								<legend>More Account Settings</legend>
+								<label class="checkbox">
+									<input type="checkbox" name="ui_restrictions.account.settings.show_user" {{#compare account.ui_restrictions.account.settings.show_user '!==' false }}checked{{/compare}}>Show User Settings Tab
+								</label>
+								<label class="checkbox">
+									<input type="checkbox" name="ui_restrictions.account.settings.show_account" {{#compare account.ui_restrictions.account.settings.show_account '!==' false }}checked{{/compare}}>Show Account Settings Tab
+								</label>
+								<label class="checkbox">
+									<input type="checkbox" name="ui_restrictions.account.settings.show_billing" {{#compare account.ui_restrictions.account.settings.show_billing '!==' false }}checked{{/compare}}>Show Billing Settings Tab
+								</label>
+							</div>
+							<div class="restrictions-balance container-fluid">
+								<legend>More Balance Settings</legend>
+								<label class="checkbox">
+									<input type="checkbox" name="ui_restrictions.billing.balance.show_credit" {{#compare account.ui_restrictions.billing.balance.show_credit '!==' false }}checked{{/compare}}>Show Credit Informations
+								</label>
+							</div>
+						</div>
+					</form>
+						<div class="buttons-div">
+							<button id="accountsmanager_uirestrictions_save" class="btn btn-success">Update</button>
+						</div>
+				</div>
 			</div>
 		</div>
 	</div>
