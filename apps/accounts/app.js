@@ -432,6 +432,9 @@ define(function(require){
 										callback();
 									}
 								}
+							},
+							function(err, results) {
+
 							});
 
 							self.render();
