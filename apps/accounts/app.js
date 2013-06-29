@@ -1517,7 +1517,7 @@ define(function(require){
 				event.preventDefault();
 
 				var UIRestrictions = form2object('accountsmanager_uirestrictions_form').account;
-				
+
 				self.updateData(accountData, UIRestrictions,
 					function(data, status) {
 						toastr.success(self.i18n.active().toastrMessages.uiRestrictionsUpdateSuccess, '', {"timeOut": 5000});
@@ -1580,6 +1580,21 @@ define(function(require){
 					template.find('.restrictions-right .' + restrictionType).removeClass('active');
 					$this.removeClass('active');
 				}
+			});
+
+			template.find('.restrictions-right div input').click(function() {
+				var isChecked = false;
+
+				template.find('.restrictions-right .restrictions-profile input').each(function() {
+					if ($(this).is(':checked')) {
+						isChecked = true;
+						return false;
+					};
+				});
+
+				if (!isChecked) {
+					template.find('.restrictions-menu li[data-content="restrictions-profile"] input').click();
+				};
 			});
 
 			return template;
