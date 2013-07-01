@@ -104,7 +104,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'accountsManager.activate': '_render'
+			'accountsManager.activate': '_render',
+			'accountsManager.restoreMasquerading': '_restoreMasquerading'
 		},
 
 		load: function(callback) {
@@ -135,7 +136,7 @@ define(function(require){
 			var self = this,
 				accountsManager = $(monster.template(self, 'accountsManager')),
 				parent = container || $('#ws-content');
-
+			console.log(monster);
 			(parent)
 				.empty()
 				.append(accountsManager);
@@ -249,6 +250,7 @@ define(function(require){
 					});
 
 					$list.find('.account-link').click(function() {
+						parent.find('.main-content').empty();
 						self.edit($(this).parent().data('account_id'), parent);
 						self.renderList(accountList, parent, false);
 					});
@@ -347,7 +349,6 @@ define(function(require){
 						if(v.action === false) { v.action = "deny"; }
 					});
 
-					//TODO: submit new account
 					monster.request({
 						resource: 'accountsManager.create', 
 						data: {
@@ -1117,7 +1118,7 @@ define(function(require){
 				}
 			});
 
-			contentHtml.find('button.cancel').on('click', function(e) {
+			contentHtml.find('button.cancel, .close-link:not(.close-admin-settings)').on('click', function(e) {
 				e.preventDefault();
 				closeTabsContent();
 
@@ -1153,8 +1154,7 @@ define(function(require){
 			contentHtml.find('#accountsmanager_use_account_btn').on('click', function(e) {
 				e.preventDefault();
 
-				//TODO: handle masquerading
-				console.log(monster.apps);
+				self.triggerMasquerading(accountData);
 
 				e.stopPropagation();
 			});
@@ -1628,7 +1628,43 @@ define(function(require){
 
 		autoGeneratePassword: function() {
 			return monster.util.randomString(4,'abcdefghjkmnpqrstuvwxyz')+monster.util.randomString(4,'0123456789');
-		}
+		},
+
+		triggerMasquerading: function(account) {
+            var self = this;
+
+            if(!'masquerade' in monster.apps['accounts']) {
+	            monster.apps['auth'].curentAccount = $.extend(true, {}, account);
+	        }
+
+            self.updateApps(account.id);
+
+            monster.pub('myaccount.renderNavLinks', {
+				name: account.name,
+				isMasquerading: true
+			});
+
+			self.render();
+        },
+
+        updateApps: function(accountId) {
+            $.each(monster.apps, function(key, val) {
+                if(val.isMasqueradable && val.apiUrl === monster.apps['accounts'].apiUrl) {
+                    val.accountId = accountId;
+                }
+            });
+        },
+
+        _restoreMasquerading: function() {
+            var self = this;
+
+            monster.apps['auth'].currentAccount = $.extend(true, {}, monster.apps['auth'].originalAccount);
+            self.updateApps(monster.apps['auth'].originalAccount.id);
+
+            monster.pub('myaccount.renderNavLinks');
+
+			self.render();
+        }
 
 
 	};

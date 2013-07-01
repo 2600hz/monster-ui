@@ -258,23 +258,27 @@
 	padding-top: 5px;
 }
 
-#form_accountsmanager_account_admins form {
-	margin-bottom: 0px;
+#accounts_manager_view .close-link {
+	float:right;
 }
 
-#form_accountsmanager_account_admins .close-admin-settings > span {
+#accounts_manager_view .close-link > span {
 	margin-left: 5px;
 }
 
-#form_accountsmanager_account_admins .close-admin-settings:hover,
-#form_accountsmanager_account_admins .close-admin-settings:focus {
+#accounts_manager_view .close-link:hover,
+#accounts_manager_view .close-link:focus {
 	text-decoration: none;
 	color: #22CCFF;
 }
 
-#form_accountsmanager_account_admins .close-admin-settings:hover > span,
-#form_accountsmanager_account_admins .close-admin-settings:focus {
+#accounts_manager_view .close-link:hover > span,
+#accounts_manager_view .close-link:focus {
 	text-decoration: underline;
+}
+
+#form_accountsmanager_account_admins form {
+	margin-bottom: 0px;
 }
 
 #form_accountsmanager_account_admins .admin-btn-div {
@@ -377,10 +381,6 @@
 #form_accountsmanager_account_admins .create-user-div input[type="radio"] {
 	vertical-align: top;
 	margin-right: 5px;
-}
-
-#form_accountsmanager_account_admins .close-admin-settings {
-	float:right;
 }
 
 #form_accountsmanager_account_admins .create-user-div .new-admin-password-div {

@@ -159,7 +159,10 @@ define(function(require){
 					results.user.apps = results.user.apps || {};
 
 					self.currentUser = results.user;
-					self.currentAccount = results.account;
+					// This account will remain unchanged, it should be used by non-masqueradable apps
+					self.originalAccount = results.account;
+					// This account will be overriden when masquerading, it should be used by masqueradable apps
+					self.currentAccount = $.extend(true, {}, self.originalAccount);
 
 					$.each(results.user.apps, function(k, v) {
 						if(v['default']) {

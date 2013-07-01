@@ -56,6 +56,23 @@ body h1.lobster {
     font-size: 14px;
 }
 
+#main section > .navbar .nav > li.nav-masquerading {
+    border-left: 1px solid #353535;
+}
+
+#main section > .navbar .nav > li.nav-masquerading > a {
+    padding-top: 10px;
+    text-align: center;
+}
+
+#main section > .navbar .nav > li.nav-masquerading .name-text {
+    color: #22ccff;
+}
+
+#main section > .navbar .nav > li.myaccount-link .name-text {
+    font-size: 16px;
+}
+
 #main section > .navbar .nav-collapse .nav > li > a:hover,
 #main section > .navbar .nav-collapse .dropdown-menu a:hover {
     background-color: transparent;

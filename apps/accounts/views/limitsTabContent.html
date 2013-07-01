@@ -45,7 +45,11 @@
 				<li class="call-restrictions-element">
 					<label>
 						<input type="checkbox" {{#if this.checked}}checked{{/if}} name="limits.call_restriction.{{this.id}}.action" value="allow" />
-						{{this.name}}
+						{{#compare this.id '===' 'unknown'}}
+							Other
+						{{else}}
+							{{this.name}}
+						{{/compare}}
 					</label>
 				</li>
 				{{/each}}
