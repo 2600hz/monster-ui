@@ -660,8 +660,11 @@
 	margin: 0;
 }
 
+.restrictions-tab-container .restrictions-menu .nav a:hover {
+	background-color: #eceaeb;
+}
+
 .restrictions-tab-container .restrictions-menu .nav li[data-content] a:hover {
-	background-color: #fff;
 	color: #777;
 }
 
@@ -671,6 +674,10 @@
 
 .restrictions-tab-container .restrictions-menu .nav li[data-content] a.enabled {
 	color: #22ccff;
+}
+
+.restrictions-tab-container .restrictions-menu .nav li[data-content] a.enabled:hover {
+	background-color: #fff;
 }
 
 .restrictions-tab-container .restrictions-menu .nav a input[type="checkbox"] {

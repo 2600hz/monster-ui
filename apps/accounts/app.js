@@ -1585,6 +1585,21 @@ define(function(require){
 				}
 			});
 
+			template.find('.restrictions-right div input').click(function() {
+				var isChecked = false;
+
+				template.find('.restrictions-right .restrictions-profile input').each(function() {
+					if ($(this).is(':checked')) {
+						isChecked = true;
+						return false;
+					};
+				});
+
+				if (!isChecked) {
+					template.find('.restrictions-menu li[data-content="restrictions-profile"] input').click();
+				};
+			});
+
 			return template;
 		},
 
