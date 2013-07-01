@@ -33,7 +33,7 @@ define(function(require){
 			'auth.loadAccount' : '_loadAccount',
 			'auth.loginClick': '_loginClick',
 			'auth.logout': '_logout',
-			'auth.sharedAuth' : '_sharedAuth',
+			'auth.initApp' : '_initApp',
 			'auth.welcome' : '_login',
 		},
 
@@ -221,7 +221,7 @@ define(function(require){
 			});
 		},
 
-		_sharedAuth: function (args) {
+		_initApp: function (args) {
 			var self = this;
 
 			var restData = {

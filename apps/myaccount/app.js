@@ -34,7 +34,7 @@ define(function(require){
 		load: function(callback){
 			var self = this;
 
-			self.whappAuth(function() {
+			self.initApp(function() {
 				self.render();
 
 				callback && callback(self);
@@ -58,7 +58,7 @@ define(function(require){
 				var appName = self._apps.pop();
 
 				/* We first load all the required apps */
-				monster._loadApp(appName, function(app) {
+				monster.apps.load(appName, function(app) {
 					app.render();
 
 					self._loadApps(callback);
@@ -66,10 +66,10 @@ define(function(require){
 			}
 		},
 
-		whappAuth: function(_callback) {
+		initApp: function(_callback) {
 			var self = this;
 
-			monster.pub('auth.sharedAuth', {
+			monster.pub('auth.initApp', {
 				app: self,
 				callback: _callback
 			});

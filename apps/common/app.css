@@ -149,6 +149,10 @@ table.table tr td {
 /************************************************************************************************/
 /* Common CSS classes */
 
+.dropdown-menu i {
+	margin-right: 10px;
+}
+
 /* Search Box */
 .search-box {
 	line-height: 26px;
