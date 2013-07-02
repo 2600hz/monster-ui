@@ -478,11 +478,23 @@ table.table tr td {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 
+.number-box.disabled {
+	cursor: default;
+}
+
+.number-box.disabled:hover {
+	background: #f9f9f9;
+}
+
 .number-box.selected  {
 	background: #f5f5f5;
 	border-top: 1px solid #22ccff !important;
 	box-shadow: inset 0 0 5px #cccccc;
 	font-weight: 500;
+}
+
+.number-box i.icon-cog:before {
+	cursor: pointer;
 }
 
 /* Links Classes */

@@ -1,15 +1,17 @@
-<div id="actions_wrapper_spare" class="actions-wrapper">
-    <form class="form-inline">
-        <label>{{ i18n.bulkActions }}</label>
-    </form>
+<div id="actions_wrapper_used" class="actions-wrapper">
+    <div class="form-inline">
+    	<span class="search-box pull-right">
+            <i class="icon-search"></i>
+            <input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+        </span>
+    </div>
 </div>
 
 <div class="accounts-numbers">
 	{{#each listAccounts}}
-    	<div class="account-section" data-id="{{ id }}">
+    	<div class="account-section" data-id="{{ id }}" data-name="{{ name }}">
         	<div class="account-header">
             	<div class="left-part">
-                	<input type="checkbox"></input>
             	</div>
             	<div class="expandable">
                 	{{ name }}
@@ -18,7 +20,7 @@
         	</div>
         	<div class="numbers-wrapper">
 				{{#each usedNumbers}}
-					<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
+					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
 						<div class="number-options pull-right">
         					<div class="navbar">
             					<ul class="nav pull-right">
@@ -35,8 +37,6 @@
             					</ul>
         					</div>
     					</div>
-
-						<input type="checkbox"></input>
 						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
 						<div class="locality">
 							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
@@ -56,7 +56,7 @@
         				</div>
 					</div>
 				{{else}}
-					<div class="number-box no-data">
+					<div class="number-box disabled no-data">
 						{{ ../../i18n.noUsedNumber }}
 					</div>
 				{{/each}}

@@ -80,11 +80,6 @@
 	list-style: none;
 }
 
-#numbers_container .actions-wrapper .dropdown-move .dropdown-menu {
-	max-height: 300px;
-	overflow-y: auto;
-}
-
 #numbers_container .account-section .numbers-wrapper {
 	display: none;
 }
@@ -93,6 +88,10 @@
 	border: 1px solid #ccc;
     border-bottom-width: 0px;
     margin-top: -1px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box.highlighted {
+	background: #BBFF99;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .number-options .dropdown {
@@ -130,7 +129,6 @@
     border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
-    cursor: pointer;
     font-size: 20px;
     height: 70px;
     line-height: 70px;
@@ -151,7 +149,31 @@
 }
 
 #numbers_container .account-section .account-header .expandable {
-	margin-left: 40px;
+	margin: 0 150px 0 40px;
+	cursor: pointer;
+}
+
+#numbers_container .account-section .account-header .right-links {
+	height: 100%;
+}
+
+#numbers_container .account-section.open .account-header .right-links a > *{
+	color: #ffffff;
+}
+
+#numbers_container .account-section .account-header .right-links a > *{
+	color: #22ccff;
+}
+
+#numbers_container .account-section .account-header .right-links i{
+	margin-right: 6px;
+	text-decoration: none !important;
+}
+
+#numbers_container .account-section .account-header .right-links a {
+	font-size: 14px;
+	margin-right: 10px;
+    white-space: nowrap;
 }
 
 #numbers_container .account-section .account-header .account-actions {
@@ -249,4 +271,105 @@
     #numbers_container {
         width: 682px; /* 2 columns of 300px + padding and borders */
     }
+
+	#numbers_container .account-section .numbers-wrapper .number-box .locality {
+		width: 220px;
+	}
+}
+
+/* Dropdown accounts */
+/***** Left Menu *****/
+.accounts-dropdown {
+	padding: 0;
+	overflow-x: hidden;
+}
+
+.accounts-dropdown .left-menu {
+	float: left;
+	background-color: #F3F3F3;
+	border-right: solid 1px #999;
+	width: 240px;
+	overflow: hidden;
+}
+
+.accounts-dropdown .left-menu .search-box {
+	width: 220px;
+	padding: 20px 10px;
+	border-bottom: solid 1px #999;
+}
+
+.accounts-dropdown .left-menu .search-box .search-query {
+	width: 178px;
+}
+
+.accounts-dropdown .left-menu .account-list-container {
+	width: 480px;
+}
+
+.accounts-dropdown .left-menu .account-list, .accounts-dropdown .left-menu .account-list-slider {
+	margin: 0;
+	list-style: none;
+	float: left;
+	overflow-y: auto;
+	max-height: 300px;
+}
+
+.accounts-dropdown .left-menu .account-list-element {
+	line-height: 40px;
+	max-height: 40px;
+	overflow: hidden;
+	border-bottom: solid 1px #ccc;
+	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
+}
+
+.accounts-dropdown .left-menu .account-list-element.active {
+	background-color: #fff;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div {
+	padding: 0 10px;
+	display: inline-block;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div:hover {
+	background-color: #eee;
+	cursor: pointer;
+	color: #22ccff;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div:hover > i {
+	color: #22ccff;
+}
+
+.accounts-dropdown .left-menu .account-link {
+	width: 220px;
+}
+
+.accounts-dropdown .left-menu .account-link.smaller-link {
+	width: 159px;
+}
+
+.accounts-dropdown .left-menu .account-link .account-name {
+	font-size: 16px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.accounts-dropdown .left-menu .account-link .account-realm {
+	font-size: 10px;
+	height: 20px;
+	line-height: 0px;
+}
+
+.accounts-dropdown .left-menu .account-children-link {
+	width: 40px;
+	height: 40px;
+	vertical-align: top;
+	float: right;
+	border-left: solid 1px #ccc;
+}
+
+.accounts-dropdown .left-menu .account-children-link > i {
+	vertical-align: middle;
+	margin-left: 17px;
 }

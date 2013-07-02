@@ -17,8 +17,10 @@
 	"usedNumbers": "Numbers in use",
 	"helpSpareNumbers": "This shows the list of numbers not used anywhere in this account. You can assign those numbers to your sub-accounts or delete these numbers from your account.",
 	"helpUsedNumbers": "This list displays where are used your numbers. You can also see the list of numbers used by your sub-accounts.",
-	"callflow": "Callflows",
+	"callflow": "Smart PBX",
 	"trunkstore": "Trunking",
+	"notUsedNumber": "{{number}}: This number is not used but belongs to {{accountName}}. (Switch to Spare Numbers view to see this number)",
+	"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Switch to the Numbers in Use view to see this number)",
 
 	"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
 	"cnamIconHelp": "This icon means that you set up the Caller-ID for this phone number",

@@ -23,10 +23,18 @@ define(function(require){
 				url: 'accounts/{accountId}/phone_numbers/collection/activate',
 				verb: 'PUT'
 			},
-			'accounts.list': {
+			'numbers.listChildren': {
 				url: 'accounts/{accountId}/children',
 				verb: 'GET'
-			}
+			},
+			'numbers.listDescendants': {
+				url: 'accounts/{accountId}/descendants',
+				verb: 'GET'
+			},
+			'numbers.searchAccounts': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify',
+				verb: 'GET'
+			},
 		},
 
 		subscribe: {
@@ -155,12 +163,67 @@ define(function(require){
 		bindEvents: function(parent, dataNumbers) {
 			var self = this,
 				listSearchedAccounts = [ self.accountId ],
+				originalAccountTree = {},
+				currentAccountTree = {},
 				showLinks = function() {
 					if(parent.find('.number-box.selected').size() > 0) {
 						parent.find('#trigger_links').show();
 					}
 					else {
 						parent.find('#trigger_links').hide();
+					}
+				},
+			    displayNumberList = function(accountId, callback) {
+					if(_.indexOf(listSearchedAccounts, accountId) === -1) {
+						self.listNumbers(accountId, function(numbers) {
+                			var spareNumbers = [],
+                    			usedNumbers = [];
+
+                			listSearchedAccounts.push(accountId);
+
+                			_.each(numbers.numbers, function(value, phoneNumber) {
+                    			if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
+                        			value.phoneNumber = phoneNumber;
+
+                        			value = self.formatNumber(value);
+
+                        			value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
+                    			}
+                			});
+
+                			_.each(dataNumbers.listAccounts, function(value) {
+                    			//TODO Sort
+                    			if(value.id === accountId) {
+                        			value.spareNumbers = spareNumbers;
+                        			value.usedNumbers = usedNumbers;
+                        			value.countSpareNumbers = spareNumbers.length;
+                        			value.countUsedNumbers = usedNumbers.length;
+
+                        			parent
+                            			.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+                            			.empty()
+                            			.append(monster.template(self, 'spareNumbersAccount', { spareNumbers: spareNumbers }))
+                            			.parent()
+                            			.find('.count')
+                            			.html('('+ spareNumbers.length +')');
+
+                        			parent
+                            			.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+                            			.empty()
+                            			.append(monster.template(self, 'usedNumbersAccount', { usedNumbers: usedNumbers }))
+                            			.parent()
+                            			.find('.count')
+                            			.html('('+ usedNumbers.length +')');
+
+                        			return false;
+                    			}
+                			});
+
+							callback && callback();
+						});
+					}
+					else {
+						callback && callback();
 					}
 				};
 
@@ -215,63 +278,15 @@ define(function(require){
 						});
 					};
 
-				if(_.indexOf(listSearchedAccounts, accountId) === -1) {
-					self.listNumbers(accountId, function(numbers) {
-						var spareNumbers = [],
-							usedNumbers = [];
-
-						listSearchedAccounts.push(accountId);
-
-						_.each(numbers.numbers, function(value, phoneNumber) {
-                			if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
-                    			value.phoneNumber = phoneNumber;
-
-								value = self.formatNumber(value);
-
-                    			value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
-                			}
-            			});
-
-						_.each(dataNumbers.listAccounts, function(value) {
-							//TODO Sort
-							if(value.id === accountId) {
-								value.spareNumbers = spareNumbers;
-								value.usedNumbers = usedNumbers;
-								value.countSpareNumbers = spareNumbers.length;
-								value.countUsedNumbers = usedNumbers.length;
-
-								parent
-									.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
-									.empty()
-									.append(monster.template(self, 'spareNumbersAccount', { spareNumbers: spareNumbers }))
-									.parent()
-									.find('.count')
-									.html('('+ spareNumbers.length +')');
-
-								parent
-									.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
-									.empty()
-									.append(monster.template(self, 'usedNumbersAccount', { usedNumbers: usedNumbers }))
-									.parent()
-									.find('.count')
-									.html('('+ usedNumbers.length +')');
-
-								return false;
-							}
-						});
-
-						toggle();
-					});
-				}
-				else {
+				displayNumberList(accountId, function() {
 					toggle();
-				}
+				});
 
 				showLinks();
 			});
 
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
-			parent.on('click', '.number-box', function(event) {
+			parent.on('click', '.number-box:not(.disabled)', function(event) {
 				var currentBox = $(this);
 
 				if(!currentBox.hasClass('no-data')) {
@@ -352,10 +367,84 @@ define(function(require){
 				});
 			});
 
+			/* to plugin */
+			parent.on('click', '#move_numbers', function() {
+				var accountId = self.accountId,
+					displayList = function() {
+						currentAccountTree = originalAccountTree;
+
+						var layout = monster.template(self, 'dropdownLayout'),
+							template = monster.template(self, 'accountDropdown', { accounts: currentAccountTree });
+
+						parent
+							.find('.accounts-dropdown')
+							.empty()
+							.append(layout)
+							.find('.account-list')
+							.append(template);
+					};
+
+				if(_.isEmpty(originalAccountTree)) {
+					self.getDescendants(accountId, function(listAccounts) {
+						originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
+
+						displayList();
+					});
+				}
+				else {
+					displayList();
+				}
+			});
+
+			parent.on('click', '.accounts-dropdown .account-children-link', function(e) {
+				e.stopPropagation();
+
+				var slider = parent.find('.account-slider'),
+					list = parent.find('.account-list'),
+					accountId = $(this).parent().data('id');
+
+				currentAccountTree = currentAccountTree[accountId].children;
+
+				var template = monster.template(self, 'accountDropdown', { accounts: currentAccountTree });
+
+                slider
+					.empty()
+					.append(template);
+
+				list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
+					list.empty()
+					 	 .append(template)
+					 	 .css('marginLeft','0px');
+
+					slider.empty();
+				});
+			});
+
+			/* When clicking on a bootstrap dropdown, it hides the dropdown, that's a hack to prevent it and allow us to type in the search field! */
+			parent.on('click', '.accounts-dropdown .search-box', function(e) {
+				e.stopPropagation();
+			});
+
+			parent.on('keyup', '.accounts-dropdown #account_search_input', function(e) {
+				e.stopPropagation();
+				var search = $(this).val();
+
+				if(search) {
+					$.each(parent.find('.account-list-element'), function(k, v) {
+						var current = $(v);
+
+						current.find('.account-link').html().toLowerCase().indexOf(search.toLowerCase()) >= 0 ? current.show() : current.hide();
+					});
+				}
+				else {
+					parent.find('.account-list-element').show();
+				}
+			});
+
 			/* Move Numbers */
-			parent.on('click', '.account-dropdown', function(event) {
+			parent.on('click', '.accounts-dropdown .account-link', function(event) {
                 var listNumbers = [],
-					destinationAccountId = $(this).data('id'),
+					destinationAccountId = $(this).parent().data('id'),
 					destinationIndex = -1,
 					mapAccounts = {};
 
@@ -498,6 +587,111 @@ define(function(require){
                     });
                 }
             });
+
+			var previousSearch = '',
+				delay = (function(){
+                var timer = 0;
+                return function(callback, ms){
+                    clearTimeout (timer);
+                    timer = setTimeout(callback, ms);
+                };
+            })();
+
+            parent.on('keyup', '.list-numbers[data-type="spare"] .search-query', function(e) {
+				var searchString = $(this).val().toLowerCase(),
+					spareList = parent.find('.list-numbers[data-type="spare"]');
+
+				searchString = monster.util.unformatPhoneNumber(searchString);
+
+				if(searchString.length > 6) {
+					delay(function() {
+						currentSearch = searchString;
+						if(currentSearch !== previousSearch) {
+							previousSearch = searchString;
+
+							self.searchAccount(searchString, function(data) {
+								if(data.account_id) {
+									displayNumberList(data.account_id, function() {
+										var section = spareList.find('[data-id="' + data.account_id + '"]'),
+											numberBox = section.find('[data-phonenumber="' + data.number + '"]');
+
+										if(numberBox.size() > 0) {
+											section.addClass('open');
+										 	 $('html, body').animate({
+         	 	 	 	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
+     	 	 	 	 	 	 	 	 	 	 }, 1000);
+
+											spareList.find('.number-box').removeClass('highlighted');
+
+											if(!numberBox.hasClass('highlighted')) {
+												numberBox.addClass('highlighted')
+                                            		.css('background', '#22ccff')
+                                            		.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+											}
+										}
+										else {
+											var template = monster.template(self, '!' + self.i18n.active().notSpareNumber, { number: data.number, accountName: section.data('name') });
+
+                                            toastr.warning(template);
+										}
+									});
+								}
+							},
+							function(data) {
+								spareList.find('.number-box').removeClass('highlighted');
+							});
+						}
+					}, 400);
+				}
+            });
+
+            parent.find('.list-numbers[data-type="used"] .search-query').on('keyup', function(e) {
+				var searchString = $(this).val().toLowerCase(),
+					usedList = parent.find('.list-numbers[data-type="used"]');
+
+				searchString = monster.util.unformatPhoneNumber(searchString);
+
+				if(searchString.length > 6) {
+					delay(function() {
+						currentSearch = searchString;
+						if(currentSearch !== previousSearch) {
+							previousSearch = searchString;
+
+							self.searchAccount(searchString, function(data) {
+								if(data.account_id) {
+									displayNumberList(data.account_id, function() {
+										var section = usedList.find('[data-id="' + data.account_id + '"]'),
+											numberBox = section.find('[data-phonenumber="' + data.number + '"]');
+
+										if(numberBox.size() > 0) {
+											section.addClass('open');
+										 	 $('html, body').animate({
+         	 	 	 	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
+     	 	 	 	 	 	 	 	 	 	 }, 1000);
+
+											usedList.find('.number-box').removeClass('highlighted');
+
+											if(!numberBox.hasClass('highlighted')) {
+												numberBox.addClass('highlighted')
+                                            		.css('background', '#22ccff')
+                                            		.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+											}
+										}
+										else {
+											var template = monster.template(self, '!' + self.i18n.active().notUsedNumber, { number: data.number, accountName: section.data('name') });
+
+											toastr.warning(template);
+										}
+									});
+								}
+							},
+							function(data) {
+								usedList.find('.number-box').removeClass('highlighted');
+							});
+						}
+					}, 400);
+				}
+            });
 		},
 
 		paintSpareNumbers: function(parent, dataNumbers, callback) {
@@ -550,6 +744,41 @@ define(function(require){
             });
 		},
 
+		getDescendants: function(accountId, success, error) {
+			var self = this;
+
+			monster.request({
+                resource: 'numbers.listDescendants',
+                data: {
+                    accountId: accountId
+                },
+                success: function(_data, status) {
+                    success && success(_data.data);
+                },
+                error: function(_data, status) {
+                    error && error(_data);
+                }
+            });
+		},
+
+		searchAccount: function(phoneNumber, success, error) {
+            var self = this;
+
+            monster.request({
+                resource: 'numbers.searchAccounts',
+                data: {
+                    accountId: self.accountId,
+					phoneNumber: phoneNumber
+                },
+                success: function(_data, status) {
+                    success && success(_data.data);
+                },
+				error: function(_data, status) {
+					error && error(_data);
+				}
+            });
+        },
+
 		deleteNumbers: function(args, callback) {
 			var self = this;
 
@@ -578,7 +807,7 @@ define(function(require){
 					'GB': 'London, Great-Britain',
 					'IE': 'Dublin, Ireland',
 					'BR': 'Rio de Jainero, Brazil',
-					'RU': 'Moscow, Russia,',
+					'RU': 'Moscow, Russia',
 					'NZ': 'Wellington, New-Zealand',
 					'UA': 'Kiev, Ukraine'
 				},
@@ -605,7 +834,7 @@ define(function(require){
 			var self = this;
 
 			monster.request({
-				resource: 'accounts.list',
+				resource: 'numbers.listChildren',
 				data: {
 					accountId: self.accountId
 				},

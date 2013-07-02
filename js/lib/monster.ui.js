@@ -1,8 +1,8 @@
 define(function(require){
 
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster");
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster');
 
 	var requestAmount = 0,
 		homeIcon;
@@ -45,6 +45,18 @@ define(function(require){
 		return ret;
 	});
 
+	Handlebars.registerHelper('debug', function(optionalValue) {
+		console.log('Current Context');
+		console.log('====================');
+		console.log(this);
+
+		if (optionalValue) {
+			console.log('Value');
+			console.log('====================');
+			console.log(optionalValue);
+		}
+	});
+
 	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
 		phoneNumber = phoneNumber.toString();
 
@@ -61,7 +73,7 @@ define(function(require){
 		if (options === undefined) {
 			options = rvalue;
 			rvalue = operator;
-			operator = "===";
+			operator = '===';
 		}
 
 		operators = {

@@ -74,6 +74,50 @@ define(function(require){
 			return parseInt((date.getTime() / 1000) + 62167219200);
 		},
 
+		unformatPhoneNumber: function(formattedNumber) {
+			var phoneNumber = formattedNumber.replace(/[^0-9]/g, '');
+
+			return phoneNumber;
+		},
+
+		accountArrayToTree: function(accountArray, rootAccountId) {
+			var result = {};
+
+			$.each(accountArray, function(k, v) {
+				if(v.id === rootAccountId) {
+					if(!result[v.id]) { result[v.id] = {}; }
+					result[v.id].name = v.name;
+					result[v.id].realm = v.realm;
+				}
+				else {
+					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
+						currentAcc;
+
+					for(var i=0; i<parents.length; i++) {
+						if(!currentAcc) {
+							if(!result[parents[i]]) { result[parents[i]] = {}; }
+
+						 	currentAcc = result[parents[i]];
+ 	 	 	 	 	 	}
+						else {
+							if(!currentAcc.children) { currentAcc.children = {}; }
+							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
+
+							currentAcc = currentAcc.children[parents[i]];
+						}
+					}
+
+					if(!currentAcc.children) { currentAcc.children = {}; }
+					if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
+
+					currentAcc.children[v.id].name = v.name;
+					currentAcc.children[v.id].realm = v.realm;
+				}
+			});
+
+			return result;
+		},
+
 		formatPhoneNumber: function(phoneNumber){
 			if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
 				phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');

@@ -1,5 +1,5 @@
 {{#each usedNumbers}}
-	<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
+	<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
         <div class="number-options pull-right">
             <div class="navbar">
                 <ul class="nav pull-right">
@@ -15,7 +15,6 @@
             </div>
         </div>
 
-        <input type="checkbox"></input>
         <div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
         <span class="locality">
             <span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
@@ -33,7 +32,7 @@
         </div>
     </div>
 {{else}}
-	<div class="number-box no-data">
+	<div class="number-box disabled no-data">
 		{{ i18n.noUsedNumber }}
 	</div>
 {{/each}}
