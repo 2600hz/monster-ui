@@ -232,7 +232,8 @@ define(function(require){
 					}
 				},
 				success = function(app) {
-					app.accountId = self.accountId;
+					app.isMasqueradable = app.isMasqueradable || true;
+					app.accountId = app.isMasqueradable ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
                     args.callback && args.callback();

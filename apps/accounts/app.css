@@ -561,7 +561,7 @@
 
 #accountsmanager_new_account_form .account-settings-step .add-admin-pic {
 	background: url('static/images/addAdminPic.png') center no-repeat;
-	height: 180px;
+	height: 165px;
 	width: 200px;
 }
 
@@ -580,6 +580,25 @@
 
 #accountsmanager_new_account_form .account-settings-step .password-toggle-div {
 	display: none;
+}
+
+#accountsmanager_new_account_form .account-settings-step input {
+	width: 100%;
+	box-sizing: border-box;
+	height: 30px;
+}
+
+#accountsmanager_new_account_form .account-settings-step select {
+	width: 100%;
+}
+
+#accountsmanager_new_account_form .account-settings-step .new-admin-div .btn-group button {
+	width: 50%;
+}
+
+#accountsmanager_new_account_form .account-settings-step .new-admin-div .btn-group {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #accountsmanager_new_account_form .error-message {
@@ -664,12 +683,8 @@
 	background-color: #eceaeb;
 }
 
-.restrictions-tab-container .restrictions-menu .nav li[data-content] a:hover {
-	color: #777;
-}
-
 .restrictions-tab-container .restrictions-menu .nav a.enabled {
-	color: #777777;
+	color: #777;
 }
 
 .restrictions-tab-container .restrictions-menu .nav li[data-content] a.enabled {

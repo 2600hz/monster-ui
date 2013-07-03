@@ -1,11 +1,14 @@
 <div class="row-fluid">
 	<div class="span12">
-		<ul class="nav nav-tabs account-tabs">
-			<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">{{ i18n.tabTitles.limits }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">{{ i18n.tabTitles.restrictions }}</a></li>
-		</ul>
+		<div class="tab-bar">
+			<button id="accountsmanager_use_account_btn" class="btn btn-success pull-right">{{ i18n.useAccount }}</button>
+			<ul class="nav nav-tabs account-tabs">
+				<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">{{ i18n.tabTitles.limits }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">{{ i18n.tabTitles.restrictions }}</a></li>
+			</ul>
+		</div>
 		<div class="tab-content">
 			<div class="tab-pane active" id="accountsmanager_overview_tab">
 				<ul class="list-settings">
@@ -43,14 +46,6 @@
 											</label>
 											<div class="controls">
 												<div class="plain-text">{{account.id}}</div>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label">
-												{{ i18n.masquerading }}
-											</label>
-											<div class="controls">
-												<button id="accountsmanager_use_account_btn" class="btn btn-primary">{{ i18n.useAccount }}</button>
 											</div>
 										</div>
 										<div class="control-group">

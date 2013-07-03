@@ -73,7 +73,10 @@
 	"balancePerMinute": "Per minute credit balance:",
 	"addToBalance": "Add to the current balance:",
 	"allowPrepay": "Allow customers to make per-minute calls that go over the above limit, and bill them the per-minute cost of the call",
-	"addAdminLink": "Add an admin to the account",
+	"addAdminLink": {
+		"toggleOn": "Add an admin to the account",
+		"toggleOff": "I changed my mind, who needs an admin?"
+	},
 	"adminLabels": {
 		"firstName": "Admin first name",
 		"lastName": "Admin last name",
@@ -93,8 +96,8 @@
 	"wizardStepTitles": {
 		"setupAccount": "Set up an account",
 		"servicePlan": "Choose Service Plan",
-		"limits": "Set Limits",
-		"restrictions": "Set Restrictions"
+		"limits": "Call Restrictions",
+		"restrictions": "Permissions"
 	},
 	"wizardButtons": {
 		"cancel": "Cancel",
