@@ -14,9 +14,11 @@
 	"update": "Sauvegarder",
 	"none": "Aucun",
 	"month": "Mois",
+	"search": "Rechercher",
 	"currency": "$",
 	"disableAccount": "D&eacute;sactiver ce compte",
 	"enableAccount": "Activer ce compte",
+	"deleteAccount": "Supprimer ce compte",
 	"useAccount": "Utiliser le compte",
 	"changesSaved": "Changements Sauvegard&eacute;s!",
 	"createdOn": "Cr&eacute;&eacute; le",
@@ -67,7 +69,10 @@
 	"balancePerMinute": "Solde &agrave;-la-minute:",
 	"addToBalance": "Ajouter au solde actuel:",
 	"inboundTrunks": "Autoriser les clients &agrave; passer des appels d&eacute;passant la limite ci-dessus, et leur facturer le prix &agrave;-la-minute de l'appel",
-	"addAdminLink": "Ajouter un administrateur au compte",
+	"addAdminLink": {
+		"toggleOn": "Ajouter un administrateur au compte",
+		"toggleOff": "Ne pas ajouter d'administrateur"
+	},
 	"adminLabels": {
 		"firstName": "Pr&eacute;nom de l'administrateur",
 		"lastName": "Nom de l'administrateur",

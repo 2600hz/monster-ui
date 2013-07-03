@@ -1,11 +1,14 @@
 <div class="row-fluid">
 	<div class="span12">
-		<ul class="nav nav-tabs account-tabs">
-			<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">{{ i18n.tabTitles.limits }}</a></li>
-			<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">{{ i18n.tabTitles.restrictions }}</a></li>
-		</ul>
+		<div class="tab-bar">
+			<button id="accountsmanager_use_account_btn" class="btn btn-success pull-right">{{ i18n.useAccount }}</button>
+			<ul class="nav nav-tabs account-tabs">
+				<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_limits_tab">{{ i18n.tabTitles.limits }}</a></li>
+				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_restrictions_tab">{{ i18n.tabTitles.restrictions }}</a></li>
+			</ul>
+		</div>
 		<div class="tab-content">
 			<div class="tab-pane active" id="accountsmanager_overview_tab">
 				<ul class="list-settings">
@@ -33,6 +36,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_status">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label">
 												{{ i18n.accountId }}
@@ -50,8 +57,6 @@
 												{{/if}}
 											</label>
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
-												<button id="accountsmanager_use_account_btn" class="btn btn-primary">{{ i18n.useAccount }}</button>
 												{{#if account.enabled}}
 												<input type="hidden" name="enabled" value="false"/>
 												<button data-field="accountsmanager_account_status" class="btn btn-warning change">
@@ -63,6 +68,13 @@
 													{{ i18n.enable }}
 												</button>
 												{{/if}}
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label">
+												{{ i18n.deleteAccount }}
+											</label>
+											<div class="controls">
 												<button id="accountsmanager_delete_account_btn" class="btn btn-danger">{{ i18n.delete }}</button>
 											</div>
 										</div>
@@ -86,6 +98,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_name">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_name">{{ i18n.accountName }}</label>
 											<div class="controls">
@@ -118,6 +134,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_realm">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.accountRealm }}</label>
 											<div class="controls">
@@ -194,6 +214,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_technical_contact">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technicalContact.name }}</label>
 											<div class="controls">
@@ -250,6 +274,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_billing_contact">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billingContact.name }}</label>
 											<div class="controls">
@@ -294,6 +322,10 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_timezone">
+										<a href="#" class="close-link">
+											<i class="icon-remove icon-small"></i>
+											<span>{{ i18n.close }}</span>
+										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.accountTimezone }}</label>
 											<div class="controls">

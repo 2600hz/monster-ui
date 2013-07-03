@@ -1,3 +1,18 @@
+{{#if isMasquerading}}
+<li class="restore-masquerading-link nav-masquerading">
+	<a href="#">
+		<div>Switch back to</div>
+		<div class="name-text">My account</div>
+	</a>
+</li>
+<li data-link="myaccount" class="myaccount-link nav-masquerading">
+	<a href="#">
+		<div>Currently Viewing</div>
+		<div class="name-text">{{name}}</div>
+	</a>
+</li>
+{{else}}
 <li data-link="myaccount" class="myaccount-link">
 	<a href="#">{{ i18n.hello }} {{name}}</a>
 </li>
+{{/if}}

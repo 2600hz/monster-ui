@@ -59,7 +59,7 @@
 							<div class="control-group span5">
 								<div class="add-admin-pic"></div>
 								<div class="add-admin-toggle">
-									<a href="#">{{ i18n.addAdminLink }}</a><i class="icon-question-sign"></i>
+									<a href="#">{{ i18n.addAdminLink.toggleOn }}</a><i class="icon-question-sign"></i>
 								</div>
 							</div>
 
@@ -78,7 +78,7 @@
 							<div class="control-group clearfix">
 								<div class="span5 offset1">
 									<label>{{ i18n.adminLabels.email }}</label>
-	    							<input type="text" name="user.email" />
+	    							<input type="email" name="user.email" />
 								</div>
 								<div class="span5">
 									<label>{{ i18n.adminLabels.number }}</label>
@@ -86,9 +86,11 @@
 								</div>
 							</div>
 							<div class="control-group clearfix">
-								<div id="accountsmanager_autogen_switch" class="switch span7 offset2" data-on-label="Auto-generate password" data-off-label="Manually type password">
-								    <input type="checkbox" checked name="extra.autogenPassword" />
+								<div class="btn-group offset1 span10" data-toggle="buttons-radio">
+									<button type="button" class="btn btn-primary autogen-button active">{{ i18n.autogenPassword }}</button>
+									<button type="button" class="btn btn-primary manual-button">{{ i18n.manuallyTypePassword }}</button>
 								</div>
+								<input type="checkbox" class="hide autogen-ckb" checked name="extra.autogenPassword" />
 							</div>
 							<div class="control-group password-toggle-div clearfix">
 								<div class="span5 offset1">

@@ -33,7 +33,7 @@ define(function(require){
 			'auth.loadAccount' : '_loadAccount',
 			'auth.loginClick': '_loginClick',
 			'auth.logout': '_logout',
-			'auth.sharedAuth' : '_sharedAuth',
+			'auth.initApp' : '_initApp',
 			'auth.welcome' : '_login',
 		},
 
@@ -159,7 +159,10 @@ define(function(require){
 					results.user.apps = results.user.apps || {};
 
 					self.currentUser = results.user;
-					self.currentAccount = results.account;
+					// This account will remain unchanged, it should be used by non-masqueradable apps
+					self.originalAccount = results.account;
+					// This account will be overriden when masquerading, it should be used by masqueradable apps
+					self.currentAccount = $.extend(true, {}, self.originalAccount);
 
 					$.each(results.user.apps, function(k, v) {
 						if(v['default']) {
@@ -218,7 +221,7 @@ define(function(require){
 			});
 		},
 
-		_sharedAuth: function (args) {
+		_initApp: function (args) {
 			var self = this;
 
 			var restData = {
@@ -229,7 +232,8 @@ define(function(require){
 					}
 				},
 				success = function(app) {
-					app.accountId = self.accountId;
+					app.isMasqueradable = app.isMasqueradable || true;
+					app.accountId = app.isMasqueradable ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
                     args.callback && args.callback();

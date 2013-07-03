@@ -27,13 +27,14 @@ define(function(require){
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
-			'myaccount.activateSubmodule': '_activateSubmodule'
+			'myaccount.activateSubmodule': '_activateSubmodule',
+			'myaccount.renderNavLinks': '_renderNavLinks'
 		},
 
 		load: function(callback){
 			var self = this;
 
-			self.whappAuth(function() {
+			self.initApp(function() {
 				self.render();
 
 				callback && callback(self);
@@ -57,7 +58,7 @@ define(function(require){
 				var appName = self._apps.pop();
 
 				/* We first load all the required apps */
-				monster._loadApp(appName, function(app) {
+				monster.apps.load(appName, function(app) {
 					app.render();
 
 					self._loadApps(callback);
@@ -65,34 +66,52 @@ define(function(require){
 			}
 		},
 
-		whappAuth: function(_callback) {
+		initApp: function(_callback) {
 			var self = this;
 
-			monster.pub('auth.sharedAuth', {
+			monster.pub('auth.initApp', {
 				app: self,
 				callback: _callback
 			});
 		},
 
+		_renderNavLinks: function(args) {
+			var self = this,
+				navHtml = $(monster.template(self, 'nav', {
+					name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
+					isMasquerading: args && args.isMasquerading || false
+				}));
+
+			$('#ws-navbar .links').empty()
+								  .append(navHtml);
+		},
+
 		render: function(){
 			/* render non-dependant stuff */
 			var self = this,
-				dataNav = {
-					name: monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name
-				},
 				myaccountHtml = $(monster.template(self, 'myaccount')),
-				navHtml = $(monster.template(self, 'nav', dataNav));
+				navContainer = $('#ws-navbar .links');
 
 			$('#topbar').after(myaccountHtml);
 
-			$('#ws-navbar .links').append(navHtml);
+			self._renderNavLinks();
 
-			$(navHtml).on('click', function(e) {
+			navContainer.on('click', '.myaccount-link', function(e) {
 				e.preventDefault();
 
 				self._loadApps(function() {
 					monster.pub('myaccount.display');
 				});
+			});
+
+			navContainer.on('click', '.restore-masquerading-link', function(e) {
+				e.preventDefault();
+
+				// Closing myaccount (if open) before restoring from masquerading
+				if($('#myaccount').hasClass('myaccount-open')) {
+					monster.pub('myaccount.display');
+				}
+				monster.pub('accountsManager.restoreMasquerading');
 			});
 
 			self.groups = {

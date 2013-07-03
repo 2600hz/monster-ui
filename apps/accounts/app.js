@@ -22,7 +22,7 @@ define(function(require){
 				verb: 'GET'
 			},
 			'accountsManager.create': {
-				url: 'accounts',
+				url: 'accounts/{accountId}',
 				verb: 'PUT'
 			},
 			'accountsManager.update': {
@@ -104,21 +104,22 @@ define(function(require){
 		},
 
 		subscribe: {
-			'accountsManager.activate': '_render'
+			'accountsManager.activate': '_render',
+			'accountsManager.restoreMasquerading': '_restoreMasquerading'
 		},
 
 		load: function(callback) {
 			var self = this;
 
-			self.whappAuth(function() {
+			self.initApp(function() {
 				callback && callback(self);
 			});
 		},
 
-		whappAuth: function(callback) {
+		initApp: function(callback) {
 			var self = this;
 
-			monster.pub('auth.sharedAuth', {
+			monster.pub('auth.initApp', {
 				app: self,
 				callback: callback
 			});
@@ -136,9 +137,8 @@ define(function(require){
 				accountsManager = $(monster.template(self, 'accountsManager')),
 				parent = container || $('#ws-content');
 
-			(parent)
-				.empty()
-				.append(accountsManager);
+			parent.empty()
+				  .append(accountsManager);
 
 			self.loadAccountList(function() {
 				self.renderAccountsManager(accountsManager);
@@ -198,7 +198,8 @@ define(function(require){
 			parent.find('#add_account_link').click(function(e) {
 				e.preventDefault();
 				self.renderNewAccountWizard({
-					parent: parent
+					parent: parent,
+					accountId: parent.find('.account-breadcrumb').last().data('id') || self.accountId
 				});
 			});
 
@@ -212,45 +213,50 @@ define(function(require){
 			});
 		},
 
-		renderList: function(accountList, parent, slide) {
+		renderList: function(accountList, parent, selectedId, slide) {
 			var self = this,
+				accountList = accountList || [];
 				accountListHtml = $(monster.template(self, 'accountsList', {
 					accounts: $.map(accountList, function(val, key) {
 						val.id = key;
 						return val;
 					}),
-					selectedId: self.editAccountId
+					selectedId: selectedId
 				})),
 				$list = parent.find('.account-list'),
 				$slider = parent.find('.account-list-slider'),
 				bindLinkClicks = function() {
 					$list.find('.account-children-link').click(function() {
-						var acc_id = $(this).parent().data('account_id'),
+						var accountId = $(this).parent().data('account_id'),
 							$breadcrumbs = parent.find('.account-breadcrumbs'),
 							breadcrumbStep = $breadcrumbs.find('.account-breadcrumb').length+1,
 							$breadcrumb = $(monster.template(self, 'accountsBreadcrumb', {
-								name: accountList[acc_id].name,
+								id: accountId,
+								name: accountList[accountId].name,
 								step: breadcrumbStep
 							}));
 
 						$breadcrumbs.append($breadcrumb);
 						$breadcrumb.find('a').click(function(e) {
 							e.preventDefault();
-							self.renderList(accountList[acc_id].children, parent, false);
+							self.renderList(accountList, parent, accountId);
+							self.edit(accountId, parent);
 							$.each($breadcrumbs.find('.account-breadcrumb'), function() {
-								if(parseInt($(this).data('step'),10) > breadcrumbStep) {
+								if(parseInt($(this).data('step'),10) >= breadcrumbStep) {
 									$(this).remove();
 								}
 							});
 							parent.find('.main-content').empty();
 						});
 
-						self.renderList(accountList[acc_id].children, parent, true);
+						self.renderList(accountList[accountId].children, parent, true);
 					});
 
 					$list.find('.account-link').click(function() {
-						self.edit($(this).parent().data('account_id'), parent);
-						self.renderList(accountList, parent, false);
+						var accountId = $(this).parent().data('account_id');
+						parent.find('.main-content').empty();
+						self.edit(accountId, parent);
+						self.renderList(accountList, parent, accountId);
 					});
 				};
 
@@ -279,15 +285,18 @@ define(function(require){
 		renderNewAccountWizard: function(params) {
 			var self = this,
 				parent = params.parent,
-				newAccountWizard = $(monster.template(self, 'newAccountWizard', {
-
-				})),
+				parentAccountId = params.accountId,
+				newAccountWizard = $(monster.template(self, 'newAccountWizard')),
 				maxStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('max_step'));
 
 			newAccountWizard.find('.wizard-top-bar').data('active_step', '1');
 
 			newAccountWizard.find('.wizard-content-step').hide();
 			newAccountWizard.find('.wizard-content-step[data-step="1"]').show();
+
+			if(!monster.apps['auth'].isReseller) {
+				newAccountWizard.find('.wizard-top-bar .step[data-step="2"]').hide();
+			}
 
 			if(maxStep > 1) {
 				newAccountWizard.find('.submit-btn').hide();
@@ -301,7 +310,7 @@ define(function(require){
 			newAccountWizard.find('.step').on('click', function() {
 				var currentStep = newAccountWizard.find('.wizard-top-bar').data('active_step'),
 					newStep = $(this).data('step');
-				if($(this).hasClass('completed')) {
+				if($(this).hasClass('completed') && currentStep !== newStep) {
 					self.validateStep(currentStep, 
 									  newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), 
 									  function() {
@@ -313,17 +322,24 @@ define(function(require){
 			newAccountWizard.find('.next-step').on('click', function(ev) {
 				ev.preventDefault();
 
-				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
+				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step')),
+					newStep = currentStep+1;
+				if(newStep === 2 && !monster.apps['auth'].isReseller) {
+					newStep++;
+				}
 				self.validateStep(currentStep, newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), function() {
-					self.changeStep(++currentStep, maxStep, newAccountWizard);
+					self.changeStep(newStep, maxStep, newAccountWizard);
 				});
 			});
 
 			newAccountWizard.find('.prev-step').on('click', function(ev) {
 				ev.preventDefault();
 
-				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
-				self.changeStep(--currentStep, maxStep, newAccountWizard);
+				var newStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'))-1;
+				if(newStep === 2 && !monster.apps['auth'].isReseller) {
+					newStep--;
+				}
+				self.changeStep(newStep, maxStep, newAccountWizard);
 			});
 
 			newAccountWizard.find('.cancel').on('click', function(ev) {
@@ -347,10 +363,10 @@ define(function(require){
 						if(v.action === false) { v.action = "deny"; }
 					});
 
-					//TODO: submit new account
 					monster.request({
 						resource: 'accountsManager.create', 
 						data: {
+							accountId: parentAccountId,
 							data: formData.account
 						},
 						success: function(data, status) {
@@ -508,12 +524,54 @@ define(function(require){
 			);
 		},
 
-		renderRestrictionsStep: function(params) {
+		renderAccountInfoStep: function(params) {
 			var self = this,
 				parent = params.parent,
-				stepTemplate = self.getRestrictionsTabContent({
-					parent: parent
-				})
+				newAdminDiv = parent.find('.new-admin-div'),
+				autogenBtn = newAdminDiv.find('.autogen-button'),
+				manualBtn = newAdminDiv.find('.manual-button'),
+				autogenCheckbox = newAdminDiv.find('.autogen-ckb'),
+				pwdToggleDiv = newAdminDiv.find('.password-toggle-div');
+
+			timezone.populateDropdown(parent.find('#accountsmanager_new_account_timezone'));
+
+			parent.find('.add-admin-toggle > a').on('click', function(e) {
+				e.preventDefault();
+				var $this = $(this);
+				if(newAdminDiv.hasClass('active')) {
+					newAdminDiv.slideUp();
+					newAdminDiv.removeClass('active');
+					newAdminDiv.find('input[type="text"], input[type="email"]').val('');
+					autogenBtn.click();
+					$this.html(self.i18n.active().addAdminLink.toggleOn);
+					$this.next('i').show();
+				} else {
+					newAdminDiv.slideDown();
+					newAdminDiv.addClass('active');
+					$this.html(self.i18n.active().addAdminLink.toggleOff);
+					$this.next('i').hide();
+				}
+			});
+
+			manualBtn.on('click', function(e) {
+				autogenCheckbox.prop('checked', false);
+				pwdToggleDiv.slideDown();
+			});
+
+			autogenBtn.on('click', function(e) {
+				autogenCheckbox.prop('checked', true);
+				pwdToggleDiv.find('input[type=password]').val('');
+				pwdToggleDiv.slideUp();
+			});
+		},
+
+		renderServicePlanStep: function(params) {
+			var self = this,
+				parent = params.parent,
+				stepTemplate = $(monster.template(self, 'servicePlanWizardStep', {
+					servicePlans: params.servicePlans,
+					isReseller: monster.apps['auth'].isReseller
+				}));
 
 				parent.append(stepTemplate);
 		},
@@ -536,48 +594,14 @@ define(function(require){
 				parent.append(stepTemplate);
 		},
 
-		renderServicePlanStep: function(params) {
+		renderRestrictionsStep: function(params) {
 			var self = this,
 				parent = params.parent,
-				stepTemplate = $(monster.template(self, 'servicePlanWizardStep', {
-					servicePlans: params.servicePlans,
-					isReseller: monster.apps['auth'].isReseller
-				}));
+				stepTemplate = self.getRestrictionsTabContent({
+					parent: parent
+				})
 
 				parent.append(stepTemplate);
-		},
-
-		renderAccountInfoStep: function(params) {
-			var self = this,
-				parent = params.parent,
-				autogenSwitch = parent.find('#accountsmanager_autogen_switch');
-
-			timezone.populateDropdown(parent.find('#accountsmanager_new_account_timezone'));
-
-			parent.find('.add-admin-toggle > a').on('click', function(e) {
-				e.preventDefault();
-				var newAdminDiv = parent.find('.new-admin-div');
-				if(newAdminDiv.hasClass('active')) {
-					newAdminDiv.slideUp();
-					newAdminDiv.removeClass('active');
-					newAdminDiv.find('input[type="text"], input[type="email"]').val('');
-					autogenSwitch.bootstrapSwitch('setState', true);
-				} else {
-					newAdminDiv.slideDown();
-					newAdminDiv.addClass('active');
-				}
-			});
-
-			autogenSwitch.bootstrapSwitch();
-			autogenSwitch.on('switch-change', function(e, data) {
-				var pwdToggleDiv = parent.find('.password-toggle-div');
-				if(data.value) {
-					pwdToggleDiv.find('input[type=password]').val('');
-					pwdToggleDiv.slideUp();
-				} else {
-					pwdToggleDiv.slideDown();
-				}
-			});
 		},
 
 		changeStep: function(stepIndex, maxStep, parent) {
@@ -667,8 +691,9 @@ define(function(require){
 			}
 		},
 
-		renderEditAdminsForm: function(parent) {
+		renderEditAdminsForm: function(parent, editAccountId) {
 			var self = this,
+				editAccountId = editAccountId;
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_account_admins"]'),
 				closeAdminsSetting = function() {
 					$settingsItem.removeClass('open');
@@ -679,7 +704,7 @@ define(function(require){
 			monster.request({
 				resource: 'accountsManager.users.list',
 				data: {
-					accountId: self.editAccountId,
+					accountId: editAccountId,
 				},
 				success: function(data, status) {
 					var admins = $.map(data.data, function(val) {
@@ -735,11 +760,11 @@ define(function(require){
 							monster.request({
 								resource: 'accountsManager.users.delete', 
 								data: {
-									accountId: self.editAccountId,
+									accountId: editAccountId,
 									userId: userId
 								},
 								success: function(data, status) {
-									self.renderEditAdminsForm(parent);
+									self.renderEditAdminsForm(parent, editAccountId);
 								}
 							});
 						});
@@ -815,7 +840,7 @@ define(function(require){
 								monster.request({
 									resource: 'accountsManager.users.get', 
 									data: {
-										accountId: self.editAccountId,
+										accountId: editAccountId,
 										userId: userId
 									},
 									success: function(data, status) {
@@ -826,12 +851,12 @@ define(function(require){
 										monster.request({
 											resource: 'accountsManager.users.update', 
 											data: {
-												accountId: self.editAccountId,
+												accountId: editAccountId,
 												userId: userId,
 												data: newData
 											},
 											success: function(data, status) {
-												self.renderEditAdminsForm(parent);
+												self.renderEditAdminsForm(parent, editAccountId);
 											}
 										});
 									}
@@ -874,11 +899,11 @@ define(function(require){
 								monster.request({
 									resource: 'accountsManager.users.create', 
 									data: {
-										accountId: self.editAccountId,
+										accountId: editAccountId,
 										data: formData
 									},
 									success: function(data, status) {
-										self.renderEditAdminsForm(parent);
+										self.renderEditAdminsForm(parent, editAccountId);
 									}
 								});
 							}
@@ -887,7 +912,7 @@ define(function(require){
 							monster.request({
 								resource: 'accountsManager.users.get', 
 								data: {
-									accountId: self.editAccountId,
+									accountId: editAccountId,
 									userId: userId
 								},
 								success: function(data, status) {
@@ -895,12 +920,12 @@ define(function(require){
 									monster.request({
 										resource: 'accountsManager.users.update', 
 										data: {
-											accountId: self.editAccountId,
+											accountId: editAccountId,
 											userId: userId,
 											data: data.data
 										},
 										success: function(data, status) {
-											self.renderEditAdminsForm(parent);
+											self.renderEditAdminsForm(parent, editAccountId);
 										}
 									});
 								}
@@ -916,8 +941,6 @@ define(function(require){
 
 		edit: function(accountId, parent) {
 			var self = this;
-			
-			self.editAccountId = accountId;
 
 			monster.parallel({
 					account: function(callback) {
@@ -1112,12 +1135,12 @@ define(function(require){
 					$this.find('.settings-item-content').slideDown('fast');
 
 					if($this.data('name') === 'accountsmanager_account_admins') {
-						self.renderEditAdminsForm(parent);
+						self.renderEditAdminsForm(parent, accountData.id);
 					}
 				}
 			});
 
-			contentHtml.find('button.cancel').on('click', function(e) {
+			contentHtml.find('button.cancel, .close-link:not(.close-admin-settings)').on('click', function(e) {
 				e.preventDefault();
 				closeTabsContent();
 
@@ -1153,8 +1176,7 @@ define(function(require){
 			contentHtml.find('#accountsmanager_use_account_btn').on('click', function(e) {
 				e.preventDefault();
 
-				//TODO: handle masquerading
-				console.log(monster.apps);
+				self.triggerMasquerading(accountData);
 
 				e.stopPropagation();
 			});
@@ -1224,7 +1246,7 @@ define(function(require){
 							monster.request({
 								resource: 'accountsManager.servicePlans.delete', 
 								data: {
-									accountId: self.editAccountId,
+									accountId: accountData.id,
 									planId: servicePlans.currentId,
 									data: {}
 								},
@@ -1233,7 +1255,7 @@ define(function(require){
 										monster.request({
 											resource: 'accountsManager.servicePlans.add', 
 											data: {
-												accountId: self.editAccountId,
+												accountId: accountData.id,
 												planId: newPlanId,
 												data: {}
 											},
@@ -1256,7 +1278,7 @@ define(function(require){
 							monster.request({
 								resource: 'accountsManager.servicePlans.add', 
 								data: {
-									accountId: self.editAccountId,
+									accountId: accountData.id,
 									planId: newPlanId,
 									data: {}
 								},
@@ -1281,7 +1303,7 @@ define(function(require){
 						monster.request({
 							resource: 'accountsManager.servicePlans.reconciliation', 
 							data: {
-								accountId: self.editAccountId,
+								accountId: accountData.id,
 								data: {}
 							},
 							success: function(data, status) {
@@ -1307,7 +1329,7 @@ define(function(require){
 						monster.request({
 							resource: 'accountsManager.servicePlans.synchronization', 
 							data: {
-								accountId: self.editAccountId,
+								accountId: accountData.id,
 								data: {}
 							},
 							success: function(data, status) {
@@ -1343,7 +1365,7 @@ define(function(require){
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
-			self.adjustTabsWidth(contentHtml.find('ul.account-tabs > li'));
+			// self.adjustTabsWidth(contentHtml.find('ul.account-tabs > li'));
 
 			if(typeof callback === 'function') {
 				callback(contentHtml);
@@ -1363,10 +1385,11 @@ define(function(require){
 				limits = params.limits,
 				balance = params.balance,
 				accountData = params.accountData,
-				tabContentTemplate = self.getLimitsTabContent(params);
+				tabContentTemplate = self.getLimitsTabContent(params),
+				creditBalanceSpan = tabContentTemplate.find('.manage-credit-div .credit-balance'),
+				addCreditInput = tabContentTemplate.find('.add-credit-input');
 
-			//TODO get currency
-			tabContentTemplate.find('.manage-credit-div .credit-balance').html('$'+balance);
+			creditBalanceSpan.html(self.i18n.active().currency+balance);
 
 			parent.find('#accountsmanager_limits_save').click(function(e) {
 				e.preventDefault();
@@ -1374,7 +1397,7 @@ define(function(require){
 				var newTwowayValue = twowayTrunksDiv.find('.slider-div').slider('value'),
 					newInboundValue = inboundTrunksDiv.find('.slider-div').slider('value'),
 					callRestrictions = form2object('accountsmanager_callrestrictions_form').limits.call_restriction,
-					addCredit = tabContentTemplate.find('.add-credit-input').val(),
+					addCredit = addCreditInput.val(),
 					allowPrepay = tabContentTemplate.find('.allow-prepay-ckb').is(':checked');
 
 				if(/^(\d+(\.\d{1,2})?)?$/.test(addCredit)) {
@@ -1415,6 +1438,9 @@ define(function(require){
 										}
 									},
 									success: function(data, status) {
+										balance += parseFloat(addCredit);
+										creditBalanceSpan.html(self.i18n.active().currency+balance);
+										addCreditInput.val('');
 										toastr.success(self.i18n.active().toastrMessages.creditAddSuccess, '', {"timeOut": 5000});
 									},
 									error: function(data, status) {
@@ -1643,7 +1669,40 @@ define(function(require){
 
 		autoGeneratePassword: function() {
 			return monster.util.randomString(4,'abcdefghjkmnpqrstuvwxyz')+monster.util.randomString(4,'0123456789');
-		}
+		},
+
+		triggerMasquerading: function(account) {
+            var self = this;
+
+            monster.apps['auth'].currentAccount = $.extend(true, {}, account);
+            self.updateApps(account.id);
+
+            monster.pub('myaccount.renderNavLinks', {
+				name: account.name,
+				isMasquerading: true
+			});
+
+			self.render();
+        },
+
+        updateApps: function(accountId) {
+            $.each(monster.apps, function(key, val) {
+                if( (val.isMasqueradable && val.apiUrl === monster.apps['accounts'].apiUrl) || key === 'auth' ) {
+                    val.accountId = accountId;
+                }
+            });
+        },
+
+        _restoreMasquerading: function() {
+            var self = this;
+
+            monster.apps['auth'].currentAccount = $.extend(true, {}, monster.apps['auth'].originalAccount);
+            self.updateApps(monster.apps['auth'].originalAccount.id);
+
+            monster.pub('myaccount.renderNavLinks');
+
+			self.render();
+        }
 
 
 	};
