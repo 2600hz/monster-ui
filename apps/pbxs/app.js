@@ -232,8 +232,8 @@ define(function(require){
 				if(results.account.data.servers) {
 					$.each(results.account.data.servers, function(k, server) {
 						$.each(server.DIDs, function(did, v) {
-							if(did in results.numbers.data) {
-								results.account.data.servers[k].DIDs[did].features = results.numbers.data[did].features;
+							if(did in results.numbers.data.numbers) {
+								results.account.data.servers[k].DIDs[did].features = results.numbers.data.numbers[did].features;
 							}
 						});
 					});
@@ -303,20 +303,19 @@ define(function(require){
 					accountId: self.accountId,
 				},
 				success: function(_data, status) {
-					var self = this,
-						account_data = {
-							account: {
-								credits: {
-									prepay: '0.00'
-								},
-								trunks: '0',
-								inbound_trunks: '0',
-								auth_realm: _data.data.realm
+					var account_data = {
+						account: {
+							credits: {
+								prepay: '0.00'
 							},
-							billing_account_id: self.accountId,
-							DIDs_Unassigned: {},
-							servers: []
-						};
+							trunks: '0',
+							inbound_trunks: '0',
+							auth_realm: _data.data.realm
+						},
+						billing_account_id: self.accountId,
+						DIDs_Unassigned: {},
+						servers: []
+					};
 
 					monster.request({
 						resource: 'oldTrunkstore.create',
@@ -2487,7 +2486,7 @@ define(function(require){
 				monster.parallel({
 					list_numbers: function(callback){
 						self.listAllNumbers(function(_data_numbers) {
-							callback(null, _data_numbers.data);
+							callback(null, _data_numbers.data.numbers);
 						});
 					},
 					account: function(callback){
@@ -2521,7 +2520,7 @@ define(function(require){
 			monster.parallel({
 				listNumbers: function(callback){
 					self.listAllNumbers(function(_dataNumbers) {
-						callback(null, _dataNumbers.data);
+						callback(null, _dataNumbers.data.numbers);
 					});
 				},
 				account: function(callback){
@@ -2556,9 +2555,7 @@ define(function(require){
 
 				//Build available numbers list
 				$.each(results.listNumbers, function(k, v) {
-					if(k !== 'id') {
-						tabData.push(k);
-					}
+					tabData.push(k);
 				});
 
 				_callback && _callback(tabData);
