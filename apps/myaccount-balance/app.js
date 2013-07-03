@@ -123,7 +123,11 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var renderData = $.extend(true, {}, defaults, self.formatTableData(results.transactions.data, defaults.fieldData.accounts)),
+					var renderData = $.extend(true, {}, 
+											  defaults,  
+											  self.formatTableData(results.transactions.data, defaults.fieldData.accounts),
+											  {uiRestrictions: monster.apps['auth'].currentAccount.ui_restrictions}
+											 ),
 						balance = $(monster.template(self, 'balance', renderData)),
 						args = {
 							module: self.name,
@@ -281,6 +285,7 @@ define(function(require){
 
 		initTable: function(parent) {
 			var self = this,
+				showCredit = monster.apps['auth'].currentAccount.ui_restrictions.balance.show_credit,
 				columns = [
 					{
 						'sTitle': 'timestamp',
@@ -321,13 +326,14 @@ define(function(require){
 					},
 					{
 						'sTitle': self.i18n.active().durationColumn,
-						'sWidth': '5%'
-					},
-					{
-						'sTitle': self.i18n.active().amountColumn,
-						'sWidth': '5%'
+						'sWidth': '10%'
 					}
 				];
+
+			if (showCredit) {
+				columns[7].sWidth = '5%';
+				columns.push({'sTitle': self.i18n.active().amountColumn,'sWidth': '5%'});
+			}
 
 			monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
 				sDom: '<"table-custom-actions">frtlip',

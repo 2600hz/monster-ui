@@ -1585,7 +1585,7 @@ define(function(require){
 				}
 			});
 
-			template.find('.restrictions-right div input').click(function() {
+			template.find('.restrictions-right .restrictions-profile input').click(function() {
 				var isChecked = false;
 
 				template.find('.restrictions-right .restrictions-profile input').each(function() {

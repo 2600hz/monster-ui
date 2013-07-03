@@ -3,6 +3,7 @@
 
     </div>
 
+	{{#compare uiRestrictions.balance.show_credit '!==' false }}
     <div class="title-bar fancy-header">
         <div class="box-white-border">
             <div class="box-white-content">
@@ -31,6 +32,7 @@
             <button class="btn btn-success" id="add_credits">{{ i18n.addCredit }}</button>
         </div>
     </div>
+	{{/compare}}
 
     <div class="table-wrapper">
         <table id="transactions_grid" class="display table">

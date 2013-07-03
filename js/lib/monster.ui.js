@@ -157,7 +157,6 @@ define(function(require){
 		},
 
 		dialog: function(content, options) {
-			console.log(monster.apps.common);
 			var dialog = $("<div />").append(content),
 				commonApp = monster.apps['common'],
 				i18n = commonApp.i18n.active();
