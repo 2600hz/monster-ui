@@ -1,0 +1,166 @@
+<div>
+	<a href="#" class="close-admin-settings close-link">
+		<i class="icon-remove icon-small"></i>
+		<span>{{ i18n.close }}</span>
+	</a>
+	<div class="control-group">
+		<label class="control-label" for="accountsmanager_account_admins">{{ i18n.accountAdmins }}</label>
+		<div class="controls">
+			<ul class="admin-list">
+				{{#each accountAdmins}}
+				<li class="admin-element" data-user_id="{{this.id}}">
+					<div class="admin-element-display">
+						<a class="admin-element-link delete" href="#">
+							<i class="icon-trash icon-large icon-red"></i>
+						</a>
+						<a class="admin-element-link edit" href="#">
+							<i class="icon-pencil icon-large"></i>
+						</a>
+						<ul class="admin-element-info">
+							<li>{{this.first_name}}&nbsp;{{this.last_name}}</li>
+							<li>{{this.email}}</li>
+							{{#if this.contact_number}}
+							<li>{{formatPhoneNumber this.contact_number}}</li>
+							{{/if}}
+						</ul>
+					</div>
+					<div class="admin-element-edit">
+						<form>
+							<div class="controls clearfix">
+								<div class="input-prepend span12">
+									<span class="add-on"><i class="icon-envelope"></i></span>
+									<input type="email" name="email" value="{{this.email}}" data-original_value="{{this.email}}" placeholder="{{ i18n.adminPlaceholders.email }}"/>
+							    </div>
+							</div>
+							<div class="controls clearfix">
+								<div class="input-prepend span12">
+									<span class="add-on"><i class="icon-user"></i></span>
+									<input type="text" name="first_name" value="{{this.first_name}}" data-original_value="{{this.first_name}}" placeholder="{{ i18n.adminPlaceholders.firstName }}"/>
+							    </div>
+							</div>
+							<div class="controls clearfix">
+								<div class="input-prepend span12">
+									<span class="add-on"><i class="icon-user"></i></span>
+									<input type="text" name="last_name" value="{{this.last_name}}" data-original_value="{{this.last_name}}" placeholder="{{ i18n.adminPlaceholders.lastName }}"/>
+							    </div>
+							</div>
+							<div class="controls clearfix">
+								<div class="input-prepend span12">
+									<span class="add-on"><i class="icon-phone"></i></span>
+									<input type="text" name="contact_number" value="{{this.contact_number}}" data-original_value="{{this.contact_number}}" placeholder="{{ i18n.adminPlaceholders.number }}"/>
+							    </div>
+							</div>
+							<div class="controls controls-row edit-admin-password-div clearfix">
+									<input type="password" class="span6" name="password" placeholder="{{ i18n.adminPlaceholders.password }}"/>
+									<input type="password" class="span6" name="extra.password_confirm" placeholder="{{ i18n.adminPlaceholders.confirm }}"/>
+							</div>
+							<div class="controls controls-row admin-btn-div">
+								<div class="span6">
+									<button class="btn btn-danger admin-cancel-btn">{{ ../i18n.cancel }}</button>
+								</div>
+								<div class="span6">
+									<button class="btn btn-success admin-save-btn">{{ ../i18n.save }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</li>
+				{{else}}
+				<li class="admin-element">
+					<div class="admin-empty-msg">{{ i18n.noAdminMessage }}</div>
+				</li>
+				{{/each}}
+				<li class="admin-element add-admin">
+					<button id="accountsmanager_new_admin_btn" class="btn btn-small btn-primary btn-block" data-toggle="button">
+						<i class="icon-caret-down pull-right"></i>
+						{{ i18n.newAdmin }}
+					</button>
+				</li>
+				<li class="new-admin-element">
+					<ul class="nav nav-tabs new-admin-tabs">
+						<li class="span6 active"><a href="#accountsmanager_create_user_tab">{{ i18n.newUser }}</a></li>
+						<li class="span6"><a href="#accountsmanager_promote_user_tab">{{ i18n.existingUser }}</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="accountsmanager_create_user_tab" class="tab-pane active create-user-div">
+							<form id="accountsmanager_add_admin_form">
+								<div class="controls clearfix">
+									<div class="input-prepend span12">
+										<span class="add-on"><i class="icon-envelope"></i></span>
+										<input type="email" name="email" placeholder="Email address"/>
+								    </div>
+								</div>
+								<div class="controls clearfix">
+									<div class="input-prepend span12">
+										<span class="add-on"><i class="icon-user"></i></span>
+										<input type="text" name="first_name" placeholder="First name"/>
+								    </div>
+								</div>
+								<div class="controls clearfix">
+									<div class="input-prepend span12">
+										<span class="add-on"><i class="icon-user"></i></span>
+										<input type="text" name="last_name" placeholder="Last name"/>
+								    </div>
+								</div>
+								<div class="controls clearfix">
+									<div class="input-prepend span12">
+										<span class="add-on"><i class="icon-phone"></i></span>
+										<input type="text" name="contact_number" placeholder="Phone number"/>
+								    </div>
+								</div>
+								<div>
+									<label><input type="radio" name="extra.autogen_password" value="true" checked />{{ i18n.autogenPassword }}</label>
+									<label><input type="radio" name="extra.autogen_password" value="false" />{{ i18n.manuallyTypePassword }}</label>
+									<div class="controls controls-row new-admin-password-div clearfix">
+											<input type="password" class="span6" name="password" placeholder="Password"/>
+											<input type="password" class="span6" name="extra.password_confirm" placeholder="Confirm"/>
+									</div>
+								</div>
+								<div class="controls controls-row admin-btn-div">
+									<div class="span6">
+										<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+									</div>
+									<div class="span6">
+										<button class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div id="accountsmanager_promote_user_tab" class="tab-pane promote-user-div">
+							{{#if accountUsers.length}}
+							<div class="controls">
+								<select class="span12" id="accountsmanager_promote_user_select">
+									{{#each accountUsers}}
+									<option value="{{this.id}}">
+										{{this.first_name}}&nbsp;{{this.last_name}}
+									</option>
+									{{/each}}
+								</select>
+							</div>
+							<div class="controls controls-row admin-btn-div">
+								<div class="span6">
+									<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+								</div>
+								<div class="span6">
+									<button class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
+								</div>
+							</div>
+							{{else}}
+							<div class="controls">
+								<div class="span12">
+									<span class="admin-empty-msg">{{ i18n.noUserMessage }}</span>
+								</div>
+							</div>
+							<div class="controls admin-btn-div">
+								<div class="span6">
+									<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+								</div>
+							</div>
+							{{/if}}
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

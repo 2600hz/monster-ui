@@ -49,7 +49,7 @@ define(function(require){
 				self.authToken = cookieData.authToken;
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
-
+				self.isReseller = cookieData.isReseller;
 
 				monster.pub('auth.loadAccount');
 			}
@@ -88,6 +88,7 @@ define(function(require){
 					self.accountId = data.data.account_id;
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
+					self.isReseller = data.data.is_reseller;
 
 					$('#ws-content').empty();
 
@@ -158,7 +159,10 @@ define(function(require){
 					results.user.apps = results.user.apps || {};
 
 					self.currentUser = results.user;
-					self.currentAccount = results.account;
+					// This account will remain unchanged, it should be used by non-masqueradable apps
+					self.originalAccount = results.account;
+					// This account will be overriden when masquerading, it should be used by masqueradable apps
+					self.currentAccount = $.extend(true, {}, self.originalAccount);
 
 					$.each(results.user.apps, function(k, v) {
 						if(v['default']) {
@@ -228,7 +232,8 @@ define(function(require){
 					}
 				},
 				success = function(app) {
-					app.accountId = self.accountId;
+					app.isMasqueradable = app.isMasqueradable || true;
+					app.accountId = app.isMasqueradable ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
                     args.callback && args.callback();

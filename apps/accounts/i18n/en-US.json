@@ -1,0 +1,164 @@
+{
+	"addAccount": "Add New Account",
+	"editSettings": "Edit",
+	"saveChanges": "Save Changes",
+	"cancel": "Cancel",
+	"close": "Close",
+	"disable": "Disable",
+	"disabled": "Disabled",
+	"active": "Active",
+	"delete": "Delete",
+	"enable": "Enable",
+	"add": "Add",
+	"save": "Save",
+	"update": "Update",
+	"none": "None",
+	"month": "Month",
+	"search": "Search",
+	"currency": "$",
+	"disableAccount": "Disable this Account",
+	"enableAccount": "Enable this Account",
+	"deleteAccount": "Delete this Account",
+	"useAccount": "Use Account",
+	"masquerading": "Masquerading",
+	"changesSaved": "Changes Saved!",
+	"createdOn": "Created on",
+	"accountStatus": "Account Status",
+	"accountId": "Account ID",
+	"accountName": "Account Name",
+	"accountRealm": "Account Realm",
+	"accountTimezone": "Timezone",
+	"accountAdmins": "Account Administrators",
+	"noAdminMessage": "This account doesn't have any admin",
+	"noUserMessage": "This account doesn't have any regular user",
+	"newAdmin": "Add a new administrator",
+	"newUser": "New User",
+	"existingUser": "Existing User",
+	"autogenPassword": "Auto-generate password",
+	"manuallyTypePassword": "Manually type password",
+	"billingContact": {
+		"label": "Billing Contact",
+		"name": "Billing Contact Name",
+		"email": "Billing Contact Email",
+		"number": "Phone Number"
+	},
+	"technicalContact": {
+		"label": "Technical Contact",
+		"name": "Technical Contact Name",
+		"email": "Technical Contact Email",
+		"number": "Phone Number"
+	},
+	"chargeReminder" : {
+		"line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+		"line2": "Are you sure you want to continue?"
+	},
+	"tabTitles": {
+		"overview": "Overview",
+		"servicePlans": "Service Plans",
+		"limits": "Limits",
+		"restrictions": "Restrictions"
+	},
+	"activeServicePlan": "Active service plan",
+	"servicePlanMaintenance": "Service plan maintenance",
+	"servicePlanReconciliation": "Reconciliation",
+	"servicePlanSynchronization": "Synchronization",
+	"servicePlanWizardLegend": "Choose a service plan for this account:",
+	"servicePlanResellerOnly": "Only resellers are allowed to manage service plans.",
+	"trunksLegend": "Set limits for included simultaneous inbound and outbound calls",
+	"twowayTrunks": "Unlimited outbound trunks",
+	"inboundTrunks": "Unlimited inbound trunks",
+	"callRestrictionsLegend": "Call restrictions",
+	"callRestrictionsTitle": "This account can place calls to...",
+	"balanceTitle": "Manage credit balance",
+	"balancePerMinute": "Per minute credit balance:",
+	"addToBalance": "Add to the current balance:",
+	"allowPrepay": "Allow customers to make per-minute calls that go over the above limit, and bill them the per-minute cost of the call",
+	"addAdminLink": {
+		"toggleOn": "Add an admin to the account",
+		"toggleOff": "I changed my mind, who needs an admin?"
+	},
+	"adminLabels": {
+		"firstName": "Admin first name",
+		"lastName": "Admin last name",
+		"email": "Admin email address",
+		"number": "Admin contact number",
+		"password": "Admin password",
+		"confirm": "Confirm password"
+	},
+	"adminPlaceholders": {
+		"firstName": "First name",
+		"lastName": "Last name",
+		"email": "Email address",
+		"number": "Phone number",
+		"password": "Password",
+		"confirm": "Confirm"
+	},
+	"wizardStepTitles": {
+		"setupAccount": "Set up an account",
+		"servicePlan": "Choose Service Plan",
+		"limits": "Call Restrictions",
+		"restrictions": "Permissions"
+	},
+	"wizardButtons": {
+		"cancel": "Cancel",
+		"previous": "Previous",
+		"next": "Next",
+		"submit": "Submit"
+	},
+	"wizardErrorMessages": {
+		"pleaseCorrect": "Please correct the following errors:",
+		"accountMandatoryFields": "The account name and realm fields are mandatory.",
+		"adminMandatoryFields": "The admin first name, last name and email address are mandatory when adding a new admin.",
+		"adminPasswordError": "The password must be at least 6 characters long and include a letter and a number.",
+		"adminPasswordConfirmError": "The password and its confirmation do not match.",
+		"incorrectBalanceFormat": "Incorrect format for balance credit, you can only enter a number with up to 2 decimals.",
+		"balanceMinimumAmount": "The minimum amount for balance credit is $5.00."
+	},
+	"deleteUserConfirm": "This user will be permanently deleted. Continue?",
+	"deleteAccountConfirm": "This account will be permanently deleted. Continue?",
+	"toastrMessages": {
+		"servicePlanUpdateSuccess": "Active service plan updated successfully!",
+		"servicePlanUpdateError": "An unexpected error occurred! Please try again.",
+		"servicePlanReconciliationSuccess": "Reconciliation completed successfully!",
+		"servicePlanReconciliationError": "An error occurred during reconciliation process! Please try again later.",
+		"servicePlanSynchronizationSuccess": "Synchronization completed successfully!",
+		"servicePlanSynchronizationError": "An error occurred during synchronization process! Please try again later.",
+		"limitsUpdateSuccess": "Limits updated successfully!",
+		"limitsUpdateError": "An unexpected error occured when updating the limits, please try again later.",
+		"creditAddSuccess": "Credit successfully added to the current balance!",
+		"creditAddError": "An unexpected error occured when adding credit, please try again later.",
+		"deleteAccountError": "An error occured while deleting the account, please try again.",
+		"newAccount": {
+			"accountError": "An unexpected error occured while creating the account.",
+			"adminError": "The account administrator could not be created.",
+			"limitsError": "An error occured while setting up the limits.",
+			"creditError": "An error occured while adding credit to the account."
+		},
+		"uiRestrictionsUpdateSuccess": "UI restrictions updated successfully!",
+		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later."
+	},
+	"uiRestrictionsLegend": "Select what your customer can view",
+	"uiRestrictionsMenu": {
+		"account": "Account",
+		"settings": "Settings",
+		"billing": "Billing",
+		"transactions": "Transactions",
+		"servicePlan": "Service Plan",
+		"perMinute": "Per Minute",
+		"trunking": "Trunking",
+		"inbound": "Inbound",
+		"outbound": "Outbound"
+	},
+	"uiRestrictionsExtraSettings": {
+		"profile": {
+			"legend":"More Account Settings",
+			"showUserTab":"Show User Settings Tab",
+			"showAccountTab":"Show Account Settings Tab",
+			"showBillingTab":"Show Billing Settings Tab"
+		},
+		"perMinute": {
+			"legend":"More Balance Settings",
+			"showCreditInfo":"Show Credit Information"
+		}
+	}
+}

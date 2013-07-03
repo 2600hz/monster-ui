@@ -10,16 +10,18 @@ require.config({
 		handlebars: 'js/lib/handlebars-1.0.10',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
+		jstz: 'js/lib/jstz.min',
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
+		'monster-timezone': 'js/lib/monster.timezone',
 		'monster-util': 'js/lib/monster.util',
+		nicescroll: 'js/lib/jquery.nicescroll.min',
 		'monster-apps': 'js/lib/monster.apps',
 		plugins: 'js/plugins',
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
 		toastr: 'js/lib/toastr-1.3.0.min',
-		underscore: 'js/lib/underscore-1.4.4.min',
-		nicescroll: 'js/lib/jquery.nicescroll.min'
+		underscore: 'js/lib/underscore-1.4.4.min'
 	},
 	shim: {
 		bootstrap: ['jqueryui'],
