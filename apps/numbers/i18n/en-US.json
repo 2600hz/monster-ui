@@ -8,6 +8,8 @@
 	"numbers": "Numbers",
 	"addNumbers": "Add Numbers",
 	"moveNumbers": "Move To",
+	"searchNumbers": "Search a number...",
+	"go": "Go",
 	"deleteNumbers": "Delete",
 	"successDelete": "You successfuly deleted {{count}} phone number(s) from your account(s)",
 	"successMove": "You successfuly moved {{count}} phone number(s) to the following account: {{ accountName }}",

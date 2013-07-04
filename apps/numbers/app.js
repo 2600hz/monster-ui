@@ -163,8 +163,6 @@ define(function(require){
 		bindEvents: function(parent, dataNumbers) {
 			var self = this,
 				listSearchedAccounts = [ self.accountId ],
-				originalAccountTree = {},
-				currentAccountTree = {},
 				showLinks = function() {
 					if(parent.find('.number-box.selected').size() > 0) {
 						parent.find('#trigger_links').show();
@@ -368,149 +366,109 @@ define(function(require){
 			});
 
 			/* to plugin */
-			parent.on('click', '#move_numbers', function() {
-				var accountId = self.accountId,
-					displayList = function() {
-						currentAccountTree = originalAccountTree;
+			var originalAccountTree = {},
+			    moveNumbersToAccount = function(accountId) {
+			    	console.log('move');
+					var listNumbers = [],
+						destinationAccountId = accountId,
+						destinationIndex = -1,
+						mapAccounts = {};
 
-						var layout = monster.template(self, 'dropdownLayout'),
-							template = monster.template(self, 'accountDropdown', { accounts: currentAccountTree });
+					parent.find('.number-box.selected').each(function(k, v) {
+                    	var box = $(v),
+                        	number = box.data('phonenumber');
+                        	accountId = box.parents('.account-section').data('id');
 
-						parent
-							.find('.accounts-dropdown')
-							.empty()
-							.append(layout)
-							.find('.account-list')
-							.append(template);
+                    	if(!(accountId in mapAccounts)) {
+                        	mapAccounts[accountId] = {};
+                    	}
+
+                    	mapAccounts[accountId][number] = true;
+                    	listNumbers.push(number);
+                	});
+
+					var requestData = {
+						numbers: listNumbers,
+						accountId: destinationAccountId
 					};
 
-				if(_.isEmpty(originalAccountTree)) {
-					self.getDescendants(accountId, function(listAccounts) {
-						originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
+                	self.moveNumbers(requestData, function(data) {
+						var countMove = 0;
 
-						displayList();
-					});
-				}
-				else {
-					displayList();
-				}
-			});
+						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+							if(account.id === destinationAccountId) {
+								destinationIndex = indexAccount;
+							}
 
-			parent.on('click', '.accounts-dropdown .account-children-link', function(e) {
-				e.stopPropagation();
+                        	if(account.id in mapAccounts) {
+                            	var newList = [];
+                            	_.each(account.spareNumbers, function(number, indexNumber) {
+                                	if(!(number.phoneNumber in data.success)) {
+                                    	newList.push(number);
+                                	}
+                                	else {
+										data.success[number.phoneNumber] = number;
+                                    	countMove++;
+                                	}
+                            	});
 
-				var slider = parent.find('.account-slider'),
-					list = parent.find('.account-list'),
-					accountId = $(this).parent().data('id');
+                            	dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+                            	dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+                        	}
+                    	});
 
-				currentAccountTree = currentAccountTree[accountId].children;
+						/* If we didn't open it yet, it will be automatically updated when we click on it */
+						if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
+							_.each(data.success, function(value, number) {
+								dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
+							});
 
-				var template = monster.template(self, 'accountDropdown', { accounts: currentAccountTree });
-
-                slider
-					.empty()
-					.append(template);
-
-				list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
-					list.empty()
-					 	 .append(template)
-					 	 .css('marginLeft','0px');
-
-					slider.empty();
-				});
-			});
-
-			/* When clicking on a bootstrap dropdown, it hides the dropdown, that's a hack to prevent it and allow us to type in the search field! */
-			parent.on('click', '.accounts-dropdown .search-box', function(e) {
-				e.stopPropagation();
-			});
-
-			parent.on('keyup', '.accounts-dropdown #account_search_input', function(e) {
-				e.stopPropagation();
-				var search = $(this).val();
-
-				if(search) {
-					$.each(parent.find('.account-list-element'), function(k, v) {
-						var current = $(v);
-
-						current.find('.account-link').html().toLowerCase().indexOf(search.toLowerCase()) >= 0 ? current.show() : current.hide();
-					});
-				}
-				else {
-					parent.find('.account-list-element').show();
-				}
-			});
-
-			/* Move Numbers */
-			parent.on('click', '.accounts-dropdown .account-link', function(event) {
-                var listNumbers = [],
-					destinationAccountId = $(this).parent().data('id'),
-					destinationIndex = -1,
-					mapAccounts = {};
-
-				parent.find('.number-box.selected').each(function(k, v) {
-                    var box = $(v),
-                        number = box.data('phonenumber');
-                        accountId = box.parents('.account-section').data('id');
-
-                    if(!(accountId in mapAccounts)) {
-                        mapAccounts[accountId] = {};
-                    }
-
-                    mapAccounts[accountId][number] = true;
-                    listNumbers.push(number);
-                });
-
-				var requestData = {
-					numbers: listNumbers,
-					accountId: destinationAccountId
-				};
-
-                self.moveNumbers(requestData, function(data) {
-					var countMove = 0;
-
-					_.each(dataNumbers.listAccounts, function(account, indexAccount) {
-						if(account.id === destinationAccountId) {
-							destinationIndex = indexAccount;
+							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
 						}
 
-                        if(account.id in mapAccounts) {
-                            var newList = [];
-                            _.each(account.spareNumbers, function(number, indexNumber) {
-                                if(!(number.phoneNumber in data.success)) {
-                                    newList.push(number);
-                                }
-                                else {
-									data.success[number.phoneNumber] = number;
-                                    countMove++;
-                                }
-                            });
+						//TODO Sort date
+                    	self.paintSpareNumbers(parent, dataNumbers, function() {
+                    		var dataTemplate = {
+									count: countMove,
+									accountName: dataNumbers.listAccounts[destinationIndex].name
+                    			},
+                        		template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
 
-                            dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
-                            dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
-                        }
+                        	toastr.success(template);
+                    	});
+                	});
+				},
+				dropdownAccount;
+
+			parent.on('click', '#move_numbers', function() {
+                var accountId = self.accountId,
+                    displayList = function() {
+                    	dropdownAccount.reset();
+                    };
+
+                if(_.isEmpty(originalAccountTree)) {
+                    self.getDescendants(accountId, function(listAccounts) {
+                        originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
+
+						var args = {
+							parent: parent.find('.list-numbers[data-type="spare"]'),
+							accountsTree: originalAccountTree,
+							callbacks: {
+								clickAccount: moveNumbersToAccount,
+								loaded: function(dropdown) {
+									dropdownAccount = dropdown;
+								}
+							}
+						};
+
+						monster.pub('common.selectAccount', args);
+
+                        displayList();
                     });
-
-					/* If we didn't open it yet, it will be automatically updated when we click on it */
-					if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
-						_.each(data.success, function(value, number) {
-							dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
-						});
-
-						dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
-					}
-
-					//TODO Sort date
-                    self.paintSpareNumbers(parent, dataNumbers, function() {
-                    	var dataTemplate = {
-								count: countMove,
-								accountName: dataNumbers.listAccounts[destinationIndex].name
-                    		},
-                        	template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
-
-                        toastr.success(template);
-                    });
-                });
+                }
+                else {
+                    displayList();
+                }
             });
 
             parent.on('click', '.cnam-number', function() {
@@ -588,110 +546,119 @@ define(function(require){
                 }
             });
 
-			var previousSearch = '',
-				delay = (function(){
-                var timer = 0;
-                return function(callback, ms){
-                    clearTimeout (timer);
-                    timer = setTimeout(callback, ms);
-                };
-            })();
-
-            parent.on('keyup', '.list-numbers[data-type="spare"] .search-query', function(e) {
-				var searchString = $(this).val().toLowerCase(),
-					spareList = parent.find('.list-numbers[data-type="spare"]');
+			var searchListNumbers = function(searchString, parent) {
+				var viewList = parent;
 
 				searchString = monster.util.unformatPhoneNumber(searchString);
 
-				if(searchString.length > 6) {
-					delay(function() {
-						currentSearch = searchString;
-						if(currentSearch !== previousSearch) {
-							previousSearch = searchString;
+				self.searchAccount(searchString, function(data) {
+					if(data.account_id) {
+						displayNumberList(data.account_id, function() {
+							var section = viewList.find('[data-id="' + data.account_id + '"]'),
+								numberBox = section.find('[data-phonenumber="' + data.number + '"]');
 
-							self.searchAccount(searchString, function(data) {
-								if(data.account_id) {
-									displayNumberList(data.account_id, function() {
-										var section = spareList.find('[data-id="' + data.account_id + '"]'),
-											numberBox = section.find('[data-phonenumber="' + data.number + '"]');
+							if(numberBox.size() > 0) {
+								section.addClass('open');
+								 $('html, body').animate({
+         	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
+     	 	 	 	 	 	 	 }, 1000);
 
-										if(numberBox.size() > 0) {
-											section.addClass('open');
-										 	 $('html, body').animate({
-         	 	 	 	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
-     	 	 	 	 	 	 	 	 	 	 }, 1000);
+								viewList.find('.number-box').removeClass('highlighted');
 
-											spareList.find('.number-box').removeClass('highlighted');
-
-											if(!numberBox.hasClass('highlighted')) {
-												numberBox.addClass('highlighted')
-                                            		.css('background', '#22ccff')
-                                            		.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
-											}
-										}
-										else {
-											var template = monster.template(self, '!' + self.i18n.active().notSpareNumber, { number: data.number, accountName: section.data('name') });
-
-                                            toastr.warning(template);
-										}
-									});
+								if(!numberBox.hasClass('highlighted')) {
+									numberBox.addClass('highlighted')
+                                        .css('background', '#22ccff')
+                                        .animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
 								}
-							},
-							function(data) {
-								spareList.find('.number-box').removeClass('highlighted');
-							});
-						}
-					}, 400);
-				}
+							}
+							else {
+								var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
+								    template = monster.template(self, '!' + self.i18n.active()[type], { number: data.number, accountName: section.data('name') });
+
+                                toastr.warning(template);
+							}
+						});
+					}
+				},
+				function(data) {
+					viewList.find('.number-box').removeClass('highlighted');
+				});
+			};
+
+            parent.on('click', '.list-numbers[data-type="spare"] button.search-numbers', function(e) {
+				var spareList = parent.find('.list-numbers[data-type="spare"]'),
+					searchString = spareList.find('.search-custom input[type="text"]').val().toLowerCase();
+
+				searchListNumbers(searchString, spareList);
             });
 
-            parent.find('.list-numbers[data-type="used"] .search-query').on('keyup', function(e) {
-				var searchString = $(this).val().toLowerCase(),
-					usedList = parent.find('.list-numbers[data-type="used"]');
+			parent.on('keyup', '.list-numbers[data-type="spare"] .search-custom input[type="text"]', function(e) {
+				if(e.keyCode === 13) {
+					var val = e.target.value.toLowerCase(),
+						spareList = parent.find('.list-numbers[data-type="spare"]');
+
+					if(val) {
+						searchListNumbers(val, spareList);
+					}
+				}
+			});
+
+            parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
+				var usedList = parent.find('.list-numbers[data-type="used"]'),
+					searchString = usedList.find('.search-custom input[type="text"]').val().toLowerCase();
+
+				searchListNumbers(searchString, usedList);
+            });
+
+			parent.on('keyup', '.list-numbers[data-type="used"] .search-custom input[type="text"]', function(e) {
+				if(e.keyCode === 13) {
+					var val = e.target.value.toLowerCase(),
+						usedList = parent.find('.list-numbers[data-type="used"]');
+
+					if(val) {
+						searchListNumbers(val, usedList);
+					}
+				}
+			});
+
+            /*parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
+				var usedList = parent.find('.list-numbers[data-type="used"]'),
+					searchString = usedList.find('.search-custom input[type="text"]').val().toLowerCase();
 
 				searchString = monster.util.unformatPhoneNumber(searchString);
 
-				if(searchString.length > 6) {
-					delay(function() {
-						currentSearch = searchString;
-						if(currentSearch !== previousSearch) {
-							previousSearch = searchString;
+				self.searchAccount(searchString, function(data) {
+					if(data.account_id) {
+						displayNumberList(data.account_id, function() {
+							var section = usedList.find('[data-id="' + data.account_id + '"]'),
+								numberBox = section.find('[data-phonenumber="' + data.number + '"]');
 
-							self.searchAccount(searchString, function(data) {
-								if(data.account_id) {
-									displayNumberList(data.account_id, function() {
-										var section = usedList.find('[data-id="' + data.account_id + '"]'),
-											numberBox = section.find('[data-phonenumber="' + data.number + '"]');
+							if(numberBox.size() > 0) {
+								section.addClass('open');
+								 $('html, body').animate({
+         	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
+     	 	 	 	 	 	 	 }, 1000);
 
-										if(numberBox.size() > 0) {
-											section.addClass('open');
-										 	 $('html, body').animate({
-         	 	 	 	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
-     	 	 	 	 	 	 	 	 	 	 }, 1000);
-
-											usedList.find('.number-box').removeClass('highlighted');
-
-											if(!numberBox.hasClass('highlighted')) {
-												numberBox.addClass('highlighted')
-                                            		.css('background', '#22ccff')
-                                            		.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
-											}
-										}
-										else {
-											var template = monster.template(self, '!' + self.i18n.active().notUsedNumber, { number: data.number, accountName: section.data('name') });
-
-											toastr.warning(template);
-										}
-									});
-								}
-							},
-							function(data) {
 								usedList.find('.number-box').removeClass('highlighted');
-							});
-						}
-					}, 400);
-				}
-            });
+
+								if(!numberBox.hasClass('highlighted')) {
+									numberBox.addClass('highlighted')
+                                        .css('background', '#22ccff')
+                                        .animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+								}
+							}
+							else {
+								var template = monster.template(self, '!' + self.i18n.active().notUsedNumber, { number: data.number, accountName: section.data('name') });
+
+								toastr.warning(template);
+							}
+						});
+					}
+				},
+				function(data) {
+					usedList.find('.number-box').removeClass('highlighted');
+				});
+			});*/
 		},
 
 		paintSpareNumbers: function(parent, dataNumbers, callback) {
@@ -728,6 +695,7 @@ define(function(require){
 		},
 
 		moveNumbers: function(args, callback) {
+			console.log('moveNumbers');
 			var self = this;
 
             monster.request({

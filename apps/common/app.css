@@ -637,3 +637,102 @@ body a.monster_link:hover {
     display: inline-block;
     vertical-align: middle;
 }
+
+/* Dropdown account */
+.accounts-dropdown {
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.accounts-dropdown .left-menu {
+    float: left;
+    background-color: #F3F3F3;
+    border-right: solid 1px #999;
+    width: 240px;
+    overflow: hidden;
+}
+
+.accounts-dropdown .left-menu .search-box {
+    width: 220px;
+    padding: 20px 10px;
+    border-bottom: solid 1px #999;
+}
+
+.accounts-dropdown .left-menu .search-box .search-query {
+    width: 178px;
+}
+
+.accounts-dropdown .left-menu .account-list-container {
+    width: 480px;
+}
+
+.accounts-dropdown .left-menu .account-list, .accounts-dropdown .left-menu .account-list-slider {
+    margin: 0;
+    list-style: none;
+    float: left;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 300px;
+}
+
+.accounts-dropdown .left-menu .account-list-element {
+    line-height: 40px;
+    max-height: 40px;
+    overflow: hidden;
+    border-bottom: solid 1px #ccc;
+    font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
+    width: 240px;
+}
+
+.accounts-dropdown .left-menu .account-list-element.active {
+    background-color: #fff;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div {
+    display: inline-block;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div:hover {
+    cursor: pointer;
+    color: #22ccff;
+}
+
+.accounts-dropdown .left-menu .account-list-element > div:hover > i {
+    color: #22ccff;
+}
+
+.accounts-dropdown .left-menu .account-link {
+    padding: 0 10px;
+    width: 220px;
+}
+
+.accounts-dropdown .left-menu .account-link.smaller-link {
+    width: 149px;
+
+}
+
+.accounts-dropdown .left-menu .account-link .account-name {
+    font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+}
+
+.accounts-dropdown .left-menu .account-link .account-realm {
+    font-size: 10px;
+    height: 20px;
+    line-height: 0px;
+}
+
+.accounts-dropdown .left-menu .account-children-link {
+    border-left: solid 1px #ccc;
+    height: 40px;
+    float: right;
+    vertical-align: top;
+    width: 50px;
+}
+
+.accounts-dropdown .left-menu .account-children-link > i {
+    vertical-align: middle;
+    margin-left: 17px;
+}
