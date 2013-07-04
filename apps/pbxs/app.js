@@ -784,27 +784,7 @@ define(function(require){
 		cleanPhoneNumberData: function(data) {
 			var self = this;
 
-			/* Clean Failover */
-			if('failover' in data && 'sip' in data.failover && data.failover.sip === '') {
-				delete data.failover.sip;
-			}
-
-			if('failover' in data && 'e164' in data.failover && data.failover.e164 === '') {
-				delete data.failover.e164;
-			}
-
-			if(data.failover && $.isEmptyObject(data.failover)) {
-				delete data.failover;
-			}
-
-			/* Clean Caller-ID */
-			if('cnam' in data && 'display_name' in data.cnam && data.cnam.display_name === '') {
-				delete data.cnam.display_name;
-			}
-
-			if(data.cnam && $.isEmptyObject(data.cnam)) {
-				delete data.cnam;
-			}
+			return data;
 		},
 
 		normalizeEndpointData: function(data) {
@@ -1598,128 +1578,94 @@ define(function(require){
 			});
 
 			pbxsManager.on('click', '.failover-number', function() {
-				var $failover_cell = $(this),
-					data_phone_number = $failover_cell.parents('.number-wrapper').first().data('phone_number'),
-					phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
+				var failoverCell = $(this).parents('.number-wrapper').first(),
+                    phoneNumber = failoverCell.data('phone_number');
 
-				if(phone_number[1]) {
-					self.getNumber(phone_number[1], function(_data) {
-						self.renderFailoverDialog(_data.data.failover || {}, function(failover_data) {
-							//_data.data.failover = $.extend({}, _data.data.failover, failover_data);
-							_data.data.failover = $.extend({}, failover_data);
+                if(phoneNumber) {
+                    var args = {
+                        phoneNumber: phoneNumber,
+                        callbacks: {
+                            success: function(data) {
+                                if('failover' in data.data) {
+                                    if(failoverCell.find('.features i.icon-thumbs-down').size() === 0) {
+                                        failoverCell
+                                            .find('.features')
+                                            .append('<i class="icon-green icon-thumbs-down"></i>')
+                                    }
+                                }
+                                else {
+                                    failoverCell
+                                        .find('.features i.icon-thumbs-down')
+                                        .remove()
+                                }
+                            }
+                        }
+                    };
 
-							self.cleanPhoneNumberData(_data.data);
-
-							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-								function() {
-									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
-											if(!($.isEmptyObject(_data.data.failover))){
-												$failover_cell
-													.removeClass('inactive')
-													.addClass('active');
-											}
-											else{
-												$failover_cell
-													.removeClass('active')
-													.addClass('inactive');
-											}
-
-											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
-											    template = monster.template(self, '!' + self.i18n.active().success_failover, { phoneNumber: phoneNumber });
-
-											toastr.success(template);
-										},
-										function(_data_update) {
-											monster.ui.alert(self.i18n.active().failed_update_failover + '<br/>' + _data_update.message);
-										}
-									);
-								}
-							);
-						});
-					});
-				}
+                    monster.apps.load('failover', function(app) {
+                        monster.pub('failover.editPopup', args);
+                    });
+                }
 			});
 
 			pbxsManager.on('click', '.cnam-number', function() {
-				var $cnam_cell = $(this),
-					data_phone_number = $cnam_cell.parents('.number-wrapper').first().data('phone_number'),
-					phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
+                var cnamCell = $(this).parents('.number-wrapper').first(),
+                    phoneNumber = cnamCell.data('phone_number');
 
-				if(phone_number[1]) {
-					self.getNumber(phone_number[1], function(_data) {
-						self.renderCnamDialog(_data.data.cnam || {}, function(cnam_data) {
-							_data.data.cnam = $.extend({}, _data.data.cnam, cnam_data);
+                if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.cnam))) {
+									if(cnamCell.find('.features i.icon-user').size() === 0) {
+                                		cnamCell
+                                			.find('.features')
+                                			.append('<i class="icon-green icon-user"></i>')
+									}
+                            	}
+                            	else {
+                                	cnamCell
+                                		.find('.features i.icon-user')
+                                		.remove()
+                            	}
+                            }
+						}
+					};
 
-							self.cleanPhoneNumberData(_data.data);
-
-							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-								function() {
-									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
-											if(!($.isEmptyObject(_data.data.cnam))) {
-												$cnam_cell
-													.removeClass('inactive')
-													.addClass('active');
-											}
-											else {
-												$cnam_cell
-													.removeClass('active')
-													.addClass('inactive');
-											}
-
-											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
-											    template = monster.template(self, '!' + self.i18n.active().success_cnam, { phoneNumber: phoneNumber });
-
-											toastr.success(template);
-										},
-										function(_data_update) {
-											monster.ui.alert(self.i18n.active().error_update_caller_id + '' + _data_update.message);
-										}
-									);
-								}
-							);
-						});
+					monster.apps.load('callerId', function(app) {
+						monster.pub('callerId.editPopup', args);
 					});
-				}
+                }
 			});
 
 			pbxsManager.on('click', '.e911-number', function() {
-				var $e911_cell = $(this),
-					data_phone_number = $e911_cell.parents('.number-wrapper').first().data('phone_number'),
-					phone_number = data_phone_number.match(/^\+?1?([2-9]\d{9})$/);
+                var e911Cell = $(this).parents('.number-wrapper').first(),
+                    phoneNumber = e911Cell.data('phone_number');
 
-				if(phone_number[1]) {
-					self.getNumber(phone_number[1], function(_data) {
-						self.renderE911Dialog(_data.data.dash_e911 || {}, function(e911_data) {
-							_data.data.dash_e911 = $.extend({}, _data.data.dash_e911, e911_data);
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.dash_e911))) {
+                                    if(e911Cell.find('.features i.icon-ambulance').size() === 0) {
+                                        e911Cell
+                                            .find('.features')
+                                            .append('<i class="icon-green icon-ambulance"></i>')
+                                    }
+                                }
+                                else {
+                                    e911Cell
+                                        .find('.features i.icon-ambulance')
+                                        .remove()
+                                }
+							}
+						}
+					};
 
-							self.cleanPhoneNumberData(_data.data);
-
-							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-								function() {
-									self.updateNumber(phone_number[1], _data.data, function(_data_update) {
-											if(!($.isEmptyObject(_data.data.dash_e911))) {
-												$e911_cell
-													.removeClass('inactive')
-													.addClass('active');
-											}
-											else {
-												$e911_cell
-													.removeClass('active')
-													.addClass('inactive');
-											}
-
-											var phoneNumber = monster.util.formatPhoneNumber(phone_number[1]),
-											    template = monster.template(self, '!' + self.i18n.active().success_e911, { phoneNumber: phoneNumber });
-
-											toastr.success(template);
-										},
-										function(_data_update) {
-											monster.ui.alert(self.i18n.active().error_update_e911 + '' + _data_update.message);
-										}
-									);
-								}
-							);
-						});
+					monster.apps.load('e911', function(app) {
+						monster.pub('e911.editPopup', args);
 					});
 				}
 			});
@@ -1777,152 +1723,6 @@ define(function(require){
 			(target || $('#ws-content'))
 				.empty()
 				.append(pbxsManager);
-		},
-
-		renderCnamDialog: function(cnam_data, callback) {
-			var self = this,
-				popup_html = $(monster.template(self, 'cnamDialog', cnam_data || {})),
-				popup;
-
-			$('button.btn.btn-success', popup_html).click(function(ev) {
-				ev.preventDefault();
-
-				var cnam_form_data = form2object('cnam');
-
-				if(typeof callback === 'function') {
-					callback(cnam_form_data);
-				}
-
-				popup.dialog('destroy').remove();
-			});
-
-			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().caller_id_dialog_title
-			});
-		},
-
-		 renderFailoverDialog: function(failover_data, callback) {
-			var self = this,
-				radio = (failover_data || {}).e164 ? 'number' : ((failover_data || {}).sip ? 'sip' : ''),
-				tmpl_data = {
-					radio: radio,
-					failover: (failover_data || {}).e164 || (failover_data || {}).sip || '',
-					phone_number: failover_data.phone_number || ''
-				},
-				popup_html = $(monster.template(self, 'failoverDialog', tmpl_data)),
-				popup,
-				result,
-				popup_title = self.i18n.active().failover_title;
-
-			$('.failover-block input', popup_html).on('keyup', function() {
-				$('.failover-block', popup_html).removeClass('selected');
-				$('.failover-block:not([data-type="'+$(this).parents('.failover-block').first().data('type')+'"]) input[type="text"]', popup_html).val('');
-
-				$(this).parents('.failover-block').addClass('selected');
-			});
-
-			$('.failover-block[data-type="'+radio+'"]', popup_html).addClass('selected');
-			$('.failover-block:not([data-type="'+radio+'"]) input', popup_html).val('');
-
-			$('.submit_btn', popup_html).click(function(ev) {
-				ev.preventDefault();
-
-				var failover_form_data = {},
-					type = $('.failover-block.selected', popup_html).data('type');
-
-				if(type === 'number' || type === 'sip') {
-					failover_form_data.raw_input = $('.failover-block[data-type="'+type+'"] input', popup_html).val();
-
-					if(failover_form_data.raw_input.match(/^sip:/)) {
-						failover_form_data.sip = failover_form_data.raw_input;
-					}
-					else if(result = failover_form_data.raw_input.replace(/-|\(|\)|\s/g,'').match(/^\+?1?([2-9]\d{9})$/)) {
-						failover_form_data.e164 = '+1' + result[1];
-					}
-					else {
-						failover_form_data.e164 = '';
-					}
-
-					delete failover_form_data.raw_input;
-
-					if(failover_form_data.e164 || failover_form_data.sip) {
-						if(typeof callback === 'function') {
-							callback(failover_form_data);
-						}
-
-						popup.dialog('destroy').remove();
-					}
-					else {
-						monster.ui.alert(self.i18n.active().invalid_failover_number);
-					}
-				}
-				else {
-					monster.ui.alert(self.i18n.active().no_data_failover);
-				}
-			 });
-
-			$('.remove_failover', popup_html).click(function(ev) {
-				ev.preventDefault();
-				if(typeof callback === 'function') {
-					callback({ e164: '', sip: '' });
-				}
-
-				popup.dialog('destroy').remove();
-			});
-
-			popup = monster.ui.dialog(popup_html, {
-				title: popup_title,
-				width: '540px'
-			});
-		},
-
-		renderE911Dialog: function(e911_data, callback) {
-			var self = this,
-				popup_html = $(monster.template(self, 'e911Dialog', e911_data || {})),
-				popup;
-
-			$('.icon-question-sign[data-toggle="tooltip"]', popup_html).tooltip();
-
-			$('#postal_code', popup_html).blur(function() {
-				$.getJSON('http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?', { postalcode: $(this).val() }, function(response) {
-					if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
-						$('#locality', popup_html).val(response.postalcodes[0].placeName);
-						$('#region', popup_html).val(response.postalcodes[0].adminName1);
-					}
-				});
-			});
-
-			$('.inline_field > input', popup_html).keydown(function() {
-				$('.gmap_link_div', popup_html).hide();
-			});
-
-			if(e911_data.latitude && e911_data.longitude) {
-				var href = 'http://maps.google.com/maps?q='+ e911_data.latitude + ',+' + e911_data.longitude + '+(' + self.i18n.active().gmap_pin_label + ')&iwloc=A&hl=en';
-				$('#gmap_link', popup_html).attr('href', href);
-				$('.gmap_link_div', popup_html).show();
-			}
-
-			$('#submit_btn', popup_html).click(function(ev) {
-				ev.preventDefault();
-
-				var e911_form_data = form2object('e911');
-
-				if(typeof callback === 'function') {
-					callback(e911_form_data);
-				}
-
-				popup.dialog('destroy').remove();
-			});
-
-			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().e911_dialog_title
-			});
-
-			// Fixing the position of the rotated text using its width
-			var $rotated_text = $('#e911_rotated_text', popup_html),
-				rotated_text_offset = $rotated_text.width()/2;
-
-			$rotated_text.css({'top': 40+rotated_text_offset +'px', 'left': 25-rotated_text_offset +'px'});
 		},
 
 		renderAddNumberDialog: function(globalData, index, callback) {
@@ -2504,8 +2304,8 @@ define(function(require){
 					var json_data = {};
 
 					$.each(results.account.servers[id].DIDs, function(k, v) {
-						if(k in results.list_numbers) {
-							json_data[k] = results.list_numbers[k];
+						if(k in results.list_numbers.numbers) {
+							json_data[k] = results.list_numbers.numbers[k];
 						}
 					});
 
@@ -2540,7 +2340,7 @@ define(function(require){
 				//Remove numbers used in trunkstore
 				$.each(results.account.servers, function(k, v) {
 					$.each(this.DIDs, function(k2, v2) {
-						delete results.listNumbers[k2];
+						delete results.listNumbers.numbers[k2];
 					});
 				});
 
@@ -2548,15 +2348,17 @@ define(function(require){
 				$.each(results.listCallflows, function(k, v) {
 					if(this.numbers) {
 						$.each(this.numbers, function(k2, v2) {
-							delete results.listNumbers[v2];
+							delete results.listNumbers.numbers[v2];
 						});
 					}
 				});
 
 				//Build available numbers list
-				$.each(results.listNumbers, function(k, v) {
-					tabData.push(k);
-				});
+				if('numbers' in results.listNumbers) {
+					$.each(results.listNumbers.numbers, function(k, v) {
+						tabData.push(k);
+					});
+				}
 
 				_callback && _callback(tabData);
 			});

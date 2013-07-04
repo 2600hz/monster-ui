@@ -1,0 +1,18 @@
+{
+	"dialogTitle": "Edit 911 Location",
+    "gmapPinLabel": "Your+E911+Location",
+    "postalCode": "Zip Code",
+    "addressLine1": "Address Line 1",
+    "addressLine2": "Address Line 2",
+    "city": "City",
+    "state": "State",
+    "verifyLocation": "Verify Location",
+    "title": "E911 Address",
+    "rotatedText": "For emergency services",
+    "infoBox": "This address will show up to 911 emergency services when you dial it from your number.",
+
+	"dialogTitle": "Caller ID Name Selection",
+	"add": "Add",
+	"errorUpdate": "Failed to update the E911 Settings for this phone number",
+	"successE911": "You successfully updated the e911 address of {{phoneNumber}}"
+}

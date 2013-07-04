@@ -24,6 +24,10 @@
 	"csv": "CSV",
 	"pdf": "PDF",
 
+	"cnam": "Caller-ID",
+	"e911": "e911",
+	"failover": "Failover",
+
 	"dialog" : {
 		"showError": "Show Error",
 		"confirmOk": "OK",

@@ -1,0 +1,14 @@
+{{#eachkeys accounts}}
+	<li class="account-list-element" data-id="{{this.key}}">
+		{{#if this.value.children}}
+			<div class="account-link smaller-link">
+				<div class="account-name">{{this.value.name}}</div>
+			</div>
+			<div class="account-children-link"><i class="icon-caret-right"></i></div>
+		{{else}}
+			<div class="account-link" data-id="{{this.key}}">
+				<div class="account-name">{{this.value.name}}</div>
+			</div>
+		{{/if}}
+	</li>
+{{/eachkeys}}

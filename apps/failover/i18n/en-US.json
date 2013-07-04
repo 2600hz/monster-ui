@@ -1,0 +1,16 @@
+{
+	"errorUpdate": "Failed to update the Failover for this phone number.",
+    "failoverTitle": "Setup Failover",
+    "failoverText": "When Inbound call is unreachable, place your call to",
+    "helpFailover": "If your phone system is unreachable for any reason, we can redirect a caller to an alternate phone number or VoIP device. If the Failover number is an external number this call will cost you for both inbound and outbound.",
+    "removeFailover": "Remove",
+    "change": "Change",
+    "activate": "Activate",
+    "alternateNumber": "Alternate Number",
+    "or": "OR",
+    "sipAddress": "SIP Address",
+    "invalidFailoverNumber": "Invalid Failover Number, please type it again",
+    "successFailover": "You successfully updated the failover number of {{ phoneNumber }}",
+    "successRemove": "You successfully removed the failover settings of {{ phoneNumber }}",
+    "noDataFailover": "No data entered, please type it again"
+}

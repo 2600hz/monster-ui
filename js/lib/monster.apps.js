@@ -59,7 +59,7 @@ define(function(require){
 				});
 			}
 			else {
-				callback && callback(app);
+				callback && callback(monster.apps[name]);
 			}
 		}
 	};

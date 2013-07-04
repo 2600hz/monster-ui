@@ -1,8 +1,8 @@
 define(function(require){
 
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster");
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster');
 
 	var requestAmount = 0,
 		homeIcon;
@@ -45,10 +45,22 @@ define(function(require){
 		return ret;
 	});
 
-	Handlebars.registerHelper('formatPhoneNumber', function(phone_number) {
-		phone_number = phone_number.toString();
+	Handlebars.registerHelper('debug', function(optionalValue) {
+		console.log('Current Context');
+		console.log('====================');
+		console.log(this);
 
-		return monster.util.formatPhoneNumber(phone_number);
+		if (optionalValue) {
+			console.log('Value');
+			console.log('====================');
+			console.log(optionalValue);
+		}
+	});
+
+	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
+		phoneNumber = phoneNumber.toString();
+
+		return monster.util.formatPhoneNumber(phoneNumber);
 	});
 
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
@@ -61,7 +73,7 @@ define(function(require){
 		if (options === undefined) {
 			options = rvalue;
 			rvalue = operator;
-			operator = "===";
+			operator = '===';
 		}
 
 		operators = {
