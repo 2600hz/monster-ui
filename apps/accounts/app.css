@@ -374,6 +374,8 @@
 #form_accountsmanager_account_admins .create-user-div .img-input-div > input {
 	padding-left: 35px;
 	width: 100%;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
 	height: 30px;
 }
@@ -584,6 +586,8 @@
 
 #accountsmanager_new_account_form .account-settings-step input {
 	width: 100%;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
 	height: 30px;
 }

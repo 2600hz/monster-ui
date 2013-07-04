@@ -1,7 +1,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<div class="tab-bar">
-			<button id="accountsmanager_use_account_btn" class="btn btn-success pull-right">{{ i18n.useAccount }}</button>
+			<button type="button" id="accountsmanager_use_account_btn" class="btn btn-success pull-right">{{ i18n.useAccount }}</button>
 			<ul class="nav nav-tabs account-tabs">
 				<li class="active"><a href="#accountsmanager_overview_tab">{{ i18n.tabTitles.overview }}</a></li>
 				<li class="{{#unless account.enabled}}disabled{{/unless}}"><a href="#accountsmanager_serviceplans_tab">{{ i18n.tabTitles.servicePlans }}</a></li>
@@ -38,7 +38,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_account_status">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label">
@@ -59,12 +59,12 @@
 											<div class="controls">
 												{{#if account.enabled}}
 												<input type="hidden" name="enabled" value="false"/>
-												<button data-field="accountsmanager_account_status" class="btn btn-warning change">
+												<button type="button" data-field="accountsmanager_account_status" class="btn btn-warning change">
 													{{ i18n.disable }}
 												</button>
 												{{else}}
 												<input type="hidden" name="enabled" value="true"/>
-												<button data-field="accountsmanager_account_status" class="btn btn-success change">
+												<button type="button" data-field="accountsmanager_account_status" class="btn btn-success change">
 													{{ i18n.enable }}
 												</button>
 												{{/if}}
@@ -75,7 +75,7 @@
 												{{ i18n.deleteAccount }}
 											</label>
 											<div class="controls">
-												<button id="accountsmanager_delete_account_btn" class="btn btn-danger">{{ i18n.delete }}</button>
+												<button type="button" id="accountsmanager_delete_account_btn" class="btn btn-danger">{{ i18n.delete }}</button>
 											</div>
 										</div>
 									</form>
@@ -100,7 +100,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_account_name">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_name">{{ i18n.accountName }}</label>
@@ -110,7 +110,7 @@
 										</div>
 										<div class="control-group">
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_name">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -136,7 +136,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_account_realm">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.accountRealm }}</label>
@@ -146,7 +146,7 @@
 										</div>
 										<div class="control-group">
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_realm">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -216,7 +216,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_technical_contact">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technicalContact.name }}</label>
@@ -238,7 +238,7 @@
 										</div>
 										<div class="control-group">
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_technical_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -276,7 +276,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_billing_contact">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billingContact.name }}</label>
@@ -298,7 +298,7 @@
 										</div>
 										<div class="control-group">
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_billing_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -324,7 +324,7 @@
 									<form class="form-horizontal" id="form_accountsmanager_account_timezone">
 										<a href="#" class="close-link">
 											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.close }}</span>
+											<span>{{ i18n.closeSetting }}</span>
 										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.accountTimezone }}</label>
@@ -334,7 +334,7 @@
 										</div>
 										<div class="control-group">
 											<div class="controls">
-												<button class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_timezone">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -364,7 +364,7 @@
 							</div>
 							<div class="controls-group">
 								<div class="controls">
-									<button id="accountsmanager_serviceplan_save" class="btn btn-success pull-right">{{ i18n.save }}</button>
+									<button type="button" id="accountsmanager_serviceplan_save" class="btn btn-success pull-right">{{ i18n.save }}</button>
 								</div>
 							</div>
 						</form>
@@ -384,8 +384,8 @@
 							<legend>{{ i18n.servicePlanMaintenance }}</legend>
 							<div class="controls-group">
 								<div class="controls">
-									<button id="accountsmanager_serviceplan_reconciliation" class="btn btn-primary">{{ i18n.servicePlanReconciliation }}</button>
-									<button id="accountsmanager_serviceplan_synchronization" class="btn btn-primary">{{ i18n.servicePlanSynchronization }}</button>
+									<button type="button" id="accountsmanager_serviceplan_reconciliation" class="btn btn-primary">{{ i18n.servicePlanReconciliation }}</button>
+									<button type="button" id="accountsmanager_serviceplan_synchronization" class="btn btn-primary">{{ i18n.servicePlanSynchronization }}</button>
 								</div>
 							</div>
 						</form>
@@ -398,7 +398,7 @@
 				<form id="accountsmanager_callrestrictions_form">
 				</form>
 				<div class="clearfix buttons-div">
-					<button id="accountsmanager_limits_save" class="btn btn-success">{{ i18n.update }}</button>
+					<button type="button" id="accountsmanager_limits_save" class="btn btn-success">{{ i18n.update }}</button>
 				</div>
 			</div>
 			
@@ -406,7 +406,7 @@
 				<form class="clearfix" id="accountsmanager_uirestrictions_form">
 				</form>
 				<div class="buttons-div">
-					<button id="accountsmanager_uirestrictions_save" class="btn btn-success">{{ i18n.update }}</button>
+					<button type="button" id="accountsmanager_uirestrictions_save" class="btn btn-success">{{ i18n.update }}</button>
 				</div>
 			</div>
 		</div>

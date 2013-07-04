@@ -124,7 +124,7 @@ define(function(require){
 					var renderData = $.extend(true, {}, 
 											  defaults,  
 											  self.formatTableData(results.transactions.data, defaults.fieldData.accounts),
-											  {uiRestrictions: monster.apps['auth'].currentAccount.ui_restrictions}
+											  {uiRestrictions: monster.apps['auth'].originalAccount.ui_restrictions}
 											 ),
 						balance = $(monster.template(self, 'balance', renderData)),
 						args = {
@@ -283,7 +283,8 @@ define(function(require){
 
 		initTable: function(parent) {
 			var self = this,
-				showCredit = monster.apps['auth'].currentAccount.ui_restrictions.balance.show_credit,
+				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {},
+				showCredit = uiRestrictions.balance && uiRestrictions.balance.show_credit == false ? false : true,
 				columns = [
 					{
 						'sTitle': 'timestamp',

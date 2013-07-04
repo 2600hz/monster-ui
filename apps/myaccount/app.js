@@ -158,10 +158,10 @@ define(function(require){
                                                                     hidecursordelay:1000
                                                                 }),
                 firstTab = myaccount.find('.myaccount-menu li:not(.nav-header)').first(),
-                uiRestrictions = monster.apps['auth'].currentAccount.ui_restrictions,
+                uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions,
                 defaultApp = self._defaultApp.name.match(/-(?:[a-zA-Z]+)/)[0].replace('-', '');
 
-			if (!uiRestrictions ||  !uiRestrictions[defaultApp] || !uiRestrictions[defaultApp].show_tab) {
+			if (uiRestrictions && uiRestrictions[defaultApp] && uiRestrictions[defaultApp].show_tab === false) {
 				self._defaultApp.name = firstTab.data('module');
 				if (firstTab.data('key')) {
 					self._defaultApp.key =  firstTab.data('key');
@@ -248,7 +248,7 @@ define(function(require){
 																.replace(/([a-z])([A-Z])/, '$1_$2')
 																.toLowerCase()
 																.replace('-', ''),
-				uiRestrictions = monster.apps['auth'].currentAccount.ui_restrictions;
+				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
 
 			if(module === self._defaultApp.name) {
 				self._defaultApp.title = params.title;

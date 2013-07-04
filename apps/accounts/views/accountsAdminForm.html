@@ -1,7 +1,7 @@
 <div>
 	<a href="#" class="close-admin-settings close-link">
 		<i class="icon-remove icon-small"></i>
-		<span>{{ i18n.close }}</span>
+		<span>{{ i18n.closeSettings }}</span>
 	</a>
 	<div class="control-group">
 		<label class="control-label" for="accountsmanager_account_admins">{{ i18n.accountAdmins }}</label>
@@ -56,10 +56,10 @@
 							</div>
 							<div class="controls controls-row admin-btn-div">
 								<div class="span6">
-									<button class="btn btn-danger admin-cancel-btn">{{ ../i18n.cancel }}</button>
+									<button type="button" class="btn btn-danger admin-cancel-btn">{{ ../i18n.cancel }}</button>
 								</div>
 								<div class="span6">
-									<button class="btn btn-success admin-save-btn">{{ ../i18n.save }}</button>
+									<button type="submit" class="btn btn-success admin-save-btn">{{ ../i18n.save }}</button>
 								</div>
 							</div>
 						</form>
@@ -71,7 +71,7 @@
 				</li>
 				{{/each}}
 				<li class="admin-element add-admin">
-					<button id="accountsmanager_new_admin_btn" class="btn btn-small btn-primary btn-block" data-toggle="button">
+					<button type="button" id="accountsmanager_new_admin_btn" class="btn btn-small btn-primary btn-block" data-toggle="button">
 						<i class="icon-caret-down pull-right"></i>
 						{{ i18n.newAdmin }}
 					</button>
@@ -118,10 +118,10 @@
 								</div>
 								<div class="controls controls-row admin-btn-div">
 									<div class="span6">
-										<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+										<button type="button" class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
 									</div>
 									<div class="span6">
-										<button class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
+										<button type="submit" class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
 									</div>
 								</div>
 							</form>
@@ -139,10 +139,10 @@
 							</div>
 							<div class="controls controls-row admin-btn-div">
 								<div class="span6">
-									<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+									<button type="button" class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
 								</div>
 								<div class="span6">
-									<button class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
+									<button type="submit" class="btn btn-success admin-add-btn">{{ i18n.add }}</button>
 								</div>
 							</div>
 							{{else}}
@@ -153,7 +153,7 @@
 							</div>
 							<div class="controls admin-btn-div">
 								<div class="span6">
-									<button class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
+									<button type="button" class="btn btn-danger admin-cancel-btn">{{ i18n.cancel }}</button>
 								</div>
 							</div>
 							{{/if}}

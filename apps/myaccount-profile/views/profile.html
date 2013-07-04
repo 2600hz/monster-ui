@@ -1,19 +1,19 @@
 <div class="row-fluid profile-content-wrapper">
 	<div class="span12">
 		<ul class="nav nav-tabs" id="profile_settings">
-		{{#compare account.ui_restrictions.profile.show_user '!==' false }}
+		{{#compare uiRestrictions.profile.show_user '!==' false }}
 			<li><a href="#user"><i class="icon-user"></i>{{ i18n.userSettings }}</a></li>
 		{{/compare}}
-		{{#compare account.ui_restrictions.profile.show_account '!==' false }}
+		{{#compare uiRestrictions.profile.show_account '!==' false }}
 			<li><a href="#account"><i class="icon-cogs"></i>{{ i18n.accountSettings }}</a></li>
 		{{/compare}}
-		{{#compare account.ui_restrictions.profile.show_billing '!==' false }}
+		{{#compare uiRestrictions.profile.show_billing '!==' false }}
 			<li><a href="#billing"><i class="icon-credit-card"></i>{{ i18n.billingSettings }}</a></li>
 		{{/compare}}
 		</ul>
 
 		<div class="tab-content">
-			{{#compare account.ui_restrictions.profile.show_user '!==' false }}
+			{{#compare uiRestrictions.profile.show_user '!==' false }}
 			<div class="tab-pane" id="user">
 				<ul class="list-settings">
 					<li class="settings-item clearfix" data-name="email">
@@ -88,7 +88,7 @@
 			</div>
 			{{/compare}}
 
-			{{#compare account.ui_restrictions.profile.show_account '!==' false }}
+			{{#compare uiRestrictions.profile.show_account '!==' false }}
 			<div class="tab-pane" id="account">
 				<ul class="list-settings">
 					<li class="settings-item clearfix" data-name="account_name">
@@ -195,7 +195,7 @@
 			</div>
 			{{/compare}}
 
-			{{#compare account.ui_restrictions.profile.show_billing '!==' false }}
+			{{#compare uiRestrictions.profile.show_billing '!==' false }}
 			<div class="tab-pane" id="billing">
 				<ul class="list-settings">
 					<li class="settings-item clearfix" data-name="credit_card">

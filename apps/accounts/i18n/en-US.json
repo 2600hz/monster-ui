@@ -2,8 +2,7 @@
 	"addAccount": "Add New Account",
 	"editSettings": "Edit",
 	"saveChanges": "Save Changes",
-	"cancel": "Cancel",
-	"close": "Close",
+	"closeSetting": "Close",
 	"disable": "Disable",
 	"disabled": "Disabled",
 	"active": "Active",
@@ -14,8 +13,6 @@
 	"update": "Update",
 	"none": "None",
 	"month": "Month",
-	"search": "Search",
-	"currency": "$",
 	"disableAccount": "Disable this Account",
 	"enableAccount": "Enable this Account",
 	"deleteAccount": "Delete this Account",
@@ -98,12 +95,6 @@
 		"servicePlan": "Choose Service Plan",
 		"limits": "Call Restrictions",
 		"restrictions": "Permissions"
-	},
-	"wizardButtons": {
-		"cancel": "Cancel",
-		"previous": "Previous",
-		"next": "Next",
-		"submit": "Submit"
 	},
 	"wizardErrorMessages": {
 		"pleaseCorrect": "Please correct the following errors:",

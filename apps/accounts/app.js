@@ -1389,7 +1389,7 @@ define(function(require){
 				creditBalanceSpan = tabContentTemplate.find('.manage-credit-div .credit-balance'),
 				addCreditInput = tabContentTemplate.find('.add-credit-input');
 
-			creditBalanceSpan.html(self.i18n.active().currency+balance);
+			creditBalanceSpan.html(self.i18n.active().currencyUsed+balance);
 
 			parent.find('#accountsmanager_limits_save').click(function(e) {
 				e.preventDefault();
@@ -1439,7 +1439,7 @@ define(function(require){
 									},
 									success: function(data, status) {
 										balance += parseFloat(addCredit);
-										creditBalanceSpan.html(self.i18n.active().currency+balance);
+										creditBalanceSpan.html(self.i18n.active().currencyUsed+balance);
 										addCreditInput.val('');
 										toastr.success(self.i18n.active().toastrMessages.creditAddSuccess, '', {"timeOut": 5000});
 									},

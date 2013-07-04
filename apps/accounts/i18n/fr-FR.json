@@ -2,8 +2,7 @@
 	"addAccount": "Ajouter un compte",
 	"editSettings": "Modifier",
 	"saveChanges": "Sauvegarder les changements",
-	"cancel": "Annuler",
-	"close": "Fermer",
+	"closeSetting": "Fermer",
 	"disable": "D&eacute;sactiver",
 	"disabled": "D&eacute;sactiv&eacute;",
 	"active": "Actif",
@@ -14,8 +13,6 @@
 	"update": "Sauvegarder",
 	"none": "Aucun",
 	"month": "Mois",
-	"search": "Rechercher",
-	"currency": "$",
 	"disableAccount": "D&eacute;sactiver ce compte",
 	"enableAccount": "Activer ce compte",
 	"deleteAccount": "Supprimer ce compte",
@@ -94,12 +91,6 @@
 		"servicePlan": "Choisir un abonnement",
 		"limits": "D&eacute;finir les limites",
 		"restrictions": "D&eacute;finir les restrictions"
-	},
-	"wizardButtons": {
-		"cancel": "Annuler",
-		"previous": "Pr&eacute;c&eacute;dent",
-		"next": "Suivant",
-		"submit": "Envoyer"
 	},
 	"wizardErrorMessages": {
 		"pleaseCorrect": "Veuillez corriger les erreurs suivantes:",
