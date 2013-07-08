@@ -1,4 +1,4 @@
-html {
+html, body, #main, #main section {
     height: 100%;
 }
 
@@ -120,7 +120,13 @@ body h1.lobster {
 }
 
 #main section > .ws-content {
-    margin-top: 20px;
+	top: 67px;
+	left:0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+	height: auto;
+	width: auto;
 }
 
 /* Hack to remove iPad clipping onclick */
