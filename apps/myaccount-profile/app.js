@@ -98,7 +98,7 @@ define(function(require){
 						monster.request({
 							resource: 'profile.getUser',
 							data: {
-								accountId: self.accountId,
+								accountId: monster.apps['auth'].originalAccount.id,
 								userId: self.userId
 							},
 							success: function(data, status) {
@@ -120,7 +120,7 @@ define(function(require){
 				},
 				function(err, results) {
 					results = self.formatData(results);
-
+					results.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
 					var profile = $(monster.template(self, 'profile', results));
 
 					self.bindEvents(profile, results);
@@ -156,6 +156,7 @@ define(function(require){
 				};
 
 			if(type === 'user') {
+				params.accountId = monster.apps['auth'].originalAccount.id;
 				params.userId = self.userId;
 			}
 			else if(type === 'billing') {

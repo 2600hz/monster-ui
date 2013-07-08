@@ -1,0 +1,72 @@
+<div class="limits-tab-container">
+	<div class="clearfix">
+		<legend>{{ i18n.trunksLegend }}</legend>
+		<div class="trunks-div twoway clearfix">
+			<div class="section-slider-value clearfix">
+				<div class="slider-value-wrapper clearfix">
+					<div class="slider-value"></div>
+					<div class="total-amount">{{ i18n.currencyUsed }}<span class="total-amount-value"></span>/{{ i18n.month }}</div>
+				</div>
+			</div>
+
+			<div class="section-slider clearfix">
+				<div class="slider-title">{{ i18n.twowayTrunks }}</div>
+				<div class="slider-wrapper">
+					<div class="slider-div"></div>
+				</div>
+			</div>
+			<input type="hidden" name="limits.twoway_trunks" class="trunks-value" value="0" />
+		</div>
+
+		<div class="trunks-div inbound clearfix">
+			<div class="section-slider-value clearfix">
+				<div class="slider-value-wrapper clearfix">
+					<div class="slider-value"></div>
+					<div class="total-amount">{{ i18n.currencyUsed }}<span class="total-amount-value"></span>/{{ i18n.month }}</div>
+				</div>
+			</div>
+
+			<div class="section-slider clearfix">
+				<div class="slider-title">{{ i18n.inboundTrunks }}</div>
+				<div class="slider-wrapper">
+					<div class="slider-div"></div>
+				</div>
+			</div>
+			<input type="hidden" name="limits.inbound_trunks" class="trunks-value" value="0" />
+		</div>
+	</div>
+
+	<div class="clearfix call-restrictions-div">
+		<legend>{{ i18n.callRestrictionsLegend }}</legend>
+		<div class="pull-left">
+			<div class="title">{{ i18n.callRestrictionsTitle }}</div>
+			<ul class="call-restrictions-list">
+				{{#each classifiers}}
+				<li class="call-restrictions-element">
+					<label>
+						<input type="checkbox" {{#if this.checked}}checked{{/if}} name="limits.call_restriction.{{this.id}}.action" value="allow" />
+						{{#compare this.id '===' 'unknown'}}
+							Other
+						{{else}}
+							{{this.name}}
+						{{/compare}}
+					</label>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+		<div class="manage-credit-div pull-left">
+			<div class="title">{{ i18n.balanceTitle }}</div>
+			<div>
+				{{ i18n.balancePerMinute }} <span class="credit-balance">{{ i18n.currencyUsed }}0</span>
+			</div>
+			<div>{{ i18n.addToBalance }} <input class="add-credit-input" name="addCreditBalance" pattern="\d+(\.\d{1,2})?" type="text" /></div>
+			<label class="allow-prepay">
+				<input name="limits.allow_prepay" class="allow-prepay-ckb pull-left" type="checkbox" />
+				<div>
+					{{ i18n.allowPrepay }}
+				</div>
+			</label>
+		</div>
+	</div>
+</div>

@@ -27,7 +27,8 @@ define(function(require){
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
-			'myaccount.activateSubmodule': '_activateSubmodule'
+			'myaccount.activateSubmodule': '_activateSubmodule',
+			'myaccount.renderNavLinks': '_renderNavLinks'
 		},
 
 		load: function(callback){
@@ -74,25 +75,43 @@ define(function(require){
 			});
 		},
 
+		_renderNavLinks: function(args) {
+			var self = this,
+				navHtml = $(monster.template(self, 'nav', {
+					name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
+					isMasquerading: args && args.isMasquerading || false
+				}));
+
+			$('#ws-navbar .links').empty()
+								  .append(navHtml);
+		},
+
 		render: function(){
 			/* render non-dependant stuff */
 			var self = this,
-				dataNav = {
-					name: monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name
-				},
 				myaccountHtml = $(monster.template(self, 'myaccount')),
-				navHtml = $(monster.template(self, 'nav', dataNav));
+				navContainer = $('#ws-navbar .links');
 
 			$('#topbar').after(myaccountHtml);
 
-			$('#ws-navbar .links').append(navHtml);
+			self._renderNavLinks();
 
-			$(navHtml).on('click', function(e) {
+			navContainer.on('click', '.myaccount-link', function(e) {
 				e.preventDefault();
 
 				self._loadApps(function() {
 					monster.pub('myaccount.display');
 				});
+			});
+
+			navContainer.on('click', '.restore-masquerading-link', function(e) {
+				e.preventDefault();
+
+				// Closing myaccount (if open) before restoring from masquerading
+				if($('#myaccount').hasClass('myaccount-open')) {
+					monster.pub('myaccount.display');
+				}
+				monster.pub('accountsManager.restoreMasquerading');
 			});
 
 			self.groups = {
@@ -137,7 +156,17 @@ define(function(require){
                                                                     cursorcolor:"#333",
                                                                     cursoropacitymin:0.5,
                                                                     hidecursordelay:1000
-                                                                });
+                                                                }),
+                firstTab = myaccount.find('.myaccount-menu li:not(.nav-header)').first(),
+                uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions,
+                defaultApp = self._defaultApp.name.match(/-(?:[a-zA-Z]+)/)[0].replace('-', '');
+
+			if (uiRestrictions && uiRestrictions[defaultApp] && uiRestrictions[defaultApp].show_tab === false) {
+				self._defaultApp.name = firstTab.data('module');
+				if (firstTab.data('key')) {
+					self._defaultApp.key =  firstTab.data('key');
+				};
+			}
 
 			if(myaccount.hasClass('myaccount-open')) {
 				myaccount.find('.myaccount-right .myaccount-content').empty();
@@ -159,12 +188,23 @@ define(function(require){
 					}
 				};
 
+				if (self._defaultApp.key) {
+					args.key = self._defaultApp.key;
+				};
+
 				monster.pub('myaccount.activateSubmodule', args);
 			}
 		},
 
 		_renderSubmodule: function(template) {
-			$('#myaccount .myaccount-right .myaccount-content').html(template);
+			var parent = $('#myaccount');
+
+			parent.find('.myaccount-right .myaccount-content').html(template);
+
+			if (parent.find('.myaccount-menu .nav li.active')) {
+				parent.find('.myaccount-right .nav li').first().addClass('active');
+				parent.find('.myaccount-right .tab-content div').first().addClass('active');
+			};
 		},
 
 		_activateSubmodule: function(args) {
@@ -202,7 +242,13 @@ define(function(require){
 				category = params.category || 'accountCategory',
 				menu = params.menu,
 				_weight = params.weight,
-				module = params.name;
+				module = params.name,
+				restriction = menu.data('key') ? menu.data('key') : menu.data('module')
+																.match(/-(?:[a-zA-Z]+)/)[0]
+																.replace(/([a-z])([A-Z])/, '$1_$2')
+																.toLowerCase()
+																.replace('-', ''),
+				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
 
 			if(module === self._defaultApp.name) {
 				self._defaultApp.title = params.title;
@@ -220,51 +266,54 @@ define(function(require){
 
 			category = self.groups[category];
 
-			if(navList.find('#'+category.id).size() === 0) {
-				var inserted = false;
-				navList.find('li.nav-header').each(function(k, v) {
-					if($(this).data('weight') > category.weight) {
-						$(this).before('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
-						inserted = true;
-						return false;
+			if (!uiRestrictions || !uiRestrictions[restriction] || uiRestrictions[restriction].show_tab) {
+
+				if(navList.find('#'+category.id).size() === 0) {
+					var inserted = false;
+					navList.find('li.nav-header').each(function(k, v) {
+						if($(this).data('weight') > category.weight) {
+							$(this).before('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
+							inserted = true;
+							return false;
+						}
+					});
+
+					if(inserted === false) {
+						navList.append('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
 					}
-				});
-
-				if(inserted === false) {
-					navList.append('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
 				}
-			}
 
-			if(_weight) {
-				menu.data('weight', _weight);
+				if(_weight) {
+					menu.data('weight', _weight);
 
-				var categoryReached = false;
+					var categoryReached = false;
 
-				navList.find('li').each(function(index,v) {
-					if(categoryReached) {
-						var weight = $(this).data('weight');
+					navList.find('li').each(function(index,v) {
+						if(categoryReached) {
+							var weight = $(this).data('weight');
 
-						if(_weight < weight || $(v).hasClass('nav-header')) {
-							$(this)
-								.before(menu);
+							if(_weight < weight || $(v).hasClass('nav-header')) {
+								$(this)
+									.before(menu);
+
+								return false;
+							}
+						}
+
+						if($(v).attr('id') === category.id) {
+							categoryReached = true;
+						}
+
+						if(index >= (navList.find('li').length - 1)) {
+							$(this).after(menu);
 
 							return false;
 						}
-					}
-
-					if($(v).attr('id') === category.id) {
-						categoryReached = true;
-					}
-
-					if(index >= (navList.find('li').length - 1)) {
-						$(this).after(menu);
-
-						return false;
-					}
-				});
-			}
-			else {
-				navList.find('#'+category.id).after(menu);
+					});
+				}
+				else {
+					navList.find('#'+category.id).after(menu);
+				}
 			}
 		}
 	};
