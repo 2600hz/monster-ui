@@ -102,3 +102,63 @@
     position: relative;
     top: -50%;
 }
+
+/********** CONFERENCES INFORMATION **********/
+
+#conferences_container .right-content {
+	margin-left: 230px;
+	padding: 10px 20px;
+	width: 700px;
+}
+
+#conferences_container .right-content div .header {
+	height: 60px;
+	margin-bottom: 30px;
+}
+
+#conferences_container .right-content div .header h1 {
+	font-weight: normal;
+}
+
+#conferences_container .right-content div .header input {
+	margin-top: 18px;
+}
+
+#conferences_container .right-content div table {
+	clear: both;
+	width: 100%;
+	color: #777;
+}
+
+#conferences_container .right-content div table thead {
+	text-align: center;
+	border-bottom: 1px solid #777;
+}
+
+#conferences_container .right-content div table tbody {
+	text-align: center;
+}
+
+#conferences_container .right-content div table tbody tr {
+	height:80px;
+	font-size: 21px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+#conferences_container .right-content div table tbody tr:last-child {
+	border-bottom: 1px solid #777;
+}
+
+#conferences_container .right-content div table thead tr th:first-child,
+#conferences_container .right-content div table tbody tr td:first-child {
+	text-align: left;
+}
+
+#conferences_container .right-content div table tbody tr td:first-child {
+	line-height: 25px;
+}
+
+#conferences_container .right-content div table tbody tr div {
+	width: 240px;
+	font-size: 12px;
+}
