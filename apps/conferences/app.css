@@ -17,8 +17,6 @@
 }
 
 #conferences_container .right-content {
-	height: 100%;
-	background: red;
 }
 
 #conferences_container .left-menu .nav-items {
@@ -57,10 +55,20 @@
 	height: 10%;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.active, #conferences_container .left-menu .nav-items .nav-item:not(.role):hover {
+#conferences_container .left-menu .nav-items .nav-item.role .nav-title {
+	cursor: default;
+	font-size: 20px;
+	margin-top: 0;
+}
+
+#conferences_container .left-menu .nav-items .nav-item.active {
 	border-left: 3px solid #22ccff;
 	cursor: pointer;
+	box-shadow: 3px 3px 40px #222 inset;
+}
 
+#conferences_container .left-menu .nav-items .nav-item:not(.role):hover {
+	cursor: pointer;
 	box-shadow: 3px 3px 40px #222 inset;
 }
 
@@ -70,6 +78,7 @@
 
 #conferences_container .left-menu .nav-items .nav-item .nav-title {
 	color: #fff;
+	margin-top: 5px;
 	text-shadow: 1px 1px 1px #333;
 }
 

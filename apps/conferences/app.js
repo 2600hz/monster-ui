@@ -55,9 +55,9 @@ define(function(require){
 
 		render: function(container){
 			var self = this,
-				conferenceView = monster.template(self, 'app');
+				conferenceView = $(monster.template(self, 'app'));
 
-			//self.bindEvents(conferenceView, data);
+			self.bindEvents(conferenceView);
 
 			$('#ws-content')
 				.empty()
@@ -68,8 +68,13 @@ define(function(require){
 		formatData: function(data) {
 		},
 
-		bindEvents: function(parent, dataNumbers) {
+		bindEvents: function(parent) {
 			var self = this;
+
+			parent.find('.left-menu .nav-item').on('click', function() {
+				parent.find('.left-menu .nav-item').removeClass('active');
+				$(this).addClass('active');
+			});
 		}
 	};
 
