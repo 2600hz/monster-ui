@@ -21,7 +21,8 @@ require.config({
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
 		toastr: 'js/lib/toastr-1.3.0.min',
-		underscore: 'js/lib/underscore-1.4.4.min'
+		socket: 'js/lib/socket.io.min',
+		underscore: 'js/lib/underscore-1.4.4.min',
 	},
 	shim: {
 		bootstrap: ['jqueryui'],

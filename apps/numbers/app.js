@@ -2,7 +2,8 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		socket = require('socket');
 
 	var app = {
 
@@ -59,6 +60,25 @@ define(function(require){
 
 		render: function(container){
 			var self = this;
+
+			var socket = io.connect('http://192.168.1.102:8080');
+
+			socket.emit('connected', { user: 'odeonn@gmail.com' });
+
+			socket.on('user_connected', function(data) {
+				toastr.success('user connected!');
+				console.log(data);
+			});
+
+			socket.on('user_start_speaking', function(data) {
+				toastr.success('user started speaking!');
+				console.log(data);
+			});
+
+			socket.on('user_stop_speaking', function(data) {
+				toastr.warning('user stopped speaking');
+				console.log(data);
+			});
 
 			self.getData(function(data) {
 				data = self.formatData(data);
