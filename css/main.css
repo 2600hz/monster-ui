@@ -120,7 +120,7 @@ body h1.lobster {
 }
 
 #main section > .ws-content {
-    /* margin-top: 20px; */
+    margin-top: 20px;
 }
 
 /* Hack to remove iPad clipping onclick */

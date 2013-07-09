@@ -16,8 +16,14 @@
 	-webkit-box-sizing: border-box;
 }
 
+#conferences_container .right-content {
+	height: 100%;
+	background: red;
+}
+
 #conferences_container .left-menu .nav-items {
 	background: #333;
+	box-shadow: 1px 1px 10px #333;
 	height: 100%;
 	list-style: none;
 	margin: 0;
@@ -25,22 +31,35 @@
 }
 
 #conferences_container .left-menu .nav-items .nav-item {
-	border-top: 1px solid #222;
-	border-bottom: 1px solid #666;
+	border-bottom: 1px solid #000;
+	border-top: 1px solid #555;
 	border-left: 3px solid #333;
 	border-right: 3px solid #333;
 
 	color: #fff;
 	height: 18%;
 	text-align: center;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#conferences_container .left-menu .nav-items .nav-item:first-child {
+	border-top: 0px;
+}
+
+#conferences_container .left-menu .nav-items .nav-item:last-child {
+	border-bottom: 0px;
 }
 
 #conferences_container .left-menu .nav-items .nav-item.role {
 	height: 10%;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.active {
+#conferences_container .left-menu .nav-items .nav-item.active, #conferences_container .left-menu .nav-items .nav-item:not(.role):hover {
 	border-left: 3px solid #22ccff;
+	cursor: pointer;
 
 	box-shadow: 3px 3px 40px #222 inset;
 }
