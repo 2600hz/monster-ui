@@ -103,19 +103,19 @@ define(function(require){
 			var self = this;
 
 			value.viewFeatures = {
-                failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().failoverIconHelp },
-                outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().cnamIconHelp },
-                dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().e911IconHelp },
-                local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp }
-            };
+				failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().failoverIconHelp },
+				outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().cnamIconHelp },
+				dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().e911IconHelp },
+				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp }
+			};
 
-            _.each(value.features, function(feature) {
-                value.viewFeatures[feature].active = 'active';
-            });
+			_.each(value.features, function(feature) {
+				value.viewFeatures[feature].active = 'active';
+			});
 
-            if('used_by' in value) {
-                value.friendlyUsedBy = self.i18n.active()[value.used_by];
-            }
+			if('used_by' in value) {
+				value.friendlyUsedBy = self.i18n.active()[value.used_by];
+			}
 
 			return value;
 		},
@@ -144,7 +144,7 @@ define(function(require){
 
 				value = self.formatNumber(value);
 
-                value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
+				value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
 			});
 
 			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
@@ -191,51 +191,51 @@ define(function(require){
 						parent.find('#trigger_links').hide();
 					}
 				},
-			    displayNumberList = function(accountId, callback) {
+				displayNumberList = function(accountId, callback) {
 					if(_.indexOf(listSearchedAccounts, accountId) === -1) {
 						self.listNumbers(accountId, function(numbers) {
-                			var spareNumbers = [],
-                    			usedNumbers = [];
+							var spareNumbers = [],
+								usedNumbers = [];
 
-                			listSearchedAccounts.push(accountId);
+							listSearchedAccounts.push(accountId);
 
-                			_.each(numbers.numbers, function(value, phoneNumber) {
-                    			if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
-                        			value.phoneNumber = phoneNumber;
+							_.each(numbers.numbers, function(value, phoneNumber) {
+								if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
+									value.phoneNumber = phoneNumber;
 
-                        			value = self.formatNumber(value);
+									value = self.formatNumber(value);
 
-                        			value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
-                    			}
-                			});
+									value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
+								}
+							});
 
-                			_.each(dataNumbers.listAccounts, function(value) {
-                    			//TODO Sort
-                    			if(value.id === accountId) {
-                        			value.spareNumbers = spareNumbers;
-                        			value.usedNumbers = usedNumbers;
-                        			value.countSpareNumbers = spareNumbers.length;
-                        			value.countUsedNumbers = usedNumbers.length;
+							_.each(dataNumbers.listAccounts, function(value) {
+								//TODO Sort
+								if(value.id === accountId) {
+									value.spareNumbers = spareNumbers;
+									value.usedNumbers = usedNumbers;
+									value.countSpareNumbers = spareNumbers.length;
+									value.countUsedNumbers = usedNumbers.length;
 
-                        			parent
-                            			.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
-                            			.empty()
-                            			.append(monster.template(self, 'spareNumbersAccount', { spareNumbers: spareNumbers }))
-                            			.parent()
-                            			.find('.count')
-                            			.html('('+ spareNumbers.length +')');
+									parent
+										.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+										.empty()
+										.append(monster.template(self, 'spareNumbersAccount', { spareNumbers: spareNumbers }))
+										.parent()
+										.find('.count')
+										.html('('+ spareNumbers.length +')');
 
-                        			parent
-                            			.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
-                            			.empty()
-                            			.append(monster.template(self, 'usedNumbersAccount', { usedNumbers: usedNumbers }))
-                            			.parent()
-                            			.find('.count')
-                            			.html('('+ usedNumbers.length +')');
+									parent
+										.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
+										.empty()
+										.append(monster.template(self, 'usedNumbersAccount', { usedNumbers: usedNumbers }))
+										.parent()
+										.find('.count')
+										.html('('+ usedNumbers.length +')');
 
-                        			return false;
-                    			}
-                			});
+									return false;
+								}
+							});
 
 							callback && callback();
 						});
@@ -280,7 +280,7 @@ define(function(require){
 			/* Click on an account header, open list of numbers of this account. Send an API call to search it if it has not been searched already */
 			parent.on('click', '.expandable', function(event) {
 				var section = $(this).parents('.account-section'),
-				    accountId = section.data('id'),
+					accountId = section.data('id'),
 					toggle = function() {
 						section.toggleClass('open');
 
@@ -387,32 +387,32 @@ define(function(require){
 
 			/* to plugin */
 			var originalAccountTree = {},
-			    moveNumbersToAccount = function(accountId) {
-			    	console.log('move');
+				moveNumbersToAccount = function(accountId) {
+					console.log('move');
 					var listNumbers = [],
 						destinationAccountId = accountId,
 						destinationIndex = -1,
 						mapAccounts = {};
 
 					parent.find('.number-box.selected').each(function(k, v) {
-                    	var box = $(v),
-                        	number = box.data('phonenumber');
-                        	accountId = box.parents('.account-section').data('id');
+						var box = $(v),
+							number = box.data('phonenumber');
+							accountId = box.parents('.account-section').data('id');
 
-                    	if(!(accountId in mapAccounts)) {
-                        	mapAccounts[accountId] = {};
-                    	}
+						if(!(accountId in mapAccounts)) {
+							mapAccounts[accountId] = {};
+						}
 
-                    	mapAccounts[accountId][number] = true;
-                    	listNumbers.push(number);
-                	});
+						mapAccounts[accountId][number] = true;
+						listNumbers.push(number);
+					});
 
 					var requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
 					};
 
-                	self.moveNumbers(requestData, function(data) {
+					self.moveNumbers(requestData, function(data) {
 						var countMove = 0;
 
 						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
@@ -420,22 +420,22 @@ define(function(require){
 								destinationIndex = indexAccount;
 							}
 
-                        	if(account.id in mapAccounts) {
-                            	var newList = [];
-                            	_.each(account.spareNumbers, function(number, indexNumber) {
-                                	if(!(number.phoneNumber in data.success)) {
-                                    	newList.push(number);
-                                	}
-                                	else {
+							if(account.id in mapAccounts) {
+								var newList = [];
+								_.each(account.spareNumbers, function(number, indexNumber) {
+									if(!(number.phoneNumber in data.success)) {
+										newList.push(number);
+									}
+									else {
 										data.success[number.phoneNumber] = number;
-                                    	countMove++;
-                                	}
-                            	});
+										countMove++;
+									}
+								});
 
-                            	dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
-                            	dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
-                        	}
-                    	});
+								dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+								dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+							}
+						});
 
 						/* If we didn't open it yet, it will be automatically updated when we click on it */
 						if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
@@ -447,28 +447,28 @@ define(function(require){
 						}
 
 						//TODO Sort date
-                    	self.paintSpareNumbers(parent, dataNumbers, function() {
-                    		var dataTemplate = {
+						self.paintSpareNumbers(parent, dataNumbers, function() {
+							var dataTemplate = {
 									count: countMove,
 									accountName: dataNumbers.listAccounts[destinationIndex].name
-                    			},
-                        		template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
+								},
+								template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
 
-                        	toastr.success(template);
-                    	});
-                	});
+							toastr.success(template);
+						});
+					});
 				},
 				dropdownAccount;
 
 			parent.on('click', '#move_numbers', function() {
-                var accountId = self.accountId,
-                    displayList = function() {
-                    	dropdownAccount.reset();
-                    };
+				var accountId = self.accountId,
+					displayList = function() {
+						dropdownAccount.reset();
+					};
 
-                if(_.isEmpty(originalAccountTree)) {
-                    self.getDescendants(accountId, function(listAccounts) {
-                        originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
+				if(_.isEmpty(originalAccountTree)) {
+					self.getDescendants(accountId, function(listAccounts) {
+						originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
 
 						var args = {
 							parent: parent.find('.list-numbers[data-type="spare"]'),
@@ -483,88 +483,88 @@ define(function(require){
 
 						monster.pub('common.selectAccount', args);
 
-                        displayList();
-                    });
-                }
-                else {
-                    displayList();
-                }
-            });
+						displayList();
+					});
+				}
+				else {
+					displayList();
+				}
+			});
 
-            parent.on('click', '.cnam-number', function() {
+			parent.on('click', '.cnam-number', function() {
 				var cnamCell = $(this).parents('.number-box').first(),
-                    phoneNumber = cnamCell.data('phonenumber');
+					phoneNumber = cnamCell.data('phonenumber');
 
-                if(phoneNumber) {
-                    var args = {
-                        phoneNumber: phoneNumber,
-                        callbacks: {
-                            success: function(data) {
-                                if(!($.isEmptyObject(data.data.cnam))) {
-                                    cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
-                                }
-                                else {
-                                    cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
-                                }
-                            }
-                        }
-                    };
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.cnam))) {
+									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
+								}
+								else {
+									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+								}
+							}
+						}
+					};
 
-                    monster.apps.load('callerId', function(app) {
-                        monster.pub('callerId.editPopup', args);
-                    });
-                }
-            });
+					monster.apps.load('callerId', function(app) {
+						monster.pub('callerId.editPopup', args);
+					});
+				}
+			});
 
 			parent.on('click', '.e911-number', function() {
 				var e911Cell = $(this).parents('.number-box').first(),
-                    phoneNumber = e911Cell.data('phonenumber');
+					phoneNumber = e911Cell.data('phonenumber');
 
-                if(phoneNumber) {
-                    var args = {
-                        phoneNumber: phoneNumber,
-                        callbacks: {
-                            success: function(data) {
-                                if(!($.isEmptyObject(data.data.dash_e911))) {
-                                    e911Cell.find('.features i.feature-dash_e911').addClass('active');
-                                }
-                                else {
-                                    e911Cell.find('.features i.feature-dash_e911').removeClass('active');
-                                }
-                            }
-                        }
-                    };
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.dash_e911))) {
+									e911Cell.find('.features i.feature-dash_e911').addClass('active');
+								}
+								else {
+									e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+								}
+							}
+						}
+					};
 
-                    monster.apps.load('e911', function(app) {
-                        monster.pub('e911.editPopup', args);
-                    });
-                }
+					monster.apps.load('e911', function(app) {
+						monster.pub('e911.editPopup', args);
+					});
+				}
 			});
 
 			parent.on('click', '.failover-number', function() {
-                var failoverCell = $(this).parents('.number-box').first(),
-                    phoneNumber = failoverCell.data('phonenumber');
+				var failoverCell = $(this).parents('.number-box').first(),
+					phoneNumber = failoverCell.data('phonenumber');
 
-                if(phoneNumber) {
-                    var args = {
-                        phoneNumber: phoneNumber,
-                        callbacks: {
-                            success: function(data) {
-                                if(!($.isEmptyObject(data.data.failover))) {
-                                    failoverCell.find('.features i.feature-failover').addClass('active');
-                                }
-                                else {
-                                    failoverCell.find('.features i.feature-failover').removeClass('active');
-                                }
-                            }
-                        }
-                    };
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.failover))) {
+									failoverCell.find('.features i.feature-failover').addClass('active');
+								}
+								else {
+									failoverCell.find('.features i.feature-failover').removeClass('active');
+								}
+							}
+						}
+					};
 
-                    monster.apps.load('failover', function(app) {
-                        monster.pub('failover.editPopup', args);
-                    });
-                }
-            });
+					monster.apps.load('failover', function(app) {
+						monster.pub('failover.editPopup', args);
+					});
+				}
+			});
 
 			var searchListNumbers = function(searchString, parent) {
 				var viewList = parent;
@@ -580,22 +580,22 @@ define(function(require){
 							if(numberBox.size() > 0) {
 								section.addClass('open');
 								 $('html, body').animate({
-         	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
-     	 	 	 	 	 	 	 }, 1000);
+									 scrollTop: numberBox.offset().top - 20
+								 }, 1000);
 
 								viewList.find('.number-box').removeClass('highlighted');
 
 								if(!numberBox.hasClass('highlighted')) {
 									numberBox.addClass('highlighted')
-                                        .css('background', '#22ccff')
-                                        .animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+										.css('background', '#22ccff')
+										.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
 								}
 							}
 							else {
 								var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-								    template = monster.template(self, '!' + self.i18n.active()[type], { number: data.number, accountName: section.data('name') });
+									template = monster.template(self, '!' + self.i18n.active()[type], { number: data.number, accountName: section.data('name') });
 
-                                toastr.warning(template);
+								toastr.warning(template);
 							}
 						});
 					}
@@ -605,12 +605,12 @@ define(function(require){
 				});
 			};
 
-            parent.on('click', '.list-numbers[data-type="spare"] button.search-numbers', function(e) {
+			parent.on('click', '.list-numbers[data-type="spare"] button.search-numbers', function(e) {
 				var spareList = parent.find('.list-numbers[data-type="spare"]'),
 					searchString = spareList.find('.search-custom input[type="text"]').val().toLowerCase();
 
 				searchListNumbers(searchString, spareList);
-            });
+			});
 
 			parent.on('keyup', '.list-numbers[data-type="spare"] .search-custom input[type="text"]', function(e) {
 				if(e.keyCode === 13) {
@@ -623,12 +623,12 @@ define(function(require){
 				}
 			});
 
-            parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
+			parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
 				var usedList = parent.find('.list-numbers[data-type="used"]'),
 					searchString = usedList.find('.search-custom input[type="text"]').val().toLowerCase();
 
 				searchListNumbers(searchString, usedList);
-            });
+			});
 
 			parent.on('keyup', '.list-numbers[data-type="used"] .search-custom input[type="text"]', function(e) {
 				if(e.keyCode === 13) {
@@ -641,7 +641,7 @@ define(function(require){
 				}
 			});
 
-            /*parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
+			/*parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
 				var usedList = parent.find('.list-numbers[data-type="used"]'),
 					searchString = usedList.find('.search-custom input[type="text"]').val().toLowerCase();
 
@@ -656,15 +656,15 @@ define(function(require){
 							if(numberBox.size() > 0) {
 								section.addClass('open');
 								 $('html, body').animate({
-         	 	 	 	 	 	 	 scrollTop: numberBox.offset().top - 20
-     	 	 	 	 	 	 	 }, 1000);
+									 scrollTop: numberBox.offset().top - 20
+								 }, 1000);
 
 								usedList.find('.number-box').removeClass('highlighted');
 
 								if(!numberBox.hasClass('highlighted')) {
 									numberBox.addClass('highlighted')
-                                        .css('background', '#22ccff')
-                                        .animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+										.css('background', '#22ccff')
+										.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
 								}
 							}
 							else {
@@ -697,91 +697,91 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-                    numbers: function(callback) {
-                        self.listNumbers(self.accountId, function(numbers) {
-                            callback(null, numbers)
+					numbers: function(callback) {
+						self.listNumbers(self.accountId, function(numbers) {
+							callback(null, numbers)
 						});
-                    },
-                    accounts: function(callback) {
-                        self.listAccounts(function(accounts) {
-                            callback(null, accounts);
-                        });
-                    }
-                },
-                function(err, results) {
+					},
+					accounts: function(callback) {
+						self.listAccounts(function(accounts) {
+							callback(null, accounts);
+						});
+					}
+				},
+				function(err, results) {
 					callback(results);
-                }
-            );
+				}
+			);
 		},
 
 		moveNumbers: function(args, callback) {
 			console.log('moveNumbers');
 			var self = this;
 
-            monster.request({
-                resource: 'numbers.move',
-                data: {
-                    accountId: args.accountId,
-                    data: {
-                        numbers: args.numbers
-                    }
-                },
-                success: function(_dataNumbers, status) {
-                    callback && callback(_dataNumbers.data);
-                }
-            });
+			monster.request({
+				resource: 'numbers.move',
+				data: {
+					accountId: args.accountId,
+					data: {
+						numbers: args.numbers
+					}
+				},
+				success: function(_dataNumbers, status) {
+					callback && callback(_dataNumbers.data);
+				}
+			});
 		},
 
 		getDescendants: function(accountId, success, error) {
 			var self = this;
 
 			monster.request({
-                resource: 'numbers.listDescendants',
-                data: {
-                    accountId: accountId
-                },
-                success: function(_data, status) {
-                    success && success(_data.data);
-                },
-                error: function(_data, status) {
-                    error && error(_data);
-                }
-            });
-		},
-
-		searchAccount: function(phoneNumber, success, error) {
-            var self = this;
-
-            monster.request({
-                resource: 'numbers.searchAccounts',
-                data: {
-                    accountId: self.accountId,
-					phoneNumber: phoneNumber
-                },
-                success: function(_data, status) {
-                    success && success(_data.data);
-                },
+				resource: 'numbers.listDescendants',
+				data: {
+					accountId: accountId
+				},
+				success: function(_data, status) {
+					success && success(_data.data);
+				},
 				error: function(_data, status) {
 					error && error(_data);
 				}
-            });
-        },
+			});
+		},
+
+		searchAccount: function(phoneNumber, success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'numbers.searchAccounts',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: phoneNumber
+				},
+				success: function(_data, status) {
+					success && success(_data.data);
+				},
+				error: function(_data, status) {
+					error && error(_data);
+				}
+			});
+		},
 
 		deleteNumbers: function(args, callback) {
 			var self = this;
 
-            monster.request({
-                resource: 'numbers.delete',
-                data: {
+			monster.request({
+				resource: 'numbers.delete',
+				data: {
 					accountId: args.accountId,
-                    data: {
+					data: {
 						numbers: args.numbers
 					}
-                },
-                success: function(_dataNumbers, status) {
-                    callback && callback(_dataNumbers.data);
-                }
-            });
+				},
+				success: function(_dataNumbers, status) {
+					callback && callback(_dataNumbers.data);
+				}
+			});
 		},
 
 		listNumbers: function(accountId, callback) {
