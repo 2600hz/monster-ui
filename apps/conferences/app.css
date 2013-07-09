@@ -1,11 +1,11 @@
 #conferences_container {
-
+	font-family: 'Quicksand', sans-serif;
 }
 
 #conferences_container .left-menu {
 	height: 100%;
 	left: 0;
-	min-height: 400px;
+	min-height: 575px;
 	padding-top: 67px;
 	position: absolute;
 	top: 0;
