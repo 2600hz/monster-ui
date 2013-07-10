@@ -1,0 +1,31 @@
+<div id="conferences_information_container">
+	<div id="active_conferences_content">
+		<div class="header">
+			<h1 class="pull-left">Acitve Conferences</h1>
+			<span class="search-box pull-right">
+				<i class="icon-search"></i>
+				<input type="text" class="search-query" placeholder="Search">
+			</span>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Conference Name</th>
+					<th>Elapsed Time</th>
+					<th>View</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each conferences}}
+				<tr class="list-element">
+					<td>{{ name }}</td>
+					<td>{{ duration }}</td>
+					<td><input id="view_conference" type="checkbox"></td>
+				</tr>
+			{{else}}
+				<tr><td colspan="3" class="empty">No conference in progress.</td></tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

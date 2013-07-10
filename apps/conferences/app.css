@@ -120,62 +120,82 @@
 
 /********** CONFERENCES INFORMATION **********/
 
-#conferences_container .right-content {
-	margin-left: 230px;
-	padding: 10px 20px;
-	width: 700px;
+.search-box > i.icon-search {
+	position: relative;
+	top: 2px;
+	left: 24px;
+	margin: 0;
 }
 
-#conferences_container .right-content div .header {
+#conferences_information_container {
+	margin: 0 auto;
+	max-width: 800px;
+}
+
+#conferences_information_container .header {
 	height: 60px;
 	margin-bottom: 30px;
 }
 
-#conferences_container .right-content div .header h1 {
+#conferences_information_container .header h1 {
 	font-weight: normal;
 }
 
-#conferences_container .right-content div .header input {
+#conferences_information_container .header .search-box {
 	margin-top: 18px;
 }
 
-#conferences_container .right-content div table {
+#conferences_information_container table {
 	clear: both;
 	width: 100%;
 	color: #777;
 }
 
-#conferences_container .right-content div table thead {
+#conferences_information_container table thead {
 	text-align: center;
 	border-bottom: 1px solid #777;
 }
 
-#conferences_container .right-content div table tbody {
+#conferences_information_container table tbody {
 	text-align: center;
 }
 
-#conferences_container .right-content div table tbody tr {
-	height:80px;
-	font-size: 21px;
+#conferences_information_container div:not(#upcoming_conferences_content) table tbody tr {
+	height: 60px;
+	font-size: 26px;
 	border-bottom: 1px solid #e5e5e5;
 }
 
-#conferences_container .right-content div table tbody tr:last-child {
+#upcoming_conferences_content table tbody tr { font-size: 26px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+1) { height: 32px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+2) { height: 27px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+3) { height: 25px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+4) { height: 5px; border-bottom: 1px solid #e5e5e5; }
+
+#conferences_information_container table tbody tr:last-child,
+#conferences_information_container div:not(#upcoming_conferences_content) table tbody tr:last-child {
 	border-bottom: 1px solid #777;
 }
 
-#conferences_container .right-content div table thead tr th:first-child,
-#conferences_container .right-content div table tbody tr td:first-child {
+#conferences_information_container table thead tr th:first-child,
+#conferences_information_container table tbody tr td:first-child {
 	text-align: left;
 }
 
-#conferences_container .right-content div table tbody tr td:first-child {
+#conferences_information_container table tbody tr td:first-child {
 	line-height: 25px;
 }
 
-#conferences_container .right-content div table tbody tr div {
-	width: 240px;
-	font-size: 12px;
+#conferences_information_container table tbody tr td.empty {
+	height: 100px;
+	text-align: center;
+	border-bottom: 1px solid #777;
+}
+
+#conferences_information_container table tbody tr div {
+	position: relative;
+	width: 300px;
+	font-size: 14px;
 }
 
 /***************** Conference Viewer *******************/
@@ -419,5 +439,3 @@
 		display: block;
 	}
 }
-
-/*******************************************************/

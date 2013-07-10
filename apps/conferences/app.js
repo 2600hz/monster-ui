@@ -118,13 +118,129 @@ define(function(require){
 		},
 
 		renderActiveConference: function(parent) {
-			var self = this;
+			var self = this,
+				data = self.formatActiveConferences(
+						{ conferences: [
+							{ name: 'Upcoming Conference\'s Name 0',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 1',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 2',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 3',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 4',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 5',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 6',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 7',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 8',duration: 150 },
+							{ name: 'Upcoming Conference\'s Name 9',duration: 150 }
+						]}),
+				activeConfView = monster.template(self, 'activeConferences', data);
+
+				parent
+					.find('.right-content')
+					.empty()
+					.append(activeConfView);
+		},
+		formatActiveConferences: function(data) {
+			return data;
 		},
 		renderUpcomingConferences: function(parent) {
-			var self = this;
+			var self = this,
+				data = self.formatUpcomingConferences(
+						{ conferences: [
+							{ name: 'Upcoming Conference\'s Name 0',timestamp: 1982073630,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 1',timestamp: 1982077230,moderatorPin: '168143',memberPin: '124881' },
+							{ name: 'Upcoming Conference\'s Name 2',timestamp: 1982080830,moderatorPin: '188445',memberPin: '122869' },
+							{ name: 'Upcoming Conference\'s Name 3',timestamp: 1982084430,moderatorPin: '148621',memberPin: '173447' },
+							{ name: 'Upcoming Conference\'s Name 4',timestamp: 1982088030,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 5',timestamp: 1982091630,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 6',timestamp: 1982095230,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 7',timestamp: 1982098830,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 8',timestamp: 1982102430,moderatorPin: '161427',memberPin: '194212' },
+							{ name: 'Upcoming Conference\'s Name 9',timestamp: 1982106030,moderatorPin: '161427',memberPin: '194212' }
+						]}),
+				upcomingConfView = monster.template(self, 'upcomingConferences', data);
+
+			parent
+				.find('.right-content')
+				.empty()
+				.append(upcomingConfView);
+
+			parent.find('#upcoming_conferences_content .header input').on('keyup', function() {
+				var self = $(this),
+					search = self.val();
+
+				if(search) {
+					$.each(parent.find('tbody tr'), function() {
+						var td= $(this).find('td:first-child'),
+							val = $(this).data('name').toLowerCase();
+						console.log(val, $(this));
+						if(val.indexOf(search.toLowerCase()) >= 0) {
+							$(this).show();
+						} else {
+							$(this).hide();
+						}
+					});
+				} else {
+					parent.find('tbody tr').show();
+				}
+			});
+		},
+		formatUpcomingConferences: function(data) {
+			var conferences = data.conferences;
+
+			for(var key in conferences) {
+				var item = conferences[key];
+					timestamp = monster.util.toFriendlyDate(item.timestamp);
+
+				item.date = timestamp.match(/([0-9]+)\/([0-9]+)/)[0];
+				item.startTime = timestamp.match(/([0-9]+):([0-9]+)\s(AM|PM)/)[0];
+			}
+
+			data.conferences.sort(function(a,b) {
+				return a.timestamp - b.timestamp;
+			});
+
+			return data;
 		},
 		renderCallinNumbers: function(parent) {
-			var self = this;
+			var self = this,
+				data = {
+					numbers: {
+						0: { number: '+1 (415) 123-456'},
+						1: { number: '+1 (813) 123-456'},
+						2: { number: '+1 (236) 123-456'},
+						3: { number: '+1 (734) 123-456'},
+						4: { number: '+1 (665) 123-456'},
+						5: { number: '+1 (542) 123-456'},
+						6: { number: '+1 (102) 123-456'},
+						7: { number: '+1 (442) 123-456'},
+						8: { number: '+1 (401) 123-456'},
+						9: { number: '+1 (565) 123-456'}
+					}
+				},
+				callinNumbersView = monster.template(self, 'callinNumbers', data);
+
+			parent
+				.find('.right-content')
+				.empty()
+				.append(callinNumbersView);
+		},
+		searchAsYouType: function(item, parent) {
+			parent.find('#' + item + '_conferences_content .header input').on('keyup', function() {
+				var self = $(this),
+					search = self.val();
+
+				if(search) {
+					$.each(parent.find('.list-element'), function() {
+						if($(this).find('td:first-child').html().toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+							$(this).show();
+						} else {
+							$(this).hide();
+						}
+					});
+				} else {
+					parent.find('.list-element').show();
+				}
+			});
 		},
 		renderCustomizeNotifications: function(parent) {
 			var self = this;
