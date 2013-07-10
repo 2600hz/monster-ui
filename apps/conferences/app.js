@@ -138,10 +138,12 @@ define(function(require){
 
 				self.bindActiveConference(activeConfView, data);
 
-				parent
-					.find('.right-content')
-					.empty()
-					.append(activeConfView);
+			parent
+				.find('.right-content')
+				.empty()
+				.append(activeConfView);
+
+			self.searchAsYouType('active', parent);
 		},
 		bindActiveConference: function(parent, data) {
 			var self = this,
@@ -154,19 +156,19 @@ define(function(require){
 				};
 
 				mapTimers[conference.id].timer = setInterval(function() {
-                	target = parent.find('[data-id="'+conference.id+'"] td.duration');
+					target = parent.find('[data-id="'+conference.id+'"] td.duration');
 
-                	mapTimers[conference.id].duration++;
+					mapTimers[conference.id].duration++;
 
-                	/* As long as the page is displayed */
-                	if(parent.find('#active_conferences_content').size() > 0) {
-                    	target.html(monster.util.friendlyTimer(mapTimers[conference.id].duration));
-                	}
-                	else {
-                    	clearInterval(mapTimers[conference.id].timer);
+					/* As long as the page is displayed */
+					if(parent.find('#active_conferences_content').size() > 0) {
+						target.html(monster.util.friendlyTimer(mapTimers[conference.id].duration));
+					}
+					else {
+						clearInterval(mapTimers[conference.id].timer);
 						delete mapTimers[conference.id];
-                	}
-            	}, 1000);
+					}
+				}, 1000);
 			});
 
 			parent.find('.view-conference').on('click', function() {
@@ -202,25 +204,7 @@ define(function(require){
 				.empty()
 				.append(upcomingConfView);
 
-			parent.find('#upcoming_conferences_content .header input').on('keyup', function() {
-				var self = $(this),
-					search = self.val();
-
-				if(search) {
-					$.each(parent.find('tbody tr'), function() {
-						var td= $(this).find('td:first-child'),
-							val = $(this).data('name').toLowerCase();
-						console.log(val, $(this));
-						if(val.indexOf(search.toLowerCase()) >= 0) {
-							$(this).show();
-						} else {
-							$(this).hide();
-						}
-					});
-				} else {
-					parent.find('tbody tr').show();
-				}
-			});
+			self.searchAsYouType('upcoming', parent);
 		},
 		formatUpcomingConferences: function(data) {
 			var conferences = data.conferences;
@@ -261,22 +245,26 @@ define(function(require){
 				.find('.right-content')
 				.empty()
 				.append(callinNumbersView);
+
+			self.searchAsYouType('callin', parent);
 		},
-		searchAsYouType: function(item, parent) {
-			parent.find('#' + item + '_conferences_content .header input').on('keyup', function() {
+		searchAsYouType: function(type, parent) {
+			parent.find('#' + type + '_conferences_content .header input').on('keyup', function() {
 				var self = $(this),
 					search = self.val();
 
 				if(search) {
-					$.each(parent.find('.list-element'), function() {
-						if($(this).find('td:first-child').html().toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+					$.each(parent.find('tbody tr'), function() {
+						var conferenceName = $(this).data('name').toLowerCase();
+
+						if(conferenceName.indexOf(search.toLowerCase()) >= 0) {
 							$(this).show();
 						} else {
 							$(this).hide();
 						}
 					});
 				} else {
-					parent.find('.list-element').show();
+					parent.find('tbody tr').show();
 				}
 			});
 		},
