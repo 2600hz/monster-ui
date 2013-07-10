@@ -199,6 +199,16 @@
 	font-size: 14px;
 }
 
+/***************** Active Conferences ******************/
+#active_conferences_content td.duration, #active_conferences_content th.duration{
+	text-align: left;
+	width: 200px;
+}
+
+#active_conferences_content td i.icon-signin {
+	cursor: pointer;
+}
+
 /***************** Conference Viewer *******************/
 #conference_viewer {
 	background: #f0f0f0;
