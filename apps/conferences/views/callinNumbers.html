@@ -1,0 +1,30 @@
+<div id="conferences_information_container">
+	<div id="callin_numbers_content">
+		<div class="header">
+			<h1 class="pull-left">Call-in Numbers</h1>
+			<span class="search-box pull-right">
+				<i class="icon-search"></i>
+				<input type="text" class="search-query" placeholder="Search">
+			</span>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Assigned Conference Numbers</th>
+					<th>Remove</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each numbers}}
+				<tr class="list-element">
+					<td>{{ number }}</td>
+					<td><i class="icon-remove"></i></td>
+				</tr>
+			{{else}}
+				<tr><td colspan="2" class="empty">No call-in numbers.</td></tr>
+			{{/each}}
+			</tbody>
+		</table>
+		<button class="btn btn-success pull-right">Add Number</button>
+	</div>
+</div>

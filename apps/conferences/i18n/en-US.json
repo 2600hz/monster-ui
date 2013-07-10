@@ -51,5 +51,27 @@
 		"participantEmailDuplicateAlert": "This e-mail is already in use in this conference!",
 		"noParticipantConfirm": "You didn't add any participant to this conference, do you want to schedule it anyway?",
 		"deleteConferenceConfirm": "You're about to delete this conference, do you want to continue?"
+	},
+	"help": {
+		"addUser": "Add User",
+		"record": "Click to start recording this conference",
+		"stopRecord": "Click to stop the recording of this conference",
+		"mute": "Click to mute everybody in this conference.",
+		"unmute": "Click to unmute everybody in the conference.",
+		"lock": "Click to lock this conference, preventing new users to join it.",
+		"unlock": "Click to unlock this conference, allowing new users to join it.",
+		"leave": "Leave this conference",
+		"hangup": "Hangup this conference",
+		"muteUser": "Click to mute this user",
+		"unmuteUser": "Click to unmute this user",
+		"deafUser": "Click to disable the sound of the conference for this user",
+		"undeafUser": "Click to enable the sound of the conference for this user",
+		"hangupUser": "Kick this user from the conference"
+	},
+	"moderator": {
+		"pin": "Moderator PIN"
+	},
+	"member": {
+		"pin": "Member PIN"
 	}
 }

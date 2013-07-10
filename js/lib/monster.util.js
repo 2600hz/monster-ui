@@ -66,6 +66,16 @@ define(function(require){
 			return parsedDate;
 		},
 
+		friendlyTimer: function(seconds) {
+			var seconds = Math.floor(seconds),
+				hours = Math.floor(seconds / 3600),
+				minutes = Math.floor(seconds / 60) % 60,
+				remainingSeconds = seconds % 60,
+				displayTime = (hours < 10 ? '0' + hours : '' + hours) + ':' + (minutes < 10 ? '0' + minutes : '' + minutes) + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : '' + remainingSeconds);
+
+			return seconds >= 0 ? displayTime : '00:00:00';
+		},
+
 		gregorianToDate: function(timestamp) {
 			return (new Date((timestamp  - 62167219200)*1000));
 		},

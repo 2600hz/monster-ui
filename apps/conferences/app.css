@@ -1,9 +1,13 @@
 #conferences_container {
 	height: 100%;
-	font-family: 'Quicksand', sans-serif;
+	/* font-family: 'Quicksand', sans-serif; */
 }
 
-#conferences_container .left-menu {
+#conferences_container .menu {
+	height: 100%;
+}
+
+#conferences_container .menu .left-menu {
 	float: left;
 	height: 100%;
 	min-height: 525px;
@@ -14,7 +18,7 @@
 	-webkit-box-sizing: border-box;
 }
 
-#conferences_container .right-content {
+#conferences_container .menu .right-content {
 	height: 100%;
 
 	margin-left: 250px;
@@ -26,7 +30,7 @@
 	-webkit-box-sizing: border-box;
 }
 
-#conferences_container .left-menu .nav-items {
+#conferences_container .menu .left-menu .nav-items {
 	background: #333;
 	box-shadow: 1px 1px 10px #333;
 	height: 100%;
@@ -35,7 +39,7 @@
 	padding: 0;
 }
 
-#conferences_container .left-menu .nav-items .nav-item {
+#conferences_container .menu .left-menu .nav-items .nav-item {
 	border-bottom: 1px solid #000;
 	border-top: 1px solid #555;
 	border-left: 3px solid #333;
@@ -50,44 +54,44 @@
 	-webkit-box-sizing: border-box;
 }
 
-#conferences_container .left-menu .nav-items .nav-item:first-child {
+#conferences_container .menu .left-menu .nav-items .nav-item:first-child {
 	border-top: 0px;
 }
 
-#conferences_container .left-menu .nav-items .nav-item:last-child {
+#conferences_container .menu .left-menu .nav-items .nav-item:last-child {
 	border-bottom: 0px;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.role {
+#conferences_container .menu .left-menu .nav-items .nav-item.role {
 	height: 10%;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.role .nav-title {
+#conferences_container .menu .left-menu .nav-items .nav-item.role .nav-title {
 	cursor: default;
 	font-size: 20px;
 	margin-top: 0;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.active {
+#conferences_container .menu .left-menu .nav-items .nav-item.active {
 	border-left: 3px solid #22ccff;
 	cursor: pointer;
 	box-shadow: 3px 3px 40px #222 inset;
 }
 
-#conferences_container .left-menu .nav-items .nav-item.active i {
+#conferences_container .menu .left-menu .nav-items .nav-item.active i {
 	color: #22ccff;
 }
 
-#conferences_container .left-menu .nav-items .nav-item:not(.role):hover {
+#conferences_container .menu .left-menu .nav-items .nav-item:not(.role):hover {
 	cursor: pointer;
 	box-shadow: 3px 3px 40px #222 inset;
 }
 
-#conferences_container .left-menu .nav-items .nav-item i {
+#conferences_container .menu .left-menu .nav-items .nav-item i {
 	font-size: 40px;
 }
 
-#conferences_container .left-menu .nav-items .nav-item .nav-title {
+#conferences_container .menu .left-menu .nav-items .nav-item .nav-title {
 	color: #fff;
 	margin-top: 5px;
 	text-shadow: 1px 1px 1px #333;
@@ -117,62 +121,324 @@
 
 /********** CONFERENCES INFORMATION **********/
 
-#conferences_container .right-content {
-	margin-left: 230px;
-	padding: 10px 20px;
-	width: 700px;
+.search-box > i.icon-search {
+	position: relative;
+	top: 2px;
+	left: 24px;
+	margin: 0;
 }
 
-#conferences_container .right-content div .header {
+#conferences_information_container {
+	margin: 0 auto;
+	max-width: 800px;
+}
+
+#conferences_information_container .header {
 	height: 60px;
 	margin-bottom: 30px;
 }
 
-#conferences_container .right-content div .header h1 {
+#conferences_information_container .header h1 {
 	font-weight: normal;
 }
 
-#conferences_container .right-content div .header input {
+#conferences_information_container .header .search-box {
 	margin-top: 18px;
 }
 
-#conferences_container .right-content div table {
+#conferences_information_container table {
 	clear: both;
 	width: 100%;
 	color: #777;
 }
 
-#conferences_container .right-content div table thead {
+#conferences_information_container table thead {
 	text-align: center;
 	border-bottom: 1px solid #777;
 }
 
-#conferences_container .right-content div table tbody {
+#conferences_information_container table tbody {
 	text-align: center;
 }
 
-#conferences_container .right-content div table tbody tr {
-	height:80px;
-	font-size: 21px;
+#conferences_information_container div:not(#upcoming_conferences_content) table tbody tr {
+	height: 60px;
+	font-size: 26px;
 	border-bottom: 1px solid #e5e5e5;
 }
 
-#conferences_container .right-content div table tbody tr:last-child {
+#upcoming_conferences_content table tbody tr { font-size: 26px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+1) { height: 32px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+2) { height: 27px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+3) { height: 25px; }
+#upcoming_conferences_content table tbody tr:nth-child(4n+4) { height: 5px; border-bottom: 1px solid #e5e5e5; }
+
+#conferences_information_container table tbody tr:last-child,
+#conferences_information_container div:not(#upcoming_conferences_content) table tbody tr:last-child {
 	border-bottom: 1px solid #777;
 }
 
-#conferences_container .right-content div table thead tr th:first-child,
-#conferences_container .right-content div table tbody tr td:first-child {
+#conferences_information_container table thead tr th:first-child,
+#conferences_information_container table tbody tr td:first-child {
 	text-align: left;
 }
 
-#conferences_container .right-content div table tbody tr td:first-child {
+#conferences_information_container table tbody tr td:first-child {
 	line-height: 25px;
 }
 
-#conferences_container .right-content div table tbody tr div {
-	width: 240px;
-	font-size: 12px;
+#conferences_information_container table tbody tr td.empty {
+	height: 100px;
+	text-align: center;
+	border-bottom: 1px solid #777;
+}
+
+#conferences_information_container table tbody tr div {
+	position: relative;
+	width: 300px;
+	font-size: 14px;
+}
+
+/***************** Conference Viewer *******************/
+#conference_viewer {
+	background: #f0f0f0;
+	display: none;
+	height: auto;
+	min-height: 100%;
+}
+
+#conference_viewer .content {
+	height: auto;
+	display: block;
+	margin: auto;
+	max-width: 1000px;
+	padding-bottom: 115px;
+}
+
+#conference_viewer .content .user {
+	float: left;
+	margin: 25px 40px 0px;
+	width: 115px;
+}
+
+#conference_viewer .content .user .currently-speaking {
+	height: 20px;
+	margin-bottom: 5px;
+}
+
+#conference_viewer .content .user .currently-speaking.active {
+	background-image: url(static/images/speaking1.png);
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+
+	-webkit-animation: scrollRight 1s linear infinite;
+    -moz-animation:    scrollRight 1s linear infinite;
+}
+
+@-webkit-keyframes scrollRight {
+	from { background-position: 0px 0; }
+	to { background-position: 109px 0; }
+}
+@-moz-keyframes scrollRight {
+	from { background-position: 0 0; }
+	to { background-position: 109px 0; }
+}
+@keyframes scrollRight {
+	from { background-position: 0 0; }
+	to { background-position: 109px 0; }
+}
+
+#conference_viewer .content .user .box {
+	background: #fff;
+	border: 1px solid #999;
+}
+
+#conference_viewer .content .user .box .image-wrapper {
+	border: 1px solid #999;
+	height: 100px;
+	margin: 5px 5px 0 5px;
+}
+
+#conference_viewer .content .user .box .actions-user {
+	background: #333;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user {
+	border: 1px solid #222;
+	color: #999;
+	display: inline-block;
+	height: 36px;
+	line-height: 36px;
+	margin: 0;
+	text-align: center;
+	width: 37.66px;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user.active, #conference_viewer .content .user .box .actions-user .action-user:hover {
+	background: #111;
+	border: 1px solid #000;
+	cursor: pointer;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user:not(.active) i:not(.active) {
+	display: inline-block;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user.active i.active {
+	display: inline-block;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user i {
+	color: #777;
+	font-size: 18px;
+	margin-right: 0px;
+	display: none;
+}
+
+#conference_viewer .content .user .box .user-title {
+	text-align: center;
+	padding: 5px 2px;
+}
+
+#conference_viewer .content .user .box .image-wrapper .admin-icon {
+	background: none repeat scroll 0 0 white;
+    display: none;
+    height: 25px;
+    line-height: 25px;
+    opacity: 0.75;
+    position: relative;
+    text-align: center;
+    top: -100px;
+    width: 25px;
+}
+
+#conference_viewer .content .user .box .image-wrapper .tooltip {
+	opacity: 1;
+	line-height: 12px;
+}
+
+#conference_viewer .content .user .box .image-wrapper .admin-icon.active {
+	display: block;
+}
+
+#conference_viewer .footer{
+	background: #fff;
+	border-top: 1px solid #999;
+	height: 100px;
+	position: fixed;
+}
+
+#conference_viewer .footer .block {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+
+	float: left;
+	text-align: center;
+	width: 40%;
+}
+
+#conference_viewer .footer .timer.block {
+	width: 20%;
+}
+
+#conference_viewer .footer .timer.block .timer-wrapper .timer-text {
+	background: #f0f0f0;
+	border: 1px solid #999;
+	color: #999;
+	display: inline-block;
+	font-size: 35px;
+	text-align: left;
+	padding: 16px 0 18px 19px;
+	width: 180px;
+}
+
+#conference_viewer .footer .info.block {
+	text-align: left;
+	padding-left: 30px;
+}
+
+#conference_viewer .footer .info.block .info-wrapper i {
+	color: #999;
+	margin-right: 5px;
+}
+
+#conference_viewer .footer .info.block .info-wrapper .conference-title {
+	display: inline-block;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+#conference_viewer .footer .info.block .info-wrapper .pin-block {
+	margin-top: 10px;
+}
+
+#conference_viewer .footer .info.block .info-wrapper .moderator-pin {
+	margin-right: 15px;
+}
+
+#conference_viewer .footer .actions.block {
+	text-align: right;
+	padding-right: 30px;
+}
+
+#conference_viewer .footer .actions.block .actions-wrapper, #conference_viewer .footer .timer.block .timer-wrapper, #conference_viewer .footer .info.block .info-wrapper  {
+	margin-top: 23px;
+}
+
+#conference_viewer .footer .actions .action-conference {
+	background: #333;
+	border: 1px solid #222;
+	display: inline-block;
+	height: 52px;
+	line-height: 54px;
+	margin-right: 0;
+	text-align: center;
+	width: 54px;
+}
+
+#conference_viewer .footer .actions .action-conference:hover, #conference_viewer .footer .actions .action-conference.active {
+	background: #111;
+	border: 1px solid #000;
+}
+
+#conference_viewer .footer .actions .action-conference > i {
+	color: #999;
+	cursor: pointer;
+	display: none;
+	font-size: 20px;
+	margin: 0;
+	padding: 12px 15px;
+}
+
+#conference_viewer .footer .actions .action-conference:hover, #conference_viewer .footer .actions .action-conference:not(.active) > i:not(.active) {
+	display: inline-block;
+}
+
+#conference_viewer .footer .actions .action-conference:hover, #conference_viewer .footer .actions .action-conference.active > i.active {
+	display: inline-block;
+}
+
+#conference_viewer .footer .actions .action-conference.separated {
+	margin-right: 20px;
+}
+
+@media (max-width: 979px) {
+	#conference_viewer .footer .info.block, #conference_viewer .footer .actions.block {
+		width: 50%;
+	}
+
+	#conference_viewer .content {
+		max-width: 600px;
+	}
+
+	#conference_viewer .footer .member-pin {
+		display: block;
+	}
 }
 
 /******************** Add/Edit Conference ********************/

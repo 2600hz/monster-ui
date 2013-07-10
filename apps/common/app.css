@@ -347,14 +347,20 @@ table.table tr td {
 }
 
 .tooltip.left .tooltip-arrow {
-	border-left-color: #333;
+	border-left-color: #222;
 }
 .tooltip.right .tooltip-arrow {
-	border-right-color: #333;
+	border-right-color: #222;
+}
+.tooltip.top .tooltip-arrow {
+	border-top-color: #222;
+}
+.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #222;
 }
 
 .tooltip .tooltip-inner {
-	background: #333;
+	background: #222;
 	line-height: 15px;
 	text-align: left;
 	padding: 10px;

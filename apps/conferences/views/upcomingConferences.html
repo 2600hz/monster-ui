@@ -1,0 +1,45 @@
+<div id="conferences_information_container">
+	<div id="upcoming_conferences_content">
+		<div class="header">
+			<h1 class="pull-left">Upcoming Conferences</h1>
+			<span class="search-box pull-right">
+				<i class="icon-search"></i>
+				<input type="text" class="search-query" placeholder="Search">
+			</span>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Conference Name</th>
+					<th>Date</th>
+					<th>Start Time</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each conferences}}
+				<tr data-name="{{ name }}">
+					<td></td>
+					<td rowspan="4">{{ date }}</td>
+					<td rowspan="4">{{ startTime }}</td>
+					<td rowspan="4"><i class="icon-edit"></i></td>
+				</tr>
+				<tr class="list-element" data-name="{{ name }}">
+					<td>{{ name }}</td>
+				</tr>
+				<tr data-name="{{ name }}">
+					<td>
+						<div>
+							<span>Moderator Pin: {{ moderatorPin }}</span>
+							<span class="pull-right">Member Pin: {{ memberPin }}</span>
+						</div>
+					</td>
+				</tr>
+				<tr data-name="{{ name }}"><td colspan="4"></td></tr>
+			{{else}}
+				<tr><td colspan="4" class="empty">No conference scheduled.</td></tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>
