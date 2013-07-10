@@ -1,0 +1,41 @@
+<form id="add_new_participant_form">
+	<div class="control-group">
+		<label class="control-label">{{ i18n.popupLabels.email }}</label>
+		<div class="controls">
+			<input type="text" name="email">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">{{ i18n.popupLabels.name }}</label>
+		<div class="controls">
+			<input type="text" name="name">
+		</div>
+	</div>
+	<div class="control-group{{#if type}} hidden{{/if}}">
+		<div class="controls">
+			<label class="control-label">
+				<input type="radio" name="moderator" value="true" {{#compare type '===' 'moderator'}}checked{{/compare}}>
+				{{ i18n.popupLabels.moderator }}
+			</label>
+			<label class="control-label">
+				<input type="radio" name="moderator" value="false" {{#compare type '!=' 'moderator'}}checked{{/compare}}>
+				{{ i18n.popupLabels.member }}
+			</label>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<button type="button" id="add_participant_btn" class="btn btn-primary">
+				{{#unless type}}
+					{{ i18n.popupTitles.participant }}
+				{{else}}
+					{{#compare type '===' 'moderator'}}
+						{{ i18n.popupTitles.moderator }}
+					{{else}}
+						{{ i18n.popupTitles.member }}
+					{{/compare}}
+				{{/unless}}
+			</button>
+		</div>
+	</div>
+<form>

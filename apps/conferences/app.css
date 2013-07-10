@@ -114,6 +114,7 @@
     top: -50%;
 }
 
+
 /********** CONFERENCES INFORMATION **********/
 
 #conferences_container .right-content {
@@ -173,3 +174,176 @@
 	width: 240px;
 	font-size: 12px;
 }
+
+/******************** Add/Edit Conference ********************/
+
+#edit_conference_container {
+	max-width: 800px;
+	margin: auto;
+}
+
+#edit_conference_container > .row-fluid:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+#edit_conference_container > .row-fluid:last-child {
+	border-top: solid 1px #333;
+	padding-top: 10px;
+}
+
+#edit_conference_container .conference-title {
+	font-size: 30px;
+	line-height: 40px;
+	margin-bottom: 60px;
+	color: #22ccff;
+}
+
+#edit_conference_container .switch-link-div {
+    font-size: 0; /* Trick to remove the space between inline-block divs */
+    line-height: 30px;
+    margin-bottom: 20px;
+}
+
+#edit_conference_container .switch-link {
+    display: inline-block;
+    color: #777;
+    border-bottom: solid 3px #777;
+    font-size: 20px;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#edit_conference_container .switch-link[data-start="now"] {
+	width: 40%;
+}
+
+#edit_conference_container .switch-link[data-start="later"] {
+	width: 60%;
+}
+
+#edit_conference_container .switch-link:hover, #edit_conference_container .switch-link.active {
+    color: #22ccff;
+    cursor: pointer;
+    border-bottom-color: #22ccff;
+}
+
+#edit_conference_container .credentials {
+	background-color: #efefef;
+	border: solid 1px #999;
+	margin-bottom: 20px;
+}
+
+#edit_conference_container .credentials .credentials-title {
+	background-color: #333;
+	color: #ccc;
+	font-size: 16px;
+	padding: 10px;
+	text-align: center;
+}
+
+#edit_conference_container .credentials .credentials-element {
+	padding: 10px 20px;
+	margin: 0 20px;
+	line-height: 30px;
+}
+
+#edit_conference_container .credentials .credentials-element:not(:last-child) {
+	border-bottom: solid 1px #ccc;
+}
+
+#edit_conference_container .credentials .credentials-element i {
+	margin-right: 10px;
+}
+
+#edit_conference_container .credentials .credentials-element .pin {
+	font-size: 20px;
+	float: right;
+}
+
+#edit_conference_container input[type="text"] {
+	width: 100%;
+	height: 30px;
+    box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#edit_conference_container .participant-div-title {
+	margin-bottom: 10px;
+	border-bottom: solid 1px #333;
+}
+
+#edit_conference_container .participant-list {
+	list-style: none;
+	margin: 0;
+}
+
+#edit_conference_container .participant-list > li {
+	font-size: 12px;
+	line-height: 25px;
+}
+
+#edit_conference_container .remove-participant-link {
+	margin-left: 10px;
+}
+
+#edit_conference_container .remove-participant-link:hover {
+	color: #ee1212;
+	cursor: pointer;
+}
+
+#edit_conference_container .no-participant {
+
+}
+
+#edit_conference_container .add-participant-link {
+	margin-bottom: 10px;
+	font-style: italic;
+}
+
+#edit_conference_container .add-participant-link > a {
+	text-decoration: underline;
+}
+
+#edit_conference_container .record-conference-ckb {
+	margin: 0 6px 2px 0;
+}
+
+#edit_conference_container .button-div button:not(:last-child) {
+	margin-left: 20px;
+}
+
+/*************************************************************/
+
+
+/******************* Add Participant Popup *******************/
+
+#add_new_participant_form {
+	margin: 0;
+	padding: 20px;
+}
+
+#add_new_participant_form > .control-group:last-child {
+	margin: 20px 0 0 0;
+}
+
+#add_new_participant_form input[type="radio"] {
+	margin: 0 6px 4px 0;
+}
+
+#add_new_participant_form input[type="text"] {
+	width: 100%;
+	height: 30px;
+    box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#add_new_participant_form button {
+	width: 100%;
+}
+
+/*************************************************************/

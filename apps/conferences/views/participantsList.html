@@ -1,0 +1,37 @@
+<ul class="participant-list">
+	{{#each participants}}
+	<li class="participant-element">
+		<div class="pull-right">
+			<i class="icon-remove icon-small remove-participant-link" data-email="{{this.email}}"></i>
+		</div>
+		<div class="pull-right">
+			{{#if this.name}}
+				{{this.name}}
+			{{else}}
+				- - - - -
+			{{/if}}
+		</div>
+		<div>{{this.email}}</div>
+	</li>
+	{{else}}
+		{{#compare moderator '===' true}}
+		<li class="no-participant">
+			{{ i18n.noModerator }}
+		</li>
+		{{else}}
+		<li class="no-participant">
+			{{ i18n.noMember }}
+		</li>
+		{{/compare}}
+	{{/each}}
+	
+	{{#compare moderator '===' true}}
+		<li data-type="moderator" class="add-participant-link">
+			<a href="#">{{ i18n.addModeratorLink }}</a>
+		</li>
+	{{else}}
+		<li data-type="member" class="add-participant-link">
+			<a href="#">{{ i18n.addMemberLink }}</a>
+		</li>
+	{{/compare}}
+</ul>

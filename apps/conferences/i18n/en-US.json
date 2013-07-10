@@ -4,5 +4,52 @@
 	"upcomingConferences": "Upcoming Conferences",
 	"newConferences": "New Conference",
 	"callinNumbers": "Call-in Numbers",
-	"customizeNotifications": "Customize Notifications"
+	"customizeNotifications": "Customize Notifications",
+	"addModeratorLink": "Add moderator",
+	"addMemberLink": "Add member",
+	"startNowLink": "Start Now",
+	"scheduleLink": "Schedule for Later",
+	"newConferenceTitle": "Add New Conference",
+	"conferenceNameLabel": "Conference Name",
+	"dateLabel": "Date",
+	"timeLabel": "Time",
+	"accessCredentials": "Access Credentials",
+	"moderatorPIN": "Moderator Access PIN:",
+	"memberPIN": "Member Access PIN:",
+	"moderatorListTitle": "Moderators",
+	"memberListTitle": "Members",
+	"noModerator": "This conference does not have any moderator yet.",
+	"noMember": "This conference does not have any member yet.",
+	"recordConference": "Record Conference",
+	"editConferenceButtons": {
+		"create": "Schedule Conference",
+		"update": "Update",
+		"cancel": "Cancel Conference"
+	},
+	"popupTitles": {
+		"participant": "Add Participant",
+		"member": "Add Member",
+		"moderator": "Add Moderator"
+	},
+	"popupLabels": {
+		"email": "Email OR Phone Number",
+		"name": "Name (Optional)",
+		"member": "Add as a Member",
+		"moderator": "Add as a Moderator"
+	},
+	"toastrMessages": {
+		"newConferenceSuccess": "The Conference has been scheduled.",
+		"newConferenceError": "An unexpected error happend while scheduling the Conference, please try again.",
+		"updateConferenceSuccess": "The Conference has been updated.",
+		"updateConferenceError": "An unexpected error happend while updating the Conference, please try again.",
+		"deleteConferenceSuccess": "The Conference has been cancelled.",
+		"deleteConferenceError": "An unexpected error happend while cancelling the Conference, please try again."
+	},
+	"popupMessages": {
+		"mandatoryConferenceNameAlert": "You must specify a Conference Name!",
+		"mandatoryParticipantEmailAlert": "You must specify an e-mail address!",
+		"participantEmailDuplicateAlert": "This e-mail is already in use in this conference!",
+		"noParticipantConfirm": "You didn't add any participant to this conference, do you want to schedule it anyway?",
+		"deleteConferenceConfirm": "You're about to delete this conference, do you want to continue?"
+	}
 }
