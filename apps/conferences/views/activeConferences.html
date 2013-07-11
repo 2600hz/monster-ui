@@ -11,16 +11,16 @@
 			<thead>
 				<tr>
 					<th>Conference Name</th>
-					<th>Elapsed Time</th>
+					<th class="duration">Elapsed Time</th>
 					<th>View</th>
 				</tr>
 			</thead>
 			<tbody>
 			{{#each conferences}}
-				<tr class="list-element">
+				<tr class="list-element" data-id="{{id}}">
 					<td>{{ name }}</td>
-					<td>{{ duration }}</td>
-					<td><input id="view_conference" type="checkbox"></td>
+					<td class="duration">{{ friendlyDuration }}</td>
+					<td class="view-conference"><i class="icon-signin"></i></td>
 				</tr>
 			{{else}}
 				<tr><td colspan="3" class="empty">No conference in progress.</td></tr>

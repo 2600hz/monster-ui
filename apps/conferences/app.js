@@ -119,27 +119,63 @@ define(function(require){
 
 		renderActiveConference: function(parent) {
 			var self = this,
-				data = self.formatActiveConferences(
+				data = self.formatActiveConference(
 						{ conferences: [
-							{ name: 'Upcoming Conference\'s Name 0',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 1',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 2',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 3',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 4',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 5',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 6',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 7',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 8',duration: 150 },
-							{ name: 'Upcoming Conference\'s Name 9',duration: 150 }
+							{ id: '123', name: 'Upcoming Conference\'s Name 0',duration: 10 },
+							{ id: '131', name: 'Upcoming Conference\'s Name 1',duration: 150 },
+							{ id: '141', name: 'Upcoming Conference\'s Name 2',duration: 54 },
+							{ id: '152', name: 'Upcoming Conference\'s Name 3',duration: 128 },
+							{ id: '120', name: 'Upcoming Conference\'s Name 4',duration: 314 },
+							{ id: '129', name: 'Upcoming Conference\'s Name 5',duration: 159 },
+							{ id: '128', name: 'Upcoming Conference\'s Name 6',duration: 211 },
+							{ id: '127', name: 'Upcoming Conference\'s Name 7',duration: 121 },
+							{ id: '125', name: 'Upcoming Conference\'s Name 8',duration: 947 },
+							{ id: '124', name: 'Upcoming Conference\'s Name 9',duration: 231 }
 						]}),
-				activeConfView = monster.template(self, 'activeConferences', data);
+				activeConfView = $(monster.template(self, 'activeConferences', data));
+
+				self.bindActiveConference(activeConfView, data);
 
 				parent
 					.find('.right-content')
 					.empty()
 					.append(activeConfView);
 		},
-		formatActiveConferences: function(data) {
+		bindActiveConference: function(parent, data) {
+			var self = this,
+				mapTimers = {};
+
+			_.each(data.conferences, function(conference) {
+				mapTimers[conference.id] = {
+					duration: conference.duration,
+					timer: {}
+				};
+
+				mapTimers[conference.id].timer = setInterval(function() {
+                	target = parent.find('[data-id="'+conference.id+'"] td.duration');
+
+                	mapTimers[conference.id].duration++;
+
+                	/* As long as the page is displayed */
+                	if(parent.find('#active_conferences_content').size() > 0) {
+                    	target.html(monster.util.friendlyTimer(mapTimers[conference.id].duration));
+                	}
+                	else {
+                    	clearInterval(mapTimers[conference.id].timer);
+						delete mapTimers[conference.id];
+                	}
+            	}, 1000);
+			});
+
+			parent.find('.view-conference').on('click', function() {
+				self.renderViewConference($(this).parents('tr').first().data('id'));
+			});
+		},
+		formatActiveConference: function(data) {
+			_.each(data.conferences, function(conference) {
+				conference.friendlyDuration = monster.util.friendlyTimer(conference.duration);
+			});
+
 			return data;
 		},
 		renderUpcomingConferences: function(parent) {
@@ -244,15 +280,14 @@ define(function(require){
 		},
 		renderCustomizeNotifications: function(parent) {
 			var self = this;
-
-			self.renderViewConference(parent);
 		},
 		renderNewConference: function(parent) {
 			var self = this;
 		},
 
-		renderViewConference: function(parent) {
+		renderViewConference: function(conferenceId) {
 			var self = this,
+				parent = $('#conferences_container'),
 				dataTemplate = {
 					name: 'JR\'s Conference',
 					moderator_pin: '123456',
@@ -282,7 +317,7 @@ define(function(require){
 			self.bindViewConference(parent, dataTemplate);
 
 			parent
-				.find('.menu')
+				.find('.menu, .right-content')
 				.hide();
 
 			parent
@@ -337,6 +372,10 @@ define(function(require){
 
 				parent
 					.find('.menu')
+					.show();
+
+				parent
+					.find('.right-content')
 					.show();
 			});
 
