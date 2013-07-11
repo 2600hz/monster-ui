@@ -121,13 +121,6 @@
 
 /********** CONFERENCES INFORMATION **********/
 
-.search-box > i.icon-search {
-	position: relative;
-	top: 2px;
-	left: 24px;
-	margin: 0;
-}
-
 #conferences_information_container {
 	margin: 0 auto;
 	max-width: 800px;
@@ -146,6 +139,13 @@
 	margin-top: 18px;
 }
 
+#conferences_information_container .header .search-box > i.icon-search {
+	position: relative;
+	top: 2px;
+	left: 24px;
+	margin: 0;
+}
+
 #conferences_information_container table {
 	clear: both;
 	width: 100%;
@@ -162,7 +162,7 @@
 }
 
 #conferences_information_container div:not(#upcoming_conferences_content) table tbody tr {
-	height: 60px;
+	height: 91px;
 	font-size: 26px;
 	border-bottom: 1px solid #e5e5e5;
 }

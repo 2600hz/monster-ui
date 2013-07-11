@@ -18,16 +18,16 @@
 			</thead>
 			<tbody>
 			{{#each conferences}}
-				<tr data-name="{{ name }}">
+				<tr data-search="{{ name }}">
 					<td></td>
 					<td rowspan="4">{{ date }}</td>
 					<td rowspan="4">{{ startTime }}</td>
 					<td rowspan="4"><i data-id="{{ id }}" class="edit-conference-link icon-edit"></i></td>
 				</tr>
-				<tr data-name="{{ name }}">
+				<tr data-search="{{ name }}">
 					<td>{{ name }}</td>
 				</tr>
-				<tr data-name="{{ name }}">
+				<tr data-search="{{ name }}">
 					<td>
 						<div>
 							<span>Moderator Pin: {{ pin_moderator }}</span>
@@ -35,7 +35,7 @@
 						</div>
 					</td>
 				</tr>
-				<tr data-name="{{ name }}"><td colspan="4"></td></tr>
+				<tr data-search="{{ name }}"><td colspan="4"></td></tr>
 			{{else}}
 				<tr><td colspan="4" class="empty">No conference scheduled.</td></tr>
 			{{/each}}

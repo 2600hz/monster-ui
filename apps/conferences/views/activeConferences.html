@@ -1,7 +1,7 @@
 <div id="conferences_information_container">
 	<div id="active_conferences_content">
 		<div class="header">
-			<h1 class="pull-left">Acitve Conferences</h1>
+			<h1 class="pull-left">Active Conferences</h1>
 			<span class="search-box pull-right">
 				<i class="icon-search"></i>
 				<input type="text" class="search-query" placeholder="Search">
@@ -17,7 +17,7 @@
 			</thead>
 			<tbody>
 			{{#each conferences}}
-				<tr data-id="{{id}}">
+				<tr data-id="{{id}}" data-search="{{ name }}">
 					<td>{{ name }}</td>
 					<td class="duration">{{ friendlyDuration }}</td>
 					<td class="view-conference"><i class="icon-signin"></i></td>

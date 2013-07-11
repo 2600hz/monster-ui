@@ -283,13 +283,13 @@ define(function(require){
 		searchAsYouType: function(type, parent) {
 			parent.find('#' + type + '_conferences_content .header input').on('keyup', function() {
 				var self = $(this),
-					search = self.val();
+					search = self.val().toLowerCase();
 
 				if(search) {
 					$.each(parent.find('tbody tr'), function() {
-						var conferenceName = $(this).data('name').toLowerCase();
+						var value = $(this).data('search').toLowerCase();
 
-						if(conferenceName.indexOf(search.toLowerCase()) >= 0) {
+						if(value.indexOf(search) >= 0) {
 							$(this).show();
 						} else {
 							$(this).hide();
