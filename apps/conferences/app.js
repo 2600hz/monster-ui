@@ -289,7 +289,7 @@ define(function(require){
 				conference = {
 					participants: [],
 					pins: { //TODO Call an API to get unique PINs
-						moderator: 123456, 
+						moderator: 123456,
 						member: 654321
 					}
 				},
@@ -322,7 +322,7 @@ define(function(require){
 		editConference: function(parent, conferenceId) {
 			var self = this;
 			monster.request({
-				resource: 'conferences.get', 
+				resource: 'conferences.get',
 				data: {
 					accountId: self.accountId,
 					conferenceId: conferenceId
@@ -458,7 +458,7 @@ define(function(require){
 							newConference.start = monster.util.dateToGregorian(date);
 
 							monster.request({
-								resource: 'conferences.add', 
+								resource: 'conferences.add',
 								data: {
 									accountId: self.accountId,
 									data: newConference
@@ -471,7 +471,7 @@ define(function(require){
 								}
 							});
 						};
-						
+
 						if(newConference.participants.length <= 0) {
 							monster.ui.confirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
 								createConference();
@@ -505,7 +505,7 @@ define(function(require){
 							newConference.start = monster.util.dateToGregorian(date);
 
 							monster.request({
-								resource: 'conferences.update', 
+								resource: 'conferences.update',
 								data: {
 									accountId: self.accountId,
 									conferenceId: newConference.id,
@@ -519,7 +519,7 @@ define(function(require){
 								}
 							});
 						};
-						
+
 						if(newConference.participants.length <= 0) {
 							monster.ui.confirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
 								createConference();
@@ -535,7 +535,7 @@ define(function(require){
 				e.preventDefault();
 				monster.ui.confirm(self.i18n.active().popupMessages.deleteConferenceConfirm, function() {
 					monster.request({
-						resource: 'conferences.delete', 
+						resource: 'conferences.delete',
 						data: {
 							accountId: self.accountId,
 							conferenceId: conference.id,
