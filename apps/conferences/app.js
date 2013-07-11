@@ -183,46 +183,78 @@ define(function(require){
 			return data;
 		},
 		renderUpcomingConferences: function(parent) {
-			var self = this,
-				data = self.formatUpcomingConferences(
-						{ conferences: [
-							{ name: 'Upcoming Conference\'s Name 0',timestamp: 1982073630,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 1',timestamp: 1982077230,moderatorPin: '168143',memberPin: '124881' },
-							{ name: 'Upcoming Conference\'s Name 2',timestamp: 1982080830,moderatorPin: '188445',memberPin: '122869' },
-							{ name: 'Upcoming Conference\'s Name 3',timestamp: 1982084430,moderatorPin: '148621',memberPin: '173447' },
-							{ name: 'Upcoming Conference\'s Name 4',timestamp: 1982088030,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 5',timestamp: 1982091630,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 6',timestamp: 1982095230,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 7',timestamp: 1982098830,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 8',timestamp: 1982102430,moderatorPin: '161427',memberPin: '194212' },
-							{ name: 'Upcoming Conference\'s Name 9',timestamp: 1982106030,moderatorPin: '161427',memberPin: '194212' }
-						]}),
-				upcomingConfView = monster.template(self, 'upcomingConferences', data);
+			var self = this;
 
-			parent
-				.find('.right-content')
-				.empty()
-				.append(upcomingConfView);
+			monster.request({
+				resource: 'conferences.list', 
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					var conferences = self.formatUpcomingConferences(data.data),
+						upcomingConfView = $(monster.template(self, 'upcomingConferences', { conferences: conferences }));
 
-			self.searchAsYouType('upcoming', parent);
+					self.bindUpcomingConferencesEvents(upcomingConfView, parent);
+
+					self.searchAsYouType('upcoming', parent);
+
+					parent
+						.find('.right-content')
+						.empty()
+						.append(upcomingConfView);
+				}
+			});
+			
 		},
-		formatUpcomingConferences: function(data) {
-			var conferences = data.conferences;
+		formatUpcomingConferences: function(conferences) {
+			var currentTimestamp = monster.util.dateToGregorian(new Date()),
+				result = [];
 
-			for(var key in conferences) {
-				var item = conferences[key];
-					timestamp = monster.util.toFriendlyDate(item.timestamp);
+			_.each(conferences, function(item) {
+				if(item.start > currentTimestamp) {
+					var timestamp = monster.util.toFriendlyDate(item.start, 'standard');
 
-				item.date = timestamp.match(/([0-9]+)\/([0-9]+)/)[0];
-				item.startTime = timestamp.match(/([0-9]+):([0-9]+)\s(AM|PM)/)[0];
-			}
-
-			data.conferences.sort(function(a,b) {
-				return a.timestamp - b.timestamp;
+					item.date = timestamp.match(/([0-9]+)\/([0-9]+)/)[0];
+					item.startTime = timestamp.match(/([0-9]+):([0-9]+)\s(AM|PM)/)[0];
+					result.push(item);
+				}
 			});
 
-			return data;
+			result.sort(function(a,b) {
+				return a.start - b.start;
+			});
+
+			return result;
 		},
+
+		bindUpcomingConferencesEvents: function(parent, appContainer) {
+			var self = this;
+
+			parent.find('.header input').on('keyup', function() {
+				var self = $(this),
+					search = self.val();
+
+				if(search) {
+					$.each(parent.find('tbody tr'), function() {
+						var td= $(this).find('td:first-child'),
+							val = $(this).data('name').toLowerCase();
+						console.log(val, $(this));
+						if(val.indexOf(search.toLowerCase()) >= 0) {
+							$(this).show();
+						} else {
+							$(this).hide();
+						}
+					});
+				} else {
+					parent.find('tbody tr').show();
+				}
+			});
+
+			parent.find('.edit-conference-link').on('click', function(e) {
+				self.editConference(appContainer, $(this).data('id'));
+			});
+		},
+
 		renderCallinNumbers: function(parent) {
 			var self = this,
 				data = {
@@ -298,6 +330,7 @@ define(function(require){
 
 			self.bindNewConferenceEvents( {
 				parent: conferenceTemplate,
+				appContainer: parent,
 				conference: conference
 			});
 
@@ -332,6 +365,7 @@ define(function(require){
 
 					self.bindNewConferenceEvents( {
 						parent: conferenceTemplate,
+						appContainer: parent,
 						conference: conference
 					});
 
@@ -361,11 +395,13 @@ define(function(require){
 		/**
 		 * Expected params:
 		 * - parent
+		 * - appContainer
 		 * - conference
 		 */
 		bindNewConferenceEvents: function(params) {
 			var self = this,
 				parent = params.parent,
+				appContainer = params.appContainer,
 				conference = params.conference,
 				switchLinks = parent.find('.switch-link'),
 				containsEmail = function(email, participants) {
@@ -452,7 +488,17 @@ define(function(require){
 									data: newConference
 								},
 								success: function(data, status) {
+									var currentTimestamp = monster.util.dateToGregorian(new Date());
 									toastr.success(self.i18n.active().toastrMessages.newConferenceSuccess, '', {"timeOut": 5000});
+									
+									appContainer.find('.left-menu .nav-item').removeClass('active');
+									if(newConference.start > currentTimestamp) {
+										self.renderUpcomingConferences(appContainer);
+										appContainer.find('#upcoming_conferences').addClass('active');
+									} else {
+										self.renderActiveConference(appContainer);
+										appContainer.find('#active_conferences').addClass('active');
+									}
 								},
 								error: function(data, status) {
 									toastr.error(self.i18n.active().toastrMessages.newConferenceError, '', {"timeOut": 5000});
@@ -484,7 +530,7 @@ define(function(require){
 					if(parent.find('.switch-link.active').data() === 'now') {
 						newConference.start = monster.util.dateToGregorian(new Date());
 					} else {
-						function createConference() {
+						function updateConference() {
 							var date = parent.find('.date-input').datepicker('getDate'),
 								time = parent.find('.time-input').timepicker('getTime');
 
@@ -500,7 +546,17 @@ define(function(require){
 									data: newConference
 								},
 								success: function(data, status) {
+									var currentTimestamp = monster.util.dateToGregorian(new Date());
 									toastr.success(self.i18n.active().toastrMessages.updateConferenceSuccess, '', {"timeOut": 5000});
+									
+									appContainer.find('.left-menu .nav-item').removeClass('active');
+									if(newConference.start > currentTimestamp) {
+										self.renderUpcomingConferences(appContainer);
+										appContainer.find('#upcoming_conferences').addClass('active');
+									} else {
+										self.renderActiveConference(appContainer);
+										appContainer.find('#active_conferences').addClass('active');
+									}
 								},
 								error: function(data, status) {
 									toastr.error(self.i18n.active().toastrMessages.updateConferenceError, '', {"timeOut": 5000});
@@ -510,10 +566,10 @@ define(function(require){
 
 						if(newConference.participants.length <= 0) {
 							monster.ui.confirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
-								createConference();
+								updateConference();
 							});
 						} else {
-							createConference();
+							updateConference();
 						}
 					}
 				}
@@ -531,6 +587,7 @@ define(function(require){
 						},
 						success: function(data, status) {
 							toastr.success(self.i18n.active().toastrMessages.deleteConferenceSuccess, '', {"timeOut": 5000});
+							self.renderUpcomingConferences(appContainer);
 						},
 						error: function(data, status) {
 							toastr.error(self.i18n.active().toastrMessages.deleteConferenceError, '', {"timeOut": 5000});
