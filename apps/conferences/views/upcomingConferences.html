@@ -22,7 +22,7 @@
 					<td></td>
 					<td rowspan="4">{{ date }}</td>
 					<td rowspan="4">{{ startTime }}</td>
-					<td rowspan="4"><i class="icon-edit"></i></td>
+					<td rowspan="4"><i data-id="{{ id }}" class="edit-conference-link icon-edit"></i></td>
 				</tr>
 				<tr class="list-element" data-name="{{ name }}">
 					<td>{{ name }}</td>
@@ -30,8 +30,8 @@
 				<tr data-name="{{ name }}">
 					<td>
 						<div>
-							<span>Moderator Pin: {{ moderatorPin }}</span>
-							<span class="pull-right">Member Pin: {{ memberPin }}</span>
+							<span>Moderator Pin: {{ pin_moderator }}</span>
+							<span class="pull-right">Member Pin: {{ pin_member }}</span>
 						</div>
 					</td>
 				</tr>

@@ -173,6 +173,11 @@
 #upcoming_conferences_content table tbody tr:nth-child(4n+3) { height: 25px; }
 #upcoming_conferences_content table tbody tr:nth-child(4n+4) { height: 5px; border-bottom: 1px solid #e5e5e5; }
 
+#upcoming_conferences_content .edit-conference-link:hover {
+	cursor: pointer;
+	color: #22ccff;
+}
+
 #conferences_information_container table tbody tr:last-child,
 #conferences_information_container div:not(#upcoming_conferences_content) table tbody tr:last-child {
 	border-bottom: 1px solid #777;

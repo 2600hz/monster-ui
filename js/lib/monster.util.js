@@ -51,7 +51,7 @@ define(function(require){
 				var humanDate = month+'/'+day+'/'+year,
 					humanTime = hours + ':' + minutes + suffix;
 
-				if(todayYear === year && todayMonth === month && todayDay === day && type !== 'short') {
+				if(todayYear === year && todayMonth === month && todayDay === day && type !== 'short' && type !== 'standard') {
 					humanDate = 'Today';
 				}
 
