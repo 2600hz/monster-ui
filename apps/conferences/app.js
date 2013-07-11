@@ -108,6 +108,13 @@ define(function(require){
 
 			parent.find('#callin_numbers').on('click', function() {
 				self.renderCallinNumbers(parent);
+
+				parent.find('#callin_numbers_content button').on('click', function() {
+					monster.ui.dialog(monster.template(self, 'addCallinNumberPopup'), {
+						title: 'Add Number',
+						width: '540px'
+					});
+				});
 			});
 
 			parent.find('#active_conferences').on('click', function() {
@@ -145,6 +152,7 @@ define(function(require){
 
 			self.searchAsYouType('active', parent);
 		},
+
 		bindActiveConference: function(parent, data) {
 			var self = this,
 				mapTimers = {};
@@ -175,6 +183,7 @@ define(function(require){
 				self.renderViewConference($(this).parents('tr').first().data('id'));
 			});
 		},
+
 		formatActiveConference: function(data) {
 			_.each(data.conferences, function(conference) {
 				conference.friendlyDuration = monster.util.friendlyTimer(conference.duration);
@@ -182,6 +191,7 @@ define(function(require){
 
 			return data;
 		},
+
 		renderUpcomingConferences: function(parent) {
 			var self = this;
 
@@ -196,16 +206,14 @@ define(function(require){
 
 					self.bindUpcomingConferencesEvents(upcomingConfView, parent);
 
-					self.searchAsYouType('upcoming', parent);
-
 					parent
 						.find('.right-content')
 						.empty()
 						.append(upcomingConfView);
 				}
 			});
-			
 		},
+
 		formatUpcomingConferences: function(conferences) {
 			var currentTimestamp = monster.util.dateToGregorian(new Date()),
 				result = [];
@@ -230,25 +238,7 @@ define(function(require){
 		bindUpcomingConferencesEvents: function(parent, appContainer) {
 			var self = this;
 
-			parent.find('.header input').on('keyup', function() {
-				var self = $(this),
-					search = self.val();
-
-				if(search) {
-					$.each(parent.find('tbody tr'), function() {
-						var td= $(this).find('td:first-child'),
-							val = $(this).data('name').toLowerCase();
-						console.log(val, $(this));
-						if(val.indexOf(search.toLowerCase()) >= 0) {
-							$(this).show();
-						} else {
-							$(this).hide();
-						}
-					});
-				} else {
-					parent.find('tbody tr').show();
-				}
-			});
+			self.searchAsYouType('upcoming', parent);
 
 			parent.find('.edit-conference-link').on('click', function(e) {
 				self.editConference(appContainer, $(this).data('id'));
@@ -271,16 +261,25 @@ define(function(require){
 						9: { number: '+1 (565) 123-456'}
 					}
 				},
-				callinNumbersView = monster.template(self, 'callinNumbers', data);
+				callinNumbersView = $(monster.template(self, 'callinNumbers', data));
+
+			self.bindCallinNumbersEvents(callinNumbersView, parent);
 
 			parent
 				.find('.right-content')
 				.empty()
 				.append(callinNumbersView);
+		},
+
+		bindCallinNumbersEvents: function(parent, appContainer) {
+			var self = this;
 
 			self.searchAsYouType('callin', parent);
 		},
+
 		searchAsYouType: function(type, parent) {
+			console.log(parent.find('#' + type + '_conferences_content'));
+			console.log(parent);
 			parent.find('#' + type + '_conferences_content .header input').on('keyup', function() {
 				var self = $(this),
 					search = self.val().toLowerCase();
@@ -300,8 +299,15 @@ define(function(require){
 				}
 			});
 		},
+
 		renderCustomizeNotifications: function(parent) {
-			var self = this;
+			var self = this,
+				customizeNotificationsView = monster.template(self, 'customizeNotifications');
+
+			parent
+				.find('.right-content')
+				.empty()
+				.append(customizeNotificationsView);
 		},
 
 		renderNewConference: function(parent) {

@@ -149,6 +149,7 @@
 #conferences_information_container table {
 	clear: both;
 	width: 100%;
+	margin-bottom: 20px;
 	color: #777;
 }
 
@@ -202,6 +203,16 @@
 	position: relative;
 	width: 300px;
 	font-size: 14px;
+}
+
+#add_number_popup {
+	margin: 33px auto;
+	width: 380px;
+}
+
+#add_number_popup input {
+	margin-right: 20px;
+	margin-bottom: 0;
 }
 
 /***************** Active Conferences ******************/
