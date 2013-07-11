@@ -1,0 +1,72 @@
+<div id="view_conference">
+	<div class="content clearfix">
+		{{#each users}}
+		<div class="user">
+			<div class="currently-speaking {{#if isSpeaking}}active{{/if}}"></div>
+			<div class="box">
+				<div class="image-wrapper">
+					<img src="apps/conferences/static/images/{{imageRef}}.jpg" height="107" width="107" alt="imageRef"></img>
+					<div class="admin-icon{{#if isAdmin}} active{{/if}}">
+						<i class="icon-user"></i>
+					</div>
+				</div>
+				<div class="user-title">
+					{{ name }}
+				</div>
+				<div class="actions-user">
+					<div class="action-user togglable mute{{#if isMuted}} active{{/if}}">
+						<i class="icon-microphone" data-toggle="tooltip" data-placement="top" data-original-title="{{ ../i18n.help.unmuteUser }}"></i>
+						<i class="icon-microphone-off icon-blue active" data-toggle="tooltip" data-placement="top" data-original-title="{{ ../i18n.help.muteUser }}"></i>
+					</div>
+					<div class="action-user togglable  headset{{#if isDeaf}} active{{/if}}">
+			 			<i class="icon-headphones" data-toggle="tooltip" data-placement="top" data-original-title="{{ ../i18n.help.deafUser }}"></i>
+			 			<i class="icon-headphones icon-yellow active" data-toggle="tooltip" data-placement="top" data-original-title="{{ ../i18n.help.undeafUser }}"></i>
+					</div>
+					<div class="action-user hangup">
+						<i class="icon-signout" data-toggle="tooltip" data-placement="top" data-original-title="{{ ../i18n.help.hangupUser }}"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/each}}
+	</div>
+
+	<div class="footer navbar navbar-fixed-bottom">
+		<div class="info block">
+			<div class="info-wrapper">
+				<div class="conference-title">{{ name }} <span class="hidden-desktop">(<span class="timerjs">{{ elapsedTime }}</span>)</span></div>
+				<div class="pin-block">
+					<span class="moderator-pin"><i class="icon-user"></i>{{ i18n.moderator.pin }}: {{ moderator_pin }}</span>
+					<span class="member-pin"><i class="icon-user"></i>{{ i18n.member.pin }}: {{ member_pin }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="timer block visible-desktop">
+			<div class="timer-wrapper">
+				<div class="timerjs timer-text">{{ elapsedTime }}</div>
+			</div>
+		</div>
+		<div class="actions block">
+			<div class="actions-wrapper">
+				<div class="action-conference separated" data-action="add-user">
+					<i class="icon-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.addUser }}"></i>
+				</div>
+				<div class="action-conference togglable" data-action="record">
+					<i class="icon-circle" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.record }}"></i>
+					<i class="icon-circle icon-red active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.stopRecord }}"></i>
+				</div>
+				<div class="action-conference togglable" data-action="mute">
+					<i class="icon-microphone" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.mute }}"></i>
+					<i class="icon-microphone-off icon-blue active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.unmute }}"></i>
+				</div>
+				<div class="action-conference togglable separated" data-action="lock">
+					<i class="icon-unlock" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.lock }}"></i>
+					<i class="icon-lock icon-yellow active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.unlock }}"></i>
+				</div>
+				<div class="action-conference" data-action="hangup">
+					<i class="icon-signout" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.hangup }}"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
