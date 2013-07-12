@@ -93,7 +93,7 @@ define(function(require){
 		bindEvents: function(parent) {
 			var self = this;
 
-			parent.find('.left-menu .nav-item').on('click', function() {
+			parent.find('.left-menu .nav-item:not(.role)').on('click', function() {
 				parent.find('.left-menu .nav-item').removeClass('active');
 				$(this).addClass('active');
 			});
@@ -196,7 +196,7 @@ define(function(require){
 			var self = this;
 
 			monster.request({
-				resource: 'conferences.list', 
+				resource: 'conferences.list',
 				data: {
 					accountId: self.accountId
 				},
@@ -496,7 +496,7 @@ define(function(require){
 								success: function(data, status) {
 									var currentTimestamp = monster.util.dateToGregorian(new Date());
 									toastr.success(self.i18n.active().toastrMessages.newConferenceSuccess, '', {"timeOut": 5000});
-									
+
 									appContainer.find('.left-menu .nav-item').removeClass('active');
 									if(newConference.start > currentTimestamp) {
 										self.renderUpcomingConferences(appContainer);
@@ -554,7 +554,7 @@ define(function(require){
 								success: function(data, status) {
 									var currentTimestamp = monster.util.dateToGregorian(new Date());
 									toastr.success(self.i18n.active().toastrMessages.updateConferenceSuccess, '', {"timeOut": 5000});
-									
+
 									appContainer.find('.left-menu .nav-item').removeClass('active');
 									if(newConference.start > currentTimestamp) {
 										self.renderUpcomingConferences(appContainer);
