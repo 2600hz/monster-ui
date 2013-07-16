@@ -3,6 +3,11 @@
 	/* font-family: 'Quicksand', sans-serif; */
 }
 
+#conferences_container input[type="text"]:not(.search-query) {
+	border-radius: 0;
+	border-color: #aaa;
+}
+
 #conferences_container .menu {
 	height: 100%;
 }
@@ -608,6 +613,18 @@
 	margin-left: 20px;
 }
 
+@media (max-width: 979px) {
+	#edit_conference_container .row-fluid .span6 {
+		float: none;
+		display: block;
+		width: 100%;
+		margin-left: 0;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+}
+
 /*************************************************************/
 
 
@@ -632,10 +649,94 @@
     box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	border-radius: 0;
+	border-color: #aaa;
 }
 
 #add_new_participant_form button {
 	width: 100%;
+}
+
+#add_new_participant_form label {
+	font-size: 12px;
+}
+
+/*************************************************************/
+
+
+/********************** Buttons Styling **********************/
+
+button.conf-btn, input[type="button"].conf-btn {
+	padding: 12px 20px;
+	border: none;
+	font-size: 16px;
+	color: #333;
+	background-color: #ccc;
+}
+
+button.conf-btn:hover, input[type="button"].conf-btn:hover {
+	background-color: #aaa;
+	color: #fff;
+}
+
+button.conf-btn:active, input[type="button"].conf-btn:active {
+	box-shadow: 1px 1px 1px #333 inset;
+	background-color: #aaa;
+	color: #fff;
+}
+
+button.blue-btn, input[type="button"].blue-btn {
+	background-color: #22ccff;
+	color: #333;
+}
+
+button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:active, input[type="button"].blue-btn:active {
+	background-color: #22b0ff;
+	color: #fff;
+}
+
+/*************************************************************/
+
+
+/*********************** Dialog Styling **********************/
+
+.conference-dialog {
+    border: solid 1px #777;
+    border-radius: 0;
+}
+
+.conference-dialog .ui-dialog-titlebar {
+    background: #ccc;
+    border-radius: 0;
+    padding: 10px 20px;
+}
+
+.conference-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    width: 40px;
+}
+
+.conference-dialog .ui-dialog-titlebar .ui-dialog-title {
+    font-size: 18px;  
+    font-weight: normal;
+    color: #777;
+}
+
+.conference-dialog .ui-dialog-titlebar i {
+    color: #777;
+}
+
+.conference-dialog .adduser-plus-icon {
+    text-shadow: 1px 1px 0px #ccc, 
+    			-1px 1px 0px #ccc, 
+    			 1px -1px 0px #ccc, 
+    			-1px -1px 0px #ccc; 
+    position: absolute; 
+    top: 25px; 
+    left: 35px;
+}
+
+.conference-dialog .adduser-user-icon {
+    margin-right: 15px;
 }
 
 /*************************************************************/

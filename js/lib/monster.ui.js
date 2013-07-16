@@ -101,6 +101,16 @@ define(function(require){
 		}
 	});
 
+	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+	    _title: function(title) {
+	        if (!this.options.title ) {
+	            title.html("&#160;");
+	        } else {
+	            title.html(this.options.title);
+	        }
+	    }
+	}));
+
 	var ui = {
 		alert: function(type, content, callback){
 			if(typeof content === "undefined"){
@@ -168,10 +178,12 @@ define(function(require){
 			return dialog;
 		},
 
-		dialog: function(content, options) {
+		dialog: function(content, options, type) {
 			var dialog = $("<div />").append(content),
 				commonApp = monster.apps['common'],
-				i18n = commonApp.i18n.active();
+				i18n = commonApp.i18n.active(),
+				dialogType = type || 'classic',
+				closeBtnText = i18n['close'] || 'X';
 
 			$('input', content).keypress(function(e) {
 				if(e.keyCode == 13) {
@@ -215,7 +227,10 @@ define(function(require){
 			options = $.extend(defaults, options || {}, strictOptions);
 			dialog.dialog(options);
 
-			dialog.siblings().find('.ui-dialog-titlebar-close').text(i18n['close'] || 'X');
+			if(type === 'conference') {
+				closeBtnText = '<i class="icon-remove icon-small"></i>'
+			}
+			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},

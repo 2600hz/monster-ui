@@ -315,8 +315,8 @@ define(function(require){
 				conference = {
 					participants: [],
 					pins: { //TODO Call an API to get unique PINs
-						moderator: 123456,
-						member: 654321
+						moderator: parseInt(monster.util.randomString(1,'123456789')+monster.util.randomString(5,'0123456789')),
+						member: parseInt(monster.util.randomString(1,'123456789')+monster.util.randomString(5,'0123456789'))
 					}
 				},
 				conferenceTemplate = $(monster.template(self, 'editConference', {conference: conference})),
@@ -609,6 +609,7 @@ define(function(require){
 				template = $(monster.template(self, 'addParticipantPopup', { type: participantType })),
 				options = {
 					closeOnEscape: true,
+					dialogClass: "conference-dialog",
 					onClose: function() {
 						ok ? callbackOk && callbackOk(participant) : callbackCancel && callbackCancel();
 					}
@@ -616,15 +617,17 @@ define(function(require){
 				ok = false,
 				participant = {};
 
+			options.title = '<i class="icon-user icon-large adduser-user-icon"></i>'
+						  + '<i class="icon-plus icon-small adduser-plus-icon"></i>';
 			if(!participantType) {
-				options.title = self.i18n.active().popupTitles.participant;
+				options.title += self.i18n.active().popupTitles.participant;
 			} else if(participantType === "member") {
-				options.title = self.i18n.active().popupTitles.member;
+				options.title += self.i18n.active().popupTitles.member;
 			} else if(participantType === "moderator") {
-				options.title = self.i18n.active().popupTitles.moderator;
+				options.title += self.i18n.active().popupTitles.moderator;
 			}
 
-			dialog = monster.ui.dialog(template, options);
+			dialog = monster.ui.dialog(template, options, 'conference');
 
 			template.find('#add_participant_btn').on('click', function(e) {
 				e.preventDefault();
