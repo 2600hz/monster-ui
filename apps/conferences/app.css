@@ -713,6 +713,7 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 
 .conference-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
     width: 40px;
+    color: #777;
 }
 
 .conference-dialog .ui-dialog-titlebar .ui-dialog-title {

@@ -32,6 +32,10 @@ define(function(require){
 			'conferences.delete': {
 				url: 'accounts/{accountId}/conferences/{conferenceId}',
 				verb: 'DELETE'
+			},
+			'conferences.getPins': {
+				url: 'accounts/{accountId}/conferences/pins',
+				verb: 'GET'
 			}
 		},
 
@@ -311,39 +315,48 @@ define(function(require){
 		},
 
 		renderNewConference: function(parent) {
-			var self = this,
-				conference = {
-					participants: [],
-					pins: { //TODO Call an API to get unique PINs
-						moderator: parseInt(monster.util.randomString(1,'123456789')+monster.util.randomString(5,'0123456789')),
-						member: parseInt(monster.util.randomString(1,'123456789')+monster.util.randomString(5,'0123456789'))
-					}
+			var self = this;
+
+			monster.request({
+				resource: 'conferences.getPins',
+				data: {
+					accountId: self.accountId
 				},
-				conferenceTemplate = $(monster.template(self, 'editConference', {conference: conference})),
-				dateInputDiv = conferenceTemplate.find('.date-input-div'),
-				dateInput = dateInputDiv.find('.date-input'),
-				timeInput = dateInputDiv.find('.time-input');
+				success: function(data, status) {
+					var conference = {
+							participants: [],
+							pins: {
+								moderator: data.data[0],
+								member: data.data[1]
+							}
+						},
+						conferenceTemplate = $(monster.template(self, 'editConference', {conference: conference})),
+						dateInputDiv = conferenceTemplate.find('.date-input-div'),
+						dateInput = dateInputDiv.find('.date-input'),
+						timeInput = dateInputDiv.find('.time-input');
 
 
-			dateInput.datepicker({ minDate: 0 });
-			dateInput.datepicker('setDate', new Date());
-			timeInput.timepicker();
-			timeInput.timepicker('setTime', new Date());
-			dateInputDiv.hide();
+					dateInput.datepicker({ minDate: 0 });
+					dateInput.datepicker('setDate', new Date());
+					timeInput.timepicker();
+					timeInput.timepicker('setTime', new Date());
+					dateInputDiv.hide();
 
-			self.refreshParticipantsList(conferenceTemplate, conference.participants, true);
-			self.refreshParticipantsList(conferenceTemplate, conference.participants, false);
+					self.refreshParticipantsList(conferenceTemplate, conference.participants, true);
+					self.refreshParticipantsList(conferenceTemplate, conference.participants, false);
 
-			self.bindNewConferenceEvents( {
-				parent: conferenceTemplate,
-				appContainer: parent,
-				conference: conference
+					self.bindNewConferenceEvents( {
+						parent: conferenceTemplate,
+						appContainer: parent,
+						conference: conference
+					});
+
+
+					parent.find('.right-content')
+						.empty()
+						.append(conferenceTemplate);
+				}
 			});
-
-
-			parent.find('.right-content')
-				.empty()
-				.append(conferenceTemplate);
 		},
 
 		editConference: function(parent, conferenceId) {
@@ -445,7 +458,7 @@ define(function(require){
 							conference.participants.push(participant);
 							self.refreshParticipantsList(parent, conference.participants, participant.moderator);
 						} else {
-							monster.ui.alert(self.i18n.active().popupMessages.participantEmailDuplicateAlert);
+							self.conferenceAlert(self.i18n.active().popupMessages.participantEmailDuplicateAlert);
 						}
 					},
 					function() {},
@@ -474,7 +487,7 @@ define(function(require){
 				newConference = $.extend(true, {}, conference, formData);
 
 				if(!newConference.name) {
-					monster.ui.alert(self.i18n.active().popupMessages.mandatoryConferenceNameAlert);
+					self.conferenceAlert(self.i18n.active().popupMessages.mandatoryConferenceNameAlert);
 				} else {
 					if(parent.find('.switch-link.active').data() === 'now') {
 						newConference.start = monster.util.dateToGregorian(new Date());
@@ -513,8 +526,8 @@ define(function(require){
 						};
 
 						if(newConference.participants.length <= 0) {
-							monster.ui.confirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
-								createConference();
+							self.conferenceConfirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
+									createConference();
 							});
 						} else {
 							createConference();
@@ -531,7 +544,7 @@ define(function(require){
 				newConference = $.extend(true, {}, conference, formData);
 
 				if(!newConference.name) {
-					monster.ui.alert(self.i18n.active().popupMessages.mandatoryConferenceNameAlert);
+					self.conferenceAlert(self.i18n.active().popupMessages.mandatoryConferenceNameAlert);
 				} else {
 					if(parent.find('.switch-link.active').data() === 'now') {
 						newConference.start = monster.util.dateToGregorian(new Date());
@@ -571,7 +584,7 @@ define(function(require){
 						};
 
 						if(newConference.participants.length <= 0) {
-							monster.ui.confirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
+							self.conferenceConfirm(self.i18n.active().popupMessages.noParticipantConfirm, function() {
 								updateConference();
 							});
 						} else {
@@ -583,7 +596,7 @@ define(function(require){
 
 			parent.find('#cancel_conference_btn').on('click', function(e) {
 				e.preventDefault();
-				monster.ui.confirm(self.i18n.active().popupMessages.deleteConferenceConfirm, function() {
+				self.conferenceConfirm(self.i18n.active().popupMessages.deleteConferenceConfirm, function() {
 					monster.request({
 						resource: 'conferences.delete',
 						data: {
@@ -609,7 +622,8 @@ define(function(require){
 				template = $(monster.template(self, 'addParticipantPopup', { type: participantType })),
 				options = {
 					closeOnEscape: true,
-					dialogClass: "conference-dialog",
+					dialogClass: "conference-dialog", 
+					dialogType: "conference",
 					onClose: function() {
 						ok ? callbackOk && callbackOk(participant) : callbackCancel && callbackCancel();
 					}
@@ -627,7 +641,7 @@ define(function(require){
 				options.title += self.i18n.active().popupTitles.moderator;
 			}
 
-			dialog = monster.ui.dialog(template, options, 'conference');
+			dialog = monster.ui.dialog(template, options);
 
 			template.find('#add_participant_btn').on('click', function(e) {
 				e.preventDefault();
@@ -635,7 +649,7 @@ define(function(require){
 				participant.moderator = (template.find('input:radio[name="moderator"]:checked').val() === "true");
 
 				if(!participant.email) {
-					monster.ui.alert(self.i18n.active().popupMessages.mandatoryParticipantEmailAlert);
+					self.conferenceAlert(self.i18n.active().popupMessages.mandatoryParticipantEmailAlert);
 				} else {
 					ok = true;
 					dialog.dialog('close');
@@ -742,6 +756,18 @@ define(function(require){
 			parent.find('.action-user.togglable').on('click', function() {
 				$(this).toggleClass('active');
 			});
+		},
+
+		conferenceAlert: function(type, content, callback) {
+			return monster.ui.alert(type, content, callback, { dialogClass: "conference-dialog", dialogType: "conference" });
+		},
+
+		conferenceConfirm: function(content, callbackOk, callbackCancel) {
+			var dialog = monster.ui.confirm(content, callbackOk, callbackCancel, { dialogClass: "conference-dialog", dialogType: "conference" });
+			dialog.find('.btn').removeClass('btn').addClass('conf-btn');
+			dialog.find('.btn-danger').removeClass('btn-danger');
+			dialog.find('.btn-success').removeClass('btn-success').addClass('blue-btn');
+			return dialog;
 		}
 	};
 
