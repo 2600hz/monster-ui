@@ -45,10 +45,12 @@ require.config({
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
 	$.support.cors = true;
 
-	require(['monster-util', 'monster-ui', 'monster-apps'], function(util, ui, apps){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
+
+		monster.socket = io.connect('http://192.168.1.41:5555');
 
 		$(function(){
 			monster.apps.load('core', function(app){

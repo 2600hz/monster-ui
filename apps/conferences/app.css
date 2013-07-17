@@ -232,7 +232,7 @@
 
 /***************** Conference Viewer *******************/
 #conference_viewer {
-	background: #f0f0f0;
+	background: #e5e5e5;
 	display: none;
 	height: auto;
 	min-height: 100%;
@@ -248,8 +248,8 @@
 
 #conference_viewer .content .user {
 	float: left;
-	margin: 25px 40px 0px;
-	width: 115px;
+	margin: 25px 35px 0px;
+	width: 125px;
 }
 
 #conference_viewer .content .user .currently-speaking {
@@ -288,6 +288,7 @@
 	border: 1px solid #999;
 	height: 100px;
 	margin: 5px 5px 0 5px;
+	padding: 0 5px;
 }
 
 #conference_viewer .content .user .box .actions-user {
@@ -302,7 +303,7 @@
 	line-height: 36px;
 	margin: 0;
 	text-align: center;
-	width: 37.66px;
+	width: 41px;
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -325,6 +326,7 @@
 
 #conference_viewer .content .user .box .actions-user .action-user i {
 	color: #777;
+	cursor: pointer;
 	font-size: 18px;
 	margin-right: 0px;
 	display: none;
@@ -361,6 +363,7 @@
 	border-top: 1px solid #999;
 	height: 100px;
 	position: fixed;
+	z-index: 90; /* In order to be hidden by modal dialog overlays */
 }
 
 #conference_viewer .footer .block {
@@ -378,7 +381,7 @@
 }
 
 #conference_viewer .footer .timer.block .timer-wrapper .timer-text {
-	background: #f0f0f0;
+	background: #e5e5e5;
 	border: 1px solid #999;
 	color: #999;
 	display: inline-block;
@@ -469,6 +472,14 @@
 
 	#conference_viewer .footer .member-pin {
 		display: block;
+	}
+
+	#conferences_container .menu .left-menu {
+		width: 150px;
+	}
+
+	#conferences_container .menu .right-content {
+		margin-left: 150px;
 	}
 }
 
