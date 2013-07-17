@@ -2,9 +2,7 @@
 	<div class="row-fluid">
 		<div class="span6">
 			{{#unless conference.id}}
-			<div class="conference-title">
-				{{ i18n.newConferenceTitle }}
-			</div>
+			<h1>{{ i18n.newConferenceTitle }}</h1>
 			<div class="switch-link-div">
 			    <div data-start="now" class="switch-link active">{{ i18n.startNowLink }}</div>
 			    <div data-start="later" class="switch-link">{{ i18n.scheduleLink }}</div>

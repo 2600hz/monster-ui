@@ -8,6 +8,7 @@ require.config({
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
 		form2object: 'js/lib/form2object',
 		handlebars: 'js/lib/handlebars-1.0.10',
+		hotkeys: 'js/lib/jquery.hotkeys.min',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
 		jstz: 'js/lib/jstz.min',
@@ -24,6 +25,7 @@ require.config({
 		timepicker: 'js/lib/jquery.timepicker.min',
 		socket: 'js/lib/socket.io.min',
 		underscore: 'js/lib/underscore-1.4.4.min',
+		wysiwyg: 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {
 		bootstrap: ['jqueryui'],

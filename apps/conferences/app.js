@@ -1,9 +1,11 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		hotkeys = require('hotkeys'),
 		monster = require('monster'),
 		timepicker = require('timepicker'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		wysiwyg = require('wysiwyg');
 
 	var app = {
 
@@ -287,8 +289,6 @@ define(function(require){
 		},
 
 		searchAsYouType: function(type, parent) {
-			console.log(parent.find('#' + type + '_conferences_content'));
-			console.log(parent);
 			parent.find('#' + type + '_conferences_content .header input').on('keyup', function() {
 				var self = $(this),
 					search = self.val().toLowerCase();
@@ -311,12 +311,88 @@ define(function(require){
 
 		renderCustomizeNotifications: function(parent) {
 			var self = this,
-				customizeNotificationsView = monster.template(self, 'customizeNotifications');
+				customizeNotificationsView = monster.template(self, 'customizeNotifications'),
+				data = {
+						email: '<i>email</i> <b>data</b>',
+						updates: '<i>updates</i> <b>data</b>',
+						summary: '<i>summary</i> <b>data</b>'
+					};
 
 			parent
 				.find('.right-content')
 				.empty()
 				.append(customizeNotificationsView);
+
+			self.renderWysiwyg(parent, data);
+
+			self.bindCustomizeNotificationsEvents(parent, data);
+		},
+
+		bindCustomizeNotificationsEvents: function(parent, data) {
+			var self = this,
+				parent = parent.find('#customize_notifications_content');
+
+			parent.find('.switch-link').on('click', function() {
+				if (!$(this).hasClass('active')) {
+					parent.find('.switch-link.active').removeClass('active');
+					$(this).addClass('active');
+				}
+				self.loadWysiwygContent(parent, data);
+			});
+
+			parent.find('> button').on('click', function() {
+				for (var key in data) {
+					if (key == parent.find('.switch-link.active').data('link')) {
+						data[key] = parent.find('#editor')[0].innerHTML;
+						console.log(data[key]);
+					};
+				}
+			});
+		},
+
+		renderWysiwyg: function(parent, data) {
+			var self = this,
+				parent = parent.find('#customize_notifications_content'),
+				fonts = ['Serif','Sans','Arial','Arial Black','Courier','Courier New','Comic Sans MS','Helvetica','Impact','Lucida Grande','Lucida Sans','Tahoma','Times','Times New Roman','Verdana'],
+				fontTarget = parent.find('[data-original-title=Font]').siblings('.dropdown-menu'),
+				msg = '';
+
+			$.each(fonts, function (idx, val) {
+				fontTarget.append($('<li><a data-edit="fontName ' + val +'" style="font-family:\'' + val + '\'">' + val + '</a></li>'));
+			});
+
+			parent.find('a[title]').tooltip({container:'body'});
+
+			parent.find('.dropdown-menu input').click(function () {
+						return false;
+					})
+					.change(function () {
+						$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+					})
+					.keydown('esc', function () {
+						this.value='';
+						$(this).change();
+					}
+			);
+
+			parent.find('#editor').wysiwyg({ fileUploadError: function(reason, detail) {
+				if (reason==='unsupported-file-type') {
+					msg = "Unsupported format " + detail;
+				} else {
+					console.log("error uploading file", reason, detail);
+				}
+				$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
+			}});
+
+			self.loadWysiwygContent(parent, data);
+		},
+
+		loadWysiwygContent: function(parent, data) {
+			for (var key in data) {
+				if (key = parent.find('.switch-link.active').data('link')) {
+					parent.find('#editor').html(data[key]);
+				}
+			}
 		},
 
 		renderNewConference: function(parent) {

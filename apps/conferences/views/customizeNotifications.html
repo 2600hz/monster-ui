@@ -1,10 +1,70 @@
 <div id="conferences_information_container">
-	<div id="customize_notifications">
+	<div id="customize_notifications_content">
 		<h1>Customize Notifications</h1>
 		<div class="switch-link-div">
-			<div class="switch-link">Invitation Email</div>
-			<div class="switch-link">Updates</div>
-			<div class="switch-link">Summary</div>
+			<div class="switch-link active" data-link="email">Invitation Email</div>
+			<div class="switch-link" data-link="updates">Updates</div>
+			<div class="switch-link" data-link="summary">Summary</div>
 		</div>
+		<div class="wysiwyg-container">
+			<div id="alerts"></div>
+			<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Font">
+						<i class="icon-font"></i>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+					</ul>
+				</div>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Font Size">
+						<i class="icon-text-height"></i>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+						<li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+						<li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+					</ul>
+				</div>
+				<div class="btn-group">
+					<a class="btn" data-edit="bold" title data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+					<a class="btn" data-edit="italic" title data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+					<a class="btn" data-edit="strikethrough" title data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+					<a class="btn" data-edit="underline" title data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn" data-edit="insertUnorderedList" title data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
+					<a class="btn" data-edit="insertOrderedList" title data-original-title="Number list"><i class="icon-list-ol"></i></a>
+					<a class="btn" data-edit="outdent" title data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+					<a class="btn" data-edit="indent" title data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn btn-info" data-edit="justifyLeft" title data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+					<a class="btn" data-edit="justifyCenter" title data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+					<a class="btn" data-edit="justifyRight" title data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+					<a class="btn" data-edit="justifyFull" title data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Hyperlink"><i class="icon-link"></i></a>
+					<div class="dropdown-menu input-append">
+						<input class="span2" placeholder="URL" type="text" data-edit="createlink">
+						<button class="btn" type="button">Add</button>
+					</div>
+					<a class="btn" data-edit="unlink" title data-original-title="Remove Hyperlink"><i class="icon-unlink"></i></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn" id="upload" title data-original-title="Upload"><i class="icon-picture"></i>
+					<input type="file" data-edit="insertImage" value="test"></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn" data-edit="undo" title data-original-title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+					<a class="btn" data-edit="redo" title data-original-title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+				</div>
+			</div>
+			<div id="editor" contenteditable="true"></div>
+		</div>
+		<button class="btn pull-right">Save Style</button>
 	</div>
 </div>

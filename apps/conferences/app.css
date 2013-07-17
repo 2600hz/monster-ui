@@ -499,11 +499,9 @@
 	padding-top: 10px;
 }
 
-#edit_conference_container .conference-title {
-	font-size: 30px;
-	line-height: 40px;
+#edit_conference_container h1 {
 	margin-bottom: 60px;
-	color: #22ccff;
+	font-weight: normal;
 }
 
 #edit_conference_container .switch-link-div {
@@ -752,3 +750,125 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 }
 
 /*************************************************************/
+
+
+/****************** Customize Notifications ******************/
+
+#customize_notifications_content h1 {
+	margin-bottom: 70px;
+	font-weight: normal;
+}
+
+#customize_notifications_content .switch-link-div { margin-bottom: 40px; }
+
+#customize_notifications_content .switch-link {
+	display: inline-block;
+	color: #bbb;
+	border-bottom: solid 3px #bbb;
+	font-size: 20px;
+	padding: 5px;
+	text-align: center;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#customize_notifications_content .switch-link:hover {
+	color: #777;
+	border-bottom: solid 3px #777;
+	cursor: pointer;
+}
+
+#customize_notifications_content .switch-link.active {
+	color: #22ccff;
+	border-bottom-color: #22ccff;
+	cursor: pointer;
+}
+
+#customize_notifications_content .switch-link { width: 15%; }
+#customize_notifications_content .switch-link:first-child { width: 28%; }
+#customize_notifications_content .switch-link:last-child { width: 20%; }
+#customize_notifications_content .switch-link.active:hover { cursor: default; }
+
+/*** WYSIWYG ***/
+
+#customize_notifications_content .btn-toolbar {
+	margin: 0;
+	padding: 6px 0;
+	border: 1px solid #ccc;
+	background-color: #eee;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#customize_notifications_content .btn-group {
+	margin-left: 4px;
+	padding-left: 5px;
+	border-left: 1px solid #ccc;
+}
+
+#customize_notifications_content .btn-group:first-child {
+	border-left: 0;
+	padding-left: 3px;
+}
+
+#customize_notifications_content .btn-group > .btn {
+	padding: 4px 7px;
+	border: 1px solid transparent;
+	border-radius: 0;
+	background-color: #eee;
+	background-image: none;
+	box-shadow: none;
+}
+
+#customize_notifications_content .btn-group > .btn:not(:first-child) {
+	margin-left: 5px;
+}
+
+#customize_notifications_content .btn-group > .btn:hover,
+#customize_notifications_content .btn-group > .btn.selected {
+	border: 1px solid #bbb;
+	background-color: #ddd;
+}
+
+#customize_notifications_content .btn-group input[data-edit="insertImage"] {
+	opacity: 0;
+	position: absolute;
+	top: 0px;
+	left: -2px;
+	width: 36px;
+	height: 30px;
+}
+
+#customize_notifications_content .btn-group a#upload {
+	overflow: hidden;
+}
+
+#customize_notifications_content .wysiwyg-container #editor {
+	margin-bottom: 20px;
+	max-height: 320px;
+	height: 320px;
+	background-color: white;
+	border-collapse: separate; 
+	border: 1px solid #cccccc;
+	border-top: 0;
+	padding: 4px; 
+	box-sizing: content-box; 
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset; 
+	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	overflow: auto;
+	outline: none;
+}
+
+#customize_notifications_content .btn-group .dropdown-menu {
+	padding: 5px;
+	border-radius: 0;
+}
+
+#customize_notifications_content .btn-group .dropdown-menu a:hover {
+	background-color: #22ccff;
+	background-image: none;
+	cursor: pointer;
+}
