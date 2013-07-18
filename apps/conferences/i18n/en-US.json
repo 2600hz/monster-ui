@@ -27,7 +27,8 @@
 	"editConferenceButtons": {
 		"create": "Schedule Conference",
 		"update": "Update",
-		"cancel": "Cancel Conference"
+		"cancel": "Cancel Conference",
+		"back": "Back to Upcoming Conferences"
 	},
 	"popupTitles": {
 		"participant": "Add Participant",

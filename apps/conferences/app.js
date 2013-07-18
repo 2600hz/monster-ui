@@ -859,6 +859,11 @@ define(function(require){
 					});
 				});
 			});
+
+			parent.find('#back_to_conferences_link').on('click', function(e) {
+				e.preventDefault();
+				self.renderUpcomingConferences(appContainer);
+			});
 		},
 
 		showAddParticipantPopup: function(callbackOk, callbackCancel, participantType) {

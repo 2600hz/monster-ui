@@ -76,10 +76,11 @@
 			<input type="checkbox" class="record-conference-ckb" name="record">
 			{{ i18n.recordConference }}
 		</label>
-		<div class="button-div">
+		<div class="button-div clearfix">
 			{{#if conference.id}}
 			<button type="button" id="update_conference_btn" class="conf-btn blue-btn pull-right">{{ i18n.editConferenceButtons.update }}</button>
 			<button type="button" id="cancel_conference_btn" class="conf-btn pull-right">{{ i18n.editConferenceButtons.cancel }}</button>
+			<a href="#" id="back_to_conferences_link" class="pull-right">{{ i18n.editConferenceButtons.back }}</a>
 			{{else}}
 			<button type="button" id="create_conference_btn" class="conf-btn blue-btn pull-right">{{ i18n.editConferenceButtons.create }}</button>
 			{{/if}}

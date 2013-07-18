@@ -624,6 +624,11 @@
 	margin-left: 20px;
 }
 
+#edit_conference_container .button-div a {
+	margin-top: 24px;
+	font-size: 13px;
+}
+
 @media (max-width: 979px) {
 	#edit_conference_container .row-fluid .span6 {
 		float: none;
