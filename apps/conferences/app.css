@@ -210,6 +210,11 @@
 	font-size: 14px;
 }
 
+/***************** Call-In Numbers *********************/
+#callin_conferences_content .remove-callin-number {
+	cursor: pointer;
+}
+
 /***************** Active Conferences ******************/
 #active_conferences_content td.duration, #active_conferences_content th.duration{
 	text-align: left;

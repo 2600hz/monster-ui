@@ -422,10 +422,10 @@ define(function(require){
 					_.each(parent.find('tbody tr'), function(row) {
 						row = $(row);
 
-						rowValue = row.data('search').toString();
+						rowValue = row.data('search');
 
 						if(rowValue) {
-							rowValue = rowValue.toLowerCase();
+							rowValue = rowValue.toString().toLowerCase();
 
 							rowValue.indexOf(search) >= 0 ? row.show() : row.hide();
 						}
