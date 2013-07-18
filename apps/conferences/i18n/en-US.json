@@ -4,6 +4,9 @@
 	"upcomingConferences": "Upcoming Conferences",
 	"newConferences": "New Conference",
 	"callinNumbers": "Call-in Numbers",
+	"assignedConferenceNumbers": "Assigned Conference Numbers",
+	"noCallinNumber": "There are currently no Call-in number.",
+	"addNumber": "Add Number",
 	"customizeNotifications": "Customize Notifications",
 	"addModeratorLink": "Add moderator",
 	"addMemberLink": "Add member",
@@ -29,13 +32,15 @@
 	"popupTitles": {
 		"participant": "Add Participant",
 		"member": "Add Member",
-		"moderator": "Add Moderator"
+		"moderator": "Add Moderator",
+		"callinNumber": "Add Call-in Number"
 	},
 	"popupLabels": {
 		"email": "Email OR Phone Number",
 		"name": "Name (Optional)",
 		"member": "Add as a Member",
-		"moderator": "Add as a Moderator"
+		"moderator": "Add as a Moderator",
+		"phoneNumber": "Phone Number"
 	},
 	"toastrMessages": {
 		"newConferenceSuccess": "The Conference has been scheduled.",
@@ -43,7 +48,11 @@
 		"updateConferenceSuccess": "The Conference has been updated.",
 		"updateConferenceError": "An unexpected error happend while updating the Conference, please try again.",
 		"deleteConferenceSuccess": "The Conference has been cancelled.",
-		"deleteConferenceError": "An unexpected error happend while cancelling the Conference, please try again."
+		"deleteConferenceError": "An unexpected error happend while cancelling the Conference, please try again.",
+		"almostDoneConference": "The conference is about to stop",
+		"destroyedConference": "The conference you were observing has ended",
+		"successAddCallin": "You successfully added {{number}} to the Call-in Numbers",
+		"successDeleteCallin": "You successfully deleted {{number}} to the Call-in Numbers"
 	},
 	"popupMessages": {
 		"mandatoryConferenceNameAlert": "You must specify a Conference Name!",
