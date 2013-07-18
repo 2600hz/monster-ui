@@ -136,35 +136,53 @@ define(function(require){
 		},
 
 		renderActiveConference: function(parent) {
-			var self = this,
-				data = self.formatActiveConference(
-						{ conferences: [
-							{ id: '123', name: 'Upcoming Conference\'s Name 0',duration: 10 },
-							{ id: '131', name: 'Upcoming Conference\'s Name 1',duration: 150 },
-							{ id: '141', name: 'Upcoming Conference\'s Name 2',duration: 54 },
-							{ id: '152', name: 'Upcoming Conference\'s Name 3',duration: 128 },
-							{ id: '120', name: 'Upcoming Conference\'s Name 4',duration: 314 },
-							{ id: '129', name: 'Upcoming Conference\'s Name 5',duration: 159 },
-							{ id: '128', name: 'Upcoming Conference\'s Name 6',duration: 211 },
-							{ id: '127', name: 'Upcoming Conference\'s Name 7',duration: 121 },
-							{ id: '125', name: 'Upcoming Conference\'s Name 8',duration: 947 },
-							{ id: '124', name: 'Upcoming Conference\'s Name 9',duration: 231 }
-						]}),
-				activeConfView = $(monster.template(self, 'activeConferences', data));
+			var self = this;
+			// 	data = self.formatActiveConference(
+			// 			{ conferences: [
+			// 				{ id: '123', name: 'Upcoming Conference\'s Name 0',duration: 10, active:true },
+			// 				{ id: '131', name: 'Upcoming Conference\'s Name 1',duration: 150, active:false },
+			// 				{ id: '141', name: 'Upcoming Conference\'s Name 2',duration: 54, active:false },
+			// 				{ id: '152', name: 'Upcoming Conference\'s Name 3',duration: 128, active:true },
+			// 				{ id: '120', name: 'Upcoming Conference\'s Name 4',duration: 314, active:false },
+			// 				{ id: '129', name: 'Upcoming Conference\'s Name 5',duration: 159, active:true },
+			// 				{ id: '128', name: 'Upcoming Conference\'s Name 6',duration: 211, active:true },
+			// 				{ id: '127', name: 'Upcoming Conference\'s Name 7',duration: 121, active:false },
+			// 				{ id: '125', name: 'Upcoming Conference\'s Name 8',duration: 947, active:false },
+			// 				{ id: '124', name: 'Upcoming Conference\'s Name 9',duration: 231, active:true }
+			// 			]}),
+			// 	activeConfView = $(monster.template(self, 'activeConferences', data));
 
-				self.bindActiveConference(activeConfView, data);
+			// self.bindActiveConferenceEvents(parent, data);
 
-			parent
-				.find('.right-content')
-				.empty()
-				.append(activeConfView);
+			// parent
+			// 	.find('.right-content')
+			// 	.empty()
+			// 	.append(activeConfView);
 
-			self.searchAsYouType('active', parent);
+			monster.request({
+				resource: 'conferences.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: function (data, status) {
+					var conferences =self.formatActiveConference(data.data),
+						activeConfView = $(monster.template(self, 'activeConferences', { conferences: conferences }));
+
+					self.bindActiveConferenceEvents(activeConfView, parent);
+
+					parent
+						.find('.right-content')
+						.empty()
+						.append(activeConfView);
+				}
+			})
 		},
 
-		bindActiveConference: function(parent, data) {
+		bindActiveConferenceEvents: function(parent, data) {
 			var self = this,
 				mapTimers = {};
+
+			self.searchAsYouType('active', parent);
 
 			_.each(data.conferences, function(conference) {
 				mapTimers[conference.id] = {
@@ -196,11 +214,29 @@ define(function(require){
 		},
 
 		formatActiveConference: function(data) {
-			_.each(data.conferences, function(conference) {
-				conference.friendlyDuration = monster.util.friendlyTimer(conference.duration);
+			var currentTimestamp = monster.util.dateToGregorian(new Date()),
+				result = [],
+				length = data.length;
+
+			for ( var i = 0; i < length; i++ ) {
+				data[i].friendlyDuration = monster.util.friendlyTimer(data[i].start);
+				if ( data[i].start < currentTimestamp ) {
+					var timestamp = monster.util.toFriendlyDate(data[i].start, 'standard');
+
+					if ( timestamp != '-' ) {
+						data[i].date = timestamp.match(/([0-9]+)\/([0-9]+)/)[0];
+						data[i].startTime = timestamp;
+						console.log(result);
+						result.push(data[i]);
+					}
+				}
+			}
+
+			result.sort(function (a, b) {
+				return a.start - b.start;
 			});
 
-			return data;
+			return result;
 		},
 
 		renderUpcomingConferences: function(parent) {
@@ -282,20 +318,10 @@ define(function(require){
 				.append(callinNumbersView);
 		},
 
-		bindCallinNumbersEvents: function(parent, appContainer, data) {
+		bindCallinNumbersEvents: function(parent, appContainer) {
 			var self = this;
 
 			self.searchAsYouType('callin', parent);
-
-			parent.find('.icon-remove').on('click', function() {
-				for (var key in data.numbers) {
-					if (data.numbers[key].number == $(this).closest('tr').data('search')) {
-						delete data.numbers[key];
-					}
-				}
-
-				parent.find('right-content').empty().append($(monster.template(self, 'callinNumbers', data)))
-			});
 		},
 
 		searchAsYouType: function(type, parent) {
@@ -354,7 +380,6 @@ define(function(require){
 				for (var key in data) {
 					if (key == parent.find('.switch-link.active').data('link')) {
 						data[key] = parent.find('#editor')[0].innerHTML;
-						console.log(data[key]);
 					};
 				}
 			});
