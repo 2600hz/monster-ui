@@ -129,6 +129,8 @@ define(function(require){
 		},
 
 		formatPhoneNumber: function(phoneNumber){
+			phoneNumber = phoneNumber.toString();
+
 			if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
 				phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
 			}

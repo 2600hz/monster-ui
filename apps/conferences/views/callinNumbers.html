@@ -1,30 +1,22 @@
 <div id="conferences_information_container">
 	<div id="callin_conferences_content">
 		<div class="header">
-			<h1 class="pull-left">Call-in Numbers</h1>
+			<h1 class="pull-left">{{ i18n.callinNumbers }}</h1>
 			<span class="search-box pull-right">
 				<i class="icon-search"></i>
-				<input type="text" class="search-query" placeholder="Search">
+				<input type="text" class="search-query" placeholder="{{ i18n.search }}">
 			</span>
 		</div>
 		<table>
 			<thead>
 				<tr>
-					<th>Assigned Conference Numbers</th>
-					<th>Remove</th>
+					<th>{{ i18n.assignedConferenceNumbers }}</th>
+					<th>{{ i18n.remove }}</th>
 				</tr>
 			</thead>
 			<tbody>
-			{{#each numbers}}
-				<tr data-search="{{ number }}">
-					<td>{{ number }}</td>
-					<td><i class="icon-remove"></i></td>
-				</tr>
-			{{else}}
-				<tr><td colspan="2" class="empty">No call-in numbers.</td></tr>
-			{{/each}}
 			</tbody>
 		</table>
-		<button class="conf-btn blue-btn pull-right">Add Number</button>
+		<button id="add_callin_number" class="conf-btn blue-btn pull-right">{{ i18n.addNumber }}</button>
 	</div>
 </div>
