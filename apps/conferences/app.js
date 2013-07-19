@@ -77,7 +77,7 @@ define(function(require){
 			'conferences.kickParticipant': {
 				url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}',
 				verb: 'POST'
-			},
+			}
 		},
 
 		subscribe: {
@@ -105,6 +105,9 @@ define(function(require){
 				conferenceView = $(monster.template(self, 'app'));
 
 			self.bindEvents(conferenceView);
+
+			self.renderActiveConference(conferenceView);
+			conferenceView.find('#active_conferences').addClass('active');
 
 			$('#ws-content')
 				.empty()
@@ -174,10 +177,10 @@ define(function(require){
 					accountId: self.accountId
 				},
 				success: function (data, status) {
-					var conferences =self.formatActiveConference(data.data),
+					var conferences = self.formatActiveConference(data.data),
 						activeConfView = $(monster.template(self, 'activeConferences', { conferences: conferences }));
 
-					self.bindActiveConferenceEvents(activeConfView, parent);
+					self.bindActiveConferenceEvents(activeConfView, conferences);
 
 					parent
 						.find('.right-content')
@@ -187,13 +190,13 @@ define(function(require){
 			})
 		},
 
-		bindActiveConferenceEvents: function(parent, data) {
+		bindActiveConferenceEvents: function(parent, conferences) {
 			var self = this,
 				mapTimers = {};
 
 			self.searchAsYouType('active', parent);
 
-			_.each(data.conferences, function(conference) {
+			_.each(conferences, function(conference) {
 				mapTimers[conference.id] = {
 					duration: conference.duration,
 					timer: {}
@@ -217,32 +220,24 @@ define(function(require){
 
 			parent.find('.view-conference').on('click', function() {
 				//self.renderViewConference($(this).parents('tr').first().data('id'));
-				console.log('click');
 				self.renderViewConference('838934b5a23c210681eaadb89d0fb8ad');
 			});
 		},
 
-		formatActiveConference: function(data) {
-			var currentTimestamp = monster.util.dateToGregorian(new Date()),
-				result = [],
-				length = data.length;
+		formatActiveConference: function(conferences) {
+			var self = this,
+				result = [];
 
-			for ( var i = 0; i < length; i++ ) {
-				data[i].friendlyDuration = monster.util.friendlyTimer(data[i].start);
-				if ( data[i].start < currentTimestamp ) {
-					var timestamp = monster.util.toFriendlyDate(data[i].start, 'standard');
-
-					if ( timestamp != '-' ) {
-						data[i].date = timestamp.match(/([0-9]+)\/([0-9]+)/)[0];
-						data[i].startTime = timestamp;
-						console.log(result);
-						result.push(data[i]);
-					}
-				}
-			}
+			_.each(conferences, function(conference) {
+				//Uncomment when API is working if(conference.active) {
+					conference.duration = Math.floor(Math.random()*1000);
+					conference.friendlyDuration = monster.util.friendlyTimer(conference.duration);
+					result.push(conference);
+				//}
+			});
 
 			result.sort(function (a, b) {
-				return a.start - b.start;
+				return a.duration - b.duration;
 			});
 
 			return result;
@@ -966,7 +961,8 @@ define(function(require){
 
 			monster.socket.emit('connection_status');
 
-			monster.socket.once('connection_status', function(isConnected) {
+			monster.socket.on('connection_status', function(isConnected) {
+				console.log('status');
 				if(!isConnected) {
 					monster.socket.emit('connection', {'conference_id': conferenceId, 'user_name': self.userId});
 
@@ -1075,12 +1071,13 @@ define(function(require){
 
 			parent.find('.action-conference[data-action="add-user"]').on('click', function() {
 				self.showAddParticipantPopup(function(participant) {
-					console.log(participant);
 				});
 			});
 
 			var quitConferenceViewer = function() {
 				monster.socket.emit('disconnection');
+				monster.socket.removeAllListeners();
+				parent.off('click', '.action-user');
 
 				parent
 					.find('#conference_viewer')
@@ -1116,13 +1113,15 @@ define(function(require){
 			var ifStillUsingConference = function(callback) {
 				if(parent.find('#view_conference:visible').size() === 0) {
 					monster.socket.emit('disconnection')
+					monster.socket.removeAllListeners();
+					parent.off('click', '.action-user');
 				}
 				else {
 					callback();
 				}
 			};
 
-			monster.socket.once('add_member', function(user, data) {
+			monster.socket.on('add_member', function(user, data) {
 				ifStillUsingConference(function() {
 					var dataUser = self.formatUserViewConference(data),
 						userTemplate = monster.template(self, 'boxUser', dataUser);
@@ -1131,7 +1130,7 @@ define(function(require){
 				});
 			});
 
-			monster.socket.once('conference_destroy', function(conferenceId) {
+			monster.socket.on('conference_destroy', function(conferenceId) {
 				if(data.id === conferenceId) {
 					toastr.warning(self.i18n.active().toastrMessages.almostDoneConference);
 
@@ -1143,48 +1142,48 @@ define(function(require){
 				}
 			});
 
-			monster.socket.once('del_member', function(user, data) {
+			monster.socket.on('del_member', function(user, data) {
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"]').remove();
 				});
 			});
 
-			monster.socket.once('mute_member', function(user, data) {
+			monster.socket.on('mute_member', function(user, data) {
 				console.log('mute_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').addClass('active');
 				});
 			});
 
-			monster.socket.once('unmute_member', function(user, data) {
+			monster.socket.on('unmute_member', function(user, data) {
 				console.log('unmute_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').removeClass('active');
 				});
 			});
 
-			monster.socket.once('deaf_member', function(user, data) {
+			monster.socket.on('deaf_member', function(user, data) {
 				console.log('deaf_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').addClass('active');
 				});
 			});
 
-			monster.socket.once('undeaf_member', function(user, data) {
+			monster.socket.on('undeaf_member', function(user, data) {
 				console.log('undeaf_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').removeClass('active');
 				});
 			});
 
-			monster.socket.once('start_talking', function(user, data) {
+			monster.socket.on('start_talking', function(user, data) {
 				console.log('start_talking');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .currently-speaking').addClass('active');
 				});
 			});
 
-			monster.socket.once('stop_talking', function(user, data) {
+			monster.socket.on('stop_talking', function(user, data) {
 				console.log('stop_talking');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .currently-speaking').removeClass('active');
