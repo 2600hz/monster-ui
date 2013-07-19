@@ -5,15 +5,16 @@ define(function(require){
 		monster = require('monster');
 
 	var requestAmount = 0,
-		homeIcon;
+		homeIcon,
+		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-home';
 
 	monster.sub('monster.requestStart', function() {
 		requestAmount++;
 
 		homeIcon = homeIcon || $('#home_link > i');
 
-		if(homeIcon.hasClass('icon-home')) {
-			homeIcon .removeClass('icon-home')
+		if(homeIcon.hasClass(homeIconClass)) {
+			homeIcon .removeClass(homeIconClass)
 					 .addClass('icon-spin icon-spinner');
 		}
 	});
@@ -21,7 +22,7 @@ define(function(require){
 	monster.sub('monster.requestEnd', function() {
 		if(--requestAmount === 0) {
 			homeIcon.removeClass('icon-spin icon-spinner')
-					.addClass('icon-home');
+					.addClass(homeIconClass);
 		}
 	});
 

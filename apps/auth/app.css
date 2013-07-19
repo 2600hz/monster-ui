@@ -179,3 +179,10 @@
 	background-color: #22b0ff;
 	color: #fff;
 }
+
+@media (max-width: 979px) {
+	#conference_login_container {
+		width: 302px;
+		margin: auto;
+	}
+}

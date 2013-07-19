@@ -93,6 +93,17 @@ body h1.lobster {
     padding: 0 15px;
     width: 192px;
 }
+#main section > .navbar .navbar-inner .logo.conferencing {
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 62px;
+    text-align: center;
+}
+#main section > .navbar .navbar-inner .logo.conferencing:hover {
+    text-decoration: none;
+    color: #22ccff;
+}
+
 #main section > .navbar .navbar-inner .home {
     height: 62px;
     line-height: 62px;
@@ -101,6 +112,16 @@ body h1.lobster {
     text-align: center;
     text-decoration: none;
     width: 42px;
+}
+#main section > .navbar .navbar-inner .home.conferencing {
+    padding: 5px;
+    height: 52px;
+    width: 240px;
+}
+@media (max-width: 979px) {
+    #main section > .navbar .navbar-inner .home.conferencing {
+        width: 140px;
+    }
 }
 
 #main section > .navbar .navbar-inner i {

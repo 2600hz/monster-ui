@@ -189,7 +189,7 @@ define(function(require){
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster.login')) || {},
-				templateName = 'conferenceLogin',//'login'
+				templateName = monster.config.appleConference ? 'conferenceLogin' : 'login',
 				templateData = {
 					label: {
 						login: 'Login:'
@@ -341,7 +341,10 @@ define(function(require){
 		_conferenceLogin: function(data) {
 			var self = this,
 				formData = form2object('user_login_form');
-			console.log('conferenceLogin');
+
+			_.each(formData.update, function(val, key) { 
+				if(!val) { delete formData.update[key]; }
+			});
 			monster.request({
 				resource: 'auth.pinAuth',
 				data: {

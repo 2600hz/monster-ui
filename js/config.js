@@ -19,7 +19,9 @@ define(function(require){
 		nav: {
 			help: 'http://wiki.2600hz.com',
 			learnMore: 'http://www.2600hz.com/'
-		}
+		},
+
+		appleConference: true
 	};
 
 });
