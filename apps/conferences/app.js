@@ -534,7 +534,6 @@ define(function(require){
 				},
 				function(err, results) {
 					var customizeNotificationsView = $(monster.template(self, 'customizeNotifications', results));
-					console.log(results);
 
 					parent
 						.find('.right-content')
@@ -565,6 +564,8 @@ define(function(require){
 
 				data[type] = parent.find('#editor').html();
 
+				console.log(data);
+
 				monster.request({
 					resource: 'conferences.createNotification',
 					data: {
@@ -573,7 +574,7 @@ define(function(require){
 						data: data[type]
 					},
 					success: function(data) {
-						console.log(data);
+						
 					}
 				});
 			});
@@ -626,24 +627,21 @@ define(function(require){
 			var self = this,
 				type = parent.find('.switch-link.active').data('link');
 
-			for (var key in data) {
-				if (key = type) {
-					parent.find('#editor').html(data[key]);
+			parent.find('#editor').html(data[parent.find('.switch-link.active').data('link')]);
 
-					// monster.request({
-					// 	resource: 'conference.getNotification',
-					// 	data: {
-					// 		accountId: self.accountId,
-					// 		notificationType: 'conference_' + type,
-					// 		contentType: 'html'
-					// 	},
-					// 	success: function(data) {
-							
-					// 	}
-					// })
-
+			monster.request({
+				resource: 'conferences.getNotification',
+				data: {
+					accountId: self.accountId,
+					notificationType: 'conference_' + type,
+					contentType: 'html'
+				},
+				success: function (data) {
+					console.log(data);
+					console.log(parent.find('#editor'));
+					parent.find('#editor').html(data.response);
 				}
-			}
+			});
 		},
 
 		renderNewConference: function(parent) {
