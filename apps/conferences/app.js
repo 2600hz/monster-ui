@@ -117,18 +117,34 @@ define(function(require){
 		},
 
 		render: function(container){
+			var self = this;
+			
+			if(self.userType === 'unregistered') {
+				self.renderUserView(container);
+			} else {
+				self.renderAdminView(container);
+			}
+		},
+
+		renderUserView: function(container){
 			var self = this,
-				conferenceView = $(monster.template(self, 'app'));
+				conferenceView = $(monster.template(self, 'app', { adminView:false }));
+
+			$('#ws-content')
+				.empty()
+				.append(conferenceView);
+
+			self.renderViewConference(self.conferenceId);
+		},
+
+		renderAdminView: function(container){
+			var self = this,
+				conferenceView = $(monster.template(self, 'app', { adminView:true }));
 
 			self.bindEvents(conferenceView);
 
-			if(self.userType === 'member') {
-				self.renderViewConference('838934b5a23c210681eaadb89d0fb8ad');
-			}
-			else {
-				self.renderActiveConference(conferenceView);
-				conferenceView.find('#active_conferences').addClass('active');
-			}
+			self.renderActiveConference(conferenceView);
+			conferenceView.find('#active_conferences').addClass('active');
 
 			$('#ws-content')
 				.empty()
