@@ -77,6 +77,22 @@ define(function(require){
 			'conferences.kickParticipant': {
 				url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}',
 				verb: 'POST'
+			},
+			'conferences.createNotification': {
+				url: 'accounts/{accountId}/notify/{notificationType}',
+				verb: 'PUT',
+				type: 'text/html',
+				dataType: 'text/html'
+			},
+			'conferences.getNotification': {
+				url: 'accounts/{accountId}/notify/{notificationType}/{contentType}',
+				verb: 'GET',
+				type: 'text/html',
+				dataType: 'text/html'
+			},
+			'conferences.updateNotification': {
+				url: 'accounts/{accountId}/notify/{notificationType}',
+				verb: 'POST'
 			}
 		},
 
@@ -469,22 +485,72 @@ define(function(require){
 		},
 
 		renderCustomizeNotifications: function(parent) {
-			var self = this,
-				customizeNotificationsView = monster.template(self, 'customizeNotifications'),
-				data = {
-						email: '<i>email</i> <b>data</b>',
-						updates: '<i>updates</i> <b>data</b>',
-						summary: '<i>summary</i> <b>data</b>'
-					};
+			var self = this;
 
-			parent
-				.find('.right-content')
-				.empty()
-				.append(customizeNotificationsView);
+			monster.parallel({
+					invite: function(callback) {
+						monster.request({
+							resource: 'conferences.getNotification',
+							data: {
+								accountId: self.accountId,
+								notificationType: 'conference_invite',
+								contentType: 'html'
+							},
+							success: function(data) {
+								callback(null, data.data);
+							},
+							error: function(data) {
+								callback(null, data.data);
+							}
+						});
+					},
+					update: function(callback) {
+						monster.request({
+							resource: 'conferences.getNotification',
+							data: {
+								accountId: self.accountId,
+								notificationType: 'conference_update',
+								contentType: 'html'
+							},
+							success: function(data) {
+								callback(null, data.data);
+							},
+							error: function(data) {
+								callback(null, data.data);
+							}
+						});
+					},
+					summary: function(callback) {
+						monster.request({
+							resource: 'conferences.getNotification',
+							data: {
+								accountId: self.accountId,
+								notificationType: 'conference_summary',
+								contentType: 'html'
+							},
+							success: function(data) {
+								callback(null, data.data);
+							},
+							error: function(data) {
+								callback(null, data.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					var customizeNotificationsView = $(monster.template(self, 'customizeNotifications', results));
+					console.log(results);
 
-			self.renderWysiwyg(parent, data);
+					parent
+						.find('.right-content')
+						.empty()
+						.append(customizeNotificationsView);
 
-			self.bindCustomizeNotificationsEvents(parent, data);
+					self.renderWysiwyg(parent, results);
+
+					self.bindCustomizeNotificationsEvents(parent, results);
+				}
+			);
 		},
 
 		bindCustomizeNotificationsEvents: function(parent, data) {
@@ -500,11 +566,21 @@ define(function(require){
 			});
 
 			parent.find('> button').on('click', function() {
-				for (var key in data) {
-					if (key == parent.find('.switch-link.active').data('link')) {
-						data[key] = parent.find('#editor')[0].innerHTML;
-					};
-				}
+				var type = parent.find('.switch-link.active').data('link');
+
+				data[type] = parent.find('#editor').html();
+
+				monster.request({
+					resource: 'conferences.createNotification',
+					data: {
+						accountId: self.accountId,
+						notificationType: 'conference_' + type,
+						data: data[type]
+					},
+					success: function(data) {
+						console.log(data);
+					}
+				});
 			});
 		},
 
@@ -513,7 +589,7 @@ define(function(require){
 				parent = parent.find('#customize_notifications_content'),
 				fonts = ['Serif','Sans','Arial','Arial Black','Courier','Courier New','Comic Sans MS','Helvetica','Impact','Lucida Grande','Lucida Sans','Tahoma','Times','Times New Roman','Verdana'],
 				fontTarget = parent.find('[data-original-title=Font]').siblings('.dropdown-menu'),
-				macro = ['{user_firstName}','{user_lastName}','{user_pinNumber}','{conference_name}'],
+				macro = { user_firstName: 'User firstname', user_lastName: 'User lastname', user_pin: 'User PIN', conference_name: 'Conference name' },
 				macroTarget = parent.find('[data-original-title=Macro]').siblings('.dropdown-menu'),
 				msg = '';
 
@@ -522,7 +598,7 @@ define(function(require){
 			}
 
 			for (var key in macro) {
-				macroTarget.append($('<li><a data-edit="insertText">' + macro[key] + '</a></li>'));
+				macroTarget.append($('<li><a data-edit="insertText {' + key + '}">' + macro[key] + '</a></li>'));
 			}
 
 			parent.find('a[title]').tooltip({container:'body'});
@@ -552,9 +628,25 @@ define(function(require){
 		},
 
 		loadWysiwygContent: function(parent, data) {
+			var self = this,
+				type = parent.find('.switch-link.active').data('link');
+
 			for (var key in data) {
-				if (key = parent.find('.switch-link.active').data('link')) {
+				if (key = type) {
 					parent.find('#editor').html(data[key]);
+
+					// monster.request({
+					// 	resource: 'conference.getNotification',
+					// 	data: {
+					// 		accountId: self.accountId,
+					// 		notificationType: 'conference_' + type,
+					// 		contentType: 'html'
+					// 	},
+					// 	success: function(data) {
+							
+					// 	}
+					// })
+
 				}
 			}
 		},
