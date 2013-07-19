@@ -700,6 +700,7 @@
     -webkit-box-sizing: border-box;
     border-radius: 0;
     border-color: #aaa;
+    font-size: 16px;
 }
 
 #add_number_popup button {
@@ -707,7 +708,7 @@
 }
 
 #add_number_popup label {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 /********************** Buttons Styling **********************/

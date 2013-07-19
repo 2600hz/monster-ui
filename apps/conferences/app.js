@@ -122,8 +122,13 @@ define(function(require){
 
 			self.bindEvents(conferenceView);
 
-			self.renderActiveConference(conferenceView);
-			conferenceView.find('#active_conferences').addClass('active');
+			if(self.userType === 'member') {
+				self.renderViewConference('838934b5a23c210681eaadb89d0fb8ad');
+			}
+			else {
+				self.renderActiveConference(conferenceView);
+				conferenceView.find('#active_conferences').addClass('active');
+			}
 
 			$('#ws-content')
 				.empty()
@@ -165,27 +170,6 @@ define(function(require){
 
 		renderActiveConference: function(parent) {
 			var self = this;
-			// 	data = self.formatActiveConference(
-			// 			{ conferences: [
-			// 				{ id: '123', name: 'Upcoming Conference\'s Name 0',duration: 10, active:true },
-			// 				{ id: '131', name: 'Upcoming Conference\'s Name 1',duration: 150, active:false },
-			// 				{ id: '141', name: 'Upcoming Conference\'s Name 2',duration: 54, active:false },
-			// 				{ id: '152', name: 'Upcoming Conference\'s Name 3',duration: 128, active:true },
-			// 				{ id: '120', name: 'Upcoming Conference\'s Name 4',duration: 314, active:false },
-			// 				{ id: '129', name: 'Upcoming Conference\'s Name 5',duration: 159, active:true },
-			// 				{ id: '128', name: 'Upcoming Conference\'s Name 6',duration: 211, active:true },
-			// 				{ id: '127', name: 'Upcoming Conference\'s Name 7',duration: 121, active:false },
-			// 				{ id: '125', name: 'Upcoming Conference\'s Name 8',duration: 947, active:false },
-			// 				{ id: '124', name: 'Upcoming Conference\'s Name 9',duration: 231, active:true }
-			// 			]}),
-			// 	activeConfView = $(monster.template(self, 'activeConferences', data));
-
-			// self.bindActiveConferenceEvents(parent, data);
-
-			// parent
-			// 	.find('.right-content')
-			// 	.empty()
-			// 	.append(activeConfView);
 
 			monster.request({
 				resource: 'conferences.list',
@@ -430,21 +414,32 @@ define(function(require){
 			parent.on('click', '.remove-callin-number', function() {
 				var number = $(this).parents('tr').data('id');
 
-				delete data.numbers[number];
-
 				monster.request({
-					resource: 'conferences.updateConferencesServer',
+					resource: 'conferences.getConferencesServer',
 					data: {
 						conferencesServerId: data.id,
-						accountId: self.accountId,
-						data: data
+						accountId: self.accountId
 					},
-					success: function(data) {
-						var templateToastr = monster.template(self, '!' + self.i18n.active().toastrMessages.successDeleteCallin, { number: monster.util.formatPhoneNumber(number) });
+					success: function(dataGet) {
+						if('numbers' in dataGet.data) {
+							delete dataGet.data.numbers[number];
+						}
 
-						toastr.success(templateToastr);
+						monster.request({
+							resource: 'conferences.updateConferencesServer',
+							data: {
+								conferencesServerId: dataGet.data.id,
+								accountId: self.accountId,
+								data: dataGet.data
+							},
+							success: function(dataPost) {
+								var templateToastr = monster.template(self, '!' + self.i18n.active().toastrMessages.successDeleteCallin, { number: monster.util.formatPhoneNumber(number) });
 
-						self.refreshCallinNumbers(parent, data.data);
+								toastr.success(templateToastr);
+
+								self.refreshCallinNumbers(parent, dataPost.data);
+							}
+						});
 					}
 				});
 			});
@@ -1035,8 +1030,14 @@ define(function(require){
 						}
 					},
 					function(err, results) {
-						var dataTemplate = self.formatViewConference(results),
-							conferenceView = $(monster.template(self, 'viewConference', dataTemplate));
+						var dataTemplate = self.formatViewConference(results);
+
+						if(self.userType === 'user') {
+							var conferenceView = $(monster.template(self, 'viewConference', dataTemplate));
+						}
+						else {
+							var conferenceView = $(monster.template(self, 'viewConference', dataTemplate));
+						}
 
 						parent
 							.find('#conference_viewer')
