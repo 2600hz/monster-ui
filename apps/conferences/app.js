@@ -1105,9 +1105,9 @@ define(function(require){
 
 		formatViewConference: function(data) {
 			var self = this,
-				formattedData = {
+				formattedData = $.extend(true, data.conference, {
 					users: []
-				};
+				});
 
 			if('userType' in self && self.userType === 'unregistered') {
 				formattedData.user = self.user;
@@ -1115,8 +1115,6 @@ define(function(require){
 
 			formattedData.elapsedTime = monster.util.friendlyTimer(data.status['Run-Time']);
 			formattedData.rawElapsedTime = data.status['Run-Time'];
-			formattedData.name = data.conference.name;
-			formattedData.id = data.conference.id;
 
 			_.each(data.status['Participants'], function(user) {
 				formattedData.users.push(self.formatUserViewConference(user));
@@ -1213,7 +1211,7 @@ define(function(require){
 				var actionBox = $(this),
 					args = {
 						action: actionBox.data('action'),
-						state: actionBox.hasClass('active'),
+						state: !actionBox.hasClass('active'),
 						conferenceId: data.id,
 						success: function(data) {
 							console.log(data);
@@ -1295,6 +1293,23 @@ define(function(require){
 						quitConferenceViewer();
 					}, 5000);
 				}
+			});
+
+			monster.socket.on('lock_true', function(data) {
+				console.log('lock true');
+				parent.find('.action-conference.api[data-action="lock"]').addClass('active');
+			});
+			monster.socket.on('lock_false', function(data) {
+				console.log('lock false');
+				parent.find('.action-conference.api[data-action="lock"]').removeClass('active');
+			});
+			monster.socket.on('record_true', function(data) {
+				console.log('record true');
+				parent.find('.action-conference.api[data-action="record"]').addClass('active');
+			});
+			monster.socket.on('record_false', function(data) {
+				console.log('record false');
+				parent.find('.action-conference.api[data-action="record"]').removeClass('active');
 			});
 
 			monster.socket.on('del_member', function(user, data) {

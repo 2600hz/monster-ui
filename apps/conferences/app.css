@@ -354,6 +354,7 @@
 	background: none repeat scroll 0 0 white;
 	display: none;
 	height: 25px;
+	left: -5px;
 	line-height: 25px;
 	opacity: 0.75;
 	position: relative;
