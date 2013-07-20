@@ -78,6 +78,10 @@ define(function(require){
 				url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}',
 				verb: 'POST'
 			},
+			'conferences.actionConference': {
+				url: 'accounts/{accountId}/conferences/{conferenceId}/{action}',
+				verb: 'POST'
+			},
 			'conferences.createNotification': {
 				url: 'accounts/{accountId}/notify/{notificationType}',
 				verb: 'PUT',
@@ -118,7 +122,7 @@ define(function(require){
 
 		render: function(container){
 			var self = this;
-			
+
 			if(self.userType === 'unregistered') {
 				self.renderUserView(container);
 			} else {
@@ -590,7 +594,7 @@ define(function(require){
 						data: data[type]
 					},
 					success: function(data) {
-						
+
 					}
 				});
 			});
@@ -1044,14 +1048,9 @@ define(function(require){
 						}
 					},
 					function(err, results) {
-						var dataTemplate = self.formatViewConference(results);
-
-						if(self.userType === 'user') {
-							var conferenceView = $(monster.template(self, 'viewConference', dataTemplate));
-						}
-						else {
-							var conferenceView = $(monster.template(self, 'viewConference', dataTemplate));
-						}
+						var dataTemplate = self.formatViewConference(results),
+							template = 'userType' in self ? 'viewUserConference' : 'viewConference';
+							conferenceView = $(monster.template(self, template, dataTemplate));
 
 						parent
 							.find('#conference_viewer')
@@ -1107,10 +1106,12 @@ define(function(require){
 		formatViewConference: function(data) {
 			var self = this,
 				formattedData = {
-					users: [],
-					moderator_pin: '123456',
-					member_pin: '654321'
+					users: []
 				};
+
+			if('userType' in self && self.userType === 'unregistered') {
+				formattedData.user = self.user;
+			}
 
 			formattedData.elapsedTime = monster.util.friendlyTimer(data.status['Run-Time']);
 			formattedData.rawElapsedTime = data.status['Run-Time'];
@@ -1152,8 +1153,34 @@ define(function(require){
 			});
 		},
 
+		/* Expected Args:
+			action,
+			conferenceId,
+			state,
+			successCallback
+		*/
+		actionConference: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'conferences.actionConference',
+				data: {
+					conferenceId: args.conferenceId,
+					accountId: self.accountId,
+					action: args.action,
+					data: {
+						state: args.state
+					}
+				},
+				success: function(data) {
+					args.success && args.success(data);
+				}
+			});
+		},
+
 		bindViewConference: function(parent, data) {
 			var self = this,
+			    styles = [ 'style1', 'style2', 'style3' ],
 				time = data.rawElapsedTime,
 				target,
 				interval = setInterval(function() {
@@ -1177,13 +1204,23 @@ define(function(require){
 				if ('ontouchstart' in document.documentElement) e.preventDefault()
 			});
 
-			parent.find('.action-conference.togglable').on('click', function() {
-				$(this).toggleClass('active');
-			});
-
 			parent.find('.action-conference[data-action="add-user"]').on('click', function() {
 				self.showAddParticipantPopup(function(participant) {
 				});
+			});
+
+			parent.find('.action-conference.api').on('click', function() {
+				var actionBox = $(this),
+					args = {
+						action: actionBox.data('action'),
+						state: actionBox.hasClass('active'),
+						conferenceId: data.id,
+						success: function(data) {
+							console.log(data);
+						}
+					};
+
+				self.actionConference(args);
 			});
 
 			var quitConferenceViewer = function() {
@@ -1206,6 +1243,12 @@ define(function(require){
 
 			parent.find('.action-conference[data-action="hangup"]').on('click', function() {
 				quitConferenceViewer();
+			});
+
+			parent.find('.action-conference[data-action="logout"]').on('click', function() {
+				self.conferenceConfirm(self.i18n.active().popupMessages.confirmLogout, function() {
+					window.location.reload();
+				});
 			});
 
 			parent.on('click', '.action-user', function() {
@@ -1264,6 +1307,9 @@ define(function(require){
 				console.log('mute_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').addClass('active');
+
+					//User view
+					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="mute"]').addClass('active');
 				});
 			});
 
@@ -1271,6 +1317,9 @@ define(function(require){
 				console.log('unmute_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').removeClass('active');
+
+					//User view
+					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="mute"]').removeClass('active');
 				});
 			});
 
@@ -1278,6 +1327,9 @@ define(function(require){
 				console.log('deaf_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').addClass('active');
+
+					//User view
+					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="deaf"]').removeClass('active');
 				});
 			});
 
@@ -1285,13 +1337,18 @@ define(function(require){
 				console.log('undeaf_member');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').removeClass('active');
+
+					//User view
+					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="deaf"]').removeClass('active');
 				});
 			});
 
 			monster.socket.on('start_talking', function(user, data) {
 				console.log('start_talking');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .currently-speaking').addClass('active');
+					var styleClass = styles[(Math.floor(Math.random() * 100) % 3)];
+
+					parent.find('.user[data-id="'+ user + '"] .currently-speaking').addClass('active ' + styleClass);
 				});
 			});
 
@@ -1299,6 +1356,10 @@ define(function(require){
 				console.log('stop_talking');
 				ifStillUsingConference(function() {
 					parent.find('.user[data-id="'+ user + '"] .currently-speaking').removeClass('active');
+
+					for(style in styles) {
+						parent.find('.user[data-id="'+ user + '"] .currently-speaking').removeClass(style);
+					}
 				});
 			});
 		},

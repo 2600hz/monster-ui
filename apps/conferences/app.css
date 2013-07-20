@@ -260,12 +260,23 @@
 }
 
 #conference_viewer .content .user .currently-speaking.active {
-	background-image: url(static/images/speaking1.png);
 	background-position: 0px 0px;
 	background-repeat: repeat-x;
 
 	-webkit-animation: scrollRight 1s linear infinite;
 	-moz-animation:    scrollRight 1s linear infinite;
+}
+
+#conference_viewer .content .user .currently-speaking.active.style1 {
+	background-image: url(static/images/speaking01.png);
+}
+
+#conference_viewer .content .user .currently-speaking.active.style2 {
+	background-image: url(static/images/speaking02.png);
+}
+
+#conference_viewer .content .user .currently-speaking.active.style3 {
+	background-image: url(static/images/speaking03.png);
 }
 
 @-webkit-keyframes scrollRight {
@@ -364,6 +375,7 @@
 	background: #fff;
 	border-top: 1px solid #999;
 	height: 100px;
+	min-width: 600px;
 	position: fixed;
 	z-index: 90; /* In order to be hidden by modal dialog overlays */
 }
@@ -464,7 +476,7 @@
 }
 
 @media (max-width: 979px) {
-	#conference_viewer .footer .info.block, #conference_viewer .footer .actions.block {
+	#view_conference:not(.user) .footer .info.block, #view_conference:not(.user) .footer .actions.block {
 		width: 50%;
 	}
 
@@ -482,6 +494,73 @@
 
 	#conferences_container .menu .right-block {
 		margin-left: 150px;
+	}
+}
+
+/**************** Conference Viewer for User *****************/
+#view_conference.user .footer .request-summary {
+	text-align: center;
+}
+
+#view_conference.user .footer .request-summary .summary-wrapper {
+	text-align: left;
+	margin-top: 20px;
+}
+
+#view_conference.user .footer .request-summary .field-block {
+	margin-top: 5px;
+	display: inline-block;
+}
+
+#view_conference.user .footer .request-summary .field-block button {
+	padding: 5px 15px;
+	margin-left: 10px;
+}
+
+#view_conference.user .footer .request-summary .field-block input {
+	margin-bottom: 0;
+	width: 150px;
+}
+
+#view_conference.user .footer .actions.block {
+	width: 10%;
+}
+
+#view_conference.user .footer .request-summary.block{
+	width: 30%;
+}
+
+#view_conference.user .footer .info.block {
+	width: 25%;
+}
+
+#view_conference.user .footer .timer.block {
+	width: 35%;
+}
+
+#view_conference.user .state-user {
+	padding: 10px 0;
+	text-align: center;
+}
+
+#view_conference.user .state-user i {
+	margin: 0 10px;
+	display: none;
+}
+
+#view_conference.user .state-user i.active {
+	display: inline-block;
+}
+
+@media (max-width: 979px) {
+	#view_conference.user .footer .block.request-summary {
+		width: 45% !important;
+	}
+	#view_conference.user .footer .block.info {
+		width: 40%;
+	}
+	#view_conference.user .footer .block.actions {
+		width: 15% !important;
 	}
 }
 

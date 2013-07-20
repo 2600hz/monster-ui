@@ -2,7 +2,7 @@ html, body, #main, #main section {
     height: 100%;
 }
 
-body {
+body, .ws-content {
     min-width: 600px;
 }
 

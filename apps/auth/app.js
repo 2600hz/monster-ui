@@ -360,6 +360,7 @@ define(function(require){
 
 					monster.apps.load('conferences', function(app) {
 						app.userType = 'unregistered';
+						app.user = formData;
 						app.conferenceId = data.data.conference_id;
 						app.render($('#ws-content'));
 					});
