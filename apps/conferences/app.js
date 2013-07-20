@@ -58,6 +58,10 @@ define(function(require){
 				url: 'accounts/{accountId}/conferences/{conferenceId}/status',
 				verb: 'GET'
 			},
+			'conferences.addParticipant': {
+				url: 'accounts/{accountId}/conferences/{conferenceId}/add_participant',
+				verb: 'POST'
+			},
 			'conferences.muteParticipant': {
 				url: 'accounts/{accountId}/conferences/{conferenceId}/mute/{participantId}',
 				verb: 'POST'
@@ -1204,6 +1208,18 @@ define(function(require){
 
 			parent.find('.action-conference[data-action="add-user"]').on('click', function() {
 				self.showAddParticipantPopup(function(participant) {
+					monster.request({
+						resource: 'conferences.addParticipant',
+						data: {
+							conferenceId: data.id,
+							accountId: self.accountId,
+							data: participant
+						},
+						success: function(data) {
+							var newParticipant = data.data;
+							console.log(newParticipant.pin);
+						}
+					});
 				});
 			});
 

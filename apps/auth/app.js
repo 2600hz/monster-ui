@@ -361,6 +361,7 @@ define(function(require){
 					monster.apps.load('conferences', function(app) {
 						app.userType = 'unregistered';
 						app.user = formData;
+						app.isModerator = data.data.is_moderator;
 						app.conferenceId = data.data.conference_id;
 						app.render($('#ws-content'));
 					});
