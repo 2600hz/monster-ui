@@ -5,7 +5,7 @@
 	"newConferences": "New Conference",
 	"callinNumbers": "Call-in Numbers",
 	"assignedConferenceNumbers": "Assigned Conference Numbers",
-	"noCallinNumber": "There are currently no Call-in number.",
+	"noCallinNumber": "There is currently no Call-in number.",
 	"addNumber": "Add Number",
 	"customizeNotifications": "Customize Notifications",
 	"addModeratorLink": "Add moderator",
@@ -56,7 +56,8 @@
 		"almostDoneConference": "The conference is about to stop",
 		"destroyedConference": "The conference you were observing has ended",
 		"successAddCallin": "You successfully added {{number}} to the Call-in Numbers",
-		"successDeleteCallin": "You successfully deleted {{number}} to the Call-in Numbers"
+		"successDeleteCallin": "You successfully deleted {{number}} to the Call-in Numbers",
+		"saveNotificationSuccess": "The {{type}} Notification's Style has been saved"
 	},
 	"popupMessages": {
 		"mandatoryConferenceNameAlert": "You must specify a Conference Name!",

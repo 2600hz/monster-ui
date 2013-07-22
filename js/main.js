@@ -25,7 +25,7 @@ require.config({
 		timepicker: 'js/lib/jquery.timepicker.min',
 		socket: 'js/lib/socket.io.min',
 		underscore: 'js/lib/underscore-1.4.4.min',
-		wysiwyg: 'js/lib/bootstrap.wysiwyg'
+		wysiwyg: 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {
 		bootstrap: ['jqueryui'],
