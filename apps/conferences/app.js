@@ -596,15 +596,11 @@ define(function(require){
 						data: data[type]
 					},
 					success: function(data) {
-<<<<<<< Updated upstream
-
-=======
 						var link = parent.find('.switch-link.active').data('link'),
 							type = link.charAt(0).toUpperCase() + link.slice(1),
 							toastrTemplate = monster.template(self, '!' + self.i18n.active().toastrMessages.saveNotificationSuccess, { type: type });
 
 						toastr.success(toastrTemplate);
->>>>>>> Stashed changes
 					}
 				});
 			});
