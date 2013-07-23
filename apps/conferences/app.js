@@ -105,6 +105,7 @@ define(function(require){
 		},
 
 		subscribe: {
+			'conferences.show': '_render'
 		},
 
 		load: function(callback){
@@ -124,6 +125,11 @@ define(function(require){
 			});
 		},
 
+		_render: function() {
+			var self = this;
+			self.render();
+		},
+
 		render: function(container){
 			var self = this;
 
@@ -136,9 +142,10 @@ define(function(require){
 
 		renderUserView: function(container){
 			var self = this,
+				container = container || $('#ws-content'),
 				conferenceView = $(monster.template(self, 'app', { adminView:false }));
 
-			$('#ws-content')
+			container
 				.empty()
 				.append(conferenceView);
 
@@ -147,14 +154,15 @@ define(function(require){
 
 		renderAdminView: function(container){
 			var self = this,
+				container = container || $('#ws-content'),
 				conferenceView = $(monster.template(self, 'app', { adminView:true }));
 
 			self.bindEvents(conferenceView);
 
 			self.renderActiveConference(conferenceView);
 			conferenceView.find('#active_conferences').addClass('active');
-
-			$('#ws-content')
+			
+			container
 				.empty()
 				.append(conferenceView);
 		},
