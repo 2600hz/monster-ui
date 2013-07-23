@@ -10,14 +10,6 @@
 			<div id="alerts"></div>
 			<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
 				<div class="btn-group">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Font">
-						<i class="icon-font"></i>
-						<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
-					</ul>
-				</div>
-				<div class="btn-group">
 					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Font Size">
 						<i class="icon-text-height"></i>
 						<b class="caret"></b>
@@ -31,14 +23,16 @@
 				<div class="btn-group">
 					<a class="btn" data-edit="bold" title data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
 					<a class="btn" data-edit="italic" title data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
-					<a class="btn" data-edit="strikethrough" title data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
 					<a class="btn" data-edit="underline" title data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+					<a class="btn" data-edit="strikethrough" title data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
 				</div>
 				<div class="btn-group">
-					<a class="btn" data-edit="insertUnorderedList" title data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
-					<a class="btn" data-edit="insertOrderedList" title data-original-title="Number list"><i class="icon-list-ol"></i></a>
-					<a class="btn" data-edit="outdent" title data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
-					<a class="btn" data-edit="indent" title data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Font Color">
+						<i class="icon-font"></i>
+						<b class="caret"></b>
+					</a>
+					<div class="dropdown-menu color-menu">
+					</div>
 				</div>
 				<div class="btn-group">
 					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Alignment">
@@ -51,6 +45,20 @@
 						<a class="btn" data-edit="justifyRight" title data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
 						<a class="btn" data-edit="justifyFull" title data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
 					</ul>
+				</div>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="List">
+						<i class="icon-list"></i>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu submenu">
+					<a class="btn" data-edit="insertUnorderedList" title data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
+					<a class="btn" data-edit="insertOrderedList" title data-original-title="Number list"><i class="icon-list-ol"></i></a>
+					</ul>
+				</div>
+				<div class="btn-group">
+					<a class="btn" data-edit="outdent" title data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+					<a class="btn" data-edit="indent" title data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
 				</div>
 				<div class="btn-group">
 					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="Hyperlink"><i class="icon-link"></i></a>
@@ -69,6 +77,9 @@
 				<div class="btn-group">
 					<a class="btn" data-edit="undo" title data-original-title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
 					<a class="btn" data-edit="redo" title data-original-title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+				</div>
+				<div class="btn-group">
+					<a class="btn" data-edit="insertHorizontalRule" title data-original-title="Horizontal Rule"><i class="icon-minus"></i></a>
 				</div>
 				<div class="btn-group">
 					<a class="btn dropdown-toogle" data-toggle="dropdown" data-original-title="Macro">

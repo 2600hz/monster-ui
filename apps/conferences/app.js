@@ -588,8 +588,6 @@ define(function(require){
 
 				data[type] = parent.find('#editor').html();
 
-				console.log(data);
-
 				monster.request({
 					resource: 'conferences.createNotification',
 					data: {
@@ -598,7 +596,11 @@ define(function(require){
 						data: data[type]
 					},
 					success: function(data) {
+						var link = parent.find('.switch-link.active').data('link'),
+							type = link.charAt(0).toUpperCase() + link.slice(1),
+							toastrTemplate = monster.template(self, '!' + self.i18n.active().toastrMessages.saveNotificationSuccess, { type: type });
 
+						toastr.success(toastrTemplate);
 					}
 				});
 			});
@@ -609,21 +611,31 @@ define(function(require){
 				parent = parent.find('#customize_notifications_content'),
 				fonts = ['Serif','Sans','Arial','Arial Black','Courier','Courier New','Comic Sans MS','Helvetica','Impact','Lucida Grande','Lucida Sans','Tahoma','Times','Times New Roman','Verdana'],
 				fontTarget = parent.find('[data-original-title=Font]').siblings('.dropdown-menu'),
-				macro = { user_firstName: 'User firstname', user_lastName: 'User lastname', user_pin: 'User PIN', conference_name: 'Conference name' },
+				macro = {
+						user_first_name: 'User\'s First Name',
+						user_last_name: 'User\'s Last Name',
+						user_pin: 'User\'s PIN',
+						conference_name: 'Conference\'s Name',
+						conference_date: 'Conference\'s Date',
+						conference_time: 'Conference\'s Time'
+					},
 				macroTarget = parent.find('[data-original-title=Macro]').siblings('.dropdown-menu'),
+				colors = ['ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00','f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca','d8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694','bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314','a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100','7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'],
+				colorTarget = parent.find('[data-original-title="Font Color"]').siblings('.dropdown-menu'),
 				msg = '';
 
-			for (var key in fonts) {
-				fontTarget.append($('<li><a data-edit="fontName ' + fonts[key] +'" style="font-family:\'' + fonts[key] + '\'">' + fonts[key] + '</a></li>'));
+			for (var key in macro) {
+				macroTarget.append($('<li><a data-edit="insertHTML <b>{' + key + '}</b>">' + macro[key] + '</a></li>'));
 			}
 
-			for (var key in macro) {
-				macroTarget.append($('<li><a data-edit="insertText {' + key + '}">' + macro[key] + '</a></li>'));
+			for (var key in colors) {
+				colorTarget.append($('<a data-edit="foreColor #' + colors[key] + '" style="background-color: #' + colors[key] + ';"></a>'));
 			}
 
 			parent.find('a[title]').tooltip({container:'body'});
 
-			parent.find('.dropdown-menu input').click(function () {
+			parent.find('.dropdown-menu input')
+					.on('click', function () {
 						return false;
 					})
 					.change(function () {
@@ -651,8 +663,6 @@ define(function(require){
 			var self = this,
 				type = parent.find('.switch-link.active').data('link');
 
-			parent.find('#editor').html(data[parent.find('.switch-link.active').data('link')]);
-
 			monster.request({
 				resource: 'conferences.getNotification',
 				data: {
@@ -661,8 +671,6 @@ define(function(require){
 					contentType: 'html'
 				},
 				success: function (data) {
-					console.log(data);
-					console.log(parent.find('#editor'));
 					parent.find('#editor').html(data.response);
 				}
 			});
