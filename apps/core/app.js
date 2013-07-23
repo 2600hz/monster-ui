@@ -117,7 +117,11 @@ define(function(require){
 				homeLink = $('#home_link'),
 				renderLanding = function() {
 					if(monster.config.appleConference) {
-						window.location.reload();
+						if(monster.apps['conferences']) {
+							monster.pub('conferences.show');
+						} else {
+							window.location.reload();
+						}
 					} else {
 						if($.cookie('monster-auth')) {
 							var args = {

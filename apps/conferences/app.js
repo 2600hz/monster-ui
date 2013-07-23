@@ -107,6 +107,7 @@ define(function(require){
 		},
 
 		subscribe: {
+			'conferences.show': '_render'
 		},
 
 		load: function(callback){
@@ -126,6 +127,11 @@ define(function(require){
 			});
 		},
 
+		_render: function() {
+			var self = this;
+			self.render();
+		},
+
 		render: function(container){
 			var self = this;
 
@@ -138,9 +144,10 @@ define(function(require){
 
 		renderUserView: function(container){
 			var self = this,
+				container = container || $('#ws-content'),
 				conferenceView = $(monster.template(self, 'app', { adminView:false }));
 
-			$('#ws-content')
+			container
 				.empty()
 				.append(conferenceView);
 
@@ -149,14 +156,15 @@ define(function(require){
 
 		renderAdminView: function(container){
 			var self = this,
+				container = container || $('#ws-content'),
 				conferenceView = $(monster.template(self, 'app', { adminView:true }));
 
 			self.bindEvents(conferenceView);
 
 			self.renderActiveConference(conferenceView);
 			conferenceView.find('#active_conferences').addClass('active');
-
-			$('#ws-content')
+			
+			container
 				.empty()
 				.append(conferenceView);
 		},
@@ -245,8 +253,7 @@ define(function(require){
 			});
 
 			parent.find('.view-conference').on('click', function() {
-				//self.renderViewConference($(this).parents('tr').first().data('id'));
-				self.renderViewConference('838934b5a23c210681eaadb89d0fb8ad');
+				self.renderViewConference($(this).parents('tr').first().data('id'));
 			});
 		},
 
@@ -1062,6 +1069,11 @@ define(function(require){
 							template = 'userType' in self ? 'viewUserConference' : 'viewConference';
 							conferenceView = $(monster.template(self, template, dataTemplate));
 
+						_.each(dataTemplate.users, function(user) {
+							console.log(user);
+							conferenceView.find('.content').append(monster.template(self, 'boxUser', user));
+						});
+
 						parent
 							.find('#conference_viewer')
 							.empty()
@@ -1098,9 +1110,10 @@ define(function(require){
 		},
 
 		formatUserViewConference: function(user) {
-			var formattedUser = {},
+			var self = this,
+				formattedUser = {},
 				//randomImages = [ 'jean', 'james', 'karl', 'peter', 'darren', 'dhruvi', 'patrick', 'xavier' ];
-				randomImages = [ 'meme21', 'meme22', 'meme23', 'meme24', 'meme25', 'meme26', 'meme27', 'meme28' ];
+				randomImages = [ 'meme21', 'meme22', 'meme23', 'meme24', 'meme25', 'meme26', 'meme27', 'meme28', 'meme29', 'meme30', 'meme31', 'meme32', 'meme33', 'meme34', 'meme36'];
 
 			formattedUser.id = user['Call-ID'] || user.call_id;
 			formattedUser.isMuted = user['Mute-Detect'] || user.mute_detect;
@@ -1108,7 +1121,12 @@ define(function(require){
 			formattedUser.isDeaf = 'Hear' in user ? !(user['Hear']) : !(user.hear);
 			formattedUser.name = user['Caller-ID-Name'] || user.caller_id_name;
 			formattedUser.isAdmin = user['Is-Moderator'] || user.is_moderator;
-			formattedUser.imageRef = randomImages[Math.floor(Math.random()*randomImages.length)];
+			formattedUser.hasRights = 'userType' in self ? self.userType === 'unregistered' && self.isModerator : true;
+
+			var a = formattedUser.name.charCodeAt(0),
+			    b = formattedUser.name.charCodeAt(formattedUser.name.length -1);
+
+			formattedUser.imageRef = randomImages[(a+b) % randomImages.length];
 
 			return formattedUser;
 		},
@@ -1118,6 +1136,8 @@ define(function(require){
 				formattedData = $.extend(true, data.conference, {
 					users: []
 				});
+
+			console.log(self);
 
 			if('userType' in self && self.userType === 'unregistered') {
 				formattedData.user = self.user;
@@ -1343,40 +1363,28 @@ define(function(require){
 			monster.socket.on('mute_member', function(user, data) {
 				console.log('mute_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').addClass('active');
-
-					//User view
-					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="mute"]').addClass('active');
+					parent.find('.user[data-id="'+ user + '"] [data-action="mute"]').addClass('active');
 				});
 			});
 
 			monster.socket.on('unmute_member', function(user, data) {
 				console.log('unmute_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="mute"]').removeClass('active');
-
-					//User view
-					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="mute"]').removeClass('active');
+					parent.find('.user[data-id="'+ user + '"] [data-action="mute"]').removeClass('active');
 				});
 			});
 
 			monster.socket.on('deaf_member', function(user, data) {
 				console.log('deaf_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').addClass('active');
-
-					//User view
-					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="deaf"]').removeClass('active');
+					parent.find('.user[data-id="'+ user + '"] [data-action="deaf"]').addClass('active');
 				});
 			});
 
 			monster.socket.on('undeaf_member', function(user, data) {
 				console.log('undeaf_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .action-user[data-action="deaf"]').removeClass('active');
-
-					//User view
-					parent.find('.user[data-id="'+ user + '"] .state-user [data-action="deaf"]').removeClass('active');
+					parent.find('.user[data-id="'+ user + '"] [data-action="deaf"]').removeClass('active');
 				});
 			});
 
