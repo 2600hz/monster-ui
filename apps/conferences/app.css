@@ -378,7 +378,7 @@
 	height: 100px;
 	min-width: 600px;
 	position: fixed;
-	z-index: 90; /* In order to be hidden by modal dialog overlays */
+	z-index: 50; /* In order to be hidden by modal dialog overlays */
 }
 
 #conference_viewer .footer .block {
