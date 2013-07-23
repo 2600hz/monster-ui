@@ -1056,6 +1056,11 @@ define(function(require){
 							template = 'userType' in self ? 'viewUserConference' : 'viewConference';
 							conferenceView = $(monster.template(self, template, dataTemplate));
 
+						_.each(dataTemplate.users, function(user) {
+							console.log(user);
+							conferenceView.find('.content').append(monster.template(self, 'boxUser', user));
+						});
+
 						parent
 							.find('#conference_viewer')
 							.empty()
@@ -1092,7 +1097,8 @@ define(function(require){
 		},
 
 		formatUserViewConference: function(user) {
-			var formattedUser = {},
+			var self = this,
+				formattedUser = {},
 				//randomImages = [ 'jean', 'james', 'karl', 'peter', 'darren', 'dhruvi', 'patrick', 'xavier' ];
 				randomImages = [ 'meme21', 'meme22', 'meme23', 'meme24', 'meme25', 'meme26', 'meme27', 'meme28' ];
 
@@ -1103,6 +1109,7 @@ define(function(require){
 			formattedUser.name = user['Caller-ID-Name'] || user.caller_id_name;
 			formattedUser.isAdmin = user['Is-Moderator'] || user.is_moderator;
 			formattedUser.imageRef = randomImages[Math.floor(Math.random()*randomImages.length)];
+			formattedUser.hasRights = 'userType' in self ? self.userType === 'unregistered' && self.isModerator : true;
 
 			return formattedUser;
 		},
@@ -1112,6 +1119,8 @@ define(function(require){
 				formattedData = $.extend(true, data.conference, {
 					users: []
 				});
+
+			console.log(self);
 
 			if('userType' in self && self.userType === 'unregistered') {
 				formattedData.user = self.user;
