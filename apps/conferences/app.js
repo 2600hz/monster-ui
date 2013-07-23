@@ -87,20 +87,22 @@ define(function(require){
 				verb: 'POST'
 			},
 			'conferences.createNotification': {
-				url: 'accounts/{accountId}/notify/{notificationType}',
+				url: 'accounts/{accountId}/notify/conference_{notificationType}',
 				verb: 'PUT',
 				type: 'text/html',
 				dataType: 'text/html'
 			},
 			'conferences.getNotification': {
-				url: 'accounts/{accountId}/notify/{notificationType}/{contentType}',
+				url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}',
 				verb: 'GET',
 				type: 'text/html',
 				dataType: 'text/html'
 			},
 			'conferences.updateNotification': {
-				url: 'accounts/{accountId}/notify/{notificationType}',
-				verb: 'POST'
+				url: 'accounts/{accountId}/notify/conference_{notificationType}',
+				verb: 'POST',
+				type: 'text/html',
+				dataType: 'text/html'
 			}
 		},
 
@@ -512,14 +514,14 @@ define(function(require){
 							resource: 'conferences.getNotification',
 							data: {
 								accountId: self.accountId,
-								notificationType: 'conference_invite',
+								notificationType: 'invite',
 								contentType: 'html'
 							},
 							success: function(data) {
-								callback(null, data.data);
+								callback(null, data.response);
 							},
 							error: function(data) {
-								callback(null, data.data);
+								callback(null);
 							}
 						});
 					},
@@ -528,14 +530,14 @@ define(function(require){
 							resource: 'conferences.getNotification',
 							data: {
 								accountId: self.accountId,
-								notificationType: 'conference_update',
+								notificationType: 'update',
 								contentType: 'html'
 							},
 							success: function(data) {
-								callback(null, data.data);
+								callback(null, data.response);
 							},
 							error: function(data) {
-								callback(null, data.data);
+								callback(null);
 							}
 						});
 					},
@@ -544,14 +546,14 @@ define(function(require){
 							resource: 'conferences.getNotification',
 							data: {
 								accountId: self.accountId,
-								notificationType: 'conference_summary',
+								notificationType: 'summary',
 								contentType: 'html'
 							},
 							success: function(data) {
-								callback(null, data.data);
+								callback(null, data.response);
 							},
 							error: function(data) {
-								callback(null, data.data);
+								callback(null);
 							}
 						});
 					}
@@ -560,7 +562,7 @@ define(function(require){
 					var customizeNotificationsView = $(monster.template(self, 'customizeNotifications', results));
 
 					parent
-						.find('.right-content')
+						.find('div.right-content')
 						.empty()
 						.append(customizeNotificationsView);
 
@@ -573,55 +575,61 @@ define(function(require){
 
 		bindCustomizeNotificationsEvents: function(parent, data) {
 			var self = this,
-				parent = parent.find('#customize_notifications_content');
+				parent = parent.find('div#customize_notifications_content');
 
-			parent.find('.switch-link').on('click', function() {
+			parent.find('div.switch-link').on('click', function() {
 				if (!$(this).hasClass('active')) {
-					parent.find('.switch-link.active').removeClass('active');
+					parent.find('div.switch-link.active').removeClass('active');
 					$(this).addClass('active');
 				}
+
 				self.loadWysiwygContent(parent, data);
 			});
 
 			parent.find('> button').on('click', function() {
-				var type = parent.find('.switch-link.active').data('link');
+				var type = parent.find('div.switch-link.active').data('type'),
+					request = ( data[type] ) ? 'update' : 'create';
 
-				data[type] = parent.find('#editor').html();
+				data[type] = parent.find('div#editor').html();
 
-				monster.request({
-					resource: 'conferences.createNotification',
-					data: {
-						accountId: self.accountId,
-						notificationType: 'conference_' + type,
-						data: data[type]
-					},
-					success: function(data) {
-						var link = parent.find('.switch-link.active').data('link'),
-							type = link.charAt(0).toUpperCase() + link.slice(1),
-							toastrTemplate = monster.template(self, '!' + self.i18n.active().toastrMessages.saveNotificationSuccess, { type: type });
+				function monsterRequest (requestType) {
+					monster.request({
+						resource: 'conferences.' + requestType + 'Notification',
+						data: {
+							accountId: self.accountId,
+							notificationType: type,
+							data: data[type],
+							contentType: 'html'
+						},
+						success: function (data) {
+							var type = parent.find('div.switch-link.active').data('type'),
+								toastrTemplate = monster.template(self, '!' + self.i18n.active().toastrMessages.saveNotificationSuccess, { type: type.charAt(0).toUpperCase() + type.slice(1) });
 
-						toastr.success(toastrTemplate);
-					}
-				});
+							toastr.success(toastrTemplate);
+						}
+					});
+				}
+
+				monsterRequest(request);
+
 			});
 		},
 
 		renderWysiwyg: function(parent, data) {
 			var self = this,
-				parent = parent.find('#customize_notifications_content'),
-				fonts = ['Serif','Sans','Arial','Arial Black','Courier','Courier New','Comic Sans MS','Helvetica','Impact','Lucida Grande','Lucida Sans','Tahoma','Times','Times New Roman','Verdana'],
-				fontTarget = parent.find('[data-original-title=Font]').siblings('.dropdown-menu'),
+				parent = parent.find('div#customize_notifications_content'),
 				macro = {
 						user_first_name: 'User\'s First Name',
 						user_last_name: 'User\'s Last Name',
 						user_pin: 'User\'s PIN',
 						conference_name: 'Conference\'s Name',
 						conference_date: 'Conference\'s Date',
-						conference_time: 'Conference\'s Time'
+						conference_time: 'Conference\'s Time',
+						conference_record: 'Conference\'s Record'
 					},
-				macroTarget = parent.find('[data-original-title=Macro]').siblings('.dropdown-menu'),
+				macroTarget = parent.find('a[data-original-title=Macro]').siblings('ul.dropdown-menu'),
 				colors = ['ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00','f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca','d8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694','bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314','a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100','7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'],
-				colorTarget = parent.find('[data-original-title="Font Color"]').siblings('.dropdown-menu'),
+				colorTarget = parent.find('div[data-original-title="Font Color"]').siblings('div.dropdown-menu'),
 				msg = '';
 
 			for (var key in macro) {
@@ -634,12 +642,12 @@ define(function(require){
 
 			parent.find('a[title]').tooltip({container:'body'});
 
-			parent.find('.dropdown-menu input')
+			parent.find('div.dropdown-menu').find('input')
 					.on('click', function () {
 						return false;
 					})
 					.change(function () {
-						$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+						$(this).parent('div.dropdown-menu').siblings('a.dropdown-toggle').dropdown('toggle');
 					})
 					.keydown('esc', function () {
 						this.value='';
@@ -647,8 +655,8 @@ define(function(require){
 					}
 			);
 
-			parent.find('#editor').wysiwyg({ fileUploadError: function(reason, detail) {
-				if (reason==='unsupported-file-type') {
+			parent.find('div#editor').wysiwyg({ fileUploadError: function(reason, detail) {
+				if (reason === 'unsupported-file-type') {
 					msg = "Unsupported format " + detail;
 				} else {
 					console.log("error uploading file", reason, detail);
@@ -661,19 +669,9 @@ define(function(require){
 
 		loadWysiwygContent: function(parent, data) {
 			var self = this,
-				type = parent.find('.switch-link.active').data('link');
+				type = parent.find('div.switch-link.active').data('type');
 
-			monster.request({
-				resource: 'conferences.getNotification',
-				data: {
-					accountId: self.accountId,
-					notificationType: 'conference_' + type,
-					contentType: 'html'
-				},
-				success: function (data) {
-					parent.find('#editor').html(data.response);
-				}
-			});
+			parent.find('div#editor').html(data[type]);
 		},
 
 		renderNewConference: function(parent) {
