@@ -2348,7 +2348,7 @@ define(function(require){
 				$.each(results.listCallflows, function(k, v) {
 					if(this.numbers) {
 						$.each(this.numbers, function(k2, v2) {
-							delete results.listNumbers.numbers[v2];
+							delete results.listNumbers[v2];
 						});
 					}
 				});
