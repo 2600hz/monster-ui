@@ -228,8 +228,12 @@
 	width: 200px;
 }
 
-#active_conferences_content td i.icon-signin {
+#active_conferences_content td.view-conference:hover {
 	cursor: pointer;
+}
+
+#active_conferences_content td.view-conference:hover i.icon-signin {
+	color: #22ccff;
 }
 
 /***************** Conference Viewer *******************/
@@ -966,7 +970,6 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 
 #customize_notifications_content .wysiwyg-container #editor {
 	margin-bottom: 20px;
-	max-height: 320px;
 	height: 320px;
 	background-color: white;
 	border-collapse: separate;

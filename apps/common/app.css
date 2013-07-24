@@ -745,7 +745,7 @@ body a.monster_link:hover {
 
 /* Checkboxes & Radio Buttons Styles */
 
-input[type="checkbox"]:before {
+/*input[type="checkbox"]:before {
 	content: "";
 	display: inline-block;
 
@@ -768,12 +768,4 @@ input[type="checkbox"]:checked:before {
 	color: #f3f3f3;
 	text-align: center;
 	line-height: 15px;
-}
-
-
-/*
-input[type="checkbox"] {
-	display: none;
 }*/
-
-
