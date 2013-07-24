@@ -51,7 +51,7 @@ define(function(require){
 			});
 		},
 
-		render: function(account){
+		render: function(callback){
 			var self = this,
 				transactionsMenu = $(monster.template(self, 'menu')),
 				args = {
@@ -63,6 +63,8 @@ define(function(require){
 				};
 
 			monster.pub('myaccount.addSubmodule', args);
+
+			callback && callback();
 		},
 
 		_renderContent: function(args) {

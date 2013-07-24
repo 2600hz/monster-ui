@@ -69,7 +69,7 @@ define(function(require){
 			});
 		},
 
-		render: function(account){
+		render: function(callback){
 			var self = this;
 
 			self.getBalance(function(data) {
@@ -85,7 +85,10 @@ define(function(require){
 						category: 'billingCategory'
 					};
 
+				console.log(args);
 				monster.pub('myaccount.addSubmodule', args);
+
+				callback && callback();
 			});
 		},
 
@@ -121,8 +124,8 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var renderData = $.extend(true, {}, 
-											  defaults,  
+					var renderData = $.extend(true, {},
+											  defaults,
 											  self.formatTableData(results.transactions.data, defaults.fieldData.accounts),
 											  {uiRestrictions: monster.apps['auth'].originalAccount.ui_restrictions}
 											 ),

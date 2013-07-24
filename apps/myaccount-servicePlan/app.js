@@ -50,7 +50,7 @@ define(function(require){
 			});
 		},
 
-		render: function(account){
+		render: function(callback){
 			var self = this,
 				servicePlanMenu = $(monster.template(self, 'menu')),
 				args = {
@@ -62,6 +62,8 @@ define(function(require){
 				};
 
 			monster.pub('myaccount.addSubmodule', args);
+
+			callback && callback();
 		},
 
 		_renderContent: function(args) {

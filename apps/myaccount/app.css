@@ -125,6 +125,7 @@
 
 #myaccount .myaccount-menu .nav li.active .active-highlight {
 	border-left: 3px solid #22CCFF;
+	color: #22ccff;
 }
 
 #myaccount .myaccount-menu .menu-bottom .signout {

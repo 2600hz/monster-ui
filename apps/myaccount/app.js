@@ -44,25 +44,29 @@ define(function(require){
 		_apps: ['myaccount-profile', 'myaccount-balance', 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'],
 
 		_defaultApp: {
-			name: 'myaccount-balance'
+			name: 'myaccount-profile'
 		},
 
 		_loadApps: function(callback) {
 			var self = this;
 
-			/* Once all the required apps are loaded, we render the myaccount app */
-			if(!self._apps.length) {
-				callback && callback();
-			}
-			else {
+			if(self._apps.length) {
 				var appName = self._apps.pop();
 
-				/* We first load all the required apps */
+				// We first load all the required apps
 				monster.apps.load(appName, function(app) {
-					app.render();
-
-					self._loadApps(callback);
+					app.render(function() {
+						if(!self._apps.length) {
+							callback && callback();
+						}
+						else {
+							self._loadApps(callback);
+						}
+					});
 				});
+			}
+			else {
+				callback && callback();
 			}
 		},
 
@@ -177,7 +181,7 @@ define(function(require){
 			}
 			else {
 				var args = {
-					title: self._defaultApp.title,
+					title: monster.apps[self._defaultApp.name].i18n.active().title,
 					module: self._defaultApp.name,
 					callback: function() {
 						myaccount
@@ -212,6 +216,9 @@ define(function(require){
 				myaccount = $('#myaccount'),
 				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
 
+			console.log(myaccount.find('li'));
+			console.log(myaccount.find('[data-module]'));
+
 			myaccount.find('.myaccount-menu .nav li').removeClass('active');
 			submodule.addClass('active');
 
@@ -235,6 +242,7 @@ define(function(require){
 		},
 
 		_addSubmodule: function(params) {
+			console.log(params);
 			var self = this,
 				inserted = false,
 				myaccount = $('body #myaccount'),

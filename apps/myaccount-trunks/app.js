@@ -48,7 +48,7 @@ define(function(require){
 			});
 		},
 
-		render: function(account){
+		render: function(callback){
 			var self = this;
 
 			self.getLimits(function(data) {
@@ -77,6 +77,8 @@ define(function(require){
 
 				monster.pub('myaccount.addSubmodule', argsInbound);
 				monster.pub('myaccount.addSubmodule', argsOutbound);
+
+				callback && callback();
 			});
 		},
 

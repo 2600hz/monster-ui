@@ -62,7 +62,7 @@ define(function(require){
 			});
 		},
 
-		render: function(account){
+		render: function(callback){
 			var self = this,
 				dataTemplate = {
 					accountName: monster.apps['auth'].currentAccount.name || ''
@@ -77,6 +77,8 @@ define(function(require){
 				};
 
 			monster.pub('myaccount.addSubmodule', args);
+
+			callback && callback();
 		},
 
 		_renderContent: function(args) {
