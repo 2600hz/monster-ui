@@ -83,10 +83,15 @@ define(function(require){
 				data = _.extend({}, options.data || {});
 
 			settings.error = function requestError (error, one, two, three) {
-				//console.warn('reqwest failure on: ' + options.resource, error)
 				monster.pub('monster.requestEnd');
 
-				options.error && options.error(error);
+				var parsedError = error;
+
+				if('response' in error) {
+					parsedError = $.parseJSON(error.response);
+				}
+
+				options.error && options.error(parsedError, error);
 			};
 
 			settings.success = function requestSuccess (resp) {

@@ -216,9 +216,6 @@ define(function(require){
 				myaccount = $('#myaccount'),
 				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
 
-			console.log(myaccount.find('li'));
-			console.log(myaccount.find('[data-module]'));
-
 			myaccount.find('.myaccount-menu .nav li').removeClass('active');
 			submodule.addClass('active');
 
@@ -242,7 +239,6 @@ define(function(require){
 		},
 
 		_addSubmodule: function(params) {
-			console.log(params);
 			var self = this,
 				inserted = false,
 				myaccount = $('body #myaccount'),

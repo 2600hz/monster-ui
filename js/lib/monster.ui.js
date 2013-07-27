@@ -102,6 +102,7 @@ define(function(require){
 	});
 
 	var ui = {
+		//3 types: info (blue), warning (yellow), error (red)
 		alert: function(type, content, callback){
 			if(typeof content === "undefined"){
 				content = type;
@@ -393,7 +394,27 @@ define(function(require){
 
 				return month+'/'+day+'/'+year;
 			}
-		}, 
+		},
+
+		friendlyError: function(dataError) {
+			var self = this,
+				message = '',
+				i18n = monster.apps['common'].i18n.active();
+
+			if(dataError && dataError.data && 'api_error' in dataError.data && 'errors' in dataError.data.api_error) {
+				var errors = dataError.data.api_error.errors;
+
+				_.each(errors, function(error, k) {
+					message += '<b>' + i18n.error + ' ' + error.code + ': </b>' + i18n.errors[error.code];
+
+					if(k !== errors.length - 1)  {
+						message += '<br/><br/>';
+					}
+				});
+			}
+
+			self.alert('error', message);
+		},
 
 		accountArrayToTree: function(accountArray, rootAccountId) {
 	        var result = {};
@@ -407,13 +428,13 @@ define(function(require){
 	                var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
 	                    currentAcc;
 	                for(var i=0; i<parents.length; i++) {
-	                    if(!currentAcc) { 
+	                    if(!currentAcc) {
 	                        if(!result[parents[i]]) { result[parents[i]] = {}; }
-	                        currentAcc = result[parents[i]]; 
-	                    } else { 
+	                        currentAcc = result[parents[i]];
+	                    } else {
 	                        if(!currentAcc.children) { currentAcc.children = {}; }
 	                        if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-	                        currentAcc = currentAcc.children[parents[i]]; 
+	                        currentAcc = currentAcc.children[parents[i]];
 	                    }
 	                }
 	                if(!currentAcc.children) { currentAcc.children = {}; }

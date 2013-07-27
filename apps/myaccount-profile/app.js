@@ -93,6 +93,10 @@ define(function(require){
 							},
 							success: function(data, status) {
 								callback(null, data.data);
+							},
+							error: function(data, status) {
+								/* For some people billing is not via braintree, but we still ned to display the tab */
+								callback(null, {});
 							}
 						});
 					},
@@ -122,7 +126,7 @@ define(function(require){
 				},
 				function(err, results) {
 					results = self.formatData(results);
-					results.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
+
 					var profile = $(monster.template(self, 'profile', results));
 
 					self.bindEvents(profile, results);
@@ -182,7 +186,9 @@ define(function(require){
 		},
 
 		formatData: function(data) {
-			if('billing' in data) {
+			data.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {};
+
+			if(! _.isEmpty(data.billing) ) {
 				data.billing.credit_card = data.billing.credit_cards[0] || {};
 
 				/* If There is a credit card stored, we fill the fields with * */
@@ -191,6 +197,9 @@ define(function(require){
 					data.billing.credit_card.fake_cvv = '***';
 					data.billing.credit_card.type = data.billing.credit_card.card_type.toLowerCase();
 				}
+			}
+			else {
+				data.uiRestrictions.profile = $.extend(data.uiRestrictions.profile || {}, { show_billing: false });
 			}
 
 			return data;
@@ -211,6 +220,7 @@ define(function(require){
 				},
 				successUpdating = function(key, parent) {
 					profile = parent;
+
 					var link = profile.find('li[data-name='+key+']');
 
 					if(key === 'credit_card') {
@@ -305,9 +315,7 @@ define(function(require){
 								monster.pub('myaccount-profile.renderContent', args);
 							},
 							function(dataError) {
-								if(dataError && dataError.data && 'api_error' in dataError.data && 'message' in dataError.data.api_error) {
-									monster.ui.alert(dataError.data.api_error.message);
-								}
+								monster.ui.friendlyError(dataError);
 							}
 						);
 					},

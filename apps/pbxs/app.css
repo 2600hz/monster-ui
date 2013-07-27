@@ -925,7 +925,7 @@
 }
 
 #edit_number .number-box input[type="checkbox"] {
-	margin: 0;
+	margin: -2px 10px 0 0;
 }
 
 #edit_number .content .stats .title_stats {

@@ -7,7 +7,7 @@
 	"monthlyCharge": "Monthly Charge",
 	"serviceCharge": "Service Charge (Prorated)",
 
-	"noData": "No Data",
+	"noData": "There are no transactions between the 2 dates selected !",
 
 	"per_minute_call": "Per-Minute Call",
 	"sub_account_per_minute_call": "Per-Minute Call (Sub-Account)",

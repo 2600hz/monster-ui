@@ -175,7 +175,7 @@ table.table tr td {
 
 .yellow-box {
 	border: 1px solid yellow;
-	background: yellow;
+	background: #FFFF99;
 }
 
 .orange-box {
@@ -352,6 +352,12 @@ table.table tr td {
 .tooltip.right .tooltip-arrow {
 	border-right-color: #333;
 }
+.tooltip.top .tooltip-arrow {
+	border-top-color: #333;
+}
+.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #333;
+}
 
 .tooltip .tooltip-inner {
 	background: #333;
@@ -460,6 +466,7 @@ table.table tr td {
 
 /* Box Element */
 .number-box {
+	border-top: 1px solid transparent;
 	background: #f9f9f9;
 	height: 50px;
 	line-height: 50px;

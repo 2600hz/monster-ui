@@ -311,8 +311,8 @@ define(function(require){
 				var currentStep = newAccountWizard.find('.wizard-top-bar').data('active_step'),
 					newStep = $(this).data('step');
 				if($(this).hasClass('completed') && currentStep !== newStep) {
-					self.validateStep(currentStep, 
-									  newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), 
+					self.validateStep(currentStep,
+									  newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'),
 									  function() {
 						self.changeStep(newStep, maxStep, newAccountWizard);
 					});
@@ -364,7 +364,7 @@ define(function(require){
 					});
 
 					monster.request({
-						resource: 'accountsManager.create', 
+						resource: 'accountsManager.create',
 						data: {
 							accountId: parentAccountId,
 							data: formData.account
@@ -380,7 +380,7 @@ define(function(require){
 										formData.user.username = formData.user.email;
 										formData.user.priv_level = "admin";
 										monster.request({
-											resource: 'accountsManager.users.create', 
+											resource: 'accountsManager.users.create',
 											data: {
 												accountId: newAccountId,
 												data: formData.user
@@ -398,7 +398,7 @@ define(function(require){
 								},
 								limits: function(callback) {
 									monster.request({
-										resource: 'accountsManager.limits.get', 
+										resource: 'accountsManager.limits.get',
 										data: {
 											accountId: newAccountId
 										},
@@ -423,7 +423,6 @@ define(function(require){
 											});
 										},
 										error: function(data, status) {
-											console.log('get limits error');
 										}
 									});
 								},
@@ -478,7 +477,7 @@ define(function(require){
 					servicePlans: function(callback) {
 						if(monster.apps['auth'].isReseller) {
 							monster.request({
-								resource: 'accountsManager.servicePlans.list', 
+								resource: 'accountsManager.servicePlans.list',
 								data: {
 									accountId: self.accountId
 								},
@@ -492,7 +491,7 @@ define(function(require){
 					},
 					classifiers: function(callback) {
 						monster.request({
-							resource: 'accountsManager.classifiers.get', 
+							resource: 'accountsManager.classifiers.get',
 							data: {
 								accountId: self.accountId
 							},
@@ -643,7 +642,7 @@ define(function(require){
 				formData = form2object('accountsmanager_new_account_form');
 
 			switch(step) {
-				case 1: 
+				case 1:
 					if(!formData.account.name || !formData.account.realm) {
 						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.accountMandatoryFields;
 						validated = false;
@@ -666,7 +665,7 @@ define(function(require){
 					break;
 				case 2:
 					break;
-				case 3: 
+				case 3:
 					if(!/^(\d+(\.\d{1,2})?)?$/.test(formData.addCreditBalance)) {
 						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.incorrectBalanceFormat;
 						validated = false;
@@ -758,7 +757,7 @@ define(function(require){
 						var userId = $(this).parent().parent().data('user_id');
 						monster.ui.confirm(self.i18n.active().deleteUserConfirm, function() {
 							monster.request({
-								resource: 'accountsManager.users.delete', 
+								resource: 'accountsManager.users.delete',
 								data: {
 									accountId: editAccountId,
 									userId: userId
@@ -793,7 +792,7 @@ define(function(require){
 							$adminPasswordDiv = $adminElement.find('.edit-admin-password-div');
 
 						$adminPasswordDiv.hide();
-						
+
 						$adminElement.find('.admin-cancel-btn').click(function(e) {
 							e.preventDefault();
 							$adminElement.find('input').each(function() {
@@ -815,18 +814,18 @@ define(function(require){
 								});
 							}
 						})
-						
+
 						$adminElement.find('.admin-save-btn').click(function(e) {
 							e.preventDefault();
 							var formData = form2object($adminElement.find('form')[0]);
-							
+
 							if(!(formData.first_name && formData.last_name && formData.email)) {
 								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
 							} else if($adminPasswordDiv.is(":visible")
-									&& (formData.password.length < 6 
-										|| /\s/.test(formData.password) 
-										|| !/\d/.test(formData.password) 
-										|| !/[A-Za-z]/.test(formData.password) 
+									&& (formData.password.length < 6
+										|| /\s/.test(formData.password)
+										|| !/\d/.test(formData.password)
+										|| !/[A-Za-z]/.test(formData.password)
 										)
 									) {
 								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
@@ -838,7 +837,7 @@ define(function(require){
 									delete formData.password;
 								}
 								monster.request({
-									resource: 'accountsManager.users.get', 
+									resource: 'accountsManager.users.get',
 									data: {
 										accountId: editAccountId,
 										userId: userId
@@ -849,7 +848,7 @@ define(function(require){
 										}
 										var newData = $.extend(true, {}, data.data, formData);
 										monster.request({
-											resource: 'accountsManager.users.update', 
+											resource: 'accountsManager.users.update',
 											data: {
 												accountId: editAccountId,
 												userId: userId,
@@ -878,11 +877,11 @@ define(function(require){
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
 							if(!(formData.first_name && formData.last_name && formData.email)) {
 								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
-							} else if(!autoGen 
-									&& (formData.password.length < 6 
-										|| /\s/.test(formData.password) 
-										|| !/\d/.test(formData.password) 
-										|| !/[A-Za-z]/.test(formData.password) 
+							} else if(!autoGen
+									&& (formData.password.length < 6
+										|| /\s/.test(formData.password)
+										|| !/\d/.test(formData.password)
+										|| !/[A-Za-z]/.test(formData.password)
 										)
 									) {
 								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
@@ -897,7 +896,7 @@ define(function(require){
 								}
 
 								monster.request({
-									resource: 'accountsManager.users.create', 
+									resource: 'accountsManager.users.create',
 									data: {
 										accountId: editAccountId,
 										data: formData
@@ -910,7 +909,7 @@ define(function(require){
 						} else {
 							var userId = contentHtml.find('#accountsmanager_promote_user_select option:selected').val();
 							monster.request({
-								resource: 'accountsManager.users.get', 
+								resource: 'accountsManager.users.get',
 								data: {
 									accountId: editAccountId,
 									userId: userId
@@ -918,7 +917,7 @@ define(function(require){
 								success: function(data, status) {
 									data.data.priv_level = "admin";
 									monster.request({
-										resource: 'accountsManager.users.update', 
+										resource: 'accountsManager.users.update',
 										data: {
 											accountId: editAccountId,
 											userId: userId,
@@ -945,7 +944,7 @@ define(function(require){
 			monster.parallel({
 					account: function(callback) {
 						monster.request({
-							resource: 'accountsManager.get', 
+							resource: 'accountsManager.get',
 							data: {
 								accountId: accountId
 							},
@@ -956,7 +955,7 @@ define(function(require){
 					},
 					users: function(callback) {
 						monster.request({
-							resource: 'accountsManager.users.list', 
+							resource: 'accountsManager.users.list',
 							data: {
 								accountId: accountId
 							},
@@ -967,7 +966,7 @@ define(function(require){
 					},
 					listServicePlans: function(callback) {
 						monster.request({
-							resource: 'accountsManager.servicePlans.list', 
+							resource: 'accountsManager.servicePlans.list',
 							data: {
 								accountId: accountId
 							},
@@ -978,14 +977,14 @@ define(function(require){
 					},
 					currentServicePlan: function(callback) {
 						monster.request({
-							resource: 'accountsManager.servicePlans.current', 
+							resource: 'accountsManager.servicePlans.current',
 							data: {
 								accountId: accountId
 							},
 							success: function(data, status) {
 								if(!$.isEmptyObject(data.data.plans)) {
 									monster.request({
-										resource: 'accountsManager.servicePlans.get', 
+										resource: 'accountsManager.servicePlans.get',
 										data: {
 											accountId: accountId,
 											planId: Object.keys(data.data.plans)[0]
@@ -1005,7 +1004,7 @@ define(function(require){
 					},
 					limits: function(callback) {
 						monster.request({
-							resource: 'accountsManager.limits.get', 
+							resource: 'accountsManager.limits.get',
 							data: {
 								accountId: accountId
 							},
@@ -1016,7 +1015,7 @@ define(function(require){
 					},
 					classifiers: function(callback) {
 						monster.request({
-							resource: 'accountsManager.classifiers.get', 
+							resource: 'accountsManager.classifiers.get',
 							data: {
 								accountId: accountId
 							},
@@ -1027,7 +1026,7 @@ define(function(require){
 					},
 					currentBalance: function(callback) {
 						monster.request({
-							resource: 'accountsManager.balance.get', 
+							resource: 'accountsManager.balance.get',
 							data: {
 								accountId: accountId
 							},
@@ -1087,8 +1086,8 @@ define(function(require){
 						name: val.friendly_name,
 						checked: true
 					};
-					if(accountLimits.call_restriction 
-						&& key in accountLimits.call_restriction 
+					if(accountLimits.call_restriction
+						&& key in accountLimits.call_restriction
 						&& accountLimits.call_restriction[key].action === "deny") {
 						ret.checked = false;
 					}
@@ -1104,7 +1103,7 @@ define(function(require){
 
 			if($.isNumeric(templateData.account.created)) {
 				templateData.account.created = monster.ui.toFriendlyDate(accountData.created, "short");
-			}			
+			}
 
 			var contentHtml = $(monster.template(self, 'edit', templateData)),
 				$liSettings = contentHtml.find('li.settings-item'),
@@ -1156,7 +1155,7 @@ define(function(require){
 
 				monster.ui.confirm(self.i18n.active().deleteAccountConfirm, function() {
 					monster.request({
-						resource: 'accountsManager.delete', 
+						resource: 'accountsManager.delete',
 						data: {
 							accountId: accountData.id,
 							data: {}
@@ -1244,7 +1243,7 @@ define(function(require){
 							};
 						if(servicePlans.currentId) {
 							monster.request({
-								resource: 'accountsManager.servicePlans.delete', 
+								resource: 'accountsManager.servicePlans.delete',
 								data: {
 									accountId: accountData.id,
 									planId: servicePlans.currentId,
@@ -1253,7 +1252,7 @@ define(function(require){
 								success: function(data, status) {
 									if (newPlanId) {
 										monster.request({
-											resource: 'accountsManager.servicePlans.add', 
+											resource: 'accountsManager.servicePlans.add',
 											data: {
 												accountId: accountData.id,
 												planId: newPlanId,
@@ -1276,7 +1275,7 @@ define(function(require){
 							});
 						} else if (newPlanId) {
 							monster.request({
-								resource: 'accountsManager.servicePlans.add', 
+								resource: 'accountsManager.servicePlans.add',
 								data: {
 									accountId: accountData.id,
 									planId: newPlanId,
@@ -1301,7 +1300,7 @@ define(function(require){
 						$btn_rec.addClass('disabled');
 						$btn_sync.addClass('disabled');
 						monster.request({
-							resource: 'accountsManager.servicePlans.reconciliation', 
+							resource: 'accountsManager.servicePlans.reconciliation',
 							data: {
 								accountId: accountData.id,
 								data: {}
@@ -1318,7 +1317,7 @@ define(function(require){
 							}
 						});
 					}
-					
+
 				});
 
 				$btn_sync.click(function(e) {
@@ -1327,7 +1326,7 @@ define(function(require){
 						$btn_rec.addClass('disabled');
 						$btn_sync.addClass('disabled');
 						monster.request({
-							resource: 'accountsManager.servicePlans.synchronization', 
+							resource: 'accountsManager.servicePlans.synchronization',
 							data: {
 								accountId: accountData.id,
 								data: {}
@@ -1653,7 +1652,7 @@ define(function(require){
 				delete dataToUpdate.reseller;
 			}
 			monster.request({
-				resource: 'accountsManager.update', 
+				resource: 'accountsManager.update',
 				data: {
 					accountId: data.id,
 					data: $.extend(true, {}, data, newData)

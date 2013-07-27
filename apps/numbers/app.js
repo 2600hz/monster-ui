@@ -368,7 +368,6 @@ define(function(require){
 			/* to plugin */
 			var originalAccountTree = {},
 				moveNumbersToAccount = function(accountId) {
-					console.log('move');
 					var listNumbers = [],
 						destinationAccountId = accountId,
 						destinationIndex = -1,
@@ -695,7 +694,6 @@ define(function(require){
 		},
 
 		moveNumbers: function(args, callback) {
-			console.log('moveNumbers');
 			var self = this;
 
 			monster.request({

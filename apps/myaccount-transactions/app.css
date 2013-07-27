@@ -28,6 +28,13 @@
 	margin-top: 25px;
 }
 
+.transactions-content-wrapper .list-transactions .no-data {
+	background: none repeat scroll 0 0 #F0F0F0;
+	border: 1px solid #CCCCCC;
+	padding: 15px;
+	text-align: center;
+}
+
 .transactions-content-wrapper .list-transactions .transaction {
 	line-height: 65px;
 	margin-bottom: 15px;

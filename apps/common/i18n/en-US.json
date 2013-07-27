@@ -52,5 +52,10 @@
 		"previous": "Previous",
 		"next": "Next",
 		"last": "Last"
+	},
+
+	"errors": {
+		"81714": "Credit card number is required.",
+		"81725": "Credit card must include one of number or venmo_sdk_payment_method_code."
 	}
 }

@@ -85,7 +85,6 @@ define(function(require){
 						category: 'billingCategory'
 					};
 
-				console.log(args);
 				monster.pub('myaccount.addSubmodule', args);
 
 				callback && callback();

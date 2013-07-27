@@ -50,9 +50,6 @@ define(function(require){
                     list = parent.find('.account-list'),
                     accountId = $(this).parent().data('id');
 
-                    console.log(currentAccountTree);
-                    console.log(accountId);
-
                 currentAccountTree = currentAccountTree[accountId].children;
 
                 var template = monster.template(self, 'accountDropdown', { accounts: currentAccountTree });
@@ -95,7 +92,6 @@ define(function(require){
             parent.on('click', '.accounts-dropdown .account-link', function(event) {
 				var destinationAccountId = $(this).parent().data('id');
 
-				console.log('click');
 				args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId);
 			});
 
