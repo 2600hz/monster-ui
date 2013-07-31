@@ -18,6 +18,10 @@ define(function(require){
 				url: 'shared_auth',
 				verb: 'PUT'
 			},
+			'auth.pinAuth': {
+				url: 'pin_auth',
+				verb: 'PUT'
+			},
 			'auth.getUser': {
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
@@ -32,6 +36,7 @@ define(function(require){
 			'auth.authenticate' : '_authenticate',
 			'auth.loadAccount' : '_loadAccount',
 			'auth.loginClick': '_loginClick',
+			'auth.conferenceLogin': '_conferenceLogin',
 			'auth.logout': '_logout',
 			'auth.initApp' : '_initApp',
 			'auth.welcome' : '_login',
@@ -184,6 +189,7 @@ define(function(require){
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster.login')) || {},
+				templateName = monster.config.appleConference ? 'conferenceLogin' : 'login',
 				templateData = {
 					label: {
 						login: 'Login:'
@@ -194,9 +200,13 @@ define(function(require){
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false
 				},
-				loginHtml = monster.template(self, 'login', templateData),
+				loginHtml = $(monster.template(self, templateName, templateData)),
 				content = $('#welcome_page .right_div');
 
+			loginHtml.find('.login-tabs a').click(function(e) {
+				e.preventDefault();
+				$(this).tab('show');
+			});
 			content.empty().append(loginHtml);
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
@@ -204,10 +214,14 @@ define(function(require){
 			content.find('.login').on('click', function(event){
 				event.preventDefault();
 
-				monster.pub('auth.loginClick', {
-					realm: realm,
-					accountName: accountName
-				});
+				if($(this).data('login_type') === 'conference') {
+					monster.pub('auth.conferenceLogin');
+				} else {
+					monster.pub('auth.loginClick', {
+						realm: realm,
+						accountName: accountName
+					});
+				}
 			});
 		},
 
@@ -233,7 +247,7 @@ define(function(require){
 				},
 				success = function(app) {
 					app.isMasqueradable = app.isMasqueradable || true;
-					app.accountId = app.isMasqueradable ? self.currentAccount.id : self.accountId;
+					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
                     args.callback && args.callback();
@@ -322,6 +336,51 @@ define(function(require){
 			}
 
 			monster.pub('auth.authenticate', _.extend({ credentials: hashedCreds }, loginData));
+		},
+
+		_conferenceLogin: function(data) {
+			var self = this,
+				formData = form2object('user_login_form');
+
+			_.each(formData.update, function(val, key) { 
+				if(!val) { delete formData.update[key]; }
+			});
+			monster.request({
+				resource: 'auth.pinAuth',
+				data: {
+					data: formData
+				},
+				success: function (data, status) {
+					self.accountId = data.data.account_id;
+					self.authToken = data.auth_token;
+					self.userId = null;
+					self.isReseller = data.data.is_reseller;
+
+					$('#ws-content').empty();
+
+					monster.apps.load('conferences', function(app) {
+						app.userType = 'unregistered';
+						app.user = formData;
+						app.isModerator = data.data.is_moderator;
+						app.conferenceId = data.data.conference_id;
+						app.render($('#ws-content'));
+					});
+				},
+				error: function(error) {
+					if(error.status === 400) {
+						monster.ui.alert('Invalid credentials, please check that your PIN is correct.');
+					}
+					else if($.inArray(error.status, [401, 403]) > -1) {
+						monster.ui.alert('Invalid credentials, please check that your PIN is correct.');
+					}
+					else if(error.statusText === 'error') {
+						monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
+					}
+					else {
+						monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
+					}
+				}
+			});
 		}
 	}
 

@@ -112,13 +112,17 @@ define(function(require){
 				delete data[name];
 			});
 
-			var postData = {
-				data: data.data
-			};
-
 			if(settings.method.toLowerCase() !== 'get'){
+				var postData = data.data;
+
+				if(settings.contentType === 'application/json') {
+					postData = JSON.stringify({
+						data: data.data
+					});
+				}
+
 				settings = _.extend(settings, {
-					data: JSON.stringify(postData)
+					data: postData
 				});
 			}
 

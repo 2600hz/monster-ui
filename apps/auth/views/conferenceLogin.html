@@ -1,0 +1,98 @@
+<div id="conference_login_container">
+    <ul class="nav nav-tabs login-tabs">
+        <li class="active"><a href="#user_login_tab">{{ i18n.conferenceLogin.userTab }}</a></li>
+        <li><a href="#admin_login_tab">{{ i18n.conferenceLogin.adminTab }}</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="user_login_tab" class="tab-pane conference-login active">
+            <div class="conference-login-header">
+                <i class="icon-apple icon-large"></i>
+                <div>{{ i18n.conferenceLogin.headerLabel }}</div>
+            </div>
+            <form id="user_login_form" class="conference-login-content">
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.conferenceLogin.pinLabel }}</label>
+                    <div class="controls">
+                        <input type="text" name="pin">
+                    </div>
+                </div>
+                <div class="control-group clearfix splitter-div">
+                    <div class="splitter-bar"></div>
+                    <div class="splitter-text">{{ i18n.conferenceLogin.optionalSplitter }}</div>
+                    <div class="splitter-bar"></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.conferenceLogin.nameLabel }}</label>
+                    <div class="controls">
+                        <input type="text" name="update.name">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.conferenceLogin.callInLabel }}</label>
+                    <div class="controls">
+                        <input type="text" name="update.number">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button class="conf-btn blue-btn login" data-login_type="conference" type="submit">{{ i18n.conferenceLogin.buttonLabel }}</button>
+                    </div>
+                </div>
+
+                <!-- <div class="control-group">
+                    <div class="controls">
+                        <button id="create_conf_button" class="conf-btn" type="button">Create a Conference</button>
+                    </div>
+                </div> -->
+            </form>
+        </div>
+            
+        <div id="admin_login_tab" class="tab-pane conference-login">
+            <div class="conference-login-header">
+                <i class="icon-apple icon-large"></i>
+                <div>Conference Login</div>
+            </div>
+            <form class="conference-login-content">
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.login.label }}</label>
+                    <div class="controls">
+                        <input type="text" id="login" name="login" value="{{ username }}">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.password }}</label>
+                    <div class="controls">
+                        <input type="password" name="password" id="password" >
+                    </div>
+                </div>
+                {{#if requestAccountName }}
+                <div class="control-group">
+                    <label class="control-label">{{ i18n.account.name }}</label>
+                    <div class="controls">
+                        <input type="text" id="account_name" name="account_name" value="{{ account_name }}">
+                    </div>
+                </div>
+                {{/if}}
+                <div class="control-group">
+                    <div class="controls">
+                        <label class="checkbox">
+                            {{#if rememberMe }}
+                                <input id="remember_me" type="checkbox" CHECKED="CHECKED"/>
+                            {{else }}
+                                <input id="remember_me" type="checkbox"/>
+                            {{/if }}
+                            {{ i18n.rememberMe }}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button class="conf-btn blue-btn login" type="submit">{{ i18n.login.label }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

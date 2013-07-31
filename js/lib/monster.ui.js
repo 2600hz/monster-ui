@@ -5,15 +5,16 @@ define(function(require){
 		monster = require('monster');
 
 	var requestAmount = 0,
-		homeIcon;
+		homeIcon,
+		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-home';
 
 	monster.sub('monster.requestStart', function() {
 		requestAmount++;
 
 		homeIcon = homeIcon || $('#home_link > i');
 
-		if(homeIcon.hasClass('icon-home')) {
-			homeIcon .removeClass('icon-home')
+		if(homeIcon.hasClass(homeIconClass)) {
+			homeIcon .removeClass(homeIconClass)
 					 .addClass('icon-spin icon-spinner');
 		}
 	});
@@ -21,7 +22,7 @@ define(function(require){
 	monster.sub('monster.requestEnd', function() {
 		if(--requestAmount === 0) {
 			homeIcon.removeClass('icon-spin icon-spinner')
-					.addClass('icon-home');
+					.addClass(homeIconClass);
 		}
 	});
 
@@ -101,9 +102,19 @@ define(function(require){
 		}
 	});
 
+	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+	    _title: function(title) {
+	        if (!this.options.title ) {
+	            title.html("&#160;");
+	        } else {
+	            title.html(this.options.title);
+	        }
+	    }
+	}));
+
 	var ui = {
 		//3 types: info (blue), warning (yellow), error (red)
-		alert: function(type, content, callback){
+		alert: function(type, content, callback, options){
 			if(typeof content === "undefined"){
 				content = type;
 				type = "info";
@@ -113,15 +124,19 @@ define(function(require){
 				template = monster.template(commonApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
 				content = $(template),
 				i18n = commonApp.i18n.active(),
-				options = {
-					title: i18n[type],
-					onClose: function(){
-						callback && callback();
-					}
-				},
+				options = $.extend(
+					true,
+					{
+						title: i18n[type],
+						onClose: function(){
+							callback && callback();
+						}
+					},
+					options
+				),
 				dialog;
 
-			dialog = this.dialog(content, options, i18n);
+			dialog = this.dialog(content, options);
 
 			dialog.find('.btn.alert_button').click(function() {
 				dialog.dialog('close');
@@ -139,20 +154,24 @@ define(function(require){
 			return dialog;
 		},
 
-		confirm: function(content, callbackOk, callbackCancel) {
+		confirm: function(content, callbackOk, callbackCancel, options) {
 			var self = this,
 				dialog,
 				commonApp = monster.apps['common'],
 				i18n = commonApp.i18n.active();
 				template = monster.template(commonApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
 				confirmBox = $(template),
-				options = {
-					closeOnEscape: false,
-					title: i18n.dialog.confirmTitle,
-					onClose: function() {
-						ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
-					}
-				},
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						title: i18n.dialog.confirmTitle,
+						onClose: function() {
+							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
+						}
+					},
+					options
+				),
 				ok = false;
 
 			dialog = this.dialog(confirmBox, options);
@@ -172,8 +191,11 @@ define(function(require){
 		dialog: function(content, options) {
 			var dialog = $("<div />").append(content),
 				commonApp = monster.apps['common'],
-				i18n = commonApp.i18n.active();
+				i18n = commonApp.i18n.active(),
+				dialogType = options.dialogType || 'classic',
+				closeBtnText = i18n['close'] || 'X';
 
+			delete options.dialogType;
 			$('input', content).keypress(function(e) {
 				if(e.keyCode == 13) {
 					e.preventDefault();
@@ -216,7 +238,10 @@ define(function(require){
 			options = $.extend(defaults, options || {}, strictOptions);
 			dialog.dialog(options);
 
-			dialog.siblings().find('.ui-dialog-titlebar-close').text(i18n['close'] || 'X');
+			if(dialogType === 'conference') {
+				closeBtnText = '<i class="icon-remove icon-small"></i>'
+			}
+			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},

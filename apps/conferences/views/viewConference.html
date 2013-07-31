@@ -1,0 +1,45 @@
+<div id="view_conference">
+	<div class="content clearfix">
+		{{#each users}}
+		{{/each}}
+	</div>
+
+	<div class="footer navbar navbar-fixed-bottom">
+		<div class="info block">
+			<div class="info-wrapper">
+				<div class="conference-title">{{ name }} <span class="hidden-desktop">(<span class="timerjs">{{ elapsedTime }}</span>)</span></div>
+				<div class="pin-block">
+					<span class="moderator-pin"><i class="icon-user"></i>{{ i18n.moderator.pin }}: {{ pins.moderator }}</span>
+					<span class="member-pin"><i class="icon-user"></i>{{ i18n.member.pin }}: {{ pins.member }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="timer block visible-desktop">
+			<div class="timer-wrapper">
+				<div class="timerjs timer-text">{{ elapsedTime }}</div>
+			</div>
+		</div>
+		<div class="actions block">
+			<div class="actions-wrapper">
+				<div class="action-conference separated" data-action="add-user">
+					<i class="icon-telicon-add-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.addUser }}"></i>
+				</div>
+				<div class="action-conference api togglable{{#if record}} active{{/if}}" data-action="record">
+					<i class="icon-circle" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.record }}"></i>
+					<i class="icon-circle icon-red active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.stopRecord }}"></i>
+				</div>
+				<div class="action-conference api togglable{{#if mute}} active{{/if}}" data-action="mute">
+					<i class="icon-microphone" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.mute }}"></i>
+					<i class="icon-microphone-off icon-blue active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.unmute }}"></i>
+				</div>
+				<div class="action-conference api togglable separated{{#if lock}} active{{/if}}" data-action="lock">
+					<i class="icon-unlock" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.lock }}"></i>
+					<i class="icon-lock icon-yellow active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.unlock }}"></i>
+				</div>
+				<div class="action-conference" data-action="hangup">
+					<i class="icon-signout" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.hangup }}"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

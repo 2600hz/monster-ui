@@ -347,10 +347,16 @@ table.table tr td {
 }
 
 .tooltip.left .tooltip-arrow {
-	border-left-color: #333;
+	border-left-color: #222;
 }
 .tooltip.right .tooltip-arrow {
-	border-right-color: #333;
+	border-right-color: #222;
+}
+.tooltip.top .tooltip-arrow {
+	border-top-color: #222;
+}
+.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #222;
 }
 .tooltip.top .tooltip-arrow {
 	border-top-color: #333;
@@ -360,7 +366,7 @@ table.table tr td {
 }
 
 .tooltip .tooltip-inner {
-	background: #333;
+	background: #222;
 	line-height: 15px;
 	text-align: left;
 	padding: 10px;
@@ -576,170 +582,197 @@ body a.monster_link:hover {
 
 /* Old Trunkstore Popup */
 .trunkstore_popup .note_icon {
-    background: url('static/images/note.png') no-repeat;
-    width: 23px;
-    height: 23px;
-    display: inline-block;
+	background: url('static/images/note.png') no-repeat;
+	width: 23px;
+	height: 23px;
+	display: inline-block;
 }
 
 .trunkstore_popup p.note_box {
-    background-color: #E7E7E7;
-    padding: 15px 10px;
-    font-size: 12px;
-    line-height:15px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    border: 2px solid #A6A6A6;
-    text-align: center;
+	background-color: #E7E7E7;
+	padding: 15px 10px;
+	font-size: 12px;
+	line-height:15px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border: 2px solid #A6A6A6;
+	text-align: center;
 }
 
 .trunkstore_popup .help {
-    margin-top: 15px;
-    text-align: left;
-    font-size: 10px;
-    line-height: 16px;
-    display: block;
-    font-weight: normal;
+	margin-top: 15px;
+	text-align: left;
+	font-size: 10px;
+	line-height: 16px;
+	display: block;
+	font-weight: normal;
 }
 
 .trunkstore_popup .fancy_help {
-    margin-top: 15px;
-    text-align: left;
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: normal;
-    margin: 5px 2% 5px 2%;
-    padding: 1%;
-    display: inline-block;
-    width: 93%;
+	margin-top: 15px;
+	text-align: left;
+	font-size: 11px;
+	line-height: 16px;
+	font-weight: normal;
+	margin: 5px 2% 5px 2%;
+	padding: 1%;
+	display: inline-block;
+	width: 93%;
 }
 
 .trunkstore_popup .fancy_help.small {
-    width: 250px;
+	width: 250px;
 }
 
 .trunkstore_popup .fancy_help.small .wrapper_icon {
-    width: 23px;
+	width: 23px;
 }
 
 .trunkstore_popup .fancy_help.small .help_text {
-    width: 220px;
+	width: 220px;
 }
 
 .trunkstore_popup .fancy_help.border {
-    background: #ddd;
-    border: 1px solid #adadad;
+	background: #ddd;
+	border: 1px solid #adadad;
 }
 
 .trunkstore_popup .fancy_help .wrapper_icon {
-    text-align: center;
-    padding-right: 1%;
-    width: 5%;
-    display: inline-block;
-    vertical-align: middle;
+	text-align: center;
+	padding-right: 1%;
+	width: 5%;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .trunkstore_popup .fancy_help .help_text {
-    width: 93%;
-    display: inline-block;
-    vertical-align: middle;
+	width: 93%;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 /* Dropdown account */
 .accounts-dropdown {
-    padding: 0;
-    overflow-x: hidden;
+	padding: 0;
+	overflow-x: hidden;
 }
 
 .accounts-dropdown .left-menu {
-    float: left;
-    background-color: #F3F3F3;
-    border-right: solid 1px #999;
-    width: 240px;
-    overflow: hidden;
+	float: left;
+	background-color: #F3F3F3;
+	border-right: solid 1px #999;
+	width: 240px;
+	overflow: hidden;
 }
 
 .accounts-dropdown .left-menu .search-box {
-    width: 220px;
-    padding: 20px 10px;
-    border-bottom: solid 1px #999;
+	width: 220px;
+	padding: 20px 10px;
+	border-bottom: solid 1px #999;
 }
 
 .accounts-dropdown .left-menu .search-box .search-query {
-    width: 178px;
+	width: 178px;
 }
 
 .accounts-dropdown .left-menu .account-list-container {
-    width: 480px;
+	width: 480px;
 }
 
 .accounts-dropdown .left-menu .account-list, .accounts-dropdown .left-menu .account-list-slider {
-    margin: 0;
-    list-style: none;
-    float: left;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 300px;
+	margin: 0;
+	list-style: none;
+	float: left;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 300px;
 }
 
 .accounts-dropdown .left-menu .account-list-element {
-    line-height: 40px;
-    max-height: 40px;
-    overflow: hidden;
-    border-bottom: solid 1px #ccc;
-    font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
-    width: 240px;
+	line-height: 40px;
+	max-height: 40px;
+	overflow: hidden;
+	border-bottom: solid 1px #ccc;
+	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
+	width: 240px;
 }
 
 .accounts-dropdown .left-menu .account-list-element.active {
-    background-color: #fff;
+	background-color: #fff;
 }
 
 .accounts-dropdown .left-menu .account-list-element > div {
-    display: inline-block;
+	display: inline-block;
 }
 
 .accounts-dropdown .left-menu .account-list-element > div:hover {
-    cursor: pointer;
-    color: #22ccff;
+	cursor: pointer;
+	color: #22ccff;
 }
 
 .accounts-dropdown .left-menu .account-list-element > div:hover > i {
-    color: #22ccff;
+	color: #22ccff;
 }
 
 .accounts-dropdown .left-menu .account-link {
-    padding: 0 10px;
-    width: 220px;
+	padding: 0 10px;
+	width: 220px;
 }
 
 .accounts-dropdown .left-menu .account-link.smaller-link {
-    width: 149px;
+	width: 149px;
 
 }
 
 .accounts-dropdown .left-menu .account-link .account-name {
-    font-size: 16px;
-    height: 40px;
-    line-height: 40px;
-    overflow: hidden;
+	font-size: 16px;
+	height: 40px;
+	line-height: 40px;
+	overflow: hidden;
 }
 
 .accounts-dropdown .left-menu .account-link .account-realm {
-    font-size: 10px;
-    height: 20px;
-    line-height: 0px;
+	font-size: 10px;
+	height: 20px;
+	line-height: 0px;
 }
 
 .accounts-dropdown .left-menu .account-children-link {
-    border-left: solid 1px #ccc;
-    height: 40px;
-    float: right;
-    vertical-align: top;
-    width: 50px;
+	border-left: solid 1px #ccc;
+	height: 40px;
+	float: right;
+	vertical-align: top;
+	width: 50px;
 }
 
 .accounts-dropdown .left-menu .account-children-link > i {
-    vertical-align: middle;
-    margin-left: 17px;
+	vertical-align: middle;
+	margin-left: 17px;
 }
+
+/* Checkboxes & Radio Buttons Styles */
+
+/*input[type="checkbox"]:before {
+	content: "";
+	display: inline-block;
+
+	width: 16px;
+	height: 16px;
+
+	margin-right: 10px;
+	position: relative;
+	left: -1px;
+	bottom: 1px;
+	background-color: #aaa;
+	box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+}
+
+input[type="checkbox"]:checked:before {
+	content: "\2713";
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+	bottom: 2px;
+	font-size: 15px;
+	color: #f3f3f3;
+	text-align: center;
+	line-height: 15px;
+}*/

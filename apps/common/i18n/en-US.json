@@ -28,6 +28,8 @@
 	"e911": "e911",
 	"failover": "Failover",
 
+	"examplePhoneNumber": "+1 (415) 482-9912",
+
 	"dialog" : {
 		"showError": "Show Error",
 		"confirmOk": "OK",

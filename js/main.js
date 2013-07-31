@@ -8,6 +8,7 @@ require.config({
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
 		form2object: 'js/lib/form2object',
 		handlebars: 'js/lib/handlebars-1.0.10',
+		hotkeys: 'js/lib/jquery.hotkeys.min',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
 		jstz: 'js/lib/jstz.min',
@@ -21,7 +22,10 @@ require.config({
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
 		toastr: 'js/lib/toastr-1.3.0.min',
-		underscore: 'js/lib/underscore-1.4.4.min'
+		timepicker: 'js/lib/jquery.timepicker.min',
+		socket: 'js/lib/socket.io.min',
+		underscore: 'js/lib/underscore-1.4.4.min',
+		wysiwyg: 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {
 		bootstrap: ['jqueryui'],
@@ -43,10 +47,12 @@ require.config({
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
 	$.support.cors = true;
 
-	require(['monster-util', 'monster-ui', 'monster-apps'], function(util, ui, apps){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
+
+		monster.socket = io.connect('http://192.168.1.82:5555');
 
 		$(function(){
 			monster.apps.load('core', function(app){

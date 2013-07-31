@@ -69,3 +69,120 @@
 		width: 90%;
 	}
 }
+
+/***************************************************************************************************/
+
+#conference_login_container .tab-content {
+    border: none;
+    background-color: inherit;
+}
+
+#conference_login_container .login-tabs {
+	margin-top: 20px;
+}
+
+#conference_login_container .conference-login {
+    width: 300px;
+    border: solid 1px #777;
+}
+
+#conference_login_container .conference-login-header {
+    background: #ddd;
+    padding: 10px 20px;
+    border-bottom: solid 1px #777;
+    color: #777;
+    line-height: 30px;
+}
+
+#conference_login_container .conference-login-header i {
+    color: #777;
+    margin-right: 10px;
+}
+
+#conference_login_container .conference-login-header div {
+    display: inline-block;
+    font-size: 20px;
+}
+
+#conference_login_container .conference-login-content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin: 0;
+}
+
+#conference_login_container .conference-login-content label {
+    font-size: 13px;
+}
+
+#conference_login_container .conference-login-content .splitter-div .splitter-bar {
+    float: left;
+    width: 35%;
+    border-bottom: solid 1px #777;
+    height: 10px;
+}
+
+#conference_login_container .conference-login-content .splitter-div .splitter-text {
+    float: left;
+    width: 30%;
+    text-align: center;
+    font-size: 13px;
+    height: 20px;
+}
+
+#conference_login_container .conference-login-content .control-group:last-child {
+    /*margin-top: 20px;
+    padding-top: 20px;
+    border-top: solid 1px #777;*/
+    margin-bottom: 0;
+}
+
+#conference_login_container .conference-login button {
+    width: 100%;
+}
+
+#conference_login_container .conference-login input[type="text"], .conference-login input[type="password"] {
+	border-radius: 0;
+	border-color: #aaa;
+	width:100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	height: 30px;
+}
+
+#conference_login_container .conference-login button.conf-btn {
+	padding: 12px 20px;
+	border: none;
+	font-size: 16px;
+	color: #333;
+	background-color: #ddd;
+}
+
+#conference_login_container .conference-login button.conf-btn:hover {
+	background-color: #aaa;
+	color: #fff;
+}
+
+#conference_login_container .conference-login button.conf-btn:active {
+	box-shadow: 1px 1px 1px #333 inset;
+	background-color: #aaa;
+	color: #fff;
+}
+
+#conference_login_container .conference-login button.blue-btn {
+	background-color: #22ccff;
+	color: #333;
+}
+
+#conference_login_container .conference-login button.blue-btn:hover, 
+#conference_login_container .conference-login button.blue-btn:active {
+	background-color: #22b0ff;
+	color: #fff;
+}
+
+@media (max-width: 979px) {
+	#conference_login_container {
+		width: 302px;
+		margin: auto;
+	}
+}

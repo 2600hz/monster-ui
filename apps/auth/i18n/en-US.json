@@ -17,5 +17,16 @@
 	"login":{
 		"label": "Login",
 		"placeholder": "Username"
+	},
+
+	"conferenceLogin": {
+		"userTab": "User",
+		"adminTab": "Administrator",
+		"headerLabel": "Conference Login",
+		"pinLabel": "Pin Number",
+		"nameLabel": "Name",
+		"callInLabel": "Your 'Call-in' Phone Number",
+		"optionalSplitter": "Optional",
+		"buttonLabel": "Log-in to Conference"
 	}
 }

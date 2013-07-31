@@ -51,7 +51,7 @@ define(function(require){
 				var humanDate = month+'/'+day+'/'+year,
 					humanTime = hours + ':' + minutes + suffix;
 
-				if(todayYear === year && todayMonth === month && todayDay === day && type !== 'short') {
+				if(todayYear === year && todayMonth === month && todayDay === day && type !== 'short' && type !== 'standard') {
 					humanDate = 'Today';
 				}
 
@@ -64,6 +64,16 @@ define(function(require){
 			}
 
 			return parsedDate;
+		},
+
+		friendlyTimer: function(seconds) {
+			var seconds = Math.floor(seconds),
+				hours = Math.floor(seconds / 3600),
+				minutes = Math.floor(seconds / 60) % 60,
+				remainingSeconds = seconds % 60,
+				displayTime = (hours < 10 ? '0' + hours : '' + hours) + ':' + (minutes < 10 ? '0' + minutes : '' + minutes) + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : '' + remainingSeconds);
+
+			return seconds >= 0 ? displayTime : '00:00:00';
 		},
 
 		gregorianToDate: function(timestamp) {
@@ -119,6 +129,8 @@ define(function(require){
 		},
 
 		formatPhoneNumber: function(phoneNumber){
+			phoneNumber = phoneNumber.toString();
+
 			if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
 				phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
 			}
