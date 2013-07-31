@@ -22,6 +22,7 @@
 
 .service-plan-content-wrapper .action-bar li.dropdown-download i {
 	margin-right: 5px;
+	text-decoration: none;
 }
 
 .service-plan-content-wrapper .action-bar li.dropdown-download {
