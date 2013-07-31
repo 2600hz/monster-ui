@@ -106,7 +106,7 @@ define(function(require){
 		_render: function(container) {
 			var self = this,
 				pbxsManager = $(monster.template(self, 'pbxsManager')),
-				parent = container || $('#ws-content');
+				parent = _.isEmpty(container) ? $('#ws-content') : container;
 
 			(parent)
 				.empty()

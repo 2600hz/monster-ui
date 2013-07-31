@@ -52,7 +52,9 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'boots
 		monster.ui = ui;
 		monster.apps = apps;
 
-		monster.socket = io.connect('http://192.168.1.82:5555');
+		if('socket' in monster.config.api) {
+			monster.socket = io.connect(monster.config.api.socket);
+		}
 
 		$(function(){
 			monster.apps.load('core', function(app){

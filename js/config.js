@@ -2,8 +2,8 @@ define(function(require){
 
 	return {
 		api: {
-			default: 'http://192.168.1.82:8000/v1/'
-			//default: 'https://api.2600hz.com:8443/v1/'
+			default: 'http://192.168.1.82:8000/v1/',
+			//socket: 'http://192.168.1.82:5555'
 		},
 
 		company: {
@@ -19,9 +19,8 @@ define(function(require){
 		nav: {
 			help: 'http://wiki.2600hz.com',
 			learnMore: 'http://www.2600hz.com/'
-		},
+		}
 
-		appleConference: true
 	};
 
 });

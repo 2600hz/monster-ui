@@ -327,11 +327,6 @@
 **************************************************************************************************************************************************
 *************************************************************************************************************************************************/
 
-/* General Layout */
-#ws-content #pbxs_manager_view {
-	margin-bottom: 160px;
-}
-
 /* Unassigned Numbers */
 #ws-content #list_pbxs_navbar #unassigned_numbers {
 	color: #333;
@@ -565,13 +560,9 @@
 }
 
 #ws-content #pbx_connector_container {
-	margin: auto;
+	margin: 20px auto 160px;
 	width: 902px; /* 3 columns of 300px + padding and borders */
-}
-
-#ws-content #pbx_connector_container {
 	display: block;
-	margin: auto;
 }
 
 #ws-content #pbx_connector_container .pbx-title{

@@ -1,7 +1,13 @@
+#ws-content #welcome_page {
+	margin-top: 20px;
+}
+
 .login-block {
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+
+	margin: 0 20px;
 }
 
 .login-block .btn.login {
@@ -36,7 +42,7 @@
 @media (min-width: 1200px) {
     #ws-content #welcome_page {
         display: block;
-        margin: auto;
+        margin: 20px auto auto;
         width: 1140px;
     }
 }
@@ -174,15 +180,13 @@
 	color: #333;
 }
 
-#conference_login_container .conference-login button.blue-btn:hover, 
+#conference_login_container .conference-login button.blue-btn:hover,
 #conference_login_container .conference-login button.blue-btn:active {
 	background-color: #22b0ff;
 	color: #fff;
 }
 
-@media (max-width: 979px) {
-	#conference_login_container {
-		width: 302px;
-		margin: auto;
-	}
+#conference_login_container {
+	width: 302px;
+	margin: auto;
 }

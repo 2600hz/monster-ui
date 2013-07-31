@@ -252,7 +252,6 @@ table.table tr td {
 .wizard .wizard-top-bar {
 	border-bottom: 10px solid #333;
 	text-align: center;
-	margin: -20px -20px 0 -20px;
 }
 
 .wizard .wizard-top-bar .steps-wrapper {
