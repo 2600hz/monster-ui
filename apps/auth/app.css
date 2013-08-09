@@ -5,17 +5,36 @@
 .login-block {
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
+	background: none repeat scroll 0 0 rgba(50, 50, 50, 0.86);
 	border-radius: 10px;
 
-	margin: 0 20px;
+	color: #fff;
+
+	margin: 20px auto auto;
+
+	width: 300px;
+}
+
+.login-block .row-login:not(:first-child) {
+	margin-top: 15px
 }
 
 .login-block .btn.login {
 	height: 30px;
+	width: 100%;
 }
 
 .login-block form {
 	margin: 0;
+}
+
+.login-block form .row-login.input-prepend {
+	width: 296px; /* Fix bootstrap glitch */
+}
+
+.login-block form .input-prepend .add-on {
+	width: 17px;
+	text-align: center;
 }
 
 .login-block form .control-group:last-child {

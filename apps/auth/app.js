@@ -66,28 +66,13 @@ define(function(require){
 
 		},
 
-		_activate: function() {
-			var self = this;
-
-			if(self.authToken == null) {
-				monster.pub('auth.login');
-			}
-			else {
-				monster.ui.confirm('Are you sure that you want to log out?', function() {
-					$.cookie('monster-auth', null);
-
-					$('#ws-content').empty();
-				});
-			}
-		},
-
-		_authenticate: function(login_data) {
+		_authenticate: function(loginData) {
 			var self = this;
 
 			monster.request({
 				resource: 'auth.userAuth',
 				data: {
-					data: login_data
+					data: loginData
 				},
 				success: function (data, status) {
 					self.accountId = data.data.account_id;
@@ -95,19 +80,22 @@ define(function(require){
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
 
-					$('#ws-content').empty();
-
+					console.log($('#remember_me'));
 					if($('#remember_me').is(':checked')) {
-						var cookieLogin = {};
-						loginUsername ? cookieLogin.login = loginUsername : true;
-						loginData.account_name ? cookieLogin.account_name = loginData.account_name : true;
-						$.cookie('c_monster_login', JSON.stringify(cookieLogin), {expires: 30});
+						var cookieLogin = {
+							login: $('#login').val(),
+							accountName: loginData.account_name
+						};
+
+						$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
 					}
 					else{
-						$.cookie('c_monster_login', null);
+						$.cookie('monster-login', null);
 					}
 
 					$.cookie('monster-auth', JSON.stringify(self, {expires: 30}));
+
+					$('#ws-content').empty();
 
 					monster.pub('auth.loadAccount');
 				},
@@ -188,7 +176,7 @@ define(function(require){
 			var self = this,
 				accountName = '',
 				realm = '',
-				cookieLogin = $.parseJSON($.cookie('monster.login')) || {},
+				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
 				templateName = monster.config.appleConference ? 'conferenceLogin' : 'login',
 				templateData = {
 					label: {
@@ -196,12 +184,14 @@ define(function(require){
 					},
 					username: cookieLogin.login || '',
 					requestAccountName: (realm || accountName) ? false : true,
-					accountName: accountName || cookieLogin.accountName || '',
+					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
 				content = $('#welcome_page .right_div');
+
+				console.log(cookieLogin, templateData);
 
 			loginHtml.find('.login-tabs a').click(function(e) {
 				e.preventDefault();
@@ -342,7 +332,7 @@ define(function(require){
 			var self = this,
 				formData = form2object('user_login_form');
 
-			_.each(formData.update, function(val, key) { 
+			_.each(formData.update, function(val, key) {
 				if(!val) { delete formData.update[key]; }
 			});
 			monster.request({

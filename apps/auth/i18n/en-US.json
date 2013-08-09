@@ -15,8 +15,7 @@
 	},
 
 	"login":{
-		"label": "Login",
-		"placeholder": "Username"
+		"buttonText": "Sign in"
 	},
 
 	"conferenceLogin": {
