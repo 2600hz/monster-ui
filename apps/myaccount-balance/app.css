@@ -45,6 +45,15 @@
     display: inline-block;
 }
 
+.balance-content-wrapper .action-bar-wrapper .dropdown-download #download {
+	color: #666;
+}
+
+.balance-content-wrapper .action-bar-wrapper .dropdown-download i {
+	text-decoration: none;
+	margin-right: 5px;
+}
+
 .balance-content-wrapper .clickover {
     width: 270px;
     font-size: 12px;

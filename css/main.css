@@ -18,6 +18,22 @@ body h1.lobster {
     font-family: 'Lobster', cursive;
 }
 
+/* Monster-Link */
+a.monster-link {
+	color: #666;
+	cursor: pointer;
+	margin: 0 10px;
+}
+
+a.monster-link.blue {
+	color: #22ccff;
+}
+
+a.monster-link i {
+	margin-right: 5px;
+	text-decoration: none;
+}
+
 /* Navbar */
 #main section > .navbar  {
     border-top: 5px solid #22ccff;
@@ -170,18 +186,14 @@ body div {
 /* Phone to portrait tablet */
 @media (max-width: 767px) {
     #main section > .navbar .navbar-inner .logo {
-        border: none;
-
     }
 
     #main section > .navbar .navbar-inner .help {
-        border-left: none;
         margin-right: 0;
         margin-left: 0;
     }
 
     #main section > .navbar .navbar-inner .home {
-        border-left: none;
         margin-left: 0;
     }
 }

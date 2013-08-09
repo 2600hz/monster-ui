@@ -59,7 +59,8 @@ define(function(require){
 		},
 
 		render: function(container){
-			var self = this;
+			var self = this,
+				container = container || $('#ws-content');
 
 			self.getData(function(data) {
 				data = self.formatData(data);
@@ -73,7 +74,7 @@ define(function(require){
 
 				self.bindEvents(numbersView, data);
 
-				$('#ws-content')
+				container
 					.empty()
 					.append(numbersView);
 			});
@@ -87,7 +88,8 @@ define(function(require){
 				failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().failoverIconHelp },
 				outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().cnamIconHelp },
 				dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().e911IconHelp },
-				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp }
+				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp },
+				port: { icon: 'icon-phone icon-yellow feature-port' }
 			};
 
 			_.each(value.features, function(feature) {

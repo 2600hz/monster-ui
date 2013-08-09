@@ -1,6 +1,8 @@
 {
 	"close" : "X Close",
 
+	"save": "Save",
+	"saveChanges": "Save Changes",
 	"previous": "Previous",
 	"next": "Next",
 	"submit": "Submit",

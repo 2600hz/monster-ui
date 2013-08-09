@@ -1,0 +1,29 @@
+<div id="users_container">
+	<div class="users-header">
+		<div class="title">
+			{{ i18n.users.title }}
+			<span class="count-users">16</span>
+		</div>
+
+		<a class="add-user">
+			<i class="icon-plus-sign icon-green"></i>
+			{{ i18n.users.add }}
+		</a>
+
+		<span class="search-box pull-right">
+			<i class="icon-search"></i>
+			<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+		</span>
+	</div>
+
+	<div class="users-grid">
+		<div class="grid-row title">
+			<div class="grid-cell name">{{ i18n.users.titleGrid.users }}</div>
+			<div class="grid-cell extension">{{ i18n.users.titleGrid.extensions }}</div>
+			<div class="grid-cell phone-number">{{ i18n.users.titleGrid.phoneNumbers }}</div>
+			<div class="grid-cell devices">{{ i18n.users.titleGrid.devices }}</div>
+			<div class="grid-cell features">{{ i18n.users.titleGrid.features }}</div>
+		</div>
+		<div class="user-rows"></div>
+	</div>
+</div>

@@ -1,0 +1,40 @@
+<div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}} {{ formatPhoneNumber phoneNumber }} {{extension}}">
+	<div class="user-cells">
+		<div class="name grid-cell" data-type="name"><i class="{{#if isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
+		<div class="extension grid-cell centered" data-type="extension">{{ extension }}</div>
+		<div class="phone-number grid-cell centered" data-type="phone-number">{{ formatPhoneNumber phoneNumber }}</div>
+		<div class="devices grid-cell centered" data-type="devices">
+			{{#each devices}}
+				<i class="icon-phone"></i>
+			{{/each}}
+
+			{{#if additionalDevices}}
+				(+{{additionalDevices}})
+			{{/if}}
+		</div>
+		<div class="features grid-cell right-aligned" data-type="features">
+			<div class="number-options pull-right">
+				<div class="navbar">
+					<ul class="nav pull-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+							<ul class="dropdown-menu">
+								<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ i18n.cnam }}</a></li>
+								<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ i18n.e911 }}</a></li>
+								<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ i18n.failover }}</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			&nbsp;
+			{{#each features}}
+				<i class="icon-telicon-user"></i>
+			{{/each}}
+		</div>
+	</div>
+
+	<div class="edit-user" style="display:none;">
+
+	</div>
+</div>

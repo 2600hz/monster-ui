@@ -1,0 +1,31 @@
+{
+	"menuTitles": {
+		"myOffice": "My Office",
+		"users": "Users",
+		"groups": "Groups",
+		"numbers": "Numbers",
+		"devices": "Devices",
+		"mainNumber": "Strategy",
+		"callLogs": "Call Logs",
+		"quickLinks": "Quick Links"
+	},
+
+	"users": {
+		"admin": "Admin",
+		"add": "Add User",
+		"delete": "Delete User",
+		"includeInDirectory": "Include user to Company Directory",
+		"resetPassword": "Reset Password",
+		"resendInstructions": "Resend Instructions",
+		"title": "Users",
+		"titleGrid": {
+			"users": "Users",
+			"extensions": "Extensions",
+			"phoneNumbers": "Phone Numbers",
+			"devices": "Devices",
+			"features": "Features"
+		},
+		"uploadPicture": "Upload a Picture",
+		"user": "User"
+	}
+}
