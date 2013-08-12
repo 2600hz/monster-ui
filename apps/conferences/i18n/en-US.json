@@ -57,7 +57,7 @@
 		"destroyedConference": "The conference you were observing has ended",
 		"successAddCallin": "You successfully added {{number}} to the Call-in Numbers",
 		"successDeleteCallin": "You successfully deleted {{number}} to the Call-in Numbers",
-		"saveNotificationSuccess": "The {{type}} Notification's Style has been saved"
+		"saveNotificationSuccess": "The {{type}} Notification's Style has been {{action}}."
 	},
 	"popupMessages": {
 		"mandatoryConferenceNameAlert": "You must specify a Conference Name!",
