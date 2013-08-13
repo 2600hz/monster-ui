@@ -9,13 +9,13 @@
 
 <div class="accounts-numbers">
 	{{#each listAccounts}}
-    	<div class="account-section" data-id="{{ id }}" data-name="{{ name }}">
+    	<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
         	<div class="account-header">
             	<div class="left-part">
             	</div>
             	<div class="expandable">
                 	{{ name }}
-                	<span class="count">{{ countUsedNumbers }}</span>
+                	<span class="count">({{ countUsedNumbers }})</span>
             	</div>
         	</div>
         	<div class="numbers-wrapper">
