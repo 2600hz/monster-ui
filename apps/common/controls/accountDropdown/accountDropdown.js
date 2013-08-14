@@ -4,15 +4,23 @@ define(function(require){
 		monster = require('monster');
 
 	var accountDropdown = {
+		requests: {
+
+		},
+
+		subscribe: {
+			'common.selectAccount': '_renderAccountDropdown'
+		},
+
 		/* Events */
-		render: function(app, args) {
-			var commonApp = app,
+		_renderAccountDropdown: function(args) {
+			var self = this,
 				originalAccountTree = args.accountsTree,
 				currentAccountTree = originalAccountTree,
 				parent = args.parent;
 
-			var layout = monster.template(commonApp, 'dropdownLayout'),
-                template = monster.template(commonApp, 'accountDropdown', { accounts: currentAccountTree });
+			var layout = monster.template(self, 'accountDropdown-layout'),
+                template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
 
             parent
             	.find('.accounts-dropdown')
@@ -30,7 +38,7 @@ define(function(require){
 
                 currentAccountTree = currentAccountTree[accountId].children;
 
-                var template = monster.template(commonApp, 'accountDropdown', { accounts: currentAccountTree });
+                var template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
 
                 slider
                     .empty()
@@ -77,8 +85,8 @@ define(function(require){
 				reset: function() {
 					currentAccountTree = originalAccountTree;
 
-					var layout = monster.template(commonApp, 'dropdownLayout'),
-                		template = monster.template(commonApp, 'accountDropdown', { accounts: currentAccountTree });
+					var layout = monster.template(self, 'accountDropdown-layout'),
+                		template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
 
             		parent
             			.find('.accounts-dropdown')

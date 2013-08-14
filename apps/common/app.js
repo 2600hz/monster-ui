@@ -2,20 +2,13 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		accountDropdown = require('./js/accountDropdown');
 
-	var app = {
+		accountDropdown = require('./controls/accountDropdown/accountDropdown');
 
+	var app = $.extend(true, accountDropdown, {
 		name: 'common',
 
 		i18n: [ 'en-US' ],
-
-		requests: {
-		},
-
-		subscribe: {
-			'common.selectAccount': '_renderSelectAccount'
-		},
 
 		load: function(callback){
 			var self = this;
@@ -23,15 +16,10 @@ define(function(require){
 			callback && callback(self);
 		},
 
-		render: function(container){
+		render: function() {}
+	});
 
-		},
-
-		/* Events */
-		_renderSelectAccount: function(args) {
-			accountDropdown.render(this, args);
-		}
-	};
+	console.log(app);
 
 	return app;
 });
