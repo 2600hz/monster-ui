@@ -19,7 +19,5 @@ define(function(require){
 		render: function() {}
 	});
 
-	console.log(app);
-
 	return app;
 });

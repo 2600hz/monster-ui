@@ -120,10 +120,10 @@ define(function(require){
 				type = "info";
 			}
 
-			var commonApp = monster.apps['common'],
-				template = monster.template(commonApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
+			var coreApp = monster.apps['core'],
+				template = monster.template(coreApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
 				content = $(template),
-				i18n = commonApp.i18n.active(),
+				i18n = coreApp.i18n.active(),
 				options = $.extend(
 					true,
 					{
@@ -157,9 +157,9 @@ define(function(require){
 		confirm: function(content, callbackOk, callbackCancel, options) {
 			var self = this,
 				dialog,
-				commonApp = monster.apps['common'],
-				i18n = commonApp.i18n.active();
-				template = monster.template(commonApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
+				coreApp = monster.apps['core'],
+				i18n = coreApp.i18n.active(),
+				template = monster.template(coreApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
 				confirmBox = $(template),
 				options = $.extend(
 					true,
@@ -190,8 +190,8 @@ define(function(require){
 
 		dialog: function(content, options) {
 			var dialog = $("<div />").append(content),
-				commonApp = monster.apps['common'],
-				i18n = commonApp.i18n.active(),
+				coreApp = monster.apps['core'],
+				i18n = coreApp.i18n.active(),
 				dialogType = options.dialogType || 'classic',
 				closeBtnText = i18n['close'] || 'X';
 
@@ -250,7 +250,7 @@ define(function(require){
 			create: function(name, element, columns, data, options) {
 				var self = this,
 					tableObj,
-					i18n = monster.apps['common'].i18n.active(),
+					i18n = monster.apps['core'].i18n.active(),
 					defaultOptions = {
                     	sDom: '<f>t<ip>',
                     	sPaginationType: 'full_numbers',
@@ -308,7 +308,7 @@ define(function(require){
 					search = search_wrapper.find('input[type="text"]'),
 					btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
 					btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
-					i18n = monster.apps['common'].i18n.active();
+					i18n = monster.apps['core'].i18n.active();
 
 				search.attr('placeholder', i18n.table.search);
 
@@ -424,7 +424,7 @@ define(function(require){
 		friendlyError: function(dataError) {
 			var self = this,
 				message = '',
-				i18n = monster.apps['common'].i18n.active();
+				i18n = monster.apps['core'].i18n.active();
 
 			if(dataError && dataError.data && 'api_error' in dataError.data && 'errors' in dataError.data.api_error) {
 				var errors = dataError.data.api_error.errors;
