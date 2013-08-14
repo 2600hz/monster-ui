@@ -3,9 +3,13 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 
-		accountDropdown = require('./controls/accountDropdown/accountDropdown');
+		//accountDropdown = require('./controls/accountDropdown/accountDropdown');
 
-	var app = $.extend(true, accountDropdown, {
+		controls = {
+			'accountDropdown': require('./controls/accountDropdown/accountDropdown')
+		}
+
+	var app = /*$.extend(true, accountDropdown,*/ {
 		name: 'common',
 
 		i18n: [ 'en-US' ],
@@ -17,6 +21,10 @@ define(function(require){
 		},
 
 		render: function() {}
+	};
+
+	$.each(controls, function(k, v) {
+		app = $.extend(true, app, v);
 	});
 
 	return app;
