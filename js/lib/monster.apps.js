@@ -29,7 +29,7 @@ define(function(require){
                     monster._loadLocale(app, locale)
                 });
 
-                monster.util.addCommonI18n(app);
+                monster.util.addCoreI18n(app);
 
                 // add an active property method to the i18n array within the app.
                 _.extend(app.i18n, {

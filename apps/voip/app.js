@@ -7,7 +7,7 @@ define(function(require){
 
 	var app = {
 
-		name: 'conferences',
+		name: 'voip',
 
 		i18n: [ 'en-US' ],
 
@@ -150,9 +150,8 @@ define(function(require){
 
 		/* Numbers */
 		renderNumbers: function(parent) {
-			monster.apps.load('numbers', function(app) {
-				app.render(parent.find('.right-content'));
-			});
+			console.log(this);
+			monster.pub('common.numbers.render', parent.find('.right-content'));
 		},
 
 		/* My Office */

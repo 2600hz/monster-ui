@@ -59,10 +59,10 @@ define(function(require){
 			self._load(); // do this here because subsequent apps are dependent upon core layout
 		},
 
-		_apps: ['common', 'auth'],
+		_apps: ['auth'],
 
 		//List of apps required once the user is logged in
-		_baseApps: ['myaccount'],//['myaccount', 'app_store'],
+		_baseApps: ['common', 'myaccount'],//['myaccount', 'app_store'],
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
 		_defaultApp: 'pbxs',

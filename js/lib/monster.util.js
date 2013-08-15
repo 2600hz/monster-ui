@@ -5,9 +5,9 @@ define(function(require){
 		monster = require("monster");
 
 	var util = {
-		addCommonI18n: function(app) {
-			if('common' in monster.apps) {
-				var i18n = monster.apps['common'].data.i18n;
+		addCoreI18n: function(app) {
+			if('core' in monster.apps) {
+				var i18n = monster.apps['core'].data.i18n;
 
 				//We have to use jQuery deep copy
 				app = $.extend(true, app.data.i18n, i18n);

@@ -1,0 +1,21 @@
+<div id="numbers_container">
+	<div class="top-box clearfix">
+		<div id="box_spare_numbers" class="half-box selected" data-type="spare">
+			<span class="title"> {{ accountName }} {{ i18n.numbers.spareNumbers }} </span>
+			<span class="count"> {{ countSpareNumbers }} </span>
+			<i class="help-popover icon-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpSpareNumbers }}"></i>
+		</div>
+
+		<div id="box_used_numbers" class="half-box" data-type="used">
+			<span class="title"> {{ i18n.numbers.usedNumbers }} </span>
+			<span class="count"> {{ countUsedNumbers }} </span>
+			<i class="help-popover icon-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpUsedNumbers }}"></i>
+		</div>
+	</div>
+
+	<div class="list-numbers clearfix" data-type="spare">
+	</div>
+
+	<div class="list-numbers clearfix" data-type="used">
+	</div>
+</div>
