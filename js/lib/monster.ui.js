@@ -2,7 +2,8 @@ define(function(require){
 
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		icheck = require('icheck');
 
 	var requestAmount = 0,
 		homeIcon,
@@ -62,6 +63,10 @@ define(function(require){
 		phoneNumber = phoneNumber.toString();
 
 		return monster.util.formatPhoneNumber(phoneNumber);
+	});
+
+	Handlebars.registerHelper('toLowerCase', function(stringValue) {
+		return stringValue.toString().toLowerCase();
 	});
 
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
@@ -238,12 +243,34 @@ define(function(require){
 			options = $.extend(defaults, options || {}, strictOptions);
 			dialog.dialog(options);
 
-			if(dialogType === 'conference') {
-				closeBtnText = '<i class="icon-remove icon-small"></i>'
+			switch(dialogType) {
+				case 'conference':
+					closeBtnText = '<i class="icon-remove icon-small"></i>';
+					break;
+				case 'content':
+					closeBtnText = '<span class="icon-stack">'
+								 + '<i class="icon-circle icon-stack-base icon-white"></i>'
+								 + '<i class="icon-remove-sign"></i>'
+								 + '</span>';
+					break;
 			}
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
+		},
+
+		contentDialog: function(content, title, options) {
+			var self = this,
+				options = $.extend(
+					true, 
+					options || {}, 
+					{
+						dialogClass: "content-dialog", 
+						dialogType: "content", 
+						title: title
+					}
+				);
+			self.dialog(content, options);
 		},
 
 		table: {
@@ -252,34 +279,34 @@ define(function(require){
 					tableObj,
 					i18n = monster.apps['common'].i18n.active(),
 					defaultOptions = {
-                    	sDom: '<f>t<ip>',
-                    	sPaginationType: 'full_numbers',
-                    	aaData: data || {},
-                    	aoColumns: columns,
-                    	bScrollInfinite: true,
-                    	bScrollCollapse: true,
-                    	sScrollY: '300px',
-                    	oLanguage: {
-                        	sEmptyTable: i18n.table.empty,
-                        	sProcessing: i18n.table.processing,
-                        	sInfo: i18n.table.startEndTotal,
-                        	sLengthMenu: i18n.table.showEntries,
-                        	sZeroRecords: i18n.table.zeroRecords,
-                        	sLoadingRecords: i18n.table.loading,
-                        	sInfoEmpty: i18n.table.infoEmpty,
-                        	sInfoFiltered: i18n.table.filtered,
-                        	oPaginate: {
-                            	sFirst: i18n.paging.first,
-                            	sPrevious: i18n.paging.previous,
-                            	sNext: i18n.paging.next,
-                            	sLast: i18n.paging.last
-                        	}
-                    	}
-                	},
-                	options = $.extend(true, {}, defaultOptions, options);
+						sDom: '<f>t<ip>',
+						sPaginationType: 'full_numbers',
+						aaData: data || {},
+						aoColumns: columns,
+						bScrollInfinite: true,
+						bScrollCollapse: true,
+						sScrollY: '300px',
+						oLanguage: {
+							sEmptyTable: i18n.table.empty,
+							sProcessing: i18n.table.processing,
+							sInfo: i18n.table.startEndTotal,
+							sLengthMenu: i18n.table.showEntries,
+							sZeroRecords: i18n.table.zeroRecords,
+							sLoadingRecords: i18n.table.loading,
+							sInfoEmpty: i18n.table.infoEmpty,
+							sInfoFiltered: i18n.table.filtered,
+							oPaginate: {
+								sFirst: i18n.paging.first,
+								sPrevious: i18n.paging.previous,
+								sNext: i18n.paging.next,
+								sLast: i18n.paging.last
+							}
+						}
+					},
+					options = $.extend(true, {}, defaultOptions, options);
 
-            	tableObj = element.dataTable(options);
-            	tableObj.name = name;;
+				tableObj = element.dataTable(options);
+				tableObj.name = name;;
 
 				self.applyFunctions(tableObj);
 				self.applyModifications(tableObj);
@@ -323,7 +350,7 @@ define(function(require){
 		},
 
 		initRangeDatepicker: function(range, parent) {
-    		var self = this,
+			var self = this,
 				container = parent,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
@@ -442,35 +469,56 @@ define(function(require){
 		},
 
 		accountArrayToTree: function(accountArray, rootAccountId) {
-	        var result = {};
+			var result = {};
 
-	        $.each(accountArray, function(k, v) {
-	            if(v.id === rootAccountId) {
-	                if(!result[v.id]) { result[v.id] = {}; }
-	                result[v.id].name = v.name;
-	                result[v.id].realm = v.realm;
-	            } else {
-	                var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
-	                    currentAcc;
-	                for(var i=0; i<parents.length; i++) {
-	                    if(!currentAcc) {
-	                        if(!result[parents[i]]) { result[parents[i]] = {}; }
-	                        currentAcc = result[parents[i]];
-	                    } else {
-	                        if(!currentAcc.children) { currentAcc.children = {}; }
-	                        if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-	                        currentAcc = currentAcc.children[parents[i]];
-	                    }
-	                }
-	                if(!currentAcc.children) { currentAcc.children = {}; }
-	                if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
-	                currentAcc.children[v.id].name = v.name;
-	                currentAcc.children[v.id].realm = v.realm;
-	            }
-	        });
+			$.each(accountArray, function(k, v) {
+				if(v.id === rootAccountId) {
+					if(!result[v.id]) { result[v.id] = {}; }
+					result[v.id].name = v.name;
+					result[v.id].realm = v.realm;
+				} else {
+					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
+						currentAcc;
+					for(var i=0; i<parents.length; i++) {
+						if(!currentAcc) { 
+							if(!result[parents[i]]) { result[parents[i]] = {}; }
+							currentAcc = result[parents[i]]; 
+						} else { 
+							if(!currentAcc.children) { currentAcc.children = {}; }
+							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
+							currentAcc = currentAcc.children[parents[i]]; 
+						}
+					}
+					if(!currentAcc.children) { currentAcc.children = {}; }
+					if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
+					currentAcc.children[v.id].name = v.name;
+					currentAcc.children[v.id].realm = v.realm;
+				}
+			});
 
-	        return result;
-	    }
+			return result;
+		},
+
+		prettyCheck: {
+			create: function(target, inputType) {
+				var self = this,
+					type = inputType || 'checkbox',
+					options = {
+						checkboxClass: 'icheckbox_flat',
+						radioClass: 'iradio_flat'
+					};
+
+				if(target.is("input") || type === "all") {
+					target.iCheck(options);
+				} else {
+					target.find('input[type="'+type+'"]').iCheck(options);
+				}
+			},
+
+			action: function(target, action) {
+				target.iCheck(action);
+			}
+		}
 	};
 
 	return ui;

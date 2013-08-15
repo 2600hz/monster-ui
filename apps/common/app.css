@@ -111,6 +111,44 @@ table.table tr td {
 	font-family: 'Maven Pro', Helvetica, sans-serif;
 }
 
+/* New JQuery Popup */
+.content-dialog {
+	border: solid 1px #777;
+	border-radius: 0;
+}
+
+.content-dialog .ui-dialog-titlebar {
+	background: -moz-linear-gradient(top, hsl(0,0%,90%) 0%, hsl(0,0%,80%) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,90%)), color-stop(100%,hsl(0,0%,80%)));
+	background: -webkit-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
+	background: -o-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
+	background: -ms-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
+	background: linear-gradient(to bottom, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E6E6E6', endColorstr='#CCCCCC',GradientType=0 );
+	border-radius: 0;
+	padding: 15px 20px;
+}
+
+.content-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+	width: 40px;
+	color: #777;
+}
+
+.content-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close span {
+	line-height: 20px;
+	width: 2em;
+}
+
+.content-dialog .ui-dialog-titlebar .ui-dialog-title {
+	color: #777;
+	text-transform: uppercase;
+}
+
+.content-dialog .ui-dialog-titlebar i {
+	color: #777;
+	font-size: 20px;
+}
+
 /* JQuery datepicker */
 .ui-datepicker th { font-weight: 500; }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: 500; color: #333; }
