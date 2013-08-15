@@ -80,7 +80,6 @@ define(function(require){
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
 
-					console.log($('#remember_me'));
 					if($('#remember_me').is(':checked')) {
 						var cookieLogin = {
 							login: $('#login').val(),
@@ -93,7 +92,14 @@ define(function(require){
 						$.cookie('monster-login', null);
 					}
 
-					$.cookie('monster-auth', JSON.stringify(self, {expires: 30}));
+					var cookieAuth = {
+						authToken: self.authToken,
+						accountId: self.accountId,
+						userId: self.userId,
+						isReseller: self.isReseller
+					};
+
+					$.cookie('monster-auth', JSON.stringify(cookieAuth), {expires: 30});
 
 					$('#ws-content').empty();
 

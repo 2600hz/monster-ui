@@ -65,10 +65,10 @@ define(function(require){
 			var self = this;
 
 			value.viewFeatures = {
-				failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().failoverIconHelp },
-				outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().cnamIconHelp },
-				dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().e911IconHelp },
-				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().localIconHelp },
+				failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
+				outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamIconHelp },
+				dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
+				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().numbers.localIconHelp },
 				port: { icon: 'icon-phone icon-yellow feature-port' }
 			};
 
@@ -77,7 +77,7 @@ define(function(require){
 			});
 
 			if('used_by' in value) {
-				value.friendlyUsedBy = self.i18n.active()[value.used_by];
+				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}
 
 			return value;
@@ -318,7 +318,7 @@ define(function(require){
 					accountId: self.accountId
 				};
 
-				monster.ui.confirm(self.i18n.active().confirmDelete, function() {
+				monster.ui.confirm(self.i18n.active().numbers.confirmDelete, function() {
 					self.numbersDelete(requestData, function(data) {
 						var countDelete = 0;
 
@@ -340,7 +340,7 @@ define(function(require){
 						});
 
 						self.numbersPaintSpare(parent, dataNumbers, function() {
-							var template = monster.template(self, '!' + self.i18n.active().successDelete, { count: countDelete });
+							var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
 
 							toastr.success(template);
 						});
@@ -414,7 +414,7 @@ define(function(require){
 									count: countMove,
 									accountName: dataNumbers.listAccounts[destinationIndex].name
 								},
-								template = monster.template(self, '!' + self.i18n.active().successMove, dataTemplate);
+								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
 
 							toastr.success(template);
 						});
@@ -555,7 +555,7 @@ define(function(require){
 							}
 							else {
 								var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-									template = monster.template(self, '!' + self.i18n.active()[type], { number: data.number, accountName: section.data('name') });
+									template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
 
 								toastr.warning(template);
 							}
