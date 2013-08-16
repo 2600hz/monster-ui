@@ -608,8 +608,14 @@ define(function(require){
 							data: data[type]
 						},
 						success: function (data) {
-							var type = parent.find('div.switch-link.active').data('type'),
-								toastrTemplate = monster.template(self, '!' + self.i18n.active().toastrMessages.saveNotificationSuccess, { type: type.charAt(0).toUpperCase() + type.slice(1) });
+							var toastrTemplate = monster.template(
+													self,
+													'!' + self.i18n.active().toastrMessages.saveNotificationSuccess,
+													{
+														type: type.charAt(0).toUpperCase() + type.slice(1),
+														action: ( request == 'update' ) ? 'saved' : 'created'
+													}
+												);
 
 							toastr.success(toastrTemplate);
 						}
@@ -625,17 +631,24 @@ define(function(require){
 			var self = this,
 				parent = parent.find('div#customize_notifications_content'),
 				macro = {
-						user_first_name: 'User\'s First Name',
-						user_last_name: 'User\'s Last Name',
-						user_pin: 'User\'s PIN',
-						conference_name: 'Conference\'s Name',
-						conference_date: 'Conference\'s Date',
-						conference_time: 'Conference\'s Time',
-						conference_record: 'Conference\'s Record'
-					},
+							user_first_name: 'User\'s First Name',
+							user_last_name: 'User\'s Last Name',
+							user_pin: 'User\'s PIN',
+							conference_name: 'Conference\'s Name',
+							conference_date: 'Conference\'s Date',
+							conference_time: 'Conference\'s Time',
+							conference_record: 'Conference\'s Record'
+						},
 				macroTarget = parent.find('a[data-original-title=Macro]').siblings('ul.dropdown-menu'),
-				colors = ['ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00','f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca','d8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694','bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314','a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100','7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'],
-				colorTarget = parent.find('div[data-original-title="Font Color"]').siblings('div.dropdown-menu'),
+				colors = [
+							'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
+							'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
+							'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
+							'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
+							'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
+							'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
+						],
+				colorTarget = parent.find('a[data-original-title="Font Color"]').siblings('div.color-menu'),
 				msg = '';
 
 			for (var key in macro) {
@@ -777,12 +790,11 @@ define(function(require){
 				.append(template);
 		},
 
-		/**
-		 * Expected params:
-		 * - parent
-		 * - appContainer
-		 * - conference
-		 */
+		/* Expected params:
+			parent,
+			appContainer,
+			conference
+		*/
 		bindNewConferenceEvents: function(params) {
 			var self = this,
 				parent = params.parent,
@@ -1002,8 +1014,8 @@ define(function(require){
 				ok = false,
 				participant = {};
 
-			options.title = '<i class="icon-user icon-large adduser-user-icon"></i>'
-						  + '<i class="icon-plus icon-small adduser-plus-icon"></i>';
+			options.title = '<i class="icon-telicon-add-user icon-large adduser-user-icon"></i>';
+
 			if(!participantType) {
 				options.title += self.i18n.active().popupTitles.participant;
 			} else if(participantType === "member") {
@@ -1034,7 +1046,8 @@ define(function(require){
 			var self = this,
 				parent = $('#conferences_container'),
 				renderView = function() {
-					var defaults = {};
+					var defaults = {
+					};
 
 					monster.parallel({
 
@@ -1063,13 +1076,18 @@ define(function(require){
 							});
 						}
 					},
-					function(err, results) {
+					function(err, results, i1, i2) {
 						var dataTemplate = self.formatViewConference(results),
 							template = 'userType' in self ? 'viewUserConference' : 'viewConference';
 							conferenceView = $(monster.template(self, template, dataTemplate));
 
+						console.log(dataTemplate);
+						console.log(results.status);
+
 						_.each(dataTemplate.users, function(user) {
-							conferenceView.find('.content').append(monster.template(self, 'boxUser', user));
+							conferenceView
+								.find('div.content')
+								.append(monster.template(self, 'boxUser', user));
 						});
 
 						parent
@@ -1080,16 +1098,16 @@ define(function(require){
 						self.bindViewConference(parent, dataTemplate);
 
 						parent
-							.find('.menu')
+							.find('div.menu')
 							.hide();
 
 						parent
-							.find('#conference_viewer')
+							.find('div#conference_viewer')
 							.fadeIn('slow');
-						}
-					);
+					});
 				};
 
+			monster.socket.removeAllListeners();
 			monster.socket.emit('connection_status');
 
 			monster.socket.on('connection_status', function(isConnected) {
@@ -1108,20 +1126,27 @@ define(function(require){
 
 		formatUserViewConference: function(user) {
 			var self = this,
-				formattedUser = {},
 				//randomImages = [ 'jean', 'james', 'karl', 'peter', 'darren', 'dhruvi', 'patrick', 'xavier' ];
-				randomImages = [ 'meme21', 'meme22', 'meme23', 'meme24', 'meme25', 'meme26', 'meme27', 'meme28', 'meme29', 'meme30', 'meme31', 'meme32', 'meme33', 'meme34', 'meme36'];
+				randomImages = [ 'meme21', 'meme22', 'meme23', 'meme24', 'meme25', 'meme26', 'meme27', 'meme28', 'meme29', 'meme30', 'meme31', 'meme32', 'meme33', 'meme34', 'meme36'],
+				formattedUser = {
+					id: user.call_id,
+					isDeaf: ( user.hear ) ? false : true,
+					isAdmin: user.is_moderator,
+					isMuted: user.mute,
+					isAbsent: ( user.call_id ) ? false : true,
+					isSpeaking: user.talking,
+					name: user.caller_id_name,
+					hasRights: 'userType' in self ? self.userType === 'unregistered' && self.isModerator : true,
+					pin: user.pin
+				};
 
-			formattedUser.id = user['Call-ID'] || user.call_id;
-			formattedUser.isMuted = user['Mute-Detect'] || user.mute_detect;
-			formattedUser.isSpeaking = user['Speak'] || user.speak;
-			formattedUser.isDeaf = 'Hear' in user ? !(user['Hear']) : !(user.hear);
-			formattedUser.name = user['Caller-ID-Name'] || user.caller_id_name;
-			formattedUser.isAdmin = user['Is-Moderator'] || user.is_moderator;
-			formattedUser.hasRights = 'userType' in self ? self.userType === 'unregistered' && self.isModerator : true;
+			if ( typeof formattedUser.id === 'undefined' ) {
+				formattedUser.name = user.name;
+				formattedUser.isAdmin = user.moderator;
+			}
 
 			var a = formattedUser.name.charCodeAt(0),
-			    b = formattedUser.name.charCodeAt(formattedUser.name.length -1);
+				b = formattedUser.name.charCodeAt(formattedUser.name.length -1);
 
 			formattedUser.imageRef = randomImages[(a+b) % randomImages.length];
 
@@ -1134,20 +1159,27 @@ define(function(require){
 					users: []
 				});
 
+			formattedData.elapsedTime = monster.util.friendlyTimer(data.status.run_time);
+			formattedData.rawElapsedTime = data.status.run_time;
+
 			if('userType' in self && self.userType === 'unregistered') {
 				formattedData.user = self.user;
 			}
 
-			formattedData.elapsedTime = monster.util.friendlyTimer(data.status['Run-Time']);
-			formattedData.rawElapsedTime = data.status['Run-Time'];
-
-			_.each(data.status['Participants'], function(user) {
+			_.each(data.conference.participants, function (user) {
 				formattedData.users.push(self.formatUserViewConference(user));
 			});
 
-			/* Sort by admin */
+			// _.each(data.status.participants, function (user) {
+			// 	formattedData.users.push(self.formatUserViewConference(user));
+			// });
+
+			formattedData.users.sort(function (a, b) {
+				return ( a.isAbsent ) ? (a.isAdmin === ( false ) ? -1 : 1) : (a.isAdmin === ( false ) ? 1 : -1);
+			});
+
 			formattedData.users.sort(function(a, b) {
-				return a.isAdmin === true ? -1 : 1;
+				return a.isAbsent === ( false ) ? -1 : 1;
 			});
 
 			return formattedData;
@@ -1177,9 +1209,9 @@ define(function(require){
 		},
 
 		/* Expected Args:
-			action,
+			accountId,
 			conferenceId,
-			state,
+			action,
 			successCallback
 		*/
 		actionConference: function(args) {
@@ -1188,8 +1220,8 @@ define(function(require){
 			monster.request({
 				resource: 'conferences.actionConference',
 				data: {
-					conferenceId: args.conferenceId,
 					accountId: self.accountId,
+					conferenceId: args.conferenceId,
 					action: args.action,
 					data: {}
 				},
@@ -1234,9 +1266,26 @@ define(function(require){
 							accountId: self.accountId,
 							data: participant
 						},
-						success: function(data) {
-							var newParticipant = data.data;
-							console.log(newParticipant.pin);
+						success: function(user) {
+
+							var dataUser = self.formatUserViewConference(user.data),
+								userTemplate = $(monster.template(self, 'boxUser', dataUser)).fadeIn('slow');
+
+							var admins = [];
+							for (var key in data.users) {
+								if ( data.users[key].isAdmin ) {
+									admins.push(data.users[key].pin);
+								}
+							}
+
+							if ( dataUser.isAdmin && dataUser.isAbsent ) {
+								userTemplate.insertAfter(parent.find('div.content').find('div.user.absent[data-pin="' + admins[admins.length - 1] + '"]'));
+							} else if ( !dataUser.isAdmin && dataUser.isAbsent ) {
+								parent
+									.find('div#view_conference')
+									.find('div.content')
+									.append(userTemplate);
+							}
 						}
 					});
 				});
@@ -1244,8 +1293,7 @@ define(function(require){
 
 			parent.find('div.action-conference.api').on('click', function () {
 				var actionBox = $(this),
-					action = ( actionBox.data('action') == 'record' ) ? 'start_record' : actionBox.data('action'),
-					args = {};
+					action = ( actionBox.data('action') == 'record' ) ? 'start_record' : actionBox.data('action');
 
 				if (actionBox.hasClass('active')) {
 					actionBox.removeClass('active');
@@ -1265,7 +1313,9 @@ define(function(require){
 					actionBox.addClass('active');
 				};
 
-				args = {
+				console.log(action);
+
+				var args = {
 						action: action,
 						conferenceId: data.id,
 						userId: self.accountId,
@@ -1303,7 +1353,7 @@ define(function(require){
 				});
 			});
 
-			parent.on('click', '.action-user', function() {
+			parent.find('div.action-user').on('click', function() {
 				var actionBox = $(this),
 					prefix = actionBox.hasClass('active') ? 'un' : '',
 					action = prefix + actionBox.data('action'),
@@ -1319,25 +1369,93 @@ define(function(require){
 
 			var ifStillUsingConference = function(callback) {
 				if(parent.find('#view_conference:visible').size() === 0) {
-					monster.socket.emit('disconnection')
+					monster.socket.emit('disconnection');
 					monster.socket.removeAllListeners();
-					parent.off('click', '.action-user');
+
+					parent.find('.action-user').off('click');
 				}
 				else {
 					callback();
 				}
 			};
 
-			monster.socket.on('add_member', function(user, data) {
-				ifStillUsingConference(function() {
-					var dataUser = self.formatUserViewConference(data),
-						userTemplate = monster.template(self, 'boxUser', dataUser);
+			// monster.socket.on('user_connected', function () {
+			// 	console.log('user_connected');
+			// 	ifStillUsingConference(function () {});
+			// });
 
-					parent.find('#view_conference .content').append(userTemplate);
+			// monster.socket.on('user_disconnected', function () {
+			// 	console.log('user_disconnected');
+			// 	ifStillUsingConference(function () {});
+			// });
+
+			monster.socket.on('add_member', function(userId, userInfo) { 
+				console.log('add_member');
+
+				ifStillUsingConference(function() {
+					var dataTemplate = self.formatUserViewConference(userInfo),
+						contentDiv = parent.find('div#view_conference').find('div.content'),
+						userDiv = contentDiv.find('div.user[data-pin="' + userInfo.pin +'"]'),
+						isAdmin = ( typeof userDiv.data('admin') === 'undefined' ) ? false : true;
+
+					dataTemplate.isAdmin = isAdmin;
+
+					for (var key in data.participants) {
+						if ( data.participants[key].pin == userInfo.pin ) {
+							dataTemplate.name = data.participants[key].name;
+						}
+					}
+
+					userDiv.remove();
+
+					if ( isAdmin ) {
+						console.log(userInfo);
+						contentDiv.prepend(monster.template(self, 'boxUser', dataTemplate));
+					} else {
+						$(monster.template(self, 'boxUser', dataTemplate)).insertAfter(contentDiv.find('div.user[data-admin]').last());
+					}
+				});
+			});
+
+			monster.socket.on('del_member', function(userId, userInfo) {
+				console.log('del_member');
+
+				ifStillUsingConference(function() {
+					var dataTemplate = self.formatUserViewConference(userInfo),
+						contentDiv = parent.find('div#view_conference').find('div.content'),
+						userPin = parent.find('div.user[data-id="' + userId + '"]').data('pin'),
+						userDiv = parent.find('div.user[data-pin="' + userPin + '"]'),
+						isAdmin = ( typeof userDiv.data('admin') === 'undefined' ) ? false : true;
+
+					dataTemplate.isAdmin = isAdmin;
+					dataTemplate.pin = userPin;
+					dataTemplate.isAbsent = true;
+					dataTemplate.id = userId;
+
+					for (var key in data.participants) {
+						if ( data.participants[key].pin == userPin ) {
+							dataTemplate.name = data.participants[key].name;
+						}
+					}
+
+					userDiv.remove();
+
+					if ( isAdmin ) {
+						$(monster.template(self, 'boxUser', dataTemplate)).insertAfter(contentDiv.find('div.user.absent[data-admin]').last());
+					} else {
+						contentDiv.append(monster.template(self, 'boxUser', dataTemplate));
+					}
+
+					for(style in styles) {
+						userDiv
+							.find('div.currently-speaking')
+							.removeClass(styles[style]);
+					}
 				});
 			});
 
 			monster.socket.on('conference_destroy', function(conferenceId) {
+				console.log('conference_destroy');
 				if(data.id === conferenceId) {
 					toastr.warning(self.i18n.active().toastrMessages.almostDoneConference);
 
@@ -1351,70 +1469,129 @@ define(function(require){
 
 			monster.socket.on('lock_true', function(data) {
 				console.log('lock true');
-				parent.find('.action-conference.api[data-action="lock"]').addClass('active');
+				parent
+					.find('div.action-conference.api[data-action="lock"]')
+					.addClass('active');
 			});
 
 			monster.socket.on('lock_false', function(data) {
 				console.log('lock false');
-				parent.find('.action-conference.api[data-action="lock"]').removeClass('active');
+				parent
+					.find('div.action-conference.api[data-action="lock"]')
+					.removeClass('active');
 			});
 
 			monster.socket.on('record_true', function(data) {
 				console.log('record true');
-				parent.find('.action-conference.api[data-action="record"]').addClass('active');
+				parent
+					.find('div.action-conference.api[data-action="record"]')
+					.addClass('active');
 			});
 
 			monster.socket.on('record_false', function(data) {
 				console.log('record false');
-				parent.find('.action-conference.api[data-action="record"]').removeClass('active');
-			});
-
-			monster.socket.on('del_member', function(user, data) {
-				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"]').remove();
-				});
+				parent
+					.find('div.action-conference.api[data-action="record"]')
+					.removeClass('active');
 			});
 
 			monster.socket.on('mute_member', function(user, data) {
+				console.log('mute_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] [data-action="mute"]').addClass('active');
+					var current = parent.find('div.user[data-id="'+ user + '"]').find('div.currently-speaking');
+
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div.action-user[data-action="mute"]')
+						.addClass('active');
+
+					parent
+						.find('div.user[data-id="' + user + '"]')
+						.find('div.state-user')
+						.find('i:last-child')
+						.addClass('active');
+
+					current.removeClass('active');
+
+					for(style in styles) {
+						current.removeClass(styles[style]);
+					}
 				});
 			});
 
-			monster.socket.on('unmute_member', function(user, data) {
+			monster.socket.on('unmute_member', function(user) {
+				console.log('unmute_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] [data-action="mute"]').removeClass('active');
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div.action-user[data-action="mute"]')
+						.removeClass('active');
+
+					parent
+						.find('div.user[data-id="' + user + '"]')
+						.find('div.state-user')
+						.find('i:last-child')
+						.removeClass('active');
 				});
 			});
 
 			monster.socket.on('deaf_member', function(user, data) {
 				console.log('deaf_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] [data-action="deaf"]').addClass('active');
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div[data-action="deaf"]')
+						.addClass('active');
+
+					parent
+						.find('div.user[data-id="' + user + '"]')
+						.find('div.state-user')
+						.find('i:first-child')
+						.addClass('active');
 				});
 			});
 
 			monster.socket.on('undeaf_member', function(user, data) {
 				console.log('undeaf_member');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] [data-action="deaf"]').removeClass('active');
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div[data-action="deaf"]')
+						.removeClass('active');
+
+					parent
+						.find('div.user[data-id="' + user + '"]')
+						.find('div.state-user')
+						.find('i:first-child')
+						.removeClass('active');
 				});
 			});
 
 			monster.socket.on('start_talking', function(user, data) {
+				console.log('start_talking');
 				ifStillUsingConference(function() {
 					var styleClass = styles[(Math.floor(Math.random() * 100) % 3)];
 
-					parent.find('.user[data-id="'+ user + '"] .currently-speaking').addClass('active ' + styleClass);
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div.currently-speaking')
+						.addClass('active ' + styleClass);
 				});
 			});
 
 			monster.socket.on('stop_talking', function(user, data) {
+				console.log('stop_talking');
 				ifStillUsingConference(function() {
-					parent.find('.user[data-id="'+ user + '"] .currently-speaking').removeClass('active');
+					parent
+						.find('div.user[data-id="'+ user + '"]')
+						.find('div.currently-speaking')
+						.removeClass('active');
 
 					for(style in styles) {
-						parent.find('.user[data-id="'+ user + '"] .currently-speaking').removeClass(style);
+						parent
+							.find('div.user[data-id="'+ user + '"]')
+							.find('div.currently-speaking')
+							.removeClass(styles[style]);
 					}
 				});
 			});
