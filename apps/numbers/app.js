@@ -31,11 +31,20 @@ define(function(require){
 			});
 		},
 
-		render: function(container){
+		render: function(parent){
 			var self = this,
-				container = container || $('#ws-content');
+				parent = parent || $('#ws-content');
 
-			monster.pub('common.numbers.render', container);
+			var numberManager = $(monster.template(self, 'app'));
+
+			monster.pub('common.numbers.render', {
+				container: numberManager,
+				callbackAfterRender: function(numberControl) {
+					parent
+						.empty()
+						.append(numberControl);
+				}
+			});
 		},
 	};
 

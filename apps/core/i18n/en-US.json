@@ -43,6 +43,13 @@
 		"confirmTitle" : "Confirmation"
 	},
 
+	"paging": {
+		"first": "First",
+		"previous": "Previous",
+		"next": "Next",
+		"last": "Last"
+	},
+
 	"table" : {
 		"search": "Search...",
 		"empty" : "No data available in table",

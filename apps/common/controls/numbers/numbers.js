@@ -37,12 +37,19 @@ define(function(require){
 			'common.numbers.render': 'numbersRender'
 		},
 
-		numbersRender: function(container){
-			var self = this,
-				container = container || $('#ws-content');
+		/* Arguments:
+		** container: jQuery Div
+		** callbackAfterRender: callback executed once we rendered the number control
+		** viewType: default to 'pbx', can be set to 'pbx', basically changes the view from Number Manager to SmartPBX the if set to 'pbx'
+		*/
 
-			console.log(self, this);
+		numbersRender: function(args){
+			var self = this,
+				container = args.container || $('#ws-content'),
+				callbackAfterRender = args.callbackAfterRender;
+
 			self.numbersGetData(function(data) {
+				data.viewType = args.viewType || 'manager';
 				data = self.numbersFormatData(data);
 
 				var numbersView = $(monster.template(self, 'numbers-layout', data)),
@@ -57,6 +64,8 @@ define(function(require){
 				container
 					.empty()
 					.append(numbersView);
+
+				callbackAfterRender && callbackAfterRender(container);
 			});
 		},
 
