@@ -1,0 +1,82 @@
+<div id="servers_list" data-view="list">
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>All Servers</th>
+				<th>Region &amp; Zone</th>
+				<th>Alert Message</th>
+				<th>ms io Speed</th>
+				<th>ms io wait</th>
+				<th>NIC1</th>
+				<th>NIC2</th>
+				<th>VPN</th>
+				<th>CPU</th>
+				<th>RAM</th>
+				<th>DISK</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each servers}}
+			<tr>
+				<td>
+					<div class="all-server">
+						<div class="flag pull-left {{status}}">
+							<!-- <img src="css/flags/32/{{country}}.png" alt="" /> -->
+						</div>
+						<div class="ip">{{ip}}</div>
+						<div class="domain-name">{{dn}}</div>
+					</div>
+				</td>
+				<td>
+					<img src="css/flags/32/{{country}}.png" alt="">
+					{{city}}
+				</td>
+				<td>{{alert}}</td>
+				<td>{{speed}}</td>
+				<td>{{ping}}</td>
+				<td>
+					{{#if nic1}}
+					<i class="icon-ok" style="font-size: 2em; color: #9ac842;"></i>
+					{{else}}
+					<i class="icon-remove" style="font-size: 2em; color: #bc3434;"></i>
+					{{/if}}
+				</td>
+				<td>
+					{{#if nic2}}
+					<i class="icon-ok" style="font-size: 2em; color: #9ac842;"></i>
+					{{else}}
+					<i class="icon-remove" style="font-size: 2em; color: #bc3434;"></i>
+					{{/if}}
+				</td>
+				<td>
+					{{#if vpn}}
+					<i class="icon-thumbs-up" style="font-size: 1.8em; color: #9ac842;"></i>
+					{{else}}
+					<i class="icon-thumbs-down" style="font-size: 1.8em; color: #e8776d;"></i>
+					{{/if}}
+				</td>
+				<td>
+					<div class="progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}">
+						<div class="bar" style="width: {{cpu}}%;"></div>
+					</div>
+					<span>{{cpu}}%</span>
+				</td>
+				<td>
+					<div class="progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}">
+						<div class="bar" style="width: {{ram}}%;"></div>
+					</div>
+					<span>{{ram}}%</span>
+				</td>
+				<td>
+					<div class="progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}">
+						<div class="bar" style="width: {{disk}}%;"></div>
+					</div>
+					<span>{{disk}}%</span>
+				</td>
+				<td><i class="icon-cog"></i></td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</div>

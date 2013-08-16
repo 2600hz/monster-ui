@@ -12,6 +12,7 @@ require.config({
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
 		jstz: 'js/lib/jstz.min',
+		leaflet: 'js/lib/leaflet.min',
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
