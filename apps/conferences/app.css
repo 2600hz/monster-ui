@@ -254,7 +254,7 @@
 
 #conference_viewer .content .user {
 	float: left;
-	margin: 25px 35px 0px;
+	margin: 15px 37px 0px;
 	width: 125px;
 }
 
@@ -301,6 +301,22 @@
 	border: 1px solid #999;
 }
 
+#conference_viewer .content .user:not(.absent) .box {
+	box-shadow: 10px 10px 15px #999;
+}
+
+#conference_viewer .content .user.absent .box {
+	margin-bottom: 36px;
+
+	opacity: 0.2;
+
+	/*filter: brightness(0.4);*/
+	/*-webkit-filter: brightness(0.4);*/
+
+	/*filter: blur(3px);*/
+	/*-webkit-filter: blur(3px);*/
+}
+
 #conference_viewer .content .user .box .image-wrapper {
 	border: 1px solid #999;
 	height: 100px;
@@ -308,8 +324,18 @@
 	padding: 0 5px;
 }
 
+#conference_viewer .content .user .box .image-wrapper img {
+	width: 100px;
+	height: 100px;
+}
+
 #conference_viewer .content .user .box .actions-user {
 	background: #333;
+
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
 #conference_viewer .content .user .box .actions-user .action-user {
@@ -327,7 +353,8 @@
 	-webkit-box-sizing: border-box;
 }
 
-#conference_viewer .content .user .box .actions-user .action-user.active, #conference_viewer .content .user .box .actions-user .action-user:hover {
+#conference_viewer .content .user .box .actions-user .action-user.active,
+#conference_viewer .content .user .box .actions-user .action-user:hover {
 	background: #111;
 	border: 1px solid #000;
 	cursor: pointer;
@@ -343,10 +370,13 @@
 
 #conference_viewer .content .user .box .actions-user .action-user i {
 	color: #777;
-	cursor: pointer;
 	font-size: 18px;
 	margin-right: 0px;
 	display: none;
+}
+
+#conference_viewer .content .user .box .actions-user .action-user i:hover {
+	cursor: pointer;
 }
 
 #conference_viewer .content .user .box .user-title {
@@ -544,7 +574,8 @@
 }
 
 #view_conference.user .state-user {
-	padding: 10px 0;
+	height: 18px;
+	padding: 9px 0;
 	text-align: center;
 }
 
@@ -773,26 +804,26 @@
 }
 
 #add_number_popup > .control-group:last-child {
-    margin: 20px 0 0 0;
+	margin: 20px 0 0 0;
 }
 
 #add_number_popup input[type="text"] {
-    width: 100%;
-    height: 30px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border-radius: 0;
-    border-color: #aaa;
-    font-size: 16px;
+	width: 100%;
+	height: 30px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border-radius: 0;
+	border-color: #aaa;
+	font-size: 16px;
 }
 
 #add_number_popup button {
-    width: 100%;
+	width: 100%;
 }
 
 #add_number_popup label {
-    font-size: 14px;
+	font-size: 14px;
 }
 
 /********************** Buttons Styling **********************/
@@ -857,17 +888,9 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 	color: #777;
 }
 
-.conference-dialog .adduser-plus-icon {
-    text-shadow: 1px 1px 0px #ccc,
-    			-1px 1px 0px #ccc,
-    			 1px -1px 0px #ccc,
-    			-1px -1px 0px #ccc;
-    position: absolute;
-    top: 25px;
-    left: 35px;
-}
-
 .conference-dialog .adduser-user-icon {
+	position: relative;
+	top: 1px;
 	margin-right: 15px;
 }
 
@@ -968,29 +991,6 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 	overflow: hidden;
 }
 
-#customize_notifications_content .wysiwyg-container #editor {
-	margin-bottom: 20px;
-	height: 320px;
-	background-color: white;
-	border-collapse: separate;
-	border: 1px solid #cccccc;
-	border-top: 0;
-	padding: 10px;
-	box-sizing: content-box;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
-	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
-	overflow: auto;
-	outline: none;
-}
-
-#customize_notifications_content .wysiwyg-container #editor hr {
-	border-top: 1px solid #ccc;
-}
-
-#customize_notifications_content .wysiwyg-container #editor blockquote {
-	border-left: none;
-}
-
 #customize_notifications_content .btn-group .dropdown-menu {
 	border-radius: 0;
 	min-width: 0;
@@ -1027,4 +1027,27 @@ button.blue-btn:hover, input[type="button"].blue-btn:hover, button.blue-btn:acti
 	padding: 0;
 	border: 2px solid #fff;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+}
+
+#customize_notifications_content .wysiwyg-container #editor {
+	margin-bottom: 20px;
+	height: 320px;
+	background-color: white;
+	border-collapse: separate;
+	border: 1px solid #cccccc;
+	border-top: 0;
+	padding: 10px;
+	box-sizing: content-box;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	overflow: auto;
+	outline: none;
+}
+
+#customize_notifications_content .wysiwyg-container #editor hr {
+	border-top: 1px solid #ccc;
+}
+
+#customize_notifications_content .wysiwyg-container #editor blockquote {
+	border-left: none;
 }

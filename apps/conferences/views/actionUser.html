@@ -1,0 +1,13 @@
+<div class="actions-user">
+	<div class="action-user togglable{{#if isDeaf}} active{{/if}}" data-action="deaf">
+		<i class="icon-headphones" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.deafUser }}"></i>
+		<i class="icon-telicon-deafen icon-yellow active" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.undeafUser }}"></i>
+	</div>
+	<div class="action-user togglable{{#if isMuted}} active{{/if}}" data-action="mute">
+		<i class="icon-microphone{{#if isDeaf}} active {{/if}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.muteUser }}"></i>
+		<i class="icon-microphone-off icon-blue{{#unless isDeaf}} active{{/unless}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.unmuteUser }}"></i>
+	</div>
+	<div class="action-user" data-action="kick">
+		<i class="icon-signout" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.help.hangupUser }}"></i>
+	</div>
+</div>
