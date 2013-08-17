@@ -112,6 +112,8 @@ define(function(require){
 				dataTemplate = {},
 			    mapUsers = {};
 
+			console.log(data);
+
 			_.each(data.users, function(user) {
 				mapUsers[user.id] = self.usersFormatUserData(user);
 			});
