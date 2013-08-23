@@ -62,10 +62,10 @@ define(function(require){
 		_apps: ['common', 'auth'],
 
 		//List of apps required once the user is logged in
-		_baseApps: ['myaccount'],//['myaccount', 'app_store'],
+		_baseApps: ['myaccount', 'appstore', 'apploader'],
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
-		_defaultApp: 'pbxs',
+		_defaultApp: ''/*'pbxs'*/,
 
 		_load: function(){
 			var self = this;
@@ -86,7 +86,7 @@ define(function(require){
 			var self = this;
 
 			if(!self._baseApps.length) {
-				var defaultApp = (args.defaultApp || {}).id || self._defaultApp;
+				var defaultApp = args.defaultApp || self._defaultApp;
 
 				if(defaultApp !== '') {
 					monster.apps.load(defaultApp, function(app) {
@@ -135,7 +135,11 @@ define(function(require){
 
 			homeLink.on('click', function(e) {
 				e.preventDefault();
-				renderLanding();
+				monster.pub('apploader.toggle');
+				// monster.apps.load('apploader', function(app){
+				// 	app.render();
+				// });
+				// renderLanding();
 			});
 
 			container.find('#ws-navbar .logo').on('click', function(e) {

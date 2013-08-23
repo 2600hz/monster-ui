@@ -19,7 +19,7 @@
 	"selectedUsers": "Selected Users",
 	"selectAll": "Select All",
 	"unselectAll": "Unselect All",
-	"selectUsersLink": "Select Users ({{selectedUsers}})",
+	"selectUsersLink": "Selected Users ({{selectedUsers}})",
 	"alerts": {
 		"noUserSelected": "You must select at least one user for this app.<br><br>If you don't want any user to use this app, you can turn it off."
 	}

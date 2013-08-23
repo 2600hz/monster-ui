@@ -1,0 +1,52 @@
+<div id="apploader">
+	<ul class="app-list">
+		{{#each apps}}
+			<li class="app-list-element" data-id="{{id}}" data-name="{{name}}">
+				<div class="app-draggable">
+					<div class="app-draggable-inner"></div>
+				</div>
+				<div class="app-icon"></div>
+				<div class="app-name">{{label}}</div>
+				{{#unless @index }}
+				<div class="app-default">
+					<div class="app-default-top"><i class="icon-circle icon-green icon-small"></i></div>
+					<div class="app-default-bottom">default</div>
+				</div>
+				{{/unless}}
+			</li>
+		{{/each}}
+	</ul>
+	{{#if allowAppstore}}
+		<div class="appstore-link" data-name="appstore">
+			<div class="appstore-link-icon"><i class="icon-cog icon-large icon-white"></i></div>
+			<div class="appstore-link-label">App Store</div>
+		</div>
+	{{/if}}
+	<!-- <ul class="app-list">
+		<li class="app-list-element">
+			<div class="app-draggable">
+				<div class="app-draggable-inner"></div>
+			</div>
+			<div class="app-icon"></div>
+			<div class="app-name">Accounts Manager</div>
+			<div class="app-default">
+				<div class="app-default-top"><i class="icon-circle icon-green icon-small"></i></div>
+				<div class="app-default-bottom">default</div>
+			</div>
+		</li>
+		<li class="app-list-element">
+			<div class="app-draggable">
+				<div class="app-draggable-inner"></div>
+			</div>
+			<div class="app-icon"></div>
+			<div class="app-name">Conferences</div>
+		</li>
+		<li class="app-list-element">
+			<div class="app-draggable">
+				<div class="app-draggable-inner"></div>
+			</div>
+			<div class="app-icon"></div>
+			<div class="app-name">User Portal</div>
+		</li>
+	</ul> -->
+</div>

@@ -24,6 +24,7 @@ define(function(require){
 
 		subscribe: {
 			'myaccount.display': '_show',
+			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
@@ -173,11 +174,7 @@ define(function(require){
 			}
 
 			if(myaccount.hasClass('myaccount-open')) {
-				myaccount.find('.myaccount-right .myaccount-content').empty();
-				niceScrollBar.hide();
-				myaccount
-					.slideUp(300, niceScrollBar.resize)
-					.removeClass('myaccount-open');
+				self.hide(myaccount, niceScrollBar);
 			}
 			else {
 				var args = {
@@ -197,6 +194,27 @@ define(function(require){
 				};
 
 				monster.pub('myaccount.activateSubmodule', args);
+			}
+		},
+
+		hide: function(myaccount, scrollbar) {
+			var self = this,
+				myaccount = myaccount || $('#myaccount'),
+				niceScrollBar = scrollbar || myaccount.find('.myaccount-menu ul.nav.nav-list').getNiceScroll()[0];
+
+			myaccount.find('.myaccount-right .myaccount-content').empty();
+			niceScrollBar.hide();
+			myaccount
+				.slideUp(300, niceScrollBar.resize)
+				.removeClass('myaccount-open');
+		},
+
+		_hide: function() {
+			var self = this,
+				myaccount = $('#myaccount');
+
+			if(myaccount.hasClass('myaccount-open')) {
+				self.hide(myaccount);
 			}
 		},
 

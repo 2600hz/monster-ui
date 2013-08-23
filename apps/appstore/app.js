@@ -259,6 +259,12 @@ define(function(require){
 							data: app
 						},
 						success: function(_data, status) {
+							var updateCookie = function() {
+								var cookieData = $.parseJSON($.cookie('monster-auth'));
+								cookieData.installedApps = monster.apps['auth'].installedApps;
+								$.cookie('monster-auth', JSON.stringify(cookieData, {expires: 30}));
+							};
+
 							icon.stop(true, true)
 								.show()
 								.removeClass('icon-spin icon-spinner')
@@ -267,6 +273,28 @@ define(function(require){
 									icon.removeClass('icon-ok icon-green')
 										.addClass('icon-spinner');
 								});
+
+							if(_data.data.installed.all
+							|| _data.data.installed.users.indexOf(self.userId) >= 0) {
+								if(!monster.apps['auth'].installedApps[_data.data.id]) {
+									monster.apps['auth'].installedApps[_data.data.id] = {
+										name: _data.data.name,
+										i18n: _data.data.i18n,
+										icon: _data.data.icon
+									};
+									
+									updateCookie();
+									$('#apploader').remove();
+								}
+							} else if(_data.data.installed.users.length === 0) {
+								if(monster.apps['auth'].installedApps[_data.data.id]) {
+									delete monster.apps['auth'].installedApps[_data.data.id];
+
+									updateCookie();
+									$('#apploader').remove();
+								}
+							}
+
 							successCallback && successCallback();
 						},
 						error: function(_data, status) {
@@ -297,6 +325,8 @@ define(function(require){
 							app, 
 							function() {
 								parent.find('.permissions-bloc').slideDown();
+								$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
+								$('#appstore_container .app-filter.active').click();
 							}, 
 							function() {
 								app.installed = previousSettings;
@@ -312,6 +342,8 @@ define(function(require){
 							app, 
 							function() {
 								parent.find('.permissions-bloc').slideUp();
+								$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
+								$('#appstore_container .app-filter.active').click();
 							}, 
 							function() {
 								app.installed = previousSettings;
