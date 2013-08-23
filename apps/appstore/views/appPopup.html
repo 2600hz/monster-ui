@@ -1,0 +1,91 @@
+<div id="appstore_popup_container" class="clearfix">
+	<div class="left-container">
+		<div class="title-container clearfix">
+			<div class="icon"></div>
+			<div class="title">{{ app.label }}</div>
+		</div>
+		<div class="screenshot-container">
+			<div id="screenshot_carousel" class="carousel slide">
+				<ol class="carousel-indicators">
+					<li data-target="#screenshot_carousel" data-slide-to="0" class="active"></li>
+					<li data-target="#screenshot_carousel" data-slide-to="1" class=""></li>
+					<li data-target="#screenshot_carousel" data-slide-to="2" class=""></li>
+					<li data-target="#screenshot_carousel" data-slide-to="3" class=""></li>
+				</ol>
+				<div class="carousel-inner">
+					<div class="item active" style="background-image: url('http://i.imgur.com/xYqMY9o.jpg')"></div>
+					<div class="item" style="background-image: url('http://i.imgur.com/pyqp2Xj.jpg')"></div>
+					<div class="item" style="background-image: url('http://i.imgur.com/OxmmK5G.jpg')"></div>
+					<div class="item" style="background-image: url('http://i.imgur.com/xgsfVLb.jpg')"></div>
+				</div>
+				<a class="left carousel-control" href="#screenshot_carousel" data-slide="prev">‹</a>
+				<a class="right carousel-control" href="#screenshot_carousel" data-slide="next">›</a>
+			</div>
+		</div>
+		<div class="description-container">
+			<div class="description-title">{{ i18n.description }}</div>
+			<div class="description-content">{{ app.description }}</div>
+		</div>
+	</div>
+	<div class="right-container">
+		<div class="app-details-view">
+			<div class="toggle-button-bloc">
+				<i class="icon-spinner icon-large"></i>
+				<div class="switch" data-on="success" data-off="default">
+				    <input type="checkbox" name="installed" checked />
+				</div>
+			</div>
+			<div class="info-bloc">
+				<ul>
+					<li>{{ i18n.author }}: {{ app.author }}</li>
+					<li>{{ i18n.version }}: {{ app.version }}</li>
+					<li>{{ i18n.license }}: {{ app.license }}</li>
+					<li>{{ i18n.price}}: {{#compare app.price '==' 0}}{{ i18n.free }}{{else}}{{ app.price }}{{/compare}}</li>
+				</ul>
+			</div>
+			<div class="permissions-bloc">
+				<div class="permissions-title">{{ i18n.permissions.title }}</div>
+				<label><input id="app_popup_all_users_radiobtn" type="radio" name="permissions" value="all" checked>{{ i18n.permissions.all }}</label>
+				<label><input id="app_popup_specific_users_radiobtn" type="radio" name="permissions" value="specific">{{ i18n.permissions.specific }}</label>
+				<div class="permissions-link">
+					<a href="#" id="app_popup_select_users_link">No selected user</a>
+				</div>
+			</div>
+			<div class="help-bloc bottom-right-div">
+				<div>{{ i18n.help.title }}</div>
+				<ul>
+					<li><a href="{{ app.help.documentation }}" target="_blank">{{ i18n.help.documentation }}</a></li>
+					<li><a href="{{ app.help.howto }}" target="_blank">{{ i18n.help.howTo }}</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="user-list-view">
+			<div class="user-list-title">
+				{{ i18n.selectedUsers }} <span class="selected-users-number">0</span>/<span class="total-users-number">0</span>
+			</div>
+			<div class="user-list-filter">
+				<input type="text" class="search-query input-medium" placeholder="{{i18n.search}}...">
+			</div>
+			<div class="user-list-links clearfix">
+				<a data-action="check" href="#">{{ i18n.selectAll }}</a>
+				<a data-action="uncheck" href="#">{{ i18n.unselectAll }}</a>
+			</div>
+			<form id="app_popup_user_list_form">
+				<ul class="user-list">
+					{{#each users}}
+					<li class="user-list-element" data-name="{{first_name}} {{last_name}}">
+						<label>
+							<input type="checkbox" name="users[]" value={{this.id}} data-original={{#if this.selected}}"check" checked{{else}}"uncheck"{{/if}}>
+							{{first_name}} {{last_name}}
+						</label>
+					</li>
+					{{/each}}
+				</ul>
+			</form>
+			<div class="user-list-buttons bottom-right-div">
+				<a href="#" id="user_list_cancel">{{i18n.cancel}}</a>
+				<button id="user_list_save" type="button" class="btn btn-success pull-right">{{i18n.save}}</button>
+			</div>
+		</div>
+	</div>
+</div>

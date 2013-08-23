@@ -30,166 +30,277 @@
 	 * Returns form values represented as Javascript object
 	 * "name" attribute defines structure of resulting object
 	 *
-	 * @param rootNode {Element|String} root form element (or it's id)
+	 * @param rootNode {Element|String} root form element (or it's id) or array of root elements
 	 * @param delimiter {String} structure parts delimiter defaults to '.'
+	 * @param skipEmpty {Boolean} should skip empty text values, defaults to true
+	 * @param nodeCallback {Function} custom function to get node value
 	 */
-	window.form2object = function(rootNode, delimiter)
+	window.form2object = function(rootNode, delimiter, skipEmpty, nodeCallback)
 	{
+		if (typeof skipEmpty == 'undefined' || skipEmpty == null) skipEmpty = true;
+		if (typeof delimiter == 'undefined' || delimiter == null) delimiter = '.';
+
 		rootNode = typeof rootNode == 'string' ? document.getElementById(rootNode) : rootNode;
-		delimiter = delimiter || '.';
-		var formValues = getFormValues(rootNode);
-		var result = {};
-		var arrays = {};
 
-		for (var i = 0; i < formValues.length; i++)
+		var formValues = [],
+			currNode,
+			i = 0;
+
+		/* If rootNode is array - combine values */
+		if (rootNode.constructor == Array || (typeof NodeList != "undefined" && rootNode.constructor == NodeList))
 		{
-			var value = formValues[i].value;
-			//if (value === '') continue;
-
-			var name = formValues[i].name;
-			var nameParts = name.split(delimiter);
-
-			var currResult = result;
-
-			for (var j = 0; j < nameParts.length; j++)
+			while(currNode = rootNode[i++])
 			{
-				var namePart = nameParts[j];
+				formValues = formValues.concat(getFormValues(currNode, nodeCallback));
+			}
+		}
+		else
+		{
+			formValues = getFormValues(rootNode, nodeCallback);
+		}
 
-				var arrName;
+		return processNameValues(formValues, skipEmpty, delimiter);
+	};
+
+	/**
+	 * Processes collection of { name: 'name', value: 'value' } objects.
+	 * @param nameValues
+	 * @param skipEmpty if true skips elements with value == '' or value == null
+	 * @param delimiter
+	 */
+	function processNameValues(nameValues, skipEmpty, delimiter)
+	{
+		var result = {},
+			arrays = {},
+			i, j, k, l,
+			value,
+			nameParts,
+			currResult,
+			arrNameFull,
+			arrName,
+			arrIdx,
+			namePart,
+			name,
+			_nameParts;
+
+		for (i = 0; i < nameValues.length; i++)
+		{
+			value = nameValues[i].value;
+
+			if (skipEmpty && value === '') continue;
+
+			name = nameValues[i].name;
+			_nameParts = name.split(delimiter);
+			nameParts = [];
+			currResult = result;
+			arrNameFull = '';
+
+			for(j = 0; j < _nameParts.length; j++)
+			{
+				namePart = _nameParts[j].split('][');
+				if (namePart.length > 1)
+				{
+					for(k = 0; k < namePart.length; k++)
+					{
+						if (k == 0)
+						{
+							namePart[k] = namePart[k] + ']';
+						}
+						else if (k == namePart.length - 1)
+						{
+							namePart[k] = '[' + namePart[k];
+						}
+						else
+						{
+							namePart[k] = '[' + namePart[k] + ']';
+						}
+
+						arrIdx = namePart[k].match(/([a-z_]+)?\[([a-z_][a-z0-9]+?)\]/i);
+						if (arrIdx)
+						{
+							for(l = 1; l < arrIdx.length; l++)
+							{
+								if (arrIdx[l]) nameParts.push(arrIdx[l]);
+							}
+						}
+						else{
+							nameParts.push(namePart[k]);
+						}
+					}
+				}
+				else
+					nameParts = nameParts.concat(namePart);
+			}
+
+			for (j = 0; j < nameParts.length; j++)
+			{
+				namePart = nameParts[j];
 
 				if (namePart.indexOf('[]') > -1 && j == nameParts.length - 1)
 				{
 					arrName = namePart.substr(0, namePart.indexOf('['));
+					arrNameFull += arrName;
 
 					if (!currResult[arrName]) currResult[arrName] = [];
 					currResult[arrName].push(value);
 				}
-				else
+				else if (namePart.indexOf('[') > -1)
 				{
-					if (namePart.indexOf('[') > -1)
+					arrName = namePart.substr(0, namePart.indexOf('['));
+					arrIdx = namePart.replace(/(^([a-z_]+)?\[)|(\]$)/gi, '');
+
+					/* Unique array name */
+					arrNameFull += '_' + arrName + '_' + arrIdx;
+
+					/*
+					 * Because arrIdx in field name can be not zero-based and step can be
+					 * other than 1, we can't use them in target array directly.
+					 * Instead we're making a hash where key is arrIdx and value is a reference to
+					 * added array element
+					 */
+
+					if (!arrays[arrNameFull]) arrays[arrNameFull] = {};
+					if (arrName != '' && !currResult[arrName]) currResult[arrName] = [];
+
+					if (j == nameParts.length - 1)
 					{
-						arrName = namePart.substr(0, namePart.indexOf('['));
-						var arrIdx = namePart.replace(/^[a-z]+\[|\]$/gi, '');
-
-						/*
-						 * Because arrIdx in field name can be not zero-based and step can be
-						 * other than 1, we can't use them in target array directly.
-						 * Instead we're making a hash where key is arrIdx and value is a reference to
-						 * added array element
-						 */
-
-						if (!arrays[arrName]) arrays[arrName] = {};
-						if (!currResult[arrName]) currResult[arrName] = [];
-
-						if (j == nameParts.length - 1)
+						if (arrName == '')
 						{
-							currResult[arrName].push(value);
+							currResult.push(value);
+							arrays[arrNameFull][arrIdx] = currResult[currResult.length - 1];
 						}
 						else
 						{
-							if (!arrays[arrName][arrIdx])
-							{
-								currResult[arrName].push({});
-								arrays[arrName][arrIdx] = currResult[arrName][currResult[arrName].length - 1];
-							}
+							currResult[arrName].push(value);
+							arrays[arrNameFull][arrIdx] = currResult[arrName][currResult[arrName].length - 1];
 						}
-
-						currResult = arrays[arrName][arrIdx];
 					}
 					else
 					{
-						if (j < nameParts.length - 1) /* Not the last part of name - means object */
+						if (!arrays[arrNameFull][arrIdx])
 						{
-							if (!currResult[namePart]) currResult[namePart] = {};
-							currResult = currResult[namePart];
+							if ((/^[a-z_]+\[?/i).test(nameParts[j+1])) currResult[arrName].push({});
+							else currResult[arrName].push([]);
+
+							arrays[arrNameFull][arrIdx] = currResult[arrName][currResult[arrName].length - 1];
 						}
-						else
-						{
-							currResult[namePart] = value;
-						}
+					}
+
+					currResult = arrays[arrNameFull][arrIdx];
+				}
+				else
+				{
+					arrNameFull += namePart;
+
+					if (j < nameParts.length - 1) /* Not the last part of name - means object */
+					{
+						if (!currResult[namePart]) currResult[namePart] = {};
+						currResult = currResult[namePart];
+					}
+					else
+					{
+						currResult[namePart] = value;
 					}
 				}
 			}
 		}
 
 		return result;
-	};
+	}
 
-	function getFormValues(rootNode)
+    function getFormValues(rootNode, nodeCallback)
+    {
+        var result = extractNodeValues(rootNode, nodeCallback);
+        return result.length > 0 ? result : getSubFormValues(rootNode, nodeCallback);
+    }
+
+    function getSubFormValues(rootNode, nodeCallback)
 	{
-		var result = [];
-		var currentNode = rootNode.firstChild;
+		var result = [],
+			currentNode = rootNode.firstChild,
+			callbackResult, fieldValue, subresult;
 
 		while (currentNode)
 		{
-			if (currentNode.nodeName.match(/INPUT|SELECT|TEXTAREA/i))
-			{
-				result.push({ name: currentNode.name, value: getFieldValue(currentNode)});
-			}
-			else
-			{
-				var subresult = getFormValues(currentNode);
-				result = result.concat(subresult);
-			}
-
+			result = result.concat(extractNodeValues(currentNode, nodeCallback));
 			currentNode = currentNode.nextSibling;
 		}
 
 		return result;
 	}
 
+    function extractNodeValues(node, nodeCallback) {
+        var callbackResult, fieldValue, result = [];
+
+        callbackResult = nodeCallback && nodeCallback(node);
+
+        if (callbackResult && callbackResult.name) {
+            result = [callbackResult];
+        }
+        else if (node.nodeName.match(/INPUT|TEXTAREA/i)) {
+            fieldValue = getFieldValue(node);
+
+            if (fieldValue !== null)
+                result = [ { name: node.name, value: fieldValue} ];
+        }
+        else if (node.nodeName.match(/SELECT/i)) {
+	        fieldValue = getFieldValue(node);
+	        
+	        if (fieldValue !== null)
+	            result = [ { name: node.name.replace(/\[\]$/, ''), value: fieldValue } ];
+        }
+        else{
+            result = getSubFormValues(node, nodeCallback);
+        }
+
+        return result;
+    }
+
+
 	function getFieldValue(fieldNode)
 	{
-		if (fieldNode.nodeName == 'INPUT')
-		{
-			if (fieldNode.type.toLowerCase() == 'radio' || fieldNode.type.toLowerCase() == 'checkbox')
-			{
-				if (fieldNode.checked && fieldNode.value != "on")
-				{
-					return fieldNode.value;
+		switch (fieldNode.nodeName) {
+			case 'INPUT':
+			case 'TEXTAREA':
+				switch (fieldNode.type.toLowerCase()) {
+					case 'radio':
+					case 'checkbox':
+						if (fieldNode.checked) return fieldNode.value;
+						break;
+
+					case 'button':
+					case 'reset':
+					case 'submit':
+					case 'image':
+						return '';
+						break;
+
+					default:
+						return fieldNode.value;
+						break;
 				}
-                else if(fieldNode.checked)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-			}
-			else
-			{
-				if (!fieldNode.type.toLowerCase().match(/button|reset|submit|image/i))
-				{
-					return fieldNode.value;
-				}
-			}
-		}
-		else
-		{
-			if (fieldNode.nodeName == 'TEXTAREA')
-			{
-				return fieldNode.innerHTML;
-			}
-			else
-			{
-				if (fieldNode.nodeName == 'SELECT')
-				{
-					return getSelectedOptionValue(fieldNode);
-				}
-			}
+				break;
+
+			case 'SELECT':
+				return getSelectedOptionValue(fieldNode);
+				break;
+
+			default:
+				break;
 		}
 
-		return '';
+		return null;
 	}
 
 	function getSelectedOptionValue(selectNode)
 	{
-		var multiple = selectNode.multiple;
+		var multiple = selectNode.multiple,
+			result = [],
+			options;
+
 		if (!multiple) return selectNode.value;
 
-		var result = [];
-		for (var options = selectNode.getElementsByTagName("option"), i = 0, l = options.length; i < l; i++)
+		for (options = selectNode.getElementsByTagName("option"), i = 0, l = options.length; i < l; i++)
 		{
 			if (options[i].selected) result.push(options[i].value);
 		}

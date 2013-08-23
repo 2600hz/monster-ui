@@ -1,0 +1,407 @@
+#ws-content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/********** LEFT **********/
+
+#appstore_container .left-menu {
+    float: left;
+    width: 200px;
+}
+
+#appstore_container .left-menu .app-filter-list {
+    list-style: none;
+    margin: 0;
+}
+
+#appstore_container .left-menu .app-filter-list > li {
+    height: 60px;
+    line-height: 60px;
+    border-right: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    text-align: left;
+    text-transform: uppercase;
+    color: #ccc;
+    background-color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#appstore_container .left-menu .app-filter-list > li:hover {
+    background-color: #444;
+}
+
+#appstore_container .left-menu .app-filter-list > li.active {
+    background-color: #22ccff;
+    color: white;
+}
+
+/********** RIGHT **********/
+
+#appstore_container .right-content {
+    margin-left: 200px;
+    padding: 20px;
+}
+
+#appstore_container .right-content .content {
+    margin: auto;
+    max-width: 936px;
+}
+
+/* * * * * Top * * * * */
+
+#appstore_container .right-content .search-bar:after {
+    clear: right;
+}
+
+/* * * * * Center * * * * */
+
+#appstore_container .right-content .app-list-container {
+    margin-top: 20px;
+}
+
+#appstore_container .right-content .app-list-container .app-list {
+    list-style: none;
+    margin: 0;
+}
+
+#appstore_container .right-content .app-list-container .app-element {
+    width: 270px;
+    height: 90px;
+    border: solid 1px #ccc;
+    float: left;
+    padding: 30px 15px;
+    margin: 5px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 4px;
+
+    background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,91%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,91%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+}
+
+#appstore_container .right-content .app-list-container .app-element:hover {
+    background: -moz-linear-gradient(top,  hsl(0,0%,91%) 0%, hsl(0,0%,100%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,91%)), color-stop(100%,hsl(0,0%,100%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+#appstore_container .right-content .app-list-container .app-element .app-installed {
+    height: 18px;
+    width: 18px;
+    padding: 3px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-left: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    border-bottom-left-radius: 4px;
+}
+
+#appstore_container .right-content .app-list-container .app-element:not(.installed) .app-installed {
+    display: none;
+}
+
+#appstore_container .right-content .app-list-container .app-element-left {
+    float: left;
+    width: 70px;
+    height: 100%;
+}
+
+#appstore_container .right-content .app-list-container .app-element-left .app-icon {
+    height: 100%;
+    width: 64px;
+    margin: auto;
+    background: url('./static/images/default_icon.png') no-repeat center;
+    background-size: contain;
+}
+
+#appstore_container .right-content .app-list-container .app-element-right {
+    float: left;
+    width: 190px;
+    margin-left: 10px;
+}
+
+#appstore_container .right-content .app-list-container .app-element-right .app-title {
+    text-transform: uppercase;
+    color: #22ccff;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+}
+
+#appstore_container .right-content .app-list-container .app-element-right .app-description {
+    height: 60px;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+/*@media (min-width: 1144px) {
+    #appstore_container .right-content .content {
+        width: 904px;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element:nth-of-type(-n+3) {
+        border-top: solid 1px #ccc;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element:last-of-type, 
+    #appstore_container .right-content .app-list-container .app-element:nth-of-type(3n) {
+        border-right: solid 1px #ccc;
+    }
+}
+
+@media (min-width: 844px) and (max-width: 1143px) {
+    #appstore_container .right-content .content {
+        width: 603px;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element:nth-of-type(-n+2) {
+        border-top: solid 1px #ccc;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element:last-of-type, 
+    #appstore_container .right-content .app-list-container .app-element:nth-of-type(2n) {
+        border-right: solid 1px #ccc;
+    }
+}
+
+@media (max-width: 843px) {
+    #appstore_container .right-content .content {
+        width: 302px;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element:first-of-type {
+        border-top: solid 1px #ccc;
+    }
+
+    #appstore_container .right-content .app-list-container .app-element {
+        border-right: solid 1px #ccc;
+    }
+}*/
+
+/********** POPUP **********/
+
+#appstore_popup_container {
+    padding: 20px;
+}
+
+#appstore_popup_container {
+
+}
+
+#appstore_popup_container .icon {
+    background: url('http://icons.iconarchive.com/icons/martz90/circle/48/skydrive-icon.png') no-repeat center;
+    height: 60px;
+    width: 60px;
+    float: left;
+}
+
+#appstore_popup_container .left-container {
+    float: left;
+    width: 350px;
+}
+
+#appstore_popup_container .right-container {
+    float: left;
+    width: 200px;
+    background-color: #eee;
+    border: solid 1px #ccc;
+    margin-left: 20px;
+    border-radius: 4px;
+}
+
+#appstore_popup_container .title {
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    margin-left: 15px;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#appstore_popup_container .screenshot-container {
+    height: 300px;
+}
+
+#appstore_popup_container .left-container > div:not(:first-of-type) {
+    margin-top: 30px;
+}
+
+#appstore_popup_container .description-title {
+    color: #22ccff;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#appstore_popup_container .description-content {
+    font-size: 13px;
+}
+
+#appstore_popup_container .screenshot-container .carousel,
+#appstore_popup_container .screenshot-container .carousel .carousel-inner,
+#appstore_popup_container .screenshot-container .carousel .carousel-inner > .item {
+    height: 100%;
+}
+
+#appstore_popup_container .screenshot-container .carousel .carousel-inner > .item {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#appstore_popup_container .screenshot-container .carousel .carousel-indicators li {
+    background-color: rgba(51, 51, 51, 0.25);
+    cursor: pointer;
+}
+
+#appstore_popup_container .screenshot-container .carousel .carousel-indicators li.active {
+    background-color: rgba(51, 51, 51, 0.75);
+}
+
+#appstore_popup_container .screenshot-container .carousel .carousel-control {
+    display: none;
+}
+
+#appstore_popup_container .right-container .toggle-button-bloc i {
+    margin: 3px 10px;
+    float: right;
+    display: none;
+}
+
+#appstore_popup_container .right-container .toggle-button-bloc i.icon-ok {
+    text-shadow: 5px 5px 40px #1FFF00,
+                 5px -5px 40px #1FFF00,
+                -5px 5px 40px #1FFF00,
+                -5px -5px 40px #1FFF00;
+}
+
+#appstore_popup_container .right-container .toggle-button-bloc i.icon-remove {
+    text-shadow: 5px 5px 40px #FF5757,
+                 5px -5px 40px #FF5757,
+                -5px 5px 40px #FF5757,
+                -5px -5px 40px #FF5757;
+}
+
+#appstore_popup_container .right-container .user-list-view {
+    display: none;
+}
+
+#appstore_popup_container .right-container > div > div {
+    padding: 10px;
+}
+
+#appstore_popup_container .right-container > div > div:not(:first-of-type) {
+    border-top: solid 1px #ccc;
+}
+
+#appstore_popup_container .right-container .info-bloc ul {
+    margin: 0;
+    list-style: none;
+}
+
+#appstore_popup_container .right-container .info-bloc li {
+    line-height: 30px;
+}
+
+#appstore_popup_container .right-container .permissions-bloc .permissions-title {
+    margin-bottom: 10px;
+}
+
+#appstore_popup_container .right-container .permissions-bloc .permissions-link {
+    display: none;
+    margin-top: 10px;
+}
+
+#appstore_popup_container .right-container .permissions-bloc .permissions-link a,
+#appstore_popup_container .right-container .permissions-bloc .permissions-link a:hover {
+    font-size: 13px;
+    color: #22ccff;
+}
+
+#appstore_popup_container .right-container .permissions-bloc input[type="radio"] {
+    margin: 0 6px 4px 0;
+}
+
+#appstore_popup_container .right-container .bottom-right-div {
+    position: absolute;
+    width: 180px;
+    bottom: 20px; 
+}
+
+#appstore_popup_container .right-container .help-bloc > div {
+    text-transform: uppercase;
+}
+
+#appstore_popup_container .right-container .help-bloc > ul {
+    margin: 10px 0 0 0;
+    list-style: none;
+}
+
+#appstore_popup_container .right-container .help-bloc a {
+    font-size: 14px;
+    font-weight: 500;
+} 
+
+#appstore_popup_container .right-container .help-bloc a:hover {
+    color: #22ccff;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list {
+    margin: 0;
+    list-style: none;
+    border-top: solid 1px #ccc;
+    background-color: #f9f9f9;
+    overflow: auto;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-element {
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-element label {
+    padding: 8px 10px;
+    margin: 0;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-element.checked i.icon-sign-blank {
+    display: none;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-element:not(.checked) i.icon-check-sign {
+    display: none;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-element:hover {
+    background-color: #f3f3f3;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-links a {
+    color: #22ccff;
+    font-size: 13px;
+    width: 50%;
+    text-align: center;
+    float: left;
+}
+
+#appstore_popup_container .right-container .user-list-view .user-list-buttons a {
+    color: #22ccff;
+    line-height: 30px;
+}
