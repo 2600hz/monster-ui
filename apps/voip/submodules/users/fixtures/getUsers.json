@@ -1,0 +1,35 @@
+{
+   "auth_token":"db28f946ea9726f7ae04449060e23915",
+   "status":"success",
+   "request_id":"7cb8d9900485fe5ccebc28edf22122b7",
+   "revision":"85302bf64003fa86ad247a9bc4e307ca",
+   "data":[
+      {
+         "id":"d9354b313c2b79b51dd3a41a83395d81",
+         "username":"jr",
+         "email":"jr2@2600hz.com",
+         "features": [],
+         "first_name":"Jean-Roch",
+         "last_name":"Maitre",
+         "priv_level":"admin"
+      },
+      {
+         "id":"d4d3be77cdf04a9da566713fffa48841",
+         "username":"joris",
+         "email":"joris@2600hz.com",
+         "features": [],
+         "first_name":"Joris",
+         "last_name":"Walou",
+         "priv_level":"admin"
+      },
+      {
+         "id":"48919214bf958abfd5b0c545d2d8ee2f",
+         "username":"max",
+         "email":"max@2600hz.com",
+         "features": ["caller_id"],
+         "first_name":"Maxime",
+         "last_name":"Roux",
+         "priv_level":"admin"
+      }
+   ]
+}

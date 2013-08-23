@@ -103,21 +103,21 @@ define(function(require){
 	});
 
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
-	    _title: function(title) {
-	        if (!this.options.title ) {
-	            title.html("&#160;");
-	        } else {
-	            title.html(this.options.title);
-	        }
-	    }
+		_title: function(title) {
+			if (!this.options.title ) {
+				title.html("&#160;");
+			} else {
+				title.html(this.options.title);
+			}
+		}
 	}));
 
 	var ui = {
 		//3 types: info (blue), warning (yellow), error (red)
 		alert: function(type, content, callback, options){
 			if(typeof content === "undefined"){
-				content = type;
-				type = "info";
+	content = type;
+	type = "info";
 			}
 
 			var coreApp = monster.apps['core'],
@@ -252,34 +252,34 @@ define(function(require){
 					tableObj,
 					i18n = monster.apps['core'].i18n.active(),
 					defaultOptions = {
-                    	sDom: '<f>t<ip>',
-                    	sPaginationType: 'full_numbers',
-                    	aaData: data || {},
-                    	aoColumns: columns,
-                    	bScrollInfinite: true,
-                    	bScrollCollapse: true,
-                    	sScrollY: '300px',
-                    	oLanguage: {
-                        	sEmptyTable: i18n.table.empty,
-                        	sProcessing: i18n.table.processing,
-                        	sInfo: i18n.table.startEndTotal,
-                        	sLengthMenu: i18n.table.showEntries,
-                        	sZeroRecords: i18n.table.zeroRecords,
-                        	sLoadingRecords: i18n.table.loading,
-                        	sInfoEmpty: i18n.table.infoEmpty,
-                        	sInfoFiltered: i18n.table.filtered,
-                        	oPaginate: {
-                            	sFirst: i18n.paging.first,
-                            	sPrevious: i18n.paging.previous,
-                            	sNext: i18n.paging.next,
-                            	sLast: i18n.paging.last
-                        	}
-                    	}
-                	},
-                	options = $.extend(true, {}, defaultOptions, options);
+        				sDom: '<f>t<ip>',
+						sPaginationType: 'full_numbers',
+						aaData: data || {},
+						aoColumns: columns,
+						bScrollInfinite: true,
+						bScrollCollapse: true,
+						sScrollY: '300px',
+						oLanguage: {
+							sEmptyTable: i18n.table.empty,
+							sProcessing: i18n.table.processing,
+							sInfo: i18n.table.startEndTotal,
+							sLengthMenu: i18n.table.showEntries,
+							sZeroRecords: i18n.table.zeroRecords,
+							sLoadingRecords: i18n.table.loading,
+							sInfoEmpty: i18n.table.infoEmpty,
+							sInfoFiltered: i18n.table.filtered,
+							oPaginate: {
+								sFirst: i18n.paging.first,
+								sPrevious: i18n.paging.previous,
+								sNext: i18n.paging.next,
+								sLast: i18n.paging.last
+							}
+						}
+					},
+					options = $.extend(true, {}, defaultOptions, options);
 
-            	tableObj = element.dataTable(options);
-            	tableObj.name = name;;
+				tableObj = element.dataTable(options);
+				tableObj.name = name;;
 
 				self.applyFunctions(tableObj);
 				self.applyModifications(tableObj);

@@ -38,6 +38,12 @@
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	margin-top: 10px;
+
+	font-family: verdana;
+}
+
+#users_container .users-grid i.icon-plus {
+	margin-left: 5px;
 }
 
 #users_container .users-grid .grid-row.title:not(:last-child) {
@@ -62,6 +68,7 @@
 #users_container .users-grid .grid-row .grid-cell {
 	border-right: 1px solid #eee;
 	display: inline-block;
+	overflow: hidden;
 	padding-left: 10px;
 	width: 20%;
 
@@ -139,14 +146,14 @@
 	border-right: none;
 }
 
-/* Detail User */
-#users_container .detail-user .actions {
+#users_container .actions {
 	border-top: 1px solid #ddd;
 	height: 30px;
 	line-height: 30px;
-	padding: 20px;
+	padding: 15px;
 }
 
+/* Detail User */
 #users_container .detail-user .user-fields {
 	display: inline-block;
 	padding: 20px;
@@ -204,4 +211,42 @@
 #users_container .detail-user .advanced-fields #reset_password {
 	padding-right: 6px;
 	padding-left: 6px;
+}
+
+/* Detail Numbers */
+#users_container .detail-numbers .list-wrapper {
+	background: #FFF;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	margin: 10px;
+}
+
+#users_container .detail-numbers .list-wrapper .phone-number-row  {
+	border-bottom: 1px solid #ccc;
+}
+
+#users_container .detail-numbers .list-wrapper .phone-number-row > * {
+	display: inline-block;
+	line-height: 32px;
+	height: 32px;
+	padding: 10px;
+}
+
+#users_container .detail-numbers .unassigned-list-header {
+	background: #999;
+	height: 32px;
+	line-height: 32px;
+	padding: 10px;
+}
+
+#users_container .detail-numbers .list-unassigned-numbers {
+	overflow: auto;
+	height: 211px;
+}
+
+#users_container .detail-numbers .unassigned-list-header .title {
+	color: #FFF;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: bold;
 }

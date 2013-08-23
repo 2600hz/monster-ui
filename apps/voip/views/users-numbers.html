@@ -1,0 +1,68 @@
+<div class="detail-numbers">
+	<div class="list-wrapper">
+		<div class="list-assigned-numbers number-list">
+			{{#eachkeys assignedNumbers}}
+				<div class="phone-number-row" data-id="{{this.key}}">
+					<div class="number">
+						{{debug ../i18n }}
+						<button type="button" class="btn btn-danger">{{ ../i18n.remove }}</button>
+						{{ formatPhoneNumber this.key }}
+					</div>
+					<div class="locality">
+						<span class="flag"><img src="css/flags/32/{{ this.value.locality.iso }}.png" height="32" width="32"></img></span>
+						<span class="city">{{ this.value.locality.city }}, {{ this.value.locality.country }}</span>
+					</div>
+					<div class="features">
+						&nbsp;
+						{{#each this.value.features}}
+							<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+						{{/each}}
+					</div>
+				</div>
+			{{else}}
+				<div class="phone-number-row empty">
+					{{../i18n.users.noAssignedNumbers}}
+				</div>
+			{{/eachkeys}}
+		</div>
+
+		<div class="unassigned-list-header">
+			<div class="title">{{i18n.users.addFromSpare}} (<span class="count-spare"></span>)</div>
+			<div class="search-bar pull-right">
+				<span class="search-box pull-right">
+					<i class="icon-search"></i>
+					<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+				</span>
+			</div>
+		</div>
+
+		<div class="list-unassigned-numbers number-list">
+			{{#eachkeys unassignedNumbers}}
+				<div class="phone-number-row" data-id="{{this.key}}">
+					<div class="number">
+						<button type="button" class="btn btn-success">{{ ../i18n.add }}</button>
+						{{ formatPhoneNumber this.key }}
+					</div>
+					<div class="locality">
+						<span class="flag"><img src="css/flags/32/{{ this.value.locality.iso }}.png" height="32" width="32"></img></span>
+						<span class="city">{{ this.value.locality.city }}, {{ this.value.locality.country }}</span>
+					</div>
+				</div>
+			{{else}}
+				<div class="phone-number-row empty">
+					{{i18n.users.noUnassignedNumbers}}
+				</div>
+			{{/eachkeys}}
+		</div>
+	</div>
+
+	<div class="actions">
+		<a id="buy_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-shopping-cart icon-green"></i>{{ i18n.users.buy }}</a>
+		<a id="port_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-random icon-blue"></i>{{ i18n.users.port }}</a>
+
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+			<button type="button" class="btn btn-success">{{ i18n.saveChanges }}</button>
+		</div>
+	</div>
+</div>
