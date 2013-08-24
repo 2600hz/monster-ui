@@ -1,28 +1,30 @@
 <div id="appstore_container" class="clearfix">
 	<div class="left-menu">
-		<ul class="app-filter-list">
-			<li class="app-filter active">
-				All Apps
-			</li>
-			<li data-filter="installed" class="app-filter">
-				My Apps
-			</li>
-			<li data-filter="reseller" class="app-filter">
-				Resellers Apps
-			</li>
-			<li data-filter="carrier" class="app-filter">
-				Carriers Apps
-			</li>
-			<li data-filter="developer" class="app-filter">
-				Developers Apps
-			</li>
-			<li data-filter="community" class="app-filter">
-				Community Apps
+		<div class="app-filter-list">
+			<div class="app-filter active">
+				{{ i18n.filters.all }}
+			</div>
+			<div class="app-filter-group">
+				<div data-filter="installed" class="app-filter">
+					{{ i18n.filters.installed }}
+				</div>
+				<div data-filter="reseller" class="app-filter">
+					{{ i18n.filters.resellers }}
+				</div>
+				<div data-filter="carrier" class="app-filter">
+					{{ i18n.filters.carriers }}
+				</div>
+				<div data-filter="developer" class="app-filter">
+					{{ i18n.filters.developers }}
+				</div>
+			</div>
+			<!-- <li data-filter="community" class="app-filter">
+				{{ i18n.filters.community }}
 			</li>
 			<li class="contribute-app-link">
 				Contribute Apps
-			</li>
-		</ul>
+			</li> -->
+		</div>
 	</div>
 
 	<div class="right-content">

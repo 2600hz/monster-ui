@@ -110,6 +110,12 @@ define(function(require){
 					tolerance: "pointer"
 				});
 
+				template.find('.app-list').niceScroll({
+					cursorcolor:"#333",
+					cursoropacitymin:0.5,
+					hidecursordelay:1000
+				}).hide();
+
 				self.bindEvents(template);
 				self.show();
 			} else {
@@ -181,21 +187,37 @@ define(function(require){
 
 		show: function(app) {
 			var self =  this,
-				apploader = app || $('#apploader');
+				apploader = app || $('#apploader'),
+				niceScrollBar = apploader.find('.app-list').getNiceScroll()[0];
 
 			if(!apploader.hasClass('active')) {
 				apploader.addClass('active')
-						 .animate({ left: 0 });
+						 .animate(
+						 	{ left: 0 }, 
+						 	400, 
+						 	"swing", 
+						 	function() {
+						 		niceScrollBar.resize();
+						 		niceScrollBar.show();
+						 	}
+						 );
 			}
 		},
 
 		_hide: function(app) {
 			var self =  this,
-				apploader = app || $('#apploader');
+				apploader = app || $('#apploader'),
+				niceScrollBar = apploader.find('.app-list').getNiceScroll()[0];
 
 			if(apploader.hasClass('active')) {
+				niceScrollBar.hide();
 				apploader.removeClass('active')
-						 .animate({ left: "-310px" });
+						 .animate(
+						 	{ left: "-310px" }, 
+						 	400, 
+						 	"swing", 
+						 	niceScrollBar.resize
+						 );
 			}
 		},
 

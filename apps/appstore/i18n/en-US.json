@@ -6,6 +6,14 @@
 	"price": "Price",
 	"free": "Free",
 	"save": "Save",
+	"filters": {
+		"all": "All Apps",
+		"installed": "My Apps",
+		"resellers": "Resellers Apps",
+		"carriers": "Carriers Apps",
+		"developers": "Developers Apps",
+		"community": "Community Apps"
+	},
 	"permissions": {
 		"title": "Who can use this App?",
 		"all": "All users",
