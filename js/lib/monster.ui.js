@@ -192,10 +192,15 @@ define(function(require){
 			var dialog = $("<div />").append(content),
 				coreApp = monster.apps['core'],
 				i18n = coreApp.i18n.active(),
-				dialogType = options.dialogType || 'classic',
+				dialogType = ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) ? options.dialogType : 'classic',
+				// dialogType = options.dialogType || 'classic',
 				closeBtnText = i18n['close'] || 'X';
 
-			delete options.dialogType;
+			if ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) {
+				delete options.dialogType;
+			}
+
+			// delete options.dialogType;
 			$('input', content).keypress(function(e) {
 				if(e.keyCode == 13) {
 					e.preventDefault();

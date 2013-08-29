@@ -1,74 +1,74 @@
 <div id="servers_list" data-view="list">
-	<table class="table table-bordered">
+	<table class="footable table table-bordered" data-filter="#filter">
 		<thead>
 			<tr>
-				<th>All Servers</th>
-				<th>Region &amp; Zone</th>
-				<th>Alert Message</th>
-				<th>ms io Speed</th>
-				<th>ms io wait</th>
-				<th>NIC1</th>
-				<th>NIC2</th>
-				<th>VPN</th>
-				<th>CPU</th>
-				<th>RAM</th>
-				<th>DISK</th>
-				<th>Actions</th>
+				<th data-toggle="true">Status &amp; IP &amp; Domain Name</th>
+				<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
+				<th data-hide="xs,sm,md,lg">Alert Message</th>
+				<th data-hide="xs,sm,md" data-type="numeric">ms i/o Speed</th>
+				<th data-hide="xs,sm,md" data-type="numeric">ms i/o wait</th>
+				<th data-hide="xs,sm">NIC1</th>
+				<th data-hide="xs,sm">NIC2</th>
+				<th data-hide="xs,sm">VPN</th>
+				<th data-hide="xs">CPU</th>
+				<th data-hide="xs">RAM</th>
+				<th data-hide="xs">DISK</th>
+				<th data-sort-ignore="true">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each servers}}
 			<tr>
-				<td>
+				<td data-value="server_{{status}} {{ip}} {{dn}}">
 					<div class="all-server">
 						<div class="flag pull-left {{status}}">
-							<!-- <img src="css/flags/32/{{country}}.png" alt="" /> -->
+							<img src="apps/cluster/static/images/server_{{status}}.png" alt="" />
 						</div>
 						<div class="ip">{{ip}}</div>
 						<div class="domain-name">{{dn}}</div>
 					</div>
 				</td>
-				<td>
-					<img src="css/flags/32/{{country}}.png" alt="">
+				<td data-value="{{city}} {{country}}">
+					<img src="css/flags/32/{{country}}.png" alt="{{country}}" title="{{country}}">
 					{{city}}
 				</td>
-				<td>{{alert}}</td>
-				<td>{{speed}}</td>
-				<td>{{ping}}</td>
-				<td>
+				<td data-type="alpha">{{alert}}</td>
+				<td data-type="numeric">{{speed}}</td>
+				<td data-type="numeric">{{ping}}</td>
+				<td data-value="{{#if nic1}}nic_up nic1_up{{else}}nic_down nic1_down{{/if}}">
 					{{#if nic1}}
 					<i class="icon-ok" style="font-size: 2em; color: #9ac842;"></i>
 					{{else}}
 					<i class="icon-remove" style="font-size: 2em; color: #bc3434;"></i>
 					{{/if}}
 				</td>
-				<td>
+				<td data-value="{{#if nic2}}nic_up nic2_up{{else}}nic_down nic2_down{{/if}}">
 					{{#if nic2}}
 					<i class="icon-ok" style="font-size: 2em; color: #9ac842;"></i>
 					{{else}}
 					<i class="icon-remove" style="font-size: 2em; color: #bc3434;"></i>
 					{{/if}}
 				</td>
-				<td>
+				<td data-value="{{#if vpn}}vpn_up{{else}}vpn_down{{/if}}">
 					{{#if vpn}}
 					<i class="icon-thumbs-up" style="font-size: 1.8em; color: #9ac842;"></i>
 					{{else}}
 					<i class="icon-thumbs-down" style="font-size: 1.8em; color: #e8776d;"></i>
 					{{/if}}
 				</td>
-				<td>
+				<td data-value="{{cpu}}{{#if cpu_overload}} cpu_overload overload{{/if}}">
 					<div class="progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}">
 						<div class="bar" style="width: {{cpu}}%;"></div>
 					</div>
 					<span>{{cpu}}%</span>
 				</td>
-				<td>
+				<td data-value="{{ram}}{{#if ram_overload}} ram_overload overload{{/if}}">
 					<div class="progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}">
 						<div class="bar" style="width: {{ram}}%;"></div>
 					</div>
 					<span>{{ram}}%</span>
 				</td>
-				<td>
+				<td data-value="{{disk}}{{#if disk_overload}} disk_overload overload{{/if}}">
 					<div class="progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}">
 						<div class="bar" style="width: {{disk}}%;"></div>
 					</div>

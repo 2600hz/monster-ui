@@ -131,11 +131,11 @@
 
 /********************** Server View ***********************/
 
-#servers_view_container { min-width: 760px; }
+/*#servers_view_container { min-width: 760px; }*/
 
 #servers_view_container .cluster-actions {
 	margin-bottom: 8px;
-	padding-bottom: 10px;
+	padding-bottom: 27px;
 	border-bottom: 3px solid #eeeff0;
 }
 
@@ -160,7 +160,11 @@
 
 #servers_view_container .server-actions > div { display: inline-block; }
 
-#servers_view_container .server-actions .search-box { margin: 18px 10px 0 0; }
+#servers_view_container .server-actions .search-box {
+	margin: 18px 10px 0 0;
+	opacity: 0;
+	visibility: hidden;
+}
 
 #servers_view_container .server-actions .search-box i {
 	position: relative;
@@ -184,9 +188,11 @@
 
 /*********************** List View ************************/
 
-#servers_view_container #servers_list table { border-top: 1px solid #ddd; }
+#servers_view_container #servers_list table,
+#ui-dialog-map #servers_list table { border-top: 1px solid #ddd; }
 
-#servers_view_container #servers_list th {
+#servers_view_container #servers_list th,
+#ui-dialog-map #servers_list th {
 	background-color: #f7f8f9;
 	color: #9aa2a8;
 	text-align: center;
@@ -198,58 +204,83 @@
 	width: 5%;
 	height: 62px;
 	color: #78838a;
-	text-align: center;
 	vertical-align: middle;
+	text-align: center;
 }
 
 #servers_view_container #servers_list td:first-child {
-	width: 17%;
-	padding-left: 2.5%;
 	padding-right: 2.5%;
+	padding-left: 2.5%;
+	width: 20%;
 	text-align: left;
 }
 
-#servers_view_container #servers_list td:first-child .all-servers { margin: 0 auto; }
+#servers_view_container #servers_list td:first-child .all-servers,
+#ui-dialog-map #servers_list td:first-child .all-servers { margin: 0 auto; }
 
-#servers_view_container #servers_list td:first-child .flag {
-	margin-right: 15px;
+#servers_view_container #servers_list td:first-child .flag,
+#ui-dialog-map #servers_list td:first-child .flag {
+	margin-right: 20px;
+	padding-top: 5px;
+
+	width: 50px;
 	height: 60px;
-
-	width: 32px;
-	content: "";
 	border-radius: 10px;
+	content: "";
 }
-
-#servers_view_container #servers_list td:first-child .flag.up      { background-color: #52d125; }
-#servers_view_container #servers_list td:first-child .flag.down    { background-color: #ffaa44; }
-#servers_view_container #servers_list td:first-child .flag.warning { background-color: #ff626b; }
-
-/*#servers_view_container #servers_list td:first-child .flag img { margin-top: 50%; }*/
 
 #servers_view_container #servers_list td:nth-child(2) { width: 12%; }
 
-#servers_view_container #servers_list td:nth-child(2) img {
+#servers_view_container #servers_list td:nth-child(2) img,
+#ui-dialog-map #servers_list td:nth-child(2) img {
 	display: block;
 	margin: 0 auto;
 }
 
-#servers_view_container #servers_list td:nth-child(3) { width: 17%; }
+#servers_view_container #servers_list td:nth-child(3) { width: 14%; }
 
 #servers_view_container #servers_list td:last-child { width: 6%; }
 
-#servers_view_container #servers_list td:last-child i { font-size: 2em; }
+#servers_view_container #servers_list td:last-child i,
+#ui-dialog-map #servers_list td:last-child i { font-size: 2em; }
 
-#servers_view_container #servers_list td:last-child i:hover { cursor: pointer; }
+#servers_view_container #servers_list td:last-child i:hover,
+#ui-dialog-map #servers_list td:last-child i:hover { cursor: pointer; }
 
-#servers_view_container #servers_list .progress {
-	height: 8px;
+#servers_view_container #servers_list .progress,
+#ui-dialog-map #servers_list .progress {
 	margin-bottom: 5px;
+	height: 8px;
 	background-color: #7e7e85;
 	background-image: none;
 }
 
+#ui-dialog-map #servers_list td {
+	height: 62px;
+	color: #78838a;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#ui-dialog-map #servers_list td:first-child {
+	padding-right: 2.5%;
+	padding-left: 2.5%;
+	text-align: left;
+}
+
 /************************* Map View ************************/
 
+#servers_view_container #servers_map { background-color: #c6c6c6; }
+
 #servers_view_container #servers_map #map {
-	height: 180px;
+	width: 1020px;
+	height: 608px;
+	margin: 0 auto;
+
+	cursor: default;
+}
+
+#ui-dialog-map {
+	border: none;
+	box-shadow: none;
 }

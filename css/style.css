@@ -11,4 +11,9 @@
 @import url('jquery.timepicker.css');
 @import url('tables/tables.css');
 
+@import url('leaflet/leaflet.min.css');
+@import url('leaflet/leaflet.ie.min.css');
+
+@import url('footable.core.min.css');
+
 @import url('main.css');
