@@ -50,11 +50,12 @@ define(function(require){
 			}
 			else {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
-
+				
 				self.authToken = cookieData.authToken;
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
 				self.isReseller = cookieData.isReseller;
+				self.installedApps = cookieData.installedApps;
 
 				monster.pub('auth.loadAccount');
 			}
@@ -79,6 +80,7 @@ define(function(require){
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
+					self.installedApps = data.data.apps;
 
 					if($('#remember_me').is(':checked')) {
 						var cookieLogin = {
@@ -96,7 +98,8 @@ define(function(require){
 						authToken: self.authToken,
 						accountId: self.accountId,
 						userId: self.userId,
-						isReseller: self.isReseller
+						isReseller: self.isReseller,
+						installedApps: self.installedApps
 					};
 
 					$.cookie('monster-auth', JSON.stringify(cookieAuth), {expires: 30});
@@ -144,8 +147,7 @@ define(function(require){
 				}
 			},
 			function(err, results) {
-				var hasDefaultApp = false,
-					defaultApp;
+				var defaultApp;
 
 				if(err) {
 					monster.ui.alert('error', self.i18n.active().errorLoadingAccount, function() {
@@ -163,13 +165,14 @@ define(function(require){
 					// This account will be overriden when masquerading, it should be used by masqueradable apps
 					self.currentAccount = $.extend(true, {}, self.originalAccount);
 
-					$.each(results.user.apps, function(k, v) {
-						if(v['default']) {
-							hasDefaultApp = true;
-							v.id = k;
-							defaultApp = v;
+					if(results.user.appList && results.user.appList.length > 0) {
+						for(var i = 0; i < results.user.appList.length; i++) {
+							if(self.installedApps[results.user.appList[i]]) {
+								defaultApp = self.installedApps[results.user.appList[i]].name;
+								break;
+							}
 						}
-					});
+					}
 
 					monster.pub('core.loadApps', {
 						defaultApp: defaultApp

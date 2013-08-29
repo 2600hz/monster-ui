@@ -35,17 +35,8 @@ define(function(require){
 	};
 
 	$.each(controls, function(k, control) {
-		/*app[k] = control;
-
-		$.each(control.subscribe, function(nameEvent, nameFunction) {
-			app.subscribe[nameEvent] = control[nameFunction];
-		});
-
-		$.extend(true, app.requests, control.requests);*/
 		$.extend(true, app, control);
 	});
-
-	console.log(app);
 
 	return app;
 });

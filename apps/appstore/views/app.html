@@ -1,0 +1,38 @@
+<div id="appstore_container" class="clearfix">
+	<div class="left-menu">
+		<div class="app-filter-list">
+			<div class="app-filter active">
+				{{ i18n.filters.all }}
+			</div>
+			<div class="app-filter-group">
+				<div data-filter="installed" class="app-filter">
+					{{ i18n.filters.installed }}
+				</div>
+				<div data-filter="reseller" class="app-filter">
+					{{ i18n.filters.resellers }}
+				</div>
+				<div data-filter="carrier" class="app-filter">
+					{{ i18n.filters.carriers }}
+				</div>
+				<div data-filter="developer" class="app-filter">
+					{{ i18n.filters.developers }}
+				</div>
+			</div>
+			<!-- <li data-filter="community" class="app-filter">
+				{{ i18n.filters.community }}
+			</li>
+			<li class="contribute-app-link">
+				Contribute Apps
+			</li> -->
+		</div>
+	</div>
+
+	<div class="right-content">
+		<div class="content">
+			<div class="search-bar clearfix">
+				<input type="text" class="search-query input-medium pull-right" placeholder="{{i18n.search}}">
+			</div>
+			<div class="app-list-container"></div>
+		</div>
+	</div>
+</div>

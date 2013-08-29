@@ -1,11 +1,27 @@
 <div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}} {{ formatPhoneNumber phoneNumber }} {{extension}}">
 	<div class="user-cells">
 		<div class="name grid-cell" data-type="name"><i class="{{#if isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
-		<div class="extension grid-cell centered" data-type="extension">{{ extension }}</div>
-		<div class="phone-number grid-cell centered" data-type="phone-number">{{ formatPhoneNumber phoneNumber }}</div>
+		<div class="extension grid-cell centered" data-type="extensions">
+			{{ extension }}
+
+			{{#if additionalExtensions}}
+				<i class="icon-plus icon-blue"></i>
+			{{/if}}
+		</div>
+		<div class="phone-number grid-cell centered" data-type="numbers">
+			{{ formatPhoneNumber phoneNumber }}
+
+			{{#if additionalNumbers}}
+				<i class="icon-plus icon-blue"></i>
+			{{/if}}
+		</div>
 		<div class="devices grid-cell centered" data-type="devices">
 			{{#each devices}}
-				<i class="icon-phone"></i>
+				{{#compare this '===' 'softphone'}}
+					<i class="icon-telicon-outbound-call"></i>
+				{{else}}
+					<i class="icon-phone"></i>
+				{{/compare}}
 			{{/each}}
 
 			{{#if additionalDevices}}
@@ -29,7 +45,7 @@
 			</div>
 			&nbsp;
 			{{#each features}}
-				<i class="icon-telicon-user"></i>
+				<i class="icon-telicon-credit-card icon-blue"></i>
 			{{/each}}
 		</div>
 	</div>

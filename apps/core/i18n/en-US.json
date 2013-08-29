@@ -1,48 +1,46 @@
 {
-	"hello": "Welcome!",
-	"welcome": "SIP Trunking Made Easy",
-	"conferencingLogo": "Conferencing",
-
-	"close" : "X Close",
-
-	"save": "Save",
-	"saveChanges": "Save Changes",
-	"previous": "Previous",
-	"next": "Next",
-	"submit": "Submit",
+	"add": "Add",
 	"cancel": "Cancel",
-	"search": "Search",
-	"select": "Select",
-	"error": "Error",
-	"info": "Info",
-	"warning": "Warning!",
-
 	"chargeReminder" : {
         "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
         "line2": "Are you sure you want to continue?"
     },
-
-	"currencyUsed": "$",
-	"startDate": "Start Date",
-	"endDate": "End Date",
-	"filter": "Filter",
-	"download": "Download",
-	"csv": "CSV",
-	"pdf": "PDF",
-
+	"close" : "X Close",
 	"cnam": "Caller-ID",
-	"e911": "e911",
-	"failover": "Failover",
-
-	"examplePhoneNumber": "+1 (415) 482-9912",
-
+	"conferencingLogo": "Conferencing",
+	"csv": "CSV",
+	"currencyUsed": "$",
 	"dialog" : {
 		"showError": "Show Error",
 		"confirmOk": "OK",
 		"confirmCancel" : "Cancel",
 		"confirmTitle" : "Confirmation"
 	},
-
+	"download": "Download",
+	"e911": "e911",
+	"endDate": "End Date",
+	"error": "Error",
+	"examplePhoneNumber": "+1 (415) 482-9912",
+	"failover": "Failover",
+	"filter": "Filter",
+	"hello": "Welcome!",
+	"info": "Info",
+	"next": "Next",
+	"paging": {
+		"first": "First",
+		"previous": "Previous",
+		"next": "Next",
+		"last": "Last"
+	},
+	"pdf": "PDF",
+	"previous": "Previous",
+	"remove": "Remove",
+	"save": "Save",
+	"saveChanges": "Save Changes",
+	"search": "Search",
+	"select": "Select",
+	"startDate": "Start Date",
+	"submit": "Submit",
 	"table" : {
 		"search": "Search...",
 		"empty" : "No data available in table",
@@ -53,5 +51,7 @@
 		"loading": "Loading...",
 		"filtered": "(filtered from _MAX_ total entries)",
 		"infoEmpty": ""
-	}
+	},
+	"warning": "Warning!",
+	"welcome": "SIP Trunking Made Easy"
 }

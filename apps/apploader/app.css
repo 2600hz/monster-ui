@@ -1,0 +1,148 @@
+#apploader {
+    z-index: 1000;
+    position: absolute;
+    bottom: 0;
+    top: 67px;
+    left: -310px;
+    width: 300px;
+    background-color: rgba(25, 25, 25, 0.95);
+    box-shadow: 1px 1px 5px #333;
+    color: #dedede;
+    min-height: 300px;
+
+    -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: -moz-none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#apploader .app-list {
+    list-style: none;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    bottom: 90px;
+    top: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
+
+#apploader .app-list .app-list-element {
+    height: 60px;
+    border-bottom: solid 2px rgba(51,51,51,0.75);
+    padding: 5px 0px;
+    cursor: pointer;
+}
+
+#apploader .app-list .app-list-element:hover,
+#apploader .app-list .app-list-element.ui-sortable-helper {
+	background-color: rgba(25, 25, 25, 0.75);
+}
+
+#apploader .app-list .app-list-element:first-of-type {
+    border-top: solid 2px rgba(51,51,51,0.75);
+}
+
+#apploader .app-list .app-list-element.ui-sortable-helper {
+    border-top: solid 2px rgba(51,51,51,0.75);
+}
+
+#apploader .app-list .app-list-element > div:not(.app-default) {
+    float: left;
+    height: 100%;
+}
+
+#apploader .app-list .app-list-element .app-draggable {
+    width: 30px;
+    cursor: move;
+}
+
+#apploader .app-list .app-list-element-placeholder {
+    height: 70px;
+}
+
+#apploader .app-list .app-list-element-placeholder:not(:last-child) {
+	border-bottom: solid 2px rgba(51,51,51,0.75);
+}
+
+#apploader .app-list .app-list-element .app-draggable .app-draggable-inner {
+    height: 34px;
+    width: 2px;
+    border-left: solid 1px #3A3A3A;
+    border-right: solid 1px #3A3A3A;
+    margin: 13px 10px;
+}
+
+#apploader .app-list .app-list-element .app-icon {
+    width: 40px;
+    background: url('./static/images/default_icon.png') no-repeat center;
+    background-size: contain;
+}
+
+#apploader .app-list .app-list-element .app-name {
+    line-height: 60px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 20px;
+}
+
+#apploader .app-default {
+    position: absolute;
+    right: 0;
+    padding: 10px;
+}
+
+#apploader .app-default > div {
+    height: 20px;
+    text-align: center;
+}
+
+#apploader .app-default .app-default-bottom {
+    font-size: 12px;
+    color: #777;
+}
+
+#apploader .appstore-link {
+	height: 70px;
+	line-height: 70px;
+	padding: 10px 0px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	border-top: solid 1px #ccc;
+	cursor: pointer;
+
+	background: -moz-linear-gradient(top,  hsl(0,0%,15%) 0%, hsl(0,0%,5%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,15%)), color-stop(100%,hsl(0,0%,5%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,15%) 0%,hsl(0,0%,5%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,15%) 0%,hsl(0,0%,5%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,15%) 0%,hsl(0,0%,5%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,15%) 0%,hsl(0,0%,5%) 100%); /* W3C */
+}
+
+#apploader .appstore-link:hover {
+	background: -moz-linear-gradient(top,  hsl(0,0%,10%) 0%, hsl(0,0%,15%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,10%)), color-stop(100%,hsl(0,0%,15%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,10%) 0%,hsl(0,0%,15%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,10%) 0%,hsl(0,0%,15%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,10%) 0%,hsl(0,0%,15%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,10%) 0%,hsl(0,0%,15%) 100%); /* W3C */
+}
+
+#apploader .appstore-link .appstore-link-label {
+	text-transform: uppercase;
+	padding: 0px 10px;
+	margin-left: 60px;
+}
+
+#apploader .appstore-link .appstore-link-icon {
+	float: left;
+	margin-left: 20px;
+	width: 40px;
+	text-align: center;
+}

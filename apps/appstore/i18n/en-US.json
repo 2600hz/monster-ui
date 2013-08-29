@@ -1,0 +1,34 @@
+{
+	"description": "Description",
+	"author": "Author",
+	"version": "Version",
+	"license": "License",
+	"price": "Price",
+	"free": "Free",
+	"save": "Save",
+	"filters": {
+		"all": "All Apps",
+		"installed": "My Apps",
+		"resellers": "Resellers Apps",
+		"carriers": "Carriers Apps",
+		"developers": "Developers Apps",
+		"community": "Community Apps"
+	},
+	"permissions": {
+		"title": "Who can use this App?",
+		"all": "All users",
+		"specific": "Specific users"
+	},
+	"help": {
+		"title": "Help Documentations",
+		"documentation": "View Documentation",
+		"howTo": "View How-To Video"
+	},
+	"selectedUsers": "Selected Users",
+	"selectAll": "Select All",
+	"unselectAll": "Unselect All",
+	"selectUsersLink": "Selected Users ({{selectedUsers}})",
+	"alerts": {
+		"noUserSelected": "You must select at least one user for this app.<br><br>If you don't want any user to use this app, you can turn it off."
+	}
+}
