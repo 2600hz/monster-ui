@@ -155,13 +155,6 @@ define(function(require){
 				});
 			});
 
-			parent.find('.app-list-element').on('click', function(e) {
-				monster.apps.load($(this).data('name'), function(app){
-					app.render();
-				});
-				self._hide(parent);
-			});
-
 			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
 				monster.apps.load($(this).data('name'), function(app){
 					app.render();
