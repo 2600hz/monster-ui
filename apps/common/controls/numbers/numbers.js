@@ -34,7 +34,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'common.numbers.render': 'numbersRender'
+			'common.numbers.render': 'numbersRender',
+			'common.numbers.getListFeatures': 'numbersGetFeatures'
 		},
 
 		/* Arguments:
@@ -73,13 +74,7 @@ define(function(require){
 		numbersFormatNumber: function(value) {
 			var self = this;
 
-			value.viewFeatures = {
-				failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-				outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamIconHelp },
-				dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
-				local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().numbers.localIconHelp },
-				port: { icon: 'icon-phone icon-yellow feature-port' }
-			};
+			value.viewFeatures = self.numbersGetFeatures();
 
 			_.each(value.features, function(feature) {
 				value.viewFeatures[feature].active = 'active';
@@ -90,6 +85,22 @@ define(function(require){
 			}
 
 			return value;
+		},
+
+		numbersGetFeatures: function(callback) {
+			var self = this,
+				features = {
+					failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
+					outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamIconHelp },
+					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
+					local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().numbers.localIconHelp },
+					port: { icon: 'icon-phone icon-yellow feature-port' }
+				};
+
+			if(callback) {
+				callback && callback(features);
+			}
+			else return features;
 		},
 
 		numbersFormatData: function(data) {

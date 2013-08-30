@@ -18,34 +18,35 @@ define(function(require){
 				url: 'resetPassword.json',
 				verb: 'POST'
 			},
-			'voip.users.getCallflows': {
-				apiRoot: 'apps/voip/submodules/users/fixtures/',
-				url: 'getCallflows.json',
-				verb: 'GET'
-			},
-			'voip.users.getDevices': {
-				apiRoot: 'apps/voip/submodules/users/fixtures/',
-				url: 'getDevices.json',
-				verb: 'GET'
-			},
-			'voip.users.getNumbers': {
-				apiRoot: 'apps/voip/submodules/users/fixtures/',
-				url: 'getNumbers.json',
-				verb: 'GET'
-			},
 			'voip.users.getUsers': {
 				apiRoot: 'apps/voip/submodules/users/fixtures/',
 				url: 'getUsers.json',
 				verb: 'GET'
 			},
+			'voip.users.getDevices': {
+				url: 'accounts/{accountId}/devices',
+				verb: 'GET'
+			},
+			'voip.users.getNumbers': {
+				url: 'accounts/{accountId}/phone_numbers/',
+				verb: 'GET'
+			},
+			'voip.users.getCallflows': {
+				url: 'accounts/{accountId}/callflows/',
+				verb: 'GET'
+			},
+			'voip.users.getCallflow': {
+				url: 'accounts/{accountId}/callflows/{callflowId}',
+				verb: 'GET'
+			},
+			'voip.users.updateCallflow': {
+				url: 'accounts/{accountId}/callflows/{callflowId}',
+				verb: 'POST'
+			},
 			'voip.users.getUser': {
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
 			}/*,
-			'voip.users.getNumbers': {
-				url: 'accounts/{accountId}/phone_numbers',
-				verb: 'GET'
-			},
 			'voip.users.resendInstructions': {
 				url: 'accounts/{accountId}/users/{userId}/resend_instructions',
 				verb: 'POST'
@@ -55,14 +56,6 @@ define(function(require){
 				verb: 'POST'
 			},
 
-			'voip.users.getCallflows': {
-				url: 'accounts/{accountId}/callflows',
-				verb: 'GET'
-			},
-			'voip.users.getDevices': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
-			},
 			'voip.users.getUsers': {
 				url: 'accounts/{accountId}/users',
 				verb: 'GET'
@@ -74,11 +67,15 @@ define(function(require){
 		},
 
 		/* Users */
-		usersRender: function(parent) {
-			var self = this;
+		/* args: parent and userId */
+		usersRender: function(args) {
+			var self = this,
+				parent = args.parent || $('.right-content'),
+				_userId = args.userId;
 
-			self.usersGetData(function(dataTemplate) {
-				var template = $(monster.template(self, 'users-layout', dataTemplate)),
+			self.usersGetData(function(data) {
+				var dataTemplate = self.usersFormatListData(data),
+				    template = $(monster.template(self, 'users-layout', dataTemplate)),
 					templateUser;
 
 				_.each(dataTemplate.users, function(user) {
@@ -92,6 +89,15 @@ define(function(require){
 				parent
 					.empty()
 					.append(template);
+
+				if(_userId) {
+					parent.find('.grid-row[data-id=' + _userId + ']')
+						.css('background-color', '#22CCFF')
+						.animate({
+							backgroundColor: '#fcfcfc'
+						}, 2000
+					);
+				}
 			});
 		},
 
@@ -134,9 +140,7 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					dataTemplate = self.usersFormatListData(results);
-
-					callback && callback(dataTemplate);
+					callback && callback(results);
 				}
 			);
 		},
@@ -159,7 +163,9 @@ define(function(require){
 
 		usersFormatListData: function(data) {
 			var self = this,
-				dataTemplate = {},
+				dataTemplate = {
+					countUsers: data.users.length
+				},
 			    mapUsers = {};
 
 			_.each(data.users, function(user) {
@@ -215,12 +221,13 @@ define(function(require){
 		usersBindEvents: function(template, parent) {
 			var self = this,
 				currentUser,
+				currentCallflow,
+				numbersToSave,
 				toastrMessages = self.i18n.active().users.toastrMessages;
 
 			template.on('click', '.cancel-link', function() {
 				template.find('.edit-user').empty().hide();
 			});
-
 
 			template.on('click', '#resend_instructions', function() {
 				var userId = $(this).parents('.grid-row').data('id');
@@ -267,14 +274,123 @@ define(function(require){
 					if(type === 'user') {
 						currentUser = data;
 					}
+					else if(type === 'numbers') {
+						numbersToSave = [];
+						currentCallflow = data.callflow;
+
+						_.each(data.extensions, function(number) {
+							numbersToSave.push(number);
+						});
+					}
 
 					row.find('.edit-user').append(template).show();
+				});
+			});
+
+			template.on('click', '.save-numbers', function() {
+				var numbers = $.extend(true, [], numbersToSave),
+					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+
+				template.find('.list-assigned-numbers .phone-number-row').each(function(k, row) {
+					numbers.push($(row).data('id'));
+				});
+
+				monster.request({
+					resource: 'voip.users.getCallflow',
+					data: {
+						accountId: self.accountId,
+						callflowId: currentCallflow.id
+					},
+					success: function(callflowData) {
+						callflowData.data.numbers = numbers;
+
+						monster.request({
+							resource: 'voip.users.updateCallflow',
+							data: {
+								accountId: self.accountId,
+								callflowId: currentCallflow.id,
+								data: callflowData.data
+							},
+							success: function(callflowData) {
+								toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
+								self.usersRender({ userId: callflowData.data.owner_id });
+							}
+						});
+					}
 				});
 			});
 
 			template.find('.users-header .search-query').on('keyup', function() {
 				var searchString = $(this).val().toLowerCase(),
 					rows = template.find('.grid-row:not(.title)');
+
+				_.each(rows, function(row) {
+					var row = $(row);
+
+					if(row.data('search').toLowerCase().indexOf(searchString) < 0) {
+						row.hide();
+					}
+					else {
+						row.show();
+					}
+				});
+			});
+
+			template.on('click', '.detail-numbers .list-unassigned-numbers .add-number', function() {
+				var row = $(this).parents('.phone-number-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') - 1,
+					assignedList = template.find('.detail-numbers .list-assigned-numbers');
+
+				if(row.siblings().length === 0) {
+					template.find('.detail-numbers .list-unassigned-numbers').append(monster.template(self, 'users-empty-numbers-list', { category: 'unassigned' }));
+				}
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				row.find('button')
+					.removeClass('add-number btn-primary')
+					.addClass('remove-number btn-danger')
+					.text(self.i18n.active().remove);
+
+				if(assignedList.find('.empty-row').size() > 0) {
+					assignedList.empty();
+				}
+
+				assignedList.append(row);
+			});
+
+			template.on('click', '.detail-numbers .list-assigned-numbers .remove-number', function() {
+				var row = $(this).parents('.phone-number-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') + 1,
+					unassignedList = template.find('.detail-numbers .list-unassigned-numbers');
+
+				if(row.siblings().length === 0) {
+					template.find('.detail-numbers .list-assigned-numbers').append(monster.template(self, 'users-empty-numbers-list', { category: 'assigned' }));
+				}
+
+				row.find('button')
+					.removeClass('remove-number btn-danger')
+					.addClass('add-number btn-primary')
+					.text(self.i18n.active().add);
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				if(unassignedList.find('.empty-row').size() > 0) {
+					unassignedList.empty();
+				}
+
+				unassignedList.append(row);
+			});
+
+			template.on('keyup', '.detail-numbers .unassigned-list-header .search-query', function() {
+				var searchString = $(this).val().toLowerCase(),
+					rows = template.find('.list-unassigned-numbers .phone-number-row');
 
 				_.each(rows, function(row) {
 					var row = $(row);
@@ -326,14 +442,39 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					callflows: function(callbackParallel) {
+					callflow: function(callbackParallel) {
 						monster.request({
 							resource: 'voip.users.getCallflows',
 							data: {
 								accountId: self.accountId
 							},
 							success: function(callflows) {
-								callbackParallel && callbackParallel(null, callflows.data);
+								var callflowId;
+
+								$.each(callflows.data, function(k, callflowLoop) {
+									/* Find Smart PBX Callflow of this user */
+									if(callflowLoop.owner_id === userId) {
+										callflowId = callflowLoop.id;
+
+										return false;
+									}
+								});
+
+								if(callflowId) {
+									monster.request({
+										resource: 'voip.users.getCallflow',
+										data: {
+											accountId: self.accountId,
+											callflowId: callflowId
+										},
+										success: function(callflow) {
+											callbackParallel && callbackParallel(null, callflow.data);
+										}
+									});
+								}
+								else {
+									callbackParallel && callbackParallel(null, {});
+								}
 							}
 						});
 					},
@@ -350,43 +491,61 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					results = self.usersFormatNumbersData(userId, results);
+					self.usersFormatNumbersData(userId, results, function(results) {
+						template = $(monster.template(self, 'users-numbers', results));
 
-					console.log(results);
-					template = $(monster.template(self, 'users-numbers', results));
-
-					callback && callback(template, results);
+						callback && callback(template, results);
+					});
 				}
 			);
 		},
 
-		usersFormatNumbersData: function(userId, data) {
-			console.log(data);
-			var numbers = {
-				assignedNumbers: {},
-				unassignedNumbers: {}
-			};
+		usersSaveNumbers: function(numbers, callback) {
+		},
 
-			/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
-			_.each(data.callflows, function(callflow) {
-				if(callflow.owner_id === userId) {
-					_.each(callflow.numbers, function(number) {
-						if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
-							numbers.assignedNumbers[number] = data.numbers.numbers[number];
+		usersFormatNumbersData: function(userId, data, callback) {
+			var self = this,
+				numbers = {
+					countSpare: 0,
+					assignedNumbers: {},
+					unassignedNumbers: {},
+					extensions: []
+				};
+
+			monster.pub('common.numbers.getListFeatures', function(features) {
+				if('numbers' in data.numbers) {
+					_.each(data.numbers.numbers, function(number, k) {
+						/* Formating number */
+						number.viewFeatures = $.extend(true, {}, features);
+						number.localityEnabled = 'locality' in number ? true : false;
+
+						_.each(number.features, function(feature) {
+							number.viewFeatures[feature].active = 'active';
+						});
+
+						/* Adding to spare numbers */
+						if(number.used_by === '') {
+							numbers.countSpare++;
+
+							numbers.unassignedNumbers[k] = number;
 						}
 					});
 				}
-			});
 
-			if('numbers' in data.numbers) {
-				_.each(data.numbers.numbers, function(v, k) {
-					if(v.used_by === '') {
-						numbers.unassignedNumbers[k] = v;
+				/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
+				numbers.callflow = data.callflow;
+
+				_.each(data.callflow.numbers, function(number) {
+					if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
+						numbers.assignedNumbers[number] = data.numbers.numbers[number];
+					}
+					else {
+						numbers.extensions.push(number);
 					}
 				});
-			}
 
-			return numbers;
+				callback && callback(numbers);
+			});
 		}
 	};
 

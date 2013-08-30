@@ -15,7 +15,10 @@
 		"add": "Add User",
 		"addFromSpare": "Add from Spare Numbers",
 		"buy": "Buy Numbers",
+		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
+		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"delete": "Delete User",
+		"noNumber": "No number",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
 		"includeInDirectory": "Include user to Company Directory",
@@ -32,7 +35,8 @@
 		},
 		"toastrMessages": {
 			"instructionsSent": "An e-mail has been sent to {{ email }} with all the user Instructions on how to get started with the UI!",
-			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password."
+			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password.",
+			"numbersUpdated": "You successfuly updated the phone numbers of {{ name }}."
 		},
 		"uploadPicture": "Upload a Picture",
 		"user": "User"

@@ -98,7 +98,11 @@
 		 "+14154230350":{
 			"state":"in_service",
 			"features":[
-
+				"local",
+				"failover",
+				"port",
+				"dash_e911",
+				"outbound_cnam"
 			],
 			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
 			"used_by":"callflow",
@@ -218,7 +222,8 @@
 		 "+14154230427":{
 			"state":"in_service",
 			"features":[
-
+				"dash_e911",
+				"outbound_cnam"
 			],
 			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
 			"used_by":"",

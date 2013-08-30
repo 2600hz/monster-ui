@@ -9,10 +9,14 @@
 			{{/if}}
 		</div>
 		<div class="phone-number grid-cell centered" data-type="numbers">
-			{{ formatPhoneNumber phoneNumber }}
+			{{#if phoneNumber}}
+				{{ formatPhoneNumber phoneNumber }}
 
-			{{#if additionalNumbers}}
-				<i class="icon-plus icon-blue"></i>
+				{{#if additionalNumbers}}
+					<i class="icon-plus icon-blue"></i>
+				{{/if}}
+			{{else}}
+				{{ i18n.users.noNumber }}
 			{{/if}}
 		</div>
 		<div class="devices grid-cell centered" data-type="devices">

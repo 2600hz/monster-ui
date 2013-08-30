@@ -3,7 +3,7 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster');
 
-		subModules = {
+	var subModules = {
 			numbers: require('./submodules/numbers/numbers'),
 			users: require('./submodules/users/users'),
 			myOffice: require('./submodules/myOffice/myOffice')
@@ -78,7 +78,7 @@ define(function(require){
 			});
 
 			parent.find('.category#users').on('click', function() {
-				monster.pub('voip.users.render', container);
+				monster.pub('voip.users.render', { parent: container });
 			});
 
 			parent.find('.category#groups').on('click', function() {
