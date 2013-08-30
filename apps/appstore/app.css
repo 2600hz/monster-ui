@@ -1,61 +1,86 @@
-#ws-content {
-    padding: 0 !important;
-    margin: 0 !important;
+#appstore_container {
+    padding: 20px;
+    max-width: 1136px;
+    margin: auto;
+}
+
+@media (min-width: 1176px) {
+    #appstore_container {
+        width: 1136px;
+    }
+}
+
+@media (min-width: 864px) and (max-width: 1175px) {
+    #appstore_container {
+        width: 824px;
+    }
+}
+
+@media (max-width: 863px) {
+    #appstore_container {
+        width: 512px;
+    }
 }
 
 /********** LEFT **********/
 
 #appstore_container .left-menu {
     float: left;
-    width: 200px;
+    width: 180px;
 }
 
-#appstore_container .left-menu .app-filter-list {
-    list-style: none;
-    margin: 0;
-}
-
-#appstore_container .left-menu .app-filter-list > li {
-    height: 60px;
-    line-height: 60px;
-    border-right: solid 1px #ccc;
-    border-bottom: solid 1px #ccc;
-    text-align: left;
-    text-transform: uppercase;
-    color: #ccc;
-    background-color: #333;
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    padding: 10px;
+#appstore_container .left-menu .app-filter {
+    background: #fcfcfc;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     cursor: pointer;
+    display: block;
+    font-size: 18px;
+    height: 30px;
+    line-height: 30px;
+    padding: 15px 10px;
+    margin: 10px auto;
 }
 
-#appstore_container .left-menu .app-filter-list > li:hover {
-    background-color: #444;
+#appstore_container .left-menu .app-filter:hover {
+    background: #f5f5f5;
 }
 
-#appstore_container .left-menu .app-filter-list > li.active {
-    background-color: #22ccff;
-    color: white;
+#appstore_container .left-menu .app-filter.active {
+    background: #22ccff;
+    border: 1px solid #22ccff;
+    color: #fff;
+}
+
+#appstore_container .left-menu .app-filter-group .app-filter {
+    margin: 0px auto;
+}
+
+#appstore_container .left-menu .app-filter-group .app-filter:not(:first-child) {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+#appstore_container .left-menu .app-filter-group .app-filter:not(:last-child) {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom: none;
 }
 
 /********** RIGHT **********/
 
 #appstore_container .right-content {
     margin-left: 200px;
-    padding: 20px;
-}
-
-#appstore_container .right-content .content {
-    margin: auto;
-    max-width: 936px;
 }
 
 /* * * * * Top * * * * */
 
 #appstore_container .right-content .search-bar:after {
     clear: right;
+}
+
+#appstore_container .right-content .search-bar .search-query {
+    margin-right: 5px;
 }
 
 /* * * * * Center * * * * */
@@ -80,23 +105,23 @@
     cursor: pointer;
     border-radius: 4px;
 
-    background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,91%) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,91%))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,91%) 100%); /* W3C */
+    background: -moz-linear-gradient(top,  hsl(0,0%,99%) 0%, hsl(0,0%,96%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,99%)), color-stop(100%,hsl(0,0%,96%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,99%) 0%,hsl(0,0%,96%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,99%) 0%,hsl(0,0%,96%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,99%) 0%,hsl(0,0%,96%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,99%) 0%,hsl(0,0%,96%) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
 }
 
 #appstore_container .right-content .app-list-container .app-element:hover {
-    background: -moz-linear-gradient(top,  hsl(0,0%,91%) 0%, hsl(0,0%,100%) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,91%)), color-stop(100%,hsl(0,0%,100%))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  hsl(0,0%,91%) 0%,hsl(0,0%,100%) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    background: -moz-linear-gradient(top,  hsl(0,0%,96%) 0%, hsl(0,0%,99%) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,96%)), color-stop(100%,hsl(0,0%,99%))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  hsl(0,0%,96%) 0%,hsl(0,0%,99%) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  hsl(0,0%,96%) 0%,hsl(0,0%,99%) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  hsl(0,0%,96%) 0%,hsl(0,0%,99%) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  hsl(0,0%,96%) 0%,hsl(0,0%,99%) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#fcfcfc',GradientType=0 ); /* IE6-9 */
 }
 
 #appstore_container .right-content .app-list-container .app-element .app-installed {
@@ -148,50 +173,6 @@
     overflow: hidden;
     font-size: 12px;
 }
-
-/*@media (min-width: 1144px) {
-    #appstore_container .right-content .content {
-        width: 904px;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element:nth-of-type(-n+3) {
-        border-top: solid 1px #ccc;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element:last-of-type, 
-    #appstore_container .right-content .app-list-container .app-element:nth-of-type(3n) {
-        border-right: solid 1px #ccc;
-    }
-}
-
-@media (min-width: 844px) and (max-width: 1143px) {
-    #appstore_container .right-content .content {
-        width: 603px;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element:nth-of-type(-n+2) {
-        border-top: solid 1px #ccc;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element:last-of-type, 
-    #appstore_container .right-content .app-list-container .app-element:nth-of-type(2n) {
-        border-right: solid 1px #ccc;
-    }
-}
-
-@media (max-width: 843px) {
-    #appstore_container .right-content .content {
-        width: 302px;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element:first-of-type {
-        border-top: solid 1px #ccc;
-    }
-
-    #appstore_container .right-content .app-list-container .app-element {
-        border-right: solid 1px #ccc;
-    }
-}*/
 
 /********** POPUP **********/
 

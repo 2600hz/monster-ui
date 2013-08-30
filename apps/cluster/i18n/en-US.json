@@ -1,0 +1,14 @@
+{
+	"close" : "Close",
+	"monitor": "Monitor",
+	"servers": "Servers",
+	"amqp": "AMQP",
+	"sip": "SIP",
+	"media": "Media",
+	"apps": "Apps",
+	"db": "DB",
+	"carrier": "Carrier",
+	"network": "Network",
+	"security": "Security",
+	"capacity": "Capacity"
+}

@@ -274,8 +274,10 @@ define(function(require){
 										.addClass('icon-spinner');
 								});
 
-							if(_data.data.installed.all
-							|| _data.data.installed.users.indexOf(self.userId) >= 0) {
+							var userInstalled = ($.grep(_data.data.installed.users, function(val, key) {
+								return val.id === self.userId;
+							}).length === 1);
+							if(_data.data.installed.all || userInstalled) {
 								if(!monster.apps['auth'].installedApps[_data.data.id]) {
 									monster.apps['auth'].installedApps[_data.data.id] = {
 										name: _data.data.name,
@@ -286,7 +288,7 @@ define(function(require){
 									updateCookie();
 									$('#apploader').remove();
 								}
-							} else if(_data.data.installed.users.length === 0) {
+							} else {
 								if(monster.apps['auth'].installedApps[_data.data.id]) {
 									delete monster.apps['auth'].installedApps[_data.data.id];
 

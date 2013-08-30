@@ -8,6 +8,7 @@
     background-color: rgba(25, 25, 25, 0.95);
     box-shadow: 1px 1px 5px #333;
     color: #dedede;
+    min-height: 300px;
 
     -webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -20,8 +21,12 @@
 #apploader .app-list {
     list-style: none;
     margin: 0;
-    height: 100%;
-    padding-bottom: 90px;
+    position: absolute;
+    width: 100%;
+    bottom: 90px;
+    top: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
 	-moz-box-sizing: border-box; 
 	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;

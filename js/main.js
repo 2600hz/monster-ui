@@ -6,6 +6,9 @@ require.config({
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
+		footable: 'js/lib/footable/footable.min',
+		'footable-sort': 'js/lib/footable/footable.sort.min',
+		'footable-filter': 'js/lib/footable/footable.filter.min',
 		form2object: 'js/lib/form2object',
 		handlebars: 'js/lib/handlebars-1.0.10',
 		hotkeys: 'js/lib/jquery.hotkeys.min',
@@ -14,6 +17,7 @@ require.config({
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
 		jstz: 'js/lib/jstz.min',
+		leaflet: 'js/lib/leaflet.min',
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
@@ -30,6 +34,8 @@ require.config({
 		wysiwyg: 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {
+		'footable-sort': ['footable'],
+		'footable-filter': ['footable'],
 		bootstrap: ['jqueryui'],
 		'bootstrap-switch': ['bootstrap'],
 		'bootstrap-clickover': ['bootstrap'],
