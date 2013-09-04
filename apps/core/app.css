@@ -126,11 +126,8 @@ table.table tr td {
 
 /* jQuery Popup Customization */
 .ui-dialog {
-	background: #444;
-	border-width: 1px 20px 20px;
-	border-color: #444;
-	border-top: 1px solid #333;
-	border-radius: 8px;
+	border: solid 1px #777;
+	border-radius: 0;
 	box-shadow: 1px 1px 3px #333;
 	padding: 0px;
 }
@@ -143,60 +140,6 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-titlebar {
-	background: rgb(68,68,68); /* Old browsers */
-	background: -moz-linear-gradient(left,  rgba(68,68,68,1) 0%, rgba(89,89,89,1) 50%, rgba(68,68,68,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(68,68,68,1)), color-stop(50%,rgba(89,89,89,1)), color-stop(100%,rgba(68,68,68,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(left,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* IE10+ */
-	background: linear-gradient(to right,  rgba(68,68,68,1) 0%,rgba(89,89,89,1) 50%,rgba(68,68,68,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#444444', endColorstr='#444444',GradientType=1 ); /* IE6-9 */
-
-	border: none;
-	padding: 5px;
-}
-
-.ui-dialog .ui-dialog-titlebar-close {
-	background: none;
-	border: none;
-	color: #ccc;
-	width: 82px;
-	word-spacing: 8px;
-}
-
-.ui-dialog .ui-dialog-titlebar-close:hover {
-	text-decoration: none;
-	font-weight: 500;
-	color: #ddd;
-	padding: 1px;
-}
-
-.ui-dialog .ui-dialog-title {
-	font-weight: 500;
-}
-
-.ui-dialog .ui-dialog-titlebar-close span {
-	overflow: visible;
-	text-align: right;
-	text-indent: 0px;
-	width: 80px;
-}
-
-.ui-widget-overlay {
-	background: #333;
-}
-
-.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-	font-family: 'Maven Pro', Helvetica, sans-serif;
-}
-
-/* New JQuery Popup */
-.content-dialog {
-	border: solid 1px #777;
-	border-radius: 0;
-}
-
-.content-dialog .ui-dialog-titlebar {
 	background: -moz-linear-gradient(top, hsl(0,0%,90%) 0%, hsl(0,0%,80%) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,90%)), color-stop(100%,hsl(0,0%,80%)));
 	background: -webkit-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
@@ -206,26 +149,38 @@ table.table tr td {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E6E6E6', endColorstr='#CCCCCC',GradientType=0 );
 	border-radius: 0;
 	padding: 15px 20px;
+	border: none;
 }
 
-.content-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+.ui-dialog .ui-dialog-titlebar-close {
+	background: none;
+	border: none;
 	width: 40px;
 	color: #777;
 }
 
-.content-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close span {
-	line-height: 20px;
-	width: 2em;
-}
-
-.content-dialog .ui-dialog-titlebar .ui-dialog-title {
+.ui-dialog .ui-dialog-title {
+	font-weight: 500;
 	color: #777;
 	text-transform: uppercase;
 }
 
-.content-dialog .ui-dialog-titlebar i {
+.ui-dialog .ui-dialog-titlebar-close span {
+	line-height: 20px;
+	width: 2em;
+}
+
+.ui-dialog .ui-dialog-titlebar-close i {
 	color: #777;
 	font-size: 20px;
+}
+
+.ui-widget-overlay {
+	background: #333;
+}
+
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-family: 'Maven Pro', Helvetica, sans-serif;
 }
 
 /* JQuery datepicker */

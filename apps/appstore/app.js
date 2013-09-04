@@ -226,7 +226,7 @@ define(function(require){
 					rightContainer.find('.total-users-number').html(users.length);
 
 					monster.ui.prettyCheck.create(userListContainer);
-					monster.ui.contentDialog(template, app.label);
+					monster.ui.dialog(template, {title: app.label});
 
 					if(leftContainer.height() > rightContainer.height()) {
 						rightContainer.height(leftContainer.height());

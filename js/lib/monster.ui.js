@@ -198,7 +198,6 @@ define(function(require){
 				coreApp = monster.apps['core'],
 				i18n = coreApp.i18n.active(),
 				dialogType = ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) ? options.dialogType : 'classic',
-				// dialogType = options.dialogType || 'classic',
 				closeBtnText = i18n['close'] || 'X';
 
 			if ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) {
@@ -252,7 +251,7 @@ define(function(require){
 				case 'conference':
 					closeBtnText = '<i class="icon-remove icon-small"></i>';
 					break;
-				case 'content':
+				default:
 					closeBtnText = '<span class="icon-stack">'
 								 + '<i class="icon-circle icon-stack-base icon-white"></i>'
 								 + '<i class="icon-remove-sign"></i>'
@@ -262,20 +261,6 @@ define(function(require){
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
-		},
-
-		contentDialog: function(content, title, options) {
-			var self = this,
-				options = $.extend(
-					true, 
-					options || {}, 
-					{
-						dialogClass: "content-dialog", 
-						dialogType: "content", 
-						title: title
-					}
-				);
-			self.dialog(content, options);
 		},
 
 		table: {
