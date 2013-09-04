@@ -1,0 +1,13 @@
+<div class="holidays-element">
+	<div class="delete-holiday">
+		<i class="icon-trash icon-red"></i>
+	</div>
+	<div>
+		<input type="text" class="name" value="{{name}}" original="{{name}}">
+		<input type="text" class="date from" value="{{fromDate}}" data-original="{{fromDate}}">
+		{{#if isDateRange}}
+			<span>to</span>
+			<input type="text" class="date to" value="{{toDate}}" data-original="{{toDate}}">
+		{{/if}}
+	</div>
+</div>

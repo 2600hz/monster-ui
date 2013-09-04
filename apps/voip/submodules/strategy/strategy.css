@@ -1,0 +1,269 @@
+#strategy_container .clearfix:after {
+	clear: right;
+}
+
+#strategy_container .element-container:not(:first-of-type) {
+	margin-top: 10px;
+}
+
+#strategy_container .element-header-outer {
+	background: #dedede;
+	border-radius: 4px;
+}
+
+#strategy_container .element-header-inner {
+	height: 60px;
+	background: #f3f3f3;
+	margin: 5px;
+	cursor: pointer;
+}
+
+#strategy_container .element-container.open .element-header-outer {
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#strategy_container .element-container.open .element-header-inner {
+	margin-bottom: 0px;
+}
+
+#strategy_container .element-container .element-content {
+	display: none;
+}
+
+#strategy_container .element-content {
+	border: solid 1px #dedede;
+}
+
+#strategy_container .element-header-inner > div {
+	width: 50%;
+	line-height: 60px;
+	float: left;
+	white-space: nowrap;   overflow: hidden;
+	text-overflow: ellipsis;
+	position: relative;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
+
+#strategy_container .element-header-inner .title > i {
+	margin: 0px 20px;
+}
+
+#strategy_container .element-header-inner .title > span {
+	font-size: 18px;
+}
+
+#strategy_container .element-header-inner .summary {
+	padding-right: 60px;
+	padding-left: 20px;
+}
+
+#strategy_container .element-header-inner .summary > i {
+	position: absolute;
+	line-height: 60px;
+	margin-right: 20px;
+	margin-left: 20px;
+	right: 0px;
+}
+
+#strategy_container .element-container.open .element-header-inner .summary > i {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	color: #22ccff;
+}
+
+#strategy_container .element-container .basic-actions {
+	padding: 20px;
+	border-top: solid 1px #ccc;
+	background-color: #f3f3f3;
+	text-align: right;
+}
+
+#strategy_container .element-container .basic-actions .cancel-link {
+	margin-right: 40px;
+	vertical-align: middle;
+}
+
+/************** Main Numbers **************/
+
+#strategy_container .element-container.main-number .main-number-element {
+	border-bottom: solid 1px #dedede;
+	line-height: 50px;
+}
+
+#strategy_container .element-container.main-number .main-number-element > div {
+	display: inline-block;
+	padding: 10px;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#strategy_container .element-container.main-number .main-number-element > div:not(:last-of-type) {
+	border-right: solid 1px #dedede;
+}
+
+#strategy_container .element-container.main-number .main-number-element .number {
+	text-align: left;
+	width: 35%;
+}
+
+#strategy_container .element-container.main-number .main-number-element .number > button {
+	margin: 0px 15px;
+}
+
+#strategy_container .element-container.main-number .main-number-element .country {
+	width: 25%;
+	text-align: center;
+}
+
+#strategy_container .element-container.main-number .main-number-element .options {
+	width: 40%;
+	text-align: right;
+}
+
+#strategy_container .element-container.main-number .main-number-element .options > i {
+	margin-right: 10px;
+}
+
+#strategy_container .element-container.main-number .main-number-actions {
+	padding: 25px 20px;
+	line-height: 30px;
+	background-color: #f3f3f3;
+}
+
+#strategy_container .element-container.main-number .main-number-actions .action-links a {
+	margin-right: 15px;
+	white-space: nowrap;
+}
+
+#strategy_container .element-container.main-number .main-number-actions .action-links a i {
+	margin-right: 5px;
+}
+
+/********** Strategy Hours ***********/
+
+#strategy_container .element-container.strategy-hours .custom-hours-toggler {
+	padding: 20px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-toggler .title {
+	font-size: 18px;
+	line-height: 30px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-toggler > label:first-of-type {
+	margin-bottom: 20px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-toggler .title > input {
+	margin: 0 16px 4px 0;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-toggler .description {
+	margin-left: 30px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-div {
+	border-top: dashed 1px #ccc;
+	padding: 20px;
+	display: none;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-header {
+	font-size: 18px;
+	padding: 15px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-days {
+	border: solid 1px #ccc;
+	border-radius: 10px;
+	background-color: #FCFCFC;
+}
+
+#strategy_container .element-container.strategy-hours .custom-day {
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-day:not(:first-of-type) {
+	border-top: solid 1px #ccc;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-div label {
+	display: inline-block;
+	margin: 0;
+	vertical-align: middle;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-div .custom-day label {
+	width: 120px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-div input[type="text"] {
+	width: 80px;
+	margin: 0 10px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-day .status {
+	color: #999;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-lunchbreak {
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+	margin-top: 20px;
+}
+
+/********** Strategy Holidays ***********/
+
+#strategy_container .element-container.strategy-holidays .holidays-toggler {
+	padding: 20px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div {
+	border-top: dashed 1px #ccc;
+	padding: 20px;
+	display: none;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-add {
+	text-align: right;
+	padding: 10px 60px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element {
+	padding: 5px 40px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element:not(:last-of-type) {
+	border-bottom: solid 1px #dedede;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element input,
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element span {
+	margin: 5px 20px 5px 0px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .name {
+	width: 180px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .date {
+	width: 120px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .delete-holiday {
+	float: right;
+	line-height: 40px;
+	cursor: pointer;
+}

@@ -1,0 +1,60 @@
+<div class="custom-hours-toggler">
+	<label>
+		<div class="title">
+			<input type="radio" name="customHours" value="false" checked>
+			24 hours Open Office
+		</div>
+		<div class="description">
+			Choose this option if you want incoming calls to be handled the same way all the time.
+		</div>
+	</label>
+	<label>
+		<div class="title">
+			<input type="radio" name="customHours" value="true">
+			Custom Office Hours
+		</div>
+		<div class="description">
+			Choose this option if you want incoming calls to be handled differently when your office is closed.
+		</div>
+	</label>
+</div>
+
+<div class="custom-hours-div">
+	<div class="custom-hours-header">
+		<span class="pull-right timezone">Company Timezone: PST</span>
+		<span class="title">Custom Hours</span>
+	</div>
+	<div class="custom-days">
+		{{#each days}}
+		<div class="custom-day">
+			<span class="status pull-right">{{#if this.open}}{{../../i18n.strategy.open}}{{else}}{{../../i18n.strategy.closed}}{{/if}}</span>
+			<div>
+				<label>
+					<input type="checkbox" name="customHours.{{this.name}}.open" {{#if this.open}}checked{{/if}}>
+					{{this.name}}
+				</label>
+				<span class="timepickers" {{#unless this.open}}style="display:none;"{{/unless}}>
+					<input class="from-hour timepicker" type="text" name="customHours.{{this.name}}.from" value="{{this.from}}">
+					to
+					<input class="to-hour timepicker" type="text" name="customHours.{{this.name}}.to" value="{{this.to}}">
+				</span>
+			</div>
+		</div>
+		{{/each}}
+	</div>
+	<div class="custom-hours-lunchbreak">
+		<label>
+			<input type="checkbox" name="customHours.lunchbreak" {{#if lunchbreak.enabled}}checked{{/if}}>
+			Are you closed for lunch hours?
+		</label>
+		<span class="timepickers" {{#unless lunchbreak.enabled}}style="display:none;"{{/unless}}>
+			<input class="from-hour timepicker" type="text" name="customHours.lunchbreak.from" value="{{lunchbreak.from}}">
+			to
+			<input class="to-hour timepicker" type="text" name="customHours.lunchbreak.to" value="{{lunchbreak.to}}">
+		</span>
+	</div>
+</div>
+<div class="custom-hours-actions basic-actions">
+	<a href="#" class="cancel-link">Cancel</a>
+	<button class="btn btn-success save-button">Save Changes</button>
+</div>

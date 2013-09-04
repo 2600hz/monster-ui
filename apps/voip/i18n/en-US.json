@@ -40,5 +40,10 @@
 		},
 		"uploadPicture": "Upload a Picture",
 		"user": "User"
+	},
+
+	"strategy": {
+		"open": "Open",
+		"closed": "Closed"
 	}
 }

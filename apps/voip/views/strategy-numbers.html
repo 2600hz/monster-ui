@@ -1,0 +1,29 @@
+{{#each numbers}}
+<div class="main-number-element">
+	<div class="number">
+		<button type="button" class="btn btn-danger{{#compare ../numbers.length '===' 1}} disabled{{/compare}}">
+			Remove
+		</button>
+		<span>{{formatPhoneNumber this.number}}</span>
+	</div>
+	<div class="country">
+		<div class="flag"></div>
+		<span>{{this.city}}</span>
+	</div>
+	<div class="options">
+		<i class="icon-cog icon-large"></i>
+	</div>
+</div>
+{{else}}
+<div class="main-number-element">
+	Please add a main number
+</div>
+{{/each}}
+<div class="main-number-actions">
+	<a href="#" class="cancel-link pull-right">Cancel</a>
+	<div class="action-links">
+		<a href="#" class="spare-link"><i class="icon-file-text-alt icon-orange icon-large"></i> Spare Numbers</a>&nbsp;
+		<a href="#" class="buy-link"><i class="icon-shopping-cart icon-green icon-large"></i> Buy Numbers</a>&nbsp;
+		<a href="#" class="port-link"><i class="icon-random icon-blue icon-large"></i> Transfer Numbers</a>
+	</div>
+</div>

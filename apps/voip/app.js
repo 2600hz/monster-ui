@@ -6,7 +6,8 @@ define(function(require){
 	var subModules = {
 			numbers: require('./submodules/numbers/numbers'),
 			users: require('./submodules/users/users'),
-			myOffice: require('./submodules/myOffice/myOffice')
+			myOffice: require('./submodules/myOffice/myOffice'),
+			strategy: require('./submodules/strategy/strategy')
 		};
 
 	var app = {
@@ -45,8 +46,10 @@ define(function(require){
 				template = $(monster.template(self, 'app'));
 
 			/* On first Load, load my office */
-			template.find('.category#my_office').addClass('active');
-			monster.pub('voip.myOffice.render', template.find('.right-content'));
+			// template.find('.category#my_office').addClass('active');
+			// monster.pub('voip.myOffice.render', template.find('.right-content'));
+			template.find('.category#strategy').addClass('active');
+			monster.pub('voip.strategy.render', template.find('.right-content'));
 
 			self.bindEvents(template);
 
