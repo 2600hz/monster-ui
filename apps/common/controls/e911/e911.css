@@ -24,7 +24,6 @@
 }
 
 .trunkstore_popup.e911 .e911_image {
-    background: url('static/images/e911_image.png') no-repeat center;
     width: 80px;
     height: 265px;
     margin: 0 10px 0 30px;

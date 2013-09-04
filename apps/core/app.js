@@ -61,11 +61,11 @@ define(function(require){
 
 		_apps: ['auth'],
 
-		//List of apps required once the user is logged in
-		_baseApps: ['common', 'myaccount', 'appstore', 'apploader'],
+		//List of apps required once the user is logged in (LIFO)
+		_baseApps: ['apploader', 'appstore', 'myaccount', 'common'],
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
-		_defaultApp: ''/*'pbxs'*/,
+		_defaultApp: '',
 
 		_load: function(){
 			var self = this;

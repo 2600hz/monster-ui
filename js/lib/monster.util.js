@@ -10,7 +10,14 @@ define(function(require){
 				var i18n = monster.apps['core'].data.i18n;
 
 				//We have to use jQuery deep copy
-				app = $.extend(true, app.data.i18n, i18n);
+				$.extend(true, app.data.i18n, i18n);
+			}
+
+			if('common' in monster.apps) {
+				var i18n = monster.apps['common'].data.i18n;
+
+				//We have to use jQuery deep copy
+				$.extend(true, app.data.i18n, i18n);
 			}
 		},
 

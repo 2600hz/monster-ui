@@ -4,47 +4,27 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr');
 
-	var app = {
-
-		name: 'callerId',
-
-		i18n: [ 'en-US' ],
+	var callerId = {
 
 		requests: {
-			'callerId.getNumber': {
+			'common.callerId.getNumber': {
 				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
 				verb: 'GET'
 			},
-			'callerId.updateNumber': {
+			'common.callerId.updateNumber': {
 				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
 				verb: 'POST'
 			}
 		},
 
 		subscribe: {
-			'callerId.editPopup': 'edit'
+			'common.callerId.renderPopup': 'callerIdEdit'
 		},
 
-		load: function(callback){
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-            var self = this;
-
-            monster.pub('auth.initApp', {
-                app: self,
-                callback: callback
-            });
-        },
-
-		render: function(dataNumber, callbacks) {
+		callerIdRender: function(dataNumber, callbacks) {
+			console.log(dataNumber, callbacks);
 			var self = this,
-                popup_html = $(monster.template(self, 'cnamDialog', dataNumber.cnam || {})),
+                popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
                 popup;
 
             $('button.btn.btn-success', popup_html).click(function(ev) {
@@ -60,10 +40,10 @@ define(function(require){
 
 				monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
                     function() {
-                        self.updateNumber(dataNumber.id, dataNumber,
+                        self.callerIdUpdateNumber(dataNumber.id, dataNumber,
                             function(data) {
                                 var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-                                    template = monster.template(self, '!' + self.i18n.active().successCnam, { phoneNumber: phoneNumber });
+                                    template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
 
                                 toastr.success(template);
 
@@ -72,7 +52,7 @@ define(function(require){
                                 callbacks.success && callbacks.success(data);
                             },
                             function(data) {
-                                monster.ui.alert(self.i18n.active().errorUpdate + '' + data.data.message);
+                                monster.ui.alert(self.i18n.active().callerId.errorUpdate + '' + data.data.message);
 
                                 callbacks.error && callbacks.error(data);
                             }
@@ -82,23 +62,23 @@ define(function(require){
             });
 
             popup = monster.ui.dialog(popup_html, {
-                title: self.i18n.active().dialogTitle
+                title: self.i18n.active().callerId.dialogTitle
             });
 		},
 
-		edit: function(args) {
+		callerIdEdit: function(args) {
 			var self = this;
 
-			self.getNumber(args.phoneNumber, function(dataNumber) {
-				self.render(dataNumber.data, args.callbacks);
+			self.callerIdGetNumber(args.phoneNumber, function(dataNumber) {
+				self.callerIdRender(dataNumber.data, args.callbacks);
 			});
 		},
 
-		getNumber: function(phoneNumber, success, error) {
+		callerIdGetNumber: function(phoneNumber, success, error) {
             var self = this;
 
             monster.request({
-                resource: 'callerId.getNumber',
+                resource: 'common.callerId.getNumber',
                 data: {
                     accountId: self.accountId,
                     phoneNumber: encodeURIComponent(phoneNumber)
@@ -116,11 +96,11 @@ define(function(require){
             });
         },
 
-		updateNumber: function(phoneNumber, data, success, error) {
+		callerIdUpdateNumber: function(phoneNumber, data, success, error) {
             var self = this;
 
             monster.request({
-                resource: 'callerId.updateNumber',
+                resource: 'common.callerId.updateNumber',
                 data: {
                     accountId: self.accountId,
                     phoneNumber: encodeURIComponent(phoneNumber),
@@ -140,5 +120,5 @@ define(function(require){
         }
 	};
 
-	return app;
+	return callerId;
 });

@@ -9,11 +9,11 @@ define(function(require){
 		},
 
 		subscribe: {
-			'common.selectAccount': 'accountDropdown_render'
+			'common.selectAccount': 'accountDropdownRender'
 		},
 
 		/* Events */
-		accountDropdown_render: function(args) {
+		accountDropdownRender: function(args) {
 			var self = this,
 				originalAccountTree = args.accountsTree,
 				currentAccountTree = originalAccountTree,

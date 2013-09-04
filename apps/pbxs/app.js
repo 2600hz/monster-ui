@@ -1604,9 +1604,7 @@ define(function(require){
                         }
                     };
 
-                    monster.apps.load('failover', function(app) {
-                        monster.pub('failover.editPopup', args);
-                    });
+                    monster.pub('common.failover.renderPopup', args);
                 }
 			});
 
@@ -1635,9 +1633,7 @@ define(function(require){
 						}
 					};
 
-					monster.apps.load('callerId', function(app) {
-						monster.pub('callerId.editPopup', args);
-					});
+					monster.pub('common.callerId.renderPopup', args);
                 }
 			});
 
@@ -1666,9 +1662,7 @@ define(function(require){
 						}
 					};
 
-					monster.apps.load('e911', function(app) {
-						monster.pub('e911.editPopup', args);
-					});
+					monster.pub('common.e911.renderPopup', args);
 				}
 			});
 

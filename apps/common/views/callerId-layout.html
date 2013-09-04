@@ -5,12 +5,12 @@
 		<div class="right_part">
 			<div class="row-fluid">
 				<div class="row-fluid">
-					{{ i18n.callerIdName }}
+					{{ i18n.callerId.callerIdName }}
 				</div>
 
 				<div class="row-fluid">
 					<form id="cnam">
-						<input type="text" class="caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerIdPlaceholder }}"/>
+						<input type="text" class="caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerId.callerIdPlaceholder }}"/>
 					</form>
 				</div>
 
@@ -27,8 +27,8 @@
 				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
 			</div>
 			<div class="text-wrapper">
-				<p>{{ i18n.help.firstLine }}</p>
-				<p>{{ i18n.help.secondLine }}</p>
+				<p>{{ i18n.callerId.help.firstLine }}</p>
+				<p>{{ i18n.callerId.help.secondLine }}</p>
 			</div>
 		</div>
 	</div>

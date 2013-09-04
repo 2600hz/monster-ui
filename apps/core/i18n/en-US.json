@@ -1,12 +1,12 @@
 {
 	"add": "Add",
 	"cancel": "Cancel",
+	"change": "Change",
 	"chargeReminder" : {
         "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
         "line2": "Are you sure you want to continue?"
     },
 	"close" : "X Close",
-	"cnam": "Caller-ID",
 	"conferencingLogo": "Conferencing",
 	"csv": "CSV",
 	"currencyUsed": "$",
@@ -17,11 +17,9 @@
 		"confirmTitle" : "Confirmation"
 	},
 	"download": "Download",
-	"e911": "e911",
 	"endDate": "End Date",
 	"error": "Error",
 	"examplePhoneNumber": "+1 (415) 482-9912",
-	"failover": "Failover",
 	"filter": "Filter",
 	"hello": "Welcome!",
 	"info": "Info",

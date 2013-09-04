@@ -1,2 +1,18 @@
 @import url('controls/accountDropdown/accountDropdown.css');
+@import url('controls/callerId/callerId.css');
+@import url('controls/e911/e911.css');
+@import url('controls/failover/failover.css');
 @import url('controls/numbers/numbers.css');
+
+/* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
+.trunkstore_popup.cnam .left_image {
+    background: url('static/images/cid_phone.png') center no-repeat;
+}
+
+.trunkstore_popup.e911 .e911_image {
+    background: url('static/images/e911_image.png') no-repeat center;
+}
+
+.trunkstore_popup.failover .header {
+    background: url('static/images/failover_header.png') no-repeat center;
+}

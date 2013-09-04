@@ -4,11 +4,7 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr');
 
-	var app = {
-
-		name: 'failover',
-
-		i18n: [ 'en-US' ],
+	var failover = {
 
 		requests: {
 			'failover.getNumber': {
@@ -22,27 +18,10 @@ define(function(require){
 		},
 
 		subscribe: {
-			'failover.editPopup': 'edit'
+			'common.failover.renderPopup': 'failoverEdit'
 		},
 
-		load: function(callback){
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		render: function(dataNumber, callbacks) {
+		failoverRender: function(dataNumber, callbacks) {
 			var self = this,
 				radio = '';
 
@@ -55,7 +34,7 @@ define(function(require){
 					failover: dataNumber.failover,
 					phoneNumber: dataNumber.id
 				},
-				popupHtml = $(monster.template(self, 'failoverDialog', tmplData)),
+				popupHtml = $(monster.template(self, 'failover-dialog', tmplData)),
 				popup;
 
 			popupHtml.find('.failover-block[data-type="'+radio+'"]').addClass('selected');
@@ -95,10 +74,10 @@ define(function(require){
 					if(dataNumber.failover.e164 || dataNumber.failover.sip) {
 						monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 							function() {
-								self.updateNumber(dataNumber.id, dataNumber,
+								self.failoverUpdateNumber(dataNumber.id, dataNumber,
 									function(data) {
 										var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-											template = monster.template(self, '!' + self.i18n.active().successFailover, { phoneNumber: phoneNumber });
+											template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
 
 										toastr.success(template);
 
@@ -107,7 +86,7 @@ define(function(require){
 										callbacks.success && callbacks.success(data);
 									},
 									function(data) {
-										monster.ui.alert(self.i18n.active().errorUpdate + '' + data.data.message);
+										monster.ui.alert(self.i18n.active().failover.errorUpdate + '' + data.data.message);
 
 										callbacks.error && callbacks.error(data);
 									}
@@ -116,11 +95,11 @@ define(function(require){
 						);
 					}
 					else {
-						monster.ui.alert(self.i18n.active().invalidFailoverNumber);
+						monster.ui.alert(self.i18n.active().failover.invalidFailoverNumber);
 					}
 				}
 				else {
-					monster.ui.alert(self.i18n.active().noDataFailover);
+					monster.ui.alert(self.i18n.active().failover.noDataFailover);
 				}
 			});
 
@@ -129,10 +108,10 @@ define(function(require){
 
 				delete dataNumber.failover;
 
-				self.updateNumber(dataNumber.id, dataNumber,
+				self.failoverUpdateNumber(dataNumber.id, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().successRemove, { phoneNumber: phoneNumber });
+							template = monster.template(self, '!' + self.i18n.active().failover.successRemove, { phoneNumber: phoneNumber });
 
 						toastr.success(template);
 
@@ -141,7 +120,7 @@ define(function(require){
 						callbacks.success && callbacks.success(data);
 					},
 					function(data) {
-						monster.ui.alert(self.i18n.active().errorUpdate + '' + data.data.message);
+						monster.ui.alert(self.i18n.active().failover.errorUpdate + '' + data.data.message);
 
 						callbacks.error && callbacks.error(data);
 					}
@@ -149,20 +128,20 @@ define(function(require){
 			});
 
 			popup = monster.ui.dialog(popupHtml, {
-				title: self.i18n.active().failoverTitle,
+				title: self.i18n.active().failover.failoverTitle,
 				width: '540px'
 			});
 		},
 
-		edit: function(args) {
+		failoverEdit: function(args) {
 			var self = this;
 
-			self.getNumber(args.phoneNumber, function(dataNumber) {
-				self.render(dataNumber.data, args.callbacks);
+			self.failoverGetNumber(args.phoneNumber, function(dataNumber) {
+				self.failoverRender(dataNumber.data, args.callbacks);
 			});
 		},
 
-		getNumber: function(phoneNumber, success, error) {
+		failoverGetNumber: function(phoneNumber, success, error) {
 			var self = this;
 
 			monster.request({
@@ -184,7 +163,7 @@ define(function(require){
 			});
 		},
 
-		updateNumber: function(phoneNumber, data, success, error) {
+		failoverUpdateNumber: function(phoneNumber, data, success, error) {
 			var self = this;
 
 			monster.request({
@@ -208,5 +187,5 @@ define(function(require){
 		}
 	};
 
-	return app;
+	return failover;
 });

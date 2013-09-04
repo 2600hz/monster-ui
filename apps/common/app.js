@@ -5,6 +5,9 @@ define(function(require){
 
 		controls = {
 			'accountDropdown': require('./controls/accountDropdown/accountDropdown'),
+			'callerId': require('./controls/callerId/callerId'),
+			'e911': require('./controls/e911/e911'),
+			'failover': require('./controls/failover/failover'),
 			'numbers': require('./controls/numbers/numbers')
 		}
 
