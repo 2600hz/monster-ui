@@ -175,6 +175,13 @@ table.table tr td {
 	font-size: 20px;
 }
 
+.ui-dialog .ui-dialog-titlebar-close:hover i.icon-stack-base {
+	text-shadow: 3px 3px 8px #fff, 
+				-3px 3px 8px #fff, 
+				 3px -3px 8px #fff, 
+				-3px -3px 8px #fff;
+}
+
 .ui-widget-overlay {
 	background: #333;
 }
