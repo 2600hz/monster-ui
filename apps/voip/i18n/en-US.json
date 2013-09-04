@@ -15,6 +15,8 @@
 		"add": "Add User",
 		"addFromSpare": "Add from Spare Numbers",
 		"buy": "Buy Numbers",
+		"noMatchingNumbers": "There were no numbers found matching your search",
+		"noMatchingUser": "No data found matching your search",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"delete": "Delete User",

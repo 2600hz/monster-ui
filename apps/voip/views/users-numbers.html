@@ -1,8 +1,11 @@
 <div class="detail-numbers">
 	<div class="list-wrapper">
 		<div class="list-assigned-numbers number-list">
+			<div class="empty-row">
+				{{ i18n.users.noAssignedNumbers }}
+			</div>
 			{{#eachkeys assignedNumbers}}
-				<div class="phone-number-row" data-id="{{this.key}}">
+				<div class="phone-number-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
 					<div class="features-block pull-right">
 						<div class="pull-right">
 							<div class="navbar">
@@ -40,10 +43,6 @@
 					</div>
 
 				</div>
-			{{else}}
-				<div class="phone-number-row empty">
-					{{../i18n.users.noAssignedNumbers}}
-				</div>
 			{{/eachkeys}}
 		</div>
 
@@ -58,6 +57,12 @@
 		</div>
 
 		<div class="list-unassigned-numbers number-list">
+			<div class="empty-search-row">
+				{{ i18n.users.noMatchingNumbers }}
+			</div>
+			<div class="empty-row">
+				{{ i18n.users.noMoreSpareNumbers }}
+			</div>
 			{{#eachkeys unassignedNumbers}}
 				<div class="phone-number-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
 					<div class="features-block pull-right">

@@ -220,13 +220,16 @@ define(function(require){
 
 		usersBindEvents: function(template, parent) {
 			var self = this,
+				currentNumberSearch = '',
 				currentUser,
 				currentCallflow,
 				numbersToSave,
 				toastrMessages = self.i18n.active().users.toastrMessages;
 
 			template.on('click', '.cancel-link', function() {
-				template.find('.edit-user').empty().hide();
+				template.find('.edit-user').hide().empty();
+
+				template.find('.grid-cell.active').removeClass('active');
 			});
 
 			template.on('click', '#resend_instructions', function() {
@@ -267,24 +270,29 @@ define(function(require){
 
 				template.find('.edit-user').empty().hide();
 
-				template.find('.grid-cell').removeClass('active');
-				cell.toggleClass('active');
+				if(cell.hasClass('active')) {
+					template.find('.grid-cell').removeClass('active');
+				}
+				else {
+					template.find('.grid-cell').removeClass('active');
+					cell.toggleClass('active');
 
-				self.usersGetTemplate(type, userId, function(template, data) {
-					if(type === 'user') {
-						currentUser = data;
-					}
-					else if(type === 'numbers') {
-						numbersToSave = [];
-						currentCallflow = data.callflow;
+					self.usersGetTemplate(type, userId, function(template, data) {
+						if(type === 'user') {
+							currentUser = data;
+						}
+						else if(type === 'numbers') {
+							numbersToSave = [];
+							currentCallflow = data.callflow;
 
-						_.each(data.extensions, function(number) {
-							numbersToSave.push(number);
-						});
-					}
+							_.each(data.extensions, function(number) {
+								numbersToSave.push(number);
+							});
+						}
 
-					row.find('.edit-user').append(template).show();
-				});
+						row.find('.edit-user').append(template).show();
+					});
+				}
 			});
 
 			template.on('click', '.save-numbers', function() {
@@ -322,18 +330,18 @@ define(function(require){
 
 			template.find('.users-header .search-query').on('keyup', function() {
 				var searchString = $(this).val().toLowerCase(),
-					rows = template.find('.grid-row:not(.title)');
+					rows = template.find('.user-rows .grid-row:not(.title)'),
+					emptySearch = template.find('.user-rows .empty-search-row');
 
 				_.each(rows, function(row) {
 					var row = $(row);
 
-					if(row.data('search').toLowerCase().indexOf(searchString) < 0) {
-						row.hide();
-					}
-					else {
-						row.show();
-					}
+					row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
 				});
+
+				if(rows.size() > 0) {
+					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+				}
 			});
 
 			template.on('click', '.detail-numbers .list-unassigned-numbers .add-number', function() {
@@ -341,10 +349,6 @@ define(function(require){
 					spare = template.find('.count-spare'),
 					countSpare = spare.data('count') - 1,
 					assignedList = template.find('.detail-numbers .list-assigned-numbers');
-
-				if(row.siblings().length === 0) {
-					template.find('.detail-numbers .list-unassigned-numbers').append(monster.template(self, 'users-empty-numbers-list', { category: 'unassigned' }));
-				}
 
 				spare
 					.html(countSpare)
@@ -355,11 +359,17 @@ define(function(require){
 					.addClass('remove-number btn-danger')
 					.text(self.i18n.active().remove);
 
-				if(assignedList.find('.empty-row').size() > 0) {
-					assignedList.empty();
-				}
-
+				assignedList.find('.empty-row').hide();
 				assignedList.append(row);
+
+				var rows = template.find('.list-unassigned-numbers .phone-number-row');
+
+				if(rows.size() === 0) {
+					template.find('.detail-numbers .list-unassigned-numbers .empty-row').show();
+				}
+				else if(rows.is(':visible') === false) {
+					template.find('.detail-numbers .list-unassigned-numbers .empty-search-row').show();
+				}
 			});
 
 			template.on('click', '.detail-numbers .list-assigned-numbers .remove-number', function() {
@@ -368,40 +378,50 @@ define(function(require){
 					countSpare = spare.data('count') + 1,
 					unassignedList = template.find('.detail-numbers .list-unassigned-numbers');
 
-				if(row.siblings().length === 0) {
-					template.find('.detail-numbers .list-assigned-numbers').append(monster.template(self, 'users-empty-numbers-list', { category: 'assigned' }));
-				}
+				/* Alter the html */
+				row.hide();
 
 				row.find('button')
 					.removeClass('remove-number btn-danger')
 					.addClass('add-number btn-primary')
 					.text(self.i18n.active().add);
 
+				unassignedList.append(row);
+				unassignedList.find('.empty-row').hide();
+
 				spare
 					.html(countSpare)
 					.data('count', countSpare);
 
-				if(unassignedList.find('.empty-row').size() > 0) {
-					unassignedList.empty();
+				var rows = template.find('.detail-numbers .list-assigned-numbers .phone-number-row');
+				/* If no rows beside the clicked one, display empty row */
+				if(rows.is(':visible') === false) {
+					template.find('.detail-numbers .list-assigned-numbers .empty-row').show();
 				}
 
-				unassignedList.append(row);
+				/* If it matches the search string, show it */
+				if(row.data('search').indexOf(currentNumberSearch) >= 0) {
+					row.show();
+					unassignedList.find('.empty-search-row').hide();
+				}
 			});
 
 			template.on('keyup', '.detail-numbers .unassigned-list-header .search-query', function() {
-				var searchString = $(this).val().toLowerCase(),
-					rows = template.find('.list-unassigned-numbers .phone-number-row');
+				var rows = template.find('.list-unassigned-numbers .phone-number-row'),
+					emptySearch = template.find('.list-unassigned-numbers .empty-search-row'),
+					currentRow;
+
+				currentNumberSearch = $(this).val().toLowerCase();
 
 				_.each(rows, function(row) {
-					var row = $(row);
-
-					if(row.data('search').toLowerCase().indexOf(searchString) < 0) {
-						row.hide();
-					}
-					else {
-						row.show();
-					}
+					currentRow = $(row);
+					currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
 				});
+
+				if(rows.size() > 0) {
+					console.log(rows.is(':visible'));
+					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+				}
 			});
 		},
 
