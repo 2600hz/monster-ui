@@ -1,7 +1,7 @@
 <div class="detail-numbers">
 	<div class="list-wrapper">
 		<div class="list-assigned-numbers number-list">
-			<div class="empty-row">
+			<div class="empty-row{{#if emptyAssigned}} visible{{/if}}">
 				{{ i18n.users.noAssignedNumbers }}
 			</div>
 			{{#eachkeys assignedNumbers}}
@@ -13,7 +13,7 @@
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
 										<ul class="dropdown-menu">
-											<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../i18n.cnam.label }}</a></li>
+											<li><a class="callerId-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
 											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
 											{{#compare this.value.used_by "===" "trunkstore"}}
 												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../i18n.failover.label }}</a></li>
@@ -43,6 +43,8 @@
 					</div>
 
 				</div>
+			{{else}}
+
 			{{/eachkeys}}
 		</div>
 
@@ -60,7 +62,7 @@
 			<div class="empty-search-row">
 				{{ i18n.users.noMatchingNumbers }}
 			</div>
-			<div class="empty-row">
+			<div class="empty-row{{#if emptySpare}} visible{{/if}} ">
 				{{ i18n.users.noMoreSpareNumbers }}
 			</div>
 			{{#eachkeys unassignedNumbers}}
@@ -72,7 +74,7 @@
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
 										<ul class="dropdown-menu">
-											<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../i18n.cnam.label }}</a></li>
+											<li><a class="callerId-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
 											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
 											{{#compare this.value.used_by "===" "trunkstore"}}
 												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../i18n.failover.label }}</a></li>
@@ -100,10 +102,6 @@
 							N/A
 						{{/if}}
 					</div>
-				</div>
-			{{else}}
-				<div class="phone-number-row empty-row">
-					{{../i18n.users.noMoreSpareNumbers}}
 				</div>
 			{{/eachkeys}}
 		</div>

@@ -2,10 +2,14 @@
 	<div class="user-cells">
 		<div class="name grid-cell" data-type="name"><i class="{{#if isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
 		<div class="extension grid-cell centered" data-type="extensions">
-			{{ extension }}
+			{{#if extension}}
+				{{ extension }}
 
-			{{#if additionalExtensions}}
-				<i class="icon-plus icon-blue"></i>
+				{{#if additionalExtensions}}
+					<i class="icon-plus icon-blue"></i>
+				{{/if}}
+			{{else}}
+				{{ i18n.users.noExtension }}
 			{{/if}}
 		</div>
 		<div class="phone-number grid-cell centered" data-type="numbers">
