@@ -1,0 +1,35 @@
+<div id="port_container">
+	<div id="orders_list">
+		<h3 class="pull-left">Pending Orders</h3>
+		<span class="pull-right">
+			<a href="#"><i class="icon-telicon-porting"></i>Start New Transfert (port)</a>
+		</span>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Requested Date</th>
+					<th>Status</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each ports}}
+				<tr class="collapse" data-id="{{id}}">
+					<td><i class="icon-caret-right"></i>{{name}}</td>
+					<td>{{#if date}}{{date}}{{else}}.....{{/if}}</td>
+					<td>{{status}}</td>
+					{{#if action}}
+					<td><button class="btn btn-success">continue</button></td>
+					{{else}}
+					<td><button class="btn btn-info">info</button></td>
+					{{/if}}
+				</tr>
+				{{#each numbers}}
+				<tr data-id="{{../id}}"><td colspan="4">{{this}}</td></tr>
+				{{/each}}
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

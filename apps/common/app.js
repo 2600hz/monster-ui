@@ -8,7 +8,8 @@ define(function(require){
 			'callerId': require('./controls/callerId/callerId'),
 			'e911': require('./controls/e911/e911'),
 			'failover': require('./controls/failover/failover'),
-			'numbers': require('./controls/numbers/numbers')
+			'numbers': require('./controls/numbers/numbers'),
+			'port': require('./controls/port/port')
 		}
 
 	var app = {
@@ -20,21 +21,21 @@ define(function(require){
 		subscribe: {},
 
 		load: function(callback){
-            var self = this;
+			var self = this;
 
-            self.initApp(function() {
-                callback && callback(self);
-            });
-        },
+			self.initApp(function() {
+				callback && callback(self);
+			});
+		},
 
-        initApp: function(callback) {
-            var self = this;
+		initApp: function(callback) {
+			var self = this;
 
-            monster.pub('auth.initApp', {
-                app: self,
-                callback: callback
-            });
-        }
+			monster.pub('auth.initApp', {
+				app: self,
+				callback: callback
+			});
+		}
 	};
 
 	$.each(controls, function(k, control) {

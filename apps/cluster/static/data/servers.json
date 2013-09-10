@@ -1,6 +1,6 @@
 {
 	"servers": [
-		{ "type": ["amqp", "sip", "apps"], "status": "up", "ip": "125.0.0.2", "dn": "sensu001-prod", "country": "US", "city": "San Francisco", "alert": "Databse https error", "speed": 120, "ping": 96, "nic1": true, "nic2": false, "vpn": false, "cpu": 42, "ram": 93, "disk": 67, "lat": 37.7833, "lng": -122.4167 },
+		{ "type": "amqp", "status": "up", "ip": "125.0.0.2", "dn": "sensu001-prod", "country": "US", "city": "San Francisco", "alert": "Databse https error", "speed": 120, "ping": 96, "nic1": true, "nic2": false, "vpn": false, "cpu": 42, "ram": 93, "disk": 67, "lat": 37.7833, "lng": -122.4167 },
 		{ "type": "sip", "status": "up", "ip": "10.25.14.136", "dn": "fs001-aa", "country": "US", "city": "New York", "alert": "", "speed": 68, "ping": 57, "nic1": true, "nic2": true, "vpn": true, "cpu": 64, "ram": 75, "disk": 45, "lat": 40.6700, "lng": -73.9400 },
 		{ "type": "apps", "status": "up", "ip": "10.25.14.136", "dn": "db001-pivot", "country": "US", "city": "Dallas", "alert": "", "speed": 68, "ping": 57, "nic1": true, "nic2": true, "vpn": true, "cpu": 64, "ram": 75, "disk": 45, "lat": 32.7758, "lng": -96.7967 },
 		{ "type": "media", "status": "up", "ip": "10.25.14.136", "dn": "fs005-aa", "country": "US", "city": "Seattle", "alert": "", "speed": 68, "ping": 57, "nic1": true, "nic2": true, "vpn": true, "cpu": 64, "ram": 75, "disk": 45, "lat": 47.6097, "lng": -122.3331 },
