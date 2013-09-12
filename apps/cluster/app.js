@@ -14,15 +14,17 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
+			/*
 			'servers.list': {
 				apiRoot: 'apps/cluster/static/data/',
 				url: 'servers.json',
 				verb: 'GET'
-			}/*,
-			'servers.list': {
-				api_url: 'accounts/{accountId}/servers',
-				verb: 'GET'
 			}*/
+			'servers.list': {
+				apiRoot: 'http://colelabs.com/2600/cm/',
+				url: 'servers',
+				verb: 'GET'
+			}
 		},
 
 		subscribe: {},
