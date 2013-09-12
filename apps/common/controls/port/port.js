@@ -118,9 +118,8 @@ define(function(require){
 
 		portResumeOrders: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#resume_orders');
-
-			var body = window.innerHeight,
+				parent = $('.ui-dialog').find('div#resume_orders'),
+				body = window.innerHeight,
 				dialog = $('.ui-dialog').css('height').substring(0, $('.ui-dialog').css('height').length - 2),
 				total = Math.round((body - dialog) / 2);
 
@@ -148,13 +147,22 @@ define(function(require){
 				var numbersList = parent.find('div#add_numbers').find('input').val();
 
 				if ( numbersList == "" ) {
-					parent.find('div#add_numbers').find('div.row-fluid').addClass('error');
+					parent
+						.find('div#add_numbers')
+						.find('div.row-fluid')
+						.addClass('error');
 				} else {
-					numbersList = self.portFormatNumbers(parent.find('div#add_numbers').find('input').val().split(' ')),
+					numbersList = self.portFormatNumbers(numbersList.split(' '));
 
-					parent.find('div#add_numbers').find('div.row-fluid').removeClass('error');
+					parent
+						.find('div#add_numbers')
+						.find('div.row-fluid')
+						.removeClass('error');
 
-					parent.find('div#add_numbers').find('button').unbind('click');
+					parent
+						.find('div#add_numbers')
+						.find('button')
+						.unbind('click');
 
 					console.log(numbersList);
 
@@ -174,24 +182,37 @@ define(function(require){
 
 			parent.find('div#add_numbers').find('button').on('click', function() {
 				if ( parent.find('div#add_numbers').find('input').val() == "" ) {
-					parent.find('div#add_numbers').find('div.row-fluid').addClass('error');
+					parent
+						.find('div#add_numbers')
+						.find('div.row-fluid')
+						.addClass('error');
 				} else {
-					parent.find('div#add_numbers').find('div.row-fluid').removeClass('error');
 					console.log('click');
+					parent
+						.find('div#add_numbers')
+						.find('div.row-fluid')
+						.removeClass('error');
 				}
 			});
 
 			parent.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
 				var ul = $(this).parent().parent();
 
-				parent.find('div#manage_orders').find('li[data-value="' + $(this).parent().data('value') + '"]').remove();
+				parent
+					.find('div#manage_orders')
+					.find('li[data-value="' + $(this).parent().data('value') + '"]')
+					.remove();
 
 				if ( ul.is(':empty') ) {
 					ul.parent().parent().remove();
 				}
 
 				if ( parent.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
-					parent.find('div#manage_orders').find('.row-fluid:last-child').animate({height: '0px'}, 500);
+					parent
+						.find('div#manage_orders')
+						.find('.row-fluid:last-child')
+						.animate({height: '0px'}, 500);
+
 					$('.ui-dialog-content')
 						.empty()
 						.append($(monster.template(self, 'port-step1')));
@@ -272,18 +293,13 @@ define(function(require){
 
 			$("html, body").animate({ scrollTop: "0px" }, 100);
 
-			parent.find('div#footer').find('button.btn-success').on('click', function() {
-				$('.ui-dialog-content')
-					.empty()
-					.append($(monster.template(self, 'port-step4')));
-
-				self.portConfirmOrder(parent);
-			});
-
 			parent.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
 				var ul = $(this).parent().parent();
 
-				parent.find('div#upload_bill').find('li[data-value="' + $(this).parent().data('value') + '"]').remove();
+				parent
+					.find('div#upload_bill')
+					.find('li[data-value="' + $(this).parent().data('value') + '"]')
+					.remove();
 
 				if ( ul.is(':empty') ) {
 					ul.parent().parent().remove();
@@ -293,6 +309,31 @@ define(function(require){
 						.append($(monster.template(self, 'port-step1')));
 
 					self.portAddNumbers();
+				}
+			});
+
+			parent.find('div#footer').find('button.btn-success').on('click', function() {
+				var input = parent.find('div#name_transfer').find('input#transfer_helper');
+
+				if ( input.val() == "" ) {
+					$('html, body').animate({ scrollTop: parent.find('div#name_transfer').offset().top }, 100);
+
+					input
+						.parent()
+						.parent()
+						.delay(1000)
+						.addClass('error');
+				} else {
+					input
+						.parent()
+						.parent()
+						.removeClass('error');
+
+					$('.ui-dialog-content')
+						.empty()
+						.append($(monster.template(self, 'port-step4')));
+
+					self.portConfirmOrder(parent);
 				}
 			});
 		},
@@ -312,9 +353,15 @@ define(function(require){
 
 			parent.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
 				if ( $(this).find('div.switch-animate').hasClass('switch-off') ) {
-					parent.find('div#temporary_numbers').find('select#numbers_to_buy').prop('disabled', true);
+					parent
+						.find('div#temporary_numbers')
+						.find('select#numbers_to_buy')
+						.prop('disabled', true);
 				} else if ( $(this).find('div.switch-animate').hasClass('switch-on') ) {
-					parent.find('div#temporary_numbers').find('select#numbers_to_buy').prop('disabled', false);
+					parent
+						.find('div#temporary_numbers')
+						.find('select#numbers_to_buy')
+						.prop('disabled', false);
 				}
 			});
 
@@ -325,7 +372,12 @@ define(function(require){
 					data = { order: {} };
 
 				if ( notification_email !== "" ) {
-					parent.find('input#notification_email').parent().parent().removeClass('error');
+					parent
+						.find('input#notification_email')
+						.parent()
+						.parent()
+						.removeClass('error');
+
 					data.order.notification_email = notification_email;
 
 					if ( parent.find('div#temporary_numbers').find('div.switch-animate').hasClass('switch-on') ) {
@@ -335,7 +387,12 @@ define(function(require){
 					$('.ui-dialog').remove();
 					self.portRender();
 				} else {
-					parent.find('input#notification_email').parent().parent().addClass('error');
+					parent
+						.find('input#notification_email')
+						.parent()
+						.parent()
+						.addClass('error');
+
 					$("html, body").animate({ scrollTop: parent.find('div#notification').offset().top }, 100);
 				}
 			});
