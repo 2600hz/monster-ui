@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		bootstrapSwitch = require('bootstrap-switch'),
 		monster = require('monster'),
 		timepicker = require('timepicker');
 
@@ -43,7 +44,7 @@ define(function(require){
 
 							return data;
 						},
-						parent = monster.ui.dialog($(monster.template(self, 'port-ordersList', format(data))), { title: 'transfert [port] numbers' });
+						parent = monster.ui.dialog($(monster.template(self, 'port-ordersList', format(data))), { title: 'transfer [port] numbers' });
 
 					self.portPendingOrders(parent.find('div#port_container'));
 				}
@@ -52,7 +53,7 @@ define(function(require){
 
 		/**
 		  * @desc bind events in the port container
-		  * @param parent - jquery object
+		  * @param parent - #port_container
 		*/
 		portPendingOrders: function(parent) {
 			var self = this,
@@ -96,6 +97,14 @@ define(function(require){
 
 			container.find('td:last-child').find('button').on('click', function(event) {
 				event.stopPropagation();
+
+				if ( $(this).hasClass('btn-success') ) {
+					$('.ui-dialog-content')
+						.empty()
+						.append($(monster.template(self, 'port-resumeOrders')));
+
+					self.portResumeOrders(parent);
+				}
 			});
 
 			container.find('span.pull-right').find('a').on('click', function() {
@@ -107,9 +116,9 @@ define(function(require){
 			});
 		},
 
-		portAddNumbers: function(parent) {
+		portResumeOrders: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#port_container');
+				parent = $('.ui-dialog').find('div#resume_orders');
 
 			var body = window.innerHeight,
 				dialog = $('.ui-dialog').css('height').substring(0, $('.ui-dialog').css('height').length - 2),
@@ -117,55 +126,149 @@ define(function(require){
 
 			$('.ui-dialog').animate({top: total + 'px'}, 200);
 
+			parent.find('button').on('click', function() {
+				$('.ui-dialog-content')
+					.empty()
+					.append($(monster.template(self, 'port-step3')));
+
+				self.portSubmitDocuments(parent);
+			});
+		},
+
+		portAddNumbers: function(parent) {
+			var self = this,
+				parent = $('.ui-dialog').find('div#port_container'),
+				body = window.innerHeight,
+				dialog = $('.ui-dialog').css('height').substring(0, $('.ui-dialog').css('height').length - 2),
+				total = Math.round((body - dialog) / 2);
+
+			$('.ui-dialog').animate({top: total + 'px'}, 200);
+
 			parent.find('div#add_numbers').find('button').on('click', function() {
-				if ( parent.find('div#add_numbers').find('input').val() == "" ) {
-					parent.find('div#add_numbers').find('input').addClass('error');
+				var numbersList = parent.find('div#add_numbers').find('input').val();
+
+				if ( numbersList == "" ) {
+					parent.find('div#add_numbers').find('div.row-fluid').addClass('error');
 				} else {
-					var numbersList = parent.find('div#add_numbers').find('input').val().split(' ');
+					numbersList = self.portFormatNumbers(parent.find('div#add_numbers').find('input').val().split(' ')),
 
-					if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
-						$('.ui-dialog').animate({top: '80px'}, 200);
-					}
+					parent.find('div#add_numbers').find('div.row-fluid').removeClass('error');
 
-					$(monster.template(self, 'port-step2')).insertAfter(parent.find('div#add_numbers'));
+					parent.find('div#add_numbers').find('button').unbind('click');
 
-					parent.find('div#add_numbers').find('button').on('click', function() {
-						console.log('click');
-					});
+					console.log(numbersList);
 
-					parent.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
-						var ul = $(this).parent().parent();
-
-						parent.find('div#manage_orders').find('li[data-value="' + $(this).parent().data('value') + '"]').remove();
-
-						if ( ul.is(':empty') ) {
-							ul.parent().parent().remove();
-						}
-
-						if ( parent.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
-							parent.find('div#manage_orders').find('.row-fluid:last-child').animate({height: '0px'}, 500);
-							$('.ui-dialog-content')
-								.empty()
-								.append($(monster.template(self, 'port-step1')));
-
-							self.portAddNumbers();
-						}
-					});
-
-					parent.find('#footer').find('button.btn-success').on('click', function() {
-						$('.ui-dialog-content')
-							.empty()
-							.append($(monster.template(self, 'port-step3')));
-
-						self.portSubmitDocuments(parent);
-					});
+					$(monster.template(self, 'port-step2'), numbersList).insertAfter(parent.find('div#add_numbers'));
+					self.portManageOrders(parent);
 				}
 			});
+		},
+
+		portManageOrders: function(parent) {
+			var self = this,
+				parent = $('.ui-dialog').find('div#port_container');
+
+			if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
+				$('.ui-dialog').animate({top: '80px'}, 200);
+			}
+
+			parent.find('div#add_numbers').find('button').on('click', function() {
+				if ( parent.find('div#add_numbers').find('input').val() == "" ) {
+					parent.find('div#add_numbers').find('div.row-fluid').addClass('error');
+				} else {
+					parent.find('div#add_numbers').find('div.row-fluid').removeClass('error');
+					console.log('click');
+				}
+			});
+
+			parent.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
+				var ul = $(this).parent().parent();
+
+				parent.find('div#manage_orders').find('li[data-value="' + $(this).parent().data('value') + '"]').remove();
+
+				if ( ul.is(':empty') ) {
+					ul.parent().parent().remove();
+				}
+
+				if ( parent.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
+					parent.find('div#manage_orders').find('.row-fluid:last-child').animate({height: '0px'}, 500);
+					$('.ui-dialog-content')
+						.empty()
+						.append($(monster.template(self, 'port-step1')));
+
+					self.portAddNumbers();
+				}
+			});
+
+			parent.find('#footer').find('button.btn-success').on('click', function() {
+				var allChecked = new Boolean();
+
+				parent.find('div#eula').find('input').each(function(index, el) {
+					if ( !$(this).is(':checked') ) {
+						allChecked = false;
+					}
+				});
+
+				if ( allChecked ) {
+					$('.ui-dialog-content')
+						.empty()
+						.append($(monster.template(self, 'port-step3')));
+
+					self.portSubmitDocuments(parent);
+				}
+			});
+		},
+
+		portFormatNumbers: function(numbersList) {
+			var areaCodes = new Array();
+				formattedData = { orders: [] };
+
+			for ( var key in numbersList ) {
+				areaCodes.push(numbersList[key].substring(0, 3));
+			}
+
+			areaCodes = _.uniq(areaCodes, true);
+
+			for ( var code in areaCodes ) {
+				var orderNumbersList = new Array(),
+					order = new Object();
+
+				for ( var number in numbersList ) {
+					if ( areaCodes[code] == numbersList[number].substring(0, 3) ) {
+						orderNumbersList.push(numbersList[number]);
+					}
+				}
+
+				switch ( areaCodes[code] ) {
+					case '213':
+						order.carrier = 'at&t';
+						break;
+					case '415':
+						order.carrier = 'verizon';
+						break;
+					case '530':
+						order.carrier = 'sprint';
+						break;
+					case '669':
+						order.carrier = 't-mobile';
+						break;
+				}
+
+				order.numbers = orderNumbersList;
+
+				formattedData.orders[code] = order;
+			}
+
+			return formattedData;
 		},
 
 		portSubmitDocuments: function(parent) {
 			var self = this,
 				parent = $('.ui-dialog').find('div#port_container');
+
+			if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
+				$('.ui-dialog').animate({top: '80px'}, 200);
+			}
 
 			$("html, body").animate({ scrollTop: "0px" }, 100);
 
@@ -197,16 +300,44 @@ define(function(require){
 		portConfirmOrder: function(parent) {
 			var self = this,
 				parent = $('.ui-dialog').find('div#port_container'),
-				dateInput = parent.find('input.date-input');
+				dateInput = parent.find('input.date-input'),
+				toggleButton = parent.find('.switch');
 
-			dateInput.datepicker({ minDate: 0 });
-			dateInput.datepicker('setDate', new Date());
+			dateInput.datepicker({ minDate: '+3d' });
+			dateInput.datepicker('setDate', '+3d');
+
+			toggleButton.bootstrapSwitch();
 
 			$("html, body").animate({ scrollTop: "0px" }, 100);
 
+			parent.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
+				if ( $(this).find('div.switch-animate').hasClass('switch-off') ) {
+					parent.find('div#temporary_numbers').find('select#numbers_to_buy').prop('disabled', true);
+				} else if ( $(this).find('div.switch-animate').hasClass('switch-on') ) {
+					parent.find('div#temporary_numbers').find('select#numbers_to_buy').prop('disabled', false);
+				}
+			});
+
 			parent.find('div#footer').find('button.btn-success').on('click', function() {
-				$('.ui-dialog').remove();
-				self.portRender();
+				var notification_email = parent.find('input#notification_email').val(),
+					transfer_date = parent.find('input#transfer_numbers_date').val(),
+					temporary_numbers = parent.find('select#numbers_to_buy')[0][parent.find('select#numbers_to_buy')[0].selectedIndex].value,
+					data = { order: {} };
+
+				if ( notification_email !== "" ) {
+					parent.find('input#notification_email').parent().parent().removeClass('error');
+					data.order.notification_email = notification_email;
+
+					if ( parent.find('div#temporary_numbers').find('div.switch-animate').hasClass('switch-on') ) {
+						data.order.temporary_numbers = temporary_numbers;
+					}
+
+					$('.ui-dialog').remove();
+					self.portRender();
+				} else {
+					parent.find('input#notification_email').parent().parent().addClass('error');
+					$("html, body").animate({ scrollTop: parent.find('div#notification').offset().top }, 100);
+				}
 			});
 		}
 	};

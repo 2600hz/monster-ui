@@ -4,79 +4,21 @@
 		<p>Due to the nature of your numbers or the carriers, we may split your order. You will be able to process all the orders, one at a time.</p>
 	</div>
 	<div class="row-fluid">
-		<!-- (div>h3{Order $}+div.scroll>ul>(li[data-value="4151234567"]>i.icon-warning-sign+{4151234567}+i.icon-remove-sign.pull-right)*10)*2 -->
+	{{#each orders}}
 		<div class="order">
 			<div class="header">
-				<h3>Order 1</h3>
-				<p>AT&amp;T Local Numbers<i class="icon-info-sign pull-right"></i></p>
-			</div class="header">
-			<div class="scroll">
-				<ul>
-					<li data-value="4157654320"><i class="icon-warning-sign"></i>4157654320<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654321"><i class="icon-warning-sign"></i>4157654321<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654322"><i class="icon-warning-sign"></i>4157654322<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654323"><i class="icon-warning-sign"></i>4157654323<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654324"><i class="icon-warning-sign"></i>4157654324<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654325"><i class="icon-warning-sign"></i>4157654325<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654326"><i class="icon-warning-sign"></i>4157654326<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654327"><i class="icon-warning-sign"></i>4157654327<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654328"><i class="icon-warning-sign"></i>4157654328<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4157654329"><i class="icon-warning-sign"></i>4157654329<i class="icon-remove-sign pull-right"></i></li>
-				</ul>
-			</div>
-		</div>
-		<div class="order">
-			<div class="header">
-				<h3>Order 2</h3>
-				<p>AT&amp;T Toll-Free Numbers<i class="icon-info-sign pull-right"></i></p>
+				<h3>Order {{@key}}</h3>
+				<p>{{carrier}}<i class="icon-info-sign pull-right"></i></p>
 			</div>
 			<div class="scroll">
 				<ul>
-					<li data-value="4151234560"><i class="icon-warning-sign"></i>4151234560<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234561"><i class="icon-warning-sign"></i>4151234561<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234562"><i class="icon-warning-sign"></i>4151234562<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234563"><i class="icon-warning-sign"></i>4151234563<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234564"><i class="icon-warning-sign"></i>4151234564<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234565"><i class="icon-warning-sign"></i>4151234565<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234566"><i class="icon-warning-sign"></i>4151234566<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151934567"><i class="icon-warning-sign"></i>4151934567<i class="icon-remove-sign pull-right"></i></li>
+				{{#each numbers}}
+					<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+				{{/each}}
 				</ul>
 			</div>
 		</div>
-		<div class="order">
-			<div class="header">
-				<h3>Order 3</h3>
-				<p>Verizon Toll-Free Numbers<i class="icon-info-sign pull-right"></i></p>
-			</div>
-			<div class="scroll">
-				<ul>
-					<li data-value="4150234567"><i class="icon-warning-sign"></i>4150234567<i class="icon-remove-sign pull-right"></i></li><!-- 
-					<li data-value="4151294567"><i class="icon-warning-sign"></i>4151294567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4152234567"><i class="icon-warning-sign"></i>4152234567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4153234567"><i class="icon-warning-sign"></i>4153234567<i class="icon-remove-sign pull-right"></i></li> -->
-				</ul>
-			</div>
-		</div>
-		<div class="order">
-			<div class="header">
-				<h3>Order 4</h3>
-				<p>Sprint Local Numbers<i class="icon-info-sign pull-right"></i></p>
-			</div>
-			<div class="scroll">
-				<ul>
-					<li data-value="4151214567"><i class="icon-warning-sign"></i>4151214567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151224567"><i class="icon-warning-sign"></i>4151224567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151234567"><i class="icon-warning-sign"></i>4151234567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151244567"><i class="icon-warning-sign"></i>4151244567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151254567"><i class="icon-warning-sign"></i>4151254567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151264567"><i class="icon-warning-sign"></i>4151264567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151274567"><i class="icon-warning-sign"></i>4151274567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151284567"><i class="icon-warning-sign"></i>4151284567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4159294567"><i class="icon-warning-sign"></i>4159294567<i class="icon-remove-sign pull-right"></i></li>
-					<li data-value="4151204567"><i class="icon-warning-sign"></i>4151204567<i class="icon-remove-sign pull-right"></i></li>
-				</ul>
-			</div>
-		</div>
+	{{/each}}
 	</div>
 </div>
 <div id="eula">
@@ -105,9 +47,9 @@
 	</div>
 	<div class="span6 offset1">
 		<ul class="help-links">
-			<li><a href="">View Porting FAQs</a></li>
+			<li><a href="#footer">View Porting FAQs</a></li>
 			<li class="separator"></li>
-			<li><a href="">Watch Video</a></li>
+			<li><a href="#footer">Watch Video</a></li>
 		</ul>
 	</div>
 	<div class="span2 offset1">

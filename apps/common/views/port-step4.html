@@ -1,54 +1,39 @@
 <div id="port_container">
 	<div id="notification">
-	
-		<!-- First solution with :after -->
-		<div class="transfer-status">
-			<div class="step1">
-				<i class="icon-ok-status"></i>
-				<span>Add Number</span>
+		<div class="row-fluid" id="transfer_status">
+			<div class="span4 done">
+				<i class="icon-ok-sign"></i>
+				<div class="title">Add Number</div>
 			</div>
-			<div class="step2">
-				<i class="icon-ok-status"></i>
-				<span>Submit Documents</span>
+			<div class="span4 done">
+				<i class="icon-ok-sign"></i>
+				<div class="title">Submit Documents</div>
 			</div>
-			<div class="step3">
-				<i class="icon-cirlce"></i>
-				<span>Confirm Order</span>
+			<div class="span4 todo">
+				<i class="icon-circle"></i>
+				<div class="title">Confirm Order</div>
 			</div>
 		</div>
-	
-		<!-- Second solution with hr balise -->
-		<!-- <div class="transfer-status">
-			<i class="icon-ok-sign"></i>
-			<hr>
-			<i class="icon-ok-status"></i>
-			<hr>
-			<i class="icon-cirlce"></i>
-		</div>
-		<div class="transfer-status-name">
-			<span>Add Numbers</span>
-			<span>Submit Documents</span>
-			<span>Confirm Order</span>
-		</div> -->
 	
 		<h2>Great! Total 30 numbers are ready to transfert!</h2>
 	
-		<div class="row-fluid">
+		<div class="row-fluid control-group">
 			<div class="span6">
-				<label for="notification_email">Who should we notify upon completion?</label>
+				<label class="control-label" for="notification_email">Who should we notify upon completion?</label>
 			</div>
 			<div class="span6">
 				<input type="text" class="span8" id="notification_email" placeholder="Email address">
+				<span class="help-inline"><i class="icon-warning-sign"></i></span>
 			</div>
 		</div>
 	</div>
 	<div id="transfer_date">
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="">When do you want to transfer the numbers?</label>
+				<label for="transfer_numbers_date">When do you want to transfer the numbers?</label>
 			</div>
 			<div class="span6">
-				<input class="date-input span8" type="text" name="extra.date">
+				<input class="date-input span8" type="text" id="transfer_numbers_date" name="extra.date">
 			</div>
 		</div>
 		<div class="row-fluid info">
@@ -59,28 +44,27 @@
 	<div id="temporary_numbers">
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="">Would you like to have temporary numbers?</label>
+				<label for="have_temporary_numbers">Would you like to have temporary numbers?</label>
 			</div>
 			<div class="span6">
-				<div class="switch-on switch-animate">
-					<input type="checkbox" name="installed" checked="">
-					<span class="switch-left switch-success">yes</span>
-					<label style="border-radius: 20px;">&nbsp;</label>
-					<span class="switch-right switch-default">no</span>
-				</div>
+				<div class="toggle-button-bloc">
+					<div class="switch" data-on="success" data-off="default" data-on-label="YES" data-off-label="NO">
+						<input type="checkbox" id="have_temporary_numbers" name="installed" checked />
+					</div>
+			</div>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="">How many numbers would you like to buy?</label>
+				<label for="numbers_to_buy">How many numbers would you like to buy?</label>
 			</div>
 			<div class="span6">
-				<select name="" id="">
-					<option value="">1</option>
-					<option value="">2</option>
-					<option value="">3</option>
-					<option value="">4</option>
-					<option value="" selected>5</option>
+				<select name="" class="span2" id="numbers_to_buy">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5" selected>5</option>
 				</select>
 			</div>
 		</div>

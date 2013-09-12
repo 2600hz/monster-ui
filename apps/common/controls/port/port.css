@@ -11,6 +11,7 @@ div#port_container > div { padding: 40px 60px; }
 div#port_container > div:not(:first-child) { border-top: 1px solid #ddd; }
 
 div#port_container h2 {
+	margin-top: 0px;
 	color: #2CF;
 	text-align: center;
 	font-weight: normal;
@@ -46,8 +47,9 @@ div.row-fluid.info p {
 
 .order {
 	display: inline-block;
-	width: 29.29%;
-	height: 0;
+	width: 29.28%;
+	height: 100%;
+	vertical-align: top;
 }
 
 .order:not(:first-child) { margin-left: 50px; }
@@ -87,10 +89,50 @@ div.row-fluid.info p {
 	color: red;
 }
 
+.order li .icon-warning-sign.visible { visibility: visible; }
+
 .order li .icon-remove-sign:hover { cursor: pointer; }
 
 div#continue_later { text-align: center; }
 div#continue_later p { margin: 5px 0; }
+
+.help-block { font-size: 12px; }
+
+#transfer_status {
+	margin-bottom: 50px;
+	text-align: center;
+}
+
+#transfer_status .span4 { position: relative; }
+
+#transfer_status .done,
+#transfer_status .done i { color: #2CF; }
+#transfer_status .todo,
+#transfer_status .todo i { color: #909090; }
+
+#transfer_status .span4:not(:last-child).done i:after,
+#transfer_status .span4:not(:last-child).todo i:after {
+	position: absolute;
+	top: 8px;
+	right: -144px;
+	display: block;
+	width: 103%;
+	height: 2px;
+	content: "";
+}
+
+#transfer_status .span4:not(:last-child).done i:after { background-color: #2cf; }
+#transfer_status .span4:not(:last-child).todo i:after { background-color: #909090; }
+
+#port_container label { font-size: 16px; }
+
+.control-group:not(.error) .help-inline { display: none; }
+.control-group.error .help-inline {
+	display: inline-block;
+	margin: 6px 0 0 5px;
+	vertical-align: top;
+}
+.control-group.error .help-inline i { color: #b94a48; }
 
 /**********************************************************/
 
@@ -122,6 +164,7 @@ div#orders_list > span.pull-right i {
 /*************** Reformat Default Table CSS ***************/
 
 div#orders_list .table { border: none; }
+
 div#orders_list .table.table-bordered {
 	border-top:  1px solid #DDD;
 	border-right:  1px solid #DDD;
@@ -179,6 +222,21 @@ div#orders_list table tr[data-id]:not(.collapse) { display: none; }
 
 div#orders_list table tr.active td { border-top: 2px solid #2CF; }
 
+
+/**********************************************************/
+
+/********************** Resume Orders *********************/
+
+div#resume_orders { width: 820px; }
+
+div#resume_orders h2 { margin-bottom: 50px; }
+
+div#resume_orders .row-fluid {
+	margin-bottom: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #ddd;
+}
+
 /**********************************************************/
 
 /*********************** Add Numbers **********************/
@@ -195,16 +253,11 @@ div#add_numbers .search-custom {
 }
 
 div#add_numbers input { height: 34px; }
-div#add_numbers input.error { border-color: #f00; }
 
-
-/**********************************************************/
-
-/*********************** Add Numbers **********************/
-
-div#manage_orders > div:last-child {
+div#manage_orders > .row-fluid:last-child {
 	position: relative;
 	overflow-x: auto;
+	margin-top: 25px;
 	height: 445px;
 	white-space: nowrap;
 }
@@ -224,6 +277,12 @@ div#eula input { margin-right: 10px; }
 
 /******************** Submit Documents ********************/
 
+div#name_transfer .row-fluid label {
+	margin: 0;
+	padding: 4px 0;
+	text-align: right;
+}
+
 div#upload_bill .span6:first-child { padding-right: 12px; }
 div#upload_bill .span6:last-child { padding-left: 12px; }
 
@@ -238,7 +297,6 @@ div#upload_bill form button { margin-bottom: 4px; }
 div#upload_bill form .help-block {
 	margin-bottom: 15px;
 	text-align: left;
-	font-size: 12px;
 }
 
 div#upload_bill form label { text-align: left; }
@@ -262,15 +320,13 @@ div#loa .row-fluid {
 	text-align: center;
 }
 
-div#loa .row-fluid .span4 .number {
-	font-size: 25px;
-}
+div#loa .row-fluid .span4 .number { font-size: 25px; }
 
 /**********************************************************/
 
 /********************** Confirm Order *********************/
 
-div#notification .row-fluid { margin-top: 50px; }
+div#notification .row-fluid:last-child { margin-top: 50px; }
 
 div#notification .row-fluid label,
 div#transfer_date .row-fluid label,
@@ -280,15 +336,20 @@ div#temporary_numbers .row-fluid label {
 	text-align: right;
 }
 
-div#transfer_date .row-fluid:first-child { margin-bottom: 20px }
+div#transfer_date .row-fluid:first-child { margin-bottom: 20px; }
 
 div#transfer_date .info .important {
 	color: #F00;
 	text-transform: uppercase;
 }
 
+div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 20px; }
+
+div#order_summary h2 { margin: 0 0 20px; }
+
 div#order_summary > .row-fluid {
 	border: 1px solid #ddd;
+	box-shadow: 10px 10px 15px 0px #ddd;
 }
 
 div#order_summary .row-fluid .span6:first-child {
@@ -297,8 +358,10 @@ div#order_summary .row-fluid .span6:first-child {
 }
 
 div#order_summary .row-fluid .span6:first-child ul {
-	margin-bottom: 0;
+	margin: 0;
 	list-style: none;
 }
+
+div#order_summary .row-fluid .span6:first-child ul li:not(:last-child) { margin-bottom: 5px; }
 
 div#order_summary .row-fluid .span6:last-child { padding: 20px; }

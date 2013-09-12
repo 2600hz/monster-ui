@@ -1,0 +1,13 @@
+<div class="order">
+	<div class="header">
+		<h3>Order {{this}}</h3>
+		<p>{{carrier}}<i class="icon-info-sign pull-right"></i></p>
+	</div class="header">
+	<div class="scroll">
+		<ul>
+		{{#each numbers}}
+			<li data-value="{{number}}"><i class="icon-warning-sign{{#if error}} visible{{/if}}"></i>{{number}}<i class="icon-remove-sign pull-right"></i></li>
+		{{/each}}
+		</ul>
+	</div>
+</div>
