@@ -9,6 +9,7 @@ div#port_container {
 
 div#port_container > div { padding: 40px 60px; }
 div#port_container > div:not(:first-child) { border-top: 1px solid #ddd; }
+div#port_container > div > *:not(:last-child) { margin-bottom: 40px; }
 
 div#port_container h2 {
 	margin-top: 0px;
@@ -97,12 +98,12 @@ div.row-fluid.info p {
 div#continue_later { text-align: center; }
 div#continue_later p { margin: 5px 0; }
 
-.help-block { font-size: 12px; }
-
-#transfer_status {
-	margin-bottom: 40px;
-	text-align: center;
+.help-block {
+	font-size: 12px;
+	margin-bottom: 0;
 }
+
+#transfer_status { text-align: center; }
 
 #transfer_status .span4 { position: relative; }
 
@@ -127,6 +128,8 @@ div#continue_later p { margin: 5px 0; }
 
 #port_container label { font-size: 16px; }
 
+.control-group { margin-bottom: 0; }
+
 .control-group:not(.error) .help-inline { display: none; }
 .control-group.error .help-inline {
 	display: inline-block;
@@ -140,13 +143,13 @@ div#continue_later p { margin: 5px 0; }
 /*********************** Orders List **********************/
 
 div#orders_list > h3 {
-	margin-bottom: 30px;
+	margin-top: 0;
 	color: #5D5D5C;
 	font-weight: normal;
 }
 
 div#orders_list > span.pull-right {
-	margin: 20px 0 30px;
+	margin-top: 10px;
 	height: 20px;
 }
 
@@ -164,7 +167,10 @@ div#orders_list > span.pull-right i {
 
 /*************** Reformat Default Table CSS ***************/
 
-div#orders_list .table { border: none; }
+div#orders_list .table {
+	border: none;
+	margin-bottom: 0;
+}
 
 div#orders_list .table.table-bordered {
 	border-top:  1px solid #DDD;
@@ -233,7 +239,7 @@ div#resume_orders { width: 820px; }
 div#resume_orders h2 { margin-bottom: 50px; }
 
 div#resume_orders .row-fluid {
-	margin-bottom: 20px;
+	margin-bottom: 20px !important;
 	padding-top: 20px;
 	border-top: 1px solid #ddd;
 }
@@ -242,7 +248,7 @@ div#resume_orders .row-fluid {
 
 /*********************** Add Numbers **********************/
 
-div#add_numbers > div { margin-top: 50px; }
+div#add_numbers > div { margin-bottom: 0; }
 
 div#add_numbers .row-fluid > .span6:first-child { text-align: center; }
 div#add_numbers .row-fluid > .span6:first-child label { margin-bottom: 20px; }
@@ -258,13 +264,11 @@ div#add_numbers input { height: 34px; }
 div#manage_orders > .row-fluid:last-child {
 	position: relative;
 	overflow-x: auto;
-	margin-top: 25px;
 	max-height: 445px;
 	white-space: nowrap;
 }
 
 div#eula .important {
-	margin: 25px 0;
 	color: red;
 	text-align: center;
 	font-size: 25px;
@@ -272,7 +276,11 @@ div#eula .important {
 
 div#eula .important span { text-transform: uppercase; }
 
-div#eula input { margin-right: 10px; }
+div#eula form { margin-bottom: 0; }
+
+div#eula input { margin: 0 10px 0 0; }
+
+div#eula label:last-child { margin-bottom: 0; }
 
 /**********************************************************/
 
@@ -316,12 +324,11 @@ div#loa h4 {
 	font-weight: normal;
 }
 
-div#loa .row-fluid {
-	margin: 50px 0;
-	text-align: center;
-}
+div#loa .row-fluid { text-align: center; }
 
 div#loa .row-fluid .span4 .number { font-size: 25px; }
+
+div#loa > p { margin-bottom: 0; }
 
 /**********************************************************/
 
@@ -329,7 +336,8 @@ div#loa .row-fluid .span4 .number { font-size: 25px; }
 
 div#notification h2 { margin-bottom: 0; }
 
-div#notification .row-fluid:last-child { margin: 40px 0 0; }
+div#notification input,
+div#transfer_date input { margin-bottom: 0; }
 
 div#notification .row-fluid label,
 div#transfer_date .row-fluid label,
@@ -348,8 +356,6 @@ div#transfer_date .info .important {
 
 div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 40px; }
 
-div#order_summary h2 { margin: 0 0 40px; }
-
 div#order_summary > .row-fluid {
 	border: 1px solid #ddd;
 	box-shadow: 10px 10px 15px 0px #ddd;
@@ -361,8 +367,7 @@ div#order_summary .row-fluid .span6:first-child {
 }
 
 div#order_summary .row-fluid .span6:first-child ul {
-	margin: 0;
-	list-style: none;
+	margin: 0 0 0 40px;
 }
 
 div#order_summary .row-fluid .span6:first-child ul li:not(:last-child) { margin-bottom: 5px; }
