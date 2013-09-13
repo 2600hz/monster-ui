@@ -17,17 +17,27 @@
 		"addNewExtension": "Extension number: ",
 		"addFromSpare": "Add from Spare Numbers",
 		"buy": "Buy Numbers",
+		"dialogCreationUser": {
+			"createUser": "Create User",
+			"email": "Email",
+			"extension": "Ext. #",
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"title": "User creation"
+		},
+		"delete": "Delete User",
+		"featureOn": "ON",
+		"includeInDirectory": "Include to Company Directory",
 		"noMatchingNumbers": "There were no numbers found matching your search",
 		"noMatchingUser": "No data found matching your search",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
-		"delete": "Delete User",
 		"noNumber": "No number",
 		"noExtension": "No extension",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
-		"includeInDirectory": "Include user to Company Directory",
+		"noUserFeatures": "None",
 		"port": "Port Numbers",
 		"resetPassword": "Reset Password",
 		"resendInstructions": "Resend Instructions",
@@ -43,10 +53,38 @@
 			"instructionsSent": "An e-mail has been sent to {{ email }} with all the user Instructions on how to get started with the UI!",
 			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password.",
 			"numbersUpdated": "You successfuly updated the phone numbers of {{ name }}.",
-			"userUpdated": "You successfuly updated {{ name }} settings."
+			"userUpdated": "You successfuly updated {{ name }} settings.",
+			"userDelete": "You successfully deleted {{ name }} from the Smart PBX!"
 		},
 		"uploadPicture": "Upload a Picture",
-		"user": "User"
+		"user": "User",
+		"find_me_follow_me": {
+			"title": "Find Me Follow Me"
+		},
+		"call_forwarding": {
+			"title": "Call Forwarding"
+		},
+		"call_recording": {
+			"title": "Call Recording"
+		},
+		"voicemails": {
+			"title": "Voicemails"
+		},
+		"caller_id": {
+			"title": "Caller-ID"
+		},
+		"music_on_hold": {
+			"title": "Music-On-Hold"
+		},
+		"conferencing": {
+			"title": "Conferencing"
+		},
+		"faxing": {
+			"title": "Faxing"
+		},
+		"hotdesking": {
+			"title": "Hot-Desking"
+		}
 	},
 
 	"strategy": {
