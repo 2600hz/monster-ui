@@ -8,15 +8,15 @@ define(function(require){
 	var app = {
 
 		requests: {
+			// 'common.port.list': {
+			// 	url: 'accounts/{accountId}/phone_numbers',
+			// 	verb: 'GET'
+			// },
 			'common.port.list': {
 				apiRoot: 'apps/common/static/',
 				url: "ports.json",
 				verb: 'GET'
-			}/*,
-			'common.port.list': {
-				url: 'accounts/{accountId}/phone_numbers',
-				verb: 'GET'
-			}*/
+			}
 		},
 
 		subscribe: {
@@ -24,13 +24,14 @@ define(function(require){
 		},
 
 		portRender: function(args){
-			var self = this;
-				// callbackAfterRender = args.callbackAfterRender;
+			var self = this,
+				args = args || {};
 
 			monster.request({
 				resource: 'common.port.list',
 				data: {},
 				success: function(data, status) {
+					/* format: generation of random fake data */
 					var format = function(data) {
 							var status = ['Incomplete LOA', 'Pending', 'In Process', 'Completed'];
 
@@ -46,19 +47,23 @@ define(function(require){
 						},
 						parent = monster.ui.dialog($(monster.template(self, 'port-ordersList', format(data))), { title: 'transfer [port] numbers' });
 
-					self.portPendingOrders(parent.find('div#port_container'));
+					self.portPendingOrders(parent);
 				}
 			});
 		},
 
 		/**
-		  * @desc bind events in the port container
-		  * @param parent - #port_container
+		  * @desc bind events of the port-pendingOrders template
+		  * @param parent - .ui-dialog-content
 		*/
 		portPendingOrders: function(parent) {
 			var self = this,
 				container = parent.find('div#orders_list');
 
+			/*
+			 * on click on a tr in the table
+			 * show/hide the numbers of the port clicked in the table
+			 */
 			container.find('tr.collapse').on('click', function() {
 				var caret = $(this).find('i[class^="icon-caret-"]'),
 					changeCaretDiretion = function(element, direction) {
@@ -95,38 +100,57 @@ define(function(require){
 				}
 			});
 
+			/*
+			 * on click on the Start New Transfer link
+			 * empty .ui-dialog-content and load port-addNumbers template
+			 */
+			container.find('span.pull-right').find('a').on('click', function() {
+				parent
+					.empty()
+					.append($(monster.template(self, 'port-step1')));
+
+				self.portAddNumbers(parent);
+			});
+
+			/*
+			 * on click on the continue button
+			 * empty .ui-dialog-content and load port-resumeOrders template
+			 */
 			container.find('td:last-child').find('button').on('click', function(event) {
 				event.stopPropagation();
 
 				if ( $(this).hasClass('btn-success') ) {
-					$('.ui-dialog-content')
+					parent
 						.empty()
 						.append($(monster.template(self, 'port-resumeOrders')));
 
 					self.portResumeOrders(parent);
 				}
 			});
-
-			container.find('span.pull-right').find('a').on('click', function() {
-				$('.ui-dialog-content')
-					.empty()
-					.append($(monster.template(self, 'port-step1')));
-
-				self.portAddNumbers(parent);
-			});
 		},
 
+		/**
+		  * @desc bind events of the port-resumeOrders template
+		  * @param parent - .ui-dialog-content
+		*/
 		portResumeOrders: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#resume_orders'),
+				container = parent.find('div#resume_orders'),
 				body = window.innerHeight,
-				dialog = $('.ui-dialog').css('height').substring(0, $('.ui-dialog').css('height').length - 2),
+				dialog = parent.css('height').substring(0, parent.css('height').length - 2),
 				total = Math.round((body - dialog) / 2);
 
+			/*
+			 * center the dialog box verticaly
+			 */
 			$('.ui-dialog').animate({top: total + 'px'}, 200);
 
-			parent.find('button').on('click', function() {
-				$('.ui-dialog-content')
+			/*
+			 * on click the Complete this order button
+			 * empty .ui-dialog-content and load port-submitDocuments template
+			 */
+			container.find('button').on('click', function() {
+				parent
 					.empty()
 					.append($(monster.template(self, 'port-step3')));
 
@@ -134,71 +158,102 @@ define(function(require){
 			});
 		},
 
+		/**
+		  * @desc bind events of the port-addNumbers template
+		  * @param parent - .ui-dialog-content
+		*/
 		portAddNumbers: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#port_container'),
+				container = parent.find('div#add_numbers'),
 				body = window.innerHeight,
 				dialog = $('.ui-dialog').css('height').substring(0, $('.ui-dialog').css('height').length - 2),
 				total = Math.round((body - dialog) / 2);
 
+			/*
+			 * center the dialog box verticaly
+			 */
 			$('.ui-dialog').animate({top: total + 'px'}, 200);
 
-			parent.find('div#add_numbers').find('button').on('click', function() {
-				var numbersList = parent.find('div#add_numbers').find('input').val();
+			/*
+			 * on click on the Add button
+			 * check if the input is empty
+			 * if not load port-ManageOrders template after port-addNumber template
+			 */
+			container.find('button').on('click', function() {
+				var numbersList = container.find('input').val();
 
 				if ( numbersList == "" ) {
-					parent
-						.find('div#add_numbers')
+					container
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
 					numbersList = self.portFormatNumbers(numbersList.split(' '));
 
-					parent
-						.find('div#add_numbers')
+					container
 						.find('div.row-fluid')
 						.removeClass('error');
 
-					parent
-						.find('div#add_numbers')
+					/*
+					 * unbind because it is used in portManagerOrders
+					 * to add number without adding the port-managerOrders template again
+					 */
+					container
 						.find('button')
 						.unbind('click');
 
-					console.log(numbersList);
+					$(monster.template(self, 'port-step2', numbersList)).insertAfter(container);
 
-					$(monster.template(self, 'port-step2'), numbersList).insertAfter(parent.find('div#add_numbers'));
 					self.portManageOrders(parent);
 				}
 			});
 		},
 
+		/**
+		  * @desc bind events of the port-manageOrders template
+		  * @param parent - .ui-dialog-content
+		*/
 		portManageOrders: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#port_container');
+				container = parent.find('div#port_container');
 
+			/*
+			 * if dialog box too high to fit on the sceen
+			 * dock it at 80px at the top of the screen
+			 */
 			if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
 				$('.ui-dialog').animate({top: '80px'}, 200);
 			}
 
-			parent.find('div#add_numbers').find('button').on('click', function() {
-				if ( parent.find('div#add_numbers').find('input').val() == "" ) {
-					parent
+			/*
+			 * on click on Add button
+			 * check if input is empty
+			 * if not add the numbers sorted in orders
+			 */
+			container.find('div#add_numbers').find('button').on('click', function() {
+				if ( container.find('div#add_numbers').find('input').val() == "" ) {
+					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
 					console.log('click');
-					parent
+					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.removeClass('error');
 				}
 			});
 
-			parent.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
+			/*
+			 * on click on Remove number icon
+			 * remove the number from the the UI
+			 * if there is not any numbers left
+			 * load port-addNumbers template
+			 */
+			container.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
 				var ul = $(this).parent().parent();
 
-				parent
+				container
 					.find('div#manage_orders')
 					.find('li[data-value="' + $(this).parent().data('value') + '"]')
 					.remove();
@@ -207,8 +262,8 @@ define(function(require){
 					ul.parent().parent().remove();
 				}
 
-				if ( parent.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
-					parent
+				if ( container.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
+					container
 						.find('div#manage_orders')
 						.find('.row-fluid:last-child')
 						.animate({height: '0px'}, 500);
@@ -217,14 +272,19 @@ define(function(require){
 						.empty()
 						.append($(monster.template(self, 'port-step1')));
 
-					self.portAddNumbers();
+					self.portAddNumbers(parent);
 				}
 			});
 
-			parent.find('#footer').find('button.btn-success').on('click', function() {
+			/*
+			 * on click on Next button
+			 * if all checkboxes checked
+			 * empty .ui-dialog-content and load port-submitDocuments template
+			 */
+			container.find('#footer').find('button.btn-success').on('click', function() {
 				var allChecked = new Boolean();
 
-				parent.find('div#eula').find('input').each(function(index, el) {
+				container.find('div#eula').find('input').each(function(index, el) {
 					if ( !$(this).is(':checked') ) {
 						allChecked = false;
 					}
@@ -240,8 +300,13 @@ define(function(require){
 			});
 		},
 
+		/**
+		  * @desc return an object with numbers sorted by area code
+		  * @param numbersList - array of phone numbers
+		*/
 		portFormatNumbers: function(numbersList) {
-			var areaCodes = new Array();
+			var areaCodes = new Array(),
+				carrierList = ['at&t', 'verizon', 'srpint', 't-mobile'],
 				formattedData = { orders: [] };
 
 			for ( var key in numbersList ) {
@@ -260,21 +325,7 @@ define(function(require){
 					}
 				}
 
-				switch ( areaCodes[code] ) {
-					case '213':
-						order.carrier = 'at&t';
-						break;
-					case '415':
-						order.carrier = 'verizon';
-						break;
-					case '530':
-						order.carrier = 'sprint';
-						break;
-					case '669':
-						order.carrier = 't-mobile';
-						break;
-				}
-
+				order.carrier = carrierList[Math.floor(Math.random() * carrierList.length)];
 				order.numbers = orderNumbersList;
 
 				formattedData.orders[code] = order;
@@ -283,20 +334,37 @@ define(function(require){
 			return formattedData;
 		},
 
+		/**
+		  * @desc bind events of the port-manageOrders template
+		  * @param parent - .ui-dialog-content
+		*/
 		portSubmitDocuments: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#port_container');
+				container = parent.find('div#port_container');
 
-			if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
-				$('.ui-dialog').animate({top: '80px'}, 200);
+			/*
+			 * if dialog box too high to fit on the sceen
+			 * dock it at 80px at the top of the screen
+			 */
+			if ( parent.css('top').substring(0, parent.css('top').length - 2) > 80 ) {
+				parent.animate({top: '80px'}, 200);
 			}
 
+			/*
+			 * scroll to the top of the page
+			 */
 			$("html, body").animate({ scrollTop: "0px" }, 100);
 
-			parent.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
+			/*
+			 * on click on Remove number icon
+			 * remove the number from the the UI
+			 * if there is not any numbers left
+			 * load port-addNumbers template
+			 */
+			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
 				var ul = $(this).parent().parent();
 
-				parent
+				container
 					.find('div#upload_bill')
 					.find('li[data-value="' + $(this).parent().data('value') + '"]')
 					.remove();
@@ -312,16 +380,21 @@ define(function(require){
 				}
 			});
 
-			parent.find('div#footer').find('button.btn-success').on('click', function() {
-				var input = parent.find('div#name_transfer').find('input#transfer_helper');
+			/*
+			 * on click on Submit button
+			 * if all required inputs filled
+			 * empty .ui-dialog-content and load port-submitDocuments template
+			 * else show which inputs contain errors
+			 */
+			container.find('div#footer').find('button.btn-success').on('click', function() {
+				var input = container.find('div#name_transfer').find('input#transfer_helper');
 
 				if ( input.val() == "" ) {
-					$('html, body').animate({ scrollTop: parent.find('div#name_transfer').offset().top }, 100);
+					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
 
 					input
 						.parent()
 						.parent()
-						.delay(1000)
 						.addClass('error');
 				} else {
 					input
@@ -338,41 +411,64 @@ define(function(require){
 			});
 		},
 
+		/**
+		  * @desc bind events of the port-confirmOrder template
+		  * @param parent - .ui-dialog-content
+		*/
 		portConfirmOrder: function(parent) {
 			var self = this,
-				parent = $('.ui-dialog').find('div#port_container'),
-				dateInput = parent.find('input.date-input'),
-				toggleButton = parent.find('.switch');
+				container = parent.find('div#port_container'),
+				dateInput = container.find('input.date-input'),
+				toggleButton = container.find('.switch');
 
+			/*
+			 * initialize datepicker and toggle inputs
+			 */
 			dateInput.datepicker({ minDate: '+3d' });
 			dateInput.datepicker('setDate', '+3d');
-
 			toggleButton.bootstrapSwitch();
 
+			/*
+			 * scroll to the top of the page
+			 */
 			$("html, body").animate({ scrollTop: "0px" }, 100);
 
-			parent.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
+			/*
+			 * on click on switch button
+			 * 
+			 */
+			container.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
 				if ( $(this).find('div.switch-animate').hasClass('switch-off') ) {
-					parent
+					container
+						.find('div#temporary_numbers')
+						.find('div.row-fluid:nth-child(2)')
+						.slideUp('500');
+
+					container
 						.find('div#temporary_numbers')
 						.find('select#numbers_to_buy')
 						.prop('disabled', true);
 				} else if ( $(this).find('div.switch-animate').hasClass('switch-on') ) {
-					parent
+					container
 						.find('div#temporary_numbers')
 						.find('select#numbers_to_buy')
 						.prop('disabled', false);
+
+					container
+						.find('div#temporary_numbers')
+						.find('div.row-fluid:nth-child(2)')
+						.slideDown('500');
 				}
 			});
 
-			parent.find('div#footer').find('button.btn-success').on('click', function() {
-				var notification_email = parent.find('input#notification_email').val(),
-					transfer_date = parent.find('input#transfer_numbers_date').val(),
-					temporary_numbers = parent.find('select#numbers_to_buy')[0][parent.find('select#numbers_to_buy')[0].selectedIndex].value,
+			container.find('div#footer').find('button.btn-success').on('click', function() {
+				var notification_email = container.find('input#notification_email').val(),
+					transfer_date = container.find('input#transfer_numbers_date').val(),
+					temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value,
 					data = { order: {} };
 
 				if ( notification_email !== "" ) {
-					parent
+					container
 						.find('input#notification_email')
 						.parent()
 						.parent()
@@ -380,7 +476,7 @@ define(function(require){
 
 					data.order.notification_email = notification_email;
 
-					if ( parent.find('div#temporary_numbers').find('div.switch-animate').hasClass('switch-on') ) {
+					if ( container.find('div#temporary_numbers').find('div.switch-animate').hasClass('switch-on') ) {
 						data.order.temporary_numbers = temporary_numbers;
 					}
 
@@ -393,7 +489,7 @@ define(function(require){
 						.parent()
 						.addClass('error');
 
-					$("html, body").animate({ scrollTop: parent.find('div#notification').offset().top }, 100);
+					$("html, body").animate({ scrollTop: container.find('div#notification').offset().top }, 100);
 				}
 			});
 		}

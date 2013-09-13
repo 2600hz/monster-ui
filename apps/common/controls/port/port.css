@@ -47,6 +47,7 @@ div.row-fluid.info p {
 
 .order {
 	display: inline-block;
+	padding-bottom: 10px;
 	width: 29.28%;
 	height: 100%;
 	vertical-align: top;
@@ -99,7 +100,7 @@ div#continue_later p { margin: 5px 0; }
 .help-block { font-size: 12px; }
 
 #transfer_status {
-	margin-bottom: 50px;
+	margin-bottom: 40px;
 	text-align: center;
 }
 
@@ -243,8 +244,8 @@ div#resume_orders .row-fluid {
 
 div#add_numbers > div { margin-top: 50px; }
 
-div#add_numbers .row-fluid > div:first-child { text-align: center; }
-div#add_numbers .row-fluid > div:first-child p { margin-bottom: 20px; }
+div#add_numbers .row-fluid > .span6:first-child { text-align: center; }
+div#add_numbers .row-fluid > .span6:first-child label { margin-bottom: 20px; }
 
 div#add_numbers .search-custom {
 	display: block;
@@ -258,7 +259,7 @@ div#manage_orders > .row-fluid:last-child {
 	position: relative;
 	overflow-x: auto;
 	margin-top: 25px;
-	height: 445px;
+	max-height: 445px;
 	white-space: nowrap;
 }
 
@@ -326,7 +327,9 @@ div#loa .row-fluid .span4 .number { font-size: 25px; }
 
 /********************** Confirm Order *********************/
 
-div#notification .row-fluid:last-child { margin-top: 50px; }
+div#notification h2 { margin-bottom: 0; }
+
+div#notification .row-fluid:last-child { margin: 40px 0 0; }
 
 div#notification .row-fluid label,
 div#transfer_date .row-fluid label,
@@ -336,16 +339,16 @@ div#temporary_numbers .row-fluid label {
 	text-align: right;
 }
 
-div#transfer_date .row-fluid:first-child { margin-bottom: 20px; }
+div#transfer_date .row-fluid:first-child { margin-bottom: 40px; }
 
 div#transfer_date .info .important {
 	color: #F00;
 	text-transform: uppercase;
 }
 
-div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 20px; }
+div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 40px; }
 
-div#order_summary h2 { margin: 0 0 20px; }
+div#order_summary h2 { margin: 0 0 40px; }
 
 div#order_summary > .row-fluid {
 	border: 1px solid #ddd;
