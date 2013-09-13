@@ -235,6 +235,7 @@ define(function(require){
 					}
 					userListContainer.css('maxHeight', rightContainer.height()-182);
 
+					template.find('#screenshot_carousel').carousel();
 				}
 			});
 		},
