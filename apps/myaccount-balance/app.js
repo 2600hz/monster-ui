@@ -234,11 +234,12 @@ define(function(require){
 		},
 
 		formatTableData: function(dataRequest, mapAccounts) {
-			var data = {
-				tabData: [],
-				totalMinutes: 0,
-				totalCharges: 0.00
-			};
+			var self = this,
+				data = {
+					tabData: [],
+					totalMinutes: 0,
+					totalCharges: 0.00
+				};
 
 			if(dataRequest.length > 0) {
 				$.each(dataRequest, function(k, v) {
@@ -274,10 +275,12 @@ define(function(require){
 							monster.util.formatPhoneNumber(v.metadata.to),
 							accountName,
 							duration,
-							self.i18n.active().currencyUsed + v.amount
+							self.i18n.active().currencyUsed + v.amount.toFixed(3)
 						]);
 					}
 				});
+
+				data.totalCharges = data.totalCharges.toFixed(3);
 			}
 
 			return data;

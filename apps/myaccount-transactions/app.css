@@ -88,3 +88,47 @@
 	font-size: 16px;
 	text-align: right;
 }
+/* Table Customization */
+.transactions-content-wrapper .list-transactions .transaction table{
+	font-size: 14px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:first-child,
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:first-child {
+	padding-left: 10%;
+}
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(2),
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(2) {
+	width: 100px;
+	text-align: right;
+}
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(3),
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(3) {
+	width: 40px;
+	text-align: center;
+}
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(4),
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(4) {
+	width: 20px;
+	text-align: left;
+}
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(5),
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(5) {
+	width: 100px;
+	text-align: right;
+}
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(5) {
+	color: #44cc44;
+	font-weight: 500;
+}
+
+.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(6),
+.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(6) {
+	text-align: right;
+	padding-right: 10%;
+}
+
+.transactions-content-wrapper .list-transactions .transaction table.table td.no-data {
+	text-align: center;
+	padding-right: 10%;
+}

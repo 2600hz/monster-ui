@@ -16,9 +16,9 @@
 				<div class="text-box">
 					<div class="title">
 						{{#compare this.type '===' 'monthly'}}
-							{{ ../../i18n.monthlyCharge }}
+							{{ ../../../i18n.monthlyCharge }}
 						{{else}}
-							{{ ../../i18n.serviceCharge }}
+							{{ ../../../i18n.serviceCharge }}
 						{{/compare}}
 					</div>
 					<div class="date">{{ this.created }}</div>
@@ -41,11 +41,11 @@
 								{{#services}}
 									<tr>
 										<td>{{ service }}</td>
-										<td>{{ ../../i18n.currencyUsed }}{{ rate }}</td>
+										<td>{{ ../../../i18n.currencyUsed }}{{ rate }}</td>
 										<td>X</td>
 										<td>{{ quantity }}</td>
 										<td>{{ discount }}</td>
-										<td>{{ ../../i18n.currencyUsed }}{{ monthly_charges }}</td>
+										<td>{{ ../../../i18n.currencyUsed }}{{ monthly_charges }}</td>
 									</tr>
 								{{/services}}
 							</tbody>

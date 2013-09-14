@@ -159,19 +159,32 @@ define(function(require){
 									v.type = 'charges';
 								}
 								else {
+									var mapDiscounts = {};
+									_.each(v.discounts, function(discount) {
+										mapDiscounts[discount.id] = discount;
+									});
+
 									v.type = v.prorated ? 'prorated' : 'monthly';
 									v.services = [];
 
 									$.each(v.add_ons, function(k, addOn) {
+										var discount = 0;
+
 										addOn.amount = parseFloat(addOn.amount).toFixed(2);
 										addOn.quantity = parseFloat(addOn.quantity);
-										addOn.monthly_charges = (addOn.amount * addOn.quantity).toFixed(2);
+
+										if((addOn.id + '_discount') in mapDiscounts) {
+											var discountItem = mapDiscounts[addOn.id + '_discount'];
+											discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
+										}
+
+										addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
 
 										v.services.push({
-											service: i18n.t('myaccount.service_plan.'+addOn.id),
+											service: monster.apps['myaccount-servicePlan'].i18n.active()[addOn.id],
 											rate: addOn.amount,
 											quantity: addOn.quantity,
-											discount: '',
+											discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
 											monthly_charges: addOn.monthly_charges
 										});
 									});
