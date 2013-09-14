@@ -50,7 +50,7 @@ define(function(require){
 			}
 			else {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
-				
+
 				self.authToken = cookieData.authToken;
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
@@ -102,7 +102,7 @@ define(function(require){
 						installedApps: self.installedApps
 					};
 
-					$.cookie('monster-auth', JSON.stringify(cookieAuth), {expires: 30});
+					$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
 					$('#ws-content').empty();
 
@@ -150,10 +150,14 @@ define(function(require){
 				var defaultApp;
 
 				if(err) {
-					monster.ui.alert('error', self.i18n.active().errorLoadingAccount, function() {
+					// If we want to display a warning
+					/*	monster.ui.alert('error', self.i18n.active().errorLoadingAccount, function() {
 						$.cookie('monster-auth', null);
 						window.location.reload();
-					});
+					});*/
+
+					$.cookie('monster-auth', null);
+					window.location.reload();
 				}
 				else {
 					results.user.account_name = results.account.name;

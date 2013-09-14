@@ -254,6 +254,13 @@ form.form-horizontal .input-append {
     display: block;
 }
 
+.form-horizontal.small-labels .control-group label.control-label {
+	width: 20px;
+}
+.form-horizontal.small-labels .control-group .controls {
+	margin-left: 40px;
+}
+
 @media (max-width: 480px) {
 	.form-horizontal .control-label {
 		padding-top: 5px;

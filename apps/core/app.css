@@ -160,9 +160,9 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-title {
+	font-size: 16px;
 	font-weight: 500;
 	color: #777;
-	text-transform: uppercase;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -176,9 +176,9 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover i.icon-stack-base {
-	text-shadow: 3px 3px 8px #fff, 
-				-3px 3px 8px #fff, 
-				 3px -3px 8px #fff, 
+	text-shadow: 3px 3px 8px #fff,
+				-3px 3px 8px #fff,
+				 3px -3px 8px #fff,
 				-3px -3px 8px #fff;
 }
 
@@ -188,6 +188,10 @@ table.table tr td {
 
 .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
 	font-family: 'Maven Pro', Helvetica, sans-serif;
+}
+
+.ui-dialog .dialog-buttons-wrapper {
+	text-align: right;
 }
 
 /* JQuery datepicker */
