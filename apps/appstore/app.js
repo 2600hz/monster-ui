@@ -195,8 +195,8 @@ define(function(require){
 							return val;
 						}),
 						template = $(monster.template(self, 'appPopup', {
-							app: app, 
-							users: users, 
+							app: app,
+							users: users,
 						 	i18n: {
 								selectedUsers: app.installed.users.length,
 							  	totalUsers: users.length
@@ -235,6 +235,7 @@ define(function(require){
 					}
 					userListContainer.css('maxHeight', rightContainer.height()-182);
 
+					template.find('#screenshot_carousel').carousel();
 				}
 			});
 		},
@@ -245,10 +246,10 @@ define(function(require){
 				selectedUsersCount = app.installed.users.length,
 				updateApp = function(app, successCallback, errorCallback) {
 					var icon = parent.find('.toggle-button-bloc i');
-					
+
 					icon.show()
 						.addClass('icon-spin');
-					
+
 					delete app.label;
 					delete app.description;
 					monster.request({
@@ -262,7 +263,7 @@ define(function(require){
 							var updateCookie = function() {
 								var cookieData = $.parseJSON($.cookie('monster-auth'));
 								cookieData.installedApps = monster.apps['auth'].installedApps;
-								$.cookie('monster-auth', JSON.stringify(cookieData, {expires: 30}));
+								$.cookie('monster-auth', JSON.stringify(cookieData));
 							};
 
 							icon.stop(true, true)
@@ -284,7 +285,7 @@ define(function(require){
 										i18n: _data.data.i18n,
 										icon: _data.data.icon
 									};
-									
+
 									updateCookie();
 									$('#apploader').remove();
 								}
@@ -324,12 +325,12 @@ define(function(require){
 							users: []
 						};
 						updateApp(
-							app, 
+							app,
 							function() {
 								parent.find('.permissions-bloc').slideDown();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
 								$('#appstore_container .app-filter.active').click();
-							}, 
+							},
 							function() {
 								app.installed = previousSettings;
 								$this.bootstrapSwitch('setState', false);
@@ -341,12 +342,12 @@ define(function(require){
 							users: []
 						};
 						updateApp(
-							app, 
+							app,
 							function() {
 								parent.find('.permissions-bloc').slideUp();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
 								$('#appstore_container .app-filter.active').click();
-							}, 
+							},
 							function() {
 								app.installed = previousSettings;
 								$this.bootstrapSwitch('setState', true);
@@ -366,10 +367,10 @@ define(function(require){
 						users: []
 					};
 					updateApp(
-						app, 
+						app,
 						function() {
 							parent.find('.permissions-link').hide();
-						}, 
+						},
 						function() {
 							app.installed = previousSettings;
 							parent.find('#app_popup_specific_users_radiobtn').prop('checked', true);
