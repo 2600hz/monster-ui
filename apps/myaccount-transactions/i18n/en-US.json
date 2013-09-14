@@ -9,6 +9,12 @@
 
 	"noData": "There are no transactions between the 2 dates selected !",
 
+	"serviceTitle": "Service",
+	"discount": "Discount",
+	"rateTitle": "Rate",
+	"quantityTitle": "Quantity",
+	"monthlyChargesTitle": "Monthly Charges",
+
 	"per_minute_call": "Per-Minute Call",
 	"sub_account_per_minute_call": "Per-Minute Call (Sub-Account)",
 	"feature_activation": "Feature Activation",
