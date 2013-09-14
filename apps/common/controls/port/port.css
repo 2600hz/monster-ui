@@ -56,10 +56,9 @@ div.row-fluid.info p {
 
 .order:not(:first-child) { margin-left: 50px; }
 
-.order .header { padding: 0 10px; }
-
 .order h3 {
-	margin: 0;
+	margin: 0 0 10px 0;
+	padding: 0 10px;
 	color: #2CF;
 	font-weight: normal;
 }
@@ -295,8 +294,10 @@ div#name_transfer .row-fluid label {
 div#upload_bill .span6:first-child { padding-right: 12px; }
 div#upload_bill .span6:last-child { padding-left: 12px; }
 
+div#upload_bill .info { min-height: 80px }
+
 div#upload_bill form {
-	margin: 50px auto 0;
+	margin: 0 auto;
 	max-width: 260px;
 	text-align: center;
 }

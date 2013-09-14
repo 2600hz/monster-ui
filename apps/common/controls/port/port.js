@@ -45,7 +45,7 @@ define(function(require){
 
 							return data;
 						},
-						parent = monster.ui.dialog($(monster.template(self, 'port-ordersList', format(data))), { title: 'transfer [port] numbers' });
+						parent = monster.ui.dialog($(monster.template(self, 'port-pendingOrders', format(data))), { title: 'transfer [port] numbers' });
 
 					self.portPendingOrders(parent);
 				}
@@ -107,7 +107,7 @@ define(function(require){
 			container.find('span.pull-right').find('a').on('click', function() {
 				parent
 					.empty()
-					.append($(monster.template(self, 'port-step1')));
+					.append($(monster.template(self, 'port-addNumbers')));
 
 				self.portAddNumbers(parent);
 			});
@@ -152,7 +152,7 @@ define(function(require){
 			container.find('button').on('click', function() {
 				parent
 					.empty()
-					.append($(monster.template(self, 'port-step3')));
+					.append($(monster.template(self, 'port-submitDocuments')));
 
 				self.portSubmitDocuments(parent);
 			});
@@ -201,7 +201,7 @@ define(function(require){
 						.find('button')
 						.unbind('click');
 
-					$(monster.template(self, 'port-step2', numbersList)).insertAfter(container);
+					$(monster.template(self, 'port-manageOrders', numbersList)).insertAfter(container);
 
 					self.portManageOrders(parent);
 				}
@@ -230,17 +230,52 @@ define(function(require){
 			 * if not add the numbers sorted in orders
 			 */
 			container.find('div#add_numbers').find('button').on('click', function() {
-				if ( container.find('div#add_numbers').find('input').val() == "" ) {
+				var numbersList = container.find('div#add_numbers').find('input').val();
+
+				if ( numbersList == "" ) {
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					console.log('click');
+					var ordersList = self.portFormatNumbers(numbersList.split(' ')).orders;
+
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.removeClass('error');
+
+					for ( var order in ordersList ) {
+						container
+							.find('div#manage_orders')
+							.find('div.row-fluid:last-child')
+							.append($(monster.template(self, 'port-order', ordersList[order])));
+					}
+
+					container.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
+						var ul = $(this).parent().parent();
+
+						$(this)
+							.parent()
+							.remove();
+
+						if ( ul.is(':empty') ) {
+							ul.parent().parent().remove();
+						}
+
+						if ( container.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
+							container
+								.find('div#manage_orders')
+								.find('.row-fluid:last-child')
+								.animate({height: '0px'}, 500);
+
+							$('.ui-dialog-content')
+								.empty()
+								.append($(monster.template(self, 'port-addNumbers')));
+
+							self.portAddNumbers(parent);
+						}
+					});
 				}
 			});
 
@@ -253,9 +288,8 @@ define(function(require){
 			container.find('div#manage_orders').find('i.icon-remove-sign').on('click', function() {
 				var ul = $(this).parent().parent();
 
-				container
-					.find('div#manage_orders')
-					.find('li[data-value="' + $(this).parent().data('value') + '"]')
+				$(this)
+					.parent()
 					.remove();
 
 				if ( ul.is(':empty') ) {
@@ -270,7 +304,7 @@ define(function(require){
 
 					$('.ui-dialog-content')
 						.empty()
-						.append($(monster.template(self, 'port-step1')));
+						.append($(monster.template(self, 'port-addNumbers')));
 
 					self.portAddNumbers(parent);
 				}
@@ -293,7 +327,7 @@ define(function(require){
 				if ( allChecked ) {
 					$('.ui-dialog-content')
 						.empty()
-						.append($(monster.template(self, 'port-step3')));
+						.append($(monster.template(self, 'port-submitDocuments')));
 
 					self.portSubmitDocuments(parent);
 				}
@@ -306,7 +340,7 @@ define(function(require){
 		*/
 		portFormatNumbers: function(numbersList) {
 			var areaCodes = new Array(),
-				carrierList = ['at&t', 'verizon', 'srpint', 't-mobile'],
+				carrierList = ['at&t', 'verizon', 'sprint', 't-mobile'],
 				formattedData = { orders: [] };
 
 			for ( var key in numbersList ) {
@@ -346,8 +380,8 @@ define(function(require){
 			 * if dialog box too high to fit on the sceen
 			 * dock it at 80px at the top of the screen
 			 */
-			if ( parent.css('top').substring(0, parent.css('top').length - 2) > 80 ) {
-				parent.animate({top: '80px'}, 200);
+			if ( $('.ui-dialog').css('top').substring(0, $('.ui-dialog').css('top').length - 2) > 80 ) {
+				$('.ui-dialog').animate({top: '80px'}, 200);
 			}
 
 			/*
@@ -374,16 +408,16 @@ define(function(require){
 
 					$('.ui-dialog-content')
 						.empty()
-						.append($(monster.template(self, 'port-step1')));
+						.append($(monster.template(self, 'port-addNumbers')));
 
-					self.portAddNumbers();
+					self.portAddNumbers(parent);
 				}
 			});
 
 			/*
 			 * on click on Submit button
 			 * if all required inputs filled
-			 * empty .ui-dialog-content and load port-submitDocuments template
+			 * empty .ui-dialog-content and load port-confirmOrders template
 			 * else show which inputs contain errors
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
@@ -404,7 +438,7 @@ define(function(require){
 
 					$('.ui-dialog-content')
 						.empty()
-						.append($(monster.template(self, 'port-step4')));
+						.append($(monster.template(self, 'port-confirmOrder')));
 
 					self.portConfirmOrder(parent);
 				}
@@ -435,32 +469,38 @@ define(function(require){
 
 			/*
 			 * on click on switch button
-			 * 
+			 * if switch to on show select numbers
+			 * else hide and disable select numbers
 			 */
 			container.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
 				if ( $(this).find('div.switch-animate').hasClass('switch-off') ) {
 					container
 						.find('div#temporary_numbers')
-						.find('div.row-fluid:nth-child(2)')
-						.slideUp('500');
+						.find('select#numbers_to_buy')
+						.prop('disabled', true);
 
 					container
 						.find('div#temporary_numbers')
-						.find('select#numbers_to_buy')
-						.prop('disabled', true);
+						.find('div.row-fluid:nth-child(2)')
+						.slideUp('500');
 				} else if ( $(this).find('div.switch-animate').hasClass('switch-on') ) {
 					container
 						.find('div#temporary_numbers')
-						.find('select#numbers_to_buy')
-						.prop('disabled', false);
-
-					container
-						.find('div#temporary_numbers')
 						.find('div.row-fluid:nth-child(2)')
-						.slideDown('500');
+						.slideDown('500', function() {
+							container
+								.find('div#temporary_numbers')
+								.find('select#numbers_to_buy')
+								.prop('disabled', false);
+						});
 				}
 			});
 
+			/*
+			 * on click on Submit button
+			 * if email input empty scroll to it
+			 * else load portRender
+			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
 				var notification_email = container.find('input#notification_email').val(),
 					transfer_date = container.find('input#transfer_numbers_date').val(),
