@@ -15,8 +15,10 @@ define(function(require){
 
 		requests: {
 			'servers.list': {
-				apiRoot: 'apps/cluster/static/data/',
-				url: 'servers.json',
+				apiRoot: 'http://colelabs.com/2600/cm/',
+				url: 'servers',
+				/*apiRoot: 'apps/cluster/static/data/',
+				url: 'servers.json',*/
 				verb: 'GET'
 			}/*,
 			'servers.list': {
@@ -30,140 +32,161 @@ define(function(require){
 		load: function (callback) {
 			var self = this;
 
-			callback && callback(self);
+			self.initApp(function() {
+				callback && callback(self);
+			});
+		},
+
+		initApp: function(callback) {
+			var self = this;
+
+			monster.pub('auth.initApp', {
+                app: self,
+                callback: callback
+            });
 		},
 
 		render: function (container) {
-			var self = this,
-				format = function (data) {
-					for (var server in data.servers) {
+			var self = this;
 
-						/*
-							TODO: remove when API works
-						*/
+			self.listServers(function(data) {
+				var data = self.formatServer(data),
+					container = container || $('div#ws-content'),
+					serversStatus = self.formatToServersStatus(data),
+					clusterManagerTemplate = $(monster.template(self, 'app', serversStatus));
 
-						data.servers[server].id = server;
+				container
+					.empty()
+					.append(clusterManagerTemplate);
 
-						var status = ['up', 'up', 'up', 'warning', 'down'],
-							alerts = ['Database HTTPS Error', 'Server Version Old'];
+				self.renderServersView(clusterManagerTemplate, data);
+				self.bindEvents(clusterManagerTemplate, data);
+			});
+		},
 
-						data.servers[server].status = status[Math.floor(Math.random() * status.length)];
-
-						data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
-						data.servers[server].nic2 = ( Math.round(Math.random()) == 1 ) ? true : false;
-						data.servers[server].vpn = ( Math.round(Math.random()) == 1 ) ? true : false;
-
-						data.servers[server].cpu = Math.floor((Math.random() * 100) + 1);
-						data.servers[server].ram = Math.floor((Math.random() * 100) + 1);
-						data.servers[server].disk = Math.floor((Math.random() * 100) + 1);
-
-						data.servers[server].speed = Math.floor(Math.random() * 500) + 1;
-						data.servers[server].ping = Math.floor(Math.random() * 150) + 1;
-
-						if ( data.servers[server].status == 'warning' || data.servers[server].status == 'down' ) {
-							data.servers[server].alert = alerts[Math.floor(Math.random() * alerts.length)];
-						} else {
-							data.servers[server].alert = 'No error';
-						}
-
-						// data.servers[server].role = data.servers[server].type;
-						// delete data.servers[server].type;
-
-						/*
-							end TODO
-						*/
-
-						data.servers[server].cpu_overload = ( data.servers[server].cpu >= 75 ) ? true : false;
-						data.servers[server].ram_overload = ( data.servers[server].ram >= 75 ) ? true : false;
-						data.servers[server].disk_overload = ( data.servers[server].disk >= 75 ) ? true : false;
-
-						if ( data.servers[server].alert == '' ) {
-							data.servers[server].alert = 'No error';
-						}
-					}
-
-					return data;
-				},
-				formatToServersStatus = function (data) {
-					var serversStatusByType = new Array(),
-						serversTypes = new Array(),
-						formattedData = new Object(),
-						getServersStatus = function (statusList) {
-							var counter = 0;
-
-							for (var status in statusList) {
-								if ( statusList[status] == 'up' ) {
-									++counter;
-								}
-							}
-
-							if ( counter == 0 ) {
-								return 'down';
-							} else if ( counter == 1 ) {
-								return 'warning';
-							} else {
-								return 'up';
-							}
-						};
-
-					for (var server in data.servers) {
-
-						/*
-							Test if array
-						*/
-
-						if ( data.servers[server].type instanceof Array ) {
-							/* Format if array */
-						}
-
-						/*
-							End Test
-						*/
-
-						serversTypes.push(data.servers[server].type);
-					}
-
-					serversTypes = _.uniq(serversTypes, true);
-
-					for (var type in serversTypes) {
-						var serversStatus = new Array();
-
-						for (var server in data.servers) {
-							if ( data.servers[server].type == serversTypes[type] ) {
-								serversStatus.push(data.servers[server].status);
-							}
-						}
-
-						formattedData[serversTypes[type]] = getServersStatus(serversStatus);
-					}
-
-					for (var status in formattedData) {
-						serversStatusByType.push(formattedData[status]);
-					}
-
-					formattedData.all = getServersStatus(serversStatusByType);
-
-					return formattedData;
-				};
+		listServers: function(callback) {
+			var self = this;
 
 			monster.request({
 				resource: 'servers.list',
-				data: {},
+				data: {
+				},
 				success: function(data, status) {
-					var data = format(data),
-						container = container || $('div#ws-content'),
-						serversStatus = formatToServersStatus(data),
-						clusterManagerTemplate = $(monster.template(self, 'app', serversStatus));
-
-					container
-						.empty()
-						.append(clusterManagerTemplate);
-
-					self.renderServersView(clusterManagerTemplate, data);
-					self.bindEvents(clusterManagerTemplate, data);
-
+					callback && callback(data);
 				}
 			});
+		},
+
+		formatToServersStatus: function(data) {
+			var serversStatusByType = new Array(),
+				serversTypes = new Array(),
+				formattedData = new Object(),
+				getServersStatus = function (statusList) {
+					var counter = 0;
+
+					for (var status in statusList) {
+						if ( statusList[status] == 'up' ) {
+							++counter;
+						}
+					}
+
+					if ( counter == 0 ) {
+						return 'down';
+					} else if ( counter == 1 ) {
+						return 'warning';
+					} else {
+						return 'up';
+					}
+				};
+
+			for (var server in data.servers) {
+
+				/*
+					Test if array
+				*/
+
+				if ( data.servers[server].type instanceof Array ) {
+					/* Format if array */
+				}
+
+				/*
+					End Test
+				*/
+
+				serversTypes.push(data.servers[server].type);
+			}
+
+			serversTypes = _.uniq(serversTypes, true);
+
+			for (var type in serversTypes) {
+				var serversStatus = new Array();
+
+				for (var server in data.servers) {
+					if ( data.servers[server].type == serversTypes[type] ) {
+						serversStatus.push(data.servers[server].status);
+					}
+				}
+
+				formattedData[serversTypes[type]] = getServersStatus(serversStatus);
+			}
+
+			for (var status in formattedData) {
+				serversStatusByType.push(formattedData[status]);
+			}
+
+			formattedData.all = getServersStatus(serversStatusByType);
+
+			return formattedData;
+		},
+
+		formatServer: function(data) {
+			for (var server in data.servers) {
+
+				/*
+					TODO: remove when API works
+				*/
+
+				data.servers[server].id = server;
+
+				var status = ['up', 'up', 'up', 'warning', 'down'],
+					alerts = ['Database HTTPS Error', 'Server Version Old'];
+
+				data.servers[server].status = status[Math.floor(Math.random() * status.length)];
+
+				data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
+				data.servers[server].nic2 = ( Math.round(Math.random()) == 1 ) ? true : false;
+				data.servers[server].vpn = ( Math.round(Math.random()) == 1 ) ? true : false;
+
+				data.servers[server].cpu = Math.floor((Math.random() * 100) + 1);
+				data.servers[server].ram = Math.floor((Math.random() * 100) + 1);
+				data.servers[server].disk = Math.floor((Math.random() * 100) + 1);
+
+				data.servers[server].speed = Math.floor(Math.random() * 500) + 1;
+				data.servers[server].ping = Math.floor(Math.random() * 150) + 1;
+
+				if ( data.servers[server].status == 'warning' || data.servers[server].status == 'down' ) {
+					data.servers[server].alert = alerts[Math.floor(Math.random() * alerts.length)];
+				} else {
+					data.servers[server].alert = 'No error';
+				}
+
+				// data.servers[server].role = data.servers[server].type;
+				// delete data.servers[server].type;
+
+				/*
+					end TODO
+				*/
+
+				data.servers[server].cpu_overload = ( data.servers[server].cpu >= 75 ) ? true : false;
+				data.servers[server].ram_overload = ( data.servers[server].ram >= 75 ) ? true : false;
+				data.servers[server].disk_overload = ( data.servers[server].disk >= 75 ) ? true : false;
+
+				if ( data.servers[server].alert == '' ) {
+					data.servers[server].alert = 'No error';
+				}
+			}
+
+			return data;
 		},
 
 		/* Expected params:
@@ -189,6 +212,22 @@ define(function(require){
 					}
 				};
 
+			parent.find('.cluster-actions select').on('change', function() {
+				self.listServers(function(data) {
+					var data = self.formatServer(data),
+						container = container || $('div#ws-content'),
+						serversStatus = self.formatToServersStatus(data),
+						clusterManagerTemplate = $(monster.template(self, 'app', serversStatus));
+
+					container
+						.empty()
+						.append(clusterManagerTemplate);
+
+					self.renderServersView(clusterManagerTemplate, data);
+					self.bindEvents(clusterManagerTemplate, data);
+				});
+			});
+
 			parent.find('div.left-menu').find('ul:first-child').find('li.nav-item:not(.role)').on('click', function () {
 				parent
 					.find('div.left-menu')
@@ -213,10 +252,10 @@ define(function(require){
 		*/
 		renderServersView: function (parent, data, viewType) {
 			var self = this,
-				activeView = new Object(),
+				activeView = {},
 				viewType = ( typeof viewType != 'undefined' ) ? viewType : 'list';
 
-			activeView[viewType] = true;
+			activeView.viewType = true;
 
 			parent
 				.find('div.right-content')
