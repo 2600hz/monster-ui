@@ -71,7 +71,10 @@
 			"title": "Voicemails"
 		},
 		"caller_id": {
-			"title": "Caller-ID"
+			"title": "Caller-ID Number",
+			"dropdownLabel": "Show my Caller-Id Number as",
+			"headline": "User Caller-ID Settings",
+			"help": "If you have more than one phone device, you can do specific settings for each device from the devices screen. Device setting will overwrite user Caller-ID settings."
 		},
 		"music_on_hold": {
 			"title": "Music-On-Hold"

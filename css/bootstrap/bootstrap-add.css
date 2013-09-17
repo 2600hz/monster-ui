@@ -1,3 +1,9 @@
+/* Bootstrap switch */
+.switch-left, .switch-right{
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 /* Font-Awesome */
 [class^="icon-"]:before, [class*=" icon-"]:before {
   /* Change text-decoration + add line-height to be normal */

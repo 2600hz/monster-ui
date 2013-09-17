@@ -3,7 +3,7 @@ require.config({
 	paths: {
 		async: 'js/lib/async',
 		bootstrap: 'js/lib/bootstrap-2.3.1.min',
-		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
+		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
 		footable: 'js/lib/footable/footable.min',

@@ -1,5 +1,11 @@
 /* ============================================================
- * bootstrapSwitch v1.2 by Larentis Mattia @spiritualGuru
+ * bootstrapSwitch v1.8 by Larentis Mattia @SpiritualGuru
+ * http://www.larentis.eu/
+ *
+ * Enhanced for radiobuttons by Stein, Peter @BdMdesigN
+ * http://www.bdmdesign.org/
+ *
+ * Project site:
  * http://www.larentis.eu/switch/
  * ============================================================
  * Licensed under the Apache License, Version 2.0
@@ -22,10 +28,20 @@
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+  vertical-align: middle;
   min-width: 100px;
 }
 .has-switch.switch-mini {
   min-width: 72px;
+}
+.has-switch.switch-mini i.switch-mini-icons {
+  height: 1.20em;
+  line-height: 9px;
+  vertical-align: text-top;
+  text-align: center;
+  transform: scale(0.6);
+  margin-top: -1px;
+  margin-bottom: -1px;
 }
 .has-switch.switch-small {
   min-width: 80px;
@@ -55,11 +71,12 @@
   transition: left 0.5s;
 }
 .has-switch > div.switch-off {
-  left: -49%;
+  left: -50%;
 }
 .has-switch > div.switch-on {
   left: 0%;
 }
+.has-switch input[type=radio],
 .has-switch input[type=checkbox] {
   display: none;
 }
@@ -99,13 +116,14 @@
   line-height: normal;
 }
 .has-switch label {
+  text-align: center;
   margin-top: -1px;
   margin-bottom: -1px;
   z-index: 100;
   width: 34%;
   border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
-  color: #ffffff;
+  color: #333333;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
@@ -128,13 +146,19 @@
 .has-switch label.active,
 .has-switch label.disabled,
 .has-switch label[disabled] {
-  color: #ffffff;
+  color: #333333;
   background-color: #e6e6e6;
   *background-color: #d9d9d9;
 }
 .has-switch label:active,
 .has-switch label.active {
   background-color: #cccccc \9;
+}
+.has-switch label i {
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  line-height: 18px;
+  pointer-events: none;
 }
 .has-switch span {
   text-align: center;
@@ -349,4 +373,36 @@
 .has-switch span.switch-danger:active,
 .has-switch span.switch-danger.active {
   background-color: #e9322d \9;
+}
+.has-switch span.switch-default {
+  color: #333333;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  background-color: #f0f0f0;
+  background-image: -moz-linear-gradient(top, #e6e6e6, #ffffff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e6e6), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #e6e6e6, #ffffff);
+  background-image: -o-linear-gradient(top, #e6e6e6, #ffffff);
+  background-image: linear-gradient(to bottom, #e6e6e6, #ffffff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e6e6', endColorstr='#ffffffff', GradientType=0);
+  border-color: #ffffff #ffffff #d9d9d9;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #ffffff;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.has-switch span.switch-default:hover,
+.has-switch span.switch-default:focus,
+.has-switch span.switch-default:active,
+.has-switch span.switch-default.active,
+.has-switch span.switch-default.disabled,
+.has-switch span.switch-default[disabled] {
+  color: #333333;
+  background-color: #ffffff;
+  *background-color: #f2f2f2;
+}
+.has-switch span.switch-default:active,
+.has-switch span.switch-default.active {
+  background-color: #e6e6e6 \9;
 }

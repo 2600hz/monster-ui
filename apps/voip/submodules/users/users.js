@@ -125,8 +125,7 @@ define(function(require){
 			self.usersGetData(function(data) {
 				var dataTemplate = self.usersFormatListData(data),
 				    template = $(monster.template(self, 'users-layout', dataTemplate)),
-					templateUser,
-					existingExtensions;
+					templateUser;
 
 				_.each(dataTemplate.users, function(user) {
 					templateUser = monster.template(self, 'users-row', user);
@@ -134,6 +133,7 @@ define(function(require){
 					template.find('.user-rows').append(templateUser);
 				});
 
+				console.log(data);
 				self.usersBindEvents(template, parent, dataTemplate);
 
 				parent
@@ -223,6 +223,7 @@ define(function(require){
 		},
 
 		usersFormatUserData: function(dataUser) {
+			console.log(dataUser);
 			var self = this,
 				formattedUser = {
 					additionalDevices: 0,
@@ -285,6 +286,7 @@ define(function(require){
 
 			//TODO REMOVE HARDCODED FOR TESTING PURPOSES
 			dataUser.features = ['hotdesking', 'caller_id'];
+
 			_.each(dataUser.features, function(v) {
 				formattedUser.mapFeatures[v].active = true;
 
@@ -763,17 +765,31 @@ define(function(require){
 
 			template.on('click', '.feature', function() {
 				var type = $(this).data('feature'),
-					featureTemplate = monster.template(self, 'users-feature-' + type, currentUser.mapFeatures[type]);
+					featureTemplate = $(monster.template(self, 'users-feature-' + type, currentUser.mapFeatures[type])),
+				   	switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
 
-					console.log(currentUser.mapFeatures[type]);
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					console.log(e);
+					console.log(data);
+					if(data.value === true) {
+						featureTemplate.find('.content').slideDown();
+					}
+					else {
+						featureTemplate.find('.content').slideUp();
+					}
+				});
 
 				var popup = monster.ui.dialog(featureTemplate, {
 					title: currentUser.mapFeatures[type].title,
 					position: ['center', 20]
 				});
-
-				console.log(currentUser.mapFeatures[type]);
 			});
+
+			template.on
 		},
 
 		usersGetTemplate: function(type, userId, callbackAfterData) {

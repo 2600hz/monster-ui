@@ -399,3 +399,24 @@
 	margin-left: 30px;
 	margin-right: 12px;
 }
+
+/* Feature Popups */
+.feature-popup-container .actions,
+.feature-popup-container .content {
+	padding: 15px 25px;
+	border-top: 1px solid #ccc;
+}
+
+.feature-popup-container .switch {
+	margin-left: 15px;
+}
+
+/* Caller-ID User Feature Popup */
+.feature-popup-container[data-feature="callerId"] {
+	width: 580px;
+}
+
+.feature-popup-container .caller-id-select {
+	margin-top: 5px;
+	margin-left: 10px;
+}
