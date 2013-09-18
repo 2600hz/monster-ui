@@ -150,6 +150,7 @@
 
 #users_container .users-grid .grid-row .grid-cell.features {
 	border-right: none;
+	text-align: center;
 }
 
 #users_container .actions {
@@ -326,4 +327,118 @@
 #users_container .detail-numbers.extensions .input-extension {
 	margin-right: 5px;
 	width: 50px;
+}
+
+/* Detail Features */
+#users_container .detail-features .features-grid .feature {
+	border: 1px solid #FFF;
+	cursor: pointer;
+	display: inline-block;
+	height: 150px;
+	text-align: center;
+	white-space: nowrap;
+	width: 25%;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#users_container .detail-features .features-grid .feature .icon-wrapper,
+.feature-popup-container .feature-icon-wrapper{
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,87%) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,87%))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+
+	border: 5px solid #DDDDDD;
+    border-radius: 60px 60px 60px 60px;
+    box-shadow: 0 -1px 2px #666666 inset;
+    display: inline-block;
+    height: 60px;
+    line-height: 60px;
+    margin: 20px;
+    text-align: center;
+    width: 60px;
+}
+
+#users_container .detail-features .features-grid .feature .icon-wrapper.active,
+.feature-popup-container .feature-icon-wrapper.active{
+	background: #19d332; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%, hsl(132,46%,46%) 61%, hsl(0,0%,0%) 99%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,hsl(128,79%,46%)), color-stop(61%,hsl(132,46%,46%)), color-stop(99%,hsl(0,0%,0%))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#19d332', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#users_container .detail-features .features-grid .feature:hover {
+	background: #FFF;
+	box-shadow: 1px 1px 15px #ddd inset;
+}
+
+#creation_user_dialog {
+	padding: 20px;
+}
+
+#creation_user_dialog input.same-line {
+	margin-left: 6px;
+}
+
+#creation_user_dialog input.input-small {
+	width: 93px;
+}
+
+#creation_user_dialog i.second-field {
+	margin-left: 30px;
+	margin-right: 12px;
+}
+
+/* Feature Popups */
+.feature-popup-container .actions,
+.feature-popup-container .content {
+	padding: 15px 25px;
+	border-top: 1px solid #ccc;
+}
+
+.feature-popup-container .switch {
+	margin-left: 15px;
+}
+
+.feature-popup-container .content.disabled {
+	display: none;
+}
+
+/* Caller-ID User Feature Popup */
+.feature-popup-container[data-feature="caller_id"] {
+	width: 525px;
+}
+
+.feature-popup-container .caller-id-select {
+	margin-top: 5px;
+	margin-left: 10px;
+}
+
+/* Call Forwarding User Feature Popup */
+.feature-popup-container[data-feature="call_forward"] {
+	width: 510px;
+}
+
+.feature-popup-container[data-feature="call_forward"] #number_field {
+	margin-left: 10px;
+}
+
+.feature-popup-container[data-feature="call_forward"] form {
+	margin-bottom: 40px;
+}
+
+.feature-popup-container[data-feature="call_forward"] form .main-line {
+	height: 60px;
+	line-height: 60px;
 }

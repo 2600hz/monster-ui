@@ -6,25 +6,19 @@
 </div>
 
 <div class="holidays-div">
-	<div class="holidays-add">
-		<a href="#">Add Holiday</a>
+	<div class="holidays-add navbar clearfix">
+		<ul class="nav pull-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">Add Holiday</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a class="add-holidays-link" data-type="single" href="#">Single Day</a></li>
+					<li><a class="add-holidays-link" data-type="range" href="#">Date Range</a></li>
+					<li><a class="add-holidays-link" data-type="advanced" href="#">Advanced</a></li>
+				</ul>
+			</li>
+		</ul>
 	</div>
-	<div class="holidays-list">
-		<!-- <div class="holidays-element">
-			<input type="text" class="name" value="Independence Day" original="Independence Day">
-			<input type="text" class="date single">
-		</div>
-		<div class="holidays-element">
-			<input type="text" class="name" value="Labor Day" original="Labor Day">
-			<input type="text" class="date single">
-		</div>
-		<div class="holidays-element">
-			<input type="text" class="name" value="Christmas Holidays" original="Christmas Holidays">
-			<input type="text" class="date from">
-			to
-			<input type="text" class="date to">
-		</div> -->
-	</div>
+	<div class="holidays-list"></div>
 </div>
 
 <div class="holidays-actions basic-actions">

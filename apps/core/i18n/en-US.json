@@ -16,7 +16,9 @@
 		"confirmCancel" : "Cancel",
 		"confirmTitle" : "Confirmation"
 	},
+	"disabled": "Disabled",
 	"download": "Download",
+	"enabled": "Enabled",
 	"endDate": "End Date",
 	"error": "Error",
 	"examplePhoneNumber": "+1 (415) 482-9912",

@@ -150,6 +150,10 @@
 
 /********** Strategy Hours ***********/
 
+#strategy_container .element-container.strategy-hours form {
+	margin: 0px;
+}
+
 #strategy_container .element-container.strategy-hours .custom-hours-toggler {
 	padding: 20px;
 }
@@ -237,8 +241,21 @@
 }
 
 #strategy_container .element-container.strategy-holidays .holidays-div .holidays-add {
-	text-align: right;
-	padding: 10px 60px;
+	padding: 0px 60px;
+	margin: 0;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-add .dropdown {
+	display: inline-block;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-add .dropdown-menu {
+	min-width: 0;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-add .dropdown-toggle {
+	color: #22ccff;
+	background-color: transparent;
 }
 
 #strategy_container .element-container.strategy-holidays .holidays-div .holidays-element {
@@ -250,8 +267,22 @@
 }
 
 #strategy_container .element-container.strategy-holidays .holidays-div .holidays-element input,
-#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element span {
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element span,
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element select {
 	margin: 5px 20px 5px 0px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .month,
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .wday {
+	width: 70px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .day {
+	width: 60px;
+}
+
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .ordinal {
+	width: 120px;
 }
 
 #strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .name {
@@ -266,4 +297,56 @@
 	float: right;
 	line-height: 40px;
 	cursor: pointer;
+}
+
+/********** Strategy Calls ***********/
+
+#strategy_container .element-container.strategy-calls .calls-tabs {
+	height: 32px;
+	padding: 20px 20px 0;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs {
+	padding: 20px;
+	border: none;
+	background: transparent;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .callflow-tab-title {
+	margin-bottom: 10px;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option {
+	display: inline-block;
+	vertical-align: top;
+	padding: 10px;
+	border: solid 2px #ccc;
+	border-radius: 10px;
+	text-align: center;
+	opacity: 0.5;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option i {
+	color: #aaa;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option .radio-div .iradio_flat {
+	margin: 0;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option:not(:first-of-type) {
+    margin-left: 20px;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option > div:not(:first-of-type) {
+    margin-top: 10px;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active {
+	border-color: #22ccff;
+	opacity: 1;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .virtual-icon i {
+	color: #22ccff;
 }

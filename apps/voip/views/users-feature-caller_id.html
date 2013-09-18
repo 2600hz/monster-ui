@@ -1,0 +1,36 @@
+<div class="feature-popup-container" data-feature="caller_id">
+	<div class="feature-popup-title">
+        <div class="feature-icon-wrapper">
+            <i class="{{extra.mapFeatures.caller_id.icon}}"></i>
+        </div>
+        {{ i18n.users.caller_id.headline }}
+        <div class="switch" data-on="success" data-off="default" data-on-label="{{i18n.enabled}}" data-off-label="{{i18n.disabled}}">
+			<input type="checkbox" id="checkbox_caller_id"{{#if extra.mapFeatures.caller_id.active}} checked="checked"{{/if}}></input>
+        </div>
+	</div>
+
+	<div class="content{{#unless extra.mapFeatures.caller_id.active}} disabled{{/unless}}">
+        {{ i18n.users.caller_id.dropdownLabel }}
+		<select class="caller-id-select">
+			{{#each extra.listCallerId}}
+				<option{{#compare ../this.caller_id.internal.number "===" this}} selected{{/compare}} value="{{this}}">{{this}}</option>
+			{{/each}}
+		</select>
+
+		<div class="help-box gray-box">
+        	<div class="wrapper-icon">
+            	&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+        	</div>
+        	<div class="text-wrapper">
+            	<p>{{ i18n.users.caller_id.help }}</p>
+        	</div>
+    	</div>
+	</div>
+
+	<div class="actions clearfix">
+        <div class="pull-right">
+            <a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+            <button type="button" class="btn btn-success save">{{ i18n.saveChanges }}</button>
+        </div>
+    </div>
+</div>

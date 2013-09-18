@@ -60,7 +60,7 @@ define(function(require){
 	});
 
 	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
-		phoneNumber = phoneNumber.toString();
+		phoneNumber = (phoneNumber || '').toString();
 
 		return monster.util.formatPhoneNumber(phoneNumber);
 	});
@@ -470,13 +470,13 @@ define(function(require){
 					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
 						currentAcc;
 					for(var i=0; i<parents.length; i++) {
-						if(!currentAcc) { 
+						if(!currentAcc) {
 							if(!result[parents[i]]) { result[parents[i]] = {}; }
-							currentAcc = result[parents[i]]; 
-						} else { 
+							currentAcc = result[parents[i]];
+						} else {
 							if(!currentAcc.children) { currentAcc.children = {}; }
 							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-							currentAcc = currentAcc.children[parents[i]]; 
+							currentAcc = currentAcc.children[parents[i]];
 						}
 					}
 					if(!currentAcc.children) { currentAcc.children = {}; }
@@ -523,7 +523,7 @@ define(function(require){
 			 *	'update' (apply input changes, which were done outside the plugin)
 			 *	'destroy' (remove all traces of iCheck)
 			 *
-			 * callback: A callback function that will be executed after EACH time the action is performed on a checkbox/radio 
+			 * callback: A callback function that will be executed after EACH time the action is performed on a checkbox/radio
 			**/
 			action: function(target, action, callback) {
 				target.iCheck(action, callback);
