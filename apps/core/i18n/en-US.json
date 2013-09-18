@@ -52,6 +52,7 @@
 		"filtered": "(filtered from _MAX_ total entries)",
 		"infoEmpty": ""
 	},
+	"unexpectedError": "An unexpected error happened, please try again!",
 	"warning": "Warning!",
 	"welcome": "SIP Trunking Made Easy"
 }

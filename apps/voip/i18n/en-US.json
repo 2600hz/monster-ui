@@ -92,8 +92,12 @@
 		"faxing": {
 			"title": "Faxing"
 		},
-		"hotdesking": {
-			"title": "Hot-Desking"
+		"hotdesk": {
+			"label": "Does it require a PIN?",
+			"keep_logged_in_elsewhere": "Allow login at multiple devices",
+			"title": "Hot-Desking",
+			"headline": "User Hot-Desking Settings",
+			"help": "The Hot-Desking ID is automatically set as the user's extensions number."
 		}
 	},
 

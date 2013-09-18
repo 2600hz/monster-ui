@@ -401,6 +401,10 @@
 }
 
 /* Feature Popups */
+.feature-popup-container {
+	width: 510px;
+}
+
 .feature-popup-container .actions,
 .feature-popup-container .content {
 	padding: 15px 25px;
@@ -415,6 +419,15 @@
 	display: none;
 }
 
+.feature-popup-container form {
+	margin-bottom: 40px;
+}
+
+.feature-popup-container form .main-line {
+	height: 60px;
+	line-height: 60px;
+}
+
 /* Caller-ID User Feature Popup */
 .feature-popup-container[data-feature="caller_id"] {
 	width: 525px;
@@ -426,19 +439,15 @@
 }
 
 /* Call Forwarding User Feature Popup */
-.feature-popup-container[data-feature="call_forward"] {
-	width: 510px;
-}
-
 .feature-popup-container[data-feature="call_forward"] #number_field {
 	margin-left: 10px;
 }
-
-.feature-popup-container[data-feature="call_forward"] form {
-	margin-bottom: 40px;
+/* Hot Desking User Feature Popup */
+.feature-popup-container[data-feature="hotdesk"] form .main-line .icheckbox_flat {
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
-.feature-popup-container[data-feature="call_forward"] form .main-line {
-	height: 60px;
-	line-height: 60px;
+.feature-popup-container[data-feature="hotdesk"] #pin {
+	margin-top: 10px;
 }

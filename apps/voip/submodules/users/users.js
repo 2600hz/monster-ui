@@ -266,10 +266,10 @@ define(function(require){
 							iconColor: 'icon-blue',
 							title: self.i18n.active().users.find_me_follow_me.title
 						},*/
-						hotdesking: {
+						hotdesk: {
 							icon: 'icon-fire',
 							iconColor: 'icon-orange',
-							title: self.i18n.active().users.hotdesking.title
+							title: self.i18n.active().users.hotdesk.title
 						},
 						/*music_on_hold: {
 							icon: 'icon-music',
@@ -297,6 +297,10 @@ define(function(require){
 
 			if('call_forward' in dataUser && dataUser.call_forward.enabled) {
 				dataUser.features.push('call_forward');
+			}
+
+			if('hotdesk' in dataUser && dataUser.hotdesk.enabled) {
+				dataUser.features.push('hotdesk');
 			}
 
 			_.each(dataUser.features, function(v) {
@@ -606,6 +610,7 @@ define(function(require){
 
 				self.usersUpdateUser(userToSave, function(userData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+
 					self.usersRender({ userId: userData.data.id });
 				});
 			});
@@ -775,85 +780,159 @@ define(function(require){
 			});
 
 			template.on('click', '.feature[data-feature="caller_id"]', function() {
-				var featureTemplate = $(monster.template(self, 'users-feature-caller_id', currentUser)),
-				   	switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
-
-				featureTemplate.find('.cancel-link').on('click', function() {
-					popup.dialog('close').remove();
-				});
-
-				switchFeature.on('switch-change', function(e, data) {
-					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
-				});
-
-				featureTemplate.find('.save').on('click', function() {
-					var switchCallerId = featureTemplate.find('.switch'),
-						userData = currentUser,
-						userToSave = $.extend(true, {}, {
-							caller_id: {
-								internal: {}
-							}
-						}, currentUser);
-
-					if(switchCallerId.bootstrapSwitch('status') === false) {
-						if('internal' in userToSave.caller_id) {
-							delete userToSave.caller_id.internal.number;
-						}
-					}
-					else {
-						userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
-					}
-
-					userToSave = self.usersCleanUserData(userToSave);
-
-					self.usersUpdateUser(userToSave, function(data) {
-						popup.dialog('close').remove();
-
-						self.usersRender({ userId: data.data.id });
-					});
-				});
-
-				var popup = monster.ui.dialog(featureTemplate, {
-					title: currentUser.extra.mapFeatures.caller_id.title,
-					position: ['center', 20]
-				});
+				self.usersRenderCallerId(currentUser);
 			});
 
 			template.on('click', '.feature[data-feature="call_forward"]', function() {
-				var featureTemplate = $(monster.template(self, 'users-feature-call_forward', currentUser)),
-					switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+				self.usersRenderCallForward(currentUser);
+			});
 
-				featureTemplate.find('.cancel-link').on('click', function() {
+			template.on('click', '.feature[data-feature="hotdesk"]', function() {
+				self.usersRenderHotdesk(currentUser);
+			});
+
+			template.on('click', '.feature[data-feature="vm_to_email"]', function() {
+				self.usersRenderVMToEmail(currentUser);
+			});
+		},
+
+		usersRenderHotdesk: function(currentUser) {
+			var self = this,
+				featureTemplate = $(monster.template(self, 'users-feature-hotdesk', currentUser)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				requirePin = featureTemplate.find('[name="require_pin"]');
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			requirePin.on('ifChanged', function() {
+				if(requirePin.is(':checked')) {
+					featureTemplate.find('#pin')
+						.removeAttr('disabled', 'disabled')
+						.focus();
+				}
+				else {
+					featureTemplate.find('#pin')
+						.val('')
+						.attr('disabled', 'disabled');
+				}
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var formData = form2object('hotdesk_form');
+
+				formData.enabled = switchFeature.bootstrapSwitch('status');
+				formData.id = currentUser.extra.extension;
+				delete currentUser.hotdesk;
+
+				userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
+				userToSave = self.usersCleanUserData(userToSave);
+
+				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
+
+					self.usersRender({ userId: data.data.id });
 				});
+			});
 
-				switchFeature.on('switch-change', function(e, data) {
-					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: currentUser.extra.mapFeatures.hotdesk.title,
+				position: ['center', 20]
+			});
+		},
+
+		usersRenderVMToEmail: function(currentUser) {
+
+		},
+
+		usersRenderCallerId: function(currentUser) {
+			var self = this,
+				featureTemplate = $(monster.template(self, 'users-feature-caller_id', currentUser)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var switchCallerId = featureTemplate.find('.switch'),
+					userData = currentUser,
+					userToSave = $.extend(true, {}, {
+						caller_id: {
+							internal: {}
+						}
+					}, currentUser);
+
+				if(switchCallerId.bootstrapSwitch('status') === false) {
+					if('internal' in userToSave.caller_id) {
+						delete userToSave.caller_id.internal.number;
+					}
+				}
+				else {
+					userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
+				}
+
+				userToSave = self.usersCleanUserData(userToSave);
+
+				self.usersUpdateUser(userToSave, function(data) {
+					popup.dialog('close').remove();
+
+					self.usersRender({ userId: data.data.id });
 				});
+			});
 
-				featureTemplate.find('.save').on('click', function() {
-					var formData = form2object('call_forward_form');
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: currentUser.extra.mapFeatures.caller_id.title,
+				position: ['center', 20]
+			});
+		},
 
-					formData.enabled = switchFeature.bootstrapSwitch('status');
-					formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
+		usersRenderCallForward: function(currentUser) {
+			var self = this,
+				featureTemplate = $(monster.template(self, 'users-feature-call_forward', currentUser)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
 
-					var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
 
-					userToSave = self.usersCleanUserData(userToSave);
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
 
-					self.usersUpdateUser(userToSave, function(data) {
-						popup.dialog('close').remove();
+			featureTemplate.find('.save').on('click', function() {
+				var formData = form2object('call_forward_form');
 
-						self.usersRender({ userId: data.data.id });
-					});
+				formData.enabled = switchFeature.bootstrapSwitch('status');
+				formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
+
+				var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
+
+				userToSave = self.usersCleanUserData(userToSave);
+
+				self.usersUpdateUser(userToSave, function(data) {
+					popup.dialog('close').remove();
+
+					self.usersRender({ userId: data.data.id });
 				});
+			});
 
-				monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
 
-				var popup = monster.ui.dialog(featureTemplate, {
-					title: currentUser.extra.mapFeatures.call_forward.title,
-					position: ['center', 20]
-				});
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: currentUser.extra.mapFeatures.call_forward.title,
+				position: ['center', 20]
 			});
 		},
 
@@ -1333,6 +1412,9 @@ define(function(require){
 				},
 				success: function(userData) {
 					callback && callback(userData);
+				},
+				error: function(data) {
+					monster.ui.handleError(data);
 				}
 			});
 		},
