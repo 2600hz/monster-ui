@@ -411,12 +411,34 @@
 	margin-left: 15px;
 }
 
+.feature-popup-container .content.disabled {
+	display: none;
+}
+
 /* Caller-ID User Feature Popup */
-.feature-popup-container[data-feature="callerId"] {
-	width: 580px;
+.feature-popup-container[data-feature="caller_id"] {
+	width: 525px;
 }
 
 .feature-popup-container .caller-id-select {
 	margin-top: 5px;
 	margin-left: 10px;
+}
+
+/* Call Forwarding User Feature Popup */
+.feature-popup-container[data-feature="call_forward"] {
+	width: 510px;
+}
+
+.feature-popup-container[data-feature="call_forward"] #number_field {
+	margin-left: 10px;
+}
+
+.feature-popup-container[data-feature="call_forward"] form {
+	margin-bottom: 40px;
+}
+
+.feature-popup-container[data-feature="call_forward"] form .main-line {
+	height: 60px;
+	line-height: 60px;
 }

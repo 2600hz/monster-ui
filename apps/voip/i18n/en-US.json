@@ -61,7 +61,14 @@
 		"find_me_follow_me": {
 			"title": "Find Me Follow Me"
 		},
-		"call_forwarding": {
+		"call_forward": {
+			"directCallsOnly": "Forward direct calls only",
+			"headline": "User Call Forwarding Settings",
+			"help": "Users can change these settings from the user portal.",
+			"keepCallerId": "Keep your Caller-ID",
+			"label": "Forward all calls to this number",
+			"placeholder": "+14157283992",
+			"requireKeyPress": "Leave voicemails on forwarded numbers",
 			"title": "Call Forwarding"
 		},
 		"call_recording": {
@@ -73,7 +80,7 @@
 		"caller_id": {
 			"title": "Caller-ID Number",
 			"dropdownLabel": "Show my Caller-Id Number as",
-			"headline": "User Caller-ID Settings",
+			"headline": "User Caller-ID Number Settings",
 			"help": "If you have more than one phone device, you can do specific settings for each device from the devices screen. Device setting will overwrite user Caller-ID settings."
 		},
 		"music_on_hold": {

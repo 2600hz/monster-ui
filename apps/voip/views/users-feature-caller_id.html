@@ -1,19 +1,19 @@
-<div class="feature-popup-container" data-feature="callerId">
+<div class="feature-popup-container" data-feature="caller_id">
 	<div class="feature-popup-title">
         <div class="feature-icon-wrapper">
-            <i class="{{this.icon}}"></i>
+            <i class="{{extra.mapFeatures.caller_id.icon}}"></i>
         </div>
         {{ i18n.users.caller_id.headline }}
         <div class="switch" data-on="success" data-off="default" data-on-label="{{i18n.enabled}}" data-off-label="{{i18n.disabled}}">
-			<input type="checkbox" id="checkbox_caller_id" checked="checked"></input>
+			<input type="checkbox" id="checkbox_caller_id"{{#if extra.mapFeatures.caller_id.active}} checked="checked"{{/if}}></input>
         </div>
 	</div>
 
-	<div class="content">
+	<div class="content{{#unless extra.mapFeatures.caller_id.active}} disabled{{/unless}}">
         {{ i18n.users.caller_id.dropdownLabel }}
 		<select class="caller-id-select">
-			{{#each callerIdChoices}}
-				<option{{if this.selected}} selected{{/if}} value="{{this.number}}">{{this.number}} ({{this.friendlyText}})</option>
+			{{#each extra.listCallerId}}
+				<option{{#compare ../this.caller_id.internal.number "===" this}} selected{{/compare}} value="{{this}}">{{this}}</option>
 			{{/each}}
 		</select>
 

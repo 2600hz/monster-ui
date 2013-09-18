@@ -133,7 +133,6 @@ define(function(require){
 					template.find('.user-rows').append(templateUser);
 				});
 
-				console.log(data);
 				self.usersBindEvents(template, parent, dataTemplate);
 
 				parent
@@ -223,7 +222,6 @@ define(function(require){
 		},
 
 		usersFormatUserData: function(dataUser) {
-			console.log(dataUser);
 			var self = this,
 				formattedUser = {
 					additionalDevices: 0,
@@ -233,6 +231,9 @@ define(function(require){
 					extension: '',
 					hasFeatures: false,
 					isAdmin: dataUser.priv_level === 'admin',
+					listCallerId: [],
+					listExtensions: [],
+					listNumbers: [],
 					phoneNumber: '',
 					mapFeatures: {
 						caller_id: {
@@ -240,10 +241,10 @@ define(function(require){
 							iconColor: 'icon-blue',
 							title: self.i18n.active().users.caller_id.title
 						},
-						call_forwarding: {
+						call_forward: {
 							icon: 'icon-mail-forward',
 							iconColor: 'icon-yellow',
-							title: self.i18n.active().users.call_forwarding.title
+							title: self.i18n.active().users.call_forward.title
 						},
 						/*call_recording: {
 							icon: 'icon-microphone',
@@ -284,16 +285,27 @@ define(function(require){
 					}
 				};
 
-			//TODO REMOVE HARDCODED FOR TESTING PURPOSES
-			dataUser.features = ['hotdesking', 'caller_id'];
+
+			if(!('extra' in dataUser)) {
+				dataUser.extra = formattedUser;
+			}
+			//TODO UGLY
+			dataUser.features = [];
+			if('caller_id' in dataUser && 'internal' in dataUser.caller_id && 'number' in dataUser.caller_id.internal) {
+				dataUser.features.push('caller_id');
+			}
+
+			if('call_forward' in dataUser && dataUser.call_forward.enabled) {
+				dataUser.features.push('call_forward');
+			}
 
 			_.each(dataUser.features, function(v) {
-				formattedUser.mapFeatures[v].active = true;
-
-				formattedUser.hasFeatures = true;
+				dataUser.extra.mapFeatures[v].active = true;
 			});
 
-			dataUser = $.extend(true, {}, formattedUser, dataUser);
+			if(dataUser.features.length > 0) {
+				dataUser.extra.hasFeatures = true;
+			}
 
 			return dataUser;
 		},
@@ -325,20 +337,26 @@ define(function(require){
 
 					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
+						user.extra.listCallerId.push(number);
+
 						if(number.length < 6) {
-							if(user.extension === '') {
-								user.extension = number;
+							user.extra.listExtensions.push(number);
+
+							if(user.extra.extension === '') {
+								user.extra.extension = number;
 							}
 							else {
-								user.additionalExtensions++;
+								user.extra.additionalExtensions++;
 							}
 						}
 						else {
-							if(user.phoneNumber === '') {
-								user.phoneNumber = number;
+							user.extra.listNumbers.push(number);
+
+							if(user.extra.phoneNumber === '') {
+								user.extra.phoneNumber = number;
 							}
 							else {
-								user.additionalNumbers++;
+								user.extra.additionalNumbers++;
 							}
 						}
 					});
@@ -353,11 +371,11 @@ define(function(require){
 				var userId = device.owner_id;
 
 				if(userId in mapResultUsers) {
-					if(mapResultUsers[userId].devices.length == 2) {
-						mapResultUsers[userId].additionalDevices++;
+					if(mapResultUsers[userId].extra.devices.length == 2) {
+						mapResultUsers[userId].extra.additionalDevices++;
 					}
 					else {
-						mapResultUsers[userId].devices.push(device.device_type);
+						mapResultUsers[userId].extra.devices.push(device.device_type);
 					}
 				}
 			});
@@ -385,7 +403,8 @@ define(function(require){
 				existingExtensions = data.existingExtensions,
 				extensionsToSave,
 				numbersToSave,
-				toastrMessages = self.i18n.active().users.toastrMessages;
+				toastrMessages = self.i18n.active().users.toastrMessages,
+				listUsers = data;
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
 				var cell = $(this),
@@ -402,7 +421,7 @@ define(function(require){
 					template.find('.grid-cell').removeClass('active');
 					cell.toggleClass('active');
 
-					self.usersGetTemplate(type, userId, function(template, data) {
+					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
 							currentUser = data;
 						}
@@ -425,7 +444,6 @@ define(function(require){
 						}
 						else if(type === 'features') {
 							currentUser = data;
-							console.log(data);
 						}
 
 						//FancyCheckboxes.
@@ -581,21 +599,14 @@ define(function(require){
 			});
 
 			template.on('click', '.save-user', function() {
-				var formData = form2object('form-'+currentUser.id);
+				var formData = form2object('form-'+currentUser.id),
+					userToSave = $.extend(true, {}, currentUser, formData);
 
-				$.extend(true, currentUser, formData);
+				userToSave = self.usersCleanUserData(userToSave);
 
-				monster.request({
-					resource: 'voip.users.updateUser',
-					data: {
-						accountId: self.accountId,
-						userId: currentUser.id,
-						data: currentUser
-					},
-					success: function(userData) {
-						toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
-						self.usersRender({ userId: userData.data.id });
-					}
+				self.usersUpdateUser(userToSave, function(userData) {
+					toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+					self.usersRender({ userId: userData.data.id });
 				});
 			});
 
@@ -763,9 +774,8 @@ define(function(require){
 				}
 			});
 
-			template.on('click', '.feature', function() {
-				var type = $(this).data('feature'),
-					featureTemplate = $(monster.template(self, 'users-feature-' + type, currentUser.mapFeatures[type])),
+			template.on('click', '.feature[data-feature="caller_id"]', function() {
+				var featureTemplate = $(monster.template(self, 'users-feature-caller_id', currentUser)),
 				   	switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
 
 				featureTemplate.find('.cancel-link').on('click', function() {
@@ -773,26 +783,88 @@ define(function(require){
 				});
 
 				switchFeature.on('switch-change', function(e, data) {
-					console.log(e);
-					console.log(data);
-					if(data.value === true) {
-						featureTemplate.find('.content').slideDown();
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var switchCallerId = featureTemplate.find('.switch'),
+						userData = currentUser,
+						userToSave = $.extend(true, {}, {
+							caller_id: {
+								internal: {}
+							}
+						}, currentUser);
+
+					if(switchCallerId.bootstrapSwitch('status') === false) {
+						if('internal' in userToSave.caller_id) {
+							delete userToSave.caller_id.internal.number;
+						}
 					}
 					else {
-						featureTemplate.find('.content').slideUp();
+						userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
 					}
+
+					userToSave = self.usersCleanUserData(userToSave);
+
+					self.usersUpdateUser(userToSave, function(data) {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: data.data.id });
+					});
 				});
 
 				var popup = monster.ui.dialog(featureTemplate, {
-					title: currentUser.mapFeatures[type].title,
+					title: currentUser.extra.mapFeatures.caller_id.title,
 					position: ['center', 20]
 				});
 			});
 
-			template.on
+			template.on('click', '.feature[data-feature="call_forward"]', function() {
+				var featureTemplate = $(monster.template(self, 'users-feature-call_forward', currentUser)),
+					switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var formData = form2object('call_forward_form');
+
+					formData.enabled = switchFeature.bootstrapSwitch('status');
+					formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
+
+					var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
+
+					userToSave = self.usersCleanUserData(userToSave);
+
+					self.usersUpdateUser(userToSave, function(data) {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: data.data.id });
+					});
+				});
+
+				monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+				var popup = monster.ui.dialog(featureTemplate, {
+					title: currentUser.extra.mapFeatures.call_forward.title,
+					position: ['center', 20]
+				});
+			});
 		},
 
-		usersGetTemplate: function(type, userId, callbackAfterData) {
+		usersCleanUserData: function(userData) {
+			delete userData.features;
+			delete userData.extra;
+
+			return userData;
+		},
+
+		usersGetTemplate: function(type, userId, listUsers, callbackAfterData) {
 			var self = this,
 				template;
 
@@ -806,11 +878,11 @@ define(function(require){
 				self.usersGetExtensionsTemplate(userId, callbackAfterData);
 			}
 			else if(type === 'features') {
-				self.usersGetFeaturesTemplate(userId, callbackAfterData);
+				self.usersGetFeaturesTemplate(userId, listUsers, callbackAfterData);
 			}
 		},
 
-		usersGetFeaturesTemplate: function(userId, callback) {
+		usersGetFeaturesTemplate: function(userId, listUsers, callback) {
 			var self = this;
 
 			monster.request({
@@ -820,7 +892,15 @@ define(function(require){
 					userId: userId
 				},
 				success: function(data) {
-					var dataTemplate = self.usersFormatUserData(data.data);
+					var userData = data.data;
+
+					_.each(listUsers.users, function(user) {
+						if(user.id === data.data.id) {
+							userData = $.extend(true, userData, user);
+						}
+					});
+
+					var dataTemplate = self.usersFormatUserData(userData);
 
 					template = $(monster.template(self, 'users-features', dataTemplate));
 
@@ -1188,7 +1268,6 @@ define(function(require){
 		usersCreate: function(data, callback) {
 			var self = this;
 
-			console.log(data);
 			monster.request({
 				resource: 'voip.users.createUser',
 				data: {
@@ -1238,6 +1317,22 @@ define(function(require){
 				},
 				success: function(data) {
 					callback(data.data);
+				}
+			});
+		},
+
+		usersUpdateUser: function(userData, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.updateUser',
+				data: {
+					accountId: self.accountId,
+					userId: userData.id,
+					data: userData
+				},
+				success: function(userData) {
+					callback && callback(userData);
 				}
 			});
 		},
