@@ -8,36 +8,7 @@ define(function(require){
 	var app = {
 
 		requests: {
-			'voip.users.resendInstructions': {
-				apiRoot: 'apps/voip/submodules/users/fixtures/',
-				url: 'resendInstructions.json',
-				verb: 'POST'
-			},
-			'voip.users.resetPassword': {
-				apiRoot: 'apps/voip/submodules/users/fixtures/',
-				url: 'resetPassword.json',
-				verb: 'POST'
-			},
-			'voip.users.getDevices': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
-			},
-			'voip.users.getNumbers': {
-				url: 'accounts/{accountId}/phone_numbers/',
-				verb: 'GET'
-			},
-			'voip.users.getCallflows': {
-				url: 'accounts/{accountId}/callflows/',
-				verb: 'GET'
-			},
-			'voip.users.getCallflow': {
-				url: 'accounts/{accountId}/callflows/{callflowId}',
-				verb: 'GET'
-			},
-			'voip.users.updateCallflow': {
-				url: 'accounts/{accountId}/callflows/{callflowId}',
-				verb: 'POST'
-			},
+			/* Users */
 			'voip.users.getUsers': {
 				url: 'accounts/{accountId}/users',
 				verb: 'GET'
@@ -54,21 +25,18 @@ define(function(require){
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
 			},
-			'voip.users.listUserCallflows': {
-				url: 'accounts/{accountId}/callflows?filter_owner_id={userId}',
-				verb: 'GET'
+			'voip.users.deleteUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'DELETE'
 			},
-			'voip.users.listUserDevices': {
-				url: 'accounts/{accountId}/devices?filter_owner_id={userId}',
-				verb: 'GET'
-			},
-			'voip.users.listUserVMBoxes': {
-				url: 'accounts/{accountId}/vmboxes?filter_owner_id={userId}',
-				verb: 'GET'
-			},
+			/* VMBoxes*/
 			'voip.users.createVMBox': {
 				url: 'accounts/{accountId}/vmboxes',
 				verb: 'PUT'
+			},
+			'voip.users.getVMBox': {
+				url: 'accounts/{accountId}/vmboxes/{vmboxId}',
+				verb: 'GET'
 			},
 			'voip.users.updateVMBox': {
 				url: 'accounts/{accountId}/vmboxes/{vmboxId}',
@@ -78,9 +46,26 @@ define(function(require){
 				url: 'accounts/{accountId}/vmboxes/{vmboxId}',
 				verb: 'DELETE'
 			},
+			'voip.users.listUserVMBoxes': {
+				url: 'accounts/{accountId}/vmboxes?filter_owner_id={userId}',
+				verb: 'GET'
+			},
+			/* Callflows */
+			'voip.users.getCallflows': {
+				url: 'accounts/{accountId}/callflows/',
+				verb: 'GET'
+			},
 			'voip.users.createCallflow': {
 				url: 'accounts/{accountId}/callflows',
 				verb: 'PUT'
+			},
+			'voip.users.listUserCallflows': {
+				url: 'accounts/{accountId}/callflows?filter_owner_id={userId}',
+				verb: 'GET'
+			},
+			'voip.users.getCallflow': {
+				url: 'accounts/{accountId}/callflows/{callflowId}',
+				verb: 'GET'
 			},
 			'voip.users.updateCallflow': {
 				url: 'accounts/{accountId}/callflows/{callflowId}',
@@ -90,13 +75,42 @@ define(function(require){
 				url: 'accounts/{accountId}/callflows/{callflowId}',
 				verb: 'DELETE'
 			},
+			/* Devices */
+			'voip.users.getDevices': {
+				url: 'accounts/{accountId}/devices',
+				verb: 'GET'
+			},
+			'voip.users.listUserDevices': {
+				url: 'accounts/{accountId}/devices?filter_owner_id={userId}',
+				verb: 'GET'
+			},
 			'voip.users.deleteDevice': {
 				url: 'accounts/{accountId}/devices/{deviceId}',
 				verb: 'DELETE'
 			},
-			'voip.users.deleteUser': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'DELETE'
+			/* Directories */
+			'voip.users.listDirectories': {
+				url: 'accounts/{accountId}/directories/',
+				verb: 'GET'
+			},
+			'voip.users.createDirectory': {
+				url: 'accounts/{accountId}/directories',
+				verb: 'PUT'
+			},
+			/* Misc */
+			'voip.users.getNumbers': {
+				url: 'accounts/{accountId}/phone_numbers/',
+				verb: 'GET'
+			},
+			'voip.users.resendInstructions': {
+				apiRoot: 'apps/voip/submodules/users/fixtures/',
+				url: 'resendInstructions.json',
+				verb: 'POST'
+			},
+			'voip.users.resetPassword': {
+				apiRoot: 'apps/voip/submodules/users/fixtures/',
+				url: 'resetPassword.json',
+				verb: 'POST'
 			}
 			/*,
 			'voip.users.resendInstructions': {
@@ -150,78 +164,7 @@ define(function(require){
 			});
 		},
 
-		usersGetData: function(callback) {
-			var self = this;
-
-			monster.parallel({
-					users: function(callback) {
-						monster.request({
-							resource: 'voip.users.getUsers',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(dataUsers) {
-								callback(null, dataUsers.data);
-							}
-						});
-					},
-					callflows: function(callback) {
-						monster.request({
-							resource: 'voip.users.getCallflows',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(dataCallflows) {
-								callback(null, dataCallflows.data);
-							}
-						});
-					},
-					devices: function(callback) {
-						monster.request({
-							resource: 'voip.users.getDevices',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(dataDevices) {
-								callback(null, dataDevices.data);
-							}
-						});
-					}
-				},
-				function(err, results) {
-					callback && callback(results);
-				}
-			);
-		},
-
-		usersUpdateCallflowNumbers: function(callflowId, numbers, callback) {
-			var self = this;
-
-			monster.request({
-				resource: 'voip.users.getCallflow',
-				data: {
-					accountId: self.accountId,
-					callflowId: callflowId
-				},
-				success: function(getCallflowData) {
-					getCallflowData.data.numbers = numbers;
-
-					monster.request({
-						resource: 'voip.users.updateCallflow',
-						data: {
-							accountId: self.accountId,
-							callflowId: callflowId,
-							data: getCallflowData.data
-						},
-						success: function(callflowData) {
-							callback && callback(callflowData);
-						}
-					});
-				}
-			});
-		},
-
-		usersFormatUserData: function(dataUser) {
+		usersFormatUserData: function(dataUser, _mainDirectory, _mainCallflow) {
 			var self = this,
 				formattedUser = {
 					additionalDevices: 0,
@@ -235,6 +178,7 @@ define(function(require){
 					listExtensions: [],
 					listNumbers: [],
 					phoneNumber: '',
+					sameEmail: dataUser.email === dataUser.username,
 					mapFeatures: {
 						caller_id: {
 							icon: 'icon-user',
@@ -246,61 +190,21 @@ define(function(require){
 							iconColor: 'icon-yellow',
 							title: self.i18n.active().users.call_forward.title
 						},
-						/*call_recording: {
-							icon: 'icon-microphone',
-							iconColor: 'icon-blue',
-							title: self.i18n.active().users.call_recording.title
-						},
-						conferencing: {
-							icon: 'icon-comments',
-							iconColor: 'icon-lightgray',
-							title: self.i18n.active().users.conferencing.title
-						},
-						faxing: {
-							icon: 'icon-print',
-							iconColor: 'icon-black',
-							title: self.i18n.active().users.faxing.title
-						}
-						find_me_follow_me: {
-							icon: 'icon-briefcase',
-							iconColor: 'icon-blue',
-							title: self.i18n.active().users.find_me_follow_me.title
-						},*/
 						hotdesk: {
 							icon: 'icon-fire',
 							iconColor: 'icon-orange',
 							title: self.i18n.active().users.hotdesk.title
 						},
-						/*music_on_hold: {
-							icon: 'icon-music',
-							iconColor: 'icon-purple',
-							title: self.i18n.active().users.music_on_hold.title
-						},
-						*/
-						voicemails: {
+						vm_to_email: {
 							icon: 'icon-envelope',
 							iconColor: 'icon-green',
-							title: self.i18n.active().users.voicemails.title
+							title: self.i18n.active().users.vm_to_email.title
 						}
 					}
 				};
 
-
 			if(!('extra' in dataUser)) {
 				dataUser.extra = formattedUser;
-			}
-			//TODO UGLY
-			dataUser.features = [];
-			if('caller_id' in dataUser && 'internal' in dataUser.caller_id && 'number' in dataUser.caller_id.internal) {
-				dataUser.features.push('caller_id');
-			}
-
-			if('call_forward' in dataUser && dataUser.call_forward.enabled) {
-				dataUser.features.push('call_forward');
-			}
-
-			if('hotdesk' in dataUser && dataUser.hotdesk.enabled) {
-				dataUser.features.push('hotdesk');
 			}
 
 			_.each(dataUser.features, function(v) {
@@ -309,6 +213,21 @@ define(function(require){
 
 			if(dataUser.features.length > 0) {
 				dataUser.extra.hasFeatures = true;
+			}
+
+			if(_mainDirectory) {
+				dataUser.extra.mainDirectoryId = _mainDirectory.id;
+
+				if('directories' in dataUser && _mainDirectory.id in dataUser.directories) {
+					dataUser.extra.includeInDirectory = true;
+				}
+				else {
+					dataUser.extra.includeInDirectory = false;
+				}
+			}
+
+			if(_mainCallflow) {
+				dataUser.extra.mainCallflowId = _mainCallflow.id;
 			}
 
 			return dataUser;
@@ -408,6 +327,8 @@ define(function(require){
 				extensionsToSave,
 				numbersToSave,
 				toastrMessages = self.i18n.active().users.toastrMessages,
+				mainDirectoryId,
+				mainCallflowId,
 				listUsers = data;
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
@@ -428,6 +349,14 @@ define(function(require){
 					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
 							currentUser = data;
+
+							if(data.extra.mainDirectoryId) {
+								mainDirectoryId = data.extra.mainDirectoryId;
+							}
+
+							if(data.extra.mainCallflowId) {
+								mainCallflowId = data.extra.mainCallflowId;
+							}
 						}
 						else if(type === 'numbers') {
 							extensionsToSave = [];
@@ -476,6 +405,7 @@ define(function(require){
 
 			template.find('.users-header .add-user').on('click', function() {
 				var defaults = {
+						sendToSameEmail: true,
 						nextExtension: (parseInt(existingExtensions[existingExtensions.length - 1]) || 2000) + 1 + '',
 					},
 				    userTemplate = $(monster.template(self, 'users-creation', defaults));
@@ -492,6 +422,10 @@ define(function(require){
 
 						self.usersRender();
 					});
+				});
+
+				userTemplate.find('#notification_email').on('ifChanged', function() {
+					userTemplate.find('.email-group').toggleClass('hidden');
 				});
 
 				var popup = monster.ui.dialog(userTemplate, {
@@ -600,6 +534,10 @@ define(function(require){
 				self.usersDelete(userId, function(data) {
 					toastr.success(monster.template(self, '!' + toastrMessages.userDeleted));
 				});
+			});
+
+			template.on('ifChanged', '#notification_email', function() {
+				template.find('.email-group').toggleClass('hidden');
 			});
 
 			template.on('click', '.save-user', function() {
@@ -792,7 +730,19 @@ define(function(require){
 			});
 
 			template.on('click', '.feature[data-feature="vm_to_email"]', function() {
-				self.usersRenderVMToEmail(currentUser);
+				self.usersListVMBoxesUser(currentUser.id, function(vmboxes) {
+					currentUser.extra.deleteAfterNotify = true;
+					if(vmboxes.length > 0) {
+						self.usersGetVMBox(vmboxes[0].id, function(data) {
+							currentUser.extra.deleteAfterNotify = data.delete_after_notify;
+
+							self.usersRenderVMToEmail(currentUser);
+						});
+					}
+					else {
+						self.usersRenderVMToEmail(currentUser);
+					}
+				});
 			});
 		},
 
@@ -849,7 +799,82 @@ define(function(require){
 		},
 
 		usersRenderVMToEmail: function(currentUser) {
+			var self = this,
+				featureTemplate = $(monster.template(self, 'users-feature-vm_to_email', currentUser)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
 
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var formData = form2object('vm_to_email_form'),
+				    userToSave = $.extend(true, {}, currentUser),
+				    enabled = switchFeature.bootstrapSwitch('status'),
+				    updateUser = function(user) {
+						self.usersUpdateUser(user, function(data) {
+							popup.dialog('close').remove();
+
+							self.usersRender({ userId: data.data.id });
+						});
+					},
+					/* updates all the vmboxes with the new delete after notify setting, and then calls the callback*/
+					updateVMsDeleteAfterNotify = function(val, userId, callbackAfterUpdate) {
+						self.usersListVMBoxesUser(userId, function(vmboxes) {
+							var listFnParallel = [];
+
+							_.each(vmboxes, function(vm) {
+								listFnParallel.push(function(callback) {
+									self.usersGetVMBox(vm.id, function(data) {
+										/* Only update vms if the deleteAfterNotify value is different than before */
+										if(data.delete_after_notify !== val) {
+											data.delete_after_notify = val;
+
+											self.usersUpdateVMBox(data, function(data) {
+												callback(null, data);
+											});
+										}
+										else {
+											callback(null, data);
+										}
+									});
+								});
+							});
+
+							monster.parallel(listFnParallel, function(err, results) {
+								callbackAfterUpdate && callbackAfterUpdate(results);
+							});
+						});
+					};
+
+				userToSave.vm_to_email_enabled = enabled;
+
+				userToSave = self.usersCleanUserData(userToSave);
+
+				/* Only update the email and the checkboxes if the setting is enabled */
+				if(enabled === true) {
+					userToSave.email = formData.email;
+
+					/* Update VMBoxes, then update user and finally close the popup */
+					updateVMsDeleteAfterNotify(formData.delete_after_notify, userToSave.id, function() {
+						updateUser(userToSave);
+					});
+				}
+				else {
+					updateUser(userToSave);
+				}
+			});
+
+			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: currentUser.extra.mapFeatures.call_forward.title,
+				position: ['center', 20]
+			});
 		},
 
 		usersRenderCallerId: function(currentUser) {
@@ -937,8 +962,31 @@ define(function(require){
 		},
 
 		usersCleanUserData: function(userData) {
+			/* If the user has been removed from the directory */
+			if(userData.extra.includeInDirectory === false) {
+				if('directories' in userData && userData.extra.mainDirectoryId && userData.extra.mainDirectoryId in userData.directories) {
+					delete userData.directories[userData.extra.mainDirectoryId];
+				}
+			}
+			else {
+				userData.directories = userData.directories || {};
+
+				if(userData.extra.mainCallflowId) {
+					userData.directories[userData.extra.mainDirectoryId] = userData.extra.mainCallflowId;//userData.extra.userCallflowId;
+				}
+				else {
+					toastr.error('This user doesnt have a smart pbx callflow');
+				}
+			}
+
+			console.log(userData.extra);
+			if('sameEmail' in userData.extra) {
+				userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
+			}
+
 			delete userData.features;
 			delete userData.extra;
+			delete userData[''];
 
 			return userData;
 		},
@@ -948,7 +996,7 @@ define(function(require){
 				template;
 
 			if(type === 'name') {
-				self.usersGetNameTemplate(userId, callbackAfterData);
+				self.usersGetNameTemplate(userId, listUsers, callbackAfterData);
 			}
 			else if(type === 'numbers') {
 				self.usersGetNumbersTemplate(userId, callbackAfterData);
@@ -987,25 +1035,51 @@ define(function(require){
 				}
 			});
 		},
-		usersGetNameTemplate: function(userId, callback) {
+		usersGetNameTemplate: function(userId, listUsers, callbackAfterFormat) {
 			var self = this;
 
-			monster.request({
-				resource: 'voip.users.getUser',
-				data: {
-					accountId: self.accountId,
-					userId: userId
+			monster.parallel({
+					mainCallflow: function(callback) {
+						self.usersGetMainCallflow(userId, function(mainCallflow) {
+							callback(null, mainCallflow);
+						});
+					},
+					mainDirectory: function(callback) {
+						self.usersGetMainDirectory(function(mainDirectory) {
+							callback(null, mainDirectory);
+						});
+					},
+					user: function(callback) {
+						monster.request({
+							resource: 'voip.users.getUser',
+							data: {
+								accountId: self.accountId,
+								userId: userId
+							},
+							success: function(data) {
+								callback(null, data.data);
+							}
+						});
+					}
 				},
-				success: function(data) {
-					var dataTemplate = self.usersFormatUserData(data.data);
+				function(error, results) {
+					var userData = results.user;
+
+					_.each(listUsers.users, function(user) {
+						if(user.id === results.user.id) {
+							userData = $.extend(true, userData, user);
+						}
+					});
+
+					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow);
 
 					template = $(monster.template(self, 'users-name', dataTemplate));
 
 					timezone.populateDropdown(template.find('#user_timezone'), dataTemplate.timezone);
 
-					callback && callback(template, data.data);
+					callbackAfterFormat && callbackAfterFormat(template, dataTemplate);
 				}
-			});
+			);
 		},
 
 		usersGetNumbersData: function(userId, callback) {
@@ -1172,7 +1246,7 @@ define(function(require){
 				fullName = data.user.first_name + ' ' + data.user.last_name,
 				formattedData = {
 					user: $.extend(true, {}, {
-						username: data.user.email
+						email: data.extra.sameEmail ? data.user.username : data.extra.email
 					}, data.user),
 					vmbox: {
 						mailbox: (data.callflow || {}).extension,
@@ -1199,12 +1273,14 @@ define(function(require){
 						},
 						name: fullName + ' SmartPBX\'s Callflow',
 						numbers: [ (data.callflow || {}).extension ]
-					}
+					},
+					extra: data.extra
 				};
 
 			return formattedData;
 		},
 
+		/* Utils */
 		usersDelete: function(userId, callback) {
 			var self = this;
 
@@ -1222,27 +1298,13 @@ define(function(require){
 						});
 					},
 					vmbox: function(callback) {
-						monster.request({
-							resource: 'voip.users.listUserVMBoxes',
-							data: {
-								accountId: self.accountId,
-								userId: userId
-							},
-							success: function(data) {
-								callback(null, data.data);
-							}
+						self.usersListVMBoxesUser(userId, function(data) {
+							callback(null, data);
 						});
 					},
 					callflows: function(callback) {
-						monster.request({
-							resource: 'voip.users.listUserCallflows',
-							data: {
-								accountId: self.accountId,
-								userId: userId
-							},
-							success: function(data) {
-								callback(null, data.data);
-							}
+						self.usersListCallflowsUser(userId, function(data) {
+							callback(null, data);
 						});
 					}
 				},
@@ -1363,9 +1425,158 @@ define(function(require){
 						data.callflow.flow.children['_'].data.id = _dataVM.id;
 
 						self.usersCreateCallflow(data.callflow, function(_dataCF) {
-							callback(data.data);
+							if(data.extra.includeInDirectory) {
+								self.usersAddUserToMainDirectory(_dataUser.data, _dataCF.id, function(data) {
+									callback(data);
+								});
+							}
+							else {
+								callback(data);
+							}
 						});
 					});
+				}
+			});
+		},
+
+		usersAddUserToMainDirectory: function(dataUser, callflowId, callback) {
+			var self = this;
+
+			self.usersGetMainDirectory(function(directory) {
+				dataUser.directories = dataUser.directories || {};
+				dataUser.directories[directory.id] = callflowId;
+
+				self.usersUpdateUser(dataUser, function(data) {
+					callback && callback(data);
+				});
+			});
+		},
+
+		usersGetMainCallflow: function(userId, callback) {
+			var self = this;
+
+			self.usersListCallflowsUser(userId, function(listCallflows) {
+				var indexMain = -1;
+
+				_.each(listCallflows, function(callflow, index) {
+					if(callflow.owner_id === userId) {
+						indexMain = index;
+						return false;
+					}
+				});
+
+				if(indexMain === -1) {
+					toastr.error(self.i18n.active().users.noUserCallflow);
+					callback(null);
+				}
+				else {
+					callback(listCallflows[indexMain]);
+				}
+			});
+		},
+
+		usersGetMainDirectory: function(callback) {
+			var self = this;
+
+			self.usersListDirectories(function(listDirectories) {
+				var indexMain = -1;
+
+				_.each(listDirectories, function(directory, index) {
+					if(directory.name === 'SmartPBX Directory') {
+						indexMain = index;
+
+						return false;
+					}
+				});
+
+				if(indexMain === -1) {
+					self.usersCreateMainDirectory(function(data) {
+						callback(data);
+					});
+				}
+				else {
+					callback(listDirectories[indexMain]);
+				}
+			});
+		},
+
+		usersListDirectories: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listDirectories',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		usersCreateMainDirectory: function(callback) {
+			var self = this,
+				dataDirectory = {
+					confirm_match: false,
+					max_dtmf: '0',
+					min_dtmf: '3',
+					name: 'SmartPBX Directory',
+					sort_by: 'last_name'
+				};
+
+			monster.request({
+				resource: 'voip.users.createDirectory',
+				data: {
+					accountId: self.accountId,
+					data: dataDirectory
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		usersListCallflowsUser: function(userId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listUserCallflows',
+				data: {
+					accountId: self.accountId,
+					userId: userId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersListVMBoxesUser: function(userId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listUserVMBoxes',
+				data: {
+					accountId: self.accountId,
+					userId: userId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersGetVMBox: function(vmboxId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getVMBox',
+				data: {
+					accountId: self.accountId,
+					vmboxId: vmboxId
+				},
+				success: function(data) {
+					callback(data.data);
 				}
 			});
 		},
@@ -1378,6 +1589,22 @@ define(function(require){
 				data: {
 					accountId: self.accountId,
 					data: vmData
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersUpdateVMBox: function(vmData, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.updateVMBox',
+				data: {
+					accountId: self.accountId,
+					data: vmData,
+					vmboxId: vmData.id
 				},
 				success: function(data) {
 					callback(data.data);
@@ -1415,6 +1642,77 @@ define(function(require){
 				},
 				error: function(data) {
 					monster.ui.handleError(data);
+				}
+			});
+		},
+
+		usersGetData: function(callback) {
+			var self = this;
+
+			monster.parallel({
+					users: function(callback) {
+						monster.request({
+							resource: 'voip.users.getUsers',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(dataUsers) {
+								callback(null, dataUsers.data);
+							}
+						});
+					},
+					callflows: function(callback) {
+						monster.request({
+							resource: 'voip.users.getCallflows',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(dataCallflows) {
+								callback(null, dataCallflows.data);
+							}
+						});
+					},
+					devices: function(callback) {
+						monster.request({
+							resource: 'voip.users.getDevices',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(dataDevices) {
+								callback(null, dataDevices.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					callback && callback(results);
+				}
+			);
+		},
+
+		usersUpdateCallflowNumbers: function(callflowId, numbers, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getCallflow',
+				data: {
+					accountId: self.accountId,
+					callflowId: callflowId
+				},
+				success: function(getCallflowData) {
+					getCallflowData.data.numbers = numbers;
+
+					monster.request({
+						resource: 'voip.users.updateCallflow',
+						data: {
+							accountId: self.accountId,
+							callflowId: callflowId,
+							data: getCallflowData.data
+						},
+						success: function(callflowData) {
+							callback && callback(callflowData);
+						}
+					});
 				}
 			});
 		},

@@ -175,53 +175,28 @@
 	margin: 10px 0;
 }
 
-#users_container .detail-user .basic-fields .row-fields {
-	text-align: center;
-}
-
-#users_container .detail-user .basic-fields #include_directory {
-	margin: 0 10px 0 0;
-}
-
-#users_container .detail-user .basic-fields label {
+#users_container .detail-user .user-fields .basic-fields label {
 	display: inline-block;
 }
 
-#users_container .detail-user .basic-fields i.icon-user {
-	margin: 0 2px 0 2px;
-}
-
-#users_container .detail-user .basic-fields i.icon-time {
-	margin: 0 8px 0 2px;
-}
-
-#users_container .detail-user .basic-fields input[name="email"] {
-	margin-left: 8px;
-	width: 222px;
-}
-
-#users_container .detail-user .basic-fields input[type="text"] {
-	margin-left: 8px;
-	width: 100px;
-}
-
-#users_container .detail-user .basic-fields select#user_timezone {
-	padding: 4px 4px 4px 2px;
-	width: 236px;
-}
-
-#users_container .detail-user .advanced-fields > * {
+#users_container .detail-user .user-fields .advanced-fields > * {
 	display: inline-block;
 	margin: 0 5px 15px 5px;
 }
 
-#users_container .detail-user .advanced-fields #reset_password {
-	padding-right: 6px;
-	padding-left: 6px;
+#users_container .detail-user .fix-left {
+	margin-left: 12px;
 }
 
-#users_container .detail-user .fix-left {
-	margin-left: 10px;
+#users_container .detail-user .row-fields {
+	height: 40px;
+	line-height: 40px;
+}
+
+#users_container .detail-user .icon-wrapper {
+	display: inline-block;
+	text-align: center;
+	width: 50px;
 }
 /* Detail Numbers */
 #users_container .detail-numbers .list-wrapper {
@@ -450,4 +425,10 @@
 
 .feature-popup-container[data-feature="hotdesk"] #pin {
 	margin-top: 10px;
+}
+
+/* VM To Email User Feature Popup */
+.feature-popup-container[data-feature="vm_to_email"] #email {
+	margin-top: 8px;
+	margin-left: 8px;
 }

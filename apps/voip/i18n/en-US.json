@@ -19,11 +19,13 @@
 		"buy": "Buy Numbers",
 		"dialogCreationUser": {
 			"createUser": "Create User",
-			"email": "Email",
+			"loginEmail": "Login Email",
 			"extension": "Ext. #",
 			"firstName": "First Name",
 			"lastName": "Last Name",
-			"title": "User creation"
+			"title": "User creation",
+			"sendToSameEmail": "Use the login e-mail for system notifications",
+			"notificationEmail": "Notification E-mail"
 		},
 		"delete": "Delete User",
 		"featureOn": "ON",
@@ -38,6 +40,7 @@
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
 		"noUserFeatures": "None",
+		"noUserCallflow": "An error occured. There are no Callflow assigned to this user, so you can't add him to the Company directory",
 		"port": "Port Numbers",
 		"resetPassword": "Reset Password",
 		"resendInstructions": "Resend Instructions",
@@ -74,7 +77,13 @@
 		"call_recording": {
 			"title": "Call Recording"
 		},
-		"voicemails": {
+		"vm_to_email": {
+			"deleteAfterNotify": "Delete messages from database after sending the notification.",
+			"headline": "Voicemail-to-Email Settings",
+			"help": "By using this feature you agree to the State and Federal terms and conditions.",
+			"label": "Send voicemails to",
+			"seeHere": "See Here",
+			"placeholder": "user@company.com",
 			"title": "Voicemails"
 		},
 		"caller_id": {

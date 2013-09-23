@@ -63,7 +63,11 @@
 
 #voip_container > .left-menu .category.separated {
 	border-radius: 4px;
-	margin: 10px auto;
+	margin: 10px auto 0 auto;
+}
+
+#voip_container > .left-menu .category-group {
+	margin-top: 10px;
 }
 
 #voip_container > .left-menu .category.active {

@@ -1,4 +1,4 @@
-<div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}} {{ formatPhoneNumber extra.phoneNumber }} {{extra.extension}}">
+<div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}}{{#each extra.listCallerId}} {{formatPhoneNumber this}} {{this}}{{/each}}">
 	<div class="user-cells">
 		<div class="name grid-cell" data-type="name"><i class="{{#if extra.isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
 		<div class="extension grid-cell centered" data-type="extensions">

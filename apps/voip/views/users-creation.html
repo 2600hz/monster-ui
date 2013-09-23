@@ -8,11 +8,12 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="email"><i class="icon-envelope"></i></label>
+			<label class="control-label" for="email"><i class="icon-key"></i></label>
 			<div class="controls">
-				<input type="text" name="user.email" id="email" placeholder="{{i18n.users.dialogCreationUser.email}}">
+				<input type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}">
 			</div>
 		</div>
+
 		<div class="control-group">
 			<label class="control-label" for="timezone"><i class="icon-telicon-moderator"></i></label>
 			<div class="controls">
@@ -25,21 +26,35 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="include_directory"></label>
-			<div class="controls">
-				<label>
-					<input id="include_directory" type="checkbox" name="user.include_directory"{{#if includeInDirectory}} checked="checked"{{/if}}></input>
-					{{ i18n.users.includeInDirectory }}
-				</label>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label" for="user_creation_timezone"><i class="icon-time"></i></label>
 			<div class="controls">
 				<select id="user_creation_timezone" name="user.timezone" data-original_value="{{timezone}}"></select>
 			</div>
 		</div>
-
+		<div class="control-group">
+			<label class="control-label" for="include_directory"></label>
+			<div class="controls">
+				<label>
+					<input id="include_directory" type="checkbox" name="extra.includeInDirectory"{{#if includeInDirectory}} checked="checked"{{/if}}></input>
+					{{ i18n.users.includeInDirectory }}
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="notification_email"></label>
+			<div class="controls">
+				<label>
+					<input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if sendToSameEmail}} checked{{/if}}></input>
+					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
+				</label>
+			</div>
+		</div>
+		<div class="control-group email-group{{#if sendToSameEmail}} hidden{{/if}}">
+			<label class="control-label" for="email"><i class="icon-envelope"></i></label>
+			<div class="controls">
+				<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}">
+			</div>
+		</div>
 	</form>
 	<div class="dialog-buttons-wrapper">
 		<button id="create_user" class="btn btn-success">{{ i18n.users.dialogCreationUser.createUser }}</button>

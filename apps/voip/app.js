@@ -46,10 +46,8 @@ define(function(require){
 				template = $(monster.template(self, 'app'));
 
 			/* On first Load, load my office */
-			template.find('.category#my_office').addClass('active');
-			monster.pub('voip.myOffice.render', template.find('.right-content'));
-			// template.find('.category#strategy').addClass('active');
-			// monster.pub('voip.strategy.render', template.find('.right-content'));
+			template.find('.category#users').addClass('active');
+			monster.pub('voip.users.render', { parent: template.find('.right-content') });
 
 			self.bindEvents(template);
 
