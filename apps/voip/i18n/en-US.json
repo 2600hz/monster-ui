@@ -17,15 +17,24 @@
 		"addNewExtension": "Extension number: ",
 		"addFromSpare": "Add from Spare Numbers",
 		"buy": "Buy Numbers",
+		"changeUsername": "Change username",
+		"dialogChangePassword": {
+			"help": "You can set a new password by just typing any password you want, along with the new username!",
+			"password": "Password",
+			"passwordPlaceholder": "at least 8 letters or digits",
+			"title": "Update username and password",
+			"username": "Login E-mail"
+		},
 		"dialogCreationUser": {
 			"createUser": "Create User",
-			"loginEmail": "Login Email",
 			"extension": "Ext. #",
 			"firstName": "First Name",
 			"lastName": "Last Name",
-			"title": "User creation",
+			"loginEmail": "Login Email",
+			"notificationEmail": "Notification E-mail",
+			"password": "at least 8 letters or digits",
 			"sendToSameEmail": "Use the login e-mail for system notifications",
-			"notificationEmail": "Notification E-mail"
+			"title": "User creation"
 		},
 		"delete": "Delete User",
 		"featureOn": "ON",

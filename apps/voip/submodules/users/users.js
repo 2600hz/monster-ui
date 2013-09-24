@@ -237,7 +237,7 @@ define(function(require){
 			var self = this,
 				dataTemplate = {
 					existingExtensions: [],
-					countUsers: data.users.length
+					countUsers: 0
 				},
 			    mapAllUsers = {},
 			    mapResultUsers = {};
@@ -258,10 +258,10 @@ define(function(require){
 				if(userId in mapAllUsers) {
 					var user = $.extend(true, {}, mapAllUsers[userId]);
 
+					dataTemplate.countUsers++;
+
 					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
-						user.extra.listCallerId.push(number);
-
 						if(number.length < 6) {
 							user.extra.listExtensions.push(number);
 
@@ -273,6 +273,8 @@ define(function(require){
 							}
 						}
 						else {
+							user.extra.listCallerId.push(number);
+
 							user.extra.listNumbers.push(number);
 
 							if(user.extra.phoneNumber === '') {
@@ -553,6 +555,29 @@ define(function(require){
 				});
 			});
 
+			template.on('click', '#change_username', function() {
+				var passwordTemplate = $(monster.template(self, 'users-changePassword', currentUser));
+
+				passwordTemplate.find('.save-new-username').on('click', function() {
+					var formData = form2object('form_new_username'),
+					    userToSave = $.extend(true, {}, currentUser, formData);
+
+					userToSave = self.usersCleanUserData(userToSave);
+
+					self.usersUpdateUser(userToSave, function(userData) {
+						popup.dialog('close').remove();
+
+						toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+
+						self.usersRender({ userId: userData.data.id });
+					});
+				});
+
+				var popup = monster.ui.dialog(passwordTemplate, {
+					title: self.i18n.active().users.dialogChangePassword.title
+				});
+			});
+
 			/* Events for Numbers in Users */
 			template.on('click', '.save-numbers', function() {
 				var numbers = $.extend(true, [], extensionsToSave),
@@ -566,7 +591,6 @@ define(function(require){
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
 					self.usersRender({ userId: callflowData.data.owner_id });
 				});
-
 			});
 
 			template.on('click', '.detail-numbers .list-unassigned-numbers .add-number', function() {
@@ -917,10 +941,15 @@ define(function(require){
 				});
 			});
 
-			var popup = monster.ui.dialog(featureTemplate, {
-				title: currentUser.extra.mapFeatures.caller_id.title,
-				position: ['center', 20]
-			});
+			if(currentUser.extra.listCallerId.length > 0){
+				var popup = monster.ui.dialog(featureTemplate, {
+					title: currentUser.extra.mapFeatures.caller_id.title,
+					position: ['center', 20]
+				});
+			}
+			else {
+				monster.ui.alert('error', 'Before configuring the Caller-ID of this user, you need to assign him a number');
+			}
 		},
 
 		usersRenderCallForward: function(currentUser) {
@@ -972,14 +1001,10 @@ define(function(require){
 				userData.directories = userData.directories || {};
 
 				if(userData.extra.mainCallflowId) {
-					userData.directories[userData.extra.mainDirectoryId] = userData.extra.mainCallflowId;//userData.extra.userCallflowId;
-				}
-				else {
-					toastr.error('This user doesnt have a smart pbx callflow');
+					userData.directories[userData.extra.mainDirectoryId] = userData.extra.mainCallflowId;
 				}
 			}
 
-			console.log(userData.extra);
 			if('sameEmail' in userData.extra) {
 				userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
 			}

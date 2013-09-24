@@ -1,16 +1,24 @@
 <div id="creation_user_dialog">
 	<form class="form-horizontal small-labels" id="form_user_creation">
 		<div class="control-group">
+			<label class="control-label" for="email"><i class="icon-key"></i></label>
+			<div class="controls">
+				<input type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="password"><i class="icon-unlock"></i></label>
+			<div class="controls">
+				<input type="password" name="user.password" id="password" placeholder="{{i18n.users.dialogCreationUser.password}}"/>
+			</div>
+		</div>
+
+		<div class="control-group">
 			<label class="control-label" for="first_name"><i class="icon-book"></i></label>
 			<div class="controls">
 				<input class="input-small" type="text" id="first_name" name="user.first_name" placeholder="{{i18n.users.dialogCreationUser.firstName}}"></input>
 				<input class="same-line input-small" type="text" name="user.last_name" placeholder="{{i18n.users.dialogCreationUser.lastName}}"></input>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="email"><i class="icon-key"></i></label>
-			<div class="controls">
-				<input type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}">
 			</div>
 		</div>
 

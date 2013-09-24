@@ -198,6 +198,15 @@
 	text-align: center;
 	width: 50px;
 }
+
+#users_container .detail-user .icheckbox_flat {
+	margin:	0px 16px -5px 3px;
+}
+
+#users_container .detail-user #change_username {
+	margin-left: 5px;
+}
+
 /* Detail Numbers */
 #users_container .detail-numbers .list-wrapper {
 	background: #FFF;
@@ -431,4 +440,23 @@
 .feature-popup-container[data-feature="vm_to_email"] #email {
 	margin-top: 8px;
 	margin-left: 8px;
+}
+
+/* Change Password Popup */
+.change-password-popup {
+	width: 390px;
+}
+
+.change-password-popup .form-horizontal .control-group .control-label {
+	width: 100px;
+}
+
+.change-password-popup .form-horizontal .control-group .controls {
+	margin-left: 120px;
+}
+
+.change-password-popup .change-password-content,
+.change-password-popup .actions {
+	border-top: 1px solid #CCCCCC;
+	padding: 15px 25px;
 }

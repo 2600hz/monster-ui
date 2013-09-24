@@ -1,20 +1,14 @@
 <div class="detail-user">
-	{{debug}}
 	<div id="form-{{id}}" class="user-fields row-fluid">
-		<!--<div class="picture-block content-centered span3">
-			<div class="profile-picture-wrapper">
-				<img class="img-circle" src="apps/voip/static/images/xavier.jpg" width="80px" height="80px"></img>
-			</div>
-			<a class="monster-link blue">{{ i18n.users.uploadPicture }}</a>
-		</div>-->
 		<div class="basic-fields span6">
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-key"></i></div>
+				{{username}}
+				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
+			</div>
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-book"></i></div>
 				<input type="text" class="input-small" name="first_name" value="{{first_name}}"></input><input class="input-small fix-left" type="text" name="last_name" value="{{last_name}}"></input>
-			</div>
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-key"></i></div>
-				<input type="email" name="username" value="{{username}}"></input>
 			</div>
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-telicon-moderator"></i></div>
@@ -44,7 +38,7 @@
 					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
                 </label>
         	</div>
-        	<div class="row-fields email-group{{#if sendToSameEmail}} hidden{{/if}}">
+        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
             	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
             	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
         	</div>
