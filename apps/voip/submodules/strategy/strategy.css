@@ -320,10 +320,10 @@
 	display: inline-block;
 	vertical-align: top;
 	padding: 10px;
-	border: solid 2px #ccc;
+	border: solid 2px #ddd;
 	border-radius: 10px;
 	text-align: center;
-	opacity: 0.5;
+	background-color: #f9f9f9;
 }
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option i {
@@ -334,19 +334,150 @@
 	margin: 0;
 }
 
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option select {
+	width: 160px;
+}
+
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option:not(:first-of-type) {
-    margin-left: 20px;
+	margin-left: 20px;
 }
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option > div:not(:first-of-type) {
-    margin-top: 10px;
+	margin-top: 10px;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option:not(.active) > div:not(.radio-div) {
+	opacity: 0.5;
 }
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active {
 	border-color: #22ccff;
-	opacity: 1;
+	background-color: #f0f0f0;
 }
 
-#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .virtual-icon i {
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div .menu-icon i {
+	color: rgba(238, 18, 18, 0.8);
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div[data-callflow] .menu-icon i {
 	color: #22ccff;
+}
+
+/******************* Menu Popup *******************/
+
+#strategy_menu_popup {
+	width: 700px;
+	padding: 20px;
+}
+#strategy_menu_popup > div:not(:last-of-type) {
+	margin-bottom: 25px;
+}
+#strategy_menu_popup .menu-block > div {
+	float: left;
+	width: 340px;
+}
+#strategy_menu_popup .menu-block .right {
+	margin-left: 20px;
+}
+#strategy_menu_popup .menu-block .title {
+	color: #22ccff;
+	font-size: 22px;
+	font-weight: 500;
+	padding: 15px 0;
+}
+#strategy_menu_popup .menu-block .menu-line {
+	padding: 5px 0px;
+}
+#strategy_menu_popup .menu-block .menu-line > div, 
+#strategy_menu_popup .menu-block .menu-line > input,
+#strategy_menu_popup .menu-block .menu-line > select {
+	margin: 0 15px 0 0;
+	display: inline-block;
+	vertical-align: initial;
+}
+#strategy_menu_popup .menu-block .menu-line .number-input {
+	width: 18px;
+}
+#strategy_menu_popup .menu-block .menu-line .number-text {
+	width: 32px;
+	text-align: center;
+	color: #22ccff;
+	font-size: 18px;
+	font-weight: bold;
+	cursor: pointer;
+}
+#strategy_menu_popup .menu-block .menu-line .target-select {
+	width: 140px;
+}
+#strategy_menu_popup .menu-block .menu-line i {
+	cursor: pointer;
+	opacity: 0.8;
+}
+#strategy_menu_popup .menu-block .menu-line i:hover {
+	color: #ff1212 !important;
+}
+#strategy_menu_popup .menu-block .menu-line i:active {
+	color: #ff1212 !important;
+	text-shadow: 1px 1px 1px #999;
+}
+#strategy_menu_popup .menu-block .menu-line.editing .number-text {
+	display: none;
+}
+#strategy_menu_popup .menu-block .menu-line:not(.editing) .number-input {
+	display: none;
+}
+
+#strategy_menu_popup .menu-block .add-menu-line a {
+	color: #22ccff;
+	text-decoration: underline;
+}
+
+#strategy_menu_popup .menu-block .add-menu-line {
+	margin-top: 10px;
+}
+
+#strategy_menu_popup .action-block .cancel-link {
+    line-height: 30px; 
+    margin-right: 40px;
+    color: #22ccff;
+}
+
+#strategy_menu_popup_accordion .greeting-option:not(:last-of-type) {
+    margin-bottom: 15px;
+}
+
+#strategy_menu_popup_accordion .greeting-option.active .greeting-option-header i {
+	color: #7FFF55 !important;
+}
+
+#strategy_menu_popup_accordion .greeting-option-header {
+	padding: 10px;
+	font-weight: bold;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#strategy_menu_popup_accordion .greeting-option-header i {
+	vertical-align: middle;
+	text-shadow: 0 0 1px #000;
+}
+
+#strategy_menu_popup_accordion .greeting-option-content {
+	padding: 10px;
+	font-size: 14px;
+}
+
+#strategy_menu_popup_accordion .greeting-option-content textarea {
+	width: 100%;
+	box-sizing: border-box;
+	margin: 0px;
+	min-height: 90px;
+}
+
+#strategy_menu_popup_accordion .greeting-option-actions {
+	margin-top: 10px;
+}
+
+#strategy_menu_popup_accordion .greeting-option-actions button:not(:first-of-type) {
+	margin-right: 10px;
 }

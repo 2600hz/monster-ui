@@ -130,6 +130,11 @@
 			"friday": "Friday",
 			"saturday": "Saturday",
 			"sunday": "Sunday"
+		},
+		"callEntities": {
+			"user": "Users",
+			"device": "Devices",
+			"ring_group": "Groups"
 		}
 	}
 }

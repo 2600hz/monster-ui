@@ -1,11 +1,11 @@
 <div class="holidays-toggler">
 	<label>
-		<input type="checkbox" name="holidays.enabled" {{#if holidays.enabled}}checked{{/if}}>
+		<input type="checkbox" name="holidays.enabled" {{#if enabled}}checked{{/if}}>
 		Are you closed for holidays? This will override the office hours settings above.
 	</label>
 </div>
 
-<div class="holidays-div">
+<div class="holidays-div" {{#if enabled}}style="display:block;"{{/if}}>
 	<div class="holidays-add navbar clearfix">
 		<ul class="nav pull-right">
 			<li class="dropdown">
