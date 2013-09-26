@@ -272,7 +272,11 @@
 	margin: 5px 20px 5px 0px;
 }
 
-#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .month,
+#strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .month {
+	width: 70px;
+	text-transform: uppercase;
+}
+
 #strategy_container .element-container.strategy-holidays .holidays-div .holidays-element .wday {
 	width: 70px;
 }

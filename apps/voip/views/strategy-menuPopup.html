@@ -1,18 +1,18 @@
 <div id="strategy_menu_popup">
 	<div class="info-block">
-		Virtual Receptionist will answer incoming calls professionally and automatically transfer them to an appropriate department or person. Main Menu will allow you to set up call routes. Please type or record greetings that matches the Main Menu.
+		{{i18n.strategy.popup.infoBlock}}
 	</div>
 	<div class="menu-block clearfix">
 		<div class="left">
-			<div class="title">Main Menu</div>
+			<div class="title">{{i18n.strategy.popup.menuTitle}}</div>
 			<div class="content">
 			</div>
 			<div class="add-menu-line">
-				<a href="#">Add route</a>
+				<a href="#">{{i18n.strategy.popup.addRouteLink}}</a>
 			</div>
 		</div>
 		<div class="right">
-			<div class="title">Greetings</div>
+			<div class="title">{{i18n.strategy.popup.greetingsTitle}}</div>
 			<div class="content">
 				<div id="strategy_menu_popup_accordion">
 					<div class="greeting-option accordion-group {{#compare greeting.media_source '===' 'tts'}}active{{/compare}}">
@@ -20,16 +20,16 @@
 							 data-parent="#strategy_menu_popup_accordion" 
 							 data-target="#strategy_menu_popup_tts_greeting">
 							<div class="pull-right"><i class="icon-comment icon-white"></i></div>
-							<div>Text to Speech</div>
+							<div>{{i18n.strategy.popup.ttsGreetingTitle}}</div>
 						</div>
 						<div class="collapse" id="strategy_menu_popup_tts_greeting">
 							<div class="greeting-option-content">
-								<textarea placeholder="Please enter your greeting message here.">
+								<textarea placeholder="{{i18n.strategy.popup.ttsGreetingPlaceholder}}">
 									{{#compare greeting.media_source '===' 'tts'}}{{greeting.tts.text}}{{/compare}}
 								</textarea>
 								<div class="greeting-option-actions clearfix">
-									<button class="update-greeting pull-right btn btn-mini btn-primary">Update</button>
-									<button class="cancel-greeting pull-right btn btn-mini">Cancel</button>
+									<button class="update-greeting pull-right btn btn-mini btn-primary">{{i18n.update}}</button>
+									<button class="cancel-greeting pull-right btn btn-mini">{{i18n.cancel}}</button>
 								</div>
 							</div>
 						</div>
@@ -39,14 +39,14 @@
 							 data-parent="#strategy_menu_popup_accordion" 
 							 data-target="#strategy_menu_popup_upload_greeting">
 							<div class="pull-right"><i class="icon-upload-alt icon-white"></i></div>
-							<div>Upload your own file</div>
+							<div>{{i18n.strategy.popup.uploadGreetingTitle}}</div>
 						</div>
 						<div class="collapse" id="strategy_menu_popup_upload_greeting">
 							<div class="greeting-option-content">
 								<input type="file">
 								<div class="greeting-option-actions clearfix">
-									<button class="update-greeting pull-right btn btn-mini btn-primary">Update</button>
-									<button class="cancel-greeting pull-right btn btn-mini">Cancel</button>
+									<button class="update-greeting pull-right btn btn-mini btn-primary">{{i18n.update}}</button>
+									<button class="cancel-greeting pull-right btn btn-mini">{{i18n.cancel}}</button>
 								</div>
 							</div>
 						</div>
@@ -56,12 +56,12 @@
 							 data-parent="#strategy_menu_popup_accordion" 
 							 data-target="#strategy_menu_popup_record_greeting">
 							<div class="pull-right"><i class="icon-info-sign icon-white"></i></div>
-							<div>Record it over the phone</div>
+							<div>{{i18n.strategy.popup.recordGreetingTitle}}</div>
 						</div>
 						<div class="collapse" id="strategy_menu_popup_record_greeting">
 							<div class="greeting-option-content">
 								<div>
-									Record the greeting message yourself over the phone, by following the steps below:
+									{{i18n.strategy.popup.recordGreetingInfo}}
 								</div>
 								<ol style=" margin-top: 15px; margin-bottom: 0; ">
 									<li>Pickup you phone.</li>
@@ -78,7 +78,7 @@
 		</div>
 	</div>
 	<div class="action-block clearfix">
-		<button class="save-button btn btn-success pull-right">Save</button>
-		<a href="#" class="cancel-link pull-right">Cancel</a>
+		<button class="save-button btn btn-success pull-right">{{i18n.save}}</button>
+		<a href="#" class="cancel-link pull-right">{{i18n.cancel}}</a>
 	</div>
 </div>

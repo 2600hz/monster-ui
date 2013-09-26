@@ -120,6 +120,59 @@
 	},
 
 	"strategy": {
+		"sectionTitles": {
+			"numbers": "Main Company Numbers",
+			"hours": "Office Hours Strategy",
+			"holidays": "Office Holidays",
+			"calls": "Incoming Call Handling"
+		},
+		"noNumber": "Please add a main number.",
+		"numberLinks": {
+			"spare": "Spare Numbers",
+			"buy": "Buy Numbers",
+			"port": "Port Numbers"
+		},
+		"hours": {
+			"alwaysOpenTitle": "24 hours Open Office",
+			"alwaysOpenDescription": "Choose this option if you want incoming calls to be handled the same way all the time.",
+			"customHoursTitle": "Custom Office Hours",
+			"customHoursDescription": "Choose this option if you want incoming calls to be handled differently when your office is closed.",
+			"listTitle": "Cutsom Hours",
+			"timezone": "Company Timezone:",
+			"to": "to",
+			"lunchbreakTitle": "Are you closed for lunch hours?"
+		},
+		"holidays": {
+			"enableTitle": "Are you closed for holidays? This will override the office hours settings above.",
+			"addLink": "Add Holiday",
+			"singleLink": "Single Day",
+			"rangeLink": "Date Range",
+			"advancedLink": "Advanced"
+		},
+		"calls": {
+			"openHoursTitle": "Open Hours",
+			"lunchHoursTitle": "Lunch Hours",
+			"afterHoursTitle": "After Hours",
+			"holidaysTitle": "Holidays",
+			"callTabTitle": "Select the way you want your callers to reach you.",
+			"incomingCall": "Incoming Call",
+			"virtualReceptionist": "Virtual Receptionist",
+			"voicemail": "Voicemail"
+		},
+		"popup": {
+			"title": "Virtual Receptionist",
+			"infoBlock": "Virtual Receptionist will answer incoming calls professionally and automatically transfer them to an appropriate department or person. Main Menu will allow you to set up call routes. Please type or record greetings that matches the Main Menu.",
+			"menuTitle": "Main Menu",
+			"greetingsTitle": "Greetings",
+			"addRouteLink": "Add route",
+			"ttsGreetingTitle": "Text to Speech",
+			"ttsGreetingPlaceholder": "Please enter your greeting message here.",
+			"uploadGreetingTitle": "Upload your own file",
+			"recordGreetingTitle": "Record it over the phone",
+			"recordGreetingInfo": "Record the greeting message yourself over the phone, by following the steps below:",
+			"pressKey": "Press",
+			"for": "for"
+		},
 		"open": "Open",
 		"closed": "Closed",
 		"weekdays": {
@@ -131,10 +184,47 @@
 			"saturday": "Saturday",
 			"sunday": "Sunday"
 		},
+		"ordinals": {
+			"first": "First",
+			"second": "Second",
+			"third": "Third",
+			"fourth": "Fourth",
+			"fifth": "Fifth",
+			"last": "Last"
+		},
+		"monthsShort": {
+			"january": "Jan",
+			"february": "Feb",
+			"march": "Mar",
+			"april": "Apr",
+			"may": "May",
+			"june": "Jun",
+			"july": "Jul",
+			"august": "Aug",
+			"september": "Sep",
+			"october": "Oct",
+			"november": "Nov",
+			"december": "Dec"
+		},
 		"callEntities": {
 			"user": "Users",
 			"device": "Devices",
 			"ring_group": "Groups"
+		},
+		"confirmMessages": {
+			"deleteHoliday": "This holiday will be permanently deleted. Continue?",
+			"disableHolidays": "All existing holidays will be permanently deleted. Continue?"
+		},
+		"alertMessages": {
+			"uniqueHoliday": "Every holiday must have a unique name.",
+			"undefinedMenu": "You selected a Virtual Receptionist without setting it up. Please set it up by clicking on the Virtual Receptionist link, or choose a different option.",
+			"emptyTtsGreeting": "You must type in your greeting message to enable Text to Speech functionality.",
+			"emptyUploadGreeting": "Please select a file to upload",
+			"uniqueMenuNumbers": "Numbers within the menu must be unique and non-empty."
+		},
+		"toastrMessages": {
+			"updateHolidaySuccess": "Holidays sucessfully updated.",
+			"updateCallSuccess": "Call strategy sucessfully updated."
 		}
 	}
 }

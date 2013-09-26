@@ -121,7 +121,7 @@ define(function(require){
 			var self = this,
 				parent = container || $('#ws_content'),
 				templateData = {},
-				template = $(monster.template(self, 'strategy-layout', templateData));
+				template;
 
 			monster.parallel({
 					temporalRules: function(callback) {
@@ -146,13 +146,18 @@ define(function(require){
 					}
 				},
 				function(err, results) {
+					templateData = {
+						firstNumber: results.callflows["MainCallflow"].numbers[0] || "N/A"
+					}
 					console.log(results);
+					template = $(monster.template(self, 'strategy-layout', templateData));
 					self.strategyBindEvents(template, results);
+
+					parent
+						.empty()
+						.append(template);
 				}
 			);
-
-			parent.empty()
-				  .append(template);
 		},
 
 		strategyBindEvents: function(template, strategyData) {
@@ -349,6 +354,11 @@ define(function(require){
 							$(this).empty().append(monster.template(self, 'strategy-callsTab', tabData));
 						});
 
+						$.each(template.find('.user-select select'), function() {
+							var $this = $(this);
+							$this.siblings('.title').text(self.i18n.active().strategy.callEntities[$this.find('option:selected').data('type')]);
+						});
+
 						monster.ui.prettyCheck.create(container, 'radio');
 						callback && callback();
 						break;
@@ -515,7 +525,7 @@ define(function(require){
 					id = holidaysElement.data('id');
 
 				if(id) {
-					monster.ui.confirm('This holiday will be permanently deleted. Continue?', function() {
+					monster.ui.confirm(self.i18n.active().strategy.confirmMessages.deleteHoliday, function() {
 						var mainCallflow = strategyData.callflows["MainCallflow"];
 						delete mainCallflow.flow.children[id];
 
@@ -622,7 +632,7 @@ define(function(require){
 					});
 
 					if(invalidData) {
-						monster.ui.alert('Every holiday must have a unique name.')
+						monster.ui.alert(self.i18n.active().strategy.alertMessages.uniqueHoliday)
 					} else {
 						monster.parallel(holidayRulesRequests, function(err, results) {
 							_.each(results, function(val, key) {
@@ -641,13 +651,13 @@ define(function(require){
 								strategyData.callflows["MainCallflow"] = updatedCallflow;
 								parent.find('.element-content').hide();
 								parent.removeClass('open');
-								toastr.success('Holidays sucessfully updated.');
+								toastr.success(self.i18n.active().strategy.toastrMessages.updateHolidaySuccess);
 							});
 						});
 					}
 				} else {
 
-					monster.ui.confirm('All existing holidays will be permanently deleted. Continue?', function() {
+					monster.ui.confirm(self.i18n.active().strategy.confirmMessages.disableHolidays, function() {
 						_.each(strategyData.temporalRules.holidays, function(val, key) {
 							holidayRulesRequests[key] = function(callback) {
 								monster.request({
@@ -672,7 +682,7 @@ define(function(require){
 								strategyData.callflows["MainCallflow"] = updatedCallflow;
 								parent.find('.element-content').hide();
 								parent.removeClass('open');
-								toastr.success('Holidays sucessfully updated.');
+								toastr.success(self.i18n.active().strategy.toastrMessages.updateHolidaySuccess);
 							});
 						});
 					});
@@ -707,6 +717,11 @@ define(function(require){
 
 				parentCallOption.siblings().removeClass('active');
 				parentCallOption.addClass('active');
+			});
+
+			container.on('change', '.user-select select', function(e) {
+				var $this = $(this);
+				$this.siblings('.title').text(self.i18n.active().strategy.callEntities[$this.find('option:selected').data('type')])
 			});
 
 			container.on('click', '.save-button', function(e) {
@@ -789,7 +804,7 @@ define(function(require){
 				});
 
 				if(invalidTab) {
-					monster.ui.alert('You selected a Virtual Receptionist without setting it up. Please set it up by clicking on the Virtual Receptionist link, or choose a different option.');
+					monster.ui.alert(self.i18n.active().strategy.alertMessages.undefinedMenu);
 					container.find('a[href="#'+invalidTab+'"]').tab('show');
 				} else {
 					var parallelRequests = {};
@@ -806,7 +821,7 @@ define(function(require){
 					monster.parallel(parallelRequests, function(err, results) {
 						container.hide();
 						container.parents('.element-container').removeClass('open');
-						toastr.success('Call strategy sucessfully updated.');
+						toastr.success(self.i18n.active().strategy.toastrMessages.updateCallSuccess);
 					});
 				}
 			});
@@ -817,22 +832,36 @@ define(function(require){
 				templateData = $.extend(true, {
 					resources: {
 						months: [
-							{ value:1, label:"JAN" }, { value:2, label:"FEB" }, { value:3, label:"MAR" },
-							{ value:4, label:"APR" }, { value:5, label:"MAY" }, { value:6, label:"JUN" },
-							{ value:7, label:"JUL" }, { value:8, label:"AUG" }, { value:9, label:"SEP" },
-							{ value:10, label:"OCT" }, { value:11, label:"NOV" }, { value:12, label:"DEC" }
+							{ value:1, label: self.i18n.active().strategy.monthsShort["january"] }, 
+							{ value:2, label: self.i18n.active().strategy.monthsShort["february"] }, 
+							{ value:3, label: self.i18n.active().strategy.monthsShort["march"] },
+							{ value:4, label: self.i18n.active().strategy.monthsShort["april"] }, 
+							{ value:5, label: self.i18n.active().strategy.monthsShort["may"] }, 
+							{ value:6, label: self.i18n.active().strategy.monthsShort["june"] },
+							{ value:7, label: self.i18n.active().strategy.monthsShort["july"] }, 
+							{ value:8, label: self.i18n.active().strategy.monthsShort["august"] }, 
+							{ value:9, label: self.i18n.active().strategy.monthsShort["september"] },
+							{ value:10, label: self.i18n.active().strategy.monthsShort["october"] }, 
+							{ value:11, label: self.i18n.active().strategy.monthsShort["november"] }, 
+							{ value:12, label: self.i18n.active().strategy.monthsShort["december"] }
 						],
 						days: [],
 						wdays: [
-							{ value:"monday", label:"Mon" }, { value:"tuesday", label:"Tue" },
-							{ value:"wednesday", label:"Wed" }, { value:"thursday", label:"Thu" },
-							{ value:"friday", label:"Fri" }, { value:"saturday", label:"Sat" },
-							{ value:"sunday", label:"Sun" }
+							{ value:"monday", label: self.i18n.active().strategy.weekdays["monday"].substring(0,3) }, 
+							{ value:"tuesday", label: self.i18n.active().strategy.weekdays["tuesday"].substring(0,3) },
+							{ value:"wednesday", label: self.i18n.active().strategy.weekdays["wednesday"].substring(0,3) }, 
+							{ value:"thursday", label: self.i18n.active().strategy.weekdays["thursday"].substring(0,3) },
+							{ value:"friday", label: self.i18n.active().strategy.weekdays["friday"].substring(0,3) }, 
+							{ value:"saturday", label: self.i18n.active().strategy.weekdays["saturday"].substring(0,3) },
+							{ value:"sunday", label: self.i18n.active().strategy.weekdays["sunday"].substring(0,3) }
 						],
 						ordinals: [
-							{ value:"first", label:"First" }, { value:"second", label:"Second" },
-							{ value:"third", label:"Third" }, { value:"fourth", label:"Fourth" },
-							{ value:"fifth", label:"Fifth" }, { value:"last", label:"Last" }
+							{ value:"first", label: self.i18n.active().strategy.ordinals["first"] }, 
+							{ value:"second", label: self.i18n.active().strategy.ordinals["second"] },
+							{ value:"third", label: self.i18n.active().strategy.ordinals["third"] }, 
+							{ value:"fourth", label: self.i18n.active().strategy.ordinals["fourth"] },
+							{ value:"fifth", label: self.i18n.active().strategy.ordinals["fifth"] }, 
+							{ value:"last", label: self.i18n.active().strategy.ordinals["last"] }
 						]
 					}
 				}, holiday, {holidayType: holidayType});
@@ -854,7 +883,7 @@ define(function(require){
 					console.log(menu);
 					template = $(monster.template(self, 'strategy-menuPopup', { menu: menu, greeting: greeting }));
 
-					popup = monster.ui.dialog(template, { title: "Virtual Receptionist - "+label});
+					popup = monster.ui.dialog(template, { title: self.i18n.active().strategy.popup.title+" - "+label});
 
 					var menuLineContainer = template.find('.menu-block .left .content');
 					_.each(strategyData.callflows[name].flow.children, function(val, key) {
@@ -1049,7 +1078,7 @@ define(function(require){
 						});
 					}
 				} else {
-					monster.ui.alert('You must type in your greeting message to enable Text to Speech functionality.');
+					monster.ui.alert(self.i18n.active().strategy.alertMessages.emptyTtsGreeting);
 				}
 			});
 
@@ -1132,7 +1161,7 @@ define(function(require){
 				if(file) {
 					fileReader.readAsDataURL(file);
 				} else {
-					monster.ui.alert('Please select a file to upload');
+					monster.ui.alert(self.i18n.active().strategy.alertMessages.emptyUploadGreeting);
 				}
 			});
 
@@ -1178,7 +1207,7 @@ define(function(require){
 				});
 
 				if(invalidData) {
-					monster.ui.alert('Numbers within the menu must be unique and non-empty.');
+					monster.ui.alert(self.i18n.active().strategy.alertMessages.uniqueMenuNumbers);
 				} else {
 					strategyData.callflows[callflowName].flow.children = menuElements;
 					self.strategyUpdateCallflow(strategyData.callflows[callflowName], function(updatedCallflow) {

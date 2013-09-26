@@ -3,27 +3,27 @@
 		<label>
 			<div class="title">
 				<input type="radio" name="enabled" value="false" {{#if alwaysOpen}}checked{{/if}}>
-				24 hours Open Office
+				{{i18n.strategy.hours.alwaysOpenTitle}}
 			</div>
 			<div class="description">
-				Choose this option if you want incoming calls to be handled the same way all the time.
+				{{i18n.strategy.hours.alwaysOpenDescription}}
 			</div>
 		</label>
 		<label>
 			<div class="title">
 				<input type="radio" name="enabled" value="true" {{#unless alwaysOpen}}checked{{/unless}}>
-				Custom Office Hours
+				{{i18n.strategy.hours.customHoursTitle}}
 			</div>
 			<div class="description">
-				Choose this option if you want incoming calls to be handled differently when your office is closed.
+				{{i18n.strategy.hours.customHoursDescription}}
 			</div>
 		</label>
 	</div>
 
 	<div class="custom-hours-div" {{#unless alwaysOpen}}style="display: block;"{{/unless}}>
 		<div class="custom-hours-header">
-			<span class="pull-right timezone">Company Timezone: {{companyTimezone}}</span>
-			<span class="title">Custom Hours</span>
+			<span class="pull-right timezone">{{i18n.strategy.hours.timezone}} {{companyTimezone}}</span>
+			<span class="title">{{i18n.strategy.hours.listTitle}}</span>
 		</div>
 		<div class="custom-days">
 			{{#each days}}
@@ -36,7 +36,7 @@
 					</label>
 					<span class="timepickers" {{#unless this.open}}style="display:none;"{{/unless}}>
 						<input class="from-hour timepicker" type="text" name="weekdays.{{this.name}}.from" value="{{this.from}}">
-						to
+						{{../i18n.strategy.hours.to}}
 						<input class="to-hour timepicker" type="text" name="weekdays.{{this.name}}.to" value="{{this.to}}">
 					</span>
 				</div>
@@ -46,17 +46,17 @@
 		<div class="custom-hours-lunchbreak">
 			<label>
 				<input type="checkbox" name="lunchbreak.enabled" {{#if lunchbreak.enabled}}checked{{/if}}>
-				Are you closed for lunch hours?
+				{{i18n.strategy.hours.lunchbreakTitle}}
 			</label>
 			<span class="timepickers" {{#unless lunchbreak.enabled}}style="display:none;"{{/unless}}>
 				<input class="from-hour timepicker" type="text" name="lunchbreak.from" value="{{lunchbreak.from}}">
-				to
+				{{i18n.strategy.hours.to}}
 				<input class="to-hour timepicker" type="text" name="lunchbreak.to" value="{{lunchbreak.to}}">
 			</span>
 		</div>
 	</div>
 	<div class="custom-hours-actions basic-actions">
-		<a href="#" class="cancel-link">Cancel</a>
-		<button class="btn btn-success save-button">Save Changes</button>
+		<a href="#" class="cancel-link">{{i18n.cancel}}</a>
+		<button class="btn btn-success save-button">{{i18n.saveChanges}}</button>
 	</div>
 </form>

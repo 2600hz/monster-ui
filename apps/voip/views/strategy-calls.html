@@ -1,13 +1,13 @@
 <ul class="nav nav-tabs calls-tabs clearfix">
-	<li class="active"><a href="#strategy_calls_open_hours_tab">Open Hours</a></li>
+	<li class="active"><a href="#strategy_calls_open_hours_tab">{{i18n.strategy.calls.openHoursTitle}}</a></li>
 	{{#if lunchbreak}}
-	<li><a href="#strategy_calls_lunch_hours_tab">Lunch Hours</a></li>
+	<li><a href="#strategy_calls_lunch_hours_tab">{{i18n.strategy.calls.openHoursTitle}}</a></li>
 	{{/if}}
 	{{#if afterhours}}
-	<li><a href="#strategy_calls_after_hours_tab">After Hours</a></li>
+	<li><a href="#strategy_calls_after_hours_tab">{{i18n.strategy.calls.openHoursTitle}}</a></li>
 	{{/if}}
 	{{#if holidays}}
-	<li><a href="#strategy_calls_holidays_tab">Holidays</a></li>
+	<li><a href="#strategy_calls_holidays_tab">{{i18n.strategy.calls.openHoursTitle}}</a></li>
 	{{/if}}
 </ul>
 <div class="tab-content callflow-tabs">
@@ -24,6 +24,6 @@
 </div>
 
 <div class="calls-actions basic-actions">
-	<a href="#" class="cancel-link">Cancel</a>
-	<button class="btn btn-success save-button">Save Changes</button>
+	<a href="#" class="cancel-link">{{i18n.cancel}}</a>
+	<button class="btn btn-success save-button">{{i18n.saveChanges}}</button>
 </div>

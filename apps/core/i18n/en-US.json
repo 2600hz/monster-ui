@@ -53,6 +53,7 @@
 		"infoEmpty": ""
 	},
 	"unexpectedError": "An unexpected error happened, please try again!",
+	"update": "Update",
 	"warning": "Warning!",
 	"welcome": "SIP Trunking Made Easy"
 }
