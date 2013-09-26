@@ -125,22 +125,22 @@ define(function(require){
 
 			monster.parallel({
 					temporalRules: function(callback) {
-						self.getTemporalRules(function(temporalRules) {
+						self.strategyGetTemporalRules(function(temporalRules) {
 							callback(null, temporalRules);
 						});
 					},
 					callflows: function(callback) {
-						self.getMainCallflows(function(callflows) {
+						self.strategyGetMainCallflows(function(callflows) {
 							callback(null, callflows);
 						});
 					},
 					callEntities: function(callback) {
-						self.getCallEntities(function(callEntities) {
+						self.strategyGetCallEntities(function(callEntities) {
 							callback(null, callEntities);
 						});
 					},
 					voicemails: function(callback) {
-						self.getVoicesmailBoxes(function(callEntities) {
+						self.strategyGetVoicesmailBoxes(function(callEntities) {
 							callback(null, callEntities);
 						});
 					}
@@ -171,7 +171,7 @@ define(function(require){
 				} else {
 					containers.removeClass('open');
 					containers.find('.element-content').hide();
-					self.refreshTemplate(element, strategyData, function() {
+					self.strategyRefreshTemplate(element, strategyData, function() {
 						element.addClass('open');
 						element.find('.element-content').show();
 					});
@@ -191,7 +191,7 @@ define(function(require){
 			self.strategyCallsBindEvents(strategyCallsContainer, strategyData);
 		},
 
-		refreshTemplate: function(container, strategyData, callback) {
+		strategyRefreshTemplate: function(container, strategyData, callback) {
 			var self = this,
 				templateName = container.data('template');
 
@@ -292,7 +292,7 @@ define(function(require){
 									}
 								}
 
-								self.renderHolidayLine(holidayList, holidayType, holidayData);
+								self.strategyRenderHolidayLine(holidayList, holidayType, holidayData);
 							}
 						});
 
@@ -327,7 +327,7 @@ define(function(require){
 										type: "default"
 									},
 									callflow: callflowName,
-									callEntities: self.getCallEntitiesDropdownData(strategyData.callEntities),
+									callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities),
 									voicemails: strategyData.voicemails
 								};
 
@@ -485,8 +485,8 @@ define(function(require){
 					monster.parallel(tmpRulesRequests, function(err, results) {});
 				}
 
-				self.rebuildMainCallflowRuleArray(strategyData);
-				self.updateCallflow(mainCallflow, function(updatedCallflow) {
+				self.strategyRebuildMainCallflowRuleArray(strategyData);
+				self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
 					strategyData.callflows["MainCallflow"] = updatedCallflow;
 					parent.find('.element-content').hide();
 					parent.removeClass('open');
@@ -507,7 +507,7 @@ define(function(require){
 
 			container.on('click', '.add-holidays-link', function(e) {
 				e.preventDefault();
-				self.renderHolidayLine(container.find('.holidays-list'), $(this).data('type'));
+				self.strategyRenderHolidayLine(container.find('.holidays-list'), $(this).data('type'));
 			});
 
 			container.on('click', '.delete-holiday', function(e) {
@@ -519,8 +519,8 @@ define(function(require){
 						var mainCallflow = strategyData.callflows["MainCallflow"];
 						delete mainCallflow.flow.children[id];
 
-						self.rebuildMainCallflowRuleArray(strategyData);
-						self.updateCallflow(mainCallflow, function(updatedCallflow) {
+						self.strategyRebuildMainCallflowRuleArray(strategyData);
+						self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
 							strategyData.callflows["MainCallflow"] = updatedCallflow;
 							monster.request({
 								resource: 'strategy.temporalRules.delete',
@@ -636,8 +636,8 @@ define(function(require){
 								strategyData.temporalRules.holidays[val.name] = val;
 							});
 
-							self.rebuildMainCallflowRuleArray(strategyData);
-							self.updateCallflow(mainCallflow, function(updatedCallflow) {
+							self.strategyRebuildMainCallflowRuleArray(strategyData);
+							self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
 								strategyData.callflows["MainCallflow"] = updatedCallflow;
 								parent.find('.element-content').hide();
 								parent.removeClass('open');
@@ -667,8 +667,8 @@ define(function(require){
 
 						monster.parallel(holidayRulesRequests, function(err, results) {
 							strategyData.temporalRules.holidays = {};
-							self.rebuildMainCallflowRuleArray(strategyData);
-							self.updateCallflow(mainCallflow, function(updatedCallflow) {
+							self.strategyRebuildMainCallflowRuleArray(strategyData);
+							self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
 								strategyData.callflows["MainCallflow"] = updatedCallflow;
 								parent.find('.element-content').hide();
 								parent.removeClass('open');
@@ -695,7 +695,7 @@ define(function(require){
 			container.on('click', '.menu-div a', function(e) {
 				e.preventDefault();
 				var parentTab = $(this).parents('.callflow-tab');
-				self.showMenuPopup({ 
+				self.strategyShowMenuPopup({ 
 					strategyData: strategyData,
 					name: parentTab.data('callflow') + 'Menu',
 					label: container.find('a[href="#'+parentTab.prop('id')+'"]').text()
@@ -796,7 +796,7 @@ define(function(require){
 					_.each(flows, function(val, key) {
 						strategyData.callflows[key].flow = val;
 						parallelRequests[key] = function(callback) {
-							self.updatedCallflow(strategyData.callflows[key], function(updatedCallflow) {
+							self.strategyUpdateCallflow(strategyData.callflows[key], function(updatedCallflow) {
 								strategyData.callflows[key] = updatedCallflow;
 								callback(null, updatedCallflow);
 							});
@@ -812,7 +812,7 @@ define(function(require){
 			});
 		},
 
-		renderHolidayLine: function(container, holidayType, holiday, callback) {
+		strategyRenderHolidayLine: function(container, holidayType, holiday, callback) {
 			var self = this,
 				templateData = $.extend(true, {
 					resources: {
@@ -844,7 +844,7 @@ define(function(require){
 			container.append(monster.template(self, 'strategy-holidayLine', templateData));
 		},
 
-		showMenuPopup: function(params, callback) {
+		strategyShowMenuPopup: function(params, callback) {
 			var self = this,
 				strategyData = params.strategyData,
 				name = params.name,
@@ -860,12 +860,12 @@ define(function(require){
 					_.each(strategyData.callflows[name].flow.children, function(val, key) {
 						menuLineContainer.append(monster.template(self, 'strategy-menuLine', { 
 							number: key, 
-							callEntities: self.getCallEntitiesDropdownData(strategyData.callEntities),
+							callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities),
 							selectedId: val.data.id || val.data.endpoints[0].id
 						}));
 					});
 
-					self.bindMenuPopupEvents(popup, $.extend({
+					self.strategyBindMenuPopupEvents(popup, $.extend({
 						menu: menu,
 						greeting: greeting
 					}, params));
@@ -947,7 +947,7 @@ define(function(require){
 			}
 		},
 
-		bindMenuPopupEvents: function(popup, params) {
+		strategyBindMenuPopupEvents: function(popup, params) {
 			var self = this,
 				strategyData = params.strategyData,
 				callflowName = params.name,
@@ -982,7 +982,7 @@ define(function(require){
 
 			container.find('.add-menu-line a').on('click', function(e) {
 				e.preventDefault();
-				var menuLine = $(monster.template(self, 'strategy-menuLine', { callEntities: self.getCallEntitiesDropdownData(strategyData.callEntities) }));
+				var menuLine = $(monster.template(self, 'strategy-menuLine', { callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities) }));
 				container.find('.menu-block .left .content').append(menuLine);
 				menuLine.find('.number-input').focus();
 			});
@@ -1181,7 +1181,7 @@ define(function(require){
 					monster.ui.alert('Numbers within the menu must be unique and non-empty.');
 				} else {
 					strategyData.callflows[callflowName].flow.children = menuElements;
-					self.updateCallflow(strategyData.callflows[callflowName], function(updatedCallflow) {
+					self.strategyUpdateCallflow(strategyData.callflows[callflowName], function(updatedCallflow) {
 						strategyData.callflows[callflowName] = updatedCallflow;
 					});
 					popup.dialog('close');
@@ -1189,7 +1189,7 @@ define(function(require){
 			});
 		},
 
-		getCallEntitiesDropdownData: function(callEntities) {
+		strategyGetCallEntitiesDropdownData: function(callEntities) {
 			var self = this,
 				results = [];
 			_.each(callEntities, function(value, key) {
@@ -1213,7 +1213,7 @@ define(function(require){
 			return results;
 		},
 
-		getMainCallflows: function(callback) {
+		strategyGetMainCallflows: function(callback) {
 			var self = this;
 			monster.request({
 				resource: 'strategy.callflows.list',
@@ -1274,7 +1274,7 @@ define(function(require){
 			});
 		},
 
-		getTemporalRules: function(callback) {
+		strategyGetTemporalRules: function(callback) {
 			var self = this;
 			monster.request({
 				resource: 'strategy.temporalRules.list',
@@ -1376,7 +1376,7 @@ define(function(require){
 			});
 		},
 
-		getCallEntities: function(callback) {
+		strategyGetCallEntities: function(callback) {
 			var self = this;
 			monster.parallel(
 				{
@@ -1420,7 +1420,7 @@ define(function(require){
 			);
 		},
 
-		getVoicesmailBoxes: function(callback) {
+		strategyGetVoicesmailBoxes: function(callback) {
 			var self = this;
 			monster.request({
 				resource: 'strategy.voicemails.list',
@@ -1433,7 +1433,7 @@ define(function(require){
 			});
 		},
 
-		rebuildMainCallflowRuleArray: function(strategyData) {
+		strategyRebuildMainCallflowRuleArray: function(strategyData) {
 			var self = this,
 				mainCallflow = strategyData.callflows["MainCallflow"],
 				rules = strategyData.temporalRules,
@@ -1458,7 +1458,7 @@ define(function(require){
 			mainCallflow.flow.data.rules = ruleArray;
 		},
 
-		updateCallflow: function(callflow, callback) {
+		strategyUpdateCallflow: function(callflow, callback) {
 			var self = this,
 				callflowId = callflow.id;
 			delete callflow.metadata;
