@@ -1,7 +1,8 @@
 define(function(require){
 	var $ = require("jquery"),
 		_ = require("underscore"),
-		monster = require("monster");
+		monster = require("monster"),
+		toastr = require("toastr");
 
 	var app = {
 
@@ -80,7 +81,12 @@ define(function(require){
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
-					self.installedApps = data.data.apps;
+					if("apps" in data.data) {
+						self.installedApps = data.data.apps;	
+					} else {
+						self.installedApps = [];
+						toastr.error(self.i18n.active().toastrMessages.appListError);
+					}
 
 					if($('#remember_me').is(':checked')) {
 						var cookieLogin = {

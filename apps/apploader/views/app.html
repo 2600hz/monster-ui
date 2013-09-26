@@ -1,6 +1,6 @@
 <div id="apploader">
 	<div class="app-list-container">
-		<ul class="app-list">
+		<ul class="app-list {{#if allowAppstore}}has-appstore{{/if}}">
 			{{#each apps}}
 				<li class="app-list-element" data-id="{{id}}" data-name="{{name}}">
 					<div class="app-draggable">

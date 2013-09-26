@@ -97,7 +97,10 @@ define(function(require){
 					});
 				}
 
-				var template = $(monster.template(self, 'app', { apps: appList, allowAppstore: true }));
+				var template = $(monster.template(self, 'app', { 
+					apps: appList, 
+					allowAppstore: (monster.apps['auth'].currentUser.priv_level === "admin")
+				}));
 				$('#topbar').after(template);
 
 				template.find('.app-list').sortable({ 
