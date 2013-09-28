@@ -1,7 +1,9 @@
+@import url('submodules/devices/devices.css');
+/*@import url('submodules/groups/groups.css');*/
+/*@import url('submodules/myOffice/myOffice.css');*/
 @import url('submodules/numbers/numbers.css');
-@import url('submodules/users/users.css');
-@import url('submodules/myOffice/myOffice.css');
 @import url('submodules/strategy/strategy.css');
+@import url('submodules/users/users.css');
 
 #voip_container {
 	margin: auto;

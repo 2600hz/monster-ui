@@ -207,92 +207,92 @@
 	margin-left: 5px;
 }
 
-/* Detail Numbers */
-#users_container .detail-numbers .list-wrapper {
+/* Grid add remove */
+#users_container .list-wrapper {
 	background: #FFF;
 	border-radius: 4px;
 	border: 1px solid #ddd;
 	margin: 10px;
 }
 
-#users_container .detail-numbers .list-unassigned-numbers {
+#users_container .list-unassigned-items{
 	overflow: auto;
 	max-height: 211px;
 }
 
-#users_container .detail-numbers .unassigned-list-header {
+#users_container .unassigned-list-header {
 	background: #999;
 	height: 32px;
 	line-height: 32px;
 	padding: 10px;
 }
 
-#users_container .detail-numbers .unassigned-list-header .title {
+#users_container .unassigned-list-header .title {
 	color: #FFF;
 	display: inline-block;
 	font-size: 16px;
 	font-weight: bold;
 }
 
-#users_container .detail-numbers .list-wrapper .phone-number-row  {
+#users_container .list-wrapper .item-row  {
 	border-bottom: 1px solid #ccc;
 	white-space: nowrap;
 }
 
-#users_container .detail-numbers .list-wrapper .phone-number-row > * {
+#users_container .list-wrapper .item-row > * {
 	display: inline-block;
 	line-height: 32px;
 	height: 32px;
 	padding: 10px;
 }
 
-
-#users_container .detail-numbers .list-wrapper .phone-number-row button {
-	padding: 2px;
-	margin-right: 15px;
-	width: 80px;
-}
-
-#users_container .detail-numbers .list-wrapper .phone-number-row .features > i {
-	display: none;
-}
-
-#users_container .detail-numbers .list-wrapper .phone-number-row .features > i.active {
-	display: inline-block;
-}
-
-#users_container .detail-numbers .list-wrapper .phone-number-row .locality {
-	border-left: 1px solid #CCC;
-	display: none;
-}
-
-#users_container .detail-numbers .list-wrapper .list-assigned-numbers .phone-number-row .locality {
-	width: 250px;
-	border-right: 1px solid #CCC;
-}
-
-#users_container .detail-numbers .list-wrapper .phone-number-row .locality img {
-	margin-right: 5px;
-}
-
-#users_container .detail-numbers .list-wrapper .list-unassigned-numbers .features-block {
-	display: none;
-}
-
-#users_container .detail-numbers .list-wrapper .features-block .dropdown {
-	margin-top: -4px;
-}
-
-#users_container .detail-numbers .list-wrapper .empty-search-row,
-#users_container .detail-numbers .list-wrapper .empty-row {
+#users_container .list-wrapper .empty-search-row,
+#users_container .list-wrapper .empty-row {
 	display: none;
 	padding: 16px;
 	text-align: center;
 }
 
-#users_container .detail-numbers .list-wrapper .empty-search-row.visible,
-#users_container .detail-numbers .list-wrapper .empty-row.visible {
+#users_container .list-wrapper .empty-search-row.visible,
+#users_container .list-wrapper .empty-row.visible {
 	display: block;
+}
+
+#users_container .list-wrapper .item-row button {
+	padding: 2px;
+	margin-right: 15px;
+	width: 80px;
+}
+
+/* Detail Numbers */
+#users_container .detail-numbers .list-wrapper .item-row .features > i {
+	display: none;
+}
+
+#users_container .detail-numbers .list-wrapper .item-row .features > i.active {
+	display: inline-block;
+}
+
+#users_container .detail-numbers .list-wrapper .item-row .locality {
+	border-left: 1px solid #CCC;
+	display: none;
+}
+
+#users_container .detail-numbers .list-wrapper .list-assigned-items .item-row .locality {
+	width: 250px;
+	border-right: 1px solid #CCC;
+}
+
+#users_container .detail-numbers .list-wrapper .item-row .locality img {
+	margin-right: 5px;
+}
+
+#users_container .detail-numbers .list-wrapper .list-unassigned-items .features-block {
+	display: none;
+}
+
+#users_container .detail-numbers .list-wrapper .features-block .dropdown {
+	margin-top: -4px;
 }
 
 #users_container .detail-numbers .list-wrapper .navbar .nav li.dropdown.open.active > .dropdown-toggle,
@@ -302,7 +302,7 @@
 }
 
 @media (min-width: 1000px) {
-	#users_container .detail-numbers .list-wrapper .phone-number-row .locality {
+	#users_container .detail-numbers .list-wrapper .item-row .locality {
 		display: inline-block;
 	}
 }

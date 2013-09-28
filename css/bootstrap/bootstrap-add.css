@@ -124,6 +124,7 @@ a {
     background-repeat:repeat-x;filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22a5ff',endColorstr='#ff22ccff',GradientType=0)
 
     color: #eee;
+    cursor: pointer;
 }
 
 .dropdown-menu li>a:hover i, .dropdown-menu li>a:focus i, .dropdown-menu .active>a i, .dropdown-menu .active>a:hover i, .dropdown-submenu:hover>a i {

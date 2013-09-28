@@ -25,11 +25,24 @@
 		</div>
 		<div class="devices grid-cell centered" data-type="devices">
 			{{#each extra.devices}}
+			{{debug}}
 				{{#compare this '===' 'softphone'}}
-					<i class="icon-telicon-outbound-call"></i>
-				{{else}}
+					<i class="icon-user"></i>
+				{{/compare}}
+				{{#compare this '===' 'cellphone'}}
+					<i class="icon-facebook"></i>
+				{{/compare}}
+				{{#compare this '===' 'sip_device'}}
+					<i class="icon-google-plus"></i>
+				{{/compare}}
+				{{#compare this '===' 'fax'}}
+					<i class="icon-dribble"></i>
+				{{/compare}}
+				{{#compare this '===' 'landline'}}
 					<i class="icon-phone"></i>
 				{{/compare}}
+			{{else}}
+				{{ i18n.users.noUserDevices }}
 			{{/each}}
 
 			{{#if extra.additionalDevices}}

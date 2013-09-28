@@ -1,0 +1,241 @@
+{
+   "auth_token":"db28f946ea9726f7ae04449060e23915",
+   "status":"success",
+   "request_id":"262003f2eb3c32ade04ef58687922a72",
+   "revision":"23-b6277ad60e7bd30e6bd6cda1614d782c",
+   "data":{
+	  "numbers":{
+		 "+14154230431":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907142,
+			"updated":63543907158,
+			"locality": {
+				"iso": "US",
+				"country": "USA",
+				"city": "San Francisco"
+			}
+		 },
+		 "+14154230434":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907142,
+			"updated":63543907160,
+			"locality": {
+				"iso": "US",
+				"country": "USA",
+				"city": "San Francisco"
+			}
+		 },
+		 "+14154230444":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907142,
+			"updated":63543907162,
+			"locality": {
+				"iso": "US",
+				"country": "USA",
+				"city": "San Francisco"
+			}
+		 },
+		 "+14154230437":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907142,
+			"updated":63543907164,
+			"locality": {
+				"iso": "US",
+				"country": "USA",
+				"city": "San Francisco"
+			}
+		 },
+		 "+14154230419":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907142,
+			"updated":63543907165,
+			"locality": {
+				"iso": "FR",
+				"country": "France",
+				"city": "Clermont-Ferrand"
+			}
+		 },
+		 "+14154230381":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"callflow",
+			"created":63543907142,
+			"updated":63544153697,
+			"locality": {
+				"iso": "NZ",
+				"country": "New-Zealand",
+				"city": "Wellington"
+			}
+		 },
+		 "+14154230350":{
+			"state":"in_service",
+			"features":[
+				"local",
+				"failover",
+				"port",
+				"dash_e911",
+				"outbound_cnam"
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"callflow",
+			"created":63543907141,
+			"updated":63544238102,
+			"locality": {
+				"iso": "BR",
+				"country": "Brazil",
+				"city": "Rio de Jainero"
+			}
+		 },
+		 "+14154230370":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"callflow",
+			"created":63543907141,
+			"updated":63544153645,
+			"locality": {
+				"iso": "US",
+				"country": "USA",
+				"city": "San Francisco"
+			}
+		 },
+		 "+14154230418":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907141,
+			"updated":63543907173,
+			"locality": {
+				"iso": "UA",
+				"country": "Ukraine",
+				"city": "Kiev"
+			}
+		 },
+		 "+14154230420":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907141,
+			"updated":63543907174,
+			"locality": {
+				"iso": "GB",
+				"country": "Great-Britain",
+				"city": "London"
+			}
+		 },
+		 "+14154230443":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907141,
+			"updated":63543907176,
+			"locality": {
+				"iso": "IT",
+				"country": "Italy",
+				"city": "Rome"
+			}
+		 },
+		 "+14154230413":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"callflow",
+			"created":63543907141,
+			"updated":63544238100,
+			"locality": {
+				"iso": "RU",
+				"country": "Russia",
+				"city": "Moscow"
+			}
+		 },
+		 "+14154230391":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907141,
+			"updated":63543907180,
+			"locality": {
+				"iso": "DE",
+				"country": "Germany",
+				"city": "Berlin"
+			}
+		 },
+		 "+14154230445":{
+			"state":"in_service",
+			"features":[
+
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907140,
+			"updated":63543907182,
+			"locality": {
+				"iso": "IN",
+				"country": "India",
+				"city": "Mumbai"
+			}
+		 },
+		 "+14154230427":{
+			"state":"in_service",
+			"features":[
+				"dash_e911",
+				"outbound_cnam"
+			],
+			"assigned_to":"64cd8d2a12ac216104a1341ab1b9ab2a",
+			"used_by":"",
+			"created":63543907140,
+			"updated":63543907184,
+			"locality": {
+				"iso": "FR",
+				"country": "France",
+				"city": "Limoges"
+			}
+		 }
+	  },
+	  "casquade_quantity":15
+   }
+}

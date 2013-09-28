@@ -3,6 +3,10 @@
 	max-width: 902px;
 }
 
+#numbers_container .accounts-numbers {
+	font-family: verdana;
+}
+
 #numbers_container .top-box {
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -130,7 +134,7 @@
     border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
-    font-size: 20px;
+    font-size: 18px;
     height: 70px;
     line-height: 70px;
     padding-left: 10px;

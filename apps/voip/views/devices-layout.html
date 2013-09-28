@@ -1,0 +1,38 @@
+<div id="devices_container">
+	<div class="devices-header">
+		<div class="title">
+			{{ i18n.devices.title }}
+			<span class="count-devices">{{countDevices}}</span>
+		</div>
+		<div class="dropdown">
+			<a href="#" class="monster-link dropdown-toggle" data-toggle="dropdown"><i class="icon-plus-sign icon-green"></i>{{i18n.devices.add }}</a>
+			<ul class="dropdown-menu">
+				<li><a data-type="sip_device"><i class="icon-phone"></i>{{ i18n.devices.types.sip_device }}</a></li>
+				<li><a data-type="cellphone"><i class="icon-phone"></i>{{ i18n.devices.types.cellphone }}</a></li>
+				<li><a data-type="softphone"><i class="icon-phone"></i>{{ i18n.devices.types.softphone }}</a></li>
+				<li><a data-type="landline"><i class="icon-phone"></i>{{ i18n.devices.types.landline }}</a></li>
+				<li><a data-type="fax"><i class="icon-phone"></i>{{ i18n.devices.types.fax }}</a></li>
+			</ul>
+		</div>
+
+		<span class="search-box pull-right">
+			<i class="icon-search"></i>
+			<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+		</span>
+	</div>
+
+	<div class="devices-grid">
+		<div class="grid-row title">
+			<div class="grid-cell type">{{ i18n.devices.titleGrid.type }}</div>
+			<div class="grid-cell mac-address">{{ i18n.devices.titleGrid.modelMacAddress }}</div>
+			<div class="grid-cell user">{{ i18n.devices.titleGrid.user }}</div>
+			<div class="grid-cell enable">{{ i18n.devices.titleGrid.enable }}</div>
+			<div class="grid-cell edit">{{ i18n.devices.titleGrid.edit }}</div>
+		</div>
+		<div class="devices-rows">
+			<div class="empty-search-row">
+				{{ i18n.devices.noMatchingDevices }}
+			</div>
+		</div>
+	</div>
+</div>

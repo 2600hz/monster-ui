@@ -149,7 +149,6 @@ define(function(require){
 					templateData = {
 						firstNumber: results.callflows["MainCallflow"].numbers[0] || "N/A"
 					}
-					console.log(results);
 					template = $(monster.template(self, 'strategy-layout', templateData));
 					self.strategyBindEvents(template, results);
 
@@ -204,7 +203,7 @@ define(function(require){
 					case "numbers":
 						var callflow = strategyData.callflows["MainCallflow"],
 							numbers = callflow ? callflow.numbers : [],
-							templateData = { 
+							templateData = {
 								numbers: $.map(numbers, function(val, key) {
 									if(val.length > 8) { //TODO actually test the number
 										return {
@@ -336,7 +335,7 @@ define(function(require){
 									voicemails: strategyData.voicemails
 								};
 
-							
+
 							if(["user","device","ring_group"].indexOf(strategyData.callflows[callflowName].flow.module) >= 0) {
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
 								if(strategyData.callflows[callflowName].flow.children["_"].module === "voicemail") {
@@ -435,8 +434,6 @@ define(function(require){
 
 						return (h*3600 + m*60).toString();
 					};
-
-				console.log(customHours);
 
 				_.each(strategyData.temporalRules.weekdays, function(val, key) {
 					delete mainCallflow.flow.children[val.id];
@@ -577,7 +574,7 @@ define(function(require){
 								month: parseInt(month),
 								type: "main_holidays"
 							};
-						
+
 						if(!name || Object.keys(holidayRulesRequests).indexOf(name) >= 0) {
 							invalidData = true;
 							return false;
@@ -597,8 +594,6 @@ define(function(require){
 							holidayRule.ordinal = ordinal
 							holidayRule.wdays = [wday]
 						}
-
-						console.log(holidayRule);
 
 						if(id) {
 							holidayRulesRequests[name] = function(callback) {
@@ -705,7 +700,7 @@ define(function(require){
 			container.on('click', '.menu-div a', function(e) {
 				e.preventDefault();
 				var parentTab = $(this).parents('.callflow-tab');
-				self.strategyShowMenuPopup({ 
+				self.strategyShowMenuPopup({
 					strategyData: strategyData,
 					name: parentTab.data('callflow') + 'Menu',
 					label: container.find('a[href="#'+parentTab.prop('id')+'"]').text()
@@ -737,10 +732,10 @@ define(function(require){
 						callEntity = callOption.find('.user-select'),
 						voicemail = callOption.find('.voicemail-select')
 						flow = {};
-					
+
 					if(callEntity.length) {
 						var selectedEntity = callEntity.find('option:selected'),
-							flowElement = { 
+							flowElement = {
 								children: {},
 								module: selectedEntity.data('type'),
 								data: {}
@@ -832,35 +827,35 @@ define(function(require){
 				templateData = $.extend(true, {
 					resources: {
 						months: [
-							{ value:1, label: self.i18n.active().strategy.monthsShort["january"] }, 
-							{ value:2, label: self.i18n.active().strategy.monthsShort["february"] }, 
+							{ value:1, label: self.i18n.active().strategy.monthsShort["january"] },
+							{ value:2, label: self.i18n.active().strategy.monthsShort["february"] },
 							{ value:3, label: self.i18n.active().strategy.monthsShort["march"] },
-							{ value:4, label: self.i18n.active().strategy.monthsShort["april"] }, 
-							{ value:5, label: self.i18n.active().strategy.monthsShort["may"] }, 
+							{ value:4, label: self.i18n.active().strategy.monthsShort["april"] },
+							{ value:5, label: self.i18n.active().strategy.monthsShort["may"] },
 							{ value:6, label: self.i18n.active().strategy.monthsShort["june"] },
-							{ value:7, label: self.i18n.active().strategy.monthsShort["july"] }, 
-							{ value:8, label: self.i18n.active().strategy.monthsShort["august"] }, 
+							{ value:7, label: self.i18n.active().strategy.monthsShort["july"] },
+							{ value:8, label: self.i18n.active().strategy.monthsShort["august"] },
 							{ value:9, label: self.i18n.active().strategy.monthsShort["september"] },
-							{ value:10, label: self.i18n.active().strategy.monthsShort["october"] }, 
-							{ value:11, label: self.i18n.active().strategy.monthsShort["november"] }, 
+							{ value:10, label: self.i18n.active().strategy.monthsShort["october"] },
+							{ value:11, label: self.i18n.active().strategy.monthsShort["november"] },
 							{ value:12, label: self.i18n.active().strategy.monthsShort["december"] }
 						],
 						days: [],
 						wdays: [
-							{ value:"monday", label: self.i18n.active().strategy.weekdays["monday"].substring(0,3) }, 
+							{ value:"monday", label: self.i18n.active().strategy.weekdays["monday"].substring(0,3) },
 							{ value:"tuesday", label: self.i18n.active().strategy.weekdays["tuesday"].substring(0,3) },
-							{ value:"wednesday", label: self.i18n.active().strategy.weekdays["wednesday"].substring(0,3) }, 
+							{ value:"wednesday", label: self.i18n.active().strategy.weekdays["wednesday"].substring(0,3) },
 							{ value:"thursday", label: self.i18n.active().strategy.weekdays["thursday"].substring(0,3) },
-							{ value:"friday", label: self.i18n.active().strategy.weekdays["friday"].substring(0,3) }, 
+							{ value:"friday", label: self.i18n.active().strategy.weekdays["friday"].substring(0,3) },
 							{ value:"saturday", label: self.i18n.active().strategy.weekdays["saturday"].substring(0,3) },
 							{ value:"sunday", label: self.i18n.active().strategy.weekdays["sunday"].substring(0,3) }
 						],
 						ordinals: [
-							{ value:"first", label: self.i18n.active().strategy.ordinals["first"] }, 
+							{ value:"first", label: self.i18n.active().strategy.ordinals["first"] },
 							{ value:"second", label: self.i18n.active().strategy.ordinals["second"] },
-							{ value:"third", label: self.i18n.active().strategy.ordinals["third"] }, 
+							{ value:"third", label: self.i18n.active().strategy.ordinals["third"] },
 							{ value:"fourth", label: self.i18n.active().strategy.ordinals["fourth"] },
-							{ value:"fifth", label: self.i18n.active().strategy.ordinals["fifth"] }, 
+							{ value:"fifth", label: self.i18n.active().strategy.ordinals["fifth"] },
 							{ value:"last", label: self.i18n.active().strategy.ordinals["last"] }
 						]
 					}
@@ -880,15 +875,14 @@ define(function(require){
 				label = params.label,
 				template, menu, greeting,
 				showPopup = function() {
-					console.log(menu);
 					template = $(monster.template(self, 'strategy-menuPopup', { menu: menu, greeting: greeting }));
 
 					popup = monster.ui.dialog(template, { title: self.i18n.active().strategy.popup.title+" - "+label});
 
 					var menuLineContainer = template.find('.menu-block .left .content');
 					_.each(strategyData.callflows[name].flow.children, function(val, key) {
-						menuLineContainer.append(monster.template(self, 'strategy-menuLine', { 
-							number: key, 
+						menuLineContainer.append(monster.template(self, 'strategy-menuLine', {
+							number: key,
 							callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities),
 							selectedId: val.data.id || val.data.endpoints[0].id
 						}));
@@ -1442,7 +1436,7 @@ define(function(require){
 							}
 						});
 					}
-				}, 
+				},
 				function(err, results) {
 					callback(results);
 				}

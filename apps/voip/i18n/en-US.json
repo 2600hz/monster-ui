@@ -10,14 +10,37 @@
 		"quickLinks": "Help Topics"
 	},
 
+	"devices": {
+		"add": "Add Device",
+		"buy": "Buy Device",
+		"noMatchingDevices": "There were no devices found matching your search",
+		"title": "Devices",
+		"titleGrid": {
+			"edit": "Edit",
+			"enable": "Enable",
+			"user": "User",
+			"modelMacAddress": "Model / Mac Address",
+			"type": "Type"
+		},
+		"types": {
+			"cellphone": "Cell Phone",
+			"sip_device": "SIP Phone",
+			"softphone": "Soft Phone",
+			"landline": "Landline",
+			"fax": "ATA / Fax"
+		},
+		"unassignedDevice": "-"
+	},
+
 	"users": {
 		"admin": "Admin",
 		"add": "Add User",
 		"addExtension": "Add an extension to this user",
 		"addNewExtension": "Extension number: ",
 		"addFromSpare": "Add from Spare Numbers",
+		"addFromSpareDevices": "Add from Spare Devices",
 		"buy": "Buy Numbers",
-		"changeUsername": "Change username",
+		"changeUsername": "Change",
 		"dialogChangePassword": {
 			"help": "You can set a new password by just typing any password you want, along with the new username!",
 			"password": "Password",
@@ -39,15 +62,19 @@
 		"delete": "Delete User",
 		"featureOn": "ON",
 		"includeInDirectory": "Include to Company Directory",
+		"noMatchingDevices": "No devices matching your search",
 		"noMatchingNumbers": "There were no numbers found matching your search",
 		"noMatchingUser": "No data found matching your search",
+		"noMoreSpareDevices": "There are no spare device left, you can buy new devices by going in the Devices Inventory",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
+		"noAssignedDevices": "There are currently no device assigned to this user.",
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
 		"noNumber": "No number",
 		"noExtension": "No extension",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
+		"noUserDevices": "None",
 		"noUserFeatures": "None",
 		"noUserCallflow": "An error occured. There are no Callflow assigned to this user, so you can't add him to the Company directory",
 		"port": "Port Numbers",
@@ -62,11 +89,12 @@
 			"features": "Features"
 		},
 		"toastrMessages": {
+			"devicesUpdated": "You successfuly updated the devices assigned to {{ name }}.",
 			"instructionsSent": "An e-mail has been sent to {{ email }} with all the user Instructions on how to get started with the UI!",
-			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password.",
 			"numbersUpdated": "You successfuly updated the phone numbers of {{ name }}.",
-			"userUpdated": "You successfuly updated {{ name }} settings.",
-			"userDelete": "You successfully deleted {{ name }} from the Smart PBX!"
+			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password.",
+			"userDelete": "You successfully deleted {{ name }} from the Smart PBX!",
+			"userUpdated": "You successfuly updated {{ name }} settings."
 		},
 		"uploadPicture": "Upload a Picture",
 		"user": "User",

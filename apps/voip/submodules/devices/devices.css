@@ -1,0 +1,163 @@
+#devices_container .devices-header {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 18px;
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+#devices_container .devices-header > * {
+	display: inline-block;
+}
+
+#devices_container .devices-header .count-devices {
+	color: #22ccff;
+	display: inline-block;
+	font-size: 28px;
+	font-weight: 500;
+	margin-left: 10px;
+	margin-right: 25px;
+	margin-top: -5px;
+}
+
+#devices_container .devices-header .add-device {
+	cursor: pointer;
+	color: #666;
+	font-size: 14px;
+	margin-left: 20px;
+}
+
+#devices_container .devices-header .add-device i {
+	text-decoration: none;
+	margin-right: 5px;
+}
+
+#devices_container .devices-grid {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-top: 10px;
+
+	font-family: verdana;
+}
+
+#devices_container .devices-grid i.icon-plus {
+	margin-left: 5px;
+}
+
+#devices_container .devices-grid .empty-search-row {
+	display: none;
+	padding: 16px;
+	text-align: center;
+}
+
+#devices_container .devices-grid .grid-row.title:not(:last-child) {
+	border-bottom: 1px solid #ddd;
+}
+
+#devices_container .devices-grid .grid-row.title,
+#devices_container .devices-grid .grid-row .user-cells{
+	height: 50px;
+	line-height: 50px; /* 60 - padding */
+}
+
+#devices_container .devices-grid .grid-row:not(:last-child) {
+	border-bottom: 1px solid #eee;
+}
+
+#devices_container .devices-grid .grid-row.title .grid-cell {
+	text-align: center;
+	padding-left: 0;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell {
+	border-right: 1px solid #eee;
+	display: inline-block;
+	overflow: hidden;
+	padding-left: 10px;
+	width: 20%;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:first-child {
+	border-left: none !important;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:last-child {
+	border-right: none !important;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:not(.features) {
+	white-space: nowrap;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.centered {
+	padding: 0;
+	text-align: center;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.right-aligned {
+	padding: 0 5px 0 0;
+	text-align: right;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.features a.dropdown-toggle {
+	padding: 15px 7px 2px 15px;
+	text-align: left;
+	background: transparent !important;
+}
+
+#devices_container .devices-cells {
+	height: 60px;
+	line-height: 60px;
+}
+
+/* Columns */
+#devices_container .devices-grid .grid-row .grid-cell.type {
+	width: 20%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address {
+	width: 30%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .first-line{
+	height: 30px;
+	line-height: 45px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .first-line.bigger{
+	line-height: 60px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .second-line{
+	color: #999;
+	font-size: 10px;
+	height: 30px;
+	line-height: 25px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.user {
+	width: 25%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.enable {
+	width: 15%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.edit {
+	width: 10%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.edit .settings {
+	padding: 10px;
+	cursor: pointer;
+}
+#devices_container .devices-grid .grid-row .grid-cell.edit .settings:hover {
+	color: #000;
+}
