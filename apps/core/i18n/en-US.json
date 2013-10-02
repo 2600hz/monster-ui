@@ -26,6 +26,8 @@
 	"hello": "Welcome!",
 	"info": "Info",
 	"next": "Next",
+	"on": "On",
+	"off": "Off",
 	"paging": {
 		"first": "First",
 		"previous": "Previous",

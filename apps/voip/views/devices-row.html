@@ -1,0 +1,22 @@
+<div class="grid-row" data-id="{{id}}" data-search="{{userName}} {{friendlyType}} {{type}} {{name}} {{macAddress}}">
+	<div class="devices-cells">
+		<div class="type grid-cell centered {{colorLine}}">
+			{{friendlyType}}
+		</div>
+		<div class="mac-address grid-cell">
+			<div class="first-line{{#compare macAddress '===' ''}} bigger{{/compare}}">{{name}}</div>
+			<div class="second-line">{{macAddress}}</div>
+		</div>
+		<div class="user grid-cell{{#unless isAssigned}} centered{{/unless}}">
+			{{userName}}
+		</div>
+		<div class="enable grid-cell centered">
+			<div class="switch" data-on="success" data-off="danger" data-on-label="{{i18n.on}}" data-off-label="{{i18n.off}}">
+			    <input type="checkbox" id="checkbox_enabled"{{#if enabled}} checked="checked"{{/if}}></input>
+			</div>
+		</div>
+		<div class="edit grid-cell centered">
+			<i class="icon-wrench settings"></i>
+		</div>
+	</div>
+</div>

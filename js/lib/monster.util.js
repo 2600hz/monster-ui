@@ -157,6 +157,28 @@ define(function(require){
 			return phoneNumber;
 		},
 
+		formatMacAddress: function(macAddress) {
+			var regex = /[^0-9a-fA-F]/g,
+			    macAddress = macAddress.replace(regex, ''),
+				formattedMac = '';
+
+			if(macAddress.length === 12) {
+				var i = 0;
+
+				for(var c in macAddress) {
+    				if((i%2 === 0) && (i !== 0)) {
+        				formattedMac += ':' + macAddress[i];
+    				}
+    				else {
+        				formattedMac += macAddress[i];
+    				}
+    				i++;
+				}
+			}
+
+			return formattedMac;
+		},
+
 		randomString: function(length, _chars) {
 			var chars = _chars || "23456789abcdefghjkmnpqrstuvwxyz",
 				randomString = '';

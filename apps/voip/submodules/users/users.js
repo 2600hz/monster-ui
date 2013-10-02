@@ -76,13 +76,21 @@ define(function(require){
 				verb: 'DELETE'
 			},
 			/* Devices */
-			'voip.users.getDevices': {
+			'voip.users.listDevices': {
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'voip.users.listUserDevices': {
 				url: 'accounts/{accountId}/devices?filter_owner_id={userId}',
 				verb: 'GET'
+			},
+			'voip.users.getDevice': {
+				url: 'accounts/{accountId}/devices/{deviceId}',
+				verb: 'GET'
+			},
+			'voip.users.updateDevice': {
+				url: 'accounts/{accountId}/devices/{deviceId}',
+				verb: 'POST'
 			},
 			'voip.users.deleteDevice': {
 				url: 'accounts/{accountId}/devices/{deviceId}',
@@ -446,7 +454,7 @@ define(function(require){
 				var numbers = $.extend(true, [], numbersToSave),
 					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
 
-				template.find('.list-assigned-extensions .phone-number-row').each(function(k, row) {
+				template.find('.extensions .list-assigned-items .item-row').each(function(k, row) {
 					var row = $(row),
 						number;
 
@@ -467,7 +475,7 @@ define(function(require){
 						recommendedExtension: nextExtension
 					},
 					newLineTemplate = $(monster.template(self, 'users-newExtension', dataTemplate)),
-					listExtensions = template.find('.list-assigned-extensions');
+					listExtensions = template.find('.extensions .list-assigned-items');
 
 				listExtensions.find('.empty-row').hide();
 
@@ -477,10 +485,10 @@ define(function(require){
 			});
 
 			template.on('click', '.remove-extension', function() {
-				var phoneRow = $(this).parents('.phone-number-row'),
+				var phoneRow = $(this).parents('.item-row'),
 					emptyRow = phoneRow.siblings('.empty-row');
 
-				if(phoneRow.siblings('.phone-number-row').size() === 0) {
+				if(phoneRow.siblings('.item-row').size() === 0) {
 					emptyRow.show();
 				}
 
@@ -495,7 +503,7 @@ define(function(require){
 					existingExtensions.splice(index, 1);
 				}
 
-				$(this).parents('.phone-number-row').remove();
+				$(this).parents('.item-row').remove();
 			});
 
 
@@ -578,12 +586,98 @@ define(function(require){
 				});
 			});
 
+			/* Events for Devices in Users */
+			template.on('click', '.save-devices', function() {
+				var dataDevices = {
+						new: [],
+						old: []
+					},
+					name = $(this).parents('.grid-row').find('.grid-cell.name').text(),
+					userId = $(this).parents('.grid-row').data('id');
+
+				template.find('.detail-devices .list-assigned-items .item-row.updated').each(function(k, row) {
+					dataDevices.new.push($(row).data('id'));
+				});
+				template.find('.detail-devices .list-unassigned-items .item-row.updated').each(function(k, row) {
+					dataDevices.old.push($(row).data('id'));
+				});
+
+				self.usersUpdateDevices(dataDevices, userId, function() {
+					toastr.success(monster.template(self, '!' + toastrMessages.devicesUpdated, { name: name }));
+					self.usersRender({ userId: userId });
+				});
+			});
+
+			template.on('click', '.detail-devices .list-unassigned-items .add-device', function() {
+				var row = $(this).parents('.item-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') - 1,
+					assignedList = template.find('.detail-devices .list-assigned-items');
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				row.toggleClass('updated')
+					.find('button')
+					.removeClass('add-device btn-primary')
+					.addClass('remove-device btn-danger')
+					.text(self.i18n.active().remove);
+
+				assignedList.find('.empty-row').hide();
+				assignedList.append(row);
+
+				var rows = template.find('.list-unassigned-items .item-row');
+
+				if(rows.size() === 0) {
+					template.find('.detail-devices .list-unassigned-items .empty-row').show();
+				}
+				else if(rows.is(':visible') === false) {
+					template.find('.detail-devices .list-unassigned-items .empty-search-row').show();
+				}
+			});
+
+			template.on('click', '.detail-devices .list-assigned-items .remove-device', function() {
+				var row = $(this).parents('.item-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') + 1,
+					unassignedList = template.find('.detail-devices .list-unassigned-items');
+
+				/* Alter the html */
+				row.hide();
+
+				row.toggleClass('updated')
+					.find('button')
+					.removeClass('remove-device btn-danger')
+					.addClass('add-device btn-primary')
+					.text(self.i18n.active().add);
+
+				unassignedList.append(row);
+				unassignedList.find('.empty-row').hide();
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				var rows = template.find('.detail-devices .list-assigned-items .item-row');
+				/* If no rows beside the clicked one, display empty row */
+				if(rows.is(':visible') === false) {
+					template.find('.detail-devices .list-assigned-items .empty-row').show();
+				}
+
+				/* If it matches the search string, show it */
+				if(row.data('search').indexOf(currentNumberSearch) >= 0) {
+					row.show();
+					unassignedList.find('.empty-search-row').hide();
+				}
+			});
+
 			/* Events for Numbers in Users */
 			template.on('click', '.save-numbers', function() {
 				var numbers = $.extend(true, [], extensionsToSave),
 					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
 
-				template.find('.list-assigned-numbers .phone-number-row').each(function(k, row) {
+				template.find('.detail-numbers .list-assigned-items .item-row').each(function(k, row) {
 					numbers.push($(row).data('id'));
 				});
 
@@ -593,11 +687,11 @@ define(function(require){
 				});
 			});
 
-			template.on('click', '.detail-numbers .list-unassigned-numbers .add-number', function() {
-				var row = $(this).parents('.phone-number-row'),
+			template.on('click', '.detail-numbers .list-unassigned-items .add-number', function() {
+				var row = $(this).parents('.item-row'),
 					spare = template.find('.count-spare'),
 					countSpare = spare.data('count') - 1,
-					assignedList = template.find('.detail-numbers .list-assigned-numbers');
+					assignedList = template.find('.detail-numbers .list-assigned-items');
 
 				spare
 					.html(countSpare)
@@ -611,21 +705,21 @@ define(function(require){
 				assignedList.find('.empty-row').hide();
 				assignedList.append(row);
 
-				var rows = template.find('.list-unassigned-numbers .phone-number-row');
+				var rows = template.find('.list-unassigned-items .item-row');
 
 				if(rows.size() === 0) {
-					template.find('.detail-numbers .list-unassigned-numbers .empty-row').show();
+					template.find('.detail-numbers .list-unassigned-items .empty-row').show();
 				}
 				else if(rows.is(':visible') === false) {
-					template.find('.detail-numbers .list-unassigned-numbers .empty-search-row').show();
+					template.find('.detail-numbers .list-unassigned-items .empty-search-row').show();
 				}
 			});
 
-			template.on('click', '.detail-numbers .list-assigned-numbers .remove-number', function() {
-				var row = $(this).parents('.phone-number-row'),
+			template.on('click', '.detail-numbers .list-assigned-items .remove-number', function() {
+				var row = $(this).parents('.item-row'),
 					spare = template.find('.count-spare'),
 					countSpare = spare.data('count') + 1,
-					unassignedList = template.find('.detail-numbers .list-unassigned-numbers');
+					unassignedList = template.find('.detail-numbers .list-unassigned-items');
 
 				/* Alter the html */
 				row.hide();
@@ -642,10 +736,10 @@ define(function(require){
 					.html(countSpare)
 					.data('count', countSpare);
 
-				var rows = template.find('.detail-numbers .list-assigned-numbers .phone-number-row');
+				var rows = template.find('.detail-numbers .list-assigned-items .item-row');
 				/* If no rows beside the clicked one, display empty row */
 				if(rows.is(':visible') === false) {
-					template.find('.detail-numbers .list-assigned-numbers .empty-row').show();
+					template.find('.detail-numbers .list-assigned-items .empty-row').show();
 				}
 
 				/* If it matches the search string, show it */
@@ -655,9 +749,9 @@ define(function(require){
 				}
 			});
 
-			template.on('keyup', '.detail-numbers .unassigned-list-header .search-query', function() {
-				var rows = template.find('.list-unassigned-numbers .phone-number-row'),
-					emptySearch = template.find('.list-unassigned-numbers .empty-search-row'),
+			template.on('keyup', '.list-wrapper .unassigned-list-header .search-query', function() {
+				var rows = template.find('.list-unassigned-items .item-row'),
+					emptySearch = template.find('.list-unassigned-items .empty-search-row'),
 					currentRow;
 
 				currentNumberSearch = $(this).val().toLowerCase();
@@ -673,7 +767,7 @@ define(function(require){
 			});
 
 			template.on('click', '.callerId-number', function() {
-				var cnamCell = $(this).parents('.phone-number-row').first(),
+				var cnamCell = $(this).parents('.item-row').first(),
 					phoneNumber = cnamCell.data('id');
 
 				if(phoneNumber) {
@@ -696,7 +790,7 @@ define(function(require){
 			});
 
 			template.on('click', '.e911-number', function() {
-				var e911Cell = $(this).parents('.phone-number-row').first(),
+				var e911Cell = $(this).parents('.item-row').first(),
 					phoneNumber = e911Cell.data('id');
 
 				if(phoneNumber) {
@@ -719,7 +813,7 @@ define(function(require){
 			});
 
 			template.on('click', '.failover-number', function() {
-				var failoverCell = $(this).parents('.phone-number-row').first(),
+				var failoverCell = $(this).parents('.item-row').first(),
 					phoneNumber = failoverCell.data('id');
 
 				if(phoneNumber) {
@@ -1032,6 +1126,9 @@ define(function(require){
 			else if(type === 'features') {
 				self.usersGetFeaturesTemplate(userId, listUsers, callbackAfterData);
 			}
+			else if(type === 'devices') {
+				self.usersGetDevicesTemplate(userId, callbackAfterData);
+			}
 		},
 
 		usersGetFeaturesTemplate: function(userId, listUsers, callback) {
@@ -1105,6 +1202,20 @@ define(function(require){
 					callbackAfterFormat && callbackAfterFormat(template, dataTemplate);
 				}
 			);
+		},
+
+		usersGetDevicesData: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listDevices',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		},
 
 		usersGetNumbersData: function(userId, callback) {
@@ -1181,7 +1292,17 @@ define(function(require){
 				});
 			});
 		},
+		usersGetDevicesTemplate: function(userId, callback) {
+			var self = this;
 
+			self.usersGetDevicesData(function(results) {
+				var results = self.usersFormatDevicesData(userId, results);
+
+				template = $(monster.template(self, 'users-devices', results));
+
+				callback && callback(template, results);
+			});
+		},
 		usersGetExtensionsTemplate: function(userId, callback) {
 			var self = this;
 			self.usersGetNumbersData(userId, function(results) {
@@ -1191,6 +1312,30 @@ define(function(require){
 					callback && callback(template, results);
 				});
 			});
+		},
+
+		usersFormatDevicesData: function(userId, data) {
+			var self = this,
+				formattedData = {
+					countSpare: 0,
+					assignedDevices: {},
+					unassignedDevices: {}
+				};
+
+			_.each(data, function(device) {
+				if(device.owner_id === userId) {
+					formattedData.assignedDevices[device.id] = device;
+				}
+				else if(device.owner_id === '' || !('owner_id' in device)) {
+					formattedData.countSpare++;
+					formattedData.unassignedDevices[device.id] = device;
+				}
+			});
+
+			formattedData.emptyAssigned = _.isEmpty(formattedData.assignedDevices);
+			formattedData.emptySpare = _.isEmpty(formattedData.unassignedDevices);
+
+			return formattedData;
 		},
 
 		usersFormatNumbersData: function(userId, data, callback) {
@@ -1671,6 +1816,37 @@ define(function(require){
 			});
 		},
 
+		usersGetDevice: function(deviceId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getDevice',
+				data: {
+					accountId: self.accountId,
+					deviceId: deviceId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersUpdateDevice: function(data, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.updateDevice',
+				data: {
+					accountId: self.accountId,
+					data: data,
+					deviceId: data.id
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
 		usersGetData: function(callback) {
 			var self = this;
 
@@ -1699,7 +1875,7 @@ define(function(require){
 					},
 					devices: function(callback) {
 						monster.request({
-							resource: 'voip.users.getDevices',
+							resource: 'voip.users.listDevices',
 							data: {
 								accountId: self.accountId
 							},
@@ -1713,6 +1889,41 @@ define(function(require){
 					callback && callback(results);
 				}
 			);
+		},
+
+		usersUpdateDevices: function(data, userId, callbackAfterUpdate) {
+			var self = this;
+
+			monster.parallel
+			var listFnParallel = [];
+
+			_.each(data.new, function(deviceId) {
+				listFnParallel.push(function(callback) {
+					self.usersGetDevice(deviceId, function(data) {
+						data.owner_id = userId;
+
+						self.usersUpdateDevice(data, function(data) {
+							callback(null, data);
+						});
+					});
+				});
+			});
+
+			_.each(data.old, function(deviceId) {
+				listFnParallel.push(function(callback) {
+					self.usersGetDevice(deviceId, function(data) {
+						delete data.owner_id;
+
+						self.usersUpdateDevice(data, function(data) {
+							callback(null, data);
+						});
+					});
+				});
+			});
+
+			monster.parallel(listFnParallel, function(err, results) {
+				callbackAfterUpdate && callbackAfterUpdate(results);
+			});
 		},
 
 		usersUpdateCallflowNumbers: function(callflowId, numbers, callback) {

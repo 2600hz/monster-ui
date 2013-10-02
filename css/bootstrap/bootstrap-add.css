@@ -4,6 +4,9 @@
 	padding-right: 10px;
 }
 
+.has-switch label {
+	z-index: 0;
+}
 /* Font-Awesome */
 [class^="icon-"]:before, [class*=" icon-"]:before {
   /* Change text-decoration + add line-height to be normal */
@@ -70,6 +73,15 @@
     color: #fff;
 }
 
+.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+	background-color: #22CCFF;
+}
+
+.pull-right.dropdown-menu:after {
+	right: 10px;
+	left: auto;
+}
+
 /* More class for bootstrap */
 .content-centered {
     text-align: center;
@@ -124,6 +136,7 @@ a {
     background-repeat:repeat-x;filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22a5ff',endColorstr='#ff22ccff',GradientType=0)
 
     color: #eee;
+    cursor: pointer;
 }
 
 .dropdown-menu li>a:hover i, .dropdown-menu li>a:focus i, .dropdown-menu .active>a i, .dropdown-menu .active>a:hover i, .dropdown-submenu:hover>a i {

@@ -1,0 +1,105 @@
+<div class="edit-device" data-type="sip-device" data-id="{{id}}">
+	<div class="title-bar clearfix">
+		<div class="device-title pull-left">
+			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
+			<div class="device-model">{{provision.endpoint_brand}} {{provision.endpoint_model}}</div>
+		</div>
+
+		<ul class="nav nav-pills pull-right">
+			<li class="main-section active">
+				<a class="change-section" data-section="basic" href="#">{{ i18n.devices.popupSettings.basicTitle }}</a>
+			</li>
+			<li class="main-section dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ i18n.devices.popupSettings.advancedTitle }}
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu pull-right">
+					<li><a class="change-section" data-section="audio" href="#"><i class="icon-music"></i>{{ i18n.devices.popupSettings.audio.menuTitle }}</a></li>
+					<li><a class="change-section" data-section="video" href="#"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="content">
+		<form id="form_device" class="form-horizontal">
+			<div class="section active" data-section="basic">
+				<div class="control-group">
+					<label class="control-label" for="name">{{ i18n.devices.sip_device.deviceName }}</label>
+					<div class="controls">
+						<input type="text" id="name" name="name" value="{{name}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="mac_address">{{ i18n.devices.sip_device.macAddress }}</label>
+					<div class="controls">
+						<input type="text" name="mac_address" placeholder="{{ i18n.devices.sip_device.macAddressPlaceholder }}" value="{{mac_address}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="section clearfix" data-section="audio">
+				<div class="title">
+					{{ i18n.devices.popupSettings.audio.sectionTitle }}
+				</div>
+
+				<div class="codec-selector" id="audio_codec_selector">
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
+						<ul class="available-codecs connectedSortable">
+							{{#each extra.availableCodecs.audio}}
+  	  	  	  	  	  			<li class="item-codec ui-state-default" data-codec="{{this.codec}}">{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
+						<ul class="selected-codecs connectedSortable">
+							{{#each extra.selectedCodecs.audio}}
+  	  	  	  	  	  			<li class="item-codec ui-state-default" data-codec="{{this.codec}}">{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="section clearfix" data-section="video">
+				<div class="title">
+					{{ i18n.devices.popupSettings.video.sectionTitle }}
+				</div>
+				<div class="codec-selector" id="video_codec_selector">
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
+						<ul class="available-codecs connectedSortable">
+							{{#each extra.availableCodecs.video}}
+  	  	  	  	  	  			<li class="item-codec ui-state-default" data-codec="{{this.codec}}">{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
+						<ul class="selected-codecs connectedSortable">
+							{{#each extra.selectedCodecs.video}}
+  	  	  	  	  	  			<li class="item-codec ui-state-default" data-codec="{{this.codec}}">{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="actions clearfix">
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+			{{#if id}}
+				<button type="button" class="btn btn-danger delete">{{ i18n.devices.deleteDevice }}</button>
+				<button type="button" class="btn btn-success save">{{ i18n.saveChanges }}</button>
+			{{else}}
+				<button type="button" class="btn btn-success save">{{ i18n.devices.createDevice }}</button>
+			{{/if}}
+		</div>
+	</div>
+</div>
