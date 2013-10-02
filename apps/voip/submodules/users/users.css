@@ -18,14 +18,12 @@
 	font-size: 28px;
 	font-weight: 500;
 	margin-left: 10px;
+	margin-right: 25px;
 	margin-top: -5px;
 }
 
 #users_container .users-header .add-user {
-	cursor: pointer;
-	color: #666;
 	font-size: 14px;
-	margin-left: 20px;
 }
 
 #users_container .users-header .add-user i {

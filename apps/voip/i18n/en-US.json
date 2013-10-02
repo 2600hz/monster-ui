@@ -12,8 +12,43 @@
 
 	"devices": {
 		"add": "Add Device",
+		"createDevice": "Create Device",
+		"deleteDevice": "Delete Device",
+		"deletedDevice": "You successfully deleted the following device \"{{deviceName}}\".",
+		"popupSettings": {
+			"advancedTitle": "Advanced",
+			"basicTitle": "Basic Settings",
+			"basicSectionTitle": "Basic Settings",
+			"audio": {
+				"menuTitle": "Audio",
+				"sectionTitle": "Audio Settings",
+				"selectedCodecs": "Selected Codecs",
+				"unselectedCodecs": "Unselected Codecs"
+			},
+			"video": {
+				"menuTitle": "Video",
+				"sectionTitle": "Video Settings",
+				"selectedCodecs": "Selected Codecs",
+				"unselectedCodecs": "Unselected Codecs"
+			}
+		},
 		"buy": "Buy Device",
 		"noMatchingDevices": "There were no devices found matching your search",
+		"provisionerPopup": {
+			"brandHeadline": "Select the brand of the device:",
+			"deviceHeadline": "Select the model of the device:",
+			"deviceSelected": "You have selected the {{brand}} {{model}}",
+			"missingBrand": "The brand of my device is not listed here",
+			"missingDevice": "My device is not listed here",
+			"title": "Selection of the device"
+		},
+		"sip_device": {
+			"addTitle": "Adding a SIP Device",
+			"editTitle": "Editing SIP Device: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"deviceName": "Device Name"
+		},
 		"title": "Devices",
 		"titleGrid": {
 			"edit": "Edit",

@@ -4,6 +4,9 @@
 	padding-right: 10px;
 }
 
+.has-switch label {
+	z-index: 0;
+}
 /* Font-Awesome */
 [class^="icon-"]:before, [class*=" icon-"]:before {
   /* Change text-decoration + add line-height to be normal */
@@ -68,6 +71,15 @@
 
 .nav-tabs > li.active > a i {
     color: #fff;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+	background-color: #22CCFF;
+}
+
+.pull-right.dropdown-menu:after {
+	right: 10px;
+	left: auto;
 }
 
 /* More class for bootstrap */

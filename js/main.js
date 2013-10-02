@@ -16,6 +16,7 @@ require.config({
 		isotope: 'js/lib/jquery.isotope.min',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
+		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
 		jstz: 'js/lib/jstz.min',
 		leaflet: 'js/lib/leaflet.min',
 		monster: 'js/lib/monster',
