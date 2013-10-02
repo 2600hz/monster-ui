@@ -7,7 +7,8 @@ define(function(require){
 			numbers: require('./submodules/numbers/numbers'),
 			users: require('./submodules/users/users'),
 			myOffice: require('./submodules/myOffice/myOffice'),
-			strategy: require('./submodules/strategy/strategy')
+			strategy: require('./submodules/strategy/strategy'),
+			callLogs: require('./submodules/callLogs/callLogs')
 		};
 
 	var app = {

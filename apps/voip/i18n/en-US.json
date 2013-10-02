@@ -226,5 +226,36 @@
 			"updateHolidaySuccess": "Holidays sucessfully updated.",
 			"updateCallSuccess": "Call strategy sucessfully updated."
 		}
+	},
+
+	"callLogs": {
+		"title": "Call Logs",
+		"dateRangeTo": "to",
+		"noSearchMatch": "You search criteria did not match any Call Log.",
+		"detailsPopupTitle": "Call Log Details",
+		"applyFilter": "Filter by selected dates",
+		"resetFilter": "Reset filter to default dates",
+		"gridHeaders": {
+			"inboundCall": "Inbound",
+			"outboundCall": "Outbound",
+			"dateTime1": "Date/Time",
+			"dateTime2": "(PST)",
+			"from": "From",
+			"to": "To",
+			"duration1": "Duration",
+			"duration2": "(Min)",
+			"hangup1": "Hangup",
+			"hangup2": "Cause",
+			"details1": "Call",
+			"details2": "Details",
+			"report1": "Submit",
+			"report2": "Report"
+		},
+		"reportCall": "Report Call",
+		"alertMessages": {
+			"getDetailsError": "An error occured while retrieving the call log's details."
+		},
+		"key": "Key",
+		"value": "Value"
 	}
 }
