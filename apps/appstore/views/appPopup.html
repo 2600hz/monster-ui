@@ -2,7 +2,7 @@
 	<div class="left-container">
 		<div class="title-container clearfix">
 			<div class="icon"></div>
-			<div class="title">{{ app.label }}</div>
+			<div class="title">{{ app.extra.label }}</div>
 		</div>
 		<div class="screenshot-container">
 			<div id="screenshot_carousel" class="carousel slide">
@@ -24,7 +24,18 @@
 		</div>
 		<div class="description-container">
 			<div class="description-title">{{ i18n.description }}</div>
-			<div class="description-content">{{ app.description }}</div>
+			<div class="description-content">{{ app.extra.description }}</div>
+			<div class="description-content">{{ app.extra.extendedDescription }}</div>
+			<div class="description-content">
+				<div class="features-title">{{ i18n.featuresTitle }}</div>
+				<ul>
+					{{#each app.extra.features}}
+					<li>{{this}}</li>
+					{{else}}
+					<li>{{ i18n.undefinedFeatures }}</li>
+					{{/each}}
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="right-container">

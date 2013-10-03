@@ -178,8 +178,12 @@ define(function(require){
 				},
 				success: function(data, status) {
 					var app = $.extend(true, data.data, {
-							label: data.data.i18n['en-US'].label,
-							description: data.data.i18n['en-US'].description,
+							extra: {
+								label: data.data.i18n['en-US'].label,
+								description: data.data.i18n['en-US'].description,
+								extendedDescription: data.data.i18n['en-US'].extended_description,
+								features: data.data.i18n['en-US'].features
+							}
 						}),
 						selectedUsersList = $.extend(true, [], app.installed.users),
 						users = $.map($.extend(true, [], userList), function(val, key) {
@@ -226,7 +230,7 @@ define(function(require){
 					rightContainer.find('.total-users-number').html(users.length);
 
 					monster.ui.prettyCheck.create(userListContainer);
-					monster.ui.dialog(template, {title: app.label});
+					monster.ui.dialog(template, {title: app.extra.label});
 
 					if(leftContainer.height() > rightContainer.height()) {
 						rightContainer.height(leftContainer.height());
@@ -250,8 +254,7 @@ define(function(require){
 					icon.show()
 						.addClass('icon-spin');
 
-					delete app.label;
-					delete app.description;
+					delete app.extra;
 					monster.request({
 						resource: 'appstore.update',
 						data: {
