@@ -178,10 +178,7 @@
 
 #appstore_popup_container {
 	padding: 20px;
-}
-
-#appstore_popup_container {
-
+	width: 570px;
 }
 
 #appstore_popup_container .icon {
@@ -199,10 +196,15 @@
 #appstore_popup_container .right-container {
 	float: left;
 	width: 200px;
+	height: 380px;
 	background-color: #eee;
 	border: solid 1px #ccc;
 	margin-left: 20px;
 	border-radius: 4px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	position: relative;
 }
 
 #appstore_popup_container .title {
@@ -216,7 +218,7 @@
 }
 
 #appstore_popup_container .screenshot-container {
-	height: 280px;
+	height: 300px;
 }
 
 #appstore_popup_container .left-container > div:not(:first-of-type) {
@@ -294,10 +296,6 @@
 				-5px -5px 40px #FF5757;
 }
 
-#appstore_popup_container .right-container .user-list-view {
-	display: none;
-}
-
 #appstore_popup_container .right-container > div > div {
 	padding: 10px;
 }
@@ -337,7 +335,7 @@
 #appstore_popup_container .right-container .bottom-right-div {
 	position: absolute;
 	width: 180px;
-	bottom: 20px; 
+	bottom: 0px; 
 }
 
 #appstore_popup_container .right-container .help-bloc > div {
@@ -358,12 +356,21 @@
 	color: #22ccff;
 }
 
+#appstore_popup_container .right-container .user-list-view {
+	display: none;
+}
+
+#appstore_popup_container .right-container .user-list-view form {
+	margin: 0;
+}
+
 #appstore_popup_container .right-container .user-list-view .user-list {
 	margin: 0;
 	list-style: none;
 	border-top: solid 1px #ccc;
 	background-color: #f9f9f9;
 	overflow: auto;
+	height: 195px;
 }
 
 #appstore_popup_container .right-container .user-list-view .user-list-element {
@@ -374,6 +381,9 @@
 #appstore_popup_container .right-container .user-list-view .user-list-element label {
 	padding: 8px 10px;
 	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #appstore_popup_container .right-container .user-list-view .user-list-element.checked i.icon-sign-blank {

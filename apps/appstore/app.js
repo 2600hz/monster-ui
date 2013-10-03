@@ -232,12 +232,18 @@ define(function(require){
 					monster.ui.prettyCheck.create(userListContainer);
 					monster.ui.dialog(template, {title: app.extra.label});
 
-					if(leftContainer.height() > rightContainer.height()) {
-						rightContainer.height(leftContainer.height());
-					} else {
-						leftContainer.height(rightContainer.height());
-					}
-					userListContainer.css('maxHeight', rightContainer.height()-182);
+					// userListContainer.niceScroll({
+					// 	cursorcolor:"#333",
+					// 	cursoropacitymin:0.5,
+					// 	hidecursordelay:1000
+					// });
+
+					// if(leftContainer.height() > rightContainer.height()) {
+					// 	rightContainer.height(leftContainer.height());
+					// } else {
+					// 	leftContainer.height(rightContainer.height());
+					// }
+					// userListContainer.css('maxHeight', rightContainer.height()-182);
 
 					template.find('#screenshot_carousel').carousel();
 				}
@@ -386,6 +392,7 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+				// userList.getNiceScroll()[0].resize();
 			});
 
 			userList.on('ifToggled', 'input', function(e) {
@@ -426,6 +433,7 @@ define(function(require){
 				});
 				parent.find('.user-list-view').hide();
 				parent.find('.app-details-view').show();
+				// userList.getNiceScroll()[0].resize();
 			});
 
 			parent.find('#user_list_save').on('click', function(e) {
@@ -447,6 +455,7 @@ define(function(require){
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();
+					// userList.getNiceScroll()[0].resize();
 
 					updateApp(app);
 				} else {
