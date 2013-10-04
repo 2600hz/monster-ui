@@ -1,4 +1,10 @@
-<div id="servers_list" data-view="list">
+<div id='php'></div>
+
+	
+
+
+
+
 	<table class="footable table table-bordered" data-filter="#filter">
 		<thead>
 			<tr>
@@ -74,9 +80,18 @@
 					</div>
 					<span>{{disk}}%</span>
 				</td>
-				<td><i class="icon-cog"></i></td>
+				<td><nobr><i class="icon-cog"></i> 
+				 
+					 <select class='selaction' client='{{ip}}' id='sel_{{dn}}'>
+							<option value='sensu_client_config'>Sensu Config</option>
+							<option value='kz-ecallmgr'>System Info</option>
+							<option value='reboot'>Reboot</option>
+						 </select>
+					 </nobr>
+					<div><button class='btn btnaction' ip='{{ip}}' client='{{dn}}'>Go</button></div>
+				</td>
 			</tr>
 			{{/each}}
 		</tbody>
 	</table>
-</div>
+ 

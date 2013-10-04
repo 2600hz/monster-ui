@@ -1,0 +1,38 @@
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th data-toggle="true">Status &amp; IP &amp; Domain Name</th>
+				<!--<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
+				<th data-hide="xs,sm,md,lg">Message</th>-->
+				<th data-hide="xs,sm,md,lg">Queues</th>
+				<th data-hide="xs,sm,md,lg">MsgRate</th>
+				<th data-hide="xs,sm,md,lg">Exchanges</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each servers}}
+				{{#if rabbit}}
+					<tr>
+						<td data-value="server_{{status}} {{ip}} {{dn}}">
+							<div class="all-server">
+								<div class="flag pull-left {{status}}">
+									<img src="apps/cluster/static/images/server_{{status}}.png" alt="" />
+								</div>
+								<div class="ip">{{ip}}</div>
+								<div class="domain-name">{{dn}}</div>
+							</div>
+						</td>
+						<!--<td data-value="{{city}} {{country}}">
+							<img src="css/flags/32/{{country}}.png" alt="{{country}}" title="{{country}}">
+							{{city}}
+						</td>
+						<td data-type="alpha">{{alert}}</td>-->
+						<td data-type="numeric">{{queues}}</td>
+						<td data-type="numeric">{{messages_rate}}/s</td>
+						<td data-type="numeric">{{exchanges}}</td>
+					</tr>
+				{{/if}}
+			{{/each}}
+		</tbody>
+	</table>
