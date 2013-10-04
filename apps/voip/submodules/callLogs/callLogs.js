@@ -19,10 +19,10 @@ define(function(require){
 			'voip.callLogs.render': 'callLogsRender'
 		},
 
-		callLogsRender: function(parent) {
+		callLogsRender: function(args) {
 			var self = this;
 
-			self.callLogsRenderContent(parent);
+			self.callLogsRenderContent(args.parent);
 		},
 
 		callLogsRenderContent: function(parent, fromDate, toDate) {
@@ -288,8 +288,13 @@ define(function(require){
 						return result;
 					}
 
+					var detailsArray = objToArray(data.data);
+					detailsArray.sort(function(a, b) {
+						return a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+					})
+
 					monster.ui.dialog(
-						monster.template(self, 'callLogs-detailsPopup', { details: objToArray(data.data) }), 
+						monster.template(self, 'callLogs-detailsPopup', { details: detailsArray }), 
 						{ title: self.i18n.active().callLogs.detailsPopupTitle }
 					);
 				},
