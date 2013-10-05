@@ -149,8 +149,15 @@ define(function(require){
 				success: function(data, status) {
 
 					if (data.noauth) {
-						alert("You need to log in first!");
-						window.location.replace('http://localhost/db/2600/login.php');
+						//alert("You need to log in first!");
+						var container =  $('div#ws-content');
+							clusterManagerTemplate = $(monster.template(self, 'login', data));
+						
+						container
+							.empty()
+							.append(clusterManagerTemplate);	
+
+						//window.location.replace('http://localhost/db/2600/login.php');
 					}
 					else { 
 						var data = format(data),
@@ -329,7 +336,7 @@ define(function(require){
 				dn = $(this).attr('client');
 				ip = $(this).attr('ip');				
 				command = $("#sel_"+dn).val();
-				alert(command);
+				//alert(command);
 				$("#php").html("");	
 				$("#php").load("http://localhost/db/2600/index.php/monitor/ssh", 
 					{ip:ip, command:command}, 
