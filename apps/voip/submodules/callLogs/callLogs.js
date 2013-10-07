@@ -43,7 +43,6 @@ define(function(require){
 			}
 
 			self.callLogsGetCdrs(fromDate, toDate, function(cdrs) {
-				console.log(cdrs);
 				cdrs = self.callLogsFormatCdrs(cdrs);
 
 				dataTemplate.cdrs = cdrs;
@@ -149,7 +148,6 @@ define(function(require){
 						toDateTimestamp = toDateInput.datepicker("getDate").getTime();
 
 					restrictTo.setDate(restrictTo.getDate()+7);
-					console.log(restrictTo);
 					toDateInput.datepicker("option", "minDate", selectedDate);
 					toDateInput.datepicker("option", "maxDate", restrictTo);
 					if(toDateTimestamp > restrictTo.getTime() || toDateTimestamp < selectedDate.getTime()) {
@@ -204,8 +202,6 @@ define(function(require){
 								if(!(val.other_leg_call_id in cdrs)) { cdrs[val.other_leg_call_id] = {}; }
 								if(!('bLegs' in cdrs[val.other_leg_call_id])) { cdrs[val.other_leg_call_id].bLegs = {}; }
 								cdrs[val.other_leg_call_id].bLegs[val.id] = val;
-							} else {
-								console.log('IGNORED: '+val.id);
 							}
 						}
 					});
@@ -244,7 +240,6 @@ define(function(require){
 
 			_.each(cdrs, function(val, key) {
 				if(!('aLeg' in val)) {
-					console.log('CLEANED: '+key);
 					delete cdrs[key];
 				} else {
 					var cdr = formatCdr(val.aLeg);
