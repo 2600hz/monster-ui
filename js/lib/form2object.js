@@ -37,7 +37,8 @@
 	 */
 	window.form2object = function(rootNode, delimiter, skipEmpty, nodeCallback)
 	{
-		if (typeof skipEmpty == 'undefined' || skipEmpty == null) skipEmpty = true;
+		/* Changed default value of skipEmpty from true to false */
+		if (typeof skipEmpty == 'undefined' || skipEmpty == null) skipEmpty = false;
 		if (typeof delimiter == 'undefined' || delimiter == null) delimiter = '.';
 
 		rootNode = typeof rootNode == 'string' ? document.getElementById(rootNode) : rootNode;

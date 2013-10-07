@@ -124,6 +124,15 @@ table.table tr td {
 	margin-bottom: 0;
 }
 
+/* Monster Tabs */
+.tabs-section {
+	display: none;
+}
+
+.tabs-section.active {
+	display: block;
+}
+
 /* jQuery Popup Customization */
 .ui-dialog {
 	border: solid 1px #777;

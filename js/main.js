@@ -46,6 +46,7 @@ require.config({
 			exports: 'Handlebars'
 		},
 		plugins: ['jquery'],
+		'touch-punch': ['jqueryui'],
 		underscore: {
 			exports: '_'
 		}
@@ -53,7 +54,7 @@ require.config({
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
-require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
+require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover', 'touch-punch'], function($, monster){
 	$.support.cors = true;
 
 	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){

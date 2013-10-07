@@ -6,7 +6,6 @@ define(function(require){
 		handlebars = require('handlebars'),
 		async = require('async'),
 		form2object = require('form2object'),
-		touchPunch = require('touch-punch'),
 		config = require('js/config');
 
 	var monster = {

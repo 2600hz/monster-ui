@@ -276,6 +276,22 @@ define(function(require){
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},
 
+		tabs: function(template) {
+			template.find('.tabs-main-selector').first().addClass('active');
+			template.find('.tabs-section').first().addClass('active');
+
+			template.find('.tabs-selector').on('click', function() {
+				var $this = $(this),
+					section = $this.data('section');
+
+				templateDevice.find('.tabs-main-selector').removeClass('active');
+				templateDevice.find('.tabs-section').hide();
+
+				templateDevice.find('.tabs-section[data-section="' + section + '"]').show();
+				$this.parents('.tabs-main-selector').addClass('active');
+			});
+		},
+
 		table: {
 			create: function(name, element, columns, data, options) {
 				var self = this,

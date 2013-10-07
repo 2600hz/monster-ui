@@ -82,7 +82,7 @@ define(function(require){
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
 					if("apps" in data.data) {
-						self.installedApps = data.data.apps;	
+						self.installedApps = data.data.apps;
 					} else {
 						self.installedApps = [];
 						toastr.error(self.i18n.active().toastrMessages.appListError);
@@ -209,8 +209,6 @@ define(function(require){
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
 				content = $('#welcome_page .right_div');
-
-				console.log(cookieLogin, templateData);
 
 			loginHtml.find('.login-tabs a').click(function(e) {
 				e.preventDefault();
