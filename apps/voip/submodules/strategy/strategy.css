@@ -38,7 +38,7 @@
 #strategy_container .element-header-inner > div {
 	width: 50%;
 	line-height: 60px;
-	float: left;
+	display: inline-block;
 	white-space: nowrap;   overflow: hidden;
 	text-overflow: ellipsis;
 	position: relative;
@@ -92,12 +92,13 @@
 
 #strategy_container .element-container.main-number .main-number-element {
 	border-bottom: solid 1px #dedede;
-	line-height: 50px;
+	height: 70px;
 }
 
 #strategy_container .element-container.main-number .main-number-element > div {
 	display: inline-block;
 	padding: 10px;
+	line-height: 50px;
 	-moz-box-sizing: border-box; 
 	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
@@ -324,7 +325,7 @@
 	display: inline-block;
 	vertical-align: top;
 	padding: 10px;
-	border: solid 2px #ddd;
+	border: solid 2px #ccc;
 	border-radius: 10px;
 	text-align: center;
 	background-color: #f9f9f9;
@@ -348,10 +349,6 @@
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option > div:not(:first-of-type) {
 	margin-top: 10px;
-}
-
-#strategy_container .element-container.strategy-calls .callflow-tabs .call-option:not(.active) > div:not(.radio-div) {
-	opacity: 0.5;
 }
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active {
@@ -474,6 +471,8 @@
 #strategy_menu_popup_accordion .greeting-option-content textarea {
 	width: 100%;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	margin: 0px;
 	min-height: 90px;
 }
