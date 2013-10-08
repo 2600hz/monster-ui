@@ -94,7 +94,6 @@ define(function(require){
 			});
 
 			parent.find('.category#devices').on('click', function() {
-				console.log('click');
 				monster.pub('voip.devices.render', args);
 			});
 

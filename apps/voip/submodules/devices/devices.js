@@ -7,6 +7,16 @@ define(function(require){
 	var app = {
 
 		requests: {
+			/* Classifiers */
+			'voip.devices.listClassifiers': {
+				url: 'accounts/{accountId}/phone_numbers/classifiers',
+				verb: 'GET'
+			},
+			/* Numbers */
+			'voip.devices.listNumbers': {
+				url: 'accounts/{accountId}/phone_numbers',
+				verb: 'GET'
+			},
 			/* Provisioner */
 			'voip.devices.getProvisionerData': {
 				apiRoot: monster.config.api.provisioner || 'http://p.2600hz.com/',
@@ -129,10 +139,13 @@ define(function(require){
 
             template.find('.settings').on('click', function() {
 				var $this = $(this),
-					deviceId = $this.parents('.grid-row').data('id');
+					dataDevice = {
+						id: $this.parents('.grid-row').data('id')
+					};
 
-				self.devicesGetDevice(deviceId, function(dataDevice) {
-					self.devicesRenderEdit(dataDevice, function(device) {
+				//self.devicesGetDevice(deviceId, function(dataDevice) {
+				self.devicesGetEditData(dataDevice, function(dataDevice) {
+					self.devicesRenderDevice(dataDevice, function(device) {
 						self.devicesRender({ deviceId: device.id });
 					});
 				});
@@ -149,55 +162,36 @@ define(function(require){
 
 		devicesRenderAdd: function(type, callback) {
 			var self = this,
-				args = {
-					type: type
+				data = {
+					device_type: type
 				};
 
 			if(type === 'sip_device') {
 				self.devicesGetProvisionerData(function(dataProvisioner) {
-					args.data = self.devicesFormatProvisionerData(dataProvisioner);
+					var listModels = self.devicesFormatProvisionerData(dataProvisioner);
 
-					self.devicesRenderProvisioner(args, function(dataProvisioner) {
-						var argsSip = {
-							data: {
-								device_type: 'sip_device'
-							},
-							dataProvisioner: dataProvisioner
-						};
+					self.devicesRenderProvisioner(listModels, function(dataProvisioner) {
+						data.provision = dataProvisioner;
 
-						self.devicesRenderDevice(argsSip, callback);
+						self.devicesGetEditData(data, function(dataDevice) {
+							self.devicesRenderDevice(dataDevice, callback);
+						});
 					});
 				});
 			}
 			else {
-
+				self.devicesGetEditData(data, function(dataDevice) {
+					self.devicesRenderDevice(dataDevice, callback);
+				});
 			}
 		},
 
-		devicesRenderEdit: function(data, callback) {
-			var self = this;
-
-			if(data.device_type === 'sip_device') {
-				var argsSip = {
-					data: data,
-					dataProvisioner: data.provision
-				};
-
-				self.devicesRenderDevice(argsSip, callback);
-			}
-			else {
-
-			}
-		},
-
-		devicesRenderDevice: function(args, callback) {
-			console.log(args);
+		devicesRenderDevice: function(data, callback) {
 			var self = this
-				mode = args.data.id ? 'edit' : 'add',
-				type = args.data.device_type,
-				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: args.data.name }) : self.i18n.active().devices[type].addTitle;
-			    formattedData = self.devicesFormatData(args),
-			    templateDevice = $(monster.template(self, 'devices-'+type, formattedData));
+				mode = data.id ? 'edit' : 'add',
+				type = data.device_type,
+				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
+			    templateDevice = $(monster.template(self, 'devices-'+type, data));
 
 			if(type === 'sip_device') {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
@@ -209,19 +203,11 @@ define(function(require){
 				}).disableSelection();
 			}
 
-			templateDevice.find('.change-section').on('click', function() {
-				var $this = $(this),
-					section = $this.data('section');
-
-				templateDevice.find('.main-section').removeClass('active');
-				templateDevice.find('.section').hide();
-
-				templateDevice.find('.section[data-section="' + section + '"]').show();
-				$this.parents('.main-section').addClass('active');
-			});
+			monster.ui.tabs(templateDevice);
+			templateDevice.find('.switch').bootstrapSwitch();
 
 			templateDevice.find('.actions .save').on('click', function() {
-				var dataToSave = self.devicesMergeData(formattedData, templateDevice);
+				var dataToSave = self.devicesMergeData(data, templateDevice);
 
 				self.devicesSaveDevice(dataToSave, function(data) {
 					popup.dialog('close').remove();
@@ -230,7 +216,7 @@ define(function(require){
 				});
 			});
 
-			templateDevice.find('.actions .delete').on('click', function() {
+			templateDevice.find('#delete_device').on('click', function() {
 				var deviceId = $(this).parents('.edit-device').data('id');
 
 				self.devicesDeleteDevice(deviceId, function(device) {
@@ -252,12 +238,12 @@ define(function(require){
 		},
 
 		/* Args inclunding: data:list of supported devices from provisioner api */
-		devicesRenderProvisioner: function(args, callback) {
+		devicesRenderProvisioner: function(listModels, callback) {
 			var self = this,
 				selectedBrand,
 				selectedFamily,
 				selectedModel,
-				templateDevice = $(monster.template(self, 'devices-provisioner', args.data));
+				templateDevice = $(monster.template(self, 'devices-provisioner', listModels));
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
@@ -336,6 +322,12 @@ define(function(require){
 				}
 			}
 
+			if(formData.call_restriction) {
+				_.each(formData.call_restriction, function(restriction) {
+					restriction.action = restriction.action === true ? 'inherit' : 'deny';
+				});
+			}
+
 			delete originalData.extra;
 			delete formData.extra;
 
@@ -347,6 +339,9 @@ define(function(require){
 		devicesFormatData: function(data) {
 			var defaults = {
 					extra: {
+						hasE911Numbers: data.e911Numbers.length > 0,
+						e911Numbers: data.e911Numbers,
+						restrictions: data.listClassifiers,
 						selectedCodecs: {
 							audio: [],
 							video: []
@@ -372,6 +367,7 @@ define(function(require){
 							}
 						}
 					},
+					call_restriction: {},
 					device_type: 'sip_device',
 					enabled: true,
 					mac_address: '',
@@ -384,15 +380,26 @@ define(function(require){
 						}
 					},
 					name: '',
-					provision: data.dataProvisioner,
 					suppress_unregister_notifications: false
-				},
-				formattedData = $.extend(true, {}, defaults, data.data);
+				};
+
+			_.each(data.listClassifiers, function(restriction, name) {
+				defaults.extra.restrictions[name] = restriction;
+
+				if('call_restriction' in data.device && name in data.device.call_restriction) {
+					defaults.extra.restrictions[name].action = data.device.call_restriction[name].action;
+				}
+				else {
+					defaults.extra.restrictions[name].action = 'inherit';
+				}
+			});
+
+			var formattedData = $.extend(true, {}, defaults, data.device);
 
 			/* Audio Codecs*/
 			/* extend doesn't replace the array so we need to do it manually */
-			if(data.data.media && data.data.media.audio && data.data.media.audio.codecs) {
-				formattedData.media.audio.codecs = data.data.media.audio.codecs;
+			if(data.device.media && data.device.media.audio && data.device.media.audio.codecs) {
+				formattedData.media.audio.codecs = data.device.media.audio.codecs;
 			}
 
 			_.each(formattedData.media.audio.codecs, function(codec) {
@@ -406,8 +413,8 @@ define(function(require){
 			});
 
 			/* Video codecs */
-			if(data.data.media && data.data.media.video && data.data.media.video.codecs) {
-				formattedData.media.video.codecs = data.data.media.video.codecs;
+			if(data.device.media && data.device.media.video && data.device.media.video.codecs) {
+				formattedData.media.video.codecs = data.device.media.video.codecs;
 			}
 
 			_.each(formattedData.media.video.codecs, function(codec) {
@@ -419,8 +426,6 @@ define(function(require){
 					formattedData.extra.availableCodecs.video.push({ codec: codec, description: description });
 				}
 			});
-
-			console.log(formattedData);
 
 			return formattedData;
 		},
@@ -549,6 +554,75 @@ define(function(require){
 					callback(data.data);
 				}
 			});
+		},
+
+		devicesListClassifiers: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.devices.listClassifiers',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		devicesGetE911Numbers: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.devices.listNumbers',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					var e911Numbers = [];
+
+					_.each(data.data.numbers, function(number, value) {
+						if(number.features.indexOf('dash_e911') >= 0) {
+							e911Numbers.push(value);
+						}
+					});
+
+					callback(e911Numbers);
+				}
+			});
+		},
+
+		devicesGetEditData: function(dataDevice, callback) {
+			var self = this;
+
+			monster.parallel({
+					listClassifiers: function(callback) {
+						self.devicesListClassifiers(function(dataClassifiers) {
+							callback(null, dataClassifiers);
+						});
+					},
+					device: function(callback) {
+						if(dataDevice.id) {
+							self.devicesGetDevice(dataDevice.id, function(dataDevice) {
+								callback(null, dataDevice);
+							});
+						}
+						else {
+							callback(null, dataDevice);
+						}
+					},
+					e911Numbers: function(callback) {
+						self.devicesGetE911Numbers(function(e911Numbers) {
+							callback(null, e911Numbers);
+						});
+					}
+				},
+				function(error, results) {
+			    	var formattedData = self.devicesFormatData(results);
+
+					callback && callback(formattedData);
+				}
+			);
 		},
 
 		devicesGetDevice: function(deviceId, callbackSuccess, callbackError) {
