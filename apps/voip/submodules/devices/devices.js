@@ -103,13 +103,19 @@ define(function(require){
 
 			template.find('.devices-header .search-query').on('keyup', function() {
                 var searchString = $(this).val().toLowerCase(),
+                	viewMode = 'true',//template.find('#device_view_selector').val(),
                     rows = template.find('.devices-rows .grid-row:not(.title)'),
                     emptySearch = template.find('.devices-rows .empty-search-row');
 
                 _.each(rows, function(row) {
                     var row = $(row);
 
-                    row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
+					if(row.data('assigned')+'' === viewMode) {
+                    	row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
+					}
+					else {
+						row.hide();
+					}
                 });
 
                 if(rows.size() > 0) {
@@ -193,7 +199,7 @@ define(function(require){
 				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
 			    templateDevice = $(monster.template(self, 'devices-'+type, data));
 
-			if(type === 'sip_device') {
+			if($.inArray(type, ['sip_device', 'cellphone', 'softphone', 'landline', 'fax']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
 			  		connectWith: '.connectedSortable'
 				}).disableSelection();
@@ -292,10 +298,13 @@ define(function(require){
 
 		devicesMergeData: function(originalData, template) {
 			var self = this,
-				hasCodecs = originalData.device_type === 'sip_device' ? true : false,
+				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'cellphone', 'fax', 'softphone']) > -1,
+				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone']) > -1,
 				formData = form2object('form_device');
 
-			formData.mac_address = monster.util.formatMacAddress(formData.mac_address);
+			if('mac_address' in formData) {
+				formData.mac_address = monster.util.formatMacAddress(formData.mac_address);
+			}
 
 			if(hasCodecs) {
 				formData.media = {
@@ -322,7 +331,15 @@ define(function(require){
 				}
 			}
 
-			if(formData.call_restriction) {
+			if(hasCallForward) {
+				$.extend(true, formData.call_forward, {
+					enabled: true,
+					require_keypress: true,
+					keep_caller_id: true
+				});
+			}
+
+			if('call_restriction' in formData) {
 				_.each(formData.call_restriction, function(restriction) {
 					restriction.action = restriction.action === true ? 'inherit' : 'deny';
 				});
@@ -370,7 +387,6 @@ define(function(require){
 					call_restriction: {},
 					device_type: 'sip_device',
 					enabled: true,
-					mac_address: '',
 					media: {
 						audio: {
 							codecs: ['PCMU', 'PCMA']
@@ -379,8 +395,12 @@ define(function(require){
 							codecs: []
 						}
 					},
-					name: '',
 					suppress_unregister_notifications: false
+				},
+				typedDefaults = {
+					landline: {
+
+					}
 				};
 
 			_.each(data.listClassifiers, function(restriction, name) {
@@ -444,11 +464,13 @@ define(function(require){
 			});
 
 			_.each(data.devices, function(device) {
+				var isAssigned = device.owner_id ? true : false;
+
 				formattedData.countDevices++;
 
 				formattedData.devices[device.id] = {
 					id: device.id,
-					isAssigned: !!device.owner_id,
+					isAssigned: isAssigned + '',
 					macAddress: device.mac_address,
 					name: device.name,
 					userName: device.owner_id ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,

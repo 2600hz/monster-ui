@@ -12,6 +12,7 @@
 
 	"devices": {
 		"add": "Add Device",
+		"assigned": "Assigned",
 		"createDevice": "Create Device",
 		"deleteDevice": "Delete Device",
 		"deletedDevice": "You successfully deleted the following device \"{{deviceName}}\".",
@@ -62,6 +63,35 @@
 			"macAddressPlaceholder": "19:33:1A:B2:12:58",
 			"deviceName": "Device Name"
 		},
+		"landline": {
+			"addTitle": "Adding a Landline",
+			"editTitle": "Editing Landline: {{name}}",
+			"number": "Number",
+			"numberPlaceholder": "+14152231121",
+			"deviceName": "Device Name"
+		},
+		"cellphone": {
+			"addTitle": "Adding a Cell Phone",
+			"editTitle": "Editing Cell Phone: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"deviceName": "Device Name"
+		},
+		"fax": {
+			"addTitle": "Adding a Fax Machine",
+			"editTitle": "Editing Fax Machine: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"deviceName": "Device Name"
+		},
+		"softphone": {
+			"addTitle": "Adding a Softphone",
+			"editTitle": "Editing Softphone: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"deviceName": "Device Name"
+		},
+		"spare": "Spare",
 		"title": "Devices",
 		"titleGrid": {
 			"edit": "Edit",

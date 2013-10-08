@@ -1,4 +1,4 @@
-<div class="grid-row" data-id="{{id}}" data-search="{{userName}} {{friendlyType}} {{type}} {{name}} {{macAddress}}">
+<div class="grid-row" data-id="{{id}}" data-search="{{userName}} {{friendlyType}} {{type}} {{name}} {{macAddress}}" data-assigned="{{isAssigned}}">
 	<div class="devices-cells">
 		<div class="type grid-cell centered {{colorLine}}">
 			{{friendlyType}}
@@ -7,7 +7,7 @@
 			<div class="first-line{{#compare macAddress '===' ''}} bigger{{/compare}}">{{name}}</div>
 			<div class="second-line">{{macAddress}}</div>
 		</div>
-		<div class="user grid-cell{{#unless isAssigned}} centered{{/unless}}">
+		<div class="user grid-cell{{#compare isAssigned '===' 'false'}} centered{{/compare}}">
 			{{userName}}
 		</div>
 		<div class="enable grid-cell centered">

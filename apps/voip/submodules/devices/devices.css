@@ -178,6 +178,7 @@
 .edit-device .title-bar {
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 20px;
+	padding: 15px 0;
 }
 
 .edit-device .title-bar .device-title > div {
@@ -190,15 +191,22 @@
 	margin-left: 40px;
 }
 
+.edit-device .title-bar .device-title .device-image {
+	border-radius: 4px;
+	border: 1px solid #CCC;
+}
+
 .edit-device .title-bar .nav-pills {
 	margin-top: 24px;
 	margin-right: 15px;
 }
 
 .edit-device .content .tabs-section .title {
-	margin-bottom: 30px;
-	margin-left: 180px;
-	font-size: 18px;
+	color: #22CCFF;
+    font-size: 24px;
+    margin-bottom: 30px;
+    margin-left: 40px;
+    text-shadow: 1px 0 1px #CCCCCC;
 }
 
 .edit-device .help-box.red-box {
@@ -221,20 +229,40 @@
 }
 
 .edit-device .content .codec-selector .box-selector .box-title {
-	font-size: 18px;
+	background: none repeat scroll 0 0 #22CCFF;
+    border-radius: 4px 4px 0 0;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 500;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 20px;
+    text-align: left;
 }
 
 .edit-device .content .codec-selector .box-selector ul {
+	background: #FFFFFF;
 	border: 1px solid #ccc;
-	border-radius: 4px;
+	border-radius: 0 0 4px 4px;
 	list-style: none;
-	margin: 10px 0;
-	min-height: 295px;
+	margin: 0;
+	min-height: 287px;
+}
+
+.edit-device .content #video_codec_selector .box-selector ul {
+	min-height: 123px;
 }
 
 .edit-device .content .codec-selector .box-selector ul li.item-codec {
+	background: #F0F0F0;
+	border-bottom: 1px solid #ddd;
 	cursor: pointer;
+	font-size: 14px;
 	padding: 10px 5px;
+}
+
+.edit-device .content .codec-selector .box-selector ul li.item-codec:hover {
+	background: #F4F4F4;
 }
 /* Provisioner Popup */
 .device-popup {
