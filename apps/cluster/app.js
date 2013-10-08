@@ -15,6 +15,7 @@ define(function(require){
 
 		requests: {
 			'servers.list': {
+				//apiRoot: 'http://www.colelabs.com/2600/cm/',
 				apiRoot: 'http://localhost/db/2600/index.php/cm/',
 				url: 'system',
 				verb: 'GET'
@@ -159,6 +160,8 @@ define(function(require){
 
 						//window.location.replace('http://localhost/db/2600/login.php');
 					}
+					else if (data.authd)
+						{alert('yup, authd');}
 					else { 
 						var data = format(data),
 							container = container || $('div#ws-content'),
@@ -331,19 +334,27 @@ define(function(require){
 					}					
 				}
 			});
+	
+			//Action Dropdown
+			parent.find('button.btnaction').on('click', function () {
+			dn = $(this).attr('client');
+			ip = $(this).attr('ip');				
+			command = $("#sel_"+dn).val();
+			//alert(command);
+			$("#php").html("");	
+			$("#php").load("http://localhost/db/2600/index.php/monitor/ssh", 
+				{ip:ip, command:command}, 
+				function() {
+					$("#php").prepend(ip + '-' + command+"<br><br>");
+				});
 
-				parent.find('button.btnaction').on('click', function () {
+			});
+
+			//CPU, MEM, HD Metrics
+			parent.find('div.barmetric').on('click', function () {
 				dn = $(this).attr('client');
-				ip = $(this).attr('ip');				
-				command = $("#sel_"+dn).val();
-				//alert(command);
-				$("#php").html("");	
-				$("#php").load("http://localhost/db/2600/index.php/monitor/ssh", 
-					{ip:ip, command:command}, 
-					function() {
-						$("#php").prepend(ip + '-' + command+"<br><br>");
-					});
-
+				metric = $(this).attr('metric');				
+				window.open('http://192.237.168.225/render?target=voip.' + dn + '.system.' + metric + '&width=1000&height=800','wrd')
 			});
 		},
 

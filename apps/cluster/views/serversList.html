@@ -63,19 +63,19 @@
 					{{/if}}
 				</td>
 				<td data-value="{{cpu}}{{#if cpu_overload}} cpu_overload overload{{/if}}">
-					<div class="progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}">
-						<div class="bar" style="width: {{cpu}}%;"></div>
+					<div class="barmetric progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='CPUPercentUsed'>
+						<div class="bar"  style="width: {{cpu}}%;"></div>
 					</div>
 					<span>{{cpu}}%</span>
 				</td>
 				<td data-value="{{ram}}{{#if ram_overload}} ram_overload overload{{/if}}">
-					<div class="progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}">
+					<div class="barmetric progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='MemPercentUsed'>
 						<div class="bar" style="width: {{ram}}%;"></div>
 					</div>
 					<span>{{ram}}%</span>
 				</td>
 				<td data-value="{{disk}}{{#if disk_overload}} disk_overload overload{{/if}}">
-					<div class="progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}">
+					<div class="barmetric progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='HDPercentUsed'>
 						<div class="bar" style="width: {{disk}}%;"></div>
 					</div>
 					<span>{{disk}}%</span>
