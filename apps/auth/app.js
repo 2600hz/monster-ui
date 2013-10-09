@@ -83,6 +83,15 @@ define(function(require){
 					self.isReseller = data.data.is_reseller;
 					if("apps" in data.data) {
 						self.installedApps = data.data.apps;
+						//Temporary fix to reduce the size of the cookie
+						_.each(self.installedApps, function(val, key) {
+							val.i18n = {
+								"en-US": {
+									label: val.i18n["en-US"].label,
+									description: val.i18n["en-US"].description
+								}
+							}
+						});
 					} else {
 						self.installedApps = [];
 						toastr.error(self.i18n.active().toastrMessages.appListError);
