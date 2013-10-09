@@ -427,10 +427,10 @@ define(function(require){
 					var dataForm = form2object('form_user_creation'),
 						formattedData = self.usersFormatCreationData(dataForm);
 
-					self.usersCreate(formattedData, function() {
+					self.usersCreate(formattedData, function(data) {
 						popup.dialog('close').remove();
 
-						self.usersRender();
+						self.usersRender({ userId: data.user.id });
 					});
 				});
 
@@ -1587,6 +1587,7 @@ define(function(require){
 				},
 				success: function(_dataUser) {
 					var userId = _dataUser.data.id;
+					data.user.id = userId;
 					data.vmbox.owner_id = userId;
 
 					self.usersCreateVMBox(data.vmbox, function(_dataVM) {
@@ -1596,7 +1597,7 @@ define(function(require){
 
 						self.usersCreateCallflow(data.callflow, function(_dataCF) {
 							if(data.extra.includeInDirectory) {
-								self.usersAddUserToMainDirectory(_dataUser.data, _dataCF.id, function(data) {
+								self.usersAddUserToMainDirectory(_dataUser.data, _dataCF.id, function(dataDirectory) {
 									callback(data);
 								});
 							}

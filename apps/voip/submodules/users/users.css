@@ -40,8 +40,9 @@
 	font-family: verdana;
 }
 
-#users_container .users-grid i.icon-plus {
-	margin-left: 5px;
+#users_container .users-grid i.icon-telicon-multiple-items {
+	font-size: 14px;
+	margin-left: 15px;
 }
 
 #users_container .users-grid .empty-search-row {
@@ -144,6 +145,10 @@
 #users_container .users-grid .grid-row .grid-cell.devices,
 #users_container .users-grid .grid-row .grid-cell.extension {
 	width: 15%;
+}
+
+#users_container .users-grid .grid-row:not(.title) .grid-cell.extension {
+	padding-left: 25px;
 }
 
 #users_container .users-grid .grid-row .grid-cell.features {

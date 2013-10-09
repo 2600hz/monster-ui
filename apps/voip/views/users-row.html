@@ -1,44 +1,44 @@
 <div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}}{{#each extra.listCallerId}} {{formatPhoneNumber this}} {{this}}{{/each}}">
 	<div class="user-cells">
 		<div class="name grid-cell" data-type="name"><i class="{{#if extra.isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
-		<div class="extension grid-cell centered" data-type="extensions">
+		<div class="extension grid-cell" data-type="extensions">
 			{{#if extra.extension}}
 				{{ extra.extension }}
 
 				{{#if extra.additionalExtensions}}
-					<i class="icon-plus icon-blue"></i>
+					<i class="icon-telicon-multiple-items"></i>
 				{{/if}}
 			{{else}}
 				{{ i18n.users.noExtension }}
 			{{/if}}
 		</div>
-		<div class="phone-number grid-cell centered" data-type="numbers">
+		<div class="phone-number grid-cell" data-type="numbers">
 			{{#if extra.phoneNumber}}
 				{{ formatPhoneNumber extra.phoneNumber }}
 
 				{{#if extra.additionalNumbers}}
-					<i class="icon-plus icon-blue"></i>
+					<i class="icon-telicon-multiple-items"></i>
 				{{/if}}
 			{{else}}
 				{{ i18n.users.noNumber }}
 			{{/if}}
 		</div>
-		<div class="devices grid-cell centered" data-type="devices">
+		<div class="devices grid-cell" data-type="devices">
 			{{#each extra.devices}}
 				{{#compare this '===' 'softphone'}}
-					<i class="icon-user"></i>
+					<i class="icon-telicon-soft-phone"></i>
 				{{/compare}}
 				{{#compare this '===' 'cellphone'}}
-					<i class="icon-facebook"></i>
+					<i class="icon-telicon-mobile-phone"></i>
 				{{/compare}}
 				{{#compare this '===' 'sip_device'}}
-					<i class="icon-phone"></i>
+					<i class="icon-telicon-voip-phone"></i>
 				{{/compare}}
 				{{#compare this '===' 'fax'}}
-					<i class="icon-dribble"></i>
+					<i class="icon-telicon-fax"></i>
 				{{/compare}}
 				{{#compare this '===' 'landline'}}
-					<i class="icon-phone"></i>
+					<i class="icon-telicon-home-phone"></i>
 				{{/compare}}
 			{{else}}
 				{{ i18n.users.noUserDevices }}

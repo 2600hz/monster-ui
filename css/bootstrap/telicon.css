@@ -1,7 +1,6 @@
 /*
- *	telicon 1.0
- *	The telecom icon font designed as an extension for the Font Awesome Library and Twitter Bootstrap
- *  Work done by Josh Sanders (josh@2600hz.com)
+ *	telicon v1.1
+ *	The telecom-centric icon font, designed by Josh Sanders of 2600hz, to be used as a stand-alone font, or in conjunction with the Font Awesome Library
 */
 
 @font-face {
@@ -11,6 +10,8 @@
 		url('../font/telicon.woff') format('woff'),
 		url('../font/telicon.ttf') format('truetype'),
 		url('../font/telicon.svg#telicon') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
 
 /*****************************************
@@ -20,39 +21,62 @@
 [class^="icon-telicon-"],
 [class*=" icon-telicon-"] {
 	font-family: 'telicon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+[class^="icon-telicon-"]:before,
+[class*=" icon-telicon-"]:before {
+	text-decoration: inherit;
+	display: inline-block;
+	speak: none;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 /*  telicon uses the Unicode Private Use Area (PUA) to ensure screen
     readers do not read off random characters that represent icons */
 
-.icon-telicon-calendar:before 				{ content: "\e000"; }
-.icon-telicon-user:before 					{ content: "\e001"; }
-.icon-telicon-unassign:before 				{ content: "\e002"; }
-.icon-telicon-speaking:before 				{ content: "\e003"; }
-.icon-telicon-seats:before 					{ content: "\e004"; }
-.icon-telicon-prorated-charge:before 		{ content: "\e005"; }
-.icon-telicon-porting:before 				{ content: "\e006"; }
-.icon-telicon-pbx:before 					{ content: "\e007"; }
-.icon-telicon-outbound-trunk:before 		{ content: "\e008"; }
-.icon-telicon-outbound-call:before 			{ content: "\e009"; }
-.icon-telicon-onetime-charge:before 		{ content: "\e00a"; }
-.icon-telicon-deafen:before 				{ content: "\e00b"; }
-.icon-telicon-credit-card:before 			{ content: "\e00c"; }
-.icon-telicon-configuration:before 			{ content: "\e00d"; }
-.icon-telicon-calling-id:before 			{ content: "\e00e"; }
-.icon-telicon-caller-id:before 				{ content: "\e00f"; }
-.icon-telicon-billing:before 				{ content: "\e010"; }
-.icon-telicon-billing-history:before 		{ content: "\e011"; }
-.icon-telicon-available-balance:before 		{ content: "\e012"; }
-.icon-telicon-assign:before 				{ content: "\e013"; }
-.icon-telicon-add-user:before 				{ content: "\e014"; }
-.icon-telicon-add-credit:before 			{ content: "\e015"; }
-.icon-telicon-moderator:before 				{ content: "\e016"; }
-.icon-telicon-ip:before 					{ content: "\e017"; }
-.icon-telicon-international-number:before 	{ content: "\e018"; }
-.icon-telicon-international-call:before 	{ content: "\e019"; }
-.icon-telicon-inbound-trunk:before 			{ content: "\e01a"; }
-.icon-telicon-inbound-call:before 			{ content: "\e01b"; }
-.icon-telicon-hangup:before 				{ content: "\e01c"; }
-.icon-telicon-global:before 				{ content: "\e01d"; }
-.icon-telicon-failover:before 				{ content: "\e01e"; }
+.icon-telicon-fax:before 					{ content: "\e000"; }
+.icon-telicon-ata:before 					{ content: "\e001"; }
+.icon-telicon-home-phone:before 			{ content: "\e002"; }
+.icon-telicon-sprint-phone:before  			{ content: "\e003"; }
+.icon-telicon-mobile-phone:before 			{ content: "\e004"; }
+.icon-telicon-tablet:before 				{ content: "\e005"; }
+.icon-telicon-soft-phone:before 			{ content: "\e006"; }
+.icon-telicon-voip-phone:before 			{ content: "\e007"; }
+.icon-telicon-calendar:before 				{ content: "\e008"; }
+.icon-telicon-user:before 					{ content: "\e009"; }
+.icon-telicon-unassign:before 				{ content: "\e00a"; }
+.icon-telicon-speaking:before 				{ content: "\e00b"; }
+.icon-telicon-seats:before 					{ content: "\e00c"; }
+.icon-telicon-prorated-charge:before 		{ content: "\e00d"; }
+.icon-telicon-porting:before 				{ content: "\e00e"; }
+.icon-telicon-pbx:before 					{ content: "\e00f"; }
+.icon-telicon-outbound-trunk:before 		{ content: "\e010"; }
+.icon-telicon-outbound-call:before 			{ content: "\e011"; }
+.icon-telicon-onetime-charge:before 		{ content: "\e012"; }
+.icon-telicon-deafen:before 				{ content: "\e013"; }
+.icon-telicon-credit-card:before 			{ content: "\e014"; }
+.icon-telicon-configuration:before 			{ content: "\e015"; }
+.icon-telicon-calling-id:before 			{ content: "\e016"; }
+.icon-telicon-caller-id:before 				{ content: "\e017"; }
+.icon-telicon-billing:before 				{ content: "\e018"; }
+.icon-telicon-billing-history:before 		{ content: "\e019"; }
+.icon-telicon-available-balance:before 		{ content: "\e01a"; }
+.icon-telicon-assign:before 				{ content: "\e01b"; }
+.icon-telicon-add-user:before 				{ content: "\e01c"; }
+.icon-telicon-add-credit:before 			{ content: "\e01d"; }
+.icon-telicon-moderator:before 				{ content: "\e01e"; }
+.icon-telicon-ip:before 					{ content: "\e01f"; }
+.icon-telicon-international-number:before 	{ content: "\e020"; }
+.icon-telicon-international-call:before 	{ content: "\e021"; }
+.icon-telicon-inbound-trunk:before 			{ content: "\e022"; }
+.icon-telicon-inbound-call:before 			{ content: "\e023"; }
+.icon-telicon-hangup:before 				{ content: "\e024"; }
+.icon-telicon-global:before 				{ content: "\e025"; }
+.icon-telicon-failover:before 				{ content: "\e026"; }
+.icon-telicon-multiple-items:before 		{ content: "\e027"; }

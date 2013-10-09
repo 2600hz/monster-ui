@@ -30,7 +30,7 @@
 				"menuTitle": "Emergency Caller-ID",
 				"sectionTitle": "Emergency Caller-ID",
 				"emergency": "Number",
-				"notSet": "- Not Set -",
+				"notSet": "- Account Default -",
 				"noE911Numbers": "You didn't set E911 on any of your numbers, please set it up via the Number Manager and come back on this screen once it's done"
 			},
 			"restrictions": {
@@ -148,8 +148,8 @@
 		"noAssignedDevices": "There are currently no device assigned to this user.",
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
-		"noNumber": "No number",
-		"noExtension": "No extension",
+		"noNumber": "None",
+		"noExtension": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
 		"noUserDevices": "None",
