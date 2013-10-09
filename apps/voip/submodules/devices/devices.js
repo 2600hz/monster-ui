@@ -372,6 +372,7 @@ define(function(require){
 								'G729': 'G729 - 8kbps (Requires License)',
                                 'PCMU': 'G711u / PCMU - 64kbps (North America)',
                                 'PCMA': 'G711a / PCMA - 64kbps (Elsewhere)',
+                                'GSM': 'GSM',
                                 'G722_16': 'G722 (HD) @ 16kHz',
                                 'G722_32': 'G722.1 (HD) @ 32kHz',
                                 'CELT_48': 'Siren (HD) @ 48kHz',
