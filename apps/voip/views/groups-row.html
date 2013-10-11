@@ -1,0 +1,33 @@
+<div class="grid-row" data-id="{{id}}" data-search="{{name}} {{extra.extension}} {{extra.mainNumber}}">
+	<div class="groups-cells">
+		<div class="name grid-cell" data-type="name">{{ name }}</div>
+		<div class="members grid-cell centered" data-type="members">{{ endpoints }}</div>
+		<div class="extension grid-cell centered" data-type="extensions">
+			{{#if extra.extension}}
+                {{ extra.extension }}
+
+                {{#if extra.additionalExtensions}}
+                    <i class="icon-telicon-multiple-items"></i>
+                {{/if}}
+            {{else}}
+                {{ i18n.groups.noExtension }}
+            {{/if}}
+		</div>
+		<div class="phone-number grid-cell centered" data-type="numbers">
+			{{#if extra.mainNumber}}
+                {{ extra.mainNumber }}
+
+                {{#if extra.additionalNumbers}}
+                    <i class="icon-telicon-multiple-items"></i>
+                {{/if}}
+            {{else}}
+                {{ i18n.groups.noNumber }}
+            {{/if}}
+		</div>
+		<div class="features grid-cell right-aligned" data-type="features"></div>
+	</div>
+
+	<div class="edit-groups" style="display:none;">
+
+	</div>
+</div>

@@ -45,12 +45,12 @@
 					{{ i18n.devices.popupSettings.audio.sectionTitle }}
 				</div>
 
-				<div class="codec-selector" id="audio_codec_selector">
+				<div class="items-selector codec-selector" id="audio_codec_selector">
 					<div class="box-selector">
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -59,7 +59,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -70,12 +70,12 @@
 				<div class="title">
 					{{ i18n.devices.popupSettings.video.sectionTitle }}
 				</div>
-				<div class="codec-selector" id="video_codec_selector">
+				<div class="items-selector codec-selector" id="video_codec_selector">
 					<div class="box-selector">
 						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -84,7 +84,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
