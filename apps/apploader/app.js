@@ -62,7 +62,7 @@ define(function(require){
 						appList.push({
 							id: val,
 							name: app.name,
-							icon: app.icon,
+							icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val + "/icon?auth_token=" + self.authToken,
 							label: app.i18n["en-US"].label
 						});
 						delete installedApps[val];
@@ -75,7 +75,7 @@ define(function(require){
 					appList.push({
 						id: key,
 						name: val.name,
-						icon: val.icon,
+						icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + key + "/icon?auth_token=" + self.authToken,
 						label: val.i18n["en-US"].label
 					});
 

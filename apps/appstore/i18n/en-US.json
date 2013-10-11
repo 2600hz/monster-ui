@@ -1,5 +1,7 @@
 {
 	"description": "Description",
+	"featuresTitle": "Features:",
+	"undefinedFeatures": "Feature list coming soon...",
 	"author": "Author",
 	"version": "Version",
 	"license": "License",
