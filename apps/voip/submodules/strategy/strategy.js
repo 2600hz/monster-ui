@@ -167,6 +167,7 @@ define(function(require){
 		strategyBindEvents: function(template, strategyData) {
 			var self = this,
 				containers = template.find('.element-container'),
+				strategyNumbersContainer = template.find('.element-container.strategy-numbers .element-content'),
 				strategyHoursContainer = template.find('.element-container.strategy-hours .element-content'),
 				strategyHolidaysContainer = template.find('.element-container.strategy-holidays .element-content'),
 				strategyCallsContainer = template.find('.element-container.strategy-calls .element-content');
@@ -195,6 +196,7 @@ define(function(require){
 			});
 
 
+			self.strategyNumbersBindEvents(strategyNumbersContainer, strategyData);
 			self.strategyHoursBindEvents(strategyHoursContainer, strategyData);
 			self.strategyHolidaysBindEvents(strategyHolidaysContainer, strategyData);
 			self.strategyCallsBindEvents(strategyCallsContainer, strategyData);
@@ -370,6 +372,26 @@ define(function(require){
 						callback && callback();
 						break;
 				}
+		},
+
+		strategyNumbersBindEvents: function(container, strategyData) {
+			var self = this;
+
+			container.on('click', '.action-links .spare-link', function(e) {
+				e.preventDefault();
+			});
+
+			container.on('click', '.action-links .buy-link', function(e) {
+				e.preventDefault();
+			});
+
+			container.on('click', '.action-links .port-link', function(e) {
+				e.preventDefault();
+			});
+
+			container.on('click', '.main-number-element .remove-number', function(e) {
+				e.preventDefault();
+			});
 		},
 
 		strategyHoursBindEvents: function(container, strategyData) {

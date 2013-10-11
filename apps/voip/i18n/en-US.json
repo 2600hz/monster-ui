@@ -232,7 +232,7 @@
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
-		"noNumberTitle": "Please add a main number to continue.",
+		"noNumberTitle": "No selected number",
 		"noNumberMessage": "Please add a main number to continue.",
 		"numberLinks": {
 			"spare": "Spare Numbers",
