@@ -182,10 +182,11 @@
 }
 
 #appstore_popup_container .icon {
-	background: url('http://icons.iconarchive.com/icons/martz90/circle/48/skydrive-icon.png') no-repeat center;
+	background: url('./static/images/default_icon.png') no-repeat center;
 	height: 60px;
 	width: 60px;
 	float: left;
+	background-size: contain;
 }
 
 #appstore_popup_container .left-container {
@@ -205,6 +206,10 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	position: relative;
+}
+
+#appstore_popup_container .bottom-container {
+	margin-top: 15px;
 }
 
 #appstore_popup_container .title {
@@ -259,7 +264,7 @@
 
 #appstore_popup_container .screenshot-container .carousel .carousel-inner > .item {
 	background-repeat: no-repeat;
-	background-size: contain;
+	background-size: cover;
 	background-position: center;
 }
 

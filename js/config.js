@@ -2,7 +2,7 @@ define(function(require){
 
 	return {
 		api: {
-			default: 'http://192.168.1.41:8000/v1/',
+			default: 'http://10.26.0.41:8000/v1/',
 			//socket: 'http://192.168.1.82:5555'
 		},
 
