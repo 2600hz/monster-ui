@@ -22,7 +22,11 @@ define(function(require){
 			'buyNumbers.searchNumberBlocks': {
 				url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}',
 				verb: 'GET'
-			}
+			},
+			'buyNumbers.getCurrentServicePlan': {
+				url: 'accounts/{accountId}/service_plans/current',
+				verb: 'GET'
+			},
 			// 'buyNumbers.listCountries': {
 			// 	url: 'http://192.168.1.109:8888/number_manager/api/utilities/countries',
 			// 	contentType: 'application/json',
@@ -50,7 +54,10 @@ define(function(require){
 				};
 			self.buyNumbersGetAvailableCountries(function(countries) {
 				args.availableCountries = countries;
-				self.buyNumbersShowPopup(args, params.callbacks);
+				self.buyNumbersGetPrices(function(prices) {
+					args.prices = prices;
+					self.buyNumbersShowPopup(args, params.callbacks);
+				});
 			});
 		},
 
@@ -81,6 +88,41 @@ define(function(require){
 					"vanity": true,
 					"prefix": 1,
 					"name": "United States"
+				}
+			});
+		},
+
+		buyNumbersGetPrices: function(callback) {
+			var self = this;
+			monster.request({
+				resource: 'buyNumbers.getCurrentServicePlan',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					var prices = {
+						regular: 0,
+						tollfree: 0,
+						vanity: 0
+					};
+					if(data.data && data.data.items && data.data.items.phone_numbers) {
+						var phoneNumbers = data.data.items.phone_numbers;
+						if(phoneNumbers.did_us && phoneNumbers.did_us.rate) {
+							prices.regular = phoneNumbers.did_us.rate
+						}
+						if(phoneNumbers.tollfree_us && phoneNumbers.tollfree_us.rate) {
+							prices.tollfree = phoneNumbers.tollfree_us.rate
+						} else {
+							prices.tollfree = prices.regular;
+						}
+						if(phoneNumbers.vanity_us && phoneNumbers.vanity_us.rate) {
+							prices.vanity = phoneNumbers.vanity_us.rate
+						}
+					}
+					callback(prices);
+				},
+				error: function(data, status) {
+					monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 				}
 			});
 		},
@@ -546,7 +588,7 @@ define(function(require){
 										array_index: args.displayedNumbers.length, 
 										number_value: num, 
 										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode), 
-										price: "2" //TODO: Replace that value using pricing api
+										price: args.prices.tollfree
 									});
 								});
 
@@ -729,7 +771,7 @@ define(function(require){
 												array_index: args.displayedNumbers.length,
 												number_value: startNum + "_" + value.size,
 												formatted_value: self.buyNumbersFormatNumber(startNum, self.selectedCountryCode, endNum),
-												price: value.size
+												price: value.size * args.prices.regular
 											});
 										});
 
@@ -773,7 +815,7 @@ define(function(require){
 												array_index: args.displayedNumbers.length, 
 												number_value: num, 
 												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode), 
-												price: seqNumIntvalue.toString()
+												price: seqNumIntvalue * args.prices.regular
 											});
 										});
 
