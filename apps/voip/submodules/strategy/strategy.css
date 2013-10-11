@@ -155,6 +155,10 @@
 	margin-right: 5px;
 }
 
+#strategy_container .element-container.main-number .main-number-actions .action-links ul.dropdown-menu {
+	min-width: 0;
+}
+
 /********** Strategy Hours ***********/
 
 #strategy_container .element-container.strategy-hours form {

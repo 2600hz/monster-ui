@@ -21,9 +21,19 @@
 {{/each}}
 <div class="main-number-actions">
 	<a href="#" class="cancel-link pull-right">{{ i18n.cancel }}</a>
-	<div class="action-links">
-		<a href="#" class="spare-link"><i class="icon-file-text-alt icon-orange icon-large"></i> {{ i18n.strategy.numberLinks.spare }}</a>&nbsp;
-		<a href="#" class="buy-link"><i class="icon-shopping-cart icon-green icon-large"></i> {{ i18n.strategy.numberLinks.buy }}</a>&nbsp;
-		<a href="#" class="port-link"><i class="icon-random icon-blue icon-large"></i> {{ i18n.strategy.numberLinks.port }}</a>
+	<div class="action-links nav-bar">
+		<a href="#" class="spare-link pull-left"><i class="icon-file-text-alt icon-orange icon-large"></i> {{ i18n.strategy.numberLinks.spare }}</a>&nbsp;
+		<ul class="nav pull-left">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart icon-green icon-large"></i> {{ i18n.strategy.numberLinks.buy.link }}</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a class="buy-link" data-type="regular" href="#">{{i18n.strategy.numberLinks.buy.regular}}</a></li>
+					<li><a class="buy-link" data-type="tollfree" href="#">{{i18n.strategy.numberLinks.buy.tollfree}}</a></li>
+					<li><a class="buy-link" data-type="vanity" href="#">{{i18n.strategy.numberLinks.buy.vanity}}</a></li>
+				</ul>
+			</li>
+		</ul>
+		&nbsp;
+		<a href="#" class="port-link pull-left"><i class="icon-random icon-blue icon-large"></i> {{ i18n.strategy.numberLinks.port }}</a>
 	</div>
 </div>

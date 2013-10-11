@@ -167,7 +167,7 @@ define(function(require){
 		strategyBindEvents: function(template, strategyData) {
 			var self = this,
 				containers = template.find('.element-container'),
-				strategyNumbersContainer = template.find('.element-container.strategy-numbers .element-content'),
+				strategyNumbersContainer = template.find('.element-container.main-number .element-content'),
 				strategyHoursContainer = template.find('.element-container.strategy-hours .element-content'),
 				strategyHolidaysContainer = template.find('.element-container.strategy-holidays .element-content'),
 				strategyCallsContainer = template.find('.element-container.strategy-calls .element-content');
@@ -383,6 +383,18 @@ define(function(require){
 
 			container.on('click', '.action-links .buy-link', function(e) {
 				e.preventDefault();
+				monster.pub('common.buyNumbers', {
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							console.log(numbers);
+							toastr.success(self.i18n.active().strategy.toastrMessages.buyNumbersSuccess);
+						},
+						error: function(error) {
+							toastr.error(self.i18n.active().strategy.toastrMessages.buyNumbersError);
+						}
+					}
+				});
 			});
 
 			container.on('click', '.action-links .port-link', function(e) {

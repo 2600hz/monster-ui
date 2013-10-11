@@ -268,7 +268,12 @@
 		"noNumberMessage": "Please add a main number to continue.",
 		"numberLinks": {
 			"spare": "Spare Numbers",
-			"buy": "Buy Numbers",
+			"buy": {
+				"link": "Buy Numbers",
+				"regular": "Local",
+				"tollfree": "Toll-free",
+				"vanity": "Vanity"
+			},
 			"port": "Port Numbers"
 		},
 		"hours": {
@@ -363,7 +368,9 @@
 		},
 		"toastrMessages": {
 			"updateHolidaySuccess": "Holidays sucessfully updated.",
-			"updateCallSuccess": "Call strategy sucessfully updated."
+			"updateCallSuccess": "Call strategy sucessfully updated.",
+			"buyNumbersSuccess": "The numbers have been purchased.",
+			"buyNumbersError": "An error occured while purchasing numbers."
 		}
 	},
 

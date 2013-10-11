@@ -264,13 +264,13 @@ define(function(require){
 					setTimeout(function() {
 						self.buyNumbersToggleCheckingDiv(container, false);
 						var unavailableNumbers = [];
-						args.selectedNumbers = $.grep(args.selectedNumbers, function(value,index) {
-							if(Math.floor(Math.random()*10) === 0) {
-								unavailableNumbers.push(value);
-								return false;
-							}
-							return true;
-						});
+						// args.selectedNumbers = $.grep(args.selectedNumbers, function(value,index) {
+						// 	if(Math.floor(Math.random()*10) === 0) {
+						// 		unavailableNumbers.push(value);
+						// 		return false;
+						// 	}
+						// 	return true;
+						// });
 						if(unavailableNumbers.length > 0) {
  							container.find('#check_numbers_div .unavailable-div .unavailable-numbers')
  									 .empty()
