@@ -1,7 +1,8 @@
 define(function(require){
 	var $ = require("jquery"),
 		_ = require("underscore"),
-		monster = require("monster");
+		monster = require("monster"),
+		toastr = require("toastr");
 
 	var app = {
 
@@ -80,7 +81,21 @@ define(function(require){
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
-					self.installedApps = data.data.apps;
+					if("apps" in data.data) {
+						self.installedApps = data.data.apps;
+						//Temporary fix to reduce the size of the cookie
+						_.each(self.installedApps, function(val, key) {
+							val.i18n = {
+								"en-US": {
+									label: val.i18n["en-US"].label,
+									description: val.i18n["en-US"].description
+								}
+							}
+						});
+					} else {
+						self.installedApps = [];
+						toastr.error(self.i18n.active().toastrMessages.appListError);
+					}
 
 					if($('#remember_me').is(':checked')) {
 						var cookieLogin = {
@@ -203,8 +218,6 @@ define(function(require){
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
 				content = $('#welcome_page .right_div');
-
-				console.log(cookieLogin, templateData);
 
 			loginHtml.find('.login-tabs a').click(function(e) {
 				e.preventDefault();

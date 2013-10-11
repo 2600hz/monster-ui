@@ -6,6 +6,7 @@ require.config({
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
+		ddslick: 'js/lib/jquery.ddslick.min',
 		footable: 'js/lib/footable/footable.min',
 		'footable-sort': 'js/lib/footable/footable.sort.min',
 		'footable-filter': 'js/lib/footable/footable.filter.min',
