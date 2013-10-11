@@ -1,0 +1,192 @@
+<div id="buy_number">
+    <div class="content">
+
+        <div class="regular-search tollfree-search">
+            <div id="search_top_div">
+
+                <div class="regular-search">
+                    <div class="row-fluid row-popup">
+                        <div class="input-div">
+                            <label>{{i18n.buyNumbers.countrySelectLabel}}</label>
+                            <div id="regular_country_select"></div>
+                        </div>
+                        <div class="input-div">
+                            <label>{{i18n.buyNumbers.cityInputLabel}}</label>
+                            <input type="text" id="city_input"/>
+                        </div>
+                    </div>
+                    <div id="area_code_radio_div" class="radio-group start-hidden">
+                    </div>
+
+                    <div class="row-fluid row-popup top-splitter">
+                        <div id="seq_num_div">
+                            <span id="seq_num_checkbox_span">
+                                <label>
+                                    <input type="checkbox" class="checkbox" id="seq_num_checkbox" />
+                                    <span for="seq_num_checkbox">{{i18n.buyNumbers.seqCheckboxLabel}}</span>
+                                </label>
+                            </span>
+                            <span id="seq_num_input_span" class="start-hidden">
+                                <label>
+                                    <span>{{i18n.buyNumbers.seqInputLabel}}</span>
+                                    <input type="text" id="seq_num_input" maxlength="3" />
+                                </label>
+                            </span>
+                        </div>
+                        <button class="btn btn-primary" type="submit" id="search_numbers_button">
+                            <i class="icon-search icon-white"></i>&nbsp;&nbsp;{{i18n.buyNumbers.search}}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row-fluid row-popup tollfree-search">
+                    <div id="tollfree_search_top_div">
+                        <div class="clearfix ddlist-mini">
+                            <div id="tollfree_country_select"></div>
+                            <div id="tollfree_radio_label">{{i18n.buyNumbers.tollfreeRadioLabel}}</div>
+                        </div>
+                        <div class="clearfix">
+                            <div id="tollfree_radio_group" class="radio-group pull-left">
+                            </div>
+                            <button class="btn btn-primary pull-right" type="submit" id="tollfree_search_button">
+                                <i class="icon-search icon-white"></i>&nbsp;&nbsp;{{i18n.buyNumbers.search}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="search_result_div" class="start-hidden">
+
+                <div class="row-fluid row-popup regular-search">
+                    <div class="result-top-div">
+                        {{i18n.buyNumbers.searchResults}} <span id="search_parameters"></span>
+                        <a id="back_to_search" href="#">{{i18n.buyNumbers.backToSearch}}</a>
+                    </div>
+                </div>
+                <div class="row-fluid row-popup top-splitter">
+                    <div class="result-content-div clearfix">
+                        <div class="left-div"></div>
+
+                        <div class="right-div">
+                            <div class="top-div">
+                                <span id="total_num_span">N/A</span>
+                                {{i18n.buyNumbers.numbersAdded}}
+                                <i class="icon-shopping-cart icon-green"></i>
+                            </div>
+                            <div class="center-div top-splitter"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-fluid row-popup top-splitter">
+                    <div class="result-bottom-div">
+                        <a id="more_info_link" class="whitelabel-field" href="https://2600hz.atlassian.net/wiki/display/OPS/Purchasing+Numbers" target="_blank">&gt;&gt;{{i18n.buyNumbers.moreInfo}}</a>
+                        <button id="buy_numbers_button" class="btn btn-success">{{i18n.buyNumbers.buyNumbers}}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="check_numbers_div" class="start-hidden">
+                <div class="checking-div">
+                    <div class="row-fluid row-popup">
+                        <i class="icon-spinner icon-2x icon-blue"></i>
+                        <span>{{i18n.buyNumbers.checkingMessage}}</span>
+                    </div>
+                </div>
+                <div class="unavailable-div start-hidden">
+                    <div class="summary-div">
+                        <div class="row-fluid row-popup">
+                            <div class="summary-label unavailable-label">{{i18n.buyNumbers.unavailableMessage}}</div>
+                        </div>
+                        <div class="row-fluid row-popup top-splitter">
+                            <div class="unavailable-numbers">
+                            </div>
+                        </div>
+                        <div class="row-fluid row-popup top-splitter">
+                            <button id="continue_buy_button" class="btn btn-success pull-right">{{i18n.buyNumbers.continue}}</button>
+                            <a id="back_to_results_link" class="cancel-link pull-right" href="#">{{i18n.buyNumbers.backToSearchResults}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="confirm_div" class="start-hidden">
+                <div class="row-fluid row-popup">
+                    <div class="summary-div">
+                        <div class="pull-left">
+                            <div class="summary-label">{{i18n.buyNumbers.summaryTotalNumbers}}</div>
+                            <div class="summary-label">{{i18n.buyNumbers.summaryTotalCharges}}</div>
+                        </div>
+                        <div class="pull-right">
+                            <div class="summary-label summary-value large-value"><span id="summary_total_numbers">N/A</span></div>
+                            <div class="summary-label summary-value">$<span id="summary_total_price">N/A</span>/{{i18n.buyNumbers.month}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid row-popup top-splitter">
+                    <div class="summary-div">
+                        <div class="help-box gray-box">
+                            <div class="wrapper-icon">
+                                &nbsp;<i class="icon-info-sign2"></i>&nbsp;
+                            </div>
+                            <div class="text-wrapper">
+                                <p>{{i18n.buyNumbers.confirmInfoMsg1}}</p>
+                                <p>{{i18n.buyNumbers.confirmInfoMsg2}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid row-popup top-splitter">
+                    <div class="summary-div">
+                        <button id="confirm_buy_button" class="btn btn-success pull-right">{{i18n.buyNumbers.confirm}}</button>
+                        <a id="cancel_buy_link" class="cancel-link pull-right" href="#">{{i18n.buyNumbers.cancel}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vanity_search_div" class="vanity-search">
+            <div class="row-fluid row-popup">
+                <div class="ddlist-mini clearfix">
+                    <div id="vanity_country_select"></div>
+                    <div id="vanity_search_label">{{i18n.buyNumbers.vanitySearchLabel}}</div>
+                </div>
+                <div class="vanity-input-div clearfix">
+                    <span class="vanity-input US-input">
+                        <span>(</span>
+                        <input type='text' maxlength='3' />
+                        <span>)</span>
+                        <input type='text' maxlength='3' />
+                        <span>-</span>
+                        <input type='text' maxlength='4' />
+                    </span>
+                    <span class="vanity-input default-input start-hidden">
+                        <input type='text' maxlength='20' />
+                    </span>
+                    <i class="icon-ok icon-2x icon-blue start-hidden"></i>
+                    <i class="icon-spinner icon-2x icon-spin icon-orange start-hidden"></i>
+                    <i class="icon-remove icon-2x icon-red start-hidden"></i>
+                    <div class="pull-right">
+                        <button id="vanity_search_button" class="btn btn-primary pull-right">
+                            <i class="icon-search icon-white"></i>&nbsp;&nbsp;{{i18n.buyNumbers.search}}
+                        </button>
+                        <button id="vanity_buy_button" class="btn btn-success pull-right start-hidden">{{i18n.buyNumbers.buyNumber}}</button>
+                        <a id="back_to_vanity_search" class="start-hidden" href="#">{{i18n.buyNumbers.searchAgain}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid row-popup top-splitter">
+                <div class="vanity-info-div">
+                    <p>{{i18n.buyNumbers.vanitySearchInfo1}}</p>
+                    <p>{{i18n.buyNumbers.vanitySearchInfo2}}</p>
+                    <a id="send_request_link" class="whitelabel-field" href="mailto:support@2600hz.com?subject=Vanity%20Number%20request">&gt;&gt;{{i18n.buyNumbers.sendRequest}}</a>
+                </div>
+                <div class="dialpad_img">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

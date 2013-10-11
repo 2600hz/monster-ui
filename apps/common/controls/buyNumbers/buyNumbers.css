@@ -1,0 +1,388 @@
+#buy_number a {
+	color: #009DE6;
+	font-size: 12px;
+}
+
+#buy_number .row-fluid.row-popup {
+	padding: 15px 0;
+}
+
+#buy_number .top-splitter {
+	border-top: 1px solid #ccc;
+}
+
+#buy_number .input-div {
+	width: 275px;
+	float: left;
+	margin-left: 15px;
+}
+
+#buy_number select, #buy_number input[type="text"] {
+	height: 36px;
+	margin: 0;
+	padding: 0 5px;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+#buy_number #city_input {
+	width: 265px;
+}
+
+#buy_number #search_top_div .input-div label {
+	cursor: auto;
+}
+
+#buy_number #search_top_div #area_code_radio_div {
+	margin-bottom: 15px;
+	min-height: 25px;
+}
+
+#buy_number #search_top_div #area_code_radio_div > span {
+	margin-left: 15px;
+}
+
+#buy_number .radio-group input {
+	display: inline-block;
+	margin: 0 6px 3px 14px;
+}
+
+#buy_number .radio-group label {
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+#buy_number #seq_num_div {
+	margin-left: 15px;
+	float: left;
+}
+
+#buy_number #seq_num_div > span {
+	display: block;
+}
+
+#buy_number #seq_num_checkbox {
+	margin: 0 3px 2px 0;
+}
+
+#buy_number #seq_num_input_span {
+	margin: 15px 0 0 22px;
+}
+
+#buy_number #seq_num_input_span > label { 
+	margin-bottom: 0;
+}
+
+#buy_number #seq_num_input_span #seq_num_input {
+	width: 35px;
+	margin-left: 5px;
+}
+
+#buy_number #search_numbers_button {
+	margin-right: 20px;
+	float: right;
+}
+
+#buy_number #tollfree_search_top_div {
+	padding: 0 20px 0 15px;
+}
+
+#buy_number #tollfree_search_top_div .ddlist-mini {
+	margin-bottom: 10px;
+}
+
+#buy_number #tollfree_country_select {
+	float: left;
+}
+
+#buy_number #tollfree_radio_label {
+	margin-left: 15px;
+	line-height: 38px;
+	float: left;
+}
+
+#buy_number #tollfree_radio_group label {
+	line-height: 30px;
+	margin-bottom: 0;
+}
+
+#buy_number #tollfree_radio_group label:first-child input {
+	margin-left: 0;
+}
+
+#buy_number #search_result_div .row-fluid.row-popup > div {
+	padding: 0 15px;
+}
+
+#buy_number #back_to_search {
+	float: right;
+}
+
+#buy_number #search_parameters {
+	font-weight: 500;
+}
+
+#buy_number #search_result_div .result-content-div > div {
+	float: left;
+	height: 350px;
+}
+
+#buy_number #search_result_div .result-content-div .left-div {
+	width: 370px;
+	overflow-y: scroll; 
+	border: solid 1px #ccc;
+	border-radius: 5px 0 0 5px;
+}
+
+#buy_number #search_result_div .result-content-div .left-div .no-result {
+	padding: 10px;
+	color: red;
+	font-style: italic;
+	text-align: justify;
+	font-weight: 500;
+}
+
+#buy_number #search_result_div .result-content-div .left-div .number-box {
+	height: 35px;
+	line-height: 35px;
+	cursor: auto;
+	border-bottom: solid 1px #ccc;
+}
+
+#buy_number #search_result_div .result-content-div .left-div .loading-div {
+	text-align: center;
+	border-bottom: none;
+}
+
+#buy_number #search_result_div .result-content-div .left-div .loading-div > span {
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+#buy_number .number-value {
+	margin-left: 15px;
+}
+
+#buy_number .number-price {
+	float: right;
+	margin-right: 15px;
+	font-size: 12px;
+	color: #999;
+}
+
+#buy_number #search_result_div .result-content-div .right-div {
+	width: 195px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div > div {
+	padding: 10px 0;
+	margin-left: 15px;
+}
+
+#buy_number #total_num_span {
+	font-size: 22px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div i {
+	float: right;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .top-div {
+	height: 30px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .top-div .icon-shopping-cart {
+	font-size: 24px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div {
+	height: 280px;
+	overflow-y: auto;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div ul {
+	list-style: none;
+	margin: 0;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div ul li {
+	font-size: 12px;
+	line-height: 16px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div ul li:not(:last-child) {
+	margin-bottom: 8px;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div ul li:hover {
+	background-color: #F0F0F0;
+}
+
+#buy_number #search_result_div .result-content-div .right-div .center-div .icon-trash:hover {
+	text-shadow: 0 0 15px;
+	cursor: pointer;
+}
+
+#buy_number #buy_numbers_button {
+	float: right;
+}
+
+#buy_number #vanity_search_div .row-fluid.row-popup > div {
+	padding: 0px 15px;
+}
+
+#buy_number #vanity_search_div .ddlist-mini {
+	margin-bottom: 10px;
+}
+
+#buy_number #vanity_search_div .ddlist-mini > div {
+	float:left;
+}
+
+#buy_number #vanity_search_label {
+	margin-left: 15px;
+	line-height: 38px;
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input {
+	float:left;
+}
+
+#buy_number #vanity_search_div .vanity-input-div > i {
+	float:left;
+	margin-left: 15px;
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input.US-input span {
+	font-size: 50px;
+	vertical-align: text-bottom;
+	color: #22ccff
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input input {
+	text-transform: uppercase;
+	text-align: center;
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input.default-input input {
+	width: 286px;
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input.US-input input {
+	width: 50px;
+}
+
+#buy_number #vanity_search_div .vanity-input-div .vanity-input.US-input input:last-child {
+	width: 80px;
+}
+
+#buy_number #back_to_vanity_search {
+	position: absolute;
+	right: 16px;
+	top: 94px;
+}
+
+#buy_number #vanity_search_div .vanity-info-div {
+	float: left;
+	text-align: justify;
+	width: 365px;
+	font-size: 10px;
+}
+
+#buy_number #vanity_search_div .dialpad_img {
+	float: left;
+	width: 172px;
+	height: 116px;
+}
+
+#buy_number #check_numbers_div .checking-div {
+	padding: 20px;
+	text-align: center;
+}
+
+#buy_number #check_numbers_div .checking-div span {
+	margin-left: 15px;
+	font-weight: 500;
+	font-size: 20px;
+	color: #22ccff;
+}
+
+#buy_number #check_numbers_div .unavailable-div .unavailable-numbers {
+	overflow-y: auto;
+	max-height: 140px;
+}
+
+#buy_number #check_numbers_div .unavailable-div .unavailable-numbers ul {
+	list-style: none;
+	margin: 0;
+}
+
+#buy_number #check_numbers_div .unavailable-div .unavailable-numbers ul li {
+	line-height: 28px;
+}
+
+#buy_number .summary-div {
+	padding: 0 50px;
+}
+
+#buy_number .summary-div .summary-label {
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 28px;
+	margin: 5px 0;
+}
+
+#buy_number .summary-div .summary-label.unavailable-label {
+	font-size: 14px;
+	line-height: 20px;
+	text-align: justify;
+}
+
+#buy_number #confirm_div .summary-div .summary-label.summary-value {
+	color: #22ccff;
+}
+
+#buy_number #confirm_div .summary-div .summary-label.large-value {
+	font-size: 28px;
+}
+
+#buy_number #confirm_div .info-msg:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+#buy_number .cancel-link {
+	margin: 5px 20px;
+}
+
+/***************** Temporary fix for country select *******************/
+
+#vanity_country_select, #tollfree_country_select {
+	width: 42px;
+	height: 34px;
+	border: solid 1px #ccc;
+	border-radius: 4px;
+	background-color: #eee;
+	background-position: center;
+}
+
+#regular_country_select {
+	width: 270px;
+	height: 38px;
+	border: solid 1px #ccc;
+	border-radius: 4px;
+	color: #009DE6;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 38px;
+	padding-left: 60px;
+	background-position: 10px;
+	background-color: #eee;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
+
+#regular_country_select:before {
+	content: "United States";
+}
