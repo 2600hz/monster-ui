@@ -232,7 +232,8 @@
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
-		"noNumber": "Please add a main number.",
+		"noNumberTitle": "Please add a main number to continue.",
+		"noNumberMessage": "Please add a main number to continue.",
 		"numberLinks": {
 			"spare": "Spare Numbers",
 			"buy": "Buy Numbers",

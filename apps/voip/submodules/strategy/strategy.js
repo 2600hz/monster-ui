@@ -146,8 +146,9 @@ define(function(require){
 					}
 				},
 				function(err, results) {
+					var hasMainNumber = (results.callflows["MainCallflow"].numbers.length > 0 && results.callflows["MainCallflow"].numbers[0] !== "undefined")
 					templateData = {
-						firstNumber: results.callflows["MainCallflow"].numbers[0] || "N/A"
+						firstNumber: hasMainNumber ? results.callflows["MainCallflow"].numbers[0] : self.i18n.active().strategy.noNumberTitle
 					}
 					template = $(monster.template(self, 'strategy-layout', templateData));
 					self.strategyBindEvents(template, results);
@@ -155,6 +156,10 @@ define(function(require){
 					parent
 						.empty()
 						.append(template);
+
+					if(!hasMainNumber) {
+						template.find('.element-container:not(.main-number)').hide();
+					}
 				}
 			);
 		},
@@ -202,10 +207,10 @@ define(function(require){
 				switch(templateName) {
 					case "numbers":
 						var callflow = strategyData.callflows["MainCallflow"],
-							numbers = callflow ? callflow.numbers : [],
+							numbers = callflow.numbers,
 							templateData = {
 								numbers: $.map(numbers, function(val, key) {
-									if(val.length > 8) { //TODO actually test the number
+									if(val!=="undefined") { //TODO actually test the number
 										return {
 											number: val,
 											city: "San Francisco"
@@ -1261,6 +1266,33 @@ define(function(require){
 							});
 						}
 					});
+
+					if(!parallelRequests["MainCallflow"]) {
+						parallelRequests["MainCallflow"] = function(callback) {
+							monster.request({
+								resource: 'strategy.callflows.add',
+								data: {
+									accountId: self.accountId,
+									data: {
+										contact_list: {
+											exclude: false
+										},
+										numbers: ["undefined"],
+										name: "MainCallflow",
+										type: "main",
+										flow: {
+											children: {},
+											data: {},
+											module: "temporal_route"
+										}
+									}
+								},
+								success: function(data, status) {
+									callback(null, data.data);
+								}
+							});
+						}
+					}
 
 					_.each(self.subCallflowsLabel, function(val) {
 						if(!parallelRequests[val]) {
