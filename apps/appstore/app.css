@@ -224,6 +224,10 @@
 
 #appstore_popup_container .screenshot-container {
 	height: 300px;
+	border: solid 1px #ccc;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 #appstore_popup_container .left-container > div:not(:first-of-type) {
@@ -266,6 +270,10 @@
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
+}
+
+#appstore_popup_container .screenshot-container .carousel .carousel-inner > .item.missing-screenshot {
+	background-image: url('./static/images/missing_screenshot.png');
 }
 
 #appstore_popup_container .screenshot-container .carousel .carousel-indicators li {

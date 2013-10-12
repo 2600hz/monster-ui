@@ -185,7 +185,10 @@ define(function(require){
 								extendedDescription: data.data.i18n['en-US'].extended_description,
 								features: data.data.i18n['en-US'].features
 							},
-							icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken
+							icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
+							screenshots: $.map(data.data.screenshots, function(val, key) {
+								return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+							})
 						}),
 						selectedUsersList = $.extend(true, [], app.installed.users),
 						users = $.map($.extend(true, [], userList), function(val, key) {
@@ -212,6 +215,8 @@ define(function(require){
 						rightContainer = template.find('.right-container'),
 						userListContainer = rightContainer.find('.user-list'),
 						appSwitch = rightContainer.find('.switch');
+
+					console.log(app);
 
 					appSwitch.bootstrapSwitch();
 

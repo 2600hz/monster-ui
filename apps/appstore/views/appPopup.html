@@ -8,16 +8,18 @@
 			<div class="screenshot-container">
 				<div id="screenshot_carousel" class="carousel slide">
 					<ol class="carousel-indicators">
+						{{#each app.screenshots}}
+						<li data-target="#screenshot_carousel" data-slide-to="{{@index}}" class="{{#unless @index}}active{{/unless}}"></li>
+						{{else}}
 						<li data-target="#screenshot_carousel" data-slide-to="0" class="active"></li>
-						<li data-target="#screenshot_carousel" data-slide-to="1" class=""></li>
-						<li data-target="#screenshot_carousel" data-slide-to="2" class=""></li>
-						<li data-target="#screenshot_carousel" data-slide-to="3" class=""></li>
+						{{/each}}
 					</ol>
 					<div class="carousel-inner">
-						<div class="item active" style="background-image: url('http://i.imgur.com/xYqMY9o.jpg')"></div>
-						<div class="item" style="background-image: url('http://i.imgur.com/pyqp2Xj.jpg')"></div>
-						<div class="item" style="background-image: url('http://i.imgur.com/OxmmK5G.jpg')"></div>
-						<div class="item" style="background-image: url('http://i.imgur.com/xgsfVLb.jpg')"></div>
+						{{#each app.screenshots}}
+						<div class="item" style="background-image: url('{{this}}')"></div>
+						{{else}}
+						<div class="item missing-screenshot active"></div>
+						{{/each}}
 					</div>
 					<a class="left carousel-control" href="#screenshot_carousel" data-slide="prev">‹</a>
 					<a class="right carousel-control" href="#screenshot_carousel" data-slide="next">›</a>
