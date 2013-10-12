@@ -8,7 +8,7 @@ define(function(require){
 
 	var requestAmount = 0,
 		homeIcon,
-		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-home';
+		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-th';
 
 	monster.sub('monster.requestStart', function() {
 		requestAmount++;
