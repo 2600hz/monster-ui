@@ -34,6 +34,7 @@ define(function(require){
 		},
 
 		subscribe: {
+			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
 			'common.numbers.getListFeatures': 'numbersGetFeatures'
 		},
@@ -717,6 +718,95 @@ define(function(require){
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
 				}
+			});
+		},
+
+		/* AccountID and Callback in args */
+		numbersFormatDialogSpare: function(data) {
+			var formattedData = {
+				accountName: data.accountName,
+				numbers: {}
+			};
+
+			_.each(data.numbers, function(number, id) {
+				if(number.used_by === '') {
+					number.phoneNumber = id;
+					formattedData.numbers[id] = number;
+				}
+			});
+
+			return formattedData;
+		},
+
+		numbersDialogSpare: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				accountName = args.accountName || '',
+				callback = args.callback;
+
+			self.numbersList(accountId, function(data) {
+				data.accountName = accountName;
+
+				var formattedData = self.numbersFormatDialogSpare(data),
+				    spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
+
+                spareTemplate.find('.empty-search-row').hide();
+
+				spareTemplate.on('keyup', '.search-query', function() {
+                	var rows = spareTemplate.find('.number-box'),
+                    	emptySearch = spareTemplate.find('.empty-search-row'),
+                    	currentRow;
+
+                	currentNumberSearch = $(this).val().toLowerCase();
+
+                	_.each(rows, function(row) {
+                    	currentRow = $(row);
+                    	currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+                	});
+
+                	if(rows.size() > 0) {
+                    	rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+                	}
+            	});
+
+				spareTemplate.find('#proceed').on('click', function() {
+					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
+						selectedNumbers = [];
+
+					_.each(selectedNumbersRow, function(row) {
+						var number = $(row).data('number');
+
+						selectedNumbers.push(formattedData.numbers[number]);
+					});
+
+					if(selectedNumbers.length > 0) {
+						console.log(selectedNumbers);
+						args.callback && args.callback(selectedNumbers);
+
+						popup.dialog('close').remove();
+					}
+					else {
+						monster.ui.alert('error', self.i18n.active().numbers.dialogSpare.noNumberSelected);
+					}
+				});
+
+				spareTemplate.find('.number-box').on('click', function(event) {
+					var $this = $(this);
+
+					$this.toggleClass('selected');
+
+					if(!$(event.target).is('input:checkbox')) {
+						var $current_cb = $this.find('input[type="checkbox"]'),
+							cb_value = $current_cb.prop('checked');
+
+						$current_cb.prop('checked', !cb_value);
+					}
+				});
+
+				var popup = monster.ui.dialog(spareTemplate, {
+					title: self.i18n.active().numbers.dialogSpare.title,
+					position: ['center', 20]
+				});
 			});
 		},
 

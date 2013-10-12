@@ -4,6 +4,14 @@
 	},
 
 	"numbers": {
+		"dialogSpare": {
+			"title": "List of Spare Numbers",
+			"headline": "Spare Numbers of",
+			"headlineNoAccount": "Select numbers",
+			"noMatchingNumbers": "No numbers matched your search.",
+			"noNumberSelected": "You didn't select any number. You need to select at least one number by clicking on a number in the list.",
+			"proceed": "Proceed"
+		},
 		"bulkActions": "Bulk Actions",
 		"buy": "Buy",
 		"port": "Port",
