@@ -112,15 +112,18 @@ define(function(require){
 					usedNumbers: []
 				},
 				templateData = {
+					viewType: data.viewType,
 					listAccounts: []
 				};
 
 			/* Initializing accounts metadata */
 			var thisAccount = _.extend(monster.apps['auth'].currentAccount, templateLists);
 
-			_.each(data.accounts, function(account) {
-				mapAccounts[account.id] = account;
-			});
+			if(data.viewType !== 'pbx') {
+				_.each(data.accounts, function(account) {
+					mapAccounts[account.id] = account;
+				});
+			}
 
 			/* assign each number to spare numbers or used numbers for main account */
 			_.each(data.numbers.numbers, function(value, phoneNumber) {
@@ -128,7 +131,14 @@ define(function(require){
 
 				value = self.numbersFormatNumber(value);
 
-				value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
+				if(value.used_by) {
+					if(data.viewType === 'pbx' && value.used_by === 'callflow') {
+						thisAccount.usedNumbers.push(value);
+					}
+				}
+				else {
+					thisAccount.spareNumbers.push(value);
+				}
 			});
 
 			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
@@ -780,7 +790,6 @@ define(function(require){
 					});
 
 					if(selectedNumbers.length > 0) {
-						console.log(selectedNumbers);
 						args.callback && args.callback(selectedNumbers);
 
 						popup.dialog('close').remove();

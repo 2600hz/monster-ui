@@ -218,11 +218,13 @@
 }
 
 #numbers_container .account-section:nth-of-type(1) .account-header {
-	border-radius: 8px 8px 0 0;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .account-header {
-	border-radius: 0 0 8px 8px;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
     border-bottom: 1px solid #CCCCCC;
 }
 
