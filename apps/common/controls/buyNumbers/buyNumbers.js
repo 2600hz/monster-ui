@@ -320,17 +320,21 @@ define(function(require){
 					data: {
 						accountId: self.accountId,
 						data: {
-							numbers: args.selectedNumbers
+							numbers: numbers
 						}
 					},
 					success: function(data, status) {
-						callbacks.success && callbacks.success(data.data);
-					},
-					error: function(data, status) {
-						callbacks.error && callbacks.error(data);
+						if(!$.isEmptyObject(data.data.success)) {
+							if(!$.isEmptyObject(data.data.error)) {
+								monster.ui.alert('error', self.i18n.active().buyNumbers.partialPurchaseFailure);
+							}
+							callbacks.success && callbacks.success(data.data.success);
+						} else {
+							callbacks.error && callbacks.error(data.data.error);
+						}
+						args.popup.dialog('close');
 					}
 				});
-				// callbacks.error && callbacks.error();
 			});
 		},
 
@@ -422,7 +426,8 @@ define(function(require){
 			var self = this,
 				container = args.container,
 				vanitySearchDiv = container.find('#vanity_search_div'),
-				availableCountries = args.availableCountries;
+				availableCountries = args.availableCountries,
+				number = "";
 
 			vanitySearchDiv.find('.vanity-input input').on('keydown', function(e) {
 				var $this = $(this),
@@ -445,55 +450,57 @@ define(function(require){
 				ev.preventDefault();
 				var vanityInputDiv = vanitySearchDiv.find('.vanity-input-div'),
 					searchButton = $(this),
-					num = "",
 					countryValidation = false;
 				
 				vanityInputDiv.find('.vanity-input:visible input:text').each(function(k,v) {
-					num += $(v).val().toUpperCase();
+					number += $(v).val().toUpperCase();
 				});
 
 				switch(self.selectedCountryCode) {
 					case "US":
-						countryValidation = (num.length === 10);
+						countryValidation = (number.length === 10);
 						break;
 					default:
-						countryValidation = (num.length > 0 && num.length <= 20);
+						countryValidation = (number.length > 0 && number.length <= 20);
 						break;
 				}
 
 				vanityInputDiv.children('i').hide();
 				vanityInputDiv.children('i.icon-spinner').show();
 				searchButton.prop('disabled', true);
-				setTimeout(function() {
-					vanityInputDiv.children('i.icon-spinner').hide();
-					searchButton.prop('disabled', false);
-					if(countryValidation) {
-						monster.request({
-							resource: 'buyNumbers.searchNumbers',
-							data: {
-								pattern: num,
-								offset:0,
-								limit:1
-							},
-							success: function(data, status) {
-								if(data.data && data.data.length > 0) {
-									vanityInputDiv.children('i.icon-ok').show();
-									vanitySearchDiv.find('#vanity_buy_button').show();
-									vanitySearchDiv.find('#back_to_vanity_search').show();
-									searchButton.hide();
-									vanityInputDiv.find('input:text').prop('disabled',true);
-								} else {
-									vanityInputDiv.children('i.icon-remove').show();
-								}
-							},
-							error: function(data, status) {
-								monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
+				if(countryValidation) {
+					monster.request({
+						resource: 'buyNumbers.searchNumbers',
+						data: {
+							pattern: number,
+							offset:0,
+							limit:1
+						},
+						success: function(data, status) {
+							if(data.data && data.data.length > 0) {
+								vanityInputDiv.children('i.icon-ok').show();
+								vanitySearchDiv.find('#vanity_buy_button').show();
+								vanitySearchDiv.find('#back_to_vanity_search').show();
+								searchButton.hide();
+								vanityInputDiv.find('input:text').prop('disabled',true);
+							} else {
+								vanityInputDiv.children('i.icon-remove').show();
+								number = "";
 							}
-						});
-					} else {
-						monster.ui.alert('error', self.i18n.active().buyNumbers.partialNumAlert);
-					}
-				}, 1000);
+
+							vanityInputDiv.children('i.icon-spinner').hide();
+							searchButton.prop('disabled', false);
+						},
+						error: function(data, status) {
+							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
+							
+							vanityInputDiv.children('i.icon-spinner').hide();
+							searchButton.prop('disabled', false);
+						}
+					});
+				} else {
+					monster.ui.alert('error', self.i18n.active().buyNumbers.partialNumAlert);
+				}
 			});
 
 			vanitySearchDiv.find('#back_to_vanity_search').on('click', function(ev) {
@@ -508,7 +515,28 @@ define(function(require){
 
 			vanitySearchDiv.find('#vanity_buy_button').on('click', function(ev) {
 				ev.preventDefault();
-				//TODO buy the number
+				if(number.length > 0) {
+					monster.request({
+						resource: 'buyNumbers.activateNumbers',
+						data: {
+							accountId: self.accountId,
+							data: {
+								numbers: ["+" + args.availableCountries[self.selectedCountryCode].prefix + number]
+							}
+						},
+						success: function(data, status) {
+							if(!$.isEmptyObject(data.data.success)) {
+								if(!$.isEmptyObject(data.data.error)) {
+									monster.ui.alert('error', self.i18n.active().buyNumbers.partialPurchaseFailure);
+								}
+								callbacks.success && callbacks.success(data.data.success);
+							} else {
+								callbacks.error && callbacks.error(data.data.error);
+							}
+							args.popup.dialog('close');
+						}
+					});
+				}
 			});
 		},
 
@@ -704,7 +732,7 @@ define(function(require){
 				minLength: 2,
 				delay: 500,
 				select: function( event, ui ) {
-					var areaCodes = cityList[ui.item.value].prefixes,
+					var areaCodes = cityList[ui.item.value].prefixes.sort(),
 						areaCodesDiv = container.find('#area_code_radio_div');
 					selectedCity = ui.item.value;
 					areaCodesDiv.empty()
@@ -993,6 +1021,7 @@ define(function(require){
 					result.push(prefix+number);
 				}
 			});
+
 			return result;
 		}
 

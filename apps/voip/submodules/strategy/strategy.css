@@ -113,7 +113,7 @@
 
 #strategy_container .element-container.main-number .main-number-element .number {
 	text-align: left;
-	width: 35%;
+	width: 100%;
 }
 
 #strategy_container .element-container.main-number .main-number-element .number > button {
@@ -157,6 +157,11 @@
 
 #strategy_container .element-container.main-number .main-number-actions .action-links ul.dropdown-menu {
 	min-width: 0;
+}
+
+#strategy_container .element-container.main-number .main-number-actions .action-links .buy-dropdown:hover {
+	background-color: transparent;
+	text-decoration: underline;
 }
 
 /********** Strategy Hours ***********/

@@ -212,10 +212,9 @@ define(function(require){
 							numbers = callflow.numbers,
 							templateData = {
 								numbers: $.map(numbers, function(val, key) {
-									if(val!=="undefined") { //TODO actually test the number
+									if(val!=="undefined") {
 										return {
-											number: val,
-											city: "San Francisco"
+											number: val
 										};
 									}
 								})
@@ -377,14 +376,35 @@ define(function(require){
 		},
 
 		strategyNumbersBindEvents: function(container, strategyData) {
-			var self = this;
+			var self = this,
+				addNumbersToMainCallflow = function(numbers) {
+					if(numbers.length) {
+						var mainCallflow = strategyData.callflows["MainCallflow"];
+						if(mainCallflow.numbers.length <= 1
+						&& mainCallflow.numbers[0] === "undefined") {
+							mainCallflow.numbers = [];
+						}
+						mainCallflow.numbers = mainCallflow.numbers.concat(numbers);
+						self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
+							strategyData.callflows["MainCallflow"] = updatedCallflow;
+							container.hide();
+							container.parents('.element-container').removeClass('open');
+						});
+					}
+				};
 
 			container.on('click', '.action-links .spare-link', function(e) {
 				e.preventDefault();
 
 				var args = {
 					accountName: monster.apps['auth'].currentAccount.name,
-					accountId: self.accountId
+					accountId: self.accountId,
+					callback: function(numberList) {
+						var numbers = $.map(numberList, function(val) {
+							return val.phoneNumber;
+						});
+						addNumbersToMainCallflow(numbers);
+					}
 				}
 
 				monster.pub('common.numbers.dialogSpare', args);
@@ -396,7 +416,7 @@ define(function(require){
 					searchType: $(this).data('type'),
 					callbacks: {
 						success: function(numbers) {
-							console.log(numbers);
+							addNumbersToMainCallflow(Object.keys(numbers));
 							toastr.success(self.i18n.active().strategy.toastrMessages.buyNumbersSuccess);
 						},
 						error: function(error) {
@@ -412,6 +432,17 @@ define(function(require){
 
 			container.on('click', '.main-number-element .remove-number', function(e) {
 				e.preventDefault();
+				var numberToRemove = $(this).data('number'),
+					indexToRemove = strategyData.callflows["MainCallflow"].numbers.indexOf(numberToRemove);
+
+				if(indexToRemove >= 0) {
+					strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
+					self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
+						strategyData.callflows["MainCallflow"] = updatedCallflow;
+						container.hide();
+						container.parents('.element-container').removeClass('open');
+					});
+				}
 			});
 		},
 

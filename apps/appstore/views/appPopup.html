@@ -16,7 +16,7 @@
 					</ol>
 					<div class="carousel-inner">
 						{{#each app.screenshots}}
-						<div class="item" style="background-image: url('{{this}}')"></div>
+						<div class="item {{#unless @index}}active{{/unless}}" style="background-image: url('{{this}}')"></div>
 						{{else}}
 						<div class="item missing-screenshot active"></div>
 						{{/each}}
