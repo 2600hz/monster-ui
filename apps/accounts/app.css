@@ -129,8 +129,8 @@
 #accounts_manager_view .main-content {
 	padding: 20px 30px;
 	overflow-y: auto;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -318,8 +318,8 @@
 
 #form_accountsmanager_account_admins .admin-element .admin-element-info {
 	height: 60px;
-	list-style: none; 
-	margin: 0px 100px 0px 0px; 
+	list-style: none;
+	margin: 0px 100px 0px 0px;
 	padding: 5px;
 }
 
@@ -370,8 +370,8 @@
 #form_accountsmanager_account_admins .create-user-div .img-input-div > input {
 	padding-left: 35px;
 	width: 100%;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	height: 30px;
 }
@@ -458,7 +458,7 @@
 	font-weight: 500;
 }
 
-.limits-tab-container .slider-div .ui-slider-range, 
+.limits-tab-container .slider-div .ui-slider-range,
 .limits-tab-container .slider-div .ui-slider-handle {
 	background-color: #22ccff;
 }
@@ -582,8 +582,8 @@
 
 #accountsmanager_new_account_form .account-settings-step input {
 	width: 100%;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	height: 30px;
 }

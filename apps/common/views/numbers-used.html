@@ -46,7 +46,10 @@
 						</div>
 
 						<div class="used-by">
-							{{ this.friendlyUsedBy }}
+							{{#compare ../../viewType '===' 'pbx'}}
+							{{else}}
+								{{ this.friendlyUsedBy }}
+							{{/compare}}
 						</div>
 
         				<div class="features pull-right">
