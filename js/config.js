@@ -2,8 +2,9 @@ define(function(require){
 
 	return {
 		api: {
+			provisioner: 'http://p.2600hz.com/',
 			default: 'http://10.26.0.41:8000/v1/',
-			//socket: 'http://192.168.1.82:5555'
+			socket: 'http://10.26.0.41:5555'
 		},
 
 		company: {
