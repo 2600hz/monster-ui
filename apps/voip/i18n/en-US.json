@@ -10,6 +10,38 @@
 		"quickLinks": "Help Topics"
 	},
 
+	"groups": {
+		"add": "Add Group",
+		"delete": "Delete Group",
+		"dialogCreationGroup": {
+			"availableUsers": "Available Users",
+			"createGroup": "Create Group",
+			"extension": "Extension",
+			"name": "Name this group",
+			"placeholderExtension": "2002",
+			"placeholderName": "Sales",
+			"selectedUsers": "Selected Users",
+			"title": "Creating a group"
+		},
+		"groupDeleted": "You successfuly deleted {{name}}'s Group",
+		"name": "Group Name",
+		"noExtension": "None",
+		"noFeatures": "None",
+		"noMatchingGroup": "There were no groups found matching your search",
+		"noNumber": "None",
+		"ringThisMemberFor": "Ring this member for:",
+		"ringGroupMissing": "No Ring Group are defined for this Group (group_id missing from callflow)",
+		"removeMember": "Remove Member",
+		"title": "Groups (Work in progress!)",
+		"titleGrid": {
+			"groups": "Group Name",
+			"members": "Members",
+			"extensions": "Extension",
+			"phoneNumbers": "Direct Number",
+			"features": "Group Features"
+		}
+	},
+
 	"devices": {
 		"add": "Add Device",
 		"assigned": "Assigned",

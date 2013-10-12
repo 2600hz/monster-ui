@@ -5,7 +5,7 @@ define(function(require){
 
 	var subModules = {
 			devices: require('./submodules/devices/devices'),
-			//groups: require('./submodules/groups/groups'),
+			groups: require('./submodules/groups/groups'),
 			//myOffice: require('./submodules/myOffice/myOffice'),
 			numbers: require('./submodules/numbers/numbers'),
 			strategy: require('./submodules/strategy/strategy'),
@@ -41,7 +41,6 @@ define(function(require){
 				callback: callback
 			});
 		},
-
 
 		render: function(container){
 			var self = this,

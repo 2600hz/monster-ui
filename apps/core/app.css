@@ -561,6 +561,57 @@ table.table tr td {
 	line-height: 25px;
 }
 
+/* 2 columns selector */
+.items-selector .box-selector {
+	float: left;
+	width: 300px;
+}
+
+.items-selector .box-selector:first-child {
+	margin-right: 20px;
+}
+
+.items-selector .box-selector .box-title {
+	background: none repeat scroll 0 0 #22CCFF;
+    border-radius: 4px 4px 0 0;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 500;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.items-selector .box-selector ul {
+	background: #EEE;
+	border: 1px solid #ccc;
+	border-radius: 0 0 4px 4px;
+	list-style: none;
+	margin: 0;
+}
+
+.items-selector .box-selector ul li.item-selector {
+	background: #FFF;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	font-size: 14px;
+	height: 40px;
+	line-height: 40px;
+	padding: 0px 5px;
+}
+
+.items-selector .box-selector ul li.item-selector:hover {
+	background: #FCFCFC;
+}
+
+.items-selector .box-selector ul li.item-selector .item-handle {
+	background: url('static/images/drag.png');
+	float: left;
+	height: 30px;
+	margin: 5px 10px 0 0;
+	width: 5px;
+}
 /* Box Element */
 .number-box {
 	border-top: 1px solid transparent;

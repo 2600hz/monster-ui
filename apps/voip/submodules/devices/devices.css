@@ -214,10 +214,6 @@
 }
 
 /* Codecs selector */
-.edit-device .content .codec-selector {
-
-}
-
 .edit-device .content .codec-selector .box-selector {
 	float: left;
 	width: 300px;
@@ -227,42 +223,12 @@
 	margin-left: 30px;
 	margin-right: 40px;
 }
-
-.edit-device .content .codec-selector .box-selector .box-title {
-	background: none repeat scroll 0 0 #22CCFF;
-    border-radius: 4px 4px 0 0;
-    color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 500;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 20px;
-    text-align: left;
-}
-
 .edit-device .content .codec-selector .box-selector ul {
-	background: #FFFFFF;
-	border: 1px solid #ccc;
-	border-radius: 0 0 4px 4px;
-	list-style: none;
-	margin: 0;
 	min-height: 328px;
 }
 
 .edit-device .content #video_codec_selector .box-selector ul {
 	min-height: 123px;
-}
-
-.edit-device .content .codec-selector .box-selector ul li.item-codec {
-	background: #F0F0F0;
-	border-bottom: 1px solid #ddd;
-	cursor: pointer;
-	font-size: 14px;
-	padding: 10px 5px;
-}
-
-.edit-device .content .codec-selector .box-selector ul li.item-codec:hover {
-	background: #F4F4F4;
 }
 /* Provisioner Popup */
 .device-popup {
