@@ -115,7 +115,6 @@ define(function(require){
 				mapGroups = {};
 
 			_.each(data.groups, function(group) {
-				console.log(group);
 				mapGroups[group.id] = group;
 				mapGroups[group.id].extra = {};
 			});
@@ -143,7 +142,6 @@ define(function(require){
 
 			data.groups = mapGroups;
 
-			console.log(data);
 			return data;
 		},
 
@@ -215,7 +213,6 @@ define(function(require){
 						self.groupsCreate(formattedData, function(data) {
 							popup.dialog('close').remove();
 
-							console.log(data);
 							self.groupsRender({ groupId: data.id });
 						});
 					});
