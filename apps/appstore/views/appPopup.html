@@ -2,20 +2,20 @@
 	<div class="top-container clearfix">
 		<div class="left-container">
 			<div class="title-container clearfix">
-				<div class="icon" style="background-image:url({{app.icon}})"></div>
+				<div class="icon" style="background-image:url({{app.extra.icon}})"></div>
 				<div class="title">{{ app.extra.label }}</div>
 			</div>
 			<div class="screenshot-container">
 				<div id="screenshot_carousel" class="carousel slide">
 					<ol class="carousel-indicators">
-						{{#each app.screenshots}}
+						{{#each app.extra.screenshots}}
 						<li data-target="#screenshot_carousel" data-slide-to="{{@index}}" class="{{#unless @index}}active{{/unless}}"></li>
 						{{else}}
 						<li data-target="#screenshot_carousel" data-slide-to="0" class="active"></li>
 						{{/each}}
 					</ol>
 					<div class="carousel-inner">
-						{{#each app.screenshots}}
+						{{#each app.extra.screenshots}}
 						<div class="item {{#unless @index}}active{{/unless}}" style="background-image: url('{{this}}')"></div>
 						{{else}}
 						<div class="item missing-screenshot active"></div>

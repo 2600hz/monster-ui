@@ -183,12 +183,12 @@ define(function(require){
 								label: data.data.i18n['en-US'].label,
 								description: data.data.i18n['en-US'].description,
 								extendedDescription: data.data.i18n['en-US'].extended_description,
-								features: data.data.i18n['en-US'].features
-							},
-							icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
-							screenshots: $.map(data.data.screenshots, function(val, key) {
-								return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
-							})
+								features: data.data.i18n['en-US'].features,
+								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
+								screenshots: $.map(data.data.screenshots, function(val, key) {
+									return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+								})
+							}
 						}),
 						selectedUsersList = $.extend(true, [], app.installed.users),
 						users = $.map($.extend(true, [], userList), function(val, key) {
