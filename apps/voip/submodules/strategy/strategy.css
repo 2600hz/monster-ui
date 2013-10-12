@@ -134,6 +134,12 @@
 	margin-right: 10px;
 }
 
+#strategy_container .element-container.main-number .main-number-element .no-number-error {
+	font-style: italic;
+	color: #ee1212;
+	font-weight: 500;
+}
+
 #strategy_container .element-container.main-number .main-number-actions {
 	padding: 25px 20px;
 	line-height: 30px;
