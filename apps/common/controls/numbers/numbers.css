@@ -281,3 +281,39 @@
 		display: none;
 	}
 }
+
+/* Dialog Spare Numbers */
+.dialog-spare-container {
+	padding: 15px;
+}
+
+.dialog-spare-container .grid-numbers .title {
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding: 10px;
+	width: 600px;
+}
+
+.dialog-spare-container .number-box > input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.dialog-spare-container .grid-numbers {
+	padding-bottom: 10px;
+}
+
+.dialog-spare-container .grid-numbers .numbers {
+	border: 1px solid #DDD;
+	max-height: 372px;
+	overflow: auto;
+}
+
+.dialog-spare-container .grid-numbers .numbers .number-box {
+	border: 1px solid #DDD;
+}
+
+.dialog-spare-container .grid-numbers .empty-search-row {
+	text-align: center;
+	padding: 10px;
+}

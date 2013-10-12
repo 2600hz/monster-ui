@@ -381,6 +381,13 @@ define(function(require){
 
 			container.on('click', '.action-links .spare-link', function(e) {
 				e.preventDefault();
+
+				var args = {
+					accountName: monster.apps['auth'].currentAccount.name,
+					accountId: self.accountId
+				}
+
+				monster.pub('common.numbers.dialogSpare', args);
 			});
 
 			container.on('click', '.action-links .buy-link', function(e) {
