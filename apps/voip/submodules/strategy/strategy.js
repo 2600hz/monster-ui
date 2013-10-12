@@ -343,7 +343,6 @@ define(function(require){
 
 
 							if(["user","device","ring_group"].indexOf(strategyData.callflows[callflowName].flow.module) >= 0) {
-								console.log(strategyData.callflows[callflowName]);
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
 								if("_" in strategyData.callflows[callflowName].flow.children 
 								&& strategyData.callflows[callflowName].flow.children["_"].module === "voicemail") {

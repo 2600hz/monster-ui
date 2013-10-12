@@ -216,8 +216,6 @@ define(function(require){
 						userListContainer = rightContainer.find('.user-list'),
 						appSwitch = rightContainer.find('.switch');
 
-					console.log(app);
-
 					appSwitch.bootstrapSwitch();
 
 					if(app.installed.users.length > 0) {
