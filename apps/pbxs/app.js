@@ -1506,10 +1506,6 @@ define(function(require){
 						}
 					}
 				});
-				// self.renderAddNumberDialog(data, serverId, function() {
-					// self.listNumbersByPbx(serverId, callback_listing);
-					// self.renderList(serverId);
-				// });
 			});
 
 			pbxsManager.find('.pbx-dropdown:not(.empty)').on('click', function(ev) {

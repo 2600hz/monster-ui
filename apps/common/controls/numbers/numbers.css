@@ -162,6 +162,11 @@
 	height: 100%;
 }
 
+#numbers_container .account-section .account-header .right-links .buy-numbers-dropdown {
+	margin: 0;
+	display: inline-block;
+}
+
 #numbers_container .account-section.open .account-header .right-links a > *{
 	color: #ffffff;
 }

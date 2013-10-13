@@ -297,6 +297,26 @@ define(function(require){
 				showLinks();
 			});
 
+			parent.on('click', '.account-header .buy-numbers-link', function(e) {
+				monster.pub('common.buyNumbers', {
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							// var numbersData = $.map(numbers, function(val, key) {
+							// 	return { phone_number: key };
+							// });
+
+							// self.getAccount(function(globalData) {
+							// 	self.addNumbers(globalData, serverId, numbersData, function() {
+							// 		self.listNumbersByPbx(serverId, callback_listing);
+							// 		self.renderList(serverId);
+							// 	});
+							// });
+						}
+					}
+				});
+			});
+
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
 			parent.on('click', '.number-box:not(.disabled)', function(event) {
 				var currentBox = $(this);
