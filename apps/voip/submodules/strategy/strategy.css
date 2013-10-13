@@ -370,7 +370,7 @@
 	color: rgba(238, 18, 18, 0.8);
 }
 
-#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div[data-callflow] .menu-icon i {
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div.has-menu .menu-icon i {
 	color: #22ccff;
 }
 

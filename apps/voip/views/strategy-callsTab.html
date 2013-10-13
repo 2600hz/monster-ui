@@ -3,7 +3,7 @@
 	<div class="radio-div"><input type="radio" {{#compare callOption.type '===' 'default'}}checked{{/compare}} name="calls.{{callflow}}" value="menu"></div>
 	<div class="title">{{i18n.strategy.calls.incomingCall}}</div>
 	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
-	<div class="menu-div" {{#if menu}}data-callflow="{{menu}}"{{/if}}>
+	<div class="menu-div {{#if menu}}has-menu" data-callflow="{{menu}}{{/if}}">
 		<div class="menu-icon"><i class="icon-play-sign icon-3x"></i></div>
 		<div class="link"><a href="#"><i class="icon-cog icon-small"></i> {{i18n.strategy.calls.virtualReceptionist}}</a></div>
 	</div>
@@ -51,7 +51,7 @@
 		</select>
 	</div>
 	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
-	<div class="menu-div" {{#if menu}}data-callflow="{{menu}}"{{/if}}>
+	<div class="menu-div {{#if menu}}has-menu" data-callflow="{{menu}}{{/if}}">
 		<div class="menu-icon"><i class="icon-play-sign icon-3x"></i></div>
 		<div class="link"><a href="#"><i class="icon-cog icon-small"></i> {{i18n.strategy.calls.virtualReceptionist}}</a></div>
 	</div>

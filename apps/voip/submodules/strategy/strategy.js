@@ -385,9 +385,12 @@ define(function(require){
 						}
 						mainCallflow.numbers = mainCallflow.numbers.concat(numbers);
 						self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
+							var parentContainer = container.parents('.element-container');
 							strategyData.callflows["MainCallflow"] = updatedCallflow;
 							container.hide();
-							container.parents('.element-container').removeClass('open');
+							parentContainer.removeClass('open');
+							parentContainer.find('.element-header-inner .summary > span').html(monster.util.formatPhoneNumber(updatedCallflow.numbers[0]));
+							container.parents('#strategy_container').find('.element-container:not(.main-number)').show();
 						});
 					}
 				};
@@ -1040,6 +1043,7 @@ define(function(require){
 							success: function(data, status) {
 								strategyData.callflows[name] = data.data;
 								$('.callflow-tab.active .menu-div').data('callflow', name);
+								$('.callflow-tab.active .menu-div').addClass('has-menu');
 								showPopup();
 							}
 						});
@@ -1355,7 +1359,9 @@ define(function(require){
 										type: "main",
 										flow: {
 											children: {},
-											data: {},
+											data: {
+												timezone: monster.apps["auth"].currentAccount.timezone
+											},
 											module: "temporal_route"
 										}
 									}
