@@ -862,6 +862,41 @@ define(function(require){
 					}
 				});
 			});
+
+			template.on('click', '.actions .buy-link', function(e) {
+                e.preventDefault();
+                monster.pub('common.buyNumbers', {
+                    searchType: $(this).data('type'),
+                    callbacks: {
+                        success: function(numbers) {
+                        	var countNew = 0;
+
+                        	monster.pub('common.numbers.getListFeatures', function(features) {
+								_.each(numbers, function(number, k) {
+									countNew++;
+
+									/* Formating number */
+									number.viewFeatures = $.extend(true, {}, features);
+
+									var rowTemplate = monster.template(self, 'users-rowSpareNumber', number);
+
+									template.find('.list-unassigned-items .empty-row').hide();
+									template.find('.list-unassigned-items').append(rowTemplate);
+								});
+
+								var previous = parseInt(template.find('.unassigned-list-header .count-spare').data('count')),
+									newTotal = previous + countNew;
+
+								template.find('.unassigned-list-header .count-spare')
+									.data('count', newTotal)
+									.html(newTotal);
+							});
+                        },
+                        error: function(error) {
+                        }
+                    }
+                });
+            });
 		},
 
 		usersRenderHotdesk: function(currentUser) {
