@@ -146,11 +146,6 @@
 	background-color: #f3f3f3;
 }
 
-#strategy_container .element-container.main-number .main-number-actions .action-links a {
-	margin-right: 15px;
-	white-space: nowrap;
-}
-
 #strategy_container .element-container.main-number .main-number-actions .action-links a i {
 	margin-right: 5px;
 }
