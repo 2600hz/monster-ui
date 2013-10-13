@@ -1487,11 +1487,29 @@ define(function(require){
 				self.renderEndpoint(data, endpointData, target, callbacks, pbxsManager);
 			});
 
-			pbxsManager.find('#buy_numbers').on('click', function() {
-				self.renderAddNumberDialog(data, serverId, function() {
-					self.listNumbersByPbx(serverId, callback_listing);
-					self.renderList(serverId);
+			pbxsManager.find('.buy-numbers-link').on('click', function() {
+
+				monster.pub('common.buyNumbers', {
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							var numbersData = $.map(numbers, function(val, key) {
+								return { phone_number: key };
+							});
+
+							self.getAccount(function(globalData) {
+								self.addNumbers(globalData, serverId, numbersData, function() {
+									self.listNumbersByPbx(serverId, callback_listing);
+									self.renderList(serverId);
+								});
+							});
+						}
+					}
 				});
+				// self.renderAddNumberDialog(data, serverId, function() {
+					// self.listNumbersByPbx(serverId, callback_listing);
+					// self.renderList(serverId);
+				// });
 			});
 
 			pbxsManager.find('.pbx-dropdown:not(.empty)').on('click', function(ev) {
