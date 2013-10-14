@@ -50,7 +50,7 @@ define(function(require){
 			var self = this,
 				params = params || {},
 				args = {
-					searchType: params.searchType || 'regular' 
+					searchType: params.searchType || 'regular'
 				};
 
 			self.assignedAccountId = params.accountId || self.accountId;
@@ -159,11 +159,11 @@ define(function(require){
 				case 'tollfree':
 					self.buyNumbersRenderTollfree(args);
 					break;
-				
+
 				case 'vanity':
 					self.buyNumbersRenderVanity(args, callbacks || {});
 					break;
-				
+
 				case 'regular':
 				default:
 					self.buyNumbersRenderRegular(args);
@@ -317,7 +317,7 @@ define(function(require){
 			container.find('#confirm_buy_button').on('click', function(ev) {
 				ev.preventDefault();
 				var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix);
-				
+
 				monster.request({
 					resource: 'buyNumbers.activateNumbers',
 					data: {
@@ -361,7 +361,7 @@ define(function(require){
 					countrySelectFunction(data);
 				}
 			});
-			
+
 			// Temporary solution to run some code after the ddslick is generated.
 			// The library will eventually need to be modified to add a callback.
 			setTimeout(function() {
@@ -421,7 +421,7 @@ define(function(require){
 			});
 
 			container.find('.vanity-search').show();
-				
+
 			self.buyNumbersBindVanityEvents(args, popupCallbacks);
 		},
 
@@ -454,7 +454,7 @@ define(function(require){
 				var vanityInputDiv = vanitySearchDiv.find('.vanity-input-div'),
 					searchButton = $(this),
 					countryValidation = false;
-				
+
 				vanityInputDiv.find('.vanity-input:visible input:text').each(function(k,v) {
 					number += $(v).val().toUpperCase();
 				});
@@ -496,7 +496,7 @@ define(function(require){
 						},
 						error: function(data, status) {
 							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
-							
+
 							vanityInputDiv.children('i.icon-spinner').hide();
 							searchButton.prop('disabled', false);
 						}
@@ -563,7 +563,7 @@ define(function(require){
 			// 	countrySelectFunction: function(data) {
 			// 		var tollfreePrefixes = availableCountries[data.selectedData.value].toll_free,
 			// 			radioGroup = container.find('#tollfree_radio_group');
-					
+
 			// 		radioGroup.empty()
 			// 				  .append(monster.template(self, 'buyNumbers-tollfree', {tollfreePrefixes: tollfreePrefixes}));
 
@@ -572,7 +572,7 @@ define(function(require){
 			// });
 			var tollfreePrefixes = availableCountries[self.selectedCountryCode].toll_free,
 				radioGroup = container.find('#tollfree_radio_group');
-			
+
 			radioGroup.empty()
 					  .append(monster.template(self, 'buyNumbers-tollfree', {tollfreePrefixes: tollfreePrefixes}));
 
@@ -616,9 +616,9 @@ define(function(require){
 										prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
 									if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 									args.displayedNumbers.push({
-										array_index: args.displayedNumbers.length, 
-										number_value: num, 
-										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode), 
+										array_index: args.displayedNumbers.length,
+										number_value: num,
+										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode),
 										price: args.prices.tollfree
 									});
 								});
@@ -761,13 +761,13 @@ define(function(require){
 
 			container.find('#search_numbers_button').on('click', function(ev) {
 				ev.preventDefault();
-				
+
 				var seqNumIntvalue = parseInt(container.find('#seq_num_input').val(),10) || 1,
 					isSeqNumChecked = container.find('#seq_num_checkbox').prop('checked'),
 					cityInput = container.find('#city_input').val(),
 					areacode = cityInput.match(/^\d+$/) ? cityInput : container.find('#area_code_radio_div input[type="radio"]:checked').val(),
-					searchParams = (cityInput.match(/^\d{3}$/) ? self.i18n.active().buyNumbers.areaCode 
-								 + " " + cityInput : selectedCity + " ("+areacode+")") 
+					searchParams = (cityInput.match(/^\d{3}$/) ? self.i18n.active().buyNumbers.areaCode
+								 + " " + cityInput : selectedCity + " ("+areacode+")")
 								 + (isSeqNumChecked ? " " + monster.template(self, '!'+self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : "");
 
 				if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
@@ -779,7 +779,7 @@ define(function(require){
 						performSearch = function(_offset, _limit, _callback) {
 							loadingNewNumbers = true;
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
-							resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
+							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 							monster.request({
 								resource: 'buyNumbers.searchNumberBlocks',
 								data: {
@@ -839,13 +839,13 @@ define(function(require){
 										$.each(data.data, function(key, value) {
 											var num = value.number,
 												prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
-												
+
 											if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 
 											args.displayedNumbers.push({
-												array_index: args.displayedNumbers.length, 
-												number_value: num, 
-												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode), 
+												array_index: args.displayedNumbers.length,
+												number_value: num,
+												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode),
 												price: seqNumIntvalue * args.prices.regular
 											});
 										});
@@ -919,7 +919,7 @@ define(function(require){
 					break;
 			}
 
-			if(endNumber.length === number.length && endNumber !== number) { 
+			if(endNumber.length === number.length && endNumber !== number) {
 				result += " "+self.i18n.active().buyNumbers.to+" " + endNumber.substr(endNumber.length - 4);
 			}
 
@@ -981,7 +981,7 @@ define(function(require){
 				searchType = args.searchType;
 
 			if(searchType === 'tollfree') {
-				container.find('#search_top_div').show();    
+				container.find('#search_top_div').show();
 			}
 			searchResultDiv.show();
 

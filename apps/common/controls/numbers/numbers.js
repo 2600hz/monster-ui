@@ -185,13 +185,18 @@ define(function(require){
 						parent.find('#trigger_links').hide();
 					}
 				},
-				displayNumberList = function(accountId, callback) {
-					if(_.indexOf(listSearchedAccounts, accountId) === -1) {
+				displayNumberList = function(accountId, callback, forceRefresh) {
+					var alreadySearched = _.indexOf(listSearchedAccounts, accountId) >= 0,
+						forceRefresh = forceRefresh || false;
+
+					if(!alreadySearched || forceRefresh) {
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
 								usedNumbers = [];
 
-							listSearchedAccounts.push(accountId);
+							if(!alreadySearched) {
+								listSearchedAccounts.push(accountId);
+							}
 
 							_.each(numbers.numbers, function(value, phoneNumber) {
 								if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
@@ -298,10 +303,16 @@ define(function(require){
 			});
 
 			parent.on('click', '.account-header .buy-numbers-link', function(e) {
+				var accountId = $(this).parents('.account-section').data('id');
+
 				monster.pub('common.buyNumbers', {
+					accountId: accountId,
 					searchType: $(this).data('type'),
 					callbacks: {
 						success: function(numbers) {
+							displayNumberList(accountId, function(numbers) {
+								parent.find('.account-section[data-id="'+accountId+'"]').addClass('open');
+							}, true);
 							// var numbersData = $.map(numbers, function(val, key) {
 							// 	return { phone_number: key };
 							// });
