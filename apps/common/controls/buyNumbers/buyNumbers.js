@@ -52,6 +52,9 @@ define(function(require){
 				args = {
 					searchType: params.searchType || 'regular' 
 				};
+
+			self.assignedAccountId = params.accountId || self.accountId;
+
 			self.buyNumbersGetAvailableCountries(function(countries) {
 				args.availableCountries = countries;
 				self.buyNumbersGetPrices(function(prices) {
@@ -66,7 +69,7 @@ define(function(require){
 			// monster.request({
 			// 	resource: 'buyNumbers.listCountries',
 			// 	data: {
-			// 		accountId: self.accountId
+			// 		accountId: self.assignedAccountId
 			// 	},
 			// 	success: function(data, status) {
 			// 		callback(data.data);
@@ -97,7 +100,7 @@ define(function(require){
 			monster.request({
 				resource: 'buyNumbers.getCurrentServicePlan',
 				data: {
-					accountId: self.accountId
+					accountId: self.assignedAccountId
 				},
 				success: function(data, status) {
 					var prices = {
@@ -217,7 +220,7 @@ define(function(require){
 					// monster.request({
 					// 	resource: 'buyNumbers.getStatus',
 					// 	data: {
-					// 		accountId: self.accountId,
+					// 		accountId: self.assignedAccountId,
 					// 		country: self.selectedCountryCode,
 					// 		data: $.map(args.selectedNumbers, function(val) {
 					// 			return args.availableCountries[self.selectedCountryCode].prefix + val.number_value;
@@ -318,7 +321,7 @@ define(function(require){
 				monster.request({
 					resource: 'buyNumbers.activateNumbers',
 					data: {
-						accountId: self.accountId,
+						accountId: self.assignedAccountId,
 						data: {
 							numbers: numbers
 						}
@@ -519,7 +522,7 @@ define(function(require){
 					monster.request({
 						resource: 'buyNumbers.activateNumbers',
 						data: {
-							accountId: self.accountId,
+							accountId: self.assignedAccountId,
 							data: {
 								numbers: ["+" + args.availableCountries[self.selectedCountryCode].prefix + number]
 							}
