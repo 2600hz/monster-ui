@@ -132,7 +132,12 @@ define(function(require){
 				value = self.numbersFormatNumber(value);
 
 				if(value.used_by) {
-					if(data.viewType === 'pbx' && value.used_by === 'callflow') {
+					if(data.viewType === 'pbx') {
+						if(value.used_by === 'callflow') {
+							thisAccount.usedNumbers.push(value);
+						}
+					}
+					else {
 						thisAccount.usedNumbers.push(value);
 					}
 				}
