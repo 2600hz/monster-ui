@@ -731,7 +731,8 @@ define(function(require){
 			}
 		},
 
-		addNumbers: function(globalData, index, numbersData, callback) {
+		// [10/17/13 ; max] Should not be used anymore, will be cleaned up when it is certain that we won't use it anymore.
+		/*addNumbers: function(globalData, index, numbersData, callback) {
 			var self = this,
 				numberData;
 
@@ -779,7 +780,7 @@ define(function(require){
 					}
 				});
 			}
-		},
+		},*/
 
 		cleanPhoneNumberData: function(data) {
 			var self = this;
@@ -1487,20 +1488,26 @@ define(function(require){
 				self.renderEndpoint(data, endpointData, target, callbacks, pbxsManager);
 			});
 
-			pbxsManager.find('.buy-numbers-link').on('click', function() {
+			pbxsManager.find('.buy-numbers-link').on('click', function(e) {
+				e.preventDefault();
 
 				monster.pub('common.buyNumbers', {
 					searchType: $(this).data('type'),
 					callbacks: {
 						success: function(numbers) {
-							var numbersData = $.map(numbers, function(val, key) {
-								return { phone_number: key };
-							});
-
 							self.getAccount(function(globalData) {
-								self.addNumbers(globalData, serverId, numbersData, function() {
+
+								_.each(numbers, function(val, key) {
+									globalData.data.servers[serverId].DIDs[key] = {
+										failover: false,
+										cnam: false,
+										dash_e911: false
+									};
+								});
+
+								self.updateOldTrunkstore(globalData.data, function(updatedData) {
+									self.renderList(serverId, undefined, undefined, updatedData.data.servers);
 									self.listNumbersByPbx(serverId, callback_listing);
-									self.renderList(serverId);
 								});
 							});
 						}
@@ -1735,7 +1742,8 @@ define(function(require){
 				.append(pbxsManager);
 		},
 
-		renderAddNumberDialog: function(globalData, index, callback) {
+		// [10/17/13 ; max] Should not be used anymore, will be cleaned up when it is certain that we won't use it anymore.
+		/*renderAddNumberDialog: function(globalData, index, callback) {
 			var self = this,
 				numbers_data = [],
 				popup_html = $(monster.template(self, 'addNumberDialog')),
@@ -1818,7 +1826,7 @@ define(function(require){
 				width: '600px',
 				position: ['center', 20]
 			});
-		},
+		},*/
 
 		renderPortDialog: function(callback) {
 			var self = this,
