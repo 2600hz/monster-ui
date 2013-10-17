@@ -446,6 +446,26 @@ define(function(require){
 									} else {
 										callback();
 									}
+								},
+								servicePlans: function(callback) {
+									if(formData.servicePlan) {
+										monster.request({
+											resource: 'accountsManager.servicePlans.add',
+											data: {
+												accountId: newAccountId,
+												planId: formData.servicePlan,
+												data: {}
+											},
+											success: function(data, status) {
+												callback(null, data.data);
+											},
+											error: function(data, status) {
+												toastr.error(self.i18n.active().toastrMessages.newAccount.servicePlanError, '', {"timeOut": 5000});
+											}
+										});
+									} else {
+										callback();
+									}
 								}
 							},
 							function(err, results) {
