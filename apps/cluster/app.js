@@ -8,16 +8,22 @@ define(function(require){
 		monster = require('monster');
 
 	var app = {
-
 		name: 'cluster',
+		cmapi: 'http://localhost/2600/v1/accounts/accountidhere/',
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'servers.list': {
-				//apiRoot: 'http://www.colelabs.com/2600/cm/',
-				apiRoot: 'http://localhost/db/2600/index.php/cm/',
-				url: 'system',
+				//apiRoot: 'http://www.colelabs.com/2600/v1/accounts/{accountId}/',
+				apiRoot: 'http://localhost/2600/v1/accounts/{accountId}/',
+				url: 'system/{cluster}',
+				verb: 'GET'
+			},
+			'localservers.list': {
+				apiRoot: 'apps/cluster/static/data/',
+				//apiRoot: this.cmapi ,
+				url: '{cluster}.json',
 				verb: 'GET'
 			} 
 		},
@@ -26,11 +32,28 @@ define(function(require){
 
 		load: function (callback) {
 			var self = this;
-
-			callback && callback(self);
+			self.initApp(function() { 
+				callback && callback(self);
+			});
 		},
 
-		render: function (container) {
+		initApp: function(callback) {
+			var self = this;
+			monster.pub('auth.initApp', {
+				app: self,
+				callback: callback
+			});
+		},
+		
+		render: function (container, cluster) {
+
+			 //Find better place to stick this
+			 window.Handlebars.registerHelper('select', function( value, options ){
+		        var $el = $('<select />').html( options.fn(this) );
+		        $el.find('[value=' + value + ']').attr({'selected':'selected'});
+		        return $el.html();
+		    });
+
 			var self = this,
 				format = function (data) {
 					for (var server in data.servers) {
@@ -44,16 +67,16 @@ define(function(require){
 						var status = ['up', 'up', 'up', 'warning', 'down'],
 							alerts = ['Database HTTPS Error', 'Server Version Old'];
 
-						//data.servers[server].status = status[Math.floor(Math.random() * status.length)];
+						data.servers[server].status = status[Math.floor(Math.random() * status.length)];
 
-						//data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
-						//data.servers[server].nic2 = ( Math.round(Math.random()) == 1 ) ? true : false;
+						data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
+						data.servers[server].nic2 = ( Math.round(Math.random()) == 1 ) ? true : false;
 						data.servers[server].vpn = ( Math.round(Math.random()) == 1 ) ? true : false;
-						/*
+						
 						data.servers[server].cpu = Math.floor((Math.random() * 100) + 1);
 						data.servers[server].ram = Math.floor((Math.random() * 100) + 1);
 						data.servers[server].disk = Math.floor((Math.random() * 100) + 1);
-						*/
+						
 						data.servers[server].speed = Math.floor(Math.random() * 500) + 1;
 						data.servers[server].ping = Math.floor(Math.random() * 150) + 1;
 
@@ -144,24 +167,34 @@ define(function(require){
 					return formattedData;
 				};
 
+			if (!cluster)
+				cluster='kawlinlocal';
+
+
+			if (cluster=='local1' || cluster == '2600hzlocal' || cluster == 'kawlinlocal')
+				apiresource='localservers.list';
+			else
+				apiresource='servers.list';
+
 			monster.request({
-				resource: 'servers.list',
-				data: {},
+				resource: apiresource,
+				data: {
+					accountId: self.accountId,
+					cluster: cluster
+				},
 				success: function(data, status) {
+
+					data.cluster=cluster;
 
 					if (data.noauth) {
 						//alert("You need to log in first!");
+						console.log(data);
 						var container =  $('div#ws-content');
 							clusterManagerTemplate = $(monster.template(self, 'login', data));
-						
 						container
 							.empty()
 							.append(clusterManagerTemplate);	
-
-						//window.location.replace('http://localhost/db/2600/login.php');
 					}
-					else if (data.authd)
-						{alert('yup, authd');}
 					else { 
 						var data = format(data),
 							container = container || $('div#ws-content'),
@@ -174,13 +207,10 @@ define(function(require){
 
 						self.renderServersView(clusterManagerTemplate, data);
 						self.bindEvents(clusterManagerTemplate, data);
-						//self.listAMQP();
 					}
 
 				}
 			});
-
-
 		},
 
 		/* Expected params:
@@ -194,7 +224,13 @@ define(function(require){
 						serverType = ( serverType == 'servers' ) ? 'all' : serverType;
 						formattedData.serverFilter=serverType;
 
-					if ( serverType != 'all' ) {
+					if (serverType != 'all') {
+						data.serverFilter=serverType;
+					}
+					else
+						data.serverFilter = null;
+
+					if ( serverType != 'all' && serverType != 'carrier' && serverType != 'network' && serverType != 'security' && serverType != 'capacity') {
 						for (var server in data.servers) {
 							if ( data.servers[server].type == serverType ) {
 								formattedData.servers.push(data.servers[server]);
@@ -208,15 +244,17 @@ define(function(require){
 				};
 			
 
-
-			parent.find('div.left-menu').find('ul:first-child').find('li.nav-item:not(.role)').on('click', function () {
+//			parent.find('div.left-menu').find('ul:first-child').find('li.nav-item:not(.role)').on('click', function () {
+			parent.find('div.left-menu').find('ul').find('li.nav-item:not(.role)').on('click', function () {
 				parent
 					.find('div.left-menu')
-					.find('ul:first-child')
+					.find('ul')
+					//.find('ul:first-child')
 					.find('li.nav-item.active')
 					.removeClass('active');
 
 				$(this).addClass('active');
+		
 
 				self.renderServersView(
 					parent,
@@ -237,6 +275,7 @@ define(function(require){
 				viewType = ( typeof viewType != 'undefined' ) ? viewType : 'list';
 
 			activeView[viewType] = true;
+			activeView['cluster']=data.cluster;
 
 			parent
 				.find('div.right-content')
@@ -253,6 +292,7 @@ define(function(require){
 						data
 					)));		
 
+			if (data.serverFilter != 'carrier' && data.serverFilter != 'network' && data.serverFilter != 'security' && data.serverFilter != 'capacity' )
 			parent
 				.find('div#servers_view_container').find('div#servers_list')
 				.append($(monster.template(
@@ -342,51 +382,70 @@ define(function(require){
 			command = $("#sel_"+dn).val();
 			//alert(command);
 			$("#php").html("");	
-			$("#php").load("http://localhost/db/2600/index.php/monitor/ssh", 
+			$("#php").load(self.cmapi + "ssh", 
 				{ip:ip, command:command}, 
 				function() {
-					$("#php").prepend(ip + '-' + command+"<br><br>");
+					$( "#php" ).attr("title",ip + '-' + command);
+					$( "#php" ).dialog();
 				});
 
 			});
 
 			//CPU, MEM, HD Metrics
-			parent.find('div.barmetric').on('click', function () {
+			parent.find('.barmetric').on('click', function () {
 				dn = $(this).attr('client');
 				metric = $(this).attr('metric');				
-				window.open('http://192.237.168.225/render?target=voip.' + dn + '.system.' + metric + '&width=1000&height=800','wrd')
+				///////$("#php").html("<img width='95%' height='95%' src='" + self.cmapi + "show_graph/"+dn+"/"+metric+"'>");
+				$("#php").html("<img width='95%' height='95%' src='apps/cluster/static/images/graphall.png'>");
+				//$("#php").html("<img src='http://localhost/db/2600/index.php/cm/show_graph/"+dn+"/"+metric+"'>");
+				//$("#php").attr("title","");
+				//$("#php").attr("title",dn + '  -  ' + metric);
+				var wWidth = $(window).width();
+				var dWidth = wWidth * 0.8;
+				var wheight = $(window).height();
+				var dheight = wheight * 0.8;
+
+				$("#php").dialog({height:600,  width:800, modal:true, 
+					buttons: {
+						        "Ok!": function() {
+						          $( this ).dialog( "close" );
+						         } 
+						     } 
+				});
 			});
+
+			//Sensu Event Buttons
+			parent.find('.btn-sensuevent').on('click', function () {
+				$("#php").html( $(this).attr("output") );
+				$("#php").dialog({ modal:true, width:500, height:300, title:$(this).attr('check'), 
+					buttons: {
+						        "Silence Client": function() {
+						          $( this ).dialog( "close" );
+						         },
+						         "Silence Check": function() {
+						          $( this ).dialog( "close" );
+						         },
+						          "Resolve": function() {
+						          $( this ).dialog( "close" );
+						         }
+						     } 
+				});
+			});
+
+
+			//Cluster Selection Dropdown
+			parent.find('#selcluster').on('change', function () {
+					targetcluster=$("#selcluster").val(); 
+					$("#servers_list").fadeOut(2000);
+					self.render(null, targetcluster);
+			});
+
+			parent.find('.regionfilter').on('click', function() {
+				alert('werdup');
+			});
+
 		},
 
-
-
-		listAMQP: function() {			
-			monster.request({
-				resource: 'amqp.list',
-				data: {},
-				success: function(data, status) {
-					console.log("look here dummy!");
-					console.log(data);
-					var data = format(data),
-						container = container || $('div#ws-content'),						 
-						amqpTemplate = $(monster.template(self, 'amqpList', data));
-						//clusterManagerTemplate = $(monster.template(self, 'app', null));
-
-					
-					container 
-						.empty()
-						.append(amqpTemplate);
-
-					alert('it ran?');
-					
-					/*this works but is whole screen so not really
-					container
-						.empty()
-						.append(amqpTemplate);*/
-
-				}
-			});
-		},
 
 		/* Expected params:
 			parent (mandatory),

@@ -1,11 +1,27 @@
 <div id="servers_view_container">
 	<div class="cluster-actions">
 		<h3 class="">Cluster</h3>
-		<select name="" id="">
-			<option value="prod">Production</option>
-			<option value="dev">Test</option>
+		<select name="" id="selcluster">
+			{{#select cluster}}
+			<option value="kawlinlocal">kawlinlocal</option>
+			<option value="2600hz">2600hz</option>
+			<option value="5060">5060</option>
+			<option value="cloudpbx">cloudpbx</option>
+			<option value="iptel">iptel</option>
+			<option value="kawlin">kawlin</option>
+			<option value="networkedvoice">networkedvoice</option>
+			<option value="nimbustel">nimbustel</option>
+			<option value="o-net">o-net</option>
+			<option value="quikvoip">quikvoip</option>
+			<option value="simwood">simwood</option>
+			<option value="sipoasis">sipoasis</option>
+			<option value="vinixtech">vinixtech</option>
+			<option value="zswitch">zswitch</option>
+			<option value="2600hzlocal">2600hzlocal</option>
+			<option value="kawlinlocal">kawlinlocal</option>
+			{{/select}}
 		</select>
-		<button class="btn">Filter by Region &amp; Zone</button>
+		<button class="btn regionfilter" >Filter by Region &amp; Zone</button>
 		<button class="btn btn-large pull-right">Quick Diagnostics</button>
 	</div>
 	<div class="server-actions">

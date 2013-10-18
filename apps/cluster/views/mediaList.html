@@ -5,8 +5,11 @@
 				<th data-toggle="true">Status &amp; IP &amp; Domain Name</th>
 				<!--<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
 				<th data-hide="xs,sm,md,lg">Message</th>-->
-				<th data-hide="xs,sm,md,lg">Channels</th>
+				<th data-hide="xs,sm,md,lg">Calls</th>
 				<th data-hide="xs,sm,md,lg">eCallMgr Listeners</th>
+				<th data-hide="xs,sm,md,lg">Conference Bridges</th>
+				<th data-hide="xs,sm,md,lg">Longest Call Duration</th>
+				<th data-hide="xs,sm,md,lg">Accepting New Calls</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,6 +32,9 @@
 						<td data-type="alpha">{{alert}}</td>-->
 						<td data-type="numeric">{{channels}}</td>
 						<td data-type="numeric">{{erlang_nodes}}</td>
+						<td data-type="numeric">{{conference_bridges}}</td>
+						<td data-type="alpha">{{longest_duration}}</td>
+						<td data-type="alpha">{{accepting_calls}}</td>
 					</tr>
 				{{/if}}
 			{{/each}}

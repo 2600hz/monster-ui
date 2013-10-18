@@ -5,15 +5,14 @@
 				<th data-toggle="true">Status &amp; IP &amp; Domain Name</th>
 				<!--<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
 				<th data-hide="xs,sm,md,lg">Message</th>-->
-				<th data-hide="xs,sm,md,lg">Queues</th>
-				<th data-hide="xs,sm,md,lg">MsgRate</th>
-				<th data-hide="xs,sm,md,lg">Exchanges</th>
-				<th data-hide="xs,sm,md,lg">MemoryAvail</th>
+				<th data-hide="xs,sm,md,lg">Registrations</th>
+				<th data-hide="xs,sm,md,lg">Packets/Sec</th>
+				
 			</tr>
 		</thead>
 		<tbody>
 			{{#each servers}}
-				{{#if rabbit}}
+				{{#if sip}}
 					<tr>
 						<td data-value="server_{{status}} {{ip}} {{dn}}">
 							<div class="all-server">
@@ -29,10 +28,8 @@
 							{{city}}
 						</td>
 						<td data-type="alpha">{{alert}}</td>-->
-						<td data-type="numeric">{{queues}}</td>
-						<td data-type="numeric">{{messages_rate}}/s</td>
-						<td data-type="numeric">{{exchanges}}</td>
-						<td data-type="numeric">{{memory}}%</td>
+						<td data-type="numeric">{{registrations}}</td>
+						<td data-type="numeric">{{packets}}/s</td> 
 					</tr>
 				{{/if}}
 			{{/each}}
