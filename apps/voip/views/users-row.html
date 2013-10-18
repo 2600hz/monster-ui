@@ -1,60 +1,63 @@
-<div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}} {{ formatPhoneNumber phoneNumber }} {{extension}}">
+<div class="grid-row" data-id="{{id}}" data-search="{{first_name}} {{last_name}}{{#each extra.listCallerId}} {{formatPhoneNumber this}} {{this}}{{/each}}">
 	<div class="user-cells">
-		<div class="name grid-cell" data-type="name"><i class="{{#if isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
-		<div class="extension grid-cell centered" data-type="extensions">
-			{{#if extension}}
-				{{ extension }}
+		<div class="name grid-cell" data-type="name"><i class="{{#if extra.isAdmin}}icon-telicon-moderator icon-blue{{else}}icon-telicon-user icon-lightgrey{{/if}}"></i> {{ first_name }} {{ last_name }}</div>
+		<div class="extension grid-cell" data-type="extensions">
+			{{#if extra.extension}}
+				{{ extra.extension }}
 
-				{{#if additionalExtensions}}
-					<i class="icon-plus icon-blue"></i>
+				{{#if extra.additionalExtensions}}
+					<i class="icon-telicon-multiple-items"></i>
 				{{/if}}
 			{{else}}
 				{{ i18n.users.noExtension }}
 			{{/if}}
 		</div>
-		<div class="phone-number grid-cell centered" data-type="numbers">
-			{{#if phoneNumber}}
-				{{ formatPhoneNumber phoneNumber }}
+		<div class="phone-number grid-cell" data-type="numbers">
+			{{#if extra.phoneNumber}}
+				{{ formatPhoneNumber extra.phoneNumber }}
 
-				{{#if additionalNumbers}}
-					<i class="icon-plus icon-blue"></i>
+				{{#if extra.additionalNumbers}}
+					<i class="icon-telicon-multiple-items"></i>
 				{{/if}}
 			{{else}}
 				{{ i18n.users.noNumber }}
 			{{/if}}
 		</div>
-		<div class="devices grid-cell centered" data-type="devices">
-			{{#each devices}}
+		<div class="devices grid-cell" data-type="devices">
+			{{#each extra.devices}}
 				{{#compare this '===' 'softphone'}}
-					<i class="icon-telicon-outbound-call"></i>
-				{{else}}
-					<i class="icon-phone"></i>
+					<i class="icon-telicon-soft-phone"></i>
 				{{/compare}}
+				{{#compare this '===' 'cellphone'}}
+					<i class="icon-telicon-mobile-phone"></i>
+				{{/compare}}
+				{{#compare this '===' 'sip_device'}}
+					<i class="icon-telicon-voip-phone"></i>
+				{{/compare}}
+				{{#compare this '===' 'fax'}}
+					<i class="icon-telicon-fax"></i>
+				{{/compare}}
+				{{#compare this '===' 'landline'}}
+					<i class="icon-telicon-home-phone"></i>
+				{{/compare}}
+			{{else}}
+				{{ i18n.users.noUserDevices }}
 			{{/each}}
 
-			{{#if additionalDevices}}
-				(+{{additionalDevices}})
+			{{#if extra.additionalDevices}}
+				(+{{extra.additionalDevices}})
 			{{/if}}
 		</div>
 		<div class="features grid-cell right-aligned" data-type="features">
-			<div class="number-options pull-right">
-				<div class="navbar">
-					<ul class="nav pull-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
-							<ul class="dropdown-menu">
-								<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ i18n.callerId.label }}</a></li>
-								<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ i18n.e911.label }}</a></li>
-								<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ i18n.failover.label }}</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-			&nbsp;
-			{{#each features}}
-				<i class="icon-telicon-credit-card icon-blue"></i>
-			{{/each}}
+			{{#if extra.hasFeatures}}
+				{{#each extra.mapFeatures}}
+					{{#if this.active}}
+						<i class="{{this.icon}} {{this.iconColor}}"></i>
+					{{/if}}
+				{{/each}}
+			{{else}}
+				{{ i18n.users.noUserFeatures }}
+			{{/if}}
 		</div>
 	</div>
 

@@ -1,0 +1,50 @@
+<div class="edit-device" data-type="sip-device" data-id="{{id}}">
+	<div class="title-bar clearfix">
+		<div class="device-title pull-left">
+			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
+			<div class="device-model">{{name}}</div>
+		</div>
+
+		<ul class="nav nav-pills pull-right">
+			<li class="tabs-main-selector main-section active">
+				<a class="tabs-selector change-section" data-section="basic" href="javascript:void(0)">{{ i18n.devices.popupSettings.basicTitle }}</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="content">
+		<form id="form_device" class="form-horizontal">
+			<div class="tabs-section active" data-section="basic">
+				<div class="control-group">
+					<label class="control-label" for="name">{{ i18n.devices.sip_device.deviceName }}</label>
+					<div class="controls">
+						<input type="text" id="name" name="name" value="{{name}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="number">{{ i18n.devices.landline.number }}</label>
+					<div class="controls">
+						<input type="text" name="call_forward.number" placeholder="{{ i18n.devices.landline.numberPlaceholder }}" value="{{call_forward.number}}">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="actions clearfix">
+		{{#if id}}
+			<a id="delete_device" class="monster-link"><i class="icon-trash icon-red"></i>{{ i18n.devices.deleteDevice }}</a>
+		{{/if}}
+
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+				<button type="button" class="btn btn-success save">
+				{{#if id}}
+					{{ i18n.saveChanges }}
+				{{else}}
+					{{ i18n.devices.createDevice }}
+				{{/if}}
+				</button>
+		</div>
+	</div>
+</div>

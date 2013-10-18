@@ -1,0 +1,33 @@
+<div id="groups_container">
+	<div class="groups-header">
+		<div class="title">
+			{{ i18n.groups.title }}
+			<span class="count-groups">{{countGroups}}</span>
+		</div>
+
+		<a class="monster-link add-group">
+			<i class="icon-plus-sign icon-green"></i>
+			{{ i18n.groups.add }}
+		</a>
+
+		<span class="search-box pull-right">
+			<i class="icon-search"></i>
+			<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+		</span>
+	</div>
+
+	<div class="groups-grid">
+		<div class="grid-row title">
+			<div class="grid-cell name">{{ i18n.groups.titleGrid.groups }}</div>
+			<div class="grid-cell members">{{ i18n.groups.titleGrid.members }}</div>
+			<div class="grid-cell extension">{{ i18n.groups.titleGrid.extensions }}</div>
+			<div class="grid-cell phone-number">{{ i18n.groups.titleGrid.phoneNumbers }}</div>
+			<div class="grid-cell features">{{ i18n.groups.titleGrid.features }}</div>
+		</div>
+		<div class="groups-rows">
+			<div class="empty-search-row">
+				{{ i18n.groups.noMatchingGroup }}
+			</div>
+		</div>
+	</div>
+</div>

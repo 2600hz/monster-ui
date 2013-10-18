@@ -91,8 +91,15 @@ define(function(require){
 			return parseInt((date.getTime() / 1000) + 62167219200);
 		},
 
-		unformatPhoneNumber: function(formattedNumber) {
-			var phoneNumber = formattedNumber.replace(/[^0-9]/g, '');
+		unformatPhoneNumber: function(formattedNumber, specialRule) {
+			var regex = /[^0-9]/g,
+				specialRule = specialRule || 'none';
+
+			if(specialRule === 'keepPlus') {
+				regex = /[^0-9\+]/g;
+			}
+
+			var phoneNumber = formattedNumber.replace(regex, '');
 
 			return phoneNumber;
 		},
@@ -136,16 +143,40 @@ define(function(require){
 		},
 
 		formatPhoneNumber: function(phoneNumber){
-			phoneNumber = phoneNumber.toString();
+			if(phoneNumber) {
+				phoneNumber = phoneNumber.toString();
 
-			if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
-				phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
-			}
-			else if(phoneNumber.length === 10) {
-				phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '+1 ($1) $2-$3');
+				if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
+					phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
+				}
+				else if(phoneNumber.length === 10) {
+					phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '+1 ($1) $2-$3');
+				}
 			}
 
 			return phoneNumber;
+		},
+
+		formatMacAddress: function(macAddress) {
+			var regex = /[^0-9a-fA-F]/g,
+			    macAddress = macAddress.replace(regex, ''),
+				formattedMac = '';
+
+			if(macAddress.length === 12) {
+				var i = 0;
+
+				for(var c in macAddress) {
+    				if((i%2 === 0) && (i !== 0)) {
+        				formattedMac += ':' + macAddress[i];
+    				}
+    				else {
+        				formattedMac += macAddress[i];
+    				}
+    				i++;
+				}
+			}
+
+			return formattedMac;
 		},
 
 		randomString: function(length, _chars) {

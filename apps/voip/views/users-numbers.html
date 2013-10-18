@@ -1,11 +1,11 @@
 <div class="detail-numbers">
 	<div class="list-wrapper">
-		<div class="list-assigned-numbers number-list">
+		<div class="list-assigned-items number-list">
 			<div class="empty-row{{#if emptyAssigned}} visible{{/if}}">
 				{{ i18n.users.noAssignedNumbers }}
 			</div>
 			{{#eachkeys assignedNumbers}}
-				<div class="phone-number-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
+				<div class="item-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
 					<div class="features-block pull-right">
 						<div class="pull-right">
 							<div class="navbar">
@@ -33,7 +33,7 @@
 						<button type="button" class="btn btn-danger remove-number">{{ ../i18n.remove }}</button>
 						{{ formatPhoneNumber this.key }}
 					</div>
-					<div class="locality">
+					<!--<div class="locality">
 						{{#if this.value.localityEnabled}}
 							<span class="flag"><img src="css/flags/32/{{ this.value.locality.iso }}.png" height="32" width="32"></img></span>
 							<span class="city">{{ this.value.locality.city }}, {{ this.value.locality.country }}</span>
@@ -41,7 +41,7 @@
 							N/A
 						{{/if}}
 					</div>
-
+					-->
 				</div>
 			{{else}}
 
@@ -58,7 +58,7 @@
 			</div>
 		</div>
 
-		<div class="list-unassigned-numbers number-list">
+		<div class="list-unassigned-items number-list">
 			<div class="empty-search-row">
 				{{ i18n.users.noMatchingNumbers }}
 			</div>
@@ -66,7 +66,7 @@
 				{{ i18n.users.noMoreSpareNumbers }}
 			</div>
 			{{#eachkeys unassignedNumbers}}
-				<div class="phone-number-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
+				<div class="item-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
 					<div class="features-block pull-right">
 						<div class="pull-right">
 							<div class="navbar">
@@ -94,6 +94,7 @@
 						<button type="button" class="btn btn-primary add-number">{{ ../i18n.add }}</button>
 						{{ formatPhoneNumber this.key }}
 					</div>
+					<!--
 					<div class="locality">
 						{{#if this.value.localityEnabled}}
 							<span class="flag"><img src="css/flags/32/{{ this.value.locality.iso }}.png" height="32" width="32"></img></span>
@@ -101,14 +102,24 @@
 						{{else}}
 							N/A
 						{{/if}}
-					</div>
+					</div>-->
 				</div>
 			{{/eachkeys}}
 		</div>
 	</div>
 
 	<div class="actions">
-		<a id="buy_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-shopping-cart icon-green"></i>{{ i18n.users.buy }}</a>
+		<ul class="nav pull-left">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle buy-dropdown monster-link" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart icon-green icon-large"></i>{{ i18n.strategy.numberLinks.buy.link }}</a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="buy-link" data-type="regular" href="#">{{i18n.strategy.numberLinks.buy.regular}}</a></li>
+                    <li><a class="buy-link" data-type="tollfree" href="#">{{i18n.strategy.numberLinks.buy.tollfree}}</a></li>
+                    <li><a class="buy-link" data-type="vanity" href="#">{{i18n.strategy.numberLinks.buy.vanity}}</a></li>
+                </ul>
+            </li>
+        </ul>
+		<!--<a id="buy_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-shopping-cart icon-green"></i>{{ i18n.users.buy }}</a>-->
 		<a id="port_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-random icon-blue"></i>{{ i18n.users.port }}</a>
 
 		<div class="pull-right">

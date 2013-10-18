@@ -16,7 +16,8 @@ define(function(require){
 				parent = container || $('#ws_content');
 
 			monster.pub('common.numbers.render', {
-				container: parent
+				container: parent,
+				viewType: 'pbx'
 			});
 		}
 	};

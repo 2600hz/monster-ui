@@ -621,6 +621,15 @@
 	text-decoration: none !important;
 }
 
+#ws-content #pbx_connector_container #actions_wrapper .buy-numbers-dropdown {
+	margin: 0;
+	display: inline-block;
+}
+
+#ws-content #pbx_connector_container #actions_wrapper .buy-numbers-dropdown .dropdown-menu {
+	min-width: 0;
+}
+
 #ws-content #pbx_connector_container #actions_wrapper a.action-number:hover .action-text {
 	text-decoration: underline;
 }

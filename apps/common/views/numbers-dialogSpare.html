@@ -1,0 +1,35 @@
+<div class="dialog-spare-container">
+	<div class="grid-numbers">
+		<div class="title blue-gradient-reverse">
+			{{#if accountName}}
+				{{ i18n.numbers.dialogSpare.headline }} {{accountName}}
+			{{else}}
+				{{ i18n.numbers.dialogSpare.headlineNoAccount}}
+			{{/if}}
+
+			<span class="search-box pull-right">
+				<i class="icon-search"></i>
+				<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
+			</span>
+		</div>
+		<div class="numbers">
+			<div class="empty-search-row">
+                {{ i18n.numbers.dialogSpare.noMatchingNumbers }}
+            </div>
+			{{#each numbers}}
+				<div class="number-box" data-number="{{this.phoneNumber}}" data-search="{{this.phoneNumber}} {{formatPhoneNumber this.phoneNumber}}">
+					<input type="checkbox"></input>
+					<span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>
+				</div>
+			{{else}}
+				<div class="number-box no-data">
+					{{ i18n.numbers.noSpareNumber }}
+				</div>
+			{{/each}}
+		</div>
+	</div>
+
+	<div class="dialog-buttons-wrapper">
+		<button id="proceed" class="btn btn-success">{{i18n.numbers.dialogSpare.proceed}}</button>
+	</div>
+</div>

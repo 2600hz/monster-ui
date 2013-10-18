@@ -169,6 +169,8 @@ define(function(require){
 						window.location.href = self.apiUrl+'/accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 					});
 
+					console.log(renderData);
+
 					monster.ui.table.balance.fnAddData(renderData.tabData);
 
 					balance.find('.popup-marker').clickover();
@@ -365,35 +367,30 @@ define(function(require){
 
 			parent.find('.switch').bootstrapSwitch()
 								 .on('switch-change', function (e, data) {
-				if(stateSwitch === 'manual') {
-					stateSwitch = 'event';
+				if(data.value === true) {
+					parent.find('#recharge_content').slideDown('fast')
 				}
 				else {
-					if(data.value === true) {
-						parent.find('#recharge_content').slideDown('fast')
-					}
-					else {
-						parent.find('#recharge_content').slideUp();
+					parent.find('#recharge_content').slideUp();
 
-						if(autoRecharge === true) {
-							monster.ui.confirm(self.i18n.active().turnoffRechargeConfirm,
-								function() {
-									self.getLimits(function(dataLimits) {
-										dataLimits.data.recharge = { enabled: false };
+					if(autoRecharge === true) {
+						monster.ui.confirm(self.i18n.active().turnoffRechargeConfirm,
+							function() {
+								self.getLimits(function(dataLimits) {
+									dataLimits.data.recharge = { enabled: false };
 
-										self.updateLimits(dataLimits.data, function() {
-											autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
-											toastr.success(self.i18n.active().autoRechargeCancelled);
-				});
+									self.updateLimits(dataLimits.data, function() {
+										autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+										toastr.success(self.i18n.active().autoRechargeCancelled);
 									});
-								},
-								function() {
-									parent.find('#recharge_content').slideDown();
-									stateSwitch = 'manual';
-									parent.find('.switch').bootstrapSwitch('setState', true);
-								}
-							);
-						}
+								});
+							},
+							function() {
+								parent.find('#recharge_content').slideDown();
+								stateSwitch = 'manual';
+								parent.find('.switch').bootstrapSwitch('setState', true);
+							}
+						);
 					}
 				}
 			}).bootstrapSwitch('setState', autoRecharge);

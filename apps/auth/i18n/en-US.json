@@ -27,5 +27,9 @@
 		"callInLabel": "Your 'Call-in' Phone Number",
 		"optionalSplitter": "Optional",
 		"buttonLabel": "Log-in to Conference"
+	},
+
+	"toastrMessages": {
+		"appListError": "A problem occured while loading your list of applications."
 	}
 }

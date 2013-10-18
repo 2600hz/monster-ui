@@ -1,12 +1,12 @@
 <div id="apploader">
 	<div class="app-list-container">
-		<ul class="app-list">
+		<ul class="app-list {{#if allowAppstore}}has-appstore{{/if}}">
 			{{#each apps}}
 				<li class="app-list-element" data-id="{{id}}" data-name="{{name}}">
 					<div class="app-draggable">
 						<div class="app-draggable-inner"></div>
 					</div>
-					<div class="app-icon"></div>
+					<div class="app-icon" style="background-image:url({{icon}})"></div>
 					<div class="app-name">{{label}}</div>
 					{{#unless @index }}
 					<div class="app-default">
