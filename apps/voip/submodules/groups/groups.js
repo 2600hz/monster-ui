@@ -125,7 +125,7 @@ define(function(require){
 						listNumbers = [];
 
 					_.each(callflow.numbers, function(number) {
-						number.length < 6 ? listExtensions.push(number) : listNumbers.push(number);
+						number.length < 7 ? listExtensions.push(number) : listNumbers.push(number);
 					});
 
 					if(listExtensions.length > 0) {
@@ -137,6 +137,7 @@ define(function(require){
 						mapGroups[callflow.group_id].extra.mainNumber = listNumbers[0];
 					}
 					mapGroups[callflow.group_id].extra.additionalNumbers = listNumbers.length > 1;
+					mapGroups[callflow.group_id].extra.callflowId = callflow.id;
 				}
 			});
 
@@ -306,14 +307,14 @@ define(function(require){
 		groupsGetExtensionsTemplate: function(groupId, callback) {
 			var self = this;
 
-			self.groupsGetExtensionsData(groupId, function(data) {
-				var data = self.groupsFormatExtensionsData(data);
+			self.groupsGetNumbersData(groupId, function(data) {
+				var data = self.groupsFormatNumbersData(data);
 
 				template = $(monster.template(self, 'groups-extensions', data));
 
 				self.groupsBindExtensions(template, data);
 
-				callback && callback(template, results);
+				callback && callback(template, data);
 			});
 		},
 
@@ -356,39 +357,56 @@ define(function(require){
 		},
 
 		groupsBindExtensions: function(template, data) {
-			var self = this;
-			/*template.on('click', '.save-extensions', function() {
-				var numbers = $.extend(true, [], numbersToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+			var self = this,
+				toastrMessages = self.i18n.active().groups.toastrMessages,
+				listExtension = [];
 
-				template.find('.extensions .list-assigned-items .item-row').each(function(k, row) {
+			template.on('click', '.save-extensions', function() {
+				var extensionsToSave = [],
+					parentRow = $(this).parents('.grid-row'),
+					callflowId = parentRow.data('callflow_id'),
+					name = parentRow.data('name');
+
+				template.find('.list-assigned-items .item-row').each(function(k, row) {
 					var row = $(row),
 						number;
 
 					number = (row.data('id') ? row.data('id') : row.find('.input-extension').val()) + '';
 
-					numbers.push(number);
+					extensionsToSave.push(number);
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.groupsUpdateExtensions(callflowId, extensionsToSave, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.groupsRender({ groupId: callflowData.group_id });
 				});
 			});
 
 			template.on('click', '#add_extensions', function() {
-				var nextExtension = (parseInt(existingExtensions[existingExtensions.length - 1]) || 2000) + 1 + '',
-					dataTemplate = {
-						recommendedExtension: nextExtension
-					},
-					newLineTemplate = $(monster.template(self, 'users-newExtension', dataTemplate)),
-					listExtensions = template.find('.extensions .list-assigned-items');
+				var renderNewRow = function(lastExtension) {
+					var lastExtension = listExtension[listExtension.length - 1] + 1,
+					    dataTemplate = {
+							recommendedExtension: lastExtension
+						},
+						newLineTemplate = $(monster.template(self, 'groups-newExtension', dataTemplate)),
+						$listExtensions = template.find('.list-assigned-items');
 
-				listExtensions.find('.empty-row').hide();
+					listExtension.push(lastExtension);
+					$listExtensions.find('.empty-row').hide();
 
-				listExtensions.append(newLineTemplate);
+					$listExtensions.append(newLineTemplate);
+				};
 
-				existingExtensions.push(nextExtension);
+				if(_.isEmpty(listExtension)) {
+					self.groupsListExtensions(function(arrayExtension) {
+						listExtension = arrayExtension;
+
+						renderNewRow();
+					});
+				}
+				else {
+					renderNewRow();
+				}
 			});
 
 			template.on('click', '.remove-extension', function() {
@@ -403,15 +421,15 @@ define(function(require){
 			});
 
 			template.on('click', '.cancel-extension-link', function() {
-				var extension = $(this).siblings('input').val(),
-				    index = existingExtensions.indexOf(extension);
+				var extension = parseInt($(this).siblings('input').val()),
+				    index = listExtension.indexOf(extension);
 
 				if(index > -1) {
-					existingExtensions.splice(index, 1);
+					listExtension.splice(index, 1);
 				}
 
 				$(this).parents('.item-row').remove();
-			});*/
+			});
 		},
 
 		groupsBindMembers: function(template, data) {
@@ -517,6 +535,90 @@ define(function(require){
 			});
 		},
 
+		groupsFormatNumbersData: function(data) {
+			var self = this,
+				response = {
+					emptyExtensions: true,
+					extensions: []
+				};
+
+			if('groupCallflow' in data.callflow && 'numbers' in data.callflow.groupCallflow) {
+				_.each(data.callflow.groupCallflow.numbers, function(number) {
+					if(!(number in data.numbers.numbers)) {
+						response.extensions.push(number);
+					}
+				});
+			}
+
+			response.emptyExtensions = response.extensions.length === 0;
+
+			return response;
+		},
+
+		groupsGetNumbersData: function(groupId, callback) {
+			var self = this;
+
+			monster.parallel({
+					callflow: function(callbackParallel) {
+						var response = {};
+
+						monster.request({
+							resource: 'voip.groups.getCallflows',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(callflows) {
+								response.list = callflows.data;
+
+								var callflowId;
+
+								$.each(callflows.data, function(k, callflowLoop) {
+									/* Find Smart PBX Callflow of this group */
+									if(callflowLoop.group_id === groupId) {
+										callflowId = callflowLoop.id;
+
+										return false;
+									}
+								});
+
+								if(callflowId) {
+									monster.request({
+										resource: 'voip.groups.getCallflow',
+										data: {
+											accountId: self.accountId,
+											callflowId: callflowId
+										},
+										success: function(callflow) {
+											response.groupCallflow = callflow.data;
+
+											callbackParallel && callbackParallel(null, response);
+										}
+									});
+								}
+								else {
+									callbackParallel && callbackParallel(null, response);
+								}
+							}
+						});
+					},
+					numbers: function(callbackParallel) {
+						monster.request({
+							resource: 'voip.groups.getNumbers',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(numbers) {
+								callbackParallel && callbackParallel(null, numbers.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					callback && callback(results);
+				}
+			);
+		},
+
 		groupsGetMembersData: function(groupId, globalCallback) {
 			var self = this;
 
@@ -576,6 +678,71 @@ define(function(require){
 			};
 
 			return data.group;
+		},
+
+		groupsUpdateExtensions: function(callflowId, newNumbers, callback) {
+			var self = this;
+
+			self.groupsGetCallflow(callflowId, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number.length > 6) {
+						newNumbers.push(number);
+					}
+				});
+
+				callflow.numbers = newNumbers;
+
+				self.groupsUpdateCallflow(callflow, function(callflow) {
+					callback && callback(callflow);
+				});
+			});
+		},
+
+		groupsListExtensions: function(callback) {
+			var self = this,
+				extensionList = [];
+
+			self.groupsListCallflows(function(callflowList) {
+				_.each(callflowList, function(callflow) {
+					_.each(callflow.numbers, function(number) {
+						if(number.length < 7) {
+							var extension = parseInt(number);
+
+							if(extension > 1) {
+								extensionList.push(extension);
+							}
+						}
+					});
+				});
+
+				extensionList.sort(function(a, b) {
+					var parsedA = parseInt(a),
+						parsedB = parseInt(b),
+						result = -1;
+
+					if(parsedA > 0 && parsedB > 0) {
+						result = parsedA > parsedB;
+					}
+
+					return result;
+				});
+
+				callback && callback(extensionList);
+			});
+		},
+
+		groupsListCallflows: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.getCallflows',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(callflows) {
+					callback && callback(callflows.data);
+				}
+			});
 		},
 
 		groupsCreate: function(data, callback) {
@@ -797,6 +964,21 @@ define(function(require){
 					callback && callback(results);
 				}
 			);
+		},
+
+		groupsGetCallflow: function(callflowId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.getCallflow',
+				data: {
+					accountId: self.accountId,
+					callflowId: callflowId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		},
 
 		groupsGetData: function(callback) {

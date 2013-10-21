@@ -12,6 +12,8 @@
 
 	"groups": {
 		"add": "Add Group",
+		"addExtension": "Add Extension",
+		"addNewExtension": "Extension number: ",
 		"delete": "Delete Group",
 		"dialogCreationGroup": {
 			"availableUsers": "Available Users",
@@ -25,6 +27,7 @@
 		},
 		"groupDeleted": "You successfuly deleted {{name}}'s Group",
 		"name": "Group Name",
+		"noAssignedExtensions": "There are currently no extension assigned to this group.",
 		"noExtension": "None",
 		"noFeatures": "None",
 		"noMatchingGroup": "There were no groups found matching your search",
@@ -32,13 +35,17 @@
 		"ringThisMemberFor": "Ring this member for:",
 		"ringGroupMissing": "No Ring Group are defined for this Group (group_id missing from callflow)",
 		"removeMember": "Remove Member",
-		"title": "Groups (Work in progress!)",
+		"title": "Groups",
 		"titleGrid": {
 			"groups": "Group Name",
 			"members": "Members",
 			"extensions": "Extension",
 			"phoneNumbers": "Direct Number",
 			"features": "Group Features"
+		},
+		"toastrMessages": {
+			"numbersUpdated": "You successfuly updated the phone numbers of {{name}}",
+			"extensionsUpdated": "You successfuly updated the extensions numbers of {{name}}"
 		}
 	},
 

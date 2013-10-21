@@ -275,3 +275,61 @@
 #creation_group_dialog .one-line-form label {
 	line-height: 30px;
 }
+
+/* Numbers / Extensions */
+/* Grid add remove */
+#groups_container .list-wrapper {
+	background: #FFF;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	margin: 10px;
+}
+
+#groups_container .list-unassigned-items{
+	overflow: auto;
+	max-height: 211px;
+}
+
+#groups_container .unassigned-list-header {
+	background: #999;
+	height: 32px;
+	line-height: 32px;
+	padding: 10px;
+}
+
+#groups_container .unassigned-list-header .title {
+	color: #FFF;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#groups_container .list-wrapper .item-row  {
+	border-bottom: 1px solid #ccc;
+	white-space: nowrap;
+}
+
+#groups_container .list-wrapper .item-row > * {
+	display: inline-block;
+	line-height: 32px;
+	height: 32px;
+	padding: 10px;
+}
+
+#groups_container .list-wrapper .item-row button {
+	margin-right: 15px;
+	padding: 2px;
+	width: 80px;
+}
+
+#groups_container .list-wrapper .empty-search-row,
+#groups_container .list-wrapper .empty-row {
+	display: none;
+	padding: 16px;
+	text-align: center;
+}
+
+#groups_container .list-wrapper .empty-search-row.visible,
+#groups_container .list-wrapper .empty-row.visible {
+	display: block;
+}
