@@ -34,12 +34,12 @@ define(function(require){
 				toDate = new Date();
 				if(fromDate) {
 					toDate.setTime(fromDate.getTime());
-					toDate.setDate(+7);
+					toDate.setDate(toDate.getDate()+7);
 				}
 			}
 			if(!fromDate) {
 				fromDate = new Date();
-				fromDate.setDate(-7);
+				fromDate.setDate(fromDate.getDate()-7);
 			}
 
 			self.callLogsGetCdrs(fromDate, toDate, function(cdrs) {
