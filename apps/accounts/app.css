@@ -438,7 +438,7 @@
 	box-shadow: 1px 1px 4px #CCCCCC;
 	color: #FFFFFF;
 	height: 40px;
-	margin: 0 10px 0 171px;
+	margin-right: 10px;
 	text-align: center;
 	width: 50px;
 }
@@ -463,6 +463,12 @@
 	background-color: #22ccff;
 }
 
+.limits-tab-container .slider-div .ui-slider-handle.ui-state-hover,
+.limits-tab-container .slider-div .ui-slider-handle.ui-state-focus {
+	font-weight: 500;
+	color: inherit;
+}
+
 .limits-tab-container .section-button {
 	text-align: right;
 }
@@ -476,7 +482,7 @@
 }
 
 .limits-tab-container .section-slider {
-	margin-top: 20px;
+	margin-top: 60px;
 }
 
 .limits-tab-container  .slider-title {
@@ -492,7 +498,10 @@
 
 .limits-tab-container .slider-value-wrapper {
 	display: block;
-	position: relative;
+	position: absolute;
+	top: -50px;
+	left: -17px;
+	width: 220px;
 }
 
 .limits-tab-container .slider-value-wrapper > * {
