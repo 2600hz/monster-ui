@@ -11,9 +11,11 @@
 	},
 
 	"groups": {
+		"addFromSpare": "Add from Spare Numbers",
 		"add": "Add Group",
 		"addExtension": "Add Extension",
 		"addNewExtension": "Extension number: ",
+		"buy": "Buy Numbers",
 		"delete": "Delete Group",
 		"dialogCreationGroup": {
 			"availableUsers": "Available Users",
@@ -32,6 +34,12 @@
 		"noFeatures": "None",
 		"noMatchingGroup": "There were no groups found matching your search",
 		"noNumber": "None",
+		"noAssignedNumbers": "There are no numbers assigned to this group.",
+		"noUnassignedNumbers": "There are no available number left to assign to this group.",
+		"noAssignedNumbers": "There are currently no number assigned to this group.",
+		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
+		"noMatchingNumbers": "There were no numbers found matching your search",
+		"port": "Port Numbers",
 		"ringThisMemberFor": "Ring this member for:",
 		"ringGroupMissing": "No Ring Group are defined for this Group (group_id missing from callflow)",
 		"removeMember": "Remove Member",
@@ -46,6 +54,9 @@
 		"toastrMessages": {
 			"numbersUpdated": "You successfuly updated the phone numbers of {{name}}",
 			"extensionsUpdated": "You successfuly updated the extensions numbers of {{name}}"
+		},
+		"voicemails": {
+			"title": "Voicemail Box"
 		}
 	},
 

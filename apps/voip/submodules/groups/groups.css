@@ -146,6 +146,10 @@
 	width: 15%;
 }
 
+#groups_container .groups-grid .grid-row:not(.title) .grid-cell.extension {
+	padding-left: 25px;
+}
+
 #groups_container .groups-grid .grid-row .grid-cell.features {
 	border-right: none;
 	text-align: center;
@@ -156,6 +160,11 @@
 	height: 30px;
 	line-height: 30px;
 	padding: 15px;
+}
+
+#groups_container .groups-grid i.icon-telicon-multiple-items {
+    font-size: 14px;
+    margin-left: 15px;
 }
 
 /* Members */
@@ -333,3 +342,41 @@
 #groups_container .list-wrapper .empty-row.visible {
 	display: block;
 }
+
+/* Numbers */
+#groups_container .list-wrapper .item-row .features > i {
+	display: none;
+}
+
+#groups_container .list-wrapper .item-row .features > i.active {
+	display: inline-block;
+}
+
+#groups_container .list-wrapper .item-row .locality {
+    border-left: 1px solid #CCC;
+    display: none;
+}
+
+#groups_container .list-wrapper .list-assigned-items .item-row .locality {
+    width: 250px;
+    border-right: 1px solid #CCC;
+}
+
+#groups_container .list-wrapper .item-row .locality img {
+    margin-right: 5px;
+}
+
+#groups_container .list-wrapper .list-unassigned-items .features-block {
+    display: none;
+}
+
+#groups_container .list-wrapper .features-block .dropdown {
+    margin-top: -4px;
+}
+
+#groups_container .list-wrapper .navbar .nav li.dropdown.open.active > .dropdown-toggle,
+#groups_container .list-wrapper .navbar .nav li.dropdown.open > .dropdown-toggle,
+#groups_container .navbar .nav li.dropdown.active {
+    background: #FFF;
+}
+

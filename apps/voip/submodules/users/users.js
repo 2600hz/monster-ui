@@ -812,29 +812,6 @@ define(function(require){
 				}
 			});
 
-			template.on('click', '.failover-number', function() {
-				var failoverCell = $(this).parents('.item-row').first(),
-					phoneNumber = failoverCell.data('id');
-
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								if(!($.isEmptyObject(data.data.failover))) {
-									failoverCell.find('.features i.feature-failover').addClass('active');
-								}
-								else {
-									failoverCell.find('.features i.feature-failover').removeClass('active');
-								}
-							}
-						}
-					};
-
-					monster.pub('common.failover.renderPopup', args);
-				}
-			});
-
 			template.on('click', '.feature[data-feature="caller_id"]', function() {
 				self.usersRenderCallerId(currentUser);
 			});

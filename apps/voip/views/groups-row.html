@@ -1,8 +1,8 @@
-<div class="grid-row" data-id="{{id}}" data-search="{{name}} {{extra.extension}} {{extra.mainNumber}}" data-callflow_id="{{extra.callflowId}}" data-name="{{name}}">
+<div class="grid-row" data-id="{{id}}" data-search="{{name}} {{#each extra.listCallerId}}{{this}} {{formatPhoneNumber this}} {{/each}}" data-callflow_id="{{extra.callflowId}}" data-name="{{name}}">
 	<div class="groups-cells">
 		<div class="name grid-cell" data-type="name">{{ name }}</div>
 		<div class="members grid-cell centered" data-type="members">{{ endpoints }}</div>
-		<div class="extension grid-cell centered" data-type="extensions">
+		<div class="extension grid-cell" data-type="extensions">
 			{{#if extra.extension}}
                 {{ extra.extension }}
 
@@ -13,9 +13,9 @@
                 {{ i18n.groups.noExtension }}
             {{/if}}
 		</div>
-		<div class="phone-number grid-cell centered" data-type="numbers">
+		<div class="phone-number grid-cell" data-type="numbers">
 			{{#if extra.mainNumber}}
-                {{ extra.mainNumber }}
+                {{formatPhoneNumber extra.mainNumber}}
 
                 {{#if extra.additionalNumbers}}
                     <i class="icon-telicon-multiple-items"></i>
@@ -24,7 +24,17 @@
                 {{ i18n.groups.noNumber }}
             {{/if}}
 		</div>
-		<div class="features grid-cell right-aligned" data-type="features"></div>
+		<div class="features grid-cell right-aligned" data-type="features">
+			{{#if extra.hasFeatures}}
+                {{#each extra.mapFeatures}}
+                    {{#if this.active}}
+                        <i class="{{this.icon}} {{this.iconColor}}"></i>
+                    {{/if}}
+                {{/each}}
+            {{else}}
+                {{ i18n.users.noUserFeatures }}
+            {{/if}}
+		</div>
 	</div>
 
 	<div class="edit-groups" style="display:none;">
