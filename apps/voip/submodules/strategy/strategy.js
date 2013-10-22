@@ -439,10 +439,20 @@ define(function(require){
 
 				if(indexToRemove >= 0) {
 					strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
+					if(strategyData.callflows["MainCallflow"].numbers.length === 0) {
+						strategyData.callflows["MainCallflow"].numbers = ["undefined"];
+					}
 					self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
+						var parentContainer = container.parents('.element-container');
 						strategyData.callflows["MainCallflow"] = updatedCallflow;
 						container.hide();
-						container.parents('.element-container').removeClass('open');
+						parentContainer.removeClass('open');
+						if(updatedCallflow.numbers.length > 0 && updatedCallflow.numbers[0] !== "undefined") {
+							parentContainer.find('.element-header-inner .summary > span').html(monster.util.formatPhoneNumber(updatedCallflow.numbers[0]));
+						} else {
+							parentContainer.find('.element-header-inner .summary > span').html(self.i18n.active().strategy.noNumberTitle);
+							container.parents('#strategy_container').find('.element-container:not(.main-number)').hide();
+						}
 					});
 				}
 			});

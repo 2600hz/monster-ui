@@ -1,7 +1,7 @@
 {{#each numbers}}
 <div class="main-number-element">
 	<div class="number">
-		<button type="button" class="btn btn-danger remove-number{{#compare ../numbers.length '===' 1}} disabled{{/compare}}" data-number="{{this.number}}">
+		<button type="button" class="btn btn-danger remove-number" data-number="{{this.number}}">
 			{{ ../i18n.remove }}
 		</button>
 		<span>{{formatPhoneNumber this.number}}</span>
