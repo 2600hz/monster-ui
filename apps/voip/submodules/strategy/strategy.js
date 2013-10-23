@@ -148,7 +148,7 @@ define(function(require){
 				function(err, results) {
 					var hasMainNumber = (results.callflows["MainCallflow"].numbers.length > 0 && results.callflows["MainCallflow"].numbers[0] !== "undefined")
 					templateData = {
-						firstNumber: hasMainNumber ? results.callflows["MainCallflow"].numbers[0] : self.i18n.active().strategy.noNumberTitle
+						mainNumbers: hasMainNumber ? results.callflows["MainCallflow"].numbers : [self.i18n.active().strategy.noNumberTitle]
 					}
 					template = $(monster.template(self, 'strategy-layout', templateData));
 					self.strategyBindEvents(template, results);
@@ -174,16 +174,22 @@ define(function(require){
 
 			template.find('.element-header-inner').on('click', function(e) {
 				var element = $(this).parents('.element-container');
-
 				if(element.hasClass('open')) {
-					element.removeClass('open');
-					element.find('.element-content').hide();
+					element.find('.element-content').slideUp(function() {
+						element.removeClass('open');
+					});
 				} else {
-					containers.removeClass('open');
-					containers.find('.element-content').hide();
+					$.each(containers, function() {
+						var $this = $(this);
+						if($this.hasClass('open')) {
+							$this.find('.element-content').slideUp(function() {
+								$this.removeClass('open');
+							});
+						}
+					})
 					self.strategyRefreshTemplate(element, strategyData, function() {
 						element.addClass('open');
-						element.find('.element-content').show();
+						element.find('.element-content').slideDown();
 					});
 				}
 			});
@@ -191,8 +197,9 @@ define(function(require){
 			template.find('.element-container').on('click', '.cancel-link', function(e) {
 				e.preventDefault();
 				var parent = $(this).parents('.element-container');
-				parent.find('.element-content').hide();
-				parent.removeClass('open');
+				parent.find('.element-content').slideUp(function() {
+					parent.removeClass('open');
+				});
 			});
 
 
@@ -387,11 +394,25 @@ define(function(require){
 						self.strategyUpdateCallflow(mainCallflow, function(updatedCallflow) {
 							var parentContainer = container.parents('.element-container');
 							strategyData.callflows["MainCallflow"] = updatedCallflow;
-							container.hide();
-							parentContainer.removeClass('open');
-							parentContainer.find('.element-header-inner .summary > span').html(monster.util.formatPhoneNumber(updatedCallflow.numbers[0]));
-							container.parents('#strategy_container').find('.element-container:not(.main-number)').show();
+							refreshNumbersHeader(parentContainer);
+							self.strategyRefreshTemplate(parentContainer, strategyData);
 						});
+					}
+				},
+				refreshNumbersHeader = function(parentContainer) {
+					var mainCallflow = strategyData.callflows["MainCallflow"],
+						headerSpan = parentContainer.find('.element-header-inner .summary > span');
+					if(mainCallflow.numbers.length > 0 && mainCallflow.numbers[0] !== "undefined") {
+						headerSpan.html(monster.util.formatPhoneNumber(mainCallflow.numbers[0]));
+						if(mainCallflow.numbers.length > 2) {
+							headerSpan.append('<i class="icon-telicon-multiple-items icon-small"></i>')
+						} else if(mainCallflow.numbers.length === 2) {
+							headerSpan.append(", "+monster.util.formatPhoneNumber(mainCallflow.numbers[1]))
+						}
+						container.parents('#strategy_container').find('.element-container:not(.main-number)').show();
+					} else { 
+						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
+						container.parents('#strategy_container').find('.element-container:not(.main-number)').hide();
 					}
 				};
 
@@ -444,15 +465,10 @@ define(function(require){
 					}
 					self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
 						var parentContainer = container.parents('.element-container');
+						toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
 						strategyData.callflows["MainCallflow"] = updatedCallflow;
-						container.hide();
-						parentContainer.removeClass('open');
-						if(updatedCallflow.numbers.length > 0 && updatedCallflow.numbers[0] !== "undefined") {
-							parentContainer.find('.element-header-inner .summary > span').html(monster.util.formatPhoneNumber(updatedCallflow.numbers[0]));
-						} else {
-							parentContainer.find('.element-header-inner .summary > span').html(self.i18n.active().strategy.noNumberTitle);
-							container.parents('#strategy_container').find('.element-container:not(.main-number)').hide();
-						}
+						refreshNumbersHeader(parentContainer);
+						self.strategyRefreshTemplate(parentContainer, strategyData);
 					});
 				}
 			});
