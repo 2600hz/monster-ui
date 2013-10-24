@@ -14,6 +14,7 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
+		 
 			'servers.list': {
 				//apiRoot: 'http://www.colelabs.com/2600/v1/accounts/{accountId}/',
 				apiRoot: 'http://localhost/2600/v1/accounts/{accountId}/',
@@ -26,6 +27,7 @@ define(function(require){
 				url: '{cluster}.json',
 				verb: 'GET'
 			} 
+
 		},
 
 		subscribe: {},
