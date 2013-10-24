@@ -1,7 +1,7 @@
 {{#each numbers}}
 <div class="main-number-element">
 	<div class="number">
-		<button type="button" class="btn btn-danger remove-number{{#compare ../numbers.length '===' 1}} disabled{{/compare}}" data-number="{{this.number}}">
+		<button type="button" class="btn btn-danger remove-number" data-number="{{this.number}}">
 			{{ ../i18n.remove }}
 		</button>
 		<span>{{formatPhoneNumber this.number}}</span>
@@ -13,7 +13,7 @@
 </div>
 {{/each}}
 <div class="main-number-actions">
-	<a href="#" class="cancel-link pull-right">{{ i18n.cancel }}</a>
+	<a href="#" class="cancel-link pull-right">{{ i18n.close }}</a>
 	<div class="action-links nav-bar clearfix">
 		<a href="#" class="spare-link monster-link pull-left"><i class="icon-file-text-alt icon-orange icon-large"></i>{{ i18n.strategy.numberLinks.spare }}</a>
 		<ul class="nav pull-left">

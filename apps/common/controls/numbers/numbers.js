@@ -848,6 +848,11 @@ define(function(require){
 					}
 				});
 
+				spareTemplate.find('.cancel-link').on('click', function(e) {
+					e.preventDefault();
+					popup.dialog('close');
+				});
+
 				var popup = monster.ui.dialog(spareTemplate, {
 					title: self.i18n.active().numbers.dialogSpare.title,
 					position: ['center', 20]

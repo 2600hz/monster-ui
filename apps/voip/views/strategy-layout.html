@@ -7,7 +7,16 @@
 					<span>{{ i18n.strategy.sectionTitles.numbers }}</span>
 				</div>
 				<div class="summary">
-					<span>{{formatPhoneNumber firstNumber}}</span>
+					<span>
+						{{formatPhoneNumber mainNumbers.[0]}}
+						{{#if mainNumbers.[1]}}
+							{{#if mainNumbers.[2]}}
+								<i class="icon-telicon-multiple-items icon-small"></i>
+							{{else}}
+								, {{formatPhoneNumber mainNumbers.[1]}}
+							{{/if}}
+						{{/if}}
+					</span>
 					<i class="icon-play"></i>
 				</div>
 			</div>

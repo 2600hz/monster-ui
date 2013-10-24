@@ -1,7 +1,12 @@
 <div class="grid-row" data-id="{{id}}" data-search="{{userName}} {{friendlyType}} {{type}} {{name}} {{macAddress}}" data-assigned="{{isAssigned}}">
 	<div class="devices-cells">
-		<div class="type grid-cell centered {{colorLine}}">
-			{{friendlyType}}
+		<div class="type grid-cell centered {{classStatus}}">
+			<div class="first-line">
+				<i class="{{friendlyIconClass}} icon-device"></i>
+			</div>
+			<div class="second-line">
+				{{friendlyType}}
+			</div>
 		</div>
 		<div class="mac-address grid-cell">
 			<div class="first-line{{#compare macAddress '===' ''}} bigger{{/compare}}">{{name}}</div>

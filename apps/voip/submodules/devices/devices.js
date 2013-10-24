@@ -124,14 +124,34 @@ define(function(require){
             });
 
             template.find('.switch').on('change', function() {
-				var deviceId = $(this).parents('.grid-row').data('id'),
-					toggle = $(this),
+				var toggle = $(this),
+					row = toggle.parents('.grid-row'),
+					deviceId = row.data('id'),
 					enable = toggle.bootstrapSwitch('status');
 
 				self.devicesGetDevice(deviceId, function(dataDevice) {
 					dataDevice.enabled = enable;
 
 					self.devicesUpdateDevice(dataDevice, function(dataDevice) {
+						row.find('.type').removeClass('unregistered registered disabled');
+
+						var classStatus = 'disabled';
+
+						if(dataDevice.enabled === true) {
+							classStatus = 'unregistered';
+
+							_.each(data.devices, function(device) {
+								if(device.id === dataDevice.id) {
+									if(device.registered === true) {
+										classStatus = 'registered';
+									}
+
+									return false;
+								}
+							});
+						}
+
+						row.find('.type').addClass(classStatus);
 						//We could display a success message but that could spam the user so for now we don't display anything
 					},
 					function() {
@@ -458,7 +478,14 @@ define(function(require){
 					devices: {}
 				},
 				mapUsers = {},
-				unassignedString = self.i18n.active().devices.unassignedDevice;
+				unassignedString = self.i18n.active().devices.unassignedDevice,
+				mapIconClass = {
+					cellphone: 'icon-telicon-mobile-phone',
+					landline: 'icon-telicon-home-phone',
+					softphone: 'icon-telicon-soft-phone',
+					sip_device: 'icon-telicon-voip-phone',
+					fax: 'icon-telicon-fax'
+				};
 
 			_.each(data.users, function(user) {
 				mapUsers[user.id] = user;
@@ -472,6 +499,7 @@ define(function(require){
 				formattedData.devices[device.id] = {
 					id: device.id,
 					isAssigned: isAssigned + '',
+					friendlyIconClass: mapIconClass[device.device_type],
 					macAddress: device.mac_address,
 					name: device.name,
 					userName: device.owner_id ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
@@ -479,11 +507,11 @@ define(function(require){
 					type: device.device_type,
 					friendlyType: self.i18n.active().devices.types[device.device_type],
 					registered: false,
-					colorLine: device.enabled ? 'red' : 'black' /* Display a device in black if it's disabled, otherwise, until we know whether it's registered or not, we set the color to red */
+					classStatus: device.enabled ? 'unregistered' : 'disabled' /* Display a device in black if it's disabled, otherwise, until we know whether it's registered or not, we set the color to red */
 				}
 			});
 
-			_.each(data.statuses, function(status) {
+			_.each(data.status, function(status) {
 				if(status.registered === true && status.device_id in formattedData.devices) {
 					var device = formattedData.devices[status.device_id];
 
@@ -491,7 +519,7 @@ define(function(require){
 
 					/* Now that we know if it's registered, we set the color to green */
 					if(device.enabled) {
-						device.colorLine = 'green';
+						device.classStatus = 'registered';
 					}
 				}
 			});

@@ -6,7 +6,7 @@
         "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
         "line2": "Are you sure you want to continue?"
     },
-	"close" : "X Close",
+	"close" : "Close",
 	"conferencingLogo": "Conferencing",
 	"csv": "CSV",
 	"currencyUsed": "$",
