@@ -185,6 +185,7 @@ define(function(require){
 				success: function(data, status) {
 
 					data.cluster=cluster;
+					console.log(data);
 
 					if (data.noauth) {
 						//alert("You need to log in first!");
