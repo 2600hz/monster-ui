@@ -168,7 +168,7 @@ define(function(require){
 				var $accountList = parent.find('.account-list'),
 					$accountListSlider = parent.find('.account-list-slider'),
 					$mainContent = parent.find('.main-content'),
-					height = this.innerHeight-$accountList.position().top+'px';
+					height = this.innerHeight-$accountList.position().top-67+'px';
 				$accountList.css('height', height);
 				$accountListSlider.css('height', height);
 				$mainContent.css('height', height);
@@ -240,7 +240,7 @@ define(function(require){
 						$breadcrumb.find('a').click(function(e) {
 							e.preventDefault();
 							self.renderList(accountList, parent, accountId);
-							self.edit(accountId, parent);
+							self.edit(accountId, accountList, parent);
 							$.each($breadcrumbs.find('.account-breadcrumb'), function() {
 								if(parseInt($(this).data('step'),10) >= breadcrumbStep) {
 									$(this).remove();
@@ -255,7 +255,7 @@ define(function(require){
 					$list.find('.account-link').click(function() {
 						var accountId = $(this).parent().data('account_id');
 						parent.find('.main-content').empty();
-						self.edit(accountId, parent);
+						self.edit(accountId, accountList, parent);
 						self.renderList(accountList, parent, accountId);
 					});
 				};
@@ -938,7 +938,7 @@ define(function(require){
 			});
 		},
 
-		edit: function(accountId, parent) {
+		edit: function(accountId, accountList, parent) {
 			var self = this;
 
 			monster.parallel({
@@ -1048,6 +1048,7 @@ define(function(require){
 							accountLimits: results.limits,
 							classifiers: results.classifiers,
 							accountBalance: 'balance' in results.currentBalance ? results.currentBalance.balance : 0,
+							accountList: accountList,
 							parent: parent
 						};
 
@@ -1213,6 +1214,10 @@ define(function(require){
 								}
 							})
 						);
+
+						params.accountList[data.data.id].name = data.data.name;
+						params.accountList[data.data.id].realm = data.data.realm;
+						self.renderList(params.accountList, parent, data.data.id);
 					},
 					function(data) {
 						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {

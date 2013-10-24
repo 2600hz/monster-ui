@@ -99,6 +99,11 @@ define(function(require){
 
 			data.amount = parseFloat(data.amount).toFixed(2);
 
+			data.listTransactions.sort(function(a, b) {
+				return a.created < b.created;
+			});
+
+			console.log(data.listTransactions);
 			if(data.listTransactions) {
 				$.each(data.listTransactions, function(k, v) {
 					v.reason = self.i18n.active()[v.reason ? v.reason : 'oneTimeCharge'];
@@ -159,26 +164,44 @@ define(function(require){
 									v.type = 'charges';
 								}
 								else {
+									var mapDiscounts = {};
+									_.each(v.discounts, function(discount) {
+										mapDiscounts[discount.id] = discount;
+									});
+
 									v.type = v.prorated ? 'prorated' : 'monthly';
 									v.services = [];
 
 									$.each(v.add_ons, function(k, addOn) {
+										var discount = 0;
+
 										addOn.amount = parseFloat(addOn.amount).toFixed(2);
 										addOn.quantity = parseFloat(addOn.quantity);
-										addOn.monthly_charges = (addOn.amount * addOn.quantity).toFixed(2);
+
+										if((addOn.id + '_discount') in mapDiscounts) {
+											var discountItem = mapDiscounts[addOn.id + '_discount'];
+											discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
+										}
+
+										addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
 
 										v.services.push({
-											service: i18n.t('myaccount.service_plan.'+addOn.id),
+											service: monster.apps['myaccount-servicePlan'].i18n.active().titles[addOn.id],
 											rate: addOn.amount,
 											quantity: addOn.quantity,
-											discount: '',
+											discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
 											monthly_charges: addOn.monthly_charges
 										});
+									});
+
+									v.services.sort(function(a, b) {
+										return parseFloat(a.rate) <= parseFloat(b.rate);
 									});
 								}
 
 								v.amount = parseFloat(v.amount).toFixed(2);
-								v.created = monster.util.toFriendlyDate(v.created_at, 'short');
+								v.friendlyCreated = monster.util.toFriendlyDate(v.created_at, 'short');
+								v.created = v.created_at;
 								arrayTransactions.push(v);
 
 								defaults.amount += parseFloat(v.amount);
@@ -194,7 +217,7 @@ define(function(require){
 							$.each(dataCharges.data, function(k, v) {
 								v.type = 'charges';
 								v.amount = parseFloat(v.amount).toFixed(2);
-								v.created = monster.util.toFriendlyDate(v.created, 'short');
+								v.friendlyCreated = monster.util.toFriendlyDate(v.created, 'short');
 								arrayCharges.push(v);
 
 								defaults.amount += parseFloat(v.amount);

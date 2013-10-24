@@ -88,7 +88,7 @@ define(function(require){
 
 										if(monthlyCharges > 0) {
 											dataArray.push({
-												service: self.i18n.active()[itemName],
+												service: self.i18n.active().titles[itemName],
 												rate: item.rate || 0,
 												quantity: item.quantity || 0,
 												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
@@ -110,6 +110,7 @@ define(function(require){
 							renderData.servicePlanArray = dataArray;
 							renderData.totalAmount = parseFloat(totalAmount).toFixed(2);
 
+							console.log(renderData);
 							callback(null, data);
 						});
 					},

@@ -37,7 +37,8 @@
 	 */
 	window.form2object = function(rootNode, delimiter, skipEmpty, nodeCallback)
 	{
-		if (typeof skipEmpty == 'undefined' || skipEmpty == null) skipEmpty = true;
+		/* Changed default value of skipEmpty from true to false */
+		if (typeof skipEmpty == 'undefined' || skipEmpty == null) skipEmpty = false;
 		if (typeof delimiter == 'undefined' || delimiter == null) delimiter = '.';
 
 		rootNode = typeof rootNode == 'string' ? document.getElementById(rootNode) : rootNode;
@@ -245,7 +246,7 @@
         }
         else if (node.nodeName.match(/SELECT/i)) {
 	        fieldValue = getFieldValue(node);
-	        
+
 	        if (fieldValue !== null)
 	            result = [ { name: node.name.replace(/\[\]$/, ''), value: fieldValue } ];
         }
@@ -264,10 +265,14 @@
 			case 'TEXTAREA':
 				switch (fieldNode.type.toLowerCase()) {
 					case 'radio':
-					case 'checkbox':
 						if (fieldNode.checked) return fieldNode.value;
 						break;
-
+					case 'checkbox':
+						/* If there are no values on checkboxes, the default value will be set to "on" or "true" depending on the browser (even a non-checked checkbox value will be "on")
+							but we want the form2object method to return true or false whether the checkbox is ticked or not */
+						if (fieldNode.value === 'true' || fieldNode.value === 'on') return fieldNode.checked;
+						if (fieldNode.checked) return fieldNode.value;
+						break;
 					case 'button':
 					case 'reset':
 					case 'submit':

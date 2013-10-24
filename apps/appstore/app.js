@@ -139,6 +139,7 @@ define(function(require){
 						}
 						val.label = val.i18n['en-US'].label;
 						val.description = val.i18n['en-US'].description;
+						val.icon = self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val.id + "/icon?auth_token=" + self.authToken
 						delete val.i18n;
 					});
 
@@ -178,8 +179,16 @@ define(function(require){
 				},
 				success: function(data, status) {
 					var app = $.extend(true, data.data, {
-							label: data.data.i18n['en-US'].label,
-							description: data.data.i18n['en-US'].description,
+							extra: {
+								label: data.data.i18n['en-US'].label,
+								description: data.data.i18n['en-US'].description,
+								extendedDescription: data.data.i18n['en-US'].extended_description,
+								features: data.data.i18n['en-US'].features,
+								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
+								screenshots: $.map(data.data.screenshots, function(val, key) {
+									return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+								})
+							}
 						}),
 						selectedUsersList = $.extend(true, [], app.installed.users),
 						users = $.map($.extend(true, [], userList), function(val, key) {
@@ -195,8 +204,8 @@ define(function(require){
 							return val;
 						}),
 						template = $(monster.template(self, 'appPopup', {
-							app: app, 
-							users: users, 
+							app: app,
+							users: users,
 						 	i18n: {
 								selectedUsers: app.installed.users.length,
 							  	totalUsers: users.length
@@ -226,15 +235,22 @@ define(function(require){
 					rightContainer.find('.total-users-number').html(users.length);
 
 					monster.ui.prettyCheck.create(userListContainer);
-					monster.ui.dialog(template, {title: app.label});
+					monster.ui.dialog(template, {title: app.extra.label});
 
-					if(leftContainer.height() > rightContainer.height()) {
-						rightContainer.height(leftContainer.height());
-					} else {
-						leftContainer.height(rightContainer.height());
-					}
-					userListContainer.css('maxHeight', rightContainer.height()-182);
+					// userListContainer.niceScroll({
+					// 	cursorcolor:"#333",
+					// 	cursoropacitymin:0.5,
+					// 	hidecursordelay:1000
+					// });
 
+					// if(leftContainer.height() > rightContainer.height()) {
+					// 	rightContainer.height(leftContainer.height());
+					// } else {
+					// 	leftContainer.height(rightContainer.height());
+					// }
+					// userListContainer.css('maxHeight', rightContainer.height()-182);
+
+					template.find('#screenshot_carousel').carousel();
 				}
 			});
 		},
@@ -245,12 +261,11 @@ define(function(require){
 				selectedUsersCount = app.installed.users.length,
 				updateApp = function(app, successCallback, errorCallback) {
 					var icon = parent.find('.toggle-button-bloc i');
-					
+
 					icon.show()
 						.addClass('icon-spin');
-					
-					delete app.label;
-					delete app.description;
+
+					delete app.extra;
 					monster.request({
 						resource: 'appstore.update',
 						data: {
@@ -262,7 +277,7 @@ define(function(require){
 							var updateCookie = function() {
 								var cookieData = $.parseJSON($.cookie('monster-auth'));
 								cookieData.installedApps = monster.apps['auth'].installedApps;
-								$.cookie('monster-auth', JSON.stringify(cookieData, {expires: 30}));
+								$.cookie('monster-auth', JSON.stringify(cookieData));
 							};
 
 							icon.stop(true, true)
@@ -284,7 +299,7 @@ define(function(require){
 										i18n: _data.data.i18n,
 										icon: _data.data.icon
 									};
-									
+
 									updateCookie();
 									$('#apploader').remove();
 								}
@@ -324,12 +339,12 @@ define(function(require){
 							users: []
 						};
 						updateApp(
-							app, 
+							app,
 							function() {
 								parent.find('.permissions-bloc').slideDown();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
 								$('#appstore_container .app-filter.active').click();
-							}, 
+							},
 							function() {
 								app.installed = previousSettings;
 								$this.bootstrapSwitch('setState', false);
@@ -341,12 +356,12 @@ define(function(require){
 							users: []
 						};
 						updateApp(
-							app, 
+							app,
 							function() {
 								parent.find('.permissions-bloc').slideUp();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
 								$('#appstore_container .app-filter.active').click();
-							}, 
+							},
 							function() {
 								app.installed = previousSettings;
 								$this.bootstrapSwitch('setState', true);
@@ -366,10 +381,10 @@ define(function(require){
 						users: []
 					};
 					updateApp(
-						app, 
+						app,
 						function() {
 							parent.find('.permissions-link').hide();
-						}, 
+						},
 						function() {
 							app.installed = previousSettings;
 							parent.find('#app_popup_specific_users_radiobtn').prop('checked', true);
@@ -382,6 +397,7 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+				// userList.getNiceScroll()[0].resize();
 			});
 
 			userList.on('ifToggled', 'input', function(e) {
@@ -422,6 +438,7 @@ define(function(require){
 				});
 				parent.find('.user-list-view').hide();
 				parent.find('.app-details-view').show();
+				// userList.getNiceScroll()[0].resize();
 			});
 
 			parent.find('#user_list_save').on('click', function(e) {
@@ -443,6 +460,7 @@ define(function(require){
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();
+					// userList.getNiceScroll()[0].resize();
 
 					updateApp(app);
 				} else {

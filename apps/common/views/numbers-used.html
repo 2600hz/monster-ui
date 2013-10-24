@@ -39,12 +39,17 @@
     					</div>
 						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
 						<div class="locality">
+							<!--
 							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
 							<span class="city">{{ this.friendlyLocality }}</span>
+							-->
 						</div>
 
 						<div class="used-by">
-							{{ this.friendlyUsedBy }}
+							{{#compare ../../viewType '===' 'pbx'}}
+							{{else}}
+								{{ this.friendlyUsedBy }}
+							{{/compare}}
 						</div>
 
         				<div class="features pull-right">

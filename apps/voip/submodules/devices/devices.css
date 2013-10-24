@@ -1,0 +1,329 @@
+#devices_container .devices-header {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 18px;
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+#devices_container .devices-header > * {
+	display: inline-block;
+}
+
+#devices_container .devices-header .count-devices {
+	color: #22ccff;
+	display: inline-block;
+	font-size: 28px;
+	font-weight: 500;
+	margin-left: 10px;
+	margin-right: 25px;
+	margin-top: -5px;
+}
+
+#devices_container .devices-header .add-device {
+	font-size: 14px;
+}
+
+#devices_container .devices-header .add-device i {
+	text-decoration: none;
+	margin-right: 5px;
+}
+
+#devices_container .devices-grid {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-top: 10px;
+
+	font-family: verdana;
+}
+
+#devices_container .devices-grid i.icon-plus {
+	margin-left: 5px;
+}
+
+#devices_container .devices-grid .empty-search-row {
+	display: none;
+	padding: 16px;
+	text-align: center;
+}
+
+#devices_container .devices-grid .grid-row.title:not(:last-child) {
+	border-bottom: 1px solid #ddd;
+}
+
+#devices_container .devices-grid .grid-row.title,
+#devices_container .devices-grid .grid-row .user-cells{
+	height: 50px;
+	line-height: 50px; /* 60 - padding */
+}
+
+#devices_container .devices-grid .grid-row:not(:last-child) {
+	border-bottom: 1px solid #eee;
+}
+
+#devices_container .devices-grid .grid-row.title .grid-cell {
+	text-align: center;
+	padding-left: 0;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell {
+	border-right: 1px solid #eee;
+	display: inline-block;
+	overflow: hidden;
+	padding-left: 10px;
+	width: 20%;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:first-child {
+	border-left: none !important;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:last-child {
+	border-right: none !important;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell:not(.features) {
+	white-space: nowrap;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.centered {
+	padding: 0;
+	text-align: center;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.right-aligned {
+	padding: 0 5px 0 0;
+	text-align: right;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.features a.dropdown-toggle {
+	padding: 15px 7px 2px 15px;
+	text-align: left;
+	background: transparent !important;
+}
+
+#devices_container .devices-cells {
+	height: 60px;
+	line-height: 60px;
+}
+
+/* Columns */
+#devices_container .devices-grid .grid-row .grid-cell.type {
+	width: 20%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address {
+	width: 30%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .first-line{
+	height: 30px;
+	line-height: 45px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .first-line.bigger{
+	line-height: 60px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.mac-address .second-line{
+	color: #999;
+	font-size: 10px;
+	height: 30px;
+	line-height: 25px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.user {
+	width: 25%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.enable {
+	width: 15%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.edit {
+	width: 10%;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.edit .settings {
+	padding: 10px;
+	cursor: pointer;
+}
+#devices_container .devices-grid .grid-row .grid-cell.edit .settings:hover {
+	color: #000;
+}
+
+/* Adding / Edition Devices Popups */
+.edit-device {
+	width: 700px;
+}
+
+.edit-device .actions {
+	border-top: 1px solid #CCCCCC;
+    height: 30px;
+    line-height: 30px;
+    padding: 15px;
+}
+
+.edit-device .actions button {
+	margin-left: 5px;
+}
+
+.edit-device .title-bar {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 20px;
+	padding: 15px 0;
+}
+
+.edit-device .title-bar .device-title > div {
+	display: inline-block;
+	float: left;
+	font-size: 18px;
+	font-weight: bold;
+	height: 80px;
+	line-height: 80px;
+	margin-left: 40px;
+}
+
+.edit-device .title-bar .device-title .device-image {
+	border-radius: 4px;
+	border: 1px solid #CCC;
+}
+
+.edit-device .title-bar .nav-pills {
+	margin-top: 24px;
+	margin-right: 15px;
+}
+
+.edit-device .content .tabs-section .title {
+	color: #22CCFF;
+    font-size: 24px;
+    margin-bottom: 30px;
+    margin-left: 40px;
+    text-shadow: 1px 0 1px #CCCCCC;
+}
+
+.edit-device .help-box.red-box {
+	margin: 10px 25px
+}
+
+/* Codecs selector */
+.edit-device .content .codec-selector .box-selector {
+	float: left;
+	width: 300px;
+}
+
+.edit-device .content .codec-selector .box-selector:first-child {
+	margin-left: 30px;
+	margin-right: 40px;
+}
+.edit-device .content .codec-selector .box-selector ul {
+	min-height: 328px;
+}
+
+.edit-device .content #video_codec_selector .box-selector ul {
+	min-height: 123px;
+}
+/* Provisioner Popup */
+.device-popup {
+	width: 700px;
+}
+
+.device-popup .text-right {
+	padding: 10px;
+	text-align: right;
+}
+
+.device-popup .block-brand {
+	background: #eee;
+	border: 1px solid #ddd;
+}
+
+.device-popup .title-bar {
+	padding: 20px 10px;
+}
+
+.device-popup .block-brand .brand-selection {
+	background: #ccc;
+	border-top: 2px solid #22CCFF;
+	overflow-x: auto;
+	padding: 10px 0 5px;
+	white-space: nowrap;
+	width: auto;
+}
+
+.device-popup .block-brand .brand-selection .brand-box {
+	border: 2px solid #666666;
+    border-radius: 5px 5px 5px 5px;
+    color: #666666;
+    display: inline-block;
+    font-weight: bold;
+    height: 67px;
+    line-height: 69px;
+    margin: auto 10px;
+    text-align: center;
+    width: 95px;
+}
+
+.device-popup .block-brand .brand-selection .brand-box.unselected {
+	opacity: 0.5;
+}
+
+.device-popup .block-brand .brand-selection .brand-box.selected,
+.device-popup .block-brand .brand-selection .brand-box:hover {
+	border: 2px solid #22CCFF;
+}
+
+/* Default state */
+.device-popup .block-device,
+.device-popup .actions{
+	display: none;
+}
+
+.device-popup .block-device .device-selection {
+	background: #FFF;
+	border: 1px solid #CCC;
+	padding: 10px;
+}
+
+.device-popup .block-device .device-selection .device-box {
+	border-radius: 4px;
+	border: 2px solid #FFF;
+	display: inline-block;
+	margin: 0 0px 10px;
+	padding: 3px;
+}
+
+.device-popup .block-device .device-selection .device-box.selected {
+	border: 2px solid #22CCFF;
+}
+
+.device-popup .block-device .device-selection .device-box .device-image {
+	height: 80px;
+	width: 100px;
+}
+
+.device-popup .block-device .device-selection .device-box .device-name {
+	text-align: center;
+}
+
+.device-popup .block-device .device-selection .devices-brand {
+	display: none;
+}
+
+.device-popup .block-device .device-selection .devices-brand.active {
+	display: block;
+}
+
+.device-popup .actions .selection {
+	display: inline-block;
+	margin-right: 20px;
+	font-size: 16px;
+	font-weight: 500;
+}

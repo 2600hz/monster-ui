@@ -124,6 +124,15 @@ table.table tr td {
 	margin-bottom: 0;
 }
 
+/* Monster Tabs */
+.tabs-section {
+	display: none;
+}
+
+.tabs-section.active {
+	display: block;
+}
+
 /* jQuery Popup Customization */
 .ui-dialog {
 	border: solid 1px #777;
@@ -160,9 +169,9 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-title {
+	font-size: 16px;
 	font-weight: 500;
 	color: #777;
-	text-transform: uppercase;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -176,9 +185,9 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover i.icon-stack-base {
-	text-shadow: 3px 3px 8px #fff, 
-				-3px 3px 8px #fff, 
-				 3px -3px 8px #fff, 
+	text-shadow: 3px 3px 8px #fff,
+				-3px 3px 8px #fff,
+				 3px -3px 8px #fff,
 				-3px -3px 8px #fff;
 }
 
@@ -188,6 +197,10 @@ table.table tr td {
 
 .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
 	font-family: 'Maven Pro', Helvetica, sans-serif;
+}
+
+.ui-dialog .dialog-buttons-wrapper {
+	text-align: right;
 }
 
 /* JQuery datepicker */
@@ -322,7 +335,7 @@ table.table tr td {
 }
 
 .gray-box {
-	background: #f9f9f9;
+	background: #f2f2f2;
 	border: 1px solid #ddd;
 	box-shadow: 0 1px 2px #ccc;
 }
@@ -548,6 +561,57 @@ table.table tr td {
 	line-height: 25px;
 }
 
+/* 2 columns selector */
+.items-selector .box-selector {
+	float: left;
+	width: 300px;
+}
+
+.items-selector .box-selector:first-child {
+	margin-right: 20px;
+}
+
+.items-selector .box-selector .box-title {
+	background: none repeat scroll 0 0 #22CCFF;
+    border-radius: 4px 4px 0 0;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 500;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.items-selector .box-selector ul {
+	background: #EEE;
+	border: 1px solid #ccc;
+	border-radius: 0 0 4px 4px;
+	list-style: none;
+	margin: 0;
+}
+
+.items-selector .box-selector ul li.item-selector {
+	background: #FFF;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	font-size: 14px;
+	height: 40px;
+	line-height: 40px;
+	padding: 0px 5px;
+}
+
+.items-selector .box-selector ul li.item-selector:hover {
+	background: #FCFCFC;
+}
+
+.items-selector .box-selector ul li.item-selector .item-handle {
+	background: url('static/images/drag.png');
+	float: left;
+	height: 30px;
+	margin: 5px 10px 0 0;
+	width: 5px;
+}
 /* Box Element */
 .number-box {
 	border-top: 1px solid transparent;

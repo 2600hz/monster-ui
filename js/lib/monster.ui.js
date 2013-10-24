@@ -3,11 +3,12 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		icheck = require('icheck');
+		icheck = require('icheck'),
+		toastr = require('toastr');
 
 	var requestAmount = 0,
 		homeIcon,
-		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-home';
+		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-th';
 
 	monster.sub('monster.requestStart', function() {
 		requestAmount++;
@@ -60,7 +61,7 @@ define(function(require){
 	});
 
 	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
-		phoneNumber = phoneNumber.toString();
+		phoneNumber = (phoneNumber || '').toString();
 
 		return monster.util.formatPhoneNumber(phoneNumber);
 	});
@@ -157,6 +158,18 @@ define(function(require){
 				});
 
 			return dialog;
+		},
+
+		handleError: function(data) {
+			var self = this,
+				coreApp = monster.apps['core'];
+
+			if('message' in data) {
+				toastr.error(data.message);
+			}
+			else {
+				toastr.error(coreApp.i18n.active().unexpectedError);
+			}
 		},
 
 		confirm: function(content, callbackOk, callbackCancel, options) {
@@ -261,6 +274,22 @@ define(function(require){
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
+		},
+
+		tabs: function(template) {
+			template.find('.tabs-main-selector').first().addClass('active');
+			template.find('.tabs-section').first().addClass('active');
+
+			template.find('.tabs-selector').on('click', function() {
+				var $this = $(this),
+					section = $this.data('section');
+
+				templateDevice.find('.tabs-main-selector').removeClass('active');
+				templateDevice.find('.tabs-section').hide();
+
+				templateDevice.find('.tabs-section[data-section="' + section + '"]').show();
+				$this.parents('.tabs-main-selector').addClass('active');
+			});
 		},
 
 		table: {
@@ -470,13 +499,13 @@ define(function(require){
 					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
 						currentAcc;
 					for(var i=0; i<parents.length; i++) {
-						if(!currentAcc) { 
+						if(!currentAcc) {
 							if(!result[parents[i]]) { result[parents[i]] = {}; }
-							currentAcc = result[parents[i]]; 
-						} else { 
+							currentAcc = result[parents[i]];
+						} else {
 							if(!currentAcc.children) { currentAcc.children = {}; }
 							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-							currentAcc = currentAcc.children[parents[i]]; 
+							currentAcc = currentAcc.children[parents[i]];
 						}
 					}
 					if(!currentAcc.children) { currentAcc.children = {}; }
@@ -523,7 +552,7 @@ define(function(require){
 			 *	'update' (apply input changes, which were done outside the plugin)
 			 *	'destroy' (remove all traces of iCheck)
 			 *
-			 * callback: A callback function that will be executed after EACH time the action is performed on a checkbox/radio 
+			 * callback: A callback function that will be executed after EACH time the action is performed on a checkbox/radio
 			**/
 			action: function(target, action, callback) {
 				target.iCheck(action, callback);

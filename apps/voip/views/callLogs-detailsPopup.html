@@ -1,0 +1,18 @@
+<div id="call_logs_details_popup">
+	<table class="details-table">
+		<thead>
+			<tr>
+				<td>{{i18n.callLogs.key}}</td>
+				<td>{{i18n.callLogs.value}}</td>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each details}}
+			<tr>
+				<td title="{{this.key}}">{{this.key}}</td>
+				<td>{{this.value}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</div>

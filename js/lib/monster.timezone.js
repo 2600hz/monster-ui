@@ -408,6 +408,10 @@ define(function(require) {
 
 		getLocaleTimezone: function() {
 			return jstz.determine_timezone().name();
+		},
+
+		formatTimezone: function(timezone)  {
+			return timezone.replace(/(.+)\/([^\/]+)/, "$2 ($1)").replace("_", " ");
 		}
 	};
 

@@ -3,6 +3,10 @@
 	max-width: 902px;
 }
 
+#numbers_container .accounts-numbers {
+	font-family: verdana;
+}
+
 #numbers_container .top-box {
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -130,7 +134,7 @@
     border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
-    font-size: 20px;
+    font-size: 18px;
     height: 70px;
     line-height: 70px;
     padding-left: 10px;
@@ -156,6 +160,11 @@
 
 #numbers_container .account-section .account-header .right-links {
 	height: 100%;
+}
+
+#numbers_container .account-section .account-header .right-links .buy-numbers-dropdown {
+	margin: 0;
+	display: inline-block;
 }
 
 #numbers_container .account-section.open .account-header .right-links a > *{
@@ -214,11 +223,13 @@
 }
 
 #numbers_container .account-section:nth-of-type(1) .account-header {
-	border-radius: 8px 8px 0 0;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .account-header {
-	border-radius: 0 0 8px 8px;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
     border-bottom: 1px solid #CCCCCC;
 }
 
@@ -276,4 +287,40 @@
 	#numbers_container .account-section .numbers-wrapper .number-box .locality {
 		display: none;
 	}
+}
+
+/* Dialog Spare Numbers */
+.dialog-spare-container {
+	padding: 15px;
+}
+
+.dialog-spare-container .grid-numbers .title {
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding: 10px;
+	width: 600px;
+}
+
+.dialog-spare-container .number-box > input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.dialog-spare-container .grid-numbers {
+	padding-bottom: 10px;
+}
+
+.dialog-spare-container .grid-numbers .numbers {
+	border: 1px solid #DDD;
+	max-height: 372px;
+	overflow: auto;
+}
+
+.dialog-spare-container .grid-numbers .numbers .number-box {
+	border: 1px solid #DDD;
+}
+
+.dialog-spare-container .grid-numbers .empty-search-row {
+	text-align: center;
+	padding: 10px;
 }

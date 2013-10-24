@@ -22,7 +22,7 @@
 		<form class="form-inline">
 			<label>{{ i18n.numbersLabel }}</label>
 			<label id="count_phones"></label>
-			<span id="trigger_links">
+			<span id="trigger_links" class="nav-bar">
 				<a href="#" id="remove_numbers" class="action-number"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.remove }}</span></a>
 
 				<li class="dropdown dropdown-move">
@@ -36,7 +36,16 @@
 					</ul>
 				</li>
 			</span>
-			<a href="#" id="buy_numbers" class="action-number"><i class="icon-shopping-cart icon-green"></i><span class="action-text">{{ i18n.buy }}</span></a>
+			<ul class="nav buy-numbers-dropdown">
+				<li class="dropdown">
+					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart icon-green"></i><span class="action-text">{{ i18n.buy }}</span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a class="buy-numbers-link" data-type="regular" href="#">{{i18n.buyNumberLinks.regular}}</a></li>
+						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{i18n.buyNumberLinks.tollfree}}</a></li>
+						<li><a class="buy-numbers-link" data-type="vanity" href="#">{{i18n.buyNumberLinks.vanity}}</a></li>
+					</ul>
+				</li>
+			</ul>
 			<a href="#" id="port_numbers" class="action-number"><i class="icon-random icon-blue"></i><span class="action-text">{{ i18n.port }}</span></a>
 
 			<span class="search-box pull-right">

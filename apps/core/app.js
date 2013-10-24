@@ -158,7 +158,8 @@ define(function(require){
 						 .text(self.i18n.active().conferencingLogo)
 						 .addClass('conferencing');
 			} else {
-				homeLink.find('i').addClass('icon-home icon-large');
+				//homeLink.find('i').addClass('icon-home icon-large');
+				homeLink.find('i').addClass('icon-th icon-large');
 				monster.request({
 					resource: 'layout.getLogo',
 					data: {

@@ -23,13 +23,17 @@
     margin: 0;
     position: absolute;
     width: 100%;
-    bottom: 90px;
+    bottom: 0px;
     top: 0px;
     overflow-x: hidden;
     overflow-y: auto;
 	-moz-box-sizing: border-box; 
 	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
+}
+
+#apploader .app-list.has-appstore {
+    bottom: 90px;
 }
 
 #apploader .app-list .app-list-element {

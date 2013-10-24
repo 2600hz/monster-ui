@@ -4,10 +4,13 @@ define(function(require){
 		monster = require('monster');
 
 	var subModules = {
+			devices: require('./submodules/devices/devices'),
+			groups: require('./submodules/groups/groups'),
+			//myOffice: require('./submodules/myOffice/myOffice'),
 			numbers: require('./submodules/numbers/numbers'),
+			strategy: require('./submodules/strategy/strategy'),
 			users: require('./submodules/users/users'),
-			myOffice: require('./submodules/myOffice/myOffice'),
-			strategy: require('./submodules/strategy/strategy')
+			callLogs: require('./submodules/callLogs/callLogs')
 		};
 
 	var app = {
@@ -39,17 +42,14 @@ define(function(require){
 			});
 		},
 
-
 		render: function(container){
 			var self = this,
 				parent = container || $('#ws-content'),
 				template = $(monster.template(self, 'app'));
 
 			/* On first Load, load my office */
-			template.find('.category#my_office').addClass('active');
-			monster.pub('voip.myOffice.render', template.find('.right-content'));
-			// template.find('.category#strategy').addClass('active');
-			// monster.pub('voip.strategy.render', template.find('.right-content'));
+			template.find('.category#users').addClass('active');
+			monster.pub('voip.users.render', { parent: template.find('.right-content') });
 
 			self.bindEvents(template);
 
@@ -76,16 +76,16 @@ define(function(require){
 				$(this).toggleClass('active');
 			});
 
-			parent.find('.category#my_office').on('click', function() {
-				monster.pub('voip.myOffice.render', container);
-			});
+			var args = {
+				parent: container
+			};
 
 			parent.find('.category#users').on('click', function() {
-				monster.pub('voip.users.render', { parent: container });
+				monster.pub('voip.users.render', args);
 			});
 
 			parent.find('.category#groups').on('click', function() {
-				monster.pub('voip.groups.render', container);
+				monster.pub('voip.groups.render', args);
 			});
 
 			parent.find('.category#numbers').on('click', function() {
@@ -93,7 +93,7 @@ define(function(require){
 			});
 
 			parent.find('.category#devices').on('click', function() {
-				monster.pub('voip.devices.render', container);
+				monster.pub('voip.devices.render', args);
 			});
 
 			parent.find('.category#strategy').on('click', function() {
@@ -101,11 +101,7 @@ define(function(require){
 			});
 
 			parent.find('.category#call_logs').on('click', function() {
-				monster.pub('voip.callLogs.render', container);
-			});
-
-			parent.find('.category#quick_links').on('click', function() {
-				monster.pub('voip.quickLinks.render', container);
+				monster.pub('voip.callLogs.render', args);
 			});
 		}
 	};

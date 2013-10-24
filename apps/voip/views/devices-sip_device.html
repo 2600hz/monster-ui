@@ -1,0 +1,158 @@
+<div class="edit-device" data-type="sip-device" data-id="{{id}}">
+	<div class="title-bar clearfix">
+		<div class="device-title pull-left">
+			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
+			<div class="device-model">{{provision.endpoint_brand}} - {{provision.endpoint_model}}</div>
+		</div>
+
+		<ul class="nav nav-pills pull-right">
+			<li class="tabs-main-selector main-section active">
+				<a class="tabs-selector change-section" data-section="basic" href="javascript:void(0)">{{ i18n.devices.popupSettings.basicTitle }}</a>
+			</li>
+			<li class="tabs-main-selector main-section dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">{{ i18n.devices.popupSettings.advancedTitle }}
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu pull-right">
+					<li><a class="tabs-selector change-section" data-section="audio" href="javascript:void(0)"><i class="icon-music"></i>{{ i18n.devices.popupSettings.audio.menuTitle }}</a></li>
+					<li><a class="tabs-selector change-section" data-section="video" href="javascript:void(0)"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
+					<li><a class="tabs-selector change-section" data-section="restrictions" href="javascript:void(0)"><i class="icon-ban-circle"></i>{{ i18n.devices.popupSettings.restrictions.menuTitle }}</a></li>
+					<li><a class="tabs-selector change-section" data-section="callerId" href="javascript:void(0)"><i class="icon-ambulance"></i>{{ i18n.devices.popupSettings.callerId.menuTitle }}</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="content">
+		<form id="form_device" class="form-horizontal">
+			<div class="tabs-section active" data-section="basic">
+				<div class="control-group">
+					<label class="control-label" for="name">{{ i18n.devices.sip_device.deviceName }}</label>
+					<div class="controls">
+						<input type="text" id="name" name="name" value="{{name}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="mac_address">{{ i18n.devices.sip_device.macAddress }}</label>
+					<div class="controls">
+						<input type="text" name="mac_address" placeholder="{{ i18n.devices.sip_device.macAddressPlaceholder }}" value="{{mac_address}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="tabs-section clearfix" data-section="audio">
+				<div class="title">
+					{{ i18n.devices.popupSettings.audio.sectionTitle }}
+				</div>
+
+				<div class="items-selector codec-selector" id="audio_codec_selector">
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
+						<ul class="available-codecs connectedSortable">
+							{{#each extra.availableCodecs.audio}}
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
+						<ul class="selected-codecs connectedSortable">
+							{{#each extra.selectedCodecs.audio}}
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="tabs-section clearfix" data-section="video">
+				<div class="title">
+					{{ i18n.devices.popupSettings.video.sectionTitle }}
+				</div>
+				<div class="items-selector codec-selector" id="video_codec_selector">
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
+						<ul class="available-codecs connectedSortable">
+							{{#each extra.availableCodecs.video}}
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+
+					<div class="box-selector">
+						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
+						<ul class="selected-codecs connectedSortable">
+							{{#each extra.selectedCodecs.video}}
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="tabs-section clearfix" data-section="restrictions">
+				<div class="title">
+					{{ i18n.devices.popupSettings.restrictions.sectionTitle }}
+				</div>
+
+				{{#eachkeys extra.restrictions}}
+					<div class="control-group">
+                    	<label class="control-label">{{this.value.friendly_name}}</label>
+                    	<div class="controls">
+							<div class="switch" data-on="primary" data-off="danger" data-on-label="{{../i18n.devices.popupSettings.restrictions.inherit}}" data-off-label="{{../i18n.devices.popupSettings.restrictions.deny}}">
+				    			<input type="checkbox" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
+							</div>
+                    	</div>
+                	</div>
+				{{/eachkeys}}
+			</div>
+
+			<div class="tabs-section clearfix" data-section="callerId">
+				<div class="title">
+					{{ i18n.devices.popupSettings.callerId.sectionTitle }}
+				</div>
+
+				{{#if extra.hasE911Numbers}}
+					<div class="control-group">
+						<label class="control-label">{{ i18n.devices.popupSettings.callerId.emergency }}</label>
+						<div class="controls">
+							<select name="caller_id.emergency.number" class="caller-id-select">
+								<option value="">{{i18n.devices.popupSettings.callerId.notSet}}</option>
+								{{#each extra.e911Numbers}}
+									<option{{#compare ../this.caller_id.emergency.number "===" this}} selected{{/compare}} value="{{this}}">{{this}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+				{{else}}
+					<div class="help-box red-box">
+        				<div class="wrapper-icon">
+            				<i class="icon-remove icon-red"></i>
+        				</div>
+        				<div class="text-wrapper">
+							{{ i18n.devices.popupSettings.callerId.noE911Numbers }}
+						</div>
+    				</div>
+				{{/if}}
+			</div>
+		</form>
+	</div>
+
+	<div class="actions clearfix">
+		{{#if id}}
+			<a id="delete_device" class="monster-link"><i class="icon-trash icon-red"></i>{{ i18n.devices.deleteDevice }}</a>
+		{{/if}}
+
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+				<button type="button" class="btn btn-success save">
+				{{#if id}}
+					{{ i18n.saveChanges }}
+				{{else}}
+					{{ i18n.devices.createDevice }}
+				{{/if}}
+				</button>
+		</div>
+	</div>
+</div>

@@ -34,6 +34,7 @@ define(function(require){
 		},
 
 		subscribe: {
+			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
 			'common.numbers.getListFeatures': 'numbersGetFeatures'
 		},
@@ -111,15 +112,18 @@ define(function(require){
 					usedNumbers: []
 				},
 				templateData = {
+					viewType: data.viewType,
 					listAccounts: []
 				};
 
 			/* Initializing accounts metadata */
 			var thisAccount = _.extend(monster.apps['auth'].currentAccount, templateLists);
 
-			_.each(data.accounts, function(account) {
-				mapAccounts[account.id] = account;
-			});
+			if(data.viewType !== 'pbx') {
+				_.each(data.accounts, function(account) {
+					mapAccounts[account.id] = account;
+				});
+			}
 
 			/* assign each number to spare numbers or used numbers for main account */
 			_.each(data.numbers.numbers, function(value, phoneNumber) {
@@ -127,7 +131,19 @@ define(function(require){
 
 				value = self.numbersFormatNumber(value);
 
-				value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
+				if(value.used_by) {
+					if(data.viewType === 'pbx') {
+						if(value.used_by === 'callflow') {
+							thisAccount.usedNumbers.push(value);
+						}
+					}
+					else {
+						thisAccount.usedNumbers.push(value);
+					}
+				}
+				else {
+					thisAccount.spareNumbers.push(value);
+				}
 			});
 
 			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
@@ -174,13 +190,18 @@ define(function(require){
 						parent.find('#trigger_links').hide();
 					}
 				},
-				displayNumberList = function(accountId, callback) {
-					if(_.indexOf(listSearchedAccounts, accountId) === -1) {
+				displayNumberList = function(accountId, callback, forceRefresh) {
+					var alreadySearched = _.indexOf(listSearchedAccounts, accountId) >= 0,
+						forceRefresh = forceRefresh || false;
+
+					if(!alreadySearched || forceRefresh) {
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
 								usedNumbers = [];
 
-							listSearchedAccounts.push(accountId);
+							if(!alreadySearched) {
+								listSearchedAccounts.push(accountId);
+							}
 
 							_.each(numbers.numbers, function(value, phoneNumber) {
 								if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
@@ -284,6 +305,32 @@ define(function(require){
 				});
 
 				showLinks();
+			});
+
+			parent.on('click', '.account-header .buy-numbers-link', function(e) {
+				var accountId = $(this).parents('.account-section').data('id');
+
+				monster.pub('common.buyNumbers', {
+					accountId: accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(accountId, function(numbers) {
+								parent.find('.account-section[data-id="'+accountId+'"]').addClass('open');
+							}, true);
+							// var numbersData = $.map(numbers, function(val, key) {
+							// 	return { phone_number: key };
+							// });
+
+							// self.getAccount(function(globalData) {
+							// 	self.addNumbers(globalData, serverId, numbersData, function() {
+							// 		self.listNumbersByPbx(serverId, callback_listing);
+							// 		self.renderList(serverId);
+							// 	});
+							// });
+						}
+					}
+				});
 			});
 
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
@@ -717,6 +764,94 @@ define(function(require){
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
 				}
+			});
+		},
+
+		/* AccountID and Callback in args */
+		numbersFormatDialogSpare: function(data) {
+			var formattedData = {
+				accountName: data.accountName,
+				numbers: {}
+			};
+
+			_.each(data.numbers, function(number, id) {
+				if(number.used_by === '') {
+					number.phoneNumber = id;
+					formattedData.numbers[id] = number;
+				}
+			});
+
+			return formattedData;
+		},
+
+		numbersDialogSpare: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				accountName = args.accountName || '',
+				callback = args.callback;
+
+			self.numbersList(accountId, function(data) {
+				data.accountName = accountName;
+
+				var formattedData = self.numbersFormatDialogSpare(data),
+				    spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
+
+                spareTemplate.find('.empty-search-row').hide();
+
+				spareTemplate.on('keyup', '.search-query', function() {
+                	var rows = spareTemplate.find('.number-box'),
+                    	emptySearch = spareTemplate.find('.empty-search-row'),
+                    	currentRow;
+
+                	currentNumberSearch = $(this).val().toLowerCase();
+
+                	_.each(rows, function(row) {
+                    	currentRow = $(row);
+                    	currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+                	});
+
+                	if(rows.size() > 0) {
+                    	rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+                	}
+            	});
+
+				spareTemplate.find('#proceed').on('click', function() {
+					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
+						selectedNumbers = [];
+
+					_.each(selectedNumbersRow, function(row) {
+						var number = $(row).data('number');
+
+						selectedNumbers.push(formattedData.numbers[number]);
+					});
+
+					if(selectedNumbers.length > 0) {
+						args.callback && args.callback(selectedNumbers);
+
+						popup.dialog('close').remove();
+					}
+					else {
+						monster.ui.alert('error', self.i18n.active().numbers.dialogSpare.noNumberSelected);
+					}
+				});
+
+				spareTemplate.find('.number-box').on('click', function(event) {
+					var $this = $(this);
+
+					$this.toggleClass('selected');
+
+					if(!$(event.target).is('input:checkbox')) {
+						var $current_cb = $this.find('input[type="checkbox"]'),
+							cb_value = $current_cb.prop('checked');
+
+						$current_cb.prop('checked', !cb_value);
+					}
+				});
+
+				var popup = monster.ui.dialog(spareTemplate, {
+					title: self.i18n.active().numbers.dialogSpare.title,
+					position: ['center', 20]
+				});
 			});
 		},
 

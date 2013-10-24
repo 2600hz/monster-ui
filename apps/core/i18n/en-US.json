@@ -16,7 +16,9 @@
 		"confirmCancel" : "Cancel",
 		"confirmTitle" : "Confirmation"
 	},
+	"disabled": "Disabled",
 	"download": "Download",
+	"enabled": "Enabled",
 	"endDate": "End Date",
 	"error": "Error",
 	"examplePhoneNumber": "+1 (415) 482-9912",
@@ -24,6 +26,8 @@
 	"hello": "Welcome!",
 	"info": "Info",
 	"next": "Next",
+	"on": "On",
+	"off": "Off",
 	"paging": {
 		"first": "First",
 		"previous": "Previous",
@@ -50,6 +54,8 @@
 		"filtered": "(filtered from _MAX_ total entries)",
 		"infoEmpty": ""
 	},
+	"unexpectedError": "An unexpected error happened, please try again!",
+	"update": "Update",
 	"warning": "Warning!",
-	"welcome": "SIP Trunking Made Easy"
+	"welcome": "Hosted Telecom Services"
 }

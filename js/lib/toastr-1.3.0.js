@@ -1,14 +1,15 @@
 /*
- * Copyright 2012 John Papa and Hans Fjällemark.  
- * All Rights Reserved.  
- * Use, reproduction, distribution, and modification of this code is subject to the terms and 
+ * Copyright 2012 John Papa and Hans Fjällemark.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
  * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
  *
  * Author: John Papa and Hans Fjällemark
  * Project: https://github.com/CodeSeven/toastr
  */
 ; (function (define) {
-    define(['jquery'], function ($) {
+    //define(['jquery'], function ($) { /* WE REMOVED IT BECAUSE IT CRASHED REQUIRE MINIFICATION */
+	define(function(require) {
         return (function () {
             var version = '1.3.0',
                 $container,

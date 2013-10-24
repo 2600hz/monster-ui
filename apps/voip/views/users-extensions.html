@@ -1,11 +1,11 @@
 <div class="detail-numbers extensions">
 	<div class="list-wrapper">
-		<div class="list-assigned-extensions number-list">
+		<div class="list-assigned-items number-list">
 			<div class="empty-row{{#if emptyExtensions}} visible{{/if}}">
 				{{ i18n.users.noAssignedExtensions }}
 			</div>
 			{{#each extensions}}
-				<div class="phone-number-row" data-id="{{this}}" data-search="{{this}}">
+				<div class="item-row" data-id="{{this}}" data-search="{{this}}">
 					<div class="number">
 						<button type="button" class="btn btn-danger remove-extension">{{ ../i18n.remove }}</button>
 						{{ this }}

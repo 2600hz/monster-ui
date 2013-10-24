@@ -1,7 +1,10 @@
+@import url('submodules/devices/devices.css');
+@import url('submodules/groups/groups.css');
+/*@import url('submodules/myOffice/myOffice.css');*/
 @import url('submodules/numbers/numbers.css');
-@import url('submodules/users/users.css');
-@import url('submodules/myOffice/myOffice.css');
 @import url('submodules/strategy/strategy.css');
+@import url('submodules/callLogs/callLogs.css');
+@import url('submodules/users/users.css');
 
 #voip_container {
 	margin: auto;
@@ -63,7 +66,11 @@
 
 #voip_container > .left-menu .category.separated {
 	border-radius: 4px;
-	margin: 10px auto;
+	margin: 10px auto 0 auto;
+}
+
+#voip_container > .left-menu .category-group {
+	margin-top: 10px;
 }
 
 #voip_container > .left-menu .category.active {
@@ -140,4 +147,130 @@
 		transition:margin 0.5s;
 		margin-left: 81px;
 	}
+}
+
+/* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
+
+/* Devices Brands */
+.device-popup .brand-selection .brand-box.polycom {
+    background: url('static/images/brands/polycom.png') center no-repeat;
+}
+.device-popup .brand-selection .brand-box.yealink {
+    background: url('static/images/brands/yealink.png') center no-repeat;
+}
+.device-popup .brand-selection .brand-box.cisco {
+    background: url('static/images/brands/cisco.png') center no-repeat;
+}
+.device-popup .brand-selection .brand-box.mocet {
+    background: url('static/images/brands/mocet.png') center no-repeat;
+}
+.device-popup .brand-selection .brand-box.snom {
+    background: url('static/images/brands/snom.png') center no-repeat;
+}
+.device-popup .brand-selection .brand-box.audiocodes {
+    background: url('static/images/brands/audiocodes.png') center no-repeat;
+}
+
+/* Devices Models */
+.device-image {
+	height: 80px;
+	width: 100px;
+}
+/* Yealink */
+.device-image.yealink-t18 {
+	background: url('static/images/devices/yealinkt18.jpg') center no-repeat;
+}
+.device-image.yealink-t20 {
+	background: url('static/images/devices/yealinkt20.jpg') center no-repeat;
+}
+.device-image.yealink-t22 {
+	background: url('static/images/devices/yealinkt22.jpg') center no-repeat;
+}
+.device-image.yealink-t26 {
+	background: url('static/images/devices/yealinkt26.jpg') center no-repeat;
+}
+.device-image.yealink-t28 {
+	background: url('static/images/devices/yealinkt28.jpg') center no-repeat;
+}
+.device-image.yealink-t32 {
+	background: url('static/images/devices/yealinkt32.jpg') center no-repeat;
+}
+.device-image.yealink-t38 {
+	background: url('static/images/devices/yealinkt38.jpg') center no-repeat;
+}
+
+/* Cisco */
+.device-image.cisco-901 {
+	background: url('static/images/devices/cisco901.jpg') center no-repeat;
+}
+.device-image.cisco-921 {
+	background: url('static/images/devices/cisco921.jpg') center no-repeat;
+}
+.device-image.cisco-922 {
+	background: url('static/images/devices/cisco922.jpg') center no-repeat;
+}
+.device-image.cisco-941 {
+	background: url('static/images/devices/cisco941.jpg') center no-repeat;
+}
+.device-image.cisco-942 {
+	background: url('static/images/devices/cisco942.jpg') center no-repeat;
+}
+.device-image.cisco-962 {
+	background: url('static/images/devices/cisco962.jpg') center no-repeat;
+}
+.device-image.cisco-303 {
+	background: url('static/images/devices/cisco303.jpg') center no-repeat;
+}
+.device-image.cisco-501g {
+	background: url('static/images/devices/cisco501g.jpg') center no-repeat;
+}
+.device-image.cisco-502g {
+	background: url('static/images/devices/cisco502g.jpg') center no-repeat;
+}
+.device-image.cisco-504g {
+	background: url('static/images/devices/cisco504g.jpg') center no-repeat;
+}
+.device-image.cisco-525g {
+	background: url('static/images/devices/cisco525g.jpg') center no-repeat;
+}
+.device-image.cisco-525g2 {
+	background: url('static/images/devices/cisco525g2.jpg') center no-repeat;
+}
+
+/* Polycom */
+.device-image.polycom-1500 {
+	background: url('static/images/devices/polycom1500.jpg') center no-repeat;
+}
+.device-image.polycom-321 {
+	background: url('static/images/devices/polycom321.jpg') center no-repeat;
+}
+.device-image.polycom-331 {
+	background: url('static/images/devices/polycom331.jpg') center no-repeat;
+}
+.device-image.polycom-335 {
+	background: url('static/images/devices/polycom335.jpg') center no-repeat;
+}
+.device-image.polycom-450 {
+	background: url('static/images/devices/polycom450.jpg') center no-repeat;
+}
+.device-image.polycom-5000 {
+	background: url('static/images/devices/polycom5000.jpg') center no-repeat;
+}
+.device-image.polycom-550 {
+	background: url('static/images/devices/polycom550.jpg') center no-repeat;
+}
+.device-image.polycom-560 {
+	background: url('static/images/devices/polycom560.jpg') center no-repeat;
+}
+.device-image.polycom-6000 {
+	background: url('static/images/devices/polycom6000.jpg') center no-repeat;
+}
+.device-image.polycom-650 {
+	background: url('static/images/devices/polycom650.jpg') center no-repeat;
+}
+.device-image.polycom-670 {
+	background: url('static/images/devices/polycom670.jpg') center no-repeat;
+}
+.device-image.polycom-7000 {
+	background: url('static/images/devices/polycom7000.jpg') center no-repeat;
 }
