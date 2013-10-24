@@ -38,6 +38,7 @@
 #strategy_container .element-header-inner > div {
 	width: 50%;
 	line-height: 60px;
+	height: 60px;
 	display: inline-block;
 	white-space: nowrap;   overflow: hidden;
 	text-overflow: ellipsis;
@@ -58,6 +59,10 @@
 #strategy_container .element-header-inner .summary {
 	padding-right: 60px;
 	padding-left: 20px;
+}
+
+#strategy_container .element-header-inner .summary > span i {
+	margin-left: 15px;
 }
 
 #strategy_container .element-header-inner .summary > i {

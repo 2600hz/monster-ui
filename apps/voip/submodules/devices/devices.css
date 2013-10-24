@@ -139,6 +139,31 @@
 	line-height: 25px;
 }
 
+#devices_container .devices-grid .grid-row .grid-cell.type .first-line {
+	height: 40px;
+	line-height: 55px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.type .first-line > i {
+	font-size: 24px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.type .second-line {
+	font-size: 12px;
+	height: 20px;
+	line-height: 20px;
+}
+
+#devices_container .devices-grid .grid-row .grid-cell.registered i {
+	color: #44CC44;
+}
+#devices_container .devices-grid .grid-row .grid-cell.unregistered i {
+	color: #EE1212;
+}
+#devices_container .devices-grid .grid-row .grid-cell.disabled i {
+	color: #333333;
+}
+
 #devices_container .devices-grid .grid-row .grid-cell.user {
 	width: 25%;
 }

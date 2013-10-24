@@ -123,7 +123,8 @@
 			"accountError": "An unexpected error occured while creating the account.",
 			"adminError": "The account administrator could not be created.",
 			"limitsError": "An error occured while setting up the limits.",
-			"creditError": "An error occured while adding credit to the account."
+			"creditError": "An error occured while adding credit to the account.",
+			"servicePlanError": "An error occured while assigning the service plan to the account."
 		},
 		"uiRestrictionsUpdateSuccess": "UI restrictions updated successfully!",
 		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later."

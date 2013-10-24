@@ -324,3 +324,9 @@
 	text-align: center;
 	padding: 10px;
 }
+
+.dialog-spare-container .dialog-buttons-wrapper a.cancel-link {
+	margin-right: 30px;
+	vertical-align: middle;
+	color: #22ccff;
+}

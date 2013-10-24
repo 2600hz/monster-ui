@@ -2,7 +2,7 @@
 	<div class="list-wrapper">
 		<div class="list-assigned-items number-list">
 			<div class="empty-row{{#if emptyAssigned}} visible{{/if}}">
-				{{ i18n.users.noAssignedNumbers }}
+				{{ i18n.groups.noAssignedNumbers }}
 			</div>
 			{{#eachkeys assignedNumbers}}
 				<div class="item-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
@@ -15,9 +15,6 @@
 										<ul class="dropdown-menu">
 											<li><a class="callerId-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
 											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
-											{{#compare this.value.used_by "===" "trunkstore"}}
-												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../i18n.failover.label }}</a></li>
-											{{/compare}}
 										</ul>
 									</li>
 								</ul>
@@ -49,7 +46,7 @@
 		</div>
 
 		<div class="unassigned-list-header">
-			<div class="title">{{i18n.users.addFromSpare}} (<span data-count="{{countSpare}}" class="count-spare">{{countSpare}}</span>)</div>
+			<div class="title">{{i18n.groups.addFromSpare}} (<span data-count="{{countSpare}}" class="count-spare">{{countSpare}}</span>)</div>
 			<div class="search-bar pull-right">
 				<span class="search-box pull-right">
 					<i class="icon-search"></i>
@@ -60,10 +57,10 @@
 
 		<div class="list-unassigned-items number-list">
 			<div class="empty-search-row">
-				{{ i18n.users.noMatchingNumbers }}
+				{{ i18n.groups.noMatchingNumbers }}
 			</div>
 			<div class="empty-row{{#if emptySpare}} visible{{/if}} ">
-				{{ i18n.users.noMoreSpareNumbers }}
+				{{ i18n.groups.noMoreSpareNumbers }}
 			</div>
 			{{#eachkeys unassignedNumbers}}
 				<div class="item-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
@@ -76,9 +73,6 @@
 										<ul class="dropdown-menu">
 											<li><a class="callerId-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
 											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
-											{{#compare this.value.used_by "===" "trunkstore"}}
-												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../i18n.failover.label }}</a></li>
-											{{/compare}}
 										</ul>
 									</li>
 								</ul>
@@ -109,8 +103,17 @@
 	</div>
 
 	<div class="actions">
-		<a id="buy_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-shopping-cart icon-green"></i>{{ i18n.users.buy }}</a>
-		<a id="port_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-random icon-blue"></i>{{ i18n.users.port }}</a>
+		<ul class="nav pull-left">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle buy-dropdown monster-link" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart icon-green icon-large"></i>{{ i18n.strategy.numberLinks.buy.link }}</a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="buy-link" data-type="regular" href="#">{{i18n.strategy.numberLinks.buy.regular}}</a></li>
+                    <li><a class="buy-link" data-type="tollfree" href="#">{{i18n.strategy.numberLinks.buy.tollfree}}</a></li>
+                    <li><a class="buy-link" data-type="vanity" href="#">{{i18n.strategy.numberLinks.buy.vanity}}</a></li>
+                </ul>
+            </li>
+        </ul>
+		<a id="port_numbers" class="monster-link" href="javascript:void(0);"><i class="icon-random icon-blue"></i>{{ i18n.groups.port }}</a>
 
 		<div class="pull-right">
 			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>

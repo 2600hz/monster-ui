@@ -112,11 +112,22 @@ define(function(require){
 
 		groupsFormatListData: function(data) {
 			var self = this,
-				mapGroups = {};
+				mapGroups = {},
+				mapFeatures = {
+					voicemails: {
+						icon: 'icon-envelope',
+						iconColor: 'icon-green',
+						title: self.i18n.active().groups.voicemails.title
+					}
+				};
 
 			_.each(data.groups, function(group) {
 				mapGroups[group.id] = group;
-				mapGroups[group.id].extra = {};
+
+				mapGroups[group.id].extra = {
+					hasFeatures: false,
+					mapFeatures: mapFeatures
+				};
 			});
 
 			_.each(data.callflows, function(callflow) {
@@ -125,18 +136,29 @@ define(function(require){
 						listNumbers = [];
 
 					_.each(callflow.numbers, function(number) {
-						number.length < 6 ? listExtensions.push(number) : listNumbers.push(number);
+						number.length < 7 ? listExtensions.push(number) : listNumbers.push(number);
 					});
+
+					mapGroups[callflow.group_id].extra.listCallerId = [];
 
 					if(listExtensions.length > 0) {
 						mapGroups[callflow.group_id].extra.extension = listExtensions[0];
+
+						_.each(listExtensions, function(number) {
+							mapGroups[callflow.group_id].extra.listCallerId.push(number);
+						});
 					}
 					mapGroups[callflow.group_id].extra.additionalExtensions = listExtensions.length > 1;
 
 					if(listNumbers.length > 0) {
 						mapGroups[callflow.group_id].extra.mainNumber = listNumbers[0];
+
+						_.each(listNumbers, function(number) {
+							mapGroups[callflow.group_id].extra.listCallerId.push(number);
+						});
 					}
 					mapGroups[callflow.group_id].extra.additionalNumbers = listNumbers.length > 1;
+					mapGroups[callflow.group_id].extra.callflowId = callflow.id;
 				}
 			});
 
@@ -164,15 +186,6 @@ define(function(require){
 					cell.toggleClass('active');
 
 					self.groupsGetTemplate(type, groupId, function(template, data) {
-						if(type === 'name') {
-						}
-						else if(type === 'numbers') {
-						}
-						else if(type === 'extensions') {
-						}
-						else if(type === 'features') {
-						}
-
 						//FancyCheckboxes.
 						monster.ui.prettyCheck.create(template);
 
@@ -280,15 +293,29 @@ define(function(require){
 				self.groupsGetNameTemplate(groupId, callbackAfterData);
 			}
 			else if(type === 'numbers') {
+				self.groupsGetNumbersTemplate(groupId, callbackAfterData);
 			}
 			else if(type === 'extensions') {
 				self.groupsGetExtensionsTemplate(groupId, callbackAfterData);
 			}
 			else if(type === 'features') {
+				self.groupsGetFeaturesTemplate(groupId, callbackAfterData);
 			}
 			else if(type === 'members') {
 				self.groupsGetMembersTemplate(groupId, callbackAfterData);
 			}
+		},
+
+		groupsGetFeaturesTemplate: function(groupId, callback) {
+			var self = this;
+
+			self.groupsGetFeaturesData(groupId, function(data) {
+				template = $(monster.template(self, 'groups-features', data));
+
+				self.groupsBindFeatures(template, data);
+
+				callback && callback(template, data);
+			});
 		},
 
 		groupsGetNameTemplate: function(groupId, callback) {
@@ -303,17 +330,31 @@ define(function(require){
 			});
 		},
 
+		groupsGetNumbersTemplate: function(groupId, callback) {
+			var self = this;
+
+			self.groupsGetNumbersData(groupId, function(data) {
+				self.groupsFormatNumbersData(data, function(data) {
+					template = $(monster.template(self, 'groups-numbers', data));
+
+					self.groupsBindNumbers(template, data);
+
+					callback && callback(template, data);
+				});
+			});
+		},
+
 		groupsGetExtensionsTemplate: function(groupId, callback) {
 			var self = this;
 
-			self.groupsGetExtensionsData(groupId, function(data) {
-				var data = self.groupsFormatExtensionsData(data);
+			self.groupsGetNumbersData(groupId, function(data) {
+				self.groupsFormatNumbersData(data, function(data) {
+					template = $(monster.template(self, 'groups-extensions', data));
 
-				template = $(monster.template(self, 'groups-extensions', data));
+					self.groupsBindExtensions(template, data);
 
-				self.groupsBindExtensions(template, data);
-
-				callback && callback(template, results);
+					callback && callback(template, data);
+				});
 			});
 		},
 
@@ -328,6 +369,16 @@ define(function(require){
 				self.groupsBindMembers(template, results);
 
 				callback && callback(template, results);
+			});
+		},
+
+		groupsBindFeatures: function(template, data) {
+			var self = this;
+
+			template.find('.feature[data-feature="voicemails"]').on('click', function() {
+				console.log(data);
+
+				self.groupsRenderVoicemails(data);
 			});
 		},
 
@@ -355,40 +406,240 @@ define(function(require){
 			});
 		},
 
-		groupsBindExtensions: function(template, data) {
-			var self = this;
-			/*template.on('click', '.save-extensions', function() {
-				var numbers = $.extend(true, [], numbersToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+		groupsBindNumbers: function(template, data) {
+			var self = this,
+				toastrMessages = self.i18n.active().groups.toastrMessages,
+				currentNumberSearch = '';
 
-				template.find('.extensions .list-assigned-items .item-row').each(function(k, row) {
+			template.on('click', '.save-numbers', function() {
+				var numbersToSave = [],
+					parentRow = $(this).parents('.grid-row'),
+					callflowId = parentRow.data('callflow_id'),
+					name = parentRow.data('name');
+
+				template.find('.list-assigned-items .item-row').each(function(k, row) {
+					numbersToSave.push($(row).data('id'));
+				});
+
+				self.groupsUpdateNumbers(callflowId, numbersToSave, function(callflowData) {
+					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
+					self.groupsRender({ groupId: callflowData.group_id });
+				});
+			});
+
+			template.on('click', '.list-unassigned-items .add-number', function() {
+				var row = $(this).parents('.item-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') - 1,
+					assignedList = template.find('.list-assigned-items');
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				row.find('button')
+					.removeClass('add-number btn-primary')
+					.addClass('remove-number btn-danger')
+					.text(self.i18n.active().remove);
+
+				assignedList.find('.empty-row').hide();
+				assignedList.append(row);
+
+				var rows = template.find('.list-unassigned-items .item-row');
+
+				if(rows.size() === 0) {
+					template.find('.list-unassigned-items .empty-row').show();
+				}
+				else if(rows.is(':visible') === false) {
+					template.find('.list-unassigned-items .empty-search-row').show();
+				}
+			});
+
+			template.on('click', '.list-assigned-items .remove-number', function() {
+				var row = $(this).parents('.item-row'),
+					spare = template.find('.count-spare'),
+					countSpare = spare.data('count') + 1,
+					unassignedList = template.find('.list-unassigned-items');
+
+				/* Alter the html */
+				row.hide();
+
+				row.find('button')
+					.removeClass('remove-number btn-danger')
+					.addClass('add-number btn-primary')
+					.text(self.i18n.active().add);
+
+				unassignedList.append(row);
+				unassignedList.find('.empty-row').hide();
+
+				spare
+					.html(countSpare)
+					.data('count', countSpare);
+
+				var rows = template.find('.list-assigned-items .item-row');
+				/* If no rows beside the clicked one, display empty row */
+				if(rows.is(':visible') === false) {
+					template.find('.list-assigned-items .empty-row').show();
+				}
+
+				/* If it matches the search string, show it */
+				if(row.data('search').indexOf(currentNumberSearch) >= 0) {
+					row.show();
+					unassignedList.find('.empty-search-row').hide();
+				}
+			});
+
+			template.on('keyup', '.list-wrapper .unassigned-list-header .search-query', function() {
+				var rows = template.find('.list-unassigned-items .item-row'),
+					emptySearch = template.find('.list-unassigned-items .empty-search-row'),
+					currentRow;
+
+				currentNumberSearch = $(this).val().toLowerCase();
+
+				_.each(rows, function(row) {
+					currentRow = $(row);
+					currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+				});
+
+				if(rows.size() > 0) {
+					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+				}
+			});
+
+			template.on('click', '.e911-number', function() {
+				var e911Cell = $(this).parents('.item-row').first(),
+					phoneNumber = e911Cell.data('id');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.dash_e911))) {
+									e911Cell.find('.features i.feature-dash_e911').addClass('active');
+								}
+								else {
+									e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.e911.renderPopup', args);
+				}
+			});
+
+			template.on('click', '.callerId-number', function() {
+				var cnamCell = $(this).parents('.item-row').first(),
+					phoneNumber = cnamCell.data('id');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.cnam))) {
+									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
+								}
+								else {
+									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.callerId.renderPopup', args);
+				}
+			});
+
+			template.on('click', '.actions .buy-link', function(e) {
+				e.preventDefault();
+
+				monster.pub('common.buyNumbers', {
+					searchType: $(this).data('type'),
+						callbacks: {
+						success: function(numbers) {
+							var countNew = 0;
+
+							monster.pub('common.numbers.getListFeatures', function(features) {
+								_.each(numbers, function(number, k) {
+									countNew++;
+
+									/* Formating number */
+									number.viewFeatures = $.extend(true, {}, features);
+
+									var rowTemplate = monster.template(self, 'users-rowSpareNumber', number);
+
+									template.find('.list-unassigned-items .empty-row').hide();
+									template.find('.list-unassigned-items').append(rowTemplate);
+								});
+
+								var previous = parseInt(template.find('.unassigned-list-header .count-spare').data('count')),
+									newTotal = previous + countNew;
+
+								template.find('.unassigned-list-header .count-spare')
+									.data('count', newTotal)
+									.html(newTotal);
+							});
+						},
+						error: function(error) {
+						}
+					}
+				});
+			});
+		},
+
+		groupsBindExtensions: function(template, data) {
+			var self = this,
+				toastrMessages = self.i18n.active().groups.toastrMessages,
+				listExtension = [];
+
+			template.on('click', '.save-extensions', function() {
+				var extensionsToSave = [],
+					parentRow = $(this).parents('.grid-row'),
+					callflowId = parentRow.data('callflow_id'),
+					name = parentRow.data('name');
+
+				template.find('.list-assigned-items .item-row').each(function(k, row) {
 					var row = $(row),
 						number;
 
 					number = (row.data('id') ? row.data('id') : row.find('.input-extension').val()) + '';
 
-					numbers.push(number);
+					extensionsToSave.push(number);
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.groupsUpdateExtensions(callflowId, extensionsToSave, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.groupsRender({ groupId: callflowData.group_id });
 				});
 			});
 
 			template.on('click', '#add_extensions', function() {
-				var nextExtension = (parseInt(existingExtensions[existingExtensions.length - 1]) || 2000) + 1 + '',
-					dataTemplate = {
-						recommendedExtension: nextExtension
-					},
-					newLineTemplate = $(monster.template(self, 'users-newExtension', dataTemplate)),
-					listExtensions = template.find('.extensions .list-assigned-items');
+				var renderNewRow = function(lastExtension) {
+					var lastExtension = listExtension[listExtension.length - 1] + 1,
+					    dataTemplate = {
+							recommendedExtension: lastExtension
+						},
+						newLineTemplate = $(monster.template(self, 'groups-newExtension', dataTemplate)),
+						$listExtensions = template.find('.list-assigned-items');
 
-				listExtensions.find('.empty-row').hide();
+					listExtension.push(lastExtension);
+					$listExtensions.find('.empty-row').hide();
 
-				listExtensions.append(newLineTemplate);
+					$listExtensions.append(newLineTemplate);
+				};
 
-				existingExtensions.push(nextExtension);
+				if(_.isEmpty(listExtension)) {
+					self.groupsListExtensions(function(arrayExtension) {
+						listExtension = arrayExtension;
+
+						renderNewRow();
+					});
+				}
+				else {
+					renderNewRow();
+				}
 			});
 
 			template.on('click', '.remove-extension', function() {
@@ -403,15 +654,15 @@ define(function(require){
 			});
 
 			template.on('click', '.cancel-extension-link', function() {
-				var extension = $(this).siblings('input').val(),
-				    index = existingExtensions.indexOf(extension);
+				var extension = parseInt($(this).siblings('input').val()),
+				    index = listExtension.indexOf(extension);
 
 				if(index > -1) {
-					existingExtensions.splice(index, 1);
+					listExtension.splice(index, 1);
 				}
 
 				$(this).parents('.item-row').remove();
-			});*/
+			});
 		},
 
 		groupsBindMembers: function(template, data) {
@@ -509,12 +760,133 @@ define(function(require){
 			});
 		},
 
+		groupsGetFeaturesData: function(groupId, callback) {
+			var self = this;
+
+			self.groupsGetGroup(groupId, function(data) {
+				callback && callback(data);
+			});
+		},
+
 		groupsGetNameData: function(groupId, callback) {
 			var self = this;
 
 			self.groupsGetGroup(groupId, function(data) {
 				callback && callback(data);
 			});
+		},
+
+		groupsFormatNumbersData: function(data, callback) {
+			console.log(data);
+			var self = this,
+				response = {
+					emptyExtensions: true,
+					extensions: [],
+
+					emptyAssigned: true,
+					assignedNumbers: {},
+					countSpare: 0,
+					unassignedNumbers: {}
+				};
+
+
+			monster.pub('common.numbers.getListFeatures', function(features) {
+				_.each(data.numbers.numbers, function(number, id) {
+					/* Formating number */
+                    number.viewFeatures = $.extend(true, {}, features);
+                    /* TODO: Once locality is enabled, we need to remove it */
+                    number.localityEnabled = 'locality' in number ? true : false;
+
+                    _.each(number.features, function(feature) {
+                        number.viewFeatures[feature].active = 'active';
+                    });
+
+					if(number.used_by === '') {
+						response.unassignedNumbers[id] = number;
+						response.countSpare++;
+					}
+				});
+
+				if('groupCallflow' in data.callflow && 'numbers' in data.callflow.groupCallflow) {
+					_.each(data.callflow.groupCallflow.numbers, function(number) {
+						if(!(number in data.numbers.numbers)) {
+							response.extensions.push(number);
+						}
+						else {
+							response.assignedNumbers[number] = data.numbers.numbers[number];
+						}
+					});
+				}
+				response.emptyExtensions = _.isEmpty(response.extensions);
+				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
+
+				console.log(response);
+				callback && callback(response);
+			});
+		},
+
+		groupsGetNumbersData: function(groupId, callback) {
+			var self = this;
+
+			monster.parallel({
+					callflow: function(callbackParallel) {
+						var response = {};
+
+						monster.request({
+							resource: 'voip.groups.getCallflows',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(callflows) {
+								response.list = callflows.data;
+
+								var callflowId;
+
+								$.each(callflows.data, function(k, callflowLoop) {
+									/* Find Smart PBX Callflow of this group */
+									if(callflowLoop.group_id === groupId) {
+										callflowId = callflowLoop.id;
+
+										return false;
+									}
+								});
+
+								if(callflowId) {
+									monster.request({
+										resource: 'voip.groups.getCallflow',
+										data: {
+											accountId: self.accountId,
+											callflowId: callflowId
+										},
+										success: function(callflow) {
+											response.groupCallflow = callflow.data;
+
+											callbackParallel && callbackParallel(null, response);
+										}
+									});
+								}
+								else {
+									callbackParallel && callbackParallel(null, response);
+								}
+							}
+						});
+					},
+					numbers: function(callbackParallel) {
+						monster.request({
+							resource: 'voip.groups.getNumbers',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(numbers) {
+								callbackParallel && callbackParallel(null, numbers.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					callback && callback(results);
+				}
+			);
 		},
 
 		groupsGetMembersData: function(groupId, globalCallback) {
@@ -576,6 +948,89 @@ define(function(require){
 			};
 
 			return data.group;
+		},
+
+		groupsUpdateNumbers: function(callflowId, newNumbers, callback) {
+			var self = this;
+
+			self.groupsGetCallflow(callflowId, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number.length < 7) {
+						newNumbers.push(number);
+					}
+				});
+
+				callflow.numbers = newNumbers;
+
+				self.groupsUpdateCallflow(callflow, function(callflow) {
+					callback && callback(callflow);
+				});
+			});
+		},
+
+		groupsUpdateExtensions: function(callflowId, newNumbers, callback) {
+			var self = this;
+
+			self.groupsGetCallflow(callflowId, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number.length > 6) {
+						newNumbers.push(number);
+					}
+				});
+
+				callflow.numbers = newNumbers;
+
+				self.groupsUpdateCallflow(callflow, function(callflow) {
+					callback && callback(callflow);
+				});
+			});
+		},
+
+		groupsListExtensions: function(callback) {
+			var self = this,
+				extensionList = [];
+
+			self.groupsListCallflows(function(callflowList) {
+				_.each(callflowList, function(callflow) {
+					_.each(callflow.numbers, function(number) {
+						if(number.length < 7) {
+							var extension = parseInt(number);
+
+							if(extension > 1) {
+								extensionList.push(extension);
+							}
+						}
+					});
+				});
+
+				extensionList.sort(function(a, b) {
+					var parsedA = parseInt(a),
+						parsedB = parseInt(b),
+						result = -1;
+
+					if(parsedA > 0 && parsedB > 0) {
+						result = parsedA > parsedB;
+					}
+
+					return result;
+				});
+
+				callback && callback(extensionList);
+			});
+		},
+
+		groupsListCallflows: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.getCallflows',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(callflows) {
+					callback && callback(callflows.data);
+				}
+			});
 		},
 
 		groupsCreate: function(data, callback) {
@@ -797,6 +1252,21 @@ define(function(require){
 					callback && callback(results);
 				}
 			);
+		},
+
+		groupsGetCallflow: function(callflowId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.getCallflow',
+				data: {
+					accountId: self.accountId,
+					callflowId: callflowId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		},
 
 		groupsGetData: function(callback) {

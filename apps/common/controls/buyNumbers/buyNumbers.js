@@ -331,7 +331,7 @@ define(function(require){
 							if(!$.isEmptyObject(data.data.error)) {
 								monster.ui.alert('error', self.i18n.active().buyNumbers.partialPurchaseFailure);
 							}
-							callbacks.success && callbacks.success(data.data.success);
+							callbacks.success && callbacks.success(data.data.success, data.data.error);
 						} else {
 							callbacks.error && callbacks.error(data.data.error);
 						}
@@ -503,6 +503,9 @@ define(function(require){
 					});
 				} else {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.partialNumAlert);
+					number = "";
+					vanityInputDiv.children('i.icon-spinner').hide();
+					searchButton.prop('disabled', false);
 				}
 			});
 

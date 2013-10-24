@@ -258,7 +258,7 @@ define(function(require){
 				var userId = callflow.owner_id;
 
 				_.each(callflow.numbers, function(number) {
-					if(number.length < 6) {
+					if(number.length < 7) {
 						dataTemplate.existingExtensions.push(number);
 					}
 				});
@@ -270,7 +270,7 @@ define(function(require){
 
 					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
-						if(number.length < 6) {
+						if(number.length < 7) {
 							user.extra.listExtensions.push(number);
 
 							if(user.extra.extension === '') {
@@ -809,29 +809,6 @@ define(function(require){
 					};
 
 					monster.pub('common.e911.renderPopup', args);
-				}
-			});
-
-			template.on('click', '.failover-number', function() {
-				var failoverCell = $(this).parents('.item-row').first(),
-					phoneNumber = failoverCell.data('id');
-
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								if(!($.isEmptyObject(data.data.failover))) {
-									failoverCell.find('.features i.feature-failover').addClass('active');
-								}
-								else {
-									failoverCell.find('.features i.feature-failover').removeClass('active');
-								}
-							}
-						}
-					};
-
-					monster.pub('common.failover.renderPopup', args);
 				}
 			});
 
