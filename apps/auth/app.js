@@ -87,8 +87,8 @@ define(function(require){
 						_.each(self.installedApps, function(val, key) {
 							val.i18n = {
 								"en-US": {
-									label: val.i18n["en-US"].label,
-									description: val.i18n["en-US"].description
+									label: val.label,
+									description: val.label
 								}
 							}
 						});
