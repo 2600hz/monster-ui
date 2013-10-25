@@ -219,17 +219,20 @@ define(function(require){
 				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
 			    templateDevice = $(monster.template(self, 'devices-'+type, data));
 
-			if($.inArray(type, ['sip_device', 'cellphone', 'softphone', 'landline', 'fax']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
 			  		connectWith: '.connectedSortable'
 				}).disableSelection();
+			}
 
+			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
 				templateDevice.find('#video_codec_selector .selected-codecs, #video_codec_selector .available-codecs').sortable({
 			  		connectWith: '.connectedSortable'
 				}).disableSelection();
 			}
 
 			monster.ui.tabs(templateDevice);
+			monster.ui.prettyCheck.create(templateDevice);
 			templateDevice.find('.switch').bootstrapSwitch();
 
 			templateDevice.find('.actions .save').on('click', function() {
@@ -318,23 +321,26 @@ define(function(require){
 
 		devicesMergeData: function(originalData, template) {
 			var self = this,
-				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'cellphone', 'fax', 'softphone']) > -1,
-				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone']) > -1,
+				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'fax', 'ata', 'softphone', 'smartphone']) > -1,
+				hasSIP = $.inArray(originalData.device_type, ['fax', 'ata', 'softphone', 'smartphone']) > -1,
+				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone', 'smartphone']) > -1,
 				formData = form2object('form_device');
+
+				console.log(formData);
 
 			if('mac_address' in formData) {
 				formData.mac_address = monster.util.formatMacAddress(formData.mac_address);
 			}
 
 			if(hasCodecs) {
-				formData.media = {
+				formData.media = $.extend(true, {
 					audio: {
 						codecs: []
 					},
 					video: {
 						codecs: []
 					}
-				};
+				}, formData.media);
 
 				template.find('#audio_codec_selector .selected-codecs li').each(function() {
 					formData.media.audio.codecs.push($(this).data('codec'));
@@ -352,11 +358,19 @@ define(function(require){
 			}
 
 			if(hasCallForward) {
-				$.extend(true, formData.call_forward, {
+				formData.call_forward = $.extend(true, {
 					enabled: true,
 					require_keypress: true,
 					keep_caller_id: true
-				});
+				}, formData.call_forward);
+			}
+
+			if(hasSIP ) {
+				formData.sip = $.extend(true, {
+					expire_seconds: 360,
+					invite_format: 'username',
+					method: 'password'
+				}, formData.sip);
 			}
 
 			if('call_restriction' in formData) {
@@ -420,7 +434,60 @@ define(function(require){
 				},
 				typedDefaults = {
 					landline: {
-
+						call_forward: {
+							require_keypress: true,
+							keep_caller_id: true
+						},
+						contact_list: {
+							exclude: true
+						}
+					},
+					cellphone: {
+						call_forward: {
+							require_keypress: true,
+							keep_caller_id: true
+						},
+						contact_list: {
+							exclude: true
+						},
+					},
+					ata: {
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
+					fax: {
+						media: {
+							fax_option: 'auto'
+						},
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
+					softphone: {
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
+					smartphone: {
+						call_forward: {
+							require_keypress: true,
+							keep_caller_id: true
+						},
+						contact_list: {
+							exclude: true
+						},
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
 					}
 				};
 
@@ -435,7 +502,8 @@ define(function(require){
 				}
 			});
 
-			var formattedData = $.extend(true, {}, defaults, data.device);
+			var formattedData = $.extend(true, {}, typedDefaults[data.device.device_type], defaults, data.device);
+			console.log(formattedData);
 
 			/* Audio Codecs*/
 			/* extend doesn't replace the array so we need to do it manually */
@@ -481,6 +549,7 @@ define(function(require){
 				unassignedString = self.i18n.active().devices.unassignedDevice,
 				mapIconClass = {
 					cellphone: 'icon-telicon-mobile-phone',
+					smartphone: 'icon-telicon-sprint-phone',
 					landline: 'icon-telicon-home-phone',
 					softphone: 'icon-telicon-soft-phone',
 					sip_device: 'icon-telicon-voip-phone',

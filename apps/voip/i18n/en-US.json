@@ -70,6 +70,9 @@
 			"advancedTitle": "Advanced",
 			"basicTitle": "Basic Settings",
 			"basicSectionTitle": "Basic Settings",
+			"options": {
+				"menuTitle": "Options"
+			},
 			"audio": {
 				"menuTitle": "Audio",
 				"sectionTitle": "Audio Settings",
@@ -115,31 +118,63 @@
 		},
 		"landline": {
 			"addTitle": "Adding a Landline",
+			"deviceName": "Device Name",
 			"editTitle": "Editing Landline: {{name}}",
+			"new": "New Landline",
 			"number": "Number",
 			"numberPlaceholder": "+14152231121",
-			"deviceName": "Device Name"
+			"requireKeypress": "Allow use of landline voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
 		},
 		"cellphone": {
 			"addTitle": "Adding a Cell Phone",
+			"deviceName": "Device Name",
 			"editTitle": "Editing Cell Phone: {{name}}",
-			"macAddress": "MAC Address",
-			"macAddressPlaceholder": "19:33:1A:B2:12:58",
-			"deviceName": "Device Name"
+			"new": "New Cell Phone",
+			"number": "Number",
+			"numberPlaceholder": "+14152231121",
+			"requireKeypress": "Allow use of cellphone voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
+		},
+		"smartphone": {
+			"addTitle": "Adding a Smartphone",
+			"deviceName": "Device Name",
+			"editTitle": "Editing Smartphone: {{name}}",
+			"new": "New Smartphone",
+			"requireKeypress": "Allow use of cellphone voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
 		},
 		"fax": {
 			"addTitle": "Adding a Fax Machine",
 			"editTitle": "Editing Fax Machine: {{name}}",
 			"macAddress": "MAC Address",
 			"macAddressPlaceholder": "19:33:1A:B2:12:58",
-			"deviceName": "Device Name"
+			"new": "Fax Machine",
+			"deviceName": "Device Name",
+			"t38": "T38",
+			"disabled": "Disabled",
+			"auto": "Auto-detect",
+			"force": "Always force"
 		},
 		"softphone": {
 			"addTitle": "Adding a Softphone",
 			"editTitle": "Editing Softphone: {{name}}",
-			"macAddress": "MAC Address",
-			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"new": "New Softphone",
 			"deviceName": "Device Name"
+		},
+		"ata": {
+			"addTitle": "Adding an ATA",
+			"editTitle": "Editing ATA: {{name}}",
+			"new": "New ATA",
+			"deviceName": "Device Name"
+		},
+		"sip": {
+			"username": "SIP Username",
+			"password": "SIP Password",
+			"realm": "Realm"
 		},
 		"spare": "Spare",
 		"title": "Devices",
@@ -153,9 +188,11 @@
 		"types": {
 			"cellphone": "Cell Phone",
 			"sip_device": "SIP Phone",
+			"smartphone": "Smartphone",
 			"softphone": "Soft Phone",
 			"landline": "Landline",
-			"fax": "ATA / Fax"
+			"fax": "Fax",
+			"ata": "ATA"
 		},
 		"unassignedDevice": "-"
 	},

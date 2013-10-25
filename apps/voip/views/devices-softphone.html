@@ -1,8 +1,15 @@
-<div class="edit-device" data-type="sip-device" data-id="{{id}}">
+<div class="edit-device" data-id="{{id}}">
 	<div class="title-bar clearfix">
 		<div class="device-title pull-left">
-			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
-			<div class="device-model">{{name}}</div>
+			<div class="device-icon">
+				<i class="icon-telicon-soft-phone"></i>
+			</div>
+
+			{{#if id}}
+				<div class="device-model">{{name}}</div>
+			{{else}}
+				<div class="device-model">{{i18n.devices.softphone.new}}</div>
+			{{/if}}
 		</div>
 
 		<ul class="nav nav-pills pull-right">
@@ -27,15 +34,30 @@
 		<form id="form_device" class="form-horizontal">
 			<div class="tabs-section active" data-section="basic">
 				<div class="control-group">
-					<label class="control-label" for="name">{{ i18n.devices.sip_device.deviceName }}</label>
+					<label class="control-label" for="name">{{ i18n.devices.softphone.deviceName }}</label>
 					<div class="controls">
 						<input type="text" id="name" name="name" value="{{name}}">
 					</div>
 				</div>
+
 				<div class="control-group">
-					<label class="control-label" for="mac_address">{{ i18n.devices.sip_device.macAddress }}</label>
+					<label class="control-label" for="sip_username">{{ i18n.devices.sip.username }}</label>
 					<div class="controls">
-						<input type="text" name="mac_address" placeholder="{{ i18n.devices.sip_device.macAddressPlaceholder }}" value="{{mac_address}}">
+						<input type="text" id="sip_username" name="sip.username" value="{{sip.username}}">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="sip_password">{{ i18n.devices.sip.password }}</label>
+					<div class="controls">
+						<input type="text" id="sip_password" name="sip.password" value="{{sip.password}}">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="sip_username">{{ i18n.devices.sip.realm }}</label>
+					<div class="controls">
+						<span class="displayed-realm">{{ sip.realm }}</span>
 					</div>
 				</div>
 			</div>
@@ -45,12 +67,12 @@
 					{{ i18n.devices.popupSettings.audio.sectionTitle }}
 				</div>
 
-				<div class="codec-selector" id="audio_codec_selector">
+				<div class="items-selector codec-selector" id="audio_codec_selector">
 					<div class="box-selector">
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -59,7 +81,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -70,12 +92,12 @@
 				<div class="title">
 					{{ i18n.devices.popupSettings.video.sectionTitle }}
 				</div>
-				<div class="codec-selector" id="video_codec_selector">
+				<div class="items-selector codec-selector" id="video_codec_selector">
 					<div class="box-selector">
 						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -84,7 +106,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec" data-codec="{{this.codec}}">{{ this.description }}</li>
+  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -101,7 +123,7 @@
                     	<label class="control-label">{{this.value.friendly_name}}</label>
                     	<div class="controls">
 							<div class="switch" data-on="primary" data-off="danger" data-on-label="{{../i18n.devices.popupSettings.restrictions.inherit}}" data-off-label="{{../i18n.devices.popupSettings.restrictions.deny}}">
-				    			<input type="checkbox" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
+				    			<input type="checkbox" class="not-pretty" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
 							</div>
                     	</div>
                 	</div>

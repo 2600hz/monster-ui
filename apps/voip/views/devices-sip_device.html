@@ -1,4 +1,4 @@
-<div class="edit-device" data-type="sip-device" data-id="{{id}}">
+<div class="edit-device" data-id="{{id}}">
 	<div class="title-bar clearfix">
 		<div class="device-title pull-left">
 			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
@@ -101,7 +101,7 @@
                     	<label class="control-label">{{this.value.friendly_name}}</label>
                     	<div class="controls">
 							<div class="switch" data-on="primary" data-off="danger" data-on-label="{{../i18n.devices.popupSettings.restrictions.inherit}}" data-off-label="{{../i18n.devices.popupSettings.restrictions.deny}}">
-				    			<input type="checkbox" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
+				    			<input class="not-pretty" type="checkbox" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
 							</div>
                     	</div>
                 	</div>

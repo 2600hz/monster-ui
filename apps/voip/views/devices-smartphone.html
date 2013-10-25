@@ -2,13 +2,13 @@
 	<div class="title-bar clearfix">
 		<div class="device-title pull-left">
 			<div class="device-icon">
-				<i class="icon-telicon-fax"></i>
+				<i class="icon-telicon-sprint-phone"></i>
 			</div>
 
 			{{#if id}}
 				<div class="device-model">{{name}}</div>
 			{{else}}
-				<div class="device-model">{{i18n.devices.fax.new}}</div>
+				<div class="device-model">{{i18n.devices.smartphone.new}}</div>
 			{{/if}}
 		</div>
 
@@ -21,6 +21,7 @@
 					<b class="caret"></b>
 				</a>
 				<ul class="dropdown-menu pull-right">
+					<li><a class="tabs-selector change-section" data-section="options" href="javascript:void(0)"><i class="icon-cogs"></i>{{ i18n.devices.popupSettings.options.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="audio" href="javascript:void(0)"><i class="icon-music"></i>{{ i18n.devices.popupSettings.audio.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="video" href="javascript:void(0)"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="restrictions" href="javascript:void(0)"><i class="icon-ban-circle"></i>{{ i18n.devices.popupSettings.restrictions.menuTitle }}</a></li>
@@ -34,12 +35,17 @@
 		<form id="form_device" class="form-horizontal">
 			<div class="tabs-section active" data-section="basic">
 				<div class="control-group">
-					<label class="control-label" for="name">{{ i18n.devices.fax.deviceName }}</label>
+					<label class="control-label" for="name">{{ i18n.devices.smartphone.deviceName }}</label>
 					<div class="controls">
 						<input type="text" id="name" name="name" value="{{name}}">
 					</div>
 				</div>
-
+				<div class="control-group">
+					<label class="control-label" for="number">{{ i18n.devices.cellphone.number }}</label>
+					<div class="controls">
+						<input type="text" name="call_forward.number" placeholder="{{ i18n.devices.cellphone.numberPlaceholder }}" value="{{call_forward.number}}">
+					</div>
+				</div>
 				<div class="control-group">
 					<label class="control-label" for="sip_username">{{ i18n.devices.sip.username }}</label>
 					<div class="controls">
@@ -60,17 +66,36 @@
 						<span class="displayed-realm">{{ sip.realm }}</span>
 					</div>
 				</div>
+			</div>
 
+			<div class="tabs-section" data-section="options">
 				<div class="control-group">
-					<label class="control-label" for="media_fax_option">{{ i18n.devices.fax.t38 }}</label>
-					<div class="controls">
-						<select id="media_fax_option" name="media.fax_option">
-							<option{{#compare media.fax_option '===' 'auto'}} selected{{/compare}} value="auto">{{ i18n.devices.fax.auto }}</option>
-							<option{{#compare media.fax_option '===' 'true'}} selected{{/compare}} value="true">{{ i18n.devices.fax.force }}</option>
-							<option{{#compare media.fax_option '===' 'false'}} selected{{/compare}} value="false">{{ i18n.devices.fax.disabled }}</option>
-						</select>
-					</div>
-				</div>
+            		<label class="control-label" for="require_keypress"></label>
+            		<div class="controls">
+                		<label>
+                    		<input id="require_keypress" type="checkbox" name="call_forward.require_keypress"{{#if call_forward.require_keypress}} checked="checked"{{/if}}></input>
+                    		{{ i18n.devices.smartphone.requireKeypress }}
+                		</label>
+            		</div>
+        		</div>
+				<div class="control-group">
+            		<label class="control-label" for="keep_caller_id"></label>
+            		<div class="controls">
+                		<label>
+                    		<input id="keep_caller_id" type="checkbox" name="call_forward.keep_caller_id"{{#if call_forward.keep_caller_id}} checked="checked"{{/if}}></input>
+                    		{{ i18n.devices.smartphone.keepCallerId }}
+                		</label>
+            		</div>
+        		</div>
+				<div class="control-group">
+            		<label class="control-label" for="hide_contact_list"></label>
+            		<div class="controls">
+                		<label>
+                    		<input id="hide_contact_list" type="checkbox" name="contact_list.exclude"{{#if contact_list.exclude}} checked="checked"{{/if}}></input>
+                    		{{ i18n.devices.smartphone.hideContactList }}
+                		</label>
+            		</div>
+        		</div>
 			</div>
 
 			<div class="tabs-section clearfix" data-section="audio">

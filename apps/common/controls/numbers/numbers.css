@@ -182,8 +182,11 @@
 
 #numbers_container .account-section .account-header .right-links a {
 	font-size: 14px;
-	margin-right: 10px;
     white-space: nowrap;
+}
+
+#numbers_container .account-section .account-header .right-links > * {
+	margin-right: 10px;
 }
 
 #numbers_container .account-section .account-header .account-actions {
