@@ -83,15 +83,6 @@ define(function(require){
 					self.isReseller = data.data.is_reseller;
 					if("apps" in data.data) {
 						self.installedApps = data.data.apps;
-						//Temporary fix to reduce the size of the cookie
-						_.each(self.installedApps, function(val, key) {
-							val.i18n = {
-								"en-US": {
-									label: val.label,
-									description: val.label
-								}
-							}
-						});
 					} else {
 						self.installedApps = [];
 						toastr.error(self.i18n.active().toastrMessages.appListError);
@@ -186,8 +177,16 @@ define(function(require){
 
 					if(results.user.appList && results.user.appList.length > 0) {
 						for(var i = 0; i < results.user.appList.length; i++) {
-							if(self.installedApps[results.user.appList[i]]) {
-								defaultApp = self.installedApps[results.user.appList[i]].name;
+							var appId = results.user.appList[i],
+								accountApps = results.account.apps,
+								fullAppList = {};
+
+							_.each(self.installedApps, function(val) {
+								fullAppList[val.id] = val;
+							});
+
+							if(appId in fullAppList && appId in accountApps && (accountApps[appId].all || results.user.id in accountApps[appId].users)) {
+								defaultApp = fullAppList[appId].name;
 								break;
 							}
 						}
