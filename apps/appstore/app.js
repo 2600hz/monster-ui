@@ -145,6 +145,9 @@ define(function(require){
 					}
 				},
 				function(err, results) {
+					if(!("apps" in results.account)) {
+						results.account.apps = {};
+					}
 					_.each(results.apps, function(val, key) {
 						if(val.id in results.account.apps && (results.account.apps[val.id].all || results.account.apps[val.id].users.length > 0)) {
 							val.tags ? val.tags.push("installed") : val.tags = ["installed"];
@@ -205,7 +208,8 @@ define(function(require){
 								})
 							}
 						}),
-						selectedUsersList = $.extend(true, [], account.apps[appId].users),
+						selectedUsersLength = appId in account.apps ? account.apps[appId].users.length : 0,
+						selectedUsersList = appId in account.apps ? $.extend(true, [], account.apps[appId].users) : [],
 						users = $.map($.extend(true, [], userList), function(val, key) {
 							if(selectedUsersList.length) {
 								for(var i=0; i<selectedUsersList.length; i++) {
@@ -222,7 +226,7 @@ define(function(require){
 							app: app,
 							users: users,
 						 	i18n: {
-								selectedUsers: account.apps[appId].users.length,
+								selectedUsers: selectedUsersLength,
 							  	totalUsers: users.length
 						  	}
 						})),
@@ -233,20 +237,20 @@ define(function(require){
 
 					appSwitch.bootstrapSwitch();
 
-					if(account.apps[appId].users.length > 0) {
+					if(!("apps" in account) || !(appId in account.apps) || (!account.apps[appId].all && account.apps[appId].users.length === 0)) {
+						appSwitch.bootstrapSwitch('setState', false);
+						rightContainer.find('.permissions-bloc').hide();
+					} else if(account.apps[appId].users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
 						rightContainer.find('#app_popup_select_users_link').html(
-							monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: account.apps[appId].users.length })
+							monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
 						);
-					} else if(!account.apps[appId].all) {
-						appSwitch.bootstrapSwitch('setState', false);
-						rightContainer.find('.permissions-bloc').hide();
-					}
+					} 
 
 					self.bindPopupEvents(template, app, appstoreData);
 
-					rightContainer.find('.selected-users-number').html(account.apps[appId].users.length);
+					rightContainer.find('.selected-users-number').html(selectedUsersLength);
 					rightContainer.find('.total-users-number').html(users.length);
 
 					monster.ui.prettyCheck.create(userListContainer);
@@ -273,7 +277,7 @@ define(function(require){
 		bindPopupEvents: function(parent, app, appstoreData) {
 			var self = this,
 				userList = parent.find('.user-list'),
-				selectedUsersCount = appstoreData.account.apps[app.id].users.length,
+				selectedUsersCount = app.id in appstoreData.account.apps ? appstoreData.account.apps[app.id].users.length : 0,
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
 					var icon = parent.find('.toggle-button-bloc i'),
 						errorFunction = function() {
@@ -298,6 +302,9 @@ define(function(require){
 						},
 						success: function(data, status) {
 							appstoreData.account = data.data;
+							if(!("apps" in appstoreData.account)) {
+								appstoreData.account.apps = {};
+							}
 							appstoreData.account.apps[app.id] = appInstallInfo;
 							monster.request({
 								resource: 'appstore.account.update',
@@ -333,7 +340,7 @@ define(function(require){
 			parent.find('.toggle-button-bloc .switch').on('switch-change', function(e, data) {
 				var $this = $(this),
 					previousSettings = $.extend(true, {}, appstoreData.account.apps[app.id]),
-					isInstalled = (previousSettings.all || previousSettings.users.length > 0);
+					isInstalled = (app.id in appstoreData.account.apps && (previousSettings.all || previousSettings.users.length > 0));
 				if(data.value != isInstalled) {
 					if(data.value) {
 						updateAppInstallInfo(
@@ -444,7 +451,7 @@ define(function(require){
 				e.preventDefault();
 				var selectedUsers = form2object('app_popup_user_list_form').users;
 				if(selectedUsers) {
-					var appInstalledInfo = {
+					var appInstallInfo = {
 						all: false,
 						users: $.map(selectedUsers, function(val) {
 							return { id: val };
@@ -456,14 +463,14 @@ define(function(require){
 					});
 
 					parent.find('#app_popup_select_users_link').html(
-						monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: appInstalledInfo.users.length })
+						monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: appInstallInfo.users.length })
 					);
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();
 					// userList.getNiceScroll()[0].resize();
 
-					updateAppInstallInfo(appInstalledInfo);
+					updateAppInstallInfo(appInstallInfo);
 				} else {
 					monster.ui.alert(self.i18n.active().alerts.noUserSelected)
 				}
