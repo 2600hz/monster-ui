@@ -215,8 +215,9 @@ define(function(require){
 					});
 
 					userApps = $.grep(userApps, function(appId) {
-						var app = fullAppList[appId];
-						if(app && appId in accountApps && (accountApps[appId].all || self.userId in accountApps[appId].users)) {
+						var app = fullAppList[appId],
+							userArray = $.map(accountApps[appId].users, function(val) { return val.id });
+						if(app && appId in accountApps && (accountApps[appId].all || userArray.indexOf(self.userId) >= 0)) {
 							appList.push({
 								id: appId,
 								name: app.name,
@@ -231,7 +232,8 @@ define(function(require){
 					});
 
 					_.each(accountApps, function(val, key) {
-						if(key in accountApps && (accountApps[key].all || self.userId in accountApps[key].users)) {
+						var userArray = $.map(accountApps[key].users, function(val) { return val.id });
+						if(accountApps[key].all || userArray.indexOf(self.userId) >= 0) {
 							appList.push({
 								id: key,
 								name: fullAppList[key].name,
