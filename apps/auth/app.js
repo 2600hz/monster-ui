@@ -168,6 +168,7 @@ define(function(require){
 				else {
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
+					results.account.apps = results.account.apps || {};
 
 					self.currentUser = results.user;
 					// This account will remain unchanged, it should be used by non-masqueradable apps

@@ -190,22 +190,14 @@ define(function(require){
 		getUserApps: function(callback) {
 			var self = this;
 
-			monster.parallel({
-					account: function(callback) {
-						monster.request({
-							resource: 'apploader.account.get',
-							data: {
-								accountId: self.accountId,
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					}
+			monster.request({
+				resource: 'apploader.account.get',
+				data: {
+					accountId: self.accountId,
 				},
-				function(err, results) {
+				success: function(data, status) {
 					var fullAppList = {}, // Full list of existing apps
-						accountApps = $.extend(true, {}, results.account.apps), // List of apps available on the account, with list of enabled user
+						accountApps = $.extend(true, {}, data.data.apps), // List of apps available on the account, with list of enabled user
 						userApps = monster.apps['auth'].currentUser.appList || [], // List of apps on the user, used for ordering and default app only
 						updateUserApps = false,
 						appList = []; // List of apps available for this user, to be return
@@ -216,7 +208,7 @@ define(function(require){
 
 					userApps = $.grep(userApps, function(appId) {
 						var app = fullAppList[appId],
-							userArray = $.map(accountApps[appId].users, function(val) { return val.id });
+							userArray = appId in accountApps ? $.map(accountApps[appId].users, function(val) { return val.id }) : [];
 						if(app && appId in accountApps && (accountApps[appId].all || userArray.indexOf(self.userId) >= 0)) {
 							appList.push({
 								id: appId,
@@ -232,7 +224,7 @@ define(function(require){
 					});
 
 					_.each(accountApps, function(val, key) {
-						var userArray = $.map(accountApps[key].users, function(val) { return val.id });
+						var userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
 						if(accountApps[key].all || userArray.indexOf(self.userId) >= 0) {
 							appList.push({
 								id: key,
@@ -262,7 +254,7 @@ define(function(require){
 
 					callback && callback(appList);
 				}
-			);
+			});
 		}
 	};
 
