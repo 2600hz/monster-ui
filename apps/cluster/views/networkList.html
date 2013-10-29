@@ -1,0 +1,28 @@
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>     
+				<th data-toggle="true">Provider</th>
+				<!--<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
+				<th data-hide="xs,sm,md,lg">Message</th>-->
+				<th data-hide="xs,sm,md,lg">IP Address</th>
+				<th data-hide="xs,sm,md,lg">Min Ping</th>
+				<th data-hide="xs,sm,md,lg">Max Ping</th>
+				<th data-hide="xs,sm,md,lg">Status</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			{{#each network}}
+					<tr>
+						<td data-type="alpha">
+							{{provider}}
+						</td>
+						<td data-type="alpha">{{ip_address}}</td>
+						<td data-type="alpha">{{min_ping}}</td>
+						<td data-type="alpha">{{max_ping}}</td>
+						<td data-type="alpha">{{status}}</td>
+					</tr>
+			{{/each}}
+		</tbody>
+	</table>

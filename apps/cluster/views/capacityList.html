@@ -1,0 +1,27 @@
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th data-toggle="true">Carrier</th>
+				<!--<th data-hide="xs,sm,md,lg">Region &amp; Zone</th>
+				<th data-hide="xs,sm,md,lg">Message</th>-->
+				<th data-hide="xs,sm,md,lg">Something</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			{{#each carriers}}
+					<tr>
+						<td data-value="server_{{status}} {{ip}} {{dn}}">
+							CarrierName
+						</td>
+						<!--<td data-value="{{city}} {{country}}">
+							<img src="css/flags/32/{{country}}.png" alt="{{country}}" title="{{country}}">
+							{{city}}
+						</td>
+						<td data-type="alpha">{{alert}}</td>-->
+						<td data-type="numeric">{{queues}}</td>
+					</tr>
+			{{/each}}
+		</tbody>
+	</table>
