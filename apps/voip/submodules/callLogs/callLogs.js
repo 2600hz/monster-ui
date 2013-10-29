@@ -195,8 +195,9 @@ define(function(require){
 					var cdrs = {};
 					_.each(data.data, function(val) {
 						if(val.direction === 'inbound') {
-							if(!(val.id in cdrs)) { cdrs[val.id] = {}; }
-							cdrs[val.id].aLeg = val;
+							var call_id = val.call_id || val.id;
+							if(!(call_id in cdrs)) { cdrs[call_id] = {}; }
+							cdrs[call_id].aLeg = val;
 						} else {
 							if('other_leg_call_id' in val) {
 								if(!(val.other_leg_call_id in cdrs)) { cdrs[val.other_leg_call_id] = {}; }
