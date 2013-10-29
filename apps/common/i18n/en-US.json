@@ -4,6 +4,7 @@
 	},
 
 	"numbers": {
+		"mainNumber": "Office Number",
 		"dialogSpare": {
 			"title": "List of Spare Numbers",
 			"headline": "Spare Numbers of",
