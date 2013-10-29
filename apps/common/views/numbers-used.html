@@ -10,14 +10,16 @@
 <div class="accounts-numbers">
 	{{#each listAccounts}}
     	<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
-        	<div class="account-header">
-            	<div class="left-part">
-            	</div>
-            	<div class="expandable">
-                	{{ name }}
-                	<span class="count">({{ countUsedNumbers }})</span>
-            	</div>
-        	</div>
+    		{{#compare ../viewType '!==' 'pbx'}}
+        		<div class="account-header">
+            		<div class="left-part">
+            		</div>
+            		<div class="expandable">
+                		{{ name }}
+                		<span class="count">({{ countUsedNumbers }})</span>
+            		</div>
+        		</div>
+        	{{/compare}}
         	<div class="numbers-wrapper">
 				{{#each usedNumbers}}
 					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
@@ -46,9 +48,22 @@
 						</div>
 
 						<div class="used-by">
-							{{#compare ../../viewType '===' 'pbx'}}
-							{{else}}
+							{{#compare ../../viewType '!==' 'pbx'}}
 								{{ this.friendlyUsedBy }}
+							{{else}}
+								{{#compare this.ownerType '===' 'user'}}
+									<i class="icon-telicon-seats"></i>
+								{{else}}
+									{{#compare this.ownerType '===' 'group'}}
+										<i class="icon-group"></i>
+									{{else}}
+										{{#compare this.ownerType '===' 'main'}}
+											<i class="icon-moon"></i>
+										{{/compare}}
+									{{/compare}}
+								{{/compare}}
+
+								{{ this.owner }}
 							{{/compare}}
 						</div>
 

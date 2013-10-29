@@ -31,6 +31,18 @@ define(function(require){
 				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify',
 				verb: 'GET'
 			},
+			'common.numbers.listCallflows': {
+				url: 'accounts/{accountId}/callflows',
+				verb: 'GET'
+			},
+			'common.numbers.listUsers': {
+				url: 'accounts/{accountId}/users',
+				verb: 'GET'
+			},
+			'common.numbers.listGroups': {
+				url: 'accounts/{accountId}/groups',
+				verb: 'GET'
+			}
 		},
 
 		subscribe: {
@@ -318,16 +330,20 @@ define(function(require){
 							displayNumberList(accountId, function(numbers) {
 								parent.find('.account-section[data-id="'+accountId+'"]').addClass('open');
 							}, true);
-							// var numbersData = $.map(numbers, function(val, key) {
-							// 	return { phone_number: key };
-							// });
+						}
+					}
+				});
+			});
 
-							// self.getAccount(function(globalData) {
-							// 	self.addNumbers(globalData, serverId, numbersData, function() {
-							// 		self.listNumbersByPbx(serverId, callback_listing);
-							// 		self.renderList(serverId);
-							// 	});
-							// });
+			parent.on('click', '.actions-wrapper .buy-numbers-dropdown .buy-numbers-link', function(e) {
+				var accountId = self.accountId;
+
+				monster.pub('common.buyNumbers', {
+					accountId: self.accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(self.accountId, function(numbers) {}, true);
 						}
 					}
 				});
@@ -860,9 +876,121 @@ define(function(require){
 			});
 		},
 
-		numbersList: function(accountId, callback) {
+		numbersList: function(accountId, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					callflows: function(callback) {
+						self.numbersListCallflows(accountId, function(callflows) {
+							callback && callback(null, callflows);
+						});
+					},
+					groups: function(callback) {
+						self.numbersListGroups(accountId, function(groups) {
+							callback && callback(null, groups);
+						});
+					},
+					users: function(callback) {
+						self.numbersListUsers(accountId, function(users) {
+							callback && callback(null, users);
+						});
+					},
+					numbers: function(callback) {
+						self.numbersListNumbers(accountId, function(numbers) {
+							callback && callback(null, numbers);
+						});
+					}
+				},
+				function(err, results) {
+					self.numbersFormatList(results);
+
+					globalCallback && globalCallback(results.numbers);
+				}
+			);
+		},
+
+		numbersFormatList: function(data) {
 			var self = this,
-				mapCountry = {
+				mapUsers = {},
+				mapGroups = {};
+
+			_.each(data.users, function(user) {
+				mapUsers[user.id] = user;
+			});
+
+			_.each(data.groups, function(group) {
+				mapGroups[group.id] = group;
+			});
+
+			_.each(data.callflows, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number in data.numbers.numbers) {
+						if(callflow.owner_id) {
+							var user = mapUsers[callflow.owner_id];
+
+							data.numbers.numbers[number].owner = user.first_name + ' ' + user.last_name;
+							data.numbers.numbers[number].ownerType = 'user';
+						}
+						else if(callflow.group_id) {
+							data.numbers.numbers[number].owner = mapGroups[callflow.group_id].name;
+							data.numbers.numbers[number].ownerType = 'group';
+						}
+						else if(callflow.type && callflow.type === 'main') {
+							data.numbers.numbers[number].owner = self.i18n.active().numbers.mainNumber;
+							data.numbers.numbers[number].ownerType = 'main';
+						}
+					}
+				});
+			});
+
+			return data;
+		},
+
+		numbersListUsers: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listUsers',
+				data: {
+					accountId: accountId
+				},
+				success: function(users, status) {
+					callback && callback(users.data);
+				}
+			});
+		},
+
+		numbersListCallflows: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listCallflows',
+				data: {
+					accountId: accountId
+				},
+				success: function(callflows, status) {
+					callback && callback(callflows.data);
+				}
+			});
+		},
+
+		numbersListGroups: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listGroups',
+				data: {
+					accountId: accountId
+				},
+				success: function(groups, status) {
+					callback && callback(groups.data);
+				}
+			});
+		},
+
+		numbersListNumbers: function(accountId, callback) {
+			var self = this;
+				/*mapCountry = {
 					'FR': 'Paris, France',
 					'DE': 'Berlin, Germany',
 					'US': 'San Francisco, CA',
@@ -875,7 +1003,7 @@ define(function(require){
 					'NZ': 'Wellington, New-Zealand',
 					'UA': 'Kiev, Ukraine'
 				},
-				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];
+				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];*/
 
 			monster.request({
 				resource: 'common.numbers.list',
@@ -884,10 +1012,10 @@ define(function(require){
 				},
 				success: function(_dataNumbers, status) {
 					/* TODO REMOVE */
-					$.each(_dataNumbers.data.numbers, function(k, v) {
+					/*$.each(_dataNumbers.data.numbers, function(k, v) {
 						v.isoCountry = randomArray[Math.floor((Math.random()*100)%(randomArray.length))];
 						v.friendlyLocality = mapCountry[v.isoCountry];
-					});
+					});*/
 
 					callback && callback(_dataNumbers.data);
 				}

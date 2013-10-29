@@ -109,7 +109,11 @@
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality {
-	width: 300px;
+	width: 250px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .used-by i {
+	margin-right: 5px;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality, #numbers_container .account-section .numbers-wrapper .number-box .used-by {
@@ -237,9 +241,6 @@
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .numbers-wrapper .number-box:nth-last-of-type(1) {
-    border-bottom-left-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
-
     border-bottom-width: 1px;
 }
 
@@ -251,6 +252,10 @@
 
 #numbers_container .actions-wrapper #trigger_links {
     display: none;
+}
+
+#numbers_container .buy-numbers-dropdown {
+	display: inline-block;
 }
 
 #numbers_container .search-custom {
