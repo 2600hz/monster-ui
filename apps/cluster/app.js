@@ -69,6 +69,7 @@ define(function(require){
 						var status = ['up', 'up', 'up', 'warning', 'down'],
 							alerts = ['Database HTTPS Error', 'Server Version Old'];
 
+						/*
 						data.servers[server].status = status[Math.floor(Math.random() * status.length)];
 
 						data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
@@ -81,7 +82,7 @@ define(function(require){
 						
 						data.servers[server].speed = Math.floor(Math.random() * 500) + 1;
 						data.servers[server].ping = Math.floor(Math.random() * 150) + 1;
-
+						*/
 						/*
 						if ( data.servers[server].status == 'warning' || data.servers[server].status == 'down' ) {
 							data.servers[server].alert = alerts[Math.floor(Math.random() * alerts.length)];
@@ -185,7 +186,7 @@ define(function(require){
 					cluster: cluster
 				},
 				success: function(data, status) {
-
+					console.log(self.accountId);
 					data.cluster=cluster;
 					console.log(data);
 
