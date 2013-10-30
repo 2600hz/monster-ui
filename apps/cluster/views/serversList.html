@@ -1,4 +1,10 @@
-<div id="servers_list" data-view="list">
+<div id='php'></div>
+
+	
+
+
+
+
 	<table class="footable table table-bordered" data-filter="#filter">
 		<thead>
 			<tr>
@@ -10,9 +16,15 @@
 				<th data-hide="xs,sm">NIC1</th>
 				<th data-hide="xs,sm">NIC2</th>
 				<th data-hide="xs,sm">VPN</th>
-				<th data-hide="xs">CPU</th>
-				<th data-hide="xs">RAM</th>
-				<th data-hide="xs">DISK</th>
+				<th data-hide="xs">CPU
+					<div class="barmetric" client='all' metric='CPUPercentUsed'>Graph</div>
+				</th>
+				<th data-hide="xs">RAM 
+					<div class="barmetric" client='all' metric='MemPercentUsed'>Graph</div>
+				</th>
+				<th data-hide="xs">DISK
+					<div class="barmetric" client='all' metric='HDPercentUsed'>Graph</div>
+				</th>
 				<th data-sort-ignore="true">Actions</th>
 			</tr>
 		</thead>
@@ -32,7 +44,10 @@
 					<img src="css/flags/32/{{country}}.png" alt="{{country}}" title="{{country}}">
 					{{city}}
 				</td>
-				<td data-type="alpha">{{alert}}</td>
+				<td data-type="alpha">
+					{{#each alert}}
+						<button class='btn btn-sensuevent' client='{{dn}}' check='{{@key}}' output='{{this}}'>{{@key}}</button>
+					{{/each}}</td>
 				<td data-type="numeric">{{speed}}</td>
 				<td data-type="numeric">{{ping}}</td>
 				<td data-value="{{#if nic1}}nic_up nic1_up{{else}}nic_down nic1_down{{/if}}">
@@ -57,26 +72,34 @@
 					{{/if}}
 				</td>
 				<td data-value="{{cpu}}{{#if cpu_overload}} cpu_overload overload{{/if}}">
-					<div class="progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}">
-						<div class="bar" style="width: {{cpu}}%;"></div>
+					<div class="barmetric progress{{#if cpu_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='CPUPercentUsed'>
+						<div class="bar"  style="width: {{cpu}}%;"></div>
 					</div>
 					<span>{{cpu}}%</span>
 				</td>
 				<td data-value="{{ram}}{{#if ram_overload}} ram_overload overload{{/if}}">
-					<div class="progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}">
+					<div class="barmetric progress{{#if ram_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='MemPercentUsed'>
 						<div class="bar" style="width: {{ram}}%;"></div>
 					</div>
 					<span>{{ram}}%</span>
 				</td>
 				<td data-value="{{disk}}{{#if disk_overload}} disk_overload overload{{/if}}">
-					<div class="progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}">
+					<div class="barmetric progress{{#if disk_overload}} progress-danger{{else}} progress-success{{/if}}" client='{{dn}}' metric='HDPercentUsed'>
 						<div class="bar" style="width: {{disk}}%;"></div>
 					</div>
 					<span>{{disk}}%</span>
 				</td>
-				<td><i class="icon-cog"></i></td>
+				<td><nobr><i class="icon-cog"></i> 
+				 
+					 <select class='selaction' client='{{ip}}' id='sel_{{dn}}'>
+							<option value='sensu_client_config'>Sensu Config</option>
+							<option value='kz-ecallmgr'>System Info</option>
+							<option value='reboot'>Reboot</option>
+						 </select>
+					 </nobr>
+					<div><button class='btn btnaction' ip='{{ip}}' client='{{dn}}'>Go</button></div>
+				</td>
 			</tr>
 			{{/each}}
 		</tbody>
 	</table>
-</div>

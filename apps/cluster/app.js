@@ -8,32 +8,54 @@ define(function(require){
 		monster = require('monster');
 
 	var app = {
-
 		name: 'cluster',
+		cmapi: 'http://localhost/2600/v1/accounts/accountidhere/',
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
+		 
 			'servers.list': {
+				//apiRoot: 'http://www.colelabs.com/2600/v1/accounts/{accountId}/',
+				apiRoot: 'http://localhost/2600/v1/accounts/{accountId}/',
+				url: 'system/{cluster}',
+				verb: 'GET'
+			},
+			'localservers.list': {
 				apiRoot: 'apps/cluster/static/data/',
-				url: 'servers.json',
+				//apiRoot: this.cmapi ,
+				url: '{cluster}.json',
 				verb: 'GET'
-			}/*,
-			'servers.list': {
-				api_url: 'accounts/{accountId}/servers',
-				verb: 'GET'
-			}*/
+			} 
+
 		},
 
 		subscribe: {},
 
 		load: function (callback) {
 			var self = this;
-
-			callback && callback(self);
+			self.initApp(function() { 
+				callback && callback(self);
+			});
 		},
 
-		render: function (container) {
+		initApp: function(callback) {
+			var self = this;
+			monster.pub('auth.initApp', {
+				app: self,
+				callback: callback
+			});
+		},
+		
+		render: function (container, cluster) {
+
+			 //Find better place to stick this
+			 window.Handlebars.registerHelper('select', function( value, options ){
+		        var $el = $('<select />').html( options.fn(this) );
+		        $el.find('[value=' + value + ']').attr({'selected':'selected'});
+		        return $el.html();
+		    });
+
 			var self = this,
 				format = function (data) {
 					for (var server in data.servers) {
@@ -47,25 +69,27 @@ define(function(require){
 						var status = ['up', 'up', 'up', 'warning', 'down'],
 							alerts = ['Database HTTPS Error', 'Server Version Old'];
 
+						/*
 						data.servers[server].status = status[Math.floor(Math.random() * status.length)];
 
 						data.servers[server].nic1 = ( Math.round(Math.random()) == 1 ) ? true : false;
 						data.servers[server].nic2 = ( Math.round(Math.random()) == 1 ) ? true : false;
 						data.servers[server].vpn = ( Math.round(Math.random()) == 1 ) ? true : false;
-
+						
 						data.servers[server].cpu = Math.floor((Math.random() * 100) + 1);
 						data.servers[server].ram = Math.floor((Math.random() * 100) + 1);
 						data.servers[server].disk = Math.floor((Math.random() * 100) + 1);
-
+						
 						data.servers[server].speed = Math.floor(Math.random() * 500) + 1;
 						data.servers[server].ping = Math.floor(Math.random() * 150) + 1;
-
+						*/
+						/*
 						if ( data.servers[server].status == 'warning' || data.servers[server].status == 'down' ) {
 							data.servers[server].alert = alerts[Math.floor(Math.random() * alerts.length)];
 						} else {
 							data.servers[server].alert = 'No error';
 						}
-
+						*/
 						// data.servers[server].role = data.servers[server].type;
 						// delete data.servers[server].type;
 
@@ -146,21 +170,48 @@ define(function(require){
 					return formattedData;
 				};
 
+			if (!cluster)
+				cluster='kawlinlocal';
+
+
+			if (cluster=='local1' || cluster == '2600hzlocal' || cluster == 'kawlinlocal')
+				apiresource='localservers.list';
+			else
+				apiresource='servers.list';
+
 			monster.request({
-				resource: 'servers.list',
-				data: {},
+				resource: apiresource,
+				data: {
+					accountId: self.accountId,
+					cluster: cluster
+				},
 				success: function(data, status) {
-					var data = format(data),
-						container = container || $('div#ws-content'),
-						serversStatus = formatToServersStatus(data),
-						clusterManagerTemplate = $(monster.template(self, 'app', serversStatus));
+					console.log(self.accountId);
+					data.cluster=cluster;
+					console.log(data);
 
-					container
-						.empty()
-						.append(clusterManagerTemplate);
+					if (data.noauth) {
+						//alert("You need to log in first!");
+						console.log(data);
+						var container =  $('div#ws-content');
+							clusterManagerTemplate = $(monster.template(self, 'login', data));
+						container
+							.empty()
+							.append(clusterManagerTemplate);	
+					}
+					else { 
+						var data = format(data),
+							container = container || $('div#ws-content'),
+							serversStatus = formatToServersStatus(data),
+							clusterManagerTemplate = $(monster.template(self, 'app', serversStatus));
 
-					self.renderServersView(clusterManagerTemplate, data);
-					self.bindEvents(clusterManagerTemplate, data);
+						container
+							.empty()
+							.append(clusterManagerTemplate);
+
+						self.renderServersView(clusterManagerTemplate, data);
+						self.bindEvents(clusterManagerTemplate, data);
+					}
 
 				}
 			});
@@ -175,8 +226,15 @@ define(function(require){
 				filterServersByType = function(data, serverType) {
 					var formattedData = { servers: [] },
 						serverType = ( serverType == 'servers' ) ? 'all' : serverType;
+						formattedData.serverFilter=serverType;
 
-					if ( serverType != 'all' ) {
+					if (serverType != 'all') {
+						data.serverFilter=serverType;
+					}
+					else
+						data.serverFilter = null;
+
+					if ( serverType != 'all' && serverType != 'carrier' && serverType != 'network' && serverType != 'security' && serverType != 'capacity') {
 						for (var server in data.servers) {
 							if ( data.servers[server].type == serverType ) {
 								formattedData.servers.push(data.servers[server]);
@@ -188,15 +246,19 @@ define(function(require){
 						return data;
 					}
 				};
+			
 
-			parent.find('div.left-menu').find('ul:first-child').find('li.nav-item:not(.role)').on('click', function () {
+//			parent.find('div.left-menu').find('ul:first-child').find('li.nav-item:not(.role)').on('click', function () {
+			parent.find('div.left-menu').find('ul').find('li.nav-item:not(.role)').on('click', function () {
 				parent
 					.find('div.left-menu')
-					.find('ul:first-child')
+					.find('ul')
+					//.find('ul:first-child')
 					.find('li.nav-item.active')
 					.removeClass('active');
 
 				$(this).addClass('active');
+		
 
 				self.renderServersView(
 					parent,
@@ -217,14 +279,26 @@ define(function(require){
 				viewType = ( typeof viewType != 'undefined' ) ? viewType : 'list';
 
 			activeView[viewType] = true;
+			activeView['cluster']=data.cluster;
 
 			parent
 				.find('div.right-content')
 				.empty()
 				.append($(monster.template(self, 'serversView', activeView)));
+			
 
+			if (data.serverFilter)
+				parent
+					.find('div#servers_view_container').find('div#servers_list')
+					.prepend($(monster.template(
+						self,
+						data.serverFilter + 'List',
+						data
+					)));		
+
+			if (data.serverFilter != 'carrier' && data.serverFilter != 'network' && data.serverFilter != 'security' && data.serverFilter != 'capacity' )
 			parent
-				.find('div#servers_view_container')
+				.find('div#servers_view_container').find('div#servers_list')
 				.append($(monster.template(
 					self,
 					'servers' + viewType.charAt(0).toUpperCase() + viewType.slice(1),
@@ -245,6 +319,7 @@ define(function(require){
 					parent
 						.find('.footable')
 						.footable($, footable);
+
 			}
 
 			self.bindServersViewEvents(parent, data);
@@ -299,15 +374,89 @@ define(function(require){
 						parent
 							.find('.footable')
 							.footable($, footable);
-					}
+
+					}					
 				}
 			});
+	
+			//Action Dropdown
+			parent.find('button.btnaction').on('click', function () {
+			dn = $(this).attr('client');
+			ip = $(this).attr('ip');				
+			command = $("#sel_"+dn).val();
+			//alert(command);
+			$("#php").html("");	
+			$("#php").load(self.cmapi + "ssh", 
+				{ip:ip, command:command}, 
+				function() {
+					$( "#php" ).attr("title",ip + '-' + command);
+					$( "#php" ).dialog();
+				});
+
+			});
+
+			//CPU, MEM, HD Metrics
+			parent.find('.barmetric').on('click', function () {
+				dn = $(this).attr('client');
+				metric = $(this).attr('metric');				
+				///////$("#php").html("<img width='95%' height='95%' src='" + self.cmapi + "show_graph/"+dn+"/"+metric+"'>");
+				$("#php").html("<img width='95%' height='95%' src='apps/cluster/static/images/graphall.png'>");
+				//$("#php").html("<img src='http://localhost/db/2600/index.php/cm/show_graph/"+dn+"/"+metric+"'>");
+				//$("#php").attr("title","");
+				//$("#php").attr("title",dn + '  -  ' + metric);
+				var wWidth = $(window).width();
+				var dWidth = wWidth * 0.8;
+				var wheight = $(window).height();
+				var dheight = wheight * 0.8;
+
+				$("#php").dialog({height:600,  width:800, modal:true, 
+					buttons: {
+						        "Ok!": function() {
+						          $( this ).dialog( "close" );
+						         } 
+						     } 
+				});
+			});
+
+			//Sensu Event Buttons
+			parent.find('.btn-sensuevent').on('click', function () {
+				$("#php").html( $(this).attr("output") );
+				$("#php").dialog({ modal:true, width:500, height:300, title:$(this).attr('check'), 
+					buttons: {
+						        "Silence Client": function() {
+						          $( this ).dialog( "close" );
+						         },
+						         "Silence Check": function() {
+						          $( this ).dialog( "close" );
+						         },
+						          "Resolve": function() {
+						          $( this ).dialog( "close" );
+						         }
+						     } 
+				});
+			});
+
+
+			//Cluster Selection Dropdown
+			parent.find('#selcluster').on('change', function () {
+					targetcluster=$("#selcluster").val(); 
+					$("#servers_list").fadeOut(2000);
+					self.render(null, targetcluster);
+			});
+
+			parent.find('.regionfilter').on('click', function() {
+				alert('werdup');
+			});
+
 		},
+
 
 		/* Expected params:
 			parent (mandatory),
 			data (mandatory)
 		*/
+
+
 		renderMap: function (parent, data) {
 			var self = this,
 				markers = new Array(),
