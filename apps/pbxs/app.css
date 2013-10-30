@@ -459,6 +459,12 @@
 	border-top: 1px solid #fff;
 }
 
+
+#ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_numbers_wrapper .unassigned-number .phone-number {
+	display: inline-block;
+	width: 150px;
+}
+
 #ws-content #list_pbxs_navbar #unassigned_numbers .content #unassigned_numbers_wrapper .unassigned-number input[type="checkbox"] {
 	margin: 0 10px 0 0;
 }
@@ -743,6 +749,8 @@
 
 #ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .phone-number {
 	margin-left: 4px;
+	display: inline-block;
+	width: 135px;
 }
 
 #ws-content #pbx_connector_container #search_results #count_result {
@@ -762,11 +770,19 @@
 	#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper {
 		margin-right: 0;
 	}
+
+	#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .flag {
+		display: none;
+	}
 }
 
 @media (min-width: 663px) and (max-width: 962px) {
 	#ws-content #pbx_connector_container {
 		width: 582px; /* 2 columns of 300px + padding and borders */
+	}
+
+	#ws-content #pbx_connector_container .numbers-wrapper div.number-wrapper .flag {
+		display: none;
 	}
 }
 

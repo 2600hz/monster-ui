@@ -1,50 +1,52 @@
 <div id="actions_wrapper_used" class="actions-wrapper">
-    <div class="form-inline">
+	<div class="form-inline">
 		<div class="input-append pull-right search-custom">
 			<input class="span2" type="text" placeholder="{{ i18n.numbers.searchNumbers }}"/>
 			<button class="btn btn-success search-numbers" type="button">{{ i18n.numbers.go }}</button>
 		</div>
-    </div>
+	</div>
 </div>
 
 <div class="accounts-numbers">
 	{{#each listAccounts}}
-    	<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
-    		{{#compare ../viewType '!==' 'pbx'}}
-        		<div class="account-header">
-            		<div class="left-part">
-            		</div>
-            		<div class="expandable">
-                		{{ name }}
-                		<span class="count">({{ countUsedNumbers }})</span>
-            		</div>
-        		</div>
-        	{{/compare}}
-        	<div class="numbers-wrapper">
+		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
+			{{#compare ../viewType '!==' 'pbx'}}
+				<div class="account-header">
+					<div class="left-part">
+					</div>
+					<div class="expandable">
+						{{ name }}
+						<span class="count">({{ countUsedNumbers }})</span>
+					</div>
+				</div>
+			{{/compare}}
+			<div class="numbers-wrapper">
 				{{#each usedNumbers}}
 					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
 						<div class="number-options pull-right">
-        					<div class="navbar">
-            					<ul class="nav pull-right">
-                					<li class="dropdown">
-                    					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
-                    					<ul class="dropdown-menu">
-                        					<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../../i18n.callerId.label }}</a></li>
-                        					<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../../i18n.e911.label }}</a></li>
-                        					{{#compare this.used_by "===" "trunkstore"}}
-                        						<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../../i18n.failover.label }}</a></li>
-                        					{{/compare}}
-                    					</ul>
-                					</li>
-            					</ul>
-        					</div>
-    					</div>
+							<div class="navbar">
+								<ul class="nav pull-right">
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+										<ul class="dropdown-menu">
+											<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../../i18n.callerId.label }}</a></li>
+											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../../i18n.e911.label }}</a></li>
+											{{#compare this.used_by "===" "trunkstore"}}
+												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../../i18n.failover.label }}</a></li>
+											{{/compare}}
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
 						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
 						<div class="locality">
-							<!--
-							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
-							<span class="city">{{ this.friendlyLocality }}</span>
-							-->
+							{{#if this.isoCountry }}
+								<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
+							{{/if}}
+							{{#if this.friendlyLocality }}
+								<span class="city">{{ this.friendlyLocality }}</span>
+							{{/if}}
 						</div>
 
 						<div class="used-by">
@@ -67,20 +69,20 @@
 							{{/compare}}
 						</div>
 
-        				<div class="features pull-right">
+						<div class="features pull-right">
 							{{#if this.viewFeatures}}
-            					{{#each this.viewFeatures}}
-                        			<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
-            					{{/each}}
-    						{{/if}}
-        				</div>
+								{{#each this.viewFeatures}}
+									<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+								{{/each}}
+							{{/if}}
+						</div>
 					</div>
 				{{else}}
 					<div class="number-box disabled no-data">
 						{{ ../../i18n.numbers.noUsedNumber }}
 					</div>
 				{{/each}}
-        	</div>
-    	</div>
+			</div>
+		</div>
 	{{/each}}
 </div>

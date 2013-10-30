@@ -20,6 +20,14 @@
 				<div class="number-box" data-number="{{this.phoneNumber}}" data-search="{{this.phoneNumber}} {{formatPhoneNumber this.phoneNumber}}">
 					<input type="checkbox"></input>
 					<span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>
+					<span class="locality">
+						{{#if this.isoCountry }}
+							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
+						{{/if}}
+						{{#if this.friendlyLocality }}
+							<span class="city">{{ this.friendlyLocality }}</span>
+						{{/if}}
+					</span>
 				</div>
 			{{else}}
 				<div class="number-box no-data">

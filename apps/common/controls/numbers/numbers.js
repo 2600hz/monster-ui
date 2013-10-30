@@ -88,6 +88,10 @@ define(function(require){
 			var self = this;
 
 			value.viewFeatures = self.numbersGetFeatures();
+			if('locality' in value) {
+				value.isoCountry = value.locality.country || '';
+				value.friendlyLocality = 'city' in value.locality ? value.locality.city + ('state' in value.locality ? ', ' + value.locality.state : '') : '';
+			}
 
 			_.each(value.features, function(feature) {
 				value.viewFeatures[feature].active = 'active';
@@ -785,14 +789,16 @@ define(function(require){
 
 		/* AccountID and Callback in args */
 		numbersFormatDialogSpare: function(data) {
-			var formattedData = {
-				accountName: data.accountName,
-				numbers: {}
-			};
+			var self = this,
+				formattedData = {
+					accountName: data.accountName,
+					numbers: {}
+				};
 
 			_.each(data.numbers, function(number, id) {
 				if(number.used_by === '') {
 					number.phoneNumber = id;
+					number = self.numbersFormatNumber(number);
 					formattedData.numbers[id] = number;
 				}
 			});
