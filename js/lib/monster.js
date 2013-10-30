@@ -6,7 +6,7 @@ define(function(require){
 		handlebars = require('handlebars'),
 		async = require('async'),
 		form2object = require('form2object'),
-		config = require('js/config');
+		config = require('config');
 
 	var monster = {
 		_channel: postal.channel('monster'),
