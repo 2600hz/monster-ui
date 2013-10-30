@@ -36,13 +36,13 @@
 }
 
 #call_logs_container .grid-row-group:not(:last-of-type) {
-	border-bottom: solid 1px #eee;
+	border-bottom: solid 1px #e3e3e3;
 }
 #call_logs_container .grid-row-group:first-of-type {
 	border-bottom: solid 1px #ddd;
 }
 #call_logs_container .grid-row-group .grid-row:not(:first-of-type) {
-	border-top: solid 1px #eee;
+	border-top: solid 1px #e3e3e3;
 }
 #call_logs_container .grid-row-group:last-of-type:not(.open) .a-leg {
 	border-bottom-left-radius: 4px;
@@ -69,7 +69,7 @@
 	cursor: pointer;
 }
 #call_logs_container .grid-row.b-leg {
-	background-color: #fefefe;
+	background-color: #e0f3ff;
 	display: none;
 }
 
@@ -83,7 +83,7 @@
 	vertical-align: bottom;
 }
 #call_logs_container .grid-cell:not(:first-of-type) {
-	border-left: solid 1px #EEE;
+	border-left: solid 1px #e3e3e3;
 }
 #call_logs_container .grid-cell.direction {
 	width: 5%;
