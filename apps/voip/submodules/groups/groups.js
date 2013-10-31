@@ -376,8 +376,6 @@ define(function(require){
 			var self = this;
 
 			template.find('.feature[data-feature="voicemails"]').on('click', function() {
-				console.log(data);
-
 				self.groupsRenderVoicemails(data);
 			});
 		},
@@ -777,7 +775,6 @@ define(function(require){
 		},
 
 		groupsFormatNumbersData: function(data, callback) {
-			console.log(data);
 			var self = this,
 				response = {
 					emptyExtensions: true,
@@ -820,7 +817,6 @@ define(function(require){
 				response.emptyExtensions = _.isEmpty(response.extensions);
 				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
 
-				console.log(response);
 				callback && callback(response);
 			});
 		},

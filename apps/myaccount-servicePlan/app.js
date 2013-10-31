@@ -110,7 +110,6 @@ define(function(require){
 							renderData.servicePlanArray = dataArray;
 							renderData.totalAmount = parseFloat(totalAmount).toFixed(2);
 
-							console.log(renderData);
 							callback(null, data);
 						});
 					},

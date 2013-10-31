@@ -236,6 +236,8 @@
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
 		"noNumber": "None",
+		"noNumberCallflow": "You need to assign at least one extension or phone number to this user before saving it",
+		"needExtensionFirst": "We require users to have an extension before assigning them a phone number, please click on the extension section and add one from there.",
 		"noExtension": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",

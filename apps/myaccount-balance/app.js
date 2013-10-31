@@ -169,8 +169,6 @@ define(function(require){
 						window.location.href = self.apiUrl+'/accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 					});
 
-					console.log(renderData);
-
 					monster.ui.table.balance.fnAddData(renderData.tabData);
 
 					balance.find('.popup-marker').clickover();

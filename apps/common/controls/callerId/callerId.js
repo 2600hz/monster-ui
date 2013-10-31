@@ -22,7 +22,6 @@ define(function(require){
 		},
 
 		callerIdRender: function(dataNumber, callbacks) {
-			console.log(dataNumber, callbacks);
 			var self = this,
                 popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
                 popup;

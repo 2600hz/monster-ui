@@ -245,28 +245,25 @@ define(function(require){
 			var self = this,
 				dataTemplate = {
 					existingExtensions: [],
-					countUsers: 0
+					countUsers: data.users.length
 				},
-			    mapAllUsers = {},
-			    mapResultUsers = {};
+			    mapUsers = {};
 
 			_.each(data.users, function(user) {
-				mapAllUsers[user.id] = self.usersFormatUserData(user);
+				mapUsers[user.id] = self.usersFormatUserData(user);
 			});
 
 			_.each(data.callflows, function(callflow) {
 				var userId = callflow.owner_id;
 
 				_.each(callflow.numbers, function(number) {
-					if(number.length < 7) {
+					if(number && number.length < 7) {
 						dataTemplate.existingExtensions.push(number);
 					}
 				});
 
-				if(userId in mapAllUsers) {
-					var user = $.extend(true, {}, mapAllUsers[userId]);
-
-					dataTemplate.countUsers++;
+				if(userId in mapUsers) {
+					var user = mapUsers[userId];
 
 					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
@@ -293,8 +290,6 @@ define(function(require){
 							}
 						}
 					});
-
-					mapResultUsers[userId] = user;
 				}
 			});
 
@@ -303,19 +298,19 @@ define(function(require){
 			_.each(data.devices, function(device) {
 				var userId = device.owner_id;
 
-				if(userId in mapResultUsers) {
-					if(mapResultUsers[userId].extra.devices.length == 2) {
-						mapResultUsers[userId].extra.additionalDevices++;
+				if(userId in mapUsers) {
+					if(mapUsers[userId].extra.devices.length == 2) {
+						mapUsers[userId].extra.additionalDevices++;
 					}
 					else {
-						mapResultUsers[userId].extra.devices.push(device.device_type);
+						mapUsers[userId].extra.devices.push(device.device_type);
 					}
 				}
 			});
 
 			/* Sort by last name */
 			var sortedUsers = [];
-			_.each(mapResultUsers, function(user) {
+			_.each(mapUsers, function(user) {
 				sortedUsers.push(user);
 			});
 
@@ -451,8 +446,10 @@ define(function(require){
 
 			/* Events for Extensions details */
 			template.on('click', '.save-extensions', function() {
-				var numbers = $.extend(true, [], numbersToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+				var $this = $(this),
+					numbers = $.extend(true, [], numbersToSave),
+					name = $this.parents('.grid-row').find('.grid-cell.name').text(),
+					userId = $this.parents('.grid-row').data('id');
 
 				template.find('.extensions .list-assigned-items .item-row').each(function(k, row) {
 					var row = $(row),
@@ -463,9 +460,9 @@ define(function(require){
 					numbers.push(number);
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, numbers, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.usersRender({ userId: callflowData.owner_id });
 				});
 			});
 
@@ -674,16 +671,18 @@ define(function(require){
 
 			/* Events for Numbers in Users */
 			template.on('click', '.save-numbers', function() {
-				var numbers = $.extend(true, [], extensionsToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+				var $this = $(this),
+					numbers = $.extend(true, [], extensionsToSave),
+					name = $this.parents('.grid-row').find('.grid-cell.name').text(),
+					userId = $this.parents('.grid-row').data('id');
 
 				template.find('.detail-numbers .list-assigned-items .item-row').each(function(k, row) {
 					numbers.push($(row).data('id'));
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, numbers, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.usersRender({ userId: callflowData.owner_id });
 				});
 			});
 
@@ -1380,15 +1379,17 @@ define(function(require){
 					});
 				}
 
-				/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
-				_.each(response.callflow.numbers, function(number) {
-					if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
-						response.assignedNumbers[number] = data.numbers.numbers[number];
-					}
-					else {
-						response.extensions.push(number);
-					}
-				});
+				if(response.callflow) {
+					/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
+					_.each(response.callflow.numbers, function(number) {
+						if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
+							response.assignedNumbers[number] = data.numbers.numbers[number];
+						}
+						else {
+							response.extensions.push(number);
+						}
+					});
+				}
 
 				/* List of extensions */
 				response.allExtensions = [];
@@ -1414,6 +1415,7 @@ define(function(require){
 
 					return result;
 				});
+
 				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
 				response.emptySpare = _.isEmpty(response.unassignedNumbers);
 				response.emptyExtensions = _.isEmpty(response.extensions);
@@ -1622,6 +1624,61 @@ define(function(require){
 			});
 		},
 
+		/* Hack to support users from previous version */
+		usersMigrateFromExtensions: function(userId, listExtensions, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getUser',
+				data: {
+					accountId: self.accountId,
+					userId: userId
+				},
+				success: function(data) {
+					var user = data.data,
+						fullName = user.first_name + ' ' + user.last_name,
+						vmbox = {
+							owner_id: user.id,
+							mailbox: listExtensions[0], //TODO
+							name: fullName + '\'s VMBox',
+							timezone: user.timezone
+						},
+						callflow = {
+							contact_list: {
+								exclude: false
+							},
+							flow: {
+								children: {
+									_: {
+										children: {},
+										data: {
+										},
+										module: 'voicemail'
+									}
+								},
+								data: {
+									id: user.id,
+									can_call_self: false,
+									timeout: 20
+								},
+								module: 'user'
+							},
+							name: fullName + ' SmartPBX\'s Callflow',
+							numbers: listExtensions,
+							owner_id: user.id
+						};
+
+					self.usersCreateVMBox(vmbox, function(_dataVM) {
+						callflow.flow.children['_'].data.id = _dataVM.id;
+
+						self.usersCreateCallflow(callflow, function(_dataCF) {
+							callback && callback(_dataCF);
+						});
+					});
+				}
+			});
+		},
+
 		usersAddUserToMainDirectory: function(dataUser, callflowId, callback) {
 			var self = this;
 
@@ -1649,7 +1706,7 @@ define(function(require){
 				});
 
 				if(indexMain === -1) {
-					toastr.error(self.i18n.active().users.noUserCallflow);
+					//toastr.error(self.i18n.active().users.noUserCallflow);
 					callback(null);
 				}
 				else {
@@ -1939,31 +1996,48 @@ define(function(require){
 			});
 		},
 
-		usersUpdateCallflowNumbers: function(callflowId, numbers, callback) {
+		usersUpdateCallflowNumbers: function(userId, callflowId, numbers, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'voip.users.getCallflow',
-				data: {
-					accountId: self.accountId,
-					callflowId: callflowId
-				},
-				success: function(getCallflowData) {
-					getCallflowData.data.numbers = numbers;
-
+			if(numbers.length > 0) {
+				if(callflowId) {
 					monster.request({
-						resource: 'voip.users.updateCallflow',
+						resource: 'voip.users.getCallflow',
 						data: {
 							accountId: self.accountId,
-							callflowId: callflowId,
-							data: getCallflowData.data
+							callflowId: callflowId
 						},
-						success: function(callflowData) {
-							callback && callback(callflowData);
+						success: function(getCallflowData) {
+							getCallflowData.data.numbers = numbers;
+
+							monster.request({
+								resource: 'voip.users.updateCallflow',
+								data: {
+									accountId: self.accountId,
+									callflowId: callflowId,
+									data: getCallflowData.data
+								},
+								success: function(callflowData) {
+									callback && callback(callflowData.data);
+								}
+							});
 						}
 					});
 				}
-			});
+				else {
+					if(numbers[0].length < 7) {
+						self.usersMigrateFromExtensions(userId, numbers, function(data) {
+							callback && callback(data);
+						});
+					}
+					else {
+						toastr.error(self.i18n.active().users.needExtensionFirst);
+					}
+				}
+			}
+			else {
+				toastr.error(self.i18n.active().users.noNumberCallflow);
+			}
 		},
 
 		usersSortExtensions: function(a, b) {
