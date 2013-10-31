@@ -233,7 +233,11 @@ define(function(require){
 					$.each(results.account.data.servers, function(k, server) {
 						$.each(server.DIDs, function(did, v) {
 							if(did in results.numbers.data.numbers) {
-								results.account.data.servers[k].DIDs[did].features = results.numbers.data.numbers[did].features;
+								var num = results.numbers.data.numbers[did];
+								results.account.data.servers[k].DIDs[did].features = num.features;
+								if('locality' in num) {
+									results.account.data.servers[k].DIDs[did].isoCountry = num.locality.country || '';
+								}
 							}
 						});
 					});
@@ -2344,7 +2348,10 @@ define(function(require){
 				if('numbers' in results.listNumbers) {
 					$.each(results.listNumbers.numbers, function(k, v) {
 						if(!v.used_by) {
-							tabData.push(k);
+							tabData.push({
+								phoneNumber: k,
+								isoCountry: 'locality' in v ? (v.locality.country || '') : ''
+							});
 						}
 					});
 				}

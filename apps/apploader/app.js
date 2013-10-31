@@ -224,8 +224,9 @@ define(function(require){
 					});
 
 					_.each(accountApps, function(val, key) {
-						var userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
-						if(accountApps[key].all || userArray.indexOf(self.userId) >= 0) {
+						var app = fullAppList[key],
+							userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
+						if(app && (accountApps[key].all || userArray.indexOf(self.userId) >= 0)) {
 							appList.push({
 								id: key,
 								name: fullAppList[key].name,

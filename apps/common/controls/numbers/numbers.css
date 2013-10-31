@@ -103,12 +103,14 @@
 	margin-top: 4px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .phone-number {
+#numbers_container .account-section .numbers-wrapper .number-box .phone-number,
+.dialog-spare-container .numbers .number-box .phone-number {
 	display: inline-block;
 	width: 150px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality {
+#numbers_container .account-section .numbers-wrapper .number-box .locality,
+.dialog-spare-container .numbers .number-box .locality {
 	width: 250px;
 }
 
@@ -116,12 +118,15 @@
 	margin-right: 5px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality, #numbers_container .account-section .numbers-wrapper .number-box .used-by {
+#numbers_container .account-section .numbers-wrapper .number-box .locality, 
+#numbers_container .account-section .numbers-wrapper .number-box .used-by,
+.dialog-spare-container .numbers .number-box .locality {
 	margin-left: 30px;
 	display: inline-block;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality .flag {
+#numbers_container .account-section .numbers-wrapper .number-box .locality .flag,
+.dialog-spare-container .numbers .number-box .locality .flag {
 	margin-right: 10px;
 }
 
@@ -167,7 +172,7 @@
 }
 
 #numbers_container .account-section .account-header .right-links .buy-numbers-dropdown {
-	margin: 0;
+	margin-bottom: 0;
 	display: inline-block;
 }
 
