@@ -134,10 +134,6 @@
 	box-sizing: border-box;
 }
 
-#accounts_manager_view .main-content .controls > button:not(:last-child) {
-	margin-right: 5px;
-}
-
 #accounts_manager_view .main-content .controls .input-prepend span.add-on {
 	width: 16px;
 }
@@ -146,14 +142,30 @@
 	width: 85%;
 }
 
-/***** Edit: Overview *****/
-
 #accounts_manager_view .main-content .account-tabs {
 	margin-bottom: 9px;
 }
 
 #accounts_manager_view .main-content .account-tabs > li {
 	text-align: center;
+}
+
+#accounts_manager_view .main-content .tab-content {
+	border-radius: 4px;
+}
+
+/***** Edit: Overview *****/
+
+#accounts_manager_view .main-content .form-horizontal .controls.action-bar {
+	text-align: right;
+}
+
+#accounts_manager_view .main-content .form-horizontal .controls.action-bar a {
+	vertical-align: middle;
+}
+
+#accounts_manager_view .main-content .form-horizontal .controls.action-bar > *:not(:last-child) {
+	margin-right: 10px;
 }
 
 #accounts_manager_view .main-content .list-settings {
@@ -164,6 +176,10 @@
 
 #accounts_manager_view .main-content .list-settings .settings-item:not(:first-child) {
 	border-top: 1px solid #CCCCCC;
+}
+
+#accounts_manager_view .main-content .list-settings .settings-item.open {
+	border-top: 1px solid #22ccff;
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item .title {
@@ -241,13 +257,14 @@
 
 #accounts_manager_view .main-content .list-settings .settings-item-content {
 	background-color: #ffffff;
-	border-top: 1px solid #22ccff;
+	border-top: 1px solid #e6e6e6;
 	display: none;
 	padding: 20px 15px 0;
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item-content .form-horizontal {
 	margin: 0;
+	display: inline-block;
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item-content .form-horizontal .plain-text {

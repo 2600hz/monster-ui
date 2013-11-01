@@ -1132,8 +1132,9 @@ define(function(require){
 				$aSettings = $liSettings.find('a.settings-link'),
 				closeTabsContent = function() {
 					$liSettings.removeClass('open');
-					$liContent.hide();
-					$aSettings.show();
+					$liContent.slideUp('fast');
+					$aSettings.find('.update .text').text(self.i18n.active().editSetting);
+					$aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
 				};
 
 			contentHtml.find('.account-tabs a').click(function(e) {
@@ -1144,23 +1145,27 @@ define(function(require){
 				}
 			});
 
-			contentHtml.find('li.settings-item').on('click', function(e) {
-				var $this = $(this);
+			contentHtml.find('li.settings-item .settings-link').on('click', function(e) {
+				var $this = $(this),
+					settingsItem = $this.parents('.settings-item');
 
-				if(!$this.hasClass('open') && !$this.hasClass('disabled')) {
+				if(!settingsItem.hasClass('disabled')) {
+					var isOpen = settingsItem.hasClass('open');
 					closeTabsContent();
-
-					$this.addClass('open');
-					$this.find('a.settings-link').hide();
-					$this.find('.settings-item-content').slideDown('fast');
-
-					if($this.data('name') === 'accountsmanager_account_admins') {
-						self.renderEditAdminsForm(parent, accountData.id);
+					if(!isOpen){
+						settingsItem.addClass('open');
+						$this.find('.update .text').text(self.i18n.active().closeSetting);
+						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+						settingsItem.find('.settings-item-content').slideDown('fast');
+	
+						if(settingsItem.data('name') === 'accountsmanager_account_admins') {
+							self.renderEditAdminsForm(parent, accountData.id);
+						}
 					}
 				}
 			});
 
-			contentHtml.find('button.cancel, .close-link:not(.close-admin-settings)').on('click', function(e) {
+			contentHtml.find('.settings-item .cancel').on('click', function(e) {
 				e.preventDefault();
 				closeTabsContent();
 

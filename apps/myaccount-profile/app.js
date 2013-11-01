@@ -213,8 +213,9 @@ define(function(require){
 				aSettings = liSettings.find('a.settings-link'),
 				closeContent = function() {
 					liSettings.removeClass('open');
-					liContent.hide();
-					aSettings.show();
+					liContent.slideUp('fast');
+					aSettings.find('.update .text').text(self.i18n.active().editSettings);
+					aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
 					liSettings.find('.uneditable').show();
 					liSettings.find('.edition').hide();
 				},
@@ -366,27 +367,29 @@ define(function(require){
 				$(this).tab('show');
 			});
 
-			profile.find('li.settings-item').on('click', function(e) {
-				var currentElement = $(this);
+			profile.find('li.settings-item .settings-link').on('click', function(e) {
+				var $this = $(this),
+					settingsItem = $this.parents('.settings-item'),
+					isOpen = settingsItem.hasClass('open');
 
-				if(!currentElement.hasClass('open')) {
 					closeContent();
-
-					currentElement.addClass('open');
-					currentElement.find('a.settings-link').hide();
-					currentElement.find('.settings-item-content').slideDown('fast');
-
-					if(currentElement.data('name') === 'credit_card') {
-						/* If there is no credit-card data, we skip the step that just displays the creditcard info */
-						if($.isEmptyObject(data.billing.credit_card)) {
-							currentElement.find('.uneditable').hide();
-							currentElement.find('.edition').show();
+					if(!isOpen){
+						settingsItem.addClass('open');
+						$this.find('.update .text').text(self.i18n.active().close);
+						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+						settingsItem.find('.settings-item-content').slideDown('fast');
+	
+						if(settingsItem.data('name') === 'credit_card') {
+							/* If there is no credit-card data, we skip the step that just displays the creditcard info */
+							if($.isEmptyObject(data.billing.credit_card)) {
+								settingsItem.find('.uneditable').hide();
+								settingsItem.find('.edition').show();
+							}
 						}
 					}
-				}
 			});
 
-			profile.find('button.cancel').on('click', function(e) {
+			profile.find('.cancel').on('click', function(e) {
 				e.preventDefault();
 				closeContent();
 
