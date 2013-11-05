@@ -252,9 +252,8 @@ define(function(require){
 		},
 
 		_initApp: function (args) {
-			var self = this;
-
-			var restData = {
+			var self = this,
+				restData = {
 					data: {
 						realm : self.realm,
 						accountId : self.accountId,
@@ -267,7 +266,17 @@ define(function(require){
 					app.userId = self.userId;
 
                     args.callback && args.callback();
-				};
+				},
+				installedApp = _.find(self.installedApps, function(val) {
+					return val.name === args.app.name;
+				});
+
+			if(installedApp && installedApp.api_url) {
+				args.app.apiUrl = installedApp.api_url;
+				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
+					args.app.apiUrl += "/";
+				}
+			}
 
 			if(self.apiUrl !== args.app.apiUrl) {
 				monster.request({
