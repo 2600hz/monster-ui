@@ -168,7 +168,7 @@ define(function(require){
 				var $accountList = parent.find('.account-list'),
 					$accountListSlider = parent.find('.account-list-slider'),
 					$mainContent = parent.find('.main-content'),
-					height = this.innerHeight-$accountList.position().top+'px';
+					height = this.innerHeight-$accountList.position().top-67+'px';
 				$accountList.css('height', height);
 				$accountListSlider.css('height', height);
 				$mainContent.css('height', height);
@@ -240,7 +240,7 @@ define(function(require){
 						$breadcrumb.find('a').click(function(e) {
 							e.preventDefault();
 							self.renderList(accountList, parent, accountId);
-							self.edit(accountId, parent);
+							self.edit(accountId, accountList, parent);
 							$.each($breadcrumbs.find('.account-breadcrumb'), function() {
 								if(parseInt($(this).data('step'),10) >= breadcrumbStep) {
 									$(this).remove();
@@ -255,7 +255,7 @@ define(function(require){
 					$list.find('.account-link').click(function() {
 						var accountId = $(this).parent().data('account_id');
 						parent.find('.main-content').empty();
-						self.edit(accountId, parent);
+						self.edit(accountId, accountList, parent);
 						self.renderList(accountList, parent, accountId);
 					});
 				};
@@ -441,6 +441,26 @@ define(function(require){
 											},
 											error: function(data, status) {
 												toastr.error(self.i18n.active().toastrMessages.newAccount.creditError, '', {"timeOut": 5000});
+											}
+										});
+									} else {
+										callback();
+									}
+								},
+								servicePlans: function(callback) {
+									if(formData.servicePlan) {
+										monster.request({
+											resource: 'accountsManager.servicePlans.add',
+											data: {
+												accountId: newAccountId,
+												planId: formData.servicePlan,
+												data: {}
+											},
+											success: function(data, status) {
+												callback(null, data.data);
+											},
+											error: function(data, status) {
+												toastr.error(self.i18n.active().toastrMessages.newAccount.servicePlanError, '', {"timeOut": 5000});
 											}
 										});
 									} else {
@@ -938,7 +958,7 @@ define(function(require){
 			});
 		},
 
-		edit: function(accountId, parent) {
+		edit: function(accountId, accountList, parent) {
 			var self = this;
 
 			monster.parallel({
@@ -1048,6 +1068,7 @@ define(function(require){
 							accountLimits: results.limits,
 							classifiers: results.classifiers,
 							accountBalance: 'balance' in results.currentBalance ? results.currentBalance.balance : 0,
+							accountList: accountList,
 							parent: parent
 						};
 
@@ -1213,6 +1234,10 @@ define(function(require){
 								}
 							})
 						);
+
+						params.accountList[data.data.id].name = data.data.name;
+						params.accountList[data.data.id].realm = data.data.realm;
+						self.renderList(params.accountList, parent, data.data.id);
 					},
 					function(data) {
 						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
@@ -1477,9 +1502,6 @@ define(function(require){
 				inbound = limits.inbound_trunks || 0,
 				totalAmountInbound = amountInbound * inbound,
 				inboundTrunksDiv = template.find('.trunks-div.inbound'),
-				adjustHandle = function(trunksDiv) {
-					trunksDiv.find('.slider-value-wrapper').css('left', trunksDiv.find('.slider-div .ui-slider-handle').css('left'));
-				},
 				createSlider = function(args) {
 					var trunksDiv = args.trunksDiv,
 						sliderValue = trunksDiv.find('.slider-value'),
@@ -1495,10 +1517,6 @@ define(function(require){
 							sliderValue.html(ui.value);
 							totalAmountValue.html(totalAmount.toFixed(2));
 							trunksValue.val(ui.value);
-							adjustHandle(trunksDiv);
-						},
-						change: function(event, ui) {
-							adjustHandle(trunksDiv);
 						}
 					});
 				};
@@ -1521,10 +1539,12 @@ define(function(require){
 
 			twowayTrunksDiv.find('.slider-value').html(twoway);
 			twowayTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
-			adjustHandle(twowayTrunksDiv);
 			inboundTrunksDiv.find('.slider-value').html(inbound);
 			inboundTrunksDiv.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
-			adjustHandle(inboundTrunksDiv);
+			$.each(template.find('.trunks-div'), function() {
+				var $this = $(this);
+				$this.find('.ui-slider-handle').append($this.find('.section-slider-value'));
+			});
 
 			return template;
 		},

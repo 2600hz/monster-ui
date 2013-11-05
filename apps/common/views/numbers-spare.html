@@ -1,47 +1,80 @@
 <div id="actions_wrapper_spare" class="actions-wrapper">
-    <div class="form-inline">
-        <label>{{ i18n.numbers.numbers }}</label>
-        <span id="trigger_links">
-            <a href="#" id="delete_numbers" class="action-number"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.numbers.deleteNumbers }}</span></a>
-            <li class="dropdown dropdown-move">
-            	<a href="#" id="move_numbers" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-share-alt icon-yellow"></i><span class="action-text">{{ i18n.numbers.moveNumbers }}</span></a>
-                <ul class="dropdown-menu accounts-dropdown">
-                	<li class="content-centered"><i class="icon-spin icon-spinner"></i></li>
-                </ul>
-            </li>
-        </span>
+	<div class="form-inline">
+		<label>{{ i18n.numbers.numbers }}</label>
+
+		<span id="trigger_links">
+			<a href="#" id="delete_numbers" class="action-number"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.numbers.deleteNumbers }}</span></a>
+			{{#compare viewType '!==' 'pbx'}}
+				<li class="dropdown dropdown-move">
+					<a href="#" id="move_numbers" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-share-alt icon-yellow"></i><span class="action-text">{{ i18n.numbers.moveNumbers }}</span></a>
+					<ul class="dropdown-menu accounts-dropdown">
+						<li class="content-centered"><i class="icon-spin icon-spinner"></i></li>
+					</ul>
+				</li>
+			{{/compare}}
+		</span>
+
+		{{#compare viewType '===' 'pbx'}}
+			<ul class="nav buy-numbers-dropdown">
+				<li class="dropdown">
+					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart icon-green"></i><span class="action-text">{{ ../i18n.numbers.buy }}</span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a class="buy-numbers-link" data-type="regular" href="#">{{../i18n.numbers.buyNumberLinks.regular}}</a></li>
+						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+						<li><a class="buy-numbers-link" data-type="vanity" href="#">{{../i18n.numbers.buyNumberLinks.vanity}}</a></li>
+					</ul>
+				</li>
+			</ul>
+			<a href="#" id="port_numbers" class="action-number"><i class="icon-random icon-blue"></i><span class="action-text">{{ ../i18n.numbers.port }}</span></a>
+		{{/compare}}
 
 		<div class="input-append pull-right search-custom">
 			<input class="span2" type="text" placeholder="{{ i18n.numbers.searchNumbers }}"/>
 			<button class="btn btn-success search-numbers" type="button">{{ i18n.numbers.go }}</button>
 		</div>
-    </div>
+	</div>
 </div>
 
 <div class="accounts-numbers">
 	{{#each listAccounts}}
-    	<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
-        	<div class="account-header">
-            	<div class="right-links pull-right">
-        			<a href="#" id="buy_numbers" class="action-number"><i class="icon-shopping-cart"></i><span class="action-text">{{ ../i18n.numbers.buy }}</span></a>
-        			<a href="#" id="port_numbers" class="action-number"><i class="icon-random"></i><span class="action-text">{{ ../i18n.numbers.port }}</span></a>
-        		</div>
-            	<div class="left-part">
-                	<input type="checkbox"></input>
-            	</div>
-            	<div class="expandable">
-                	{{ name }}
-                	<span class="count">({{ countSpareNumbers }})</span>
-            	</div>
-        	</div>
-        	<div class="numbers-wrapper">
+		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
+			{{#compare ../viewType '!==' 'pbx'}}
+				<div class="account-header">
+					<div class="right-links pull-right">
+						<ul class="nav buy-numbers-dropdown">
+							<li class="dropdown">
+								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart"></i><span class="action-text">{{ ../../i18n.numbers.buy }}</span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a class="buy-numbers-link" data-type="regular" href="#">{{../../i18n.numbers.buyNumberLinks.regular}}</a></li>
+									<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{../../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+									<li><a class="buy-numbers-link" data-type="vanity" href="#">{{../../i18n.numbers.buyNumberLinks.vanity}}</a></li>
+								</ul>
+							</li>
+						</ul>
+						<a href="#" id="port_numbers" class="action-number"><i class="icon-random"></i><span class="action-text">{{ ../../i18n.numbers.port }}</span></a>
+					</div>
+					<div class="left-part">
+						<input type="checkbox"></input>
+					</div>
+					<div class="expandable">
+						{{ name }}
+						<span class="count">({{ countSpareNumbers }})</span>
+					</div>
+				</div>
+			{{/compare}}
+
+			<div class="numbers-wrapper">
 				{{#each spareNumbers}}
 					<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
 						<input type="checkbox"></input>
 						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
 						<span class="locality">
-							<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
-							<span class="city">{{ this.friendlyLocality }}</span>
+							{{#if this.isoCountry }}
+								<span class="flag"><img src="css/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
+							{{/if}}
+							{{#if this.friendlyLocality }}
+								<span class="city">{{ this.friendlyLocality }}</span>
+							{{/if}}
 						</span>
 					</div>
 				{{else}}
@@ -49,7 +82,7 @@
 						{{ ../../i18n.numbers.noSpareNumber }}
 					</div>
 				{{/each}}
-        	</div>
-    	</div>
+			</div>
+		</div>
 	{{/each}}
 </div>

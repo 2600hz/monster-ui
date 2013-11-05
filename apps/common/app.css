@@ -1,4 +1,5 @@
 @import url('controls/accountDropdown/accountDropdown.css');
+@import url('controls/buyNumbers/buyNumbers.css');
 @import url('controls/callerId/callerId.css');
 @import url('controls/e911/e911.css');
 @import url('controls/failover/failover.css');
@@ -16,4 +17,13 @@
 
 .trunkstore_popup.failover .header {
     background: url('static/images/failover_header.png') no-repeat center;
+}
+
+#buy_number #vanity_search_div .dialpad_img {
+    background: url('static/images/dialpad.png') no-repeat center;
+}
+
+#vanity_country_select, #tollfree_country_select, #regular_country_select {
+    background-image: url('static/images/US_flag.png');
+    background-repeat: no-repeat;
 }

@@ -1,0 +1,58 @@
+<div class="callflow-tab-title">{{i18n.strategy.calls.callTabTitle}}</div>
+<div class="call-option menu-call {{#compare callOption.type '===' 'default'}}active{{/compare}}">
+	<div class="radio-div"><input type="radio" {{#compare callOption.type '===' 'default'}}checked{{/compare}} name="calls.{{callflow}}" value="menu"></div>
+	<div class="title">{{i18n.strategy.calls.incomingCall}}</div>
+	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
+	<div class="menu-div {{#if menu}}has-menu" data-callflow="{{menu}}{{/if}}">
+		<div class="menu-icon"><i class="icon-play-sign icon-3x"></i></div>
+		<div class="link"><a href="#"><i class="icon-cog icon-small"></i> {{i18n.strategy.calls.virtualReceptionist}}</a></div>
+	</div>
+</div>
+<div class="call-option user-voicemail-call {{#compare callOption.type '===' 'user-voicemail'}}active{{/compare}}">
+	<div class="radio-div"><input type="radio" {{#compare callOption.type '===' 'user-voicemail'}}checked{{/compare}} name="calls.{{callflow}}" value="user-voicemail"></div>
+	<div class="title">{{i18n.strategy.calls.incomingCall}}</div>
+	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
+	<div class="user-select">
+		<div class="title">N/A</div>
+		<select>
+			{{#each callEntities}}
+				<optgroup label="{{groupName}}">
+					{{#each entities}}
+						<option value="{{id}}" data-type="{{../groupType}}" {{#compare ../../callOption.callEntityId '===' id}}selected{{/compare}}>{{name}}</option>
+					{{/each}}
+				</optgroup>
+			{{/each}}
+		</select>
+	</div>
+	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
+	<div class="voicemail-select">
+		<div class="title">{{i18n.strategy.calls.voicemail}}</div>
+		<select>
+			{{#each voicemails}}
+				<option value="{{id}}" {{#compare ../callOption.voicemailId '===' id}}selected{{/compare}}>{{name}}</option>
+			{{/each}}
+		</select>
+	</div>
+</div>
+<div class="call-option user-menu-call {{#compare callOption.type '===' 'user-menu'}}active{{/compare}}">
+	<div class="radio-div"><input type="radio" {{#compare callOption.type '===' 'user-menu'}}checked{{/compare}} name="calls.{{callflow}}" value="user-menu"></div>
+	<div class="title">{{i18n.strategy.calls.incomingCall}}</div>
+	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
+	<div class="user-select">
+		<div class="title">N/A</div>
+		<select>
+			{{#each callEntities}}
+				<optgroup label="{{groupName}}">
+					{{#each entities}}
+						<option value="{{id}}" data-type="{{../groupType}}" {{#compare ../../callOption.callEntityId '===' id}}selected{{/compare}}>{{name}}</option>
+					{{/each}}
+				</optgroup>
+			{{/each}}
+		</select>
+	</div>
+	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>
+	<div class="menu-div {{#if menu}}has-menu" data-callflow="{{menu}}{{/if}}">
+		<div class="menu-icon"><i class="icon-play-sign icon-3x"></i></div>
+		<div class="link"><a href="#"><i class="icon-cog icon-small"></i> {{i18n.strategy.calls.virtualReceptionist}}</a></div>
+	</div>
+</div>

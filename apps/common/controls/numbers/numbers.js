@@ -31,9 +31,22 @@ define(function(require){
 				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify',
 				verb: 'GET'
 			},
+			'common.numbers.listCallflows': {
+				url: 'accounts/{accountId}/callflows',
+				verb: 'GET'
+			},
+			'common.numbers.listUsers': {
+				url: 'accounts/{accountId}/users',
+				verb: 'GET'
+			},
+			'common.numbers.listGroups': {
+				url: 'accounts/{accountId}/groups',
+				verb: 'GET'
+			}
 		},
 
 		subscribe: {
+			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
 			'common.numbers.getListFeatures': 'numbersGetFeatures'
 		},
@@ -75,6 +88,10 @@ define(function(require){
 			var self = this;
 
 			value.viewFeatures = self.numbersGetFeatures();
+			if('locality' in value) {
+				value.isoCountry = value.locality.country || '';
+				value.friendlyLocality = 'city' in value.locality ? value.locality.city + ('state' in value.locality ? ', ' + value.locality.state : '') : '';
+			}
 
 			_.each(value.features, function(feature) {
 				value.viewFeatures[feature].active = 'active';
@@ -111,15 +128,18 @@ define(function(require){
 					usedNumbers: []
 				},
 				templateData = {
+					viewType: data.viewType,
 					listAccounts: []
 				};
 
 			/* Initializing accounts metadata */
 			var thisAccount = _.extend(monster.apps['auth'].currentAccount, templateLists);
 
-			_.each(data.accounts, function(account) {
-				mapAccounts[account.id] = account;
-			});
+			if(data.viewType !== 'pbx') {
+				_.each(data.accounts, function(account) {
+					mapAccounts[account.id] = account;
+				});
+			}
 
 			/* assign each number to spare numbers or used numbers for main account */
 			_.each(data.numbers.numbers, function(value, phoneNumber) {
@@ -127,7 +147,19 @@ define(function(require){
 
 				value = self.numbersFormatNumber(value);
 
-				value.used_by ? thisAccount.usedNumbers.push(value) : thisAccount.spareNumbers.push(value);
+				if(value.used_by) {
+					if(data.viewType === 'pbx') {
+						if(value.used_by === 'callflow') {
+							thisAccount.usedNumbers.push(value);
+						}
+					}
+					else {
+						thisAccount.usedNumbers.push(value);
+					}
+				}
+				else {
+					thisAccount.spareNumbers.push(value);
+				}
 			});
 
 			thisAccount.countUsedNumbers = thisAccount.usedNumbers.length;
@@ -174,13 +206,18 @@ define(function(require){
 						parent.find('#trigger_links').hide();
 					}
 				},
-				displayNumberList = function(accountId, callback) {
-					if(_.indexOf(listSearchedAccounts, accountId) === -1) {
+				displayNumberList = function(accountId, callback, forceRefresh) {
+					var alreadySearched = _.indexOf(listSearchedAccounts, accountId) >= 0,
+						forceRefresh = forceRefresh || false;
+
+					if(!alreadySearched || forceRefresh) {
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
 								usedNumbers = [];
 
-							listSearchedAccounts.push(accountId);
+							if(!alreadySearched) {
+								listSearchedAccounts.push(accountId);
+							}
 
 							_.each(numbers.numbers, function(value, phoneNumber) {
 								if(phoneNumber !== 'id' && phoneNumber !== 'quantity') {
@@ -284,6 +321,36 @@ define(function(require){
 				});
 
 				showLinks();
+			});
+
+			parent.on('click', '.account-header .buy-numbers-link', function(e) {
+				var accountId = $(this).parents('.account-section').data('id');
+
+				monster.pub('common.buyNumbers', {
+					accountId: accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(accountId, function(numbers) {
+								parent.find('.account-section[data-id="'+accountId+'"]').addClass('open');
+							}, true);
+						}
+					}
+				});
+			});
+
+			parent.on('click', '.actions-wrapper .buy-numbers-dropdown .buy-numbers-link', function(e) {
+				var accountId = self.accountId;
+
+				monster.pub('common.buyNumbers', {
+					accountId: self.accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(self.accountId, function(numbers) {}, true);
+						}
+					}
+				});
 			});
 
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
@@ -720,9 +787,216 @@ define(function(require){
 			});
 		},
 
-		numbersList: function(accountId, callback) {
+		/* AccountID and Callback in args */
+		numbersFormatDialogSpare: function(data) {
 			var self = this,
-				mapCountry = {
+				formattedData = {
+					accountName: data.accountName,
+					numbers: {}
+				};
+
+			_.each(data.numbers, function(number, id) {
+				if(number.used_by === '') {
+					number.phoneNumber = id;
+					number = self.numbersFormatNumber(number);
+					formattedData.numbers[id] = number;
+				}
+			});
+
+			return formattedData;
+		},
+
+		numbersDialogSpare: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				accountName = args.accountName || '',
+				callback = args.callback;
+
+			self.numbersList(accountId, function(data) {
+				data.accountName = accountName;
+
+				var formattedData = self.numbersFormatDialogSpare(data),
+				    spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
+
+                spareTemplate.find('.empty-search-row').hide();
+
+				spareTemplate.on('keyup', '.search-query', function() {
+                	var rows = spareTemplate.find('.number-box'),
+                    	emptySearch = spareTemplate.find('.empty-search-row'),
+                    	currentRow;
+
+                	currentNumberSearch = $(this).val().toLowerCase();
+
+                	_.each(rows, function(row) {
+                    	currentRow = $(row);
+                    	currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+                	});
+
+                	if(rows.size() > 0) {
+                    	rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+                	}
+            	});
+
+				spareTemplate.find('#proceed').on('click', function() {
+					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
+						selectedNumbers = [];
+
+					_.each(selectedNumbersRow, function(row) {
+						var number = $(row).data('number');
+
+						selectedNumbers.push(formattedData.numbers[number]);
+					});
+
+					if(selectedNumbers.length > 0) {
+						args.callback && args.callback(selectedNumbers);
+
+						popup.dialog('close').remove();
+					}
+					else {
+						monster.ui.alert('error', self.i18n.active().numbers.dialogSpare.noNumberSelected);
+					}
+				});
+
+				spareTemplate.find('.number-box').on('click', function(event) {
+					var $this = $(this);
+
+					$this.toggleClass('selected');
+
+					if(!$(event.target).is('input:checkbox')) {
+						var $current_cb = $this.find('input[type="checkbox"]'),
+							cb_value = $current_cb.prop('checked');
+
+						$current_cb.prop('checked', !cb_value);
+					}
+				});
+
+				spareTemplate.find('.cancel-link').on('click', function(e) {
+					e.preventDefault();
+					popup.dialog('close');
+				});
+
+				var popup = monster.ui.dialog(spareTemplate, {
+					title: self.i18n.active().numbers.dialogSpare.title,
+					position: ['center', 20]
+				});
+			});
+		},
+
+		numbersList: function(accountId, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					callflows: function(callback) {
+						self.numbersListCallflows(accountId, function(callflows) {
+							callback && callback(null, callflows);
+						});
+					},
+					groups: function(callback) {
+						self.numbersListGroups(accountId, function(groups) {
+							callback && callback(null, groups);
+						});
+					},
+					users: function(callback) {
+						self.numbersListUsers(accountId, function(users) {
+							callback && callback(null, users);
+						});
+					},
+					numbers: function(callback) {
+						self.numbersListNumbers(accountId, function(numbers) {
+							callback && callback(null, numbers);
+						});
+					}
+				},
+				function(err, results) {
+					self.numbersFormatList(results);
+
+					globalCallback && globalCallback(results.numbers);
+				}
+			);
+		},
+
+		numbersFormatList: function(data) {
+			var self = this,
+				mapUsers = {},
+				mapGroups = {};
+
+			_.each(data.users, function(user) {
+				mapUsers[user.id] = user;
+			});
+
+			_.each(data.groups, function(group) {
+				mapGroups[group.id] = group;
+			});
+
+			_.each(data.callflows, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number in data.numbers.numbers) {
+						if(callflow.owner_id) {
+							var user = mapUsers[callflow.owner_id];
+
+							data.numbers.numbers[number].owner = user.first_name + ' ' + user.last_name;
+							data.numbers.numbers[number].ownerType = 'user';
+						}
+						else if(callflow.group_id) {
+							data.numbers.numbers[number].owner = mapGroups[callflow.group_id].name;
+							data.numbers.numbers[number].ownerType = 'group';
+						}
+						else if(callflow.type && callflow.type === 'main') {
+							data.numbers.numbers[number].owner = self.i18n.active().numbers.mainNumber;
+							data.numbers.numbers[number].ownerType = 'main';
+						}
+					}
+				});
+			});
+
+			return data;
+		},
+
+		numbersListUsers: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listUsers',
+				data: {
+					accountId: accountId
+				},
+				success: function(users, status) {
+					callback && callback(users.data);
+				}
+			});
+		},
+
+		numbersListCallflows: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listCallflows',
+				data: {
+					accountId: accountId
+				},
+				success: function(callflows, status) {
+					callback && callback(callflows.data);
+				}
+			});
+		},
+
+		numbersListGroups: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.numbers.listGroups',
+				data: {
+					accountId: accountId
+				},
+				success: function(groups, status) {
+					callback && callback(groups.data);
+				}
+			});
+		},
+
+		numbersListNumbers: function(accountId, callback) {
+			var self = this;
+				/*mapCountry = {
 					'FR': 'Paris, France',
 					'DE': 'Berlin, Germany',
 					'US': 'San Francisco, CA',
@@ -735,7 +1009,7 @@ define(function(require){
 					'NZ': 'Wellington, New-Zealand',
 					'UA': 'Kiev, Ukraine'
 				},
-				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];
+				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];*/
 
 			monster.request({
 				resource: 'common.numbers.list',
@@ -744,10 +1018,10 @@ define(function(require){
 				},
 				success: function(_dataNumbers, status) {
 					/* TODO REMOVE */
-					$.each(_dataNumbers.data.numbers, function(k, v) {
+					/*$.each(_dataNumbers.data.numbers, function(k, v) {
 						v.isoCountry = randomArray[Math.floor((Math.random()*100)%(randomArray.length))];
 						v.friendlyLocality = mapCountry[v.isoCountry];
-					});
+					});*/
 
 					callback && callback(_dataNumbers.data);
 				}

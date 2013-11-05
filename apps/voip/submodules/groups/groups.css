@@ -1,0 +1,382 @@
+#groups_container .groups-header {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 18px;
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+#groups_container .groups-header > * {
+	display: inline-block;
+}
+
+#groups_container .groups-header .count-groups {
+	color: #22ccff;
+	display: inline-block;
+	font-size: 28px;
+	font-weight: 500;
+	margin-left: 10px;
+	margin-right: 25px;
+	margin-top: -5px;
+}
+
+#groups_container .groups-header .add-group {
+	font-size: 14px;
+}
+
+#groups_container .groups-header .add-group i {
+	text-decoration: none;
+	margin-right: 5px;
+}
+
+#groups_container .groups-grid {
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-top: 10px;
+
+	font-family: verdana;
+}
+
+#groups_container .groups-grid i.icon-plus {
+	margin-left: 5px;
+}
+
+#groups_container .groups-grid .empty-search-row {
+	display: none;
+	padding: 16px;
+	text-align: center;
+}
+
+#groups_container .groups-grid .grid-row.title:not(:last-child) {
+	border-bottom: 1px solid #ddd;
+}
+
+#groups_container .groups-grid .grid-row.title,
+#groups_container .groups-grid .grid-row .groups-cells{
+	height: 50px;
+	line-height: 50px; /* 60 - padding */
+}
+
+#groups_container .groups-grid .grid-row:not(:last-child) {
+	border-bottom: 1px solid #eee;
+}
+
+#groups_container .groups-grid .grid-row.title .grid-cell {
+	text-align: center;
+	padding-left: 0;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell {
+	border-right: 1px solid #eee;
+	display: inline-block;
+	overflow: hidden;
+	padding-left: 10px;
+	width: 20%;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell:first-child {
+	border-left: none !important;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell:last-child {
+	border-right: none !important;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.active {
+	background: #f5f5f5;
+	height: 51px;
+}
+
+#groups_container .groups-grid .grid-row:not(.title) .grid-cell:hover {
+	cursor: pointer;
+	background: #eee;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell:not(.features) {
+	white-space: nowrap;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.centered {
+	padding: 0;
+	text-align: center;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.right-aligned {
+	padding: 0 5px 0 0;
+	text-align: right;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.devices i,
+#groups_container .groups-grid .grid-row .grid-cell.features i {
+	margin: 0 5px;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.features .navbar {
+	margin-bottom: 0;
+	text-align: left;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.features a.dropdown-toggle {
+	padding: 15px 7px 2px 15px;
+	text-align: left;
+	background: transparent !important;
+}
+
+#groups_container .groups-grid .grid-row .edit-groups {
+	background: #f5f5f5;
+	border-top: 1px solid #eee;
+	min-height: 50px;
+}
+
+/* Columns */
+#groups_container .groups-grid .grid-row .grid-cell.name,
+#groups_container .groups-grid .grid-row .grid-cell.phone-number {
+	width: 25%;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.members,
+#groups_container .groups-grid .grid-row .grid-cell.extension {
+	width: 15%;
+}
+
+#groups_container .groups-grid .grid-row:not(.title) .grid-cell.extension {
+	padding-left: 25px;
+}
+
+#groups_container .groups-grid .grid-row .grid-cell.features {
+	border-right: none;
+	text-align: center;
+}
+
+#groups_container .actions {
+	border-top: 1px solid #ddd;
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+#groups_container .groups-grid i.icon-telicon-multiple-items {
+    font-size: 14px;
+    margin-left: 15px;
+}
+
+/* Members */
+#groups_container .detail-group .grid-time .group-row {
+	background: #FFF;
+	padding: 10px 0;
+	width: 100%;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#groups_container .detail-group .grid-time .group-row:nth-child(2) {
+	padding-top: 25px;
+}
+
+#groups_container .detail-group .grid-time .group-row > div {
+	display: inline-block;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+#groups_container .detail-group .grid-time .group-row.title {
+	background: #F5F5F5;
+	margin-top: 1px;
+}
+
+#groups_container .detail-group .grid-time .group-row .name {
+	overflow: hidden;
+	padding-left: 10px;
+	width: 20%;
+	white-space: nowrap;
+}
+#groups_container .detail-group .grid-time .group-row .times {
+	padding-left: 30px;
+	padding-right: 30px;
+	width: 60%;
+}
+#groups_container .detail-group .grid-time .group-row .remove {
+	text-align: center;
+	width: 20%;
+}
+
+/* Sliders */
+#groups_container .slider-time.ui-slider {
+	border: none;
+	cursor: pointer;
+	height: 10px;
+	background: #DDDDDD;
+}
+
+#groups_container .slider-time.ui-slider .ui-slider-range {
+	background: #33BB44;
+	border: 1px solid #333;
+	border-radius: 0;
+}
+
+#groups_container .slider-time.ui-slider .ui-slider-handle {
+	background: #33BB44;
+    border: 1px solid #333333;
+    cursor: pointer;
+    height: 25px;
+    margin: -7px 0;
+    padding: 3px;
+    width: 5px;
+}
+
+.slider-tooltip {
+    position: absolute;
+    display: block;
+    font-size: 12px;
+	bottom: 30px;
+	right: -9px;
+}
+.slider-tooltip .slider-tooltip-inner {
+	width: 30px;
+    max-width: 200px;
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Name */
+.detail-group #form-name {
+	display: inline-block;
+	margin-top: 20px;
+}
+
+.detail-group #form-name .control-group {
+	display: inline-block;
+}
+
+/* Creation */
+#creation_group_dialog {
+	padding: 15px 30px;
+}
+#creation_group_dialog .items-selector {
+	margin-bottom: 20px;
+}
+#creation_group_dialog .items-selector .box-selector {
+	width: 250px;
+}
+#creation_group_dialog .items-selector .box-selector ul {
+	height: 300px;
+	overflow: auto;
+}
+#creation_group_dialog .one-line-form > *{
+	float: left;
+}
+#creation_group_dialog .one-line-form input[type="text"] {
+	margin-left: 5px;
+	margin-right: 20px;
+}
+#creation_group_dialog .one-line-form label {
+	line-height: 30px;
+}
+
+/* Numbers / Extensions */
+/* Grid add remove */
+#groups_container .list-wrapper {
+	background: #FFF;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	margin: 10px;
+}
+
+#groups_container .list-unassigned-items{
+	overflow: auto;
+	max-height: 211px;
+}
+
+#groups_container .unassigned-list-header {
+	background: #999;
+	height: 32px;
+	line-height: 32px;
+	padding: 10px;
+}
+
+#groups_container .unassigned-list-header .title {
+	color: #FFF;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#groups_container .list-wrapper .item-row  {
+	border-bottom: 1px solid #ccc;
+	white-space: nowrap;
+}
+
+#groups_container .list-wrapper .item-row > * {
+	display: inline-block;
+	line-height: 32px;
+	height: 32px;
+	padding: 10px;
+}
+
+#groups_container .list-wrapper .item-row button {
+	margin-right: 15px;
+	padding: 2px;
+	width: 80px;
+}
+
+#groups_container .list-wrapper .empty-search-row,
+#groups_container .list-wrapper .empty-row {
+	display: none;
+	padding: 16px;
+	text-align: center;
+}
+
+#groups_container .list-wrapper .empty-search-row.visible,
+#groups_container .list-wrapper .empty-row.visible {
+	display: block;
+}
+
+/* Numbers */
+#groups_container .list-wrapper .item-row .features > i {
+	display: none;
+}
+
+#groups_container .list-wrapper .item-row .features > i.active {
+	display: inline-block;
+}
+
+#groups_container .list-wrapper .item-row .locality {
+    border-left: 1px solid #CCC;
+    display: none;
+}
+
+#groups_container .list-wrapper .list-assigned-items .item-row .locality {
+    width: 250px;
+    border-right: 1px solid #CCC;
+}
+
+#groups_container .list-wrapper .item-row .locality img {
+    margin-right: 5px;
+}
+
+#groups_container .list-wrapper .list-unassigned-items .features-block {
+    display: none;
+}
+
+#groups_container .list-wrapper .features-block .dropdown {
+    margin-top: -4px;
+}
+
+#groups_container .list-wrapper .navbar .nav li.dropdown.open.active > .dropdown-toggle,
+#groups_container .list-wrapper .navbar .nav li.dropdown.open > .dropdown-toggle,
+#groups_container .navbar .nav li.dropdown.active {
+    background: #FFF;
+}
+

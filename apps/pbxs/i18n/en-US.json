@@ -119,6 +119,11 @@
 	"move": "Move To",
 	"remove": "Unassign",
 	"buy": "Buy",
+	"buyNumberLinks" : {
+		"regular": "Local",
+		"tollfree": "Toll-free",
+		"vanity": "Vanity"
+	},
 	"port": "Port",
 	"search": "Search",
 	"no_pbx": "No other PBX",

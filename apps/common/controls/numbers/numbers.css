@@ -3,6 +3,10 @@
 	max-width: 902px;
 }
 
+#numbers_container .accounts-numbers {
+	font-family: verdana;
+}
+
 #numbers_container .top-box {
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -99,21 +103,30 @@
 	margin-top: 4px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .phone-number {
+#numbers_container .account-section .numbers-wrapper .number-box .phone-number,
+.dialog-spare-container .numbers .number-box .phone-number {
 	display: inline-block;
 	width: 150px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality {
-	width: 300px;
+#numbers_container .account-section .numbers-wrapper .number-box .locality,
+.dialog-spare-container .numbers .number-box .locality {
+	width: 250px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality, #numbers_container .account-section .numbers-wrapper .number-box .used-by {
+#numbers_container .account-section .numbers-wrapper .number-box .used-by i {
+	margin-right: 5px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .locality, 
+#numbers_container .account-section .numbers-wrapper .number-box .used-by,
+.dialog-spare-container .numbers .number-box .locality {
 	margin-left: 30px;
 	display: inline-block;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality .flag {
+#numbers_container .account-section .numbers-wrapper .number-box .locality .flag,
+.dialog-spare-container .numbers .number-box .locality .flag {
 	margin-right: 10px;
 }
 
@@ -130,7 +143,7 @@
     border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
-    font-size: 20px;
+    font-size: 18px;
     height: 70px;
     line-height: 70px;
     padding-left: 10px;
@@ -158,6 +171,11 @@
 	height: 100%;
 }
 
+#numbers_container .account-section .account-header .right-links .buy-numbers-dropdown {
+	margin-bottom: 0;
+	display: inline-block;
+}
+
 #numbers_container .account-section.open .account-header .right-links a > *{
 	color: #ffffff;
 }
@@ -173,8 +191,11 @@
 
 #numbers_container .account-section .account-header .right-links a {
 	font-size: 14px;
-	margin-right: 10px;
     white-space: nowrap;
+}
+
+#numbers_container .account-section .account-header .right-links > * {
+	margin-right: 10px;
 }
 
 #numbers_container .account-section .account-header .account-actions {
@@ -214,18 +235,17 @@
 }
 
 #numbers_container .account-section:nth-of-type(1) .account-header {
-	border-radius: 8px 8px 0 0;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .account-header {
-	border-radius: 0 0 8px 8px;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
     border-bottom: 1px solid #CCCCCC;
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .numbers-wrapper .number-box:nth-last-of-type(1) {
-    border-bottom-left-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
-
     border-bottom-width: 1px;
 }
 
@@ -237,6 +257,10 @@
 
 #numbers_container .actions-wrapper #trigger_links {
     display: none;
+}
+
+#numbers_container .buy-numbers-dropdown {
+	display: inline-block;
 }
 
 #numbers_container .search-custom {
@@ -276,4 +300,46 @@
 	#numbers_container .account-section .numbers-wrapper .number-box .locality {
 		display: none;
 	}
+}
+
+/* Dialog Spare Numbers */
+.dialog-spare-container {
+	padding: 15px;
+}
+
+.dialog-spare-container .grid-numbers .title {
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding: 10px;
+	width: 600px;
+}
+
+.dialog-spare-container .number-box > input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.dialog-spare-container .grid-numbers {
+	padding-bottom: 10px;
+}
+
+.dialog-spare-container .grid-numbers .numbers {
+	border: 1px solid #DDD;
+	max-height: 372px;
+	overflow: auto;
+}
+
+.dialog-spare-container .grid-numbers .numbers .number-box {
+	border: 1px solid #DDD;
+}
+
+.dialog-spare-container .grid-numbers .empty-search-row {
+	text-align: center;
+	padding: 10px;
+}
+
+.dialog-spare-container .dialog-buttons-wrapper a.cancel-link {
+	margin-right: 30px;
+	vertical-align: middle;
+	color: #22ccff;
 }

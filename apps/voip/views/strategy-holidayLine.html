@@ -1,13 +1,39 @@
-<div class="holidays-element">
+<div class="holidays-element" {{#if id}}data-id="{{id}}{{/if}}">
 	<div class="delete-holiday">
 		<i class="icon-trash icon-red"></i>
 	</div>
 	<div>
-		<input type="text" class="name" value="{{name}}" original="{{name}}">
-		<input type="text" class="date from" value="{{fromDate}}" data-original="{{fromDate}}">
-		{{#if isDateRange}}
-			<span>to</span>
-			<input type="text" class="date to" value="{{toDate}}" data-original="{{toDate}}">
-		{{/if}}
+		<input type="text" class="name" value="{{name}}">
+		<select class="month">
+			{{#each resources.months}}
+				<option value="{{this.value}}" {{#compare this.value '===' ../month}}selected{{/compare}}>{{this.label}}</option>
+			{{/each}}
+		</select>
+		{{#compare holidayType '===' 'advanced'}}
+			<select class="ordinal">
+				{{#each resources.ordinals}}
+					<option value="{{this.value}}" {{#compare this.value '===' ../ordinal}}selected{{/compare}}>{{this.label}}</option>
+				{{/each}}
+			</select>
+			<select class="wday">
+				{{#each resources.wdays}}
+					<option value="{{this.value}}" {{#compare this.value '===' ../wday}}selected{{/compare}}>{{this.label}}</option>
+				{{/each}}
+			</select>
+		{{else}}
+			<select class="day from">
+				{{#each resources.days}}
+					<option value="{{this}}" {{#compare this '===' ../fromDay}}selected{{/compare}}>{{this}}</option>
+				{{/each}}
+			</select>
+			{{#compare holidayType '===' 'range'}}
+				<span>to</span>
+				<select class="day to">
+					{{#each resources.days}}
+						<option value="{{this}}" {{#compare this '===' ../toDay}}selected{{/compare}}>{{this}}</option>
+					{{/each}}
+				</select>
+			{{/compare}}
+		{{/compare}}
 	</div>
 </div>

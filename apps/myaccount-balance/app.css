@@ -134,10 +134,6 @@
 }
 
 .add-credits-content-wrapper .box-content .line-content .line-button button {
-    margin-top: 10px;
+    margin-top: -3px;
     width: 100%;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-button .switch {
-    margin-top: 10px;
 }

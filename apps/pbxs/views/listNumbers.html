@@ -2,6 +2,9 @@
 <div class="number-wrapper number-box" data-phone_number="{{this.key}}">
 	<input type="checkbox"></input>
 	<span class="phone-number">{{ formatPhoneNumber this.key }}</span>
+	{{#if this.value.isoCountry}}
+		<span class="flag"><img src="css/flags/32/{{ this.value.isoCountry }}.png" height="32" width="32"></img></span>
+	{{/if}}
 
 	<div class="number-options pull-right">
 		<div class="navbar">

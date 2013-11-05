@@ -10,24 +10,238 @@
 		"quickLinks": "Help Topics"
 	},
 
+	"groups": {
+		"addFromSpare": "Add from Spare Numbers",
+		"add": "Add Group",
+		"addExtension": "Add Extension",
+		"addNewExtension": "Extension number: ",
+		"buy": "Buy Numbers",
+		"delete": "Delete Group",
+		"dialogCreationGroup": {
+			"availableUsers": "Available Users",
+			"createGroup": "Create Group",
+			"extension": "Extension",
+			"name": "Name this group",
+			"placeholderExtension": "2002",
+			"placeholderName": "Sales",
+			"selectedUsers": "Selected Users",
+			"title": "Creating a group"
+		},
+		"groupDeleted": "You successfully deleted {{name}}'s Group",
+		"name": "Group Name",
+		"noAssignedExtensions": "There are currently no extension assigned to this group.",
+		"noExtension": "None",
+		"noFeatures": "None",
+		"noMatchingGroup": "There were no groups found matching your search",
+		"noNumber": "None",
+		"noAssignedNumbers": "There are no numbers assigned to this group.",
+		"noUnassignedNumbers": "There are no available number left to assign to this group.",
+		"noAssignedNumbers": "There are currently no number assigned to this group.",
+		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
+		"noMatchingNumbers": "There were no numbers found matching your search",
+		"port": "Port Numbers",
+		"ringThisMemberFor": "Ring this member for:",
+		"ringGroupMissing": "No Ring Group are defined for this Group (group_id missing from callflow)",
+		"removeMember": "Remove Member",
+		"title": "Groups",
+		"titleGrid": {
+			"groups": "Group Name",
+			"members": "Members",
+			"extensions": "Extension",
+			"phoneNumbers": "Direct Number",
+			"features": "Group Features"
+		},
+		"toastrMessages": {
+			"numbersUpdated": "You successfully updated the phone numbers of {{name}}",
+			"extensionsUpdated": "You successfully updated the extensions numbers of {{name}}"
+		},
+		"voicemails": {
+			"title": "Voicemail Box"
+		}
+	},
+
+	"devices": {
+		"add": "Add Device",
+		"assigned": "Assigned",
+		"createDevice": "Create Device",
+		"deleteDevice": "Delete Device",
+		"deletedDevice": "You successfully deleted the following device \"{{deviceName}}\".",
+		"popupSettings": {
+			"advancedTitle": "Advanced",
+			"basicTitle": "Basic Settings",
+			"basicSectionTitle": "Basic Settings",
+			"options": {
+				"menuTitle": "Options"
+			},
+			"audio": {
+				"menuTitle": "Audio",
+				"sectionTitle": "Audio Settings",
+				"selectedCodecs": "Selected Codecs",
+				"unselectedCodecs": "Available Codecs"
+			},
+			"callerId": {
+				"menuTitle": "Emergency Caller-ID",
+				"sectionTitle": "Emergency Caller-ID",
+				"emergency": "Number",
+				"notSet": "- Account Default -",
+				"noE911Numbers": "You didn't set E911 on any of your numbers, please set it up via the Number Manager and come back on this screen once it's done"
+			},
+			"restrictions": {
+				"menuTitle": "Restrictions",
+				"sectionTitle": "Restrictions Settings",
+				"inherit": "Inherit",
+				"deny": "Deny"
+			},
+			"video": {
+				"menuTitle": "Video",
+				"sectionTitle": "Video Settings",
+				"selectedCodecs": "Selected Codecs",
+				"unselectedCodecs": "Available Codecs"
+			}
+		},
+		"buy": "Buy Device",
+		"noMatchingDevices": "There were no devices found matching your search",
+		"provisionerPopup": {
+			"brandHeadline": "Select the brand of the device:",
+			"deviceHeadline": "Select the model of the device:",
+			"deviceSelected": "You have selected the {{brand}} {{model}}",
+			"missingBrand": "The brand of my device is not listed here",
+			"missingDevice": "My device is not listed here",
+			"title": "Selection of the device"
+		},
+		"sip_device": {
+			"addTitle": "Adding a SIP Device",
+			"editTitle": "Editing SIP Device: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"deviceName": "Device Name"
+		},
+		"landline": {
+			"addTitle": "Adding a Landline",
+			"deviceName": "Device Name",
+			"editTitle": "Editing Landline: {{name}}",
+			"new": "New Landline",
+			"number": "Number",
+			"numberPlaceholder": "+14152231121",
+			"requireKeypress": "Allow use of landline voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
+		},
+		"cellphone": {
+			"addTitle": "Adding a Cell Phone",
+			"deviceName": "Device Name",
+			"editTitle": "Editing Cell Phone: {{name}}",
+			"new": "New Cell Phone",
+			"number": "Number",
+			"numberPlaceholder": "+14152231121",
+			"requireKeypress": "Allow use of cellphone voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
+		},
+		"smartphone": {
+			"addTitle": "Adding a Smartphone",
+			"deviceName": "Device Name",
+			"editTitle": "Editing Smartphone: {{name}}",
+			"new": "New Smartphone",
+			"requireKeypress": "Allow use of cellphone voicemail",
+			"keepCallerId": "Keep Original Caller-ID",
+			"hideContactList": "Hide from Contact List"
+		},
+		"fax": {
+			"addTitle": "Adding a Fax Machine",
+			"editTitle": "Editing Fax Machine: {{name}}",
+			"macAddress": "MAC Address",
+			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"new": "Fax Machine",
+			"deviceName": "Device Name",
+			"t38": "T38",
+			"disabled": "Disabled",
+			"auto": "Auto-detect",
+			"force": "Always force"
+		},
+		"softphone": {
+			"addTitle": "Adding a Softphone",
+			"editTitle": "Editing Softphone: {{name}}",
+			"new": "New Softphone",
+			"deviceName": "Device Name"
+		},
+		"ata": {
+			"addTitle": "Adding an ATA",
+			"editTitle": "Editing ATA: {{name}}",
+			"new": "New ATA",
+			"deviceName": "Device Name"
+		},
+		"sip": {
+			"username": "SIP Username",
+			"password": "SIP Password",
+			"realm": "Realm"
+		},
+		"spare": "Spare",
+		"title": "Devices",
+		"titleGrid": {
+			"edit": "Edit",
+			"enable": "Enable",
+			"user": "User",
+			"modelMacAddress": "Model / Mac Address",
+			"type": "Type"
+		},
+		"types": {
+			"cellphone": "Cell Phone",
+			"sip_device": "SIP Phone",
+			"smartphone": "Smartphone",
+			"softphone": "Soft Phone",
+			"landline": "Landline",
+			"fax": "Fax",
+			"ata": "ATA"
+		},
+		"unassignedDevice": "-"
+	},
+
 	"users": {
 		"admin": "Admin",
 		"add": "Add User",
 		"addExtension": "Add an extension to this user",
 		"addNewExtension": "Extension number: ",
 		"addFromSpare": "Add from Spare Numbers",
+		"addFromSpareDevices": "Add from Spare Devices",
 		"buy": "Buy Numbers",
+		"changeUsername": "Change",
+		"dialogChangePassword": {
+			"help": "You can set a new password by just typing any password you want, along with the new username!",
+			"password": "Password",
+			"passwordPlaceholder": "at least 8 letters or digits",
+			"title": "Update username and password",
+			"username": "Login E-mail"
+		},
+		"dialogCreationUser": {
+			"createUser": "Create User",
+			"extension": "Ext. #",
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"loginEmail": "Login Email",
+			"notificationEmail": "Notification E-mail",
+			"password": "at least 8 letters or digits",
+			"sendToSameEmail": "Use the login e-mail for system notifications",
+			"title": "User creation"
+		},
+		"delete": "Delete User",
+		"featureOn": "ON",
+		"includeInDirectory": "Include to Company Directory",
+		"noMatchingDevices": "No devices matching your search",
 		"noMatchingNumbers": "There were no numbers found matching your search",
 		"noMatchingUser": "No data found matching your search",
+		"noMoreSpareDevices": "There are no spare device left, you can buy new devices by going in the Devices Inventory",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
+		"noAssignedDevices": "There are currently no device assigned to this user.",
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
-		"delete": "Delete User",
-		"noNumber": "No number",
-		"noExtension": "No extension",
+		"noNumber": "None",
+		"noExtension": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
-		"includeInDirectory": "Include user to Company Directory",
+		"noUserDevices": "None",
+		"noUserFeatures": "None",
+		"noUserCallflow": "An error occured. There are no Callflow assigned to this user, so you can't add him to the Company directory",
 		"port": "Port Numbers",
 		"resetPassword": "Reset Password",
 		"resendInstructions": "Resend Instructions",
@@ -40,17 +254,210 @@
 			"features": "Features"
 		},
 		"toastrMessages": {
+			"devicesUpdated": "You successfully updated the devices assigned to {{ name }}.",
 			"instructionsSent": "An e-mail has been sent to {{ email }} with all the user Instructions on how to get started with the UI!",
+			"numbersUpdated": "You successfully updated the phone numbers of {{ name }}.",
 			"passwordReseted": "The password has been reset, an e-mail has been sent to {{ email }} with instructions on how to create a new password.",
-			"numbersUpdated": "You successfuly updated the phone numbers of {{ name }}.",
-			"userUpdated": "You successfuly updated {{ name }} settings."
+			"userDelete": "You successfully deleted {{ name }} from the Smart PBX!",
+			"userUpdated": "You successfully updated {{ name }} settings."
 		},
 		"uploadPicture": "Upload a Picture",
-		"user": "User"
+		"user": "User",
+		"find_me_follow_me": {
+			"title": "Find Me Follow Me"
+		},
+		"call_forward": {
+			"directCallsOnly": "Forward direct calls only",
+			"headline": "User Call Forwarding Settings",
+			"help": "Users can change these settings from the user portal.",
+			"keepCallerId": "Keep your Caller-ID",
+			"label": "Forward all calls to this number",
+			"placeholder": "+14157283992",
+			"requireKeyPress": "Leave voicemails on forwarded numbers",
+			"title": "Call Forwarding"
+		},
+		"call_recording": {
+			"title": "Call Recording"
+		},
+		"vm_to_email": {
+			"deleteAfterNotify": "Delete messages from database after sending the notification.",
+			"headline": "Voicemail-to-Email Settings",
+			"help": "By using this feature you agree to the State and Federal terms and conditions.",
+			"label": "Send voicemails to",
+			"seeHere": "See Here",
+			"placeholder": "user@company.com",
+			"title": "Voicemails"
+		},
+		"caller_id": {
+			"title": "Caller-ID Number",
+			"dropdownLabel": "Show my Caller-Id Number as",
+			"headline": "User Caller-ID Number Settings",
+			"help": "If you have more than one phone device, you can do specific settings for each device from the devices screen. Device setting will overwrite user Caller-ID settings."
+		},
+		"music_on_hold": {
+			"title": "Music-On-Hold"
+		},
+		"conferencing": {
+			"title": "Conferencing"
+		},
+		"faxing": {
+			"title": "Faxing"
+		},
+		"hotdesk": {
+			"label": "Does it require a PIN?",
+			"keep_logged_in_elsewhere": "Allow login at multiple devices",
+			"title": "Hot-Desking",
+			"headline": "User Hot-Desking Settings",
+			"help": "The Hot-Desking ID is automatically set as the user's extensions number."
+		}
 	},
 
 	"strategy": {
+		"sectionTitles": {
+			"numbers": "Main Company Numbers",
+			"hours": "Office Hours Strategy",
+			"holidays": "Office Holidays",
+			"calls": "Incoming Call Handling"
+		},
+		"noNumberTitle": "No selected number",
+		"noNumberMessage": "Please add a main number to continue.",
+		"numberLinks": {
+			"spare": "Add from Spare Numbers",
+			"buy": {
+				"link": "Buy Numbers",
+				"regular": "Local",
+				"tollfree": "Toll-free",
+				"vanity": "Vanity"
+			},
+			"port": "Port Numbers"
+		},
+		"hours": {
+			"alwaysOpenTitle": "24 hours Open Office",
+			"alwaysOpenDescription": "Choose this option if you want incoming calls to be handled the same way all the time.",
+			"customHoursTitle": "Custom Office Hours",
+			"customHoursDescription": "Choose this option if you want incoming calls to be handled differently when your office is closed.",
+			"listTitle": "Cutsom Hours",
+			"timezone": "Company Timezone:",
+			"to": "to",
+			"lunchbreakTitle": "Are you closed for lunch hours?"
+		},
+		"holidays": {
+			"enableTitle": "Are you closed for holidays? This will override the office hours settings above.",
+			"addLink": "Add Holiday",
+			"singleLink": "Single Day",
+			"rangeLink": "Date Range",
+			"advancedLink": "Advanced"
+		},
+		"calls": {
+			"openHoursTitle": "Open Hours",
+			"lunchHoursTitle": "Lunch Hours",
+			"afterHoursTitle": "After Hours",
+			"holidaysTitle": "Holidays",
+			"callTabTitle": "Select the way you want your callers to reach you.",
+			"incomingCall": "Incoming Call",
+			"virtualReceptionist": "Virtual Receptionist",
+			"voicemail": "Voicemail"
+		},
+		"popup": {
+			"title": "Virtual Receptionist",
+			"infoBlock": "Virtual Receptionist will answer incoming calls professionally and automatically transfer them to an appropriate department or person. Main Menu will allow you to set up call routes. Please type or record greetings that matches the Main Menu.",
+			"menuTitle": "Main Menu",
+			"greetingsTitle": "Greetings",
+			"addRouteLink": "Add route",
+			"ttsGreetingTitle": "Text to Speech",
+			"ttsGreetingPlaceholder": "Please enter your greeting message here.",
+			"uploadGreetingTitle": "Upload your own file",
+			"recordGreetingTitle": "Record it over the phone",
+			"recordGreetingInfo": "Record the greeting message yourself over the phone, by following the steps below:",
+			"pressKey": "Press",
+			"for": "for"
+		},
 		"open": "Open",
-		"closed": "Closed"
+		"closed": "Closed",
+		"weekdays": {
+			"monday": "Monday",
+			"tuesday": "Tuesday",
+			"wednesday": "Wednesday",
+			"thursday": "Thursday",
+			"friday": "Friday",
+			"saturday": "Saturday",
+			"sunday": "Sunday"
+		},
+		"ordinals": {
+			"first": "First",
+			"second": "Second",
+			"third": "Third",
+			"fourth": "Fourth",
+			"fifth": "Fifth",
+			"last": "Last"
+		},
+		"monthsShort": {
+			"january": "Jan",
+			"february": "Feb",
+			"march": "Mar",
+			"april": "Apr",
+			"may": "May",
+			"june": "Jun",
+			"july": "Jul",
+			"august": "Aug",
+			"september": "Sep",
+			"october": "Oct",
+			"november": "Nov",
+			"december": "Dec"
+		},
+		"callEntities": {
+			"user": "Users",
+			"device": "Devices",
+			"ring_group": "Groups"
+		},
+		"confirmMessages": {
+			"deleteHoliday": "This holiday will be permanently deleted. Continue?",
+			"disableHolidays": "All existing holidays will be permanently deleted. Continue?"
+		},
+		"alertMessages": {
+			"uniqueHoliday": "Every holiday must have a unique name.",
+			"undefinedMenu": "You selected a Virtual Receptionist without setting it up. Please set it up by clicking on the Virtual Receptionist link, or choose a different option.",
+			"emptyTtsGreeting": "You must type in your greeting message to enable Text to Speech functionality.",
+			"emptyUploadGreeting": "Please select a file to upload",
+			"uniqueMenuNumbers": "Numbers within the menu must be unique and non-empty."
+		},
+		"toastrMessages": {
+			"updateHolidaySuccess": "Holidays sucessfully updated.",
+			"updateCallSuccess": "Call strategy sucessfully updated.",
+			"buyNumbersSuccess": "The numbers have been purchased.",
+			"buyNumbersError": "An error occured while purchasing numbers.",
+			"removeNumberSuccess": "Number successfully removed from the main callflow."
+		}
+	},
+
+	"callLogs": {
+		"title": "Call Logs",
+		"dateRangeTo": "to",
+		"noSearchMatch": "You search criteria did not match any Call Log.",
+		"detailsPopupTitle": "Call Log Details",
+		"applyFilter": "Filter by selected dates",
+		"resetFilter": "Reset filter to default dates",
+		"gridHeaders": {
+			"inboundCall": "Inbound",
+			"outboundCall": "Outbound",
+			"dateTime1": "Date/Time",
+			"dateTime2": "(PST)",
+			"from": "From",
+			"to": "To",
+			"duration1": "Duration",
+			"duration2": "(Min)",
+			"hangup1": "Hangup",
+			"hangup2": "Cause",
+			"details1": "Call",
+			"details2": "Details",
+			"report1": "Submit",
+			"report2": "Report"
+		},
+		"reportCall": "Report Call",
+		"alertMessages": {
+			"getDetailsError": "An error occured while retrieving the call log's details."
+		},
+		"key": "Key",
+		"value": "Value"
 	}
 }

@@ -4,10 +4,19 @@
 			<div class="element-header-inner">
 				<div class="title">
 					<i class="icon-info-sign"></i>
-					<span>Main Company Numbers</span>
+					<span>{{ i18n.strategy.sectionTitles.numbers }}</span>
 				</div>
 				<div class="summary">
-					<span>800-779-9000, 415-886-7900</span>
+					<span>
+						{{formatPhoneNumber mainNumbers.[0]}}
+						{{#if mainNumbers.[1]}}
+							{{#if mainNumbers.[2]}}
+								<i class="icon-telicon-multiple-items icon-small"></i>
+							{{else}}
+								, {{formatPhoneNumber mainNumbers.[1]}}
+							{{/if}}
+						{{/if}}
+					</span>
 					<i class="icon-play"></i>
 				</div>
 			</div>
@@ -19,10 +28,10 @@
 			<div class="element-header-inner">
 				<div class="title">
 					<i class="icon-info-sign"></i>
-					<span>Office Hours Strategy</span>
+					<span>{{ i18n.strategy.sectionTitles.hours }}</span>
 				</div>
 				<div class="summary">
-					<span>Custom Office Hours</span>
+					<span></span>
 					<i class="icon-play"></i>
 				</div>
 			</div>
@@ -34,31 +43,29 @@
 			<div class="element-header-inner">
 				<div class="title">
 					<i class="icon-info-sign"></i>
-					<span>Office Holidays</span>
+					<span>{{ i18n.strategy.sectionTitles.holidays }}</span>
 				</div>
 				<div class="summary">
-					<span>None</span>
+					<span></span>
 					<i class="icon-play"></i>
 				</div>
 			</div>
 		</div>
 		<div class="element-content"></div>
 	</div>
-	<div class="element-container">
+	<div class="element-container strategy-calls" data-template="calls">
 		<div class="element-header-outer clearfix">
 			<div class="element-header-inner">
 				<div class="title">
 					<i class="icon-info-sign"></i>
-					<span>Incoming Call Handling</span>
+					<span>{{ i18n.strategy.sectionTitles.calls }}</span>
 				</div>
 				<div class="summary">
-					<span>Default</span>
+					<span></span>
 					<i class="icon-play"></i>
 				</div>
 			</div>
 		</div>
-		<div class="element-content">
-			blablabla
-		</div>
+		<div class="element-content"></div>
 	</div>
 </div>

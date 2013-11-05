@@ -1,0 +1,84 @@
+<div id="strategy_menu_popup">
+	<div class="info-block">
+		{{i18n.strategy.popup.infoBlock}}
+	</div>
+	<div class="menu-block clearfix">
+		<div class="left">
+			<div class="title">{{i18n.strategy.popup.menuTitle}}</div>
+			<div class="content">
+			</div>
+			<div class="add-menu-line">
+				<a href="#">{{i18n.strategy.popup.addRouteLink}}</a>
+			</div>
+		</div>
+		<div class="right">
+			<div class="title">{{i18n.strategy.popup.greetingsTitle}}</div>
+			<div class="content">
+				<div id="strategy_menu_popup_accordion">
+					<div class="greeting-option accordion-group {{#compare greeting.media_source '===' 'tts'}}active{{/compare}}">
+						<div class="greeting-option-header btn-primary" data-toggle="collapse" 
+							 data-parent="#strategy_menu_popup_accordion" 
+							 data-target="#strategy_menu_popup_tts_greeting">
+							<div class="pull-right"><i class="icon-comment icon-white"></i></div>
+							<div>{{i18n.strategy.popup.ttsGreetingTitle}}</div>
+						</div>
+						<div class="collapse" id="strategy_menu_popup_tts_greeting">
+							<div class="greeting-option-content">
+								<textarea placeholder="{{i18n.strategy.popup.ttsGreetingPlaceholder}}">
+									{{#compare greeting.media_source '===' 'tts'}}{{greeting.tts.text}}{{/compare}}
+								</textarea>
+								<div class="greeting-option-actions clearfix">
+									<button class="update-greeting pull-right btn btn-mini btn-primary">{{i18n.update}}</button>
+									<button class="cancel-greeting pull-right btn btn-mini">{{i18n.cancel}}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="greeting-option accordion-group {{#compare greeting.media_source '===' 'upload'}}active{{/compare}}">
+						<div class="greeting-option-header btn-primary" data-toggle="collapse" 
+							 data-parent="#strategy_menu_popup_accordion" 
+							 data-target="#strategy_menu_popup_upload_greeting">
+							<div class="pull-right"><i class="icon-upload-alt icon-white"></i></div>
+							<div>{{i18n.strategy.popup.uploadGreetingTitle}}</div>
+						</div>
+						<div class="collapse" id="strategy_menu_popup_upload_greeting">
+							<div class="greeting-option-content">
+								<input type="file">
+								<div class="greeting-option-actions clearfix">
+									<button class="update-greeting pull-right btn btn-mini btn-primary">{{i18n.update}}</button>
+									<button class="cancel-greeting pull-right btn btn-mini">{{i18n.cancel}}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="greeting-option accordion-group">
+						<div class="greeting-option-header btn-primary" data-toggle="collapse" 
+							 data-parent="#strategy_menu_popup_accordion" 
+							 data-target="#strategy_menu_popup_record_greeting">
+							<div class="pull-right"><i class="icon-info-sign icon-white"></i></div>
+							<div>{{i18n.strategy.popup.recordGreetingTitle}}</div>
+						</div>
+						<div class="collapse" id="strategy_menu_popup_record_greeting">
+							<div class="greeting-option-content">
+								<div>
+									{{i18n.strategy.popup.recordGreetingInfo}}
+								</div>
+								<ol style=" margin-top: 15px; margin-bottom: 0; ">
+									<li>Pickup you phone.</li>
+									<li>Type in this PIN: <span class="record-pin">{{menu.record_pin}}</span>.</li>
+									<li>Record your message.</li>
+									<li>????</li>
+									<li>Profit!</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="action-block clearfix">
+		<button class="save-button btn btn-success pull-right">{{i18n.save}}</button>
+		<a href="#" class="cancel-link pull-right">{{i18n.cancel}}</a>
+	</div>
+</div>

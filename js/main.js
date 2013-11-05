@@ -3,9 +3,11 @@ require.config({
 	paths: {
 		async: 'js/lib/async',
 		bootstrap: 'js/lib/bootstrap-2.3.1.min',
-		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.2',
+		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
+		config: 'js/config',
 		datatables: 'js/lib/tables/jquery.dataTables-1.8',
+		ddslick: 'js/lib/jquery.ddslick.min',
 		footable: 'js/lib/footable/footable.min',
 		'footable-sort': 'js/lib/footable/footable.sort.min',
 		'footable-filter': 'js/lib/footable/footable.filter.min',
@@ -16,6 +18,7 @@ require.config({
 		isotope: 'js/lib/jquery.isotope.min',
 		jquery: 'js/lib/jquery-1.9.1.min',
 		jqueryui: 'js/lib/jquery-ui-1.10.3.custom.min',
+		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
 		jstz: 'js/lib/jstz.min',
 		leaflet: 'js/lib/leaflet.min',
 		monster: 'js/lib/monster',
@@ -27,7 +30,7 @@ require.config({
 		plugins: 'js/plugins',
 		postal: 'js/lib/postal-0.8.2',
 		reqwest: 'js/lib/reqwest-0.7.3.min',
-		toastr: 'js/lib/toastr-1.3.0.min',
+		toastr: 'js/lib/toastr-1.3.0',
 		timepicker: 'js/lib/jquery.timepicker.min',
 		socket: 'js/lib/socket.io.min',
 		underscore: 'js/lib/underscore-1.4.4.min',
@@ -45,6 +48,7 @@ require.config({
 			exports: 'Handlebars'
 		},
 		plugins: ['jquery'],
+		'touch-punch': ['jqueryui'],
 		underscore: {
 			exports: '_'
 		}
@@ -52,7 +56,7 @@ require.config({
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
-require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover'], function($, monster){
+require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover', 'touch-punch'], function($, monster){
 	$.support.cors = true;
 
 	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){
