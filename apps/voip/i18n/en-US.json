@@ -281,6 +281,16 @@
 		"call_recording": {
 			"title": "Call Recording"
 		},
+		"conferencing": {
+			"title": "Conferencing",
+			"headline": "User Conferencing Settings",
+			"pinLabel": "PIN of this user"
+		},
+		"faxing": {
+			"title": "Faxing",
+			"dropdownLabel": "Choose number for Fax Machine",
+			"headline": "User Faxing Settings"
+		},
 		"vm_to_email": {
 			"deleteAfterNotify": "Delete messages from database after sending the notification.",
 			"headline": "Voicemail-to-Email Settings",
@@ -298,12 +308,6 @@
 		},
 		"music_on_hold": {
 			"title": "Music-On-Hold"
-		},
-		"conferencing": {
-			"title": "Conferencing"
-		},
-		"faxing": {
-			"title": "Faxing"
 		},
 		"hotdesk": {
 			"label": "Does it require a PIN?",

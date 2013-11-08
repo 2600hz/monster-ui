@@ -324,7 +324,7 @@
 	height: 150px;
 	text-align: center;
 	white-space: nowrap;
-	width: 25%;
+	width: 33.3333%;
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -415,6 +415,11 @@
 	line-height: 60px;
 }
 
+.feature-popup-container input,
+.feature-popup-container select {
+	margin-left: 10px;
+}
+
 /* Caller-ID User Feature Popup */
 .feature-popup-container[data-feature="caller_id"] {
 	width: 525px;
@@ -422,17 +427,11 @@
 
 .feature-popup-container .caller-id-select {
 	margin-top: 5px;
-	margin-left: 10px;
 }
 
-/* Call Forwarding User Feature Popup */
-.feature-popup-container[data-feature="call_forward"] #number_field {
-	margin-left: 10px;
-}
 /* Hot Desking User Feature Popup */
 .feature-popup-container[data-feature="hotdesk"] form .main-line .icheckbox_flat {
 	margin-left: 10px;
-	margin-right: 10px;
 }
 
 .feature-popup-container[data-feature="hotdesk"] #pin {
@@ -442,7 +441,11 @@
 /* VM To Email User Feature Popup */
 .feature-popup-container[data-feature="vm_to_email"] #email {
 	margin-top: 8px;
-	margin-left: 8px;
+}
+
+/* Conferencing */
+.feature-popup-container[data-feature="conferencing"] form {
+	margin-bottom: 0;
 }
 
 /* Change Password Popup */
