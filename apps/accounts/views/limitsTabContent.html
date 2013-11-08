@@ -62,8 +62,8 @@
 			</div>
 			<div>{{ i18n.addToBalance }} <input class="add-credit-input" name="addCreditBalance" pattern="\d+(\.\d{1,2})?" type="text" /></div>
 			<label class="allow-prepay">
-				<input name="limits.allow_prepay" class="allow-prepay-ckb pull-left" type="checkbox" />
-				<div>
+				<input name="limits.allow_prepay" class="allow-prepay-ckb pull-left" type="checkbox" {{#if allowPrepay}}checked{{/if}} />
+				<div class="text">
 					{{ i18n.allowPrepay }}
 				</div>
 			</label>

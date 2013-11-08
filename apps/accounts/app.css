@@ -570,9 +570,14 @@
 	width: 270px;
 }
 
-.limits-tab-container .call-restrictions-div .manage-credit-div label.allow-prepay > div {
-	margin-left: 20px;
+.limits-tab-container .call-restrictions-div .manage-credit-div label.allow-prepay > * {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.limits-tab-container .call-restrictions-div .manage-credit-div label.allow-prepay > .text {
 	text-align: justify;
+	width: 242px;
 }
 
 .limits-tab-container .call-restrictions-div .credit-balance {
@@ -721,10 +726,8 @@
 	background-color: #fff;
 }
 
-.restrictions-tab-container .restrictions-menu .nav a input[type="checkbox"] {
+.restrictions-tab-container .restrictions-menu .nav a .icheckbox_flat {
 	margin-left: 10px;
-	margin-right: 10px;
-	margin-top: 0;
 }
 
 /* RESTRICTIONS CONTENT */

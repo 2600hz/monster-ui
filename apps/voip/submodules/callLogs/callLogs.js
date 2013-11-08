@@ -46,6 +46,7 @@ define(function(require){
 				cdrs = self.callLogsFormatCdrs(cdrs);
 
 				dataTemplate.cdrs = cdrs;
+				console.log(dataTemplate);
 				template = $(monster.template(self, 'callLogs-layout', dataTemplate));
 
 				self.callLogsBindEvents(template, cdrs);
@@ -226,6 +227,7 @@ define(function(require){
 
 					return {
 						id: cdr.id,
+						callId: cdr.call_id,
 						timestamp: cdr.timestamp,
 						date: month+"/"+day+"/"+year,
 						time: hours+":"+minutes,
