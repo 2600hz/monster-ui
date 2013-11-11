@@ -23,6 +23,30 @@
 		</div>
 		<div class="element-content"></div>
 	</div>
+	<div class="element-container strategy-confnum" data-template="confnum">
+		<div class="element-header-outer clearfix">
+			<div class="element-header-inner">
+				<div class="title">
+					<i class="icon-info-sign"></i>
+					<span>{{ i18n.strategy.sectionTitles.confnum }}</span>
+				</div>
+				<div class="summary">
+					<span>
+						{{formatPhoneNumber confNumbers.[0]}}
+						{{#if confNumbers.[1]}}
+							{{#if confNumbers.[2]}}
+								<i class="icon-telicon-multiple-items icon-small"></i>
+							{{else}}
+								, {{formatPhoneNumber confNumbers.[1]}}
+							{{/if}}
+						{{/if}}
+					</span>
+					<i class="icon-play"></i>
+				</div>
+			</div>
+		</div>
+		<div class="element-content"></div>
+	</div>
 	<div class="element-container strategy-hours" data-template="hours">
 		<div class="element-header-outer clearfix">
 			<div class="element-header-inner">

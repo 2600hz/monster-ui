@@ -95,12 +95,12 @@
 
 /************** Main Numbers **************/
 
-#strategy_container .element-container.main-number .main-number-element {
+#strategy_container .element-container .number-element {
 	border-bottom: solid 1px #dedede;
 	height: 70px;
 }
 
-#strategy_container .element-container.main-number .main-number-element > div {
+#strategy_container .element-container .number-element > div {
 	display: inline-block;
 	padding: 10px;
 	line-height: 50px;
@@ -112,54 +112,54 @@
 	text-overflow: ellipsis;
 }
 
-#strategy_container .element-container.main-number .main-number-element > div:not(:last-of-type) {
+#strategy_container .element-container .number-element > div:not(:last-of-type) {
 	border-right: solid 1px #dedede;
 }
 
-#strategy_container .element-container.main-number .main-number-element .number {
+#strategy_container .element-container .number-element .number {
 	text-align: left;
 	width: 100%;
 }
 
-#strategy_container .element-container.main-number .main-number-element .number > button {
+#strategy_container .element-container .number-element .number > button {
 	margin: 0px 15px;
 }
 
-#strategy_container .element-container.main-number .main-number-element .country {
+#strategy_container .element-container .number-element .country {
 	width: 25%;
 	text-align: center;
 }
 
-#strategy_container .element-container.main-number .main-number-element .options {
+#strategy_container .element-container .number-element .options {
 	width: 40%;
 	text-align: right;
 }
 
-#strategy_container .element-container.main-number .main-number-element .options > i {
+#strategy_container .element-container .number-element .options > i {
 	margin-right: 10px;
 }
 
-#strategy_container .element-container.main-number .main-number-element .no-number-error {
+#strategy_container .element-container .number-element .no-number-error {
 	font-style: italic;
 	color: #ee1212;
 	font-weight: 500;
 }
 
-#strategy_container .element-container.main-number .main-number-actions {
+#strategy_container .element-container .number-actions {
 	padding: 25px 20px;
 	line-height: 30px;
 	background-color: #f3f3f3;
 }
 
-#strategy_container .element-container.main-number .main-number-actions .action-links a i {
+#strategy_container .element-container .number-actions .action-links a i {
 	margin-right: 5px;
 }
 
-#strategy_container .element-container.main-number .main-number-actions .action-links ul.dropdown-menu {
+#strategy_container .element-container .number-actions .action-links ul.dropdown-menu {
 	min-width: 0;
 }
 
-#strategy_container .element-container.main-number .main-number-actions .action-links .buy-dropdown:hover {
+#strategy_container .element-container .number-actions .action-links .buy-dropdown:hover {
 	background-color: transparent;
 	text-decoration: underline;
 }

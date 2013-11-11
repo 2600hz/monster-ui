@@ -321,12 +321,14 @@
 	"strategy": {
 		"sectionTitles": {
 			"numbers": "Main Company Numbers",
+			"confnum": "Main Conference Number",
 			"hours": "Office Hours Strategy",
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
 		"noNumberTitle": "No selected number",
 		"noNumberMessage": "Please add a main number to continue.",
+		"noConfNumMessage": "Please add a main conference number.",
 		"numberLinks": {
 			"spare": "Add from Spare Numbers",
 			"buy": {
