@@ -27,6 +27,10 @@ define(function(require){
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
 			},
+			'auth.updateUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'POST'
+			},
 			'auth.getAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'GET'
@@ -170,28 +174,63 @@ define(function(require){
 					results.user.apps = results.user.apps || {};
 					results.account.apps = results.account.apps || {};
 
+					var accountApps = results.account.apps,
+						fullAppList = {};
+
+					_.each(self.installedApps, function(val) {
+						fullAppList[val.id] = val;
+					});
+
+					if(results.user.appList && results.user.appList.length > 0) {
+						for(var i = 0; i < results.user.appList.length; i++) {
+							var appId = results.user.appList[i];
+							if(appId in fullAppList && appId in accountApps) {
+								var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+								if(accountApps[appId].all || accountAppUsers.indexOf(results.user.id) >= 0) {
+									defaultApp = fullAppList[appId].name;
+									break;
+								}
+							}
+						}
+					} else {
+						var userAppList = $.map(fullAppList, function(val) {
+							if(val.id in accountApps) {
+								var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+								if(accountApps[val.id].all || accountAppUsers.indexOf(results.user.id) >= 0) {
+									return val;
+								}
+							}
+						});
+
+						if(userAppList && userAppList.length > 0) {
+							userAppList.sort(function(a, b) {
+								return a.label < b.label ? -1 : 1;
+							});
+
+							results.user.appList = $.map(userAppList, function(val) {
+								return val.id;
+							});
+
+							defaultApp = fullAppList[results.user.appList[0]].name;
+
+							monster.request({
+								resource: 'auth.updateUser',
+								data: {
+									accountId: results.account.id,
+									userId: results.user.id,
+									data: results.user
+								},
+								success: function(_data, status) {},
+								error: function(_data, status) {}
+							});
+						}
+					}
+
 					self.currentUser = results.user;
 					// This account will remain unchanged, it should be used by non-masqueradable apps
 					self.originalAccount = results.account;
 					// This account will be overriden when masquerading, it should be used by masqueradable apps
 					self.currentAccount = $.extend(true, {}, self.originalAccount);
-
-					if(results.user.appList && results.user.appList.length > 0) {
-						for(var i = 0; i < results.user.appList.length; i++) {
-							var appId = results.user.appList[i],
-								accountApps = results.account.apps,
-								fullAppList = {};
-
-							_.each(self.installedApps, function(val) {
-								fullAppList[val.id] = val;
-							});
-
-							if(appId in fullAppList && appId in accountApps && (accountApps[appId].all || results.user.id in accountApps[appId].users)) {
-								defaultApp = fullAppList[appId].name;
-								break;
-							}
-						}
-					}
 
 					monster.pub('core.loadApps', {
 						defaultApp: defaultApp
