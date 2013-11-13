@@ -185,7 +185,7 @@ define(function(require){
 						for(var i = 0; i < results.user.appList.length; i++) {
 							var appId = results.user.appList[i];
 							if(appId in fullAppList && appId in accountApps) {
-								var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+								var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
 								if(accountApps[appId].all || accountAppUsers.indexOf(results.user.id) >= 0) {
 									defaultApp = fullAppList[appId].name;
 									break;
