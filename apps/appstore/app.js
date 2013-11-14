@@ -310,7 +310,7 @@ define(function(require){
 						},
 						success: function(data, status) {
 							appstoreData.account = data.data;
-							if(!("apps" in appstoreData.account)) {
+							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps)) {
 								appstoreData.account.apps = {};
 							}
 							appstoreData.account.apps[app.id] = appInstallInfo;
