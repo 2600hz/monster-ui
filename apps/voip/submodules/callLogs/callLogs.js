@@ -46,7 +46,6 @@ define(function(require){
 				cdrs = self.callLogsFormatCdrs(cdrs);
 
 				dataTemplate.cdrs = cdrs;
-				console.log(dataTemplate);
 				template = $(monster.template(self, 'callLogs-layout', dataTemplate));
 
 				self.callLogsBindEvents(template, cdrs);
@@ -80,8 +79,8 @@ define(function(require){
 					matchedResults = true;
 				} else {
 					_.each(cdrs, function(cdr) {
-						var searchString = (cdr.date + "|" + cdr.fromName + "|" 
-										 + cdr.fromNumber + "|" + cdr.toName + "|" 
+						var searchString = (cdr.date + "|" + cdr.fromName + "|"
+										 + cdr.fromNumber + "|" + cdr.toName + "|"
 										 + cdr.toNumber + "|" + cdr.hangupCause).toLowerCase(),
 							rowGroup = template.find('.grid-row.a-leg[data-id="'+cdr.id+'"]').parents('.grid-row-group');
 						if(searchString.indexOf(searchValue) >= 0) {
@@ -89,8 +88,8 @@ define(function(require){
 							rowGroup.show();
 						} else {
 							var matched = _.find(cdr.bLegs, function(bLeg) {
-								var searchStr = (bLeg.date + "|" + bLeg.fromName + "|" 
-											  + bLeg.fromNumber + "|" + bLeg.toName + "|" 
+								var searchStr = (bLeg.date + "|" + bLeg.fromName + "|"
+											  + bLeg.fromNumber + "|" + bLeg.toName + "|"
 											  + bLeg.toNumber + "|" + bLeg.hangupCause).toLowerCase();
 								return searchStr.indexOf(searchValue) >= 0;
 							});
@@ -292,7 +291,7 @@ define(function(require){
 					})
 
 					monster.ui.dialog(
-						monster.template(self, 'callLogs-detailsPopup', { details: detailsArray }), 
+						monster.template(self, 'callLogs-detailsPopup', { details: detailsArray }),
 						{ title: self.i18n.active().callLogs.detailsPopupTitle }
 					);
 				},
