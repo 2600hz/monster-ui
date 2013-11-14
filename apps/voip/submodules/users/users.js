@@ -582,8 +582,6 @@ define(function(require){
 				var formData = form2object('form-'+currentUser.id),
 					userToSave = $.extend(true, {}, currentUser, formData);
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(userData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
 
@@ -597,8 +595,6 @@ define(function(require){
 				passwordTemplate.find('.save-new-username').on('click', function() {
 					var formData = form2object('form_new_username'),
 					    userToSave = $.extend(true, {}, currentUser, formData);
-
-					userToSave = self.usersCleanUserData(userToSave);
 
 					self.usersUpdateUser(userToSave, function(userData) {
 						popup.dialog('close').remove();
@@ -1098,7 +1094,6 @@ define(function(require){
 				delete currentUser.hotdesk;
 
 				userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
-				userToSave = self.usersCleanUserData(userToSave);
 
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
@@ -1170,8 +1165,6 @@ define(function(require){
 
 				userToSave.vm_to_email_enabled = enabled;
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				/* Only update the email and the checkboxes if the setting is enabled */
 				if(enabled === true) {
 					userToSave.email = formData.email;
@@ -1225,8 +1218,6 @@ define(function(require){
 					userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
 				}
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
 
@@ -1266,8 +1257,6 @@ define(function(require){
 
 				var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
 
@@ -1302,6 +1291,7 @@ define(function(require){
 				userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
 			}
 
+			delete userData.include_directory;
 			delete userData.features;
 			delete userData.extra;
 			delete userData[''];
@@ -2044,6 +2034,8 @@ define(function(require){
 		usersUpdateUser: function(userData, callback) {
 			var self = this;
 
+			userData = self.usersCleanUserData(userData);
+
 			monster.request({
 				resource: 'voip.users.updateUser',
 				data: {
@@ -2376,15 +2368,18 @@ define(function(require){
 						});
 					},
 					user: function(callback) {
-						if(data.user.conferencing_enabled !== true) {
-							data.user.conferencing_enabled = true;
+						if(data.user.smartpbx && data.user.smartpbx.conferencing && data.user.smartpbx.conferencing.enabled === true) {
+							callback && callback(null, data.user);
+						}
+						else {
+							data.user.smartpbx = data.user.smartpbx || {};
+							data.user.smartpbx.conferencing = data.user.smartpbx.conferencing || {};
+
+							data.user.smartpbx.conferencing.enabled = true;
 
 							self.usersUpdateUser(data.user, function(user) {
 								callback && callback(null, user);
 							});
-						}
-						else {
-							callback && callback(null, data.user);
 						}
 					}
 				},
@@ -2427,15 +2422,18 @@ define(function(require){
 						});
 					},
 					user: function(callback) {
-						if(data.user.faxing_enabled !== true) {
-							data.user.faxing_enabled = true;
+						if(data.user.smartpbx && data.user.smartpbx.faxing && data.user.smartpbx.faxing.enabled === true) {
+							callback && callback(null, data.user);
+						}
+						else {
+							data.user.smartpbx = data.user.smartpbx || {};
+							data.user.smartpbx.faxing = data.user.smartpbx.faxing || {};
+
+							data.user.smartpbx.faxing.enabled = true;
 
 							self.usersUpdateUser(data.user, function(user) {
 								callback && callback(null, user);
 							});
-						}
-						else {
-							callback && callback(null, data.user);
 						}
 					}
 				},
@@ -2483,7 +2481,11 @@ define(function(require){
 					},
 					user: function(callback) {
 						self.usersGetUser(userId, function(user) {
-							user.conferencing_enabled = false;
+							//user.conferencing_enabled = false;
+							user.smartpbx = user.smartpbx || {};
+							user.smartpbx.conferencing = user.smartpbx.conferencing || {};
+
+							user.smartpbx.conferencing.enabled = false;
 
 							self.usersUpdateUser(user, function(user) {
 								callback(null, user);
@@ -2523,7 +2525,11 @@ define(function(require){
 					},
 					user: function(callback) {
 						self.usersGetUser(userId, function(user) {
-							user.faxing_enabled = false;
+							//user.faxing_enabled = false;
+							user.smartpbx = user.smartpbx || {};
+							user.smartpbx.faxing = user.smartpbx.faxing || {};
+
+							user.smartpbx.faxing.enabled = false;
 
 							self.usersUpdateUser(user, function(user) {
 								callback(null, user);
