@@ -105,6 +105,27 @@ define(function(require){
 				url: 'accounts/{accountId}/directories',
 				verb: 'PUT'
 			},
+			/* Conferences */
+			'voip.users.createConference': {
+				url: 'accounts/{accountId}/conferences',
+				verb: 'PUT'
+			},
+			'voip.users.getConference': {
+				url: 'accounts/{accountId}/conferences/{conferenceId}',
+				verb: 'GET'
+			},
+			'voip.users.updateConference': {
+				url: 'accounts/{accountId}/conferences/{conferenceId}',
+				verb: 'POST'
+			},
+			'voip.users.deleteConference': {
+				url: 'accounts/{accountId}/conferences/{conferenceId}',
+				verb: 'DELETE'
+			},
+			'voip.users.listUserConferences': {
+				url: 'accounts/{accountId}/conferences?filter_owner_id={userId}',
+				verb: 'GET'
+			},
 			/* Misc */
 			'voip.users.getNumbers': {
 				url: 'accounts/{accountId}/phone_numbers/',
@@ -207,6 +228,16 @@ define(function(require){
 							icon: 'icon-envelope',
 							iconColor: 'icon-green',
 							title: self.i18n.active().users.vm_to_email.title
+						},
+						faxing: {
+							icon: 'icon-telicon-fax',
+							iconColor: 'icon-red',
+							title: self.i18n.active().users.faxing.title
+						},
+						conferencing: {
+							icon: 'icon-comments',
+							iconColor: 'icon-gray',
+							title: self.i18n.active().users.conferencing.title
 						}
 					}
 				};
@@ -245,28 +276,25 @@ define(function(require){
 			var self = this,
 				dataTemplate = {
 					existingExtensions: [],
-					countUsers: 0
+					countUsers: data.users.length
 				},
-			    mapAllUsers = {},
-			    mapResultUsers = {};
+			    mapUsers = {};
 
 			_.each(data.users, function(user) {
-				mapAllUsers[user.id] = self.usersFormatUserData(user);
+				mapUsers[user.id] = self.usersFormatUserData(user);
 			});
 
 			_.each(data.callflows, function(callflow) {
 				var userId = callflow.owner_id;
 
 				_.each(callflow.numbers, function(number) {
-					if(number.length < 7) {
+					if(number && number.length < 7) {
 						dataTemplate.existingExtensions.push(number);
 					}
 				});
 
-				if(userId in mapAllUsers) {
-					var user = $.extend(true, {}, mapAllUsers[userId]);
-
-					dataTemplate.countUsers++;
+				if(userId in mapUsers) {
+					var user = mapUsers[userId];
 
 					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
@@ -293,8 +321,6 @@ define(function(require){
 							}
 						}
 					});
-
-					mapResultUsers[userId] = user;
 				}
 			});
 
@@ -303,19 +329,19 @@ define(function(require){
 			_.each(data.devices, function(device) {
 				var userId = device.owner_id;
 
-				if(userId in mapResultUsers) {
-					if(mapResultUsers[userId].extra.devices.length == 2) {
-						mapResultUsers[userId].extra.additionalDevices++;
+				if(userId in mapUsers) {
+					if(mapUsers[userId].extra.devices.length == 2) {
+						mapUsers[userId].extra.additionalDevices++;
 					}
 					else {
-						mapResultUsers[userId].extra.devices.push(device.device_type);
+						mapUsers[userId].extra.devices.push(device.device_type);
 					}
 				}
 			});
 
 			/* Sort by last name */
 			var sortedUsers = [];
-			_.each(mapResultUsers, function(user) {
+			_.each(mapUsers, function(user) {
 				sortedUsers.push(user);
 			});
 
@@ -451,8 +477,10 @@ define(function(require){
 
 			/* Events for Extensions details */
 			template.on('click', '.save-extensions', function() {
-				var numbers = $.extend(true, [], numbersToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+				var $this = $(this),
+					numbers = $.extend(true, [], numbersToSave),
+					name = $this.parents('.grid-row').find('.grid-cell.name').text(),
+					userId = $this.parents('.grid-row').data('id');
 
 				template.find('.extensions .list-assigned-items .item-row').each(function(k, row) {
 					var row = $(row),
@@ -463,9 +491,9 @@ define(function(require){
 					numbers.push(number);
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, numbers, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.usersRender({ userId: callflowData.owner_id });
 				});
 			});
 
@@ -554,8 +582,6 @@ define(function(require){
 				var formData = form2object('form-'+currentUser.id),
 					userToSave = $.extend(true, {}, currentUser, formData);
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(userData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
 
@@ -569,8 +595,6 @@ define(function(require){
 				passwordTemplate.find('.save-new-username').on('click', function() {
 					var formData = form2object('form_new_username'),
 					    userToSave = $.extend(true, {}, currentUser, formData);
-
-					userToSave = self.usersCleanUserData(userToSave);
 
 					self.usersUpdateUser(userToSave, function(userData) {
 						popup.dialog('close').remove();
@@ -674,16 +698,18 @@ define(function(require){
 
 			/* Events for Numbers in Users */
 			template.on('click', '.save-numbers', function() {
-				var numbers = $.extend(true, [], extensionsToSave),
-					name = $(this).parents('.grid-row').find('.grid-cell.name').text();
+				var $this = $(this),
+					numbers = $.extend(true, [], extensionsToSave),
+					name = $this.parents('.grid-row').find('.grid-cell.name').text(),
+					userId = $this.parents('.grid-row').data('id');
 
 				template.find('.detail-numbers .list-assigned-items .item-row').each(function(k, row) {
 					numbers.push($(row).data('id'));
 				});
 
-				self.usersUpdateCallflowNumbers(currentCallflow.id, numbers, function(callflowData) {
+				self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, numbers, function(callflowData) {
 					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.data.owner_id });
+					self.usersRender({ userId: callflowData.owner_id });
 				});
 			});
 
@@ -840,6 +866,56 @@ define(function(require){
 				});
 			});
 
+			template.on('click', '.feature[data-feature="conferencing"]', function() {
+				self.usersGetConferenceFeature(currentUser.id, function(conference) {
+					var data = {
+						user: currentUser,
+						conference: conference
+					};
+
+					self.usersRenderConferencing(data);
+				});
+			});
+
+			template.on('click', '.feature[data-feature="faxing"]', function() {
+				monster.parallel({
+						numbers: function(callback) {
+							self.usersListNumbers(function(listNumbers) {
+								var spareNumbers = {};
+
+								_.each(listNumbers.numbers, function(number, key) {
+									if(number.used_by === '') {
+										spareNumbers[key] = number;
+									}
+								});
+
+								callback && callback(null, spareNumbers);
+							});
+						},
+						callflows: function(callback) {
+							self.usersListCallflowsUser(currentUser.id, function(callflows) {
+								var existingCallflow;
+
+								_.each(callflows, function(callflow) {
+									if(callflow.type === 'faxing') {
+										existingCallflow = callflow;
+
+										return false;
+									}
+								});
+
+								callback && callback(null, existingCallflow)
+							});
+						}
+					},
+					function(err, results) {
+						results.user = currentUser;
+
+						self.usersRenderFaxing(results);
+					}
+				);
+			});
+
 			template.on('click', '.actions .buy-link', function(e) {
                 e.preventDefault();
                 monster.pub('common.buyNumbers', {
@@ -876,6 +952,113 @@ define(function(require){
             });
 		},
 
+		usersFormatFaxingData: function(data) {
+			var listNumbers = [];
+
+			if(data.callflows) {
+				if(data.callflows.numbers.length > 0) {
+					listNumbers.push(data.callflows.numbers[0]);
+				}
+			}
+
+			_.each(data.numbers, function(value, number) {
+				listNumbers.push(number);
+			});
+
+			data.extra = $.extend(true, {}, data.extra, {
+				listNumbers: listNumbers
+			});
+
+			return data;
+		},
+
+		usersRenderConferencing: function(data) {
+			var self = this,
+				data = self.usersFormatConferencingData(data),
+				featureTemplate = $(monster.template(self, 'users-feature-conferencing', data)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				data.conference = form2object('conferencing_form');
+
+				if(switchFeature.bootstrapSwitch('status')) {
+					self.usersUpdateConferencing(data, function(user) {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: user.id });
+					});
+				}
+				else {
+					self.usersDeleteConferencing(data.user.id, function(user) {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: user.id });
+					});
+				}
+			});
+
+			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: data.user.extra.mapFeatures.conferencing.title,
+				position: ['center', 20]
+			});
+		},
+
+		usersFormatConferencingData: function(data) {
+			return data;
+		},
+
+		usersRenderFaxing: function(data) {
+			var self = this,
+				data = self.usersFormatFaxingData(data),
+				featureTemplate = $(monster.template(self, 'users-feature-faxing', data)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var newNumber = popup.find('.dropdown-numbers').val();
+
+				if(switchFeature.bootstrapSwitch('status')) {
+					self.usersUpdateFaxing(data, newNumber, function(results) {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: results.callflow.owner_id });
+					});
+				}
+				else {
+					self.usersDeleteFaxing(data.callflows.owner_id, function() {
+						popup.dialog('close').remove();
+
+						self.usersRender({ userId: data.callflows.owner_id });
+					});
+				}
+			});
+
+			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+			var popup = monster.ui.dialog(featureTemplate, {
+				title: data.user.extra.mapFeatures.faxing.title,
+				position: ['center', 20]
+			});
+		},
+
+
 		usersRenderHotdesk: function(currentUser) {
 			var self = this,
 				featureTemplate = $(monster.template(self, 'users-feature-hotdesk', currentUser)),
@@ -911,7 +1094,6 @@ define(function(require){
 				delete currentUser.hotdesk;
 
 				userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
-				userToSave = self.usersCleanUserData(userToSave);
 
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
@@ -983,8 +1165,6 @@ define(function(require){
 
 				userToSave.vm_to_email_enabled = enabled;
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				/* Only update the email and the checkboxes if the setting is enabled */
 				if(enabled === true) {
 					userToSave.email = formData.email;
@@ -1038,8 +1218,6 @@ define(function(require){
 					userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
 				}
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
 
@@ -1079,8 +1257,6 @@ define(function(require){
 
 				var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
 
-				userToSave = self.usersCleanUserData(userToSave);
-
 				self.usersUpdateUser(userToSave, function(data) {
 					popup.dialog('close').remove();
 
@@ -1115,6 +1291,7 @@ define(function(require){
 				userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
 			}
 
+			delete userData.include_directory;
 			delete userData.features;
 			delete userData.extra;
 			delete userData[''];
@@ -1146,27 +1323,18 @@ define(function(require){
 		usersGetFeaturesTemplate: function(userId, listUsers, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'voip.users.getUser',
-				data: {
-					accountId: self.accountId,
-					userId: userId
-				},
-				success: function(data) {
-					var userData = data.data;
+			self.usersGetUser(userId, function(userData) {
+				_.each(listUsers.users, function(user) {
+					if(user.id === userData.id) {
+						userData = $.extend(true, userData, user);
+					}
+				});
 
-					_.each(listUsers.users, function(user) {
-						if(user.id === data.data.id) {
-							userData = $.extend(true, userData, user);
-						}
-					});
+				var dataTemplate = self.usersFormatUserData(userData);
 
-					var dataTemplate = self.usersFormatUserData(userData);
+				template = $(monster.template(self, 'users-features', dataTemplate));
 
-					template = $(monster.template(self, 'users-features', dataTemplate));
-
-					callback && callback(template, dataTemplate);
-				}
+				callback && callback(template, dataTemplate);
 			});
 		},
 		usersGetNameTemplate: function(userId, listUsers, callbackAfterFormat) {
@@ -1184,15 +1352,8 @@ define(function(require){
 						});
 					},
 					user: function(callback) {
-						monster.request({
-							resource: 'voip.users.getUser',
-							data: {
-								accountId: self.accountId,
-								userId: userId
-							},
-							success: function(data) {
-								callback(null, data.data);
-							}
+						self.usersGetUser(userId, function(userData) {
+							callback(null, userData);
 						});
 					}
 				},
@@ -1277,15 +1438,10 @@ define(function(require){
 						});
 					},
 					numbers: function(callbackParallel) {
-						monster.request({
-							resource: 'voip.users.getNumbers',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(numbers) {
-								callbackParallel && callbackParallel(null, numbers.data);
-							}
+						self.usersListNumbers(function(listNumbers) {
+							callbackParallel && callbackParallel(null, listNumbers);
 						});
+
 					}
 				},
 				function(err, results) {
@@ -1293,6 +1449,7 @@ define(function(require){
 				}
 			);
 		},
+
 		usersGetNumbersTemplate: function(userId, callback) {
 			var self = this;
 
@@ -1325,7 +1482,6 @@ define(function(require){
 				});
 			});
 		},
-
 		usersFormatDevicesData: function(userId, data) {
 			var self = this,
 				formattedData = {
@@ -1380,15 +1536,17 @@ define(function(require){
 					});
 				}
 
-				/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
-				_.each(response.callflow.numbers, function(number) {
-					if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
-						response.assignedNumbers[number] = data.numbers.numbers[number];
-					}
-					else {
-						response.extensions.push(number);
-					}
-				});
+				if(response.callflow) {
+					/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
+					_.each(response.callflow.numbers, function(number) {
+						if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
+							response.assignedNumbers[number] = data.numbers.numbers[number];
+						}
+						else {
+							response.extensions.push(number);
+						}
+					});
+				}
 
 				/* List of extensions */
 				response.allExtensions = [];
@@ -1414,6 +1572,7 @@ define(function(require){
 
 					return result;
 				});
+
 				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
 				response.emptySpare = _.isEmpty(response.unassignedNumbers);
 				response.emptyExtensions = _.isEmpty(response.extensions);
@@ -1622,6 +1781,53 @@ define(function(require){
 			});
 		},
 
+		/* Hack to support users from previous version */
+		usersMigrateFromExtensions: function(userId, listExtensions, callback) {
+			var self = this;
+
+			self.usersGetUser(userId, function(user) {
+				var fullName = user.first_name + ' ' + user.last_name,
+					vmbox = {
+						owner_id: user.id,
+						mailbox: listExtensions[0], //TODO
+						name: fullName + '\'s VMBox',
+						timezone: user.timezone
+					},
+					callflow = {
+						contact_list: {
+							exclude: false
+						},
+						flow: {
+							children: {
+								_: {
+									children: {},
+									data: {
+									},
+									module: 'voicemail'
+								}
+							},
+							data: {
+								id: user.id,
+								can_call_self: false,
+								timeout: 20
+							},
+							module: 'user'
+						},
+						name: fullName + ' SmartPBX\'s Callflow',
+						numbers: listExtensions,
+						owner_id: user.id
+					};
+
+				self.usersCreateVMBox(vmbox, function(_dataVM) {
+					callflow.flow.children['_'].data.id = _dataVM.id;
+
+					self.usersCreateCallflow(callflow, function(_dataCF) {
+						callback && callback(_dataCF);
+					});
+				});
+			});
+		},
+
 		usersAddUserToMainDirectory: function(dataUser, callflowId, callback) {
 			var self = this;
 
@@ -1649,7 +1855,7 @@ define(function(require){
 				});
 
 				if(indexMain === -1) {
-					toastr.error(self.i18n.active().users.noUserCallflow);
+					//toastr.error(self.i18n.active().users.noUserCallflow);
 					callback(null);
 				}
 				else {
@@ -1810,8 +2016,25 @@ define(function(require){
 			});
 		},
 
+		usersGetUser: function(userId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getUser',
+				data: {
+					accountId: self.accountId,
+					userId: userId
+				},
+				success: function(user) {
+					callback && callback(user.data);
+				}
+			});
+		},
+
 		usersUpdateUser: function(userData, callback) {
 			var self = this;
+
+			userData = self.usersCleanUserData(userData);
 
 			monster.request({
 				resource: 'voip.users.updateUser',
@@ -1825,6 +2048,98 @@ define(function(require){
 				},
 				error: function(data) {
 					monster.ui.handleError(data);
+				}
+			});
+		},
+
+		usersGetConferenceFeature: function(userId, callback) {
+			var self = this;
+
+			self.usersListConferences(userId, function(conferences) {
+				if(conferences.length > 0) {
+					self.usersGetConference(conferences[0].id, function(conference) {
+						callback && callback(conference);
+					});
+				}
+				else {
+					callback && callback();
+				}
+			});
+		},
+
+		usersListConferences: function(userId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listUserConferences',
+				data: {
+					accountId: self.accountId,
+					userId: userId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersGetConference: function(conferenceId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getConference',
+				data: {
+					accountId: self.accountId,
+					conferenceId: conferenceId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersUpdateConference: function(conference, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.updateConference',
+				data: {
+					accountId: self.accountId,
+					conferenceId: conference.id,
+					data: conference
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersCreateConference: function(conference, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.createConference',
+				data: {
+					accountId: self.accountId,
+					data: conference
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersDeleteConference: function(conferenceId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.deleteConference',
+				data: {
+					accountId: self.accountId,
+					conferenceId: conferenceId,
+					data: {}
+				},
+				success: function(data) {
+					callback(data.data);
 				}
 			});
 		},
@@ -1939,31 +2254,294 @@ define(function(require){
 			});
 		},
 
-		usersUpdateCallflowNumbers: function(callflowId, numbers, callback) {
+		usersUpdateCallflowNumbers: function(userId, callflowId, numbers, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'voip.users.getCallflow',
-				data: {
-					accountId: self.accountId,
-					callflowId: callflowId
-				},
-				success: function(getCallflowData) {
-					getCallflowData.data.numbers = numbers;
-
+			if(numbers.length > 0) {
+				if(callflowId) {
 					monster.request({
-						resource: 'voip.users.updateCallflow',
+						resource: 'voip.users.getCallflow',
 						data: {
 							accountId: self.accountId,
-							callflowId: callflowId,
-							data: getCallflowData.data
+							callflowId: callflowId
 						},
-						success: function(callflowData) {
-							callback && callback(callflowData);
+						success: function(getCallflowData) {
+							getCallflowData.data.numbers = numbers;
+
+							self.usersUpdateCallflow(getCallflowData.data, function(callflowData) {
+								callback && callback(callflowData);
+							});
 						}
 					});
 				}
+				else {
+					if(numbers[0].length < 7) {
+						self.usersMigrateFromExtensions(userId, numbers, function(data) {
+							callback && callback(data);
+						});
+					}
+					else {
+						toastr.error(self.i18n.active().users.needExtensionFirst);
+					}
+				}
+			}
+			else {
+				toastr.error(self.i18n.active().users.noNumberCallflow);
+			}
+		},
+
+		usersListNumbers: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getNumbers',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(numbers) {
+					callback && callback(numbers.data);
+				}
 			});
+		},
+
+		usersUpdateCallflow: function(callflow, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.updateCallflow',
+				data: {
+					accountId: self.accountId,
+					callflowId: callflow.id,
+					data: callflow
+				},
+				success: function(callflowData) {
+					callback && callback(callflowData.data);
+				}
+			});
+		},
+
+		usersCreateCallflow: function(callflow, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.createCallflow',
+				data: {
+					accountId: self.accountId,
+					data: callflow
+				},
+				success: function(callflowData) {
+					callback && callback(callflowData.data);
+				}
+			});
+		},
+
+		usersUpdateConferencing: function(data, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					conference: function(callback) {
+						var baseConference = {
+							name: data.user.first_name + ' ' + data.user.last_name + ' SmartPBX Conference',
+							owner_id: data.user.id,
+							play_name_on_join: true,
+							member: {
+								numbers: []
+							}
+						};
+
+						baseConference = $.extend(true, {}, baseConference, data.conference);
+
+						self.usersListConferences(data.user.id, function(conferences) {
+							var conferenceToSave = baseConference;
+							if(conferences.length > 0) {
+								conferenceToSave = $.extend(true, {}, conferences[0], baseConference);
+
+								self.usersUpdateConference(conferenceToSave, function(conference) {
+									callback && callback(null, conference);
+								});
+							}
+							else {
+								self.usersCreateConference(conferenceToSave, function(conference) {
+									callback && callback(null, conference);
+								});
+							}
+						});
+					},
+					user: function(callback) {
+						if(data.user.smartpbx && data.user.smartpbx.conferencing && data.user.smartpbx.conferencing.enabled === true) {
+							callback && callback(null, data.user);
+						}
+						else {
+							data.user.smartpbx = data.user.smartpbx || {};
+							data.user.smartpbx.conferencing = data.user.smartpbx.conferencing || {};
+
+							data.user.smartpbx.conferencing.enabled = true;
+
+							self.usersUpdateUser(data.user, function(user) {
+								callback && callback(null, user);
+							});
+						}
+					}
+				},
+				function(err, results) {
+					globalCallback && globalCallback(results);
+				}
+			);
+		},
+
+		usersUpdateFaxing: function(data, newNumber, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					callflow: function(callback) {
+						var baseCallflow = {
+							type: 'faxing',
+							owner_id: data.user.id,
+							numbers: [ newNumber ],
+							flow: {
+								data: {
+									owner_id: data.user.id
+								},
+								module: 'receive_fax',
+								children: {}
+							}
+						};
+
+						self.usersListCallflowsUser(data.user.id, function(callflows) {
+							_.each(callflows, function(callflow) {
+								if(callflow.type === 'faxing') {
+									baseCallflow.id = callflow.id;
+
+									return false;
+								}
+							});
+
+							self.usersUpdateCallflowFaxing(baseCallflow, function(callflow) {
+								callback && callback(null, callflow);
+							});
+						});
+					},
+					user: function(callback) {
+						if(data.user.smartpbx && data.user.smartpbx.faxing && data.user.smartpbx.faxing.enabled === true) {
+							callback && callback(null, data.user);
+						}
+						else {
+							data.user.smartpbx = data.user.smartpbx || {};
+							data.user.smartpbx.faxing = data.user.smartpbx.faxing || {};
+
+							data.user.smartpbx.faxing.enabled = true;
+
+							self.usersUpdateUser(data.user, function(user) {
+								callback && callback(null, user);
+							});
+						}
+					}
+				},
+				function(err, results) {
+					globalCallback && globalCallback(results);
+				}
+			);
+		},
+
+		usersUpdateCallflowFaxing: function(callflow, callback) {
+			var self = this;
+
+			if(callflow.id) {
+				self.usersUpdateCallflow(callflow, function(callflow) {
+					callback && callback(callflow);
+				});
+			}
+			else {
+				self.usersCreateCallflow(callflow, function(callflow) {
+					callback && callback(callflow);
+				});
+			}
+		},
+
+		usersDeleteConferencing: function(userId, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					conferences: function(callback) {
+						self.usersListConferences(userId, function(conferences) {
+							var listRequests = [];
+
+							_.each(conferences, function(conference) {
+								listRequests.push(function(subCallback) {
+									self.usersDeleteConference(conference.id, function(data) {
+										subCallback(null, data);
+									});
+								});
+							});
+
+							monster.parallel(listRequests, function(err, results) {
+								callback && callback(results);
+							});
+						});
+					},
+					user: function(callback) {
+						self.usersGetUser(userId, function(user) {
+							//user.conferencing_enabled = false;
+							user.smartpbx = user.smartpbx || {};
+							user.smartpbx.conferencing = user.smartpbx.conferencing || {};
+
+							user.smartpbx.conferencing.enabled = false;
+
+							self.usersUpdateUser(user, function(user) {
+								callback(null, user);
+							});
+						});
+
+					}
+				},
+				function(err, results) {
+					globalCallback && globalCallback(results);
+				}
+			);
+		},
+
+		usersDeleteFaxing: function(userId, globalCallback) {
+			var self = this;
+
+			monster.parallel({
+					callflows: function(callback) {
+						self.usersListCallflowsUser(userId, function(callflows) {
+							var listRequests = [];
+
+							_.each(callflows, function(callflow) {
+								if(callflow.type === 'faxing') {
+									listRequests.push(function(subCallback) {
+										self.usersDeleteCallflow(callflow.id, function(data) {
+											subCallback(null, data);
+										});
+									});
+								}
+							});
+
+							monster.parallel(listRequests, function(err, results) {
+								callback && callback(results);
+							});
+						});
+					},
+					user: function(callback) {
+						self.usersGetUser(userId, function(user) {
+							//user.faxing_enabled = false;
+							user.smartpbx = user.smartpbx || {};
+							user.smartpbx.faxing = user.smartpbx.faxing || {};
+
+							user.smartpbx.faxing.enabled = false;
+
+							self.usersUpdateUser(user, function(user) {
+								callback(null, user);
+							});
+						});
+
+					}
+				},
+				function(err, results) {
+					globalCallback && globalCallback(results);
+				}
+			);
 		},
 
 		usersSortExtensions: function(a, b) {

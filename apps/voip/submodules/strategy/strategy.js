@@ -10,7 +10,7 @@ define(function(require){
 
 		requests: {
 			'strategy.callflows.list': {
-				url: 'accounts/{accountId}/callflows?filter_type=main',
+				url: 'accounts/{accountId}/callflows?has_value=type',
 				verb: 'GET'
 			},
 			'strategy.callflows.get': {
@@ -146,9 +146,11 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var hasMainNumber = (results.callflows["MainCallflow"].numbers.length > 0 && results.callflows["MainCallflow"].numbers[0] !== "undefined")
+					var hasMainNumber = (results.callflows["MainCallflow"].numbers.length > 0 && results.callflows["MainCallflow"].numbers[0] !== "undefined"),
+						hasConfNumber = (results.callflows["MainConference"].numbers.length > 0 && results.callflows["MainConference"].numbers[0] !== "undefinedconf")
 					templateData = {
-						mainNumbers: hasMainNumber ? results.callflows["MainCallflow"].numbers : [self.i18n.active().strategy.noNumberTitle]
+						mainNumbers: hasMainNumber ? results.callflows["MainCallflow"].numbers : [self.i18n.active().strategy.noNumberTitle],
+						confNumbers: hasConfNumber ? results.callflows["MainConference"].numbers : [self.i18n.active().strategy.noNumberTitle]
 					}
 					template = $(monster.template(self, 'strategy-layout', templateData));
 					self.strategyBindEvents(template, results);
@@ -158,7 +160,7 @@ define(function(require){
 						.append(template);
 
 					if(!hasMainNumber) {
-						template.find('.element-container:not(.main-number)').hide();
+						template.find('.element-container:not(.main-number,.strategy-confnum)').hide();
 					}
 				}
 			);
@@ -168,6 +170,7 @@ define(function(require){
 			var self = this,
 				containers = template.find('.element-container'),
 				strategyNumbersContainer = template.find('.element-container.main-number .element-content'),
+				strategyConfNumContainer = template.find('.element-container.strategy-confnum .element-content'),
 				strategyHoursContainer = template.find('.element-container.strategy-hours .element-content'),
 				strategyHolidaysContainer = template.find('.element-container.strategy-holidays .element-content'),
 				strategyCallsContainer = template.find('.element-container.strategy-calls .element-content');
@@ -204,6 +207,7 @@ define(function(require){
 
 
 			self.strategyNumbersBindEvents(strategyNumbersContainer, strategyData);
+			self.strategyConfNumBindEvents(strategyConfNumContainer, strategyData);
 			self.strategyHoursBindEvents(strategyHoursContainer, strategyData);
 			self.strategyHolidaysBindEvents(strategyHolidaysContainer, strategyData);
 			self.strategyCallsBindEvents(strategyCallsContainer, strategyData);
@@ -220,6 +224,24 @@ define(function(require){
 							templateData = {
 								numbers: $.map(numbers, function(val, key) {
 									if(val!=="undefined") {
+										return {
+											number: val
+										};
+									}
+								})
+							},
+							template = monster.template(self, 'strategy-'+templateName, templateData);
+
+						container.find('.element-content').empty()
+														  .append(template);
+						callback && callback();
+						break;
+					case "confnum":
+						var callflow = strategyData.callflows["MainConference"],
+							numbers = callflow.numbers,
+							templateData = {
+								numbers: $.map(numbers, function(val, key) {
+									if(val!=="undefinedconf") {
 										return {
 											number: val
 										};
@@ -409,10 +431,10 @@ define(function(require){
 						} else if(mainCallflow.numbers.length === 2) {
 							headerSpan.append(", "+monster.util.formatPhoneNumber(mainCallflow.numbers[1]))
 						}
-						container.parents('#strategy_container').find('.element-container:not(.main-number)').show();
+						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').show();
 					} else { 
 						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
-						container.parents('#strategy_container').find('.element-container:not(.main-number)').hide();
+						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').hide();
 					}
 				};
 
@@ -453,7 +475,7 @@ define(function(require){
 				e.preventDefault();
 			});
 
-			container.on('click', '.main-number-element .remove-number', function(e) {
+			container.on('click', '.number-element .remove-number', function(e) {
 				e.preventDefault();
 				var numberToRemove = $(this).data('number'),
 					indexToRemove = strategyData.callflows["MainCallflow"].numbers.indexOf(numberToRemove);
@@ -468,6 +490,97 @@ define(function(require){
 						toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
 						strategyData.callflows["MainCallflow"] = updatedCallflow;
 						refreshNumbersHeader(parentContainer);
+						self.strategyRefreshTemplate(parentContainer, strategyData);
+					});
+				}
+			});
+		},
+
+		strategyConfNumBindEvents: function(container, strategyData) {
+			var self = this,
+				addNumbersToMainConference = function(numbers) {
+					if(numbers.length) {
+						var mainConference = strategyData.callflows["MainConference"];
+						if(mainConference.numbers.length <= 1
+						&& mainConference.numbers[0] === "undefinedconf") {
+							mainConference.numbers = [];
+						}
+						mainConference.numbers = mainConference.numbers.concat(numbers);
+						self.strategyUpdateCallflow(mainConference, function(updatedCallflow) {
+							var parentContainer = container.parents('.element-container');
+							strategyData.callflows["MainConference"] = updatedCallflow;
+							refreshConfNumHeader(parentContainer);
+							self.strategyRefreshTemplate(parentContainer, strategyData);
+						});
+					}
+				},
+				refreshConfNumHeader = function(parentContainer) {
+					var mainConference = strategyData.callflows["MainConference"],
+						headerSpan = parentContainer.find('.element-header-inner .summary > span');
+					if(mainConference.numbers.length > 0 && mainConference.numbers[0] !== "undefinedconf") {
+						headerSpan.html(monster.util.formatPhoneNumber(mainConference.numbers[0]));
+						if(mainConference.numbers.length > 2) {
+							headerSpan.append('<i class="icon-telicon-multiple-items icon-small"></i>')
+						} else if(mainConference.numbers.length === 2) {
+							headerSpan.append(", "+monster.util.formatPhoneNumber(mainConference.numbers[1]))
+						}
+					} else { 
+						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
+					}
+				};
+
+			container.on('click', '.action-links .spare-link', function(e) {
+				e.preventDefault();
+
+				var args = {
+					accountName: monster.apps['auth'].currentAccount.name,
+					accountId: self.accountId,
+					callback: function(numberList) {
+						var numbers = $.map(numberList, function(val) {
+							return val.phoneNumber;
+						});
+						addNumbersToMainConference(numbers);
+					}
+				}
+
+				monster.pub('common.numbers.dialogSpare', args);
+			});
+
+			container.on('click', '.action-links .buy-link', function(e) {
+				e.preventDefault();
+				monster.pub('common.buyNumbers', {
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							addNumbersToMainConference(Object.keys(numbers));
+							toastr.success(self.i18n.active().strategy.toastrMessages.buyNumbersSuccess);
+						},
+						error: function(error) {
+							toastr.error(self.i18n.active().strategy.toastrMessages.buyNumbersError);
+						}
+					}
+				});
+			});
+
+			container.on('click', '.action-links .port-link', function(e) {
+				e.preventDefault();
+			});
+
+			container.on('click', '.number-element .remove-number', function(e) {
+				e.preventDefault();
+				var numberToRemove = $(this).data('number'),
+					indexToRemove = strategyData.callflows["MainConference"].numbers.indexOf(numberToRemove);
+
+				if(indexToRemove >= 0) {
+					strategyData.callflows["MainConference"].numbers.splice(indexToRemove, 1);
+					if(strategyData.callflows["MainConference"].numbers.length === 0) {
+						strategyData.callflows["MainConference"].numbers = ["undefinedconf"];
+					}
+					self.strategyUpdateCallflow(strategyData.callflows["MainConference"], function(updatedCallflow) {
+						var parentContainer = container.parents('.element-container');
+						toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
+						strategyData.callflows["MainConference"] = updatedCallflow;
+						refreshConfNumHeader(parentContainer);
 						self.strategyRefreshTemplate(parentContainer, strategyData);
 					});
 				}
@@ -1355,7 +1468,8 @@ define(function(require){
 					var parallelRequests = {};
 
 					_.each(data.data, function(val, key) {
-						var name = val.name || val.numbers[0];
+						if(val.type === "main" || val.type === "conference")
+						var name = val.type === "conference" ? "MainConference" : val.name || val.numbers[0];
 						parallelRequests[name] = function(callback) {
 							monster.request({
 								resource: 'strategy.callflows.get',
@@ -1399,6 +1513,33 @@ define(function(require){
 						}
 					}
 
+					if(!parallelRequests["MainConference"]) {
+						parallelRequests["MainConference"] = function(callback) {
+							monster.request({
+								resource: 'strategy.callflows.add',
+								data: {
+									accountId: self.accountId,
+									data: {
+										contact_list: {
+											exclude: false
+										},
+										numbers: ["undefinedconf"],
+										name: "MainConference",
+										type: "conference",
+										flow: {
+											children: {},
+											data: {},
+											module: "conference"
+										}
+									}
+								},
+								success: function(data, status) {
+									callback(null, data.data);
+								}
+							});
+						}
+					}
+
 					_.each(self.subCallflowsLabel, function(val) {
 						if(!parallelRequests[val]) {
 							parallelRequests[val] = function(callback) {
@@ -1425,7 +1566,7 @@ define(function(require){
 								});
 							}
 						}
-					})
+					});
 
 					monster.parallel(parallelRequests, function(err, results) {
 						callback(results);

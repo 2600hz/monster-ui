@@ -26,12 +26,14 @@
 				<div class="icon-wrapper"><i class="icon-time"></i></div>
 				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
 			</div>
+			{{#if extra.mainCallflowId}}
 			<div class="row-fields">
 				<label class="fix-left">
 					<input id="include_directory" type="checkbox" name="extra.includeInDirectory"{{#if extra.includeInDirectory}} checked="checked"{{/if}}></input>
 					{{ i18n.users.includeInDirectory }}
 				</label>
 			</div>
+			{{/if}}
 			<div class="row-fields">
             	<label class="fix-left" for="notification_email">
                     <input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if extra.sameEmail}} checked{{/if}}></input>

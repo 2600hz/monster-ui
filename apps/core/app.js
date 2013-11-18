@@ -65,7 +65,7 @@ define(function(require){
 		_baseApps: ['apploader', 'appstore', 'myaccount', 'common'],
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
-		_defaultApp: '',
+		_defaultApp: 'appstore',
 
 		_load: function(){
 			var self = this;
@@ -86,9 +86,10 @@ define(function(require){
 			var self = this;
 
 			if(!self._baseApps.length) {
-				var defaultApp = args.defaultApp || self._defaultApp;
+				/* If admin with no app, go to app store, otherwise, oh well... */
+				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
-				if(defaultApp !== '') {
+				if(defaultApp && defaultApp !== '') {
 					monster.apps.load(defaultApp, function(app) {
 						app.render($('#ws-content'));
 					});

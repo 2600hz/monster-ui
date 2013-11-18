@@ -539,6 +539,8 @@ define(function(require){
 					self.renderRestrictionsStep({
 						parent: parent.find('.wizard-content-step[data-step="4"]')
 					});
+
+					monster.ui.prettyCheck.create(parent);
 				}
 			);
 		},
@@ -1132,8 +1134,9 @@ define(function(require){
 				$aSettings = $liSettings.find('a.settings-link'),
 				closeTabsContent = function() {
 					$liSettings.removeClass('open');
-					$liContent.hide();
-					$aSettings.show();
+					$liContent.slideUp('fast');
+					$aSettings.find('.update .text').text(self.i18n.active().editSetting);
+					$aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
 				};
 
 			contentHtml.find('.account-tabs a').click(function(e) {
@@ -1144,23 +1147,27 @@ define(function(require){
 				}
 			});
 
-			contentHtml.find('li.settings-item').on('click', function(e) {
-				var $this = $(this);
+			contentHtml.find('li.settings-item .settings-link').on('click', function(e) {
+				var $this = $(this),
+					settingsItem = $this.parents('.settings-item');
 
-				if(!$this.hasClass('open') && !$this.hasClass('disabled')) {
+				if(!settingsItem.hasClass('disabled')) {
+					var isOpen = settingsItem.hasClass('open');
 					closeTabsContent();
-
-					$this.addClass('open');
-					$this.find('a.settings-link').hide();
-					$this.find('.settings-item-content').slideDown('fast');
-
-					if($this.data('name') === 'accountsmanager_account_admins') {
-						self.renderEditAdminsForm(parent, accountData.id);
+					if(!isOpen){
+						settingsItem.addClass('open');
+						$this.find('.update .text').text(self.i18n.active().closeSetting);
+						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+						settingsItem.find('.settings-item-content').slideDown('fast');
+	
+						if(settingsItem.data('name') === 'accountsmanager_account_admins') {
+							self.renderEditAdminsForm(parent, accountData.id);
+						}
 					}
 				}
 			});
 
-			contentHtml.find('button.cancel, .close-link:not(.close-admin-settings)').on('click', function(e) {
+			contentHtml.find('.settings-item .cancel').on('click', function(e) {
 				e.preventDefault();
 				closeTabsContent();
 
@@ -1386,6 +1393,8 @@ define(function(require){
 				parent: contentHtml.find('#accountsmanager_restrictions_tab')
 			});
 
+			monster.ui.prettyCheck.create(contentHtml);
+
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
@@ -1492,7 +1501,8 @@ define(function(require){
 				formattedClassifiers = params.formattedClassifiers,
 				limits = params.limits || {};
 				template = $(monster.template(self, 'limitsTabContent', {
-					classifiers: formattedClassifiers
+					classifiers: formattedClassifiers,
+					allowPrepay: limits.allow_prepay
 				})),
 				amountTwoway = 29.99,
 				twoway = limits.twoway_trunks || 0,
@@ -1591,26 +1601,23 @@ define(function(require){
 				};
 			});
 
-			template.find('.restrictions-element input').click(function(event) {
+			template.find('.restrictions-element input').on('ifToggled', function(e) {
 				var $this = $(this),
-					restrictionType = ($this.closest('li').data('content')) ? $this.closest('li').data('content') : false;
+					restrictionElement = $this.closest('li'),
+					restrictionType = (restrictionElement.data('content')) ? restrictionElement.data('content') : false;
 				if ($this.is(':checked')) {
 					$this.closest('a').addClass('enabled');
 
-					template.find('.restrictions-right .' + restrictionType + ' input').each(function() {
-						$(this).prop('checked', true);
-					});
-					event.stopPropagation();
+					monster.ui.prettyCheck.action(template.find('.restrictions-right .' + restrictionType + ' input'), 'check');
 				} else {
 					$this.closest('a').removeClass('enabled');
 
-					template.find('.restrictions-right .' + restrictionType + ' input').each(function() {
-						$(this).prop('checked', false);
-					});
+					monster.ui.prettyCheck.action(template.find('.restrictions-right .' + restrictionType + ' input'), 'uncheck');
 				};
+					restrictionElement.click();
 			});
 
-			template.find('.restrictions-element[data-content]').click(function() {
+			template.find('.restrictions-element[data-content]').on('click', function() {
 				var $this = $(this),
 					restrictionType = $this.data('content');
 
@@ -1630,7 +1637,7 @@ define(function(require){
 				}
 			});
 
-			template.find('.restrictions-right .restrictions-profile input').click(function() {
+			template.find('.restrictions-right .restrictions-profile input').on('ifToggled', function(e) {
 				var isChecked = false;
 
 				template.find('.restrictions-right .restrictions-profile input').each(function() {
@@ -1641,7 +1648,7 @@ define(function(require){
 				});
 
 				if (!isChecked) {
-					template.find('.restrictions-menu li[data-content="restrictions-profile"] input').click();
+					monster.ui.prettyCheck.action(template.find('.restrictions-menu li[data-content="restrictions-profile"] input'), 'uncheck');
 				};
 			});
 

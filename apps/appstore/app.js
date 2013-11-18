@@ -145,17 +145,25 @@ define(function(require){
 					}
 				},
 				function(err, results) {
+					var installedAppIds = _.map(monster.apps['auth'].installedApps, function(val) {
+						return val.id;
+					});
 					if(!("apps" in results.account)) {
 						results.account.apps = {};
 					}
-					_.each(results.apps, function(val, key) {
-						if(val.id in results.account.apps && (results.account.apps[val.id].all || results.account.apps[val.id].users.length > 0)) {
-							val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+					results.apps = _.filter(results.apps, function(val, key) {
+						if(installedAppIds.indexOf(val.id) >= 0) {
+							if(val.id in results.account.apps && (results.account.apps[val.id].all || results.account.apps[val.id].users.length > 0)) {
+								val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+							}
+							val.label = val.i18n['en-US'].label;
+							val.description = val.i18n['en-US'].description;
+							val.icon = self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val.id + "/icon?auth_token=" + self.authToken
+							delete val.i18n;
+							return true;
+						} else {
+							return false;
 						}
-						val.label = val.i18n['en-US'].label;
-						val.description = val.i18n['en-US'].description;
-						val.icon = self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val.id + "/icon?auth_token=" + self.authToken
-						delete val.i18n;
 					});
 
 					callback(results);
@@ -302,7 +310,7 @@ define(function(require){
 						},
 						success: function(data, status) {
 							appstoreData.account = data.data;
-							if(!("apps" in appstoreData.account)) {
+							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps)) {
 								appstoreData.account.apps = {};
 							}
 							appstoreData.account.apps[app.id] = appInstallInfo;

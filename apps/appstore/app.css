@@ -1,5 +1,5 @@
 #appstore_container {
-	padding: 20px;
+	padding: 15px;
 	max-width: 1136px;
 	margin: auto;
 }
@@ -42,6 +42,10 @@
 	margin: 10px auto;
 }
 
+#appstore_container .left-menu .app-filter-list > .app-filter:first-child {
+	margin-top: 0px;
+}
+
 #appstore_container .left-menu .app-filter:hover {
 	background: #f5f5f5;
 }
@@ -75,6 +79,10 @@
 
 /* * * * * Top * * * * */
 
+#appstore_container .right-content .search-bar {
+	margin: 16px 0px 21px;
+}
+
 #appstore_container .right-content .search-bar:after {
 	clear: right;
 }
@@ -84,10 +92,6 @@
 }
 
 /* * * * * Center * * * * */
-
-#appstore_container .right-content .app-list-container {
-	margin-top: 20px;
-}
 
 #appstore_container .right-content .app-list-container .app-list {
 	list-style: none;

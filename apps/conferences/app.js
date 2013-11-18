@@ -163,7 +163,7 @@ define(function(require){
 
 			self.renderActiveConference(conferenceView);
 			conferenceView.find('#active_conferences').addClass('active');
-			
+
 			container
 				.empty()
 				.append(conferenceView);
@@ -678,7 +678,6 @@ define(function(require){
 				if (reason === 'unsupported-file-type') {
 					msg = "Unsupported format " + detail;
 				} else {
-					console.log("error uploading file", reason, detail);
 				}
 				$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
 			}});
@@ -1081,9 +1080,6 @@ define(function(require){
 							template = 'userType' in self ? 'viewUserConference' : 'viewConference';
 							conferenceView = $(monster.template(self, template, dataTemplate));
 
-						console.log(dataTemplate);
-						console.log(results.status);
-
 						_.each(dataTemplate.users, function(user) {
 							conferenceView
 								.find('div.content')
@@ -1313,8 +1309,6 @@ define(function(require){
 					actionBox.addClass('active');
 				};
 
-				console.log(action);
-
 				var args = {
 						action: action,
 						conferenceId: data.id,
@@ -1380,18 +1374,14 @@ define(function(require){
 			};
 
 			// monster.socket.on('user_connected', function () {
-			// 	console.log('user_connected');
 			// 	ifStillUsingConference(function () {});
 			// });
 
 			// monster.socket.on('user_disconnected', function () {
-			// 	console.log('user_disconnected');
 			// 	ifStillUsingConference(function () {});
 			// });
 
-			monster.socket.on('add_member', function(userId, userInfo) { 
-				console.log('add_member');
-
+			monster.socket.on('add_member', function(userId, userInfo) {
 				ifStillUsingConference(function() {
 					var dataTemplate = self.formatUserViewConference(userInfo),
 						contentDiv = parent.find('div#view_conference').find('div.content'),
@@ -1409,7 +1399,6 @@ define(function(require){
 					userDiv.remove();
 
 					if ( isAdmin ) {
-						console.log(userInfo);
 						contentDiv.prepend(monster.template(self, 'boxUser', dataTemplate));
 					} else {
 						$(monster.template(self, 'boxUser', dataTemplate)).insertAfter(contentDiv.find('div.user[data-admin]').last());
@@ -1418,7 +1407,6 @@ define(function(require){
 			});
 
 			monster.socket.on('del_member', function(userId, userInfo) {
-				console.log('del_member');
 
 				ifStillUsingConference(function() {
 					var dataTemplate = self.formatUserViewConference(userInfo),
@@ -1455,7 +1443,6 @@ define(function(require){
 			});
 
 			monster.socket.on('conference_destroy', function(conferenceId) {
-				console.log('conference_destroy');
 				if(data.id === conferenceId) {
 					toastr.warning(self.i18n.active().toastrMessages.almostDoneConference);
 
@@ -1468,35 +1455,30 @@ define(function(require){
 			});
 
 			monster.socket.on('lock_true', function(data) {
-				console.log('lock true');
 				parent
 					.find('div.action-conference.api[data-action="lock"]')
 					.addClass('active');
 			});
 
 			monster.socket.on('lock_false', function(data) {
-				console.log('lock false');
 				parent
 					.find('div.action-conference.api[data-action="lock"]')
 					.removeClass('active');
 			});
 
 			monster.socket.on('record_true', function(data) {
-				console.log('record true');
 				parent
 					.find('div.action-conference.api[data-action="record"]')
 					.addClass('active');
 			});
 
 			monster.socket.on('record_false', function(data) {
-				console.log('record false');
 				parent
 					.find('div.action-conference.api[data-action="record"]')
 					.removeClass('active');
 			});
 
 			monster.socket.on('mute_member', function(user, data) {
-				console.log('mute_member');
 				ifStillUsingConference(function() {
 					var current = parent.find('div.user[data-id="'+ user + '"]').find('div.currently-speaking');
 
@@ -1520,7 +1502,6 @@ define(function(require){
 			});
 
 			monster.socket.on('unmute_member', function(user) {
-				console.log('unmute_member');
 				ifStillUsingConference(function() {
 					parent
 						.find('div.user[data-id="'+ user + '"]')
@@ -1536,7 +1517,6 @@ define(function(require){
 			});
 
 			monster.socket.on('deaf_member', function(user, data) {
-				console.log('deaf_member');
 				ifStillUsingConference(function() {
 					parent
 						.find('div.user[data-id="'+ user + '"]')
@@ -1552,7 +1532,6 @@ define(function(require){
 			});
 
 			monster.socket.on('undeaf_member', function(user, data) {
-				console.log('undeaf_member');
 				ifStillUsingConference(function() {
 					parent
 						.find('div.user[data-id="'+ user + '"]')
@@ -1568,7 +1547,6 @@ define(function(require){
 			});
 
 			monster.socket.on('start_talking', function(user, data) {
-				console.log('start_talking');
 				ifStillUsingConference(function() {
 					var styleClass = styles[(Math.floor(Math.random() * 100) % 3)];
 
@@ -1580,7 +1558,6 @@ define(function(require){
 			});
 
 			monster.socket.on('stop_talking', function(user, data) {
-				console.log('stop_talking');
 				ifStillUsingConference(function() {
 					parent
 						.find('div.user[data-id="'+ user + '"]')

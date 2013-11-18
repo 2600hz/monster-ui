@@ -236,6 +236,8 @@
 		"noAssignedNumbers": "There are currently no number assigned to this user.",
 		"noAssignedExtensions": "There are currently no extension assigned to this user.",
 		"noNumber": "None",
+		"noNumberCallflow": "You need to assign at least one extension or phone number to this user before saving it",
+		"needExtensionFirst": "We require users to have an extension before assigning them a phone number, please click on the extension section and add one from there.",
 		"noExtension": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this user.",
 		"noUnassignedNumbers": "There are no available number left to assign to this user.",
@@ -279,6 +281,16 @@
 		"call_recording": {
 			"title": "Call Recording"
 		},
+		"conferencing": {
+			"title": "Conferencing",
+			"headline": "User Conferencing Settings",
+			"pinLabel": "PIN of this user"
+		},
+		"faxing": {
+			"title": "Faxing",
+			"dropdownLabel": "Choose number for Fax Machine",
+			"headline": "User Faxing Settings"
+		},
 		"vm_to_email": {
 			"deleteAfterNotify": "Delete messages from database after sending the notification.",
 			"headline": "Voicemail-to-Email Settings",
@@ -297,12 +309,6 @@
 		"music_on_hold": {
 			"title": "Music-On-Hold"
 		},
-		"conferencing": {
-			"title": "Conferencing"
-		},
-		"faxing": {
-			"title": "Faxing"
-		},
 		"hotdesk": {
 			"label": "Does it require a PIN?",
 			"keep_logged_in_elsewhere": "Allow login at multiple devices",
@@ -315,12 +321,14 @@
 	"strategy": {
 		"sectionTitles": {
 			"numbers": "Main Company Numbers",
+			"confnum": "Main Conference Number",
 			"hours": "Office Hours Strategy",
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
 		"noNumberTitle": "No selected number",
 		"noNumberMessage": "Please add a main number to continue.",
+		"noConfNumMessage": "Please add a main conference number.",
 		"numberLinks": {
 			"spare": "Add from Spare Numbers",
 			"buy": {

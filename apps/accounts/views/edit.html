@@ -28,7 +28,7 @@
 							</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -36,10 +36,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_status">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label">
 												{{ i18n.accountId }}
@@ -90,7 +86,7 @@
 							<span class="description">{{account.name}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -98,10 +94,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_name">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_name">{{ i18n.accountName }}</label>
 											<div class="controls">
@@ -109,8 +101,8 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<div class="controls">
-												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+											<div class="controls action-bar">
+												<a href="#" class="cancel">{{ i18n.cancel }}</a>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_name">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -126,7 +118,7 @@
 							<span class="description">{{account.realm}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -134,10 +126,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_realm">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_realm">{{ i18n.accountRealm }}</label>
 											<div class="controls">
@@ -145,8 +133,8 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<div class="controls">
-												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+											<div class="controls action-bar">
+												<a href="#" class="cancel">{{ i18n.cancel }}</a>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_realm">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -162,7 +150,7 @@
 							{{#if accountAdmins.length}}
 								<div class="description">
 									<ul>
-										<li>{{accountAdmins.0.firstName}}&nbsp;{{accountAdmins.0.lastName}}</li>
+										<li>{{accountAdmins.0.first_name}}&nbsp;{{accountAdmins.0.last_name}}</li>
 										<li>{{accountAdmins.0.email}}</li>
 										{{#if accountAdmins.0.contactNumber}}
 										<li>{{formatPhoneNumber accountAdmins.0.contactNumber}}</li>
@@ -174,7 +162,7 @@
 							{{/if}}
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -206,7 +194,7 @@
 							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -214,10 +202,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_technical_contact">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_technical_contact_name">{{ i18n.technicalContact.name }}</label>
 											<div class="controls">
@@ -237,8 +221,8 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<div class="controls">
-												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+											<div class="controls action-bar">
+												<a href="#" class="cancel">{{ i18n.cancel }}</a>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_technical_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -266,7 +250,7 @@
 							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -274,10 +258,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_billing_contact">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_billing_contact_name">{{ i18n.billingContact.name }}</label>
 											<div class="controls">
@@ -297,8 +277,8 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<div class="controls">
-												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+											<div class="controls action-bar">
+												<a href="#" class="cancel">{{ i18n.cancel }}</a>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_billing_contact">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>
@@ -314,7 +294,7 @@
 							<span class="description">{{account.timezone}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.editSetting }}</span>
 							</span>
 							<span class="changes-saved">{{ i18n.changesSaved }}</span>
 						</a>
@@ -322,10 +302,6 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_accountsmanager_account_timezone">
-										<a href="#" class="close-link">
-											<i class="icon-remove icon-small"></i>
-											<span>{{ i18n.closeSetting }}</span>
-										</a>
 										<div class="control-group">
 											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.accountTimezone }}</label>
 											<div class="controls">
@@ -333,8 +309,8 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<div class="controls">
-												<button type="button" class="btn btn-danger cancel">{{ i18n.cancel }}</button>
+											<div class="controls action-bar">
+												<a href="#" class="cancel">{{ i18n.cancel }}</a>
 												<button type="submit" class="btn btn-success change" data-field="accountsmanager_account_timezone">{{ i18n.saveChanges }}</button>
 											</div>
 										</div>

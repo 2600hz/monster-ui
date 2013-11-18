@@ -326,8 +326,6 @@ define(function(require){
 				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone', 'smartphone']) > -1,
 				formData = form2object('form_device');
 
-				console.log(formData);
-
 			if('mac_address' in formData) {
 				formData.mac_address = monster.util.formatMacAddress(formData.mac_address);
 			}
@@ -503,7 +501,6 @@ define(function(require){
 			});
 
 			var formattedData = $.extend(true, {}, typedDefaults[data.device.device_type], defaults, data.device);
-			console.log(formattedData);
 
 			/* Audio Codecs*/
 			/* extend doesn't replace the array so we need to do it manually */

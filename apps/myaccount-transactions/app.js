@@ -103,7 +103,6 @@ define(function(require){
 				return a.created < b.created;
 			});
 
-			console.log(data.listTransactions);
 			if(data.listTransactions) {
 				$.each(data.listTransactions, function(k, v) {
 					v.reason = self.i18n.active()[v.reason ? v.reason : 'oneTimeCharge'];
