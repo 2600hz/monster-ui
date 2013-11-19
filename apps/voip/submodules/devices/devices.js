@@ -568,7 +568,7 @@ define(function(require){
 					friendlyIconClass: mapIconClass[device.device_type],
 					macAddress: device.mac_address,
 					name: device.name,
-					userName: device.owner_id ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
+					userName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
 					enabled: device.enabled,
 					type: device.device_type,
 					friendlyType: self.i18n.active().devices.types[device.device_type],
