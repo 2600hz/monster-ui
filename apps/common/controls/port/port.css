@@ -85,21 +85,24 @@ div.row-fluid.info p {
 
 .order li .icon-warning-sign {
 	position: relative;
+	top: 1px;
 	right: 10px;
 	visibility: hidden;
 	color: red;
 }
 
+.order .icon-remove-sign:hover { cursor: pointer; }
+
 .order li .icon-warning-sign.visible { visibility: visible; }
 
-.order li .icon-remove-sign:hover { cursor: pointer; }
+.order h3 .icon-remove-sign { margin-top: 11px; }
 
 div#continue_later { text-align: center; }
 div#continue_later p { margin: 5px 0; }
 
 .help-block {
-	font-size: 12px;
 	margin-bottom: 0;
+	font-size: 12px;
 }
 
 #transfer_status { text-align: center; }
@@ -115,7 +118,7 @@ div#continue_later p { margin: 5px 0; }
 #transfer_status .span4:not(:last-child).todo i:after {
 	position: absolute;
 	top: 8px;
-	right: -144px;
+	right: -56%;
 	display: block;
 	width: 103%;
 	height: 2px;
@@ -167,8 +170,8 @@ div#orders_list > span.pull-right i {
 /*************** Reformat Default Table CSS ***************/
 
 div#orders_list .table {
-	border: none;
 	margin-bottom: 0;
+	border: none;
 }
 
 div#orders_list .table.table-bordered {
@@ -277,7 +280,7 @@ div#eula .important span { text-transform: uppercase; }
 
 div#eula form { margin-bottom: 0; }
 
-div#eula input { margin: 0 10px 0 0; }
+div#eula input { margin: -5px 10px 0 0; }
 
 div#eula label:last-child { margin-bottom: 0; }
 
@@ -294,7 +297,7 @@ div#name_transfer .row-fluid label {
 div#upload_bill .span6:first-child { padding-right: 12px; }
 div#upload_bill .span6:last-child { padding-left: 12px; }
 
-div#upload_bill .info { min-height: 80px }
+div#upload_bill .info { min-height: 80px; }
 
 div#upload_bill form {
 	margin: 0 auto;
@@ -303,6 +306,8 @@ div#upload_bill form {
 }
 
 div#upload_bill form button { margin-bottom: 4px; }
+
+div#upload_bill form input.upload { display: none; }
 
 div#upload_bill form .help-block {
 	margin-bottom: 15px;
@@ -328,6 +333,8 @@ div#loa h4 {
 div#loa .row-fluid { text-align: center; }
 
 div#loa .row-fluid .span4 .number { font-size: 25px; }
+
+div#loa input.upload { display: none; }
 
 div#loa > p { margin-bottom: 0; }
 

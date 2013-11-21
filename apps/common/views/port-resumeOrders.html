@@ -1,22 +1,14 @@
 <div id="port_container">
 	<div id="resume_orders">
 		<h2>Complete following orders, one at a time!</h2>
+		{{#each orders}}
 		<div class="row-fluid">
-			<div class="span2">Order 1</div>
-			<div class="span5 offset1">(15) AT&amp;T Local Numbers</div>
+			<div class="span2">Order {{@index}}</div>
+			<div class="span5 offset1">{{carrier}}</div>
 			<div class="span4">
-				<button class="btn btn-success">Complete this order</button>
+				<button class="btn btn-success" data-index="{{@index}}">Complete this order</button>
 			</div>
 		</div>
-		<div class="row-fluid">
-			<div class="span2">Order 1</div>
-			<div class="span5 offset1">(3) AT&amp;T Toll-free Numbers</div>
-			<div class="span4"><button class="btn btn-success">Complete this order</button></div>
-		</div>
-		<div class="row-fluid">
-			<div class="span2">Order 2</div>
-			<div class="span5 offset1">(2) Verizon Toll-free Numbers</div>
-			<div class="span4"><button class="btn btn-success">Complete this order</button></div>
-		</div>
+		{{/each}}
 	</div>
 </div>

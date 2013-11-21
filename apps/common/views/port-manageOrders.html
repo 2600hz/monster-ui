@@ -6,11 +6,11 @@
 	<div class="row-fluid">
 	{{#each orders}}
 		<div class="order">
-			<h3>{{carrier}}</h3>
+			<h3>{{carrier}} <i class="icon-remove-sign pull-right"></i></h3>
 			<div class="scroll">
 				<ul>
 				{{#each numbers}}
-					<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+					<li data-value="{{this}}" data-carrier="{{../carrier}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
 				{{/each}}
 				</ul>
 			</div>
@@ -25,18 +25,26 @@
 	</div>
 	<p class="important"><span>Important!</span> Please understand and agree with the following</p>
 	<form action="">
-		<label for="cancel_service">
-			<input type="checkbox" id="cancel_service"> I will not cancel my old service until after the numbers are ompletely transfered,
-		</label>
-		<label for="cancel_numbers">
-			<input type="checkbox" id="cancel_numbers"> I understand any other numbers on the old account may be cancelled by the old provider,
-		</label>
-		<label for="change_fee">
-			<input type="checkbox" id="change_fee"> I understand my old carrier may charge an early termination fee,
-		</label>
-		<label for="not_featured">
-			<input type="checkbox" id="not_featured"> These are standard phone numbers, not featured (like [star-ring]).
-		</label>
+		<div class="control-group">
+			<label class="control-label" for="cancel_service">
+				<input type="checkbox" id="cancel_service"> I will not cancel my old service until after the numbers are ompletely transfered,
+			</label>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="cancel_numbers">
+				<input type="checkbox" id="cancel_numbers"> I understand any other numbers on the old account may be cancelled by the old provider,
+			</label>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="change_fee">
+				<input type="checkbox" id="change_fee"> I understand my old carrier may charge an early termination fee,
+			</label>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="not_featured">
+				<input type="checkbox" id="not_featured"> These are standard phone numbers, not featured (like [star-ring]).
+			</label>
+		</div>
 	</form>
 </div>
 <div id="footer">

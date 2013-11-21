@@ -19,7 +19,7 @@
 				<label class="control-label" for="transfer_helper">Name that helps you remember this transfer</label>
 			</div>
 			<div class="span6">
-				<input type="text" class="span8" id="transfer_helper" placeholder="AT&amp;T Local Numbers">
+				<input type="text" class="span8" id="transfer_helper" placeholder="AT&amp;T Local Numbers" value="{{#if name}}{{name}}{{/if}}">
 				<span class="help-block">For eg. 2600hz office local DIDs, NY office numbers</span>
 			</div>
 		</div>
@@ -31,19 +31,20 @@
 					<i class="icon-info-sign"></i>
 					<p>Please submit your current phone bill and fill out account details as mentioned on the bill you upload. <a href="#">Learn More</a></p>
 				</div>
-				<form action="">
-					<button class="btn btn-success upload span12">upload phone bill</button>
-					<span class="help-block">pdf, jpg, png format</span>
+				<form action="" id="bill_form">
+					<button type="button" class="btn btn-success upload span12">upload phone bill</button>
+					<input type="file" class="upload" name="bill">
+					<span class="help-block">pdf format only</span>
 					<label for="account_name">Name on the account</label>
-					<input type="text" class="span12" id="account_name">
+					<input type="text" class="span12" id="account_name" value="{{#if bill.name}}{{bill.name}}{{/if}}">
 					<label for="address">Address</label>
-					<input type="text" class="span12" id="address">
+					<input type="text" class="span12" id="address" value="{{#if bill.address}}{{bill.address}}{{/if}}">
 					<label for="city">City</label>
-					<input type="text" class="span12" id="city">
+					<input type="text" class="span12" id="city" value="{{#if bill.city}}{{bill.city}}{{/if}}">
 					<label for="state">State</label>
-					<input type="text" class="span12" id="state">
+					<input type="text" class="span12" id="state" value="{{#if bill.state}}{{bill.state}}{{/if}}">
 					<label for="zip_code">ZIP code</label>
-					<input type="text" class="span12" id="zip_code">
+					<input type="text" class="span12" id="zip_code" value="{{#if bill.zip_code}}{{bill.zip_code}}{{/if}}">
 				</form>
 			</div>
 			<div class="span6">
@@ -52,19 +53,12 @@
 					<p>Please verify that the following numbers are mentioned on the bill you upload. <span class="important">If the numbers are not mentioned on the bill, please REMOVE them or this order will fail to transfer all the numbers.</p>
 				</div>
 				<div class="order">
-					<h3>AT&amp;T Local Numbers</h3>
+					<h3>{{carrier}}</h3>
 					<div class="scroll">
 						<ul>
-							<li data-value="4157654320"><i class="icon-warning-sign"></i>4157654320<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654321"><i class="icon-warning-sign"></i>4157654321<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654322"><i class="icon-warning-sign"></i>4157654322<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654323"><i class="icon-warning-sign"></i>4157654323<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654324"><i class="icon-warning-sign"></i>4157654324<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654325"><i class="icon-warning-sign"></i>4157654325<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654326"><i class="icon-warning-sign"></i>4157654326<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654327"><i class="icon-warning-sign"></i>4157654327<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654328"><i class="icon-warning-sign"></i>4157654328<i class="icon-remove-sign pull-right"></i></li>
-							<li data-value="4157654329"><i class="icon-warning-sign"></i>4157654329<i class="icon-remove-sign pull-right"></i></li>
+						{{#each numbers}}
+							<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+						{{/each}}
 						</ul>
 					</div>
 				</div>
@@ -76,7 +70,7 @@
 		<div class="row-fluid">
 			<div class="span4">
 				<span class="span2 number">1.</span>
-				<button class="btn span10">download loa</button>
+				<button type="button" class="btn span10">download loa</button>
 			</div>
 			<div class="span4">
 				<span class="span1 offset3 number">2.</span>
@@ -84,7 +78,8 @@
 			</div>
 			<div class="span4">
 				<span class="span2 number">3.</span>
-				<button class="btn span10">upload loa</button>
+				<button type="button" class="btn span10 upload">upload loa</button>
+				<input type="file" class="upload" name="loa">
 			</div>
 		</div>
 		<p>For those who don’t have time, printer or scanner, we also offer digital sign for &#36;5 one-time charge. <a href="#">Digital LOA form</a></p>
@@ -114,7 +109,7 @@
 			</ul>
 		</div>
 		<div class="span2 offset1">
-			<button class="btn btn-success pull-right">submit</button>
+			<button class="btn btn-success pull-right">next</button>
 		</div>
 		</div>
 	</div>

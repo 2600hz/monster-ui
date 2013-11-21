@@ -15,14 +15,14 @@
 			</div>
 		</div>
 	
-		<h2>Great! Total 30 numbers are ready to transfert!</h2>
+		<h2>Great! {{total}} numbers are ready to transfert!</h2>
 	
 		<div class="row-fluid control-group">
 			<div class="span6">
 				<label class="control-label" for="notification_email">Who should we notify upon completion?</label>
 			</div>
 			<div class="span6">
-				<input type="text" class="span8" id="notification_email" placeholder="Email address">
+				<input type="text" class="span8" id="notification_email" placeholder="Email address" value="{{#if email}}{{email}}{{/if}}">
 				<span class="help-inline"><i class="icon-warning-sign"></i></span>
 			</div>
 		</div>
@@ -33,7 +33,7 @@
 				<label for="transfer_numbers_date">When do you want to transfer the numbers?</label>
 			</div>
 			<div class="span6">
-				<input class="date-input span8" type="text" id="transfer_numbers_date" name="extra.date">
+				<input class="date-input span8" type="text" id="transfer_numbers_date" name="extra.date" value="{{#if transfer_date}}{{transfer_date}}{{/if}}">
 			</div>
 		</div>
 		<div class="row-fluid info">
@@ -77,15 +77,15 @@
 		<h2>Order Summary</h2>
 		<div class="row-fluid">
 			<div class="span6">
-				<p>AT&amp;T local numbers</p>
+				<p>{{name}}</p>
 				<ul>
-					<li>Order Date: 07/14/13</li>
-					<li>Transfer Schedule Date: 07/30/13</li>
-					<li>Total Numbers: 15</li>
+					<li>Order Date: {{created}}</li>
+					<li>Transfer Schedule Date: <span id="transfer_schedule_date">{{transfer}}</span></li>
+					<li>Total Numbers: {{total}}</li>
 				</ul>
 			</div>
 			<div class="span6">
-				<p>Order total: &#36;75</p>
+				<p>Total order: &#36;{{price}}</p>
 				<div class="row-fluid info">
 					<i class="icon-info-sign"></i>
 					<p>One time fees of &#36;5/number will be charged to your account.</p>
