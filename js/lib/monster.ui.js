@@ -531,11 +531,11 @@ define(function(require){
 						radioClass: 'iradio_flat'
 					};
 
-				if(target.is("input") || type === "all") {
+				if(target.is("input:not(.not-pretty)")) {
 					target.iCheck(options);
 				} else {
 					/* Only update fields without the not-pretty class (we added this class to checkboxes with alternates stylings, such as the ones impacted by the bootstrapSwitch library) */
-					target.find('input[type="'+type+'"]:not(.not-pretty)').iCheck(options);
+					target.find('input'+(type !== "all" ? '[type="'+type+'"]' : '')+':not(.not-pretty)').iCheck(options);
 				}
 			},
 
