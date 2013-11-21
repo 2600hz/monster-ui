@@ -1263,6 +1263,7 @@ define(function(require){
 								data: {
 									streamable: true,
 									name: callflowName,
+									type: 'virtual_receptionist'
 									media_source: "tts",
 									description: "<Text to Speech>",
 									tts: {
@@ -1344,6 +1345,7 @@ define(function(require){
 								data: {
 									streamable: true,
 									name: callflowName,
+									type: 'virtual_receptionist',
 									media_source: "upload",
 									description: file.name
 								}
