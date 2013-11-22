@@ -301,6 +301,12 @@ define(function(require){
 				templateDevice.find('.actions').show();
 			});
 
+			templateDevice.find('.missing-brand').on('click', function() {
+				popup.dialog('close').remove();
+
+				callback && callback();
+			});
+
 			templateDevice.find('.next-step').on('click', function() {
 				var dataProvisioner = {
 					endpoint_brand: selectedBrand,
@@ -431,6 +437,13 @@ define(function(require){
 					suppress_unregister_notifications: false
 				},
 				typedDefaults = {
+					sip_device: {
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
 					landline: {
 						call_forward: {
 							require_keypress: true,

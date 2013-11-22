@@ -114,6 +114,7 @@
 			"editTitle": "Editing SIP Device: {{name}}",
 			"macAddress": "MAC Address",
 			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"new": "New SIP Device",
 			"deviceName": "Device Name"
 		},
 		"landline": {
