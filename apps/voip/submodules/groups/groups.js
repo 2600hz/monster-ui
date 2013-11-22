@@ -67,6 +67,14 @@ define(function(require){
 			'voip.groups.getNumbers': {
 				url: 'accounts/{accountId}/phone_numbers/',
 				verb: 'GET'
+			},
+			'voip.groups.listMedia': {
+				url: 'accounts/{accountId}/media?key_missing=type',
+				verb: 'GET'
+			},
+			'voip.groups.listVMBoxes': {
+				url: 'accounts/{accountId}/vmboxes',
+				verb: 'GET'
 			}
 		},
 
@@ -112,22 +120,12 @@ define(function(require){
 
 		groupsFormatListData: function(data) {
 			var self = this,
-				mapGroups = {},
-				mapFeatures = {
-					voicemails: {
-						icon: 'icon-envelope',
-						iconColor: 'icon-green',
-						title: self.i18n.active().groups.voicemails.title
-					}
-				};
+				mapGroups = {};
 
 			_.each(data.groups, function(group) {
 				mapGroups[group.id] = group;
 
-				mapGroups[group.id].extra = {
-					hasFeatures: false,
-					mapFeatures: mapFeatures
-				};
+				mapGroups[group.id].extra = self.groupsGetGroupFeatures(group);
 			});
 
 			_.each(data.callflows, function(callflow) {
@@ -165,6 +163,41 @@ define(function(require){
 			data.groups = mapGroups;
 
 			return data;
+		},
+
+		groupsGetGroupFeatures: function(group) {
+			var self = this,
+				result = {
+					mapFeatures: {
+						call_recording: {
+							icon: 'icon-microphone',
+							iconColor: 'icon-blue',
+							title: self.i18n.active().groups.callRecording.title
+						},
+						music_on_hold: {
+							icon: 'icon-music',
+							iconColor: 'icon-yellow',
+							title: self.i18n.active().groups.musicOnHold.title
+						},
+						voicemails: {
+							icon: 'icon-envelope',
+							iconColor: 'icon-green',
+							title: self.i18n.active().groups.voicemails.title
+						}
+					},
+					hasFeatures: false
+				};
+
+			_.each(result.mapFeatures, function(val, key) {
+				if(('features' in group && group.features.indexOf(key) >= 0) // If data from view
+				|| ('smartpbx' in group && key in group.smartpbx && group.smartpbx[key].enabled) // If data from document
+				|| (key === 'music_on_hold' && key in group && 'media_id' in group[key])){ // special case for music_on_hold since it's an old feature
+					val.active = true;
+					result.hasFeatures = true;
+				}
+			});
+
+			return result;
 		},
 
 		groupsBindEvents: function(template, parent) {
@@ -268,8 +301,8 @@ define(function(require){
 				},
 				callflow: {
 					numbers: [ formData.extra.extension ],
+					name: formData.name + ' Ring Group',
 					flow: {
-						name: formData.name + ' Ring Group',
 						module: 'ring_group',
 						children: {},
 						data: {
@@ -310,7 +343,7 @@ define(function(require){
 			var self = this;
 
 			self.groupsGetFeaturesData(groupId, function(data) {
-				template = $(monster.template(self, 'groups-features', data));
+				template = $(monster.template(self, 'groups-features', data.group));
 
 				self.groupsBindFeatures(template, data);
 
@@ -375,8 +408,214 @@ define(function(require){
 		groupsBindFeatures: function(template, data) {
 			var self = this;
 
+			template.find('.feature[data-feature="call_recording"]').on('click', function() {
+				self.groupsRenderCallRecording(data);
+			});
+
+			template.find('.feature[data-feature="music_on_hold"]').on('click', function() {
+				self.groupsRenderMusicOnHold(data);
+			});
+
 			template.find('.feature[data-feature="voicemails"]').on('click', function() {
 				self.groupsRenderVoicemails(data);
+			});
+		},
+
+		groupsRenderCallRecording: function(data) {
+			var self = this,
+				templateData = $.extend(true, {
+												group: data.group
+											},
+											(data.group.extra.mapFeatures.call_recording.active ? {
+												url: data.callflow.flow.data.url,
+												format: data.callflow.flow.data.format,
+												timeLimit: data.callflow.flow.data.time_limit
+											} : {})
+										),
+				featureTemplate = $(monster.template(self, 'groups-feature-call_recording', templateData)),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				popup;
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var formData = form2object('call_recording_form'),
+				    enabled = switchFeature.bootstrapSwitch('status');
+
+				if(!('smartpbx' in data.group)) { data.group.smartpbx = {}; }
+				if(!('call_recording' in data.group.smartpbx)) {
+					data.group.smartpbx.call_recording = {
+						enabled: false
+					}; 
+				}
+
+				if(data.group.smartpbx.call_recording.enabled || enabled) {
+					data.group.smartpbx.call_recording.enabled = enabled;
+					var newCallflow = $.extend(true, {}, data.callflow);
+					if(enabled) {
+						if(newCallflow.flow.module === 'record_call') {
+							newCallflow.flow.data = $.extend(true, { action: "start" }, formData);
+						} else {
+							newCallflow.flow = {
+								children: {
+									"_": $.extend(true, {}, data.callflow.flow)
+								},
+								module: "record_call",
+								data: $.extend(true, { action: "start" }, formData)
+							}
+						}
+					} else {
+						newCallflow.flow = $.extend(true, {}, data.callflow.flow.children["_"]);
+					}
+					self.groupsUpdateCallflow(newCallflow, function(updatedCallflow) {
+						self.groupsUpdate(data.group, function(updatedGroup) {
+							popup.dialog('close').remove();
+							self.groupsRender({ groupId: data.group.id });
+						});
+					});
+				} else {
+					popup.dialog('close').remove();
+					self.groupsRender({ groupId: data.group.id });
+				}
+			});
+
+			popup = monster.ui.dialog(featureTemplate, {
+				title: data.group.extra.mapFeatures.call_recording.title,
+				position: ['center', 20]
+			});
+		},
+
+		groupsRenderMusicOnHold: function(data) {
+			var self = this,
+				silenceMediaId = 'silence_stream://300000';
+
+			self.groupsListMedias(function(medias) {
+				var templateData = {
+						group: data.group,
+						silenceMedia: silenceMediaId,
+						mediaList: medias,
+						media: 'music_on_hold' in data.group && 'media_id' in data.group.music_on_hold ? data.group.music_on_hold.media_id : silenceMediaId
+					},
+					featureTemplate = $(monster.template(self, 'groups-feature-music_on_hold', templateData)),
+					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+					popup;
+
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var selectedMedia = featureTemplate.find('.media-dropdown option:selected').val(),
+					    enabled = switchFeature.bootstrapSwitch('status');
+
+					if(!('music_on_hold' in data.group)) {
+						data.group.music_on_hold = {};
+					}
+
+					if('media_id' in data.group.music_on_hold || enabled) {
+						if(enabled) {
+							data.group.music_on_hold = {
+								media_id: selectedMedia
+							};
+						} else {
+							data.group.music_on_hold = {};
+						}
+						self.groupsUpdate(data.group, function(updatedGroup) {
+							popup.dialog('close').remove();
+							self.groupsRender({ groupId: data.group.id });
+						});
+					} else {
+						popup.dialog('close').remove();
+						self.groupsRender({ groupId: data.group.id });
+					}
+				});
+
+				popup = monster.ui.dialog(featureTemplate, {
+					title: data.group.extra.mapFeatures.music_on_hold.title,
+					position: ['center', 20]
+				});
+			});
+		},
+
+		groupsRenderVoicemails: function(data) {
+			var self = this,
+				flow = data.callflow.flow;
+
+			while(flow.module !== 'ring_group') {
+				flow = flow.children["_"];
+			}
+
+			self.groupsListVMBoxes(function(vmboxes) {
+				var templateData = $.extend(true, {
+												group: data.group,
+												vmboxList: vmboxes,
+											},
+											('_' in flow.children && flow.children['_'].module === 'voicemail' ? {
+												vmboxId: flow.data.id
+											} : {})
+										),
+				 	featureTemplate = $(monster.template(self, 'groups-feature-voicemails', templateData)),
+					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+					popup;
+
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var selectedVMBox = featureTemplate.find('.vmboxes-dropdown option:selected').val(),
+					    enabled = switchFeature.bootstrapSwitch('status');
+
+					if(!('smartpbx' in data.group)) { data.group.smartpbx = {}; }
+					if(!('voicemails' in data.group.smartpbx)) {
+						data.group.smartpbx.voicemails = {
+							enabled: false
+						}; 
+					}
+
+					if(data.group.smartpbx.voicemails.enabled || enabled) {
+						data.group.smartpbx.voicemails.enabled = enabled;
+						if(enabled) {
+							flow.children['_'] = {
+								data: {
+									id: selectedVMBox
+								},
+								module: 'voicemail',
+								children: {}
+							};
+						} else {
+							flow.children = {};
+						}
+						self.groupsUpdateCallflow(data.callflow, function(updatedCallflow) {
+							self.groupsUpdate(data.group, function(updatedGroup) {
+								popup.dialog('close').remove();
+								self.groupsRender({ groupId: data.group.id });
+							});
+						});
+					} else {
+						popup.dialog('close').remove();
+						self.groupsRender({ groupId: data.group.id });
+					}
+				});
+
+				popup = monster.ui.dialog(featureTemplate, {
+					title: data.group.extra.mapFeatures.music_on_hold.title,
+					position: ['center', 20]
+				});
 			});
 		},
 
@@ -758,12 +997,38 @@ define(function(require){
 			});
 		},
 
+		// groupsGetFeaturesData: function(groupId, callback) {
+		// 	var self = this;
+
+		// 	self.groupsGetGroup(groupId, function(data) {
+		// 		if(!('extra') in data) { data.extra = {}; }
+		// 		$.extend(true, data.extra, self.groupsGetGroupFeatures(data));
+		// 		callback && callback(data);
+		// 	});
+		// },
+
 		groupsGetFeaturesData: function(groupId, callback) {
 			var self = this;
 
-			self.groupsGetGroup(groupId, function(data) {
-				callback && callback(data);
-			});
+			monster.parallel({
+					group: function(callback) {
+						self.groupsGetGroup(groupId, function(data) {
+							callback(null, data);
+						});
+
+					},
+					callflow: function(callback) {
+						self.groupsGetRingGroup(groupId, function(data) {
+							callback(null, data);
+						});
+
+					}
+				},
+				function(err, results) {
+					results.group.extra = self.groupsGetGroupFeatures(results.group);
+					callback && callback(results);
+				}
+			);
 		},
 
 		groupsGetNameData: function(groupId, callback) {
@@ -1029,6 +1294,34 @@ define(function(require){
 			});
 		},
 
+		groupsListMedias: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.listMedia',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(medias) {
+					callback && callback(medias.data);
+				}
+			});
+		},
+
+		groupsListVMBoxes: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.groups.listVMBoxes',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(medias) {
+					callback && callback(medias.data);
+				}
+			});
+		},
+
 		groupsCreate: function(data, callback) {
 			var self = this;
 
@@ -1161,15 +1454,17 @@ define(function(require){
 			);
 		},
 
-		groupsUpdate: function(data, callback) {
+		groupsUpdate: function(group, callback) {
 			var self = this;
+
+			delete group.extra;
 
 			monster.request({
 				resource: 'voip.groups.updateGroup',
 				data: {
 					accountId: self.accountId,
-					groupId: data.id,
-					data: data
+					groupId: group.id,
+					data: group
 				},
 				success: function(data) {
 					callback && callback(data.data);
@@ -1179,6 +1474,8 @@ define(function(require){
 
 		groupsUpdateCallflow: function(callflow, callback) {
 			var self = this;
+
+			delete callflow.metadata;
 
 			monster.request({
 				resource: 'voip.groups.updateCallflow',

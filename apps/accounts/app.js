@@ -125,14 +125,14 @@ define(function(require){
 			});
 		},
 
-		render: function(container){
+		render: function(container, callback){
 			var self = this;
 
-			self._render(container);
+			self._render(container, callback);
 		},
 
 		// subscription handlers
-		_render: function(container) {
+		_render: function(container, callback) {
 			var self = this,
 				accountsManager = $(monster.template(self, 'accountsManager')),
 				parent = container || $('#ws-content');
@@ -142,6 +142,7 @@ define(function(require){
 
 			self.loadAccountList(function() {
 				self.renderAccountsManager(accountsManager);
+				callback && callback(parent);
 			});
 		},
 
@@ -472,7 +473,11 @@ define(function(require){
 
 							});
 
-							self.render();
+							self.render(null, function(container) {
+								// var originalAccountList = self.accountTree[self.accountId].children;
+								// self.renderList(originalAccountList, parent, newAccountId);
+								self.edit(newAccountId, null, container);
+							});
 						},
 						error: function(data, status) {
 							toastr.error(self.i18n.active().toastrMessages.newAccount.accountError, '', {"timeOut": 5000});
@@ -1242,9 +1247,11 @@ define(function(require){
 							})
 						);
 
-						params.accountList[data.data.id].name = data.data.name;
-						params.accountList[data.data.id].realm = data.data.realm;
-						self.renderList(params.accountList, parent, data.data.id);
+						if(params.accountList) {
+							params.accountList[data.data.id].name = data.data.name;
+							params.accountList[data.data.id].realm = data.data.realm;
+							self.renderList(params.accountList, parent, data.data.id);
+						}
 					},
 					function(data) {
 						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
