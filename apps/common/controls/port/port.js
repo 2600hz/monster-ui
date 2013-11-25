@@ -1,4 +1,5 @@
 define(function(require){
+
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		bootstrapSwitch = require('bootstrap-switch'),
@@ -37,27 +38,35 @@ define(function(require){
 				verb: 'GET'
 			},
 			'common.port.attachment.add': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={document}',
-				contentType: 'application/pdf',
-				verb: 'PUT'
+				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}',
+				verb: 'PUT',
+				type: 'application/pdf',
+				dataType: 'application/pdf'
 			},
 			'common.port.attachment.update': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{document}',
-				contentType: 'application/pdf',
-				verb: 'POST'
+				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
+				verb: 'POST',
+				type: 'application/pdf',
+				dataType: 'application/pdf'
 			},
 			'common.port.attachment.delete': {
-				url: 'accounts/{accountId}/port_requests{portRequestId}/attachments/{document}',
+				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
 				verb: 'DELETE'
 			},
 			'common.port.attachment.get': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{document}',
-				contentType: 'application/pdf',
-				verb: 'GET'
+				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
+				verb: 'GET',
+				type: 'application/pdf',
+				dataType: 'application/pdf'
 			},
 			'common.port.add.state': {
 				url: 'accounts/{accountId}/port_requests/{portRequestId}/ready',
 				verb: 'PUT'
+			},
+			'common.port.sort': {
+				apiRoot: 'http://10.26.0.68/number_manager/api/',
+				url: 'numbers/meta',
+				verb: 'POST'
 			}
 		},
 
@@ -67,9 +76,11 @@ define(function(require){
 
 		portRender: function(args){
 			var self = this,
-				args = args || {};
+				args = args || { };
 
-			self.portRequestGet(function(data) {
+			args.id = ( args.id ) ? args.id : self.accountId;
+
+			self.portRequestGet(args.id, function(data) {
 				var formatToTemplate = function(data) {
 						for ( var port in data.data ) {
 							var date = monster.util.gregorianToDate(data.data[port].created);
@@ -80,7 +91,7 @@ define(function(require){
 					},
 					parent = monster.ui.dialog($(monster.template(self, 'port-pendingOrders', formatToTemplate(data))), { title: 'transfer [port] numbers' });
 
-				self.portPendingOrders(parent, data);
+				self.portPendingOrders(args.id, parent, data);
 			});
 		},
 
@@ -88,7 +99,7 @@ define(function(require){
 		  * @desc bind events of the port-pendingOrders template
 		  * @param parent - .ui-dialog-content
 		*/
-		portPendingOrders: function(parent, data) {
+		portPendingOrders: function(accountId, parent, data) {
 			var self = this,
 				container = parent.find('#orders_list');
 
@@ -143,7 +154,7 @@ define(function(require){
 					.empty()
 					.append($(monster.template(self, 'port-addNumbers')));
 
-				self.portAddNumbers(parent);
+				self.portAddNumbers(accountId, parent);
 			});
 
 			/*
@@ -153,7 +164,7 @@ define(function(require){
 			container.find('td:last-child').find('button').on('click', function(event) {
 				event.stopPropagation();
 
-				self.portRequestGetDetail($(this).parent().parent().data('id'), function(data) {
+				self.portRequestGetDetail(accountId, $(this).parent().parent().data('id'), function(data) {
 					data = { orders: [data.data] };
 
 					if ( container.find('td:last-child').find('button').hasClass('btn-success') ) {
@@ -161,7 +172,7 @@ define(function(require){
 							.empty()
 							.append($(monster.template(self, 'port-submitDocuments', data.orders[0])));
 
-						self.portSubmitDocuments(parent, data);
+						self.portSubmitDocuments(accountId, parent, data);
 					} else {
 						console.log('info');
 					}
@@ -173,7 +184,7 @@ define(function(require){
 		  * @desc bind events of the port-resumeOrders template
 		  * @param parent - .ui-dialog-content
 		*/
-		portResumeOrders: function(parent, data) {
+		portResumeOrders: function(accountId, parent, data) {
 			var self = this,
 				container = parent.find('div#resume_orders');;
 
@@ -188,7 +199,7 @@ define(function(require){
 					.empty()
 					.append($(monster.template(self, 'port-submitDocuments', data.orders[$(this).data('index')])));
 
-				self.portSubmitDocuments(parent, data, $(this).data('index'));
+				self.portSubmitDocuments(accountId, parent, data, $(this).data('index'));
 			});
 		},
 
@@ -196,7 +207,7 @@ define(function(require){
 		  * @desc bind events of the port-addNumbers template
 		  * @param parent - .ui-dialog-content
 		*/
-		portAddNumbers: function(parent) {
+		portAddNumbers: function(accountId, parent) {
 			var self = this,
 				container = parent.find('div#add_numbers');
 
@@ -215,25 +226,58 @@ define(function(require){
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					numbersList = self.portFormatNumbers(numbersList.split(' '));
+					monster.request({
+						resource: 'common.port.sort',
+						data: {
+							data: numbersList.split(' ')
+						},
+						success: function(data) {
+							data = data.data;
 
-					container
-						.find('div.row-fluid')
-						.removeClass('error');
+							var carriersList = new Array(),
+								formattedData = { orders: [] };
 
-					container.find('#numbers_list')[0].value = '';
+							for (var number in data) {
+								carriersList.push(data[number].company);
+							}
 
-					/*
-					 * unbind because it is used in portManagerOrders
-					 * to add number without adding the port-managerOrders template again
-					 */
-					container
-						.find('button')
-						.unbind('click');
+							carriersList = _.uniq(carriersList);
 
-					$(monster.template(self, 'port-manageOrders', numbersList)).insertAfter(container);
+							for (var carrier in carriersList) {
+								var numbersList = new Array(),
+									order = new Object();
 
-					self.portManageOrders(parent);
+								for (var number in data) {
+									if ( data[number].company == carriersList[carrier] ) {
+										numbersList.push(number);
+									}
+								}
+
+								order.carrier = carriersList[carrier];
+								order.numbers = numbersList;
+
+								formattedData.orders[carrier] = order;
+							}
+
+							container
+								.find('div.row-fluid')
+								.removeClass('error');
+
+							container.find('#numbers_list')[0].value = '';
+
+							/*
+							 * unbind because it is used in portManagerOrders
+							 * to add number without adding the port-managerOrders template again
+							 */
+							container
+								.find('button')
+								.unbind('click');
+
+							$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
+
+							self.portManageOrders(accountId, parent);
+						}
+					});
 				}
 			});
 		},
@@ -242,7 +286,7 @@ define(function(require){
 		  * @desc bind events of the port-manageOrders template
 		  * @param parent - .ui-dialog-content
 		*/
-		portManageOrders: function(parent) {
+		portManageOrders: function(accountId, parent) {
 			var self = this,
 				container = parent.find('div#port_container');
 
@@ -262,42 +306,60 @@ define(function(require){
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					var ordersList = self.portFormatNumbers(numbersList.split(' ')).orders;
+					monster.request({
+						resource: 'common.port.sort',
+						data: {
+							data: numbersList.split(' ')
+						},
+						success: function(data) {
+							data = data.data;
 
-					container
-						.find('div#add_numbers')
-						.find('div.row-fluid')
-						.removeClass('error');
+							var carriersList = new Array(),
+								formattedData = { orders: [] };
 
-					container.find('#numbers_list')[0].value = '';
+							for (var number in data) {
+								carriersList.push(data[number].company);
+							}
 
-					for ( var order in ordersList ) {
-						container
-							.find('div#manage_orders')
-							.find('div.row-fluid:last-child')
-							.append($(monster.template(self, 'port-order', ordersList[order])));
-					}
-				}
-			});
+							carriersList = _.uniq(carriersList);
 
-			container.on('click', '#manage_orders h3 i.icon-remove-sign', function() {
-				$(this).parent().parent().remove();
+							for (var carrier in carriersList) {
+								var numbersList = new Array(),
+									order = new Object();
 
-				if ( $(this).parent().parent().is(':empty') ) {
-					$(this).parent().parent().parent().parent().remove();
-				}
+								for (var number in data) {
+									if ( data[number].company == carriersList[carrier] ) {
+										numbersList.push(number);
+									}
+								}
 
-				if ( container.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
-					container
-						.find('div#manage_orders')
-						.find('.row-fluid:last-child')
-						.animate({height: '0px'}, 500);
+								order.carrier = carriersList[carrier];
+								order.numbers = numbersList;
 
-					$('.ui-dialog-content')
-						.empty()
-						.append($(monster.template(self, 'port-addNumbers')));
+								formattedData.orders[carrier] = order;
+							}
 
-					self.portAddNumbers(parent);
+							container
+								.find('div.row-fluid')
+								.removeClass('error');
+
+							container.find('#numbers_list')[0].value = '';
+
+							container
+								.find('div#add_numbers')
+								.find('div.row-fluid')
+								.removeClass('error');
+
+							container.find('#numbers_list')[0].value = '';
+
+							for ( var order in formattedData.orders ) {
+								container
+									.find('div#manage_orders')
+									.find('div.row-fluid:last-child')
+									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
+							}
+						}
+					});
 				}
 			});
 
@@ -328,7 +390,7 @@ define(function(require){
 						.empty()
 						.append($(monster.template(self, 'port-addNumbers')));
 
-					self.portAddNumbers(parent);
+					self.portAddNumbers(accountId, parent);
 				}
 			});
 
@@ -340,7 +402,7 @@ define(function(require){
 				}
 			});
 
-			self.portCancelOrder(parent, container);
+			self.portCancelOrder(accountId, parent, container);
 
 			/*
 			 * on click on Next button
@@ -378,7 +440,7 @@ define(function(require){
 						.empty()
 						.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
 
-					self.portSubmitDocuments(parent, ordersList);
+					self.portSubmitDocuments(accountId, parent, ordersList);
 				// } else {
 				// 	container.find('div#eula').find('input').each(function() {
 				// 		if ( !$(this).is(':checked') ) {
@@ -427,7 +489,7 @@ define(function(require){
 		  * @desc bind events of the port-manageOrders template
 		  * @param parent - .ui-dialog-content
 		*/
-		portSubmitDocuments: function(parent, data, index) {
+		portSubmitDocuments: function(accountId, parent, data, index) { 
 			var self = this,
 				index = index || 0,
 				container = parent.find('div#port_container');
@@ -438,17 +500,33 @@ define(function(require){
 				$(this).blur();
 				container.find('#bill_form').find('input.upload').click();
 
-				container.find('#bill_form').find('input.upload').on('change', function() {
-					var formData = form2object('bill_form');
+				container.find('#bill_form').find('input.upload').on('change', function(evt) {
+					var file = evt.target.files;
 
-					for (var key in formData) {
-						if ( key == "" ) {
-							delete formData[key];
+					if(file.length > 0) {
+						var reader = new FileReader(),
+							binary = 'updating';
+
+						reader.onloadend = function(evt) {
+							binary = evt.target.result;
+
+							if ( typeof data.orders[index].id == "undefined" ) {
+								data.orders[index].bill_attachment = binary;
+							} else {
+								if ( typeof data.orders[index].uploads['bill.pdf'] == "undefined" ) {
+									self.portRequestAddAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {
+										console.log(data);
+									});
+								} else {
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {
+										console.log(data);
+									});
+								}
+							}
 						}
-					}
 
-					console.log($(this)[0].files[0].name);
-					console.log(formData);
+						reader.readAsDataURL(file[0]);
+					}
 				});
 			});
 
@@ -459,7 +537,10 @@ define(function(require){
 			 * load port-addNumbers template
 			 */
 			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
-				var ul = $(this).parent().parent();
+				var ul = $(this).parent().parent(),
+					args = new Object();
+
+				args.id = accountId;
 
 				container
 					.find('div#upload_bill')
@@ -480,10 +561,10 @@ define(function(require){
 							.empty()
 							.append($(monster.template(self, 'port-resumeOrders', data)));
 
-						self.portResumeOrders(parent, data);
+						self.portResumeOrders(accountId, parent, data);
 					} else {
 						$('.ui-dialog').remove();
-						self.portRender();
+						self.portRender(args);
 					}
 				}
 			});
@@ -492,15 +573,37 @@ define(function(require){
 				$(this).blur();
 				container.find('#loa').find('input.upload').click();
 
-				container.find('#loa').find('input.upload').on('change', function() {
-					var formData = form2object('loa');
+				container.find('#loa').find('input.upload').on('change', function(evt) {
+					var files = evt.target.files;
 
-					console.log($(this)[0].files[0].name);
-					console.log(formData);
+					if(files.length > 0) {
+						var reader = new FileReader(),
+							binary = 'updating';
+
+						reader.onloadend = function(evt) {
+							binary = evt.target.result;
+
+							if ( typeof data.orders[index].id == "undefined" ) {
+								data.orders[index].loa_attachment = binary;
+							} else {
+								if ( typeof data.orders[index].uploads['loa.pdf'] == "undefined" ) {
+									self.portRequestAddAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {
+										console.log(data);
+									});
+								} else {
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {
+										console.log(data);
+									});
+								}
+							}
+						}
+
+						reader.readAsDataURL(files[0]);
+					}
 				});
 			});
 
-			self.portSaveOrder(parent, container, data, function(data) {
+			self.portSaveOrder(accountId, parent, container, data, function(data) {
 				data.orders[index].name = container.find('input#transfer_helper').val();
 				if ( typeof data.orders[index].bill == 'undefined' ) {
 					data.orders[index].bill = new Object();
@@ -514,7 +617,7 @@ define(function(require){
 				return data;
 			}, index);
 
-			self.portCancelOrder(parent, container, data, index);
+			self.portCancelOrder(accountId, parent, container, data, index);
 
 			/*
 			 * on click on Submit button
@@ -563,7 +666,7 @@ define(function(require){
 						.empty()
 						.append($(monster.template(self, 'port-confirmOrder', dataTemplate)));
 
-					self.portConfirmOrder(parent, data, index);
+					self.portConfirmOrder(accountId, parent, data, index);
 				// }
 			});
 		},
@@ -572,7 +675,7 @@ define(function(require){
 		  * @desc bind events of the port-confirmOrder template
 		  * @param parent - .ui-dialog-content
 		*/
-		portConfirmOrder: function(parent, data, index) {
+		portConfirmOrder: function(accountId, parent, data, index) {
 			var self = this,
 				container = parent.find('div#port_container'),
 				order = data.orders[index];
@@ -653,7 +756,7 @@ define(function(require){
 			 * on click on Save button
 			 * empty .ui-dialog-content and load port-resumeOrders template
 			 */
-			self.portSaveOrder(parent, container, data, function(data) {
+			self.portSaveOrder(accountId, parent, container, data, function(data) {
 				data.orders[index].email = container.find('input#notification_email').val();
 				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
@@ -665,7 +768,7 @@ define(function(require){
 				return data;
 			}, index);
 
-			self.portCancelOrder(parent, container, data, index);
+			self.portCancelOrder(accountId, parent, container, data, index);
 
 			/*
 			 * on click on Submit button
@@ -692,19 +795,23 @@ define(function(require){
 						}
 
 
-						self.portRequestAdd(data.orders[index], function() {
+						self.portRequestAdd(accountId, data.orders[index], function() {
 
 							data.orders.splice(index, 1);
 
 							if ( typeof data.orders[0] == 'undefined' ) {
+								var args = new Object();
+
+								args.id = accountId;
+
 								$('.ui-dialog').remove();
-								self.portRender();
+								self.portRender(args);
 							} else {
 								$('.ui-dialog-content')
 									.empty()
 									.append($(monster.template(self, 'port-resumeOrders', data)));
 
-								self.portResumeOrders(parent, data);
+								self.portResumeOrders(accountId, parent, data);
 							}
 
 						});
@@ -728,8 +835,12 @@ define(function(require){
 					}
 
 					self.portRequestUpdate(data.orders[index].id, data.orders[index], function() {
+						var args = new Object()
+
+						args.id = accountId;
+
 						$('.ui-dialog').remove();
-						self.portRender();
+						self.portRender(args);
 					});
 				}
 			});
@@ -745,73 +856,93 @@ define(function(require){
 			$("html, body").animate({ scrollTop: "0" }, 100);
 		},
 
-		portSaveOrder: function(parent, container, data, callback, index) {
+		portSaveOrder: function(accountId, parent, container, data, callback, index) {
 			var self = this,
-				index = index || 0;
+				index = index || 0,
+				args = new Object();
+
+			args.id = accountId;
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
 				data = callback(data);
 
 				if ( typeof data.orders[index].id === 'undefined' ) {
-					self.portRequestAdd(data.orders[index], function() {
+					self.portRequestAdd(accountId, data.orders[index], function() {
 						if ( data.orders.length > 1 ) {
 							data.orders.splice(index, 1);
 							parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-							self.portResumeOrders(parent, data);
+							self.portResumeOrders(accountId, parent, data);
 						} else {
 							$('.ui-dialog').remove();
-							self.portRender();
+							self.portRender(args);
 						}
 					});
 				} else {
-					self.portRequestUpdate(data.orders[index].id, data.orders[index], function() {
+					self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
 						$('.ui-dialog').remove();
-						self.portRender();
+						self.portRender(args);
 					});
 				}
 			});
 		},
 
-		portCancelOrder: function(parent, container, data, index) {
+		portCancelOrder: function(accountId, parent, container, data, index) {
 			var self = this,
 				data = data || undefined,
-				index = index || 0;
+				index = index || 0,
+				args = new Object();
+
+			args.id = accountId;
 
 			container.find('div#footer').find('button.btn-danger').on('click', function() {
 				if ( typeof data === 'undefined' ) {
 					$('.ui-dialog').remove();
-					self.portRender();
+					self.portRender(args);
 				} else {
 					if ( typeof data.orders[index].id === 'undefined' ) {
 						if ( data.orders.length > 1 ) {
 							data.orders.splice(index, 1);
 							parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-							self.portResumeOrders(parent, data);
+							self.portResumeOrders(accountId, parent, data);
 						} else {
 							$('.ui-dialog').remove();
-							self.portRender();
+							self.portRender(args);
 						}
 					} else {
-						self.portRequestDelete(parent, data.orders[index].id, function() {
+						self.portRequestDelete(accountId, parent, data.orders[index].id, function() {
 							$('.ui-dialog').remove();
-							self.portRender();
+							self.portRender(args);
 						});
 					}
 				}
 			});
 		},
 
-		portRequestAdd: function(order, callback) {
+		portRequestAdd: function(accountId, order, callback) {
 			var self = this;
 
-			order = self.portArrayToObjects(order);
+			if ( typeof order.bill_attachment != "undefined" || typeof order.loa_attachment != "undefined" ) {
+				var attachments = new Object();
+
+				if ( typeof order.bill_attachment != "undefined" ) {
+					attachments.bill = order.bill_attachment;
+					delete order.bill_attachment;
+				}
+
+				if ( typeof order.loa_attachment != "undefined" ) {
+					attachments.loa = order.loa_attachment;
+					delete order.bill_attachment;
+				}
+			}
 
 			console.log(order);
+
+			order = self.portArrayToObjects(order);
 
 			monster.request({
 				resource: 'common.port.add',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					data: order
 				},
 				success: function (data) {
@@ -823,17 +954,15 @@ define(function(require){
 			});
 		},
 
-		portRequestUpdate: function(portRequestId, order, callback) {
+		portRequestUpdate: function(accountId, portRequestId, order, callback) {
 			var self = this;
 
 			order = self.portArrayToObjects(order);
 
-			console.log(order);
-
 			monster.request({
 				resource: 'common.port.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
 					data: order
 				},
@@ -845,13 +974,11 @@ define(function(require){
 			});
 		},
 
-		portRequestDelete: function(parent, portRequestId, callback) {
-			var self = this;
-
+		portRequestDelete: function(accountId, portRequestId, callback) {
 			monster.request({
 				resource: 'common.port.delete',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
@@ -863,13 +990,13 @@ define(function(require){
 			});
 		},
 
-		portRequestGet: function(callback) {
+		portRequestGet: function(accountId, callback) {
 			var self = this;
 
 			monster.request({
 				resource: 'common.port.get',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					data: {}
 				},
 				success: function (data) {
@@ -883,13 +1010,13 @@ define(function(require){
 			});
 		},
 
-		portRequestGetDetail: function(portRequestId, callback) {
+		portRequestGetDetail: function(accountId, portRequestId, callback) {
 			var self = this;
 
 			monster.request({
 				resource: 'common.port.get.detail',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
@@ -903,13 +1030,11 @@ define(function(require){
 			});
 		},
 
-		portRequestGetDescendants: function(callback) {
-			var self = this;
-
+		portRequestGetDescendants: function(accountId, callback) {
 			monster.request({
 				resource: 'common.port.get.descendants',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					data: {}
 				},
 				success: function (data) {
@@ -920,13 +1045,11 @@ define(function(require){
 			});
 		},
 
-		portRequestGetAttachments: function(portRequestId, callback) {
-			var self = this;
-
+		portRequestGetAttachments: function(accountId, portRequestId, callback) {
 			monster.request({
 				resource: "common.port.get.attachments",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
@@ -936,16 +1059,14 @@ define(function(require){
 			});
 		},
 
-		portRequestAddAttachment: function(portRequestId, document, callback) {
-			var self = this;
-
+		portRequestAddAttachment: function(accountId, portRequestId, documentName, data, callback) {
 			monster.request({
 				resource: "common.port.attachment.add",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
-					document: document,
-					data: {}
+					documentName: documentName,
+					data: data
 				},
 				success: function(data) {
 					callback(data);
@@ -953,16 +1074,14 @@ define(function(require){
 			});
 		},
 
-		portRequestUpdateAttachment: function(portRequestId, document, callback) {
-			var self = this;
-
+		portRequestUpdateAttachment: function(accountId, portRequestId, documentName, data, callback) {
 			monster.request({
 				resource: "common.port.attachment.update",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
-					document: document,
-					data: {}
+					documentName: documentName,
+					data: data
 				},
 				success: function(data) {
 					callback(data);
@@ -970,15 +1089,13 @@ define(function(require){
 			});
 		},
 
-		portRequestDeleteAttachment: function(portRequestId, document, callback) {
-			var self = this;
-
+		portRequestDeleteAttachment: function(accountId, portRequestId, documentName, callback) {
 			monster.request({
 				resource: "common.port.attachment.delete",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
-					document: document,
+					documentName: documentName,
 					data: {}
 				},
 				success: function(data) {
@@ -987,15 +1104,13 @@ define(function(require){
 			});
 		},
 
-		portRequestGetAttachment: function(portRequestId, document, callback) {
-			var self = this;
-
+		portRequestGetAttachment: function(accountId, portRequestId, documentName, callback) {
 			monster.request({
 				resource: "common.port.attachment.get",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
-					document: document,
+					documentName: documentName,
 					data: {}
 				},	
 				success: function(data) {
@@ -1004,13 +1119,11 @@ define(function(require){
 			});
 		},
 
-		portRequestAddState: function(portRequestId, callback) {
-			var self = this;
-
+		portRequestAddState: function(accountId, portRequestId, callback) {
 			monster.request({
 				resource: "common.port.add.state",
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},

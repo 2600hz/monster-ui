@@ -61,6 +61,7 @@ div.row-fluid.info p {
 	padding: 0 10px;
 	color: #2CF;
 	font-weight: normal;
+	overflow: hidden;
 }
 
 .order .scroll {
