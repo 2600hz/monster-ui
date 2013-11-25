@@ -55,8 +55,25 @@
 			"numbersUpdated": "You successfully updated the phone numbers of {{name}}",
 			"extensionsUpdated": "You successfully updated the extensions numbers of {{name}}"
 		},
+		"callRecording": {
+			"title": "Call Recording",
+			"headline": "Group Call Recording Settings",
+			"formatLabel": "Format:",
+			"urlLabel": "URL:",
+			"urlPlaceholder": "http://your.server.com/place/to/store/recordings",
+			"timeLimitLabel": "Time Limit (sec):"
+		},
+		"musicOnHold": {
+			"title": "Music-On-Hold",
+			"headline": "Group Music-On-Hold Settings",
+			"dropdownLabel": "Music on Hold:",
+			"silence": "Silence",
+			"defaultMusic": "Default Music"
+		},
 		"voicemails": {
-			"title": "Voicemail Box"
+			"title": "Voicemails",
+			"headline": "Group Voicemail Settings",
+			"dropdownLabel": "Voicemail Box:"
 		}
 	},
 
@@ -114,6 +131,7 @@
 			"editTitle": "Editing SIP Device: {{name}}",
 			"macAddress": "MAC Address",
 			"macAddressPlaceholder": "19:33:1A:B2:12:58",
+			"new": "New SIP Device",
 			"deviceName": "Device Name"
 		},
 		"landline": {

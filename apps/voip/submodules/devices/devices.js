@@ -301,6 +301,12 @@ define(function(require){
 				templateDevice.find('.actions').show();
 			});
 
+			templateDevice.find('.missing-brand').on('click', function() {
+				popup.dialog('close').remove();
+
+				callback && callback();
+			});
+
 			templateDevice.find('.next-step').on('click', function() {
 				var dataProvisioner = {
 					endpoint_brand: selectedBrand,
@@ -431,6 +437,13 @@ define(function(require){
 					suppress_unregister_notifications: false
 				},
 				typedDefaults = {
+					sip_device: {
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
 					landline: {
 						call_forward: {
 							require_keypress: true,
@@ -568,7 +581,7 @@ define(function(require){
 					friendlyIconClass: mapIconClass[device.device_type],
 					macAddress: device.mac_address,
 					name: device.name,
-					userName: device.owner_id ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
+					userName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
 					enabled: device.enabled,
 					type: device.device_type,
 					friendlyType: self.i18n.active().devices.types[device.device_type],

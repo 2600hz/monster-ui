@@ -931,7 +931,7 @@ define(function(require){
 			_.each(data.callflows, function(callflow) {
 				_.each(callflow.numbers, function(number) {
 					if(number in data.numbers.numbers) {
-						if(callflow.owner_id) {
+						if(callflow.owner_id && callflow.owner_id in mapUsers) {
 							var user = mapUsers[callflow.owner_id];
 
 							data.numbers.numbers[number].owner = user.first_name + ' ' + user.last_name;

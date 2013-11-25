@@ -1274,21 +1274,23 @@ define(function(require){
 
 		usersCleanUserData: function(userData) {
 			/* If the user has been removed from the directory */
-			if(userData.extra.includeInDirectory === false) {
-				if('directories' in userData && userData.extra.mainDirectoryId && userData.extra.mainDirectoryId in userData.directories) {
-					delete userData.directories[userData.extra.mainDirectoryId];
+			if(userData.extra) {
+				if(userData.extra.includeInDirectory === false) {
+					if('directories' in userData && userData.extra.mainDirectoryId && userData.extra.mainDirectoryId in userData.directories) {
+						delete userData.directories[userData.extra.mainDirectoryId];
+					}
 				}
-			}
-			else {
-				userData.directories = userData.directories || {};
+				else {
+					userData.directories = userData.directories || {};
 
-				if(userData.extra.mainCallflowId) {
-					userData.directories[userData.extra.mainDirectoryId] = userData.extra.mainCallflowId;
+					if(userData.extra.mainCallflowId) {
+						userData.directories[userData.extra.mainDirectoryId] = userData.extra.mainCallflowId;
+					}
 				}
-			}
 
-			if('sameEmail' in userData.extra) {
-				userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
+				if('sameEmail' in userData.extra) {
+					userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
+				}
 			}
 
 			delete userData.include_directory;

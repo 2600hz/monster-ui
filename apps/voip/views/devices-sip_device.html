@@ -1,8 +1,20 @@
 <div class="edit-device" data-id="{{id}}">
 	<div class="title-bar clearfix">
 		<div class="device-title pull-left">
+			{{#if provision}}
 			<div class="device-image {{provision.endpoint_brand}}-{{provision.endpoint_model}}"></div>
 			<div class="device-model">{{provision.endpoint_brand}} - {{provision.endpoint_model}}</div>
+			{{else}}
+				<div class="device-icon">
+					<i class="icon-telicon-voip-phone"></i>
+				</div>
+
+				{{#if id}}
+					<div class="device-model">{{name}}</div>
+				{{else}}
+					<div class="device-model">{{i18n.devices.sip_device.new}}</div>
+				{{/if}}
+			{{/if}}
 		</div>
 
 		<ul class="nav nav-pills pull-right">
@@ -32,12 +44,35 @@
 						<input type="text" id="name" name="name" value="{{name}}">
 					</div>
 				</div>
+				{{#if provision}}
 				<div class="control-group">
 					<label class="control-label" for="mac_address">{{ i18n.devices.sip_device.macAddress }}</label>
 					<div class="controls">
 						<input type="text" name="mac_address" placeholder="{{ i18n.devices.sip_device.macAddressPlaceholder }}" value="{{mac_address}}">
 					</div>
 				</div>
+				{{else}}
+					<div class="control-group">
+						<label class="control-label" for="sip_username">{{ i18n.devices.sip.username }}</label>
+						<div class="controls">
+							<input type="text" id="sip_username" name="sip.username" value="{{sip.username}}">
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="sip_password">{{ i18n.devices.sip.password }}</label>
+						<div class="controls">
+							<input type="text" id="sip_password" name="sip.password" value="{{sip.password}}">
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="sip_username">{{ i18n.devices.sip.realm }}</label>
+						<div class="controls">
+							<span class="displayed-realm">{{ sip.realm }}</span>
+						</div>
+					</div>
+				{{/if}}
 			</div>
 
 			<div class="tabs-section clearfix" data-section="audio">
@@ -146,13 +181,13 @@
 
 		<div class="pull-right">
 			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
-				<button type="button" class="btn btn-success save">
-				{{#if id}}
-					{{ i18n.saveChanges }}
-				{{else}}
-					{{ i18n.devices.createDevice }}
-				{{/if}}
-				</button>
+			<button type="button" class="btn btn-success save">
+			{{#if id}}
+				{{ i18n.saveChanges }}
+			{{else}}
+				{{ i18n.devices.createDevice }}
+			{{/if}}
+			</button>
 		</div>
 	</div>
 </div>
