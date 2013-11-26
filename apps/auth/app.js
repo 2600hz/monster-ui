@@ -318,9 +318,11 @@ define(function(require){
 			}
 
 			if(self.apiUrl !== args.app.apiUrl) {
+				/* Hacking the API URL */
 				monster.request({
-                    resource: 'auth.sharedAuth',
+					apiUrl: args.app.apiUrl + 'shared_auth',
                     data: restData,
+					resource: 'auth.sharedAuth',
                     success: function (json, xhr) {
 						args.app.authToken = json.auth_token;
 

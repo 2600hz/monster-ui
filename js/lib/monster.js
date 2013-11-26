@@ -76,6 +76,8 @@ define(function(require){
 				throw('The resource requested could not be found.', options.resource);
 			}
 
+			settings.url = options.apiUrl || settings.url;
+
 			settings.url += self._cacheString(settings);
 
 			var mappedKeys = [],
