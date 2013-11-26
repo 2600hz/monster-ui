@@ -22,6 +22,19 @@
 		{{/each}}
 	</div>
 	<div class="actions">
+		<ul class="pull-left add-user-dropdown">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle monster-link" data-toggle="dropdown" data-target="#">
+					<i class="icon-plus-sign icon-green"></i>
+					{{ i18n.users.add }}
+				</a>
+				<ul class="dropdown-menu" role="menu">
+					{{#each extra.remainingUsers}}
+						<li class="add-user {{#if inUse}}in-use{{/if}}" data-id="{{id}}">{{first_name}} {{last_name}}</li>
+					{{/each}}
+				</ul>
+			</li>
+		</ul>
 		<div class="pull-right">
 			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
 			<button type="button" class="btn btn-success save-groups">{{ i18n.saveChanges }}</button>

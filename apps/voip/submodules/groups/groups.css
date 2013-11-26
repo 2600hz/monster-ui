@@ -210,6 +210,36 @@
 	text-align: center;
 	width: 20%;
 }
+#groups_container .detail-group .groups-fields:after {
+	clear: right;
+}
+#groups_container .detail-group .add-user-dropdown {
+	list-style: none;
+	margin: 0;
+}
+#groups_container .detail-group .add-user-dropdown .dropdown {
+	height: 30px;
+	line-height: 30px;
+}
+#groups_container .detail-group .add-user-dropdown .dropdown-menu {
+	border-radius: 0;
+	padding: 0;
+}
+#groups_container .detail-group .add-user-dropdown .add-user {
+	background: #FFF;
+	cursor: pointer;
+	font-size: 14px;
+	height: 40px;
+	line-height: 40px;
+	padding: 0px 15px;
+	white-space: nowrap;
+}
+#groups_container .detail-group .add-user-dropdown .add-user.in-use {
+	display: none;
+}
+#groups_container .detail-group .add-user-dropdown .add-user:hover {
+	background: #FCFCFC;
+}
 
 /* Sliders */
 #groups_container .slider-time.ui-slider {

@@ -25,7 +25,8 @@
 			"placeholderExtension": "2002",
 			"placeholderName": "Sales",
 			"selectedUsers": "Selected Users",
-			"title": "Creating a group"
+			"title": "Creating a group",
+			"missingDataAlert": "You must choose a name and an extension for this group"
 		},
 		"groupDeleted": "You successfully deleted {{name}}'s Group",
 		"name": "Group Name",
