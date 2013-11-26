@@ -1130,7 +1130,7 @@ define(function(require){
 				};
 
 			if($.isNumeric(templateData.account.created)) {
-				templateData.account.created = monster.ui.toFriendlyDate(accountData.created, "short");
+				templateData.account.created = monster.util.toFriendlyDate(accountData.created, "short");
 			}
 
 			var contentHtml = $(monster.template(self, 'edit', templateData)),
