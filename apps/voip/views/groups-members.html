@@ -2,6 +2,7 @@
 	<div id="form-{{id}}" class="groups-fields row-fluid" data-id="{{id}}">
 	<div class="grid-time">
 		<div class="group-row title">
+			<div class="scale-container"></div>
 			<div class="name"><!--{{ i18n.groups.ringThisMemberFor }}--></div>
 			<div class="times"></div>
 			<div class="remove">{{ i18n.groups.removeMember }}</div>
@@ -9,6 +10,7 @@
 
 		{{#each extra.ringGroup}}
 			<div class="group-row" data-user_id="{{id}}">
+				<div class="scale-container"></div>
 				<div class="name">{{name}}</div>
 				<div class="times">
 					<div class="slider-time">

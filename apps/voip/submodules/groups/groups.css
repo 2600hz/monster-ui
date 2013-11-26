@@ -170,8 +170,9 @@
 /* Members */
 #groups_container .detail-group .grid-time .group-row {
 	background: #FFF;
-	padding: 10px 0;
+	padding: 20px 0 10px;
 	width: 100%;
+	position: relative;
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -262,22 +263,82 @@
     height: 25px;
     margin: -7px 0;
     padding: 3px;
-    width: 5px;
+    width: 0px;
 }
 
-.slider-tooltip {
+#groups_container .slider-time.ui-slider .ui-slider-range,
+#groups_container .slider-time.ui-slider .ui-slider-handle {
+	background-color: hsl(85, 80%, 40%) !important; 
+	background-repeat: repeat-x; 
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714"); 
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714)); 
+	background-image: -moz-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -ms-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714)); 
+	background-image: -webkit-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -o-linear-gradient(top, #bcef75, #73b714); 
+	background-image: linear-gradient(#bcef75, #73b714); 
+	border-color: #73b714 #73b714 hsl(85, 80%, 32.5%); 
+}
+
+#groups_container .slider-time.ui-slider .slider-tooltip {
     position: absolute;
     display: block;
     font-size: 12px;
 	bottom: 30px;
-	right: -9px;
+	right: -11px;
 }
-.slider-tooltip .slider-tooltip-inner {
+#groups_container .slider-time.ui-slider .slider-tooltip .slider-tooltip-inner {
 	width: 30px;
     max-width: 200px;
     color: #000000;
     text-align: center;
     text-decoration: none;
+}
+
+
+
+/* Slider scale */
+#groups_container .scale-container {
+    position: absolute;
+    height: 100%;
+    border-bottom: solid 1px #ddd;
+    top: 0px;
+    left: 20%;
+    right: 20%;
+    margin: 0 26px 0 34px;
+}
+#groups_container .group-row:last-of-type .scale-container {
+	border-bottom: none;
+}
+#groups_container .scale-container > span {
+    position: absolute;
+	bottom: 35%;
+	font-size: 11px;
+	left: -8px;
+	color: #999;
+}
+#groups_container .scale-element {
+    height: 100%;
+    border-right: solid 1px #ddd;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#groups_container .group-row.title .scale-element {
+    top: 65%;
+    height: 35%;
+}
+#groups_container .scale-element:first-child {
+    border-left: solid 1px #ddd;
+}
+#groups_container .scale-element > span {
+    position: absolute;
+	top: -20px;
+	font-size: 11px;
+	right: -24px;
+	color: #999;
 }
 
 /* Name */

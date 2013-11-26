@@ -906,7 +906,9 @@ define(function(require){
 		},
 
 		groupsBindMembers: function(template, data) {
-			var self = this;
+			var self = this,
+				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
+				scaleMaxSeconds = 60; //Maximum of seconds, corresponding to the end of the scale
 
 			template.find('.save-groups').on('click', function() {
 				var endpoints = [],
@@ -972,7 +974,8 @@ define(function(require){
 					template.find('.group-row[data-user_id="'+ userId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
 				},
 				createSlider = function(endpoint) {
-					template.find('.group-row[data-user_id="'+ endpoint.id +'"] .slider-time').slider({
+					var groupRow = template.find('.group-row[data-user_id="'+ endpoint.id +'"]');
+					groupRow.find('.slider-time').slider({
 						range: true,
 						min: 0,
 						max: 60,
@@ -983,11 +986,27 @@ define(function(require){
 							createTooltip(event, ui, endpoint.id, $(this));
 						},
 					});
+					createSliderScale(groupRow);
+				},
+				createSliderScale = function(container, isHeader) {
+					var scaleContainer = container.find('.scale-container')
+						isHeader = isHeader || false;
+
+					for(var i=1; i<=scaleSections; i++) {
+						var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
+									 + (isHeader ? '<span>'+(i*scaleMaxSeconds/scaleSections)+' Sec</span>' : '')
+									 + '</div>';
+						scaleContainer.append(toAppend);
+					}
+					if(isHeader) {
+						scaleContainer.append('<span>0 Sec</span>');
+					}
 				};
 
 			_.each(data.extra.ringGroup, function(endpoint) {
 				createSlider(endpoint);
 			});
+			createSliderScale(template.find('.group-row.title'), true);
 		},
 
 		groupsGetCreationData: function(callback) {
