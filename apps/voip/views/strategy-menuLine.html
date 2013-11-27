@@ -7,7 +7,7 @@
 		{{#each callEntities}}
 			<optgroup label="{{groupName}}">
 				{{#each entities}}
-					<option value="{{id}}" data-type="{{../groupType}}" {{#compare id '===' ../../selectedId }}selected{{/compare}}>{{name}}</option>
+					<option value="{{id}}" data-type="{{module}}" {{#compare id '===' ../../selectedId }}selected{{/compare}}>{{name}}</option>
 				{{/each}}
 			</optgroup>
 		{{/each}}

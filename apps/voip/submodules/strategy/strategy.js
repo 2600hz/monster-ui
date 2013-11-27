@@ -25,6 +25,14 @@ define(function(require){
 				url: 'accounts/{accountId}/callflows/{callflowId}',
 				verb: 'POST'
 			},
+			'strategy.callflows.listUserCallflows': {
+				url: 'accounts/{accountId}/callflows?has_key=owner_id&key_missing=type',
+				verb: 'GET'
+			},
+			'strategy.callflows.listRingGroups': {
+				url: 'accounts/{accountId}/callflows?has_key=group_id',
+				verb: 'GET'
+			},
 			'strategy.temporalRules.list': {
 				url: 'accounts/{accountId}/temporal_rules?has_key=type',
 				verb: 'GET'
@@ -371,7 +379,7 @@ define(function(require){
 								};
 
 
-							if(["user","device","ring_group"].indexOf(strategyData.callflows[callflowName].flow.module) >= 0) {
+							if(!_.isEmpty(strategyData.callflows[callflowName].flow.children)) {
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
 								if("_" in strategyData.callflows[callflowName].flow.children 
 								&& strategyData.callflows[callflowName].flow.children["_"].module === "voicemail") {
@@ -391,7 +399,7 @@ define(function(require){
 
 						$.each(template.find('.user-select select'), function() {
 							var $this = $(this);
-							$this.siblings('.title').text(self.i18n.active().strategy.callEntities[$this.find('option:selected').data('type')]);
+							$this.siblings('.title').text($this.find('option:selected').closest('optgroup').prop('label'));
 						});
 
 						monster.ui.prettyCheck.create(container, 'radio');
@@ -936,7 +944,7 @@ define(function(require){
 
 			container.on('change', '.user-select select', function(e) {
 				var $this = $(this);
-				$this.siblings('.title').text(self.i18n.active().strategy.callEntities[$this.find('option:selected').data('type')])
+				$this.siblings('.title').text($this.find('option:selected').closest('optgroup').prop('label'));
 			});
 
 			container.on('click', '.save-button', function(e) {
@@ -963,6 +971,7 @@ define(function(require){
 						switch(flowElement.module) {
 							case 'user':
 							case 'device':
+							case 'callflow':
 								flowElement.data.id = selectedEntity.val();
 								break;
 							case 'ring_group':
@@ -1099,11 +1108,13 @@ define(function(require){
 
 					popup = monster.ui.dialog(template, { title: self.i18n.active().strategy.popup.title+" - "+label});
 
-					var menuLineContainer = template.find('.menu-block .left .content');
+					var menuLineContainer = template.find('.menu-block .left .content'),
+						popupCallEntities = $.extend(true, {}, strategyData.callEntities, { voicemail: strategyData.voicemails });
+
 					_.each(strategyData.callflows[name].flow.children, function(val, key) {
 						menuLineContainer.append(monster.template(self, 'strategy-menuLine', {
 							number: key,
-							callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities),
+							callEntities: self.strategyGetCallEntitiesDropdownData(popupCallEntities),
 							selectedId: val.data.id || val.data.endpoints[0].id
 						}));
 					});
@@ -1226,7 +1237,8 @@ define(function(require){
 
 			container.find('.add-menu-line a').on('click', function(e) {
 				e.preventDefault();
-				var menuLine = $(monster.template(self, 'strategy-menuLine', { callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities) }));
+				var popupCallEntities = $.extend(true, {}, strategyData.callEntities, { voicemail: strategyData.voicemails }),
+					menuLine = $(monster.template(self, 'strategy-menuLine', { callEntities: self.strategyGetCallEntitiesDropdownData(popupCallEntities) }));
 				container.find('.menu-block .left .content').append(menuLine);
 				menuLine.find('.number-input').focus();
 			});
@@ -1412,6 +1424,8 @@ define(function(require){
 					switch(entityType) {
 						case 'user':
 						case 'device':
+						case 'voicemail':
+						case 'callflow':
 							menuElements[number].data.id = entityId;
 							break;
 						case 'ring_group':
@@ -1440,15 +1454,17 @@ define(function(require){
 				results = [];
 			_.each(callEntities, function(value, key) {
 				var group = {
-					groupName: self.i18n.active().strategy.callEntities[key],
-					groupType: key,
-					entities: $.map(value, function(entity) {
-						return {
-							id: entity.id,
-							name: entity.name || (entity.first_name + ' ' + entity.last_name)
-						};
-					})
-				};
+						groupName: self.i18n.active().strategy.callEntities[key],
+						groupType: key,
+						entities: $.map(value, function(entity) {
+							return {
+								id: entity.id,
+								name: entity.name || (entity.first_name + ' ' + entity.last_name),
+								module: entity.module || key
+							};
+						})
+					};
+				group.entities.sort(function(a,b) { return (a.name.toLowerCase() > b.name.toLowerCase()); });
 				if(group.groupType === "user") {
 					results.splice(0, 0, group);
 				} else {
@@ -1683,7 +1699,7 @@ define(function(require){
 			var self = this;
 			monster.parallel(
 				{
-					user: function(_callback) {
+					users: function(_callback) {
 						monster.request({
 							resource: 'strategy.users.list',
 							data: {
@@ -1694,7 +1710,18 @@ define(function(require){
 							}
 						});
 					},
-					ring_group: function(_callback) {
+					userCallflows: function(_callback) {
+						monster.request({
+							resource: 'strategy.callflows.listUserCallflows',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data, status) {
+								_callback(null, data.data);
+							}
+						});
+					},
+					groups: function(_callback) {
 						monster.request({
 							resource: 'strategy.groups.list',
 							data: {
@@ -1705,7 +1732,18 @@ define(function(require){
 							}
 						});
 					},
-					device: function(_callback) {
+					ringGroups: function(_callback) {
+						monster.request({
+							resource: 'strategy.callflows.listRingGroups',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data, status) {
+								_callback(null, data.data);
+							}
+						});
+					},
+					devices: function(_callback) {
 						monster.request({
 							resource: 'strategy.devices.list',
 							data: {
@@ -1718,7 +1756,39 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					callback(results);
+					var callEntities = {
+						device: results.devices,
+						user: [],
+						ring_group: []
+					};
+
+					_.each(callEntities.device, function(device) {
+						device.module = 'device';
+					});
+
+					_.each(results.users, function(user) {
+						var userCallflow = _.find(results.userCallflows, function(callflow) { return callflow.owner_id === user.id });
+						if(userCallflow) {
+							user.id = userCallflow.id;
+							user.module = 'callflow';
+						} else {
+							user.module = 'user';
+						}
+						callEntities.user.push(user);
+					});
+
+					_.each(results.groups, function(group) {
+						var ringGroup = _.find(results.ringGroups, function(ringGroup) { return ringGroup.group_id === group.id });
+						if(ringGroup) {
+							group.id = ringGroup.id;
+							group.module = 'callflow';
+						} else {
+							group.module = 'ring_group';
+						}
+						callEntities.ring_group.push(group);
+					});
+
+					callback(callEntities);
 				}
 			);
 		},
