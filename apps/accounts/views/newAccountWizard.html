@@ -44,18 +44,23 @@
 				<div class="wizard-content">
 					<div class="wizard-content-step account-settings-step" data-step="1">
 						<div class="row-fluid">
-							
+
 							<div class="control-group span5 offset1">
 								<label>{{ i18n.accountName }}</label>
     							<input type="text" name="account.name" />
 
 								<label>{{ i18n.accountRealm }}</label>
-    							<input type="text" name="account.realm" />
+								<span class="generated-realm">
+									<span class="realm-text uneditable-input">Auto-generated</span><a class="realm-link change-realm"><i class="icon-pencil"></i>{{i18n.change}}</a>
+								</span>
+								<span class="manual-realm">
+    								<input type="text" name="account.realm" /><a class="realm-link cancel-edition"><i class="icon-remove"></i>{{i18n.cancel}}</a>
+    							</span>
 
 								<label>{{ i18n.accountTimezone }}</label>
     							<select id="accountsmanager_new_account_timezone" name="account.timezone"></select>
 							</div>
-							
+
 							<div class="control-group span5">
 								<div class="add-admin-pic"></div>
 								<div class="add-admin-toggle">
