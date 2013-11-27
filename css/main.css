@@ -102,9 +102,9 @@ a.monster-link i {
 #main section > .navbar .navbar-inner .logo {
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 192px 53px;
     border-left: 1px solid #353535;
     border-right: 1px solid #353535;
+    cursor: default;
     float: left;
     height: 62px;
     padding: 0 15px;

@@ -145,7 +145,7 @@ define(function(require){
 
 			container.find('#ws-navbar .logo').on('click', function(e) {
 				e.preventDefault();
-				renderLanding();
+				// renderLanding();
 			});
 
 			monster.getVersion(function(version) {
