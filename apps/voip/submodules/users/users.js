@@ -1182,7 +1182,7 @@ define(function(require){
 			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
 
 			var popup = monster.ui.dialog(featureTemplate, {
-				title: currentUser.extra.mapFeatures.call_forward.title,
+				title: currentUser.extra.mapFeatures.vm_to_email.title,
 				position: ['center', 20]
 			});
 		},
