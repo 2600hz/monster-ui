@@ -787,7 +787,8 @@ define(function(require){
 								resource: 'accountsManager.users.delete',
 								data: {
 									accountId: editAccountId,
-									userId: userId
+									userId: userId,
+									data: {}
 								},
 								success: function(data, status) {
 									self.renderEditAdminsForm(parent, editAccountId);
