@@ -435,7 +435,8 @@
 		"callEntities": {
 			"user": "Users",
 			"device": "Devices",
-			"ring_group": "Groups"
+			"ring_group": "Groups",
+			"voicemail": "Voicemail Boxes"
 		},
 		"confirmMessages": {
 			"deleteHoliday": "This holiday will be permanently deleted. Continue?",
