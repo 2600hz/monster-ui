@@ -2,7 +2,10 @@
 	<a href="javascript:void(0);">
         <div class="active-highlight">
             <i class="hidden-phone icon-time"></i> {{ i18n.title }}
+
+		{{#compare uiRestrictions.balance.show_credit '!==' false }}
             <span class="badge pull-right visible-desktop">$<span class="amount">{{ amount }}</span></span>
+		{{/compare}}
         </div>
 	</a>
 </li>
