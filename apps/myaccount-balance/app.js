@@ -166,7 +166,7 @@ define(function(require){
 					});
 
 					balance.find('#get_csv').on('click', function() {
-						window.location.href = self.apiUrl+'/accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+						window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 					});
 
 					monster.ui.table.balance.fnAddData(renderData.tabData);
