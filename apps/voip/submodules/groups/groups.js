@@ -255,12 +255,15 @@ define(function(require){
 
 					groupTemplate.find('#create_group').on('click', function() {
 						var formattedData = self.groupsCreationMergeData(data, groupTemplate);
+						if(formattedData.group.name && formattedData.callflow.numbers[0]) {
+							self.groupsCreate(formattedData, function(data) {
+								popup.dialog('close').remove();
 
-						self.groupsCreate(formattedData, function(data) {
-							popup.dialog('close').remove();
-
-							self.groupsRender({ groupId: data.id });
-						});
+								self.groupsRender({ groupId: data.id });
+							});
+						} else {
+							monster.ui.alert('error', self.i18n.active().groups.dialogCreationGroup.missingDataAlert)
+						}
 					});
 
 					groupTemplate.find('#group_user_selector .selected-users, #group_user_selector .available-users').sortable({
@@ -551,8 +554,8 @@ define(function(require){
 			var self = this,
 				flow = data.callflow.flow;
 
-			while(flow.module !== 'ring_group') {
-				flow = flow.children["_"];
+			while(flow.module !== 'ring_group' && !_.isEmpty(flow.children)) {
+				flow = flow.children['_'];
 			}
 
 			self.groupsListVMBoxes(function(vmboxes) {
@@ -903,7 +906,9 @@ define(function(require){
 		},
 
 		groupsBindMembers: function(template, data) {
-			var self = this;
+			var self = this,
+				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
+				scaleMaxSeconds = 60; //Maximum of seconds, corresponding to the end of the scale
 
 			template.find('.save-groups').on('click', function() {
 				var endpoints = [],
@@ -930,39 +935,78 @@ define(function(require){
 			});
 
 			template.on('click', '.remove-user', function() {
-				$(this).parents('.group-row').remove();
+				var parentRow = $(this).parents('.group-row');
+				template.find('.add-user[data-id="'+parentRow.data('user_id')+'"]').removeClass('in-use');
+				parentRow.remove();
+			});
+
+			template.on('click', '.add-user', function() {
+				var $this = $(this),
+					newEndpoint = {
+						id: $this.data('id'),
+						timeout: '20',
+						delay: '0',
+						endpoint_type: 'user'
+					};
+
+				template.find('.grid-time').append(monster.template(self, 'groups-membersRow', {
+					id: newEndpoint.id,
+					name: $(this).text()
+				}));
+				createSlider(newEndpoint);
+				
+				$this.addClass('in-use');
 			});
 
 			var sliderTooltip = function(event, ui) {
-				var val = ui.value,
-					tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val + '</div></div>';
+					var val = ui.value,
+						tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val + '</div></div>';
 
-				$(ui.handle).html(tooltip);
-			};
+					$(ui.handle).html(tooltip);
+				},
+				createTooltip = function(event, ui, userId, sliderObj) {
+					var val1 = sliderObj.slider('values', 0),
+						val2 = sliderObj.slider('values', 1),
+						tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
+						tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
 
-			var createTooltip = function(event, ui, userId, sliderObj) {
-				var val1 = sliderObj.slider('values', 0),
-					val2 = sliderObj.slider('values', 1),
-					tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
-					tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
+					template.find('.group-row[data-user_id="'+ userId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
+					template.find('.group-row[data-user_id="'+ userId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
+				},
+				createSlider = function(endpoint) {
+					var groupRow = template.find('.group-row[data-user_id="'+ endpoint.id +'"]');
+					groupRow.find('.slider-time').slider({
+						range: true,
+						min: 0,
+						max: 60,
+						values: [ endpoint.delay, endpoint.delay+endpoint.timeout ],
+						slide: sliderTooltip,
+						change: sliderTooltip,
+						create: function(event, ui) {
+							createTooltip(event, ui, endpoint.id, $(this));
+						},
+					});
+					createSliderScale(groupRow);
+				},
+				createSliderScale = function(container, isHeader) {
+					var scaleContainer = container.find('.scale-container')
+						isHeader = isHeader || false;
 
-				template.find('.group-row[data-user_id="'+ userId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
-				template.find('.group-row[data-user_id="'+ userId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
-			};
+					for(var i=1; i<=scaleSections; i++) {
+						var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
+									 + (isHeader ? '<span>'+(i*scaleMaxSeconds/scaleSections)+' Sec</span>' : '')
+									 + '</div>';
+						scaleContainer.append(toAppend);
+					}
+					if(isHeader) {
+						scaleContainer.append('<span>0 Sec</span>');
+					}
+				};
 
 			_.each(data.extra.ringGroup, function(endpoint) {
-				template.find('.group-row[data-user_id="'+ endpoint.id +'"] .slider-time').slider({
-					range: true,
-					min: 0,
-					max: 60,
-					values: [ endpoint.delay, endpoint.delay+endpoint.timeout ],
-					slide: sliderTooltip,
-					change: sliderTooltip,
-					create: function(event, ui) {
-						createTooltip(event, ui, endpoint.id, $(this));
-					},
-				});
+				createSlider(endpoint);
 			});
+			createSliderScale(template.find('.group-row.title'), true);
 		},
 
 		groupsGetCreationData: function(callback) {
@@ -1187,13 +1231,18 @@ define(function(require){
 
 		groupsFormatMembersData: function(data) {
 			var self = this,
-				mapUsers = {};
+				mapUsers = {},
+				flow = data.callflow.flow;
 
 			_.each(data.users, function(user) {
 				mapUsers[user.id] = user;
 			});
 
-			var endpoints = data.callflow.flow.data.endpoints;
+			while(flow.module !== 'ring_group' && !_.isEmpty(flow.children)) {
+				flow = flow.children['_'];
+			}
+
+			var endpoints = flow.data.endpoints;
 
 			_.each(endpoints, function(endpoint) {
 				user = mapUsers[endpoint.id];
@@ -1201,11 +1250,17 @@ define(function(require){
 				endpoint.delay = parseInt(endpoint.delay);
 				endpoint.timeout = parseInt(endpoint.timeout);
 
-				endpoint.name = endpoint.id in mapUsers ? user.first_name + ' ' + user.last_name : 'Not a user';
+				if(endpoint.id in mapUsers) {
+					endpoint.name = user.first_name + ' ' + user.last_name;
+					mapUsers[endpoint.id].inUse = true;
+				} else { 
+					endpoint.name = 'Not a user';
+				}
 			});
 
 			data.group.extra = {
-				ringGroup: endpoints
+				ringGroup: endpoints,
+				remainingUsers: mapUsers
 			};
 
 			return data.group;
@@ -1438,9 +1493,14 @@ define(function(require){
 					},
 					callflow: function(callback) {
 						self.groupsGetRingGroup(groupId, function(ringGroup) {
-							ringGroup.flow.data.endpoints = endpoints;
+							var flow = ringGroup.flow;
+							while(flow.module !== 'ring_group' && !_.isEmpty(flow.children)) {
+								flow = flow.children['_'];
+							}
 
-							ringGroup.flow.data.timeout = self.groupsComputeTimeout(endpoints);
+							flow.data.endpoints = endpoints;
+
+							flow.data.timeout = self.groupsComputeTimeout(endpoints);
 
 							self.groupsUpdateCallflow(ringGroup, function(data) {
 								callback && callback(null, data);
