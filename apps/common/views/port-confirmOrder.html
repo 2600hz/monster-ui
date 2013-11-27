@@ -1,0 +1,125 @@
+<div id="port_container">
+	<div id="notification">
+		<div class="row-fluid" id="transfer_status">
+			<div class="span4 done">
+				<i class="icon-ok-sign"></i>
+				<div class="title">{{ i18n.port.progressBarLeft }}</div>
+			</div>
+			<div class="span4 done">
+				<i class="icon-ok-sign"></i>
+				<div class="title">{{ i18n.port.progressBarMiddle }}</div>
+			</div>
+			<div class="span4 todo">
+				<i class="icon-circle"></i>
+				<div class="title">{{ i18n.port.progressBarRight }}</div>
+			</div>
+		</div>
+	
+		<h2>{{ i18n.port.confirmOrder.titlePartOne }} {{total}} {{ i18n.port.confirmOrder.titlePartTwo }}</h2>
+	
+		<div class="row-fluid control-group">
+			<div class="span6">
+				<label class="control-label" for="notification_email">{{ i18n.port.confirmOrder.labelEmail }}</label>
+			</div>
+			<div class="span6">
+				<input type="text" class="span8" id="notification_email" placeholder="Email address" value="{{#if email}}{{email}}{{/if}}">
+				<span class="help-inline"><i class="icon-warning-sign"></i></span>
+			</div>
+		</div>
+	</div>
+	<div id="transfer_date">
+		<div class="row-fluid">
+			<div class="span6">
+				<label for="transfer_numbers_date">{{ i18n.port.confirmOrder.labelDate }}</label>
+			</div>
+			<div class="span6">
+				<input class="date-input span8" type="text" id="transfer_numbers_date" name="extra.date" value="{{#if transfer_date}}{{transfer_date}}{{/if}}">
+			</div>
+		</div>
+		<div class="row-fluid info">
+			<i class="icon-info-sign"></i>
+			<p><span class="important">{{ i18n.port.confirmOrder.dateInfoPartOne }}</span> {{ i18n.port.confirmOrder.dateInfoPartTwo }}</p>
+		</div>
+	</div>
+	<div id="temporary_numbers">
+		<div class="row-fluid">
+			<div class="span6">
+				<label for="have_temporary_numbers">{{ i18n.port.confirmOrder.labelTemporaryNumbers }}</label>
+			</div>
+			<div class="span6">
+				<div class="toggle-button-bloc">
+					<div class="switch" data-on="success" data-off="default" data-on-label="{{ i18n.port.confirmOrder.toggleButtonOn }}" data-off-label="{{ i18n.port.confirmOrder.toggleButtonOff }}">
+						<input type="checkbox" id="have_temporary_numbers" name="installed" checked />
+					</div>
+			</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
+				<label for="numbers_to_buy">{{ i18n.port.confirmOrder.labelTemporaryNumbersCount }}</label>
+			</div>
+			<div class="span6">
+				<select name="" class="span2" id="numbers_to_buy">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5" selected>5</option>
+				</select>
+			</div>
+		</div>
+		<div class="row-fluid info">
+			<i class="icon-info-sign"></i>
+			<p>{{ i18n.port.confirmOrder.temporaryNumbersInfoPartOne }} &#36;{{ i18n.port.confirmOrder.temporaryNumbersInfoPartTwo }}</p>
+		</div>
+	</div>
+	<div id="order_summary">
+		<h2>{{ i18n.port.confirmOrder.orderSummaryTitle }}</h2>
+		<div class="row-fluid">
+			<div class="span6">
+				<p>{{name}}</p>
+				<ul>
+					<li>{{ i18n.port.confirmOrder.labelOrderDate }} {{created}}</li>
+					<li>{{ i18n.port.confirmOrder.labelTransferDate }} <span id="transfer_schedule_date">{{transfer}}</span></li>
+					<li>{{ i18n.port.confirmOrder.labelNumbersTotal }} {{total}}</li>
+				</ul>
+			</div>
+			<div class="span6">
+				<p>{{ i18n.port.confirmOrder.labelOrderTotal }} &#36;{{price}}</p>
+				<div class="row-fluid info">
+					<i class="icon-info-sign"></i>
+					<p>{{ i18n.port.confirmOrder.orderTotalInfoPartOne }} &#36;{{ i18n.port.confirmOrder.orderTotalInfoPartTwo }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="continue_later">
+		<div class="row-fluid">
+			<div class="span4">
+				<button class="btn btn-info span12">{{ i18n.port.saveButtonPartOne }} &amp; {{ i18n.port.saveButtonPartTwo }}</button>
+			</div>
+			<div class="span8">
+				<p>{{ i18n.port.labelSaveButton }}</p>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<div class="row-fluid">
+		<div class="span3">
+			<button class="btn btn-danger">{{ i18n.port.cancelOrderButton}}</button>
+		</div>
+		<div class="span6">
+			<ul class="help-links">
+				<li><a href="">{{ i18n.port.faqLink }}</a></li>
+				<li class="separator"></li>
+				<li><a href="">{{ i18n.port.videoLink }}</a></li>
+				<li class="separator"></li>
+				<li><a href="">{{ i18n.port.contactUsLink }}</a></li>
+			</ul>
+		</div>
+		<div class="span2 offset1">
+			<button class="btn btn-success pull-right">{{ i18n.port.confirmOrder.submitButton }}</button>
+		</div>
+		</div>
+	</div>
+</div>
