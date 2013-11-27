@@ -64,7 +64,7 @@ define(function(require){
 				verb: 'PUT'
 			},
 			'common.port.sort': {
-				apiRoot: 'http://69.164.206.244/number_manager/api/',
+				apiRoot: 'http://69.164.206.244/number_manager/api/index.php/',
 				url: 'numbers/{country}/meta',
 				verb: 'POST'
 			}
