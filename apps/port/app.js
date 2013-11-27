@@ -43,7 +43,8 @@ define(function(require){
 					parent
 						.empty()
 						.append(portControl);
-				}
+				},
+				parent: parent
 			});
 		},
 	};

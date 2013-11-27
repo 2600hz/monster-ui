@@ -1,7 +1,7 @@
 <div id="manage_orders">
 	<div class="row-fluid info">
 		<i class="icon-info-sign"></i>
-		<p>Due to the nature of your numbers or the carriers, we may split your order. You will be able to process all the orders, one at a time.</p>
+		<p>{{ i18n.port.manageOrders.orderListInfo }}</p>
 	</div>
 	<div class="row-fluid">
 	{{#each orders}}
@@ -21,28 +21,28 @@
 <div id="eula">
 	<div class="row-fluid info">
 		<i class="icon-info-sign"></i>
-		<p>In the next step we need to collect the bill to show that you are the rightful owner of these numbers. This is required by law. We may split your order further if the numbers are not mentioned in the bill you will upload</p>
+		<p>{{ i18n.port.manageOrders.eulaInfo }}</p>
 	</div>
-	<p class="important"><span>Important!</span> Please understand and agree with the following</p>
+	<p class="important"><span>{{ i18n.port.manageOrders.eulaWarningPartOne }}</span> {{ i18n.port.manageOrders.eulaWarningPartTwo }}</p>
 	<form action="">
 		<div class="control-group">
 			<label class="control-label" for="cancel_service">
-				<input type="checkbox" id="cancel_service"> I will not cancel my old service until after the numbers are ompletely transfered,
+				<input type="checkbox" id="cancel_service"> {{ i18n.port.manageOrders.labelCancelService }}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="cancel_numbers">
-				<input type="checkbox" id="cancel_numbers"> I understand any other numbers on the old account may be cancelled by the old provider,
+				<input type="checkbox" id="cancel_numbers"> {{ i18n.port.manageOrders.labelCancelNumbers }}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="change_fee">
-				<input type="checkbox" id="change_fee"> I understand my old carrier may charge an early termination fee,
+				<input type="checkbox" id="change_fee"> {{ i18n.port.manageOrders.labelChangeFee }}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="not_featured">
-				<input type="checkbox" id="not_featured"> These are standard phone numbers, not featured (like [star-ring]).
+				<input type="checkbox" id="not_featured"> {{ i18n.port.manageOrders.labelStandardNumbers }}
 			</label>
 		</div>
 	</form>
@@ -50,17 +50,17 @@
 <div id="footer">
 	<div class="row-fluid">
 	<div class="span2">
-		<button class="btn btn-danger">cancel</button>
+		<button class="btn btn-danger">{{ i18n.port.cancelButton }}</button>
 	</div>
 	<div class="span6 offset1">
 		<ul class="help-links">
-			<li><a href="#footer">View Porting FAQs</a></li>
+			<li><a href="#footer">{{ i18n.port.faqLink }}</a></li>
 			<li class="separator"></li>
-			<li><a href="#footer">Watch Video</a></li>
+			<li><a href="#footer">{{ i18n.port.videoLink }}</a></li>
 		</ul>
 	</div>
 	<div class="span2 offset1">
-		<button class="btn btn-success pull-right">next</button>
+		<button class="btn btn-success pull-right">{{ i18n.port.nextButton }}</button>
 	</div>
 	</div>
 </div>

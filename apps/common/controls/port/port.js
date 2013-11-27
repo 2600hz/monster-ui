@@ -64,8 +64,8 @@ define(function(require){
 				verb: 'PUT'
 			},
 			'common.port.sort': {
-				apiRoot: 'http://10.26.0.68/number_manager/api/',
-				url: 'numbers/meta',
+				apiRoot: 'http://69.164.206.244/number_manager/api/',
+				url: 'numbers/{country}/meta',
 				verb: 'POST'
 			}
 		},
@@ -76,22 +76,31 @@ define(function(require){
 
 		portRender: function(args){
 			var self = this,
-				args = args || { };
+				args = args || {},
+				accountId = args.accountId || self.accountId;
 
-			args.id = ( args.id ) ? args.id : self.accountId;
+			self.portPositionDialogBox();
 
-			self.portRequestGet(args.id, function(data) {
+			self.portRequestGet(accountId, function(data) {
 				var formatToTemplate = function(data) {
-						for ( var port in data.data ) {
-							var date = monster.util.gregorianToDate(data.data[port].created);
-							data.data[port].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+						for ( var order in data.data ) {
+							var date = monster.util.gregorianToDate(data.data[order].created);
+							data.data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+							data.data[order].status = ( data.data[order].port_state == 'ready' ) ? true : false;
 						}
 
 						return data;
 					},
-					parent = monster.ui.dialog($(monster.template(self, 'port-pendingOrders', formatToTemplate(data))), { title: 'transfer [port] numbers' });
+					portTemplate = $(monster.template(self, 'port-pendingOrders', formatToTemplate(data))),
+					parent = args.parent || monster.ui.dialog('', {
+						width: '940px',
+						position: ['center', 20],
+						title: self.i18n.active().port.dialogTitle
+					});
 
-				self.portPendingOrders(args.id, parent, data);
+				parent.empty().append(portTemplate);
+
+				self.portPendingOrders(accountId, parent, data);
 			});
 		},
 
@@ -162,19 +171,18 @@ define(function(require){
 			 * empty .ui-dialog-content and load port-submitDocuments template
 			 */
 			container.find('td:last-child').find('button').on('click', function(event) {
+				var button = $(this);
 				event.stopPropagation();
 
 				self.portRequestGetDetail(accountId, $(this).parent().parent().data('id'), function(data) {
 					data = { orders: [data.data] };
 
-					if ( container.find('td:last-child').find('button').hasClass('btn-success') ) {
+					if ( button.hasClass('btn-success') ) {
 						parent
 							.empty()
 							.append($(monster.template(self, 'port-submitDocuments', data.orders[0])));
 
 						self.portSubmitDocuments(accountId, parent, data);
-					} else {
-						console.log('info');
 					}
 				})
 			});
@@ -226,57 +234,24 @@ define(function(require){
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					monster.request({
-						resource: 'common.port.sort',
-						data: {
-							data: numbersList.split(' ')
-						},
-						success: function(data) {
-							data = data.data;
+					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
+						container
+							.find('div.row-fluid')
+							.removeClass('error');
 
-							var carriersList = new Array(),
-								formattedData = { orders: [] };
+						container.find('#numbers_list')[0].value = '';
 
-							for (var number in data) {
-								carriersList.push(data[number].company);
-							}
+						/*
+						 * unbind because it is used in portManagerOrders
+						 * to add number without adding the port-managerOrders template again
+						 */
+						container
+							.find('button')
+							.unbind('click');
 
-							carriersList = _.uniq(carriersList);
+						$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
 
-							for (var carrier in carriersList) {
-								var numbersList = new Array(),
-									order = new Object();
-
-								for (var number in data) {
-									if ( data[number].company == carriersList[carrier] ) {
-										numbersList.push(number);
-									}
-								}
-
-								order.carrier = carriersList[carrier];
-								order.numbers = numbersList;
-
-								formattedData.orders[carrier] = order;
-							}
-
-							container
-								.find('div.row-fluid')
-								.removeClass('error');
-
-							container.find('#numbers_list')[0].value = '';
-
-							/*
-							 * unbind because it is used in portManagerOrders
-							 * to add number without adding the port-managerOrders template again
-							 */
-							container
-								.find('button')
-								.unbind('click');
-
-							$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
-
-							self.portManageOrders(accountId, parent);
-						}
+						self.portManageOrders(accountId, parent);
 					});
 				}
 			});
@@ -306,58 +281,25 @@ define(function(require){
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					monster.request({
-						resource: 'common.port.sort',
-						data: {
-							data: numbersList.split(' ')
-						},
-						success: function(data) {
-							data = data.data;
+					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
+						container
+							.find('div.row-fluid')
+							.removeClass('error');
 
-							var carriersList = new Array(),
-								formattedData = { orders: [] };
+						container.find('#numbers_list')[0].value = '';
 
-							for (var number in data) {
-								carriersList.push(data[number].company);
-							}
+						container
+							.find('div#add_numbers')
+							.find('div.row-fluid')
+							.removeClass('error');
 
-							carriersList = _.uniq(carriersList);
+						container.find('#numbers_list')[0].value = '';
 
-							for (var carrier in carriersList) {
-								var numbersList = new Array(),
-									order = new Object();
-
-								for (var number in data) {
-									if ( data[number].company == carriersList[carrier] ) {
-										numbersList.push(number);
-									}
-								}
-
-								order.carrier = carriersList[carrier];
-								order.numbers = numbersList;
-
-								formattedData.orders[carrier] = order;
-							}
-
+						for ( var order in formattedData.orders ) {
 							container
-								.find('div.row-fluid')
-								.removeClass('error');
-
-							container.find('#numbers_list')[0].value = '';
-
-							container
-								.find('div#add_numbers')
-								.find('div.row-fluid')
-								.removeClass('error');
-
-							container.find('#numbers_list')[0].value = '';
-
-							for ( var order in formattedData.orders ) {
-								container
-									.find('div#manage_orders')
-									.find('div.row-fluid:last-child')
-									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
-							}
+								.find('div#manage_orders')
+								.find('div.row-fluid:last-child')
+								.append($(monster.template(self, 'port-order', formattedData.orders[order])));
 						}
 					});
 				}
@@ -386,7 +328,7 @@ define(function(require){
 						.find('.row-fluid:last-child')
 						.animate({height: '0px'}, 500);
 
-					$('.ui-dialog-content')
+					parent
 						.empty()
 						.append($(monster.template(self, 'port-addNumbers')));
 
@@ -418,7 +360,7 @@ define(function(require){
 					}
 				});
 
-				// if ( allChecked ) {
+				if ( allChecked ) {
 
 					var ordersList = { orders: [] };
 
@@ -436,18 +378,18 @@ define(function(require){
 						ordersList.orders.push(order);
 					});
 
-					$('.ui-dialog-content')
+					parent
 						.empty()
 						.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
 
 					self.portSubmitDocuments(accountId, parent, ordersList);
-				// } else {
-				// 	container.find('div#eula').find('input').each(function() {
-				// 		if ( !$(this).is(':checked') ) {
-				// 			$(this).parent().parent().addClass('error');
-				// 		}
-				// 	});
-				// }
+				} else {
+					container.find('div#eula').find('input').each(function() {
+						if ( !$(this).is(':checked') ) {
+							$(this).parent().parent().addClass('error');
+						}
+					});
+				}
 			});
 		},
 
@@ -455,34 +397,46 @@ define(function(require){
 		  * @desc return an object with numbers sorted by area code
 		  * @param numbersList - array of phone numbers
 		*/
-		portFormatNumbers: function(numbersList) {
-			var areaCodes = new Array(),
-				carrierList = ['at&t', 'verizon', 'sprint', 't-mobile'],
-				formattedData = { orders: [] };
+		portFormatNumbers: function(container, numbersList, callback) {
+			var self = this;
 
-			for ( var key in numbersList ) {
-				areaCodes.push(numbersList[key].substring(0, 3));
-			}
+			monster.request({
+				resource: 'common.port.sort',
+				data: {
+					data: numbersList.split(' '),
+					country: 'US'
+				},
+				success: function(data) {
+					data = data.data;
 
-			areaCodes = _.uniq(areaCodes, true);
+					var carriersList = new Array(),
+						formattedData = { orders: [] };
 
-			for ( var code in areaCodes ) {
-				var orderNumbersList = new Array(),
-					order = new Object();
-
-				for ( var number in numbersList ) {
-					if ( areaCodes[code] == numbersList[number].substring(0, 3) ) {
-						orderNumbersList.push(numbersList[number]);
+					for (var number in data) {
+						carriersList.push(data[number].company);
 					}
+
+					carriersList = _.uniq(carriersList);
+
+					for (var carrier in carriersList) {
+						var numbersList = new Array(),
+							order = new Object();
+
+						for (var number in data) {
+							if ( data[number].company == carriersList[carrier] ) {
+								numbersList.push(number);
+							}
+						}
+
+						order.carrier = carriersList[carrier];
+						order.numbers = numbersList;
+
+						formattedData.orders[carrier] = order;
+					}
+
+					callback(container, formattedData);
 				}
-
-				order.carrier = carrierList[Math.floor(Math.random() * carrierList.length)];
-				order.numbers = orderNumbersList;
-
-				formattedData.orders[code] = order;
-			}
-
-			return formattedData;
+			});
 		},
 
 		/**
@@ -510,17 +464,18 @@ define(function(require){
 						reader.onloadend = function(evt) {
 							binary = evt.target.result;
 
+							if ( typeof file[0].name != 'undefined' ) {
+								container.find('#bill_form').find('span.file-name').text(file[0].name);
+								container.find('#bill_form').find('span.file-name').css('visibility','visible');
+							}
+
 							if ( typeof data.orders[index].id == "undefined" ) {
 								data.orders[index].bill_attachment = binary;
 							} else {
 								if ( typeof data.orders[index].uploads['bill.pdf'] == "undefined" ) {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {
-										console.log(data);
-									});
+									self.portRequestAddAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {});
 								} else {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {
-										console.log(data);
-									});
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {});
 								}
 							}
 						}
@@ -537,10 +492,7 @@ define(function(require){
 			 * load port-addNumbers template
 			 */
 			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
-				var ul = $(this).parent().parent(),
-					args = new Object();
-
-				args.id = accountId;
+				var ul = $(this).parent().parent();
 
 				container
 					.find('div#upload_bill')
@@ -563,8 +515,7 @@ define(function(require){
 
 						self.portResumeOrders(accountId, parent, data);
 					} else {
-						$('.ui-dialog').remove();
-						self.portRender(args);
+						self.portReloadApp(accountId, parent);
 					}
 				}
 			});
@@ -574,36 +525,37 @@ define(function(require){
 				container.find('#loa').find('input.upload').click();
 
 				container.find('#loa').find('input.upload').on('change', function(evt) {
-					var files = evt.target.files;
+					var file = evt.target.files;
 
-					if(files.length > 0) {
+					if(file.length > 0) {
 						var reader = new FileReader(),
 							binary = 'updating';
 
 						reader.onloadend = function(evt) {
 							binary = evt.target.result;
 
+							if ( typeof file[0].name != 'undefined' ) {
+								container.find('#loa').find('span.file-name').text(file[0].name);
+								container.find('#loa').find('span.file-name').css('visibility','visible');
+							}
+
 							if ( typeof data.orders[index].id == "undefined" ) {
 								data.orders[index].loa_attachment = binary;
 							} else {
 								if ( typeof data.orders[index].uploads['loa.pdf'] == "undefined" ) {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {
-										console.log(data);
-									});
+									self.portRequestAddAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {});
 								} else {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {
-										console.log(data);
-									});
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {});
 								}
 							}
 						}
 
-						reader.readAsDataURL(files[0]);
+						reader.readAsDataURL(file[0]);
 					}
 				});
 			});
 
-			self.portSaveOrder(accountId, parent, container, data, function(data) {
+			container.find('div#continue_later').find('button.btn-info').on('click', function() {
 				data.orders[index].name = container.find('input#transfer_helper').val();
 				if ( typeof data.orders[index].bill == 'undefined' ) {
 					data.orders[index].bill = new Object();
@@ -614,8 +566,8 @@ define(function(require){
 				data.orders[index].bill.state = container.find('input#state').val();
 				data.orders[index].bill.zip_code = container.find('input#zip_code').val();
 
-				return data;
-			}, index);
+				self.portSaveOrder(accountId, parent, data, index);
+			});
 
 			self.portCancelOrder(accountId, parent, container, data, index);
 
@@ -626,16 +578,57 @@ define(function(require){
 			 * else show which inputs contain errors
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var input = container.find('div#name_transfer').find('input#transfer_helper');
+				var input = container.find('div#name_transfer').find('input#transfer_helper'),
+					submitData = true;
 
-				// if ( input.val() == "" ) {
-				// 	$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
+				if ( container.find('#transfer_helper').val() == '' ) {
+					submitData = false;
+					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
+					input
+						.parent()
+						.parent()
+						.addClass('error');
+				}
 
-				// 	input
-				// 		.parent()
-				// 		.parent()
-				// 		.addClass('error');
-				// } else {
+				if ( container.find('#account_name').val() == '' ) {
+					submitData = false;
+				}
+
+				if ( container.find('#city').val() == '' ) {
+					submitData = false;
+				}
+
+				if ( container.find('#state').val() == '' ) {
+					submitData = false;
+				}
+
+				if ( container.find('#address').val() == '' ) {
+					submitData = false;
+				}
+
+				if ( container.find('#zip_code').val() == '' ) {
+					submitData = false;
+				}
+
+				if ( typeof data.orders[index].uploads == 'undefined' ) {
+					if ( typeof data.orders[index].bill_attachment == 'undefined' ) {
+						submitData = false;
+					}
+
+					if ( typeof data.orders[index].loa_attachment == 'undefined' ) {
+						submitData = false;
+					}
+				} else {
+					if ( typeof data.orders[index].uploads['bill.pdf'] == 'undefined' ) {
+						submitData = false;
+					}
+
+					if ( typeof data.orders[index].uploads['loa.pdf'] == 'undefined' ) {
+						submitData = false;
+					}
+				}
+
+				if ( submitData ) {
 					input
 						.parent()
 						.parent()
@@ -662,12 +655,12 @@ define(function(require){
 					dataTemplate.total = data.orders[index].numbers.length;
 					dataTemplate.price = dataTemplate.total * 5;
 
-					$('.ui-dialog-content')
+					parent
 						.empty()
 						.append($(monster.template(self, 'port-confirmOrder', dataTemplate)));
 
 					self.portConfirmOrder(accountId, parent, data, index);
-				// }
+				}
 			});
 		},
 
@@ -677,8 +670,7 @@ define(function(require){
 		*/
 		portConfirmOrder: function(accountId, parent, data, index) {
 			var self = this,
-				container = parent.find('div#port_container'),
-				order = data.orders[index];
+				container = parent.find('div#port_container');
 
 			self.portPositionDialogBox();
 
@@ -756,7 +748,9 @@ define(function(require){
 			 * on click on Save button
 			 * empty .ui-dialog-content and load port-resumeOrders template
 			 */
-			self.portSaveOrder(accountId, parent, container, data, function(data) {
+
+			container.find('div#continue_later').find('button.btn-info').on('click', function() {
+
 				data.orders[index].email = container.find('input#notification_email').val();
 				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
@@ -765,8 +759,9 @@ define(function(require){
 					delete data.orders[index]['temporary_numbers'];
 				}
 
-				return data;
-			}, index);
+				self.portSaveOrder(accountId, parent, data, index);
+
+			});
 
 			self.portCancelOrder(accountId, parent, container, data, index);
 
@@ -776,128 +771,88 @@ define(function(require){
 			 * else load portRender
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
-				if ( typeof data.orders[index].id == 'undefined' ) {
-					var email = container.find('input#notification_email').val(),
-						transfer_date = container.find('input#transfer_numbers_date').val(),
-						temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
+				var submitData = true;
 
-					// if ( email !== "" ) {
-						container
-							.find('input#notification_email')
-							.parent()
-							.parent()
-							.removeClass('error');
+				if ( container.find('#notification_email').val() == '' ) {
+					submitData = false;
+				}
 
-						order.email = container.find('#notification_email').val();
-						order.transfer_date = container.find('#transfer_numbers_date').val();
-						if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
-							order.temporary_numbers = temporary_numbers;
-						}
+				if ( submitData ) {
 
-
-						self.portRequestAdd(accountId, data.orders[index], function() {
-
-							data.orders.splice(index, 1);
-
-							if ( typeof data.orders[0] == 'undefined' ) {
-								var args = new Object();
-
-								args.id = accountId;
-
-								$('.ui-dialog').remove();
-								self.portRender(args);
-							} else {
-								$('.ui-dialog-content')
-									.empty()
-									.append($(monster.template(self, 'port-resumeOrders', data)));
-
-								self.portResumeOrders(accountId, parent, data);
-							}
-
-						});
-
-					// } else {
-					// 	parent
-					// 		.find('input#notification_email')
-					// 		.parent()
-					// 		.parent()
-					// 		.addClass('error');
-
-					// 	$("html, body").animate({ scrollTop: container.find('div#notification').offset().top }, 100);
-					// }
-				} else {
 					data.orders[index].email = container.find('input#notification_email').val();
 					data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 					if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
-						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[index][container.find('select#numbers_to_buy')[index].selectedIndex].value;
-					} else {
-						delete data.orders[index]['temporary_numbers'];
+						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
+					} else if ( typeof data.orders[index].temporary_numbers != 'undefined' ) {
+						delete data.orders[index].temporary_numbers;
 					}
 
-					self.portRequestUpdate(data.orders[index].id, data.orders[index], function() {
-						var args = new Object()
+					if ( typeof data.orders[index].id == 'undefined' ) {
+						self.portRequestAdd(accountId, data.orders[index], function(portRequestId) {
+							data.orders.splice(index, 1);
 
-						args.id = accountId;
+							self.portRequestReadyState(accountId, portRequestId, function() {
+								if ( typeof data.orders[0] == 'undefined' ) {
+									self.portReloadApp(accountId, parent);
+								} else {
+									parent
+										.empty()
+										.append($(monster.template(self, 'port-resumeOrders', data)));
 
-						$('.ui-dialog').remove();
-						self.portRender(args);
-					});
+									self.portResumeOrders(accountId, parent, data);
+								}
+							});
+						});
+					} else {
+						self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
+							self.portRequestReadyState(accountId, data.orders[index].id, function() {
+								self.portReloadApp(accountId, parent);
+							});
+						});
+					}
 				}
 			});
 		},
 
 		portPositionDialogBox: function() {
+
+			$("html, body").animate({ scrollTop: "0" }, 100);
 			if ( $('body').height() - ($('.ui-dialog').height() + 80) <= 0 ) {
 				$('.ui-dialog').animate({top: '80'}, 200);
 			} else {
 				$('.ui-dialog').animate({top: ($("body").height() / 2) - ($('.ui-dialog').height() / 2)}, 200);
 			}
-
-			$("html, body").animate({ scrollTop: "0" }, 100);
 		},
 
-		portSaveOrder: function(accountId, parent, container, data, callback, index) {
+		portSaveOrder: function(accountId, parent, data, index) {
 			var self = this,
-				index = index || 0,
-				args = new Object();
+				index = index || 0;
 
-			args.id = accountId;
-
-			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-				data = callback(data);
-
-				if ( typeof data.orders[index].id === 'undefined' ) {
-					self.portRequestAdd(accountId, data.orders[index], function() {
-						if ( data.orders.length > 1 ) {
-							data.orders.splice(index, 1);
-							parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-							self.portResumeOrders(accountId, parent, data);
-						} else {
-							$('.ui-dialog').remove();
-							self.portRender(args);
-						}
-					});
-				} else {
-					self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-						$('.ui-dialog').remove();
-						self.portRender(args);
-					});
-				}
-			});
+			if ( typeof data.orders[index].id === 'undefined' ) {
+				self.portRequestAdd(accountId, data.orders[index], function() {
+					if ( data.orders.length > 1 ) {
+						data.orders.splice(index, 1);
+						parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
+						self.portResumeOrders(accountId, parent, data);
+					} else {
+						self.portReloadApp(accountId, parent);
+					}
+				});
+			} else {
+				self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
+					self.portReloadApp(accountId, parent);
+				});
+			}
 		},
 
 		portCancelOrder: function(accountId, parent, container, data, index) {
 			var self = this,
 				data = data || undefined,
-				index = index || 0,
-				args = new Object();
-
-			args.id = accountId;
+				index = index || 0;
 
 			container.find('div#footer').find('button.btn-danger').on('click', function() {
 				if ( typeof data === 'undefined' ) {
-					$('.ui-dialog').remove();
-					self.portRender(args);
+					self.portReloadApp(accountId, parent);
 				} else {
 					if ( typeof data.orders[index].id === 'undefined' ) {
 						if ( data.orders.length > 1 ) {
@@ -905,13 +860,11 @@ define(function(require){
 							parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
 							self.portResumeOrders(accountId, parent, data);
 						} else {
-							$('.ui-dialog').remove();
-							self.portRender(args);
+							self.portReloadApp(accountId, parent);
 						}
 					} else {
-						self.portRequestDelete(accountId, parent, data.orders[index].id, function() {
-							$('.ui-dialog').remove();
-							self.portRender(args);
+						self.portRequestDelete(accountId, data.orders[index].id, function() {
+							self.portReloadApp(accountId, parent);
 						});
 					}
 				}
@@ -919,23 +872,18 @@ define(function(require){
 		},
 
 		portRequestAdd: function(accountId, order, callback) {
-			var self = this;
+			var self = this,
+				attachments = new Object();
 
-			if ( typeof order.bill_attachment != "undefined" || typeof order.loa_attachment != "undefined" ) {
-				var attachments = new Object();
-
-				if ( typeof order.bill_attachment != "undefined" ) {
-					attachments.bill = order.bill_attachment;
-					delete order.bill_attachment;
-				}
-
-				if ( typeof order.loa_attachment != "undefined" ) {
-					attachments.loa = order.loa_attachment;
-					delete order.bill_attachment;
-				}
+			if ( typeof order.bill_attachment != "undefined" ) {
+				attachments.bill = order.bill_attachment;
+				delete order.bill_attachment;
 			}
 
-			console.log(order);
+			if ( typeof order.loa_attachment != "undefined" ) {
+				attachments.loa = order.loa_attachment;
+				delete order.loa_attachment;
+			}
 
 			order = self.portArrayToObjects(order);
 
@@ -946,10 +894,27 @@ define(function(require){
 					data: order
 				},
 				success: function (data) {
-					callback();
+					var portRequestId = data.data.id;
 
-					console.log('request: add');
-					console.log(data);
+					if ( typeof attachments.bill != 'undefined' ) {
+						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
+							if ( typeof attachments.loa != 'undefined' ) {
+								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {});
+
+								callback(portRequestId);
+							} else {
+								callback(portRequestId);
+							}
+						});
+					} else {
+						if ( typeof attachments.loa != 'undefined' ) {
+							self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
+								callback(portRequestId);
+							});
+						} else {
+							callback(portRequestId);
+						}
+					}
 				}
 			});
 		},
@@ -968,13 +933,13 @@ define(function(require){
 				},
 				success: function (data) {
 					callback();
-
-					console.log('request: update | portRequestId: ' + portRequestId);
 				}
 			});
 		},
 
 		portRequestDelete: function(accountId, portRequestId, callback) {
+			var self = this;
+
 			monster.request({
 				resource: 'common.port.delete',
 				data: {
@@ -984,8 +949,6 @@ define(function(require){
 				},
 				success: function (data) {
 					callback();
-
-					console.log('request: delete | portRequestId: ' + portRequestId);
 				}
 			});
 		},
@@ -1003,9 +966,6 @@ define(function(require){
 					self.portObjectsToArray(data.data);
 
 					callback(data);
-
-					console.log('request: get');
-					console.log(data.data);
 				}
 			});
 		},
@@ -1024,8 +984,6 @@ define(function(require){
 					self.portObjectsToArray(data.data);
 
 					callback(data);
-
-					console.log('request: get.detail');
 				}
 			});
 		},
@@ -1039,8 +997,6 @@ define(function(require){
 				},
 				success: function (data) {
 					callback(data);
-
-					console.log('request: port.get.descendants');
 				}
 			});
 		},
@@ -1089,7 +1045,7 @@ define(function(require){
 			});
 		},
 
-		portRequestDeleteAttachment: function(accountId, portRequestId, documentName, callback) {
+		portRequestDeleteAttachment: function(accountId, portRequestId, documentName) {
 			monster.request({
 				resource: "common.port.attachment.delete",
 				data: {
@@ -1098,9 +1054,7 @@ define(function(require){
 					documentName: documentName,
 					data: {}
 				},
-				success: function(data) {
-					callback(data);
-				}
+				success: function(data) {}
 			});
 		},
 
@@ -1119,7 +1073,7 @@ define(function(require){
 			});
 		},
 
-		portRequestAddState: function(accountId, portRequestId, callback) {
+		portRequestReadyState: function(accountId, portRequestId, callback) {
 			monster.request({
 				resource: "common.port.add.state",
 				data: {
@@ -1128,7 +1082,7 @@ define(function(require){
 					data: {}
 				},
 				success: function(data) {
-					callback(data);
+					callback();
 				}
 			});
 		},
@@ -1169,6 +1123,22 @@ define(function(require){
 			}
 
 			return order;
+		},
+
+		portReloadApp: function(accountId, parent) {
+			var self = this,
+				args = new Object();
+
+			args.accountId = accountId;
+
+			if ( parent.hasClass('ui-dialog-content') ) {
+				parent.parent().remove();
+			} else {
+				parent.empty();
+				args.parent = $('#ws-content');
+			}
+
+			self.portRender(args);
 		}
 	};
 

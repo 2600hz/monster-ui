@@ -1,12 +1,12 @@
 <div id="port_container">
 	<div id="resume_orders">
-		<h2>Complete following orders, one at a time!</h2>
+		<h2>{{ i18n.port.resumeOrder.title }}</h2>
 		{{#each orders}}
 		<div class="row-fluid">
-			<div class="span2">Order {{@index}}</div>
+			<div class="span2">{{ ../i18n.port.resumeOrder.labelOrder }} {{@index}}</div>
 			<div class="span5 offset1">{{carrier}}</div>
 			<div class="span4">
-				<button class="btn btn-success" data-index="{{@index}}">Complete this order</button>
+				<button class="btn btn-success" data-index="{{@index}}">{{ ../i18n.port.resumeOrder.completeOrderButton }}</button>
 			</div>
 		</div>
 		{{/each}}

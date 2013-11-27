@@ -3,23 +3,23 @@
 		<div class="row-fluid" id="transfer_status">
 			<div class="span4 done">
 				<i class="icon-ok-sign"></i>
-				<div class="title">Add Number</div>
+				<div class="title">{{ i18n.port.progressBarLeft }}</div>
 			</div>
 			<div class="span4 done">
 				<i class="icon-ok-sign"></i>
-				<div class="title">Submit Documents</div>
+				<div class="title">{{ i18n.port.progressBarMiddle }}</div>
 			</div>
 			<div class="span4 todo">
 				<i class="icon-circle"></i>
-				<div class="title">Confirm Order</div>
+				<div class="title">{{ i18n.port.progressBarRight }}</div>
 			</div>
 		</div>
 	
-		<h2>Great! {{total}} numbers are ready to transfert!</h2>
+		<h2>{{ i18n.port.confirmOrder.titlePartOne }} {{total}} {{ i18n.port.confirmOrder.titlePartTwo }}</h2>
 	
 		<div class="row-fluid control-group">
 			<div class="span6">
-				<label class="control-label" for="notification_email">Who should we notify upon completion?</label>
+				<label class="control-label" for="notification_email">{{ i18n.port.confirmOrder.labelEmail }}</label>
 			</div>
 			<div class="span6">
 				<input type="text" class="span8" id="notification_email" placeholder="Email address" value="{{#if email}}{{email}}{{/if}}">
@@ -30,7 +30,7 @@
 	<div id="transfer_date">
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="transfer_numbers_date">When do you want to transfer the numbers?</label>
+				<label for="transfer_numbers_date">{{ i18n.port.confirmOrder.labelDate }}</label>
 			</div>
 			<div class="span6">
 				<input class="date-input span8" type="text" id="transfer_numbers_date" name="extra.date" value="{{#if transfer_date}}{{transfer_date}}{{/if}}">
@@ -38,17 +38,17 @@
 		</div>
 		<div class="row-fluid info">
 			<i class="icon-info-sign"></i>
-			<p><span class="important">important:</span> We do not guarantee same date but we will try our best or inform you if any changes. Please note that ports can take from 3 to 30 days.</p>
+			<p><span class="important">{{ i18n.port.confirmOrder.dateInfoPartOne }}</span> {{ i18n.port.confirmOrder.dateInfoPartTwo }}</p>
 		</div>
 	</div>
 	<div id="temporary_numbers">
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="have_temporary_numbers">Would you like to have temporary numbers?</label>
+				<label for="have_temporary_numbers">{{ i18n.port.confirmOrder.labelTemporaryNumbers }}</label>
 			</div>
 			<div class="span6">
 				<div class="toggle-button-bloc">
-					<div class="switch" data-on="success" data-off="default" data-on-label="YES" data-off-label="NO">
+					<div class="switch" data-on="success" data-off="default" data-on-label="{{ i18n.port.confirmOrder.toggleButtonOn }}" data-off-label="{{ i18n.port.confirmOrder.toggleButtonOff }}">
 						<input type="checkbox" id="have_temporary_numbers" name="installed" checked />
 					</div>
 			</div>
@@ -56,7 +56,7 @@
 		</div>
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="numbers_to_buy">How many numbers would you like to buy?</label>
+				<label for="numbers_to_buy">{{ i18n.port.confirmOrder.labelTemporaryNumbersCount }}</label>
 			</div>
 			<div class="span6">
 				<select name="" class="span2" id="numbers_to_buy">
@@ -70,25 +70,25 @@
 		</div>
 		<div class="row-fluid info">
 			<i class="icon-info-sign"></i>
-			<p>These numbers will automatically be added to your current application. You will be charged &#36;1/Month/Number. Delete these numbers once your existing number transfer get completed to avoid charges.</p>
+			<p>{{ i18n.port.confirmOrder.temporaryNumbersInfoPartOne }} &#36;{{ i18n.port.confirmOrder.temporaryNumbersInfoPartTwo }}</p>
 		</div>
 	</div>
 	<div id="order_summary">
-		<h2>Order Summary</h2>
+		<h2>{{ i18n.port.confirmOrder.orderSummaryTitle }}</h2>
 		<div class="row-fluid">
 			<div class="span6">
 				<p>{{name}}</p>
 				<ul>
-					<li>Order Date: {{created}}</li>
-					<li>Transfer Schedule Date: <span id="transfer_schedule_date">{{transfer}}</span></li>
-					<li>Total Numbers: {{total}}</li>
+					<li>{{ i18n.port.confirmOrder.labelOrderDate }} {{created}}</li>
+					<li>{{ i18n.port.confirmOrder.labelTransferDate }} <span id="transfer_schedule_date">{{transfer}}</span></li>
+					<li>{{ i18n.port.confirmOrder.labelNumbersTotal }} {{total}}</li>
 				</ul>
 			</div>
 			<div class="span6">
-				<p>Total order: &#36;{{price}}</p>
+				<p>{{ i18n.port.confirmOrder.labelOrderTotal }} &#36;{{price}}</p>
 				<div class="row-fluid info">
 					<i class="icon-info-sign"></i>
-					<p>One time fees of &#36;5/number will be charged to your account.</p>
+					<p>{{ i18n.port.confirmOrder.orderTotalInfoPartOne }} &#36;{{ i18n.port.confirmOrder.orderTotalInfoPartTwo }}</p>
 				</div>
 			</div>
 		</div>
@@ -96,29 +96,29 @@
 	<div id="continue_later">
 		<div class="row-fluid">
 			<div class="span4">
-				<button class="btn btn-info span12">save &amp; continue later</button>
+				<button class="btn btn-info span12">{{ i18n.port.saveButtonPartOne }} &amp; {{ i18n.port.saveButtonPartTwo }}</button>
 			</div>
 			<div class="span8">
-				<p>If you do not have all the required documents, save and come back later.</p>
+				<p>{{ i18n.port.labelSaveButton }}</p>
 			</div>
 		</div>
 	</div>
 	<div id="footer">
 		<div class="row-fluid">
 		<div class="span3">
-			<button class="btn btn-danger">cancel this order</button>
+			<button class="btn btn-danger">{{ i18n.port.cancelOrderButton}}</button>
 		</div>
 		<div class="span6">
 			<ul class="help-links">
-				<li><a href="">View Porting FAQs</a></li>
+				<li><a href="">{{ i18n.port.faqLink }}</a></li>
 				<li class="separator"></li>
-				<li><a href="">Watch Video</a></li>
+				<li><a href="">{{ i18n.port.videoLink }}</a></li>
 				<li class="separator"></li>
-				<li><a href="">Conact Us</a></li>
+				<li><a href="">{{ i18n.port.contactUsLink }}</a></li>
 			</ul>
 		</div>
 		<div class="span2 offset1">
-			<button class="btn btn-success pull-right">submit</button>
+			<button class="btn btn-success pull-right">{{ i18n.port.confirmOrder.submitButton }}</button>
 		</div>
 		</div>
 	</div>

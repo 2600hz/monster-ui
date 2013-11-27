@@ -141,5 +141,97 @@
 		"sendRequest": "Send us a request",
 		"to": "to",
 		"partialPurchaseFailure": "Sorry, some of the requested numbers could not be purchased."
+	},
+
+	"port": {
+		"dialogTitle": "Port numbers",
+		"addButton": "add",
+		"saveButtonPartOne": "save",
+		"saveButtonPartTwo": "continue later",
+		"labelSaveButton": "If you do not have all the required documents, save and come back later.",
+		"cancelButton": "cancel",
+		"cancelOrderButton": "cancel this order",
+		"faqLink": "View Porting FAQs",
+		"videoLink": "Watch Video",
+		"contactUsLink": "Contact Us",
+		"nextButton": "next",
+		"progressBarLeft": "Add Numbers",
+		"progressBarMiddle": "Submit Documents",
+		"progressBarRight": "Confirm Order",
+		"addNumbers": {
+			"title": "We are excited you are moving numbers to our service!",
+			"labelAddNumbers": "What numbers do you want to transfer? Type one number in at a time or paste all. No extra characters beside number."
+		},
+		"confirmOrder" : {
+			"titlePartOne": "Great!",
+			"titlePartTwo": "numbers are ready to transfert!",
+			"labelEmail": "Who should we notify upon completion?",
+			"labelDate": "When do you want to transfer the numbers?",
+			"dateInfoPartOne": "important:",
+			"dateInfoPartTwo": "We do not guarantee same date but we will try our best or inform you if any changes. Please note that ports can take from 3 to 30 days.",
+			"labelTemporaryNumbers": "Would you like to have temporary numbers?",
+			"toggleButtonOn": "YES",
+			"toggleButtonOff": "NO",
+			"labelTemporaryNumbersCount": "How many numbers would you like to buy?",
+			"temporaryNumbersInfoPartOne": "These numbers will automatically be added to your current application. You will be charged",
+			"temporaryNumbersInfoPartTwo": "1/Month/Number. Delete these numbers once your existing number transfer get completed to avoid charges.",
+			"orderSummaryTitle": "Order Summary",
+			"labelOrderDate": "Order Date:",
+			"labelTransferDate": "Transfer Schedule Date:",
+			"labelNumbersTotal": "Total Numbers:",
+			"labelOrderTotal": "Total Order:",
+			"orderTotalInfoPartOne": "One time fees of",
+			"orderTotalInfoPartTwo": "5/number will be charged to your account.",
+			"submitButton": "submit"
+		},
+		"manageOrders": {
+			"orderListInfo": "Due to the nature of your numbers or the carriers, we may split your order. You will be able to process all the orders, one at a time.",
+			"eulaInfo": "In the next step we need to collect the bill to show that you are the rightful owner of these numbers. This is required by law. We may split your order further if the numbers are not mentioned in the bill you will upload.",
+			"eulaWarningPartOne": "Important!",
+			"eulaWarningPartTwo": "Please understand and agree with the following",
+			"labelCancelService": "I will not cancel my old service until after the numbers are ompletely transfered,",
+			"labelCancelNumbers": "I understand any other numbers on the old account may be cancelled by the old provider,",
+			"labelChangeFee": "I understand my old carrier may charge an early termination fee,",
+			"labelStandardNumbers": "These are standard phone numbers, not featured (like [star-ring])."
+		},
+		"pendingOrders": {
+			"title": "Pending Orders",
+			"newPortLink": "Start New Transfert (port)",
+			"tableOrderName": "Name",
+			"tableOrderDate": "Requested Date",
+			"tableOrderStatus": "Status",
+			"tableOrderAction": "Action",
+			"continueButton": "continue",
+			"infoButton": "info",
+			"noOrder": "No port"
+		},
+		"resumeOrder": {
+			"title": "Complete following orders, one at a time!",
+			"labelOrder": "Order",
+			"completeOrderButton": "Complete this order"
+		},
+		"submitDocuments": {
+			"labelOrderName": "Name that helps you remember this transfer",
+			"labelOrderNameHelper": "For eg. 2600hz office local DIDs, NY office numbers",
+			"billInfoPartOne": "Please submit your current phone bill and fill out account details as mentioned on the bill you upload.",
+			"billInfoPartTwo": "Learn More",
+			"uploadBillButton": "upload phone bill",
+			"uploadBillHelper": "pdf format only",
+			"labelAccountName": "Name on the account",
+			"labelAddress": "Address",
+			"labelCity": "City",
+			"labelState": "State",
+			"labelZipCode": "ZIP Code",
+			"orderListInfoPartOne": "Please verify that the following numbers are mentioned on the bill you upload.",
+			"orderListInfoPartTwo": "If the numbers are not mentioned on the bill, please REMOVE them or this order will fail to transfer all the numbers.",
+			"loaTitlePartOne": "Please fill out the Letter of Authorization (LoA)",
+			"loaTitlePartTwo": "What is LOA?",
+			"loaDownloadStep": "download loa",
+			"loaSignStep": "sign loa form",
+			"loaUploadStep": "upload loa",
+			"loaHelperPartOne": "For those who don’t have time, printer or scanner, we also offer digital sign for",
+			"loaHelperPartTwo": "5 one-time charge.",
+			"loaHelperPartThree": "Digital LOA form"
+		}
 	}
 }

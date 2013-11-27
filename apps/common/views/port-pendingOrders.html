@@ -1,16 +1,16 @@
 <div id="port_container">
 	<div id="orders_list">
-		<h3 class="pull-left">Pending Orders</h3>
+		<h3 class="pull-left">{{ i18n.port.pendingOrders.title}}</h3>
 		<span class="pull-right">
-			<a href="#"><i class="icon-telicon-porting"></i>Start New Transfert (port)</a>
+			<a href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
 		</span>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>Name</th>
-					<th>Requested Date</th>
-					<th>Status</th>
-					<th>Action</th>
+					<th>{{ i18n.port.pendingOrders.tableOrderName }}</th>
+					<th>{{ i18n.port.pendingOrders.tableOrderDate }}</th>
+					<th>{{ i18n.port.pendingOrders.tableOrderStatus }}</th>
+					<th>{{ i18n.port.pendingOrders.tableOrderAction }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -20,10 +20,12 @@
 					<td><i class="icon-caret-right"></i>{{name}}</td>
 					<td>{{#if created}}{{created}}{{else}}.....{{/if}}</td>
 					<td>{{port_state}}</td>
-					{{#if port_state}}
-					<td><button class="btn btn-success">continue</button></td>
+					{{#if status}}
+					<td>
+						<!-- <button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button> -->
+					</td>
 					{{else}}
-					<td><button class="btn btn-info">info</button></td>
+					<td><button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button></td>
 					{{/if}}
 				</tr>
 				{{#each numbers}}
@@ -31,7 +33,7 @@
 				{{/each}}
 			{{/each}}
 			{{else}}
-				<tr><td colspan="4">No port</td></tr>
+				<tr><td colspan="4">{{ i18n.port.pendingOrders.noOrder}}</td></tr>
 			{{/if}}
 			</tbody>
 		</table>

@@ -57,11 +57,11 @@ div.row-fluid.info p {
 .order:not(:first-child) { margin-left: 50px; }
 
 .order h3 {
+	overflow: hidden;
 	margin: 0 0 10px 0;
 	padding: 0 10px;
 	color: #2CF;
 	font-weight: normal;
-	overflow: hidden;
 }
 
 .order .scroll {
@@ -310,6 +310,12 @@ div#upload_bill form button { margin-bottom: 4px; }
 
 div#upload_bill form input.upload { display: none; }
 
+div#upload_bill form .file-name {
+	display: block;
+	visibility: hidden;
+	margin-bottom: 15px;
+}
+
 div#upload_bill form .help-block {
 	margin-bottom: 15px;
 	text-align: left;
@@ -336,6 +342,12 @@ div#loa .row-fluid { text-align: center; }
 div#loa .row-fluid .span4 .number { font-size: 25px; }
 
 div#loa input.upload { display: none; }
+
+div#loa .file-name {
+	display: block;
+	visibility: hidden;
+	margin-top: 15px;
+}
 
 div#loa > p { margin-bottom: 0; }
 
