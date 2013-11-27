@@ -89,6 +89,12 @@ a.monster-link i {
     font-size: 16px;
 }
 
+#main section > .navbar .nav > li.myaccount-link i.icon-caret-down {
+    position: relative;
+    top: 2px;
+    margin-left: 10px;
+}
+
 #main section > .navbar .nav-collapse .nav > li > a:hover,
 #main section > .navbar .nav-collapse .dropdown-menu a:hover {
     background-color: transparent;
