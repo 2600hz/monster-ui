@@ -637,6 +637,29 @@
 	font-style: italic;
 }
 
+#accountsmanager_new_account_form .account-settings-step .realm-text {
+	width: 170px;
+}
+
+#accountsmanager_new_account_form .account-settings-step .manual-realm {
+	display: none;
+}
+
+#accountsmanager_new_account_form .account-settings-step .manual-realm input[type="text"]{
+	width: 190px;
+	margin-right: 10px;
+}
+
+#accountsmanager_new_account_form .account-settings-step .realm-link {
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+#accountsmanager_new_account_form .account-settings-step .realm-link i {
+	text-decoration: none;
+	margin-right: 4px;
+}
+
 /******************* Restrictions Tab ********************/
 
 #accountsmanager_restrictions_tab {

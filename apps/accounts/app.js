@@ -561,6 +561,19 @@ define(function(require){
 
 			timezone.populateDropdown(parent.find('#accountsmanager_new_account_timezone'));
 
+			parent.find('.change-realm').on('click', function(e) {
+				parent.find('.generated-realm').hide();
+				parent.find('.manual-realm')
+					.show()
+					.find('input')
+					.focus();
+			});
+
+			parent.find('.cancel-edition').on('click', function(e) {
+				parent.find('.manual-realm').hide();
+				parent.find('.generated-realm').show();
+			});
+
 			parent.find('.add-admin-toggle > a').on('click', function(e) {
 				e.preventDefault();
 				var $this = $(this);
@@ -670,7 +683,7 @@ define(function(require){
 
 			switch(step) {
 				case 1:
-					if(!formData.account.name || !formData.account.realm) {
+					if(!formData.account.name) {
 						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.accountMandatoryFields;
 						validated = false;
 					}
@@ -1164,7 +1177,7 @@ define(function(require){
 						$this.find('.update .text').text(self.i18n.active().closeSetting);
 						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
 						settingsItem.find('.settings-item-content').slideDown('fast');
-	
+
 						if(settingsItem.data('name') === 'accountsmanager_account_admins') {
 							self.renderEditAdminsForm(parent, accountData.id);
 						}
