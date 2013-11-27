@@ -1,0 +1,118 @@
+<div id="port_container">
+	<div id="name_transfer">
+		<div class="row-fluid" id="transfer_status">
+			<div class="span4 done">
+				<i class="icon-ok-sign"></i>
+				<div class="title">{{ i18n.port.progressBarLeft }}</div>
+			</div>
+			<div class="span4 todo">
+				<i class="icon-circle"></i>
+				<div class="title">{{ i18n.port.progressBarMiddle }}</div>
+			</div>
+			<div class="span4 todo">
+				<i class="icon-circle"></i>
+				<div class="title">{{ i18n.port.progressBarRight }}</div>
+			</div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span6">
+				<label class="control-label" for="transfer_helper">{{ i18n.port.submitDocuments.labelOrderName }}</label>
+			</div>
+			<div class="span6">
+				<input type="text" class="span8" id="transfer_helper" placeholder="AT&amp;T Local Numbers" value="{{#if name}}{{name}}{{/if}}">
+				<span class="help-block">{{ i18n.port.submitDocuments.labelOrderNameHelper }}</span>
+			</div>
+		</div>
+	</div>
+	<div id="upload_bill">
+		<div class="row-fluid">
+			<div class="span6">
+				<div class="row-fluid info">
+					<i class="icon-info-sign"></i>
+					<p>{{ i18n.port.submitDocuments.billInfoPartOne }} <a href="#">{{ i18n.port.submitDocuments.billInfoPartTwo }}</a></p>
+				</div>
+				<form action="" id="bill_form">
+					<button type="button" class="btn btn-success upload span12">{{ i18n.port.submitDocuments.uploadBillButton }}</button>
+					<input type="file" class="upload" name="bill">
+					<span class="help-block">{{ i18n.port.submitDocuments.uploadBillHelper }}</span>
+					<span class="file-name"></span>
+					<label for="account_name">{{ i18n.port.submitDocuments.labelAccountName }}</label>
+					<input type="text" class="span12" id="account_name" value="{{#if bill.name}}{{bill.name}}{{/if}}">
+					<label for="address">{{ i18n.port.submitDocuments.labelAddress }}</label>
+					<input type="text" class="span12" id="address" value="{{#if bill.address}}{{bill.address}}{{/if}}">
+					<label for="city">{{ i18n.port.submitDocuments.labelCity }}</label>
+					<input type="text" class="span12" id="city" value="{{#if bill.city}}{{bill.city}}{{/if}}">
+					<label for="state">{{ i18n.port.submitDocuments.labelState }}</label>
+					<input type="text" class="span12" id="state" value="{{#if bill.state}}{{bill.state}}{{/if}}">
+					<label for="zip_code">{{ i18n.port.submitDocuments.labelZipCode }}</label>
+					<input type="text" class="span12" id="zip_code" value="{{#if bill.zip_code}}{{bill.zip_code}}{{/if}}">
+				</form>
+			</div>
+			<div class="span6">
+				<div class="row-fluid info">
+					<i class="icon-info-sign"></i>
+					<p>{{ i18n.port.submitDocuments.orderListInfoPartOne }} <span class="text-error">{{ i18n.port.submitDocuments.orderListInfoPartTwo }}</span></p>
+				</div>
+				<div class="order">
+					<h3>{{carrier}}</h3>
+					<div class="scroll">
+						<ul>
+						{{#each numbers}}
+							<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+						{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="loa">
+		<h4>{{ i18n.port.submitDocuments.loaTitlePartOne }} <a href="#">{{ i18n.port.submitDocuments.loaTitlePartTwo }}</a></h4>
+		<div class="row-fluid">
+			<div class="span4">
+				<span class="span2 number">1.</span>
+				<button type="button" class="btn span10">{{ i18n.port.submitDocuments.loaDownloadStep }}</button>
+			</div>
+			<div class="span4">
+				<span class="span1 offset3 number">2.</span>
+				<span class="span5">{{ i18n.port.submitDocuments.loaSignStep }}</span>
+			</div>
+			<div class="span4">
+				<span class="span2 number">3.</span>
+				<button type="button" class="btn span10 upload">{{ i18n.port.submitDocuments.loaUploadStep }}</button>
+				<input type="file" class="upload" name="loa">
+				<span class="file-name span10 offset2"></span>
+			</div>
+		</div>
+		<p>{{ i18n.port.submitDocuments.loaHelperPartOne }} &#36;{{ i18n.port.submitDocuments.loaHelperPartTwo }} <a href="#">{{ i18n.port.submitDocuments.loaHelperPartThree }}</a></p>
+	</div>
+	<div id="continue_later">
+		<div class="row-fluid">
+			<div class="span4">
+				<button class="btn btn-info span12">{{ i18n.port.saveButtonPartOne }} &amp; {{ i18n.port.saveButtonPartTwo}}</button>
+			</div>
+			<div class="span8">
+				<p>{{ i18n.port.labelSaveButton }}</p>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<div class="row-fluid">
+		<div class="span3">
+			<button class="btn btn-danger">{{ i18n.port.cancelOrderButton }}</button>
+		</div>
+		<div class="span6">
+			<ul class="help-links">
+				<li><a href="#footer">{{ i18n.port.faqLink }}</a></li>
+				<li class="separator"></li>
+				<li><a href="#footer">{{ i18n.port.videoLink }}</a></li>
+				<li class="separator"></li>
+				<li><a href="#footer">{{ i18n.port.contactUsLink }}</a></li>
+			</ul>
+		</div>
+		<div class="span2 offset1">
+			<button class="btn btn-success pull-right">{{ i18n.port.nextButton }}</button>
+		</div>
+		</div>
+	</div>
+</div>
