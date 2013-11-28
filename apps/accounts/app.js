@@ -860,7 +860,7 @@ define(function(require){
 							var formData = form2object($adminElement.find('form')[0]);
 
 							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
 							} else if($adminPasswordDiv.is(":visible")
 									&& (formData.password.length < 6
 										|| /\s/.test(formData.password)
@@ -868,9 +868,9 @@ define(function(require){
 										|| !/[A-Za-z]/.test(formData.password)
 										)
 									) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
 							} else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
 							} else {
 								formData = self.cleanFormData(formData);
 								if(!$adminPasswordDiv.is(":visible")) {
@@ -916,7 +916,7 @@ define(function(require){
 							var formData = form2object('accountsmanager_add_admin_form'),
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
 							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
 							} else if(!autoGen
 									&& (formData.password.length < 6
 										|| /\s/.test(formData.password)
@@ -924,9 +924,9 @@ define(function(require){
 										|| !/[A-Za-z]/.test(formData.password)
 										)
 									) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
 							} else if(!autoGen && formData.password !== formData.extra.password_confirm) {
-								monster.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
+								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
 							} else {
 								formData = self.cleanFormData(formData);
 								formData.priv_level = "admin";
@@ -1268,7 +1268,7 @@ define(function(require){
 					},
 					function(data) {
 						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
-							monster.alert(data.data.api_error.message);
+							monster.ui.alert(data.data.api_error.message);
 						}
 					}
 				);
