@@ -1,0 +1,396 @@
+.ui-widget-content a { color: #2CF; }
+.ui-dialog-content { overflow-y: auto; height: 100%; }
+.ui-dialog { height: 80%; }
+
+div#port_container {
+	margin: 0 auto;
+	max-width: 940px;
+}
+
+div#port_container > div { padding: 40px 60px; }
+div#port_container > div:not(:first-child) { border-top: 1px solid #ddd; }
+div#port_container > div > *:not(:last-child) { margin-bottom: 40px; }
+
+div#port_container h2 {
+	margin-top: 0px;
+	color: #2CF;
+	text-align: center;
+	font-weight: normal;
+}
+
+ul.help-links {
+	margin: 5px auto 0;
+	text-align: center;
+}
+
+ul.help-links li {
+	display: inline;
+	list-style: none;
+}
+
+ul.help-links li.separator {
+	margin: 0 15px;
+	border-left: 1px solid #2CF;
+}
+
+div.row-fluid.info { position: relative; }
+
+div.row-fluid.info i {
+	position: absolute;
+	top: 2px;
+	left: -22px;
+}
+
+div.row-fluid.info p {
+	margin-bottom: 0;
+	font-size: 13px;
+}
+
+.order {
+	display: inline-block;
+	padding-bottom: 10px;
+	width: 29.28%;
+	height: 100%;
+	vertical-align: top;
+}
+
+.order:not(:first-child) { margin-left: 50px; }
+
+.order h3 {
+	overflow: hidden;
+	margin: 0 0 10px 0;
+	padding: 0 10px;
+	color: #2CF;
+	font-weight: normal;
+}
+
+.order .scroll {
+	overflow-y: auto;
+	max-height: 327px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+}
+
+.order ul {
+	margin-bottom: 0;
+	margin-left: 0;
+	list-style: none;
+}
+
+.order li {
+	padding: 10px 10px 10px 25px;
+	border-bottom: 1px solid #ddd;
+}
+
+.order li:last-child { border-bottom: none; }
+
+.order li .icon-warning-sign {
+	position: relative;
+	top: 1px;
+	right: 10px;
+	visibility: hidden;
+	color: red;
+}
+
+.order .icon-remove-sign:hover { cursor: pointer; }
+
+.order li .icon-warning-sign.visible { visibility: visible; }
+
+.order h3 .icon-remove-sign { margin-top: 11px; }
+
+div#continue_later { text-align: center; }
+div#continue_later p { margin: 5px 0; }
+
+.help-block {
+	margin-bottom: 0;
+	font-size: 12px;
+}
+
+#transfer_status { text-align: center; }
+
+#transfer_status .span4 { position: relative; }
+
+#transfer_status .done,
+#transfer_status .done i { color: #2CF; }
+#transfer_status .todo,
+#transfer_status .todo i { color: #909090; }
+
+#transfer_status .span4:not(:last-child).done i:after,
+#transfer_status .span4:not(:last-child).todo i:after {
+	position: absolute;
+	top: 8px;
+	right: -56%;
+	display: block;
+	width: 103%;
+	height: 2px;
+	content: "";
+}
+
+#transfer_status .span4:not(:last-child).done i:after { background-color: #2cf; }
+#transfer_status .span4:not(:last-child).todo i:after { background-color: #909090; }
+
+#port_container label { font-size: 16px; }
+
+.control-group { margin-bottom: 0; }
+
+.control-group:not(.error) .help-inline { display: none; }
+.control-group.error .help-inline {
+	display: inline-block;
+	margin: 6px 0 0 5px;
+	vertical-align: top;
+}
+.control-group.error .help-inline i { color: #b94a48; }
+
+/**********************************************************/
+
+/*********************** Orders List **********************/
+
+div#orders_list > h3 {
+	margin-top: 0;
+	color: #5D5D5C;
+	font-weight: normal;
+}
+
+div#orders_list > span.pull-right {
+	margin-top: 10px;
+	height: 20px;
+}
+
+div#orders_list > span.pull-right a { font-size: 16px; }
+
+div#orders_list > span.pull-right a:hover i { text-decoration: none; }
+
+div#orders_list > span.pull-right i {
+	position: relative;
+	top: 2px;
+	margin-right: 8px;
+	color: #2CF;
+	font-size: 20px;
+}
+
+/*************** Reformat Default Table CSS ***************/
+
+div#orders_list .table {
+	margin-bottom: 0;
+	border: none;
+}
+
+div#orders_list .table.table-bordered {
+	border-top:  1px solid #DDD;
+	border-right:  1px solid #DDD;
+	border-bottom:  1px solid #DDD;
+	border-radius: 10px;
+}
+
+div#orders_list .table th {
+	padding-top: 20px;
+	background-color: #f9f9f9;
+	color: #78838a;
+	text-align: center;
+	text-shadow: none;
+	font-weight: normal;
+}
+
+div#orders_list .table tr,
+div#orders_list .table tbody tr:nth-child(odd) { background: #fff; }
+
+div#orders_list .table-bordered thead tr:first-child > th:first-child { border-top-left-radius: 10px; }
+div#orders_list .table-bordered thead tr:last-child > th:last-child { border-top-right-radius: 10px; }
+div#orders_list .table-bordered tbody tr:last-child > td:first-child { border-bottom-left-radius: 10px; }
+div#orders_list .table-bordered tbody tr:last-child > td:last-child { border-bottom-right-radius: 10px; }
+
+div#orders_list table th:first-child { text-align: left; }
+div#orders_list table th:not(:first-child) { border-left: 1px solid transparent; }
+
+div#orders_list table td {
+	padding: 12px inherit;
+	color: #78838a;
+}
+
+div#orders_list table td:first-child { padding-left: 40px; }
+
+div#orders_list table th:first-child,
+div#orders_list table tr.collapse td:first-child { padding-left: 30px; }
+
+div#orders_list table th:last-child,
+div#orders_list table td:last-child { padding-right: 20px; }
+
+div#orders_list table td:not(:first-child) { text-align: center; }
+
+div#orders_list table td:first-child i {
+	position: relative;
+	top: 2px;
+	right: 15px;
+}
+
+div#orders_list table tr.collapse,
+div#orders_list table tr.collapse:nth-child(odd) { background-color: #f9f9f9; }
+
+div#orders_list table tr.collapse:hover { cursor: pointer; }
+
+div#orders_list table tr[data-id]:not(.collapse) { display: none; }
+
+div#orders_list table tr.active td { border-top: 2px solid #2CF; }
+
+
+/**********************************************************/
+
+/********************** Resume Orders *********************/
+
+div#resume_orders { width: 820px; }
+
+div#resume_orders h2 { margin-bottom: 50px; }
+
+div#resume_orders .row-fluid {
+	margin-bottom: 20px !important;
+	padding-top: 20px;
+	border-top: 1px solid #ddd;
+}
+
+/**********************************************************/
+
+/*********************** Add Numbers **********************/
+
+div#add_numbers > div { margin-bottom: 0; }
+
+div#add_numbers .row-fluid > .span6:first-child { text-align: center; }
+div#add_numbers .row-fluid > .span6:first-child label { margin-bottom: 20px; }
+
+div#add_numbers .search-custom {
+	display: block;
+	text-align: center;
+	font-size: 15px;
+}
+
+div#add_numbers input { height: 34px; }
+
+div#manage_orders > .row-fluid:last-child {
+	position: relative;
+	overflow-x: auto;
+	max-height: 445px;
+	white-space: nowrap;
+}
+
+div#eula .important {
+	color: red;
+	text-align: center;
+	font-size: 25px;
+}
+
+div#eula .important span { text-transform: uppercase; }
+
+div#eula form { margin-bottom: 0; }
+
+div#eula input { margin: -5px 10px 0 0; }
+
+div#eula label:last-child { margin-bottom: 0; }
+
+/**********************************************************/
+
+/******************** Submit Documents ********************/
+
+div#name_transfer .row-fluid label {
+	margin: 0;
+	padding: 4px 0;
+	text-align: right;
+}
+
+div#upload_bill .span6:first-child { padding-right: 12px; }
+div#upload_bill .span6:last-child { padding-left: 12px; }
+
+div#upload_bill .info { min-height: 80px; }
+
+div#upload_bill form {
+	margin: 0 auto;
+	max-width: 260px;
+	text-align: center;
+}
+
+div#upload_bill form button { margin-bottom: 4px; }
+
+div#upload_bill form input.upload { display: none; }
+
+div#upload_bill form .file-name {
+	display: block;
+	visibility: hidden;
+	margin-bottom: 15px;
+}
+
+div#upload_bill form .help-block {
+	margin-bottom: 15px;
+	text-align: left;
+}
+
+div#upload_bill form label { text-align: left; }
+
+div#upload_bill span.imporant { color: #F00; }
+
+div#upload_bill .order {
+	margin: 0 16.5%;
+	max-width: 260px;
+	width: 100%;
+	height: 100%;
+}
+
+div#loa h4 {
+	margin: 0;
+	font-weight: normal;
+}
+
+div#loa .row-fluid { text-align: center; }
+
+div#loa .row-fluid .span4 .number { font-size: 25px; }
+
+div#loa input.upload { display: none; }
+
+div#loa .file-name {
+	display: block;
+	visibility: hidden;
+	margin-top: 15px;
+}
+
+div#loa > p { margin-bottom: 0; }
+
+/**********************************************************/
+
+/********************** Confirm Order *********************/
+
+div#notification h2 { margin-bottom: 0; }
+
+div#notification input,
+div#transfer_date input { margin-bottom: 0; }
+
+div#notification .row-fluid label,
+div#transfer_date .row-fluid label,
+div#temporary_numbers .row-fluid label {
+	margin: 0;
+	padding: 4px 0;
+	text-align: right;
+}
+
+div#transfer_date .row-fluid:first-child { margin-bottom: 40px; }
+
+div#transfer_date .info .important {
+	color: #F00;
+	text-transform: uppercase;
+}
+
+div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 40px; }
+
+div#order_summary > .row-fluid {
+	border: 1px solid #ddd;
+	box-shadow: 10px 10px 15px 0px #ddd;
+}
+
+div#order_summary .row-fluid .span6:first-child {
+	padding: 20px;
+	border-right: 1px solid #ddd;
+}
+
+div#order_summary .row-fluid .span6:first-child ul {
+	margin: 0 0 0 40px;
+}
+
+div#order_summary .row-fluid .span6:first-child ul li:not(:last-child) { margin-bottom: 5px; }
+
+div#order_summary .row-fluid .span6:last-child { padding: 20px; }

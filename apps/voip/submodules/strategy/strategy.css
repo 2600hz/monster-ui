@@ -366,6 +366,10 @@
 	margin-top: 10px;
 }
 
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option .menu-div .link-icon i {
+	margin-right: 5px;
+}
+
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active {
 	border-color: #22ccff;
 	background-color: #f0f0f0;

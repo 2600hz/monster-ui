@@ -4,7 +4,8 @@
 	"editSettings": "Edit",
 	"email": "Email",
 	"password": "Password",
-	"confirmPassword": "Confirm password",
+	"newPassword": "New Password",
+	"confirmPassword": "Confirm New Password",
 	"saveChanges": "Save Changes",
 	"changesSaved": "Changes Saved!",
 

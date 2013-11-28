@@ -62,7 +62,7 @@
 								<div class="span12">
 									<form class="form-horizontal" id="form_password">
 										<div class="control-group">
-											<label class="control-label" for="password">{{ i18n.password }}</label>
+											<label class="control-label" for="password">{{ i18n.newPassword }}</label>
 											<div class="controls">
 												<input type="password" id="password" name="password" data-original_value=""/>
 											</div>
@@ -235,7 +235,7 @@
 															<span class="card-type mastercard"></span>
 															<span class="card-type discover"></span>
 														</span>
-														<input type="number" id="credit_card_number" name="credit_card.number" class="input-medium" data-original_value=""/>
+														<input type="text" id="credit_card_number" name="credit_card.number" class="input-medium" data-original_value=""/>
 													</div>
 												</div>
 											</div>
@@ -245,8 +245,8 @@
 											<div class="controls">
 												<label class="uneditable">{{billing.credit_card.expiration_month}}/{{billing.credit_card.expiration_year}}</label>
 												<div class="edition">
-													<input type="number" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{ i18n.month }}" data-original_value="{{billing.credit_card.expiration_month}}"/>
-													<input type="number" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{ i18n.year }}" data-original_value="{{billing.credit_card.expiration_year}}"/>
+													<input type="text" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{ i18n.month }}" data-original_value="{{billing.credit_card.expiration_month}}"/>
+													<input type="text" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{ i18n.year }}" data-original_value="{{billing.credit_card.expiration_year}}"/>
 												</div>
 											</div>
 										</div>
@@ -255,7 +255,7 @@
 											<div class="controls">
 												<label class="uneditable">{{billing.credit_card.fake_cvv}}</label>
 												<div class="edition">
-													<input type="number" class="input-mini" id="security_code" name="credit_card.cvv" maxLength="4" data-original_value=""/>
+													<input type="text" class="input-mini" id="security_code" name="credit_card.cvv" maxLength="4" data-original_value=""/>
 												</div>
 											</div>
 										</div>
