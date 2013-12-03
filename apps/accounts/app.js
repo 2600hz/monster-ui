@@ -621,16 +621,19 @@ define(function(require){
 				formattedClassifiers = $.map(params.classifiers, function(val, key) {
 					return {
 						id: key,
-						name: val.friendly_name,
+						name: (self.i18n.active().classifiers[key] || {}).name || val.friendly_name,
+						help: (self.i18n.active().classifiers[key] || {}).help,
 						checked: true
 					};
 				}),
 				stepTemplate = self.getLimitsTabContent({
 					parent: parent,
 					formattedClassifiers: formattedClassifiers
-				})
+				});
 
-				parent.append(stepTemplate);
+			stepTemplate.find('[data-toggle="tooltip"]').tooltip();
+
+			parent.append(stepTemplate);
 		},
 
 		renderRestrictionsStep: function(params) {

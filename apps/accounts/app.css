@@ -557,6 +557,10 @@
 	margin: 0 5px 0 0;
 }
 
+.limits-tab-container .call-restrictions-div .call-restrictions-element i {
+	margin-left: 5px;
+}
+
 .limits-tab-container .call-restrictions-div .manage-credit-div > div {
 	margin-bottom: 10px;
 }

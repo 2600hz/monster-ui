@@ -605,6 +605,10 @@ define(function(require){
 					});
 				});
 
+				passwordTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
 				var popup = monster.ui.dialog(passwordTemplate, {
 					title: self.i18n.active().users.dialogChangePassword.title
 				});
