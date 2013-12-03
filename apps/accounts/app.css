@@ -741,6 +741,12 @@
 	color: #777;
 }
 
+.restrictions-tab-container .restrictions-menu .nav li[data-content] i.icon-caret-right {
+	position: relative;
+	top: 11px;
+	right: 5px;
+}
+
 .restrictions-tab-container .restrictions-menu .nav li[data-content] a.enabled {
 	color: #22ccff;
 }

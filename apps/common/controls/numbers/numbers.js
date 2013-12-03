@@ -339,6 +339,20 @@ define(function(require){
 				});
 			});
 
+			parent.on('click', '.actions-wrapper .buy-numbers-dropdown .buy-numbers-link', function(e) {
+				var accountId = self.accountId;
+
+				monster.pub('common.buyNumbers', {
+					accountId: self.accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(self.accountId, function(numbers) {}, true);
+						}
+					}
+				});
+			});
+
 			parent.on('click', '.account-header .action-number.port', function(e) {
 				var accountId = $(this).parents('.account-section').data('id');
 
@@ -349,6 +363,20 @@ define(function(require){
 							displayNumberList(accountId, function(numbers) {
 								parent.find('.account-section[data-id="'+accountId+'"]').addClass('open');
 							}, true);
+						}
+					}
+				});
+			});
+
+			parent.on('click', '.actions-wrapper .action-number.port', function(e) {
+				var accountId = self.accountId;
+
+				monster.pub('common.port.render', {
+					accountId: accountId,
+					searchType: $(this).data('type'),
+					callbacks: {
+						success: function(numbers) {
+							displayNumberList(accountId, function(numbers) {}, true);
 						}
 					}
 				});

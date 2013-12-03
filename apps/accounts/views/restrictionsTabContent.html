@@ -5,7 +5,9 @@
 			<li class="nav-header blue-gradient-reverse">{{ i18n.uiRestrictionsMenu.account }}</li>
 			<li class="restrictions-element" data-content="restrictions-profile">
 				<a href="javascript:void(0);">
-					<input type="checkbox" name="account.ui_restrictions.profile.show_tab" {{#compare account.ui_restrictions.profile.show_tab '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsMenu.settings }}
+					<input type="checkbox" name="account.ui_restrictions.profile.show_tab" {{#compare account.ui_restrictions.profile.show_tab '!==' false }}checked{{/compare}}>
+					{{ i18n.uiRestrictionsMenu.settings }}
+					<i class="icon-caret-right pull-right"></i>
 				</a>
 			</li>
 			<li class="nav-header blue-gradient-reverse">{{ i18n.uiRestrictionsMenu.billing }}</li>
@@ -21,7 +23,9 @@
 			</li>
 			<li class="restrictions-element" data-content="restrictions-balance">
 				<a href="javascript:void(0);">
-					<input type="checkbox" name="account.ui_restrictions.balance.show_tab" {{#compare account.ui_restrictions.balance.show_tab '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsMenu.perMinute }}
+					<input type="checkbox" name="account.ui_restrictions.balance.show_tab" {{#compare account.ui_restrictions.balance.show_tab '!==' false }}checked{{/compare}}>
+					{{ i18n.uiRestrictionsMenu.perMinute }}
+					<i class="icon-caret-right pull-right"></i>
 				</a>
 			</li>
 			<li class="nav-header blue-gradient-reverse">{{ i18n.uiRestrictionsMenu.trunking }}</li>
