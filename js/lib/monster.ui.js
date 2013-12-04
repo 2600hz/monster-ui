@@ -4,7 +4,8 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		icheck = require('icheck'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		validate = require('validate');
 
 	var requestAmount = 0,
 		homeIcon,
@@ -576,6 +577,19 @@ define(function(require){
 			 *
 			 * For more info, please refer to https://github.com/fronteed/iCheck
 			**/
+		},
+
+		validate: function(form, options) {
+			var defaultOptions = {
+				errorClass: "monster-invalid",
+				validClass: "monster-valid"
+			};
+
+			return form.validate($.extend(true, defaultOptions, options));
+		},
+
+		valid: function(form) {
+			return form.valid();
 		}
 	};
 

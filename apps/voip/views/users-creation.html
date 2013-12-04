@@ -3,22 +3,22 @@
 		<div class="control-group">
 			<label class="control-label" for="email"><i class="icon-key"></i></label>
 			<div class="controls">
-				<input type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}"/>
+				<input required type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}"/>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="password"><i class="icon-unlock"></i></label>
 			<div class="controls">
-				<input type="password" name="user.password" id="password" placeholder="{{i18n.users.dialogCreationUser.password}}"/>
+				<input required minlength="8" type="password" name="user.password" id="password" placeholder="{{i18n.users.dialogCreationUser.password}}"/>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="first_name"><i class="icon-book"></i></label>
 			<div class="controls">
-				<input class="input-small" type="text" id="first_name" name="user.first_name" placeholder="{{i18n.users.dialogCreationUser.firstName}}"></input>
-				<input class="same-line input-small" type="text" name="user.last_name" placeholder="{{i18n.users.dialogCreationUser.lastName}}"></input>
+				<input required class="input-small" type="text" id="first_name" name="user.first_name" placeholder="{{i18n.users.dialogCreationUser.firstName}}"></input>
+				<input required class="same-line input-small" type="text" name="user.last_name" placeholder="{{i18n.users.dialogCreationUser.lastName}}"></input>
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 					<option value="user" selected>{{ i18n.users.user }}</option>
 				</select>
 				<i class="second-field icon-phone"></i>
-				<input class="input-mini" type="text" name="callflow.extension" id="extension" placeholder="{{i18n.users.dialogCreationUser.extension}}" value="{{nextExtension}}">
+				<input required class="input-mini" type="text" name="callflow.extension" id="extension" placeholder="{{i18n.users.dialogCreationUser.extension}}" value="{{nextExtension}}">
 			</div>
 		</div>
 		<div class="control-group">

@@ -518,6 +518,14 @@ define(function(require){
 			});
 
 			self.renderWizardSteps(newAccountWizard);
+			monster.ui.validate(newAccountWizard.find('#accountsmanager_new_account_form'), {
+				rules: {
+					'addCreditBalance': {
+						number: true,
+						min: 5
+					}
+				}
+			});
 
 			parent.find('.edition-view').hide();
 			parent.find('.creation-view').append(newAccountWizard);
@@ -706,57 +714,59 @@ define(function(require){
 
 		validateStep: function(step, parent, callback) {
 			var self = this,
-				validated = true,
+				validated = monster.ui.valid($('#accountsmanager_new_account_form')),
 				step = parseInt(step),
 				errorMessage = self.i18n.active().wizardErrorMessages.pleaseCorrect,
 				formData = form2object('accountsmanager_new_account_form');
 
-			switch(step) {
-				case 1:
-					if(!formData.account.name) {
-						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.accountMandatoryFields;
-						validated = false;
-					}
-					if(parent.find('.new-admin-div').hasClass('active')) {
-						if(!formData.user.first_name || !formData.user.last_name || !formData.user.email) {
-							errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminMandatoryFields;
-							validated = false;
-						}
-						if(!formData.extra.autogenPassword) {
-							if(formData.user.password.length < 6 || !/[A-Za-z]/.test(formData.user.password) || !/[0-9]/.test(formData.user.password)) {
-								errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordError;
-								validated = false;
-							} else if(!formData.user.password || formData.user.password !== formData.extra.confirmPassword) {
-								errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordConfirmError;
-								validated = false;
-							}
-						}
-					}
-					break;
-				case 2:
-					break;
-				case 3:
-					if(!/^(\d+(\.\d{1,2})?)?$/.test(formData.addCreditBalance)) {
-						errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.incorrectBalanceFormat;
-						validated = false;
-					} else {
-						if(formData.addCreditBalance && parseFloat(formData.addCreditBalance) < 5.0) {
-							errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.balanceMinimumAmount;
-							validated = false;
-						}
-					}
-					break;
-				case 4:
-					break;
-				default:
-					validated = false;
-					break;
-			}
+			
+
+			// switch(step) {
+			// 	case 1:
+			// 		if(!formData.account.name) {
+			// 			errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.accountMandatoryFields;
+			// 			validated = false;
+			// 		}
+			// 		if(parent.find('.new-admin-div').hasClass('active')) {
+			// 			if(!formData.user.first_name || !formData.user.last_name || !formData.user.email) {
+			// 				errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminMandatoryFields;
+			// 				validated = false;
+			// 			}
+			// 			if(!formData.extra.autogenPassword) {
+			// 				if(formData.user.password.length < 6 || !/[A-Za-z]/.test(formData.user.password) || !/[0-9]/.test(formData.user.password)) {
+			// 					errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordError;
+			// 					validated = false;
+			// 				} else if(!formData.user.password || formData.user.password !== formData.extra.confirmPassword) {
+			// 					errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.adminPasswordConfirmError;
+			// 					validated = false;
+			// 				}
+			// 			}
+			// 		}
+			// 		break;
+			// 	case 2:
+			// 		break;
+			// 	case 3:
+			// 		if(!/^(\d+(\.\d{1,2})?)?$/.test(formData.addCreditBalance)) {
+			// 			errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.incorrectBalanceFormat;
+			// 			validated = false;
+			// 		} else {
+			// 			if(formData.addCreditBalance && parseFloat(formData.addCreditBalance) < 5.0) {
+			// 				errorMessage += '<br/>- ' + self.i18n.active().wizardErrorMessages.balanceMinimumAmount;
+			// 				validated = false;
+			// 			}
+			// 		}
+			// 		break;
+			// 	case 4:
+			// 		break;
+			// 	default:
+			// 		validated = false;
+			// 		break;
+			// }
 
 			if(validated) {
 				callback && callback();
 			} else {
-				monster.ui.alert(errorMessage);
+				// monster.ui.alert(errorMessage);
 			}
 		},
 

@@ -387,6 +387,17 @@
 	margin-right: 12px;
 }
 
+#creation_user_dialog label.monster-invalid[for="user.last_name"] {
+	margin-left: 113px;
+}
+#creation_user_dialog label.monster-invalid[for="extension"] {
+	margin-left: 145px;
+}
+
+.control-group label.monster-invalid {
+	position: absolute;
+}
+
 /* Feature Popups */
 .feature-popup-container {
 	width: 510px;
