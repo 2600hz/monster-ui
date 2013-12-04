@@ -252,10 +252,6 @@ define(function(require){
 						if(!(dataForm.password === dataForm.confirm_password)) {
 							error = self.i18n.active().passwords_not_matching;
 						}
-						else if(!winkstart.is_password_valid(dataForm.password)) {
-							/* No need to display error since the password mechanism already does that for us */
-							validate = false;
-						}
 					}
 
 					if(error && typeof callbackError === 'function') {
@@ -378,7 +374,7 @@ define(function(require){
 						$this.find('.update .text').text(self.i18n.active().close);
 						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
 						settingsItem.find('.settings-item-content').slideDown('fast');
-	
+
 						if(settingsItem.data('name') === 'credit_card') {
 							/* If there is no credit-card data, we skip the step that just displays the creditcard info */
 							if($.isEmptyObject(data.billing.credit_card)) {
