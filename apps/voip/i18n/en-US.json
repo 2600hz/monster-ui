@@ -249,6 +249,8 @@
 			"title": "User creation"
 		},
 		"delete": "Delete User",
+		"errorCallerId": "Before configuring the Caller-ID of this user, you need to assign him a number",
+		"errorNumberFaxing": "Before configuring the Faxing number of this user, you need to get some spare numbers on your account (You can buy new numbers in the Numbers section on the left menu).",
 		"featureOn": "ON",
 		"includeInDirectory": "Include to Company Directory",
 		"noMatchingDevices": "No devices matching your search",
