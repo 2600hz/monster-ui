@@ -14,9 +14,16 @@
 				<div class="title">{{ i18n.port.progressBarRight }}</div>
 			</div>
 		</div>
-	
-		<h2>{{ i18n.port.confirmOrder.titlePartOne }} {{total}} {{ i18n.port.confirmOrder.titlePartTwo }}</h2>
-	
+
+		<h2>
+			{{ i18n.port.confirmOrder.titlePartOne }} {{total}} 
+			{{#compare total '==' 1}}
+				{{ i18n.port.confirmOrder.titlePartTwo }}
+			{{else}}
+				{{ i18n.port.confirmOrder.titlePartTwoBis }}
+			{{/compare}}
+		</h2>
+
 		<div class="row-fluid control-group">
 			<div class="span6">
 				<label class="control-label" for="notification_email">{{ i18n.port.confirmOrder.labelEmail }}</label>

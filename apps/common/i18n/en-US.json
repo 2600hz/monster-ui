@@ -162,9 +162,12 @@
 			"title": "We are excited you are moving numbers to our service!",
 			"labelAddNumbers": "What numbers do you want to transfer? Type one number in at a time or paste all. No extra characters beside number."
 		},
+		"invalidNumber": "The number that you entered is invalid !!!",
+		"invalidNumbers": "The numbers that you entered are invalid and were removed !!!",
 		"confirmOrder" : {
 			"titlePartOne": "Great!",
-			"titlePartTwo": "numbers are ready to transfert!",
+			"titlePartTwo": "number is ready to transfer!",
+			"titlePartTwoBis": "numbers are ready to transfer!",
 			"labelEmail": "Who should we notify upon completion?",
 			"labelDate": "When do you want to transfer the numbers?",
 			"dateInfoPartOne": "important:",
@@ -206,7 +209,7 @@
 			"noOrder": "No port"
 		},
 		"resumeOrder": {
-			"title": "Complete following orders, one at a time!",
+			"title": "Complete the following orders, one at a time!",
 			"labelOrder": "Order",
 			"completeOrderButton": "Complete this order"
 		},
