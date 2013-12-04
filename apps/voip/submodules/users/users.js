@@ -448,16 +448,40 @@ define(function(require){
 
 				timezone.populateDropdown(userTemplate.find('#user_creation_timezone'));
 				monster.ui.prettyCheck.create(userTemplate);
+				// userTemplate.find('#form_user_creation').validate({
+				// 	errorClass: "monster-invalid",
+				// 	validClass: "monster-valid"/*,
+				// 	groups: {
+				// 		fullName: "user.first_name user.last_name"
+				// 	}*/
+				// });
+				monster.ui.validate(userTemplate.find('#form_user_creation'), {
+					messages: {
+						'user.first_name': {
+							required: 'Required'
+						},
+						'user.last_name': {
+							required: 'Required'
+						},
+						'callflow.extension': {
+							required: 'Required'
+						}
+					},
+				});
 
 				userTemplate.find('#create_user').on('click', function() {
-					var dataForm = form2object('form_user_creation'),
-						formattedData = self.usersFormatCreationData(dataForm);
+					if(monster.ui.valid(userTemplate.find('#form_user_creation'))) {
+						var dataForm = form2object('form_user_creation'),
+							formattedData = self.usersFormatCreationData(dataForm);
 
-					self.usersCreate(formattedData, function(data) {
-						popup.dialog('close').remove();
+						self.usersCreate(formattedData, function(data) {
+							popup.dialog('close').remove();
 
-						self.usersRender({ userId: data.user.id });
-					});
+							self.usersRender({ userId: data.user.id });
+						});
+					} else {
+						console.log('invalid!!');
+					}
 				});
 
 				userTemplate.find('#notification_email').on('ifChanged', function() {
