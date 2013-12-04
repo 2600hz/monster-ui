@@ -598,7 +598,7 @@ define(function(require){
 				if ( container.find('#transfer_helper').val() == '' ) {
 					submitData = false;
 					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
-					input
+					container.find('#transfer_helper').val()
 						.parent()
 						.parent()
 						.addClass('error');
