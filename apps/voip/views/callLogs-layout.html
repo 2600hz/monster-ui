@@ -23,10 +23,10 @@
 				<div class="grid-row header-row">
 					<div class="grid-cell direction">
 						<div class="sub-cell cell-top">
-							<i class="icon-arrow-right icon-green" title="{{i18n.callLogs.gridHeaders.outboundCall}}"></i>
+							<i class="icon-arrow-right icon-green" title="{{i18n.callLogs.gridHeaders.inboundCall}}"></i>
 						</div>
 						<div class="sub-cell cell-bottom">
-							<i class="icon-arrow-left icon-orange" title="{{i18n.callLogs.gridHeaders.inboundCall}}"></i>
+							<i class="icon-arrow-left icon-orange" title="{{i18n.callLogs.gridHeaders.outboundCall}}"></i>
 						</div>
 					</div>
 					<div class="grid-cell datetime">
@@ -66,9 +66,9 @@
 					<div class="grid-cell direction">
 						<div class="sub-cell single-cell">
 							{{#if this.isOutboundCall}}
-							<i class="icon-arrow-right icon-green"></i>
-							{{else}}
 							<i class="icon-arrow-left icon-orange"></i>
+							{{else}}
+							<i class="icon-arrow-right icon-green"></i>
 							{{/if}}
 						</div>
 					</div>

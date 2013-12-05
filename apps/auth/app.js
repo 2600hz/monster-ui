@@ -309,7 +309,7 @@ define(function(require){
 					}
 				},
 				success = function(app) {
-					app.isMasqueradable = app.isMasqueradable || true;
+					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
 					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 

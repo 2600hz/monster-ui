@@ -49,7 +49,7 @@
 		"empty" : "No data available in table",
 		"processing" : "Processing...",
 		"showEntries": "Show _MENU_ entries",
-		"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries3",
+		"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries",
 		"zeroRecords": "No matching records found",
 		"loading": "Loading...",
 		"filtered": "(filtered from _MAX_ total entries)",
