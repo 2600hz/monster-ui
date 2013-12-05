@@ -42,6 +42,7 @@ define(function(require){
 			'auth.loadAccount' : '_loadAccount',
 			'auth.loginClick': '_loginClick',
 			'auth.conferenceLogin': '_conferenceLogin',
+			'auth.clickLogout': '_clickLogout',
 			'auth.logout': '_logout',
 			'auth.initApp' : '_initApp',
 			'auth.welcome' : '_login',
@@ -170,6 +171,8 @@ define(function(require){
 					window.location.reload();
 				}
 				else {
+					monster.util.autoLogout();
+
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
 					results.account.apps = results.account.apps || {};
@@ -280,14 +283,20 @@ define(function(require){
 			});
 		},
 
-		_logout: function() {
+		_clickLogout: function() {
 			var self = this;
 
 			monster.ui.confirm(self.i18n.active().confirmLogout, function() {
-				$.cookie('monster-auth', null);
-
-				window.location.reload();
+				self._logout();
 			});
+		},
+
+		_logout: function() {
+			var self = this;
+
+			$.cookie('monster-auth', null);
+
+			window.location.reload();
 		},
 
 		_initApp: function (args) {

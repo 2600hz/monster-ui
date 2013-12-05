@@ -89,7 +89,7 @@ define(function(require){
 
 				var parsedError = error;
 
-				if('response' in error) {
+				if('response' in error && error.response) {
 					parsedError = $.parseJSON(error.response);
 				}
 

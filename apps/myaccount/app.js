@@ -148,7 +148,7 @@ define(function(require){
             });
 
 			container.find('.signout').on('click', function() {
-				monster.pub('auth.logout');
+				monster.pub('auth.clickLogout');
 			});
 		},
 
