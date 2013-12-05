@@ -119,19 +119,17 @@ define(function(require){
 
 					monster.pub('auth.loadAccount');
 				},
-				error: function(error) {
-					if(error.status === 400) {
-						monster.ui.alert('Invalid credentials, please check that your username and account name are correct.');
+				error: function(apiResponse, rawError) {
+					var errorMessage = self.i18n.active().errors.generic;
+
+					if(rawError.status in self.i18n.active().errors) {
+						errorMessage = self.i18n.active().errors[rawError.status];
 					}
-					else if($.inArray(error.status, [401, 403]) > -1) {
-						monster.ui.alert('Invalid credentials, please check that your password and account name are correct.');
+					else if(apiResponse.message) {
+						errorMessage += "<br/><br/>" + self.i18n.active().errors.genericLabel + ': ' + apiResponse.message;
 					}
-					else if(error.statusText === 'error') {
-						monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
-					}
-					else {
-						monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
-					}
+
+					monster.ui.alert('error', errorMessage);
 				}
 			});
 		},
@@ -441,19 +439,17 @@ define(function(require){
 						app.render($('#ws-content'));
 					});
 				},
-				error: function(error) {
-					if(error.status === 400) {
-						monster.ui.alert('Invalid credentials, please check that your PIN is correct.');
+				error: function(apiResponse, rawError) {
+					var errorMessage = self.i18n.active().errors.generic;
+
+					if(rawError.status in self.i18n.active().errors) {
+						errorMessage = self.i18n.active().errors[rawError.status];
 					}
-					else if($.inArray(error.status, [401, 403]) > -1) {
-						monster.ui.alert('Invalid credentials, please check that your PIN is correct.');
+					else if(apiResponse.message) {
+						errorMessage += "<br/><br/>" + self.i18n.active().errors.genericLabel + ': ' + apiResponse.message;
 					}
-					else if(error.statusText === 'error') {
-						monster.ui.alert('Oh no! We are having trouble contacting the server, please try again later...');
-					}
-					else {
-						monster.ui.alert('An error was encountered while attempting to process your request (Error: ' + status + ')');
-					}
+
+					monster.ui.alert('error', errorMessage);
 				}
 			});
 		}
