@@ -56,12 +56,14 @@ div.row-fluid.info p {
 
 .order:not(:first-child) { margin-left: 50px; }
 
-.order h3 {
+.order h4 {
 	overflow: hidden;
 	margin: 0 0 10px 0;
 	padding: 0 10px;
 	color: #2CF;
 	font-weight: normal;
+	text-transform: lowercase;
+	text-transform: capitalize;
 }
 
 .order .scroll {
