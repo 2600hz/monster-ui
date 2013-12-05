@@ -204,3 +204,9 @@ body div {
         margin-left: 0;
     }
 }
+
+/* Success buttons */
+.btn-success {
+    text-transform: uppercase;
+    font-weight: 600;
+}
