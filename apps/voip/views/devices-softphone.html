@@ -25,6 +25,7 @@
 					<li><a class="tabs-selector change-section" data-section="video" href="javascript:void(0)"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="restrictions" href="javascript:void(0)"><i class="icon-ban-circle"></i>{{ i18n.devices.popupSettings.restrictions.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="callerId" href="javascript:void(0)"><i class="icon-ambulance"></i>{{ i18n.devices.popupSettings.callerId.menuTitle }}</a></li>
+					<li><a class="tabs-selector change-section" data-section="miscellaneous" href="javascript:void(0)"><i class="icon-cogs"></i>{{ i18n.devices.popupSettings.miscellaneous.menuTitle }}</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -67,7 +68,7 @@
 					{{ i18n.devices.popupSettings.audio.sectionTitle }}
 				</div>
 
-				<div class="items-selector codec-selector" id="audio_codec_selector">
+				<div class="items-selector codec-selector clearfix" id="audio_codec_selector">
 					<div class="box-selector">
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
@@ -157,6 +158,22 @@
 						</div>
     				</div>
 				{{/if}}
+			</div>
+
+			<div class="tabs-section clearfix" data-section="miscellaneous">
+				<div class="title">
+					{{ i18n.devices.popupSettings.miscellaneous.sectionTitle }}
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="secure_rtp"></label>
+					<div class="controls">
+						<label>
+							<input type="checkbox" id="secure_rtp" name="media.secure_rtp"{{#if media.secure_rtp}} checked="checked"{{/if}}></input>
+							{{ i18n.devices.popupSettings.miscellaneous.secureRtp }}
+						</label>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
