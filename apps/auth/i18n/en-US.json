@@ -18,6 +18,14 @@
 		"buttonText": "Sign in"
 	},
 
+	"errors": {
+		"generic": "An unknown error happened, please try again in a few seconds!",
+		"genericLabel": "API Response",
+		"401": "Invalid credentials, please check that your username and account name are correct.",
+		"403": "Access forbidden.",
+		"500": "Internal server error, please contact your administrator"
+	},
+
 	"conferenceLogin": {
 		"userTab": "User",
 		"adminTab": "Administrator",
