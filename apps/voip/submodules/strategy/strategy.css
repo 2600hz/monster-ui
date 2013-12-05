@@ -93,7 +93,17 @@
 	vertical-align: middle;
 }
 
+#strategy_container .element-container:not(.strategy-confnum) .title .icon-phone {
+	color: #22ccff;
+}
+
 /************** Main Numbers **************/
+
+#strategy_container .element-container.main-number .title .icon-phone {
+	position: relative;
+	top: 3px;
+	font-size: 28px;
+}
 
 #strategy_container .element-container .number-element {
 	border-bottom: solid 1px #dedede;
@@ -381,6 +391,26 @@
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div.has-menu .menu-icon i {
 	color: #22ccff;
+}
+
+/********** Strategy Conference ***********/
+
+#strategy_container .element-container.strategy-confnum .title .icon-user {
+	position: relative;
+	top: 2px;
+	font-size: 28px;
+	color: #44cc44;
+}
+
+/********** Strategy Helper ***********/
+
+#strategy_container .element-container.helper .icon-info-sign {
+	float: left;
+	margin-right: 10px;
+}
+
+#strategy_container .element-container.helper p {
+	text-align: justify;
 }
 
 /******************* Menu Popup *******************/

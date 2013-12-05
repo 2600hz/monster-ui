@@ -3,7 +3,7 @@
 		<div class="element-header-outer clearfix">
 			<div class="element-header-inner">
 				<div class="title">
-					<i class="icon-info-sign"></i>
+					<i class="icon-phone"></i>
 					<span>{{ i18n.strategy.sectionTitles.numbers }}</span>
 				</div>
 				<div class="summary">
@@ -23,11 +23,56 @@
 		</div>
 		<div class="element-content"></div>
 	</div>
+	<div class="element-container strategy-hours" data-template="hours">
+		<div class="element-header-outer clearfix">
+			<div class="element-header-inner">
+				<div class="title">
+					<i class="icon-phone"></i>
+					<span>{{ i18n.strategy.sectionTitles.hours }}</span>
+				</div>
+				<div class="summary">
+					<span></span>
+					<i class="icon-play"></i>
+				</div>
+			</div>
+		</div>
+		<div class="element-content"></div>
+	</div>
+	<div class="element-container strategy-holidays" data-template="holidays">
+		<div class="element-header-outer clearfix">
+			<div class="element-header-inner">
+				<div class="title">
+					<i class="icon-phone"></i>
+					<span>{{ i18n.strategy.sectionTitles.holidays }}</span>
+				</div>
+				<div class="summary">
+					<span></span>
+					<i class="icon-play"></i>
+				</div>
+			</div>
+		</div>
+		<div class="element-content"></div>
+	</div>
+	<div class="element-container strategy-calls" data-template="calls">
+		<div class="element-header-outer clearfix">
+			<div class="element-header-inner">
+				<div class="title">
+					<i class="icon-phone"></i>
+					<span>{{ i18n.strategy.sectionTitles.calls }}</span>
+				</div>
+				<div class="summary">
+					<span></span>
+					<i class="icon-play"></i>
+				</div>
+			</div>
+		</div>
+		<div class="element-content"></div>
+	</div>
 	<div class="element-container strategy-confnum" data-template="confnum">
 		<div class="element-header-outer clearfix">
 			<div class="element-header-inner">
 				<div class="title">
-					<i class="icon-info-sign"></i>
+					<i class="icon-user"></i>
 					<span>{{ i18n.strategy.sectionTitles.confnum }}</span>
 				</div>
 				<div class="summary">
@@ -47,49 +92,10 @@
 		</div>
 		<div class="element-content"></div>
 	</div>
-	<div class="element-container strategy-hours" data-template="hours">
-		<div class="element-header-outer clearfix">
-			<div class="element-header-inner">
-				<div class="title">
-					<i class="icon-info-sign"></i>
-					<span>{{ i18n.strategy.sectionTitles.hours }}</span>
-				</div>
-				<div class="summary">
-					<span></span>
-					<i class="icon-play"></i>
-				</div>
-			</div>
-		</div>
-		<div class="element-content"></div>
+	{{#unless mainNumbers.[0]}}
+	<div class="element-container helper">
+		<i class="icon-info-sign"></i>
+		<p>Note: Please add a Main Office Number to your account first. Once you add main number, you should be able to set up Office Hours, Holidays and Incoming Call Handling (Call-Flow) for your office.</p>
 	</div>
-	<div class="element-container strategy-holidays" data-template="holidays">
-		<div class="element-header-outer clearfix">
-			<div class="element-header-inner">
-				<div class="title">
-					<i class="icon-info-sign"></i>
-					<span>{{ i18n.strategy.sectionTitles.holidays }}</span>
-				</div>
-				<div class="summary">
-					<span></span>
-					<i class="icon-play"></i>
-				</div>
-			</div>
-		</div>
-		<div class="element-content"></div>
-	</div>
-	<div class="element-container strategy-calls" data-template="calls">
-		<div class="element-header-outer clearfix">
-			<div class="element-header-inner">
-				<div class="title">
-					<i class="icon-info-sign"></i>
-					<span>{{ i18n.strategy.sectionTitles.calls }}</span>
-				</div>
-				<div class="summary">
-					<span></span>
-					<i class="icon-play"></i>
-				</div>
-			</div>
-		</div>
-		<div class="element-content"></div>
-	</div>
+	{{/unless}}
 </div>

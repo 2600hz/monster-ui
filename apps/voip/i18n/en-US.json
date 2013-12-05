@@ -352,7 +352,7 @@
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
-		"noNumberTitle": "No selected number",
+		"noNumberTitle": "Add Main Number",
 		"noNumberMessage": "Please add a main number to continue.",
 		"noConfNumMessage": "Please add a main conference number.",
 		"numberLinks": {
