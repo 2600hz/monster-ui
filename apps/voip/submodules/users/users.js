@@ -1056,10 +1056,15 @@ define(function(require){
 
 			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
 
-			var popup = monster.ui.dialog(featureTemplate, {
-				title: data.user.extra.mapFeatures.faxing.title,
-				position: ['center', 20]
-			});
+			if(data.extra.listNumbers.length > 0) {
+				var popup = monster.ui.dialog(featureTemplate, {
+					title: data.user.extra.mapFeatures.faxing.title,
+					position: ['center', 20]
+				});
+			}
+			else {
+				monster.ui.alert('error', self.i18n.active().users.errorNumberFaxing);
+			}
 		},
 
 
@@ -1236,7 +1241,7 @@ define(function(require){
 				});
 			}
 			else {
-				monster.ui.alert('error', 'Before configuring the Caller-ID of this user, you need to assign him a number');
+				monster.ui.alert('error', self.i18n.active().users.errorCallerID);
 			}
 		},
 
