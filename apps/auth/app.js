@@ -159,17 +159,12 @@ define(function(require){
 				var defaultApp;
 
 				if(err) {
-					// If we want to display a warning
-					/*	monster.ui.alert('error', self.i18n.active().errorLoadingAccount, function() {
-						$.cookie('monster-auth', null);
-						window.location.reload();
-					});*/
-
 					$.cookie('monster-auth', null);
 					window.location.reload();
 				}
 				else {
 					monster.util.autoLogout();
+					$('.signout').show();
 
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
