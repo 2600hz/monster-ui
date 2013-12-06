@@ -36,6 +36,25 @@
     }
 }
 
+.links .signout {
+	display: none;
+}
+
+.links .top-link {
+	height: 62px;
+	line-height: 62px;
+	padding: 0 10px;
+	text-decoration: none;
+}
+
+.links .top-link i {
+	color: #FFF;
+}
+
+.links .top-link:hover i {
+	color: #22CCFF;
+}
+
 @media (min-width: 768px) and (max-width: 979px) {
     .hello {
         margin: 30px 0;

@@ -1,18 +1,18 @@
 {{#if isMasquerading}}
-<li class="restore-masquerading-link nav-masquerading">
+<li class="restore-masquerading-link nav-masquerading myaccount-common-link">
 	<a href="#">
 		<div>Switch back to</div>
 		<div class="name-text">My account</div>
 	</a>
 </li>
-<li data-link="myaccount" class="myaccount-link nav-masquerading">
+<li data-link="myaccount" class="myaccount-link nav-masquerading myaccount-common-link">
 	<a href="#">
 		<div>Currently Viewing</div>
 		<div class="name-text">{{name}}</div>
 	</a>
 </li>
 {{else}}
-<li data-link="myaccount" class="myaccount-link">
-	<a href="#">{{name}} <i class="icon-caret-down icon-white"></i></a>
+<li data-link="myaccount" class="myaccount-link myaccount-common-link">
+	<a href="#">{{name}} <i class="icon-caret-down"></i></a>
 </li>
 {{/if}}

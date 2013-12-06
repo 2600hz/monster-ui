@@ -4,7 +4,8 @@ define(function(require){
 		_ = require('underscore'),
 		bootstrapSwitch = require('bootstrap-switch'),
 		monster = require('monster'),
-		timepicker = require('timepicker');
+		timepicker = require('timepicker'),
+		toastr = require('toastr');
 
 	var app = {
 
@@ -235,23 +236,28 @@ define(function(require){
 						.addClass('error');
 				} else {
 					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
-						container
-							.find('div.row-fluid')
-							.removeClass('error');
 
-						container.find('#numbers_list')[0].value = '';
+						if ( formattedData.orders.length > 0 ) {
+							container
+								.find('div.row-fluid')
+								.removeClass('error');
 
-						/*
-						 * unbind because it is used in portManagerOrders
-						 * to add number without adding the port-managerOrders template again
-						 */
-						container
-							.find('button')
-							.unbind('click');
+							container.find('#numbers_list')[0].value = '';
 
-						$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
+							/*
+							 * unbind because it is used in portManagerOrders
+							 * to add number without adding the port-managerOrders template again
+							 */
+							container
+								.find('button')
+								.unbind('click');
 
-						self.portManageOrders(accountId, parent);
+							$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
+
+							self.portManageOrders(accountId, parent);
+						} else {
+							container.find('#numbers_list')[0].value = '';
+						}
 					});
 				}
 			});
@@ -272,7 +278,8 @@ define(function(require){
 			 * check if input is empty
 			 * if not add the numbers sorted in orders
 			 */
-			container.find('div#add_numbers').find('button').on('click', function() {
+			// container.find('div#add_numbers').find('button').on('click', function() {
+			container.on('click', 'div#add_numbers button', function() {
 				var numbersList = container.find('div#add_numbers').find('input').val();
 
 				if ( numbersList == "" ) {
@@ -282,10 +289,6 @@ define(function(require){
 						.addClass('error');
 				} else {
 					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
-						container
-							.find('div.row-fluid')
-							.removeClass('error');
-
 						container.find('#numbers_list')[0].value = '';
 
 						container
@@ -293,13 +296,25 @@ define(function(require){
 							.find('div.row-fluid')
 							.removeClass('error');
 
-						container.find('#numbers_list')[0].value = '';
-
 						for ( var order in formattedData.orders ) {
-							container
-								.find('div#manage_orders')
-								.find('div.row-fluid:last-child')
-								.append($(monster.template(self, 'port-order', formattedData.orders[order])));
+							container.find('#manage_orders').find('div.order').each(function(index, el) {
+								var carrier = $(this).find('h4').text();
+
+								if ( carrier == formattedData.orders[order].carrier ) {
+									for ( var number in formattedData.orders[order].numbers) {
+										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="icon-warning-sign"></i>' + formattedData.orders[order].numbers[number] + '<i class="icon-remove-sign pull-right"></i></li>');
+									}
+
+									formattedData.orders.splice(order, 1);
+								}
+							})
+
+							if ( formattedData.orders.length != 0 ) {
+								container
+									.find('div#manage_orders')
+									.find('div.row-fluid:last-child')
+									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
+							}
 						}
 					});
 				}
@@ -378,11 +393,19 @@ define(function(require){
 						ordersList.orders.push(order);
 					});
 
-					parent
-						.empty()
-						.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
+					if ( ordersList.orders.length == 1 ) {
+						parent
+							.empty()
+							.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
 
-					self.portSubmitDocuments(accountId, parent, ordersList);
+						self.portSubmitDocuments(accountId, parent, ordersList);
+					} else {
+						parent
+							.empty()
+							.append($(monster.template(self, 'port-resumeOrders', ordersList)));
+
+						self.portResumeOrders(accountId, parent, ordersList);
+					}
 				} else {
 					container.find('div#eula').find('input').each(function() {
 						if ( !$(this).is(':checked') ) {
@@ -410,9 +433,15 @@ define(function(require){
 					data = data.data;
 
 					var carriersList = new Array(),
-						formattedData = { orders: [] };
+						formattedData = { orders: [] },
+						errorCount = 0;
 
 					for (var number in data) {
+						if ( data[number].company == null || data[number].company == 'undefined' || data[number].company == "" ) {
+							errorCount++;
+							delete data[number];
+							continue;
+						}
 						carriersList.push(data[number].company);
 					}
 
@@ -432,6 +461,12 @@ define(function(require){
 						order.numbers = numbersList;
 
 						formattedData.orders[carrier] = order;
+					}
+
+					if ( errorCount == 1 ) {
+						toastr.error(self.i18n.active().port.invalidNumber, '', {"timeOut": 5000});
+					} else if ( errorCount > 1 ) {
+						toastr.error(self.i18n.active().port.invalidNumbers, '', {"timeOut": 5000});
 					}
 
 					callback(container, formattedData);
@@ -472,6 +507,7 @@ define(function(require){
 							if ( typeof data.orders[index].id == "undefined" ) {
 								data.orders[index].bill_attachment = binary;
 							} else {
+								data.orders[index].bill_attachment = binary;
 								if ( typeof data.orders[index].uploads['bill.pdf'] == "undefined" ) {
 									self.portRequestAddAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {});
 								} else {
@@ -542,6 +578,7 @@ define(function(require){
 							if ( typeof data.orders[index].id == "undefined" ) {
 								data.orders[index].loa_attachment = binary;
 							} else {
+								data.orders[index].loa_attachment = binary;
 								if ( typeof data.orders[index].uploads['loa.pdf'] == "undefined" ) {
 									self.portRequestAddAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {});
 								} else {
@@ -556,17 +593,30 @@ define(function(require){
 			});
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-				data.orders[index].name = container.find('input#transfer_helper').val();
-				if ( typeof data.orders[index].bill == 'undefined' ) {
-					data.orders[index].bill = new Object();
-				}
-				data.orders[index].bill.name = container.find('input#account_name').val();
-				data.orders[index].bill.address = container.find('input#address').val();
-				data.orders[index].bill.city = container.find('input#city').val();
-				data.orders[index].bill.state = container.find('input#state').val();
-				data.orders[index].bill.zip_code = container.find('input#zip_code').val();
+				var submitData = true;
 
-				self.portSaveOrder(accountId, parent, data, index);
+				if ( container.find('#transfer_helper').val() == '' ) {
+					submitData = false;
+					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
+					container.find('#transfer_helper')
+						.parent()
+						.parent()
+						.addClass('error');
+				}
+
+				if ( submitData ) {
+					data.orders[index].name = container.find('input#transfer_helper').val();
+					if ( typeof data.orders[index].bill == 'undefined' ) {
+						data.orders[index].bill = new Object();
+					}
+					data.orders[index].bill.name = container.find('input#account_name').val();
+					data.orders[index].bill.address = container.find('input#address').val();
+					data.orders[index].bill.city = container.find('input#city').val();
+					data.orders[index].bill.state = container.find('input#state').val();
+					data.orders[index].bill.zip_code = container.find('input#zip_code').val();
+
+					self.portSaveOrder(accountId, parent, data, index);
+				}
 			});
 
 			self.portCancelOrder(accountId, parent, container, data, index);
@@ -610,22 +660,12 @@ define(function(require){
 					submitData = false;
 				}
 
-				if ( typeof data.orders[index].uploads == 'undefined' ) {
-					if ( typeof data.orders[index].bill_attachment == 'undefined' ) {
-						submitData = false;
-					}
+				if ( typeof data.orders[index].bill_attachment == 'undefined' && typeof data.orders[index].uploads['bill.pdf'] == 'undefined' ) {
+					submitData = false;
+				}
 
-					if ( typeof data.orders[index].loa_attachment == 'undefined' ) {
-						submitData = false;
-					}
-				} else {
-					if ( typeof data.orders[index].uploads['bill.pdf'] == 'undefined' ) {
-						submitData = false;
-					}
-
-					if ( typeof data.orders[index].uploads['loa.pdf'] == 'undefined' ) {
-						submitData = false;
-					}
+				if ( typeof data.orders[index].loa_attachment == 'undefined' && typeof data.orders[index].uploads['loa.pdf'] == 'undefined' ) {
+					submitData = false;
 				}
 
 				if ( submitData ) {
@@ -633,6 +673,11 @@ define(function(require){
 						.parent()
 						.parent()
 						.removeClass('error');
+
+					if ( typeof data.orders[index].id != 'undefined') {
+						delete data.orders[index].loa_attachment;
+						delete data.orders[index].bill_attachment;
+					}
 
 					data.orders[index].name = container.find('#transfer_helper').val();
 					data.orders[index].bill = new Object();
@@ -750,11 +795,10 @@ define(function(require){
 			 */
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-
 				data.orders[index].email = container.find('input#notification_email').val();
 				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
-					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[index][container.find('select#numbers_to_buy')[index].selectedIndex].value;
+					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
 				} else {
 					delete data.orders[index]['temporary_numbers'];
 				}
@@ -899,9 +943,9 @@ define(function(require){
 					if ( typeof attachments.bill != 'undefined' ) {
 						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
 							if ( typeof attachments.loa != 'undefined' ) {
-								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {});
-
-								callback(portRequestId);
+								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
+									callback(portRequestId);
+								});
 							} else {
 								callback(portRequestId);
 							}

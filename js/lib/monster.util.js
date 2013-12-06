@@ -5,6 +5,51 @@ define(function(require){
 		monster = require("monster");
 
 	var util = {
+
+		/*
+			This function will automatically logout the user after %wait% minutes (defaults to 15).
+		   	This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
+		*/
+		autoLogout: function() {
+			var i18n = monster.apps['core'].i18n.active(),
+				timerAlert,
+				timerLogout,
+			    wait=15,
+			    alertBeforeLogout=2,
+			    alertTriggered = false,
+			    alertDialog;
+
+			var logout = function()	{
+				monster.pub('auth.logout');
+			};
+
+			var resetTimer = function() {
+    			clearTimeout(timerAlert);
+    			clearTimeout(timerLogout);
+
+    			if(alertTriggered) {
+    				alertTriggered = false;
+
+    				alertDialog.dialog('close').remove();
+    			}
+
+				timerAlert=setTimeout(function() {
+					alertTriggered = true;
+
+					alertDialog = monster.ui.alert(i18n.alertLogout);
+				}, 60000*(wait-alertBeforeLogout));
+
+    			timerLogout=setTimeout(function() {
+					logout();
+				}, 60000*wait);
+			};
+
+			document.onkeypress = resetTimer;
+			document.onmousemove = resetTimer;
+
+			resetTimer();
+		},
+
 		addCoreI18n: function(app) {
 			if('core' in monster.apps) {
 				var i18n = monster.apps['core'].data.i18n;

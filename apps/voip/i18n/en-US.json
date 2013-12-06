@@ -104,6 +104,11 @@
 				"notSet": "- Account Default -",
 				"noE911Numbers": "You didn't set E911 on any of your numbers, please set it up via the Number Manager and come back on this screen once it's done"
 			},
+			"miscellaneous": {
+				"menuTitle": "Miscellaneous",
+				"sectionTitle": "Miscellaneous",
+				"secureRtp": "Secure RTP"
+			},
 			"restrictions": {
 				"menuTitle": "Restrictions",
 				"sectionTitle": "Restrictions Settings",
@@ -244,6 +249,8 @@
 			"title": "User creation"
 		},
 		"delete": "Delete User",
+		"errorCallerId": "Before configuring the Caller-ID of this user, you need to assign him a number",
+		"errorNumberFaxing": "Before configuring the Faxing number of this user, you need to get some spare numbers on your account (You can buy new numbers in the Numbers section on the left menu).",
 		"featureOn": "ON",
 		"includeInDirectory": "Include to Company Directory",
 		"noMatchingDevices": "No devices matching your search",
@@ -345,7 +352,7 @@
 			"holidays": "Office Holidays",
 			"calls": "Incoming Call Handling"
 		},
-		"noNumberTitle": "No selected number",
+		"noNumberTitle": "Add Main Number",
 		"noNumberMessage": "Please add a main number to continue.",
 		"noConfNumMessage": "Please add a main conference number.",
 		"numberLinks": {

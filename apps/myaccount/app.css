@@ -1,7 +1,7 @@
 /* My account */
 #myaccount {
 	width: 100%;
-	height: 501px;
+	height: 487px;
 	background-color: white;
 	display: none;
 	border-bottom: 5px solid #22ccff;
@@ -39,7 +39,8 @@
 
 #myaccount .myaccount-menu .nav {
 	color: #777;
-	height: 85%;
+	/* height: 85%; */
+	height: 100%;
 	padding-right: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -150,7 +151,7 @@
 /* MYACCOUNT CONTENT */
 #myaccount .myaccount-content {
 	background-color: white;
-	height: 420px;
+	height: 406px;
 	padding: 20px 30px;
 	overflow-x: hidden;
 }

@@ -31,7 +31,8 @@ define(function(require){
 		render: function(container){
 			var self = this,
 				template = monster.template(self, 'app', {}),
-				content = $(template);
+				content = $(template),
+				isLoggedIn = true;
 
 			document.title = 'Monster UI - ' + monster.config.company.name;
 
@@ -40,8 +41,21 @@ define(function(require){
 			self._render(container);
 
 			if(!$.cookie('monster-auth')) {
+				isLoggedIn = false;
+
 				self._welcome(content);
 			}
+
+			var dataLinks = {
+					isLoggedIn: isLoggedIn
+				},
+			    linksTemplate = $(monster.template(self, 'top-right-links', dataLinks));
+
+			linksTemplate.find('a.signout').on('click', function() {
+				monster.pub('auth.clickLogout');
+			});
+
+			container.find('.links').append(linksTemplate);
 
 			if('nav' in monster.config) {
 				if('help' in monster.config.nav || 'myHelp' in monster.config.nav) {

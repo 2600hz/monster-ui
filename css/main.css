@@ -72,6 +72,11 @@ a.monster-link i {
     font-size: 14px;
 }
 
+#main section > .navbar .nav > li.myaccount-link.nav-masquerading {
+	border-right: 1px solid #353535;
+	margin-right: 10px;
+}
+
 #main section > .navbar .nav > li.nav-masquerading {
     border-left: 1px solid #353535;
 }
@@ -92,7 +97,12 @@ a.monster-link i {
 #main section > .navbar .nav > li.myaccount-link i.icon-caret-down {
     position: relative;
     top: 2px;
-    margin-left: 10px;
+    margin-left: 8px;
+    color: #FFF;
+}
+
+#main section > .navbar .nav > li.myaccount-link:hover i.icon-caret-down {
+	color: #22CCFF
 }
 
 #main section > .navbar .nav-collapse .nav > li > a:hover,
@@ -147,7 +157,7 @@ a.monster-link i {
     }
 }
 
-#main section > .navbar .navbar-inner i {
+/*#main section > .navbar .navbar-inner i {
     display: inline-block;
 }
 
@@ -161,7 +171,7 @@ a.monster-link i {
     padding: 0 10px;
     text-align: center;
     text-decoration: none;
-}
+}*/
 
 #main section > .ws-content {
 	top: 67px;
@@ -203,4 +213,10 @@ body div {
     #main section > .navbar .navbar-inner .home {
         margin-left: 0;
     }
+}
+
+/* Success buttons */
+.btn-success {
+    text-transform: uppercase;
+    font-weight: 600;
 }

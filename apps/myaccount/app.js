@@ -87,8 +87,9 @@ define(function(require){
 					isMasquerading: args && args.isMasquerading || false
 				}));
 
-			$('#ws-navbar .links').empty()
-								  .append(navHtml);
+			/* Hack to redraw myaccount links on masquerading */
+			$('#ws-navbar .links').find('.myaccount-common-link').remove();
+			$('#ws-navbar .links').append(navHtml);
 		},
 
 		render: function(){
@@ -146,10 +147,6 @@ define(function(require){
 			container.find('.myaccount-close').on('click', function() {
                 monster.pub('myaccount.display');
             });
-
-			container.find('.signout').on('click', function() {
-				monster.pub('auth.logout');
-			});
 		},
 
 		// events

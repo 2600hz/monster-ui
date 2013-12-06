@@ -1,5 +1,6 @@
 {
 	"add": "Add",
+	"alertLogout": "Your session is about to expire. Move your cursor to resume activity.",
 	"cancel": "Cancel",
 	"change": "Change",
 	"chargeReminder" : {
