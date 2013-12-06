@@ -393,8 +393,7 @@
 #creation_user_dialog label.monster-invalid[for="extension"] {
 	margin-left: 145px;
 }
-
-.control-group label.monster-invalid {
+#creation_user_dialog .control-group label.monster-invalid {
 	position: absolute;
 }
 

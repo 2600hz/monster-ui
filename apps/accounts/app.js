@@ -520,6 +520,9 @@ define(function(require){
 			self.renderWizardSteps(newAccountWizard);
 			monster.ui.validate(newAccountWizard.find('#accountsmanager_new_account_form'), {
 				rules: {
+					'extra.confirmPassword': {
+						equalTo: 'input[name="user.password"]'
+					},
 					'addCreditBalance': {
 						number: true,
 						min: 5
@@ -714,10 +717,10 @@ define(function(require){
 
 		validateStep: function(step, parent, callback) {
 			var self = this,
-				validated = monster.ui.valid($('#accountsmanager_new_account_form')),
+				validated = monster.ui.valid($('#accountsmanager_new_account_form'));/*,
 				step = parseInt(step),
 				errorMessage = self.i18n.active().wizardErrorMessages.pleaseCorrect,
-				formData = form2object('accountsmanager_new_account_form');
+				formData = form2object('accountsmanager_new_account_form');*/
 
 			
 
@@ -765,9 +768,9 @@ define(function(require){
 
 			if(validated) {
 				callback && callback();
-			} else {
-				// monster.ui.alert(errorMessage);
-			}
+			}/* else {
+				monster.ui.alert(errorMessage);
+			}*/
 		},
 
 		renderEditAdminsForm: function(parent, editAccountId) {
@@ -898,21 +901,23 @@ define(function(require){
 
 						$adminElement.find('.admin-save-btn').click(function(e) {
 							e.preventDefault();
-							var formData = form2object($adminElement.find('form')[0]);
+							var form = $adminElement.find('form'),
+								formData = form2object(form[0]);
 
-							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
-							} else if($adminPasswordDiv.is(":visible")
-									&& (formData.password.length < 6
-										|| /\s/.test(formData.password)
-										|| !/\d/.test(formData.password)
-										|| !/[A-Za-z]/.test(formData.password)
-										)
-									) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
-							} else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
-							} else {
+							// if(!(formData.first_name && formData.last_name && formData.email)) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
+							// } else if($adminPasswordDiv.is(":visible")
+							// 		&& (formData.password.length < 6
+							// 			|| /\s/.test(formData.password)
+							// 			|| !/\d/.test(formData.password)
+							// 			|| !/[A-Za-z]/.test(formData.password)
+							// 			)
+							// 		) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
+							// } else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
+							// } else {
+							if(monster.ui.valid(form)) {
 								formData = self.cleanFormData(formData);
 								if(!$adminPasswordDiv.is(":visible")) {
 									delete formData.password;
@@ -956,19 +961,20 @@ define(function(require){
 						if($newAdminElem.find('.tab-pane.active').hasClass('create-user-div')) {
 							var formData = form2object('accountsmanager_add_admin_form'),
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
-							if(!(formData.first_name && formData.last_name && formData.email)) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
-							} else if(!autoGen
-									&& (formData.password.length < 6
-										|| /\s/.test(formData.password)
-										|| !/\d/.test(formData.password)
-										|| !/[A-Za-z]/.test(formData.password)
-										)
-									) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
-							} else if(!autoGen && formData.password !== formData.extra.password_confirm) {
-								monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
-							} else {
+							// if(!(formData.first_name && formData.last_name && formData.email)) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
+							// } else if(!autoGen
+							// 		&& (formData.password.length < 6
+							// 			|| /\s/.test(formData.password)
+							// 			|| !/\d/.test(formData.password)
+							// 			|| !/[A-Za-z]/.test(formData.password)
+							// 			)
+							// 		) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
+							// } else if(!autoGen && formData.password !== formData.extra.password_confirm) {
+							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
+							// } else {
+							if(monster.ui.valid(contentHtml.find('#accountsmanager_add_admin_form'))) {
 								formData = self.cleanFormData(formData);
 								formData.priv_level = "admin";
 								formData.username = formData.email;
@@ -986,6 +992,7 @@ define(function(require){
 										self.renderEditAdminsForm(parent, editAccountId);
 									}
 								});
+								$newAdminBtn.click();
 							}
 						} else {
 							var userId = contentHtml.find('#accountsmanager_promote_user_select option:selected').val();
@@ -1010,11 +1017,30 @@ define(function(require){
 									});
 								}
 							});
+							$newAdminBtn.click();
 						}
-						$newAdminBtn.click();
 					});
 
 					parent.find('#form_accountsmanager_account_admins').empty().append(contentHtml);
+
+					$.each(contentHtml.find('form'), function() {
+						monster.ui.validate($(this), {
+							rules: {
+								'extra.password_confirm': {
+									equalTo: 'input[name="password"]'
+								}
+							},
+							messages: {
+								'extra.password_confirm': {
+									equalTo: self.i18n.active().validationMessages.invalidPasswordConfirm
+								}
+							},
+							errorPlacement: function(error, element) {
+								error.appendTo(element.parent());
+							}
+						});
+					});
+					
 				}
 			});
 		},
@@ -1276,44 +1302,46 @@ define(function(require){
 					fieldName = $this.data('field'),
 					newData = self.cleanFormData(form2object('form_'+fieldName));
 
-				self.updateData(accountData, newData,
-					function(data) {
-						self.editAccount(
-							$.extend(true, params, {
-								accountData: data.data,
-								callback: function(parent) {
-									var $link = parent.find('li[data-name='+fieldName+']');
+				if(monster.ui.valid(contentHtml.find('#form_'+fieldName))) {
+					self.updateData(accountData, newData,
+						function(data) {
+							self.editAccount(
+								$.extend(true, params, {
+									accountData: data.data,
+									callback: function(parent) {
+										var $link = parent.find('li[data-name='+fieldName+']');
 
-									$link.find('.update').hide();
-									$link.find('.changes-saved').show()
-															  .fadeOut(1500, function() {
-																  $link.find('.update').fadeIn(500);
-															  });
+										$link.find('.update').hide();
+										$link.find('.changes-saved').show()
+																  .fadeOut(1500, function() {
+																	  $link.find('.update').fadeIn(500);
+																  });
 
-									$link.css('background-color', '#22ccff')
-										   .animate({
-											backgroundColor: '#eee'
-										}, 2000
-									);
+										$link.css('background-color', '#22ccff')
+											   .animate({
+												backgroundColor: '#eee'
+											}, 2000
+										);
 
-									parent.find('.settings-item-content').hide();
-									parent.find('a.settings-link').show();
-								}
-							})
-						);
+										parent.find('.settings-item-content').hide();
+										parent.find('a.settings-link').show();
+									}
+								})
+							);
 
-						if(params.accountList) {
-							params.accountList[data.data.id].name = data.data.name;
-							params.accountList[data.data.id].realm = data.data.realm;
-							self.renderList(params.accountList, parent, data.data.id);
+							if(params.accountList) {
+								params.accountList[data.data.id].name = data.data.name;
+								params.accountList[data.data.id].realm = data.data.realm;
+								self.renderList(params.accountList, parent, data.data.id);
+							}
+						},
+						function(data) {
+							if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
+								monster.ui.alert(data.data.api_error.message);
+							}
 						}
-					},
-					function(data) {
-						if(data && data.data && 'api_error' in data.data && 'message' in data.data.api_error) {
-							monster.ui.alert(data.data.api_error.message);
-						}
-					}
-				);
+					);
+				}
 			});
 
 			// If reseller
@@ -1462,6 +1490,19 @@ define(function(require){
 
 			// self.adjustTabsWidth(contentHtml.find('ul.account-tabs > li'));
 
+			$.each(contentHtml.find('form'), function() {
+				var options = {};
+				if(this.id === 'accountsmanager_callrestrictions_form') {
+					options.rules = {
+						'addCreditBalance': {
+							number: true,
+							min: 5
+						}
+					};
+				}
+				monster.ui.validate($(this), options);
+			});
+
 			if(typeof callback === 'function') {
 				callback(contentHtml);
 			}
@@ -1494,8 +1535,7 @@ define(function(require){
 					addCredit = addCreditInput.val(),
 					allowPrepay = tabContentTemplate.find('.allow-prepay-ckb').is(':checked');
 
-
-				if(/^(\d+(\.\d{1,2})?)?$/.test(addCredit)) {
+				if(monster.ui.valid(parent.find('#accountsmanager_callrestrictions_form'))) {
 
 					$.each(params.formattedClassifiers, function(k, v) {
 						if(!(v.id in callRestrictions) || callRestrictions[v.id].action !== "allow") { 
@@ -1550,8 +1590,6 @@ define(function(require){
 						}
 					);
 
-				} else {
-					monster.ui.alert(self.i18n.active().wizardErrorMessages.balanceMinimumAmount);
 				}
 
 			});
