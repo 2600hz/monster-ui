@@ -158,5 +158,8 @@
 			"legend":"More Balance Settings",
 			"showCreditInfo":"Show Credit Information"
 		}
+	},
+	"validationMessages": {
+		"invalidPasswordConfirm": "Passwords do not match."
 	}
 }
