@@ -1,4 +1,8 @@
 <div id="strategy_container">
+	<div class="element-container helper">
+		<i class="icon-info-sign"></i>
+		<p>Note: Please add a Main Office Number to your account first. Once you add main number, you should be able to set up Office Hours, Holidays and Incoming Call Handling (Call-Flow) for your office.</p>
+	</div>
 	<div class="element-container main-number" data-template="numbers">
 		<div class="element-header-outer clearfix">
 			<div class="element-header-inner">
@@ -92,10 +96,4 @@
 		</div>
 		<div class="element-content"></div>
 	</div>
-	{{#unless mainNumbers.[0]}}
-	<div class="element-container helper">
-		<i class="icon-info-sign"></i>
-		<p>Note: Please add a Main Office Number to your account first. Once you add main number, you should be able to set up Office Hours, Holidays and Incoming Call Handling (Call-Flow) for your office.</p>
-	</div>
-	{{/unless}}
 </div>

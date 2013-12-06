@@ -169,6 +169,11 @@ define(function(require){
 
 					if(!hasMainNumber) {
 						template.find('.element-container:not(.main-number,.strategy-confnum)').hide();
+						template.find('.element-container.helper').css('display', 'block');
+						template.find('.element-container.main-number').css('margin-top', '10px');
+					} else {
+						template.find('.element-container.helper').css('display', 'none');
+						template.find('.element-container.main-number').css('margin-top', '0px');
 					}
 				}
 			);
@@ -440,9 +445,13 @@ define(function(require){
 							headerSpan.append(", "+monster.util.formatPhoneNumber(mainCallflow.numbers[1]))
 						}
 						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').show();
+						container.parents('#strategy_container').find('.element-container.helper').hide();
+						container.parents('#strategy_container').find('.element-container.main-number').css('margin-top', '0px');
 					} else { 
 						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
 						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').hide();
+						container.parents('#strategy_container').find('.element-container.helper').show();
+						container.parents('#strategy_container').find('.element-container.main-number').css('margin-top', '10px');
 					}
 				};
 

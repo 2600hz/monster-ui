@@ -404,6 +404,10 @@
 
 /********** Strategy Helper ***********/
 
+#strategy_container .element-container.helper {
+	/*display: none;*/
+}
+
 #strategy_container .element-container.helper .icon-info-sign {
 	float: left;
 	margin-right: 10px;
