@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		chosen = require('chosen'),
 		monster = require('monster'),
 		toastr = require('toastr'),
 		timezone = require('monster-timezone'),
@@ -1427,6 +1428,8 @@ define(function(require){
 			}
 
 			timezone.populateDropdown(contentHtml.find('#accountsmanager_account_timezone'), accountData.timezone);
+
+			contentHtml.find('#accountsmanager_account_timezone').chosen({search_contains: true, width: "100%"});
 
 			self.renderLimitsTab({
 				accountData: accountData,
