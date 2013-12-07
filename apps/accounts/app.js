@@ -100,6 +100,10 @@ define(function(require){
 			'accountsManager.balance.add': {
 				url: 'accounts/{accountId}/braintree/credits',
 				verb: 'PUT'
+			},
+			'accountsManager.callflows.add': {
+				url: 'accounts/{accountId}/callflows',
+				verb: 'PUT'
 			}
 		},
 
@@ -397,6 +401,27 @@ define(function(require){
 										callback();
 									}
 								},
+								noMatch: function(callback) {
+									var noMatchCallflow = {
+										numbers: ['no_match'],
+										flow: {
+											children: {},
+											data: {},
+											module: 'offnet'
+										}
+									};
+
+									monster.request({
+										resource: 'accountsManager.callflows.add',
+										data: {
+											accountId: newAccountId,
+											data: noMatchCallflow
+										},
+										success: function(data, status) {
+											callback(null, data.data);
+										}
+									});
+								},
 								limits: function(callback) {
 									monster.request({
 										resource: 'accountsManager.limits.get',
@@ -488,7 +513,6 @@ define(function(require){
 			});
 
 			self.renderWizardSteps(newAccountWizard);
-
 
 			parent.find('.edition-view').hide();
 			parent.find('.creation-view').append(newAccountWizard);
