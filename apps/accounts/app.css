@@ -152,6 +152,7 @@
 
 #accounts_manager_view .main-content .tab-content {
 	border-radius: 4px;
+	overflow: visible;
 }
 
 /***** Edit: Overview *****/

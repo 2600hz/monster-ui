@@ -19,4 +19,6 @@
 
 @import url('footable.core.min.css');
 
+@import url('chosen/chosen.min.css');
+
 @import url('main.css');
