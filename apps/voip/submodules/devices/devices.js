@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		mask = require('mask'),
 		monster = require('monster'),
 		toastr = require('toastr');
 
@@ -234,6 +235,7 @@ define(function(require){
 			monster.ui.tabs(templateDevice);
 			monster.ui.prettyCheck.create(templateDevice);
 			templateDevice.find('.switch').bootstrapSwitch();
+			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
 
 			templateDevice.find('.actions .save').on('click', function() {
 				var dataToSave = self.devicesMergeData(data, templateDevice);

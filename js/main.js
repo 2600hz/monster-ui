@@ -22,6 +22,7 @@ require.config({
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
 		jstz: 'js/lib/jstz.min',
 		leaflet: 'js/lib/leaflet.min',
+		mask: 'js/lib/jquery.mask',
 		monster: 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
