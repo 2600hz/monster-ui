@@ -795,6 +795,8 @@ define(function(require){
 				},
 				error: function(_data, status) {
 					error && error(_data);
+
+					toastr.error(self.i18n.active().numbers.numberNotFound);
 				}
 			});
 		},
