@@ -22,8 +22,6 @@
 			"createGroup": "Create Group",
 			"extension": "Extension",
 			"name": "Name this group",
-			"placeholderExtension": "2002",
-			"placeholderName": "Sales",
 			"selectedUsers": "Selected Users",
 			"title": "Creating a group",
 			"missingDataAlert": "You must choose a name and an extension for this group"
