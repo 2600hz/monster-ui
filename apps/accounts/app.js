@@ -363,10 +363,14 @@ define(function(require){
 				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
 				self.validateStep(currentStep, newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), function() {
 
-					var formData = form2object('accountsmanager_new_account_form');
+					var formData = form2object('accountsmanager_new_account_form'),
+						callRestrictions = {}; // Can't use form data for this since unchecked checkboxes are not retrieved by form2object
 
-					$.each(formData.limits.call_restriction, function(k, v) {
-						if(v.action === false) { v.action = "deny"; }
+					$.each(newAccountWizard.find('.call-restrictions-element input[type="checkbox"]'), function() {
+						var $this = $(this);
+						callRestrictions[$this.data('id')] = {
+							action: $this.is(':checked') ? 'allow' : 'deny'
+						};
 					});
 
 					monster.request({
@@ -433,7 +437,8 @@ define(function(require){
 											var newLimits = {
 												allow_prepay: formData.limits.allow_prepay,
 												inbound_trunks: parseInt(formData.limits.inbound_trunks, 10),
-												twoway_trunks: parseInt(formData.limits.twoway_trunks, 10)
+												twoway_trunks: parseInt(formData.limits.twoway_trunks, 10),
+												call_restriction: callRestrictions
 											};
 											monster.request({
 												resource: 'accountsManager.limits.update',
@@ -655,8 +660,6 @@ define(function(require){
 					parent: parent,
 					formattedClassifiers: formattedClassifiers
 				});
-
-			stepTemplate.find('[data-toggle="tooltip"]').tooltip();
 
 			parent.append(stepTemplate);
 		},
@@ -1153,7 +1156,8 @@ define(function(require){
 				formattedClassifiers = $.map(params.classifiers, function(val, key) {
 					var ret = {
 						id: key,
-						name: val.friendly_name,
+						name: (self.i18n.active().classifiers[key] || {}).name || val.friendly_name,
+						help: (self.i18n.active().classifiers[key] || {}).help,
 						checked: true
 					};
 					if(accountLimits.call_restriction
@@ -1474,7 +1478,6 @@ define(function(require){
 				addCreditInput = tabContentTemplate.find('.add-credit-input');
 
 			creditBalanceSpan.html(self.i18n.active().currencyUsed+balance);
-
 			parent.find('#accountsmanager_limits_save').click(function(e) {
 				e.preventDefault();
 
@@ -1484,10 +1487,15 @@ define(function(require){
 					addCredit = addCreditInput.val(),
 					allowPrepay = tabContentTemplate.find('.allow-prepay-ckb').is(':checked');
 
+
 				if(/^(\d+(\.\d{1,2})?)?$/.test(addCredit)) {
 
-					$.each(callRestrictions, function(k, v) {
-						if(v.action === false) { v.action = "deny"; }
+					$.each(params.formattedClassifiers, function(k, v) {
+						if(!(v.id in callRestrictions) || callRestrictions[v.id].action !== "allow") { 
+							callRestrictions[v.id] = {
+								action: "deny"
+							};
+						}
 					});
 
 					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
@@ -1606,6 +1614,8 @@ define(function(require){
 				var $this = $(this);
 				$this.find('.ui-slider-handle').append($this.find('.section-slider-value'));
 			});
+
+			template.find('[data-toggle="tooltip"]').tooltip();
 
 			return template;
 		},
