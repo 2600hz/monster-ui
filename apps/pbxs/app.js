@@ -1555,52 +1555,9 @@ define(function(require){
 			pbxsManager.find('#port_numbers').on('click', function(ev) {
 				ev.preventDefault();
 
-				self.renderPortDialog(function(portData, popup) {
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.getAccount(function(globalData) {
-								var portsDone = 0;
-
-								$.each(portData.phone_numbers, function(i, val) {
-									var number_data = {
-										phone_number: val
-									};
-
-									var check_update_trunkstore = function() {
-										if(++portsDone > portData.phone_numbers.length - 1) {
-											self.updateOldTrunkstore(globalData.data, function(_data) {
-												_data.data.servers[serverId].extra = { id: serverId };
-
-												if(callbacks && 'saveSuccess' in callbacks && typeof callbacks.saveSuccess == 'function') {
-													callbacks.saveSuccess(_data);
-												}
-
-												popup.dialog('close');
-											});
-										}
-									};
-
-									self.portNumber(number_data, function(_number_data) {
-											number_data.options = _number_data.data;
-
-											if('id' in number_data.options) {
-												delete number_data.options.id;
-											}
-
-											self.submitPort(portData, number_data, function(_data) {
-												globalData.data.servers[serverId].DIDs[val] = { failover: false, cnam: false, dash_e911: false };
-
-												check_update_trunkstore();
-											});
-										},
-										function(_number_data) {
-											check_update_trunkstore();
-										}
-									);
-								});
-							});
-						}
-					);
+				monster.pub('common.port.render', {
+					accountId: self.accountId,
+					callbacks: {}
 				});
 			});
 
