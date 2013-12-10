@@ -9,8 +9,12 @@ define(function(require){
 	var app = {
 
 		requests: {
-			'strategy.callflows.list': {
+			'strategy.callflows.listHasType': {
 				url: 'accounts/{accountId}/callflows?has_value=type',
+				verb: 'GET'
+			},
+			'strategy.callflows.list': {
+				url: 'accounts/{accountId}/callflows',
 				verb: 'GET'
 			},
 			'strategy.callflows.get': {
@@ -386,7 +390,7 @@ define(function(require){
 
 							if(!_.isEmpty(strategyData.callflows[callflowName].flow.children)) {
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
-								if("_" in strategyData.callflows[callflowName].flow.children 
+								if("_" in strategyData.callflows[callflowName].flow.children
 								&& strategyData.callflows[callflowName].flow.children["_"].module === "voicemail") {
 									tabData.callOption.type = "user-voicemail";
 									tabData.callOption.voicemailId = strategyData.callflows[callflowName].flow.children["_"].data.id;
@@ -447,7 +451,7 @@ define(function(require){
 						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').show();
 						container.parents('#strategy_container').find('.element-container.helper').hide();
 						container.parents('#strategy_container').find('.element-container.main-number').css('margin-top', '0px');
-					} else { 
+					} else {
 						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
 						container.parents('#strategy_container').find('.element-container:not(.main-number,.strategy-confnum)').hide();
 						container.parents('#strategy_container').find('.element-container.helper').show();
@@ -541,7 +545,7 @@ define(function(require){
 						} else if(mainConference.numbers.length === 2) {
 							headerSpan.append(", "+monster.util.formatPhoneNumber(mainConference.numbers[1]))
 						}
-					} else { 
+					} else {
 						headerSpan.html(self.i18n.active().strategy.noNumberTitle);
 					}
 				};
@@ -1487,7 +1491,7 @@ define(function(require){
 		strategyGetMainCallflows: function(callback) {
 			var self = this;
 			monster.request({
-				resource: 'strategy.callflows.list',
+				resource: 'strategy.callflows.listHasType',
 				data: {
 					accountId: self.accountId
 				},
@@ -1534,7 +1538,10 @@ define(function(require){
 									}
 								},
 								success: function(data, status) {
-									callback(null, data.data);
+									/* If they don't have a main callflow, check if the feature codes are enabled, and create them if not */
+									self.strategyCreateFeatureCodes(function() {
+										callback(null, data.data);
+									});
 								}
 							});
 						}
@@ -1599,6 +1606,171 @@ define(function(require){
 						callback(results);
 					});
 				}
+			});
+		},
+
+		strategyCreateFeatureCodes: function(callback) {
+			var self = this;
+
+			/* To complete with all feature codes */
+			self.strategyGetFeatureCodes(function(listFeatureCodes) {
+					console.log(listFeatureCodes);
+				//Check if feature codes are created
+				if(listFeatureCodes.length > 0) {
+					callback && callback();
+				}
+				else {
+					var listRequests = [],
+					    featureCodes = [
+							{
+								name: 'call_forward[action=deactivate]',
+								number: '73',
+								callflowNumber: '*73',
+								moduleName: 'call_forward',
+								actionName: 'deactivate'
+							},
+							{
+								name: 'call_forward[action=activate]',
+								number: '72',
+								callflowNumber: '*72',
+								moduleName: 'call_forward',
+								actionName: 'activate'
+							},
+							{
+								name: 'call_forward[action=toggle]',
+								number: '74',
+								pattern: '^\\*74([0-9]*)$',
+								moduleName: 'call_forward',
+								actionName: 'toggle'
+							},
+							{
+								name: 'call_forward[action=update]',
+								number: '56',
+								callflowNumber: '*56',
+								moduleName: 'call_forward',
+								actionName: 'update'
+							},
+							{
+								name: 'hotdesk[action=login]',
+								number: '11',
+								callflowNumber: '*11',
+								moduleName: 'hotdesk',
+								actionName: 'login'
+							},
+							{
+								name: 'hotdesk[action=logout]',
+								number: '12',
+								callflowNumber: '*12',
+								moduleName: 'hotdesk',
+								actionName: 'logout'
+							},
+							{
+								name: 'hotdesk[action=toggle]',
+								number: '13',
+								callflowNumber: '*13',
+								moduleName: 'hotdesk',
+								actionName: 'toggle'
+							},
+							{
+								name: 'voicemail[action=check]',
+								number: '97',
+								callflowNumber: '*97',
+								moduleName: 'voicemail',
+								actionName: 'check'
+							},
+							{
+								name: 'voicemail[action="direct"]',
+								number: '*',
+								pattern: '^\\*\\*([0-9]*)$',
+								moduleName: 'voicemail',
+								actionName: 'compose'
+							},
+							{
+								name: 'intercom',
+								number: '0',
+								pattern: '^\\*0([0-9]*)$',
+								moduleName: 'intercom',
+								actionName: 'compose'
+							},
+							{
+								name: 'privacy[mode=full]',
+								number: '67',
+								pattern: '^\\*67([0-9]*)$',
+								moduleName: 'privacy',
+								actionName: 'full'
+							},
+							{
+								name: 'park_and_retrieve',
+								number: '3',
+								pattern: '^\\*3([0-9]*)$',
+								moduleName: 'park',
+								actionName: 'auto'
+							},
+							{
+								name: 'valet',
+								number: '4',
+								callflowNumber: '*4',
+								moduleName: 'park',
+								actionName: 'park'
+							},
+							{
+								name: 'retrieve',
+								number: '5',
+								pattern: '^\\*5([0-9]*)$',
+								moduleName: 'park',
+								actionName: 'retrieve'
+							}
+						];
+
+					_.each(featureCodes, function(featureCode) {
+						var callflow = {
+							flow: {
+								children: {},
+								data: {
+									action: featureCode.actionName
+								},
+								module: featureCode.moduleName
+							},
+							featurecode: {
+								name: featureCode.name,
+								number: featureCode.number
+							}
+						};
+
+						if('pattern' in featureCode) {
+							callflow.patterns = [ featureCode.pattern ];
+						}
+						else {
+							callflow.numbers = [ featureCode.callflowNumber ];
+						}
+
+						listRequests.push(function(localCallback) {
+							self.strategyCreateCallflow(callflow, function(data) {
+								localCallback && localCallback(null, data);
+							});
+						});
+					});
+
+					monster.parallel(listRequests, function(err, results) {
+						callback && callback();
+					});
+				}
+			});
+		},
+
+		strategyGetFeatureCodes: function(callback) {
+			var self = this;
+
+			self.strategyGetCallflows(function(listCallflows) {
+				var listFeatureCodes = [];
+
+				_.each(listCallflows, function(callflow) {
+					if('featurecode' in callflow && callflow.featurecode !== false) {
+						listFeatureCodes.push(callflow);
+					}
+				});
+
+				callback && callback(listFeatureCodes);
 			});
 		},
 
@@ -1838,6 +2010,35 @@ define(function(require){
 			});
 
 			mainCallflow.flow.data.rules = ruleArray;
+		},
+
+		strategyGetCallflows: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'strategy.callflows.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(callflowData) {
+					callback && callback(callflowData.data);
+				}
+			});
+		},
+
+		strategyCreateCallflow: function(callflow, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'strategy.callflows.add',
+				data: {
+					accountId: self.accountId,
+					data: callflow
+				},
+				success: function(callflowData) {
+					callback && callback(callflowData.data);
+				}
+			});
 		},
 
 		strategyUpdateCallflow: function(callflow, callback) {
