@@ -124,7 +124,7 @@
 		"tollfree": "Toll-free",
 		"vanity": "Vanity"
 	},
-	"port": "Port",
+	"portLabel": "Port",
 	"search": "Search",
 	"no_pbx": "No other PBX",
 	"no_number": "There is currently no number assigned to this PBX, you can add, buy or port numbers to this PBX via the action bar.",
