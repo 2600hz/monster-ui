@@ -179,7 +179,7 @@ define(function(require){
 
 				trunksOutboundView.find('#slider_twoway').slider({
 					min: 0,
-					max: 20,
+					max: 100,
 					range: 'min',
 					value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
 					slide: function( event, ui ) {

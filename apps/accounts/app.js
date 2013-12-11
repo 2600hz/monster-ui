@@ -1585,7 +1585,7 @@ define(function(require){
 			createSlider({
 				trunksDiv: twowayTrunksDiv,
 				minValue: 0,
-				maxValue: 20,
+				maxValue: 100,
 				currentValue: twoway,
 				amount: amountTwoway
 			});
