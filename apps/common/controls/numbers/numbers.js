@@ -186,7 +186,7 @@ define(function(require){
 
 			/* Order the subaccount list by name */
 			templateData.listAccounts.sort(function(a,b) {
-				return (a.name.toLowerCase() > b.name.toLowerCase());
+				return a.name.toLowerCase() > b.name.toLowerCase() ? 1 :-1;
 			});
 
 			/* Append our current account with the numbers at the top */
@@ -546,6 +546,10 @@ define(function(require){
 
 				if(_.isEmpty(originalAccountTree)) {
 					self.numbersGetDescendants(accountId, function(listAccounts) {
+						listAccounts.sort(function(a,b) {
+							return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+						});
+
 						originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
 
 						var args = {

@@ -44,7 +44,7 @@
 				{{#each classifiers}}
 				<li class="call-restrictions-element">
 					<label>
-						<input type="checkbox" {{#if this.checked}}checked{{/if}} name="limits.call_restriction.{{this.id}}.action" value="allow" />
+						<input type="checkbox" {{#if this.checked}}checked{{/if}} name="limits.call_restriction.{{this.id}}.action" value="allow" data-id="{{this.id}}" />
 						{{this.name}}
 						{{#if this.help}}
 							<i class="help-popover icon-question-sign" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>
