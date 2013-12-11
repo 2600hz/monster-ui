@@ -615,6 +615,36 @@ define(function(require){
 			});
 
 			/* Events for Devices in Users */
+			template.on('click', '.create-device', function() {
+				var $this = $(this),
+					type = $this.data('type'),
+					userId = $this.parents('.grid-row').data('id');
+
+				monster.pub('voip.devices.renderAdd', {
+					type: type,
+					callback: function(device) {
+						var rowDevice = monster.template(self, 'users-rowSpareDevice', device),
+							listUnassigned = template.find('.list-unassigned-items'),
+							countSpare = template.find('.unassigned-list-header .count-spare');
+
+						listUnassigned.find('.empty-row').hide();
+
+						/* reset search */
+						listUnassigned.find('.empty-search-row').hide();
+						template.find('.unassigned-list-header .search-query').val('');
+						listUnassigned.find('.item-row').show();
+
+
+						/* Update count */
+						countSpare.data('count', parseInt(countSpare.data('count')) + 1);
+						template.find('.unassigned-list-header .count-spare').html(countSpare.data('count'));
+
+						/* Add row */
+						listUnassigned.append(rowDevice);
+					}
+				});
+            });
+
 			template.on('click', '.save-devices', function() {
 				var dataDevices = {
 						new: [],

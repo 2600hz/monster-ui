@@ -58,7 +58,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'voip.devices.render': 'devicesRender'
+			'voip.devices.render': 'devicesRender',
+			'voip.devices.renderAdd': 'devicesRenderAdd'
 		},
 
 		/* Users */
@@ -181,14 +182,19 @@ define(function(require){
             template.find('.create-device').on('click', function() {
 				var type = $(this).data('type');
 
-				self.devicesRenderAdd(type, function(device) {
-					self.devicesRender({ deviceId: device.id });
+				monster.pub('voip.devices.renderAdd', {
+					type: type,
+					callback: function(device) {
+						self.devicesRender({ deviceId: device.id });
+					}
 				});
             });
 		},
 
-		devicesRenderAdd: function(type, callback) {
+		devicesRenderAdd: function(args) {
 			var self = this,
+				type = args.type,
+				callback = args.callback,
 				data = {
 					device_type: type
 				};
