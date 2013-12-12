@@ -473,8 +473,6 @@ define(function(require){
 
 							self.usersRender({ userId: data.user.id });
 						});
-					} else {
-						console.log('invalid!!');
 					}
 				});
 
