@@ -13,18 +13,18 @@
 		<form id="call_recording_form">
 			<div>
 				<span>{{ i18n.groups.callRecording.urlLabel }}</span>
-				<input name="url" type="text" placeholder="{{ i18n.groups.callRecording.urlPlaceholder }}" value="{{url}}">
+				<input required name="url" type="url" placeholder="{{ i18n.groups.callRecording.urlPlaceholder }}" value="{{url}}">
 			</div>
 			<div>
 				<span>{{ i18n.groups.callRecording.formatLabel }}</span>
 				<select name="format" class="input-medium">
 					<option value="mp3" {{#if format}}{{#compare format '===' 'mp3'}}selected{{/compare}}{{else}}selected{{/if}}>mp3</option>
-					<option value="wav" {{#compare format '===' 'wav'}}selected{{/compare}}>wav</option>
+					<option value=2"wav" {{#compare format '===' 'wav'}}selected{{/compare}}>wav</option>
 				</select>
 			</div>
 			<div>
 				<span>{{ i18n.groups.callRecording.timeLimitLabel }}</span>
-				<input name="time_limit" type="number" class="input-small" value="{{#if timeLimit}}{{timeLimit}}{{else}}600{{/if}}">
+				<input required name="time_limit" type="text" class="input-small" value="{{#if timeLimit}}{{timeLimit}}{{else}}600{{/if}}">
 			</div>
 		</form>
 	</div>

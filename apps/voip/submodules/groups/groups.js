@@ -251,19 +251,23 @@ define(function(require){
 
 			template.find('.groups-header .add-group').on('click', function() {
 				self.groupsGetCreationData(function(data) {
-				     var groupTemplate = $(monster.template(self, 'groups-creation', data));
+					var groupTemplate = $(monster.template(self, 'groups-creation', data)),
+						groupForm = groupTemplate.find('#form_group_creation');
+
+					monster.ui.validate(groupForm);
 
 					groupTemplate.find('#create_group').on('click', function() {
 						var formattedData = self.groupsCreationMergeData(data, groupTemplate);
-						if(formattedData.group.name && formattedData.callflow.numbers[0]) {
+						// if(formattedData.group.name && formattedData.callflow.numbers[0]) {
+						if(monster.ui.valid(groupForm)) {
 							self.groupsCreate(formattedData, function(data) {
 								popup.dialog('close').remove();
 
 								self.groupsRender({ groupId: data.id });
 							});
-						} else {
+						}/* else {
 							monster.ui.alert('error', self.i18n.active().groups.dialogCreationGroup.missingDataAlert)
-						}
+						}*/
 					});
 
 					groupTemplate.find('#group_user_selector .selected-users, #group_user_selector .available-users').sortable({
@@ -437,7 +441,16 @@ define(function(require){
 										),
 				featureTemplate = $(monster.template(self, 'groups-feature-call_recording', templateData)),
 				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				featureForm = featureTemplate.find('#call_recording_form'),
 				popup;
+
+			monster.ui.validate(featureForm, {
+				rules: {
+					'time_limit': {
+						digits: true
+					}
+				}
+			});
 
 			featureTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -448,43 +461,45 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
-				var formData = form2object('call_recording_form'),
-				    enabled = switchFeature.bootstrapSwitch('status');
+				if(monster.ui.valid(featureForm)) {
+					var formData = form2object('call_recording_form'),
+						enabled = switchFeature.bootstrapSwitch('status');
 
-				if(!('smartpbx' in data.group)) { data.group.smartpbx = {}; }
-				if(!('call_recording' in data.group.smartpbx)) {
-					data.group.smartpbx.call_recording = {
-						enabled: false
-					}; 
-				}
-
-				if(data.group.smartpbx.call_recording.enabled || enabled) {
-					data.group.smartpbx.call_recording.enabled = enabled;
-					var newCallflow = $.extend(true, {}, data.callflow);
-					if(enabled) {
-						if(newCallflow.flow.module === 'record_call') {
-							newCallflow.flow.data = $.extend(true, { action: "start" }, formData);
-						} else {
-							newCallflow.flow = {
-								children: {
-									"_": $.extend(true, {}, data.callflow.flow)
-								},
-								module: "record_call",
-								data: $.extend(true, { action: "start" }, formData)
-							}
-						}
-					} else {
-						newCallflow.flow = $.extend(true, {}, data.callflow.flow.children["_"]);
+					if(!('smartpbx' in data.group)) { data.group.smartpbx = {}; }
+					if(!('call_recording' in data.group.smartpbx)) {
+						data.group.smartpbx.call_recording = {
+							enabled: false
+						}; 
 					}
-					self.groupsUpdateCallflow(newCallflow, function(updatedCallflow) {
-						self.groupsUpdate(data.group, function(updatedGroup) {
-							popup.dialog('close').remove();
-							self.groupsRender({ groupId: data.group.id });
+
+					if(data.group.smartpbx.call_recording.enabled || enabled) {
+						data.group.smartpbx.call_recording.enabled = enabled;
+						var newCallflow = $.extend(true, {}, data.callflow);
+						if(enabled) {
+							if(newCallflow.flow.module === 'record_call') {
+								newCallflow.flow.data = $.extend(true, { action: "start" }, formData);
+							} else {
+								newCallflow.flow = {
+									children: {
+										"_": $.extend(true, {}, data.callflow.flow)
+									},
+									module: "record_call",
+									data: $.extend(true, { action: "start" }, formData)
+								}
+							}
+						} else {
+							newCallflow.flow = $.extend(true, {}, data.callflow.flow.children["_"]);
+						}
+						self.groupsUpdateCallflow(newCallflow, function(updatedCallflow) {
+							self.groupsUpdate(data.group, function(updatedGroup) {
+								popup.dialog('close').remove();
+								self.groupsRender({ groupId: data.group.id });
+							});
 						});
-					});
-				} else {
-					popup.dialog('close').remove();
-					self.groupsRender({ groupId: data.group.id });
+					} else {
+						popup.dialog('close').remove();
+						self.groupsRender({ groupId: data.group.id });
+					}
 				}
 			});
 
@@ -623,18 +638,23 @@ define(function(require){
 		},
 
 		groupsBindName: function(template, data) {
-			var self = this;
+			var self = this,
+				nameForm = template.find('#form-name');
+
+			monster.ui.validate(nameForm);
 
 			template.find('.save-group').on('click', function() {
-				var formData = form2object('form-name');
+				if(monster.ui.valid(nameForm)) {
+					var formData = form2object('form-name');
 
-				//formData = self.groupsCleanNameData(formData);
+					//formData = self.groupsCleanNameData(formData);
 
-				data = $.extend(true, {}, data, formData);
+					data = $.extend(true, {}, data, formData);
 
-				self.groupsUpdate(data, function(data) {
-					self.groupsRender({ groupId: data.id });
-				});
+					self.groupsUpdate(data, function(data) {
+						self.groupsRender({ groupId: data.id });
+					});
+				}
 			});
 
 			template.find('.delete-group').on('click', function() {
