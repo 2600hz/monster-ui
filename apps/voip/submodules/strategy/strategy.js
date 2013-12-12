@@ -1614,7 +1614,6 @@ define(function(require){
 
 			/* To complete with all feature codes */
 			self.strategyGetFeatureCodes(function(listFeatureCodes) {
-					console.log(listFeatureCodes);
 				//Check if feature codes are created
 				if(listFeatureCodes.length > 0) {
 					callback && callback();

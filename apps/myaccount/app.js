@@ -19,6 +19,10 @@ define(function(require){
 			'myaccount.getAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'GET'
+			},
+			'myAccount.getBraintree': {
+				url: 'accounts/{accountId}/braintree/customer',
+				verb: 'GET'
 			}
 		},
 
@@ -105,9 +109,7 @@ define(function(require){
 			navContainer.on('click', '.myaccount-link', function(e) {
 				e.preventDefault();
 
-				self._loadApps(function() {
-					monster.pub('myaccount.display');
-				});
+				self.loadAppsAndDisplay();
 			});
 
 			navContainer.on('click', '.restore-masquerading-link', function(e) {
@@ -139,6 +141,46 @@ define(function(require){
 			};
 
 			self.bindEvents(myaccountHtml);
+
+			if(monster.apps['auth'].isReseller) {
+				self.checkCreditCard();
+			}
+		},
+
+		loadAppsAndDisplay: function(callback) {
+			var self = this;
+
+			self._loadApps(function() {
+				monster.pub('myaccount.display', {
+					callback: callback
+				});
+			});
+		},
+
+		checkCreditCard: function() {
+			var self = this;
+
+			self.getBraintree(function(data) {
+				if(data.credit_cards.length === 0) {
+					self.loadAppsAndDisplay(function() {
+						monster.pub('myaccount-profile.showCreditTab');
+					});
+				}
+			});
+		},
+
+		getBraintree: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'myAccount.getBraintree',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(dataBraintree) {
+					callback && callback(dataBraintree.data);
+				}
+			});
 		},
 
 		bindEvents: function(container) {
@@ -150,8 +192,9 @@ define(function(require){
 		},
 
 		// events
-		_show: function() {
+		_show: function(args) {
 			var self = this,
+				callback = (args || {}).callback,
 				myaccount = $('#myaccount'),
 				scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
                 niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
@@ -183,6 +226,8 @@ define(function(require){
 								niceScrollBar.show().resize();
 							})
 							.addClass('myaccount-open');
+
+						callback && callback();
 					}
 				};
 
@@ -238,8 +283,6 @@ define(function(require){
 			myaccount.find('.myaccount-content').empty();
 
 			monster.pub(args.module + '.renderContent', args);
-
-			args.callback && args.callback();
 		},
 
 		_updateMenu: function(params) {

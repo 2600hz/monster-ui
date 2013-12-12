@@ -134,8 +134,6 @@ define(function(require){
 							data: self.i18n.active().currencyUsed + renderData.amount
 						};
 
-					console.log(renderData);
-
 					self.bindEvents(balance);
 
 					monster.pub('myaccount.updateMenu', args);

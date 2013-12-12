@@ -33,5 +33,6 @@
 	"billingName": "Name",
 	"firstName": "First",
 	"lastName": "Last",
-	"changeCard": "Change Card Info"
+	"changeCard": "Change Card Info",
+	"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes."
 }

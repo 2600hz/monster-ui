@@ -2,6 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
+		toastr = require('toastr'),
 
 		templates = {
 			menu: 'menu',
@@ -42,7 +43,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'myaccount-profile.renderContent': '_renderContent'
+			'myaccount-profile.renderContent': '_renderContent',
+			'myaccount-profile.showCreditTab': '_showCreditTab'
 		},
 
 		load: function(callback){
@@ -142,6 +144,17 @@ define(function(require){
 					}
 				}
 			);
+		},
+
+		_showCreditTab: function() {
+			var self = this,
+				profileContent = $('#myaccount .myaccount-content .profile-content-wrapper');
+
+			profileContent.find('.nav-tabs a[href="#billing"]').tab('show');
+
+			self.openTab(profileContent.find('.settings-item[data-name="credit_card"] .settings-link'));
+
+			toastr.error(self.i18n.active().missingCard);
 		},
 
 		cleanFormData: function(module, data) {
@@ -365,24 +378,13 @@ define(function(require){
 
 			profile.find('li.settings-item .settings-link').on('click', function(e) {
 				var $this = $(this),
-					settingsItem = $this.parents('.settings-item'),
-					isOpen = settingsItem.hasClass('open');
+					isOpen = $this.parent().hasClass('open');
 
-					closeContent();
-					if(!isOpen){
-						settingsItem.addClass('open');
-						$this.find('.update .text').text(self.i18n.active().close);
-						$this.find('.update i').removeClass('icon-cog').addClass('icon-remove');
-						settingsItem.find('.settings-item-content').slideDown('fast');
+				closeContent();
 
-						if(settingsItem.data('name') === 'credit_card') {
-							/* If there is no credit-card data, we skip the step that just displays the creditcard info */
-							if($.isEmptyObject(data.billing.credit_card)) {
-								settingsItem.find('.uneditable').hide();
-								settingsItem.find('.edition').show();
-							}
-						}
-					}
+				if(!isOpen) {
+					self.openTab($this, _.isEmpty(data.billing.credit_cards));
+				}
 			});
 
 			profile.find('.cancel').on('click', function(e) {
@@ -396,6 +398,25 @@ define(function(require){
 
 				e.stopPropagation();
 			});
+		},
+
+		openTab: function(link, hasEmptyCreditCardInfo) {
+			var self = this,
+				settingsItem = link.parents('.settings-item'),
+				hasEmptyCreditCardInfo = hasEmptyCreditCardInfo === false ? false : true;
+
+			settingsItem.addClass('open');
+			link.find('.update .text').text(self.i18n.active().close);
+			link.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+			settingsItem.find('.settings-item-content').slideDown('fast');
+
+			if(settingsItem.data('name') === 'credit_card') {
+				/* If there is no credit-card data, we skip the step that just displays the creditcard info */
+				if(hasEmptyCreditCardInfo) {
+					settingsItem.find('.uneditable').hide();
+					settingsItem.find('.edition').show();
+				}
+			}
 		}
 	};
 
