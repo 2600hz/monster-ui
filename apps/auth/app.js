@@ -118,18 +118,6 @@ define(function(require){
 					$('#ws-content').empty();
 
 					monster.pub('auth.loadAccount');
-				},
-				error: function(apiResponse, rawError) {
-					var errorMessage = self.i18n.active().errors.generic;
-
-					if(rawError.status in self.i18n.active().errors) {
-						errorMessage = self.i18n.active().errors[rawError.status];
-					}
-					else if(apiResponse.message) {
-						errorMessage += "<br/><br/>" + self.i18n.active().errors.genericLabel + ': ' + apiResponse.message;
-					}
-
-					monster.ui.alert('error', errorMessage);
 				}
 			});
 		},
