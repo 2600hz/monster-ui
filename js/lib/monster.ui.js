@@ -4,7 +4,8 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		icheck = require('icheck'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		validate = require('validate');
 
 	var requestAmount = 0,
 		homeIcon,
@@ -576,6 +577,59 @@ define(function(require){
 			 *
 			 * For more info, please refer to https://github.com/fronteed/iCheck
 			**/
+		},
+
+		customValidationInitialized: false,
+
+		initCustomValidation: function() {
+			var localization = monster.apps['core'].i18n.active().validation,
+				addSimpleRule = function(name, regex) {
+					$.validator.addMethod(name, function(value, element, param) {
+						return this.optional(element) || regex.test(value);
+					}, localization.customRules[name]);
+				},
+				defaultMessages = {};
+
+			// Initializing default messages
+			_.each(localization.defaultRules, function(val, key) {
+				defaultMessages[key] = $.validator.format(val);
+			});
+			$.extend($.validator.messages, defaultMessages);
+
+			// Adding simple custom rules
+			addSimpleRule('mac', /^(?:[0-9A-F]{2}(\:|\-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i);
+			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
+			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\ ?[AP]M))$/i);
+
+			// Adding advanced custom rules
+			$.validator.addMethod('greaterDate', function(value, element, param) {
+				var target = _.isString(param) ? $(param) : param;
+				if ( this.settings.onfocusout ) {
+					target.unbind(".validate-greaterDate").bind("blur.validate-greaterDate", function() {
+						$(element).valid();
+					});
+				}
+				return monster.util.timeToSeconds(value) > monster.util.timeToSeconds(target.val());
+			}, localization.customRules['greaterDate']);
+			
+			this.customValidationInitialized = true;
+		},
+
+		validate: function(form, options) {
+			var defaultOptions = {
+				errorClass: "monster-invalid",
+				validClass: "monster-valid"
+			};
+
+			if(!this.customValidationInitialized) {
+				this.initCustomValidation();
+			}
+
+			return form.validate($.extend(true, defaultOptions, options));
+		},
+
+		valid: function(form) {
+			return form.valid();
 		}
 	};
 

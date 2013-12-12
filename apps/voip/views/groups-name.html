@@ -1,12 +1,12 @@
 <div class="detail-group">
-	<div id="form-name" class="form-horizontal">
+	<form id="form-name" class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="inputName">{{ i18n.groups.name }}</label>
 			<div class="controls">
-				<input type="text" name="name" id="inputName" placeholder="" value="{{name}}"></input>
+				<input required type="text" name="name" id="inputName" placeholder="" value="{{name}}"></input>
 			</div>
 		</div>
-	</div>
+	</form>
 	<div class="actions">
 		<a class="delete-group monster-link" href="javascript:void(0);"><i class="icon-trash icon-red"></i>{{ i18n.groups.delete }}</a>
 

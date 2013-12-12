@@ -348,6 +348,7 @@
 
 #form_accountsmanager_account_admins .new-admin-element {
 	display: none;
+	position: relative;
 }
 
 #form_accountsmanager_account_admins .new-admin-element .new-admin-tabs > li {
@@ -394,6 +395,10 @@
 	height: 30px;
 }
 
+#form_accountsmanager_account_admins .input-prepend {
+	margin-bottom: 20px;
+}
+
 #form_accountsmanager_account_admins .create-user-div input[type="radio"] {
 	vertical-align: top;
 	margin-right: 5px;
@@ -402,6 +407,18 @@
 #form_accountsmanager_account_admins .create-user-div .new-admin-password-div {
 	display: none;
 	margin-top: 5px;
+	position: relative;
+}
+
+#form_accountsmanager_account_admins .create-user-div .new-admin-password-div label.monster-invalid[for="password"],
+#form_accountsmanager_account_admins .admin-element-edit .edit-admin-password-div label.monster-invalid[for="password"] {
+	margin-top: 30px;
+}
+
+#form_accountsmanager_account_admins .create-user-div .new-admin-password-div label.monster-invalid[for="extra.password_confirm"],
+#form_accountsmanager_account_admins .admin-element-edit .edit-admin-password-div label.monster-invalid[for="extra.password_confirm"] {
+	margin-top: 30px;
+	margin-left: 145px; /* Warning: This will be messed up if the screen is too small due to bootstraps responsive spans; */
 }
 
 #form_accountsmanager_account_admins .admin-empty-msg {
@@ -412,6 +429,10 @@
 
 #accountsmanager_autogen_pwd_toggle {
 	width: 220px;
+}
+
+#accountsmanager_overview_tab .control-group {
+	position: relative;
 }
 
 
@@ -566,6 +587,18 @@
 	margin-bottom: 10px;
 }
 
+.limits-tab-container .call-restrictions-div .manage-credit-div .add-credit-container {
+	position: relative;
+	padding-bottom: 18px;
+}
+
+.limits-tab-container .call-restrictions-div .manage-credit-div .add-credit-label {
+	margin-right: 5px;
+	margin-top: 8px;
+	vertical-align: top;
+	display: inline-block;
+}
+
 .limits-tab-container .call-restrictions-div .manage-credit-div .add-credit-input {
 	width: 50px;
 	margin-bottom: 0;
@@ -608,7 +641,9 @@
 }
 
 #accountsmanager_new_account_form .account-settings-step > .row-fluid {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	position: relative;
 	border-bottom: solid 1px #ccc;
 }
 
@@ -622,6 +657,11 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	height: 30px;
+	margin-bottom: 20px;
+}
+
+#accountsmanager_new_account_form .account-settings-step label {
+	margin: 0;
 }
 
 #accountsmanager_new_account_form .account-settings-step select {
@@ -643,7 +683,8 @@
 }
 
 #accountsmanager_new_account_form .account-settings-step .realm-text {
-	width: 170px;
+	width: 176px;
+	margin-bottom: 20px;
 }
 
 #accountsmanager_new_account_form .account-settings-step .manual-realm {
@@ -652,17 +693,24 @@
 
 #accountsmanager_new_account_form .account-settings-step .manual-realm input[type="text"]{
 	width: 190px;
-	margin-right: 10px;
 }
 
 #accountsmanager_new_account_form .account-settings-step .realm-link {
 	cursor: pointer;
 	margin-left: 10px;
+	vertical-align: top;
+	display: inline-block;
+	margin-top: 8px;
 }
 
 #accountsmanager_new_account_form .account-settings-step .realm-link i {
 	text-decoration: none;
 	margin-right: 4px;
+}
+
+#accountsmanager_new_account_form label.monster-invalid {
+	margin-top: -20px;
+	line-height: 20px;
 }
 
 /******************* Restrictions Tab ********************/

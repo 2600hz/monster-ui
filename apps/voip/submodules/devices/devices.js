@@ -224,7 +224,30 @@ define(function(require){
 				mode = data.id ? 'edit' : 'add',
 				type = data.device_type,
 				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
-			    templateDevice = $(monster.template(self, 'devices-'+type, data));
+			    templateDevice = $(monster.template(self, 'devices-'+type, data)),
+			    deviceForm = templateDevice.find('#form_device');
+
+			monster.ui.validate(deviceForm, {
+				rules: {
+					'name': {
+						required: true
+					},
+					'mac_address': {
+						required: true,
+						mac: true
+					},
+					'sip.username': {
+						required: true
+					},
+					'sip.password': {
+						required: true
+					},
+					'call_forward.number': {
+						required: true
+					}
+				},
+				ignore: '' // Do not ignore hidden fields
+			});
 
 			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
@@ -244,13 +267,17 @@ define(function(require){
 			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
 
 			templateDevice.find('.actions .save').on('click', function() {
-				var dataToSave = self.devicesMergeData(data, templateDevice);
+				if(monster.ui.valid(deviceForm)) {
+					var dataToSave = self.devicesMergeData(data, templateDevice);
 
-				self.devicesSaveDevice(dataToSave, function(data) {
-					popup.dialog('close').remove();
+					self.devicesSaveDevice(dataToSave, function(data) {
+						popup.dialog('close').remove();
 
-					callback && callback(data);
-				});
+						callback && callback(data);
+					});
+				} else {
+					templateDevice.find('.tabs-selector[data-section="basic"]').click();
+				}
 			});
 
 			templateDevice.find('#delete_device').on('click', function() {

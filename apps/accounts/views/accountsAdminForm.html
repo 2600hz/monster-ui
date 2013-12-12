@@ -25,19 +25,19 @@
 							<div class="controls clearfix">
 								<div class="input-prepend span12">
 									<span class="add-on"><i class="icon-envelope"></i></span>
-									<input type="email" name="email" value="{{this.email}}" data-original_value="{{this.email}}" placeholder="{{ i18n.adminPlaceholders.email }}"/>
+									<input required type="email" name="email" value="{{this.email}}" data-original_value="{{this.email}}" placeholder="{{ i18n.adminPlaceholders.email }}"/>
 							    </div>
 							</div>
 							<div class="controls clearfix">
 								<div class="input-prepend span12">
 									<span class="add-on"><i class="icon-user"></i></span>
-									<input type="text" name="first_name" value="{{this.first_name}}" data-original_value="{{this.first_name}}" placeholder="{{ i18n.adminPlaceholders.firstName }}"/>
+									<input required type="text" name="first_name" value="{{this.first_name}}" data-original_value="{{this.first_name}}" placeholder="{{ i18n.adminPlaceholders.firstName }}"/>
 							    </div>
 							</div>
 							<div class="controls clearfix">
 								<div class="input-prepend span12">
 									<span class="add-on"><i class="icon-user"></i></span>
-									<input type="text" name="last_name" value="{{this.last_name}}" data-original_value="{{this.last_name}}" placeholder="{{ i18n.adminPlaceholders.lastName }}"/>
+									<input required type="text" name="last_name" value="{{this.last_name}}" data-original_value="{{this.last_name}}" placeholder="{{ i18n.adminPlaceholders.lastName }}"/>
 							    </div>
 							</div>
 							<div class="controls clearfix">
@@ -47,8 +47,8 @@
 							    </div>
 							</div>
 							<div class="controls controls-row edit-admin-password-div clearfix">
-									<input type="password" class="span6" name="password" placeholder="{{ i18n.adminPlaceholders.password }}"/>
-									<input type="password" class="span6" name="extra.password_confirm" placeholder="{{ i18n.adminPlaceholders.confirm }}"/>
+									<input required type="password" class="span6" name="password" placeholder="{{ i18n.adminPlaceholders.password }}"/>
+									<input required type="password" class="span6" name="extra.password_confirm" placeholder="{{ i18n.adminPlaceholders.confirm }}"/>
 							</div>
 							<div class="controls controls-row admin-btn-div">
 								<div class="span6">
@@ -83,19 +83,19 @@
 								<div class="controls clearfix">
 									<div class="input-prepend span12">
 										<span class="add-on"><i class="icon-envelope"></i></span>
-										<input type="email" name="email" placeholder="Email address"/>
+										<input required  type="email" name="email" placeholder="Email address"/>
 								    </div>
 								</div>
 								<div class="controls clearfix">
 									<div class="input-prepend span12">
 										<span class="add-on"><i class="icon-user"></i></span>
-										<input type="text" name="first_name" placeholder="First name"/>
+										<input required  type="text" name="first_name" placeholder="First name"/>
 								    </div>
 								</div>
 								<div class="controls clearfix">
 									<div class="input-prepend span12">
 										<span class="add-on"><i class="icon-user"></i></span>
-										<input type="text" name="last_name" placeholder="Last name"/>
+										<input required  type="text" name="last_name" placeholder="Last name"/>
 								    </div>
 								</div>
 								<div class="controls clearfix">
@@ -108,8 +108,8 @@
 									<label><input type="radio" name="extra.autogen_password" value="true" checked />{{ i18n.autogenPassword }}</label>
 									<label><input type="radio" name="extra.autogen_password" value="false" />{{ i18n.manuallyTypePassword }}</label>
 									<div class="controls controls-row new-admin-password-div clearfix">
-											<input type="password" class="span6" name="password" placeholder="Password"/>
-											<input type="password" class="span6" name="extra.password_confirm" placeholder="Confirm"/>
+											<input required type="password" class="span6" name="password" placeholder="Password"/>
+											<input required type="password" class="span6" name="extra.password_confirm" placeholder="Confirm"/>
 									</div>
 								</div>
 								<div class="controls controls-row admin-btn-div">

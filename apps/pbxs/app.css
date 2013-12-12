@@ -42,6 +42,14 @@
 	margin: 0px 5px 5px 5px
 }
 
+#edit_server .selected-pbx-block > div {
+	display: inline-block;
+}
+
+#edit_server .selected-pbx-block label.monster-invalid {
+	margin-left: 5px;
+}
+
 #edit_server .pbx-brand-list .bluebox {
 	background: url('static/images/endpoints/bluebox.png');
 }
@@ -169,6 +177,15 @@
 #edit_server .wizard-content-step .well .row-fluid {
 	line-height: 40px;
 	text-align: left;
+}
+
+#edit_server .wizard-content-step[data-step="2"] .well .row-fluid:not(:last-of-type) {
+	margin-bottom: 5px;
+	position: relative;
+}
+
+#edit_server .wizard-content-step[data-step="2"] .well .row-fluid label.monster-invalid {
+	top: 36px;
 }
 
 #edit_server .wizard-content-step .well .row-fluid input {

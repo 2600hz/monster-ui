@@ -47,14 +47,14 @@
 
 							<div class="control-group span5 offset1">
 								<label>{{ i18n.accountName }}</label>
-    							<input type="text" name="account.name" />
+    							<input required type="text" name="account.name" />
 
 								<label>{{ i18n.accountRealm }}</label>
 								<span class="generated-realm">
 									<span class="realm-text uneditable-input">Auto-generated</span><a class="realm-link change-realm"><i class="icon-pencil"></i>{{i18n.change}}</a>
 								</span>
 								<span class="manual-realm">
-    								<input type="text" name="account.realm" /><a class="realm-link cancel-edition"><i class="icon-remove"></i>{{i18n.cancel}}</a>
+    								<input required type="text" name="account.realm" /><a class="realm-link cancel-edition"><i class="icon-remove"></i>{{i18n.cancel}}</a>
     							</span>
 
 								<label>{{ i18n.accountTimezone }}</label>
@@ -73,17 +73,17 @@
 							<div class="control-group clearfix">
 								<div class="span5 offset1">
 									<label>{{ i18n.adminLabels.firstName }}</label>
-	    							<input type="text" name="user.first_name" />
+	    							<input required type="text" name="user.first_name" />
 								</div>
 								<div class="span5">
 									<label>{{ i18n.adminLabels.lastName }}</label>
-	    							<input type="text" name="user.last_name" />
+	    							<input required type="text" name="user.last_name" />
 								</div>
 							</div>
 							<div class="control-group clearfix">
 								<div class="span5 offset1">
 									<label>{{ i18n.adminLabels.email }}</label>
-	    							<input type="email" name="user.email" />
+	    							<input required type="email" name="user.email" />
 								</div>
 								<div class="span5">
 									<label>{{ i18n.adminLabels.number }}</label>
@@ -100,7 +100,7 @@
 							<div class="control-group password-toggle-div clearfix">
 								<div class="span5 offset1">
 									<label>{{ i18n.adminLabels.password }}</label>
-	    							<input type="password" name="user.password" />
+	    							<input required type="password" name="user.password" />
 								</div>
 								<div class="span5">
 									<label>{{ i18n.adminLabels.confirm }}</label>

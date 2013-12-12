@@ -345,10 +345,17 @@
 .detail-group #form-name {
 	display: inline-block;
 	margin-top: 20px;
+	margin-bottom: 0px;
 }
 
 .detail-group #form-name .control-group {
 	display: inline-block;
+}
+
+.detail-group #form-name label.monster-invalid {
+	position: inherit;
+	display: inline-block;
+	margin-left: 5px;
 }
 
 /* Creation */
@@ -367,6 +374,7 @@
 }
 #creation_group_dialog .one-line-form > *{
 	float: left;
+	position: relative;
 }
 #creation_group_dialog .one-line-form input[type="text"] {
 	margin-left: 5px;
@@ -374,6 +382,11 @@
 }
 #creation_group_dialog .one-line-form label {
 	line-height: 30px;
+}
+#creation_group_dialog .one-line-form label.monster-invalid {
+	top: 30px;
+	left: 5px;
+	line-height: 20px !important;
 }
 
 /* Numbers / Extensions */
@@ -529,9 +542,17 @@
 .feature-popup-container[data-feature="call_recording"] form {
 	margin-bottom: 0;
 }
+.feature-popup-container[data-feature="call_recording"] form > div {
+	margin-bottom: 10px;
+	position: relative;
+}
 .feature-popup-container[data-feature="call_recording"] form span {
 	display: inline-block;
 	width: 120px;
 	text-align: right;
 	vertical-align: text-bottom;
+}
+.feature-popup-container[data-feature="call_recording"] form label.monster-invalid {
+	top: 30px;
+	left: 130px;
 }

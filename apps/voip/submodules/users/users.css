@@ -167,6 +167,7 @@
 #users_container .detail-user .user-fields {
 	display: inline-block;
 	padding: 20px;
+	margin: 0px;
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -187,6 +188,11 @@
 	margin: 0 5px 15px 5px;
 }
 
+#users_container .detail-user .user-fields .basic-fields label.monster-invalid {
+	margin-left: -100px;
+	margin-top: 30px;
+}
+
 #users_container .detail-user .fix-left {
 	margin-left: 12px;
 }
@@ -194,6 +200,7 @@
 #users_container .detail-user .row-fields {
 	height: 40px;
 	line-height: 40px;
+	margin-bottom: 10px;
 }
 
 #users_container .detail-user .icon-wrapper {
@@ -387,6 +394,13 @@
 	margin-right: 12px;
 }
 
+#creation_user_dialog label.monster-invalid[for="user.last_name"] {
+	margin-left: 113px;
+}
+#creation_user_dialog label.monster-invalid[for="extension"] {
+	margin-left: 145px;
+}
+
 /* Feature Popups */
 .feature-popup-container {
 	width: 510px;
@@ -411,8 +425,13 @@
 }
 
 .feature-popup-container form .main-line {
-	height: 60px;
+	height: 70px; /* Adding extra space for validation messages */
 	line-height: 60px;
+	position: relative;
+}
+
+.feature-popup-container form .main-line label.monster-invalid {
+    top: 45px;
 }
 
 .feature-popup-container input,

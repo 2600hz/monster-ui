@@ -36,6 +36,7 @@ require.config({
 		timepicker: 'js/lib/jquery.timepicker.min',
 		socket: 'js/lib/socket.io.min',
 		underscore: 'js/lib/underscore-1.4.4.min',
+		validate: 'js/lib/jquery.validate.min',
 		wysiwyg: 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {

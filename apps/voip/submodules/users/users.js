@@ -449,15 +449,33 @@ define(function(require){
 				timezone.populateDropdown(userTemplate.find('#user_creation_timezone'));
 				monster.ui.prettyCheck.create(userTemplate);
 
+				monster.ui.validate(userTemplate.find('#form_user_creation'), {
+					messages: {
+						'user.first_name': {
+							required: self.i18n.active().validation.required
+						},
+						'user.last_name': {
+							required: self.i18n.active().validation.required
+						},
+						'callflow.extension': {
+							required: self.i18n.active().validation.required
+						}
+					}
+				});
+
 				userTemplate.find('#create_user').on('click', function() {
-					var dataForm = form2object('form_user_creation'),
-						formattedData = self.usersFormatCreationData(dataForm);
+					if(monster.ui.valid(userTemplate.find('#form_user_creation'))) {
+						var dataForm = form2object('form_user_creation'),
+							formattedData = self.usersFormatCreationData(dataForm);
 
-					self.usersCreate(formattedData, function(data) {
-						popup.dialog('close').remove();
+						self.usersCreate(formattedData, function(data) {
+							popup.dialog('close').remove();
 
-						self.usersRender({ userId: data.user.id });
-					});
+							self.usersRender({ userId: data.user.id });
+						});
+					} else {
+						console.log('invalid!!');
+					}
 				});
 
 				userTemplate.find('#notification_email').on('ifChanged', function() {
@@ -580,29 +598,38 @@ define(function(require){
 
 			template.on('click', '.save-user', function() {
 				var formData = form2object('form-'+currentUser.id),
-					userToSave = $.extend(true, {}, currentUser, formData);
+					userToSave = $.extend(true, {}, currentUser, formData),
+					form = template.find('#form-'+currentUser.id);
 
-				self.usersUpdateUser(userToSave, function(userData) {
-					toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+				// console.log(form);
+				if(monster.ui.valid(form)) {
+					self.usersUpdateUser(userToSave, function(userData) {
+						toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
 
-					self.usersRender({ userId: userData.data.id });
-				});
+						self.usersRender({ userId: userData.data.id });
+					});
+				}
 			});
 
 			template.on('click', '#change_username', function() {
-				var passwordTemplate = $(monster.template(self, 'users-changePassword', currentUser));
+				var passwordTemplate = $(monster.template(self, 'users-changePassword', currentUser)),
+					form = passwordTemplate.find('#form_new_username');
+
+				monster.ui.validate(form);
 
 				passwordTemplate.find('.save-new-username').on('click', function() {
 					var formData = form2object('form_new_username'),
 					    userToSave = $.extend(true, {}, currentUser, formData);
 
-					self.usersUpdateUser(userToSave, function(userData) {
-						popup.dialog('close').remove();
+					if(monster.ui.valid(form)) {
+						self.usersUpdateUser(userToSave, function(userData) {
+							popup.dialog('close').remove();
 
-						toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+							toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
 
-						self.usersRender({ userId: userData.data.id });
-					});
+							self.usersRender({ userId: userData.data.id });
+						});
+					}
 				});
 
 				passwordTemplate.find('.cancel-link').on('click', function() {
@@ -1010,7 +1037,10 @@ define(function(require){
 			var self = this,
 				data = self.usersFormatConferencingData(data),
 				featureTemplate = $(monster.template(self, 'users-feature-conferencing', data)),
-				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				featureForm = featureTemplate.find('#conferencing_form');
+
+			monster.ui.validate(featureForm);
 
 			featureTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -1021,21 +1051,23 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
-				data.conference = form2object('conferencing_form');
+				if(monster.ui.valid(featureForm)) {
+					data.conference = form2object('conferencing_form');
 
-				if(switchFeature.bootstrapSwitch('status')) {
-					self.usersUpdateConferencing(data, function(user) {
-						popup.dialog('close').remove();
+					if(switchFeature.bootstrapSwitch('status')) {
+						self.usersUpdateConferencing(data, function(user) {
+							popup.dialog('close').remove();
 
-						self.usersRender({ userId: user.id });
-					});
-				}
-				else {
-					self.usersDeleteConferencing(data.user.id, function(user) {
-						popup.dialog('close').remove();
+							self.usersRender({ userId: user.id });
+						});
+					}
+					else {
+						self.usersDeleteConferencing(data.user.id, function(user) {
+							popup.dialog('close').remove();
 
-						self.usersRender({ userId: user.id });
-					});
+							self.usersRender({ userId: user.id });
+						});
+					}
 				}
 			});
 
@@ -1102,7 +1134,10 @@ define(function(require){
 			var self = this,
 				featureTemplate = $(monster.template(self, 'users-feature-hotdesk', currentUser)),
 				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
-				requirePin = featureTemplate.find('[name="require_pin"]');
+				requirePin = featureTemplate.find('[name="require_pin"]'),
+				featureForm = featureTemplate.find('#hotdesk_form');
+
+			monster.ui.validate(featureForm);
 
 			featureTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -1126,19 +1161,22 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
-				var formData = form2object('hotdesk_form');
+				if(monster.ui.valid(featureForm)) {
+					var formData = form2object('hotdesk_form');
 
-				formData.enabled = switchFeature.bootstrapSwitch('status');
-				formData.id = currentUser.extra.extension;
-				delete currentUser.hotdesk;
+					formData.enabled = switchFeature.bootstrapSwitch('status');
+					formData.id = currentUser.extra.extension;
+					if(formData.require_pin === false) { delete formData.pin; }
+					delete currentUser.hotdesk;
 
-				userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
+					userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
 
-				self.usersUpdateUser(userToSave, function(data) {
-					popup.dialog('close').remove();
+					self.usersUpdateUser(userToSave, function(data) {
+						popup.dialog('close').remove();
 
-					self.usersRender({ userId: data.data.id });
-				});
+						self.usersRender({ userId: data.data.id });
+					});
+				}
 			});
 
 			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
@@ -1152,7 +1190,10 @@ define(function(require){
 		usersRenderVMToEmail: function(currentUser) {
 			var self = this,
 				featureTemplate = $(monster.template(self, 'users-feature-vm_to_email', currentUser)),
-				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				featureForm = featureTemplate.find('#vm_to_email_form');
+
+			monster.ui.validate(featureForm);
 
 			featureTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -1206,12 +1247,14 @@ define(function(require){
 
 				/* Only update the email and the checkboxes if the setting is enabled */
 				if(enabled === true) {
-					userToSave.email = formData.email;
+					if(monster.ui.valid(featureForm)) {
+						userToSave.email = formData.email;
 
-					/* Update VMBoxes, then update user and finally close the popup */
-					updateVMsDeleteAfterNotify(formData.delete_after_notify, userToSave.id, function() {
-						updateUser(userToSave);
-					});
+						/* Update VMBoxes, then update user and finally close the popup */
+						updateVMsDeleteAfterNotify(formData.delete_after_notify, userToSave.id, function() {
+							updateUser(userToSave);
+						});
+					}
 				}
 				else {
 					updateUser(userToSave);
@@ -1278,7 +1321,10 @@ define(function(require){
 		usersRenderCallForward: function(currentUser) {
 			var self = this,
 				featureTemplate = $(monster.template(self, 'users-feature-call_forward', currentUser)),
-				switchFeature = featureTemplate.find('.switch').bootstrapSwitch();
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				featureForm = featureTemplate.find('#call_forward_form');
+
+			monster.ui.validate(featureForm);
 
 			featureTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -1289,18 +1335,20 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
-				var formData = form2object('call_forward_form');
+				if(monster.ui.valid(featureForm)) {
+					var formData = form2object('call_forward_form');
 
-				formData.enabled = switchFeature.bootstrapSwitch('status');
-				formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
+					formData.enabled = switchFeature.bootstrapSwitch('status');
+					formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
 
-				var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
+					var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
 
-				self.usersUpdateUser(userToSave, function(data) {
-					popup.dialog('close').remove();
+					self.usersUpdateUser(userToSave, function(data) {
+						popup.dialog('close').remove();
 
-					self.usersRender({ userId: data.data.id });
-				});
+						self.usersRender({ userId: data.data.id });
+					});
+				}
 			});
 
 			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
@@ -1410,6 +1458,19 @@ define(function(require){
 					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow);
 
 					template = $(monster.template(self, 'users-name', dataTemplate));
+					monster.ui.validate(template.find('form.user-fields'), {
+						messages: {
+							'first_name': {
+								required: self.i18n.active().validation.required
+							},
+							'last_name': {
+								required: self.i18n.active().validation.required
+							}
+						}/*,
+						errorPlacement: function(error, element) {
+							error.appendTo(element.parent());
+						}*/
+					});
 
 					timezone.populateDropdown(template.find('#user_timezone'), dataTemplate.timezone);
 
