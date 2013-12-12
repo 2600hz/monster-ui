@@ -154,8 +154,8 @@ define(function(require){
 						});
 					},
 					voicemails: function(callback) {
-						self.strategyGetVoicesmailBoxes(function(callEntities) {
-							callback(null, callEntities);
+						self.strategyGetVoicesmailBoxes(function(voicemailBoxes) {
+							callback(null, voicemailBoxes);
 						});
 					}
 				},
@@ -1999,6 +1999,7 @@ define(function(require){
 					accountId: self.accountId,
 				},
 				success: function(data, status) {
+					data.data.sort(function(a,b) { return (a.name.toLowerCase() > b.name.toLowerCase()); });
 					callback(data.data);
 				}
 			});
