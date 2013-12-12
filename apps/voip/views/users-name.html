@@ -1,5 +1,5 @@
 <div class="detail-user">
-	<div id="form-{{id}}" class="user-fields row-fluid">
+	<form id="form-{{id}}" class="user-fields row-fluid">
 		<div class="basic-fields span6">
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-key"></i></div>
@@ -8,7 +8,7 @@
 			</div>
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-book"></i></div>
-				<input type="text" class="input-small" name="first_name" value="{{first_name}}"></input><input class="input-small fix-left" type="text" name="last_name" value="{{last_name}}"></input>
+				<input required type="text" class="input-small" name="first_name" value="{{first_name}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}"></input>
 			</div>
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-telicon-moderator"></i></div>
@@ -49,7 +49,7 @@
 			<a id="resend_instructions" href="javascript:void(0)">{{ i18n.users.resendInstructions }}</a>
 			<button type="button" id="reset_password" class="btn btn-primary">{{ i18n.users.resetPassword }}</button>
 		</div>-->
-	</div>
+	</form>
 	<div class="actions">
 		<a id="delete_user" class="monster-link" href="javascript:void(0);"><i class="icon-trash icon-red"></i>{{ i18n.users.delete }}</a>
 

@@ -959,9 +959,12 @@ define(function(require){
 			$('.submit-btn', parent).on('click', function(ev) {
 				ev.preventDefault();
 
-				if(typeof callback_submit === 'function') {
-					callback_submit();
-				}
+				current_step = parseInt($('.wizard-top-bar', parent).attr('data-active_step'));
+				self.validate_step(current_step, parent, function() {
+					if(typeof callback_submit === 'function') {
+						callback_submit();
+					}
+				});
 			});
 		},
 
@@ -998,41 +1001,43 @@ define(function(require){
 
 		validate_step: function(step, parent, callback) {
 			var self = this,
-				validated = true,
+				validated = monster.ui.valid($('#endpoint')),
 				step = parseInt(step),
 				error_message = self.i18n.active().please_correct;
 
 			var form_data = form2object('endpoint');
 
-			if(step === 1) {
-				if($('.pbx-brand-list .pbx.selected', parent).size() === 0) {
-					error_message += '<br/>- ' + self.i18n.active().no_pbx_selected;
-					validated = false;
-				}
-			}
-			else if(step === 2) {
-				/* IP */
-				if($('input[type="radio"][name="auth.auth_method"]:checked', parent).val() === 'IP') {
-					if(!($('#auth_ip', parent).val().match(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/) !== null)) {
+			if(validated) {
+				if(step === 1) {
+					if($('.pbx-brand-list .pbx.selected', parent).size() === 0) {
+						error_message += '<br/>- ' + self.i18n.active().no_pbx_selected;
 						validated = false;
-						error_message += '<br/>- ' + self.i18n.active().not_valid_ip;
 					}
 				}
-				/* Auth */
+				else if(step === 2) {
+					/* IP */
+					if($('input[type="radio"][name="auth.auth_method"]:checked', parent).val() === 'IP') {
+						if(!($('#auth_ip', parent).val().match(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/) !== null)) {
+							validated = false;
+							error_message += '<br/>- ' + self.i18n.active().not_valid_ip;
+						}
+					}
+					/* Auth */
+					else {
+
+					}
+				}
+				else if(step === 3) {
+				}
+
+				if(validated === true) {
+					if(typeof callback === 'function') {
+						callback();
+					}
+				}
 				else {
-
+					monster.ui.alert(error_message);
 				}
-			}
-			else if(step === 3) {
-			}
-
-			if(validated === true) {
-				if(typeof callback === 'function') {
-					callback();
-				}
-			}
-			else {
-				monster.ui.alert(error_message);
 			}
 		},
 
@@ -1345,6 +1350,14 @@ define(function(require){
 			else {
 				$('#list_pbxs_navbar', parent).hide();
 			}
+
+			monster.ui.validate(endpointHtml.find('#endpoint'), {
+				rules: {
+					"auth.ip": {
+						"ipv4": true
+					}
+				}
+			});
 
 			(target)
 				.empty()

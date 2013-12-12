@@ -434,10 +434,6 @@
 	position: relative;
 }
 
-#accountsmanager_overview_tab .control-group label.monster-invalid {
-	position: absolute;
-}
-
 
 /***** Edit: Service Plans *****/
 
@@ -627,10 +623,6 @@
     color: #22ccff;
 }
 
-#accountsmanager_limits_tab label.monster-invalid {
-	position: absolute;
-}
-
 /***************** Wizard *********************/
 
 #accountsmanager_new_account_form .account-settings-step .add-admin-pic {
@@ -716,7 +708,6 @@
 }
 
 #accountsmanager_new_account_form label.monster-invalid {
-	position: absolute;
 	margin-top: -20px;
 	line-height: 20px;
 }

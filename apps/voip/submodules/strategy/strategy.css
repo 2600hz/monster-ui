@@ -219,7 +219,7 @@
 }
 
 #strategy_container .element-container.strategy-hours .custom-day {
-	height: 30px;
+	min-height: 32px;
 	line-height: 30px;
 	padding: 15px;
 }
@@ -234,8 +234,12 @@
 	vertical-align: middle;
 }
 
-#strategy_container .element-container.strategy-hours .custom-hours-div .custom-day label {
+#strategy_container .element-container.strategy-hours .custom-hours-div .custom-day .custom-day-label {
 	width: 120px;
+}
+
+#strategy_container .element-container.strategy-hours .custom-hours-div .custom-day label.monster-invalid {
+	position: static;
 }
 
 #strategy_container .element-container.strategy-hours .custom-hours-div input[type="text"] {

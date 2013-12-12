@@ -233,6 +233,22 @@ define(function(require){
 			}
 
 			return randomString;
+		},
+
+		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
+		timeToSeconds: function(time) {
+			var suffix = time.substring(time.length-2),
+				timeArr = time.split(':'),
+				h = parseInt(timeArr[0],10),
+				m = parseInt(timeArr[1],10);
+
+			if(suffix === 'pm' && h < 12) {
+				h += 12;
+			} else if(suffix === "am" && h === 12) {
+				h = 0;
+			}
+
+			return (h*3600 + m*60).toString();
 		}
 	};
 
