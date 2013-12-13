@@ -587,8 +587,10 @@ define(function(require){
 			template.on('click', '#delete_user', function() {
 				var userId = $(this).parents('.grid-row').data('id');
 
-				self.usersDelete(userId, function(data) {
-					toastr.success(monster.template(self, '!' + toastrMessages.userDeleted));
+				monster.ui.confirm(self.i18n.active().users.confirmDeleteUser, function() {
+					self.usersDelete(userId, function(data) {
+						toastr.success(monster.template(self, '!' + toastrMessages.userDeleted));
+					});
 				});
 			});
 
