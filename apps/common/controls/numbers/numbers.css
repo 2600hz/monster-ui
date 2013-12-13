@@ -342,3 +342,42 @@
 	vertical-align: middle;
 	color: #22ccff;
 }
+
+/* Dialog Confirmation Actions */
+#action_confirmation h4 {
+	margin-bottom: 0;
+	padding: 15px 15px 25px;
+	border-bottom: 1px solid #ddd;
+	text-align: center;
+}
+
+#action_confirmation .monster-blue { color: #22ccff; }
+
+#action_confirmation .table-wrapper {
+	max-height: 420px;
+	overflow-y: auto;
+}
+
+#action_confirmation thead th {
+	color: #000;
+	background-color: #f9f9f9;
+	text-shadow: none;
+}
+
+#action_confirmation th { padding: 15px 8px 15px 20px; }
+#action_confirmation td { padding-left: 60px; padding-right: 15px; }
+#action_confirmation tr { background-color: #f9f9f9; }
+#action_confirmation tr:nth-child(odd) { background-color: #f9f9f9; }
+
+#action_confirmation td i.remove-number {
+	position: relative;
+	top: 7px;
+}
+
+#action_confirmation td i.remove-number:hover { cursor: pointer }
+
+#action_confirmation .actions { padding: 15px; }
+
+#action_confirmation .actions a { text-decoration: none; }
+
+#action_confirmation .actions a:hover { text-decoration: underline; }

@@ -47,7 +47,25 @@
 		"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
 		"cnamIconHelp": "This icon means that you set up the Caller-ID for this phone number",
 		"e911IconHelp": "This icon means that you set up e911 for this phone number",
-		"localIconHelp": "This icon means that this number is a local number"
+		"localIconHelp": "This icon means that this number is a local number",
+
+		"dialogConfirm": {
+			"from": "From ",
+			"cancel": "Cancel",
+			"delete": {
+				"title": "Delete Numbers - Confirmation",
+				"questionPartOne": "Are you sure you want to delete ",
+				"questionPartTwo": " number(s)?",
+				"button": "delete number(s)"
+			},
+			"move": {
+				"title": "Move Numbers - Confirmation",
+				"questionPartOne": "Are you sure you want to move ",
+				"questionPartTwo": " number(s) to ",
+				"questionPartThree": "?",
+				"button": "move number(s)"
+			}
+		}
 	},
 
 	"callerId": {
