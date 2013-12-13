@@ -1756,7 +1756,8 @@ define(function(require){
 
 					_.each(results.devices, function(device) {
 						listFnDelete.push(function(callback) {
-							self.usersDeleteDevice(device.id, function(data) {
+//							self.usersDeleteDevice(device.id, function(data) {
+							self.usersUnassignDevice(device.id, function(data) {
 								callback(null, '');
 							});
 						});
@@ -1818,6 +1819,19 @@ define(function(require){
 				}
 			});
 		},
+
+		usersUnassignDevice: function(deviceId, callback) {
+			var self = this;
+
+			self.usersGetDevice(deviceId, function(deviceGet) {
+				delete deviceGet.owner_id;
+
+				self.usersUpdateDevice(deviceGet, function(updatedDevice) {
+					callback && callback(updatedDevice);
+				});
+			});
+		},
+
 		usersDeleteDevice: function(deviceId, callback) {
 			var self = this;
 
