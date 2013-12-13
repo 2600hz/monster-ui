@@ -76,9 +76,10 @@ define(function(require){
 
 			/* Move Numbers */
 			parent.on('click', '.accounts-dropdown .account-link', function(event) {
-				var destinationAccountId = $(this).parent().data('id');
+				var destinationAccountId = $(this).parent().data('id'),
+					destinationAccountName = $(this).find('.account-name').text();
 
-				args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId);
+				args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId, destinationAccountName);
 			});
 
 			var dropdown = {
