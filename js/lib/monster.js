@@ -56,6 +56,9 @@ define(function(require){
 					contentType: request.type || 'application/json',
 					crossOrigin: true,
 					processData: false,
+					customFlags: {
+						generateError: request.generateError === false ? false : true
+					},
 					before: function(ampXHR, settings) {
 						monster.pub('monster.requestStart');
 
@@ -91,6 +94,21 @@ define(function(require){
 
 				if('response' in error && error.response) {
 					parsedError = $.parseJSON(error.response);
+				}
+
+				if(settings.customFlags.generateError) {
+					var errorsI18n = monster.apps.core.i18n.active().errors,
+					    errorMessage = errorsI18n.generic;
+
+					if(error.status in errorsI18n) {
+						errorMessage = errorsI18n[error.status];
+					}
+
+					if(parsedError.message) {
+						errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
+					}
+
+					monster.ui.alert('error', errorMessage);
 				}
 
 				options.error && options.error(parsedError, error);

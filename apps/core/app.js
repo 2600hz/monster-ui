@@ -13,7 +13,8 @@ define(function(require){
 			'layout.getLogo': {
 				url: 'whitelabel/{domain}/logo',
 				dataType: '*',
-				verb: 'GET'
+				verb: 'GET',
+				generateError: false
 			}
 		},
 
