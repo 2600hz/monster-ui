@@ -336,6 +336,19 @@ define(function(require){
 				templateDevice.find('.actions').show();
 			});
 
+			templateDevice.find('.device-box').dblclick(function() {
+				var $this = $(this),
+					dataProvisioner = {
+					endpoint_brand: selectedBrand,
+					endpoint_family: $this.data('family'),
+					endpoint_model: $this.data('model')
+				};
+
+				popup.dialog('close').remove();
+
+				callback && callback(dataProvisioner);
+			});
+
 			templateDevice.find('.missing-brand').on('click', function() {
 				popup.dialog('close').remove();
 
