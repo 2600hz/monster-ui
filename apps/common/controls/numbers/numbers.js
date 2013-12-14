@@ -267,7 +267,15 @@ define(function(require){
 
 			/* On init */
 			parent.find('[data-toggle="tooltip"]').tooltip();
-			parent.find('.list-numbers[data-type="used"]').hide();
+
+			if(dataNumbers.viewType === 'pbx') {
+				parent.find('.list-numbers[data-type="spare"]').hide();
+				parent.find('.half-box[data-type="used"]').addClass('selected');
+			}
+			else {
+				parent.find('.list-numbers[data-type="used"]').hide();
+				parent.find('.half-box[data-type="spare"]').addClass('selected');
+			}
 
 			/* Events */
 			/* Toggle between spare/used numbers view */

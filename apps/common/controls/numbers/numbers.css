@@ -31,7 +31,6 @@
 	border-top: 4px solid #ddd;
 	color: #333;
     cursor: pointer;
-	float: left;
     font-size: 20px;
     height: 80px;
 	line-height: 65px;
@@ -118,7 +117,7 @@
 	margin-right: 5px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality, 
+#numbers_container .account-section .numbers-wrapper .number-box .locality,
 #numbers_container .account-section .numbers-wrapper .number-box .used-by,
 .dialog-spare-container .numbers .number-box .locality {
 	margin-left: 30px;
