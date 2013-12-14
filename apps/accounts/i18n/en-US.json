@@ -136,6 +136,7 @@
 		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later."
 	},
 	"uiRestrictionsLegend": "Select what your customer can view",
+	"uiRestrictionsTooltip": "When you click on your name from top right corner of the screen, you will see a dropdown menu. You can restrict the view of these options to your Sub-Account by simply uncheck it from account permissions.",
 	"uiRestrictionsMenu": {
 		"account": "Account",
 		"settings": "Settings",

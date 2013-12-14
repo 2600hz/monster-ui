@@ -720,6 +720,19 @@
 }
 
 /* RESTRICTIONS MENU */
+.restrictions-tab-container legend .help-popover {
+	background: none repeat scroll 0 0 #FAFAFA;
+	border-radius: 15px 15px 15px 15px;
+	box-shadow: 0 1px 1px #999999;
+	color: #999999;
+	font-size: 17px;
+	height: 20px;
+	line-height: 20px;
+	margin-top: 9px;
+	text-align: center;
+	width: 20px;
+	float: right;
+}
 .restrictions-tab-container .restrictions-menu {
 	float: left;
 	width: 240px;

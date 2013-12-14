@@ -683,6 +683,8 @@ define(function(require){
 				})
 
 				parent.append(stepTemplate);
+
+				parent.find('[data-toggle="tooltip"]').tooltip();
 		},
 
 		changeStep: function(stepIndex, maxStep, parent) {
@@ -1679,6 +1681,8 @@ define(function(require){
 				tabContentTemplate = self.getRestrictionsTabContent(params);
 
 			parent.find('#accountsmanager_uirestrictions_form').append(tabContentTemplate);
+
+			parent.find('[data-toggle="tooltip"]').tooltip();
 
 			parent.find('#accountsmanager_uirestrictions_save').click(function(event) {
 				event.preventDefault();
