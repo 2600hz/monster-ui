@@ -713,6 +713,22 @@
 	line-height: 20px;
 }
 
+#accounts_manager_view .wizard .processing-div {
+	display: none;
+    padding: 50px;
+    text-align: center;
+}
+#accounts_manager_view .wizard .processing-div span {
+    font-size: 20px;
+    color: #22ccff;
+    line-height: 46px;
+    vertical-align: bottom;
+    font-weight: 500;
+}
+#accounts_manager_view .wizard .processing-div i {
+    margin-right: 15px;
+}
+
 /******************* Restrictions Tab ********************/
 
 #accountsmanager_restrictions_tab {

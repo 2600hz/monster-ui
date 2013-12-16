@@ -360,7 +360,23 @@ define(function(require){
 			newAccountWizard.find('.submit-btn').on('click', function(ev) {
 				ev.preventDefault();
 
-				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step'));
+				var currentStep = parseInt(newAccountWizard.find('.wizard-top-bar').data('active_step')),
+					toggleProcessing = function(show) {
+						var stepsDiv = newAccountWizard.find('#accountsmanager_new_account_form'),
+							processingDiv = newAccountWizard.find('.processing-div');
+
+						if(show) {
+							stepsDiv.hide();
+							processingDiv.show();
+							processingDiv.find('i.icon-spinner').addClass('icon-spin');
+							newAccountWizard.find('.step').removeClass('completed');
+						} else {
+							stepsDiv.show();
+							processingDiv.hide();
+							processingDiv.find('i.icon-spinner').removeClass('icon-spin');
+							newAccountWizard.find('.step').addClass('completed');
+						}
+					};
 				self.validateStep(currentStep, newAccountWizard.find('.wizard-content-step[data-step="'+currentStep+'"]'), function() {
 
 					var formData = form2object('accountsmanager_new_account_form'),
@@ -372,6 +388,8 @@ define(function(require){
 							action: $this.is(':checked') ? 'allow' : 'deny'
 						};
 					});
+
+					toggleProcessing(true);
 
 					monster.request({
 						resource: 'accountsManager.create',
@@ -512,6 +530,7 @@ define(function(require){
 						},
 						error: function(data, status) {
 							toastr.error(self.i18n.active().toastrMessages.newAccount.accountError, '', {"timeOut": 5000});
+							toggleProcessing(false);
 						}
 					});
 

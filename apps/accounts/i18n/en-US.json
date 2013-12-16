@@ -111,6 +111,8 @@
 		"incorrectBalanceFormat": "Incorrect format for balance credit, you can only enter a number with up to 2 decimals.",
 		"balanceMinimumAmount": "The minimum amount for balance credit is $5.00."
 	},
+	"wizardProcessingMessage1": "Processing request...",
+	"wizardProcessingMessage2": "Please wait while the account is being created.",
 	"deleteUserConfirm": "This user will be permanently deleted. Continue?",
 	"deleteAccountConfirm": "This account will be permanently deleted. Continue?",
 	"toastrMessages": {
