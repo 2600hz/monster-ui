@@ -316,8 +316,14 @@ define(function(require){
 
 			container.find('#confirm_buy_button').on('click', function(ev) {
 				ev.preventDefault();
-				var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix);
-
+				var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix),
+					confirmDiv = container.find('#confirm_div'),
+					processingDiv = container.find('#processing_purchase_div');
+				
+				confirmDiv.hide();
+				processingDiv.show();
+				processingDiv.find('i.icon-spinner').addClass('icon-spin');
+				
 				monster.request({
 					resource: 'buyNumbers.activateNumbers',
 					data: {

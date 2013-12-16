@@ -127,6 +127,8 @@
 		"month": "Month",
 		"search": "Search",
 		"checkingMessage": "Checking numbers availability...",
+		"processingMessage1": "Activating numbers...",
+		"processingMessage2": "Please wait until the process has been completed.",
 		"unavailable": "Unavailable",
 		"unavailableMessage": "Oops! These numbers just became unavailable. Continue with the remaining available numbers or go back to search results and add more numbers.",
 		"unavailableServiceAlert": "Service currently unavailable, sorry for the inconvenience. Please try again later.",

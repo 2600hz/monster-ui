@@ -355,6 +355,20 @@
 	margin: 5px 20px;
 }
 
+#buy_number #processing_purchase_div {
+	padding: 20px;
+	text-align: center;
+}
+
+#buy_number #processing_purchase_div span {
+	margin-left: 15px;
+	font-weight: 500;
+	font-size: 20px;
+	color: #22ccff;
+	line-height: 32px;
+	vertical-align: bottom;
+}
+
 /***************** Temporary fix for country select *******************/
 
 #vanity_country_select, #tollfree_country_select {
