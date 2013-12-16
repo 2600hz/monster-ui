@@ -228,6 +228,7 @@
 		"addFromSpareDevices": "Add from Spare Devices",
 		"buy": "Buy Numbers",
 		"changeUsername": "Change",
+		"confirmDeleteUser": "Deleting a user will delete this user and his Voicemail Box, and unassign the devices and numbers that were assigned to him. Do you want to continue?",
 		"dialogChangePassword": {
 			"help": "You can set a new password by just typing any password you want, along with the new username!",
 			"password": "Password",

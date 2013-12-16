@@ -585,8 +585,10 @@ define(function(require){
 			template.on('click', '#delete_user', function() {
 				var userId = $(this).parents('.grid-row').data('id');
 
-				self.usersDelete(userId, function(data) {
-					toastr.success(monster.template(self, '!' + toastrMessages.userDeleted));
+				monster.ui.confirm(self.i18n.active().users.confirmDeleteUser, function() {
+					self.usersDelete(userId, function(data) {
+						toastr.success(monster.template(self, '!' + toastrMessages.userDeleted));
+					});
 				});
 			});
 
@@ -1754,7 +1756,8 @@ define(function(require){
 
 					_.each(results.devices, function(device) {
 						listFnDelete.push(function(callback) {
-							self.usersDeleteDevice(device.id, function(data) {
+//							self.usersDeleteDevice(device.id, function(data) {
+							self.usersUnassignDevice(device.id, function(data) {
 								callback(null, '');
 							});
 						});
@@ -1816,6 +1819,19 @@ define(function(require){
 				}
 			});
 		},
+
+		usersUnassignDevice: function(deviceId, callback) {
+			var self = this;
+
+			self.usersGetDevice(deviceId, function(deviceGet) {
+				delete deviceGet.owner_id;
+
+				self.usersUpdateDevice(deviceGet, function(updatedDevice) {
+					callback && callback(updatedDevice);
+				});
+			});
+		},
+
 		usersDeleteDevice: function(deviceId, callback) {
 			var self = this;
 
