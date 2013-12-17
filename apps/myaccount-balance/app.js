@@ -168,7 +168,7 @@ define(function(require){
 						self.refreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
 					});
 
-					balance.find('#get_csv').on('click', function() {
+					balance.find('.action-number#download').on('click', function() {
 						window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 					});
 
