@@ -45,7 +45,7 @@
 		</ul>
 	</div>
 	<div class="restrictions-right">
-		<div class="restrictions-profile container-fluid">
+		<div class="restrictions-profile container-fluid" data-content="restrictions-profile">
 			<legend>{{ i18n.uiRestrictionsExtraSettings.profile.legend }}</legend>
 			<label class="checkbox">
 				<input type="checkbox" name="account.ui_restrictions.profile.show_user" {{#compare account.ui_restrictions.profile.show_user '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsExtraSettings.profile.showUserTab }}
@@ -57,10 +57,13 @@
 				<input type="checkbox" name="account.ui_restrictions.profile.show_billing" {{#compare account.ui_restrictions.profile.show_billing '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsExtraSettings.profile.showBillingTab }}
 			</label>
 		</div>
-		<div class="restrictions-balance container-fluid">
+		<div class="restrictions-balance container-fluid" data-content="restrictions-balance">
 			<legend>{{ i18n.uiRestrictionsExtraSettings.perMinute.legend }}</legend>
 			<label class="checkbox">
 				<input type="checkbox" name="account.ui_restrictions.balance.show_credit" {{#compare account.ui_restrictions.balance.show_credit '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsExtraSettings.perMinute.showCreditInfo }}
+			</label>
+			<label class="checkbox">
+				<input type="checkbox" name="account.ui_restrictions.balance.show_minutes" {{#compare account.ui_restrictions.balance.show_minutes '!==' false }}checked{{/compare}}>{{ i18n.uiRestrictionsExtraSettings.perMinute.showMinutesInfo }}
 			</label>
 		</div>
 	</div>

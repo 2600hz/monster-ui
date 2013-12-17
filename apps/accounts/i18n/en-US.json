@@ -159,7 +159,8 @@
 		},
 		"perMinute": {
 			"legend":"More Balance Settings",
-			"showCreditInfo":"Show Credit Information"
+			"showCreditInfo":"Show Credit Information",
+			"showMinutesInfo": "Show Minutes Information"
 		}
 	},
 	"validationMessages": {
