@@ -150,13 +150,8 @@ define(function(require){
 
 			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
 
-			parent.find('#get_csv').on('click', function() {
+			parent.find('.action-number#download').on('click', function() {
 				window.location.href = self.apiUrl+'accounts/'+self.accountId+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.authToken;
-			});
-
-			parent.find('#get_pdf').on('click', function() {
-				window.location.href = self.apiUrl + 'accounts/' +
-								   self.accountId + '/service_plans/current?identifier=items&depth=4&auth_token=' + self.authToken;
 			});
 		},
 
