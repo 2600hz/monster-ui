@@ -190,6 +190,14 @@ define(function(require){
 						}, 2000
 					);
 				}
+
+				console.log(dataTemplate.users.length);
+
+				if ( dataTemplate.users.length == 0) {
+					parent.find('.no-users-row').css('display', 'block');
+				} else {
+					parent.find('.no-users-row').css('display', 'none');
+				}
 			});
 		},
 

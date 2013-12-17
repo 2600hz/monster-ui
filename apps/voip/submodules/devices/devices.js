@@ -97,6 +97,12 @@ define(function(require){
 						}, 2000
 					);
 				}
+
+				if ( dataTemplate.devices.length == 0 ) {
+					parent.find('.no-devices-row').css('display', 'block');
+				} else {
+					parent.find('.no-devices-row').css('display', 'none');
+				}
 			});
 		},
 

@@ -44,7 +44,8 @@
 	margin-left: 5px;
 }
 
-#devices_container .devices-grid .empty-search-row {
+#devices_container .devices-grid .empty-search-row,
+#devices_container .devices-grid .no-devices-row {
 	display: none;
 	padding: 16px;
 	text-align: center;

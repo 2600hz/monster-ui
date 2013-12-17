@@ -32,6 +32,7 @@
 		"noExtension": "None",
 		"noFeatures": "None",
 		"noMatchingGroup": "There were no groups found matching your search",
+		"noGroupsConfigured": "There are no groups configured",
 		"noNumber": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this group.",
 		"noUnassignedNumbers": "There are no available number left to assign to this group.",
@@ -122,6 +123,7 @@
 		},
 		"buy": "Buy Device",
 		"noMatchingDevices": "There were no devices found matching your search",
+		"noDevicesConfigured": "There are no devices configured",
 		"provisionerPopup": {
 			"brandHeadline": "Select the brand of the device:",
 			"deviceHeadline": "Select the model of the device:",
@@ -255,6 +257,7 @@
 		"noMatchingDevices": "No devices matching your search",
 		"noMatchingNumbers": "There were no numbers found matching your search",
 		"noMatchingUser": "No data found matching your search",
+		"noUsersConfigured": "There are no users configured",
 		"noMoreSpareDevices": "There are no spare device left, you can buy new devices by going in the Devices Inventory",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
 		"noAssignedDevices": "There are currently no device assigned to this user.",

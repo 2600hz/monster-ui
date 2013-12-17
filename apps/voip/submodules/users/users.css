@@ -45,7 +45,8 @@
 	margin-left: 15px;
 }
 
-#users_container .users-grid .empty-search-row {
+#users_container .users-grid .empty-search-row,
+#users_container .users-grid .no-users-row {
 	display: none;
 	padding: 16px;
 	text-align: center;
