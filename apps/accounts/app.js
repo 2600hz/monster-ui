@@ -1750,19 +1750,21 @@ define(function(require){
 				}
 			});
 
-			template.find('.restrictions-right .restrictions-profile input').on('ifToggled', function(e) {
-				var isChecked = false;
+			template.find('.restrictions-right input').on('ifToggled', function(e) {
+				var restrictionsContainer = $(this).parents().eq(2),
+					isChecked = false;
 
-				template.find('.restrictions-right .restrictions-profile input').each(function() {
-					if ($(this).is(':checked')) {
-						isChecked = true;
-						return false;
-					};
-				});
+				if ( restrictionsContainer.data('content') != 'restrictions-balance' ) {
+					restrictionsContainer.find('input').each(function() {
+						if ($(this).is(':checked')) {
+							isChecked = true;
+						}
+					});
 
-				if (!isChecked) {
-					monster.ui.prettyCheck.action(template.find('.restrictions-menu li[data-content="restrictions-profile"] input'), 'uncheck');
-				};
+					if (!isChecked) {
+						monster.ui.prettyCheck.action(template.find('.restrictions-menu li[data-content="' + restrictionsContainer.data('content') + '"] input'), 'uncheck');
+					}
+				}
 			});
 
 			return template;

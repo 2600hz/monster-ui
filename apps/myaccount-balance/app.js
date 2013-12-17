@@ -127,8 +127,11 @@ define(function(require){
 											  defaults,
 											  self.formatTableData(results.transactions.data, defaults.fieldData.accounts),
 											  {uiRestrictions: monster.apps['auth'].originalAccount.ui_restrictions}
-											 ),
-						balance = $(monster.template(self, 'balance', renderData)),
+											 );
+
+					renderData.uiRestrictions.balance.show_header = false;
+
+					var balance = $(monster.template(self, 'balance', renderData)),
 						args = {
 							module: self.name,
 							data: self.i18n.active().currencyUsed + renderData.amount
