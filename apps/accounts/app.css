@@ -723,6 +723,10 @@
 	line-height: 20px;
 }
 
+#accountsmanager_new_account_form .add-credit-container label.monster-invalid {
+	margin-top: 0px;
+}
+
 #accounts_manager_view .wizard .processing-div {
 	display: none;
     padding: 50px;
