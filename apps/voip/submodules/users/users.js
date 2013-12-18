@@ -201,7 +201,7 @@ define(function(require){
 			});
 		},
 
-		usersFormatUserData: function(dataUser, _mainDirectory, _mainCallflow) {
+		usersFormatUserData: function(dataUser, _mainDirectory, _mainCallflow, _vmbox) {
 			var self = this,
 				formattedUser = {
 					additionalDevices: 0,
@@ -275,6 +275,10 @@ define(function(require){
 
 			if(_mainCallflow) {
 				dataUser.extra.mainCallflowId = _mainCallflow.id;
+			}
+
+			if(_vmbox) {
+				dataUser.extra.vmbox = _vmbox;
 			}
 
 			return dataUser;
@@ -393,6 +397,7 @@ define(function(require){
 					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
 							currentUser = data;
+							console.log(currentUser);
 
 							if(data.extra.mainDirectoryId) {
 								mainDirectoryId = data.extra.mainDirectoryId;
@@ -609,13 +614,27 @@ define(function(require){
 					userToSave = $.extend(true, {}, currentUser, formData),
 					form = template.find('#form-'+currentUser.id);
 
-				// console.log(form);
 				if(monster.ui.valid(form)) {
-					self.usersUpdateUser(userToSave, function(userData) {
-						toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
+					currentUser.extra.vmbox.mailbox = formData.extra.vmboxNumber;
+					currentUser.extra.vmbox.timezone = formData.timezone;
+					monster.parallel({
+							vmbox: function(callback) {
+								self.usersUpdateVMBox(currentUser.extra.vmbox, function(vmbox) {
+									callback && callback(null, vmbox);
+								});
+							},
+							user: function(callback) {
+								self.usersUpdateUser(userToSave, function(userData) {
+									callback && callback(null, userData.data);
+								});
+							}
+						},
+						function(error, results) {
+							toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: results.user.first_name + ' ' + results.user.last_name }));
 
-						self.usersRender({ userId: userData.data.id });
-					});
+							self.usersRender({ userId: results.user.id });
+						}
+					);
 				}
 			});
 
@@ -630,12 +649,22 @@ define(function(require){
 					    userToSave = $.extend(true, {}, currentUser, formData);
 
 					if(monster.ui.valid(form)) {
+						if(currentUser.extra.sameEmail) {
+							userToSave.email = userToSave.username;
+						}
+
 						self.usersUpdateUser(userToSave, function(userData) {
+							currentUser.username = userData.data.username;
+							template.find('#username').html(userData.data.username);
+
+							if(currentUser.extra.sameEmail) {
+								template.find('#email').val(userData.data.email);
+								currentUser.email = userData.username;
+							}
+
 							popup.dialog('close').remove();
 
 							toastr.success(monster.template(self, '!' + toastrMessages.userUpdated, { name: userData.data.first_name + ' ' + userData.data.last_name }));
-
-							self.usersRender({ userId: userData.data.id });
 						});
 					}
 				});
@@ -1450,20 +1479,33 @@ define(function(require){
 					},
 					user: function(callback) {
 						self.usersGetUser(userId, function(userData) {
+							console.log(userData);
 							callback(null, userData);
+						});
+					},
+					vmbox: function(callback) {
+						self.usersListVMBoxesUser(userId, function(vmboxes) {
+							if(vmboxes.length > 0) {
+								self.usersGetVMBox(vmboxes[0].id, function(vmbox) {
+									callback(null, vmbox);
+								});
+							}
 						});
 					}
 				},
 				function(error, results) {
+					console.log(results);
 					var userData = results.user;
 
 					_.each(listUsers.users, function(user) {
 						if(user.id === results.user.id) {
-							userData = $.extend(true, userData, user);
+							userData = $.extend(true, user, userData);
+
+							return false;
 						}
 					});
 
-					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow);
+					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow, results.vmbox);
 
 					template = $(monster.template(self, 'users-name', dataTemplate));
 					monster.ui.validate(template.find('form.user-fields'), {
@@ -1474,10 +1516,7 @@ define(function(require){
 							'last_name': {
 								required: self.i18n.active().validation.required
 							}
-						}/*,
-						errorPlacement: function(error, element) {
-							error.appendTo(element.parent());
-						}*/
+						}
 					});
 
 					timezone.populateDropdown(template.find('#user_timezone'), dataTemplate.timezone);
@@ -1695,14 +1734,18 @@ define(function(require){
 		usersFormatCreationData: function(data, callback) {
 			var self = this,
 				fullName = data.user.first_name + ' ' + data.user.last_name,
+				defaultTimezone = timezone.getLocaleTimezone(),
 				formattedData = {
 					user: $.extend(true, {}, {
-						email: data.extra.sameEmail ? data.user.username : data.extra.email
+						email: data.extra.sameEmail ? data.user.username : data.extra.email,
+						priv_level: 'user',
+						timezone: defaultTimezone
 					}, data.user),
 					vmbox: {
-						mailbox: (data.callflow || {}).extension,
+						//mailbox: (data.callflow || {}).extension,
+						mailbox: data.vmbox.number,
 						name: fullName + '\'s VMBox',
-						timezone: data.user.timezone
+						timezone: defaultTimezone
 					},
 					callflow: {
 						contact_list: {
@@ -2169,9 +2212,6 @@ define(function(require){
 				},
 				success: function(userData) {
 					callback && callback(userData);
-				},
-				error: function(data) {
-					monster.ui.handleError(data);
 				}
 			});
 		},

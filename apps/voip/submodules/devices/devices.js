@@ -849,9 +849,6 @@ define(function(require){
 				},
 				success: function(data) {
 					callback(data.data);
-				},
-				error: function(data) {
-					monster.ui.handleError(data);
 				}
 			});
 		},
@@ -870,8 +867,6 @@ define(function(require){
 					callbackSuccess && callbackSuccess(data.data);
 				},
 				error: function(data) {
-					monster.ui.handleError(data);
-
 					callbackError && callbackError(data);
 				}
 			});

@@ -204,6 +204,10 @@
 	margin-bottom: 10px;
 }
 
+#users_container .detail-user .row-fields #vmbox_number {
+	margin-left: 7px;
+}
+
 #users_container .detail-user .icon-wrapper {
 	display: inline-block;
 	text-align: center;
@@ -379,7 +383,11 @@
 }
 
 #creation_user_dialog {
-	padding: 20px;
+	padding: 20px 10px 20px 60px
+}
+
+#creation_user_dialog .control-group .controls {
+	margin-left: 30px;
 }
 
 #creation_user_dialog input.same-line {
@@ -395,11 +403,51 @@
 	margin-right: 12px;
 }
 
+#creation_user_dialog button {
+	margin-right: 70px;
+}
+
 #creation_user_dialog label.monster-invalid[for="user.last_name"] {
 	margin-left: 113px;
 }
+
 #creation_user_dialog label.monster-invalid[for="extension"] {
 	margin-left: 145px;
+}
+
+#creation_user_dialog .control-group.hack-left .control-label{
+	width: 0px;
+}
+
+#creation_user_dialog .control-group.hack-left .controls {
+	margin-left: 5px;
+}
+
+#creation_user_dialog .control-group-split .split-group {
+	float: left;
+}
+
+#creation_user_dialog .control-group-split .split-group:not(:first-child) {
+	margin-left: 20px;
+}
+
+#creation_user_dialog .control-group-split {
+	margin-bottom: 22px;
+	margin-top: -7px;
+}
+
+#creation_user_dialog .control-group-split .split-title {
+	margin-left: 30px;
+	padding-bottom: 5px;
+}
+
+#creation_user_dialog .control-group-split i {
+	margin-left: 2px;
+	margin-right: 10px;
+}
+
+#creation_user_dialog .control-group-split input {
+	width: 74px;
 }
 
 /* Feature Popups */
@@ -470,15 +518,15 @@
 
 /* Change Password Popup */
 .change-password-popup {
-	width: 390px;
+	width: 430px;
 }
 
 .change-password-popup .form-horizontal .control-group .control-label {
-	width: 100px;
+	width: 140px;
 }
 
 .change-password-popup .form-horizontal .control-group .controls {
-	margin-left: 120px;
+	margin-left: 160px;
 }
 
 .change-password-popup .change-password-content,
