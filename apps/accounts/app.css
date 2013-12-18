@@ -28,16 +28,42 @@
 	overflow-y: auto;
 }
 
+#accounts_manager_view .left-menu .account-list-add {
+	line-height: 50px;
+	max-height: 50px;
+	font-weight: 500;
+	background-color: #ddd;
+}
+
+#accounts_manager_view .left-menu .account-list-add i {
+	margin: 10px;
+}
+
+#accounts_manager_view .left-menu .account-list-add:hover {
+	background-color: #e6e6e6;
+	color: #22ccff;
+	cursor: pointer;
+}
+
+#accounts_manager_view .left-menu .account-list-add:hover i {
+	color: #22ccff;
+}
+
 #accounts_manager_view .left-menu .account-list-element {
 	line-height: 60px;
 	max-height: 60px;
 	overflow: hidden;
-	border-bottom: solid 1px #ccc;
+	border-top: solid 1px #ccc;
 	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
+}
+
+#accounts_manager_view .left-menu .account-list-element:last-of-type {
+	border-bottom: solid 1px #ccc;
 }
 
 #accounts_manager_view .left-menu .account-list-element.active {
 	background-color: #fff;
+	border-top:  solid 2px #22ccff;
 }
 
 #accounts_manager_view .left-menu .account-list-element > div {
@@ -105,23 +131,6 @@
 	padding: 20px 20px;
 	overflow: hidden;
 	height: 30px;
-}
-
-#add_account_link {
-	padding: 20px 20px;
-	float: right;
-	border-left: solid 1px #ccc;
-	background-color: #f3f3f3;
-}
-
-#add_account_link:hover {
-	background-color: #eee;
-	color: #22ccff;
-	cursor: pointer;
-}
-
-#add_account_link:hover > i {
-	color: #22ccff;
 }
 
 /***** Main content *****/

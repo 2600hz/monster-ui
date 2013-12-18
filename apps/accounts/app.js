@@ -201,7 +201,7 @@ define(function(require){
 				self.render();
 			});
 
-			parent.find('#add_account_link').click(function(e) {
+			parent.on('click', '.account-list-add', function(e) {
 				e.preventDefault();
 				self.renderNewAccountWizard({
 					parent: parent,
