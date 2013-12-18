@@ -97,6 +97,12 @@ define(function(require){
 						}, 2000
 					);
 				}
+
+				if ( dataTemplate.devices.length == 0 ) {
+					parent.find('.no-devices-row').css('display', 'block');
+				} else {
+					parent.find('.no-devices-row').css('display', 'none');
+				}
 			});
 		},
 
@@ -843,9 +849,6 @@ define(function(require){
 				},
 				success: function(data) {
 					callback(data.data);
-				},
-				error: function(data) {
-					monster.ui.handleError(data);
 				}
 			});
 		},
@@ -864,8 +867,6 @@ define(function(require){
 					callbackSuccess && callbackSuccess(data.data);
 				},
 				error: function(data) {
-					monster.ui.handleError(data);
-
 					callbackError && callbackError(data);
 				}
 			});

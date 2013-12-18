@@ -115,6 +115,12 @@ define(function(require){
 						}, 2000
 					);
 				}
+
+				if ( typeof dataTemplate.groups.length === 'undefined' ) {
+					parent.find('.no-groups-row').css('display', 'block');
+				} else {
+					parent.find('.no-groups-row').css('display', 'none');
+				}
 			});
 		},
 

@@ -161,18 +161,6 @@ define(function(require){
 			return dialog;
 		},
 
-		handleError: function(data) {
-			var self = this,
-				coreApp = monster.apps['core'];
-
-			if('message' in data) {
-				toastr.error(data.message);
-			}
-			else {
-				toastr.error(coreApp.i18n.active().unexpectedError);
-			}
-		},
-
 		confirm: function(content, callbackOk, callbackCancel, options) {
 			var self = this,
 				dialog,
@@ -611,7 +599,7 @@ define(function(require){
 				}
 				return monster.util.timeToSeconds(value) > monster.util.timeToSeconds(target.val());
 			}, localization.customRules['greaterDate']);
-			
+
 			this.customValidationInitialized = true;
 		},
 

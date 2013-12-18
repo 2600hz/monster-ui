@@ -20,20 +20,16 @@
 	margin-bottom: 0px;
 }
 
-.service-plan-content-wrapper .action-bar li.dropdown-download i {
+.service-plan-content-wrapper .action-bar .action-number#download i {
 	margin-right: 5px;
 	text-decoration: none;
 }
 
-.service-plan-content-wrapper .action-bar li.dropdown-download {
+.service-plan-content-wrapper .action-bar .action-number#download {
+	color: #666666;
 	margin-left: 20px;
 	margin-top: 5px;
 	list-style: none;
-}
-
-.service-plan-content-wrapper .action-bar li.dropdown-download > a {
-	color: #666666;
-	margin-right: 20px;
 	white-space: nowrap;
 }
 

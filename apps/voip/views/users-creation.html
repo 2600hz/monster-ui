@@ -1,7 +1,15 @@
 <div id="creation_user_dialog">
 	<form class="form-horizontal small-labels" id="form_user_creation">
 		<div class="control-group">
-			<label class="control-label" for="email"><i class="icon-key"></i></label>
+			<label class="control-label" for="first_name"><i class="icon-user"></i></label>
+			<div class="controls">
+				<input required class="input-small" type="text" id="first_name" name="user.first_name" placeholder="{{i18n.users.dialogCreationUser.firstName}}"></input>
+				<input required class="same-line input-small" type="text" name="user.last_name" placeholder="{{i18n.users.dialogCreationUser.lastName}}"></input>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="email"><i class="icon-envelope"></i></label>
 			<div class="controls">
 				<input required type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}"/>
 			</div>
@@ -14,32 +22,24 @@
 			</div>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="first_name"><i class="icon-book"></i></label>
-			<div class="controls">
-				<input required class="input-small" type="text" id="first_name" name="user.first_name" placeholder="{{i18n.users.dialogCreationUser.firstName}}"></input>
-				<input required class="same-line input-small" type="text" name="user.last_name" placeholder="{{i18n.users.dialogCreationUser.lastName}}"></input>
+		<div class="control-group-split clearfix">
+			<div class="split-group">
+				<div class="split-title">{{ i18n.users.dialogCreationUser.extension }}</div>
+				<div class="split-field">
+					<i class="icon-phone"></i>
+					<input required class="input-mini" type="text" name="callflow.extension" id="extension" placeholder="{{i18n.users.dialogCreationUser.extension}}" value="{{nextExtension}}"/>
+				</div>
+			</div>
+			<div class="split-group">
+				<div class="split-title">{{ i18n.users.dialogCreationUser.vmboxNumber }}</div>
+				<div class="split-field">
+					<i class="icon-asterisk"></i>
+					<input required class="input-mini" type="text" name="vmbox.number" id="extension" placeholder="{{i18n.users.dialogCreationUser.extension}}" value="{{nextExtension}}"/>
+				</div>
 			</div>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="timezone"><i class="icon-telicon-moderator"></i></label>
-			<div class="controls">
-				<select id="priv_level" name="user.priv_level" class="input-small">
-					<option value="admin">{{ i18n.users.admin }}</option>
-					<option value="user" selected>{{ i18n.users.user }}</option>
-				</select>
-				<i class="second-field icon-phone"></i>
-				<input required class="input-mini" type="text" name="callflow.extension" id="extension" placeholder="{{i18n.users.dialogCreationUser.extension}}" value="{{nextExtension}}">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="user_creation_timezone"><i class="icon-time"></i></label>
-			<div class="controls">
-				<select id="user_creation_timezone" name="user.timezone" data-original_value="{{timezone}}"></select>
-			</div>
-		</div>
-		<div class="control-group">
+		<div class="control-group hack-left">
 			<label class="control-label" for="include_directory"></label>
 			<div class="controls">
 				<label>
@@ -48,7 +48,7 @@
 				</label>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group hack-left">
 			<label class="control-label" for="notification_email"></label>
 			<div class="controls">
 				<label>

@@ -32,6 +32,7 @@
 		"noExtension": "None",
 		"noFeatures": "None",
 		"noMatchingGroup": "There were no groups found matching your search",
+		"noGroupsConfigured": "There are no groups configured",
 		"noNumber": "None",
 		"noAssignedNumbers": "There are no numbers assigned to this group.",
 		"noUnassignedNumbers": "There are no available number left to assign to this group.",
@@ -122,6 +123,7 @@
 		},
 		"buy": "Buy Device",
 		"noMatchingDevices": "There were no devices found matching your search",
+		"noDevicesConfigured": "There are no devices configured",
 		"provisionerPopup": {
 			"brandHeadline": "Select the brand of the device:",
 			"deviceHeadline": "Select the model of the device:",
@@ -232,20 +234,28 @@
 		"dialogChangePassword": {
 			"help": "You can set a new password by just typing any password you want, along with the new username!",
 			"password": "Password",
-			"passwordPlaceholder": "at least 8 letters or digits",
+			"passwordPlaceholder": "Password (Min. 8 characters)",
 			"title": "Update username and password",
-			"username": "Login E-mail"
+			"username": "User's Email address"
 		},
 		"dialogCreationUser": {
 			"createUser": "Create User",
 			"extension": "Ext. #",
 			"firstName": "First Name",
 			"lastName": "Last Name",
-			"loginEmail": "Login Email",
+			"loginEmail": "User's Email address",
 			"notificationEmail": "Notification E-mail",
-			"password": "at least 8 letters or digits",
+			"password": "Password (Min. 8 characters)",
 			"sendToSameEmail": "Use the login e-mail for system notifications",
-			"title": "User creation"
+			"title": "User creation",
+			"vmboxNumber": "VM Box Number"
+		},
+		"editionForm": {
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"role": "Role",
+			"timezone": "Timezone",
+			"vmboxNumber": "VMBox Number"
 		},
 		"delete": "Delete User",
 		"errorCallerId": "Before configuring the Caller-ID of this user, you need to assign him a number",
@@ -255,6 +265,7 @@
 		"noMatchingDevices": "No devices matching your search",
 		"noMatchingNumbers": "There were no numbers found matching your search",
 		"noMatchingUser": "No data found matching your search",
+		"noUsersConfigured": "There are no users configured",
 		"noMoreSpareDevices": "There are no spare device left, you can buy new devices by going in the Devices Inventory",
 		"noMoreSpareNumbers": "There are no spare number left, you can buy new numbers by clicking the link below",
 		"noAssignedDevices": "There are currently no device assigned to this user.",
@@ -329,7 +340,7 @@
 			"title": "Caller-ID Number",
 			"dropdownLabel": "Show my Caller-Id Number as",
 			"headline": "User Caller-ID Number Settings",
-			"help": "If you have more than one phone device, you can do specific settings for each device from the devices screen. Device setting will overwrite user Caller-ID settings."
+			"help": "If you don't enable this feature, the Caller-ID displayed by default will be the one configured on the Main Number of this account."
 		},
 		"music_on_hold": {
 			"title": "Music-On-Hold"

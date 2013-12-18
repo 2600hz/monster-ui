@@ -44,7 +44,8 @@
 	margin-left: 5px;
 }
 
-#groups_container .groups-grid .empty-search-row {
+#groups_container .groups-grid .empty-search-row,
+#groups_container .groups-grid .no-groups-row {
 	display: none;
 	padding: 16px;
 	text-align: center;

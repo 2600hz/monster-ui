@@ -41,15 +41,11 @@
     width: 100%;
 }
 
-.balance-content-wrapper .action-bar-wrapper .dropdown-download {
-    display: inline-block;
-}
-
-.balance-content-wrapper .action-bar-wrapper .dropdown-download #download {
+.balance-content-wrapper .action-bar-wrapper .action-number#download {
 	color: #666;
 }
 
-.balance-content-wrapper .action-bar-wrapper .dropdown-download i {
+.balance-content-wrapper .action-bar-wrapper .action-number#download i {
 	text-decoration: none;
 	margin-right: 5px;
 }

@@ -2,15 +2,6 @@
 	<form id="form-{{id}}" class="user-fields row-fluid">
 		<div class="basic-fields span6">
 			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-key"></i></div>
-				{{username}}
-				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
-			</div>
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-book"></i></div>
-				<input required type="text" class="input-small" name="first_name" value="{{first_name}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}"></input>
-			</div>
-			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-telicon-moderator"></i></div>
 				<select id="priv_level" name="priv_level">
 					{{#compare priv_level '===' 'admin'}}
@@ -22,10 +13,31 @@
 					{{/compare}}
 				</select>
 			</div>
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-key"></i></div>
+				<span id="username">{{username}}</span>
+				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
+			</div>
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-user"></i></div>
+				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
+			</div>
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-asterisk"></i></div>
+				<label for="vmbox_number">
+					{{ i18n.users.editionForm.vmboxNumber }}
+				</label>
+				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
+			</div>
+
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-time"></i></div>
 				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
 			</div>
+
 			{{#if extra.mainCallflowId}}
 			<div class="row-fields">
 				<label class="fix-left">
