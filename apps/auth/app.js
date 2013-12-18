@@ -61,6 +61,7 @@ define(function(require){
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
 				self.isReseller = cookieData.isReseller;
+				self.resellerId = cookieData.reseller_id;
 				self.installedApps = cookieData.installedApps;
 
 				monster.pub('auth.loadAccount');
@@ -86,6 +87,7 @@ define(function(require){
 					self.authToken = data.auth_token;
 					self.userId = data.data.owner_id;
 					self.isReseller = data.data.is_reseller;
+					self.resellerId = data.data.reseller_id;
 					if("apps" in data.data) {
 						self.installedApps = data.data.apps;
 					} else {
@@ -110,6 +112,7 @@ define(function(require){
 						accountId: self.accountId,
 						userId: self.userId,
 						isReseller: self.isReseller,
+						resellerId: self.resellerId,
 						installedApps: self.installedApps
 					};
 
@@ -411,6 +414,7 @@ define(function(require){
 					self.authToken = data.auth_token;
 					self.userId = null;
 					self.isReseller = data.data.is_reseller;
+					self.resellerId = data.data.reseller_id;
 
 					$('#ws-content').empty();
 

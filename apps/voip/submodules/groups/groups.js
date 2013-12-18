@@ -88,7 +88,8 @@ define(function(require){
 			var self = this,
 				args = args || {},
 				parent = args.parent || $('.right-content'),
-				_groupId = args.groupId;
+				_groupId = args.groupId,
+				noGoup = false;
 
 			self.groupsGetData(function(data) {
 				var dataTemplate = self.groupsFormatListData(data),
@@ -116,7 +117,11 @@ define(function(require){
 					);
 				}
 
-				if ( typeof dataTemplate.groups.length === 'undefined' ) {
+				for (var group in dataTemplate.groups) {
+					noGroup = ( typeof dataTemplate.groups[group] === 'undefined' ) ? true : false;
+				}
+
+				if ( noGroup ) {
 					parent.find('.no-groups-row').css('display', 'block');
 				} else {
 					parent.find('.no-groups-row').css('display', 'none');
