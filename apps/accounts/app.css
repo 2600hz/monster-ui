@@ -33,6 +33,7 @@
 	max-height: 50px;
 	font-weight: 500;
 	background-color: #ddd;
+	width: 240px;
 }
 
 #accounts_manager_view .left-menu .account-list-add i {
@@ -57,7 +58,7 @@
 	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
 }
 
-#accounts_manager_view .left-menu .account-list-element:last-of-type {
+#accounts_manager_view .left-menu .account-list-container li:last-child {
 	border-bottom: solid 1px #ccc;
 }
 
@@ -189,7 +190,7 @@
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item.open {
-	border-top: 1px solid #22ccff;
+	border-top: 2px solid #22ccff;
 }
 
 #accounts_manager_view .main-content .list-settings .settings-item .title {
