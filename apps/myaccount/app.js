@@ -142,7 +142,7 @@ define(function(require){
 
 			self.bindEvents(myaccountHtml);
 
-			if(monster.apps['auth'].isReseller) {
+			if(monster.apps['auth'].resellerId === monster.config.resellerId) {
 				self.checkCreditCard();
 			}
 		},
