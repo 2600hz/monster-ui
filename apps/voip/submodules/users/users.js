@@ -617,7 +617,7 @@ define(function(require){
 					currentUser.extra.vmbox.timezone = formData.timezone;
 					monster.parallel({
 							vmbox: function(callback) {
-								self.usersUpdateVMBox(currentUser.extra.vmbox, function(vmbox) {
+								self.usersSmartUpdateVMBox(currentUser, true, function(vmbox) {
 									callback && callback(null, vmbox);
 								});
 							},
@@ -1114,6 +1114,7 @@ define(function(require){
 			});
 		},
 
+
 		usersFormatConferencingData: function(data) {
 			return data;
 		},
@@ -1487,6 +1488,9 @@ define(function(require){
 								self.usersGetVMBox(vmboxes[0].id, function(vmbox) {
 									callback(null, vmbox);
 								});
+							}
+							else {
+								callback(null, {});
 							}
 						});
 					}
@@ -1951,13 +1955,13 @@ define(function(require){
 			var self = this;
 
 			self.usersGetUser(userId, function(user) {
+				user.extra = {
+					vmbox: {
+						mailbox: listExtensions[0]
+					}
+				};
+
 				var fullName = user.first_name + ' ' + user.last_name,
-					vmbox = {
-						owner_id: user.id,
-						mailbox: listExtensions[0], //TODO
-						name: fullName + '\'s VMBox',
-						timezone: user.timezone
-					},
 					callflow = {
 						contact_list: {
 							exclude: false
@@ -1983,7 +1987,7 @@ define(function(require){
 						owner_id: user.id
 					};
 
-				self.usersCreateVMBox(vmbox, function(_dataVM) {
+				self.usersSmartUpdateVMBox(user, false, function(_dataVM) {
 					callflow.flow.children['_'].data.id = _dataVM.id;
 
 					self.usersCreateCallflow(callflow, function(_dataCF) {
@@ -2493,6 +2497,39 @@ define(function(require){
 				},
 				success: function(callflowData) {
 					callback && callback(callflowData.data);
+				}
+			});
+		},
+
+		usersSmartUpdateVMBox: function(user, needVMUpdate, callback) {
+			var self = this;
+
+			self.usersListVMBoxesUser(user.id, function(vmboxes) {
+				if(vmboxes.length > 0) {
+					if(needVMUpdate) {
+						self.usersGetVMBox(vmboxes[0].id, function(vmbox) {
+							vmbox = $.extend(true, {}, vmbox, user.extra.vmbox);
+
+							self.usersUpdateVMBox(vmbox, function(vmbox) {
+								callback && callback(vmbox);
+							});
+						});
+					}
+					else {
+						callback && callback(vmboxes[0]);
+					}
+				}
+				else {
+					var vmbox = {
+						owner_id: user.id,
+						mailbox: user.extra.vmbox.mailbox,
+						name: user.first_name + ' ' + user.last_name + '\'s VMBox',
+						timezone: user.timezone
+					};
+
+					self.usersCreateVMBox(vmbox, function(vmbox) {
+						callback && callback(vmbox);
+					});
 				}
 			});
 		},
