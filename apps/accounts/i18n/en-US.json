@@ -58,7 +58,7 @@
 	"classifiers": {
 		"unknown": {
 			"name": "Other than above",
-			"help": "Please select this option when you want this account to place calls to ANY NUMBER other than mentioned on the list. (When the formate of the number is unknown to the system.)"
+			"help": "Please select this option when you want this account to place calls to ANY NUMBER other than mentioned on the list. (When the format of the number is unknown to the system.)"
 		}
 	},
 	"activeServicePlan": "Active service plan",
