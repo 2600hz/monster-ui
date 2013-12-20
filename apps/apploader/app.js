@@ -74,11 +74,11 @@ define(function(require){
 						tolerance: "pointer"
 					});
 
-					template.find('.app-list').niceScroll({
+					self.niceScrollId = template.find('.app-list').niceScroll({
 						cursorcolor:"#333",
 						cursoropacitymin:0.5,
 						hidecursordelay:1000
-					}).hide();
+					}).hide().id;
 
 					self.bindEvents(template);
 					self.show();
@@ -121,6 +121,9 @@ define(function(require){
 			});
 
 			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
+				//Cleaning up nicescrolls from the DOM
+				$('.nicescroll-rails:not(#'+self.niceScrollId+',#'+self.niceScrollId+'-hr)').remove();
+				
 				monster.apps.load($(this).data('name'), function(app){
 					app.render();
 				});
