@@ -82,6 +82,11 @@
 	left: auto;
 }
 
+.pull-right.dropdown-menu:before {
+    right: 9px;
+    left: auto;
+}
+
 /* More class for bootstrap */
 .content-centered {
     text-align: center;

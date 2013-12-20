@@ -89,7 +89,7 @@ define(function(require){
 				args = args || {},
 				parent = args.parent || $('.right-content'),
 				_groupId = args.groupId,
-				noGoup = false;
+				noGroup = true;
 
 			self.groupsGetData(function(data) {
 				var dataTemplate = self.groupsFormatListData(data),
@@ -120,6 +120,8 @@ define(function(require){
 				for (var group in dataTemplate.groups) {
 					noGroup = ( typeof dataTemplate.groups[group] === 'undefined' ) ? true : false;
 				}
+
+				console.log(noGroup);
 
 				if ( noGroup ) {
 					parent.find('.no-groups-row').css('display', 'block');

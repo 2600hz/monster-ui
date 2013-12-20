@@ -245,6 +245,10 @@
     text-shadow: 1px 0 1px #CCCCCC;
 }
 
+.edit-device .content .tabs-section .number-address {
+	display: none;
+}
+
 .edit-device .help-box.red-box {
 	margin: 10px 25px
 }

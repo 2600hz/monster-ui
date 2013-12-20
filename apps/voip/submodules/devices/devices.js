@@ -18,6 +18,10 @@ define(function(require){
 				url: 'accounts/{accountId}/phone_numbers',
 				verb: 'GET'
 			},
+			'common.e911.getNumber': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+				verb: 'GET'
+			},
 			/* Provisioner */
 			'voip.devices.getProvisionerData': {
 				apiRoot: monster.config.api.provisioner || 'http://p.2600hz.com/',
@@ -72,7 +76,7 @@ define(function(require){
 
 			self.devicesGetData(function(data) {
 				var dataTemplate = self.devicesFormatListData(data),
-				    template = $(monster.template(self, 'devices-layout', dataTemplate)),
+					template = $(monster.template(self, 'devices-layout', dataTemplate)),
 					templateDevice;
 
 				_.each(dataTemplate.devices, function(device) {
@@ -110,28 +114,28 @@ define(function(require){
 			var self = this;
 
 			template.find('.devices-header .search-query').on('keyup', function() {
-                var searchString = $(this).val().toLowerCase(),
-                	viewMode = 'true',//template.find('#device_view_selector').val(),
-                    rows = template.find('.devices-rows .grid-row:not(.title)'),
-                    emptySearch = template.find('.devices-rows .empty-search-row');
+				var searchString = $(this).val().toLowerCase(),
+					viewMode = 'true',//template.find('#device_view_selector').val(),
+					rows = template.find('.devices-rows .grid-row:not(.title)'),
+					emptySearch = template.find('.devices-rows .empty-search-row');
 
-                _.each(rows, function(row) {
-                    var row = $(row);
+				_.each(rows, function(row) {
+					var row = $(row);
 
 					if(row.data('assigned')+'' === viewMode) {
-                    	row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
+						row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
 					}
 					else {
 						row.hide();
 					}
-                });
+				});
 
-                if(rows.size() > 0) {
-                    rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
-                }
-            });
+				if(rows.size() > 0) {
+					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+				}
+			});
 
-            template.find('.switch').on('change', function() {
+			template.find('.switch').on('change', function() {
 				var toggle = $(this),
 					row = toggle.parents('.grid-row'),
 					deviceId = row.data('id'),
@@ -169,9 +173,9 @@ define(function(require){
 				function() {
 					toggle.bootstrapSwitch('toggleState');
 				});
-            });
+			});
 
-            template.find('.settings').on('click', function() {
+			template.find('.settings').on('click', function() {
 				var $this = $(this),
 					dataDevice = {
 						id: $this.parents('.grid-row').data('id')
@@ -183,9 +187,9 @@ define(function(require){
 						self.devicesRender({ deviceId: device.id });
 					});
 				});
-            });
+			});
 
-            template.find('.create-device').on('click', function() {
+			template.find('.create-device').on('click', function() {
 				var type = $(this).data('type');
 
 				monster.pub('voip.devices.renderAdd', {
@@ -194,7 +198,7 @@ define(function(require){
 						self.devicesRender({ deviceId: device.id });
 					}
 				});
-            });
+			});
 		},
 
 		devicesRenderAdd: function(args) {
@@ -230,8 +234,16 @@ define(function(require){
 				mode = data.id ? 'edit' : 'add',
 				type = data.device_type,
 				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
-			    templateDevice = $(monster.template(self, 'devices-'+type, data)),
-			    deviceForm = templateDevice.find('#form_device');
+				templateDevice = $(monster.template(self, 'devices-'+type, data)),
+				deviceForm = templateDevice.find('#form_device'),
+				selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
+
+			if ( selectedNumber != "" ) {
+				self.devicesGetE911NumberAddress(selectedNumber, function(address) {
+					templateDevice.find('.number-address').css('display', 'block');
+					templateDevice.find('.number-address p').html(address);
+				});
+			}
 
 			monster.ui.validate(deviceForm, {
 				rules: {
@@ -257,13 +269,13 @@ define(function(require){
 
 			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
-			  		connectWith: '.connectedSortable'
+					connectWith: '.connectedSortable'
 				}).disableSelection();
 			}
 
 			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
 				templateDevice.find('#video_codec_selector .selected-codecs, #video_codec_selector .available-codecs').sortable({
-			  		connectWith: '.connectedSortable'
+					connectWith: '.connectedSortable'
 				}).disableSelection();
 			}
 
@@ -299,6 +311,21 @@ define(function(require){
 
 			templateDevice.find('.actions .cancel-link').on('click', function() {
 				popup.dialog('close').remove();
+			});
+
+			templateDevice.on('change', '.caller-id-select', function() {
+				var selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
+
+				templateDevice.find('.number-address p').empty();
+
+				if ( selectedNumber != "" ) {
+					self.devicesGetE911NumberAddress(selectedNumber, function(address) {
+						templateDevice.find('.number-address p').html(address);
+					});
+					templateDevice.find('.number-address').slideDown();
+				} else {
+					templateDevice.find('.number-address').slideUp();
+				}
 			});
 
 			var popup = monster.ui.dialog(templateDevice, {
@@ -462,18 +489,18 @@ define(function(require){
 						listCodecs: {
 							audio: {
 								'G729': 'G729 - 8kbps (Requires License)',
-                                'PCMU': 'G711u / PCMU - 64kbps (North America)',
-                                'PCMA': 'G711a / PCMA - 64kbps (Elsewhere)',
-                                'GSM': 'GSM',
-                                'G722_16': 'G722 (HD) @ 16kHz',
-                                'G722_32': 'G722.1 (HD) @ 32kHz',
-                                'CELT_48': 'Siren (HD) @ 48kHz',
-                                'CELT_64': 'Siren (HD) @ 64kHz'
+								'PCMU': 'G711u / PCMU - 64kbps (North America)',
+								'PCMA': 'G711a / PCMA - 64kbps (Elsewhere)',
+								'GSM': 'GSM',
+								'G722_16': 'G722 (HD) @ 16kHz',
+								'G722_32': 'G722.1 (HD) @ 32kHz',
+								'CELT_48': 'Siren (HD) @ 48kHz',
+								'CELT_64': 'Siren (HD) @ 64kHz'
 							},
 							video: {
 								'H261': 'H261',
-                                'H263': 'H263',
-                                'H264': 'H264'
+								'H263': 'H263',
+								'H264': 'H264'
 							}
 						}
 					},
@@ -605,7 +632,7 @@ define(function(require){
 
 		devicesFormatListData: function(data) {
 			var self = this,
-			    formattedData = {
+				formattedData = {
 					countDevices: 0,
 					devices: {}
 				},
@@ -802,7 +829,7 @@ define(function(require){
 					}
 				},
 				function(error, results) {
-			    	var formattedData = self.devicesFormatData(results);
+					var formattedData = self.devicesFormatData(results);
 
 					callback && callback(formattedData);
 				}
@@ -914,6 +941,27 @@ define(function(require){
 					callback && callback(results);
 				}
 			);
+		},
+
+		devicesGetE911NumberAddress: function(number, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'common.e911.getNumber',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(_data, status) {
+					var street_address = _data.data.dash_e911.street_address,
+						postal_code = _data.data.dash_e911.postal_code,
+						locality = _data.data.dash_e911.locality,
+						region = _data.data.dash_e911.region,
+						number = _data.data.id;
+
+					callback(street_address + '<br>' + locality + ', ' + region + ' ' + postal_code);
+				}
+			});
 		}
 	};
 

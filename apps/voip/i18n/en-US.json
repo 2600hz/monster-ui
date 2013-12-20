@@ -101,7 +101,8 @@
 				"sectionTitle": "Emergency Caller-ID",
 				"emergency": "Number",
 				"notSet": "- Account Default -",
-				"noE911Numbers": "You didn't set E911 on any of your numbers, please set it up via the Number Manager and come back on this screen once it's done"
+				"noE911Numbers": "You didn't set E911 on any of your numbers, please set it up via the Number Manager and come back on this screen once it's done",
+				"address": "Address"
 			},
 			"miscellaneous": {
 				"menuTitle": "Miscellaneous",

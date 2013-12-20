@@ -156,9 +156,15 @@
 							<select name="caller_id.emergency.number" class="caller-id-select">
 								<option value="">{{i18n.devices.popupSettings.callerId.notSet}}</option>
 								{{#each extra.e911Numbers}}
-									<option{{#compare ../this.caller_id.emergency.number "===" this}} selected{{/compare}} value="{{this}}">{{this}}</option>
+									<option {{#compare ../this.caller_id.emergency.number "===" this}} selected{{/compare}} value="{{this}}">{{this}}</option>
 								{{/each}}
 							</select>
+						</div>
+					</div>
+					<div class="control-group number-address">
+						<label class="control-label">{{i18n.devices.popupSettings.callerId.address}}</label>
+						<div class="controls">
+							<p></p>
 						</div>
 					</div>
 				{{else}}
