@@ -319,6 +319,7 @@
 .device-popup .block-brand .brand-selection .brand-box.selected,
 .device-popup .block-brand .brand-selection .brand-box:hover {
 	border: 2px solid #22CCFF;
+	cursor: pointer;
 }
 
 /* Default state */
@@ -342,7 +343,11 @@
 }
 
 .device-popup .block-device .device-selection .device-box.selected {
-	border: 2px solid #22CCFF;
+	border: 2px solid #22CCFF !important;
+}
+.device-popup .block-device .device-selection .device-box:hover {
+	border: 2px solid #ddd;
+	cursor: pointer;
 }
 
 .device-popup .block-device .device-selection .device-box .device-image {
