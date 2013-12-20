@@ -422,6 +422,7 @@ define(function(require){
 							if(strategyData.callflows[callflowName].flow.module === "voicemail") {
 								tabData.callOption.callEntityId = 'none';
 								tabData.callOption.voicemailId = strategyData.callflows[callflowName].flow.data.id;
+								tabData.callOption.type = "user-voicemail";
 							} else if(!_.isEmpty(strategyData.callflows[callflowName].flow.children)) {
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
 								if("_" in strategyData.callflows[callflowName].flow.children
