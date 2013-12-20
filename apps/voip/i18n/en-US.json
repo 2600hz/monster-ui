@@ -400,7 +400,9 @@
 			"callTabTitle": "Select the way you want your callers to reach you.",
 			"incomingCall": "Incoming Call",
 			"virtualReceptionist": "Virtual Receptionist",
-			"voicemail": "Voicemail"
+			"voicemail": "Voicemail",
+			"groupOther": "Other",
+			"optionNone": "Skip to Voicemail"
 		},
 		"popup": {
 			"title": "Virtual Receptionist",

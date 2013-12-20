@@ -62,6 +62,9 @@
 					{{/each}}
 				</optgroup>
 			{{/each}}
+			<optgroup label="{{i18n.strategy.calls.groupOther}}">
+				<option value="none" data-type="none" {{#compare callOption.callEntityId '===' 'none'}}selected{{/compare}}>{{i18n.strategy.calls.optionNone}}</option>
+			</optgroup>
 		</select>
 	</div>
 	<div class="arrow-icon"><i class="icon-arrow-down icon-large"></i></div>

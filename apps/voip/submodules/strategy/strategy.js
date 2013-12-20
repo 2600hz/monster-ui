@@ -419,7 +419,10 @@ define(function(require){
 								};
 
 
-							if(!_.isEmpty(strategyData.callflows[callflowName].flow.children)) {
+							if(strategyData.callflows[callflowName].flow.module === "voicemail") {
+								tabData.callOption.callEntityId = 'none';
+								tabData.callOption.voicemailId = strategyData.callflows[callflowName].flow.data.id;
+							} else if(!_.isEmpty(strategyData.callflows[callflowName].flow.children)) {
 								tabData.callOption.callEntityId = strategyData.callflows[callflowName].flow.data.id;
 								if("_" in strategyData.callflows[callflowName].flow.children
 								&& strategyData.callflows[callflowName].flow.children["_"].module === "voicemail") {
@@ -1012,6 +1015,9 @@ define(function(require){
 									endpoint_type: "group",
 									id: selectedEntity.val()
 								}];
+								break;
+							case 'none': 
+								flowElement = {};
 								break;
 						}
 
