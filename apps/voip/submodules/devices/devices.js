@@ -235,14 +235,17 @@ define(function(require){
 				type = data.device_type,
 				popupTitle = mode === 'edit' ? monster.template(self, '!' + self.i18n.active().devices[type].editTitle, { name: data.name }) : self.i18n.active().devices[type].addTitle;
 				templateDevice = $(monster.template(self, 'devices-'+type, data)),
-				deviceForm = templateDevice.find('#form_device'),
-				selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
+				deviceForm = templateDevice.find('#form_device');
 
-			if ( selectedNumber != "" ) {
-				self.devicesGetE911NumberAddress(selectedNumber, function(address) {
-					templateDevice.find('.number-address').css('display', 'block');
-					templateDevice.find('.number-address p').html(address);
-				});
+			if ( data.extra.hasE911Numbers ) {
+				var selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
+
+				if (selectedNumber != "" ) {
+					self.devicesGetE911NumberAddress(selectedNumber, function(address) {
+						templateDevice.find('.number-address').css('display', 'block');
+						templateDevice.find('.number-address p').html(address);
+					});
+				}
 			}
 
 			monster.ui.validate(deviceForm, {
@@ -954,12 +957,15 @@ define(function(require){
 				},
 				success: function(_data, status) {
 					var street_address = _data.data.dash_e911.street_address,
-						postal_code = _data.data.dash_e911.postal_code,
 						locality = _data.data.dash_e911.locality,
-						region = _data.data.dash_e911.region,
-						number = _data.data.id;
+						postal_code = _data.data.dash_e911.postal_code,
+						region = _data.data.dash_e911.region;
 
-					callback(street_address + '<br>' + locality + ', ' + region + ' ' + postal_code);
+					if ( typeof _data.data.dash_e911.extended_address !== 'undefined' ) {
+						callback(street_address + ', ' + _data.data.dash_e911.extended_address + '<br>' + locality + ', ' + region + ' ' + postal_code);
+					} else {
+						callback(street_address + ', ' + '<br>' + locality + ', ' + region + ' ' + postal_code);
+					}
 				}
 			});
 		}
