@@ -163,7 +163,8 @@ define(function(require){
 			var self = this,
 				args = args || {},
 				parent = args.parent || $('.right-content'),
-				_userId = args.userId;
+				_userId = args.userId,
+				_openedTab = args.openedTab;
 
 			self.usersGetData(function(data) {
 				var dataTemplate = self.usersFormatListData(data),
@@ -195,6 +196,12 @@ define(function(require){
 					parent.find('.no-users-row').css('display', 'block');
 				} else {
 					parent.find('.no-users-row').css('display', 'none');
+				}
+
+				if(_userId && _openedTab) {
+					template.find('.grid-row[data-id="'+ _userId +'"] .grid-cell[data-type="' + _openedTab + '"]').click();
+
+					args.callback && args.callback();
 				}
 			});
 		},
@@ -395,7 +402,6 @@ define(function(require){
 					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
 							currentUser = data;
-							console.log(currentUser);
 
 							if(data.extra.mainDirectoryId) {
 								mainDirectoryId = data.extra.mainDirectoryId;
@@ -1086,21 +1092,28 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
+				var args = {
+					openedTab: 'features',
+					callback: function() {
+						popup.dialog('close').remove();
+					}
+				};
+
 				if(monster.ui.valid(featureForm)) {
 					data.conference = form2object('conferencing_form');
 
 					if(switchFeature.bootstrapSwitch('status')) {
-						self.usersUpdateConferencing(data, function(user) {
-							popup.dialog('close').remove();
+						self.usersUpdateConferencing(data, function(data) {
+							args.userId = data.user.data.id;
 
-							self.usersRender({ userId: user.id });
+							self.usersRender(args);
 						});
 					}
 					else {
-						self.usersDeleteConferencing(data.user.id, function(user) {
-							popup.dialog('close').remove();
+						self.usersDeleteConferencing(data.user.id, function(data) {
+							args.userId = data.user.data.id;
 
-							self.usersRender({ userId: user.id });
+							self.usersRender(args);
 						});
 					}
 				}
@@ -1134,20 +1147,26 @@ define(function(require){
 			});
 
 			featureTemplate.find('.save').on('click', function() {
-				var newNumber = popup.find('.dropdown-numbers').val();
+				var newNumber = popup.find('.dropdown-numbers').val(),
+					args = {
+						openedTab: 'features',
+						callback: function() {
+							popup.dialog('close').remove();
+						}
+					};
 
 				if(switchFeature.bootstrapSwitch('status')) {
 					self.usersUpdateFaxing(data, newNumber, function(results) {
-						popup.dialog('close').remove();
+						args.userId = results.callflow.owner_id;
 
-						self.usersRender({ userId: results.callflow.owner_id });
+						self.usersRender(args);
 					});
 				}
 				else {
 					self.usersDeleteFaxing(data.callflows.owner_id, function() {
-						popup.dialog('close').remove();
+						args.userId = data.callflows.owner_id;
 
-						self.usersRender({ userId: data.callflows.owner_id });
+						self.usersRender(args);
 					});
 				}
 			});
@@ -1198,7 +1217,13 @@ define(function(require){
 
 			featureTemplate.find('.save').on('click', function() {
 				if(monster.ui.valid(featureForm)) {
-					var formData = form2object('hotdesk_form');
+					var formData = form2object('hotdesk_form'),
+					args = {
+						openedTab: 'features',
+						callback: function() {
+							popup.dialog('close').remove();
+						}
+					};
 
 					formData.enabled = switchFeature.bootstrapSwitch('status');
 					formData.id = currentUser.extra.extension;
@@ -1208,9 +1233,9 @@ define(function(require){
 					userToSave = $.extend(true, {}, currentUser, { hotdesk: formData });
 
 					self.usersUpdateUser(userToSave, function(data) {
-						popup.dialog('close').remove();
+						args.userId = data.data.id;
 
-						self.usersRender({ userId: data.data.id });
+						self.usersRender(args);
 					});
 				}
 			});
@@ -1243,11 +1268,17 @@ define(function(require){
 				var formData = form2object('vm_to_email_form'),
 				    userToSave = $.extend(true, {}, currentUser),
 				    enabled = switchFeature.bootstrapSwitch('status'),
+				    args = {
+						callback: function() {
+							popup.dialog('close').remove();
+						},
+				    	openedTab: 'features'
+				    },
 				    updateUser = function(user) {
 						self.usersUpdateUser(user, function(data) {
-							popup.dialog('close').remove();
+							args.userId = data.data.id;
 
-							self.usersRender({ userId: data.data.id });
+							self.usersRender(args);
 						});
 					},
 					/* updates all the vmboxes with the new delete after notify setting, and then calls the callback*/
@@ -1325,7 +1356,13 @@ define(function(require){
 						caller_id: {
 							internal: {}
 						}
-					}, currentUser);
+					}, currentUser),
+					args = {
+						openedTab: 'features',
+						callback: function() {
+							popup.dialog('close').remove();
+						}
+					};
 
 				if(switchCallerId.bootstrapSwitch('status') === false) {
 					if('internal' in userToSave.caller_id) {
@@ -1337,9 +1374,9 @@ define(function(require){
 				}
 
 				self.usersUpdateUser(userToSave, function(data) {
-					popup.dialog('close').remove();
+					args.userId = data.data.id;
 
-					self.usersRender({ userId: data.data.id });
+					self.usersRender(args);
 				});
 			});
 
@@ -1358,7 +1395,13 @@ define(function(require){
 			var self = this,
 				featureTemplate = $(monster.template(self, 'users-feature-call_forward', currentUser)),
 				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
-				featureForm = featureTemplate.find('#call_forward_form');
+				featureForm = featureTemplate.find('#call_forward_form'),
+				args = {
+					callback: function() {
+						popup.dialog('close').remove()
+					},
+					openedTab: 'features'
+				};
 
 			monster.ui.validate(featureForm);
 
@@ -1380,9 +1423,9 @@ define(function(require){
 					var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
 
 					self.usersUpdateUser(userToSave, function(data) {
-						popup.dialog('close').remove();
+						args.userId = data.data.id;
 
-						self.usersRender({ userId: data.data.id });
+						self.usersRender(args);
 					});
 				}
 			});
@@ -1478,7 +1521,6 @@ define(function(require){
 					},
 					user: function(callback) {
 						self.usersGetUser(userId, function(userData) {
-							console.log(userData);
 							callback(null, userData);
 						});
 					},
@@ -1496,7 +1538,6 @@ define(function(require){
 					}
 				},
 				function(error, results) {
-					console.log(results);
 					var userData = results.user;
 
 					_.each(listUsers.users, function(user) {
@@ -2501,6 +2542,9 @@ define(function(require){
 			});
 		},
 
+		/* If user has a vmbox, then only update it if it comes from the user form.
+		If the check comes from the extension page, where we create a callflow,
+		then only update the vmbox if there are no vmbox attached to this user */
 		usersSmartUpdateVMBox: function(user, needVMUpdate, callback) {
 			var self = this;
 

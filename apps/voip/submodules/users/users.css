@@ -74,6 +74,7 @@
 #users_container .users-grid .grid-row .grid-cell {
 	border-right: 1px solid #eee;
 	display: inline-block;
+	height: 100%;
 	overflow: hidden;
 	padding-left: 10px;
 	width: 20%;
