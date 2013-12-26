@@ -41,10 +41,14 @@
 }
 
 .links .top-link {
+	display: block;
+	float: left;
+	width: 62px;
 	height: 62px;
 	line-height: 62px;
-	padding: 0 10px;
+	text-align: center;
 	text-decoration: none;
+	border-left: 2px solid #22ccff;
 }
 
 .links .top-link i {

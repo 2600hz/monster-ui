@@ -65,10 +65,15 @@ a.monster-link i {
     background-color: #22ccff;
 }
 
+#main section > .navbar .nav.links {
+    margin-right: -20px;
+}
+
 #main section > .navbar .nav > li > a {
     text-shadow: none;
     color: whiteSmoke;
-    padding-top: 19px;
+    line-height: 62px;
+    padding: 0 22px 0 0;
     font-size: 14px;
 }
 
