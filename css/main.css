@@ -68,7 +68,7 @@ a.monster-link i {
 #main section > .navbar .nav > li > a {
     text-shadow: none;
     color: whiteSmoke;
-    padding-top: 21px;
+    padding-top: 19px;
     font-size: 14px;
 }
 
@@ -94,14 +94,14 @@ a.monster-link i {
     font-size: 16px;
 }
 
-#main section > .navbar .nav > li.myaccount-link i.icon-caret-down {
+#main section > .navbar .nav > li.myaccount-link i {
     position: relative;
     top: 2px;
     margin-left: 8px;
     color: #FFF;
 }
 
-#main section > .navbar .nav > li.myaccount-link:hover i.icon-caret-down {
+#main section > .navbar .nav > li.myaccount-link:hover i {
 	color: #22CCFF
 }
 
@@ -113,6 +113,10 @@ a.monster-link i {
 #main section > .navbar .nav > li > a:focus,
 #main section > .navbar .nav > li > a:hover {
     color: #22ccff;
+}
+
+#main section > .navbar .nav > li > a:hover i {
+    color: #22ccff !important;
 }
 
 #main section > .navbar .navbar-inner .logo {
@@ -145,6 +149,10 @@ a.monster-link i {
     text-align: center;
     text-decoration: none;
     width: 42px;
+}
+
+#main section > .navbar .navbar-inner .home:hover .icon-white {
+    color: #22ccff !important;
 }
 #main section > .navbar .navbar-inner .home.conferencing {
     padding: 5px;
