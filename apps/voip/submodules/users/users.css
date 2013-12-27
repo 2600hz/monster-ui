@@ -397,10 +397,6 @@
 	text-align: center;
 }
 
-#creation_user_dialog div.dialog-buttons-wrapper button#create_user {
-	letter-spacing: 0.5px;
-}
-
 #creation_user_dialog .control-group .controls {
 	margin-left: 36px;
 }

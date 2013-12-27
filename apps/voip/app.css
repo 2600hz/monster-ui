@@ -29,7 +29,12 @@
 }
 
 #voip_container > .left-menu .category {
-	background: #fcfcfc;
+	background-color: #fcfcfc;
+	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 97%) 100%);
+	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 97%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 97%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 97%) 100%);
+	background-image:         linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 97%) 100%);
 	border-top: 1px solid #ddd;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
@@ -46,7 +51,12 @@
 }
 
 #voip_container > .left-menu .category.active {
-	background: #22ccff;
+	background-color: #22ccff;
+	background-image: -webkit-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
+	background-image:    -moz-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
+	background-image:         linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
 	border: 1px solid #22ccff;
 	color: #fff;
 }
@@ -71,10 +81,6 @@
 
 #voip_container > .left-menu .category-group {
 	margin-top: 10px;
-}
-
-#voip_container > .left-menu .category.active {
-	background: #22ccff;
 }
 
 #voip_container > .left-menu .category:last-child {
