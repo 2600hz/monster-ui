@@ -232,6 +232,7 @@ body div {
 .btn-success {
     text-transform: uppercase;
     font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 /* Inputs */

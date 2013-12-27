@@ -93,7 +93,7 @@
 }
 
 #users_container .users-grid .grid-row .grid-cell.active {
-	background: #f5f5f5;
+	background: #e0e0e0;
 	height: 51px;
 }
 
@@ -133,7 +133,7 @@
 }
 
 #users_container .users-grid .grid-row .edit-user {
-	background: #f5f5f5;
+	background: #e0e0e0;
 	border-top: 1px solid #eee;
 	min-height: 50px;
 }
@@ -397,6 +397,10 @@
 	text-align: center;
 }
 
+#creation_user_dialog div.dialog-buttons-wrapper button#create_user {
+	letter-spacing: 0.5px;
+}
+
 #creation_user_dialog .control-group .controls {
 	margin-left: 36px;
 }
@@ -426,8 +430,12 @@
 	width: 0px;
 }
 
+#creation_user_dialog .control-group.hack-left .icheckbox_flat {
+	margin-right: 12px;
+}
+
 #creation_user_dialog .control-group.hack-left .controls {
-	margin-left: 5px;
+	margin-left: 0;
 }
 
 #creation_user_dialog .control-group-split .split-group {
