@@ -383,12 +383,22 @@
 	box-shadow: 1px 1px 15px #ddd inset;
 }
 
-#creation_user_dialog {
-	padding: 20px 10px 20px 60px
+#creation_user_dialog form > div {
+	padding: 20px 40px 0px 60px;
+	border-bottom: 1px solid #c1c1c1;
+}
+
+#creation_user_dialog i {
+	color: #929799;
+}
+
+#creation_user_dialog div.dialog-buttons-wrapper {
+	padding-bottom: 20px;
+	text-align: center;
 }
 
 #creation_user_dialog .control-group .controls {
-	margin-left: 30px;
+	margin-left: 36px;
 }
 
 #creation_user_dialog input.same-line {
@@ -402,10 +412,6 @@
 #creation_user_dialog i.second-field {
 	margin-left: 30px;
 	margin-right: 12px;
-}
-
-#creation_user_dialog button {
-	margin-right: 70px;
 }
 
 #creation_user_dialog label.monster-invalid[for="user.last_name"] {
@@ -429,7 +435,7 @@
 }
 
 #creation_user_dialog .control-group-split .split-group:not(:first-child) {
-	margin-left: 20px;
+	margin-left: 14px;
 }
 
 #creation_user_dialog .control-group-split {
@@ -438,13 +444,14 @@
 }
 
 #creation_user_dialog .control-group-split .split-title {
-	margin-left: 30px;
+	margin-left: 36px;
 	padding-bottom: 5px;
+	font-size: 12px
 }
 
 #creation_user_dialog .control-group-split i {
 	margin-left: 2px;
-	margin-right: 10px;
+	margin-right: 16px;
 }
 
 #creation_user_dialog .control-group-split input {

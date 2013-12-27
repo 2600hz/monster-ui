@@ -1,5 +1,6 @@
 <div id="creation_user_dialog">
 	<form class="form-horizontal small-labels" id="form_user_creation">
+	<div>
 		<div class="control-group">
 			<label class="control-label" for="first_name"><i class="icon-user"></i></label>
 			<div class="controls">
@@ -21,7 +22,9 @@
 				<input required minlength="8" type="password" name="user.password" id="password" placeholder="{{i18n.users.dialogCreationUser.password}}"/>
 			</div>
 		</div>
+	</div>
 
+	<div>
 		<div class="control-group-split clearfix">
 			<div class="split-group">
 				<div class="split-title">{{ i18n.users.dialogCreationUser.extension }}</div>
@@ -38,7 +41,9 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
+	<div>
 		<div class="control-group hack-left">
 			<label class="control-label" for="include_directory"></label>
 			<div class="controls">
@@ -63,6 +68,7 @@
 				<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}">
 			</div>
 		</div>
+	</div>
 	</form>
 	<div class="dialog-buttons-wrapper">
 		<button id="create_user" class="btn btn-success">{{ i18n.users.dialogCreationUser.createUser }}</button>

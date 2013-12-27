@@ -48,7 +48,7 @@
 	line-height: 62px;
 	text-align: center;
 	text-decoration: none;
-	border-left: 2px solid #22ccff;
+	border-left: 1px solid #353535;
 }
 
 .links .top-link i {
@@ -159,29 +159,30 @@ table.table tr td {
 /* jQuery Popup Customization */
 .ui-dialog {
 	border: solid 1px #777;
-	border-radius: 0;
+	border-radius: 5px;
 	box-shadow: 1px 1px 3px #333;
 	padding: 0px;
 }
 
 .ui-dialog .ui-dialog-content {
 	background: #f9f9f9;
-	border-radius: 0px;
+	border-radius: 5px;
 	min-width: 300px;
 	padding: 0;
 }
 
 .ui-dialog .ui-dialog-titlebar {
-	background: -moz-linear-gradient(top, hsl(0,0%,90%) 0%, hsl(0,0%,80%) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,90%)), color-stop(100%,hsl(0,0%,80%)));
-	background: -webkit-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
-	background: -o-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
-	background: -ms-linear-gradient(top, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
-	background: linear-gradient(to bottom, hsl(0,0%,90%) 0%,hsl(0,0%,80%) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E6E6E6', endColorstr='#CCCCCC',GradientType=0 );
-	border-radius: 0;
+	background: -moz-linear-gradient(top, hsl(0,0%,94%) 0%, hsl(0,0%,88%) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,94%)), color-stop(100%,hsl(0,0%,88%)));
+	background: -webkit-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
+	background: -o-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
+	background: -ms-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
+	background: linear-gradient(to bottom, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EFEFEF', endColorstr='#D7D7D7',GradientType=0 );
+	border-radius: 5px 5px 0 0;
 	padding: 15px 20px;
-	border: none;
+	border: 0;
+	border-bottom: 1px solid #c1c1c1;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
@@ -192,9 +193,11 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 500;
-	color: #777;
+	color: #424749;
+	text-shadow: 1px 1px 1px #f7f7f7;
+	letter-spacing: 0.4px;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -203,15 +206,16 @@ table.table tr td {
 }
 
 .ui-dialog .ui-dialog-titlebar-close i {
-	color: #777;
+	color: #626769;
 	font-size: 20px;
 }
 
-.ui-dialog .ui-dialog-titlebar-close:hover i.icon-stack-base {
-	text-shadow: 3px 3px 8px #fff,
+.ui-dialog .ui-dialog-titlebar-close:hover i.icon-remove-sign {
+	/*text-shadow: 3px 3px 8px #fff,
 				-3px 3px 8px #fff,
 				 3px -3px 8px #fff,
-				-3px -3px 8px #fff;
+				-3px -3px 8px #fff;*/
+	color: #22ccff;
 }
 
 .ui-widget-overlay {

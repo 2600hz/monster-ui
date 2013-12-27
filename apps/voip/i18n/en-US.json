@@ -241,14 +241,14 @@
 		},
 		"dialogCreationUser": {
 			"createUser": "Create User",
-			"extension": "Ext. #",
+			"extension": "Extention #",
 			"firstName": "First Name",
 			"lastName": "Last Name",
 			"loginEmail": "User's Email address",
 			"notificationEmail": "Notification E-mail",
 			"password": "Password (Min. 8 characters)",
 			"sendToSameEmail": "Use the login e-mail for system notifications",
-			"title": "User creation",
+			"title": "Create User",
 			"vmboxNumber": "VM Box Number"
 		},
 		"editionForm": {
