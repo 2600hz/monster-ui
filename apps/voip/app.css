@@ -47,18 +47,26 @@
 }
 
 #voip_container > .left-menu .category:hover {
-	background: #f5f5f5;
+	background: #ddd;
 }
 
 #voip_container > .left-menu .category.active {
+	position: relative;
 	background-color: #22ccff;
-	background-image: -webkit-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
-	background-image:    -moz-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
-	background-image:     -ms-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
-	background-image:      -o-linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
-	background-image:         linear-gradient(top, hsl(194, 87%, 76%) 0%, hsl(196, 87%, 73%) 100%);
+	background-image: none;
 	border: 1px solid #22ccff;
 	color: #fff;
+}
+
+#voip_container > .left-menu .category.active:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 21px;
+	right: -10px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #22ccff;
 }
 
 #voip_container > .left-menu .category.active .title i {
@@ -108,7 +116,7 @@
 }
 
 #voip_container > .left-menu .category .title i {
-	color: #666;
+	color: #929799;
 	margin: 0px 8px 0px 4px;
 }
 

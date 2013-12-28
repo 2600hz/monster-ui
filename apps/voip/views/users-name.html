@@ -45,6 +45,7 @@
 					{{ i18n.users.includeInDirectory }}
 				</label>
 			</div>
+
 			{{/if}}
 			<div class="row-fields">
             	<label class="fix-left" for="notification_email">
@@ -52,6 +53,7 @@
 					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
                 </label>
         	</div>
+
         	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
             	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
             	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
