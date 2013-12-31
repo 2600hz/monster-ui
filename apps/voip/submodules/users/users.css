@@ -1,15 +1,16 @@
 #users_container .users-header {
-	background: #fcfcfc;
-	border: 1px solid #ddd;
-	border-radius: 4px;
 	font-size: 18px;
-	height: 30px;
 	line-height: 30px;
-	padding: 15px;
 }
 
 #users_container .users-header > * {
 	display: inline-block;
+}
+
+#users_container .users-header .title {
+	padding: 15px;
+	border: 1px solid #dcdcdc;
+	border-radius: 4px 0 0 4px;
 }
 
 #users_container .users-header .count-users {
@@ -23,19 +24,33 @@
 }
 
 #users_container .users-header .add-user {
-	font-size: 14px;
+	margin: 0;
+	padding: 13px;
+	border: 1px solid #dcdcdc;
+	border-left: 0;
+	border-radius: 0 4px 4px 0;
+	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	vertical-align: top;
+	text-align: center;
+	font-size: 12px;
+	line-height: 16px;
 }
 
 #users_container .users-header .add-user i {
-	text-decoration: none;
+	display: block;
 	margin-right: 5px;
+	color: #929799;
+	text-decoration: none;
 }
 
+#users_container .users-header .search-box { margin: 15px 0 15px 15px; }
+
 #users_container .users-grid {
-	background: #fcfcfc;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	margin-top: 10px;
+	margin-top: 20px;
 	font-family: verdana;
 }
 
@@ -51,27 +66,18 @@
 	text-align: center;
 }
 
-#users_container .users-grid .grid-row.title:not(:last-child) {
-	border-bottom: 1px solid #ddd;
-}
-
 #users_container .users-grid .grid-row.title,
 #users_container .users-grid .grid-row .user-cells{
 	height: 50px;
 	line-height: 50px; /* 60 - padding */
 }
 
-#users_container .users-grid .grid-row:not(:last-child) {
-	border-bottom: 1px solid #eee;
-}
-
 #users_container .users-grid .grid-row.title .grid-cell {
-	text-align: center;
-	padding-left: 0;
+	text-align: left;
+	padding-left: 10px;
 }
 
 #users_container .users-grid .grid-row .grid-cell {
-	border-right: 1px solid #eee;
 	display: inline-block;
 	height: 100%;
 	overflow: hidden;
@@ -111,7 +117,7 @@
 }
 
 #users_container .users-grid .grid-row .grid-cell.right-aligned {
-	padding: 0 5px 0 0;
+	padding: 0 10px 0 0;
 	text-align: right;
 }
 
@@ -154,7 +160,32 @@
 
 #users_container .users-grid .grid-row .grid-cell.features {
 	border-right: none;
-	text-align: center;
+}
+
+#users_container .user-rows .grid-row {
+	margin-bottom: 10px;
+	border: 1px solid #dcdcdc;
+	border-radius: 4px;
+}
+
+#users_container .user-rows .grid-cell {
+	border-right: 1px solid #fff;
+	border-left: 1px solid #dcdcdc;
+	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+}
+
+#users_container .user-rows .grid-cell:first-child {
+	border-left: 0;
+	border-radius: 4px 0 0 4px;
+}
+
+#users_container .user-rows .grid-cell:last-child {
+	border-right: 0;
+	border-radius: 0 4px 4px 0;
 }
 
 #users_container .actions {
@@ -355,14 +386,14 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
 
 	border: 5px solid #DDDDDD;
-    border-radius: 60px 60px 60px 60px;
-    box-shadow: 0 -1px 2px #666666 inset;
-    display: inline-block;
-    height: 60px;
-    line-height: 60px;
-    margin: 20px;
-    text-align: center;
-    width: 60px;
+	border-radius: 60px 60px 60px 60px;
+	box-shadow: 0 -1px 2px #666666 inset;
+	display: inline-block;
+	height: 60px;
+	line-height: 60px;
+	margin: 20px;
+	text-align: center;
+	width: 60px;
 }
 
 #users_container .detail-features .features-grid .feature .icon-wrapper.active,
@@ -491,7 +522,7 @@
 }
 
 .feature-popup-container form .main-line label.monster-invalid {
-    top: 45px;
+	top: 45px;
 }
 
 .feature-popup-container input,

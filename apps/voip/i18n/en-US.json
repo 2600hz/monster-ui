@@ -284,13 +284,13 @@
 		"port": "Port Numbers",
 		"resetPassword": "Reset Password",
 		"resendInstructions": "Resend Instructions",
-		"title": "Users",
+		"title": "Total Users",
 		"titleGrid": {
-			"users": "Users",
+			"users": "Users Settings",
 			"extensions": "Extensions",
 			"phoneNumbers": "Phone Numbers",
 			"devices": "Devices",
-			"features": "Features"
+			"features": "User Features"
 		},
 		"toastrMessages": {
 			"devicesUpdated": "You successfully updated the devices assigned to {{ name }}.",
