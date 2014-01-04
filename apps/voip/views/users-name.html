@@ -1,6 +1,29 @@
 <div class="detail-user">
 	<form id="form-{{id}}" class="user-fields row-fluid">
 		<div class="basic-fields span6">
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-key"></i></div>
+				<span id="username">{{username}}</span>
+				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
+			</div>
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-user"></i></div>
+				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
+			</div>
+
+			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-time"></i></div>
+				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
+			</div>
+
+        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
+            	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
+            	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
+        	</div>
+		</div>
+		<div class="basic-fields span6">
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-telicon-moderator"></i></div>
 				<select id="priv_level" name="priv_level">
@@ -15,27 +38,11 @@
 			</div>
 
 			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-key"></i></div>
-				<span id="username">{{username}}</span>
-				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
-			</div>
-
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-user"></i></div>
-				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
-			</div>
-
-			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-asterisk"></i></div>
 				<label for="vmbox_number">
 					{{ i18n.users.editionForm.vmboxNumber }}
 				</label>
 				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
-			</div>
-
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-time"></i></div>
-				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
 			</div>
 
 			{{#if extra.mainCallflowId}}
@@ -52,11 +59,6 @@
                     <input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if extra.sameEmail}} checked{{/if}}></input>
 					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
                 </label>
-        	</div>
-
-        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
-            	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
-            	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
         	</div>
 		</div>
 		<!--<div class="advanced-fields content-centered span3">

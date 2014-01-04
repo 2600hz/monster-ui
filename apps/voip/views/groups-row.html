@@ -1,7 +1,7 @@
 <div class="grid-row" data-id="{{id}}" data-search="{{name}} {{#each extra.listCallerId}}{{this}} {{formatPhoneNumber this}} {{/each}}" data-callflow_id="{{extra.callflowId}}" data-name="{{name}}">
 	<div class="groups-cells">
 		<div class="name grid-cell" data-type="name">{{ name }}</div>
-		<div class="members grid-cell centered" data-type="members">{{ endpoints }}</div>
+		<div class="members grid-cell" data-type="members">{{ endpoints }}</div>
 		<div class="extension grid-cell" data-type="extensions">
 			{{#if extra.extension}}
                 {{ extra.extension }}

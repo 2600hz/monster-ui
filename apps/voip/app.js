@@ -20,6 +20,22 @@ define(function(require){
 		i18n: [ 'en-US' ],
 
 		requests: {
+			'voip.users.getUsers': {
+				url: 'accounts/{accountId}/users',
+				verb: 'GET'
+			},
+			'voip.groups.listGroups': {
+				url: 'accounts/{accountId}/groups',
+				verb: 'GET'
+			},
+			'common.numbers.list': {
+				url: 'accounts/{accountId}/phone_numbers',
+				verb: 'GET'
+			},
+			'voip.devices.listDevices': {
+				url: 'accounts/{accountId}/devices',
+				verb: 'GET'
+			},
 		},
 
 		subscribe: {
@@ -45,17 +61,57 @@ define(function(require){
 		render: function(container){
 			var self = this,
 				parent = container || $('#ws-content'),
-				template = $(monster.template(self, 'app'));
+				dataTemplate = new Object();
 
-			/* On first Load, load my office */
-			template.find('.category#users').addClass('active');
-			monster.pub('voip.users.render', { parent: template.find('.right-content') });
+			
+			monster.request({
+				resource: 'voip.users.getUsers',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(dataUsers) {
+					dataTemplate['users'] = dataUsers.data.length;
+					monster.request({
+						resource: 'voip.groups.listGroups',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(dataGroups) {
+							dataTemplate['groups'] = dataGroups.data.length;
+							monster.request({
+								resource: 'common.numbers.list',
+								data: {
+									accountId: self.accountId
+								},
+								success: function(dataNumbers) {
+									dataTemplate['numbers'] = Object.keys(dataNumbers.data.numbers).length;
+									monster.request({
+										resource: 'voip.devices.listDevices',
+										data: {
+											accountId: self.accountId
+										},
+										success: function(dataDevices) {
+											dataTemplate['devices'] = dataDevices.data.length;
 
-			self.bindEvents(template);
+											var template = $(monster.template(self, 'app', dataTemplate));
 
-			parent
-				.empty()
-				.append(template);
+											/* On first Load, load my office */
+											template.find('.category#users').addClass('active');
+											monster.pub('voip.users.render', { parent: template.find('.right-content') });
+
+											self.bindEvents(template);
+
+											parent
+												.empty()
+												.append(template);
+										}
+									});
+								}
+							});
+						}
+					});
+				}
+			});
 		},
 
 		formatData: function(data) {

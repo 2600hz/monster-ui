@@ -92,9 +92,12 @@ define(function(require){
 				noGroup = true;
 
 			self.groupsGetData(function(data) {
+				console.log(data);
 				var dataTemplate = self.groupsFormatListData(data),
-				    template = $(monster.template(self, 'groups-layout', dataTemplate)),
+				    template = $(monster.template(self, 'groups-layout', { countGroups: Object.keys(dataTemplate.groups).length })),
 					templateGroup;
+
+				console.log(Object.keys(dataTemplate.groups).length);
 
 				_.each(dataTemplate.groups, function(group) {
 					templateGroup = monster.template(self, 'groups-row', group);
@@ -120,8 +123,6 @@ define(function(require){
 				for (var group in dataTemplate.groups) {
 					noGroup = ( typeof dataTemplate.groups[group] === 'undefined' ) ? true : false;
 				}
-
-				console.log(noGroup);
 
 				if ( noGroup ) {
 					parent.find('.no-groups-row').css('display', 'block');
@@ -218,24 +219,53 @@ define(function(require){
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
 				var cell = $(this),
+					row = $(this).parent(),
 					type = cell.data('type'),
 					row = cell.parents('.grid-row'),
 					groupId = row.data('id');
 
-				template.find('.edit-groups').empty().hide();
+				template.find('.edit-groups').slideUp("400", function() {
+					$(this).empty();
+				});
 
 				if(cell.hasClass('active')) {
 					template.find('.grid-cell').removeClass('active');
+					template.find('.grid-row').removeClass('active');
+
+					$('body').find('.overlay').remove();
+					cell.css({
+						'position': 'inline-block',
+						'z-index': '0'
+					});
+
+					cell.parent().siblings('.edit-groups').css({
+						'position': 'block',
+						'z-index': '0'
+					});
 				}
 				else {
 					template.find('.grid-cell').removeClass('active');
+					template.find('.grid-row').removeClass('active');
 					cell.toggleClass('active');
+					row.toggleClass('active');
+
+					cell.css({
+						'position': 'relative',
+						'z-index': '3'
+					});
+
+					cell.parent().siblings('.edit-groups').css({
+						'position': 'relative',
+						'z-index': '2'
+					});
 
 					self.groupsGetTemplate(type, groupId, function(template, data) {
 						//FancyCheckboxes.
 						monster.ui.prettyCheck.create(template);
 
-						row.find('.edit-groups').append(template).show();
+						row.find('.edit-groups').append(template).slideDown();
+
+						$('body').append($('<div class="overlay"></div>'));
 					});
 				}
 			});
@@ -257,9 +287,21 @@ define(function(require){
 			});
 
 			template.on('click', '.cancel-link', function() {
-				template.find('.edit-groups').hide().empty();
+				template.find('.edit-groups').slideUp("400", function() {
+					$(this).empty();
+					template.find('.grid-cell.active').css({
+						'position': 'inline-block',
+						'z-index': '0'
+					});
+					template.find('.grid-row.active .edit-groups').css({
+						'position': 'block',
+						'z-index': '0'
+					});
+					template.find('.grid-row.active').removeClass('active');
+					$('body').find('.overlay').remove();
 
-				template.find('.grid-cell.active').removeClass('active');
+					template.find('.grid-cell.active').removeClass('active');
+				});
 			});
 
 			template.find('.groups-header .add-group').on('click', function() {

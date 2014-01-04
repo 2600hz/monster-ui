@@ -13,8 +13,8 @@
 
 #voip_container > .left-menu {
 	float: left;
-	width: 179px;
 	margin: 5px 10px 0 11px;
+	width: 179px;
 }
 
 #voip_container > .left-menu .category {
@@ -57,29 +57,27 @@
 
 #voip_container > .left-menu .category.active .title i { color: #fff; }
 
-#voip_container > .left-menu .category.active .badge {
-	border: 1px solid #fff;
-	color: #22ccff;
-}
-
 #voip_container > .left-menu .category.simple { margin: 10px auto 0 auto; }
 
 #voip_container > .left-menu .category .title {
 	display: inline-block;
 	overflow: hidden;
-	max-width: 145px;
+	max-width: 126px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	font-size: 16px;
 }
 
 #voip_container > .left-menu .category.simple .title { max-width: 165px; }
 
-#voip_container > .left-menu .category .badge {
-	margin-top: 5px;
-	border: 1px solid #ddd;
-	background: #fff;
-	color: #666;
-	text-shadow: none;
+#voip_container > .left-menu .category .label {
+	margin-top: 6px;
+	min-width: 20px;
+	border: 1px solid #dcdcdc;
+	border-radius: 10px;
+	background-color: #fff;
+	color: #929799;
+	text-align: center;
 }
 
 #voip_container > .left-menu .category .title i {
@@ -106,6 +104,10 @@
 	content: "";
 }
 
+#voip_container > .left-menu .category-group .category:not(:first-child):hover::before { border-top: 1px solid #eee; }
+
+#voip_container > .left-menu .category-group .category.active:not(:first-child)::before { border-top: 1px solid #22ccff; }
+
 #voip_container > .left-menu .category-group .category:first-child {
 	border: 1px solid #dcdcdc;
 	border-radius: 4px 4px 0 0;
@@ -119,27 +121,27 @@
 #voip_container > .left-menu .category .title i.larger-margin { margin-right: 12px; }
 
 #voip_container .right-content {
-	margin-left: 201px;
 	margin-bottom: 10px;
+	margin-left: 201px;
 	padding: 15px 15px 0;
 }
 
 #voip_container .right-content > * {
-	padding-top: 0;
 	margin-top: 0;
+	padding-top: 0;
 }
 @media (max-width: 979px) {
 	#voip_container > .left-menu {
-		-moz-transition:width 0.5s;
+		width: 59px;
 		-webkit-transition:width 0.5s;
+		-moz-transition:width 0.5s;
 		-o-transition:width 0.5s;
 		transition:width 0.5s;
-		width: 59px;
 	}
 
 	#voip_container > .left-menu .category {
-		text-align: center;
 		padding: 15px !important;
+		text-align: center;
 	}
 
 	#voip_container > .left-menu .category i {
@@ -148,11 +150,11 @@
 	}
 
 	#voip_container .right-content {
-		-moz-transition:margin 0.5s;
+		margin-left: 81px;
 		-webkit-transition: margin 0.5s;
+		-moz-transition:margin 0.5s;
 		-o-transition:margin 0.5s;
 		transition:margin 0.5s;
-		margin-left: 81px;
 	}
 }
 
@@ -180,8 +182,8 @@
 
 /* Devices Models */
 .device-image {
-	height: 80px;
 	width: 100px;
+	height: 80px;
 }
 /* Yealink */
 .device-image.yealink-t18 {

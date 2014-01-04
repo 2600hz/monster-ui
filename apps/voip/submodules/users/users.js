@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		chosen = require('chosen'),
 		monster = require('monster'),
 		timezone = require('monster-timezone'),
 		toastr = require('toastr');
@@ -386,22 +387,50 @@ define(function(require){
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
 				var cell = $(this),
+					row = $(this).parent(),
 					type = cell.data('type'),
 					row = cell.parents('.grid-row'),
 					userId = row.data('id');
 
-				template.find('.edit-user').empty().hide();
+				template.find('.edit-user').slideUp("400", function() {
+					$(this).empty();
+				});
 
 				if(cell.hasClass('active')) {
 					template.find('.grid-cell').removeClass('active');
+					template.find('.grid-row').removeClass('active');
+
+					$('body').find('.overlay').remove();
+					cell.css({
+						'position': 'inline-block',
+						'z-index': '0'
+					});
+
+					cell.parent().siblings('.edit-user').css({
+						'position': 'block',
+						'z-index': '0'
+					});
 				}
 				else {
 					template.find('.grid-cell').removeClass('active');
+					template.find('.grid-row').removeClass('active');
 					cell.toggleClass('active');
+					row.toggleClass('active');
+
+					cell.css({
+						'position': 'relative',
+						'z-index': '3'
+					});
+
+					cell.parent().siblings('.edit-user').css({
+						'position': 'relative',
+						'z-index': '2'
+					});
 
 					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
-							currentUser = data;
+
+							template.find('#user_timezone').chosen({search_contains: true, width: "61%"});
 
 							if(data.extra.mainDirectoryId) {
 								mainDirectoryId = data.extra.mainDirectoryId;
@@ -435,7 +464,9 @@ define(function(require){
 						//FancyCheckboxes.
 						monster.ui.prettyCheck.create(template);
 
-						row.find('.edit-user').append(template).show();
+						row.find('.edit-user').append(template).slideDown();
+
+						$('body').append($('<div class="overlay"></div>'));
 					});
 				}
 			});
@@ -503,9 +534,23 @@ define(function(require){
 			});
 
 			template.on('click', '.cancel-link', function() {
-				template.find('.edit-user').hide().empty();
+				template.find('.edit-user').slideUp("400", function() {
+					$(this).empty();
+					template.find('.grid-cell.active').css({
+						'position': 'inline-block',
+						'z-index': '0'
+					});
+					template.find('.grid-row.active .edit-user').css({
+						'position': 'block',
+						'z-index': '0'
+					});
+					template.find('.grid-row.active').removeClass('active');
+					$('body').find('.overlay').remove();
 
-				template.find('.grid-cell.active').removeClass('active');
+					template.find('.grid-cell.active').removeClass('active');
+				});
+
+				
 			});
 
 			/* Events for Extensions details */
