@@ -387,7 +387,6 @@ define(function(require){
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
 				var cell = $(this),
-					row = $(this).parent(),
 					type = cell.data('type'),
 					row = cell.parents('.grid-row'),
 					userId = row.data('id');
@@ -400,7 +399,7 @@ define(function(require){
 					template.find('.grid-cell').removeClass('active');
 					template.find('.grid-row').removeClass('active');
 
-					$('body').find('.overlay').remove();
+					$('body').find('#users_container_overlay').remove();
 					cell.css({
 						'position': 'inline-block',
 						'z-index': '0'
@@ -466,7 +465,7 @@ define(function(require){
 
 						row.find('.edit-user').append(template).slideDown();
 
-						$('body').append($('<div class="overlay"></div>'));
+						$('body').append($('<div id="users_container_overlay"></div>'));
 					});
 				}
 			});
@@ -545,7 +544,7 @@ define(function(require){
 						'z-index': '0'
 					});
 					template.find('.grid-row.active').removeClass('active');
-					$('body').find('.overlay').remove();
+					$('body').find('#users_container_overlay').remove();
 
 					template.find('.grid-cell.active').removeClass('active');
 				});

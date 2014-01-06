@@ -1,4 +1,4 @@
-.overlay {
+#users_container_overlay {
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -56,7 +56,7 @@
 	text-decoration: none;
 }
 
-#users_container .users-header .search-box { margin: 15px 0 15px 15px; }
+#users_container .users-header .search-box { margin: 16px 0 16px 15px; }
 
 #users_container .users-grid {
 	margin-top: 20px;

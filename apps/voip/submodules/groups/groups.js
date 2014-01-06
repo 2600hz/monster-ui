@@ -92,12 +92,9 @@ define(function(require){
 				noGroup = true;
 
 			self.groupsGetData(function(data) {
-				console.log(data);
 				var dataTemplate = self.groupsFormatListData(data),
 				    template = $(monster.template(self, 'groups-layout', { countGroups: Object.keys(dataTemplate.groups).length })),
 					templateGroup;
-
-				console.log(Object.keys(dataTemplate.groups).length);
 
 				_.each(dataTemplate.groups, function(group) {
 					templateGroup = monster.template(self, 'groups-row', group);
@@ -219,7 +216,6 @@ define(function(require){
 
 			template.find('.grid-row:not(.title) .grid-cell').on('click', function() {
 				var cell = $(this),
-					row = $(this).parent(),
 					type = cell.data('type'),
 					row = cell.parents('.grid-row'),
 					groupId = row.data('id');
@@ -232,7 +228,7 @@ define(function(require){
 					template.find('.grid-cell').removeClass('active');
 					template.find('.grid-row').removeClass('active');
 
-					$('body').find('.overlay').remove();
+					$('body').find('#groups_container_overlay').remove();
 					cell.css({
 						'position': 'inline-block',
 						'z-index': '0'
@@ -265,7 +261,7 @@ define(function(require){
 
 						row.find('.edit-groups').append(template).slideDown();
 
-						$('body').append($('<div class="overlay"></div>'));
+						$('body').append($('<div id="groups_container_overlay"></div>'));
 					});
 				}
 			});
@@ -298,7 +294,7 @@ define(function(require){
 						'z-index': '0'
 					});
 					template.find('.grid-row.active').removeClass('active');
-					$('body').find('.overlay').remove();
+					$('body').find('#groups_container_overlay').remove();
 
 					template.find('.grid-cell.active').removeClass('active');
 				});
