@@ -89,6 +89,7 @@ a.monster-link i {
 #main section > .navbar .nav > li.nav-masquerading > a {
     padding-top: 10px;
     text-align: center;
+    line-height: inherit;
 }
 
 #main section > .navbar .nav > li.nav-masquerading .name-text {
