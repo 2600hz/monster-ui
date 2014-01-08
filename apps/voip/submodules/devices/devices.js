@@ -276,7 +276,7 @@ define(function(require){
 				}).disableSelection();
 			}
 
-			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'softphone']) > -1) {
 				templateDevice.find('#video_codec_selector .selected-codecs, #video_codec_selector .available-codecs').sortable({
 					connectWith: '.connectedSortable'
 				}).disableSelection();

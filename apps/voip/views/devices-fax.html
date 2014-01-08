@@ -22,7 +22,6 @@
 				</a>
 				<ul class="dropdown-menu pull-right">
 					<li><a class="tabs-selector change-section" data-section="audio" href="javascript:void(0)"><i class="icon-music"></i>{{ i18n.devices.popupSettings.audio.menuTitle }}</a></li>
-					<li><a class="tabs-selector change-section" data-section="video" href="javascript:void(0)"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="restrictions" href="javascript:void(0)"><i class="icon-ban-circle"></i>{{ i18n.devices.popupSettings.restrictions.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="callerId" href="javascript:void(0)"><i class="icon-ambulance"></i>{{ i18n.devices.popupSettings.callerId.menuTitle }}</a></li>
 				</ul>
@@ -92,31 +91,6 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
-							{{/each}}
-						</ul>
-					</div>
-				</div>
-			</div>
-
-			<div class="tabs-section clearfix" data-section="video">
-				<div class="title">
-					{{ i18n.devices.popupSettings.video.sectionTitle }}
-				</div>
-				<div class="items-selector codec-selector" id="video_codec_selector">
-					<div class="box-selector">
-						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
-						<ul class="available-codecs connectedSortable">
-							{{#each extra.availableCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
-							{{/each}}
-						</ul>
-					</div>
-
-					<div class="box-selector">
-						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
-						<ul class="selected-codecs connectedSortable">
-							{{#each extra.selectedCodecs.video}}
   	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
