@@ -1342,7 +1342,7 @@ define(function(require){
 							parent.find('.main-content').empty();
 							console.log(accountData.id);
 							parent.find('.account-list-element[data-account_id="'+accountData.id+'"]').remove();
-							delete self.currentAccountList[accountData.id];
+							delete self.findAccountInTree(self.accountTree, accountData.id).accountList[accountData.id];
 						},
 						error: function(data, status) {
 							toastr.error(self.i18n.active().toastrMessages.deleteAccountError, '', {"timeOut": 5000});
