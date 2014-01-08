@@ -167,6 +167,8 @@ define(function(require){
 				_userId = args.userId,
 				_openedTab = args.openedTab;
 
+			self.usersRemoveOverlay();
+
 			self.usersGetData(function(data) {
 				var dataTemplate = self.usersFormatListData(data),
 				    template = $(monster.template(self, 'users-layout', dataTemplate)),
@@ -399,7 +401,7 @@ define(function(require){
 					template.find('.grid-cell').removeClass('active');
 					template.find('.grid-row').removeClass('active');
 
-					$('body').find('#users_container_overlay').remove();
+					self.usersRemoveOverlay();
 					cell.css({
 						'position': 'inline-block',
 						'z-index': '0'
@@ -544,7 +546,8 @@ define(function(require){
 						'z-index': '0'
 					});
 					template.find('.grid-row.active').removeClass('active');
-					$('body').find('#users_container_overlay').remove();
+
+					self.usersRemoveOverlay();
 
 					template.find('.grid-cell.active').removeClass('active');
 				});
@@ -2841,6 +2844,10 @@ define(function(require){
 			}
 
 			return result;
+		},
+
+		usersRemoveOverlay: function() {
+			$('body').find('#users_container_overlay').remove();
 		}
 	};
 
