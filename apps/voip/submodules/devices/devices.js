@@ -270,13 +270,13 @@ define(function(require){
 				ignore: '' // Do not ignore hidden fields
 			});
 
-			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax', 'ata']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
 					connectWith: '.connectedSortable'
 				}).disableSelection();
 			}
 
-			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'softphone']) > -1) {
 				templateDevice.find('#video_codec_selector .selected-codecs, #video_codec_selector .available-codecs').sortable({
 					connectWith: '.connectedSortable'
 				}).disableSelection();
@@ -647,7 +647,8 @@ define(function(require){
 					landline: 'icon-telicon-home-phone',
 					softphone: 'icon-telicon-soft-phone',
 					sip_device: 'icon-telicon-voip-phone',
-					fax: 'icon-telicon-fax'
+					fax: 'icon-telicon-fax',
+					ata: 'icon-telicon-fax'
 				};
 
 			_.each(data.users, function(user) {
