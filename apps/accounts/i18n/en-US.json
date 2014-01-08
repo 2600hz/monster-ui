@@ -74,6 +74,7 @@
 	"callRestrictionsTitle": "This account can place calls to...",
 	"balanceTitle": "Manage credit balance",
 	"balancePerMinute": "Per minute credit balance:",
+	"balanceTooltip": "This credit will be used to make per-minute (plan) calls, international calls and receive toll-free calls.",
 	"addToBalance": "Add to the current balance:",
 	"allowPrepay": "Allow customers to make per-minute calls that go over the above limit, and bill them the per-minute cost of the call",
 	"addAdminLink": {
