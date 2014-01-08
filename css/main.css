@@ -70,16 +70,12 @@ a.monster-link i {
 }
 
 #main section > .navbar .nav > li > a {
-    text-shadow: none;
-    color: whiteSmoke;
-    line-height: 62px;
     padding: 0 22px 0 0;
+    height: 62px;
+    color: whiteSmoke;
+    text-shadow: none;
     font-size: 14px;
-}
-
-#main section > .navbar .nav > li.myaccount-link.nav-masquerading {
-	border-right: 1px solid #353535;
-	margin-right: 10px;
+    line-height: 58px;
 }
 
 #main section > .navbar .nav > li.nav-masquerading {
@@ -87,7 +83,8 @@ a.monster-link i {
 }
 
 #main section > .navbar .nav > li.nav-masquerading > a {
-    padding-top: 10px;
+    padding: 10px 22px 0 22px;
+    height: 52px;
     text-align: center;
     line-height: inherit;
 }

@@ -36,10 +36,6 @@
     }
 }
 
-.links .signout {
-	display: none;
-}
-
 .links .top-link {
 	display: block;
 	float: left;
@@ -57,6 +53,10 @@
 
 .links .top-link:hover i {
 	color: #22CCFF;
+}
+
+.links .signout {
+	display: none;
 }
 
 @media (min-width: 768px) and (max-width: 979px) {

@@ -34,7 +34,7 @@
 
 #users_container .users-header .add-user {
 	margin: 0;
-	padding: 13px;
+	padding: 9px 13px;
 	border: 1px solid #dcdcdc;
 	border-left: 0;
 	border-radius: 0 4px 4px 0;
@@ -46,12 +46,23 @@
 	vertical-align: top;
 	text-align: center;
 	font-size: 12px;
-	line-height: 16px;
+	line-height: 18pt;
+}
+
+@-moz-document url-prefix() {
+	#users_container .users-header .add-user {
+		line-height: 21px;
+	}
+}
+
+#users_container .users-header .add-user:hover {
+	background-image: none;
+	background-color: #eee;
 }
 
 #users_container .users-header .add-user i {
 	display: block;
-	margin-right: 0;
+	margin: 0;
 	color: #929799;
 	text-decoration: none;
 }
@@ -108,7 +119,8 @@
 
 #users_container .users-grid .user-rows .grid-cell:not(.active):hover {
 	border-right: 1px solid #eee;
-	background: #eee;
+	background-color: #eee;
+	background-image: none;
 	cursor: pointer;
 }
 

@@ -61,57 +61,17 @@ define(function(require){
 		render: function(container){
 			var self = this,
 				parent = container || $('#ws-content'),
-				dataTemplate = new Object();
+				template = $(monster.template(self, 'app'));
 
-			
-			monster.request({
-				resource: 'voip.users.getUsers',
-				data: {
-					accountId: self.accountId
-				},
-				success: function(dataUsers) {
-					dataTemplate['users'] = dataUsers.data.length;
-					monster.request({
-						resource: 'voip.groups.listGroups',
-						data: {
-							accountId: self.accountId
-						},
-						success: function(dataGroups) {
-							dataTemplate['groups'] = dataGroups.data.length;
-							monster.request({
-								resource: 'common.numbers.list',
-								data: {
-									accountId: self.accountId
-								},
-								success: function(dataNumbers) {
-									dataTemplate['numbers'] = Object.keys(dataNumbers.data.numbers).length;
-									monster.request({
-										resource: 'voip.devices.listDevices',
-										data: {
-											accountId: self.accountId
-										},
-										success: function(dataDevices) {
-											dataTemplate['devices'] = dataDevices.data.length;
+			/* On first Load, load my office */
+			template.find('.category#users').addClass('active');
+			monster.pub('voip.users.render', { parent: template.find('.right-content') });
 
-											var template = $(monster.template(self, 'app', dataTemplate));
+			self.bindEvents(template);
 
-											/* On first Load, load my office */
-											template.find('.category#users').addClass('active');
-											monster.pub('voip.users.render', { parent: template.find('.right-content') });
-
-											self.bindEvents(template);
-
-											parent
-												.empty()
-												.append(template);
-										}
-									});
-								}
-							});
-						}
-					});
-				}
-			});
+			parent
+				.empty()
+				.append(template);
 		},
 
 		formatData: function(data) {

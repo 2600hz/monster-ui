@@ -70,16 +70,6 @@
 
 #voip_container > .left-menu .category.simple .title { max-width: 165px; }
 
-#voip_container > .left-menu .category .label {
-	margin-top: 6px;
-	min-width: 20px;
-	border: 1px solid #dcdcdc;
-	border-radius: 10px;
-	background-color: #fff;
-	color: #929799;
-	text-align: center;
-}
-
 #voip_container > .left-menu .category .title i {
 	margin: 0px 8px 0px 4px;
 	color: #929799;
