@@ -100,7 +100,6 @@ define(function(require){
                     phoneNumber: encodeURIComponent(phoneNumber)
                 },
                 success: function(_data, status) {
-                    console.log(_data);
                     if(typeof success === 'function') {
                         success(_data);
                     }

@@ -84,6 +84,7 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
+			"checkList": "Already exists",
 			"mac": "Please enter a valid MAC address.",
 			"ipv4": "Please enter a valid IP v4 address.",
 			"time12h": "Please enter a valid time in 12-hour AM/PM format.",

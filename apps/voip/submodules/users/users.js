@@ -31,6 +31,10 @@ define(function(require){
 				verb: 'DELETE'
 			},
 			/* VMBoxes*/
+			'voip.users.listVMBoxes': {
+				url: 'accounts/{accountId}/vmboxes',
+				verb: 'GET'
+			},
 			'voip.users.createVMBox': {
 				url: 'accounts/{accountId}/vmboxes',
 				verb: 'PUT'
@@ -53,7 +57,7 @@ define(function(require){
 			},
 			/* Callflows */
 			'voip.users.getCallflows': {
-				url: 'accounts/{accountId}/callflows/',
+				url: 'accounts/{accountId}/callflows',
 				verb: 'GET'
 			},
 			'voip.users.createCallflow': {
@@ -489,49 +493,69 @@ define(function(require){
 			});
 
 			template.find('.users-header .add-user').on('click', function() {
-				var defaults = {
-						sendToSameEmail: true,
-						nextExtension: (parseInt(existingExtensions[existingExtensions.length - 1]) || 2000) + 1 + '',
-					},
-				    userTemplate = $(monster.template(self, 'users-creation', defaults));
-
-				timezone.populateDropdown(userTemplate.find('#user_creation_timezone'));
-				monster.ui.prettyCheck.create(userTemplate);
-
-				monster.ui.validate(userTemplate.find('#form_user_creation'), {
-					messages: {
-						'user.first_name': {
-							required: self.i18n.active().validation.required
+				monster.parallel({
+						callflows: function(callback) {
+							self.usersListCallflows(function(callflows) {
+								callback(null, callflows);
+							});
 						},
-						'user.last_name': {
-							required: self.i18n.active().validation.required
-						},
-						'callflow.extension': {
-							required: self.i18n.active().validation.required
+						vmboxes: function(callback) {
+							self.usersListVMBoxes(function(vmboxes) {
+								callback(null, vmboxes);
+							});
 						}
-					}
-				});
+					},
+					function(err, results) {
+						var originalData = self.usersFormatAddUser(results),
+							userTemplate = $(monster.template(self, 'users-creation', originalData));
 
-				userTemplate.find('#create_user').on('click', function() {
-					if(monster.ui.valid(userTemplate.find('#form_user_creation'))) {
-						var dataForm = form2object('form_user_creation'),
-							formattedData = self.usersFormatCreationData(dataForm);
+						timezone.populateDropdown(userTemplate.find('#user_creation_timezone'));
+						monster.ui.prettyCheck.create(userTemplate);
 
-						self.usersCreate(formattedData, function(data) {
-							popup.dialog('close').remove();
+						monster.ui.validate(userTemplate.find('#form_user_creation'), {
+							rules: {
+								'callflow.extension': {
+									checkList: originalData.listExtensions
+								},
+								'vmbox.number': {
+									checkList: originalData.listVMBoxes
+								}
+							},
+							messages: {
+								'user.first_name': {
+									required: self.i18n.active().validation.required
+								},
+								'user.last_name': {
+									required: self.i18n.active().validation.required
+								},
+								'callflow.extension': {
+									required: self.i18n.active().validation.required
+								}
+							}
+						});
 
-							self.usersRender({ userId: data.user.id });
+						userTemplate.find('#create_user').on('click', function() {
+							if(monster.ui.valid(userTemplate.find('#form_user_creation'))) {
+								var dataForm = form2object('form_user_creation'),
+									formattedData = self.usersFormatCreationData(dataForm);
+
+								self.usersCreate(formattedData, function(data) {
+									popup.dialog('close').remove();
+
+									self.usersRender({ userId: data.user.id });
+								});
+							}
+						});
+
+						userTemplate.find('#notification_email').on('ifChanged', function() {
+							userTemplate.find('.email-group').toggleClass('hidden');
+						});
+
+						var popup = monster.ui.dialog(userTemplate, {
+							title: self.i18n.active().users.dialogCreationUser.title
 						});
 					}
-				});
-
-				userTemplate.find('#notification_email').on('ifChanged', function() {
-					userTemplate.find('.email-group').toggleClass('hidden');
-				});
-
-				var popup = monster.ui.dialog(userTemplate, {
-					title: self.i18n.active().users.dialogCreationUser.title
-				});
+				);
 			});
 
 			template.on('click', '.cancel-link', function() {
@@ -552,7 +576,7 @@ define(function(require){
 					template.find('.grid-cell.active').removeClass('active');
 				});
 
-				
+
 			});
 
 			/* Events for Extensions details */
@@ -1101,6 +1125,48 @@ define(function(require){
             });
 		},
 
+		usersFormatAddUser: function(data) {
+			var formattedData = {
+					sendToSameEmail: true,
+					nextExtension: '',
+					nextVMBox: '',
+					listExtensions: {},
+					listVMBoxes:{},
+				},
+				arrayExtensions = [],
+				arrayVMBoxes = [];
+
+			_.each(data.callflows, function(callflow) {
+				_.each(callflow.numbers, function(number) {
+					if(number.length < 7) {
+						formattedData.listExtensions[number] = callflow;
+						arrayExtensions.push(number);
+					}
+				});
+			});
+
+			arrayExtensions.sort(function(a, b) {
+				return parseInt(a) > parseInt(b);
+			});
+
+			//Set the Next extension to 2001 if there are no extensions in the system, or to the latest extension + 1 if there are
+			formattedData.nextExtension = (parseInt(arrayExtensions[arrayExtensions.length - 1] || 2000) + 1) + '';
+
+			_.each(data.vmboxes, function(vmbox) {
+				formattedData.listVMBoxes[vmbox.mailbox] = vmbox;
+				arrayVMBoxes.push(vmbox.mailbox);
+			});
+
+			arrayVMBoxes.sort(function(a, b) {
+				return parseInt(a) > parseInt(b);
+			});
+
+			//Set the VMBox Number to 2001 if there are no VMBox in the system, or to the latest vmbox number + 1 if there are
+			formattedData.nextVMBox = (parseInt(arrayVMBoxes[arrayVMBoxes.length - 1] || 2000) + 1) + '';
+
+			return formattedData;
+		},
+
 		usersFormatFaxingData: function(data) {
 			var listNumbers = [];
 
@@ -1637,42 +1703,36 @@ define(function(require){
 					callflow: function(callbackParallel) {
 						var response = {};
 
-						monster.request({
-							resource: 'voip.users.getCallflows',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(callflows) {
-								response.list = callflows.data;
+						self.usersListCallflows(function(callflows) {
+							response.list = callflows;
 
-								var callflowId;
+							var callflowId;
 
-								$.each(callflows.data, function(k, callflowLoop) {
-									/* Find Smart PBX Callflow of this user */
-									if(callflowLoop.owner_id === userId) {
-										callflowId = callflowLoop.id;
+							$.each(callflows.data, function(k, callflowLoop) {
+								/* Find Smart PBX Callflow of this user */
+								if(callflowLoop.owner_id === userId) {
+									callflowId = callflowLoop.id;
 
-										return false;
+									return false;
+								}
+							});
+
+							if(callflowId) {
+								monster.request({
+									resource: 'voip.users.getCallflow',
+									data: {
+										accountId: self.accountId,
+										callflowId: callflowId
+									},
+									success: function(callflow) {
+										response.userCallflow = callflow.data;
+
+										callbackParallel && callbackParallel(null, response);
 									}
 								});
-
-								if(callflowId) {
-									monster.request({
-										resource: 'voip.users.getCallflow',
-										data: {
-											accountId: self.accountId,
-											callflowId: callflowId
-										},
-										success: function(callflow) {
-											response.userCallflow = callflow.data;
-
-											callbackParallel && callbackParallel(null, response);
-										}
-									});
-								}
-								else {
-									callbackParallel && callbackParallel(null, response);
-								}
+							}
+							else {
+								callbackParallel && callbackParallel(null, response);
 							}
 						});
 					},
@@ -2182,6 +2242,20 @@ define(function(require){
 			});
 		},
 
+		usersListCallflows: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.getCallflows',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
 		usersListCallflowsUser: function(userId, callback) {
 			var self = this;
 
@@ -2190,6 +2264,20 @@ define(function(require){
 				data: {
 					accountId: self.accountId,
 					userId: userId
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersListVMBoxes: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listVMBoxes',
+				data: {
+					accountId: self.accountId
 				},
 				success: function(data) {
 					callback(data.data);
@@ -2445,14 +2533,8 @@ define(function(require){
 						});
 					},
 					callflows: function(callback) {
-						monster.request({
-							resource: 'voip.users.getCallflows',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(dataCallflows) {
-								callback(null, dataCallflows.data);
-							}
+						self.usersListCallflows(function(callflows) {
+							callback(null, callflows);
 						});
 					},
 					devices: function(callback) {

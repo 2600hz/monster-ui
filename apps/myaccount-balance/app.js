@@ -131,8 +131,6 @@ define(function(require){
 
 					renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
-					console.log(renderData.uiRestrictions.balance);
-
 					var balance = $(monster.template(self, 'balance', renderData)),
 						args = {
 							module: self.name,

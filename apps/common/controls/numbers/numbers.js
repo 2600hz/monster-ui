@@ -595,8 +595,6 @@ define(function(require){
 									childCount = tbody[0].childElementCount,
 									numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
 
-								console.log(tbody);
-
 								requestData.numbers.splice(number, 1);
 								$(this).parent().parent().remove();
 
