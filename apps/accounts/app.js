@@ -255,12 +255,12 @@ define(function(require){
 		findAccountInTree: function(accountTree, accountId) {
 			var self = this,
 				results = null;
-				
+
 			if(accountId in accountTree) {
 				return {
 					accountList: accountTree,
 					breadcrumbs: [{
-						id: accountId, 
+						id: accountId,
 						name: accountTree[accountId].name
 					}]
 				};
@@ -269,12 +269,12 @@ define(function(require){
 					if('children' in value) {
 						results = self.findAccountInTree(value.children, accountId);
 					}
-					if(results !== null) { 
+					if(results !== null) {
 						results.breadcrumbs.splice(0, 0, {
 							id: key,
 							name: value.name
 						})
-						return false; 
+						return false;
 					}
 				});
 				return results;
@@ -786,7 +786,7 @@ define(function(require){
 				errorMessage = self.i18n.active().wizardErrorMessages.pleaseCorrect,
 				formData = form2object('accountsmanager_new_account_form');*/
 
-			
+
 
 			// switch(step) {
 			// 	case 1:
@@ -1104,7 +1104,7 @@ define(function(require){
 							}
 						});
 					});
-					
+
 				}
 			});
 		},
@@ -1340,7 +1340,6 @@ define(function(require){
 						success: function(data, status) {
 							// self.render();
 							parent.find('.main-content').empty();
-							console.log(accountData.id);
 							parent.find('.account-list-element[data-account_id="'+accountData.id+'"]').remove();
 							delete self.findAccountInTree(self.accountTree, accountData.id).accountList[accountData.id];
 						},
@@ -1605,9 +1604,9 @@ define(function(require){
 					allowPrepay = tabContentTemplate.find('.allow-prepay-ckb').is(':checked');
 
 				if(monster.ui.valid(parent.find('#accountsmanager_callrestrictions_form'))) {
-					
+
 					$.each(params.formattedClassifiers, function(k, v) {
-						if(!(v.id in callRestrictions) || callRestrictions[v.id].action !== "allow") { 
+						if(!(v.id in callRestrictions) || callRestrictions[v.id].action !== "allow") {
 							callRestrictions[v.id] = {
 								action: "deny"
 							};

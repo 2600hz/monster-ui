@@ -91,6 +91,8 @@ define(function(require){
 				_groupId = args.groupId,
 				noGroup = true;
 
+			self.groupsRemoveOverlay();
+
 			self.groupsGetData(function(data) {
 				var dataTemplate = self.groupsFormatListData(data),
 				    template = $(monster.template(self, 'groups-layout', { countGroups: Object.keys(dataTemplate.groups).length })),
@@ -228,7 +230,7 @@ define(function(require){
 					template.find('.grid-cell').removeClass('active');
 					template.find('.grid-row').removeClass('active');
 
-					$('body').find('#groups_container_overlay').remove();
+					self.groupsRemoveOverlay();
 					cell.css({
 						'position': 'inline-block',
 						'z-index': '0'
@@ -294,7 +296,7 @@ define(function(require){
 						'z-index': '0'
 					});
 					template.find('.grid-row.active').removeClass('active');
-					$('body').find('#groups_container_overlay').remove();
+					self.groupsRemoveOverlay();
 
 					template.find('.grid-cell.active').removeClass('active');
 				});
@@ -1724,6 +1726,10 @@ define(function(require){
 					callback && callback(results);
 				}
 			);
+		},
+
+		groupsRemoveOverlay: function() {
+			$('body').find('#groups_container_overlay').remove();
 		}
 	};
 

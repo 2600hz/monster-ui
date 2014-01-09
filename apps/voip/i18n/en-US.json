@@ -241,7 +241,9 @@
 		},
 		"dialogCreationUser": {
 			"createUser": "Create User",
+			"errorOnCreation": "An error occured while trying to create this user:",
 			"extension": "Extension #",
+			"extensionAlreadyExist": "This Extension is already taken, please choose a different Extension Number.",
 			"firstName": "First Name",
 			"lastName": "Last Name",
 			"loginEmail": "User's Email address",
@@ -249,6 +251,7 @@
 			"password": "Password (Min. 8 characters)",
 			"sendToSameEmail": "Send user notifications to above e-mail",
 			"title": "Create User",
+			"vmboxAlreadyExist": "VMBox Number is already taken, please choose a different Voicemail Box Number.",
 			"vmboxNumber": "VM Box Number"
 		},
 		"editionForm": {

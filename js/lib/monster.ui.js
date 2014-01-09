@@ -600,6 +600,17 @@ define(function(require){
 				return monster.util.timeToSeconds(value) > monster.util.timeToSeconds(target.val());
 			}, localization.customRules['greaterDate']);
 
+			// Adding advanced custom rules
+			$.validator.addMethod('checkList', function(value, element, listToCheck) {
+				if(_.isArray(listToCheck)) {
+					return listToCheck.indexOf(value) < 0;
+				}
+				else if(_.isObject(listToCheck)) {
+					return !(value in listToCheck);
+				}
+				else return true;
+			}, localization.customRules['checkList']);
+
 			this.customValidationInitialized = true;
 		},
 
