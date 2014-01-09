@@ -241,7 +241,7 @@
 		},
 		"dialogCreationUser": {
 			"createUser": "Create User",
-			"extension": "Extention #",
+			"extension": "Extension #",
 			"firstName": "First Name",
 			"lastName": "Last Name",
 			"loginEmail": "User's Email address",
