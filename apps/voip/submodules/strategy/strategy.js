@@ -307,6 +307,18 @@ define(function(require){
 								templateData.alwaysOpen = false;
 							}
 						});
+
+						// Setting Monday to Friday enabled by default for 9AM-5PM, when switching from 24hours Open to Custom Hours.
+						if(templateData.alwaysOpen) {
+							_.each(templateData.days, function(val) {
+								if(val.name !== "MainSaturday" && val.name !== "MainSunday") {
+									val.open = true;
+									val.from = "9:00AM";
+									val.to = "5:00PM";
+								}
+							});
+						}
+
 						template = $(monster.template(self, 'strategy-'+templateName, templateData));
 
 						var validationOptions = {
