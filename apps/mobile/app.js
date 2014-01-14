@@ -12,8 +12,9 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
+				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
+				url: 'accounts/{accountId}/activateDevice',
+				verb: 'POST'
 			},
 			'mobile.updatePhone': {
 				url: 'accounts/{accountId}/devices',
@@ -29,12 +30,12 @@ define(function(require){
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://192.168.0.29/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://192.168.0.29/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -146,11 +147,12 @@ define(function(require){
 
 					console.log(formattedData);
 					console.log(JSON.stringify(formattedData));
-					/*self.activatePhone(formattedData, function(device) {
-						var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
+					self.activatePhone(formattedData, function(device) {
+						console.log(device);
+						/*var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
 
-						toastr.success(template);
-					});*/
+						toastr.success(template);*/
+					});
 				}
 			});
 
@@ -288,13 +290,15 @@ define(function(require){
 		activatePhone: function(data, callback) {
 			var self = this;
 
+			console.log('activatePhone');
 			monster.request({
 				resource: 'mobile.activatePhone',
 				data: {
-					accountId: self.accountId/*,
-					data: data*/
+					accountId: self.accountId,
+					data: data
 				},
 				success: function(device) {
+				console.log('activatedPhone');
 					callback && callback(device.data);
 				}
 			});
