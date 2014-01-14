@@ -55,6 +55,7 @@
 	max-height: 60px;
 	overflow: hidden;
 	border-top: solid 1px #ccc;
+	border-right: solid 1px #ccc;
 	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
 }
 
@@ -132,6 +133,10 @@
 	padding: 20px 20px;
 	overflow: hidden;
 	height: 30px;
+}
+
+#accounts_manager_view .content .top-bar .account-breadcrumbs > span:not(:last-child) a {
+	color: #666;
 }
 
 /***** Main content *****/
