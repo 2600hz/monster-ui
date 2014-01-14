@@ -1847,8 +1847,8 @@ define(function(require){
 											name: val,
 											type: "main_weekdays",
 											start_date: monster.util.dateToGregorian(new Date()),
-											time_window_start: "32400",
-											time_window_stop: "61200",
+											time_window_start: "32400", // 9:00AM
+											time_window_stop: "61200",  // 5:00PM
 											wdays: [val.substring(4).toLowerCase()]
 										}
 									},

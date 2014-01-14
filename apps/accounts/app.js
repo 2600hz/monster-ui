@@ -308,6 +308,8 @@ define(function(require){
 				accounts: $.map(self.currentAccountList, function(val, key) {
 					val.id = key;
 					return val;
+				}).sort(function(a,b) {
+					return a.name.toLowerCase() > b.name.toLowerCase() ? 1 :-1;
 				}),
 				selectedId: selectedId
 			}));
