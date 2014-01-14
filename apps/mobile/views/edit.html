@@ -26,6 +26,22 @@
 
 				{{#if mdn}}
 					<div class="control-group">
+						<label class="control-label" for="esnDec">{{i18n.editView.esn.label}}</label>
+						<div class="controls">
+							{{esn}}
+						</div>
+					</div>
+				{{else}}
+					<div class="control-group">
+						<label class="control-label" for="esn">{{i18n.editView.esn.label}}</label>
+						<div class="controls">
+							<input required type="text" id="esn" name="esn"></input>
+						</div>
+					</div>
+				{{/if}}
+				<!--
+				{{#if mdn}}
+					<div class="control-group">
 						<label class="control-label" for="esnDec">{{i18n.editView.esnDec.label}}</label>
 						<div class="controls">
 							{{esn_dec}}
@@ -44,7 +60,7 @@
 							<input required type="text" id="esn" name="extra.esn"></input>
 						</div>
 					</div>
-				{{/if}}
+				{{/if}}-->
 
 				<div class="control-group">
 					<label class="control-label" for="icc">{{i18n.editView.icc.label}}</label>

@@ -219,7 +219,6 @@ define(function(require){
 			var self = this,
 				formattedData = data;
 
-			console.log(formattedData.esn.validationMessage);
 			if(formattedData.esn.validationMessage === null) {
 				formattedData.esn.validationMessage = self.i18n.active().checkView.unknownEsn;
 			}
@@ -262,11 +261,12 @@ define(function(require){
 				data.voice.device_unavailable[data.extra.method] = data.extra.methodValue;
 			}
 
+			/*
 			if(data.extra.esn) {
 				var length = data.extra.esn.length;
 
-				/* If ESN is 18 characters long, it is the decimal ESN, and we convert it to hexa manually.
-				If it is 14 or 15 characters long, it is the hexa ESN, we need to strip the last character if it 15 char long. We then convert it to decimal manually */
+				If ESN is 18 characters long, it is the decimal ESN, and we convert it to hexa manually.
+				If it is 14 or 15 characters long, it is the hexa ESN, we need to strip the last character if it 15 char long. We then convert it to decimal manually
 				if(length === 18) {
 					data.esn_dec = parseInt(data.extra.esn) + '';
 					data.esn_hexa = data.esn_dec.toString(16);
@@ -279,7 +279,7 @@ define(function(require){
 					data.esn_hexa = data.extra.esn;
 					data.esn_dec = parseInt(data.extra.esn, 16) + '';
 				}
-			}
+			}*/
 
 			delete data.extra;
 
@@ -290,7 +290,6 @@ define(function(require){
 		activatePhone: function(data, callback) {
 			var self = this;
 
-			console.log('activatePhone');
 			monster.request({
 				resource: 'mobile.activatePhone',
 				data: {
@@ -347,7 +346,7 @@ define(function(require){
 				data: {
 					accountId: self.accountId,
 					data: {
-						serial: esn
+						esn: esn
 					}/*,
 					data: data*/
 				},
@@ -360,8 +359,6 @@ define(function(require){
 		checkCoverage: function(zipCode, callback) {
 			var self = this;
 
-			console.log(zipCode);
-
 			monster.request({
 				resource: 'mobile.checkCoverage',
 				data: {
@@ -372,6 +369,7 @@ define(function(require){
 					data: data*/
 				},
 				success: function(coverage) {
+					console.log(coverage);
 					callback && callback(coverage);
 				}
 			});
