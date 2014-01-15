@@ -1708,7 +1708,7 @@ define(function(require){
 
 							var callflowId;
 
-							$.each(callflows.data, function(k, callflowLoop) {
+							$.each(callflows, function(k, callflowLoop) {
 								/* Find Smart PBX Callflow of this user */
 								if(callflowLoop.owner_id === userId) {
 									callflowId = callflowLoop.id;
