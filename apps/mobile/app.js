@@ -12,7 +12,7 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
@@ -103,6 +103,7 @@ define(function(require){
 		},
 
 		renderEditDevice: function(data) {
+			console.log(data);
 			var self = this,
 				dataTemplate = self.formatEditData(data),
 				template = $(monster.template(self, 'edit', dataTemplate)),
@@ -148,7 +149,12 @@ define(function(require){
 					console.log(formattedData);
 					console.log(JSON.stringify(formattedData));
 					self.activatePhone(formattedData, function(device) {
-						console.log(device);
+						if(device.service_info) {
+							self.renderEditDevice(device);
+						}
+						else {
+							monster.ui.alert('error', device.error);
+						}
 						/*var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
 
 						toastr.success(template);*/
@@ -228,6 +234,7 @@ define(function(require){
 
 		formatEditData: function(data) {
 			var self = this;
+			console.log(data);
 
 			if(!_.isEmpty(data)) {
 				data.extra = {};
@@ -297,8 +304,7 @@ define(function(require){
 					data: data
 				},
 				success: function(device) {
-				console.log('activatedPhone');
-					callback && callback(device.data);
+					callback && callback(device);
 				}
 			});
 		},
