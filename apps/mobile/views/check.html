@@ -1,0 +1,34 @@
+<div class="mobile-wrapper" id="check_view">
+	<div class="title-header">
+		<h1>{{i18n.checkView.title}}</h1>
+		<a class="monster-link cancel">{{i18n.checkView.goBack}}</a>
+	</div>
+
+	<div class="form-wrapper">
+		<form class="form-horizontal" id="form_check">
+			<div>
+				<div class="control-group">
+					<label class="control-label" for="esn">{{i18n.checkView.esn.label}}</label>
+					<div class="controls">
+						<input required type="text" id="esn" name="esn"></input>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="zipCode">{{i18n.checkView.zipCode.label}}</label>
+					<div class="controls">
+						<input required type="text" id="zipCode" name="zipCode" placeholder="{{i18n.checkView.zipCode.placeholder}}"></input>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div class="results">
+		</div>
+
+		<div class="button-wrapper">
+			<button class="btn btn-danger cancel">{{i18n.checkView.cancel}}</button>
+			<button class="btn btn-success" id="check">{{i18n.checkView.check}}</button>
+		</div>
+	</div>
+</div>
