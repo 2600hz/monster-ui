@@ -21,21 +21,29 @@ define(function(require){
 				verb: 'GET'
 			},
 			'mobile.listActivations': {
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'apps/mobile/fixtures/',
-				url: 'edit.json',
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				url: 'accounts/{accountId}/devices/{activationId}',
+				verb: 'GET'
+			},
+			'mobile.cancelActivation': {
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				//apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				//apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -80,6 +88,7 @@ define(function(require){
 					template = $(monster.template(self, 'list', dataTemplate)),
 					parent = _.isEmpty(container) ? $('#ws-content') : container;
 
+console.log(dataTemplate);
 				self.bindEvents(template);
 
 				(parent)
@@ -127,6 +136,14 @@ define(function(require){
 
 			template.find('#checkDevice').on('click', function() {
 				self.renderCheckDevice();
+			});
+
+			template.find('.device-action[data-action="cancel"]').on('click', function() {
+				var deviceId = $(this).parents('.device-line').data('id');
+
+				self.cancelActivation(deviceId, function(activationDetails) {
+					self.render();
+				});
 			});
 
 			template.find('.device-action[data-action="edit"]').on('click', function() {
@@ -315,16 +332,28 @@ define(function(require){
 			monster.request({
 				resource: 'mobile.getActivation',
 				data: {
-			/*		accountId: self.accountId,
-					activationId: activationId*/
+					accountId: self.accountId,
+					activationId: encodeURIComponent(activationId)
 				},
 				success: function(activation) {
 					console.log(activation);
-					//callback && callback(activationId.data);
 					callback && callback(activation);
+				}
+			});
+		},
+
+		cancelActivation: function(activationId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'mobile.cancelActivation',
+				data: {
+					accountId: self.accountId,
+					activationId: encodeURIComponent(activationId)
 				},
-				error: function(data) {
-					console.log(data);
+				success: function(activation) {
+					console.log(activation);
+					callback && callback(activation);
 				}
 			});
 		},
@@ -335,11 +364,10 @@ define(function(require){
 			monster.request({
 				resource: 'mobile.listActivations',
 				data: {
-					accountId: self.accountId/*,
-					data: data*/
+					accountId: self.accountId
 				},
 				success: function(activations) {
-					callback && callback(activations.data);
+					callback && callback(activations);
 				}
 			});
 		},

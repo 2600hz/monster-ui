@@ -76,7 +76,7 @@
 }
 
 .mobile-wrapper#list_view .list-devices .device-line .device-name,
-.mobile-wrapper#list_view .list-devices .device-line .device-owner {
+.mobile-wrapper#list_view .list-devices .device-line .device-number {
 	width: 350px;
 }
 
@@ -85,7 +85,24 @@
 	width: 100px;
 }
 
+.mobile-wrapper#list_view .list-devices .device-line .device-actions > a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line .device-actions > a:hover > i {
+	color: #000;
+}
+
 /* Edit View */
+.mobile-wrapper#edit_view .form-wrapper .form-horizontal .control-group {
+	margin-bottom: 10px;
+}
+
+.mobile-wrapper#edit_view .form-wrapper .form-horizontal .control-group .controls {
+	line-height: 30px;
+}
+
 .mobile-wrapper#edit_view .form-wrapper {
 	background: #eee;
 	border: 1px solid #22CCFF;
@@ -122,5 +139,7 @@
 }
 
 .mobile-wrapper#edit_view .sprint-infos .sprint-line .value{
+	height: 20px;
+	line-height: 20px;
 	width: 300px;
 }
