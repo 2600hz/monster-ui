@@ -402,12 +402,17 @@
 	-moz-box-sizing: border-box;
 
 	box-sizing: border-box;
-	width: 33.3333%;
+	width: 25%;
 	height: 150px;
 	border: 1px solid #FFF;
 	text-align: center;
 	white-space: nowrap;
 	cursor: pointer;
+}
+
+#users_container .detail-features .features-grid .feature .feature-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #users_container .detail-features .features-grid .feature .icon-wrapper,
@@ -611,4 +616,165 @@
 .change-password-popup .actions {
 	padding: 15px 25px;
 	border-top: 1px solid #CCCCCC;
+}
+
+/* Find me Follow me feature popup */
+.feature-popup-container[data-feature="find_me_follow_me"] {
+	width: 620px;
+}
+
+#find_me_follow_me_form {
+	margin: 0;
+}
+
+#find_me_follow_me_form .no-device {
+	color: red;
+	font-size: 18px;
+	padding: 10px;
+}
+
+#find_me_follow_me_form .grid-time .device-row {
+	position: relative;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 25px 0 15px;
+	width: 100%;
+}
+
+#find_me_follow_me_form .grid-time .device-row > div {
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#find_me_follow_me_form .grid-time .device-row.title {
+	padding: 5px 0px;
+}
+
+#find_me_follow_me_form .grid-time .device-row.title .name {
+	height: 40px;
+	line-height: 40px;
+}
+
+#find_me_follow_me_form .grid-time .device-row .name {
+	width: 25%;
+	vertical-align: bottom;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#find_me_follow_me_form .grid-time .device-row .name i {
+	margin-right: 10px;
+}
+#find_me_follow_me_form .grid-time .device-row.disabled .name {
+	color: #999;
+}
+#find_me_follow_me_form .grid-time .device-row .times {
+	padding-right: 30px;
+	padding-left: 30px;
+	width: 65%;
+}
+#find_me_follow_me_form .grid-time .device-row .action {
+	width: 10%;
+	text-align: center;
+	vertical-align: bottom;
+	padding-left: 10px;
+}
+
+#find_me_follow_me_form .slider-time.ui-slider {
+	height: 10px;
+	border: none;
+	background: #DDDDDD;
+	cursor: pointer;
+}
+
+#find_me_follow_me_form .slider-time.ui-slider .ui-slider-range {
+	border: 1px solid #333;
+	border-radius: 0;
+	background: #33BB44;
+}
+
+#find_me_follow_me_form .slider-time.ui-slider .ui-slider-handle {
+	margin: -7px 0;
+	padding: 3px;
+	width: 0px;
+	height: 25px;
+	border: 1px solid #333333;
+	background: #33BB44;
+	cursor: pointer;
+}
+
+#find_me_follow_me_form .slider-time.ui-slider .ui-slider-range,
+#find_me_follow_me_form .slider-time.ui-slider .ui-slider-handle { 
+	border-color: #73b714 #73b714 hsl(85, 80%, 32.5%);
+	background-color: hsl(85, 80%, 40%) !important; 
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714)); 
+	background-image: -moz-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -ms-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714)); 
+	background-image: -webkit-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -o-linear-gradient(top, #bcef75, #73b714); 
+	background-image: linear-gradient(#bcef75, #73b714); 
+	background-repeat: repeat-x; 
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714"); 
+}
+
+#find_me_follow_me_form .slider-time.ui-slider .slider-tooltip {
+	position: absolute;
+	right: -11px;
+	bottom: 30px;
+	display: block;
+	font-size: 12px;
+}
+#find_me_follow_me_form .slider-time.ui-slider .slider-tooltip .slider-tooltip-inner {
+	max-width: 200px;
+	width: 30px;
+	color: #000000;
+	text-align: center;
+	text-decoration: none;
+}
+
+#find_me_follow_me_form .scale-container {
+	position: absolute;
+	top: 0px;
+	right: 10%;
+	left: 25%;
+	margin: 0 26px 0 34px;
+	height: 100%;
+	border-bottom: solid 1px #ddd;
+}
+#find_me_follow_me_form .device-row:last-of-type .scale-container {
+	border-bottom: none;
+}
+#find_me_follow_me_form .scale-container > span {
+	position: absolute;
+	bottom: 15%;
+	left: -8px;
+	color: #999;
+	font-size: 11px;
+}
+#find_me_follow_me_form .scale-element {
+	position: relative;
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 100%;
+	border-right: solid 1px #ddd;
+}
+#find_me_follow_me_form .device-row.title .scale-element {
+	top: 85%;
+	height: 15%;
+	vertical-align: top;
+}
+#find_me_follow_me_form .scale-element:first-child {
+	border-left: solid 1px #ddd;
+}
+#find_me_follow_me_form .scale-element > span {
+	position: absolute;
+	top: -20px;
+	right: -24px;
+	color: #999;
+	font-size: 11px;
 }

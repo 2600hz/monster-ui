@@ -455,6 +455,7 @@ define(function(require){
 			var self = this;
 
 			self.groupsGetMembersData(groupId, function(results) {
+				console.log(results);
 				var results = self.groupsFormatMembersData(results);
 
 				template = $(monster.template(self, 'groups-members', results));
@@ -982,6 +983,8 @@ define(function(require){
 			var self = this,
 				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
 				scaleMaxSeconds = 60; //Maximum of seconds, corresponding to the end of the scale
+
+			console.log(data);
 
 			template.find('.save-groups').on('click', function() {
 				var endpoints = [],

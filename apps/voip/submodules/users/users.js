@@ -258,6 +258,11 @@ define(function(require){
 							icon: 'icon-comments',
 							iconColor: 'icon-gray',
 							title: self.i18n.active().users.conferencing.title
+						},
+						find_me_follow_me: {
+							icon: 'icon-sitemap',
+							iconColor: 'icon-purple',
+							title: self.i18n.active().users.find_me_follow_me.title
 						}
 					}
 				};
@@ -1023,6 +1028,43 @@ define(function(require){
 				self.usersRenderHotdesk(currentUser);
 			});
 
+			template.on('click', '.feature[data-feature="find_me_follow_me"]', function() {
+				monster.parallel({
+						userDevices: function(callback) {
+							monster.request({
+								resource: 'voip.users.listUserDevices',
+								data: {
+									accountId: self.accountId,
+									userId: currentUser.id
+								},
+								success: function(data) {
+									callback(null, data.data);
+								}
+							});
+						},
+						userCallflow: function(callback) {
+							self.usersListCallflowsUser(currentUser.id, function(data) {
+								if(data.length > 0) {
+									monster.request({
+										resource: 'voip.users.getCallflow',
+										data: {
+											accountId: self.accountId,
+											callflowId: data[0].id
+										},
+										success: function(callflow) {
+											callback(null, callflow.data)
+										}
+									});
+								}
+							});
+						}
+					},
+					function(error, results) {
+						self.usersRenderFindMeFollowMe($.extend(true, results, { currentUser: currentUser }));
+					}
+				);
+			});
+
 			template.on('click', '.feature[data-feature="vm_to_email"]', function() {
 				self.usersListVMBoxesUser(currentUser.id, function(vmboxes) {
 					currentUser.extra.deleteAfterNotify = true;
@@ -1549,6 +1591,169 @@ define(function(require){
 				title: currentUser.extra.mapFeatures.call_forward.title,
 				position: ['center', 20]
 			});
+		},
+
+		usersRenderFindMeFollowMe: function(params) {
+			var self = this,
+				currentUser = params.currentUser,
+				userDevices = params.userDevices.sort(function(a, b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1 }),
+				userCallflow = params.userCallflow,
+				featureTemplate = $(monster.template(self, 'users-feature-find_me_follow_me', { currentUser: currentUser, devices: userDevices })),
+				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+				featureForm = featureTemplate.find('#find_me_follow_me_form'),
+				args = {
+					callback: function() {
+						popup.dialog('close').remove();
+					},
+					openedTab: 'features'
+				},
+				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
+				scaleMaxSeconds = 60, //Maximum of seconds, corresponding to the end of the scale
+				selectedDevices = {};
+
+			if(userCallflow.flow.module === 'ring_group') {
+				_.each(userCallflow.flow.data.endpoints, function(val) {
+					selectedDevices[val.id] = val;
+				});
+			}
+
+			featureTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			switchFeature.on('switch-change', function(e, data) {
+				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+			});
+
+			featureTemplate.find('.save').on('click', function() {
+				var enabled = switchFeature.bootstrapSwitch('status'),
+					enabledDevices = featureTemplate.find('.device-row[data-device_id]:not(.disabled)');
+
+				currentUser.smartpbx = currentUser.smartpbx || {};
+				currentUser.smartpbx.find_me_follow_me = currentUser.smartpbx.find_me_follow_me || {};
+				currentUser.smartpbx.find_me_follow_me.enabled = (enabled && enabledDevices.length > 0);
+
+				if(enabled && enabledDevices.length > 0) {
+					userCallflow.flow.module = 'ring_group';
+					userCallflow.flow.data = {
+						strategy: "simultaneous",
+						timeout: scaleMaxSeconds,
+						endpoints: []
+					}
+					$.each(enabledDevices, function() {
+						var $row = $(this),
+							deviceId = $row.data('device_id'),
+							values = $row.find('.slider-time').slider('values');
+						
+						userCallflow.flow.data.endpoints.push({
+							id: deviceId,
+							endpoint_type: "device",
+							delay: values[0],
+							timeout: (values[1] - values[0])
+						});
+					});
+				} else {
+					userCallflow.flow.module = 'user';
+					userCallflow.flow.data = {
+						can_call_self: false,
+						id: currentUser.id,
+						timeout: "20"
+					}
+				}
+
+				monster.parallel({
+						callflow: function(callbackParallel) {
+							self.usersUpdateCallflow(userCallflow, function(data) {
+								callbackParallel && callbackParallel(null, data.data);
+							});
+						},
+						user: function(callbackParallel) {
+							self.usersUpdateUser(currentUser, function(data) {
+								callbackParallel && callbackParallel(null, data.data);
+							});
+						}
+					},
+					function(err, results) {
+						args.userId = results.user.id;
+						self.usersRender(args);
+					}
+				);
+			});
+
+			monster.ui.prettyCheck.create(featureTemplate.find('.disable-device'));
+
+			if(userDevices && userDevices.length > 0) {
+				var popup = monster.ui.dialog(featureTemplate, {
+					title: currentUser.extra.mapFeatures.find_me_follow_me.title,
+					position: ['center', 20]
+				});
+			} else {
+				monster.ui.alert('error', self.i18n.active().users.find_me_follow_me.noDevice);
+			}
+
+			var sliderTooltip = function(event, ui) {
+					var val = ui.value,
+						tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val + '</div></div>';
+
+					$(ui.handle).html(tooltip);
+				},
+				createTooltip = function(event, ui, deviceId, sliderObj) {
+					var val1 = sliderObj.slider('values', 0),
+						val2 = sliderObj.slider('values', 1),
+						tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
+						tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
+
+					featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
+					featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
+				},
+				createSlider = function(device) {
+					var deviceRow = featureTemplate.find('.device-row[data-device_id="'+ device.id +'"]');
+					deviceRow.find('.slider-time').slider({
+						range: true,
+						min: 0,
+						max: scaleMaxSeconds,
+						values: device.id in selectedDevices ? [ selectedDevices[device.id].delay, selectedDevices[device.id].delay+selectedDevices[device.id].timeout ] : [0,0],
+						slide: sliderTooltip,
+						change: sliderTooltip,
+						create: function(event, ui) {
+							createTooltip(event, ui, device.id, $(this));
+						},
+					});
+					createSliderScale(deviceRow);
+				},
+				createSliderScale = function(container, isHeader) {
+					var scaleContainer = container.find('.scale-container')
+						isHeader = isHeader || false;
+
+					for(var i=1; i<=scaleSections; i++) {
+						var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
+									 + (isHeader ? '<span>'+(i*scaleMaxSeconds/scaleSections)+' Sec</span>' : '')
+									 + '</div>';
+						scaleContainer.append(toAppend);
+					}
+					if(isHeader) {
+						scaleContainer.append('<span>0 Sec</span>');
+					}
+				};
+
+			featureTemplate.find('.disable-device').on('ifToggled', function() {
+				var parentRow = $(this).parents('.device-row');
+				if(this.checked) {
+					parentRow.find('.times').stop().animate({ opacity: 0 });
+					parentRow.addClass('disabled')
+				} else {
+					parentRow.find('.times').stop().animate({ opacity: 1 });
+					parentRow.removeClass('disabled')
+				}
+			});
+
+			_.each(userDevices, function(device) {
+				createSlider(device);
+				if(currentUser.extra.mapFeatures.find_me_follow_me.active && !(device.id in selectedDevices)) {
+					monster.ui.prettyCheck.action(featureTemplate.find('.device-row[data-device_id="'+device.id+'"] .disable-device'), 'check');
+				}
+			});
+			createSliderScale(featureTemplate.find('.device-row.title'), true);
 		},
 
 		usersCleanUserData: function(userData) {
@@ -2556,37 +2761,84 @@ define(function(require){
 		},
 
 		usersUpdateDevices: function(data, userId, callbackAfterUpdate) {
-			var self = this;
+			var self = this,
+				updateDevices = function(userCallflow) {
+					var listFnParallel = [];
 
-			monster.parallel
-			var listFnParallel = [];
+					_.each(data.new, function(deviceId) {
+						listFnParallel.push(function(callback) {
+							self.usersGetDevice(deviceId, function(data) {
+								data.owner_id = userId;
 
-			_.each(data.new, function(deviceId) {
-				listFnParallel.push(function(callback) {
-					self.usersGetDevice(deviceId, function(data) {
-						data.owner_id = userId;
-
-						self.usersUpdateDevice(data, function(data) {
-							callback(null, data);
+								self.usersUpdateDevice(data, function(data) {
+									callback(null, data);
+								});
+							});
 						});
 					});
-				});
-			});
 
-			_.each(data.old, function(deviceId) {
-				listFnParallel.push(function(callback) {
-					self.usersGetDevice(deviceId, function(data) {
-						delete data.owner_id;
+					_.each(data.old, function(deviceId) {
+						listFnParallel.push(function(callback) {
+							self.usersGetDevice(deviceId, function(data) {
+								delete data.owner_id;
 
-						self.usersUpdateDevice(data, function(data) {
-							callback(null, data);
+								self.usersUpdateDevice(data, function(data) {
+									callback(null, data);
+								});
+							});
 						});
 					});
-				});
-			});
 
-			monster.parallel(listFnParallel, function(err, results) {
-				callbackAfterUpdate && callbackAfterUpdate(results);
+					if(data.old.length > 0 && userCallflow && userCallflow.flow.module === 'ring_group') {
+						var endpointsCount = userCallflow.flow.data.endpoints.length;
+						userCallflow.flow.data.endpoints =_.filter(userCallflow.flow.data.endpoints, function(endpoint) {
+							return (data.old.indexOf(endpoint.id) < 0);
+						});
+						if(userCallflow.flow.data.endpoints.length < endpointsCount) {
+							if(userCallflow.flow.data.endpoints.length === 0) {
+								userCallflow.flow.module = 'user';
+								userCallflow.flow.data = {
+									can_call_self: false,
+									id: userId,
+									timeout: "20"
+								}
+								listFnParallel.push(function(callback) {
+									self.usersGetUser(userId, function(user) {
+										user.smartpbx.find_me_follow_me.enabled = false;
+										self.usersUpdateUser(user, function(data) {
+											callback(null, data)
+										});
+									});
+								});
+							}
+							listFnParallel.push(function(callback) {
+								self.usersUpdateCallflow(userCallflow, function(data) {
+									callback(null, data);
+								});
+							});
+						}
+					}
+
+					monster.parallel(listFnParallel, function(err, results) {
+						callbackAfterUpdate && callbackAfterUpdate(results);
+					});
+				};
+
+			self.usersListCallflowsUser(userId, function(data) {
+				if(data.length > 0) {
+					monster.request({
+						resource: 'voip.users.getCallflow',
+						data: {
+							accountId: self.accountId,
+							callflowId: data[0].id
+						},
+						success: function(callflow) {
+							updateDevices(callflow.data);
+						}
+					});
+				} else {
+					updateDevices(null);
+				}
 			});
 		},
 

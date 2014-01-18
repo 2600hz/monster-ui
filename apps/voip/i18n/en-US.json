@@ -305,9 +305,6 @@
 		},
 		"uploadPicture": "Upload a Picture",
 		"user": "User",
-		"find_me_follow_me": {
-			"title": "Find Me Follow Me"
-		},
 		"call_forward": {
 			"directCallsOnly": "Forward direct calls only",
 			"headline": "User Call Forwarding Settings",
@@ -339,6 +336,13 @@
 			"seeHere": "See Here",
 			"placeholder": "user@company.com",
 			"title": "Voicemails"
+		},
+		"find_me_follow_me": {
+			"title": "Find me, Follow me",
+			"headline": "Find me, Follow me Settings",
+			"disableDevice": "Do not ring",
+			"ringThisPhoneFor": "Ring this phone for",
+			"noDevice": "You need at least one device to enable this feature."
 		},
 		"caller_id": {
 			"title": "Caller-ID Number",
