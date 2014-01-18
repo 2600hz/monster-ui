@@ -434,6 +434,7 @@ define(function(require){
 
 					self.usersGetTemplate(type, userId, listUsers, function(template, data) {
 						if(type === 'name') {
+							currentUser = data;
 
 							template.find('#user_timezone').chosen({search_contains: true, width: "61%"});
 
