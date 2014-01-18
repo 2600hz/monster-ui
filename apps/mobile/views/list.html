@@ -1,0 +1,20 @@
+<div class="mobile-wrapper" id="list_view">
+	<div class="title-header">
+		<h1>{{i18n.listView.welcomeTitle}}</h1>
+		<button class="btn btn-primary" id="addNewDevice">{{i18n.listView.addActivation}}</button>
+		<button class="btn btn-primary" id="checkDevice">{{i18n.listView.checkDevice}}</button>
+	</div>
+
+	<div class="list-devices clearfix">
+		{{#each devices}}
+		<div class="device-line" data-id="{{this.number}}">
+			<div class="device-name">{{this.name}}</div>
+			<div class="device-number">{{this.number}}</div>
+			<div class="device-actions">
+				<a class="device-action" data-action="cancel"><i class="icon-remove"></i>{{i18n.listView.removeDevice}}</a>
+				<a class="device-action" data-action="edit"><i class="icon-cog"></i>{{i18n.listView.editDevice}}</a>
+			</div>
+		</div>
+		{{/each}}
+	</div>
+</div>

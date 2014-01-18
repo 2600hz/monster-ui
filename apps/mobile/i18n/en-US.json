@@ -1,0 +1,110 @@
+{
+	"activationSuccess": "{{deviceName}} has been activated, congratulations!",
+
+	"checkView": {
+		"check": "Check",
+		"title": "Check if your mobile can be activated with 2600hz!",
+		"goBack": "Return to activation listing",
+		"cancel": "Cancel",
+		"esn": {
+			"label": "ESN"
+		},
+		"zipCode": {
+			"label": "Zip Code",
+			"placeholder": "94105"
+		},
+		"unknownEsn": "Invalid ESN"
+	},
+
+	"listView": {
+		"addActivation": "Activate a new device",
+		"checkDevice": "Check availability",
+		"editDevice": "Edit",
+		"welcomeTitle": "Welcome to the 2600hz Mobile App"
+	},
+
+	"editView": {
+		"activationTitle": "Form to Activate a Sprint Phone",
+		"cancel": "Cancel",
+		"goBack": "Return to activation listing",
+		"deviceName": {
+			"label": "Device Name",
+			"placeholder": "JR's Device"
+		},
+		"icc": {
+			"label": "ICC (SIM Card)",
+			"placeholder": "89011200000172674425"
+		},
+		"mdn": {
+			"label": "MDN"
+		},
+		"esn": {
+			"label": "ESN"
+		},
+		"esnHexa": {
+			"label": "ESN (Hexa)"
+		},
+		"esnDec": {
+			"label": "ESN (Decimal)"
+		},
+		"zipCode": {
+			"label": "Zip Code",
+			"placeholder": "94105"
+		},
+		"informations": "Informations",
+		"features": "Features",
+		"miscellaneous": "Miscellaneous",
+		"voiceRouting": {
+			"inbound": "Inbound Voice Routing",
+			"outbound": "Outbound Voice Routing",
+			"url": {
+				"label": "URI",
+				"placeholder": "sip:222@blah.com"
+			},
+			"username": {
+				"label": "Username"
+			},
+			"password": {
+				"label": "Password"
+			}
+		},
+		"technologies": {
+			"label": "Data Technology",
+			"3g": "3G",
+			"wimax": "Wimax",
+			"lte": "LTE",
+			"spark": "Spark"
+		},
+		"enable": {
+			"inbound": "Inbound SMS",
+			"outbound": "Outbound SMS",
+			"mms": "MMS",
+			"data": "Data",
+			"voice": "Voice"
+		},
+		"method": {
+			"title": "Device Unavailable",
+			"redirect": "Redirect",
+			"response": "Response",
+			"value": "Value"
+		},
+		"update": "Update this device",
+		"activate": "Activate this device!",
+		"sprintInfos": {
+			"title": "Sprint Info",
+			"imsi": "IMSI",
+			"msid": "MSID",
+			"msl": "msl",
+			"csa": "csa",
+			"modelName": "Model Name",
+			"manufacturer": "Manufacturer",
+			"modelNumber": "Model Number",
+			"deviceSerialNumber": "Serial Number",
+			"iccSku": "ICC SKU",
+			"activationDate": "Activation Date",
+			"sprintNai": "Sprint NAI",
+			"pricePlan": "Price Plan",
+			"services": "Services"
+		}
+	}
+}
