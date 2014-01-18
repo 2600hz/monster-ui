@@ -11,6 +11,17 @@ define(function(require){
                 css = path + '.css';
 
             require([path], function(app){
+            	/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
+				if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
+					_.each(monster.apps.auth.installedApps, function(storedApp) {
+						if(app.name === storedApp.name && storedApp.source_url) {
+							app.sourceUrl = storedApp.source_url;
+							appPath = app.sourceUrl + '/' + appPath;
+						}
+					});
+				}
+				/* End Snippet */
+
                 _.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
 
                 _.each(app.requests, function(request, id){

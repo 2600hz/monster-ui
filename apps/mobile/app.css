@@ -1,0 +1,145 @@
+.mobile-wrapper {
+}
+
+.mobile-wrapper .title-header {
+	margin-top: 30px;
+	text-align: center;
+	width: 100%;
+}
+
+.mobile-wrapper .form-wrapper .button-wrapper {
+	text-align: center;
+}
+
+.mobile-wrapper .form-wrapper .button-wrapper > button{
+	margin: 0 5px;
+}
+
+/* Check view */
+.mobile-wrapper#check_view .form-wrapper {
+	background: #eee;
+	border: 1px solid #22CCFF;
+	border-radius: 4px;
+	display: block;
+	margin: 30px auto;
+	padding: 20px 50px;
+	width: 400px;
+}
+
+.mobile-wrapper#check_view .form-wrapper .results {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.mobile-wrapper#check_view .form-wrapper .results img {
+	margin: 10px;
+}
+
+.mobile-wrapper#check_view .form-wrapper .results .results-esn {
+	background: #22CCFF;
+	border: 1px solid #FFFFFF;
+	border-radius: 4px;
+	color: #FFF;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 10px 0;
+}
+/* List View */
+.mobile-wrapper#list_view #addNewDevice {
+	margin-right: 10px;
+}
+
+.mobile-wrapper#list_view .list-devices {
+	background: #fafafa;
+	border: 1px solid #22ccff;
+	border-radius: 4px;
+
+	display: block;
+	margin: 30px auto;
+	width: 800px;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line > div{
+	border: 1px solid #dddddd;
+	display: inline-block;
+	float: left;
+
+	height: 30px;
+	line-height: 30px;
+
+	padding: 0 15px;
+	text-align: center;
+
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line .device-name,
+.mobile-wrapper#list_view .list-devices .device-line .device-number {
+	width: 350px;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line .device-actions {
+	text-align: right;
+	width: 100px;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line .device-actions > a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.mobile-wrapper#list_view .list-devices .device-line .device-actions > a:hover > i {
+	color: #000;
+}
+
+/* Edit View */
+.mobile-wrapper#edit_view .form-wrapper .form-horizontal .control-group {
+	margin-bottom: 10px;
+}
+
+.mobile-wrapper#edit_view .form-wrapper .form-horizontal .control-group .controls {
+	line-height: 30px;
+}
+
+.mobile-wrapper#edit_view .form-wrapper {
+	background: #eee;
+	border: 1px solid #22CCFF;
+	border-radius: 4px;
+	display: block;
+	margin: 30px auto;
+	padding: 20px 50px;
+	width: 500px;
+}
+
+.mobile-wrapper#edit_view .form-wrapper label input[type="checkbox"] {
+	margin-right: 5px;
+	margin-top: -2px;
+}
+
+.mobile-wrapper#edit_view .sprint-infos {
+	background: #FFF;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.mobile-wrapper#edit_view .sprint-infos .sprint-line > div{
+	display: inline-block;
+	float: left;
+	padding: 5px 10px;
+}
+.mobile-wrapper#edit_view .sprint-infos .sprint-line .sprint-label{
+	color: #22CCFF;
+	font-weight: bold;
+	text-align: right;
+	width: 110px;
+}
+
+.mobile-wrapper#edit_view .sprint-infos .sprint-line .value{
+	height: 20px;
+	line-height: 20px;
+	width: 300px;
+}
