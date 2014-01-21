@@ -115,19 +115,13 @@ define(function(require){
 
 			template.find('.devices-header .search-query').on('keyup', function() {
 				var searchString = $(this).val().toLowerCase(),
-					viewMode = 'true',//template.find('#device_view_selector').val(),
 					rows = template.find('.devices-rows .grid-row:not(.title)'),
 					emptySearch = template.find('.devices-rows .empty-search-row');
 
 				_.each(rows, function(row) {
 					var row = $(row);
 
-					if(row.data('assigned')+'' === viewMode) {
-						row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
-					}
-					else {
-						row.hide();
-					}
+					row.data('search').toLowerCase().indexOf(searchString) < 0 ? row.hide() : row.show();
 				});
 
 				if(rows.size() > 0) {
