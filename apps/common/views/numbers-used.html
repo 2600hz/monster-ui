@@ -61,6 +61,10 @@
 									{{else}}
 										{{#compare this.ownerType '===' 'main'}}
 											<i class="icon-moon"></i>
+										{{else}}
+											{{#compare this.ownerType '===' 'conference'}}
+												<i class="icon-comments"></i>
+											{{/compare}}
 										{{/compare}}
 									{{/compare}}
 								{{/compare}}

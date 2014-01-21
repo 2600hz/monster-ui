@@ -1113,6 +1113,10 @@ define(function(require){
 							data.numbers.numbers[number].owner = self.i18n.active().numbers.mainNumber;
 							data.numbers.numbers[number].ownerType = 'main';
 						}
+						else if(callflow.type && callflow.type === 'conference') {
+							data.numbers.numbers[number].owner = self.i18n.active().numbers.conferenceNumber;
+							data.numbers.numbers[number].ownerType = 'conference';
+						}
 					}
 				});
 			});
