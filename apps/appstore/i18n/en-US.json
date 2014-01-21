@@ -19,6 +19,7 @@
 	"permissions": {
 		"title": "Who can use this App?",
 		"all": "All users",
+		"admins": "Admins only",
 		"specific": "Specific users"
 	},
 	"help": {

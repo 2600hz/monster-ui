@@ -153,8 +153,16 @@ define(function(require){
 					}
 					results.apps = _.filter(results.apps, function(val, key) {
 						if(installedAppIds.indexOf(val.id) >= 0) {
-							if(val.id in results.account.apps && (results.account.apps[val.id].all || results.account.apps[val.id].users.length > 0)) {
-								val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+							if(val.id in results.account.apps) {
+								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+								if('all' in results.account.apps[val.id]) {
+									results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
+									delete results.account.apps[val.id].all;
+								}
+								/*****************************************************************************************/
+								if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
+									val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+								}
 							}
 							val.label = val.i18n['en-US'].label;
 							val.description = val.i18n['en-US'].description;
@@ -245,9 +253,11 @@ define(function(require){
 
 					appSwitch.bootstrapSwitch();
 
-					if(!("apps" in account) || !(appId in account.apps) || (!account.apps[appId].all && account.apps[appId].users.length === 0)) {
+					if(!("apps" in account) || !(appId in account.apps) || (account.apps[appId].allowed_users === 'specific' && account.apps[appId].users.length === 0)) {
 						appSwitch.bootstrapSwitch('setState', false);
 						rightContainer.find('.permissions-bloc').hide();
+					} else if(account.apps[appId].allowed_users === 'admins') {
+						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
 					} else if(account.apps[appId].users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
@@ -293,15 +303,14 @@ define(function(require){
 								.show()
 								.removeClass('icon-spin icon-spinner')
 								.addClass('icon-remove icon-red')
-								.fadeOut(3000, function() {
-									icon.removeClass('icon-remove icon-red')
-										.addClass('icon-spinner');
-								});
+								.fadeOut(3000);
 							errorCallback && errorCallback();
 						};
 
-					icon.show()
-						.addClass('icon-spin');
+					icon.stop(true, true)
+						.removeClass('icon-remove icon-red icon-ok icon-green')
+						.addClass('icon-spinner icon-spin')
+						.show();
 
 					monster.request({
 						resource: 'appstore.account.get',
@@ -326,10 +335,7 @@ define(function(require){
 										.show()
 										.removeClass('icon-spin icon-spinner')
 										.addClass('icon-ok icon-green')
-										.fadeOut(3000, function() {
-											icon.removeClass('icon-ok icon-green')
-												.addClass('icon-spinner');
-										});
+										.fadeOut(3000);
 
 									$('#apploader').remove();
 									successCallback && successCallback();
@@ -348,12 +354,12 @@ define(function(require){
 			parent.find('.toggle-button-bloc .switch').on('switch-change', function(e, data) {
 				var $this = $(this),
 					previousSettings = $.extend(true, {}, appstoreData.account.apps[app.id]),
-					isInstalled = (app.id in appstoreData.account.apps && (previousSettings.all || previousSettings.users.length > 0));
+					isInstalled = (app.id in appstoreData.account.apps && (previousSettings.allowed_users !== 'specific' || previousSettings.users.length > 0));
 				if(data.value != isInstalled) {
 					if(data.value) {
 						updateAppInstallInfo(
 							{
-								all: true,
+								allowed_users: 'all',
 								users: []
 							},
 							function() {
@@ -369,7 +375,7 @@ define(function(require){
 					} else {
 						updateAppInstallInfo(
 							{
-								all: false,
+								allowed_users: 'specific',
 								users: []
 							},
 							function() {
@@ -387,13 +393,14 @@ define(function(require){
 			});
 
 			parent.find('.permissions-bloc input[name="permissions"]').on('change', function(e) {
-				if($(this).val() === 'specific') {
+				var allowedUsers = $(this).val();
+				if(allowedUsers === 'specific') {
 					parent.find('.permissions-link').show();
 				} else {
 					var previousSettings = $.extend(true, {}, appstoreData.account.apps[app.id]);
 					updateAppInstallInfo(
 						{
-							all: true,
+							allowed_users: allowedUsers,
 							users: []
 						},
 						function() {
@@ -460,7 +467,7 @@ define(function(require){
 				var selectedUsers = form2object('app_popup_user_list_form').users;
 				if(selectedUsers) {
 					var appInstallInfo = {
-						all: false,
+						allowed_users: 'specific',
 						users: $.map(selectedUsers, function(val) {
 							return { id: val };
 						})

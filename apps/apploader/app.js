@@ -214,15 +214,25 @@ define(function(require){
 					userApps = $.grep(userApps, function(appId) {
 						var app = fullAppList[appId],
 							userArray = appId in accountApps ? $.map(accountApps[appId].users, function(val) { return val.id }) : [];
-						if(app && appId in accountApps && (accountApps[appId].all || userArray.indexOf(self.userId) >= 0)) {
-							appList.push({
-								id: appId,
-								name: app.name,
-								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + appId + "/icon?auth_token=" + self.authToken,
-								label: app.label
-							});
-							delete accountApps[appId];
-							return true;
+						if(app && appId in accountApps) {
+							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+							if('all' in accountApps[appId]) {
+								accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
+								delete accountApps[appId].all;
+							}
+							/*****************************************************************************************/
+							if(accountApps[appId].allowed_users === 'all' 
+							|| (accountApps[appId].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin")
+							|| userArray.indexOf(self.userId) >= 0) {
+								appList.push({
+									id: appId,
+									name: app.name,
+									icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + appId + "/icon?auth_token=" + self.authToken,
+									label: app.label
+								});
+								delete accountApps[appId];
+								return true;
+							}
 						}
 						updateUserApps = true;
 						return false;
@@ -231,7 +241,13 @@ define(function(require){
 					_.each(accountApps, function(val, key) {
 						var app = fullAppList[key],
 							userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
-						if(app && (accountApps[key].all || userArray.indexOf(self.userId) >= 0)) {
+						/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+						if('all' in accountApps[key]) {
+							accountApps[key].allowed_users = accountApps[key].all ? 'all' : 'specific';
+							delete accountApps[key].all;
+						}
+						/*****************************************************************************************/
+						if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
 							appList.push({
 								id: key,
 								name: fullAppList[key].name,
