@@ -51,7 +51,7 @@
 				(+{{extra.additionalDevices}})
 			{{/if}}
 		</div>
-		<div class="features grid-cell right-aligned" data-type="features">
+		<div class="features grid-cell right-aligned{{#compare extra.countFeatures ">" 5}} smaller{{/compare}}" data-type="features">
 			{{#if extra.hasFeatures}}
 				{{#each extra.mapFeatures}}
 					{{#if this.active}}
