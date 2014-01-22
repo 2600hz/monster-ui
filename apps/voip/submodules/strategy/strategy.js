@@ -1443,6 +1443,10 @@ define(function(require){
 				}
 			});
 
+			container.find('.cancel-greeting').on('click', function(e) {
+				$(this).parents('.collapse').collapse('hide');
+			});
+
 			container.find('.cancel-link').on('click', function(e) {
 				e.preventDefault();
 				popup.dialog('close');
