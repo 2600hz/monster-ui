@@ -5,6 +5,7 @@
 
 	"numbers": {
 		"mainNumber": "Office Number",
+		"conferenceNumber": "Main Conference Number",
 		"dialogSpare": {
 			"title": "List of Spare Numbers",
 			"headline": "Spare Numbers of",

@@ -12,7 +12,6 @@
 	<div class="content{{#unless user.extra.mapFeatures.faxing.active}} disabled{{/unless}}">
         {{ i18n.users.faxing.dropdownLabel }}
 		<select class="dropdown-numbers">
-				{{debug extra.listNumbers}}
 			{{#each extra.listNumbers}}
 				<option value="{{this}}">{{this}}</option>
 			{{/each}}
