@@ -38,6 +38,10 @@ define(function(require){
 				url: 'accounts/{accountId}/users',
 				verb: 'GET'
 			},
+			'accountsManager.users.listAdmins': {
+				url: 'accounts/{accountId}/users?filter_priv_level=admin',
+				verb: 'GET'
+			},
 			'accountsManager.users.get': {
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
@@ -847,6 +851,27 @@ define(function(require){
 					$settingsItem.removeClass('open');
 					$settingsItem.find('.settings-item-content').hide();
 					$settingsItem.find('a.settings-link').show();
+				},
+				refreshAdminsHeader = function() {
+					monster.request({
+						resource: 'accountsManager.users.listAdmins',
+						data: {
+							accountId: editAccountId
+						},
+						success: function(data, status) {
+							$settingsItem.find('.total-admins').text(data.data.length);
+							if(data.data.length > 0) {
+								data.data = data.data.sort(function(a,b) {
+									return (a.first_name+a.last_name).toLowerCase() > (b.first_name+b.last_name).toLowerCase() ? 1 : -1;
+								});
+								$settingsItem.find('.first-admin-name').text(data.data[0].first_name + " " + data.data[0].last_name);
+								$settingsItem.find('.first-admin-email').text(data.data[0].email);
+							} else {
+								$settingsItem.find('.first-admin-name').text("-");
+								$settingsItem.find('.first-admin-email').empty();
+							}
+						}
+					});
 				};
 
 			monster.request({
@@ -855,6 +880,9 @@ define(function(require){
 					accountId: editAccountId,
 				},
 				success: function(data, status) {
+					data.data = data.data.sort(function(a,b) {
+						return (a.first_name+a.last_name).toLowerCase() > (b.first_name+b.last_name).toLowerCase() ? 1 : -1;
+					});
 					var admins = $.map(data.data, function(val) {
 							return val.priv_level === "admin" ? val : null;
 						}),
@@ -914,6 +942,7 @@ define(function(require){
 								},
 								success: function(data, status) {
 									self.renderEditAdminsForm(parent, editAccountId);
+									refreshAdminsHeader();
 								}
 							});
 						});
@@ -970,19 +999,6 @@ define(function(require){
 							var form = $adminElement.find('form'),
 								formData = form2object(form[0]);
 
-							// if(!(formData.first_name && formData.last_name && formData.email)) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
-							// } else if($adminPasswordDiv.is(":visible")
-							// 		&& (formData.password.length < 6
-							// 			|| /\s/.test(formData.password)
-							// 			|| !/\d/.test(formData.password)
-							// 			|| !/[A-Za-z]/.test(formData.password)
-							// 			)
-							// 		) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
-							// } else if($adminPasswordDiv.is(":visible") && formData.password !== formData.extra.password_confirm) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
-							// } else {
 							if(monster.ui.valid(form)) {
 								formData = self.cleanFormData(formData);
 								if(!$adminPasswordDiv.is(":visible")) {
@@ -1008,6 +1024,7 @@ define(function(require){
 											},
 											success: function(data, status) {
 												self.renderEditAdminsForm(parent, editAccountId);
+												refreshAdminsHeader();
 											}
 										});
 									}
@@ -1027,19 +1044,7 @@ define(function(require){
 						if($newAdminElem.find('.tab-pane.active').hasClass('create-user-div')) {
 							var formData = form2object('accountsmanager_add_admin_form'),
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
-							// if(!(formData.first_name && formData.last_name && formData.email)) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminMandatoryFields);
-							// } else if(!autoGen
-							// 		&& (formData.password.length < 6
-							// 			|| /\s/.test(formData.password)
-							// 			|| !/\d/.test(formData.password)
-							// 			|| !/[A-Za-z]/.test(formData.password)
-							// 			)
-							// 		) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordError);
-							// } else if(!autoGen && formData.password !== formData.extra.password_confirm) {
-							// 	monster.ui.alert('error',self.i18n.active().wizardErrorMessages.adminPasswordConfirmError);
-							// } else {
+							
 							if(monster.ui.valid(contentHtml.find('#accountsmanager_add_admin_form'))) {
 								formData = self.cleanFormData(formData);
 								formData.priv_level = "admin";
@@ -1056,6 +1061,7 @@ define(function(require){
 									},
 									success: function(data, status) {
 										self.renderEditAdminsForm(parent, editAccountId);
+										refreshAdminsHeader();
 									}
 								});
 								$newAdminBtn.click();
@@ -1079,6 +1085,7 @@ define(function(require){
 										},
 										success: function(data, status) {
 											self.renderEditAdminsForm(parent, editAccountId);
+											refreshAdminsHeader();
 										}
 									});
 								}
@@ -1216,7 +1223,9 @@ define(function(require){
 						},
 						params = {
 							accountData: results.account,
-							accountUsers: results.users,
+							accountUsers: results.users.sort(function(a,b) {
+								return (a.first_name+a.last_name).toLowerCase() > (b.first_name+b.last_name).toLowerCase() ? 1 : -1;
+							}),
 							servicePlans: servicePlans,
 							accountLimits: results.limits,
 							classifiers: results.classifiers,
