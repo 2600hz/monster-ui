@@ -96,6 +96,11 @@ define(function(require){
 					parsedError = $.parseJSON(error.response);
 				}
 
+				if(error.status === 402) {
+					options.acceptCharges = true;
+					monster.request(options);
+				}
+
 				if(settings.customFlags.generateError) {
 					var errorsI18n = monster.apps.core.i18n.active().errors,
 					    errorMessage = errorsI18n.generic;
@@ -136,9 +141,15 @@ define(function(require){
 				var postData = data.data;
 
 				if(settings.contentType === 'application/json') {
-					postData = JSON.stringify({
+					var payload = {
 						data: data.data
-					});
+					};
+
+					if(options.acceptCharges === true) {
+						payload.accept_charges = true;
+					}
+
+					postData = JSON.stringify(payload);
 				}
 
 				settings = _.extend(settings, {
