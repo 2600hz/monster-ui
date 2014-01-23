@@ -275,6 +275,7 @@ define(function(require){
 				dataUser.extra.mapFeatures[v].active = true;
 			});
 
+			dataUser.extra.countFeatures = dataUser.features.length;
 			if(dataUser.features.length > 0) {
 				dataUser.extra.hasFeatures = true;
 			}
@@ -1645,7 +1646,7 @@ define(function(require){
 						var $row = $(this),
 							deviceId = $row.data('device_id'),
 							values = $row.find('.slider-time').slider('values');
-						
+
 						userCallflow.flow.data.endpoints.push({
 							id: deviceId,
 							endpoint_type: "device",

@@ -129,9 +129,17 @@
 	cursor: pointer;
 }
 
-#users_container .users-grid .user-rows .grid-cell:last-child:not(.active):hover { border-right: 1px solid #dcdcdc; }
+#users_container .users-grid .user-rows .grid-cell:last-child:not(.active):hover {
+	border-right: 1px solid #dcdcdc;
+}
 
-#users_container .users-grid .grid-row .grid-cell:not(.features) { white-space: nowrap; }
+#users_container .users-grid .grid-row .grid-cell.features.smaller {
+	line-height: 24px;
+}
+
+#users_container .users-grid .grid-row .grid-cell:not(.features) {
+	white-space: nowrap;
+}
 
 #users_container .users-grid .grid-row .grid-cell.centered {
 	padding: 0;
@@ -707,18 +715,18 @@
 }
 
 #find_me_follow_me_form .slider-time.ui-slider .ui-slider-range,
-#find_me_follow_me_form .slider-time.ui-slider .ui-slider-handle { 
+#find_me_follow_me_form .slider-time.ui-slider .ui-slider-handle {
 	border-color: #73b714 #73b714 hsl(85, 80%, 32.5%);
-	background-color: hsl(85, 80%, 40%) !important; 
-	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714)); 
-	background-image: -moz-linear-gradient(top, #bcef75, #73b714); 
-	background-image: -ms-linear-gradient(top, #bcef75, #73b714); 
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714)); 
-	background-image: -webkit-linear-gradient(top, #bcef75, #73b714); 
-	background-image: -o-linear-gradient(top, #bcef75, #73b714); 
-	background-image: linear-gradient(#bcef75, #73b714); 
-	background-repeat: repeat-x; 
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714"); 
+	background-color: hsl(85, 80%, 40%) !important;
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714));
+	background-image: -moz-linear-gradient(top, #bcef75, #73b714);
+	background-image: -ms-linear-gradient(top, #bcef75, #73b714);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714));
+	background-image: -webkit-linear-gradient(top, #bcef75, #73b714);
+	background-image: -o-linear-gradient(top, #bcef75, #73b714);
+	background-image: linear-gradient(#bcef75, #73b714);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714");
 }
 
 #find_me_follow_me_form .slider-time.ui-slider .slider-tooltip {
