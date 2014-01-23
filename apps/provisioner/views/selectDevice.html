@@ -1,0 +1,32 @@
+{{#if this.data}}
+<div class="row-fluid select-device">
+	<div class="span6 offset6">
+		<select id="phones">
+			<option value="default" selected>Select a device</option>
+			{{#each this.data}}
+			<option value="{{this.id}}">{{this.name}}</option>
+			{{/each}}
+		</select>
+	</div>
+</div>
+{{/if}}
+<div class="row-fluid select-device">
+	{{#if this.data}}
+	<div class="span6">
+	{{else}}
+	<div class="span12">
+	{{/if}}
+		<a class="new-device" data-id="{{this.accountId}}">
+			<i class="icon-phone"></i>
+			Provision a new phone
+		</a>
+	</div>
+	{{#if this.data}}
+	<div class="span6">
+		<a class="existing-deivce">
+			<i class="icon-phone"></i>
+			Configure an existing phone
+		</a>
+	</div>
+	{{/if}}
+</div>

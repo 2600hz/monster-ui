@@ -1,0 +1,82 @@
+.provisioner-container {
+	margin: 20px auto;
+	max-width: 1024px;
+}
+
+.provisioner-container > .row-fluid > div:last-child {
+	padding-top: 40px;
+}
+
+.provisioner-container form > .row-fluid [class^='span'] {
+	text-align: center;
+}
+
+.provisioner-container form > .row-fluid a {
+	display: block;
+	margin: 0 auto;
+	padding: 20px 5px 5px 5px;
+	width: 110px;
+	height: 90px;
+	border: 3px solid #22ccff;
+	border-radius: 60px;
+	background-color: #ddd;
+	color: #fff;
+	text-decoration: none;
+	font-size: 15px;
+}
+
+.provisioner-container form > .row-fluid a:hover {
+	box-shadow: 1px 1px 20px 0 #aaa inset;
+	cursor: pointer;
+}
+
+.provisioner-container form > .row-fluid i {
+	display: block;
+	margin-bottom: 2px;
+	color: #22ccff;
+	font-size: 26px;
+}
+
+.provisioner-container .nav-bar .switch-link {
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 5px;
+	min-width: 10%;
+	border-bottom: solid 3px #BBB;
+	color: #BBB;
+	text-align: center;
+	font-size: 20px;
+}
+
+.provisioner-container .nav-bar .switch-link:hover {
+	border-bottom: solid 3px #777;
+	color: #777;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.provisioner-container .nav-bar .active {
+	border-bottom-color: #2CF;
+	color: #2CF;
+	cursor: pointer;
+}
+
+.provisioner-container .nav-bar .active:hover {
+	border-bottom-color: #2CF;
+	color: #2CF;
+	cursor: default;
+}
+
+.provisioner-container .devices-options .container {
+	max-width: 1024px;
+}
+
+.provisioner-container .devices-options .container > .content:not(.active) {
+	display: none;
+}
+
+.provisioner-container .devices-options .container > .active {
+	display: block;
+}

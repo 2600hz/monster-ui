@@ -1,0 +1,17 @@
+<div class="provisioner-container">
+	<div class="row-fluid">
+		<div class="span9">
+			<form>
+				<legend>Configure devices within your accounts</legend>
+				<label for="accounts">Which account are you configuring?</label>
+				<select id="accounts">
+					<option value="null" selected>Select an account</option>
+					{{#each data}}
+					<option value="{{id}}">{{name}}</option>
+					{{/each}}
+				</select>
+			</form>
+		</div>
+		<div class="span3">Configure your preferred default settings, which apply to accross all your devices or all your accounts.</div>
+	</div>
+</div>
