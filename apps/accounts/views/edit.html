@@ -146,20 +146,19 @@
 					<!-- Account admins -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_admins">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.accountAdmins }} ({{accountAdmins.length}})</span>
-							{{#if accountAdmins.length}}
+							<span class="title">{{ i18n.accountAdmins }} (<span class="total-admins">{{accountAdmins.length}}</span>)</span>
 								<div class="description">
 									<ul>
-										<li>{{accountAdmins.0.first_name}}&nbsp;{{accountAdmins.0.last_name}}</li>
-										<li>{{accountAdmins.0.email}}</li>
-										{{#if accountAdmins.0.contactNumber}}
-										<li>{{formatPhoneNumber accountAdmins.0.contactNumber}}</li>
-										{{/if}}
+										<li class="first-admin-name">
+											{{#if accountAdmins.length}}
+												{{accountAdmins.0.first_name}}&nbsp;{{accountAdmins.0.last_name}}
+											{{else}}
+												-
+											{{/if}}
+										</li>
+										<li class="first-admin-email">{{accountAdmins.0.email}}</li>
 									</ul>
 								</div>
-							{{else}}
-								<span class="description">-</span>
-							{{/if}}
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
 								<span class="text">{{ i18n.editSetting }}</span>

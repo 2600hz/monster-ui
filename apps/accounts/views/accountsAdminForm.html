@@ -15,9 +15,6 @@
 						<ul class="admin-element-info">
 							<li>{{this.first_name}}&nbsp;{{this.last_name}}</li>
 							<li>{{this.email}}</li>
-							{{#if this.contact_number}}
-							<li>{{formatPhoneNumber this.contact_number}}</li>
-							{{/if}}
 						</ul>
 					</div>
 					<div class="admin-element-edit">
@@ -38,12 +35,6 @@
 								<div class="input-prepend span12">
 									<span class="add-on"><i class="icon-user"></i></span>
 									<input required type="text" name="last_name" value="{{this.last_name}}" data-original_value="{{this.last_name}}" placeholder="{{ i18n.adminPlaceholders.lastName }}"/>
-							    </div>
-							</div>
-							<div class="controls clearfix">
-								<div class="input-prepend span12">
-									<span class="add-on"><i class="icon-phone"></i></span>
-									<input type="text" name="contact_number" value="{{this.contact_number}}" data-original_value="{{this.contact_number}}" placeholder="{{ i18n.adminPlaceholders.number }}"/>
 							    </div>
 							</div>
 							<div class="controls controls-row edit-admin-password-div clearfix">
@@ -96,12 +87,6 @@
 									<div class="input-prepend span12">
 										<span class="add-on"><i class="icon-user"></i></span>
 										<input required  type="text" name="last_name" placeholder="Last name"/>
-								    </div>
-								</div>
-								<div class="controls clearfix">
-									<div class="input-prepend span12">
-										<span class="add-on"><i class="icon-phone"></i></span>
-										<input type="text" name="contact_number" placeholder="Phone number"/>
 								    </div>
 								</div>
 								<div>
