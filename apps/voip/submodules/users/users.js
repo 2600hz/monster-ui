@@ -315,42 +315,44 @@ define(function(require){
 			});
 
 			_.each(data.callflows, function(callflow) {
-				var userId = callflow.owner_id;
+				if(callflow.type !== 'faxing') {
+					var userId = callflow.owner_id;
 
-				_.each(callflow.numbers, function(number) {
-					if(number && number.length < 7) {
-						dataTemplate.existingExtensions.push(number);
-					}
-				});
-
-				if(userId in mapUsers) {
-					var user = mapUsers[userId];
-
-					//User can only have one phoneNumber and one extension displayed with this code
 					_.each(callflow.numbers, function(number) {
-						if(number.length < 7) {
-							user.extra.listExtensions.push(number);
-
-							if(user.extra.extension === '') {
-								user.extra.extension = number;
-							}
-							else {
-								user.extra.additionalExtensions++;
-							}
-						}
-						else {
-							user.extra.listCallerId.push(number);
-
-							user.extra.listNumbers.push(number);
-
-							if(user.extra.phoneNumber === '') {
-								user.extra.phoneNumber = number;
-							}
-							else {
-								user.extra.additionalNumbers++;
-							}
+						if(number && number.length < 7) {
+							dataTemplate.existingExtensions.push(number);
 						}
 					});
+
+					if(userId in mapUsers) {
+						var user = mapUsers[userId];
+
+						//User can only have one phoneNumber and one extension displayed with this code
+						_.each(callflow.numbers, function(number) {
+							if(number.length < 7) {
+								user.extra.listExtensions.push(number);
+
+								if(user.extra.extension === '') {
+									user.extra.extension = number;
+								}
+								else {
+									user.extra.additionalExtensions++;
+								}
+							}
+							else {
+								user.extra.listCallerId.push(number);
+
+								user.extra.listNumbers.push(number);
+
+								if(user.extra.phoneNumber === '') {
+									user.extra.phoneNumber = number;
+								}
+								else {
+									user.extra.additionalNumbers++;
+								}
+							}
+						});
+					}
 				}
 			});
 
@@ -1917,7 +1919,7 @@ define(function(require){
 
 							$.each(callflows, function(k, callflowLoop) {
 								/* Find Smart PBX Callflow of this user */
-								if(callflowLoop.owner_id === userId) {
+								if(callflowLoop.owner_id === userId && callflowLoop.type !== 'faxing') {
 									callflowId = callflowLoop.id;
 
 									return false;
