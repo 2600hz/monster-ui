@@ -854,3 +854,41 @@ label.monster-invalid {
     line-height: 16px;
     position: absolute;
 }
+
+/* Confirm Charges popup */
+.charges-dialog {
+	max-width: 800px;
+	width: auto;
+}
+
+.charges-dialog .help-box .text-wrapper {
+	padding: 25px 30px 15px;
+}
+
+.charges-dialog .help-box .text-wrapper p {
+	text-align: justify;
+}
+
+.charges-dialog .help-box .text-wrapper table {
+	margin: 15px 0;
+	min-width: 400px;
+}
+
+.charges-dialog .help-box .text-wrapper table thead th:nth-child(2),
+.charges-dialog .help-box .text-wrapper table thead th:nth-child(5),
+.charges-dialog .help-box .text-wrapper table thead th:nth-child(6),
+.charges-dialog .help-box .text-wrapper table tbody td:nth-child(2),
+.charges-dialog .help-box .text-wrapper table tbody td:nth-child(5),
+.charges-dialog .help-box .text-wrapper table tbody td:nth-child(6) {
+	text-align: right;
+}
+
+.charges-dialog .help-box .text-wrapper table thead th:nth-child(4),
+.charges-dialog .help-box .text-wrapper table tbody td:nth-child(4) {
+	text-align: left;
+}
+
+.charges-dialog .help-box .text-wrapper table tbody td:nth-child(3),
+.charges-dialog .help-box .text-wrapper p:last-child {
+	text-align: center;
+}
