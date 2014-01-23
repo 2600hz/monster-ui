@@ -1,7 +1,3 @@
-<li class="account-list-add">
-	<i class="icon-plus-sign icon-large"></i>
-	<span>{{ i18n.addAccount }}</span>
-</li>
 {{#each accounts}}
 	<li class="account-list-element {{#compare this.id "===" ../selectedId}}active{{/compare}}" data-account_id="{{this.id}}">
 		{{#if this.children}}
