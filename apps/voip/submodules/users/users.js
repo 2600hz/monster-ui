@@ -695,15 +695,17 @@ define(function(require){
 
 			template.on('click', '.save-user', function() {
 				var formData = form2object('form-'+currentUser.id),
-					userToSave = $.extend(true, {}, currentUser, formData),
 					form = template.find('#form-'+currentUser.id);
 
 				if(monster.ui.valid(form)) {
 					currentUser.extra.vmbox.mailbox = formData.extra.vmboxNumber;
 					currentUser.extra.vmbox.timezone = formData.timezone;
+
+					var userToSave = $.extend(true, {}, currentUser, formData);
+
 					monster.parallel({
 							vmbox: function(callback) {
-								self.usersSmartUpdateVMBox(currentUser, true, function(vmbox) {
+								self.usersSmartUpdateVMBox(userToSave, true, function(vmbox) {
 									callback && callback(null, vmbox);
 								});
 							},
@@ -1761,6 +1763,7 @@ define(function(require){
 		},
 
 		usersCleanUserData: function(userData) {
+			var userData = $.extend(true, {}, userData);
 			/* If the user has been removed from the directory */
 			if(userData.extra) {
 				if(userData.extra.includeInDirectory === false) {
@@ -2938,6 +2941,7 @@ define(function(require){
 					if(needVMUpdate) {
 						self.usersGetVMBox(vmboxes[0].id, function(vmbox) {
 							vmbox = $.extend(true, {}, vmbox, user.extra.vmbox);
+							vmbox.name = user.first_name + ' ' + user.last_name + '\'s VMBox';
 
 							self.usersUpdateVMBox(vmbox, function(vmbox) {
 								callback && callback(vmbox);
