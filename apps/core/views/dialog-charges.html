@@ -1,0 +1,46 @@
+<div class="alert-dialog charges-dialog">
+	<div class="help-box gray-box">
+		<div class="wrapper-icon">
+			<i class="icon-question-sign2"></i>
+		</div>
+		<div class="text-wrapper">
+			<p>
+			{{#if activation_charges_description}}
+				{{#if activation_charges}}
+				{{i18n.confirmCharges.withChargesPartOne}}{{activation_charges}}{{i18n.confirmCharges.withChargesPartTwo}}{{activation_charges_description}}. 
+				{{else}}
+				{{i18n.confirmCharges.withoutCharges}}{{activation_charges_description}}. 
+				{{/if}}
+			{{/if}}
+			{{i18n.confirmCharges.detail}}
+			</p>
+			<table class="table charges-summary">
+				<thead>
+					<tr>
+						<th>{{i18n.confirmCharges.service}}</th>
+						<th>{{i18n.confirmCharges.rate}}</th>
+						<th></th>
+						<th>{{i18n.confirmCharges.quantity}}</th>
+						<th>{{i18n.confirmCharges.discount}}</th>
+						<th>{{i18n.confirmCharges.monthlyCharges}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{service}}</td>
+						<td>${{rate}}</td>
+						<td>X</td>
+						<td>{{quantity}}</td>
+						<td>{{#if discount}}${{discount}}{{else}}0{{/if}}</td>
+						<td>${{monthlyCharges}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>{{i18n.confirmCharges.actions}}</p>
+		</div>
+	</div>
+	<div class="alert-buttons-wrapper clearfix">
+		<button id="cancel_button" class="btn btn-danger confirm_button">{{ i18n.dialog.confirmCancel }}</button>
+		<button id="confirm_button" class="btn btn-success confirm_button">{{ i18n.dialog.confirmOk }}</button>
+	</div>
+</div>

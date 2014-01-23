@@ -96,24 +96,26 @@ define(function(require){
 					parsedError = $.parseJSON(error.response);
 				}
 
-				if(error.status === 402) {
-					options.acceptCharges = true;
-					monster.request(options);
-				}
+				if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
+					monster.ui.charges(parsedError.data, function() {
+						options.acceptCharges = true;
+						monster.request(options);
+					});
+				} else {
+					if(settings.customFlags.generateError) {
+						var errorsI18n = monster.apps.core.i18n.active().errors,
+							errorMessage = errorsI18n.generic;
 
-				if(settings.customFlags.generateError) {
-					var errorsI18n = monster.apps.core.i18n.active().errors,
-					    errorMessage = errorsI18n.generic;
+						if(error.status in errorsI18n) {
+							errorMessage = errorsI18n[error.status];
+						}
 
-					if(error.status in errorsI18n) {
-						errorMessage = errorsI18n[error.status];
+						if(parsedError.message) {
+							errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
+						}
+
+						monster.ui.alert('error', errorMessage);
 					}
-
-					if(parsedError.message) {
-						errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
-					}
-
-					monster.ui.alert('error', errorMessage);
 				}
 
 				options.error && options.error(parsedError, error);
