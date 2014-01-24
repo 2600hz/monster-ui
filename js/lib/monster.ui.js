@@ -265,6 +265,69 @@ define(function(require){
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},
 
+		charges: function(data, callbackOk, callbackCancel) {
+			var self = this,
+				dialog,
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active(),
+				formatData = function(data) {
+					var totalAmount = 0,
+						renderData = [];
+
+					$.each(data, function(categoryName, category) {
+						if (categoryName != 'activation_charges' && categoryName != 'activation_charges_description') {
+							$.each(category, function(itemName, item) {
+								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
+									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
+
+								if(monthlyCharges > 0) {
+									renderData.push({
+										service: itemName.toUpperCase().replace("_"," "),
+										rate: item.rate || 0,
+										quantity: item.quantity || 0,
+										discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+										monthlyCharges: monthlyCharges,
+										activation_charges: (( data.activation_charges ) ? data.activation_charges : false),
+										activation_charges_description: (( data.activation_charges_description ) ? data.activation_charges_description : false)
+									});
+
+									totalAmount += parseFloat(monthlyCharges);
+								}
+							});
+						}
+					});
+
+					return renderData;
+				},
+				template = $(monster.template(coreApp, 'dialog-charges', formatData(data)[0])),
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						width: 'auto',
+						title: i18n.confirmCharges.title,
+						onClose: function() {
+							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
+						}
+					},
+					options
+				),
+				ok = false;
+
+			dialog = this.dialog(template, options);
+
+			template.find('#confirm_button').on('click', function() {
+				ok = true;
+				dialog.dialog('close');
+			});
+
+			template.find('#cancel_button').on('click', function() {
+				dialog.dialog('close');
+			});
+
+			return dialog;
+		},
+
 		tabs: function(template) {
 			template.find('.tabs-main-selector').first().addClass('active');
 			template.find('.tabs-section').first().addClass('active');

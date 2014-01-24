@@ -94,5 +94,18 @@
 		"required": "Required."
 	},
 	"warning": "Warning!",
-	"welcome": "Hosted Telecom Services"
+	"welcome": "Hosted Telecom Services",
+	"confirmCharges": {
+		"title": "Charges Confirmation",
+		"withChargesPartOne": "You will pay a $",
+		"withChargesPartTwo": "} on-time ",
+		"withoutCharges": "There is no ",
+		"detail": "Here is the detail of the monthly charges attached to your account for this service:",
+		"service": "Service",
+		"rate": "Rate",
+		"quantity": "Quantity",
+		"discount": "Discount",
+		"monthlyCharges": "Monthly Charges",
+		"actions": "Press OK to confirm or Cancel to abort the process."
+	}
 }

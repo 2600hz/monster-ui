@@ -43,8 +43,8 @@
 	white-space: nowrap;   overflow: hidden;
 	text-overflow: ellipsis;
 	position: relative;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -114,8 +114,8 @@
 	display: inline-block;
 	padding: 10px;
 	line-height: 50px;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	white-space: nowrap;
 	overflow: hidden;
@@ -399,7 +399,7 @@
 
 /********** Strategy Conference ***********/
 
-#strategy_container .element-container.strategy-confnum .title .icon-user {
+#strategy_container .element-container.strategy-confnum .title i {
 	position: relative;
 	top: 2px;
 	font-size: 28px;
@@ -446,7 +446,7 @@
 #strategy_menu_popup .menu-block .menu-line {
 	padding: 5px 0px;
 }
-#strategy_menu_popup .menu-block .menu-line > div, 
+#strategy_menu_popup .menu-block .menu-line > div,
 #strategy_menu_popup .menu-block .menu-line > input,
 #strategy_menu_popup .menu-block .menu-line > select {
 	margin: 0 15px 0 0;
@@ -495,7 +495,7 @@
 }
 
 #strategy_menu_popup .action-block .cancel-link {
-    line-height: 30px; 
+    line-height: 30px;
     margin-right: 40px;
     color: #22ccff;
 }
