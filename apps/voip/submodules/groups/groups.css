@@ -614,3 +614,26 @@
 	top: 30px;
 	left: 130px;
 }
+
+/* Music-On-Hold  Feature */
+.feature-popup-container[data-feature="music_on_hold"] .media-dropdown {
+	margin-bottom: 0px;
+}
+.feature-popup-container[data-feature="music_on_hold"] .upload-toggle {
+	margin-left: 10px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.feature-popup-container[data-feature="music_on_hold"] .upload-div {
+	display: none;
+	margin-top: 20px;
+}
+.feature-popup-container[data-feature="music_on_hold"] .upload-div .upload-input {
+	margin: 0;
+	width: 330px;
+}
+.feature-popup-container[data-feature="music_on_hold"] .upload-div button {
+	margin-left: 10px;
+	padding-left: 13px;
+	padding-right: 13px;
+}

@@ -64,6 +64,7 @@
 	},
 	"unexpectedError": "An unexpected error happened, please try again!",
 	"update": "Update",
+	"upload": "Upload",
 	"validation": {
 		"defaultRules": {
 			"required": "This field is required.",

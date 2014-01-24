@@ -1296,6 +1296,7 @@ define(function(require){
 				var text = ttsGreeting.find('textarea').val();
 				if(text) {
 					if(greeting && greeting.id) {
+						greeting.type = 'virtual_receptionist';
 						greeting.description = "<Text to Speech>";
 						greeting.media_source = "tts";
 						greeting.tts = {
@@ -1378,6 +1379,7 @@ define(function(require){
 
 				fileReader.onloadend = function(evt) {
 					if(greeting && greeting.id) {
+						greeting.type = 'virtual_receptionist';
 						greeting.description = file.name;
 						greeting.media_source = "upload";
 						delete greeting.tts;

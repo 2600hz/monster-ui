@@ -72,6 +72,19 @@ define(function(require){
 				url: 'accounts/{accountId}/media?key_missing=type',
 				verb: 'GET'
 			},
+			'voip.groups.createMedia': {
+				url: 'accounts/{accountId}/media',
+				verb: 'PUT'
+			},
+			'voip.groups.deleteMedia': {
+				url: 'accounts/{accountId}/media/{mediaId}',
+				verb: 'DELETE'
+			},
+            'voip.groups.uploadMedia': {
+                url: 'accounts/{accountId}/media/{mediaId}/raw',
+                verb: 'POST',
+                type: 'application/x-base64'
+            },
 			'voip.groups.listVMBoxes': {
 				url: 'accounts/{accountId}/vmboxes',
 				verb: 'GET'
@@ -576,7 +589,22 @@ define(function(require){
 					},
 					featureTemplate = $(monster.template(self, 'groups-feature-music_on_hold', templateData)),
 					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
-					popup;
+					popup,
+					closeUploadDiv = function(newMedia) {
+						var uploadInput = featureTemplate.find('.upload-input');
+						uploadInput.wrap('<form>').closest('form').get(0).reset();
+						uploadInput.unwrap();
+						featureTemplate.find('.upload-div').slideUp(function() {
+							featureTemplate.find('.upload-toggle').removeClass('active');
+						});
+						if(newMedia) {
+							var mediaSelect = featureTemplate.find('.media-dropdown');
+							mediaSelect.append('<option value="'+newMedia.id+'">'+newMedia.name+'</option>');
+							mediaSelect.val(newMedia.id);
+						}
+					};
+
+				console.log(templateData);
 
 				featureTemplate.find('.cancel-link').on('click', function() {
 					popup.dialog('close').remove();
@@ -584,6 +612,71 @@ define(function(require){
 
 				switchFeature.on('switch-change', function(e, data) {
 					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.upload-toggle').on('click', function() {
+					if($(this).hasClass('active')) {
+						featureTemplate.find('.upload-div').stop(true, true).slideUp();
+					} else {
+						featureTemplate.find('.upload-div').stop(true, true).slideDown();
+					}
+				});
+
+				featureTemplate.find('.upload-cancel').on('click', function() {
+					closeUploadDiv();
+				});
+
+				featureTemplate.find('.upload-submit').on('click', function() {
+					var file = featureTemplate.find('.upload-input')[0].files[0];
+						fileReader = new FileReader();
+
+					fileReader.onloadend = function(evt) {
+						monster.request({
+							resource: 'voip.groups.createMedia',
+							data: {
+								accountId: self.accountId,
+								data: {
+									streamable: true,
+									name: file.name,
+									media_source: "upload",
+									description: file.name
+								}
+							},
+							success: function(data, status) {
+								var media = data.data;
+								monster.request({
+									resource: 'voip.groups.uploadMedia',
+									data: {
+										accountId: self.accountId,
+										mediaId: media.id,
+										data: evt.target.result
+									},
+									success: function(data, status) {
+										closeUploadDiv(media);
+									},
+									error: function(data, status) {
+										monster.request({
+											resource: 'voip.groups.deleteMedia',
+											data: {
+												accountId: self.accountId,
+												mediaId: media.id,
+												data: {}
+											},
+											success: function(data, status) {
+
+											}
+										});
+									}
+								});
+							}
+						});
+					};
+
+					if(file) {
+						fileReader.readAsDataURL(file);
+					} else {
+						monster.ui.alert(self.i18n.active().groups.musicOnHold.emptyUploadAlert);
+					}
 				});
 
 				featureTemplate.find('.save').on('click', function() {

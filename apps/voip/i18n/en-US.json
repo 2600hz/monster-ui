@@ -68,7 +68,8 @@
 			"headline": "Group Music-On-Hold Settings",
 			"dropdownLabel": "Music on Hold:",
 			"silence": "Silence",
-			"defaultMusic": "Default Music"
+			"defaultMusic": "Default Music",
+			"emptyUploadAlert": "Please select a file to upload"
 		},
 		"voicemails": {
 			"title": "Voicemails",
