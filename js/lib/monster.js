@@ -96,19 +96,26 @@ define(function(require){
 					parsedError = $.parseJSON(error.response);
 				}
 
-				if(settings.customFlags.generateError) {
-					var errorsI18n = monster.apps.core.i18n.active().errors,
-					    errorMessage = errorsI18n.generic;
+				if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
+					monster.ui.charges(parsedError.data, function() {
+						options.acceptCharges = true;
+						monster.request(options);
+					});
+				} else {
+					if(settings.customFlags.generateError) {
+						var errorsI18n = monster.apps.core.i18n.active().errors,
+							errorMessage = errorsI18n.generic;
 
-					if(error.status in errorsI18n) {
-						errorMessage = errorsI18n[error.status];
+						if(error.status in errorsI18n) {
+							errorMessage = errorsI18n[error.status];
+						}
+
+						if(parsedError.message) {
+							errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
+						}
+
+						monster.ui.alert('error', errorMessage);
 					}
-
-					if(parsedError.message) {
-						errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
-					}
-
-					monster.ui.alert('error', errorMessage);
 				}
 
 				options.error && options.error(parsedError, error);
@@ -136,9 +143,15 @@ define(function(require){
 				var postData = data.data;
 
 				if(settings.contentType === 'application/json') {
-					postData = JSON.stringify({
+					var payload = {
 						data: data.data
-					});
+					};
+
+					if(options.acceptCharges === true) {
+						payload.accept_charges = true;
+					}
+
+					postData = JSON.stringify(payload);
 				}
 
 				settings = _.extend(settings, {
