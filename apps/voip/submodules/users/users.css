@@ -269,6 +269,12 @@
 	margin-left: -100px;
 }
 
+#users_container .detail-user .user-fields .basic-fields .row-fields.vmbox label.monster-invalid {
+	display: block;
+	margin-left: 170px;
+	margin-top: -10px;
+}
+
 #users_container .detail-user .fix-left {
 	margin-left: 12px;
 }

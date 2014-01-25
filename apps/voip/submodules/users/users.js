@@ -213,7 +213,7 @@ define(function(require){
 			});
 		},
 
-		usersFormatUserData: function(dataUser, _mainDirectory, _mainCallflow, _vmbox) {
+		usersFormatUserData: function(dataUser, _mainDirectory, _mainCallflow, _vmbox, _vmboxes) {
 			var self = this,
 				formattedUser = {
 					additionalDevices: 0,
@@ -297,6 +297,14 @@ define(function(require){
 
 			if(_vmbox) {
 				dataUser.extra.vmbox = _vmbox;
+			}
+
+			if(!_.isEmpty(_vmbox) && !_.isEmpty(_vmboxes)) {
+				var i = _vmboxes.indexOf(_vmbox.mailbox);
+
+				_vmboxes.splice(i, 1);
+
+				dataUser.extra.existingVmboxes = _vmboxes;
 			}
 
 			return dataUser;
@@ -1860,6 +1868,17 @@ define(function(require){
 								callback(null, {});
 							}
 						});
+					},
+					existingVmboxes: function(callback) {
+						self.usersListVMBoxes(function(vmboxes) {
+							var listVMBoxes = [];
+
+							_.each(vmboxes, function(vmbox) {
+								listVMBoxes.push(vmbox.mailbox);
+							});
+
+							callback(null, listVMBoxes);
+						});
 					}
 				},
 				function(error, results) {
@@ -1873,10 +1892,16 @@ define(function(require){
 						}
 					});
 
-					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow, results.vmbox);
+					var dataTemplate = self.usersFormatUserData(userData, results.mainDirectory, results.mainCallflow, results.vmbox, results.existingVmboxes);
 
 					template = $(monster.template(self, 'users-name', dataTemplate));
+
 					monster.ui.validate(template.find('form.user-fields'), {
+						rules: {
+							'extra.vmboxNumber': {
+								checkList: dataTemplate.extra.existingVmboxes
+							}
+						},
 						messages: {
 							'first_name': {
 								required: self.i18n.active().validation.required

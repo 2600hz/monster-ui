@@ -18,9 +18,11 @@
 				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
 			</div>
 
-        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
-            	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
-            	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
+        	<div class="row-fields">
+            	<label class="fix-left" for="notification_email">
+                    <input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if extra.sameEmail}} checked{{/if}}></input>
+					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
+                </label>
         	</div>
 		</div>
 		<div class="basic-fields span6">
@@ -37,7 +39,7 @@
 				</select>
 			</div>
 
-			<div class="row-fields">
+			<div class="row-fields vmbox">
 				<div class="icon-wrapper"><i class="icon-asterisk"></i></div>
 				<label for="vmbox_number">
 					{{ i18n.users.editionForm.vmboxNumber }}
@@ -54,11 +56,10 @@
 			</div>
 
 			{{/if}}
-			<div class="row-fields">
-            	<label class="fix-left" for="notification_email">
-                    <input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if extra.sameEmail}} checked{{/if}}></input>
-					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
-                </label>
+
+        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
+            	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
+            	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
         	</div>
 		</div>
 		<!--<div class="advanced-fields content-centered span3">
