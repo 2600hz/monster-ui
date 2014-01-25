@@ -275,8 +275,8 @@ define(function(require){
 						// 	return true;
 						// });
 						if(unavailableNumbers.length > 0) {
- 							container.find('#check_numbers_div .unavailable-div .unavailable-numbers')
- 									 .empty()
+							container.find('#check_numbers_div .unavailable-div .unavailable-numbers')
+									 .empty()
 									 .append(monster.template(self, 'buyNumbers-unavailableNumbers', {numbers: unavailableNumbers}));
 						} else {
 							var totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers)
@@ -722,20 +722,20 @@ define(function(require){
 							},
 							success: function(data, status) {
 								if(data.data) {
-						            cityList = data.data;
-						            response(
-						            	$.map( cityList, function(val, key) {
-							                return {
-							                    label: key + ", " + val.state + " (" + (val.prefixes.length <= 2 ? val.prefixes.join(", ") : val.prefixes.slice(0,2).join(", ")+",...") + ")",
-							                    value: key
-							                }
-							            })
-							            .sort(function(a,b) {
+									cityList = data.data;
+									response(
+										$.map( cityList, function(val, key) {
+											return {
+												label: key + ", " + val.state + " (" + (val.prefixes.length <= 2 ? val.prefixes.join(", ") : val.prefixes.slice(0,2).join(", ")+",...") + ")",
+												value: key
+											}
+										})
+										.sort(function(a,b) {
 											return (a.value.toLowerCase() > b.value.toLowerCase());
 										})
 										.slice(0,10)
-						            );
-						        }
+									);
+								}
 							},
 							error: function(data, status) {}
 						});
@@ -751,7 +751,7 @@ define(function(require){
 							  .append(monster.template(self, 'buyNumbers-areaCodes', {areaCodes: areaCodes}))
 							  .find('input:radio:first').prop('checked', true);
 					areaCodes.length > 1 ? areaCodesDiv.slideDown() : areaCodesDiv.slideUp();
-
+					event.stopPropagation();
 				}
 			});
 
@@ -765,6 +765,13 @@ define(function(require){
 				} else {
 					seqNumInputSpan.slideUp();
 					searchButton.animate({marginTop:"0"});
+				}
+			});
+
+			container.on('keydown', '#city_input, input[name="area_code_radio"], #seq_num_input, #seq_num_checkbox', function(e) {
+				if(e.keyCode == 13) {
+					container.find('#search_numbers_button').click();
+					$(this).blur();
 				}
 			});
 
