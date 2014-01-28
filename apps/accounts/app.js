@@ -5,7 +5,9 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr'),
 		timezone = require('monster-timezone'),
-		nicescroll = require('nicescroll');
+		nicescroll = require('nicescroll'),
+		hotkeys = require('hotkeys'),
+		wysiwyg = require('wysiwyg');
 
 	var app = {
 
@@ -1281,7 +1283,15 @@ define(function(require){
 					accountAdmins: admins,
 					accountUsers: regularUsers,
 					accountServicePlans: servicePlans,
-					isReseller: monster.apps['auth'].isReseller
+					isReseller: monster.apps['auth'].isReseller,
+					wysiwygColorList: [
+						'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
+						'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
+						'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
+						'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
+						'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
+						'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
+					]
 				};
 
 			if($.isNumeric(templateData.account.created)) {
@@ -1297,7 +1307,8 @@ define(function(require){
 					$liContent.slideUp('fast');
 					$aSettings.find('.update .text').text(self.i18n.active().editSetting);
 					$aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
-				};
+				},
+				notesTab = contentHtml.find('#accountsmanager_notes_tab');
 
 			contentHtml.find('.account-tabs a').click(function(e) {
 				e.preventDefault();
@@ -1566,6 +1577,36 @@ define(function(require){
 
 			parent.find('.main-content').empty()
 										.append(contentHtml);
+
+			notesTab.find('a[title]').tooltip({container:'body'});
+			notesTab.find('div.dropdown-menu input')
+					.on('click', function () {
+						return false;
+					})
+					.change(function () {
+						$(this).parents('div.dropdown-menu').siblings('a.dropdown-toggle').dropdown('toggle');
+					})
+					.keydown('esc', function () {
+						this.value='';
+						$(this).change();
+					}
+			);
+			notesTab.find('#editor').wysiwyg();
+			notesTab.find('#editor').html(accountData.custom_notes);
+			notesTab.find('#accountsmanager_notes_save').on('click', function() {
+				var notesContent = notesTab.find('#editor').html();
+				self.updateData(
+					accountData, 
+					{ custom_notes: notesContent }, 
+					function(data, status) {
+						accountData = data.data;
+						toastr.success(self.i18n.active().toastrMessages.notesUpdateSuccess, '', {"timeOut": 5000});
+					},
+					function(data, status) {
+						toastr.error(self.i18n.active().toastrMessages.notesUpdateError, '', {"timeOut": 5000});
+					}
+				);
+			});
 
 			// self.adjustTabsWidth(contentHtml.find('ul.account-tabs > li'));
 
@@ -1871,7 +1912,7 @@ define(function(require){
 				resource: 'accountsManager.update',
 				data: {
 					accountId: data.id,
-					data: $.extend(true, {}, data, newData)
+					data: dataToUpdate
 				},
 				success: function(_data, status) {
 					success && success(_data, status);
