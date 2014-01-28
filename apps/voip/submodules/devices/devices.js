@@ -232,12 +232,13 @@ define(function(require){
 				deviceForm = templateDevice.find('#form_device');
 
 			if ( data.extra.hasE911Numbers ) {
-				var selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
-
-				if (selectedNumber != "" ) {
-					self.devicesGetE911NumberAddress(selectedNumber, function(address) {
-						templateDevice.find('.number-address').css('display', 'block');
-						templateDevice.find('.number-address p').html(address);
+				if(data.caller_id && data.caller_id.emergency && data.caller_id.emergency.number) {
+					self.devicesGetE911NumberAddress(data.caller_id.emergency.number, function(address) {
+						templateDevice
+									.find('.number-address')
+									.show()
+									.find('p')
+									.html(address);
 					});
 				}
 			}
@@ -278,6 +279,7 @@ define(function(require){
 
 			monster.ui.tabs(templateDevice);
 			monster.ui.prettyCheck.create(templateDevice);
+			templateDevice.find('[data-toggle="tooltip"]').tooltip();
 			templateDevice.find('.switch').bootstrapSwitch();
 			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
 
@@ -311,17 +313,21 @@ define(function(require){
 			});
 
 			templateDevice.on('change', '.caller-id-select', function() {
-				var selectedNumber = templateDevice.find('.caller-id-select')[0][templateDevice.find('.caller-id-select')[0].selectedIndex].value;
+				var selectedNumber = this.value;
 
-				templateDevice.find('.number-address p').empty();
+				var divAddress = templateDevice.find('.number-address');
 
-				if ( selectedNumber != "" ) {
+				divAddress.find('p').empty();
+
+				if (selectedNumber !== '') {
 					self.devicesGetE911NumberAddress(selectedNumber, function(address) {
-						templateDevice.find('.number-address p').html(address);
+						divAddress.find('p').html(address);
 					});
-					templateDevice.find('.number-address').slideDown();
-				} else {
-					templateDevice.find('.number-address').slideUp();
+
+					divAddress.slideDown();
+				}
+				else {
+					divAddress.slideUp();
 				}
 			});
 
@@ -470,7 +476,8 @@ define(function(require){
 		},
 
 		devicesFormatData: function(data) {
-			var defaults = {
+			var self = this,
+				defaults = {
 					extra: {
 						hasE911Numbers: data.e911Numbers.length > 0,
 						e911Numbers: data.e911Numbers,
@@ -582,9 +589,17 @@ define(function(require){
 
 			_.each(data.listClassifiers, function(restriction, name) {
 				defaults.extra.restrictions[name] = restriction;
+				if(name in self.i18n.active().devices.classifiers) {
+					defaults.extra.restrictions[name].friendly_name = self.i18n.active().devices.classifiers[name].name;
+
+					if('help' in self.i18n.active().devices.classifiers[name]) {
+						defaults.extra.restrictions[name].help = self.i18n.active().devices.classifiers[name].help;
+					}
+				}
 
 				if('call_restriction' in data.device && name in data.device.call_restriction) {
 					defaults.extra.restrictions[name].action = data.device.call_restriction[name].action;
+
 				}
 				else {
 					defaults.extra.restrictions[name].action = 'inherit';
