@@ -14,6 +14,19 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/bg.jpg', sizingMethod='scale')";
 }
 
+.footer-wrapper {
+	position: fixed;
+	bottom: 2px;
+	right: 2px;
+}
+
+.footer-wrapper .powered-by > * {
+	color: #333;
+	font-size: 11px;
+	margin-right: 5px;
+	text-decoration: none;
+}
+
 .hello {
     text-align: center;
 }
