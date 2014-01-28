@@ -182,6 +182,7 @@
 
 #buy_number #total_num_span {
 	font-size: 22px;
+	margin-right: 5px;
 }
 
 #buy_number #search_result_div .result-content-div .right-div i {
