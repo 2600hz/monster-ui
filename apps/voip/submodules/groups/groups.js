@@ -468,7 +468,6 @@ define(function(require){
 			var self = this;
 
 			self.groupsGetMembersData(groupId, function(results) {
-				console.log(results);
 				var results = self.groupsFormatMembersData(results);
 
 				template = $(monster.template(self, 'groups-members', results));
@@ -536,7 +535,7 @@ define(function(require){
 					if(!('call_recording' in data.group.smartpbx)) {
 						data.group.smartpbx.call_recording = {
 							enabled: false
-						}; 
+						};
 					}
 
 					if(data.group.smartpbx.call_recording.enabled || enabled) {
@@ -603,8 +602,6 @@ define(function(require){
 							mediaSelect.val(newMedia.id);
 						}
 					};
-
-				console.log(templateData);
 
 				featureTemplate.find('.cancel-link').on('click', function() {
 					popup.dialog('close').remove();
@@ -749,7 +746,7 @@ define(function(require){
 					if(!('voicemails' in data.group.smartpbx)) {
 						data.group.smartpbx.voicemails = {
 							enabled: false
-						}; 
+						};
 					}
 
 					if(data.group.smartpbx.voicemails.enabled || enabled) {
@@ -1077,8 +1074,6 @@ define(function(require){
 				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
 				scaleMaxSeconds = 60; //Maximum of seconds, corresponding to the end of the scale
 
-			console.log(data);
-
 			template.find('.save-groups').on('click', function() {
 				var endpoints = [],
 					groupId = data.id;
@@ -1123,7 +1118,7 @@ define(function(require){
 					name: $(this).text()
 				}));
 				createSlider(newEndpoint);
-				
+
 				$this.addClass('in-use');
 			});
 
@@ -1422,7 +1417,7 @@ define(function(require){
 				if(endpoint.id in mapUsers) {
 					endpoint.name = user.first_name + ' ' + user.last_name;
 					mapUsers[endpoint.id].inUse = true;
-				} else { 
+				} else {
 					endpoint.name = 'Not a user';
 				}
 			});

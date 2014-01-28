@@ -124,6 +124,12 @@
 			}
 		},
 		"buy": "Buy Device",
+		"classifiers": {
+			"unknown": {
+			    "name": "Other than above",
+			    "help": "Please select this option when you want this account to place calls to ANY NUMBER other than mentioned on the list. (When the format of the number is unknown to the system.)"
+			}
+		},
 		"noMatchingDevices": "There were no devices found matching your search",
 		"noDevicesConfigured": "There are no devices configured",
 		"provisionerPopup": {

@@ -153,17 +153,20 @@
 				<div class="title">
 					{{ i18n.devices.popupSettings.restrictions.sectionTitle }}
 				</div>
-
-				{{#eachkeys extra.restrictions}}
+				{{#each extra.restrictions}}
 					<div class="control-group">
-                    	<label class="control-label">{{this.value.friendly_name}}</label>
+                    	<label class="control-label">{{this.friendly_name}}
+                    		{{#if this.help}}
+								<i class="help-popover icon-question-sign" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>
+                    		{{/if}}
+                    	</label>
                     	<div class="controls">
 							<div class="switch" data-on="primary" data-off="danger" data-on-label="{{../i18n.devices.popupSettings.restrictions.inherit}}" data-off-label="{{../i18n.devices.popupSettings.restrictions.deny}}">
-				    			<input type="checkbox" class="not-pretty" name="call_restriction.{{this.key}}.action" id="checkbox_enabled"{{#compare this.value.action '===' 'inherit'}} checked{{/compare}}></input>
+				    			<input class="not-pretty" type="checkbox" name="call_restriction.{{@key}}.action" id="checkbox_enabled"{{#compare this.action '===' 'inherit'}} checked{{/compare}}></input>
 							</div>
                     	</div>
                 	</div>
-				{{/eachkeys}}
+				{{/each}}
 			</div>
 
 			<div class="tabs-section clearfix" data-section="callerId">
