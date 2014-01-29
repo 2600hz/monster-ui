@@ -25,6 +25,8 @@
 	"accountName": "Account Name",
 	"accountRealm": "Account Realm",
 	"accountTimezone": "Timezone",
+	"accountLanguage": "Language",
+	"accountTimezoneTitle": "Timezone & Language",
 	"accountAdmins": "Account Administrators",
 	"noAdminMessage": "This account doesn't have any admin",
 	"noUserMessage": "This account doesn't have any regular user",
