@@ -1,20 +1,25 @@
 <div id="call_logs_container">
 	<div class="call-logs-header">
-		<div class="search-div pull-right">
-			<span class="search-box">
-				<i class="icon-search"></i>
-				<input type="text" class="search-query" placeholder="{{i18n.table.search}}">
-			</span>
-		</div>
-		<div class="filter-div pull-right">
-			<input type="text" class="date-filter filter-from">
-			<span>{{i18n.callLogs.dateRangeTo}}</span>
-			<input type="text" class="date-filter filter-to">
-			<i class="apply-filter icon-filter icon-green" title="{{i18n.callLogs.applyFilter}}"></i>
-			<i class="refresh-filter icon-refresh icon-blue" title="{{i18n.callLogs.resetFilter}}"></i>
-		</div>
 		<div class="title-div">
 			{{i18n.callLogs.title}}
+		</div>
+		<div class="action-div">
+			<div class="search-div pull-right">
+				<span class="search-box">
+					<i class="icon-search"></i>
+					<input type="text" class="search-query" placeholder="{{i18n.table.search}}">
+				</span>
+			</div>
+			<div class="filter-div">
+				<i class="refresh-filter icon-refresh icon-blue" title="{{i18n.callLogs.resetFilter}}"></i>
+				<span>{{i18n.startDate}}:</span>
+				<input type="text" class="date-filter filter-from">
+				<span>{{i18n.endDate}}:</span>
+				<input type="text" class="date-filter filter-to">
+				<button type="button" class="apply-filter btn btn-primary" title="{{i18n.callLogs.applyFilter}}">{{i18n.filter}}</button>
+				<a href="#" role="button" class="download-csv"><i class="icon-download-alt icon-green"></i>{{i18n.download}}</a>
+				<!-- <i class=" icon-download-alt icon-green" title="Download CSV File"></i> -->
+			</div>
 		</div>
 	</div>
 	<div class="call-logs-content">

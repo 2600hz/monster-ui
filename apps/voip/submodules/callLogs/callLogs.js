@@ -9,6 +9,13 @@ define(function(require){
 				url: 'accounts/{accountId}/cdrs?created_from={fromDate}&created_to={toDate}',
 				verb: 'GET'
 			},
+			'voip.callLogs.getCdrsCSV': {
+				url: 'accounts/{accountId}/cdrs?created_from={fromDate}&created_to={toDate}',
+				verb: 'GET',
+				headers: {
+					'Accept': 'application/octet-stream'
+				}
+			},
 			'voip.callLogs.getCdr': {
 				url: 'accounts/{accountId}/cdrs/{cdrId}',
 				verb: 'GET'
@@ -61,14 +68,41 @@ define(function(require){
 		callLogsBindEvents: function(template, cdrs) {
 			var self = this;
 
-			template.find('.filter-div i.apply-filter').on('click', function(e) {
+			template.find('.filter-div .apply-filter').on('click', function(e) {
 				var fromDate = template.find('.filter-div input.filter-from').datepicker("getDate"),
-					toDate = template.find('.filter-div input.filter-to').datepicker("getDate")
+					toDate = template.find('.filter-div input.filter-to').datepicker("getDate");
 				self.callLogsRenderContent(template.parents('.right-content'), fromDate, toDate);
 			});
 
-			template.find('.filter-div i.refresh-filter').on('click', function(e) {
+			template.find('.filter-div .refresh-filter').on('click', function(e) {
 				self.callLogsRenderContent(template.parents('.right-content'));
+			});
+
+			template.find('.filter-div .download-csv').on('click', function(e) {
+				monster.ui.alert('Not implemented yet!');
+				// var fromDate = template.find('.filter-div input.filter-from').datepicker("getDate"),
+				// 	toDate = template.find('.filter-div input.filter-to').datepicker("getDate");
+
+				// fromDate.setHours(0);
+				// fromDate.setMinutes(0);
+				// fromDate.setSeconds(0);
+				// fromDate.setMilliseconds(0);
+				// toDate.setHours(23);
+				// toDate.setMinutes(59);
+				// toDate.setSeconds(59);
+				// toDate.setMilliseconds(999);
+
+				// monster.request({
+				// 	resource: 'voip.callLogs.getCdrsCSV',
+				// 	data: {
+				// 		accountId: self.accountId,
+				// 		fromDate: monster.util.dateToGregorian(fromDate),
+				// 		toDate: monster.util.dateToGregorian(toDate)
+				// 	},
+				// 	success: function(data, status) {
+				// 		console.log('success');
+				// 	}
+				// });
 			});
 
 			template.find('.search-div input.search-query').on('keyup', function(e) {

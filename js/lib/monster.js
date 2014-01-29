@@ -63,6 +63,9 @@ define(function(require){
 						monster.pub('monster.requestStart');
 
 						ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
+						_.each(request.headers, function(val, key) {
+							ampXHR.setRequestHeader(key, val);
+						});
 
 						return true;
 					}
