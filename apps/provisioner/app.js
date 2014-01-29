@@ -51,15 +51,17 @@ define(function(require){
 				parent = parent || $('#ws-content'),
 				provisionerTemplate;
 
-			self.getAccounts(function(data) {
-				provisionerTemplate = $(monster.template(self, 'app', data));
+			// self.getAccounts(function(data) {
+			// 	provisionerTemplate = $(monster.template(self, 'app', data));
 
-				parent
-					.empty()
-					.append(provisionerTemplate);
+			// 	parent
+			// 		.empty()
+			// 		.append(provisionerTemplate);
 
-				self.bindEvents(parent);
-			});
+			// 	self.bindEvents(parent);
+			// });
+
+			self.renderDeviceParameters(parent);
 		},
 
 		bindEvents: function(parent) {
@@ -117,37 +119,98 @@ define(function(require){
 			var self = this;
 
 			self.getDeviceParameters(function(data) {
-				var dataTemplate = {
-						data: data
-					},
-					deviceTemplate = $(monster.template(self, 'editDevice', dataTemplate));
+				var index,
+					field,
+					option,
+					section,
+					dataField,
+					pathArray = [],
+					formatData = function(data) {
+						var i,
+							key,
+							_data,
+							iterations;
 
-				deviceTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', {placeholder:' '});
-				deviceTemplate.find('.nav-bar > .switch-link:first-child').addClass('active');
-				deviceTemplate.find('.devices-options .container > .content:first-child').addClass('active');
+						for ( key in data ) {
+							if ( data[key].iterate ) {
+								i = 0;
+								_data = data[key].data;
+								iterations = data[key].iterate;
+								data[key].data = [];
 
-				for ( var section in data ) {
-					for ( var option in data[section].data ) {
-						for ( var field in data[section].data[option].data) {
-							console.log(data[section].data[option].data[field]);
-							if ( data[section].data[option].data[field].type == 'select' ) {
-								deviceTemplate
-									.find('.container .content[data-content="' + section + '"] .' + option + '')
-									.append($(monster.template(self, 'selectField', data[section].data[option].data[field])));
-							} else if ( data[section].data[option].data[field].type == 'text' ) {
-								deviceTemplate
-									.find('.container .content[data-content="' + section + '"] .' + option + '')
-									.append($(monster.template(self, 'textField', data[section].data[option].data[field])));
+								formatData(_data);
+
+								for ( ; i < iterations; i++ ) {
+									data[key].data.push(_data);
+								}
+							} else if (!data[key].iterate && data[key].data) {
+								formatData(data[key].data);
 							}
 						}
+
+						return data;
+					},
+					dataTemplate = {
+						data: formatData(data)
+					},
+					parametersTemplate = $(monster.template(self, 'editDevice', dataTemplate));
+
+				console.log(data);
+
+				for ( section in data ) {
+					if ( data[section].iterate ) {
+						for ( index in data[section].data ) {
+							pathArray.push(section + '[' + index + ']');
+							for ( option in data[section].data[index]) {
+								pathArray.push(option);
+								for ( field in data[section].data[index][option].data) {
+									pathArray.push(field);
+									dataField = data[section].data[index][option].data[field];
+									dataField.path = pathArray.join('.');
+
+									parametersTemplate
+										.find('.container .content[data-content="' + section + '"] .sub-content[data-subcontent="' + index + '"] .' + option)
+										.append($(monster.template(self, dataField.type + 'Field', dataField)));
+
+									pathArray.splice(pathArray.length - 1, 1);
+								}
+								pathArray.splice(pathArray.length - 1, 1);
+							}
+							pathArray.splice(pathArray.length - 1, 1);
+						}
+					} else {
+						pathArray.push(section);
+						for ( option in data[section].data) {
+							pathArray.push(option);
+							for ( field in data[section].data[option].data) {
+								pathArray.push(field);
+								dataField = data[section].data[option].data[field];
+								dataField.path = pathArray.join('.');
+
+								parametersTemplate
+									.find('.container .content[data-content="' + section + '"] .' + option)
+									.append($(monster.template(self, dataField.type + 'Field', dataField)));
+
+								pathArray.splice(pathArray.length -1, 1);
+							}
+							pathArray.splice(pathArray.length - 1, 1);
+						}
+						pathArray.splice(pathArray.length - 1, 1);
 					}
 				}
 
-
+				parametersTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', {placeholder:' '});
+				parametersTemplate.find('.nav-bar > .switch-link:first-child').addClass('active');
+				parametersTemplate.find('.devices-options .container > .content:first-child').addClass('active');
+				parametersTemplate.find('.nav-bar .switch-sublink:first-child').addClass('active');
+				parametersTemplate.find('.container .content > div:nth-child(2)').addClass('active');
+				parametersTemplate.find('.switch-sublink').each(function() {
+					$(this).text(parseInt($(this).text(), 10) + 1);
+				});
 
 				parent
 					.empty()
-					.append(deviceTemplate);
+					.append(parametersTemplate);
 
 				self.bindDeviceParametersEvents(parent);
 			});
@@ -161,6 +224,17 @@ define(function(require){
 				$(this).addClass('active');
 				parent.find('.devices-options .content.active').removeClass('active');
 				parent.find('.devices-options .content[data-content="' + $(this).data('menu') + '"]').addClass('active');
+			});
+
+			parent.on('click', '.switch-sublink', function() {
+				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .switch-sublink.active').removeClass('active');
+				$(this).addClass('active');
+				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .sub-content.active').removeClass('active');
+				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .sub-content[data-subcontent="' + $(this).data('submenu') + '"]').addClass('active');
+			});
+
+			parent.find('.save').on('click', function() {
+				console.log(form2object('form2object'));
 			});
 		},
 
