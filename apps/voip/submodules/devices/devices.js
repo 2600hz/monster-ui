@@ -300,11 +300,13 @@ define(function(require){
 			templateDevice.find('#delete_device').on('click', function() {
 				var deviceId = $(this).parents('.edit-device').data('id');
 
-				self.devicesDeleteDevice(deviceId, function(device) {
-					self.devicesRender();
-					popup.dialog('close').remove();
+				monster.ui.confirm(self.i18n.active().devices.confirmDeleteDevice, function() {
+					self.devicesDeleteDevice(deviceId, function(device) {
+						self.devicesRender();
+						popup.dialog('close').remove();
 
-					toastr.success(monster.template(self, '!' + self.i18n.active().devices.deletedDevice, { deviceName: device.name }));
+						toastr.success(monster.template(self, '!' + self.i18n.active().devices.deletedDevice, { deviceName: device.name }));
+					});
 				});
 			});
 

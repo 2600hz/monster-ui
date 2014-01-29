@@ -16,6 +16,7 @@
 		"addExtension": "Add Extension",
 		"addNewExtension": "Extension number: ",
 		"buy": "Buy Numbers",
+		"confirmDeleteGroup": "This group will be permanently deleted. Continue?",
 		"delete": "Delete Group",
 		"dialogCreationGroup": {
 			"availableUsers": "Available Users",
@@ -82,6 +83,7 @@
 		"add": "Add Device",
 		"assigned": "Assigned",
 		"createDevice": "Create Device",
+		"confirmDeleteDevice": "This device will be permanently deleted. Continue?",
 		"deleteDevice": "Delete Device",
 		"deletedDevice": "You successfully deleted the following device \"{{deviceName}}\".",
 		"popupSettings": {

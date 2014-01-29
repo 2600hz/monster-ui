@@ -53,7 +53,8 @@
 		"overview": "Overview",
 		"servicePlans": "Service Plans",
 		"limits": "Limits",
-		"restrictions": "Restrictions"
+		"restrictions": "Restrictions",
+		"notes": "Notes"
 	},
 	"classifiers": {
 		"unknown": {
@@ -136,7 +137,9 @@
 			"servicePlanError": "An error occured while assigning the service plan to the account."
 		},
 		"uiRestrictionsUpdateSuccess": "UI restrictions updated successfully!",
-		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later."
+		"uiRestrictionsUpdateError": "An unexpected error occured when updating the UI restrictions, please try again later.",
+		"notesUpdateSuccess": "Notes updated successfully!",
+		"notesUpdateError": "An unexpected error occured when updating the notes, please try again later."
 	},
 	"uiRestrictionsLegend": "Select what your customer can view",
 	"uiRestrictionsTooltip": "When you click on your name from top right corner of the screen, you will see a dropdown menu. You can restrict the view of these options to your Sub-Account by simply uncheck it from account permissions.",
@@ -166,5 +169,37 @@
 	},
 	"validationMessages": {
 		"invalidPasswordConfirm": "Passwords do not match."
+	},
+	"notesLegend": "Write some notes on this account",
+	"wysiwygLabels": {
+		"fontSize": {
+			"huge": "Huge",
+			"normal": "Normal",
+			"small": "Small"
+		},
+		"bold": "Bold",
+		"italic": "Italic",
+		"underline": "Underline",
+		"strikethrough": "Strikethrough",
+		"fontColor": "Font Color",
+		"alignment": {
+			"title": "Alignment",
+			"left": "Align Left",
+			"center": "Center",
+			"right": "Align Right",
+			"justify": "Justify"
+		},
+		"list": {
+			"title": "List",
+			"bullet": "Bullet List",
+			"number": "Number List"
+		},
+		"indent": "Indent",
+		"reverseIndent": "Reduce Indent",
+		"insertLink": "HyperLink",
+		"removeLink": "Remove Hyperlink",
+		"undo": "Undo",
+		"redo": "Redo",
+		"horizontalRule": "Horizontal Rule"
 	}
 }
