@@ -38,6 +38,7 @@ define(function(require){
 			document.title = 'Monster UI - ' + monster.config.company.name;
 
 			container.append(content);
+			container.append(monster.template(self, 'footer'));
 
 			self._render(container);
 
