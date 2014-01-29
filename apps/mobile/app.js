@@ -88,7 +88,6 @@ define(function(require){
 					template = $(monster.template(self, 'list', dataTemplate)),
 					parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-console.log(dataTemplate);
 				self.bindEvents(template);
 
 				(parent)
@@ -112,7 +111,6 @@ console.log(dataTemplate);
 		},
 
 		renderEditDevice: function(data) {
-			console.log(data);
 			var self = this,
 				dataTemplate = self.formatEditData(data),
 				template = $(monster.template(self, 'edit', dataTemplate)),
@@ -163,8 +161,6 @@ console.log(dataTemplate);
 					var formData = form2object('form_activation'),
 				    	formattedData = self.cleanEditData(formData);
 
-					console.log(formattedData);
-					console.log(JSON.stringify(formattedData));
 					self.activatePhone(formattedData, function(device) {
 						if(device.service_info) {
 							self.renderEditDevice(device);
@@ -184,8 +180,6 @@ console.log(dataTemplate);
 					var formData = form2object('form_activation'),
 				    	formattedData = self.cleanEditData(formData);
 
-					console.log(formattedData);
-					console.log(JSON.stringify(formattedData));
 					/*self.updatePhone(formattedData, function(device) {
 						var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device[0].name });
 
@@ -251,7 +245,6 @@ console.log(dataTemplate);
 
 		formatEditData: function(data) {
 			var self = this;
-			console.log(data);
 
 			if(!_.isEmpty(data)) {
 				data.extra = {};
@@ -336,7 +329,6 @@ console.log(dataTemplate);
 					activationId: encodeURIComponent(activationId)
 				},
 				success: function(activation) {
-					console.log(activation);
 					callback && callback(activation);
 				}
 			});
@@ -352,7 +344,6 @@ console.log(dataTemplate);
 					activationId: encodeURIComponent(activationId)
 				},
 				success: function(activation) {
-					console.log(activation);
 					callback && callback(activation);
 				}
 			});
@@ -403,7 +394,6 @@ console.log(dataTemplate);
 					data: data*/
 				},
 				success: function(coverage) {
-					console.log(coverage);
 					callback && callback(coverage);
 				}
 			});

@@ -16,7 +16,7 @@ define(function(require){
 	var app = {
 		name: 'common',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {},
 		subscribe: {},

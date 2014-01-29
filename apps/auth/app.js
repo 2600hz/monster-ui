@@ -108,6 +108,7 @@ define(function(require){
 					}
 
 					var cookieAuth = {
+						language: data.data.language,
 						authToken: self.authToken,
 						accountId: self.accountId,
 						userId: self.userId,
@@ -160,6 +161,14 @@ define(function(require){
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};
 					results.account.apps = results.account.apps || {};
+
+					/* If user has a preferred language, then set the i18n flag with this value, if not, check if the account has a default preferred language */
+					if('language' in results.user) {
+						monster.config.i18n.active = results.user.language;
+					}
+					else if('language' in results.account) {
+						monster.config.i18n.active = results.account.language;
+					}
 
 					var accountApps = results.account.apps,
 						fullAppList = {};

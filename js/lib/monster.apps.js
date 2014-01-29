@@ -36,18 +36,29 @@ define(function(require){
 
                 _.extend(app.data, { i18n: {} });
 
-                _.each(app.i18n, function(locale){
-                    monster._loadLocale(app, locale)
-                });
+				/* en-US is the default language of Monster, Deal with it! */
+                monster._loadLocale(app, 'en-US');
+
+				/* If the app supports the "active" language, then we load its json file if its not the default one */
+                if(monster.config.i18n.active !== 'en-US' && app.i18n.indexOf(monster.config.i18n.active) >= 0) {
+                	monster._loadLocale(app, monster.config.i18n.active);
+                }
 
                 monster.util.addCoreI18n(app);
 
                 // add an active property method to the i18n array within the app.
                 _.extend(app.i18n, {
                     active: function(){
-                        return app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {}
+                        return app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {};
                     }
                 });
+
+				app.data.i18n[monster.config.i18n.active] = $.extend(true, {}, app.data.i18n['en-US'], app.data.i18n[monster.config.i18n.active]);
+
+				/* common is loaded once the user is logged in, and once he's logged in, we know his language, so we need to override the i18n for the common elements like the confirm box and such */
+                if(app.name === 'common') {
+					monster.apps['core'].data.i18n = $.extend(true, {}, monster.apps['core'].data.i18n, app.data.i18n);
+                }
 
                 app.apiUrl = app.apiUrl || monster.config.api.default;
 

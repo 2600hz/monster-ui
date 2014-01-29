@@ -1,4 +1,12 @@
 {
 	"hello": "Bienvenue!",
-	"welcome": "Le Trunking facile!"
+	"welcome": "La VoIP facile!",
+	"error": "Erreur",
+	"errors": {
+		"generic": "Erreur inconnue... Veuillez réessayer dans quelques instants!",
+		"genericLabel": "Réponse de l'API",
+		"401": "Identifiants non valides. Vérifiez que votre nom d'utilisateur et votre mots de passes sont corrects!",
+		"403": "Accès interdit",
+		"500": "Erreur serveur interne. Veuillez contacter le personnel informatique!"
+	},
 }

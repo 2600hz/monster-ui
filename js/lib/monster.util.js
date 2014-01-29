@@ -57,13 +57,21 @@ define(function(require){
 				//We have to use jQuery deep copy
 				$.extend(true, app.data.i18n, i18n);
 			}
+		},
 
-			if('common' in monster.apps) {
-				var i18n = monster.apps['common'].data.i18n;
+		setDefaultLanguage: function() {
+			var defaultsI18n = {
+				default: 'en-US',
+				active: navigator.language
+			};
 
-				//We have to use jQuery deep copy
-				$.extend(true, app.data.i18n, i18n);
-			}
+			monster.config.i18n = $.extend(true, {}, defaultsI18n, monster.config.i18n);
+
+			if($.cookie('monster-auth')) {
+				var authData = $.parseJSON($.cookie('monster-auth'));
+
+				monster.config.i18n.active = authData.language;
+			};
 		},
 
 		toFriendlyDate: function(timestamp, type) {

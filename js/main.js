@@ -67,6 +67,8 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'boots
 		monster.ui = ui;
 		monster.apps = apps;
 
+		monster.util.setDefaultLanguage();
+
 		if('socket' in monster.config.api) {
 			monster.socket = io.connect(monster.config.api.socket);
 		}

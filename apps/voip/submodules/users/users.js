@@ -1790,6 +1790,15 @@ define(function(require){
 				if('sameEmail' in userData.extra) {
 					userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
 				}
+
+				if('language' in userData.extra) {
+					if(userData.extra.language !== 'auto') {
+						userData.language = userData.extra.language;
+					}
+					else {
+						delete userData.language;
+					}
+				}
 			}
 
 			delete userData.include_directory;

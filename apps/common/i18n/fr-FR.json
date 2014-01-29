@@ -1,0 +1,109 @@
+{
+	"add": "Ajouter",
+	"alertLogout": "Votre session va bientôt expirer. Bougez votre souris pour éviter une déconnexion!",
+	"cancel": "Annuler",
+	"change": "Changer",
+	"chargeReminder" : {
+        "line1": "Your on-file credit card will immediately be charged for any changes you make. If you have changed any recurring services, new charges will be pro-rated for your billing cycle.",
+        "line2": "Are you sure you want to continue?"
+    },
+	"close" : "Fermer",
+	"conferencingLogo": "Conferences",
+	"csv": "CSV",
+	"currencyUsed": "$",
+	"dialog" : {
+		"showError": "Détails erreur",
+		"confirmOk": "OK",
+		"confirmCancel" : "Annuler",
+		"confirmTitle" : "Confirmation"
+	},
+	"disabled": "Desactivé",
+	"download": "Télécharger",
+	"enabled": "Activé",
+	"endDate": "Date de Fin",
+	"error": "Erreur",
+	"errors": {
+		"generic": "Erreur inconnue... Veuillez réessayer dans quelques instants!",
+		"genericLabel": "Réponse de l'API",
+		"401": "Identifiants non valides. Vérifiez que votre nom d'utilisateur et votre mots de passes sont corrects!",
+		"403": "Accès interdit",
+		"500": "Erreur serveur interne. Veuillez contacter le personnel informatique!"
+	},
+	"examplePhoneNumber": "+1 (415) 482-9912",
+	"filter": "Filtrer",
+	"info": "Info",
+	"next": "Suivant",
+	"on": "On",
+	"off": "Off",
+	"paging": {
+		"first": "Premier",
+		"previous": "Précédent",
+		"next": "Suivant",
+		"last": "Dernier"
+	},
+	"pdf": "PDF",
+	"previous": "Précédent",
+	"remove": "Retirer",
+	"save": "Sauvegarder",
+	"saveChanges": "Sauvegarder changements",
+	"search": "Chercher",
+	"select": "Sélectionner",
+	"startDate": "Date de début",
+	"submit": "Envoyer",
+	"table" : {
+		"search": "Chercher...",
+		"empty" : "Pas de données dans la table",
+		"processing" : "Chargement...",
+		"showEntries": "Montre _MENU_ lignes",
+		"startEndTotal": "Montre les lignes _START_ à _END_ sur un total de _TOTAL_",
+		"zeroRecords": "Pas de résultats correspondants",
+		"loading": "Chargement...",
+		"filtered": "(filtrés d'un total de _MAX_ lignes)",
+		"infoEmpty": ""
+	},
+	"unexpectedError": "Erreur inconnue... Réessayer votre requête.",
+	"update": "Mettre à jour",
+	"upload": "Uploader",
+	"validation": {
+		"defaultRules": {
+			"required": "Champ requis.",
+			"remote": "Corrigez ce champ.",
+			"email": "Adresse e-mail valide.",
+			"url": "URL invalide.",
+			"date": "Date invalide.",
+			"dateISO": "Date invalide (format non-ISO).",
+			"number": "Veuillez entrer un nombre valide.",
+			"digits": "Veuillez entrer uniquement des numéros.",
+			"creditcard": "Numéro de carte bleue invalide.",
+			"equalTo": "Veuillez entrer la même valeur.",
+			"maxlength": "Veuillez entrer {0} caractères maximum.",
+			"minlength": "Veuillez entrer au moins {0} caractères.",
+			"rangelength": "Veuillez entrer une valeur contenant entre {0} et {1} caractères.",
+			"range": "Veuillez entrer une valeur entre {0} et {1}.",
+			"max": "Veuillez entrer une valeur inférieure ou égale à {0}.",
+			"min": "Veuillez entrer une valeur supérieure ou égale à {0}."
+		},
+		"customRules": {
+			"checkList": "Éxiste déjà",
+			"mac": "Veuillez entrer une adresse MAC valide.",
+			"ipv4": "Veuillez entrer une addresse IPv4 valide.",
+			"time12h": "Veuillez entrer une heure au format 12-h AM/PM.",
+			"greaterDate": "L'heure de début doit précéder l'heure de fin."
+		},
+		"required": "Requis."
+	},
+	"warning": "Attention!",
+	"confirmCharges": {
+		"title": "Confirmation de frais",
+		"withChargesPartOne": "You will pay a $",
+		"withChargesPartTwo": "} on-time ",
+		"withoutCharges": "There is no ",
+		"detail": "Voici les détails des frais mensuels de ce compte pour ce service:",
+		"service": "Service",
+		"rate": "Taux",
+		"quantity": "Quantité",
+		"discount": "Discount",
+		"monthlyCharges": "Frais mensuels",
+		"actions": "Pressez OK pour confirmer ou Annuler pour revenir en arrière."
+	}
+}

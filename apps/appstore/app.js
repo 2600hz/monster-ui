@@ -164,8 +164,10 @@ define(function(require){
 									val.tags ? val.tags.push("installed") : val.tags = ["installed"];
 								}
 							}
-							val.label = val.i18n['en-US'].label;
-							val.description = val.i18n['en-US'].description;
+							var i18n = val.i18n[monster.config.i18n.active] || val.i18n['en-US'];
+
+							val.label = i18n.label;
+							val.description = i18n.description;
 							val.icon = self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val.id + "/icon?auth_token=" + self.authToken
 							delete val.i18n;
 							return true;
@@ -212,12 +214,14 @@ define(function(require){
 					appId: appId
 				},
 				success: function(data, status) {
+					dataI18n = data.data.i18n[monster.config.i18n.active] || data.data.i18n['en-US'];
+
 					var app = $.extend(true, data.data, {
 							extra: {
-								label: data.data.i18n['en-US'].label,
-								description: data.data.i18n['en-US'].description,
-								extendedDescription: data.data.i18n['en-US'].extended_description,
-								features: data.data.i18n['en-US'].features,
+								label: dataI18n.label,
+								description: dataI18n.description,
+								extendedDescription: dataI18n.extended_description,
+								features: dataI18n.features,
 								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
 								screenshots: $.map(data.data.screenshots, function(val, key) {
 									return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
@@ -264,7 +268,7 @@ define(function(require){
 						rightContainer.find('#app_popup_select_users_link').html(
 							monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
 						);
-					} 
+					}
 
 					self.bindPopupEvents(template, app, appstoreData);
 
