@@ -21,16 +21,34 @@
 			<a class="switch-link" data-menu="{{@key}}">{{text}}</a>
 		{{/each}}
 		</div>
-		<div class="container">
+		<div class="container" id="form2object">
 		{{#each data}}
 			<form class="form-horizontal content" data-content="{{@key}}">
-			{{#each this.data}}
+			{{#if iterate}}
+				<div class="nav nav-bar">
+				{{#each data}}
+					<a class="switch-sublink" data-submenu="{{@index}}">{{@index}}</a>
+				{{/each}}
+				</div>
+				{{#each data}}
+				<div class="sub-content" data-subcontent="{{@index}}">
+					{{#each this}}
+					<div class="{{@key}}">
+						<legend>{{text}}</legend>
+					</div>
+					{{/each}}
+				</div>
+				{{/each}}
+			{{else}}
+				{{#each data}}
 				<div class="{{@key}}">
 					<legend>{{text}}</legend>
 				</div>
-			{{/each}}
+				{{/each}}
+			{{/if}}
 			</form>
 		{{/each}}
+			<button class="btn btn-success pull-right save">Save</button>
 		</div>
 	</div>
 </div>
