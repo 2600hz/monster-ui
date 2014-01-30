@@ -1,6 +1,7 @@
 .profile-content-wrapper .tab-content {
     border-radius: 4px;
     border-top: inherit;
+    overflow: visible;
 }
 
 .profile-content-wrapper .list-settings {
