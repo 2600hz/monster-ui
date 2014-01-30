@@ -32,6 +32,48 @@
 								"value": "1"
 							}
 						]
+					},
+					"checkbox": {
+						"text": "Checkbox",
+						"type": "checkbox",
+						"data": [
+							{
+								"text": "1",
+								"name": "one",
+								"value": true
+							},
+							{
+								"text": "2",
+								"name": "two",
+								"value": false
+							},
+							{
+								"text": "3",
+								"name": "three",
+								"value": false
+							}
+						]
+					},
+					"radio": {
+						"text": "Radio",
+						"type": "radio",
+						"data": [
+							{
+								"text": "1",
+								"name": "one",
+								"value": true
+							},
+							{
+								"text": "2",
+								"name": "two",
+								"value": false
+							},
+							{
+								"text": "3",
+								"name": "three",
+								"value": false
+							}
+						]
 					}
 				}
 			}
