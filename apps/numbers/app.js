@@ -6,7 +6,7 @@ define(function(require){
 
 		name: 'numbers',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 		},
