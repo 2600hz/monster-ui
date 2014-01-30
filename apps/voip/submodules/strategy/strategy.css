@@ -340,6 +340,90 @@
 	padding: 20px 20px 0;
 }
 
+#strategy_container .element-container.strategy-calls .calls-tabs .open-hours-tab i {
+	color: #74B814;
+}
+#strategy_container .element-container.strategy-calls .calls-tabs .open-hours-tab.active i {
+	color: #333;
+}
+#strategy_container .element-container.strategy-calls .calls-tabs .open-hours-tab.active a {
+	background-color: hsl(85, 80%, 40%) !important;
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714");
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714));
+	background-image: -moz-linear-gradient(top, #bcef75, #73b714);
+	background-image: -ms-linear-gradient(top, #bcef75, #73b714);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714));
+	background-image: -webkit-linear-gradient(top, #bcef75, #73b714);
+	background-image: -o-linear-gradient(top, #bcef75, #73b714);
+	background-image: linear-gradient(#bcef75, #73b714);
+	border-color: #73b714 #73b714 hsl(85, 80%, 32.5%);
+	color: #333 !important;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.49);
+	-webkit-font-smoothing: antialiased;
+}
+
+#strategy_container .element-container.strategy-calls .calls-tabs .lunch-hours-tab i {
+	color: #f89406;
+}
+#strategy_container .element-container.strategy-calls .calls-tabs .lunch-hours-tab.active a {
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #faa732;
+	background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
+	background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+	background-image: -o-linear-gradient(top, #fbb450, #f89406);
+	background-image: linear-gradient(to bottom, #fbb450, #f89406);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
+	border-color: #f89406 #f89406 #ad6704;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+#strategy_container .element-container.strategy-calls .calls-tabs .after-hours-tab i {
+	color: #363636;
+}
+#strategy_container .element-container.strategy-calls .calls-tabs .after-hours-tab.active a {
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #363636;
+	background-image: -moz-linear-gradient(top, #444444, #222222);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
+	background-image: -webkit-linear-gradient(top, #444444, #222222);
+	background-image: -o-linear-gradient(top, #444444, #222222);
+	background-image: linear-gradient(to bottom, #444444, #222222);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);
+	border-color: #222222 #222222 #000000;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+#strategy_container .element-container.strategy-calls .calls-tabs .holidays-tab i {
+	color: #49afcd;
+}
+#strategy_container .element-container.strategy-calls .calls-tabs .holidays-tab.active a {
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #49afcd;
+	background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+	background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
+	background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
+	background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2f96b4', GradientType=0);
+	border-color: #2f96b4 #2f96b4 #1f6377;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+#strategy_container .element-container.strategy-calls .calls-tabs li.active i {
+	color: #ffffff;
+}
+
 #strategy_container .element-container.strategy-calls .callflow-tabs {
 	padding: 20px;
 	border: none;
@@ -384,9 +468,26 @@
 	margin-right: 5px;
 }
 
+#strategy_container .element-container.strategy-calls .callflow-tabs .call-option .menu-div .link a {
+	color: #333;
+	text-decoration: underline;
+}
+
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active {
-	border-color: #22ccff;
 	background-color: #f0f0f0;
+}
+
+#strategy_container .element-container.strategy-calls .callflow-tabs #strategy_calls_open_hours_tab .call-option.active {
+	border-color: #74B814;
+}
+#strategy_container .element-container.strategy-calls .callflow-tabs #strategy_calls_lunch_hours_tab .call-option.active {
+	border-color: #f89406;
+}
+#strategy_container .element-container.strategy-calls .callflow-tabs #strategy_calls_after_hours_tab .call-option.active {
+	border-color: #363636;
+}
+#strategy_container .element-container.strategy-calls .callflow-tabs #strategy_calls_holidays_tab .call-option.active {
+	border-color: #49afcd;
 }
 
 #strategy_container .element-container.strategy-calls .callflow-tabs .call-option.active .menu-div .menu-icon i {

@@ -427,7 +427,8 @@ define(function(require){
 									},
 									callflow: callflowName,
 									callEntities: self.strategyGetCallEntitiesDropdownData(strategyData.callEntities),
-									voicemails: strategyData.voicemails
+									voicemails: strategyData.voicemails,
+									tabMessage: self.i18n.active().strategy.calls.callTabsMessages[callflowName]
 								};
 
 
