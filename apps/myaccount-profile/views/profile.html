@@ -84,6 +84,52 @@
 							</div>
 						</div>
 					</li>
+					<li class="settings-item clearfix" data-name="timezone">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.timezoneTitle }}</span>
+							<div class="description">
+								<ul>
+									<li>{{user.timezone}}</li>
+									<li>{{user.language}}</li>
+								</ul>
+							</div>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.editSettings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_timezone">
+                                        <div class="control-group">
+                                            <label class="control-label" for="user_timezone">{{ i18n.userTimezone }}</label>
+                                            <div class="controls">
+                                                <select id="user_timezone" name="timezone" data-original_value="{{user.timezone}}"></select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="user_language">{{ i18n.userLanguage }}</label>
+                                            <div class="controls">
+                                                <select id="user_language" name="language">
+                                                    <option value="auto">{{i18n.languages.auto}}</option>
+                                                    <option value="en-US"{{#compare user.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+                                                    <option value="fr-FR"{{#compare user.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls action-bar">
+                                                <a href="#" class="cancel">{{ i18n.cancel }}</a>
+                                                <button type="submit" class="btn btn-success change" data-module="user" data-field="timezone">{{ i18n.saveChanges }}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+								</div>
+							</div>
+						</div>
+					</li>
 				</ul>
 			</div>
 			{{/compare}}
@@ -187,6 +233,52 @@
 											</div>
 										</div>
 									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="settings-item clearfix" data-name="account_timezone">
+						<a class="settings-link clearfix">
+							<span class="title">{{ i18n.timezoneTitle }}</span>
+							<div class="description">
+								<ul>
+									<li>{{account.timezone}}</li>
+									<li>{{account.language}}</li>
+								</ul>
+							</div>
+							<span class="update">
+								<i class="icon-cog icon-small"></i>
+								<span class="text">{{ i18n.editSettings }}</span>
+							</span>
+							<span class="changes-saved">{{ i18n.changesSaved }}</span>
+						</a>
+						<div class="settings-item-content">
+							<div class="row-fluid">
+								<div class="span12">
+									<form class="form-horizontal" id="form_account_timezone">
+                                        <div class="control-group">
+                                            <label class="control-label" for="account_timezone">{{ i18n.userTimezone }}</label>
+                                            <div class="controls">
+                                                <select id="account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="account_language">{{ i18n.userLanguage }}</label>
+                                            <div class="controls">
+                                                <select id="account_language" name="language">
+                                                    <option value="auto">{{i18n.languages.auto}}</option>
+                                                    <option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+                                                    <option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls action-bar">
+                                                <a href="#" class="cancel">{{ i18n.cancel }}</a>
+                                                <button type="submit" class="btn btn-success change" data-module="account" data-field="account_timezone">{{ i18n.saveChanges }}</button>
+                                            </div>
+                                        </div>
+                                    </form>
 								</div>
 							</div>
 						</div>

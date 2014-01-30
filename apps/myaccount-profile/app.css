@@ -24,7 +24,9 @@
     cursor: pointer;
     display: block;
     font-weight: 500;
-    padding: 20px 15px;
+    height: 60px;
+    line-height: 60px;
+    padding: 0px 15px;
     text-decoration: none;
 }
 
@@ -40,6 +42,7 @@
 }
 
 .profile-content-wrapper .list-settings .settings-item .settings-link .description {
+	display: inline-block;
     font-weight: 500;
 }
 
@@ -87,6 +90,14 @@
 
 .profile-content-wrapper .list-settings .settings-item-content .edition {
     display: none;
+}
+
+.profile-content-wrapper .list-settings .settings-item .settings-link .description > ul {
+	display: table-cell;
+    height: 60px;
+    list-style: none outside none;
+    margin: 0;
+    vertical-align: middle;
 }
 
 .profile-content-wrapper .list-settings .card-type {

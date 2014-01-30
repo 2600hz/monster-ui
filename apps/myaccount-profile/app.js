@@ -3,6 +3,7 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		toastr = require('toastr'),
+		timezone = require('monster-timezone'),
 
 		templates = {
 			menu: 'menu',
@@ -162,7 +163,15 @@ define(function(require){
 				data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
 			}
 
+			return data;
+		},
+
+
+		cleanMergedData: function(data) {
+			var self = this;
+
 			delete data.extra;
+			delete data[''];
 
 			return data;
 		},
@@ -181,6 +190,14 @@ define(function(require){
 			else if(type === 'billing') {
 				params.data = newData;
 			}
+
+			if('language' in params.data) {
+				if(params.data.language === 'auto') {
+					delete params.data.language;
+				}
+			}
+
+			params.data = self.cleanMergedData(params.data);
 
 			monster.request({
 				resource: 'profile.update'+(type.slice(0,1).toUpperCase() + type.substr(1)),
@@ -334,6 +351,12 @@ define(function(require){
 					}
 				);
 			});
+
+			timezone.populateDropdown(profile.find('#user_timezone'), data.user.timezone);
+			profile.find('#user_timezone').chosen({ search_contains: true, width: '100%' });
+
+			timezone.populateDropdown(profile.find('#account_timezone'), data.account.timezone);
+			profile.find('#account_timezone').chosen({ search_contains: true, width: '100%' });
 
 			profile.find('.edit-credit-card').on('click', function(e) {
 				e.preventDefault();

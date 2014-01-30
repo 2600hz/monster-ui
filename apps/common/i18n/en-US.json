@@ -366,5 +366,10 @@
 		"discount": "Discount",
 		"monthlyCharges": "Monthly Charges",
 		"actions": "Press OK to confirm or Cancel to abort the process."
+	},
+	"languages": {
+		"auto": "Default",
+		"americanEnglish": "English (en-US)",
+		"frenchFrench": "French (fr-FR)"
 	}
 }

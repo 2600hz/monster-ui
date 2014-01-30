@@ -1017,6 +1017,7 @@ define(function(require){
 											formData.username = formData.email;
 										}
 										var newData = $.extend(true, {}, data.data, formData);
+
 										monster.request({
 											resource: 'accountsManager.users.update',
 											data: {
@@ -1046,7 +1047,7 @@ define(function(require){
 						if($newAdminElem.find('.tab-pane.active').hasClass('create-user-div')) {
 							var formData = form2object('accountsmanager_add_admin_form'),
 								autoGen = ($createUserDiv.find('input[name="extra.autogen_password"]:checked').val() === "true");
-							
+
 							if(monster.ui.valid(contentHtml.find('#accountsmanager_add_admin_form'))) {
 								formData = self.cleanFormData(formData);
 								formData.priv_level = "admin";
@@ -1393,29 +1394,27 @@ define(function(require){
 				if(monster.ui.valid(contentHtml.find('#form_'+fieldName))) {
 					self.updateData(accountData, newData,
 						function(data) {
-							self.editAccount(
-								$.extend(true, params, {
-									accountData: data.data,
-									callback: function(parent) {
-										var $link = parent.find('li[data-name='+fieldName+']');
+							params.accountData = data.data;
+							params.callback = function(parent) {
+								var $link = parent.find('li[data-name='+fieldName+']');
 
-										$link.find('.update').hide();
-										$link.find('.changes-saved').show()
-																  .fadeOut(1500, function() {
-																	  $link.find('.update').fadeIn(500);
-																  });
+								$link.find('.update').hide();
+								$link.find('.changes-saved').show()
+														  .fadeOut(1500, function() {
+															  $link.find('.update').fadeIn(500);
+														  });
 
-										$link.css('background-color', '#22ccff')
-											   .animate({
-												backgroundColor: '#eee'
-											}, 2000
-										);
+								$link.css('background-color', '#22ccff')
+									   .animate({
+										backgroundColor: '#eee'
+									}, 2000
+								);
 
-										parent.find('.settings-item-content').hide();
-										parent.find('a.settings-link').show();
-									}
-								})
-							);
+								parent.find('.settings-item-content').hide();
+								parent.find('a.settings-link').show();
+							};
+
+							self.editAccount(params);
 
 							if(self.currentAccountList) {
 								self.currentAccountList[data.data.id].name = data.data.name;
@@ -1596,8 +1595,8 @@ define(function(require){
 			notesTab.find('#accountsmanager_notes_save').on('click', function() {
 				var notesContent = notesTab.find('#editor').html();
 				self.updateData(
-					accountData, 
-					{ custom_notes: notesContent }, 
+					accountData,
+					{ custom_notes: notesContent },
 					function(data, status) {
 						accountData = data.data;
 						toastr.success(self.i18n.active().toastrMessages.notesUpdateSuccess, '', {"timeOut": 5000});
@@ -1893,21 +1892,38 @@ define(function(require){
 			$tabs.css('min-width',maxWidth+'px');
 		},
 
-		cleanFormData: function(formData) {
-			delete formData.extra;
+		cleanMergedData: function(data) {
+			var self = this;
 
-			if("enabled" in formData) {
-				formData.enabled = formData.enabled === "false" ? false : true;
+			if('reseller' in data) {
+				delete data.reseller;
 			}
+
+			if('language' in data) {
+				if(data.language === 'auto') {
+					delete data.language;
+				}
+			}
+
+			return data;
+		},
+
+		cleanFormData: function(formData) {
+			if('enabled' in formData) {
+				formData.enabled = formData.enabled === 'false' ? false : true;
+			}
+
+			delete formData.extra;
 
 			return formData;
 		},
 
 		updateData: function(data, newData, success, error) {
-			var dataToUpdate = $.extend(true, {}, data, newData);
-			if('reseller' in dataToUpdate) {
-				delete dataToUpdate.reseller;
-			}
+			var self = this,
+				dataToUpdate = $.extend(true, {}, data, newData);
+
+			dataToUpdate = self.cleanMergedData(dataToUpdate);
+
 			monster.request({
 				resource: 'accountsManager.update',
 				data: {

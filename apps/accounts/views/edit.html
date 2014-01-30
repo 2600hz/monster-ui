@@ -290,8 +290,13 @@
 					<!-- Account timezone -->
 					<li class="settings-item {{#unless account.enabled}}disabled{{/unless}}" data-name="accountsmanager_account_timezone">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.accountTimezone }}</span>
-							<span class="description">{{account.timezone}}</span>
+							<span class="title">{{ i18n.accountTimezoneTitle }}</span>
+							<div class="description">
+								<ul>
+									<li>{{account.timezone}}</li>
+									<li>{{account.language}}</li>
+								</ul>
+							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
 								<span class="text">{{ i18n.editSetting }}</span>
@@ -306,6 +311,16 @@
 											<label class="control-label" for="accountsmanager_account_timezone">{{ i18n.accountTimezone }}</label>
 											<div class="controls">
 												<select id="accountsmanager_account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="accountsmanager_language">{{ i18n.accountLanguage }}</label>
+											<div class="controls">
+												<select id="user_language" name="language">
+                    								<option value="auto">{{i18n.languages.auto}}</option>
+                    								<option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+                    								<option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+                								</select>
 											</div>
 										</div>
 										<div class="control-group">
@@ -377,7 +392,7 @@
 					<button type="button" id="accountsmanager_limits_save" class="btn btn-success">{{ i18n.update }}</button>
 				</div>
 			</div>
-			
+
 			<div class="tab-pane" id="accountsmanager_restrictions_tab">
 				<form class="clearfix" id="accountsmanager_uirestrictions_form">
 				</form>
@@ -385,7 +400,7 @@
 					<button type="button" id="accountsmanager_uirestrictions_save" class="btn btn-success">{{ i18n.update }}</button>
 				</div>
 			</div>
-			
+
 			<div class="tab-pane" id="accountsmanager_notes_tab">
 				<legend>{{ i18n.notesLegend }}</legend>
 				<div class="clearfix wysiwyg-container">
