@@ -180,10 +180,11 @@ define(function(require){
 				var $accountList = parent.find('.account-list'),
 					$accountListSlider = parent.find('.account-list-slider'),
 					$mainContent = parent.find('.main-content'),
-					height = this.innerHeight-$accountList.position().top-67+'px';
-				$accountList.css('height', height);
-				$accountListSlider.css('height', height);
-				$mainContent.css('height', height);
+					topBarHeight = $('#topbar').outerHeight(),
+					listHeight = this.innerHeight-$accountList.position().top-topBarHeight+'px'; //
+				$accountList.css('height', listHeight);
+				$accountListSlider.css('height', listHeight);
+				$mainContent.css('height', this.innerHeight-$mainContent.position().top-topBarHeight+'px');
 			});
 			$(window).resize();
 
