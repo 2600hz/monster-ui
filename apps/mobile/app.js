@@ -8,7 +8,7 @@ define(function(require){
 
 		name: 'mobile',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'mobile.activatePhone': {

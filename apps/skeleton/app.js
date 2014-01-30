@@ -8,7 +8,7 @@ define(function(require){
 
 		name: 'skeleton',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			/* This will use the default api url given in js/config.js. If you want to use your own api you can use the following

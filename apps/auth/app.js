@@ -61,7 +61,7 @@ define(function(require){
 				self.accountId = cookieData.accountId;
 				self.userId = cookieData.userId;
 				self.isReseller = cookieData.isReseller;
-				self.resellerId = cookieData.reseller_id;
+				self.resellerId = cookieData.resellerId;
 				self.installedApps = cookieData.installedApps;
 
 				monster.pub('auth.loadAccount');

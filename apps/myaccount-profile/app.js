@@ -4,6 +4,7 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr'),
 		timezone = require('monster-timezone'),
+		chosen = require('chosen'),
 
 		templates = {
 			menu: 'menu',
