@@ -414,12 +414,17 @@
 			"lunchHoursTitle": "Lunch Hours",
 			"afterHoursTitle": "After Hours",
 			"holidaysTitle": "Holidays",
-			"callTabTitle": "Select the way you want your callers to reach you.",
 			"incomingCall": "Incoming Call",
 			"virtualReceptionist": "Virtual Receptionist",
 			"voicemail": "Voicemail",
 			"groupOther": "Other",
-			"optionNone": "Skip to Voicemail"
+			"optionNone": "Skip to Voicemail",
+			"callTabsMessages": {
+				"MainOpenHours":"Select the way you want your callers to reach you when your office is Open.",
+				"MainLunchHours":"Select the way you want your callers to reach you during Lunch Hours.",
+				"MainAfterHours":"Select the way you want your callers to reach you when your office is Closed.",
+				"MainHolidays":"Select the way you want your callers to reach you when you are closed during Holidays."
+			}
 		},
 		"popup": {
 			"title": "Virtual Receptionist",
