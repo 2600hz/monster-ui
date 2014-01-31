@@ -1771,7 +1771,21 @@ define(function(require){
 		},
 
 		usersCleanUserData: function(userData) {
-			var userData = $.extend(true, {}, userData);
+			var userData = $.extend(true, {}, userData),
+				fullName = userData.first_name + ' ' + userData.last_name,
+				defaultCallerIdName = fullName.substring(0, 15),
+			    defaults = {
+			    	caller_id: {
+						internal: {
+							name: defaultCallerIdName
+						},
+						external: {
+							name: defaultCallerIdName
+						}
+					}
+				};
+
+			userData = $.extend(true, defaults, userData);
 			/* If the user has been removed from the directory */
 			if(userData.extra) {
 				if(userData.extra.includeInDirectory === false) {
@@ -2133,6 +2147,14 @@ define(function(require){
 				defaultTimezone = timezone.getLocaleTimezone(),
 				formattedData = {
 					user: $.extend(true, {}, {
+						caller_id: {
+							internal: {
+								name: fullName
+							},
+							external: {
+								name: fullName
+							}
+						},
 						email: data.extra.sameEmail ? data.user.username : data.extra.email,
 						priv_level: 'user',
 						timezone: defaultTimezone
