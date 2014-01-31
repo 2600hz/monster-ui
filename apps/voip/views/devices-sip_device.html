@@ -26,6 +26,9 @@
 					<b class="caret"></b>
 				</a>
 				<ul class="dropdown-menu pull-right">
+					{{#if provision}}
+					<li><a class="tabs-selector change-section" data-section="sip" href="javascript:void(0)"><i class="icon-user"></i>{{ i18n.devices.popupSettings.sip.menuTitle }}</a></li>
+					{{/if}}
 					<li><a class="tabs-selector change-section" data-section="audio" href="javascript:void(0)"><i class="icon-music"></i>{{ i18n.devices.popupSettings.audio.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="video" href="javascript:void(0)"><i class="icon-facetime-video"></i>{{ i18n.devices.popupSettings.video.menuTitle }}</a></li>
 					<li><a class="tabs-selector change-section" data-section="restrictions" href="javascript:void(0)"><i class="icon-ban-circle"></i>{{ i18n.devices.popupSettings.restrictions.menuTitle }}</a></li>
@@ -53,6 +56,34 @@
 					</div>
 				</div>
 				{{else}}
+				<div class="control-group">
+					<label class="control-label" for="sip_username">{{ i18n.devices.sip.username }}</label>
+					<div class="controls">
+						<input type="text" id="sip_username" name="sip.username" value="{{sip.username}}">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="sip_password">{{ i18n.devices.sip.password }}</label>
+					<div class="controls">
+						<input type="text" id="sip_password" name="sip.password" value="{{sip.password}}">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label">{{ i18n.devices.sip.realm }}</label>
+					<div class="controls">
+						<span class="displayed-realm">{{ sip.realm }}</span>
+					</div>
+				</div>
+				{{/if}}
+			</div>
+
+			{{#if provision}}
+				<div class="tabs-section clearfix" data-section="sip">
+					<div class="title">
+						{{ i18n.devices.popupSettings.sip.sectionTitle }}
+					</div>
 					<div class="control-group">
 						<label class="control-label" for="sip_username">{{ i18n.devices.sip.username }}</label>
 						<div class="controls">
@@ -73,9 +104,8 @@
 							<span class="displayed-realm">{{ sip.realm }}</span>
 						</div>
 					</div>
-				{{/if}}
-			</div>
-
+				</div>
+			{{/if}}
 			<div class="tabs-section clearfix" data-section="audio">
 				<div class="title">
 					{{ i18n.devices.popupSettings.audio.sectionTitle }}
