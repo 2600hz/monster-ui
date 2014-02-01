@@ -4,40 +4,6 @@
 	max-width: 1024px;
 }
 
-.provisioner-container > .row-fluid > div:last-child {
-	padding-top: 40px;
-}
-
-.provisioner-container form > .row-fluid [class^='span'] {
-	text-align: center;
-}
-
-.provisioner-container form > .row-fluid a {
-	display: block;
-	margin: 0 auto;
-	padding: 20px 5px 5px 5px;
-	width: 110px;
-	height: 90px;
-	border: 3px solid #22ccff;
-	border-radius: 60px;
-	background-color: #ddd;
-	color: #fff;
-	text-decoration: none;
-	font-size: 15px;
-}
-
-.provisioner-container form > .row-fluid a:hover {
-	box-shadow: 1px 1px 20px 0 #aaa inset;
-	cursor: pointer;
-}
-
-.provisioner-container form > .row-fluid i {
-	display: block;
-	margin-bottom: 2px;
-	color: #22ccff;
-	font-size: 26px;
-}
-
 .provisioner-container .nav-bar {
 	text-align: center;
 }
@@ -93,11 +59,11 @@
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	margin: 0 10px;
-	padding: 5px;
-	width: 32px;
+	margin: 0 10px 10px;
+	padding: 7px 5px;
+	width: 36px;
 	border: 1px solid #bbb;
-	border-radius: 16px;
+	border-radius: 18px;
 	color: #bbb;
 	font-weight: bold;
 	font-size: 20px;
