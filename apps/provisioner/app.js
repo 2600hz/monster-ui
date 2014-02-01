@@ -11,18 +11,21 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-			'provisioner.getDescendants': {
-				url: 'accounts/{accountId}/descendants',
-				verb: 'GET'
+			// 'provisioner.getParametersByModel': {
+			// 	'apiRoot': 'apps/provisioner/static/',
+			// 	'url': 'data.json',
+			// 	'verb': "GET"
+			// },
+			'provisioner.getParametersByModel': {
+				'apiRoot': 'http://10.26.0.194:8888/Provisioner-2600hz/api/',
+				'url': 'ui/{brand}/{model}',
+				'verb': "GET"
 			},
-			'provisioner.getDevicesByAccount': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
-			},
-			'provisioner.getDeviceParameters': {
-				apiRoot: 'apps/provisioner/static/',
-				'url': 'data.json',
-				verb: 'GET'
+			'provisioner.getAccountsByProvider': {
+				'apiRoot': 'http://10.26.0.194:8888/Provisioner-2600hz/api/',
+				'url': 'accounts/provider/{provider_id}',
+				'verb': "GET",
+				'generateError': false
 			}
 		},
 
@@ -48,77 +51,33 @@ define(function(require){
 
 		render: function(parent){
 			var self = this,
-				parent = parent || $('#ws-content'),
-				provisionerTemplate;
+				provisionerTemplate,
+				parent = parent || $('#ws-content');
 
-			// self.getAccounts(function(data) {
-			// 	provisionerTemplate = $(monster.template(self, 'app', data));
+			self.getAccountsByProvider(function(data) {
+				provisionerTemplate = $(monster.template(self, 'app', data));
 
-			// 	parent
-			// 		.empty()
-			// 		.append(provisionerTemplate);
+				parent
+					.empty()
+					.append(provisionerTemplate);
 
-			// 	self.bindEvents(parent);
-			// });
+				self.bindEvents(parent);
 
-			self.renderDeviceParameters(parent);
+				// self.renderDeviceParameters(parent);
+			}, function() {
+				monster.ui.alert('error', 'Francis\' Server is Down!');
+			});
 		},
 
 		bindEvents: function(parent) {
 			var self = this;
 
-			parent.find('#accounts').on('change', function() {
-				self.renderSelectDevice(parent, $(this)[0].selectedOptions[0].value);
-			});
-		},
-
-		renderSelectDevice: function(parent, accountId) {
-			var self = this,
-				dataTemplate = {
-					accountId: accountId
-				},
-				deviceTemplate;
-
-			parent.find('.select-device').remove();
-
-			self.getDevicesByAccount(accountId, function(data) {
-				if ( data.length === 0 ) {
-					dataTemplate.empty = true;
-				} else {
-					dataTemplate.empty = false;
-					dataTemplate.data = data;
-				}
-
-				deviceTemplate = monster.template(self, "selectDevice", dataTemplate);
-
-				parent.find('form').append(deviceTemplate);
-
-				self.bindSelectDeviceEvents(parent);
-			});
-		},
-
-		bindSelectDeviceEvents: function(parent) {
-			var self = this;
-
-			parent.find('.new-device').on('click', function() {
-				self.renderNewDevice(parent);
-			});
-
-			parent.find('.existing-deivce').on('click', function() {
-				self.renderDeviceParameters(parent, parent.find('#phones')[0].selectedOptions[0].value);
-			});
-		},
-
-		renderNewDevice: function(parent) {
-			var self = this;
-
-			console.log('New Device');
 		},
 
 		renderDeviceParameters: function(parent, deviceId) {
 			var self = this;
 
-			self.getDeviceParameters(function(data) {
+			self.getParametersByModel(function(data) {
 				var index,
 					field,
 					option,
@@ -155,8 +114,6 @@ define(function(require){
 					},
 					parametersTemplate = $(monster.template(self, 'editDevice', dataTemplate));
 
-				console.log(data);
-
 				for ( section in data ) {
 					if ( data[section].iterate ) {
 						for ( index in data[section].data ) {
@@ -169,7 +126,7 @@ define(function(require){
 									dataField.path = pathArray.join('.');
 
 									parametersTemplate
-										.find('.container .content[data-content="' + section + '"] .sub-content[data-subcontent="' + index + '"] .' + option)
+										.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
 										.append($(monster.template(self, dataField.type + 'Field', dataField)));
 
 									pathArray.splice(pathArray.length - 1, 1);
@@ -188,7 +145,7 @@ define(function(require){
 								dataField.path = pathArray.join('.');
 
 								parametersTemplate
-									.find('.container .content[data-content="' + section + '"] .' + option)
+									.find('.container .content[data-key="' + section + '"] .' + option)
 									.append($(monster.template(self, dataField.type + 'Field', dataField)));
 
 								pathArray.splice(pathArray.length -1, 1);
@@ -199,11 +156,12 @@ define(function(require){
 					}
 				}
 
-				parametersTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', {placeholder:' '});
 				parametersTemplate.find('.nav-bar > .switch-link:first-child').addClass('active');
 				parametersTemplate.find('.devices-options .container > .content:first-child').addClass('active');
 				parametersTemplate.find('.nav-bar .switch-sublink:first-child').addClass('active');
-				parametersTemplate.find('.container .content > div:nth-child(2)').addClass('active');
+				parametersTemplate.find('.container .content [data-key="0"]').addClass('active');
+
+				parametersTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', {placeholder:' '});
 				parametersTemplate.find('.switch-sublink').each(function() {
 					$(this).text(parseInt($(this).text(), 10) + 1);
 				});
@@ -223,14 +181,14 @@ define(function(require){
 				parent.find('.switch-link.active').removeClass('active');
 				$(this).addClass('active');
 				parent.find('.devices-options .content.active').removeClass('active');
-				parent.find('.devices-options .content[data-content="' + $(this).data('menu') + '"]').addClass('active');
+				parent.find('.devices-options .content[data-key="' + $(this).data('key') + '"]').addClass('active');
 			});
 
 			parent.on('click', '.switch-sublink', function() {
-				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .switch-sublink.active').removeClass('active');
+				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .switch-sublink.active').removeClass('active');
 				$(this).addClass('active');
-				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .sub-content.active').removeClass('active');
-				parent.find('.content[data-content="' + $(this).parent().parent().data('content') + '"] .sub-content[data-subcontent="' + $(this).data('submenu') + '"]').addClass('active');
+				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .sub-content.active').removeClass('active');
+				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .sub-content[data-key="' + $(this).data('key') + '"]').addClass('active');
 			});
 
 			parent.find('.save').on('click', function() {
@@ -247,45 +205,34 @@ define(function(require){
 
 
 
-		getAccounts: function(callback) {
+		getParametersByModel: function(callback) {
 			var self = this;
 
 			monster.request({
-				resource: 'provisioner.getDescendants',
+				resource: 'provisioner.getParametersByModel',
 				data: {
-					accountId: self.accountId
+					brand: 'yealink',
+					model: 't22'
 				},
 				success: function(data, status) {
-					callback(data);
+					callback(data.data);
+				}
+			});
+		},
+
+		getAccountsByProvider: function(success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getAccountsByProvider',
+				data: {
+					provider_id: '383ce0b13d6592d94ad6e78aea0001f6'
+				},
+				success: function(data, status) {
+					success(data);
 				},
 				error: function(data, status) {
-					console.log(data);
-				}
-			});
-		},
-
-		getDevicesByAccount: function(accountId, callback) {
-			var self = this;
-
-			monster.request({
-				resource: 'provisioner.getDevicesByAccount',
-				data: {
-					accountId: accountId
-				},
-				success: function(_data, status) {
-					callback(_data.data);
-				}
-			});
-		},
-
-		getDeviceParameters: function(callback) {
-			var self = this;
-
-			monster.request({
-				resource: "provisioner.getDeviceParameters",
-				data: {},
-				success: function(_data, status) {
-					callback(_data);
+					error();
 				}
 			});
 		}

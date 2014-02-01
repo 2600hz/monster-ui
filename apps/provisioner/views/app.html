@@ -1,17 +1,24 @@
 <div class="provisioner-container">
-	<div class="row-fluid">
-		<div class="span9">
-			<form>
-				<legend>Configure devices within your accounts</legend>
-				<label for="accounts">Which account are you configuring?</label>
-				<select id="accounts">
-					<option value="null" selected>Select an account</option>
-					{{#each data}}
-					<option value="{{id}}">{{name}}</option>
-					{{/each}}
-				</select>
-			</form>
+{{#each data}}
+	<div class="account-section {{open}}" data-id="{{id}}" data-name="{{name}}">
+		<div class="account-header">
+			<div class="right-links pull-right">
+				<ul class="nav add-devices-dropdown">
+					<li class="dropdown">
+						<a href="#" id="add_devices" class="dropdown-toggle add-dropdown action-device" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart"></i><span class="action-text">Add</span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a class="create-device" data-type="sip_phone"><i class="icon-telicon-voip-phone"></i></a></li>
+							<li><a class="create-device" data-type="cellphone"><i class="icon-telicon-mobile-phone"></i></a></li>
+							<li><a class="create-device" data-type="smartphone"><i class="icon-telicon-sprint-phone"></i></a></li>
+							<li><a class="create-device" data-type="softphone"><i class="icon-telicon-soft-phone"></i></a></li>
+							<li><a class="create-device" data-type="landline"><i class="icon-telicon-landline"></i></a></li>
+							<li><a class="create-device" data-type="fax"><i class="icon-telicon-fax"></i></a></li>
+							<li><a class="create-device" data-type="ata"><i class="icon-telicon-ata"></i></a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
-		<div class="span3">Configure your preferred default settings, which apply to accross all your devices or all your accounts.</div>
 	</div>
+{{/each}}
 </div>
