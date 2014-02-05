@@ -6,9 +6,9 @@ define(function(require){
 
 	var app = {
 
-		name: "auth",
+		name: 'auth',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'auth.userAuth': {

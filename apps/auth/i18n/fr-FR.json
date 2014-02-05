@@ -1,0 +1,35 @@
+{
+	"password": "Mot de Passe",
+	"rememberMe": "Se souvenir de moi",
+	"username": "Nom d'utilisateur",
+    "or": "OU",
+    "errorLoadingAccount": "Une erreur inconnue est intervenue durant le chargement de votre compte",
+
+    "confirmLogout": "Souhaitez-vous vraiment vous déconnecter?",
+
+	"account": {
+		"name": "Nom de compte",
+		"namePlaceholder": "Nom d'entreprise",
+		"realm": "Royaume",
+		"realmPlaceholder": "Royaume du compte"
+	},
+
+	"login":{
+		"buttonText": "Se connecter"
+	},
+
+	"conferenceLogin": {
+		"userTab": "Utilisateur",
+		"adminTab": "Administrateur",
+		"headerLabel": "Login",
+		"pinLabel": "Code PIN",
+		"nameLabel": "Nom",
+		"callInLabel": "Votre numéro",
+		"optionalSplitter": "Optionnel",
+		"buttonLabel": "Se connecter"
+	},
+
+	"toastrMessages": {
+		"appListError": "Un problème est intervenu durant le chargement de vos applications."
+	}
+}
