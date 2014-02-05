@@ -12,7 +12,7 @@ define(function(require){
 
 		name: 'myaccount-servicePlan',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'servicePlan.get': {
