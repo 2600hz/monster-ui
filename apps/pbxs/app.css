@@ -269,7 +269,7 @@
 }
 
 #edit_server .wizard-buttons {
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 }
 
 #edit_server .header-step {
@@ -375,7 +375,7 @@
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers #unassigned_numbers_header > *:not(i) {
-	margin: 0 10px 0 10px;
+	margin: 0 5px;
 }
 
 #ws-content #list_pbxs_navbar #unassigned_numbers #unassigned_numbers_header i {
