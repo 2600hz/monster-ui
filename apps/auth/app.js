@@ -182,6 +182,12 @@ define(function(require){
 							var appId = results.user.appList[i];
 							if(appId in fullAppList && appId in accountApps) {
 								var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
+								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+								if('all' in accountApps[appId]) {
+									accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
+									delete accountApps[appId].all;
+								}
+								/*****************************************************************************************/
 								if(accountApps[appId].allowed_users === 'all' 
 								|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
 								|| accountAppUsers.indexOf(results.user.id) >= 0) {
@@ -194,6 +200,12 @@ define(function(require){
 						var userAppList = $.map(fullAppList, function(val) {
 							if(val.id in accountApps) {
 								var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+								if('all' in accountApps[val.id]) {
+									accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
+									delete accountApps[val.id].all;
+								}
+								/*****************************************************************************************/
 								if(accountApps[val.id].allowed_users === 'all'
 								|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
 								|| accountAppUsers.indexOf(results.user.id) >= 0) {
