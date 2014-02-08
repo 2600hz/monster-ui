@@ -1,6 +1,6 @@
 {
 	"menuTitles": {
-		"myOffice": "My Office",
+		"myOffice": "Dashboard",
 		"users": "Users",
 		"groups": "User Groups",
 		"numbers": "Numbers",
@@ -538,5 +538,30 @@
 		},
 		"key": "Key",
 		"value": "Value"
+	},
+
+	"myOffice": {
+		"topBarLinks": {
+			"callerID": "Caller ID",
+			"musicOnHold": "Hold Music",
+			"callRecording": "Recording",
+			"hours": "Hours"
+		},
+		"totalUsers": "Total Users",
+		"totalDevices": "Total Devices",
+		"totalConfs": "Conference Bridges",
+		"mainNumberLabel": "Main Number",
+		"confNumberLabel": "Conference Number",
+		"faxNumberLabel": "Fax Number",
+		"totalNumbers": "Total Numbers",
+		"accountId": "Account ID:",
+		"accountRealm": "Account Realm:",
+		"numberChartLegend": {
+			"assigned": "Assigned Numbers",
+			"spare": "Spare Numbers",
+			"local": "Local Numbers",
+			"tollfree": "Toll-free Numbers",
+			"international": "International Numbers"
+		}
 	}
 }

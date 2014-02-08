@@ -6,7 +6,7 @@ define(function(require){
 	var subModules = {
 			devices: require('./submodules/devices/devices'),
 			groups: require('./submodules/groups/groups'),
-			//myOffice: require('./submodules/myOffice/myOffice'),
+			myOffice: require('./submodules/myOffice/myOffice'),
 			numbers: require('./submodules/numbers/numbers'),
 			strategy: require('./submodules/strategy/strategy'),
 			users: require('./submodules/users/users'),
@@ -64,8 +64,8 @@ define(function(require){
 				template = $(monster.template(self, 'app'));
 
 			/* On first Load, load my office */
-			template.find('.category#users').addClass('active');
-			monster.pub('voip.users.render', { parent: template.find('.right-content') });
+			template.find('.category#my_office').addClass('active');
+			monster.pub('voip.myOffice.render', { parent: template.find('.right-content') });
 
 			self.bindEvents(template);
 
@@ -96,6 +96,10 @@ define(function(require){
 				parent: container
 			};
 
+			parent.find('.category#my_office').on('click', function() {
+				monster.pub('voip.myOffice.render', args);
+			});
+
 			parent.find('.category#users').on('click', function() {
 				monster.pub('voip.users.render', args);
 			});
@@ -113,7 +117,7 @@ define(function(require){
 			});
 
 			parent.find('.category#strategy').on('click', function() {
-				monster.pub('voip.strategy.render', container);
+				monster.pub('voip.strategy.render', args);
 			});
 
 			parent.find('.category#call_logs').on('click', function() {

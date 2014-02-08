@@ -131,9 +131,11 @@ define(function(require){
 			"MainHolidays"
 		],
 
-		strategyRender: function(container){
+		strategyRender: function(args){
 			var self = this,
-				parent = container || $('#ws_content'),
+				args = args || {},
+				parent = args.parent || $('.right-content'),
+				openElement = args.openElement,
 				templateData = {},
 				template;
 
@@ -174,12 +176,24 @@ define(function(require){
 						.append(template);
 
 					if(!hasMainNumber) {
-						template.find('.element-container:not(.main-number,.strategy-confnum)').hide();
+						template.find('.element-container.strategy-hours,.element-container.strategy-holidays,.element-container.strategy-calls').hide();
 						template.find('.element-container.helper').css('display', 'block');
 						template.find('.element-container.main-number').css('margin-top', '10px');
 					} else {
 						template.find('.element-container.helper').css('display', 'none');
 						template.find('.element-container.main-number').css('margin-top', '0px');
+					}
+
+					console.log(openElement);
+
+					if(openElement) {
+						var element = template.find('.element-container.'+openElement+':visible');
+						if(element.length > 0) {
+							self.strategyRefreshTemplate(element, results, function() {
+								element.addClass('open');
+								element.find('.element-content').show();
+							});
+						}
 					}
 				}
 			);
