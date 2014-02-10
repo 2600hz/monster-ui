@@ -891,9 +891,7 @@ define(function(require){
 			$('.cancel', parent).show();
 			$('.submit-btn', parent).show();
 
-			if(step_index === 3) {
-				$('#list_pbxs_navbar').hide();
-			}
+			$('#list_pbxs_navbar').hide();
 
 			$('.cancel', parent).off()
 								.on('click', function(ev) {

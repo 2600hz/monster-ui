@@ -103,7 +103,7 @@ define(function(require){
 			},
 			/* Directories */
 			'voip.users.listDirectories': {
-				url: 'accounts/{accountId}/directories/',
+				url: 'accounts/{accountId}/directories',
 				verb: 'GET'
 			},
 			'voip.users.createDirectory': {
@@ -133,7 +133,7 @@ define(function(require){
 			},
 			/* Misc */
 			'voip.users.getNumbers': {
-				url: 'accounts/{accountId}/phone_numbers/',
+				url: 'accounts/{accountId}/phone_numbers',
 				verb: 'GET'
 			},
 			'voip.users.resendInstructions': {

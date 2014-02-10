@@ -2,10 +2,10 @@
 	"hello": "Bonjour",
     "signout": "Deconnexion",
     "myaccount": "Compte",
-    "close": "Fermer",
+    "closeSlide": "Fermer",
     "store": "Boutique",
 
     "accountCategory": "Compte",
     "billingCategory": "Facturation",
-    "trunkingCategory": "Trunking"
+    "trunkingCategory": "Limite d'appels"
 }

@@ -13,7 +13,7 @@ define(function(require){
 
 		name: 'myaccount-transactions',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'transactions.getMonthly': {

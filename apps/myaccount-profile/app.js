@@ -15,7 +15,7 @@ define(function(require){
 
 		name: 'myaccount-profile',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'profile.getUser': {

@@ -2,6 +2,7 @@
 	"welcome": "Hosted Telecom Services",
 	"hello": "Welcome!",
 	"error": "Error",
+	"poweredBy": "Powered by ",
 	"errors": {
 		"generic": "An unknown error happened, please try again in a few seconds!",
 		"genericLabel": "API Response",
