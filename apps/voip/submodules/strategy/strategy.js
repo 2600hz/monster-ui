@@ -267,7 +267,7 @@ define(function(require){
 										if(val!=="undefined") {
 											var ret = {
 												number: val,
-												features: strategyData.numberFeatures
+												features: $.extend(true, {}, strategyData.numberFeatures)
 											};
 											_.each(accountNumbers[val].features, function(feature) {
 												ret.features[feature].active = 'active';
