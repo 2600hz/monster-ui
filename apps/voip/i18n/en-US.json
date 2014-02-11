@@ -547,6 +547,14 @@
 			"callRecording": "Recording",
 			"hours": "Hours"
 		},
+		"musicOnHold": {
+			"title": "Music-On-Hold",
+			"headline": "Setup Music-On-Hold for the Account",
+			"dropdownLabel": "Music on Hold:",
+			"silence": "Silence",
+			"default": "Default Music",
+			"emptyUploadAlert": "Please select a file to upload"
+		},
 		"totalUsers": "Total Users",
 		"totalDevices": "Total Devices",
 		"totalConfs": "Conference Bridges",

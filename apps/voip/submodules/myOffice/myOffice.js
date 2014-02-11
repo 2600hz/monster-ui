@@ -10,6 +10,10 @@ define(function(require){
 				url: 'accounts/{accountId}',
 				verb: 'GET'
 			},
+			'voip.myOffice.updateAccount': {
+				url: 'accounts/{accountId}',
+				verb: 'POST'
+			},
 			'voip.myOffice.listUsers': {
 				url: 'accounts/{accountId}/users',
 				verb: 'GET'
@@ -29,7 +33,24 @@ define(function(require){
 			'voip.myOffice.listTypedCallflows': {
 				url: 'accounts/{accountId}/callflows?has_value=type',
 				verb: 'GET'
-			}
+			},
+			'voip.myOffice.listMedia': {
+				url: 'accounts/{accountId}/media?key_missing=type',
+				verb: 'GET'
+			},
+			'voip.myOffice.createMedia': {
+				url: 'accounts/{accountId}/media',
+				verb: 'PUT'
+			},
+			'voip.myOffice.deleteMedia': {
+				url: 'accounts/{accountId}/media/{mediaId}',
+				verb: 'DELETE'
+			},
+            'voip.myOffice.uploadMedia': {
+                url: 'accounts/{accountId}/media/{mediaId}/raw',
+                verb: 'POST',
+                type: 'application/x-base64'
+            }
 		},
 
 		subscribe: {
@@ -92,7 +113,11 @@ define(function(require){
 						chartOptions
 					);
 
-				self.myOfficeBindEvents(parent, template);
+				self.myOfficeBindEvents({
+					parent: parent,
+					template: template,
+					myOfficeData: myOfficeData
+				});
 
 				parent
 					.empty()
@@ -305,8 +330,11 @@ define(function(require){
 			return data;
 		},
 
-		myOfficeBindEvents: function(parent, template) {
-			var self = this;
+		myOfficeBindEvents: function(args) {
+			var self = this,
+				parent = args.parent,
+				template = args.template,
+				myOfficeData = args.myOfficeData;
 
 			template.find('.link-box').on('click', function(e) {
 				var $this = $(this),
@@ -331,6 +359,182 @@ define(function(require){
 						$('.category#strategy').addClass('active');
 						monster.pub('voip.strategy.render', { parent: parent, openElement: subcategory });
 						break;
+				}
+			});
+
+			template.find('.header-link.music-on-hold').on('click', function(e) {
+				e.preventDefault();
+				self.myOfficeRenderMusicOnHoldPopup({
+					account: myOfficeData.account
+				});
+			});
+
+			template.find('.header-link.caller-id').on('click', function(e) {
+				e.preventDefault();
+				monster.ui.alert('Caller ID popup coming soon...')
+			});
+		},
+
+		myOfficeRenderMusicOnHoldPopup: function(args) {
+			var self = this,
+				account = args.account,
+				silenceMediaId = 'silence_stream://300000';
+
+			self.groupsListMedias(function(medias) {
+				var templateData = {
+						silenceMedia: silenceMediaId,
+						mediaList: medias,
+						media: 'music_on_hold' in account && 'media_id' in account.music_on_hold ? account.music_on_hold.media_id : undefined
+					},
+					popupTemplate = $(monster.template(self, 'myOffice-musicOnHoldPopup', templateData)),
+					popup = monster.ui.dialog(popupTemplate, {
+					title: self.i18n.active().myOffice.musicOnHold.title,
+					position: ['center', 20]
+				});
+
+				self.myOfficeMusicOnHoldPopupBindEvents({
+					popupTemplate: popupTemplate,
+					popup: popup,
+					account: account
+				})
+			});
+		},
+
+		myOfficeMusicOnHoldPopupBindEvents: function(args) {
+			var self = this,
+				popupTemplate = args.popupTemplate,
+				popup = args.popup,
+				account = args.account,
+				closeUploadDiv = function(newMedia) {
+					var uploadInput = popupTemplate.find('.upload-input');
+					uploadInput.wrap('<form>').closest('form').get(0).reset();
+					uploadInput.unwrap();
+					popupTemplate.find('.upload-div').slideUp(function() {
+						popupTemplate.find('.upload-toggle').removeClass('active');
+					});
+					if(newMedia) {
+						var mediaSelect = popupTemplate.find('.media-dropdown');
+						mediaSelect.append('<option value="'+newMedia.id+'">'+newMedia.name+'</option>');
+						mediaSelect.val(newMedia.id);
+					}
+				};
+
+			popupTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			popupTemplate.find('.upload-toggle').on('click', function() {
+				if($(this).hasClass('active')) {
+					popupTemplate.find('.upload-div').stop(true, true).slideUp();
+				} else {
+					popupTemplate.find('.upload-div').stop(true, true).slideDown();
+				}
+			});
+
+			popupTemplate.find('.upload-cancel').on('click', function() {
+				closeUploadDiv();
+			});
+
+			popupTemplate.find('.upload-submit').on('click', function() {
+				var file = popupTemplate.find('.upload-input')[0].files[0];
+					fileReader = new FileReader();
+
+				fileReader.onloadend = function(evt) {
+					monster.request({
+						resource: 'voip.myOffice.createMedia',
+						data: {
+							accountId: self.accountId,
+							data: {
+								streamable: true,
+								name: file.name,
+								media_source: "upload",
+								description: file.name
+							}
+						},
+						success: function(data, status) {
+							var media = data.data;
+							monster.request({
+								resource: 'voip.myOffice.uploadMedia',
+								data: {
+									accountId: self.accountId,
+									mediaId: media.id,
+									data: evt.target.result
+								},
+								success: function(data, status) {
+									closeUploadDiv(media);
+								},
+								error: function(data, status) {
+									monster.request({
+										resource: 'voip.myOffice.deleteMedia',
+										data: {
+											accountId: self.accountId,
+											mediaId: media.id,
+											data: {}
+										},
+										success: function(data, status) {
+
+										}
+									});
+								}
+							});
+						}
+					});
+				};
+
+				if(file) {
+					fileReader.readAsDataURL(file);
+				} else {
+					monster.ui.alert(self.i18n.active().myOffice.musicOnHold.emptyUploadAlert);
+				}
+			});
+
+			popupTemplate.find('.save').on('click', function() {
+				var selectedMedia = popupTemplate.find('.media-dropdown option:selected').val();
+
+				if(!('music_on_hold' in account)) {
+					account.music_on_hold = {};
+				}
+
+				if(selectedMedia && selectedMedia.length > 0) {
+					account.music_on_hold = {
+						media_id: selectedMedia
+					};
+				} else {
+					account.music_on_hold = {};
+				}
+				self.myOfficeUpdateAccount(account, function(updatedAccount) {
+					popup.dialog('close').remove();
+				});
+			});
+		},
+
+		myOfficeListMedias: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.myOffice.listMedia',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(medias) {
+					callback && callback(medias.data);
+				}
+			});
+		},
+
+		myOfficeUpdateAccount: function(account, callback) {
+			var self = this;
+
+			delete account.extra;
+
+			monster.request({
+				resource: 'voip.myOffice.updateAccount',
+				data: {
+					accountId: self.accountId,
+					data: account
+				},
+				success: function(data) {
+					callback && callback(data.data);
 				}
 			});
 		}

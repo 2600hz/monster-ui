@@ -255,3 +255,24 @@
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-div .number-types-legend ul {
 	margin-top: 5px;
 }
+
+/********** Music-On-Hold Popup **********/
+#my_office_music_on_hold_popup .media-dropdown {
+	margin-bottom: 0px;
+}
+#my_office_music_on_hold_popup .upload-toggle {
+	margin-left: 10px;
+}
+#my_office_music_on_hold_popup .upload-div {
+	display: none;
+	margin-top: 20px;
+}
+#my_office_music_on_hold_popup .upload-div .upload-input {
+	margin: 0;
+	width: 330px;
+}
+#my_office_music_on_hold_popup .upload-div button {
+	margin-left: 10px;
+	padding-left: 13px;
+	padding-right: 13px;
+}

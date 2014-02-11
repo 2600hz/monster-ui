@@ -621,8 +621,6 @@
 }
 .feature-popup-container[data-feature="music_on_hold"] .upload-toggle {
 	margin-left: 10px;
-	padding-right: 10px;
-	padding-left: 10px;
 }
 .feature-popup-container[data-feature="music_on_hold"] .upload-div {
 	display: none;
