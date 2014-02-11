@@ -6,6 +6,26 @@
 		</button>
 		<span>{{formatPhoneNumber this.number}}</span>
 	</div>
+	<div class="features-block pull-right">
+		<div class="pull-right">
+			<div class="navbar">
+				<ul class="nav pull-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+						<ul class="dropdown-menu">
+							<li><a class="callerId-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
+							<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="features pull-right">
+			{{#each this.features}}
+				<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+			{{/each}}
+		</div>
+	</div>
 </div>
 {{else}}
 <div class="number-element">
