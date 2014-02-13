@@ -1,0 +1,10 @@
+{{#each devices}}
+	<div class="device-box" data-mac-address="{{this.macAddress}}">
+		<input type="checkbox"></input>
+		<div class="device-name">{{this.name}}</div>
+	</div>
+	{{else}}
+	<div class="device-box no-data">
+		{{../i18n.noDevices}}
+	</div>
+{{/each}}

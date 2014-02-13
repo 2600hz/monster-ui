@@ -1,24 +1,68 @@
 <div class="provisioner-container">
-{{#each data}}
-	<div class="account-section {{open}}" data-id="{{id}}" data-name="{{name}}">
-		<div class="account-header">
-			<div class="right-links pull-right">
-				<ul class="nav add-devices-dropdown">
-					<li class="dropdown">
-						<a href="#" id="add_devices" class="dropdown-toggle add-dropdown action-device" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart"></i><span class="action-text">Add</span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a class="create-device" data-type="sip_phone"><i class="icon-telicon-voip-phone"></i></a></li>
-							<li><a class="create-device" data-type="cellphone"><i class="icon-telicon-mobile-phone"></i></a></li>
-							<li><a class="create-device" data-type="smartphone"><i class="icon-telicon-sprint-phone"></i></a></li>
-							<li><a class="create-device" data-type="softphone"><i class="icon-telicon-soft-phone"></i></a></li>
-							<li><a class="create-device" data-type="landline"><i class="icon-telicon-landline"></i></a></li>
-							<li><a class="create-device" data-type="fax"><i class="icon-telicon-fax"></i></a></li>
-							<li><a class="create-device" data-type="ata"><i class="icon-telicon-ata"></i></a></li>
-						</ul>
-					</li>
-				</ul>
+	<div class="actions-wrapper">
+		<div class="form-inline">
+			<span>{{ i18n.devices }}</span>
+
+			<span id="trigger_links">
+				<a href="#" id="delete_devices" class="action-device"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.deleteDevices }}</span></a>
+				<a href="#" id="provision_devices" class="action-device"><i class="icon-telicon-configuration icon-yellow"></i><span class="action-text">{{ i18n.provisionDevices }}</span></a>
+			</span>
+			<div class="input-append pull-right search-custom">
+				<input class="span2" type="text" placeholder="{{ i18n.searchDevice }}"/>
+				<button class="btn btn-success search-numbers" type="button">{{ i18n.go }}</button>
 			</div>
 		</div>
 	</div>
-{{/each}}
+	<div class="accounts-list">
+	{{#each data}}
+		<div class="account-section" data-id="{{id}}" data-name="{{name}}">
+			<div class="account-header">
+				<div class="right-links pull-right">
+					{{!-- <ul class="nav add-devices-dropdown">
+						<li class="dropdown">
+							<a href="#" id="add_device" class="dropdown-toggle add-dropdown action-device" data-toggle="dropdown" data-target="#">
+								<i class="icon-shopping-cart"></i>
+								<span class="action-text">{{../i18n.add}}</span>
+							</a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a class="create-device" data-type="sip_phone"><i class="icon-telicon-voip-phone"></i> {{../i18n.sip}}</a></li>
+								<li><a class="create-device" data-type="cellphone"><i class="icon-telicon-mobile-phone"></i> {{../i18n.cellphone}}</a></li>
+								<li><a class="create-device" data-type="smartphone"><i class="icon-telicon-sprint-phone"></i> {{../i18n.smartphone}}</a></li>
+								<li><a class="create-device" data-type="softphone"><i class="icon-telicon-soft-phone"></i> {{../i18n.softphone}}</a></li>
+								<li><a class="create-device" data-type="landline"><i class="icon-telicon-home-phone"></i> {{../i18n.landline}}</a></li>
+								<li><a class="create-device" data-type="fax"><i class="icon-telicon-fax"></i> {{../i18n.fax}}</a></li>
+								<li><a class="create-device" data-type="ata"><i class="icon-telicon-ata"></i> {{../i18n.ata}}</a></li>
+							</ul>
+						</li>
+					</ul> --}}
+					<a href="#" class="add-device" class="dropdown-toggle add-dropdown action-device" data-toggle="dropdown" data-target="#">
+						<i class="icon-shopping-cart"></i>
+						<span class="action-text">{{../i18n.add}}</span>
+					</a>
+				</div>
+				<div class="left-part">
+					{{!-- <input type="checkbox"></input> --}}
+				</div>
+				<div class="expandable">
+					{{name}}
+				</div>
+			</div>
+			<div class="devices-wrapper">
+			{{#each devices}}
+				<div class="device-box" data-mac-address="{{this.mac_address}}">
+					<input type="checkbox"></input>
+					<div class="device-name">{{this.name}}</div>
+					<div class="device-mac-address">{{this.mac_address_formatted}}</div>
+					<div class="device-brand {{this.brand}}"></div>
+					<div class="device-model {{this.brand}}-{{this.model}}"></div>
+				</div>
+			{{else}}
+				<div class="device-box no-data">
+					{{../../i18n.noDevices}}
+				</div>
+			{{/each}}
+			</div>
+		</div>
+	{{/each}}
+	</div>
 </div>
