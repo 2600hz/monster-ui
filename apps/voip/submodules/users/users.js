@@ -491,10 +491,6 @@ define(function(require){
 						$('body').append($('<div id="users_container_overlay"></div>'));
 					});
 				}
-
-				template.on('click', '#users_container_overlay', function() {
-					console.log('test');
-				});
 			});
 
 			template.find('.users-header .search-query').on('keyup', function() {
