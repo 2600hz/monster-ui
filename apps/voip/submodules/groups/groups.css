@@ -49,6 +49,12 @@
 	line-height: 16px;
 }
 
+@-moz-document url-prefix() {
+	#groups_container .groups-header .add-group {
+		line-height: 13px;
+	}
+}
+
 #groups_container .groups-header .add-group i {
 	display: block;
 	margin-right: 0;
