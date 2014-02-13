@@ -1,3 +1,17 @@
 {
-	"close" : "Close"
+	"devices": "Devices",
+	"deleteDevices": "Delete",
+	"provisionDevices": "Provision",
+	"searchDevice": "Search a device",
+	"go": "go",
+	"close" : "Close",
+	"add": "Add",
+	"noDevices": "There are no spare devices in this account.",
+	"sip": "SIP",
+	"cellphone": "Cellphone",
+	"smartphone": "Smartphone",
+	"softphone": "Softphone",
+	"landline": "Landline",
+	"fax": "Fax",
+	"ata": "ATA"
 }

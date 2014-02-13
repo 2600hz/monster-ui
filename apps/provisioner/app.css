@@ -1,14 +1,382 @@
 .provisioner-container {
 	margin: 20px auto 0;
 	padding-bottom: 20px;
-	max-width: 1024px;
+	max-width: 900px;
 }
 
-.provisioner-container .nav-bar {
+/*********************************************************/
+/********************* Accounts list *********************/
+/*********************************************************/
+
+.provisioner-container .actions-wrapper {
+	margin: 20px 0 10px 0;
+	height: 40px;
+	line-height: 40px;
+}
+
+.provisioner-container .actions-wrapper #trigger_links {
+	display: none;
+}
+
+.provisioner-container .search-custom {
+	line-height: 30px;
+}
+
+.provisioner-container .actions-wrapper span{
+	margin-right: 20px;
+	font-weight: 500;
+	font-size: 16px;
+}
+
+.provisioner-container .actions-wrapper a.action-device {
+	margin-right: 20px;
+	color: #666666;
+	text-decoration: none !important;
+	white-space: nowrap;
+}
+
+.provisioner-container .actions-wrapper a.action-number:hover .action-text {
+	text-decoration: underline;
+}
+
+.provisioner-container .actions-wrapper a i{
+	margin-right: 5px;
+}
+
+.provisioner-container .accounts-list .account-section .devices-wrapper {
+	display: none;
+}
+
+.provisioner-container .accounts-list > .active .devices-wrapper {
+	display: block;
+}
+
+.provisioner-container .accounts-list .account-section .account-header .left-part {
+	visibility: hidden;
+}
+
+.provisioner-container .accounts-list > .active .account-header .left-part {
+	visibility: visible;
+}
+
+.provisioner-container .account-section .devices-wrapper {
+	display: none;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box {
+	margin-top: -1px;
+	padding: 5px 0px 5px 10px;
+	height: 80px;
+	border: 1px solid #ccc;
+	border-bottom-width: 0px;
+	background: #F9F9F9;
+	line-height: 50px;
+	cursor: pointer;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box.highlighted {
+	background: #BBFF99;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box .device-options .dropdown {
+	margin-top: 4px;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box .device-name {
+	display: inline-block;
+	margin-top: 15px;
+	width: 150px;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box .device-mac-address {
+	margin-top: 15px;
+	width: 150px;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box .device-brand {
+	margin-top: 7px;
+	margin-right: 55px;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box > * {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box .used-by i {
+	margin-right: 5px;
+}
+
+.provisioner-container .account-section .devices-wrapper .device-box.no-data:hover {
+	background: #f9f9f9;
+}
+
+.provisioner-container .account-section input[type="checkbox"] {
+	margin: 34px 20px 0 4px;
+}
+
+.provisioner-container .account-section .account-header {
+	padding-left: 10px;
+	height: 70px;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	background: #F2F2F2;
+	font-size: 18px;
+	line-height: 70px;
+}
+
+.provisioner-container .account-section .account-header:hover {
+	background: #F0F0F0;
+}
+
+.provisioner-container .account-section .account-header .count {
+	margin-left: 10px;
+}
+
+.provisioner-container .account-section .account-header .left-part {
+	float: left;
+	width: 30px;
+}
+
+.provisioner-container .account-section .account-header .expandable {
+	margin: 0 68px 0 40px;
+	cursor: pointer;
+}
+
+.provisioner-container .account-section .account-header .right-links {
+	height: 100%;
+}
+
+.provisioner-container .account-section .account-header .right-links .add-devices-dropdown {
+	display: inline-block;
+	margin-bottom: 0;
+}
+
+
+.provisioner-container .account-section.active .account-header .right-links .add-devices-dropdown .dropdown-menu i {
+	color: #22ccff;
+}
+
+.provisioner-container .account-section.active .account-header .right-links .add-devices-dropdown .dropdown-menu a:hover i {
+	color: #fff;
+}
+
+.provisioner-container .account-section.active .account-header .right-links a > *{
+	color: #ffffff;
+}
+
+.provisioner-container .account-section .account-header .right-links a > *{
+	color: #22ccff;
+}
+
+.provisioner-container .account-section .account-header .right-links i{
+	margin-right: 6px;
+	text-decoration: none !important;
+}
+
+.provisioner-container .account-section .account-header .right-links a {
+	white-space: nowrap;
+	font-size: 14px;
+}
+
+.provisioner-container .account-section .account-header .right-links > * {
+	margin-right: 10px;
+}
+
+.provisioner-container .account-section .account-header .account-actions {
+	margin: 8px;
+	cursor: pointer !important;
+}
+
+.provisioner-container .dropdown-toggle {
+	background: transparent !important;
+}
+
+.provisioner-container .account-section .account-header input[type="checkbox"],
+.provisioner-container .account-section .account-header .count {
+	display: none;
+}
+
+.provisioner-container .account-section.active .account-header input[type="checkbox"],
+.provisioner-container .account-section.active .account-header .count {
+	display: inline-block;
+}
+
+.provisioner-container .account-section.active .account-header {
+
+	border-bottom-right-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+	background-color:#22ccff;
+	background-image:linear-gradient(to bottom,#22ccff,#22a5ff);
+	background-image:-moz-linear-gradient(top,#22ccff,#22a5ff);
+	background-image:-webkit-gradient(linear,0 0,0 100%,from(#22ccff),to(#22a5ff));
+	background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
+	background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
+
+	color: #ffffff;
+	filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+}
+
+.provisioner-container .account-section.active .devices-wrapper {
+	display: block;
+}
+
+.provisioner-container .account-section:nth-of-type(1) .account-header {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
+
+.provisioner-container .account-section:nth-last-of-type(1) .account-header {
+	border-bottom: 1px solid #CCCCCC;
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+.provisioner-container .account-section:nth-last-of-type(1) .devices-wrapper .device-box:nth-last-of-type(1) {
+	border-bottom-width: 1px;
+}
+.provisioner-container .device-brand {
+	margin-top: 7px;
+	width:95px;
+	height: 67px;
+	vertical-align: top;
+}
+
+/* Devices Brands */
+.provisioner-container .device-brand.polycom {
+	background: url('static/images/brands/polycom.png') center no-repeat;
+}
+.provisioner-container .device-brand.yealink {
+	background: url('static/images/brands/yealink.png') center no-repeat;
+}
+.provisioner-container .device-brand.cisco {
+	background: url('static/images/brands/cisco.png') center no-repeat;
+}
+.provisioner-container .device-brand.mocet {
+	background: url('static/images/brands/mocet.png') center no-repeat;
+}
+.provisioner-container .device-brand.snom {
+	background: url('static/images/brands/snom.png') center no-repeat;
+}
+.provisioner-container .brand-box.audiocodes {
+	background: url('static/images/brands/audiocodes.png') center no-repeat;
+}
+
+/* Devices Models */
+.provisioner-container .device-model {
+	width: 100px;
+	height: 80px;
+}
+/* Yealink */
+.provisioner-container .device-model.yealink-t18 {
+	background: url('static/images/devices/yealinkt18.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t20 {
+	background: url('static/images/devices/yealinkt20.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t22 {
+	background: url('static/images/devices/yealinkt22.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t26 {
+	background: url('static/images/devices/yealinkt26.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t28 {
+	background: url('static/images/devices/yealinkt28.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t32 {
+	background: url('static/images/devices/yealinkt32.jpg') center no-repeat;
+}
+.provisioner-container .device-model.yealink-t38 {
+	background: url('static/images/devices/yealinkt38.jpg') center no-repeat;
+}
+
+/* Cisco */
+.provisioner-container .device-model.cisco-901 {
+	background: url('static/images/devices/cisco901.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-921 {
+	background: url('static/images/devices/cisco921.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-922 {
+	background: url('static/images/devices/cisco922.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-941 {
+	background: url('static/images/devices/cisco941.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-942 {
+	background: url('static/images/devices/cisco942.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-962 {
+	background: url('static/images/devices/cisco962.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-303 {
+	background: url('static/images/devices/cisco303.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-501g {
+	background: url('static/images/devices/cisco501g.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-502g {
+	background: url('static/images/devices/cisco502g.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-504g {
+	background: url('static/images/devices/cisco504g.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-525g {
+	background: url('static/images/devices/cisco525g.jpg') center no-repeat;
+}
+.provisioner-container .device-model.cisco-525g2 {
+	background: url('static/images/devices/cisco525g2.jpg') center no-repeat;
+}
+
+/* Polycom */
+.provisioner-container .device-model.polycom-1500 {
+	background: url('static/images/devices/polycom1500.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-321 {
+	background: url('static/images/devices/polycom321.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-331 {
+	background: url('static/images/devices/polycom331.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-335 {
+	background: url('static/images/devices/polycom335.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-450 {
+	background: url('static/images/devices/polycom450.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-5000 {
+	background: url('static/images/devices/polycom5000.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-550 {
+	background: url('static/images/devices/polycom550.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-560 {
+	background: url('static/images/devices/polycom560.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-6000 {
+	background: url('static/images/devices/polycom6000.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-650 {
+	background: url('static/images/devices/polycom650.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-670 {
+	background: url('static/images/devices/polycom670.jpg') center no-repeat;
+}
+.provisioner-container .device-model.polycom-7000 {
+	background: url('static/images/devices/polycom7000.jpg') center no-repeat;
+}
+
+
+/********************************************************/
+/******************** Device options ********************/
+/********************************************************/
+
+.provisioner-container .device-options .nav-bar {
 	text-align: center;
 }
 
-.provisioner-container .nav-bar .switch-link {
+.provisioner-container .device-options .nav-bar .switch-link {
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -21,40 +389,40 @@
 	font-size: 20px;
 }
 
-.provisioner-container .nav-bar .switch-link:hover {
+.provisioner-container .device-options .nav-bar .switch-link:hover {
 	border-bottom: solid 3px #777;
 	color: #777;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.provisioner-container .nav-bar .active {
+.provisioner-container .device-options .nav-bar .active {
 	border-bottom-color: #2CF;
 	color: #2CF;
 	cursor: pointer;
 }
 
-.provisioner-container .nav-bar .active:hover {
+.provisioner-container .device-options .nav-bar .active:hover {
 	border-bottom-color: #2CF;
 	color: #2CF;
 	cursor: default;
 }
 
-.provisioner-container .devices-options .container {
-	max-width: 1024px;
+.provisioner-container .device-options .device-content .container {
+	max-width: 900px;
 }
 
-.provisioner-container .devices-options .container > .content:not(.active),
-.provisioner-container .devices-options .container .sub-content:not(.active) {
+.provisioner-container .device-options .device-content .container > .content:not(.active),
+.provisioner-container .device-options .device-content .container .sub-content:not(.active) {
 	display: none;
 }
 
-.provisioner-container .devices-options .container > .active,
-.provisioner-container .devices-options .container .sub-content.active{
+.provisioner-container .device-options .device-content .container > .active,
+.provisioner-container .device-options .device-content .container .sub-content.active{
 	display: block;
 }
 
-.provisioner-container .devices-options .nav .switch-sublink {
+.provisioner-container .device-options .device-content .nav .switch-sublink {
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -69,15 +437,15 @@
 	font-size: 20px;
 }
 
-.provisioner-container .devices-options .nav .switch-sublink:hover {
+.provisioner-container .device-options .device-content .nav .switch-sublink:hover {
 	border-color: #777;
 	color: #777;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.provisioner-container .devices-options .nav .active,
-.provisioner-container .devices-options .nav .active:hover {
+.provisioner-container .device-options .device-content .nav .active,
+.provisioner-container .device-options .device-content .nav .active:hover {
 	border-color: #22ccff;
 	color: #22ccff;
 	cursor: default;
