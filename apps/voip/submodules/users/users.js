@@ -1179,6 +1179,28 @@ define(function(require){
                     }
                 });
             });
+
+			$('body').on('click', '#users_container_overlay', function() {
+				template.find('.edit-user').slideUp("400", function() {
+					$(this).empty();
+				});
+
+				self.usersRemoveOverlay();
+
+				template.find('.grid-cell.active').css({
+					'position': 'inline-block',
+					'z-index': '0'
+				});
+
+				template.find('.grid-row.active').parent().siblings('.edit-user').css({
+					'position': 'block',
+					'z-index': '0'
+				});
+
+				template.find('.grid-cell.active').removeClass('active');
+				template.find('.grid-row.active').removeClass('active');
+
+			});
 		},
 
 		usersFormatAddUser: function(data) {
