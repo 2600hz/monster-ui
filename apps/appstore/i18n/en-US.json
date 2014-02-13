@@ -22,11 +22,6 @@
 		"admins": "Admins only",
 		"specific": "Specific users"
 	},
-	"help": {
-		"title": "Help Documentations",
-		"documentation": "View Documentation",
-		"howTo": "View How-To Video"
-	},
 	"selectedUsers": "Selected Users",
 	"selectAll": "Select All",
 	"unselectAll": "Unselect All",

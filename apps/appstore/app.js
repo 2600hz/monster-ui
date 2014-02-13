@@ -422,6 +422,8 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+
+				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
 				// userList.getNiceScroll()[0].resize();
 			});
 

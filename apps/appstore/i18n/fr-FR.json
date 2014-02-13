@@ -1,0 +1,31 @@
+{
+	"description": "Description",
+	"featuresTitle": "Caractéristiques:",
+	"undefinedFeatures": "Liste en cours de rédaction...",
+	"author": "Auteur",
+	"version": "Version",
+	"license": "License",
+	"price": "Prix",
+	"free": "Gratuit",
+	"save": "Sauver",
+	"filters": {
+		"all": "Toutes les Apps",
+		"installed": "Mes Apps",
+		"resellers": "Apps Revendeurs",
+		"carriers": "Apps Opérateurs",
+		"developers": "Apps Développeurs"
+	},
+	"permissions": {
+		"title": "Qui peut utiliser cette App?",
+		"all": "Tous les utilisateurs",
+		"admins": "Administrateurs uniquement",
+		"specific": "Utilisateurs spécifiques"
+	},
+	"selectedUsers": "Utlilisateurs Sélectionnés",
+	"selectAll": "Tout sélectionner",
+	"unselectAll": "Tout désélectionner",
+	"selectUsersLink": "Utilisateurs Sélectionnés ({{selectedUsers}})",
+	"alerts": {
+		"noUserSelected": "Vous devez sélectionner au moins un utilisateur pour cette app.<br><br>Si vous ne voulez autoriser aucun utilisateur pour cette app, vous pouvez simplement la désactiver (Off)."
+	}
+}
