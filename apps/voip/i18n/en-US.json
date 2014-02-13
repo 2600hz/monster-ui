@@ -555,10 +555,20 @@
 			"default": "Default Music",
 			"emptyUploadAlert": "Please select a file to upload"
 		},
+		"callerId": {
+			"title": "Caller ID",
+			"headline": "Select a Caller ID Number for the Account",
+			"outboundDropdownLabel": "Caller ID Number for outbound calls:",
+			"emergencyDropdownLabel": "Caller ID Number for emergency services:",
+			"help1": "The Caller ID number for your account's outbound calls must be selected from your Main Numbers.",
+			"help2": "The Caller ID for emergency services may be selected from any number in your Account that has the e911 feature configured."
+		},
+		"missingE911Message": "Please setup the emergency Caller ID on a number that has e911 configured.",
 		"totalUsers": "Total Users",
 		"totalDevices": "Total Devices",
 		"totalConfs": "Conference Bridges",
 		"mainNumberLabel": "Main Number",
+		"noMainNumber": "Add main number",
 		"confNumberLabel": "Conference Number",
 		"faxNumberLabel": "Fax Number",
 		"totalNumbers": "Total Numbers",

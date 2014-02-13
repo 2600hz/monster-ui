@@ -20,6 +20,9 @@
 	</div>
 
 	<div class="dashboard-content">
+		<div class="missing-e911-message btn-danger{{#unless account.caller_id.emergency.number}} active{{/unless}}">
+			<i class="icon-warning-sign"></i>{{i18n.myOffice.missingE911Message}}
+		</div>
 		<div class="dashboard-content-div dashboard-left-content">
 			<div class="dashboard-left-section clearfix">
 				<div class="left-section-header link-box" data-category="users">
@@ -62,16 +65,6 @@
 
 		<div class="dashboard-content-div dashboard-right-content">
 			<div class="dashboard-box">
-				<!-- <div class="dashboard-box-row e911-row">
-					<div class="row-title">
-						<div class="line1">E911</div>
-						<div class="line2">Address</div>
-					</div>
-					<div class="row-content">
-						<div class="line1">116 Natoma Street, 2nd Floor</div>
-						<div class="line2">San Francisco, CA, 94105</div>
-					</div>
-				</div> -->
 				<div class="dashboard-box-row main-number-row link-box" data-category="strategy" data-subcategory="main-number">
 					<div class="row-title">
 						<div>{{i18n.myOffice.mainNumberLabel}}</div>
@@ -79,13 +72,16 @@
 					<div class="row-content">
 						<ul class="number-list">
 							{{#each mainNumbers}}
-							<li>
-								<i class="icon-ambulance icon-red pull-right{{#if e911}} enabled{{/if}}"></i>
-								<i class="icon-user icon-green pull-right{{#if callerId}} enabled{{/if}}"></i>
-								<div class="number-div">{{formatPhoneNumber number}}</div>
+							<li{{#compare this.number '===' ../account.caller_id.external.number}} class="caller-id"{{/compare}}>
+								<div class="features pull-right">
+									{{#each this.features}}
+										<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+									{{/each}}
+								</div>
+								<div class="number-div">{{formatPhoneNumber this.number}}</div>
 							</li>
 							{{else}}
-							<li>-</li>
+							<li>{{i18n.myOffice.noMainNumber}}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -98,8 +94,11 @@
 						<ul class="number-list">
 							{{#each confNumbers}}
 							<li>
-								<i class="icon-ambulance icon-red pull-right{{#if e911}} enabled{{/if}}"></i>
-								<i class="icon-user icon-green pull-right{{#if callerId}} enabled{{/if}}"></i>
+								<div class="features pull-right">
+									{{#each this.features}}
+										<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+									{{/each}}
+								</div>
 								<div class="number-div">{{formatPhoneNumber number}}</div>
 							</li>
 							{{else}}

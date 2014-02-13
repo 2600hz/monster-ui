@@ -69,9 +69,10 @@ define(function(require){
 						totalDevices: myOfficeData.devices.length,
 						totalNumbers: _.size(myOfficeData.numbers),
 						totalConferences: myOfficeData.totalConferences,
-						mainNumbers: myOfficeData.mainNumbers,
-						confNumbers: myOfficeData.confNumbers,
-						faxNumbers: myOfficeData.faxNumbers,
+						mainNumbers: myOfficeData.mainNumbers || [],
+						confNumbers: myOfficeData.confNumbers || [],
+						faxNumbers: myOfficeData.faxNumbers || [],
+						hasE911: myOfficeData.hasE911,
 						devicesList: _.toArray(myOfficeData.devicesData).sort(function(a, b) { return b.count - a.count ; }),
 						assignedNumbersList: _.toArray(myOfficeData.assignedNumbersData).sort(function(a, b) { return b.count - a.count ; }),
 						numberTypesList: _.toArray(myOfficeData.numberTypesData).sort(function(a, b) { return b.count - a.count ; })
@@ -172,6 +173,11 @@ define(function(require){
 							}
 						});
 					},
+					numberFeatures: function(callback) {
+						monster.pub('common.numbers.getListFeatures', function(features) {
+							callback(null, features);
+						});
+					},
 					// directories: function(parallelCallback) {
 					// 	monster.request({
 					// 		resource: 'voip.myOffice.listDirectories',
@@ -269,10 +275,7 @@ define(function(require){
 						color: "#b588b9"
 					}
 				},
-				totalConferences = 0,
-				mainNumbers = [],
-				confNumbers = [],
-				faxNumbers = [];
+				totalConferences = 0;
 
 			_.each(data.devices, function(val) {
 				if(val.device_type in devices) {
@@ -299,22 +302,33 @@ define(function(require){
 				}
 			});
 
+			data.hasE911 = false;
 			_.each(data.callflows, function(val) {
+				var numberArrayName = '';
 				if(val.type === "main" && val.name === "MainCallflow") {
-					_.each(val.numbers, function(num) {
-						mainNumbers.push({
-							number: num,
-							e911: (data.numbers[num].features.indexOf("dash_e911") >= 0),
-							callerId: (data.numbers[num].features.indexOf("outbound_cnam") >= 0)
-						});
-					});
+					numberArrayName = 'mainNumbers';
 				} else if(val.type === "conference" && val.name === "MainConference") {
+					numberArrayName = 'confNumbers';
+				}
+
+				if(numberArrayName.length > 0) {
+					if(!(numberArrayName in data)) { data[numberArrayName] = []; }
 					_.each(val.numbers, function(num) {
-						confNumbers.push({
-							number: num,
-							e911: (data.numbers[num].features.indexOf("dash_e911") >= 0),
-							callerId: (data.numbers[num].features.indexOf("outbound_cnam") >= 0)
-						});
+						if(num !== 'undefined' && num !== 'undefinedconf') {
+							var number = {
+								number: num,
+								features: $.extend(true, {}, data.numberFeatures)
+							};
+							if(num in data.numbers) {
+								_.each(data.numbers[num].features, function(feature) {
+									number.features[feature].active = 'active';
+									if(feature === 'dash_e911' && numberArrayName === 'mainNumbers') {
+										data.hasE911 = true;
+									}
+								});
+							}
+							data[numberArrayName].push(number);
+						}
 					});
 				}
 			});
@@ -323,9 +337,6 @@ define(function(require){
 			data.assignedNumbersData = assignedNumbers;
 			data.numberTypesData = numberTypes;
 			data.totalConferences = totalConferences;
-			data.mainNumbers = mainNumbers;
-			data.confNumbers = confNumbers;
-			data.faxNumbers = faxNumbers;
 
 			return data;
 		},
@@ -371,7 +382,10 @@ define(function(require){
 
 			template.find('.header-link.caller-id').on('click', function(e) {
 				e.preventDefault();
-				monster.ui.alert('Caller ID popup coming soon...')
+				self.myOfficeRenderCallerIdPopup({
+					parent: parent,
+					myOfficeData: myOfficeData
+				});
 			});
 		},
 
@@ -504,6 +518,90 @@ define(function(require){
 				}
 				self.myOfficeUpdateAccount(account, function(updatedAccount) {
 					popup.dialog('close').remove();
+				});
+			});
+		},
+
+		myOfficeRenderCallerIdPopup: function(args) {
+			var self = this,
+				parent = args.parent,
+				myOfficeData = args.myOfficeData,
+				emergencyMainNumbers = $.map(myOfficeData.mainNumbers, function(val) {
+					if('active' in val.features['dash_e911']) {
+						return val.number;
+					}
+				}),
+				otherEmergencyNumbers = $.map(myOfficeData.numbers, function(val, key) {
+					if(val.features.indexOf('dash_e911') >= 0 && emergencyMainNumbers.indexOf(key) < 0) {
+						return key;
+					}
+				})
+				templateData = {
+					mainNumbers: myOfficeData.mainNumbers,
+					emergencyMainNumbers: emergencyMainNumbers,
+					otherEmergencyNumbers: otherEmergencyNumbers,
+					selectedMainNumber: 'caller_id' in myOfficeData.account && 'external' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.external.number || 'none' : 'none',
+					selectedEmergencyNumber: 'caller_id' in myOfficeData.account && 'emergency' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.emergency.number || 'none' : 'none'
+				},
+				popupTemplate = $(monster.template(self, 'myOffice-callerIdPopup', templateData)),
+				popup = monster.ui.dialog(popupTemplate, {
+					title: self.i18n.active().myOffice.callerId.title,
+					position: ['center', 20]
+				});
+
+			self.myOfficeCallerIdPopupBindEvents({
+				parent: parent,
+				popupTemplate: popupTemplate,
+				popup: popup,
+				account: myOfficeData.account
+			});
+		},
+
+		myOfficeCallerIdPopupBindEvents: function(args) {
+			var self = this,
+				parent = args.parent,
+				popupTemplate = args.popupTemplate,
+				popup = args.popup,
+				account = args.account;
+
+			popupTemplate.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+
+			popupTemplate.find('.upload-cancel').on('click', function() {
+				closeUploadDiv();
+			});
+
+			popupTemplate.find('.save').on('click', function() {
+				var outboundCallerId = popupTemplate.find('.caller-id-select.outbound option:selected').val(),
+					emergencyCallerId = popupTemplate.find('.caller-id-select.emergency option:selected').val();
+
+				console.log(outboundCallerId, emergencyCallerId);
+				if(!('caller_id' in account)) {
+					account.caller_id = {};
+				}
+
+				if(outboundCallerId && outboundCallerId.length > 0) {
+					account.caller_id.external = {
+						number: outboundCallerId
+					};
+				} else {
+					delete account.caller_id.external;
+				}
+
+				if(emergencyCallerId && emergencyCallerId.length > 0) {
+					account.caller_id.emergency = {
+						number: emergencyCallerId
+					};
+				} else {
+					delete account.caller_id.emergency;
+				}
+
+				self.myOfficeUpdateAccount(account, function(updatedAccount) {
+					popup.dialog('close').remove();
+					self.myOfficeRender({
+						parent: parent
+					});
 				});
 			});
 		},

@@ -50,6 +50,20 @@
 }
 
 /********** Content **********/
+#myoffice_container .dashboard-content .missing-e911-message {
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 4px;
+	opacity: 0.8;
+	display: none;
+}
+#myoffice_container .dashboard-content .missing-e911-message.active {
+	display: block;
+}
+#myoffice_container .dashboard-content .missing-e911-message i {
+	margin-right: 10px;
+}
+
 #myoffice_container .dashboard-content-div {
 	width: 50%;
 	display: inline-block;
@@ -183,8 +197,16 @@
 	list-style: none;
 	margin: 0;
 }
-#myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list i:not(.enabled) {
+#myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list li.caller-id {
+    color: #22ccff;
+    text-shadow: 1px 1px 0px #ccc;
+}
+#myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list .features > i {
 	display: none;
+	cursor: inherit;
+}
+#myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list .features > i.active {
+	display: inline-block;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list .number-div {
 	white-space: nowrap;
