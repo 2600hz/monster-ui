@@ -13,8 +13,7 @@
 		"installed": "My Apps",
 		"resellers": "Resellers Apps",
 		"carriers": "Carriers Apps",
-		"developers": "Developers Apps",
-		"community": "Community Apps"
+		"developers": "Developers Apps"
 	},
 	"permissions": {
 		"title": "Who can use this App?",
