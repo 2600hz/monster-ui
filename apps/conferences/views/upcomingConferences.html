@@ -1,7 +1,7 @@
 <div id="conferences_information_container">
 	<div id="upcoming_conferences_content">
 		<div class="header">
-			<h1 class="pull-left">Upcoming Conferences</h1>
+			<h1 class="pull-left">{{ i18n.upcomingConferences }}</h1>
 			<span class="search-box pull-right">
 				<i class="icon-search"></i>
 				<input type="text" class="search-query" placeholder="Search">
@@ -10,10 +10,10 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Conference Name</th>
-					<th>Date</th>
-					<th>Start Time</th>
-					<th>Edit</th>
+					<th>{{ i18n.conferenceNameLabel }}</th>
+					<th>{{ i18n.dateLabel }}</th>
+					<th>{{ i18n.startTime }}</th>
+					<th>{{ i18n.edit }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,14 +30,14 @@
 				<tr data-search="{{ name }}">
 					<td>
 						<div>
-							<span>Moderator Pin: {{ pins.moderator }}</span>
-							<span class="pull-right">Member Pin: {{ pins.member }}</span>
+							<span>{{ i18n.moderatorPin }}{{ pins.moderator }}</span>
+							<span class="pull-right">{{ i18n.memberPin }}{{ pins.member }}</span>
 						</div>
 					</td>
 				</tr>
 				<tr data-search="{{ name }}"><td colspan="4"></td></tr>
 			{{else}}
-				<tr><td colspan="4" class="empty">No conference scheduled.</td></tr>
+				<tr><td colspan="4" class="empty">{{ i18n.noConferenceScheduled }}</td></tr>
 			{{/each}}
 			</tbody>
 		</table>
