@@ -1,9 +1,12 @@
 {{#each devices}}
-	<div class="device-box" data-mac-address="{{this.macAddress}}">
-		<input type="checkbox"></input>
+	<div class="device-box" data-mac-address="{{this.mac_address}}">
+		<input type="checkbox" />
 		<div class="device-name">{{this.name}}</div>
+		<div class="device-mac-address">{{this.mac_address_formatted}}</div>
+		<div class="device-brand {{this.brand}}"></div>
+		<div class="device-model {{this.brand}}-{{this.model}}"></div>
 	</div>
-	{{else}}
+{{else}}
 	<div class="device-box no-data">
 		{{../i18n.noDevices}}
 	</div>

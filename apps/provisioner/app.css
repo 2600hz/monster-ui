@@ -107,8 +107,13 @@
 	margin-right: 5px;
 }
 
+.provisioner-container .account-section .devices-wrapper .device-box.no-data {
+	height: 60px;
+}
+
 .provisioner-container .account-section .devices-wrapper .device-box.no-data:hover {
 	background: #f9f9f9;
+	cursor: default;
 }
 
 .provisioner-container .account-section input[type="checkbox"] {
