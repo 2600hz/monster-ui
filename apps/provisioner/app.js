@@ -4,7 +4,7 @@ define(function(require){
 		mask = require('mask'),
 		monster = require('monster');
 
-	var apiRoot = 'http://10.26.0.233:8888/Provisioner-2600hz';
+	var apiRoot = 'http://10.26.0.76:8888/Provisioner-2600hz';
 
 	var app = {
 
@@ -137,6 +137,8 @@ define(function(require){
 			});
 		},
 
+		initialized: false,
+
 		render: function(parent){
 			var self = this,
 				_data,
@@ -161,7 +163,10 @@ define(function(require){
 						.empty()
 						.append(appTemplate);
 
+
+
 					self.bindEvents(parent);
+					self.initialized = true;
 				});
 			});
 		},
@@ -177,17 +182,21 @@ define(function(require){
 				};
 
 			/* Click on header to expand device wrapper */
-			parent.find('.account-section').find('.account-header').on('click', '.expandable', function() {
-				var section = $(this).parent().parent();
+			parent.find('.expandable').on('click', function() {
+				var section = $(this).parents('.account-section');
 
 				if ( section.hasClass('active') ) {
 					section.removeClass('active');
 				} else {
 					if ( section.find('.devices-wrapper').find('.device-box').hasClass('no-data') ) {
 						self.getDevicesByAccount(section.data('id'), function(data) {
+							for ( var device in data ) {
+								data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{1,2}', 'g')).join(':');
+							}
+
 							section.find('.devices-wrapper')
 								.empty()
-								.append($(monster.template(self, 'devicesWrapper', { devices: data})));
+								.append($(monster.template(self, 'devicesWrapper', { devices: data })));
 						});
 					}
 
@@ -240,34 +249,44 @@ define(function(require){
 			// 	showLinks();
 			// });
 
-			parent.find('.account-section.active').on('click', '.device-box', function(event) {
-				if ( $(this).hasClass('selected') ) {
-					$(this).removeClass('selected');
-					$(this).find('input')[0].checked = false;
-				} else {
-					if( parent.find('.device-box.selected input')[0] ) {
-						parent.find('.device-box.selected input')[0].checked = false;
+			if (self.initialized === false) {
+				parent.on('click', '.device-box:not(.no-data)', function() {
+					if ( $(this).hasClass('selected') ) {
+						$(this).removeClass('selected');
+						$(this).find('input')[0].checked = false;
+					} else {
+						if( parent.find('.device-box.selected input')[0] ) {
+							parent.find('.device-box.selected input')[0].checked = false;
+						}
+
+						parent.find('.account-section .device-box.selected').removeClass('selected');
+						$(this).addClass('selected');
+						$(this).find('input')[0].checked = true;
 					}
 
-					parent.find('.account-section .device-box.selected').removeClass('selected');
-					$(this).addClass('selected');
-					$(this).find('input')[0].checked = true;
-				}
-
-				showLinks();
-			});
+					showLinks();
+				});
 
 			parent.on('click', '#delete_devices', function() {
 				var accountId = parent.find('.device-box.selected').parent().parent().data('id'),
 					macAddress = parent.find('.device-box.selected').data('mac-address');
 
 				self.deleteDevice(accountId, macAddress, function() {
+					var wrapper = parent.find('.device-box.selected').parent();
+
 					parent.find('.device-box.selected').remove();
+
+					if ( $(wrapper).is(':empty') ) {
+						$(wrapper)
+							.empty()
+							.append($(monster.template(self, 'noDevice')));
+					}
 				});
 			});
+		}
 
 			parent.find('#provision_devices').on('click', function() {
-				var accountId = parent.find('.account-section.active').data('id'),
+				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
 					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
 
 				self.getDevice(accountId, macAddress, function(data) {
@@ -277,8 +296,6 @@ define(function(require){
 
 			parent.find('.account-section .add-device').on('click', function() {
 				var accountId = $(this).parents('.account-section').data('id');
-
-				console.log(accountId);
 
 				self.renderDeviceSettings(parent, accountId, null);
 			});
@@ -494,12 +511,11 @@ define(function(require){
 						brand: parent.find('select[name="manufacturer"]').find('option:selected').val(),
 						family: $(this).find('option:selected').data('family'),
 						model: $(this).val(),
-						mac_address: parent.find('#mac').val().replace(/:/g, ''),
 						name: parent.find('#name').val(),
 						settings: deviceData.settings
 					};
 
-					self.renderDeviceSettings(parent, accountId, macAddress, deviceData);
+					self.renderDeviceSettings(parent, accountId, parent.find('#mac').val().replace(/:/g, ''), deviceData);
 				}
 			});
 
@@ -583,7 +599,11 @@ define(function(require){
 					callback(data);
 				},
 				error: function(data, status) {
-					monster.ui.alert('error', 'Francis\' Server is Down!');
+					if ( data.error.code == 404 ) {
+						monster.ui.alert('error', 'Your account does not have the provider role!');
+					} else {
+						monster.ui.alert('error', 'Francis\' Server is Down!');
+					}
 				}
 			});
 		},
@@ -701,7 +721,6 @@ define(function(require){
 					model: model
 				},
 				success: function(data, status) {
-					console.log(data.data);
 					callback(data.data);
 				}
 			});
