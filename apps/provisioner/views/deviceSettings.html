@@ -1,6 +1,6 @@
 <div class="provisioner-container">
-	<div class="device-options">
-		<div class="devices-header">
+	<div class="device-settings">
+		<div class="settings-header">
 			<form class="form-inline">
 				<div class="row-fluid">
 					<div class="span3">
@@ -30,13 +30,13 @@
 					</div>
 					<div class="span3">
 						<label for="mac">
-							MAC Address <input type="text" id="mac" value="{{mac_address}}">
+							MAC Address <input type="text" id="mac"{{#if mac_address}} disabled{{/if}} value="{{mac_address}}">
 						</label>
 					</div>
 				</div>
 			</form>
 		</div>
-		<div class="device-content">
+		<div class="settings-content">
 			<div class="nav nav-bar">
 			{{#each settings}}
 				<a class="switch-link" data-key="{{@key}}">{{text}}</a>
