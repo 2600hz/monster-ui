@@ -78,7 +78,14 @@
 	background: #BBFF99;
 }
 
-.provisioner-container .account-section .devices-wrapper .device-box .device-options .dropdown {
+.provisioner-container .account-section .devices-wrapper .device-box.selected {
+	border-top: 1px solid #2CF;
+	background: #F5F5F5;
+	box-shadow: inset 0 0 5px #CCC;
+}
+
+
+.provisioner-container .account-section .devices-wrapper .device-box .device-settings .dropdown {
 	margin-top: 4px;
 }
 
@@ -377,16 +384,16 @@
 /******************** Device options ********************/
 /********************************************************/
 
-.provisioner-container .device-options .nav-bar {
+.provisioner-container .device-settings .nav-bar {
 	text-align: center;
 }
 
-.provisioner-container .device-options .nav-bar .switch-link {
+.provisioner-container .device-settings .nav-bar .switch-link {
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	padding: 5px;
+	padding: 5px 10px;
 	min-width: 10%;
 	border-bottom: solid 3px #BBB;
 	color: #BBB;
@@ -394,40 +401,40 @@
 	font-size: 20px;
 }
 
-.provisioner-container .device-options .nav-bar .switch-link:hover {
+.provisioner-container .device-settings .nav-bar .switch-link:hover {
 	border-bottom: solid 3px #777;
 	color: #777;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.provisioner-container .device-options .nav-bar .active {
+.provisioner-container .device-settings .nav-bar .active {
 	border-bottom-color: #2CF;
 	color: #2CF;
 	cursor: pointer;
 }
 
-.provisioner-container .device-options .nav-bar .active:hover {
+.provisioner-container .device-settings .nav-bar .active:hover {
 	border-bottom-color: #2CF;
 	color: #2CF;
 	cursor: default;
 }
 
-.provisioner-container .device-options .device-content .container {
+.provisioner-container .device-settings .settings-content .container {
 	max-width: 900px;
 }
 
-.provisioner-container .device-options .device-content .container > .content:not(.active),
-.provisioner-container .device-options .device-content .container .sub-content:not(.active) {
+.provisioner-container .device-settings .settings-content .container > .content:not(.active),
+.provisioner-container .device-settings .settings-content .container .sub-content:not(.active) {
 	display: none;
 }
 
-.provisioner-container .device-options .device-content .container > .active,
-.provisioner-container .device-options .device-content .container .sub-content.active{
+.provisioner-container .device-settings .settings-content .container > .active,
+.provisioner-container .device-settings .settings-content .container .sub-content.active{
 	display: block;
 }
 
-.provisioner-container .device-options .device-content .nav .switch-sublink {
+.provisioner-container .device-settings .settings-content .nav .switch-sublink {
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -442,15 +449,15 @@
 	font-size: 20px;
 }
 
-.provisioner-container .device-options .device-content .nav .switch-sublink:hover {
+.provisioner-container .device-settings .settings-content .nav .switch-sublink:hover {
 	border-color: #777;
 	color: #777;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.provisioner-container .device-options .device-content .nav .active,
-.provisioner-container .device-options .device-content .nav .active:hover {
+.provisioner-container .device-settings .settings-content .nav .active,
+.provisioner-container .device-settings .settings-content .nav .active:hover {
 	border-color: #22ccff;
 	color: #22ccff;
 	cursor: default;
