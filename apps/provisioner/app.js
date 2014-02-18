@@ -549,19 +549,27 @@ define(function(require){
 					}
 				}
 
-				deviceData = {
-					brand: brand,
-					family: family,
-					model: model,
-					name: name,
-					settings: dataForm
-				};
-
 				if ( deviceData.mac_address ) {
+					deviceData = {
+						brand: brand,
+						family: family,
+						model: model,
+						name: name,
+						settings: dataForm
+					};
+
 					self.updateDevice(accountId, macAddress, deviceData, function() {
 						self.render(parent);
 					});
 				} else {
+					deviceData = {
+						brand: brand,
+						family: family,
+						model: model,
+						name: name,
+						settings: dataForm
+					};
+
 					self.addDevice(accountId, newMacAddress, deviceData, function() {
 						self.render(parent);
 					});
