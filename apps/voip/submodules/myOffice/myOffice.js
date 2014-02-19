@@ -26,6 +26,14 @@ define(function(require){
 				url: 'accounts/{accountId}/phone_numbers',
 				verb: 'GET'
 			},
+			'voip.myOffice.getNumber': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+				verb: 'GET'
+			},
+			'voip.myOffice.updateNumber': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+				verb: 'POST'
+			},
 			'voip.myOffice.listDirectories': {
 				url: 'accounts/{accountId}/directories',
 				verb: 'GET'
@@ -46,11 +54,11 @@ define(function(require){
 				url: 'accounts/{accountId}/media/{mediaId}',
 				verb: 'DELETE'
 			},
-            'voip.myOffice.uploadMedia': {
-                url: 'accounts/{accountId}/media/{mediaId}/raw',
-                verb: 'POST',
-                type: 'application/x-base64'
-            }
+			'voip.myOffice.uploadMedia': {
+				url: 'accounts/{accountId}/media/{mediaId}/raw',
+				verb: 'POST',
+				type: 'application/x-base64'
+			}
 		},
 
 		subscribe: {
@@ -526,28 +534,32 @@ define(function(require){
 			var self = this,
 				parent = args.parent,
 				myOfficeData = args.myOfficeData,
-				emergencyMainNumbers = $.map(myOfficeData.mainNumbers, function(val) {
-					if('active' in val.features['dash_e911']) {
-						return val.number;
-					}
-				}),
-				otherEmergencyNumbers = $.map(myOfficeData.numbers, function(val, key) {
-					if(val.features.indexOf('dash_e911') >= 0 && emergencyMainNumbers.indexOf(key) < 0) {
-						return key;
-					}
-				})
 				templateData = {
 					mainNumbers: myOfficeData.mainNumbers,
-					emergencyMainNumbers: emergencyMainNumbers,
-					otherEmergencyNumbers: otherEmergencyNumbers,
-					selectedMainNumber: 'caller_id' in myOfficeData.account && 'external' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.external.number || 'none' : 'none',
-					selectedEmergencyNumber: 'caller_id' in myOfficeData.account && 'emergency' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.emergency.number || 'none' : 'none'
+					selectedMainNumber: 'caller_id' in myOfficeData.account && 'external' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.external.number || 'none' : 'none'
 				},
 				popupTemplate = $(monster.template(self, 'myOffice-callerIdPopup', templateData)),
 				popup = monster.ui.dialog(popupTemplate, {
 					title: self.i18n.active().myOffice.callerId.title,
 					position: ['center', 20]
 				});
+
+			monster.ui.validate(popupTemplate.find('.emergency-form > form'), {
+				messages: {
+					'postal_code': {
+						required: '*'
+					},
+					'street_address': {
+						required: '*'
+					},
+					'locality': {
+						required: '*'
+					},
+					'region': {
+						required: '*'
+					}
+				}
+			});
 
 			self.myOfficeCallerIdPopupBindEvents({
 				parent: parent,
@@ -562,7 +574,39 @@ define(function(require){
 				parent = args.parent,
 				popupTemplate = args.popupTemplate,
 				popup = args.popup,
-				account = args.account;
+				account = args.account,
+				callerIdNumberSelect = popupTemplate.find('.caller-id-select'),
+				callerIdNameInput = popupTemplate.find('.caller-id-name'),
+				emergencyZipcodeInput = popupTemplate.find('.caller-id-emergency-zipcode'),
+				emergencyAddress1Input = popupTemplate.find('.caller-id-emergency-address1'),
+				emergencyAddress2Input = popupTemplate.find('.caller-id-emergency-address2'),
+				emergencyCityInput = popupTemplate.find('.caller-id-emergency-city'),
+				emergencyStateInput = popupTemplate.find('.caller-id-emergency-state'),
+				loadNumberDetails = function(number) {
+					if(number) {
+						self.myOfficeGetNumber(number, function(numberData) {
+							if("cnam" in numberData) {
+								callerIdNameInput.val(numberData.cnam.display_name);
+							} else {
+								callerIdNameInput.val("");
+							}
+
+							if("dash_e911" in numberData) {
+								emergencyZipcodeInput.val(numberData.dash_e911.postal_code);
+								emergencyAddress1Input.val(numberData.dash_e911.street_address);
+								emergencyAddress2Input.val(numberData.dash_e911.extended_address);
+								emergencyCityInput.val(numberData.dash_e911.locality);
+								emergencyStateInput.val(numberData.dash_e911.region);
+							} else {
+								emergencyZipcodeInput.val("");
+								emergencyAddress1Input.val("");
+								emergencyAddress2Input.val("");
+								emergencyCityInput.val("");
+								emergencyStateInput.val("");
+							}
+						});
+					}
+				};
 
 			popupTemplate.find('.cancel-link').on('click', function() {
 				popup.dialog('close').remove();
@@ -572,37 +616,109 @@ define(function(require){
 				closeUploadDiv();
 			});
 
-			popupTemplate.find('.save').on('click', function() {
-				var outboundCallerId = popupTemplate.find('.caller-id-select.outbound option:selected').val(),
-					emergencyCallerId = popupTemplate.find('.caller-id-select.emergency option:selected').val();
-
-				console.log(outboundCallerId, emergencyCallerId);
-				if(!('caller_id' in account)) {
-					account.caller_id = {};
+			callerIdNumberSelect.on('change', function() {
+				var selectedNumber = $(this).val();
+				if(selectedNumber) {
+					popupTemplate.find('.number-feature').slideDown();
+					loadNumberDetails(selectedNumber);
+				} else {
+					popupTemplate.find('.number-feature').slideUp();
 				}
+			});
 
-				if(outboundCallerId && outboundCallerId.length > 0) {
-					account.caller_id.external = {
-						number: outboundCallerId
+			emergencyZipcodeInput.on('blur', function() {
+				$.getJSON('http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?', { postalcode: $(this).val() }, function(response) {
+					if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
+						emergencyCityInput.val(response.postalcodes[0].placeName);
+						emergencyStateInput.val(response.postalcodes[0].adminName1);
+					}
+				});
+			});
+
+			popupTemplate.find('.save').on('click', function() {
+				var callerIdNumber = callerIdNumberSelect.val(),
+					e911Form = popupTemplate.find('.emergency-form > form'),
+					updateAccount = function() {
+						self.myOfficeUpdateAccount(account, function(updatedAccount) {
+							popup.dialog('close').remove();
+							self.myOfficeRender({
+								parent: parent
+							});
+						});
 					};
+				if(callerIdNumber) {
+					if(monster.ui.valid(e911Form)) {
+						var callerIdName = callerIdNameInput.val();
+
+						account.caller_id = $.extend(true, {}, account.caller_id, {
+							external: {
+								number: callerIdNumber
+							},
+							emergency: {
+								number: callerIdNumber
+							}
+						});
+
+						self.myOfficeGetNumber(callerIdNumber, function(numberData) {
+							if(callerIdNumber) {
+								$.extend(true, numberData, { cnam: { display_name: callerIdName } });
+							} else {
+								delete numberData.cnam;
+							}
+
+							$.extend(true, numberData, {
+								dash_e911: form2object(e911Form[0])
+							});
+
+							self.myOfficeUpdateNumber(numberData, function(data) {
+								updateAccount();
+							});
+						});
+					}
 				} else {
 					delete account.caller_id.external;
-				}
-
-				if(emergencyCallerId && emergencyCallerId.length > 0) {
-					account.caller_id.emergency = {
-						number: emergencyCallerId
-					};
-				} else {
 					delete account.caller_id.emergency;
+					updateAccount();
 				}
+			});
 
-				self.myOfficeUpdateAccount(account, function(updatedAccount) {
-					popup.dialog('close').remove();
-					self.myOfficeRender({
-						parent: parent
-					});
-				});
+			loadNumberDetails(callerIdNumberSelect.val());
+		},
+
+		myOfficeGetNumber: function(number, success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.myOffice.getNumber',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(data, status) {
+					success && success(data.data);
+				},
+				error: function(data, status) {
+					error && error(data);
+				}
+			});
+		},
+
+		myOfficeUpdateNumber: function(numberData, success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.myOffice.updateNumber',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(numberData.id),
+					data: numberData
+				},
+				success: function(data, status) {
+					success && success(data.data);
+				},
+				error: function(data, status) {
+					error && error(data);
+				}
 			});
 		},
 

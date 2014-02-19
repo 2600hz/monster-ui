@@ -83,6 +83,7 @@
 	height: 50px;
 	line-height: 50px;
 	border-bottom: solid 1px #aaa;
+	border-top: solid 1px #aaa;
 	padding: 0 10px;
 	margin-bottom: 20px;
 }
@@ -162,6 +163,9 @@
 	background-image: -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image: linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	color: #7A7F81;
+}
+#myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row.fax-number-row {
+    display: none; /*Hiding Fax temporarily*/
 }
 #myoffice_container .dashboard-right-content .dashboard-box > * {
 	border-bottom: solid 1px #c0c0c0;
@@ -297,4 +301,26 @@
 	margin-left: 10px;
 	padding-left: 13px;
 	padding-right: 13px;
+}
+
+/********** Caller ID Popup **********/
+#my_office_caller_id_popup .emergency-form {
+    margin-top: 15px;
+}
+#my_office_caller_id_popup .emergency-form form {
+    margin: 0px;
+}
+#my_office_caller_id_popup .emergency-form label {
+    margin: 0;
+}
+#my_office_caller_id_popup .emergency-form label.monster-invalid {
+    margin: 5px 0 0 5px;
+    display: inline-block;
+}
+#my_office_caller_id_popup .emergency-form-label {
+    display: inline-block;
+    width: 120px;
+}
+#my_office_caller_id_popup .caller-id-name {
+    margin-top: 5px;
 }

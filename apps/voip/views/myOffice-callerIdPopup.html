@@ -1,41 +1,19 @@
-<div class="feature-popup-container" data-feature="caller_id">
-	<div class="feature-popup-title">
+<div id="my_office_caller_id_popup" class="feature-popup-container">
+	<!-- <div class="feature-popup-title">
 		<div class="feature-icon-wrapper">
 			<i class="icon-user"></i>
 		</div>
 		{{ i18n.myOffice.callerId.headline }}
-	</div>
+	</div> -->
 
 	<div class="content">
 		<div>
-			{{ i18n.myOffice.callerId.outboundDropdownLabel }}
-			<select class="caller-id-select outbound">
-				<option value="">None</option>
+			{{ i18n.myOffice.callerId.numberLabel }}
+			<select class="caller-id-select">
+				<option{{#compare selectedMainNumber "===" "none"}} selected{{/compare}} value="">None</option>
 				{{#each mainNumbers}}
 					<option{{#compare ../selectedMainNumber "===" this.number}} selected{{/compare}} value="{{this.number}}">{{formatPhoneNumber this.number}}</option>
 				{{/each}}
-			</select>
-		</div>
-		<div>
-			{{ i18n.myOffice.callerId.emergencyDropdownLabel }}
-			<select class="caller-id-select emergency">
-				<option value="">None</option>
-				{{#if emergencyMainNumbers.length}}
-				<optgroup label="From Main Numbers">
-					{{#each emergencyMainNumbers}}
-						<option{{#compare ../selectedEmergencyNumber "===" this}} selected{{/compare}} value="{{this}}">{{formatPhoneNumber this}}</option>
-					{{/each}}
-				</optgroup>
-				<optgroup label="From the Account">
-					{{#each otherEmergencyNumbers}}
-						<option{{#compare ../selectedEmergencyNumber "===" this}} selected{{/compare}} value="{{this}}">{{formatPhoneNumber this}}</option>
-					{{/each}}
-				</optgroup>
-				{{else}}
-					{{#each otherEmergencyNumbers}}
-						<option{{#compare ../selectedEmergencyNumber "===" this}} selected{{/compare}} value="{{this}}">{{formatPhoneNumber this}}</option>
-					{{/each}}
-				{{/if}}
 			</select>
 		</div>
 
@@ -44,8 +22,63 @@
 				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
 			</div>
 			<div class="text-wrapper">
-				<p>{{ i18n.myOffice.callerId.help1 }}</p>
-				<p>{{ i18n.myOffice.callerId.help2 }}</p>
+				<p>{{ i18n.myOffice.callerId.numberHelp }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="content number-feature" {{#compare selectedMainNumber '===' 'none'}}style="display:none;"{{/compare}}>
+		<div>
+			{{ i18n.myOffice.callerId.nameLabel }}
+			<input type="text" class="caller-id-name">
+		</div>
+
+		<div class="help-box gray-box">
+			<div class="wrapper-icon">
+				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+			</div>
+			<div class="text-wrapper">
+				<p>{{ i18n.myOffice.callerId.nameHelp }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="content number-feature" {{#compare selectedMainNumber '===' 'none'}}style="display:none;"{{/compare}}>
+		<div>
+			<div>{{ i18n.myOffice.callerId.emergencyLabel }}</div>
+			<div class="emergency-form">
+				<form>
+					<label>
+						<span class="emergency-form-label">{{ i18n.myOffice.callerId.emergencyZipcode }}</span>
+						<input required name="postal_code" type="text" class="caller-id-emergency-zipcode">
+					</label>
+					<label>
+						<span class="emergency-form-label">{{ i18n.myOffice.callerId.emergencyAddress1 }}</span>
+						<input required name="street_address" type="text" class="caller-id-emergency-address1">
+					</label>
+					<label>
+						<span class="emergency-form-label">{{ i18n.myOffice.callerId.emergencyAddress2 }}</span>
+						<input name="extended_address" type="text" class="caller-id-emergency-address2">
+					</label>
+					<label>
+						<span class="emergency-form-label">{{ i18n.myOffice.callerId.emergencyCity }}</span>
+						<input required name="locality" type="text" class="caller-id-emergency-city">
+					</label>
+					<label>
+						<span class="emergency-form-label">{{ i18n.myOffice.callerId.emergencyState }}</span>
+						<input required name="region" type="text" class="caller-id-emergency-state">
+					</label>
+				</form>
+			</div>
+		</div>
+
+		<div class="help-box gray-box">
+			<div class="wrapper-icon">
+				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+			</div>
+			<div class="text-wrapper">
+				<p>{{ i18n.myOffice.callerId.emergencyHelp1 }}</p>
+				<p>{{ i18n.myOffice.callerId.emergencyHelp2 }}</p>
 			</div>
 		</div>
 	</div>
