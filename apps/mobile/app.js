@@ -17,8 +17,9 @@ define(function(require){
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
+				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				url: 'accounts/{accountId}/devices/{activationId}',
+				verb: 'POST'
 			},
 			'mobile.listActivations': {
 				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
@@ -37,13 +38,11 @@ define(function(require){
 			},
 			'mobile.checkCoverage': {
 				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
-				//apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
 				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
-				//apiRoot: 'http://10.26.0.200/sprint/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -118,7 +117,8 @@ define(function(require){
 
 			monster.ui.validate(template.find('#form_activation'));
 
-			self.bindEditEvents(template);
+			self.bindEditEvents(template, data);
+			console.log(data);
 
 			(parent)
 				.empty()
@@ -153,8 +153,9 @@ define(function(require){
 			});
 		},
 
-		bindEditEvents: function(template) {
+		bindEditEvents: function(template, data) {
 			var self = this;
+			console.log(data);
 
 			template.find('#activate_sprint_phone').on('click', function(e) {
 				if(monster.ui.valid(template.find('#form_activation'))) {
@@ -180,11 +181,13 @@ define(function(require){
 					var formData = form2object('form_activation'),
 				    	formattedData = self.cleanEditData(formData);
 
-					/*self.updatePhone(formattedData, function(device) {
-						var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device[0].name });
+				    formattedData = $.extend(true, data, formattedData);
+
+					self.updatePhone(formattedData, function(device) {
+						var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
 
 						toastr.success(template);
-					});*/
+					});
 				}
 			});
 
@@ -304,6 +307,22 @@ define(function(require){
 		},
 
 		//utils
+		updatePhone: function(data, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'mobile.updatePhone',
+				data: {
+					accountId: self.accountId,
+					activationId:  encodeURIComponent(data.mdn),
+					data: data
+				},
+				success: function(device) {
+					callback && callback(device);
+				}
+			});
+		},
+
 		activatePhone: function(data, callback) {
 			var self = this;
 

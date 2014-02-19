@@ -1,5 +1,6 @@
 {
 	"activationSuccess": "{{deviceName}} has been activated, congratulations!",
+	"updateSuccess": "{{deviceName}} has been successfully updated!",
 
 	"checkView": {
 		"check": "Check",
@@ -57,7 +58,8 @@
 		"voiceRouting": {
 			"inbound": "Inbound Voice Routing",
 			"outbound": "Outbound Voice Routing",
-			"url": {
+			"mobile": "Mobile Voice Routing",
+			"uri": {
 				"label": "URI",
 				"placeholder": "sip:222@blah.com"
 			},
