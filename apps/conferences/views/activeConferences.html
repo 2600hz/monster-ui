@@ -1,7 +1,7 @@
 <div id="conferences_information_container">
 	<div id="active_conferences_content">
 		<div class="header">
-			<h1 class="pull-left">Active Conferences</h1>
+			<h1 class="pull-left">{{ i18n.activeConferences }}</h1>
 			<span class="search-box pull-right">
 				<i class="icon-search"></i>
 				<input type="text" class="search-query" placeholder="Search">
@@ -10,9 +10,9 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Conference Name</th>
-					<th class="duration">Elapsed Time</th>
-					<th>View</th>
+					<th>{{ i18n.conferenceNameLabel }}</th>
+					<th class="duration">{{ i18n.elapsedTime }}</th>
+					<th>{{ i18n.view }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,7 +23,7 @@
 					<td class="view-conference"><i class="icon-signin"></i></td>
 				</tr>
 			{{else}}
-				<tr><td colspan="3" class="empty">No conference in progress.</td></tr>
+				<tr><td colspan="3" class="empty">{{ i18n.noConference }}</td></tr>
 			{{/each}}
 			</tbody>
 		</table>

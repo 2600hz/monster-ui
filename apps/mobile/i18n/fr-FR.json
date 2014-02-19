@@ -57,6 +57,7 @@
 		"voiceRouting": {
 			"inbound": "Routage d'appels entrants",
 			"outbound": "Routage d'appels sortants",
+			"mobile": "Routage d'appels mobile",
 			"url": {
 				"label": "URI",
 				"placeholder": "sip:222@blah.com"
