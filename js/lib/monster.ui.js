@@ -49,6 +49,13 @@ define(function(require){
 		return ret;
 	});
 
+	Handlebars.registerHelper('times', function(n, options) {
+		var ret = '';
+		for(var i = 0; i < n; ++i)
+			ret += options.fn(i);
+		return ret;
+	});
+
 	Handlebars.registerHelper('debug', function(optionalValue) {
 		console.log('Current Context');
 		console.log('====================');

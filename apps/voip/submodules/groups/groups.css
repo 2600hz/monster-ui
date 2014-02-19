@@ -5,7 +5,7 @@
 	width: 100%;
 	height: 100%;
 	background-color: #000;
-	opacity: .5;
+	opacity: .3;
 }
 
 #groups_container .groups-header {
@@ -47,6 +47,12 @@
 	text-align: center;
 	font-size: 12px;
 	line-height: 16px;
+}
+
+@-moz-document url-prefix() {
+	#groups_container .groups-header .add-group {
+		line-height: 13px;
+	}
 }
 
 #groups_container .groups-header .add-group i {
@@ -621,8 +627,6 @@
 }
 .feature-popup-container[data-feature="music_on_hold"] .upload-toggle {
 	margin-left: 10px;
-	padding-right: 10px;
-	padding-left: 10px;
 }
 .feature-popup-container[data-feature="music_on_hold"] .upload-div {
 	display: none;

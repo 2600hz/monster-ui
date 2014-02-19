@@ -13,19 +13,13 @@
 		"installed": "My Apps",
 		"resellers": "Resellers Apps",
 		"carriers": "Carriers Apps",
-		"developers": "Developers Apps",
-		"community": "Community Apps"
+		"developers": "Developers Apps"
 	},
 	"permissions": {
 		"title": "Who can use this App?",
 		"all": "All users",
 		"admins": "Admins only",
 		"specific": "Specific users"
-	},
-	"help": {
-		"title": "Help Documentations",
-		"documentation": "View Documentation",
-		"howTo": "View How-To Video"
 	},
 	"selectedUsers": "Selected Users",
 	"selectAll": "Select All",

@@ -114,39 +114,23 @@
 	display: inline-block;
 	padding: 10px;
 	line-height: 50px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	height: 50px;
 }
 
-#strategy_container .element-container .number-element > div:not(:last-of-type) {
-	border-right: solid 1px #dedede;
+#strategy_container .element-container .number-element .features-block .dropdown-toggle {
+	background-color: #ffffff;
+	margin-top: 5px;
+}
+#strategy_container .element-container .number-element .features-block .features > i {
+	display: none;
 }
 
-#strategy_container .element-container .number-element .number {
-	text-align: left;
-	width: 100%;
+#strategy_container .element-container .number-element .features-block .features > i.active {
+	display: inline-block;
 }
 
 #strategy_container .element-container .number-element .number > button {
 	margin: 0px 15px;
-}
-
-#strategy_container .element-container .number-element .country {
-	width: 25%;
-	text-align: center;
-}
-
-#strategy_container .element-container .number-element .options {
-	width: 40%;
-	text-align: right;
-}
-
-#strategy_container .element-container .number-element .options > i {
-	margin-right: 10px;
 }
 
 #strategy_container .element-container .number-element .no-number-error {

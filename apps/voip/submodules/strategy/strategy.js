@@ -105,6 +105,10 @@ define(function(require){
 			'strategy.voicemails.list': {
 				url: 'accounts/{accountId}/vmboxes',
 				verb: 'GET'
+			},
+			'strategy.numbers.list': {
+				url: 'accounts/{accountId}/phone_numbers',
+				verb: 'GET'
 			}
 		},
 
@@ -131,9 +135,11 @@ define(function(require){
 			"MainHolidays"
 		],
 
-		strategyRender: function(container){
+		strategyRender: function(args){
 			var self = this,
-				parent = container || $('#ws_content'),
+				args = args || {},
+				parent = args.parent || $('.right-content'),
+				openElement = args.openElement,
 				templateData = {},
 				template;
 
@@ -157,6 +163,11 @@ define(function(require){
 						self.strategyGetVoicesmailBoxes(function(voicemailBoxes) {
 							callback(null, voicemailBoxes);
 						});
+					},
+					numberFeatures: function(callback) {
+						monster.pub('common.numbers.getListFeatures', function(features) {
+							callback(null, features);
+						});
 					}
 				},
 				function(err, results) {
@@ -174,12 +185,22 @@ define(function(require){
 						.append(template);
 
 					if(!hasMainNumber) {
-						template.find('.element-container:not(.main-number,.strategy-confnum)').hide();
+						template.find('.element-container.strategy-hours,.element-container.strategy-holidays,.element-container.strategy-calls').hide();
 						template.find('.element-container.helper').css('display', 'block');
 						template.find('.element-container.main-number').css('margin-top', '10px');
 					} else {
 						template.find('.element-container.helper').css('display', 'none');
 						template.find('.element-container.main-number').css('margin-top', '0px');
+					}
+
+					if(openElement) {
+						var element = template.find('.element-container.'+openElement+':visible');
+						if(element.length > 0) {
+							self.strategyRefreshTemplate(element, results, function() {
+								element.addClass('open');
+								element.find('.element-content').show();
+							});
+						}
 					}
 				}
 			);
@@ -238,22 +259,30 @@ define(function(require){
 
 				switch(templateName) {
 					case "numbers":
-						var callflow = strategyData.callflows["MainCallflow"],
-							numbers = callflow.numbers,
-							templateData = {
-								numbers: $.map(numbers, function(val, key) {
-									if(val!=="undefined") {
-										return {
-											number: val
-										};
-									}
-								})
-							},
-							template = monster.template(self, 'strategy-'+templateName, templateData);
+						self.strategyListAccountNumbers(function(accountNumbers) {
+							var callflow = strategyData.callflows["MainCallflow"],
+								numbers = callflow.numbers,
+								templateData = {
+									numbers: $.map(numbers, function(val, key) {
+										if(val!=="undefined") {
+											var ret = {
+												number: val,
+												features: $.extend(true, {}, strategyData.numberFeatures)
+											};
+											_.each(accountNumbers[val].features, function(feature) {
+												ret.features[feature].active = 'active';
+											});
+											return ret;
+										}
+									}),
+									listFeatures: strategyData.numberFeatures
+								},
+								template = monster.template(self, 'strategy-'+templateName, templateData);
 
-						container.find('.element-content').empty()
-														  .append(template);
-						callback && callback();
+							container.find('.element-content').empty()
+															  .append(template);
+							callback && callback();
+						});
 						break;
 					case "confnum":
 						var callflow = strategyData.callflows["MainConference"],
@@ -561,6 +590,52 @@ define(function(require){
 						refreshNumbersHeader(parentContainer);
 						self.strategyRefreshTemplate(parentContainer, strategyData);
 					});
+				}
+			});
+
+			container.on('click', '.number-element .callerId-number', function() {
+				var cnamCell = $(this).parents('.number-element').first(),
+					phoneNumber = cnamCell.find('.remove-number').data('number');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.cnam))) {
+									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
+								}
+								else {
+									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.callerId.renderPopup', args);
+				}
+			});
+
+			container.on('click', '.number-element .e911-number', function() {
+				var e911Cell = $(this).parents('.number-element').first(),
+					phoneNumber = e911Cell.find('.remove-number').data('number');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if(!($.isEmptyObject(data.data.dash_e911))) {
+									e911Cell.find('.features i.feature-dash_e911').addClass('active');
+								}
+								else {
+									e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.e911.renderPopup', args);
 				}
 			});
 		},
@@ -2026,6 +2101,19 @@ define(function(require){
 				success: function(data, status) {
 					data.data.sort(function(a,b) { return (a.name.toLowerCase() > b.name.toLowerCase()); });
 					callback(data.data);
+				}
+			});
+		},
+
+		strategyListAccountNumbers: function(callback) {
+			var self = this;
+			monster.request({
+				resource: 'strategy.numbers.list',
+				data: {
+					accountId: self.accountId,
+				},
+				success: function(data, status) {
+					callback(data.data.numbers);
 				}
 			});
 		},

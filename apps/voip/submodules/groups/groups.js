@@ -345,6 +345,27 @@ define(function(require){
 					});
 				});
 			});
+
+			$('body').on('click', '#groups_container_overlay', function() {
+				template.find('.edit-groups').slideUp("400", function() {
+					$(this).empty();
+				});
+
+				self.groupsRemoveOverlay();
+
+				template.find('.grid-cell.active').css({
+					'position': 'inline-block',
+					'z-index': '0'
+				});
+
+				template.find('.grid-row.active').parent().siblings('.edit-groups').css({
+					'position': 'block',
+					'z-index': '0'
+				});
+
+				template.find('.grid-cell.active').removeClass('active');
+				template.find('.grid-row.active').removeClass('active');
+			});
 		},
 
 		groupsCreationMergeData: function(data, template) {
