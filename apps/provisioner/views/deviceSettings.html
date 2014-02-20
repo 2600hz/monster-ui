@@ -1,0 +1,77 @@
+<div class="provisioner-container">
+	<div class="device-settings">
+		<div class="settings-header">
+			<form class="form-inline">
+				<div class="row-fluid">
+					<div class="span3">
+						<label for="manufacturer">
+							Brand
+							<select name="manufacturer">
+							{{#each brand_list }}
+								<option value="{{this}}"{{#compare this '==' ../brand }} selected{{/compare}}>{{this}}</option>
+							{{/each}}
+							</select>
+						</label>
+					</div>
+					<div class="span3">
+						<label for="model">
+							Model
+							<select name="model">
+							{{#each model_list}}
+								<option value="{{name}}"{{#compare name '==' ../model }} selected{{/compare}} data-brand="{{../brand}}" data-family="{{family}}">{{name}}</option>
+							{{/each}}
+							</select>
+						</label>
+					</div>
+					<div class="span3">
+						<label for="name">
+							Device's name <input type="text" id="name" value="{{name}}">
+						</label>
+					</div>
+					<div class="span3">
+						<label for="mac">
+							MAC Address <input type="text" id="mac"{{#if mac_address}} disabled{{/if}} value="{{mac_address}}">
+						</label>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="settings-content">
+			<div class="nav nav-bar">
+			{{#each settings}}
+				<a class="switch-link" data-key="{{@key}}">{{text}}</a>
+			{{/each}}
+			</div>
+			<div class="container" id="form2object">
+			{{#each settings}}
+				<form class="form-horizontal content" data-key="{{@key}}">
+				{{#if iterate}}
+					<div class="nav nav-bar">
+					{{#each data}}
+						<a class="switch-sublink" data-key="{{@index}}">{{@index}}</a>
+					{{/each}}
+					</div>
+					{{#each data}}
+					<div class="sub-content" data-key="{{@index}}">
+						{{#each this}}
+						<div class="{{@key}}">
+							<legend>{{text}}</legend>
+						</div>
+						{{/each}}
+					</div>
+					{{/each}}
+				{{else}}
+					{{#each data}}
+					<div class="{{@key}}">
+						<legend>{{text}}</legend>
+					</div>
+					{{/each}}
+				{{/if}}
+				</form>
+			{{/each}}
+				<button class="btn btn-danger pull-left cancel">Cancel</button>
+				<button class="btn btn-success pull-right save">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
