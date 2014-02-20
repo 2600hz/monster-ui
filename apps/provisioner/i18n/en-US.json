@@ -6,12 +6,5 @@
 	"go": "go",
 	"close" : "Close",
 	"add": "Add",
-	"noDevices": "There are no spare devices in this account.",
-	"sip": "SIP",
-	"cellphone": "Cellphone",
-	"smartphone": "Smartphone",
-	"softphone": "Softphone",
-	"landline": "Landline",
-	"fax": "Fax",
-	"ata": "ATA"
+	"noDevices": "There are no devices in this account."
 }

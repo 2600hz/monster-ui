@@ -4,7 +4,7 @@ define(function(require){
 		mask = require('mask'),
 		monster = require('monster');
 
-	var apiRoot = 'http://10.26.0.154:8888/Provisioner-2600hz';
+	var apiRoot = monster.config.api.provisioner;
 
 	var app = {
 
@@ -19,11 +19,11 @@ define(function(require){
 			// 	'url': '/api/accounts',
 			// 	'verb': 'PUT'
 			// },
-			// 'provisioner.getAccount': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/accounts/{account_id}',
-			// 	'verb': 'GET'
-			// },
+			'provisioner.getAccount': {
+				'apiRoot': apiRoot,
+				'url': '/api/accounts/{account_id}',
+				'verb': 'GET'
+			},
 			'provisioner.getAccountsByProvider': {
 				'apiRoot': apiRoot,
 				'url': '/api/accounts/provider/{provider_id}',
@@ -147,7 +147,7 @@ define(function(require){
 
 			parent = parent || $('#ws-content');
 
-			self.getAccountsByProvider('', function(data) {
+			self.getAccountsByProvider(function(data) {
 				dataToTemplate = data;
 
 				self.getDevicesByAccount(dataToTemplate.data[0].id, function(data) {
@@ -197,10 +197,12 @@ define(function(require){
 							section.find('.devices-wrapper')
 								.empty()
 								.append($(monster.template(self, 'devicesWrapper', { devices: data })));
-						});
-					}
 
-					section.addClass('active');
+							section.addClass('active');
+						});
+					} else {
+						section.addClass('active');
+					}
 				}
 			});
 
@@ -525,16 +527,13 @@ define(function(require){
 					option,
 					section,
 					dataForm = form2object('form2object'),
-					name = parent.find('#name').val(),
-					newMacAddress = parent.find('#mac').val().replace(/:/g, ''),
-					model = parent.find('select[name="model"] option:selected').attr('value'),
-					brand = parent.find('select[name="model"] option:selected').data('brand'),
-					family = parent.find('select[name="model"] option:selected').data('family');
+					deviceExsit = deviceData.mac_address ? true : false,
+					newMacAddress = parent.find('#mac').val().replace(/:/g, '');
 
 				for ( section in dataForm ) {
 					if ( Array.isArray(dataForm[section]) ) {
 						for ( index in dataForm[section] ) {
-							for ( option in dataForm[section][index]) {
+							for ( option in dataForm[section][index] ) {
 								for ( field in dataForm[section][index][option] ) {
 									if ( dataForm[section][index][option][field] === '' ) {
 										dataForm[section][index] = null;
@@ -549,27 +548,19 @@ define(function(require){
 					}
 				}
 
-				if ( deviceData.mac_address ) {
-					deviceData = {
-						brand: brand,
-						family: family,
-						model: model,
-						name: name,
+				deviceData = {
+						brand: parent.find('select[name="model"] option:selected').data('brand'),
+						family: parent.find('select[name="model"] option:selected').data('family'),
+						model: parent.find('select[name="model"] option:selected').attr('value'),
+						name: parent.find('#name').val(),
 						settings: dataForm
 					};
 
+				if ( deviceExsit ) {
 					self.updateDevice(accountId, macAddress, deviceData, function() {
 						self.render(parent);
 					});
 				} else {
-					deviceData = {
-						brand: brand,
-						family: family,
-						model: model,
-						name: name,
-						settings: dataForm
-					};
-
 					self.addDevice(accountId, newMacAddress, deviceData, function() {
 						self.render(parent);
 					});
@@ -587,23 +578,40 @@ define(function(require){
 
 
 		/* Accounts Requests */
-		getAccountsByProvider: function(providerId, callback) {
+		getAccount: function(accountId, callback) {
 			var self = this;
-			
-			// providerId = monster.apps.auth.resellerId;
-			providerId = '383ce0b13d6592d94ad6e78aea0001f6';
+
+			monster.request({
+				resource: 'provisioner.getAccount',
+				data: {
+					account_id: accountId
+				},
+				success: function(data, status) {
+					callback(data);
+				}
+			})
+		},
+		getAccountsByProvider: function(callback) {
+			var self = this;
 
 			monster.request({
 				resource: 'provisioner.getAccountsByProvider',
 				data: {
-					provider_id: providerId
+					provider_id: self.accountId
 				},
 				success: function(data, status) {
 					callback(data);
 				},
 				error: function(data, status) {
-					if ( data.error.code == 404 ) {
-						monster.ui.alert('error', 'Your account does not have the provider role!');
+					if ( data.error.code == 401 ) {
+						self.getAccount(self.accountId, function(data) {
+							var _data = data;
+
+							_data.id = self.accountId;
+							data = { data: [_data] };
+
+							callback(data);
+						});
 					} else {
 						monster.ui.alert('error', 'Francis\' Server is Down!');
 					}
@@ -612,10 +620,7 @@ define(function(require){
 		},
 		/* Devices Requests */
 		addDevice: function(accountId, macAddress, data, callback) {
-			var self = this,
-				providerId = monster.apps.auth.resellerId;
-
-			providerId = '383ce0b13d6592d94ad6e78aea0001f6';
+			var self = this;
 
 			monster.request({
 				resource: 'provisioner.addDevice',
@@ -625,7 +630,7 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					self.generateFile(macAddress, providerId, function() {
+					self.generateFile(macAddress, function() {
 						callback();
 					});
 				}
@@ -659,10 +664,7 @@ define(function(require){
 			});
 		},
 		updateDevice: function(accountId, macAddress, data, callback) {
-			var self = this,
-				providerId = monster.apps.auth.resellerId;
-
-			providerId = '383ce0b13d6592d94ad6e78aea0001f6';
+			var self = this;
 
 			monster.request({
 				resource: 'provisioner.updateDevice',
@@ -672,7 +674,7 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					self.generateFile(macAddress, providerId, function() {
+					self.generateFile(macAddress, function() {
 						callback();
 					});
 				}
@@ -693,11 +695,11 @@ define(function(require){
 			});
 		},
 		/* Files Requests */
-		generateFile: function(macAddress, providerId, callback) {
+		generateFile: function(macAddress, callback) {
 			var self = this,
 				data = {
 					mac_address: macAddress,
-					provider_id: providerId
+					settings: {}
 				};
 
 			monster.request({
@@ -742,26 +744,24 @@ define(function(require){
 		getModelsByBrand: function(brand, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.getBrands',
-				data: {
-				},
-				success: function(data, status) {
-					var modelsList = { data: [] };
+			self.getBrands(function(data) {
+				var key,
+					model,
+					family,
+					modelsList = { data: [] };
 
-					for ( var key in data.data ) {
-						if ( brand == key) {
-							for ( var family in data.data[key].families ) {
-								for ( var model in data.data[key].families[family].models ) {
-									data.data[key].families[family].models[model].family = family;
-									modelsList.data.push(data.data[key].families[family].models[model]);
-								}
+				for ( key in data ) {
+					if ( brand == key) {
+						for ( family in data[key].families ) {
+							for ( model in data[key].families[family].models ) {
+								data[key].families[family].models[model].family = family;
+								modelsList.data.push(data[key].families[family].models[model]);
 							}
 						}
 					}
-
-					callback(modelsList);
 				}
+
+				callback(modelsList);
 			});
 		}
 	};
