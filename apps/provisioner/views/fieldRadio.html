@@ -3,7 +3,7 @@
 	<div class="controls">
 	{{#each data}}
 		<label for="{{../path}}.{{name}}" class="radio inline">
-			<input id="{{../path}}.{{name}}" name="{{../path}}" type="{{../type}}"{{#if value}} checked{{/if}}> {{text}}
+			<input id="{{../path}}.{{name}}" name="{{../path}}" type="{{../type}}" value="{{name}}"{{#if name}} checked{{/if}}>{{text}}
 		</label>
 	{{/each}}
 	</div>
