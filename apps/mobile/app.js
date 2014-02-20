@@ -127,6 +127,8 @@ define(function(require){
 			if ($("#nativeRouting").is(":checked"))
 				$("#kazoorouting").hide();	
 
+			$("#editTabs").tabs();
+
 		},
 
 		bindEvents: function(template) {

@@ -6,286 +6,300 @@
 
 	<div class="form-wrapper">
 		<form class="form-horizontal" id="form_activation">
-			<div>
-				<h4>{{i18n.editView.informations}}</h4>
-				<div class="control-group">
-					<label class="control-label" for="device_name">{{i18n.editView.deviceName.label}}</label>
-					<div class="controls">
-						<input required type="text" id="device_name" name="device_name" value="{{device_name}}" placeholder="{{i18n.editView.deviceName.placeholder}}"></input>
+			<div id="editTabs">
+				<ul>
+					<li><a href="#editTabs1">{{i18n.editView.informations}}</a></li>
+					<li><a href="#editTabs2">{{i18n.editView.features}}</a></li>
+					<li><a href="#editTabs3">{{i18n.editView.miscellaneous}}</a></li>
+					<li><a href="#editTabs4">{{i18n.editView.voiceRouting.general}}</a></li>
+					<li><a href="#editTabs5">{{i18n.editView.sprintInfos.title}}</a></li>
+				</ul>
+			 
+			 	<div id="editTabs1">
+					<h4>{{i18n.editView.informations}}</h4>
+					<div class="control-group">
+						<label class="control-label" for="device_name">{{i18n.editView.deviceName.label}}</label>
+						<div class="controls">
+							<input required type="text" id="device_name" name="device_name" value="{{device_name}}" placeholder="{{i18n.editView.deviceName.placeholder}}"></input>
+						</div>
+					</div>
+
+					{{#if mdn}}
+						<div class="control-group">
+							<label class="control-label" for="mdn">{{i18n.editView.mdn.label}}</label>
+							<div class="controls">
+								{{mdn}}
+							</div>
+						</div>
+					{{/if}}
+
+					{{#if mdn}}
+						<div class="control-group">
+							<label class="control-label" for="esnDec">{{i18n.editView.esn.label}}</label>
+							<div class="controls">
+								{{esn}}
+							</div>
+						</div>
+					{{else}}
+						<div class="control-group">
+							<label class="control-label" for="esn">{{i18n.editView.esn.label}}</label>
+							<div class="controls">
+								<input required type="text" id="esn" name="esn"></input>
+							</div>
+						</div>
+					{{/if}}
+					<!--
+					{{#if mdn}}
+						<div class="control-group">
+							<label class="control-label" for="esnDec">{{i18n.editView.esnDec.label}}</label>
+							<div class="controls">
+								{{esn_dec}}
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="esnHexa">{{i18n.editView.esnHexa.label}}</label>
+							<div class="controls">
+								{{esn_hexa}}
+							</div>
+						</div>
+					{{else}}
+						<div class="control-group">
+							<label class="control-label" for="esn">{{i18n.editView.esn.label}}</label>
+							<div class="controls">
+								<input required type="text" id="esn" name="extra.esn"></input>
+							</div>
+						</div>
+					{{/if}}-->
+
+					<div class="control-group">
+						<label class="control-label" for="icc">{{i18n.editView.icc.label}}</label>
+						<div class="controls">
+							{{#if mdn}}
+								{{icc}}
+							{{else}}
+								<input type="text" id="icc" name="icc" value="{{icc}}" placeholder="{{i18n.editView.icc.placeholder}}"></input>
+							{{/if}}
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="zipCode">{{i18n.editView.zipCode.label}}</label>
+						<div class="controls">
+							{{#if mdn}}
+								{{zip_code}}
+							{{else}}
+								<input required type="text" id="zipCode" name="zip_code" value="{{zip_code}}" placeholder="{{i18n.editView.zipCode.placeholder}}"></input>
+							{{/if}}
+						</div>
 					</div>
 				</div>
+				<div id="editTabs2">
+					<h4>{{i18n.editView.features}}</h4>
 
-				{{#if mdn}}
 					<div class="control-group">
-						<label class="control-label" for="mdn">{{i18n.editView.mdn.label}}</label>
 						<div class="controls">
-							{{mdn}}
-						</div>
-					</div>
-				{{/if}}
+							<label>
+								<input type="checkbox" id="smsInboundEnabled" name="sms.inbound.enabled"{{#if sms.inbound.enabled}} checked{{/if}}></input>
+								{{i18n.editView.enable.inbound}}
+							</label>
 
-				{{#if mdn}}
-					<div class="control-group">
-						<label class="control-label" for="esnDec">{{i18n.editView.esn.label}}</label>
-						<div class="controls">
-							{{esn}}
-						</div>
-					</div>
-				{{else}}
-					<div class="control-group">
-						<label class="control-label" for="esn">{{i18n.editView.esn.label}}</label>
-						<div class="controls">
-							<input required type="text" id="esn" name="esn"></input>
-						</div>
-					</div>
-				{{/if}}
-				<!--
-				{{#if mdn}}
-					<div class="control-group">
-						<label class="control-label" for="esnDec">{{i18n.editView.esnDec.label}}</label>
-						<div class="controls">
-							{{esn_dec}}
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="esnHexa">{{i18n.editView.esnHexa.label}}</label>
-						<div class="controls">
-							{{esn_hexa}}
-						</div>
-					</div>
-				{{else}}
-					<div class="control-group">
-						<label class="control-label" for="esn">{{i18n.editView.esn.label}}</label>
-						<div class="controls">
-							<input required type="text" id="esn" name="extra.esn"></input>
-						</div>
-					</div>
-				{{/if}}-->
+							<label>
+								<input type="checkbox" id="smsOutboundEnabled" name="sms.outbound.enabled"{{#if sms.outbound.enabled}} checked{{/if}}></input>
+								{{i18n.editView.enable.outbound}}
+							</label>
 
-				<div class="control-group">
-					<label class="control-label" for="icc">{{i18n.editView.icc.label}}</label>
-					<div class="controls">
-						{{#if mdn}}
-							{{icc}}
-						{{else}}
-							<input type="text" id="icc" name="icc" value="{{icc}}" placeholder="{{i18n.editView.icc.placeholder}}"></input>
-						{{/if}}
+							<label>
+								<input type="checkbox" id="mms" name="sms.mms"{{#if sms.mms}} checked{{/if}}></input>
+								{{i18n.editView.enable.mms}}
+							</label>
+
+							<label>
+								<input type="checkbox" id="data" name="data.enabled"{{#if data.enabled}} checked{{/if}}></input>
+								{{i18n.editView.enable.data}}
+							</label>
+
+							<label>
+								<input type="checkbox" id="data" name="voice.enabled"{{#if voice.enabled}} checked{{/if}}></input>
+								{{i18n.editView.enable.voice}}
+							</label>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="technology">{{i18n.editView.technologies.label}}</label>
+							<div class="controls">
+								<select id="technology" name="data.technology">
+									<option value="3g"{{#compare data.technology "===" "3g"}} selected{{/compare}}>{{i18n.editView.technologies.3g}}</option>
+									<option value="wimax"{{#compare data.technology "===" "wimax"}} selected{{/compare}}>{{i18n.editView.technologies.wimax}}</option>
+									<option value="lte"{{#compare data.technology "===" "lte"}} selected{{/compare}}>{{i18n.editView.technologies.lte}}</option>
+									<option value="spark"{{#compare data.technology "===" "spark"}} selected{{/compare}}>{{i18n.editView.technologies.spark}}</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="zipCode">{{i18n.editView.zipCode.label}}</label>
-					<div class="controls">
-						{{#if mdn}}
-							{{zip_code}}
-						{{else}}
-							<input required type="text" id="zipCode" name="zip_code" value="{{zip_code}}" placeholder="{{i18n.editView.zipCode.placeholder}}"></input>
-						{{/if}}
-					</div>
-				</div>
-
-				<h4>{{i18n.editView.features}}</h4>
-
-				<div class="control-group">
-					<div class="controls">
-						<label>
-							<input type="checkbox" id="smsInboundEnabled" name="sms.inbound.enabled"{{#if sms.inbound.enabled}} checked{{/if}}></input>
-							{{i18n.editView.enable.inbound}}
-						</label>
-
-						<label>
-							<input type="checkbox" id="smsOutboundEnabled" name="sms.outbound.enabled"{{#if sms.outbound.enabled}} checked{{/if}}></input>
-							{{i18n.editView.enable.outbound}}
-						</label>
-
-						<label>
-							<input type="checkbox" id="mms" name="sms.mms"{{#if sms.mms}} checked{{/if}}></input>
-							{{i18n.editView.enable.mms}}
-						</label>
-
-						<label>
-							<input type="checkbox" id="data" name="data.enabled"{{#if data.enabled}} checked{{/if}}></input>
-							{{i18n.editView.enable.data}}
-						</label>
-
-						<label>
-							<input type="checkbox" id="data" name="voice.enabled"{{#if voice.enabled}} checked{{/if}}></input>
-							{{i18n.editView.enable.voice}}
-						</label>
-					</div>
-
+				<div id="editTabs3">
+					<h4>{{i18n.editView.miscellaneous}}</h4>
 					<div class="control-group">
-						<label class="control-label" for="technology">{{i18n.editView.technologies.label}}</label>
+						<label class="control-label" for="method">{{i18n.editView.method.title}}</label>
 						<div class="controls">
-							<select id="technology" name="data.technology">
-								<option value="3g"{{#compare data.technology "===" "3g"}} selected{{/compare}}>{{i18n.editView.technologies.3g}}</option>
-								<option value="wimax"{{#compare data.technology "===" "wimax"}} selected{{/compare}}>{{i18n.editView.technologies.wimax}}</option>
-								<option value="lte"{{#compare data.technology "===" "lte"}} selected{{/compare}}>{{i18n.editView.technologies.lte}}</option>
-								<option value="spark"{{#compare data.technology "===" "spark"}} selected{{/compare}}>{{i18n.editView.technologies.spark}}</option>
+							<select id="method" name="extra.method">
+								<option value="redirect"{{#compare extra.method "===" "redirect"}} selected{{/compare}}>{{i18n.editView.method.redirect}}</option>
+								<option value="response"{{#compare extra.method "===" "response"}} selected{{/compare}}>{{i18n.editView.method.response}}</option>
 							</select>
 						</div>
 					</div>
-				</div>
 
-				<h4>{{i18n.editView.miscellaneous}}</h4>
-				<div class="control-group">
-					<label class="control-label" for="method">{{i18n.editView.method.title}}</label>
-					<div class="controls">
-						<select id="method" name="extra.method">
-							<option value="redirect"{{#compare extra.method "===" "redirect"}} selected{{/compare}}>{{i18n.editView.method.redirect}}</option>
-							<option value="response"{{#compare extra.method "===" "response"}} selected{{/compare}}>{{i18n.editView.method.response}}</option>
-						</select>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="methodValue">{{i18n.editView.method.value}}</label>
-					<div class="controls">
-						<input type="text" id="methodValue" name="extra.methodValue" value="{{extra.methodValue}}"></input>
-					</div>
-				</div>
-
-				<h4>{{i18n.editView.voiceRouting.general}}</h4>
-				<div class="control-group">
-						<label>
-							<input type="checkbox" id="nativeRouting" name="voice.nativeRouting"{{#if voice.native}} checked{{/if}}></input>
-							{{i18n.editView.voiceRouting.native}}
-						</label>
-				</div>
-
-				<div id="kazoorouting">
-					<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
 					<div class="control-group">
-						<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+						<label class="control-label" for="methodValue">{{i18n.editView.method.value}}</label>
 						<div class="controls">
-							<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="mobileUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-						<div class="controls">
-							<input type="text" id="mobileUsername" name="voice.kazoo.routing.username" value="{{voice.kazoo.routing.username}}"></input>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="mobilePassword">{{i18n.editView.voiceRouting.password.label}}</label>
-						<div class="controls">
-							<input type="text" id="mobilePassword" name="voice.kazoo.routing.password" value="{{voice.kazoo.routing.password}}"></input>
-						</div>
-					</div>
-					
-
-					<button type="button" class="btn btn-primary" id="toggle_advanced_routing">{{i18n.editView.toggleRouting}}</button>
-
-					
-
-
-					<div id="advancedrouting">
-						<h4>{{i18n.editView.voiceRouting.inbound}}</h4>
-						<div class="control-group">
-							<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
-							<div class="controls">
-								<input type="text" id="inboundUrl" name="voice.inbound.routing.uri" value="{{voice.inbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="inboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-							<div class="controls">
-								<input type="text" id="inboundUsername" name="voice.inbound.routing.username" value="{{voice.inbound.routing.username}}"></input>
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="inboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
-							<div class="controls">
-								<input type="text" id="inboundPassword" name="voice.inbound.routing.password" value="{{voice.inbound.routing.password}}"></input>
-							</div>
-						</div>
-
-						<h4>{{i18n.editView.voiceRouting.outbound}}</h4>
-						<div class="control-group">
-							<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
-							<div class="controls">
-								<input type="text" id="outboundUrl" name="voice.outbound.routing.uri" value="{{voice.outbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="outboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-							<div class="controls">
-								<input type="text" id="outboundUsername" name="voice.outbound.routing.username" value="{{voice.outbound.routing.username}}"></input>
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="outboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
-							<div class="controls">
-								<input type="text" id="outboundPassword" name="voice.outbound.routing.password" value="{{voice.outbound.routing.password}}"></input>
-							</div>
+							<input type="text" id="methodValue" name="extra.methodValue" value="{{extra.methodValue}}"></input>
 						</div>
 					</div>
 				</div>
-			</div>
+				<div id="editTabs4">
+					<h4>{{i18n.editView.voiceRouting.general}}</h4>
+					<div class="control-group">
+							<label>
+								<input type="checkbox" id="nativeRouting" name="voice.nativeRouting"{{#if voice.native}} checked{{/if}}></input>
+								{{i18n.editView.voiceRouting.native}}
+							</label>
+					</div>
+
+					<div id="kazoorouting">
+						<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
+						<div class="control-group">
+							<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+							<div class="controls">
+								<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="mobileUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+							<div class="controls">
+								<input type="text" id="mobileUsername" name="voice.kazoo.routing.username" value="{{voice.kazoo.routing.username}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="mobilePassword">{{i18n.editView.voiceRouting.password.label}}</label>
+							<div class="controls">
+								<input type="text" id="mobilePassword" name="voice.kazoo.routing.password" value="{{voice.kazoo.routing.password}}"></input>
+							</div>
+						</div>
+						
+
+						<button type="button" class="btn btn-primary" id="toggle_advanced_routing">{{i18n.editView.toggleRouting}}</button>
+
+						
+
+
+						<div id="advancedrouting">
+							<h4>{{i18n.editView.voiceRouting.inbound}}</h4>
+							<div class="control-group">
+								<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+								<div class="controls">
+									<input type="text" id="inboundUrl" name="voice.inbound.routing.uri" value="{{voice.inbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+								<div class="controls">
+									<input type="text" id="inboundUsername" name="voice.inbound.routing.username" value="{{voice.inbound.routing.username}}"></input>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+								<div class="controls">
+									<input type="text" id="inboundPassword" name="voice.inbound.routing.password" value="{{voice.inbound.routing.password}}"></input>
+								</div>
+							</div>
+
+							<h4>{{i18n.editView.voiceRouting.outbound}}</h4>
+							<div class="control-group">
+								<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+								<div class="controls">
+									<input type="text" id="outboundUrl" name="voice.outbound.routing.uri" value="{{voice.outbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="outboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+								<div class="controls">
+									<input type="text" id="outboundUsername" name="voice.outbound.routing.username" value="{{voice.outbound.routing.username}}"></input>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="outboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+								<div class="controls">
+									<input type="text" id="outboundPassword" name="voice.outbound.routing.password" value="{{voice.outbound.routing.password}}"></input>
+								</div>
+							</div>
+						</div> <!--advanced routing-->
+					</div><!--kazoo routing-->
+				</div><!--editTabs-N-->
+				<div id="editTabs5">
+					{{#if mdn}}
+						<h4>{{i18n.editView.sprintInfos.title}}</h4>
+						<div class="sprint-infos clearfix">
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.imsi}}</div>
+								<div class="value">{{service_info.imsi}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.msid}}</div>
+								<div class="value">{{service_info.msid}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.msl}}</div>
+								<div class="value">{{service_info.msl}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.csa}}</div>
+								<div class="value">{{service_info.csa}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.modelName}}</div>
+								<div class="value">{{service_info.model_name}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.manufacturer}}</div>
+								<div class="value">{{service_info.manufacturer}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.modelNumber}}</div>
+								<div class="value">{{service_info.model_number}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.deviceSerialNumber}}</div>
+								<div class="value">{{service_info.device_serial_number}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.iccSku}}</div>
+								<div class="value">{{service_info.icc_sku}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.activationDate}}</div>
+								<div class="value">{{service_info.activation_date}}</div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.sprintNai}}</div>
+								<div class="value">{{service_info.sprint_nai}} </div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.pricePlan}}</div>
+								<div class="value">{{service_info.price_plan}} </div>
+							</div>
+							<div class="sprint-line">
+								<div class="sprint-label">{{i18n.editView.sprintInfos.services}}</div>
+								<div class="multi-value">
+									{{#each service_info.services}}
+										<div>{{this}} </div>
+									{{/each}}
+								</div>
+							</div>
+						</div>
+					{{/if}}
+				</div><!--editTabs-N-->
+			</div><!--editTabs-->
 		</form>
-
-		{{#if mdn}}
-			<h4>{{i18n.editView.sprintInfos.title}}</h4>
-			<div class="sprint-infos clearfix">
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.imsi}}</div>
-					<div class="value">{{service_info.imsi}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.msid}}</div>
-					<div class="value">{{service_info.msid}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.msl}}</div>
-					<div class="value">{{service_info.msl}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.csa}}</div>
-					<div class="value">{{service_info.csa}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.modelName}}</div>
-					<div class="value">{{service_info.model_name}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.manufacturer}}</div>
-					<div class="value">{{service_info.manufacturer}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.modelNumber}}</div>
-					<div class="value">{{service_info.model_number}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.deviceSerialNumber}}</div>
-					<div class="value">{{service_info.device_serial_number}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.iccSku}}</div>
-					<div class="value">{{service_info.icc_sku}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.activationDate}}</div>
-					<div class="value">{{service_info.activation_date}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.sprintNai}}</div>
-					<div class="value">{{service_info.sprint_nai}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.pricePlan}}</div>
-					<div class="value">{{service_info.price_plan}}</div>
-				</div>
-				<div class="sprint-line">
-					<div class="sprint-label">{{i18n.editView.sprintInfos.services}}</div>
-					<div class="multi-value">
-						{{#each service_info.services}}
-							<div>{{this}}</div>
-						{{/each}}
-					</div>
-				</div>
-			</div>
-		{{/if}}
 
 		<div class="button-wrapper">
 			<button class="btn btn-danger cancel">{{i18n.editView.cancel}}</button>

@@ -104,13 +104,13 @@
 }
 
 .mobile-wrapper#edit_view .form-wrapper {
-	background: #eee;
+	/*background: #eee;
 	border: 1px solid #22CCFF;
 	border-radius: 4px;
-	display: block;
+	padding: 20px 20px;*/
 	margin: 30px auto;
-	padding: 20px 50px;
-	width: 500px;
+	width: 600px;
+	display: block;
 }
 
 .mobile-wrapper#edit_view .form-wrapper label input[type="checkbox"] {
