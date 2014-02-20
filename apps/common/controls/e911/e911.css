@@ -42,6 +42,10 @@
     padding-top: 10px;
 }
 
+.trunkstore_popup.e911 form.form-horizontal .control-group .control-label.remove-btn-container {
+    padding-top: 0;
+}
+
 .trunkstore_popup.e911 form.form-horizontal .control-group .controls {
     margin-left: 160px;
 }
