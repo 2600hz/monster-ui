@@ -127,66 +127,6 @@
 					</div>
 				</div>
 
-				<h4>{{i18n.editView.voiceRouting.inbound}}</h4>
-				<div class="control-group">
-					<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
-					<div class="controls">
-						<input type="text" id="inboundUrl" name="voice.inbound.routing.uri" value="{{voice.inbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-					<div class="controls">
-						<input type="text" id="inboundUsername" name="voice.inbound.routing.username" value="{{voice.inbound.routing.username}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
-					<div class="controls">
-						<input type="text" id="inboundPassword" name="voice.inbound.routing.password" value="{{voice.inbound.routing.password}}"></input>
-					</div>
-				</div>
-
-				<h4>{{i18n.editView.voiceRouting.outbound}}</h4>
-				<div class="control-group">
-					<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
-					<div class="controls">
-						<input type="text" id="outboundUrl" name="voice.outbound.routing.uri" value="{{voice.outbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="outboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-					<div class="controls">
-						<input type="text" id="outboundUsername" name="voice.outbound.routing.username" value="{{voice.outbound.routing.username}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="outboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
-					<div class="controls">
-						<input type="text" id="outboundPassword" name="voice.outbound.routing.password" value="{{voice.outbound.routing.password}}"></input>
-					</div>
-				</div>
-
-				<h4>{{i18n.editView.voiceRouting.mobile}}</h4>
-				<div class="control-group">
-					<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
-					<div class="controls">
-						<input type="text" id="mobileUrl" name="voice.mobile.routing.uri" value="{{voice.mobile.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="mobileUsername">{{i18n.editView.voiceRouting.username.label}}</label>
-					<div class="controls">
-						<input type="text" id="mobileUsername" name="voice.mobile.routing.username" value="{{voice.mobile.routing.username}}"></input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="mobilePassword">{{i18n.editView.voiceRouting.password.label}}</label>
-					<div class="controls">
-						<input type="text" id="mobilePassword" name="voice.mobile.routing.password" value="{{voice.mobile.routing.password}}"></input>
-					</div>
-				</div>
-
 				<h4>{{i18n.editView.miscellaneous}}</h4>
 				<div class="control-group">
 					<label class="control-label" for="method">{{i18n.editView.method.title}}</label>
@@ -202,6 +142,84 @@
 					<label class="control-label" for="methodValue">{{i18n.editView.method.value}}</label>
 					<div class="controls">
 						<input type="text" id="methodValue" name="extra.methodValue" value="{{extra.methodValue}}"></input>
+					</div>
+				</div>
+
+				<h4>{{i18n.editView.voiceRouting.general}}</h4>
+				<div class="control-group">
+						<label>
+							<input type="checkbox" id="nativeRouting" name="voice.nativeRouting"{{#if voice.native}} checked{{/if}}></input>
+							{{i18n.editView.voiceRouting.native}}
+						</label>
+				</div>
+
+				<div id="kazoorouting">
+					<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
+					<div class="control-group">
+						<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+						<div class="controls">
+							<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="mobileUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+						<div class="controls">
+							<input type="text" id="mobileUsername" name="voice.kazoo.routing.username" value="{{voice.kazoo.routing.username}}"></input>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="mobilePassword">{{i18n.editView.voiceRouting.password.label}}</label>
+						<div class="controls">
+							<input type="text" id="mobilePassword" name="voice.kazoo.routing.password" value="{{voice.kazoo.routing.password}}"></input>
+						</div>
+					</div>
+					
+
+					<button type="button" class="btn btn-primary" id="toggle_advanced_routing">{{i18n.editView.toggleRouting}}</button>
+
+					
+
+
+					<div id="advancedrouting">
+						<h4>{{i18n.editView.voiceRouting.inbound}}</h4>
+						<div class="control-group">
+							<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+							<div class="controls">
+								<input type="text" id="inboundUrl" name="voice.inbound.routing.uri" value="{{voice.inbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+							<div class="controls">
+								<input type="text" id="inboundUsername" name="voice.inbound.routing.username" value="{{voice.inbound.routing.username}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+							<div class="controls">
+								<input type="text" id="inboundPassword" name="voice.inbound.routing.password" value="{{voice.inbound.routing.password}}"></input>
+							</div>
+						</div>
+
+						<h4>{{i18n.editView.voiceRouting.outbound}}</h4>
+						<div class="control-group">
+							<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+							<div class="controls">
+								<input type="text" id="outboundUrl" name="voice.outbound.routing.uri" value="{{voice.outbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="outboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+							<div class="controls">
+								<input type="text" id="outboundUsername" name="voice.outbound.routing.username" value="{{voice.outbound.routing.username}}"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="outboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+							<div class="controls">
+								<input type="text" id="outboundPassword" name="voice.outbound.routing.password" value="{{voice.outbound.routing.password}}"></input>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

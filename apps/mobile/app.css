@@ -143,3 +143,8 @@
 	line-height: 20px;
 	width: 300px;
 }
+
+.mobile-wrapper#edit_view #advancedrouting {
+	display:none;
+	border: 1px;
+}

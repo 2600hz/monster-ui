@@ -12,37 +12,37 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
-				url: 'accounts/{accountId}/devices/{activationId}',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				url: 'accounts/{accountId}/updateDevice/{activationId}',
 				verb: 'POST'
 			},
 			'mobile.listActivations': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.cancelActivation': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -123,6 +123,10 @@ define(function(require){
 			(parent)
 				.empty()
 				.append(template);
+
+			if ($("#nativeRouting").is(":checked"))
+				$("#kazoorouting").hide();	
+
 		},
 
 		bindEvents: function(template) {
@@ -184,15 +188,27 @@ define(function(require){
 				    formattedData = $.extend(true, data, formattedData);
 
 					self.updatePhone(formattedData, function(device) {
-						var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
-
-						toastr.success(template);
+						if (device.device_name) {
+							var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
+							toastr.success(template);
+						}
+						else
+							alert('failed');
 					});
 				}
 			});
 
 			template.find('.cancel').on('click', function() {
 				self.render();
+			});
+
+
+			template.find('#toggle_advanced_routing').on('click', function(e) {
+				$("#advancedrouting").toggle();
+			});
+		
+			template.find('#nativeRouting').on('click', function(e) {
+				$("#kazoorouting").toggle();	
 			});
 		},
 
@@ -270,7 +286,7 @@ define(function(require){
 				defaults = {
 					voice: {
 						device_unavailable: {},
-						native_routing: false
+						nativeRouting: false
 					}
 				};
 
