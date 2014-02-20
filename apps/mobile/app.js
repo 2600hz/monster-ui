@@ -12,37 +12,37 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
-				url: 'accounts/{accountId}/devices/{activationId}',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				url: 'accounts/{accountId}/updateDevice/{activationId}',
 				verb: 'POST'
 			},
 			'mobile.listActivations': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.cancelActivation': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://colelabs.com/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -110,6 +110,13 @@ define(function(require){
 		},
 
 		renderEditDevice: function(data) {
+			if (data.voice.routingType=="native") 
+				data.voice.routingNative=true;
+			if (data.voice.routingType=="kazoo") 
+				data.voice.routingKazoo=true;			
+			if (data.voice.routingType=="advanced") 
+				data.voice.routingAdvanced=true;
+
 			var self = this,
 				dataTemplate = self.formatEditData(data),
 				template = $(monster.template(self, 'edit', dataTemplate)),
@@ -123,6 +130,15 @@ define(function(require){
 			(parent)
 				.empty()
 				.append(template);
+
+
+			if ($('input[name="routingType"]:checked').val()=="native")
+				$("#kazoorouting").hide();	
+
+			$("#editTabs").tabs();
+
+
+
 		},
 
 		bindEvents: function(template) {
@@ -184,9 +200,12 @@ define(function(require){
 				    formattedData = $.extend(true, data, formattedData);
 
 					self.updatePhone(formattedData, function(device) {
-						var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
-
-						toastr.success(template);
+						if (device.device_name) {
+							var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
+							toastr.success(template);
+						}
+						else
+							alert('failed');
 					});
 				}
 			});
@@ -194,6 +213,26 @@ define(function(require){
 			template.find('.cancel').on('click', function() {
 				self.render();
 			});
+
+
+			template.find('.routingType').on('click', function(e) {
+				if ($(this).val()=="native") {
+					$("#kazoorouting").hide();
+					$("#advancedrouting").hide();
+				}
+
+				if ($(this).val()=="kazoo") { 
+					$("#kazoorouting").show();
+					$("#advancedrouting").hide();
+				}					
+
+				if ($(this).val()=="advanced") { 
+					$("#kazoorouting").hide();
+					$("#advancedrouting").show();
+				}	
+
+			});
+
 		},
 
 		bindCheckEvents: function(template) {
@@ -270,7 +309,7 @@ define(function(require){
 				defaults = {
 					voice: {
 						device_unavailable: {},
-						native_routing: false
+						nativeRouting: false
 					}
 				};
 

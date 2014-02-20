@@ -1,3 +1,10 @@
 {
-	"close" : "Close"
+	"devices": "Devices",
+	"deleteDevices": "Delete",
+	"provisionDevices": "Provision",
+	"searchDevice": "Search a device",
+	"go": "go",
+	"close" : "Close",
+	"add": "Add",
+	"noDevices": "There are no devices in this account."
 }

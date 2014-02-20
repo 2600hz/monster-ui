@@ -58,7 +58,9 @@
 		"voiceRouting": {
 			"inbound": "Inbound Voice Routing",
 			"outbound": "Outbound Voice Routing",
-			"mobile": "Mobile Voice Routing",
+			"kazoo": "Kazoo Routing",
+			"native": "Native Routing",
+			"general" : "Routing",
 			"uri": {
 				"label": "URI",
 				"placeholder": "sip:222@blah.com"
@@ -91,6 +93,7 @@
 			"value": "Value"
 		},
 		"update": "Update this device",
+		"toggleRouting": "Advanced Routing",
 		"activate": "Activate this device!",
 		"sprintInfos": {
 			"title": "Sprint Info",
