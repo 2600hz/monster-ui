@@ -158,11 +158,13 @@
 				</div>
 				<div id="editTabs4">
 					<h4>{{i18n.editView.voiceRouting.general}}</h4>
+
 					<div class="control-group">
-							<label>
-								<input type="checkbox" id="nativeRouting" name="voice.nativeRouting"{{#if voice.native}} checked{{/if}}></input>
-								{{i18n.editView.voiceRouting.native}}
-							</label>
+							
+						<label><input type='radio' name='voice.routingType' class="routingType" value='native' {{#if voice.routingNative}} checked{{/if}}/>Native</label>
+						<label><input type='radio' name='voice.routingType' class="routingType" value='kazoo' {{#if voice.routingKazoo}} checked{{/if}}/>Kazoo</label>
+						<label><input type='radio' name='voice.routingType' class="routingType" value='advanced' {{#if voice.routingAdvanced}} checked{{/if}}/>Advanced</label>
+
 					</div>
 
 					<div id="kazoorouting">
@@ -185,10 +187,7 @@
 								<input type="text" id="mobilePassword" name="voice.kazoo.routing.password" value="{{voice.kazoo.routing.password}}"></input>
 							</div>
 						</div>
-						
-
-						<button type="button" class="btn btn-primary" id="toggle_advanced_routing">{{i18n.editView.toggleRouting}}</button>
-
+					</div>
 						
 
 
@@ -233,7 +232,6 @@
 								</div>
 							</div>
 						</div> <!--advanced routing-->
-					</div><!--kazoo routing-->
 				</div><!--editTabs-N-->
 				<div id="editTabs5">
 					{{#if mdn}}

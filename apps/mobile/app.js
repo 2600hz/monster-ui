@@ -110,6 +110,13 @@ define(function(require){
 		},
 
 		renderEditDevice: function(data) {
+			if (data.voice.routingType=="native") 
+				data.voice.routingNative=true;
+			if (data.voice.routingType=="kazoo") 
+				data.voice.routingKazoo=true;			
+			if (data.voice.routingType=="advanced") 
+				data.voice.routingAdvanced=true;
+
 			var self = this,
 				dataTemplate = self.formatEditData(data),
 				template = $(monster.template(self, 'edit', dataTemplate)),
@@ -124,10 +131,13 @@ define(function(require){
 				.empty()
 				.append(template);
 
-			if ($("#nativeRouting").is(":checked"))
+
+			if ($('input[name="routingType"]:checked').val()=="native")
 				$("#kazoorouting").hide();	
 
 			$("#editTabs").tabs();
+
+
 
 		},
 
@@ -205,13 +215,24 @@ define(function(require){
 			});
 
 
-			template.find('#toggle_advanced_routing').on('click', function(e) {
-				$("#advancedrouting").toggle();
+			template.find('.routingType').on('click', function(e) {
+				if ($(this).val()=="native") {
+					$("#kazoorouting").hide();
+					$("#advancedrouting").hide();
+				}
+
+				if ($(this).val()=="kazoo") { 
+					$("#kazoorouting").show();
+					$("#advancedrouting").hide();
+				}					
+
+				if ($(this).val()=="advanced") { 
+					$("#kazoorouting").hide();
+					$("#advancedrouting").show();
+				}	
+
 			});
-		
-			template.find('#nativeRouting').on('click', function(e) {
-				$("#kazoorouting").toggle();	
-			});
+
 		},
 
 		bindCheckEvents: function(template) {

@@ -22,7 +22,7 @@
 	border-radius: 4px;
 	display: block;
 	margin: 30px auto;
-	padding: 20px 50px;
+	/*padding: 20px 50px;*/
 	width: 400px;
 }
 
@@ -104,10 +104,10 @@
 }
 
 .mobile-wrapper#edit_view .form-wrapper {
-	/*background: #eee;
+	background: #eee;
 	border: 1px solid #22CCFF;
 	border-radius: 4px;
-	padding: 20px 20px;*/
+	padding: 0px 20px;
 	margin: 30px auto;
 	width: 600px;
 	display: block;
