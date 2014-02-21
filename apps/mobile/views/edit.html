@@ -160,11 +160,17 @@
 					<h4>{{i18n.editView.voiceRouting.general}}</h4>
 
 					<div class="control-group">
-							
-						<label><input type='radio' name='voice.routingType' class="routingType" value='native' {{#if voice.routingNative}} checked{{/if}}/>Native</label>
-						<label><input type='radio' name='voice.routingType' class="routingType" value='kazoo' {{#if voice.routingKazoo}} checked{{/if}}/>Kazoo</label>
-						<label><input type='radio' name='voice.routingType' class="routingType" value='advanced' {{#if voice.routingAdvanced}} checked{{/if}}/>Advanced</label>
-
+						<div class="btn-group" data-type="routingType" style='text-align:center'>					
+							 <button class="btn routingType" type='button' data-value="native">Native</button> 
+							 <button class="btn routingType" type='button' data-value="kazoo">Kazoo</button> 
+							 <button class="btn routingType" type='button' data-value="advanced">Advanced</button> 
+						</div>
+						<input id="voiceRoutingType" name="voice.routingType" type='hidden'/>
+						<!--
+							<label><input type='radio' name='voice.routingType' class="routingType" value='native' {{#if voice.routingNative}} checked{{/if}}/> Native</label>
+							<label><input type='radio' name='voice.routingType' class="routingType" value='kazoo' {{#if voice.routingKazoo}} checked{{/if}}/> Kazoo</label>
+							<label><input type='radio' name='voice.routingType' class="routingType" value='advanced' {{#if voice.routingAdvanced}} checked{{/if}}/> Advanced</label>
+						-->
 					</div>
 
 					<div id="kazoorouting">
