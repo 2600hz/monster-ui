@@ -91,6 +91,7 @@
 		"gmapPinLabel": "Your+E911+Location",
 		"infoBox": "This address will show up to 911 emergency services when you dial it from your number.",
 		"label": "e911",
+		"lastE911Error": "You must have e911 set up on at least one number in your account. Please set it up on another number before removing it from this one.",
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
 		"state": "State",
