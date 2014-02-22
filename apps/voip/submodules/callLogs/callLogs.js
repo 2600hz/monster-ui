@@ -247,7 +247,8 @@ define(function(require){
 		},
 
 		callLogsFormatCdrs: function(cdrs) {
-			var result = [],
+			var self = this,
+				result = [],
 				formatCdr = function(cdr) {
 					var date = monster.util.gregorianToDate(cdr.timestamp),
 						day = (date.getDate() < 10 ? "0" : "") + date.getDate(),
@@ -270,7 +271,22 @@ define(function(require){
 						toNumber: cdr.callee_id_number || ("request" in cdr) ? cdr.request.replace(/@.*/, '') : cdr.to.replace(/@.*/, ''),
 						duration: durationMin + ":" + durationSec,
 						hangupCause: cdr.hangup_cause,
-						isOutboundCall: ("authorizing_id" in cdr)
+						isOutboundCall: ("authorizing_id" in cdr),
+						mailtoLink: "mailto:support@2600hz.com"
+								  + "?subject=Call Report: " + cdr.call_id
+								  + "&body=Please describe the details of the issue:%0D%0A%0D%0A"
+								  + "%0D%0A____________________________________________________________%0D%0A"
+								  + "%0D%0AAccount ID: " + self.accountId
+								  + "%0D%0AFrom (Name): " + (cdr.caller_id_name || "")
+								  + "%0D%0AFrom (Number): " + (cdr.caller_id_number || cdr.from.replace(/@.*/, ''))
+								  + "%0D%0ATo (Name): " + (cdr.callee_id_name || "")
+								  + "%0D%0ATo (Number): " + (cdr.callee_id_number || ("request" in cdr) ? cdr.request.replace(/@.*/, '') : cdr.to.replace(/@.*/, ''))
+								  + "%0D%0ADate: " + month+"/"+day+"/"+year
+								  + "%0D%0ADuration: " + durationMin + ":" + durationSec
+								  + "%0D%0AHangup Cause: " + (cdr.hangup_cause || "")
+								  + "%0D%0ACall ID: " + cdr.call_id
+								  + "%0D%0AOther Leg Call ID: " + (cdr.other_leg_call_id || "")
+								  + "%0D%0AHandling Server: " + (cdr.handling_server || "")
 					};
 				};
 
@@ -279,6 +295,7 @@ define(function(require){
 					delete cdrs[key];
 				} else {
 					var cdr = formatCdr(val.aLeg);
+					console.log(cdr);
 					cdr.bLegs = [];
 					_.each(val.bLegs, function(v, k) {
 						cdr.bLegs.push(formatCdr(v));
