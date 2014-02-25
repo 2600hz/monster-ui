@@ -20,7 +20,7 @@
 	</div>
 
 	<div class="dashboard-content">
-		<div class="missing-e911-message btn-danger{{#unless account.caller_id.emergency.number}} active{{/unless}}">
+		<div class="missing-e911-message btn-danger{{#unless hasE911}} active{{/unless}}">
 			<i class="icon-warning-sign"></i>{{i18n.myOffice.missingE911Message}}
 		</div>
 		<div class="dashboard-content-div dashboard-left-content">
@@ -41,17 +41,23 @@
 					<span class="number">{{totalDevices}}</span>
 				</div>
 				<div class="left-section-content devices-section-content">
-					<canvas id="dashboard_devices_chart" class="pull-left" width="130" height="130"></canvas>
-					<div class="devices-chart-legend">
-						<ul>
-							{{#each devicesList}}
-							<li class="legend-element{{#unless count}} no-device{{/unless}}">
-								<i class="icon-circle legend-color" style="color: {{color}};"></i>
-								<span class="legend-label">{{label}}</span>
-								<span class="legend-number">{{count}}</span>
-							</li>
-							{{/each}}
-						</ul>
+					<div class="devices-chart">
+						<canvas id="dashboard_devices_chart" class="pull-left" width="130" height="130"></canvas>
+						<div class="devices-chart-legend">
+							<ul>
+								{{#each devicesList}}
+								<li class="legend-element{{#unless count}} no-device{{/unless}}">
+									<i class="icon-circle legend-color" style="color: {{color}};"></i>
+									<span class="legend-label">{{label}}</span>
+									<span class="legend-number">{{count}}</span>
+								</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+					<div class="unregistered-devices clearfix">
+						<div class="value">{{unregisteredDevices}}</div>
+						<div class="title">Unregistered Devices</div>
 					</div>
 				</div>
 			</div>
