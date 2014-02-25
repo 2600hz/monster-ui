@@ -569,9 +569,10 @@
 			"emergencyCity": "City",
 			"emergencyState": "State",
 			"emergencyHelp1": "This address will appear as your Caller ID address when you make outbound emergency call to a government agency (e.g. 911 in the US).",
-			"emergencyHelp2": "Note: You can set this feature on users' numbers too if they do not share the same location as above."
+			"emergencyHelp2": "Note: You can set this feature on users' numbers too if they do not share the same location as above.",
+			"mandatoryE911Alert": "You must specify e911 information for your company caller ID number."
 		},
-		"missingE911Message": "Please setup the emergency Caller ID on a number that has e911 configured.",
+		"missingE911Message": "Please setup your Company Caller ID on a number that has e911 configured.",
 		"totalUsers": "Total Users",
 		"totalDevices": "Total Devices",
 		"totalConfs": "Conference Bridges",
