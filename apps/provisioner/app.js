@@ -16,103 +16,103 @@ define(function(require){
 			/* Accounts APIs */
 			// 'provisioner.addAccount': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/accounts',
+			// 	'url': 'api/accounts',
 			// 	'verb': 'PUT'
 			// },
 			'provisioner.getAccount': {
 				'apiRoot': apiRoot,
-				'url': '/api/accounts/{account_id}',
+				'url': 'api/accounts/{account_id}',
 				'verb': 'GET'
 			},
 			'provisioner.getAccountsByProvider': {
 				'apiRoot': apiRoot,
-				'url': '/api/accounts/provider/{provider_id}',
+				'url': 'api/accounts/provider/{provider_id}',
 				'verb': "GET",
 				'generateError': false
 			},
 			// 'provisioner.updateAccount': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/accounts/{account_id}',
+			// 	'url': 'api/accounts/{account_id}',
 			// 	'verb': 'POST'
 			// },
 			// 'provisioner.deleteAccount': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/accounts/{account_id}',
+			// 	'url': 'api/accounts/{account_id}',
 			// 	'verb': 'DELETE'
 			// },
 			/* Devices APIs */
 			'provisioner.addDevice': {
 				'apiRoot': apiRoot,
-				'url': '/api/devices/{account_id}/{mac_address}',
+				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'PUT'
 			},
 			'provisioner.getDevice': {
 				'apiRoot': apiRoot,
-				'url': '/api/devices/{account_id}/{mac_address}',
+				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': "GET"
 			},
 			'provisioner.getDevicesByAccount': {
 				'apiRoot': apiRoot,
-				'url': '/api/devices/{account_id}',
+				'url': 'api/devices/{account_id}',
 				'verb': "GET"
 			},
 			'provisioner.updateDevice': {
 				'apiRoot': apiRoot,
-				'url': '/api/devices/{account_id}/{mac_address}',
+				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'POST'
 			},
 			'provisioner.deleteDevice': {
 				'apiRoot': apiRoot,
-				'url': '/api/devices/{account_id}/{mac_address}',
+				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'DELETE'
 			},
 			/* Files API */
 			'provisioner.generateFile': {
 				'apiRoot': apiRoot,
-				'url': '/api/files/generate',
+				'url': 'api/files/generate',
 				'verb': 'POST'
 			},
 			/* Providers APIs */
 			// 'provisioner.addProvider': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/providers',
+			// 	'url': 'api/providers',
 			// 	'verb': 'PUT'
 			// },
 			// 'provisioner.getProvider': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/providers/{provider_id}',
+			// 	'url': 'api/providers/{provider_id}',
 			// 	'verb': 'GET'
 			// },
 			// 'provisioner.getProviders': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/providers',
+			// 	'url': 'api/providers',
 			// 	'verb': 'GET'
 			// },
 			// 'provisioner.updateProvider': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/providers/{provider_id}',
+			// 	'url': 'api/providers/{provider_id}',
 			// 	'verb': 'POST'
 			// },
 			// 'provisioner.deleteProvider': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/providers/{provider_id}',
+			// 	'url': 'api/providers/{provider_id}',
 			// 	'verb': 'DELETE'
 			// },
 			/* UI APIs */
 			'provisioner.getSettingsByModel': {
 				'apiRoot': apiRoot,
-				'url': '/api/ui/{brand}/{model}',
+				'url': 'api/ui/{brand}/{model}',
 				'verb': "GET"
 			},
 			// 'provisioner.getSettingsByDevice': {
 			// 	'apiRoot': apiRoot,
-			// 	'url': '/api/ui/{account_id}/{mac_address}',
+			// 	'url': 'api/ui/{account_id}/{mac_address}',
 			// 	'verb': ''
 			// },
 			/* Phones API */
 			'provisioner.getBrands': {
 				'apiRoot': apiRoot,
-				'url': '/api/phones',
+				'url': 'api/phones',
 				'verb': 'GET'
 			}
 		},
