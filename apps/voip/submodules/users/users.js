@@ -131,6 +131,24 @@ define(function(require){
 				url: 'accounts/{accountId}/conferences?filter_owner_id={userId}',
 				verb: 'GET'
 			},
+			/* Media */
+			'voip.users.listMedia': {
+				url: 'accounts/{accountId}/media?key_missing=type',
+				verb: 'GET'
+			},
+			'voip.users.createMedia': {
+				url: 'accounts/{accountId}/media',
+				verb: 'PUT'
+			},
+			'voip.users.deleteMedia': {
+				url: 'accounts/{accountId}/media/{mediaId}',
+				verb: 'DELETE'
+			},
+            'voip.users.uploadMedia': {
+                url: 'accounts/{accountId}/media/{mediaId}/raw',
+                verb: 'POST',
+                type: 'application/x-base64'
+            },
 			/* Misc */
 			'voip.users.getNumbers': {
 				url: 'accounts/{accountId}/phone_numbers',
@@ -263,6 +281,11 @@ define(function(require){
 							icon: 'icon-sitemap',
 							iconColor: 'icon-purple',
 							title: self.i18n.active().users.find_me_follow_me.title
+						},
+						music_on_hold: {
+							icon: 'icon-music',
+							iconColor: 'icon-pink',
+							title: self.i18n.active().users.music_on_hold.title
 						}
 					}
 				};
@@ -1079,6 +1102,10 @@ define(function(require){
 				);
 			});
 
+			template.on('click', '.feature[data-feature="music_on_hold"]', function() {
+				self.usersRenderMusicOnHold(currentUser);
+			});
+
 			template.on('click', '.feature[data-feature="vm_to_email"]', function() {
 				self.usersListVMBoxesUser(currentUser.id, function(vmboxes) {
 					currentUser.extra.deleteAfterNotify = true;
@@ -1790,6 +1817,140 @@ define(function(require){
 				}
 			});
 			createSliderScale(featureTemplate.find('.device-row.title'), true);
+		},
+
+		usersRenderMusicOnHold: function(currentUser) {
+			var self = this,
+				silenceMediaId = 'silence_stream://300000';
+
+			self.usersListMedias(function(medias) {
+				var templateData = {
+						user: currentUser,
+						silenceMedia: silenceMediaId,
+						mediaList: medias,
+						media: 'music_on_hold' in currentUser && 'media_id' in currentUser.music_on_hold ? currentUser.music_on_hold.media_id : silenceMediaId
+					},
+					featureTemplate = $(monster.template(self, 'users-feature-music_on_hold', templateData)),
+					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+					popup,
+					closeUploadDiv = function(newMedia) {
+						var uploadInput = featureTemplate.find('.upload-input');
+						uploadInput.wrap('<form>').closest('form').get(0).reset();
+						uploadInput.unwrap();
+						featureTemplate.find('.upload-div').slideUp(function() {
+							featureTemplate.find('.upload-toggle').removeClass('active');
+						});
+						if(newMedia) {
+							var mediaSelect = featureTemplate.find('.media-dropdown');
+							mediaSelect.append('<option value="'+newMedia.id+'">'+newMedia.name+'</option>');
+							mediaSelect.val(newMedia.id);
+						}
+					};
+
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.upload-toggle').on('click', function() {
+					if($(this).hasClass('active')) {
+						featureTemplate.find('.upload-div').stop(true, true).slideUp();
+					} else {
+						featureTemplate.find('.upload-div').stop(true, true).slideDown();
+					}
+				});
+
+				featureTemplate.find('.upload-cancel').on('click', function() {
+					closeUploadDiv();
+				});
+
+				featureTemplate.find('.upload-submit').on('click', function() {
+					var file = featureTemplate.find('.upload-input')[0].files[0];
+						fileReader = new FileReader();
+
+					fileReader.onloadend = function(evt) {
+						monster.request({
+							resource: 'voip.users.createMedia',
+							data: {
+								accountId: self.accountId,
+								data: {
+									streamable: true,
+									name: file.name,
+									media_source: "upload",
+									description: file.name
+								}
+							},
+							success: function(data, status) {
+								var media = data.data;
+								monster.request({
+									resource: 'voip.users.uploadMedia',
+									data: {
+										accountId: self.accountId,
+										mediaId: media.id,
+										data: evt.target.result
+									},
+									success: function(data, status) {
+										closeUploadDiv(media);
+									},
+									error: function(data, status) {
+										monster.request({
+											resource: 'voip.users.deleteMedia',
+											data: {
+												accountId: self.accountId,
+												mediaId: media.id,
+												data: {}
+											},
+											success: function(data, status) {
+
+											}
+										});
+									}
+								});
+							}
+						});
+					};
+
+					if(file) {
+						fileReader.readAsDataURL(file);
+					} else {
+						monster.ui.alert(self.i18n.active().users.music_on_hold.emptyUploadAlert);
+					}
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var selectedMedia = featureTemplate.find('.media-dropdown option:selected').val(),
+					    enabled = switchFeature.bootstrapSwitch('status');
+
+					if(!('music_on_hold' in currentUser)) {
+						currentUser.music_on_hold = {};
+					}
+
+					if('media_id' in currentUser.music_on_hold || enabled) {
+						if(enabled) {
+							currentUser.music_on_hold = {
+								media_id: selectedMedia
+							};
+						} else {
+							currentUser.music_on_hold = {};
+						}
+						self.usersUpdateUser(currentUser, function(updatedUser) {
+							popup.dialog('close').remove();
+							self.usersRender({ userId: currentUser.id });
+						});
+					} else {
+						popup.dialog('close').remove();
+						self.usersRender({ userId: currentUser.id });
+					}
+				});
+
+				popup = monster.ui.dialog(featureTemplate, {
+					title: currentUser.extra.mapFeatures.music_on_hold.title,
+					position: ['center', 20]
+				});
+			});
 		},
 
 		usersCleanUserData: function(userData) {
@@ -2800,6 +2961,20 @@ define(function(require){
 					accountId: self.accountId,
 					data: data,
 					deviceId: data.id
+				},
+				success: function(data) {
+					callback(data.data);
+				}
+			});
+		},
+
+		usersListMedias: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'voip.users.listMedia',
+				data: {
+					accountId: self.accountId
 				},
 				success: function(data) {
 					callback(data.data);

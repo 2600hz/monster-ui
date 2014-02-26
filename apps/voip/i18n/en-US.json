@@ -364,7 +364,11 @@
 			"help": "If you don't enable this feature, the Caller-ID displayed by default will be the one configured on the Main Number of this account."
 		},
 		"music_on_hold": {
-			"title": "Music-On-Hold"
+			"title": "Music-On-Hold",
+			"headline": "User Music-On-Hold Settings",
+			"dropdownLabel": "Music on Hold:",
+			"silence": "Silence",
+			"emptyUploadAlert": "Please select a file to upload"
 		},
 		"hotdesk": {
 			"label": "Does it require a PIN?",
