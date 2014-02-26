@@ -1,0 +1,38 @@
+<div class="feature-popup-container" data-feature="music_on_hold">
+	<div class="feature-popup-title">
+		<div class="feature-icon-wrapper">
+			<i class="{{user.extra.mapFeatures.music_on_hold.icon}}"></i>
+		</div>
+		{{ i18n.users.music_on_hold.headline }}
+		<div class="switch" data-on="success" data-off="default" data-on-label="{{i18n.enabled}}" data-off-label="{{i18n.disabled}}">
+			<input type="checkbox"{{#if user.extra.mapFeatures.music_on_hold.active}} checked="checked"{{/if}}></input>
+		</div>
+	</div>
+
+	<div class="content{{#unless user.extra.mapFeatures.music_on_hold.active}} disabled{{/unless}}">
+		<div>
+			<span>{{ i18n.users.music_on_hold.dropdownLabel }}</span>
+			<select name="format" class="media-dropdown">
+				<option value="{{silenceMedia}}" {{#compare media '===' silenceMedia}}selected{{/compare}}>{{ i18n.users.music_on_hold.silence }}</option>
+				{{#each mediaList}}
+					<option value="{{this.id}}" {{#compare ../media '===' this.id}}selected{{/compare}}>{{this.name}}</option>
+				{{/each}}
+			</select>
+			<button type="button" class="btn btn-primary upload-toggle" data-toggle="button">
+				{{ i18n.upload }}
+			</button>
+		</div>
+		<div class="upload-div">
+			<input type="file" class="upload-input" accept="audio/*">
+			<button type="button" class="btn btn-success upload-submit"><i class="icon-upload-alt"></i></button>
+			<button type="button" class="btn btn-danger upload-cancel"><i class="icon-remove"></i></button>
+		</div>
+	</div>
+
+	<div class="actions clearfix">
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+			<button type="button" class="btn btn-success save">{{ i18n.saveChanges }}</button>
+		</div>
+	</div>
+</div>

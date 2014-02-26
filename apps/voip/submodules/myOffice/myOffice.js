@@ -22,6 +22,10 @@ define(function(require){
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
+			'voip.myOffice.getDevicesStatus': {
+				url: 'accounts/{accountId}/devices/status',
+				verb: 'GET'
+			},
 			'voip.myOffice.listNumbers': {
 				url: 'accounts/{accountId}/phone_numbers',
 				verb: 'GET'
@@ -75,6 +79,7 @@ define(function(require){
 						account: myOfficeData.account,
 						totalUsers: myOfficeData.users.length,
 						totalDevices: myOfficeData.devices.length,
+						unregisteredDevices: myOfficeData.devices.length - myOfficeData.devicesStatus.length,
 						totalNumbers: _.size(myOfficeData.numbers),
 						totalConferences: myOfficeData.totalConferences,
 						mainNumbers: myOfficeData.mainNumbers || [],
@@ -162,6 +167,17 @@ define(function(require){
 					devices: function(parallelCallback) {
 						monster.request({
 							resource: 'voip.myOffice.listDevices',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data) {
+								parallelCallback && parallelCallback(null, data.data);
+							}
+						});
+					},
+					devicesStatus: function(parallelCallback) {
+						monster.request({
+							resource: 'voip.myOffice.getDevicesStatus',
 							data: {
 								accountId: self.accountId
 							},
@@ -310,7 +326,6 @@ define(function(require){
 				}
 			});
 
-			data.hasE911 = false;
 			_.each(data.callflows, function(val) {
 				var numberArrayName = '';
 				if(val.type === "main" && val.name === "MainCallflow") {
@@ -330,9 +345,6 @@ define(function(require){
 							if(num in data.numbers) {
 								_.each(data.numbers[num].features, function(feature) {
 									number.features[feature].active = 'active';
-									if(feature === 'dash_e911' && numberArrayName === 'mainNumbers') {
-										data.hasE911 = true;
-									}
 								});
 							}
 							data[numberArrayName].push(number);
@@ -341,6 +353,11 @@ define(function(require){
 				}
 			});
 
+			data.hasE911 = ('caller_id' in data.account 
+						 && 'emergency' in data.account.caller_id 
+						 && 'number' in data.account.caller_id.emergency
+						 && data.account.caller_id.emergency.number in data.numbers
+						 && data.numbers[data.account.caller_id.emergency.number].features.indexOf('dash_e911') >= 0);
 			data.devicesData = devices;
 			data.assignedNumbersData = assignedNumbers;
 			data.numberTypesData = numberTypes;
@@ -539,12 +556,13 @@ define(function(require){
 					selectedMainNumber: 'caller_id' in myOfficeData.account && 'external' in myOfficeData.account.caller_id ? myOfficeData.account.caller_id.external.number || 'none' : 'none'
 				},
 				popupTemplate = $(monster.template(self, 'myOffice-callerIdPopup', templateData)),
+				e911Form = popupTemplate.find('.emergency-form > form'),
 				popup = monster.ui.dialog(popupTemplate, {
 					title: self.i18n.active().myOffice.callerId.title,
 					position: ['center', 20]
 				});
 
-			monster.ui.validate(popupTemplate.find('.emergency-form > form'), {
+			monster.ui.validate(e911Form, {
 				messages: {
 					'postal_code': {
 						required: '*'
@@ -560,6 +578,8 @@ define(function(require){
 					}
 				}
 			});
+
+			monster.ui.valid(e911Form);
 
 			self.myOfficeCallerIdPopupBindEvents({
 				parent: parent,
@@ -674,6 +694,8 @@ define(function(require){
 								updateAccount();
 							});
 						});
+					} else {
+						monster.ui.alert(self.i18n.active().myOffice.callerId.mandatoryE911Alert);
 					}
 				} else {
 					delete account.caller_id.external;
