@@ -110,13 +110,6 @@ define(function(require){
 		},
 
 		renderEditDevice: function(data) {
-			if (data.voice.routingType=="native") 
-				data.voice.routingNative=true;
-			if (data.voice.routingType=="kazoo") 
-				data.voice.routingKazoo=true;			
-			if (data.voice.routingType=="advanced") 
-				data.voice.routingAdvanced=true;
-
 			var self = this,
 				dataTemplate = self.formatEditData(data),
 				template = $(monster.template(self, 'edit', dataTemplate)),
@@ -135,23 +128,23 @@ define(function(require){
 			/*if ($('input[name="routingType"]:checked').val()=="native")
 				$("#kazoorouting").hide();	*/
 
-			$("#editTabs").tabs();
+			template.find("#editTabs").tabs();
 
-			$('button[data-value="'+data.voice.routingType+'"]').addClass('btn-primary');
-			switch (data.voice.routingType) {
-				case 'native': 
-					$("#advancedrouting").hide();
-					$("#kazoorouting").hide();
-					break;
-				case 'kazoo':
-					$("#advancedrouting").hide();
-					$("#kazoorouting").show();
-					break;
-				case 'advanced':
-					$("#advancedrouting").show();
-					$("#kazoorouting").hide();
-					break;
-			};
+			if (!_.isEmpty(data) && 'voice' in data && data.voice.routingType) {
+				$('button[data-value="'+data.voice.routingType+'"]').addClass('btn-primary');
+				switch (data.voice.routingType) {
+					case 'native': 
+						template.find("#advancedrouting").hide();
+						template.find("#kazoorouting").hide();
+						break;
+					case 'advanced':
+						template.find("#advancedrouting").show();
+						template.find("#kazoorouting").hide();
+						break;
+				};
+			}
+			else
+				template.find('button[data-value="kazoo"]').addClass('btn-primary');
 
 
 		},
