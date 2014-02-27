@@ -31,8 +31,10 @@
 	text-align: center;
 }
 #myoffice_container .dashboard-header .header-link:hover {
-	text-shadow: 1px 1px 0px #666;
+	box-shadow: 0px 0px 20px #666 inset;
+	border-radius: 4px;
 	text-decoration: none;
+	font-weight: bold;
 }
 #myoffice_container .dashboard-header .header-link .header-link-icon {
 	height: 30px;
@@ -98,8 +100,8 @@
 	border: 1px solid #dcdcdc;
 }
 #myoffice_container .dashboard-left-content .left-section-header .title {
-	font-size: 24px;
-	color: #999;
+	font-size: 22px;
+	color: #555;
 }
 #myoffice_container .dashboard-left-content .left-section-header .number {
 	font-size: 24px;
@@ -140,6 +142,7 @@
 #myoffice_container .devices-section-content .unregistered-devices .value {
     float: right;
     color: red;
+    font-weight: bold;
 }
 #myoffice_container .devices-section-content .unregistered-devices {
     margin-top: 25px;
@@ -171,7 +174,7 @@
 	background-image: -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image: -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image: linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
-	color: #7A7F81;
+	color: #555;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row.fax-number-row {
     display: none; /*Hiding Fax temporarily*/
@@ -196,6 +199,8 @@
 	width: 40%;
 	padding-right: 5px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content {
 	width: 60%;
@@ -257,8 +262,8 @@
 	line-height: 40px;
 	padding: 10px;
 	background-color: #f6f6f6;            
-	font-size: 24px;  
-	color: #999;
+	font-size: 22px;  
+	color: #555;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-div .div-title .number {
 	float: right;

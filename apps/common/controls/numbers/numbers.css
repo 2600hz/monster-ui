@@ -206,6 +206,10 @@
 	background: transparent !important;
 }
 
+#numbers_container .dropdown-toggle > i:hover {
+    color: #000;
+}
+
 #numbers_container .account-section .account-header input[type="checkbox"], #numbers_container .account-section .account-header .count {
 	display: none;
 }
