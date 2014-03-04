@@ -4,8 +4,6 @@ define(function(require){
 		mask = require('mask'),
 		monster = require('monster');
 
-	var apiRoot = monster.config.api.provisioner;
-
 	var app = {
 
 		name: 'provisioner',
@@ -14,104 +12,58 @@ define(function(require){
 
 		requests: {
 			/* Accounts APIs */
-			// 'provisioner.addAccount': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/accounts',
-			// 	'verb': 'PUT'
-			// },
 			'provisioner.getAccount': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/accounts/{account_id}',
 				'verb': 'GET'
 			},
 			'provisioner.getAccountsByProvider': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/accounts/provider/{provider_id}',
 				'verb': "GET",
 				'generateError': false
 			},
-			// 'provisioner.updateAccount': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/accounts/{account_id}',
-			// 	'verb': 'POST'
-			// },
-			// 'provisioner.deleteAccount': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/accounts/{account_id}',
-			// 	'verb': 'DELETE'
-			// },
 			/* Devices APIs */
 			'provisioner.addDevice': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'PUT'
 			},
 			'provisioner.getDevice': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': "GET"
 			},
 			'provisioner.getDevicesByAccount': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/devices/{account_id}',
 				'verb': "GET"
 			},
 			'provisioner.updateDevice': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'POST'
 			},
 			'provisioner.deleteDevice': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/devices/{account_id}/{mac_address}',
 				'verb': 'DELETE'
 			},
 			/* Files API */
 			'provisioner.generateFile': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/files/generate',
 				'verb': 'POST'
 			},
-			/* Providers APIs */
-			// 'provisioner.addProvider': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/providers',
-			// 	'verb': 'PUT'
-			// },
-			// 'provisioner.getProvider': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/providers/{provider_id}',
-			// 	'verb': 'GET'
-			// },
-			// 'provisioner.getProviders': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/providers',
-			// 	'verb': 'GET'
-			// },
-			// 'provisioner.updateProvider': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/providers/{provider_id}',
-			// 	'verb': 'POST'
-			// },
-			// 'provisioner.deleteProvider': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/providers/{provider_id}',
-			// 	'verb': 'DELETE'
-			// },
 			/* UI APIs */
 			'provisioner.getSettingsByModel': {
-				'apiRoot': apiRoot,
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/ui/{brand}/{model}',
 				'verb': "GET"
 			},
-			// 'provisioner.getSettingsByDevice': {
-			// 	'apiRoot': apiRoot,
-			// 	'url': 'api/ui/{account_id}/{mac_address}',
-			// 	'verb': ''
-			// },
 			/* Phones API */
-			'provisioner.getBrands': {
-				'apiRoot': apiRoot,
+			'provisioner.getPhones': {
+				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/phones',
 				'verb': 'GET'
 			}
@@ -141,29 +93,23 @@ define(function(require){
 
 		render: function(parent){
 			var self = this,
-				_data,
-				appTemplate,
-				dataToTemplate;
+				appTemplate;
 
 			parent = parent || $('#ws-content');
 
-			self.getAccountsByProvider(function(data) {
-				dataToTemplate = data;
-
-				self.getDevicesByAccount(dataToTemplate.data[0].id, function(data) {
+			self.requestGetAccountsByProvider(function(dataTemplate) {
+				self.requestGetDevicesByAccount(dataTemplate.data[0].id, function(data) {
 					for ( var device in data ) {
-						data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{1,2}', 'g')).join(':');
+						data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{2}', 'g')).join(':');
 					}
 
-					dataToTemplate.data[0].devices = data;
-					appTemplate = $(monster.template(self, 'app', dataToTemplate));
-					appTemplate.find('.account-section[data-id="' + dataToTemplate.data[0].id + '"]').addClass('active');
+					dataTemplate.data[0].devices = data;
+					appTemplate = $(monster.template(self, 'app', dataTemplate));
+					appTemplate.find('.account-section[data-id="' + dataTemplate.data[0].id + '"]').addClass('active');
 
 					parent
 						.empty()
 						.append(appTemplate);
-
-
 
 					self.bindEvents(parent);
 					self.initialized = true;
@@ -181,7 +127,6 @@ define(function(require){
 					}
 				};
 
-			/* Click on header to expand device wrapper */
 			parent.find('.expandable').on('click', function() {
 				var section = $(this).parents('.account-section');
 
@@ -189,9 +134,9 @@ define(function(require){
 					section.removeClass('active');
 				} else {
 					if ( section.find('.devices-wrapper').find('.device-box').hasClass('no-data') ) {
-						self.getDevicesByAccount(section.data('id'), function(data) {
+						self.requestGetDevicesByAccount(section.data('id'), function(data) {
 							for ( var device in data ) {
-								data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{1,2}', 'g')).join(':');
+								data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{2}', 'g')).join(':');
 							}
 
 							section.find('.devices-wrapper')
@@ -205,51 +150,6 @@ define(function(require){
 					}
 				}
 			});
-
-			/* Click on header's checkbox to select/deselect  */
-			// parent.find('.account-header').on('click', 'input[type="checkbox"]', function(event) {
-			// 	var checkboxes = $(this).parents('.account-section').first().find('.device-box input[type="checkbox"]'),
-			// 		isChecked = $(this).prop('checked');
-
-			// 	checkboxes.prop('checked', isChecked);
-
-			// 	if ( isChecked ) {
-			// 		checkboxes.parent().addClass('selected');
-			// 	} else {
-			// 		checkboxes.parent().removeClass('selected');
-			// 	}
-
-			// 	showLinks();
-			// });
-
-			/* Add class selected when you click on a device box, check/uncheck  the account checkbox if all/no devices are checked */
-			// parent.on('click', '.device-box:not(.disabled)', function(event) {
-			// 	var currentBox = $(this);
-
-			// 	if(!currentBox.hasClass('no-data')) {
-			// 		var section = currentBox.parents('.account-section').first(),
-			// 			accountCheckbox = section.find('.account-header input[type="checkbox"]');
-
-			// 		currentBox.toggleClass('selected');
-
-			// 		if(!$(event.target).is('input:checkbox')) {
-			// 			var currentCheckbox = currentBox.find('input[type="checkbox"]'),
-			// 				checkboxValue = currentCheckbox.prop('checked');
-
-			// 			currentCheckbox.prop('checked', !checkboxValue);
-			// 		}
-
-			// 		/* Check account checkbox if all the devices are checked */
-			// 		if(section.find('.devices-wrapper input[type="checkbox"]:checked').size() === section.find('.devices-wrapper input[type="checkbox"]').size()) {
-			// 			accountCheckbox.prop('checked', true);
-			// 		}
-			// 		else {
-			// 			accountCheckbox.prop('checked', false);
-			// 		}
-			// 	}
-
-			// 	showLinks();
-			// });
 
 			if (self.initialized === false) {
 				parent.on('click', '.device-box:not(.no-data)', function() {
@@ -273,7 +173,7 @@ define(function(require){
 					var accountId = parent.find('.device-box.selected').parent().parent().data('id'),
 						macAddress = parent.find('.device-box.selected').data('mac-address');
 
-					self.deleteDevice(accountId, macAddress, function() {
+					self.requestDeleteDevice(accountId, macAddress, function() {
 						var wrapper = parent.find('.device-box.selected').parent();
 
 						parent.find('.device-box.selected').remove();
@@ -291,294 +191,230 @@ define(function(require){
 				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
 					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
 
-				self.getDevice(accountId, macAddress, function(data) {
-					self.renderDeviceSettings(parent, accountId, macAddress, data);
+				self.requestGetDevice(accountId, macAddress, function(data) {
+					self.renderSettingsHeader(parent, accountId, data);
 				});
 			});
 
 			parent.find('.account-section .add-device').on('click', function() {
 				var accountId = $(this).parents('.account-section').data('id');
 
-				self.renderDeviceSettings(parent, accountId, null);
+				self.renderSettingsHeader(parent, accountId);
 			});
 		},
 
-		renderDeviceSettings: function(parent, accountId, macAddress, deviceData) {
+		renderSettingsHeader: function(parent, accountId, deviceData) {
 			var self = this;
 
-			deviceData = deviceData || { brand: 'yealink', model: 't22' };
+			self.getPhonesList(deviceData ? deviceData.brand : null, function(dataTemplate) {
+				var settingsHeaderTemplate;
 
-			self.getSettingsByModel(deviceData.brand, deviceData.model, function(data) {
-				self.getBrands(function(deviceFamily) {
-					var index,
-						field,
-						brand,
-						model,
-						option,
-						family,
-						section,
-						dataField,
-						dataTemplate,
-						pathArray = [],
-						brandList = [],
-						modelList = [],
-						parametersTemplate,
-						formatData = function(data) {
-							var i,
-								key,
-								_data,
-								iterations;
+				if ( deviceData ) {
+					dataTemplate.device = deviceData;
+				}
 
-							for ( key in data ) {
-								if ( typeof data[key].iterate === 'undefined' && typeof data[key].data !== 'undefined' ) {
-									formatData(data[key].data);
-								} else if ( data[key].iterate === 0 ) {
-									delete data[key];
-								} else if ( data[key].iterate == 1 ) {
-									delete data[key].iterate;
-									formatData(data[key].data);
-								} else if ( data[key].iterate > 1 ) { 
-									i = 0;
-									_data = data[key].data;
-									iterations = data[key].iterate;
-									data[key].data = [];
+				settingsHeaderTemplate = $(monster.template(self, 'settingsHeader', dataTemplate));
+				settingsHeaderTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', { placeholder: ' ' });
 
-									formatData(_data);
+				parent
+					.empty()
+					.append(settingsHeaderTemplate);
 
-									for ( ; i < iterations; i++ ) {
-										data[key].data.push(_data);
-									}
-								}
-							}
+				self.bindSettingsHeaderEvents(parent, settingsHeaderTemplate, accountId, deviceData);
 
-							return data;
+				if ( deviceData ) {
+					self.renderSettingsContent(parent, accountId, deviceData);
+				}
+			});
+		},
+
+		bindSettingsHeaderEvents: function(parent, template, accountId, deviceData) {
+			var self = this;
+
+			parent.find('select[name="manufacturer"]').on('change', function() {
+				if ( $(this).val() != 'default' ) {
+					self.getPhonesList($(this).val(), function(dataTemplate) {
+						parent
+							.find('select[name="model"]')
+							.empty()
+							.append($(monster.template(self, 'modelOption', dataTemplate)))
+							.prop('disabled', null);
+					});
+				}
+			});
+
+			parent.find('select[name="model"]').on('change', function() {
+				if ( $(this).val() != 'default' ) {
+					var newModel = {
+							brand: $(this).find('option:selected').data('brand'),
+							family: $(this).find('option:selected').data('family'),
+							model: $(this).val()
 						};
 
-					for ( brand in deviceFamily ) {
-						brandList.push(brand);
-
-						if ( brand == deviceData.brand ) {
-							for ( family in deviceFamily[brand].families ) {
-								for ( model in deviceFamily[brand].families[family].models ) {
-									deviceFamily[brand].families[family].models[model].family = family;
-									modelList.push(deviceFamily[brand].families[family].models[model]);
-								}
-							}
-						}
+					if ( parent.find('#form2object').length ) {
+						newModel.settings = form2object('form2object');
 					}
 
-					dataTemplate = {
-						model_list: modelList,
-						brand_list: brandList,
-						name: deviceData.name,
-						model: deviceData.model,
-						brand: deviceData.brand,
-						mac_address: macAddress,
-						settings: formatData(data)
-					};
-
-					parametersTemplate = $(monster.template(self, 'deviceSettings', dataTemplate));
-
-					for ( section in data ) {
-						if ( data[section].iterate ) {
-							for ( index in data[section].data ) {
-								pathArray.push(section + '[' + index + ']');
-								for ( option in data[section].data[index]) {
-									pathArray.push(option);
-									for ( field in data[section].data[index][option].data) {
-										pathArray.push(field);
-										dataField = data[section].data[index][option].data[field];
-										dataField.path = pathArray.join('.');
-
-										parametersTemplate
-											.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
-											.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-
-										pathArray.splice(pathArray.length - 1, 1);
-									}
-									pathArray.splice(pathArray.length - 1, 1);
-								}
-								pathArray.splice(pathArray.length - 1, 1);
-							}
-						} else {
-							pathArray.push(section);
-							for ( option in data[section].data) {
-								pathArray.push(option);
-								for ( field in data[section].data[option].data) {
-									pathArray.push(field);
-									dataField = data[section].data[option].data[field];
-									dataField.path = pathArray.join('.');
-
-									parametersTemplate
-										.find('.container .content[data-key="' + section + '"] .' + option)
-										.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-
-									pathArray.splice(pathArray.length -1, 1);
-								}
-								pathArray.splice(pathArray.length - 1, 1);
-							}
-							pathArray.splice(pathArray.length - 1, 1);
-						}
-					}
-
-					for ( section in deviceData.settings ) {
-						if ( Array.isArray(deviceData.settings[section]) ) {
-							for ( index in deviceData.settings[section] ) {
-								pathArray.push(section + '[' + index + ']');
-								for ( option in deviceData.settings[section][index]) {
-									pathArray.push(option);
-									for ( field in deviceData.settings[section][index][option]) {
-										pathArray.push(field);
-
-										parametersTemplate.find('*[name="' + pathArray.join('.') + '"]').val(deviceData.settings[section][index][option][field]);
-										parametersTemplate.find('*[name="' + pathArray.join('.') + '"]').attr('value', deviceData.settings[section][index][option][field]);
-
-										pathArray.splice(pathArray.length - 1, 1);
-									}
-									pathArray.splice(pathArray.length - 1, 1);
-								}
-								pathArray.splice(pathArray.length - 1, 1);
-							}
-						} else {
-							pathArray.push(section);
-							for ( option in deviceData.settings[section]) {
-								pathArray.push(option);
-								for ( field in deviceData.settings[section][option]) {
-									pathArray.push(field);
-
-									parametersTemplate.find('*[name="' + pathArray.join('.') + '"]').val(deviceData.settings[section][option][field]);
-									parametersTemplate.find('*[name="' + pathArray.join('.') + '"]').attr('value', deviceData.settings[section][option][field]);
-
-									pathArray.splice(pathArray.length -1, 1);
-								}
-								pathArray.splice(pathArray.length - 1, 1);
-							}
-							pathArray.splice(pathArray.length - 1, 1);
-						}
-					}
-
-					parametersTemplate.find('.container .content [data-key="0"]').addClass('active');
-					parametersTemplate.find('.nav-bar > .switch-link:first-child').addClass('active');
-					parametersTemplate.find('.nav-bar .switch-sublink:first-child').addClass('active');
-					parametersTemplate.find('.settings-content .container > .content:first-child').addClass('active');
-
-					parametersTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', {placeholder:' '});
-					parametersTemplate.find('.switch-sublink').each(function() {
-						$(this).text(parseInt($(this).text(), 10) + 1);
-					});
-
-					parent
-						.empty()
-						.append(parametersTemplate);
-
-					self.bindDeviceSettingsEvents(parent, accountId, macAddress, deviceData);
-				});
+					self.renderSettingsContent(parent, accountId, deviceData, newModel);
+				}
 			});
 		},
 
-		bindDeviceSettingsEvents: function(parent, accountId, macAddress, deviceData) {
+		renderSettingsContent: function(parent, accountId, deviceData, newModel) {
 			var self = this;
 
-			parent.on('click', '.switch-link', function() {
+			self.getSettings(newModel || deviceData, function(settings) {
+				var settingsContentTemplate = $(monster.template(self, 'settingsContent', { settings: settings })),
+					currentSettings = newModel ? newModel.settings : deviceData.settings,
+					pathArray = [],
+					dataField,
+					section,
+					option,
+					field,
+					index;
+
+				parent
+					.find('.settings-content')
+					.empty()
+					.append(settingsContentTemplate);
+
+				for ( section in settings ) {
+					if ( Array.isArray(settings[section].data) ) {
+						for ( index in settings[section].data ) {
+							pathArray.push(section + '[' + index +']');
+							for ( option in settings[section].data[index] ) {
+								pathArray.push(option);
+								for ( field in settings[section].data[index][option].data ) {
+									pathArray.push(field);
+									dataField = settings[section].data[index][option].data[field];
+									dataField.path = pathArray.join('.');
+
+									parent
+										.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
+										.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+
+									pathArray.splice(pathArray.length--, 1);
+								}
+								pathArray.splice(pathArray.length--, 1);
+							}
+							pathArray.splice(pathArray.length--, 1);
+						}
+					} else {
+						pathArray.push(section);
+						for ( option in settings[section].data ) {
+							pathArray.push(option);
+							for ( field in settings[section].data[option].data ) {
+								pathArray.push(field);
+								dataField = settings[section].data[option].data[field];
+								dataField.path = pathArray.join('.');
+
+								parent
+									.find('.container .content[data-key="' + section + '"] .' + option)
+									.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+
+								pathArray.splice(pathArray.length--, 1);
+							}
+							pathArray.splice(pathArray.length--, 1);
+						}
+						pathArray.splice(pathArray.length--, 1);
+					}
+				}
+
+				for ( section in currentSettings ) {
+					if ( Array.isArray(currentSettings[section]) ) {
+						for ( index in currentSettings[section] ) {
+							pathArray.push(section + '[' + index + ']');
+							for ( option in currentSettings[section][index] ) {
+								pathArray.push(option);
+								for ( field in currentSettings[section][index][option] ) {
+									pathArray.push(field);
+
+									parent
+										.find('*[name="' + pathArray.join('.') + '"]')
+										.val(currentSettings[section][index][option][field])
+										.attr('value', currentSettings[section][index][option][field]);
+
+									pathArray.splice(pathArray.length--, 1);
+								}
+								pathArray.splice(pathArray.length--, 1);
+							}
+							pathArray.splice(pathArray.length--, 1);
+						}
+					} else {
+						pathArray.push(section);
+						for ( option in currentSettings[section] ) {
+							pathArray.push(option);
+							for ( field in currentSettings[section][option] ) {
+								pathArray.push(field);
+
+								parent
+									.find('*[name="' + pathArray.join('.') + '"]')
+									.val(currentSettings[section][option][field])
+									.attr('value', currentSettings[section][option][field]);
+
+								pathArray.splice(pathArray.length--, 1);
+							}
+							pathArray.splice(pathArray.length--, 1);
+						}
+						pathArray.splice(pathArray.length--, 1);
+					}
+				}
+
+				parent.find('.nav-bar > .switch-link:first-child').addClass('active');
+				parent.find('.settings-content .container > .content:first-child').addClass('active');
+
+				parent.find('.switch-sublink').each(function() {
+					$(this).text(parseInt($(this).text(), 10) + 1);
+				});
+
+				self.bindSettingsContentEvents(parent, accountId, deviceData);
+			});
+		},
+
+		bindSettingsContentEvents: function(parent, accountId, deviceData) {
+			var self = this;
+
+			parent.find('.switch-link').on('click', function() {
 				parent.find('.switch-link.active').removeClass('active');
 				$(this).addClass('active');
 				parent.find('.settings-content .content.active').removeClass('active');
 				parent.find('.settings-content .content[data-key="' + $(this).data('key') + '"]').addClass('active');
 			});
 
-			parent.on('click', '.switch-sublink', function() {
-				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .switch-sublink.active').removeClass('active');
+			parent.find('.switch-sublink').on('click', function() {
+				parent.find('.content[data-key="' + $(this).parents('.content').data('key') + '"] .switch-sublink.active').removeClass('active');
 				$(this).addClass('active');
-				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .sub-content.active').removeClass('active');
-				parent.find('.content[data-key="' + $(this).parent().parent().data('key') + '"] .sub-content[data-key="' + $(this).data('key') + '"]').addClass('active');
+				parent.find('.content[data-key="' + $(this).parents('.content').data('key') + '"] .sub-content.active').removeClass('active');
+				parent.find('.content[data-key="' + $(this).parents('.content').data('key') + '"] .sub-content[data-key="' + $(this).data('key') + '"]').addClass('active');
 			});
 
-			parent.find('.settings-header').on('change', 'select[name="manufacturer"]', function() {
-				self.getModelsByBrand($(this).find('option:selected').val(), function(modelsList) {
-					var modelSelect = parent.find('.settings-header').find('select[name="model"]');
-
-					modelSelect
-						.empty()
-						.append($(monster.template(self, 'modelOption', modelsList)));
-				});
-			});
-
-			parent.find('.settings-header').on('change', 'select[name="model"]', function() {
-				if ( $(this).prop('value') !== '' ) {
-					deviceData = {
-						brand: parent.find('select[name="manufacturer"]').find('option:selected').val(),
-						family: $(this).find('option:selected').data('family'),
-						model: $(this).val(),
-						name: parent.find('#name').val(),
-						settings: deviceData.settings
-					};
-
-					self.renderDeviceSettings(parent, accountId, parent.find('#mac').val().replace(/:/g, ''), deviceData);
-				}
-			});
-
-			parent.find('.cancel').on('click', function() {
+			parent.find('#cancel').on('click', function() {
 				self.render(parent);
 			});
 
-			parent.find('.save').on('click', function() {
-				var index,
-					field,
-					option,
-					section,
-					dataForm = form2object('form2object'),
-					deviceExsit = deviceData.mac_address ? true : false,
-					newMacAddress = parent.find('#mac').val().replace(/:/g, '');
-
-				for ( section in dataForm ) {
-					if ( Array.isArray(dataForm[section]) ) {
-						for ( index in dataForm[section] ) {
-							for ( option in dataForm[section][index] ) {
-								for ( field in dataForm[section][index][option] ) {
-									if ( dataForm[section][index][option][field] === '' ) {
-										dataForm[section][index] = null;
-									}
-
-									break;
-								}
-
-								break;
-							}
-						}
-					}
-				}
-
-				deviceData = {
+			parent.find('#save').on('click', function() {
+				var newModel = {
 						brand: parent.find('select[name="model"] option:selected').data('brand'),
 						family: parent.find('select[name="model"] option:selected').data('family'),
 						model: parent.find('select[name="model"] option:selected').attr('value'),
 						name: parent.find('#name').val(),
-						settings: dataForm
+						settings: self.cleanForm(form2object('form2object'))
 					};
 
-				if ( deviceExsit ) {
-					self.updateDevice(accountId, macAddress, deviceData, function() {
+				if ( deviceData ) {
+					self.requestUpdateDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newModel, function() {
 						self.render(parent);
 					});
 				} else {
-					self.addDevice(accountId, newMacAddress, deviceData, function() {
+					self.requestAddDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newModel, function() {
 						self.render(parent);
 					});
 				}
 			});
 		},
 
-
-
-
-
-
-
-
-
-
 		/* Accounts Requests */
-		getAccount: function(accountId, callback) {
+		requestGetAccount: function(accountId, callback) {
 			var self = this;
 
 			monster.request({
@@ -589,9 +425,9 @@ define(function(require){
 				success: function(data, status) {
 					callback(data);
 				}
-			})
+			});
 		},
-		getAccountsByProvider: function(callback) {
+		requestGetAccountsByProvider: function(callback) {
 			var self = this;
 
 			monster.request({
@@ -603,23 +439,20 @@ define(function(require){
 					callback(data);
 				},
 				error: function(data, status) {
-					if ( data.error.code == 401 ) {
-						self.getAccount(self.accountId, function(data) {
-							var _data = data;
+					if ( data.status === 0 ) {
+						monster.ui.alert('error', 'Provisioner Server is Down!');
+					} else if ( data.error.code == 401 ) {
+						self.requestGetAccount(self.accountId, function(data) {
+							data.id = self.accountId;
 
-							_data.id = self.accountId;
-							data = { data: [_data] };
-
-							callback(data);
+							callback({ data: [data] });
 						});
-					} else {
-						monster.ui.alert('error', 'Francis\' Server is Down!');
 					}
 				}
 			});
 		},
 		/* Devices Requests */
-		addDevice: function(accountId, macAddress, data, callback) {
+		requestAddDevice: function(accountId, macAddress, data, callback) {
 			var self = this;
 
 			monster.request({
@@ -630,13 +463,16 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					self.generateFile(macAddress, function() {
+					self.requestGenerateFile(macAddress, function() {
 						callback();
 					});
+				},
+				error: function(data, status) {
+					console.log(data, status);
 				}
 			});
 		},
-		getDevice: function(accountId, macAddress, callback) {
+		requestGetDevice: function(accountId, macAddress, callback) {
 			var self = this;
 
 			monster.request({
@@ -650,7 +486,7 @@ define(function(require){
 				}
 			});
 		},
-		getDevicesByAccount: function(accountId, callback) {
+		requestGetDevicesByAccount: function(accountId, callback) {
 			var self = this;
 
 			monster.request({
@@ -663,7 +499,7 @@ define(function(require){
 				}
 			});
 		},
-		updateDevice: function(accountId, macAddress, data, callback) {
+		requestUpdateDevice: function(accountId, macAddress, data, callback) {
 			var self = this;
 
 			monster.request({
@@ -674,13 +510,13 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					self.generateFile(macAddress, function() {
+					self.requestGenerateFile(macAddress, function() {
 						callback();
 					});
 				}
 			});
 		},
-		deleteDevice: function(accountId, macAddress, callback) {
+		requestDeleteDevice: function(accountId, macAddress, callback) {
 			var self = this;
 
 			monster.request({
@@ -695,7 +531,7 @@ define(function(require){
 			});
 		},
 		/* Files Requests */
-		generateFile: function(macAddress, callback) {
+		requestGenerateFile: function(macAddress, callback) {
 			var self = this,
 				data = {
 					mac_address: macAddress,
@@ -712,9 +548,8 @@ define(function(require){
 				}
 			});
 		},
-		/* Providers Requests */
 		/* UI Requests */
-		getSettingsByModel: function(brand, model, callback) {
+		requestGetSettingsByModel: function(brand, model, callback) {
 			var self = this;
 
 			monster.request({
@@ -729,11 +564,11 @@ define(function(require){
 			});
 		},
 		/* Phones Requests */
-		getBrands: function(callback) {
+		requestGetPhones: function(callback) {
 			var self = this;
 
 			monster.request({
-				resource: 'provisioner.getBrands',
+				resource: 'provisioner.getPhones',
 				data: {
 				},
 				success: function(data, status) {
@@ -741,28 +576,94 @@ define(function(require){
 				}
 			});
 		},
-		getModelsByBrand: function(brand, callback) {
+
+		/* Methods */
+		getPhonesList: function(deviceBrand, callback) {
 			var self = this;
 
-			self.getBrands(function(data) {
-				var key,
-					model,
+			self.requestGetPhones(function(brands) {
+				var brandsList = [],
+					modelsList = [],
 					family,
-					modelsList = { data: [] };
+					model,
+					brand;
 
-				for ( key in data ) {
-					if ( brand == key) {
-						for ( family in data[key].families ) {
-							for ( model in data[key].families[family].models ) {
-								data[key].families[family].models[model].family = family;
-								modelsList.data.push(data[key].families[family].models[model]);
+				for ( brand in brands ) {
+					brandsList.push(brand);
+					if ( deviceBrand && deviceBrand == brand ) {
+						for ( family in brands[brand].families ) {
+							for ( model in brands[brand].families[family].models ) {
+								brands[brand].families[family].models[model].family = family;
+								brands[brand].families[family].models[model].brand = brand;
+								modelsList.push(brands[brand].families[family].models[model]);
 							}
 						}
 					}
 				}
 
-				callback(modelsList);
+				callback(deviceBrand ? { brands_list: brandsList, models_list: modelsList } : { brands_list: brandsList });
 			});
+		},
+
+		getSettings: function(deviceData, callback) {
+			var self = this;
+
+			self.requestGetSettingsByModel(deviceData.brand, deviceData.model, function(settings) {
+				var formatSettings = function(data) {
+						for ( var key in data ) {
+							if ( !data[key].iterate && data[key].data ) {
+								formatSettings(data[key].data);
+							} else if ( data[key].iterate === 0 ) {
+								delete data[key];
+							} else if ( data[key].iterate == 1 ) {
+								delete data[key].iterate;
+								formatSettings(data[key].data);
+							} else if ( data[key].iterate > 1 ) {
+								var iterations = data[key].iterate,
+									_data = data[key].data,
+									i = 0;
+
+								data[key].data = [];
+
+								formatSettings(_data);
+
+								for ( ; i < iterations; i++ ) {
+									data[key].data.push(_data);
+								}
+							}
+						}
+
+						return data;
+					};
+
+				callback(formatSettings(settings));
+			});
+		},
+
+		cleanForm: function(dataForm) {
+			var self = this,
+				section,
+				option,
+				index,
+				field;
+
+			for ( section in dataForm ) {
+				if ( Array.isArray(dataForm[section]) ) {
+					for ( index in dataForm[section] ) {
+						for ( option in dataForm[section][index] ) {
+							for ( field in dataForm[section][index][option] ) {
+								if ( dataForm[section][index][option][field] === '' ) {
+									dataForm[section][index] = null;
+								}
+								break;
+							}
+							break;
+						}
+					}
+				}
+			}
+
+			return dataForm;
 		}
 	};
 

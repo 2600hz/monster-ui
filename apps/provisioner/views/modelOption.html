@@ -1,4 +1,4 @@
-<option value="" selected>Select a model</option>
-{{#each data}}
-<option value="{{name}}" data-family="{{family}}">{{name}}</option>
+<option value="default" disabled selected>Select a model</option>
+{{#each models_list}}
+<option value="{{name}}" data-brand="{{brand}}" data-family="{{family}}">{{name}}</option>
 {{/each}}

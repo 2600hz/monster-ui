@@ -6,5 +6,11 @@
 	"go": "go",
 	"close" : "Close",
 	"add": "Add",
-	"noDevices": "There are no devices in this account."
+	"noDevices": "There are no devices in this account.",
+	"brand": "Brand",
+	"model": "Model",
+	"deviceName": "Device's name",
+	"macAddress": "MAC Address",
+	"cancel": "Cancel",
+	"save": "Save"
 }
