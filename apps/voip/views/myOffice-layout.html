@@ -31,7 +31,7 @@
 				</div>
 				<div class="left-section-content users-section-content">
 					{{#times totalUsers}}
-					<div class="users-element"><i class="icon-2x icon-male"></i></div>
+					<div class="users-element"><i class="icon-2x icon-male{{#compare this '<' ../totalChannels}} icon-blue{{/compare}}"></i></div>
 					{{/times}}
 				</div>
 			</div>

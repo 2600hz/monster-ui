@@ -42,6 +42,10 @@ define(function(require){
 				url: 'accounts/{accountId}/directories',
 				verb: 'GET'
 			},
+			'voip.myOffice.listChannels': {
+				url: 'accounts/{accountId}/channels',
+				verb: 'GET'
+			},
 			'voip.myOffice.listTypedCallflows': {
 				url: 'accounts/{accountId}/callflows?has_value=type',
 				verb: 'GET'
@@ -82,6 +86,7 @@ define(function(require){
 						unregisteredDevices: myOfficeData.devices.length - myOfficeData.devicesStatus.length,
 						totalNumbers: _.size(myOfficeData.numbers),
 						totalConferences: myOfficeData.totalConferences,
+						totalChannels: myOfficeData.totalChannels,
 						mainNumbers: myOfficeData.mainNumbers || [],
 						confNumbers: myOfficeData.confNumbers || [],
 						faxNumbers: myOfficeData.faxNumbers || [],
@@ -202,6 +207,17 @@ define(function(require){
 							callback(null, features);
 						});
 					},
+					channels: function(parallelCallback) {
+						monster.request({
+							resource: 'voip.myOffice.listChannels',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data) {
+								parallelCallback && parallelCallback(null, data.data);
+							}
+						});
+					},
 					// directories: function(parallelCallback) {
 					// 	monster.request({
 					// 		resource: 'voip.myOffice.listDirectories',
@@ -299,7 +315,8 @@ define(function(require){
 						color: "#b588b9"
 					}
 				},
-				totalConferences = 0;
+				totalConferences = 0,
+				channelsArray = [];
 
 			_.each(data.devices, function(val) {
 				if(val.device_type in devices) {
@@ -353,11 +370,18 @@ define(function(require){
 				}
 			});
 
+			_.each(data.channels, function(val) {
+				if(channelsArray.indexOf(val.bridge_id) < 0) {
+					channelsArray.push(val.bridge_id);
+				}
+			})
+
 			data.hasE911 = ('caller_id' in data.account 
 						 && 'emergency' in data.account.caller_id 
 						 && 'number' in data.account.caller_id.emergency
 						 && data.account.caller_id.emergency.number in data.numbers
 						 && data.numbers[data.account.caller_id.emergency.number].features.indexOf('dash_e911') >= 0);
+			data.totalChannels = channelsArray.length;
 			data.devicesData = devices;
 			data.assignedNumbersData = assignedNumbers;
 			data.numberTypesData = numberTypes;

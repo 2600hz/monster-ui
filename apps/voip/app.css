@@ -30,7 +30,7 @@
 	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
-	color: #929799;
+	color: #555;
 	font-size: 18px;
 	line-height: 30px;
 	cursor: pointer;
@@ -72,7 +72,7 @@
 
 #voip_container > .left-menu .category .title i {
 	margin: 0px 8px 0px 4px;
-	color: #929799;
+	color: #555;
 }
 
 #voip_container > .left-menu .category-group { margin-top: 20px; }
