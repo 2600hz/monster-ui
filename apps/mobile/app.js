@@ -12,44 +12,50 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/updateDevice/{activationId}',
 				verb: 'POST'
 			},
 			'mobile.listActivations': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.cancelActivation': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
 		},
 
 		subscribe: {
-			'mobile.activate': 'render'
+			'mobile.dashboard.render': 'renderDashboard',
+			'mobile.devices.render': 'renderDevices',
+			'mobile.activate.render': 'renderActivate',
+			'mobile.buy.render': 'renderBuy',
+			'mobile.models.render': 'renderModels',
+			'mobile.ideas.render': 'renderIdeas',
+			'mobile.help.render': 'renderHelp'
 		},
 
 		load: function(callback){
@@ -79,6 +85,29 @@ define(function(require){
 		// subscription handlers
 		_render: function(container) {
 			var self = this;
+			var	dataTemplate = {};
+			template = $(monster.template(self, 'app', dataTemplate)),
+			parent = _.isEmpty(container) ? $('#ws-content') : container;
+
+			self.bindEvents(template);
+
+			(parent)
+				.empty()
+				.append(template);
+		},
+
+
+		renderDashboard: function(container) {
+			var self = this,
+				template = $(monster.template(self, 'dashboard'));
+
+			(container.parent)
+				.empty()
+				.append(template);
+		},
+
+		renderDevices: function(container) {
+			var self = this;
 
 			self.listActivations(function(listActivations) {
 				var	dataTemplate = {
@@ -87,24 +116,59 @@ define(function(require){
 					template = $(monster.template(self, 'list', dataTemplate)),
 					parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-				self.bindEvents(template);
+				self.bindListEvents(template);
 
-				(parent)
+				(container.parent)
 					.empty()
 					.append(template);
 			});
 		},
 
-		renderCheckDevice: function() {
+		renderActivate: function(container) {
 			var self = this,
-				template = $(monster.template(self, 'check')),
-				parent = $('#ws-content');
+				template = $(monster.template(self, 'check'));
 
 			monster.ui.validate(template.find('#form_check'));
 
-			self.bindCheckEvents(template);
+			self.bindActivateEvents(template);
 
-			(parent)
+			(container.parent)
+				.empty()
+				.append(template);
+		},
+
+		renderBuy: function(container) {
+			var self = this,
+				template = $(monster.template(self, 'buy'));
+
+			(container.parent)
+				.empty()
+				.append(template);
+		},
+
+		renderModels: function(container) {
+			var self = this,
+				template = $(monster.template(self, 'models'));
+
+			(container.parent)
+				.empty()
+				.append(template);
+		},
+
+		renderIdeas: function(container) {
+			var self = this,
+				template = $(monster.template(self, 'ideas'));
+
+			(container.parent)
+				.empty()
+				.append(template);
+		},
+
+		renderHelp: function(container) {
+			var self = this,
+				template = $(monster.template(self, 'help'));
+
+			(container.parent)
 				.empty()
 				.append(template);
 		},
@@ -149,27 +213,75 @@ define(function(require){
 
 		},
 
-		bindEvents: function(template) {
+		bindEvents: function(parent) {
+			var self = this,
+				container = parent.find('.right-content');
+
+			parent.find('.category').on('click', function() {
+				parent
+					.find('.category')
+					.removeClass('active');
+
+				container.empty();
+
+				$(this).toggleClass('active');
+			});
+
+			var args = {
+				parent : container
+			};
+
+			parent.find('.category#dashboard').on('click', function() {
+				monster.pub('mobile.dashboard.render', args);
+			});
+
+			parent.find('.category#devices').on('click', function() {
+				monster.pub('mobile.devices.render', args);
+			});
+
+			parent.find('.category#activate').on('click', function() {
+				monster.pub('mobile.activate.render', args);
+			});
+
+			parent.find('.category#buy').on('click', function() {
+				monster.pub('mobile.buy.render', args);
+			});
+
+			parent.find('.category#models').on('click', function() {
+				monster.pub('mobile.models.render', args);
+			});
+
+			parent.find('.category#ideas').on('click', function() {
+				monster.pub('mobile.ideas.render', args);
+			});
+
+			parent.find('.category#help').on('click', function() {
+				monster.pub('mobile.help.render', args);
+			});
+
+		},
+
+		bindListEvents: function(template) {
 			var self = this;
 
-			template.find('#addNewDevice').on('click', function() {
+/*			template.find('#addNewDevice').on('click', function() {
 				self.renderEditDevice();
 			});
 
 			template.find('#checkDevice').on('click', function() {
 				self.renderCheckDevice();
-			});
+			});*/
 
-			template.find('.device-action[data-action="cancel"]').on('click', function() {
-				var deviceId = $(this).parents('.device-line').data('id');
+			template.find('.mobile-action[data-action="cancel"]').on('click', function() {
+				var deviceId = $(this).parents('.mobile-row').data('id');
 
 				self.cancelActivation(deviceId, function(activationDetails) {
 					self.render();
 				});
 			});
 
-			template.find('.device-action[data-action="edit"]').on('click', function() {
-				var deviceId = $(this).parents('.device-line').data('id');
+			template.find('.mobile-action[data-action="edit"]').on('click', function() {
+				var deviceId = $(this).parents('.mobile-row').data('id');
 
 				self.getActivation(deviceId, function(activationDetails) {
 					self.renderEditDevice(activationDetails);
@@ -254,7 +366,7 @@ define(function(require){
 
 		},
 
-		bindCheckEvents: function(template) {
+		bindActivateEvents: function(template) {
 			var self = this;
 
 			template.find('.cancel').on('click', function() {

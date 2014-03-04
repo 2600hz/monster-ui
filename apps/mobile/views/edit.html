@@ -158,6 +158,7 @@
 				</div>
 				<div id="editTabs4">
 					<h4>{{i18n.editView.voiceRouting.general}}</h4>
+					<div>{{i18n.editView.voiceRouting.description}}</div>
 
 					<div class="control-group">
 						<div class="btn-group" data-type="routingType" style='text-align:center'>					
@@ -176,9 +177,9 @@
 					<div id="kazoorouting">
 						<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
 						<div class="control-group">
-							<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+							<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.realm}}</label>
 							<div class="controls">
-								<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+								<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}"></input>
 							</div>
 						</div>
 						<div class="control-group">
@@ -198,7 +199,8 @@
 
 
 						<div id="advancedrouting">
-							<h4>{{i18n.editView.voiceRouting.inbound}}</h4>
+							<h4>{{i18n.editView.voiceRouting.inbound.title}}</h4>
+							<div>{{i18n.editView.voiceRouting.inbound.description}}</div>
 							<div class="control-group">
 								<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
 								<div class="controls">
@@ -218,7 +220,8 @@
 								</div>
 							</div>
 
-							<h4>{{i18n.editView.voiceRouting.outbound}}</h4>
+							<h4>{{i18n.editView.voiceRouting.outbound.title}}</h4>
+							<div>{{i18n.editView.voiceRouting.outbound.description}}</div>
 							<div class="control-group">
 								<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
 								<div class="controls">

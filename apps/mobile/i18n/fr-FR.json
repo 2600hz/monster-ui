@@ -72,9 +72,8 @@
 		"technologies": {
 			"label": "Technologie",
 			"3g": "3G",
-			"wimax": "Wimax",
-			"lte": "LTE",
-			"spark": "Spark"
+			"wimax": "WiMax",
+			"lte": "LTE"
 		},
 		"enable": {
 			"inbound": "Recevoir des SMS",

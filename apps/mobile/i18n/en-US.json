@@ -4,7 +4,8 @@
 
 	"checkView": {
 		"check": "Check",
-		"title": "Check if your mobile can be activated with 2600hz!",
+		"title": "Check availability",
+		"description" : "Check if your phone can be activated on our service and if your area has coverage.",
 		"goBack": "Return to activation listing",
 		"cancel": "Cancel",
 		"esn": {
@@ -21,29 +22,29 @@
 		"addActivation": "Activate a new device",
 		"checkDevice": "Check availability",
 		"editDevice": "Edit",
-		"welcomeTitle": "Welcome to the 2600hz Mobile App"
+		"welcomeTitle": "2600hz Mobile Device Manager"
 	},
 
 	"editView": {
-		"activationTitle": "Form to Activate a Sprint Phone",
+		"activationTitle": "Activate a Mobile Device",
 		"cancel": "Cancel",
-		"goBack": "Return to activation listing",
+		"goBack": "Return to mobile device list",
 		"deviceName": {
 			"label": "Device Name",
 			"placeholder": "JR's Device"
 		},
 		"icc": {
-			"label": "ICC (SIM Card)",
-			"placeholder": "89011200000172674425"
+			"label": "ICC / SIM Card ID (Optional)",
+			"placeholder": "89011200000172614320"
 		},
 		"mdn": {
 			"label": "MDN"
 		},
 		"esn": {
-			"label": "ESN"
+			"label": "Electronic Serial Number (ESN or MEID)"
 		},
 		"esnHexa": {
-			"label": "ESN (Hexa)"
+			"label": "ESN (Hex)"
 		},
 		"esnDec": {
 			"label": "ESN (Decimal)"
@@ -56,11 +57,18 @@
 		"features": "Features",
 		"miscellaneous": "Miscellaneous",
 		"voiceRouting": {
-			"inbound": "Inbound Voice Routing",
-			"outbound": "Outbound Voice Routing",
+			"inbound": { 
+				"title" : "Inbound Voice Routing",
+				"description" : "When a caller on the PSTN network dials a mobile-assigned number, where should we send the call first?"
+			},
+			"outbound": {
+				"title" : "Outbound Voice Routing",
+				"description" : "When a caller makes an outbound call from a mobile device, where should we send the call first?"
+			},
 			"kazoo": "Kazoo Routing",
 			"native": "Native Routing",
 			"general" : "Routing",
+			"realm" : "Realm",
 			"uri": {
 				"label": "URI",
 				"placeholder": "sip:222@blah.com"
@@ -75,9 +83,8 @@
 		"technologies": {
 			"label": "Data Technology",
 			"3g": "3G",
-			"wimax": "Wimax",
-			"lte": "LTE",
-			"spark": "Spark"
+			"wimax": "WiMax",
+			"lte": "LTE"
 		},
 		"enable": {
 			"inbound": "Inbound SMS",
@@ -96,11 +103,11 @@
 		"toggleRouting": "Advanced Routing",
 		"activate": "Activate this device!",
 		"sprintInfos": {
-			"title": "Sprint Info",
+			"title": "Carrier Info",
 			"imsi": "IMSI",
 			"msid": "MSID",
-			"msl": "msl",
-			"csa": "csa",
+			"msl": "MSL (Service Code)",
+			"csa": "Coverage Area",
 			"modelName": "Model Name",
 			"manufacturer": "Manufacturer",
 			"modelNumber": "Model Number",
