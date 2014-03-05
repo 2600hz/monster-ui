@@ -1,0 +1,9 @@
+<div class="results-esn">
+	{{#if esn.validationMessage}}
+		{{esn.validationMessage}}<br/>
+		{{esn.model_name}}
+	{{else}}
+		{{esn.error}}<br/>
+		{{esn.errordetail}}
+	{{/if}}
+</div>

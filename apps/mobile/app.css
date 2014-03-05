@@ -294,11 +294,11 @@
 #mobile_list .mobile-rows .grid-row.active .grid-cell:first-child { border-bottom-left-radius: 0; }
 #mobile_list .mobile-name { width: 25% !important; }
 #mobile_list .mobile-esn { width: 25% !important; }
-#mobile_list .mobile-number { width: 27% !important; }
-#mobile_list .mobile-network { width: 10% !important; }
-#mobile_list .mobile-services { width: 13% !important; }
+#mobile_list .mobile-number { width: 16% !important; }
+#mobile_list .mobile-network { width: 8% !important; }
+#mobile_list .mobile-services { width: 15% !important; }
 #mobile_list .mobile-services i { margin-right: 4px; cursor:pointer; }
-#mobile_list .mobile-actions { width: 10% !important; }
+#mobile_list .mobile-actions { width: 11% !important; }
 #mobile_list .mobile-actions i { margin-right: 4px; cursor:pointer; }
 #mobile_list .actions {
 	position: relative;
@@ -347,3 +347,114 @@
 	width: 300px;
 }
 
+/*WIZARDS*/
+
+.bootstrapWizard {
+  display: block;
+  list-style: none;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+.bootstrapWizard a:hover,
+.bootstrapWizard a:active,
+.bootstrapWizard a:focus {
+  text-decoration: none;
+}
+.bootstrapWizard li {
+  display: block;
+  float: left;
+  width: 25%;
+  text-align: center;
+  padding-left: 0;
+}
+.bootstrapWizard li:before {
+  border-top: 3px solid #55606E;
+  content: "";
+  display: block;
+  font-size: 0;
+  overflow: hidden;
+  position: relative;
+  top: 11px;
+  right: 1px;
+  width: 100%;
+  z-index: 1;
+}
+.bootstrapWizard li:first-child:before {
+  left: 50%;
+  max-width: 50%;
+}
+.bootstrapWizard li:last-child:before {
+  max-width: 50%;
+  width: 50%;
+}
+.bootstrapWizard li.complete .step {
+  background: #0aa66e;
+  padding: 1px 6px;
+  border: 3px solid #55606E;
+}
+.bootstrapWizard li .step i {
+  font-size: 10px;
+  font-weight: normal;
+  position: relative;
+  top: -1.5px;
+}
+.bootstrapWizard li .step {
+  background: #B2B5B9;
+  color: #ffffff;
+  display: inline;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 12px;
+  padding: 7px 13px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  z-index: 2;
+  transition: all 0.1s linear 0s;
+}
+.bootstrapWizard li.active .step,
+.bootstrapWizard li.active.complete .step {
+  background: #0091d9;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 7px 13px;
+  font-size: 15px;
+  border-radius: 50%;
+  border: 3px solid #55606E;
+}
+.bootstrapWizard li.complete .title,
+.bootstrapWizard li.active .title {
+  color: #2B3D53;
+}
+.bootstrapWizard li .title {
+  color: #bfbfbf;
+  display: block;
+  font-size: 13px;
+  line-height: 15px;
+  max-width: 100%;
+  position: relative;
+  table-layout: fixed;
+  text-align: center;
+  top: 20px;
+  word-wrap: break-word;
+  z-index: 104;
+}
+.wizard-actions {
+  display: block;
+  list-style: none;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+.wizard-actions li {
+  display: inline;
+}
+.tab-content.transparent {
+  background-color: transparent;
+}
+.activation-Wizard-header {margin-bottom: 20px !important}
+.activation-Wizard-body {margin-top: 20px !important}
+.clearfix {height:20px !important;}

@@ -369,20 +369,11 @@ define(function(require){
 		bindActivateEvents: function(template) {
 			var self = this;
 
-			template.find('.cancel').on('click', function() {
-				self.render();
-			});
-
-			template.find('#check').on('click', function() {
+			template.find('#verifyDevice').on('click', function() {
 				if(monster.ui.valid(template.find('#form_check'))) {
 					var formData = form2object('form_check');
 
 					monster.parallel({
-							coverage: function(callback) {
-								self.checkCoverage(formData.zipCode, function(coverage) {
-									callback && callback(null, coverage);
-								});
-							},
 							esn: function(callback) {
 								self.checkEsn(formData.esn, function(availability) {
 									callback && callback(null, availability);
@@ -392,10 +383,36 @@ define(function(require){
 						function(err, results) {
 							results = self.formatCheckData(results);
 
-							var resultsTemplate = $(monster.template(self, 'checkResults', results));
+							var resultsTemplate = $(monster.template(self, 'checkDeviceResults', results));
 
 							template
-								.find('.results')
+								.find('#device_results')
+								.empty()
+								.append(resultsTemplate)
+								.show();
+						}
+					);
+				}
+			});
+
+			template.find('#checkCoverage').on('click', function() {
+				if(monster.ui.valid(template.find('#form_check'))) {
+					var formData = form2object('form_check');
+
+					monster.parallel({
+							coverage: function(callback) {
+								self.checkCoverage(formData.zip_code, function(coverage) {
+									callback && callback(null, coverage);
+								});
+							}
+						},
+						function(err, results) {
+							//results = self.formatCheckData(results);
+
+							var resultsTemplate = $(monster.template(self, 'checkCoverageResults', results));
+
+							template
+								.find('#coverage_results')
 								.empty()
 								.append(resultsTemplate)
 								.show();
