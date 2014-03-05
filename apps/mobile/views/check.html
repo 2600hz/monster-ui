@@ -39,10 +39,8 @@
 									<td>
 										<input required type="text" id="esn" name="esn"></input>
 									</td>
-									<td rowspan=2>
-										<button id="verifyDevice" type='button' class='btn btn-primary'>Verify Device<br/>Is Eligible</button><br/><br/>
-
-									</td>
+									<td><a href='#'>How Do I Find This?</a></td>
+									 
 								</tr>
 								<tr>
 									<td>
@@ -52,8 +50,15 @@
 									<td>
 										<input type="text" id="icc" name="icc" value="{{icc}}" placeholder="{{i18n.editView.icc.placeholder}}"></input>
 									</td>
+									<td><a href='#'>How Do I Find This?</a></td>
+								</tr>
+								<tr>
+									<td colspan=3 align='center'>
+										<button id="verifyDevice" type='button' class='btn btn-primary'>Verify Device<br/>Is Eligible</button>
+									</td>
 								</tr>
 							</table>
+							
 							<div class='results' id="device_results"></div>
 						</div>
 	
@@ -66,12 +71,18 @@
 							<table cellpadding='20px'>
 								<tr>
 									<td>
-										{{i18n.checkView.zipCode.label}}
+										Phone's Home Zip Code<br/>
+										(Primary Coverage Area)
 									</td>
 									<td>
 										<input required type="text" id="zipCode" name="zip_code" value="{{zip_code}}" placeholder="{{i18n.editView.zipCode.placeholder}}"></input>
 									</td>
-									<td rowspan=2>
+									<td>
+										<a href="#">See Coverage Map</a>
+									</td>
+								</tr>
+								<tr>
+									<td align='center' colspan='3'>
 										<button id="checkCoverage" type='button' class='btn btn-primary'>Verify Coverage<br/>of Area</button>
 									</td>
 								</tr>
