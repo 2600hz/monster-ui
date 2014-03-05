@@ -1,0 +1,208 @@
+<div class="mobile-wrapper" id="activate_view">
+	<div class="title-header">
+		<h1>{{i18n.editView.activationTitle}}</h1>
+		<!--<a class="monster-link cancel">{{i18n.editView.goBack}}</a>-->
+	</div>
+
+	<div class="form-wrapper">
+		<form id="form_check" novalidate="novalidate">
+			<div id="bootstrap-wizard-1" class="col-sm-12">
+				<div class="activation-Wizard-header">
+					<ul class="bootstrapWizard form-wizard">
+						<li class="active" data-target="#step1">
+							<a href="#tab1" data-toggle="tab"> <span class="step">1</span> <span class="title">Validate Device</span> </a>
+						</li>
+						<li data-target="#step2">
+							<a href="#tab2" data-toggle="tab"> <span class="step">2</span> <span class="title">Check Coverage</span> </a>
+						</li>
+						<li data-target="#step3">
+							<a href="#tab3" data-toggle="tab"> <span class="step">3</span> <span class="title">Activate Device</span> </a>
+						</li>
+						<li data-target="#step4">
+							<a href="#tab4" data-toggle="tab"> <span class="step">4</span> <span class="title">Confirmation</span> </a>
+						</li>
+					</ul>
+
+				</div>
+				<div class="clearfix"></div>
+				<div class="activaiton-Wizard-body tab-content">
+					<div class="tab-pane active" id="tab1">
+						<br>
+						<h3><strong>Step 1 </strong> - Validate Device</h3>
+						<center>
+						<div class="control-group">
+							<table cellpadding='20px'>
+								<tr>
+									<td>
+										Phone's ESN/MEID Number:<br/>
+										(15 or 20 characters)
+									</td>
+									<td>
+										<input required type="text" id="esn" name="esn"></input>
+									</td>
+									<td><a href='#'>How Do I Find This?</a></td>
+									 
+								</tr>
+								<tr>
+									<td>
+										SIM Card Number (ICC ID):<br/>
+										(OPTIONAL: LTE Devices Only)
+									</td>
+									<td>
+										<input type="text" id="icc" name="icc" value="{{icc}}" placeholder="{{i18n.editView.icc.placeholder}}"></input>
+									</td>
+									<td><a href='#'>How Do I Find This?</a></td>
+								</tr>
+								<tr>
+									<td colspan=3 align='center'>
+										<button id="verifyDevice" type='button' class='btn btn-primary'>Verify Device<br/>Is Eligible</button>
+									</td>
+								</tr>
+							</table>
+							
+							<div class='results device_results'></div>
+						</div>
+						</center>
+					</div>
+					<div class="tab-pane" id="tab2">
+						<br>
+						<h3><strong>Step 2</strong> - Check Coverage</h3>
+						<center>
+						<div class="control-group">
+
+							<table cellpadding='20px'>
+								<tr>
+									<td>
+										Phone's Home Zip Code<br/>
+										(Primary Coverage Area)
+									</td>
+									<td>
+										<input required type="text" id="zipCode" name="zip_code" value="{{zip_code}}" placeholder="{{i18n.editView.zipCode.placeholder}}"></input>
+									</td>
+									<td>
+										<a href="#">See Coverage Map</a>
+									</td>
+								</tr>
+								<tr>
+									<td align='center' colspan='3'>
+										<button id="checkCoverage" type='button' class='btn btn-primary'>Verify Coverage<br/>of Area</button>
+									</td>
+								</tr>
+							</table>
+							<div class='results coverage_results'></div>
+						</div>
+						</center>
+					</div>
+					<div class="tab-pane" id="tab3">
+						<br>
+						<h3><strong>Step 3</strong> - Activate Device</h3>
+						<br/>
+						<center>
+						<div id="activateESN">Please complete step 1 to verify compatibilty of your device!</div>
+						<br/>
+						<div id="activateZip">Please complete step 2 to verify coverage of your zip code!</div>
+						<br/>
+						
+						<div id="activateReady" style="display:none">
+
+							<div class="control-group">
+								<div class="btn-group" data-type="routingType" style='text-align:center'>					
+									 <button class="btn routingType" type='button' data-value="native">Native</button> 
+									 <button class="btn routingType" type='button' data-value="kazoo">Kazoo</button> 
+									 <button class="btn routingType" type='button' data-value="advanced">Advanced</button> 
+								</div>
+								<input id="voiceRoutingType" name="voice.routingType" type='hidden'/>
+
+							</div>
+
+							<div id="kazoorouting">
+								<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
+								<div class="control-group">
+									<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.realm}}</label>
+									<div class="controls">
+										<input type="text" id="mobileUrl" name="voice.kazoo.routing.realm" value="{{voice.kazoo.routing.realm}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="mobileUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+									<div class="controls">
+										<input type="text" id="mobileUsername" name="voice.kazoo.routing.username" value="{{voice.kazoo.routing.username}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="mobilePassword">{{i18n.editView.voiceRouting.password.label}}</label>
+									<div class="controls">
+										<input type="text" id="mobilePassword" name="voice.kazoo.routing.password" value="{{voice.kazoo.routing.password}}"></input>
+									</div>
+								</div>
+							</div>
+							
+
+
+							<div id="advancedrouting">
+								<h4>{{i18n.editView.voiceRouting.inbound.title}}</h4>
+								<div>{{i18n.editView.voiceRouting.inbound.description}}</div>
+								<div class="control-group">
+									<label class="control-label" for="inboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+									<div class="controls">
+										<input type="text" id="inboundUrl" name="voice.inbound.routing.uri" value="{{voice.inbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="inboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+									<div class="controls">
+										<input type="text" id="inboundUsername" name="voice.inbound.routing.username" value="{{voice.inbound.routing.username}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="inboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+									<div class="controls">
+										<input type="text" id="inboundPassword" name="voice.inbound.routing.password" value="{{voice.inbound.routing.password}}"></input>
+									</div>
+								</div>
+
+								<h4>{{i18n.editView.voiceRouting.outbound.title}}</h4>
+								<div>{{i18n.editView.voiceRouting.outbound.description}}</div>
+								<div class="control-group">
+									<label class="control-label" for="outboundUrl">{{i18n.editView.voiceRouting.uri.label}}</label>
+									<div class="controls">
+										<input type="text" id="outboundUrl" name="voice.outbound.routing.uri" value="{{voice.outbound.routing.uri}}" placeholder="{{i18n.editView.voiceRouting.uri.placeholder}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="outboundUsername">{{i18n.editView.voiceRouting.username.label}}</label>
+									<div class="controls">
+										<input type="text" id="outboundUsername" name="voice.outbound.routing.username" value="{{voice.outbound.routing.username}}"></input>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="outboundPassword">{{i18n.editView.voiceRouting.password.label}}</label>
+									<div class="controls">
+										<input type="text" id="outboundPassword" name="voice.outbound.routing.password" value="{{voice.outbound.routing.password}}"></input>
+									</div>
+								</div>
+							</div> <!--advanced routing-->
+						<br/>
+						<button type='button' id='activateBtn' class='btn btn-primary'>Activate your Phone!</button>				
+						</div>
+
+						</center>
+					</div>
+					<div class="tab-pane" id="tab4">
+						<br>
+						<h3><strong>Step 4</strong> - Confirmation</h3>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--
+		<div class="button-wrapper">
+			<button class="btn btn-danger cancel">{{i18n.editView.cancel}}</button>
+			{{#if esn_dec}}
+				<button class="btn btn-success" id="update_sprint_phone">{{i18n.editView.update}}</button>
+			{{else}}
+				<button class="btn btn-success" id="activate_sprint_phone">{{i18n.editView.activate}}</button>
+			{{/if}}
+		</div>-->
+	</div>
+</div>

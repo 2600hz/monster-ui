@@ -126,7 +126,7 @@ define(function(require){
 
 		renderActivate: function(container) {
 			var self = this,
-				template = $(monster.template(self, 'check'));
+				template = $(monster.template(self, 'activate'));
 
 			monster.ui.validate(template.find('#form_check'));
 
@@ -135,6 +135,23 @@ define(function(require){
 			(container.parent)
 				.empty()
 				.append(template);
+
+
+			if (!_.isEmpty(data) && 'voice' in data && data.voice.routingType) {
+				$('button[data-value="'+data.voice.routingType+'"]').addClass('btn-primary');
+				switch (data.voice.routingType) {
+					case 'native': 
+						template.find("#advancedrouting").hide();
+						template.find("#kazoorouting").hide();
+						break;
+					case 'advanced':
+						template.find("#advancedrouting").show();
+						template.find("#kazoorouting").hide();
+						break;
+				};
+			}
+			else
+				template.find('button[data-value="kazoo"]').addClass('btn-primary');
 		},
 
 		renderBuy: function(container) {
@@ -292,7 +309,7 @@ define(function(require){
 		bindEditEvents: function(template, data) {
 			var self = this;
 			console.log(data);
-
+/*
 			template.find('#activate_sprint_phone').on('click', function(e) {
 				if(monster.ui.valid(template.find('#form_activation'))) {
 					var formData = form2object('form_activation'),
@@ -305,12 +322,11 @@ define(function(require){
 						else {
 							monster.ui.alert('error', device.error);
 						}
-						/*var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
-
-						toastr.success(template);*/
+						//var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
+						//toastr.success(template);
 					});
 				}
-			});
+			});*/
 
 			template.find('#update_sprint_phone').on('click', function(e) {
 				if(monster.ui.valid(template.find('#form_activation'))) {
@@ -386,10 +402,16 @@ define(function(require){
 							var resultsTemplate = $(monster.template(self, 'checkDeviceResults', results));
 
 							template
-								.find('#device_results')
+								.find('.device_results')
 								.empty()
 								.append(resultsTemplate)
 								.show();
+
+							$("#activateESN").html("ESN: " + formData.esn);
+
+							if ($("#activateESN").html().substring(0,3)=="ESN" && $("#activateZip").html().substring(0,3)=="Zip")
+								$("#activateReady").show();
+								
 						}
 					);
 				}
@@ -412,12 +434,62 @@ define(function(require){
 							var resultsTemplate = $(monster.template(self, 'checkCoverageResults', results));
 
 							template
-								.find('#coverage_results')
+								.find('.coverage_results')
 								.empty()
 								.append(resultsTemplate)
 								.show();
+
+							$("#activateZip").html("ZipCode: " + formData.zip_code);
+							if ($("#activateESN").html().substring(0,3)=="ESN" && $("#activateZip").html().substring(0,3)=="Zip")
+								$("#activateReady").show();
 						}
 					);
+				}
+			});
+			template.find('#activateBtn').on('click', function(e) {
+				if(monster.ui.valid(template.find('#form_check'))) {
+					var formData = form2object('form_check'),
+				    	formattedData = self.cleanEditData(formData);
+
+					self.activatePhone(formattedData, function(device) {
+						if(device.service_info) {
+							self.renderEditDevice(device);
+						}
+						else {
+							monster.ui.alert('error', device.error);
+						}
+						//var template = monster.template(self, '!' + self.i18n.active().activationSuccess, { deviceName: device[0].name });
+						//toastr.success(template);
+					});
+				}
+			});
+
+
+
+
+			template.find('.routingType').on('click', function(e) {
+				if ($(this).attr('data-value')=="native") {
+					$("#kazoorouting").hide();
+					$("#advancedrouting").hide();
+				}
+
+				if ($(this).attr('data-value')=="kazoo") { 
+					$("#kazoorouting").show();
+					$("#advancedrouting").hide();
+				}					
+
+				if ($(this).attr('data-value')=="advanced") { 
+					$("#kazoorouting").hide();
+					$("#advancedrouting").show();
+				}	
+
+			});
+
+			template.find('.btn-group .btn').on('click', function(ev) {
+				if(!($(this).hasClass('btn-primary'))) {
+					$('.btn', $(this).parent()).removeClass('btn-primary');
+					$(this).addClass('btn-primary');
+					$("#voiceRoutingType").val( $(this).attr("data-value") );	
 				}
 			});
 		},
@@ -464,10 +536,11 @@ define(function(require){
 			/* Setting defaults */
 			data = $.extend(true, {}, data, defaults);
 
+			/*
 			if(data.extra.method) {
 				data.voice.device_unavailable[data.extra.method] = data.extra.methodValue;
 			}
-
+			*/
 			/*
 			if(data.extra.esn) {
 				var length = data.extra.esn.length;
