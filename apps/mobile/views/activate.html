@@ -104,14 +104,19 @@
 						<br/>
 						
 						<div id="activateReady" style="display:none">
-
+						<table cellpadding='10px'>
+							<tr>
+								<td>Device Name:</td>
+								<td><input type='text' name='device_name'/></td>
+							</tr>
+						</table>
 							<div class="control-group">
 								<div class="btn-group" data-type="routingType" style='text-align:center'>					
 									 <button class="btn routingType" type='button' data-value="native">Native</button> 
-									 <button class="btn routingType" type='button' data-value="kazoo">Kazoo</button> 
+									 <button class="btn routingType btn-primary" type='button' data-value="kazoo">Kazoo</button> 
 									 <button class="btn routingType" type='button' data-value="advanced">Advanced</button> 
 								</div>
-								<input id="voiceRoutingType" name="voice.routingType" type='hidden'/>
+								<input id="voiceRoutingType" name="voice.routingType" value='kazoo' type='hidden'/>
 
 							</div>
 
@@ -183,7 +188,8 @@
 								</div>
 							</div> <!--advanced routing-->
 						<br/>
-						<button type='button' id='activateBtn' class='btn btn-primary'>Activate your Phone!</button>				
+
+						<button type='button' id='activateBtn' class='btn btn-primary'>Activate your Phone!</button>			
 						</div>
 
 						</center>

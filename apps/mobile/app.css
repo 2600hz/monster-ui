@@ -159,14 +159,10 @@
 	margin-top: -2px;
 }
 
-.mobile-wrapper#edit_view #advancedrouting {
+#advancedrouting {
 	display:none;
 	border: 1px;
 }
-
-
-
-
 
 
 #mobile_list .mobile-header .add-group i {
