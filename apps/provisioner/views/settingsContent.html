@@ -1,0 +1,35 @@
+<div class="nav nav-bar">
+{{#each settings}}
+	<a class="switch-link" data-key="{{@key}}">{{text}}</a>
+{{/each}}
+</div>
+<div class="container" id="form2object">
+{{#each settings}}
+	<form class="form-horizontal content" data-key="{{@key}}">
+	{{#if iterate}}
+		<div class="nav nav-bar">
+		{{#each data}}
+			<a class="switch-sublink{{#compare @index '==' 0}} active{{/compare}}" data-key="{{@index}}">{{@index}}</a>
+		{{/each}}
+		</div>
+		{{#each data}}
+		<div class="sub-content{{#compare @index '==' 0}} active{{/compare}}" data-key="{{@index}}">
+			{{#each this}}
+			<div class="{{@key}}">
+				<legend>{{text}}</legend>
+			</div>
+			{{/each}}
+		</div>
+		{{/each}}
+	{{else}}
+		{{#each data}}
+		<div class="{{@key}}">
+			<legend>{{text}}</legend>
+		</div>
+		{{/each}}
+	{{/if}}
+	</form>
+{{/each}}
+	<button class="btn btn-danger pull-left" id="cancel">{{i18n.cancel}}</button>
+	<button class="btn btn-success pull-right" id="save">{{i18n.save}}</button>
+</div>
