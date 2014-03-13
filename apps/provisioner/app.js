@@ -389,6 +389,7 @@ define(function(require){
 										pathArray.push(field);
 										dataField = data[section].data[index][option].data[field];
 										dataField.path = pathArray.join('.');
+										dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField. value;
 
 										parametersTemplate
 											.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
@@ -408,6 +409,7 @@ define(function(require){
 									pathArray.push(field);
 									dataField = data[section].data[option].data[field];
 									dataField.path = pathArray.join('.');
+									dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField. value;
 
 									parametersTemplate
 										.find('.container .content[data-key="' + section + '"] .' + option)
@@ -763,6 +765,10 @@ define(function(require){
 
 				callback(modelsList);
 			});
+		},
+
+		generateRandomLocalPort: function(args) {
+			return _.random(args[0], args[1]);
 		}
 	};
 
