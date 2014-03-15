@@ -495,13 +495,15 @@ define(function(require){
 						listCodecs: {
 							audio: {
 								'G729': 'G729 - 8kbps (Requires License)',
-								'PCMU': 'G711u / PCMU - 64kbps (North America)',
+								'PCMU': 'G711u / PCMU - 64kbps (NA)',
 								'PCMA': 'G711a / PCMA - 64kbps (Elsewhere)',
 								'GSM': 'GSM',
 								'G722_16': 'G722 (HD) @ 16kHz',
 								'G722_32': 'G722.1 (HD) @ 32kHz',
 								'CELT_48': 'Siren (HD) @ 48kHz',
-								'CELT_64': 'Siren (HD) @ 64kHz'
+								'CELT_64': 'Siren (HD) @ 64kHz',
+								'OPUS': 'OPUS',
+								'Speex': 'Speex'
 							},
 							video: {
 								'H261': 'H261',

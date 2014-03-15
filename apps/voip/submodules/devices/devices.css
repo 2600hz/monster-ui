@@ -269,7 +269,8 @@
 	margin-right: 40px;
 }
 .edit-device .content .codec-selector .box-selector ul {
-	min-height: 328px;
+	height: 328px;
+	overflow: auto;
 }
 
 .edit-device .content #video_codec_selector .box-selector ul {
