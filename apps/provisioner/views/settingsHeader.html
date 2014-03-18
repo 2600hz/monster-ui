@@ -1,44 +1,62 @@
 <div class="provisioner-container">
+	<div class="top-box clearfix">
+		<div class="settings-tab{{#if isReseller}} tab3{{else}} tab2{{/if}} active" data-tab="device">
+			{{ i18n.deviceSettings }}
+		</div>
+		<div class="settings-tab{{#if isReseller}} tab3{{else}} tab2{{/if}}" data-tab="account">
+			{{ i18n.accountSettings }}
+		</div>
+		{{#if isReseller}}
+		<div class="settings-tab tab3" data-tab="provider">
+			{{ i18n.providerSettings }}
+		</div>
+		{{/if}}
+	</div>
 	<div class="device-settings">
 		<div class="settings-header">
-			<form class="form-inline row-fluid">
-				<div class="span3">
-					<label class="span12" for="manufacturer">
-						{{i18n.brand}}
-						<select class="span12" name="manufacturer">
-						{{#compare device '===' undefined}}
-							<option value="default" disabled selected>Select a brand</option>
-						{{/compare}}
-						{{#each brands_list }}
-							<option value="{{this}}"{{#compare this '==' ../device.brand }} selected{{/compare}}>{{this}}</option>
-						{{/each}}
-						</select>
-					</label>
+			<div class="row-fluid">
+				<div class="span2">
+					<button class="btn" id="reset">Reset</button>
 				</div>
-				<div class="span3">
-					<label class="span12" for="model">
-						{{i18n.model}}
-						<select class="span12" name="model"{{#compare device '===' undefined}} disabled{{/compare}}>
-						{{#compare device '===' undefined}}
-							<option value="default" disabled selected>Select a model</option>
-						{{/compare}}
-						{{#each models_list}}
-							<option value="{{name}}"{{#compare name '==' ../device.model }} selected{{/compare}} data-brand="{{brand}}" data-family="{{family}}">{{name}}</option>
-						{{/each}}
-						</select>
-					</label>
+				<div class="span10">
+					<div class="span3">
+						<label class="span12" for="manufacturer">
+							{{i18n.brand}}
+							<select class="span12" name="manufacturer">
+							{{#compare device '===' undefined}}
+								<option value="default" disabled selected>Select a brand</option>
+							{{/compare}}
+							{{#each brands_list }}
+								<option value="{{this}}"{{#compare this '==' ../device.brand }} selected{{/compare}}>{{this}}</option>
+							{{/each}}
+							</select>
+						</label>
+					</div>
+					<div class="span3">
+						<label class="span12" for="model">
+							{{i18n.model}}
+							<select class="span12" name="model"{{#compare device '===' undefined}} disabled{{/compare}}>
+							{{#compare device '===' undefined}}
+								<option value="default" disabled selected>Select a model</option>
+							{{/compare}}
+							{{#each models_list}}
+								<option value="{{name}}"{{#compare name '==' ../device.model }} selected{{/compare}} data-brand="{{brand}}" data-family="{{family}}">{{name}}</option>
+							{{/each}}
+							</select>
+						</label>
+					</div>
+					<div class="span3">
+						<label class="span12" for="name">
+							{{i18n.deviceName}} <input class="span12" type="text" id="name" value="{{device.name}}">
+						</label>
+					</div>
+					<div class="span3">
+						<label class="span12" for="mac">
+							{{i18n.macAddress}} <input class="span12" type="text" id="mac"{{#if device.mac_address}} disabled{{/if}} value="{{device.mac_address}}">
+						</label>
+					</div>
 				</div>
-				<div class="span3">
-					<label class="span12" for="name">
-						{{i18n.deviceName}} <input class="span12" type="text" id="name" value="{{device.name}}">
-					</label>
-				</div>
-				<div class="span3">
-					<label class="span12" for="mac">
-						{{i18n.macAddress}} <input class="span12" type="text" id="mac"{{#if device.mac_address}} disabled{{/if}} value="{{device.mac_address}}">
-					</label>
-				</div>
-			</form>
+			</div>
 		</div>
 		<div class="settings-content">
 		</div>
