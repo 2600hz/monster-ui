@@ -252,6 +252,9 @@ define(function(require){
 						required: true,
 						mac: true
 					},
+					'mobile.mdn': {
+						number: true
+					},
 					'sip.username': {
 						required: true
 					},
@@ -265,13 +268,13 @@ define(function(require){
 				ignore: '' // Do not ignore hidden fields
 			});
 
-			if($.inArray(type, ['sip_device', 'smartphone', 'softphone', 'fax', 'ata']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'mobile', 'softphone', 'fax', 'ata']) > -1) {
 				templateDevice.find('#audio_codec_selector .selected-codecs, #audio_codec_selector .available-codecs').sortable({
 					connectWith: '.connectedSortable'
 				}).disableSelection();
 			}
 
-			if($.inArray(type, ['sip_device', 'smartphone', 'softphone']) > -1) {
+			if($.inArray(type, ['sip_device', 'smartphone', 'mobile', 'softphone']) > -1) {
 				templateDevice.find('#video_codec_selector .selected-codecs, #video_codec_selector .available-codecs').sortable({
 					connectWith: '.connectedSortable'
 				}).disableSelection();
@@ -413,8 +416,8 @@ define(function(require){
 
 		devicesMergeData: function(originalData, template) {
 			var self = this,
-				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'fax', 'ata', 'softphone', 'smartphone']) > -1,
-				hasSIP = $.inArray(originalData.device_type, ['fax', 'ata', 'softphone', 'smartphone']) > -1,
+				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'fax', 'ata', 'softphone', 'smartphone', 'mobile']) > -1,
+				hasSIP = $.inArray(originalData.device_type, ['fax', 'ata', 'softphone', 'smartphone', 'mobile']) > -1,
 				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone', 'smartphone']) > -1,
 				formData = form2object('form_device');
 
@@ -575,6 +578,13 @@ define(function(require){
 							username: 'user_' + monster.util.randomString(10)
 						}
 					},
+					mobile: {
+						sip: {
+							password: monster.util.randomString(12),
+							realm: monster.apps['auth'].currentAccount.realm,
+							username: 'user_' + monster.util.randomString(10)
+						}
+					},
 					smartphone: {
 						call_forward: {
 							require_keypress: true,
@@ -658,6 +668,7 @@ define(function(require){
 					cellphone: 'icon-telicon-mobile-phone',
 					smartphone: 'icon-telicon-sprint-phone',
 					landline: 'icon-telicon-home-phone',
+					mobile: 'icon-telicon-sprint-phone',
 					softphone: 'icon-telicon-soft-phone',
 					sip_device: 'icon-telicon-voip-phone',
 					fax: 'icon-telicon-fax',

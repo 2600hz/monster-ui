@@ -176,6 +176,14 @@
 			"keepCallerId": "Keep Original Caller-ID",
 			"hideContactList": "Hide from Contact List"
 		},
+		"mobile": {
+			"addTitle": "Adding a Mobile",
+			"deviceName": "Device Name",
+			"editTitle": "Editing Mobile: {{name}}",
+			"mdn": "MDN",
+			"mdnPlaceholder": "10 digits phone number",
+			"new": "New Mobile"
+		},
 		"smartphone": {
 			"addTitle": "Adding a Smartphone",
 			"deviceName": "Device Name",
@@ -227,6 +235,7 @@
 			"cellphone": "Cell Phone",
 			"sip_device": "SIP Phone",
 			"smartphone": "Smartphone",
+			"mobile": "Mobile",
 			"softphone": "Soft Phone",
 			"landline": "Landline",
 			"fax": "Fax",

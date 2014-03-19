@@ -110,7 +110,7 @@ define(function(require){
 								value: val.count,
 								color: val.color
 							};
-						}).sort(function(a, b) { return b.value - a.value ; }), 
+						}).sort(function(a, b) { return b.value - a.value ; }),
 						chartOptions
 					),
 					assignedNumbersChart = new Chart(template.find('#dashboard_assigned_numbers_chart').get(0).getContext("2d")).Doughnut(
@@ -119,7 +119,7 @@ define(function(require){
 								value: val.count,
 								color: val.color
 							};
-						}).sort(function(a, b) { return b.value - a.value ; }), 
+						}).sort(function(a, b) { return b.value - a.value ; }),
 						chartOptions
 					),
 					numberTypesChart = new Chart(template.find('#dashboard_number_types_chart').get(0).getContext("2d")).Doughnut(
@@ -128,7 +128,7 @@ define(function(require){
 								value: val.count,
 								color: val.color
 							};
-						}).sort(function(a, b) { return b.value - a.value ; }), 
+						}).sort(function(a, b) { return b.value - a.value ; }),
 						chartOptions
 					);
 
@@ -265,6 +265,11 @@ define(function(require){
 						count: 0,
 						color: "#00a1e0"
 					},
+					"mobile": {
+						label: self.i18n.active().devices.types.mobile,
+						count: 0,
+						color: "#00a1e0"
+					},
 					"softphone": {
 						label: self.i18n.active().devices.types.softphone,
 						count: 0,
@@ -376,8 +381,8 @@ define(function(require){
 				}
 			})
 
-			data.hasE911 = ('caller_id' in data.account 
-						 && 'emergency' in data.account.caller_id 
+			data.hasE911 = ('caller_id' in data.account
+						 && 'emergency' in data.account.caller_id
 						 && 'number' in data.account.caller_id.emergency
 						 && data.account.caller_id.emergency.number in data.numbers
 						 && data.numbers[data.account.caller_id.emergency.number].features.indexOf('dash_e911') >= 0);

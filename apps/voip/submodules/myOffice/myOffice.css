@@ -117,6 +117,10 @@
 }
 
 /* Devices Chart */
+#myoffice_container .devices-section-content .devices-chart canvas {
+	margin: 7px 0;
+}
+
 #myoffice_container .devices-section-content .devices-chart-legend {
 	margin-left: 150px;
 	margin-right: 10px;
@@ -258,11 +262,11 @@
 }
 
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-div .div-title {
-	height: 40px;  
+	height: 40px;
 	line-height: 40px;
 	padding: 10px;
-	background-color: #f6f6f6;            
-	font-size: 22px;  
+	background-color: #f6f6f6;
+	font-size: 22px;
 	color: #555;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-div .div-title .number {
