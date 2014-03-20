@@ -255,10 +255,10 @@
 		"changeUsername": "Change",
 		"confirmDeleteUser": "Deleting a user will delete this user and his Voicemail Box, and unassign the devices and numbers that were assigned to him. Do you want to continue?",
 		"dialogChangePassword": {
-			"help": "You can set a new password by just typing any password you want, along with the new username!",
+			"help": "You can set a new password by just typing any password you want, along with the Email address!",
 			"password": "Password",
 			"passwordPlaceholder": "Password (Min. 8 characters)",
-			"title": "Update username and password",
+			"title": "Update Email and password",
 			"username": "User's Email address"
 		},
 		"dialogCreationUser": {
@@ -330,7 +330,6 @@
 		"call_forward": {
 			"directCallsOnly": "Forward direct calls only",
 			"headline": "User Call Forwarding Settings",
-			"help": "Users can change these settings from the user portal.",
 			"keepCallerId": "Keep your Caller-ID",
 			"label": "Forward all calls to this number",
 			"placeholder": "+14157283992",
@@ -414,7 +413,7 @@
 			"alwaysOpenDescription": "Choose this option if you want incoming calls to be handled the same way all the time.",
 			"customHoursTitle": "Custom Office Hours",
 			"customHoursDescription": "Choose this option if you want incoming calls to be handled differently when your office is closed.",
-			"listTitle": "Cutsom Hours",
+			"listTitle": "Custom Hours",
 			"timezone": "Company Timezone:",
 			"to": "to",
 			"lunchbreakTitle": "Are you closed for lunch hours?"
