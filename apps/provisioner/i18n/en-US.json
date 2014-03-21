@@ -2,7 +2,7 @@
 	"devices": "Devices",
 	"delete": "Delete",
 	"update": "Update",
-	"add": "Add",
+	"addDevice": "Add Device",
 	"noDevices": "There are no devices in this account.",
 	"deviceSettings": "Device's Settings",
 	"accountSettings": "Account's Settings",
@@ -12,5 +12,10 @@
 	"deviceName": "Device's name",
 	"macAddress": "MAC Address",
 	"cancel": "Cancel",
-	"save": "Save"
+	"save": "Save",
+	"reset": "Reset",
+	"selectBrand": "Select a brand",
+	"selectModel": "Select a model",
+	"providerSettings": "Provider Settings",
+	"accountSettings": "Account Settings"
 }
