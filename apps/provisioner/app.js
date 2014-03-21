@@ -125,6 +125,7 @@ define(function(require){
 					}
 
 					dataTemplate.data[0].devices = data;
+					dataTemplate.isReseller = monster.apps.auth.isReseller;
 					appTemplate = $(monster.template(self, 'app', dataTemplate));
 					appTemplate.find('.account-section[data-id="' + dataTemplate.data[0].id + '"]').addClass('active');
 
@@ -194,17 +195,19 @@ define(function(require){
 					var accountId = parent.find('.device-box.selected').parent().parent().data('id'),
 						macAddress = parent.find('.device-box.selected').data('mac-address');
 
-					self.requestDeleteDevice(accountId, macAddress, function() {
-						var wrapper = parent.find('.device-box.selected').parent();
+					if ( macAddress ) {
+						self.requestDeleteDevice(accountId, macAddress, function() {
+							var wrapper = parent.find('.device-box.selected').parent();
 
-						parent.find('.device-box.selected').remove();
+							parent.find('.device-box.selected').remove();
 
-						if ( $(wrapper).is(':empty') ) {
-							$(wrapper)
-								.empty()
-								.append($(monster.template(self, 'noDevice')));
-						}
-					});
+							if ( $(wrapper).is(':empty') ) {
+								$(wrapper)
+									.empty()
+									.append($(monster.template(self, 'noDevice')));
+							}
+						});
+					}
 				});
 			}
 
@@ -212,12 +215,27 @@ define(function(require){
 				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
 					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
 
-				self.requestGetDevice(accountId, macAddress, function(data) {
+				if ( macAddress ) {
 					self.renderSettingsHeader(parent, accountId, macAddress);
-				});
+				}
+			});
+
+			parent.find('#update_provider').on('click', function() {
+				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
+					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
+
+				if ( monster.apps.auth.isReseller ) {
+					self.renderSettingsHeader(parent);
+				}
 			});
 
 			parent.find('.account-section .add-device').on('click', function() {
+				var accountId = $(this).parents('.account-section').data('id');
+
+				self.renderSettingsHeader(parent, accountId, 'new');
+			});
+
+			parent.find('.account-section .update-account').on('click', function() {
 				var accountId = $(this).parents('.account-section').data('id');
 
 				self.renderSettingsHeader(parent, accountId);
@@ -226,7 +244,7 @@ define(function(require){
 
 		renderSettingsHeader: function(parent, accountId, macAddress) {
 			var self = this,
-				render = function(data) {
+				loadHeader = function(data) {
 					self.getPhonesList(data ? data.brand : null, function(dataTemplate) {
 						var settingsHeaderTemplate;
 
@@ -234,15 +252,11 @@ define(function(require){
 							dataTemplate.device = data;
 						}
 
-						if ( monster.apps.auth.isReseller ) {
-							dataTemplate.isReseller = monster.apps.auth.isReseller;
-						}
-
 						settingsHeaderTemplate = $(monster.template(self, 'settingsHeader', dataTemplate));
 						settingsHeaderTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', { placeholder: ' ' });
 
 						parent
-							.empty()
+							.find('.settings-header')
 							.append(settingsHeaderTemplate);
 
 						self.bindSettingsHeaderEvents(parent, accountId, macAddress);
@@ -255,52 +269,36 @@ define(function(require){
 					});
 				};
 
+			parent
+				.empty()
+				.append($(monster.template(self, 'settings')));
+
+
 			if ( macAddress ) {
-				self.requestGetDevice(accountId, macAddress, function(data) {
-					render(data);
+				if ( macAddress == 'new' ) {
+					loadHeader();
+				} else {
+					self.requestGetDevice(accountId, macAddress, function(data) {
+						loadHeader(data);
+					});
+				}
+			} else if ( accountId ) {
+				self.requestGetAccount(accountId, function(data) {
+					self.requestGetGlobalSettings(function(settings) {
+						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
+					});
 				});
-			} else {
-				render();
+			} else if ( monster.apps.auth.isReseller) {
+				self.requestGetProvider(function(data) {
+					self.requestGetGlobalSettings(function(settings) {
+						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
+					});
+				});
 			}
 		},
 
 		bindSettingsHeaderEvents: function(parent, accountId, macAddress) {
 			var self = this;
-
-			parent.find('.settings-tab').on('click', function() {
-				if ( $(this).data('tab') == 'device' && !$(this).hasClass('active') ) {
-					if ( macAddress ) {
-						self.requestGetDevice(accountId, macAddress, function(data) {
-							self.requestGetSettingsByModel(data.brand, data.model, function(settings) {
-								self.renderSettingsHeader(parent, accountId, macAddress);
-							});
-						});
-					} else {
-						self.renderSettingsHeader(parent, accountId);
-					}
-				} else if ( $(this).data('tab') == 'account' && !$(this).hasClass('active') ) {
-					self.requestGetAccount(accountId, function(data) {
-						self.requestGetGlobalSettings(function(settings) {
-							self.renderSettingsContent(parent, accountId, data.settings, settings);
-						});
-					});
-				} else if ( monster.apps.auth.isReseller && $(this).data('tab') == 'provider' && !$(this).hasClass('active') ) {
-					self.requestGetProvider(accountId, function(data) {
-						self.requestGetGlobalSettings(function(settings) {
-							self.renderSettingsContent(parent, accountId, data.settings, settings);
-						});
-					});
-				}
-
-				parent.find('.settings-tab.active').removeClass('active');
-				$(this).addClass('active');
-
-				if ( $(this).data('tab') != 'device' ) {
-					parent.find('.settings-header').hide();
-				} else {
-					parent.find('.settings-header').show();
-				}
-			});
 
 			parent.find('#reset').on('click', function() {
 				self.renderSettingsHeader(parent, accountId, macAddress);
@@ -347,7 +345,8 @@ define(function(require){
 				field,
 				index;
 
-			parent.find('.settings-content')
+			parent
+				.find('.settings-content')
 				.empty()
 				.append(settingsContentTemplate);
 
@@ -470,7 +469,7 @@ define(function(require){
 
 			parent.find('#save').on('click', function() {
 
-				if ( parent.find('.settings-tab.active').data('tab') == 'device' ) {
+				if ( macAddress ) {
 					var newDevice = {
 						brand: parent.find('select[name="model"] option:selected').data('brand'),
 						family: parent.find('select[name="model"] option:selected').data('family'),
@@ -479,18 +478,18 @@ define(function(require){
 						settings: self.cleanForm(form2object('form2object'))
 					};
 
-					if ( macAddress ) {
+					if ( macAddress == 'new' ) {
+						self.requestAddDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newDevice, function() {
+							self.render(parent);
+						});
+					} else {
 						self.requestGetDevice(accountId, macAddress, function(data) {
 							self.requestUpdateDevice(accountId, macAddress, newDevice, function() {
 								self.render(parent);
 							});
 						});
-					} else {
-						self.requestAddDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newDevice, function() {
-							self.render(parent);
-						});
 					}
-				} else if ( parent.find('.settings-tab.active').data('tab') == 'account' ) {
+				} else if ( accountId ) {
 					self.requestGetAccount(accountId, function(data) {
 						data.settings = self.cleanForm(form2object('form2object'));
 
@@ -498,8 +497,8 @@ define(function(require){
 							self.render(parent);
 						});
 					});
-				} else if ( monster.apps.auth.isReseller && parent.find('.settings-tab.active').data('tab') == 'provider') {
-					self.requestGetProvider(accountId, function(data) {
+				} else if ( monster.apps.auth.isReseller ) {
+					self.requestGetProvider(function(data) {
 						data.settings = self.cleanForm(form2object('form2object'));
 
 						self.requestUpdateProvider(data, function() {
@@ -577,9 +576,6 @@ define(function(require){
 					self.requestGenerateFile(macAddress, function() {
 						callback();
 					});
-				},
-				error: function(data, status) {
-					console.log(data, status);
 				}
 			});
 		},
@@ -660,7 +656,7 @@ define(function(require){
 			});
 		},
 		/* Providers APIs */
-		requestGetProvider: function(accountId, callback) {
+		requestGetProvider: function(callback) {
 			var self = this;
 
 			monster.request({
