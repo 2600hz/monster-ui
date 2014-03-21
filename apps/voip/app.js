@@ -17,7 +17,7 @@ define(function(require){
 
 		name: 'voip',
 
-		i18n: [ 'en-US' ],
+		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
 			'voip.users.getUsers': {

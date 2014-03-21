@@ -1168,20 +1168,6 @@ define(function(require){
 
 		numbersListNumbers: function(accountId, callback) {
 			var self = this;
-				/*mapCountry = {
-					'FR': 'Paris, France',
-					'DE': 'Berlin, Germany',
-					'US': 'San Francisco, CA',
-					'IN': 'Mumbai, India',
-					'IT': 'Roma, Italy',
-					'GB': 'London, Great-Britain',
-					'IE': 'Dublin, Ireland',
-					'BR': 'Rio de Jainero, Brazil',
-					'RU': 'Moscow, Russia',
-					'NZ': 'Wellington, New-Zealand',
-					'UA': 'Kiev, Ukraine'
-				},
-				randomArray = ['FR', 'DE', 'US', 'IN', 'IT', 'GB', 'IE', 'BR', 'RU', 'NZ', 'UA'];*/
 
 			monster.request({
 				resource: 'common.numbers.list',
@@ -1189,12 +1175,6 @@ define(function(require){
 					accountId: accountId
 				},
 				success: function(_dataNumbers, status) {
-					/* TODO REMOVE */
-					/*$.each(_dataNumbers.data.numbers, function(k, v) {
-						v.isoCountry = randomArray[Math.floor((Math.random()*100)%(randomArray.length))];
-						v.friendlyLocality = mapCountry[v.isoCountry];
-					});*/
-
 					callback && callback(_dataNumbers.data);
 				}
 			});

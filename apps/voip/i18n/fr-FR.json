@@ -129,7 +129,7 @@
 				"unselectedCodecs": "Codecs disponibles"
 			}
 		},
-		"buy": "Acheter téléphone"
+		"buy": "Acheter téléphone",
 		"classifiers": {
 			"unknown": {
 			    "name": "Autre que les options précédentes",
@@ -264,7 +264,7 @@
 		"dialogCreationUser": {
 			"createUser": "Créer utilisateur",
 			"errorOnCreation": "Une erreur est survenue lors de la création de l'utilisateur:",
-			"extension": "Extension #",
+			"extension": "Num. Extension",
 			"extensionAlreadyExist": "Cette extension est déjà prise, veuillez choisir un numéro différent.",
 			"firstName": "Prénom",
 			"lastName": "Nom",
@@ -274,7 +274,7 @@
 			"sendToSameEmail": "Envoyer les notifications à l'email spécifié plus haut",
 			"title": "Créer Utilisateur",
 			"vmboxAlreadyExist": "Le numéro de répondeur existe déjà, veuillez en choisir un autre.",
-			"vmboxNumber": "VM Box Number"
+			"vmboxNumber": "Numéro Répondeur"
 		},
 		"editionForm": {
 			"firstName": "Prénom",
