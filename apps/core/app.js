@@ -183,7 +183,7 @@ define(function(require){
 						domain: domain
 					},
 					success: function(_data) {
-						container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + '/whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+						container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 					},
 					error: function(error) {
 						container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/static/images/logo.png")');
