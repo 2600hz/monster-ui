@@ -4,9 +4,14 @@
 			<span>{{ i18n.devices }}</span>
 
 			<span id="trigger_links">
-				<a href="#" id="delete_devices" class="action-device"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.deleteDevices }}</span></a>
-				<a href="#" id="provision_devices" class="action-device"><i class="icon-telicon-configuration icon-yellow"></i><span class="action-text">{{ i18n.provisionDevices }}</span></a>
+				<a href="#" id="delete_devices" class="action-device"><i class="icon-remove icon-red"></i><span class="action-text">{{ i18n.delete }}</span></a>
+				<a href="#" id="provision_devices" class="action-device" data-settings='device'><i class="icon-telicon-configuration icon-yellow"></i><span class="action-text">{{ i18n.update }}</span></a>
 			</span>
+			{{#if isReseller}}
+			<a href="#" id="update_provider" class="action-device pull-right">
+				<i class="icon-cog"></i>{{ i18n.providerSettings }}
+			</a>
+			{{/if}}
 		</div>
 	</div>
 	<div class="accounts-list">
@@ -14,9 +19,13 @@
 		<div class="account-section{{#compare @index '===' 0}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}">
 			<div class="account-header">
 				<div class="right-links pull-right">
-					<a href="#" class="add-device" class="dropdown-toggle add-dropdown action-device" data-toggle="dropdown" data-target="#">
+					<a href="#" class="update-account" class="dropdown-toggle add-dropdown action-device" data-settigns='account' data-toggle="dropdown" data-target="#">
+						<i class="icon-cog"></i>
+						<span class="action-text">{{ ../i18n.accountSettings }}</span>
+					</a>
+					<a href="#" class="add-device" class="dropdown-toggle add-dropdown action-device" data-settigns='device' data-toggle="dropdown" data-target="#">
 						<i class="icon-shopping-cart"></i>
-						<span class="action-text">{{../i18n.add}}</span>
+						<span class="action-text">{{../i18n.addDevice}}</span>
 					</a>
 				</div>
 				<div class="left-part">
