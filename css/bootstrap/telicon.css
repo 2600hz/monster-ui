@@ -1,6 +1,6 @@
 /*
- *	telicon v1.1
- *	The telecom-centric icon font, designed by Josh Sanders of 2600hz, to be used as a stand-alone font, or in conjunction with the Font Awesome Library
+ *	Telicon v1.2
+ *	The telecom-centric icon font, designed by Josh Sanders, to be used as a stand-alone font, or in conjunction with the Font Awesome Library
 */
 
 @font-face {
@@ -14,9 +14,11 @@
 	font-style: normal;
 }
 
-/*****************************************
-			telicon styles
-*****************************************/
+/*
+ * --------------------------------------
+ *			telicon styles
+ * --------------------------------------
+*/
 
 [class^="icon-telicon-"],
 [class*=" icon-telicon-"] {
@@ -28,23 +30,19 @@
 	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
-}
-[class^="icon-telicon-"]:before,
-[class*=" icon-telicon-"]:before {
-	text-decoration: inherit;
-	display: inline-block;
-	speak: none;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-/*  telicon uses the Unicode Private Use Area (PUA) to ensure screen
-    readers do not read off random characters that represent icons */
+/*
+ *  Telicon uses the Unicode Private Use Area (PUA) to ensure screen
+ *	readers do not read off random characters that represent icons
+*/
 
 .icon-telicon-fax:before 					{ content: "\e000"; }
 .icon-telicon-ata:before 					{ content: "\e001"; }
 .icon-telicon-home-phone:before 			{ content: "\e002"; }
-.icon-telicon-sprint-phone:before  			{ content: "\e003"; }
-.icon-telicon-mobile-phone:before 			{ content: "\e004"; }
+.icon-telicon-sprint-phone:before  			{ content: "\e603"; }
+.icon-telicon-mobile-phone:before 			{ content: "\e601"; }
 .icon-telicon-tablet:before 				{ content: "\e005"; }
 .icon-telicon-soft-phone:before 			{ content: "\e006"; }
 .icon-telicon-voip-phone:before 			{ content: "\e007"; }
@@ -80,3 +78,5 @@
 .icon-telicon-global:before 				{ content: "\e025"; }
 .icon-telicon-failover:before 				{ content: "\e026"; }
 .icon-telicon-multiple-items:before 		{ content: "\e027"; }
+.icon-telicon-extension:before 				{ content: "\e600"; }
+.icon-telicon-voicemail:before 				{ content: "\e602"; }

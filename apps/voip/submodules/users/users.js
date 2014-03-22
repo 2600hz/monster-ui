@@ -263,7 +263,7 @@ define(function(require){
 							title: self.i18n.active().users.hotdesk.title
 						},
 						vm_to_email: {
-							icon: 'icon-envelope',
+							icon: 'icon-telicon-voicemail',
 							iconColor: 'icon-green',
 							title: self.i18n.active().users.vm_to_email.title
 						},
