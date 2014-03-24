@@ -1,16 +1,21 @@
 {
 	"devices": "Devices",
-	"deleteDevices": "Delete",
-	"provisionDevices": "Provision",
-	"searchDevice": "Search a device",
-	"go": "go",
-	"close" : "Close",
-	"add": "Add",
+	"delete": "Delete",
+	"update": "Update",
+	"addDevice": "Add Device",
 	"noDevices": "There are no devices in this account.",
+	"deviceSettings": "Device's Settings",
+	"accountSettings": "Account's Settings",
+	"providerSettings": "Provider's Settings",
 	"brand": "Brand",
 	"model": "Model",
 	"deviceName": "Device's name",
 	"macAddress": "MAC Address",
 	"cancel": "Cancel",
-	"save": "Save"
+	"save": "Save",
+	"reset": "Reset",
+	"selectBrand": "Select a brand",
+	"selectModel": "Select a model",
+	"providerSettings": "Provider Settings",
+	"accountSettings": "Account Settings"
 }

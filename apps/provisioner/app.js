@@ -23,6 +23,11 @@ define(function(require){
 				'verb': "GET",
 				'generateError': false
 			},
+			'provisioner.updateAccount': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/accounts/{account_id}',
+				'verb': 'POST'
+			},
 			/* Devices APIs */
 			'provisioner.addDevice': {
 				'apiRoot': monster.config.api.provisioner,
@@ -55,13 +60,29 @@ define(function(require){
 				'url': 'api/files/generate',
 				'verb': 'POST'
 			},
+			/* Providers APIs */
+			'provisioner.getProvider': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/providers/{provider_id}',
+				'verb': 'GET'
+			},
+			'provisioner.updateProvider': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/providers/{provider_id}',
+				'verb': 'POST'
+			},
 			/* UI APIs */
 			'provisioner.getSettingsByModel': {
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/ui/{brand}/{model}',
 				'verb': "GET"
 			},
-			/* Phones API */
+			'provisioner.getGlobalSettings': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/ui/global',
+				'verb': 'GET'
+			},
+			/* Phones APIs */
 			'provisioner.getPhones': {
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/phones',
@@ -104,6 +125,7 @@ define(function(require){
 					}
 
 					dataTemplate.data[0].devices = data;
+					dataTemplate.isReseller = monster.apps.auth.isReseller;
 					appTemplate = $(monster.template(self, 'app', dataTemplate));
 					appTemplate.find('.account-section[data-id="' + dataTemplate.data[0].id + '"]').addClass('active');
 
@@ -151,7 +173,7 @@ define(function(require){
 				}
 			});
 
-			if (self.initialized === false) {
+			if ( self.initialized === false ) {
 				parent.on('click', '.device-box:not(.no-data)', function() {
 					if ( $(this).hasClass('selected') ) {
 						$(this).removeClass('selected');
@@ -173,17 +195,19 @@ define(function(require){
 					var accountId = parent.find('.device-box.selected').parent().parent().data('id'),
 						macAddress = parent.find('.device-box.selected').data('mac-address');
 
-					self.requestDeleteDevice(accountId, macAddress, function() {
-						var wrapper = parent.find('.device-box.selected').parent();
+					if ( macAddress ) {
+						self.requestDeleteDevice(accountId, macAddress, function() {
+							var wrapper = parent.find('.device-box.selected').parent();
 
-						parent.find('.device-box.selected').remove();
+							parent.find('.device-box.selected').remove();
 
-						if ( $(wrapper).is(':empty') ) {
-							$(wrapper)
-								.empty()
-								.append($(monster.template(self, 'noDevice')));
-						}
-					});
+							if ( $(wrapper).is(':empty') ) {
+								$(wrapper)
+									.empty()
+									.append($(monster.template(self, 'noDevice')));
+							}
+						});
+					}
 				});
 			}
 
@@ -191,45 +215,94 @@ define(function(require){
 				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
 					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
 
-				self.requestGetDevice(accountId, macAddress, function(data) {
-					self.renderSettingsHeader(parent, accountId, data);
-				});
+				if ( macAddress ) {
+					self.renderSettingsHeader(parent, accountId, macAddress);
+				}
+			});
+
+			parent.find('#update_provider').on('click', function() {
+				var accountId = parent.find('.device-box.selected').parents('.account-section.active').data('id'),
+					macAddress = parent.find('.account-section.active').find('.device-box.selected').data('mac-address');
+
+				if ( monster.apps.auth.isReseller ) {
+					self.renderSettingsHeader(parent);
+				}
 			});
 
 			parent.find('.account-section .add-device').on('click', function() {
+				var accountId = $(this).parents('.account-section').data('id');
+
+				self.renderSettingsHeader(parent, accountId, 'new');
+			});
+
+			parent.find('.account-section .update-account').on('click', function() {
 				var accountId = $(this).parents('.account-section').data('id');
 
 				self.renderSettingsHeader(parent, accountId);
 			});
 		},
 
-		renderSettingsHeader: function(parent, accountId, deviceData) {
-			var self = this;
+		renderSettingsHeader: function(parent, accountId, macAddress) {
+			var self = this,
+				loadHeader = function(data) {
+					self.getPhonesList(data ? data.brand : null, function(dataTemplate) {
+						var settingsHeaderTemplate;
 
-			self.getPhonesList(deviceData ? deviceData.brand : null, function(dataTemplate) {
-				var settingsHeaderTemplate;
+						if ( data ) {
+							dataTemplate.device = data;
+						}
 
-				if ( deviceData ) {
-					dataTemplate.device = deviceData;
+						settingsHeaderTemplate = $(monster.template(self, 'settingsHeader', dataTemplate));
+						settingsHeaderTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', { placeholder: ' ' });
+
+						parent
+							.find('.settings-header')
+							.append(settingsHeaderTemplate);
+
+						self.bindSettingsHeaderEvents(parent, accountId, macAddress);
+
+						if ( data ) {
+							self.requestGetSettingsByModel(data.brand, data.model, function(settings) {
+								self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
+							});
+						}
+					});
+				};
+
+			parent
+				.empty()
+				.append($(monster.template(self, 'settings')));
+
+
+			if ( macAddress ) {
+				if ( macAddress == 'new' ) {
+					loadHeader();
+				} else {
+					self.requestGetDevice(accountId, macAddress, function(data) {
+						loadHeader(data);
+					});
 				}
-
-				settingsHeaderTemplate = $(monster.template(self, 'settingsHeader', dataTemplate));
-				settingsHeaderTemplate.find('#mac').mask('hh:hh:hh:hh:hh:hh', { placeholder: ' ' });
-
-				parent
-					.empty()
-					.append(settingsHeaderTemplate);
-
-				self.bindSettingsHeaderEvents(parent, settingsHeaderTemplate, accountId, deviceData);
-
-				if ( deviceData ) {
-					self.renderSettingsContent(parent, accountId, deviceData);
-				}
-			});
+			} else if ( accountId ) {
+				self.requestGetAccount(accountId, function(data) {
+					self.requestGetGlobalSettings(function(settings) {
+						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
+					});
+				});
+			} else if ( monster.apps.auth.isReseller) {
+				self.requestGetProvider(function(data) {
+					self.requestGetGlobalSettings(function(settings) {
+						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
+					});
+				});
+			}
 		},
 
-		bindSettingsHeaderEvents: function(parent, template, accountId, deviceData) {
+		bindSettingsHeaderEvents: function(parent, accountId, macAddress) {
 			var self = this;
+
+			parent.find('#reset').on('click', function() {
+				self.renderSettingsHeader(parent, accountId, macAddress);
+			});
 
 			parent.find('select[name="manufacturer"]').on('change', function() {
 				if ( $(this).val() != 'default' ) {
@@ -255,61 +328,43 @@ define(function(require){
 						newModel.settings = form2object('form2object');
 					}
 
-					self.renderSettingsContent(parent, accountId, deviceData, newModel);
+					self.requestGetSettingsByModel(newModel.brand, newModel.model, function(settings) {
+						self.renderSettingsContent(parent, accountId, newModel.settings, settings, macAddress);
+					});
 				}
 			});
 		},
 
-		renderSettingsContent: function(parent, accountId, deviceData, newModel) {
-			var self = this;
+		renderSettingsContent: function(parent, accountId, data, settings, macAddress) {
+			var self = this,
+				settingsContentTemplate = $(monster.template(self, 'settingsContent', { settings: settings })),
+				pathArray = [],
+				dataField,
+				section,
+				option,
+				field,
+				index;
 
-			self.getSettings(newModel || deviceData, function(settings) {
-				var settingsContentTemplate = $(monster.template(self, 'settingsContent', { settings: settings })),
-					currentSettings = newModel ? newModel.settings : deviceData.settings,
-					pathArray = [],
-					dataField,
-					section,
-					option,
-					field,
-					index;
+			parent
+				.find('.settings-content')
+				.empty()
+				.append(settingsContentTemplate);
 
-				parent
-					.find('.settings-content')
-					.empty()
-					.append(settingsContentTemplate);
-
-				for ( section in settings ) {
-					if ( Array.isArray(settings[section].data) ) {
-						for ( index in settings[section].data ) {
-							pathArray.push(section + '[' + index +']');
-							for ( option in settings[section].data[index] ) {
-								pathArray.push(option);
-								for ( field in settings[section].data[index][option].data ) {
-									pathArray.push(field);
-									dataField = settings[section].data[index][option].data[field];
-									dataField.path = pathArray.join('.');
-
-									parent
-										.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
-										.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-
-									pathArray.splice(pathArray.length--, 1);
-								}
-								pathArray.splice(pathArray.length--, 1);
-							}
-							pathArray.splice(pathArray.length--, 1);
-						}
-					} else {
-						pathArray.push(section);
-						for ( option in settings[section].data ) {
+			for ( section in settings ) {
+				if ( Array.isArray(settings[section].data) ) {
+					for ( index in settings[section].data ) {
+						pathArray.push(section + '[' + index +']');
+						for ( option in settings[section].data[index] ) {
 							pathArray.push(option);
-							for ( field in settings[section].data[option].data ) {
+							for ( field in settings[section].data[index][option].data ) {
 								pathArray.push(field);
-								dataField = settings[section].data[option].data[field];
+
+								dataField = settings[section].data[index][option].data[field];
 								dataField.path = pathArray.join('.');
+								dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
 
 								parent
-									.find('.container .content[data-key="' + section + '"] .' + option)
+									.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
 									.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
 
 								pathArray.splice(pathArray.length--, 1);
@@ -318,39 +373,42 @@ define(function(require){
 						}
 						pathArray.splice(pathArray.length--, 1);
 					}
-				}
+				} else {
+					pathArray.push(section);
+					for ( option in settings[section].data ) {
+						pathArray.push(option);
+						for ( field in settings[section].data[option].data ) {
+							pathArray.push(field);
 
-				for ( section in currentSettings ) {
-					if ( Array.isArray(currentSettings[section]) ) {
-						for ( index in currentSettings[section] ) {
-							pathArray.push(section + '[' + index + ']');
-							for ( option in currentSettings[section][index] ) {
-								pathArray.push(option);
-								for ( field in currentSettings[section][index][option] ) {
-									pathArray.push(field);
+							dataField = settings[section].data[option].data[field];
+							dataField.path = pathArray.join('.');
+							dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
 
-									parent
-										.find('*[name="' + pathArray.join('.') + '"]')
-										.val(currentSettings[section][index][option][field])
-										.attr('value', currentSettings[section][index][option][field]);
+							parent
+								.find('.container .content[data-key="' + section + '"] .' + option)
+								.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
 
-									pathArray.splice(pathArray.length--, 1);
-								}
-								pathArray.splice(pathArray.length--, 1);
-							}
 							pathArray.splice(pathArray.length--, 1);
 						}
-					} else {
-						pathArray.push(section);
-						for ( option in currentSettings[section] ) {
+						pathArray.splice(pathArray.length--, 1);
+					}
+					pathArray.splice(pathArray.length--, 1);
+				}
+			}
+
+			for ( section in data ) {
+				if ( Array.isArray(data[section]) ) {
+					for ( index in data[section] ) {
+						pathArray.push(section + '[' + index + ']');
+						for ( option in data[section][index] ) {
 							pathArray.push(option);
-							for ( field in currentSettings[section][option] ) {
+							for ( field in data[section][index][option] ) {
 								pathArray.push(field);
 
 								parent
 									.find('*[name="' + pathArray.join('.') + '"]')
-									.val(currentSettings[section][option][field])
-									.attr('value', currentSettings[section][option][field]);
+									.val(data[section][index][option][field])
+									.attr('value', data[section][index][option][field]);
 
 								pathArray.splice(pathArray.length--, 1);
 							}
@@ -358,20 +416,37 @@ define(function(require){
 						}
 						pathArray.splice(pathArray.length--, 1);
 					}
+				} else {
+					pathArray.push(section);
+					for ( option in data[section] ) {
+						pathArray.push(option);
+						for ( field in data[section][option] ) {
+							pathArray.push(field);
+
+							parent
+								.find('*[name="' + pathArray.join('.') + '"]')
+								.val(data[section][option][field])
+								.attr('value', data[section][option][field]);
+
+							pathArray.splice(pathArray.length--, 1);
+						}
+						pathArray.splice(pathArray.length--, 1);
+					}
+					pathArray.splice(pathArray.length--, 1);
 				}
+			}
 
-				parent.find('.nav-bar > .switch-link:first-child').addClass('active');
-				parent.find('.settings-content .container > .content:first-child').addClass('active');
+			parent.find('.nav-bar > .switch-link:first-child').addClass('active');
+			parent.find('.settings-content .container > .content:first-child').addClass('active');
 
-				parent.find('.switch-sublink').each(function() {
-					$(this).text(parseInt($(this).text(), 10) + 1);
-				});
-
-				self.bindSettingsContentEvents(parent, accountId, deviceData);
+			parent.find('.switch-sublink').each(function() {
+				$(this).text(parseInt($(this).text(), 10) + 1);
 			});
+
+			self.bindSettingsContentEvents(parent, accountId, macAddress);
 		},
 
-		bindSettingsContentEvents: function(parent, accountId, deviceData) {
+		bindSettingsContentEvents: function(parent, accountId, macAddress) {
 			var self = this;
 
 			parent.find('.switch-link').on('click', function() {
@@ -393,7 +468,9 @@ define(function(require){
 			});
 
 			parent.find('#save').on('click', function() {
-				var newModel = {
+
+				if ( macAddress ) {
+					var newDevice = {
 						brand: parent.find('select[name="model"] option:selected').data('brand'),
 						family: parent.find('select[name="model"] option:selected').data('family'),
 						model: parent.find('select[name="model"] option:selected').attr('value'),
@@ -401,13 +478,32 @@ define(function(require){
 						settings: self.cleanForm(form2object('form2object'))
 					};
 
-				if ( deviceData ) {
-					self.requestUpdateDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newModel, function() {
-						self.render(parent);
+					if ( macAddress == 'new' ) {
+						self.requestAddDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newDevice, function() {
+							self.render(parent);
+						});
+					} else {
+						self.requestGetDevice(accountId, macAddress, function(data) {
+							self.requestUpdateDevice(accountId, macAddress, newDevice, function() {
+								self.render(parent);
+							});
+						});
+					}
+				} else if ( accountId ) {
+					self.requestGetAccount(accountId, function(data) {
+						data.settings = self.cleanForm(form2object('form2object'));
+
+						self.requestUpdateAccount(accountId, data, function() {
+							self.render(parent);
+						});
 					});
-				} else {
-					self.requestAddDevice(accountId, parent.find('#mac').val().replace(/:/g, ''), newModel, function() {
-						self.render(parent);
+				} else if ( monster.apps.auth.isReseller ) {
+					self.requestGetProvider(function(data) {
+						data.settings = self.cleanForm(form2object('form2object'));
+
+						self.requestUpdateProvider(data, function() {
+							self.render(parent);
+						});
 					});
 				}
 			});
@@ -441,13 +537,27 @@ define(function(require){
 				error: function(data, status) {
 					if ( data.status === 0 ) {
 						monster.ui.alert('error', 'Provisioner Server is Down!');
-					} else if ( data.error.code == 401 ) {
+					} else if ( data.error.code == 401 || data.error.code == 404 ) {
 						self.requestGetAccount(self.accountId, function(data) {
 							data.id = self.accountId;
 
 							callback({ data: [data] });
 						});
 					}
+				}
+			});
+		},
+		requestUpdateAccount: function(accountId, data, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.updateAccount',
+				data: {
+					account_id: accountId,
+					data: data
+				},
+				success: function(data, status) {
+					callback();
 				}
 			});
 		},
@@ -466,9 +576,6 @@ define(function(require){
 					self.requestGenerateFile(macAddress, function() {
 						callback();
 					});
-				},
-				error: function(data, status) {
-					console.log(data, status);
 				}
 			});
 		},
@@ -548,6 +655,34 @@ define(function(require){
 				}
 			});
 		},
+		/* Providers APIs */
+		requestGetProvider: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getProvider',
+				data: {
+					provider_id: self.accountId
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
+		requestUpdateProvider: function(data, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.updateProvider',
+				data: {
+					provider_id: self.accountId,
+					data: data
+				},
+				success: function(data, status) {
+					callback();
+				}
+			});
+		},
 		/* UI Requests */
 		requestGetSettingsByModel: function(brand, model, callback) {
 			var self = this;
@@ -559,7 +694,19 @@ define(function(require){
 					model: model
 				},
 				success: function(data, status) {
-					callback(data.data);
+					callback(self.expandSettings(data.data));
+				}
+			});
+		},
+		requestGetGlobalSettings: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getGlobalSettings',
+				data: {
+				},
+				success: function(data, status) {
+					callback(self.expandSettings(data.data));
 				}
 			});
 		},
@@ -605,39 +752,33 @@ define(function(require){
 			});
 		},
 
-		getSettings: function(deviceData, callback) {
+		expandSettings: function(data) {
 			var self = this;
 
-			self.requestGetSettingsByModel(deviceData.brand, deviceData.model, function(settings) {
-				var formatSettings = function(data) {
-						for ( var key in data ) {
-							if ( !data[key].iterate && data[key].data ) {
-								formatSettings(data[key].data);
-							} else if ( data[key].iterate === 0 ) {
-								delete data[key];
-							} else if ( data[key].iterate == 1 ) {
-								delete data[key].iterate;
-								formatSettings(data[key].data);
-							} else if ( data[key].iterate > 1 ) {
-								var iterations = data[key].iterate,
-									_data = data[key].data,
-									i = 0;
+			for ( var key in data ) {
+				if ( !data[key].iterate && data[key].data ) {
+					self.expandSettings(data[key].data);
+				} else if ( data[key].iterate === 0 ) {
+					delete data[key];
+				} else if ( data[key].iterate == 1 ) {
+					delete data[key].iterate;
+					self.expandSettings(data[key].data);
+				} else if ( data[key].iterate > 1 ) {
+					var iterations = data[key].iterate,
+						_data = data[key].data,
+						i = 0;
 
-								data[key].data = [];
+					data[key].data = [];
 
-								formatSettings(_data);
+					self.expandSettings(_data);
 
-								for ( ; i < iterations; i++ ) {
-									data[key].data.push(_data);
-								}
-							}
-						}
+					for ( ; i < iterations; i++ ) {
+						data[key].data.push(_data);
+					}
+				}
+			}
 
-						return data;
-					};
-
-				callback(formatSettings(settings));
-			});
+			return data;
 		},
 
 		cleanForm: function(dataForm) {
@@ -664,6 +805,10 @@ define(function(require){
 			}
 
 			return dataForm;
+		},
+
+		generateRandomLocalPort: function(args) {
+			return _.random(args[0], args[1]);
 		}
 	};
 
