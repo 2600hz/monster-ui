@@ -236,7 +236,9 @@ define(function(require){
 				var accountId = $(this).parent().data('id');
 				parent.find('.main-content').empty();
 				self.renderList(self.accountTree, parent, accountId);
-				self.edit(accountId, parent);
+				if(!$this.hasClass('disabled')) {
+					self.edit(accountId, parent);
+				}
 			});
 
 			parent.on('click', '.account-children-link', function() {
@@ -251,7 +253,7 @@ define(function(require){
 				self.renderList(self.currentAccountList[accountId].children, parent, null, true);
 			});
 
-			parent.on('click', '.account-link', function() {
+			parent.on('click', '.account-link:not(.disabled)', function() {
 				var accountId = $(this).parent().data('account_id');
 				parent.find('.main-content').empty();
 				self.edit(accountId, parent);
@@ -310,13 +312,12 @@ define(function(require){
 			} else {
 				self.currentAccountList = accountList;
 			}
-
 			accountListHtml = $(monster.template(self, 'accountsList', {
 				accounts: $.map(self.currentAccountList, function(val, key) {
 					val.id = key;
 					return val;
 				}).sort(function(a,b) {
-					return a.name.toLowerCase() > b.name.toLowerCase() ? 1 :-1;
+					return (a.name || self.i18n.active().missingAccount).toLowerCase() > (b.name || self.i18n.active().missingAccount).toLowerCase() ? 1 :-1;
 				}),
 				selectedId: selectedId
 			}));

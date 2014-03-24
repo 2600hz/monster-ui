@@ -13,6 +13,7 @@
 	"update": "Update",
 	"none": "None",
 	"month": "Month",
+	"missingAccount": "Missing Account",
 	"disableAccount": "Disable this Account",
 	"enableAccount": "Enable this Account",
 	"deleteAccount": "Delete this Account",
