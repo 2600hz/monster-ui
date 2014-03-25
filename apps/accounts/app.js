@@ -233,7 +233,8 @@ define(function(require){
 
 			parent.on('click', '.account-breadcrumb a', function(e) {
 				e.preventDefault();
-				var accountId = $(this).parent().data('id');
+				var $this = $(this),
+					accountId = $this.parent().data('id');
 				parent.find('.main-content').empty();
 				self.renderList(self.accountTree, parent, accountId);
 				if(!$this.hasClass('disabled')) {
