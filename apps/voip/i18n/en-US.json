@@ -345,9 +345,10 @@
 			"pinLabel": "PIN of this user"
 		},
 		"faxing": {
-			"title": "Faxing",
-			"dropdownLabel": "Choose number for Fax Machine",
-			"headline": "User Faxing Settings"
+			"title": "Fax to Email",
+			"dropdownLabel": "Personal Fax Number",
+			"headline": "Fax to Email",
+			"help": "This user will receive a fax at {{variable}} as an attachment."
 		},
 		"vm_to_email": {
 			"deleteAfterNotify": "Delete messages from database after sending the notification.",

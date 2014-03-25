@@ -16,6 +16,15 @@
 				<option value="{{this}}">{{this}}</option>
 			{{/each}}
 		</select>
+
+		<div class="help-box gray-box">
+            <div class="wrapper-icon">
+                &nbsp;<i class="icon-info-sign2"></i>&nbsp;
+            </div>
+            <div class="text-wrapper">
+                <p>{{replaceVar i18n.users.faxing.help this.user.email }}</p>
+            </div>
+        </div>
 	</div>
 
 	<div class="actions clearfix">

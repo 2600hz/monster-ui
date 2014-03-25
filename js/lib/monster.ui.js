@@ -78,6 +78,10 @@ define(function(require){
 		return stringValue.toString().toLowerCase();
 	});
 
+	Handlebars.registerHelper('replaceVar', function(stringValue, variable) {
+		return stringValue.replace('{{variable}}', variable);
+	});
+
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
 		var operators, result;
 

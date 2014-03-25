@@ -109,7 +109,12 @@ define(function(require){
 			navContainer.on('click', '.myaccount-link', function(e) {
 				e.preventDefault();
 
-				self.loadAppsAndDisplay();
+				if($('#myaccount').hasClass('myaccount-open')) {
+					self.hide();
+				}
+				else {
+					self.loadAppsAndDisplay();
+				}
 			});
 
 			navContainer.on('click', '.restore-masquerading-link', function(e) {
@@ -148,13 +153,32 @@ define(function(require){
 		},
 
 		loadAppsAndDisplay: function(callback) {
-			var self = this;
+			var self = this,
+				displayMyAccount = function() {
+					monster.pub('myaccount.display', {
+						callback: callback
+					});
+				};
 
-			self._loadApps(function() {
-				monster.pub('myaccount.display', {
-					callback: callback
+			/* If it hasn't been loaded before */
+			if(self._apps.length) {
+				self._loadApps(function() {
+					displayMyAccount();
 				});
-			});
+			}
+			/* Else we need to refresh the badges */
+			else {
+				var countBadges = 3;
+
+				monster.pub('myaccount.refreshBadges', {
+					callback: function() {
+						/* when all the badges have been updated, display my account */
+						if(!--countBadges) {
+							displayMyAccount();
+						}
+					}
+				});
+			}
 		},
 
 		checkCreditCard: function() {
@@ -294,6 +318,8 @@ define(function(require){
 					$('[data-module="'+params.module+'"] .badge').html(params.data);
 				}
 			}
+
+			params.callback && params.callback();
 		},
 
 		_addSubmodule: function(params) {

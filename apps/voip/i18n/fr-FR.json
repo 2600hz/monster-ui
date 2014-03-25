@@ -345,9 +345,10 @@
 			"pinLabel": "PIN de l'utilisateur"
 		},
 		"faxing": {
-			"title": "Fax",
-			"dropdownLabel": "Choisir un numéro pour ce Fax",
-			"headline": "Réglages du Fax"
+			"title": "Fax vers Email",
+			"dropdownLabel": "Numéro de Fax Perso",
+			"help": "Un fax sera envoyé à {{variable}} en tant que pièce jointe.",
+			"headline": "Fax vers Email"
 		},
 		"vm_to_email": {
 			"deleteAfterNotify": "Supprimer les messages vocaux de la base de données après l'envoi de la notification.",

@@ -49,7 +49,8 @@ define(function(require){
 
 		subscribe: {
 			'myaccount-balance.renderContent': '_renderContent',
-			'myaccount-balance.addCreditDialog': '_renderAddCredit'
+			'myaccount-balance.addCreditDialog': '_renderAddCredit',
+			'myaccount.refreshBadges': '_refreshBadge'
 		},
 
 		load: function(callback){
@@ -88,6 +89,20 @@ define(function(require){
 				monster.pub('myaccount.addSubmodule', args);
 
 				callback && callback();
+			});
+		},
+
+		_refreshBadge: function(args) {
+			var self = this;
+
+			self.getBalance(function(data) {
+				var argsBadge = {
+					module: self.name,
+					data: self.i18n.active().currencyUsed + parseFloat(data.data.amount).toFixed(2),
+					callback: args.callback
+				};
+
+				monster.pub('myaccount.updateMenu', argsBadge);
 			});
 		},
 
