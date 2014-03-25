@@ -28,7 +28,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'myaccount-trunks.renderContent': '_renderContent'
+			'myaccount-trunks.renderContent': '_renderContent',
+			'myaccount.refreshBadges': '_refreshBadges'
 		},
 
 		load: function(callback){
@@ -91,6 +92,28 @@ define(function(require){
 			else {
 				self.renderOutbound();
 			}
+		},
+
+		_refreshBadges: function(args) {
+			var self = this;
+
+			self.getLimits(function(dataLimits) {
+				var argsMenuInbound = {
+						module: self.name,
+						key: 'inbound',
+						data: dataLimits.data.inbound_trunks,
+						callback: args.callback
+					},
+					argsMenuOutbound = {
+						module: self.name,
+						key: 'outbound',
+						data: dataLimits.data.twoway_trunks,
+						callback: args.callback
+					};
+
+				monster.pub('myaccount.updateMenu', argsMenuInbound);
+				monster.pub('myaccount.updateMenu', argsMenuOutbound);
+			});
 		},
 
 		renderInbound: function() {
