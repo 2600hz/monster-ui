@@ -206,7 +206,7 @@ define(function(require){
 							title: self.i18n.active().groups.musicOnHold.title
 						},
 						voicemails: {
-							icon: 'icon-envelope',
+							icon: 'icon-telicon-voicemail',
 							iconColor: 'icon-green',
 							title: self.i18n.active().groups.voicemails.title
 						}

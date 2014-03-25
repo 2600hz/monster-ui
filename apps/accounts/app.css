@@ -91,6 +91,11 @@
 	width: 159px;
 }
 
+#accounts_manager_view .left-menu .account-link.disabled:hover {
+	background-color: inherit;
+	cursor: not-allowed;
+}
+
 #accounts_manager_view .left-menu .account-link .account-name {
 	font-size: 16px;
 	height: 40px;
@@ -101,6 +106,14 @@
 	font-size: 10px;
 	height: 20px;
 	line-height: 0px;
+}
+
+#accounts_manager_view .left-menu .account-link .account-error {
+	font-size: 16px;
+	color: #ee1212;
+	font-style: italic;
+	height: 60px;
+	line-height: 60px;
 }
 
 #accounts_manager_view .left-menu .account-children-link {
@@ -133,6 +146,10 @@
 	padding: 20px 20px;
 	overflow: hidden;
 	height: 30px;
+}
+
+#accounts_manager_view .content .top-bar .account-breadcrumbs a.disabled {
+	font-style: italic;
 }
 
 #accounts_manager_view .content .top-bar .account-breadcrumbs > span:not(:last-child) a {
