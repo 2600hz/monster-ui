@@ -13,6 +13,7 @@
 	"update": "Sauvegarder",
 	"none": "Aucun",
 	"month": "Mois",
+	"missingAccount": "Compte introuvable",
 	"disableAccount": "Désactiver ce compte",
 	"enableAccount": "Activer ce compte",
 	"deleteAccount": "Supprimer ce compte",

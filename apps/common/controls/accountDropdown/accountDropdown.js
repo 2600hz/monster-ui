@@ -19,8 +19,16 @@ define(function(require){
 				currentAccountTree = originalAccountTree,
 				parent = args.parent;
 
-			var layout = monster.template(self, 'accountDropdown-layout'),
-				template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
+			var accountErrName = self.i18n.active().accountDropdown.missingAccount,
+				layout = monster.template(self, 'accountDropdown-layout'),
+				template = monster.template(self, 'accountDropdown-list', { 
+					accounts: $.map(currentAccountTree, function(val, key) {
+						val.id = key;
+						return val;
+					}).sort(function(a,b) {
+						return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
+					})
+				});
 
 			parent
 				.find('.accounts-dropdown')
@@ -38,7 +46,14 @@ define(function(require){
 
 				currentAccountTree = currentAccountTree[accountId].children;
 
-				var template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
+				var template = monster.template(self, 'accountDropdown-list', { 
+					accounts: $.map(currentAccountTree, function(val, key) {
+						val.id = key;
+						return val;
+					}).sort(function(a,b) {
+						return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
+					})
+				});
 
 				slider
 					.empty()
@@ -76,10 +91,15 @@ define(function(require){
 
 			/* Move Numbers */
 			parent.on('click', '.accounts-dropdown .account-link', function(event) {
-				var destinationAccountId = $(this).parent().data('id'),
-					destinationAccountName = $(this).find('.account-name').text();
+				var $this = $(this);
+				if($this.hasClass('disabled')) {
+					event.stopPropagation();
+				} else {
+					var destinationAccountId = $this.parent().data('id'),
+						destinationAccountName = $this.find('.account-name').text();
 
-				args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId, destinationAccountName);
+					args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId, destinationAccountName);
+				}
 			});
 
 			var dropdown = {
@@ -87,7 +107,14 @@ define(function(require){
 					currentAccountTree = originalAccountTree;
 
 					var layout = monster.template(self, 'accountDropdown-layout'),
-						template = monster.template(self, 'accountDropdown-list', { accounts: currentAccountTree });
+						template = monster.template(self, 'accountDropdown-list', { 
+							accounts: $.map(currentAccountTree, function(val, key) {
+								val.id = key;
+								return val;
+							}).sort(function(a,b) {
+								return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
+							})
+						});
 
 					parent
 						.find('.accounts-dropdown')
