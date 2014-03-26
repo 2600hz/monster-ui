@@ -289,7 +289,7 @@ define(function(require){
 					});
 				});
 			} else if ( monster.apps.auth.isReseller) {
-				self.requestGetProvider(undefined, function(data) {
+				self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
 					self.requestGetGlobalSettings(function(settings) {
 						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
 					});
@@ -349,6 +349,11 @@ define(function(require){
 					self.bindSettingsContentEvents(parent, accountId, macAddress);
 				},
 				findDefaultValues = function(data, settings, args) {
+
+					if ( Array.isArray(settings[args.section]) ) {
+						settings[args.section] = settings[args.section][args.index];
+					}
+
 					if ( settings[args.section] && settings[args.section][args.option] && settings[args.section][args.option][args.field]) {
 						data.defaultValue = settings[args.section][args.option][args.field];
 
@@ -486,15 +491,15 @@ define(function(require){
 					}
 				} else if ( accountId ) {
 					self.requestGetAccount(accountId, function(data) {
-						data.settings = self.cleanForm(form2object('form2object'));
+						data.settings = form2object('form2object');
 
 						self.requestUpdateAccount(accountId, data, function() {
 							self.render(parent);
 						});
 					});
 				} else if ( monster.apps.auth.isReseller ) {
-					self.requestGetProvider(undefined, function(data) {
-						data.settings = self.cleanForm(form2object('form2object'));
+					self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
+						data.settings = form2object('form2object');
 
 						self.requestUpdateProvider(data, function() {
 							self.render(parent);
@@ -660,7 +665,7 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.getProvider',
 				data: {
-					provider_id: monster.apps.auth.isReseller ? self.accountId : providerId
+					provider_id: providerId ? providerId : self.accountId
 				},
 				success: function(data, status) {
 					callback(data.data);
@@ -785,33 +790,15 @@ define(function(require){
 
 			for ( section in dataForm ) {
 				if ( Array.isArray(dataForm[section]) ) {
-
-					if ( dataForm[section].length == 1 ) {
-						var temp = dataForm[section][0];
-						dataForm[section] = temp;
-
-						for ( index in dataForm[section] ) {
-							for ( option in dataForm[section][index] ) {
-								for ( field in dataForm[section][index][option] ) {
-									if ( dataForm[section][index][option][field] === '' ) {
-										dataForm[section][index] = null;
-									}
-									break;
+					for ( index in dataForm[section] ) {
+						for ( option in dataForm[section][index] ) {
+							for ( field in dataForm[section][index][option] ) {
+								if ( dataForm[section][index][option][field] === '' ) {
+									dataForm[section][index] = null;
 								}
 								break;
 							}
-						}
-					} else {
-						for ( index in dataForm[section] ) {
-							for ( option in dataForm[section][index] ) {
-								for ( field in dataForm[section][index][option] ) {
-									if ( dataForm[section][index][option][field] === '' ) {
-										dataForm[section][index] = null;
-									}
-									break;
-								}
-								break;
-							}
+							break;
 						}
 					}
 				}
