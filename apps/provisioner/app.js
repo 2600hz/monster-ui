@@ -289,7 +289,7 @@ define(function(require){
 					});
 				});
 			} else if ( monster.apps.auth.isReseller) {
-				self.requestGetProvider(function(data) {
+				self.requestGetProvider(undefined, function(data) {
 					self.requestGetGlobalSettings(function(settings) {
 						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
 					});
@@ -338,112 +338,107 @@ define(function(require){
 		renderSettingsContent: function(parent, accountId, data, settings, macAddress) {
 			var self = this,
 				settingsContentTemplate = $(monster.template(self, 'settingsContent', { settings: settings })),
-				pathArray = [],
-				dataField,
-				section,
-				option,
-				field,
-				index;
+				initTemplate = function() {
+					parent.find('.nav-bar > .switch-link:first-child').addClass('active');
+					parent.find('.settings-content .container > .content:first-child').addClass('active');
+
+					parent.find('.switch-sublink').each(function() {
+						$(this).text(parseInt($(this).text(), 10) + 1);
+					});
+
+					self.bindSettingsContentEvents(parent, accountId, macAddress);
+				},
+				findDefaultValues = function(data, settings, args) {
+					if ( settings[args.section] && settings[args.section][args.option] && settings[args.section][args.option][args.field]) {
+						data.defaultValue = settings[args.section][args.option][args.field];
+
+						if ( data.defaultValue == '1' || data.defaultValue == '0' ) {
+							for ( var key in data.data ) {
+								if ( data.data[key].value == data.defaultValue ) {
+									data.defaultValue = data.data[key].text;
+								}
+							}
+						}
+					}
+				};
 
 			parent
 				.find('.settings-content')
 				.empty()
 				.append(settingsContentTemplate);
 
-			for ( section in settings ) {
-				if ( Array.isArray(settings[section].data) ) {
-					for ( index in settings[section].data ) {
-						pathArray.push(section + '[' + index +']');
-						for ( option in settings[section].data[index] ) {
-							pathArray.push(option);
-							for ( field in settings[section].data[index][option].data ) {
-								pathArray.push(field);
+			if ( accountId && macAddress ) {
+				self.requestGetAccount(accountId, function(accountData) {
+					self.requestGetProvider(accountData.provider_id, function(providerData) {
+						var mergedSettings = _.extend(providerData.settings, accountData.settings);
 
-								dataField = settings[section].data[index][option].data[field];
-								dataField.path = pathArray.join('.');
-								dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
-
-								parent
-									.find('.container .content[data-key="' + section + '"] .sub-content[data-key="' + index + '"] .' + option)
-									.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-
-								pathArray.splice(pathArray.length--, 1);
-							}
-							pathArray.splice(pathArray.length--, 1);
-						}
-						pathArray.splice(pathArray.length--, 1);
-					}
-				} else {
-					pathArray.push(section);
-					for ( option in settings[section].data ) {
-						pathArray.push(option);
-						for ( field in settings[section].data[option].data ) {
-							pathArray.push(field);
-
-							dataField = settings[section].data[option].data[field];
-							dataField.path = pathArray.join('.');
+						self.scanObject(settings, function(args) {
+							dataField = args.dataField;
+							dataField.path = args.pathArray.join('.');
 							dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
 
+							findDefaultValues(dataField, mergedSettings, args);
+
 							parent
-								.find('.container .content[data-key="' + section + '"] .' + option)
+								.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
 								.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+						});
 
-							pathArray.splice(pathArray.length--, 1);
-						}
-						pathArray.splice(pathArray.length--, 1);
-					}
-					pathArray.splice(pathArray.length--, 1);
-				}
-			}
+						self.scanObject(data, function(args) {
+							parent
+								.find('*[name="' + args.pathArray.join('.') + '"]')
+								.val(args.dataField)
+								.attr('value', args.dataField);
+						});
 
-			for ( section in data ) {
-				if ( Array.isArray(data[section]) ) {
-					for ( index in data[section] ) {
-						pathArray.push(section + '[' + index + ']');
-						for ( option in data[section][index] ) {
-							pathArray.push(option);
-							for ( field in data[section][index][option] ) {
-								pathArray.push(field);
+						initTemplate();
+					});
+				});
+			} else if ( accountId ) {
+				self.requestGetAccount(accountId, function(accountData) {
+					self.requestGetProvider(accountData.provider_id, function(providerData) {
+						self.scanObject(settings, function(args) {
+							dataField = args.dataField;
+							dataField.path = args.pathArray.join('.');
+							dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
 
-								parent
-									.find('*[name="' + pathArray.join('.') + '"]')
-									.val(data[section][index][option][field])
-									.attr('value', data[section][index][option][field]);
-
-								pathArray.splice(pathArray.length--, 1);
-							}
-							pathArray.splice(pathArray.length--, 1);
-						}
-						pathArray.splice(pathArray.length--, 1);
-					}
-				} else {
-					pathArray.push(section);
-					for ( option in data[section] ) {
-						pathArray.push(option);
-						for ( field in data[section][option] ) {
-							pathArray.push(field);
+							findDefaultValues(dataField, providerData.settings, args);
 
 							parent
-								.find('*[name="' + pathArray.join('.') + '"]')
-								.val(data[section][option][field])
-								.attr('value', data[section][option][field]);
+								.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
+								.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+						});
 
-							pathArray.splice(pathArray.length--, 1);
-						}
-						pathArray.splice(pathArray.length--, 1);
-					}
-					pathArray.splice(pathArray.length--, 1);
-				}
+						self.scanObject(data, function(args) {
+							parent
+								.find('*[name="' + args.pathArray.join('.') + '"]')
+								.val(args.dataField)
+								.attr('value', args.dataField);
+						});
+
+						initTemplate();
+					});
+				});
+			} else {
+				self.scanObject(settings, function(args) {
+					dataField = args.dataField;
+					dataField.path = args.pathArray.join('.');
+					dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
+
+					parent
+						.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
+						.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+				});
+
+				self.scanObject(data, function(args) {
+					parent
+						.find('*[name="' + args.pathArray.join('.') + '"]')
+						.val(args.dataField)
+						.attr('value', args.dataField);
+				});
+
+				initTemplate();
 			}
-
-			parent.find('.nav-bar > .switch-link:first-child').addClass('active');
-			parent.find('.settings-content .container > .content:first-child').addClass('active');
-
-			parent.find('.switch-sublink').each(function() {
-				$(this).text(parseInt($(this).text(), 10) + 1);
-			});
-
-			self.bindSettingsContentEvents(parent, accountId, macAddress);
 		},
 
 		bindSettingsContentEvents: function(parent, accountId, macAddress) {
@@ -498,7 +493,7 @@ define(function(require){
 						});
 					});
 				} else if ( monster.apps.auth.isReseller ) {
-					self.requestGetProvider(function(data) {
+					self.requestGetProvider(undefined, function(data) {
 						data.settings = self.cleanForm(form2object('form2object'));
 
 						self.requestUpdateProvider(data, function() {
@@ -520,6 +515,9 @@ define(function(require){
 				},
 				success: function(data, status) {
 					callback(data);
+				},
+				error: function(data, status) {
+					console.log(data, status);
 				}
 			});
 		},
@@ -656,13 +654,13 @@ define(function(require){
 			});
 		},
 		/* Providers APIs */
-		requestGetProvider: function(callback) {
+		requestGetProvider: function(providerId, callback) {
 			var self = this;
 
 			monster.request({
 				resource: 'provisioner.getProvider',
 				data: {
-					provider_id: self.accountId
+					provider_id: monster.apps.auth.isReseller ? self.accountId : providerId
 				},
 				success: function(data, status) {
 					callback(data.data);
@@ -760,10 +758,7 @@ define(function(require){
 					self.expandSettings(data[key].data);
 				} else if ( data[key].iterate === 0 ) {
 					delete data[key];
-				} else if ( data[key].iterate == 1 ) {
-					delete data[key].iterate;
-					self.expandSettings(data[key].data);
-				} else if ( data[key].iterate > 1 ) {
+				} else if ( data[key].iterate >= 1 ) {
 					var iterations = data[key].iterate,
 						_data = data[key].data,
 						i = 0;
@@ -790,21 +785,103 @@ define(function(require){
 
 			for ( section in dataForm ) {
 				if ( Array.isArray(dataForm[section]) ) {
-					for ( index in dataForm[section] ) {
-						for ( option in dataForm[section][index] ) {
-							for ( field in dataForm[section][index][option] ) {
-								if ( dataForm[section][index][option][field] === '' ) {
-									dataForm[section][index] = null;
+
+					if ( dataForm[section].length == 1 ) {
+						var temp = dataForm[section][0];
+						dataForm[section] = temp;
+
+						for ( index in dataForm[section] ) {
+							for ( option in dataForm[section][index] ) {
+								for ( field in dataForm[section][index][option] ) {
+									if ( dataForm[section][index][option][field] === '' ) {
+										dataForm[section][index] = null;
+									}
+									break;
 								}
 								break;
 							}
-							break;
+						}
+					} else {
+						for ( index in dataForm[section] ) {
+							for ( option in dataForm[section][index] ) {
+								for ( field in dataForm[section][index][option] ) {
+									if ( dataForm[section][index][option][field] === '' ) {
+										dataForm[section][index] = null;
+									}
+									break;
+								}
+								break;
+							}
 						}
 					}
 				}
 			}
 
 			return dataForm;
+		},
+
+		scanObject: function(data, callback) {
+			var pathArray = [],
+				section,
+				option,
+				__data,
+				index,
+				field,
+				_data;
+
+			for ( section in data ) {
+				_data = data[section].data ? data[section].data : data[section];
+
+				if ( Array.isArray(_data) ) {
+					for ( index in _data ) {
+						pathArray.push(section + '[' + index + ']');
+						for ( option in _data[index] ) {
+							__data = _data[index][option].data ? _data[index][option].data : _data[index][option];
+							pathArray.push(option);
+							for ( field in __data ) {
+								pathArray.push(field);
+
+								callback({
+									dataField: __data[field],
+									pathArray: pathArray,
+									isArray: true,
+									section: section,
+									option: option,
+									index: index,
+									field: field
+								});
+
+								pathArray.splice(pathArray.length--, 1);
+							}
+							pathArray.splice(pathArray.length--, 1);
+						}
+						pathArray.splice(pathArray.length--, 1);
+					}
+				} else {
+					pathArray.push(section);
+					for ( option in _data) {
+						__data = _data[option].data ? _data[option].data : _data[option];
+						pathArray.push(option);
+						for ( field in __data) {
+							pathArray.push(field);
+
+							callback({
+								dataField: __data[field],
+								pathArray: pathArray,
+								isArray: false,
+								section: section,
+								option: option,
+								index: index,
+								field: field
+							});
+
+							pathArray.splice(pathArray.length--, 1);
+						}
+						pathArray.splice(pathArray.length--, 1);
+					}
+					pathArray.splice(pathArray.length--, 1);
+				}
+			}
 		},
 
 		generateRandomLocalPort: function(args) {

@@ -1,4 +1,4 @@
-<div class="control-group">
+<div class="control-group{{#if defaultValue}} warning{{/if}}">
 	<label class="control-label" for="{{path}}">{{text}}</label>
 	<div class="controls">
 		<select id="{{path}}" name="{{path}}">
@@ -6,5 +6,8 @@
 			<option value="{{value}}">{{text}}</option>
 		{{/each}}
 		</select>
+		{{#if defaultValue}}
+		<span class="help-inline">This setting is defined at <strong>{{defaultValue}}</strong> on the account or provider level</span>
+		{{/if}}
 	</div>
 </div>
