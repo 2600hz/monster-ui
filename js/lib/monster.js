@@ -150,6 +150,11 @@ define(function(require){
 						data: data.data
 					};
 
+					payload.data.ui_metadata = {
+						version: monster.config.version,
+						ui: 'monster-ui'
+					};
+
 					if(options.acceptCharges === true) {
 						payload.accept_charges = true;
 					}
@@ -271,8 +276,10 @@ define(function(require){
 			$.ajax({
 				url: 'VERSION',
 				cache: false,
-				success: function(template) {
-					callback(template);
+				success: function(version) {
+					version = version.replace(/[\n\s]/g,'')
+
+					callback(version);
 				}
 			});
 		},

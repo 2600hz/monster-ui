@@ -165,7 +165,9 @@ define(function(require){
 			});
 
 			monster.getVersion(function(version) {
-				$('.footer-wrapper .tag-version').html('('+version.replace(/\s/g,'')+')');
+				$('.footer-wrapper .tag-version').html('('+version+')');
+
+				monster.config.version = version;
 			});
 
 			if(monster.config.appleConference) {
