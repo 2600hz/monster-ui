@@ -12,37 +12,37 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/updateDevice/{activationId}',
 				verb: 'POST'
 			},
 			'mobile.listActivations': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.cancelActivation': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
