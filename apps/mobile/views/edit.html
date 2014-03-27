@@ -9,7 +9,7 @@
 			<div id="editTabs">
 				<ul>
 					<li><a href="#editTabs1">{{i18n.editView.informations}}</a></li>
-					<li><a href="#editTabs2">{{i18n.editView.features}}</a></li>
+					<!--<li><a href="#editTabs2">{{i18n.editView.features}}</a></li>-->
 					<!--<li><a href="#editTabs3">{{i18n.editView.miscellaneous}}</a></li>-->
 					<li><a href="#editTabs4">{{i18n.editView.voiceRouting.general}}</a></li>
 					<li><a href="#editTabs5">{{i18n.editView.sprintInfos.title}}</a></li>
@@ -92,7 +92,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="editTabs2">
+				<!--<div id="editTabs2">
 					<h4>{{i18n.editView.features}}</h4>
 
 					<div class="control-group">
@@ -135,7 +135,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>-->
 				<!--<div id="editTabs3">
 					<h4>{{i18n.editView.miscellaneous}}</h4>
 					<div class="control-group">
@@ -161,11 +161,12 @@
 
 					<div class="control-group">
 						<div class="btn-group" data-type="routingType" style='text-align:center'>					
-							 <button class="btn routingType" type='button' data-value="native">Native</button> 
-							 <button class="btn routingType" type='button' data-value="kazoo">Kazoo</button> 
+							 <!--<button class="btn routingType" type='button' data-value="native">Native</button> -->
+							 <button class="btn routingType" type='button' data-value="kazoo">Kazoo Hosted</button> 
+							<button class="btn routingType" type='button' data-value="kazoo_external">Kazoo Dedicated</button> 
 							 <button class="btn routingType" type='button' data-value="advanced">Advanced</button> 
 						</div>
-						<input id="voiceRoutingType" name="voice.routingType" type='hidden'/>
+						<input id="voiceRoutingType" name="voice.routingType" type='hidden' value='{{voice.routingType}}'/>
 						<!--
 							<label><input type='radio' name='voice.routingType' class="routingType" value='native' {{#if voice.routingNative}} checked{{/if}}/> Native</label>
 							<label><input type='radio' name='voice.routingType' class="routingType" value='kazoo' {{#if voice.routingKazoo}} checked{{/if}}/> Kazoo</label>
@@ -175,6 +176,7 @@
 
 					<div id="kazoorouting">
 						<h4>{{i18n.editView.voiceRouting.kazoo}}</h4>
+						
 						<div class="control-group">
 							<label class="control-label" for="mobileUrl">{{i18n.editView.voiceRouting.realm}}</label>
 							<div class="controls">
@@ -243,8 +245,8 @@
 				</div><!--editTabs-N-->
 				<div id="editTabs5">
 					{{#if mdn}}
-						<h4>{{i18n.editView.sprintInfos.title}}</h4>
-						<div class="sprint-infos clearfix">
+						<br/><h4>{{i18n.editView.sprintInfos.title}}</h4>
+						<div class="sprint-infos">
 							<div class="sprint-line">
 								<div class="sprint-label">{{i18n.editView.sprintInfos.imsi}}</div>
 								<div class="value">{{service_info.imsi}}</div>
@@ -294,21 +296,32 @@
 								<div class="value">{{service_info.price_plan}} </div>
 							</div>
 							<div class="sprint-line">
-								<div class="sprint-label">{{i18n.editView.sprintInfos.services}}</div>
+								<div class="sprint-label">Active {{i18n.editView.sprintInfos.services}}</div>
 								<div class="multi-value">
-									{{#each service_info.services}}
+									{{#each activesocs}}
 										<div>{{this}} </div>
 									{{/each}}
 								</div>
 							</div>
+							<!--
+							<div class="sprint-line">
+								<div class="sprint-label">Inactive Services</div>
+								<div class="multi-value">
+									{{#each inactivesocs}}
+										<input type='checkbox'>{{this}}</input><br/>
+									{{/each}}
+								</div>
+							</div>
+							-->
 						</div>
+					<!--<button class="btn btn-danger" type='button' id="cancel_sprint_phone" data-mdn='{{mdn}}'>CANCEL THIS SERVICE</button>-->
 					{{/if}}
 				</div><!--editTabs-N-->
 			</div><!--editTabs-->
 		</form>
 
 		<div class="button-wrapper">
-			<button class="btn btn-danger cancel">{{i18n.editView.cancel}}</button>
+			<button class="btn btn-primary cancel">Back</button>
 			{{#if esn}}
 				<button class="btn btn-success" id="update_sprint_phone">{{i18n.editView.update}}</button>
 			{{else}}

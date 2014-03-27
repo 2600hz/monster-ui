@@ -291,10 +291,10 @@
 #mobile_list .mobile-name { width: 25% !important; }
 #mobile_list .mobile-esn { width: 25% !important; }
 #mobile_list .mobile-number { width: 16% !important; }
-#mobile_list .mobile-network { width: 8% !important; }
+#mobile_list .mobile-network { width: 10% !important; }
 #mobile_list .mobile-services { width: 15% !important; }
 #mobile_list .mobile-services i { margin-right: 4px; cursor:pointer; }
-#mobile_list .mobile-actions { width: 11% !important; }
+#mobile_list .mobile-actions { width: 9% !important; }
 #mobile_list .mobile-actions i { margin-right: 4px; cursor:pointer; }
 #mobile_list .actions {
 	position: relative;
@@ -342,6 +342,11 @@
 	line-height: 20px;
 	width: 40%;
 }
+
+/*
+.mobile-wrapper#edit_view .ui-helper-clearfix {height:1px !important;  display:inline; clear:right;}
+.mobile-wrapper#edit_view .ui-helper-clearfix:after {height:1px !important;  display:inline; clear:right;}
+*/
 
 /*WIZARDS*/
 
@@ -436,7 +441,7 @@
   text-align: center;
   top: 20px;
   word-wrap: break-word;
-  z-index: 104;
+  z-index: 2;
 }
 .wizard-actions {
   display: block;
@@ -453,3 +458,7 @@
 }
 .activation-Wizard-header {margin-bottom: 20px !important}
 .activation-Wizard-body {margin-top: 20px !important}
+
+.helptitle {font-weight:bold;}
+#cancel_sprint_phone {float:right;}
+

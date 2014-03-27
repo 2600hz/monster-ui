@@ -24,7 +24,7 @@
 					</ul>
 
 				</div>
-				<div class="clearfix"></div>
+				<div></div>
 				<div class="activaiton-Wizard-body tab-content">
 					<div class="tab-pane active" id="tab1">
 						<br>
@@ -40,7 +40,7 @@
 									<td>
 										<input required type="text" id="esn" name="esn"></input>
 									</td>
-									<td><a href='#'>How Do I Find This?</a></td>
+									<td><a href='#' id="helpESN">How Do I Find This?</a></td>
 									 
 								</tr>
 								<tr>
@@ -112,8 +112,9 @@
 						</table>
 							<div class="control-group">
 								<div class="btn-group" data-type="routingType" style='text-align:center'>					
-									 <button class="btn routingType" type='button' data-value="native">Native</button> 
-									 <button class="btn routingType btn-primary" type='button' data-value="kazoo">Kazoo</button> 
+									 <!--<button class="btn routingType" type='button' data-value="native">Native</button> -->
+									 <button class="btn routingType btn-primary" type='button' data-value="kazoo">Kazoo Hosted</button> 
+									 <button class="btn routingType" type='button' data-value="kazoo_external">Kazoo Dedicated</button> 
 									 <button class="btn routingType" type='button' data-value="advanced">Advanced</button> 
 								</div>
 								<input id="voiceRoutingType" name="voice.routingType" value='kazoo' type='hidden'/>
