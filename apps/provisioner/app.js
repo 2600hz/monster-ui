@@ -20,8 +20,7 @@ define(function(require){
 			'provisioner.getAccountsByProvider': {
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/accounts/provider/{provider_id}',
-				'verb': "GET",
-				'generateError': false
+				'verb': "GET"
 			},
 			'provisioner.updateAccount': {
 				'apiRoot': monster.config.api.provisioner,
@@ -114,20 +113,24 @@ define(function(require){
 
 		render: function(parent){
 			var self = this,
-				appTemplate;
-
-			parent = parent || $('#ws-content');
-
-			self.requestGetAccountsByProvider(function(dataTemplate) {
-				self.requestGetDevicesByAccount(dataTemplate.data[0].id, function(data) {
+				appTemplate,
+				initTemplate = function(data, dataTemplate, dataId) {
 					for ( var device in data ) {
 						data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{2}', 'g')).join(':');
+					}
+
+					if ( !dataTemplate.data ) {
+						var temp = [dataTemplate];
+
+						temp[0].id = self.accountId;
+						dataTemplate = {};
+						dataTemplate.data = temp;
 					}
 
 					dataTemplate.data[0].devices = data;
 					dataTemplate.isReseller = monster.apps.auth.isReseller;
 					appTemplate = $(monster.template(self, 'app', dataTemplate));
-					appTemplate.find('.account-section[data-id="' + dataTemplate.data[0].id + '"]').addClass('active');
+					appTemplate.find('.account-section[data-id="' + dataId + '"]').addClass('active');
 
 					parent
 						.empty()
@@ -135,8 +138,23 @@ define(function(require){
 
 					self.bindEvents(parent);
 					self.initialized = true;
+				};
+
+			parent = parent || $('#ws-content');
+
+			if ( self.accountId === monster.apps.auth.resellerId ) {
+				self.requestGetAccountsByProvider(function(dataTemplate) {
+					self.requestGetDevicesByAccount(monster.apps.auth.resellerId, function(data) {
+						initTemplate(data, dataTemplate, monster.apps.auth.resellerId);
+					});
 				});
-			});
+			} else {
+				self.requestGetAccount(self.accountId, function(dataTemplate) {
+					self.requestGetDevicesByAccount(self.accountId, function(data) {
+						initTemplate(data, dataTemplate, self.accountId);
+					});
+				});
+			}
 		},
 
 		bindEvents: function(parent) {
@@ -520,9 +538,6 @@ define(function(require){
 				},
 				success: function(data, status) {
 					callback(data);
-				},
-				error: function(data, status) {
-					console.log(data, status);
 				}
 			});
 		},
@@ -532,21 +547,10 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.getAccountsByProvider',
 				data: {
-					provider_id: self.accountId
+					provider_id: monster.apps.auth.resellerId
 				},
 				success: function(data, status) {
 					callback(data);
-				},
-				error: function(data, status) {
-					if ( data.status === 0 ) {
-						monster.ui.alert('error', 'Provisioner Server is Down!');
-					} else if ( data.error.code == 401 || data.error.code == 404 ) {
-						self.requestGetAccount(self.accountId, function(data) {
-							data.id = self.accountId;
-
-							callback({ data: [data] });
-						});
-					}
 				}
 			});
 		},
@@ -665,7 +669,7 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.getProvider',
 				data: {
-					provider_id: providerId ? providerId : self.accountId
+					provider_id: providerId
 				},
 				success: function(data, status) {
 					callback(data.data);
@@ -678,7 +682,7 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.updateProvider',
 				data: {
-					provider_id: self.accountId,
+					provider_id: monster.apps.auth.resellerId,
 					data: data
 				},
 				success: function(data, status) {
