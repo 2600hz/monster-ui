@@ -80,6 +80,10 @@ define(function(require){
 				url: 'accounts/{accountId}/callflows/{callflowId}',
 				verb: 'DELETE'
 			},
+			'voip.users.listConfNumbers': {
+				url: 'accounts/{accountId}/callflows?filter_type=conference',
+				verb: 'GET'
+			},
 			/* Devices */
 			'voip.users.listDevices': {
 				url: 'accounts/{accountId}/devices',
@@ -1123,13 +1127,19 @@ define(function(require){
 			});
 
 			template.on('click', '.feature[data-feature="conferencing"]', function() {
-				self.usersGetConferenceFeature(currentUser.id, function(conference) {
+				self.usersGetConferenceFeature(currentUser.id, function(dataConf) {
 					var data = {
+						listConferences: dataConf.listConfNumbers,
 						user: currentUser,
-						conference: conference
+						conference: dataConf.conference
 					};
 
-					self.usersRenderConferencing(data);
+					if(_.isEmpty(data.listConferences)) {
+						monster.ui.alert('error', self.i18n.active().users.conferencing.noConfNumbers);
+					}
+					else {
+						self.usersRenderConferencing(data);
+					}
 				});
 			});
 
@@ -2845,17 +2855,61 @@ define(function(require){
 			});
 		},
 
-		usersGetConferenceFeature: function(userId, callback) {
+		usersGetConferenceFeature: function(userId, globalCallback) {
+			var self = this,
+				dataResponse = {
+					conference: {},
+					listConfNumbers: []
+				};
+
+			monster.parallel({
+					confNumbers: function(callback) {
+						self.usersListConfNumbers(function(numbers) {
+							callback && callback(null, numbers);
+						});
+					},
+					listConferences: function(callback) {
+						self.usersListConferences(userId, function(conferences) {
+							if(conferences.length > 0) {
+								self.usersGetConference(conferences[0].id, function(conference) {
+									callback && callback(null, conference);
+								});
+							}
+							else {
+								callback && callback(null, {});
+							}
+						});
+					}
+				},
+				function(err, results) {
+					dataResponse.conference = results.listConferences;
+					dataResponse.listConfNumbers = results.confNumbers;
+
+					globalCallback && globalCallback(dataResponse);
+				}
+			);
+		},
+
+		usersListConfNumbers: function(callback) {
 			var self = this;
 
-			self.usersListConferences(userId, function(conferences) {
-				if(conferences.length > 0) {
-					self.usersGetConference(conferences[0].id, function(conference) {
-						callback && callback(conference);
+			monster.request({
+				resource: 'voip.users.listConfNumbers',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					var numbers = [];
+
+					_.each(data.data, function(conf) {
+						if(conf.name === 'MainConference') {
+							if(conf.numbers.length > 0 && conf.numbers[0] !== 'undefinedconf') {
+								numbers = numbers.concat(conf.numbers);
+							}
+						}
 					});
-				}
-				else {
-					callback && callback();
+
+					callback && callback(numbers);
 				}
 			});
 		},

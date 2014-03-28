@@ -341,8 +341,11 @@
 		},
 		"conferencing": {
 			"title": "Conférence de l'Utilisateur",
-			"headline": "Réglages de la conférence Utilisateur",
-			"pinLabel": "PIN de l'utilisateur"
+			"headline": "Conférence de l'Utilisateur",
+			"number": "Numéro téléphonique de la conférence",
+			"pinLabel": "Salle de conférence",
+			"help": "Afin de joindre la conférence, transmettez le numéro téléphonique à appeler ainsi que le numéro de salle de conférence à tous les participants!",
+			"noConfNumbers": "Vous devez ajouter un Numéro principal de Conférence (Voir \"Numéro principal\" dans le menu de gauche) avant de pouvoir configurer les Conférences personnelles des utilisateurs"
 		},
 		"faxing": {
 			"title": "Fax vers Email",

@@ -12,10 +12,29 @@
 	<div class="content{{#unless user.extra.mapFeatures.conferencing.active}} disabled{{/unless}}">
 		<form id="conferencing_form">
 			<div class="main-line">
+				{{ i18n.users.conferencing.number }}
+				<div class="list-numbers" data-count="{{listConferences.length}}">
+					{{#each listConferences}}
+						<div class="conference-number">{{formatPhoneNumber this}}</div>
+					{{/each}}
+				</div>
+			</div>
+
+			<div class="main-line">
 				{{ i18n.users.conferencing.pinLabel }}
 				<input required id="pin" type="text" name="member.numbers[]" class="input-small" value="{{conference.member.numbers.[0]}}"></input>
 			</div>
 		</form>
+
+		<div class="help-box gray-box">
+			<div class="wrapper-icon">
+				&nbsp;<i class="icon-info-sign2"></i>&nbsp;
+			</div>
+
+			<div class="text-wrapper">
+				<p>{{i18n.users.conferencing.help}}</p>
+			</div>
+		</div>
 	</div>
 
 	<div class="actions clearfix">

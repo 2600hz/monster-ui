@@ -613,6 +613,29 @@
 	margin-bottom: 0;
 }
 
+.feature-popup-container[data-feature="conferencing"] form .list-numbers {
+	display: inline-block;
+	font-weight: 500;
+	height: 65px;
+	line-height: 15px;
+	margin-left: 25px;
+	overflow: auto;
+	vertical-align: middle;
+	width: 180px;
+}
+
+.feature-popup-container[data-feature="conferencing"] form .list-numbers[data-count="1"] {
+	line-height: 61px;
+}
+
+.feature-popup-container[data-feature="conferencing"] form .list-numbers[data-count="2"] {
+	line-height: 32px;
+}
+
+.feature-popup-container[data-feature="conferencing"] form .list-numbers[data-count="3"] {
+	line-height: 20px;
+}
+
 /* Change Password Popup */
 .change-password-popup {
 	width: 430px;

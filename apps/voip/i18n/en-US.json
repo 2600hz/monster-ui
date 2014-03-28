@@ -340,9 +340,12 @@
 			"title": "Call Recording"
 		},
 		"conferencing": {
-			"title": "Conferencing",
-			"headline": "User Conferencing Settings",
-			"pinLabel": "PIN of this user"
+			"title": "Conference Bridge",
+			"headline": "Personal Conference Bridge",
+			"pinLabel": "Personal Conference Room number",
+			"number": "Conferencing Phone Number(s)",
+			"help": "You can create a conference call by providing a conferencing phone number and your personal room number to the participants",
+			"noConfNumbers": "You need to add a Main Conference Number (in the Main number section on the left of the SmartPBX) in order to enable the Personnals Conference Bridges"
 		},
 		"faxing": {
 			"title": "Fax to Email",
