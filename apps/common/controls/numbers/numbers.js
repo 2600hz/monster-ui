@@ -94,7 +94,9 @@ define(function(require){
 			}
 
 			_.each(value.features, function(feature) {
-				value.viewFeatures[feature].active = 'active';
+				if(feature in value.viewFeatures) {
+					value.viewFeatures[feature].active = 'active';
+				}
 			});
 
 			if('used_by' in value) {
