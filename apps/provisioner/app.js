@@ -393,7 +393,9 @@ define(function(require){
 			if ( accountId && macAddress ) {
 				self.requestGetAccount(accountId, function(accountData) {
 					self.requestGetProvider(accountData.provider_id, function(providerData) {
-						var mergedSettings = _.extend(providerData.settings, accountData.settings);
+						var mergedSettings = {};
+
+						$.extend(true, mergedSettings, providerData.settings, accountData.settings);
 
 						self.scanObject(settings, function(args) {
 							dataField = args.dataField;
