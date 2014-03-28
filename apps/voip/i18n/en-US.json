@@ -367,7 +367,8 @@
 			"headline": "Find me, Follow me Settings",
 			"disableDevice": "Do not ring",
 			"ringThisPhoneFor": "Ring this phone for",
-			"noDevice": "You need at least one device to enable this feature."
+			"noDevice": "You need at least one device to enable this feature.",
+			"noNumber": "Before configuring the Find-Me Follow-Me feature for this user, you need to assign him a number or an extension"
 		},
 		"caller_id": {
 			"title": "Caller-ID Number",

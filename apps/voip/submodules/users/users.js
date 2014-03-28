@@ -1096,6 +1096,8 @@ define(function(require){
 											callback(null, callflow.data)
 										}
 									});
+								} else {
+									callback(null, null);
 								}
 							});
 						}
@@ -1667,166 +1669,169 @@ define(function(require){
 		},
 
 		usersRenderFindMeFollowMe: function(params) {
-			var self = this,
-				currentUser = params.currentUser,
-				userDevices = params.userDevices.sort(function(a, b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1 }),
-				userCallflow = params.userCallflow,
-				featureTemplate = $(monster.template(self, 'users-feature-find_me_follow_me', { currentUser: currentUser, devices: userDevices })),
-				switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
-				featureForm = featureTemplate.find('#find_me_follow_me_form'),
-				args = {
-					callback: function() {
-						popup.dialog('close').remove();
+			var self = this;
+
+			if(!params.userCallflow) {
+				monster.ui.alert('error', self.i18n.active().users.find_me_follow_me.noNumber);
+			} else if(!params.userDevices || params.userDevices.length === 0) {
+				monster.ui.alert('error', self.i18n.active().users.find_me_follow_me.noDevice);
+			} else {
+				var currentUser = params.currentUser,
+					userDevices = params.userDevices.sort(function(a, b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1 }),
+					userCallflow = params.userCallflow,
+					featureTemplate = $(monster.template(self, 'users-feature-find_me_follow_me', { currentUser: currentUser, devices: userDevices })),
+					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
+					featureForm = featureTemplate.find('#find_me_follow_me_form'),
+					args = {
+						callback: function() {
+							popup.dialog('close').remove();
+						},
+						openedTab: 'features'
 					},
-					openedTab: 'features'
-				},
-				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
-				scaleMaxSeconds = 60, //Maximum of seconds, corresponding to the end of the scale
-				selectedDevices = {};
+					scaleSections = 6, //Number of 'sections' in the time scales for the sliders
+					scaleMaxSeconds = 60, //Maximum of seconds, corresponding to the end of the scale
+					selectedDevices = {};
 
-			if(userCallflow.flow.module === 'ring_group') {
-				_.each(userCallflow.flow.data.endpoints, function(val) {
-					selectedDevices[val.id] = val;
-				});
-			}
-
-			featureTemplate.find('.cancel-link').on('click', function() {
-				popup.dialog('close').remove();
-			});
-
-			switchFeature.on('switch-change', function(e, data) {
-				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
-			});
-
-			featureTemplate.find('.save').on('click', function() {
-				var enabled = switchFeature.bootstrapSwitch('status'),
-					enabledDevices = featureTemplate.find('.device-row[data-device_id]:not(.disabled)');
-
-				currentUser.smartpbx = currentUser.smartpbx || {};
-				currentUser.smartpbx.find_me_follow_me = currentUser.smartpbx.find_me_follow_me || {};
-				currentUser.smartpbx.find_me_follow_me.enabled = (enabled && enabledDevices.length > 0);
-
-				if(enabled && enabledDevices.length > 0) {
-					userCallflow.flow.module = 'ring_group';
-					userCallflow.flow.data = {
-						strategy: "simultaneous",
-						timeout: scaleMaxSeconds,
-						endpoints: []
-					}
-					$.each(enabledDevices, function() {
-						var $row = $(this),
-							deviceId = $row.data('device_id'),
-							values = $row.find('.slider-time').slider('values');
-
-						userCallflow.flow.data.endpoints.push({
-							id: deviceId,
-							endpoint_type: "device",
-							delay: values[0],
-							timeout: (values[1] - values[0])
-						});
+				if(userCallflow.flow.module === 'ring_group') {
+					_.each(userCallflow.flow.data.endpoints, function(val) {
+						selectedDevices[val.id] = val;
 					});
-				} else {
-					userCallflow.flow.module = 'user';
-					userCallflow.flow.data = {
-						can_call_self: false,
-						id: currentUser.id,
-						timeout: "20"
-					}
 				}
 
-				monster.parallel({
-						callflow: function(callbackParallel) {
-							self.usersUpdateCallflow(userCallflow, function(data) {
-								callbackParallel && callbackParallel(null, data.data);
-							});
-						},
-						user: function(callbackParallel) {
-							self.usersUpdateUser(currentUser, function(data) {
-								callbackParallel && callbackParallel(null, data.data);
-							});
+				featureTemplate.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+
+				switchFeature.on('switch-change', function(e, data) {
+					data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
+				});
+
+				featureTemplate.find('.save').on('click', function() {
+					var enabled = switchFeature.bootstrapSwitch('status'),
+						enabledDevices = featureTemplate.find('.device-row[data-device_id]:not(.disabled)');
+
+					currentUser.smartpbx = currentUser.smartpbx || {};
+					currentUser.smartpbx.find_me_follow_me = currentUser.smartpbx.find_me_follow_me || {};
+					currentUser.smartpbx.find_me_follow_me.enabled = (enabled && enabledDevices.length > 0);
+
+					if(enabled && enabledDevices.length > 0) {
+						userCallflow.flow.module = 'ring_group';
+						userCallflow.flow.data = {
+							strategy: "simultaneous",
+							timeout: scaleMaxSeconds,
+							endpoints: []
 						}
-					},
-					function(err, results) {
-						args.userId = results.user.id;
-						self.usersRender(args);
+						$.each(enabledDevices, function() {
+							var $row = $(this),
+								deviceId = $row.data('device_id'),
+								values = $row.find('.slider-time').slider('values');
+
+							userCallflow.flow.data.endpoints.push({
+								id: deviceId,
+								endpoint_type: "device",
+								delay: values[0],
+								timeout: (values[1] - values[0])
+							});
+						});
+					} else {
+						userCallflow.flow.module = 'user';
+						userCallflow.flow.data = {
+							can_call_self: false,
+							id: currentUser.id,
+							timeout: "20"
+						}
 					}
-				);
-			});
 
-			monster.ui.prettyCheck.create(featureTemplate.find('.disable-device'));
+					monster.parallel({
+							callflow: function(callbackParallel) {
+								self.usersUpdateCallflow(userCallflow, function(data) {
+									callbackParallel && callbackParallel(null, data.data);
+								});
+							},
+							user: function(callbackParallel) {
+								self.usersUpdateUser(currentUser, function(data) {
+									callbackParallel && callbackParallel(null, data.data);
+								});
+							}
+						},
+						function(err, results) {
+							args.userId = results.user.id;
+							self.usersRender(args);
+						}
+					);
+				});
 
-			if(userDevices && userDevices.length > 0) {
+				monster.ui.prettyCheck.create(featureTemplate.find('.disable-device'));
+
 				var popup = monster.ui.dialog(featureTemplate, {
 					title: currentUser.extra.mapFeatures.find_me_follow_me.title,
 					position: ['center', 20]
 				});
-			} else {
-				monster.ui.alert('error', self.i18n.active().users.find_me_follow_me.noDevice);
+
+				var sliderTooltip = function(event, ui) {
+						var val = ui.value,
+							tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val + '</div></div>';
+
+						$(ui.handle).html(tooltip);
+					},
+					createTooltip = function(event, ui, deviceId, sliderObj) {
+						var val1 = sliderObj.slider('values', 0),
+							val2 = sliderObj.slider('values', 1),
+							tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
+							tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
+
+						featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
+						featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
+					},
+					createSlider = function(device) {
+						var deviceRow = featureTemplate.find('.device-row[data-device_id="'+ device.id +'"]');
+						deviceRow.find('.slider-time').slider({
+							range: true,
+							min: 0,
+							max: scaleMaxSeconds,
+							values: device.id in selectedDevices ? [ selectedDevices[device.id].delay, selectedDevices[device.id].delay+selectedDevices[device.id].timeout ] : [0,0],
+							slide: sliderTooltip,
+							change: sliderTooltip,
+							create: function(event, ui) {
+								createTooltip(event, ui, device.id, $(this));
+							},
+						});
+						createSliderScale(deviceRow);
+					},
+					createSliderScale = function(container, isHeader) {
+						var scaleContainer = container.find('.scale-container')
+							isHeader = isHeader || false;
+
+						for(var i=1; i<=scaleSections; i++) {
+							var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
+										 + (isHeader ? '<span>'+(i*scaleMaxSeconds/scaleSections)+' Sec</span>' : '')
+										 + '</div>';
+							scaleContainer.append(toAppend);
+						}
+						if(isHeader) {
+							scaleContainer.append('<span>0 Sec</span>');
+						}
+					};
+
+				featureTemplate.find('.disable-device').on('ifToggled', function() {
+					var parentRow = $(this).parents('.device-row');
+					if(this.checked) {
+						parentRow.find('.times').stop().animate({ opacity: 0 });
+						parentRow.addClass('disabled')
+					} else {
+						parentRow.find('.times').stop().animate({ opacity: 1 });
+						parentRow.removeClass('disabled')
+					}
+				});
+
+				_.each(userDevices, function(device) {
+					createSlider(device);
+					if(currentUser.extra.mapFeatures.find_me_follow_me.active && !(device.id in selectedDevices)) {
+						monster.ui.prettyCheck.action(featureTemplate.find('.device-row[data-device_id="'+device.id+'"] .disable-device'), 'check');
+					}
+				});
+				createSliderScale(featureTemplate.find('.device-row.title'), true);	
 			}
-
-			var sliderTooltip = function(event, ui) {
-					var val = ui.value,
-						tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val + '</div></div>';
-
-					$(ui.handle).html(tooltip);
-				},
-				createTooltip = function(event, ui, deviceId, sliderObj) {
-					var val1 = sliderObj.slider('values', 0),
-						val2 = sliderObj.slider('values', 1),
-						tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
-						tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
-
-					featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
-					featureTemplate.find('.device-row[data-device_id="'+ deviceId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
-				},
-				createSlider = function(device) {
-					var deviceRow = featureTemplate.find('.device-row[data-device_id="'+ device.id +'"]');
-					deviceRow.find('.slider-time').slider({
-						range: true,
-						min: 0,
-						max: scaleMaxSeconds,
-						values: device.id in selectedDevices ? [ selectedDevices[device.id].delay, selectedDevices[device.id].delay+selectedDevices[device.id].timeout ] : [0,0],
-						slide: sliderTooltip,
-						change: sliderTooltip,
-						create: function(event, ui) {
-							createTooltip(event, ui, device.id, $(this));
-						},
-					});
-					createSliderScale(deviceRow);
-				},
-				createSliderScale = function(container, isHeader) {
-					var scaleContainer = container.find('.scale-container')
-						isHeader = isHeader || false;
-
-					for(var i=1; i<=scaleSections; i++) {
-						var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
-									 + (isHeader ? '<span>'+(i*scaleMaxSeconds/scaleSections)+' Sec</span>' : '')
-									 + '</div>';
-						scaleContainer.append(toAppend);
-					}
-					if(isHeader) {
-						scaleContainer.append('<span>0 Sec</span>');
-					}
-				};
-
-			featureTemplate.find('.disable-device').on('ifToggled', function() {
-				var parentRow = $(this).parents('.device-row');
-				if(this.checked) {
-					parentRow.find('.times').stop().animate({ opacity: 0 });
-					parentRow.addClass('disabled')
-				} else {
-					parentRow.find('.times').stop().animate({ opacity: 1 });
-					parentRow.removeClass('disabled')
-				}
-			});
-
-			_.each(userDevices, function(device) {
-				createSlider(device);
-				if(currentUser.extra.mapFeatures.find_me_follow_me.active && !(device.id in selectedDevices)) {
-					monster.ui.prettyCheck.action(featureTemplate.find('.device-row[data-device_id="'+device.id+'"] .disable-device'), 'check');
-				}
-			});
-			createSliderScale(featureTemplate.find('.device-row.title'), true);
 		},
 
 		usersRenderMusicOnHold: function(currentUser) {
