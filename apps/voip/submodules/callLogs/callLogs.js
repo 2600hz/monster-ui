@@ -292,10 +292,12 @@ define(function(require){
 
 			_.each(cdrs, function(val, key) {
 				if(!('aLeg' in val)) {
-					delete cdrs[key];
+					// Handling lone b-legs as standalone a-legs
+					_.each(val.bLegs, function(v, k) {
+						result.push($.extend({ bLegs: [] }, formatCdr(v)));
+					});
 				} else {
 					var cdr = formatCdr(val.aLeg);
-					console.log(cdr);
 					cdr.bLegs = [];
 					_.each(val.bLegs, function(v, k) {
 						cdr.bLegs.push(formatCdr(v));
@@ -303,6 +305,8 @@ define(function(require){
 					result.push(cdr);
 				}
 			});
+
+			console.log(result);
 
 			result.sort(function(a, b) {
 				return b.timestamp - a.timestamp;
