@@ -12,37 +12,37 @@ define(function(require){
 
 		requests: {
 			'mobile.activatePhone': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/activateDevice',
 				verb: 'POST'
 			},
 			'mobile.updatePhone': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/updateDevice/{activationId}',
 				verb: 'POST'
 			},
 			'mobile.listActivations': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
 			'mobile.getActivation': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/devices/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.cancelActivation': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/cancel/{activationId}',
 				verb: 'GET'
 			},
 			'mobile.checkCoverage': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkCoverage',
 				verb: 'POST'
 			},
 			'mobile.checkEsn': {
-				apiRoot: 'http://localhost/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
+				apiRoot: 'http://sandbox.2600hz.com/tower_of_power/sprintapi/html/sprint_api/index.php/v1/',
 				url: 'accounts/{accountId}/checkDeviceInfo',
 				verb: 'POST'
 			}
@@ -96,7 +96,6 @@ define(function(require){
 				.append(template);
 		},
 
-
 		renderDashboard: function(container) {
 			var self = this,
 				template = $(monster.template(self, 'dashboard'));
@@ -140,10 +139,10 @@ define(function(require){
 			if (!_.isEmpty(data) && 'voice' in data && data.voice.routingType) {
 				$('button[data-value="'+data.voice.routingType+'"]').addClass('btn-primary');
 				switch (data.voice.routingType) {
-					case 'native': 
+					/*case 'native': 
 						template.find("#advancedrouting").hide();
 						template.find("#kazoorouting").hide();
-						break;
+						break;*/
 					case 'advanced':
 						template.find("#advancedrouting").show();
 						template.find("#kazoorouting").hide();
@@ -201,7 +200,7 @@ define(function(require){
 			self.bindEditEvents(template, data);
 			console.log(data);
 
-			(parent)
+			$('.right-content')
 				.empty()
 				.append(template);
 
@@ -214,10 +213,10 @@ define(function(require){
 			if (!_.isEmpty(data) && 'voice' in data && data.voice.routingType) {
 				$('button[data-value="'+data.voice.routingType+'"]').addClass('btn-primary');
 				switch (data.voice.routingType) {
-					case 'native': 
+					/*case 'native': 
 						template.find("#advancedrouting").hide();
 						template.find("#kazoorouting").hide();
-						break;
+						break;*/
 					case 'advanced':
 						template.find("#advancedrouting").show();
 						template.find("#kazoorouting").hide();
@@ -339,6 +338,8 @@ define(function(require){
 						if (device.device_name) {
 							var template = monster.template(self, '!' + self.i18n.active().updateSuccess, { deviceName: device.device_name });
 							toastr.success(template);
+							container = parent.find('.right-content');
+							monster.pub('mobile.devices.render', { parent : container });
 						}
 						else
 							alert('failed');
@@ -347,20 +348,22 @@ define(function(require){
 			});
 
 			template.find('.cancel').on('click', function() {
-				self.render();
+				container = parent.find('.right-content');
+				monster.pub('mobile.devices.render', { parent : container });
+				//self.renderDevices();
 			});
 
 
 			template.find('.routingType').on('click', function(e) {
-				if ($(this).attr('data-value')=="native") {
+				/*if ($(this).attr('data-value')=="native") {
 					$("#kazoorouting").hide();
 					$("#advancedrouting").hide();
-				}
+				}*/
 
-				if ($(this).attr('data-value')=="kazoo") { 
+				if ($(this).attr('data-value')=="kazoo" || $(this).attr('data-value')=="kazoo_external") { 
 					$("#kazoorouting").show();
 					$("#advancedrouting").hide();
-				}					
+				}						
 
 				if ($(this).attr('data-value')=="advanced") { 
 					$("#kazoorouting").hide();
@@ -374,11 +377,23 @@ define(function(require){
 					$('.btn', $(this).parent()).removeClass('btn-primary');
 					$(this).addClass('btn-primary');
 					$("#voiceRoutingType").val( $(this).attr("data-value") );	
-
-
-
 				}
 			});
+
+
+			template.find('#cancel_sprint_phone').on('click', function() {
+				var deviceId = $(this).attr('data-mdn');
+				
+				if (confirm("Are you SURE you want to cancel " + deviceId + "? You may not be able to get it back!" ))
+					self.cancelActivation(deviceId, function(activationDetails) {
+						self.render();
+					});
+				else
+					alert('phew! that was a close one!');
+
+			});
+
+
 
 		},
 
@@ -468,15 +483,17 @@ define(function(require){
 
 
 			template.find('.routingType').on('click', function(e) {
-				if ($(this).attr('data-value')=="native") {
+				/*if ($(this).attr('data-value')=="native") {
 					$("#kazoorouting").hide();
 					$("#advancedrouting").hide();
-				}
+				}*/
 
-				if ($(this).attr('data-value')=="kazoo") { 
+
+				if ($(this).attr('data-value')=="kazoo" || $(this).attr('data-value')=="kazoo_external" ) { 
 					$("#kazoorouting").show();
 					$("#advancedrouting").hide();
-				}					
+				}	
+
 
 				if ($(this).attr('data-value')=="advanced") { 
 					$("#kazoorouting").hide();
@@ -492,6 +509,13 @@ define(function(require){
 					$("#voiceRoutingType").val( $(this).attr("data-value") );	
 				}
 			});
+
+
+			template.find("#helpESN").on('click', function(ev) {
+				var helptemplate = $(monster.template(self, 'help_esn', {}));
+				monster.ui.dialog(helptemplate, {width: '500px', title:'Locating your MEID/ESN'});
+			});
+
 		},
 
 		formatCheckData: function(data) {
