@@ -44,6 +44,13 @@
 		"ringThisMemberFor": "Ring this member for:",
 		"ringGroupMissing": "No Ring Group are defined for this Group (group_id missing from callflow)",
 		"removeMember": "Remove Member",
+		"extraNode": {
+			"label": "If no one answers, forward the call to:",
+			"menu": "Menu",
+			"mainMenu": "Main Menu (Open hours)",
+			"voicemails": "Voicemail Boxes",
+			"users": "Users"
+		},
 		"title": "Groups",
 		"titleGrid": {
 			"groups": "Group Name",
@@ -71,11 +78,6 @@
 			"silence": "Silence",
 			"defaultMusic": "Default Music",
 			"emptyUploadAlert": "Please select a file to upload"
-		},
-		"voicemails": {
-			"title": "Voicemails",
-			"headline": "Group Voicemail Settings",
-			"dropdownLabel": "Voicemail Box:"
 		}
 	},
 

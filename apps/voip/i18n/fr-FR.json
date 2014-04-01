@@ -44,6 +44,13 @@
 		"ringThisMemberFor": "Faire sonner ce membre pendant:",
 		"ringGroupMissing": "Aucun groupe d'appels n'a été défini pour ce groupe d'utilisatuers (group_id missing from callflow)",
 		"removeMember": "Supprimer ce membre",
+		"extraNode": {
+			"label": "Si personne ne répond, transférer l'appel vers :",
+			"menu": "Menu",
+			"mainMenu": "Menu principal",
+			"voicemails": "Répondeurs",
+			"users": "Utilisateurs"
+		},
 		"title": "Groupes",
 		"titleGrid": {
 			"groups": "Nom du groupe",
@@ -71,11 +78,6 @@
 			"silence": "Silence",
 			"defaultMusic": "Musique par défaut",
 			"emptyUploadAlert": "Veuillez sélectionner un fichier à uploader"
-		},
-		"voicemails": {
-			"title": "Répondeur",
-			"headline": "Options du répondeur du groupe",
-			"dropdownLabel": "Répondeur:"
 		}
 	},
 

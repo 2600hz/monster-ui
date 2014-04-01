@@ -23,6 +23,26 @@
 			</div>
 		{{/each}}
 	</div>
+	<div class="extra-node">
+		<span>{{ i18n.groups.extraNode.label }}</span>
+		<select class="extra-node-select">
+			<optgroup label="{{ i18n.groups.extraNode.menu }}">
+				{{#if extra.callEntities.mainMenu}}
+				<option value="{{extra.callEntities.mainMenu.id}}" data-module="callflow" {{#compare extra.selectedEntity.id '===' extra.callEntities.mainMenu.id}}selected{{/compare}}>{{ i18n.groups.extraNode.mainMenu }}</option>
+				{{/if}}
+			</optgroup>
+			<optgroup label="{{ i18n.groups.extraNode.voicemails }}">
+				{{#each extra.callEntities.voicemails}}
+				<option value="{{id}}" data-module="voicemail" {{#compare ../extra.selectedEntity.id '===' id}}selected{{/compare}}>{{name}}</option>
+				{{/each}}
+			</optgroup>
+			<optgroup label="{{ i18n.groups.extraNode.users }}">
+				{{#each extra.callEntities.userCallflows}}
+				<option value="{{id}}" data-module="callflow" {{#compare ../extra.selectedEntity.id '===' id}}selected{{/compare}}>{{userName}}</option>
+				{{/each}}
+			</optgroup>
+		</select>
+	</div>
 	<div class="actions">
 		<ul class="pull-left add-user-dropdown">
 			<li class="dropdown">
