@@ -111,12 +111,14 @@ define(function(require){
 				}
 			});
 
-			if ( navbar.find('.current-app').is(':empty') ) {
+			if ( appName === 'appstore' ) {
+				navbar.find('.current-app').empty();
+			} else if ( navbar.find('.current-app').is(':empty') ) {
 				navbar
 					.find('.current-app')
 					.append(monster.template(self, 'current-app', defaultApp));
 
-				navbar.find('.active-app').fadeIn(400);
+				navbar.find('.active-app').fadeIn(100);
 			} else {
 				navbar.find('.active-app').fadeOut(100, function() {
 					navbar
@@ -138,6 +140,7 @@ define(function(require){
 
 				if(defaultApp && defaultApp !== '') {
 					monster.apps.load(defaultApp, function(app) {
+						self.showDefaultApp(defaultApp);
 						app.render($('#ws-content'));
 					});
 				}
