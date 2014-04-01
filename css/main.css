@@ -78,6 +78,15 @@ a.monster-link i {
     line-height: 58px;
 }
 
+#main section > .navbar .nav > li > a .user-name {
+    display: inline-block;
+    float: left;
+    overflow: hidden;
+    max-width: 141px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 #main section > .navbar .nav > li.nav-masquerading {
     border-left: 1px solid #353535;
 }
@@ -120,6 +129,46 @@ a.monster-link i {
 
 #main section > .navbar .nav > li > a:hover i {
     color: #22ccff !important;
+}
+
+#main section > .navbar .navbar-inner .current-app {
+    display: inline-block;
+    float: left;
+}
+
+#main section > .navbar .navbar-inner .active-app {
+    display: none;
+    float: left;
+    padding: 0 30px;
+    height: 62px;
+    border-right: 1px solid #353535;
+}
+#main section > .navbar .navbar-inner .active-app > div {
+    display: inline-block;
+    float: left;
+}
+#main section > .navbar .navbar-inner .app-icon {
+    width: 40px;
+    height: 100%;
+    background: no-repeat center;
+    background-size: contain;
+}
+#main section > .navbar .navbar-inner .app-name {
+    overflow: hidden;
+    padding: 0 0 0 20px;
+    max-width: 200px;
+    color: #F5F5F5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 60px;
+}
+#main section > .navbar .navbar-inner .active-app:hover {
+    cursor: pointer;
+}
+#main section > .navbar .navbar-inner .active-app:hover .app-name {
+    color: #22ccff;
 }
 
 #main section > .navbar .navbar-inner .logo {
@@ -223,6 +272,19 @@ body div {
 
     #main section > .navbar .navbar-inner .home {
         margin-left: 0;
+    }
+}
+
+
+@media (max-width: 954px) {
+    #main section > .navbar .navbar-inner .current-app .app-name {
+        display: none;
+    }
+}
+
+@media (max-width: 715px) {
+    #main section > .navbar .navbar-inner .current-app {
+        display: none;
     }
 }
 
