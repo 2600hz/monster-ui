@@ -86,6 +86,15 @@ define(function(require){
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/phones',
 				'verb': 'GET'
+			},
+			/* Apps Link APIs */
+			'provisioner.getProviderIdIfNotMasqueraded': {
+				'url': 'apps_link/authorize',
+				'verb': 'GET'
+			},
+			'provisioner.getProviderIdIfMasqueraded': {
+				'url': 'accounts/{account_id}/apps_link/authorize',
+				'verb': 'GET'
 			}
 		},
 
@@ -127,7 +136,12 @@ define(function(require){
 						dataTemplate.data = temp;
 					}
 
-					dataTemplate.data[0].devices = data;
+					for ( var account in dataTemplate.data ) {
+						if ( dataTemplate.data[account].id === dataId ) {
+							dataTemplate.data[account].devices = data;
+						}
+					}
+
 					dataTemplate.isReseller = monster.apps.auth.isReseller;
 					appTemplate = $(monster.template(self, 'app', dataTemplate));
 					appTemplate.find('.account-section[data-id="' + dataId + '"]').addClass('active');
@@ -142,10 +156,10 @@ define(function(require){
 
 			parent = parent || $('#ws-content');
 
-			if ( self.accountId === monster.apps.auth.resellerId ) {
+			if ( monster.apps.auth.isReseller ) {
 				self.requestGetAccountsByProvider(function(dataTemplate) {
-					self.requestGetDevicesByAccount(monster.apps.auth.resellerId, function(data) {
-						initTemplate(data, dataTemplate, monster.apps.auth.resellerId);
+					self.requestGetDevicesByAccount(dataTemplate.data[0].id, function(data) {
+						initTemplate(data, dataTemplate, dataTemplate.data[0].id);
 					});
 				});
 			} else {
@@ -307,7 +321,7 @@ define(function(require){
 					});
 				});
 			} else if ( monster.apps.auth.isReseller) {
-				self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
+				self.requestGetProvider(function(data) {
 					self.requestGetGlobalSettings(function(settings) {
 						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
 					});
@@ -392,7 +406,7 @@ define(function(require){
 
 			if ( accountId && macAddress ) {
 				self.requestGetAccount(accountId, function(accountData) {
-					self.requestGetProvider(accountData.provider_id, function(providerData) {
+					self.requestGetProvider(function(providerData) {
 						var mergedSettings = {};
 
 						$.extend(true, mergedSettings, providerData.settings, accountData.settings);
@@ -421,7 +435,7 @@ define(function(require){
 				});
 			} else if ( accountId ) {
 				self.requestGetAccount(accountId, function(accountData) {
-					self.requestGetProvider(accountData.provider_id, function(providerData) {
+					self.requestGetProvider(function(providerData) {
 						self.scanObject(settings, function(args) {
 							dataField = args.dataField;
 							dataField.path = args.pathArray.join('.');
@@ -518,7 +532,7 @@ define(function(require){
 						});
 					});
 				} else if ( monster.apps.auth.isReseller ) {
-					self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
+					self.requestGetProvider(function(data) {
 						data.settings = form2object('form2object');
 
 						self.requestUpdateProvider(data, function() {
@@ -546,14 +560,16 @@ define(function(require){
 		requestGetAccountsByProvider: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.getAccountsByProvider',
-				data: {
-					provider_id: monster.apps.auth.resellerId
-				},
-				success: function(data, status) {
-					callback(data);
-				}
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.getAccountsByProvider',
+					data: {
+						provider_id: providerId
+					},
+					success: function(data, status) {
+						callback(data);
+					}
+				});
 			});
 		},
 		requestUpdateAccount: function(accountId, data, callback) {
@@ -665,31 +681,35 @@ define(function(require){
 			});
 		},
 		/* Providers APIs */
-		requestGetProvider: function(providerId, callback) {
+		requestGetProvider: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.getProvider',
-				data: {
-					provider_id: providerId
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.getProvider',
+					data: {
+						provider_id: providerId
+					},
+					success: function(data, status) {
+						callback(data.data);
+					}
+				});
 			});
 		},
 		requestUpdateProvider: function(data, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.updateProvider',
-				data: {
-					provider_id: monster.apps.auth.resellerId,
-					data: data
-				},
-				success: function(data, status) {
-					callback();
-				}
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.updateProvider',
+					data: {
+						provider_id: providerId,
+						data: data
+					},
+					success: function(data, status) {
+						callback();
+					}
+				});
 			});
 		},
 		/* UI Requests */
@@ -732,8 +752,56 @@ define(function(require){
 				}
 			});
 		},
+		/* Apps Link APIs */
+		requestGetProviderIfNotMasqueraded: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getProviderIdIfNotMasqueraded',
+				data: {
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
+		requestProviderIfMasqueraded: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getProviderIdIfMasqueraded',
+				data: {
+					account_id: self.accountId
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
 
 		/* Methods */
+		getProviderId: function(callback) {
+			var self = this;
+
+			if ( self.accountId === monster.apps.auth.originalAccount.id ) {
+				self.requestGetProviderIfNotMasqueraded(function(data) {
+					if ( data.is_reseller ) {
+						callback(data.account_id);
+					} else {
+						callback(data.reseller_id);
+					}
+				});
+			} else {
+				self.requestProviderIfMasqueraded(function(data) {
+					if ( data.is_reseller ) {
+						callback(data.account_id);
+					} else {
+						callback(data.reseller_id);
+					}
+				});
+			}
+		},
+
 		getPhonesList: function(deviceBrand, callback) {
 			var self = this;
 
