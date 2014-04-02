@@ -175,6 +175,7 @@
         "labelSaveButton": "If you do not have all the required documents, save and come back later.",
         "cancelButton": "cancel",
         "cancelOrderButton": "cancel this order",
+        "cancelOrderPopup": "Are you sure you want to cancel this transfer?",
         "faqLink": "View Porting FAQs",
         "videoLink": "Watch Video",
         "contactUsLink": "Contact Us",

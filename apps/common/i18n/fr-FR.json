@@ -168,6 +168,7 @@
 		"labelSaveButton":"Si vous n'avez pas tout les documents requis, sauvegardez et revenez plus tard.",
 		"cancelButton":"annuler",
 		"cancelOrderButton":"annuler ce transfert",
+		"cancelOrderPopup": "Souhaitez-vous vraiment annuler ce transfert ?",
 		"faqLink":"Voir la FAQ sur le transfert de numéros",
 		"videoLink":"Regarder la vidéo",
 		"contactUsLink":"Contactez nous",
