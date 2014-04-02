@@ -78,7 +78,9 @@
             "secondLine": "Please note Cellular devices do not display this field and it may take up to 72 hours to update."
         },
         "label": "Caller-ID",
-        "successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}"
+        "successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}",
+        "successRemoveCnam": "You successfully removed the Caller-ID of {{phoneNumber}}",
+        "noCallerId": "There is no Caller-ID for the phone number {{phoneNumber}}"
     },
 
     "e911": {

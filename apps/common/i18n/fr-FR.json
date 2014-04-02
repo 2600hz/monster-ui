@@ -75,7 +75,9 @@
 			"secondLine":"Veuillez noter que les téléphones cellulaires n'affichent pas ce champ, mais aussi que la mise à jour du Caller-ID peut prendre jusqu'à 72 heures."
 		},
 		"label":"Caller-ID",
-		"successCnam":"Mise à jour du Caller-ID de {{phoneNumber}} réussie!"
+		"successCnam":"Mise à jour du Caller-ID de {{phoneNumber}} réussie!",
+		"successRemoveCnam": "Vous avez supprimé avec succès le Caller-ID de {{phoneNumber}}",
+		"noCallerId": "Il n'y a aucun Caller-ID pour le numéro {{phoneNumber}}"
 	},
 	"e911":{
 		"addressLine1":"Ligne Adresse 1",
