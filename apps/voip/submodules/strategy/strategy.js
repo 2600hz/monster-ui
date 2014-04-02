@@ -98,10 +98,6 @@ define(function(require){
 				url: 'accounts/{accountId}/devices',
 				verb: 'GET'
 			},
-			'strategy.devices.list': {
-				url: 'accounts/{accountId}/devices',
-				verb: 'GET'
-			},
 			'strategy.voicemails.list': {
 				url: 'accounts/{accountId}/vmboxes',
 				verb: 'GET'
@@ -109,6 +105,14 @@ define(function(require){
 			'strategy.numbers.list': {
 				url: 'accounts/{accountId}/phone_numbers',
 				verb: 'GET'
+			},
+			'strategy.numbers.get': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+				verb: 'GET'
+			},
+			'strategy.numbers.update': {
+				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
+				verb: 'POST'
 			}
 		},
 
@@ -580,15 +584,74 @@ define(function(require){
 
 				if(indexToRemove >= 0) {
 					strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
+
 					if(strategyData.callflows["MainCallflow"].numbers.length === 0) {
 						strategyData.callflows["MainCallflow"].numbers = ["undefined"];
 					}
-					self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
-						var parentContainer = container.parents('.element-container');
-						toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
-						strategyData.callflows["MainCallflow"] = updatedCallflow;
-						refreshNumbersHeader(parentContainer);
-						self.strategyRefreshTemplate(parentContainer, strategyData);
+
+					self.strategyGetNumber(numberToRemove, function(dataNumber) {
+						var dataTemplate = { phoneNumber: numberToRemove },
+							featureList = [],
+							popupHtml,
+							popup,
+							updateCallflow = function() {
+								self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
+									var parentContainer = container.parents('.element-container');
+									toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
+									strategyData.callflows["MainCallflow"] = updatedCallflow;
+									refreshNumbersHeader(parentContainer);
+									self.strategyRefreshTemplate(parentContainer, strategyData);
+								});
+							};
+
+						_.each(dataNumber, function(val, idx) {
+							if ( idx === 'cnam' || idx === 'dash_e911' ) {
+								featureList.push({
+									name: idx,
+									friendlyName: self.i18n.active().strategy.popupRemoveFeatures.features[idx]
+								});
+							}
+						});
+
+						if ( featureList.length > 0 ) {
+							dataTemplate.featureList = featureList;
+							popupHtml = $(monster.template(self, 'strategy-popupRemoveFeatures', dataTemplate));
+
+							popup = monster.ui.dialog(popupHtml, {
+									title: self.i18n.active().strategy.popupRemoveFeatures.title,
+									width: '540px'
+								});
+
+							popup.find('.delete-feature').on('click', function() {
+								$(this).parents('tr').remove();
+
+								if ( popup.find('tbody').is(':empty') ) {
+									popup.dialog('close');
+
+									updateCallflow();
+								}
+							});
+
+							popup.find('.cancel-link').on('click', function() {
+								popup.dialog('close');
+
+								updateCallflow();
+							});
+
+							popup.find('#remove_features').on('click', function() {
+								popup.find('.table td').each(function(idx, elem) {
+									delete dataNumber[$(this).data('name')];
+								});
+
+								self.strategyUpdateNumber(numberToRemove, dataNumber, function() {
+									popup.dialog('close');
+
+									updateCallflow();
+								});
+							});
+						} else {
+							updateCallflow();
+						}
 					});
 				}
 			});
@@ -2114,6 +2177,37 @@ define(function(require){
 				},
 				success: function(data, status) {
 					callback(data.data.numbers);
+				}
+			});
+		},
+
+		strategyGetNumber: function(phoneNumber, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'strategy.numbers.get',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(phoneNumber)
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
+
+		strategyUpdateNumber: function(phoneNumber, data, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'strategy.numbers.update',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(phoneNumber),
+					data: data
+				},
+				success: function(data, status) {
+					callback();
 				}
 			});
 		},

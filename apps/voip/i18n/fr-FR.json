@@ -527,6 +527,20 @@
 			"buyNumbersSuccess": "Les numéros ont été achetés avec succès.",
 			"buyNumbersError": "Une erreur est survenue lors de l'achat des numéros.",
 			"removeNumberSuccess": "Numéro retiré du callflow principal."
+		},
+		"popupRemoveFeatures": {
+			"title": "Supprimer des fonctionnalités",
+			"questionPartOne": "Voulez-vous supprimer des fonctionnalités du numéro",
+			"questionPartTwo": "?",
+			"featuresToRemove": "Fonctionnalité(s) à supprimer :",
+			"dialogConfirm": {
+				"keep": "Garder",
+				"remove": "Supprimer"
+			},
+			"features": {
+				"cnam": "Caller-ID",
+				"dash_e911": "Adresse d'urgence (e911)"
+			}
 		}
 	},
 

@@ -527,6 +527,20 @@
 			"buyNumbersSuccess": "The numbers have been purchased.",
 			"buyNumbersError": "An error occured while purchasing numbers.",
 			"removeNumberSuccess": "Number successfully removed from the main callflow."
+		},
+		"popupRemoveFeatures": {
+			"title": "Remove Features",
+			"questionPartOne": "Do you want to remove features from number",
+			"questionPartTwo": "?",
+			"featuresToRemove": "Feature(s) to remove :",
+			"dialogConfirm": {
+				"keep": "Keep",
+				"remove": "Remove"
+			},
+			"features": {
+				"cnam": "Caller-ID",
+				"dash_e911": "e911"
+			}
 		}
 	},
 

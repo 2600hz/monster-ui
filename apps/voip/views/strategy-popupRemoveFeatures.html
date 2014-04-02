@@ -1,0 +1,21 @@
+<div id="action_confirmation">
+	<h4>{{i18n.strategy.popupRemoveFeatures.questionPartOne}} <span class="monster-blue">{{phoneNumber}}</span> {{i18n.strategy.popupRemoveFeatures.questionPartTwo}}</h4>
+	<div class="table-wrapper">
+		<table class="table">
+		<thead>
+			<tr>
+				<th>{{i18n.strategy.popupRemoveFeatures.featuresToRemove}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each featureList}}
+			<tr><td data-name="{{name}}">{{friendlyName}}<i class="icon-remove-circle pull-right delete-feature"></i></td></tr>
+			{{/each}}
+		</tbody>
+		</table>
+	</div>
+	<div class="actions pull-right">
+		<a class="cancel-link monster-link blue" href="javascript:void(0);">{{i18n.strategy.popupRemoveFeatures.dialogConfirm.keep}}</a>
+		<button class="btn btn-danger" id="remove_features">{{i18n.strategy.popupRemoveFeatures.dialogConfirm.remove}}</button>
+	</div>
+</div>
