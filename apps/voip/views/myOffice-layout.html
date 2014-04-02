@@ -20,9 +20,11 @@
 	</div>
 
 	<div class="dashboard-content">
-		<div class="missing-e911-message btn-danger{{#unless hasE911}} active{{/unless}}">
-			<i class="icon-warning-sign"></i>{{i18n.myOffice.missingE911Message}}
+		{{#if topMessage}}
+		<div class="dashboard-top-message {{topMessage.class}}">
+			<i class="icon-warning-sign"></i>{{topMessage.message}}<!-- {{i18n.myOffice.missingE911Message}} -->
 		</div>
+		{{/if}}
 		<div class="dashboard-content-div dashboard-left-content">
 			<div class="dashboard-left-section clearfix">
 				<div class="left-section-header link-box" data-category="users">
@@ -57,7 +59,7 @@
 					</div>
 					<div class="unregistered-devices clearfix">
 						<div class="value">{{unregisteredDevices}}</div>
-						<div class="title">Unregistered Devices</div>
+						<div class="title">{{i18n.myOffice.unregisteredDevices}}</div>
 					</div>
 				</div>
 			</div>

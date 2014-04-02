@@ -249,7 +249,7 @@ define(function(require){
 					listExtensions: [],
 					listNumbers: [],
 					phoneNumber: '',
-					sameEmail: dataUser.email === dataUser.username,
+					differentEmail: dataUser.email !== dataUser.username,
 					mapFeatures: {
 						caller_id: {
 							icon: 'icon-user',
@@ -770,7 +770,7 @@ define(function(require){
 					    userToSave = $.extend(true, {}, currentUser, formData);
 
 					if(monster.ui.valid(form)) {
-						if(currentUser.extra.sameEmail) {
+						if(!currentUser.extra.differentEmail) {
 							userToSave.email = userToSave.username;
 						}
 
@@ -778,7 +778,7 @@ define(function(require){
 							currentUser.username = userData.data.username;
 							template.find('#username').html(userData.data.username);
 
-							if(currentUser.extra.sameEmail) {
+							if(!currentUser.extra.differentEmail) {
 								template.find('#email').val(userData.data.email);
 								currentUser.email = userData.username;
 							}
@@ -1830,7 +1830,7 @@ define(function(require){
 						monster.ui.prettyCheck.action(featureTemplate.find('.device-row[data-device_id="'+device.id+'"] .disable-device'), 'check');
 					}
 				});
-				createSliderScale(featureTemplate.find('.device-row.title'), true);	
+				createSliderScale(featureTemplate.find('.device-row.title'), true);
 			}
 		},
 
@@ -1999,8 +1999,8 @@ define(function(require){
 					}
 				}
 
-				if('sameEmail' in userData.extra) {
-					userData.email = userData.extra.sameEmail ? userData.username : userData.extra.email;
+				if('differentEmail' in userData.extra) {
+					userData.email = userData.extra.differentEmail ? userData.extra.email : userData.username;
 				}
 
 				if('language' in userData.extra) {
@@ -2353,7 +2353,7 @@ define(function(require){
 								name: fullName
 							}
 						},
-						email: data.extra.sameEmail ? data.user.username : data.extra.email,
+						email: data.extra.differentEmail ? data.extra.email : data.user.userName,
 						priv_level: 'user',
 						timezone: defaultTimezone
 					}, data.user),

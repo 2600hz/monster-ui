@@ -90,7 +90,7 @@ define(function(require){
 						mainNumbers: myOfficeData.mainNumbers || [],
 						confNumbers: myOfficeData.confNumbers || [],
 						faxNumbers: myOfficeData.faxNumbers || [],
-						hasE911: myOfficeData.hasE911,
+						topMessage: myOfficeData.topMessage,
 						devicesList: _.toArray(myOfficeData.devicesData).sort(function(a, b) { return b.count - a.count ; }),
 						assignedNumbersList: _.toArray(myOfficeData.assignedNumbersData).sort(function(a, b) { return b.count - a.count ; }),
 						numberTypesList: _.toArray(myOfficeData.numberTypesData).sort(function(a, b) { return b.count - a.count ; })
@@ -218,17 +218,6 @@ define(function(require){
 							}
 						});
 					},
-					// directories: function(parallelCallback) {
-					// 	monster.request({
-					// 		resource: 'voip.myOffice.listDirectories',
-					// 		data: {
-					// 			accountId: self.accountId
-					// 		},
-					// 		success: function(data) {
-					// 			parallelCallback && parallelCallback(null, data.data);
-					// 		}
-					// 	});
-					// },
 					callflows: function(parallelCallback) {
 						monster.request({
 							resource: 'voip.myOffice.listTypedCallflows',
@@ -381,11 +370,22 @@ define(function(require){
 				}
 			})
 
-			data.hasE911 = ('caller_id' in data.account
-						 && 'emergency' in data.account.caller_id
-						 && 'number' in data.account.caller_id.emergency
-						 && data.account.caller_id.emergency.number in data.numbers
-						 && data.numbers[data.account.caller_id.emergency.number].features.indexOf('dash_e911') >= 0);
+			if(!data.mainNumbers || data.mainNumbers.length === 0) {
+				data.topMessage = {
+					class: 'btn-warning',
+					message: self.i18n.active().myOffice.missingMainNumberMessage
+				}
+			} else if(!('caller_id' in data.account)
+				   || !('emergency' in data.account.caller_id)
+				   || !('number' in data.account.caller_id.emergency)
+				   || !(data.account.caller_id.emergency.number in data.numbers)
+				   || data.numbers[data.account.caller_id.emergency.number].features.indexOf('dash_e911') < 0) {
+				data.topMessage = {
+					class: 'btn-danger',
+					message: self.i18n.active().myOffice.missingE911Message
+				}
+			}
+
 			data.totalChannels = channelsArray.length;
 			data.devicesData = devices;
 			data.assignedNumbersData = assignedNumbers;
@@ -441,6 +441,8 @@ define(function(require){
 					myOfficeData: myOfficeData
 				});
 			});
+
+			template.find('[data-toggle="tooltip"]').tooltip();
 		},
 
 		myOfficeRenderMusicOnHoldPopup: function(args) {

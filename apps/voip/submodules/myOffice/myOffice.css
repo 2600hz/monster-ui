@@ -52,17 +52,13 @@
 }
 
 /********** Content **********/
-#myoffice_container .dashboard-content .missing-e911-message {
+#myoffice_container .dashboard-content .dashboard-top-message {
 	padding: 10px;
 	margin-bottom: 10px;
 	border-radius: 4px;
 	opacity: 0.8;
-	display: none;
 }
-#myoffice_container .dashboard-content .missing-e911-message.active {
-	display: block;
-}
-#myoffice_container .dashboard-content .missing-e911-message i {
+#myoffice_container .dashboard-content .dashboard-top-message i {
 	margin-right: 10px;
 }
 
@@ -224,7 +220,6 @@
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list li.caller-id {
     color: #22ccff;
-    text-shadow: 1px 1px 0px #ccc;
 }
 #myoffice_container .dashboard-right-content .dashboard-box .dashboard-box-row .row-content .number-list .features > i {
 	display: none;
@@ -335,8 +330,9 @@
     margin: 0;
 }
 #my_office_caller_id_popup .emergency-form label.monster-invalid {
-    margin: 5px 0 0 5px;
+    margin: 12px 0 0 5px;
     display: inline-block !important;
+    font-size: 30px;
 }
 #my_office_caller_id_popup .emergency-form-label {
     display: inline-block;

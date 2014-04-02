@@ -279,9 +279,12 @@ define(function(require){
 											return ret;
 										}
 									}),
+									spareLinkEnabled: (_.countBy(accountNumbers, function(number) {return number.used_by ? 'assigned' : 'spare';})['spare'] > 0),
 									listFeatures: strategyData.numberFeatures
 								},
-								template = monster.template(self, 'strategy-'+templateName, templateData);
+								template = $(monster.template(self, 'strategy-'+templateName, templateData));
+
+							template.find('[data-toggle="tooltip"]').tooltip();
 
 							container.find('.element-content').empty()
 															  .append(template);
@@ -289,22 +292,25 @@ define(function(require){
 						});
 						break;
 					case "confnum":
-						var callflow = strategyData.callflows["MainConference"],
-							numbers = callflow.numbers,
-							templateData = {
-								numbers: $.map(numbers, function(val, key) {
-									if(val!=="undefinedconf") {
-										return {
-											number: val
-										};
-									}
-								})
-							},
-							template = monster.template(self, 'strategy-'+templateName, templateData);
+						self.strategyListAccountNumbers(function(accountNumbers) {
+							var callflow = strategyData.callflows["MainConference"],
+								numbers = callflow.numbers,
+								templateData = {
+									numbers: $.map(numbers, function(val, key) {
+										if(val!=="undefinedconf") {
+											return {
+												number: val
+											};
+										}
+									}),
+									spareLinkEnabled: (_.countBy(accountNumbers, function(number) {return number.used_by ? 'assigned' : 'spare';})['spare'] > 0),
+								},
+								template = monster.template(self, 'strategy-'+templateName, templateData);
 
-						container.find('.element-content').empty()
-														  .append(template);
-						callback && callback();
+							container.find('.element-content').empty()
+															  .append(template);
+							callback && callback();
+						});
 						break;
 					case "hours":
 						var secondsToTime = function(seconds) {
@@ -540,7 +546,7 @@ define(function(require){
 					}
 				};
 
-			container.on('click', '.action-links .spare-link', function(e) {
+			container.on('click', '.action-links .spare-link:not(.disabled)', function(e) {
 				e.preventDefault();
 
 				var args = {
@@ -736,7 +742,7 @@ define(function(require){
 					}
 				};
 
-			container.on('click', '.action-links .spare-link', function(e) {
+			container.on('click', '.action-links .spare-link:not(.disabled)', function(e) {
 				e.preventDefault();
 
 				var args = {

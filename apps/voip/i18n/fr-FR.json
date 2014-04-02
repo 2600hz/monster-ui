@@ -234,7 +234,7 @@
 			"edit": "Modifier",
 			"enable": "Activer",
 			"user": "Utilisateur",
-			"modelMacAddress": "Modèle / Adresse MAC",
+			"modelMacAddress": "Nom / Adresse MAC",
 			"type": "Type"
 		},
 		"types": {
@@ -274,10 +274,10 @@
 			"extensionAlreadyExist": "Cette extension est déjà prise, veuillez choisir un numéro différent.",
 			"firstName": "Prénom",
 			"lastName": "Nom",
-			"loginEmail": "Email de l'utilisateur",
+			"loginEmail": "Email/Login de l'utilisateur",
 			"notificationEmail": "Email pour notifications",
 			"password": "(Min. 8 caractères)",
-			"sendToSameEmail": "Envoyer les notifications à l'email spécifié plus haut",
+			"sendToDifferentEmail": "Envoyer les emails à une autre adresse",
 			"title": "Créer Utilisateur",
 			"vmboxAlreadyExist": "Le numéro de répondeur existe déjà, veuillez en choisir un autre.",
 			"vmboxNumber": "Numéro Répondeur"
@@ -607,7 +607,8 @@
 			"emergencyHelp2": "Note: Vous pouvez ajouter cette fonctionnalité sur chaque utilisateur si cette adresse ne leur correspond pas.",
 			"mandatoryE911Alert": "Vous devez spécifier les infos E911 pour le Caller-ID de ce numéro d'entreprise."
 		},
-		"missingE911Message": "Veuillez configurer l'E911 sur un de vos numéros d'entreprise.",
+		"missingE911Message": "Veuillez configurer le Caller-ID et l'E911 sur un de vos numéros principaux.",
+		"missingMainNumberMessage": "Veuillez ajouter un Numéro principal à votre compte.",
 		"totalUsers": "Utilisateurs",
 		"totalDevices": "Téléphones",
 		"totalConfs": "Conférences",
@@ -616,6 +617,7 @@
 		"confNumberLabel": "Numéro de conférence",
 		"faxNumberLabel": "Numéro de Fax",
 		"totalNumbers": "Total Numéros",
+		"unregisteredDevices": "Téléphones non-connectés",
 		"accountId": "ID Compte:",
 		"accountRealm": "Royaume du compte:",
 		"numberChartLegend": {
