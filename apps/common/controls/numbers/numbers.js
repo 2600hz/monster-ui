@@ -112,7 +112,7 @@ define(function(require){
 					failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
 					outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamIconHelp },
 					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
-					local: { icon: 'icon-purple icon-android feature-local', help: self.i18n.active().numbers.localIconHelp },
+					local: { icon: 'icon-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'icon-phone icon-yellow feature-port' }
 				};
 
