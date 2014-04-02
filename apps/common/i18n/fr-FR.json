@@ -169,7 +169,7 @@
 		"cancelButton":"annuler",
 		"cancelOrderButton":"annuler ce transfert",
 		"faqLink":"Voir la FAQ sur le transfert de numéros",
-		"videoLink":"Regardr la vidéo",
+		"videoLink":"Regarder la vidéo",
 		"contactUsLink":"Contactez nous",
 		"nextButton":"suivant",
 		"progressBarLeft":"Ajouter des numéros",
@@ -226,14 +226,14 @@
 			"noOrder":"Aucun transfert"
 		},
 		"resumeOrder":{
-			"title":"Compléter les demandes de trasnfert, un à la fois !",
+			"title":"Compléter les demandes de transfert, un à la fois !",
 			"labelOrder":"Transfert",
 			"completeOrderButton":"Continuer cet transfert"
 		},
 		"submitDocuments":{
 			"labelOrderName":"Nom vous permettant de vous rappeler de ce trasnfert",
 			"labelOrderNameHelper":"Par exemple: numéros du bureau 2600hz",
-			"billInfoPartOne":"Veuillez emvoyer votre facture de téléphone actuelle and remplir les informations de votre compte mentionnées sur votre facture.",
+			"billInfoPartOne":"Veuillez envoyer votre facture de téléphone actuelle and remplir les informations de votre compte mentionnées sur votre facture.",
 			"billInfoPartTwo":"En savoir plus",
 			"uploadBillButton":"Envoyer la facture",
 			"uploadBillHelper":"format pdf seulement",
@@ -242,8 +242,8 @@
 			"labelCity":"Ville",
 			"labelState":"Département",
 			"labelZipCode":"Code postal",
-			"orderListInfoPartOne":"Veuillez vérifier ques les numéros suivant sont mentionnés sur la facture envoyée.",
-			"orderListInfoPartTwo":"Si des numéros ne sont pas mentionnés sur la facture, veulliez les supprimer sinon le transfert de tout les autres numéros échouera.",
+			"orderListInfoPartOne":"Veuillez vérifier que les numéros suivant sont mentionnés sur la facture envoyée.",
+			"orderListInfoPartTwo":"Si des numéros ne sont pas mentionnés sur la facture, veulliez les supprimer, sinon le transfert de tout les autres numéros échouera.",
 			"loaTitlePartOne":"Veulliez remplir la Lettre d'Autorisation (LdA)",
 			"loaTitlePartTwo":"Qu'est-ce que la LdA ?",
 			"loaDownloadStep":"Télécharger la LdA",
@@ -251,7 +251,9 @@
 			"loaUploadStep":"Envoyez la LdA",
 			"loaHelperPartOne":"Pour ceux qui n'ont pas d'imprimante ou de scanner, nous proposont un service de signature numérique pour",
 			"loaHelperPartTwo":"5 de frais unique",
-			"loaHelperPartThree":"Formulaire LdA numérique"
+			"loaHelperPartThree":"Formulaire LdA numérique.",
+            "loaHelperPartFour": "Comment signer un docment",
+            "loaHelperPartFive": "électroniquement sans avoir à payer."
 		}
 	},
 	"add":"Ajouter",

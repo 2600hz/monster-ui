@@ -258,7 +258,9 @@
             "loaUploadStep": "upload loa",
             "loaHelperPartOne": "For those who don’t have time, printer or scanner, we also offer digital sign for",
             "loaHelperPartTwo": "5 one-time charge.",
-            "loaHelperPartThree": "Digital LOA form"
+            "loaHelperPartThree": "Digital LOA form.",
+            "loaHelperPartFour": "How to sign documents",
+            "loaHelperPartFive": "electronically without paying."
         }
     },
 
