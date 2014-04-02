@@ -593,7 +593,8 @@
 			"emergencyHelp2": "Note: Vous pouvez ajouter cette fonctionnalité sur chaque utilisateur si cette adresse ne leur correspond pas.",
 			"mandatoryE911Alert": "Vous devez spécifier les infos E911 pour le Caller-ID de ce numéro d'entreprise."
 		},
-		"missingE911Message": "Veuillez configurer l'E911 sur un de vos numéros d'entreprise.",
+		"missingE911Message": "Veuillez configurer le Caller-ID et l'E911 sur un de vos numéros principaux.",
+		"missingMainNumberMessage": "Veuillez ajouter un Numéro principal à votre compte.",
 		"totalUsers": "Utilisateurs",
 		"totalDevices": "Téléphones",
 		"totalConfs": "Conférences",
