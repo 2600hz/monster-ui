@@ -356,10 +356,8 @@
 		"vm_to_email": {
 			"deleteAfterNotify": "Delete messages from database after sending the notification.",
 			"headline": "Voicemail-to-Email Settings",
-			"help": "By using this feature you agree to the State and Federal terms and conditions.",
-			"label": "Send voicemails to",
-			"seeHere": "See Here",
-			"placeholder": "user@company.com",
+			"help": "If you want to change where email notifications go to, please edit the user's email address in the User Administration section",
+			"label": "An e-mail will be sent to {{variable}} for every new voicemail",
 			"title": "Voicemails"
 		},
 		"find_me_follow_me": {

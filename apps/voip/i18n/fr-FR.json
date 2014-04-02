@@ -355,11 +355,9 @@
 		},
 		"vm_to_email": {
 			"deleteAfterNotify": "Supprimer les messages vocaux de la base de données après l'envoi de la notification.",
-			"headline": "Réglages de la retranscription des messages vers Email",
-			"help": "En utilisant cette fonctionnalité vous acceptez les conditions d'utilisations.",
-			"label": "Envoyer les retranscriptions à",
-			"seeHere": "Voir ici",
-			"placeholder": "user@company.com",
+			"headline": "Messages vocaux vers Email",
+			"help": "Si vous souhaitez changer l'email qui recevra les notifications, vous pouvez mettre à jour l'adresse e-mail dans les réglages utilisateurs",
+			"label": "Un email sera envoyé à {{variable}} à chaque nouveau message vocal",
 			"title": "Messages vocaux"
 		},
 		"find_me_follow_me": {

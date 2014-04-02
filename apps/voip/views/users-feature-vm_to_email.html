@@ -12,8 +12,7 @@
 	<div class="content{{#unless extra.mapFeatures.vm_to_email.active}} disabled{{/unless}}">
 		<form id="vm_to_email_form">
 			<div class="main-line">
-				{{ i18n.users.vm_to_email.label }}
-				<input required id="email" type="email" name="email" class="input-medium" placeholder="{{ i18n.users.vm_to_email.placeholder }}" value="{{email}}"></input>
+				{{replaceVar i18n.users.vm_to_email.label email}}
 			</div>
 
 			<label class="fix-left">
@@ -27,7 +26,7 @@
             	&nbsp;<i class="icon-info-sign2"></i>&nbsp;
         	</div>
         	<div class="text-wrapper">
-            	<p>{{ i18n.users.vm_to_email.help }} <a class="monster_link" href="http://google.com/" target="_blank">{{i18n.users.vm_to_email.seeHere}}</a></p>
+            	<p>{{ i18n.users.vm_to_email.help }}</p>
         	</div>
     	</div>
 	</div>
