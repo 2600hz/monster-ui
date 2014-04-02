@@ -276,6 +276,18 @@
 .edit-device .content #video_codec_selector .box-selector ul {
 	min-height: 123px;
 }
+
+/* RTP Special CSS */
+.edit-device .content .rtp-line {
+	margin-left: 100px;
+}
+
+.edit-device .content .rtp-line > * {
+	float: left;
+	line-height: 30px;
+	margin: 0 10px;
+}
+
 /* Provisioner Popup */
 .device-popup {
 	width: 700px;

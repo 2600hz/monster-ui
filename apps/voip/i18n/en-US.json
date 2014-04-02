@@ -114,7 +114,11 @@
 			"miscellaneous": {
 				"menuTitle": "Miscellaneous",
 				"sectionTitle": "Miscellaneous",
-				"secureRtp": "Secure RTP"
+				"rtp": {
+					"enable": "Audio Encryption Strategy",
+					"srtp": "SRTP",
+					"zrtp": "ZRTP"
+				}
 			},
 			"restrictions": {
 				"menuTitle": "Restrictions",

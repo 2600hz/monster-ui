@@ -168,14 +168,16 @@
 					{{ i18n.devices.popupSettings.miscellaneous.sectionTitle }}
 				</div>
 
-				<div class="control-group">
-					<label class="control-label" for="secure_rtp"></label>
-					<div class="controls">
-						<label>
-							<input type="checkbox" id="secure_rtp" name="media.secure_rtp"{{#if media.secure_rtp}} checked="checked"{{/if}}></input>
-							{{ i18n.devices.popupSettings.miscellaneous.secureRtp }}
-						</label>
-					</div>
+				<div class="rtp-line">
+					<label>
+						<input type="checkbox" id="secure_rtp" name="media.encryption.enforce_security"{{#if media.encryption.enforce_security}} checked="checked"{{/if}}></input>
+						{{ i18n.devices.popupSettings.miscellaneous.rtp.enable }}
+					</label>
+
+					<select id="rtp_method" name="extra.rtpMethod">
+						<option value="srtp"{{#compare extra.rtpMethod "===" "srtp"}} selected{{/compare}}>{{ i18n.devices.popupSettings.miscellaneous.rtp.srtp }}</option>
+						<option value="zrtp"{{#compare extra.rtpMethod "===" "zrtp"}} selected{{/compare}}>{{ i18n.devices.popupSettings.miscellaneous.rtp.zrtp }}</option>
+					</select>
 				</div>
 			</div>
 		</form>

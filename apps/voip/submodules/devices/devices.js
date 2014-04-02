@@ -286,6 +286,14 @@ define(function(require){
 			templateDevice.find('.switch').bootstrapSwitch();
 			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
 
+			if(!(data.media.encryption.enforce_security)) {
+				templateDevice.find('#rtp_method').hide();
+			}
+
+			templateDevice.find('#secure_rtp').on('ifChanged', function() {
+				templateDevice.find('#rtp_method').toggle();
+			});
+
 			templateDevice.find('.actions .save').on('click', function() {
 				if(monster.ui.valid(deviceForm)) {
 					var dataToSave = self.devicesMergeData(data, templateDevice);
@@ -419,6 +427,7 @@ define(function(require){
 				hasCodecs = $.inArray(originalData.device_type, ['sip_device', 'landline', 'fax', 'ata', 'softphone', 'smartphone', 'mobile']) > -1,
 				hasSIP = $.inArray(originalData.device_type, ['fax', 'ata', 'softphone', 'smartphone', 'mobile']) > -1,
 				hasCallForward = $.inArray(originalData.device_type, ['landline', 'cellphone', 'smartphone']) > -1,
+				hasRTP = $.inArray(originalData.device_type, ['sip_device', 'mobile', 'softphone']) > -1,
 				formData = form2object('form_device');
 
 			if('mac_address' in formData) {
@@ -458,7 +467,7 @@ define(function(require){
 				}, formData.call_forward);
 			}
 
-			if(hasSIP ) {
+			if(hasSIP) {
 				formData.sip = $.extend(true, {
 					expire_seconds: 360,
 					invite_format: 'username',
@@ -472,10 +481,20 @@ define(function(require){
 				});
 			}
 
-			delete originalData.extra;
-			delete formData.extra;
-
 			var mergedData = $.extend(true, {}, originalData, formData);
+
+			/* The extend doesn't override an array if the new array is empty, so we need to run this snippet after the merge */
+			if(hasRTP) {
+				mergedData.media.encryption.methods = [];
+
+				if(mergedData.media.encryption.enforce_security) {
+					mergedData.media.encryption.methods.push(formData.extra.rtpMethod);
+				}
+			}
+
+			/* Migration clean-up */
+			delete mergedData.media.secure_rtp;
+			delete mergedData.extra;
 
 			return mergedData;
 		},
@@ -487,6 +506,7 @@ define(function(require){
 						hasE911Numbers: data.e911Numbers.length > 0,
 						e911Numbers: data.e911Numbers,
 						restrictions: data.listClassifiers,
+						rtpMethod: data.device.media && data.device.media.encryption && data.device.media.encryption.enforce_security ? data.device.media.encryption.methods[0] : '',
 						selectedCodecs: {
 							audio: [],
 							video: []
@@ -519,6 +539,9 @@ define(function(require){
 					device_type: 'sip_device',
 					enabled: true,
 					media: {
+						encryption: {
+							enforce_security: false,
+						},
 						audio: {
 							codecs: ['PCMU', 'PCMA']
 						},
