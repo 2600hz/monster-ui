@@ -20,7 +20,8 @@ define(function(require){
 
 		subscribe: {
 			'core.loadApps': '_loadApps',
-			'core.landing': '_landing'
+			'core.landing': '_landing',
+			'core.showDefaultApp' : 'showDefaultApp'
 		},
 
 		load: function(callback){
@@ -98,6 +99,38 @@ define(function(require){
 			});
 		},
 
+		showDefaultApp: function(appName) {
+			var self = this,
+				navbar = $('#ws-navbar'),
+				defaultApp;
+
+			_.each(monster.apps.auth.installedApps, function(val) {
+				if ( val.name === appName ) {
+					defaultApp = val;
+					defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.accountId + '/apps_store/' + val.id + '/icon?auth_token=' + monster.apps.auth.authToken;
+				}
+			});
+
+			if ( appName === 'appstore' ) {
+				navbar.find('.current-app').empty();
+			} else if ( navbar.find('.current-app').is(':empty') ) {
+				navbar
+					.find('.current-app')
+					.append(monster.template(self, 'current-app', defaultApp));
+
+				navbar.find('.active-app').fadeIn(100);
+			} else {
+				navbar.find('.active-app').fadeOut(100, function() {
+					navbar
+						.find('.current-app')
+						.empty()
+						.append(monster.template(self, 'current-app', defaultApp));
+
+					navbar.find('.active-app').fadeIn(100);
+				});
+			}
+		},
+
 		_loadApps: function(args) {
 			var self = this;
 
@@ -107,6 +140,7 @@ define(function(require){
 
 				if(defaultApp && defaultApp !== '') {
 					monster.apps.load(defaultApp, function(app) {
+						self.showDefaultApp(defaultApp);
 						app.render($('#ws-content'));
 					});
 				}
@@ -162,6 +196,12 @@ define(function(require){
 			container.find('#ws-navbar .logo').on('click', function(e) {
 				e.preventDefault();
 				// renderLanding();
+			});
+
+			container.find('#ws-navbar .current-app').on('click', function() {
+				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
+					app.render();
+				});
 			});
 
 			monster.getVersion(function(version) {

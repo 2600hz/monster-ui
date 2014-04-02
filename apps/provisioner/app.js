@@ -20,8 +20,7 @@ define(function(require){
 			'provisioner.getAccountsByProvider': {
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/accounts/provider/{provider_id}',
-				'verb': "GET",
-				'generateError': false
+				'verb': "GET"
 			},
 			'provisioner.updateAccount': {
 				'apiRoot': monster.config.api.provisioner,
@@ -87,6 +86,15 @@ define(function(require){
 				'apiRoot': monster.config.api.provisioner,
 				'url': 'api/phones',
 				'verb': 'GET'
+			},
+			/* Apps Link APIs */
+			'provisioner.getProviderIdIfNotMasqueraded': {
+				'url': 'apps_link/authorize',
+				'verb': 'GET'
+			},
+			'provisioner.getProviderIdIfMasqueraded': {
+				'url': 'accounts/{account_id}/apps_link/authorize',
+				'verb': 'GET'
 			}
 		},
 
@@ -114,20 +122,29 @@ define(function(require){
 
 		render: function(parent){
 			var self = this,
-				appTemplate;
-
-			parent = parent || $('#ws-content');
-
-			self.requestGetAccountsByProvider(function(dataTemplate) {
-				self.requestGetDevicesByAccount(dataTemplate.data[0].id, function(data) {
+				appTemplate,
+				initTemplate = function(data, dataTemplate, dataId) {
 					for ( var device in data ) {
 						data[device].mac_address_formatted = data[device].mac_address.match(new RegExp('.{2}', 'g')).join(':');
 					}
 
-					dataTemplate.data[0].devices = data;
+					if ( !dataTemplate.data ) {
+						var temp = [dataTemplate];
+
+						temp[0].id = self.accountId;
+						dataTemplate = {};
+						dataTemplate.data = temp;
+					}
+
+					for ( var account in dataTemplate.data ) {
+						if ( dataTemplate.data[account].id === dataId ) {
+							dataTemplate.data[account].devices = data;
+						}
+					}
+
 					dataTemplate.isReseller = monster.apps.auth.isReseller;
 					appTemplate = $(monster.template(self, 'app', dataTemplate));
-					appTemplate.find('.account-section[data-id="' + dataTemplate.data[0].id + '"]').addClass('active');
+					appTemplate.find('.account-section[data-id="' + dataId + '"]').addClass('active');
 
 					parent
 						.empty()
@@ -135,8 +152,23 @@ define(function(require){
 
 					self.bindEvents(parent);
 					self.initialized = true;
+				};
+
+			parent = parent || $('#ws-content');
+
+			if ( monster.apps.auth.isReseller ) {
+				self.requestGetAccountsByProvider(function(dataTemplate) {
+					self.requestGetDevicesByAccount(dataTemplate.data[0].id, function(data) {
+						initTemplate(data, dataTemplate, dataTemplate.data[0].id);
+					});
 				});
-			});
+			} else {
+				self.requestGetAccount(self.accountId, function(dataTemplate) {
+					self.requestGetDevicesByAccount(self.accountId, function(data) {
+						initTemplate(data, dataTemplate, self.accountId);
+					});
+				});
+			}
 		},
 
 		bindEvents: function(parent) {
@@ -289,7 +321,7 @@ define(function(require){
 					});
 				});
 			} else if ( monster.apps.auth.isReseller) {
-				self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
+				self.requestGetProvider(function(data) {
 					self.requestGetGlobalSettings(function(settings) {
 						self.renderSettingsContent(parent, accountId, data.settings, settings, macAddress);
 					});
@@ -374,8 +406,10 @@ define(function(require){
 
 			if ( accountId && macAddress ) {
 				self.requestGetAccount(accountId, function(accountData) {
-					self.requestGetProvider(accountData.provider_id, function(providerData) {
-						var mergedSettings = _.extend(providerData.settings, accountData.settings);
+					self.requestGetProvider(function(providerData) {
+						var mergedSettings = {};
+
+						$.extend(true, mergedSettings, providerData.settings, accountData.settings);
 
 						self.scanObject(settings, function(args) {
 							dataField = args.dataField;
@@ -401,7 +435,7 @@ define(function(require){
 				});
 			} else if ( accountId ) {
 				self.requestGetAccount(accountId, function(accountData) {
-					self.requestGetProvider(accountData.provider_id, function(providerData) {
+					self.requestGetProvider(function(providerData) {
 						self.scanObject(settings, function(args) {
 							dataField = args.dataField;
 							dataField.path = args.pathArray.join('.');
@@ -498,7 +532,7 @@ define(function(require){
 						});
 					});
 				} else if ( monster.apps.auth.isReseller ) {
-					self.requestGetProvider(monster.apps.auth.resellerId, function(data) {
+					self.requestGetProvider(function(data) {
 						data.settings = form2object('form2object');
 
 						self.requestUpdateProvider(data, function() {
@@ -520,34 +554,22 @@ define(function(require){
 				},
 				success: function(data, status) {
 					callback(data);
-				},
-				error: function(data, status) {
-					console.log(data, status);
 				}
 			});
 		},
 		requestGetAccountsByProvider: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.getAccountsByProvider',
-				data: {
-					provider_id: self.accountId
-				},
-				success: function(data, status) {
-					callback(data);
-				},
-				error: function(data, status) {
-					if ( data.status === 0 ) {
-						monster.ui.alert('error', 'Provisioner Server is Down!');
-					} else if ( data.error.code == 401 || data.error.code == 404 ) {
-						self.requestGetAccount(self.accountId, function(data) {
-							data.id = self.accountId;
-
-							callback({ data: [data] });
-						});
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.getAccountsByProvider',
+					data: {
+						provider_id: providerId
+					},
+					success: function(data, status) {
+						callback(data);
 					}
-				}
+				});
 			});
 		},
 		requestUpdateAccount: function(accountId, data, callback) {
@@ -659,31 +681,35 @@ define(function(require){
 			});
 		},
 		/* Providers APIs */
-		requestGetProvider: function(providerId, callback) {
+		requestGetProvider: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.getProvider',
-				data: {
-					provider_id: providerId ? providerId : self.accountId
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.getProvider',
+					data: {
+						provider_id: providerId
+					},
+					success: function(data, status) {
+						callback(data.data);
+					}
+				});
 			});
 		},
 		requestUpdateProvider: function(data, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'provisioner.updateProvider',
-				data: {
-					provider_id: self.accountId,
-					data: data
-				},
-				success: function(data, status) {
-					callback();
-				}
+			self.getProviderId(function(providerId) {
+				monster.request({
+					resource: 'provisioner.updateProvider',
+					data: {
+						provider_id: providerId,
+						data: data
+					},
+					success: function(data, status) {
+						callback();
+					}
+				});
 			});
 		},
 		/* UI Requests */
@@ -726,8 +752,56 @@ define(function(require){
 				}
 			});
 		},
+		/* Apps Link APIs */
+		requestGetProviderIfNotMasqueraded: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getProviderIdIfNotMasqueraded',
+				data: {
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
+		requestProviderIfMasqueraded: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.getProviderIdIfMasqueraded',
+				data: {
+					account_id: self.accountId
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
 
 		/* Methods */
+		getProviderId: function(callback) {
+			var self = this;
+
+			if ( self.accountId === monster.apps.auth.originalAccount.id ) {
+				self.requestGetProviderIfNotMasqueraded(function(data) {
+					if ( data.is_reseller ) {
+						callback(data.account_id);
+					} else {
+						callback(data.reseller_id);
+					}
+				});
+			} else {
+				self.requestProviderIfMasqueraded(function(data) {
+					if ( data.is_reseller ) {
+						callback(data.account_id);
+					} else {
+						callback(data.reseller_id);
+					}
+				});
+			}
+		},
+
 		getPhonesList: function(deviceBrand, callback) {
 			var self = this;
 

@@ -121,12 +121,16 @@ define(function(require){
 			});
 
 			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
+				var appName = $(this).data('name');
+
 				//Cleaning up nicescrolls from the DOM
 				$('.nicescroll-rails:not(#'+self.niceScrollId+',#'+self.niceScrollId+'-hr)').remove();
-				
-				monster.apps.load($(this).data('name'), function(app){
+
+				monster.apps.load(appName, function(app){
 					app.render();
+					monster.pub('core.showDefaultApp', appName);
 				});
+
 				self._hide(parent);
 				monster.pub('myaccount.hide');
 			});
