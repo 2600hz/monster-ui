@@ -17,5 +17,9 @@
 	"selectBrand": "Select a brand",
 	"selectModel": "Select a model",
 	"providerSettings": "Provider Settings",
-	"accountSettings": "Account Settings"
+	"accountSettings": "Account Settings",
+	"valueDefinedAtUpperLevel": {
+		"partOne": "This setting is defined at ",
+		"partTwo": " on the account or provider level"
+	}
 }
