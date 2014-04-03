@@ -274,10 +274,10 @@
 			"extensionAlreadyExist": "Cette extension est déjà prise, veuillez choisir un numéro différent.",
 			"firstName": "Prénom",
 			"lastName": "Nom",
-			"loginEmail": "Email de l'utilisateur",
+			"loginEmail": "Email/Login de l'utilisateur",
 			"notificationEmail": "Email pour notifications",
 			"password": "(Min. 8 caractères)",
-			"sendToSameEmail": "Envoyer les notifications à l'email spécifié plus haut",
+			"sendToDifferentEmail": "Envoyer les emails à une autre adresse",
 			"title": "Créer Utilisateur",
 			"vmboxAlreadyExist": "Le numéro de répondeur existe déjà, veuillez en choisir un autre.",
 			"vmboxNumber": "Numéro Répondeur"

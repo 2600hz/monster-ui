@@ -20,8 +20,8 @@
 
         	<div class="row-fields">
             	<label class="fix-left" for="notification_email">
-                    <input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if extra.sameEmail}} checked{{/if}}></input>
-					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
+                    <input id="notification_email" type="checkbox" name="extra.differentEmail"{{#if extra.differentEmail}} checked{{/if}}></input>
+					{{ i18n.users.dialogCreationUser.sendToDifferentEmail }}
                 </label>
         	</div>
 
@@ -66,7 +66,7 @@
 
 			{{/if}}
 
-        	<div class="row-fields email-group{{#if extra.sameEmail}} hidden{{/if}}">
+        	<div class="row-fields email-group{{#unless extra.differentEmail}} hidden{{/unless}}">
             	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
             	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
         	</div>

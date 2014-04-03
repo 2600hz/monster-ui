@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="control-group">
-			<label class="control-label" for="email"><i class="icon-envelope"></i></label>
+			<label class="control-label" for="email"><i class="icon-key"></i></label>
 			<div class="controls">
 				<input required type="email" name="user.username" id="username" placeholder="{{i18n.users.dialogCreationUser.loginEmail}}"/>
 			</div>
@@ -57,12 +57,12 @@
 			<label class="control-label" for="notification_email"></label>
 			<div class="controls">
 				<label>
-					<input id="notification_email" type="checkbox" name="extra.sameEmail"{{#if sendToSameEmail}} checked{{/if}}></input>
-					{{ i18n.users.dialogCreationUser.sendToSameEmail }}
+					<input id="notification_email" type="checkbox" name="extra.differentEmail"{{#if sendToDifferentEmail}} checked{{/if}}></input>
+					{{ i18n.users.dialogCreationUser.sendToDifferentEmail }}
 				</label>
 			</div>
 		</div>
-		<div class="control-group email-group{{#if sendToSameEmail}} hidden{{/if}}">
+		<div class="control-group email-group{{#unless sendToDifferentEmail}} hidden{{/unless}}">
 			<label class="control-label" for="email"><i class="icon-envelope"></i></label>
 			<div class="controls">
 				<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}">
