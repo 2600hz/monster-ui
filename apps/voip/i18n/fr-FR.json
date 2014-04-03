@@ -603,6 +603,7 @@
 		"confNumberLabel": "Numéro de conférence",
 		"faxNumberLabel": "Numéro de Fax",
 		"totalNumbers": "Total Numéros",
+		"unregisteredDevices": "Téléphones non-connectés",
 		"accountId": "ID Compte:",
 		"accountRealm": "Royaume du compte:",
 		"numberChartLegend": {

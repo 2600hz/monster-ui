@@ -218,17 +218,6 @@ define(function(require){
 							}
 						});
 					},
-					// directories: function(parallelCallback) {
-					// 	monster.request({
-					// 		resource: 'voip.myOffice.listDirectories',
-					// 		data: {
-					// 			accountId: self.accountId
-					// 		},
-					// 		success: function(data) {
-					// 			parallelCallback && parallelCallback(null, data.data);
-					// 		}
-					// 	});
-					// },
 					callflows: function(parallelCallback) {
 						monster.request({
 							resource: 'voip.myOffice.listTypedCallflows',
@@ -452,6 +441,8 @@ define(function(require){
 					myOfficeData: myOfficeData
 				});
 			});
+
+			template.find('[data-toggle="tooltip"]').tooltip();
 		},
 
 		myOfficeRenderMusicOnHoldPopup: function(args) {
