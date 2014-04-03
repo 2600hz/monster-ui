@@ -428,7 +428,10 @@ define(function(require){
 					dataTemplate = {
 						delete: true,
 						accountList: []
-					};
+					}
+					e911ErrorMessage = '';
+
+				console.log(dataNumbers)
 
 				$('body').css('overflow', 'hidden');
 
@@ -461,78 +464,110 @@ define(function(require){
 
 				dataTemplate.numberCount = listNumbers.length;
 
-				var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
-					requestData = {
-						numbers: listNumbers,
-						accountId: self.accountId
-					};
+				_.each(dataTemplate.accountList, function(val) {
+					var account = _.find(dataNumbers.listAccounts, function(account) { return account.name === val.accountName }),
+						e911Numbers = _.filter(account.spareNumbers, function(num) {
+										return num.features.indexOf('dash_e911') >= 0
+									}).concat(_.filter(account.usedNumbers, function(num) {
+										return num.features.indexOf('dash_e911') >= 0
+									})),
+						selectedE911Numbers = [];
 
-				monster.ui.dialog(dialogTemplate, {
-					width: '540px',
-					title: "Delete Numbers - Confirmation"
-				});
+						if(e911Numbers.length > 0) {
+							_.each(e911Numbers, function(number) {
+								if(val.numbers.indexOf(number.phoneNumber) >= 0) {
+									selectedE911Numbers.push(number.phoneNumber);
+								}
+							});
 
-				dialogTemplate.on('click', '.remove-number', function() {
-					for (var number in requestData.numbers) {
-						if ( $(this).parent().data('number') == requestData.numbers[number] ) {
-							var tbody = $(this).parent().parent().parent(),
-								childCount = tbody[0].childElementCount,
-								numbersCount = dialogTemplate.find('h4').find('.monster-blue');
-
-							requestData.numbers.splice(number, 1);
-							$(this).parent().parent().remove();
-
-							if ( childCount == 1 ) {
-								tbody[0].previousElementSibling.remove();
-								tbody.remove();
+							if(e911Numbers.length === selectedE911Numbers.length) {
+								if(!e911ErrorMessage) {
+									e911ErrorMessage = self.i18n.active().numbers.deleteE911Error.message;
+								}
+								e911ErrorMessage += "<br><br>" + self.i18n.active().numbers.deleteE911Error.account + " " + val.accountName;
+								e911ErrorMessage += "<br>" + self.i18n.active().numbers.deleteE911Error.numbers + " " + selectedE911Numbers.join(', ');
 							}
-							numbersCount.text(numbersCount.text() - 1);
 						}
-
-						if ( requestData.numbers.length == 0 ) {
-							dialogTemplate.parent().parent().remove();
-						}
-					}
 				});
 
-				dialogTemplate.on('click', '.cancel-link', function() {
-					dialogTemplate
-						.parent()
-						.parent()
-						.remove();
-				});
+				if(e911ErrorMessage) {
+					monster.ui.alert('error', e911ErrorMessage);
+					$('body').css('overflow', 'auto');
+				} else {
+					var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
+						requestData = {
+							numbers: listNumbers,
+							accountId: self.accountId
+						};
 
-				dialogTemplate.on('click', '#delete_action', function() {
-					self.numbersDelete(requestData, function(data) {
-						var countDelete = 0;
+					monster.ui.dialog(dialogTemplate, {
+						width: '540px',
+						title: "Delete Numbers - Confirmation"
+					});
 
-						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
-							if(account.id in mapAccounts) {
-								var newList = [];
-								_.each(account.spareNumbers, function(number, indexNumber) {
-									if(!(number.phoneNumber in data.success)) {
-										newList.push(number);
-									}
-									else {
-										countDelete++;
-									}
-								});
+					dialogTemplate.on('click', '.remove-number', function() {
+						for (var number in requestData.numbers) {
+							if ( $(this).parent().data('number') == requestData.numbers[number] ) {
+								var tbody = $(this).parent().parent().parent(),
+									childCount = tbody[0].childElementCount,
+									numbersCount = dialogTemplate.find('h4').find('.monster-blue');
 
-								dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
-								dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+								requestData.numbers.splice(number, 1);
+								$(this).parent().parent().remove();
+
+								if ( childCount == 1 ) {
+									tbody[0].previousElementSibling.remove();
+									tbody.remove();
+								}
+								numbersCount.text(numbersCount.text() - 1);
 							}
-						});
 
-						self.numbersPaintSpare(parent, dataNumbers, function() {
-							var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
+							if ( requestData.numbers.length == 0 ) {
+								dialogTemplate.parent().parent().remove();
+							}
+						}
+					});
 
-							dialogTemplate.parent().parent().remove();
-							$('body').css('overflow', 'auto');
+					dialogTemplate.on('click', '.cancel-link', function() {
+						dialogTemplate
+							.parent()
+							.parent()
+							.remove();
+					});
 
-							toastr.success(template);
+					dialogTemplate.on('click', '#delete_action', function() {
+						self.numbersDelete(requestData, function(data) {
+							var countDelete = 0;
+
+							_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+								if(account.id in mapAccounts) {
+									var newList = [];
+									_.each(account.spareNumbers, function(number, indexNumber) {
+										if(!(number.phoneNumber in data.success)) {
+											newList.push(number);
+										}
+										else {
+											countDelete++;
+										}
+									});
+
+									dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+									dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
+								}
+							});
+
+							self.numbersPaintSpare(parent, dataNumbers, function() {
+								var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
+
+								dialogTemplate.parent().parent().remove();
+								$('body').css('overflow', 'auto');
+
+								toastr.success(template);
+							});
 						});
 					});
-				});
+				}
+
 			});
 
 			/* to plugin */

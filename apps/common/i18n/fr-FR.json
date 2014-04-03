@@ -24,6 +24,11 @@
 		"assignTo":"Assigner à",
 		"confirmDelete":"Êtes-vous sûr de vouloir supprimer de ce compte les numéros sélectionnés?",
 		"delete":"Supprimer",
+		"deleteE911Error": {
+			"message": "Les numéros suivants ne peuvent pas être supprimés car ce sont les seuls de leur compte respectif ayant E911 configuré. Vous devez avoir au moins un numéro ayant E911 configuré par compte.",
+			"account": "Compte:",
+			"numbers": "Numéros:"
+		},
 		"numbers":"Numéros",
 		"addNumbers":"Ajouter Numéros",
 		"moveNumbers":"Déplacer vers",
