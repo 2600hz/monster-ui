@@ -428,7 +428,7 @@
 			"lunchbreakTitle": "Are you closed for lunch hours?"
 		},
 		"holidays": {
-			"enableTitle": "Are you closed for holidays? This will override the office hours settings above.",
+			"enableTitle": "Are you closed for holidays?",
 			"addLink": "Add Holiday",
 			"singleLink": "Single Day",
 			"rangeLink": "Date Range",

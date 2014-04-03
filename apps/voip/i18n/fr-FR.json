@@ -428,7 +428,7 @@
 			"lunchbreakTitle": "Êtes-vous fermé pendant le déjeuner?"
 		},
 		"holidays": {
-			"enableTitle": "Êtes-vous fermé pendant les vacances? Ceci outrepassera les horaires sélectionnés normalement.",
+			"enableTitle": "Êtes-vous fermé pendant les vacances?",
 			"addLink": "Ajouter vacances",
 			"singleLink": "Jour unique",
 			"rangeLink": "Période",
