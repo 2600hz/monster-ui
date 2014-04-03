@@ -234,7 +234,7 @@
 			"edit": "Modifier",
 			"enable": "Activer",
 			"user": "Utilisateur",
-			"modelMacAddress": "Modèle / Adresse MAC",
+			"modelMacAddress": "Nom / Adresse MAC",
 			"type": "Type"
 		},
 		"types": {

@@ -234,7 +234,7 @@
 			"edit": "Edit",
 			"enable": "Enable",
 			"user": "User",
-			"modelMacAddress": "Model / Mac Address",
+			"modelMacAddress": "Name / Mac Address",
 			"type": "Type"
 		},
 		"types": {
