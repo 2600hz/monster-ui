@@ -59,6 +59,16 @@ define(function(require){
 				'url': 'api/files/generate',
 				'verb': 'POST'
 			},
+			'provisioner.generateAccountFile': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'account/generate',
+				'verb': 'POST'
+			},
+			'provisioner.generateProviderFile': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'provider/generate',
+				'verb': 'POST'
+			},
 			/* Providers APIs */
 			'provisioner.getProvider': {
 				'apiRoot': monster.config.api.provisioner,
@@ -370,7 +380,40 @@ define(function(require){
 		renderSettingsContent: function(parent, accountId, data, settings, macAddress) {
 			var self = this,
 				settingsContentTemplate = $(monster.template(self, 'settingsContent', { settings: settings })),
-				initTemplate = function() {
+				insertFields = function(mergedSettings) {
+					self.scanObject(settings, function(args) {
+						dataField = args.dataField;
+						dataField.path = args.pathArray.join('.');
+						dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
+
+						if ( Array.isArray(mergedSettings[args.section]) ) {
+							mergedSettings[args.section] = mergedSettings[args.section][args.index];
+						}
+
+						if ( mergedSettings[args.section] && mergedSettings[args.section][args.option] && mergedSettings[args.section][args.option][args.field]) {
+							data.defaultValue = mergedSettings[args.section][args.option][args.field];
+
+							if ( data.defaultValue == '1' || data.defaultValue == '0' ) {
+								for ( var key in data.data ) {
+									if ( data.data[key].value == data.defaultValue ) {
+										data.defaultValue = data.data[key].text;
+									}
+								}
+							}
+						}
+
+						parent
+							.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
+							.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
+					});
+
+					self.scanObject(data, function(args) {
+						parent
+							.find('*[name="' + args.pathArray.join('.') + '"]')
+							.val(args.dataField)
+							.attr('value', args.dataField);
+					});
+
 					parent.find('.nav-bar > .switch-link:first-child').addClass('active');
 					parent.find('.settings-content .container > .content:first-child').addClass('active');
 
@@ -379,24 +422,6 @@ define(function(require){
 					});
 
 					self.bindSettingsContentEvents(parent, accountId, macAddress);
-				},
-				findDefaultValues = function(data, settings, args) {
-
-					if ( Array.isArray(settings[args.section]) ) {
-						settings[args.section] = settings[args.section][args.index];
-					}
-
-					if ( settings[args.section] && settings[args.section][args.option] && settings[args.section][args.option][args.field]) {
-						data.defaultValue = settings[args.section][args.option][args.field];
-
-						if ( data.defaultValue == '1' || data.defaultValue == '0' ) {
-							for ( var key in data.data ) {
-								if ( data.data[key].value == data.defaultValue ) {
-									data.defaultValue = data.data[key].text;
-								}
-							}
-						}
-					}
 				};
 
 			parent
@@ -407,76 +432,15 @@ define(function(require){
 			if ( accountId && macAddress ) {
 				self.requestGetAccount(accountId, function(accountData) {
 					self.requestGetProvider(function(providerData) {
-						var mergedSettings = {};
-
-						$.extend(true, mergedSettings, providerData.settings, accountData.settings);
-
-						self.scanObject(settings, function(args) {
-							dataField = args.dataField;
-							dataField.path = args.pathArray.join('.');
-							dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
-
-							findDefaultValues(dataField, mergedSettings, args);
-
-							parent
-								.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
-								.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-						});
-
-						self.scanObject(data, function(args) {
-							parent
-								.find('*[name="' + args.pathArray.join('.') + '"]')
-								.val(args.dataField)
-								.attr('value', args.dataField);
-						});
-
-						initTemplate();
+						insertFields($.extend(true, {}, providerData.settings, accountData.settings));
 					});
 				});
 			} else if ( accountId ) {
-				self.requestGetAccount(accountId, function(accountData) {
-					self.requestGetProvider(function(providerData) {
-						self.scanObject(settings, function(args) {
-							dataField = args.dataField;
-							dataField.path = args.pathArray.join('.');
-							dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
-
-							findDefaultValues(dataField, providerData.settings, args);
-
-							parent
-								.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
-								.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-						});
-
-						self.scanObject(data, function(args) {
-							parent
-								.find('*[name="' + args.pathArray.join('.') + '"]')
-								.val(args.dataField)
-								.attr('value', args.dataField);
-						});
-
-						initTemplate();
-					});
+				self.requestGetProvider(function(providerData) {
+					insertFields(providerData.settings);
 				});
 			} else {
-				self.scanObject(settings, function(args) {
-					dataField = args.dataField;
-					dataField.path = args.pathArray.join('.');
-					dataField.value = ( dataField.func ) ? self[dataField.func](dataField.args) : dataField.value;
-
-					parent
-						.find(args.isArray ? ('.container .content[data-key="' + args.section + '"] .sub-content[data-key="' + args.index + '"] .' + args.option) : ('.container .content[data-key="' + args.section + '"] .' + args.option))
-						.append($(monster.template(self, 'field' + dataField.type.charAt(0).toUpperCase() + dataField.type.slice(1), dataField)));
-				});
-
-				self.scanObject(data, function(args) {
-					parent
-						.find('*[name="' + args.pathArray.join('.') + '"]')
-						.val(args.dataField)
-						.attr('value', args.dataField);
-				});
-
-				initTemplate();
+				insertFields();
 			}
 		},
 
@@ -525,7 +489,7 @@ define(function(require){
 					}
 				} else if ( accountId ) {
 					self.requestGetAccount(accountId, function(data) {
-						data.settings = form2object('form2object');
+						data.settings = form2object('form2object', '.', true);
 
 						self.requestUpdateAccount(accountId, data, function() {
 							self.render(parent);
@@ -533,7 +497,7 @@ define(function(require){
 					});
 				} else if ( monster.apps.auth.isReseller ) {
 					self.requestGetProvider(function(data) {
-						data.settings = form2object('form2object');
+						data.settings = form2object('form2object', '.', true);
 
 						self.requestUpdateProvider(data, function() {
 							self.render(parent);
@@ -582,7 +546,8 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					callback();
+					self.requestGenerateAccountFile(accountId, callback);
+					// callback();
 				}
 			});
 		},
@@ -680,6 +645,32 @@ define(function(require){
 				}
 			});
 		},
+		requestGenerateAccountFile: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.generateAccountFile',
+				data: {
+					account_id: accountId
+				},
+				success: function(data, status) {
+					callback();
+				}
+			});
+		},
+		requestGenerateProviderFile: function(providerId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.generateProviderFile',
+				data: {
+					provider_id: provider_id
+				},
+				success: function(data, status) {
+					callback();
+				}
+			});
+		},
 		/* Providers APIs */
 		requestGetProvider: function(callback) {
 			var self = this;
@@ -707,7 +698,8 @@ define(function(require){
 						data: data
 					},
 					success: function(data, status) {
-						callback();
+						self.requestGenerateProviderFile(providerId, callback);
+						// callback();
 					}
 				});
 			});
