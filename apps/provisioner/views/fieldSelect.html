@@ -7,7 +7,7 @@
 		{{/each}}
 		</select>
 		{{#if defaultValue}}
-		<span class="help-inline">This setting is defined at <strong>{{defaultValue}}</strong> on the account or provider level</span>
+		<span class="help-inline">{{i18n.valueDefinedAtUpperLevel.partOne}}<strong>{{defaultValue}}</strong>{{i18n.valueDefinedAtUpperLevel.partTwo}}</span>
 		{{/if}}
 	</div>
 </div>

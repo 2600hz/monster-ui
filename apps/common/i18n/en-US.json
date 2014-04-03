@@ -83,7 +83,9 @@
 			"secondLine": "Please note Cellular devices do not display this field and it may take up to 72 hours to update."
 		},
 		"label": "Caller-ID",
-		"successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}"
+		"successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}",
+		"successRemoveCnam": "You successfully removed the Caller-ID of {{phoneNumber}}",
+		"noCallerId": "There is no Caller-ID for the phone number {{phoneNumber}}"
 	},
 
 	"e911": {
@@ -178,6 +180,7 @@
 		"labelSaveButton": "If you do not have all the required documents, save and come back later.",
 		"cancelButton": "cancel",
 		"cancelOrderButton": "cancel this order",
+		"cancelOrderPopup": "Are you sure you want to cancel this transfer?",
 		"faqLink": "View Porting FAQs",
 		"videoLink": "Watch Video",
 		"contactUsLink": "Contact Us",
@@ -261,7 +264,9 @@
 			"loaUploadStep": "upload loa",
 			"loaHelperPartOne": "For those who don’t have time, printer or scanner, we also offer digital sign for",
 			"loaHelperPartTwo": "5 one-time charge.",
-			"loaHelperPartThree": "Digital LOA form"
+			"loaHelperPartThree": "Digital LOA form.",
+			"loaHelperPartFour": "How to sign documents",
+			"loaHelperPartFive": "electronically without paying."
 		}
 	},
 

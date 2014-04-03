@@ -1,3 +1,25 @@
 {
-	
+	"devices": "Téléphones",
+	"delete": "Supprimer",
+	"update": "Mettre à jour",
+	"addDevice": "Ajouter un téléphone",
+	"noDevices": "Il n'y a aucun téléphones sur ce compte.",
+	"deviceSettings": "Parmètre du téléphone",
+	"accountSettings": "Paramètres du compte",
+	"providerSettings": "Paramètres du fournisseur",
+	"brand": "Marque",
+	"model": "Modèle",
+	"deviceName": "Nom du téléphone",
+	"macAddress": "Adresse MAC",
+	"cancel": "Annuler",
+	"save": "Sauvegarder",
+	"reset": "Réinitialiser",
+	"selectBrand": "Sélectionner une marque",
+	"selectModel": "Sélectionner un modèle",
+	"providerSettings": "Paramètres du fournisseur",
+	"accountSettings": "Paramètres du compte",
+	"valueDefinedAtUpperLevel": {
+		"partOne": "Ce paramètre est à ",
+		"partTwo": " au niveau du compte ou du fournisseur"
+	}
 }

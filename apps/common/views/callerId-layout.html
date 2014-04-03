@@ -16,6 +16,9 @@
 
 				<div class="row-fluid">
 					<button class="btn btn-success">{{ i18n.add }}</button>
+					{{#if display_name}}
+					<button class="btn btn-danger">{{ i18n.remove }}</button>
+					{{/if}}
 				</div>
 			</div>
 		</div>

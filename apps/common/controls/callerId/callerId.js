@@ -60,6 +60,28 @@ define(function(require){
                 );
             });
 
+			$('button.btn.btn-danger', popup_html).click(function(ev) {
+				if( dataNumber.cnam ) {
+					delete dataNumber.cnam;
+
+					self.callerIdUpdateNumber(dataNumber.id, dataNumber, function(data) {
+						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+							template = monster.template(self, '!' + self.i18n.active().callerId.successRemoveCnam, { phoneNumber: phoneNumber });
+
+						toastr.success(template);
+
+						popup.dialog('destroy').remove();
+
+						callbacks.success && callbacks.success(data);
+					});
+				} else {
+					var phoneNumber = monster.util.formatPhoneNumber(dataNumber.id),
+						template = monster.template(self, '!' + self.i18n.active().callerId.noCallerId, { phoneNumber: phoneNumber });
+
+					toastr.warning(template);
+				}
+			});
+
             popup = monster.ui.dialog(popup_html, {
                 title: self.i18n.active().callerId.dialogTitle
             });
