@@ -59,6 +59,16 @@ define(function(require){
 				'url': 'api/files/generate',
 				'verb': 'POST'
 			},
+			'provisioner.generateAccountFile': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/files/account/generate',
+				'verb': 'POST'
+			},
+			'provisioner.generateProviderFile': {
+				'apiRoot': monster.config.api.provisioner,
+				'url': 'api/files/provider/generate',
+				'verb': 'POST'
+			},
 			/* Providers APIs */
 			'provisioner.getProvider': {
 				'apiRoot': monster.config.api.provisioner,
@@ -582,7 +592,7 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-					callback();
+					self.requestGenerateAccountFile(accountId, callback);
 				}
 			});
 		},
@@ -680,6 +690,32 @@ define(function(require){
 				}
 			});
 		},
+		requestGenerateAccountFile: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.generateAccountFile',
+				data: {
+					account_id: accountId
+				},
+				success: function(data, status) {
+					callback();
+				}
+			});
+		},
+		requestGenerateProviderFile: function(providerId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'provisioner.generateProviderFile',
+				data: {
+					provider_id: providerId
+				},
+				success: function(data, status) {
+					callback();
+				}
+			});
+		},
 		/* Providers APIs */
 		requestGetProvider: function(callback) {
 			var self = this;
@@ -707,7 +743,7 @@ define(function(require){
 						data: data
 					},
 					success: function(data, status) {
-						callback();
+						self.requestGenerateProviderFile(providerId, callback);
 					}
 				});
 			});
