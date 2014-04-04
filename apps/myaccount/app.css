@@ -183,6 +183,23 @@
 #myaccount .myaccount-right .myaccount-titlebar .myaccount-close:hover span > * {
 	color: #22ccff;
 }
+@media (max-width: 767px) {
+	#myaccount .myaccount-menu {
+		width: 47px;
+		-webkit-transition:width 0.5s;
+		-moz-transition:width 0.5s;
+		-o-transition:width 0.5s;
+		transition:width 0.5s;
+	}
+
+	#myaccount .myaccount-menu .nav li.active .active-highlight {
+		border-color: #fff;
+	}
+
+	#myaccount .myaccount-menu .nav li.active .active-highlight i {
+		color: #22ccff;
+	}
+}
 @media (min-height: 700px) {
 	#myaccount {
 		height: 573px;

@@ -1,7 +1,8 @@
 <li class="myaccount-element" data-module="myaccount-balance">
 	<a href="javascript:void(0);">
         <div class="active-highlight">
-            <i class="hidden-phone icon-time"></i> {{ i18n.title }}
+            <i class="icon-time"></i>
+            <span class="hidden-phone element-name">{{ i18n.title }}</span>
 
 		{{#compare uiRestrictions.balance.show_credit '!==' false }}
             <span class="badge pull-right visible-desktop">$<span class="amount">{{ amount }}</span></span>
