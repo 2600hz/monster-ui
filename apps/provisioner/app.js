@@ -535,7 +535,7 @@ define(function(require){
 					}
 				} else if ( accountId ) {
 					self.requestGetAccount(accountId, function(data) {
-						data.settings = form2object('form2object');
+						data.settings = form2object('form2object', '.', true);
 
 						self.requestUpdateAccount(accountId, data, function() {
 							self.render(parent);
@@ -543,7 +543,7 @@ define(function(require){
 					});
 				} else if ( monster.apps.auth.isReseller ) {
 					self.requestGetProvider(function(data) {
-						data.settings = form2object('form2object');
+						data.settings = form2object('form2object', '.', true);
 
 						self.requestUpdateProvider(data, function() {
 							self.render(parent);
@@ -696,7 +696,9 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.generateAccountFile',
 				data: {
-					account_id: accountId
+					data: {
+						account_id: accountId
+					}
 				},
 				success: function(data, status) {
 					callback();
@@ -709,7 +711,9 @@ define(function(require){
 			monster.request({
 				resource: 'provisioner.generateProviderFile',
 				data: {
-					provider_id: providerId
+					data: {
+						provider_id: providerId
+					}
 				},
 				success: function(data, status) {
 					callback();
