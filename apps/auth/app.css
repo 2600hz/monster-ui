@@ -1,18 +1,19 @@
 #ws-content #welcome_page {
-	margin-top: 20px;
+	margin: 20px auto 0;
+	width: 960px;
+	border: 0.5px solid #000;
+	border-radius: 10px;
+	background: none repeat scroll 0 0 rgba(30, 30, 30, 0.86);
 }
 
 .login-block {
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	background: none repeat scroll 0 0 rgba(50, 50, 50, 0.86);
-	border-radius: 10px;
-
 	color: #fff;
 
-	margin: 20px auto auto;
+	margin: 20px auto;
 
 	width: 300px;
+	min-height: 20px;
+	padding: 19px;
 }
 
 .login-block .row-login:not(:first-child) {
@@ -58,16 +59,17 @@
 
 /* Responsive design */
 /* Large desktop */
-@media (min-width: 1200px) {
-    #ws-content #welcome_page {
-        display: block;
-        margin: 20px auto auto;
-        width: 1140px;
-    }
+@media (max-width: 1200px) {
+	#ws-content #welcome_page {
+		width: 760px;
+	}
 }
 
 /* desktop */
-@media (min-width: 979px) {
+@media (max-width: 979px) {
+	#ws-content #welcome_page {
+		width: 420px;
+	}
 }
 
 /* Portrait tablet to landscape */
