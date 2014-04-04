@@ -584,7 +584,6 @@ define(function(require){
 			});
 
 			container.on('click', '.number-element .remove-number', function(e) {
-				console.log('test');
 				var numberToRemove = $(this).data('number'),
 					indexToRemove = strategyData.callflows["MainCallflow"].numbers.indexOf(numberToRemove);
 
