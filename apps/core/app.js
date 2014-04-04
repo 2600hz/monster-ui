@@ -107,7 +107,6 @@ define(function(require){
 			_.each(monster.apps.auth.installedApps, function(val) {
 				if ( val.name === appName ) {
 					defaultApp = val;
-					defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.accountId + '/apps_store/' + val.id + '/icon?auth_token=' + monster.apps.auth.authToken;
 				}
 			});
 
@@ -198,7 +197,7 @@ define(function(require){
 				// renderLanding();
 			});
 
-			container.find('#ws-navbar .current-app').on('click', function() {
+			 container.find('#ws-navbar .current-app').on('click', function() {
 				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
 					app.render();
 				});
