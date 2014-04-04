@@ -147,6 +147,10 @@ a.monster-link.disabled i {
 	float: left;
 }
 
+#main section > .navbar .navbar-inner .current-app:hover {
+	cursor: pointer;
+}
+
 #main section > .navbar .navbar-inner .active-app {
 	display: none;
 	float: left;
@@ -175,8 +179,9 @@ a.monster-link.disabled i {
 	font-size: 18px;
 	line-height: 62px;
 }
-#main section > .navbar .navbar-inner .app-name:hover {
-	cursor: default;
+
+#main section > .navbar .navbar-inner .current-app:hover .app-name {
+	color: #22ccff;
 }
 
 #main section > .navbar .navbar-inner .logo {

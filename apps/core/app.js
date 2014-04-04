@@ -197,6 +197,12 @@ define(function(require){
 				// renderLanding();
 			});
 
+			 container.find('#ws-navbar .current-app').on('click', function() {
+				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
+					app.render();
+				});
+			});
+
 			monster.getVersion(function(version) {
 				$('.footer-wrapper .tag-version').html('('+version+')');
 
