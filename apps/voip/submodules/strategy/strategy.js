@@ -584,23 +584,23 @@ define(function(require){
 			});
 
 			container.on('click', '.number-element .remove-number', function(e) {
-				e.preventDefault();
+				console.log('test');
 				var numberToRemove = $(this).data('number'),
 					indexToRemove = strategyData.callflows["MainCallflow"].numbers.indexOf(numberToRemove);
 
 				if(indexToRemove >= 0) {
-					strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
-
-					if(strategyData.callflows["MainCallflow"].numbers.length === 0) {
-						strategyData.callflows["MainCallflow"].numbers = ["undefined"];
-					}
-
 					self.strategyGetNumber(numberToRemove, function(dataNumber) {
 						var dataTemplate = { phoneNumber: numberToRemove },
 							featureList = [],
 							popupHtml,
 							popup,
 							updateCallflow = function() {
+								strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
+
+								if(strategyData.callflows["MainCallflow"].numbers.length === 0) {
+									strategyData.callflows["MainCallflow"].numbers = ["undefined"];
+								}
+
 								self.strategyUpdateCallflow(strategyData.callflows["MainCallflow"], function(updatedCallflow) {
 									var parentContainer = container.parents('.element-container');
 									toastr.success(self.i18n.active().strategy.toastrMessages.removeNumberSuccess);
