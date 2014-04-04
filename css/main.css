@@ -166,7 +166,7 @@ a.monster-link.disabled i {
 }
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
-	max-width: 200px;
+	max-width: 260px;
 	color: #F5F5F5;
 	text-transform: uppercase;
 	text-overflow: ellipsis;
