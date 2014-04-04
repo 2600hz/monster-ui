@@ -166,20 +166,17 @@ a.monster-link.disabled i {
 }
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
-	padding: 0 0 0 20px;
 	max-width: 200px;
 	color: #F5F5F5;
+	text-transform: uppercase;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font-weight: 500;
-	font-size: 13px;
-	line-height: 60px;
+	letter-spacing: 0.5px;
+	font-size: 18px;
+	line-height: 62px;
 }
-#main section > .navbar .navbar-inner .active-app:hover {
-	cursor: pointer;
-}
-#main section > .navbar .navbar-inner .active-app:hover .app-name {
-	color: #22ccff;
+#main section > .navbar .navbar-inner .app-name:hover {
+	cursor: default;
 }
 
 #main section > .navbar .navbar-inner .logo {
@@ -288,7 +285,7 @@ body div {
 
 
 @media (max-width: 954px) {
-	#main section > .navbar .navbar-inner .current-app .app-name {
+	#main section > .navbar .navbar-inner .current-app {
 		display: none;
 	}
 }
