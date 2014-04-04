@@ -170,6 +170,10 @@ define(function(require){
 						createdFrom = (new Date(startDate).getTime()/1000) + 62167219200,
 						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
 
+					balance.find('.refresh-filter').on('click', function() {
+						self._renderContent(args);
+					});
+
 					balance.find('#filter_transactions').on('click', function() {
 						startDate = balance.find('#startDate').val();
 						endDate = balance.find('#endDate').val();

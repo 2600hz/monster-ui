@@ -1,6 +1,9 @@
-<span class="action-bar-wrapper">
-    {{ i18n.startDate }}: <input id="startDate" readonly="readonly" type="text"/>
-    {{ i18n.endDate }}: <input id="endDate" readonly="readonly" type="text"/>
-    <button class="btn btn-primary button-search" id="filter_transactions">{{ i18n.filter }}</button>
+<div class="action-bar-wrapper">
+	<i class="refresh-filter icon-refresh icon-blue" title="{{i18n.callLogs.resetFilter}}"></i>
+	<span>{{i18n.startDate}}:</span>
+	<input id="startDate" readonly="readonly" type="text"/>
+	<span>{{i18n.endDate}}:</span>
+	<input id="endDate" readonly="readonly" type="text"/>
+	<button class="btn btn-primary button-search" id="filter_transactions">{{ i18n.filter }}</button>
     <a href="#" id="download" role="button" class="action-number"><i class="icon-download-alt icon-green"></i>{{ i18n.download }}</a>
-</span>
+</div>
