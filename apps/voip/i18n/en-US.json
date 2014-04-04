@@ -519,7 +519,8 @@
 			"undefinedMenu": "You selected a Virtual Receptionist without setting it up. Please set it up by clicking on the Virtual Receptionist link, or choose a different option.",
 			"emptyTtsGreeting": "You must type in your greeting message to enable Text to Speech functionality.",
 			"emptyUploadGreeting": "Please select a file to upload",
-			"uniqueMenuNumbers": "Numbers within the menu must be unique and non-empty."
+			"uniqueMenuNumbers": "Numbers within the menu must be unique and non-empty.",
+			"lastE911Error": "You need e911 set up on at least one of your Main Numbers. Please set up e911 on another Main Number before deleting this one."
 		},
 		"toastrMessages": {
 			"updateHolidaySuccess": "Holidays sucessfully updated.",

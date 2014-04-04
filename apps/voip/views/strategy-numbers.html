@@ -1,7 +1,7 @@
 {{#each numbers}}
 <div class="number-element">
 	<div class="number">
-		<button type="button" class="btn btn-danger remove-number" data-number="{{this.number}}">
+		<button type="button" class="btn btn-danger remove-number" data-number="{{this.number}}" data-e911="{{this.features.dash_e911.active}}">
 			{{ ../i18n.remove }}
 		</button>
 		<span>{{formatPhoneNumber this.number}}</span>

@@ -279,8 +279,7 @@ define(function(require){
 											return ret;
 										}
 									}),
-									spareLinkEnabled: (_.countBy(accountNumbers, function(number) {return number.used_by ? 'assigned' : 'spare';})['spare'] > 0),
-									listFeatures: strategyData.numberFeatures
+									spareLinkEnabled: (_.countBy(accountNumbers, function(number) {return number.used_by ? 'assigned' : 'spare';})['spare'] > 0)
 								},
 								template = $(monster.template(self, 'strategy-'+templateName, templateData));
 
@@ -585,10 +584,14 @@ define(function(require){
 
 			container.on('click', '.number-element .remove-number', function(e) {
 				e.preventDefault();
-				var numberToRemove = $(this).data('number'),
+				var $this = $(this),
+					numberToRemove = $this.data('number'),
+					e911Feature = $this.data('e911'),
 					indexToRemove = strategyData.callflows["MainCallflow"].numbers.indexOf(numberToRemove);
 
-				if(indexToRemove >= 0) {
+				if(e911Feature === 'active' && container.find('.number-element .remove-number[data-e911="active"]').length === 1) {
+					monster.ui.alert('error', self.i18n.active().strategy.alertMessages.lastE911Error);
+				} else if(indexToRemove >= 0) {
 					strategyData.callflows["MainCallflow"].numbers.splice(indexToRemove, 1);
 
 					if(strategyData.callflows["MainCallflow"].numbers.length === 0) {
