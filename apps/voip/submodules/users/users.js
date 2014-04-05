@@ -222,8 +222,10 @@ define(function(require){
 				}
 
 				if ( dataTemplate.users.length == 0) {
+					parent.find('.grid-row.title').css('display', 'none');
 					parent.find('.no-users-row').css('display', 'block');
 				} else {
+					parent.find('.grid-row.title').css('display', 'block');
 					parent.find('.no-users-row').css('display', 'none');
 				}
 

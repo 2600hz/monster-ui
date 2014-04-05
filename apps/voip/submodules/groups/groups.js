@@ -145,8 +145,10 @@ define(function(require){
 				}
 
 				if ( noGroup ) {
+					parent.find('.grid-row.title').css('display', 'none');
 					parent.find('.no-groups-row').css('display', 'block');
 				} else {
+					parent.find('.grid-row.title').css('display', 'block');
 					parent.find('.no-groups-row').css('display', 'none');
 				}
 			});

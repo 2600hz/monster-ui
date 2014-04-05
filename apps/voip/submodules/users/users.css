@@ -51,13 +51,14 @@
 
 @-moz-document url-prefix() {
 	#users_container .users-header .add-user {
-		line-height: 21px;
+		line-height: 23px;
 	}
 }
 
 #users_container .users-header .add-user:hover {
 	background-image: none;
 	background-color: #eee;
+	text-decoration: none;
 }
 
 #users_container .users-header .add-user i {
@@ -65,6 +66,10 @@
 	margin: 0;
 	color: #929799;
 	text-decoration: none;
+}
+
+#users_container .users-header .add-user:hover i {
+	color: #22ccff;
 }
 
 #users_container .users-header .search-box { margin: 16px 0 16px 15px; }
@@ -395,6 +400,11 @@
 #users_container .detail-numbers .list-wrapper .navbar .nav li.dropdown.open > .dropdown-toggle,
 #users_container .detail-numbers .navbar .nav li.dropdown.active {
 	background: #FFF;
+}
+
+#users_container .detail-numbers .buy-dropdown:hover {
+	background-color: #E0E0E0;
+	text-decoration: underline;
 }
 
 @media (min-width: 1000px) {

@@ -3,19 +3,27 @@
 		<div class="basic-fields span6">
 
 			<div class="row-fields">
+				<div class="icon-wrapper"><i class="icon-user"></i></div>
+				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
+			</div>
+
+			<div class="row-fields email-group{{#unless extra.differentEmail}} hidden{{/unless}}">
+				<div class="icon-wrapper"><i class="icon-envelope"></i></div>
+				<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
+			</div>
+
+			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-key"></i></div>
 				<span id="username">{{username}}</span>
 				<a href="javascript:void(0);" id="change_username" class="monster-link blue">{{i18n.users.changeUsername}}</a>
 			</div>
 
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-user"></i></div>
-				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
-			</div>
-
-			<div class="row-fields">
-				<div class="icon-wrapper"><i class="icon-time"></i></div>
-				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
+			<div class="row-fields vmbox">
+				<div class="icon-wrapper"><i class="icon-telicon-voicemail"></i></div>
+				<label for="vmbox_number">
+					{{ i18n.users.editionForm.vmboxNumber }}
+				</label>
+				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
 			</div>
 
         	<div class="row-fields">
@@ -25,14 +33,14 @@
                 </label>
         	</div>
 
+			{{#if extra.mainCallflowId}}
 			<div class="row-fields">
-            	<div class="icon-wrapper"><i class="icon-flag"></i></div>
-				<select id="user_language" name="extra.language">
-					<option value="auto">{{i18n.languages.auto}}</option>
-					<option value="en-US"{{#compare language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
-					<option value="fr-FR"{{#compare language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
-				</select>
+				<label class="fix-left">
+					<input id="include_directory" type="checkbox" name="extra.includeInDirectory"{{#if extra.includeInDirectory}} checked="checked"{{/if}}></input>
+					{{ i18n.users.includeInDirectory }}
+				</label>
 			</div>
+			{{/if}}
 		</div>
 		<div class="basic-fields span6">
 			<div class="row-fields">
@@ -48,28 +56,19 @@
 				</select>
 			</div>
 
-			<div class="row-fields vmbox">
-				<div class="icon-wrapper"><i class="icon-telicon-voicemail"></i></div>
-				<label for="vmbox_number">
-					{{ i18n.users.editionForm.vmboxNumber }}
-				</label>
-				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
-			</div>
-
-			{{#if extra.mainCallflowId}}
 			<div class="row-fields">
-				<label class="fix-left">
-					<input id="include_directory" type="checkbox" name="extra.includeInDirectory"{{#if extra.includeInDirectory}} checked="checked"{{/if}}></input>
-					{{ i18n.users.includeInDirectory }}
-				</label>
+				<div class="icon-wrapper"><i class="icon-time"></i></div>
+				<select id="user_timezone" name="timezone" data-original_value="{{timezone}}"></select>
 			</div>
 
-			{{/if}}
-
-        	<div class="row-fields email-group{{#unless extra.differentEmail}} hidden{{/unless}}">
-            	<div class="icon-wrapper"><i class="icon-envelope"></i></div>
-            	<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
-        	</div>
+			<div class="row-fields">
+            	<div class="icon-wrapper"><i class="icon-flag"></i></div>
+				<select id="user_language" name="extra.language">
+					<option value="auto">{{i18n.languages.auto}}</option>
+					<option value="en-US"{{#compare language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+					<option value="fr-FR"{{#compare language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+				</select>
+			</div>
 		</div>
 		<!--<div class="advanced-fields content-centered span3">
 			<a id="resend_instructions" href="javascript:void(0)">{{ i18n.users.resendInstructions }}</a>
