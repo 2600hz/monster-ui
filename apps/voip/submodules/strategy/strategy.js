@@ -113,6 +113,14 @@ define(function(require){
 			'strategy.numbers.update': {
 				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
 				verb: 'POST'
+			},
+			'strategy.account.get': {
+				url: 'accounts/{accountId}',
+				verb: 'GET'
+			},
+			'strategy.account.update': {
+				url: 'accounts/{accountId}',
+				verb: 'POST'
 			}
 		},
 
@@ -610,6 +618,35 @@ define(function(require){
 									strategyData.callflows["MainCallflow"] = updatedCallflow;
 									refreshNumbersHeader(parentContainer);
 									self.strategyRefreshTemplate(parentContainer, strategyData);
+
+									//Updating Company Caller ID if this was the selected number
+									monster.request({
+										resource: 'strategy.account.get',
+										data: {
+											accountId: self.accountId
+										},
+										success: function(accountData) {
+											var modified = false;
+											if('caller_id' in accountData.data && 'external' in accountData.data.caller_id && accountData.data.caller_id.external.number === numberToRemove) {
+												delete accountData.data.caller_id.external;
+												modified = true;
+											}
+											if('caller_id' in accountData.data && 'emergency' in accountData.data.caller_id && accountData.data.caller_id.emergency.number === numberToRemove) {
+												delete accountData.data.caller_id.emergency;
+												modified = true;
+											}
+											if(modified) {
+												monster.request({
+													resource: 'strategy.account.update',
+													data: {
+														accountId: self.accountId,
+														data: accountData.data
+													},
+													success: function(data) {}
+												});
+											}
+										}
+									});
 								});
 							};
 
