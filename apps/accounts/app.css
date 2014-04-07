@@ -97,15 +97,21 @@
 }
 
 #accounts_manager_view .left-menu .account-link .account-name {
-	font-size: 16px;
+	overflow: hidden;
 	height: 40px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 16px;
 	line-height: 40px;
 }
 
 #accounts_manager_view .left-menu .account-link .account-realm {
-	font-size: 10px;
+	overflow: hidden;
 	height: 20px;
-	line-height: 0px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 10px;
+	line-height: 6px;
 }
 
 #accounts_manager_view .left-menu .account-link .account-error {
