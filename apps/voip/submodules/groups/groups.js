@@ -495,7 +495,7 @@ define(function(require){
 
 			self.groupsGetMembersData(groupId, function(results) {
 				var results = self.groupsFormatMembersData(results);
-				console.log(results);
+
 				template = $(monster.template(self, 'groups-members', results));
 
 				self.groupsBindMembers(template, results);
