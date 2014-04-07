@@ -574,6 +574,12 @@
 	background: #FFF;
 }
 
+#groups_container .detail-numbers .buy-dropdown:hover,
+#groups_container .detail-numbers .buy-dropdown:focus {
+	background-color: #E0E0E0;
+	text-decoration: underline;
+}
+
 /* Detail Features */
 #groups_container .detail-features .features-grid .feature {
 	display: inline-block;

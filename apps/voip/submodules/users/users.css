@@ -402,7 +402,8 @@
 	background: #FFF;
 }
 
-#users_container .detail-numbers .buy-dropdown:hover {
+#users_container .detail-numbers .buy-dropdown:hover,
+#users_container .detail-numbers .buy-dropdown:focus {
 	background-color: #E0E0E0;
 	text-decoration: underline;
 }
