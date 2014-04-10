@@ -431,15 +431,13 @@ define(function(require){
 					}
 					e911ErrorMessage = '';
 
-				console.log(dataNumbers)
-
 				$('body').css('overflow', 'hidden');
 
 				parent.find('.number-box.selected').each(function(k, v) {
 					var box = $(v),
 						number = box.data('phonenumber');
 						accountId = box.parents('.account-section').data('id'),
-						accountName = box.parents('.account-section').data('name');
+						accountName = box.parents('.account-section').data('name').toString();
 
 					if(!(accountId in mapAccounts)) {
 						mapAccounts[accountId] = {};
@@ -465,6 +463,7 @@ define(function(require){
 				dataTemplate.numberCount = listNumbers.length;
 
 				_.each(dataTemplate.accountList, function(val) {
+
 					var account = _.find(dataNumbers.listAccounts, function(account) { return account.name === val.accountName }),
 						e911Numbers = _.filter(account.spareNumbers, function(num) {
 										return num.features.indexOf('dash_e911') >= 0
