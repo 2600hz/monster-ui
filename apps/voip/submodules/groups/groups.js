@@ -767,82 +767,64 @@ define(function(require){
 				toastrMessages = self.i18n.active().groups.toastrMessages,
 				currentNumberSearch = '';
 
-			template.on('click', '.save-numbers', function() {
-				var numbersToSave = [],
-					parentRow = $(this).parents('.grid-row'),
-					callflowId = parentRow.data('callflow_id'),
-					name = parentRow.data('name');
+			// template.on('click', '.list-assigned-items .remove-number', function() {
+			// 	var row = $(this).parents('.item-row'),
+			// 		spare = template.find('.count-spare'),
+			// 		countSpare = spare.data('count') + 1,
+			// 		unassignedList = template.find('.list-unassigned-items');
 
-				template.find('.list-assigned-items .item-row').each(function(k, row) {
-					numbersToSave.push($(row).data('id'));
-				});
+			// 	/* Alter the html */
+			// 	row.hide();
 
-				self.groupsUpdateNumbers(callflowId, numbersToSave, function(callflowData) {
-					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.groupsRender({ groupId: callflowData.group_id });
-				});
-			});
+			// 	row.find('button')
+			// 		.removeClass('remove-number btn-danger')
+			// 		.addClass('add-number btn-primary')
+			// 		.text(self.i18n.active().add);
 
-			template.on('click', '.list-unassigned-items .add-number', function() {
-				var row = $(this).parents('.item-row'),
-					spare = template.find('.count-spare'),
-					countSpare = spare.data('count') - 1,
-					assignedList = template.find('.list-assigned-items');
+			// 	unassignedList.append(row);
+			// 	unassignedList.find('.empty-row').hide();
 
-				spare
-					.html(countSpare)
-					.data('count', countSpare);
+			// 	spare
+			// 		.html(countSpare)
+			// 		.data('count', countSpare);
 
-				row.find('button')
-					.removeClass('add-number btn-primary')
-					.addClass('remove-number btn-danger')
-					.text(self.i18n.active().remove);
+			// 	var rows = template.find('.list-assigned-items .item-row');
+			// 	/* If no rows beside the clicked one, display empty row */
+			// 	if(rows.is(':visible') === false) {
+			// 		template.find('.list-assigned-items .empty-row').show();
+			// 	}
 
-				assignedList.find('.empty-row').hide();
-				assignedList.append(row);
-
-				var rows = template.find('.list-unassigned-items .item-row');
-
-				if(rows.size() === 0) {
-					template.find('.list-unassigned-items .empty-row').show();
-				}
-				else if(rows.is(':visible') === false) {
-					template.find('.list-unassigned-items .empty-search-row').show();
-				}
-			});
+			// 	/* If it matches the search string, show it */
+			// 	if(row.data('search').indexOf(currentNumberSearch) >= 0) {
+			// 		row.show();
+			// 		unassignedList.find('.empty-search-row').hide();
+			// 	}
+			// });
 
 			template.on('click', '.list-assigned-items .remove-number', function() {
-				var row = $(this).parents('.item-row'),
-					spare = template.find('.count-spare'),
-					countSpare = spare.data('count') + 1,
-					unassignedList = template.find('.list-unassigned-items');
+				var $this = $(this),
+					parentRow = $this.parents('.grid-row'),
+					callflowId = parentRow.data('callflow_id'),
+					groupName = parentRow.data('name'),
+					row = $this.parents('.item-row'),
+					dataNumbers = [];
 
-				/* Alter the html */
-				row.hide();
+				row.slideUp(function() {
+					row.remove();
 
-				row.find('button')
-					.removeClass('remove-number btn-danger')
-					.addClass('add-number btn-primary')
-					.text(self.i18n.active().add);
+					if ( !template.find('.list-assigned-items .item-row').is(':visible') ) {
+						template.find('.list-assigned-items .empty-row').slideDown();
+					}
 
-				unassignedList.append(row);
-				unassignedList.find('.empty-row').hide();
+					template.find('.item-row').each(function(idx, elem) {
+						dataNumbers.push($(elem).data('id'));
+					});
 
-				spare
-					.html(countSpare)
-					.data('count', countSpare);
-
-				var rows = template.find('.list-assigned-items .item-row');
-				/* If no rows beside the clicked one, display empty row */
-				if(rows.is(':visible') === false) {
-					template.find('.list-assigned-items .empty-row').show();
-				}
-
-				/* If it matches the search string, show it */
-				if(row.data('search').indexOf(currentNumberSearch) >= 0) {
-					row.show();
-					unassignedList.find('.empty-search-row').hide();
-				}
+					self.groupsUpdateNumbers(callflowId, dataNumbers, function(callflowData) {
+						toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: groupName }));
+						self.groupsRender({ groupId: callflowData.group_id });
+					});
+				});
 			});
 
 			template.on('keyup', '.list-wrapper .unassigned-list-header .search-query', function() {
@@ -908,6 +890,43 @@ define(function(require){
 				}
 			});
 
+			template.on('click', '.actions .spare-link:not(.disabled)', function(e) {
+				e.preventDefault();
+
+				var $this = $(this),
+					args = {
+					accountName: monster.apps['auth'].currentAccount.name,
+					accountId: self.accountId,
+					callback: function(numberList) {
+						var parentRow = $this.parents('.grid-row'),
+							callflowId = parentRow.data('callflow_id'),
+							name = parentRow.data('name');
+							dataNumbers = [];
+
+						template.find('.empty-row').hide();
+
+						template.find('.item-row').each(function(idx, elem) {
+							dataNumbers.push($(elem).data('id'));
+						});
+
+						_.each(numberList, function(val, idx) {
+							dataNumbers.push(val.phoneNumber);
+
+							template
+								.find('.list-assigned-items')
+								.append($(monster.template(self, 'groups-numbersItemRow', { number: val })));
+						});
+
+						self.groupsUpdateNumbers(callflowId, dataNumbers, function(callflowData) {
+							toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
+							self.groupsRender({ groupId: callflowData.group_id });
+						});
+					}
+				}
+
+				monster.pub('common.numbers.dialogSpare', args);
+			});
+
 			template.on('click', '.actions .buy-link', function(e) {
 				e.preventDefault();
 
@@ -936,6 +955,8 @@ define(function(require){
 								template.find('.unassigned-list-header .count-spare')
 									.data('count', newTotal)
 									.html(newTotal);
+
+								template.find('.spare-link.disabled').removeClass('disabled');
 							});
 						},
 						error: function(error) {
@@ -1247,6 +1268,7 @@ define(function(require){
 				}
 				response.emptyExtensions = _.isEmpty(response.extensions);
 				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
+				response.emptySpare = _.isEmpty(response.unassignedNumbers);
 
 				callback && callback(response);
 			});

@@ -918,99 +918,29 @@ define(function(require){
 			});
 
 			/* Events for Numbers in Users */
-			template.on('click', '.save-numbers', function() {
-				var $this = $(this),
-					numbers = $.extend(true, [], extensionsToSave),
-					name = $this.parents('.grid-row').find('.grid-cell.name').text(),
-					userId = $this.parents('.grid-row').data('id');
-
-				template.find('.detail-numbers .list-assigned-items .item-row').each(function(k, row) {
-					numbers.push($(row).data('id'));
-				});
-
-				self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, numbers, function(callflowData) {
-					toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
-					self.usersRender({ userId: callflowData.owner_id });
-				});
-			});
-
-			template.on('click', '.detail-numbers .list-unassigned-items .add-number', function() {
-				var row = $(this).parents('.item-row'),
-					spare = template.find('.count-spare'),
-					countSpare = spare.data('count') - 1,
-					assignedList = template.find('.detail-numbers .list-assigned-items');
-
-				spare
-					.html(countSpare)
-					.data('count', countSpare);
-
-				row.find('button')
-					.removeClass('add-number btn-primary')
-					.addClass('remove-number btn-danger')
-					.text(self.i18n.active().remove);
-
-				assignedList.find('.empty-row').hide();
-				assignedList.append(row);
-
-				var rows = template.find('.list-unassigned-items .item-row');
-
-				if(rows.size() === 0) {
-					template.find('.detail-numbers .list-unassigned-items .empty-row').show();
-				}
-				else if(rows.is(':visible') === false) {
-					template.find('.detail-numbers .list-unassigned-items .empty-search-row').show();
-				}
-			});
-
 			template.on('click', '.detail-numbers .list-assigned-items .remove-number', function() {
-				var row = $(this).parents('.item-row'),
-					spare = template.find('.count-spare'),
-					countSpare = spare.data('count') + 1,
-					unassignedList = template.find('.detail-numbers .list-unassigned-items');
+				var $this = $(this),
+					userName = $this.parents('.grid-row').find('.grid-cell.name').text(),
+					dataNumbers = $.extend(true, [], extensionsToSave),
+					userId = $this.parents('.grid-row').data('id'),
+					row = $this.parents('.item-row');
 
-				/* Alter the html */
-				row.hide();
+				row.slideUp(function() {
+					row.remove();
 
-				row.find('button')
-					.removeClass('remove-number btn-danger')
-					.addClass('add-number btn-primary')
-					.text(self.i18n.active().add);
+					if ( !template.find('.list-assigned-items .item-row').is(':visible') ) {
+						template.find('.list-assigned-items .empty-row').slideDown();
+					}
 
-				unassignedList.append(row);
-				unassignedList.find('.empty-row').hide();
+					template.find('.item-row').each(function(idx, elem) {
+						dataNumbers.push($(elem).data('id'));
+					});
 
-				spare
-					.html(countSpare)
-					.data('count', countSpare);
-
-				var rows = template.find('.detail-numbers .list-assigned-items .item-row');
-				/* If no rows beside the clicked one, display empty row */
-				if(rows.is(':visible') === false) {
-					template.find('.detail-numbers .list-assigned-items .empty-row').show();
-				}
-
-				/* If it matches the search string, show it */
-				if(row.data('search').indexOf(currentNumberSearch) >= 0) {
-					row.show();
-					unassignedList.find('.empty-search-row').hide();
-				}
-			});
-
-			template.on('keyup', '.list-wrapper .unassigned-list-header .search-query', function() {
-				var rows = template.find('.list-unassigned-items .item-row'),
-					emptySearch = template.find('.list-unassigned-items .empty-search-row'),
-					currentRow;
-
-				currentNumberSearch = $(this).val().toLowerCase();
-
-				_.each(rows, function(row) {
-					currentRow = $(row);
-					currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+					self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, dataNumbers, function(callflowData) {
+						toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: userName }));
+						self.usersRender({ userId: callflowData.owner_id });
+					});
 				});
-
-				if(rows.size() > 0) {
-					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
-				}
 			});
 
 			template.on('click', '.callerId-number', function() {
@@ -1186,6 +1116,42 @@ define(function(require){
 				);
 			});
 
+			template.on('click', '.actions .spare-link:not(.disabled)', function(e) {
+				e.preventDefault();
+
+				var $this = $(this),
+					args = {
+					accountName: monster.apps['auth'].currentAccount.name,
+					accountId: self.accountId,
+					callback: function(numberList) {
+						var name = $this.parents('.grid-row').find('.grid-cell.name').text(),
+							dataNumbers = $.extend(true, [], extensionsToSave),
+							userId = $this.parents('.grid-row').data('id');
+
+						template.find('.empty-row').hide();
+
+						template.find('.item-row').each(function(idx, elem) {
+							dataNumbers.push($(elem).data('id'));
+						});
+
+						_.each(numberList, function(val, idx) {
+							dataNumbers.push(val.phoneNumber);
+
+							template
+								.find('.list-assigned-items')
+								.append($(monster.template(self, 'users-numbersItemRow', { number: val })));
+						});
+
+						self.usersUpdateCallflowNumbers(userId, (currentCallflow || {}).id, dataNumbers, function(callflowData) {
+							toastr.success(monster.template(self, '!' + toastrMessages.numbersUpdated, { name: name }));
+							self.usersRender({ userId: callflowData.owner_id });
+						});
+					}
+				}
+
+				monster.pub('common.numbers.dialogSpare', args);
+			});
+
 			template.on('click', '.actions .buy-link', function(e) {
                 e.preventDefault();
                 monster.pub('common.buyNumbers', {
@@ -1213,6 +1179,8 @@ define(function(require){
 								template.find('.unassigned-list-header .count-spare')
 									.data('count', newTotal)
 									.html(newTotal);
+
+								template.find('.spare-link.disabled').removeClass('disabled');
 							});
                         },
                         error: function(error) {
