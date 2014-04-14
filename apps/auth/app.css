@@ -211,3 +211,15 @@
 	width: 302px;
 	margin: auto;
 }
+
+/**************************************** Password Recovery ****************************************/
+
+#password_recovery form {
+	padding: 20px 55px 0 0;
+}
+
+#password_recovery .action {
+	padding: 20px;
+	border-top: 1px solid #C1C1C1;
+	text-align: center;
+}
