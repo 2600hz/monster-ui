@@ -10,7 +10,37 @@ define(function(require){
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
-		requests: {},
+		requests: {
+			'auth.userAuth': {
+				url: 'user_auth',
+				verb: 'PUT'
+			},
+			'auth.sharedAuth': {
+				url: 'shared_auth',
+				verb: 'PUT'
+			},
+			'auth.pinAuth': {
+				url: 'pin_auth',
+				verb: 'PUT'
+			},
+			'auth.getUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'GET'
+			},
+			'auth.updateUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'POST'
+			},
+			'auth.getAccount': {
+				url: 'accounts/{accountId}',
+				verb: 'GET'
+			},
+			'auth.recover_password': {
+				url: 'user_auth/recovery',
+				contentType: 'application/json',
+				verb: 'PUT'
+			}
+		},
 
 		subscribe: {
 			'auth.logout': '_logout',
@@ -369,6 +399,33 @@ define(function(require){
 			content.empty().append(loginHtml);
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
+
+			content.find('.forgot-password').on('click', function() {
+				var	template = $(monster.template(self, 'dialogPasswordRecovery')),
+					dialog;
+
+				template.find('.recover-password').on('click', function() {
+					var object = form2object('form2object');
+
+					object.account_name === '' ? delete object.account_name : true;
+					object.account_realm === '' ? delete object.account_realm : true;
+					object.phone_number === '' ? delete object.phone_number : true;
+
+					console.log(object);
+
+					monster.request({
+						resource: 'auth.recover_password',
+						data: {
+							data: object
+						},
+						success: function(data, status) {
+							console.log(data, status);
+						}
+					});
+				});
+
+				dialog = monster.ui.dialog(template, { title: 'Password Recovery' });
+			});
 
 			content.find('.login').on('click', function(event){
 				event.preventDefault();
