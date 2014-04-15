@@ -2252,7 +2252,9 @@ define(function(require){
 						number.localityEnabled = 'locality' in number ? true : false;
 
 						_.each(number.features, function(feature) {
-							number.viewFeatures[feature].active = 'active';
+							if(feature in number.viewFeatures) {
+								number.viewFeatures[feature].active = 'active';
+							}
 						});
 
 						/* Adding to spare numbers */
