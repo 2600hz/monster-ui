@@ -176,7 +176,11 @@ define(function(require){
 			templates: {}
 		},
 
-		config: _.extend({}, config),
+		config: _.extend({
+			api: {
+				default: window.location.origin + ':8000/v2/',
+			}
+		}, config),
 
 		css: function(href){
 			$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
