@@ -999,7 +999,8 @@ define(function(require){
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
-					numbers: []
+					sortedNumbers: [],
+					numbers: {}
 				},
 				sortByNumber = function(a,b) {
 					return a.phoneNumber > b.phoneNumber;
@@ -1009,11 +1010,13 @@ define(function(require){
 				if(number.used_by === '') {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
-					formattedData.numbers.push(number);
+
+					formattedData.sortedNumbers.push(number);
+					formattedData.numbers[id] = number;
 				}
 			});
 
-			formattedData.numbers.sort(sortByNumber);
+			formattedData.sortedNumbers.sort(sortByNumber);
 
 			return formattedData;
 		},
