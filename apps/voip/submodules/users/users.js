@@ -2237,7 +2237,7 @@ define(function(require){
 			var self = this,
 				response = {
 					countSpare: 0,
-					assignedNumbers: {},
+					assignedNumbers: [],
 					unassignedNumbers: {},
 					callflow: data.callflow.userCallflow,
 					extensions: []
@@ -2269,13 +2269,21 @@ define(function(require){
 					/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
 					_.each(response.callflow.numbers, function(number) {
 						if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
-							response.assignedNumbers[number] = data.numbers.numbers[number];
+							var numberElement = data.numbers.numbers[number];
+							numberElement.phoneNumber = number;
+
+							response.assignedNumbers.push(numberElement);
 						}
 						else {
 							response.extensions.push(number);
 						}
 					});
 				}
+
+				var sortByNumber = function(a,b) {
+					return a.phoneNumber > b.phoneNumber;
+				};
+				response.assignedNumbers.sort(sortByNumber);
 
 				/* List of extensions */
 				response.allExtensions = [];
@@ -2305,7 +2313,6 @@ define(function(require){
 				response.emptyAssigned = _.isEmpty(response.assignedNumbers);
 				response.emptySpare = _.isEmpty(response.unassignedNumbers);
 				response.emptyExtensions = _.isEmpty(response.extensions);
-
 
 				callback && callback(response);
 			});

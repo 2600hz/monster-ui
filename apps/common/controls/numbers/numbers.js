@@ -999,16 +999,21 @@ define(function(require){
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
-					numbers: {}
+					numbers: []
+				},
+				sortByNumber = function(a,b) {
+					return a.phoneNumber > b.phoneNumber;
 				};
 
 			_.each(data.numbers, function(number, id) {
 				if(number.used_by === '') {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
-					formattedData.numbers[id] = number;
+					formattedData.numbers.push(number);
 				}
 			});
+
+			formattedData.numbers.sort(sortByNumber);
 
 			return formattedData;
 		},
