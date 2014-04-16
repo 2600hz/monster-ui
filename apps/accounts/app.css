@@ -305,6 +305,10 @@
 	padding-top: 5px;
 }
 
+#accounts_manager_view .main-content .list-settings .settings-item-content #accountsmanager_account_realm + .monster-invalid {
+	width: 420px;
+}
+
 #accounts_manager_view .close-link {
 	float:right;
 }

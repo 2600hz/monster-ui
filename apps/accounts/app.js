@@ -1577,6 +1577,14 @@ define(function(require){
 
 			monster.ui.prettyCheck.create(contentHtml);
 
+			monster.ui.validate(contentHtml.find('#form_accountsmanager_account_realm'), {
+				rules: {
+					'realm': {
+						'realm': true
+					}
+				}
+			});
+
 			parent.find('.main-content').empty()
 										.append(contentHtml);
 
