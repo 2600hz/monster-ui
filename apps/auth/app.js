@@ -163,11 +163,19 @@ define(function(require){
 					results.account.apps = results.account.apps || {};
 
 					/* If user has a preferred language, then set the i18n flag with this value, if not, check if the account has a default preferred language */
+					var loadNewLanguage = function(language) {
+						if(language !== monster.config.language) {
+							monster._loadLocale(self, language);
+
+							monster.config.language = language;
+						}
+					};
+
 					if('language' in results.user) {
-						monster.config.i18n.active = results.user.language;
+						loadNewLanguage(results.user.language);
 					}
 					else if('language' in results.account) {
-						monster.config.i18n.active = results.account.language;
+						loadNewLanguage(results.account.language);
 					}
 
 					var accountApps = results.account.apps,
@@ -188,7 +196,7 @@ define(function(require){
 									delete accountApps[appId].all;
 								}
 								/*****************************************************************************************/
-								if(accountApps[appId].allowed_users === 'all' 
+								if(accountApps[appId].allowed_users === 'all'
 								|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
 								|| accountAppUsers.indexOf(results.user.id) >= 0) {
 									defaultApp = fullAppList[appId].name;

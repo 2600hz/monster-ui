@@ -59,18 +59,16 @@ define(function(require){
 			}
 		},
 
+		/* Set the default Language to English, and overrides it with the language from the browser. If a cookie exists, we override the language value with the value stored in the cookie) */
 		setDefaultLanguage: function() {
-			var defaultsI18n = {
-				default: 'en-US',
-				active: navigator.language
-			};
+			var defaultLanguage = navigator.language || 'en-US';
 
-			monster.config.i18n = $.extend(true, {}, defaultsI18n, monster.config.i18n);
+			monster.config.language = monster.config.language || defaultLanguage;
 
 			if($.cookie('monster-auth')) {
 				var authData = $.parseJSON($.cookie('monster-auth'));
 
-				monster.config.i18n.active = authData.language;
+				monster.config.language = authData.language;
 			};
 		},
 
