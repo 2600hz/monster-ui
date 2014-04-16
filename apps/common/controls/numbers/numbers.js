@@ -170,10 +170,12 @@ define(function(require){
 
 			mapAccounts[self.accountId] = thisAccount;
 
-			/* order all the list of numbers to display last updated number first */
 			var sortByDate = function(a,b) {
-				return a.updated > b.updated ? -1 : 1;
-			}
+					return a.updated > b.updated ? -1 : 1;
+				},
+			    sortByName = function(a,b) {
+					return a.phoneNumber > b.phoneNumber;
+				};
 
 			/* Sort the list of numbers of the main account and add the subaccounts in a list to be ordered by name later */
 			_.each(mapAccounts, function(value) {
@@ -181,8 +183,8 @@ define(function(require){
 					templateData.listAccounts.push(value);
 				}
 				else {
-					value.spareNumbers.sort(sortByDate);
-					value.usedNumbers.sort(sortByDate);
+					value.spareNumbers.sort(sortByName);
+					value.usedNumbers.sort(sortByName);
 				}
 			});
 
@@ -215,7 +217,10 @@ define(function(require){
 					if(!alreadySearched || forceRefresh) {
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
-								usedNumbers = [];
+								usedNumbers = [],
+			    				sortByName = function(a,b) {
+									return a.phoneNumber > b.phoneNumber;
+								};
 
 							if(!alreadySearched) {
 								listSearchedAccounts.push(accountId);
@@ -232,10 +237,9 @@ define(function(require){
 							});
 
 							_.each(dataNumbers.listAccounts, function(value) {
-								//TODO Sort
 								if(value.id === accountId) {
-									value.spareNumbers = spareNumbers;
-									value.usedNumbers = usedNumbers;
+									value.spareNumbers = spareNumbers.sort(sortByName);
+									value.usedNumbers = usedNumbers.sort(sortByName);
 									value.countSpareNumbers = spareNumbers.length;
 									value.countUsedNumbers = usedNumbers.length;
 
@@ -689,7 +693,6 @@ define(function(require){
 								dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
 							}
 
-							//TODO Sort date
 							self.numbersPaintSpare(parent, dataNumbers, function() {
 								var dataTemplate = {
 										count: countMove,
@@ -996,16 +999,24 @@ define(function(require){
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
+					sortedNumbers: [],
 					numbers: {}
+				},
+				sortByNumber = function(a,b) {
+					return a.phoneNumber > b.phoneNumber;
 				};
 
 			_.each(data.numbers, function(number, id) {
 				if(number.used_by === '') {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
+
+					formattedData.sortedNumbers.push(number);
 					formattedData.numbers[id] = number;
 				}
 			});
+
+			formattedData.sortedNumbers.sort(sortByNumber);
 
 			return formattedData;
 		},

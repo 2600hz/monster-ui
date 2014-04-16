@@ -16,7 +16,7 @@
 			<div class="empty-search-row">
                 {{ i18n.numbers.dialogSpare.noMatchingNumbers }}
             </div>
-			{{#each numbers}}
+			{{#each sortedNumbers}}
 				<div class="number-box" data-number="{{this.phoneNumber}}" data-search="{{this.phoneNumber}} {{formatPhoneNumber this.phoneNumber}}">
 					<input type="checkbox"></input>
 					<span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>

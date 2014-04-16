@@ -36,24 +36,31 @@ define(function(require){
 
                 _.extend(app.data, { i18n: {} });
 
-				/* en-US is the default language of Monster, Deal with it! */
-                monster._loadLocale(app, 'en-US');
+				/* en-US is the default language of Monster */
+				var defaultLanguage = 'en-US',
+					customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : defaultLanguage;
 
-				/* If the app supports the "active" language, then we load its json file if its not the default one */
-                if(monster.config.i18n.active !== 'en-US' && app.i18n.indexOf(monster.config.i18n.active) >= 0) {
-                	monster._loadLocale(app, monster.config.i18n.active);
+                monster._loadLocale(app, defaultLanguage);
+
+				/* If the app supports the custom language, then we load its json file if its not the default one */
+                if(customLanguage !== defaultLanguage) {
+                	monster._loadLocale(app, customLanguage);
                 }
 
+				/* Add global i18n to the i18n of this app */
                 monster.util.addCoreI18n(app);
+
+				/* Merge custom i18n into default i18n so that we don't display empty strings if the i18n is missing for a label */
+				app.data.i18n[customLanguage] = $.extend(true, {}, app.data.i18n[defaultLanguage], app.data.i18n[customLanguage]);
 
                 // add an active property method to the i18n array within the app.
                 _.extend(app.i18n, {
                     active: function(){
-                        return app.data.i18n[monster.config.i18n.active] || app.data.i18n['en-US'] || {};
+                    	var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : defaultLanguage;
+
+                        return app.data.i18n[language];
                     }
                 });
-
-				app.data.i18n[monster.config.i18n.active] = $.extend(true, {}, app.data.i18n['en-US'], app.data.i18n[monster.config.i18n.active]);
 
 				/* common is loaded once the user is logged in, and once he's logged in, we know his language, so we need to override the i18n for the common elements like the confirm box and such */
                 if(app.name === 'common') {
