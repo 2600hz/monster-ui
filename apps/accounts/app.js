@@ -1453,12 +1453,12 @@ define(function(require){
 								toastr.error(self.i18n.active().toastrMessages.servicePlanUpdateError, '', {"timeOut": 5000});
 								$btn_save.removeClass('disabled');
 							};
-						if(servicePlans.currentId) {
+						if(servicePlans.current.id) {
 							monster.request({
 								resource: 'accountsManager.servicePlans.delete',
 								data: {
 									accountId: accountData.id,
-									planId: servicePlans.currentId,
+									planId: servicePlans.current.id,
 									data: {}
 								},
 								success: function(data, status) {
