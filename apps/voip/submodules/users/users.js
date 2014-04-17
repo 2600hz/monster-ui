@@ -2266,9 +2266,9 @@ define(function(require){
 				}
 
 				if(response.callflow) {
-					/* If a number is in a callflow and is set as used by callflows in the number manager, then we display it as an assigned number */
+					/* If a number is in a callflow and is returned by the phone_numbers, add it to the assigned numbers  */
 					_.each(response.callflow.numbers, function(number) {
-						if(number in data.numbers.numbers && data.numbers.numbers[number].used_by === 'callflow') {
+						if(number in data.numbers.numbers) {
 							var numberElement = data.numbers.numbers[number];
 							numberElement.phoneNumber = number;
 
