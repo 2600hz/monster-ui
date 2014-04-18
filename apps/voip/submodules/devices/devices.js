@@ -714,6 +714,7 @@ define(function(require){
 					macAddress: device.mac_address,
 					name: device.name,
 					userName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
+					sortableUserName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].last_name + ' ' + mapUsers[device.owner_id].fist_name : unassignedString,
 					enabled: device.enabled,
 					type: device.device_type,
 					friendlyType: self.i18n.active().devices.types[device.device_type],
@@ -742,14 +743,21 @@ define(function(require){
 			});
 
 			arrayToSort.sort(function(a, b) {
-				if(a.userName === unassignedString) {
-					return true;
-				}
-				else if(b.userName === unassignedString) {
-					return false;
+				/* If owner is the same, order by device name */
+				if(a.userName === b.userName) {
+					return a.name.toLowerCase() > b.name.toLowerCase();
 				}
 				else {
-					return a.userName > b.userName;
+					/* Otherwise, push the unassigned devices to the bottom of the list, and show the assigned devices ordered by user name */
+					if(a.userName === unassignedString) {
+						return true;
+					}
+					else if(b.userName === unassignedString) {
+						return false;
+					}
+					else {
+						return a.sortableUserName.toLowerCase() > b.sortableUserName.toLowerCase();
+					}
 				}
 			});
 
