@@ -408,15 +408,13 @@ define(function(require){
 				}
 			});
 
-			/* Sort by last name */
 			var sortedUsers = [];
+
 			_.each(mapUsers, function(user) {
 				sortedUsers.push(user);
 			});
 
-			sortedUsers.sort(function(a, b) {
-				return a.last_name > b.last_name;
-			});
+			sortedUsers = monster.util.sort(sortedUsers, 'last_name');
 
 			dataTemplate.users = sortedUsers;
 
@@ -1647,7 +1645,7 @@ define(function(require){
 				monster.ui.alert('error', self.i18n.active().users.find_me_follow_me.noDevice);
 			} else {
 				var currentUser = params.currentUser,
-					userDevices = params.userDevices.sort(function(a, b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1 }),
+					userDevices = monster.util.sort(params.userDevices, 'name'),
 					userCallflow = params.userCallflow,
 					featureTemplate = $(monster.template(self, 'users-feature-find_me_follow_me', { currentUser: currentUser, devices: userDevices })),
 					switchFeature = featureTemplate.find('.switch').bootstrapSwitch(),
@@ -2280,10 +2278,7 @@ define(function(require){
 					});
 				}
 
-				var sortByNumber = function(a,b) {
-					return a.phoneNumber > b.phoneNumber;
-				};
-				response.assignedNumbers.sort(sortByNumber);
+				response.assignedNumbers = monster.util.sort(response.assignedNumbers, 'phoneNumber');
 
 				/* List of extensions */
 				response.allExtensions = [];

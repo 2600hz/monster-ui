@@ -6,6 +6,10 @@
 		"line2": "Are you sure you want to continue?"
 	},
 
+	"callerId": "Caller-ID",
+	"e911": "E911",
+	"failover": "Failover",
+
 	"pbx_brand": "PBX Brand",
 	"ip": "IP",
 	"config": "Config",

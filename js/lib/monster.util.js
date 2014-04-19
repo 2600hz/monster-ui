@@ -241,6 +241,28 @@ define(function(require){
 			return randomString;
 		},
 
+		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
+    	sort: function(dataSet, secondArg) {
+			var fieldName = 'name',
+    			sortFunction = function(a, b) {
+    				var aString = a[fieldName].toLowerCase(),
+    					bString = b[fieldName].toLowerCase();
+
+					return aString > bString;
+    			};
+
+    		if(typeof secondArg === 'function') {
+				sortFunction = secondArg;
+    		}
+    		else if(typeof secondArg === 'string') {
+				fieldName = secondArg;
+    		}
+
+    		result = dataSet.sort(sortFunction);
+
+			return result;
+    	},
+
 		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
 		timeToSeconds: function(time) {
 			var suffix = time.substring(time.length-2),
