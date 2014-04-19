@@ -47,11 +47,11 @@
 #voip_container > .left-menu .category.active::after {
 	position: absolute;
 	top: 21px;
-	right: -11px;
+	right: -9px;
 	display: block;
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-left: 10px solid #22ccff;
+	border-top: 9px solid transparent;
+	border-bottom: 9px solid transparent;
+	border-left: 9px solid #22ccff;
 	content: "";
 }
 
