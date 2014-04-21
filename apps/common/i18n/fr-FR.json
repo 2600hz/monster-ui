@@ -49,7 +49,8 @@
 		"notSpareNumber":"{{number}}: Ce numéro est utilisé par le compte suivant: \"{{accountName}}\". (Cliquer sur Numéros utilisés pour voir ce numéro)",
 		"numberNotFound":"Aucun numéro correspondant à votre recherche.",
 		"failoverIconHelp":"Cette icône indique que le Num. de rechange a été configuré sur ce numéro",
-		"cnamIconHelp":"Cette icône indique que le Caller-ID a été configuré sur ce numéro",
+		"cnamOutboundIconHelp":"Cette icône indique que le Caller-ID sortant a été configuré sur ce numéro",
+		"cnamInboundIconHelp":"Cette icône indique que le Caller-ID entrant a été configuré sur ce numéro",
 		"e911IconHelp":"Cette icône indique que l'adresse d'urgence a été configurée sur ce numéro",
 		"localIconHelp":"Cette icône indique ce numéro est un numéro interne",
 		"dialogConfirm":{
@@ -76,8 +77,8 @@
 		"dialogTitle":"Sélection du Nom de Caller ID",
 		"errorUpdate":"Impossible de mettre à jour le Caller-ID de ce numéro",
 		"help":{
-			"firstLine":"Entrez ici ce qui apparaîtra en tant que Caller-ID.",
-			"secondLine":"Veuillez noter que les téléphones cellulaires n'affichent pas ce champ, mais aussi que la mise à jour du Caller-ID peut prendre jusqu'à 72 heures."
+			"outbound": "Ce nom apparaîtra en tant que Caller-ID lorsque vous passerez des appels. Cette requête peut prendre jusqu'à 72 heures.",
+			"inbound": "Si vous activez cette fonctionalité, le nom de votre interlocuteur apparaîtra lorsque vous recevrez des appels."
 		},
 		"label":"Caller-ID",
 		"successCnam":"Mise à jour du Caller-ID de {{phoneNumber}} réussie!",

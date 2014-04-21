@@ -110,7 +110,8 @@ define(function(require){
 			var self = this,
 				features = {
 					failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-					outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamIconHelp },
+					outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp },
+					inbound_cnam: { icon: 'icon-green icon-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
 					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
 					local: { icon: 'icon-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'icon-phone icon-yellow feature-port' }
@@ -754,11 +755,16 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
-								if(!($.isEmptyObject(data.data.cnam))) {
+								if('cnam' in data.data && data.data.cnam.display_name) {
 									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
-								}
-								else {
+								} else {
 									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+								}
+
+								if('cnam' in data.data && data.data.cnam.inbound_lookup) {
+									cnamCell.find('.features i.feature-inbound_cnam').addClass('active');
+								} else {
+									cnamCell.find('.features i.feature-inbound_cnam').removeClass('active');
 								}
 							}
 						}
