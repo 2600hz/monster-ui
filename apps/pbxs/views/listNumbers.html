@@ -1,9 +1,9 @@
-{{#eachkeys DIDs}}
-<div class="number-wrapper number-box" data-phone_number="{{this.key}}">
+{{#each DIDs}}
+<div class="number-wrapper number-box" data-phone_number="{{phoneNumber}}">
 	<input type="checkbox"></input>
-	<span class="phone-number">{{ formatPhoneNumber this.key }}</span>
-	{{#if this.value.isoCountry}}
-		<span class="flag"><img src="css/flags/32/{{ this.value.isoCountry }}.png" height="32" width="32"></img></span>
+	<span class="phone-number">{{ formatPhoneNumber phoneNumber }}</span>
+	{{#if isoCountry}}
+		<span class="flag"><img src="css/flags/32/{{ isoCountry }}.png" height="32" width="32"></img></span>
 	{{/if}}
 
 	<div class="number-options pull-right">
@@ -12,9 +12,11 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
 					<ul class="dropdown-menu">
-						<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
-						<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
-						<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../i18n.failover.label }}</a></li>
+						{{debug this}}
+						{{debug ..}}
+						<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId }}</a></li>
+						<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911 }}</a></li>
+						<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../i18n.failover }}</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -22,8 +24,8 @@
 	</div>
 
 	<div class="features pull-right">
-		{{#if this.value.features}}
-			{{#each this.value.features}}
+		{{#if features}}
+			{{#each features}}
 				{{#compare this "dash_e911"}}
 				<i class="icon-green icon-ambulance"></i>
 				{{/compare}}
@@ -37,4 +39,4 @@
 		{{/if}}
 	</div>
 </div>
-{{/eachkeys}}
+{{/each}}

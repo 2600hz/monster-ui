@@ -62,11 +62,6 @@ define(function(require){
                     }
                 });
 
-				/* common is loaded once the user is logged in, and once he's logged in, we know his language, so we need to override the i18n for the common elements like the confirm box and such */
-                if(app.name === 'common') {
-					monster.apps['core'].data.i18n = $.extend(true, {}, monster.apps['core'].data.i18n, app.data.i18n);
-                }
-
                 app.apiUrl = app.apiUrl || monster.config.api.default;
 
                 if(monster._fileExists(css)){

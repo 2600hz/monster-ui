@@ -43,16 +43,10 @@
 	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	height: 42px;
 	vertical-align: top;
 	text-align: center;
 	font-size: 12px;
-	line-height: 18pt;
-}
-
-@-moz-document url-prefix() {
-	#users_container .users-header .add-user {
-		line-height: 23px;
-	}
 }
 
 #users_container .users-header .add-user:hover {

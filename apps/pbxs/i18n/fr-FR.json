@@ -11,6 +11,10 @@
 	"config": "Configuration",
 	"please_correct": "Veuillez corriger les erreurs suivantes:",
 
+	"callerId": "Caller-ID",
+	"e911": "Adresse d'urgence (E911)",
+	"failover": "Numéro de rechange",
+
 	"which_pbx": "Sélectionnez votre PBX",
 	"pbx_missing_help": "Votre PBX n'apparaît pas dans la liste? Faites-le nous savoir en contactant {{supportEmail}} !",
 	"no_pbx_selected": "Vous n'avez pas sélectionné de PBX",
