@@ -51,7 +51,7 @@ define(function(require){
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
-		for(var i = 0; i < n; ++i)
+		for(var i = 1; i <= n; ++i)
 			ret += options.fn(i);
 		return ret;
 	});
