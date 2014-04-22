@@ -29,26 +29,6 @@ define(function(require){
 		}
 	});
 
-	Handlebars.registerHelper('eachkeys', function(context, options) {
-		var fn = options.fn,
-			inverse = options.inverse,
-			ret = '',
-			empty = true;
-
-		for (key in context) { empty = false; break; }
-
-		if (!empty) {
-			for (key in context) {
-				ret = ret + fn({ 'key': key, 'value': context[key]});
-			}
-		}
-		else {
-			ret = inverse(this);
-		}
-
-		return ret;
-	});
-
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
 		for(var i = 1; i <= n; ++i)

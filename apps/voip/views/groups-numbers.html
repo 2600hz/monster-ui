@@ -4,8 +4,8 @@
 			<div class="empty-row{{#if emptyAssigned}} visible{{/if}}">
 				{{ i18n.groups.noAssignedNumbers }}
 			</div>
-			{{#eachkeys assignedNumbers}}
-				<div class="item-row" data-id="{{this.key}}" data-search="{{formatPhoneNumber this.key}} {{this.key}} {{this.value.locality.city}} {{this.value.locality.country}}">
+			{{#each assignedNumbers}}
+				<div class="item-row" data-id="{{@key}}" data-search="{{formatPhoneNumber @key}} {{@key}} {{locality.city}} {{locality.country}}">
 					<div class="features-block pull-right">
 						<div class="pull-right">
 							<div class="navbar">
@@ -21,19 +21,19 @@
 							</div>
 						</div>
 						<div class="features pull-right">
-							{{#each this.value.viewFeatures}}
+							{{#each viewFeatures}}
 								<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
 							{{/each}}
 						</div>
 					</div>
 					<div class="number">
 						<button type="button" class="btn btn-danger remove-number">{{ ../i18n.remove }}</button>
-						{{ formatPhoneNumber this.key }}
+						{{ formatPhoneNumber @key }}
 					</div>
 					<!--<div class="locality">
-						{{#if this.value.localityEnabled}}
-							<span class="flag"><img src="css/flags/32/{{ this.value.locality.iso }}.png" height="32" width="32"></img></span>
-							<span class="city">{{ this.value.locality.city }}, {{ this.value.locality.country }}</span>
+						{{#if localityEnabled}}
+							<span class="flag"><img src="css/flags/32/{{ locality.iso }}.png" height="32" width="32"></img></span>
+							<span class="city">{{ locality.city }}, {{ locality.country }}</span>
 						{{else}}
 							N/A
 						{{/if}}
@@ -42,7 +42,7 @@
 				</div>
 			{{else}}
 
-			{{/eachkeys}}
+			{{/each}}
 		</div>
 	</div>
 

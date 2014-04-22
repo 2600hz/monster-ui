@@ -1,8 +1,8 @@
-{{#eachkeys numbers}}
-	<tr data-search="{{ this.key }}" data-id="{{ this.key }}">
-		<td>{{ formatPhoneNumber this.key }}</td>
+{{#each numbers}}
+	<tr data-search="{{ @key }}" data-id="{{ @key }}">
+		<td>{{ formatPhoneNumber @key }}</td>
 		<td><i class="icon-remove remove-callin-number"></i></td>
 	</tr>
 {{else}}
 	<tr><td colspan="2" class="empty">{{ i18n.noCallinNumber }}</td></tr>
-{{/eachkeys}}
+{{/each}}
