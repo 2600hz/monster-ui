@@ -39,7 +39,7 @@ define(function(require){
 
 		subscribe: {
 			'auth.authenticate' : '_authenticate',
-			'auth.loadAccount' : '_loadAccount',
+			'auth.loggedIn': '_loggedIn',
 			'auth.loginClick': '_loginClick',
 			'auth.conferenceLogin': '_conferenceLogin',
 			'auth.clickLogout': '_clickLogout',
@@ -64,7 +64,7 @@ define(function(require){
 				self.resellerId = cookieData.resellerId;
 				self.installedApps = cookieData.installedApps;
 
-				monster.pub('auth.loadAccount');
+				monster.pub('auth.loggedIn');
 			}
 
 			callback && callback(self);
@@ -72,6 +72,14 @@ define(function(require){
 
 		render: function(container){
 
+		},
+
+		_loggedIn: function() {
+			var self = this;
+
+			$('#home_link').addClass('active');
+
+			self.loadAccount();
 		},
 
 		_authenticate: function(loginData) {
@@ -121,12 +129,12 @@ define(function(require){
 
 					$('#ws-content').empty();
 
-					monster.pub('auth.loadAccount');
+					monster.pub('auth.loggedIn');
 				}
 			});
 		},
 
-		_loadAccount: function(args) {
+		loadAccount: function() {
 			var self = this;
 
 			monster.parallel({
