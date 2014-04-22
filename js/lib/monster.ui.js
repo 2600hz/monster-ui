@@ -339,6 +339,32 @@ define(function(require){
 			return dialog;
 		},
 
+		// Fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
+		fade: function(element, options) {
+			var options = $.extend(true, {
+				startColor: '#22CCFF',
+				endColor: '#F2F2F2',
+				timer: 2000
+			}, options);
+
+			// If the background was a gradient, only changing the background-color wouldn't work, so we hide the image temporarirly
+			element.css({
+				'background-image': 'none',
+				'background-color': options.startColor
+			})
+			.animate({
+					backgroundColor: options.endColor
+				}, options.timer, function() {
+					element.css({
+						'background-image': '',
+						'background-color': ''
+					});
+
+					options.callback && options.callback();
+				}
+			);
+		},
+
 		tabs: function(template) {
 			template.find('.tabs-main-selector').first().addClass('active');
 			template.find('.tabs-section').first().addClass('active');

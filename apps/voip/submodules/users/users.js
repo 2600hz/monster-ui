@@ -213,12 +213,9 @@ define(function(require){
 					.append(template);
 
 				if(_userId) {
-					parent.find('.grid-row[data-id=' + _userId + ']')
-						.css('background-color', '#22CCFF')
-						.animate({
-							backgroundColor: '#fcfcfc'
-						}, 2000
-					);
+					var cells = parent.find('.grid-row[data-id=' + _userId + '] .grid-cell');
+
+					monster.ui.fade(cells);
 				}
 
 				if ( dataTemplate.users.length == 0) {

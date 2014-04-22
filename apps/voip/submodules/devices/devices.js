@@ -94,12 +94,11 @@ define(function(require){
 					.append(template);
 
 				if(_deviceId) {
-					parent.find('.grid-row[data-id=' + _deviceId + ']')
-						.css('background-color', '#22CCFF')
-						.animate({
-							backgroundColor: '#fcfcfc'
-						}, 2000
-					);
+					var row = parent.find('.grid-row[data-id=' + _deviceId + ']');
+
+					monster.ui.fade(row, {
+						endColor: '#FCFCFC'
+					});
 				}
 
 				if ( dataTemplate.devices.length == 0 ) {
@@ -714,7 +713,7 @@ define(function(require){
 					macAddress: device.mac_address,
 					name: device.name,
 					userName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name : unassignedString,
-					sortableUserName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].last_name + ' ' + mapUsers[device.owner_id].fist_name : unassignedString,
+					sortableUserName: device.owner_id && device.owner_id in mapUsers ? mapUsers[device.owner_id].last_name + ' ' + mapUsers[device.owner_id].first_name : unassignedString,
 					enabled: device.enabled,
 					type: device.device_type,
 					friendlyType: self.i18n.active().devices.types[device.device_type],
@@ -745,18 +744,24 @@ define(function(require){
 			arrayToSort.sort(function(a, b) {
 				/* If owner is the same, order by device name */
 				if(a.userName === b.userName) {
-					return a.name.toLowerCase() > b.name.toLowerCase();
+					var aName = a.name.toLowerCase(),
+						bName = b.name.toLowerCase();
+
+					return (aName > bName) ? 1 : (aName < bName) ? -1 : 0;
 				}
 				else {
 					/* Otherwise, push the unassigned devices to the bottom of the list, and show the assigned devices ordered by user name */
 					if(a.userName === unassignedString) {
-						return true;
+						return 1;
 					}
 					else if(b.userName === unassignedString) {
-						return false;
+						return -1;
 					}
 					else {
-						return a.sortableUserName.toLowerCase() > b.sortableUserName.toLowerCase();
+						var aSortName = a.sortableUserName.toLowerCase(),
+							bSortName = b.sortableUserName.toLowerCase();
+
+						return (aSortName > bSortName) ? 1 : (aSortName < bSortName) ? -1 : 0;
 					}
 				}
 			});

@@ -132,12 +132,9 @@ define(function(require){
 					.append(template);
 
 				if(_groupId) {
-					parent.find('.grid-row[data-id=' + _groupId + ']')
-						.css('background-color', '#22CCFF')
-						.animate({
-							backgroundColor: '#fcfcfc'
-						}, 2000
-					);
+					var cells =  parent.find('.grid-row[data-id=' + _groupId + '] .grid-cell');
+
+					monster.ui.fade(cells);
 				}
 
 				for (var group in dataTemplate.groups) {

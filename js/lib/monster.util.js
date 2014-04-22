@@ -246,9 +246,10 @@ define(function(require){
 			var fieldName = 'name',
     			sortFunction = function(a, b) {
     				var aString = a[fieldName].toLowerCase(),
-    					bString = b[fieldName].toLowerCase();
+    					bString = b[fieldName].toLowerCase(),
+    					result = (aString > bString) ? 1 : (aString < bString) ? -1 : 0;
 
-					return aString > bString;
+					return result;
     			};
 
     		if(typeof secondArg === 'function') {

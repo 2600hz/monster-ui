@@ -834,9 +834,14 @@ define(function(require){
 								viewList.find('.number-box').removeClass('highlighted');
 
 								if(!numberBox.hasClass('highlighted')) {
-									numberBox.addClass('highlighted')
-										.css('background', '#22ccff')
-										.animate({ backgroundColor: '#BBFF99' }, 1000, function() { numberBox.css('background', ''); });
+									monster.ui.fade(numberBox, {
+										startColor: '#22CCFF',
+										endColor: '#BBFF99',
+										timer: 1000,
+										callback: function() {
+											numberBox.addClass('highlighted');
+										}
+									});
 								}
 							}
 							else {
