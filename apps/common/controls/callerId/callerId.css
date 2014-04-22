@@ -1,40 +1,29 @@
 /* CNAM POPUP */
 .trunkstore_popup.cnam {
-    padding: 15px 15px 0 15px;
-    width: 440px;
+	width: 510px;
 }
 
-.trunkstore_popup.cnam .right_part{
-    line-height: 40px;
-    font-size: 18px;
+.trunkstore_popup.cnam form#cnam {
+	margin: 0;
 }
 
-.trunkstore_popup.cnam .left_image {
-    float: left;
-    height: 290px;
-    width: 152px;
+.trunkstore_popup.cnam .popup-content {
+	padding: 15px 25px;
 }
 
-.trunkstore_popup.cnam .right_part {
-    float: left;
-    margin: 0 10px 0 30px;
-    max-width: 300px;
+.trunkstore_popup.cnam .popup-content:not(:first-child) {
+	border-top: 1px solid #ccc;
 }
 
-.trunkstore_popup.cnam input.caller_id {
-    padding: 10px 5px;
+.trunkstore_popup.cnam .popup-content .popup-label {
+	margin: 0 10px 0 0;
+	display: inline-block;
 }
 
-.trunkstore_popup.cnam .btn.btn-success {
-    width: 100%;
-    padding: 10px 0;
+.trunkstore_popup.cnam #outbound_caller_id {
+	margin: 0;
 }
 
-.trunkstore_popup.cnam .right_part .row-fluid {
-    text-align: center;
-    margin: 25px 0;
-}
-
-.trunkstore_popup.cnam .right_part .row-fluid form {
-    margin: 0;
+.trunkstore_popup.cnam .help-box {
+	margin-top: 20px;
 }

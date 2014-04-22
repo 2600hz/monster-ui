@@ -711,11 +711,16 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
-								if(!($.isEmptyObject(data.data.cnam))) {
+								if('cnam' in data.data && data.data.cnam.display_name) {
 									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
-								}
-								else {
+								} else {
 									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+								}
+
+								if('cnam' in data.data && data.data.cnam.inbound_lookup) {
+									cnamCell.find('.features i.feature-inbound_cnam').addClass('active');
+								} else {
+									cnamCell.find('.features i.feature-inbound_cnam').removeClass('active');
 								}
 							}
 						}
