@@ -722,6 +722,7 @@ define(function(require){
 			});
 
 			template.on('ifChanged', '#notification_email', function() {
+				template.find('.email-border').toggleClass('open');
 				template.find('.email-group').toggleClass('hidden');
 			});
 
