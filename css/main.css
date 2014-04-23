@@ -76,10 +76,6 @@ a.monster-link.disabled i {
 	background-color: #22ccff;
 }
 
-#main section > .navbar .nav.links {
-	margin-right: -20px;
-}
-
 #main section > .navbar .nav > li > a {
 	padding: 0 22px 0 0;
 	height: 62px;
@@ -187,7 +183,6 @@ a.monster-link.disabled i {
 #main section > .navbar .navbar-inner .logo {
 	background-repeat: no-repeat;
 	background-position: center center;
-	border-left: 1px solid #353535;
 	border-right: 1px solid #353535;
 	cursor: default;
 	float: left;
@@ -207,13 +202,18 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .navbar-inner .home {
+	border-right: 1px solid #353535;
+	display: none;
 	height: 62px;
 	line-height: 62px;
-	margin-left: -20px;
 	padding: 0 10px;
 	text-align: center;
 	text-decoration: none;
 	width: 42px;
+}
+
+#main section > .navbar .navbar-inner .home.active {
+	display: inline-block;
 }
 
 #main section > .navbar .navbar-inner .home:hover .icon-white {
@@ -230,22 +230,6 @@ a.monster-link.disabled i {
 	}
 }
 
-/*#main section > .navbar .navbar-inner i {
-	display: inline-block;
-}
-
-#main section > .navbar .navbar-inner .help {
-	border-left: 1px solid #353535;
-	height: 62px;
-	line-height: 62px;
-	margin-right: -20px;
-	margin-left: 9px;
-	width: 42px;
-	padding: 0 10px;
-	text-align: center;
-	text-decoration: none;
-}*/
-
 #main section > .ws-content {
 	top: 67px;
 	left:0;
@@ -261,55 +245,28 @@ body div {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
-/* desktop */
-@media (min-width: 979px) {
-
-}
-
-/* Portrait tablet to landscape */
-@media (min-width: 768px) and (max-width: 979px) {
-	#main section > .navbar .navbar-inner .help {
-		border-left: none;
-	}
-}
-
-/* Phone to portrait tablet */
-@media (max-width: 767px) {
-	#main section > .navbar .navbar-inner .logo {
-	}
-
-	#main section > .navbar .navbar-inner .help {
-		margin-right: 0;
-		margin-left: 0;
-	}
-
-	#main section > .navbar .navbar-inner .home {
-		margin-left: 0;
-	}
-}
-
 
 @media (max-width: 954px) {
+	#main section > .navbar .navbar-inner .logo {
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+
+	#main section > .navbar .nav > li.nav-masquerading > a {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	#main section > .navbar .navbar-inner .links .top-link {
+		width: 52px;
+	}
+
 	#main section > .navbar .navbar-inner .current-app {
 		display: none;
 	}
-}
-
-@media (max-width: 715px) {
-	#main section > .navbar .navbar-inner .current-app {
-		display: none;
-	}
-}
-
-/* Success buttons */
-.btn-success {
-	text-transform: uppercase;
-	font-weight: 600;
-	letter-spacing: 0;
 }
 
 /* Inputs */
-
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="datetime"]:focus,
