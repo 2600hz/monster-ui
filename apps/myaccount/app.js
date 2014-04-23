@@ -125,6 +125,7 @@ define(function(require){
 					monster.pub('myaccount.display');
 				}
 				monster.pub('accountsManager.restoreMasquerading');
+				monster.pub('core.showAppName', 'accounts');
 			});
 
 			self.groups = {

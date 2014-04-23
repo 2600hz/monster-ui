@@ -128,7 +128,7 @@ define(function(require){
 
 				monster.apps.load(appName, function(app){
 					app.render();
-					monster.pub('core.showDefaultApp', appName);
+					monster.pub('core.showAppName', appName);
 				});
 
 				self._hide(parent);

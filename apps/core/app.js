@@ -21,7 +21,7 @@ define(function(require){
 		subscribe: {
 			'core.loadApps': '_loadApps',
 			'core.landing': '_landing',
-			'core.showDefaultApp' : 'showDefaultApp'
+			'core.showAppName' : 'showAppName'
 		},
 
 		load: function(callback){
@@ -99,7 +99,7 @@ define(function(require){
 			});
 		},
 
-		showDefaultApp: function(appName) {
+		showAppName: function(appName) {
 			var self = this,
 				navbar = $('#ws-navbar'),
 				defaultApp;
@@ -139,7 +139,7 @@ define(function(require){
 
 				if(defaultApp && defaultApp !== '') {
 					monster.apps.load(defaultApp, function(app) {
-						self.showDefaultApp(defaultApp);
+						self.showAppName(defaultApp);
 						app.render($('#ws-content'));
 					});
 				}
