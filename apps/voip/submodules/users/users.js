@@ -1555,7 +1555,8 @@ define(function(require){
 					userData = currentUser,
 					userToSave = $.extend(true, {}, {
 						caller_id: {
-							internal: {}
+							internal: {},
+							external: {},
 						}
 					}, currentUser),
 					args = {
@@ -1571,7 +1572,9 @@ define(function(require){
 					}
 				}
 				else {
-					userToSave.caller_id.internal.number = featureTemplate.find('.caller-id-select').val();
+					var callerIdValue = featureTemplate.find('.caller-id-select').val();
+					userToSave.caller_id.internal.number = callerIdValue;
+					userToSave.caller_id.external.number = callerIdValue;
 				}
 
 				self.usersUpdateUser(userToSave, function(data) {
