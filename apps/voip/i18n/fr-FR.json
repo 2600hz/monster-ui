@@ -341,7 +341,10 @@
 			"directCallsOnly": "Seulement transférer les appels direct",
 			"headline": "Réglages du transfert d'appel",
 			"keepCallerId": "Garder le Caller-ID",
-			"label": "Transférer tous les appels vers ce numéro",
+			"label": "Transférer tous les appels vers",
+			"mobile": "Un Téléphone Portable",
+			"deskphone": "Un Téléphone de Bureau",
+			"number": "Ce numéro",
 			"placeholder": "+14157283992",
 			"requireKeyPress": "Laisser message sur le répondeur du numéro transferé",
 			"title": "Transfert d'appels"

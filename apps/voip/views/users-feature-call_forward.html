@@ -10,11 +10,28 @@
 	</div>
 
 	<div class="content{{#unless extra.mapFeatures.call_forward.active}} disabled{{/unless}}">
-		<form id="call_forward_form">
-			<div class="main-line">
+		<form id="call_forward_form" class="form form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="phoneType">{{ i18n.users.call_forward.label }}</label>
+				<div class="controls">
+					<select class="span2" id="phoneType" name="phoneType">
+						<option value="mobile" selected>{{ i18n.users.call_forward.mobile }}</option>
+						<option value="deskphone">{{ i18n.users.call_forward.deskphone }}</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label for="number" class="control-label">{{ i18n.users.call_forward.number }}</label>
+				<div class="controls">
+					<input required id="number" type="text" name="number" class="span2" placeholder="{{ i18n.users.call_forward.placeholder }}" value="{{call_forward.number}}">
+				</div>
+			</div>
+
+			<!-- <div class="main-line">
 				{{ i18n.users.call_forward.label }}
 				<input required id="number_field" type="text" name="number" class="input-medium" placeholder="{{ i18n.users.call_forward.placeholder }}" value="{{call_forward.number}}"></input>
-			</div>
+			</div> -->
 
 			<label class="fix-left">
 				<input type="checkbox" name="require_keypress"{{#if call_forward.require_keypress}} checked{{/if}}></input>
