@@ -665,7 +665,8 @@ define(function(require){
 				resource: 'provisioner.deleteDevice',
 				data: {
 					account_id: accountId,
-					mac_address: macAddress
+					mac_address: macAddress,
+					data: {}
 				},
 				success: function(data, status) {
 					callback();
