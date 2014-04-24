@@ -1,4 +1,8 @@
 {
+	"callerId": "Caller-ID",
+	"e911": "Adresse d'urgence (E911)",
+	"failover": "Numéro de rechange",
+
 	"menuTitles": {
 		"myOffice": "Tableau de bord",
 		"users": "Utilisateurs",
