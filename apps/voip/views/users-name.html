@@ -21,7 +21,7 @@
 				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
 			</div>
 
-			<div class="email-border">
+			<div class="email-border{{#compare email '!==' username }} open{{/compare}}">
 				<div class="row-fields email-checkbox">
 					<label class="fix-left" for="notification_email">
 						<input id="notification_email" type="checkbox" name="extra.differentEmail"{{#if extra.differentEmail}} checked{{/if}}></input>
