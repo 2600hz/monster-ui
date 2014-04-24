@@ -7,11 +7,6 @@
 				<input required type="text" class="input-small" name="first_name" value="{{first_name}}" placeholder="{{i18n.users.editionForm.firstName}}"></input><input required class="input-small fix-left" type="text" name="last_name" value="{{last_name}}" placeholder="{{i18n.users.editionForm.lastName}}"></input>
 			</div>
 
-			<div class="row-fields email-group{{#unless extra.differentEmail}} hidden{{/unless}}">
-				<div class="icon-wrapper"><i class="icon-envelope"></i></div>
-				<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
-			</div>
-
 			<div class="row-fields">
 				<div class="icon-wrapper"><i class="icon-key"></i></div>
 				<span id="username">{{username}}</span>
@@ -26,12 +21,19 @@
 				<input id="vmbox_number" class="input-small" required type="text" name="extra.vmboxNumber" value="{{extra.vmbox.mailbox}}"></input>
 			</div>
 
-        	<div class="row-fields">
-            	<label class="fix-left" for="notification_email">
-                    <input id="notification_email" type="checkbox" name="extra.differentEmail"{{#if extra.differentEmail}} checked{{/if}}></input>
-					{{ i18n.users.dialogCreationUser.sendToDifferentEmail }}
-                </label>
-        	</div>
+			<div class="email-border">
+				<div class="row-fields email-checkbox">
+					<label class="fix-left" for="notification_email">
+						<input id="notification_email" type="checkbox" name="extra.differentEmail"{{#if extra.differentEmail}} checked{{/if}}></input>
+						{{ i18n.users.dialogCreationUser.sendToDifferentEmail }}
+					</label>
+				</div>
+
+				<div class="row-fields email-group{{#unless extra.differentEmail}} hidden{{/unless}}">
+					<div class="icon-wrapper"><i class="icon-envelope"></i></div>
+					<input type="email" name="extra.email" id="email" placeholder="{{i18n.users.dialogCreationUser.notificationEmail}}" value="{{email}}">
+				</div>
+			</div>
 
 			{{#if extra.mainCallflowId}}
 			<div class="row-fields">

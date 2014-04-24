@@ -288,6 +288,13 @@
 	margin-left: 7px;
 }
 
+#users_container .detail-user .email-border.open {
+	margin-bottom: 10px;
+	padding-top: 10px;
+	border: 2px dotted #A6A7A9;
+	border-radius: 4px;
+}
+
 #users_container .detail-user .icon-wrapper {
 	display: inline-block;
 	width: 50px;

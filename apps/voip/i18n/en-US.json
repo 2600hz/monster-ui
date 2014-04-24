@@ -281,7 +281,7 @@
 			"loginEmail": "Email used for Login",
 			"notificationEmail": "Notification E-mail",
 			"password": "Password (Min. 8 characters)",
-			"sendToDifferentEmail": "Send email to an alternate adress",
+			"sendToDifferentEmail": "Send emails to an alternate address",
 			"title": "Create User",
 			"vmboxAlreadyExist": "VMBox Number is already taken, please choose a different Voicemail Box Number.",
 			"vmboxNumber": "VM Box Number"
