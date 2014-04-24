@@ -19,20 +19,6 @@ define(function(require){
 			return http.status != 404;
 		},
 
-		_loadLocale: function(app, name){
-			$.ajax({
-				url: app.appPath + '/i18n/' + name + '.json',
-				dataType: 'json',
-				async: false,
-				success: function(data){
-					app.data.i18n[name] = data;
-				},
-				error: function(data, status, error){
-					console.log('_loadLocale error: ', status, error);
-				}
-			});
-		},
-
 		_requests: {},
 
 		_cacheString: function(request) {

@@ -170,99 +170,112 @@ define(function(require){
 					results.user.apps = results.user.apps || {};
 					results.account.apps = results.account.apps || {};
 
-					/* If user has a preferred language, then set the i18n flag with this value, if not, check if the account has a default preferred language */
-					var loadNewLanguage = function(language) {
-						if(language !== monster.config.language) {
-							monster._loadLocale(self, language);
+					var afterLanguageLoaded = function() {
+						var accountApps = results.account.apps,
+							fullAppList = {};
 
-							monster.config.language = language;
+						_.each(self.installedApps, function(val) {
+							fullAppList[val.id] = val;
+						});
+
+						if(results.user.appList && results.user.appList.length > 0) {
+							for(var i = 0; i < results.user.appList.length; i++) {
+								var appId = results.user.appList[i];
+								if(appId in fullAppList && appId in accountApps) {
+									var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
+									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+									if('all' in accountApps[appId]) {
+										accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
+										delete accountApps[appId].all;
+									}
+									/*****************************************************************************************/
+									if(accountApps[appId].allowed_users === 'all'
+									|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
+									|| accountAppUsers.indexOf(results.user.id) >= 0) {
+										defaultApp = fullAppList[appId].name;
+										break;
+									}
+								}
+							}
+						} else {
+							var userAppList = $.map(fullAppList, function(val) {
+								if(val.id in accountApps) {
+									var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+									if('all' in accountApps[val.id]) {
+										accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
+										delete accountApps[val.id].all;
+									}
+									/*****************************************************************************************/
+									if(accountApps[val.id].allowed_users === 'all'
+									|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
+									|| accountAppUsers.indexOf(results.user.id) >= 0) {
+										return val;
+									}
+								}
+							});
+
+							if(userAppList && userAppList.length > 0) {
+								userAppList.sort(function(a, b) {
+									return a.label < b.label ? -1 : 1;
+								});
+
+								results.user.appList = $.map(userAppList, function(val) {
+									return val.id;
+								});
+
+								defaultApp = fullAppList[results.user.appList[0]].name;
+
+								monster.request({
+									resource: 'auth.updateUser',
+									data: {
+										accountId: results.account.id,
+										userId: results.user.id,
+										data: results.user
+									},
+									success: function(_data, status) {},
+									error: function(_data, status) {}
+								});
+							}
+						}
+
+						self.currentUser = results.user;
+						// This account will remain unchanged, it should be used by non-masqueradable apps
+						self.originalAccount = results.account;
+						// This account will be overriden when masquerading, it should be used by masqueradable apps
+						self.currentAccount = $.extend(true, {}, self.originalAccount);
+
+						monster.pub('core.loadApps', {
+							defaultApp: defaultApp
+						});
+					};
+
+					/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
+					if not, check if the account has a default preferred language */
+					var loadCustomLanguage = function(language, callback) {
+						if(language !== monster.config.language) {
+							monster.apps.loadLocale(monster.apps.core, language, function() {
+								monster.apps.loadLocale(self, language, function() {
+									monster.config.language = language;
+
+									callback && callback();
+								});
+							});
+						}
+						else {
+							callback && callback();
 						}
 					};
 
 					if('language' in results.user) {
-						loadNewLanguage(results.user.language);
+						loadCustomLanguage(results.user.language, afterLanguageLoaded);
 					}
 					else if('language' in results.account) {
-						loadNewLanguage(results.account.language);
+						loadCustomLanguage(results.account.language, afterLanguageLoaded);
 					}
-
-					var accountApps = results.account.apps,
-						fullAppList = {};
-
-					_.each(self.installedApps, function(val) {
-						fullAppList[val.id] = val;
-					});
-
-					if(results.user.appList && results.user.appList.length > 0) {
-						for(var i = 0; i < results.user.appList.length; i++) {
-							var appId = results.user.appList[i];
-							if(appId in fullAppList && appId in accountApps) {
-								var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
-								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-								if('all' in accountApps[appId]) {
-									accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
-									delete accountApps[appId].all;
-								}
-								/*****************************************************************************************/
-								if(accountApps[appId].allowed_users === 'all'
-								|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
-								|| accountAppUsers.indexOf(results.user.id) >= 0) {
-									defaultApp = fullAppList[appId].name;
-									break;
-								}
-							}
-						}
-					} else {
-						var userAppList = $.map(fullAppList, function(val) {
-							if(val.id in accountApps) {
-								var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
-								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-								if('all' in accountApps[val.id]) {
-									accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
-									delete accountApps[val.id].all;
-								}
-								/*****************************************************************************************/
-								if(accountApps[val.id].allowed_users === 'all'
-								|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
-								|| accountAppUsers.indexOf(results.user.id) >= 0) {
-									return val;
-								}
-							}
-						});
-
-						if(userAppList && userAppList.length > 0) {
-							userAppList.sort(function(a, b) {
-								return a.label < b.label ? -1 : 1;
-							});
-
-							results.user.appList = $.map(userAppList, function(val) {
-								return val.id;
-							});
-
-							defaultApp = fullAppList[results.user.appList[0]].name;
-
-							monster.request({
-								resource: 'auth.updateUser',
-								data: {
-									accountId: results.account.id,
-									userId: results.user.id,
-									data: results.user
-								},
-								success: function(_data, status) {},
-								error: function(_data, status) {}
-							});
-						}
+					else {
+						afterLanguageLoaded && afterLanguageLoaded();
 					}
-
-					self.currentUser = results.user;
-					// This account will remain unchanged, it should be used by non-masqueradable apps
-					self.originalAccount = results.account;
-					// This account will be overriden when masquerading, it should be used by masqueradable apps
-					self.currentAccount = $.extend(true, {}, self.originalAccount);
-
-					monster.pub('core.loadApps', {
-						defaultApp: defaultApp
-					});
 				}
 			});
 		},

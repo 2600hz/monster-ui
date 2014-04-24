@@ -50,15 +50,6 @@ define(function(require){
 			resetTimer();
 		},
 
-		addCoreI18n: function(app) {
-			if('core' in monster.apps) {
-				var i18n = monster.apps['core'].data.i18n;
-
-				//We have to use jQuery deep copy
-				$.extend(true, app.data.i18n, i18n);
-			}
-		},
-
 		/* Set the default Language to English, and overrides it with the language from the browser. If a cookie exists, we override the language value with the value stored in the cookie) */
 		setDefaultLanguage: function() {
 			var defaultLanguage = navigator.language || 'en-US';

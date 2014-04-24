@@ -4,6 +4,8 @@ define(function(require){
 		monster = require("monster");
 
 	var apps = {
+		defaultLanguage: 'en-US',
+
 		_loadApp: function(name, callback){
             var self = this,
                 appPath = 'apps/' + name,
@@ -37,26 +39,19 @@ define(function(require){
                 _.extend(app.data, { i18n: {} });
 
 				/* en-US is the default language of Monster */
-				var defaultLanguage = 'en-US',
-					customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : defaultLanguage;
+				var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
 
-                monster._loadLocale(app, defaultLanguage);
+                self.loadLocale(app, self.defaultLanguage);
 
 				/* If the app supports the custom language, then we load its json file if its not the default one */
-                if(customLanguage !== defaultLanguage) {
-                	monster._loadLocale(app, customLanguage);
+                if(customLanguage !== self.defaultLanguage) {
+                	self.loadLocale(app, customLanguage);
                 }
-
-				/* Add global i18n to the i18n of this app */
-                monster.util.addCoreI18n(app);
-
-				/* Merge custom i18n into default i18n so that we don't display empty strings if the i18n is missing for a label */
-				app.data.i18n[customLanguage] = $.extend(true, {}, app.data.i18n[defaultLanguage], app.data.i18n[customLanguage]);
 
                 // add an active property method to the i18n array within the app.
                 _.extend(app.i18n, {
                     active: function(){
-                    	var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : defaultLanguage;
+                    	var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
 
                         return app.data.i18n[language];
                     }
@@ -85,6 +80,43 @@ define(function(require){
 			else {
 				callback && callback(monster.apps[name]);
 			}
+		},
+
+		loadLocale: function(app, language, callback) {
+			var self = this,
+				loadFile = function(afterLoading) {
+					$.ajax({
+						url: app.appPath + '/i18n/' + language + '.json',
+						dataType: 'json',
+						async: false,
+						success: function(data){
+							afterLoading && afterLoading(data);
+						},
+						error: function(data, status, error){
+							afterLoading && afterLoading({});
+
+							console.log('_loadLocale error: ', status, error);
+						}
+					});
+				};
+
+			loadFile(function(data) {
+				// If we're loading the default language, then we add it, and also merge the core i18n to it
+				if(language === self.defaultLanguage) {
+					app.data.i18n[language] = data;
+
+					// We merge the core data, which needs to be shared between apps, to the i18n of every app
+					if('core' in monster.apps) {
+						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
+					}
+				}
+				else {
+					// Otherwise, if we load a custom language, we merge the translation to the en-one
+					app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[self.defaultLanguage], data);
+				}
+
+				callback && callback();
+			});
 		}
 	};
 
