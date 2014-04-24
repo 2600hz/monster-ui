@@ -341,7 +341,10 @@
 			"directCallsOnly": "Forward direct calls only",
 			"headline": "User Call Forwarding Settings",
 			"keepCallerId": "Keep your Caller-ID",
-			"label": "Forward all calls to this number",
+			"label": "Forward all calls to" ,
+			"mobile": "A Mobile Phone",
+			"deskphone": "A Desk Phone",
+			"number": "This number",
 			"placeholder": "+14157283992",
 			"requireKeyPress": "Leave voicemails on forwarded numbers",
 			"title": "Call Forwarding"

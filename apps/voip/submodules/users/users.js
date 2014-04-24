@@ -1617,12 +1617,21 @@ define(function(require){
 				data.value ? featureTemplate.find('.content').slideDown() : featureTemplate.find('.content').slideUp();
 			});
 
+			featureTemplate.find('#phoneType').on('change', function() {
+				if ( $(this).val() === 'mobile' ) {
+					featureTemplate.find('#number').mask('+1 (999) 999-9999');
+				} else if ( $(this).val() === 'deskphone' ) {
+					featureTemplate.find('#number').mask('(999) 999-9999');
+				}
+			});
+
 			featureTemplate.find('.save').on('click', function() {
 				if(monster.ui.valid(featureForm)) {
 					var formData = form2object('call_forward_form');
 
 					formData.enabled = switchFeature.bootstrapSwitch('status');
 					formData.number = monster.util.unformatPhoneNumber(formData.number, 'keepPlus');
+					delete formData.phoneType;
 
 					var userToSave = $.extend(true, {}, currentUser, { call_forward: formData});
 
@@ -1635,6 +1644,14 @@ define(function(require){
 			});
 
 			monster.ui.prettyCheck.create(featureTemplate.find('.content'));
+
+			if ( currentUser.call_forward.number && /^(\+1)/.test(currentUser.call_forward.number) ) {
+				featureTemplate.find('#phoneType').val('mobile');
+				featureTemplate.find('#number').mask('+1 (999) 999-9999');
+			} else {
+				featureTemplate.find('#phoneType').val('deskphone');
+				featureTemplate.find('#number').mask('(999) 999-9999');
+			}
 
 			var popup = monster.ui.dialog(featureTemplate, {
 				title: currentUser.extra.mapFeatures.call_forward.title,
@@ -2403,7 +2420,7 @@ define(function(require){
 
 					_.each(results.devices, function(device) {
 						listFnDelete.push(function(callback) {
-//							self.usersDeleteDevice(device.id, function(data) {
+							// self.usersDeleteDevice(device.id, function(data) {
 							self.usersUnassignDevice(device.id, function(data) {
 								callback(null, '');
 							});
