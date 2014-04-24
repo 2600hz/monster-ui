@@ -75,7 +75,8 @@ define(function(require){
 
 			self.getBalance(function(data) {
 				var dataTemplate = {
-						amount: data.data.amount.toFixed(2) || '0.00'
+						amount: data.data.amount.toFixed(2) || '0.00',
+						uiRestrictions: monster.apps.auth.originalAccount.ui_restrictions
 					},
 					balanceMenu = $(monster.template(self, 'menu', dataTemplate));
 					args = {
