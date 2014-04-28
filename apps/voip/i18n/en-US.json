@@ -130,7 +130,13 @@
 				"menuTitle": "Restrictions",
 				"sectionTitle": "Restrictions Settings",
 				"inherit": "Inherit",
-				"deny": "Deny"
+				"deny": "Deny",
+				"matcher": {
+					"help": "Type in a number and click on \"Test\" to see which category it falls in.",
+					"placeholder": "+18554443333",
+					"button": "Test",
+					"label": "The above number matched this rule."
+				}
 			},
 			"video": {
 				"menuTitle": "Video",

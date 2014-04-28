@@ -343,6 +343,30 @@ define(function(require){
 				}
 			});
 
+			templateDevice.find('.restriction-matcher-button').on('click', function(e) {
+				e.preventDefault();
+				var number = templateDevice.find('.restriction-matcher-input').val(),
+					matched = false;
+				console.log(number);
+				templateDevice.find('.restriction-matcher-label').each(function() {
+					var label = $(this),
+						regex =  new RegExp(data.extra.restrictions[label.data('restriction')].regex);
+
+					console.log(regex)
+					if(regex.test(number)) {
+						label.show();
+						if(matched) {
+							label.fadeTo(0, 0.5);
+						} else {
+							label.fadeTo(0, 1);
+						}
+						matched = true;
+					} else {
+						label.hide();
+					}
+				});
+			})
+
 			var popup = monster.ui.dialog(templateDevice, {
 				position: ['center', 20],
 				title: popupTitle

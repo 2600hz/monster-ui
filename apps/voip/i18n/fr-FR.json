@@ -130,7 +130,13 @@
 				"menuTitle": "Restrictions",
 				"sectionTitle": "Réglages des Restrictions",
 				"inherit": "Hériter",
-				"deny": "Refuser"
+				"deny": "Refuser",
+				"matcher": {
+					"help": "Saisissez un numéro et cliquez sur \"Tester\" pour voir à quelle catégorie il appartient.",
+					"placeholder": "+18554443333",
+					"button": "Tester",
+					"label": "Le numéro ci-dessus appartient à cette catégorie."
+				}
 			},
 			"video": {
 				"menuTitle": "Vidéo",

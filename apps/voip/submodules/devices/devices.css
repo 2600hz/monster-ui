@@ -220,11 +220,11 @@
 .edit-device .title-bar .device-title .device-icon {
 	height: 75px;
 	line-height: 75px;
-	padding-top: 5px;
 }
 
 .edit-device .title-bar .device-title .device-icon > i {
 	font-size: 48px;
+	vertical-align: middle;
 }
 
 .edit-device .title-bar .device-title .device-image {
@@ -256,6 +256,24 @@
 .edit-device .content #form_device .displayed-realm {
 	line-height: 30px;
 	font-weight: bold;
+}
+
+.edit-device .restriction-matcher-div {
+	margin-right: 50px;
+	float: right;
+}
+
+.edit-device .restriction-matcher-input {
+	width: 120px;
+	margin-right: 10px;
+	margin-left: 5px;
+}
+
+.edit-device .restriction-matcher-label {
+	line-height: 30px;
+	margin-right: 50px;
+	float: right;
+	display: none;
 }
 
 /* Codecs selector */

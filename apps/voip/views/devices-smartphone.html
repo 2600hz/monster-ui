@@ -70,32 +70,32 @@
 
 			<div class="tabs-section" data-section="options">
 				<div class="control-group">
-            		<label class="control-label" for="require_keypress"></label>
-            		<div class="controls">
-                		<label>
-                    		<input id="require_keypress" type="checkbox" name="call_forward.require_keypress"{{#if call_forward.require_keypress}} checked="checked"{{/if}}></input>
-                    		{{ i18n.devices.smartphone.requireKeypress }}
-                		</label>
-            		</div>
-        		</div>
+					<label class="control-label" for="require_keypress"></label>
+					<div class="controls">
+						<label>
+							<input id="require_keypress" type="checkbox" name="call_forward.require_keypress"{{#if call_forward.require_keypress}} checked="checked"{{/if}}></input>
+							{{ i18n.devices.smartphone.requireKeypress }}
+						</label>
+					</div>
+				</div>
 				<div class="control-group">
-            		<label class="control-label" for="keep_caller_id"></label>
-            		<div class="controls">
-                		<label>
-                    		<input id="keep_caller_id" type="checkbox" name="call_forward.keep_caller_id"{{#if call_forward.keep_caller_id}} checked="checked"{{/if}}></input>
-                    		{{ i18n.devices.smartphone.keepCallerId }}
-                		</label>
-            		</div>
-        		</div>
+					<label class="control-label" for="keep_caller_id"></label>
+					<div class="controls">
+						<label>
+							<input id="keep_caller_id" type="checkbox" name="call_forward.keep_caller_id"{{#if call_forward.keep_caller_id}} checked="checked"{{/if}}></input>
+							{{ i18n.devices.smartphone.keepCallerId }}
+						</label>
+					</div>
+				</div>
 				<div class="control-group">
-            		<label class="control-label" for="hide_contact_list"></label>
-            		<div class="controls">
-                		<label>
-                    		<input id="hide_contact_list" type="checkbox" name="contact_list.exclude"{{#if contact_list.exclude}} checked="checked"{{/if}}></input>
-                    		{{ i18n.devices.smartphone.hideContactList }}
-                		</label>
-            		</div>
-        		</div>
+					<label class="control-label" for="hide_contact_list"></label>
+					<div class="controls">
+						<label>
+							<input id="hide_contact_list" type="checkbox" name="contact_list.exclude"{{#if contact_list.exclude}} checked="checked"{{/if}}></input>
+							{{ i18n.devices.smartphone.hideContactList }}
+						</label>
+					</div>
+				</div>
 			</div>
 
 			<div class="tabs-section clearfix" data-section="audio">
@@ -108,7 +108,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+								<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -117,7 +117,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.audio.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.audio}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+								<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -133,7 +133,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.video.unselectedCodecs }}</div>
 						<ul class="available-codecs connectedSortable">
 							{{#each extra.availableCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+								<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -142,7 +142,7 @@
 						<div class="box-title">{{ i18n.devices.popupSettings.video.selectedCodecs }}</div>
 						<ul class="selected-codecs connectedSortable">
 							{{#each extra.selectedCodecs.video}}
-  	  	  	  	  	  			<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
+								<li class="item-codec item-selector" data-codec="{{this.codec}}"><div class="item-handle"></div>{{ this.description }}</li>
 							{{/each}}
 						</ul>
 					</div>
@@ -150,22 +150,28 @@
 			</div>
 
 			<div class="tabs-section clearfix" data-section="restrictions">
+				<div class="restriction-matcher-div">
+					<i class="help-popover icon-question-sign icon-large" data-original-title="{{i18n.devices.popupSettings.restrictions.matcher.help}}" data-placement="top" data-toggle="tooltip"></i>
+					<input type="text" class="restriction-matcher-input" placeholder="{{i18n.devices.popupSettings.restrictions.matcher.placeholder}}" />
+					<button type="button"  class="restriction-matcher-button">{{i18n.devices.popupSettings.restrictions.matcher.button}}</button>
+				</div>
 				<div class="title">
 					{{ i18n.devices.popupSettings.restrictions.sectionTitle }}
 				</div>
 				{{#each extra.restrictions}}
 					<div class="control-group">
-                    	<label class="control-label">{{this.friendly_name}}
-                    		{{#if this.help}}
+						<label class="control-label">{{this.friendly_name}}
+							{{#if this.help}}
 								<i class="help-popover icon-question-sign" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>
-                    		{{/if}}
-                    	</label>
-                    	<div class="controls">
+							{{/if}}
+						</label>
+						<div class="controls">
 							<div class="switch" data-on="primary" data-off="danger" data-on-label="{{../i18n.devices.popupSettings.restrictions.inherit}}" data-off-label="{{../i18n.devices.popupSettings.restrictions.deny}}">
-				    			<input class="not-pretty" type="checkbox" name="call_restriction.{{@key}}.action" id="checkbox_enabled"{{#compare this.action '===' 'inherit'}} checked{{/compare}}></input>
+								<input class="not-pretty" type="checkbox" name="call_restriction.{{@key}}.action" id="checkbox_enabled"{{#compare this.action '===' 'inherit'}} checked{{/compare}}></input>
 							</div>
-                    	</div>
-                	</div>
+							<span data-restriction="{{@key}}" class="restriction-matcher-label">{{../i18n.devices.popupSettings.restrictions.matcher.label}}</span>
+						</div>
+					</div>
 				{{/each}}
 			</div>
 
@@ -188,13 +194,13 @@
 					</div>
 				{{else}}
 					<div class="help-box red-box">
-        				<div class="wrapper-icon">
-            				<i class="icon-remove icon-red"></i>
-        				</div>
-        				<div class="text-wrapper">
+						<div class="wrapper-icon">
+							<i class="icon-remove icon-red"></i>
+						</div>
+						<div class="text-wrapper">
 							{{ i18n.devices.popupSettings.callerId.noE911Numbers }}
 						</div>
-    				</div>
+					</div>
 				{{/if}}
 			</div>
 		</form>
