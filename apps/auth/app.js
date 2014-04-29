@@ -288,26 +288,23 @@ define(function(require){
 					dialog;
 
 				template.find('.recover-password').on('click', function() {
-					var object = form2object('form2object');
+					if ( monster.ui.valid(dialog.find('#password_recovery #form2object')) ) {
+						var object = form2object('form2object', '.', true);
 
-					object.account_name === '' ? delete object.account_name : true;
-					object.account_realm === '' ? delete object.account_realm : true;
-					object.phone_number === '' ? delete object.phone_number : true;
-
-					console.log(object);
-
-					monster.request({
-						resource: 'auth.recover_password',
-						data: {
-							data: object
-						},
-						success: function(data, status) {
-							console.log(data, status);
-						}
-					});
+						monster.request({
+							resource: 'auth.recover_password',
+							data: {
+								data: object
+							},
+							success: function(data, status) {
+								console.log(data, status);
+								dialog.dialog('close');
+							}
+						});
+					}
 				});
 
-				dialog = monster.ui.dialog(template, { title: 'Password Recovery' });
+				dialog = monster.ui.dialog(template, { title: self.i18n.active().recovery.title });
 			});
 
 			content.find('.login').on('click', function(event){
