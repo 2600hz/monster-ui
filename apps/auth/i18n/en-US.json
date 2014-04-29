@@ -31,6 +31,17 @@
 		"buttonLabel": "Log-in to Conference"
 	},
 
+	"recovery": {
+		"title": "Password Recovery",
+		"login": "Login",
+		"loginPlaceholder": "john@doe.com",
+		"accountNamePlaceholder": "Contoso",
+		"accountRealmPlaceholder": "sip.contoso.com",
+		"phoneNumber": "Phone Number",
+		"phoneNumberPlaceholder": "+14151234567",
+		"recoverPassword": "recover password"
+	},
+
 	"toastrMessages": {
 		"appListError": "A problem occured while loading your list of applications."
 	}

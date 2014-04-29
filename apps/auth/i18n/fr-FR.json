@@ -29,6 +29,17 @@
 		"buttonLabel": "Se connecter"
 	},
 
+	"recovery": {
+		"title": "Récupération de mot de passe",
+		"login": "Identifiant",
+		"loginPlaceholder": "alain@durand.com",
+		"accountNamePlaceholder": "Contoso",
+		"accountRealmPlaceholder": "sip.contoso.com",
+		"phoneNumber": "Numéro de téléphone",
+		"phoneNumberPlaceholder": "+33123456789",
+		"recoverPassword": "Récupérer la mot de passe"
+	},
+
 	"toastrMessages": {
 		"appListError": "Un problème est intervenu durant le chargement de vos applications."
 	}
