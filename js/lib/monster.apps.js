@@ -8,22 +8,29 @@ define(function(require){
 
 		_loadApp: function(name, callback){
             var self = this,
-                appPath = 'apps/' + name,
-                path = appPath + '/app',
-                css = path + '.css';
+                appPath = 'apps/' + name;
+
+			/* Tempo hack while API not working */
+			var externalApps = ['accounts', 'conferences', 'mobile', 'numbers', 'pbxs', 'port', 'provisioner', 'voip'];
+            /* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
+			if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
+				_.each(monster.apps.auth.installedApps, function(storedApp) {
+					/* Tempo hack while API not working */
+					if($.inArray(storedApp.name, externalApps) > -1) {
+						storedApp.source_url = 'http://webdev/monster-modules/'+storedApp.name || storedApp.source_url;
+					}
+
+					if(storedApp.name === name && 'source_url' in storedApp) {
+						appPath = storedApp.source_url;
+					}
+				});
+			}
+			/* End Snippet */
+
+            var path = appPath + '/app.js',
+            	css = appPath + '/app.css';
 
             require([path], function(app){
-            	/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-				if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
-					_.each(monster.apps.auth.installedApps, function(storedApp) {
-						if(app.name === storedApp.name && storedApp.source_url) {
-							app.sourceUrl = storedApp.source_url;
-							appPath = app.sourceUrl + '/' + appPath;
-						}
-					});
-				}
-				/* End Snippet */
-
                 _.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
 
                 _.each(app.requests, function(request, id){
