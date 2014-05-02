@@ -248,6 +248,8 @@ define(function(require){
 				});
 			}
 
+			result = monster.util.updateImagePath(result, app);
+
 			return result;
 		},
 

@@ -269,6 +269,34 @@ define(function(require){
 			}
 
 			return (h*3600 + m*60).toString();
+		},
+
+		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
+		// without this, img with relative path would  be displayed from the domain name of the browser, which we want to avoid since we're loading sources from external URLs for some apps
+		updateImagePath: function(markup, app) {
+			var $markup = $(markup),
+				listImg = $markup.find('img'),
+				result = '';
+
+			// For each image, check if the path is correct based on the appPath, and if not change it
+			for(var i = 0; i < listImg.length; i++) {
+				var	currentSrc = listImg[i].src;
+
+				// If it's an image belonging to an app, and the current path doesn't contain the right appPath
+				if(currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
+					// We replace it by the app path and append the path of the image (we strip the name of the app, since it's already part of the appPath)
+					var newPath = app.appPath + currentSrc.substring(currentSrc.indexOf(app.name) + app.name.length, currentSrc.length);
+					console.log('Please remove this console.log once we\'re sure this is not buggy! After the 5/7');
+					console.log('replacing :' + currentSrc + ' by ' + newPath);
+					listImg[i].src = newPath;
+				}
+			};
+
+			for(var i = 0; i < $markup.length; i++) {
+				result += $markup[i].outerHTML;
+			};
+
+			return result;
 		}
 	};
 
