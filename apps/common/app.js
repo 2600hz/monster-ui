@@ -6,7 +6,7 @@ define(function(require){
 	var app = {
 		name: 'common',
 
-		subModules: ['accountDropdown', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port'],
+		subModules: ['accountDropdown', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel'],
 
 		i18n: [ 'en-US', 'fr-FR' ],
 

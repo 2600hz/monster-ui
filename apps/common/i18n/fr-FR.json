@@ -262,5 +262,14 @@
             "loaHelperPartFour": "Comment signer un docment",
             "loaHelperPartFive": "électroniquement sans avoir à payer."
 		}
+	},
+
+	"chooseModel": {
+		"brandHeadline": "Sélectionner la marque du téléphone:",
+		"deviceHeadline": "Sélectionner le modèle du téléphone:",
+		"deviceSelected": "Vous avez sélectionner le {{brand}} {{model}}",
+		"missingBrand": "La marque de mon téléphone ne figure pas dans cette liste",
+		"missingDevice": "Le modèle de mon téléphone n'est pas listé",
+		"title": "Sélection du téléphone"
 	}
 }

@@ -269,5 +269,14 @@
 			"loaHelperPartFour": "How to sign documents",
 			"loaHelperPartFive": "electronically without paying."
 		}
+	},
+
+	"chooseModel": {
+		"brandHeadline": "Select the brand of the device:",
+		"deviceHeadline": "Select the model of the device:",
+		"deviceSelected": "You have selected the {{brand}} {{model}}",
+		"missingBrand": "The brand of my device is not listed here",
+		"missingDevice": "My device is not listed here",
+		"title": "Selection of the device"
 	}
 }
