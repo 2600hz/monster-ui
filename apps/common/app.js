@@ -1,20 +1,12 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster'),
-
-		controls = {
-			'accountDropdown': require('./controls/accountDropdown/accountDropdown'),
-			'buyNumbers': require('./controls/buyNumbers/buyNumbers'),
-			'callerId': require('./controls/callerId/callerId'),
-			'e911': require('./controls/e911/e911'),
-			'failover': require('./controls/failover/failover'),
-			'numbers': require('./controls/numbers/numbers'),
-			'port': require('./controls/port/port')
-		}
+		monster = require('monster');
 
 	var app = {
 		name: 'common',
+
+		subModules: ['accountDropdown', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port'],
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
@@ -38,10 +30,6 @@ define(function(require){
 			});
 		}
 	};
-
-	$.each(controls, function(k, control) {
-		$.extend(true, app, control);
-	});
 
 	return app;
 });

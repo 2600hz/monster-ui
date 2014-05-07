@@ -286,8 +286,7 @@ define(function(require){
 				if(currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
 					// We replace it by the app path and append the path of the image (we strip the name of the app, since it's already part of the appPath)
 					var newPath = app.appPath + currentSrc.substring(currentSrc.indexOf(app.name) + app.name.length, currentSrc.length);
-					console.log('Please remove this console.log once we\'re sure this is not buggy! After the 5/7');
-					console.log('replacing :' + currentSrc + ' by ' + newPath);
+
 					listImg[i].src = newPath;
 				}
 			};

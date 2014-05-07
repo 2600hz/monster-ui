@@ -1,4 +1,4 @@
-define(function(require){
+define(function(){
 	var $ = require("jquery"),
 		_ = require("underscore"),
 		monster = require("monster");
@@ -6,73 +6,117 @@ define(function(require){
 	var apps = {
 		defaultLanguage: 'en-US',
 
+		monsterizeApp: function(app, callback) {
+			var self = this,
+            	css = app.appPath + '/app.css';
+
+            _.each(app.requests, function(request, id){
+                monster._defineRequest(id, request, app);
+            });
+
+            _.each(app.subscribe, function(callback, topic){
+                var cb = typeof callback === 'string' ? app[callback] : callback;
+
+                monster.sub(topic, cb, app);
+            });
+
+            if(monster._fileExists(css)){
+                monster.css(css);
+            }
+
+            _.extend(app.data, { i18n: {} });
+
+			/* en-US is the default language of Monster */
+			var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+
+            self.loadLocale(app, self.defaultLanguage);
+
+			/* If the app supports the custom language, then we load its json file if its not the default one */
+            if(customLanguage !== self.defaultLanguage) {
+                self.loadLocale(app, customLanguage);
+            }
+
+            // add an active property method to the i18n array within the app.
+            _.extend(app.i18n, {
+                active: function(){
+                    var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+
+                    return app.data.i18n[language];
+                }
+            });
+
+            app.apiUrl = app.apiUrl || monster.config.api.default;
+
+            monster.apps[app.name] = app;
+
+            app.load(callback);
+		},
+
 		_loadApp: function(name, callback){
             var self = this,
-                appPath = 'apps/' + name;
+                appPath = 'apps/' + name,
+                customKey = 'app-' + name,
+                requirePaths = {};
 
-			/* Tempo hack while API not working */
-			var externalApps = ['accounts', 'conferences', 'mobile', 'numbers', 'pbxs', 'port', 'provisioner', 'voip'];
             /* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
 			if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
 				_.each(monster.apps.auth.installedApps, function(storedApp) {
-					/* Tempo hack while API not working */
-					if($.inArray(storedApp.name, externalApps) > -1) {
-						storedApp.source_url = 'http://webdev/monster-modules/'+storedApp.name || storedApp.source_url;
-					}
-
 					if(storedApp.name === name && 'source_url' in storedApp) {
 						appPath = storedApp.source_url;
+
+						/* If a file is hosted on a different server, its path needs to be added to the require config in order to be used later */
+						requirePaths[customKey] = storedApp.source_url + '/app.js';
+
+						require.config({
+							paths: requirePaths
+						});
 					}
 				});
 			}
-			/* End Snippet */
 
-            var path = appPath + '/app.js',
-            	css = appPath + '/app.css';
+            var path = appPath + '/app';
+
+			if(customKey in requirePaths) {
+				path = requirePaths[customKey];
+			}
 
             require([path], function(app){
-                _.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
+				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
 
-                _.each(app.requests, function(request, id){
-                    monster._defineRequest(id, request, app);
-                });
+				if('subModules' in app && app.subModules.length > 0) {
+					var toInit = app.subModules.length,
+						loadModule = function(subModule, callback) {
+							var pathSubModule = app.appPath + '/submodules/',
+								key = 'app-' + app.name + '-' + subModule,
+								path = pathSubModule + subModule + '/' + subModule,
+								paths = {};
 
-                _.each(app.subscribe, function(callback, topic){
-                    var cb = typeof callback === 'string' ? app[callback] : callback;
+							paths[key] = path;
 
-                    monster.sub(topic, cb, app);
-                });
+							require.config({
+								paths: paths
+							});
 
-                _.extend(app.data, { i18n: {} });
+							require([key], function(module) {
+								$.extend(true, app, module);
 
-				/* en-US is the default language of Monster */
-				var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+								callback && callback();
+							});
+						};
 
-                self.loadLocale(app, self.defaultLanguage);
+					_.each(app.subModules, function(subModule) {
+						loadModule(subModule, function() {
+							toInit--;
 
-				/* If the app supports the custom language, then we load its json file if its not the default one */
-                if(customLanguage !== self.defaultLanguage) {
-                	self.loadLocale(app, customLanguage);
-                }
-
-                // add an active property method to the i18n array within the app.
-                _.extend(app.i18n, {
-                    active: function(){
-                    	var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
-
-                        return app.data.i18n[language];
-                    }
-                });
-
-                app.apiUrl = app.apiUrl || monster.config.api.default;
-
-                if(monster._fileExists(css)){
-                    monster.css(css);
-                }
-
-                monster.apps[name] = app;
-
-                app.load(callback);
+							if(toInit === 0) {
+								self.monsterizeApp(app, callback);
+							}
+						});
+					});
+				}
+				else {
+					self.monsterizeApp(app, callback);
+				}
 			});
 		},
 
