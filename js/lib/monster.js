@@ -248,7 +248,9 @@ define(function(require){
 				});
 			}
 
-			result = monster.util.updateImagePath(result, app);
+			if(name.substring(0,1) !== '!') {
+				result = monster.util.updateImagePath(result, app);
+			}
 
 			return result;
 		},
