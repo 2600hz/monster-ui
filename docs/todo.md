@@ -4,5 +4,7 @@
 * How to use a Kazoo API
 * Using Monster Events
 * Using a Common control
-* I18n
+* Using Monster helpers (monster.utils, monster.ui)
 * Using Handlebars for your templates (syntax + Handlebars helpers)
+* How to use the validation in your UI
+* Adding I18n to your application
