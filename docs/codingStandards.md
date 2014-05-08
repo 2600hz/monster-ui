@@ -162,7 +162,8 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 
 ### CSS Conventions
 
-All css declaration should start by a unique id or a specific enough class to avoid impacting css in other apps.
+*	All your css should be fully compatible with at least Chrome and Firefox, and preferably with the recent versions of Internet Explorer too.
+*	Every css declaration should start by a unique id or a specific enough class to avoid impacting css in other apps.
 ```
 #skeleton_container .content { /* Good */
 	border: solid 1px green;
