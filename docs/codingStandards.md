@@ -18,13 +18,14 @@ All your files should be encoded in UTF-8. This is especially important for i18n
 
 ##### Naming
 
-We use the camel case naming convention for our variables and functions in javascript.
+We use the camel case naming convention for our variables and functions in javascript. Acronyms, such as "URL", should be treated as common words and therefore follow the camel case notation. 
 
 Example:
 ```
 {
 	myFunction: function(myParameter) {
-		var myVariable = myParameter;
+		var myVariable = myParameter,
+		    parseUrl = function(urlParser) { /* ... */ };
 		// Some code...
 	}
 }
