@@ -1,4 +1,4 @@
-## Coding standards for Monster-UI webapps
+# Coding standards for Monster-UI webapps
 
 In this document, we will go over all the code conventions used in Monster-UI. Although they are in no way mandatory, we strongly advise to follow this conventions for readability and maintenability purposes.
 
