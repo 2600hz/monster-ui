@@ -123,10 +123,16 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 ```
 {
 	"skeleton": {
-		"description": "Feel free to update the HTML template located in /apps/skeleton/views/layout.html. The Javascript to manager this app is located in /apps/skeleton/app.js.",
-		"noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/skeleton/app.css!)",
-		"searchNumbers": "Search San Francisco Numbers",
-		"welcome": "Welcome in the Skeleton App"
+		"description": "Some description",
+		"errorMessages": {
+			"someError": "Some error message",
+			"anotherError": "Another error message"
+		},
+		"multilineMessage": [
+			"first line of the multiline message",
+			"second line of the multiline message",
+			"note that arrays such as this one are rarely used"
+		]
 	}
 }
 ```
@@ -140,7 +146,12 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 *	All class attributes should be lowercase, each word separated by a dash ( - ).
 *	All data attributes should be lowercase, each word __after the data-__ separated by an underscore. The content of data attributes may follow any convention, depending on their usage. Most of the time they will be used directly in the app.js and should follow the javascript convention (camel case).
 *	When using common terms as id attributes, make sure to prepend your app name to ensure unicity.
-`<div id="skeleton_container" class="skeleton-container" data-container_type="skeletonContainer"></div>`
+
+```
+<div id="skeleton_container">
+	<div class="skeleton-content" data-container_type="skeletonContainer"></div>
+</div>
+```
 
 ##### Miscellaneous
 
