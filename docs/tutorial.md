@@ -98,6 +98,8 @@ Once your app is loaded by the framework, it will automatically call the render 
 ### Adding your app to the app store
 This is more complicated than it should be for now, but you can find how to add your app to the database [here](https://github.com/2600hz/monster-ui/blob/master/docs/appstore.md).
 
+Very important, in this example we added your demo folder to a %MAIN_DIR%/monster-modules folder. You need to have this path in the source_url key of your app document, to point to #MAIN_DIR/monster-modules/demo/.
+
 Once you added your app to the app store, and can see it in the Monster-UI, it's time to finish the example and change this app so it actually does something useful!
 
 ### Finishing the example
@@ -106,14 +108,14 @@ In order to do so, we'll add this code:
 
 	 render: function(container){
         var self = this,
-            skeletonTemplate = $(monster.template(self, 'layout')),
+            demoTemplate = $(monster.template(self, 'layout')),
             parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-        self.bindEvents(skeletonTemplate);
+        self.bindEvents(demoTemplate);
 
         (parent)
             .empty()
-            .append(skeletonTemplate);
+            .append(demoTemplate);
     },
 
     bindEvents: function(template) {
@@ -153,7 +155,7 @@ The bindEvents method defines one event, a click on the Search Button. Once you 
 The searchNumbers function is our function that will call the phone_numbers?prefix={pattern}&quantity={size} API. You will need to add the "demo.listNumbers" resource to the requests map at the top of the file so that it looks like
 
 	requests: {
-		'skeleton.listNumbers': {
+		'demo.listNumbers': {
             url: 'phone_numbers?prefix={pattern}&quantity={size}',
             verb: 'GET'
         }
@@ -181,7 +183,7 @@ results.html
         	<span>{{this}}</span>
     	{{else}}
         	<!-- In a loop, you need to use '../' to come back to the global scope and use the i18n variable -->
-        	<span>{{ ../i18n.skeleton.noNumber }}</span>
+        	<span>{{ ../i18n.demo.noNumber }}</span>
     	{{/each}}
 	</div>
 
@@ -191,8 +193,8 @@ en-US.json
 
 	{
     	"demo": {
-        	"description": "Feel free to update the HTML template located in /apps/skeleton/views/layout.html. The Javascript to manager this app is located in /apps/skeleton/app.js.",
-        	"noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/skeleton/app.css!)",
+        	"description": "Feel free to update the HTML template located in /demo/views/layout.html. The Javascript to manager this app is located in /demo/app.js.",
+        	"noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/demo/app.css!)",
         	"searchNumbers": "Search San Francisco Numbers",
         	"welcome": "Welcome in the Skeleton App"
     	}
