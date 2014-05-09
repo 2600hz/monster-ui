@@ -10,6 +10,7 @@ In this example we'll name our application 'demo'. The next thing to do, is to c
 All the JavaScript code for your app needs to be inside your app folder, in the app.js file (/apps/demo/app.js). The file from the skeleton should already be there, so you can just edit this one, and we'll try to explain all the different parts of this file.
 
 First we need to "define" the app for require js:
+
 	define(function(require){
 		/* App code in JavaScript */
 	});
@@ -17,6 +18,7 @@ First we need to "define" the app for require js:
 The first lines inside this code block are usually reserved to require the different libraries needed by your applications. This is the list of dependencies of your application. Require will always load them before executing the code of your application, so you won't have any asynchronous loading issues for the required libraries. A library will only be loaded with the first require call. Every other require call for this library will re-use the result of the first require call.
 
 Example:
+
 	var $ = require('jquery'),
         _ = require('underscore'),
         monster = require('monster'),
