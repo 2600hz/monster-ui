@@ -1,12 +1,15 @@
 # Required documents
-* Tutorial: How to build your own MonsterUI app - JR
-* How to use a Kazoo API - JR
-* Using Monster helpers (monster.utils, monster.ui) - JR
-* Using Handlebars for your templates (syntax + Handlebars helpers) - JR
+*** JR
+* Tutorial: How to build your own MonsterUI app
+* How to use a Kazoo API
+* Using Monster helpers (monster.utils, monster.ui)
+* Using Handlebars for your templates (syntax + Handlebars helpers)
 
-* Using Monster Events - Joris
-* Using a Common control - Joris
+*** Joris
+* Using Monster Events
+* Using a Common control
 
-* Adding I18n to your application - Max
-* Coding standards (CSS/HTML/JavaScript) - Max
-* How to use the validation in your UI - Max
+*** Max
+* Adding I18n to your application
+* Coding standards (CSS/HTML/JavaScript)
+* How to use the validation in your UI
