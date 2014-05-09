@@ -1,0 +1,11 @@
+# Monster-UI Documentation
+* [Tutorial: How to build your own MonsterUI app] (https://github.com/2600hz/monster-ui/blob/master/docs/tutorial.md)
+* [How to use a Kazoo API](https://github.com/2600hz/monster-ui/blob/master/docs/api.md)
+* [Using Monster helpers (monster.utils, monster.ui)](https://github.com/2600hz/monster-ui/blob/master/docs/helpers.md)
+* [Using Handlebars for your templates (syntax + Handlebars helpers)](https://github.com/2600hz/monster-ui/blob/master/docs/handlebars.md)
+* [Add your application to the app store](https://github.com/2600hz/monster-ui/blob/master/docs/appstore.md)
+* [Using Monster Events](https://github.com/2600hz/monster-ui/blob/master/docs/events.md)
+* [Using a Common control](https://github.com/2600hz/monster-ui/blob/master/docs/commonControls.md)
+* [Adding I18n to your application](https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md)
+* [Coding standards (CSS/HTML/JavaScript)](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md)
+* [How to use the validation in your UI](https://github.com/2600hz/monster-ui/blob/master/docs/validation.md)
