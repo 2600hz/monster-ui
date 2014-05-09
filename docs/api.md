@@ -32,6 +32,7 @@ app.js
 As you can see, it should be pretty self-explanatory. We created 5 resources named: 'demo.devices.list', 'demo.devices.create', 'demo.devices.update', 'demo.devices.delete', 'demo.devices.get'. We always prefix the resource name by the name of the app, and then we use a word describing which app we're using, and then finally the action. You can name them as you want but it's a good idea to follow this principle so that the request name makes sense when you use it later on in the code. The URL is always based of the default URL of your application (defined as the api_url in the app document in the database). If for some reason, you would like to use an API with a different api URL, you can add an apiRoot key in the resource definition as follow:
 
 app.js
+
 	requests: {
 		'demo.devices.list': {
 			apiRoot: 'http://yourApiURL/',
@@ -46,6 +47,7 @@ It will do the same request as the one above, except that it will request a diff
 So now that you declared all those APIs, how do you actually request them and use them in your code? Nothing works better than an example:
 
 app.js
+
 	listDevices: function(callback) {
 		var self = this;
 
@@ -74,6 +76,7 @@ As you can see, we have a monster.request helper, that allows you to request the
 We usually create a function for each API call, in order to be able to call them simply inside our code. For example, if we wanted to display the list of devices, we would do this:
 
 app.js
+
 	// In this example, we assume the mainTemplate is given as a parameter, and contains a button with the ID refreshListDevices, and that a listDevices.html view exists in the /views folder of this application)
 	displayDevices: function(mainTemplate) {
 		var self = this;
