@@ -13,5 +13,5 @@ To publish a **Common Control** in an application, follow the steps described in
 
 [link1]: https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md "Adding i18n to your application"
 [sub]: hhttps://github.com/2600hz/monster-ui/blob/master/docs/events.md#subscribe "Subscribe Documentation"
-[pub]: https://github.com/2600hz/monster-ui/blob/master/docs/events.md#pusbish "Publish Documentation"
+[pub]: https://github.com/2600hz/monster-ui/blob/master/docs/events.md#publish "Publish Documentation"
 [camelcase]: http://en.wikipedia.org/wiki/CamelCase "CamelCase Wikipedia"
