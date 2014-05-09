@@ -1,10 +1,14 @@
 # Tutorial: Create your own Monster-UI app
 The goal of this tutorial is to help any developer who wants to build an application for the Monster-UI.
-The only thing requried is to pull the Monster-UI repo at https://github.com/2600hz/monster_ui.
+At the end of this tutorial, you will have a Monster-UI app created, that you will be able to add to your UI via the app store, and that will allow you to search for phone numbers in a specific area code.
+
+Required:
+* A copy of the Monster-UI repo, that you can get [here](https://github.com/2600hz/monster-ui/)
+* Access to CouchDB to add your application to the app store
 
 ### Creating the folder
 First of all, you need to give a name for your app, it's important because we'll use this name for the directory names and for different variables inside the code.
-In this example we'll name our application 'demo'. The next thing to do, is to copy and paste the skeleton folder (monster-ui/apps/skeleton) under the apps folder, and name it "demo". Once this is done, we'll need to dive into the code and add few things to the js file.
+In this example we'll name our application 'demo'. The next thing to do, is to copy the skeleton folder (%MAIN_DIR%/monster-ui/apps/skeleton) and in this demo we'll copy it under %MAIN_DIR%/monster-modules/, and name it "demo". Once this is done, we'll need to dive into the code and add few things to the js file.
 
 ### JavaScript
 All the JavaScript code for your app needs to be inside your app folder, in the app.js file (/apps/demo/app.js). The file from the skeleton should already be there, so you can just edit this one, and we'll try to explain all the different parts of this file.
@@ -62,3 +66,146 @@ Once the list of dependencies has been created, we create an "app" object, that 
 			/* Function executer once the app initialized properly */
         }
 	};
+
+This object contains all the required attributes for a Monster-UI app to work. Let's explain each one of them:
+
+##### Name
+The is is a string with the name of your app. It needs to match the name of the folder of this app.
+
+##### i18n
+This is an array representing the supported languages. You can learn more about i18n [here](https://github.com/2600hz/monster-ui/blob/master/docs/i18n.md). The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English.
+
+##### Requests
+This is a map representing all the API calls you need in your application. For example, if your API needs to create a user, you'll need to use the /accounts/{accountId}/devices API with a PUT request. Here is an example of how you would write it:
+
+	requests: {
+		'demo.createDevice': {
+			url: 'accounts/{accountId}/devices',
+			verb: 'PUT'
+		}
+	}
+
+Usually, you would have more than one requests and you can just add them, one after the other, in this "requests" object. You can learn more about using the Kazoo APIs [here](https://github.com/2600hz/monster-ui/blob/master/docs/api.md).
+
+##### Subscribe
+This is a map representing the events that your app will listen to. It allows other Monster-UI apps to interact with your applications if you want to enable that. Most of the time, this should remain empty, since your app will not need to interact with any other Monster-UI apps.
+
+##### Required methods
+In the code example representing the "app" object, you can notice 3 methods: initApp, load, and render. Those 3 functions are needed by the Monster-UI framework to load your application and render it properly. The initApp and load methods can be copy and pasted without any changes. The initApp method initializes your app, and set some attributes for your app object, such as the current accountId, userId or the apiUrl to use. The load method allows you to do things before the render method if you need to, most of the times you should not have to modify it.
+
+Once your app is loaded by the framework, it will automatically call the render method of your application. And that's it. You can then add your own functions to the app object, and create your own UI.
+
+### Adding your app to the app store
+This is more complicated than it should be for now, but you can find how to add your app to the database [here](https://github.com/2600hz/monster-ui/blob/master/docs/appstore.md).
+
+Once you added your app to the app store, and can see it in the Monster-UI, it's time to finish the example and change this app so it actually does something useful!
+
+### Finishing the example
+Now that we covered the most important parts, we'll build this app to allow a user to search for phone numbers with an area code!
+In order to do so, we'll add this code:
+
+	 render: function(container){
+        var self = this,
+            skeletonTemplate = $(monster.template(self, 'layout')),
+            parent = _.isEmpty(container) ? $('#ws-content') : container;
+
+        self.bindEvents(skeletonTemplate);
+
+        (parent)
+            .empty()
+            .append(skeletonTemplate);
+    },
+
+    bindEvents: function(template) {
+        var self = this;
+
+        template.find('#search').on('click', function(e) {
+            self.searchNumbers(415, 15, function(listNumbers) {
+                var results = monster.template(self, 'results', listNumbers);
+
+                template
+                    .find('.results')
+                    .empty()
+                    .append(results);
+            });
+        });
+    },
+
+    searchNumbers: function(pattern, size, callback) {
+        var self = this;
+
+        monster.request({
+            resource: 'demo.listNumbers',
+            data: {
+                pattern: pattern,
+                size: size
+            },
+            success: function(listNumbers) {
+                callback && callback(listNumbers.data);
+            }
+        });
+    }
+
+Let's explain what this code does quickly. First of all the render function: it gets the HTML template called layout.html, and add it to the main div. It then bind some events. Once those events are bound, it clears the current view and show the view.
+
+The bindEvents method defines one event, a click on the Search Button. Once you click on it, it calls a function that will look for 15 numbers starting by 415, and once the API responds with 15 numbers, it adds them to a template, and display it in the ".results" div.
+
+The searchNumbers function is our function that will call the phone_numbers?prefix={pattern}&quantity={size} API. You will need to add the "demo.listNumbers" resource to the requests map at the top of the file so that it looks like
+
+	requests: {
+		'skeleton.listNumbers': {
+            url: 'phone_numbers?prefix={pattern}&quantity={size}',
+            verb: 'GET'
+        }
+    }
+
+Now that all your JavaScript code is done, you will need to add those HTML templates you used in the render and the bindEvents functions.
+You need to add the templates in the /demo/views folder.
+
+layout.html
+
+	<div id="demo_wrapper">
+    	<div class="hero-unit well">
+        	<h1>{{ i18n.demo.welcome }}</h1>
+        	<p>{{ i18n.demo.description }}</p>
+        	<button id="search" class="btn btn-primary">{{i18n.demo.searchNumbers}}</button>
+
+        	<div class="results"></div>
+    	</div>
+	</div>
+
+results.html
+
+	<div class="results-wrapper">
+    	{{#each numbers}}
+        	<span>{{this}}</span>
+    	{{else}}
+        	<!-- In a loop, you need to use '../' to come back to the global scope and use the i18n variable -->
+        	<span>{{ ../i18n.skeleton.noNumber }}</span>
+    	{{/each}}
+	</div>
+
+You can see that those templates don't use hardcoded labels, but use i18n variables. It allows your application to be internationalizable in a very simple way. The only thing to do is to add a en-US.json file in the /demo/i18n folder. It should contain the different labels you used in your templates:
+
+en-US.json
+
+	{
+    	"demo": {
+        	"description": "Feel free to update the HTML template located in /apps/skeleton/views/layout.html. The Javascript to manager this app is located in /apps/skeleton/app.js.",
+        	"noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/skeleton/app.css!)",
+        	"searchNumbers": "Search San Francisco Numbers",
+        	"welcome": "Welcome in the Skeleton App"
+    	}
+	}
+
+It's important to namespace this file by adding all your i18n keys inside an object named after your app, in order to avoid collisions with the global i18n.
+
+The very last thing to add for this demo is the CSS. It will be super simple here, but you can obviously tweak it as much as you want. It needs to be inside an app.css file at the root level of thei /demo folder.
+
+app.css
+	#demo_wrapper .results {
+    	background: red;
+	}
+
+### DING DING DING
+That's it, your app is done! You can go in the app store of the Monster-UI, select your app and add it to your account, and then start looking for numbers. You could also tweak this app to get familiar with Monster-UI, a good first thing to do would be to ask for an area code instead of always looking for 415 numbers. Have fun with it, and please let us know if you have any recommandations on how we could make this tutorial better!
