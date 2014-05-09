@@ -1,4 +1,4 @@
-## Coding standards for Monster-UI webapps
+# Coding standards for Monster-UI webapps
 
 In this document, we will go over all the code conventions used in Monster-UI. Although they are in no way mandatory, we strongly advise to follow this conventions for readability and maintenability purposes.
 
@@ -18,13 +18,14 @@ All your files should be encoded in UTF-8. This is especially important for i18n
 
 ##### Naming
 
-We use the camel case naming convention for our variables and functions in javascript.
+We use the camel case naming convention for our variables and functions in javascript. Acronyms, such as "URL", should be treated as common words and therefore follow the camel case notation. 
 
 Example:
 ```
 {
 	myFunction: function(myParameter) {
-		var myVariable = myParameter;
+		var myVariable = myParameter,
+		    parseUrl = function(urlParser) { /* ... */ };
 		// Some code...
 	}
 }
@@ -123,10 +124,16 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 ```
 {
 	"skeleton": {
-		"description": "Feel free to update the HTML template located in /apps/skeleton/views/layout.html. The Javascript to manager this app is located in /apps/skeleton/app.js.",
-		"noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/skeleton/app.css!)",
-		"searchNumbers": "Search San Francisco Numbers",
-		"welcome": "Welcome in the Skeleton App"
+		"description": "Some description",
+		"errorMessages": {
+			"someError": "Some error message",
+			"anotherError": "Another error message"
+		},
+		"multilineMessage": [
+			"first line of the multiline message",
+			"second line of the multiline message",
+			"note that arrays such as this one are rarely used"
+		]
 	}
 }
 ```
@@ -140,7 +147,12 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 *	All class attributes should be lowercase, each word separated by a dash ( - ).
 *	All data attributes should be lowercase, each word __after the data-__ separated by an underscore. The content of data attributes may follow any convention, depending on their usage. Most of the time they will be used directly in the app.js and should follow the javascript convention (camel case).
 *	When using common terms as id attributes, make sure to prepend your app name to ensure unicity.
-`<div id="skeleton_container" class="skeleton-container" data-container_type="skeletonContainer"></div>`
+
+```
+<div id="skeleton_container">
+	<div class="skeleton-content" data-container_type="skeletonContainer"></div>
+</div>
+```
 
 ##### Miscellaneous
 
@@ -151,7 +163,8 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 
 ### CSS Conventions
 
-All css declaration should start by a unique id or a specific enough class to avoid impacting css in other apps.
+*	All your css should be fully compatible with at least Chrome and Firefox, and preferably with the recent versions of Internet Explorer too.
+*	Every css declaration should start by a unique id or a specific enough class to avoid impacting css in other apps.
 ```
 #skeleton_container .content { /* Good */
 	border: solid 1px green;
