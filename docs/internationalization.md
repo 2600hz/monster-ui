@@ -52,9 +52,9 @@ var app = {
 
 The language file for your selected language will then automatically be merged into the app during the app initialization. To access it, simply call the _i18n.active()_ function, this will return you the i18n file as a JSON object.
 
-If you defined a variable, you will need to use the _monster.template()_ function to replace it by the value of your choice. 
-The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#miscellaneous)).
-The second argument should be your i18n string, prepended with a "!".
+If you defined a variable, you will need to use the _monster.template()_ function to replace it by the value of your choice.  
+The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#miscellaneous)).  
+The second argument should be your i18n string, prepended with a "!".  
 The last argument should be an object containing your variables and their values. Obviously, the keys from this object must match the variables defined in your i18n string.
 
 ```
@@ -80,7 +80,7 @@ The last argument should be an object containing your variables and their values
 
 When invoking a template with the _monster.template_ function, you always provide your app as a parameter, which then automatically passes down your i18n object to the template itself. You can then access it as any other parameters sent to the template, through the _i18n_ variable.
 
-If you defined a variable, you need to user the handlebar helper __replaceVar__ to replace it with the value of your choice.
+If you defined a variable, you need to user the handlebar helper _replaceVar_ to replace it with the value of your choice.  
 ___Note:___ for this to work, your variable __must__ be called __{{variable}}__, and there should not be more than one variable in your string. If you want to use more variables or variables with custom names, you should handle it on the javascript side and pass down your fully formated string to the template.
 
 `monster.template(self, 'layout', { username: 'Al Cohol' });`
@@ -93,3 +93,11 @@ ___Note:___ for this to work, your variable __must__ be called __{{variable}}__,
 	</div>
 </div>
 ```
+
+### How to change your language
+
+The language is defined at both the Account and User level. By default, the user uses its Account language, which may only be changed by an account administrator. Each user can however change their own language in their user settings, by clicking on their name on the top-right corner of the page (when logged in Monster-UI), and then clicking on the "Timezone & Language" section under "User Settings".
+
+![Timezone and Language settings](http://i.imgur.com/EkpuMDg.png)
+
+If the language is not defined in neither the Account nor the User, the browser language will be used.
