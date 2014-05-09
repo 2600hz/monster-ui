@@ -5,6 +5,7 @@ The Monster-UI framework allow developers to use the different Kazoo API very si
 One of the main attribute of your application, is the "requests" attribute. The Monster-UI framework takes every request defined in this map and allow you to access them with your application. Here is an example of the requests attributegiving you access to all the API needed to create a CRUD for devices:
 
 app.js
+
 	/* inside the app code */
 	requests: {
 		'demo.devices.list': {
