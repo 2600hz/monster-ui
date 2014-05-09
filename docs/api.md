@@ -1,4 +1,4 @@
-# How to use a Kazoo API a Monster-UI application
+# How to use an API in Monster-UI
 The Monster-UI framework allow developers to use the different Kazoo API very simply within their Monster-UI applications. If you would like more information on how to build an application, check [here](https://www.github.com/2600hz/monster-ui/blob/master/docs/tutorial.md).
 
 ### Listing the APIs you want to use
