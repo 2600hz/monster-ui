@@ -17,7 +17,7 @@ or with the first argument defined, to change the color and icon displayed in th
 	monster.ui.alert('error', 'This is my Error alert message');
 	monster.ui.alert('info', 'This is my Info alert message');
 
-![Image showing the different state of the alert box](http://i.imgur.com/QzKsyf8.png)
+![Image showing the different state of the alert box](http://i.imgur.com/mwmT4Z4.png)
 
 Basically calling monster.ui.alert without the first argument, will default it to "error".
 
@@ -33,7 +33,7 @@ popup.html
     });
 
 This code will display:
-![Image showing a simple Monster-UI popup](http://i.imgur.com/c2XMtjd.png)
+![Image showing a simple Monster-UI popup](http://i.imgur.com/bEdqrcJ.png)
 
 Basically a Monster-UI dialog comes with the section highlighted in red section for the title, and then a div where your template is added.
 
@@ -50,7 +50,7 @@ app.js
         });
     },
 
-![Image showing a Monster-UI confirm box to log out of the UI](http://i.imgur.com/Xh4NoRU.png)
+![Image showing a Monster-UI confirm box to log out of the UI](http://i.imgur.com/Cuuwl7b.png)
 
 The confirm helper, takes 2 required arguments and one optional:
 * First: the text you want to display in the Header of the confirm box
