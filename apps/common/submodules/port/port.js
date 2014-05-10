@@ -195,7 +195,11 @@ define(function(require){
 		*/
 		portResumeOrders: function(accountId, parent, data) {
 			var self = this,
-				container = parent.find('div#resume_orders');;
+				container = parent.find('div#resume_orders');
+
+			$.each(container.find('.row-fluid'), function(key, elem) {
+				$(elem).find('.order-key').text((parseInt($(elem).find('.order-key').text(), 10) + 1).toString());
+			});
 
 			self.portPositionDialogBox();
 
@@ -261,6 +265,8 @@ define(function(require){
 					});
 				}
 			});
+
+			self.portComingSoon(container.find('.help-links li:not(.separator) a'));
 		},
 
 		/**
@@ -288,6 +294,7 @@ define(function(require){
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
+
 					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
 						container.find('#numbers_list')[0].value = '';
 
@@ -414,6 +421,8 @@ define(function(require){
 					});
 				}
 			});
+
+			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
 		},
 
 		/**
@@ -707,6 +716,11 @@ define(function(require){
 					self.portConfirmOrder(accountId, parent, data, index);
 				}
 			});
+
+			self.portComingSoon(container.find('#upload_bill .row-fluid.info a'));
+			self.portComingSoon(container.find('#loa h4 a'));
+			self.portComingSoon(container.find('#loa p a:not(#sign_doc)'));
+			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
 		},
 
 		/**
@@ -856,6 +870,8 @@ define(function(require){
 					}
 				}
 			});
+
+			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
 		},
 
 		portPositionDialogBox: function() {
@@ -1185,6 +1201,16 @@ define(function(require){
 			}
 
 			self.portRender(args);
+		},
+
+		portComingSoon: function(context) {
+			var self = this;
+
+			context.on('click', function(event) {
+				event.preventDefault();
+
+				monster.ui.alert('Coming Soon!');
+			});
 		}
 	};
 
