@@ -22,19 +22,82 @@ This is where you will put your actual labels, messages and others by using a si
 The keys will be used in your javascript files or html templates in order to retrieve the attached values, the values being your actual text. 
 Thanks to the JSON format, you can also bind an array or an object to a key, instead of a simple string, which will allow you to better organize your i18n file.
 
+You can also add variables inside your strings by using two pairs of curly brackets: _{{myVariable}}_.
+
 Here is an example of what an i18n file would look like for a very basic app:
 ```
 {
-	"title": "Welcome to the Demo App",
+	"title": "Hello {{variable}}! Welcome to the Demo App.",
 	"description": "This is a demo app that does nothing, click on the button below to see a popup",
 	"button": "Click here!",
 	"popup": {
-		"title": "Hello World",
-		"content": "Really? \"Hello World\"? How original..."
+		"title": "Random Number Generator",
+		"content": "We've generated the random number {{number}} for you."
 	}
 }
 ```
 
 ### Use the i18n files
 
-_Work in progress_
+##### In javascript files
+
+At the top of your app.js file, you should declare the list of languages supported for your app. Again, if you started from the skeleton app, this should already be done.
+```
+var app = {
+	name: 'demoapp',
+	i18n: [ 'en-US', 'fr-FR' ],
+	/* ... */
+}
+```
+
+The language file for your selected language will then automatically be merged into the app during the app initialization. To access it, simply call the _i18n.active()_ function, this will return you the i18n file as a JSON object.
+
+If you defined a variable, you will need to use the _monster.template()_ function to replace it by the value of your choice.  
+The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#miscellaneous)).  
+The second argument should be your i18n string, prepended with a "!".  
+The last argument should be an object containing your variables and their values. Obviously, the keys from this object must match the variables defined in your i18n string.
+
+```
+{
+	/* ... */
+	bindEvents: function(template) {
+		var self = this;
+
+		template.find('#demoapp_button').on('click', function(e) {
+			var randomNumber = Math.floor(Math.random() * 100),
+				popupContent = '<p>' + monster.template(self, '!' + self.i18n.active().popup.content, { number: randomNumber }) + '</p>'
+
+			monster.ui.dialog(popupContent, {
+				title: self.i18n.active().popup.title
+			});
+		});
+	},
+	/* ... */
+}
+```
+
+##### In html templates
+
+When invoking a template with the _monster.template_ function, you always provide your app as a parameter, which then automatically passes down your i18n object to the template itself. You can then access it as any other parameters sent to the template, through the _i18n_ variable.
+
+If you defined a variable, you need to user the handlebar helper _replaceVar_ to replace it with the value of your choice.  
+___Note:___ for this to work, your variable __must__ be called __{{variable}}__, and there should not be more than one variable in your string. If you want to use more variables or variables with custom names, you should handle it on the javascript side and pass down your fully formated string to the template.
+
+`monster.template(self, 'layout', { username: 'Al Cohol' });`
+```
+<div id="demoapp_container">
+	<div class="demoapp-content">
+		<h1>{{replaceVar i18n.title username}}</h1>
+		<p>{{ i18n.description }}</p>
+		<button id="demoapp_button" type="button">{{i18n.button}}</button>
+	</div>
+</div>
+```
+
+### How to change your language
+
+The language is defined at both the Account and User level. By default, the user uses its Account language, which may only be changed by an account administrator. Each user can however change their own language in their user settings, by clicking on their name on the top-right corner of the page (when logged in Monster-UI), and then clicking on the "Timezone & Language" section under "User Settings".
+
+![Timezone and Language settings](http://i.imgur.com/EkpuMDg.png)
+
+If the language is not defined in neither the Account nor the User, the browser language will be used.
