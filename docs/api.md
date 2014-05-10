@@ -78,7 +78,8 @@ We usually create a function for each API call, in order to be able to call them
 
 app.js
 
-	// In this example, we assume the mainTemplate is given as a parameter, and contains a button with the ID refreshListDevices, and that a listDevices.html view exists in the /views folder of this application)
+	// In this example, we assume the mainTemplate is given as a parameter, and contains a button
+	// with the ID refreshListDevices, and that a listDevices.html view exists in the /views folder
 	displayDevices: function(mainTemplate) {
 		var self = this;
 
