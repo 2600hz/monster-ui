@@ -205,6 +205,7 @@ It's important to namespace this file by adding all your i18n keys inside an obj
 The very last thing to add for this demo is the CSS. It will be super simple here, but you can obviously tweak it as much as you want. It needs to be inside an app.css file at the root level of thei /demo folder.
 
 app.css
+
 	#demo_wrapper .results {
     	background: red;
 	}
