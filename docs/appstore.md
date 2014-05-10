@@ -51,9 +51,11 @@ So let's go through those different attributes:
 * `screenshots`: This is an array of image names that will be shown in the slideshow of your app page.
 
 So if you copy and paste the block of JSON above, and create a document with it, you should then be able to see the new app in the App Store, and should get a popup like this one when you click on the App in the App Store:
+
 ![Image showing details of app](http://i.imgur.com/4DZxZRR.png)
 
 Now the last thing to do would be to actually upload the different images and icon you want to use. If you go in Couch, in the document you just created, you should have the option to Upload an attachment
+
 ![Image showing upload attachment link](http://i.imgur.com/ZKGPoMu.png)
 
 Now you only need to upload your images, make sure that the names match whatever you typed in the app document. Once it's done, it will magically appear in the Monster-UI app store.
