@@ -2,9 +2,9 @@
 	<div class="block-brand">
 		<div class="title-bar clearfix">
 			<div class="title pull-left">{{i18n.chooseModel.brandHeadline}}</div>
-			{{#if show_not_listed_links}}
+		{{#if show_not_listed_links}}
 			<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingBrand}}</a>
-			{{/if}}
+		{{/if}}
 		</div>
 
 		<div class="brand-selection">
@@ -14,22 +14,22 @@
 		</div>
 	</div>
 
-	<div class="block-device">
+	<div class="block-model">
 		<div class="title-bar clearfix">
 			<div class="title pull-left">{{i18n.chooseModel.deviceHeadline}}</div>
-			{{#if show_not_listed_links}}
+		{{#if show_not_listed_links}}
 			<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingDevice}}</a>
-			{{/if}}
+		{{/if}}
 		</div>
 
-		<div class="device-selection">
+		<div class="model-selection">
 			{{#each brands}}
-				<div class="devices-brand" data-brand="{{this.name}}">
+				<div class="models-brand" data-brand="{{this.name}}">
 					{{#each this.families}}
 						{{#each this.models}}
-							<div class="device-box" data-family="{{../name}}" data-model="{{this}}">
-								<div class="device-image {{../../name}}-{{this}}"/>
-								<div class="device-name">{{this}}</div>
+							<div class="model-box" data-family="{{../name}}" data-model="{{this}}">
+								<div class="model-image {{../../name}}-{{this}}"/>
+								<div class="model-name">{{this}}</div>
 							</div>
 						{{/each}}
 					{{/each}}
@@ -38,8 +38,37 @@
 		</div>
 	</div>
 
-	<div class="actions text-right">
-		<div class="selection"></div>
-		<button class="btn btn-primary next-step">{{i18n.next}}</button>
+	<div class="block-footer">
+		<div class="block-device-info">
+			<div class="title-bar clearfix">
+				<div class="title pull-left">Device information :</div>
+			</div>
+
+			<div class="device-info">
+				<form action="" class="form form-horizontal" id="device_form">
+					<div class="control-group">
+						<label for="name" class="control-label" name="name">Device Name</label>
+						<div class="controls">
+							<input type="text" id="name" name="name">
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="mac_address" class="control-label">MAC Address</label>
+						<div class="controls">
+							<input type="text" id="mac_address" name="mac_address" placeholder="19:33:1A:B2:12:58">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="actions">
+			<div class="selection"></div>
+		{{#if show_not_listed_links}}
+			<button class="btn btn-success action-device">{{i18n.chooseModel.create}}</button>
+		{{else}}
+			<button class="btn btn-primary action-device">{{i18n.next}}</button>
+		{{/if}}
+		</div>
 	</div>
 </div>

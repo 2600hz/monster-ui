@@ -6,6 +6,7 @@ define(function(require){
 	var app = {
 
 		requests: {
+			/* Provisioner */
 			'common.chooseModel.getProvisionerData': {
 				apiRoot: monster.config.api.provisioner,
 				url: 'api/phones',
@@ -26,11 +27,11 @@ define(function(require){
 				success: function(dataProvisioner) {
 					var dataTemplate = self.chooseModelFormatProvisionerData(dataProvisioner.data);
 
-					dataTemplate.show_not_listed_links = args.showNotListedLinks;
+					dataTemplate.show_not_listed_links = args.callbackMissingBrand ? true : false;
 
 					self.chooseModelRenderProvisioner(dataTemplate, function(dataModel) {
 						args.callback(dataModel);
-					});
+					}, args.callbackMissingBrand);
 				}
 			});
 		},
@@ -63,12 +64,26 @@ define(function(require){
 			return formattedData;
 		},
 
-		chooseModelRenderProvisioner: function(dataTemplate, callback) {
+		chooseModelRenderProvisioner: function(dataTemplate, callback, callbackMissingBrand) {
 			var self = this,
 				selectedBrand,
 				selectedFamily,
 				selectedModel,
 				templateDevice = $(monster.template(self, 'chooseModel-provisioner', dataTemplate));
+
+			monster.ui.validate(templateDevice.find('#device_form'), {
+				rules: {
+					'name': {
+						required: true
+					},
+					'mac_address': {
+						required: true,
+						mac: true
+					}
+				}
+			});
+
+			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
@@ -76,56 +91,73 @@ define(function(require){
 
 				selectedBrand = brand;
 
-				$this.removeClass('unselected').addClass('selected');
-				templateDevice.find('.brand-box:not([data-brand="'+brand+'"])').removeClass('selected').addClass('unselected');
-				templateDevice.find('.devices-brand').hide();
-				templateDevice.find('.devices-brand[data-brand="'+ brand + '"]').show();
+				if ( $this.hasClass('unselected') ) {
+					$this.removeClass('unselected').addClass('selected');
+					templateDevice
+						.find('.brand-box:not([data-brand="'+brand+'"])')
+						.removeClass('selected')
+						.addClass('unselected');
 
-				templateDevice.find('.block-device').show();
+					templateDevice.find('.models-brand:not([data-brand="'+brand+'"])').slideUp(function() {
+						templateDevice.find('.models-brand[data-brand="'+ brand + '"]').fadeIn();
+					});
+				} else {
+					$this.addClass('selected');
+					templateDevice
+						.find('.brand-box:not([data-brand="'+brand+'"])')
+						.removeClass('selected')
+						.addClass('unselected');
+
+					templateDevice.find('.models-brand[data-brand="'+ brand + '"]').show(function() {
+						templateDevice.find('.block-model').slideDown();
+					});
+				}
 			});
 
-			templateDevice.find('.device-box').on('click', function() {
+			templateDevice.find('.model-box').on('click', function() {
 				var $this = $(this);
 				selectedModel = $this.data('model'),
 				selectedFamily = $this.data('family');
 
-				templateDevice.find('.device-box').removeClass('selected');
+				templateDevice.find('.model-box').removeClass('selected');
 
 				$this.addClass('selected');
 
 				templateDevice.find('.actions .selection').text(monster.template(self, '!' + self.i18n.active().chooseModel.deviceSelected, { brand: selectedBrand, model: selectedModel }));
-				templateDevice.find('.actions').show();
-			});
-
-			templateDevice.find('.device-box').dblclick(function() {
-				var $this = $(this),
-					dataModel = {
-					endpoint_brand: selectedBrand,
-					endpoint_family: $this.data('family'),
-					endpoint_model: $this.data('model')
-				};
-
-				popup.dialog('close').remove();
-
-				callback && callback(dataModel);
+				templateDevice.find('.block-footer').slideDown();
 			});
 
 			templateDevice.find('.missing-brand').on('click', function() {
 				popup.dialog('close').remove();
 
-				callback && callback();
+				callbackMissingBrand && callbackMissingBrand();
 			});
 
-			templateDevice.find('.next-step').on('click', function() {
-				var dataModel = {
-					endpoint_brand: selectedBrand,
-					endpoint_family: selectedFamily,
-					endpoint_model: selectedModel
-				};
+			templateDevice.find('.action-device').on('click', function() {
+				if(monster.ui.valid(templateDevice.find('#device_form'))) {
+					var formData = form2object('device_form'),
+						dataDevice = {
+							device_type: 'sip_device',
+							enabled: true,
+							mac_address: formData.mac_address,
+							name: formData.name,
+							provision: {
+								endpoint_brand: selectedBrand,
+								endpoint_family: selectedFamily,
+								endpoint_model: selectedModel
+							},
+							sip: {
+								password: monster.util.randomString(12),
+								realm: monster.apps.auth.currentAccount.realm,
+								username: 'user_' + monster.util.randomString(10)
+							},
+							suppress_unregister_notifications: false
+						};
 
-				popup.dialog('close').remove();
+					popup.dialog('close').remove();
 
-				callback && callback(dataModel);
+					callback && callback(dataDevice);
+				}
 			});
 
 			var popup = monster.ui.dialog(templateDevice, {
