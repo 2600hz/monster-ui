@@ -277,6 +277,7 @@
 		"deviceSelected": "You have selected the {{brand}} {{model}}",
 		"missingBrand": "The brand of my device is not listed here",
 		"missingDevice": "My device is not listed here",
-		"title": "Selection of the device"
+		"title": "Selection of the device",
+		"create": "create device"
 	}
 }

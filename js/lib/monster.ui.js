@@ -327,6 +327,11 @@ define(function(require){
 				timer: 2000
 			}, options);
 
+			// Automatically scroll to the element to let the user see the "add" animation
+			$('html, body').animate({
+				scrollTop: element.offset().top
+			}, 300);
+
 			// If the background was a gradient, only changing the background-color wouldn't work, so we hide the image temporarirly
 			element.css({
 				'background-image': 'none',

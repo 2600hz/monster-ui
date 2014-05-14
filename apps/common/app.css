@@ -52,100 +52,100 @@
 /* Devices Models */
 
 /* Yealink */
-.device-image.yealink-t18 {
+.model-image.yealink-t18 {
 	background: url('static/images/devices/yealinkt18.jpg') center no-repeat;
 }
-.device-image.yealink-t20 {
+.model-image.yealink-t20 {
 	background: url('static/images/devices/yealinkt20.jpg') center no-repeat;
 }
-.device-image.yealink-t22 {
+.model-image.yealink-t22 {
 	background: url('static/images/devices/yealinkt22.jpg') center no-repeat;
 }
-.device-image.yealink-t26 {
+.model-image.yealink-t26 {
 	background: url('static/images/devices/yealinkt26.jpg') center no-repeat;
 }
-.device-image.yealink-t28 {
+.model-image.yealink-t28 {
 	background: url('static/images/devices/yealinkt28.jpg') center no-repeat;
 }
-.device-image.yealink-t32 {
+.model-image.yealink-t32 {
 	background: url('static/images/devices/yealinkt32.jpg') center no-repeat;
 }
-.device-image.yealink-t38 {
+.model-image.yealink-t38 {
 	background: url('static/images/devices/yealinkt38.jpg') center no-repeat;
 }
 
 /* Cisco */
-.device-image.cisco-901 {
+.model-image.cisco-901 {
 	background: url('static/images/devices/cisco901.jpg') center no-repeat;
 }
-.device-image.cisco-921 {
+.model-image.cisco-921 {
 	background: url('static/images/devices/cisco921.jpg') center no-repeat;
 }
-.device-image.cisco-922 {
+.model-image.cisco-922 {
 	background: url('static/images/devices/cisco922.jpg') center no-repeat;
 }
-.device-image.cisco-941 {
+.model-image.cisco-941 {
 	background: url('static/images/devices/cisco941.jpg') center no-repeat;
 }
-.device-image.cisco-942 {
+.model-image.cisco-942 {
 	background: url('static/images/devices/cisco942.jpg') center no-repeat;
 }
-.device-image.cisco-962 {
+.model-image.cisco-962 {
 	background: url('static/images/devices/cisco962.jpg') center no-repeat;
 }
-.device-image.cisco-303 {
+.model-image.cisco-303 {
 	background: url('static/images/devices/cisco303.jpg') center no-repeat;
 }
-.device-image.cisco-501g {
+.model-image.cisco-501g {
 	background: url('static/images/devices/cisco501g.jpg') center no-repeat;
 }
-.device-image.cisco-502g {
+.model-image.cisco-502g {
 	background: url('static/images/devices/cisco502g.jpg') center no-repeat;
 }
-.device-image.cisco-504g {
+.model-image.cisco-504g {
 	background: url('static/images/devices/cisco504g.jpg') center no-repeat;
 }
-.device-image.cisco-525g {
+.model-image.cisco-525g {
 	background: url('static/images/devices/cisco525g.jpg') center no-repeat;
 }
-.device-image.cisco-525g2 {
+.model-image.cisco-525g2 {
 	background: url('static/images/devices/cisco525g2.jpg') center no-repeat;
 }
 
 /* Polycom */
-.device-image.polycom-1500 {
+.model-image.polycom-1500 {
 	background: url('static/images/devices/polycom1500.jpg') center no-repeat;
 }
-.device-image.polycom-321 {
+.model-image.polycom-321 {
 	background: url('static/images/devices/polycom321.jpg') center no-repeat;
 }
-.device-image.polycom-331 {
+.model-image.polycom-331 {
 	background: url('static/images/devices/polycom331.jpg') center no-repeat;
 }
-.device-image.polycom-335 {
+.model-image.polycom-335 {
 	background: url('static/images/devices/polycom335.jpg') center no-repeat;
 }
-.device-image.polycom-450 {
+.model-image.polycom-450 {
 	background: url('static/images/devices/polycom450.jpg') center no-repeat;
 }
-.device-image.polycom-5000 {
+.model-image.polycom-5000 {
 	background: url('static/images/devices/polycom5000.jpg') center no-repeat;
 }
-.device-image.polycom-550 {
+.model-image.polycom-550 {
 	background: url('static/images/devices/polycom550.jpg') center no-repeat;
 }
-.device-image.polycom-560 {
+.model-image.polycom-560 {
 	background: url('static/images/devices/polycom560.jpg') center no-repeat;
 }
-.device-image.polycom-6000 {
+.model-image.polycom-6000 {
 	background: url('static/images/devices/polycom6000.jpg') center no-repeat;
 }
-.device-image.polycom-650 {
+.model-image.polycom-650 {
 	background: url('static/images/devices/polycom650.jpg') center no-repeat;
 }
-.device-image.polycom-670 {
+.model-image.polycom-670 {
 	background: url('static/images/devices/polycom670.jpg') center no-repeat;
 }
-.device-image.polycom-7000 {
+.model-image.polycom-7000 {
 	background: url('static/images/devices/polycom7000.jpg') center no-repeat;
 }

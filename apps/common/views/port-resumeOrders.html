@@ -3,7 +3,7 @@
 		<h2>{{ i18n.port.resumeOrder.title }}</h2>
 		{{#each orders}}
 		<div class="row-fluid">
-			<div class="span2">{{ ../i18n.port.resumeOrder.labelOrder }} {{@index}}</div>
+			<div class="span2">{{ ../i18n.port.resumeOrder.labelOrder }} <span class="order-key">{{@index}}</span></div>
 			<div class="span5 offset1">{{carrier}}</div>
 			<div class="span4">
 				<button class="btn btn-success" data-index="{{@index}}">{{ ../i18n.port.resumeOrder.completeOrderButton }}</button>
