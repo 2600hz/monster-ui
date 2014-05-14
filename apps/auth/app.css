@@ -1,4 +1,42 @@
-#ws-content #welcome_page {
+#auth_container.login-background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background: url(static/images/bg.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/bg.jpg', sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/bg.jpg', sizingMethod='scale')";
+}
+
+#auth_container .hello {
+    text-align: center;
+}
+
+#auth_container .hello > .lobster {
+    font-size: 70px;
+    font-weight: normal;
+}
+
+#auth_container .hello .hello-subtitle {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 20px;
+}
+
+@media (min-width: 979px) {
+    #auth_container .hello {
+        margin-top: 100px;
+    }
+}
+
+#auth_container .welcome-page {
 	margin: 20px auto 0;
 	width: 960px;
 	border: 0.5px solid #000;
@@ -6,7 +44,7 @@
 	background: none repeat scroll 0 0 rgba(30, 30, 30, 0.86);
 }
 
-.login-block {
+#auth_container .login-block {
 	color: #fff;
 
 	margin: 20px auto;
@@ -16,29 +54,29 @@
 	padding: 19px;
 }
 
-.login-block .row-login:not(:first-child) {
+#auth_container .login-block .row-login:not(:first-child) {
 	margin-top: 15px
 }
 
-.login-block .btn.login {
+#auth_container .login-block .btn.login {
 	height: 30px;
 	width: 100%;
 }
 
-.login-block form {
+#auth_container .login-block form {
 	margin: 0;
 }
 
-.login-block form .row-login.input-prepend {
+#auth_container .login-block form .row-login.input-prepend {
 	width: 296px; /* Fix bootstrap glitch */
 }
 
-.login-block form .input-prepend .add-on {
+#auth_container .login-block form .input-prepend .add-on {
 	width: 17px;
 	text-align: center;
 }
 
-.login-block form .control-group:last-child {
+#auth_container .login-block form .control-group:last-child {
 	margin-bottom: 0;
 }
 
@@ -60,25 +98,25 @@
 /* Responsive design */
 /* Large desktop */
 @media (max-width: 1200px) {
-	#ws-content #welcome_page {
+	#auth_container .welcome-page {
 		width: 760px;
 	}
 }
 
 /* desktop */
 @media (max-width: 979px) {
-	#ws-content #welcome_page {
+	#auth_container .welcome-page {
 		width: 420px;
 	}
 }
 
 /* Portrait tablet to landscape */
 @media (min-width: 768px) and (max-width: 979px) {
-	.row-fluid .span6.left_div {
+	#auth_container .row-fluid .span6.left_div {
 		width: 95%;
 	}
 
-	.row-fluid .span6.right_div {
+	#auth_container .row-fluid .span6.right_div {
 		width: 95%;
 	}
 }
@@ -86,13 +124,13 @@
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
 
-    .login-block .btn.login {
+    #auth_container .login-block .btn.login {
         width: 97%;
     }
 
-	.login-block #password,
-	.login-block #account_name,
-	.login-block #login {
+	#auth_container .login-block #password,
+	#auth_container .login-block #account_name,
+	#auth_container .login-block #login {
 		width: 90%;
 	}
 }

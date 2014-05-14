@@ -11,6 +11,11 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
+			'auth.whitelabel.get': {
+				url: 'whitelabel/{domain}',
+				verb: 'GET',
+				generateError: false
+			},
 			'auth.userAuth': {
 				url: 'user_auth',
 				verb: 'PUT'
@@ -38,43 +43,113 @@ define(function(require){
 		},
 
 		subscribe: {
-			'auth.authenticate' : '_authenticate',
-			'auth.loggedIn': '_loggedIn',
-			'auth.loginClick': '_loginClick',
-			'auth.conferenceLogin': '_conferenceLogin',
-			'auth.clickLogout': '_clickLogout',
 			'auth.logout': '_logout',
+			'auth.clickLogout': '_clickLogout',
 			'auth.initApp' : '_initApp',
-			'auth.welcome' : '_login',
+			'auth.afterAuthenticate': '_afterAuthenticate'
 		},
 
 		load: function(callback){
-			var self = this;
+			var self = this,
+				mainContainer = $('#ws-content');
 
-			if(!$.cookie('monster-auth')) {
-				monster.pub('auth.welcome');
-			}
-			else {
-				var cookieData = $.parseJSON($.cookie('monster-auth'));
+			self.getWhitelabel(function(data) {
+				if(!$.cookie('monster-auth')) {
+					if('authentication' in data) {
+						self.customAuth = data.authentication;
 
-				self.authToken = cookieData.authToken;
-				self.accountId = cookieData.accountId;
-				self.userId = cookieData.userId;
-				self.isReseller = cookieData.isReseller;
-				self.resellerId = cookieData.resellerId;
-				self.installedApps = cookieData.installedApps;
+						var options = {
+							sourceUrl: self.customAuth.source_url,
+							apiUrl: self.customAuth.api_url
+						};
 
-				monster.pub('auth.loggedIn');
-			}
+						monster.apps.load(self.customAuth.name, function(app) {
+							app.render(mainContainer);
+						}, options);
+					}
+					else {
+						self.renderLoginPage(mainContainer);
+					}
+				}
+				else {
+					var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-			callback && callback(self);
+					self.authToken = cookieData.authToken;
+					self.accountId = cookieData.accountId;
+					self.userId = cookieData.userId;
+					self.isReseller = cookieData.isReseller;
+					self.resellerId = cookieData.resellerId;
+					self.installedApps = cookieData.installedApps;
+
+					self.afterLoggedIn();
+				}
+
+				callback && callback(self);
+			});
 		},
 
 		render: function(container){
 
 		},
 
-		_loggedIn: function() {
+		//Events handler
+		_clickLogout: function() {
+			var self = this;
+
+			monster.ui.confirm(self.i18n.active().confirmLogout, function() {
+				self._logout();
+			});
+		},
+
+		_initApp: function (args) {
+			var self = this,
+				restData = {
+					data: {
+						realm : self.realm,
+						accountId : self.accountId,
+						shared_token : self.authToken
+					}
+				},
+				success = function(app) {
+					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
+					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
+					app.userId = self.userId;
+
+                    args.callback && args.callback();
+				},
+				installedApp = _.find(self.installedApps, function(val) {
+					return val.name === args.app.name;
+				});
+
+			if(installedApp && installedApp.api_url) {
+				args.app.apiUrl = installedApp.api_url;
+				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
+					args.app.apiUrl += "/";
+				}
+			}
+
+			if(self.apiUrl !== args.app.apiUrl) {
+				/* Hacking the API URL */
+				monster.request({
+					apiUrl: args.app.apiUrl + 'shared_auth',
+                    data: restData,
+					resource: 'auth.sharedAuth',
+                    success: function (json, xhr) {
+						args.app.authToken = json.auth_token;
+
+						success(args.app);
+                    }
+                });
+			}
+			else {
+				args.app.authToken = this.authToken;
+
+				success(args.app);
+			}
+		},
+
+		//Methods
+		afterLoggedIn: function() {
 			var self = this;
 
 			$('#home_link').addClass('active');
@@ -82,7 +157,7 @@ define(function(require){
 			self.loadAccount();
 		},
 
-		_authenticate: function(loginData) {
+		authenticate: function(loginData) {
 			var self = this;
 
 			monster.request({
@@ -91,47 +166,54 @@ define(function(require){
 					data: loginData
 				},
 				success: function (data, status) {
-					self.accountId = data.data.account_id;
-					self.authToken = data.auth_token;
-					self.userId = data.data.owner_id;
-					self.isReseller = data.data.is_reseller;
-					self.resellerId = data.data.reseller_id;
-					if("apps" in data.data) {
-						self.installedApps = data.data.apps;
-					} else {
-						self.installedApps = [];
-						toastr.error(self.i18n.active().toastrMessages.appListError);
-					}
-
-					if($('#remember_me').is(':checked')) {
-						var cookieLogin = {
-							login: $('#login').val(),
-							accountName: loginData.account_name
-						};
-
-						$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
-					}
-					else{
-						$.cookie('monster-login', null);
-					}
-
-					var cookieAuth = {
-						language: data.data.language,
-						authToken: self.authToken,
-						accountId: self.accountId,
-						userId: self.userId,
-						isReseller: self.isReseller,
-						resellerId: self.resellerId,
-						installedApps: self.installedApps
-					};
-
-					$.cookie('monster-auth', JSON.stringify(cookieAuth));
-
-					$('#ws-content').empty();
-
-					monster.pub('auth.loggedIn');
+					self._afterAuthenticate(data);
 				}
 			});
+		},
+
+		_afterAuthenticate: function(data) {
+			var self = this;
+
+			self.accountId = data.data.account_id;
+			self.authToken = data.auth_token;
+			self.userId = data.data.owner_id;
+			self.isReseller = data.data.is_reseller;
+			self.resellerId = data.data.reseller_id;
+
+			if('apps' in data.data) {
+				self.installedApps = data.data.apps;
+			} else {
+				self.installedApps = [];
+				toastr.error(self.i18n.active().toastrMessages.appListError);
+			}
+
+			if($('#remember_me').is(':checked')) {
+				var cookieLogin = {
+					login: $('#login').val(),
+					accountName: loginData.account_name
+				};
+
+				$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
+			}
+			else{
+				$.cookie('monster-login', null);
+			}
+
+			var cookieAuth = {
+				language: data.data.language,
+				authToken: self.authToken,
+				accountId: self.accountId,
+				userId: self.userId,
+				isReseller: self.isReseller,
+				resellerId: self.resellerId,
+				installedApps: self.installedApps
+			};
+
+			$.cookie('monster-auth', JSON.stringify(cookieAuth));
+
+			$('#ws-content').empty();
+
+			self.afterLoggedIn();
 		},
 
 		loadAccount: function() {
@@ -139,7 +221,7 @@ define(function(require){
 
 			monster.parallel({
 				account: function(callback) {
-					self._getAccount(function(data) {
+					self.getAccount(function(data) {
 						callback(null, data.data);
 					},
 					function(data) {
@@ -147,7 +229,7 @@ define(function(require){
 					});
 				},
 				user: function(callback) {
-					self._getUser(function(data) {
+					self.getUser(function(data) {
 						callback(null, data.data);
 					},
 					function(data) {
@@ -280,7 +362,17 @@ define(function(require){
 			});
 		},
 
-		_login: function() {
+		renderLoginPage: function(container) {
+			var self = this;
+
+			var template = monster.template(self, 'app');
+
+			container.append(template);
+
+			self.renderLoginBlock();
+		},
+
+		renderLoginBlock: function() {
 			var self = this,
 				accountName = '',
 				realm = '',
@@ -311,21 +403,15 @@ define(function(require){
 				event.preventDefault();
 
 				if($(this).data('login_type') === 'conference') {
-					monster.pub('auth.conferenceLogin');
+					self.conferenceLogin();
 				} else {
-					monster.pub('auth.loginClick', {
+					var dataLogin = {
 						realm: realm,
 						accountName: accountName
-					});
+					};
+
+					self.loginClick(dataLogin);
 				}
-			});
-		},
-
-		_clickLogout: function() {
-			var self = this;
-
-			monster.ui.confirm(self.i18n.active().confirmLogout, function() {
-				self._logout();
 			});
 		},
 
@@ -337,97 +423,7 @@ define(function(require){
 			window.location.reload();
 		},
 
-		_initApp: function (args) {
-			var self = this,
-				restData = {
-					data: {
-						realm : self.realm,
-						accountId : self.accountId,
-						shared_token : self.authToken
-					}
-				},
-				success = function(app) {
-					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
-					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
-					app.userId = self.userId;
-
-                    args.callback && args.callback();
-				},
-				installedApp = _.find(self.installedApps, function(val) {
-					return val.name === args.app.name;
-				});
-
-			if(installedApp && installedApp.api_url) {
-				args.app.apiUrl = installedApp.api_url;
-				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
-					args.app.apiUrl += "/";
-				}
-			}
-
-			if(self.apiUrl !== args.app.apiUrl) {
-				/* Hacking the API URL */
-				monster.request({
-					apiUrl: args.app.apiUrl + 'shared_auth',
-                    data: restData,
-					resource: 'auth.sharedAuth',
-                    success: function (json, xhr) {
-						args.app.authToken = json.auth_token;
-
-						success(args.app);
-                    }
-                });
-			}
-			else {
-				args.app.authToken = this.authToken;
-
-				success(args.app);
-			}
-		},
-
-		_getAccount: function(success, error) {
-			var self = this;
-
-			monster.request({
-				resource: 'auth.getAccount',
-				data: {
-					accountId: self.accountId
-				},
-				success: function(_data) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
-				},
-				error: function(err) {
-					if(typeof error === 'function') {
-						error(err);
-					}
-				}
-			});
-		},
-
-		_getUser: function(success, error) {
-			var self = this;
-
-			monster.request({
-				resource: 'auth.getUser',
-				data: {
-					accountId: self.accountId,
-					userId: self.userId,
-				},
-				success: function(_data) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
-				},
-				error: function(err) {
-					if(typeof error === 'function') {
-						error(err);
-					}
-				}
-			});
-		},
-
-		_loginClick: function(data) {
+		loginClick: function(data) {
 			var self = this,
 				loginUsername = $('#login').val(),
 				loginPassword = $('#password').val(),
@@ -448,10 +444,12 @@ define(function(require){
 				loginData.realm = loginUsername + (typeof monster.config.realm_suffix === 'object' ? monster.config.realm_suffix.login : monster.config.realm_suffix);
 			}
 
-			monster.pub('auth.authenticate', _.extend({ credentials: hashedCreds }, loginData));
+			loginData =  _.extend({ credentials: hashedCreds }, loginData);
+
+			self.authenticate(loginData);
 		},
 
-		_conferenceLogin: function(data) {
+		conferenceLogin: function() {
 			var self = this,
 				formData = form2object('user_login_form');
 
@@ -491,6 +489,66 @@ define(function(require){
 					}
 
 					monster.ui.alert('error', errorMessage);
+				}
+			});
+		},
+
+		getAccount: function(success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'auth.getAccount',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(_data) {
+					if(typeof success === 'function') {
+						success(_data);
+					}
+				},
+				error: function(err) {
+					if(typeof error === 'function') {
+						error(err);
+					}
+				}
+			});
+		},
+
+		getUser: function(success, error) {
+			var self = this;
+
+			monster.request({
+				resource: 'auth.getUser',
+				data: {
+					accountId: self.accountId,
+					userId: self.userId,
+				},
+				success: function(_data) {
+					if(typeof success === 'function') {
+						success(_data);
+					}
+				},
+				error: function(err) {
+					if(typeof error === 'function') {
+						error(err);
+					}
+				}
+			});
+		},
+
+		getWhitelabel: function(callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'auth.whitelabel.get',
+				data: {
+					domain: window.location.hostname
+				},
+				success: function(_data) {
+					callback && callback(data.data);
+				},
+				error: function(err) {
+					callback && callback({});
 				}
 			});
 		}

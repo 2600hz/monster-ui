@@ -20,7 +20,6 @@ define(function(require){
 
 		subscribe: {
 			'core.loadApps': '_loadApps',
-			'core.landing': '_landing',
 			'core.showAppName' : 'showAppName'
 		},
 
@@ -33,8 +32,7 @@ define(function(require){
 		render: function(container){
 			var self = this,
 				template = monster.template(self, 'app', {}),
-				content = $(template),
-				isLoggedIn = true;
+				content = $(template);
 
 			document.title = 'Monster UI - ' + monster.config.company.name;
 
@@ -43,16 +41,7 @@ define(function(require){
 
 			self._render(container);
 
-			if(!$.cookie('monster-auth')) {
-				isLoggedIn = false;
-
-				self._welcome(content);
-			}
-
-			var dataLinks = {
-					isLoggedIn: isLoggedIn
-				},
-			    linksTemplate = $(monster.template(self, 'top-right-links', dataLinks));
+			var linksTemplate = $(monster.template(self, 'top-right-links'));
 
 			linksTemplate.find('a.signout').on('click', function() {
 				monster.pub('auth.clickLogout');
@@ -137,19 +126,10 @@ define(function(require){
 				/* If admin with no app, go to app store, otherwise, oh well... */
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
-				if(defaultApp && defaultApp !== '') {
-					monster.apps.load(defaultApp, function(app) {
-						self.showAppName(defaultApp);
-						app.render($('#ws-content'));
-					});
-				}
-				else {
-					var args = {
-						data: monster.apps.auth.currentUser
-					};
-
-					monster.pub('core.landing', args);
-				}
+				monster.apps.load(defaultApp, function(app) {
+					self.showAppName(defaultApp);
+					app.render($('#ws-content'));
+				});
 			}
 			else {
 				var appName = self._baseApps.pop();
@@ -164,40 +144,14 @@ define(function(require){
 			var self = this,
 				domain = window.location.hostname,
 				apiUrl = monster.config.api.default,
-				homeLink = $('#home_link'),
-				renderLanding = function() {
-					if(monster.config.appleConference) {
-						if(monster.apps['conferences']) {
-							monster.pub('conferences.show');
-						} else {
-							window.location.reload();
-						}
-					} else {
-						if($.cookie('monster-auth')) {
-							var args = {
-								data: monster.apps.auth.currentUser
-							};
-
-							monster.pub('core.landing', args);
-						}
-					}
-				};
+				homeLink = $('#home_link');
 
 			homeLink.on('click', function(e) {
 				e.preventDefault();
 				monster.pub('apploader.toggle');
-				// monster.apps.load('apploader', function(app){
-				// 	app.render();
-				// });
-				// renderLanding();
 			});
 
-			container.find('#ws-navbar .logo').on('click', function(e) {
-				e.preventDefault();
-				// renderLanding();
-			});
-
-			 container.find('#ws-navbar .current-app').on('click', function() {
+			container.find('#ws-navbar .current-app').on('click', function() {
 				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
 					app.render();
 				});
@@ -216,7 +170,6 @@ define(function(require){
 						 .text(self.i18n.active().conferencingLogo)
 						 .addClass('conferencing');
 			} else {
-				//homeLink.find('i').addClass('icon-home icon-large');
 				homeLink.find('i').addClass('icon-th icon-large');
 				monster.request({
 					resource: 'layout.getLogo',
@@ -231,34 +184,6 @@ define(function(require){
 					}
 				});
 			}
-		},
-
-		_welcome: function(container) {
-			var self = this,
-				data = {
-					companyName: monster.config.company.name || '-',
-					companyWebsite: monster.config.company.website || '',
-					learnMore: monster.config.nav.learnMore || 'http://www.2600hz.com/'
-				};
-				template = monster.template(self, 'welcome', data),
-				content = $(template);
-
-			container.append(content);
-
-			template = monster.template(self, 'welcome-left', data);
-			content = $(template);
-
-			container.find('.left_div').append(content);
-		},
-
-		_landing: function(args) {
-			var self = this,
-				parent = args.parent || $('.ws-content'),
-				html = monster.template(self, 'landing', args.data);
-
-			parent
-				.empty()
-				.append(html);
 		}
 	};
 

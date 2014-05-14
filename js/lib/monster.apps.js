@@ -52,36 +52,43 @@ define(function(){
             app.load(callback);
 		},
 
-		_loadApp: function(name, callback){
+		_loadApp: function(name, callback, options){
             var self = this,
                 appPath = 'apps/' + name,
                 customKey = 'app-' + name,
-                requirePaths = {};
+                requirePaths = {},
+                options = options || {},
+                externalUrl = options.sourceUrl || false;
 
             /* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
 			if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
-				_.each(monster.apps.auth.installedApps, function(storedApp) {
-					if(storedApp.name === name && 'source_url' in storedApp) {
-						appPath = storedApp.source_url;
+				var storedApp = _.find(monster.apps.auth.installedApps, function(installedApp) {
+					return name === installedApp.name;
+				});
 
-						/* If a file is hosted on a different server, its path needs to be added to the require config in order to be used later */
-						requirePaths[customKey] = storedApp.source_url + '/app.js';
+				if(storedApp && 'source_url' in storedApp) {
+					externalUrl = storedApp.source_url;
+				}
+			}
 
-						require.config({
-							paths: requirePaths
-						});
-					}
+			if(externalUrl) {
+				appPath = externalUrl;
+
+				requirePaths[customKey] = externalUrl + '/app';
+
+				require.config({
+					paths: requirePaths
 				});
 			}
 
-            var path = appPath + '/app';
-
-			if(customKey in requirePaths) {
-				path = requirePaths[customKey];
-			}
+            var path = customKey in requirePaths ? customKey : appPath + '/app';
 
             require([path], function(app){
 				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
+
+				if(options && 'apiUrl' in options) {
+					app.apiUrl = options.apiUrl;
+				}
 
 				if('subModules' in app && app.subModules.length > 0) {
 					var toInit = app.subModules.length,
@@ -120,13 +127,13 @@ define(function(){
 			});
 		},
 
-		load: function(name, callback) {
+		load: function(name, callback, options) {
 			var self = this;
 
 			if(!(name in monster.apps)) {
 				self._loadApp(name, function(app) {
 					callback && callback(app);
-				});
+				}, options);
 			}
 			else {
 				callback && callback(monster.apps[name]);
