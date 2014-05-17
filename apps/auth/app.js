@@ -188,10 +188,11 @@ define(function(require){
 			}
 
 			if($('#remember_me').is(':checked')) {
-				var cookieLogin = {
-					login: $('#login').val(),
-					accountName: loginData.account_name
-				};
+				var templateLogin = $('.login-block form');
+				    cookieLogin = {
+						login: templateLogin.find('#login').val(),
+						accountName: templateLogin.find('#account_name').val()
+					};
 
 				$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
 			}
