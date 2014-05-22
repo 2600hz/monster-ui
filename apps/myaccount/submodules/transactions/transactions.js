@@ -1,73 +1,30 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster'),
+		monster = require('monster');
 
-		templates = {
-			menu: 'menu',
-			transactions: 'transactions',
-			listTransactions: 'listTransactions'
-		};
-
-	var app = {
-
-		name: 'myaccount-transactions',
-
-		i18n: [ 'en-US', 'fr-FR' ],
+	var transactions = {
 
 		requests: {
-			'transactions.getMonthly': {
+			'myaccount.transactions.getMonthly': {
 				url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}',
 				verb: 'GET'
 			},
-			'transactions.getSubscriptions': {
+			'myaccount.transactions.getSubscriptions': {
 				url: 'accounts/{accountId}/transactions/subscriptions',
 				verb: 'GET'
 			},
-			'transactions.getCharges': {
+			'myaccount.transactions.getCharges': {
 				url: 'accounts/{accountId}/transactions?reason=no_call&created_from={from}&created_to={to}',
 				verb: 'GET'
 			}
 		},
 
 		subscribe: {
-			'myaccount-transactions.renderContent': '_renderContent'
+			'myaccount.transactions.renderContent': '_transactionsRenderContent'
 		},
 
-		load: function(callback){
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		render: function(callback){
-			var self = this,
-				transactionsMenu = $(monster.template(self, 'menu')),
-				args = {
-					name: self.name,
-					title: self.i18n.active().title,
-					menu: transactionsMenu,
-					weight: 10,
-					category: 'billingCategory'
-				};
-
-			monster.pub('myaccount.addSubmodule', args);
-
-			callback && callback();
-		},
-
-		_renderContent: function(args) {
+		_transactionsRenderContent: function(args) {
 			var self = this,
 				range = 31,
 				now = new Date(),
@@ -75,26 +32,20 @@ define(function(require){
 				from = to - (range * 60 * 60 * 24);
 
 			self.listTransactions(from, to, function(data) {
-				var transactionsView = $(monster.template(self, 'transactions', data)),
-					listTransactionsView = monster.template(self, 'listTransactions', data);
+				var transactionsView = $(monster.template(self, 'transactions-layout', data)),
+					listTransactionsView = monster.template(self, 'transactions-list', data);
 
 				transactionsView.find('.list-transactions').append(listTransactionsView);
 
 				monster.ui.initRangeDatepicker(range, transactionsView);
 
-				self.bindEvents(transactionsView);
+				self.transactionsBindEvents(transactionsView);
 
 				monster.pub('myaccount.renderSubmodule', transactionsView);
 			});
 		},
 
-		cleanFormData: function(module, data) {
-			delete data.extra;
-
-			return data;
-		},
-
-		formatData: function(data) {
+		transactionsFormatData: function(data) {
 			var self = this;
 
 			data.amount = parseFloat(data.amount).toFixed(2);
@@ -105,14 +56,14 @@ define(function(require){
 
 			if(data.listTransactions) {
 				$.each(data.listTransactions, function(k, v) {
-					v.reason = self.i18n.active()[v.reason ? v.reason : 'oneTimeCharge'];
+					v.reason = self.i18n.active().transactions[v.reason ? v.reason : 'oneTimeCharge'];
 				});
 			}
 
 			return data;
 		},
 
-		bindEvents: function(parent, data) {
+		transactionsBindEvents: function(parent, data) {
 			var self = this;
 
 			parent.find('.expandable').hide();
@@ -133,7 +84,7 @@ define(function(require){
 				self.listTransactions(from, to, function(data) {
 					var listTransactions = parent.find('.list-transactions').empty();
 
-					listTransactions.append(monster.template(self, 'listTransactions', data));
+					listTransactions.append(monster.template(self, 'transactions-list', data));
 
 					parent.find('.expandable').hide();
 
@@ -155,7 +106,7 @@ define(function(require){
 
 			monster.parallel({
 					monthly: function(callback) {
-						self.getMonthlyTransactions(from, to, function(dataMonthly) {
+						self.transactionsGetMonthly(from, to, function(dataMonthly) {
 							var arrayTransactions = [];
 
 							$.each(dataMonthly.data, function(k, v) {
@@ -210,7 +161,7 @@ define(function(require){
 						});
 					},
 					charges: function(callback) {
-						self.getCharges(from, to, function(dataCharges) {
+						self.transactionsGetCharges(from, to, function(dataCharges) {
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
@@ -231,18 +182,18 @@ define(function(require){
 
 					renderData.listTransactions = (results.charges).concat(results.monthly);
 
-					renderData = self.formatData(renderData);
+					renderData = self.transactionsFormatData(renderData);
 
 					callback(renderData);
 				}
 			);
 		},
 
-		getMonthlyTransactions: function(from, to, success, error) {
+		transactionsGetMonthly: function(from, to, success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'transactions.getMonthly',
+				resource: 'myaccount.transactions.getMonthly',
 				data: {
 					accountId: self.accountId,
 					from: from,
@@ -257,28 +208,11 @@ define(function(require){
 			});
 		},
 
-		getSubscriptions: function(success, error) {
+		transactionsGetCharges: function(from, to, success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'transactions.getSubscriptions',
-				data: {
-					accountId: self.accountId,
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});
-		},
-
-		getCharges: function(from, to, success, error) {
-			var self = this;
-
-			monster.request({
-				resource: 'transactions.getCharges',
+				resource: 'myaccount.transactions.getCharges',
 				data: {
 					accountId: self.accountId,
 					from: from,
@@ -294,5 +228,5 @@ define(function(require){
 		}
 	};
 
-	return app;
+	return transactions;
 });

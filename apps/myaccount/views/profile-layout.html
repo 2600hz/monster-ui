@@ -2,14 +2,14 @@
 	<div class="span12">
 		<ul class="nav nav-tabs" id="profile_settings">
 		{{#compare uiRestrictions.profile.show_user '!==' false }}
-			<li><a href="#user"><i class="icon-user"></i>{{ i18n.userSettings }}</a></li>
+			<li><a href="#user"><i class="icon-user"></i>{{ i18n.profile.userSettings }}</a></li>
 		{{/compare}}
 		{{#compare user.priv_level '===' 'admin'}}
 			{{#compare uiRestrictions.profile.show_account '!==' false }}
-				<li><a href="#account"><i class="icon-cogs"></i>{{ i18n.accountSettings }}</a></li>
+				<li><a href="#account"><i class="icon-cogs"></i>{{ i18n.profile.accountSettings }}</a></li>
 			{{/compare}}
 			{{#compare uiRestrictions.profile.show_billing '!==' false }}
-				<li><a href="#billing"><i class="icon-credit-card"></i>{{ i18n.billingSettings }}</a></li>
+				<li><a href="#billing"><i class="icon-credit-card"></i>{{ i18n.profile.billingSettings }}</a></li>
 			{{/compare}}
 		{{/compare}}
 		</ul>
@@ -20,22 +20,22 @@
 				<ul class="list-settings">
 					<li class="settings-item clearfix" data-name="email">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.email }}</span>
+							<span class="title">{{ i18n.profile.email }}</span>
 							<span class="description">{{user.email}}</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.profile.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changesSaved }}</span>
+							<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_email">
 										<div class="control-group">
-											<label class="control-label" for="email">{{ i18n.email }}</label>
+											<label class="control-label" for="email">{{ i18n.profile.email }}</label>
 											<div class="controls">
-												<input type="email" placeholder="{{ i18n.placeholderEmail }}" id="email" name="email" value="{{user.email}}" data-original_value="{{user.email}}"/>
+												<input type="email" placeholder="{{ i18n.profile.placeholderEmail }}" id="email" name="email" value="{{user.email}}" data-original_value="{{user.email}}"/>
 											</div>
 										</div>
 										<div class="control-group">
@@ -51,26 +51,26 @@
 					</li>
 					<li class="settings-item clearfix" data-name="password">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.password }}</span>
+							<span class="title">{{ i18n.profile.password }}</span>
 							<span class="description">*************</span>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.profile.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changesSaved }}</span>
+							<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_password">
 										<div class="control-group">
-											<label class="control-label" for="password">{{ i18n.newPassword }}</label>
+											<label class="control-label" for="password">{{ i18n.profile.newPassword }}</label>
 											<div class="controls">
 												<input type="password" id="password" name="password" data-original_value=""/>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="confirm_password">{{ i18n.confirmPassword }}</label>
+											<label class="control-label" for="confirm_password">{{ i18n.profile.confirmPassword }}</label>
 											<div class="controls">
 												<input type="password" id="confirm_password" name="confirm_password" data-original_value=""/>
 											</div>
@@ -88,7 +88,7 @@
 					</li>
 					<li class="settings-item clearfix" data-name="timezone">
 						<a class="settings-link clearfix">
-							<span class="title">{{ i18n.timezoneTitle }}</span>
+							<span class="title">{{ i18n.profile.timezoneTitle }}</span>
 							<div class="description">
 								<ul>
 									<li>{{user.timezone}}</li>
@@ -97,22 +97,22 @@
 							</div>
 							<span class="update">
 								<i class="icon-cog icon-small"></i>
-								<span class="text">{{ i18n.editSettings }}</span>
+								<span class="text">{{ i18n.profile.editSettings }}</span>
 							</span>
-							<span class="changes-saved">{{ i18n.changesSaved }}</span>
+							<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 						</a>
 						<div class="settings-item-content">
 							<div class="row-fluid">
 								<div class="span12">
 									<form class="form-horizontal" id="form_timezone">
                                         <div class="control-group">
-                                            <label class="control-label" for="user_timezone">{{ i18n.userTimezone }}</label>
+                                            <label class="control-label" for="user_timezone">{{ i18n.profile.userTimezone }}</label>
                                             <div class="controls">
                                                 <select id="user_timezone" name="timezone" data-original_value="{{user.timezone}}"></select>
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label" for="user_language">{{ i18n.userLanguage }}</label>
+                                            <label class="control-label" for="user_language">{{ i18n.profile.userLanguage }}</label>
                                             <div class="controls">
                                                 <select id="user_language" name="language">
                                                     <option value="auto">{{i18n.languages.auto}}</option>
@@ -142,20 +142,20 @@
 					<ul class="list-settings">
 						<li class="settings-item clearfix" data-name="account_name">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.accountName }}</span>
+								<span class="title">{{ i18n.profile.accountName }}</span>
 								<span class="description">{{account.name}}</span>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form class="form-horizontal" id="form_account_name">
 											<div class="control-group">
-												<label class="control-label" for="account_name">{{ i18n.accountName }}</label>
+												<label class="control-label" for="account_name">{{ i18n.profile.accountName }}</label>
 												<div class="controls">
 													<input type="text" id="account_name" name="name" value="{{account.name}}" data-original_value="{{account.name}}"/>
 												</div>
@@ -173,20 +173,20 @@
 						</li>
 						<li class="settings-item clearfix" data-name="account_realm">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.accountRealm }}</span>
+								<span class="title">{{ i18n.profile.accountRealm }}</span>
 								<span class="description">{{account.realm}}</span>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form class="form-horizontal" id="form_account_realm">
 											<div class="control-group">
-												<label class="control-label" for="password">{{ i18n.accountRealm }}</label>
+												<label class="control-label" for="password">{{ i18n.profile.accountRealm }}</label>
 												<div class="controls">
 													<input type="text" id="account_realm" name="realm" value="{{account.realm}}" data-original_value="{{account.realm}}"/>
 												</div>
@@ -205,28 +205,28 @@
 
 						<li class="settings-item clearfix" data-name="technical_contact">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.technicalContact }}</span>
+								<span class="title">{{ i18n.profile.technicalContact }}</span>
 								<span class="description">{{account.contact.technical.email}}{{#if account.contact.technical.number}}&nbsp;&nbsp;(<span class="number">{{formatPhoneNumber account.contact.technical.number}}</span>){{/if}}</span>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form id="form_technical_contact" class="form-horizontal">
 											<div class="control-group">
-												<label class="control-label" for="technical_contact_email">{{ i18n.technicalContactEmail }}</label>
+												<label class="control-label" for="technical_contact_email">{{ i18n.profile.technicalContactEmail }}</label>
 												<div class="controls">
-													<input type="email" id="technical_contact_email" name="contact.technical.email" value="{{account.contact.technical.email}}" placeholder="{{ i18n.placeholderEmail }}" data-original_value="{{account.contact.technical.email}}"/>
+													<input type="email" id="technical_contact_email" name="contact.technical.email" value="{{account.contact.technical.email}}" placeholder="{{ i18n.profile.placeholderEmail }}" data-original_value="{{account.contact.technical.email}}"/>
 												</div>
 											</div>
 											<div class="control-group">
-												<label class="control-label" for="technical_contact_number">{{ i18n.technicalContactNumber }}</label>
+												<label class="control-label" for="technical_contact_number">{{ i18n.profile.technicalContactNumber }}</label>
 												<div class="controls">
-													<input type="text" id="technical_contact_number" name="contact.technical.number" value="{{account.contact.technical.number}}" placeholder="{{ i18n.placeholderNumber }}" data-original_value="{{account.contact.technical.number}}"/>
+													<input type="text" id="technical_contact_number" name="contact.technical.number" value="{{account.contact.technical.number}}" placeholder="{{ i18n.profile.placeholderNumber }}" data-original_value="{{account.contact.technical.number}}"/>
 												</div>
 											</div>
 											<div class="control-group">
@@ -242,7 +242,7 @@
 						</li>
 						<li class="settings-item clearfix" data-name="account_timezone">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.timezoneTitle }}</span>
+								<span class="title">{{ i18n.profile.timezoneTitle }}</span>
 								<div class="description">
 									<ul>
 										<li>{{account.timezone}}</li>
@@ -251,27 +251,27 @@
 								</div>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form class="form-horizontal" id="form_account_timezone">
 	                                        <div class="control-group">
-	                                            <label class="control-label" for="account_timezone">{{ i18n.userTimezone }}</label>
+	                                            <label class="control-label" for="account_timezone">{{ i18n.profile.userTimezone }}</label>
 	                                            <div class="controls">
 	                                                <select id="account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
 	                                            </div>
 	                                        </div>
 	                                        <div class="control-group">
-	                                            <label class="control-label" for="account_language">{{ i18n.userLanguage }}</label>
+	                                            <label class="control-label" for="account_language">{{ i18n.profile.userLanguage }}</label>
 	                                            <div class="controls">
 	                                                <select id="account_language" name="language">
-	                                                    <option value="auto">{{i18n.languages.auto}}</option>
-	                                                    <option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
-	                                                    <option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+	                                                    <option value="auto">{{i18n.profile.languages.auto}}</option>
+	                                                    <option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.profile.languages.americanEnglish}}</option>
+	                                                    <option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.profile.languages.frenchFrench}}</option>
 	                                                </select>
 	                                            </div>
 	                                        </div>
@@ -295,30 +295,30 @@
 					<ul class="list-settings">
 						<li class="settings-item clearfix" data-name="credit_card">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.cardOnFile }}</span>
+								<span class="title">{{ i18n.profile.cardOnFile }}</span>
 								<span class="description"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</span>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form id="form_credit_card" class="form-horizontal">
 											<div class="control-group">
-												<label class="control-label" for="first_name">{{ i18n.billingName }}</label>
+												<label class="control-label" for="first_name">{{ i18n.profile.billingName }}</label>
 												<div class="controls">
 													<label class="uneditable">{{billing.first_name}} {{billing.last_name}}</label>
 													<div class="edition">
-														<input type="text" class="input-medium" id="first_name" name="first_name" value="{{billing.first_name}}" placeholder="{{ i18n.firstName }}" data-original_value="{{billing.first_name}}"/>
-														<input type="text" class="input-medium" id="last_name" name="last_name" value="{{billing.last_name}}" placeholder="{{ i18n.lastName }}" data-original_value="{{billing.last_name}}"/>
+														<input type="text" class="input-medium" id="first_name" name="first_name" value="{{billing.first_name}}" placeholder="{{ i18n.profile.firstName }}" data-original_value="{{billing.first_name}}"/>
+														<input type="text" class="input-medium" id="last_name" name="last_name" value="{{billing.last_name}}" placeholder="{{ i18n.profile.lastName }}" data-original_value="{{billing.last_name}}"/>
 													</div>
 												</div>
 											</div>
 											<div class="control-group">
-												<label class="control-label" for="credit_card_number">{{ i18n.creditCardNumber }}</label>
+												<label class="control-label" for="credit_card_number">{{ i18n.profile.creditCardNumber }}</label>
 												<div class="controls">
 													<label class="uneditable"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</label>
 													<div class="edition">
@@ -336,17 +336,17 @@
 												</div>
 											</div>
 											<div class="control-group">
-												<label class="control-label" for="expiration_date_month">{{ i18n.expirationDate }}</label>
+												<label class="control-label" for="expiration_date_month">{{ i18n.profile.expirationDate }}</label>
 												<div class="controls">
 													<label class="uneditable">{{billing.credit_card.expiration_month}}/{{billing.credit_card.expiration_year}}</label>
 													<div class="edition">
-														<input type="text" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{ i18n.month }}" data-original_value="{{billing.credit_card.expiration_month}}"/>
-														<input type="text" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{ i18n.year }}" data-original_value="{{billing.credit_card.expiration_year}}"/>
+														<input type="text" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{ i18n.profile.month }}" data-original_value="{{billing.credit_card.expiration_month}}"/>
+														<input type="text" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{ i18n.profile.year }}" data-original_value="{{billing.credit_card.expiration_year}}"/>
 													</div>
 												</div>
 											</div>
 											<div class="control-group">
-												<label class="control-label" for="security_code">{{ i18n.securityCode }}</label>
+												<label class="control-label" for="security_code">{{ i18n.profile.securityCode }}</label>
 												<div class="controls">
 													<label class="uneditable">{{billing.credit_card.fake_cvv}}</label>
 													<div class="edition">
@@ -358,7 +358,7 @@
 												<div class="controls action-bar">
 													<a href="#" class="cancel">{{ i18n.cancel }}</a>
 													<button type="submit" class="btn edition btn-success change" data-module="billing" data-field="credit_card">{{ i18n.saveChanges }}</button>
-													<button type="button" class="btn btn-primary edit-credit-card uneditable">{{ i18n.changeCard }}</button>
+													<button type="button" class="btn btn-primary edit-credit-card uneditable">{{ i18n.profile.changeCard }}</button>
 												</div>
 											</div>
 										</form>
@@ -368,28 +368,28 @@
 						</li>
 						<li class="settings-item clearfix" data-name="account_administrator">
 							<a class="settings-link clearfix">
-								<span class="title">{{ i18n.accountAdministrator }}</span>
+								<span class="title">{{ i18n.profile.accountAdministrator }}</span>
 								<span class="description">{{account.contact.billing.email}}{{#if account.contact.billing.number}}&nbsp;&nbsp;(<span class="number">{{formatPhoneNumber account.contact.billing.number}}</span>){{/if}}</span>
 								<span class="update">
 									<i class="icon-cog icon-small"></i>
-									<span class="text">{{ i18n.editSettings }}</span>
+									<span class="text">{{ i18n.profile.editSettings }}</span>
 								</span>
-								<span class="changes-saved">{{ i18n.changesSaved }}</span>
+								<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
 							</a>
 							<div class="settings-item-content">
 								<div class="row-fluid">
 									<div class="span12">
 										<form id="form_account_administrator" class="form-horizontal">
 											<div class="control-group">
-												<label class="control-label" for="account_administrator_email">{{ i18n.accountAdministratorEmail }}</label>
+												<label class="control-label" for="account_administrator_email">{{ i18n.profile.accountAdministratorEmail }}</label>
 												<div class="controls">
-													<input type="email" id="account_administrator_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{ i18n.placeholderEmail }}" data-original_value="{{account.contact.billing.email}}"/>
+													<input type="email" id="account_administrator_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{ i18n.profile.placeholderEmail }}" data-original_value="{{account.contact.billing.email}}"/>
 												</div>
 											</div>
 											<div class="control-group">
-												<label class="control-label" for="account_administrator_number">{{ i18n.accountAdministratorNumber }}</label>
+												<label class="control-label" for="account_administrator_number">{{ i18n.profile.accountAdministratorNumber }}</label>
 												<div class="controls">
-													<input type="text" id="account_administrator_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{ i18n.placeholderNumber }}"/>
+													<input type="text" id="account_administrator_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{ i18n.profile.placeholderNumber }}"/>
 												</div>
 											</div>
 											<div class="control-group">

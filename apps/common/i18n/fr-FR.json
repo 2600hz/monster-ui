@@ -263,7 +263,6 @@
             "loaHelperPartFive": "électroniquement sans avoir à payer."
 		}
 	},
-
 	"chooseModel": {
 		"brandHeadline": "Sélectionner la marque du téléphone:",
 		"deviceHeadline": "Sélectionner le modèle du téléphone:",
@@ -271,6 +270,6 @@
 		"missingBrand": "La marque de mon téléphone ne figure pas dans cette liste",
 		"missingDevice": "Le modèle de mon téléphone n'est pas listé",
 		"title": "Sélection du téléphone",
-		"Créer le téléphone"
+		"create": "Créer le téléphone"
 	}
 }

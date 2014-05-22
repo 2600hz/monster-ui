@@ -1,72 +1,30 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster'),
+		monster = require('monster');
 
-		templates = {
-			menu: 'menu',
-			servicePlan: 'servicePlan',
-		};
-
-	var app = {
-
-		name: 'myaccount-servicePlan',
-
-		i18n: [ 'en-US', 'fr-FR' ],
+	var servicePlan = {
 
 		requests: {
-			'servicePlan.get': {
+			'myaccount.servicePlan.get': {
 				url: 'accounts/{accountId}/service_plans/current',
 				verb: 'GET'
 			},
-			'servicePlan.getSubscription': {
+			'myaccount.servicePlan.getSubscription': {
 				url: 'accounts/{accountId}/transactions/subscriptions',
 				verb: 'GET'
 			},
-			'servicePlan.downloadCsv': {
+			'myaccount.servicePlan.downloadCsv': {
 				url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv',
 				verb: 'GET'
 			}
 		},
 
 		subscribe: {
-			'myaccount-servicePlan.renderContent': '_renderContent'
+			'myaccount.servicePlan.renderContent': '_servicePlanRenderContent'
 		},
 
-		load: function(callback){
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		render: function(callback){
-			var self = this,
-				servicePlanMenu = $(monster.template(self, 'menu')),
-				args = {
-					name: self.name,
-					title: self.i18n.active().title,
-					menu: servicePlanMenu,
-					weight: 20,
-					category: 'billingCategory'
-				};
-
-			monster.pub('myaccount.addSubmodule', args);
-
-			callback && callback();
-		},
-
-		_renderContent: function(args) {
+		_servicePlanRenderContent: function(args) {
 			var self = this,
 				defaults = {
 					totalAmount: 0,
@@ -76,7 +34,7 @@ define(function(require){
 
 			monster.parallel({
 					servicePlan: function(callback) {
-						self.getServicePlan(function(data) {
+						self.servicePlanGet(function(data) {
 							var dataArray = [],
 								totalAmount = 0;
 
@@ -88,7 +46,7 @@ define(function(require){
 
 										if(monthlyCharges > 0) {
 											dataArray.push({
-												service: self.i18n.active().titles[itemName],
+												service: self.i18n.active().servicePlan.titles[itemName],
 												rate: item.rate || 0,
 												quantity: item.quantity || 0,
 												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
@@ -114,7 +72,7 @@ define(function(require){
 						});
 					},
 					subscription: function(callback) {
-						self.getSubscription(function(data) {
+						self.servicePlanGetSubscription(function(data) {
 							if(data.data.length > 0) {
 								renderData.dueDate = monster.util.toFriendlyDate(data.data[0].next_bill_date, 'short');
 							}
@@ -124,28 +82,22 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var servicePlanView = $(monster.template(self, 'servicePlan', renderData));
+					var servicePlanView = $(monster.template(self, 'servicePlan-layout', renderData));
 
-					self.bindEvents(servicePlanView);
+					self.servicePlanBindEvents(servicePlanView);
 
 					monster.pub('myaccount.renderSubmodule', servicePlanView);
 				}
 			);
 		},
 
-		cleanFormData: function(module, data) {
+		servicePlanCleanFormData: function(module, data) {
 			delete data.extra;
 
 			return data;
 		},
 
-		formatData: function(data) {
-			var self = this;
-
-			return data;
-		},
-
-		bindEvents: function(parent) {
+		servicePlanBindEvents: function(parent) {
 			var self = this;
 
 			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
@@ -156,11 +108,11 @@ define(function(require){
 		},
 
 		//utils
-		downloadCsv: function(success, error) {
+		servicePlanDownloadCsv: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'servicePlan.downloadCsv',
+				resource: 'myaccount.servicePlan.downloadCsv',
 				data: {
 					accountId: self.accountId
 				},
@@ -173,11 +125,11 @@ define(function(require){
 			});
 		},
 
-		getServicePlan: function(success, error) {
+		servicePlanGet: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'servicePlan.get',
+				resource: 'myaccount.servicePlan.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -190,11 +142,11 @@ define(function(require){
 			});
 		},
 
-		getSubscription: function(success, error) {
+		servicePlanGetSubscription: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'servicePlan.getSubscription',
+				resource: 'myaccount.servicePlan.getSubscription',
 				data: {
 					accountId: self.accountId
 				},
@@ -208,5 +160,5 @@ define(function(require){
 		}
 	};
 
-	return app;
+	return servicePlan;
 });

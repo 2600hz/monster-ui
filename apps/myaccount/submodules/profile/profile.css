@@ -128,21 +128,6 @@
     display: none;
 }
 
-.profile-content-wrapper .list-settings .card-type.visa {
-    background: url(static/visa.png);
-}
-
-.profile-content-wrapper .list-settings .card-type.amex {
-    background: url(static/amex.png);
-}
-
-.profile-content-wrapper .list-settings .card-type.discover {
-    background: url(static/discover.png);
-}
-
-.profile-content-wrapper .list-settings .card-type.mastercard {
-    background: url(static/mastercard.png);
-}
 
 .profile-content-wrapper .list-settings .controls button, .profile-content-wrapper .list-settings .controls input {
 	margin-right: 5px;

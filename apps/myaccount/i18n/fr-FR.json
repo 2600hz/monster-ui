@@ -7,5 +7,157 @@
 
     "accountCategory": "Compte",
     "billingCategory": "Facturation",
-    "trunkingCategory": "Limite d'appels"
+    "trunkingCategory": "Limite d'appels",
+
+    "profile": {
+		"title": "Réglages",
+		"profile": "Réglages",
+		"editSettings": "Changer",
+		"email": "Email",
+		"password": "Mot de Passe",
+		"newPassword": "Nouveau Mot de Passe",
+		"confirmPassword": "Confirmer MDP",
+		"saveChanges": "Sauvegarder",
+		"changesSaved": "Changements sauvegardés!",
+
+		"placeholderEmail": "jon_doe@company.com",
+		"placeholderNumber": "4152223333",
+
+		"passwordsNotMatching": "Les mots de passes entrés ne correspondent pas",
+		"userSettings": "Réglages utilisateurs",
+		"accountSettings": "Réglages du compte",
+		"billingSettings": "Réglages de facturation",
+		"accountRealm": "Royaume du compte",
+		"accountName": "Nom de compte",
+		"accountAdministrator": "Contact Facturation",
+		"accountAdministratorEmail": "Email",
+		"accountAdministratorNumber": "Numéro de téléphone",
+		"technicalContact": "Contact technique",
+		"technicalContactEmail": "Email",
+		"technicalContactNumber": "Numéro de téléphone",
+		"cardOnFile": "Carte bleue",
+		"creditCardNumber": "Numéro",
+		"expirationDate": "Date d'expiration",
+		"year": "YYYY",
+		"month": "MM",
+		"securityCode": "Code de sécurité / CVV",
+		"billingName": "Nom",
+		"firstName": "Prénom",
+		"lastName": "Nom de famille",
+		"changeCard": "Changer carte",
+		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",
+		"userTimezone": "Fuseau horaire",
+		"userLanguage": "Langage",
+		"timezoneTitle": "Fuseau horaire & langage"
+    },
+
+    "balance": {
+		"availableCredits": "Crédits disponibles",
+    	"minutesUsed": "Minutes utilisées",
+    	"callCharges": "Frais d'appels",
+    	"activeCall": "en cours",
+
+    	"title": "Par Minute",
+    	"addCreditOne": "Ajout de crédits",
+    	"helpAddCreditOne": "Rajouter des crédits à votre balance actuelle afin de pouvoir activer l'e911 ou le Caller-ID sur des numéros, ou bien pour placer des appels Par Minute.",
+    	"autoRecharge": "Recharge automatique",
+    	"whenBalanceFalls": "Quand votre balance est en dessous de",
+    	"recharge": "Recharger ce compte avec",
+    	"helpAutoRecharge": "En autorisant l'Auto Recharge, vous définissez combien de crédits vous voulez rajouter une fois qu'un palier minimum est franchi. Cela vous permettra de ne plus avoir à rajouter des crédits manuellement.",
+    	"helpWhenBalanceFalls": "Entrez le palier minimum de crédits à atteindre avant de devoir recharger ce compte",
+    	"helpRecharge": "Entrez combien de crédits vous souhaitez rajouter à ce compte lorsque le palier est atteint.",
+    	"creditBalance": "Balance actuelle",
+    	"creditBalance": "Balance actuelle",
+    	"payPerMinute": "Le paiement à la minute vous permet de ne payer que ce que vous utilisez. Déposez de l'argent sur votre compte pour commencer et payer en fonction de votre utilisation ensuite.",
+    	"currentBalance": "Balance actuelle: $",
+    	"turnoffRechargeConfirm": "En supprimant la recharge automatique, vous devrez rajouter des crédits à votre compte manuellement afin de continuer à placer des appels par-minute ou pour activer des fonctionnalités comme l'e911 ou le Caller-ID. Continuer quand même?",
+    	"amount": "Montant",
+    	"confirm": "Confirmer",
+    	"placeholderThresholdRecharge": "5.00",
+    	"placeholderRecharge": "50.00",
+    	"placeholderAmount": "10.00",
+    	"addCredit": "Ajouter de l'argent",
+    	"invalidAmount": "Le montant de crédits à rajouter est invalide!",
+    	"creditsAdded": "Vous venez d'ajouter _Variable__ à votre balance!",
+    	"autoRechargeEnabled": "La recharge automatique de vos crédits est désormais activée!",
+    	"autoRechargeCancelled": "Vous avez annulé la recharge automatique de crédits avec succès.",
+    	"addCreditDialogTitle": "Add Credits",
+
+    	"dateColumn": "Date",
+    	"directionColumn": "Direction",
+    	"durationColumn": "Minutes",
+    	"amountColumn": "Montant",
+    	"fromColumn": "De",
+    	"toColumn": "À",
+    	"accountColumn": "Compte"
+    },
+
+    "transactions": {
+		"title": "Transactions",
+		"titleHeader": "Historique des transactions",
+		"billingCycle": "Cycle de facturation",
+		"to": "à",
+		"oneTimeCharge": "Paiement unique",
+		"monthlyCharge": "Frais mensuels",
+		"serviceCharge": "Service Charge (Prorated)",
+
+		"noData": "Pas de transactions durant cet intervalle !",
+
+		"serviceTitle": "Service",
+		"discount": "Réduction",
+		"rateTitle": "Taux",
+		"quantityTitle": "Quantité",
+		"monthlyChargesTitle": "Frais mensuels",
+
+		"per_minute_call": "Appels à la minute",
+		"sub_account_per_minute_call": "Per-Minute Call (Sous-comptes)",
+		"feature_activation": "Nouvelle fonctionnalité",
+		"sub_account_feature_activation": "Nouvelle fonctionnalité (Sous-comptes)",
+		"number_activation": "Activation de numéro",
+		"sub_account_number_activation": "Activation de numéro (Sous-comptes)",
+		"manual_addition": "Ajout manuel",
+		"sub_account_manual_addition": "Ajout manuel (Sous-comptes)",
+		"admin_discretion": "Opération d'administrateur"
+    },
+
+    "servicePlan": {
+		"title": "Abonnement",
+		"titleHeader": "Abonnement",
+		"dueOn": "Avant le",
+
+		"serviceTitle": "Service",
+		"discount": "Réduction",
+		"rateTitle": "Tarif",
+		"quantityTitle": "Quantité",
+		"monthlyChargesTitle": "Frais mensuels",
+
+		"titles": {
+			"twoway_trunks": "Twoway Trunks",
+			"inbound_trunks": "Inbound Trunks",
+			"did_us": "US DIDs",
+			"sip_devices": "Appareils SIP",
+			"inbound_cnam": "Inbound CNAM",
+			"e911": "E911",
+			"cnam": "CNAM",
+			"port": "Port",
+			"tollfree_us": "US Tollfree"
+		}
+    },
+
+    "trunks": {
+		"title": "Trunks",
+		"outbound": "Sortants",
+		"inbound": "Entrants",
+		"outboundTitle": "Limite d'appels sortants",
+		"inboundTitle": "Limite d'appels entrants",
+		"inboundCalling": "Appels entrants",
+		"perMonth": "/mois",
+		"quantity": "Quantité",
+		"trunks": "Trunks",
+		"twoWayCalling": "Appels sortants",
+		"updateLimits": "Mettre à jour",
+		"helpTwoway": "Ceci contrôle le nombre d'appels sortants simultanés que votre système permet.",
+		"helpInbound": "Ceci contrôle le nombre d'appels entrants simultanés que votre système permet.",
+		"monthlyCharges": "Frais mensuels"
+    }
 }

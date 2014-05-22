@@ -1,3 +1,9 @@
+@import url('submodules/balance/balance.css');
+@import url('submodules/profile/profile.css');
+@import url('submodules/servicePlan/servicePlan.css');
+@import url('submodules/transactions/transactions.css');
+@import url('submodules/trunks/trunks.css');
+
 /* My account */
 #myaccount {
 	width: 100%;
@@ -8,7 +14,7 @@
 	position: absolute;
 	z-index: 20;
 
-	box-shadow:		 0px 5px 5px rgba(50, 50, 50, 0.75);
+	box-shadow: 0px 5px 5px rgba(50, 50, 50, 0.75);
 }
 
 #myaccount > .container-fluid {
@@ -208,4 +214,20 @@
 	#myaccount .myaccount-content {
 		height: 492px;
 	}
+}
+
+.profile-content-wrapper .list-settings .card-type.visa {
+    background: url(static/visa.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.amex {
+    background: url(static/amex.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.discover {
+    background: url(static/discover.png);
+}
+
+.profile-content-wrapper .list-settings .card-type.mastercard {
+    background: url(static/mastercard.png);
 }

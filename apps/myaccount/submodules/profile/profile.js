@@ -4,94 +4,49 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr'),
 		timezone = require('monster-timezone'),
-		chosen = require('chosen'),
+		chosen = require('chosen');
 
-		templates = {
-			menu: 'menu',
-			profile: 'profile'
-		};
-
-	var app = {
-
-		name: 'myaccount-profile',
-
-		i18n: [ 'en-US', 'fr-FR' ],
+	var profile = {
 
 		requests: {
-			'profile.getUser': {
+			'myaccount.profile.getUser': {
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'GET'
 			},
-			'profile.updateUser': {
+			'myaccount.profile.updateUser': {
 				url: 'accounts/{accountId}/users/{userId}',
 				verb: 'POST'
 			},
-			'profile.getAccount': {
+			'myaccount.profile.getAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'GET'
 			},
-			'profile.updateAccount': {
+			'myaccount.profile.updateAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'POST'
 			},
-			'profile.getBilling': {
+			'myaccount.profile.getBilling': {
 				url: 'accounts/{accountId}/braintree/customer',
 				verb: 'GET'
 			},
-			'profile.updateBilling': {
+			'myaccount.profile.updateBilling': {
 				url: 'accounts/{accountId}/braintree/customer',
 				verb: 'POST'
 			}
 		},
 
 		subscribe: {
-			'myaccount-profile.renderContent': '_renderContent',
-			'myaccount-profile.showCreditTab': '_showCreditTab'
+			'myaccount.profile.renderContent': '_profileRenderContent',
+			'myaccount.profile.showCreditTab': '_profileShowCreditTab'
 		},
 
-		load: function(callback){
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		render: function(callback){
-			var self = this,
-				dataTemplate = {
-					accountName: monster.apps['auth'].currentAccount.name || ''
-				},
-				profileMenu = $(monster.template(self, 'menu', dataTemplate)),
-			    args = {
-			    	name: self.name,
-			    	title: self.i18n.active().title,
-					menu: profileMenu,
-					weight: 1,
-					category: 'accountCategory'
-				};
-
-			monster.pub('myaccount.addSubmodule', args);
-
-			callback && callback();
-		},
-
-		_renderContent: function(args) {
+		_profileRenderContent: function(args) {
 			var self = this;
 
 			monster.parallel({
 					billing: function(callback) {
 						monster.request({
-							resource: 'profile.getBilling',
+							resource: 'myaccount.profile.getBilling',
 							data: {
 								accountId: self.accountId
 							},
@@ -106,7 +61,7 @@ define(function(require){
 					},
 					user: function(callback) {
 						monster.request({
-							resource: 'profile.getUser',
+							resource: 'myaccount.profile.getUser',
 							data: {
 								accountId: monster.apps['auth'].originalAccount.id,
 								userId: self.userId
@@ -118,7 +73,7 @@ define(function(require){
 					},
 					account: function(callback) {
 						monster.request({
-							resource: 'profile.getAccount',
+							resource: 'myaccount.profile.getAccount',
 							data: {
 								accountId: self.accountId
 							},
@@ -129,11 +84,11 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					results = self.formatData(results);
+					results = self.profileFormatData(results);
 
-					var profile = $(monster.template(self, 'profile', results));
+					var profile = $(monster.template(self, 'profile-layout', results));
 
-					self.bindEvents(profile, results);
+					self.profileBindEvents(profile, results);
 
 					monster.pub('myaccount.renderSubmodule', profile);
 
@@ -148,18 +103,18 @@ define(function(require){
 			);
 		},
 
-		_showCreditTab: function() {
+		_profileShowCreditTab: function() {
 			var self = this,
 				profileContent = $('#myaccount .myaccount-content .profile-content-wrapper');
 
 			profileContent.find('.nav-tabs a[href="#billing"]').tab('show');
 
-			self.openTab(profileContent.find('.settings-item[data-name="credit_card"] .settings-link'));
+			self.profileOpenTab(profileContent.find('.settings-item[data-name="credit_card"] .settings-link'));
 
-			toastr.error(self.i18n.active().missingCard);
+			toastr.error(self.i18n.active().profile.missingCard);
 		},
 
-		cleanFormData: function(module, data) {
+		profileCleanFormData: function(module, data) {
 			if(module === 'billing') {
 				data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
 			}
@@ -177,7 +132,7 @@ define(function(require){
 			return data;
 		},
 
-		updateData: function(type, data, newData, success, error) {
+		profileUpdateData: function(type, data, newData, success, error) {
 			var self = this,
 				params = {
 					accountId: self.accountId,
@@ -201,7 +156,7 @@ define(function(require){
 			params.data = self.cleanMergedData(params.data);
 
 			monster.request({
-				resource: 'profile.update'+(type.slice(0,1).toUpperCase() + type.substr(1)),
+				resource: 'myaccount.profile.update'+(type.slice(0,1).toUpperCase() + type.substr(1)),
 				data: params,
 				success: function(_data, status) {
 					if(typeof success == 'function') {
@@ -216,7 +171,7 @@ define(function(require){
 			});
 		},
 
-		formatData: function(data) {
+		profileFormatData: function(data) {
 			data.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {};
 
 			if(! _.isEmpty(data.billing) ) {
@@ -236,7 +191,7 @@ define(function(require){
 			return data;
 		},
 
-		bindEvents: function(parent, data) {
+		profileBindEvents: function(parent, data) {
 			var self = this,
 				profile = parent,
 				liSettings = profile.find('li.settings-item'),
@@ -245,7 +200,7 @@ define(function(require){
 				closeContent = function() {
 					liSettings.removeClass('open');
 					liContent.slideUp('fast');
-					aSettings.find('.update .text').text(self.i18n.active().editSettings);
+					aSettings.find('.update .text').text(self.i18n.active().profile.editSettings);
 					aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
 					liSettings.find('.uneditable').show();
 					liSettings.find('.edition').hide();
@@ -281,7 +236,7 @@ define(function(require){
 
 					if(fieldName === 'password') {
 						if(!(dataForm.password === dataForm.confirm_password)) {
-							error = self.i18n.active().passwords_not_matching;
+							error = self.i18n.active().profile.passwords_not_matching;
 						}
 					}
 
@@ -323,10 +278,10 @@ define(function(require){
 					module = currentElement.data('module'),
 					uiTab = currentElement.parents('.tab-pane').first().attr('id'),
 					fieldName = currentElement.data('field'),
-					newData = self.cleanFormData(module, form2object('form_'+fieldName));
+					newData = self.profileCleanFormData(module, form2object('form_'+fieldName));
 
 				settingsValidate(fieldName, newData, function() {
-						self.updateData(module, data[module], newData,
+						self.profileUpdateData(module, data[module], newData,
 							function(data) {
 								var args = {
 									uiTab: uiTab,
@@ -340,7 +295,7 @@ define(function(require){
 									}
 								};
 
-								monster.pub('myaccount-profile.renderContent', args);
+								self._profileRenderContent(args);
 							},
 							function(dataError) {
 								monster.ui.friendlyError(dataError);
@@ -407,7 +362,7 @@ define(function(require){
 				closeContent();
 
 				if(!isOpen) {
-					self.openTab($this, _.isEmpty(data.billing.credit_cards));
+					self.profileOpenTab($this, _.isEmpty(data.billing.credit_cards));
 				}
 			});
 
@@ -424,7 +379,7 @@ define(function(require){
 			});
 		},
 
-		openTab: function(link, hasEmptyCreditCardInfo) {
+		profileOpenTab: function(link, hasEmptyCreditCardInfo) {
 			var self = this,
 				settingsItem = link.parents('.settings-item'),
 				hasEmptyCreditCardInfo = hasEmptyCreditCardInfo === false ? false : true;
@@ -444,5 +399,5 @@ define(function(require){
 		}
 	};
 
-	return app;
+	return profile;
 });

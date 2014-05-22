@@ -3,102 +3,51 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		dataTables = require('datatables'),
-		toastr = require('toastr'),
+		toastr = require('toastr');
 
-		templates = {
-			menu: 'menu',
-			balance: 'balance',
-			tableActionBar: 'tableActionBar',
-			addCreditDialog: 'addCredit'
-		};
-
-	var app = {
-
-		name: 'myaccount-balance',
+	var balance = {
 
 		transactionsRange: 30,
 
-		i18n: [ 'en-US', 'fr-FR' ],
-
 		requests: {
-			'balance.getCredits': {
+			'myaccount.balance.getCredits': {
 				url: 'accounts/{accountId}/braintree/credits',
 				verb: 'GET'
 			},
-			'balance.update': {
+			'myaccount.balance.update': {
 				url: 'accounts/{accountId}/braintree/credits',
 				verb: 'PUT'
 			},
-			'balance.getFilteredTransactions': {
+			'myaccount.balance.getFilteredTransactions': {
 				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}',
 				verb: 'GET'
 			},
-			'balance.getDescendants': {
+			'myaccount.balance.getDescendants': {
 				url: 'accounts/{accountId}/descendants',
 				verb: 'GET'
 			},
-			'balance.getLimits': {
+			'myaccount.balance.getLimits': {
 				url: 'accounts/{accountId}/limits',
 				verb: 'GET'
 			},
-			'balance.updateLimits': {
+			'myaccount.balance.updateLimits': {
 				url: 'accounts/{accountId}/limits',
 				verb: 'POST'
 			}
 		},
 
 		subscribe: {
-			'myaccount-balance.renderContent': '_renderContent',
-			'myaccount-balance.addCreditDialog': '_renderAddCredit',
-			'myaccount.refreshBadges': '_refreshBadge'
+			'myaccount.balance.renderContent': '_balanceRenderContent',
+			'myaccount.balance.addCreditDialog': '_balanceRenderAddCredit',
+			'myaccount.refreshBadges': '_balanceRefreshBadge'
 		},
 
-		load: function(callback){
+		_balanceRefreshBadge: function(args) {
 			var self = this;
 
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		render: function(callback){
-			var self = this;
-
-			self.getBalance(function(data) {
-				var dataTemplate = {
-						amount: data.data.amount.toFixed(2) || '0.00',
-						uiRestrictions: monster.apps.auth.originalAccount.ui_restrictions
-					},
-					balanceMenu = $(monster.template(self, 'menu', dataTemplate));
-					args = {
-						name: self.name,
-						title: self.i18n.active().title,
-						menu: balanceMenu,
-						weight: 30,
-						category: 'billingCategory'
-					};
-
-				monster.pub('myaccount.addSubmodule', args);
-
-				callback && callback();
-			});
-		},
-
-		_refreshBadge: function(args) {
-			var self = this;
-
-			self.getBalance(function(data) {
+			self.balanceGet(function(data) {
 				var argsBadge = {
-					module: self.name,
+					module: 'balance',
 					data: self.i18n.active().currencyUsed + parseFloat(data.data.amount).toFixed(2),
 					callback: args.callback
 				};
@@ -107,7 +56,7 @@ define(function(require){
 			});
 		},
 
-		_renderContent: function(args) {
+		_balanceRenderContent: function(args) {
 			var self = this,
 				defaults = {
 					fieldData: {
@@ -117,7 +66,7 @@ define(function(require){
 
 			monster.parallel({
 					accounts: function(callback) {
-						self.getAccounts(function(dataAccounts) {
+						self.balanceGetAccounts(function(dataAccounts) {
 							$.each(dataAccounts.data, function(k, v) {
 								defaults.fieldData.accounts[v.id] = v;
 							});
@@ -126,14 +75,14 @@ define(function(require){
 						});
 					},
 					balance: function(callback) {
-						self.getBalance(function(data) {
+						self.balanceGet(function(data) {
 							defaults.amount = parseFloat(data.data.amount).toFixed(2);
 
 							callback(null, data)
 						});
 					},
 					transactions: function(callback) {
-						self.getTransactions(function(dataTransactions) {
+						self.balanceGetTransactions(function(dataTransactions) {
 							callback(null, dataTransactions)
 						});
 					}
@@ -141,28 +90,28 @@ define(function(require){
 				function(err, results) {
 					var renderData = $.extend(true, {},
 											  defaults,
-											  self.formatTableData(results.transactions.data, defaults.fieldData.accounts),
+											  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
 											  {uiRestrictions: monster.apps['auth'].originalAccount.ui_restrictions}
 											 );
 
 					renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
-					var balance = $(monster.template(self, 'balance', renderData)),
+					var balance = $(monster.template(self, 'balance-layout', renderData)),
 						args = {
 							module: self.name,
 							data: self.i18n.active().currencyUsed + renderData.amount
 						};
 
-					self.bindEvents(balance);
+					self.balanceBindEvents(balance);
 
 					monster.pub('myaccount.updateMenu', args);
 					monster.pub('myaccount.renderSubmodule', balance);
 
-					self.initTable(balance);
+					self.balanceInitTable(balance);
 
 					$.fn.dataTableExt.afnFiltering.pop();
 
-					balance.find('div.table-custom-actions').html(monster.template(self, 'tableActionBar'));
+					balance.find('div.table-custom-actions').html(monster.template(self, 'balance-tableActionBar'));
 
 					monster.ui.initRangeDatepicker(self.transactionsRange, balance);
 
@@ -172,7 +121,7 @@ define(function(require){
 						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
 
 					balance.find('.refresh-filter').on('click', function() {
-						self._renderContent(args);
+						self._balanceRenderContent(args);
 					});
 
 					balance.find('#filter_transactions').on('click', function() {
@@ -185,7 +134,7 @@ define(function(require){
 						monster.ui.table.balance.find('tbody tr').remove();
 						monster.ui.table.balance.fnClearTable();
 
-						self.refreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
+						self.balanceRefreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
 					});
 
 					balance.find('.action-number#download').on('click', function() {
@@ -199,12 +148,12 @@ define(function(require){
 			);
 		},
 
-		_renderAddCredit: function(args) {
+		_balanceRenderAddCredit: function(args) {
 			var self = this,
                 popup;
 
-			self.getBalance(function(data) {
-				self.getLimits(function(dataLimits) {
+			self.balanceGet(function(data) {
+				self.balanceGetLimits(function(dataLimits) {
 					var amount = data.data.amount.toFixed(2) || '0.00',
 						rechargeDefault = { enabled: false };
 
@@ -214,7 +163,7 @@ define(function(require){
 							amount: amount,
 							limits: dataLimits.data
 						},
-						addCreditDialog = $(monster.template(self, 'addCreditDialog', templateData)),
+						addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', templateData)),
 						dataUpdate = {
 							module: self.name,
 							data: parseFloat(amount).toFixed(2)
@@ -224,7 +173,7 @@ define(function(require){
 
 					popup = monster.ui.dialog(addCreditDialog, {
 						width: '600px',
-						title: self.i18n.active().addCreditDialogTitle
+						title: self.i18n.active().balance.addCreditDialogTitle
 					});
 
 					var argsDialog = {
@@ -234,20 +183,20 @@ define(function(require){
 						callback: args.callback
 					};
 
-					self.bindEventsDialog(argsDialog);
+					self.balanceBindEventsDialog(argsDialog);
 				});
 			});
 		},
 
-		refreshTransactionsTable: function(parent, from, to, mapAccounts) {
+		balanceRefreshTransactionsTable: function(parent, from, to, mapAccounts) {
 			var self = this,
 				params = {
 					from: from,
 					to: to,
 				};
 
-			self.getTransactions(params, function(dataTransactions) {
-				var data = self.formatTableData(dataTransactions.data, mapAccounts);
+			self.balanceGetTransactions(params, function(dataTransactions) {
+				var data = self.balanceFormatTableData(dataTransactions.data, mapAccounts);
 
 				monster.ui.table.balance.addData(data.tabData);
 
@@ -256,7 +205,7 @@ define(function(require){
 			});
 		},
 
-		formatTableData: function(dataRequest, mapAccounts) {
+		balanceFormatTableData: function(dataRequest, mapAccounts) {
 			var self = this,
 				data = {
 					tabData: [],
@@ -274,7 +223,7 @@ define(function(require){
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
 					if(v.reason === 'per_minute_call') {
-						var duration = self.i18n.active().active_call,
+						var duration = self.i18n.active().balance.active_call,
 							friendlyDate = monster.util.toFriendlyDate(v.created),
 							accountName = '-';
 
@@ -309,7 +258,7 @@ define(function(require){
 			return data;
 		},
 
-		initTable: function(parent) {
+		balanceInitTable: function(parent) {
 			var self = this,
 				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {},
 				showCredit = uiRestrictions.balance && uiRestrictions.balance.show_credit == false ? false : true,
@@ -323,7 +272,7 @@ define(function(require){
 						'bVisible': false
 					},
 					{
-						'sTitle': self.i18n.active().directionColumn,
+						'sTitle': self.i18n.active().balance.directionColumn,
 						'fnRender': function(obj) {
 							var icon = '<i class="icon-arrow-left icon-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
 							if(obj.aData[obj.iDataColumn].direction === 'inbound') {
@@ -335,31 +284,31 @@ define(function(require){
 
 					},
 					{
-						'sTitle': self.i18n.active().dateColumn,
+						'sTitle': self.i18n.active().balance.dateColumn,
 						'sWidth': '20%'
 
 					},
 					{
-						'sTitle': self.i18n.active().fromColumn,
+						'sTitle': self.i18n.active().balance.fromColumn,
 						'sWidth': '20%'
 					},
 					{
-						'sTitle': self.i18n.active().toColumn,
+						'sTitle': self.i18n.active().balance.toColumn,
 						'sWidth': '20%'
 					},
 					{
-						'sTitle': self.i18n.active().accountColumn,
+						'sTitle': self.i18n.active().balance.accountColumn,
 						'sWidth': '25%'
 					},
 					{
-						'sTitle': self.i18n.active().durationColumn,
+						'sTitle': self.i18n.active().balance.durationColumn,
 						'sWidth': '10%'
 					}
 				];
 
 			if (showCredit) {
 				columns[7].sWidth = '5%';
-				columns.push({'sTitle': self.i18n.active().amountColumn,'sWidth': '5%'});
+				columns.push({'sTitle': self.i18n.active().balance.amountColumn,'sWidth': '5%'});
 			}
 
 			monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
@@ -368,17 +317,17 @@ define(function(require){
 			});
 		},
 
-		cleanFormData: function(module, data) {
+		balanceCleanFormData: function(module, data) {
 			delete data.extra;
 
 			return data;
 		},
 
-		formatData: function(data) {
+		balanceFormatData: function(data) {
 			return data;
 		},
 
-		bindEventsDialog: function(params) {
+		balanceBindEventsDialog: function(params) {
 			var self = this,
 				parent = params.parent,
 				data = params.data,
@@ -395,14 +344,14 @@ define(function(require){
 					parent.find('#recharge_content').slideUp();
 
 					if(autoRecharge === true) {
-						monster.ui.confirm(self.i18n.active().turnoffRechargeConfirm,
+						monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
 							function() {
-								self.getLimits(function(dataLimits) {
+								self.balanceGetLimits(function(dataLimits) {
 									dataLimits.data.recharge = { enabled: false };
 
-									self.updateLimits(dataLimits.data, function() {
+									self.balanceUpdateLimits(dataLimits.data, function() {
 										autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
-										toastr.success(self.i18n.active().autoRechargeCancelled);
+										toastr.success(self.i18n.active().balance.autoRechargeCancelled);
 									});
 								});
 							},
@@ -426,16 +375,16 @@ define(function(require){
 				if(creditsToAdd) {
 					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 						function() {
-							self.addBalance(creditsToAdd,
+							self.balanceAddCredits(creditsToAdd,
 								function() {
 									var dataToastr = {
 										amount: self.i18n.active().currencyUsed + creditsToAdd
 									};
 
-									toastr.success(monster.template(self, '!' + self.i18n.active().creditsAdded, dataToastr));
+									toastr.success(monster.template(self, '!' + self.i18n.active().balance.creditsAdded, dataToastr));
 
 									if(typeof params.callback === 'function') {
-										self.getBalance(function(data) {
+										self.balanceGet(function(data) {
 											params.callback(data.data.amount);
 											parent.dialog('close');
 										});
@@ -449,7 +398,7 @@ define(function(require){
 					);
 				}
 				else{
-					monster.ui.alert(self.i18n.active().invalidAmount);
+					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
 
@@ -461,21 +410,21 @@ define(function(require){
 				};
 
 				if(dataForm.threshold && dataForm.amount) {
-					self.getLimits(function(dataLimits) {
+					self.balanceGetLimits(function(dataLimits) {
 						dataLimits.data.recharge = dataForm;
 
-						self.updateLimits(dataLimits.data, function() {
-							toastr.success(self.i18n.active().autoRechargeEnabled);
+						self.balanceUpdateLimits(dataLimits.data, function() {
+							toastr.success(self.i18n.active().balance.autoRechargeEnabled);
 						});
 					});
 				}
 				else{
-					monster.ui.alert(self.i18n.active().invalidAmount);
+					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
 		},
 
-		bindEvents: function(parent) {
+		balanceBindEvents: function(parent) {
 			var self = this;
 
 			parent.find('#add_credits').on('click', function() {
@@ -484,7 +433,7 @@ define(function(require){
 						var formattedAmount =  parseFloat(amount).toFixed(2),
 						    newAmount = self.i18n.active().currencyUsed + formattedAmount,
 							argsEvent = {
-								module: self.name,
+								module: 'balance',
 								data: newAmount
 							};
 
@@ -493,16 +442,16 @@ define(function(require){
 					}
 				};
 
-				self._renderAddCredit(args);
+				self._balanceRenderAddCredit(args);
 			});
 		},
 
 		//utils
-		getAccounts: function(success, error) {
+		balanceGetAccounts: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'balance.getDescendants',
+				resource: 'myaccount.balance.getDescendants',
 				data: {
 					accountId: self.accountId,
 				},
@@ -516,11 +465,11 @@ define(function(require){
 
 		},
 
-		getLimits: function(success, error) {
+		balanceGetLimits: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'balance.getLimits',
+				resource: 'myaccount.balance.getLimits',
 				data: {
 					accountId: self.accountId,
 				},
@@ -533,7 +482,7 @@ define(function(require){
 			});
 		},
 
-	 getTransactions: function(params, success, error) {
+	 	balanceGetTransactions: function(params, success, error) {
 			var self = this;
 
 			if(typeof params === 'function') {
@@ -549,7 +498,7 @@ define(function(require){
 			}
 
 			monster.request({
-				resource: 'balance.getFilteredTransactions',
+				resource: 'myaccount.balance.getFilteredTransactions',
 				data: {
 					accountId: self.accountId,
 					from: params.from,
@@ -564,11 +513,11 @@ define(function(require){
 			});
 		},
 
-		updateLimits: function(limits, success, error) {
+		balanceUpdateLimits: function(limits, success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'balance.updateLimits',
+				resource: 'myaccount.balance.updateLimits',
 				data: {
 					accountId: self.accountId,
 					data: limits
@@ -582,11 +531,11 @@ define(function(require){
 			});
 		},
 
-		getBalance: function(success, error) {
+		balanceGet: function(success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'balance.getCredits',
+				resource: 'myaccount.balance.getCredits',
 				data: {
 					accountId: self.accountId
 				},
@@ -599,11 +548,16 @@ define(function(require){
 			});
 		},
 
-		addBalance: function(credits, success, error) {
-			var self = this;
+		balanceAddCredits: function(credits, success, error) {
+			var self = this,
+				data = {
+					amount: credits
+				};
 
-			monster.request({
-				resource: 'balance.update',
+			self.balanceUpdateRecharge(data, success, error);
+
+			/*monster.request({
+				resource: 'myaccount.balance.update',
 				data: {
 					accountId: self.accountId,
 					data: {
@@ -616,14 +570,14 @@ define(function(require){
 				error: function(data, status) {
 					error && error(data, status);
 				}
-			});
+			});*/
 		},
 
-		updateRecharge: function(data, success, error) {
+		balanceUpdateRecharge: function(data, success, error) {
 			var self = this;
 
 			monster.request({
-				resource: 'balance.update',
+				resource: 'myaccount.balance.update',
 				data: {
 					accountId: self.accountId,
 					data: data
@@ -638,5 +592,5 @@ define(function(require){
 		},
 	};
 
-	return app;
+	return balance;
 });
