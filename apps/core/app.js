@@ -9,14 +9,7 @@ define(function(require){
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
-		requests: {
-			'layout.getLogo': {
-				url: 'whitelabel/{domain}/logo',
-				dataType: '*',
-				verb: 'GET',
-				generateError: false
-			}
-		},
+		requests: {},
 
 		subscribe: {
 			'core.loadApps': '_loadApps',

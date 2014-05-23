@@ -10,37 +10,7 @@ define(function(require){
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
-		requests: {
-			// 'auth.whitelabel.get': {
-			// 	url: 'whitelabel/{domain}',
-			// 	verb: 'GET',
-			// 	generateError: false
-			// },
-			'auth.userAuth': {
-				url: 'user_auth',
-				verb: 'PUT'
-			},
-			'auth.sharedAuth': {
-				url: 'shared_auth',
-				verb: 'PUT'
-			},
-			'auth.pinAuth': {
-				url: 'pin_auth',
-				verb: 'PUT'
-			},
-			'auth.getUser': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'GET'
-			},
-			'auth.updateUser': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'POST'
-			},
-			'auth.getAccount': {
-				url: 'accounts/{accountId}',
-				verb: 'GET'
-			}
-		},
+		requests: {},
 
 		subscribe: {
 			'auth.logout': '_logout',
