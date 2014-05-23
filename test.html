@@ -56,6 +56,25 @@
 					});
 				});
 
+				$('#btn_admins').on('click', function(e) {
+					kazooSDK.user.list({
+						accountId: '64cd8d2a12ac216104a1341ab1b9ab2a',
+						filters: {
+							'filter_priv_level': 'admin'
+						},
+						success: function(data) {
+							var usersList = $('#users_list');
+							usersList.empty();
+							$.each(data.data, function(k, v) {
+								usersList.append('<li>'+v.first_name+' '+v.last_name+' ('+v.username+')</li>');
+							})
+						},
+						error: function(data) {
+							console.log(data);
+						}
+					});
+				});
+
 				window.kazooSDK = kazooSDK;
 			});
 		</script>
@@ -96,6 +115,7 @@
 			<button type="button" id="btn_auth">Auth</button>
 			<button type="button" id="btn_acc">Account</button>
 			<button type="button" id="btn_users">List Users</button>
+			<button type="button" id="btn_admins">List Admins</button>
 			<ul id="users_list"></ul>
 		</div>
 

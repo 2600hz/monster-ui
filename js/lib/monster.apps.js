@@ -8,59 +8,80 @@ define(function(){
 
 		monsterizeApp: function(app, callback) {
 			var self = this,
-            	css = app.appPath + '/app.css';
+				css = app.appPath + '/app.css';
 
-            _.each(app.requests, function(request, id){
-                monster._defineRequest(id, request, app);
-            });
+			_.each(app.requests, function(request, id){
+				monster._defineRequest(id, request, app);
+			});
 
-            _.each(app.subscribe, function(callback, topic){
-                var cb = typeof callback === 'string' ? app[callback] : callback;
+			_.each(app.subscribe, function(callback, topic){
+				var cb = typeof callback === 'string' ? app[callback] : callback;
 
-                monster.sub(topic, cb, app);
-            });
+				monster.sub(topic, cb, app);
+			});
 
-            if(monster._fileExists(css)){
-                monster.css(css);
-            }
+			if(monster._fileExists(css)){
+				monster.css(css);
+			}
 
-            _.extend(app.data, { i18n: {} });
+			_.extend(app.data, { i18n: {} });
 
 			/* en-US is the default language of Monster */
 			var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
 
-            self.loadLocale(app, self.defaultLanguage);
+			self.loadLocale(app, self.defaultLanguage);
 
 			/* If the app supports the custom language, then we load its json file if its not the default one */
-            if(customLanguage !== self.defaultLanguage) {
-                self.loadLocale(app, customLanguage);
-            }
+			if(customLanguage !== self.defaultLanguage) {
+				self.loadLocale(app, customLanguage);
+			}
 
-            // add an active property method to the i18n array within the app.
-            _.extend(app.i18n, {
-                active: function(){
-                    var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+			// add an active property method to the i18n array within the app.
+			_.extend(app.i18n, {
+				active: function(){
+					var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
 
-                    return app.data.i18n[language];
-                }
-            });
+					return app.data.i18n[language];
+				}
+			});
 
-            app.apiUrl = app.apiUrl || monster.config.api.default;
+			app.apiUrl = app.apiUrl || monster.config.api.default;
 
-            monster.apps[app.name] = app;
+			app.callApi = function(params) {
+				var apiSplit = params.resource.split('.');
+				if(apiSplit.length === 2 && apiSplit[0] in monster.kazooSdk && apiSplit[1] in monster.kazooSdk[apiSplit[0]]) {
+					var apiFunction = monster.kazooSdk[apiSplit[0]][apiSplit[1]],
+						apiSettings = $.extend({
+							authToken: app.authToken,
+							apiRoot: app.apiUrl || monster.config.api.default,
+							uiMetadata: {
+								version: monster.config.version,
+								ui: 'monster-ui'
+							},
+							success: params.success,
+							error: params.error
+						}, params.data);
 
-            app.load(callback);
+					return apiFunction(apiSettings);
+				} else {
+					console.error('This api does not exist.');
+				}
+			}
+
+			monster.apps[app.name] = app;
+
+			app.load(callback);
 		},
 
 		_loadApp: function(name, callback, options){
-            var self = this,
-                appPath = 'apps/' + name,
-                customKey = 'app-' + name,
-                requirePaths = {},
-                options = options || {},
-                externalUrl = options.sourceUrl || false;
+			var self = this,
+				appPath = 'apps/' + name,
+				customKey = 'app-' + name,
+				requirePaths = {},
+				options = options || {},
+				externalUrl = options.sourceUrl || false;
 
-            /* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
+			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
 			if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
 				var storedApp = _.find(monster.apps.auth.installedApps, function(installedApp) {
 					return name === installedApp.name;
@@ -81,9 +102,9 @@ define(function(){
 				});
 			}
 
-            var path = customKey in requirePaths ? customKey : appPath + '/app';
+			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
-            require([path], function(app){
+			require([path], function(app){
 				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
 
 				if(options && 'apiUrl' in options) {

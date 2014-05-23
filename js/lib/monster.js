@@ -6,7 +6,8 @@ define(function(require){
 		handlebars = require('handlebars'),
 		async = require('async'),
 		form2object = require('form2object'),
-		config = require('config');
+		config = require('config'),
+		kazoosdk = require('kazoosdk');
 
 	var monster = {
 		_channel: postal.channel('monster'),
@@ -287,7 +288,40 @@ define(function(require){
 			}
 			return results.length ? results[0] : null;
 		}
-	};
+	}
+
+	monster.kazooSdk = $.getKazooSdk({
+		apiRoot: monster.config.api.default,
+		onRequestStart: function(request, requestOptions) {
+			monster.pub('monster.requestStart');
+		},
+		onRequestEnd: function(request, requestOptions) {
+			monster.pub('monster.requestEnd');
+		},
+		onRequestError: function(error, requestOptions) {
+			if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
+				monster.ui.charges(error.data, function() {
+					options.acceptCharges = true;
+					monster.kazooSdk.request(options);
+				});
+			} else {
+				if(requestOptions.generateError !== false) {
+					var errorsI18n = monster.apps.core.i18n.active().errors,
+						errorMessage = errorsI18n.generic;
+
+					if(error.status in errorsI18n) {
+						errorMessage = errorsI18n[error.status];
+					}
+
+					if(error.message) {
+						errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + error.message;
+					}
+
+					monster.ui.alert('error', errorMessage);
+				}
+			}
+		}
+	});
 
 	return monster;
 });

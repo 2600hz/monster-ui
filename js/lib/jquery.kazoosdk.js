@@ -18,7 +18,42 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}' },
-			'descendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' }
+			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
+			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' }
+		},
+		directory: {
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
+		},
+		channel: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/channels' }
+		},
+		conference: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/conferences' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/conferences/{conferenceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/conferences' },
+			'getPins': { verb: 'GET', url: 'accounts/{accountId}/conferences/pins' },
+			'view': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}/status' },
+			'action': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/{action}' },
+
+			'getServer': { verb: 'GET', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
+			'createServer': { verb: 'PUT', url: 'accounts/{accountId}/conferences_servers' },
+			'updateServer': { verb: 'POST', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
+			'deleteServer': { verb: 'DELETE', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
+			'listServers': { verb: 'GET', url: 'accounts/{accountId}/conferences_servers' },
+
+			'addParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/add_participant' },
+			'muteParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/mute/{participantId}' },
+			'unmuteParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/unmute/{participantId}' },
+			'deafParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/deaf/{participantId}' },
+			'undeafParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/undeaf/{participantId}' },
+			'kickParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}' },
+
+			'createNotification': { verb: 'PUT', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' },
+			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
+			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
@@ -41,12 +76,44 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' }
 		},
+		cdrs: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' }
+		},
+		numbers: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
+			'activate': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/collection/activate' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/phone_numbers/collection' },
+			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
+			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
+			'searchNumbers': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
+			'searchBlocks': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
+			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' }
+		},
+		device: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
+			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' }
+		},
 		media: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/medias/{mediaId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/medias' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/medias/{mediaId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/medias/{mediaId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/medias' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/medias' },
+			'upload': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}/raw', type: 'application/x-base64' }
+		},
+		menu: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/menus/{menuId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/menus' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/menus/{menuId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
 		},
 		voicemail: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
@@ -54,6 +121,50 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' }
+		},
+		connectivity: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/connectivity' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/connectivity' }
+		},
+		temporalRule: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
+		},
+		servicePlan: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
+			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
+			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
+			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
+		},
+		limits: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/limits' }
+		},
+		balance: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
+			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' }
+		},
+		port: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/port_requests' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/port_requests' },
+			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/port_requests/descendants' },
+			'listAttachments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments' },
+			'getAttachment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf', dataType: 'application/pdf' },
+			'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf', dataType: 'application/pdf' },
+			'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf', dataType: 'application/pdf' },
+			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf', dataType: 'application/pdf' },
+			'setReady': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/ready' }
 		}
 	},
 	authTokens = {};
@@ -75,13 +186,14 @@
 				if(typeof this === 'object') { this.parent = sdkMethods; }
 			});
 			sdkMethods.defaultSettings = settings;
+			sdkMethods.request = request;
 
 			if('authToken' in settings && settings.authToken.length > 0) {
-				authTokens[settings.apiRoot] = authToken;
+				authTokens[settings.apiRoot] = settings.authToken;
 			}
 
 			$.each(methodsGenerator, function(group, methods) {
-				if(!(group in sdkMethods)) { sdkMethods[group] = {}; }
+				sdkMethods[group] = sdkMethods[group] || {};
 				$.each(methods, function(methodName, methodInfo) {
 					sdkMethods[group][methodName] = function(methodSettings) {
 						var self = this,
@@ -93,6 +205,14 @@
 							},
 							ids = $.map(methodInfo.url.match(/\{([^\}]+)\}/g) || [], function(v) { return v.replace(/\{|\}/g, ''); });
 
+						if('filters' in methodSettings) {
+							$.each(methodSettings.filters, function(filterKey, filterValue) {
+								requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + filterValue;
+							});
+						} 
+
+						if('type' in methodInfo) { requestSettings.type = methodInfo.type; }
+						if('dataType' in methodInfo) { requestSettings.dataType = methodInfo.dataType; }
 						if(methodInfo.verb.toLowerCase() === 'delete') {
 							requestSettings.data.data = {};
 						} else if(methodInfo.verb.toLowerCase() === 'post' || methodInfo.verb.toLowerCase() === 'put') {
@@ -151,7 +271,7 @@
 				contentType: options.type || 'application/json',
 				processData: false,
 				beforeSend: function(jqXHR, settings) {
-					options.onRequestStart && options.onRequestStart();
+					options.onRequestStart && options.onRequestStart(jqXHR, options);
 
 					jqXHR.setRequestHeader('X-Auth-Token', options.authToken || authTokens[options.apiRoot]);
 					$.each(options.headers || [], function(key, val) {
@@ -159,20 +279,12 @@
 					});
 				}
 			},
-			customFlags = {
-				generateError: options.generateError === false ? false : true
-			},
 			mappedKeys = [],
 			rurlData = /\{([^\}]+)\}/g,
 			data = $.extend({}, options.data);
 
-		// May not be needed with $.ajax
-		// if(!settings.cache && settings.method.toLowerCase() === 'get') {
-		// 	settings.url += (settings.url.indexOf('?') >= 0 ? '&' : '?') + '_=' + (new Date()).getTime();
-		// }
-
 		settings.error = function requestError (error) {
-			options.onRequestEnd && options.onRequestEnd(error, customFlags);
+			options.onRequestEnd && options.onRequestEnd(error, options);
 
 			var parsedError = error;
 
@@ -180,15 +292,15 @@
 				parsedError = $.parseJSON(error.responseText);
 			}
 
-			options.onRequestError && options.onRequestError(error, customFlags);
+			options.onRequestError && options.onRequestError(error, options);
 
 			options.error && options.error(parsedError, error);
 		};
 
 		settings.success = function requestSuccess(resp) {
-			options.onRequestEnd && options.onRequestEnd(resp, customFlags);
+			options.onRequestEnd && options.onRequestEnd(resp, options);
 
-			options.onRequestSuccess && options.onRequestSuccess(resp, customFlags);
+			options.onRequestSuccess && options.onRequestSuccess(resp, options);
 
 			options.success && options.success(resp);
 		};
