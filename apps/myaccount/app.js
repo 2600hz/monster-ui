@@ -54,12 +54,43 @@ define(function(require){
 			});
 		},
 
-		formatUiRestrictions: function(restrictions) {
-			var categories = {
-				account: ['profile'],
-				billing: ['transactions', 'service_plan', 'balance'],
-				trunking: ['inbound', 'outbound']
+		getDefaultRestrictions: function() {
+			return {
+				balance: {
+					show_credit: true,
+					show_header: true,
+					show_minutes: true,
+					show_tab: true
+				},
+				inbound: {
+					show_tab: true
+				},
+				outbound: {
+					show_tab: true
+				},
+				profile: {
+					show_account: true,
+					show_billing: true,
+					show_tab: true,
+					show_user: true
+				},
+				service_plan: {
+					show_tab: true
+				},
+				transactions: {
+					show_tab: true
+				}
 			};
+		},
+
+		formatUiRestrictions: function(restrictions) {
+			var self = this,
+				categories = {
+					account: ['profile'],
+					billing: ['transactions', 'service_plan', 'balance'],
+					trunking: ['inbound', 'outbound']
+				},
+				restrictions = restrictions || self.getDefaultRestrictions();
 
 			restrictions.categories = {};
 
