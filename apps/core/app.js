@@ -171,10 +171,12 @@ define(function(require){
 						 .addClass('conferencing');
 			} else {
 				homeLink.find('i').addClass('icon-th icon-large');
-				monster.request({
-					resource: 'layout.getLogo',
+				self.callApi({
+					resource: 'whitelabel.getLogo',
 					data: {
-						domain: domain
+						domain: domain,
+						generateError: false,
+						dataType: '*'
 					},
 					success: function(_data) {
 						container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');

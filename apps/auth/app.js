@@ -11,11 +11,11 @@ define(function(require){
 		i18n: [ 'en-US', 'fr-FR' ],
 
 		requests: {
-			'auth.whitelabel.get': {
-				url: 'whitelabel/{domain}',
-				verb: 'GET',
-				generateError: false
-			},
+			// 'auth.whitelabel.get': {
+			// 	url: 'whitelabel/{domain}',
+			// 	verb: 'GET',
+			// 	generateError: false
+			// },
 			'auth.userAuth': {
 				url: 'user_auth',
 				verb: 'PUT'
@@ -130,8 +130,8 @@ define(function(require){
 
 			if(self.apiUrl !== args.app.apiUrl) {
 				/* Hacking the API URL */
-				monster.request({
-					apiUrl: args.app.apiUrl + 'shared_auth',
+				self.callApi({
+					apiUrl: args.app.apiUrl,
                     data: restData,
 					resource: 'auth.sharedAuth',
                     success: function (json, xhr) {
@@ -160,7 +160,7 @@ define(function(require){
 		authenticate: function(loginData) {
 			var self = this;
 
-			monster.request({
+			self.callApi({
 				resource: 'auth.userAuth',
 				data: {
 					data: loginData
@@ -309,8 +309,8 @@ define(function(require){
 
 								defaultApp = fullAppList[results.user.appList[0]].name;
 
-								monster.request({
-									resource: 'auth.updateUser',
+								self.callApi({
+									resource: 'user.update',
 									data: {
 										accountId: results.account.id,
 										userId: results.user.id,
@@ -457,7 +457,7 @@ define(function(require){
 			_.each(formData.update, function(val, key) {
 				if(!val) { delete formData.update[key]; }
 			});
-			monster.request({
+			self.callApi({
 				resource: 'auth.pinAuth',
 				data: {
 					data: formData
@@ -497,8 +497,8 @@ define(function(require){
 		getAccount: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'auth.getAccount',
+			self.callApi({
+				resource: 'account.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -518,8 +518,8 @@ define(function(require){
 		getUser: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'auth.getUser',
+			self.callApi({
+				resource: 'user.get',
 				data: {
 					accountId: self.accountId,
 					userId: self.userId,
@@ -540,10 +540,11 @@ define(function(require){
 		getWhitelabel: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'auth.whitelabel.get',
+			self.callApi({
+				resource: 'whitelabel.get',
 				data: {
-					domain: window.location.hostname
+					domain: window.location.hostname,
+					generateError: false
 				},
 				success: function(_data) {
 					callback && callback(data.data);

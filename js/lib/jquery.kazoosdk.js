@@ -165,6 +165,10 @@
 			'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf', dataType: 'application/pdf' },
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf', dataType: 'application/pdf' },
 			'setReady': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/ready' }
+		},
+		whitelabel: {
+			'get': { verb: 'GET', url: 'whitelabel/{domain}' },
+			'getLogo': { verb: 'GET', url: 'whitelabel/{domain}/logo' }
 		}
 	},
 	authTokens = {};
@@ -283,7 +287,7 @@
 			rurlData = /\{([^\}]+)\}/g,
 			data = $.extend({}, options.data);
 
-		settings.error = function requestError (error) {
+		settings.error = function requestError (error, status) {
 			options.onRequestEnd && options.onRequestEnd(error, options);
 
 			var parsedError = error;
@@ -297,12 +301,12 @@
 			options.error && options.error(parsedError, error);
 		};
 
-		settings.success = function requestSuccess(resp) {
-			options.onRequestEnd && options.onRequestEnd(resp, options);
+		settings.success = function requestSuccess(responseData, status, jqXHR) {
+			options.onRequestEnd && options.onRequestEnd(responseData, options);
 
-			options.onRequestSuccess && options.onRequestSuccess(resp, options);
+			options.onRequestSuccess && options.onRequestSuccess(responseData, options);
 
-			options.success && options.success(resp);
+			options.success && options.success(responseData);
 		};
 
 		settings.url = settings.url.replace(rurlData, function (m, key) {

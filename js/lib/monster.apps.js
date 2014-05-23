@@ -53,7 +53,7 @@ define(function(){
 					var apiFunction = monster.kazooSdk[apiSplit[0]][apiSplit[1]],
 						apiSettings = $.extend({
 							authToken: app.authToken,
-							apiRoot: app.apiUrl || monster.config.api.default,
+							apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
 							uiMetadata: {
 								version: monster.config.version,
 								ui: 'monster-ui'
