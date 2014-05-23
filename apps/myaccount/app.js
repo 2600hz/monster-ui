@@ -2,12 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		nicescroll = require('nicescroll'),
-
-		templates = {
-			nav: 'nav',
-			myaccount: 'myaccount'
-		};
+		nicescroll = require('nicescroll');
 
 	var app = {
 
@@ -27,13 +22,17 @@ define(function(require){
 		},
 
 		subscribe: {
-			'myaccount.display': '_show',
 			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
-			'myaccount.addSubmodule': '_addSubmodule',
 			'myaccount.renderSubmodule': '_renderSubmodule',
-			'myaccount.activateSubmodule': '_activateSubmodule',
 			'myaccount.renderNavLinks': '_renderNavLinks'
+		},
+
+		subModules: ['profile', 'trunks', 'balance', 'servicePlan', 'transactions'],
+
+		mainContainer: '#myaccount',
+		defaultApp: {
+			name: 'profile'
 		},
 
 		load: function(callback){
@@ -46,35 +45,6 @@ define(function(require){
 			});
 		},
 
-		_apps: ['myaccount-profile', 'myaccount-balance', 'myaccount-transactions', 'myaccount-servicePlan', 'myaccount-trunks'],
-
-		_defaultApp: {
-			name: 'myaccount-profile'
-		},
-
-		_loadApps: function(callback) {
-			var self = this;
-
-			if(self._apps.length) {
-				var appName = self._apps.pop();
-
-				// We first load all the required apps
-				monster.apps.load(appName, function(app) {
-					app.render(function() {
-						if(!self._apps.length) {
-							callback && callback();
-						}
-						else {
-							self._loadApps(callback);
-						}
-					});
-				});
-			}
-			else {
-				callback && callback();
-			}
-		},
-
 		initApp: function(_callback) {
 			var self = this;
 
@@ -84,102 +54,270 @@ define(function(require){
 			});
 		},
 
-		_renderNavLinks: function(args) {
-			var self = this,
-				navHtml = $(monster.template(self, 'nav', {
-					name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
-					isMasquerading: args && args.isMasquerading || false
-				}));
+		getDefaultRestrictions: function() {
+			return {
+				balance: {
+					show_credit: true,
+					show_header: true,
+					show_minutes: true,
+					show_tab: true
+				},
+				inbound: {
+					show_tab: true
+				},
+				outbound: {
+					show_tab: true
+				},
+				profile: {
+					show_account: true,
+					show_billing: true,
+					show_tab: true,
+					show_user: true
+				},
+				service_plan: {
+					show_tab: true
+				},
+				transactions: {
+					show_tab: true
+				}
+			};
+		},
 
-			/* Hack to redraw myaccount links on masquerading */
-			$('#ws-navbar .links').find('.myaccount-common-link').remove();
-			$('#ws-navbar .links').append(navHtml);
+		formatUiRestrictions: function(restrictions) {
+			var self = this,
+				categories = {
+					account: ['profile'],
+					billing: ['transactions', 'service_plan', 'balance'],
+					trunking: ['inbound', 'outbound']
+				},
+				restrictions = restrictions || self.getDefaultRestrictions();
+
+			restrictions.categories = {};
+
+			for(var i in categories) {
+				var category = categories[i],
+					countDisplay = category.length;
+
+				category.forEach(function(element) {
+					if(!restrictions[element].show_tab) {
+						countDisplay--;
+					}
+				});
+
+				restrictions.categories[i] = {
+					show: countDisplay > 0 ? true : false
+				};
+			}
+
+			return restrictions;
 		},
 
 		render: function(){
-			/* render non-dependant stuff */
 			var self = this,
-				myaccountHtml = $(monster.template(self, 'myaccount')),
-				navContainer = $('#ws-navbar .links');
+				uiRestrictions = self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions),
+				dataTemplate = {
+					restrictions: uiRestrictions
+				},
+				myaccountHtml = $(monster.template(self, 'app', dataTemplate));
 
 			$('#topbar').after(myaccountHtml);
 
 			self._renderNavLinks();
 
-			navContainer.on('click', '.myaccount-link', function(e) {
-				e.preventDefault();
-
-				if($('#myaccount').hasClass('myaccount-open')) {
-					self.hide();
-				}
-				else {
-					self.loadAppsAndDisplay();
-				}
-			});
-
-			navContainer.on('click', '.restore-masquerading-link', function(e) {
-				e.preventDefault();
-
-				// Closing myaccount (if open) before restoring from masquerading
-				if($('#myaccount').hasClass('myaccount-open')) {
-					monster.pub('myaccount.display');
-				}
-				monster.pub('accountsManager.restoreMasquerading');
-				monster.pub('core.showAppName', 'accounts');
-			});
-
-			self.groups = {
-				'accountCategory': {
-					id: 'accountCategory',
-					friendlyName: self.i18n.active().accountCategory,
-					weight: 0
-				},
-				'billingCategory': {
-					id: 'billingCategory',
-					friendlyName: self.i18n.active().billingCategory,
-					weight: 10
-				},
-				'trunkingCategory': {
-					id: 'trunkingCategory',
-					friendlyName: self.i18n.active().trunkingCategory,
-					weight: 20
-				}
-			};
-
 			self.bindEvents(myaccountHtml);
 
-			if(monster.apps['auth'].resellerId === monster.config.resellerId) {
+			if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.profile.show_tab) {
 				self.checkCreditCard();
 			}
 		},
 
-		loadAppsAndDisplay: function(callback) {
+		// Also used by masquerading, account app
+		_renderNavLinks: function(args) {
 			var self = this,
-				displayMyAccount = function() {
-					monster.pub('myaccount.display', {
-						callback: callback
-					});
+				navLinks = $('#ws-navbar .links'),
+				navHtml = $(monster.template(self, 'nav', {
+					name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
+					isMasquerading: args && args.isMasquerading || false
+				})),
+				mainContainer = $(self.mainContainer);
+
+			/* Hack to redraw myaccount links on masquerading */
+			navLinks.find('.myaccount-common-link').remove();
+			navLinks.append(navHtml);
+		},
+
+		renderDropdown: function(callback) {
+			var self = this,
+				countBadges = 3;
+
+			monster.pub('myaccount.refreshBadges', {
+				callback: function() {
+					/* when all the badges have been updated, display my account */
+					if(!--countBadges) {
+						self.toggle({
+							callback: callback
+						});
+					}
+				}
+			});
+		},
+
+		bindEvents: function(container) {
+			var self = this,
+				mainContainer = $(self.mainContainer);
+				navLinks = $('#ws-navbar .links');
+
+			container.find('.myaccount-close').on('click', function() {
+				self.toggle();
+            });
+
+			container.find('.myaccount-element').on('click', function() {
+				var $this = $(this),
+					key = $this.data('key'),
+					module = $this.data('module'),
+					args = {
+						module: module
+					};
+
+				if(key) {
+					args.title = self.i18n.active()[module][key + 'Title'];
+					args.key = key;
+				}
+				else {
+					args.title = self.i18n.active()[module].title;
+				}
+
+				self.activateSubmodule(args);
+			});
+
+			navLinks.on('click', '.myaccount-link', function(e) {
+				e.preventDefault();
+
+				if(mainContainer.hasClass('myaccount-open')) {
+					self.hide();
+				}
+				else {
+					self.renderDropdown();
+				}
+			});
+
+			navLinks.on('click', '.restore-masquerading-link', function(e) {
+				e.preventDefault();
+
+				// Closing myaccount (if open) before restoring from masquerading
+				if(mainContainer.hasClass('myaccount-open')) {
+					self.toggle();
+				}
+				monster.pub('accountsManager.restoreMasquerading');
+				monster.pub('core.showAppName', 'accounts');
+			});
+		},
+
+		// events
+		toggle: function(args) {
+			var self = this,
+				callback = (args || {}).callback,
+				myaccount = $(self.mainContainer),
+				scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
+                niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
+                                                                    cursorcolor:"#333",
+                                                                    cursoropacitymin:0.5,
+                                                                    hidecursordelay:1000
+                                                                }),
+                firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
+                uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
+
+			if (uiRestrictions && uiRestrictions[self.defaultApp.name] && uiRestrictions[self.defaultApp.name].show_tab === false) {
+				self.defaultApp.name = firstTab.data('module');
+				if (firstTab.data('key')) {
+					self.defaultApp.key =  firstTab.data('key');
+				};
+			}
+            var defaultApp = self.defaultApp.name;
+
+			if(myaccount.hasClass('myaccount-open')) {
+				self.hide(myaccount, niceScrollBar);
+			}
+			else {
+				var args = {
+					title: 'lol',//self.i18n.active()[defaultApp].title,
+					module: defaultApp,
+					callback: function() {
+						myaccount
+							.slideDown(300, function() {
+								niceScrollBar.show().resize();
+							})
+							.addClass('myaccount-open');
+
+						callback && callback();
+					}
 				};
 
-			/* If it hasn't been loaded before */
-			if(self._apps.length) {
-				self._loadApps(function() {
-					displayMyAccount();
-				});
-			}
-			/* Else we need to refresh the badges */
-			else {
-				var countBadges = 3;
+				if (self.defaultApp.key) {
+					args.key = self.defaultApp.key;
+				};
 
-				monster.pub('myaccount.refreshBadges', {
-					callback: function() {
-						/* when all the badges have been updated, display my account */
-						if(!--countBadges) {
-							displayMyAccount();
-						}
-					}
-				});
+				self.activateSubmodule(args);
 			}
+		},
+
+		activateSubmodule: function(args) {
+            var self = this,
+                myaccount = $(self.mainContainer),
+                submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
+
+            myaccount.find('.myaccount-menu .nav li').removeClass('active');
+            submodule.addClass('active');
+
+            myaccount.find('.myaccount-module-title').html(args.title);
+            myaccount.find('.myaccount-content').empty();
+
+            monster.pub('myaccount.' + args.module + '.renderContent', args);
+        },
+
+        _renderSubmodule: function(template) {
+			var parent = $('#myaccount');
+
+			parent.find('.myaccount-right .myaccount-content').html(template);
+
+			if (parent.find('.myaccount-menu .nav li.active')) {
+				parent.find('.myaccount-right .nav li').first().addClass('active');
+				parent.find('.myaccount-right .tab-content div').first().addClass('active');
+			};
+		},
+
+		hide: function(myaccount, scrollbar) {
+			var self = this,
+				myaccount = myaccount || $(self.mainContainer),
+				niceScrollBar = scrollbar || myaccount.find('.myaccount-menu ul.nav.nav-list').getNiceScroll()[0];
+
+			myaccount.find('.myaccount-right .myaccount-content').empty();
+			niceScrollBar.hide();
+			myaccount
+				.slideUp(300, niceScrollBar.resize)
+				.removeClass('myaccount-open');
+		},
+
+		_hide: function() {
+			var self = this,
+				myaccount = $(self.mainContainer);
+
+			if(myaccount.hasClass('myaccount-open')) {
+				self.hide(myaccount);
+			}
+		},
+
+		_updateMenu: function(params) {
+			if(params.data !== undefined) {
+				if(params.key) {
+					$('[data-key="'+params.key+'"] .badge').html(params.data);
+				}
+				else {
+					$('[data-module="'+params.module+'"] .badge').html(params.data);
+				}
+			}
+
+			params.callback && params.callback();
 		},
 
 		checkCreditCard: function() {
@@ -187,8 +325,8 @@ define(function(require){
 
 			self.getBraintree(function(data) {
 				if(data.credit_cards.length === 0) {
-					self.loadAppsAndDisplay(function() {
-						monster.pub('myaccount-profile.showCreditTab');
+					self.renderDropdown(function() {
+						monster.pub('myaccount.profile.showCreditTab');
 					});
 				}
 			});
@@ -206,204 +344,6 @@ define(function(require){
 					callback && callback(dataBraintree.data);
 				}
 			});
-		},
-
-		bindEvents: function(container) {
-			var self = this;
-
-			container.find('.myaccount-close').on('click', function() {
-                monster.pub('myaccount.display');
-            });
-		},
-
-		// events
-		_show: function(args) {
-			var self = this,
-				callback = (args || {}).callback,
-				myaccount = $('#myaccount'),
-				scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
-                niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
-                                                                    cursorcolor:"#333",
-                                                                    cursoropacitymin:0.5,
-                                                                    hidecursordelay:1000
-                                                                }),
-                firstTab = myaccount.find('.myaccount-menu li:not(.nav-header)').first(),
-                uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions,
-                defaultApp = self._defaultApp.name.match(/-(?:[a-zA-Z]+)/)[0].replace('-', '');
-
-			if (uiRestrictions && uiRestrictions[defaultApp] && uiRestrictions[defaultApp].show_tab === false) {
-				self._defaultApp.name = firstTab.data('module');
-				if (firstTab.data('key')) {
-					self._defaultApp.key =  firstTab.data('key');
-				};
-			}
-
-			if(myaccount.hasClass('myaccount-open')) {
-				self.hide(myaccount, niceScrollBar);
-			}
-			else {
-				var args = {
-					title: monster.apps[self._defaultApp.name].i18n.active().title,
-					module: self._defaultApp.name,
-					callback: function() {
-						myaccount
-							.slideDown(300, function() {
-								niceScrollBar.show().resize();
-							})
-							.addClass('myaccount-open');
-
-						callback && callback();
-					}
-				};
-
-				if (self._defaultApp.key) {
-					args.key = self._defaultApp.key;
-				};
-
-				monster.pub('myaccount.activateSubmodule', args);
-			}
-		},
-
-		hide: function(myaccount, scrollbar) {
-			var self = this,
-				myaccount = myaccount || $('#myaccount'),
-				niceScrollBar = scrollbar || myaccount.find('.myaccount-menu ul.nav.nav-list').getNiceScroll()[0];
-
-			myaccount.find('.myaccount-right .myaccount-content').empty();
-			niceScrollBar.hide();
-			myaccount
-				.slideUp(300, niceScrollBar.resize)
-				.removeClass('myaccount-open');
-		},
-
-		_hide: function() {
-			var self = this,
-				myaccount = $('#myaccount');
-
-			if(myaccount.hasClass('myaccount-open')) {
-				self.hide(myaccount);
-			}
-		},
-
-		_renderSubmodule: function(template) {
-			var parent = $('#myaccount');
-
-			parent.find('.myaccount-right .myaccount-content').html(template);
-
-			if (parent.find('.myaccount-menu .nav li.active')) {
-				parent.find('.myaccount-right .nav li').first().addClass('active');
-				parent.find('.myaccount-right .tab-content div').first().addClass('active');
-			};
-		},
-
-		_activateSubmodule: function(args) {
-			var self = this,
-				myaccount = $('#myaccount'),
-				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
-
-			myaccount.find('.myaccount-menu .nav li').removeClass('active');
-			submodule.addClass('active');
-
-			myaccount.find('.myaccount-module-title').html(args.title);
-			myaccount.find('.myaccount-content').empty();
-
-			monster.pub(args.module + '.renderContent', args);
-		},
-
-		_updateMenu: function(params) {
-			if(params.data !== undefined) {
-				if(params.key) {
-					$('[data-key="'+params.key+'"] .badge').html(params.data);
-				}
-				else {
-					$('[data-module="'+params.module+'"] .badge').html(params.data);
-				}
-			}
-
-			params.callback && params.callback();
-		},
-
-		_addSubmodule: function(params) {
-			var self = this,
-				inserted = false,
-				myaccount = $('body #myaccount'),
-				navList = myaccount.find('.myaccount-menu .nav'),
-				category = params.category || 'accountCategory',
-				menu = params.menu,
-				_weight = params.weight,
-				module = params.name,
-				restriction = menu.data('key') ? menu.data('key') : menu.data('module')
-																.match(/-(?:[a-zA-Z]+)/)[0]
-																.replace(/([a-z])([A-Z])/, '$1_$2')
-																.toLowerCase()
-																.replace('-', ''),
-				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
-
-			if(module === self._defaultApp.name) {
-				self._defaultApp.title = params.title;
-			}
-
-			menu.on('click', function() {
-				var args = {
-					module: module,
-					title: params.title,
-					key: menu.data('key') || ''
-				};
-
-				monster.pub('myaccount.activateSubmodule', args);
-			});
-
-			category = self.groups[category];
-
-			if (!uiRestrictions || !uiRestrictions[restriction] || uiRestrictions[restriction].show_tab) {
-
-				if(navList.find('#'+category.id).size() === 0) {
-					var inserted = false;
-					navList.find('li.nav-header').each(function(k, v) {
-						if($(this).data('weight') > category.weight) {
-							$(this).before('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
-							inserted = true;
-							return false;
-						}
-					});
-
-					if(inserted === false) {
-						navList.append('<li id="'+category.id+'" data-weight="'+category.weight+'" class="nav-header hidden-phone blue-gradient-reverse">'+ category.friendlyName +'</li>');
-					}
-				}
-
-				if(_weight) {
-					menu.data('weight', _weight);
-
-					var categoryReached = false;
-
-					navList.find('li').each(function(index,v) {
-						if(categoryReached) {
-							var weight = $(this).data('weight');
-
-							if(_weight < weight || $(v).hasClass('nav-header')) {
-								$(this)
-									.before(menu);
-
-								return false;
-							}
-						}
-
-						if($(v).attr('id') === category.id) {
-							categoryReached = true;
-						}
-
-						if(index >= (navList.find('li').length - 1)) {
-							$(this).after(menu);
-
-							return false;
-						}
-					});
-				}
-				else {
-					navList.find('#'+category.id).after(menu);
-				}
-			}
 		}
 	};
 

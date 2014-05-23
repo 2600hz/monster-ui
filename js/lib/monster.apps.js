@@ -26,15 +26,26 @@ define(function(){
 
 			_.extend(app.data, { i18n: {} });
 
-			/* en-US is the default language of Monster */
-			var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+			// en-US is the default language of Monster
+			var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage,
+				// Once all the different i18n files are loaded, we need to append the core i18n to the app
+				addCoreI18n = function() {
+					if('core' in monster.apps) {
+						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
+					}
+				}
 
-			self.loadLocale(app, self.defaultLanguage);
-
-			/* If the app supports the custom language, then we load its json file if its not the default one */
-			if(customLanguage !== self.defaultLanguage) {
-				self.loadLocale(app, customLanguage);
-			}
+			self.loadLocale(app, self.defaultLanguage, function() {
+				// If the app supports the custom language, then we load its json file if its not the default one
+				if(customLanguage !== self.defaultLanguage) {
+					self.loadLocale(app, customLanguage, function() {
+						addCoreI18n();
+					});
+				}
+				else {
+					addCoreI18n();
+				}
+			});
 
 			// add an active property method to the i18n array within the app.
 			_.extend(app.i18n, {
@@ -126,7 +137,16 @@ define(function(){
 							});
 
 							require([key], function(module) {
+								/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
+								var oldSubscribes = $.extend(true, {}, app.subscribe);
 								$.extend(true, app, module);
+								app.subscribe = oldSubscribes;
+
+								_.each(module.subscribe, function(callback, topic){
+									var cb = typeof callback === 'string' ? app[callback] : callback;
+
+									monster.sub(topic, cb, app);
+								});
 
 								callback && callback();
 							});
@@ -183,11 +203,6 @@ define(function(){
 				// If we're loading the default language, then we add it, and also merge the core i18n to it
 				if(language === self.defaultLanguage) {
 					app.data.i18n[language] = data;
-
-					// We merge the core data, which needs to be shared between apps, to the i18n of every app
-					if('core' in monster.apps) {
-						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
-					}
 				}
 				else {
 					// Otherwise, if we load a custom language, we merge the translation to the en-one

@@ -1,0 +1,39 @@
+<div class="trunks-content">
+	<div class="fancy-header clearfix">
+		<div class="left-image">
+			<i class="icon-arrow-right"></i>
+		</div>
+
+		<div class="title-block">
+			{{ i18n.trunks.inboundCalling }} <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.trunks.helpInbound }}"></i>
+		</div>
+		<div class="right-block box-white-border">
+			<div class="content box-white-content">
+				<div class="main-title">
+					{{inbound}}
+				</div>
+				<div class="sub-title">
+					{{ i18n.currencyUsed }}<span class="total-amount-value">{{totalAmountInbound}}</span>{{ i18n.trunks.perMonth }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="section-slider-value clearfix">
+		<div class="slider-value-wrapper clearfix">
+			<div class="slider-value">{{inbound}}</div>
+			<div class="total-amount">{{ i18n.currencyUsed }}<span class="total-amount-value">{{totalAmountInbound}}</span>{{ i18n.trunks.perMonth }}</div>
+		</div>
+	</div>
+
+	<div class="section-slider clearfix">
+		<div class="slider-title">{{ i18n.trunks.quantity }}</div>
+		<div class="slider-wrapper">
+			<div id="slider_inbound"></div>
+		</div>
+	</div>
+
+	<div class="section-button">
+		<button type="submit" class="btn btn-success update-limits">{{ i18n.trunks.updateLimits }}</button>
+	</div>
+</div>

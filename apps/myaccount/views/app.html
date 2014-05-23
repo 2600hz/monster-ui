@@ -1,0 +1,104 @@
+<div id="myaccount">
+	<div class="myaccount-menu">
+		<ul class="nav nav-list">
+			{{#if restrictions.categories.account.show}}
+			<li id="accountCategory" class="nav-header hidden-phone blue-gradient-reverse">
+				{{ i18n.accountCategory }}
+			</li>
+			{{/if}}
+
+			{{#if restrictions.profile.show_tab}}
+			<li class="myaccount-element active" data-module="profile">
+				<a href="javascript:void(0);">
+					<div class="active-highlight">
+						<i class="icon-cog"></i>
+						<span class="hidden-phone element-name">{{ i18n.profile.title }}</span>
+					</div>
+				</a>
+			</li>
+			{{/if}}
+
+			{{#if restrictions.categories.billing.show}}
+			<li id="billingCategory" class="nav-header hidden-phone blue-gradient-reverse">
+				{{ i18n.billingCategory }}
+			</li>
+			{{/if}}
+			{{#if restrictions.balance.show_tab}}
+			<li class="myaccount-element" data-module="balance">
+				<a href="javascript:void(0);">
+        			<div class="active-highlight">
+            			<i class="icon-time"></i>
+            			<span class="hidden-phone element-name">{{ i18n.balance.title }}</span>
+
+					{{#compare uiRestrictions.balance.show_credit '!==' false }}
+            			<span class="badge pull-right visible-desktop">$<span class="amount">{{ amount }}</span></span>
+					{{/compare}}
+        			</div>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.service_plan.show_tab}}
+			<li class="myaccount-element" data-module="servicePlan">
+				<a href="javascript:void(0);">
+					<div class="active-highlight">
+						<i class="icon-calendar"></i>
+						<span class="hidden-phone element-name">{{ i18n.servicePlan.title }}</span>
+					</div>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.transactions.show_tab}}
+			<li class="myaccount-element" data-module="transactions">
+				<a href="javascript:void(0);">
+					<div class="active-highlight">
+						<i class="icon-credit-card"></i>
+						<span class="hidden-phone element-name">{{ i18n.transactions.title }}</span>
+					</div>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.categories.trunking.show}}
+			<li id="trunkingCategory" class="nav-header hidden-phone blue-gradient-reverse">
+				{{ i18n.trunkingCategory }}
+			</li>
+			{{/if}}
+
+			{{#if restrictions.outbound.show_tab}}
+			<li class="myaccount-element" data-module="trunks" data-key="outbound">
+				<a href="javascript:void(0);">
+					<div class="active-highlight">
+						<i class="icon-arrow-left"></i>
+						<span class="hidden-phone element-name">{{ i18n.trunks.outbound }}</span>
+						<span class="badge pull-right visible-desktop">
+						</span>
+					</div>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.inbound.show_tab}}
+			<li class="myaccount-element" data-module="trunks" data-key="inbound">
+				<a href="javascript:void(0)">
+					<div class="active-highlight">
+						<i class="icon-arrow-right"></i>
+						<span class="hidden-phone element-name">{{ i18n.trunks.inbound }}</span>
+						<span class="badge pull-right visible-desktop">
+						</span>
+	 	 	 	 </div>
+				</a>
+			</li>
+			{{/if}}
+		</ul>
+	</div>
+
+	<div class="myaccount-right">
+		<div class="myaccount-titlebar">
+			<div class="myaccount-module-title"></div>
+			<div class="myaccount-close">
+				<span><span>{{ i18n.closeSlide }}</span> <i class="icon-remove icon-small"></i></span>
+			</div>
+		</div>
+		<div class="myaccount-content container-fluid">
+
+		</div>
+	</div>
+</div>

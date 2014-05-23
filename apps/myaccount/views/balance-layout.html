@@ -1,0 +1,49 @@
+<div class="balance-content-wrapper">
+    <div class="action-bar">
+
+    </div>
+
+    {{#compare uiRestrictions.balance.show_header '!==' false }}
+    <div class="title-bar fancy-header">
+        {{#compare uiRestrictions.balance.show_credit '!==' false }}
+        <div class="box-white-border">
+            <div class="box-white-content">
+                <div class="title">{{ i18n.balance.availableCredits }}</div>
+                <div class="value">{{ i18n.currencyUsed }}<span id="amount">{{amount}}</span></div>
+            </div>
+        </div>
+        <div class="add-credits-div visible-desktop">
+            <button class="btn btn-success" id="add_credits">{{ i18n.balance.addCredit }}</button>
+        </div>
+        <div class="box-white-border pull-right visible-desktop">
+            <div class="box-white-content">
+                <div class="title">{{ i18n.balance.callCharges }}</div>
+                <div class="value">{{ i18n.currencyUsed }}<span id="call_charges">{{totalCharges}}</span></div>
+            </div>
+        </div>
+        {{/compare}}
+        {{#compare uiRestrictions.balance.show_minutes '!==' false }}
+        <div class="box-white-border pull-right visible-desktop">
+            <div class="box-white-content">
+                <div class="title">{{ i18n.balance.minutesUsed }}</div>
+                <div class="value"><span id="minutes_used">{{totalMinutes}}</span></div>
+            </div>
+        </div>
+        {{/compare}}
+        <div class="box-data pull-right hidden-desktop">
+            {{#compare uiRestrictions.balance.show_minutes '!==' false }}
+            <div class="data-line">{{ i18n.balance.minutesUsed }}: <span class="value">{{totalMinutes}}</span></div>
+            {{/compare}}
+            {{#compare uiRestrictions.balance.show_credit '!==' false }}
+            <div class="data-line">{{ i18n.balance.callCharges }}: <span class="value">{{ i18n.currencyUsed }}{{totalCharges}}</span></div>
+            {{/compare}}
+            <button class="btn btn-success" id="add_credits">{{ i18n.balance.addCredit }}</button>
+        </div>
+    </div>
+    {{/compare}}
+
+    <div class="table-wrapper">
+        <table id="transactions_grid" class="display table">
+        </table>
+    </div>
+</div>

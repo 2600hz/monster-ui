@@ -1,0 +1,34 @@
+<div class="transactions-content-wrapper">
+	<div class="fancy-header">
+		<div class="left-image">
+			<i class="icon-credit-card"></i>
+		</div>
+
+		<div class="title-block">
+			{{ i18n.transactions.titleHeader }} <span class="billing-cycle"> (<span class="billing-date start">{{ billingStartDate }}</span> {{ i18n.transactions.to }} <span class="billing-date end">{{ billingEndDate }}</span>) </span>
+		</div>
+
+		<div class="right-block box-white-border">
+			<div class="content box-white-content">
+				<div class="main-title">
+					{{ i18n.currencyUsed }}<span class="total-amount">{{ amount }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<span class="action-bar-wrapper">
+		{{ i18n.startDate }}: <input id="startDate" readonly="readonly" type="text"/>
+		{{ i18n.endDate }}: <input id="endDate" readonly="readonly" type="text"/>
+		<button class="btn btn-primary button-search" id="filter_transactions">{{ i18n.filter }}</button>
+		<!--<li class="dropdown dropdown-download">
+			<a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download-alt icon-green"></i>{{ i18n.download }}</a>
+			<ul class="dropdown-menu">
+				<li id="get_csv"><a href="#">{{ i18n.csv }}</a></li>
+			</ul>
+		</li>-->
+	</span>
+
+	<div class="list-transactions">
+	</div>
+</div>
