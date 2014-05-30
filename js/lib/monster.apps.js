@@ -59,10 +59,12 @@ define(function(){
 			app.apiUrl = app.apiUrl || monster.config.api.default;
 
 			app.callApi = function(params) {
-				var apiSplit = params.resource.split('.');
-				if(apiSplit.length === 2 && apiSplit[0] in monster.kazooSdk && apiSplit[1] in monster.kazooSdk[apiSplit[0]]) {
-					var apiFunction = monster.kazooSdk[apiSplit[0]][apiSplit[1]],
-						apiSettings = $.extend({
+				var apiSplit = params.resource.split('.'),
+					module = apiSplit[0],
+					method = apiSplit[1];
+					
+				if(apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
+					var apiSettings = $.extend({
 							authToken: app.authToken,
 							apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
 							uiMetadata: {
@@ -73,7 +75,7 @@ define(function(){
 							error: params.error
 						}, params.data);
 
-					return apiFunction(apiSettings);
+					return monster.kazooSdk[module][method](apiSettings);
 				} else {
 					console.error('This api does not exist.');
 				}
