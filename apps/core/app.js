@@ -113,23 +113,30 @@ define(function(require){
 		},
 
 		_loadApps: function(args) {
-			var self = this;
+			var self = this,
+				options = args.options || {};
 
+			// Once we finished loading the required base apps
 			if(!self._baseApps.length) {
-				/* If admin with no app, go to app store, otherwise, oh well... */
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
 				monster.apps.load(defaultApp, function(app) {
 					self.showAppName(defaultApp);
 					app.render($('#ws-content'));
-				});
+				}, options);
 			}
 			else {
 				var appName = self._baseApps.pop();
 
-				monster.apps.load(appName, function(app) {
+				// Don't load my account if there's no Kazoo Account yet
+				if(!self.hasOwnProperty('accountId') && appName === 'myaccount') {
 					self._loadApps(args);
-				});
+				}
+				else {
+					monster.apps.load(appName, function(app) {
+						self._loadApps(args);
+					});
+				}
 			}
 		},
 

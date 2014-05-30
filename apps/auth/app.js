@@ -24,19 +24,21 @@ define(function(require){
 				mainContainer = $('#ws-content');
 
 			self.getWhitelabel(function(data) {
-				if(!$.cookie('monster-auth')) {
-					if('authentication' in data) {
-						self.customAuth = data.authentication;
+				self.whitelabel = data;
 
+				if(!$.cookie('monster-auth')) {
+					// If it uses custom authentication, load the auth module
+					if(self.whitelabel.hasOwnProperty('authentication')) {
 						var options = {
-							sourceUrl: self.customAuth.source_url,
-							apiUrl: self.customAuth.api_url
+							sourceUrl: self.whitelabel.authentication.source_url,
+							apiUrl: self.whitelabel.authentication.api_url
 						};
 
-						monster.apps.load(self.customAuth.name, function(app) {
+						monster.apps.load(self.whitelabel.authentication.name, function(app) {
 							app.render(mainContainer);
 						}, options);
 					}
+					//Otherwise just render our own login page
 					else {
 						self.renderLoginPage(mainContainer);
 					}
@@ -45,11 +47,21 @@ define(function(require){
 					var cookieData = $.parseJSON($.cookie('monster-auth'));
 
 					self.authToken = cookieData.authToken;
-					self.accountId = cookieData.accountId;
-					self.userId = cookieData.userId;
 					self.isReseller = cookieData.isReseller;
 					self.resellerId = cookieData.resellerId;
-					self.installedApps = cookieData.installedApps;
+
+					// The following attributes don't always come back, when using custom-auth for example.
+					if (cookieData.hasOwnProperty('accountId')) {
+						self.accountId = cookieData.accountId;
+					}
+
+					if (cookieData.hasOwnProperty('userId')) {
+						self.userId = cookieData.userId;
+					}
+
+					if (cookieData.hasOwnProperty('installedApps')) {
+						self.installedApps = cookieData.installedApps;
+					}
 
 					self.afterLoggedIn();
 				}
@@ -122,7 +134,12 @@ define(function(require){
 		afterLoggedIn: function() {
 			var self = this;
 
-			$('#home_link').addClass('active');
+			$('#ws-content').empty();
+
+			// If user has only access to a single app, hide apps menu
+			if(!(self.whitelabel.hasOwnProperty('single_app'))) {
+				$('#home_link').addClass('active');
+			}
 
 			self.loadAccount();
 		},
@@ -141,12 +158,62 @@ define(function(require){
 			});
 		},
 
+		createCookies: function(data) {
+			var self = this;
+
+			// monster-login cookie
+			// Only if non-custom auth
+			if(!(self.whitelabel && self.whitelabel.hasOwnProperty('authentication'))) {
+				if($('#remember_me').is(':checked')) {
+					var templateLogin = $('.login-block form');
+				    	cookieLogin = {
+							login: templateLogin.find('#login').val(),
+							accountName: templateLogin.find('#account_name').val()
+						};
+
+					$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
+				}
+				else{
+					$.cookie('monster-login', null);
+				}
+			}
+
+			// monster-auth cookie
+			var cookieAuth = {
+				language: data.data.language,
+				authToken: self.authToken,
+				isReseller: self.isReseller,
+				resellerId: self.resellerId,
+			};
+
+			// These attributes don't always come back with custom-auth, so we need to make sure that they exist before saving them in the cookie
+			if (self.hasOwnProperty('accountId')) {
+				cookieAuth.accountId = self.accountId;
+			}
+
+			if (self.hasOwnProperty('userId')) {
+				cookieAuth.userId = self.userId;
+			}
+
+			if (self.hasOwnProperty('installedApps')) {
+				cookieAuth.installedApps = self.installedApps;
+			}
+
+			$.cookie('monster-auth', JSON.stringify(cookieAuth));
+		},
+
 		_afterAuthenticate: function(data) {
 			var self = this;
 
-			self.accountId = data.data.account_id;
+			if (data.data.hasOwnProperty('account_id')) {
+				self.accountId = data.data.account_id;
+			}
+
+			if (data.data.hasOwnProperty('owner_id')) {
+				self.userId = data.data.owner_id;
+			}
+
 			self.authToken = data.auth_token;
-			self.userId = data.data.owner_id;
 			self.isReseller = data.data.is_reseller;
 			self.resellerId = data.data.reseller_id;
 
@@ -157,32 +224,7 @@ define(function(require){
 				toastr.error(self.i18n.active().toastrMessages.appListError);
 			}
 
-			if($('#remember_me').is(':checked')) {
-				var templateLogin = $('.login-block form');
-				    cookieLogin = {
-						login: templateLogin.find('#login').val(),
-						accountName: templateLogin.find('#account_name').val()
-					};
-
-				$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
-			}
-			else{
-				$.cookie('monster-login', null);
-			}
-
-			var cookieAuth = {
-				language: data.data.language,
-				authToken: self.authToken,
-				accountId: self.accountId,
-				userId: self.userId,
-				isReseller: self.isReseller,
-				resellerId: self.resellerId,
-				installedApps: self.installedApps
-			};
-
-			$.cookie('monster-auth', JSON.stringify(cookieAuth));
-
-			$('#ws-content').empty();
+			self.createCookies(data);
 
 			self.afterLoggedIn();
 		},
@@ -192,24 +234,37 @@ define(function(require){
 
 			monster.parallel({
 				account: function(callback) {
-					self.getAccount(function(data) {
-						callback(null, data.data);
-					},
-					function(data) {
-						callback('error account', data);
-					});
+					// accountId missing Can happen if user doesn't have an account yet, for example with ubiquiti auth
+					if(self.hasOwnProperty('accountId')) {
+						self.getAccount(function(data) {
+							callback(null, data.data);
+						},
+						function(data) {
+							callback('error account', data);
+						});
+					}
+					else {
+						callback(null, {});
+					}
 				},
 				user: function(callback) {
-					self.getUser(function(data) {
-						callback(null, data.data);
-					},
-					function(data) {
-						callback('error user', data);
-					});
+					// userid missing Can happen if user is using a SSO like ubiquiti
+					if(self.hasOwnProperty('userId')) {
+						self.getUser(function(data) {
+							callback(null, data.data);
+						},
+						function(data) {
+							callback('error user', data);
+						});
+					}
+					else {
+						callback(null, {});
+					}
 				}
 			},
 			function(err, results) {
-				var defaultApp;
+				var defaultApp,
+					loadAppsOptions = {};
 
 				if(err) {
 					$.cookie('monster-auth', null);
@@ -224,72 +279,85 @@ define(function(require){
 					results.account.apps = results.account.apps || {};
 
 					var afterLanguageLoaded = function() {
-						var accountApps = results.account.apps,
-							fullAppList = {};
+						// If the user is not using a single app, check his apps order to get the default app
+						if(!(self.whitelabel.hasOwnProperty('single_app'))) {
+							var accountApps = results.account.apps,
+								fullAppList = {};
 
-						_.each(self.installedApps, function(val) {
-							fullAppList[val.id] = val;
-						});
-
-						if(results.user.appList && results.user.appList.length > 0) {
-							for(var i = 0; i < results.user.appList.length; i++) {
-								var appId = results.user.appList[i];
-								if(appId in fullAppList && appId in accountApps) {
-									var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
-									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-									if('all' in accountApps[appId]) {
-										accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
-										delete accountApps[appId].all;
-									}
-									/*****************************************************************************************/
-									if(accountApps[appId].allowed_users === 'all'
-									|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
-									|| accountAppUsers.indexOf(results.user.id) >= 0) {
-										defaultApp = fullAppList[appId].name;
-										break;
-									}
-								}
-							}
-						} else {
-							var userAppList = $.map(fullAppList, function(val) {
-								if(val.id in accountApps) {
-									var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
-									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-									if('all' in accountApps[val.id]) {
-										accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
-										delete accountApps[val.id].all;
-									}
-									/*****************************************************************************************/
-									if(accountApps[val.id].allowed_users === 'all'
-									|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
-									|| accountAppUsers.indexOf(results.user.id) >= 0) {
-										return val;
-									}
-								}
+							_.each(self.installedApps, function(val) {
+								fullAppList[val.id] = val;
 							});
 
-							if(userAppList && userAppList.length > 0) {
-								userAppList.sort(function(a, b) {
-									return a.label < b.label ? -1 : 1;
+							if(results.user.appList && results.user.appList.length > 0) {
+								for(var i = 0; i < results.user.appList.length; i++) {
+									var appId = results.user.appList[i];
+									if(appId in fullAppList && appId in accountApps) {
+										var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
+										/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+										if('all' in accountApps[appId]) {
+											accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
+											delete accountApps[appId].all;
+										}
+										/*****************************************************************************************/
+										if(accountApps[appId].allowed_users === 'all'
+										|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
+										|| accountAppUsers.indexOf(results.user.id) >= 0) {
+											defaultApp = fullAppList[appId].name;
+											break;
+										}
+									}
+								}
+							} else {
+								var userAppList = $.map(fullAppList, function(val) {
+									if(val.id in accountApps) {
+										var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
+										/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+										if('all' in accountApps[val.id]) {
+											accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
+											delete accountApps[val.id].all;
+										}
+										/*****************************************************************************************/
+										if(accountApps[val.id].allowed_users === 'all'
+										|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
+										|| accountAppUsers.indexOf(results.user.id) >= 0) {
+											return val;
+										}
+									}
 								});
 
-								results.user.appList = $.map(userAppList, function(val) {
-									return val.id;
-								});
+								if(userAppList && userAppList.length > 0) {
+									userAppList.sort(function(a, b) {
+										return a.label < b.label ? -1 : 1;
+									});
 
-								defaultApp = fullAppList[results.user.appList[0]].name;
+									results.user.appList = $.map(userAppList, function(val) {
+										return val.id;
+									});
 
-								self.callApi({
-									resource: 'user.update',
-									data: {
-										accountId: results.account.id,
-										userId: results.user.id,
-										data: results.user
-									},
-									success: function(_data, status) {},
-									error: function(_data, status) {}
-								});
+									defaultApp = fullAppList[results.user.appList[0]].name;
+
+									self.callApi({
+										resource: 'user.update',
+										data: {
+											accountId: results.account.id,
+											userId: results.user.id,
+											data: results.user
+										},
+										success: function(_data, status) {},
+										error: function(_data, status) {}
+									});
+								}
 							}
+						}
+						else {
+							var singleApp = self.whitelabel.single_app;
+
+							defaultApp = singleApp.name;
+
+							loadAppsOptions = {
+								sourceUrl: singleApp.source_url,
+								apiUrl: singleApp.api_url
+							};
 						}
 
 						self.currentUser = results.user;
@@ -299,7 +367,8 @@ define(function(require){
 						self.currentAccount = $.extend(true, {}, self.originalAccount);
 
 						monster.pub('core.loadApps', {
-							defaultApp: defaultApp
+							defaultApp: defaultApp,
+							options: loadAppsOptions
 						});
 					};
 
@@ -520,7 +589,22 @@ define(function(require){
 					callback && callback(data.data);
 				},
 				error: function(err) {
-					callback && callback({});
+					var expectedPayload = {
+						'authentication': {
+							name: 'ubiquiti-auth',
+							api_url: 'http://10.26.0.41:8000/v2/',
+							source_url: 'http://webdev/monster-modules/ubiquiti-auth',
+						},
+						'single_app': {
+							name: 'ubiquiti',
+							api_url: 'http://10.26.0.41:8000/v2/',
+							source_url: 'http://webdev/monster-modules/ubiquiti',
+							label: 'Ubiquiti PBX'
+						}
+					};
+
+					callback && callback(expectedPayload);
+					//callback && callback({});
 				}
 			});
 		}
