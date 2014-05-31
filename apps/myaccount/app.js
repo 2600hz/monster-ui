@@ -240,7 +240,7 @@ define(function(require){
 			}
 			else {
 				var args = {
-					title: 'lol',//self.i18n.active()[defaultApp].title,
+					title: self.i18n.active()[defaultApp].title,
 					module: defaultApp,
 					callback: function() {
 						myaccount
