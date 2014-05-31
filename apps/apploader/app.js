@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		nicescroll = require('nicescroll'),
 		monster = require('monster');
 
 	var app = {
@@ -47,7 +48,7 @@ define(function(require){
 
 		_render: function() {
 			var self = this;
-			
+
 		},
 
 		isRendered: function() {
@@ -58,18 +59,18 @@ define(function(require){
 			var self = this;
 			if(!self.isRendered()) {
 				self.getUserApps(function(appList) {
-					var template = $(monster.template(self, 'app', { 
-						apps: appList, 
+					var template = $(monster.template(self, 'app', {
+						apps: appList,
 						allowAppstore: (monster.apps['auth'].currentUser.priv_level === "admin")
 					}));
 					$('#topbar').after(template);
 
-					template.find('.app-list').sortable({ 
-						axis: "y", 
-						cursor: "move", 
+					template.find('.app-list').sortable({
+						axis: "y",
+						cursor: "move",
 						containment: "parent",
-						handle: ".app-draggable", 
-						placeholder: "app-list-element-placeholder", 
+						handle: ".app-draggable",
+						placeholder: "app-list-element-placeholder",
 						revert: 100,
 						tolerance: "pointer"
 					});
@@ -84,7 +85,7 @@ define(function(require){
 					self.show();
 				});
 			} else {
-				self.show();	
+				self.show();
 			}
 		},
 
@@ -103,9 +104,9 @@ define(function(require){
 				}
 
 				monster.apps['auth'].currentUser.appList = $.map(
-					$this.find('.app-list-element'), 
-					function(val) { 
-						return $(val).data('id'); 
+					$this.find('.app-list-element'),
+					function(val) {
+						return $(val).data('id');
 					}
 				);
 				monster.request({
@@ -141,9 +142,9 @@ define(function(require){
 
 			$(document).on('click', function(e) {
 				var homeLink = $('#home_link');
-				if(!parent.is(e.target) 
+				if(!parent.is(e.target)
 				&& !parent.has(e.target).length
-				&& !homeLink.is(e.target) 
+				&& !homeLink.is(e.target)
 				&& !homeLink.has(e.target).length) {
 					self._hide(parent);
 				}
@@ -158,9 +159,9 @@ define(function(require){
 			if(!apploader.hasClass('active')) {
 				apploader.addClass('active')
 						 .animate(
-						 	{ left: 0 }, 
-						 	400, 
-						 	"swing", 
+						 	{ left: 0 },
+						 	400,
+						 	"swing",
 						 	function() {
 						 		niceScrollBar.resize();
 						 		niceScrollBar.show();
@@ -178,9 +179,9 @@ define(function(require){
 				niceScrollBar.hide();
 				apploader.removeClass('active')
 						 .animate(
-						 	{ left: "-310px" }, 
-						 	400, 
-						 	"swing", 
+						 	{ left: "-310px" },
+						 	400,
+						 	"swing",
 						 	niceScrollBar.resize
 						 );
 			}
@@ -225,7 +226,7 @@ define(function(require){
 								delete accountApps[appId].all;
 							}
 							/*****************************************************************************************/
-							if(accountApps[appId].allowed_users === 'all' 
+							if(accountApps[appId].allowed_users === 'all'
 							|| (accountApps[appId].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin")
 							|| userArray.indexOf(self.userId) >= 0) {
 								appList.push({
