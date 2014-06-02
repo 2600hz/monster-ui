@@ -326,6 +326,9 @@ input[type="color"],
 .brand-box.audiocodes {
 	background: url('images/brands/audiocodes.png') center no-repeat;
 }
+.brand-box.grandstream {
+	background: url('images/brands/grandstream.png') center no-repeat;
+}
 
 /* Devices Models */
 .model-image {
@@ -354,6 +357,18 @@ input[type="color"],
 }
 .model-image.yealink-t38 {
 	background: url('images/models/yealinkt38.jpg') center no-repeat;
+}
+.model-image.yealink-t41 {
+	background: url('images/models/yealinkt41.jpg') center no-repeat;
+}
+.model-image.yealink-t42 {
+	background: url('images/models/yealinkt42.jpg') center no-repeat;
+}
+.model-image.yealink-t46 {
+	background: url('images/models/yealinkt46.jpg') center no-repeat;
+}
+.model-image.yealink-t48 {
+	background: url('images/models/yealinkt48.jpg') center no-repeat;
 }
 
 /* Cisco */
@@ -430,4 +445,28 @@ input[type="color"],
 }
 .model-image.polycom-7000 {
 	background: url('images/models/polycom7000.jpg') center no-repeat;
+}
+.model-image.polycom-vvx300,
+.model-image.polycom-vvx310 {
+	background: url('images/models/polycomvvx300.jpg') center no-repeat;
+}
+.model-image.polycom-vvx400,
+.model-image.polycom-vvx410 {
+	background: url('images/models/polycomvvx400.jpg') center no-repeat;
+}
+.model-image.polycom-vvx500 {
+	background: url('images/models/polycomvvx500.jpg') center no-repeat;
+}
+.model-image.polycom-vvx600 {
+	background: url('images/models/polycomvvx600.jpg') center no-repeat;
+}
+
+/* Audiocodes */
+.model-image.audiocodes-420 {
+	background: url('images/models/audiocodes420.jpg') center no-repeat;
+}
+
+/* Grandstream */
+.model-image.grandstream-ht502 {
+	background: url('images/models/grandstreamht502.jpg') center no-repeat;
 }
