@@ -621,7 +621,7 @@ define(function(require){
 						'authentication': {
 							name: 'ubiquiti-auth',
 							api_url: 'http://10.26.0.41:8000/v2/',
-							source_url: 'http://webdev/monster-modules/ubiquiti-auth',
+							source_url: 'http://webdev/monster-modules/ubiquiti/design/Resources/monster-app-auth-example/',
 						},
 						'single_app': {
 							name: 'ubiquiti',
