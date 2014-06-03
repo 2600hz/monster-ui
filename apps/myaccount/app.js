@@ -109,6 +109,11 @@ define(function(require){
 				};
 			}
 
+			// Can happen when using custom-auth, if there's no kazoo user, hide the customization of the user profile
+			if(!self.hasOwnProperty('userId')) {
+				restrictions.profile.show_user = false;
+			}
+
 			return restrictions;
 		},
 

@@ -42,7 +42,6 @@ define(function(require){
 
 		_profileRenderContent: function(args) {
 			var self = this;
-
 			monster.parallel({
 					billing: function(callback) {
 						monster.request({
@@ -60,16 +59,25 @@ define(function(require){
 						});
 					},
 					user: function(callback) {
-						monster.request({
-							resource: 'myaccount.profile.getUser',
-							data: {
-								accountId: monster.apps['auth'].originalAccount.id,
-								userId: self.userId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
+						if(self.userId) {
+							monster.request({
+								resource: 'myaccount.profile.getUser',
+								data: {
+									accountId: monster.apps['auth'].originalAccount.id,
+									userId: self.userId
+								},
+								success: function(data, status) {
+									callback(null, data.data);
+								}
+							});
+						}
+						else {
+							// for now, if the user uses an SSO, we assume he's an admin to display account and billing info.
+							// we could change that by adding a isAdmin flag to the sso auth payload and store it in the cookie, that we could then check here.
+							callback(null, {
+								priv_level: 'admin'
+							});
+						}
 					},
 					account: function(callback) {
 						monster.request({
@@ -172,6 +180,12 @@ define(function(require){
 		},
 
 		profileFormatData: function(data) {
+			// If standard user, hide account and billing
+			if(data.hasOwnProperty('user') && data.user.hasOwnProperty('priv_level') && data.user.priv_level === 'user') {
+				data.uiRestrictions.profile.show_account = false;
+				data.uiRestrictions.profile.show_billing = false;
+			}
+
 			data.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {};
 
 			if(! _.isEmpty(data.billing) ) {

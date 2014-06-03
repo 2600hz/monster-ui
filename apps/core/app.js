@@ -129,7 +129,7 @@ define(function(require){
 				var appName = self._baseApps.pop();
 
 				// Don't load my account if there's no Kazoo Account yet
-				if(!self.hasOwnProperty('accountId') && appName === 'myaccount') {
+				if(!monster.apps.auth.hasOwnProperty('accountId') && appName === 'myaccount') {
 					self._loadApps(args);
 				}
 				else {

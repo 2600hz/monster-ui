@@ -97,14 +97,14 @@ define(function(require){
 					renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
 					var balance = $(monster.template(self, 'balance-layout', renderData)),
-						args = {
+						argsLayout = {
 							module: self.name,
 							data: self.i18n.active().currencyUsed + renderData.amount
 						};
 
 					self.balanceBindEvents(balance);
 
-					monster.pub('myaccount.updateMenu', args);
+					monster.pub('myaccount.updateMenu', argsLayout);
 					monster.pub('myaccount.renderSubmodule', balance);
 
 					self.balanceInitTable(balance);
@@ -121,7 +121,7 @@ define(function(require){
 						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
 
 					balance.find('.refresh-filter').on('click', function() {
-						self._balanceRenderContent(args);
+						self._balanceRenderContent(argsLayout);
 					});
 
 					balance.find('#filter_transactions').on('click', function() {
@@ -144,6 +144,8 @@ define(function(require){
 					monster.ui.table.balance.fnAddData(renderData.tabData);
 
 					balance.find('.popup-marker').clickover();
+
+					args.callback && args.callback();
 				}
 			);
 		},

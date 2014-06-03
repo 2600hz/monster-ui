@@ -4,13 +4,11 @@
 		{{#compare uiRestrictions.profile.show_user '!==' false }}
 			<li><a href="#user"><i class="icon-user"></i>{{ i18n.profile.userSettings }}</a></li>
 		{{/compare}}
-		{{#compare user.priv_level '===' 'admin'}}
-			{{#compare uiRestrictions.profile.show_account '!==' false }}
-				<li><a href="#account"><i class="icon-cogs"></i>{{ i18n.profile.accountSettings }}</a></li>
-			{{/compare}}
-			{{#compare uiRestrictions.profile.show_billing '!==' false }}
-				<li><a href="#billing"><i class="icon-credit-card"></i>{{ i18n.profile.billingSettings }}</a></li>
-			{{/compare}}
+		{{#compare uiRestrictions.profile.show_account '!==' false }}
+			<li><a href="#account"><i class="icon-cogs"></i>{{ i18n.profile.accountSettings }}</a></li>
+		{{/compare}}
+		{{#compare uiRestrictions.profile.show_billing '!==' false }}
+			<li><a href="#billing"><i class="icon-credit-card"></i>{{ i18n.profile.billingSettings }}</a></li>
 		{{/compare}}
 		</ul>
 

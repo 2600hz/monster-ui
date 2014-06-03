@@ -63,6 +63,13 @@ define(function(require){
 						self.installedApps = cookieData.installedApps;
 					}
 
+					if (cookieData.hasOwnProperty('sso')) {
+						self.currentUser = {
+							first_name: cookieData.sso.firstName,
+							last_name: cookieData.sso.lastName
+						};
+					}
+
 					self.afterLoggedIn();
 				}
 
@@ -95,7 +102,10 @@ define(function(require){
 				success = function(app) {
 					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
 					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
-					app.userId = self.userId;
+
+					if (self.hasOwnProperty('userId')) {
+						app.userId = self.userId;
+					}
 
                     args.callback && args.callback();
 				},
@@ -131,7 +141,7 @@ define(function(require){
 		},
 
 		//Methods
-		afterLoggedIn: function() {
+		afterLoggedIn: function(data) {
 			var self = this;
 
 			$('#ws-content').empty();
@@ -141,7 +151,7 @@ define(function(require){
 				$('#home_link').addClass('active');
 			}
 
-			self.loadAccount();
+			self.loadAccount(data);
 		},
 
 		authenticate: function(loginData) {
@@ -199,6 +209,13 @@ define(function(require){
 				cookieAuth.installedApps = self.installedApps;
 			}
 
+			if (data.data.hasOwnProperty('ubiquiti_sso')) {
+				cookieAuth.sso = {
+					firstName: data.data.ubiquiti_sso.first_name,
+					lastName: data.data.ubiquiti_sso.last_name
+				};
+			}
+
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 		},
 
@@ -226,10 +243,10 @@ define(function(require){
 
 			self.createCookies(data);
 
-			self.afterLoggedIn();
+			self.afterLoggedIn(data);
 		},
 
-		loadAccount: function() {
+		loadAccount: function(_data) {
 			var self = this;
 
 			monster.parallel({
@@ -258,7 +275,18 @@ define(function(require){
 						});
 					}
 					else {
-						callback(null, {});
+						var user = {};
+
+						if (self.hasOwnProperty('currentUser')) {
+							user = self.currentUser;
+						}
+						else if (_data && _data.data && _data.data.ubiquiti_sso) {
+							user.first_name = _data.data.ubiquiti_sso.first_name;
+							user.last_name = _data.data.ubiquiti_sso.last_name;
+						}
+
+
+						callback(null, user);
 					}
 				}
 			},
