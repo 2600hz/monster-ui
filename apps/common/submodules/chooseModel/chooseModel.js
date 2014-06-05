@@ -89,28 +89,24 @@ define(function(require){
 				var $this = $(this),
 					brand = $this.data('brand');
 
-				selectedBrand = brand;
-
-				if ( $this.hasClass('unselected') ) {
-					$this.removeClass('unselected').addClass('selected');
-					templateDevice
-						.find('.brand-box:not([data-brand="'+brand+'"])')
-						.removeClass('selected')
-						.addClass('unselected');
-
-					templateDevice.find('.models-brand:not([data-brand="'+brand+'"])').slideUp(function() {
-						templateDevice.find('.models-brand[data-brand="'+ brand + '"]').fadeIn();
-					});
-				} else {
+				if ( !$this.hasClass('unselected') && !$this.hasClass('selected') ) {
 					$this.addClass('selected');
-					templateDevice
-						.find('.brand-box:not([data-brand="'+brand+'"])')
-						.removeClass('selected')
-						.addClass('unselected');
 
-					templateDevice.find('.models-brand[data-brand="'+ brand + '"]').show(function() {
+					$.each($this.siblings(), function(index, val) {
+						$(val).addClass('unselected');
+					});
+
+					templateDevice.find('.models-brand[data-brand="' + brand + '"]').show(function() {
 						templateDevice.find('.block-model').slideDown();
 					});
+				} else if ( $this.hasClass('unselected') ) {
+					templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut(function() {
+						templateDevice.find('.brand-box.selected').removeClass('selected').addClass('unselected');
+
+						$this.removeClass('unselected').addClass('selected');
+						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn();
+					});
+
 				}
 			});
 
