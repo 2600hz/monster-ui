@@ -89,6 +89,8 @@ define(function(require){
 				var $this = $(this),
 					brand = $this.data('brand');
 
+				selectedBrand = brand;
+
 				if ( !$this.hasClass('unselected') && !$this.hasClass('selected') ) {
 					$this.addClass('selected');
 
@@ -96,15 +98,15 @@ define(function(require){
 						$(val).addClass('unselected');
 					});
 
-					templateDevice.find('.models-brand[data-brand="' + brand + '"]').show(function() {
+					templateDevice.find('.models-brand[data-brand="' + brand + '"]').show(0, function() {
 						templateDevice.find('.block-model').slideDown();
 					});
 				} else if ( $this.hasClass('unselected') ) {
-					templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut(function() {
+					templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
 						templateDevice.find('.brand-box.selected').removeClass('selected').addClass('unselected');
 
 						$this.removeClass('unselected').addClass('selected');
-						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn();
+						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn('fast');
 					});
 
 				}
@@ -120,7 +122,11 @@ define(function(require){
 				$this.addClass('selected');
 
 				templateDevice.find('.actions .selection').text(monster.template(self, '!' + self.i18n.active().chooseModel.deviceSelected, { brand: selectedBrand, model: selectedModel }));
-				templateDevice.find('.block-footer').slideDown();
+				templateDevice.find('.block-footer').slideDown(function() {
+					$('html, body').animate({ scrollTop: templateDevice.find('div.block-device-info div.title-bar').offset().top }, function() {
+						templateDevice.find('#name').focus();
+					});
+				});
 			});
 
 			templateDevice.find('.missing-brand').on('click', function() {
