@@ -63,6 +63,23 @@ define(function(require){
 			};
 		},
 
+		checkVersion: function(obj, callback) {
+			var self = this,
+				i18n = monster.apps['core'].i18n.active();
+
+			if(obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
+				if(obj.ui_metadata.ui !== 'monster-ui') {
+					monster.ui.confirm(i18n.olderVersion, callback);
+				}
+				else {
+					callback && callback();
+				}
+			}
+			else {
+				callback && callback();
+			}
+		},
+
 		toFriendlyDate: function(timestamp, type) {
 			var self = this,
 				parsedDate = '-';
