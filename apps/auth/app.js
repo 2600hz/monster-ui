@@ -209,10 +209,10 @@ define(function(require){
 				cookieAuth.installedApps = self.installedApps;
 			}
 
-			if (data.data.hasOwnProperty('ubiquiti_sso')) {
+			if (data.data.hasOwnProperty('sso')) {
 				cookieAuth.sso = {
-					firstName: data.data.ubiquiti_sso.first_name,
-					lastName: data.data.ubiquiti_sso.last_name
+					firstName: data.data.sso.first_name,
+					lastName: data.data.sso.last_name
 				};
 			}
 
@@ -251,7 +251,7 @@ define(function(require){
 
 			monster.parallel({
 				account: function(callback) {
-					// accountId missing Can happen if user doesn't have an account yet, for example with ubiquiti auth
+					// accountId missing Can happen if user doesn't have an account yet, for example with custom auth
 					if(self.hasOwnProperty('accountId')) {
 						self.getAccount(function(data) {
 							callback(null, data.data);
@@ -265,7 +265,7 @@ define(function(require){
 					}
 				},
 				user: function(callback) {
-					// userid missing Can happen if user is using a SSO like ubiquiti
+					// userid missing Can happen if user is using a custom auth
 					if(self.hasOwnProperty('userId')) {
 						self.getUser(function(data) {
 							callback(null, data.data);
@@ -280,9 +280,9 @@ define(function(require){
 						if (self.hasOwnProperty('currentUser')) {
 							user = self.currentUser;
 						}
-						else if (_data && _data.data && _data.data.ubiquiti_sso) {
-							user.first_name = _data.data.ubiquiti_sso.first_name;
-							user.last_name = _data.data.ubiquiti_sso.last_name;
+						else if (_data && _data.data && _data.data.sso) {
+							user.first_name = _data.data.sso.first_name;
+							user.last_name = _data.data.sso.last_name;
 						}
 
 
