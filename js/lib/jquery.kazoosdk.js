@@ -152,6 +152,10 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
 			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' }
 		},
+		billing: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
+		},
 		port: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/port_requests' },
@@ -326,7 +330,7 @@
 
 			if(settings.contentType === 'application/json') {
 				var payload = {
-					data: data.data
+					data: data.data || {}
 				};
 
 				if('uiMetadata' in options) {
