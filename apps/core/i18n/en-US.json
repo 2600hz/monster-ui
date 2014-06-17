@@ -1,6 +1,7 @@
 {
 	"poweredBy": "Powered by ",
 	"error": "Error",
+	"olderVersion": "It appears that the data you're updating was created outside of this UI, would you like to proceed anyway?",
 	"errors": {
 		"generic": "An unknown error happened, please try again in a few seconds!",
 		"genericLabel": "API Response",

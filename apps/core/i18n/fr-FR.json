@@ -1,6 +1,7 @@
 {
 	"hello": "Bienvenue!",
 	"welcome": "La VoIP facile!",
+	"olderVersion": "Le document que vous souhaitez modifier a été créé via une autre interface. Changer ce document pourrait impacter certaines fonctionnalités lié à la précédente interface. Continuer quand même?",
 	"poweredBy": "Développé par ",
 	"errors": {
 		"generic": "Erreur inconnue... Veuillez réessayer dans quelques instants!",
