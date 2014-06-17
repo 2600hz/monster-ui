@@ -66,7 +66,9 @@ define(function(require){
 					if (cookieData.hasOwnProperty('sso')) {
 						self.currentUser = {
 							first_name: cookieData.sso.firstName,
-							last_name: cookieData.sso.lastName
+							last_name: cookieData.sso.lastName,
+							uuid: cookieData.sso.uuid,
+							account_name: cookieData.sso.accountName
 						};
 					}
 
@@ -212,7 +214,9 @@ define(function(require){
 			if (data.data.hasOwnProperty('sso')) {
 				cookieAuth.sso = {
 					firstName: data.data.sso.first_name,
-					lastName: data.data.sso.last_name
+					lastName: data.data.sso.last_name,
+					uuid: data.data.sso.uuid,
+					accountName: data.data.sso.account_name
 				};
 			}
 
@@ -283,6 +287,8 @@ define(function(require){
 						else if (_data && _data.data && _data.data.sso) {
 							user.first_name = _data.data.sso.first_name;
 							user.last_name = _data.data.sso.last_name;
+							user.uuid = _data.data.sso.uuid;
+							user.account_name = _data.data.sso.account_name;
 						}
 
 
@@ -301,8 +307,7 @@ define(function(require){
 				else {
 					monster.util.autoLogout();
 					$('.signout').show();
-
-					results.user.account_name = results.account.name;
+					results.user.account_name = results.account.name || results.user.account_name;
 					results.user.apps = results.user.apps || {};
 					results.account.apps = results.account.apps || {};
 
