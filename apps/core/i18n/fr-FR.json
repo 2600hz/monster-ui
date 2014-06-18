@@ -8,7 +8,24 @@
 		"genericLabel": "Réponse de l'API",
 		"401": "Identifiants non valides. Vérifiez que votre nom d'utilisateur et votre mots de passes sont corrects!",
 		"403": "Accès interdit",
-		"500": "Erreur serveur interne. Veuillez contacter le personnel informatique!"
+		"500": "Erreur serveur interne. Veuillez contacter le personnel informatique!",
+		"invalidData": {
+			"errorLabel": "Données invalides :",
+			"required": "Le champ \"{{field}}\" est requis.",
+			"minimum": "La valeur du champ \"{{field}}\" doit être d'au moins {{value}}.",
+			"maximum": "La valeur du champ \"{{field}}\" ne peut être supérieure à {{value}}.",
+			"minLength": "La longueur du champ \"{{field}}\" doit être d'au moins {{value}} caractères.",
+			"maxLength": "La longueur du champ \"{{field}}\" ne peut être supérieure à {{value}} caractères.",
+			"enum:": "La valeur du champ \"{{field}}\" n'a pas été trouvée parmis la liste des valeurs autorisées.",
+			"minItems": "La liste pour le champ \"{{field}}\" doit contenir au moins {{value}} éléments.",
+			"maxItems": "La liste pour le champ \"{{field}}\" ne peut contenir plus de {{value}} éléments.",
+			"minProperties": "L'objet pour le champ \"{{field}}\" n'a pas suffisement d'objets fils.",
+			"uniqueItems": "La liste pour le champ \"{{field}}\" doit être unique.",
+			"pattern": "La valeur du champ \"{{field}}\" ne correspond pas au pattern \"{{value}}\".",
+			"divisibleBy": "La valeur du champ \"{{field}}\" n'est pas divisible par {{value}}.",
+			"disallow": "La valeur du champ \"{{field}}\" n'est pas autorisée.",
+			"type": "La valeur du champ \"{{field}}\" doit être du type \"{{value}}\"."
+		}
 	},
 	"error": "Erreur",
 	"add":"Ajouter",

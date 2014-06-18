@@ -96,7 +96,20 @@ define(function(require){
 						var errorsI18n = monster.apps.core.i18n.active().errors,
 							errorMessage = errorsI18n.generic;
 
-						if(error.status in errorsI18n) {
+						if(error.status === 400 && 'data' in parsedError) {
+							errorMessage = errorsI18n.invalidData.errorLabel;
+							_.each(parsedError.data, function(fieldErrors, fieldKey) {
+								_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+									if(typeof fieldError === 'string') {
+										errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+									} else if(fieldErrorKey in errorsI18n.invalidData) {
+										errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+									} else if('message' in fieldError) {
+										errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+									}
+								});
+							});
+						} else if(error.status in errorsI18n) {
 							errorMessage = errorsI18n[error.status];
 						}
 
@@ -307,9 +320,27 @@ define(function(require){
 			} else {
 				if(requestOptions.generateError !== false) {
 					var errorsI18n = monster.apps.core.i18n.active().errors,
-						errorMessage = errorsI18n.generic;
+						errorMessage = errorsI18n.generic,
+						parsedError = error;
 
-					if(error.status in errorsI18n) {
+					if('responseText' in error && error.responseText) {
+						parsedError = $.parseJSON(error.responseText);
+					}
+
+					if(error.status === 400 && 'data' in parsedError) {
+						errorMessage = errorsI18n.invalidData.errorLabel;
+						_.each(parsedError.data, function(fieldErrors, fieldKey) {
+							_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+								if(typeof fieldError === 'string') {
+									errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+								} else if(fieldErrorKey in errorsI18n.invalidData) {
+									errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+								} else if('message' in fieldError) {
+									errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+								}
+							});
+						});
+					} else if(error.status in errorsI18n) {
 						errorMessage = errorsI18n[error.status];
 					}
 

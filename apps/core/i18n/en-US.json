@@ -7,7 +7,24 @@
 		"genericLabel": "API Response",
 		"401": "Invalid credentials, please check that your username and account name are correct.",
 		"403": "Access forbidden.",
-		"500": "Internal server error, please contact your administrator"
+		"500": "Internal server error, please contact your administrator",
+		"invalidData": {
+			"errorLabel": "Invalid Data:",
+			"required": "The field \"{{field}}\" is required.",
+			"minimum": "The value for the field \"{{field}}\" must be at least {{value}}.",
+			"maximum": "The value for the field \"{{field}}\" must not be more than {{value}}.",
+			"minLength": "The string for the field \"{{field}}\" must be at least {{value}} characters.",
+			"maxLength": "The string for the field \"{{field}}\" must not be more than {{value}} characters.",
+			"enum:": "The value for the field \"{{field}}\" was not found in the enumerated list of acceptable values.",
+			"minItems": "The list for the field \"{{field}}\" must contain at least {{value}} items.",
+			"maxItems": "The list for the field \"{{field}}\" must not contain more than {{value}} items.",
+			"minProperties": "The object for the field \"{{field}}\" does not have enough children.",
+			"uniqueItems": "The list for the field \"{{field}}\" must be unique.",
+			"pattern": "The value for the field \"{{field}}\" failed to match the pattern \"{{value}}\".",
+			"divisibleBy": "The value for the field \"{{field}}\" is not divisible by {{value}}.",
+			"disallow": "The value for the field \"{{field}}\" is not allowed.",
+			"type": "The value for the field \"{{field}}\" must be of the \"{{value}}\" type."
+		}
 	},
 	"add": "Add",
 	"alertLogout": "Your session is about to expire. Move your cursor to resume activity.",
