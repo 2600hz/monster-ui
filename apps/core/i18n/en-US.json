@@ -23,7 +23,9 @@
 			"pattern": "The value for the field \"{{field}}\" failed to match the pattern \"{{value}}\".",
 			"divisibleBy": "The value for the field \"{{field}}\" is not divisible by {{value}}.",
 			"disallow": "The value for the field \"{{field}}\" is not allowed.",
-			"type": "The value for the field \"{{field}}\" must be of the \"{{value}}\" type."
+			"type": "The value for the field \"{{field}}\" must be of the \"{{value}}\" type.",
+			"unique": "The value for the field \"{{field}}\" must be unique.",
+			"forbidden": "The value for the field \"{{field}}\" can not be updated."
 		}
 	},
 	"add": "Add",

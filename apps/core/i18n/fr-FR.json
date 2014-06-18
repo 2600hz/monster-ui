@@ -24,7 +24,9 @@
 			"pattern": "La valeur du champ \"{{field}}\" ne correspond pas au pattern \"{{value}}\".",
 			"divisibleBy": "La valeur du champ \"{{field}}\" n'est pas divisible par {{value}}.",
 			"disallow": "La valeur du champ \"{{field}}\" n'est pas autorisée.",
-			"type": "La valeur du champ \"{{field}}\" doit être du type \"{{value}}\"."
+			"type": "La valeur du champ \"{{field}}\" doit être du type \"{{value}}\".",
+			"unique": "La valeur du champ \"{{field}}\" doit être unique.",
+			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée."
 		}
 	},
 	"error": "Erreur",
