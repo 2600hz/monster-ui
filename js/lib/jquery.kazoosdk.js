@@ -55,6 +55,20 @@
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
+		local_resources: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/local_resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/local_resources' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/local_resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/local_resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/local_resources' }
+		},
+		global_resources: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/global_resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/global_resources' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/global_resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/global_resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/global_resources' }
+		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
@@ -217,7 +231,7 @@
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
 								requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + filterValue;
 							});
-						} 
+						}
 
 						if('type' in methodInfo) { requestSettings.type = methodInfo.type; }
 						if('dataType' in methodInfo) { requestSettings.dataType = methodInfo.dataType; }
