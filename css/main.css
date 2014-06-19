@@ -89,7 +89,7 @@ a.monster-link.disabled i {
 	display: inline-block;
 	float: left;
 	overflow: hidden;
-	max-width: 141px;
+	max-width: 88px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -166,7 +166,7 @@ a.monster-link.disabled i {
 }
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
-	max-width: 260px;
+	max-width: 206px;
 	color: #F5F5F5;
 	text-transform: uppercase;
 	text-overflow: ellipsis;
@@ -202,21 +202,33 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .navbar-inner .home {
-	border-right: 1px solid #353535;
 	display: none;
-	height: 62px;
-	line-height: 62px;
-	padding: 0 10px;
-	text-align: center;
+	padding: 0 20px 0 10px;
 	text-decoration: none;
-	width: 42px;
+	border-right: 1px solid #353535;
+}
+#main section > .navbar .navbar-inner .home * {
+	display: block;
+	margin: 0;
+	line-height: 62px;
+}
+#main section > .navbar .navbar-inner .home span {
+	overflow: hidden;
+	max-width: 66px;
+	margin-left: 44px;
+	white-space: nowrap;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	text-overflow: ellipsis;
+	color: #F5F5F5;
+	font-size: 18px;
 }
 
 #main section > .navbar .navbar-inner .home.active {
 	display: inline-block;
 }
 
-#main section > .navbar .navbar-inner .home:hover .icon-white {
+#main section > .navbar .navbar-inner .home:hover * {
 	color: #22ccff !important;
 }
 #main section > .navbar .navbar-inner .home.conferencing {
