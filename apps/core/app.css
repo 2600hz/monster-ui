@@ -606,6 +606,15 @@ table.table tr td {
 
 .items-selector .box-selector ul li.item-selector:hover {
 	background: #FCFCFC;
+	cursor: move;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
+}
+
+.items-selector .box-selector ul li.item-selector:active {
+	cursor: move;
+	cursor: -moz-grabbing;
+	cursor: -webkit-grabbing;
 }
 
 .items-selector .box-selector ul li.item-selector .item-handle {
