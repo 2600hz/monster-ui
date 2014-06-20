@@ -29,6 +29,7 @@
 		"billingSettings": "Réglages de facturation",
 		"accountRealm": "Royaume du compte",
 		"accountName": "Nom de compte",
+		"accountId": "ID du compte",
 		"accountAdministrator": "Contact Facturation",
 		"accountAdministratorEmail": "Email",
 		"accountAdministratorNumber": "Numéro de téléphone",

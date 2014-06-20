@@ -144,3 +144,7 @@
 .profile-content-wrapper .list-settings .controls.action-bar > *:not(:last-child) {
     margin-right: 10px;
 }
+
+.profile-content-wrapper .list-settings .controls .plain-text {
+	margin-top: 5px;
+}
