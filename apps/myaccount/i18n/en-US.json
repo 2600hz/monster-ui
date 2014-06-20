@@ -29,6 +29,7 @@
 		"billingSettings": "Billing Settings",
 		"accountRealm": "Account Realm",
 		"accountName": "Account Name",
+		"accountId": "Account ID",
 		"accountAdministrator": "Billing Contact",
 		"accountAdministratorEmail": "Billing Contact Email",
 		"accountAdministratorNumber": "Phone Number",
