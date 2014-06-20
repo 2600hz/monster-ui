@@ -124,8 +124,11 @@
 		"titles": {
 			"twoway_trunks": "Twoway Trunks",
 			"inbound_trunks": "Inbound Trunks",
+			"twoway_trunk": "Twoway Trunks",
+			"inbound_trunk": "Inbound Trunks",
 			"did_us": "US DIDs",
 			"sip_devices": "SIP Devices",
+			"sip_device": "SIP Devices",
 			"inbound_cnam": "Inbound CNAM",
 			"e911": "E911",
 			"cnam": "CNAM",
@@ -141,7 +144,7 @@
 		"to": "to",
 		"oneTimeCharge": "One-Time Charge",
 		"monthlyCharge": "Monthly Charge",
-		"serviceCharge": "Service Charge (Prorated)",
+		"serviceCharge": "Service Charge - Prorated",
 
 		"noData": "There are no transactions between the 2 dates selected !",
 
@@ -150,6 +153,7 @@
 		"rateTitle": "Rate",
 		"quantityTitle": "Quantity",
 		"monthlyChargesTitle": "Monthly Charges",
+		"declined": "Declined",
 
 		"database_rollup": "Database Rollup",
 		"per_minute_call": "Per-Minute Call",
