@@ -120,6 +120,26 @@ define(function(require){
 				},
 				myaccountHtml = $(monster.template(self, 'app', dataTemplate));
 
+			if ( !monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions') ) {
+				self.callApi({
+					resource: 'account.get',
+					data: {
+						accountId: self.accountId
+					},
+					success: function(data, status) {
+						data.data.ui_restrictions = self.getDefaultRestrictions();
+
+						self.callApi({
+							resource: 'account.update',
+							data: {
+								accountId: self.accountId,
+								data: data.data
+							}
+						});
+					}
+				});
+			}
+
 			$('#topbar').after(myaccountHtml);
 
 			self._renderNavLinks();
