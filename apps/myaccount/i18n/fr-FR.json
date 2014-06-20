@@ -99,10 +99,11 @@
 		"to": "à",
 		"oneTimeCharge": "Paiement unique",
 		"monthlyCharge": "Frais mensuels",
-		"serviceCharge": "Service Charge (Prorated)",
+		"serviceCharge": "Frais de service - Prorata",
 
 		"noData": "Pas de transactions durant cet intervalle !",
 
+		"declined": "Refusé",
 		"serviceTitle": "Service",
 		"discount": "Réduction",
 		"rateTitle": "Taux",
@@ -134,8 +135,11 @@
 		"titles": {
 			"twoway_trunks": "Twoway Trunks",
 			"inbound_trunks": "Inbound Trunks",
+			"twoway_trunk": "Twoway Trunks",
+			"inbound_trunk": "Inbound Trunks",
 			"did_us": "US DIDs",
 			"sip_devices": "Appareils SIP",
+			"sip_device": "Appareils SIP",
 			"inbound_cnam": "Inbound CNAM",
 			"e911": "E911",
 			"cnam": "CNAM",

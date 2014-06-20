@@ -3,23 +3,40 @@
 		{{#compare this.type '===' 'charges'}}
 				<div class="expand-box">
 				</div>
-				<div class="text-box">
-					<div class="title">{{ this.reason }}</div>
+				<div class="text-box {{#unless this.approved}}declined{{/unless}}">
+					<div class="title">
+						{{#if this.approved}}
+							{{ this.reason }}
+						{{else}}
+							<i class="icon-red icon-warning-sign"></i>
+							&nbsp;{{ this.reason }}
+							&nbsp;({{../../../i18n.transactions.declined}})
+						{{/if}}
+					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>
 					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
 				</div>
 			</div>
 		{{else}}
-				 <div class="expand-box">
+				<div class="expand-box">
 					<div class="expand">+</div>
 				</div>
-				<div class="text-box">
+				<div class="text-box {{#unless this.approved}}declined{{/unless}}">
 					<div class="title">
+						{{#unless this.approved}}
+							<i class="icon-red icon-warning-sign"></i>
+							&nbsp;
+						{{/unless}}
+
 						{{#compare this.type '===' 'monthly'}}
-							{{ ../../../i18n.monthlyCharge }}
+							{{ ../../../i18n.transactions.monthlyCharge }}
 						{{else}}
-							{{ ../../../i18n.serviceCharge }}
+							{{ ../../../i18n.transactions.serviceCharge }}
 						{{/compare}}
+
+						{{#unless this.approved}}
+							&nbsp;({{../../../i18n.transactions.declined}})
+						{{/unless}}
 					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>
 					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
@@ -29,12 +46,12 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="blue-gradient-reverse">{{ ../../i18n.serviceTitle }}</th>
-									<th class="blue-gradient-reverse">{{ ../../i18n.rateTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.transactions.serviceTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.transactions.rateTitle }}</th>
 									<th class="blue-gradient-reverse"></th>
-									<th class="blue-gradient-reverse">{{ ../../i18n.quantityTitle }}</th>
-									<th class="blue-gradient-reverse">{{ ../../i18n.discount }}</th>
-									<th class="blue-gradient-reverse">{{ ../../i18n.monthlyChargesTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.transactions.quantityTitle }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.transactions.discount }}</th>
+									<th class="blue-gradient-reverse">{{ ../../i18n.transactions.monthlyChargesTitle }}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -56,5 +73,5 @@
 		{{/compare}}
 	</div>
 {{else}}
-	<div class="no-data">{{ i18n.noData }}</div>
+	<div class="no-data">{{ i18n.transactions.noData }}</div>
 {{/each}}

@@ -70,6 +70,10 @@
 	margin-left: 120px;
 }
 
+.transactions-content-wrapper .list-transactions .transaction .text-box.declined {
+	color: red;
+}
+
 .transactions-content-wrapper .list-transactions .transaction .text-box > * {
 	float: left;
 	width: 33%;
