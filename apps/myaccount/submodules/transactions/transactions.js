@@ -102,6 +102,53 @@ define(function(require){
 					amount: 0.00,
 					billingStartDate: monster.util.toFriendlyDate(from, 'short'),
 					billingEndDate: monster.util.toFriendlyDate(to, 'short')
+				},
+				formatCharge = function(v) {
+					if(v.add_ons.length === 0 && v.discounts.length === 0) {
+						v.type = 'charges';
+					}
+					else {
+						var mapDiscounts = {};
+						_.each(v.discounts, function(discount) {
+							mapDiscounts[discount.id] = discount;
+						});
+
+						v.type = v.prorated ? 'prorated' : 'monthly';
+						v.services = [];
+
+						$.each(v.add_ons, function(k, addOn) {
+							var discount = 0;
+
+							addOn.amount = parseFloat(addOn.amount).toFixed(2);
+							addOn.quantity = parseFloat(addOn.quantity);
+
+							if((addOn.id + '_discount') in mapDiscounts) {
+								var discountItem = mapDiscounts[addOn.id + '_discount'];
+								discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
+							}
+
+							addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
+
+							v.services.push({
+								service: self.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
+								rate: addOn.amount,
+								quantity: addOn.quantity,
+								discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+								monthly_charges: addOn.monthly_charges
+							});
+						});
+
+						v.services.sort(function(a, b) {
+							return parseFloat(a.rate) <= parseFloat(b.rate);
+						});
+					}
+
+					v.amount = parseFloat(v.amount).toFixed(2);
+					v.approved = v.processor_response_text === 'Approved',
+					v.friendlyCreated = monster.util.toFriendlyDate(v.created_at, 'short');
+					v.created = v.created_at;
+
+					return v;
 				};
 
 			monster.parallel({
@@ -110,51 +157,11 @@ define(function(require){
 							var arrayTransactions = [];
 
 							$.each(dataMonthly.data, function(k, v) {
-								if(v.add_ons.length === 0 && v.discounts.length === 0) {
-									v.type = 'charges';
+								v = formatCharge(v);
+
+								if(v.approved) {
+									defaults.amount += parseFloat(v.amount);
 								}
-								else {
-									var mapDiscounts = {};
-									_.each(v.discounts, function(discount) {
-										mapDiscounts[discount.id] = discount;
-									});
-
-									v.type = v.prorated ? 'prorated' : 'monthly';
-									v.services = [];
-
-									$.each(v.add_ons, function(k, addOn) {
-										var discount = 0;
-
-										addOn.amount = parseFloat(addOn.amount).toFixed(2);
-										addOn.quantity = parseFloat(addOn.quantity);
-
-										if((addOn.id + '_discount') in mapDiscounts) {
-											var discountItem = mapDiscounts[addOn.id + '_discount'];
-											discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
-										}
-
-										addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
-
-										v.services.push({
-											service: monster.apps['myaccount-servicePlan'].i18n.active().titles[addOn.id],
-											rate: addOn.amount,
-											quantity: addOn.quantity,
-											discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
-											monthly_charges: addOn.monthly_charges
-										});
-									});
-
-									v.services.sort(function(a, b) {
-										return parseFloat(a.rate) <= parseFloat(b.rate);
-									});
-								}
-
-								v.amount = parseFloat(v.amount).toFixed(2);
-								v.friendlyCreated = monster.util.toFriendlyDate(v.created_at, 'short');
-								v.created = v.created_at;
-								arrayTransactions.push(v);
-
-								defaults.amount += parseFloat(v.amount);
 							});
 
 							callback(null, arrayTransactions);
@@ -165,12 +172,13 @@ define(function(require){
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
-								v.type = 'charges';
-								v.amount = parseFloat(v.amount).toFixed(2);
-								v.friendlyCreated = monster.util.toFriendlyDate(v.created, 'short');
+								v = formatCharge(v);
+
 								arrayCharges.push(v);
 
-								defaults.amount += parseFloat(v.amount);
+								if(v.approved) {
+									defaults.amount += parseFloat(v.amount);
+								}
 							});
 
 							callback(null, arrayCharges);
