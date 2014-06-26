@@ -312,10 +312,10 @@ define(function(require){
 			monster.pub('monster.requestEnd');
 		},
 		onRequestError: function(error, requestOptions) {
-			if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
+			if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
 				monster.ui.charges(error.data, function() {
-					options.acceptCharges = true;
-					monster.kazooSdk.request(options);
+					requestOptions.acceptCharges = true;
+					monster.kazooSdk.request(requestOptions);
 				});
 			} else {
 				if(requestOptions.generateError !== false) {
