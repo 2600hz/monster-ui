@@ -93,6 +93,32 @@ kazooSdk.auth.userAuth({
 
 #### List of methods
 
+##### Index
+* [Account](#account)
+* [Auth](#auth)
+* [Balance](#balance)
+* [Billing](#billing)
+* [Callflow](#callflow)
+* [Cdrs](#cdrs)
+* [Channel](#channel)
+* [Conference](#conference)
+* [Connectivity](#connectivity)
+* [Device](#device)
+* [Directory](#directory)
+* [Global_resources](#global_resources)
+* [Group](#group)
+* [Limits](#limits)
+* [Local_resources](#local_resources)
+* [Media](#media)
+* [Menu](#menu)
+* [Numbers](#numbers)
+* [Port](#port)
+* [Service Plan](#service-plan)
+* [Temporal Rule](#temporal-rule)
+* [User](#user)
+* [Voicemail](#voicemail)
+* [Whitelabel](#whitelabel)
+
 ###### Account
 
 |||
