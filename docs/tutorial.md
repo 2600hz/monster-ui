@@ -4,6 +4,7 @@ At the end of this tutorial, you will have a Monster-UI app created, that you wi
 
 Required:
 * A copy of the Monster-UI repo, that you can get [here](https://github.com/2600hz/monster-ui/)
+* A Kazoo account and credentials to login to it
 * Access to CouchDB to add your application to the app store
 
 ### Creating the folder
