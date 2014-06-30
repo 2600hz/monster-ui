@@ -358,10 +358,10 @@ define(function(require){
 				var $this = $(this),
 					section = $this.data('section');
 
-				templateDevice.find('.tabs-main-selector').removeClass('active');
-				templateDevice.find('.tabs-section').hide();
+				template.find('.tabs-main-selector').removeClass('active');
+				template.find('.tabs-section').hide();
 
-				templateDevice.find('.tabs-section[data-section="' + section + '"]').show();
+				template.find('.tabs-section[data-section="' + section + '"]').show();
 				$this.parents('.tabs-main-selector').addClass('active');
 			});
 		},
