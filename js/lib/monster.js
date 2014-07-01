@@ -354,5 +354,7 @@ define(function(require){
 		}
 	});
 
+	window.monster = monster;
+
 	return monster;
 });
