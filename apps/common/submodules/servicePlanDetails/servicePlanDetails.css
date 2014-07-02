@@ -1,0 +1,42 @@
+.service-plan-details {
+	border: solid 1px #aaa;
+	background-color: rgba(36, 204, 255, 0.1);
+	border-collapse: collapse;
+	display: table;
+	width: 100%;
+}
+.service-plan-details .line {
+	border-top: solid 1px #ccc;
+	display: table-row;
+}
+.service-plan-details .line.header:not(:first-child) {
+	border-top: solid 1px #aaa;
+}
+.service-plan-details .line.header {
+	border-bottom: solid 1px #ccc;
+	font-size:16px;
+	background-color: #22ccff;
+	color: #fff;
+}
+.service-plan-details .line > div {
+	display: table-cell;
+	width: 33.33%;
+	vertical-align: middle;
+}
+.service-plan-details .line > div:not(.charges) {
+	padding: 5px;
+}
+.service-plan-details .line:not(.header) > div:not(:last-child) {
+	border-right: solid 1px #ccc;
+}
+.service-plan-details .line .charges > div {
+	padding: 5px;
+}
+
+.service-plan-details .no-service-plan {
+	padding: 10px;
+	font-weight: 500;
+	font-size: 16px;
+	font-style: italic;
+	color: #009de6;
+}

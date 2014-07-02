@@ -279,5 +279,19 @@
 		"missingDevice": "My device is not listed here",
 		"title": "Selection of the device",
 		"create": "create device"
+	},
+
+	"servicePlanDetails": {
+		"rate": "Rate:",
+		"activationCharge": "Activation charge:",
+		"exceptions": "Exceptions:",
+		"planLines": {
+			"phone_numbers": "Phone Numbers",
+			"number_services": "Number Services",
+			"limits": "Limits",
+			"devices": "Devices",
+			"users": "Users"
+		},
+		"noServicePlan": "No Service Plan selected."
 	}
 }

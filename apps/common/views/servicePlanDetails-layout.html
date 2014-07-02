@@ -1,0 +1,56 @@
+<div class="service-plan-details">
+{{#if servicePlan}}
+	{{#each servicePlan.plan}}
+		<div class="line header">
+			<div>
+			{{#compare @key "===" "phone_numbers"}}
+				{{../../i18n.servicePlanDetails.planLines.phone_numbers}}
+			{{else}} {{#compare @key "===" "number_services"}}
+				{{../../../i18n.servicePlanDetails.planLines.number_services}}
+			{{else}} {{#compare @key "===" "limits"}}
+				{{../../../../i18n.servicePlanDetails.planLines.limits}}
+			{{else}} {{#compare @key "===" "devices"}}
+				{{../../../../../i18n.servicePlanDetails.planLines.devices}}
+			{{else}} {{#compare @key "===" "users"}}
+				{{../../../../../../i18n.servicePlanDetails.planLines.users}}
+			{{else}}
+				{{@key}}
+			{{/compare}} {{/compare}} {{/compare}} {{/compare}} {{/compare}}
+			</div>
+			<div></div>
+			<div></div>
+		</div>
+		{{#each this}}
+		<div class="line">
+			<div class="name">
+			{{#if this.name}}
+				{{this.name}}
+			{{else}}
+				{{@key}}
+			{{/if}}
+			</div>
+			<div class="charges">
+				{{#if this.rate}}
+				<div>{{../../../i18n.servicePlanDetails.rate}} {{../../../i18n.currencyUsed}}{{this.rate}}</div>
+				{{/if}}
+				{{#if this.activation_charge}}
+				<div>{{../../../i18n.servicePlanDetails.activationCharge}} {{../../../i18n.currencyUsed}}{{this.activation_charge}}</div>
+				{{/if}}
+			</div>
+			<div class="exceptions">
+			{{#if this.exceptions.length}}
+				{{../../../i18n.servicePlanDetails.exceptions}} 
+				{{#each this.exceptions}}
+					{{#if @index}}, {{/if}}{{this}}
+				{{/each}}
+			{{/if}}
+			</div>
+		</div>
+		{{/each}}
+	{{/each}}
+{{else}}
+	<div class="no-service-plan">
+	{{i18n.servicePlanDetails.noServicePlan}}
+	</div>
+{{/if}}
+</div>

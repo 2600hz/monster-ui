@@ -6,6 +6,7 @@
 @import url('submodules/numbers/numbers.css');
 @import url('submodules/port/port.css');
 @import url('submodules/chooseModel/chooseModel.css');
+@import url('submodules/servicePlanDetails/servicePlanDetails.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {
