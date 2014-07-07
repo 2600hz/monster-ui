@@ -271,5 +271,18 @@
 		"missingDevice": "Le modèle de mon téléphone n'est pas listé",
 		"title": "Sélection du téléphone",
 		"create": "Créer le téléphone"
+	},
+	"servicePlanDetails": {
+		"rate": "Taux :",
+		"activationCharge": "Coût d'activation :",
+		"exceptions": "Exceptions :",
+		"planLines": {
+			"phone_numbers": "Numéros de téléphone",
+			"number_services": "Services liés aux numéros",
+			"limits": "Limites",
+			"devices": "Appareils",
+			"users": "Utilisateurs"
+		},
+		"noServicePlan": "Aucun abonnement sélectionné."
 	}
 }
