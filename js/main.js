@@ -77,7 +77,7 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'boots
 
 		$(function(){
 			monster.apps.load('core', function(app){
-				app.render($('#main section'));
+				app.render($('#main'));
 			});
 		});
 	});

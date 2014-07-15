@@ -1,1 +1,41 @@
-<div class="ws-content" id="ws-content"></div>
+<section>
+	<!-- Ajax Spinner -->
+	<div class="loading-wrap">
+		<div class="loading outer">
+			<div class="loading inner"></div>
+		</div>
+	</div>
+
+	<div id="topbar" class="navbar navbar-inverse">
+		<div id="ws-navbar" class="navbar-inner clearfix">
+			<a id="home_link" class="pull-left home" href="#home">
+				<i class="icon-white pull-left icon-th icon-large"></i>
+				<span class="title">{{ i18n.apps }}</span>
+			</a>
+			<a class="logo" href="#home"></a>
+			<div class="current-app"></div>
+			<ul class="nav whapps"></ul>
+			<ul class="nav pull-right links">
+				<div class="pull-right">
+					<a class="top-link signout" href="javascript:void(0)">
+						<i class="icon-signout signout"></i>
+					</a>
+					<a target="_blank" class="top-link help" href="https://2600hz.atlassian.net/wiki/display/docs/Trunking.io">
+						<i class="icon-question-sign"></i>
+					</a>
+				</div>
+			</ul>
+		</div>
+	</div>
+
+	<div class="ws-content" id="ws-content"></div>
+	
+</section>
+
+<div class="footer-wrapper">
+	<span class="powered-by">
+		<a href="http://www.2600hz.com/" target="_blank" id="powered">{{i18n.poweredBy}} 2600hz</a>
+		<span class="tag-version"></span>
+	</span>
+</div>
+

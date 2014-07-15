@@ -4,7 +4,6 @@ define(function(require){
 		monster = require('monster');
 
 	var app = {
-
 		name: 'core',
 
 		i18n: [ 'en-US', 'fr-FR' ],
@@ -16,6 +15,15 @@ define(function(require){
 			'core.showAppName' : 'showAppName'
 		},
 
+		//List of apps required once the user is logged in (LIFO)
+		_baseApps: ['apploader', 'appstore', 'myaccount', 'common'],
+
+		//Default app to render if the user is logged in, can be changed by setting a default app
+		_defaultApp: 'appstore',
+
+		// Global var used to show the loading gif
+		requestAmount: 0,
+
 		load: function(callback){
 			var self = this;
 
@@ -24,60 +32,25 @@ define(function(require){
 
 		render: function(container){
 			var self = this,
-				template = monster.template(self, 'app', {}),
-				content = $(template);
-
+				mainTemplate = $(monster.template(self, 'app', {}));
+				
 			document.title = 'Monster UI - ' + monster.config.company.name;
 
-			container.append(content);
-			container.append(monster.template(self, 'footer'));
+			self.bindEvents(mainTemplate);
 
-			self._render(container);
+			self.displayVersion(mainTemplate);
+			self.displayLogo(mainTemplate);
 
-			var linksTemplate = $(monster.template(self, 'top-right-links'));
+			container.append(mainTemplate);
 
-			linksTemplate.find('a.signout').on('click', function() {
-				monster.pub('auth.clickLogout');
-			});
-
-			container.find('.links').append(linksTemplate);
-
-			if('nav' in monster.config) {
-				if('help' in monster.config.nav || 'myHelp' in monster.config.nav) {
-					$('#ws-navbar a.help').unbind('click')
-						.attr('href', monster.config.nav.help || monster.config.nav.my_help);
-				}
-
-				if('logout' in monster.config.nav || 'myLogout' in monster.config.nav) {
-					$('#ws-navbar .links .logout').unbind('click')
-						.attr('href', monster.config.nav.logout || monster.config.nav.my_logout);
-				}
-
-			}
-
-			self._load(); // do this here because subsequent apps are dependent upon core layout
+			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
 		},
 
-		_apps: ['auth'],
-
-		//List of apps required once the user is logged in (LIFO)
-		_baseApps: ['apploader', 'appstore', 'myaccount', 'common'],
-
-		//Default app to render if the user is logged in, can be changed by setting a default app
-		_defaultApp: 'appstore',
-
-		_load: function(){
+		loadAuth: function(){
 			var self = this;
 
-			if(!self._apps.length){
-				return;
-			}
-
-			var appName = self._apps.pop();
-
-			monster.apps.load(appName, function(app){
+			monster.apps.load('auth', function(app){
 				app.render($('#ws-content'));
-				self._load();
 			});
 		},
 
@@ -138,15 +111,26 @@ define(function(require){
 			}
 		},
 
-		_render: function(container) {
+		bindEvents: function(container) {
 			var self = this,
-				domain = window.location.hostname,
-				apiUrl = monster.config.api.default,
-				homeLink = $('#home_link');
+				spinner = container.find('.loading-wrap');
 
-			homeLink.on('click', function(e) {
+			/* Only subscribe to the requestStart and End event when the spinner is loaded */
+			monster.sub('monster.requestStart', function() {
+				self.onRequestStart(spinner);
+			});
+
+			monster.sub('monster.requestEnd', function() {
+				self.onRequestEnd(spinner);
+			});
+
+			container.find('#home_link').on('click', function(e) {
 				e.preventDefault();
 				monster.pub('apploader.toggle');
+			});
+
+			container.find('a.signout').on('click', function() {
+				monster.pub('auth.clickLogout');
 			});
 
 			container.find('#ws-navbar .current-app').on('click', function() {
@@ -155,34 +139,67 @@ define(function(require){
 				});
 			});
 
+			if(monster.config.hasOwnProperty('nav')) {
+				if(monster.config.nav.hasOwnProperty('help')) {
+					container.find('#ws-navbar a.help')
+							 .unbind('click')
+							 .attr('href', monster.config.nav.help);
+				}
+
+				if(monster.config.nav.hasOwnProperty('logout')) {
+					container.find('#ws-navbar .links .logout')
+							 .unbind('click')
+							 .attr('href', monster.config.nav.logout);
+				}
+			}
+		},
+
+		displayVersion: function(container) {
+			var self = this;
+
 			monster.getVersion(function(version) {
-				$('.footer-wrapper .tag-version').html('('+version+')');
+				container.find('.footer-wrapper .tag-version').html('('+version+')');
 
 				monster.config.version = version;
 			});
+		},
 
-			if(monster.config.appleConference) {
-				homeLink.find('i').addClass('icon-apple icon-2x');
-				homeLink.addClass('conferencing');
-				container.find('#ws-navbar .logo')
-						 .text(self.i18n.active().conferencingLogo)
-						 .addClass('conferencing');
-			} else {
-				homeLink.find('i').addClass('icon-th icon-large');
-				self.callApi({
-					resource: 'whitelabel.getLogo',
-					data: {
-						domain: domain,
-						generateError: false,
-						dataType: '*'
-					},
-					success: function(_data) {
-						container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
-					},
-					error: function(error) {
-						container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/static/images/logo.png")');
-					}
-				});
+		displayLogo: function(container) {
+			var self = this,
+				domain = window.location.hostname,
+				apiUrl = monster.config.api.default;
+
+			self.callApi({
+				resource: 'whitelabel.getLogo',
+				data: {
+					domain: domain,
+					generateError: false,
+					dataType: '*'
+				},
+				success: function(_data) {
+					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+				},
+				error: function(error) {
+					container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/static/images/logo.png")');
+				}
+			});
+		},
+
+		onRequestStart: function(spinner) {
+			var self = this;
+
+			if(self.requestAmount === 0) {
+				spinner.addClass('active');
+			}
+
+			self.requestAmount++;
+		},
+
+		onRequestEnd: function(spinner) {
+			var self = this;
+
+			if(--self.requestAmount === 0) {
+				spinner.removeClass('active');
 			}
 		}
 	};

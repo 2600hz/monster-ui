@@ -99,7 +99,7 @@ define(function(require){
 					countDisplay = category.length;
 
 				category.forEach(function(element) {
-					if(!restrictions[element].show_tab) {
+					if(!restrictions.hasOwnProperty(element) || !restrictions[element].show_tab) {
 						countDisplay--;
 					}
 				});

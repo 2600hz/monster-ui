@@ -1,3 +1,56 @@
+/* Loading Spinner */
+.loading-wrap {
+	display: none;
+	position: fixed;
+	right: 0;
+	top: 0;
+}
+
+.loading-wrap.active {
+	display: inline-block;
+}
+
+.loading-wrap .loading {
+	background-color: transparent;
+	border: 5px solid transparent;
+	border-top-color: #22ccff;
+	border-bottom-color: #000;
+	border-radius: 50%;
+	box-sizing: border-box;
+	padding: 0.5em;
+	position: relative;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.loading-wrap .loading.outer {
+	animation: spin 1s infinite;
+}
+
+.loading-wrap .loading.inner {
+	animation: spin-reverse 1s infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotateZ(0deg);
+	}
+
+	100% {
+		transform: rotateZ(180deg);
+	}
+}
+@keyframes spin-reverse {
+	0% {
+		transform: rotateZ(0deg);
+	}
+
+  100% {
+		transform: rotateZ(-360deg);
+	}
+}
+
+/* Footer */
 .footer-wrapper {
 	position: fixed;
 	bottom: 2px;
