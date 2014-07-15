@@ -25,7 +25,8 @@ define(function(require){
 			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.renderSubmodule': '_renderSubmodule',
-			'myaccount.renderNavLinks': '_renderNavLinks'
+			'myaccount.renderNavLinks': '_renderNavLinks',
+			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility'
 		},
 
 		subModules: ['profile', 'trunks', 'balance', 'servicePlan', 'transactions'],
@@ -83,72 +84,91 @@ define(function(require){
 			};
 		},
 
-		formatUiRestrictions: function(restrictions) {
+		_UIRestrictionsCompatibility: function(args) {
+			var self = this;
+
+			if ( args.hasOwnProperty('restrictions') && args.restrictions.hasOwnProperty('myaccount') ) {
+				args.restrictions = args.restrictions.myaccount;
+			} else if ( !args.hasOwnProperty('restrictions') ) {
+				args.restrictions = self.getDefaultRestrictions();
+			}
+
+			args.callback(args.restrictions);
+		},
+
+		formatUiRestrictions: function(restrictions, callback) {
 			var self = this,
 				categories = {
 					account: ['profile'],
 					billing: ['transactions', 'service_plan', 'balance'],
 					trunking: ['inbound', 'outbound']
-				},
-				restrictions = restrictions || self.getDefaultRestrictions();
-
-			restrictions.categories = {};
-
-			for(var i in categories) {
-				var category = categories[i],
-					countDisplay = category.length;
-
-				category.forEach(function(element) {
-					if(!restrictions[element].show_tab) {
-						countDisplay--;
-					}
-				});
-
-				restrictions.categories[i] = {
-					show: countDisplay > 0 ? true : false
 				};
-			}
 
-			return restrictions;
+			self._UIRestrictionsCompatibility({
+				restrictions: restrictions,
+				callback: function(uiRestrictions) {
+					uiRestrictions.categories = {};
+
+					for(var i in categories) {
+						var category = categories[i],
+							countDisplay = category.length;
+
+						category.forEach(function(element) {
+							if(!uiRestrictions.hasOwnProperty(element) || !uiRestrictions[element].show_tab) {
+								countDisplay--;
+							}
+						});
+
+						uiRestrictions.categories[i] = {
+							show: countDisplay > 0 ? true : false
+						};
+					}
+
+					callback(uiRestrictions);
+				}
+			});
 		},
 
 		render: function(){
-			var self = this,
-				uiRestrictions = self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions),
-				dataTemplate = {
-					restrictions: uiRestrictions
-				},
-				myaccountHtml = $(monster.template(self, 'app', dataTemplate));
+			var self = this;
 
-			if ( !monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions') ) {
-				self.callApi({
-					resource: 'account.get',
-					data: {
-						accountId: self.accountId
+			self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions, function(uiRestrictions) {
+				var dataTemplate = {
+						restrictions: uiRestrictions
 					},
-					success: function(data, status) {
-						data.data.ui_restrictions = self.getDefaultRestrictions();
+					myaccountHtml = $(monster.template(self, 'app', dataTemplate));
 
-						self.callApi({
-							resource: 'account.update',
-							data: {
-								accountId: self.accountId,
-								data: data.data
-							}
-						});
-					}
-				});
-			}
+				if ( !monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions') ) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							data.data.ui_restrictions.myaccount = self.getDefaultRestrictions();
 
-			$('#topbar').after(myaccountHtml);
+							self.callApi({
+								resource: 'account.update',
+								data: {
+									accountId: self.accountId,
+									data: data.data
+								}
+							});
+						}
+					});
+				}
 
-			self._renderNavLinks();
+				$('#topbar').after(myaccountHtml);
 
-			self.bindEvents(myaccountHtml);
+				self._renderNavLinks();
 
-			if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.profile.show_tab) {
-				self.checkCreditCard();
-			}
+				self.bindEvents(myaccountHtml);
+
+				if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.profile.show_tab) {
+					self.checkCreditCard();
+				}
+
+			});
 		},
 
 		// Also used by masquerading, account app
@@ -213,12 +233,27 @@ define(function(require){
 			navLinks.on('click', '.myaccount-link', function(e) {
 				e.preventDefault();
 
-				if(mainContainer.hasClass('myaccount-open')) {
-					self.hide();
-				}
-				else {
-					self.renderDropdown();
-				}
+				self._UIRestrictionsCompatibility({
+					restrictions: monster.apps.auth.originalAccount.ui_restrictions, 
+					callback: function(restrictions) {
+						var showDropdown = false;
+
+						for ( var restriction in restrictions ) {
+							if ( restrictions[restriction].show_tab ) {
+								showDropdown = true;
+							}
+						}
+
+						if ( showDropdown ) {
+							if(mainContainer.hasClass('myaccount-open')) {
+								self.hide();
+							}
+							else {
+								self.renderDropdown();
+							}
+						}
+					}
+				});
 			});
 
 			navLinks.on('click', '.restore-masquerading-link', function(e) {
