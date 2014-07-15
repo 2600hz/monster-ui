@@ -30,7 +30,7 @@
             			<i class="icon-time"></i>
             			<span class="hidden-phone element-name">{{ i18n.balance.title }}</span>
 
-					{{#compare uiRestrictions.balance.show_credit '!==' false }}
+					{{#compare restrictions.balance.show_credit '!==' false }}
             			<span class="badge pull-right visible-desktop">$<span class="amount">{{ amount }}</span></span>
 					{{/compare}}
         			</div>
