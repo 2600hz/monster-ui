@@ -119,11 +119,16 @@ define(function(require){
 			// Once we finished loading the required base apps
 			if(!self._baseApps.length) {
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
-
-				monster.apps.load(defaultApp, function(app) {
-					self.showAppName(defaultApp);
-					app.render($('#ws-content'));
-				}, options);
+				
+				if(typeof defaultApp !== 'undefined') {
+					monster.apps.load(defaultApp, function(app) {
+						self.showAppName(defaultApp);
+						app.render($('#ws-content'));
+					}, options);
+				}
+				else {
+					console.warn('Current user doesn\'t have a default app');
+				}
 			}
 			else {
 				var appName = self._baseApps.pop();

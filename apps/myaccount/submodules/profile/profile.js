@@ -92,21 +92,21 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					results = self.profileFormatData(results);
+					self.profileFormatData(results, function(results) {
+						var profile = $(monster.template(self, 'profile-layout', results));
 
-					var profile = $(monster.template(self, 'profile-layout', results));
+						self.profileBindEvents(profile, results);
 
-					self.profileBindEvents(profile, results);
+						monster.pub('myaccount.renderSubmodule', profile);
 
-					monster.pub('myaccount.renderSubmodule', profile);
+						if(args.uiTab) {
+							profile.find('a[href="#'+args.uiTab+'"]').tab('show');
+						}
 
-					if(args.uiTab) {
-						profile.find('a[href="#'+args.uiTab+'"]').tab('show');
-					}
-
-					if(typeof args.callback === 'function') {
-						args.callback(profile);
-					}
+						if(typeof args.callback === 'function') {
+							args.callback(profile);
+						}
+					});
 				}
 			);
 		},
@@ -178,31 +178,31 @@ define(function(require){
 				}
 			});
 		},
+		
+		profileFormatData: function(data, callback) {
+			monster.pub('myaccount.UIRestrictionsCompatibility', {
+				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+				callback: function(restrictions) {
 
-		profileFormatData: function(data) {
-			// If standard user, hide account and billing
-			if(data.hasOwnProperty('user') && data.user.hasOwnProperty('priv_level') && data.user.priv_level === 'user') {
-				data.uiRestrictions.profile.show_account = false;
-				data.uiRestrictions.profile.show_billing = false;
-			}
+					data.uiRestrictions = restrictions;
 
-			data.uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {};
+					if(! _.isEmpty(data.billing) ) {
+						data.billing.credit_card = data.billing.credit_cards[0] || {};
 
-			if(! _.isEmpty(data.billing) ) {
-				data.billing.credit_card = data.billing.credit_cards[0] || {};
+						/* If There is a credit card stored, we fill the fields with * */
+						if(data.billing.credit_card.last_four) {
+							data.billing.credit_card.fake_number = '************'+data.billing.credit_card.last_four;
+							data.billing.credit_card.fake_cvv = '***';
+							data.billing.credit_card.type = data.billing.credit_card.card_type.toLowerCase();
+						}
+					}
+					else {
+						data.uiRestrictions.profile = $.extend(data.uiRestrictions.profile || {}, { show_billing: false });
+					}
 
-				/* If There is a credit card stored, we fill the fields with * */
-				if(data.billing.credit_card.last_four) {
-					data.billing.credit_card.fake_number = '************'+data.billing.credit_card.last_four;
-					data.billing.credit_card.fake_cvv = '***';
-					data.billing.credit_card.type = data.billing.credit_card.card_type.toLowerCase();
+					callback(data);
 				}
-			}
-			else {
-				data.uiRestrictions.profile = $.extend(data.uiRestrictions.profile || {}, { show_billing: false });
-			}
-
-			return data;
+			});
 		},
 
 		profileBindEvents: function(parent, data) {

@@ -88,64 +88,68 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var renderData = $.extend(true, {},
-											  defaults,
-											  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
-											  {uiRestrictions: monster.apps['auth'].originalAccount.ui_restrictions}
-											 );
+					monster.pub('myaccount.UIRestrictionsCompatibility', {
+						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+						callback: function(uiRestrictions) {
 
-					renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
+							var renderData = $.extend(true, {},
+													  defaults,
+													  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
+													  {uiRestrictions: uiRestrictions}
+													 );
 
-					var balance = $(monster.template(self, 'balance-layout', renderData)),
-						argsLayout = {
-							module: self.name,
-							data: self.i18n.active().currencyUsed + renderData.amount
-						};
+							renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
-					self.balanceBindEvents(balance);
+							var balance = $(monster.template(self, 'balance-layout', renderData)),
+								args = {
+									module: self.name,
+									data: self.i18n.active().currencyUsed + renderData.amount
+								};
 
-					monster.pub('myaccount.updateMenu', argsLayout);
-					monster.pub('myaccount.renderSubmodule', balance);
+							self.balanceBindEvents(balance);
 
-					self.balanceInitTable(balance);
+							monster.pub('myaccount.updateMenu', args);
+							monster.pub('myaccount.renderSubmodule', balance);
 
-					$.fn.dataTableExt.afnFiltering.pop();
+							self.balanceInitTable(balance);
 
-					balance.find('div.table-custom-actions').html(monster.template(self, 'balance-tableActionBar'));
+							$.fn.dataTableExt.afnFiltering.pop();
 
-					monster.ui.initRangeDatepicker(self.transactionsRange, balance);
+							balance.find('div.table-custom-actions').html(monster.template(self, 'balance-tableActionBar'));
 
-					var startDate = balance.find('#startDate').val(),
-						endDate = balance.find('#endDate').val(),
-						createdFrom = (new Date(startDate).getTime()/1000) + 62167219200,
-						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
+							monster.ui.initRangeDatepicker(self.transactionsRange, balance);
 
-					balance.find('.refresh-filter').on('click', function() {
-						self._balanceRenderContent(argsLayout);
+							var startDate = balance.find('#startDate').val(),
+								endDate = balance.find('#endDate').val(),
+								createdFrom = (new Date(startDate).getTime()/1000) + 62167219200,
+								createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
+
+							balance.find('.refresh-filter').on('click', function() {
+								self._balanceRenderContent(args);
+							});
+
+							balance.find('#filter_transactions').on('click', function() {
+								startDate = balance.find('#startDate').val();
+								endDate = balance.find('#endDate').val();
+								createdFrom = (new Date(startDate).getTime()/1000) + 62167219200;
+								createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
+
+								/* Bug because of Infinite scrolling... we need to manually remove tr */
+								monster.ui.table.balance.find('tbody tr').remove();
+								monster.ui.table.balance.fnClearTable();
+
+								self.balanceRefreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
+							});
+
+							balance.find('.action-number#download').on('click', function() {
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+							});
+							
+							monster.ui.table.balance.fnAddData(renderData.tabData);
+
+							balance.find('.popup-marker').clickover();
+						}
 					});
-
-					balance.find('#filter_transactions').on('click', function() {
-						startDate = balance.find('#startDate').val();
-						endDate = balance.find('#endDate').val();
-						createdFrom = (new Date(startDate).getTime()/1000) + 62167219200;
-						createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
-
-						/* Bug because of Infinite scrolling... we need to manually remove tr */
-						monster.ui.table.balance.find('tbody tr').remove();
-						monster.ui.table.balance.fnClearTable();
-
-						self.balanceRefreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
-					});
-
-					balance.find('.action-number#download').on('click', function() {
-						window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
-					});
-
-					monster.ui.table.balance.fnAddData(renderData.tabData);
-
-					balance.find('.popup-marker').clickover();
-
-					args.callback && args.callback();
 				}
 			);
 		},
@@ -261,62 +265,67 @@ define(function(require){
 		},
 
 		balanceInitTable: function(parent) {
-			var self = this,
-				uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions || {},
-				showCredit = uiRestrictions.balance && uiRestrictions.balance.show_credit == false ? false : true,
-				columns = [
-					{
-						'sTitle': 'timestamp',
-						'bVisible': false
-					},
-					{
-						'sTitle': 'call_id',
-						'bVisible': false
-					},
-					{
-						'sTitle': self.i18n.active().balance.directionColumn,
-						'fnRender': function(obj) {
-							var icon = '<i class="icon-arrow-left icon-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
-							if(obj.aData[obj.iDataColumn].direction === 'inbound') {
-								icon = '<i class="icon-arrow-right icon-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
+			var self = this;
+
+			monster.pub('myaccount.UIRestrictionsCompatibility',{
+				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+				callback: function(uiRestrictions) {
+					var showCredit = uiRestrictions.balance && uiRestrictions.balance.show_credit == false ? false : true,
+						columns = [
+							{
+								'sTitle': 'timestamp',
+								'bVisible': false
+							},
+							{
+								'sTitle': 'call_id',
+								'bVisible': false
+							},
+							{
+								'sTitle': self.i18n.active().balance.directionColumn,
+								'fnRender': function(obj) {
+									var icon = '<i class="icon-arrow-left icon-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
+									if(obj.aData[obj.iDataColumn].direction === 'inbound') {
+										icon = '<i class="icon-arrow-right icon-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
+									}
+									return icon;
+								},
+								'sWidth': '5%'
+
+							},
+							{
+								'sTitle': self.i18n.active().balance.dateColumn,
+								'sWidth': '20%'
+
+							},
+							{
+								'sTitle': self.i18n.active().balance.fromColumn,
+								'sWidth': '20%'
+							},
+							{
+								'sTitle': self.i18n.active().balance.toColumn,
+								'sWidth': '20%'
+							},
+							{
+								'sTitle': self.i18n.active().balance.accountColumn,
+								'sWidth': '25%'
+							},
+							{
+								'sTitle': self.i18n.active().balance.durationColumn,
+								'sWidth': '10%'
 							}
-							return icon;
-						},
-						'sWidth': '5%'
+						];
 
-					},
-					{
-						'sTitle': self.i18n.active().balance.dateColumn,
-						'sWidth': '20%'
-
-					},
-					{
-						'sTitle': self.i18n.active().balance.fromColumn,
-						'sWidth': '20%'
-					},
-					{
-						'sTitle': self.i18n.active().balance.toColumn,
-						'sWidth': '20%'
-					},
-					{
-						'sTitle': self.i18n.active().balance.accountColumn,
-						'sWidth': '25%'
-					},
-					{
-						'sTitle': self.i18n.active().balance.durationColumn,
-						'sWidth': '10%'
+					if (showCredit) {
+						columns[7].sWidth = '5%';
+						columns.push({'sTitle': self.i18n.active().balance.amountColumn,'sWidth': '5%'});
 					}
-				];
 
-			if (showCredit) {
-				columns[7].sWidth = '5%';
-				columns.push({'sTitle': self.i18n.active().balance.amountColumn,'sWidth': '5%'});
-			}
-
-			monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
-				sDom: '<"table-custom-actions">frtlip',
-				aaSorting: [[0, 'desc']]
-			});
+					monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
+						sDom: '<"table-custom-actions">frtlip',
+						aaSorting: [[0, 'desc']]
+					});
+				}
+			})
 		},
 
 		balanceCleanFormData: function(module, data) {
