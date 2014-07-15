@@ -113,7 +113,7 @@ define(function(require){
 
 		bindEvents: function(container) {
 			var self = this,
-				spinner = container.find('.loading-wrap');
+				spinner = container.find('.loading-wrapper');
 
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
 			monster.sub('monster.requestStart', function() {
@@ -187,6 +187,9 @@ define(function(require){
 
 		onRequestStart: function(spinner) {
 			var self = this;
+			
+			// If we start a request, we cancel any existing timeout that was checking if the loading was over
+			clearTimeout(self.loadingTimeout);
 
 			if(self.requestAmount === 0) {
 				spinner.addClass('active');
@@ -196,10 +199,18 @@ define(function(require){
 		},
 
 		onRequestEnd: function(spinner) {
-			var self = this;
+			var self = this,
+				waitTime = 200;
 
+			// Ghetto
+			// We don't want the user to see the loading gif appears/disappears constantly
+			// So we added a waittime, if the number of running request is 0, we wait %waitTime% ms and check again after, to be sure that the loading is complete 
 			if(--self.requestAmount === 0) {
-				spinner.removeClass('active');
+				self.loadingTimeout = setTimeout(function() {
+					if(self.requestAmount === 0) {
+						spinner.removeClass('active');
+					}
+				}, waitTime)
 			}
 		}
 	};
