@@ -58,6 +58,7 @@ define(function(require){
 
 		_balanceRenderContent: function(args) {
 			var self = this,
+				argsCallback = args.callback,
 				defaults = {
 					fieldData: {
 						accounts: {}
@@ -91,7 +92,6 @@ define(function(require){
 					monster.pub('myaccount.UIRestrictionsCompatibility', {
 						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 						callback: function(uiRestrictions) {
-
 							var renderData = $.extend(true, {},
 													  defaults,
 													  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
@@ -148,6 +148,10 @@ define(function(require){
 							monster.ui.table.balance.fnAddData(renderData.tabData);
 
 							balance.find('.popup-marker').clickover();
+
+							if (typeof argsCallback === 'function') {
+								argsCallback(balance);
+							};
 						}
 					});
 				}
@@ -323,7 +327,7 @@ define(function(require){
 						aaSorting: [[0, 'desc']]
 					});
 				}
-			})
+			});
 		},
 
 		balanceCleanFormData: function(module, data) {

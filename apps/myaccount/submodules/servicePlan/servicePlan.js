@@ -87,6 +87,10 @@ define(function(require){
 					self.servicePlanBindEvents(servicePlanView);
 
 					monster.pub('myaccount.renderSubmodule', servicePlanView);
+
+					if(typeof args.callback === 'function') {
+						args.callback(servicePlanView);
+					}
 				}
 			);
 		},

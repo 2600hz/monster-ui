@@ -138,6 +138,11 @@ a.monster-link.disabled i {
 	color: #22ccff !important;
 }
 
+#main section > .navbar .nav > li.myaccount-link.disabled a:hover {
+	color: whiteSmoke;
+	cursor: default;
+}
+
 #main section > .navbar .navbar-inner .current-app {
 	display: inline-block;
 	float: left;
