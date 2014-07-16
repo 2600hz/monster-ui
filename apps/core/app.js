@@ -22,7 +22,10 @@ define(function(require){
 		_defaultApp: 'appstore',
 
 		// Global var used to show the loading gif
-		requestAmount: 0,
+		spinner: {
+			requestAmount: 0,
+			active: false
+		},
 
 		load: function(callback){
 			var self = this;
@@ -186,29 +189,43 @@ define(function(require){
 		},
 
 		onRequestStart: function(spinner) {
-			var self = this;
-			
+			var self = this,
+				waitTime = 650;
+
+			self.spinner.requestAmount++;
+
 			// If we start a request, we cancel any existing timeout that was checking if the loading was over
-			clearTimeout(self.loadingTimeout);
+			clearTimeout(self.spinner.endTimeout);
 
-			if(self.requestAmount === 0) {
-				spinner.addClass('active');
-			}
-
-			self.requestAmount++;
+			// And we start a timeout that will check if there are still some active requests after %waitTime%.
+			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
+			self.spinner.startTimeout = setTimeout(function() {
+				if(self.spinner.requestAmount !== 0 && self.spinner.active === false) {
+					self.spinner.active = true;
+					spinner.addClass('active');
+					
+					clearTimeout(self.spinner.startTimeout);
+				}
+			}, waitTime);
 		},
 
 		onRequestEnd: function(spinner) {
 			var self = this,
-				waitTime = 200;
+				waitTime = 750;
 
-			// Ghetto
-			// We don't want the user to see the loading gif appears/disappears constantly
-			// So we added a waittime, if the number of running request is 0, we wait %waitTime% ms and check again after, to be sure that the loading is complete 
-			if(--self.requestAmount === 0) {
-				self.loadingTimeout = setTimeout(function() {
-					if(self.requestAmount === 0) {
+			self.spinner.requestAmount--;
+
+			// If there are no active requests, we set a timeout that will check again after %waitTime%
+			// If there are no active requests after the timeout, then we can safely remove the spinner.
+			// We do this to avoid showing and hiding the spinner too quickly
+			if(self.spinner.requestAmount === 0) {
+				self.spinner.endTimeout = setTimeout(function() {
+					if(self.spinner.requestAmount === 0 && self.spinner.active === true) {
 						spinner.removeClass('active');
+						self.spinner.active = false;
+
+						clearTimeout(self.spinner.startTimeout);
+						clearTimeout(self.spinner.endTimeout);
 					}
 				}, waitTime)
 			}
