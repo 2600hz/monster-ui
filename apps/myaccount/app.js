@@ -189,12 +189,11 @@ define(function(require){
 						dataTemplate = {
 							name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
 							isMasquerading: args && args.isMasquerading || false,
-							showMyaccount: false
+							showMyaccount: showMyaccount
 						},
 						navHtml = $(monster.template(self, 'nav', dataTemplate)),
 						mainContainer = $(self.mainContainer);
-console.log(dataTemplate);
-console.log(navHtml);
+
 					/* Hack to redraw myaccount links on masquerading */
 					navLinks.find('.myaccount-common-link').remove();
 					navLinks.append(navHtml);

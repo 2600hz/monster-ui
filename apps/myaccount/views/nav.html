@@ -1,5 +1,3 @@
-
-{{debug}}
 {{#if isMasquerading}}
 <li class="restore-masquerading-link nav-masquerading myaccount-common-link">
 	<a href="#">
@@ -7,7 +5,7 @@
 		<div class="name-text">My account</div>
 	</a>
 </li>
-<li data-link="myaccount" class="myaccount-link nav-masquerading myaccount-common-link">
+<li data-link="myaccount" class="myaccount-link nav-masquerading myaccount-common-link{{#compare showMyaccount '===' false}} disabled{{/compare}}">
 	<a href="#">
 		<div>Currently Viewing</div>
 		<div class="name-text">{{name}}</div>
