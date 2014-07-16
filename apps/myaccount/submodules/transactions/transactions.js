@@ -15,7 +15,7 @@ define(function(require){
 				verb: 'GET'
 			},
 			'myaccount.transactions.getCharges': {
-				url: 'accounts/{accountId}/transactions?reason=no_call&created_from={from}&created_to={to}',
+				url: 'accounts/{accountId}/transactions?reason=no_calls&created_from={from}&created_to={to}',
 				verb: 'GET'
 			}
 		},
@@ -104,7 +104,7 @@ define(function(require){
 					billingEndDate: monster.util.toFriendlyDate(to, 'short')
 				},
 				formatCharge = function(v) {
-					if(v.add_ons.length === 0 && v.discounts.length === 0) {
+					if((!v.hasOwnProperty('add_ons') && !v.hasOwnProperty('discounts')) || (v.add_ons.length === 0 && v.discounts.length === 0)) {
 						v.type = 'charges';
 					}
 					else {
@@ -144,7 +144,8 @@ define(function(require){
 					}
 
 					v.amount = parseFloat(v.amount).toFixed(2);
-					v.approved = v.processor_response_text === 'Approved',
+					// If there are no processor response text, we assume it was approved
+					v.approved = v.hasOwnProperty('processor_response_text') ? v.processor_response_text === 'Approved' : true,
 					v.friendlyCreated = monster.util.toFriendlyDate(v.created_at, 'short');
 					v.created = v.created_at;
 
