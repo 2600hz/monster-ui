@@ -228,6 +228,9 @@ define(function(require){
 				}
 
 				self.activateSubmodule(args);
+
+				// Otherwise sometimes the data isn't synced
+				monster.pub('myaccount.refreshBadges');
 			});
 
 			navLinks.on('click', '.myaccount-link', function(e) {
