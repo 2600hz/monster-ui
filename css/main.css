@@ -20,9 +20,11 @@ body h1.lobster {
 
 /* Monster-Link */
 a.monster-link {
-	color: #666;
-	cursor: pointer;
 	margin: 0 10px;
+
+	cursor: pointer;
+
+	color: #666;
 }
 
 a.monster-link.blue {
@@ -31,13 +33,15 @@ a.monster-link.blue {
 
 a.monster-link i {
 	margin-right: 5px;
+
 	text-decoration: none;
 }
 
 a.monster-link.disabled {
-	color: #999;
 	cursor: default;
 	text-decoration: none;
+
+	color: #999;
 }
 
 a.monster-link.disabled i {
@@ -47,12 +51,16 @@ a.monster-link.disabled i {
 
 /* Navbar */
 #main section > .navbar  {
-	border-top: 5px solid #22ccff;
 	margin-bottom: 0;
+
+	border-top: 5px solid #22ccff;
 }
 
 #main section > .navbar .navbar-inner {
+	padding: 0 0 0 0;
 
+	border: none;
+	border-radius: 0;
 	background: rgb(17,17,17); /* Old browsers */
 	background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
@@ -60,12 +68,9 @@ a.monster-link.disabled i {
 	background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
 	background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
-
-	border-radius: 0;
 	box-shadow: none;
-	border: none;
-	padding: 0 0 0 0;
+
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
 }
 
 #main section > .navbar .btn-navbar {
@@ -77,10 +82,12 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .nav > li > a {
-	padding: 0 22px 0 0;
 	height: 62px;
+	padding: 0 22px 0 0;
+
 	color: whiteSmoke;
 	text-shadow: none;
+
 	font-size: 14px;
 	line-height: 58px;
 }
@@ -89,23 +96,34 @@ a.monster-link.disabled i {
 	display: inline-block;
 	float: left;
 	overflow: hidden;
+
 	max-width: 200px;
-	text-overflow: ellipsis;
+
 	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 #main section > .navbar .nav > li.nav-masquerading {
-	border-left: 1px solid #353535;
+	border-right: 1px solid #353535;
 }
 
 #main section > .navbar .nav > li.nav-masquerading > a {
-	padding: 10px 22px 0 22px;
 	height: 52px;
+	padding: 10px 22px 0 22px;
+
 	text-align: center;
+
 	line-height: inherit;
 }
 
 #main section > .navbar .nav > li.nav-masquerading .name-text {
+	overflow: hidden;
+
+	max-width: 150px;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
 	color: #22ccff;
 }
 
@@ -116,7 +134,9 @@ a.monster-link.disabled i {
 #main section > .navbar .nav > li.myaccount-link i {
 	position: relative;
 	top: 2px;
+
 	margin-left: 8px;
+
 	color: #FFF;
 }
 
@@ -139,8 +159,9 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .nav > li.myaccount-link.disabled a:hover {
-	color: whiteSmoke;
 	cursor: default;
+
+	color: whiteSmoke;
 }
 
 #main section > .navbar .navbar-inner .current-app {
@@ -155,8 +176,10 @@ a.monster-link.disabled i {
 #main section > .navbar .navbar-inner .active-app {
 	display: none;
 	float: left;
-	padding: 0 30px;
+
 	height: 62px;
+	padding: 0 30px;
+
 	border-right: 1px solid #353535;
 }
 #main section > .navbar .navbar-inner .active-app > div {
@@ -166,17 +189,22 @@ a.monster-link.disabled i {
 #main section > .navbar .navbar-inner .app-icon {
 	width: 40px;
 	height: 100%;
+
 	background: no-repeat center;
 	background-size: contain;
 }
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
+
 	max-width: 200px;
-	color: #F5F5F5;
-	text-transform: uppercase;
-	text-overflow: ellipsis;
+
 	white-space: nowrap;
 	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	text-overflow: ellipsis;
+
+	color: #F5F5F5;
+
 	font-size: 18px;
 	line-height: 62px;
 }
@@ -186,46 +214,60 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .navbar-inner .logo {
-	background-repeat: no-repeat;
-	background-position: center center;
-	border-right: 1px solid #353535;
-	cursor: default;
 	float: left;
+
+	width: 192px;
 	height: 62px;
 	padding: 0 15px;
-	width: 192px;
+
+	cursor: default;
+
+	border-right: 1px solid #353535;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 #main section > .navbar .navbar-inner .logo.conferencing {
+	text-align: center;
 	text-transform: uppercase;
+
 	font-size: 20px;
 	line-height: 62px;
-	text-align: center;
 }
 #main section > .navbar .navbar-inner .logo.conferencing:hover {
 	text-decoration: none;
+
 	color: #22ccff;
 }
 
 #main section > .navbar .navbar-inner .home {
 	display: none;
+
 	padding: 0 20px 0 10px;
+
 	text-decoration: none;
+
 	border-right: 1px solid #353535;
 }
 #main section > .navbar .navbar-inner .home * {
 	display: block;
+
 	margin: 0;
+
 	line-height: 62px;
 }
 #main section > .navbar .navbar-inner .home span {
 	overflow: hidden;
+
 	max-width: 66px;
 	margin-left: 44px;
+
 	white-space: nowrap;
 	letter-spacing: 0.5px;
 	text-transform: uppercase;
 	text-overflow: ellipsis;
+
 	color: #F5F5F5;
+
 	font-size: 18px;
 }
 
@@ -237,9 +279,9 @@ a.monster-link.disabled i {
 	color: #22ccff !important;
 }
 #main section > .navbar .navbar-inner .home.conferencing {
-	padding: 5px;
-	height: 52px;
 	width: 240px;
+	height: 52px;
+	padding: 5px;
 }
 @media (max-width: 979px) {
 	#main section > .navbar .navbar-inner .home.conferencing {
@@ -248,13 +290,14 @@ a.monster-link.disabled i {
 }
 
 #main section > .ws-content {
+	position: absolute;
 	top: 67px;
-	left:0;
 	right: 0;
 	bottom: 0;
-	position: absolute;
-	height: auto;
+	left:0;
+
 	width: auto;
+	height: auto;
 }
 
 /* Hack to remove iPad clipping onclick */
@@ -268,31 +311,41 @@ body div {
 	}
 }
 
-@media (max-width: 954px) {
-	#main section > .navbar .navbar-inner .logo {
-		padding-left: 0px;
-		padding-right: 0px;
-	}
-
-	#main section > .navbar .nav > li.nav-masquerading > a {
-		padding-left: 5px;
-		padding-right: 5px;
-	}
-
-	#main section > .navbar .navbar-inner .links .top-link {
-		width: 52px;
-	}
-}
-
-@media (max-width: 996px) {
+@media (max-width: 906px) {
 	#main section > .navbar .navbar-inner .current-app {
 		display: none;
 	}
+}
+
+@media (max-width: 685px) {
+	#main section > .navbar .navbar-inner .logo {
+		display: none;
+	}
+}
+
+@media (max-width: 1140px) {
 	#main section > .navbar .navbar-inner #home_link {
 		padding-left: 20px;
 	}
 	#main section > .navbar .navbar-inner #home_link .title {
 		display: none;
+	}
+}
+
+@media (max-width: 1064px) {
+	#main section > .navbar .navbar-inner .logo {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	#main section > .navbar .nav > li.nav-masquerading > a {
+		padding-right: 5px;
+		padding-left: 5px;
+	}
+	#main section > .navbar .navbar-inner .links .top-link {
+		width: 52px;
+	}
+	#main section > .navbar .navbar-inner .active-app {
+		padding: 0 10px;
 	}
 }
 
