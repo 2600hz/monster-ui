@@ -1,33 +1,10 @@
 define(function(require){
-
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
 		icheck = require('icheck'),
 		toastr = require('toastr'),
 		validate = require('validate');
-
-	var requestAmount = 0,
-		homeIcon,
-		homeIconClass = monster.config.appleConference ? 'icon-apple' : 'icon-th';
-
-	monster.sub('monster.requestStart', function() {
-		requestAmount++;
-
-		homeIcon = homeIcon || $('#home_link > i');
-
-		if(homeIcon.hasClass(homeIconClass)) {
-			homeIcon .removeClass(homeIconClass)
-					 .addClass('icon-spin icon-spinner');
-		}
-	});
-
-	monster.sub('monster.requestEnd', function() {
-		if(--requestAmount === 0) {
-			homeIcon.removeClass('icon-spin icon-spinner')
-					.addClass(homeIconClass);
-		}
-	});
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';

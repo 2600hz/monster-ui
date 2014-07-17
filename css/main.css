@@ -89,7 +89,7 @@ a.monster-link.disabled i {
 	display: inline-block;
 	float: left;
 	overflow: hidden;
-	max-width: 88px;
+	max-width: 200px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -138,6 +138,11 @@ a.monster-link.disabled i {
 	color: #22ccff !important;
 }
 
+#main section > .navbar .nav > li.myaccount-link.disabled a:hover {
+	color: whiteSmoke;
+	cursor: default;
+}
+
 #main section > .navbar .navbar-inner .current-app {
 	display: inline-block;
 	float: left;
@@ -166,7 +171,7 @@ a.monster-link.disabled i {
 }
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
-	max-width: 206px;
+	max-width: 200px;
 	color: #F5F5F5;
 	text-transform: uppercase;
 	text-overflow: ellipsis;
@@ -257,6 +262,11 @@ body div {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
+@media (max-width: 630px) {
+	#main section > .navbar .nav > li > a .user-name {
+		max-width: 169px;
+	}
+}
 
 @media (max-width: 954px) {
 	#main section > .navbar .navbar-inner .logo {
@@ -272,8 +282,16 @@ body div {
 	#main section > .navbar .navbar-inner .links .top-link {
 		width: 52px;
 	}
+}
 
+@media (max-width: 996px) {
 	#main section > .navbar .navbar-inner .current-app {
+		display: none;
+	}
+	#main section > .navbar .navbar-inner #home_link {
+		padding-left: 20px;
+	}
+	#main section > .navbar .navbar-inner #home_link .title {
 		display: none;
 	}
 }

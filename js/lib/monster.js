@@ -226,15 +226,19 @@ define(function(require){
 					_template = $(name).html();
 				}
 				else{
+					monster.pub('monster.requestStart');
+
 					$.ajax({
 						url: app.appPath + '/views/' + name + '.html',
 						dataType: 'text',
 						async: false,
 						success: function(result){
 							_template = result;
+							monster.pub('monster.requestEnd');
 						},
 						error: function(xhr, status, err){
 							_template = status + ': ' + err;
+							monster.pub('monster.requestEnd');
 						}
 					});
 				}

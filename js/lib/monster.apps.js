@@ -186,16 +186,22 @@ define(function(){
 		loadLocale: function(app, language, callback) {
 			var self = this,
 				loadFile = function(afterLoading) {
+					monster.pub('monster.requestStart');
+
 					$.ajax({
 						url: app.appPath + '/i18n/' + language + '.json',
 						dataType: 'json',
 						async: false,
 						success: function(data){
 							afterLoading && afterLoading(data);
+
+							monster.pub('monster.requestEnd');
 						},
 						error: function(data, status, error){
 							afterLoading && afterLoading({});
 
+							monster.pub('monster.requestEnd')
+							
 							console.log('_loadLocale error: ', status, error);
 						}
 					});

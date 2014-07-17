@@ -28,6 +28,7 @@
 			"forbidden": "The value for the field \"{{field}}\" can not be updated."
 		}
 	},
+	"apps": "apps",
 	"add": "Add",
 	"alertLogout": "Your session is about to expire. Move your cursor to resume activity.",
 	"cancel": "Cancel",

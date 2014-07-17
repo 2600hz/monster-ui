@@ -19,7 +19,7 @@ define(function(require){
 				verb: 'PUT'
 			},
 			'myaccount.balance.getFilteredTransactions': {
-				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}',
+				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason=only_calls',
 				verb: 'GET'
 			},
 			'myaccount.balance.getDescendants': {
@@ -58,6 +58,7 @@ define(function(require){
 
 		_balanceRenderContent: function(args) {
 			var self = this,
+				argsCallback = args.callback,
 				defaults = {
 					fieldData: {
 						accounts: {}
@@ -91,7 +92,6 @@ define(function(require){
 					monster.pub('myaccount.UIRestrictionsCompatibility', {
 						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 						callback: function(uiRestrictions) {
-
 							var renderData = $.extend(true, {},
 													  defaults,
 													  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
@@ -148,6 +148,10 @@ define(function(require){
 							monster.ui.table.balance.fnAddData(renderData.tabData);
 
 							balance.find('.popup-marker').clickover();
+
+							if (typeof argsCallback === 'function') {
+								argsCallback(balance);
+							};
 						}
 					});
 				}
@@ -228,34 +232,32 @@ define(function(require){
 
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
-					if(v.reason === 'per_minute_call') {
-						var duration = self.i18n.active().balance.active_call,
-							friendlyDate = monster.util.toFriendlyDate(v.created),
-							accountName = '-';
+					var duration = self.i18n.active().balance.active_call,
+						friendlyDate = monster.util.toFriendlyDate(v.created),
+						accountName = '-';
 
-						if('duration' in v.metadata) {
-							duration = Math.ceil((parseInt(v.metadata.duration))/60),
-							data.totalMinutes += duration;
-						}
-
-						if('account_id' in v.metadata) {
-							accountName = mapAccounts[v.metadata.account_id].name;
-						}
-
-						data.totalCharges += v.amount;
-
-						data.tabData.push([
-							v.created,
-							v.call_id,
-							v.metadata.call,
-							friendlyDate,
-							monster.util.formatPhoneNumber(v.metadata.from),
-							monster.util.formatPhoneNumber(v.metadata.to),
-							accountName,
-							duration,
-							self.i18n.active().currencyUsed + v.amount.toFixed(3)
-						]);
+					if('duration' in v.metadata) {
+						duration = Math.ceil((parseInt(v.metadata.duration))/60),
+						data.totalMinutes += duration;
 					}
+
+					if('account_id' in v.metadata) {
+						accountName = mapAccounts[v.metadata.account_id].name;
+					}
+
+					data.totalCharges += v.amount;
+
+					data.tabData.push([
+						v.created,
+						v.call_id,
+						v.metadata.call,
+						friendlyDate,
+						monster.util.formatPhoneNumber(v.metadata.from),
+						monster.util.formatPhoneNumber(v.metadata.to),
+						accountName,
+						duration,
+						self.i18n.active().currencyUsed + v.amount.toFixed(3)
+					]);
 				});
 
 				data.totalCharges = data.totalCharges.toFixed(3);
@@ -325,7 +327,7 @@ define(function(require){
 						aaSorting: [[0, 'desc']]
 					});
 				}
-			})
+			});
 		},
 
 		balanceCleanFormData: function(module, data) {
