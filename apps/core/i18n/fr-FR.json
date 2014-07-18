@@ -31,7 +31,7 @@
 	},
 	"error": "Erreur",
 	"add":"Ajouter",
-	"alertLogout":"Votre session va bientôt expirer. Bougez votre souris pour éviter une déconnexion!",
+	"alertLogout":"Nous avons détecté que vous êtes couramment inactifs sur cette page web. Bougez votre souris pour éviter une déconnexion!",
 	"cancel":"Annuler",
 	"change":"Changer",
 	"chargeReminder":{

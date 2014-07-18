@@ -30,7 +30,7 @@
 	},
 	"apps": "apps",
 	"add": "Add",
-	"alertLogout": "Your session is about to expire. Move your cursor to resume activity.",
+	"alertLogout": "Your current session is expiring and you're about to be logged off due to inactivity. Please move your cursor if you want to remain logged in.",
 	"cancel": "Cancel",
 	"change": "Change",
 	"chargeReminder" : {
