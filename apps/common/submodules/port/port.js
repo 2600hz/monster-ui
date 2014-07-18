@@ -60,7 +60,7 @@ define(function(require){
 				type: 'application/pdf',
 				dataType: 'application/pdf'
 			},
-			'common.port.add.state': {
+			'common.port.add.region': {
 				url: 'accounts/{accountId}/port_requests/{portRequestId}/ready',
 				verb: 'PUT'
 			},
@@ -87,7 +87,7 @@ define(function(require){
 						for ( var order in data.data ) {
 							var date = monster.util.gregorianToDate(data.data[order].created);
 							data.data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-							data.data[order].status = ( data.data[order].port_state == 'ready' ) ? true : false;
+							data.data[order].status = ( data.data[order].port_region == 'ready' ) ? true : false;
 						}
 
 						return data;
@@ -620,9 +620,9 @@ define(function(require){
 					}
 					data.orders[index].bill.name = container.find('input#account_name').val();
 					data.orders[index].bill.address = container.find('input#address').val();
-					data.orders[index].bill.city = container.find('input#city').val();
-					data.orders[index].bill.state = container.find('input#state').val();
-					data.orders[index].bill.zip_code = container.find('input#zip_code').val();
+					data.orders[index].bill.locality = container.find('input#locality').val();
+					data.orders[index].bill.region = container.find('input#region').val();
+					data.orders[index].bill.postal_code = container.find('input#postal_code').val();
 
 					self.portSaveOrder(accountId, parent, data, index);
 				}
@@ -653,11 +653,11 @@ define(function(require){
 					submitData = false;
 				}
 
-				if ( container.find('#city').val() == '' ) {
+				if ( container.find('#locality').val() == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#state').val() == '' ) {
+				if ( container.find('#region').val() == '' ) {
 					submitData = false;
 				}
 
@@ -665,7 +665,7 @@ define(function(require){
 					submitData = false;
 				}
 
-				if ( container.find('#zip_code').val() == '' ) {
+				if ( container.find('#postal_code').val() == '' ) {
 					submitData = false;
 				}
 
@@ -691,10 +691,10 @@ define(function(require){
 					data.orders[index].name = container.find('#transfer_helper').val();
 					data.orders[index].bill = new Object();
 					data.orders[index].bill.name = container.find('#account_name').val();
-					data.orders[index].bill.city = container.find('#city').val();
-					data.orders[index].bill.state = container.find('#state').val();
+					data.orders[index].bill.locality = container.find('#locality').val();
+					data.orders[index].bill.region = container.find('#region').val();
 					data.orders[index].bill.address = container.find('#address').val();
-					data.orders[index].bill.zip_code = container.find('#zip_code').val();
+					data.orders[index].bill.postal_code = container.find('#postal_code').val();
 
 					var dataTemplate = new Object(),
 						date = new Date(Math.floor(+new Date()) + 259200000),
@@ -702,7 +702,6 @@ define(function(require){
 						created = monster.util.gregorianToDate(data.orders[index].created),
 						created = (created.getMonth() + 1) + "/" + created.getDate() + "/" + created.getFullYear();
 
-					dataTemplate.email = data.orders[index].email;
 					dataTemplate.name = data.orders[index].name;
 					dataTemplate.created = ( typeof data.orders[index].created == 'undefined' ) ? date : created;
 					dataTemplate.transfer = ( typeof data.orders[index].transfer_date == 'undefined' ) ? date : data.orders[index].transfer_date;
@@ -809,7 +808,7 @@ define(function(require){
 			 */
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-				data.orders[index].email = container.find('input#notification_email').val();
+				data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
 				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
@@ -836,8 +835,7 @@ define(function(require){
 				}
 
 				if ( submitData ) {
-
-					data.orders[index].email = container.find('input#notification_email').val();
+					data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
 					data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
 					if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
@@ -1137,7 +1135,7 @@ define(function(require){
 
 		portRequestReadyState: function(accountId, portRequestId, callback) {
 			monster.request({
-				resource: "common.port.add.state",
+				resource: "common.port.add.region",
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,

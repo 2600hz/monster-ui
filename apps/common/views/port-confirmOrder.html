@@ -29,7 +29,7 @@
 				<label class="control-label" for="notification_email">{{ i18n.port.confirmOrder.labelEmail }}</label>
 			</div>
 			<div class="span6">
-				<input type="text" class="span8" id="notification_email" placeholder="Email address" value="{{#if email}}{{email}}{{/if}}">
+				<input type="text" class="span8" id="notification_email" placeholder="Email address" value="{{#if notifications.email.send_to}}{{notifications.email.send_to}}{{/if}}">
 				<span class="help-inline"><i class="icon-warning-sign"></i></span>
 			</div>
 		</div>

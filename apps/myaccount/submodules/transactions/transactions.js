@@ -42,6 +42,10 @@ define(function(require){
 				self.transactionsBindEvents(transactionsView);
 
 				monster.pub('myaccount.renderSubmodule', transactionsView);
+
+				if(typeof args.callback === 'function') {
+					args.callback(transactionsView);
+				}
 			});
 		},
 

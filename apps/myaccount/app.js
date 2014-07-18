@@ -85,7 +85,8 @@ define(function(require){
 		},
 
 		_UIRestrictionsCompatibility: function(args) {
-			var self = this;
+			var self = this,
+				showMyaccount = false;
 
 			if ( args.hasOwnProperty('restrictions') && args.restrictions.hasOwnProperty('myaccount') ) {
 				args.restrictions = args.restrictions.myaccount;
@@ -93,7 +94,13 @@ define(function(require){
 				args.restrictions = self.getDefaultRestrictions();
 			}
 
-			args.callback(args.restrictions);
+			_.each(args.restrictions, function(value, key){
+				if ( value.show_tab ) {
+					showMyaccount = true;
+				}
+			});
+
+			args.callback(args.restrictions, showMyaccount);
 		},
 
 		formatUiRestrictions: function(restrictions, callback) {
@@ -173,17 +180,25 @@ define(function(require){
 
 		// Also used by masquerading, account app
 		_renderNavLinks: function(args) {
-			var self = this,
-				navLinks = $('#ws-navbar .links'),
-				navHtml = $(monster.template(self, 'nav', {
-					name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
-					isMasquerading: args && args.isMasquerading || false
-				})),
-				mainContainer = $(self.mainContainer);
+			var self = this;
 
-			/* Hack to redraw myaccount links on masquerading */
-			navLinks.find('.myaccount-common-link').remove();
-			navLinks.append(navHtml);
+			self._UIRestrictionsCompatibility({
+				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+				callback: function(uiRestrictions, showMyaccount) {
+					var navLinks = $('#ws-navbar .links'),
+						dataTemplate = {
+							name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
+							isMasquerading: args && args.isMasquerading || false,
+							showMyaccount: showMyaccount
+						},
+						navHtml = $(monster.template(self, 'nav', dataTemplate)),
+						mainContainer = $(self.mainContainer);
+
+					/* Hack to redraw myaccount links on masquerading */
+					navLinks.find('.myaccount-common-link').remove();
+					navLinks.append(navHtml);
+				}
+			});
 		},
 
 		renderDropdown: function(callback) {
@@ -237,17 +252,9 @@ define(function(require){
 				e.preventDefault();
 
 				self._UIRestrictionsCompatibility({
-					restrictions: monster.apps.auth.originalAccount.ui_restrictions, 
-					callback: function(restrictions) {
-						var showDropdown = false;
-
-						for ( var restriction in restrictions ) {
-							if ( restrictions[restriction].show_tab ) {
-								showDropdown = true;
-							}
-						}
-
-						if ( showDropdown ) {
+					restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+					callback: function(uiRestrictions, showMyaccount) {
+						if ( showMyaccount ) {
 							if(mainContainer.hasClass('myaccount-open')) {
 								self.hide();
 							}
@@ -283,7 +290,7 @@ define(function(require){
                                                                     hidecursordelay:1000
                                                                 }),
                 firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
-                uiRestrictions = monster.apps['auth'].originalAccount.ui_restrictions;
+                uiRestrictions = monster.apps.auth.originalAccount.ui_restrictions ? monster.apps.auth.originalAccount.ui_restrictions.myaccount || monster.apps.auth.originalAccount.ui_restrictions : {};
 
 			if (uiRestrictions && uiRestrictions[self.defaultApp.name] && uiRestrictions[self.defaultApp.name].show_tab === false) {
 				self.defaultApp.name = firstTab.data('module');
