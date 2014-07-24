@@ -148,10 +148,13 @@ define(function(require){
 					}
 
 					v.amount = parseFloat(v.amount).toFixed(2);
+
 					// If there are no processor response text, we assume it was approved
 					v.approved = v.hasOwnProperty('processor_response_text') ? v.processor_response_text === 'Approved' : true,
-					v.friendlyCreated = monster.util.toFriendlyDate(v.created_at, 'short');
-					v.created = v.created_at;
+					// Our API return created but braintree returns created_at
+					v.created = v.created_at || v.created; 
+
+					v.friendlyCreated = monster.util.toFriendlyDate(v.created, 'short');
 
 					return v;
 				};

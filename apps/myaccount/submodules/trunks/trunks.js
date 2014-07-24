@@ -39,23 +39,25 @@ define(function(require){
 		_trunksRefreshBadges: function(args) {
 			var self = this;
 
-			self.trunksGetLimits(function(dataLimits) {
-				var argsMenuInbound = {
-						module: 'trunks',
-						key: 'inbound',
-						data: dataLimits.data.inbound_trunks,
-						callback: args.callback
-					},
-					argsMenuOutbound = {
-						module: 'trunks',
-						key: 'outbound',
-						data: dataLimits.data.twoway_trunks,
-						callback: args.callback
-					};
+			if(!args.hasOwnProperty('except') || args.except !== 'trunks') {
+				self.trunksGetLimits(function(dataLimits) {
+					var argsMenuInbound = {
+							module: 'trunks',
+							key: 'inbound',
+							data: dataLimits.data.inbound_trunks,
+							callback: args.callback
+						},
+						argsMenuOutbound = {
+							module: 'trunks',
+							key: 'outbound',
+							data: dataLimits.data.twoway_trunks,
+							callback: args.callback
+						};
 
-				monster.pub('myaccount.updateMenu', argsMenuInbound);
-				monster.pub('myaccount.updateMenu', argsMenuOutbound);
-			});
+					monster.pub('myaccount.updateMenu', argsMenuInbound);
+					monster.pub('myaccount.updateMenu', argsMenuOutbound);
+				});
+			}
 		},
 
 		trunksRenderInbound: function(callback) {

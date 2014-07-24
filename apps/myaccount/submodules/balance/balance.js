@@ -45,15 +45,17 @@ define(function(require){
 		_balanceRefreshBadge: function(args) {
 			var self = this;
 
-			self.balanceGet(function(data) {
-				var argsBadge = {
-					module: 'balance',
-					data: self.i18n.active().currencyUsed + parseFloat(data.data.amount).toFixed(2),
-					callback: args.callback
-				};
+			if(!args.hasOwnProperty('except') || args.except !== 'balance') {
+				self.balanceGet(function(data) {
+					var argsBadge = {
+						module: 'balance',
+						data: self.i18n.active().currencyUsed + parseFloat(data.data.amount).toFixed(2),
+						callback: args.callback
+					};
 
-				monster.pub('myaccount.updateMenu', argsBadge);
-			});
+					monster.pub('myaccount.updateMenu', argsBadge);
+				});
+			}
 		},
 
 		_balanceRenderContent: function(args) {
@@ -102,7 +104,7 @@ define(function(require){
 
 							var balance = $(monster.template(self, 'balance-layout', renderData)),
 								args = {
-									module: self.name,
+									module: 'balance',
 									data: self.i18n.active().currencyUsed + renderData.amount
 								};
 
@@ -220,7 +222,7 @@ define(function(require){
 				data = {
 					tabData: [],
 					totalMinutes: 0,
-					totalCharges: 0.00
+					totalCharges: 0
 				};
 
 			if(dataRequest.length > 0) {
@@ -234,7 +236,8 @@ define(function(require){
 
 					var duration = self.i18n.active().balance.active_call,
 						friendlyDate = monster.util.toFriendlyDate(v.created),
-						accountName = '-';
+						accountName = '-',
+						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3);
 
 					if('duration' in v.metadata) {
 						duration = Math.ceil((parseInt(v.metadata.duration))/60),
@@ -245,21 +248,21 @@ define(function(require){
 						accountName = mapAccounts[v.metadata.account_id].name;
 					}
 
-					data.totalCharges += v.amount;
+					data.totalCharges += parseFloat(v.amount);
 
 					data.tabData.push([
-						v.created,
-						v.call_id,
-						v.metadata.call,
-						friendlyDate,
-						monster.util.formatPhoneNumber(v.metadata.from),
-						monster.util.formatPhoneNumber(v.metadata.to),
-						accountName,
-						duration,
-						self.i18n.active().currencyUsed + v.amount.toFixed(3)
+						v.created || '-',
+						v.call_id || '-',
+						v.metadata.call || '-',
+						friendlyDate || '-',
+						monster.util.formatPhoneNumber(v.metadata.from) || '-',
+						monster.util.formatPhoneNumber(v.metadata.to) || '-',
+						accountName || '-',
+						duration || '-',
+						friendlyAmount || '-'
 					]);
 				});
-
+				
 				data.totalCharges = data.totalCharges.toFixed(3);
 			}
 
