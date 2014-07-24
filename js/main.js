@@ -64,6 +64,8 @@ require.config({
 require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover', 'touch-punch'], function($, monster){
 	$.support.cors = true;
 
+	monster.initSDK();
+
 	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){
 		monster.util = util;
 		monster.ui = ui;

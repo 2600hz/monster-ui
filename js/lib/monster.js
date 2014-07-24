@@ -304,60 +304,68 @@ define(function(require){
 				results.push(match[1]);
 			}
 			return results.length ? results[0] : null;
-		}
-	}
-
-	monster.kazooSdk = $.getKazooSdk({
-		apiRoot: monster.config.api.default,
-		onRequestStart: function(request, requestOptions) {
-			monster.pub('monster.requestStart');
 		},
-		onRequestEnd: function(request, requestOptions) {
-			monster.pub('monster.requestEnd');
-		},
-		onRequestError: function(error, requestOptions) {
-			if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-				monster.ui.charges(error.data, function() {
-					requestOptions.acceptCharges = true;
-					monster.kazooSdk.request(requestOptions);
-				});
-			} else {
-				if(requestOptions.generateError !== false) {
-					var errorsI18n = monster.apps.core.i18n.active().errors,
-						errorMessage = errorsI18n.generic,
-						parsedError = error;
 
-					if('responseText' in error && error.responseText) {
-						parsedError = $.parseJSON(error.responseText);
-					}
+		initSDK: function() {
+			var self = this;
 
-					if(error.status === 400 && 'data' in parsedError) {
-						errorMessage = errorsI18n.invalidData.errorLabel;
-						_.each(parsedError.data, function(fieldErrors, fieldKey) {
-							_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-								if(typeof fieldError === 'string') {
-									errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
-								} else if(fieldErrorKey in errorsI18n.invalidData) {
-									errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
-								} else if('message' in fieldError) {
-									errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
-								}
+			self.kazooSdk = $.getKazooSdk(
+				{
+					apiRoot: monster.config.api.default,
+					onRequestStart: function(request, requestOptions) {
+						monster.pub('monster.requestStart');
+					},
+					onRequestEnd: function(request, requestOptions) {
+						monster.pub('monster.requestEnd');
+					},
+					onRequestError: function(error, requestOptions) {
+						if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
+							monster.ui.charges(error.data, function() {
+								requestOptions.acceptCharges = true;
+								monster.kazooSdk.request(requestOptions);
 							});
-						});
-					} else if(error.status in errorsI18n) {
-						errorMessage = errorsI18n[error.status];
-					}
+						} else {
+							if(requestOptions.generateError !== false) {
+								var errorsI18n = monster.apps.core.i18n.active().errors,
+									errorMessage = errorsI18n.generic,
+									parsedError = error;
 
-					if(error.message) {
-						errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + error.message;
-					}
+								if('responseText' in error && error.responseText) {
+									parsedError = $.parseJSON(error.responseText);
+								}
 
-					monster.ui.alert('error', errorMessage);
+								if(error.status === 400 && 'data' in parsedError) {
+									errorMessage = errorsI18n.invalidData.errorLabel;
+									_.each(parsedError.data, function(fieldErrors, fieldKey) {
+										_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+											if(typeof fieldError === 'string') {
+												errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+											} else if(fieldErrorKey in errorsI18n.invalidData) {
+												errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+											} else if('message' in fieldError) {
+												errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+											}
+										});
+									});
+								} else if(error.status in errorsI18n) {
+									errorMessage = errorsI18n[error.status];
+								}
+
+								if(error.message) {
+									errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + error.message;
+								}
+
+								monster.ui.alert('error', errorMessage);
+							}
+						}
+					}
 				}
-			}
+			);
 		}
-	});
+	};
 
+	// We added this so Google Maps could execute a callback in the global namespace
+	// See example in Cluster Manager
 	window.monster = monster;
 
 	return monster;
