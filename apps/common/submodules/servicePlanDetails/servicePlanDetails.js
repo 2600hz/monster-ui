@@ -31,33 +31,31 @@ define(function(require){
 							planId: servicePlan
 						},
 						success: function(data, status) {
-							var template = monster.template(self, 'servicePlanDetails-layout', {
-								servicePlan: data.data
-							});
-
-							container.empty().append(template);
-
-							callback && callback({
-								template: template,
-								data: data.data
-							});
+							self.renderServicePlanDetails(container, data.data, callback);
 						}
 					});
 				} else {
-					var template = monster.template(self, 'servicePlanDetails-layout', {
-						servicePlan: servicePlan
-					});
-
-					container.empty().append(template);
-
-					callback && callback({
-						template: template,
-						data: servicePlan
-					});
+					self.renderServicePlanDetails(container, servicePlan, callback);
 				}
 			} else {
 				throw "You must provide a container!";
 			}
+		},
+
+		renderServicePlanDetails: function(container, servicePlanData, callback) {
+			var self = this,
+				template = $(monster.template(self, 'servicePlanDetails-layout', {
+					servicePlan: servicePlanData
+				}));
+
+			template.find('[data-toggle="tooltip"]').tooltip();
+
+			container.empty().append(template);
+
+			callback && callback({
+				template: template,
+				data: servicePlanData
+			});
 		}
 	}
 

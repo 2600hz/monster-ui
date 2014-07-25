@@ -23,11 +23,13 @@
 		{{#each this}}
 		<div class="line">
 			<div class="name">
-			{{#if this.name}}
-				{{this.name}}
-			{{else}}
-				{{@key}}
-			{{/if}}
+			<span {{#if this.description}}data-toggle="tooltip" data-placement="top" data-original-title="{{this.description}}"{{/if}}>
+				{{#if this.name}}
+					{{this.name}}
+				{{else}}
+					{{@key}}
+				{{/if}}
+			</span>
 			</div>
 			<div class="charges">
 				{{#if this.rate}}

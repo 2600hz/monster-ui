@@ -32,11 +32,13 @@
 .service-plan-details .line .charges > div {
 	padding: 5px;
 }
-
 .service-plan-details .no-service-plan {
 	padding: 10px;
 	font-weight: 500;
 	font-size: 16px;
 	font-style: italic;
 	color: #009de6;
+}
+.service-plan-details *[data-toggle="tooltip"] {
+	cursor: help;
 }
