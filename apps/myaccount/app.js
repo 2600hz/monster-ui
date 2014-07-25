@@ -244,8 +244,11 @@ define(function(require){
 
 				self.activateSubmodule(args);
 
-				// Otherwise sometimes the data isn't synced
-				monster.pub('myaccount.refreshBadges');
+				// Use this click to update the other badges so that the badges stay up to date even if we don't open the tabs
+				// We added the except keys, because we already update the badge when we load the module we just clicked on, so we don't need to do it twice
+				monster.pub('myaccount.refreshBadges', {
+					except: args.module
+				});
 			});
 
 			navLinks.on('click', '.myaccount-link', function(e) {
@@ -374,12 +377,9 @@ define(function(require){
 
 		_updateMenu: function(params) {
 			if(params.data !== undefined) {
-				if(params.key) {
-					$('[data-key="'+params.key+'"] .badge').html(params.data);
-				}
-				else {
-					$('[data-module="'+params.module+'"] .badge').html(params.data);
-				}
+				var container = params.hasOwnProperty('key') ? '[data-key="'+params.key+'"] .badge' : '[data-module="'+params.module+'"] .badge';
+
+				$(container).html(params.data);
 			}
 
 			params.callback && params.callback();

@@ -73,8 +73,17 @@ define(function(require){
 					},
 					subscription: function(callback) {
 						self.servicePlanGetSubscription(function(data) {
+							renderData.dueDate = '?';
+
 							if(data.data.length > 0) {
-								renderData.dueDate = monster.util.toFriendlyDate(data.data[0].next_bill_date, 'short');
+								// Hack to find the Active subscription
+								data.data.forEach(function(subscription) {
+									if(subscription.status === 'Active') {
+										renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'short');
+										
+										return false;
+									}
+								})
 							}
 
 							callback(null, data);
