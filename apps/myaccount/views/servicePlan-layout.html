@@ -1,55 +1,62 @@
 <div class="service-plan-content-wrapper">
-	<div class="fancy-header">
-		<div class="left-image">
-			<i class="icon-calendar"></i>
-		</div>
-
-		<div class="title-block">
-			{{ i18n.servicePlan.titleHeader }}
-		</div>
-
-		<div class="right-block box-white-border">
-			<div class="content box-white-content">
-				<div class="main-title">
-					{{ i18n.currencyUsed }}{{ totalAmount }}
+	{{#if hasServicePlan}}
+		{{#if hasSubscriptions}}
+			<div class="fancy-header">
+				<div class="left-image">
+					<i class="icon-calendar"></i>
 				</div>
-				<div class="sub-title">
-					{{ i18n.servicePlan.dueOn }} {{ dueDate }}
+
+				<div class="title-block">
+					{{ i18n.servicePlan.titleHeader }}
+				</div>
+
+
+				<div class="right-block box-white-border">
+					<div class="content box-white-content">
+						<div class="main-title">
+							{{ i18n.currencyUsed }}{{ totalAmount }}
+						</div>
+						<div class="sub-title">
+							{{ i18n.servicePlan.dueOn }} {{ dueDate }}
+						</div>
+					</div>
 				</div>
 			</div>
+		{{/if}}
+
+		<div class="action-bar">
+			<a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download-alt icon-green"></i>{{ i18n.download }}</a>
 		</div>
-	</div>
 
-	<div class="action-bar">
-		<a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="icon-download-alt icon-green"></i>{{ i18n.download }}</a>
-	</div>
-
-	<div class="table-content">
-		<table class="table">
-			<thead>
-				<tr>
-					<th class="blue-gradient-reverse">{{ i18n.servicePlan.serviceTitle }}</th>
-					<th class="blue-gradient-reverse">{{ i18n.servicePlan.rateTitle }}</th>
-					<th class="blue-gradient-reverse"></th>
-					<th class="blue-gradient-reverse">{{ i18n.servicePlan.quantityTitle }}</th>
-					<th class="blue-gradient-reverse">{{ i18n.servicePlan.discount }}</th>
-					<th class="blue-gradient-reverse">{{ i18n.servicePlan.monthlyChargesTitle }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{{#each servicePlanArray}}
+		<div class="table-content">
+			<table class="table">
+				<thead>
 					<tr>
-						<td>{{ this.service }}</td>
-						<td>{{ ../i18n.currencyUsed }}{{ this.rate }}</td>
-						<td>X</td>
-						<td>{{ this.quantity }}</td>
-						<td>{{ this.discount }}</td>
-						<td>{{ ../i18n.currencyUsed }}{{ this.monthlyCharges }}</td>
+						<th class="blue-gradient-reverse">{{ i18n.servicePlan.serviceTitle }}</th>
+						<th class="blue-gradient-reverse">{{ i18n.servicePlan.rateTitle }}</th>
+						<th class="blue-gradient-reverse"></th>
+						<th class="blue-gradient-reverse">{{ i18n.servicePlan.quantityTitle }}</th>
+						<th class="blue-gradient-reverse">{{ i18n.servicePlan.discount }}</th>
+						<th class="blue-gradient-reverse">{{ i18n.servicePlan.monthlyChargesTitle }}</th>
 					</tr>
-				{{else}}
-					<tr><td colspan="6" class="no-data">{{ i18n.table.empty }}</tr>
-				{{/each}}
-			</tbody>
-		</table>
-	</div>
+				</thead>
+				<tbody>
+					{{#each servicePlanArray}}
+						<tr>
+							<td>{{ this.service }}</td>
+							<td>{{ ../i18n.currencyUsed }}{{ this.rate }}</td>
+							<td>X</td>
+							<td>{{ this.quantity }}</td>
+							<td>{{ this.discount }}</td>
+							<td>{{ ../i18n.currencyUsed }}{{ this.monthlyCharges }}</td>
+						</tr>
+					{{else}}
+						<tr><td colspan="6" class="no-data">{{ i18n.servicePlan.empty }}</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	{{else}}
+		<div class="alert">{{ i18n.servicePlan.none }}</div>
+	{{/if}}
 </div>

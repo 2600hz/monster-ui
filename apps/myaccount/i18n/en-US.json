@@ -112,29 +112,28 @@
 	},
 
 	"servicePlan": {
+		"discount": "Discount",
+		"dueOn": "Due on",
+		"empty": "Your current service plan is empty!",
+		"monthlyChargesTitle": "Monthly Charges",
+		"quantityTitle": "Quantity",
+		"rateTitle": "Rate",
+		"serviceTitle": "Service",
 		"title": "Service Plan",
 		"titleHeader": "Service Plan",
-		"dueOn": "Due on",
-
-		"serviceTitle": "Service",
-		"discount": "Discount",
-		"rateTitle": "Rate",
-		"quantityTitle": "Quantity",
-		"monthlyChargesTitle": "Monthly Charges",
-
 		"titles": {
-			"twoway_trunks": "Twoway Trunks",
-			"inbound_trunks": "Inbound Trunks",
-			"twoway_trunk": "Twoway Trunks",
-			"inbound_trunk": "Inbound Trunks",
+			"cnam": "CNAM",
 			"did_us": "US DIDs",
+			"e911": "E911",
+			"inbound_cnam": "Inbound CNAM",
+			"inbound_trunk": "Inbound Trunks",
+			"inbound_trunks": "Inbound Trunks",
+			"port": "Port",
 			"sip_devices": "SIP Devices",
 			"sip_device": "SIP Devices",
-			"inbound_cnam": "Inbound CNAM",
-			"e911": "E911",
-			"cnam": "CNAM",
-			"port": "Port",
-			"tollfree_us": "US Tollfree"
+			"tollfree_us": "US Tollfree",
+			"twoway_trunk": "Twoway Trunks",
+			"twoway_trunks": "Twoway Trunks"
 		}
 	},
 

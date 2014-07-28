@@ -8,10 +8,12 @@ define(function(require){
 		requests: {
 			'myaccount.servicePlan.get': {
 				url: 'accounts/{accountId}/service_plans/current',
+				generateError: false,
 				verb: 'GET'
 			},
 			'myaccount.servicePlan.getSubscription': {
 				url: 'accounts/{accountId}/transactions/subscriptions',
+				generateError: false,
 				verb: 'GET'
 			},
 			'myaccount.servicePlan.downloadCsv': {
@@ -27,6 +29,8 @@ define(function(require){
 		_servicePlanRenderContent: function(args) {
 			var self = this,
 				defaults = {
+					hasServicePlan: false,
+					hasSubscriptions: false,
 					totalAmount: 0,
 					servicePlanArray: []
 				},
@@ -34,9 +38,11 @@ define(function(require){
 
 			monster.parallel({
 					servicePlan: function(callback) {
-						self.servicePlanGet(function(data) {
+						self.servicePlanGet(function success (data) {
 							var dataArray = [],
 								totalAmount = 0;
+
+							renderData.hasServicePlan = true;
 
 							if('items' in data.data) {
 								$.each(data.data.items, function(categoryName, category) {
@@ -69,10 +75,15 @@ define(function(require){
 							renderData.totalAmount = parseFloat(totalAmount).toFixed(2);
 
 							callback(null, data);
+						},
+						function error(data) {
+							callback(null, {});
 						});
 					},
 					subscription: function(callback) {
-						self.servicePlanGetSubscription(function(data) {
+						self.servicePlanGetSubscription(function success (data) {
+							renderData.hasSubscriptions = true;
+
 							renderData.dueDate = '?';
 
 							if(data.data.length > 0) {
@@ -87,6 +98,9 @@ define(function(require){
 							}
 
 							callback(null, data);
+						},
+						function error (data) { 
+							callback(null, {});
 						});
 					}
 				},
