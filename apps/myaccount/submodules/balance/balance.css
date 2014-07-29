@@ -33,7 +33,7 @@
 .balance-content-wrapper .title-bar .box-data .value {
 	color: #22CCFF;
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 .balance-content-wrapper .title-bar .box-data button {
@@ -112,7 +112,7 @@
 }
 
 .add-credits-content-wrapper .box-content .line-content .line-label {
-	font-weight: 500;
+	font-weight: 600;
 	width: 200px;
 }
 

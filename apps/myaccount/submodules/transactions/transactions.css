@@ -123,7 +123,7 @@
 }
 .transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(5) {
 	color: #44cc44;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 .transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(6),

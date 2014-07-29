@@ -223,7 +223,7 @@
 	margin-left: 15px;
 	text-transform: uppercase;
 	font-size: 20px;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 #appstore_popup_container .screenshot-container {
@@ -366,7 +366,7 @@
 
 #appstore_popup_container .right-container .help-bloc a {
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 600;
 } 
 
 #appstore_popup_container .right-container .help-bloc a:hover {

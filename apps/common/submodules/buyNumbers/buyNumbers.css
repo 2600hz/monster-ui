@@ -22,7 +22,7 @@
 	margin: 0;
 	padding: 0 5px;
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 #buy_number #city_input {
@@ -50,7 +50,7 @@
 #buy_number .radio-group label {
 	display: inline-block;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 #buy_number #seq_num_div {
@@ -120,7 +120,7 @@
 }
 
 #buy_number #search_parameters {
-	font-weight: 500;
+	font-weight: 600;
 }
 
 #buy_number #search_result_div .result-content-div > div {
@@ -140,7 +140,7 @@
 	color: red;
 	font-style: italic;
 	text-align: justify;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 #buy_number #search_result_div .result-content-div .left-div .number-box {
@@ -304,7 +304,7 @@
 
 #buy_number #check_numbers_div .checking-div span {
 	margin-left: 15px;
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 20px;
 	color: #22ccff;
 }
@@ -329,7 +329,7 @@
 
 #buy_number .summary-div .summary-label {
 	font-size: 20px;
-	font-weight: 500;
+	font-weight: 600;
 	line-height: 28px;
 	margin: 5px 0;
 }
@@ -363,7 +363,7 @@
 
 #buy_number #processing_purchase_div span {
 	margin-left: 15px;
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 20px;
 	color: #22ccff;
 	line-height: 32px;
@@ -387,7 +387,7 @@
 	border: solid 1px #ccc;
 	border-radius: 4px;
 	color: #009DE6;
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 14px;
 	line-height: 38px;
 	padding-left: 60px;

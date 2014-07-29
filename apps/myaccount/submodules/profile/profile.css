@@ -24,7 +24,7 @@
     color: #333;
     cursor: pointer;
     display: block;
-    font-weight: 500;
+    font-weight: 600;
     height: 60px;
     line-height: 60px;
     padding: 0px 15px;
@@ -44,7 +44,7 @@
 
 .profile-content-wrapper .list-settings .settings-item .settings-link .description {
 	display: inline-block;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .profile-content-wrapper .list-settings .settings-item .settings-link .description .number {
@@ -85,7 +85,7 @@
 .profile-content-wrapper .list-settings .settings-item-content label.uneditable {
     color: #22ccff;
     cursor: default;
-    font-weight: 500;
+    font-weight: 600;
     padding-top: 5px;
 }
 

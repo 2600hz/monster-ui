@@ -93,17 +93,17 @@
 }
 
 body, input, button, select, textarea {
-    font-family: 'Maven Pro', Helvetica, sans-serif;
+    font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 
 ::-webkit-input-placeholder {
-    font-family: 'Maven Pro', Helvetica, sans-serif;
+    font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 :-moz-placeholder {
-    font-family: 'Maven Pro', Helvetica, sans-serif;
+    font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 :-ms-input-placeholder {
-    font-family: 'Maven Pro', Helvetica, sans-serif;
+    font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 
 a {
@@ -172,7 +172,7 @@ a {
 
 /* New color buttons */
 .btn {
-    font-weight: 500;
+    font-weight: 600;
     padding-right: 20px;
     padding-left: 20px;
     letter-spacing: 1px;

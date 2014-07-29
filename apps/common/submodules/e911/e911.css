@@ -7,7 +7,7 @@
 .trunkstore_popup.e911 .e911-title {
     margin-left: 320px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 15px;
 }
 
@@ -19,7 +19,7 @@
     top: 0px;
     left: 0px;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     color: #ccc;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .trunkstore_popup.e911 .e911_text {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
     line-height: 30px;
 }

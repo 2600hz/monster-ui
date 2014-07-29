@@ -158,7 +158,7 @@ table.table {
 table.table thead th {
 	background-color: #999;
 	color: #fff;
-	font-weight: 500;
+	font-weight: 600;
 	line-height: 30px;
 	text-shadow: 1px 1px 1px #666666;
 }
@@ -242,7 +242,7 @@ table.table tr td {
 
 .ui-dialog .ui-dialog-title {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: 600;
 	color: #424749;
 	text-shadow: 1px 1px 1px #f7f7f7;
 	letter-spacing: 0.4px;
@@ -271,7 +271,7 @@ table.table tr td {
 }
 
 .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-	font-family: 'Maven Pro', Helvetica, sans-serif;
+	font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 
 .ui-dialog .dialog-buttons-wrapper {
@@ -279,8 +279,8 @@ table.table tr td {
 }
 
 /* JQuery datepicker */
-.ui-datepicker th { font-weight: 500; }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: 500; color: #333; }
+.ui-datepicker th { font-weight: 600; }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: 600; color: #333; }
 .ui-widget-header { background: #22ccff; }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #22ccff; text-decoration: none; }
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { font-weight: bold; color: #22ccff; }
@@ -503,7 +503,7 @@ table.table tr td {
 
 .wizard .wizard-content-wrapper .wizard-content .wizard-content-step h4 {
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 600;
 }
 /* Tooltips */
 .icon-question-sign[data-toggle="tooltip"] {
@@ -605,7 +605,7 @@ table.table tr td {
 }
 
 .fancy-header .title-block {
-	font-weight: 500;
+	font-weight: 600;
 	line-height: 80px;
 	float: left;
 }
@@ -651,7 +651,7 @@ table.table tr td {
     border-radius: 4px 4px 0 0;
     color: #FFFFFF;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     height: 50px;
     line-height: 50px;
     padding-left: 20px;
@@ -729,7 +729,7 @@ table.table tr td {
 	background: #f5f5f5;
 	border-top: 1px solid #22ccff !important;
 	box-shadow: inset 0 0 5px #cccccc;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 .number-box i.icon-cog:before {
