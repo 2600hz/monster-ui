@@ -1,0 +1,118 @@
+<div class="user-content-wrapper">
+	<ul class="list-settings">
+		<li class="settings-item clearfix" data-name="email">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.email }}</span>
+				<span class="description">{{user.email}}</span>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_email">
+							<div class="control-group">
+								<label class="control-label" for="email">{{ i18n.user.email }}</label>
+								<div class="controls">
+									<input type="email" placeholder="{{ i18n.placeholderEmail }}" id="email" name="email" value="{{user.email}}" data-original_value="{{user.email}}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls action-bar">
+									<a href="#" class="cancel">{{ i18n.cancel }}</a>
+									<button class="btn btn-success change" data-module="user" data-field="email">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="password">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.password }}</span>
+				<span class="description">*************</span>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_password">
+							<div class="control-group">
+								<label class="control-label" for="password">{{ i18n.user.newPassword }}</label>
+								<div class="controls">
+									<input type="password" id="password" name="password" data-original_value=""/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="confirm_password">{{ i18n.user.confirmPassword }}</label>
+								<div class="controls">
+									<input type="password" id="confirm_password" name="confirm_password" data-original_value=""/>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls action-bar">
+									<a href="#" class="cancel">{{ i18n.cancel }}</a>
+									<button type="submit" class="btn btn-success change" data-module="user" data-field="password">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="timezone">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.timezoneTitle }}</span>
+				<div class="description">
+					<ul>
+						<li>{{user.timezone}}</li>
+						<li>{{user.language}}</li>
+					</ul>
+				</div>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_timezone">
+							<div class="control-group">
+								<label class="control-label" for="user_timezone">{{ i18n.user.userTimezone }}</label>
+								<div class="controls">
+									<select id="user_timezone" name="timezone" data-original_value="{{user.timezone}}"></select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="user_language">{{ i18n.user.userLanguage }}</label>
+								<div class="controls">
+									<select id="user_language" name="language">
+										<option value="auto">{{i18n.languages.auto}}</option>
+										<option value="en-US"{{#compare user.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+										<option value="fr-FR"{{#compare user.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls action-bar">
+									<a href="#" class="cancel">{{ i18n.cancel }}</a>
+									<button type="submit" class="btn btn-success change" data-module="user" data-field="timezone">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>

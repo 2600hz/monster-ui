@@ -1,19 +1,39 @@
 <div id="myaccount">
 	<div class="myaccount-menu">
 		<ul class="nav nav-list">
-			{{#if restrictions.categories.account.show}}
-			<li id="accountCategory" class="nav-header hidden-phone blue-gradient-reverse">
-				{{ i18n.accountCategory }}
+			{{#if restrictions.categories.settings.show}}
+			<li id="settingsCategory" class="nav-header hidden-phone blue-gradient-reverse">
+				{{ i18n.settingsCategory }}
 			</li>
 			{{/if}}
 
-			{{#if restrictions.profile.show_tab}}
-			<li class="myaccount-element" data-module="profile">
+			{{#if restrictions.user.show_tab}}
+			<li class="myaccount-element" data-module="user">
 				<a href="javascript:void(0);">
-					<div class="active-highlight">
-						<i class="icon-cog"></i>
-						<span class="hidden-phone element-name">{{ i18n.profile.title }}</span>
-					</div>
+					<span class="active-highlight">
+						<i class="icon-user"></i>
+						<span class="hidden-phone element-name">{{ i18n.user.title }}</span>
+					</span>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.account.show_tab}}
+			<li class="myaccount-element" data-module="account">
+				<a href="javascript:void(0);">
+					<span class="active-highlight">
+						<i class="icon-cogs"></i>
+						<span class="hidden-phone element-name">{{ i18n.account.title }}</span>
+					</span>
+				</a>
+			</li>
+			{{/if}}
+			{{#if restrictions.billing.show_tab}}
+			<li class="myaccount-element" data-module="billing">
+				<a href="javascript:void(0);">
+					<span class="active-highlight">
+						<i class="icon-credit-card"></i>
+						<span class="hidden-phone element-name">{{ i18n.billing.title }}</span>
+					</span>
 				</a>
 			</li>
 			{{/if}}

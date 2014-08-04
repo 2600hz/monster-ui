@@ -5,51 +5,66 @@
     "closeSlide": "Close",
     "store": "Store",
 
-    "accountCategory": "Account",
+    "settingsCategory": "Settings",
     "billingCategory": "Billing",
     "trunkingCategory": "Trunking",
 
-	"profile": {
-		"title": "Settings",
-		"profile": "Settings",
-		"editSettings": "Edit",
+	"editSettings": "Edit",
+	"changesSaved": "Changes Saved!",
+	"placeholderEmail": "jon_doe@company.com",
+	"phoneNumber": "Phone Number",
+	"placeholderNumber": "4152223333",
+
+	"user": {
+		"title": "User",
+		"passwordsNotMatching": "The passwords you typed don't match",
+
 		"email": "Email",
+
 		"password": "Password",
 		"newPassword": "New Password",
 		"confirmPassword": "Confirm New Password",
-		"saveChanges": "Save Changes",
-		"changesSaved": "Changes Saved!",
 
-		"placeholderEmail": "jon_doe@company.com",
-		"placeholderNumber": "4152223333",
+		"timezoneTitle": "Timezone & Language",
+		"userTimezone": "Timezone",
+		"userLanguage": "Language"
+	},
 
-		"passwordsNotMatching": "The passwords you typed don't match",
-		"userSettings": "User Settings",
-		"accountSettings": "Account Settings",
-		"billingSettings": "Billing Settings",
-		"accountRealm": "Account Realm",
+	"account": {
+		"title": "Account",
+
 		"accountName": "Account Name",
 		"accountId": "Account ID",
-		"accountAdministrator": "Billing Contact",
-		"accountAdministratorEmail": "Billing Contact Email",
-		"accountAdministratorNumber": "Phone Number",
+
+		"accountRealm": "Account Realm",
+
 		"technicalContact": "Technical Contact",
 		"technicalContactEmail": "Technical Contact Email",
 		"technicalContactNumber": "Phone Number",
+
+		"timezoneTitle": "Timezone & Language",
+		"userTimezone": "Timezone",
+		"userLanguage": "Language"
+	},
+
+	"billing": {
+		"title": "Billing",
+		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",
+
 		"cardOnFile": "Card on File",
+		"billingName": "Name",
+		"firstName": "First",
+		"lastName": "Last",
 		"creditCardNumber": "Number",
 		"expirationDate": "Expiration Date",
 		"year": "YYYY",
 		"month": "MM",
 		"securityCode": "Security Code / CVV",
-		"billingName": "Name",
-		"firstName": "First",
-		"lastName": "Last",
 		"changeCard": "Change Card Info",
-		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",
-		"userTimezone": "Timezone",
-		"userLanguage": "Language",
-		"timezoneTitle": "Timezone & Language"
+
+		"accountAdministrator": "Billing Contact",
+		"accountAdministratorEmail": "Billing Contact Email",
+		"accountAdministratorNumber": "Phone Number"
 	},
 
 	"trunks": {

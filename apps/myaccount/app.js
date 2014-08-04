@@ -2,7 +2,8 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		nicescroll = require('nicescroll');
+		nicescroll = require('nicescroll'),
+		toastr = require('toastr');
 
 	var app = {
 
@@ -24,16 +25,18 @@ define(function(require){
 		subscribe: {
 			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
-			'myaccount.renderSubmodule': '_renderSubmodule',
+			'myaccount.events': '_myaccountEvents',
 			'myaccount.renderNavLinks': '_renderNavLinks',
+			'myaccount.renderSubmodule': '_renderSubmodule',
+			'myaccount.openAccordionGroup': '_openAccordionGroup',
 			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility'
 		},
 
-		subModules: ['profile', 'trunks', 'balance', 'servicePlan', 'transactions'],
+		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user'],
 
 		mainContainer: '#myaccount',
 		defaultApp: {
-			name: 'profile'
+			name: 'user'
 		},
 
 		load: function(callback){
@@ -57,10 +60,16 @@ define(function(require){
 
 		getDefaultRestrictions: function() {
 			return {
+				account: {
+					show_tab: true
+				},
 				balance: {
 					show_credit: true,
 					show_header: true,
 					show_minutes: true,
+					show_tab: true
+				},
+				billing: {
 					show_tab: true
 				},
 				inbound: {
@@ -69,16 +78,13 @@ define(function(require){
 				outbound: {
 					show_tab: true
 				},
-				profile: {
-					show_account: true,
-					show_billing: true,
-					show_tab: true,
-					show_user: true
-				},
 				service_plan: {
 					show_tab: true
 				},
 				transactions: {
+					show_tab: true
+				},
+				user: {
 					show_tab: true
 				}
 			};
@@ -94,6 +100,21 @@ define(function(require){
 				args.restrictions = self.getDefaultRestrictions();
 			}
 
+			if ( !args.restrictions.hasOwnProperty('user') ) {
+				args.restrictions = $.extend(args.restrictions, {
+					account: {
+						show_tab: true
+					},
+					billing: {
+						show_tab: true
+					},
+					user: {
+						show_tab: true
+					},
+				});
+				
+			}
+
 			_.each(args.restrictions, function(value, key){
 				if ( value.show_tab ) {
 					showMyaccount = true;
@@ -106,14 +127,15 @@ define(function(require){
 		formatUiRestrictions: function(restrictions, callback) {
 			var self = this,
 				categories = {
-					account: ['profile'],
+					settings: ['account', 'billing', 'user'],
 					billing: ['transactions', 'service_plan', 'balance'],
 					trunking: ['inbound', 'outbound']
-				};
+				},
+				_callback = function(billing, uiRestrictions) {
+					if ( _.isEmpty(billing) ) {
+						uiRestrictions.billing.show_tab = false;
+					}
 
-			self._UIRestrictionsCompatibility({
-				restrictions: restrictions,
-				callback: function(uiRestrictions) {
 					uiRestrictions.categories = {};
 
 					for(var i in categories) {
@@ -132,11 +154,28 @@ define(function(require){
 					}
 
 					callback(uiRestrictions);
+				};
+
+			self._UIRestrictionsCompatibility({
+				restrictions: restrictions,
+				callback: function(uiRestrictions) {
+					self.callApi({
+						resource: 'billing.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							_callback(data.data, uiRestrictions);
+						},
+						error: function(data, status) {
+							_callback({}, uiRestrictions);
+						}
+					});
 				}
 			});
 		},
 
-		render: function(){
+		render: function() {
 			var self = this;
 
 			self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions, function(uiRestrictions) {
@@ -151,14 +190,14 @@ define(function(require){
 						data: {
 							accountId: self.accountId
 						},
-						success: function(data, status) {
-							data.data.ui_restrictions.myaccount = self.getDefaultRestrictions();
+						success: function(_data, status) {
+							_data.data.ui_restrictions.myaccount = self.getDefaultRestrictions();
 
 							self.callApi({
 								resource: 'account.update',
 								data: {
 									accountId: self.accountId,
-									data: data.data
+									data: _data.data
 								}
 							});
 						}
@@ -171,10 +210,9 @@ define(function(require){
 
 				self.bindEvents(myaccountHtml);
 
-				if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.profile.show_tab) {
+				if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab) {
 					self.checkCreditCard();
 				}
-
 			});
 		},
 
@@ -284,49 +322,55 @@ define(function(require){
 		// events
 		toggle: function(args) {
 			var self = this,
-				callback = (args || {}).callback,
-				myaccount = $(self.mainContainer),
-				scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
-                niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
-                                                                    cursorcolor:"#333",
-                                                                    cursoropacitymin:0.5,
-                                                                    hidecursordelay:1000
-                                                                }),
-                firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
-                uiRestrictions = monster.apps.auth.originalAccount.ui_restrictions ? monster.apps.auth.originalAccount.ui_restrictions.myaccount || monster.apps.auth.originalAccount.ui_restrictions : {};
+				callback = (args || {}).callback;
 
-			if (uiRestrictions && uiRestrictions[self.defaultApp.name] && uiRestrictions[self.defaultApp.name].show_tab === false) {
-				self.defaultApp.name = firstTab.data('module');
-				if (firstTab.data('key')) {
-					self.defaultApp.key =  firstTab.data('key');
-				};
-			}
-            var defaultApp = self.defaultApp.name;
+			self._UIRestrictionsCompatibility({
+				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+				callback: function(uiRestrictions) {
+					var myaccount = $(self.mainContainer),
+						scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
+						niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
+																			cursorcolor:"#333",
+																			cursoropacitymin:0.5,
+																			hidecursordelay:1000
+																		}),
+						firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
+						uiRestrictions = uiRestrictions,
+						defaultApp = self.defaultApp;
 
-			if(myaccount.hasClass('myaccount-open')) {
-				self.hide(myaccount, niceScrollBar);
-			}
-			else {
-				var args = {
-					title: self.i18n.active()[defaultApp].title,
-					module: defaultApp,
-					callback: function() {
-						myaccount
-							.slideDown(300, function() {
-								niceScrollBar.show().resize();
-							})
-							.addClass('myaccount-open');
-
-						callback && callback();
+					if (uiRestrictions && uiRestrictions[defaultApp.name] && uiRestrictions[defaultApp.name].show_tab === false) {
+						defaultApp.name = firstTab.data('module');
+						if (firstTab.data('key')) {
+							defaultApp.key =  firstTab.data('key');
+						};
 					}
-				};
 
-				if (self.defaultApp.key) {
-					args.key = self.defaultApp.key;
-				};
+					if(myaccount.hasClass('myaccount-open')) {
+						self.hide(myaccount, niceScrollBar);
+					}
+					else {
+						var args = {
+							title: self.i18n.active()[defaultApp.name].title,
+							module: defaultApp.name,
+							callback: function() {
+								myaccount
+									.slideDown(300, function() {
+										niceScrollBar.show().resize();
+									})
+									.addClass('myaccount-open');
 
-				self.activateSubmodule(args);
-			}
+								callback && callback();
+							}
+						};
+
+						if (defaultApp.key) {
+							args.key = defaultApp.key;
+						};
+
+						self.activateSubmodule(args);
+					}
+				}
+			});
 		},
 
 		activateSubmodule: function(args) {
@@ -391,7 +435,21 @@ define(function(require){
 			self.getBraintree(function(data) {
 				if(data.credit_cards.length === 0) {
 					self.renderDropdown(function() {
-						monster.pub('myaccount.profile.showCreditTab');
+						var module = 'billing';
+
+						self.activateSubmodule({
+							title: self.i18n.active()[module].title,
+							module: module,
+							callback: function() {
+								var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
+
+								self._openAccordionGroup({
+									link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
+								});
+
+								toastr.error(self.i18n.active().billing.missingCard);
+							}
+						});
 					});
 				}
 			});
@@ -409,7 +467,197 @@ define(function(require){
 					callback && callback(dataBraintree.data);
 				}
 			});
-		}
+		},
+
+		_myaccountEvents: function(args) {
+			var self = this,
+				data = args.data,
+				template = args.template,
+				closeContent = function() {
+					var liSettings = template.find('li.settings-item.open'),
+						aSettings = liSettings.find('a.settings-link');
+
+					liSettings.find('.settings-item-content').slideUp('fast', function() {
+						aSettings.find('.update .text').text(self.i18n.active().editSettings);
+						aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
+						liSettings.removeClass('open');
+						liSettings.find('.uneditable').show();
+						liSettings.find('.edition').hide();
+					});
+				},
+				settingsValidate = function(fieldName, dataForm, callbackSuccess, callbackError) {
+					var validate = true,
+						error = false;
+
+					if(fieldName === 'password') {
+						if(!(dataForm.password === dataForm.confirm_password)) {
+							error = self.i18n.active().user.passwordsNotMatching;
+						}
+					}
+
+					if(error && typeof callbackError === 'function') {
+						callbackError(error);
+					}
+					else if(validate === true && error === false && typeof callbackSuccess === 'function') {
+						callbackSuccess();
+					}
+				};
+
+			template.find('.settings-link').on('click', function() {
+				var isOpen = $(this).parent().hasClass('open');
+
+				closeContent();
+
+				if ( !isOpen ) {
+					var args = { link: $(this) };
+
+					if ( data.hasOwnProperty('billing') ) {
+						args.hasEmptyCreditCardInfo = _.isEmpty(data.billing.credit_cards);
+					}
+
+					self._openAccordionGroup(args);
+				}
+			});
+
+			template.find('.cancel').on('click', function(e) {
+				e.preventDefault();
+				closeContent();
+
+				$(this).parents('form').first().find('input').each(function(k, v) {
+					var currentElement = $(v);
+					currentElement.val(currentElement.data('original_value'));
+				});
+
+				e.stopPropagation();
+			});
+
+			template.find('.change').on('click', function(e) {
+				e.preventDefault();
+
+				var currentElement = $(this),
+					module = currentElement.parents('#myaccount').find('.myaccount-menu .myaccount-element.active').data('module'),
+					moduleToUpdate = currentElement.data('module');
+					fieldName = currentElement.data('field'),
+					newData = (function cleanFormData(moduleToUpdate, data) {
+						if ( moduleToUpdate === 'billing' ) {
+							data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
+						}
+
+						return data;
+					})(moduleToUpdate, form2object('form_'+fieldName));
+
+				settingsValidate(fieldName, newData,
+					function() {
+						self.settingsUpdateData(moduleToUpdate, data[moduleToUpdate], newData,
+							function(data) {
+								var args = {
+									callback: function(parent) {
+										var link = parent.find('li[data-name='+fieldName+']');
+
+										if(fieldName === 'credit_card') {
+											parent.find('.edition').hide();
+											parent.find('.uneditable').show();
+										}
+
+										link.find('.update').hide();
+										link.find('.changes-saved').show()
+																	.fadeOut(1500, function() {
+																			link.find('.update').fadeIn(500);
+																	});
+
+										link.css('background-color', '#22ccff')
+												.animate({
+												backgroundColor: '#f6f6f6'
+											}, 2000
+										);
+
+										parent.find('li.settings-item .settings-item-content').hide();
+										parent.find('li.settings-item a.settings-link').show();
+
+										/* TODO USELESS? */
+										if(typeof callbackUpdate === 'function') {
+											callbackUpdate();
+										}
+									}
+								};
+
+								monster.pub('myaccount.' + module + '.renderContent', args);
+							},
+							function(dataError) {
+								monster.ui.friendlyError(dataError);
+							}
+						);
+					},
+					function(error) {
+						monster.ui.alert(error);
+					}
+				);
+			});
+		},
+
+		_openAccordionGroup: function(args) {
+			var self = this,
+				link = args.link,
+				settingsItem = link.parents('.settings-item'),
+				hasEmptyCreditCardInfo = args.hasEmptyCreditCardInfo === false ? false : true;
+
+			settingsItem.addClass('open');
+			link.find('.update .text').text(self.i18n.active().close);
+			link.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+			settingsItem.find('.settings-item-content').slideDown('fast');
+
+			/* If there is no credit-card data, we skip the step that just displays the creditcard info */
+			if(settingsItem.data('name') === 'credit_card' && hasEmptyCreditCardInfo) {
+				settingsItem.find('.uneditable').hide();
+				settingsItem.find('.edition').show();
+			}
+		},
+
+		settingsUpdateData: function(type, data, newData, callbackSuccess, callbackError) {
+			var self = this,
+				params = {
+					accountId: self.accountId,
+					data: $.extend(true, {}, data, newData)
+				};
+
+			if(type === 'user') {
+				params.accountId = monster.apps.auth.originalAccount.id;
+				params.userId = self.userId;
+			}
+			else if(type === 'billing') {
+				params.data = newData;
+			}
+
+			if('language' in params.data) {
+				if(params.data.language === 'auto') {
+					delete params.data.language;
+				}
+			}
+
+			params.data = (function cleanMergedData(data) {
+				var self = this;
+
+				delete data.extra;
+				delete data[''];
+
+				return data;
+			})(params.data);
+
+			self.callApi({
+				resource: type.concat('.update'),
+				data: params,
+				success: function(_data, status) {
+					if ( typeof callbackSuccess === 'function' ) {
+						callbackSuccess(_data, status);
+					}
+				},
+				error: function() {
+					if ( typeof callbackError === 'function' ) {
+						callbackError(_data, status);
+					}
+				}
+			});
+		},
 	};
 
 	return app;
