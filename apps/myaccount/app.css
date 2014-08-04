@@ -18,16 +18,16 @@
 }
 
 #myaccount > .container-fluid {
- 	height: 100%;
- 	padding: 0;
+	height: 100%;
+	padding: 0;
 }
 
 #myaccount > .container-fluid > .row-fluid {
- 	height: 100%;
+	height: 100%;
 }
 
 #myaccount > .container-fluid > .row-fluid > [class*="span"]{
- 	height: 100%;
+	height: 100%;
 }
 
 /* MYACCOUNT MENU */
@@ -217,87 +217,87 @@
 }
 
 #myaccount .myaccount-content .list-settings .card-type.visa {
-    background: url(static/visa.png);
+	background: url(static/visa.png);
 }
 
 #myaccount .myaccount-content .list-settings .card-type.amex {
-    background: url(static/amex.png);
+	background: url(static/amex.png);
 }
 
 #myaccount .myaccount-content .list-settings .card-type.discover {
-    background: url(static/discover.png);
+	background: url(static/discover.png);
 }
 
 #myaccount .myaccount-content .list-settings .card-type.mastercard {
-    background: url(static/mastercard.png);
+	background: url(static/mastercard.png);
 }
 
 #myaccount .myaccount-content .list-settings {
-    overflow: visible;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    border: 1px solid #CCC;
-    border-radius: 4px;
-    background-color: #F3F3F3;
+	overflow: visible;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	background-color: #F3F3F3;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item:not(:first-child) {
-    border-top: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item:last-child .settings-item-content {
-    border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item.open {
-    border-top: 1px solid #22ccff;
+	border-top: 1px solid #22ccff;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link {
-    color: #333;
-    cursor: pointer;
-    display: block;
-    font-weight: 600;
-    height: 60px;
-    line-height: 60px;
-    padding: 0px 15px;
-    text-decoration: none;
+	color: #333;
+	cursor: pointer;
+	display: block;
+	font-weight: 600;
+	height: 60px;
+	line-height: 60px;
+	padding: 0px 15px;
+	text-decoration: none;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link:hover {
-    background-color: #eeeeee;
+	background-color: #eeeeee;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .title {
-    float: left;
-    font-size: 13px;
-    font-weight: bold;
-    width: 220px;
+	float: left;
+	font-size: 13px;
+	font-weight: bold;
+	width: 220px;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .description {
 	display: inline-block;
-    font-weight: 600;
+	font-weight: 600;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .description .number {
-    font-weight: bold;
-    color: #22ccff;
+	font-weight: bold;
+	color: #22ccff;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .update {
-    color: #22ccff;
-    float: right;
+	color: #22ccff;
+	float: right;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .changes-saved {
-    float: right;
-    display: none;
+	float: right;
+	display: none;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link:hover .update .text {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .update .text {
@@ -305,61 +305,61 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content {
-    background-color: #ffffff;
-    border-top: 1px solid #e6e6e6;
-    display: none;
-    padding: 20px 15px 0;
+	background-color: #ffffff;
+	border-top: 1px solid #e6e6e6;
+	display: none;
+	padding: 20px 15px 0;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content .form-horizontal {
-    margin: 0;
-    display: inline-block;
+	margin: 0;
+	display: inline-block;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content label.uneditable {
-    color: #22ccff;
-    cursor: default;
-    font-weight: 600;
-    padding-top: 5px;
+	color: #22ccff;
+	cursor: default;
+	font-weight: 600;
+	padding-top: 5px;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content .edition {
-    display: none;
+	display: none;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .description > ul {
 	display: table-cell;
-    height: 60px;
-    list-style: none outside none;
-    margin: 0;
-    vertical-align: middle;
+	height: 60px;
+	list-style: none outside none;
+	margin: 0;
+	vertical-align: middle;
 }
 
 #myaccount .myaccount-content .list-settings .card-type {
-    display: inline-block;
-    margin-bottom: -9px;
-    margin-right: 5px;
-    background-repeat: no-repeat;
-    height: 25px;
-    width: 40px;
+	display: inline-block;
+	margin-bottom: -9px;
+	margin-right: 5px;
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 40px;
 }
 
 #myaccount .myaccount-content .list-settings .input-prepend .add-on {
-    padding: 1px 7px;
-    height: 26px;
+	padding: 1px 7px;
+	height: 26px;
 }
 
 #myaccount .myaccount-content .list-settings .input-prepend .add-on i {
-    margin: 0 5px;
-    font-size: 24px;
+	margin: 0 5px;
+	font-size: 24px;
 }
 
 #myaccount .myaccount-content .list-settings .input-prepend .add-on .card-type {
-    margin: 0;
+	margin: 0;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content .edition .card-type {
-    display: none;
+	display: none;
 }
 
 
@@ -368,17 +368,21 @@
 }
 
 #myaccount .myaccount-content .list-settings .controls.action-bar {
-    text-align: right;
+	text-align: right;
 }
 
 #myaccount .myaccount-content .list-settings .controls.action-bar a {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 #myaccount .myaccount-content .list-settings .controls.action-bar > *:not(:last-child) {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 #myaccount .myaccount-content .list-settings .controls .plain-text {
 	margin-top: 5px;
+}
+
+#myaccount .myaccount-content .list-settings .controls.checkbox-container {
+	padding-top: 5px;
 }

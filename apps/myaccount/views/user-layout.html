@@ -114,5 +114,42 @@
 				</div>
 			</div>
 		</li>
+		<li class="settings-item clearfix" data-name="colorblind">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.profile.colorblindTitle }}</span>
+				<span class="description">
+					{{#if user.ui_flags.colorblind}}
+						{{ i18n.profile.colorblindEnabled }}
+					{{else}}
+						{{ i18n.profile.colorblindDisabled }}
+					{{/if}}
+				</span>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.profile.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.profile.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_colorblind">
+							<div class="control-group">
+								<label class="control-label" for="user_colorblind">{{ i18n.profile.enableColorblind }}</label>
+								<div class="controls checkbox-container">
+									<input type="checkbox" id="user_colorblind" name="ui_flags.colorblind" {{#if user.ui_flags.colorblind}}checked{{/if}} />
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls action-bar">
+									<a href="#" class="cancel">{{ i18n.cancel }}</a>
+									<button type="submit" class="btn btn-success change" data-module="user" data-field="colorblind">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
 	</ul>
 </div>

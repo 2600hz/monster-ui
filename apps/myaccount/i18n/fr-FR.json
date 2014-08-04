@@ -23,7 +23,12 @@
 
 		"timezoneTitle": "Fuseau horaire & langage",
 		"userTimezone": "Fuseau horaire",
-		"userLanguage": "Langage"
+		"userLanguage": "Langage",
+
+		"colorblindTitle": "Mode Daltonien",
+		"colorblindEnabled": "Oui",
+		"colorblindDisabled": "Non",
+		"enableColorblind": "Activer le Mode Daltonien"
 	},
 
 	"account": {
