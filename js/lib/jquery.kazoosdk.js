@@ -138,6 +138,13 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' }
 		},
+		faxbox: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes/' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' }
+		},
 		connectivity: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/connectivity' },
