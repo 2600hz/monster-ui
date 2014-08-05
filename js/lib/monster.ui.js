@@ -442,12 +442,10 @@ define(function(require){
 			startDate.setDate(tomorrow.getDate() - range);
 			endDate = tomorrow;
 
-			container.find('#startDate, #endDate').datepicker(
-				{
-					beforeShow: customRange,
-					onSelect: customSelect
-				}
-			);
+			container.find('#startDate, #endDate').datepicker({
+				beforeShow: customRange,
+				onSelect: customSelect
+			});
 
 			inputStartDate.datepicker('setDate', startDate);
 			inputEndDate.datepicker('setDate', endDate);
@@ -490,7 +488,14 @@ define(function(require){
 					dateMin = inputStartDate.datepicker('getDate');
 
 					var dateMaxRange = new Date(dateMin);
-					dateMaxRange.setDate(dateMaxRange.getDate() + range);
+
+					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
+					if(specialMode === 'monthly') {
+						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
+					}
+					else {
+						dateMaxRange.setDate(dateMaxRange.getDate() + range);
+					}
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "tomorrow", we don't want users to search in the future)
 					dateMax = dateMaxRange > tomorrow ? tomorrow : dateMaxRange;
