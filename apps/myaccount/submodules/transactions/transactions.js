@@ -26,10 +26,25 @@ define(function(require){
 
 		_transactionsRenderContent: function(args) {
 			var self = this,
-				range = 31,
 				now = new Date(),
-				to = monster.util.dateToGregorian(new Date(now.setDate(now.getDate() + 1))),
-				from = to - (range * 60 * 60 * 24);
+				toDate = new Date(),
+				mode = 'monthly',
+				fromDate;
+
+			toDate.setDate(now.getDate() + 1);
+
+			fromDate = new Date(toDate);
+			// Right now that's the mode we want, but if we wanted to only display 7 days, 
+			// we would need to use a new range attribute and get rid of the mode, here and in the optionsDatePicker
+			if(typeof mode !== 'undefined' && mode === 'monthly') {
+				fromDate.setMonth(fromDate.getMonth() - 1);
+			}
+			else {
+				fromDate.setDate(fromDate.getDate() - range);
+			}
+
+			var from = monster.util.dateToGregorian(fromDate),
+				to = monster.util.dateToGregorian(toDate);
 
 			self.listTransactions(from, to, function(data) {
 				var transactionsView = $(monster.template(self, 'transactions-layout', data)),

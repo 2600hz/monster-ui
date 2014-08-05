@@ -510,12 +510,26 @@ define(function(require){
 				success = params;
 				error = success;
 
-				var tomorrow = new Date();
-				tomorrow.setDate(tomorrow.getDate() + 1);
+				var now = new Date(),
+					toDate = new Date(),
+					fromDate,
+					mode = 'monthly';
+
+				toDate.setDate(now.getDate() + 1);
+
+				fromDate = new Date(toDate);
+				// Right now that's the mode we want, but if we wanted to only display 7 days, 
+				// we would need to use a new range attribute and get rid of the mode, here and in the optionsDatePicker
+				if(typeof mode !== 'undefined' && mode === 'monthly') {
+					fromDate.setMonth(fromDate.getMonth() - 1);
+				}
+				else {
+					fromDate.setDate(fromDate.getDate() - range);
+				}
 
 				var params = {};
-				params.to = Math.floor(tomorrow.getTime()/1000) + 62167219200;
-				params.from = params.to - (self.transactionsRange*24*60*60);
+				params.to = monster.util.dateToGregorian(toDate);
+				params.from = monster.util.dateToGregorian(fromDate);
 			}
 
 			monster.request({
