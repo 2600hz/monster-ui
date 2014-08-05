@@ -33,11 +33,15 @@ define(function(require){
 
 			self.listTransactions(from, to, function(data) {
 				var transactionsView = $(monster.template(self, 'transactions-layout', data)),
-					listTransactionsView = monster.template(self, 'transactions-list', data);
+					listTransactionsView = monster.template(self, 'transactions-list', data),
+					optionsDatePicker = {
+						container: transactionsView,
+						specialMode: 'monthly'
+					};
 
 				transactionsView.find('.list-transactions').append(listTransactionsView);
 
-				monster.ui.initRangeDatepicker(range, transactionsView);
+				monster.ui.initRangeDatepicker(optionsDatePicker);
 
 				self.transactionsBindEvents(transactionsView);
 

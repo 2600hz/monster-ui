@@ -7,7 +7,7 @@ define(function(require){
 
 	var balance = {
 
-		transactionsRange: 30,
+		transactionsRange: 31,
 
 		requests: {
 			'myaccount.balance.getCredits': {
@@ -119,7 +119,12 @@ define(function(require){
 
 							balance.find('div.table-custom-actions').html(monster.template(self, 'balance-tableActionBar'));
 
-							monster.ui.initRangeDatepicker(self.transactionsRange, balance);
+							var optionsDatePicker = {
+								container: balance,
+								specialMode: 'monthly'
+							};
+
+							monster.ui.initRangeDatepicker(optionsDatePicker);
 
 							var startDate = balance.find('#startDate').val(),
 								endDate = balance.find('#endDate').val(),

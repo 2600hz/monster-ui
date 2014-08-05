@@ -419,17 +419,28 @@ define(function(require){
 			}
 		},
 
-		initRangeDatepicker: function(range, parent) {
+		// Options:
+		// specialMode: string. Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "tomorrow")
+		// range: number. Maximum number of days between start and end dates
+		// container: jQuery Object. Container of the datepickers
+		initRangeDatepicker: function(options) {
 			var self = this,
-				container = parent,
+				container = options.container,
+				range = options.range || 7,
+				specialMode = options.specialMode || false,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
 				startDate = new Date(),
 				endDate,
-				tomorrow = new Date(),
-				initRange = range;
+				tomorrow = new Date();
+
+			if(options.specialMode === 'monthly') {
+				range = 31;
+			}
 
 			tomorrow.setDate(tomorrow.getDate() + 1);
+			startDate.setDate(tomorrow.getDate() - range);
+			endDate = tomorrow;
 
 			container.find('#startDate, #endDate').datepicker(
 				{
@@ -438,65 +449,57 @@ define(function(require){
 				}
 			);
 
-			endDate = tomorrow;
-			startDate.setDate(new Date().getDate() - initRange + 1);
-
 			inputStartDate.datepicker('setDate', startDate);
 			inputEndDate.datepicker('setDate', endDate);
 
+			// customSelect runs every time the user selects a date in one of the date pickers.
+			// Features:
+			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or tomorrow (the closest to the start date is chosen).
+			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "tomorrow". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
-				var dateMin,
-					dateMax;
+				var dateMin = inputStartDate.datepicker('getDate'),
+					dateMax = inputEndDate.datepicker('getDate');
 
-				if(input.id == 'startDate') {
-					dateMin = inputStartDate.datepicker('getDate');
-					if(inputEndDate.datepicker('getDate') == null) {
-						dateMax = dateMin;
-						dateMax.setDate(dateMin.getDate() + range);
-						inputEndDate.val(toStringDate(dateMax));
+				if(input.id === 'startDate') {
+					var dateMaxRange = new Date(dateMin);
+
+					if(specialMode === 'monthly') {
+						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
 					}
 					else {
-						dateMax = inputEndDate.datepicker('getDate');
-						if((dateMax > (new Date(dateMin).setDate(dateMin.getDate() + range)) || (dateMax <= dateMin))) {
-							dateMax = dateMin;
-							dateMax.setDate(dateMax.getDate() + range);
-							dateMax > tomorrow ? dateMax = tomorrow : true;
-							inputEndDate.val(toStringDate(dateMax));
-						}
+						dateMaxRange.setDate(dateMaxRange.getDate() + range);
 					}
-				}
-				else if(input.id == 'endDate') {
-					if(inputStartDate.datepicker('getDate') == null) {
-						dateMin = inputEndDate.datepicker('getDate');
-						dateMin.setDate(dateMin.getDate() - 1);
-						inputStartDate.val(toStringDate(dateMin));
+
+					if(dateMaxRange > tomorrow) {
+						dateMaxRange = tomorrow;
 					}
+
+					inputEndDate.val(toStringDate(dateMaxRange));
 				}
 			};
 
+			// customRange runs every time the user clicks on a date picker, it will set which days are clickable in the datepicker.
+			// Features:
+			// If I click on the End Date, I shouldn't be able to select a day before the starting date, and I shouldn't be able to select anything after "tomorrow"
+			// If I click on the Start date, I should be able to select any day between the 1/1/2011 and "Today"
 			function customRange(input) {
-				var dateMin = new Date(2011, 0, 0),
+				var dateMin,
 					dateMax;
 
-				if (input.id == 'endDate') {
-					dateMax = tomorrow;
-					if (inputStartDate.datepicker('getDate') != null)
-					{
-						dateMin = inputStartDate.datepicker('getDate');
-						/* Range of 1 day minimum */
-						dateMin.setDate(dateMin.getDate() + 1);
+				if (input.id === 'endDate') {
+					dateMin = inputStartDate.datepicker('getDate');
 
-						/* Range of 1 day minimum */
-						dateMin.setDate(dateMin.getDate() + 1);
-						dateMax = inputStartDate.datepicker('getDate');
-						dateMax.setDate(dateMax.getDate() + range);
+					var dateMaxRange = new Date(dateMin);
+					dateMaxRange.setDate(dateMaxRange.getDate() + range);
 
-						if(dateMax > tomorrow) {
-							dateMax = tomorrow;
-						}
-					}
+					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "tomorrow", we don't want users to search in the future)
+					dateMax = dateMaxRange > tomorrow ? tomorrow : dateMaxRange;
+
+					// The Min End Date can't be lower than the Start Date, so the minimum is One day more than the start Date.
+					dateMin.setDate(dateMin.getDate() + 1);
 				}
-				else if (input.id == 'startDate') {
+				else if (input.id === 'startDate') {
+					dateMin = new Date(2011, 0, 0);
 					dateMax = new Date();
 				}
 
