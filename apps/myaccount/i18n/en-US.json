@@ -27,7 +27,12 @@
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",
-		"userLanguage": "Language"
+		"userLanguage": "Language",
+
+		"colorblindTitle": "Colorblind Mode",
+		"colorblindEnabled": "Enabled",
+		"colorblindDisabled": "Disabled",
+		"enableColorblind": "Enable Colorblind Mode"
 	},
 
 	"account": {

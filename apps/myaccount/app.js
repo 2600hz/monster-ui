@@ -557,6 +557,8 @@ define(function(require){
 										if(fieldName === 'credit_card') {
 											parent.find('.edition').hide();
 											parent.find('.uneditable').show();
+										} else if(fieldName === 'colorblind') {
+											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 										}
 
 										link.find('.update').hide();

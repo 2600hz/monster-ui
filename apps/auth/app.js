@@ -329,6 +329,10 @@ define(function(require){
 					else {
 						afterLanguageLoaded && afterLanguageLoaded();
 					}
+
+					if('ui_flags' in results.user && results.user.ui_flags.colorblind) {
+						$('body').addClass('colorblind');
+					}
 				}
 			});
 		},
