@@ -34,11 +34,6 @@ define(function(require){
 			'auth.getAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'GET'
-			},
-			'auth.recover_password': {
-				url: 'user_auth/recovery',
-				contentType: 'application/json',
-				verb: 'PUT'
 			}
 		},
 
@@ -396,32 +391,49 @@ define(function(require){
 				e.preventDefault();
 				$(this).tab('show');
 			});
+
 			content.empty().append(loginHtml);
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
 			content.find('.forgot-password').on('click', function() {
-				var	template = $(monster.template(self, 'dialogPasswordRecovery')),
-					dialog;
+				var template = $(monster.template(self, 'dialogPasswordRecovery')),
+					form = template.find('#form2object'),
+					popup = monster.ui.dialog(template, { title: self.i18n.active().recovery.title });
+
+				monster.ui.validate(form);
 
 				template.find('.recover-password').on('click', function() {
-					if ( monster.ui.valid(dialog.find('#password_recovery #form2object')) ) {
+					if ( monster.ui.valid(form) ) {
 						var object = form2object('form2object', '.', true);
 
-						monster.request({
-							resource: 'auth.recover_password',
+						self.callApi({
+							resource: 'auth.recovery',
 							data: {
-								data: object
+								data:object,
+								generateError: false
 							},
-							success: function(data, status) {
-								console.log(data, status);
-								dialog.dialog('close');
+							success: function(data, success) {
+								popup.dialog('close');
+
+								toastr.success(self.i18n.active().recovery.toastr.success.reset);
+							},
+							error: function(data, error) {
+								if ( error.status === 400) {
+									_.keys(data.data).forEach(function(val) {
+										if ( self.i18n.active().recovery.toastr.error.reset.hasOwnProperty(val) ) {
+											toastr.error(self.i18n.active().recovery.toastr.error.reset[val]);
+										} else {
+											if ( data.data[val].hasOwnProperty('not_found') ) {
+												toastr.error(data.data[val].not_found);
+											}
+										}
+									});
+								}
 							}
 						});
 					}
 				});
-
-				dialog = monster.ui.dialog(template, { title: self.i18n.active().recovery.title });
 			});
 
 			content.find('.login').on('click', function(event){

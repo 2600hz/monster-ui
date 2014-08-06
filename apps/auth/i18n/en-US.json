@@ -33,13 +33,31 @@
 
 	"recovery": {
 		"title": "Password Recovery",
-		"login": "Login",
-		"loginPlaceholder": "john@doe.com",
-		"accountNamePlaceholder": "Contoso",
-		"accountRealmPlaceholder": "sip.contoso.com",
-		"phoneNumber": "Phone Number",
-		"phoneNumberPlaceholder": "+14151234567",
-		"recoverPassword": "recover password"
+		"label": {
+			"phoneNumber": "Phone Number"
+		},
+		"placeholder": {
+			"username":  "john@doe.com",
+			"account": {
+				"name": "Contoso",
+				"realm": "sip.contoso.com"
+			},
+			"phoneNumber": "+14151234567"
+		},
+		"button": {
+			"recover": "recover password"
+		},
+		"toastr": {
+			"success": {
+				"reset": "Your password has been successfully reset"
+			},
+			"error": {
+				"reset": {
+					"account_name": "The account name provided could not be found",
+					"username": "The username provided could not be found"
+				}
+			}
+		}
 	},
 
 	"toastrMessages": {

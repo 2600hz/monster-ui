@@ -31,13 +31,31 @@
 
 	"recovery": {
 		"title": "Récupération de mot de passe",
-		"login": "Identifiant",
-		"loginPlaceholder": "alain@durand.com",
-		"accountNamePlaceholder": "Contoso",
-		"accountRealmPlaceholder": "sip.contoso.com",
-		"phoneNumber": "Numéro de téléphone",
-		"phoneNumberPlaceholder": "+33123456789",
-		"recoverPassword": "Récupérer la mot de passe"
+		"label": {
+			"phoneNumber": "Numéro de téléphone"
+		},
+		"placeholder": {
+			"username":  "alain@durand.com",
+			"account": {
+				"name": "Contoso",
+				"realm": "sip.contoso.com"
+			},
+			"phoneNumber": "+33123456789"
+		},
+		"button": {
+			"recover": "récupérer le mot de passe"
+		},
+		"toastr": {
+			"success": {
+				"reset": "Your password has been successfully reset"
+			},
+			"error": {
+				"reset": {
+					"account_name": "Le nom du compte fourni n'a pas pu être trouvé",
+					"username": "Le nom d'utilisateur founi n'a pas pu être trouvé"
+				}
+			}
+		}
 	},
 
 	"toastrMessages": {
