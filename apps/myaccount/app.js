@@ -94,9 +94,9 @@ define(function(require){
 			var self = this,
 				showMyaccount = false;
 
-			if ( args.hasOwnProperty('restrictions') && args.restrictions.hasOwnProperty('myaccount') ) {
+			if ( args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount') ) {
 				args.restrictions = args.restrictions.myaccount;
-			} else if ( !args.hasOwnProperty('restrictions') ) {
+			} else {
 				args.restrictions = self.getDefaultRestrictions();
 			}
 
@@ -112,7 +112,8 @@ define(function(require){
 						show_tab: true
 					},
 				});
-				
+
+				delete args.restrictions.profile;
 			}
 
 			_.each(args.restrictions, function(value, key){
