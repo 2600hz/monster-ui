@@ -24,34 +24,17 @@ define(function(require){
 			'myaccount.transactions.renderContent': '_transactionsRenderContent'
 		},
 
+		transactionsRange: 'monthly',
+
 		_transactionsRenderContent: function(args) {
-			var self = this,
-				now = new Date(),
-				toDate = new Date(),
-				mode = 'monthly',
-				fromDate;
+			var self = this;
 
-			toDate.setDate(now.getDate() + 1);
-
-			fromDate = new Date(toDate);
-			// Right now that's the mode we want, but if we wanted to only display 7 days, 
-			// we would need to use a new range attribute and get rid of the mode, here and in the optionsDatePicker
-			if(typeof mode !== 'undefined' && mode === 'monthly') {
-				fromDate.setMonth(fromDate.getMonth() - 1);
-			}
-			else {
-				fromDate.setDate(fromDate.getDate() - range);
-			}
-
-			var from = monster.util.dateToGregorian(fromDate),
-				to = monster.util.dateToGregorian(toDate);
-
-			self.listTransactions(from, to, function(data) {
+			self.listTransactions(function(data) {
 				var transactionsView = $(monster.template(self, 'transactions-layout', data)),
 					listTransactionsView = monster.template(self, 'transactions-list', data),
 					optionsDatePicker = {
 						container: transactionsView,
-						specialMode: 'monthly'
+						range: self.transactionsRange
 					};
 
 				transactionsView.find('.list-transactions').append(listTransactionsView);
@@ -101,8 +84,8 @@ define(function(require){
 			});
 
 			parent.find('#filter_transactions').on('click', function() {
-				from = monster.util.dateToGregorian(new Date(parent.find('#startDate').val()));
-				to = monster.util.dateToGregorian(new Date(parent.find('#endDate').val()));
+				var from = new Date(parent.find('#startDate').val()),
+					to = new Date(parent.find('#endDate').val());
 
 				self.listTransactions(from, to, function(data) {
 					var listTransactions = parent.find('.list-transactions').empty();
@@ -119,9 +102,24 @@ define(function(require){
 		},
 
 		//utils
+		// from, to: optional together. Date objects.
 		listTransactions: function(from, to, callback) {
-			var self = this,
-				defaults = {
+			var self = this;
+
+			if(typeof from === 'function') {
+				callback = from;
+
+				var dates = monster.util.getDefaultRangeDates(self.balanceRange);
+
+				from = dates.from;
+				to = dates.to;
+			}
+
+			// We search from the beginning of the from date, to the end of the to date
+			from = monster.util.dateToBeginningOfGregorianDay(from);
+			to = monster.util.dateToEndOfGregorianDay(to);
+
+			var defaults = {
 					amount: 0.00,
 					billingStartDate: monster.util.toFriendlyDate(from, 'short'),
 					billingEndDate: monster.util.toFriendlyDate(to, 'short')

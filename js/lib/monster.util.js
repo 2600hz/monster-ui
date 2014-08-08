@@ -150,6 +150,20 @@ define(function(require){
 			return parseInt((date.getTime() / 1000) + 62167219200);
 		},
 
+		dateToBeginningOfGregorianDay: function(date) {
+			var self = this,
+				newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+
+			return self.dateToGregorian(newDate);
+		},
+
+		dateToEndOfGregorianDay: function(date) {
+			var self = this,
+				newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+
+			return self.dateToGregorian(newDate);
+		},
+
 		unformatPhoneNumber: function(formattedNumber, specialRule) {
 			var regex = /[^0-9]/g,
 				specialRule = specialRule || 'none';
@@ -236,6 +250,31 @@ define(function(require){
 			}
 
 			return formattedMac;
+		},
+
+		getDefaultRangeDates: function(range) {
+			var self = this,
+				range = range || 7,
+				dates = {
+					from: '',
+					to: ''
+				};
+
+			var fromDefault = new Date(),
+				toDefault = new Date();
+
+			if(range === 'monthly') {
+				fromDefault.setMonth(fromDefault.getMonth() - 1);
+			}
+			else {
+				fromDefault.setDate(fromDefault.getDate() - range);
+			}
+			fromDefault.setDate(fromDefault.getDate() + 1);
+
+			dates.from = fromDefault;
+			dates.to = toDefault;
+
+			return dates;
 		},
 
 		randomString: function(length, _chars) {

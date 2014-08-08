@@ -7,8 +7,6 @@ define(function(require){
 
 	var balance = {
 
-		transactionsRange: 31,
-
 		requests: {
 			'myaccount.balance.getCredits': {
 				url: 'accounts/{accountId}/braintree/credits',
@@ -41,6 +39,8 @@ define(function(require){
 			'myaccount.balance.addCreditDialog': '_balanceRenderAddCredit',
 			'myaccount.refreshBadges': '_balanceRefreshBadge'
 		},
+
+		balanceRange: 'monthly',
 
 		_balanceRefreshBadge: function(args) {
 			var self = this;
@@ -121,35 +121,34 @@ define(function(require){
 
 							var optionsDatePicker = {
 								container: balance,
-								specialMode: 'monthly'
+								range: self.balanceRange
 							};
 
 							monster.ui.initRangeDatepicker(optionsDatePicker);
 
-							var startDate = balance.find('#startDate').val(),
-								endDate = balance.find('#endDate').val(),
-								createdFrom = (new Date(startDate).getTime()/1000) + 62167219200,
-								createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
+							var from = new Date(balance.find('#startDate').val()),
+								to = new Date(balance.find('#endDate').val());
 
 							balance.find('.refresh-filter').on('click', function() {
 								self._balanceRenderContent(args);
 							});
 
 							balance.find('#filter_transactions').on('click', function() {
-								startDate = balance.find('#startDate').val();
-								endDate = balance.find('#endDate').val();
-								createdFrom = (new Date(startDate).getTime()/1000) + 62167219200;
-								createdTo = (new Date(endDate).getTime()/1000) + 62167219200;
-
 								/* Bug because of Infinite scrolling... we need to manually remove tr */
 								monster.ui.table.balance.find('tbody tr').remove();
 								monster.ui.table.balance.fnClearTable();
 
-								self.balanceRefreshTransactionsTable(balance, createdFrom, createdTo, defaults.fieldData.accounts);
+								from = new Date(balance.find('#startDate').val());
+								to = new Date(balance.find('#endDate').val());
+
+								self.balanceRefreshTransactionsTable(balance, from, to, defaults.fieldData.accounts);
 							});
 
 							balance.find('.action-number#download').on('click', function() {
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+createdFrom+'&created_to='+createdTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
+									dlTo = monster.util.dateToEndOfGregorianDay(to);
+
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
 							});
 
 							monster.ui.table.balance.fnAddData(renderData.tabData);
@@ -217,7 +216,7 @@ define(function(require){
 
 				monster.ui.table.balance.addData(data.tabData);
 
-				parent.find('#call_charges').html(data.totalCharges.toFixed(2));
+				parent.find('#call_charges').html(data.totalCharges);
 				parent.find('#minutes_used').html(data.totalMinutes);
 			});
 		},
@@ -510,34 +509,22 @@ define(function(require){
 				success = params;
 				error = success;
 
-				var now = new Date(),
-					toDate = new Date(),
-					fromDate,
-					mode = 'monthly';
+				var dates = monster.util.getDefaultRangeDates(self.balanceRange),
+					params = {};
 
-				toDate.setDate(now.getDate() + 1);
-
-				fromDate = new Date(toDate);
-				// Right now that's the mode we want, but if we wanted to only display 7 days, 
-				// we would need to use a new range attribute and get rid of the mode, here and in the optionsDatePicker
-				if(typeof mode !== 'undefined' && mode === 'monthly') {
-					fromDate.setMonth(fromDate.getMonth() - 1);
-				}
-				else {
-					fromDate.setDate(fromDate.getDate() - range);
-				}
-
-				var params = {};
-				params.to = monster.util.dateToGregorian(toDate);
-				params.from = monster.util.dateToGregorian(fromDate);
+				params.to = dates.to;
+				params.from = dates.from;
 			}
+
+			var from = monster.util.dateToBeginningOfGregorianDay(params.from);
+			to = monster.util.dateToEndOfGregorianDay(params.to);
 
 			monster.request({
 				resource: 'myaccount.balance.getFilteredTransactions',
 				data: {
 					accountId: self.accountId,
-					from: params.from,
-					to: params.to
+					from: from,
+					to: to
 				},
 				success: function(data, status) {
 					success && success(data, status);
