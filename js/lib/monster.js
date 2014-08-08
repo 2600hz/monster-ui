@@ -258,7 +258,8 @@ define(function(require){
 				result = _template;
 			}
 
-			result = result.replace(/(\r\n|\n|\r|\t)/gm,'');
+			result = result.replace(/(\r\n|\n|\r|\t)/gm,'')
+						   .trim();
 
 			if(typeof data === 'object') {
 				_.each(data.i18n, function(value, key) {
