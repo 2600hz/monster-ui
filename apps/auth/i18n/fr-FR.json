@@ -29,7 +29,7 @@
 		"buttonLabel": "Se connecter"
 	},
 
-	"recovery": {
+	"passwordRecovery": {
 		"title": "Récupération de mot de passe",
 		"label": {
 			"phoneNumber": "Numéro de téléphone"
@@ -37,23 +37,53 @@
 		"placeholder": {
 			"username":  "alain@durand.com",
 			"account": {
-				"name": "Contoso",
-				"realm": "sip.contoso.com"
+				"name": "2600hz",
+				"realm": "sip.2600hz.com"
 			},
 			"phoneNumber": "+33123456789"
+		},
+		"help": {
+			"text": " Veuillez spécifier un nom d'utilisateur, ainsi, qu'un nom de compte ou un royaume de compte ou un numéro de téléphone lié à votre compte."
 		},
 		"button": {
 			"recover": "récupérer le mot de passe"
 		},
 		"toastr": {
 			"success": {
-				"reset": "Your password has been successfully reset"
+				"reset": "Votre mot de passe a été réinitialisé avec succès"
 			},
 			"error": {
 				"reset": {
-					"account_name": "Le nom du compte fourni n'a pas pu être trouvé",
+					"account_name": "Le nom de compte fourni n'a pas pu être trouvé",
+					"account_realm": "Le royaume de compte fourni n'a pas pu être trouvé",
+					"phone_number": "Le numéro de téléphone fourni n'a pas pu être trouvé",
 					"username": "Le nom d'utilisateur founi n'a pas pu être trouvé"
-				}
+				},
+				"missing": "Veuillez spécifier un nom de compte ou un royaume de compte ou un numéro de téléphone lié à votre compte"
+			}
+		}
+	},
+
+	"passwordUpdate": {
+		"title": "Nouveau mot de passe",
+		"label": {
+			"password": {
+				"new": "Nouveau mot de passe",
+				"confirmation": "Confirmation du nouveau mot de passe"
+			}
+		},
+		"help": {
+			"text": "Vous avez réinitialisé votre mot de passe et utilisez maintenant un mot de passe temporaire. Vous pouvez le changer ou continuer à l'utlisez."
+		},
+		"button": {
+			"update": "sauvegarder le mot de passe"
+		},
+		"toastr": {
+			"success": {
+				"update": "Votre mot de passe a été sauvegardé avec succès"
+			},
+			"error": {
+				"password": "Les mots de passe ne correspondent pas !"
 			}
 		}
 	},

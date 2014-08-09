@@ -251,13 +251,27 @@
 }
 
 /**************************************** Password Recovery ****************************************/
+#password_recovery {
+	width: 510px;
+}
 
-#password_recovery form {
+#password_update {
+	width: 455px;
+}
+
+#password_recovery form,
+#password_update form {
 	padding: 20px 55px 0 0;
 }
 
-#password_recovery .action {
+#password_recovery .action,
+#password_update .action {
 	padding: 20px;
 	border-top: 1px solid #C1C1C1;
 	text-align: center;
+}
+
+#password_recovery .help-box,
+#password_update .help-box {
+	margin: 15px 25px;
 }

@@ -31,7 +31,7 @@
 		"buttonLabel": "Log-in to Conference"
 	},
 
-	"recovery": {
+	"passwordRecovery": {
 		"title": "Password Recovery",
 		"label": {
 			"phoneNumber": "Phone Number"
@@ -39,10 +39,13 @@
 		"placeholder": {
 			"username":  "john@doe.com",
 			"account": {
-				"name": "Contoso",
-				"realm": "sip.contoso.com"
+				"name": "2600hz",
+				"realm": "sip.2600hz.com"
 			},
 			"phoneNumber": "+14151234567"
+		},
+		"help": {
+			"text": "Please input a username and either an account name, an account realm or a phone number linked to your account."
 		},
 		"button": {
 			"recover": "recover password"
@@ -54,8 +57,35 @@
 			"error": {
 				"reset": {
 					"account_name": "The account name provided could not be found",
+					"account_realm": "The account realm provided could not be found",
+					"phone_number": "The phone number provided could not be found",
 					"username": "The username provided could not be found"
-				}
+				},
+				"missing": "Please input either an account name, an account realm or a phone number linked to your account"
+			}
+		}
+	},
+
+	"passwordUpdate": {
+		"title": "Password Update",
+		"label": {
+			"password": {
+				"new": "New password",
+				"confirmation": "Confirm new password"
+			}
+		},
+		"help": {
+			"text": "You have reset your password and are now using a temporary password. You may change it or continue using it."
+		},
+		"button": {
+			"update": "update password"
+		},
+		"toastr": {
+			"success": {
+				"update": "Your password was successfully updated"
+			},
+			"error": {
+				"password": "Password typed don't match. Please retype your new password"
 			}
 		}
 	},
