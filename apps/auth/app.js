@@ -10,7 +10,32 @@ define(function(require){
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
-		requests: {},
+		requests: {
+			'auth.userAuth': {
+				url: 'user_auth',
+				verb: 'PUT'
+			},
+			'auth.sharedAuth': {
+				url: 'shared_auth',
+				verb: 'PUT'
+			},
+			'auth.pinAuth': {
+				url: 'pin_auth',
+				verb: 'PUT'
+			},
+			'auth.getUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'GET'
+			},
+			'auth.updateUser': {
+				url: 'accounts/{accountId}/users/{userId}',
+				verb: 'POST'
+			},
+			'auth.getAccount': {
+				url: 'accounts/{accountId}',
+				verb: 'GET'
+			}
+		},
 
 		subscribe: {
 			'auth.logout': '_logout',
@@ -216,6 +241,10 @@ define(function(require){
 					window.location.reload();
 				}
 				else {
+					if ( results.user.hasOwnProperty('require_password_update') && results.user.require_password_update ) {
+						self.newPassword(results.user);
+					}
+
 					monster.util.autoLogout();
 					$('.signout').show();
 
@@ -337,6 +366,48 @@ define(function(require){
 			});
 		},
 
+		newPassword: function(userData) {
+			var self = this,
+				template = $(monster.template(self, 'dialogPasswordUpdate')),
+				form = template.find('#form_password_update'),
+				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
+
+			monster.ui.validate(form);
+
+			template.find('.update-password').on('click', function() {
+				if ( monster.ui.valid(form) ) {
+					var formData = form2object('form_password_update');
+
+					if ( formData.new_password === formData.new_password_confirmation ) {
+						var newUserData = {
+								password: formData.new_password,
+								require_password_update: false
+							},
+							data = $.extend(true, {}, userData, newUserData);
+
+						self.callApi({
+							resource: 'user.update',
+							data: {
+								accountId: self.accountId,
+								userId: self.userId,
+								data: data
+							},
+							success: function(data, status) {
+								popup.dialog('close').remove();
+								toastr.success(self.i18n.active().passwordUpdate.toastr.success.update);
+							}
+						});
+					} else {
+						toastr.error(self.i18n.active().passwordUpdate.toastr.error.password);
+					}
+				}
+			});
+
+			template.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
+		},
+
 		renderLoginPage: function(container) {
 			var self = this;
 
@@ -370,9 +441,58 @@ define(function(require){
 				e.preventDefault();
 				$(this).tab('show');
 			});
+
 			content.empty().append(loginHtml);
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
+
+			content.find('.forgot-password').on('click', function() {
+				var template = $(monster.template(self, 'dialogPasswordRecovery')),
+					form = template.find('#form_password_recovery'),
+					popup = monster.ui.dialog(template, { title: self.i18n.active().passwordRecovery.title });
+
+				monster.ui.validate(form);
+
+				template.find('.recover-password').on('click', function() {
+					if ( monster.ui.valid(form) ) {
+						var object = form2object('form_password_recovery', '.', true);
+
+						if ( object.hasOwnProperty('account_name') || object.hasOwnProperty('account_realm') || object.hasOwnProperty('phone_number') ) {
+							self.callApi({
+								resource: 'auth.recovery',
+								data: {
+									data:object,
+									generateError: false
+								},
+								success: function(data, success) {
+									popup.dialog('close');
+
+									toastr.success(self.i18n.active().passwordRecovery.toastr.success.reset);
+								},
+								error: function(data, error) {
+									if ( error.status === 400) {
+										_.keys(data.data).forEach(function(val) {
+											if ( self.i18n.active().passwordRecovery.toastr.error.reset.hasOwnProperty(val) ) {
+												toastr.error(self.i18n.active().passwordRecovery.toastr.error.reset[val]);
+											} else {
+												if ( data.data[val].hasOwnProperty('not_found') ) {
+													toastr.error(data.data[val].not_found);
+												}
+											}
+										});
+									}
+								}
+							});
+						} else {
+							toastr.error(self.i18n.active().passwordRecovery.toastr.error.missing);
+						}
+					}
+				});
+
+				template.find('.cancel-link').on('click', function() {
+					popup.dialog('close').remove();
+				});
+			});
 
 			content.find('.login').on('click', function(event){
 				event.preventDefault();

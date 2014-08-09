@@ -21,6 +21,9 @@
 			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
 			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' }
 		},
+		auth: {
+			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
+		},
 		directory: {
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
