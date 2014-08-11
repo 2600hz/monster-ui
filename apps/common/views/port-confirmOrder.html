@@ -67,11 +67,9 @@
 			</div>
 			<div class="span6">
 				<select name="" class="span2" id="numbers_to_buy">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5" selected>5</option>
+				{{#each numbers}}
+					<option value="{{@index}}">{{@index}}</option>
+				{{/each}}
 				</select>
 			</div>
 		</div>

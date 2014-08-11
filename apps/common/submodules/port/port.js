@@ -706,6 +706,7 @@ define(function(require){
 					dataTemplate.created = ( typeof data.orders[index].created == 'undefined' ) ? date : created;
 					dataTemplate.transfer = ( typeof data.orders[index].transfer_date == 'undefined' ) ? date : data.orders[index].transfer_date;
 					dataTemplate.total = data.orders[index].numbers.length;
+					dataTemplate.numbers = data.orders[index].numbers;
 					dataTemplate.price = dataTemplate.total * 5;
 
 					parent
@@ -731,6 +732,13 @@ define(function(require){
 				container = parent.find('div#port_container');
 
 			self.portPositionDialogBox();
+
+			container.find('#numbers_to_buy option').each(function(idx, el) {
+				$(el).val(parseInt($(el).val(), 10) + 1);
+				$(el).text(parseInt($(el).text(), 10) + 1);
+			});
+
+			container.find('#numbers_to_buy option').last().prop('selected', 'selected');
 
 			/*
 			 * initialize datepicker, toggle inputs and select value
