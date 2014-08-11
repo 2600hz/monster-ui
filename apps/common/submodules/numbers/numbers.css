@@ -3,10 +3,6 @@
 	max-width: 902px;
 }
 
-#numbers_container .accounts-numbers {
-	font-family: verdana;
-}
-
 #numbers_container .top-box {
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
