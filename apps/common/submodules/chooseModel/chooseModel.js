@@ -45,11 +45,10 @@ define(function(require){
 				var families = [];
 
 				_.each(brand.families, function(family) {
-					var models = [];
+					var models = {};
 
 					_.each(family.models, function(model) {
-
-						models.push(model.name);
+						models[model.name] = model.name;
 					});
 
 					families.push({ name: family.name, models: models });
