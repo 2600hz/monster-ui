@@ -27,9 +27,9 @@
 				<div class="models-brand" data-brand="{{this.name}}">
 					{{#each this.families}}
 						{{#each this.models}}
-							<div class="model-box" data-family="{{../name}}" data-model="{{this}}">
-								<div class="model-image {{../../name}}-{{this}}"/>
-								<div class="model-name">{{this}}</div>
+							<div class="model-box" data-family="{{../name}}" data-model="{{@key}}">
+								<div class="model-image {{../../name}}-{{@key}}"/>
+								<div class="model-name">{{@key}}</div>
 							</div>
 						{{/each}}
 					{{/each}}

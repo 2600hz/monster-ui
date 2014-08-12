@@ -193,8 +193,6 @@
 			"title": "We are excited you are moving numbers to our service!",
 			"labelAddNumbers": "What numbers do you want to transfer? Type one number in at a time or paste all. No extra characters beside number."
 		},
-		"invalidNumber": "The number that you entered is invalid !!!",
-		"invalidNumbers": "The numbers that you entered are invalid and were removed !!!",
 		"confirmOrder" : {
 			"titlePartOne": "Great!",
 			"titlePartTwo": "number is ready to transfer!",
@@ -268,6 +266,14 @@
 			"loaHelperPartThree": "Digital LOA form.",
 			"loaHelperPartFour": "How to sign documents",
 			"loaHelperPartFive": "electronically without paying."
+		},
+		"toastr": {
+			"error": {
+				"number": {
+					"single": "The number you entered is invalid !!!",
+					"multiple": "The numbers you entered are invalid !!!"
+				}
+			}
 		}
 	},
 
