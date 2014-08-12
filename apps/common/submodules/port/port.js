@@ -232,14 +232,20 @@ define(function(require){
 			 * if not load port-ManageOrders template after port-addNumber template
 			 */
 			container.find('button').on('click', function() {
-				var numbersList = container.find('input').val();
+				var numbersArray = container.find('input').val().split(' ');
 
-				if ( numbersList == "" ) {
+				numbersArray = numbersArray.filter(function(el, idx) {
+					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
+						return el;
+					}
+				});
+
+				if ( numbersArray.length === 0 ) {
 					container
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
+					self.portFormatNumbers(container, numbersArray, function(container, formattedData) {
 
 						if ( formattedData.orders.length > 0 ) {
 							container
@@ -429,13 +435,13 @@ define(function(require){
 		  * @desc return an object with numbers sorted by area code
 		  * @param numbersList - array of phone numbers
 		*/
-		portFormatNumbers: function(container, numbersList, callback) {
+		portFormatNumbers: function(container, numbersArray, callback) {
 			var self = this;
 
 			monster.request({
 				resource: 'common.port.sort',
 				data: {
-					data: numbersList.split(' '),
+					data: numbersArray,
 					country: 'US'
 				},
 				success: function(data) {
@@ -457,17 +463,17 @@ define(function(require){
 					carriersList = _.uniq(carriersList);
 
 					for (var carrier in carriersList) {
-						var numbersList = new Array(),
+						var numbersArray = new Array(),
 							order = new Object();
 
 						for (var number in data) {
 							if ( data[number].company == carriersList[carrier] ) {
-								numbersList.push(number);
+								numbersArray.push(number);
 							}
 						}
 
 						order.carrier = carriersList[carrier];
-						order.numbers = numbersList;
+						order.numbers = numbersArray;
 
 						formattedData.orders[carrier] = order;
 					}
