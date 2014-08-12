@@ -239,8 +239,9 @@ define(function(require){
 						return el;
 					}
 				});
-console.log(numbersArray, numbersArray.length);
+
 				if ( numbersArray.length === 0 ) {
+					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
 					container
 						.find('div.row-fluid')
 						.addClass('error');
@@ -301,12 +302,12 @@ console.log(numbersArray, numbersArray.length);
 				});
 
 				if ( numbersArray.length === 0 ) {
+					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
-
 					self.portFormatNumbers(container, numbersArray, function(container, formattedData) {
 						container.find('#numbers_list')[0].value = '';
 
@@ -485,9 +486,9 @@ console.log(numbersArray, numbersArray.length);
 					}
 
 					if ( errorCount == 1 ) {
-						toastr.error(self.i18n.active().port.invalidNumber, '', {"timeOut": 5000});
+						toastr.error(self.i18n.active().port.toastr.error.number.single, '', {"timeOut": 5000});
 					} else if ( errorCount > 1 ) {
-						toastr.error(self.i18n.active().port.invalidNumbers, '', {"timeOut": 5000});
+						toastr.error(self.i18n.active().port.toastr.error.number.multiple, '', {"timeOut": 5000});
 					}
 
 					callback(container, formattedData);
