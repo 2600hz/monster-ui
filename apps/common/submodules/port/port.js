@@ -239,7 +239,7 @@ define(function(require){
 						return el;
 					}
 				});
-
+console.log(numbersArray, numbersArray.length);
 				if ( numbersArray.length === 0 ) {
 					container
 						.find('div.row-fluid')
@@ -292,16 +292,22 @@ define(function(require){
 			 */
 			// container.find('div#add_numbers').find('button').on('click', function() {
 			container.on('click', 'div#add_numbers button', function() {
-				var numbersList = container.find('div#add_numbers').find('input').val();
+				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
 
-				if ( numbersList == "" ) {
+				numbersArray = numbersArray.filter(function(el, idx) {
+					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
+						return el;
+					}
+				});
+
+				if ( numbersArray.length === 0 ) {
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
 						.addClass('error');
 				} else {
 
-					self.portFormatNumbers(container, numbersList, function(container, formattedData) {
+					self.portFormatNumbers(container, numbersArray, function(container, formattedData) {
 						container.find('#numbers_list')[0].value = '';
 
 						container
