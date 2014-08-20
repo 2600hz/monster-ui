@@ -34,7 +34,8 @@ define(function(require){
 
 		_defineRequest: function(id, request, app){
 			var self = this,
-				apiUrl = app.apiUrl ? app.apiUrl : (request.apiRoot || this.config.api.default),
+				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
+				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
 				settings = {
 					cache: request.cache || false,
 					url: apiUrl + request.url,

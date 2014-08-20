@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div id="recharge_content" {{#unless limits.recharge.enabled}}style="display: none;"{{/unless}}>
+        <div id="recharge_content" {{#unless topup.enabled}}style="display: none;"{{/unless}}>
             <div class="line-content">
                 <div class="line-label smaller">
                     <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpWhenBalanceFalls }}"></i>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="line-value">
                     <div class="fancy-dollar-sign">{{ i18n.currencyUsed }}</div>
-                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderThresholdRecharge }}" id="threshold_recharge" name="threshold_recharge" value="{{limits.recharge.threshold}}"/>
+                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderThresholdRecharge }}" id="threshold_recharge" name="threshold_recharge" value="{{topup.threshold}}"/>
                 </div>
                 <div class="line-button">
                 </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="line-value">
                     <div class="fancy-dollar-sign">{{ i18n.currencyUsed }}</div>
-                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderRecharge }}" id="recharge_amount" name="recharge_amount" value="{{limits.recharge.amount}}"/>
+                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderRecharge }}" id="recharge_amount" name="recharge_amount" value="{{topup.amount}}"/>
                 </div>
                 <div class="line-button">
                     <button id="confirm_recharge" class="btn btn-success">{{ i18n.balance.confirm }}</button>

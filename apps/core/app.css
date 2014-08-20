@@ -43,28 +43,28 @@
 	left: 80px;
 	top: 130px;
 
-	animation: spin 1s infinite;
-	-webkit-animation: spin 1s infinite;
+	animation: half-spin 1s infinite;
+	-webkit-animation: half-spin 1s infinite;
 }
 
 .loading-wrapper .line.inner {
-	animation: spin-reverse 1s infinite;
+	animation: half-spin-reverse 1s infinite;
 }
 
-@keyframes spin {
+@keyframes half-spin {
 	0% { transform: rotateZ(-45deg); }
 	100% { transform: rotateZ(135deg); }
 }
-@keyframes spin-reverse {
+@keyframes half-spin-reverse {
 	0% { transform: rotateZ(0deg); }
 	100% { transform: rotateZ(-360deg); }
 }
 
-@-webkit-keyframes spin {
+@-webkit-keyframes half-spin {
 	0% { -webkit-transform: rotateZ(-45deg); }
 	100% { -webkit-transform: rotateZ(135deg); }
 }
-@-webkit-keyframes spin-reverse {
+@-webkit-keyframes half-spin-reverse {
 	0% { -webkit-transform: rotateZ(0deg); }
 	100% { -webkit-transform: rotateZ(-360deg); }
 }

@@ -164,43 +164,85 @@ define(function(require){
 			);
 		},
 
+		balanceGetDialogData: function(callback) {
+			var self = this;
+
+			monster.parallel({
+					account: function(callback) {
+						self.callApi({
+							resource: 'account.get',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data) {
+								callback(null, data.data);
+							}
+						});
+					},
+					balance: function(callback) {
+						self.callApi({
+							resource: 'balance.get',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data) {
+								callback(null, data.data);
+							}
+						});
+					}
+				},
+				function(err, results) {
+					var data = self.balanceFormatDialogData(results);
+
+					callback && callback(data);
+				}
+			);
+		},
+
+		balanceFormatDialogData: function(data) {
+			var self = this,
+				amount = data.balance.balance.toFixed(2) || '0.00',
+				topupData = { enabled: false };
+
+			if(data.account.hasOwnProperty('topup')) {
+				topupData.enabled = true;
+
+				$.extend(true, topupData, data.account.topup);
+			}
+
+			var templateData = {
+				amount: amount,
+				topup: topupData
+			};
+
+			return templateData;
+		},
+
 		_balanceRenderAddCredit: function(args) {
 			var self = this,
-                popup;
+				popup;
 
-			self.balanceGet(function(data) {
-				self.balanceGetLimits(function(dataLimits) {
-					var amount = data.data.amount.toFixed(2) || '0.00',
-						rechargeDefault = { enabled: false };
-
-					dataLimits.data.recharge = $.extend(true, {}, rechargeDefault, dataLimits.data.recharge);
-
-					var templateData = {
-							amount: amount,
-							limits: dataLimits.data
-						},
-						addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', templateData)),
-						dataUpdate = {
-							module: self.name,
-							data: parseFloat(amount).toFixed(2)
-						};
-
-					monster.pub('myaccount.updateMenu', dataUpdate);
-
-					popup = monster.ui.dialog(addCreditDialog, {
-						width: '600px',
-						title: self.i18n.active().balance.addCreditDialogTitle
-					});
-
-					var argsDialog = {
-						parent: popup,
-						data: data,
-						dataLimits: dataLimits,
-						callback: args.callback
+			self.balanceGetDialogData(function(data) {
+				var addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', data)),
+					dataUpdate = {
+						module: self.name,
+						data: parseFloat(data.amount).toFixed(2)
 					};
 
-					self.balanceBindEventsDialog(argsDialog);
+				monster.pub('myaccount.updateMenu', dataUpdate);
+
+				popup = monster.ui.dialog(addCreditDialog, {
+					width: '600px',
+					title: self.i18n.active().balance.addCreditDialogTitle
 				});
+
+				var argsDialog = {
+					parent: popup,
+					data: data,
+					callback: args.callback
+				};
+
+				self.balanceBindEventsDialog(argsDialog);
 			});
 		},
 
@@ -351,13 +393,14 @@ define(function(require){
 			var self = this,
 				parent = params.parent,
 				data = params.data,
-				dataLimits = params.dataLimits,
 				stateSwitch = 'manual',
-				autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+				autoRecharge = data.topup.enabled;
+
+			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
 
 			parent.find('.switch').bootstrapSwitch()
-								 .on('switch-change', function (e, data) {
-				if(data.value === true) {
+								 .on('switch-change', function (e, dataSwitch) {
+				if(dataSwitch.value === true) {
 					parent.find('#recharge_content').slideDown('fast')
 				}
 				else {
@@ -366,14 +409,11 @@ define(function(require){
 					if(autoRecharge === true) {
 						monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
 							function() {
-								self.balanceGetLimits(function(dataLimits) {
-									dataLimits.data.recharge = { enabled: false };
-
-									self.balanceUpdateLimits(dataLimits.data, function() {
-										autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
-										toastr.success(self.i18n.active().balance.autoRechargeCancelled);
-									});
-								});
+								self.balanceTurnOffTopup(function() {
+									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
+									autoRecharge = false;
+									//autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+								})
 							},
 							function() {
 								parent.find('#recharge_content').slideDown();
@@ -385,7 +425,22 @@ define(function(require){
 				}
 			}).bootstrapSwitch('setState', autoRecharge);
 
-			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+			parent.find('#confirm_recharge').on('click', function() {
+				var dataTopUp = {
+					threshold: parseFloat(parent.find('#threshold_recharge').val()),
+					amount: parseFloat(parent.find('#recharge_amount').val())
+				};
+
+				if(dataTopUp.threshold && dataTopUp.amount) {
+					self.balanceUpdateTopUp(dataTopUp, function() {
+						autoRecharge = true;
+						toastr.success(self.i18n.active().balance.autoRechargeEnabled);
+					});
+				}
+				else{
+					monster.ui.alert(self.i18n.active().balance.invalidAmount);
+				}
+			});
 
 			parent.find('.add-credit').on('click', function(ev) {
 				ev.preventDefault();
@@ -421,27 +476,6 @@ define(function(require){
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
-
-			parent.find('#confirm_recharge').on('click', function() {
-				var dataForm = {
-					enabled: true,
-					threshold: parseFloat(parent.find('#threshold_recharge').val()),
-					amount: parseFloat(parent.find('#recharge_amount').val())
-				};
-
-				if(dataForm.threshold && dataForm.amount) {
-					self.balanceGetLimits(function(dataLimits) {
-						dataLimits.data.recharge = dataForm;
-
-						self.balanceUpdateLimits(dataLimits.data, function() {
-							toastr.success(self.i18n.active().balance.autoRechargeEnabled);
-						});
-					});
-				}
-				else{
-					monster.ui.alert(self.i18n.active().balance.invalidAmount);
-				}
-			});
 		},
 
 		balanceBindEvents: function(parent) {
@@ -467,6 +501,58 @@ define(function(require){
 		},
 
 		//utils
+		balanceTurnOffTopup: function(callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					if(data.data.hasOwnProperty('topup')) {
+						delete data.data.topup;
+
+						self.callApi({
+							resource: 'account.update',
+							data: {
+								accountId: self.accountId,
+								data: data.data
+							},
+							success: function(dataUpdate) {
+								callback && callback(dataUpdate);
+							}
+						});
+					}
+				}
+			});
+		},
+
+		balanceUpdateTopUp: function(dataTopUp, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					data.data.topup = dataTopUp;
+
+					self.callApi({
+						resource: 'account.update',
+						data: {
+							accountId: self.accountId,
+							data: data.data
+						},
+						success: function(dataUpdate) {
+							callback && callback(dataUpdate);
+						}
+					});
+				}
+			});
+		},
+
 		balanceGetAccounts: function(success, error) {
 			var self = this;
 

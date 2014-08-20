@@ -333,13 +333,20 @@ define(function(require){
 						}
 					},
 					success: function(data, status) {
-						if(!$.isEmptyObject(data.data.success)) {
-							if(!$.isEmptyObject(data.data.error)) {
-								monster.ui.alert('error', self.i18n.active().buyNumbers.partialPurchaseFailure);
+						if('data' in data) {
+							if('error' in data.data && !$.isEmptyObject(data.data.error)) {
+								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
+										   + '<br/>' + Object.keys(data.data.error).join('<br/>');
+								monster.ui.alert('error', errMsg);
 							}
-							callbacks.success && callbacks.success(data.data.success, data.data.error);
+
+							if('success' in data.data && !$.isEmptyObject(data.data.success)) {
+								callbacks.success && callbacks.success(data.data.success, data.data.error);
+							} else {
+								callbacks.error && callbacks.error(data.data.error);
+							}
 						} else {
-							callbacks.error && callbacks.error(data.data.error);
+							callbacks.error && callbacks.error(data);
 						}
 						args.popup.dialog('close');
 					}
@@ -539,7 +546,9 @@ define(function(require){
 						success: function(data, status) {
 							if(!$.isEmptyObject(data.data.success)) {
 								if(!$.isEmptyObject(data.data.error)) {
-									monster.ui.alert('error', self.i18n.active().buyNumbers.partialPurchaseFailure);
+									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
+										   + '<br/>' + Object.keys(data.data.error).join('<br/>');
+									monster.ui.alert('error', errMsg);
 								}
 								callbacks.success && callbacks.success(data.data.success);
 							} else {

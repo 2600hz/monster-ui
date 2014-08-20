@@ -170,7 +170,7 @@
 		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want. There would be a onetime $20 fee for requesting a special number.",
 		"sendRequest": "Send us a request",
 		"to": "to",
-		"partialPurchaseFailure": "Sorry, some of the requested numbers could not be purchased."
+		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:"
 	},
 
 	"port": {
