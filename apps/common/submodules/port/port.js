@@ -3,6 +3,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		bootstrapSwitch = require('bootstrap-switch'),
+		fileUpload = require('fileupload'),
 		monster = require('monster'),
 		timepicker = require('timepicker'),
 		toastr = require('toastr');
@@ -500,47 +501,51 @@ define(function(require){
 		  * @desc bind events of the port-manageOrders template
 		  * @param parent - .ui-dialog-content
 		*/
-		portSubmitDocuments: function(accountId, parent, data, index) { 
+		portSubmitDocuments: function(accountId, parent, data, index) {
 			var self = this,
 				index = index || 0,
 				container = parent.find('div#port_container');
 
 			self.portPositionDialogBox();
 
-			container.find('#bill_form').find('button.upload').on('click', function() {
-				$(this).blur();
-				container.find('#bill_form').find('input.upload').click();
+			container.find('.file-upload-container input').each(function(idx, el) {
+				var input = $(el),
+					type = input.prop('name'),
+					options = {
+						btnText: self.i18n.active().port.submitDocuments.changeButton,
+						mimeTypes: ['application/pdf'],
+						wrapperClass: 'input-append',
+						success: function(results) {
+							data.orders[index][type.concat('_attachment')] = results[0].file;
 
-				container.find('#bill_form').find('input.upload').on('change', function(evt) {
-					var file = evt.target.files;
-
-					if(file.length > 0) {
-						var reader = new FileReader(),
-							binary = 'updating';
-
-						reader.onloadend = function(evt) {
-							binary = evt.target.result;
-
-							if ( typeof file[0].name != 'undefined' ) {
-								container.find('#bill_form').find('span.file-name').text(file[0].name);
-								container.find('#bill_form').find('span.file-name').css('visibility','visible');
-							}
-
-							if ( typeof data.orders[index].id == "undefined" ) {
-								data.orders[index].bill_attachment = binary;
-							} else {
-								data.orders[index].bill_attachment = binary;
-								if ( typeof data.orders[index].uploads['bill.pdf'] == "undefined" ) {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {});
+							if ( data.orders[index].hasOwnProperty('id') ) {
+								if ( data.orders[index].uploads.hasOwnProperty(type.concat('.pdf')) ) {
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
 								} else {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "bill.pdf", binary, function(data) {});
+									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
+								}
+							}
+						},
+						error: function(error) {
+							for ( var key in error ) {
+								if ( error[key].length > 0 ) {
+									toastr.error(self.i18n.active().port.toastr.error[key].concat(error[key].join(', ')));
 								}
 							}
 						}
-
-						reader.readAsDataURL(file[0]);
 					}
-				});
+
+				if ( type === 'bill' ) {
+					options['bigBtnClass'] = 'btn btn-success span12';
+					options['bigBtnText'] = self.i18n.active().port.submitDocuments.uploadBillButton;
+					options['btnClass'] = 'btn btn-success';
+				} else if ( type === 'loa' ) {
+					options['bigBtnClass'] = 'btn span10';
+					options['bigBtnText'] = self.i18n.active().port.submitDocuments.loaUploadStep;
+					options['btnClass'] = 'btn';
+				}
+
+				input.fileUpload(options);
 			});
 
 			/*
@@ -576,42 +581,6 @@ define(function(require){
 						self.portReloadApp(accountId, parent);
 					}
 				}
-			});
-
-			container.find('#loa').find('button.upload').on('click', function() {
-				$(this).blur();
-				container.find('#loa').find('input.upload').click();
-
-				container.find('#loa').find('input.upload').on('change', function(evt) {
-					var file = evt.target.files;
-
-					if(file.length > 0) {
-						var reader = new FileReader(),
-							binary = 'updating';
-
-						reader.onloadend = function(evt) {
-							binary = evt.target.result;
-
-							if ( typeof file[0].name != 'undefined' ) {
-								container.find('#loa').find('span.file-name').text(file[0].name);
-								container.find('#loa').find('span.file-name').css('visibility','visible');
-							}
-
-							if ( typeof data.orders[index].id == "undefined" ) {
-								data.orders[index].loa_attachment = binary;
-							} else {
-								data.orders[index].loa_attachment = binary;
-								if ( typeof data.orders[index].uploads['loa.pdf'] == "undefined" ) {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {});
-								} else {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, "loa.pdf", binary, function(data) {});
-								}
-							}
-						}
-
-						reader.readAsDataURL(file[0]);
-					}
-				});
 			});
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {

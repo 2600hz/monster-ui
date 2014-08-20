@@ -10,6 +10,7 @@ require.config({
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
 		'ddslick': 'js/lib/jquery.ddslick.min',
+		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
 		'footable-filter': 'js/lib/footable/footable.filter.min',
 		'footable-sort': 'js/lib/footable/footable.sort.min',

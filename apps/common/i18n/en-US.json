@@ -265,10 +265,13 @@
 			"loaHelperPartTwo": "5 one-time charge.",
 			"loaHelperPartThree": "Digital LOA form.",
 			"loaHelperPartFour": "How to sign documents",
-			"loaHelperPartFive": "electronically without paying."
+			"loaHelperPartFive": "electronically without paying.",
+			"changeButton": "change"
 		},
 		"toastr": {
 			"error": {
+				"mimeType": "The following files are not in a supported format: ",
+				"size": "The following files are too big: ",
 				"number": {
 					"single": "The number you entered is invalid !!!",
 					"multiple": "The numbers you entered are invalid !!!"

@@ -31,11 +31,11 @@
 					<i class="icon-info-sign"></i>
 					<p>{{ i18n.port.submitDocuments.billInfoPartOne }} <a href="#">{{ i18n.port.submitDocuments.billInfoPartTwo }}</a></p>
 				</div>
-				<form action="" id="bill_form">
-					<button type="button" class="btn btn-success upload span12">{{ i18n.port.submitDocuments.uploadBillButton }}</button>
-					<input type="file" class="upload" name="bill">
+				<form action="" id="bill_form" class="row-fluid">
+					<div class="file-upload-container">
+						<input type="file" name="bill">
+					</div>
 					<span class="help-block">{{ i18n.port.submitDocuments.uploadBillHelper }}</span>
-					<span class="file-name"></span>
 					<label for="account_name">{{ i18n.port.submitDocuments.labelAccountName }}</label>
 					<input type="text" class="span12" id="account_name" value="{{#if bill.name}}{{bill.name}}{{/if}}">
 					<label for="address">{{ i18n.port.submitDocuments.labelAddress }}</label>
@@ -70,18 +70,23 @@
 		<h4>{{ i18n.port.submitDocuments.loaTitlePartOne }} <a href="#">{{ i18n.port.submitDocuments.loaTitlePartTwo }}</a></h4>
 		<div class="row-fluid">
 			<div class="span4">
-				<span class="span2 number">1.</span>
-				<a id="loa_link" href="http://2600hz.com/porting/2600hz_loa.pdf" class="btn span10" target="_blank">{{ i18n.port.submitDocuments.loaDownloadStep }}</a>
+				<span class="span1 number">1.</span>
+				<a id="loa_link" href="http://2600hz.com/porting/2600hz_loa.pdf" class="btn span10 offset1" target="_blank">{{ i18n.port.submitDocuments.loaDownloadStep }}</a>
 			</div>
-			<div class="span4">
+			<div class="span3">
 				<span class="span1 offset3 number">2.</span>
-				<span class="span5">{{ i18n.port.submitDocuments.loaSignStep }}</span>
+				<span class="span8">{{ i18n.port.submitDocuments.loaSignStep }}</span>
 			</div>
-			<div class="span4">
-				<span class="span2 number">3.</span>
-				<button type="button" class="btn span10 upload">{{ i18n.port.submitDocuments.loaUploadStep }}</button>
-				<input type="file" class="upload" name="loa">
-				<span class="file-name span10 offset2"></span>
+			<div class="span5">
+				<div class="row-fluid">
+					<span class="span1 offset1 number">3.</span>
+					<div class="span10 file-upload-container">
+						<input type="file" name="loa">
+					</div>
+				</div>
+				<div class="row-fluid">
+					<span class="help-block offset2">{{ i18n.port.submitDocuments.uploadBillHelper }}</span>
+				</div>
 			</div>
 		</div>
 		<p>{{ i18n.port.submitDocuments.loaHelperPartOne }} &#36;{{ i18n.port.submitDocuments.loaHelperPartTwo }} <a href="#">{{ i18n.port.submitDocuments.loaHelperPartThree }}</a> <a id="sign_doc" href="http://www.howtogeek.com/164668/how-to-electronically-sign-documents-without-printing-and-scanning-them/" target="_blank">{{ i18n.port.submitDocuments.loaHelperPartFour }}</a> {{ i18n.port.submitDocuments.loaHelperPartFive }}</p>

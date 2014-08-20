@@ -143,6 +143,18 @@ div#continue_later p { margin: 5px 0; }
 }
 #port_container .control-group.error .help-inline i { color: #b94a48; }
 
+#port_container .file-upload-container {
+	margin-bottom: 5px;
+}
+
+#port_container .file-upload-container .input-append {
+	margin-bottom: 0;
+}
+
+#port_container .file-upload-container input[type="text"] {
+	width: auto;
+}
+
 /**********************************************************/
 
 /*********************** Orders List **********************/
@@ -308,19 +320,11 @@ div#upload_bill form {
 	text-align: center;
 }
 
-div#upload_bill form button { margin-bottom: 4px; }
-
 div#upload_bill form input.upload { display: none; }
 
-div#upload_bill form .file-name {
-	display: block;
-	visibility: hidden;
-	margin-bottom: 15px;
-}
-
-div#upload_bill form .help-block {
-	margin-bottom: 15px;
-	text-align: left;
+div#upload_bill form .help-block,
+div#loa .help-block {
+	text-align: right;
 }
 
 div#upload_bill form label { text-align: left; }
@@ -341,20 +345,22 @@ div#loa h4 {
 
 div#loa .row-fluid { text-align: center; }
 
-div#loa .row-fluid .span4 .number { font-size: 25px; }
+div#loa .row-fluid > div .number { font-size: 25px; }
 
 div#loa input.upload { display: none; }
-
-div#loa .file-name {
-	display: block;
-	visibility: hidden;
-	margin-top: 15px;
-}
 
 div#loa > p { margin-bottom: 0; }
 
 div#loa #loa_link {
 	color: #333;
+}
+
+div#loa .file-upload-container {
+	text-align: right;
+}
+
+div#loa .file-upload-container > button {
+	float: right;
 }
 
 /**********************************************************/

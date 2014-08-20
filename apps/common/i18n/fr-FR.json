@@ -258,10 +258,13 @@
 			"loaHelperPartTwo":"5 de frais unique",
 			"loaHelperPartThree":"Formulaire LdA numérique.",
             "loaHelperPartFour": "Comment signer un docment",
-            "loaHelperPartFive": "électroniquement sans avoir à payer."
+            "loaHelperPartFive": "électroniquement sans avoir à payer.",
+            "buttonChange": "changer"
 		},
 		"toastr": {
 			"error": {
+				"mimeType": "Les fichiers suivants ne sont pas dans un format accepter: ",
+				"size": "Les fichiers suivants sont trop gros: ",
 				"number": {
 					"single": "Le numéro que vous avez saisi est invalide !!!",
 					"multiple": "Les numéros que vous avez saisi sont invalides !!!"
