@@ -9,7 +9,7 @@ define(function(require){
 			/* Provisioner */
 			'common.chooseModel.getProvisionerData': {
 				apiRoot: monster.config.api.provisioner,
-				url: 'api/phones',
+				url: 'phones',
 				verb: 'GET'
 			}
 		},
