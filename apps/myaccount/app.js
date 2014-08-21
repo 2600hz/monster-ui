@@ -192,6 +192,8 @@ define(function(require){
 							accountId: self.accountId
 						},
 						success: function(_data, status) {
+							_data.data.ui_restrictions = _data.data.ui_restrictions || {};
+
 							_data.data.ui_restrictions.myaccount = self.getDefaultRestrictions();
 
 							self.callApi({
