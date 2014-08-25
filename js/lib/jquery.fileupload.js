@@ -37,12 +37,12 @@
 
 			wrapper.hide();
 
-			bigButton.on('click', function() {
+			bigButton.click(function() {
 				fileInput.focus().click();
 			});
 		}
 
-		button.on('click', function() {
+		button.click(function() {
 			fileInput.focus().click();
 		});
 
@@ -53,7 +53,7 @@
 			results = {};
 		}
 
-		fileInput.on('change', function(event) {
+		fileInput.change(function(event) {
 			var filesList = Array.prototype.slice.call(event.target.files),
 				namesList = [],
 				successList = [],
@@ -144,26 +144,25 @@
 			}
 		});
 
-		input.on({
-			blur: function() {
-				fileInput.trigger('blur');
-			},
-			keydown: function(event) {
-				switch ( event.which ) {
-					case 8:
-					case 46:
-						fileInput.replaceWith(fileInput = fileInput.clone(true));
-						fileInput.trigger('change');
-						input.val('');
-						break;
-					case 9:
-						return;
-					case 13:
-						fileInput.trigger('click');
-						break;
-					default:
-						return false;
-				}
+		input.blur(function(event) {
+			fileInput.trigger('blur');
+		});
+
+		input.keydown(function(event) {
+			switch ( event.which ) {
+				case 8:
+				case 46:
+					fileInput.replaceWith(fileInput = fileInput.clone(true));
+					fileInput.trigger('change');
+					input.val('');
+					break;
+				case 9:
+					return;
+				case 13:
+					fileInput.trigger('click');
+					break;
+				default:
+					return false;
 			}
 		});
 	};
