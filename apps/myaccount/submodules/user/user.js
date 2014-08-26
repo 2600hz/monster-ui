@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		chosen = require('chosen'),
 		monster = require('monster'),
 		timezone = require('monster-timezone');
 
