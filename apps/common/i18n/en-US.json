@@ -270,7 +270,7 @@
 		},
 		"toastr": {
 			"error": {
-				"mimeType": "The following files are not in a supported format: ",
+				"mimeTypes": "The following files are not in a supported format: ",
 				"size": "The following files are too big: ",
 				"number": {
 					"single": "The number you entered is invalid !!!",

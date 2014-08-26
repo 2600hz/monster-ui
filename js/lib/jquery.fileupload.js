@@ -1,5 +1,6 @@
 (function ($) {
-	var defaultOptions = {
+	var id = 0;
+		defaultOptions = {
 			bigBtnText: 'Select a file',
 			btnText: 'Select a file',
 			inputOnly: false,
@@ -13,11 +14,10 @@
 			callbackError = args && args.hasOwnProperty('error') ? args.error : undefined,
 			options = $.extend({}, defaultOptions, args),
 			fileInput = $(this).css('display', 'none').prop('multiple', options.multiple),
-			wrapper = $('<div>'),
-			input = $('<input type="text">'),
-			button = $('<button type="button">' + options.btnText + '</button>'),
-			bigButton = $('<button type="button">' + options.bigBtnText + '</button>'),
-			results;
+			wrapper = $('<div id="file_upload_wrapper_' + ++id + '">'),
+			input = $('<input type="text" id="file_upload_input_' + id + '">'),
+			button = $('<button type="button" id="file_upload_button_' + id + '">' + options.btnText + '</button>'),
+			bigButton = $('<button type="button" id="file_upload_bigButton_' + id + '">' + options.bigBtnText + '</button>');
 
 		options.hasOwnProperty('btnClass') && button.addClass(options.btnClass);
 		options.hasOwnProperty('inputClass') && input.addClass(options.inputClass);
@@ -37,37 +37,38 @@
 
 			wrapper.hide();
 
-			bigButton.click(function() {
-				fileInput.focus().click();
+			$('body').delegate('#file_upload_bigButton_' + id, 'click', function() {
+				fileInput.focus().trigger('click');
 			});
 		}
 
-		button.click(function() {
-			fileInput.focus().click();
+		wrapper.delegate('#file_upload_button_' + id, 'click', function() {
+			fileInput.focus().trigger('click');
 		});
 
-		if ( options.resultType === '[]' ) {
-			results = [];
-		}
-		else if ( options.resultType === '{}' ) {
-			results = {};
-		}
-
-		fileInput.change(function(event) {
+		wrapper.delegate('input[type="file"]', 'change', function(event) {
 			var filesList = Array.prototype.slice.call(event.target.files),
 				namesList = [],
 				successList = [],
 				error = false,
 				errorsList = {
-					mimeType: [],
+					mimeTypes: [],
 					size: []
 				},
+				results,
 				names;
+
+			if ( options.resultType === '[]' ) {
+				results = [];
+			}
+			else if ( options.resultType === '{}' ) {
+				results = {};
+			}
 
 			filesList.forEach(function(el) {
 				var pass = true;
 
-				if ( options.hasOwnProperty('mimeType') && options.mimeTypes.indexOf(el.type) === -1 ) {
+				if ( options.hasOwnProperty('mimeTypes') && options.mimeTypes.indexOf(el.type) === -1 ) {
 					errorsList.mimeTypes.push(el.name);
 					error = true;
 					pass = false;
@@ -144,11 +145,11 @@
 			}
 		});
 
-		input.blur(function(event) {
+		wrapper.delegate('#file_upload_input_'.concat(id), 'blur', function() {
 			fileInput.trigger('blur');
 		});
 
-		input.keydown(function(event) {
+		wrapper.delegate('#file_upload_input_'.concat(id), 'keydown', function(event) {
 			switch ( event.which ) {
 				case 8:
 				case 46:
