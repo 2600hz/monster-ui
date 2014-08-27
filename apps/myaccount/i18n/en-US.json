@@ -53,7 +53,7 @@
 	},
 
 	"billing": {
-		"title": "Billing",
+		"title": "Credit Card",
 		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",
 
 		"cardOnFile": "Card on File",

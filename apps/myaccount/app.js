@@ -128,8 +128,8 @@ define(function(require){
 		formatUiRestrictions: function(restrictions, callback) {
 			var self = this,
 				categories = {
-					settings: ['account', 'billing', 'user'],
-					billing: ['transactions', 'service_plan', 'balance'],
+					settings: ['account', 'user'],
+					billing: ['billing', 'transactions', 'service_plan', 'balance'],
 					trunking: ['inbound', 'outbound']
 				},
 				_callback = function(billing, uiRestrictions) {

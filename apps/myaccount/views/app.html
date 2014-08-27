@@ -27,6 +27,12 @@
 				</a>
 			</li>
 			{{/if}}
+
+			{{#if restrictions.categories.billing.show}}
+			<li id="billingCategory" class="nav-header hidden-phone blue-gradient-reverse">
+				{{ i18n.billingCategory }}
+			</li>
+			{{/if}}
 			{{#if restrictions.billing.show_tab}}
 			<li class="myaccount-element" data-module="billing">
 				<a href="javascript:void(0);">
@@ -35,12 +41,6 @@
 						<span class="hidden-phone element-name">{{ i18n.billing.title }}</span>
 					</span>
 				</a>
-			</li>
-			{{/if}}
-
-			{{#if restrictions.categories.billing.show}}
-			<li id="billingCategory" class="nav-header hidden-phone blue-gradient-reverse">
-				{{ i18n.billingCategory }}
 			</li>
 			{{/if}}
 			{{#if restrictions.balance.show_tab}}
