@@ -321,6 +321,7 @@ define(function(require){
 						monster.pub('monster.requestEnd');
 					},
 					onRequestError: function(error, requestOptions) {
+						console.log(requestOptions);
 						if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
 							monster.ui.charges(error.data, function() {
 								requestOptions.acceptCharges = true;

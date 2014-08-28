@@ -8,14 +8,6 @@ define(function(require){
 	var balance = {
 
 		requests: {
-			'myaccount.balance.getCredits': {
-				url: 'accounts/{accountId}/braintree/credits',
-				verb: 'GET'
-			},
-			'myaccount.balance.update': {
-				url: 'accounts/{accountId}/braintree/credits',
-				verb: 'PUT'
-			},
 			'myaccount.balance.getFilteredTransactions': {
 				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason=only_calls',
 				verb: 'GET'
@@ -642,8 +634,8 @@ define(function(require){
 		balanceGet: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.getCredits',
+			self.callApi({
+				resource: 'balance.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -684,11 +676,12 @@ define(function(require){
 		balanceUpdateRecharge: function(data, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.update',
+			self.callApi({
+				resource: 'balance.add',
 				data: {
 					accountId: self.accountId,
-					data: data
+					data: data,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);

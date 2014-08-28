@@ -15,10 +15,6 @@ define(function(require){
 			'myaccount.getAccount': {
 				url: 'accounts/{accountId}',
 				verb: 'GET'
-			},
-			'myAccount.getBraintree': {
-				url: 'accounts/{accountId}/braintree/customer',
-				verb: 'GET'
 			}
 		},
 
@@ -163,7 +159,8 @@ define(function(require){
 					self.callApi({
 						resource: 'billing.get',
 						data: {
-							accountId: self.accountId
+							accountId: self.accountId,
+							generateError: false
 						},
 						success: function(data, status) {
 							_callback(data.data, uiRestrictions);
@@ -461,10 +458,11 @@ define(function(require){
 		getBraintree: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'myAccount.getBraintree',
+			self.callApi({
+				resource: 'billing.get',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					generateError: false
 				},
 				success: function(dataBraintree) {
 					callback && callback(dataBraintree.data);
