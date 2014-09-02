@@ -9,6 +9,7 @@ define(function(require){
 		},
 
 		//language: 'en-US',
+		resellerId: '64cd8d2a12ac216104a1341ab1b9ab2a',
 
 		company: {
 			name: '2600hz',
