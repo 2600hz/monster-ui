@@ -41,7 +41,7 @@ define(function(require){
 				self.balanceGet(function(data) {
 					var argsBadge = {
 						module: 'balance',
-						data: self.i18n.active().currencyUsed + parseFloat(data.data.amount).toFixed(2),
+						data: self.i18n.active().currencyUsed + parseFloat(data.data.balance).toFixed(2),
 						callback: args.callback
 					};
 
@@ -71,7 +71,7 @@ define(function(require){
 					},
 					balance: function(callback) {
 						self.balanceGet(function(data) {
-							defaults.amount = parseFloat(data.data.amount).toFixed(2);
+							defaults.amount = parseFloat(data.data.balance).toFixed(2);
 
 							callback(null, data)
 						});
@@ -452,7 +452,7 @@ define(function(require){
 
 									if(typeof params.callback === 'function') {
 										self.balanceGet(function(data) {
-											params.callback(data.data.amount);
+											params.callback(data.data.balance);
 											parent.dialog('close');
 										});
 									}
@@ -655,22 +655,6 @@ define(function(require){
 				};
 
 			self.balanceUpdateRecharge(data, success, error);
-
-			/*monster.request({
-				resource: 'myaccount.balance.update',
-				data: {
-					accountId: self.accountId,
-					data: {
-						'amount': credits
-					}
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});*/
 		},
 
 		balanceUpdateRecharge: function(data, success, error) {
