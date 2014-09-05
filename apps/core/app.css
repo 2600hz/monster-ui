@@ -541,6 +541,7 @@ table.table tr td {
 [data-toggle="tooltip"] {
 	cursor: default;
 	margin-right: 5px;
+	margin-left: 5px;
 }
 
 /* Clickover */

@@ -327,6 +327,8 @@ define(function(require){
 						// This account will be overriden when masquerading, it should be used by masqueradable apps
 						self.currentAccount = $.extend(true, {}, self.originalAccount);
 
+						self.defaultApp = defaultApp;
+
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp
 						});

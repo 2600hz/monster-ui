@@ -220,7 +220,7 @@ a.monster-link.disabled i {
 	height: 62px;
 	padding: 0 15px;
 
-	cursor: default;
+	cursor: pointer;
 
 	border-right: 1px solid #353535;
 	background-repeat: no-repeat;

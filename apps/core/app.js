@@ -142,6 +142,17 @@ define(function(require){
 				});
 			});
 
+			container.find('.logo').on('click', function() {
+				var appName = monster.apps.auth.defaultApp;
+
+				if(appName) {
+					monster.apps.load(appName, function(app) {
+						self.showAppName(appName);
+						app.render();
+					});
+				}
+			});
+
 			if(monster.config.hasOwnProperty('nav')) {
 				if(monster.config.nav.hasOwnProperty('help')) {
 					container.find('#ws-navbar a.help')
