@@ -984,6 +984,10 @@ define(function(require){
 
 			container.find('#search_result_div .right-div .center-div').empty().append(selectedNumbersList);
 			container.find('#total_num_span').html(totalNumbers.totalSelectedNumbers);
+
+			// display the plural if there's more than 1 number added
+			textAdded = (totalNumbers.totalSelectedNumbers === 0 || totalNumbers.totalSelectedNumbers === 1) ? self.i18n.active().buyNumbers.numberAddedSingle : self.i18n.active().buyNumbers.numberAddedPlural;
+			container.find('.number-added').html(textAdded);
 		},
 
 		buyNumbersRefreshDisplayedNumbersList: function(args) {
