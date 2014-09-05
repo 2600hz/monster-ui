@@ -24,7 +24,7 @@ define(function(require){
 				verb: 'GET'
 			},
 			'common.numbers.listDescendants': {
-				url: 'accounts/{accountId}/descendants',
+				url: 'accounts/{accountId}/descendants?paginate=false',
 				verb: 'GET'
 			},
 			'common.numbers.searchAccounts': {
