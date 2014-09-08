@@ -117,17 +117,19 @@
 		"required":"Requis."
 	},
 	"warning":"Attention!",
-	"confirmCharges":{
+	
+	"confirmCharges": {
 		"title":"Confirmation de frais",
-		"withChargesPartOne":"You will pay a $",
-		"withChargesPartTwo":"} on-time ",
-		"withoutCharges":"There is no ",
+		"withChargesPartOne": "You will pay a {{variable}}€",
+		"withChargesPartTwo": " on-time {{variable}}.",
+		"withoutCharges": "There is no {{variable}}.",
 		"detail":"Voici les détails des frais mensuels de ce compte pour ce service:",
-		"service":"Service",
+		"service": "Service",
 		"rate":"Taux",
 		"quantity":"Quantité",
-		"discount":"Discount",
+		"discount": "Discount",
 		"monthlyCharges":"Frais mensuels",
+		"amount": "{{variable}}€",
 		"actions":"Pressez OK pour confirmer ou Annuler pour revenir en arrière."
 	},
 	"languages":{

@@ -118,15 +118,16 @@
 	"warning": "Warning!",
 	"confirmCharges": {
 		"title": "Charges Confirmation",
-		"withChargesPartOne": "You will pay a $",
-		"withChargesPartTwo": "} on-time ",
-		"withoutCharges": "There is no ",
+		"withChargesPartOne": "You will pay a ${{variable}}",
+		"withChargesPartTwo": " on-time {{variable}}.",
+		"withoutCharges": "There is no {{variable}}.",
 		"detail": "Here is the detail of the monthly charges attached to your account for this service:",
 		"service": "Service",
 		"rate": "Rate",
 		"quantity": "Quantity",
 		"discount": "Discount",
 		"monthlyCharges": "Monthly Charges",
+		"amount": "${{variable}}",
 		"actions": "Press OK to confirm or Cancel to abort the process."
 	},
 	"languages": {
