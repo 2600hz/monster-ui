@@ -61,7 +61,7 @@ define(function(require){
 				type: 'application/pdf',
 				dataType: 'application/pdf'
 			},
-			'common.port.add.region': {
+			'common.port.ready': {
 				url: 'accounts/{accountId}/port_requests/{portRequestId}/ready',
 				verb: 'PUT'
 			},
@@ -85,15 +85,15 @@ define(function(require){
 
 			self.portRequestGet(accountId, function(data) {
 				var formatToTemplate = function(data) {
-						for ( var order in data.data ) {
-							var date = monster.util.gregorianToDate(data.data[order].created);
-							data.data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-							data.data[order].status = ( data.data[order].port_region == 'ready' ) ? true : false;
+						for ( var order in data ) {
+							var date = monster.util.gregorianToDate(data[order].created);
+							data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+							data[order].status = ( data[order].port_state == 'ready' ) ? true : false;
 						}
 
 						return data;
 					},
-					portTemplate = $(monster.template(self, 'port-pendingOrders', formatToTemplate(data))),
+					portTemplate = $(monster.template(self, 'port-pendingOrders', { data: formatToTemplate(data) })),
 					parent = args.parent || monster.ui.dialog('', {
 						width: '940px',
 						position: ['center', 20],
@@ -935,6 +935,8 @@ define(function(require){
 				delete order.loa_attachment;
 			}
 
+			order = $.extend(true, order, { port_state: 'progress' });
+
 			order = self.portArrayToObjects(order);
 
 			monster.request({
@@ -1015,7 +1017,7 @@ define(function(require){
 				success: function (data) {
 					self.portObjectsToArray(data.data);
 
-					callback(data);
+					callback(data.data);
 				}
 			});
 		},
@@ -1125,7 +1127,7 @@ define(function(require){
 
 		portRequestReadyState: function(accountId, portRequestId, callback) {
 			monster.request({
-				resource: "common.port.add.region",
+				resource: "common.port.ready",
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
