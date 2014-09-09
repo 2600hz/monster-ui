@@ -1077,7 +1077,7 @@ define(function(require){
 					data: data
 				},
 				success: function(data) {
-					callback(data);
+					callback && callback(data);
 				}
 			});
 		},
@@ -1092,7 +1092,7 @@ define(function(require){
 					data: data
 				},
 				success: function(data) {
-					callback(data);
+					callback && callback(data);
 				}
 			});
 		},
