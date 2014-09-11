@@ -249,7 +249,7 @@ define(function(require){
 									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
 								if(monthlyCharges > 0) {
 									renderData.push({
-										service: itemName.toUpperCase().replace("_"," "),
+										service: i18n.services[itemName],
 										rate: item.rate || 0,
 										quantity: item.quantity || 0,
 										discount: discount > 0 ? parseFloat(discount).toFixed(2) : '',

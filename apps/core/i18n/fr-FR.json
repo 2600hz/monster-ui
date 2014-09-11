@@ -121,7 +121,7 @@
 	"confirmCharges": {
 		"title":"Confirmation de frais",
 		"withChargesPartOne": "You will pay a {{variable}}€",
-		"withChargesPartTwo": " on-time {{variable}}.",
+		"withChargesPartTwo": " on-time {{variable}}. ",
 		"withoutCharges": "There is no {{variable}}.",
 		"detail":"Voici les détails des frais mensuels de ce compte pour ce service:",
 		"service": "Service",
@@ -136,5 +136,20 @@
 		"auto":"Par Défaut",
 		"americanEnglish":"Anglais (en-US)",
 		"frenchFrench":"Français (fr-FR)"
+	},
+	"services": {
+		"twoway_trunks": "Twoway Trunks",
+		"inbound_trunks": "Inbound Trunks",
+		"twoway_trunk": "Twoway Trunks",
+		"inbound_trunk": "Inbound Trunks",
+		"did_us": "US DIDs",
+		"sip_devices": "Appareils SIP",
+		"sip_device": "Appareils SIP",
+		"inbound_cnam": "Inbound CNAM",
+		"e911": "E911",
+		"cnam": "CNAM",
+		"port": "Port",
+		"tollfree_us": "US Tollfree",
+		"user": "Utilisateurs"
 	}
 }

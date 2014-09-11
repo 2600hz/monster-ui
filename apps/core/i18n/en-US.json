@@ -119,7 +119,7 @@
 	"confirmCharges": {
 		"title": "Charges Confirmation",
 		"withChargesPartOne": "You will pay a ${{variable}}",
-		"withChargesPartTwo": " on-time {{variable}}.",
+		"withChargesPartTwo": " on-time {{variable}}. ",
 		"withoutCharges": "There is no {{variable}}.",
 		"detail": "Here is the detail of the monthly charges attached to your account for this service:",
 		"service": "Service",
@@ -134,5 +134,20 @@
 		"auto": "Default",
 		"americanEnglish": "English (en-US)",
 		"frenchFrench": "French (fr-FR)"
+	},
+	"services": {
+		"cnam": "CNAM",
+		"did_us": "US DIDs",
+		"e911": "E911",
+		"inbound_cnam": "Inbound CNAM",
+		"inbound_trunk": "Inbound Trunks",
+		"inbound_trunks": "Inbound Trunks",
+		"port": "Port",
+		"sip_devices": "SIP Devices",
+		"sip_device": "SIP Devices",
+		"tollfree_us": "US Tollfree",
+		"twoway_trunk": "Twoway Trunks",
+		"twoway_trunks": "Twoway Trunks",
+		"user": "Users"
 	}
 }
