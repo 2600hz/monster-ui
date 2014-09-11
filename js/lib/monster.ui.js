@@ -91,8 +91,8 @@ define(function(require){
 		//3 types: info (blue), warning (yellow), error (red)
 		alert: function(type, content, callback, options){
 			if(typeof content === "undefined"){
-	content = type;
-	type = "info";
+				content = type;
+				type = "info";
 			}
 
 			var coreApp = monster.apps['core'],
@@ -247,16 +247,13 @@ define(function(require){
 							$.each(category, function(itemName, item) {
 								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
 									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
-
 								if(monthlyCharges > 0) {
 									renderData.push({
-										service: itemName.toUpperCase().replace("_"," "),
+										service: i18n.services[itemName],
 										rate: item.rate || 0,
 										quantity: item.quantity || 0,
-										discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
-										monthlyCharges: monthlyCharges,
-										activation_charges: (( data.activation_charges ) ? data.activation_charges : false),
-										activation_charges_description: (( data.activation_charges_description ) ? data.activation_charges_description : false)
+										discount: discount > 0 ? parseFloat(discount).toFixed(2) : '',
+										monthlyCharges: monthlyCharges
 									});
 
 									totalAmount += parseFloat(monthlyCharges);
@@ -267,7 +264,12 @@ define(function(require){
 
 					return renderData;
 				},
-				template = $(monster.template(coreApp, 'dialog-charges', formatData(data)[0])),
+				template = $(monster.template(coreApp, 'dialog-charges', {
+						activation_charges: data.hasOwnProperty('activation_charges') ? data.activation_charges : false,
+						activation_charges_description: data.hasOwnProperty('activation_charges_description') ? data.activation_charges_description : false,
+						charges: formatData(data)
+					}
+				)),
 				options = $.extend(
 					true,
 					{

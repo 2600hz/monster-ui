@@ -7,13 +7,16 @@
 			<p>
 			{{#if activation_charges_description}}
 				{{#if activation_charges}}
-				{{i18n.confirmCharges.withChargesPartOne}}{{activation_charges}}{{i18n.confirmCharges.withChargesPartTwo}}{{activation_charges_description}}. 
+				{{replaceVar i18n.confirmCharges.withChargesPartOne activation_charges}}{{replaceVar i18n.confirmCharges.withChargesPartTwo activation_charges_description}}
 				{{else}}
-				{{i18n.confirmCharges.withoutCharges}}{{activation_charges_description}}. 
+				{{replaceVar i18n.confirmCharges.withoutCharges activation_charges_description}}
 				{{/if}}
 			{{/if}}
+			{{#if charges}}
 			{{i18n.confirmCharges.detail}}
+			{{/if}}
 			</p>
+			{{#if charges}}
 			<table class="table charges-summary">
 				<thead>
 					<tr>
@@ -26,16 +29,19 @@
 					</tr>
 				</thead>
 				<tbody>
+				{{#each charges}}
 					<tr>
 						<td>{{service}}</td>
-						<td>${{rate}}</td>
-						<td>X</td>
+						<td>{{replaceVar ../i18n.confirmCharges.amount rate}}</td>
+						<td>x</td>
 						<td>{{quantity}}</td>
-						<td>{{#if discount}}${{discount}}{{else}}0{{/if}}</td>
-						<td>${{monthlyCharges}}</td>
+						<td>{{#if discount}}-{{replaceVar ../../i18n.confirmCharges.amount discount}}{{else}}0{{/if}}</td>
+						<td>{{replaceVar ../i18n.confirmCharges.amount monthlyCharges}}</td>
 					</tr>
+				{{/each}}
 				</tbody>
 			</table>
+			{{/if}}
 			<p>{{i18n.confirmCharges.actions}}</p>
 		</div>
 	</div>
