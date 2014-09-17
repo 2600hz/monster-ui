@@ -1,4 +1,4 @@
-<div class="wysiwyg-container"{{#if containerId}} id="{{containerId}}"{{/if}}>
+<div class="wysiwyg-container filled"{{#if containerId}} id="{{containerId}}"{{/if}}>
 	<div class="wysiwyg-toolbar" data-role="editor-toolbar" data-target="#editor">
 	{{#each tools}}
 		{{#if this}}
@@ -15,7 +15,7 @@
 						</a>
 						<ul class="dropdown-menu{{#compare command '===' 'foreColor'}} color-menu{{/compare}}">
 						{{#each options}}
-							{{#if ../icon}}
+							{{#if ../icon}} <!-- buttons -->
 								{{#if title}}
 									{{#if icon}}
 										<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>

@@ -1109,8 +1109,13 @@ label.monster-invalid {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	border: 1px solid #CCC;
-	background-color: #EEE;
+	border: 1px solid transparent;
+	border-bottom: 0;
+}
+
+.wysiwyg-container.filled .wysiwyg-toolbar {
+	border-color: #ccc;
+	background-color: #eee
 }
 
 .wysiwyg-container .wysiwyg-toolbar .btn-group {
@@ -1128,8 +1133,8 @@ label.monster-invalid {
 	padding: 4px 8px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 0;
-	background-color: #EEE;
 	background-image: none;
+	background-color: transparent;
 	box-shadow: none;
 }
 
@@ -1149,6 +1154,17 @@ label.monster-invalid {
 
 .wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu:after {
 	border-bottom-color: #ccc;
+}
+
+.wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu .btn:first-child {
+	margin-left: 5px;
+}
+.wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu .btn:last-child {
+	margin-right: 5px;
+}
+
+.wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu i {
+	margin-right: 0;
 }
 
 .wysiwyg-container .wysiwyg-toolbar .btn-group .color-menu {
@@ -1190,7 +1206,6 @@ label.monster-invalid {
 	padding: 10px;
 	border: 1px solid #CCC;
 	border-collapse: separate;
-	border-top: 0;
 	outline: none;
 	background-color: #FFF;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
