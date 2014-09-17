@@ -951,6 +951,10 @@ label.monster-invalid {
 	text-align: center;
 }
 
+.charges-dialog .help-box .text-wrapper table tbody tr {
+	background: #fdfdfd;
+}
+
 /* Left Menu */
 .container-menu {
 	margin: auto;
