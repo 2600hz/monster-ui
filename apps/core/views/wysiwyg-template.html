@@ -26,7 +26,7 @@
 									<a data-edit="{{../../../command}} #{{this}}" style="background-color: #{{this}}"></a>
 								{{/if}}
 							{{else}} <!-- macro -->
-								<li><a data-edit="{{../../command}} <b>{ {{@key}} }</b>">{{this}}</a></li>
+								<li><a data-edit="{{../../command}} <b>\{{{{@key}}}}}</b>">{{this}}</a></li>
 							{{/if}}
 						{{/each}}
 						</ul>
