@@ -13,11 +13,11 @@ define(function(require){
 
 		requests: {
 			'appstore.list': {
-				url: 'accounts/{accountId}/apps_store',
+				url: 'apps_store',
 				verb: 'GET'
 			},
 			'appstore.get': {
-				url: 'accounts/{accountId}/apps_store/{appId}',
+				url: 'apps_store/{appId}',
 				verb: 'GET'
 			},
 			'appstore.account.get': {
@@ -168,7 +168,7 @@ define(function(require){
 
 							val.label = i18n.label;
 							val.description = i18n.description;
-							val.icon = self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + val.id + "/icon?auth_token=" + self.authToken
+							val.icon = self.apiUrl + "apps_store/" + val.id + "/icon?auth_token=" + self.authToken
 							delete val.i18n;
 							return true;
 						} else {
@@ -222,9 +222,9 @@ define(function(require){
 								description: dataI18n.description,
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
-								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
+								icon: self.apiUrl + "apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
 								screenshots: $.map(data.data.screenshots, function(val, key) {
-									return self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+									return self.apiUrl + "apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
 								})
 							}
 						}),

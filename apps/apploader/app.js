@@ -232,7 +232,7 @@ define(function(require){
 								appList.push({
 									id: appId,
 									name: app.name,
-									icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + appId + "/icon?auth_token=" + self.authToken,
+									icon: self.apiUrl + "apps_store/" + appId + "/icon?auth_token=" + self.authToken,
 									label: app.label
 								});
 								delete accountApps[appId];
@@ -256,7 +256,7 @@ define(function(require){
 							appList.push({
 								id: key,
 								name: fullAppList[key].name,
-								icon: self.apiUrl + "accounts/" + self.accountId + "/apps_store/" + key + "/icon?auth_token=" + self.authToken,
+								icon: self.apiUrl + "apps_store/" + key + "/icon?auth_token=" + self.authToken,
 								label: fullAppList[key].label
 							});
 
