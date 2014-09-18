@@ -705,30 +705,43 @@ define(function(require){
 			return form.valid();
 		},
 
+		/**
+		 * @desc prepend a WYSIWYG in 'target'
+		 * @param target - mandatory jQuery Object
+		 * @param options - optional Javascript Object
+		 *
+		 * To remove elements from the toolbar, specify false as value
+		 * for the corresponding key in the defaultOptions object.
+		 * 
+		 * The target should be a jQuery Object as follow:
+		 * <div class="wysiwyg-container"></div>
+		 * The optional class "filled" can be added to this container
+		 * to change the style of the toolbar.
+		 */
 		wysiwyg: function(target, options) {
 			var self = this,
+				options = options || {},
+				id = new Date().getTime(),
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active().wysiwyg,
-				options = options || {},
 				defaultOptions = {
-					containerId: '',
 					tools: {
 						fontSize: {
-							title: i18n.fontSize,
+							title: i18n.title.fontSize,
 							icon: 'text-height',
 							options: {
 								small: {
-									title: i18n.small,
+									title: i18n.title.small,
 									command: 'fontSize',
 									args: '1'
 								},
 								normal: {
-									title: i18n.normal,
+									title: i18n.title.normal,
 									command: 'fontSize',
 									args: '3'
 								},
 								huge: {
-									title: i18n.huge,
+									title: i18n.title.huge,
 									command: 'fontSize',
 									args: '5'
 								}
@@ -736,28 +749,28 @@ define(function(require){
 						},
 						fontEffect: {
 							bold: {
-								title: i18n.bold,
+								title: i18n.title.bold,
 								icon: 'bold',
 								command: 'bold'
 							},
 							italic: {
-								title: i18n.italic,
+								title: i18n.title.italic,
 								icon: 'italic',
 								command: 'italic'
 							},
 							underline: {
-								title: i18n.underline,
+								title: i18n.title.underline,
 								icon: 'underline',
 								command: 'underline'
 							},
 							strikethrough: {
-								title: i18n.strikethrough,
+								title: i18n.title.strikethrough,
 								icon: 'strikethrough',
 								command: 'strikethrough'
 							}
 						},
 						fontColor: {
-							title: i18n.fontColor,
+							title: i18n.title.fontColor,
 							icon: 'font',
 							command: 'foreColor',
 							options: [
@@ -770,42 +783,42 @@ define(function(require){
 							]
 						},
 						textAlign: {
-							title: i18n.alignment,
+							title: i18n.title.alignment,
 							icon: 'file-text',
 							options: {
 								left: {
-									title: i18n.alignLeft,
+									title: i18n.title.alignLeft,
 									icon: 'align-left',
 									command: 'justifyLeft'
 								},
 								center: {
-									title: i18n.center,
+									title: i18n.title.center,
 									icon: 'align-center',
 									command: 'justifyCenter'
 								},
 								right: {
-									title: i18n.alignRight,
+									title: i18n.title.alignRight,
 									icon: 'align-right',
 									command: 'justifyRight'
 								},
 								justify: {
-									title: i18n.justify,
+									title: i18n.title.justify,
 									icon: 'align-justify',
 									command: 'justifyFull'
 								}
 							}
 						},
 						list: {
-							title: i18n.list,
+							title: i18n.title.list,
 							icon: 'list',
 							options: {
 								unordered: {
-									title: i18n.bulletList,
+									title: i18n.title.bulletList,
 									icon: 'list-ul',
 									command: 'insertUnorderedList'
 								},
 								ordered: {
-									title: i18n.numberList,
+									title: i18n.title.numberList,
 									icon: 'list-ol',
 									command: 'insertOrderedList'
 								}
@@ -813,52 +826,52 @@ define(function(require){
 						},
 						indentation: {
 							indent: {
-								title: i18n.reduceIndent,
+								title: i18n.title.indent,
 								icon: 'indent-right',
 								command: 'indent'
 							},
 							outdent: {
-								title: i18n.indent,
+								title: i18n.title.reduceIndent,
 								icon: 'indent-left',
 								command: 'outdent'
 							}
 						},
 						link: {
 							create: {
-								title: i18n.hyperlink,
+								title: i18n.title.hyperlink,
 								icon: 'link',
 								command: 'createLink'
 							},
 							delete: {
-								title: i18n.removeHyperlink,
+								title: i18n.title.removeHyperlink,
 								icon: 'unlink',
 								command: 'unlink'
 							},
 						},
 						image: {
-							title: i18n.upload,
+							title: i18n.title.upload,
 							icon: 'picture',
 							command: 'insertImage'
 						},
 						editing: {
 							undo: {
-								title: i18n.undo,
+								title: i18n.title.undo,
 								icon: 'undo',
 								command: 'undo'
 							},
 							redo: {
-								title: i18n.redo,
+								title: i18n.title.redo,
 								icon: 'repeat',
 								command: 'redo'
 							}
 						},
 						horizontalRule: {
-							title: i18n.horizontalRule,
+							title: i18n.title.horizontalRule,
 							icon: 'minus',
 							command: 'insertHorizontalRule'
 						},
 						macro: {
-							title: i18n.macro,
+							title: i18n.title.macro,
 							command: 'insertHtml',
 							options: {
 								user_first_name: 'User\'s First Name',
@@ -874,7 +887,7 @@ define(function(require){
 				},
 				wysiwygTemplate;
 
-			options = $.extend(true, {}, defaultOptions, options);
+			options = $.extend(true, {}, defaultOptions, options, { id: id });
 
 			for (var category in options.tools) {
 				if (!options.tools[category]) {
@@ -905,10 +918,35 @@ define(function(require){
 				.find('a[title]')
 				.tooltip({container: 'body'});
 
+			/* Handle the behavior of the creatLink dropdown menu */
+			wysiwygTemplate.find('.dropdown-menu input')
+				.on('click', function() {
+					return false;
+				})
+				.on('change', function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				})
+				.keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
 			target
-				.append(wysiwygTemplate)
-				.find('#editor')
-				.wysiwyg({ activeToolbarClass: 'selected' });
+				.prepend(wysiwygTemplate)
+				.find('#wysiwyg_editor_' + id)
+				.wysiwyg({
+					toolbarSelector: '#wysiwyg_toolbar_' + id,
+					activeToolbarClass: 'selected',
+					fileUploadError: function(reason, detail) {
+						if (reason === 'unsupported-file-type') {
+							toastr.error(detail + i18n.toastr.error.format);
+						}
+						else {
+							toastr.error(i18n.toastr.error.upload);
+							console.log('error uploading file', reason, detail);
+						}
+					}
+				});
 		}
 	};
 
