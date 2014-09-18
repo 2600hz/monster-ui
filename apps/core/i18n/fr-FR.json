@@ -151,5 +151,53 @@
 		"port": "Port",
 		"tollfree_us": "US Tollfree",
 		"user": "Utilisateurs"
+	},
+	"wysiwyg": {
+		"toastr": {
+			"error": {
+				"format": " n'est pas un format supporté",
+				"upload": "Une erreur a eu lieu lors du téléchargement du fichier"
+			}
+		},
+		"title": {
+			"fontSize": "Taille de la police",
+			"huge": "Grand",
+			"normal": "Normale",
+			"small" : "Petit",
+
+			"bold": "Gras (Ctrl/Cmd+B)",
+			"italic": "Italique (Ctrl/Cmd+I)",
+			"underline": "Souligné (Ctrl/Cmd+U)",
+			"strikethrough" : "Barrer",
+
+			"fontColor": "Couleur de la police",
+
+			"alignment": "Alignement",
+			"alignLeft": "Aligner à gauche (Ctrl/Cmd+L)",
+			"center": "Centrer (Ctrl/Cmd+E)",
+			"alignRight": "Aligner à droite (Ctrl/Cmd+R)",
+			"justify": "Justifier (Ctrl/Cmd+J)",
+
+			"list": "Liste",
+
+			"bulletList": "Liste à puce",
+			"numberList": "Liste numérotée",
+
+			"reduceIndent": "Mettre en retrait (Shift+Tab)",
+			"indent": "Mettre en alignéa (Tab)",
+
+			"hyperlink": "Lien hypertexte",
+			"add": "Ajouter",
+			"removeHyperlink": "Supprimer le lien hypertexte",
+
+			"upload": "Télécharger une image (ou glisser-déposer)",
+
+			"undo": "Annuler (Ctrl/Cmd+Z)",
+			"redo": "Rétablir (Ctrl/Cmd+Y)",
+
+			"horizontalRule": "Règle horizontal",
+
+			"macro": "Macro"
+		}
 	}
 }
