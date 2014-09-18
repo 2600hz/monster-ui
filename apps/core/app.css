@@ -679,24 +679,28 @@ table.table tr td {
 
 .items-selector .box-selector ul li.item-selector:hover {
 	background: #FCFCFC;
+}
+
+li.item-selector:hover {
 	cursor: move;
 	cursor: -moz-grab;
 	cursor: -webkit-grab;
 }
 
-.items-selector .box-selector ul li.item-selector:active {
+li.item-selector:active {
 	cursor: move;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
 
-.items-selector .box-selector ul li.item-selector .item-handle {
+li.item-selector .item-handle {
 	background: url('static/images/drag.png');
 	float: left;
 	height: 30px;
 	margin: 5px 10px 0 0;
 	width: 5px;
 }
+
 /* Box Element */
 .number-box {
 	border-top: 1px solid transparent;
@@ -988,7 +992,8 @@ label.monster-invalid {
 
 .container-menu > .left-menu .category:hover { background: #eee; }
 
-.container-menu > .left-menu .category.active {
+.container-menu > .left-menu .category.active,
+.container-menu > .left-menu .category.selected {
 	position: relative;
 	background: none #22ccff;
 	color: #fff;
@@ -1005,7 +1010,10 @@ label.monster-invalid {
 	content: "";
 }
 
-.container-menu > .left-menu .category.active .title i { color: #fff; }
+.container-menu > .left-menu .category.active .title i,
+.container-menu > .left-menu .category.selected .title i { 
+	color: #fff; 
+}
 
 .container-menu > .left-menu .category.simple { margin: 10px auto 0 auto; }
 
