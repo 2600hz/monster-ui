@@ -1,0 +1,63 @@
+<div class="wysiwyg-toolbar" id="wysiwyg_toolbar_{{id}}" data-role="editor-toolbar" data-target="#wysiwyg_editor_{{id}}">
+{{#each tools}}
+	{{#if this}}
+		<div class="btn-group">
+			{{#if title}}
+				{{#if options}}
+					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="{{title}}">
+					{{#if icon}}
+						<i class="icon-{{icon}}"></i>
+					{{else}}
+						{{title}}
+					{{/if}}
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu{{#compare command '===' 'foreColor'}} color-menu{{/compare}}">
+					{{#each options}}
+						{{#if ../icon}}
+							{{#if title}}
+								{{#if icon}}
+									<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+								{{else}}
+									<li><a data-edit="{{command}} {{args}}">{{title}}</a></li>
+								{{/if}}
+							{{else}}
+								<a data-edit="{{../../../command}} #{{this}}" style="background-color: #{{this}}"></a>
+							{{/if}}
+						{{else}}
+							<li><a data-edit="{{../../command}} <b>\{{{{@key}}}}}</b>">{{this}}</a></li>
+						{{/if}}
+					{{/each}}
+					</ul>
+				{{else}}
+					{{#compare command '===' 'insertImage'}}
+						<a class="btn wysiwyg-upload" title data-original-title="{{title}}">
+							<i class="icon-{{icon}}"></i>
+							<input type="file" data-edit="{{command}}">
+						</a>
+					{{else}}
+						<a class="btn" data-edit="{{../command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+					{{/compare}}
+				{{/if}}
+			{{else}}
+				{{#each this}}
+					{{#if this}}
+						{{#compare command '===' 'createLink'}}
+							<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="{{title}}">
+								<i class="icon-{{icon}}"></i>
+							</a>
+							<div class="dropdown-menu input-append">
+								<input class="span2" placeholder="URL" type="text" data-edit="{{command}}">
+								<button class="btn" type="button">Add</button>
+							</div>
+						{{else}}
+							<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+						{{/compare}}
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		</div>
+	{{/if}}
+{{/each}}
+</div>
+<div class="wysiwyg-editor" id="wysiwyg_editor_{{id}}"></div>

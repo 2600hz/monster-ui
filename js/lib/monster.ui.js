@@ -2,9 +2,11 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
+		hotkeys = require('hotkeys'),
 		icheck = require('icheck'),
 		toastr = require('toastr'),
-		validate = require('validate');
+		validate = require('validate'),
+		wysiwyg = require('wysiwyg');
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
@@ -701,6 +703,250 @@ define(function(require){
 
 		valid: function(form) {
 			return form.valid();
+		},
+
+		/**
+		 * @desc prepend a WYSIWYG in 'target'
+		 * @param target - mandatory jQuery Object
+		 * @param options - optional Javascript Object
+		 *
+		 * To remove elements from the toolbar, specify false as value
+		 * for the corresponding key in the defaultOptions object.
+		 * 
+		 * The target should be a jQuery Object as follow:
+		 * <div class="wysiwyg-container"></div>
+		 * The optional class "filled" can be added to this container
+		 * to change the style of the toolbar.
+		 */
+		wysiwyg: function(target, options) {
+			var self = this,
+				options = options || {},
+				id = new Date().getTime(),
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active().wysiwyg,
+				defaultOptions = {
+					tools: {
+						fontSize: {
+							title: i18n.title.fontSize,
+							icon: 'text-height',
+							options: {
+								small: {
+									title: i18n.title.small,
+									command: 'fontSize',
+									args: '1'
+								},
+								normal: {
+									title: i18n.title.normal,
+									command: 'fontSize',
+									args: '3'
+								},
+								huge: {
+									title: i18n.title.huge,
+									command: 'fontSize',
+									args: '5'
+								}
+							}
+						},
+						fontEffect: {
+							bold: {
+								title: i18n.title.bold,
+								icon: 'bold',
+								command: 'bold'
+							},
+							italic: {
+								title: i18n.title.italic,
+								icon: 'italic',
+								command: 'italic'
+							},
+							underline: {
+								title: i18n.title.underline,
+								icon: 'underline',
+								command: 'underline'
+							},
+							strikethrough: {
+								title: i18n.title.strikethrough,
+								icon: 'strikethrough',
+								command: 'strikethrough'
+							}
+						},
+						fontColor: {
+							title: i18n.title.fontColor,
+							icon: 'font',
+							command: 'foreColor',
+							options: [
+								'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
+								'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
+								'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
+								'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
+								'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
+								'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
+							]
+						},
+						textAlign: {
+							title: i18n.title.alignment,
+							icon: 'file-text',
+							options: {
+								left: {
+									title: i18n.title.alignLeft,
+									icon: 'align-left',
+									command: 'justifyLeft'
+								},
+								center: {
+									title: i18n.title.center,
+									icon: 'align-center',
+									command: 'justifyCenter'
+								},
+								right: {
+									title: i18n.title.alignRight,
+									icon: 'align-right',
+									command: 'justifyRight'
+								},
+								justify: {
+									title: i18n.title.justify,
+									icon: 'align-justify',
+									command: 'justifyFull'
+								}
+							}
+						},
+						list: {
+							title: i18n.title.list,
+							icon: 'list',
+							options: {
+								unordered: {
+									title: i18n.title.bulletList,
+									icon: 'list-ul',
+									command: 'insertUnorderedList'
+								},
+								ordered: {
+									title: i18n.title.numberList,
+									icon: 'list-ol',
+									command: 'insertOrderedList'
+								}
+							}
+						},
+						indentation: {
+							indent: {
+								title: i18n.title.indent,
+								icon: 'indent-right',
+								command: 'indent'
+							},
+							outdent: {
+								title: i18n.title.reduceIndent,
+								icon: 'indent-left',
+								command: 'outdent'
+							}
+						},
+						link: {
+							create: {
+								title: i18n.title.hyperlink,
+								icon: 'link',
+								command: 'createLink'
+							},
+							delete: {
+								title: i18n.title.removeHyperlink,
+								icon: 'unlink',
+								command: 'unlink'
+							},
+						},
+						image: {
+							title: i18n.title.upload,
+							icon: 'picture',
+							command: 'insertImage'
+						},
+						editing: {
+							undo: {
+								title: i18n.title.undo,
+								icon: 'undo',
+								command: 'undo'
+							},
+							redo: {
+								title: i18n.title.redo,
+								icon: 'repeat',
+								command: 'redo'
+							}
+						},
+						horizontalRule: {
+							title: i18n.title.horizontalRule,
+							icon: 'minus',
+							command: 'insertHorizontalRule'
+						},
+						macro: {
+							title: i18n.title.macro,
+							command: 'insertHtml',
+							options: {
+								user_first_name: 'User\'s First Name',
+								user_last_name: 'User\'s Last Name',
+								user_pin: 'User\'s PIN',
+								conference_name: 'Conference\'s Name',
+								conference_date: 'Conference\'s Date',
+								conference_time: 'Conference\'s Time',
+								conference_record: 'Conference\'s Record'
+							}
+						}
+					}
+				},
+				wysiwygTemplate;
+
+			options = $.extend(true, {}, defaultOptions, options, { id: id });
+
+			for (var category in options.tools) {
+				if (!options.tools[category]) {
+					delete options.tools[category];
+				}
+				else if (options.tools[category].hasOwnProperty('options') && _.isEmpty(options.tools[category].options)) {
+					delete options.tools[category];
+				}
+				else if (!options.tools[category].hasOwnProperty('title')) {
+					var show = false;
+
+					for (var option in options.tools[category]) {
+						if (options.tools[category][option]) {
+							show = true;
+							break;
+						}
+					}
+
+					if (!show) {
+						delete options.tools[category];
+					}
+				}
+			}
+
+			wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', options));
+
+			wysiwygTemplate
+				.find('a[title]')
+				.tooltip({container: 'body'});
+
+			/* Handle the behavior of the creatLink dropdown menu */
+			wysiwygTemplate.find('.dropdown-menu input')
+				.on('click', function() {
+					return false;
+				})
+				.on('change', function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				})
+				.keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
+			target
+				.prepend(wysiwygTemplate)
+				.find('#wysiwyg_editor_' + id)
+				.wysiwyg({
+					toolbarSelector: '#wysiwyg_toolbar_' + id,
+					activeToolbarClass: 'selected',
+					fileUploadError: function(reason, detail) {
+						if (reason === 'unsupported-file-type') {
+							toastr.error(detail + i18n.toastr.error.format);
+						}
+						else {
+							toastr.error(i18n.toastr.error.upload);
+							console.log('error uploading file', reason, detail);
+						}
+					}
+				});
 		}
 	};
 
