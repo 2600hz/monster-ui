@@ -81,6 +81,13 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/global_resources' },
 			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/global_resources/collection' }
 		},
+		ips: {
+			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/ips/{ip}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ips?zone={zone}&quantity={quantity}' },
+			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
+			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
+		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },

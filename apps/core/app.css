@@ -995,8 +995,18 @@ label.monster-invalid {
 .container-menu > .left-menu .category.active,
 .container-menu > .left-menu .category.selected {
 	position: relative;
-	background: none #22ccff;
+	/*background: none #22ccff;*/
 	color: #fff;
+
+
+	background: #1dc8ff; /* Old browsers */
+	background: -moz-linear-gradient(top, #1dc8ff 0%, #04b0ee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1dc8ff), color-stop(100%,#04b0ee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #1dc8ff 0%,#04b0ee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1dc8ff', endColorstr='#04b0ee',GradientType=0 ); /* IE6-9 */
 }
 
 .container-menu > .left-menu .category.active::after {
@@ -1006,7 +1016,7 @@ label.monster-invalid {
 	display: block;
 	border-top: 9px solid transparent;
 	border-bottom: 9px solid transparent;
-	border-left: 9px solid #22ccff;
+	border-left: 9px solid #10BCF6;
 	content: "";
 }
 
