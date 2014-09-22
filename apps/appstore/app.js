@@ -146,8 +146,26 @@ define(function(require){
 				},
 				function(err, results) {
 					var installedAppIds = _.map(monster.apps['auth'].installedApps, function(val) {
-						return val.id;
-					});
+							return val.id;
+						}),
+						getIcon = function(appId, iconCallback) {
+							var request = new XMLHttpRequest(),
+								url = self.apiUrl + 'apps_store/' + appId + '/icon?auth_token=' + self.authToken;
+								
+							request.open('GET', url, true);
+							request.onreadystatechange = function() {
+								if(request.readyState === 4) {
+									if(request.status === 200) {
+										iconCallback && iconCallback(url);
+									} else {
+										iconCallback && iconCallback(null);
+									}
+								}
+							};
+							request.send();
+						},
+						parallelIconRequests = [];
+
 					if(!("apps" in results.account)) {
 						results.account.apps = {};
 					}
@@ -168,7 +186,9 @@ define(function(require){
 
 							val.label = i18n.label;
 							val.description = i18n.description;
-							val.icon = self.apiUrl + "apps_store/" + val.id + "/icon?auth_token=" + self.authToken
+							parallelIconRequests.push(function(parallelCallback) {
+								getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
+							});
 							delete val.i18n;
 							return true;
 						} else {
@@ -176,7 +196,12 @@ define(function(require){
 						}
 					});
 
-					callback(results);
+					monster.parallel(parallelIconRequests, function(iconsErr, iconsResults) {
+						_.each(results.apps, function(app, index) {
+							app.icon = iconsResults[index];
+						});
+						callback(results);
+					});
 				}
 			);
 		},
@@ -222,7 +247,7 @@ define(function(require){
 								description: dataI18n.description,
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
-								icon: self.apiUrl + "apps_store/" + data.data.id + "/icon?auth_token=" + self.authToken,
+								icon: _.find(appstoreData.apps, function(app) { return app.id === data.data.id }).icon,
 								screenshots: $.map(data.data.screenshots, function(val, key) {
 									return self.apiUrl + "apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
 								})

@@ -197,6 +197,31 @@ define(function(require){
 			}
 		},
 
+		getFullAppList: function(callback) {
+			var self = this,
+				parallelRequest = {};
+
+			_.each(monster.apps['auth'].installedApps, function(val) {
+				parallelRequest[val.id] = function(parallelCallback) {
+					var request = new XMLHttpRequest(),
+						url = self.apiUrl + 'apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+						
+					request.open('GET', url, true);
+					request.onreadystatechange = function() {
+						if(request.readyState === 4) {
+							val.icon = request.status === 200 ? url : null;
+							parallelCallback && parallelCallback(null, val);
+						}
+					};
+					request.send();
+				}
+			});
+
+			monster.parallel(parallelRequest, function(err, results) {
+				callback && callback(results);
+			});
+		},
+
 		getUserApps: function(callback) {
 			var self = this;
 
@@ -206,80 +231,77 @@ define(function(require){
 					accountId: self.accountId,
 				},
 				success: function(data, status) {
-					var fullAppList = {}, // Full list of existing apps
-						accountApps = $.extend(true, {}, data.data.apps), // List of apps available on the account, with list of enabled user
-						userApps = monster.apps['auth'].currentUser.appList || [], // List of apps on the user, used for ordering and default app only
-						updateUserApps = false,
-						appList = []; // List of apps available for this user, to be return
+					self.getFullAppList(function(fullAppList) {
+						var accountApps = $.extend(true, {}, data.data.apps), // List of apps available on the account, with list of enabled user
+							userApps = monster.apps['auth'].currentUser.appList || [], // List of apps on the user, used for ordering and default app only
+							updateUserApps = false,
+							appList = []; // List of apps available for this user, to be return
 
-					_.each(monster.apps['auth'].installedApps, function(val) {
-						fullAppList[val.id] = val;
-					});
+						userApps = $.grep(userApps, function(appId) {
+							var app = fullAppList[appId],
+								userArray = appId in accountApps ? $.map(accountApps[appId].users, function(val) { return val.id }) : [];
+							if(app && appId in accountApps) {
+								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+								if('all' in accountApps[appId]) {
+									accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
+									delete accountApps[appId].all;
+								}
+								/*****************************************************************************************/
+								if(accountApps[appId].allowed_users === 'all'
+								|| (accountApps[appId].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin")
+								|| userArray.indexOf(self.userId) >= 0) {
+									appList.push({
+										id: appId,
+										name: app.name,
+										icon: app.icon,
+										label: app.label
+									});
+									delete accountApps[appId];
+									return true;
+								}
+							}
+							updateUserApps = true;
+							return false;
+						});
 
-					userApps = $.grep(userApps, function(appId) {
-						var app = fullAppList[appId],
-							userArray = appId in accountApps ? $.map(accountApps[appId].users, function(val) { return val.id }) : [];
-						if(app && appId in accountApps) {
+						_.each(accountApps, function(val, key) {
+							var app = fullAppList[key],
+								userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
 							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-							if('all' in accountApps[appId]) {
-								accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
-								delete accountApps[appId].all;
+							if('all' in accountApps[key]) {
+								accountApps[key].allowed_users = accountApps[key].all ? 'all' : 'specific';
+								delete accountApps[key].all;
 							}
 							/*****************************************************************************************/
-							if(accountApps[appId].allowed_users === 'all'
-							|| (accountApps[appId].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin")
-							|| userArray.indexOf(self.userId) >= 0) {
+							if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
 								appList.push({
-									id: appId,
-									name: app.name,
-									icon: self.apiUrl + "apps_store/" + appId + "/icon?auth_token=" + self.authToken,
-									label: app.label
+									id: key,
+									name: fullAppList[key].name,
+									icon: app.icon,
+									label: fullAppList[key].label
 								});
-								delete accountApps[appId];
-								return true;
+
+								userApps.push(key);
+								updateUserApps = true;
 							}
-						}
-						updateUserApps = true;
-						return false;
-					});
-
-					_.each(accountApps, function(val, key) {
-						var app = fullAppList[key],
-							userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
-						/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-						if('all' in accountApps[key]) {
-							accountApps[key].allowed_users = accountApps[key].all ? 'all' : 'specific';
-							delete accountApps[key].all;
-						}
-						/*****************************************************************************************/
-						if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
-							appList.push({
-								id: key,
-								name: fullAppList[key].name,
-								icon: self.apiUrl + "apps_store/" + key + "/icon?auth_token=" + self.authToken,
-								label: fullAppList[key].label
-							});
-
-							userApps.push(key);
-							updateUserApps = true;
-						}
-					});
-
-					if(updateUserApps) {
-						monster.apps['auth'].currentUser.appList = userApps;
-						monster.request({
-							resource: 'apploader.users.update',
-							data: {
-								accountId: self.accountId,
-								userId: self.userId,
-								data: monster.apps['auth'].currentUser
-							},
-							success: function(_data, status) {},
-							error: function(_data, status) {}
 						});
-					}
 
-					callback && callback(appList);
+						if(updateUserApps) {
+							monster.apps['auth'].currentUser.appList = userApps;
+							monster.request({
+								resource: 'apploader.users.update',
+								data: {
+									accountId: self.accountId,
+									userId: self.userId,
+									data: monster.apps['auth'].currentUser
+								},
+								success: function(_data, status) {},
+								error: function(_data, status) {}
+							});
+						}
+
+						callback && callback(appList);
+					});
 				}
 			});
 		}
