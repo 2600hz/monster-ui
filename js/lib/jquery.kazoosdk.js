@@ -58,14 +58,14 @@
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
-		resource_templates: {
+		resourceTemplates: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/resource_templates' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 		},
-		local_resources: {
+		localResources: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/local_resources/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/local_resources' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/local_resources/{resourceId}' },
@@ -73,7 +73,7 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/local_resources' },
 			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/local_resources/collection' }
 		},
-		global_resources: {
+		globalResources: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/global_resources/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/global_resources' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/global_resources/{resourceId}' },
