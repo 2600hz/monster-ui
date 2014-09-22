@@ -184,7 +184,7 @@ define(function(require){
 				apiUrl = monster.config.api.default;
 
 			self.callApi({
-				resource: 'whitelabel.getLogo',
+				resource: 'whitelabel.getLogoByDomain',
 				data: {
 					domain: domain,
 					generateError: false,

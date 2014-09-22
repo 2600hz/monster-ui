@@ -41,6 +41,7 @@
 	"conferencingLogo": "Conferencing",
 	"csv": "CSV",
 	"currencyUsed": "$",
+	"delete": "Delete",
 	"dialog" : {
 		"showError": "Show Error",
 		"confirmOk": "OK",
@@ -57,6 +58,8 @@
 	"next": "Next",
 	"on": "On",
 	"off": "Off",
+	"show": "Show",
+	"hide": "Hide",
 	"paging": {
 		"first": "First",
 		"previous": "Previous",

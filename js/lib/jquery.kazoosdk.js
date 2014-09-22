@@ -213,8 +213,16 @@
 			'setReady': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/ready' }
 		},
 		whitelabel: {
-			'get': { verb: 'GET', url: 'whitelabel/{domain}' },
-			'getLogo': { verb: 'GET', url: 'whitelabel/{domain}/logo' }
+			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
+			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
+			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/whitelabel' },
+			'getLogo': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/logo' },
+			'getWelcome': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/whitelabel' },
+			'updateLogo': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/logo', type: 'application/x-base64' },
+			'updateWelcome': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/whitelabel' }
 		}
 	},
 	authTokens = {};
