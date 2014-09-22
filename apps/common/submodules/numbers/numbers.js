@@ -27,10 +27,6 @@ define(function(require){
 				url: 'accounts/{accountId}/descendants',
 				verb: 'GET'
 			},
-			'common.numbers.searchAccounts': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify',
-				verb: 'GET'
-			},
 			'common.numbers.listCallflows': {
 				url: 'accounts/{accountId}/callflows',
 				verb: 'GET'
@@ -971,11 +967,12 @@ define(function(require){
 		numbersSearchAccount: function(phoneNumber, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.searchAccounts',
+			self.callApi({
+				resource: 'numbers.identify',
 				data: {
 					accountId: self.accountId,
-					phoneNumber: phoneNumber
+					phoneNumber: phoneNumber,
+					generateError: false
 				},
 				success: function(_data, status) {
 					success && success(_data.data);

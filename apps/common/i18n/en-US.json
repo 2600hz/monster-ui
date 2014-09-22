@@ -47,7 +47,7 @@
 		"trunkstore": "Trunking",
 		"notUsedNumber": "{{number}}: This number is not used but belongs to {{accountName}}. (Switch to Spare Numbers view to see this number)",
 		"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Switch to the Numbers in Use view to see this number)",
-		"numberNotFound": "The number you searched was not found.",
+		"numberNotFound": "The number you searched was not found! Make sure to enter the full number as we don't allow partial searches (but the formatting doesn't matter).",
 
 		"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
 		"cnamOutboundIconHelp": "This icon means that you set up the Outbound Caller-ID for this phone number",
