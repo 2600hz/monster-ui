@@ -79,6 +79,12 @@ You only need to give the jQuery object to prettyCheck and it will transform all
 ##### monster.ui.validate
 The validation in the Monster-UI has its own documentation, you can see it [here](https://github.com/2600hz/monster-ui/blob/master/docs/validation.md).
 
+##### monster.ui.protectField
+Allows you to see the value of an input of type password when focusing it. We use it to display the SIP Password of a device for example, it shows the password when you focus the field, and shows a password field when you're not focusing the field.
+In order to use it, just call the following method with the 2 arguments: the first one is a jQuery object representing the password input you want to "protect", the second argument is optional and represents the container (the template) of this input.
+
+	monster.ui.protectField(jQueryPasswordInput, containerOfInput);
+	
 ## monster.utils
 The helpers located in the monster.utils are used in the JavaScript to help you with common problems such as formatting phone numbers, transforming a gregorian date to a human date or creating a random string.
 
