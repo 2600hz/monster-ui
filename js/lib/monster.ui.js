@@ -573,6 +573,38 @@ define(function(require){
 			self.alert('error', message);
 		},
 
+		protectField: function(field, template) {
+			var template = template || $('html'),
+				fieldId = field.attr('id'),
+				fieldName = field.attr('name'),
+				value = field.val();
+
+			$('<input data-protected="'+ fieldId +'" type="text" style="display: none;" value="'+ value +'"/>').insertBefore(field);
+
+			field.on('focus', function() {
+				var $this = $(this),
+					value = $this.val();
+
+				// Setting the val to an empty string before the focus is a nice hack to have the text selection starting at the end of the string instead of the first character
+				template.find('[data-protected='+ fieldId + ']').val('')
+																   .show()
+																   .focus()
+																   .val(value);
+
+				$this.hide();
+			});
+
+			template.find('[data-protected='+ fieldId + ']').on('blur', function() {
+				var $this = $(this),
+					value = $this.val();
+
+				field.val(value)
+					 .show();
+
+				$this.hide();
+			});
+		},
+
 		accountArrayToTree: function(accountArray, rootAccountId) {
 			var result = {};
 
