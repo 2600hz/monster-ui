@@ -670,7 +670,6 @@ table.table tr td {
 .items-selector .box-selector ul li.item-selector {
 	background: #FFF;
 	border-bottom: 1px solid #ddd;
-	cursor: pointer;
 	font-size: 14px;
 	height: 40px;
 	line-height: 40px;
@@ -681,19 +680,19 @@ table.table tr td {
 	background: #FCFCFC;
 }
 
-li.item-selector:hover {
+.item-selector:hover {
 	cursor: move;
 	cursor: -moz-grab;
 	cursor: -webkit-grab;
 }
 
-li.item-selector:active {
+.item-selector.ui-sortable-helper {
 	cursor: move;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
 
-li.item-selector .item-handle {
+.item-selector .item-handle {
 	background: url('static/images/drag.png');
 	float: left;
 	height: 30px;
