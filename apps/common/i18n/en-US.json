@@ -80,13 +80,15 @@
 		"dialogTitle": "Caller ID Name Selection",
 		"errorUpdate": "Failed to update the Caller ID for this phone number",
 		"help": {
-			"outbound": "This name will appear as your Caller ID when you make outbound calls. This request may take up to 72 hours to process.",
+			"outbound": "This name will appear as your Caller ID when you make outbound calls (15 char. maximum). This request may take up to 72 hours to process.",
 			"inbound": "If you turn on this feature, the Caller's Name will appear in your Caller ID when you receive incoming calls."
 		},
 		"label": "Caller-ID",
 		"successCnam": "You successfully updated the Caller-ID of {{phoneNumber}}",
 		"successRemoveCnam": "You successfully removed the Caller-ID of {{phoneNumber}}",
-		"noCallerId": "There is no Caller-ID for the phone number {{phoneNumber}}"
+		"noCallerId": "There is no Caller-ID for the phone number {{phoneNumber}}",
+		"inboundTitle": "Inbound Caller ID Name",
+		"outboundTitle": "Outbound Caller ID Name"
 	},
 
 	"e911": {

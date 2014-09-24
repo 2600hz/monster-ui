@@ -77,13 +77,15 @@
 		"dialogTitle":"Sélection du Nom de Caller ID",
 		"errorUpdate":"Impossible de mettre à jour le Caller-ID de ce numéro",
 		"help":{
-			"outbound": "Ce nom apparaîtra en tant que Caller-ID lorsque vous passerez des appels. Cette requête peut prendre jusqu'à 72 heures.",
-			"inbound": "Si vous activez cette fonctionalité, le nom de votre interlocuteur apparaîtra lorsque vous recevrez des appels."
+			"outbound": "Ce nom apparaîtra en tant que Caller-ID lorsque l'utilisateur passerez des appels depuis ce numéro (15 caractères maximum). Cette requête peut prendre jusqu'à 72 heures.",
+			"inbound": "Si vous activez cette fonctionalité, le nom de l'interlocuteur apparaîtra lorsque l'utilisateur recevra des appels sur ce numéro."
 		},
 		"label":"Caller-ID",
 		"successCnam":"Mise à jour du Caller-ID de {{phoneNumber}} réussie!",
 		"successRemoveCnam": "Vous avez supprimé avec succès le Caller-ID de {{phoneNumber}}",
-		"noCallerId": "Il n'y a aucun Caller-ID pour le numéro {{phoneNumber}}"
+		"noCallerId": "Il n'y a aucun Caller-ID pour le numéro {{phoneNumber}}",
+		"inboundTitle": "Caller-ID d'Appels Entrants",
+		"outboundTitle": "Caller-ID d'Appels Sortants"
 	},
 	"e911":{
 		"addressLine1":"Ligne Adresse 1",

@@ -25,40 +25,50 @@ define(function(require){
 			var self = this,
 				popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
 				inboundSwitch = popup_html.find('.switch').bootstrapSwitch(),
-				popup;
+				popup,
+				form = popup_html.find('#cnam');
+
+			monster.ui.validate(form, {
+				rules: {
+					'display_name': {
+						minlength:1,
+						maxlength: 15
+					}
+				}
+			});
 
 			popup_html.find('.save').on('click', function(ev) {
 				ev.preventDefault();
 
-				var cnamFormData = form2object('cnam');
+				if(monster.ui.valid(form)) {
+					var cnamFormData = form2object('cnam');
 
-				_.extend(dataNumber, { cnam: cnamFormData });
+					_.extend(dataNumber, { cnam: cnamFormData });
 
-				if(cnamFormData.display_name === '') {
-					delete dataNumber.cnam.display_name;
-				}
-
-				monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-					function() {
-						self.callerIdUpdateNumber(dataNumber.id, dataNumber,
-							function(data) {
-								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-									template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
-
-								toastr.success(template);
-
-								popup.dialog('destroy').remove();
-
-								callbacks.success && callbacks.success(data);
-							},
-							function(data) {
-								monster.ui.alert(self.i18n.active().callerId.errorUpdate + '' + data.data.message);
-
-								callbacks.error && callbacks.error(data);
-							}
-						);
+					if(cnamFormData.display_name === '') {
+						delete dataNumber.cnam.display_name;
 					}
-				);
+
+					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
+						function() {
+							self.callerIdUpdateNumber(dataNumber.id, dataNumber,
+								function(data) {
+									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+										template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
+
+									toastr.success(template);
+
+									popup.dialog('destroy').remove();
+
+									callbacks.success && callbacks.success(data);
+								},
+								function(data) {
+									callbacks.error && callbacks.error(data);
+								}
+							);
+						}
+					);
+				}
 			});
 
 			popup_html.find('.cancel-link').on('click', function(e) {

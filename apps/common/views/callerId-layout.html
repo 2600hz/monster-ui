@@ -25,7 +25,7 @@
 	</div> -->
 	<form id="cnam">
 		<div class="popup-content">
-			<label class="popup-label" for="outbound_caller_id">Outbound Caller ID Name</label>
+			<label class="popup-label" for="outbound_caller_id">{{ i18n.callerId.outboundTitle }}</label>
 			<input type="text" id="outbound_caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerId.callerIdPlaceholder }}"/>
 			<div class="help-box gray-box">
 				<div class="wrapper-icon">
@@ -37,7 +37,7 @@
 			</div>
 		</div>
 		<div class="popup-content">
-			<label class="popup-label" for="inbound_caller_id">Inbound Caller ID Name</label>
+			<label class="popup-label" for="inbound_caller_id">{{ i18n.callerId.inboundTitle }}</label>
 			<div class="switch" data-on="success" data-off="default" data-on-label="{{i18n.on}}" data-off-label="{{i18n.off}}">
 				<input type="checkbox" id="inbound_caller_id" name="inbound_lookup"{{#if inbound_lookup}} checked="checked"{{/if}}></input>
 	        </div>
