@@ -11,9 +11,7 @@ define(function(require){
 
 		requests: {},
 
-		subscribe: {
-			'pbxsManager.activate': 'render'
-		},
+		subscribe: {},
 
 		load: function(callback){
 			var self = this;
@@ -26,7 +24,7 @@ define(function(require){
 		initApp: function(callback) {
 			var self = this;
 
-			/* Used to init the auth token and account id */
+			/* Used to init the auth token and account id of this app */
 			monster.pub('auth.initApp', {
 				app: self,
 				callback: callback
