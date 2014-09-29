@@ -72,8 +72,11 @@ define(function(require){
 
 			template.find('#search').on('click', function(e) {
 				self.searchNumbers(415, 15, function(listNumbers) {
-					var results = monster.template(self, 'results', listNumbers);
-
+					var dataTemplate = {
+							numbers: listNumbers
+						},
+						results = monster.template(self, 'results', dataTemplate);
+						
 					template
 						.find('.results')
 						.empty()
