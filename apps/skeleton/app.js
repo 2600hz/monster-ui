@@ -5,29 +5,14 @@ define(function(require){
 		toastr = require('toastr');
 
 	var app = {
-
 		name: 'skeleton',
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
-		requests: {
-			/* This will use the default api url given in js/config.js. If you want to use your own api you can use the following
-
-			'skeleton.listNumbers': {
-				apiRoot: 'http://yourapiurl/',
-				url: 'phone_numbers?prefix={pattern}&quantity={size}',
-				verb: 'GET'
-			}
-
-			*/
-			'skeleton.listNumbers': {
-				url: 'phone_numbers?prefix={pattern}&quantity={size}',
-				verb: 'GET'
-			}
-		},
+		requests: {},
 
 		subscribe: {
-			'pbxsManager.activate': '_render'
+			'pbxsManager.activate': 'render'
 		},
 
 		load: function(callback){
@@ -49,13 +34,6 @@ define(function(require){
 		},
 
 		render: function(container){
-			var self = this;
-
-			self._render(container);
-		},
-
-		// subscription handlers
-		_render: function(container) {
 			var self = this,
 				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#ws-content') : container;
@@ -71,7 +49,7 @@ define(function(require){
 			var self = this;
 
 			template.find('#search').on('click', function(e) {
-				self.searchNumbers(415, 15, function(listNumbers) {
+				self.searchNumbers(415, function(listNumbers) {
 					var dataTemplate = {
 							numbers: listNumbers
 						},
@@ -86,14 +64,15 @@ define(function(require){
 		},
 
 		//utils
-		searchNumbers: function(pattern, size, callback) {
+		searchNumbers: function(pattern, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'skeleton.listNumbers',
+			self.callApi({
+				resource: 'numbers.search',
 				data: {
 					pattern: pattern,
-					size: size
+					limit: 15,
+					offset: 0
 				},
 				success: function(listNumbers) {
 					callback && callback(listNumbers.data);
