@@ -637,13 +637,13 @@ define(function(require){
 			var self = this;
 
 			self.callApi({
-				resource: 'whitelabel.get',
+				resource: 'whitelabel.getByDomain',
 				data: {
 					domain: window.location.hostname,
 					generateError: false
 				},
 				success: function(_data) {
-					callback && callback(data.data);
+					callback && callback(_data);
 				},
 				error: function(err) {
 					callback && callback({});

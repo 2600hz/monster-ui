@@ -58,19 +58,35 @@
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
-		local_resources: {
+		resourceTemplates: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/resource_templates' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
+		},
+		localResources: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/local_resources/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/local_resources' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/local_resources/{resourceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/local_resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/local_resources' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/local_resources' },
+			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/local_resources/collection' }
 		},
-		global_resources: {
+		globalResources: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/global_resources/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/global_resources' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/global_resources/{resourceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/global_resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/global_resources' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/global_resources' },
+			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/global_resources/collection' }
+		},
+		ips: {
+			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/ips/{ip}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ips?zone={zone}&quantity={quantity}' },
+			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
+			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
@@ -107,7 +123,7 @@
 			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
 			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
-			'searchNumbers': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
+			'search': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 			'searchBlocks': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
 			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' }
 		},
@@ -197,8 +213,16 @@
 			'setReady': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/ready' }
 		},
 		whitelabel: {
-			'get': { verb: 'GET', url: 'whitelabel/{domain}' },
-			'getLogo': { verb: 'GET', url: 'whitelabel/{domain}/logo' }
+			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
+			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
+			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/whitelabel' },
+			'getLogo': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/logo' },
+			'getWelcome': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/whitelabel' },
+			'updateLogo': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/logo', type: 'application/x-base64' },
+			'updateWelcome': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/whitelabel' }
 		}
 	},
 	authTokens = {};

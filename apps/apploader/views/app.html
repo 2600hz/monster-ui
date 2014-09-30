@@ -6,7 +6,7 @@
 					<div class="app-draggable">
 						<div class="app-draggable-inner"></div>
 					</div>
-					<div class="app-icon" style="background-image:url({{icon}})"></div>
+					<div class="app-icon" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
 					<div class="app-name">{{label}}</div>
 					{{#unless @index }}
 					<div class="app-default">

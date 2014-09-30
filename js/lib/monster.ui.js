@@ -41,6 +41,30 @@ define(function(require){
 		return stringValue.replace('{{variable}}', variable);
 	});
 
+	Handlebars.registerHelper('select', function(value, options) {
+		// Create a select element 
+		var select = document.createElement('select');
+
+		// Populate it with the option HTML
+		$(select).html(options.fn(this));
+
+		//below statement doesn't work in IE9 so used the above one
+		//select.innerHTML = options.fn(this); 
+
+		// Set the value
+		select.value = value;
+
+		// Find the selected node, if it exists, add the selected attribute to it
+		if (select.children[select.selectedIndex]) {
+			select.children[select.selectedIndex].setAttribute('selected', 'selected');
+		} else { //select first option if that exists
+			if (select.children[0]) {
+				select.children[0].setAttribute('selected', 'selected');
+			}
+		}
+		return select.innerHTML;
+	});
+
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
 		var operators, result;
 
@@ -573,6 +597,38 @@ define(function(require){
 			}
 
 			self.alert('error', message);
+		},
+
+		protectField: function(field, template) {
+			var template = template || $('html'),
+				fieldId = field.attr('id'),
+				fieldName = field.attr('name'),
+				value = field.val();
+
+			$('<input data-protected="'+ fieldId +'" type="text" style="display: none;" value="'+ value +'"/>').insertBefore(field);
+
+			field.on('focus', function() {
+				var $this = $(this),
+					value = $this.val();
+
+				// Setting the val to an empty string before the focus is a nice hack to have the text selection starting at the end of the string instead of the first character
+				template.find('[data-protected='+ fieldId + ']').val('')
+																   .show()
+																   .focus()
+																   .val(value);
+
+				$this.hide();
+			});
+
+			template.find('[data-protected='+ fieldId + ']').on('blur', function() {
+				var $this = $(this),
+					value = $this.val();
+
+				field.val(value)
+					 .show();
+
+				$this.hide();
+			});
 		},
 
 		accountArrayToTree: function(accountArray, rootAccountId) {

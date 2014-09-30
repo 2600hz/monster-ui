@@ -670,7 +670,6 @@ table.table tr td {
 .items-selector .box-selector ul li.item-selector {
 	background: #FFF;
 	border-bottom: 1px solid #ddd;
-	cursor: pointer;
 	font-size: 14px;
 	height: 40px;
 	line-height: 40px;
@@ -679,24 +678,28 @@ table.table tr td {
 
 .items-selector .box-selector ul li.item-selector:hover {
 	background: #FCFCFC;
+}
+
+.item-selector:hover {
 	cursor: move;
 	cursor: -moz-grab;
 	cursor: -webkit-grab;
 }
 
-.items-selector .box-selector ul li.item-selector:active {
+.item-selector.ui-sortable-helper {
 	cursor: move;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
 
-.items-selector .box-selector ul li.item-selector .item-handle {
+.item-selector .item-handle {
 	background: url('static/images/drag.png');
 	float: left;
 	height: 30px;
 	margin: 5px 10px 0 0;
 	width: 5px;
 }
+
 /* Box Element */
 .number-box {
 	border-top: 1px solid transparent;
@@ -988,10 +991,21 @@ label.monster-invalid {
 
 .container-menu > .left-menu .category:hover { background: #eee; }
 
-.container-menu > .left-menu .category.active {
+.container-menu > .left-menu .category.active,
+.container-menu > .left-menu .category.selected {
 	position: relative;
-	background: none #22ccff;
+	/*background: none #22ccff;*/
 	color: #fff;
+
+
+	background: #1dc8ff; /* Old browsers */
+	background: -moz-linear-gradient(top, #1dc8ff 0%, #04b0ee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1dc8ff), color-stop(100%,#04b0ee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #1dc8ff 0%,#04b0ee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1dc8ff', endColorstr='#04b0ee',GradientType=0 ); /* IE6-9 */
 }
 
 .container-menu > .left-menu .category.active::after {
@@ -1001,11 +1015,14 @@ label.monster-invalid {
 	display: block;
 	border-top: 9px solid transparent;
 	border-bottom: 9px solid transparent;
-	border-left: 9px solid #22ccff;
+	border-left: 9px solid #10BCF6;
 	content: "";
 }
 
-.container-menu > .left-menu .category.active .title i { color: #fff; }
+.container-menu > .left-menu .category.active .title i,
+.container-menu > .left-menu .category.selected .title i { 
+	color: #fff; 
+}
 
 .container-menu > .left-menu .category.simple { margin: 10px auto 0 auto; }
 

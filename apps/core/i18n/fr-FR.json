@@ -42,6 +42,7 @@
 	"conferencingLogo":"Conférences",
 	"csv":"CSV",
 	"currencyUsed":"$",
+	"delete": "Supprimer",
 	"dialog":{
 		"showError":"Détails erreur",
 		"confirmOk":"OK",
@@ -58,6 +59,8 @@
 	"next":"Suivant",
 	"on":"On",
 	"off":"Off",
+	"show": "Afficher",
+	"hide": "Masquer",
 	"paging":{
 		"first":"Premier",
 		"previous":"Précédent",

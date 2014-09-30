@@ -77,7 +77,7 @@ define(function(){
 
 					return monster.kazooSdk[module][method](apiSettings);
 				} else {
-					console.error('This api does not exist.');
+					console.error('This api does not exist. Module: ' + module + ', Method: ' + method);
 				}
 			}
 
