@@ -98,3 +98,27 @@ In the above example, we check if the role of a user is `"admin"` and if it is w
 ##### replaceVar
 This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
 You can see a very good example about this helper [here](https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md#in-html-templates).
+
+##### formatTimestamp
+This helper allows you to display time in customizable format. It take a mandatory JavaScript or Gregorian timestamp in parameter and returns a time:
+
+```handlebars
+{{formatTimestamp timestamp}}
+```
+Output: 12/1/14 10:00:00
+
+If you want to display a time in another format, you can specify an optional parameter:
+
+```handlebars
+{{formatTimestamp timestamp 'DD-MM-YYYY hh:mm'}}
+```
+Output: 1-10-2014 15:52
+
+This helper will search for the following strings and replace them by the corresponding values:
+* YYYY: full year
+* YY: last 2 digits of the year
+* MM: month as a 2 digits number
+* DD: date of the day
+* hh: hours
+* mm: minutes
+* ss: seconds

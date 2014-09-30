@@ -87,9 +87,9 @@ define(function(require){
 		var timestamp = new Date(timestamp),
 			fullYear = timestamp.getFullYear(),
 			year = timestamp.getFullYear().toString().substr(2, 2),
-			month = timestamp.getMonth(),
-			day = timestamp.getDay(),
-			hour = timestamp.getHours(),
+			month = timestamp.getMonth() + 1,
+			day = timestamp.getDate(),
+			hours = timestamp.getHours(),
 			minutes = timestamp.getMinutes() < 10 ? '0' + timestamp.getMinutes() : timestamp.getMinutes(),
 			seconds = timestamp.getSeconds() < 10 ? '0' + timestamp.getSeconds() : timestamp.getSeconds(),
 			format = _.isString(format) ? format : 'MM/DD/YY hh:mm:ss';
@@ -98,7 +98,7 @@ define(function(require){
 		format = format.replace(/YY/, year);
 		format = format.replace(/MM/, month);
 		format = format.replace(/DD/, day);
-		format = format.replace(/hh/, hour);
+		format = format.replace(/hh/, hours);
 		format = format.replace(/mm/, minutes);
 		format = format.replace(/ss/, seconds);
 
