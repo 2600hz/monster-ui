@@ -2,7 +2,7 @@
 The goal of this document is to assist you in following the "Build your first Monster app" talk
 
 ### Launch the Monster
-First of all, go at the URL where your Monster-UI is hosted, and check that it actually renders something... It should display the main banner, but an empty white content...
+First of all, go at the URL where your Monster-UI is hosted, and check that it actually renders something... If you aren't logged in already, input your username, password and account name that was given to you this morning. It should allow you to log in, and lead you to an empty white page!
 
 ### Copy and paste of the skeleton app
 The content isn't filled because the UI is trying to start the `demo` app, which you currently don't have on your system... And that's the goal of this demo!
@@ -25,18 +25,7 @@ At this point, wait until the presenter asks you to copy and paste this code bef
 				</div>
 
 				<div class="row-fluid">
-					<div class="span4">
-						<h4>{{ i18n.demo.listDevices }}</h4>
-						<ul class="list-devices">
-							{{#each registeredDevices}}
-								<li class="device-item" data-id="{{ id }}">
-									{{ name }}
-								</li>
-							{{/each}}
-						</ul>
-					</div>
-
-					<div class="span8">
+					<div class="span12">
 						<h4>{{ i18n.demo.listEvents }}<button class="btn btn-primary" type="button" id="clearEvents">{{ i18n.demo.clearEvents }}</button></h4> 
 						<table class="table table-condensed list-events">
 							<thead>
@@ -96,10 +85,6 @@ bindEvents: function(template, globalData) {
 			var formattedEvent = self.formatEvent(data),
 				eventTemplate = monster.template(self, 'event', formattedEvent);
 
-			if(formattedEvent.extra.deviceId && formattedEvent.extra.deviceId in globalData.registeredDevices) {
-				monster.ui.fade(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
-			}
-
 			template.find('.list-events tbody').prepend(eventTemplate);
 		};
 
@@ -127,6 +112,17 @@ bindEvents: function(template, globalData) {
 },
 ```
 
+### Event HTML
+inside `/apps/demo/views/event.html`
+```html
+<tr class="event-item {{ extra.classEvent }}" data-deviceid="{{ extra.deviceId }}">
+	<td>{{ extra.friendlyEvent }}</td>
+	<td>{{ Caller-ID-Name }}</td>
+	<td>{{ extra.to }}</td>
+	<td>{{ formatTimestamp Timestamp }}</td>
+</tr>
+```
+
 ### Formatting Event data
 inside `/apps/demo/app.js`
 ```javascript
@@ -140,10 +136,6 @@ formatEvent: function(data) {
 	formattedData.extra.to = data['To'].substr(0, data['To'].indexOf('@'));
 	formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data['Event-Name']];
 	formattedData.extra.classEvent = data['Event-Name'] === 'CHANNEL_CREATE' ? 'info' : (data['Event-Name'] === 'CHANNEL_ANSWER' ? 'success' : 'error');
-
-	if('Custom-Channel-Vars' in data && 'Authorizing-Type' in data['Custom-Channel-Vars'] && data['Custom-Channel-Vars']['Authorizing-Type'] === 'device') {
-		formattedData.extra.deviceId = data['Custom-Channel-Vars']['Authorizing-ID'];
-	}
 
 	return formattedData;
 }

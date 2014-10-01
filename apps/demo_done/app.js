@@ -35,9 +35,9 @@ define(function(require){
 				container = container || $('#ws-content');
 
 			// Get the initial dynamic data we need before displaying the app
-			self.getRenderData(function(data) {
+			self.listDevices(function(data) {
 				// Load the data in a Handlebars template
-				var demoTemplate = $(monster.template(self, 'layout', data));
+				var demoTemplate = $(monster.template(self, 'layout', { devices: data }));
 
 				// Bind UI and Socket events
 				self.bindUIEvents(demoTemplate);
@@ -82,7 +82,7 @@ define(function(require){
 					var formattedEvent = self.formatEvent(data),
 						eventTemplate = monster.template(self, 'event', formattedEvent);
 
-					if(formattedEvent.extra.deviceId && formattedEvent.extra.deviceId in globalData.registeredDevices) {
+					if(formattedEvent.extra.hasOwnProperty('deviceId')) {
 						monster.ui.fade(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
 					}
 
@@ -126,63 +126,7 @@ define(function(require){
 			return formattedData;
 		},
 
-		formatRenderData: function(data) {
-			var self = this,
-				formattedData = {
-					registeredDevices: {}
-				};
-
-			_.each(data.devices, function(device) {
-				_.each(data.deviceStatus, function(deviceStatus) {
-					if(deviceStatus.device_id === device.id) {
-						formattedData.registeredDevices[device.id] = device;
-					}
-				})
-			});
-
-			return formattedData;
-		},
-
-		// Utils
-		getRenderData: function(globalCallback) {
-			var self = this;
-
-			//globalCallback({});
-			monster.parallel({
-					deviceStatus: function(callback) {
-						self.getDevicesStatus(function(data) {
-							callback(null, data);
-						});
-					},
-					devices: function(callback) {
-						self.listDevices(function(data) {
-							callback(null, data);
-						});
-					}
-				},
-				function(err, results) {
-					var formattedData = self.formatRenderData(results);
-
-					globalCallback && globalCallback(formattedData);
-				}
-			);
-		},
-
 		// API Calls
-		getDevicesStatus: function(callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'device.getStatus',
-				data: {
-					accountId: self.accountId
-				},
-				success: function(devices) {
-					callback(devices.data);
-				}
-			});
-		},
-
 		listDevices: function(callback) {
 			var self = this;
 
