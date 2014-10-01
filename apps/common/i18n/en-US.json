@@ -190,6 +190,12 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"commentsPopup": {
+			"title": "Comments",
+			"private": "Private",
+			"comment": "Comment",
+			"timestamp": "added a comment"
+		},
 		"addNumbers": {
 			"title": "We are excited you are moving numbers to our service!",
 			"labelAddNumbers": "What numbers do you want to transfer? Type one number in at a time or paste all. No extra characters beside number."

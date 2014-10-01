@@ -84,16 +84,7 @@ define(function(require){
 			self.portPositionDialogBox();
 
 			self.portRequestGet(accountId, function(data) {
-				var formatToTemplate = function(data) {
-						for ( var order in data ) {
-							var date = monster.util.gregorianToDate(data[order].created);
-							data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-							data[order].status = ( data[order].port_state == 'ready' ) ? true : false;
-						}
-
-						return data;
-					},
-					portTemplate = $(monster.template(self, 'port-pendingOrders', { data: formatToTemplate(data) })),
+				var portTemplate = $(monster.template(self, 'port-pendingOrders', { data: data })),
 					parent = args.parent || monster.ui.dialog('', {
 						width: '940px',
 						position: ['center', 20],
@@ -187,6 +178,120 @@ define(function(require){
 						self.portSubmitDocuments(accountId, parent, data);
 					}
 				})
+			});
+
+			container.find('.collapse td:last-child i').on('click', function(ev) {
+				ev.stopPropagation();
+				var portRequestId = $(this).parents('.collapse').data('id'),
+					currentUser = monster.apps.auth.currentUser;
+
+				self.callApi({
+					resource: 'port.get',
+					data: {
+						accountId: self.accountId,
+						portRequestId: portRequestId
+					},
+					success: function(data, status) {
+						var template = $(monster.template(self, 'port-commentsPopup', { isAdmin: monster.apps.auth.currentAccount.superduper_admin })),
+							comments = data.data.hasOwnProperty('comments') ? data.data.comments : [],
+							initPopup = function() {
+								var popup = $(monster.ui.dialog(template, {
+									title: self.i18n.active().port.commentsPopup.title,
+									width: '960px',
+									position: ['center', 20]
+								}));
+
+								monster.ui.wysiwyg(popup.find('.wysiwyg-container'));
+
+								popup.find('.actions .btn-success').on('click', function() {
+									var newComment = {
+											user_id: self.userId,
+											timestamp: new Date().getTime(),
+											content: popup.find('.wysiwyg-editor').html(),
+											superduper_comment: popup.find('#superduper_comment').is(':checked')
+										};
+
+									comments.push(newComment);
+									data.data.comments = comments;
+
+									self.callApi({
+										resource: 'port.update',
+										data: {
+											accountId: self.accountId,
+											portRequestId: portRequestId,
+											data: data.data
+										},
+										success: function(data, status) {
+											newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
+
+											popup
+												.find('.comments')
+												.show()
+												.append($(monster.template(self, 'port-comment', newComment)));
+
+											popup
+												.find('.comments .comment:last-child .comment-body')
+												.html(newComment.content);
+
+											popup.find('.comments').animate({
+													scrollTop: popup.find('.comments').scrollTop() + popup.find('.comments .comment:last-child').position().top
+												}, 300, function() {
+													monster.ui.fade($(this).find('.comment:last-child'));
+											});
+										}
+									});
+								});
+							};
+
+						if (_.isEmpty(comments)) {
+							template.find('.comments').hide();
+							initPopup();
+						}
+						else {
+							self.callApi({
+								resource: 'user.list',
+								data: {
+									accountId: self.accountId
+								},
+								success: function(data, status) {
+									var users = (function arrayToObject(usersArray) {
+											var usersObject = {};
+
+											usersArray.forEach(function(v, i) {
+												var usersId = [];
+
+												if (usersId.indexOf(v.id) === -1) {
+													usersObject[v.id] = v.first_name.concat(' ', v.last_name);
+												}
+											});
+
+											return usersObject;
+										})(data.data);
+
+									comments.forEach(function(v, i) {
+										v.author = users[v.owner_id];
+
+										if (v.superduper_comment ? monster.apps.auth.currentAccount.superduper_admin : true) {
+											template
+												.find('.comments')
+												.append($(monster.template(self, 'port-comment', v)));
+
+											template
+												.find('.comments .comment:last-child .comment-body')
+												.html(v.content);
+										}
+									});
+
+									initPopup();
+								}
+							});
+						}
+					}
+				});
+			});
+
+			container.find('.collapse td:last-child i').hover(function() {
+				$(this).toggleClass('icon-comments icon-comments-alt');
 			});
 		},
 

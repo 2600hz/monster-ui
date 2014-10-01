@@ -18,15 +18,16 @@
 			{{#each data}}
 				<tr class="collapse" data-id="{{id}}">
 					<td><i class="icon-caret-right"></i>{{name}}</td>
-					<td>{{#if created}}{{created}}{{else}}.....{{/if}}</td>
+					<td>{{#if created}}{{formatTimestamp created 'MM/DD/YYYY'}}{{else}}.....{{/if}}</td>
 					<td>{{port_state}}</td>
-					{{#if status}}
 					<td>
+					{{#compare port_state '===' 'ready'}}
 						<!-- <button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button> -->
-					</td>
 					{{else}}
-					<td><button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button></td>
-					{{/if}}
+						<button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button>
+					{{/compare}}
+						<i class="icon-comments"></i>
+					</td>
 				</tr>
 				{{#each numbers}}
 				<tr data-id="{{../id}}"><td colspan="4">{{this}}</td></tr>

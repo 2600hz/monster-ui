@@ -3,9 +3,17 @@ div#port_container {
 	max-width: 940px;
 }
 
-div#port_container > div { padding: 40px 60px; }
-div#port_container > div:not(:first-child) { border-top: 1px solid #ddd; }
-div#port_container > div > *:not(:last-child) { margin-bottom: 40px; }
+div#port_container > div,
+div#port_comments_popup > div {
+	padding: 40px 60px;
+}
+div#port_container > div:not(:first-child),
+div#port_comments_popup > div:not(:first-child) {
+	border-top: 1px solid #ddd;
+}
+div#port_container > div > *:not(:last-child) {
+	margin-bottom: 40px;
+}
 
 div#port_container h2 {
 	margin-top: 0px;
@@ -178,6 +186,15 @@ div#orders_list > span.pull-right i {
 	font-size: 20px;
 }
 
+div#orders_list .collapse td:last-child button {
+	margin-right: 10px;
+}
+
+div#orders_list .collapse td:last-child i {
+	padding: 5px;
+	vertical-align: middle;
+}
+
 /*************** Reformat Default Table CSS ***************/
 
 div#orders_list .table {
@@ -242,6 +259,47 @@ div#orders_list table tr[data-id]:not(.collapse) { display: none; }
 
 div#orders_list table tr.active td { border-top: 2px solid #2CF; }
 
+/********************* Comments Popup *********************/
+
+div#port_comments_popup .comments {
+	overflow-y: scroll;
+	max-height: 320px;
+}
+
+div#port_comments_popup .comment {
+	padding: 15px 0;
+	border-bottom: 1px solid #ddd;
+}
+
+div#port_comments_popup .comment:first-child {
+	padding-top: 0;
+}
+
+div#port_comments_popup .comment:last-child {
+	padding-bottom: 0;
+	border: 0;
+}
+
+div#port_comments_popup .comment .comment-author {
+	color: #22ccff;
+}
+
+div#port_comments_popup .comment .comment-body {
+	margin-top: 10px;
+}
+
+div#port_comments_popup .wysiwyg-editor {
+	height: 160px;
+}
+
+div#port_comments_popup .wysiwyg-container .actions {
+	text-align: right;
+}
+
+div#port_comments_popup .actions .checkbox {
+	display: inline-block;
+	margin-right: 20px;
+}
 
 /**********************************************************/
 

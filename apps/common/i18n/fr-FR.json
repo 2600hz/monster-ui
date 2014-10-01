@@ -183,6 +183,12 @@
 		"progressBarLeft":"Ajouter des numéros",
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
+		"commentsPopup": {
+			"title": "Commentaires",
+			"private": "Privé",
+			"comment": "Commenter",
+			"timestamp": "a ajouté un commentaire"
+		},
 		"addNumbers":{
 			"title":"Nous sommes impatient de transférer vos numéro sur notre service !",
 			"labelAddNumbers":"Quels numéros voulez-vous transférer ? Entrez un numéro à la fois ou copiez-collez les. Aucun autre caractère que des chiffre ne sera accepté."
