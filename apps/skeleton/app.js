@@ -41,51 +41,10 @@ define(function(require){
 				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-			self.bindSocketEvents(skeletonTemplate);
-			self.bindUIEvents(skeletonTemplate);
-
 			(parent)
 				.empty()
 				.append(skeletonTemplate);
-		},
-
-		bindSocketEvents: function(template) {
-			var self = this,
-				addEvent = function(data) {
-					console.log(data);
-					var formattedEvent = self.formatEvent(data),
-						eventTemplate = monster.template(self, 'event', formattedEvent);
-
-					if(formattedEvent.extra.deviceId && formattedEvent.extra.deviceId in globalData.registeredDevices) {
-						monster.ui.fade(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
-					}
-
-					template.find('.list-events tbody').prepend(eventTemplate);
-				};
-
-			// subscribe to call events
-			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_CREATE.*"});
-			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_ANSWER.*"});
-			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_DESTROY.*"});
-
-			// Bind some js code to the reception of call events
-			monster.socket.on("CHANNEL_CREATE", function (data) {
-				addEvent(data);
-			});
-
-			monster.socket.on("CHANNEL_ANSWER", function (data) {
-				addEvent(data);
-			});
-
-			monster.socket.on("CHANNEL_DESTROY", function (data) {
-				addEvent(data);
-			});
-		},
-
-		bindUIEvents: function(template) {
-			var self = this;
-		},
-		//utils
+		}
 	};
 
 	return app;
