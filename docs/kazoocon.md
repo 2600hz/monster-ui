@@ -1,7 +1,10 @@
 # KazooCon demo app
 The goal of this document is to assist you in following the "Build your first Monster app" talk
 
-The presenter will tell you to copy/paste some code in the order listed here. Please wait his instructions before continuing!
+### Copy and paste of the skeleton app
+The first thing to do is to go in your Monster-UI folder, then go in the apps folder. You need to have a `demo` folder in order for Monster-UI to load your app properly. To do so, you'll copy the Skeleton app available at %monsterDir%/apps/skeleton and paste it in the same apps folder. Rename it `demo`. Reload the Monster-UI website, and it should load the app and say Welcome!
+
+Once this is done, follow the presentation and wait for the presenter to ask you to copy/paste some code from this document!
 
 ### HTML
 ```html
@@ -76,7 +79,7 @@ The presenter will tell you to copy/paste some code in the order listed here. Pl
 
 ### Sockets events
 ```javascript
-bindSocketsEvents: function(template, globalData) {
+bindEvents: function(template, globalData) {
 	var self = this,
 		addEvent = function(data) {
 			console.log(data);
@@ -107,5 +110,30 @@ bindSocketsEvents: function(template, globalData) {
 	monster.socket.on("CHANNEL_DESTROY", function (data) {
 		addEvent(data);
 	});
+
+	template.find('#clearEvents').on('click', function() {
+		template.find('.table tbody tr:not(.no-events)').remove();
+	});
 },
+```
+
+### Formatting Event data
+// Formatting data
+```javascript
+formatEvent: function(data) {
+	var self = this,
+		formattedData = data;
+
+	formattedData.extra = {};
+
+	formattedData.extra.to = data['To'].substr(0, data['To'].indexOf('@'));
+	formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data['Event-Name']];
+	formattedData.extra.classEvent = data['Event-Name'] === 'CHANNEL_CREATE' ? 'info' : (data['Event-Name'] === 'CHANNEL_ANSWER' ? 'success' : 'error');
+
+	if('Custom-Channel-Vars' in data && 'Authorizing-Type' in data['Custom-Channel-Vars'] && data['Custom-Channel-Vars']['Authorizing-Type'] === 'device') {
+		formattedData.extra.deviceId = data['Custom-Channel-Vars']['Authorizing-ID'];
+	}
+
+	return formattedData;
+}
 ```
