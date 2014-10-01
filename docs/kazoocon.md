@@ -1,12 +1,20 @@
 # KazooCon demo app
 The goal of this document is to assist you in following the "Build your first Monster app" talk
 
-### Copy and paste of the skeleton app
-The first thing to do is to go in your Monster-UI folder, then go in the apps folder. You need to have a `demo` folder in order for Monster-UI to load your app properly. To do so, you'll copy the Skeleton app available at %monsterDir%/apps/skeleton and paste it in the same apps folder. Rename it `demo`. Reload the Monster-UI website, and it should load the app and say Welcome!
+### Launch the Monster
+First of all, go at the URL where your Monster-UI is hosted, and check that it actually renders something... It should display the main banner, but an empty white content...
 
-Once this is done, follow the presentation and wait for the presenter to ask you to copy/paste some code from this document!
+### Copy and paste of the skeleton app
+The content isn't filled because the UI is trying to start the `demo` app, which you currently don't have on your system... And that's the goal of this demo!
+
+So the first thing to do is to go in your Monster-UI folder, then go in the `apps` folder. You need to have a `demo` folder in order for Monster-UI to load your app properly. To do so, you'll copy the `skeleton` folder available at `%monsterDir%/apps/skeleton` and paste it under the `apps` folder. Rename the skeleton copy folder to `demo` and finally reload the Monster-UI website: it should load the app and say Welcome!
+
+Once this is done, you're running the demo app! But let's try to customize it and use some of the Monster-UI features now :)
+
+At this point, wait until the presenter asks you to copy and paste this code before playing with it!
 
 ### HTML
+`/apps/demo/views/layout.html`
 ```html
 <div id="demo_wrapper">
 	<div class="demo-content row-fluid">
@@ -54,6 +62,7 @@ Once this is done, follow the presentation and wait for the presenter to ask you
 ```
 
 ### I18n
+`/apps/demo/i18n/en-US.json`
 ```json
 {
 	"demo": {
@@ -78,6 +87,7 @@ Once this is done, follow the presentation and wait for the presenter to ask you
 ```
 
 ### Sockets events
+inside `/apps/demo/app.js`
 ```javascript
 bindEvents: function(template, globalData) {
 	var self = this,
@@ -118,8 +128,9 @@ bindEvents: function(template, globalData) {
 ```
 
 ### Formatting Event data
-// Formatting data
+inside `/apps/demo/app.js`
 ```javascript
+// Formatting data
 formatEvent: function(data) {
 	var self = this,
 		formattedData = data;
