@@ -9,10 +9,13 @@ define(function(require){
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
+		// Defines API requests not included in the SDK
 		requests: {},
 
+		// Define the events available for other apps 
 		subscribe: {},
 
+		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		load: function(callback){
 			var self = this;
 
@@ -21,6 +24,7 @@ define(function(require){
 			});
 		},
 
+		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		initApp: function(callback) {
 			var self = this;
 
@@ -31,52 +35,57 @@ define(function(require){
 			});
 		},
 
+		// Entry Point of the app
 		render: function(container){
 			var self = this,
 				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-			self.bindEvents(skeletonTemplate);
+			self.bindSocketEvents(skeletonTemplate);
+			self.bindUIEvents(skeletonTemplate);
 
 			(parent)
 				.empty()
 				.append(skeletonTemplate);
 		},
 
-		bindEvents: function(template) {
-			var self = this;
+		bindSocketEvents: function(template) {
+			var self = this,
+				addEvent = function(data) {
+					console.log(data);
+					var formattedEvent = self.formatEvent(data),
+						eventTemplate = monster.template(self, 'event', formattedEvent);
 
-			template.find('#search').on('click', function(e) {
-				self.searchNumbers(415, function(listNumbers) {
-					var dataTemplate = {
-							numbers: listNumbers
-						},
-						results = monster.template(self, 'results', dataTemplate);
-						
-					template
-						.find('.results')
-						.empty()
-						.append(results);
-				});
+					if(formattedEvent.extra.deviceId && formattedEvent.extra.deviceId in globalData.registeredDevices) {
+						monster.ui.fade(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
+					}
+
+					template.find('.list-events tbody').prepend(eventTemplate);
+				};
+
+			// subscribe to call events
+			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_CREATE.*"});
+			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_ANSWER.*"});
+			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_DESTROY.*"});
+
+			// Bind some js code to the reception of call events
+			monster.socket.on("CHANNEL_CREATE", function (data) {
+				addEvent(data);
+			});
+
+			monster.socket.on("CHANNEL_ANSWER", function (data) {
+				addEvent(data);
+			});
+
+			monster.socket.on("CHANNEL_DESTROY", function (data) {
+				addEvent(data);
 			});
 		},
 
-		//utils
-		searchNumbers: function(pattern, callback) {
+		bindUIEvents: function(template) {
 			var self = this;
-
-			self.callApi({
-				resource: 'numbers.search',
-				data: {
-					pattern: pattern,
-					limit: 15,
-					offset: 0
-				},
-				success: function(listNumbers) {
-					callback && callback(listNumbers.data);
-				}
-			});
-		}
+		},
+		//utils
 	};
 
 	return app;
