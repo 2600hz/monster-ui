@@ -79,12 +79,27 @@ define(function(require){
 		portRender: function(args){
 			var self = this,
 				args = args || {},
-				accountId = args.accountId || self.accountId;
+				accountId = args.accountId || self.accountId,
+				states = {
+					completion: '',
+					progress: '',
+					ready: '',
+					rejection: '',
+					waiting: ''
+				};
+
+			for (var k in states) {
+				states[k] = self.i18n.active().port.state[k];
+			}
 
 			self.portPositionDialogBox();
 
 			self.portRequestGet(accountId, function(data) {
-				var portTemplate = $(monster.template(self, 'port-pendingOrders', { data: data })),
+				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
+						data: data,
+						states: states,
+						isAdmin: monster.apps.auth.currentAccount.superduper_admin
+					})),
 					parent = args.parent || monster.ui.dialog('', {
 						width: '940px',
 						position: ['center', 20],
@@ -159,6 +174,42 @@ define(function(require){
 				self.portAddNumbers(accountId, parent);
 			});
 
+			container.find('table select').on('click', function(event) {
+				event.stopPropagation();
+			});
+
+			container.find('table select').on('change', function(event) {
+				var portRequestId = $(this).parents('.collapse').data('id'),
+					newState = $(this).val();
+
+				self.callApi({
+					resource: 'port.get',
+					data: {
+						accountId: self.accountId,
+						portRequestId: portRequestId
+					},
+					success: function(data, status) {
+						data.data.port_state = newState;
+
+						self.callApi({
+							resource: 'port.update',
+							data: {
+								accountId: self.accountId,
+								portRequestId: portRequestId,
+								data: data.data,
+								generateError: false
+							},
+							success: function(data, status) {
+								toastr.success('The state of the port request has been updated');
+							},
+							error: function(data, status) {
+								toastr.error('The update of the state has failed');
+							}
+						});
+					}
+				});
+			});
+
 			/*
 			 * on click on the continue button
 			 * empty .ui-dialog-content and load port-submitDocuments template
@@ -180,8 +231,8 @@ define(function(require){
 				})
 			});
 
-			container.find('.collapse td:last-child i').on('click', function(ev) {
-				ev.stopPropagation();
+			container.find('.collapse td:last-child i').on('click', function(event) {
+				event.stopPropagation();
 				var portRequestId = $(this).parents('.collapse').data('id'),
 					currentUser = monster.apps.auth.currentUser;
 

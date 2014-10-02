@@ -183,6 +183,14 @@
 		"progressBarLeft":"Ajouter des numéros",
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
+		"state": {
+			"completion": "Terminé",
+			"progress": "En cours",
+			"ready": "Prêt",
+			"rejection": "Refusé",
+			"waiting": "En attente",
+			"unconfirmed": "Unconfirmed"
+		},
 		"commentsPopup": {
 			"title": "Commentaires",
 			"private": "Privé",
@@ -232,10 +240,18 @@
 			"tableOrderName":"Nom",
 			"tableOrderDate":"Date demandé",
 			"tableOrderStatus":"Status",
-			"tableOrderAction":"Action",
+			"tableOrderAction":"Actions",
 			"continueButton":"continuer",
 			"infoButton":"information",
-			"noOrder":"Aucun transfert"
+			"noOrder":"Aucun transfert",
+			"states": {
+				"completion": "Completion",
+				"progress": "Progress",
+				"ready": "Ready",
+				"rejection": "Rejection",
+				"waiting": "Waiting",
+				"unconfirmed": "Unconfirmed"
+			}
 		},
 		"resumeOrder":{
 			"title":"Compléter les demandes de transfert, un à la fois !",

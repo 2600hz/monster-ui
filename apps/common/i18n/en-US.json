@@ -190,6 +190,14 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"state": {
+			"completion": "Completion",
+			"progress": "Progress",
+			"ready": "Ready",
+			"rejection": "Rejection",
+			"waiting": "Waiting",
+			"unconfirmed": "Unconfirmed"
+		},
 		"commentsPopup": {
 			"title": "Comments",
 			"private": "Private",
@@ -238,8 +246,8 @@
 			"newPortLink": "Start New Transfert (port)",
 			"tableOrderName": "Name",
 			"tableOrderDate": "Requested Date",
-			"tableOrderStatus": "Status",
-			"tableOrderAction": "Action",
+			"tableOrderStatus": "State",
+			"tableOrderAction": "Actions",
 			"continueButton": "continue",
 			"infoButton": "info",
 			"noOrder": "No port"
