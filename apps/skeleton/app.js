@@ -41,7 +41,7 @@ define(function(require){
 				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-			self.bindEvents(skeletonTemplate);
+			//self.bindEvents(skeletonTemplate);
 
 			(parent)
 				.empty()
