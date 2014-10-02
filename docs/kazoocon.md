@@ -1,18 +1,6 @@
 # KazooCon demo app
 The goal of this document is to assist you in following the "Build your first Monster app" talk
 
-### Launch the Monster
-First of all, go at the URL where your Monster-UI is hosted, and check that it actually renders something... If you aren't logged in already, input your username, password and account name that was given to you this morning. It should allow you to log in, and lead you to an empty white page!
-
-### Copy and paste of the skeleton app
-The content isn't filled because the UI is trying to start the `demo` app, which you currently don't have on your system... And that's the goal of this demo!
-
-So the first thing to do is to go in your Monster-UI folder, then go in the `apps` folder. You need to have a `demo` folder in order for Monster-UI to load your app properly. To do so, you'll copy the `skeleton` folder available at `%monsterDir%/apps/skeleton` and paste it under the `apps` folder. Rename the skeleton copy folder to `demo` and finally reload the Monster-UI website: it should load the app and say Welcome!
-
-Once this is done, you're running the demo app! But let's try to customize it and use some of the Monster-UI features now :)
-
-At this point, wait until the presenter asks you to copy and paste this code before playing with it!
-
 ### HTML
 `/apps/demo/views/layout.html`
 ```html
@@ -78,10 +66,9 @@ At this point, wait until the presenter asks you to copy and paste this code bef
 ### Sockets events
 inside `/apps/demo/app.js`
 ```javascript
-bindEvents: function(template, globalData) {
+bindEvents: function(template) {
 	var self = this,
 		addEvent = function(data) {
-			console.log(data);
 			var formattedEvent = self.formatEvent(data),
 				eventTemplate = monster.template(self, 'event', formattedEvent);
 
