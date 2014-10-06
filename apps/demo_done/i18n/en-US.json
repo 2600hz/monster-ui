@@ -1,0 +1,20 @@
+{
+	"demo": {
+		"welcome": "Welcome to our KazooCon Demo App",
+		"listDevices": "Registered Devices",
+		"listEvents": "List of live Events",
+		"clearEvents": "Clear Events",
+		"events": {
+			"CHANNEL_CREATE": "Placing call...",
+			"CHANNEL_ANSWER": "Call picked up...",
+			"CHANNEL_DESTROY": "Hangup"
+		},
+		"table": {
+			"caller": "Caller",
+			"callee": "Callee",
+			"eventType": "Event Type",
+			"time": "Time",
+			"noEvents": "Nothing happened for now..."
+		}
+	}
+}

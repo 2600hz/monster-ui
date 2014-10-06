@@ -1,18 +1,20 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var app = {
 		name: 'skeleton',
 
 		i18n: [ 'en-US', 'fr-FR' ],
 
+		// Defines API requests not included in the SDK
 		requests: {},
 
+		// Define the events available for other apps 
 		subscribe: {},
 
+		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		load: function(callback){
 			var self = this;
 
@@ -21,6 +23,7 @@ define(function(require){
 			});
 		},
 
+		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		initApp: function(callback) {
 			var self = this;
 
@@ -31,51 +34,17 @@ define(function(require){
 			});
 		},
 
+		// Entry Point of the app
 		render: function(container){
 			var self = this,
 				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#ws-content') : container;
 
-			self.bindEvents(skeletonTemplate);
+			//self.bindEvents(skeletonTemplate);
 
 			(parent)
 				.empty()
 				.append(skeletonTemplate);
-		},
-
-		bindEvents: function(template) {
-			var self = this;
-
-			template.find('#search').on('click', function(e) {
-				self.searchNumbers(415, function(listNumbers) {
-					var dataTemplate = {
-							numbers: listNumbers
-						},
-						results = monster.template(self, 'results', dataTemplate);
-						
-					template
-						.find('.results')
-						.empty()
-						.append(results);
-				});
-			});
-		},
-
-		//utils
-		searchNumbers: function(pattern, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.search',
-				data: {
-					pattern: pattern,
-					limit: 15,
-					offset: 0
-				},
-				success: function(listNumbers) {
-					callback && callback(listNumbers.data);
-				}
-			});
 		}
 	};
 
