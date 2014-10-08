@@ -11,12 +11,14 @@ Currently we moved all the App Store applications in their own github repo. Fork
 
 In order to add the application files to your project, find the different repos under [our github](http://github.com/2600hz) that begin with monster-ui-***, and copy those folders in the `/apps/` folder of the monster-ui repo. For example, to add the Accounts Manager once you installed monster-ui:
 
+```
   # go in the monster-ui repo
   cd /var/html/www/monster-ui
   # go in the apps folder
   cd apps
   # copy the code of the monster-ui-accounts project and rename it accounts
   git clone https://github.com/2600hz/monster-ui-accounts.git accounts
+```
 
 Note: the name of the folder is important, it needs to match the `name` field of the app document that we'll talk about later.
 
