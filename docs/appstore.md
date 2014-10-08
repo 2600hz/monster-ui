@@ -5,6 +5,8 @@ As of now, in order to see your app inside the app store, you need to manually a
 
 Now click on "New Document", and we'll create that document.
 
+(If you're adding an app that already exists, like accounts, voip, numbers, you can get all the metadata needed to create these files in their own `metadata` folder)
+
 
 	{
    	   "name": "appName",
