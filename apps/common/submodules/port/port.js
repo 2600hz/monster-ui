@@ -711,9 +711,15 @@ define(function(require){
 		*/
 		portConfirmOrder: function(accountId, parent, data, index) {
 			var self = this,
-				container = parent.find('div#port_container');
+				container = parent.find('div#port_container'),
+				date = monster.util.getBusinessDate(4),
+				formatedDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
+				transferDate = data.orders[index].hasOwnProperty('transfer_date') ? new Date(data.orders[index].transfer_date) : date,
+				formattedTransferDate = (transferDate.getMonth() + 1) + "/" + transferDate.getDate() + "/" + transferDate.getFullYear();
 
 			self.portPositionDialogBox();
+
+			container.find('#transfer_schedule_date').text(date - transferDate >= 0 ? formatedDate : formattedTransferDate);
 
 			container.find('#numbers_to_buy option').each(function(idx, el) {
 				$(el).val(parseInt($(el).val(), 10) + 1);
@@ -725,12 +731,19 @@ define(function(require){
 			/*
 			 * initialize datepicker, toggle inputs and select value
 			 */
-			container.find('input.date-input').datepicker({ minDate: '+3d' });
-			container.find('input.date-input').datepicker('setDate', '+3d');
-			if ( typeof data.orders[index].transfer_date != 'undefined' ) {
-				container.find('#transfer_numbers_date').val(data.orders[index].transfer_date);
-			}
+			container.find('input.date-input').datepicker({
+				minDate: date,
+				beforeShowDay: $.datepicker.noWeekends,
+				constrainInput: true,
+				dateFormat: 'mm/dd/yy',
+				onSelect: function(dateText, inst) {
+					container.find('#transfer_schedule_date').text(dateText);
+				}
+			});
+
+			container.find('input.date-input').datepicker('setDate', transferDate);
 			container.find('.switch').bootstrapSwitch();
+
 			if ( typeof data.orders[index].temporary_numbers != 'undefined') {
 				container.find('.switch').bootstrapSwitch('setState', true);
 
@@ -786,10 +799,6 @@ define(function(require){
 								.prop('disabled', false);
 						});
 				}
-			});
-
-			container.on('change', '#transfer_numbers_date', function() {
-				container.find('#transfer_schedule_date').text(container.find('#transfer_numbers_date').val());
 			});
 
 			/*
