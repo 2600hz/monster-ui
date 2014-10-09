@@ -378,6 +378,11 @@ div#temporary_numbers .row-fluid label {
 
 div#transfer_date .row-fluid:first-child { margin-bottom: 40px; }
 
+div#transfer_date #transfer_numbers_date {
+	cursor: pointer;
+	background-color: #fff;
+}
+
 div#transfer_date .info .important {
 	color: #F00;
 	text-transform: uppercase;
