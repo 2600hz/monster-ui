@@ -11,7 +11,6 @@ Now click on "New Document", and we'll create that document.
 	{
    	   "name": "appName",
    	   "api_url": "http://yourServer/apiUrl",
-   	   "source_url": "http://yourServer/monster-modules/appName",
    	   "i18n": {
        	   "en-US": {
            	   "label": "Friendly App Name",
@@ -33,8 +32,8 @@ Now click on "New Document", and we'll create that document.
    	   "price": 0,
    	   "icon": "nameOfIcon.png",
    	   "screenshots": [
-			"nameOfImage1.png",
-			"nameOfImage2.png"
+  			"nameOfImage1.png",
+  			"nameOfImage2.png"
    	   ],
 	   "pvt_type": "app"
 	}
