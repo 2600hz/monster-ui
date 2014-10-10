@@ -90,6 +90,18 @@ div#port_container h2 {
 	color: red;
 }
 
+@-moz-document url-prefix() {
+	#port_container .order li {
+		position: relative;
+	}
+	#port_container .order li .icon-remove-sign {
+		float: none;
+		position: absolute;
+		top: 11px;
+		right: 10px;
+	}
+}
+
 #port_container .order .icon-remove-sign:hover { cursor: pointer; }
 
 #port_container .order li .icon-warning-sign.visible { visibility: visible; }
