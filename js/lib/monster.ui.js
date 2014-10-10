@@ -957,15 +957,7 @@ define(function(require){
 						macro: {
 							title: i18n.title.macro,
 							command: 'insertHtml',
-							options: {
-								user_first_name: 'User\'s First Name',
-								user_last_name: 'User\'s Last Name',
-								user_pin: 'User\'s PIN',
-								conference_name: 'Conference\'s Name',
-								conference_date: 'Conference\'s Date',
-								conference_time: 'Conference\'s Time',
-								conference_record: 'Conference\'s Record'
-							}
+							options: false
 						}
 					}
 				},
