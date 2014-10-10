@@ -85,16 +85,16 @@ In order to use it, just call the following method with the 2 arguments: the fir
 
 	monster.ui.protectField(jQueryPasswordInput, containerOfInput);
 	
-## monster.utils
-The helpers located in the monster.utils are used in the JavaScript to help you with common problems such as formatting phone numbers, transforming a gregorian date to a human date or creating a random string.
+## monster.util
+The helpers located in the monster.util are used in the JavaScript to help you with common problems such as formatting phone numbers, transforming a gregorian date to a human date or creating a random string.
 
-#### monster.utils.toFriendlyDate
+#### monster.util.toFriendlyDate
 The Kazoo API use [Gregorian seconds](http://www.erlang.org/documentation/doc-5.4.13/lib/stdlib-1.13.12/doc/html/calendar.html) for most of the `created_at`, `updated_at` etc.. attributes, and we usually need to display those dates in the UI. In order to display these dates in a user-friendly way, we created this helper, it should be really easy to use, here's an example:
 
 	monster.util.toFriendlyDate(63566552033); // Outputs: 05/05/2014 - 04:33 PM
 	monster.util.toFriendlyDate(63566552033, 'short'); // Outputs: 05/05/2014
 
-#### monster.utils.gregorianToDate
+#### monster.util.gregorianToDate
 This helper is used if you want to get a JavaScript Date object, from a gregorian time.
 
 	monster.util.gregorianToDate(63566552033); // Returns a JS Date Object
@@ -129,7 +129,7 @@ app.js
 	monster.util.randomString(4, 'abc') // Could return 'baca' but not 'dsoo'
 
 #### sort
-Finally the sort helper helps us ordering the different list of data we're showing in the UI. It is very specific to the Kazoo API since the first argument it takes is an array of objects, such as an array of devices, or users for example. By default it will sort the array alpabetically based on the 'name' attribute of the different objects. If you would like to sort alphabetically on another field, you can specify the name of the field in the second argument.
+The sort helper helps us ordering the different list of data we're showing in the UI. It is very specific to the Kazoo API since the first argument it takes is an array of objects, such as an array of devices, or users for example. By default it will sort the array alpabetically based on the 'name' attribute of the different objects. If you would like to sort alphabetically on another field, you can specify the name of the field in the second argument.
 
 Here's an example:
 
@@ -139,5 +139,54 @@ Here's an example:
 		{ name: 'Walou', 'id': 'a52' }
 	];
 
-	monster.utils.sort(listUsers); // returns  cisfran, paulo, walou
-	monster.utils.sort(listUsers, 'id'); //returns walou, paulo, cisfran
+	monster.util.sort(listUsers); // returns  cisfran, paulo, walou
+	monster.util.sort(listUsers, 'id'); //returns walou, paulo, cisfran
+
+#### getBusinessDate
+The getBusinessDate() method adds or removes business days to the current date or to a specific date.
+###### Syntax
+```javascript
+monster.util.getBusinessDate(days[, from])
+```
+###### Parameters
+* *days*
+
+ A mandatory integer representing the number of business days to add or remove,
+
+* *from*
+
+ An optional JavaScript Date instance from witch to add or remove business days.
+
+###### Return
+The value returned by getBusinessDate() is a JavaScript Date instance.
+
+###### Description
+The getBusinessDate() method adds or removes a number of business days to the date of the day if the optional parameter is not specified. If the method is called with the optional *from* parameter, the number of business days will be added or removed to this specific date.
+
+###### Examples
+* Adding business days to current date
+```javascript
+// current date: Wed Jan 01 2014 00:00:00 GMT-0800
+
+var date = monster.util.getBusinessDate(4);
+
+console.log(date);
+// output message: Tue Jan 07 2014 00:00:00 GMT-0800
+
+```
+* Removing business days to current date
+```javascript
+// current date: Wed Jan 01 2014 00:00:00 GMT-0800
+
+var date = monster.util.getBusinessDate(-4);
+
+console.log(date);
+// output message: Thu Dec 26 2013 00:00:00 GMT-0800
+```
+* Adding business days to specific date
+```javascript
+var date = new Date(70, 1, 1); // Thu Jan 01 1970 00:00:00 GMT-0800
+
+console.log(monster.util.getBusinessDate(4, date));
+// output message: Wed Jan 07 1970 00:00:00 GMT-0800
+```
