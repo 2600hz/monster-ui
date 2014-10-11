@@ -17,6 +17,11 @@ define(function(require){
 		// For example it won't prompt for a credit card the subaccounts that have a different resellerId than this resellerId
 		// resellerId: 'your_master_account_id',
 
+		company: {
+			// For now used to display in the tab name
+			name: '2600hz'
+		},
+
 		nav: {
 			help: 'http://wiki.2600hz.com'
 		}
