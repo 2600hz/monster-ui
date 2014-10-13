@@ -762,6 +762,7 @@ define(function(require){
 					data.orders[index].bill.region = container.find('input#region').val();
 					data.orders[index].bill.postal_code = container.find('input#postal_code').val();
 
+
 					self.portSaveOrder(accountId, parent, data, index);
 				}
 			});
@@ -1091,7 +1092,7 @@ define(function(require){
 				delete order.loa_attachment;
 			}
 
-			order = $.extend(true, order, { port_state: 'progress' });
+			order = $.extend(true, order, { port_state: 'unconfirmed' });
 
 			order = self.portArrayToObjects(order);
 
