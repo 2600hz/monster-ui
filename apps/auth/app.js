@@ -646,7 +646,7 @@ define(function(require){
 					generateError: false
 				},
 				success: function(_data) {
-					callback && callback(_data);
+					callback && callback(_data.data);
 				},
 				error: function(err) {
 					callback && callback({});
