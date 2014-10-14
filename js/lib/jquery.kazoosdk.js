@@ -136,11 +136,11 @@
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' }
 		},
 		media: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/medias/{mediaId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/medias' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/medias/{mediaId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/medias/{mediaId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/medias' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/media' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/media/{mediaId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/media' },
 			'upload': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}/raw', type: 'application/x-base64' }
 		},
 		menu: {
