@@ -11,43 +11,43 @@ define(function(require){
 		   	This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
 		*/
 		autoLogout: function() {
-			var i18n = monster.apps['core'].i18n.active(),
-				timerAlert,
-				timerLogout,
-			    wait=15,
-			    alertBeforeLogout=2,
-			    alertTriggered = false,
-			    alertDialog;
+			if(!monster.config.hasOwnProperty('logoutTimer') || monster.config.logoutTimer > 0) {
+				var i18n = monster.apps['core'].i18n.active(),
+					timerAlert,
+					timerLogout,
+					wait = monster.config.logoutTimer || 15,
+					alertBeforeLogout = 2,
+					alertTriggered = false,
+					alertDialog,
+					logout = function()	{
+						monster.pub('auth.logout');
+					},
+					resetTimer = function() {
+						clearTimeout(timerAlert);
+						clearTimeout(timerLogout);
 
-			var logout = function()	{
-				monster.pub('auth.logout');
-			};
+						if(alertTriggered) {
+							alertTriggered = false;
 
-			var resetTimer = function() {
-    			clearTimeout(timerAlert);
-    			clearTimeout(timerLogout);
+							alertDialog.dialog('close').remove();
+						}
 
-    			if(alertTriggered) {
-    				alertTriggered = false;
+						timerAlert=setTimeout(function() {
+							alertTriggered = true;
 
-    				alertDialog.dialog('close').remove();
-    			}
+							alertDialog = monster.ui.alert(i18n.alertLogout);
+						}, 60000*(wait-alertBeforeLogout));
 
-				timerAlert=setTimeout(function() {
-					alertTriggered = true;
+						timerLogout=setTimeout(function() {
+							logout();
+						}, 60000*wait);
+					};
 
-					alertDialog = monster.ui.alert(i18n.alertLogout);
-				}, 60000*(wait-alertBeforeLogout));
+				document.onkeypress = resetTimer;
+				document.onmousemove = resetTimer;
 
-    			timerLogout=setTimeout(function() {
-					logout();
-				}, 60000*wait);
-			};
-
-			document.onkeypress = resetTimer;
-			document.onmousemove = resetTimer;
-
-			resetTimer();
+				resetTimer();
+			}
 		},
 
 		/* Set the default Language to English, and overrides it with the language from the browser. If a cookie exists, we override the language value with the value stored in the cookie) */

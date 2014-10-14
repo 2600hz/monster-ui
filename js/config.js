@@ -17,6 +17,11 @@ define(function(require){
 		// For example it won't prompt for a credit card the subaccounts that have a different resellerId than this resellerId
 		// resellerId: 'your_master_account_id',
 
+		// Logout Timer (minutes before showing the logged in user that it will auto-disconnect him soon)
+		// Changing this value allows you to disable the auto-logout mechanism by setting itto 0. 
+		// If you want to change the default duration (15), you can set this value with a number > 0
+		//logoutTimer: 0,
+
 		company: {
 			// For now used to display in the tab name
 			name: '2600hz'
