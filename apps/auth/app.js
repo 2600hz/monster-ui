@@ -49,6 +49,9 @@ define(function(require){
 				mainContainer = $('#ws-content');
 
 			self.getWhitelabel(function(data) {
+				// Merge the whitelabel info to replace the hardcoded info
+				monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, data);
+
 				if(!$.cookie('monster-auth')) {
 					if('authentication' in data) {
 						self.customAuth = data.authentication;
@@ -337,10 +340,10 @@ define(function(require){
 					/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
 					if not, check if the account has a default preferred language */
 					var loadCustomLanguage = function(language, callback) {
-						if(language !== monster.config.language) {
+						if(language !== monster.config.whitelabel.language) {
 							monster.apps.loadLocale(monster.apps.core, language, function() {
 								monster.apps.loadLocale(self, language, function() {
-									monster.config.language = language;
+									monster.config.whitelabel.language = language;
 
 									callback && callback();
 								});

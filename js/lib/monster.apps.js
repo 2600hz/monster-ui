@@ -27,7 +27,7 @@ define(function(){
 			_.extend(app.data, { i18n: {} });
 
 			// en-US is the default language of Monster
-			var customLanguage = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage,
+			var customLanguage = app.i18n.indexOf(monster.config.whitelabel.language) >= 0 ? monster.config.whitelabel.language : self.defaultLanguage,
 				// Once all the different i18n files are loaded, we need to append the core i18n to the app
 				addCoreI18n = function() {
 					if('core' in monster.apps) {
@@ -50,7 +50,7 @@ define(function(){
 			// add an active property method to the i18n array within the app.
 			_.extend(app.i18n, {
 				active: function(){
-					var language = app.i18n.indexOf(monster.config.language) >= 0 ? monster.config.language : self.defaultLanguage;
+					var language = app.i18n.indexOf(monster.config.whitelabel.language) >= 0 ? monster.config.whitelabel.language : self.defaultLanguage;
 
 					return app.data.i18n[language];
 				}

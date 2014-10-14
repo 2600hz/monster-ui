@@ -3,11 +3,12 @@
 	"hello": "Welcome!",
 	"password": "Password",
 	"rememberMe": "Remember me",
+	"forgotPassword": "Forgot your Password?",
 	"username": "Username",
-    "or": "OR",
-    "errorLoadingAccount": "An error occured while loading your account",
+	"or": "OR",
+	"errorLoadingAccount": "An error occured while loading your account",
 
-    "confirmLogout": "Are you sure that you want to log out?",
+	"confirmLogout": "Are you sure that you want to log out?",
 
 	"account": {
 		"name": "Account Name",

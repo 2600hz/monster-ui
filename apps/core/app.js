@@ -37,7 +37,7 @@ define(function(require){
 			var self = this,
 				mainTemplate = $(monster.template(self, 'app', {}));
 				
-			document.title = 'Monster UI - ' + monster.config.company.name;
+			document.title = monster.config.whitelabel.applicationTitle;
 
 			self.bindEvents(mainTemplate);
 
@@ -153,17 +153,17 @@ define(function(require){
 				}
 			});
 
-			if(monster.config.hasOwnProperty('nav')) {
-				if(monster.config.nav.hasOwnProperty('help')) {
+			if(monster.config.whitelabel.hasOwnProperty('nav')) {
+				if(monster.config.whitelabel.nav.hasOwnProperty('help') && monster.config.whitelabel.nav.help.length > 0) {
 					container.find('#ws-navbar a.help')
 							 .unbind('click')
-							 .attr('href', monster.config.nav.help);
+							 .attr('href', monster.config.whitelabel.nav.help);
 				}
 
-				if(monster.config.nav.hasOwnProperty('logout')) {
-					container.find('#ws-navbar .links .logout')
+				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
+					container.find('#ws-navbar .links a.signout')
 							 .unbind('click')
-							 .attr('href', monster.config.nav.logout);
+							 .attr('href', monster.config.whitelabel.nav.logout);
 				}
 			}
 		},

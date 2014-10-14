@@ -54,12 +54,12 @@ define(function(require){
 		setDefaultLanguage: function() {
 			var defaultLanguage = navigator.language || 'en-US';
 
-			monster.config.language = monster.config.language || defaultLanguage;
+			monster.config.whitelabel.language = monster.config.whitelabel.language || defaultLanguage;
 
 			if($.cookie('monster-auth')) {
 				var authData = $.parseJSON($.cookie('monster-auth'));
 
-				monster.config.language = authData.language;
+				monster.config.whitelabel.language = authData.language;
 			};
 		},
 
