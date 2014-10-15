@@ -74,12 +74,12 @@
 			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/local_resources/collection' }
 		},
 		globalResources: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/global_resources/{resourceId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/global_resources' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/global_resources/{resourceId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/global_resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/global_resources' },
-			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/global_resources/collection' }
+			'get': { verb: 'GET', url: 'global_resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'global_resources' },
+			'update': { verb: 'POST', url: 'global_resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'global_resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'global_resources' },
+			'updateCollection': { verb: 'POST', url: 'global_resources/collection' }
 		},
 		ips: {
 			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
