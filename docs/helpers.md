@@ -84,7 +84,175 @@ Allows you to see the value of an input of type password when focusing it. We us
 In order to use it, just call the following method with the 2 arguments: the first one is a jQuery object representing the password input you want to "protect", the second argument is optional and represents the container (the template) of this input.
 
 	monster.ui.protectField(jQueryPasswordInput, containerOfInput);
-	
+
+#### monster.ui.wysiwyg
+The wysiwyg() method generate a WYSIWYG from a set of overridable options and insert it inside a jQuery object.
+
+![WYSIWYG](http://i.imgur.com/Y5CESZv.png)
+##### Syntax
+```javascript
+monster.ui.wysiwyg(target[, options]);
+```
+##### Parameters
+* `target` (mandatory)
+
+ Type: [jQuery object][jquery]
+
+ A jQuery object inside which the WYSIWYG will be inserted using the [prepend()][prepend] method
+
+* `options` (optional)
+
+ Type: [JavaScript object literal][javascript_object_literal]
+
+ List of toolbar's options:
+    - fontSize (dropdown buttons)
+        + small
+        + normal
+        + huge
+    - fontEffect (group)
+        + bold
+        + italic
+        + underline
+        + strikethrough
+    - fontColor (dropdown buttons)
+    - textAlign (dropdown buttons)
+        + left
+        + center
+        + right
+        + justify
+    - list (dropdown buttons)
+        + unordered
+        + ordered
+    - indentation (grouped buttons)
+        + indent
+        + outdent
+    - link (grouped buttons)
+        + create
+        + delete
+    - image (single button)
+    - editing (grouped buttons)
+        + undo
+        + redo
+    - horizontalRule (single button)
+    - macro (dropdown buttons) *disabled by default*
+
+##### Description
+The wysiwyg() method adds a configurable WYSIWYG inside a container specified by the `target` parameter. The options in the toolbar can be removed and new ones can be added easily.
+
+For the default CSS styles to apply, the wysiwyg container specified as the *target* parameter needs to have the CSS class `wysiwyg-container` as follow:
+```html
+<div class="wysiwyg-container"></div>
+```
+If the CSS class `transparent` is added to the container, the toolbar will have a transparent background.
+
+Here is the structure of the different types of options and how they will be rendered:
+* dropdown buttons
+
+```javascript
+fontEffect: {
+    title: '',
+    icon: '',
+    options: {
+        bold: {
+            title: '',
+            icon: '',
+            command: '',
+        }
+    }
+}
+```
+* grouped buttons
+
+```javascript
+fontEffect: {
+    bold: {
+        title: '',
+        icon: '',
+        command: ''
+    }
+}
+```
+
+* single button
+
+```javascript
+image: {
+    title: '',
+    icon: '',
+    command: ''
+}
+```
+![Dropdown button](http://i.imgur.com/fCYp4Rx.png)
+###### Titles
+The value of the `title` key is the text that will be displayed when hovering the corresponding button in the toolbar.
+###### Icons
+The value of the `icon` key is the CSS class(es) that will be applied to the corresponding option. By default, [Font Awesome icons (v3.2.1)][font_awesome] are used but this can be changed easily by overriding the value of the key.
+###### Commands
+The value of the `command` key is an [execCommand][exec_command]. To add a new option in the toolbar, add it to the `options` parameter using one of the three different structure depending if the new option should be a dropdown, a group of buttons or a single button.
+###### Options
+The `options` object is used to list the different options inside a dropdown.
+##### Examples
+* Remove elements from toolbar
+```javascript
+var target = $(document.getElementsByClassName('wysiwyg-container')),
+    options = {
+        fontSize: {
+            options: {
+                huge: false
+            }
+        },
+        fontEffect: {
+            strikethrough: false
+        },
+        fontColor: false,
+        list: {
+            options: {
+                unordered: false,
+                ordered: false
+            }
+        },
+        horizontalRule: false
+    };
+
+monster.ui.wysiwyg(target, options);
+```
+* Add macro
+```javascript
+var target = $(document.getElementsByClassName('wysiwyg-container')),
+    options = {
+        macro: {
+            options: {
+                macro_1_name: 'Macro1\'s, name',
+                macro_2_name: 'Macro2\'s name'
+            }
+        }
+    };
+
+monster.ui.wysiwyg(target, options);
+```
+Macros will be inserted between a couple of pair of curly braces as shown in the following screenshot:
+
+![Macro](http://i.imgur.com/6Mbm3EG.png)
+* Add new option to remove all formating from the current selection
+```javascript
+var target = $(document.getElementsByClassName('wysiwyg-container')),
+    newOption = {
+        removeFormat: {
+            title: 'Remove format',
+            icon: 'eraser',
+            command: 'removeFormat'
+        }
+    };
+
+monster.ui.wysiwyg(target, newOptions);
+```
+
+[jquery]: http://api.jquery.com/Types/#jQuery
+[javascript_object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
+[prepend]: http://api.jquery.com/prepend/
+[font_awesome]: http://fortawesome.github.io/Font-Awesome/3.2.1/icons/
+[exec_command]: https://developer.mozilla.org/en-US/docs/Web/API/document.execCommand
+
 ## monster.util
 The helpers located in the monster.util are used in the JavaScript to help you with common problems such as formatting phone numbers, transforming a gregorian date to a human date or creating a random string.
 

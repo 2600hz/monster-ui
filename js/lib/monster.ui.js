@@ -811,7 +811,7 @@ define(function(require){
 				defaultOptions = {
 					fontSize: {
 						title: i18n.title.fontSize,
-						icon: 'text-height',
+						icon: 'icon-text-height',
 						options: {
 							small: {
 								title: i18n.title.small,
@@ -833,28 +833,28 @@ define(function(require){
 					fontEffect: {
 						bold: {
 							title: i18n.title.bold,
-							icon: 'bold',
+							icon: 'icon-bold',
 							command: 'bold'
 						},
 						italic: {
 							title: i18n.title.italic,
-							icon: 'italic',
+							icon: 'icon-italic',
 							command: 'italic'
 						},
 						underline: {
 							title: i18n.title.underline,
-							icon: 'underline',
+							icon: 'icon-underline',
 							command: 'underline'
 						},
 						strikethrough: {
 							title: i18n.title.strikethrough,
-							icon: 'strikethrough',
+							icon: 'icon-strikethrough',
 							command: 'strikethrough'
 						}
 					},
 					fontColor: {
 						title: i18n.title.fontColor,
-						icon: 'font',
+						icon: 'icon-font',
 						command: 'foreColor',
 						options: [
 							'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
@@ -867,42 +867,42 @@ define(function(require){
 					},
 					textAlign: {
 						title: i18n.title.alignment,
-						icon: 'file-text',
+						icon: 'icon-file-text',
 						options: {
 							left: {
 								title: i18n.title.alignLeft,
-								icon: 'align-left',
+								icon: 'icon-align-left',
 								command: 'justifyLeft'
 							},
 							center: {
 								title: i18n.title.center,
-								icon: 'align-center',
+								icon: 'icon-align-center',
 								command: 'justifyCenter'
 							},
 							right: {
 								title: i18n.title.alignRight,
-								icon: 'align-right',
+								icon: 'icon-align-right',
 								command: 'justifyRight'
 							},
 							justify: {
 								title: i18n.title.justify,
-								icon: 'align-justify',
+								icon: 'icon-align-justify',
 								command: 'justifyFull'
 							}
 						}
 					},
 					list: {
 						title: i18n.title.list,
-						icon: 'list',
+						icon: 'icon-list',
 						options: {
 							unordered: {
 								title: i18n.title.bulletList,
-								icon: 'list-ul',
+								icon: 'icon-list-ul',
 								command: 'insertUnorderedList'
 							},
 							ordered: {
 								title: i18n.title.numberList,
-								icon: 'list-ol',
+								icon: 'icon-list-ol',
 								command: 'insertOrderedList'
 							}
 						}
@@ -910,47 +910,47 @@ define(function(require){
 					indentation: {
 						indent: {
 							title: i18n.title.indent,
-							icon: 'indent-right',
+							icon: 'icon-indent-right',
 							command: 'indent'
 						},
 						outdent: {
 							title: i18n.title.reduceIndent,
-							icon: 'indent-left',
+							icon: 'icon-indent-left',
 							command: 'outdent'
 						}
 					},
 					link: {
 						create: {
 							title: i18n.title.hyperlink,
-							icon: 'link',
+							icon: 'icon-link',
 							command: 'createLink'
 						},
 						delete: {
 							title: i18n.title.removeHyperlink,
-							icon: 'unlink',
+							icon: 'icon-unlink',
 							command: 'unlink'
 						},
 					},
 					image: {
 						title: i18n.title.upload,
-						icon: 'picture',
+						icon: 'icon-picture',
 						command: 'insertImage'
 					},
 					editing: {
 						undo: {
 							title: i18n.title.undo,
-							icon: 'undo',
+							icon: 'icon-undo',
 							command: 'undo'
 						},
 						redo: {
 							title: i18n.title.redo,
-							icon: 'repeat',
+							icon: 'icon-repeat',
 							command: 'redo'
 						}
 					},
 					horizontalRule: {
 						title: i18n.title.horizontalRule,
-						icon: 'minus',
+						icon: 'icon-minus',
 						command: 'insertHorizontalRule'
 					},
 					macro: {
