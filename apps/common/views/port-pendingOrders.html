@@ -31,11 +31,12 @@
 					{{/if}}
 					</td>
 					<td>
-					{{#compare port_state '===' 'ready'}}
-						<!-- <button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button> -->
-					{{else}}
+					{{#compare port_state '===' 'unconfirmed'}}
 						<button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button>
+					{{else}}
+						<button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button>
 					{{/compare}}
+
 						<i class="icon-comments"></i>
 					</td>
 				</tr>

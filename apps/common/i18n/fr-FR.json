@@ -184,11 +184,10 @@
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
 		"state": {
-			"completion": "Terminé",
-			"progress": "En cours",
-			"ready": "Prêt",
-			"rejection": "Refusé",
-			"waiting": "En attente",
+			"completed": "Effectué",
+			"rejected": "Refusé",
+			"scheduled": "Programmé",
+			"submitted": "En attante",
 			"unconfirmed": "Unconfirmed"
 		},
 		"commentsPopup": {
@@ -196,6 +195,21 @@
 			"private": "Privé",
 			"comment": "Commenter",
 			"timestamp": "a ajouté un commentaire"
+		},
+		"infoPopup": {
+			"transfer": {
+				"legend": "Info du transfert",
+				"label": {
+					"name": "Nom",
+					"notificationEmail": "Adresse à notifier",
+					"transferDate": "Date du transfert",
+					"temporaryNumbers": "Numéros temporaires",
+					"carrier": "Opérateur"
+				}
+			},
+			"bill": {
+				"legend": "Info de la facture"
+			}
 		},
 		"addNumbers":{
 			"title":"Nous sommes impatient de transférer vos numéro sur notre service !",
@@ -285,7 +299,15 @@
             "buttonChange": "changer"
 		},
 		"toastr": {
+			"success": {
+				"request": {
+					"update": "La demande de transfert a été mise à jour"
+				}
+			},
 			"error": {
+				"request": {
+					"update": "La mise à jour de la demande de transfert à échoué"
+				},
 				"mimeType": "Les fichiers suivants ne sont pas dans un format accepter: ",
 				"size": "Les fichiers suivants sont trop gros: ",
 				"number": {

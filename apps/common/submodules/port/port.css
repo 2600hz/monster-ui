@@ -4,7 +4,8 @@ div#port_container {
 }
 
 div#port_container > div,
-div#port_comments_popup > div {
+div#port_comments_popup > div,
+div#port_request_info {
 	padding: 40px 60px;
 }
 div#port_container > div:not(:first-child),
@@ -262,7 +263,7 @@ div#orders_list table tr.active td { border-top: 2px solid #2CF; }
 /********************* Comments Popup *********************/
 
 div#port_comments_popup .comments {
-	overflow-y: scroll;
+	overflow-y: auto;
 	max-height: 320px;
 }
 
@@ -300,6 +301,18 @@ div#port_comments_popup .actions .checkbox {
 	display: inline-block;
 	margin-right: 20px;
 }
+
+/******************* Request Info Popup *******************/
+
+#port_request_info form {
+	margin-bottom: -20px;
+}
+
+#port_request_info span.text {
+	font-size: 14px;
+	line-height: 30px;
+}
+
 
 /**********************************************************/
 

@@ -191,11 +191,10 @@
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
 		"state": {
-			"completion": "Completion",
-			"progress": "Progress",
-			"ready": "Ready",
-			"rejection": "Rejection",
-			"waiting": "Waiting",
+			"completed": "Completed",
+			"rejected": "Rejected",
+			"scheduled": "Scheduled",
+			"submitted": "Submitted",
 			"unconfirmed": "Unconfirmed"
 		},
 		"commentsPopup": {
@@ -203,6 +202,21 @@
 			"private": "Private",
 			"comment": "Comment",
 			"timestamp": "added a comment"
+		},
+		"infoPopup": {
+			"transfer": {
+				"legend": "Transfer info",
+				"label": {
+					"name": "Name",
+					"notificationEmail": "Notification email",
+					"transferDate": "Transfer date",
+					"temporaryNumbers": "Temporary numbers",
+					"carrier": "Carrier"
+				}
+			},
+			"bill": {
+				"legend": "Bill info"
+			}
 		},
 		"addNumbers": {
 			"title": "We are excited you are moving numbers to our service!",
@@ -284,7 +298,15 @@
 			"changeButton": "change"
 		},
 		"toastr": {
+			"success": {
+				"request": {
+					"update": "The port request has been updated"
+				}
+			},
 			"error": {
+				"request": {
+					"update": "The port request failed to update"
+				},
 				"mimeTypes": "The following files are not in a supported format: ",
 				"size": "The following files are too big: ",
 				"number": {
