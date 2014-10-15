@@ -66,20 +66,20 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 		},
 		localResources: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/local_resources/{resourceId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/local_resources' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/local_resources/{resourceId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/local_resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/local_resources' },
-			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/local_resources/collection' }
+			'get': { verb: 'GET', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/resources' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/resources' },
+			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/resources/collection' }
 		},
 		globalResources: {
-			'get': { verb: 'GET', url: 'global_resources/{resourceId}' },
-			'create': { verb: 'PUT', url: 'global_resources' },
-			'update': { verb: 'POST', url: 'global_resources/{resourceId}' },
-			'delete': { verb: 'DELETE', url: 'global_resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'global_resources' },
-			'updateCollection': { verb: 'POST', url: 'global_resources/collection' }
+			'get': { verb: 'GET', url: 'resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'resources' },
+			'update': { verb: 'POST', url: 'resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'resources' },
+			'updateCollection': { verb: 'POST', url: 'resources/collection' }
 		},
 		ips: {
 			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
