@@ -809,169 +809,159 @@ define(function(require){
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active().wysiwyg,
 				defaultOptions = {
-					tools: {
-						fontSize: {
-							title: i18n.title.fontSize,
-							icon: 'text-height',
-							options: {
-								small: {
-									title: i18n.title.small,
-									command: 'fontSize',
-									args: '1'
-								},
-								normal: {
-									title: i18n.title.normal,
-									command: 'fontSize',
-									args: '3'
-								},
-								huge: {
-									title: i18n.title.huge,
-									command: 'fontSize',
-									args: '5'
-								}
-							}
-						},
-						fontEffect: {
-							bold: {
-								title: i18n.title.bold,
-								icon: 'bold',
-								command: 'bold'
+					fontSize: {
+						title: i18n.title.fontSize,
+						icon: 'icon-text-height',
+						options: {
+							small: {
+								title: i18n.title.small,
+								command: 'fontSize',
+								args: '1'
 							},
-							italic: {
-								title: i18n.title.italic,
-								icon: 'italic',
-								command: 'italic'
+							normal: {
+								title: i18n.title.normal,
+								command: 'fontSize',
+								args: '3'
 							},
-							underline: {
-								title: i18n.title.underline,
-								icon: 'underline',
-								command: 'underline'
-							},
-							strikethrough: {
-								title: i18n.title.strikethrough,
-								icon: 'strikethrough',
-								command: 'strikethrough'
-							}
-						},
-						fontColor: {
-							title: i18n.title.fontColor,
-							icon: 'font',
-							command: 'foreColor',
-							options: [
-								'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
-								'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
-								'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
-								'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
-								'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
-								'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
-							]
-						},
-						textAlign: {
-							title: i18n.title.alignment,
-							icon: 'file-text',
-							options: {
-								left: {
-									title: i18n.title.alignLeft,
-									icon: 'align-left',
-									command: 'justifyLeft'
-								},
-								center: {
-									title: i18n.title.center,
-									icon: 'align-center',
-									command: 'justifyCenter'
-								},
-								right: {
-									title: i18n.title.alignRight,
-									icon: 'align-right',
-									command: 'justifyRight'
-								},
-								justify: {
-									title: i18n.title.justify,
-									icon: 'align-justify',
-									command: 'justifyFull'
-								}
-							}
-						},
-						list: {
-							title: i18n.title.list,
-							icon: 'list',
-							options: {
-								unordered: {
-									title: i18n.title.bulletList,
-									icon: 'list-ul',
-									command: 'insertUnorderedList'
-								},
-								ordered: {
-									title: i18n.title.numberList,
-									icon: 'list-ol',
-									command: 'insertOrderedList'
-								}
-							}
-						},
-						indentation: {
-							indent: {
-								title: i18n.title.indent,
-								icon: 'indent-right',
-								command: 'indent'
-							},
-							outdent: {
-								title: i18n.title.reduceIndent,
-								icon: 'indent-left',
-								command: 'outdent'
-							}
-						},
-						link: {
-							create: {
-								title: i18n.title.hyperlink,
-								icon: 'link',
-								command: 'createLink'
-							},
-							delete: {
-								title: i18n.title.removeHyperlink,
-								icon: 'unlink',
-								command: 'unlink'
-							},
-						},
-						image: {
-							title: i18n.title.upload,
-							icon: 'picture',
-							command: 'insertImage'
-						},
-						editing: {
-							undo: {
-								title: i18n.title.undo,
-								icon: 'undo',
-								command: 'undo'
-							},
-							redo: {
-								title: i18n.title.redo,
-								icon: 'repeat',
-								command: 'redo'
-							}
-						},
-						horizontalRule: {
-							title: i18n.title.horizontalRule,
-							icon: 'minus',
-							command: 'insertHorizontalRule'
-						},
-						macro: {
-							title: i18n.title.macro,
-							command: 'insertHtml',
-							options: {
-								user_first_name: 'User\'s First Name',
-								user_last_name: 'User\'s Last Name',
-								user_pin: 'User\'s PIN',
-								conference_name: 'Conference\'s Name',
-								conference_date: 'Conference\'s Date',
-								conference_time: 'Conference\'s Time',
-								conference_record: 'Conference\'s Record'
+							huge: {
+								title: i18n.title.huge,
+								command: 'fontSize',
+								args: '5'
 							}
 						}
+					},
+					fontEffect: {
+						bold: {
+							title: i18n.title.bold,
+							icon: 'icon-bold',
+							command: 'bold'
+						},
+						italic: {
+							title: i18n.title.italic,
+							icon: 'icon-italic',
+							command: 'italic'
+						},
+						underline: {
+							title: i18n.title.underline,
+							icon: 'icon-underline',
+							command: 'underline'
+						},
+						strikethrough: {
+							title: i18n.title.strikethrough,
+							icon: 'icon-strikethrough',
+							command: 'strikethrough'
+						}
+					},
+					fontColor: {
+						title: i18n.title.fontColor,
+						icon: 'icon-font',
+						command: 'foreColor',
+						options: [
+							'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
+							'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
+							'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
+							'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
+							'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
+							'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
+						]
+					},
+					textAlign: {
+						title: i18n.title.alignment,
+						icon: 'icon-file-text',
+						options: {
+							left: {
+								title: i18n.title.alignLeft,
+								icon: 'icon-align-left',
+								command: 'justifyLeft'
+							},
+							center: {
+								title: i18n.title.center,
+								icon: 'icon-align-center',
+								command: 'justifyCenter'
+							},
+							right: {
+								title: i18n.title.alignRight,
+								icon: 'icon-align-right',
+								command: 'justifyRight'
+							},
+							justify: {
+								title: i18n.title.justify,
+								icon: 'icon-align-justify',
+								command: 'justifyFull'
+							}
+						}
+					},
+					list: {
+						title: i18n.title.list,
+						icon: 'icon-list',
+						options: {
+							unordered: {
+								title: i18n.title.bulletList,
+								icon: 'icon-list-ul',
+								command: 'insertUnorderedList'
+							},
+							ordered: {
+								title: i18n.title.numberList,
+								icon: 'icon-list-ol',
+								command: 'insertOrderedList'
+							}
+						}
+					},
+					indentation: {
+						indent: {
+							title: i18n.title.indent,
+							icon: 'icon-indent-right',
+							command: 'indent'
+						},
+						outdent: {
+							title: i18n.title.reduceIndent,
+							icon: 'icon-indent-left',
+							command: 'outdent'
+						}
+					},
+					link: {
+						create: {
+							title: i18n.title.hyperlink,
+							icon: 'icon-link',
+							command: 'createLink'
+						},
+						delete: {
+							title: i18n.title.removeHyperlink,
+							icon: 'icon-unlink',
+							command: 'unlink'
+						},
+					},
+					image: {
+						title: i18n.title.upload,
+						icon: 'icon-picture',
+						command: 'insertImage'
+					},
+					editing: {
+						undo: {
+							title: i18n.title.undo,
+							icon: 'icon-undo',
+							command: 'undo'
+						},
+						redo: {
+							title: i18n.title.redo,
+							icon: 'icon-repeat',
+							command: 'redo'
+						}
+					},
+					horizontalRule: {
+						title: i18n.title.horizontalRule,
+						icon: 'icon-minus',
+						command: 'insertHorizontalRule'
+					},
+					macro: {
+						title: i18n.title.macro,
+						command: 'insertHtml',
+						options: false
 					}
 				},
 				wysiwygTemplate;
 
-			options = $.extend(true, {}, defaultOptions, options, { id: id });
+			options = $.extend(true, {}, defaultOptions, options);
 
 			for (var category in options.tools) {
 				if (!options.tools[category]) {
@@ -996,7 +986,7 @@ define(function(require){
 				}
 			}
 
-			wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', options));
+			wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', { id: id, tools: options }));
 
 			wysiwygTemplate
 				.find('a[title]')
