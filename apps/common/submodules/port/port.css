@@ -285,6 +285,11 @@ div#port_comments_popup .comment .comment-author {
 	color: #22ccff;
 }
 
+div#port_comments_popup .comment .delete-comment:hover {
+	cursor: pointer;
+	color: red;
+}
+
 div#port_comments_popup .comment .comment-body {
 	margin-top: 10px;
 }

@@ -197,8 +197,9 @@
 			"timestamp": "a ajouté un commentaire"
 		},
 		"infoPopup": {
+			"title": "Détail de la requête",
 			"transfer": {
-				"legend": "Info du transfert",
+				"legend": "Détail du transfert",
 				"label": {
 					"name": "Nom",
 					"notificationEmail": "Adresse à notifier",
@@ -208,7 +209,10 @@
 				}
 			},
 			"bill": {
-				"legend": "Info de la facture"
+				"legend": "Détail de la facture"
+			},
+			"confirm": {
+				"deleteComment": "Êtes-vous sur de vouloir supprimer ce commentaire ?"
 			}
 		},
 		"addNumbers":{
@@ -302,6 +306,9 @@
 			"success": {
 				"request": {
 					"update": "La demande de transfert a été mise à jour"
+				},
+				"comment": {
+					"delete": "Le commentaire a été suprimé avec succès"
 				}
 			},
 			"error": {

@@ -98,7 +98,7 @@ define(function(require){
 				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
 						data: data,
 						states: states,
-						isAdmin: monster.apps.auth.currentAccount.superduper_admin
+						isAdmin: monster.apps.auth.originalAccount.superduper_admin
 					})),
 					parent = args.parent || monster.ui.dialog('', {
 						width: '940px',
@@ -244,7 +244,7 @@ define(function(require){
 						var popup = $(monster.ui.dialog(
 								$(monster.template(self, 'port-requestInfo', data.data)),
 								{
-									title: 'Request Info',
+									title: self.i18n.active().port.infoPopup.title,
 									width: '560px',
 									position: ['center', 20]
 								}
@@ -265,17 +265,7 @@ define(function(require){
 						portRequestId: portRequestId
 					},
 					success: function(data, status) {
-
-						data.data.comments = [
-								{
-									content: "<b>Lorem ipsum dolor sit amet</b>",
-									superduper_comment: true,
-									timestamp: 63580625054,
-									user_id: "7431d578734fc031eaabd70ca1f551c4"
-								}
-							];
-
-						var template = $(monster.template(self, 'port-commentsPopup', { isAdmin: monster.apps.auth.currentAccount.superduper_admin })),
+						var template = $(monster.template(self, 'port-commentsPopup', { isAdmin: monster.apps.auth.originalAccount.superduper_admin })),
 							comments = data.data.hasOwnProperty('comments') ? data.data.comments : [],
 							initPopup = function() {
 								var popup = $(monster.ui.dialog(template, {
@@ -285,6 +275,41 @@ define(function(require){
 								}));
 
 								monster.ui.wysiwyg(popup.find('.wysiwyg-container'));
+
+								popup.find('.comments').on('click', '.delete-comment', function() {
+									var comment = $(this).parents('.comment'),
+										id = $(this).data('id');
+
+									monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
+										comments.forEach(function(v, i, a) {
+											if (v.timestamp === id) {
+												comments.splice(i, 1);
+											}
+										});
+
+										data.data.comments = comments;
+
+										self.callApi({
+											resource: 'port.update',
+											data: {
+												accountId: self.accountId,
+												portRequestId: portRequestId,
+												data: data.data
+											},
+											success: function(data, status) {
+												comment.fadeOut('400', function() {
+													$(this).remove();
+
+													if (_.isEmpty(data.data.comments)) {
+														popup.find('.comments').slideUp();
+													}
+
+													toastr.success('The comment was deleted succesfully');
+												});
+											}
+										});
+									});
+								});
 
 								popup.find('.actions .btn-success').on('click', function() {
 									var newComment = {
@@ -306,6 +331,7 @@ define(function(require){
 										},
 										success: function(data, status) {
 											newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
+											newComment.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
 
 											popup
 												.find('.comments')
@@ -321,6 +347,8 @@ define(function(require){
 												}, 300, function() {
 													monster.ui.fade($(this).find('.comment:last-child'));
 											});
+
+											popup.find('.wysiwyg-editor').empty();
 										}
 									});
 								});
@@ -350,8 +378,9 @@ define(function(require){
 
 									comments.forEach(function(v, i) {
 										v.author = users[v.user_id];
+										v.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
 
-										if (v.superduper_comment ? monster.apps.auth.currentAccount.superduper_admin : true) {
+										if (v.superduper_comment ? monster.apps.auth.originalAccount.superduper_admin : true) {
 											template
 												.find('.comments')
 												.append($(monster.template(self, 'port-comment', v)));
