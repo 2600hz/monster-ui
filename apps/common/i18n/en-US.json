@@ -192,6 +192,38 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"state": {
+			"completed": "Completed",
+			"rejected": "Rejected",
+			"scheduled": "Scheduled",
+			"submitted": "Submitted",
+			"unconfirmed": "Unconfirmed"
+		},
+		"commentsPopup": {
+			"title": "Comments",
+			"private": "Private",
+			"comment": "Comment",
+			"timestamp": "added a comment"
+		},
+		"infoPopup": {
+			"title": "Request Info",
+			"transfer": {
+				"legend": "Transfer info",
+				"label": {
+					"name": "Name",
+					"notificationEmail": "Notification email",
+					"transferDate": "Transfer date",
+					"temporaryNumbers": "Temporary numbers",
+					"carrier": "Carrier"
+				}
+			},
+			"bill": {
+				"legend": "Bill info"
+			},
+			"confirm": {
+				"deleteComment": "Are you sure you want to delete this comment?"
+			}
+		},
 		"addNumbers": {
 			"title": "We are excited you are moving numbers to our service!",
 			"labelAddNumbers": "What numbers do you want to transfer? Type one number in at a time or paste all. No extra characters beside number."
@@ -234,8 +266,8 @@
 			"newPortLink": "Start New Transfert (port)",
 			"tableOrderName": "Name",
 			"tableOrderDate": "Requested Date",
-			"tableOrderStatus": "Status",
-			"tableOrderAction": "Action",
+			"tableOrderStatus": "State",
+			"tableOrderAction": "Actions",
 			"continueButton": "continue",
 			"infoButton": "info",
 			"noOrder": "No port"
@@ -272,7 +304,18 @@
 			"changeButton": "change"
 		},
 		"toastr": {
+			"success": {
+				"request": {
+					"update": "The port request has been updated"
+				},
+				"comment": {
+					"delete": "The comment was deleted successfully"
+				}
+			},
 			"error": {
+				"request": {
+					"update": "The port request failed to update"
+				},
 				"mimeTypes": "The following files are not in a supported format: ",
 				"size": "The following files are too big: ",
 				"number": {

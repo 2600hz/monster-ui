@@ -1,0 +1,14 @@
+<div id="port_comments_popup">
+	<div class="comments">
+	</div>
+	<div class="wysiwyg-container">
+		<div class="actions">
+		{{#if isAdmin}}
+			<label for="superduper_comment" class="checkbox">
+				<input id="superduper_comment" type="checkbox">{{ i18n.port.commentsPopup.private }}
+			</label>
+		{{/if}}
+			<button class="btn btn-success"><i class="icon-comment-alt"></i> {{ i18n.port.commentsPopup.comment }}</button>
+		</div>
+	</div>
+</div>

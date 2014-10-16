@@ -185,6 +185,38 @@
 		"progressBarLeft":"Ajouter des numéros",
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
+		"state": {
+			"completed": "Effectué",
+			"rejected": "Refusé",
+			"scheduled": "Programmé",
+			"submitted": "En attante",
+			"unconfirmed": "Unconfirmed"
+		},
+		"commentsPopup": {
+			"title": "Commentaires",
+			"private": "Privé",
+			"comment": "Commenter",
+			"timestamp": "a ajouté un commentaire"
+		},
+		"infoPopup": {
+			"title": "Détail de la requête",
+			"transfer": {
+				"legend": "Détail du transfert",
+				"label": {
+					"name": "Nom",
+					"notificationEmail": "Adresse à notifier",
+					"transferDate": "Date du transfert",
+					"temporaryNumbers": "Numéros temporaires",
+					"carrier": "Opérateur"
+				}
+			},
+			"bill": {
+				"legend": "Détail de la facture"
+			},
+			"confirm": {
+				"deleteComment": "Êtes-vous sur de vouloir supprimer ce commentaire ?"
+			}
+		},
 		"addNumbers":{
 			"title":"Nous sommes impatient de transférer vos numéro sur notre service !",
 			"labelAddNumbers":"Quels numéros voulez-vous transférer ? Entrez un numéro à la fois ou copiez-collez les. Aucun autre caractère que des chiffre ne sera accepté."
@@ -228,10 +260,18 @@
 			"tableOrderName":"Nom",
 			"tableOrderDate":"Date demandé",
 			"tableOrderStatus":"Status",
-			"tableOrderAction":"Action",
+			"tableOrderAction":"Actions",
 			"continueButton":"continuer",
 			"infoButton":"information",
-			"noOrder":"Aucun transfert"
+			"noOrder":"Aucun transfert",
+			"states": {
+				"completion": "Completion",
+				"progress": "Progress",
+				"ready": "Ready",
+				"rejection": "Rejection",
+				"waiting": "Waiting",
+				"unconfirmed": "Unconfirmed"
+			}
 		},
 		"resumeOrder":{
 			"title":"Compléter les demandes de transfert, un à la fois !",
@@ -265,7 +305,18 @@
             "buttonChange": "changer"
 		},
 		"toastr": {
+			"success": {
+				"request": {
+					"update": "La demande de transfert a été mise à jour"
+				},
+				"comment": {
+					"delete": "Le commentaire a été suprimé avec succès"
+				}
+			},
 			"error": {
+				"request": {
+					"update": "La mise à jour de la demande de transfert à échoué"
+				},
 				"mimeType": "Les fichiers suivants ne sont pas dans un format accepter: ",
 				"size": "Les fichiers suivants sont trop gros: ",
 				"number": {
