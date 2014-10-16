@@ -963,25 +963,25 @@ define(function(require){
 
 			options = $.extend(true, {}, defaultOptions, options);
 
-			for (var category in options.tools) {
-				if (!options.tools[category]) {
-					delete options.tools[category];
+			for (var category in options) {
+				if (!options[category]) {
+					delete options[category];
 				}
-				else if (options.tools[category].hasOwnProperty('options') && _.isEmpty(options.tools[category].options)) {
-					delete options.tools[category];
+				else if (options[category].hasOwnProperty('options') && _.isEmpty(options[category].options)) {
+					delete options[category];
 				}
-				else if (!options.tools[category].hasOwnProperty('title')) {
+				else if (!options[category].hasOwnProperty('title')) {
 					var show = false;
 
-					for (var option in options.tools[category]) {
-						if (options.tools[category][option]) {
+					for (var option in options[category]) {
+						if (options[category][option]) {
 							show = true;
 							break;
 						}
 					}
 
 					if (!show) {
-						delete options.tools[category];
+						delete options[category];
 					}
 				}
 			}
