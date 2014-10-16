@@ -840,9 +840,15 @@ define(function(require){
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
 				var input = container.find('div#name_transfer').find('input#transfer_helper'),
+					transferName = container.find('#transfer_helper').val(),
+					accountName = container.find('#account_name').val(),
+					postalCode = container.find('#postal_code').val(),
+					locality = container.find('#locality').val(),
+					address = container.find('#address').val(),
+					region = container.find('#region').val(),
 					submitData = true;
 
-				if ( container.find('#transfer_helper').val() == '' ) {
+				if ( transferName == '' ) {
 					submitData = false;
 					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
 					input
@@ -851,65 +857,67 @@ define(function(require){
 						.addClass('error');
 				}
 
-				if ( container.find('#account_name').val() == '' ) {
+				if ( accountName == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#locality').val() == '' ) {
+				if ( locality == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#region').val() == '' ) {
+				if ( region == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#address').val() == '' ) {
+				if ( address == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#postal_code').val() == '' ) {
+				if ( postalCode == '' ) {
 					submitData = false;
 				}
 
-				if ( typeof data.orders[index].bill_attachment == 'undefined' && typeof data.orders[index].uploads['bill.pdf'] == 'undefined' ) {
+				if (!data.orders[index].hasOwnProperty('bill_attachment') && !data.orders[index].uploads.hasOwnProperty('bill.pdf')) {
 					submitData = false;
 				}
 
-				if ( typeof data.orders[index].loa_attachment == 'undefined' && typeof data.orders[index].uploads['loa.pdf'] == 'undefined' ) {
+				if (!data.orders[index].hasOwnProperty('loa_attachment') && !data.orders[index].uploads.hasOwnProperty('loa.pdf')) {
 					submitData = false;
 				}
 
 				if ( submitData ) {
+					var date = monster.util.getBusinessDate(4).getTime(),
+						created = data.orders[index].hasOwnProperty('created') ? data.orders[index].created : date,
+						transfer_date = data.orders[index].hasOwnProperty('transfer_date') ? monster.util.dateToGregorian(new Date(data.orders[index].transfer_date)) : date,
+						dataTemplate = {
+							name: transferName,
+							created: created,
+							transfer_date: transfer_date,
+							total: data.orders[index].numbers.length,
+							numbers: data.orders[index].numbers,
+							price: data.orders[index].numbers.length * 5
+						};
+
 					input
 						.parent()
 						.parent()
 						.removeClass('error');
 
-					if ( typeof data.orders[index].id != 'undefined') {
+					if (data.orders[index].hasOwnProperty('id')) {
 						delete data.orders[index].loa_attachment;
 						delete data.orders[index].bill_attachment;
 					}
 
-					data.orders[index].name = container.find('#transfer_helper').val();
-					data.orders[index].bill = new Object();
-					data.orders[index].bill.name = container.find('#account_name').val();
-					data.orders[index].bill.locality = container.find('#locality').val();
-					data.orders[index].bill.region = container.find('#region').val();
-					data.orders[index].bill.address = container.find('#address').val();
-					data.orders[index].bill.postal_code = container.find('#postal_code').val();
-
-					var dataTemplate = new Object(),
-						date = new Date(Math.floor(+new Date()) + 259200000),
-						date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
-						created = monster.util.gregorianToDate(data.orders[index].created),
-						created = (created.getMonth() + 1) + "/" + created.getDate() + "/" + created.getFullYear();
-
-					dataTemplate.name = data.orders[index].name;
-					dataTemplate.created = ( typeof data.orders[index].created == 'undefined' ) ? date : created;
-					dataTemplate.transfer = ( typeof data.orders[index].transfer_date == 'undefined' ) ? date : data.orders[index].transfer_date;
-					dataTemplate.total = data.orders[index].numbers.length;
-					dataTemplate.numbers = data.orders[index].numbers;
-					dataTemplate.price = dataTemplate.total * 5;
+					data.orders[index] = $.extend(true, data.orders[index], {
+						name: transferName,
+						bill: {
+							name: accountName,
+							locality: locality,
+							region: region,
+							address: address,
+							postal_code: postalCode
+						}
+					});
 
 					if (data.orders[index].hasOwnProperty('notifications')) {
 						dataTemplate.notifications = { email: { send_to: data.orders[index].notifications.email.send_to } };
@@ -946,8 +954,9 @@ define(function(require){
 			container.find('#transfer_schedule_date').text(date - transferDate >= 0 ? formatedDate : formattedTransferDate);
 
 			container.find('#numbers_to_buy option').each(function(idx, el) {
-				$(el).val(parseInt($(el).val(), 10) + 1);
-				$(el).text(parseInt($(el).text(), 10) + 1);
+				$(el)
+					.val(parseInt($(el).val(), 10) + 1)
+					.text(parseInt($(el).text(), 10) + 1);
 			});
 
 			container.find('#numbers_to_buy option').last().prop('selected', 'selected');
@@ -1032,7 +1041,8 @@ define(function(require){
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
 				data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
+				data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
+
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
 				} else {
@@ -1059,7 +1069,8 @@ define(function(require){
 
 				if ( submitData ) {
 					data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-					data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
+					data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
+
 					if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
 					} else if ( typeof data.orders[index].temporary_numbers != 'undefined' ) {
