@@ -79,21 +79,27 @@ define(function(require){
 		portRender: function(args){
 			var self = this,
 				args = args || {},
-				accountId = args.accountId || self.accountId;
+				accountId = args.accountId || self.accountId,
+				states = {
+					completed: '',
+					rejected: '',
+					scheduled: '',
+					submitted: '',
+					unconfirmed: ''
+				};
+
+			for (var k in states) {
+				states[k] = self.i18n.active().port.state[k];
+			}
 
 			self.portPositionDialogBox();
 
 			self.portRequestGet(accountId, function(data) {
-				var formatToTemplate = function(data) {
-						for ( var order in data ) {
-							var date = monster.util.gregorianToDate(data[order].created);
-							data[order].created = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-							data[order].status = ( data[order].port_state == 'ready' ) ? true : false;
-						}
-
-						return data;
-					},
-					portTemplate = $(monster.template(self, 'port-pendingOrders', { data: formatToTemplate(data) })),
+				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
+						data: data,
+						states: states,
+						isAdmin: monster.apps.auth.originalAccount.superduper_admin
+					})),
 					parent = args.parent || monster.ui.dialog('', {
 						width: '940px',
 						position: ['center', 20],
@@ -168,6 +174,56 @@ define(function(require){
 				self.portAddNumbers(accountId, parent);
 			});
 
+			container.find('table select').on('click', function(event) {
+				event.stopPropagation();
+			});
+
+			container.find('table select').on('change', function(event) {
+				var el = $(this),
+					portRequestId = el.parents('.collapse').data('id'),
+					newState = $(this).val();
+
+				self.callApi({
+					resource: 'port.get',
+					data: {
+						accountId: self.accountId,
+						portRequestId: portRequestId
+					},
+					success: function(data, status) {
+						data.data.port_state = newState;
+
+						self.callApi({
+							resource: 'port.update',
+							data: {
+								accountId: self.accountId,
+								portRequestId: portRequestId,
+								data: data.data,
+								generateError: false
+							},
+							success: function(data, status) {
+								var btn = el.parents('.collapse').find('td:last-child button');
+
+								if (newState === 'unconfirmed') {
+									btn.removeClass('btn-info');
+									btn.addClass('btn-success');
+									btn.text(self.i18n.active().port.pendingOrders.continueButton);
+								}
+								else {
+									btn.removeClass('btn-success');
+									btn.addClass('btn-info');
+									btn.text(self.i18n.active().port.pendingOrders.infoButton);
+								}
+
+								toastr.success(self.i18n.active().port.toastr.success.request.update);
+							},
+							error: function(data, status) {
+								toastr.error(self.i18n.active().port.toastr.error.request.update);
+							}
+						});
+					}
+				});
+			});
+
 			/*
 			 * on click on the continue button
 			 * empty .ui-dialog-content and load port-submitDocuments template
@@ -177,16 +233,174 @@ define(function(require){
 				event.stopPropagation();
 
 				self.portRequestGetDetail(accountId, $(this).parent().parent().data('id'), function(data) {
-					data = { orders: [data.data] };
-
 					if ( button.hasClass('btn-success') ) {
 						parent
 							.empty()
-							.append($(monster.template(self, 'port-submitDocuments', data.orders[0])));
+							.append($(monster.template(self, 'port-submitDocuments', data.data)));
 
-						self.portSubmitDocuments(accountId, parent, data);
+						self.portSubmitDocuments(accountId, parent, { orders: [data.data] });
+					}
+					else {
+						var popup = $(monster.ui.dialog(
+								$(monster.template(self, 'port-requestInfo', data.data)),
+								{
+									title: self.i18n.active().port.infoPopup.title,
+									width: '560px',
+									position: ['center', 20]
+								}
+							));
 					}
 				})
+			});
+
+			container.find('.collapse td:last-child i').on('click', function(event) {
+				event.stopPropagation();
+				var portRequestId = $(this).parents('.collapse').data('id'),
+					currentUser = monster.apps.auth.currentUser;
+
+				self.callApi({
+					resource: 'port.get',
+					data: {
+						accountId: self.accountId,
+						portRequestId: portRequestId
+					},
+					success: function(data, status) {
+						var template = $(monster.template(self, 'port-commentsPopup', { isAdmin: monster.apps.auth.originalAccount.superduper_admin })),
+							comments = data.data.hasOwnProperty('comments') ? data.data.comments : [],
+							initPopup = function() {
+								var popup = $(monster.ui.dialog(template, {
+									title: self.i18n.active().port.commentsPopup.title,
+									width: '960px',
+									position: ['center', 20]
+								}));
+
+								monster.ui.wysiwyg(popup.find('.wysiwyg-container'));
+
+								popup.find('.comments').on('click', '.delete-comment', function() {
+									var comment = $(this).parents('.comment'),
+										id = $(this).data('id');
+
+									monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
+										comments.forEach(function(v, i, a) {
+											if (v.timestamp === id) {
+												comments.splice(i, 1);
+											}
+										});
+
+										data.data.comments = comments;
+
+										self.callApi({
+											resource: 'port.update',
+											data: {
+												accountId: self.accountId,
+												portRequestId: portRequestId,
+												data: data.data
+											},
+											success: function(data, status) {
+												comment.fadeOut('400', function() {
+													$(this).remove();
+
+													if (_.isEmpty(data.data.comments)) {
+														popup.find('.comments').slideUp();
+													}
+
+													toastr.success('The comment was deleted succesfully');
+												});
+											}
+										});
+									});
+								});
+
+								popup.find('.actions .btn-success').on('click', function() {
+									var newComment = {
+											user_id: self.userId,
+											timestamp: monster.util.dateToGregorian(new Date()),
+											content: popup.find('.wysiwyg-editor').html(),
+											superduper_comment: popup.find('#superduper_comment').is(':checked')
+										};
+
+									comments.push(newComment);
+									data.data.comments = comments;
+
+									self.callApi({
+										resource: 'port.update',
+										data: {
+											accountId: self.accountId,
+											portRequestId: portRequestId,
+											data: data.data
+										},
+										success: function(data, status) {
+											newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
+											newComment.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
+
+											popup
+												.find('.comments')
+												.show()
+												.append($(monster.template(self, 'port-comment', newComment)));
+
+											popup
+												.find('.comments .comment:last-child .comment-body')
+												.html(newComment.content);
+
+											popup.find('.comments').animate({
+													scrollTop: popup.find('.comments').scrollTop() + popup.find('.comments .comment:last-child').position().top
+												}, 300, function() {
+													monster.ui.fade($(this).find('.comment:last-child'));
+											});
+
+											popup.find('.wysiwyg-editor').empty();
+										}
+									});
+								});
+							};
+
+						if (_.isEmpty(comments)) {
+							template.find('.comments').hide();
+							initPopup();
+						}
+						else {
+							self.callApi({
+								resource: 'user.list',
+								data: {
+									accountId: self.accountId
+								},
+								success: function(data, status) {
+
+									var users = (function arrayToObject(usersArray) {
+											var usersObject = {};
+
+											usersArray.forEach(function(v, i) {
+												usersObject[v.id] = v.first_name.concat(' ', v.last_name);
+											});
+
+											return usersObject;
+										})(data.data);
+
+									comments.forEach(function(v, i) {
+										v.author = users[v.user_id];
+										v.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
+
+										if (v.superduper_comment ? monster.apps.auth.originalAccount.superduper_admin : true) {
+											template
+												.find('.comments')
+												.append($(monster.template(self, 'port-comment', v)));
+
+											template
+												.find('.comments .comment:last-child .comment-body')
+												.html(v.content);
+										}
+									});
+
+									initPopup();
+								}
+							});
+						}
+					}
+				});
+			});
+
+			container.find('.collapse td:last-child i').hover(function() {
+				$(this).toggleClass('icon-comments icon-comments-alt');
 			});
 		},
 
@@ -516,14 +730,15 @@ define(function(require){
 						mimeTypes: ['application/pdf'],
 						wrapperClass: 'input-append',
 						success: function(results) {
-							data.orders[index][type.concat('_attachment')] = results[0].file;
-
 							if ( data.orders[index].hasOwnProperty('id') ) {
 								if ( data.orders[index].uploads.hasOwnProperty(type.concat('.pdf')) ) {
 									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
 								} else {
 									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
 								}
+							}
+							else {
+								data.orders[index][type.concat('_attachment')] = results[0].file;
 							}
 						},
 						error: function(error) {
@@ -534,6 +749,10 @@ define(function(require){
 							}
 						}
 					}
+
+				if (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty(type.concat('.pdf'))) {
+					options.filesList = [ type.concat('.pdf') ];
+				}
 
 				if ( type === 'bill' ) {
 					options['bigBtnClass'] = 'btn btn-success span12';
@@ -606,6 +825,7 @@ define(function(require){
 					data.orders[index].bill.region = container.find('input#region').val();
 					data.orders[index].bill.postal_code = container.find('input#postal_code').val();
 
+
 					self.portSaveOrder(accountId, parent, data, index);
 				}
 			});
@@ -620,9 +840,15 @@ define(function(require){
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
 				var input = container.find('div#name_transfer').find('input#transfer_helper'),
+					transferName = container.find('#transfer_helper').val(),
+					accountName = container.find('#account_name').val(),
+					postalCode = container.find('#postal_code').val(),
+					locality = container.find('#locality').val(),
+					address = container.find('#address').val(),
+					region = container.find('#region').val(),
 					submitData = true;
 
-				if ( container.find('#transfer_helper').val() == '' ) {
+				if ( transferName == '' ) {
 					submitData = false;
 					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
 					input
@@ -631,65 +857,71 @@ define(function(require){
 						.addClass('error');
 				}
 
-				if ( container.find('#account_name').val() == '' ) {
+				if ( accountName == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#locality').val() == '' ) {
+				if ( locality == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#region').val() == '' ) {
+				if ( region == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#address').val() == '' ) {
+				if ( address == '' ) {
 					submitData = false;
 				}
 
-				if ( container.find('#postal_code').val() == '' ) {
+				if ( postalCode == '' ) {
 					submitData = false;
 				}
 
-				if ( typeof data.orders[index].bill_attachment == 'undefined' && typeof data.orders[index].uploads['bill.pdf'] == 'undefined' ) {
+				if (!data.orders[index].hasOwnProperty('bill_attachment') && !data.orders[index].uploads.hasOwnProperty('bill.pdf')) {
 					submitData = false;
 				}
 
-				if ( typeof data.orders[index].loa_attachment == 'undefined' && typeof data.orders[index].uploads['loa.pdf'] == 'undefined' ) {
+				if (!data.orders[index].hasOwnProperty('loa_attachment') && !data.orders[index].uploads.hasOwnProperty('loa.pdf')) {
 					submitData = false;
 				}
 
 				if ( submitData ) {
+					var date = monster.util.getBusinessDate(4).getTime(),
+						created = data.orders[index].hasOwnProperty('created') ? data.orders[index].created : date,
+						transfer_date = data.orders[index].hasOwnProperty('transfer_date') ? monster.util.dateToGregorian(new Date(data.orders[index].transfer_date)) : date,
+						dataTemplate = {
+							name: transferName,
+							created: created,
+							transfer_date: transfer_date,
+							total: data.orders[index].numbers.length,
+							numbers: data.orders[index].numbers,
+							price: data.orders[index].numbers.length * 5
+						};
+
 					input
 						.parent()
 						.parent()
 						.removeClass('error');
 
-					if ( typeof data.orders[index].id != 'undefined') {
+					if (data.orders[index].hasOwnProperty('id')) {
 						delete data.orders[index].loa_attachment;
 						delete data.orders[index].bill_attachment;
 					}
 
-					data.orders[index].name = container.find('#transfer_helper').val();
-					data.orders[index].bill = new Object();
-					data.orders[index].bill.name = container.find('#account_name').val();
-					data.orders[index].bill.locality = container.find('#locality').val();
-					data.orders[index].bill.region = container.find('#region').val();
-					data.orders[index].bill.address = container.find('#address').val();
-					data.orders[index].bill.postal_code = container.find('#postal_code').val();
+					data.orders[index] = $.extend(true, data.orders[index], {
+						name: transferName,
+						bill: {
+							name: accountName,
+							locality: locality,
+							region: region,
+							address: address,
+							postal_code: postalCode
+						}
+					});
 
-					var dataTemplate = new Object(),
-						date = new Date(Math.floor(+new Date()) + 259200000),
-						date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
-						created = monster.util.gregorianToDate(data.orders[index].created),
-						created = (created.getMonth() + 1) + "/" + created.getDate() + "/" + created.getFullYear();
-
-					dataTemplate.name = data.orders[index].name;
-					dataTemplate.created = ( typeof data.orders[index].created == 'undefined' ) ? date : created;
-					dataTemplate.transfer = ( typeof data.orders[index].transfer_date == 'undefined' ) ? date : data.orders[index].transfer_date;
-					dataTemplate.total = data.orders[index].numbers.length;
-					dataTemplate.numbers = data.orders[index].numbers;
-					dataTemplate.price = dataTemplate.total * 5;
+					if (data.orders[index].hasOwnProperty('notifications')) {
+						dataTemplate.notifications = { email: { send_to: data.orders[index].notifications.email.send_to } };
+					}
 
 					parent
 						.empty()
@@ -722,8 +954,9 @@ define(function(require){
 			container.find('#transfer_schedule_date').text(date - transferDate >= 0 ? formatedDate : formattedTransferDate);
 
 			container.find('#numbers_to_buy option').each(function(idx, el) {
-				$(el).val(parseInt($(el).val(), 10) + 1);
-				$(el).text(parseInt($(el).text(), 10) + 1);
+				$(el)
+					.val(parseInt($(el).val(), 10) + 1)
+					.text(parseInt($(el).text(), 10) + 1);
 			});
 
 			container.find('#numbers_to_buy option').last().prop('selected', 'selected');
@@ -808,7 +1041,8 @@ define(function(require){
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
 				data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-				data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
+				data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
+
 				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
 				} else {
@@ -835,7 +1069,8 @@ define(function(require){
 
 				if ( submitData ) {
 					data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-					data.orders[index].transfer_date = container.find('input#transfer_numbers_date').val();
+					data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
+
 					if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
 						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
 					} else if ( typeof data.orders[index].temporary_numbers != 'undefined' ) {
@@ -844,9 +1079,9 @@ define(function(require){
 
 					if ( typeof data.orders[index].id == 'undefined' ) {
 						self.portRequestAdd(accountId, data.orders[index], function(portRequestId) {
-							data.orders.splice(index, 1);
+							self.portRequestReadyState(accountId, portRequestId, data.orders[index], function() {
+								data.orders.splice(index, 1);
 
-							self.portRequestReadyState(accountId, portRequestId, function() {
 								if ( typeof data.orders[0] == 'undefined' ) {
 									self.portReloadApp(accountId, parent);
 								} else {
@@ -860,7 +1095,7 @@ define(function(require){
 						});
 					} else {
 						self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-							self.portRequestReadyState(accountId, data.orders[index].id, function() {
+							self.portRequestReadyState(accountId, data.orders[index].id, data.orders[index], function() {
 								self.portReloadApp(accountId, parent);
 							});
 						});
@@ -944,7 +1179,7 @@ define(function(require){
 				delete order.loa_attachment;
 			}
 
-			order = $.extend(true, order, { port_state: 'progress' });
+			order = $.extend(true, order, { port_state: 'unconfirmed' });
 
 			order = self.portArrayToObjects(order);
 
@@ -1134,16 +1369,20 @@ define(function(require){
 			});
 		},
 
-		portRequestReadyState: function(accountId, portRequestId, callback) {
-			monster.request({
-				resource: "common.port.ready",
+		portRequestReadyState: function(accountId, portRequestId, data, callback) {
+			var self = this;
+
+			data.port_state = 'submitted';
+
+			self.callApi({
+				resource: 'port.update',
 				data: {
-					accountId: accountId,
+					accountId: self.accountId,
 					portRequestId: portRequestId,
-					data: {}
+					data: data
 				},
-				success: function(data) {
-					callback();
+				success: function(data, status) {
+					callback()
 				}
 			});
 		},

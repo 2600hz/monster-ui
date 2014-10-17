@@ -6,7 +6,7 @@
 				{{#if options}}
 					<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="{{title}}">
 					{{#if icon}}
-						<i class="icon-{{icon}}"></i>
+						<i class="{{icon}}"></i>
 					{{else}}
 						{{title}}
 					{{/if}}
@@ -17,7 +17,7 @@
 						{{#if ../icon}}
 							{{#if title}}
 								{{#if icon}}
-									<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+									<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="{{icon}}"></i></a>
 								{{else}}
 									<li><a data-edit="{{command}} {{args}}">{{title}}</a></li>
 								{{/if}}
@@ -32,11 +32,11 @@
 				{{else}}
 					{{#compare command '===' 'insertImage'}}
 						<a class="btn wysiwyg-upload" title data-original-title="{{title}}">
-							<i class="icon-{{icon}}"></i>
+							<i class="{{icon}}"></i>
 							<input type="file" data-edit="{{command}}">
 						</a>
 					{{else}}
-						<a class="btn" data-edit="{{../command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+						<a class="btn" data-edit="{{../command}}" title data-original-title="{{title}}"><i class="{{icon}}"></i></a>
 					{{/compare}}
 				{{/if}}
 			{{else}}
@@ -44,14 +44,14 @@
 					{{#if this}}
 						{{#compare command '===' 'createLink'}}
 							<a class="btn dropdown-toggle" data-toggle="dropdown" title data-original-title="{{title}}">
-								<i class="icon-{{icon}}"></i>
+								<i class="{{icon}}"></i>
 							</a>
 							<div class="dropdown-menu input-append">
 								<input class="span2" placeholder="URL" type="text" data-edit="{{command}}">
 								<button class="btn" type="button">Add</button>
 							</div>
 						{{else}}
-							<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="icon-{{icon}}"></i></a>
+							<a class="btn" data-edit="{{command}}" title data-original-title="{{title}}"><i class="{{icon}}"></i></a>
 						{{/compare}}
 					{{/if}}
 				{{/each}}

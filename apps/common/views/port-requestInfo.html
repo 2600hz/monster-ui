@@ -1,0 +1,72 @@
+<div id="port_request_info">
+	<form class="form-horizontal">
+		<fieldset>
+			<legend>{{i18n.port.infoPopup.transfer.legend}}</legend>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.name}}</label>
+				<div class="controls">
+					<span class="text">{{name}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.notificationEmail}}</label>
+				<div class="controls">
+					<span class="text">{{notifications.email.send_to}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.transferDate}}</label>
+				<div class="controls">
+					<span class="text">{{transfer_date}}</span>
+				</div>
+			</div>
+		{{#if temporary_numbers}}
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.temporaryNumbers}}</label>
+				<div class="controls">
+					<span class="text">{{temporary_numbers}}</span>
+				</div>
+			</div>
+		{{/if}}
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.carrier}}</label>
+				<div class="controls">
+					<span class="text">{{carrier}}</span>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>{{i18n.port.infoPopup.bill.legend}}}</legend>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.submitDocuments.labelAccountName}}</label>
+				<div class="controls">
+					<span class="text">{{bill.name}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.submitDocuments.labelAddress}}</label>
+				<div class="controls">
+					<span class="text">{{bill.address}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.submitDocuments.labelCity}}</label>
+				<div class="controls">
+					<span class="text">{{bill.locality}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.submitDocuments.labelZipCode}}</label>
+				<div class="controls">
+					<span class="text">{{bill.postal_code}}</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.submitDocuments.labelState}}</label>
+				<div class="controls">
+					<span class="text">{{bill.region}}</span>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>

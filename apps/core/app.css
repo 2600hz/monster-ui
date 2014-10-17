@@ -1126,13 +1126,14 @@ label.monster-invalid {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	border: 1px solid transparent;
+	border: 1px solid #ccc;
 	border-bottom: 0;
+	background-color: #eee
 }
 
-.wysiwyg-container.filled .wysiwyg-toolbar {
-	border-color: #ccc;
-	background-color: #eee
+.wysiwyg-container.transparent .wysiwyg-toolbar {
+	border-color: transparent;
+	background-color: transparent;
 }
 
 .wysiwyg-container .wysiwyg-toolbar .btn-group {
