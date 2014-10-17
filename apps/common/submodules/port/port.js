@@ -1293,7 +1293,6 @@ define(function(require){
 					data: data
 				},
 				success: function(data, status) {
-console.log(data.data);
 					callback && callback();
 				}
 			});
