@@ -816,17 +816,20 @@ define(function(require){
 							small: {
 								title: i18n.title.small,
 								command: 'fontSize',
-								args: '1'
+								args: '1',
+								weight: '1'
 							},
 							normal: {
 								title: i18n.title.normal,
 								command: 'fontSize',
-								args: '3'
+								args: '3',
+								weight: '2'
 							},
 							huge: {
 								title: i18n.title.huge,
 								command: 'fontSize',
-								args: '5'
+								args: '5',
+								weight: '3'
 							}
 						}
 					},
@@ -834,22 +837,26 @@ define(function(require){
 						bold: {
 							title: i18n.title.bold,
 							icon: 'icon-bold',
-							command: 'bold'
+							command: 'bold',
+							weight: '1'
 						},
 						italic: {
 							title: i18n.title.italic,
 							icon: 'icon-italic',
-							command: 'italic'
+							command: 'italic',
+							weight: '2'
 						},
 						underline: {
 							title: i18n.title.underline,
 							icon: 'icon-underline',
-							command: 'underline'
+							command: 'underline',
+							weight: '3'
 						},
 						strikethrough: {
 							title: i18n.title.strikethrough,
 							icon: 'icon-strikethrough',
-							command: 'strikethrough'
+							command: 'strikethrough',
+							weight: '4'
 						}
 					},
 					fontColor: {
@@ -872,22 +879,26 @@ define(function(require){
 							left: {
 								title: i18n.title.alignLeft,
 								icon: 'icon-align-left',
-								command: 'justifyLeft'
+								command: 'justifyLeft',
+								weight: '1'
 							},
 							center: {
 								title: i18n.title.center,
 								icon: 'icon-align-center',
-								command: 'justifyCenter'
+								command: 'justifyCenter',
+								weight: '2'
 							},
 							right: {
 								title: i18n.title.alignRight,
 								icon: 'icon-align-right',
-								command: 'justifyRight'
+								command: 'justifyRight',
+								weight: '3'
 							},
 							justify: {
 								title: i18n.title.justify,
 								icon: 'icon-align-justify',
-								command: 'justifyFull'
+								command: 'justifyFull',
+								weight: '4'
 							}
 						}
 					},
@@ -898,12 +909,14 @@ define(function(require){
 							unordered: {
 								title: i18n.title.bulletList,
 								icon: 'icon-list-ul',
-								command: 'insertUnorderedList'
+								command: 'insertUnorderedList',
+								weight: '1'
 							},
 							ordered: {
 								title: i18n.title.numberList,
 								icon: 'icon-list-ol',
-								command: 'insertOrderedList'
+								command: 'insertOrderedList',
+								weight: '2'
 							}
 						}
 					},
@@ -911,25 +924,29 @@ define(function(require){
 						indent: {
 							title: i18n.title.indent,
 							icon: 'icon-indent-right',
-							command: 'indent'
+							command: 'indent',
+							weight: '1'
 						},
 						outdent: {
 							title: i18n.title.reduceIndent,
 							icon: 'icon-indent-left',
-							command: 'outdent'
+							command: 'outdent',
+							weight: '2'
 						}
 					},
 					link: {
 						create: {
 							title: i18n.title.hyperlink,
 							icon: 'icon-link',
-							command: 'createLink'
+							command: 'createLink',
+							weight: '1'
 						},
 						delete: {
 							title: i18n.title.removeHyperlink,
 							icon: 'icon-unlink',
-							command: 'unlink'
-						},
+							command: 'unlink',
+							weight: '2'
+						}
 					},
 					image: {
 						title: i18n.title.upload,
@@ -940,12 +957,14 @@ define(function(require){
 						undo: {
 							title: i18n.title.undo,
 							icon: 'icon-undo',
-							command: 'undo'
+							command: 'undo',
+							weight: '1'
 						},
 						redo: {
 							title: i18n.title.redo,
 							icon: 'icon-repeat',
-							command: 'redo'
+							command: 'redo',
+							weight: '2'
 						}
 					},
 					horizontalRule: {
@@ -963,26 +982,63 @@ define(function(require){
 
 			options = $.extend(true, {}, defaultOptions, options);
 
-			for (var category in options) {
-				if (!options[category]) {
-					delete options[category];
+			// Remove options with value at false
+			for (var c in options) {
+				if (!options[c]) {
+					delete options[c];
 				}
-				else if (options[category].hasOwnProperty('options') && _.isEmpty(options[category].options)) {
-					delete options[category];
+				else if (options[c].hasOwnProperty('options')) {
+					if (_.isEmpty(options[c].options)) {
+						delete options[c];
+					}
+					else {
+						var show = false;
+
+						for (var o in options[c].options) {
+							if (options[c].options[o]) {
+								show = true;
+								break;
+							}
+						}
+
+						if (!show) {
+							delete options[c];
+						}
+					}
 				}
-				else if (!options[category].hasOwnProperty('title')) {
+				else if (!options[c].hasOwnProperty('title')) {
 					var show = false;
 
-					for (var option in options[category]) {
-						if (options[category][option]) {
+					for (var o in options[c]) {
+						if (options[c][o]) {
 							show = true;
 							break;
 						}
 					}
 
 					if (!show) {
-						delete options[category];
+						delete options[c];
 					}
+				}
+			}
+
+			// Sort element by weight
+			for (var c in options) {
+				if (options[c].hasOwnProperty('title') && options[c].hasOwnProperty('options')) {
+					if (!_.isArray(options[c].options)) {
+						options[c].options = _.map(options[c].options, function(v, key){ return v; });
+
+						options[c].options.sort(function(a, b){
+							return a.weight > b.weight ? 1 : -1;
+						});
+					}
+				}
+				else if (!options[c].hasOwnProperty('title') && !options[c].hasOwnProperty('options')) {
+					options[c] = _.map(options[c], function(v, k){ return v; });
+
+					options[c].sort(function(a, b){
+						return a.weight > b.weight ? 1 : -1;
+					});
 				}
 			}
 
@@ -992,7 +1048,7 @@ define(function(require){
 				.find('a[title]')
 				.tooltip({container: 'body'});
 
-			/* Handle the behavior of the creatLink dropdown menu */
+			// Handle the behavior of the creatLink dropdown menu
 			wysiwygTemplate.find('.dropdown-menu input')
 				.on('click', function() {
 					return false;
