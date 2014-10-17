@@ -210,7 +210,7 @@
 			'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 			'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
-			'setReady': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/ready' }
+			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' }
 		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },

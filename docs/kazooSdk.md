@@ -1199,12 +1199,12 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __port.setReady(__*settings*__)__ |
-| Request Type: | PUT |
-| Request URL: | {apiRoot}/accounts/{accountId}/port_requests/{portRequestId}/ready |
+| Method: | __port.changeState(__*settings*__)__ |
+| Request Type: | POST |
+| Request URL: | {apiRoot}/accounts/{accountId}/port_requests/{portRequestId}/{state} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `portRequestId`, `data` |
+| Mandatory _settings_: | `accountId`, `portRequestId`, `state`, `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Service Plan
