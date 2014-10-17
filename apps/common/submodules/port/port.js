@@ -11,61 +11,7 @@ define(function(require){
 	var app = {
 
 		requests: {
-			'common.port.add': {
-				url: 'accounts/{accountId}/port_requests',
-				verb: 'PUT'
-			},
-			'common.port.update': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}',
-				verb: 'POST'
-			},
-			'common.port.delete': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}',
-				verb: 'DELETE'
-			},
-			'common.port.get': {
-				url: 'accounts/{accountId}/port_requests',
-				verb: 'GET'
-			},
-			'common.port.get.detail': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}',
-				verb: 'GET'
-			},
-			'common.port.get.descendants': {
-				url: 'accounts/{accountId}/port_requests/descendants',
-				verb: 'GET'
-			},
-			'common.port.get.attachments': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments',
-				verb: 'GET'
-			},
-			'common.port.attachment.add': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}',
-				verb: 'PUT',
-				type: 'application/pdf',
-				dataType: 'application/pdf'
-			},
-			'common.port.attachment.update': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
-				verb: 'POST',
-				type: 'application/pdf',
-				dataType: 'application/pdf'
-			},
-			'common.port.attachment.delete': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
-				verb: 'DELETE'
-			},
-			'common.port.attachment.get': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}',
-				verb: 'GET',
-				type: 'application/pdf',
-				dataType: 'application/pdf'
-			},
-			'common.port.ready': {
-				url: 'accounts/{accountId}/port_requests/{portRequestId}/ready',
-				verb: 'PUT'
-			},
-			'common.port.sort': {
+			'common.numbers.metadata': {
 				apiRoot: 'http://69.164.206.244/number_manager/api/index.php/',
 				url: 'numbers/{country}/meta',
 				verb: 'POST'
@@ -94,7 +40,7 @@ define(function(require){
 
 			self.portPositionDialogBox();
 
-			self.portRequestGet(accountId, function(data) {
+			self.portRequestList(accountId, function(data) {
 				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
 						data: data,
 						states: states,
@@ -232,17 +178,17 @@ define(function(require){
 				var button = $(this);
 				event.stopPropagation();
 
-				self.portRequestGetDetail(accountId, $(this).parent().parent().data('id'), function(data) {
+				self.portRequestGet(accountId, $(this).parent().parent().data('id'), function(data) {
 					if ( button.hasClass('btn-success') ) {
 						parent
 							.empty()
-							.append($(monster.template(self, 'port-submitDocuments', data.data)));
+							.append($(monster.template(self, 'port-submitDocuments', data)));
 
-						self.portSubmitDocuments(accountId, parent, { orders: [data.data] });
+						self.portSubmitDocuments(accountId, parent, { orders: [data] });
 					}
 					else {
 						var popup = $(monster.ui.dialog(
-								$(monster.template(self, 'port-requestInfo', data.data)),
+								$(monster.template(self, 'port-requestInfo', data)),
 								{
 									title: self.i18n.active().port.infoPopup.title,
 									width: '560px',
@@ -661,7 +607,7 @@ define(function(require){
 			var self = this;
 
 			monster.request({
-				resource: 'common.port.sort',
+				resource: 'common.numbers.metadata',
 				data: {
 					data: numbersArray,
 					country: 'US'
@@ -1183,13 +1129,13 @@ define(function(require){
 
 			order = self.portArrayToObjects(order);
 
-			monster.request({
-				resource: 'common.port.add',
+			self.callApi({
+				resource: 'port.create',
 				data: {
 					accountId: accountId,
 					data: order
 				},
-				success: function (data) {
+				success: function(data, status) {
 					var portRequestId = data.data.id;
 
 					if ( typeof attachments.bill != 'undefined' ) {
@@ -1220,15 +1166,18 @@ define(function(require){
 
 			order = self.portArrayToObjects(order);
 
-			monster.request({
-				resource: 'common.port.update',
+			self.callApi({
+				resource: 'port.update',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					data: order
 				},
-				success: function (data) {
+				success: function(data, status) {
 					callback();
+				},
+				error: function(data, status) {
+
 				}
 			});
 		},
@@ -1236,29 +1185,29 @@ define(function(require){
 		portRequestDelete: function(accountId, portRequestId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.port.delete',
+			self.callApi({
+				resource: 'port.delete',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
-				success: function (data) {
+				success: function(data, status) {
 					callback();
 				}
 			});
 		},
 
-		portRequestGet: function(accountId, callback) {
+		portRequestList: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.port.get',
+			self.callApi({
+				resource: 'port.list',
 				data: {
 					accountId: accountId,
 					data: {}
 				},
-				success: function (data) {
+				success: function(data, status) {
 					self.portObjectsToArray(data.data);
 
 					callback(data.data);
@@ -1266,105 +1215,138 @@ define(function(require){
 			});
 		},
 
-		portRequestGetDetail: function(accountId, portRequestId, callback) {
+		portRequestGet: function(accountId, portRequestId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.port.get.detail',
+			self.callApi({
+				resource: 'port.get',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
-				success: function (data) {
+				success: function(data, status) {
 					self.portObjectsToArray(data.data);
 
-					callback(data);
+					callback(data.data);
 				}
 			});
 		},
 
 		portRequestGetDescendants: function(accountId, callback) {
-			monster.request({
-				resource: 'common.port.get.descendants',
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listDescendants',
 				data: {
 					accountId: accountId,
 					data: {}
 				},
-				success: function (data) {
-					callback(data);
+				success: function(data, status) {
+					callback(data.data);
 				}
 			});
 		},
 
-		portRequestGetAttachments: function(accountId, portRequestId, callback) {
-			monster.request({
-				resource: "common.port.get.attachments",
+		portRequestListAttachments: function(accountId, portRequestId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listAttachments',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					data: {}
 				},
-				success: function(data) {
-					callback(data);
+				success: function(data, status) {
+					callback(data.data);
 				}
 			});
 		},
 
 		portRequestAddAttachment: function(accountId, portRequestId, documentName, data, callback) {
-			monster.request({
-				resource: "common.port.attachment.add",
+			var self = this;
+
+			self.callApi({
+				resource: 'port.createAttachment',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
 					data: data
 				},
-				success: function(data) {
-					callback && callback(data);
+				success: function(data, status) {
+					callback && callback(data.data);
 				}
 			});
 		},
 
 		portRequestUpdateAttachment: function(accountId, portRequestId, documentName, data, callback) {
-			monster.request({
-				resource: "common.port.attachment.update",
+			var self = this;
+
+			self.callApi({
+				resource: 'port.updateAttachment',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
 					data: data
 				},
-				success: function(data) {
-					callback && callback(data);
+				success: function(data, status) {
+console.log(data.data);
+					callback && callback();
 				}
 			});
 		},
 
 		portRequestDeleteAttachment: function(accountId, portRequestId, documentName) {
-			monster.request({
-				resource: "common.port.attachment.delete",
+			var self = this;
+
+			self.callApi({
+				resource: 'port.deleteAttachment',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
 					data: {}
 				},
-				success: function(data) {}
+				success: function(data, status) {}
 			});
 		},
 
 		portRequestGetAttachment: function(accountId, portRequestId, documentName, callback) {
-			monster.request({
-				resource: "common.port.attachment.get",
+			var self = this;
+
+			self.callApi({
+				resource: 'port.getAttachment',
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
 					data: {}
-				},	
-				success: function(data) {
-					callback(data);
+				},
+				success: function(data, status) {
+					callback(data.data);
+				}
+			});
+		},
+
+		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.changeState',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					portState: state,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
 				}
 			});
 		},
