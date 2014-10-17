@@ -71,7 +71,10 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/resources/{resourceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resources/{resourceId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/resources' },
-			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/resources/collection' }
+			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/resources/collection' },
+			'listJobs': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs' },
+			'getJob': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs/{jobId}' },
+			'createJob':  { verb: 'PUT', url: 'accounts/{accountId}/resources/jobs' }
 		},
 		globalResources: {
 			'get': { verb: 'GET', url: 'resources/{resourceId}' },
@@ -79,7 +82,10 @@
 			'update': { verb: 'POST', url: 'resources/{resourceId}' },
 			'delete': { verb: 'DELETE', url: 'resources/{resourceId}' },
 			'list': { verb: 'GET', url: 'resources' },
-			'updateCollection': { verb: 'POST', url: 'resources/collection' }
+			'updateCollection': { verb: 'POST', url: 'resources/collection' },
+			'listJobs': { verb: 'GET', url: 'resources/jobs' },
+			'getJob': { verb: 'GET', url: 'resources/jobs/{jobId}' },
+			'createJob':  { verb: 'PUT', url: 'resources/jobs' }
 		},
 		ips: {
 			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
