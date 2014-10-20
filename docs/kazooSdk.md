@@ -105,14 +105,15 @@ kazooSdk.auth.userAuth({
 * [Connectivity](#connectivity)
 * [Device](#device)
 * [Directory](#directory)
-* [Global_resources](#global_resources)
+* [Global Resources](#global-resources)
 * [Group](#group)
 * [Limits](#limits)
-* [Local_resources](#local_resources)
+* [Local Resources](#local-resources)
 * [Media](#media)
 * [Menu](#menu)
 * [Numbers](#numbers)
 * [Port](#port)
+* [Resource Templates](#resource-templates)
 * [Service Plan](#service-plan)
 * [Temporal Rule](#temporal-rule)
 * [User](#user)
@@ -691,56 +692,96 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
-###### Global_resources
+###### Global Resources
 
 |||
 |---|---|
-| Method: | __global_resources.get(__*settings*__)__ |
+| Method: | __globalResources.get(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/global_resources/{resourceId} |
+| Request URL: | {apiRoot}/resources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `resourceId` |
+| Mandatory _settings_: | `resourceId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
-| Method: | __global_resources.create(__*settings*__)__ |
+| Method: | __globalResources.create(__*settings*__)__ |
 | Request Type: | PUT |
-| Request URL: | {apiRoot}/accounts/{accountId}/global_resources |
+| Request URL: | {apiRoot}/resources |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `data` |
+| Mandatory _settings_: | `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
-| Method: | __global_resources.update(__*settings*__)__ |
+| Method: | __globalResources.update(__*settings*__)__ |
 | Request Type: | POST |
-| Request URL: | {apiRoot}/accounts/{accountId}/global_resources/{resourceId} |
+| Request URL: | {apiRoot}/resources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `resourceId`, `data` |
+| Mandatory _settings_: | `resourceId`, `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
-| Method: | __global_resources.delete(__*settings*__)__ |
+| Method: | __globalResources.delete(__*settings*__)__ |
 | Request Type: | DELETE |
-| Request URL: | {apiRoot}/accounts/{accountId}/global_resources/{resourceId} |
+| Request URL: | {apiRoot}/globalResources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `resourceId`, `data` |
+| Mandatory _settings_: | `resourceId`, `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
-| Method: | __global_resources.list(__*settings*__)__ |
+| Method: | __globalResources.list(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/global_resources |
+| Request URL: | {apiRoot}/resources |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId` |
+| Mandatory _settings_: | |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __globalResources.updateCollection(__*settings*__)__ |
+| Request Type: | POST |
+| Request URL: | {apiRoot}/resources/collection |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __globalResources.listJobs(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/resources/jobs |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __globalResources.getJob(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/resources/jobs/{jobId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `jobId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __globalResources.createJob(__*settings*__)__ |
+| Request Type: | PUT |
+| Request URL: | {apiRoot}/resources/jobs |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `jobId`, `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Group
@@ -817,13 +858,13 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId`, `data` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
-###### Local_resources
+###### Local Resources
 
 |||
 |---|---|
-| Method: | __local_resources.get(__*settings*__)__ |
+| Method: | __localResources.get(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/local_resources/{resourceId} |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `resourceId` |
@@ -831,9 +872,9 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __local_resources.create(__*settings*__)__ |
+| Method: | __localResources.create(__*settings*__)__ |
 | Request Type: | PUT |
-| Request URL: | {apiRoot}/accounts/{accountId}/local_resources |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `data` |
@@ -841,9 +882,9 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __local_resources.update(__*settings*__)__ |
+| Method: | __localResources.update(__*settings*__)__ |
 | Request Type: | POST |
-| Request URL: | {apiRoot}/accounts/{accountId}/local_resources/{resourceId} |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `resourceId`, `data` |
@@ -851,9 +892,9 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __local_resources.delete(__*settings*__)__ |
+| Method: | __localResources.delete(__*settings*__)__ |
 | Request Type: | DELETE |
-| Request URL: | {apiRoot}/accounts/{accountId}/local_resources/{resourceId} |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/{resourceId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `resourceId`, `data` |
@@ -861,13 +902,54 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __local_resources.list(__*settings*__)__ |
+| Method: | __localResources.list(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/local_resources |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __localResources.updateCollection(__*settings*__)__ |
+| Request Type: | POST |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/collection |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __localResources.listJobs(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/jobs |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __localResources.getJob(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/jobs/{jobId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `jobId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __localResources.createJob(__*settings*__)__ |
+| Request Type: | PUT |
+| Request URL: | {apiRoot}/accounts/{accountId}/resources/jobs |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `jobId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
 
 ###### Media
 
@@ -1205,6 +1287,59 @@ kazooSdk.auth.userAuth({
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `portRequestId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+
+###### Resource Templates
+
+|||
+|---|---|
+| Method: | __resourceTemplates.get(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/resource_templates/{resourceId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `resourceId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __resourceTemplates.create(__*settings*__)__ |
+| Request Type: | PUT |
+| Request URL: | {apiRoot}/accounts/{accountId}/resource_templates |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __resourceTemplates.update(__*settings*__)__ |
+| Request Type: | POST |
+| Request URL: | {apiRoot}/accounts/{accountId}/resource_templates/{resourceId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `resourceId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __resourceTemplates.delete(__*settings*__)__ |
+| Request Type: | DELETE |
+| Request URL: | {apiRoot}/accounts/{accountId}/resource_templates/{resourceId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `resourceId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __resourceTemplates.list(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/resource_templates |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Service Plan
