@@ -52,7 +52,8 @@ define(function(require){
 
 		/* Set the default Language to English, and overrides it with the language from the browser. If a cookie exists, we override the language value with the value stored in the cookie) */
 		setDefaultLanguage: function() {
-			var defaultLanguage = navigator.language || 'en-US';
+			var browserLanguage = (navigator.language).replace(/-.*/,function(a){return a.toUpperCase();}), // always capitalize the second part of the navigator language
+				defaultLanguage = browserLanguage || 'en-US';
 
 			monster.config.whitelabel.language = monster.config.whitelabel.language || defaultLanguage;
 
