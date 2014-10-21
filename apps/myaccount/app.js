@@ -6,10 +6,14 @@ define(function(require){
 		toastr = require('toastr');
 
 	var app = {
-
 		name: 'myaccount',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		requests: {
 			'myaccount.getAccount': {

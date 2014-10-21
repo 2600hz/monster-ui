@@ -7,8 +7,7 @@ define(function(){
 		defaultLanguage: 'en-US',
 
 		monsterizeApp: function(app, callback) {
-			var self = this,
-				css = app.appPath + '/app.css';
+			var self = this;
 
 			_.each(app.requests, function(request, id){
 				monster._defineRequest(id, request, app);
@@ -20,41 +19,9 @@ define(function(){
 				monster.sub(topic, cb, app);
 			});
 
-			if(monster._fileExists(css)){
-				monster.css(css);
-			}
+			self._addAppCss(app);
 
-			_.extend(app.data, { i18n: {} });
-
-			// en-US is the default language of Monster
-			var customLanguage = app.i18n.indexOf(monster.config.whitelabel.language) >= 0 ? monster.config.whitelabel.language : self.defaultLanguage,
-				// Once all the different i18n files are loaded, we need to append the core i18n to the app
-				addCoreI18n = function() {
-					if('core' in monster.apps) {
-						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
-					}
-				}
-
-			self.loadLocale(app, self.defaultLanguage, function() {
-				// If the app supports the custom language, then we load its json file if its not the default one
-				if(customLanguage !== self.defaultLanguage) {
-					self.loadLocale(app, customLanguage, function() {
-						addCoreI18n();
-					});
-				}
-				else {
-					addCoreI18n();
-				}
-			});
-
-			// add an active property method to the i18n array within the app.
-			_.extend(app.i18n, {
-				active: function(){
-					var language = app.i18n.indexOf(monster.config.whitelabel.language) >= 0 ? monster.config.whitelabel.language : self.defaultLanguage;
-
-					return app.data.i18n[language];
-				}
-			});
+			self._addAppI18n(app);
 
 			app.apiUrl = app.apiUrl || monster.config.api.default;
 
@@ -79,11 +46,74 @@ define(function(){
 				} else {
 					console.error('This api does not exist. Module: ' + module + ', Method: ' + method);
 				}
-			}
+			};
 
 			monster.apps[app.name] = app;
 
 			app.load(callback);
+		},
+
+		_addAppCss: function(app) {
+			var self = this,
+				listCss = app.css || [],
+				currentLanguage = monster.config.whitelabel.language,
+				addCss = function(fileName) {
+					fileName = app.appPath + '/style/' + fileName + '.css';
+
+					if(monster._fileExists(fileName)){
+						monster.css(fileName);
+					}
+					else {
+						console.info('File Name doesn\'t exist: ', fileName);
+					}
+				};
+
+			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
+			if(currentLanguage !== self.defaultLanguage) {
+				if(currentLanguage in app.i18n && app.i18n[currentLanguage].customCss === true) {
+					listCss.push('cssI18n/' + currentLanguage);
+				}
+			}
+
+			_.each(listCss, function(fileName) {
+				addCss(fileName);
+			});
+		},
+
+		_addAppI18n: function(app) {
+			var self = this,
+				currentLanguage = monster.config.whitelabel.language;
+
+			_.extend(app.data, { i18n: {} });
+
+			// en-US is the default language of Monster
+			var customLanguage = currentLanguage in app.i18n >= 0 ? currentLanguage : self.defaultLanguage,
+				// Once all the different i18n files are loaded, we need to append the core i18n to the app
+				addCoreI18n = function() {
+					if('core' in monster.apps) {
+						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
+					}
+				};
+
+			self.loadLocale(app, self.defaultLanguage, function() {
+				// If the app supports the custom language, then we load its json file if its not the default one
+				if(customLanguage !== self.defaultLanguage) {
+					self.loadLocale(app, customLanguage, function() {
+						addCoreI18n();
+					});
+				}
+				else {
+					addCoreI18n();
+				}
+			});
+
+			// add an active property method to the i18n array within the app.
+			_.extend(app.i18n, {
+				active: function(){
+					var language = currentLanguage in app.i18n ? currentLanguage : self.defaultLanguage;
+					return app.data.i18n[language];
+				}
+			});
 		},
 
 		_loadApp: function(name, callback, options){

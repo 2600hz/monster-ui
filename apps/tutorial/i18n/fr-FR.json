@@ -1,0 +1,8 @@
+{
+	"skeleton": {
+		"description": "Vous pouvez changer le template HTML situé dans /apps/skeleton/views/layout.html. Le Javascript nécessaire à cette application se situe dans /apps/skeleton/app.js.",
+		"noNumber": "Pas de numéros correspondant à votre recherche! Par contre... vous pourriez mettre à jour le CSS pour que cela soit plus joli! (astuce: le css se situe dans /apps/skeleton/app.css!)",
+		"searchNumbers": "Chercher des numéros à San Francisco",
+		"welcome": "Bienvenue dans notre exemple d'application!"
+	}
+}

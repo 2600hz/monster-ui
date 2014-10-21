@@ -1,7 +1,7 @@
-@import url('submodules/balance/balance.css');
-@import url('submodules/servicePlan/servicePlan.css');
-@import url('submodules/transactions/transactions.css');
-@import url('submodules/trunks/trunks.css');
+@import url('../submodules/balance/balance.css');
+@import url('../submodules/servicePlan/servicePlan.css');
+@import url('../submodules/transactions/transactions.css');
+@import url('../submodules/trunks/trunks.css');
 
 /* My account */
 #myaccount {

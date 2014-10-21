@@ -6,7 +6,12 @@ define(function(require){
 	var app = {
 		name: 'core',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		css: [ 'app', 'custom' ],
+
+		i18n: {
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: true }
+		},
 
 		requests: {},
 
@@ -194,7 +199,7 @@ define(function(require){
 					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
 				error: function(error) {
-					container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/static/images/logo.png")');
+					container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/style/static/images/logo.png")');
 				}
 			});
 		},

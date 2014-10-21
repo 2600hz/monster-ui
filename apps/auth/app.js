@@ -8,7 +8,12 @@ define(function(require){
 
 		name: 'auth',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		requests: {
 			'auth.userAuth': {

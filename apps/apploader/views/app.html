@@ -11,7 +11,7 @@
 					{{#unless @index }}
 					<div class="app-default">
 						<div class="app-default-top"><i class="icon-circle icon-green icon-small"></i></div>
-						<div class="app-default-bottom">default</div>
+						<div class="app-default-bottom">{{ ../../i18n.apploader.default }}</div>
 					</div>
 					{{/unless}}
 				</li>
@@ -21,7 +21,7 @@
 	{{#if allowAppstore}}
 		<div class="appstore-link" data-name="appstore">
 			<div class="appstore-link-icon"><i class="icon-cog icon-large icon-white"></i></div>
-			<div class="appstore-link-label">App Store</div>
+			<div class="appstore-link-label">{{ i18n.apploader.appStore }}</div>
 		</div>
 	{{/if}}
 </div>

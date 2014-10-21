@@ -7,7 +7,11 @@ define(function(require){
 	var app = {
 		name: 'demo',
 
-		i18n: [ 'en-US' ],//, 'fr-FR' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false }
+		},
 
 		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		load: function(callback){

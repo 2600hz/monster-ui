@@ -1,3 +1,6 @@
 {
-	
+	"apploader": {
+		"appStore": "App Store",
+		"default": "défaut"
+	}
 }

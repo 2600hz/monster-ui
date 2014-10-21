@@ -7,9 +7,14 @@ define(function(require){
 
 	var app = {
 
-		name: "appstore",
+		name: 'appstore',
 
-		i18n: [ 'en-US' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		requests: {
 			'appstore.list': {

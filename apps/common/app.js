@@ -8,7 +8,12 @@ define(function(require){
 
 		subModules: ['accountDropdown', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel', 'servicePlanDetails'],
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		requests: {},
 		subscribe: {},

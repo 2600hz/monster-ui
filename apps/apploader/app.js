@@ -5,10 +5,14 @@ define(function(require){
 		monster = require('monster');
 
 	var app = {
-
 		name: 'apploader',
 
-		i18n: [ 'en-US' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		requests: {
 			'apploader.users.update': {

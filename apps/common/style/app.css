@@ -1,12 +1,12 @@
-@import url('submodules/accountDropdown/accountDropdown.css');
-@import url('submodules/buyNumbers/buyNumbers.css');
-@import url('submodules/callerId/callerId.css');
-@import url('submodules/e911/e911.css');
-@import url('submodules/failover/failover.css');
-@import url('submodules/numbers/numbers.css');
-@import url('submodules/port/port.css');
-@import url('submodules/chooseModel/chooseModel.css');
-@import url('submodules/servicePlanDetails/servicePlanDetails.css');
+@import url('../submodules/accountDropdown/accountDropdown.css');
+@import url('../submodules/buyNumbers/buyNumbers.css');
+@import url('../submodules/callerId/callerId.css');
+@import url('../submodules/e911/e911.css');
+@import url('../submodules/failover/failover.css');
+@import url('../submodules/numbers/numbers.css');
+@import url('../submodules/port/port.css');
+@import url('../submodules/chooseModel/chooseModel.css');
+@import url('../submodules/servicePlanDetails/servicePlanDetails.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {

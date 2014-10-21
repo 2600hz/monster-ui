@@ -6,7 +6,12 @@ define(function(require){
 	var app = {
 		name: 'skeleton',
 
-		i18n: [ 'en-US', 'fr-FR' ],
+		css: [ 'app' ],
+
+		i18n: { 
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		},
 
 		// Defines API requests not included in the SDK
 		requests: {},
