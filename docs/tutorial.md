@@ -36,7 +36,9 @@ Once the list of dependencies has been created, we create an "app" object, that 
 	var app = {
 		name: 'demo',
 
-		i18n: [ 'en-US' ],
+		i18n: {
+			'en-US': { customCss: false }
+		},
 
 		requests: {
 			/* List of APIs */
@@ -74,7 +76,14 @@ This object contains all the required attributes for a Monster-UI app to work. L
 The is is a string with the name of your app. It needs to match the name of the folder of this app.
 
 ##### i18n
-This is an array representing the supported languages. You can learn more about i18n [here](https://github.com/2600hz/monster-ui/blob/master/docs/i18n.md). The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English.
+This is a map representing the supported languages. You can learn more about i18n [here](https://github.com/2600hz/monster-ui/blob/master/docs/i18n.md). The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English. The only option for each language key is the `customCss` one, which allows the framework to automatically import CSSi18n files if the user's language has this option enabled. 
+
+		```json
+		i18n: {
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: false }
+		}
+		```
 
 ##### Requests
 This is a map representing all the external API calls you need in your application. For example, if your need a way to call a Google API and still use the monster wrapper, you'd define the API here, by setting it like this:

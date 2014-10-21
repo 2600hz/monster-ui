@@ -45,12 +45,15 @@ At the top of your app.js file, you should declare the list of languages support
 ```
 var app = {
 	name: 'demoapp',
-	i18n: [ 'en-US', 'fr-FR' ],
+	i18n: {
+		'en-US': { customCss: false },
+		'fr-FR': { customCss: false }
+	},
 	/* ... */
 }
 ```
 
-The language file for your selected language will then automatically be merged into the app during the app initialization. To access it, simply call the _i18n.active()_ function, this will return you the i18n file as a JSON object.
+The language file for your selected language will then automatically be merged into the app during the app initialization. To access it, simply call the _i18n.active()_ function, this will return you the i18n file as a JSON object. The selected language is a setting on the account or user. If the user isn't logged in, it will take the browser language of what's defined in the config.js if set.
 
 If you defined a variable, you will need to use the _monster.template()_ function to replace it by the value of your choice.  
 The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#miscellaneous)).  
@@ -75,6 +78,22 @@ The last argument should be an object containing your variables and their values
 	/* ... */
 }
 ```
+
+##### Customize the CSS based on the language
+
+Sometimes, a text that is really short in English will be super-long in French and it might look better if we tweaked the CSS a little bit for the French i18n. In order to do that, 3 steps:
+
+	- we need to set the `customCss` key to true in the i18n map at the beginning of the app
+		```json
+		i18n: {
+			'en-US': { customCss: false },
+			'fr-FR': { customCss: true }
+		}
+		```
+	- check if the cssI18n folder exists in apps/%appName%/style. If it doesn't create it.
+	- Finally create a fr-FR.css file in this folder, and add your customizations in this file
+
+This way the changes will only be loaded for the customers using the French version. If you're using the English version, it won't even load the file.
 
 ##### In html templates
 
