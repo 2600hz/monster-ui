@@ -6,11 +6,11 @@ define(function(require){
 	var app = {
 		name: 'core',
 
-		css: [ 'app', 'custom' ],
+		css: [ 'app' ],
 
 		i18n: {
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: true }
+			'fr-FR': { customCss: false }
 		},
 
 		requests: {},
