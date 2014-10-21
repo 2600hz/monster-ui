@@ -1,0 +1,5 @@
+<select class="span2 switch-state">
+{{#each states}}
+	<option value="{{value}}"{{#compare @index '===' 0 }} selected{{/compare}}>{{text}}</option>
+{{/each}}
+</select>

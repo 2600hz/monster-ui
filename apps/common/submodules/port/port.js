@@ -25,25 +25,13 @@ define(function(require){
 		portRender: function(args){
 			var self = this,
 				args = args || {},
-				accountId = args.accountId || self.accountId,
-				states = {
-					completed: '',
-					rejected: '',
-					scheduled: '',
-					submitted: '',
-					unconfirmed: ''
-				};
-
-			for (var k in states) {
-				states[k] = self.i18n.active().port.state[k];
-			}
+				accountId = args.accountId || self.accountId;
 
 			self.portPositionDialogBox();
 
 			self.portRequestList(accountId, function(data) {
 				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
 						data: data,
-						states: states,
 						isAdmin: monster.apps.auth.originalAccount.superduper_admin
 					})),
 					parent = args.parent || monster.ui.dialog('', {
@@ -54,8 +42,68 @@ define(function(require){
 
 				parent.empty().append(portTemplate);
 
+				self.portRenderStateCell(parent, data);
+
 				self.portPendingOrders(accountId, parent, data);
 			});
+		},
+
+		portRenderStateCell: function(parent, data, portRequestId){
+			var self = this,
+				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
+				states = [
+					{ value: 'unconfirmed', 'text': '', next: [1] },
+					{ value: 'submitted', 'text': '', next: [2,3,4] },
+					{ value: 'scheduled', 'text': '', next: [3,4] },
+					{ value: 'rejected', 'text': '', next: [1,4] },
+					{ value: 'completed', 'text': '', next: [] }
+				],
+				getStatesToDisplay = function(nextState) {
+					var statesList = [];
+
+					for (var i = 0, len = states.length; i < len; i++) {
+						if (nextState === states[i].value) {
+							var indexList = states[i].next;
+
+							indexList.forEach(function(v, idx) {
+								statesList.push(states[v]);
+							});
+
+							statesList.unshift(states[i]);
+
+							break;
+						}
+					}
+
+					return statesList;
+				};
+
+			for (var k in states) {
+				states[k].text = self.i18n.active().port.state[states[k].value];
+			}
+
+			if (typeof portRequestId === 'string') {
+				if (isAdmin) {
+					parent
+						.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
+						.empty()
+						.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(data) })));
+				}
+			}
+			else {
+				_.each(data, function(val, key) {
+					var td = parent .find('.collapse[data-id="' + val.id + '"] td:nth-child(3)');
+
+					if (isAdmin) {
+						td.empty()
+							.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(val.port_state) })));
+					}
+					else {
+						td.empty()
+							.text(self.i18n.active().port.state[val.port_state]);
+					}
+				});
+			}
 		},
 
 		/**
@@ -120,17 +168,19 @@ define(function(require){
 				self.portAddNumbers(accountId, parent);
 			});
 
-			container.find('table select').on('click', function(event) {
+			container.find('.collapse td:nth-child(3)').on('click', '.switch-state', function(event) {
 				event.stopPropagation();
 			});
 
-			container.find('table select').on('change', function(event) {
+			container.find('.collapse td:nth-child(3)').on('change', '.switch-state', function(event) {
 				var el = $(this),
 					portRequestId = el.parents('.collapse').data('id'),
 					newState = $(this).val();
 
 				self.portRequestChangeState(accountId, portRequestId, newState, function() {
 					var button = el.parents('.collapse').find('td:last-child button');
+
+					self.portRenderStateCell(container, newState, portRequestId);
 
 					if (newState === 'unconfirmed') {
 						button
@@ -999,9 +1049,13 @@ define(function(require){
 						});
 					} else {
 						self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-							self.portRequestChangeState(accountId, portRequestId, 'submitted', function() {
+							if (data.orders[index].port_state === 'undefined') {
+								self.portRequestChangeState(accountId, data.orders[index].id, 'submitted', function() {
+									self.portReloadApp(accountId, parent);
+								});
+							}
+							else
 								self.portReloadApp(accountId, parent);
-							});
 						});
 					}
 				}

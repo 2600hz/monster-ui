@@ -19,24 +19,13 @@
 				<tr class="collapse" data-id="{{id}}">
 					<td><i class="icon-caret-right"></i>{{name}}</td>
 					<td>{{#if created}}{{formatTimestamp created 'MM/DD/YYYY'}}{{else}}.....{{/if}}</td>
-					<td>
-					{{#if ../isAdmin}}
-						<select class="span2">
-							{{#each ../../states}}
-								<option value="{{@key}}"{{#compare @key '===' ../port_state}} selected{{/compare}}>{{this}}</option>
-							{{/each}}
-						</select>
-					{{else}}
-						{{port_state}}
-					{{/if}}
-					</td>
+					<td></td>
 					<td>
 					{{#compare port_state '===' 'unconfirmed'}}
 						<button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button>
 					{{else}}
 						<button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button>
 					{{/compare}}
-
 						<i class="icon-comments"></i>
 					</td>
 				</tr>
