@@ -84,10 +84,18 @@ define(function(require){
 
 			if (typeof portRequestId === 'string') {
 				if (isAdmin) {
-					parent
-						.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
-						.empty()
-						.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(data) })));
+					if (data === 'completed') {
+						parent
+							.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
+							.empty()
+							.text(self.i18n.active().port.state[data]);
+					}
+					else {
+						parent
+							.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
+							.empty()
+							.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(data) })));
+					}
 				}
 			}
 			else {
@@ -95,8 +103,14 @@ define(function(require){
 					var td = parent .find('.collapse[data-id="' + val.id + '"] td:nth-child(3)');
 
 					if (isAdmin) {
-						td.empty()
-							.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(val.port_state) })));
+						if (val.port_state === 'completed') {
+							td.empty()
+								.text(self.i18n.active().port.state[val.port_state]);
+						}
+						else {
+							td.empty()
+								.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(val.port_state) })));
+						}
 					}
 					else {
 						td.empty()
@@ -684,11 +698,16 @@ define(function(require){
 						mimeTypes: ['application/pdf'],
 						wrapperClass: 'input-append',
 						success: function(results) {
-							if ( data.orders[index].hasOwnProperty('id') ) {
-								if ( data.orders[index].uploads.hasOwnProperty(type.concat('.pdf')) ) {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
-								} else {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file);
+							if (data.orders[index].hasOwnProperty('id')) {
+								if (data.orders[index].hasOwnProperty(type.concat('.pdf'))) {
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), reuslts[0].file, function() {
+										data.orders[index][type.concat('_attachment')] = results[0].file;
+									});
+								}
+								else {
+									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
+										data.orders[index][type.concat('_attachment')] = results[0].file;
+									});
 								}
 							}
 							else {
@@ -1049,13 +1068,14 @@ define(function(require){
 						});
 					} else {
 						self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-							if (data.orders[index].port_state === 'undefined') {
+							if (data.orders[index].port_state === 'unconfirmed') {
 								self.portRequestChangeState(accountId, data.orders[index].id, 'submitted', function() {
 									self.portReloadApp(accountId, parent);
 								});
 							}
-							else
+							else {
 								self.portReloadApp(accountId, parent);
+							}
 						});
 					}
 				}
@@ -1078,19 +1098,25 @@ define(function(require){
 			var self = this,
 				index = index || 0;
 
-			if ( typeof data.orders[index].id === 'undefined' ) {
-				self.portRequestAdd(accountId, data.orders[index], function() {
-					if ( data.orders.length > 1 ) {
-						data.orders.splice(index, 1);
-						parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-						self.portResumeOrders(accountId, parent, data);
-					} else {
-						self.portReloadApp(accountId, parent);
-					}
-				});
-			} else {
+			if (data.orders[index].hasOwnProperty('id')) {
 				self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
 					self.portReloadApp(accountId, parent);
+				});
+			}
+			else {
+				self.portRequestAdd(accountId, data.orders[index], function() {
+					if (data.orders.length > 1) {
+						data.orders.splice(index, 1);
+
+						parent
+							.empty()
+							.append($(monster.template(self, 'port-resumeOrders', data)));
+
+						self.portResumeOrders(accountId, parent, data);
+					}
+					else {
+						self.portReloadApp(accountId, parent);
+					}
 				});
 			}
 		},
@@ -1125,14 +1151,14 @@ define(function(require){
 
 		portRequestAdd: function(accountId, order, callback) {
 			var self = this,
-				attachments = new Object();
+				attachments = {};
 
-			if ( typeof order.bill_attachment != "undefined" ) {
+			if (order.hasOwnProperty('bill_attachment')) {
 				attachments.bill = order.bill_attachment;
 				delete order.bill_attachment;
 			}
 
-			if ( typeof order.loa_attachment != "undefined" ) {
+			if (order.hasOwnProperty('loa_attachment')) {
 				attachments.loa = order.loa_attachment;
 				delete order.loa_attachment;
 			}
@@ -1150,22 +1176,25 @@ define(function(require){
 				success: function(data, status) {
 					var portRequestId = data.data.id;
 
-					if ( typeof attachments.bill != 'undefined' ) {
+					if (attachments.hasOwnProperty('bill')) {
 						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
-							if ( typeof attachments.loa != 'undefined' ) {
+							if (attachments.hasOwnProperty('loa')) {
 								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
 									callback(portRequestId);
 								});
-							} else {
+							}
+							else {
 								callback(portRequestId);
 							}
 						});
-					} else {
-						if ( typeof attachments.loa != 'undefined' ) {
+					}
+					else {
+						if (attachments.hasOwnProperty('loa')) {
 							self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
 								callback(portRequestId);
 							});
-						} else {
+						}
+						else {
 							callback(portRequestId);
 						}
 					}
@@ -1177,6 +1206,14 @@ define(function(require){
 			var self = this;
 
 			order = self.portArrayToObjects(order);
+
+			if (order.hasOwnProperty('bill_attachment')) {
+				delete order.bill_attachment;
+			}
+
+			if (order.hasOwnProperty('loa_attachment')) {
+				delete order.loa_attachment;
+			}
 
 			self.callApi({
 				resource: 'port.update',
