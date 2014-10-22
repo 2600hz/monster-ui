@@ -301,6 +301,12 @@ define(function(require){
 			});
 		},
 
+		getScript: function(url, callback) {
+			var self = this;
+
+			$.getScript(url, callback);
+		},
+
 		querystring: function (key) {
 			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi'),
 				results = [],
