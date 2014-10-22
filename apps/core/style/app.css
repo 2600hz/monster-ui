@@ -693,7 +693,7 @@ table.table tr td {
 }
 
 .item-selector .item-handle {
-	background: url('../static/images/drag.png');
+	background: url('static/images/drag.png');
 	float: left;
 	height: 30px;
 	margin: 5px 10px 0 0;
