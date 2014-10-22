@@ -7,6 +7,8 @@ define(function(require){
 	var app = {
 		name: 'tutorial',
 
+		externalScripts: [ 'example' ],
+
 		css: [ 'app' ],
 
 		i18n: { 
