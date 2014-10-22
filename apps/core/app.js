@@ -58,7 +58,7 @@ define(function(require){
 			var self = this;
 
 			monster.apps.load('auth', function(app){
-				app.render($('#ws-content'));
+				app.render($('#monster-content'));
 			});
 		},
 
@@ -103,7 +103,7 @@ define(function(require){
 				if(typeof defaultApp !== 'undefined') {
 					monster.apps.load(defaultApp, function(app) {
 						self.showAppName(defaultApp);
-						app.render($('#ws-content'));
+						app.render($('#monster-content'));
 					});
 				}
 				else {

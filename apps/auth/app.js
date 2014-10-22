@@ -51,7 +51,7 @@ define(function(require){
 
 		load: function(callback){
 			var self = this,
-				mainContainer = $('#ws-content');
+				mainContainer = $('#monster-content');
 
 			self.getWhitelabel(function(data) {
 				// Merge the whitelabel info to replace the hardcoded info
@@ -215,7 +215,7 @@ define(function(require){
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
-			$('#ws-content').empty();
+			$('#monster-content').empty();
 
 			self.afterLoggedIn();
 		},
@@ -573,14 +573,14 @@ define(function(require){
 					self.isReseller = data.data.is_reseller;
 					self.resellerId = data.data.reseller_id;
 
-					$('#ws-content').empty();
+					$('#monster-content').empty();
 
 					monster.apps.load('conferences', function(app) {
 						app.userType = 'unregistered';
 						app.user = formData;
 						app.isModerator = data.data.is_moderator;
 						app.conferenceId = data.data.conference_id;
-						app.render($('#ws-content'));
+						app.render($('#monster-content'));
 					});
 				},
 				error: function(apiResponse, rawError) {

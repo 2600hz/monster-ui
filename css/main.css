@@ -2,7 +2,7 @@ html, body, #main, #main section {
 	height: 100%;
 }
 
-body, .ws-content {
+body, .monster-content {
 	min-width: 600px;
 }
 
@@ -289,7 +289,7 @@ a.monster-link.disabled i {
 	}
 }
 
-#main section > .ws-content {
+#main section > .monster-content {
 	position: absolute;
 	top: 67px;
 	right: 0;

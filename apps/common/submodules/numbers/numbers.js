@@ -55,7 +55,7 @@ define(function(require){
 
 		numbersRender: function(args){
 			var self = this,
-				container = args.container || $('#ws-content'),
+				container = args.container || $('#monster-content'),
 				callbackAfterRender = args.callbackAfterRender;
 
 			self.numbersGetData(function(data) {

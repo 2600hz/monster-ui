@@ -63,7 +63,7 @@ define(function(require){
 		render: function(container) {
 			var self = this,
 				template = $(monster.template(self, 'app')),
-				parent = container || $('#ws-content');
+				parent = container || $('#monster-content');
 
 			self.loadData(function(appstoreData) {
 				self.renderApps(template, appstoreData);

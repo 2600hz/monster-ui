@@ -64,7 +64,7 @@ define(function(require){
 		_render: function(container) {
 			var self = this,
 				skeletonTemplate = $(monster.template(self, 'layout')),
-				parent = _.isEmpty(container) ? $('#ws-content') : container;
+				parent = _.isEmpty(container) ? $('#monster-content') : container;
 
 			self.bindEvents(skeletonTemplate);
 

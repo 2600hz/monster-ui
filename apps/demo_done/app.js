@@ -36,7 +36,7 @@ define(function(require){
 		// Entry Point of the app
 		render: function(container){
 			var self = this,
-				container = container || $('#ws-content');
+				container = container || $('#monster-content');
 
 			// Get the initial dynamic data we need before displaying the app
 			self.listDevices(function(data) {

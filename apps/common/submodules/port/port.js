@@ -1462,7 +1462,7 @@ define(function(require){
 				parent.parent().remove();
 			} else {
 				parent.empty();
-				args.parent = $('#ws-content');
+				args.parent = $('#monster-content');
 			}
 
 			self.portRender(args);

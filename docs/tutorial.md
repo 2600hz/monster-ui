@@ -132,7 +132,7 @@ In order to do so, we'll add this code:
 	 render: function(container){
 		var self = this,
 			demoTemplate = $(monster.template(self, 'layout')),
-			parent = _.isEmpty(container) ? $('#ws-content') : container;
+			parent = _.isEmpty(container) ? $('#monster-content') : container;
 
 		self.bindEvents(demoTemplate);
 
