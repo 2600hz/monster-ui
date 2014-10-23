@@ -163,10 +163,7 @@
 			}
 		},
 		"title": {
-			"fontSize": "Taille de la police",
-			"huge": "Grand",
-			"normal": "Normale",
-			"small" : "Petit",
+			"fontSize": "Taille du text",
 
 			"bold": "Gras (Ctrl/Cmd+B)",
 			"italic": "Italique (Ctrl/Cmd+I)",
@@ -189,9 +186,8 @@
 			"reduceIndent": "Mettre en retrait (Shift+Tab)",
 			"indent": "Mettre en alignéa (Tab)",
 
-			"hyperlink": "Lien hypertexte",
-			"add": "Ajouter",
-			"removeHyperlink": "Supprimer le lien hypertexte",
+			"createLink": "Lien hypertexte",
+			"removeLink": "Supprimer le lien hypertexte",
 
 			"upload": "Télécharger une image (ou glisser-déposer)",
 
@@ -201,6 +197,14 @@
 			"horizontalRule": "Règle horizontal",
 
 			"macro": "Macro"
+		},
+		"text": {
+			"big": "Grand",
+			"normal": "Normal",
+			"small" : "Petit",
+		},
+		"placeholder": {
+			"createLink": "URL"
 		}
 	}
 }

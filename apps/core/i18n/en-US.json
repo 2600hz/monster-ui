@@ -162,9 +162,6 @@
 		},
 		"title": {
 			"fontSize": "Font Size",
-			"huge": "Huge",
-			"normal": "Normal",
-			"small" : "Small",
 
 			"bold": "Bold (Ctrl/Cmd+B)",
 			"italic": "Italic (Ctrl/Cmd+I)",
@@ -187,9 +184,8 @@
 			"reduceIndent": "Reduce indent (Shift+Tab)",
 			"indent": "Indent (Tab)",
 
-			"hyperlink": "Hyperlink",
-			"add": "Add",
-			"removeHyperlink": "Remove Hyperlink",
+			"createLink": "Hyperlink",
+			"removeLink": "Remove Hyperlink",
 
 			"upload": "Insert picture (or just drag & drop)",
 
@@ -199,6 +195,14 @@
 			"horizontalRule": "Horizontal Rule",
 
 			"macro": "Macro"
+		},
+		"text": {
+			"big": "Big",
+			"normal": "Normal",
+			"small" : "Small"
+		},
+		"placeholder": {
+			"createLink": "URL"
 		}
 	}
 }

@@ -792,291 +792,313 @@ define(function(require){
 		/**
 		 * @desc prepend a WYSIWYG in 'target'
 		 * @param target - mandatory jQuery Object
-		 * @param options - optional Javascript Object
+		 * @param options - optional JavaScript Object or JavaScript Boolean
 		 *
-		 * To remove elements from the toolbar, specify false as value
-		 * for the corresponding key in the defaultOptions object.
+		 * To remove some elements from the toolbar, specify false as value
+		 * for the corresponding key in the defaultOptions object. To remove
+		 * all elements, set the options parameter to false.
 		 * 
 		 * The target should be a jQuery Object as follow:
 		 * <div class="wysiwyg-container"></div>
-		 * The optional class "filled" can be added to this container
-		 * to change the style of the toolbar.
+		 * The optional class "transparent" can be added to this container
+		 * to change the background of the toolbar.
 		 */
 		wysiwyg: function(target, options) {
 			var self = this,
-				options = options || {},
-				id = new Date().getTime(),
+				options = _.isBoolean(options) ? options : options || {},
+				id = Date.now(),
 				coreApp = monster.apps.core,
-				i18n = coreApp.i18n.active().wysiwyg,
-				defaultOptions = {
-					fontSize: {
-						title: i18n.title.fontSize,
-						icon: 'icon-text-height',
-						options: {
-							small: {
-								title: i18n.title.small,
-								command: 'fontSize',
-								args: '1',
-								weight: '1'
-							},
-							normal: {
-								title: i18n.title.normal,
-								command: 'fontSize',
-								args: '3',
-								weight: '2'
-							},
-							huge: {
-								title: i18n.title.huge,
-								command: 'fontSize',
-								args: '5',
-								weight: '3'
-							}
-						}
-					},
-					fontEffect: {
-						bold: {
-							title: i18n.title.bold,
-							icon: 'icon-bold',
-							command: 'bold',
-							weight: '1'
-						},
-						italic: {
-							title: i18n.title.italic,
-							icon: 'icon-italic',
-							command: 'italic',
-							weight: '2'
-						},
-						underline: {
-							title: i18n.title.underline,
-							icon: 'icon-underline',
-							command: 'underline',
-							weight: '3'
-						},
-						strikethrough: {
-							title: i18n.title.strikethrough,
-							icon: 'icon-strikethrough',
-							command: 'strikethrough',
-							weight: '4'
-						}
-					},
-					fontColor: {
-						title: i18n.title.fontColor,
-						icon: 'icon-font',
-						command: 'foreColor',
-						options: [
-							'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
-							'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
-							'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
-							'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','b7dde8','fac08f','f2c314',
-							'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','92cddc','e36c09','c09100',
-							'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','31859b','974806','7f6000'
-						]
-					},
-					textAlign: {
-						title: i18n.title.alignment,
-						icon: 'icon-file-text',
-						options: {
-							left: {
-								title: i18n.title.alignLeft,
-								icon: 'icon-align-left',
-								command: 'justifyLeft',
-								weight: '1'
-							},
-							center: {
-								title: i18n.title.center,
-								icon: 'icon-align-center',
-								command: 'justifyCenter',
-								weight: '2'
-							},
-							right: {
-								title: i18n.title.alignRight,
-								icon: 'icon-align-right',
-								command: 'justifyRight',
-								weight: '3'
-							},
-							justify: {
-								title: i18n.title.justify,
-								icon: 'icon-align-justify',
-								command: 'justifyFull',
-								weight: '4'
-							}
-						}
-					},
-					list: {
-						title: i18n.title.list,
-						icon: 'icon-list',
-						options: {
-							unordered: {
-								title: i18n.title.bulletList,
-								icon: 'icon-list-ul',
-								command: 'insertUnorderedList',
-								weight: '1'
-							},
-							ordered: {
-								title: i18n.title.numberList,
-								icon: 'icon-list-ol',
-								command: 'insertOrderedList',
-								weight: '2'
-							}
-						}
-					},
-					indentation: {
-						indent: {
-							title: i18n.title.indent,
-							icon: 'icon-indent-right',
-							command: 'indent',
-							weight: '1'
-						},
-						outdent: {
-							title: i18n.title.reduceIndent,
-							icon: 'icon-indent-left',
-							command: 'outdent',
-							weight: '2'
-						}
-					},
-					link: {
-						create: {
-							title: i18n.title.hyperlink,
-							icon: 'icon-link',
-							command: 'createLink',
-							weight: '1'
-						},
-						delete: {
-							title: i18n.title.removeHyperlink,
-							icon: 'icon-unlink',
-							command: 'unlink',
-							weight: '2'
-						}
-					},
-					image: {
-						title: i18n.title.upload,
-						icon: 'icon-picture',
-						command: 'insertImage'
-					},
-					editing: {
-						undo: {
-							title: i18n.title.undo,
-							icon: 'icon-undo',
-							command: 'undo',
-							weight: '1'
-						},
-						redo: {
-							title: i18n.title.redo,
-							icon: 'icon-repeat',
-							command: 'redo',
-							weight: '2'
-						}
-					},
-					horizontalRule: {
-						title: i18n.title.horizontalRule,
-						icon: 'icon-minus',
-						command: 'insertHorizontalRule'
-					},
-					macro: {
-						title: i18n.title.macro,
-						command: 'insertHtml',
-						options: false
-					}
-				},
+				dataTemplate = { id: id },
 				wysiwygTemplate;
 
-			options = $.extend(true, {}, defaultOptions, options);
-
-			// Remove options with value at false
-			for (var c in options) {
-				if (!options[c]) {
-					delete options[c];
-				}
-				else if (options[c].hasOwnProperty('options')) {
-					if (_.isEmpty(options[c].options)) {
-						delete options[c];
-					}
-					else {
-						var show = false;
-
-						for (var o in options[c].options) {
-							if (options[c].options[o]) {
-								show = true;
-								break;
+			if (options) {
+				var i18n = coreApp.i18n.active().wysiwyg,
+					colorList = [
+						'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
+						'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
+						'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
+						'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','92cdcd','fac08f','f2c314',
+						'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','31859b','e36c09','c09100',
+						'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','205867','974806','7f6000'
+					],
+					defaultOptions = {
+						fontSize: {
+							weight: 10,
+							title: i18n.title.fontSize,
+							icon: 'icon-text-height',
+							command: 'fontSize',
+							options: {
+								small: {
+									weight: 10,
+									text: i18n.text.small,
+									args: '1'
+								},
+								normal: {
+									weight: 20,
+									text: i18n.text.normal,
+									args: '3'
+								},
+								big: {
+									weight: 30,
+									text: i18n.text.big,
+									args: '5'
+								}
 							}
+						},
+						fontEffect: {
+							weight: 20,
+							options: {
+								bold: {
+									weight: 10,
+									title: i18n.title.bold,
+									icon: 'icon-bold',
+									command: 'bold'
+								},
+								italic: {
+									weight: 20,
+									title: i18n.title.italic,
+									icon: 'icon-italic',
+									command: 'italic'
+								},
+								underline: {
+									weight: 30,
+									title: i18n.title.underline,
+									icon: 'icon-underline',
+									command: 'underline'
+								},
+								strikethrough: {
+									weight: 40,
+									title: i18n.title.strikethrough,
+									icon: 'icon-strikethrough',
+									command: 'strikethrough'
+								}
+							}
+						},
+						fontColor: {
+							weight: 30,
+							title: i18n.title.fontColor,
+							icon: 'icon-font',
+							command: 'foreColor',
+							options: [],
+							ante: '#'
+						},
+						textAlign: {
+							weight: 40,
+							title: i18n.title.alignment,
+							icon: 'icon-file-text',
+							options: {
+								left: {
+									weight: 10,
+									title: i18n.title.alignLeft,
+									icon: 'icon-align-left',
+									command: 'justifyLeft'
+								},
+								center: {
+									weight: 20,
+									title: i18n.title.center,
+									icon: 'icon-align-center',
+									command: 'justifyCenter'
+								},
+								right: {
+									weight: 30,
+									title: i18n.title.alignRight,
+									icon: 'icon-align-right',
+									command: 'justifyRight'
+								},
+								justify: {
+									weight: 40,
+									title: i18n.title.justify,
+									icon: 'icon-align-justify',
+									command: 'justifyFull'
+								}
+							}
+						},
+						list: {
+							weight: 50,
+							title: i18n.title.list,
+							icon: 'icon-list',
+							options: {
+								unordered: {
+									weight: 10,
+									title: i18n.title.bulletList,
+									icon: 'icon-list-ul',
+									command: 'insertUnorderedList'
+								},
+								ordered: {
+									weight: 20,
+									title: i18n.title.numberList,
+									icon: 'icon-list-ol',
+									command: 'insertOrderedList'
+								}
+							}
+						},
+						textIndent: {
+							weight: 60,
+							options: {
+								indent: {
+									weight: 10,
+									title: i18n.title.indent,
+									icon: 'icon-indent-right',
+									command: 'indent'
+								},
+								outdent: {
+									weight: 20,
+									title: i18n.title.reduceIndent,
+									icon: 'icon-indent-left',
+									command: 'outdent'
+								}
+							}
+						},
+						link: {
+							weight: 70,
+							options: {
+								create: {
+									weight: 10,
+									title: i18n.title.createLink,
+									icon: 'icon-link',
+									command: 'createLink'
+								},
+								delete: {
+									weight: 20,
+									title: i18n.title.removeLink,
+									icon: 'icon-unlink',
+									command: 'unlink'
+								}
+							}
+						},
+						image: {
+							weight: 80,
+							title: i18n.title.upload,
+							icon: 'icon-picture',
+							command: 'insertImage'
+						},
+						editing: {
+							weight: 90,
+							options: {
+								undo: {
+									weight: 10,
+									title: i18n.title.undo,
+									icon: 'icon-undo',
+									command: 'undo'
+								},
+								redo: {
+									weight: 20,
+									title: i18n.title.redo,
+									icon: 'icon-repeat',
+									command: 'redo'
+								}
+							}
+						},
+						horizontalRule: {
+							weight: 100,
+							title: i18n.title.horizontalRule,
+							icon: 'icon-minus',
+							command: 'insertHorizontalRule'
+						},
+						macro: {
+							weight: 999,
+							title: i18n.title.macro,
+							command: 'insertHtml',
+							options: false,
+							ante: '<b>{{',
+							post: '}}</b>'
 						}
+					},
+					sortByWeight = function(node) { // Sort elements by weight and "arrayize"
+						node = _.map(node, function(v, k) { return v; });
 
-						if (!show) {
-							delete options[c];
-						}
-					}
-				}
-				else if (!options[c].hasOwnProperty('title')) {
-					var show = false;
-
-					for (var o in options[c]) {
-						if (options[c][o]) {
-							show = true;
-							break;
-						}
-					}
-
-					if (!show) {
-						delete options[c];
-					}
-				}
-			}
-
-			// Sort element by weight
-			for (var c in options) {
-				if (options[c].hasOwnProperty('title') && options[c].hasOwnProperty('options')) {
-					if (!_.isArray(options[c].options)) {
-						options[c].options = _.map(options[c].options, function(v, key){ return v; });
-
-						options[c].options.sort(function(a, b){
+						node.sort(function(a, b){
 							return a.weight > b.weight ? 1 : -1;
 						});
+
+						_.each(node, function(v, k) {
+							if (v.hasOwnProperty('options')) {
+								v.options = sortByWeight(v.options);
+							}
+						});
+
+						return node;
+					};
+
+				colorList.forEach(function(hexColor, idx) {
+					defaultOptions.fontColor.options.push({ weight: ++idx * 10, args: hexColor });
+				})
+
+				options = $.extend(true, {}, defaultOptions, options);
+
+				// Remove options with value at false
+				for (var c in options) {
+					if (!options[c]) {
+						delete options[c];
+						continue;
 					}
-				}
-				else if (!options[c].hasOwnProperty('title') && !options[c].hasOwnProperty('options')) {
-					options[c] = _.map(options[c], function(v, k){ return v; });
-
-					options[c].sort(function(a, b){
-						return a.weight > b.weight ? 1 : -1;
-					});
-				}
-			}
-
-			wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', { id: id, tools: options }));
-
-			wysiwygTemplate
-				.find('a[title]')
-				.tooltip({container: 'body'});
-
-			// Handle the behavior of the creatLink dropdown menu
-			wysiwygTemplate.find('.dropdown-menu input')
-				.on('click', function() {
-					return false;
-				})
-				.on('change', function() {
-					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
-				})
-				.keydown('esc', function() {
-					this.value = '';
-					$(this).change();
-				});
-
-			target
-				.prepend(wysiwygTemplate)
-				.find('#wysiwyg_editor_' + id)
-				.wysiwyg({
-					toolbarSelector: '#wysiwyg_toolbar_' + id,
-					activeToolbarClass: 'selected',
-					fileUploadError: function(reason, detail) {
-						if (reason === 'unsupported-file-type') {
-							toastr.error(detail + i18n.toastr.error.format);
+					else if (options[c].hasOwnProperty('options')) {
+						if (_.isEmpty(options[c].options)) {
+							delete options[c];
+							continue;
 						}
 						else {
-							toastr.error(i18n.toastr.error.upload);
-							console.log('error uploading file', reason, detail);
+							var show = false;
+
+							for (var o in options[c].options) {
+								if (options[c].options[o]) {
+									show = true;
+									break;
+								}
+							}
+
+							if (!show) {
+								delete options[c];
+								continue;
+							}
 						}
 					}
-				});
+				}
+
+				dataTemplate.tools = sortByWeight(options);
+
+				wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', dataTemplate));
+
+				wysiwygTemplate
+					.find('a[title]')
+					.tooltip({container: 'body'});
+
+				if (options.hasOwnProperty('fontColor')) {
+					wysiwygTemplate.find('.color-menu a').each(function(idx, el) {
+						$(el).css('background-color', $(el).data('edit').split(' ').pop());
+					});
+				}
+
+				// Handle the behavior of the creatLink dropdown menu
+				wysiwygTemplate.find('.dropdown-menu input')
+					.on('click', function() {
+						return false;
+					})
+					.on('change', function() {
+						$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+					})
+					.keydown('esc', function() {
+						this.value = '';
+						$(this).change();
+					});
+			}
+			else {
+				wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', dataTemplate));
+			}
+
+			return target.prepend(wysiwygTemplate).find('#wysiwyg_editor_' + id).wysiwyg({
+						toolbarSelector: '#wysiwyg_toolbar_' + id,
+						activeToolbarClass: 'selected',
+						fileUploadError: function(reason, detail) {
+							if (reason === 'unsupported-file-type') {
+								toastr.error(detail + i18n.toastr.error.format);
+							}
+							else {
+								toastr.error(i18n.toastr.error.upload);
+								console.log('error uploading file', reason, detail);
+							}
+						}
+					});
 		}
 	};
 

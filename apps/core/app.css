@@ -1181,6 +1181,10 @@ label.monster-invalid {
 	margin-right: 5px;
 }
 
+.wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu input {
+	margin-left: 5px;
+}
+
 .wysiwyg-container .wysiwyg-toolbar .btn-group .dropdown-menu i {
 	margin-right: 0;
 }
@@ -1228,4 +1232,9 @@ label.monster-invalid {
 	background-color: #FFF;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
 	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	font-size: 16px;
+}
+
+.wysiwyg-container .wysiwyg-editor i {
+	font-size: inherit;
 }
