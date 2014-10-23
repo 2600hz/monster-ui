@@ -1,33 +1,48 @@
 <div id="action_confirmation">
 	{{#if delete}}
-	<h4>{{i18n.numbers.dialogConfirm.delete.questionPartOne}}<span class="monster-blue">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.delete.questionPartTwo}}</h4>
+		<h4>{{i18n.numbers.dialogConfirm.delete.questionPartOne}}<span class="monster-blue">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.delete.questionPartTwo}}</h4>
 	{{/if}}
+
 	{{#if move}}
-	<h4>{{i18n.numbers.dialogConfirm.move.questionPartOne}}<span class="monster-blue">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.move.questionPartTwo}}<span class="monster-blue">{{destinationAccountName}}</span>{{i18n.numbers.dialogConfirm.move.questionPartThree}}</h4>
+		<h4>
+			{{i18n.numbers.dialogConfirm.move.questionPartOne}}
+			<span class="monster-blue">{{numberCount}}</span>
+			{{i18n.numbers.dialogConfirm.move.questionPartTwo}}
+			<span class="monster-blue">{{destinationAccountName}}</span>
+			{{i18n.numbers.dialogConfirm.move.questionPartThree}}
+		</h4>
 	{{/if}}
+
 	<div class="table-wrapper">
-	<table class="table">
-	{{#each accountList}}
-	<thead>
-		<tr>
-			<th>{{../i18n.numbers.dialogConfirm.from}}<span class="monster-blue">{{accountName}}</span></th>
-		</tr>
-	</thead>
-	<tbody>
-		{{#each this.numbers}}
-		<tr><td data-number="{{this}}">{{this}}<i class="icon-remove-circle pull-right remove-number"></i></td></tr>
-		{{/each}}
-	</tbody>
-	{{/each}}
-	</table>
+		<table class="table">
+			{{#each accountList}}
+				<thead>
+					<tr>
+						<th>{{../i18n.numbers.dialogConfirm.from}}<span class="monster-blue">{{accountName}}</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each this.numbers}}
+						<tr>
+							<td data-number="{{this}}">
+								<div class="pull-left">{{this}}</div>
+								<i class="icon-remove-circle pull-right remove-number"></i>
+							</td>
+						</tr>
+					{{/each}}
+				</tbody>
+			{{/each}}
+		</table>
 	</div>
+
 	<div class="actions pull-right">
 		<a class="cancel-link monster-link blue" href="javascript:void(0);">{{i18n.numbers.dialogConfirm.cancel}}</a>
 		{{#if delete}}
-		<button class="btn btn-success" id="delete_action">{{i18n.numbers.dialogConfirm.delete.button}}</button>
+			<button class="btn btn-success" id="delete_action">{{i18n.numbers.dialogConfirm.delete.button}}</button>
 		{{/if}}
+
 		{{#if move}}
-		<button class="btn btn-success" id="move_action">{{i18n.numbers.dialogConfirm.move.button}}</button>
+			<button class="btn btn-success" id="move_action">{{i18n.numbers.dialogConfirm.move.button}}</button>
 		{{/if}}
 	</div>
 </div>
