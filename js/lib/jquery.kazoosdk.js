@@ -228,7 +228,15 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/whitelabel' },
 			'updateLogo': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/logo', type: 'application/x-base64' },
 			'updateWelcome': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/whitelabel' }
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/whitelabel' },
+			'listNotifications': { verb: 'GET', url: 'accounts/{accountId}/notifications' },
+			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notifications/{notificationId}' },
+			'getNotificationText': { verb: 'GET', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/plain', dataType: 'text/plain' },
+			'getNotificationHtml': { verb: 'GET', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/html', dataType: 'text/html' },
+			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}' },
+			'updateNotificationText': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/plain', dataType: 'text/plain' },
+			'updateNotificationHtml': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/html', dataType: 'text/html' },
+			'previewNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}/preview' }
 		}
 	},
 	authTokens = {};
