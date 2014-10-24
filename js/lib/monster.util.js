@@ -81,56 +81,79 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(timestamp, type) {
-			var self = this,
-				parsedDate = '-';
+		toFriendlyDate: function(timestamp, format){
+			var self = this;
 
-			if(timestamp) {
-				var today = new Date(),
+			if (typeof timestamp === 'number') {
+				var i18n = monster.apps.core.i18n.active(),
+					format2Digits = function(number) {
+						return number < 10 ? '0'.concat(number) : number;
+					},
+					today = new Date(),
 					todayYear = today.getFullYear(),
-					todayMonth = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : today.getMonth() + 1,
-					todayDay = today.getDate() < 10 ? '0' + today.getDate() : today.getDate(),
+					todayMonth = format2Digits(today.getMonth() + 1),
+					todayDay = format2Digits(today.getDate()),
 					date = self.gregorianToDate(timestamp),
-					month = date.getMonth() +1,
-					year = date.getFullYear(),
-					day = date.getDate(),
-					hours = date.getHours(),
-					minutes = date.getMinutes();
+					year = date.getFullYear().toString().substr(2, 2),
+					fullYear = date.getFullYear(),
+					month = format2Digits(date.getMonth() + 1),
+					calendarMonth = i18n.calendar.month[date.getMonth()],
+					day = format2Digits(date.getDate()),
+					weekDay = i18n.calendar.day[date.getDay()],
+					hours = format2Digits(date.getHours()),
+					minutes = format2Digits(date.getMinutes()),
+					seconds = format2Digits(date.getSeconds()),
+					patterns = {
+						'year': fullYear,
+						'YY': year,
+						'month': calendarMonth,
+						'MM': month,
+						'day': weekDay,
+						'DD': day,
+						'hh': hours,
+						'mm': minutes,
+						'ss': seconds
+					};
 
-				if(hours >= 12) {
-					if(hours !== 12) {
-						hours-=12;
+				if (format) {
+					if (format === 'short') {
+						format = 'MM/DD/year'
 					}
-					suffix = ' PM';
 				}
 				else {
-					if(hours === 0) {
-						hours = 12;
+					format = 'MM/DD/year - hh:mm12h'
+				}
+
+				if (format.indexOf('12h') > -1) {
+					var suffix;
+
+					if (hours >= 12) {
+						if (hours !== 12) {
+							hours -= 12;
+						}
+
+						suffix = i18n.calendar.suffix.pm;
 					}
-					suffix = ' AM';
+					else {
+						if (hours === '00') {
+							hours = 12
+						}
+
+						suffix = i18n.calendar.suffix.am;
+					}
+
+					patterns['12h'] = suffix;
 				}
 
-				day = day < 10 ? '0' + day : day;
-				month = month < 10 ? '0' + month : month;
-				hours = hours < 10 ? '0'+ hours : hours;
-				minutes = minutes < 10 ? '0'+ minutes : minutes;
+				_.each(patterns, function(v, k){
+					format = format.replace(k, v);
+				});
 
-				var humanDate = month+'/'+day+'/'+year,
-					humanTime = hours + ':' + minutes + suffix;
-
-				if(todayYear === year && todayMonth === month && todayDay === day && type !== 'short' && type !== 'standard') {
-					humanDate = 'Today';
-				}
-
-				if(type === 'short') {
-					parsedDate = humanDate;
-				}
-				else {
-					parsedDate = humanDate + ' - ' + humanTime;
-				}
+				return format;
 			}
-
-			return parsedDate;
+			else {
+				console.log('Timestamp should be a number');
+			}
 		},
 
 		friendlyTimer: function(seconds) {

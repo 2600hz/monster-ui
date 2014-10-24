@@ -106,7 +106,7 @@ inside `/apps/demo/views/event.html`
 	<td>{{ extra.friendlyEvent }}</td>
 	<td>{{ Caller-ID-Name }}</td>
 	<td>{{ extra.to }}</td>
-	<td>{{ formatTimestamp Timestamp }}</td>
+	<td>{{ toFriendlyDate Timestamp }}</td>
 </tr>
 ```
 

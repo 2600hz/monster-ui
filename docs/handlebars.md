@@ -99,26 +99,36 @@ In the above example, we check if the role of a user is `"admin"` and if it is w
 This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
 You can see a very good example about this helper [here](https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md#in-html-templates).
 
-##### formatTimestamp
-This helper allows you to display time in customizable format. It take a mandatory JavaScript or Gregorian timestamp in parameter and returns a time:
+##### toFriendlyDate
+This helper allows you to display time in a customizable format. It take a mandatory Gregorian timestamp in parameter and returns a formatted date:
 
 ```handlebars
-{{formatTimestamp timestamp}}
+{{toFriendlyDate gregorianTimestamp}}
 ```
-Output: 12/1/14 10:00:00
+Output: 12/01/14 12:43PM
 
 If you want to display a time in another format, you can specify an optional parameter:
 
 ```handlebars
-{{formatTimestamp timestamp 'DD-MM-YYYY hh:mm'}}
+{{toFriendlyDate gregorianTimestamp 'DD-MM-year hh:mm:ss12h'}}
 ```
-Output: 1-10-2014 15:52
+Output: 12-01-2014 12:43:23PM
+
+In bonus, you can set the optional parameter to `short` to simply display the date:
+
+```handlebars
+{{tofriendlyDate gregorianTimestamp 'short'}}
+```
+Output: 12/01/2014
 
 This helper will search for the following strings and replace them by the corresponding values:
-* YYYY: full year
+* year: full year
 * YY: last 2 digits of the year
+* month: month of the year in letters
 * MM: month as a 2 digits number
+* day: day of the week in letters
 * DD: date of the day
 * hh: hours
 * mm: minutes
 * ss: seconds
+* 12h: use the 12h format (if not specified, the 24h format is used)
