@@ -103,30 +103,8 @@ define(function(require){
 		}
 	});
 
-	Handlebars.registerHelper('formatTimestamp', function(timestamp, format) {
-		if (/^6[0-9]{10}$/.test(timestamp)) {
-			timestamp = monster.util.gregorianToDate(timestamp);
-		}
-
-		var timestamp = new Date(timestamp),
-			fullYear = timestamp.getFullYear(),
-			year = timestamp.getFullYear().toString().substr(2, 2),
-			month = timestamp.getMonth() + 1,
-			day = timestamp.getDate(),
-			hours = timestamp.getHours(),
-			minutes = timestamp.getMinutes() < 10 ? '0' + timestamp.getMinutes() : timestamp.getMinutes(),
-			seconds = timestamp.getSeconds() < 10 ? '0' + timestamp.getSeconds() : timestamp.getSeconds(),
-			format = _.isString(format) ? format : 'MM/DD/YY hh:mm:ss';
-
-		format = format.replace(/YYYY/, fullYear);
-		format = format.replace(/YY/, year);
-		format = format.replace(/MM/, month);
-		format = format.replace(/DD/, day);
-		format = format.replace(/hh/, hours);
-		format = format.replace(/mm/, minutes);
-		format = format.replace(/ss/, seconds);
-
-		return format;
+	Handlebars.registerHelper('toFriendlyDate', function(timestamp, format) {
+		return monster.util.toFriendlyDate(timestamp, format);
 	});
 
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
