@@ -228,6 +228,7 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/whitelabel' },
 			'updateLogo': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/logo', type: 'application/x-base64' },
 			'updateWelcome': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'text/html' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/whitelabel' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/whitelabel' },
 			'listNotifications': { verb: 'GET', url: 'accounts/{accountId}/notifications' },
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notifications/{notificationId}' },
