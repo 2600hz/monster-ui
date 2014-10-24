@@ -1038,16 +1038,13 @@ define(function(require){
 							continue;
 						}
 						else {
-							var show = false;
-
-							for (var o in options[c].options) {
-								if (options[c].options[o]) {
-									show = true;
-									break;
+							_.each(options[c].options, function(v, k, l){
+								if (!v) {
+									delete l[k];
 								}
-							}
+							});
 
-							if (!show) {
+							if (_.isEmpty(options[c].options)) {
 								delete options[c];
 								continue;
 							}
