@@ -18,7 +18,7 @@
 			{{#each data}}
 				<tr class="collapse" data-id="{{id}}">
 					<td><i class="icon-caret-right"></i>{{name}}</td>
-					<td>{{#if created}}{{formatTimestamp created 'MM/DD/YYYY'}}{{else}}.....{{/if}}</td>
+					<td>{{#if created}}{{toFriendlyDate created 'short'}}{{else}}.....{{/if}}</td>
 					<td></td>
 					<td>
 					{{#compare port_state '===' 'unconfirmed'}}
