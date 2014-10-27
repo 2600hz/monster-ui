@@ -28,9 +28,27 @@ define(function(){
 			app.callApi = function(params) {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
-					method = apiSplit[1];
+					method = apiSplit[1],
+					successCallback = params.success,
+					errorCallback = params.error;
 					
 				if(apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
+
+					//Handling special cases:
+					switch(params.resource) {
+						case 'account.update': {
+							if(params.data.accountId === monster.apps['auth'].currentAccount.id) {
+								successCallback = function(data, status) {
+									monster.apps['auth'].currentAccount = data.data;
+									monster.pub('auth.currentAccountUpdated', data.data);
+
+									params.success && params.success(data, status);
+								}
+							}
+							break;
+						}
+					}
+
 					var apiSettings = $.extend({
 							authToken: app.authToken,
 							apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
@@ -38,8 +56,8 @@ define(function(){
 								version: monster.config.version,
 								ui: 'monster-ui'
 							},
-							success: params.success,
-							error: params.error
+							success: successCallback,
+							error: errorCallback
 						}, params.data);
 
 					return monster.kazooSdk[module][method](apiSettings);
