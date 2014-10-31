@@ -142,6 +142,7 @@ define(function(require){
 						suffix = i18n.calendar.suffix.am;
 					}
 
+					patterns.hh = hours;
 					patterns['12h'] = suffix;
 				}
 
