@@ -2,6 +2,10 @@
 	"accountDropdown": {
 		"missingAccount": "Missing Account"
 	},
+	"accountBrowser": {
+		"missingInfo": "Missing Information",
+		"addAccount": "Add New Account"
+	},
 	"numbers": {
 		"mainNumber": "Office Number",
 		"conferenceNumber": "Main Conference Number",

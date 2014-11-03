@@ -1,0 +1,18 @@
+<div class="account-browser-container ab-sidebar">
+	<div class="search-box">
+		<i class="icon-search"></i>
+		<input type="text" class="account-browser-search search-query" placeholder="{{ i18n.search }}">
+	</div>
+	{{#if addAccountEnabled}}
+	<div class="account-list-add">
+		<i class="icon-plus-sign icon-large"></i>
+		<span>{{ i18n.accountBrowser.addAccount }}</span>
+	</div>
+	{{/if}}
+	<div class="account-list-container clearfix">
+		<ul class="account-list">
+		</ul>
+		<ul class="account-list-slider">
+		</ul>
+	</div>
+</div>
