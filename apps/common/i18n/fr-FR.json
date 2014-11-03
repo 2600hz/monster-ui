@@ -2,6 +2,10 @@
 	"accountDropdown":{
 		"missingAccount":"Compte introuvable"
 	},
+	"accountBrowser": {
+		"missingInfo": "Information Manquante",
+		"addAccount": "Ajouter un compte"
+	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",
 		"conferenceNumber":"Numéro de conférence",
