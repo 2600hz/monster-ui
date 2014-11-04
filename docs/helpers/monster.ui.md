@@ -10,11 +10,11 @@ The `monster.ui` object contains the different helpers to render common UI eleme
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
 
-[alert]: monster.util/alert().md
-[confirm]: monster.util/confirm().md
-[dialog]: monster.util/dialog().md
-[pretty_check]: monster.util/prettyCheck.md
-[protect_field]: monster.util/protectedField().md
-[table]: monster.util/table.md
-[validate]: monster.util/validate().md
-[wysiwyg]: monster.util/wysiwyg().md
+[alert]: monster.ui/alert().md
+[confirm]: monster.ui/confirm().md
+[dialog]: monster.ui/dialog().md
+[pretty_check]: monster.ui/prettyCheck.md
+[protect_field]: monster.ui/protectedField().md
+[table]: monster.ui/table.md
+[validate]: monster.ui/validate().md
+[wysiwyg]: monster.ui/wysiwyg().md
