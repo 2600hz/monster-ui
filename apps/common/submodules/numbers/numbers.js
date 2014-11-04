@@ -571,8 +571,7 @@ define(function(require){
 			});
 
 			/* to plugin */
-			var originalAccountTree = {},
-				moveNumbersToAccount = function(accountId, accountName) {
+			var moveNumbersToAccount = function(accountId, accountName) {
 					var listNumbers = [],
 						destinationAccountId = accountId,
 						destinationIndex = -1,
@@ -704,42 +703,17 @@ define(function(require){
 							});
 						});
 					});
-				},
-				dropdownAccount;
+				};
 
 			parent.on('click', '#move_numbers', function() {
-				var accountId = self.accountId,
-					displayList = function() {
-						dropdownAccount.reset();
-					};
-
-				if(_.isEmpty(originalAccountTree)) {
-					self.numbersGetDescendants(accountId, function(listAccounts) {
-						listAccounts.sort(function(a,b) {
-							return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-						});
-
-						originalAccountTree = monster.util.accountArrayToTree(listAccounts, self.accountId);
-
-						var args = {
-							parent: parent.find('.list-numbers[data-type="spare"]'),
-							accountsTree: originalAccountTree,
-							callbacks: {
-								clickAccount: moveNumbersToAccount,
-								loaded: function(dropdown) {
-									dropdownAccount = dropdown;
-								}
-							}
-						};
-
-						monster.pub('common.selectAccount', args);
-
-						displayList();
-					});
-				}
-				else {
-					displayList();
-				}
+				monster.pub('common.accountBrowser.render', {
+					container: parent.find('.list-numbers[data-type="spare"] .accounts-dropdown'),
+					customClass: 'ab-dropdown',
+					onAccountClick: function(accountId, accountName) {
+						moveNumbersToAccount(accountId, accountName);
+						parent.find('.list-numbers[data-type="spare"] .dropdown-move').removeClass('open');
+					}
+				});
 			});
 
 			parent.on('click', '.cnam-number', function() {
@@ -943,23 +917,6 @@ define(function(require){
 				},
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
-				}
-			});
-		},
-
-		numbersGetDescendants: function(accountId, success, error) {
-			var self = this;
-
-			monster.request({
-				resource: 'common.numbers.listDescendants',
-				data: {
-					accountId: accountId
-				},
-				success: function(_data, status) {
-					success && success(_data.data);
-				},
-				error: function(_data, status) {
-					error && error(_data);
 				}
 			});
 		},

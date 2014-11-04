@@ -80,6 +80,10 @@
 	list-style: none;
 }
 
+#numbers_container .actions-wrapper .dropdown-move .accounts-dropdown {
+	padding: 0;
+}
+
 #numbers_container .account-section .numbers-wrapper {
 	display: none;
 }
