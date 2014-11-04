@@ -12,122 +12,6 @@ define(function(require){
 			'common.accountBrowser.render': 'accountBrowserRender'
 		},
 
-		/* Events */
-		accountBrowserRenderX: function(args) {
-			var self = this,
-				originalAccountTree = args.accountsTree,
-				currentAccountTree = originalAccountTree,
-				parent = args.parent;
-
-			var accountErrName = self.i18n.active().accountBrowser.missingAccount,
-				layout = monster.template(self, 'accountBrowser-layout'),
-				template = monster.template(self, 'accountBrowser-list', { 
-					accounts: $.map(currentAccountTree, function(val, key) {
-						val.id = key;
-						return val;
-					}).sort(function(a,b) {
-						return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
-					})
-				});
-
-			parent
-				.find('.accounts-dropdown')
-				.empty()
-				.append(layout)
-				.find('.account-list')
-				.append(template);
-
-			parent.on('click', '.accounts-dropdown .account-children-link', function(e) {
-				e.stopPropagation();
-
-				var slider = parent.find('.account-slider'),
-					list = parent.find('.account-list'),
-					accountId = $(this).parent().data('id');
-
-				currentAccountTree = currentAccountTree[accountId].children;
-
-				var template = monster.template(self, 'accountBrowser-list', { 
-					accounts: $.map(currentAccountTree, function(val, key) {
-						val.id = key;
-						return val;
-					}).sort(function(a,b) {
-						return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
-					})
-				});
-
-				slider
-					.empty()
-					.append(template);
-
-				list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
-					list.empty()
-						 .append(template)
-						 .css('marginLeft','0px');
-
-					slider.empty();
-				});
-			});
-
-			/* When clicking on a bootstrap dropdown, it hides the dropdown, that's a hack to prevent it and allow us to type in the search field! */
-			parent.on('click', '.accounts-dropdown .search-box', function(e) {
-				e.stopPropagation();
-			});
-
-			parent.on('keyup', '.accounts-dropdown .account-browser-search', function(e) {
-				e.stopPropagation();
-				var search = $(this).val();
-
-				if(search) {
-					$.each(parent.find('.account-list-element'), function(k, v) {
-						var current = $(v);
-
-						current.find('.account-link').html().toLowerCase().indexOf(search.toLowerCase()) >= 0 ? current.show() : current.hide();
-					});
-				}
-				else {
-					parent.find('.account-list-element').show();
-				}
-			});
-
-			/* Move Numbers */
-			parent.on('click', '.accounts-dropdown .account-link', function(event) {
-				var $this = $(this);
-				if($this.hasClass('disabled')) {
-					event.stopPropagation();
-				} else {
-					var destinationAccountId = $this.parent().data('id'),
-						destinationAccountName = $this.find('.account-name').text();
-
-					args.callbacks.clickAccount && args.callbacks.clickAccount(destinationAccountId, destinationAccountName);
-				}
-			});
-
-			var dropdown = {
-				reset: function() {
-					currentAccountTree = originalAccountTree;
-
-					var layout = monster.template(self, 'accountBrowser-layout'),
-						template = monster.template(self, 'accountBrowser-list', { 
-							accounts: $.map(currentAccountTree, function(val, key) {
-								val.id = key;
-								return val;
-							}).sort(function(a,b) {
-								return (a.name || accountErrName).toLowerCase() > (b.name || accountErrName).toLowerCase() ? 1 :-1;
-							})
-						});
-
-					parent
-						.find('.accounts-dropdown')
-						.empty()
-						.append(layout)
-						.find('.account-list')
-						.append(template);
-				}
-			};
-
-			args.callbacks.loaded && args.callbacks.loaded(dropdown);
-		},
-
 		accountBrowserRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -141,6 +25,7 @@ define(function(require){
 				onNewAccountClick = args.onNewAccountClick,
 				callback = args.callback,
 				layout = $(monster.template(self, 'accountBrowser-layout', {
+					customClass: args.customClass || 'ab-sidebar',
 					addAccountEnabled: (typeof onNewAccountClick === 'function')
 				}));
 
@@ -207,6 +92,11 @@ define(function(require){
 				onBreadcrumbClick = args.onBreadcrumbClick,
 				onNewAccountClick = args.onNewAccountClick;
 
+			//Prevents autoclosing of dropdown on click
+			template.on('click', function(e) {
+				e.stopPropagation();
+			});
+
 			template.find('.account-list-add').on('click', function() {
 				var currentAccountId = template.find('.account-list').data('current'),
 					breadcrumbsList = $.map(
@@ -229,10 +119,11 @@ define(function(require){
 					search = $this.val();
 				if(search) {
 					$.each(template.find('.account-list-element'), function() {
-						if($this.find('.account-link').html().toLowerCase().indexOf(search.toLowerCase()) >= 0) {
-							$this.show();
+						var $elem = $(this);
+						if($elem.find('.account-name').text().toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+							$elem.show();
 						} else {
-							$this.hide();
+							$elem.hide();
 						}
 					});
 				} else {
@@ -245,7 +136,7 @@ define(function(require){
 				template.find('.account-list-element').removeClass('active');
 				accountElement.addClass('active');
 
-				onAccountClick && onAccountClick(accountElement.data('id'));
+				onAccountClick && onAccountClick(accountElement.data('id'), accountElement.find('.account-name').text());
 			});
 
 			template.find('.account-list').on('click', '.account-children-link', function() {
