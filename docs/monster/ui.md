@@ -21,6 +21,6 @@ The `monster.ui` object contains different methods and objects used to easily re
 [alert]: ui/alert().md
 [confirm]: ui/confirm().md
 [dialog]: ui/dialog().md
-[protect_field]: ui/protectedField().md
+[protect_field]: ui/protectField().md
 [validate]: ui/validate().md
 [wysiwyg]: ui/wysiwyg().md

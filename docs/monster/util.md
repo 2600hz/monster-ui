@@ -13,11 +13,11 @@ The `monster.util` object contains different methods used by Monster UI core and
 
 [monster]: ../monster.md
 
-[date_to_gregorian]: monster.util/dateToGregorian().md
-[format_phone_number]: monster.util/formatPhoneNumber().md
-[get_business_date]: monster.util/getBusinessDate().md
-[gregorian_to_date]: monster.util/gregorianToDate().md
-[random_string]: monster.util/randomString().md
-[sort]: monster.util/sort().md
-[to_friendly_date]: monster.util/toFriendlyDate().md
-[unformat_phone_number]: monster.util/unformatPhoneNumber().md
+[date_to_gregorian]: util/dateToGregorian().md
+[format_phone_number]: util/formatPhoneNumber().md
+[get_business_date]: util/getBusinessDate().md
+[gregorian_to_date]: util/gregorianToDate().md
+[random_string]: util/randomString().md
+[sort]: util/sort().md
+[to_friendly_date]: util/toFriendlyDate().md
+[unformat_phone_number]: util/unformatPhoneNumber().md
