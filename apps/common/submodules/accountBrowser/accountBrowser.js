@@ -167,6 +167,38 @@ define(function(require){
 				});
 			});
 
+			var accountList = template.find('.account-list'),
+				isLoading = false,
+				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spin icon-spinner"></i></li>');
+
+			accountList.on('scroll', function() {
+				if(!isLoading && accountList.data('next-key') && (accountList.scrollTop() >= (accountList[0].scrollHeight - accountList.innerHeight() - 100))) {
+					isLoading = true;
+					accountList.append(loader);
+					self.callApi({
+						resource: 'account.listChildren',
+						data: {
+							accountId: accountList.data('current'),
+							filters: {
+								'start_key': accountList.data('next-key')
+							}
+						},
+						success: function(data, status) {
+							var nextStartKey = data.next_start_key,
+								listTemplate = $(monster.template(self, 'accountBrowser-list', {
+									accounts: monster.util.sort(data.data)
+								}));
+
+							loader.remove();
+
+							accountList.append(listTemplate);
+							accountList.data('next-key', nextStartKey || null);
+							isLoading = false;
+						}
+					});
+				}
+			});
+
 			if(breadcrumbsTemplate) {
 				breadcrumbsTemplate.on('click', '.account-browser-breadcrumb a', function() {
 					var $this = $(this),
@@ -237,10 +269,12 @@ define(function(require){
 							.append(template);
 					}
 
-					if(nextStartKey) {
-						//Handle pagination
-					}
-
+					// if(nextStartKey && nextStartKey.length) {
+					// 	list.toggleClass('paginated', true);
+					// } else {
+					// 	list.toggleClass('paginated', false);
+					// }
+					list.data('next-key', nextStartKey || null);
 					list.data('current', parentId);
 
 					callback && callback();
