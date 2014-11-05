@@ -1,14 +1,17 @@
-# monster.util
-The helpers located in the monster.util are used in the JavaScript to help you with common problems such as formatting phone numbers, transforming a gregorian date to a human date or creating a random string.
+# [monster][monster].util
+The `monster.util` object contains different methods used by Monster UI core and accessible through Monster apps. Those methods are used to easily perform complicated operations specific to Monster and its ecosystem.
 
+### Methods
 * [dateToGregorian()][date_to_gregorian]
-* [formatPhoneNumber][format_phone_number]
+* [formatPhoneNumber()][format_phone_number]
 * [getBusinessDate()][get_business_date]
 * [gregorianToDate()][gregorian_to_date]
 * [randomString()][random_string]
 * [sort()][sort]
 * [toFriendlyDate()][to_friendly_date]
 * [unformatPhoneNumber()][unformat_phone_number]
+
+[monster]: ../monster.md
 
 [date_to_gregorian]: monster.util/dateToGregorian().md
 [format_phone_number]: monster.util/formatPhoneNumber().md

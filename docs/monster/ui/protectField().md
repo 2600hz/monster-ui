@@ -1,4 +1,4 @@
-# monster.ui.protectField()
+# [monster][monster].[ui][ui].protectField()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -28,5 +28,8 @@ monster.ui.protectField(field[, template]);
 
 ### Description
 This method allow the user to see the value of a password input when this input is on focus.
+
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [jquery]: http://api.jquery.com/Types/#jQuery

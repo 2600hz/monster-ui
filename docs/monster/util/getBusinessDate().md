@@ -1,4 +1,4 @@
-# monster.util.getBusinessDate()
+# [monster][monster].[util][util].getBusinessDate()
 The `monster.utilgetBusinessDate()` method adds or removes business days to the current date or to a specific date.
 
 * [Syntax](#syntax)
@@ -60,6 +60,9 @@ var date = new Date(70, 1, 1);
 console.log(monster.util.getBusinessDate(4, date));
 // output: Wed Jan 07 1970 00:00:00 GMT-0800
 ```
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date

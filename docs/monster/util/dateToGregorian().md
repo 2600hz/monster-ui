@@ -1,4 +1,4 @@
-# monster.util.dateToGregorian()
+# [monster][monster].[util][util].dateToGregorian()
 
 * [Syntax](#syntax)
 * [Parameter](#parameter)
@@ -22,5 +22,8 @@ This method returns a Gregorian timestamp.
 
 ### Description
 The `monster.util.dateToGregorian()` method converts a JavaScript Date to a Gregorian timestamp.
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date

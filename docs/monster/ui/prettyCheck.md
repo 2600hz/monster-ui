@@ -1,16 +1,17 @@
-# monster.ui.prettyCheck
-The `monster.ui.prettyCheck` object expose two methods allowing you to customize checkbox/radio.
+# [monster][monster].[ui][ui].prettyCheck
 
 * [Methods](#methods)
-* [Events](#events)
 * [Description](#description)
-* [Examples](#examples)
+* [Events](#events)
 
 ![Different states](http://i.imgur.com/Byjs07J.png)
 
 ### Methods
-* [create()](#create)
-* [action()](#action)
+* [create()][create]
+* [action()][action]
+
+### Description
+The `monster.ui.prettyCheck` object expose two methods allowing you to customize checkbox/radio.
 
 ### Events
 To handle state's changes of the checkbox/radio, several custom event types are available:
@@ -29,22 +30,13 @@ To handle state's changes of the checkbox/radio, several custom event types are 
 
 To bind these custom events to inputs, use the jQuery [`on()`][on] method.
 
-### Examples
-* Create a pretty checkbox
-```javascript
-monster.ui.prettyCheck.create($('input[type="checkbox"]'));
-```
-
-![Image showing the transformation of a checkbox, using monster.ui.prettyCheck.create()](http://i.imgur.com/MsHYyQD.png)
-
-* Bind custom event
-```javascript
-$('input').on('ifChecked', function() {
-    callback();
-});
-```
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
 [jquery]: http://api.jquery.com/Types/#jQuery
 [on]: http://api.jquery.com/on/
+
+[create]: prettyCheck/create().md
+[action]: prettyCheck/action().md

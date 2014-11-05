@@ -1,4 +1,4 @@
-# monster.ui.dialog()
+# [monster][monster].[ui][ui].dialog()
 The `monster.ui.dialog()` method generates a dialog window with the look and feel of Monster UI.
 
 * [Syntax](#syntax)
@@ -50,6 +50,8 @@ First create a template, preferably using the built-in Monster template generato
 
 As shown in the example above, the method only generates the part inside the red rectangle and the template's container.
 
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [jquery]: http://api.jquery.com/Types/#jQuery
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals

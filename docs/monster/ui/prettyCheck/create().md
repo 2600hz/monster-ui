@@ -1,4 +1,4 @@
-# monster.ui.prettyCheck.create()
+# [monster][monster].[ui][ui].[prettyCheck][prettyCheck].create()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -31,3 +31,26 @@ This method is used to transform normal looking checkbox/radio to styled ones wi
 If you specify an element containing both checkboxes and radio buttons without specifying the `inputType` parameter, only the checkboxes will be styled. To style all the inputs, call the method with the `inputType` parameter set to `all`.
 
 ### Examples
+* Transform checkboxes only
+```javascript
+monster.ui.prettyCheck.create($('input'));
+```
+
+![Image showing the transformation of a checkbox, using monster.ui.prettyCheck.create()](http://i.imgur.com/MsHYyQD.png)
+
+* Transform radio buttons only
+```javascript
+monster.ui.prettyCheck.create($('input'), 'radio');
+```
+
+* Transform checkboxes and radios buttons
+```javascript
+monster.ui.prettyCheck($('input'), 'all');
+```
+
+[monster]: ../../../monster.md
+[ui]: ../../ui.md
+[prettyCheck]: ../prettyCheck.md
+
+[jquery]: http://api.jquery.com/Types/#jQuery
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

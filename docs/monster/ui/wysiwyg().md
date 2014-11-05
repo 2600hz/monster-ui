@@ -1,4 +1,4 @@
-# monster.ui.wysiwyg()
+# [monster][monster].[ui][ui].wysiwyg()
 The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of overridable options and insert it inside a jQuery object.
 
 * [Syntax](#syntax)
@@ -258,6 +258,9 @@ var target = $(document.getElementByClassName('wysiwyg-container')),
     }
 ```
 By default, the colors are defined using the hexadecimal color model and the `ante` key has the value of #.
+
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [jquery]: http://api.jquery.com/Types/#jQuery
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals

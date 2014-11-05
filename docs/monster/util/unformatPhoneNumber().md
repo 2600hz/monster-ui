@@ -1,4 +1,4 @@
-# monster.util.unformatPhoneNumber()
+# [monster][monster].[util][util].unformatPhoneNumber()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -57,6 +57,9 @@ var phoneNumber = '+1 (415) 123-4567',
 console.log(unformattedPhoneNUmber);
 // output: "+14151234567"
 ```
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers

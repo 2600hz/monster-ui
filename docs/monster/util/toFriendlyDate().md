@@ -1,4 +1,4 @@
-# monster.util.toFriendlyDate()
+# [monster][monster].[util][util].toFriendlyDate()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -70,6 +70,9 @@ console.log(bigDate);
 console.log(shortDate);
 // output: "01/01/2014"
 ```
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [gregorian_timestamp]: http://www.erlang.org/documentation/doc-5.4.13/lib/stdlib-1.13.12/doc/html/calendar.html
 [integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers

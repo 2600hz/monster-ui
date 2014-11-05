@@ -1,4 +1,4 @@
-# monster.ui.alert()
+# [monster][monster].[ui][ui].alert()
 The `monster.ui.alert()` method generates a customizable dialog window with three distinctive styles.
 
 * [Syntax](#syntax)
@@ -60,6 +60,9 @@ monster.ui.alert(self.i18n.active().message.info);
 If the `type` parameter is not specified when calling the method, the dialog window will take the `info` style by default.
 
 ![Info dialog window](http://i.imgur.com/mFmjJv7.png)
+
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals

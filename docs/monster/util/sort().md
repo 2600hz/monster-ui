@@ -1,4 +1,4 @@
-# monster.util.sort()
+# [monster][monster].[util][util].sort()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -71,6 +71,9 @@ monster.util.sort(users, function(a, b) {
 });
 // result: "John", "Bill", "Lance"
 ```
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions

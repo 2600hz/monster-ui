@@ -1,4 +1,4 @@
-# monster.util.randomString()
+# [monster][monster].[util][util].randomString()
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
@@ -44,6 +44,9 @@ monster.util.randomString(5);
 monster.util.randomString(4, '1234567890');
 // output: '6557'
 ```
+
+[monster]: ../../monster.md
+[util]: ../util.md
 
 [integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

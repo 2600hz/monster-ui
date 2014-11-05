@@ -1,4 +1,4 @@
-# monster.ui.confirm()
+# [monster][monster].[ui][ui].confirm()
 The `monster.ui.confirm()` method generates a dialog window giving the user the choice to confirm or cancel an action.
 
 * [Syntax](#syntax)
@@ -63,6 +63,9 @@ logout: function() {...}
 To create the confirm dialog window, just call the method and indicate the string to display to the user.
 
 ![Confirm dialog window](http://i.imgur.com/ujJC7De.png)
+
+[monster]: ../../monster.md
+[ui]: ../ui.md
 
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
