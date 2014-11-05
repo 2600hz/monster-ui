@@ -70,7 +70,7 @@ This example use [custom events][events] to detect when an element is checked an
 
 
 
-[monster]: ./../../monster.md
+[monster]: ../../../monster.md
 [ui]: ../../ui.md
 [prettyCheck]: ../prettyCheck.md
 
