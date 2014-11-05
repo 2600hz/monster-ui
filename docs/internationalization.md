@@ -56,7 +56,7 @@ var app = {
 The language file for your selected language will then automatically be merged into the app during the app initialization. To access it, simply call the _i18n.active()_ function, this will return you the i18n file as a JSON object. The selected language is a setting on the account or user. If the user isn't logged in, it will take the browser language of what's defined in the config.js if set.
 
 If you defined a variable, you will need to use the _monster.template()_ function to replace it by the value of your choice.  
-The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#miscellaneous)).  
+The first argument for this function should be the app itself, by convention defined in a variable _self_ (see [Coding Standards][coding_standards_misc].
 The second argument should be your i18n string, prepended with a "!".  
 The last argument should be an object containing your variables and their values. Obviously, the keys from this object must match the variables defined in your i18n string.
 
@@ -120,3 +120,5 @@ The language is defined at both the Account and User level. By default, the user
 ![Timezone and Language settings](http://i.imgur.com/EkpuMDg.png)
 
 If the language is not defined in neither the Account nor the User, the browser language will be used.
+
+[coding_standards_misc]: codingStandards.md#miscellaneous
