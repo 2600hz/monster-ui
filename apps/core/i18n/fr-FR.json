@@ -201,7 +201,7 @@
 		"text": {
 			"big": "Grand",
 			"normal": "Normal",
-			"small" : "Petit",
+			"small" : "Petit"
 		},
 		"placeholder": {
 			"createLink": "URL"
