@@ -31,7 +31,7 @@ hello.html
 It's almost exactly the same template as above, except that we're now using the firstName variable, and we can now dislpay it properly for all the users.
 
 ## Going further
-First of all, we require all the templates to be internationalizable. We don't force you to create more than the en-US.json file, but it's important to have the capability to add more languages later on. If you want a better understanding on how to use the i18n, please go visit [this link](https://github.com/2600hz/monster-ui/tree/master/docs/internationalization.md)
+First of all, we require all the templates to be internationalizable. We don't force you to create more than the en-US.json file, but it's important to have the capability to add more languages later on. If you want a better understanding on how to use the i18n, please go visit [this link][i18n]
 
 ### Listing of different helpers
 Handlebars comes with a lot of helpers already built, you can see the list [here](http://handlebarsjs.com/). It includes basic helpers such as each, if, unless, etc...
@@ -97,7 +97,7 @@ In the above example, we check if the role of a user is `"admin"` and if it is w
 
 ##### replaceVar
 This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
-You can see a very good example about this helper [here](https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md#in-html-templates).
+You can see a very good example about this helper [here][i18n_templates].
 
 ##### toFriendlyDate
 This helper allows you to display time in a customizable format. It take a mandatory Gregorian timestamp in parameter and returns a formatted date:
@@ -132,3 +132,6 @@ This helper will search for the following strings and replace them by the corres
 * mm: minutes
 * ss: seconds
 * 12h: use the 12h format (if not specified, the 24h format is used)
+
+[i18n]: internationalization.md
+[i18n_templates]: internationalization.md#in-html-templates

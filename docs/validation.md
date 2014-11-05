@@ -1,6 +1,6 @@
 # Using validation in Monster-UI
 
-Validation in Monster-UI is done using the [jQuery Validation plugin](http://jqueryvalidation.org/documentation/). Their documentation is very complete, and it is strongly advised that you take look at it to have a better understanding of how it works.
+Validation in Monster-UI is done using the [jQuery Validation plugin][jquery_validation_plugin]. Their documentation is very complete, and it is strongly advised that you take look at it to have a better understanding of how it works.
 
 In this document, we will go over the basics of validation in Monster-UI, and the different options it offers.
 
@@ -75,7 +75,7 @@ monster.ui.validate(formToValidate, {
 });
 ```
 
-For the full list of standard validation rules, see [here](http://jqueryvalidation.org/documentation/#list-of-built-in-validation-methods).
+For the full list of standard validation rules, see [here][validation_methods].
 
 ### Cutsom validation rules
 
@@ -88,11 +88,11 @@ We added the following custom rules to the set of usable validation rules:
 *	_greaterDate_: The element should contain a date greater than the on in the provided input.
 *	_checkList_: The value of this element should not appear in the provided list (array or map).
 
-We didn't make a simplified function to add custom rules directly within your app, but you can do it using the [_jQuery.validator.addMethod_](http://jqueryvalidation.org/jQuery.validator.addMethod) method.
+We didn't make a simplified function to add custom rules directly within your app, but you can do it using the [_jQuery.validator.addMethod_][add_method] method.
 
 ### Other options
 
-Several different options can be set in the _monster.ui.validate_ method, below is a quick overview of those options. See [here](http://jqueryvalidation.org/validate) for the complete list.
+Several different options can be set in the _monster.ui.validate_ method, below is a quick overview of those options. See [here][validate] for the complete list.
 
 *	The _messages_ option will allow you to customize the content of the appended error labels. This is only if you want to override the default messages.
 *	The _errorPlacement_ option will allow you to choose where to append your error labels.
@@ -118,3 +118,8 @@ monster.ui.validate(formToValidate, {
 	errorClass: "demoapp-invalid"
 });
 ```
+
+[jquery_validation_plugin]: http://jqueryvalidation.org/documentation/
+[validation_methods]: http://jqueryvalidation.org/documentation/#list-of-built-in-validation-methods
+[add_method]: http://jqueryvalidation.org/jQuery.validator.addMethod
+[validate]: http://jqueryvalidation.org/validate

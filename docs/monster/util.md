@@ -1,5 +1,5 @@
 # [monster][monster].util
-The `monster.util` object contains different methods used by Monster UI core and accessible through Monster apps. Those methods are used to easily perform complicated operations specific to Monster and its ecosystem.
+The `monster.util` object contains different methods used by Monster UI and accessible through Monster apps. Those methods are used to easily perform complicated operations specific to Monster and its ecosystem.
 
 ### Methods
 * [dateToGregorian()][date_to_gregorian]

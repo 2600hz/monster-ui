@@ -30,5 +30,5 @@ The topic should follow the rule: `'{appName}.{commonControl}.{functionName}'`
 The `data` parameter can be a callback or an object containing a function used as callback.
 
 [postaljs]: https://github.com/postaljs/postal.js "postal.js Github project"
-[common controls]: https://github.com/2600hz/monster-ui/blob/master/docs/commonControls.md "Common Controls Documentation"
-[naming conventions]: https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md#naming "Naming Conventions"
+[common controls]: commonControls.md "Common Controls Documentation"
+[naming conventions]: codingStandards.md#naming "Naming Conventions"

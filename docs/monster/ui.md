@@ -1,10 +1,6 @@
 # [monster][monster].ui
 The `monster.ui` object contains different methods and objects used to easily render common UI elements in apps with Monster UI look and feel and helps keep an unified UI.
 
-### Helpers
-* [prettyCheck][pretty_check]
-* [table][table]
-
 ### Methods
 * [alert()][alert]
 * [confirm()][confirm]
@@ -12,6 +8,10 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [protectField()][protect_field]
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
+
+### Objects
+* [prettyCheck][pretty_check]
+* [table][table]
 
 [monster]: ../monster.md
 

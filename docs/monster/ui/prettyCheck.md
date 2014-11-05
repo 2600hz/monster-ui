@@ -1,17 +1,9 @@
 # [monster][monster].[ui][ui].prettyCheck
-
-* [Methods](#methods)
-* [Description](#description)
-* [Events](#events)
-
-![Different states](http://i.imgur.com/Byjs07J.png)
+The `monster.ui.prettyCheck` object expose two methods and a set of custom events allowing you to customize checkbox/radio.
 
 ### Methods
 * [create()][create]
 * [action()][action]
-
-### Description
-The `monster.ui.prettyCheck` object expose two methods allowing you to customize checkbox/radio.
 
 ### Events
 To handle state's changes of the checkbox/radio, several custom event types are available:

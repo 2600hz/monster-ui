@@ -5,6 +5,8 @@
 * [Description](#description)
 * [Examples](#examples)
 
+![Different states](http://i.imgur.com/Byjs07J.png)
+
 ### Syntax
 ```javascript
 monster.ui.prettyCheck.create(target[, inputType]);
