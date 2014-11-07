@@ -189,6 +189,7 @@
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
+			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
 			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 		},
