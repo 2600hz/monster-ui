@@ -1,10 +1,10 @@
 # How to use an API in Monster-UI
-The Monster-UI framework allow developers to use the different Kazoo API very simply within their Monster-UI applications. If you would like more information on how to build an application, check [here](https://www.github.com/2600hz/monster-ui/blob/master/docs/tutorial.md).
+The Monster-UI framework allow developers to use the different Kazoo API very simply within their Monster-UI applications. If you would like more information on how to build an application, check [here][tutorial].
 
 __Note: If the API you want to call is available in the Kazoo jQuery SDK, please prefer using [this method](#using-the-kazoo-jquery-sdk) over the regular API call method right below.__
 
 ### Listing the APIs you want to use
-One of the main attribute of your application, is the "requests" attribute. The Monster-UI framework takes every request defined in this map and allow you to access them with your application. Here is an example of the requests attributegiving you access to all the API needed to create a CRUD for devices:
+One of the main attribute of your application, is the "requests" attribute. The Monster-UI framework takes every request defined in this map and allow you to access them with your application. Here is an example of the requests attribute giving you access to all the API needed to create a CRUD for devices:
 
 app.js
 
@@ -105,7 +105,7 @@ To simplify the API calling process, a Kazoo API SDK has been created as a jQuer
 
 Every app now has a function `callApi(_params_)` that can be used to call any API supported by the Kazoo SDK. This function takes the same parameter structure as the `monster.request(_params_)` function, but the `resource` value should be the Kazoo SDK's method name. This means that you don't have to declare any resource in the `requests` object in your App to use the `callApi(_params_)` function.
 
-You can also add extra parameters that you would usually have specified in the `requests` object of your app, such as `apiRoot`. For the full list of available parameters, please see the [Kazoo SDK documentation](https://github.com/2600hz/monster-ui/blob/master/docs/kazooSdk.md#general-api-settings).
+You can also add extra parameters that you would usually have specified in the `requests` object of your app, such as `apiRoot`. For the full list of available parameters, please see the [Kazoo SDK documentation][kazoo_sdk_settings].
 
 	listDevices: function(callback) {
 		var self = this;
@@ -128,3 +128,6 @@ You can also add extra parameters that you would usually have specified in the `
 	}
 
 [Here is a full list of supported APIs](https://github.com/2600hz/monster-ui/blob/master/docs/kazooSdk.md#list-of-methods).
+
+[tutorial]: tutorial.md
+[kazoo_sdk_settings]: kazooSdk.md#general-api-settings

@@ -3,7 +3,7 @@ The goal of this tutorial is to help any developer who wants to build an applica
 At the end of this tutorial, you will have a Monster-UI app created, that you will be able to add to your UI via the app store, and that will allow you to search for phone numbers in a specific area code.
 
 Required:
-* A copy of the Monster-UI repo, that you can get [here](https://github.com/2600hz/monster-ui/)
+* A copy of the Monster-UI repo, that you can get [here][monster_repo]
 * A Kazoo account and credentials to login to it
 * Access to CouchDB to add your application to the app store
 
@@ -76,7 +76,7 @@ This object contains all the required attributes for a Monster-UI app to work. L
 The is is a string with the name of your app. It needs to match the name of the folder of this app.
 
 ##### i18n
-This is a map representing the supported languages. You can learn more about i18n [here](https://github.com/2600hz/monster-ui/blob/master/docs/i18n.md). The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English. The only option for each language key is the `customCss` one, which allows the framework to automatically import CSSi18n files if the user's language has this option enabled. 
+This is a map representing the supported languages. You can learn more about i18n [here][i18n]. The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English. The only option for each language key is the `customCss` one, which allows the framework to automatically import CSSi18n files if the user's language has this option enabled. 
 
 		```json
 		i18n: {
@@ -96,7 +96,7 @@ This is a map representing all the external API calls you need in your applicati
 		}
 	}
 
-If you need to call a Kazoo API or if you want to learn more about using the Kazoo APIs [here](https://github.com/2600hz/monster-ui/blob/master/docs/api.md).
+If you need to call a Kazoo API or if you want to learn more about using the Kazoo APIs [here][api].
 
 ##### Subscribe
 This is a map representing the events that your app will listen to. It allows other Monster-UI apps to interact with your applications if you want to enable that. Most of the time, this should remain empty, since your app will not need to interact with any other Monster-UI apps.
@@ -119,7 +119,7 @@ In the code representing the `app` object, you can notice 3 methods: `initApp`, 
 Once your app is loaded by the framework, it will automatically call the `render` method of your application. And that's it. You can then add your own functions to the app object, and start adding some logic to your application!
 
 ### Adding your app to the app store
-This is more complicated than it should be for now, but you can find how to add your app to the database [here](https://github.com/2600hz/monster-ui/blob/master/docs/appstore.md).
+This is more complicated than it should be for now, but you can find how to add your app to the database [here][appstore].
 
 Very important, in this example we added your demo folder to a %MAIN_DIR%/monster-modules folder. You need to have this path in the source_url key of your app document, to point to %MAIN_DIR%/monster-modules/demo/.
 
@@ -235,3 +235,8 @@ app.css
 
 ### DING DING DING
 That's it, your app is done! You can go in the app store of the Monster-UI, select your app and add it to your account, and then start looking for numbers. You could also tweak this app to get familiar with Monster-UI, a good first thing to do would be to ask for an area code instead of always looking for 415 numbers. Have fun with it, and please let us know if you have any recommandations on how we could make this tutorial better!
+
+[monster_repo]: https://github.com/2600hz/monster-ui/
+[i18n]: internationalization.md
+[api]: api.md
+[appstore]: appstore.md

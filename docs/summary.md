@@ -1,11 +1,22 @@
 # Monster-UI Documentation
-* [Tutorial: How to build your own MonsterUI app] (https://github.com/2600hz/monster-ui/blob/master/docs/tutorial.md)
-* [How to use a Kazoo API](https://github.com/2600hz/monster-ui/blob/master/docs/api.md)
-* [Using Monster helpers (monster.utils, monster.ui)](https://github.com/2600hz/monster-ui/blob/master/docs/helpers.md)
-* [Using Handlebars for your templates (syntax + Handlebars helpers)](https://github.com/2600hz/monster-ui/blob/master/docs/handlebars.md)
-* [Add your application to the app store](https://github.com/2600hz/monster-ui/blob/master/docs/appstore.md)
-* [Using Monster Events](https://github.com/2600hz/monster-ui/blob/master/docs/events.md)
-* [Using a Common control](https://github.com/2600hz/monster-ui/blob/master/docs/commonControls.md)
-* [Adding I18n to your application](https://github.com/2600hz/monster-ui/blob/master/docs/internationalization.md)
-* [Coding standards (CSS/HTML/JavaScript)](https://github.com/2600hz/monster-ui/blob/master/docs/codingStandards.md)
-* [How to use the validation in your UI](https://github.com/2600hz/monster-ui/blob/master/docs/validation.md)
+* [Tutorial: How to build your own MonsterUI app][tutorial]
+* [How to use a Kazoo API][api]
+* [Using Monster methods][monster]
+* [Using Handlebars for your templates (syntax + Handlebars helpers)][handlebars]
+* [Add your application to the app store][appstore]
+* [Using Monster Events][events]
+* [Using a Common control][common_controls]
+* [Adding I18n to your application][i18n]
+* [Coding standards (CSS/HTML/JavaScript)][coding_standards]
+* [How to use the validation in your UI][validation]
+
+[tutorial]: tutorial.md
+[api]: api.md
+[monster]: monster.md
+[handlebars]: handlebars.md
+[appstore]: appstore.md
+[events]: events.md
+[common_controls]: commonControls.md
+[i18n]: internationalization.md
+[coding_standards]: codingStandards.md
+[validation]: validation.md
