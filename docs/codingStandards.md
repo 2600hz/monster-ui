@@ -1,178 +1,308 @@
-# Coding standards for Monster-UI webapps
+# Monster UI Javascript Style Guide() {
 
-In this document, we will go over all the code conventions used in Monster-UI. Although they are in no way mandatory, we strongly advise to follow this conventions for readability and maintenability purposes.
+* [Strings](#strings)
+* [Variables](#variables)
+* [Whitespace](#whitespace)
+* [Semicolons](#semicolons)
+* [Naming Conventions](#naming-conventions)
 
-### General Conventions
+## Strings
+* Use single quotes `''` for strings
+```javascript
+// bad
+var name = "Bob Parr";
 
-General conventions are used throughout Monster-UI, regardless of the type of file.
+// good
+var name = 'Bob Parr';
 
-##### Indentation
+// bad
+var fullName = "Bod" + this.lastName;
 
-All indentation in Monster-UI should be done using tabs instead of raw spaces. It is advised to set your tabs settings to display as 4 spaces in your development environement, since some legacy code may still use 4 raw spaces instead of tabs.
-
-##### Encoding
-
-All your files should be encoded in UTF-8. This is especially important for i18n files.
-
-### Javascript Conventions
-
-##### Naming
-
-We use the camel case naming convention for our variables and functions in javascript. Acronyms, such as "URL", should be treated as common words and therefore follow the camel case notation. 
-
-Example:
+// good
+var fullName = 'Bob' + this.lastName;
 ```
-{
-	myFunction: function(myParameter) {
-		var myVariable = myParameter,
-		    parseUrl = function(urlParser) { /* ... */ };
-		// Some code...
+
+* Strings longer that 80 characters should be written across multiple lines using string concatenation
+
+* Note: If overused, long strings with concatenation could impact performance
+```javascript
+// bad
+var errorMessage = 'This is a super long error that was thrown because of Batman. When you stop to think about how Batman had anything to do with this, you would get nowhere fast.';
+
+// bad
+var errorMessage = 'This is a super long error that was thrown because \
+of Batman. When you stop to think about how Batman had anything to do \
+with this, you would get nowhere \
+fast.';
+
+// good
+var errorMessage = 'This is a super long error that was thrown because ' + 
+	'of Batman. When you stop to think about how Batman had anything to do ' + 
+	'with this, you would get nowhere fast.'
+
+```
+
+## Variables
+* Always use `var` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace
+```javascript
+// bad
+superPower = new SuperPower();
+
+// good
+var superPower = new SuperPower();
+```
+
+* Use one var declaration for multiple variables and declare each variable on a new line
+```javascript
+// bad
+var items = getItems();
+var goSportsTeam = true;
+var dragonball = 'z';
+
+// good
+var items = getItems(),
+	goSportsTeam = true,
+	dragonball = 'z';
+```
+
+* Declare unassigned variables last. This is helpful when later on you might need to assign a variable depending on one of the previous assigned variables
+```javascript
+// bad
+var i, len, dragonball,
+	items = getItems(),
+	goSportsTeam = true;
+
+// bad
+var i, items = getItems(),
+	dragonball,
+	gotSportsTeam = true,
+	len;
+
+// good
+var gotSportsTeam = true,
+	items = getItems(),
+	dragonball,
+	len,
+	i;
+```
+
+* Assign variables at the top of their scope. This helps avoid issues with variable declaration and assignment hoisting related issues
+```javascript
+// bad
+function() {
+	test();
+	console.log('doing stuff ...');
+
+	// ...other stuff...
+
+	var name = getName();
+
+	if (name === 'test') {
+		return false;
 	}
+
+	return name;
+}
+
+// good
+function() {
+	var name = getName();
+
+	test();
+	console.log('doing stuff'...);
+
+	// ...other stuff...
+
+	if (name === 'test') {
+		return false;
+	}
+
+	return name;
+}
+
+// bad
+function() {
+	var name = getName();
+
+	if(!arguments.length) {
+		return false;
+	}
+
+	// ...doing stuff...
+
+	return true;
+}
+
+// good
+function() {
+	if (!arguments.length) {
+		return false;
+	}
+
+	var name = getName();
+
+	// ...doing stuff...
+
+	return true;
 }
 ```
 
-There are however a few exceptions to this rule:
+## Whitespace
+* Use hard tabs set to 4 spaces
+```javascript
+// bad
+function() {
+∙∙var name;
+}
 
-1.  Subscribed functions will start with an underscrore.
-2.  When we need to use _$(this)_ mutiple times within the same scope (inside a _$.each_ for example), we reference it to a variable _$this_.
-3.  The data from our database, manipulated through our set of APIs, does not follow the same conventions. Most elements will be lowercase, each word separated by an underscore. For obvious reason, these elements must __not__ be renamed to follow our conventions.
+// bad
+function() {
+∙∙∙∙var name;
+}
 
-Example:
-```
-{
-	/* ... */
-	// (1)
-	subscribe: {
-		'demo.someAction': '_someSubscribedFunction'
-	},
-
-	_someSubscribedFunction: function() {
-		// Some code...
-	},
-
-	// (2)
-	someOtherFunction: function() {
-		$.each($('.some-class'), function() {
-			var $this = $(this);
-			// Some code...
-		})
-	},
-
-	// (3)
-	getUserName: function(accountId, userId) {
-		monster.request({
-			resource: 'demo.getUser',
-			data: {
-				accountId: accountId,
-				userId: userId
-			},
-			success: function(dataUser) {
-				return dataUser.data.first_name + ' ' + dataUser.data.first_name
-			}
-		});
-	}
-	/* ... */
+// good
+function() {
+————var name;
 }
 ```
 
-##### Miscellaneous
+* Place 1 space before the leading brace
+```javascript
+// bad
+function test(){
+	console.log('test');
+}
 
-*	Although not mandatory in javascript, every instruction should be terminated by a semicolon.
-*	Single quotes are preferred for strings in javascript (while double quotes are preferred in html).
-*   All our apps are defined as a JSON object. By convention, every function defined at the root of the app should declare a variable _self_ to reference the scope of the app (_this_).
+// good
+function test()∙{
+	console.log('test');
+}
+
+// bad
+user.set('attr',{
+	age: 38,
+	country: 'France'
+});
+
+// good
+user.set('attr',∙{
+	age: 38,
+	country: 'France'
+});
 ```
-	{
-		myFunction: function() {
-			var self = this;
-			// Some code...
-		}
-	}
+
+* Set off operators with spaces
+```javascript
+// bad
+var x=y+z;
+
+// good
+var x∙=∙y∙+∙z;
 ```
-*   All the variables should be declared in a single "var" declaration block, separated by a comma and line break, at the beggining of the function.
+
+* End files with a single newline character
+```javascript
+// bad
+(function(global) {
+	// ...logic...
+})(this);
+
+// bad
+(function(global) {
+	// ...logic...
+});╛
+╛
+
+// good
+(function(global) {
+	// ...logic...
+});╛
 ```
-	function() {
-		var someString = 'someString',
-			someNumber = 0,
-			someObject = {};
-		// Some code...
-	}
+
+* Use indentation when making long method chain
+```javascript
+// bad
+$('item').find('.selected').highlight().end().find('.open').updateCount();
+
+// good
+$('#items')
+	.find('.selected')
+		.highlight()
+		.end()
+	.find('.open')
+		.updateCount();
+
+// bad
+var leds = stage.selectAll('.led').data(data).enter().append('svg:svg').class('led', true)
+	.attr('width', (radius + margin) * 2).append('svg:g')
+	.attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+	.call(tron.led);
+
+// good
+var leds = stage.selectAll('.led')
+		.data(data)
+	.enter().append('svg:svg')
+		.class('led', true)
+		.attr('width', (radius + margin) * 2)
+	.append('svg:g')
+		.attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+		.call(tron.led);
+
 ```
-*	When accessing the DOM with JQuery, use the find function whenever possible.
+
+## Semicolons
+```javascript
+// bad
+(function() {
+	var name = 'Skywalker'
+	return name
+})()
+
+// good
+(function() {
+	var name = 'Skywalker';
+	return name;
+})();
+
+/**
+ * good 
+ * guards against the function becoming an argument 
+ * when two files with IIFEs are concatenated
+*/
+;(function() {
+	var name = 'Skywalker';
+	return name;
+})();
 ```
-	myElement = template.find('#my_element'); // Good
-	myElement = $('#my_element', template); // Bad
-```
-*	When manipulating javascript objects (non-DOM elements), prefer using Underscore functions over JQuery.
-```
-	var obj = {
-		a: 1,
-		b: 2,
-		c: 3
+
+[Read more](http://stackoverflow.com/questions/7365172/semicolon-before-self-invoking-function/7365214#7365214)
+
+## Naming Conventions
+* When saving a reference to `this` use `self`
+```javascript
+// bad
+function() {
+	var that = this;
+	return function() {
+		console.log(that);
 	};
-	_.each(obj, function(val, key) { /* Some code */ }); // Good
-	$.each(obj, function(key, val) { /* Some code */ }); // Bad
-```
+}
 
-### JSON Conventions
+// bad
+function() {
+	var _this = this;
+	return function() {
+		console.log(_this);
+	};
+}
 
-JSON (JavaScript Object Notation) files are used for internationalization in Monster-UI.
-
-*	All keys should use the camel case notation.
-*	All strings should be double-quoted.
-*	Despite booleans and numbers being valid JSON values, only strings, objects and arrays should be used in i18n files.
-
-```
-{
-	"skeleton": {
-		"description": "Some description",
-		"errorMessages": {
-			"someError": "Some error message",
-			"anotherError": "Another error message"
-		},
-		"multilineMessage": [
-			"first line of the multiline message",
-			"second line of the multiline message",
-			"note that arrays such as this one are rarely used"
-		]
-	}
+// good
+function() {
+	var self = this;
+	return function() {
+		console.log(self);
+	};
 }
 ```
 
-### HTML Conventions
-
-##### Naming
-
-*	All html tags should be lowercase.
-*	All id attributes should be lowercase, each word separated by an underscore ( _ ).
-*	All class attributes should be lowercase, each word separated by a dash ( - ).
-*	All data attributes should be lowercase, each word __after the data-__ separated by an underscore. The content of data attributes may follow any convention, depending on their usage. Most of the time they will be used directly in the app.js and should follow the javascript convention (camel case).
-*	When using common terms as id attributes, make sure to prepend your app name to ensure unicity.
-
-```
-<div id="skeleton_container">
-	<div class="skeleton-content" data-container_type="skeletonContainer"></div>
-</div>
-```
-
-##### Miscellaneous
-
-*	Double quotes are preferred for attributes in html (while single quotes are preferred in javascript).
-*	Avoid inline css, use css classes and define them in the app.css file.
-*	Avoid inline javascript, do the javascript implementation in the app.js file instead.
-*	Use div tags for the layout, table tags should only be used for tabular data.
-
-### CSS Conventions
-
-*	All your css should be fully compatible with at least Chrome and Firefox, and preferably with the recent versions of Internet Explorer too.
-*	Every css declaration should start by a unique id or a specific enough class to avoid impacting css in other apps.
-```
-#skeleton_container .content { /* Good */
-	border: solid 1px green;
-}
-.skeleton-container .content { /* Ok */
-	border: solid 1px black;
-}
-.content { /* Bad */
-	border: solid 1px red;
-}
-```
+# };
