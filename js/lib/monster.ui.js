@@ -260,6 +260,15 @@ define(function(require){
 			}
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
+			/*
+			 * Issue: UI-811
+			 * Uncomment the following code if you're having problem closing popups
+			 */
+			// dialog.siblings().find('ui-dialog-titlebar-close').on('start', function(event) {
+			// 	event.stopPropagation();
+			// 	$(this).click();
+			// });
+
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},
 
