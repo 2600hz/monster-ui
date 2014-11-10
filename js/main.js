@@ -1,5 +1,6 @@
 
 require.config({
+	waitSeconds: 200,
 	paths: {
 		'async': 'js/lib/async',
 		'bootstrap': 'js/lib/bootstrap-2.3.1.min',
@@ -54,6 +55,7 @@ require.config({
 			'exports': 'Handlebars'
 		},
 		'plugins': ['jquery'],
+		'kazoosdk': ['jquery'],
 		'touch-punch': ['jqueryui'],
 		'underscore': {
 			'exports': '_'
