@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+#apploader .app-list .app-list-element.active .app-name {
+    color: #22ccff;
+}
+
 #apploader .app-list .app-list-element:hover,
 #apploader .app-list .app-list-element.ui-sortable-helper {
 	background-color: rgba(25, 25, 25, 0.75);

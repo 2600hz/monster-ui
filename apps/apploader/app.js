@@ -126,7 +126,14 @@ define(function(require){
 			});
 
 			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
-				var appName = $(this).data('name');
+				var $this = $(this),
+					appName = $this.data('name');
+
+				parent.find('.app-list-element.active').removeClass('active');
+
+				if (appName !== 'appstore') {
+					$this.addClass('active');
+				}
 
 				//Cleaning up nicescrolls from the DOM
 				$('.nicescroll-rails:not(#'+self.niceScrollId+',#'+self.niceScrollId+'-hr)').remove();
