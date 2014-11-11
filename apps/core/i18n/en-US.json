@@ -25,7 +25,9 @@
 			"disallow": "The value for the field \"{{field}}\" is not allowed.",
 			"type": "The value for the field \"{{field}}\" must be of the \"{{value}}\" type.",
 			"unique": "The value for the field \"{{field}}\" must be unique.",
-			"forbidden": "The value for the field \"{{field}}\" can not be updated."
+			"forbidden": "The value for the field \"{{field}}\" can not be updated.",
+			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
+			"service_restriction": "Not enought credit to purchase the number \"{{field}}\" (${{value}})."
 		}
 	},
 	"apps": "apps",

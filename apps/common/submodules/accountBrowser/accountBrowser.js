@@ -27,7 +27,8 @@ define(function(require){
 				layout = $(monster.template(self, 'accountBrowser-layout', {
 					customClass: args.customClass || 'ab-sidebar',
 					addAccountEnabled: (typeof onNewAccountClick === 'function')
-				}));
+				})),
+				searchLink = layout.find('.account-search-link').remove();
 
 			if(container) {
 				container.empty()
@@ -76,7 +77,8 @@ define(function(require){
 					onAccountClick: onAccountClick,
 					onChildrenClick: onChildrenClick,
 					onBreadcrumbClick: onBreadcrumbClick,
-					onNewAccountClick: onNewAccountClick
+					onNewAccountClick: onNewAccountClick,
+					searchLink: searchLink
 				});
 			} else {
 				throw new ReferenceError('The "container" arg is required to load the account browser.');
@@ -90,7 +92,8 @@ define(function(require){
 				onAccountClick = args.onAccountClick,
 				onChildrenClick = args.onChildrenClick,
 				onBreadcrumbClick = args.onBreadcrumbClick,
-				onNewAccountClick = args.onNewAccountClick;
+				onNewAccountClick = args.onNewAccountClick,
+				searchLink = args.searchLink;
 
 			//Prevents autoclosing of dropdown on click
 			template.on('click', function(e) {
@@ -117,6 +120,8 @@ define(function(require){
 			template.find('.account-browser-search').on('keyup', function() {
 				var $this = $(this),
 					search = $this.val();
+
+				searchLink.find('.account-search-value').text(search);
 				if(search) {
 					$.each(template.find('.account-list-element'), function() {
 						var $elem = $(this);
@@ -126,8 +131,10 @@ define(function(require){
 							$elem.hide();
 						}
 					});
+					template.find('.account-list').append(searchLink);
 				} else {
 					template.find('.account-list-element').show();
+					searchLink.remove();
 				}
 			});
 
@@ -269,11 +276,6 @@ define(function(require){
 							.append(template);
 					}
 
-					// if(nextStartKey && nextStartKey.length) {
-					// 	list.toggleClass('paginated', true);
-					// } else {
-					// 	list.toggleClass('paginated', false);
-					// }
 					list.data('next-key', nextStartKey || null);
 					list.data('current', parentId);
 

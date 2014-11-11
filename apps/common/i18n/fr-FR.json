@@ -1,10 +1,8 @@
 {
-	"accountDropdown":{
-		"missingAccount":"Compte introuvable"
-	},
 	"accountBrowser": {
 		"missingInfo": "Information Manquante",
-		"addAccount": "Ajouter un compte"
+		"addAccount": "Ajouter un compte",
+		"searchDatabase": "Rechercher dans tous les comptes:"
 	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",

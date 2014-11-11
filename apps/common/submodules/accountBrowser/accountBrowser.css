@@ -76,12 +76,34 @@
 	max-height: 60px;
 	overflow: hidden;
 	border-top: solid 1px #ccc;
-	font-size: 0px; /* This is a trick to remove the spacing between inline-block elements */
 }
-.account-browser-container .account-list-element:first-child {
+.account-browser-container .account-search-link {
+    border-top: solid 1px #ccc;
+    text-align: center;
+    font-size: 12px;
+    line-height: 15px;
+    padding: 5px;
+    color: #555;
+	background-color: #f6f6f6;
+	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
+	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
+	background-image:         linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
+}
+.account-browser-container .account-search-link:hover {
+	background: #eee;
+	cursor: pointer;
+}
+
+.account-browser-container .account-search-link  .account-search-value {
+    font-weight: 600;
+    text-shadow: 1px 1px 0px #ccc;
+}
+.account-browser-container .account-list > li:first-child {
 	border-top: none;
 }
-.account-browser-container .account-list-element:last-child {
+.account-browser-container .account-list > li:last-child {
 	border-bottom: solid 1px #ccc;
 }
 .account-browser-container.ab-dropdown .account-list-element {

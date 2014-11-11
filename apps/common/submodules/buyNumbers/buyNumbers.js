@@ -26,17 +26,7 @@ define(function(require){
 			'buyNumbers.getCurrentServicePlan': {
 				url: 'accounts/{accountId}/service_plans/current',
 				verb: 'GET'
-			},
-			// 'buyNumbers.listCountries': {
-			// 	url: 'http://192.168.1.109:8888/number_manager/api/utilities/countries',
-			// 	contentType: 'application/json',
-			// 	verb: 'GET'
-			// },
-			// 'buyNumbers.getStatus': {
-			// 	url: 'http://69.164.206.244/number_manager/api/numbers/{country}/status',
-			// 	contentType: 'application/json',
-			// 	verb: 'GET'
-			// }
+			}
 		},
 
 		subscribe: {

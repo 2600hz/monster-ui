@@ -1,10 +1,8 @@
 {
-	"accountDropdown": {
-		"missingAccount": "Missing Account"
-	},
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
-		"addAccount": "Add New Account"
+		"addAccount": "Add New Account",
+		"searchDatabase": "Search in every account for"
 	},
 	"numbers": {
 		"mainNumber": "Office Number",
