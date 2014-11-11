@@ -26,7 +26,9 @@
 			"disallow": "La valeur du champ \"{{field}}\" n'est pas autorisée.",
 			"type": "La valeur du champ \"{{field}}\" doit être du type \"{{value}}\".",
 			"unique": "La valeur du champ \"{{field}}\" doit être unique.",
-			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée."
+			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée.",
+			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
+			"service_restriction": "Crédit insuffisant pour acheter le numéro \"{{field}}\" (${{value}})."
 		}
 	},
 	"error": "Erreur",
