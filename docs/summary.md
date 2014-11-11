@@ -9,6 +9,7 @@
 * [Adding I18n to your application][i18n]
 * [Coding standards (CSS/HTML/JavaScript)][coding_standards]
 * [How to use the validation in your UI][validation]
+* [How to write/update a test plan for your app][validation]
 
 [tutorial]: tutorial.md
 [api]: api.md
@@ -20,3 +21,4 @@
 [i18n]: internationalization.md
 [coding_standards]: codingStandards.md
 [validation]: validation.md
+[test_plan]: testPlan.mdsee md
