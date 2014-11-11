@@ -670,6 +670,16 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
+|||
+|---|---|
+| Method: | __device.quickcall(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/devices/{deviceId}/quickcall/{number} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `deviceId`, `number` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
 ###### Directory
 
 |||
@@ -1516,6 +1526,16 @@ kazooSdk.auth.userAuth({
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __user.quickcall(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/users/{userId}/quickcall/{number} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `userId`, `number` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Voicemail
