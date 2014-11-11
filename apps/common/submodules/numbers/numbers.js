@@ -810,7 +810,7 @@ define(function(require){
 								viewList.find('.number-box').removeClass('highlighted');
 
 								if(!numberBox.hasClass('highlighted')) {
-									monster.ui.fade(numberBox, {
+									monster.ui.hightlight(numberBox, {
 										startColor: '#22CCFF',
 										endColor: '#BBFF99',
 										timer: 1000,
