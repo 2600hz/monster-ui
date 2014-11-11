@@ -2,7 +2,7 @@
 	<div class="app-list-container">
 		<ul class="app-list {{#if allowAppstore}}has-appstore{{/if}}">
 			{{#each apps}}
-				<li class="app-list-element" data-id="{{id}}" data-name="{{name}}">
+				<li class="app-list-element{{#compare @index '===' 0}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}">
 					<div class="app-draggable">
 						<div class="app-draggable-inner"></div>
 					</div>
