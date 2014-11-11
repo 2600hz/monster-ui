@@ -314,12 +314,17 @@ define(function(require){
 			navLinks.on('click', '.restore-masquerading-link', function(e) {
 				e.preventDefault();
 
+				var appList = $('.app-list');
+
 				// Closing myaccount (if open) before restoring from masquerading
 				if(mainContainer.hasClass('myaccount-open')) {
 					self.toggle();
 				}
 				monster.pub('accountsManager.restoreMasquerading');
 				monster.pub('core.showAppName', 'accounts');
+
+				appList.find('.app-list-element.active').removeClass('active');
+				appList.find('.app-list-element[data-name="accounts"]').addClass('active');
 			});
 		},
 

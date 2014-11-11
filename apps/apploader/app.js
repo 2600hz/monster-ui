@@ -131,7 +131,7 @@ define(function(require){
 
 				parent.find('.app-list-element.active').removeClass('active');
 
-				if (appName !== monster.apps.appstore.name) {
+				if (appName !== 'appstore') {
 					$this.addClass('active');
 				}
 
