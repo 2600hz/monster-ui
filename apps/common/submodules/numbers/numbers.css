@@ -94,10 +94,6 @@
     margin-top: -1px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box.highlighted {
-	background-color: #BBFF99;
-}
-
 #numbers_container .account-section .numbers-wrapper .number-box .number-options .dropdown {
 	margin-top: 4px;
 }

@@ -803,22 +803,9 @@ define(function(require){
 
 							if(numberBox.size() > 0) {
 								section.addClass('open');
-								 $('html, body').animate({
-									 scrollTop: numberBox.offset().top - 20
-								 }, 1000);
-
-								viewList.find('.number-box').removeClass('highlighted');
-
-								if(!numberBox.hasClass('highlighted')) {
-									monster.ui.fade(numberBox, {
-										startColor: '#22CCFF',
-										endColor: '#BBFF99',
-										timer: 1000,
-										callback: function() {
-											numberBox.addClass('highlighted');
-										}
-									});
-								}
+								monster.ui.hightlight(numberBox, {
+									timer: 5000
+								});
 							}
 							else {
 								var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
@@ -828,9 +815,6 @@ define(function(require){
 							}
 						});
 					}
-				},
-				function(data) {
-					viewList.find('.number-box').removeClass('highlighted');
 				});
 			};
 
