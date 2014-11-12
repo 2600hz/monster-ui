@@ -65,3 +65,10 @@ monster.ui.highlight(target, {
 	}
 });
 ```
+
+[monster]: ../../monster.md
+[ui]: ../ui.md
+
+[jquery]: http://api.jquery.com/Types/#jQuery
+[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
+[undefined]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined
