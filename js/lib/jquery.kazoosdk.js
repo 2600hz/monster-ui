@@ -99,7 +99,8 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/users' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
+			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'}
 		},
 		group: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/groups/{groupId}' },
@@ -139,7 +140,8 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
-			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' }
+			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
+			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{deviceId}/quickcall/{number}'}
 		},
 		media: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
