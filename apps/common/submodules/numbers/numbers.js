@@ -543,7 +543,7 @@ define(function(require){
 								if(account.id in mapAccounts) {
 									var newList = [];
 									_.each(account.spareNumbers, function(number, indexNumber) {
-										if(!(number.phoneNumber in data.success)) {
+										if(!data.hasOwnProperty('success') || !(number.phoneNumber in data.success)) {
 											newList.push(number);
 										}
 										else {

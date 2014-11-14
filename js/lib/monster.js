@@ -148,7 +148,7 @@ define(function(require){
 
 				if(settings.contentType === 'application/json') {
 					var payload = {
-						data: data.data
+						data: data.data || {}
 					};
 
 					payload.data.ui_metadata = {
