@@ -87,7 +87,7 @@ define(function(require){
 						eventTemplate = monster.template(self, 'event', formattedEvent);
 
 					if(formattedEvent.extra.hasOwnProperty('deviceId')) {
-						monster.ui.fade(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
+						monster.ui.hightlight(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
 					}
 
 					template.find('.list-events tbody').prepend(eventTemplate);

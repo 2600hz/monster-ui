@@ -260,15 +260,6 @@ define(function(require){
 			}
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			/*
-			 * Issue: UI-811
-			 * Uncomment the following code if you're having problem closing popups
-			 */
-			// dialog.siblings().find('ui-dialog-titlebar-close').on('start', function(event) {
-			// 	event.stopPropagation();
-			// 	$(this).click();
-			// });
-
 			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
 		},
 
@@ -337,8 +328,8 @@ define(function(require){
 			return dialog;
 		},
 
-		// Fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
-		fade: function(element, options) {
+		// Highlight then fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
+		hightlight: function(element, options) {
 			var options = $.extend(true, {
 				startColor: '#22CCFF',
 				endColor: '#F2F2F2',
