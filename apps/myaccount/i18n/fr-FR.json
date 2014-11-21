@@ -161,7 +161,12 @@
 			"e911": "E911",
 			"cnam": "CNAM",
 			"port": "Port",
-			"tollfree_us": "US Tollfree"
+			"tollfree_us": "US Tollfree",
+			"__comment": "UI-815: Improve how the prices and categories are displayed for the Trunks",
+			"__version": "v3.19_s1",
+			"outbound_trunk": "Outbound Trunks",
+			"outbound_trunks": "Outbound Trunks",
+			"user": "Utilisateurs"
 		}
     },
 

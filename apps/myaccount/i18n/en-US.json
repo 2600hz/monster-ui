@@ -153,7 +153,12 @@
 			"sip_device": "SIP Devices",
 			"tollfree_us": "US Tollfree",
 			"twoway_trunk": "Twoway Trunks",
-			"twoway_trunks": "Twoway Trunks"
+			"twoway_trunks": "Twoway Trunks",
+			"__comment": "UI-815: Improve how the prices and categories are displayed for the Trunks",
+			"__version": "v3.19_s1",
+			"outbound_trunk": "Outbound Trunks",
+			"outbound_trunks": "Outbound Trunks",
+			"user": "Users"
 		}
 	},
 
