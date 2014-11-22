@@ -15,32 +15,7 @@ define(function(require){
 			'fr-FR': { customCss: false }
 		},
 
-		requests: {
-			'auth.userAuth': {
-				url: 'user_auth',
-				verb: 'PUT'
-			},
-			'auth.sharedAuth': {
-				url: 'shared_auth',
-				verb: 'PUT'
-			},
-			'auth.pinAuth': {
-				url: 'pin_auth',
-				verb: 'PUT'
-			},
-			'auth.getUser': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'GET'
-			},
-			'auth.updateUser': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'POST'
-			},
-			'auth.getAccount': {
-				url: 'accounts/{accountId}',
-				verb: 'GET'
-			}
-		},
+		requests: {},
 
 		subscribe: {
 			'auth.logout': '_logout',
@@ -342,10 +317,9 @@ define(function(require){
 						});
 					};
 
-					/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
-					if not, check if the account has a default preferred language */
+					// If the user or the account we're logged into has a language settings, and if it's different than
 					var loadCustomLanguage = function(language, callback) {
-						if(language !== monster.config.whitelabel.language) {
+						if(language !== monster.config.whitelabel.language && language !== monster.apps.defaultLanguage) {
 							monster.apps.loadLocale(monster.apps.core, language, function() {
 								monster.apps.loadLocale(self, language, function() {
 									monster.config.whitelabel.language = language;
@@ -355,10 +329,13 @@ define(function(require){
 							});
 						}
 						else {
+							monster.config.whitelabel.language = language;
 							callback && callback();
 						}
 					};
 
+					/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
+					if not, check if the account has a default preferred language */
 					if('language' in results.user) {
 						loadCustomLanguage(results.user.language, afterLanguageLoaded);
 					}

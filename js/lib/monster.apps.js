@@ -47,6 +47,24 @@ define(function(){
 							}
 							break;
 						}
+
+						case 'user.update': {
+							// If we're updating the user we're logged in with
+							if(params.data.userId === monster.apps['auth'].userId) {
+								successCallback = function(data, status) {
+									var cookieData = $.parseJSON($.cookie('monster-auth'));
+
+									// If the language stored in the cookie is not the same as the one we have in the updated data, we update the cookie.
+									if(cookieData.language !== data.data.language) {
+										cookieData.language = data.data.language;
+										$.cookie('monster-auth', JSON.stringify(cookieData));
+									}
+
+									params.success && params.success(data, status);
+								}
+							}
+							break;
+						}
 					}
 
 					var apiSettings = $.extend({
@@ -114,7 +132,7 @@ define(function(){
 
 			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
 			if(currentLanguage !== self.defaultLanguage) {
-				if(currentLanguage in app.i18n && app.i18n[currentLanguage].customCss === true) {
+				if(app.i18n.hasOwnProperty(currentLanguage) && app.i18n[currentLanguage].customCss === true) {
 					listCss.push('cssI18n/' + currentLanguage);
 				}
 			}
@@ -125,28 +143,28 @@ define(function(){
 		},
 
 		_addAppI18n: function(app) {
-			var self = this,
-				currentLanguage = monster.config.whitelabel.language;
+			var self = this;
 
 			_.extend(app.data, { i18n: {} });
 
-			// en-US is the default language of Monster
-			var customLanguage = currentLanguage in app.i18n >= 0 ? currentLanguage : self.defaultLanguage,
-				// Once all the different i18n files are loaded, we need to append the core i18n to the app
-				addCoreI18n = function() {
-					if('core' in monster.apps) {
-						$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
-					}
-				};
+			// We'll merge the Core I18n once we're done loading the different I18n coming with the application
+			var addCoreI18n = function() {
+				if(monster.apps.hasOwnProperty('core')) {
+					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
+				}
+			};
 
+			// We automatically load the default language (en-US) i18n files
 			self.loadLocale(app, self.defaultLanguage, function() {
-				// If the app supports the custom language, then we load its json file if its not the default one
-				if(customLanguage !== self.defaultLanguage) {
-					self.loadLocale(app, customLanguage, function() {
+				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
+				if(monster.config.whitelabel.language !== self.defaultLanguage) {
+					self.loadLocale(app, monster.config.whitelabel.language, function() {
+						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 						addCoreI18n();
 					});
 				}
 				else {
+					// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 					addCoreI18n();
 				}
 			});
@@ -154,7 +172,8 @@ define(function(){
 			// add an active property method to the i18n array within the app.
 			_.extend(app.i18n, {
 				active: function(){
-					var language = currentLanguage in app.i18n ? currentLanguage : self.defaultLanguage;
+					var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : self.defaultLanguage;
+
 					return app.data.i18n[language];
 				}
 			});
@@ -259,6 +278,8 @@ define(function(){
 
 		loadLocale: function(app, language, callback) {
 			var self = this,
+				// Automatic upper case for text after the hyphen (example: change en-us to en-US)
+				language = language.replace(/-.*/,function(a){return a.toUpperCase();}),
 				loadFile = function(afterLoading) {
 					monster.pub('monster.requestStart');
 
@@ -281,18 +302,25 @@ define(function(){
 					});
 				};
 
-			loadFile(function(data) {
-				// If we're loading the default language, then we add it, and also merge the core i18n to it
-				if(language === self.defaultLanguage) {
-					app.data.i18n[language] = data;
-				}
-				else {
-					// Otherwise, if we load a custom language, we merge the translation to the en-one
-					app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[self.defaultLanguage], data);
-				}
+			if(app.i18n.hasOwnProperty(language)) {
+				loadFile(function(data) {
+					// If we're loading the default language, then we add it, and also merge the core i18n to it
+					if(language === self.defaultLanguage) {
+						app.data.i18n[language] = data;
+					}
+					else {
+						// Otherwise, if we load a custom language, we merge the translation to the en-one
+						app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[self.defaultLanguage], data);
+					}
+
+					callback && callback();
+				});
+			}
+			else {
+				console.info(language + ' isn\'t a supported language by this application: ' + app.name);
 
 				callback && callback();
-			});
+			}
 		}
 	};
 

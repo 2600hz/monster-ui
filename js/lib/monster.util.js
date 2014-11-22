@@ -50,18 +50,22 @@ define(function(require){
 			}
 		},
 
-		/* Set the default Language to English, and overrides it with the language from the browser. If a cookie exists, we override the language value with the value stored in the cookie) */
+		/* Set the language to start the application.
+			By default will take the value from the cookie,
+			or if it doesn't exist, it will take the value from the config.js,
+			or if it's not set it will fall back to the language of the browser.
+			In last resort it will set it to 'en-US' if nothing is set above
+		*/
 		setDefaultLanguage: function() {
-			var browserLanguage = (navigator.language).replace(/-.*/,function(a){return a.toUpperCase();}), // always capitalize the second part of the navigator language
+			var browserLanguage = (navigator.language).replace(/-.*/,function(a){return a.toUpperCase();}),// always capitalize the second part of the navigator language
+				cookieLanguage = $.cookie('monster-auth') ? ($.parseJSON($.cookie('monster-auth'))).language : undefined,
 				defaultLanguage = browserLanguage || 'en-US';
 
-			monster.config.whitelabel.language = monster.config.whitelabel.language || defaultLanguage;
+			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
 
-			if($.cookie('monster-auth')) {
-				var authData = $.parseJSON($.cookie('monster-auth'));
-
-				monster.config.whitelabel.language = authData.language;
-			};
+			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
+			// Will normalize bad input from the config.js or cookie data coming directly from the database
+			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/,function(a){return a.toUpperCase();})
 		},
 
 		checkVersion: function(obj, callback) {
