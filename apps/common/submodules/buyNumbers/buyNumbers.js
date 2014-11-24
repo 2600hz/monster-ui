@@ -339,6 +339,9 @@ define(function(require){
 							callbacks.error && callbacks.error(data);
 						}
 						args.popup.dialog('close');
+					},
+					error: function(){
+						args.popup.dialog('close');
 					}
 				});
 			});
