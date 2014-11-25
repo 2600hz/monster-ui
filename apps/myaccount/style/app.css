@@ -113,8 +113,10 @@
 }
 
 #myaccount .myaccount-menu .nav a i {
+	display: inline-block;
 	margin-left: 10px;
 	margin-right: 10px;
+	width: 35px;
 }
 
 #myaccount .myaccount-menu .menu-bottom {
@@ -384,4 +386,8 @@
 
 #myaccount .myaccount-content .list-settings .controls.checkbox-container {
 	padding-top: 5px;
+}
+
+#myaccount .myaccount-content .fancy-header .right-block .content .main-title {
+	line-height: 80px
 }

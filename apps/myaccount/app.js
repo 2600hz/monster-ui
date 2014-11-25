@@ -78,6 +78,9 @@ define(function(require){
 				outbound: {
 					show_tab: true
 				},
+				twoway: {
+					show_tab: true
+				},
 				service_plan: {
 					show_tab: true
 				},
@@ -95,7 +98,7 @@ define(function(require){
 				showMyaccount = false;
 
 			if ( args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount') ) {
-				args.restrictions = args.restrictions.myaccount;
+				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
 			} else {
 				args.restrictions = self.getDefaultRestrictions();
 			}

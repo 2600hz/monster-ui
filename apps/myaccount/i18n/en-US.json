@@ -84,11 +84,17 @@
 		"perMonth": "/month",
 		"quantity": "Quantity",
 		"trunks": "Trunks",
-		"twoWayCalling": "Unlimited Outbound Trunks",
+		"twoWayCalling": "Unlimited Two-way Trunks",
 		"updateLimits": "Update Limits",
-		"helpTwoway": "This controls the number of simultaneous calls you can make from the system calling external numbers",
-		"helpInbound": "This controls the number of simultaneous calls you can receive to your phone system",
-		"monthlyCharges": "Monthly Charges"
+		"helpTwoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time (Example: 10 Two-way Trunks would allow your system to handle 6 inbound calls and 4 outbound calls at the same time)",
+		"helpInbound": "The number of Outbound trunks defines how many simultaneous calls you can receive to your phone system (ie: 5 Inbound Trunks allow your platform to handle 5 simultaneous incoming calls)",
+		"monthlyCharges": "Monthly Charges",
+		"__comment": "UI-664: Adding the real twoway sliders",
+		"__version": "v3.19_s2",
+		"twowayTitle": "Twoway Trunking Limits",
+		"twoway": "Two-way",
+		"outboundCalling": "Unlimited Outbound Trunks",
+		"helpOutbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time (ie: 10 Outbound Trunks allow your platform to handle 10 simultaneous calls to external numbers)"
 	},
 
 	"balance" : {

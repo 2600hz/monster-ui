@@ -23,16 +23,15 @@ define(function(require){
 
 		_trunksRenderContent: function(args) {
 			var self = this;
-
+			console.log(args.key);
 			if(args.key === 'inbound') {
-				self.trunksRenderInbound(function() {
-					args.callback && args.callback();
-				});
+				self.trunksRenderInbound(args.callback);
 			}
-			else {
-				self.trunksRenderOutbound(function() {
-					args.callback && args.callback();
-				});
+			else if(args.key === 'outbound') {
+				self.trunksRenderOutbound(args.callback);
+			}
+			else if(args.key === 'twoway') {
+				self.trunksRenderTwoway(args.callback)
 			}
 		},
 
@@ -44,18 +43,25 @@ define(function(require){
 					var argsMenuInbound = {
 							module: 'trunks',
 							key: 'inbound',
-							data: dataLimits.data.inbound_trunks,
+							data: dataLimits.data.inbound_trunks || 0,
 							callback: args.callback
 						},
 						argsMenuOutbound = {
 							module: 'trunks',
 							key: 'outbound',
-							data: dataLimits.data.twoway_trunks,
+							data: dataLimits.data.outbound_trunks || 0,
+							callback: args.callback
+						},
+						argsMenuTwoway = {
+							module: 'trunks',
+							key: 'twoway',
+							data: dataLimits.data.twoway_trunks || 0,
 							callback: args.callback
 						};
 
 					monster.pub('myaccount.updateMenu', argsMenuInbound);
 					monster.pub('myaccount.updateMenu', argsMenuOutbound);
+					monster.pub('myaccount.updateMenu', argsMenuTwoway);
 				});
 			}
 		},
@@ -134,33 +140,33 @@ define(function(require){
 			var self = this;
 
 			self.trunksGetLimits(function(data) {
-				var amountTwoway = 29.99,
-					twoway = data.data.twoway_trunks || 0,
-					totalAmountTwoway = amountTwoway * twoway,
+				var amountOutbound = 29.99,
+					outbound = data.data.outbound_trunks || 0,
+					totalAmountOutbound = amountOutbound * outbound,
 					dataTemplate = {
-						twoway: twoway,
-						amountTwoway: amountTwoway.toFixed(2),
-						totalAmountTwoway: totalAmountTwoway.toFixed(2)
+						outbound: outbound,
+						amountOutbound: amountOutbound.toFixed(2),
+						totalAmountOutbound: totalAmountOutbound.toFixed(2)
 					},
 					trunksOutboundView = $(monster.template(self, 'trunks-outbound', dataTemplate));
 
 				trunksOutboundView.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
 
-				trunksOutboundView.find('#slider_twoway').slider({
+				trunksOutboundView.find('#slider_outbound').slider({
 					min: 0,
 					max: 100,
 					range: 'min',
-					value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
+					value: data.data.outbound_trunks > 0 ? data.data.outbound_trunks : 0,
 					slide: function( event, ui ) {
 						trunksOutboundView.find('.slider-value').html(ui.value);
-						totalAmountTwoway = ui.value * amountTwoway;
+						totalAmountOutbound = ui.value * amountOutbound;
 
-						trunksOutboundView.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
+						trunksOutboundView.find('.total-amount .total-amount-value').html(totalAmountOutbound.toFixed(2));
 
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					}
 				});
 
@@ -171,8 +177,9 @@ define(function(require){
 						function() {
 							self.trunksGetLimits(function(dataLimits) {
 								var updateData = {
-									twoway_trunks: trunksOutboundView.find('#slider_twoway').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+									outbound_trunks: trunksOutboundView.find('#slider_outbound').slider('value'),
+									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
+									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
 								};
 
 								updateData = $.extend(true, dataLimits.data, updateData);
@@ -180,7 +187,7 @@ define(function(require){
 								self.trunksUpdateLimits(updateData, function(_data) {
 									var argsMenu = {
 										module: self.name,
-										data: updateData.twoway_trunks,
+										data: updateData.outbound_trunks,
 										key: 'outbound'
 									};
 
@@ -194,7 +201,77 @@ define(function(require){
 
 				monster.pub('myaccount.renderSubmodule', trunksOutboundView);
 
-				trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_twoway .ui-slider-handle').css('left'));
+				trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+
+				callback && callback();
+			});
+		},
+
+		trunksRenderTwoway: function(callback) {
+			var self = this;
+
+			self.trunksGetLimits(function(data) {
+				var amountTwoway = 29.99,
+					twoway = data.data.twoway_trunks || 0,
+					totalAmountTwoway = amountTwoway * twoway,
+					dataTemplate = {
+						twoway: twoway,
+						amountTwoway: amountTwoway.toFixed(2),
+						totalAmountTwoway: totalAmountTwoway.toFixed(2)
+					},
+					trunksTwowayView = $(monster.template(self, 'trunks-twoway', dataTemplate));
+
+				trunksTwowayView.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+
+				trunksTwowayView.find('#slider_twoway').slider({
+					min: 0,
+					max: 100,
+					range: 'min',
+					value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
+					slide: function( event, ui ) {
+						trunksTwowayView.find('.slider-value').html(ui.value);
+						totalAmountTwoway = ui.value * amountTwoway;
+
+						trunksTwowayView.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
+
+						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+					},
+					change: function(event, ui) {
+						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+					}
+				});
+
+				trunksTwowayView.find('.update-limits').on('click', function(e) {
+					e.preventDefault();
+
+					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
+						function() {
+							self.trunksGetLimits(function(dataLimits) {
+								var updateData = {
+									twoway_trunks: trunksTwowayView.find('#slider_twoway').slider('value'),
+									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+								};
+
+								updateData = $.extend(true, dataLimits.data, updateData);
+
+								self.trunksUpdateLimits(updateData, function(_data) {
+									var argsMenu = {
+										module: self.name,
+										data: updateData.twoway_trunks,
+										key: 'twoway'
+									};
+
+									monster.pub('myaccount.updateMenu', argsMenu);
+									self.trunksRenderTwoway();
+								});
+							});
+						}
+					);
+				});
+
+				monster.pub('myaccount.renderSubmodule', trunksTwowayView);
+
+				trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});

@@ -107,6 +107,17 @@
 				</a>
 			</li>
 			{{/if}}
+			{{#if restrictions.twoway.show_tab}}
+			<li class="myaccount-element" data-module="trunks" data-key="twoway">
+				<a href="javascript:void(0)">
+					<div class="active-highlight">
+						<i class="icon-resize-horizontal"></i>
+						<span class="hidden-phone element-name">{{ i18n.trunks.twoway }}</span>
+						<span class="badge pull-right visible-desktop"></span>
+					</div>
+				</a>
+			</li>
+			{{/if}}
 		</ul>
 	</div>
 
