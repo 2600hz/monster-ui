@@ -206,7 +206,7 @@ define(function(require){
 
 		onRequestStart: function(spinner) {
 			var self = this,
-				waitTime = 650;
+				waitTime = 250;
 
 			self.spinner.requestAmount++;
 
@@ -227,7 +227,7 @@ define(function(require){
 
 		onRequestEnd: function(spinner) {
 			var self = this,
-				waitTime = 750;
+				waitTime = 50;
 
 			self.spinner.requestAmount--;
 
