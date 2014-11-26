@@ -119,7 +119,7 @@ define(function(require){
 						'ss': seconds
 					};
 
-				if (format) {
+				if (typeof format === 'string') {
 					if (format === 'short') {
 						format = 'MM/DD/year'
 					}
