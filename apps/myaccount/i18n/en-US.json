@@ -164,7 +164,8 @@
 			"__version": "v3.19_s1",
 			"outbound_trunk": "Outbound Trunks",
 			"outbound_trunks": "Outbound Trunks",
-			"user": "Users"
+			"user": "Users",
+                        "users": "Users"
 		}
 	},
 
