@@ -155,8 +155,8 @@
 			"inbound_trunk": "Inbound Trunks",
 			"inbound_trunks": "Inbound Trunks",
 			"port": "Port",
-			"sip_devices": "SIP Devices",
 			"sip_device": "SIP Devices",
+			"sip_devices": "SIP Devices",
 			"tollfree_us": "US Tollfree",
 			"twoway_trunk": "Twoway Trunks",
 			"twoway_trunks": "Twoway Trunks",
@@ -164,7 +164,8 @@
 			"__version": "v3.19_s1",
 			"outbound_trunk": "Outbound Trunks",
 			"outbound_trunks": "Outbound Trunks",
-			"user": "Users"
+			"user": "Users",
+			"users": "Users"
 		}
 	},
 
