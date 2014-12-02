@@ -1441,12 +1441,14 @@ define(function(require){
 		},
 
 		portArrayToObjects: function(order) {
-			var numbers = order.numbers;
+			if (Array.isArray(order.numbers)) {
+				var numbers = order.numbers;
 
-			delete order.numbers;
-			order.numbers = new Object();
-			for (var number in numbers) {
-				order.numbers[numbers[number]] = new Object();
+				delete order.numbers;
+				order.numbers = new Object();
+				for (var number in numbers) {
+					order.numbers[numbers[number]] = new Object();
+				}
 			}
 
 			return order;
