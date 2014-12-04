@@ -329,7 +329,7 @@ define(function(require){
 		},
 
 		// Highlight then fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
-		hightlight: function(element, options) {
+		highlight: function(element, options) {
 			var options = $.extend(true, {
 				startColor: '#22CCFF',
 				endColor: '#F2F2F2',

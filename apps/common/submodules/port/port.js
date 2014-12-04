@@ -315,7 +315,7 @@ define(function(require){
 									popup.find('.comments').animate({
 											scrollTop: popup.find('.comments').scrollTop() + popup.find('.comments .comment:last-child').position().top
 										}, 300, function() {
-											monster.ui.hightlight($(this).find('.comment:last-child'));
+											monster.ui.highlight($(this).find('.comment:last-child'));
 									});
 
 									popup.find('.wysiwyg-editor').empty();

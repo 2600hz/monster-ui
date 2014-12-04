@@ -803,7 +803,7 @@ define(function(require){
 
 							if(numberBox.size() > 0) {
 								section.addClass('open');
-								monster.ui.hightlight(numberBox, {
+								monster.ui.highlight(numberBox, {
 									timer: 5000
 								});
 							}
