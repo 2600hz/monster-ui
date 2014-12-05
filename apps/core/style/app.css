@@ -353,6 +353,10 @@ table.table tr td {
 	background: #fce3e3;
 }
 
+.green-box {
+	background: #cceca0;
+}
+
 .blue-box {
 	border: 1px solid blue;
 	background: blue;
