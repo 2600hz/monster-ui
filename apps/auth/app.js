@@ -396,13 +396,27 @@ define(function(require){
 		},
 
 		renderLoginPage: function(container) {
-			var self = this;
+			var self = this,
+				template = $(monster.template(self, 'app')),
+				callback = function() {
+					container.append(template);
+					self.renderLoginBlock();
+				};
 
-			var template = monster.template(self, 'app');
-
-			container.append(template);
-
-			self.renderLoginBlock();
+			self.callApi({
+				resource: 'whitelabel.getWelcomeByDomain',
+				data: {
+					domain: window.location.hostname,
+					generateError: false
+				},
+				success: function(data, status) {
+					template.find('.left_div').empty().html(data);
+					callback();
+				},
+				error: function(data, status) {
+					callback();
+				}
+			});
 		},
 
 		renderLoginBlock: function() {
