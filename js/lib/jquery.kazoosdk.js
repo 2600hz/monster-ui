@@ -130,6 +130,7 @@
 			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
 			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
+			'matchClassifier': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers/{phoneNumber}' },
 			'search': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 			'searchBlocks': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
 			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' }
@@ -224,7 +225,7 @@
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
-			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome' },
+			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome', type: 'text/html', dataType: 'html' },
 			'get': { verb: 'GET', url: 'accounts/{accountId}/whitelabel' },
 			'getLogo': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/logo' },
 			'getWelcome': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'html' },
