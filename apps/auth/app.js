@@ -403,20 +403,24 @@ define(function(require){
 					self.renderLoginBlock();
 				};
 
-			self.callApi({
-				resource: 'whitelabel.getWelcomeByDomain',
-				data: {
-					domain: window.location.hostname,
-					generateError: false
-				},
-				success: function(data, status) {
-					template.find('.left_div').empty().html(data);
-					callback();
-				},
-				error: function(data, status) {
-					callback();
-				}
-			});
+			if(monster.config.whitelabel.custom_welcome) {
+				self.callApi({
+					resource: 'whitelabel.getWelcomeByDomain',
+					data: {
+						domain: window.location.hostname,
+						generateError: false
+					},
+					success: function(data, status) {
+						template.find('.left_div').empty().html(data);
+						callback();
+					},
+					error: function(data, status) {
+						callback();
+					}
+				});
+			} else {
+				callback();
+			}
 		},
 
 		renderLoginBlock: function() {
