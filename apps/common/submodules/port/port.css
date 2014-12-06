@@ -172,6 +172,10 @@ div#continue_later p { margin: 5px 0; }
 	width: auto;
 }
 
+#port_container label.monster-invalid {
+	font-size: 12px;
+}
+
 /**********************************************************/
 
 /*********************** Orders List **********************/
@@ -379,18 +383,29 @@ div#eula .important span { text-transform: uppercase; }
 
 div#eula form { margin-bottom: 0; }
 
-div#eula input { margin: -5px 10px 0 0; }
-
-div#eula label:last-child { margin-bottom: 0; }
+div#eula form .control-group:last-child label { margin-bottom: 0; }
 
 /**********************************************************/
 
 /******************** Submit Documents ********************/
 
+div#upload_bill label.monster-invalid {
+	right: 0;
+	margin-top: -10px;
+}
+
 div#name_transfer .row-fluid label {
 	margin: 0;
 	padding: 4px 0;
 	text-align: right;
+}
+
+div#name_transfer .row-fluid #transfer_helper {
+	margin-bottom: 0px;
+}
+
+div#name_transfer .row-fluid label.monster-invalid {
+	margin-top: 15px;
 }
 
 div#upload_bill .span6:first-child { padding-right: 12px; }
@@ -402,6 +417,10 @@ div#upload_bill form {
 	margin: 0 auto;
 	max-width: 260px;
 	text-align: center;
+}
+
+div#upload_bill form {
+	position: relative;
 }
 
 div#upload_bill form input.upload { display: none; }
