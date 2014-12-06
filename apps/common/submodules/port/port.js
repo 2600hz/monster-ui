@@ -469,6 +469,8 @@ define(function(require){
 
 			self.portPositionDialogBox();
 
+			monster.ui.prettyCheck.create(container.find('#eula'));
+
 			/*
 			 * on click on Add button
 			 * check if input is empty
@@ -570,21 +572,26 @@ define(function(require){
 			 * empty .ui-dialog-content and load port-submitDocuments template
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var allChecked = new Boolean();
+				var formToValidate = container.find('#eula form');
 
-				container.find('div#eula').find('input').each(function() {
-					if ( !$(this).is(':checked') ) {
-						allChecked = false;
+				monster.ui.validate(formToValidate, {
+					messages: {
+						'conditions[]': {
+							required: 'Please agree with all the conditions',
+							minlength: 'Please agree with all the conditions'
+						}
+					},
+					errorPlacement: function(error, element) {
+						error.insertAfter(container.find('#eula form .control-group:last-child'));
 					}
 				});
 
-				if ( allChecked ) {
-
+				if (monster.ui.valid(formToValidate)) {
 					var ordersList = { orders: [] };
 
 					container.find('div#manage_orders').find('div.order').each(function() {
-						var order = new Object(),
-							numbersList = new Array();
+						var order = {},
+							numbersList = [];
 
 						$(this).find('li').each(function() {
 							numbersList.push($(this).data('value'));
@@ -596,22 +603,24 @@ define(function(require){
 						ordersList.orders.push(order);
 					});
 
-					if ( ordersList.orders.length == 1 ) {
+					if (ordersList.orders.length == 1) {
 						parent
 							.empty()
 							.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
 
 						self.portSubmitDocuments(accountId, parent, ordersList);
-					} else {
+					}
+					else {
 						parent
 							.empty()
 							.append($(monster.template(self, 'port-resumeOrders', ordersList)));
 
 						self.portResumeOrders(accountId, parent, ordersList);
 					}
-				} else {
+				}
+				else {
 					container.find('div#eula').find('input').each(function() {
-						if ( !$(this).is(':checked') ) {
+						if (!$(this).is(':checked')) {
 							$(this).parent().parent().addClass('error');
 						}
 					});
@@ -692,7 +701,7 @@ define(function(require){
 
 			container.find('.file-upload-container input').each(function(idx, el) {
 				var input = $(el),
-					type = input.prop('name'),
+					type = input.data('name'),
 					options = {
 						btnText: self.i18n.active().port.submitDocuments.changeButton,
 						mimeTypes: ['application/pdf'],
@@ -812,50 +821,34 @@ define(function(require){
 			 * else show which inputs contain errors
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var input = container.find('div#name_transfer').find('input#transfer_helper'),
+				var hasBillAttachment = data.orders[index].hasOwnProperty('bill_attachment') || (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty('bill.pdf')) ? true : false,
+					hasLoaAttachment = data.orders[index].hasOwnProperty('loa_attachment') || (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty('loa.pdf')) ? true : false,
+					input = container.find('div#name_transfer').find('input#transfer_helper'),
+					transferNameForm = container.find('#name_transfer form'),
 					transferName = container.find('#transfer_helper').val(),
 					accountName = container.find('#account_name').val(),
 					postalCode = container.find('#postal_code').val(),
 					locality = container.find('#locality').val(),
 					address = container.find('#address').val(),
 					region = container.find('#region').val(),
+					billForm = container.find('#bill_form'),
 					submitData = true;
 
-				if ( transferName == '' ) {
-					submitData = false;
-					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
-					input
-						.parent()
-						.parent()
-						.addClass('error');
-				}
+				monster.ui.validate(transferNameForm);
+				monster.ui.validate(billForm);
 
-				if ( accountName == '' ) {
+				if (!monster.ui.valid(transferNameForm)) {
 					submitData = false;
 				}
 
-				if ( locality == '' ) {
+				if (!monster.ui.valid(billForm)) {
 					submitData = false;
 				}
 
-				if ( region == '' ) {
+				if (!hasBillAttachment || !hasLoaAttachment) {
 					submitData = false;
-				}
 
-				if ( address == '' ) {
-					submitData = false;
-				}
-
-				if ( postalCode == '' ) {
-					submitData = false;
-				}
-
-				if (!data.orders[index].hasOwnProperty('bill_attachment') && !data.orders[index].uploads.hasOwnProperty('bill.pdf')) {
-					submitData = false;
-				}
-
-				if (!data.orders[index].hasOwnProperty('loa_attachment') && !data.orders[index].uploads.hasOwnProperty('loa.pdf')) {
-					submitData = false;
+					monster.ui.alert('error', self.i18n.active().port.toastr.error.submit.document);
 				}
 
 				if ( submitData ) {
@@ -870,11 +863,6 @@ define(function(require){
 							numbers: data.orders[index].numbers,
 							price: data.orders[index].numbers.length * 5
 						};
-
-					input
-						.parent()
-						.parent()
-						.removeClass('error');
 
 					if (data.orders[index].hasOwnProperty('id')) {
 						delete data.orders[index].loa_attachment;
@@ -1034,13 +1022,11 @@ define(function(require){
 			 * else load portRender
 			 */
 			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var submitData = true;
+				var formToValidate = container.find("#notification form");
 
-				if ( container.find('#notification_email').val() == '' ) {
-					submitData = false;
-				}
+				monster.ui.validate(formToValidate);
 
-				if ( submitData ) {
+				if (monster.ui.valid(formToValidate)) {
 					data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
 					data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
 

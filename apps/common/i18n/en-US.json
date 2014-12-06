@@ -323,6 +323,9 @@
 				"number": {
 					"single": "The number you entered is invalid !!!",
 					"multiple": "The numbers you entered are invalid !!!"
+				},
+				"submit": {
+					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
 				}
 			}
 		}
