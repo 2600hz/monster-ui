@@ -330,20 +330,20 @@ define(function(require){
 						monster.pub('monster.requestEnd');
 					},
 					onRequestError: function(error, requestOptions) {
+						var parsedError = error;
+						if('responseText' in error && error.responseText) {
+							parsedError = $.parseJSON(error.responseText);
+						}
+
 						if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-							monster.ui.charges(error.data, function() {
+							monster.ui.charges(parsedError.data, function() {
 								requestOptions.acceptCharges = true;
 								monster.kazooSdk.request(requestOptions);
 							});
 						} else {
 							if(requestOptions.generateError !== false) {
 								var errorsI18n = monster.apps.core.i18n.active().errors,
-									errorMessage = errorsI18n.generic,
-									parsedError = error;
-
-								if('responseText' in error && error.responseText) {
-									parsedError = $.parseJSON(error.responseText);
-								}
+									errorMessage = errorsI18n.generic;
 
 								if(error.status === 400 && 'data' in parsedError) {
 									errorMessage = errorsI18n.invalidData.errorLabel;
