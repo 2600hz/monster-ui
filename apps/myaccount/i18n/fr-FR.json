@@ -155,8 +155,8 @@
 			"twoway_trunk": "Twoway Trunks",
 			"inbound_trunk": "Inbound Trunks",
 			"did_us": "US DIDs",
-			"sip_devices": "Appareils SIP",
 			"sip_device": "Appareils SIP",
+			"sip_devices": "Appareils SIP",
 			"inbound_cnam": "Inbound CNAM",
 			"e911": "E911",
 			"cnam": "CNAM",
@@ -166,7 +166,8 @@
 			"__version": "v3.19_s1",
 			"outbound_trunk": "Outbound Trunks",
 			"outbound_trunks": "Outbound Trunks",
-			"user": "Utilisateurs"
+			"user": "Utilisateurs",
+			"users": "Utilisateurs"
 		}
     },
 
