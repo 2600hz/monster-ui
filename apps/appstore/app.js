@@ -253,7 +253,7 @@ define(function(require){
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
 								icon: _.find(appstoreData.apps, function(app) { return app.id === data.data.id }).icon,
-								screenshots: $.map(data.data.screenshots, function(val, key) {
+								screenshots: $.map(data.data.screenshots || [], function(val, key) {
 									return self.apiUrl + "apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
 								})
 							}
