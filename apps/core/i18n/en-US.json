@@ -153,6 +153,8 @@
 		"tollfree_us": "US Tollfree",
 		"twoway_trunk": "Twoway Trunks",
 		"twoway_trunks": "Twoway Trunks",
+		"outbound_trunk": "Outbound Trunks",
+		"outbound_trunks": "Outbound Trunks",
 		"user": "Users"
 	},
 	"wysiwyg": {

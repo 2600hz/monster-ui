@@ -147,6 +147,8 @@
 		"inbound_trunks": "Inbound Trunks",
 		"twoway_trunk": "Twoway Trunks",
 		"inbound_trunk": "Inbound Trunks",
+		"outbound_trunk": "Outbound Trunks",
+		"outbound_trunks": "Outbound Trunks",
 		"did_us": "US DIDs",
 		"sip_devices": "Appareils SIP",
 		"sip_device": "Appareils SIP",

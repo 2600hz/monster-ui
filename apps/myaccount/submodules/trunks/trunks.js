@@ -102,30 +102,26 @@ define(function(require){
 				trunksInboundView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									inbound_trunks: trunksInboundView.find('#slider_inbound').slider('value'),
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							inbound_trunks: trunksInboundView.find('#slider_inbound').slider('value'),
+							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										key: 'inbound',
-										data: updateData.inbound_trunks
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								key: 'inbound',
+								data: updateData.inbound_trunks
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderInbound();
-									//TODO toastr saved
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderInbound();
+							//TODO toastr saved
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksInboundView);
@@ -173,30 +169,26 @@ define(function(require){
 				trunksOutboundView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									outbound_trunks: trunksOutboundView.find('#slider_outbound').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							outbound_trunks: trunksOutboundView.find('#slider_outbound').slider('value'),
+							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
+							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										data: updateData.outbound_trunks,
-										key: 'outbound'
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								data: updateData.outbound_trunks,
+								key: 'outbound'
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderOutbound();
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderOutbound();
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksOutboundView);
@@ -244,29 +236,25 @@ define(function(require){
 				trunksTwowayView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									twoway_trunks: trunksTwowayView.find('#slider_twoway').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							twoway_trunks: trunksTwowayView.find('#slider_twoway').slider('value'),
+							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										data: updateData.twoway_trunks,
-										key: 'twoway'
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								data: updateData.twoway_trunks,
+								key: 'twoway'
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderTwoway();
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderTwoway();
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksTwowayView);
