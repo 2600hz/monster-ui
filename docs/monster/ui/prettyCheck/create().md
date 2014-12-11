@@ -47,7 +47,7 @@ monster.ui.prettyCheck.create($('input'), 'radio');
 
 * Transform checkboxes and radios buttons
 ```javascript
-monster.ui.prettyCheck($('input'), 'all');
+monster.ui.prettyCheck.create($('input'), 'all');
 ```
 
 [monster]: ../../../monster.md
