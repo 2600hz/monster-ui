@@ -1,5 +1,4 @@
 define(function(require){
-
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		bootstrapSwitch = require('bootstrap-switch'),
@@ -22,41 +21,847 @@ define(function(require){
 			'common.port.render': 'portRender'
 		},
 
-		portRender: function(args){
+		portRender: function(args) {
 			var self = this,
 				args = args || {},
-				accountId = args.accountId || self.accountId;
+				accountId = args.accountId || self.accountId,
+				dialogOptions = {
+					width: '940px',
+					position: ['center', 20],
+					title: self.i18n.active().port.dialogTitle,
+					autoOpen: false
+				},
+				parent = args.hasOwnProperty('parent') ? args.parent : monster.ui.dialog('', dialogOptions);
 
-			self.portPositionDialogBox();
+			self.portRenderPendingOrder(parent, accountId);
+		},
+
+		portRenderPendingOrder: function(parent, accountId) {
+			var self = this;
 
 			self.portRequestList(accountId, function(data) {
-				var portTemplate = $(monster.template(self, 'port-pendingOrders', {
+				var template = monster.template(self, 'port-pendingOrders', {
 						data: data,
 						isAdmin: monster.apps.auth.originalAccount.superduper_admin
-					})),
-					parent = args.parent || monster.ui.dialog('', {
-						width: '940px',
-						position: ['center', 20],
-						title: self.i18n.active().port.dialogTitle
 					});
 
-				parent.empty().append(portTemplate);
+				parent
+					.empty()
+					.append(template);
+
+				if (parent.hasClass('ui-dialog-content')) {
+					parent.dialog('open');
+				}
 
 				self.portRenderStateCell(parent, data);
-
-				self.portPendingOrders(accountId, parent, data);
+				self.portBindPendingOrderEvents(parent, accountId);
 			});
 		},
 
-		portRenderStateCell: function(parent, data, portRequestId){
+		portBindPendingOrderEvents: function(parent, accountId) {
+			var self = this,
+				container = parent.find('#orders_list');
+
+			self.portPositionDialogBox();
+
+			container.find('span.pull-right a').on('click', function() {
+				self.portRenderAddNumber(parent, accountId);
+			});
+
+			container.find('tr.collapse').on('click', function() {
+				var el = $(this),
+					caret = el.find('i[class^="icon-caret-"]'),
+					changeCaretDiretion = function(element, direction) {
+						element.prop('class', 'icon-caret-' + direction);
+					};
+
+				if (!el.hasClass('active')) {
+					changeCaretDiretion(container.find('tr.collapse.active').find('i.icon-caret-down'), 'right');
+
+					container.find('tr.collapse.active')
+						.removeClass('active');
+
+					container.find('tr[data-id]:not(.collapse)')
+						.css('display', 'none');
+
+					container.find('tr[data-id="' + el.data('id') + '"]:not(.collapse)')
+						.css('display', 'table-row');
+
+					changeCaretDiretion(caret, 'down');
+
+					el.addClass('active');
+				}
+				else {
+					container.find('tr[data-id="' + el.data('id') + '"]:not(.collapse)')
+						.css('display', 'none');
+
+					changeCaretDiretion(caret, 'right');
+
+					el.removeClass('active');
+				}
+			});
+
+			container.find('.collapse td:nth-child(3)').on('click', '.switch-state', function(event) {
+				event.stopPropagation();
+			});
+
+			container.find('.collapse td:nth-child(3)').on('change', '.switch-state', function(event) {
+				var el = $(this),
+					portRequestId = el.parents('.collapse').data('id'),
+					newState = el.val();
+
+				self.portRequestChangeState(accountId, portRequestId, newState, function() {
+					var button = el.parents('.collapse').find('td:last-child button');
+
+					self.portRenderStateCell(container, newState, portRequestId);
+
+					if (newState === 'unconfirmed') {
+						button
+							.removeClass('btn-info')
+							.addClass('btn-success')
+							.text(self.i18n.active().port.pendingOrders.continueButton);
+					}
+					else {
+						button
+							.removeClass('btn-success')
+							.addClass('btn-info')
+							.text(self.i18n.active().port.pendingOrders.infoButton);
+					}
+
+					toastr.success(self.i18n.active().port.toastr.success.request.update);
+				}, function() {
+					toastr.error(self.i18n.active().port.toastr.error.request.update);
+				});
+			});
+
+			container.find('td:last-child').find('button').on('click', function(event) {
+				var el = $(this),
+					portRequestId = el.parent().parent().data('id');
+
+				event.stopPropagation();
+
+				self.portRequestGet(accountId, portRequestId, function(data) {
+					if (el.hasClass('btn-success')) {
+						var template = monster.template(self, 'port-submitDocuments', data),
+							dataList = { orders: [data] };
+
+						parent
+							.empty()
+							.append(template);
+
+						self.portRenderSubmitDocuments(parent, accountId, dataList);
+					}
+					else {
+						var template = monster.template(self, 'port-requestInfo', data),
+							dialogOptions = {
+								width: '560px',
+								position: ['center', 20],
+								title: self.i18n.active().port.infoPopup.title
+							};
+
+						monster.ui.dialog(template, dialogOptions);
+					}
+				})
+			});
+
+			container.find('.collapse td:last-child .icon-comments').on('click', function(event) {
+				var el = $(this),
+					portRequestId = el.parents('.collapse').data('id');
+
+				event.stopPropagation();
+
+				self.portRenderComments(parent, accountId, portRequestId);
+			});
+
+			container.find('.collapse td:last-child .icon-comments').hover(function() {
+				$(this).toggleClass('icon-comments icon-comments-alt');
+			});
+		},
+
+		portRenderComments: function(parent, accountId, portRequestId) {
+			var self = this;
+
+			self.portRequestGet(accountId, portRequestId, function(port) {
+				var template = $(monster.template(self, 'port-commentsPopup', {
+						isAdmin: monster.apps.auth.originalAccount.superduper_admin
+					})),
+					comments = port.hasOwnProperty('comments') ? port.comments : [],
+					initDialog = function() {
+						var dialogOptions = {
+								width: '960px',
+								position: ['center', 20],
+								title: self.i18n.active().port.commentsPopup.title
+							},
+							dialog = monster.ui.dialog(template, dialogOptions);
+
+						self.portBindCommentsEvents(dialog, accountId, port, comments);
+					};
+
+				if (_.isEmpty(comments)) {
+					template.find('.comments').hide();
+					initDialog();
+				}
+				else {
+					self.portRequestListUsers(accountId, function(users) {
+						users = (function arrayToObject(usersArray) {
+							var usersObject = {};
+
+							usersArray.forEach(function(v, i) {
+								usersObject[v.id] = v.first_name.concat(' ', v.last_name);
+							});
+
+							return usersObject;
+						})(users);
+
+						comments.forEach(function(v, i) {
+							v.author = users[v.user_id];
+							v.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
+
+							if (v.superduper_comment ? monster.apps.auth.originalAccount.superduper_admin : true) {
+								template.find('.comments')
+									.append(monster.template(self, 'port-comment', v));
+
+								template.find('.comments .comment:last-child .comment-body')
+									.html(v.content);
+							}
+						});
+
+						initDialog();
+					});
+				}
+			});
+		},
+
+		portBindCommentsEvents: function(container, accountId, data, comments) {
+			var self = this;
+
+			monster.ui.wysiwyg(container.find('.wysiwyg-container'));
+
+			container.find('.comments').on('click', '.delete-comment', function() {
+				var el = $(this),
+					comment = el.parents('.comment'),
+					id = el.data('id');
+
+				monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
+					comments.forEach(function(v, i, a) {
+						if (v.timestamp === id) {
+							comments.splice(i, 1);
+						}
+					});
+
+					data.comments = comments;
+
+					self.portRequestUpdate(accountId, data, function(data) {
+						comment.fadeOut('400', function() {
+							$(this).remove();
+
+							if (_.isEmpty(data.comments)) {
+								container.find('.comments').slideUp();
+							}
+
+							toastr.success(self.i18n.active().port.toastr.success.comment.delete);
+						});
+					});
+				});
+			});
+
+			container.find('.actions .btn-success').on('click', function() {
+				var currentUser = monster.apps.auth.currentUser,
+					newComment = {
+						user_id: self.userId,
+						timestamp: monster.util.dateToGregorian(new Date()),
+						content: container.find('.wysiwyg-editor').html(),
+						superduper_comment: container.find('#superduper_comment').is(':checked')
+					};
+
+				comments.push(newComment);
+				data.comments = comments;
+
+				self.portRequestUpdate(accountId, data, function() {
+					newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
+					newComment.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
+
+					container.find('.comments')
+						.show()
+						.append($(monster.template(self, 'port-comment', newComment)));
+
+					container.find('.comments .comment:last-child .comment-body')
+						.html(newComment.content);
+
+					container.find('.comments').animate({
+							scrollTop: container.find('.comments').scrollTop() + container.find('.comments .comment:last-child').position().top
+						}, 300, function() {
+							monster.ui.highlight($(this).find('.comment:last-child'));
+					});
+
+					container.find('.wysiwyg-editor').empty();
+				});
+			});
+		},
+
+		portRenderAddNumber: function(parent, accountId) {
+			var self = this,
+				template = monster.template(self, 'port-addNumbers');
+
+			parent.empty()
+				.append(template);
+
+			self.portBindAddNumberEvents(parent, accountId);
+		},
+
+		portBindAddNumberEvents: function(parent, accountId) {
+			var self = this,
+				container = parent.find('div#add_numbers');
+
+			self.portPositionDialogBox();
+			self.portComingSoon(container, ['.help-links li:not(.separator) a']);
+
+			container.find('button').on('click', function() {
+				var numbersArray = container.find('input').val().split(' ');
+
+				numbersArray = numbersArray.filter(function(el, idx) {
+					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
+						return el;
+					}
+				});
+
+				if (numbersArray.length === 0) {
+					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
+
+					container.find('div.row-fluid')
+						.addClass('error');
+				}
+				else {
+					self.portFormatNumbers(numbersArray, function(formattedData) {
+						if (formattedData.orders.length > 0) {
+							container.find('div.row-fluid')
+								.removeClass('error');
+
+							container.find('#numbers_list')[0].value = '';
+
+							/*
+							 * unbind because it is used in portManagerOrders
+							 * to add number without adding the port-managerOrders template again
+							 */
+							container.find('button')
+								.unbind('click');
+
+							self.portRenderManagerOrders(parent, accountId, formattedData);
+						}
+						else {
+							container.find('#numbers_list')[0].value = '';
+						}
+					});
+				}
+			});
+		},
+
+		portRenderManagerOrders: function(parent, accountId, data) {
+			var self = this,
+				template = $(monster.template(self, 'port-manageOrders', data));
+
+			template.insertAfter(parent.find('#add_numbers'));
+
+			self.portBindManageOrdersEvents(parent, accountId);
+		},
+
+		portBindManageOrdersEvents: function(parent, accountId) {
+			var self = this,
+				container = parent.find('#port_container');
+
+			self.portPositionDialogBox();
+			self.portCancelOrder(parent, accountId, container);
+			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
+
+			monster.ui.prettyCheck.create(container.find('#eula'));
+
+			container.on('click', 'div#add_numbers button', function() {
+				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
+
+				numbersArray = numbersArray.filter(function(el, idx) {
+					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
+						return el;
+					}
+				});
+
+				if (numbersArray.length === 0) {
+					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
+					container
+						.find('div#add_numbers')
+						.find('div.row-fluid')
+						.addClass('error');
+				}
+				else {
+					self.portFormatNumbers(numbersArray, function(formattedData) {
+						container.find('#numbers_list')[0].value = '';
+
+						container
+							.find('div#add_numbers')
+							.find('div.row-fluid')
+							.removeClass('error');
+
+						for (var order in formattedData.orders) {
+							container.find('#manage_orders').find('div.order').each(function(index, el) {
+								var carrier = $(this).find('h4').text();
+
+								if (carrier == formattedData.orders[order].carrier) {
+									for (var number in formattedData.orders[order].numbers) {
+										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="icon-warning-sign"></i>' + formattedData.orders[order].numbers[number] + '<i class="icon-remove-sign pull-right"></i></li>');
+									}
+
+									formattedData.orders.splice(order, 1);
+								}
+							});
+
+							if (formattedData.orders.length != 0) {
+								container
+									.find('div#manage_orders')
+									.find('div.row-fluid:last-child')
+									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
+							}
+						}
+					});
+				}
+			});
+
+			container.on('click', '#manage_orders li i.icon-remove-sign', function() {
+				var elem = $(this),
+					ul = elem.parent().parent();
+
+				elem.parent().remove();
+
+				if (ul.is(':empty')) {
+					ul.parent().parent().remove();
+				}
+
+				if (container.find('div#manage_orders').find('.row-fluid:last-child').is(':empty')) {
+					container
+						.find('div#manage_orders')
+						.find('.row-fluid:last-child')
+						.animate({ height: '0px' }, 500);
+
+					self.portRenderAddNumber(parent, accountId);
+				}
+			});
+
+			container.find('div#footer').find('button.btn-success').on('click', function() {
+				var formToValidate = container.find('#eula form');
+
+				monster.ui.validate(formToValidate, {
+					messages: {
+						'conditions[]': {
+							required: self.i18n.active().port.requiredConditions,
+							minlength: self.i18n.active().port.requiredConditions
+						}
+					},
+					errorPlacement: function(error, element) {
+						error.insertAfter(container.find('#eula form .control-group:last-child'));
+					}
+				});
+
+				if (monster.ui.valid(formToValidate)) {
+					var ordersList = { orders: [] };
+
+					container.find('div#manage_orders').find('div.order').each(function() {
+						var elem = $(this),
+							order = {},
+							numbersList = [];
+
+						$.each(elem.find('li'), function(idx, val) {
+							numbersList.push($(val).data('value'));
+						});
+
+						order.carrier = elem.find('li:first-child').data('carrier');
+						order.numbers = numbersList;
+
+						ordersList.orders.push(order);
+					});
+
+					self[ordersList.orders.length === 1 ? 'portRenderSubmitDocuments' : 'portRenderResumeOrders'](parent, accountId, ordersList);
+				}
+				else {
+					container.find('div#eula').find('input').each(function() {
+						if (!$(this).is(':checked')) {
+							$(this).parent().parent().addClass('error');
+						}
+					});
+				}
+			});
+		},
+
+		portRenderResumeOrders: function(parent, accountId, data) {
+			var self = this,
+				template = $(monster.template(self, 'port-resumeOrders', data));
+
+			$.each(template.find('.row-fluid'), function(idx, val) {
+				val = $(val);
+
+				val.find('.order-key')
+					.text((parseInt(val.find('.order-key').text(), 10) + 1).toString());
+			});
+
+			parent
+				.empty()
+				.append(template);
+
+			self.portBindResumeOrdersEvents(parent, accountId, data);
+		},
+
+		portBindResumeOrdersEvents: function(parent, accountId, data) {
+			var self = this,
+				container = parent.find('#resume_orders');
+
+			self.portPositionDialogBox();
+
+			container.find('button').on('click', function() {
+				var index = $(this).data('index');
+
+				self.portRenderSubmitDocuments(parent, accountId, data, index);
+			});
+		},
+
+		portRenderSubmitDocuments: function(parent, accountId, data, index) {
+			var self = this,
+				index = index || 0,
+				template = $(monster.template(self, 'port-submitDocuments', data.orders[index]));
+
+			parent
+				.empty()
+				.append(template);
+
+			self.portBindSubmitDocumentsEvents(parent, accountId, data, index);
+		},
+
+		portBindSubmitDocumentsEvents: function(parent, accountId, data, index) {
+			var self = this,
+				container = parent.find('#port_container');
+
+			self.portPositionDialogBox();
+			self.portCancelOrder(parent, accountId, container, data, index);
+			self.portComingSoon(container, [
+				'#upload_bill .row-fluid.info a',
+				'#loa h4 a',
+				'#loa p a:not(#sign_doc)',
+				'#footer .help-links li:not(.separator) a'
+			]);
+
+			container.find('.file-upload-container input').each(function(idx, el) {
+				var input = $(el),
+					type = input.data('name'),
+					options = {
+						btnText: self.i18n.active().port.submitDocuments.changeButton,
+						mimeTypes: ['application/pdf'],
+						wrapperClass: 'input-append',
+						success: function(results) {
+							if (data.orders[index].hasOwnProperty('id')) {
+								if (data.orders[index].hasOwnProperty(type.concat('.pdf'))) {
+									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
+										data.orders[index][type.concat('_attachment')] = results[0].file;
+									});
+								}
+								else {
+									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
+										data.orders[index][type.concat('_attachment')] = results[0].file;
+									});
+								}
+							}
+							else {
+								data.orders[index][type.concat('_attachment')] = results[0].file;
+							}
+						},
+						error: function(error) {
+							for ( var key in error ) {
+								if ( error[key].length > 0 ) {
+									toastr.error(self.i18n.active().port.toastr.error[key].concat(error[key].join(', ')));
+								}
+							}
+						}
+					}
+
+				if (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty(type.concat('.pdf'))) {
+					options.filesList = [ type.concat('.pdf') ];
+				}
+
+				if (type === 'bill') {
+					options['bigBtnClass'] = 'btn btn-success span12';
+					options['bigBtnText'] = self.i18n.active().port.submitDocuments.uploadBillButton;
+					options['btnClass'] = 'btn btn-success';
+				}
+				else if (type === 'loa') {
+					options['bigBtnClass'] = 'btn span10';
+					options['bigBtnText'] = self.i18n.active().port.submitDocuments.loaUploadStep;
+					options['btnClass'] = 'btn';
+				}
+
+				input.fileUpload(options);
+			});
+
+			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
+				var li = $(this).parent(),
+					ul = li.parent(),
+					numberToRemove = li.data('value'),
+					indexOfNumberToRemove = data.orders[index].numbers.indexOf(numberToRemove);
+
+				if (indexOfNumberToRemove >= 0) {
+					data.orders[index].numbers.slice(indexOfNumberToRemove, 1);
+
+					li.remove();
+				}
+
+				if (ul.is(':empty')) {
+					if (data.orders.length > 1) {
+						data.orders.splice(index, 1);
+
+						self.portRenderResumeOrders(parent, accountId, data);
+					}
+					else {
+						self.portReloadApp(parent, accountId);
+					}
+				}
+			});
+
+			container.find('div#continue_later').find('button.btn-info').on('click', function() {
+				var transferNameForm = container.find('#transfer_name_form');
+
+				monster.ui.validate(transferNameForm);
+
+				if (monster.ui.valid(transferNameForm)) {
+					var transferNameFormData = form2object('transfer_name_form', '.', true),
+						billFormData = form2object('bill_form', '.', true);
+
+					// TODO: Remove when implementing monster.ui.getFormData()
+					delete billFormData[''];
+
+					$.extend(true, data.orders[index], billFormData, transferNameFormData);
+
+					self.portSaveOrder(parent, accountId, data, index);
+				}
+			});
+
+			container.find('#footer button.btn-success').on('click', function() {
+				var order = data.orders[index],
+					hasBillAttachment = order.hasOwnProperty('bill_attachment') || order.hasOwnProperty('uploads') && order.uploads.hasOwnProperty('bill.pdf') ? true : false,
+					hasLoaAttachment = order.hasOwnProperty('loa_attachment') || order.hasOwnProperty('uploads') && order.uploads.hasOwnProperty('loa.pdf') ? true : false,
+					transferNameForm = container.find('#transfer_name_form'),
+					billForm = container.find('#bill_form'),
+					submitData = true;
+
+				monster.ui.validate(transferNameForm);
+				monster.ui.validate(billForm);
+
+				if (!monster.ui.valid(transferNameForm)) {
+					submitData = false;
+				}
+
+				if (!monster.ui.valid(billForm)) {
+					submitData = false;
+				}
+
+				if (!hasBillAttachment || !hasLoaAttachment) {
+					submitData = false;
+
+					monster.ui.alert('error', self.i18n.active().port.toastr.error.submit.document);
+				}
+
+				if (submitData) {
+					var transferNameFormData = form2object('transfer_name_form'),
+						billFormData = form2object('bill_form');
+
+					// TODO: Remove when implementing monster.ui.getFormData()
+					delete billFormData[''];
+
+					if (order.hasOwnProperty('id')) {
+						delete order.bill_attachment;
+						delete order.loa_attachment;
+					}
+
+					$.extend(true, order, billFormData, transferNameFormData);
+
+					self.portRenderConfirmOrder(parent, accountId, data, index);
+				}
+			});
+		},
+
+		portRenderConfirmOrder: function(parent, accountId, data, index) {
+			var self = this,
+				order = data.orders[index],
+				date = monster.util.dateToGregorian(monster.util.getBusinessDate(4)),
+				created = order.hasOwnProperty('created') ? order.created : date,
+				transferDate = order.hasOwnProperty('transfer_date') ? order.transfer_date : date,
+				dataTemplate = $.extend(true, {}, order, {
+					total: order.numbers.length,
+					price: order.numbers.length * 5,
+					transfer_date: date - transferDate >= 0 ? date : transferDate,
+					created: created
+				}),
+				template = $(monster.template(self, 'port-confirmOrder', dataTemplate));
+
+			parent
+				.empty()
+				.append(template);
+
+			self.portBindConfirmOrderEvents(parent, accountId, data, index);
+		},
+
+		portBindConfirmOrderEvents: function(parent, accountId, data, index) {
+			var self = this,
+				container = parent.find('#port_container'),
+				datePickerInput = container.find('input.date-input'),
+				toggleInput = container.find('.switch'),
+				order = data.orders[index];
+
+			self.portPositionDialogBox(),
+			self.portCancelOrder(parent, accountId, container, data, index);
+			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
+
+			datePickerInput.datepicker({
+				minDate: monster.util.getBusinessDate(4),
+				beforeShowDay: $.datepicker.noWeekends,
+				constrainInput: true,
+				dateFormat: 'mm/dd/yy',
+				onSelect: function(dateText, inst) {
+					var span = container.find('#transfer_schedule_date'),
+						textColor = span.css('color'),
+						speed = 200;
+
+					span.animate({ color: span.css('backgroundColor') }, speed, function() {
+						span.text(dateText);
+						span.animate({ color: textColor }, speed);
+					});
+				},
+			});
+
+			toggleInput.bootstrapSwitch();
+
+			container.find('#numbers_to_buy option')
+				.last()
+				.prop('selected', 'selected');
+
+			if (order.hasOwnProperty('temporary_numbers') && order.temporary_numbers > 0) {
+				toggleInput.bootstrapSwitch('setState', true);
+
+				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
+					.slideDown('400', function() {
+						container.find('#numbers_to_buy')
+							.val(order.temporary_numbers - 1)
+							.prop('disabled', false);
+					});
+			}
+			else {
+				toggleInput.bootstrapSwitch('setState', false);
+
+				container.find('#numbers_to_buy')
+						.prop('disabled', true);
+
+				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
+					.slideUp('400');
+			}
+
+			toggleInput.on('switch-change', function() {
+				var input = $(this);
+
+				if (input.find('div.switch-animate').hasClass('switch-off')) {
+					container.find('#numbers_to_buy')
+						.prop('disabled', true);
+
+					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
+						.slideUp('400');
+				} else if (input.find('div.switch-animate').hasClass('switch-on')) {
+					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
+						.slideDown('400', function() {
+							container.find('#numbers_to_buy')
+								.prop('disabled', false);
+						});
+				}
+			});
+
+			container.find('#numbers_to_buy option').each(function(idx, el) {
+				var elem = $(el);
+
+				elem.val(parseInt(elem.val(), 10) + 1)
+					.text(elem.val());
+			});
+
+			container.find('#continue_later button').on('click', function() {
+				var notificationEmailFormData = form2object('notification_email_form', '.', true),
+					temporaryNumbersFormData = form2object('temporary_numbers_form'),
+					transferDateFormData = form2object('transfer_date_form');
+
+				// TODO: Remove when implementing monster.ui.getFormData()
+				delete temporaryNumbersFormData[''];
+
+				$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
+
+				order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
+
+				if (container.find('.switch-animate').hasClass('switch-off')) {
+					delete order.temporary_numbers;
+				}
+
+				self.portSaveOrder(parent, accountId, data, index);
+			});
+
+			container.find('#footer button.btn-success').on('click', function() {
+				var notificationEmailForm = container.find("#notification_email_form");
+
+				monster.ui.validate(notificationEmailForm);
+
+				if (monster.ui.valid(notificationEmailForm)) {
+					var notificationEmailFormData = form2object('notification_email_form'),
+						temporaryNumbersFormData = form2object('temporary_numbers_form'),
+						transferDateFormData = form2object('transfer_date_form');
+
+					// TODO: Remove when implementing monster.ui.getFormData()
+					delete temporaryNumbersFormData[''];
+
+					$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
+
+					order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
+
+					if (container.find('.switch-animate').hasClass('switch-off')) {
+						delete order.temporary_numbers;
+					}
+
+					if (order.hasOwnProperty('id')) {
+						self.portRequestUpdate(accountId, order, function() {
+							if (order.hasOwnProperty('port_sate')) {
+								self.portReloadApp(parent, accountId);
+							}
+							else {
+								self.portRequestChangeState(accountId, order.id, 'submitted', function() {
+									self.portReloadApp(parent, accountId);
+								});
+							}
+						});
+					}
+					else {
+						self.portRequestAdd(accountId, order, function(portRequestId) {
+							data.orders.splice(index, 1);
+
+							self.portRequestChangeState(accountId, portRequestId, 'submitted', function() {
+								if (data.orders.length > 0) {
+									self.portRenderResumeOrders(parent, accountId, data);
+								}
+								else {
+									self.portReloadApp(parent, accountId);
+								}
+							});
+						});
+					}
+				}
+			});
+		},
+
+		/* Methods */
+		portRenderStateCell: function(parent, data, portRequestId) {
 			var self = this,
 				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
 				states = [
-					{ value: 'unconfirmed', 'text': '', next: [1] },
-					{ value: 'submitted', 'text': '', next: [2,3,4] },
-					{ value: 'scheduled', 'text': '', next: [3,4] },
-					{ value: 'rejected', 'text': '', next: [1,4] },
-					{ value: 'completed', 'text': '', next: [] }
+					{ value: 'unconfirmed', next: [1] },
+					{ value: 'submitted', next: [2,3,4] },
+					{ value: 'scheduled', next: [3,4] },
+					{ value: 'rejected', next: [1,4] },
+					{ value: 'completed', next: [] }
 				],
 				getStatesToDisplay = function(nextState) {
 					var statesList = [];
@@ -120,956 +925,6 @@ define(function(require){
 			}
 		},
 
-		/**
-		  * @desc bind events of the port-pendingOrders template
-		  * @param parent - .ui-dialog-content
-		*/
-		portPendingOrders: function(accountId, parent, data) {
-			var self = this,
-				container = parent.find('#orders_list');
-
-			self.portPositionDialogBox();
-
-			/*
-			 * on click on a tr in the table
-			 * show/hide the numbers of the port clicked in the table
-			 */
-			container.find('tr.collapse').on('click', function() {
-				var caret = $(this).find('i[class^="icon-caret-"]'),
-					changeCaretDiretion = function(element, direction) {
-						element.prop('class', 'icon-caret-' + direction);
-					};
-
-				if ( !$(this).hasClass('active') ) {
-					changeCaretDiretion(container.find('tr.collapse.active').find('i.icon-caret-down'), 'right');
-
-					container
-						.find('tr.collapse.active')
-						.removeClass('active');
-
-					container
-						.find('tr[data-id]:not(.collapse)')
-						.css('display', 'none');
-
-					container
-						.find('tr[data-id="' + $(this).data('id') + '"]:not(.collapse)')
-						.css('display', 'table-row');
-
-					changeCaretDiretion(caret, 'down');
-
-					$(this).addClass('active');
-				} else {
-
-					container
-						.find('tr[data-id="' + $(this).data('id') + '"]:not(.collapse)')
-						.css('display', 'none');
-
-					changeCaretDiretion(caret, 'right');
-
-					$(this).removeClass('active');
-				}
-			});
-
-			/*
-			 * on click on the Start New Transfer link
-			 * empty .ui-dialog-content and load port-addNumbers template
-			 */
-			container.find('span.pull-right').find('a').on('click', function() {
-				parent
-					.empty()
-					.append($(monster.template(self, 'port-addNumbers')));
-
-				self.portAddNumbers(accountId, parent);
-			});
-
-			container.find('.collapse td:nth-child(3)').on('click', '.switch-state', function(event) {
-				event.stopPropagation();
-			});
-
-			container.find('.collapse td:nth-child(3)').on('change', '.switch-state', function(event) {
-				var el = $(this),
-					portRequestId = el.parents('.collapse').data('id'),
-					newState = $(this).val();
-
-				self.portRequestChangeState(accountId, portRequestId, newState, function() {
-					var button = el.parents('.collapse').find('td:last-child button');
-
-					self.portRenderStateCell(container, newState, portRequestId);
-
-					if (newState === 'unconfirmed') {
-						button
-							.removeClass('btn-info')
-							.addClass('btn-success')
-							.text(self.i18n.active().port.pendingOrders.continueButton);
-					}
-					else {
-						button
-							.removeClass('btn-success')
-							.addClass('btn-info')
-							.text(self.i18n.active().port.pendingOrders.infoButton);
-					}
-
-					toastr.success(self.i18n.active().port.toastr.success.request.update);
-				}, function() {
-					toastr.error(self.i18n.active().port.toastr.error.request.update);
-				});
-			});
-
-			/*
-			 * on click on the continue button
-			 * empty .ui-dialog-content and load port-submitDocuments template
-			 */
-			container.find('td:last-child').find('button').on('click', function(event) {
-				var button = $(this);
-				event.stopPropagation();
-
-				self.portRequestGet(accountId, $(this).parent().parent().data('id'), function(data) {
-					if ( button.hasClass('btn-success') ) {
-						parent
-							.empty()
-							.append($(monster.template(self, 'port-submitDocuments', data)));
-
-						self.portSubmitDocuments(accountId, parent, { orders: [data] });
-					}
-					else {
-						var popup = $(monster.ui.dialog(
-								$(monster.template(self, 'port-requestInfo', data)),
-								{
-									title: self.i18n.active().port.infoPopup.title,
-									width: '560px',
-									position: ['center', 20]
-								}
-							));
-					}
-				})
-			});
-
-			container.find('.collapse td:last-child .icon-comments').on('click', function(event) {
-				event.stopPropagation();
-				var portRequestId = $(this).parents('.collapse').data('id'),
-					currentUser = monster.apps.auth.currentUser;
-
-				self.portRequestGet(accountId, portRequestId, function(data) {
-					var template = $(monster.template(self, 'port-commentsPopup', { isAdmin: monster.apps.auth.originalAccount.superduper_admin })),
-						comments = data.hasOwnProperty('comments') ? data.comments : [],
-						initPopup = function() {
-							var popup = $(monster.ui.dialog(template, {
-								title: self.i18n.active().port.commentsPopup.title,
-								width: '960px',
-								position: ['center', 20]
-							}));
-
-							monster.ui.wysiwyg(popup.find('.wysiwyg-container'));
-
-							popup.find('.comments').on('click', '.delete-comment', function() {
-								var comment = $(this).parents('.comment'),
-									id = $(this).data('id');
-
-								monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
-									comments.forEach(function(v, i, a) {
-										if (v.timestamp === id) {
-											comments.splice(i, 1);
-										}
-									});
-
-									data.comments = comments;
-
-									self.portRequestUpdate(accountId, portRequestId, data, function(data) {
-										comment.fadeOut('400', function() {
-											$(this).remove();
-
-											if (_.isEmpty(data.comments)) {
-												popup.find('.comments').slideUp();
-											}
-
-											toastr.success(self.i18n.active().port.toastr.success.comment.delete);
-										});
-									});
-								});
-							});
-
-							popup.find('.actions .btn-success').on('click', function() {
-								var newComment = {
-										user_id: self.userId,
-										timestamp: monster.util.dateToGregorian(new Date()),
-										content: popup.find('.wysiwyg-editor').html(),
-										superduper_comment: popup.find('#superduper_comment').is(':checked')
-									};
-
-								comments.push(newComment);
-								data.comments = comments;
-
-								self.portRequestUpdate(accountId, portRequestId, data, function() {
-									newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
-									newComment.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
-
-									popup
-										.find('.comments')
-										.show()
-										.append($(monster.template(self, 'port-comment', newComment)));
-
-									popup
-										.find('.comments .comment:last-child .comment-body')
-										.html(newComment.content);
-
-									popup.find('.comments').animate({
-											scrollTop: popup.find('.comments').scrollTop() + popup.find('.comments .comment:last-child').position().top
-										}, 300, function() {
-											monster.ui.highlight($(this).find('.comment:last-child'));
-									});
-
-									popup.find('.wysiwyg-editor').empty();
-								});
-							});
-						};
-
-					if (_.isEmpty(comments)) {
-						template.find('.comments').hide();
-						initPopup();
-					}
-					else {
-						self.callApi({
-							resource: 'user.list',
-							data: {
-								accountId: accountId
-							},
-							success: function(data, status) {
-
-								var users = (function arrayToObject(usersArray) {
-										var usersObject = {};
-
-										usersArray.forEach(function(v, i) {
-											usersObject[v.id] = v.first_name.concat(' ', v.last_name);
-										});
-
-										return usersObject;
-									})(data.data);
-
-								comments.forEach(function(v, i) {
-									v.author = users[v.user_id];
-									v.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
-
-									if (v.superduper_comment ? monster.apps.auth.originalAccount.superduper_admin : true) {
-										template
-											.find('.comments')
-											.append($(monster.template(self, 'port-comment', v)));
-
-										template
-											.find('.comments .comment:last-child .comment-body')
-											.html(v.content);
-									}
-								});
-
-								initPopup();
-							}
-						});
-					}
-				});
-			});
-
-			container.find('.collapse td:last-child .icon-comments').hover(function() {
-				$(this).toggleClass('icon-comments icon-comments-alt');
-			});
-		},
-
-		/**
-		  * @desc bind events of the port-resumeOrders template
-		  * @param parent - .ui-dialog-content
-		*/
-		portResumeOrders: function(accountId, parent, data) {
-			var self = this,
-				container = parent.find('div#resume_orders');
-
-			$.each(container.find('.row-fluid'), function(key, elem) {
-				$(elem).find('.order-key').text((parseInt($(elem).find('.order-key').text(), 10) + 1).toString());
-			});
-
-			self.portPositionDialogBox();
-
-			/*
-			 * on click the Complete this order button
-			 * empty .ui-dialog-content and load port-submitDocuments template
-			 */
-			container.find('button').on('click', function() {
-				parent
-					.empty()
-					.append($(monster.template(self, 'port-submitDocuments', data.orders[$(this).data('index')])));
-
-				self.portSubmitDocuments(accountId, parent, data, $(this).data('index'));
-			});
-		},
-
-		/**
-		  * @desc bind events of the port-addNumbers template
-		  * @param parent - .ui-dialog-content
-		*/
-		portAddNumbers: function(accountId, parent) {
-			var self = this,
-				container = parent.find('div#add_numbers');
-
-			self.portPositionDialogBox();
-
-			/*
-			 * on click on the Add button
-			 * check if the input is empty
-			 * if not load port-ManageOrders template after port-addNumber template
-			 */
-			container.find('button').on('click', function() {
-				var numbersArray = container.find('input').val().split(' ');
-
-				numbersArray = numbersArray.filter(function(el, idx) {
-					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
-						return el;
-					}
-				});
-
-				if ( numbersArray.length === 0 ) {
-					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
-					container
-						.find('div.row-fluid')
-						.addClass('error');
-				} else {
-					self.portFormatNumbers(container, numbersArray, function(container, formattedData) {
-
-						if ( formattedData.orders.length > 0 ) {
-							container
-								.find('div.row-fluid')
-								.removeClass('error');
-
-							container.find('#numbers_list')[0].value = '';
-
-							/*
-							 * unbind because it is used in portManagerOrders
-							 * to add number without adding the port-managerOrders template again
-							 */
-							container
-								.find('button')
-								.unbind('click');
-
-							$(monster.template(self, 'port-manageOrders', formattedData)).insertAfter(container);
-
-							self.portManageOrders(accountId, parent);
-						} else {
-							container.find('#numbers_list')[0].value = '';
-						}
-					});
-				}
-			});
-
-			self.portComingSoon(container.find('.help-links li:not(.separator) a'));
-		},
-
-		/**
-		  * @desc bind events of the port-manageOrders template
-		  * @param parent - .ui-dialog-content
-		*/
-		portManageOrders: function(accountId, parent) {
-			var self = this,
-				container = parent.find('div#port_container');
-
-			self.portPositionDialogBox();
-
-			monster.ui.prettyCheck.create(container.find('#eula'));
-
-			/*
-			 * on click on Add button
-			 * check if input is empty
-			 * if not add the numbers sorted in orders
-			 */
-			// container.find('div#add_numbers').find('button').on('click', function() {
-			container.on('click', 'div#add_numbers button', function() {
-				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
-
-				numbersArray = numbersArray.filter(function(el, idx) {
-					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
-						return el;
-					}
-				});
-
-				if ( numbersArray.length === 0 ) {
-					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
-					container
-						.find('div#add_numbers')
-						.find('div.row-fluid')
-						.addClass('error');
-				} else {
-					self.portFormatNumbers(container, numbersArray, function(container, formattedData) {
-						container.find('#numbers_list')[0].value = '';
-
-						container
-							.find('div#add_numbers')
-							.find('div.row-fluid')
-							.removeClass('error');
-
-						for ( var order in formattedData.orders ) {
-							container.find('#manage_orders').find('div.order').each(function(index, el) {
-								var carrier = $(this).find('h4').text();
-
-								if ( carrier == formattedData.orders[order].carrier ) {
-									for ( var number in formattedData.orders[order].numbers) {
-										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="icon-warning-sign"></i>' + formattedData.orders[order].numbers[number] + '<i class="icon-remove-sign pull-right"></i></li>');
-									}
-
-									formattedData.orders.splice(order, 1);
-								}
-							})
-
-							if ( formattedData.orders.length != 0 ) {
-								container
-									.find('div#manage_orders')
-									.find('div.row-fluid:last-child')
-									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
-							}
-						}
-					});
-				}
-			});
-
-			/*
-			 * on click on Remove number icon
-			 * remove the number from the the UI
-			 * if there is not any numbers left
-			 * load port-addNumbers template
-			 */
-			container.on('click', '#manage_orders li i.icon-remove-sign', function() {
-				var ul = $(this).parent().parent();
-
-				$(this)
-					.parent()
-					.remove();
-
-				if ( ul.is(':empty') ) {
-					ul.parent().parent().remove();
-				}
-
-				if ( container.find('div#manage_orders').find('.row-fluid:last-child').is(':empty') ) {
-					container
-						.find('div#manage_orders')
-						.find('.row-fluid:last-child')
-						.animate({height: '0px'}, 500);
-
-					parent
-						.empty()
-						.append($(monster.template(self, 'port-addNumbers')));
-
-					self.portAddNumbers(accountId, parent);
-				}
-			});
-
-			container.find('div#eula').find('input').on('click', function() {
-				if ( $(this).is(':checked') ) {
-					$(this).parent().parent().removeClass('error');
-				} else {
-					$(this).parent().parent().addClass('error');
-				}
-			});
-
-			self.portCancelOrder(accountId, parent, container);
-
-			/*
-			 * on click on Next button
-			 * if all checkboxes checked
-			 * empty .ui-dialog-content and load port-submitDocuments template
-			 */
-			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var formToValidate = container.find('#eula form');
-
-				monster.ui.validate(formToValidate, {
-					messages: {
-						'conditions[]': {
-							required: 'Please agree with all the conditions',
-							minlength: 'Please agree with all the conditions'
-						}
-					},
-					errorPlacement: function(error, element) {
-						error.insertAfter(container.find('#eula form .control-group:last-child'));
-					}
-				});
-
-				if (monster.ui.valid(formToValidate)) {
-					var ordersList = { orders: [] };
-
-					container.find('div#manage_orders').find('div.order').each(function() {
-						var order = {},
-							numbersList = [];
-
-						$(this).find('li').each(function() {
-							numbersList.push($(this).data('value'));
-						});
-
-						order.carrier = $(this).find('li:first-child').data('carrier');
-						order.numbers = numbersList;
-
-						ordersList.orders.push(order);
-					});
-
-					if (ordersList.orders.length == 1) {
-						parent
-							.empty()
-							.append($(monster.template(self, 'port-submitDocuments', ordersList.orders[0])));
-
-						self.portSubmitDocuments(accountId, parent, ordersList);
-					}
-					else {
-						parent
-							.empty()
-							.append($(monster.template(self, 'port-resumeOrders', ordersList)));
-
-						self.portResumeOrders(accountId, parent, ordersList);
-					}
-				}
-				else {
-					container.find('div#eula').find('input').each(function() {
-						if (!$(this).is(':checked')) {
-							$(this).parent().parent().addClass('error');
-						}
-					});
-				}
-			});
-
-			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
-		},
-
-		/**
-		  * @desc return an object with numbers sorted by area code
-		  * @param numbersList - array of phone numbers
-		*/
-		portFormatNumbers: function(container, numbersArray, callback) {
-			var self = this;
-
-			monster.request({
-				resource: 'common.numbers.metadata',
-				data: {
-					data: numbersArray,
-					country: 'US'
-				},
-				success: function(data) {
-					data = data.data;
-
-					var carriersList = new Array(),
-						formattedData = { orders: [] },
-						errorCount = 0;
-
-					for (var number in data) {
-						if ( data[number].company == null || data[number].company == 'undefined' || data[number].company == "" ) {
-							errorCount++;
-							delete data[number];
-							continue;
-						}
-						carriersList.push(data[number].company);
-					}
-
-					carriersList = _.uniq(carriersList);
-
-					for (var carrier in carriersList) {
-						var numbersArray = new Array(),
-							order = new Object();
-
-						for (var number in data) {
-							if ( data[number].company == carriersList[carrier] ) {
-								numbersArray.push(number);
-							}
-						}
-
-						order.carrier = carriersList[carrier];
-						order.numbers = numbersArray;
-
-						formattedData.orders[carrier] = order;
-					}
-
-					if ( errorCount == 1 ) {
-						toastr.error(self.i18n.active().port.toastr.error.number.single, '', {"timeOut": 5000});
-					} else if ( errorCount > 1 ) {
-						toastr.error(self.i18n.active().port.toastr.error.number.multiple, '', {"timeOut": 5000});
-					}
-
-					callback(container, formattedData);
-				}
-			});
-		},
-
-		/**
-		  * @desc bind events of the port-manageOrders template
-		  * @param parent - .ui-dialog-content
-		*/
-		portSubmitDocuments: function(accountId, parent, data, index) {
-			var self = this,
-				index = index || 0,
-				container = parent.find('div#port_container');
-
-			self.portPositionDialogBox();
-
-			container.find('.file-upload-container input').each(function(idx, el) {
-				var input = $(el),
-					type = input.data('name'),
-					options = {
-						btnText: self.i18n.active().port.submitDocuments.changeButton,
-						mimeTypes: ['application/pdf'],
-						wrapperClass: 'input-append',
-						success: function(results) {
-							if (data.orders[index].hasOwnProperty('id')) {
-								if (data.orders[index].hasOwnProperty(type.concat('.pdf'))) {
-									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), reuslts[0].file, function() {
-										data.orders[index][type.concat('_attachment')] = results[0].file;
-									});
-								}
-								else {
-									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
-										data.orders[index][type.concat('_attachment')] = results[0].file;
-									});
-								}
-							}
-							else {
-								data.orders[index][type.concat('_attachment')] = results[0].file;
-							}
-						},
-						error: function(error) {
-							for ( var key in error ) {
-								if ( error[key].length > 0 ) {
-									toastr.error(self.i18n.active().port.toastr.error[key].concat(error[key].join(', ')));
-								}
-							}
-						}
-					}
-
-				if (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty(type.concat('.pdf'))) {
-					options.filesList = [ type.concat('.pdf') ];
-				}
-
-				if ( type === 'bill' ) {
-					options['bigBtnClass'] = 'btn btn-success span12';
-					options['bigBtnText'] = self.i18n.active().port.submitDocuments.uploadBillButton;
-					options['btnClass'] = 'btn btn-success';
-				} else if ( type === 'loa' ) {
-					options['bigBtnClass'] = 'btn span10';
-					options['bigBtnText'] = self.i18n.active().port.submitDocuments.loaUploadStep;
-					options['btnClass'] = 'btn';
-				}
-
-				input.fileUpload(options);
-			});
-
-			/*
-			 * on click on Remove number icon
-			 * remove the number from the the UI
-			 * if there is not any numbers left
-			 * load port-addNumbers template
-			 */
-			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
-				var ul = $(this).parent().parent();
-
-				container
-					.find('div#upload_bill')
-					.find('li[data-value="' + $(this).parent().data('value') + '"]')
-					.remove();
-
-				for ( var number in data.orders[index].numbers ) {
-					if ( data.orders[index].numbers[number] == $(this).parent().data('value') ) {
-						data.orders[index].numbers.splice(data.orders[index].numbers.indexOf(data.orders[index].numbers[number]), 1);
-					}
-				}
-
-				if ( ul.is(':empty') ) {
-					if ( data.orders.length > 1) {
-						data.orders.splice(index, 1);
-
-						parent
-							.empty()
-							.append($(monster.template(self, 'port-resumeOrders', data)));
-
-						self.portResumeOrders(accountId, parent, data);
-					} else {
-						self.portReloadApp(accountId, parent);
-					}
-				}
-			});
-
-			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-				var submitData = true;
-
-				if ( container.find('#transfer_helper').val() == '' ) {
-					submitData = false;
-					$('html, body').animate({ scrollTop: container.find('div#name_transfer').offset().top }, 100);
-					container.find('#transfer_helper')
-						.parent()
-						.parent()
-						.addClass('error');
-				}
-
-				if ( submitData ) {
-					data.orders[index].name = container.find('input#transfer_helper').val();
-					if ( typeof data.orders[index].bill == 'undefined' ) {
-						data.orders[index].bill = new Object();
-					}
-					data.orders[index].bill.name = container.find('input#account_name').val();
-					data.orders[index].bill.address = container.find('input#address').val();
-					data.orders[index].bill.locality = container.find('input#locality').val();
-					data.orders[index].bill.region = container.find('input#region').val();
-					data.orders[index].bill.postal_code = container.find('input#postal_code').val();
-
-
-					self.portSaveOrder(accountId, parent, data, index);
-				}
-			});
-
-			self.portCancelOrder(accountId, parent, container, data, index);
-
-			/*
-			 * on click on Submit button
-			 * if all required inputs filled
-			 * empty .ui-dialog-content and load port-confirmOrders template
-			 * else show which inputs contain errors
-			 */
-			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var hasBillAttachment = data.orders[index].hasOwnProperty('bill_attachment') || (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty('bill.pdf')) ? true : false,
-					hasLoaAttachment = data.orders[index].hasOwnProperty('loa_attachment') || (data.orders[index].hasOwnProperty('uploads') && data.orders[index].uploads.hasOwnProperty('loa.pdf')) ? true : false,
-					input = container.find('div#name_transfer').find('input#transfer_helper'),
-					transferNameForm = container.find('#name_transfer form'),
-					transferName = container.find('#transfer_helper').val(),
-					accountName = container.find('#account_name').val(),
-					postalCode = container.find('#postal_code').val(),
-					locality = container.find('#locality').val(),
-					address = container.find('#address').val(),
-					region = container.find('#region').val(),
-					billForm = container.find('#bill_form'),
-					submitData = true;
-
-				monster.ui.validate(transferNameForm);
-				monster.ui.validate(billForm);
-
-				if (!monster.ui.valid(transferNameForm)) {
-					submitData = false;
-				}
-
-				if (!monster.ui.valid(billForm)) {
-					submitData = false;
-				}
-
-				if (!hasBillAttachment || !hasLoaAttachment) {
-					submitData = false;
-
-					monster.ui.alert('error', self.i18n.active().port.toastr.error.submit.document);
-				}
-
-				if ( submitData ) {
-					var date = monster.util.getBusinessDate(4).getTime(),
-						created = data.orders[index].hasOwnProperty('created') ? data.orders[index].created : date,
-						transfer_date = data.orders[index].hasOwnProperty('transfer_date') ? monster.util.dateToGregorian(new Date(data.orders[index].transfer_date)) : date,
-						dataTemplate = {
-							name: transferName,
-							created: created,
-							transfer_date: transfer_date,
-							total: data.orders[index].numbers.length,
-							numbers: data.orders[index].numbers,
-							price: data.orders[index].numbers.length * 5
-						};
-
-					if (data.orders[index].hasOwnProperty('id')) {
-						delete data.orders[index].loa_attachment;
-						delete data.orders[index].bill_attachment;
-					}
-
-					data.orders[index] = $.extend(true, data.orders[index], {
-						name: transferName,
-						bill: {
-							name: accountName,
-							locality: locality,
-							region: region,
-							address: address,
-							postal_code: postalCode
-						}
-					});
-
-					if (data.orders[index].hasOwnProperty('notifications')) {
-						dataTemplate.notifications = { email: { send_to: data.orders[index].notifications.email.send_to } };
-					}
-
-					parent
-						.empty()
-						.append($(monster.template(self, 'port-confirmOrder', dataTemplate)));
-
-					self.portConfirmOrder(accountId, parent, data, index);
-				}
-			});
-
-			self.portComingSoon(container.find('#upload_bill .row-fluid.info a'));
-			self.portComingSoon(container.find('#loa h4 a'));
-			self.portComingSoon(container.find('#loa p a:not(#sign_doc)'));
-			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
-		},
-
-		/**
-		  * @desc bind events of the port-confirmOrder template
-		  * @param parent - .ui-dialog-content
-		*/
-		portConfirmOrder: function(accountId, parent, data, index) {
-			var self = this,
-				container = parent.find('div#port_container'),
-				date = monster.util.getBusinessDate(4),
-				formatedDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
-				transferDate = data.orders[index].hasOwnProperty('transfer_date') ? new Date(data.orders[index].transfer_date) : date,
-				formattedTransferDate = (transferDate.getMonth() + 1) + "/" + transferDate.getDate() + "/" + transferDate.getFullYear();
-
-			self.portPositionDialogBox();
-
-			container.find('#transfer_schedule_date').text(date - transferDate >= 0 ? formatedDate : formattedTransferDate);
-
-			container.find('#numbers_to_buy option').each(function(idx, el) {
-				$(el)
-					.val(parseInt($(el).val(), 10) + 1)
-					.text(parseInt($(el).text(), 10) + 1);
-			});
-
-			container.find('#numbers_to_buy option').last().prop('selected', 'selected');
-
-			/*
-			 * initialize datepicker, toggle inputs and select value
-			 */
-			container.find('input.date-input').datepicker({
-				minDate: date,
-				beforeShowDay: $.datepicker.noWeekends,
-				constrainInput: true,
-				dateFormat: 'mm/dd/yy',
-				onSelect: function(dateText, inst) {
-					container.find('#transfer_schedule_date').text(dateText);
-				}
-			});
-
-			container.find('input.date-input').datepicker('setDate', transferDate);
-			container.find('.switch').bootstrapSwitch();
-
-			if ( typeof data.orders[index].temporary_numbers != 'undefined') {
-				container.find('.switch').bootstrapSwitch('setState', true);
-
-				container
-					.find('div#temporary_numbers')
-					.find('div.row-fluid:nth-child(2)')
-					.slideDown('500', function() {
-						container
-							.find('div#temporary_numbers')
-							.find('select#numbers_to_buy')
-							.prop('disabled', false);
-					});
-
-				container.find('#numbers_to_buy').val(data.orders[index].temporary_numbers);
-			} else {
-				container.find('.switch').bootstrapSwitch('setState', false);
-
-				container
-						.find('div#temporary_numbers')
-						.find('select#numbers_to_buy')
-						.prop('disabled', true);
-
-				container
-					.find('div#temporary_numbers')
-					.find('div.row-fluid:nth-child(2)')
-					.slideUp('500');
-			}
-
-			/*
-			 * on click on switch button
-			 * if switch to on show select numbers
-			 * else hide and disable select numbers
-			 */
-			container.find('div#temporary_numbers').find('div.switch').on('switch-change', function() {
-				if ( $(this).find('div.switch-animate').hasClass('switch-off') ) {
-					container
-						.find('div#temporary_numbers')
-						.find('select#numbers_to_buy')
-						.prop('disabled', true);
-
-					container
-						.find('div#temporary_numbers')
-						.find('div.row-fluid:nth-child(2)')
-						.slideUp('500');
-				} else if ( $(this).find('div.switch-animate').hasClass('switch-on') ) {
-					container
-						.find('div#temporary_numbers')
-						.find('div.row-fluid:nth-child(2)')
-						.slideDown('500', function() {
-							container
-								.find('div#temporary_numbers')
-								.find('select#numbers_to_buy')
-								.prop('disabled', false);
-						});
-				}
-			});
-
-			/*
-			 * on click on Save button
-			 * empty .ui-dialog-content and load port-resumeOrders template
-			 */
-
-			container.find('div#continue_later').find('button.btn-info').on('click', function() {
-				data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-				data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
-
-				if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
-					data.orders[index].temporary_numbers = container.find('select#numbers_to_buy')[0][container.find('select#numbers_to_buy')[0].selectedIndex].value;
-				} else {
-					delete data.orders[index]['temporary_numbers'];
-				}
-
-				self.portSaveOrder(accountId, parent, data, index);
-
-			});
-
-			self.portCancelOrder(accountId, parent, container, data, index);
-
-			/*
-			 * on click on Submit button
-			 * if email input empty scroll to it
-			 * else load portRender
-			 */
-			container.find('div#footer').find('button.btn-success').on('click', function() {
-				var formToValidate = container.find("#notification form");
-
-				monster.ui.validate(formToValidate);
-
-				if (monster.ui.valid(formToValidate)) {
-					data.orders[index].notifications = { email: { send_to: container.find('input#notification_email').val() } };
-					data.orders[index].transfer_date = monster.util.dateToGregorian(new Date(container.find('input#transfer_numbers_date').val()));
-
-					if ( container.find('#temporary_numbers').find('.switch-animate').hasClass('switch-on') ) {
-						data.orders[index].temporary_numbers = container.find('select#numbers_to_buy').val();
-					} else if ( typeof data.orders[index].temporary_numbers != 'undefined' ) {
-						delete data.orders[index].temporary_numbers;
-					}
-
-					if ( typeof data.orders[index].id == 'undefined' ) {
-						self.portRequestAdd(accountId, data.orders[index], function(portRequestId) {
-							data.orders.splice(index, 1);
-
-							self.portRequestChangeState(accountId, portRequestId, 'submitted', function() {
-								if ( typeof data.orders[0] == 'undefined' ) {
-									self.portReloadApp(accountId, parent);
-								} else {
-									parent
-										.empty()
-										.append($(monster.template(self, 'port-resumeOrders', data)));
-
-									self.portResumeOrders(accountId, parent, data);
-								}
-							});
-						});
-					} else {
-						self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-							if (data.orders[index].port_state === 'unconfirmed') {
-								self.portRequestChangeState(accountId, data.orders[index].id, 'submitted', function() {
-									self.portReloadApp(accountId, parent);
-								});
-							}
-							else {
-								self.portReloadApp(accountId, parent);
-							}
-						});
-					}
-				}
-			});
-
-			self.portComingSoon(container.find('#footer .help-links li:not(.separator) a'));
-		},
-
 		portPositionDialogBox: function() {
 
 			$("html, body").animate({ scrollTop: "0" }, 100);
@@ -1078,326 +933,6 @@ define(function(require){
 			} else {
 				$('.ui-dialog').animate({top: ($("body").height() / 2) - ($('.ui-dialog').height() / 2)}, 200);
 			}
-		},
-
-		portSaveOrder: function(accountId, parent, data, index) {
-			var self = this,
-				index = index || 0;
-
-			if (data.orders[index].hasOwnProperty('id')) {
-				self.portRequestUpdate(accountId, data.orders[index].id, data.orders[index], function() {
-					self.portReloadApp(accountId, parent);
-				});
-			}
-			else {
-				self.portRequestAdd(accountId, data.orders[index], function() {
-					if (data.orders.length > 1) {
-						data.orders.splice(index, 1);
-
-						parent
-							.empty()
-							.append($(monster.template(self, 'port-resumeOrders', data)));
-
-						self.portResumeOrders(accountId, parent, data);
-					}
-					else {
-						self.portReloadApp(accountId, parent);
-					}
-				});
-			}
-		},
-
-		portCancelOrder: function(accountId, parent, container, data, index) {
-			var self = this,
-				data = data || undefined,
-				index = index || 0;
-
-			container.find('div#footer').find('button.btn-danger').on('click', function() {
-				if ( typeof data === 'undefined' ) {
-					self.portReloadApp(accountId, parent);
-				} else {
-					monster.ui.confirm(self.i18n.active().port.cancelOrderPopup, function() {
-						if ( typeof data.orders[index].id === 'undefined' ) {
-							if ( data.orders.length > 1 ) {
-								data.orders.splice(index, 1);
-								parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-								self.portResumeOrders(accountId, parent, data);
-							} else {
-								self.portReloadApp(accountId, parent);
-							}
-						} else {
-							self.portRequestDelete(accountId, data.orders[index].id, function() {
-								self.portReloadApp(accountId, parent);
-							});
-						}
-					});
-				}
-			});
-		},
-
-		portRequestAdd: function(accountId, order, callback) {
-			var self = this,
-				attachments = {};
-
-			if (order.hasOwnProperty('bill_attachment')) {
-				attachments.bill = order.bill_attachment;
-				delete order.bill_attachment;
-			}
-
-			if (order.hasOwnProperty('loa_attachment')) {
-				attachments.loa = order.loa_attachment;
-				delete order.loa_attachment;
-			}
-
-			order = $.extend(true, order, { port_state: 'unconfirmed' });
-
-			order = self.portArrayToObjects(order);
-
-			self.callApi({
-				resource: 'port.create',
-				data: {
-					accountId: accountId,
-					data: order
-				},
-				success: function(data, status) {
-					var portRequestId = data.data.id;
-
-					if (attachments.hasOwnProperty('bill')) {
-						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
-							if (attachments.hasOwnProperty('loa')) {
-								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
-									callback(portRequestId);
-								});
-							}
-							else {
-								callback(portRequestId);
-							}
-						});
-					}
-					else {
-						if (attachments.hasOwnProperty('loa')) {
-							self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
-								callback(portRequestId);
-							});
-						}
-						else {
-							callback(portRequestId);
-						}
-					}
-				}
-			});
-		},
-
-		portRequestUpdate: function(accountId, portRequestId, order, callback) {
-			var self = this;
-
-			order = self.portArrayToObjects(order);
-
-			if (order.hasOwnProperty('bill_attachment')) {
-				delete order.bill_attachment;
-			}
-
-			if (order.hasOwnProperty('loa_attachment')) {
-				delete order.loa_attachment;
-			}
-
-			self.callApi({
-				resource: 'port.update',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					data: order
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestDelete: function(accountId, portRequestId, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.delete',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					data: {}
-				},
-				success: function(data, status) {
-					callback();
-				}
-			});
-		},
-
-		portRequestList: function(accountId, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.list',
-				data: {
-					accountId: accountId,
-					data: {}
-				},
-				success: function(data, status) {
-					self.portObjectsToArray(data.data);
-
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestGet: function(accountId, portRequestId, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.get',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					data: {}
-				},
-				success: function(data, status) {
-					self.portObjectsToArray(data.data);
-
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestGetDescendants: function(accountId, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.listDescendants',
-				data: {
-					accountId: accountId,
-					data: {}
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestListAttachments: function(accountId, portRequestId, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.listAttachments',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					data: {}
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestAddAttachment: function(accountId, portRequestId, documentName, data, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.createAttachment',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					documentName: documentName,
-					data: data
-				},
-				success: function(data, status) {
-					callback && callback(data.data);
-				}
-			});
-		},
-
-		portRequestUpdateAttachment: function(accountId, portRequestId, documentName, data, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.updateAttachment',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					documentName: documentName,
-					data: data
-				},
-				success: function(data, status) {
-					callback && callback();
-				}
-			});
-		},
-
-		portRequestDeleteAttachment: function(accountId, portRequestId, documentName) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.deleteAttachment',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					documentName: documentName,
-					data: {}
-				},
-				success: function(data, status) {}
-			});
-		},
-
-		portRequestGetAttachment: function(accountId, portRequestId, documentName, callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.getAttachment',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					documentName: documentName,
-					data: {}
-				},
-				success: function(data, status) {
-					callback(data.data);
-				}
-			});
-		},
-
-		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.changeState',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					state: state,
-					data: {}
-				},
-				success: function(data, status) {
-					callbackSuccess && callbackSuccess();
-				},
-				error: function(data, status) {
-					callbackError && callbackError();
-				}
-			});
-		},
-
-		portRequestReadyState: function(accountId, portRequestId, data, callback) {
-			var self = this;
-
-			data.port_state = 'submitted';
-
-			self.callApi({
-				resource: 'port.update',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					data: data
-				},
-				success: function(data, status) {
-					callback()
-				}
-			});
 		},
 
 		portObjectsToArray: function(orders) {
@@ -1440,15 +975,16 @@ define(function(require){
 			return order;
 		},
 
-		portReloadApp: function(accountId, parent) {
+		portReloadApp: function(parent, accountId) {
 			var self = this,
-				args = new Object();
+				args = {
+					accountId: accountId
+				};
 
-			args.accountId = accountId;
-
-			if ( parent.hasClass('ui-dialog-content') ) {
-				parent.parent().remove();
-			} else {
+			if (parent.hasClass('ui-dialog-content')) {
+				parent.dialog('close');
+			}
+			else {
 				parent.empty();
 				args.parent = $('#monster-content');
 			}
@@ -1456,13 +992,438 @@ define(function(require){
 			self.portRender(args);
 		},
 
-		portComingSoon: function(context) {
+		portComingSoon: function(context, targets) {
+			var self = this
+
+			targets.forEach(function(val, idx) {
+				context.find(val).on('click', function(event) {
+					event.preventDefault();
+					monster.ui.alert(self.i18n.active().port.comingSoon);
+				});
+			})
+		},
+
+		portFormatNumbers: function(numbersArray, callback) {
 			var self = this;
 
-			context.on('click', function(event) {
-				event.preventDefault();
+			monster.request({
+				resource: 'common.numbers.metadata',
+				data: {
+					data: numbersArray,
+					country: 'US'
+				},
+				success: function(data) {
+					data = data.data;
 
-				monster.ui.alert('Coming Soon!');
+					var carriersList = [],
+						formattedData = { orders: [] },
+						errorCount = 0;
+
+					for (var number in data) {
+						if (data[number].company == null || data[number].company == 'undefined' || data[number].company == "") {
+							errorCount++;
+							delete data[number];
+							continue;
+						}
+						carriersList.push(data[number].company);
+					}
+
+					carriersList = _.uniq(carriersList);
+
+					for (var carrier in carriersList) {
+						var numbersArray = [],
+							order = {};
+
+						for (var number in data) {
+							if (data[number].company == carriersList[carrier]) {
+								numbersArray.push(number);
+							}
+						}
+
+						order.carrier = carriersList[carrier];
+						order.numbers = numbersArray;
+
+						formattedData.orders[carrier] = order;
+					}
+
+					if (errorCount == 1) {
+						toastr.error(self.i18n.active().port.toastr.error.number.single, '', { timeOut: 5000 });
+					}
+					else if (errorCount > 1) {
+						toastr.error(self.i18n.active().port.toastr.error.number.multiple, '', { timeOut: 5000 });
+					}
+
+					callback(formattedData);
+				}
+			});
+		},
+
+		portSaveOrder: function(parent, accountId, data, index) {
+			var self = this,
+				orderExist = data.orders[index].hasOwnProperty('id');
+
+			if (orderExist) {
+				self.portRequestUpdate(accountId, data.orders[index], function() {
+					self.portReloadApp(parent, accountId);
+				});
+			}
+			else {
+				self.portRequestAdd(accountId, data.orders[index], function() {
+					if (data.orders.length > 1) {
+						data.orders.splice(index, 1);
+
+						self.portRenderResumeOrders(parent, accountId, data);
+					}
+					else {
+						self.portReloadApp(parent, accountId);
+					}
+				});
+			}
+		},
+
+		portCancelOrder: function(parent, accountId, container, data, index) {
+			var self = this,
+				data = data || undefined,
+				index = index || 0;
+
+			container.find('div#footer').find('button.btn-danger').on('click', function() {
+				if ( typeof data === 'undefined' ) {
+					self.portReloadApp(accountId, parent);
+				} else {
+					monster.ui.confirm(self.i18n.active().port.cancelOrderPopup, function() {
+						if ( typeof data.orders[index].id === 'undefined' ) {
+							if ( data.orders.length > 1 ) {
+								data.orders.splice(index, 1);
+								parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
+								self.portResumeOrders(accountId, parent, data);
+							} else {
+								self.portReloadApp(accountId, parent);
+							}
+						} else {
+							self.portRequestDelete(accountId, data.orders[index].id, function() {
+								self.portReloadApp(accountId, parent);
+							});
+						}
+					});
+				}
+			});
+		},
+
+		/* Request */
+		portRequestAdd: function(accountId, order, callbackSuccess, callbackError) {
+			var self = this,
+				attachments = {};
+
+			if (order.hasOwnProperty('bill_attachment')) {
+				attachments.bill = order.bill_attachment;
+				delete order.bill_attachment;
+			}
+
+			if (order.hasOwnProperty('loa_attachment')) {
+				attachments.loa = order.loa_attachment;
+				delete order.loa_attachment;
+			}
+
+			order = $.extend(true, order, { port_state: 'unconfirmed' });
+
+			order = self.portArrayToObjects(order);
+
+			self.callApi({
+				resource: 'port.create',
+				data: {
+					accountId: accountId,
+					data: order
+				},
+				success: function(data, status) {
+					var portRequestId = data.data.id;
+
+					if (attachments.hasOwnProperty('bill')) {
+						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
+							if (attachments.hasOwnProperty('loa')) {
+								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
+									callbackSuccess && callbackSuccess(portRequestId);
+								});
+							}
+							else {
+								callbackSuccess && callbackSuccess(portRequestId);
+							}
+						});
+					}
+					else {
+						if (attachments.hasOwnProperty('loa')) {
+							self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
+								callbackSuccess && callbackSuccess(portRequestId);
+							});
+						}
+						else {
+							callbackSuccess && callbackSuccess(portRequestId);
+						}
+					}
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestUpdate: function(accountId, order, callbackSuccess, callbackError) {
+			var self = this,
+				portRequestId = order.id;
+
+			order = self.portArrayToObjects(order);
+
+			if (order.hasOwnProperty('bill_attachment')) {
+				delete order.bill_attachment;
+			}
+
+			if (order.hasOwnProperty('loa_attachment')) {
+				delete order.loa_attachment;
+			}
+
+			self.callApi({
+				resource: 'port.update',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: order
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestDelete: function(accountId, portRequestId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.delete',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestList: function(accountId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.list',
+				data: {
+					accountId: accountId,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(self.portObjectsToArray(data.data));
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestGet: function(accountId, portRequestId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.get',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(self.portObjectsToArray(data.data));
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestGetDescendants: function(accountId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listDescendants',
+				data: {
+					accountId: accountId,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestListAttachments: function(accountId, portRequestId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listAttachments',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestAddAttachment: function(accountId, portRequestId, documentName, data, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.createAttachment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					documentName: documentName,
+					data: data
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data,status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestUpdateAttachment: function(accountId, portRequestId, documentName, data, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.updateAttachment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					documentName: documentName,
+					data: data
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				},
+			});
+		},
+
+		portRequestDeleteAttachment: function(accountId, portRequestId, documentName) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.deleteAttachment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					documentName: documentName,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestGetAttachment: function(accountId, portRequestId, documentName, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.getAttachment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					documentName: documentName,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.changeState',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					state: state,
+					data: {}
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestReadyState: function(accountId, portRequestId, data, callbackSuccess, callbackError) {
+			var self = this;
+
+			data.port_state = 'submitted';
+
+			self.callApi({
+				resource: 'port.update',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: data
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess();
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestListUsers: function(accountId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'user.list',
+				data: {
+					accountId: accountId
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
 			});
 		}
 	};
