@@ -1087,22 +1087,22 @@ define(function(require){
 				index = index || 0;
 
 			container.find('div#footer').find('button.btn-danger').on('click', function() {
-				if ( typeof data === 'undefined' ) {
-					self.portReloadApp(accountId, parent);
-				} else {
+				if (typeof data === 'undefined') {
+					self.portReloadApp(parent, accountId);
+				}
+				else {
 					monster.ui.confirm(self.i18n.active().port.cancelOrderPopup, function() {
-						if ( typeof data.orders[index].id === 'undefined' ) {
-							if ( data.orders.length > 1 ) {
-								data.orders.splice(index, 1);
-								parent.empty().append($(monster.template(self, 'port-resumeOrders', data)));
-								self.portResumeOrders(accountId, parent, data);
-							} else {
-								self.portReloadApp(accountId, parent);
-							}
-						} else {
+						if (data.orders[index].hasOwnProperty('id')) {
 							self.portRequestDelete(accountId, data.orders[index].id, function() {
-								self.portReloadApp(accountId, parent);
+								self.portReloadApp(parent, accountId);
 							});
+						} else {
+							if (data.orders.length > 1) {
+								data.orders.splice(index, 1);
+								self.portRenderResumeOrders(parent, accountId, data);
+							} else {
+								self.portReloadApp(parent, accountId);
+							}
 						}
 					});
 				}
