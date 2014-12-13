@@ -194,6 +194,8 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"requiredConditions": "Please agree with all the conditions",
+		"comingSoon": "Coming Soon!",
 		"state": {
 			"completed": "Completed",
 			"rejected": "Rejected",
