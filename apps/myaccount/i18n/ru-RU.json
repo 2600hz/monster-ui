@@ -1,0 +1,201 @@
+{
+	"hello": "Привет",
+    "signout": "Выйти",
+    "myaccount": "Учётная запись",
+    "closeSlide": "Закрыть",
+    "store": "Магазин",
+
+    "settingsCategory": "Настройки",
+    "billingCategory": "Биллинг",
+    "trunkingCategory": "Транки",
+
+	"editSettings": "Редактировать",
+	"changesSaved": "Изменения сохранены!",
+	"placeholderEmail": "jon_doe@company.com",
+	"phoneNumber": "Телефонный номер",
+	"placeholderNumber": "74951111111",
+
+	"user": {
+		"title": "Пользователь",
+		"passwordsNotMatching": "Введённые пароли не совпадают",
+
+		"email": "Email",
+
+		"password": "Пароль",
+		"newPassword": "Новый пароль",
+		"confirmPassword": "Подтвердите  новый  пароль",
+
+		"timezoneTitle": "Язык и часовой пояс",
+		"userTimezone": "Часовой пояс",
+		"userLanguage": "Язык",
+
+		"colorblindTitle": "Режим для слабовидящих",
+		"colorblindEnabled": "Включен",
+		"colorblindDisabled": "Выключен",
+		"enableColorblind": "Включить режим для слабовидящих"
+	},
+
+	"account": {
+		"title": "Учётная запись",
+
+		"accountName": "Имя учётной записи (код клиента)",
+		"accountId": "ID учётной записи",
+
+		"accountRealm": "SIP-домен (realm)",
+
+		"technicalContact": "Связь по техническим вопросам",
+		"technicalContactEmail": "Адрес email специалиста по техническим вопросам",
+		"technicalContactNumber": "Телефон",
+
+		"timezoneTitle": "Язык и часовой пояс",
+		"userTimezone": "Часовой пояс",
+		"userLanguage": "Язык"
+	},
+
+	"billing": {
+		"title": "Банковская карта",
+		"missingCard": "Данные по вашей банковской карте неверны, неактуальны или отсутствуют - пожалуйста, обновите и сохраните изменения.",
+
+		"cardOnFile": "Карта для оплаты",
+		"billingName": "Имя",
+		"firstName": "Имя",
+		"lastName": "Фамилия",
+		"creditCardNumber": "Номер карты",
+		"expirationDate": "Дата окончания срока действия",
+		"year": "YYYY",
+		"month": "MM",
+		"securityCode": "Код безопасности / CVV",
+		"changeCard": "Изменить данные карты",
+
+		"accountAdministrator": "Связь по вопросам оплаты",
+		"accountAdministratorEmail": "Адрес email специалиста по финансовым вопросам",
+		"accountAdministratorNumber": "Телефон"
+	},
+
+	"trunks": {
+		"title": "Каналы",
+		"outbound": "Исходящие",
+		"inbound": "Входящие",
+		"outboundTitle": "Ограничение на исходящие каналы",
+		"inboundTitle": "Ограничение на входящие каналы",
+		"inboundCalling": "Неограниченные входящие каналы",
+		"simultaneousTwoway": "_Variable__/месяц",
+		"simultaneousInbound": "$_Variable__/месяц",
+		"perMonth": "/месяц",
+		"quantity": "Количество",
+		"trunks": "Каналы",
+		"twoWayCalling": "Неограниченные двунаправленные каналы",
+		"updateLimits": "Обновить ограничения",
+		"helpTwoway": "Количество двунаправленных каналов определяет сколько одновременных звонков ваша телефонная система способна обслуживать одновременно (Пример: 10 двунаправленных каналов позволит обслуживать 6 входящих и 4 исходящих звонка одновременно)",
+		"helpInbound": "Количество входящих каналов определяет сколько одновременных входящих звонков ваша телефонная система способна обслуживать одновременно (Пример: 5 входящих каналов позволяют обслуживать 5 одновременных входящих звонков)",
+		"monthlyCharges": "Ежемесячные платежи",
+		"__comment": "UI-664: Adding the real twoway sliders",
+		"__version": "v3.19_s2",
+		"twowayTitle": "Ограничение двунаправленных каналов",
+		"twoway": "Двунаправленные",
+		"outboundCalling": "Неограниченные исходящие каналы",
+		"helpOutbound": "Количество исходящих каналов определяет сколько одновременных исходящих звонков ваша телефонная система способна обслуживать одновременно (Пример: 5 исходящих каналов позволяют обслуживать 5 одновременных исходящих звонков)"
+	},
+
+	"balance" : {
+		"availableCredits": "Доступные средства",
+		"minutesUsed": "Использовано минут",
+		"callCharges": "Начислено за звонки",
+		"activeCall": "активный",
+
+		"title": "Поминутная тарификация",
+		"creditBalance": "Доступные средства",
+		"addCreditOne": "Пополнить баланс",
+		"helpAddCreditOne": "Здесь можно добавить средств на ваш счёт, что позволит подключать новые услуги или расходовать их на звонки.",
+		"autoRecharge": "Автоматическое пополнение",
+		"whenBalanceFalls": "когда баланс опускается ниже",
+		"recharge": "пополнить",
+		"helpAutoRecharge": "Включив автоматическое пополнение, вы определяете нижний порог баланса вашего счёта и сумму автоматического пополнения.",
+		"helpWhenBalanceFalls": "Введите пороговую сумму, при достижении которой ваш счёт будет автоматически пополнен",
+		"helpRecharge": "Введите сумму, на которую ваш счёт будет пополнен автоматически при достижении порога",
+		"payPerMinute": "Поминутная тарификация позволяет платить только за фактически использованные минуты разговоров. Пополните ваш баланс для начала работы и затем пополняйте его по мере надобности.",
+		"currentBalance": "Ваш текущий баланс: ",
+		"turnoffRechargeConfirm": "Отключив автоматическое пополнение, вы будете должны самостоятельно пополнять баланс вашего счёта чтобы продолжать пользоваться услугами телефонной системы. Вы уверены что хотите продолжить?",
+		"amount": "Сумма",
+		"confirm": "Подтвердить",
+		"placeholderThresholdRecharge": "5.00",
+		"placeholderRecharge": "50.00",
+		"placeholderAmount": "10.00",
+		"addCredit": "Пополнить баланс",
+		"invalidAmount": "Введённая сумма неверна. Пожалуйста, вводите только цифры, можно использовать символы точки или запятой",
+		"autoRechargeEnabled": "Автоматическое пополнение включено!",
+		"autoRechargeCancelled": "Вы успешно отменили автоматическое пополнение баланса вашего счёта.",
+		"creditsAdded": "Вы успешно пополнили ваш баланс на сумму: {{amount}}",
+		"addCreditDialogTitle": "Пополнение счёта",
+
+		"dateColumn": "Дата",
+		"durationColumn": "Минуты",
+		"amountColumn": "Сумма",
+		"fromColumn": "От",
+		"toColumn": "Кому",
+		"directionColumn": " ",
+		"accountColumn": "Клиент"
+	},
+
+	"servicePlan": {
+		"discount": "Скидка",
+		"dueOn": "Долг на",
+		"empty": "Ваш текущий тарифный план пуст!",
+		"monthlyChargesTitle": "Ежемесячные платежи",
+		"quantityTitle": "Количество",
+		"rateTitle": "Цена минуты",
+		"serviceTitle": "Тариф",
+		"title": "Тарифный план",
+		"titleHeader": "Тарифный план",
+		"titles": {
+			"cnam": "CNAM",
+			"did_us": "US DIDs",
+			"e911": "E911",
+			"inbound_cnam": "Входящий CNAM",
+			"inbound_trunk": "Входящий канал",
+			"inbound_trunks": "Входящие каналы",
+			"port": "Перенос номеров",
+			"sip_device": "SIP-устройство",
+			"sip_devices": "SIP-устройства",
+			"tollfree_us": "US Tollfree",
+			"twoway_trunk": "Двунаправленный канал",
+			"twoway_trunks": "Двунаправленные каналы",
+			"__comment": "UI-815: Improve how the prices and categories are displayed for the Trunks",
+			"__version": "v3.19_s1",
+			"outbound_trunk": "Исходящий канал",
+			"outbound_trunks": "Исходящие каналы",
+			"user": "Пользователь",
+			"users": "Пользователи"
+		}
+	},
+
+	"transactions": {
+		"title": "Транзакции",
+		"titleHeader": "История транзакций",
+		"billingCycle": "Период тарификации",
+		"to": "",
+		"oneTimeCharge": "Однократный платёж",
+		"monthlyCharge": "Ежемесячный платёж",
+		"serviceCharge": "Оплата услуг - пропорционально",
+
+		"noData": "В выбранный период транзакций не было!",
+
+		"serviceTitle": "Тариф",
+		"discount": "Скидка",
+		"rateTitle": "Цена минуты",
+		"quantityTitle": "Количество",
+		"monthlyChargesTitle": "Ежемесячные платежи",
+		"declined": "Отклонено",
+
+		"database_rollup": "Итог",
+		"per_minute_call": "Звонки с поминутной тарификацией",
+		"sub_account_per_minute_call": "Звонки с поминутной тарификацией (дочерние клиенты)",
+		"feature_activation": "Активация услуг",
+		"sub_account_feature_activation": "Активация услуг (дочерние клиенты)",
+		"number_activation": "Активация номеров",
+		"sub_account_number_activation": "Активация номеров (дочерние клиенты)",
+		"manual_addition": "Ручное добавление",
+		"sub_account_manual_addition": "Ручное добавление (дочерние клиенты)",
+		"admin_discretion": "Прочее"
+	}
+}

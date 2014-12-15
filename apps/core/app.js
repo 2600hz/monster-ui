@@ -10,7 +10,8 @@ define(function(require){
 
 		i18n: {
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'fr-FR': { customCss: false },
+			'ru-RU': { customCss: false }
 		},
 
 		requests: {},
