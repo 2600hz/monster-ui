@@ -354,5 +354,11 @@
 			"users": "Utilisateurs"
 		},
 		"noServicePlan": "Aucun abonnement sélectionné."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Répartir",
+		"maxDurationTooltip": "Cliquez sur le label ci-contre pour changer la durée maximale de ce groupe d'appel. Vous devez saisir un nombre crompris entre 30 et 999.",
+		"doNotRing": "Ne pas faire sonner"
 	}
 }

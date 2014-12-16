@@ -8,7 +8,7 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.servicePlanDetails.render': 'render'
+			'common.servicePlanDetails.render': 'servicePlanDetailsRender'
 		},
 
 		/* Arguments:
@@ -16,7 +16,7 @@ define(function(require){
 		** servicePlan: servicePlanId or servicePlan data
 		** callback: callback executed once we rendered the number control
 		*/
-		render: function(args){
+		servicePlanDetailsRender: function(args){
 			var self = this,
 				container = args.container,
 				servicePlan = args.servicePlan || null,

@@ -1,0 +1,22 @@
+<div class="grid-time-row item-selector{{#if deleted}} deleted{{/if}}" data-id="{{endpoint.id}}">
+	<div class="scale-container"></div>
+	<div class="name">
+		{{#if endpoint.icon}}<i class="{{endpoint.icon}}"></i>{{/if}}
+		{{endpoint.name}}
+	</div>
+	<div class="times">
+		<div class="slider-time">
+
+		</div>
+	</div>
+	{{#if hasRemoveColumn}}
+	<div class="action">
+		<button class="btn btn-danger remove-user">{{ ../i18n.remove }}</button>
+	</div>
+	{{/if}}
+	{{#if hasDisableColumn}}
+	<div class="action">
+		<input type="checkbox" class="disable-row">
+	</div>
+	{{/if}}
+</div>

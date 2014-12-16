@@ -6,7 +6,7 @@ define(function(require){
 	var app = {
 		name: 'common',
 
-		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel', 'servicePlanDetails'],
+		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel', 'servicePlanDetails', 'ringingDurationControl'],
 
 		css: [ 'app' ],
 

@@ -1,0 +1,191 @@
+.ringing-duration-control .grid-time .grid-time-row-placeholder {
+	height: 60px;
+	width: 100%;
+	background: #EEE;
+}
+
+.ringing-duration-control .grid-time .grid-time-row {
+	position: relative;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+
+	box-sizing: border-box;
+	padding: 20px 0 10px;
+	width: 100%;
+	background: #FFF;
+}
+
+.ringing-duration-control .grid-time .grid-time-row > div {
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+
+	box-sizing: border-box;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.title {
+	margin-top: 1px;
+	background-color: transparent;
+	padding: 15px 0px;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.title .scale-max {
+	border: solid 1px #22ccff;
+	border-radius: 4px;
+	padding: 0px 4px;
+	cursor: pointer;
+	top: -21px;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.title .scale-max-input {
+	display: none;
+	position: absolute;
+	top: -21px;
+	right: -24px;
+	color: #333;
+	font-size: 12px;
+	width: 35px;
+	height: 12px;
+	text-align: center;
+	margin: 0;
+	padding: 4px;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.title .remove {
+	text-align: left;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.title .remove i {
+	margin: 0 0 0 5px;
+}
+
+.ringing-duration-control .grid-time .grid-time-row.deleted {
+	color: #999;
+	font-style: italic;
+}
+
+.ringing-duration-control .grid-time .grid-time-row .name {
+	overflow: hidden;
+	padding-left: 10px;
+	width: 20%;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.ringing-duration-control .grid-time .grid-time-row .times {
+	padding-right: 30px;
+	padding-left: 30px;
+	width: 60%;
+}
+.ringing-duration-control .grid-time .grid-time-row .remove {
+	width: 20%;
+	text-align: center;
+}
+.ringing-duration-control .grid-time .grid-time-row .action {
+	width: 10%;
+	text-align: center;
+	vertical-align: bottom;
+	padding-left: 10px;
+}
+
+/* Sliders */
+.ringing-duration-control .slider-time.ui-slider {
+	height: 10px;
+	border: none;
+	background: #DDDDDD;
+	cursor: pointer;
+}
+
+.ringing-duration-control .slider-time.ui-slider .ui-slider-range {
+	border: 1px solid #333;
+	border-radius: 0;
+	background: #33BB44;
+}
+
+.ringing-duration-control .slider-time.ui-slider .ui-slider-handle {
+	margin: -7px 0;
+	padding: 3px;
+	width: 0px;
+	height: 25px;
+	border: 1px solid #333333;
+	background: #33BB44;
+	cursor: pointer;
+}
+
+.ringing-duration-control .slider-time.ui-slider .ui-slider-range,
+.ringing-duration-control .slider-time.ui-slider .ui-slider-handle { 
+	border-color: #73b714 #73b714 hsl(85, 80%, 32.5%);
+	background-color: hsl(85, 80%, 40%) !important; 
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#bcef75), to(#73b714)); 
+	background-image: -moz-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -ms-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcef75), color-stop(100%, #73b714)); 
+	background-image: -webkit-linear-gradient(top, #bcef75, #73b714); 
+	background-image: -o-linear-gradient(top, #bcef75, #73b714); 
+	background-image: linear-gradient(#bcef75, #73b714); 
+	background-repeat: repeat-x; 
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcef75", endColorstr="#73b714"); 
+}
+
+.ringing-duration-control .slider-time.ui-slider .slider-tooltip {
+	position: absolute;
+	right: -11px;
+	bottom: 30px;
+	display: block;
+	font-size: 12px;
+}
+.ringing-duration-control .slider-time.ui-slider .slider-tooltip .slider-tooltip-inner {
+	max-width: 200px;
+	width: 30px;
+	color: #000000;
+	text-align: center;
+	text-decoration: none;
+}
+
+
+
+/* Slider scale */
+.ringing-duration-control .scale-container {
+	position: absolute;
+	top: 0px;
+	right: 20%;
+	left: 20%;
+	margin: 0 26px 0 34px;
+	height: 100%;
+	border-bottom: solid 1px #ddd;
+}
+.ringing-duration-control .grid-time-row:last-of-type .scale-container {
+	border-bottom: none;
+}
+.ringing-duration-control .scale-container > span {
+	position: absolute;
+	bottom: 35%;
+	left: -8px;
+	color: #999;
+	font-size: 11px;
+}
+.ringing-duration-control .scale-element {
+	position: relative;
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 100%;
+	border-right: solid 1px #ddd;
+}
+.ringing-duration-control .scale-element:first-child {
+	border-left: solid 1px #ddd;
+}
+.ringing-duration-control .grid-time-row.title .scale-element {
+	top: 65%;
+	height: 35%;
+	border-right: solid 1px #cdcdcd;
+}
+.ringing-duration-control .grid-time-row.title .scale-element:first-child {
+	border-left: solid 1px #cdcdcd;
+}
+.ringing-duration-control .scale-element > span {
+	position: absolute;
+	top: -20px;
+	right: -24px;
+	color: #999;
+	font-size: 11px;
+}

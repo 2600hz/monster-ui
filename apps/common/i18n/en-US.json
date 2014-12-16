@@ -355,5 +355,11 @@
 			"users": "Users"
 		},
 		"noServicePlan": "No Service Plan selected."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Distribute",
+		"maxDurationTooltip": "Click this box to change the maximum duration for your ring group. You must enter a number between 30 and 999.",
+		"doNotRing": "Do not ring"
 	}
 }
