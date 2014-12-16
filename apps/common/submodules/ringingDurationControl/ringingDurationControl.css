@@ -66,10 +66,14 @@
 
 .ringing-duration-control .grid-time .grid-time-row .name {
 	overflow: hidden;
+	text-overflow: ellipsis;
 	padding-left: 10px;
 	width: 20%;
 	white-space: nowrap;
 	vertical-align: middle;
+}
+.ringing-duration-control .grid-time .grid-time-row .name i {
+	margin-right: 10px;
 }
 .ringing-duration-control .grid-time .grid-time-row .times {
 	padding-right: 30px;

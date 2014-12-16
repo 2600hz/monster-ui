@@ -17,13 +17,13 @@
 		</div>
 
 		{{#each endpoints}}
-			<div class="grid-time-row item-selector{{#if deleted}} deleted{{/if}}" data-id="{{id}}">
+			<div class="grid-time-row item-selector{{#if deleted}} deleted{{/if}}{{#if disabled}} disabled{{/if}}" data-id="{{id}}">
 				<div class="scale-container"></div>
-				<div class="name">
+				<div class="name"{{#if disabled}} style="opacity: 0.5;"{{/if}}>
 					{{#if icon}}<i class="{{icon}}"></i>{{/if}}
 					{{name}}
 				</div>
-				<div class="times">
+				<div class="times"{{#if disabled}} style="opacity: 0;"{{/if}}>
 					<div class="slider-time">
 
 					</div>
@@ -35,7 +35,7 @@
 				{{/if}}
 				{{#if ../hasDisableColumn}}
 				<div class="action">
-					<input type="checkbox" class="disable-row">
+					<input type="checkbox" class="disable-row"{{#if disabled}} checked{{/if}}>
 				</div>
 				{{/if}}
 			</div>

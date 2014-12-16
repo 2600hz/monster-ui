@@ -64,9 +64,11 @@ define(function(require){
 				var parentRow = $(this).parents('.grid-time-row');
 				if(this.checked) {
 					parentRow.find('.times').stop().animate({ opacity: 0 });
+					parentRow.find('.name').stop().animate({ opacity: 0.5 });
 					parentRow.addClass('disabled');
 				} else {
 					parentRow.find('.times').stop().animate({ opacity: 1 });
+					parentRow.find('.name').stop().animate({ opacity: 1 });
 					parentRow.removeClass('disabled');
 				}
 			});
