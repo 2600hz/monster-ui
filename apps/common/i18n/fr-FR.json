@@ -187,6 +187,8 @@
 		"progressBarLeft":"Ajouter des numéros",
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
+		"requiredConditions": "Veuillez accepter les condictions",
+		"comingSoon": "Prochainement",
 		"state": {
 			"completed": "Effectué",
 			"rejected": "Refusé",

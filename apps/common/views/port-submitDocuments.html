@@ -14,7 +14,7 @@
 				<div class="title">{{ i18n.port.progressBarRight }}</div>
 			</div>
 		</div>
-		<form class="row-fluid control-group">
+		<form class="row-fluid control-group" id="transfer_name_form">
 			<div class="span6">
 				<label class="control-label" for="transfer_helper">{{ i18n.port.submitDocuments.labelOrderName }}</label>
 			</div>
@@ -45,7 +45,7 @@
 					<label for="region">{{ i18n.port.submitDocuments.labelState }}</label>
 					<input type="text" class="span12" id="region" value="{{#if bill.region}}{{bill.region}}{{/if}}" name="bill.region" required>
 					<label for="postal_code">{{ i18n.port.submitDocuments.labelZipCode }}</label>
-					<input type="text" class="span12" id="postal_code" value="{{#if bill.postal_code}}{{bill.postal_code}}{{/if}}" name="bill.postal_ode" required>
+					<input type="text" class="span12" id="postal_code" value="{{#if bill.postal_code}}{{bill.postal_code}}{{/if}}" name="bill.postal_code" required>
 				</form>
 			</div>
 			<div class="span6">
