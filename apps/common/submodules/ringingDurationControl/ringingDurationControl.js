@@ -9,12 +9,13 @@ define(function(require){
 
 		subscribe: {
 			'common.ringingDurationControl.render': 'ringingDurationControlRender',
-			'common.ringingDurationControl.addEndpoint': 'ringingDurationControlAddEndpoint'
+			'common.ringingDurationControl.addEndpoint': 'ringingDurationControlAddEndpoint',
+			'common.ringingDurationControl.getEndpoints': 'ringingDurationControlGetEndpoints'
 		},
 
 		/* Arguments:
 		** container: jQuery Div
-		** servicePlan: servicePlanId or servicePlan data
+		** endpoints: array of endpoints (containing id, name, delay and timeout)
 		** callback: callback executed once we rendered the number control
 		*/
 		ringingDurationControlRender: function(args){
@@ -47,8 +48,7 @@ define(function(require){
 		ringingDurationControlBindEvents: function(args) {
 			var self = this,
 				template = args.template,
-				endpoints = args.endpoints
-				displayedEndpoints = $.extend(true, [], endpoints);
+				endpoints = args.endpoints;
 
 			template.find('.distribute-button').on('click', function() {
 				var sliders = template.find('.grid-time-row:not(.disabled) .slider-time');
@@ -86,6 +86,7 @@ define(function(require){
 					value = $this.val()
 					intValue = parseInt($this.val());
 				if(value != $this.data('current') && !isNaN(intValue) && intValue >= 30) {
+					var displayedEndpoints = self.ringingDurationControlGetEndpoints({container: template, includeDisabled: true});
 					self.ringingDurationControlRenderSliders(template, displayedEndpoints, intValue);
 				} else {
 					$this.val($this.data('current')).hide();
@@ -108,9 +109,6 @@ define(function(require){
 					userId = parentRow.data('id');
 				template.find('.add-user[data-id="'+userId+'"]').removeClass('in-use');
 				parentRow.remove();
-				displayedEndpoints = _.filter(displayedEndpoints, function(val) {
-					return val.id !== userId;
-				});
 			});
 		},
 
@@ -193,6 +191,28 @@ define(function(require){
 				container = args.container;
 			container.find('.grid-time').append(monster.template(self, 'ringingDurationControl-row', args));
 			self.ringingDurationControlRenderSliders(container, [args.endpoint], parseInt(container.find('.grid-time-row.title .scale-max-input').val()));
+		},
+
+		ringingDurationControlGetEndpoints: function(args) {
+			var self = this,
+				container = args.container,
+				includeDisabled = args.includeDisabled,
+				endpoints = $.map(container.find('.grid-time-row[data-id]'), function(row) {
+					var $row = $(row),
+						values = $row.find('.slider-time').slider('values');
+
+					if(includeDisabled || !$row.hasClass('disabled')) {
+						return {
+							id: $row.data('id'),
+							delay: values[0],
+							timeout: (values[1] - values[0]),
+							name: $row.find('.name').text()
+						}
+					}
+				});
+
+			args.callback && args.callback(endpoints);
+			return endpoints;
 		}
 	}
 
