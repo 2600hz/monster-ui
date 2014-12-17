@@ -2,7 +2,9 @@
 	"accountBrowser": {
 		"missingInfo": "Information Manquante",
 		"addAccount": "Ajouter un compte",
-		"searchDatabase": "Rechercher dans tous les comptes:"
+		"searchDatabase": "Rechercher dans tous les comptes:",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "résultats de la recherche pour \"{{searchValue}}\""
 	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",

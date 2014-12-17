@@ -19,7 +19,9 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}' },
 			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
-			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' }
+			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
+			'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
+			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'}
 		},
 		auth: {
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }

@@ -2,7 +2,9 @@
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",
-		"searchDatabase": "Search in every account for"
+		"searchDatabase": "Search in every account for",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "search results for \"{{searchValue}}\""
 	},
 	"numbers": {
 		"mainNumber": "Office Number",
