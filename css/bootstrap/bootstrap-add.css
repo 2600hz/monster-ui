@@ -212,7 +212,6 @@ a {
 	font-weight: 600;
 	letter-spacing: 0;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.49); -webkit-font-smoothing: antialiased;
-	text-transform: uppercase;
 }
 
 .btn-success > i {
