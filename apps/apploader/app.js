@@ -29,7 +29,8 @@ define(function(require){
 		subscribe: {
 			'apploader.show': '_render',
 			'apploader.hide': '_hide',
-			'apploader.toggle': '_toggle'
+			'apploader.toggle': '_toggle',
+			'apploader.current': '_currentApp'
 		},
 
 		load: function(callback){
@@ -206,6 +207,28 @@ define(function(require){
 			} else {
 				var apploader = $('#apploader');
 				apploader.hasClass('active') ? self._hide(apploader) : self.show(apploader);
+			}
+		},
+
+		_currentApp: function (callback) {
+			var self = this,
+				apploader = $('#apploader'),
+				app = {};
+
+			if(apploader.find('li.app-list-element.active').data() !== null) {
+				app = {
+					id: apploader.find('li.app-list-element.active').data().id,
+					name: apploader.find('li.app-list-element.active').data().name
+				}
+				callback && callback(app);
+			} else {
+				self.getUserApps(function (apps) {
+					app = {
+						id: apps[0].id,
+						name: apps[0].name
+					}
+					callback && callback(app);
+				});
 			}
 		},
 
