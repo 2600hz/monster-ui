@@ -2,7 +2,9 @@
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",
-		"searchDatabase": "Search in every account for"
+		"searchDatabase": "Search in every account for",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "search results for \"{{searchValue}}\""
 	},
 	"numbers": {
 		"mainNumber": "Office Number",
@@ -194,6 +196,8 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"requiredConditions": "Please agree with all the conditions",
+		"comingSoon": "Coming Soon!",
 		"state": {
 			"completed": "Completed",
 			"rejected": "Rejected",
@@ -353,5 +357,11 @@
 			"users": "Users"
 		},
 		"noServicePlan": "No Service Plan selected."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Distribute",
+		"maxDurationTooltip": "Click this box to change the maximum duration for your ring group. You must enter a number between 30 and 999.",
+		"doNotRing": "Do not ring"
 	}
 }

@@ -6,13 +6,14 @@ define(function(require){
 	var app = {
 		name: 'common',
 
-		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel', 'servicePlanDetails'],
+		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers', 'port', 'chooseModel', 'servicePlanDetails', 'ringingDurationControl'],
 
 		css: [ 'app' ],
 
 		i18n: { 
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'fr-FR': { customCss: false },
+			'ru-RU': { customCss: false }
 		},
 
 		requests: {},

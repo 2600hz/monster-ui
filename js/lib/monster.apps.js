@@ -72,7 +72,8 @@ define(function(){
 							apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
 							uiMetadata: {
 								version: monster.config.version,
-								ui: 'monster-ui'
+								ui: 'monster-ui',
+								origin: app.name
 							},
 							success: successCallback,
 							error: errorCallback

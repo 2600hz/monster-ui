@@ -133,5 +133,16 @@ This helper will search for the following strings and replace them by the corres
 * ss: seconds
 * 12h: use the 12h format (if not specified, the 24h format is used)
 
+##### formatPrice
+The formatPrice helper can display a price with the proper amount of decimals. It's useful because prices can have a various number of decimals, but should be displayed in a consistent way.
+The example below will round off the price to two (2) decimals, and display it with two (2) decimals even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
+
+example.html
+
+	<div class="item-row">
+		<span class="item-name">{{name}}</span>
+		<span class="item-price">{{formatPrice price 2}}</span>
+	</div>
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates

@@ -150,7 +150,8 @@ define(function(require){
 				var parentElement = $(this).parents('.account-list-element'),
 					accountId = parentElement.data('id'),
 					accountName = parentElement.find('.account-name').text(),
-					parentAccountId = template.find('.account-list').data('current');
+					parentAccountId = template.find('.account-list').data('current'),
+					isSearchResult = template.find('.account-list').data('search-value');
 
 				template.find('.account-browser-search').val('');
 				self.accountBrowserRenderList({
@@ -159,17 +160,73 @@ define(function(require){
 					slide: true,
 					callback: function() {
 						if(breadcrumbsTemplate) {
+							var addBreadcrumb = function(_id, _name, _parentId) {
+								var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
+									id: _id,
+									name: _name,
+									parentId: _parentId
+								}));
+
+								breadcrumbsTemplate.find('.account-browser-breadcrumbs')
+												   .append(breadcrumbTemplate);
+							};
+
+							if(isSearchResult) {
+								var homeBreadcrumb = breadcrumbsTemplate.find('.account-browser-breadcrumb').first(),
+									homeId = homeBreadcrumb.find('a').data('id');
+								homeBreadcrumb.nextAll()
+											  .remove();
+
+								self.callApi({
+									resource: 'account.listParents',
+									data: {
+										accountId: accountId
+									},
+									success: function(data, status) {
+										var previousId = null;
+										_.each(data.data, function(val) {
+											if(val.id === homeId) {
+												previousId = val.id;
+											} else if(previousId) {
+												addBreadcrumb(val.id, val.name, previousId);
+												previousId = val.id;
+											}
+										});
+										addBreadcrumb(accountId, accountName, previousId || homeId);
+									}
+								});
+							} else {
+								addBreadcrumb(accountId, accountName, parentAccountId);
+							}
+						}
+
+						onChildrenClick && onChildrenClick(accountId);
+					}
+				});
+			});
+
+			template.find('.account-list').on('click', '.account-search-link', function() {
+				var searchValue = searchLink.find('.account-search-value').text();
+				self.accountBrowserRenderList({
+					container: template.find('.account-list-container'),
+					searchValue: searchValue,
+					slide: false,
+					callback: function() {
+						template.find('.account-browser-search').val('');
+						searchLink.remove();
+						if(breadcrumbsTemplate) {
 							var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
-								id: accountId,
-								name: accountName,
-								parentId: parentAccountId
+								search: monster.template(self, '!' + self.i18n.active().accountBrowser.breadcrumbSearchResults, { searchValue: searchValue })
 							}));
+
+							breadcrumbsTemplate.find('.account-browser-breadcrumb')
+											   .first()
+											   .nextAll()
+											   .remove();
 
 							breadcrumbsTemplate.find('.account-browser-breadcrumbs')
 											   .append(breadcrumbTemplate);
 						}
-
-						onChildrenClick && onChildrenClick(accountId);
 					}
 				});
 			});
@@ -182,14 +239,17 @@ define(function(require){
 				if(!isLoading && accountList.data('next-key') && (accountList.scrollTop() >= (accountList[0].scrollHeight - accountList.innerHeight() - 100))) {
 					isLoading = true;
 					accountList.append(loader);
+					var searchValue = accountList.data('search-value'),
+						apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
+						apiData = searchValue ? { accountName: searchValue } : { accountId: accountList.data('current') };
+
 					self.callApi({
-						resource: 'account.listChildren',
-						data: {
-							accountId: accountList.data('current'),
+						resource: apiResource,
+						data: $.extend(true, apiData, {
 							filters: {
 								'start_key': accountList.data('next-key')
 							}
-						},
+						}),
 						success: function(data, status) {
 							var nextStartKey = data.next_start_key,
 								listTemplate = $(monster.template(self, 'accountBrowser-list', {
@@ -244,13 +304,14 @@ define(function(require){
 				parentId = args.parentId || self.accountId,
 				selectedId = args.selectedId,
 				slide = args.slide,
-				callback = args.callback;
+				searchValue = args.searchValue,
+				callback = args.callback,
+				apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
+				apiData = searchValue ? { accountName: searchValue } : { accountId: parentId };
 
 			self.callApi({
-				resource: 'account.listChildren',
-				data: {
-					accountId: parentId
-				},
+				resource: apiResource,
+				data: apiData,
 				success: function(data, status) {
 					var nextStartKey = data.next_start_key,
 						slider = container.find('.account-list-slider'),
@@ -278,6 +339,7 @@ define(function(require){
 
 					list.data('next-key', nextStartKey || null);
 					list.data('current', parentId);
+					list.data('search-value', searchValue || null);
 
 					callback && callback();
 				}

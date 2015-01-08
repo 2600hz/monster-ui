@@ -107,6 +107,10 @@ define(function(require){
 		return monster.util.toFriendlyDate(timestamp, format);
 	});
 
+	Handlebars.registerHelper('formatPrice', function(price, decimals) {
+		return monster.util.formatPrice(price, decimals);
+	});
+
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title: function(title) {
 			if (!this.options.title ) {
