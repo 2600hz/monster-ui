@@ -210,18 +210,23 @@ define(function(require){
 			}
 		},
 
+		/**
+		 * Gets the currently loaded app.
+		 */
 		_currentApp: function (callback) {
 			var self = this,
 				apploader = $('#apploader'),
 				app = {};
 
 			if(apploader.find('li.app-list-element.active').data() !== null) {
+				//If apploader is loaded get data from document.
 				app = {
 					id: apploader.find('li.app-list-element.active').data().id,
 					name: apploader.find('li.app-list-element.active').data().name
 				}
 				callback && callback(app);
 			} else {
+				//This returns the default app, so only works when the apploader hasn't been loaded yet.
 				self.getUserApps(function (apps) {
 					app = {
 						id: apps[0].id,
