@@ -16,14 +16,10 @@ define(function(require){
 	});
 
 	Handlebars.registerHelper('debug', function(optionalValue) {
-		console.log('Current Context');
-		console.log('====================');
-		console.log(this);
+		console.log('Current Context: ', this);
 
 		if (optionalValue) {
-			console.log('Value');
-			console.log('====================');
-			console.log(optionalValue);
+			console.log('Value: ', optionalValue);
 		}
 	});
 
@@ -63,6 +59,14 @@ define(function(require){
 			}
 		}
 		return select.innerHTML;
+	});
+
+	Handlebars.registerHelper('ifInArray', function(elem, list, options) {
+		if(list.indexOf(elem) > -1) {
+			return options.fn(this);
+		}
+
+		return options.inverse(this);
 	});
 
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
