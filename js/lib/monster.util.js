@@ -424,6 +424,14 @@ define(function(require){
 			}
 
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
+		},
+
+		formatPrice: function(value, decimals) {
+			var decimals = parseInt(decimals),
+				decimalCount = decimals >= 0 ? decimals : 2,
+				roundedValue = Math.round(Number(value)*Math.pow(10,decimalCount))/Math.pow(10,decimalCount);
+			
+			return roundedValue.toFixed( ((parseInt(value) == value) && (isNaN(decimals) || decimals < 0)) ? 0 : decimalCount );
 		}
 	};
 

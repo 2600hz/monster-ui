@@ -33,10 +33,10 @@
 			</div>
 			<div class="charges">
 				{{#if this.rate}}
-				<div>{{../../../i18n.servicePlanDetails.rate}} {{../../../i18n.currencyUsed}}{{this.rate}}</div>
+				<div>{{../../../i18n.servicePlanDetails.rate}} {{../../../i18n.currencyUsed}}{{formatPrice this.rate}}</div>
 				{{/if}}
 				{{#if this.activation_charge}}
-				<div>{{../../../i18n.servicePlanDetails.activationCharge}} {{../../../i18n.currencyUsed}}{{this.activation_charge}}</div>
+				<div>{{../../../i18n.servicePlanDetails.activationCharge}} {{../../../i18n.currencyUsed}}{{formatPrice this.activation_charge}}</div>
 				{{/if}}
 			</div>
 			<div class="exceptions">
