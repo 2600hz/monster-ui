@@ -757,6 +757,11 @@ define(function(require){
 				else return true;
 			}, localization.customRules['checkList']);
 
+			// Adding advanced custom rules
+			$.validator.addMethod('regex', function(value, element, regexpr) {
+				return regexpr.test(value);
+			});
+
 			this.customValidationInitialized = true;
 		},
 
