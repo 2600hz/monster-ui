@@ -27,7 +27,10 @@
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
 		},
 		directory: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
 		},
 		channel: {
