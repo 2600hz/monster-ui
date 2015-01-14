@@ -10,6 +10,7 @@ require.config({
 		'chosen': 'js/lib/jquery.chosen.min',
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
+		'dependClass': 'js/lib/jquery.dependClass',
 		'ddslick': 'js/lib/jquery.ddslick.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
@@ -35,6 +36,7 @@ require.config({
 		'plugins': 'js/plugins',
 		'postal': 'js/lib/postal-0.8.2',
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
+		'slider': 'js/lib/jquery.slider',
 		'socket': 'js/lib/socket.io.min',
 		'timepicker': 'js/lib/jquery.timepicker.min',
 		'toastr': 'js/lib/toastr-1.3.0',
@@ -54,6 +56,7 @@ require.config({
 		'handlebars': {
 			'exports': 'Handlebars'
 		},
+		'slider': ['dependClass'],
 		'plugins': ['jquery'],
 		'kazoosdk': ['jquery'],
 		'touch-punch': ['jqueryui'],
