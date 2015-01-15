@@ -241,13 +241,14 @@ define(function(require){
 					accountList.append(loader);
 					var searchValue = accountList.data('search-value'),
 						apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
-						apiData = searchValue ? { accountName: searchValue } : { accountId: accountList.data('current') };
+						apiData = searchValue ? { accountName: searchValue } : { accountId: accountList.data('current') },
+						nextStartKey = accountList.data('next-key');
 
 					self.callApi({
 						resource: apiResource,
 						data: $.extend(true, apiData, {
 							filters: {
-								'start_key': accountList.data('next-key')
+								'start_key': encodeURIComponent(nextStartKey)
 							}
 						}),
 						success: function(data, status) {
