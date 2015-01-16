@@ -362,5 +362,30 @@
 		"distribute": "Répartir",
 		"maxDurationTooltip": "Cliquez sur le label ci-contre pour changer la durée maximale de ce groupe d'appel. Vous devez saisir un nombre crompris entre 30 et 999.",
 		"doNotRing": "Ne pas faire sonner"
+	},
+	
+	"__comment": "UI-966: We want to be able to customize the carrier choice in different plances, so we build a common control",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Opérateur téléphonique",
+		"headline": "Sélectionner comment configurer les opérateurs de ce compte",
+		"useBlended": {
+			"friendlyName": "Utiliser les Opérateurs mixtes",
+			"help": "En sélectionnant \"Utiliser les opérateurs mixtes\", tous les appels de ce compte utiliseront les opérateurs configurés sur le compte principal"
+		},
+		"useReseller": {
+			"friendlyName": "Utiliser les opérateurs de {{variable}}",
+			"help": "En sélectionnant \"Utiliser les opérateurs de {{variable}}\", tous les appels de ce compte utiliseront les opérateurs configurés de {{variable}}",
+			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "Utiliser les opérateurs de votre revendeur",
+			"defaultHelp": "En sélectionnant \"Utiliser les opérateurs de votre revendeur\", tous les appels de ce compte utiliseront les opérateurs configurés de votre revendeur"
+		},
+		"byoc": {
+			"friendlyName": "Configurer vos propres opérateurs",
+			"help": "En sélectionnant \"Configurer vos propres opérateurs\", vous laisserez ce compte configurer ses opérateurs manuellement."
+		},
+		"saveSuccess": "Vous avez mis à jours les options d'opérateurs avec succès!",
+		"huntError": "Vos réglages d'opérateur actuels ne fonctionnent pas dans cette interface, si vous souhaitez conserver ces réglages, ne changez rien dans ce menu. Sinon, vous pouvez sélectionner une option dans le menu et sauvegarder!"
 	}
 }

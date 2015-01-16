@@ -363,5 +363,30 @@
 		"distribute": "Distribute",
 		"maxDurationTooltip": "Click this box to change the maximum duration for your ring group. You must enter a number between 30 and 999.",
 		"doNotRing": "Do not ring"
+	},
+
+	"__comment": "UI-966: We want to be able to customize the carrier choice in different plances, so we build a common control",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Carrier",
+		"headline": "Select the carrier strategy for this account",
+		"useBlended": {
+			"friendlyName": "Use Blended Carriers",
+			"help": "This will route the calls to the global carriers set up on the master account"
+		},
+		"useReseller": {
+			"friendlyName": "Use {{variable}}'s Carriers",
+			"help": "This will route the calls to {{variable}}'s carriers.",
+			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "Use your Reseller's Carriers",
+			"defaultHelp": "This will route the calls to your Reseller's Carriers"
+		},
+		"byoc": {
+			"friendlyName": "Bring your Own Carrier (Custom)",
+			"help": "This will route the calls to the carriers set up for this account via the Carriers app."
+		},
+		"saveSuccess": "You successfully updated the Carrier settings for this account!",
+		"huntError": "Your existing settings for your no_match route are not supported in Monster UI, don't change anything in this screen if you wish to continue to use these settings. Otherwise, select one of the option in the dropdown!"
 	}
 }
