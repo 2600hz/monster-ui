@@ -16,7 +16,6 @@ define(function(require){
 
 		*/
 		carrierSelectorRender: function(args) {
-			console.log(args);
 			var self = this,
 				formattedData = self.carrierSelectorFormatData(args.data),
 				template = $(monster.template(self, 'carrierSelector-layout', formattedData));
@@ -170,7 +169,7 @@ define(function(require){
 				type = params.type || whitelabelType || 'useBlended',
 				accountId = params.accountId,
 				resellerId = params.resellerId,
-				noMatchCallflow = self.getDataNoMatchCallflow(type, resellerId);
+				noMatchCallflow = self.carrierSelectorGetDataNoMatch(type, resellerId);
 
 			self.callApi({
 				resource: 'callflow.create',
@@ -190,7 +189,7 @@ define(function(require){
 				accountId = params.accountId,
 				callflowId = params.callflowId,
 				resellerId = params.resellerId,
-				noMatchCallflow = self.getDataNoMatchCallflow(type, resellerId);
+				noMatchCallflow = self.carrierSelectorGetDataNoMatch(type, resellerId);
 
 			self.callApi({
 				resource: 'callflow.update',
@@ -203,7 +202,29 @@ define(function(require){
 					callback(data.data);
 				}
 			});
-		}
+		},
+
+		carrierSelectorGetDataNoMatch: function(type, resellerId) {
+			var self = this,
+				noMatchCallflow = {
+					numbers: ['no_match'],
+					flow: {
+						children: {},
+						data: {},
+						module: 'offnet'
+					}
+				};
+
+			if(type !== 'useBlended') {
+				noMatchCallflow.flow.module = 'resources';
+
+				if(type === 'useReseller') {
+					noMatchCallflow.flow.data.hunt_account_id = resellerId;
+				}
+			}
+
+			return noMatchCallflow;
+		},
 	};
 
 	return carrierSelector;
