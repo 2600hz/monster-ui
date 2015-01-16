@@ -3,7 +3,8 @@ define(function(require){
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			default: 'http://api.zswitch.net:8000/v2/'
+			// default: 'http://api.zswitch.net:8000/v2/'
+			default: 'http://10.26.0.41:8000/v2/'
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600hz, add the URL in the 'provisioner' key below
 			// 		provisioner: 'your_provisioner_url',
