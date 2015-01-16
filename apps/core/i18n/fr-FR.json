@@ -140,7 +140,8 @@
 	"languages":{
 		"auto":"Par Défaut",
 		"americanEnglish":"Anglais (en-US)",
-		"frenchFrench":"Français (fr-FR)"
+		"frenchFrench":"Français (fr-FR)",
+		"russianRussian": "Russe (ru-RU)"
 	},
 	"services": {
 		"twoway_trunks": "Twoway Trunks",

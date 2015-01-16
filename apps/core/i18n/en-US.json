@@ -138,7 +138,8 @@
 	"languages": {
 		"auto": "Default",
 		"americanEnglish": "English (en-US)",
-		"frenchFrench": "French (fr-FR)"
+		"frenchFrench": "French (fr-FR)",
+		"russianRussian": "Russian (ru-RU)"
 	},
 	"services": {
 		"cnam": "CNAM",
