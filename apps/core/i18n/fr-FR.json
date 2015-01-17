@@ -29,6 +29,11 @@
 			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée.",
 			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
 			"service_restriction": "Crédit insuffisant pour acheter le numéro \"{{field}}\" (${{value}})."
+		},
+		"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
+		"errorMessages": {
+			"datastore_conflict": "Conflit de données détecté. Veuillez réessayer, ou contactez votre administrateur si cela se reproduit.",
+			"account_has_descendants": "Vous ne pouvez pas supprimer un compte ayant des sous-comptes."
 		}
 	},
 	"error": "Erreur",

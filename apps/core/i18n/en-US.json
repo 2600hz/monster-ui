@@ -28,6 +28,11 @@
 			"forbidden": "The value for the field \"{{field}}\" can not be updated.",
 			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
 			"service_restriction": "Not enought credit to purchase the number \"{{field}}\" (${{value}})."
+		},
+		"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
+		"errorMessages": {
+			"datastore_conflict": "An error was cause by conflicting database documents. Please try again, and contact your administrator if it reoccurs.",
+			"account_has_descendants": "You can not delete an account that has sub-accounts."
 		}
 	},
 	"apps": "apps",

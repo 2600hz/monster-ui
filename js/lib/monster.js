@@ -358,6 +358,16 @@ define(function(require){
 											}
 										});
 									});
+								} else if((error.status === 409 || error.status === 500) && 'data' in parsedError) {
+									var errMsg = '';
+									_.each(parsedError.data, function(fieldError, fieldErrorKey) {
+										if(fieldErrorKey in errorsI18n.errorMessages) {
+											errMsg += errorsI18n.errorMessages[fieldErrorKey] + '<br>';
+										} else if('message' in fieldError) {
+											errMsg += fieldError.message + '<br>';
+										}
+									});
+									if(errMsg) { errorMessage = errMsg; }
 								} else if(error.status in errorsI18n) {
 									errorMessage = errorsI18n[error.status];
 								}
