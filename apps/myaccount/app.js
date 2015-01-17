@@ -566,8 +566,6 @@ define(function(require){
 							function(data) {
 								var args = {
 									callback: function(parent) {
-										var link = parent.find('li[data-name='+fieldName+']');
-
 										if(fieldName === 'credit_card') {
 											parent.find('.edition').hide();
 											parent.find('.uneditable').show();
@@ -575,20 +573,7 @@ define(function(require){
 											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 										}
 
-										link.find('.update').hide();
-										link.find('.changes-saved').show()
-																	.fadeOut(1500, function() {
-																			link.find('.update').fadeIn(500);
-																	});
-
-										link.css('background-color', '#22ccff')
-												.animate({
-												backgroundColor: '#f6f6f6'
-											}, 2000
-										);
-
-										parent.find('li.settings-item .settings-item-content').hide();
-										parent.find('li.settings-item a.settings-link').show();
+										self.highlightField(parent, fieldName);
 
 										/* TODO USELESS? */
 										if(typeof callbackUpdate === 'function') {
@@ -609,6 +594,26 @@ define(function(require){
 					}
 				);
 			});
+		},
+
+		highlightField: function(parent, fieldName) {
+			var	link = parent.find('li[data-name='+fieldName+']');
+
+			link.find('.update').hide();
+			link.find('.changes-saved').show()
+										.fadeOut(1500, function() {
+												link.find('.update').fadeIn(500);
+										});
+
+			link.css('background-color', '#22ccff')
+					.animate({
+					backgroundColor: '#f6f6f6'
+				}, 2000
+			);
+
+			parent.find('li.settings-item .settings-item-content').hide();
+			parent.find('li.settings-item a.settings-link').show();
+
 		},
 
 		_openAccordionGroup: function(args) {

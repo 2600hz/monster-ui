@@ -106,6 +106,7 @@
 				</div>
 			</div>
 		</li>
+
 		<li class="settings-item clearfix" data-name="account_timezone">
 			<a class="settings-link clearfix">
 				<span class="title">{{ i18n.account.timezoneTitle }}</span>
@@ -125,32 +126,48 @@
 				<div class="row-fluid">
 					<div class="span12">
 						<form class="form-horizontal" id="form_account_timezone">
-                            <div class="control-group">
-                                <label class="control-label" for="account_timezone">{{ i18n.account.userTimezone }}</label>
-                                <div class="controls">
-                                    <select id="account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label" for="account_language">{{ i18n.account.userLanguage }}</label>
-                                <div class="controls">
-                                    <select id="account_language" name="language">
-                                        <option value="auto">{{i18n.languages.auto}}</option>
-                                        <option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
-                                        <option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
-                                        <option value="ru-RU"{{#compare account.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls action-bar">
-                                    <a href="#" class="cancel">{{ i18n.cancel }}</a>
-                                    <button type="submit" class="btn btn-success change" data-module="account" data-field="account_timezone">{{ i18n.saveChanges }}</button>
-                                </div>
-                            </div>
-                        </form>
+							<div class="control-group">
+								<label class="control-label" for="account_timezone">{{ i18n.account.userTimezone }}</label>
+								<div class="controls">
+									<select id="account_timezone" name="timezone" data-original_value="{{account.timezone}}"></select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_language">{{ i18n.account.userLanguage }}</label>
+								<div class="controls">
+									<select id="account_language" name="language">
+										<option value="auto">{{i18n.languages.auto}}</option>
+										<option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+										<option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+										<option value="ru-RU"{{#compare account.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls action-bar">
+									<a href="#" class="cancel">{{ i18n.cancel }}</a>
+									<button type="submit" class="btn btn-success change" data-module="account" data-field="account_timezone">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
+			</div>
+		</li>
+
+		<li class="settings-item clearfix" data-name="carrier">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.account.carrierTitle }}</span>
+				<div class="description">
+					{{ carrierDescription }}
+				</div>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content" id="carrierSelectorContainer">
 			</div>
 		</li>
 	</ul>

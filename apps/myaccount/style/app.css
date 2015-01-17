@@ -2,6 +2,7 @@
 @import url('../submodules/servicePlan/servicePlan.css');
 @import url('../submodules/transactions/transactions.css');
 @import url('../submodules/trunks/trunks.css');
+@import url('../submodules/account/account.css');
 
 /* My account */
 #myaccount {

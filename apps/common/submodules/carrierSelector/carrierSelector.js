@@ -9,18 +9,19 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.carrierSelector': 'carrierSelectorRender'
+			'common.carrierSelector': 'carrierSelectorRender',
+			'common.carrierSelector.getDescription': 'carrierSelectorGetDescription'
 		},
 
 		/* data with noMatch parameter
-
+			callbackAfterSave
 		*/
 		carrierSelectorRender: function(args) {
 			var self = this,
 				formattedData = self.carrierSelectorFormatData(args.data),
 				template = $(monster.template(self, 'carrierSelector-layout', formattedData));
 
-			self.carrierSelectorBindEvents(template, formattedData);
+			self.carrierSelectorBindEvents(template, formattedData, args.callbackAfterSave);
 
 			args.container.empty()
 						  .append(template);
@@ -113,13 +114,15 @@ define(function(require){
 			return params;
 		},
 
-		carrierSelectorBindEvents: function(template, data) {
+		carrierSelectorBindEvents: function(template, data, callbackAfterSave) {
 			var self = this,
 				contentHtml = template,
 				defaultType = data.carrierInfo.type,
 				paramAccountId = data.accountData.id,
 				paramResellerId = data.accountData.reseller_id,
 				noMatchFlow = data.noMatch;
+
+			contentHtml.find('[data-toggle="tooltip"]').tooltip();
 
 			contentHtml.find('.carrier-choice').on('click', function() {
 				var $this = $(this),
@@ -144,6 +147,8 @@ define(function(require){
 							toastr.success(self.i18n.active().carrierSelector.saveSuccess);
 							contentHtml.find('.hunt-error').remove();
 							$this.addClass('disabled');
+
+							callbackAfterSave && callbackAfterSave(data);
 						},
 						paramsNoMatch = {
 							type: carrierType,
@@ -225,6 +230,49 @@ define(function(require){
 
 			return noMatchCallflow;
 		},
+
+		carrierSelectorGetDescription: function(args) {
+			var self = this,
+				params = args.data,
+				callback = args.callback,
+				type = "",
+				description = "";
+
+			// if module is offnet, they use global carriers ("blended")
+			if(params.noMatch.flow.module === 'offnet') {
+				type = 'useBlended';
+			}
+			else if(params.noMatch.flow.module === 'resources'){
+				// if hunt_account_id is defined
+				if(params.noMatch.flow.data.hasOwnProperty('hunt_account_id')) {
+					// check if hunt_account_id = this account id which means he brings his own carrier
+					if(params.noMatch.flow.data.hunt_account_id === params.accountData.id) {
+						type = 'byoc';
+					}
+					// else check if it's = to his resellerId, which means he uses his reseller carriers
+					else if(params.noMatch.flow.data.hunt_account_id === params.accountData.reseller_id) {
+						type = 'useReseller';
+					}
+					// else it's using an accountId we don't know, so we show an error
+					else {
+						type = 'useBlended';
+					}
+				}
+				// otherwise it means this accounts will setup their own carriers
+				else {
+					type = 'byoc';
+				}
+			}
+
+			if(monster.config.whitelabel.hasOwnProperty('companyName') && type === 'useReseller') {
+				description = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].friendlyName, { variable: monster.config.whitelabel.companyName });
+			}
+			else {
+				description = self.i18n.active().carrierSelector[type].friendlyName;
+			}
+
+			callback && callback(description);
+		}
 	};
 
 	return carrierSelector;

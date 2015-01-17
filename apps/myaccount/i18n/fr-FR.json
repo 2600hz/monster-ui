@@ -45,7 +45,11 @@
 
 		"timezoneTitle": "Fuseau horaire & langage",
 		"userTimezone": "Fuseau horaire",
-		"userLanguage": "Langage"
+		"userLanguage": "Langage",
+
+		"__comment": "UI-966: Added common control to select carrier in myaccount",
+		"__version": "v3.20_s0",
+		"carrierTitle": "Réglages Opérateur téléphonique"
 	},
 
 	"billing": {

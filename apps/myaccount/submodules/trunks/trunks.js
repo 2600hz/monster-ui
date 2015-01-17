@@ -23,7 +23,6 @@ define(function(require){
 
 		_trunksRenderContent: function(args) {
 			var self = this;
-			console.log(args.key);
 			if(args.key === 'inbound') {
 				self.trunksRenderInbound(args.callback);
 			}

@@ -383,7 +383,7 @@
 		},
 		"byoc": {
 			"friendlyName": "Configurer vos propres opérateurs",
-			"help": "En sélectionnant \"Configurer vos propres opérateurs\", vous laisserez ce compte configurer ses opérateurs manuellement."
+			"help": "En sélectionnant \"Configurer vos propres opérateurs\", vous laisserez ce compte configurer ses opérateurs manuellement via la Carrier App."
 		},
 		"saveSuccess": "Vous avez mis à jours les options d'opérateurs avec succès!",
 		"huntError": "Vos réglages d'opérateur actuels ne fonctionnent pas dans cette interface, si vous souhaitez conserver ces réglages, ne changez rien dans ce menu. Sinon, vous pouvez sélectionner une option dans le menu et sauvegarder!"

@@ -49,7 +49,10 @@
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",
-		"userLanguage": "Language"
+		"userLanguage": "Language",
+		"__comment": "UI-966: Added common control to select carrier in myaccount",
+		"__version": "v3.20_s0",
+		"carrierTitle": "Carrier Settings"
 	},
 
 	"billing": {
