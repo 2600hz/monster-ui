@@ -229,6 +229,15 @@
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' }
 		},
+		webhooks: {
+			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'create': { 'verb': 'PUT', 'url': 'accounts/{accountId}/webhooks' },
+			'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
+			'accountSummary': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/summary' },
+			'summary': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/summary' }
+		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
