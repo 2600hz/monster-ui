@@ -5,10 +5,11 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [alert()][alert]
 * [confirm()][confirm]
 * [dialog()][dialog]
+* [getFormData()][getFormData]
+* [highlight()][highlight]
 * [protectField()][protect_field]
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
-* [getFormData()][getFormData]
 
 ### Objects
 * [prettyCheck][pretty_check]
@@ -22,7 +23,8 @@ The `monster.ui` object contains different methods and objects used to easily re
 [alert]: ui/alert().md
 [confirm]: ui/confirm().md
 [dialog]: ui/dialog().md
+[getFormData]: ui/getFormData().md
+[highlight]: ui/highlight().md
 [protect_field]: ui/protectField().md
 [validate]: ui/validate().md
 [wysiwyg]: ui/wysiwyg().md
-[getFormData]: ui/getFormData().md
