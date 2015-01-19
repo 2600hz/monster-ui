@@ -1084,6 +1084,18 @@ define(function(require){
 							}
 						}
 					});
+		},
+
+		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
+			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
+
+			for (var key in formData) {
+				if (key === '') {
+					delete formData[key];
+				}
+			}
+
+			return formData;
 		}
 	};
 
