@@ -31,6 +31,9 @@ define(function(require){
 
 			self.getWhitelabel(function(data) {
 				// Merge the whitelabel info to replace the hardcoded info
+				if(data && data.hasOwnProperty('company_name')) {
+					data.companyName = data.company_name;
+				}
 				monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, data);
 
 				if(!$.cookie('monster-auth')) {
