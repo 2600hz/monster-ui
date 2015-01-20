@@ -7,18 +7,6 @@ define(function(require){
 	var e911 = {
 
 		requests: {
-			'common.e911.getNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'GET'
-			},
-			'common.e911.updateNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'POST'
-			},
-			'common.e911.listNumber': {
-				url: 'accounts/{accountId}/phone_numbers',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -78,8 +66,8 @@ define(function(require){
 			popupHtml.find('#remove_e911_btn').on('click', function(e) {
 				e.preventDefault();
 
-				monster.request({
-					resource: 'common.e911.listNumber',
+				self.callApi({
+					resource: 'numbers.list',
 					data: {
 						accountId: self.accountId
 					},
@@ -140,8 +128,8 @@ define(function(require){
 		e911GetNumber: function(phoneNumber, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.e911.getNumber',
+			self.callApi({
+				resource: 'numbers.get',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber)
@@ -162,8 +150,8 @@ define(function(require){
 		e911UpdateNumber: function(phoneNumber, data, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.e911.updateNumber',
+			self.callApi({
+				resource: 'numbers.update',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
