@@ -214,7 +214,7 @@
 		},
 		balance: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-			'getMonthly': { verb: 'GET', verb: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
+			'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
 			'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
 			'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
 			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
