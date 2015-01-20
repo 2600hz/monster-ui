@@ -48,7 +48,7 @@ define(function(require){
 			popupHtml.find('button.btn.btn-success').on('click', function(ev) {
 				ev.preventDefault();
 
-				var e911FormData = form2object('e911');
+				var e911FormData = monster.ui.getFormData('e911');
 
 				_.extend(dataNumber, { dash_e911: e911FormData });
 

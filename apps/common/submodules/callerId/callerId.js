@@ -41,7 +41,7 @@ define(function(require){
 				ev.preventDefault();
 
 				if(monster.ui.valid(form)) {
-					var cnamFormData = form2object('cnam');
+					var cnamFormData = monster.ui.getFormData('cnam');
 
 					_.extend(dataNumber, { cnam: cnamFormData });
 

@@ -364,7 +364,7 @@ define(function(require){
 
 			template.find('.update-password').on('click', function() {
 				if ( monster.ui.valid(form) ) {
-					var formData = form2object('form_password_update');
+					var formData = monster.ui.getFormData('form_password_update');
 
 					if ( formData.new_password === formData.new_password_confirmation ) {
 						var newUserData = {
@@ -461,7 +461,7 @@ define(function(require){
 
 				template.find('.recover-password').on('click', function() {
 					if ( monster.ui.valid(form) ) {
-						var object = form2object('form_password_recovery', '.', true);
+						var object = monster.ui.getFormData('form_password_recovery', '.', true);
 
 						if ( object.hasOwnProperty('account_name') || object.hasOwnProperty('account_realm') || object.hasOwnProperty('phone_number') ) {
 							self.callApi({
@@ -552,7 +552,7 @@ define(function(require){
 
 		conferenceLogin: function() {
 			var self = this,
-				formData = form2object('user_login_form');
+				formData = monster.ui.getFormData('user_login_form');
 
 			_.each(formData.update, function(val, key) {
 				if(!val) { delete formData.update[key]; }

@@ -501,7 +501,7 @@ define(function(require){
 
 			parent.find('#user_list_save').on('click', function(e) {
 				e.preventDefault();
-				var selectedUsers = form2object('app_popup_user_list_form').users;
+				var selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users;
 				if(selectedUsers) {
 					var appInstallInfo = {
 						allowed_users: 'specific',

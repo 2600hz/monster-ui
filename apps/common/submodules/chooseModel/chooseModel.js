@@ -136,7 +136,7 @@ define(function(require){
 
 			templateDevice.find('.action-device').on('click', function() {
 				if(monster.ui.valid(templateDevice.find('#device_form'))) {
-					var formData = form2object('device_form'),
+					var formData = monster.ui.getFormData('device_form'),
 						dataDevice = {
 							device_type: 'sip_device',
 							enabled: true,
