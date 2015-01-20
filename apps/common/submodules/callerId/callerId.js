@@ -7,14 +7,6 @@ define(function(require){
 	var callerId = {
 
 		requests: {
-			'common.callerId.getNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'GET'
-			},
-			'common.callerId.updateNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -92,8 +84,8 @@ define(function(require){
 		callerIdGetNumber: function(phoneNumber, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.callerId.getNumber',
+			self.callApi({
+				resource: 'numbers.get',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber)
@@ -114,8 +106,8 @@ define(function(require){
 		callerIdUpdateNumber: function(phoneNumber, data, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.callerId.updateNumber',
+			self.callApi({
+				resource: 'numbers.update',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
