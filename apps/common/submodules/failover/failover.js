@@ -7,14 +7,6 @@ define(function(require){
 	var failover = {
 
 		requests: {
-			'failover.getNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'GET'
-			},
-			'failover.updateNumber': {
-				url: 'accounts/{accountId}/phone_numbers/{phoneNumber}',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -144,8 +136,8 @@ define(function(require){
 		failoverGetNumber: function(phoneNumber, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'failover.getNumber',
+			self.callApi({
+				resource: 'numbers.get',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber)
@@ -166,8 +158,8 @@ define(function(require){
 		failoverUpdateNumber: function(phoneNumber, data, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'failover.updateNumber',
+			self.callApi({
+				resource: 'numbers.update',
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
