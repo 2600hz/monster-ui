@@ -213,7 +213,8 @@
 		},
 		balance: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' }
+			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
+			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' }
 		},
 		billing: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },

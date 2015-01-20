@@ -8,22 +8,6 @@ define(function(require){
 	var balance = {
 
 		requests: {
-			'myaccount.balance.getFilteredTransactions': {
-				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason=only_calls',
-				verb: 'GET'
-			},
-			'myaccount.balance.getDescendants': {
-				url: 'accounts/{accountId}/descendants',
-				verb: 'GET'
-			},
-			'myaccount.balance.getLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'GET'
-			},
-			'myaccount.balance.updateLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -548,8 +532,8 @@ define(function(require){
 		balanceGetAccounts: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.getDescendants',
+			self.callApi({
+				resource: 'account.listDescendants',
 				data: {
 					accountId: self.accountId,
 				},
@@ -566,8 +550,8 @@ define(function(require){
 		balanceGetLimits: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.getLimits',
+			self.callApi({
+				resource: 'limits.get',
 				data: {
 					accountId: self.accountId,
 				},
@@ -597,12 +581,13 @@ define(function(require){
 			var from = monster.util.dateToBeginningOfGregorianDay(params.from);
 			to = monster.util.dateToEndOfGregorianDay(params.to);
 
-			monster.request({
-				resource: 'myaccount.balance.getFilteredTransactions',
+			self.callApi({
+				resource: 'balance.filtered',
 				data: {
 					accountId: self.accountId,
 					from: from,
-					to: to
+					to: to,
+					reason: 'only_calls'
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -616,8 +601,8 @@ define(function(require){
 		balanceUpdateLimits: function(limits, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.updateLimits',
+			self.callApi({
+				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
 					data: limits
