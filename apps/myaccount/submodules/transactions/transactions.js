@@ -6,18 +6,6 @@ define(function(require){
 	var transactions = {
 
 		requests: {
-			'myaccount.transactions.getMonthly': {
-				url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}',
-				verb: 'GET'
-			},
-			'myaccount.transactions.getSubscriptions': {
-				url: 'accounts/{accountId}/transactions/subscriptions',
-				verb: 'GET'
-			},
-			'myaccount.transactions.getCharges': {
-				url: 'accounts/{accountId}/transactions?reason=no_calls&created_from={from}&created_to={to}',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -225,8 +213,8 @@ define(function(require){
 		transactionsGetMonthly: function(from, to, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.transactions.getMonthly',
+			self.callApi({
+				resource: 'balance.getMonthly',
 				data: {
 					accountId: self.accountId,
 					from: from,
@@ -244,12 +232,13 @@ define(function(require){
 		transactionsGetCharges: function(from, to, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.transactions.getCharges',
+			self.callApi({
+				resource: 'balance.getCharges',
 				data: {
 					accountId: self.accountId,
 					from: from,
-					to: to
+					to: to,
+					reason: 'no_calls'
 				},
 				success: function(data, status) {
 					success && success(data, status);
