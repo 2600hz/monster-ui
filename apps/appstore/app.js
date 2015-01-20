@@ -18,26 +18,6 @@ define(function(require){
 		},
 
 		requests: {
-			'appstore.list': {
-				url: 'apps_store',
-				verb: 'GET'
-			},
-			'appstore.get': {
-				url: 'apps_store/{appId}',
-				verb: 'GET'
-			},
-			'appstore.account.get': {
-				url: 'accounts/{accountId}',
-				verb: 'GET'
-			},
-			'appstore.account.update': {
-				url: 'accounts/{accountId}',
-				verb: 'POST'
-			},
-			'appstore.users.list': {
-				url: 'accounts/{accountId}/users',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -117,8 +97,8 @@ define(function(require){
 
 			monster.parallel({
 					apps: function(callback) {
-						monster.request({
-							resource: 'appstore.list',
+						self.callApi({
+							resource: 'appsStore.list',
 							data: {
 								accountId: self.accountId,
 							},
@@ -128,8 +108,8 @@ define(function(require){
 						});
 					},
 					account: function(callback) {
-						monster.request({
-							resource: 'appstore.account.get',
+						self.callApi({
+							resource: 'account.get',
 							data: {
 								accountId: self.accountId
 							},
@@ -139,8 +119,8 @@ define(function(require){
 						});
 					},
 					users: function(callback) {
-						monster.request({
-							resource: 'appstore.users.list',
+						self.callApi({
+							resource: 'user.list',
 							data: {
 								accountId: self.accountId
 							},
@@ -238,8 +218,8 @@ define(function(require){
 				userList = appstoreData.users,
 				account = appstoreData.account;
 
-			monster.request({
-				resource: 'appstore.get',
+			self.callApi({
+				resource: 'appsStore.get',
 				data: {
 					accountId: self.accountId,
 					appId: appId
@@ -347,8 +327,8 @@ define(function(require){
 						.addClass('icon-spinner icon-spin')
 						.show();
 
-					monster.request({
-						resource: 'appstore.account.get',
+					self.callApi({
+						resource: 'account.get',
 						data: {
 							accountId: appstoreData.account.id
 						},
@@ -358,8 +338,8 @@ define(function(require){
 								appstoreData.account.apps = {};
 							}
 							appstoreData.account.apps[app.id] = appInstallInfo;
-							monster.request({
-								resource: 'appstore.account.update',
+							self.callApi({
+								resource: 'account.update',
 								data: {
 									accountId: appstoreData.account.id,
 									data: appstoreData.account
