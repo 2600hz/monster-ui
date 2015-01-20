@@ -6,14 +6,6 @@ define(function(require){
 	var trunks = {
 
 		requests: {
-			'myaccount.trunks.getLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'GET'
-			},
-			'myaccount.trunks.updateLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -268,8 +260,8 @@ define(function(require){
 		trunksGetLimits: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.trunks.getLimits',
+			self.callApi({
+				resource: 'limits.get',
 				data: {
 					accountId: self.accountId,
 				},
@@ -285,8 +277,8 @@ define(function(require){
 		trunksUpdateLimits: function(limits, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.trunks.updateLimits',
+			self.callApi({
+				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
 					data: limits
