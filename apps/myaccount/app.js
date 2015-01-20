@@ -558,7 +558,7 @@ define(function(require){
 						}
 
 						return data;
-					})(moduleToUpdate, form2object('form_'+fieldName));
+					})(moduleToUpdate, monster.ui.getFormData('form_'+fieldName));
 
 				settingsValidate(fieldName, newData,
 					function() {

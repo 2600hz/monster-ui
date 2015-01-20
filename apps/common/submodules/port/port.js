@@ -626,11 +626,8 @@ define(function(require){
 				monster.ui.validate(transferNameForm);
 
 				if (monster.ui.valid(transferNameForm)) {
-					var transferNameFormData = form2object('transfer_name_form', '.', true),
-						billFormData = form2object('bill_form', '.', true);
-
-					// TODO: Remove when implementing monster.ui.getFormData()
-					delete billFormData[''];
+					var transferNameFormData = monster.ui.getFormData('transfer_name_form', '.', true),
+						billFormData = monster.ui.getFormData('bill_form', '.', true);
 
 					$.extend(true, data.orders[index], billFormData, transferNameFormData);
 
@@ -664,11 +661,8 @@ define(function(require){
 				}
 
 				if (submitData) {
-					var transferNameFormData = form2object('transfer_name_form'),
-						billFormData = form2object('bill_form');
-
-					// TODO: Remove when implementing monster.ui.getFormData()
-					delete billFormData[''];
+					var transferNameFormData = monster.ui.getFormData('transfer_name_form'),
+						billFormData = monster.ui.getFormData('bill_form');
 
 					if (order.hasOwnProperty('id')) {
 						delete order.bill_attachment;
@@ -783,12 +777,9 @@ define(function(require){
 			});
 
 			container.find('#continue_later button').on('click', function() {
-				var notificationEmailFormData = form2object('notification_email_form', '.', true),
-					temporaryNumbersFormData = form2object('temporary_numbers_form'),
-					transferDateFormData = form2object('transfer_date_form');
-
-				// TODO: Remove when implementing monster.ui.getFormData()
-				delete temporaryNumbersFormData[''];
+				var notificationEmailFormData = monster.ui.getFormData('notification_email_form', '.', true),
+					temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
+					transferDateFormData = monster.ui.getFormData('transfer_date_form');
 
 				$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
 
@@ -807,12 +798,9 @@ define(function(require){
 				monster.ui.validate(notificationEmailForm);
 
 				if (monster.ui.valid(notificationEmailForm)) {
-					var notificationEmailFormData = form2object('notification_email_form'),
-						temporaryNumbersFormData = form2object('temporary_numbers_form'),
-						transferDateFormData = form2object('transfer_date_form');
-
-					// TODO: Remove when implementing monster.ui.getFormData()
-					delete temporaryNumbersFormData[''];
+					var notificationEmailFormData = monster.ui.getFormData('notification_email_form'),
+						temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
+						transferDateFormData = monster.ui.getFormData('transfer_date_form');
 
 					$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
 
