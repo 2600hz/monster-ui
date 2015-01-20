@@ -16,14 +16,6 @@ define(function(require){
 		},
 
 		requests: {
-			'apploader.users.update': {
-				url: 'accounts/{accountId}/users/{userId}',
-				verb: 'POST'
-			},
-			'apploader.account.get': {
-				url: 'accounts/{accountId}',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -115,16 +107,8 @@ define(function(require){
 						return $(val).data('id');
 					}
 				);
-				monster.request({
-					resource: 'apploader.users.update',
-					data: {
-						accountId: self.accountId,
-						userId: self.userId,
-						data: monster.apps['auth'].currentUser
-					},
-					success: function(_data, status) {},
-					error: function(_data, status) {}
-				});
+
+				self.userUpdate();
 			});
 
 			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
@@ -265,8 +249,8 @@ define(function(require){
 		getUserApps: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'apploader.account.get',
+			self.callApi({
+				resource: 'account.get',
 				data: {
 					accountId: self.accountId,
 				},
@@ -328,20 +312,27 @@ define(function(require){
 
 						if(updateUserApps) {
 							monster.apps['auth'].currentUser.appList = userApps;
-							monster.request({
-								resource: 'apploader.users.update',
-								data: {
-									accountId: self.accountId,
-									userId: self.userId,
-									data: monster.apps['auth'].currentUser
-								},
-								success: function(_data, status) {},
-								error: function(_data, status) {}
-							});
+
+							self.userUpdate();
 						}
 
 						callback && callback(appList);
 					});
+				}
+			});
+		},
+
+		userUpdate: function(userId, data) {
+			var self = this;
+
+			self.callApi({
+				resource: 'user.update',
+				data: {
+					accountId: self.accountId,
+					userId: self.userId,
+					data: monster.apps.auth.currentUser
+				},
+				success: function(data, status) {
 				}
 			});
 		}
