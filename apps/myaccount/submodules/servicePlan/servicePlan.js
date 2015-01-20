@@ -6,20 +6,6 @@ define(function(require){
 	var servicePlan = {
 
 		requests: {
-			'myaccount.servicePlan.get': {
-				url: 'accounts/{accountId}/service_plans/current',
-				generateError: false,
-				verb: 'GET'
-			},
-			'myaccount.servicePlan.getSubscription': {
-				url: 'accounts/{accountId}/transactions/subscriptions',
-				generateError: false,
-				verb: 'GET'
-			},
-			'myaccount.servicePlan.downloadCsv': {
-				url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -138,8 +124,8 @@ define(function(require){
 		servicePlanDownloadCsv: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.downloadCsv',
+			self.callApi({
+				resource: 'servicePlan.getCsv',
 				data: {
 					accountId: self.accountId
 				},
@@ -155,10 +141,11 @@ define(function(require){
 		servicePlanGet: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.get',
+			self.callApi({
+				resource: 'servicePlan.listCurrent',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -172,10 +159,11 @@ define(function(require){
 		servicePlanGetSubscription: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.getSubscription',
+			self.callApi({
+				resource: 'balance.getSubscriptions',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);

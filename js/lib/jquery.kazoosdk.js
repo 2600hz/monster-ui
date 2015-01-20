@@ -202,6 +202,7 @@
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
+			'getCsv': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv' },
 			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
@@ -213,8 +214,9 @@
 		},
 		balance: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' }
+			'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
+			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
+			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' }
 		},
 		billing: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
