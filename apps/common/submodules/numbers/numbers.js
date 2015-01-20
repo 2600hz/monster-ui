@@ -7,38 +7,6 @@ define(function(require){
 	var numbers = {
 
 		requests: {
-			'common.numbers.list': {
-				url: 'accounts/{accountId}/phone_numbers',
-				verb: 'GET'
-			},
-			'common.numbers.delete': {
-				url: 'accounts/{accountId}/phone_numbers/collection',
-				verb: 'DELETE'
-			},
-			'common.numbers.move': {
-				url: 'accounts/{accountId}/phone_numbers/collection/activate',
-				verb: 'PUT'
-			},
-			'common.numbers.listChildren': {
-				url: 'accounts/{accountId}/children',
-				verb: 'GET'
-			},
-			'common.numbers.listDescendants': {
-				url: 'accounts/{accountId}/descendants',
-				verb: 'GET'
-			},
-			'common.numbers.listCallflows': {
-				url: 'accounts/{accountId}/callflows',
-				verb: 'GET'
-			},
-			'common.numbers.listUsers': {
-				url: 'accounts/{accountId}/users',
-				verb: 'GET'
-			},
-			'common.numbers.listGroups': {
-				url: 'accounts/{accountId}/groups',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -891,8 +859,8 @@ define(function(require){
 		numbersMove: function(args, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.move',
+			self.callApi({
+				resource: 'numbers.activateBlock',
 				data: {
 					accountId: args.accountId,
 					data: {
@@ -929,8 +897,8 @@ define(function(require){
 		numbersDelete: function(args, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.delete',
+			self.callApi({
+				resource: 'numbers.deleteBlock',
 				data: {
 					accountId: args.accountId,
 					data: {
@@ -1123,8 +1091,8 @@ define(function(require){
 		numbersListUsers: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listUsers',
+			self.callApi({
+				resource: 'user.list',
 				data: {
 					accountId: accountId
 				},
@@ -1137,8 +1105,8 @@ define(function(require){
 		numbersListCallflows: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listCallflows',
+			self.callApi({
+				resource: 'calllfow.list',
 				data: {
 					accountId: accountId
 				},
@@ -1151,8 +1119,8 @@ define(function(require){
 		numbersListGroups: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listGroups',
+			self.callApi({
+				resource: 'group.list',
 				data: {
 					accountId: accountId
 				},
@@ -1165,8 +1133,8 @@ define(function(require){
 		numbersListNumbers: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.list',
+			self.callApi({
+				resource: 'numbers.list',
 				data: {
 					accountId: accountId
 				},
@@ -1179,8 +1147,8 @@ define(function(require){
 		numbersListAccounts: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listChildren',
+			self.callApi({
+				resource: 'account.listChildren',
 				data: {
 					accountId: self.accountId
 				},
