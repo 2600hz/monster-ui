@@ -1106,7 +1106,7 @@ define(function(require){
 			var self = this;
 
 			self.callApi({
-				resource: 'calllfow.list',
+				resource: 'callflow.list',
 				data: {
 					accountId: accountId
 				},
