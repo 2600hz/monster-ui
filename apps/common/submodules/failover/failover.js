@@ -52,11 +52,8 @@ define(function(require){
 					if(failoverFormData.rawInput.match(/^sip:/)) {
 						failoverFormData.failover.sip = failoverFormData.rawInput;
 					}
-					else if(result = failoverFormData.rawInput.replace(/-|\(|\)|\s/g,'').match(/^\+?1?([2-9]\d{9})$/)) {
-						failoverFormData.failover.e164 = '+1' + result[1];
-					}
 					else {
-						failoverFormData.failover.e164 = '';
+						failoverFormData.failover.e164 = failoverFormData.rawInput;
 					}
 
 					delete failoverFormData.rawInput;
