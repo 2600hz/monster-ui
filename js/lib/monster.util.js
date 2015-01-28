@@ -317,6 +317,8 @@ define(function(require){
 			return randomString;
 		},
 
+		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
+		// The input needed is an object from the array of transaction returned by the /transactions API.
 		formatTransaction: function(transaction, isProrated) {
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
 			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
