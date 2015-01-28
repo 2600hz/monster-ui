@@ -199,6 +199,9 @@
 		"sub_account_number_activation": "Number Activation (Sub-Account)",
 		"manual_addition": "Manual Addition",
 		"sub_account_manual_addition": "Manual Addition (Sub-Account)",
-		"admin_discretion": "Admin Discretion"
+		"admin_discretion": "Admin Discretion",
+		"__comment": "UI-383: Fixing transactions for good",
+		"__version": "v3.20_s0",
+		"unknown": "Charge"
 	}
 }
