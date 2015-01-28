@@ -120,7 +120,7 @@ define(function(require){
 							var arrayTransactions = [];
 
 							$.each(dataMonthly.data, function(k, v) {
-								v = monster.util.formatTransaction(v);
+								v = monster.util.formatTransaction(v, false, self);
 
 								if(v.approved) {
 									defaults.amount += parseFloat(v.amount);
@@ -135,7 +135,7 @@ define(function(require){
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
-								v = monster.util.formatTransaction(v, true);
+								v = monster.util.formatTransaction(v, true, self);
 
 								arrayCharges.push(v);
 

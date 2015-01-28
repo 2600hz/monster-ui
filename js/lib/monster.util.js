@@ -319,7 +319,7 @@ define(function(require){
 
 		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
 		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, isProrated) {
+		formatTransaction: function(transaction, isProrated, app) {
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
 			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
 				&& !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
@@ -347,10 +347,10 @@ define(function(require){
 					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
 
 					transaction.services.push({
-						service: self.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
+						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
 						rate: addOn.amount,
 						quantity: addOn.quantity,
-						discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
 						monthly_charges: addOn.monthly_charges
 					});
 				});
