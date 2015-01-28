@@ -317,6 +317,62 @@ define(function(require){
 			return randomString;
 		},
 
+		formatTransaction: function(transaction, isProrated) {
+			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
+			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
+				&& !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
+
+				var mapDiscounts = {};
+				_.each(transaction.metadata.discounts, function(discount) {
+					mapDiscounts[discount.id] = discount;
+				});
+
+				transaction.type = isProrated ? 'prorated' : 'monthly';
+				transaction.services = [];
+
+				$.each(transaction.metadata.add_ons, function(k, addOn) {
+					var discount = 0,
+						discountName = 'discount_' + addOn.id,
+						discountItem;
+
+					if(mapDiscounts.hasOwnProperty('discountName')) {
+						discountItem = mapDiscounts[discountName];
+						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
+					}
+
+					addOn.amount = parseFloat(addOn.amount).toFixed(2);
+					addOn.quantity = parseFloat(addOn.quantity);
+					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
+
+					transaction.services.push({
+						service: self.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
+						rate: addOn.amount,
+						quantity: addOn.quantity,
+						discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+						monthly_charges: addOn.monthly_charges
+					});
+				});
+
+				transaction.services.sort(function(a, b) {
+					return parseFloat(a.rate) <= parseFloat(b.rate);
+				});
+			}
+			else {
+				transaction.type = 'charges';
+			}
+
+			transaction.amount = parseFloat(transaction.amount).toFixed(2);
+
+			// If there are no processor response text, we assume it was approved
+			transaction.approved = transaction.hasOwnProperty('processor_response_text') ? transaction.processor_response_text === 'Approved' : true,
+			// Our API return created but braintree returns created_at
+			transaction.created = transaction.created_at || transaction.created; 
+
+			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created, 'short');
+
+			return transaction;
+		},
+
 		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
     	sort: function(dataSet, secondArg) {
 			var fieldName = 'name',

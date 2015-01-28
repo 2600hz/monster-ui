@@ -109,65 +109,10 @@ define(function(require){
 			to = monster.util.dateToEndOfGregorianDay(to);
 
 			var defaults = {
-					amount: 0.00,
-					billingStartDate: monster.util.toFriendlyDate(from, 'short'),
-					billingEndDate: monster.util.toFriendlyDate(to, 'short')
-				},
-				formatCharge = function(v, isProrated) {
-					// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-					if(v.hasOwnProperty('metadata') && v.metadata.hasOwnProperty('add_ons') && v.metadata.hasOwnProperty('discounts') 
-						&& !(v.metadata.add_ons.length === 0 && v.metadata.discounts.length === 0)) {
-
-						var mapDiscounts = {};
-						_.each(v.metadata.discounts, function(discount) {
-							mapDiscounts[discount.id] = discount;
-						});
-
-						v.type = isProrated ? 'prorated' : 'monthly';
-						v.services = [];
-
-						$.each(v.metadata.add_ons, function(k, addOn) {
-							var discount = 0,
-								discountName = 'discount_' + addOn.id,
-								discountItem;
-
-							if(mapDiscounts.hasOwnProperty('discountName')) {
-								discountItem = mapDiscounts[discountName];
-								discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
-							}
-
-							addOn.amount = parseFloat(addOn.amount).toFixed(2);
-							addOn.quantity = parseFloat(addOn.quantity);
-							addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
-
-							v.services.push({
-								service: self.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
-								rate: addOn.amount,
-								quantity: addOn.quantity,
-								discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
-								monthly_charges: addOn.monthly_charges
-							});
-						});
-
-						v.services.sort(function(a, b) {
-							return parseFloat(a.rate) <= parseFloat(b.rate);
-						});
-					}
-					else {
-						v.type = 'charges';
-					}
-
-					v.amount = parseFloat(v.amount).toFixed(2);
-
-					// If there are no processor response text, we assume it was approved
-					v.approved = v.hasOwnProperty('processor_response_text') ? v.processor_response_text === 'Approved' : true,
-					// Our API return created but braintree returns created_at
-					v.created = v.created_at || v.created; 
-
-					v.friendlyCreated = monster.util.toFriendlyDate(v.created, 'short');
-
-					return v;
-				};
+				amount: 0.00,
+				billingStartDate: monster.util.toFriendlyDate(from, 'short'),
+				billingEndDate: monster.util.toFriendlyDate(to, 'short')
+			};
 
 			monster.parallel({
 					monthly: function(callback) {
@@ -175,7 +120,7 @@ define(function(require){
 							var arrayTransactions = [];
 
 							$.each(dataMonthly.data, function(k, v) {
-								v = formatCharge(v);
+								v = monster.util.formatTransaction(v);
 
 								if(v.approved) {
 									defaults.amount += parseFloat(v.amount);
@@ -190,7 +135,7 @@ define(function(require){
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
-								v = formatCharge(v, true);
+								v = monster.util.formatTransaction(v, true);
 
 								arrayCharges.push(v);
 
