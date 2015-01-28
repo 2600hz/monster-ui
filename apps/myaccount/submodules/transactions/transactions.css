@@ -59,9 +59,9 @@
 .transactions-content-wrapper .list-transactions .transaction .expand-box > * {
 	color: #CCCCCC;
 	cursor: pointer;
-	font-size: 110px;
+	font-size: 90px;
 	height: 65px;
-	line-height: 50px;
+	line-height: 65px;
 	text-align: center;
 	text-shadow: 0 -1px 1px #777777;
 }

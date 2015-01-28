@@ -1,6 +1,7 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		toastr = require('toastr'),
 		monster = require('monster');
 
 	var transactions = {
@@ -112,30 +113,31 @@ define(function(require){
 					billingStartDate: monster.util.toFriendlyDate(from, 'short'),
 					billingEndDate: monster.util.toFriendlyDate(to, 'short')
 				},
-				formatCharge = function(v) {
-					if((!v.hasOwnProperty('add_ons') && !v.hasOwnProperty('discounts')) || (v.add_ons.length === 0 && v.discounts.length === 0)) {
-						v.type = 'charges';
-					}
-					else {
+				formatCharge = function(v, isProrated) {
+					// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
+					if(v.hasOwnProperty('metadata') && v.metadata.hasOwnProperty('add_ons') && v.metadata.hasOwnProperty('discounts') 
+						&& !(v.metadata.add_ons.length === 0 && v.metadata.discounts.length === 0)) {
+
 						var mapDiscounts = {};
-						_.each(v.discounts, function(discount) {
+						_.each(v.metadata.discounts, function(discount) {
 							mapDiscounts[discount.id] = discount;
 						});
 
-						v.type = v.prorated ? 'prorated' : 'monthly';
+						v.type = isProrated ? 'prorated' : 'monthly';
 						v.services = [];
 
-						$.each(v.add_ons, function(k, addOn) {
-							var discount = 0;
+						$.each(v.metadata.add_ons, function(k, addOn) {
+							var discount = 0,
+								discountName = 'discount_' + addOn.id,
+								discountItem;
 
-							addOn.amount = parseFloat(addOn.amount).toFixed(2);
-							addOn.quantity = parseFloat(addOn.quantity);
-
-							if((addOn.id + '_discount') in mapDiscounts) {
-								var discountItem = mapDiscounts[addOn.id + '_discount'];
+							if(mapDiscounts.hasOwnProperty('discountName')) {
+								discountItem = mapDiscounts[discountName];
 								discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
 							}
 
+							addOn.amount = parseFloat(addOn.amount).toFixed(2);
+							addOn.quantity = parseFloat(addOn.quantity);
 							addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
 
 							v.services.push({
@@ -150,6 +152,9 @@ define(function(require){
 						v.services.sort(function(a, b) {
 							return parseFloat(a.rate) <= parseFloat(b.rate);
 						});
+					}
+					else {
+						v.type = 'charges';
 					}
 
 					v.amount = parseFloat(v.amount).toFixed(2);
@@ -185,7 +190,7 @@ define(function(require){
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
-								v = formatCharge(v);
+								v = formatCharge(v, true);
 
 								arrayCharges.push(v);
 
