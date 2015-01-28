@@ -135,7 +135,10 @@
 		"sub_account_number_activation": "Activation de numéro (Sous-comptes)",
 		"manual_addition": "Ajout manuel",
 		"sub_account_manual_addition": "Ajout manuel (Sous-comptes)",
-		"admin_discretion": "Opération d'administrateur"
+		"admin_discretion": "Opération d'administrateur",
+		"__comment": "UI-383: Fixing transactions for good",
+		"__version": "v3.20_s0",
+		"unknown": "Frais divers"
     },
 
     "servicePlan": {
