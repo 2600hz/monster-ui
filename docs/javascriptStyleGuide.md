@@ -1,5 +1,7 @@
 # 2600hz JavaScript Style Guide() {
 
+*Freely inspired from [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript)*
+
 
 ## Table of Contents
 
@@ -64,10 +66,10 @@ console.log(foo[0], bar[0]); // => 9, 9
 
 ```javascript
 // bad
-var item = new Object();
+var models = new Object();
 
 // good
-var item = {};
+var models = {};
 ```
 
 - Try not to use [reserved words](http://es5.github.io/#x7.6.1) as keys. It won't work in IE8. [More info](https://github.com/airbnb/javascript/issues/61)
@@ -114,39 +116,39 @@ var superman = {
 
 ```javascript
 // bad
-var items = new Array();
+var families = new Array();
 
 // good
-var items = [];
+var families = [];
 ```
 
 - If you don't know array length use Array#push.
 
 ```javascript
-var someStack = [];
+var spareNumbers = [];
 
 
 // bad
-someStack[someStack.length] = 'abracadabra';
+spareNumbers[spareNumbers.length] = 'abracadabra';
 
 // good
-someStack.push('abracadabra');
+spareNumbers.push('abracadabra');
 ```
 
 - When you need to copy an array use Array#slice. [jsPerf](http://jsperf.com/converting-arguments-to-an-array/7)
 
 ```javascript
-var len = items.length,
-	itemsCopy = [],
+var len = numbers.length,
+	numbersCopy = [],
 	i;
 
 // bad
 for (i = 0; i < len; i++) {
-  itemsCopy[i] = items[i];
+  numbersCopy[i] = numbers[i];
 }
 
 // good
-itemsCopy = items.slice();
+numbersCopy = numbers.slice();
 ```
 
 - To convert an array-like object to an array, use Array#slice.
@@ -167,16 +169,16 @@ function trigger() {
 
 ```javascript
 // bad
-var name = "Bob Parr";
+var fullName = "John Doe";
 
 // good
-var name = 'Bob Parr';
+var fullName = 'John Doe';
 
 // bad
-var fullName = "Bob " + this.lastName;
+var fullName = "John " + user.lastName;
 
 // good
-var fullName = 'Bob ' + this.lastName;
+var fullName = 'John ' + user.lastName;
 ```
 
 - Strings longer than 80 characters should be written across multiple lines using string concatenation.
@@ -344,42 +346,32 @@ var isJedi = getProp('jedi');
 
 ## Variables
 
-- Always use `var` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace. Captain Planet warned us of that.
+- Use a single `var` keyword to declare several variables.
 
 ```javascript
 // bad
-superPower = new SuperPower();
+var cardType = getCardType(cardNumber);
+var activate = true;
+var result = '';
 
 // good
-var superPower = new SuperPower();
-```
-
-- Use one `var` declaration for several variables
-
-```javascript
-// bad
-var goSportsTeam = true;
-var items = getItems();
-var dragonball = 'z';
-
-// good
-var goSportsTeam = true,
-	items = getItems(),
-	dragonball = 'z';
+var cardType = getCardType(cardNumber),
+	activate = true,
+	result = '';
 ```
 
 - Declare unassigned variables last. This is helpful when later on you might need to assign a variable depending on one of the previous assigned variables.
 
 ```javascript
 // bad
-var i, len, dragonball,
-	items = getItems(),
-	goSportsTeam = true;
+var i, len, result,
+	cardType = getCardType(cardNumber),
+	activate = true;
 
 // good
-var goSportsTeam = true,
-	items = getItems(),
-	dragonball,
+var cardType = getCardType(cardNumber),
+	activate = true,
+	result,
 	len,
 	i;
 ```
@@ -591,9 +583,6 @@ if (test)
 	return false;
 
 // good
-if (test) return false;
-
-// good
 if (test) {
 	return false;
 }
@@ -655,20 +644,20 @@ var active = true;  // is current tab
 var active = true;
 
 // bad
-function getType() {
+function getCardType(number) {
 	console.log('fetching type...');
 	// set the default type to 'no type'
-	var type = this._type || 'no type';
+	var type = type || 'no type';
 
 	return type;
 }
 
 // good
-function getType() {
+function getCardType(number) {
 	console.log('fetching type...');
 
 	// set the default type to 'no type'
-	var type = this._type || 'no type';
+	var type = type || 'no type';
 
 	return type;
 }
@@ -679,24 +668,24 @@ function getType() {
 - Use `// FIXME:` to annotate problems
 
 ```javascript
-function Calculator() {
+function buildRequest(options) {
 
-	// FIXME: shouldn't use a global here
-	total = 0;
+	// FIXME: don't know if options is defined
+	options = $.extend(true, options, defaultOptions);
 
-	return this;
+	return options;
 }
 ```
 
 - Use `// TODO:` to annotate solutions to problems
 
 ```javascript
-function Calculator() {
+function buildRequest(options) {
 
-	// TODO: total should be configurable by an options param
-	this.total = 0;
+	// TODO: should check if options is undefined
+	options = $.extend(true, options, defaultOptions);
 
-	return this;
+	return options;
 }
 ```
 
@@ -709,25 +698,25 @@ function Calculator() {
 
 ```javascript
 // bad
-function test(){
-	console.log('test');
+function error(){
+	console.log('error');
 }
 
 // good
-function test()∙{
-	console.log('test');
+function error()∙{
+	console.log('error');
 }
 
 // bad
-dog.set('attr',{
-  age: '1 year',
-  breed: 'Bernese Mountain Dog'
+monster.pub('auth.initApp',{
+	app: self,
+	callbackSuccess: function callbackSuccess() { /* ...stuff... */ }
 });
 
 // good
-dog.set('attr',∙{
-  age: '1 year',
-  breed: 'Bernese Mountain Dog'
+monster.pub('auth.initApp',∙{
+	app: self,
+	callbackSuccess: function callbackSuccess() { /* ...stuff... */ }
 });
 ```
 
@@ -735,10 +724,10 @@ dog.set('attr',∙{
 
 ```javascript
 // bad
-var x=y+5;
+var username=firstName+lastName;
 
 // good
-var x∙=∙y∙+∙5;
+var username∙=∙firstName∙+∙lastName;
 ```
 
 - Use indentation when making long method chains.
@@ -877,19 +866,19 @@ var heroes = [
 - Strings:
 
 ```javascript
-//  => this.reviewScore = 9;
+//  => discount = 9;
 
 // bad
-var totalScore = this.reviewScore + '';
+var totalDiscount = discount + '';
 
 // good
-var totalScore = '' + this.reviewScore;
+var totalDiscount = '' + discount;
 
 // bad
-var totalScore = '' + this.reviewScore + ' total score';
+var totalDiscount = '' + discount + ' total discount';
 
 // good
-var totalScore = this.reviewScore + ' total score';
+var totalDiscount = discount + ' total discount';
 ```
 
 - Use `parseInt` for Numbers and always with a radix for type casting.
@@ -916,39 +905,19 @@ var val = Number(inputValue);
 var val = parseInt(inputValue, 10);
 ```
 
-- If for whatever reason you are doing something wild and `parseInt` is your bottleneck and need to use Bitshift for [performance reasons](http://jsperf.com/coercion-vs-casting/3), leave a comment explaining why and what you're doing.
-
-```javascript
-// good
-/**
- * parseInt was the reason my code was slow.
- * Bitshifting the String to coerce it to a
- * Number made it a lot faster.
- */
-var val = inputValue >> 0;
-```
-
-- **Note:** Be careful when using bitshift operations. Numbers are represented as [64-bit values](http://es5.github.io/#x4.3.19), but Bitshift operations always return a 32-bit integer ([source](http://es5.github.io/#x11.7)). Bitshift can lead to unexpected behavior for integer values larger than 32 bits. [Discussion](https://github.com/airbnb/javascript/issues/109). Largest signed 32-bit Int is 2,147,483,647:
-
-```javascript
-2147483647 >> 0 //=> 2147483647
-2147483648 >> 0 //=> -2147483648
-2147483649 >> 0 //=> -2147483647
-```
-
 - Booleans:
 
 ```javascript
-var age = 0;
+var type = 0;
 
 // bad
-var hasAge = new Boolean(age);
+var hasType = new Boolean(type);
 
 // good
-var hasAge = Boolean(age);
+var hasType = Boolean(type);
 
 // good
-var hasAge = !!age;
+var hasType = !!type;
 ```
 
 **[▲ back to top](#table-of-contents)**
@@ -960,12 +929,12 @@ var hasAge = !!age;
 
 ```javascript
 // bad
-function q() {
+function r() {
 	// ...stuff...
 }
 
 // good
-function query() {
+function request() {
 	// ..stuff..
 }
 ```
@@ -974,37 +943,18 @@ function query() {
 
 ```javascript
 // bad
-var this_is_my_object = {};
+var formatted_user_data = {};
 function ParseURL() {}
-var u = new user({
-		name: 'Bob Parr'
-	});
+var n = {
+		id: '+14151234568'
+	};
 
 // good
-var thisIsMyObject = {};
+var formattedUserData = {};
 function parseUrl() {}
-var user = new User({
-		name: 'Bob Parr'
-	});
-```
-
-- Use a leading underscore `_` when naming subscribable functions.
-
-```javascript
-{
-	subscribe: {
-		'apploader.show': '_render',
-		'apploader.hide': '_hide'
-	},
-
-	_render: function() {
-		// ...stuff...
-	},
-
-	_hide: function() {
-		// ...stuff..
-	}
-}
+var number = {
+		id: '+14151234568'
+	};
 ```
 
 - When saving a reference to `this` use `self`.
@@ -1038,12 +988,12 @@ function() {
 - All our applications are defined as a JSON object. By convention, every function defined at the root of the application should declare a variable `self` to reference the scope of the application (`this`).
 
 ```javascript
-	{
-		myFunction: function() {
-			var self = this;
-			// Some code...
-		}
+{
+	bindEvents: function() {
+		var self = this;
+		// Some code...
 	}
+}
 ```
 
 - The data returned by the APIs, does not follow the same conventions. Most properties will be lowercased, each word separated by an underscore. For obvious reasons, these properties must __not__ be renamed.
@@ -1135,7 +1085,7 @@ function setSidebar() {
 $.each($appList, function(index, value) {
 	var id = $(this).data('id');
 
-	$this.hide();
+	$(this).hide();
 
 	// ...stuff..
 });
