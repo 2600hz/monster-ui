@@ -29,9 +29,7 @@ define(function(require){
 
 					dataTemplate.show_not_listed_links = args.callbackMissingBrand ? true : false;
 
-					self.chooseModelRenderProvisioner(dataTemplate, function(dataModel) {
-						args.callback(dataModel);
-					}, args.callbackMissingBrand);
+					self.chooseModelRenderProvisioner(dataTemplate, args.callback, args.callbackMissingBrand);
 				}
 			});
 		},
@@ -153,11 +151,12 @@ define(function(require){
 								username: 'user_' + monster.util.randomString(10)
 							},
 							suppress_unregister_notifications: false
+						},
+						callbackAfterSave = function() {
+							popup.dialog('close').remove();
 						};
 
-					popup.dialog('close').remove();
-
-					callback && callback(dataDevice);
+					callback && callback(dataDevice, callbackAfterSave);
 				}
 			});
 
