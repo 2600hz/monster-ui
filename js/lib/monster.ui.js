@@ -302,9 +302,11 @@ define(function(require){
 
 					return renderData;
 				},
+				charges = data.hasOwnProperty('activation_charges') ? data.activation_charges : false,
+				description = typeof data.activation_charges_description === 'string' ? data.activation_charges_description : false,
 				template = $(monster.template(coreApp, 'dialog-charges', {
-						activation_charges: data.hasOwnProperty('activation_charges') ? data.activation_charges : false,
-						activation_charges_description: data.hasOwnProperty('activation_charges_description') ? data.activation_charges_description : false,
+						activation_charges: charges,
+						activation_charges_description: description,
 						charges: formatData(data)
 					}
 				)),
