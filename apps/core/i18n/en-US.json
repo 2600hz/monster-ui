@@ -55,6 +55,8 @@
 		"confirmCancel" : "Cancel",
 		"confirmTitle" : "Confirmation"
 	},
+	"available": "Available",
+	"selected": "Selected",
 	"disabled": "Disabled",
 	"download": "Download",
 	"enabled": "Enabled",
