@@ -282,8 +282,11 @@ define(function(require){
 						data.totalMinutes += duration;
 					}
 
-					if('account_id' in v.metadata) {
-						accountName = mapAccounts[v.metadata.account_id].name;
+					if(v.hasOwnProperty('sub_account_name')) {
+						accountName = v.sub_account_name;
+					}
+					else if(v.hasOwnProperty('sub_account_id')) {
+						accountName = mapAccounts.hasOwnProperty(v.sub_account_id) ? mapAccounts[v.sub_account_id].name : '-';
 					}
 
 					data.totalCharges += parseFloat(v.amount);
@@ -551,7 +554,7 @@ define(function(require){
 			monster.request({
 				resource: 'myaccount.balance.getDescendants',
 				data: {
-					accountId: self.accountId,
+					accountId: self.accountId
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -594,8 +597,8 @@ define(function(require){
 				params.from = dates.from;
 			}
 
-			var from = monster.util.dateToBeginningOfGregorianDay(params.from);
-			to = monster.util.dateToEndOfGregorianDay(params.to);
+			var from = monster.util.dateToBeginningOfGregorianDay(params.from),
+				to = monster.util.dateToEndOfGregorianDay(params.to);
 
 			monster.request({
 				resource: 'myaccount.balance.getFilteredTransactions',
