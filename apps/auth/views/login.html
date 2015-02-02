@@ -1,32 +1,28 @@
-<div class="login-block">
-    <form class="form-horizontal" name="form">
-        <div class="input-prepend row-login">
-            <span class="add-on"><i class="icon-user"></i></span><input type="text" class="span11" id="login" name="login" value="{{username}}" placeholder="{{ i18n.username }}">
-        </div>
+<form class="form-horizontal" name="form">
+	<div class="login-input row-login">
+		<input type="text" id="login" name="login" value="{{username}}" placeholder="{{ i18n.username }}">
+		<i class="icon-envelope"></i>
+	</div>
 
-        <div class="input-prepend row-login">
-            <span class="add-on"><i class="icon-unlock-alt"></i></span><input type="password" class="span11" name="password" id="password" placeholder="{{ i18n.password }}">
-        </div>
+	<div class="login-input row-login">
+		<input type="password" name="password" id="password" placeholder="{{ i18n.password }}">
+		<i class="icon-lock"></i>
+	</div>
 
-        <div class="input-prepend row-login">
-            <span class="add-on"><i class="icon-bookmark"></i></span><input type="text" class="span11" id="account_name" name="account_name" value="{{accountName }}" placeholder="{{ i18n.account.name }}">
-        </div>
+	<div class="login-input row-login">
+		<input type="text" id="account_name" name="account_name" value="{{accountName }}" placeholder="{{ i18n.account.name }}">
+		<i class="icon-bookmark"></i>
+	</div>
 
-		<div class="row-login row-fluid">
-        	<label class="checkbox span6">
-            	{{#if rememberMe }}
-                	<input id="remember_me" type="checkbox" CHECKED="CHECKED"/>
-            	{{else }}
-                	<input id="remember_me" type="checkbox"/>
-            	{{/if }}
-            	{{ i18n.rememberMe }}
-        	</label>
-			<a href="#" class="forgot-password span6">{{ i18n.forgotPassword }}</a>
-        </div>
+	<div class="row-login row-action">
+		<div class="monster-checkbox">
+			<input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
+			<label for="remember_me">{{ i18n.rememberMe }}</label>
+		</div>
+		<a href="#" class="forgot-password pull-right">{{ i18n.forgotPassword }}</a>
+	</div>
 
-		<div class="row-login">
-        	<button class="btn btn-primary login" type="submit">{{ i18n.login.buttonText }}</button>
-        </div>
-    </form>
-
-</div>
+	<div class="row-login">
+		<button class="monster-button-primary login" type="submit">{{ i18n.login.buttonText }}</button>
+	</div>
+</form>

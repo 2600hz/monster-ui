@@ -194,7 +194,9 @@ define(function(require){
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
-			$('#monster-content').empty();
+			$('#monster-content').addClass('monster-content');
+			$('#main .footer-wrapper').append($('#monster-content .powered-by-block .powered-by'));
+			$('#monster-content ').empty();
 
 			self.afterLoggedIn();
 		},
@@ -405,6 +407,8 @@ define(function(require){
 				callback = function() {
 					container.append(template);
 					self.renderLoginBlock();
+					template.find('.powered-by-block').append($('#main .footer-wrapper .powered-by'));
+					$('#monster-content').removeClass('monster-content');
 				};
 
 			if(monster.config.whitelabel.custom_welcome) {
@@ -415,7 +419,7 @@ define(function(require){
 						generateError: false
 					},
 					success: function(data, status) {
-						template.find('.left_div').empty().html(data);
+						template.find('.left-div').empty().html(data);
 						callback();
 					},
 					error: function(data, status) {
@@ -444,7 +448,7 @@ define(function(require){
 					showRegister: monster.config.hide_registration || false
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
-				content = $('#welcome_page .right_div');
+				content = $('#auth_container .right-div .login-block');
 
 			loginHtml.find('.login-tabs a').click(function(e) {
 				e.preventDefault();
@@ -452,6 +456,8 @@ define(function(require){
 			});
 
 			content.empty().append(loginHtml);
+
+
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
