@@ -1101,6 +1101,54 @@ define(function(require){
 			}
 
 			return formData;
+		},
+
+		/**
+		 * @desc Two columns UI element with sortable items
+		 * @param target - mandatory jQuery Object
+		 * @param data - mandatory object of items
+		 * @param selectedData - mandatory object of selected items
+		 * @param options - optional list of settings
+		 */
+		linkedColumns: function(target, items, selectedItems, options) {
+			var self = this,
+				coreApp = monster.apps.core,
+				unselectedItems = (function findUnselectedItems(items, selectedItems) {
+					var selectedKeys = selectedItems.map(function(item) { return item.key; }),
+						unselectedItems = [];
+
+					for (var i = 0, len = items.length; i < len; i++) {
+						if (selectedKeys.indexOf(items[i].key) === -1) {
+							unselectedItems.push(items[i]);
+						}
+					}
+
+					return unselectedItems;
+				})(items, selectedItems),
+				 defaultOptions = {
+					insertionType: 'insertAfter',
+					columnsTitles: {
+						available: coreApp.i18n.active().available,
+						selected: coreApp.i18n.active().selected
+					}
+				},
+				widgetTemplate,
+				dataTemplate;
+
+			options = $.extend(true, defaultOptions, options || {});
+
+			dataTemplate = {
+				unselectedItems: unselectedItems,
+				selectedItems: selectedItems,
+				options: options
+			};
+
+			widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate));
+
+			widgetTemplate.find('.available, .selected')
+				.sortable({ connectWith: '.connected' });
+
+			return widgetTemplate[options.insertionType](target);
 		}
 	};
 
