@@ -36,12 +36,31 @@ define(function(require){
 		load: function(callback){
 			var self = this;
 
-			callback(this);
+			self.callApi({
+				resource: 'whitelabel.getByDomain',
+				data: {
+					domain: window.location.hostname,
+					generateError: false
+				},
+				success: function(data) {
+					var whitelabelData = data.data;
+					// Merge the whitelabel info to replace the hardcoded info
+					if(whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
+						whitelabelData.companyName = whitelabelData.company_name;
+					}
+					monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
+
+					callback(self);
+				},
+				error: function(err) {
+					callback(self);
+				}
+			});
 		},
 
 		render: function(container){
 			var self = this,
-				mainTemplate = $(monster.template(self, 'app', {}));
+				mainTemplate = $(monster.template(self, 'app', { hidePowered: monster.config.whitelabel.hide_powered }));
 				
 			document.title = monster.config.whitelabel.applicationTitle;
 
