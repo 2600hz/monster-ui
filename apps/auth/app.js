@@ -29,45 +29,37 @@ define(function(require){
 			var self = this,
 				mainContainer = $('#monster-content');
 
-			self.getWhitelabel(function(data) {
-				// Merge the whitelabel info to replace the hardcoded info
-				if(data && data.hasOwnProperty('company_name')) {
-					data.companyName = data.company_name;
-				}
-				monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, data);
+			if(!$.cookie('monster-auth')) {
+				if('authentication' in monster.config.whitelabel) {
+					self.customAuth = monster.config.whitelabel.authentication;
 
-				if(!$.cookie('monster-auth')) {
-					if('authentication' in data) {
-						self.customAuth = data.authentication;
+					var options = {
+						sourceUrl: self.customAuth.source_url,
+						apiUrl: self.customAuth.api_url
+					};
 
-						var options = {
-							sourceUrl: self.customAuth.source_url,
-							apiUrl: self.customAuth.api_url
-						};
-
-						monster.apps.load(self.customAuth.name, function(app) {
-							app.render(mainContainer);
-						}, options);
-					}
-					else {
-						self.renderLoginPage(mainContainer);
-					}
+					monster.apps.load(self.customAuth.name, function(app) {
+						app.render(mainContainer);
+					}, options);
 				}
 				else {
-					var cookieData = $.parseJSON($.cookie('monster-auth'));
-
-					self.authToken = cookieData.authToken;
-					self.accountId = cookieData.accountId;
-					self.userId = cookieData.userId;
-					self.isReseller = cookieData.isReseller;
-					self.resellerId = cookieData.resellerId;
-					self.installedApps = cookieData.installedApps;
-
-					self.afterLoggedIn();
+					self.renderLoginPage(mainContainer);
 				}
+			}
+			else {
+				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				callback && callback(self);
-			});
+				self.authToken = cookieData.authToken;
+				self.accountId = cookieData.accountId;
+				self.userId = cookieData.userId;
+				self.isReseller = cookieData.isReseller;
+				self.resellerId = cookieData.resellerId;
+				self.installedApps = cookieData.installedApps;
+
+				self.afterLoggedIn();
+			}
+
+			callback && callback(self);
 		},
 
 		render: function(container){
@@ -642,24 +634,6 @@ define(function(require){
 					if(typeof error === 'function') {
 						error(err);
 					}
-				}
-			});
-		},
-
-		getWhitelabel: function(callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'whitelabel.getByDomain',
-				data: {
-					domain: window.location.hostname,
-					generateError: false
-				},
-				success: function(_data) {
-					callback && callback(_data.data);
-				},
-				error: function(err) {
-					callback && callback({});
 				}
 			});
 		}
