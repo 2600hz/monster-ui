@@ -151,6 +151,7 @@
 
 #auth_container .register-block {
     text-align: center;
+    display: none; /* Temporarily hiding this until we have a register page */
 }
 #auth_container .register-message {
     color: #808089;
