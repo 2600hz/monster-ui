@@ -1240,9 +1240,12 @@ label.monster-invalid {
 
 /********** New button designs **********/
 *[class*="monster-button"] {
-	font-size: 24px;
-	padding: 12px 20px;
-	border: none;
+	font-size: 14px;
+	padding: 4px 20px;
+	background-color: transparent;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	color: #c0c0c9;
 }
 .monster-button-primary {
 	color: #fff;
