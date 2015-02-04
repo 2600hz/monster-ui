@@ -7,15 +7,16 @@
 /* My account */
 #myaccount {
 	width: 100%;
-	height: 487px;
-	background-color: white;
+	background-color: #fff;
 	display: none;
-	border-bottom: 5px solid #22ccff;
 	position: absolute;
+	top: 67px;
+	bottom: 0px;
 	z-index: 20;
-
-	box-shadow: 0px 5px 5px rgba(50, 50, 50, 0.75);
 }
+/*#myaccount[style*="display: block"] + #monster-content {
+	overflow: hidden;
+}*/
 
 #myaccount > .container-fluid {
 	height: 100%;
@@ -34,9 +35,10 @@
 #myaccount .myaccount-menu {
 	background-color: #f3f3f3;
 	float: left;
-	height: 100%;
+	min-height: 100%;
 	width: 20%;
-	box-shadow: 1px 0px 1px #bbb;
+	border-right: 1px solid #c0c0c9;
+	box-sizing: border-box;
 }
 #myaccount .myaccount-right {
 	float: left;
@@ -44,8 +46,6 @@
 }
 
 #myaccount .myaccount-menu .nav {
-	color: #777;
-	/* height: 85%; */
 	height: 100%;
 	padding-right: 0;
 	overflow-x: hidden;
@@ -55,86 +55,64 @@
 
 #myaccount .myaccount-menu .badge {
 	background: #fff;
-	border: 1px solid #ccc;
-	color: #22ccff;
-	margin-right: 10px;
-	margin-top: 10px;
-}
-
-#myaccount .myaccount-menu li.active .badge {
-	background: #f3f3f3;
-}
-
-#myaccount .myaccount-menu .nav li:not(.nav-header) {
-	border-top: 1px solid #ccc;
-}
-
-#myaccount .myaccount-menu .nav li:last-child {
-	border-bottom: 1px solid #ccc;
+	border: 1px solid #c0c0c9;
+	color: #22a5ff;
+	border-radius: 0;
+	padding: 3px 9px;
 }
 
 #myaccount .myaccount-menu .nav li {
-	border-right: 1px solid #ccc;
-	height: 56px;
-	line-height: 56px;
-	font-weight: 700;
-	font-size: 16px;
-	overflow: hidden;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 10px 20px;
+	border-right: 2px solid transparent;
 }
 
 #myaccount .myaccount-menu .nav > li.active {
 	background-color: #fff !important;
-	border-right: 1px solid #fff;
+	border-right-color: #22a5ff;
 }
 
-#myaccount .myaccount-menu .nav > li:hover {
-	background-color: #eee;
+#myaccount .myaccount-menu .nav > li:not(.nav-header):hover {
+	background-color: #e0e0e9;
 }
 
 #myaccount .myaccount-menu .nav li.nav-header {
-	color: #FFFFFF;
-	font-size: 16px;
-	font-weight: bold;
-	height: 20px;
-	letter-spacing: 2px;
-	line-height: 20px;
-	margin: 0;
-	padding: 10px 30px;
-	text-shadow: 1px 0 1px #333333;
-	text-transform: uppercase
+	padding: 0;
+	padding-bottom: 5px;
+	margin: 35px 20px 10px 20px;
+	border-bottom: solid 1px #c0c0c9;
+	text-transform: uppercase;
 }
 
 #myaccount .myaccount-menu .nav a {
 	background: none !important;
-	color: #777777;
-	height: 38px;
-	line-height: 38px;
-	padding: 10px 0;
+	text-shadow: none;
+	color: #303039;
+	padding: 0;
 	margin: 0;
+	height: 22px;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 #myaccount .myaccount-menu .nav a i {
 	display: inline-block;
-	margin-left: 10px;
 	margin-right: 10px;
 	width: 35px;
+	color: #303039;
 }
 
 #myaccount .myaccount-menu .menu-bottom {
 	height: 15%;
 }
 
-#myaccount .myaccount-menu .nav li .active-highlight {
-	border-left: 3px solid #e9e9e9;
-}
-
-#myaccount .myaccount-menu .nav li .active-highlight i{
+#myaccount .myaccount-menu .nav li .active-highlight i {
 	font-size: 20px;
 }
 
-#myaccount .myaccount-menu .nav li.active .active-highlight {
-	border-left: 3px solid #22CCFF;
-	color: #22ccff;
+#myaccount .myaccount-menu .nav li.active .active-highlight > * {
+	color: #22a5ff;
 }
 
 #myaccount .myaccount-menu .menu-bottom .signout {
@@ -165,15 +143,12 @@
 }
 
 #myaccount .myaccount-titlebar {
-	background-color: #E9E9E9;
-	height: 41px;
-	line-height: 41px;
-	box-shadow: 1px 0px 3px #bbb inset;
+	padding: 10px 30px;
+	margin-top: 20px;
 }
 
 #myaccount .myaccount-right .myaccount-titlebar .myaccount-module-title {
-	margin-left: 30px;
-	font-size: 16px;
+	font-size: 22px;
 	font-weight: 600;
 }
 
@@ -186,6 +161,7 @@
 	position: absolute;
 	right: 5%;
 	top: 0;
+	display: none; /* TEMPORARY */
 }
 
 #myaccount .myaccount-right .myaccount-titlebar .myaccount-close:hover span > * {
@@ -200,21 +176,17 @@
 		transition:width 0.5s;
 	}
 
-	#myaccount .myaccount-menu .nav li.active .active-highlight {
-		border-color: #fff;
+	#myaccount .myaccount-menu .nav li {
+		padding: 10px 0px;
 	}
 
-	#myaccount .myaccount-menu .nav li.active .active-highlight i {
-		color: #22ccff;
-	}
-}
-@media (min-height: 700px) {
-	#myaccount {
-		height: 577px;
+	#myaccount .myaccount-menu .nav a i {
+		margin-left: 12px;
 	}
 
-	#myaccount .myaccount-content {
-		height: 495px;
+	#myaccount .myaccount-menu .nav li.nav-header,
+	#myaccount .myaccount-menu .nav a .element-name {
+		display: none;
 	}
 }
 
@@ -239,13 +211,22 @@
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
-	border: 1px solid #CCC;
-	border-radius: 4px;
-	background-color: #F3F3F3;
+	background-color: #f0f0f9;
 }
 
-#myaccount .myaccount-content .list-settings .settings-item:not(:first-child) {
-	border-top: 1px solid #CCCCCC;
+#myaccount .myaccount-content .list-settings .settings-item {
+	border-top: 1px solid #c0c0c9;
+	border-left: 1px solid #c0c0c9;
+	border-right: 1px solid #c0c0c9;
+}
+#myaccount .myaccount-content .list-settings .settings-item:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+#myaccount .myaccount-content .list-settings .settings-item:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	border-bottom: 1px solid #c0c0c9;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item:last-child .settings-item-content {
@@ -253,11 +234,16 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item.open {
-	border-top: 1px solid #22ccff;
+	border: 1px solid #22a5ff;
+	background-color: #fff;
+}
+
+#myaccount .myaccount-content .list-settings .settings-item.open + .settings-item {
+	border-top: none;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link {
-	color: #333;
+	color: #303039;
 	cursor: pointer;
 	display: block;
 	font-weight: 600;
@@ -267,8 +253,14 @@
 	text-decoration: none;
 }
 
-#myaccount .myaccount-content .list-settings .settings-item .settings-link:hover {
-	background-color: #eeeeee;
+#myaccount .myaccount-content .list-settings .settings-item:not(.open) .settings-link:hover {
+	background-color: #e0e0e9;
+}
+
+#myaccount .myaccount-content .list-settings .settings-item.open .settings-link {
+	padding: 0px;
+	margin: 0 15px;
+	border-bottom: solid 1px #c0c0c9;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .title {
@@ -289,8 +281,12 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .update {
-	color: #22ccff;
 	float: right;
+	overflow: hidden;
+}
+#myaccount .myaccount-content .list-settings .settings-item .settings-link .update .text {
+	display: none;
+	margin-left: 5px;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .changes-saved {
@@ -299,23 +295,22 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link:hover .update .text {
-	text-decoration: underline;
-}
-
-#myaccount .myaccount-content .list-settings .settings-item .settings-link .update .text {
-	margin-left: 5px;
+	display: inline-block;
+	-webkit-animation-duration: 0.5s;
+			animation-duration: 0.5s;
+	-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+	-webkit-animation-name: showEdit;
+			animation-name: showEdit;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content {
-	background-color: #ffffff;
-	border-top: 1px solid #e6e6e6;
 	display: none;
-	padding: 20px 15px 0;
+	padding: 20px 15px;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content .form-horizontal {
 	margin: 0;
-	display: inline-block;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content label.uneditable {
@@ -369,15 +364,16 @@
 	margin-right: 5px;
 }
 
-#myaccount .myaccount-content .list-settings .controls.action-bar {
-	text-align: right;
+#myaccount .myaccount-content .list-settings .action-group {
+	padding-top: 20px;
+	border-top: solid 1px #c0c0c9;
 }
 
-#myaccount .myaccount-content .list-settings .controls.action-bar a {
-	vertical-align: middle;
+#myaccount .myaccount-content .list-settings .action-bar {
+	float: right;
 }
 
-#myaccount .myaccount-content .list-settings .controls.action-bar > *:not(:last-child) {
+#myaccount .myaccount-content .list-settings .action-bar > *:not(:last-child) {
 	margin-right: 10px;
 }
 
@@ -391,4 +387,27 @@
 
 #myaccount .myaccount-content .fancy-header .right-block .content .main-title {
 	line-height: 80px
+}
+
+/***** Animations *****/
+
+@-webkit-keyframes showEdit {
+	0% {
+		opacity: 0;
+		margin-right: -50px;
+	}
+	100% {
+		opacity: 1;
+		margin-right: 0px;
+	}
+}
+@keyframes showEdit {
+	0% {
+		opacity: 0;
+		margin-right: -50px;
+	}
+	100% {
+		opacity: 1;
+		margin-right: 0px;
+	}
 }
