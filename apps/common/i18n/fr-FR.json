@@ -219,6 +219,9 @@
 			"bill": {
 				"legend": "Détail de la facture"
 			},
+			"numbers": {
+				"legend": "Numéros"
+			},
 			"confirm": {
 				"deleteComment": "Êtes-vous sur de vouloir supprimer ce commentaire ?"
 			}
@@ -265,10 +268,11 @@
 			"newPortLink":"Commencer un nouveau transfert",
 			"tableOrderName":"Nom",
 			"tableOrderDate":"Date demandé",
-			"tableOrderStatus":"Status",
-			"tableOrderAction":"Actions",
-			"continueButton":"continuer",
-			"infoButton":"information",
+			"tableOrderStatus":"État",
+			"continueButton":"Continuer",
+			"deleteButton": "Supprimer",
+			"infoButton":"Information",
+			"commentsButton": "Commentaires",
 			"noOrder":"Aucun transfert",
 			"states": {
 				"completion": "Completion",
@@ -313,7 +317,8 @@
 		"toastr": {
 			"success": {
 				"request": {
-					"update": "La demande de transfert a été mise à jour"
+					"update": "La demande de transfert a été mise à jour",
+					"delete": "La demande de transfert a été supprimé"
 				},
 				"comment": {
 					"delete": "Le commentaire a été suprimé avec succès"
