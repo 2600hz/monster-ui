@@ -51,7 +51,8 @@ div#port_container h2 {
 	font-size: 13px;
 }
 
-#port_container .order {
+#port_container .order,
+#port_request_info .order {
 	display: inline-block;
 	padding-bottom: 10px;
 	width: 29.28%;
@@ -59,9 +60,13 @@ div#port_container h2 {
 	vertical-align: top;
 }
 
-#port_container .order:not(:first-child) { margin-left: 50px; }
+#port_container .order:not(:first-child),
+#port_request_info .order:not(:first-child) {
+	margin-left: 50px;
+}
 
-#port_container .order h4 {
+#port_container .order h4,
+#port_request_info .order h4 {
 	overflow: hidden;
 	margin: 0 0 10px 0;
 	padding: 0 10px;
@@ -71,27 +76,34 @@ div#port_container h2 {
 	text-transform: capitalize;
 }
 
-#port_container .order .scroll {
+#port_container .order .scroll,
+#port_request_info .order .scroll {
 	overflow-y: auto;
 	max-height: 327px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
 }
 
-#port_container .order ul {
+#port_container .order ul,
+#port_request_info .order ul {
 	margin-bottom: 0;
 	margin-left: 0;
 	list-style: none;
 }
 
-#port_container .order li {
+#port_container .order li,
+#port_request_info .order li {
 	padding: 10px 10px 10px 25px;
 	border-bottom: 1px solid #ddd;
 }
 
-#port_container .order li:last-child { border-bottom: none; }
+#port_container .order li:last-child,
+#port_request_info .order li:last-child {
+	border-bottom: none;
+}
 
-#port_container .order li .icon-warning-sign {
+#port_container .order li .icon-warning-sign,
+#port_request_info .order li .icon-warning-sign {
 	position: relative;
 	top: 1px;
 	right: 10px;
@@ -100,10 +112,12 @@ div#port_container h2 {
 }
 
 @-moz-document url-prefix() {
-	#port_container .order li {
+	#port_container .order li,
+	#port_request_info .order li {
 		position: relative;
 	}
-	#port_container .order li .icon-remove-sign {
+	#port_container .order li .icon-remove-sign,
+	#port_request_info .order li .icon-remove-sign {
 		float: none;
 		position: absolute;
 		top: 11px;
@@ -111,11 +125,20 @@ div#port_container h2 {
 	}
 }
 
-#port_container .order .icon-remove-sign:hover { cursor: pointer; }
+#port_container .order .icon-remove-sign:hover,
+#port_request_info .order .icon-remove-sign:hover {
+	cursor: pointer;
+}
 
-#port_container .order li .icon-warning-sign.visible { visibility: visible; }
+#port_container .order li .icon-warning-sign.visible,
+#port_request_info .order li .icon-warning-sign.visible {
+	visibility: visible;
+}
 
-#port_container .order h3 .icon-remove-sign { margin-top: 11px; }
+#port_container .order h3 .icon-remove-sign,
+#port_request_info .order h3 .icon-remove-sign {
+	margin-top: 11px;
+}
 
 div#continue_later { text-align: center; }
 div#continue_later p { margin: 5px 0; }
@@ -176,26 +199,36 @@ div#continue_later p { margin: 5px 0; }
 	font-size: 12px;
 }
 
+.port-container-dialog .ui-dialog-content {
+	overflow: visible;
+}
+
 /**********************************************************/
 
 /*********************** Orders List **********************/
 
-div#orders_list > h3 {
+div#orders_list .list-header {
+	margin-bottom: 10px;
+	height: 50px;
+}
+
+div#orders_list .list-header > h3 {
 	margin-top: 0;
 	color: #5D5D5C;
 	font-weight: normal;
 }
 
-div#orders_list > span.pull-right {
+div#orders_list .list-header > span.pull-right {
+	display: inline-block;
 	margin-top: 10px;
-	height: 20px;
+	height: 40px;
 }
 
-div#orders_list > span.pull-right a { font-size: 16px; }
+div#orders_list .list-header > span.pull-right a { font-size: 16px; }
 
-div#orders_list > span.pull-right a:hover i { text-decoration: none; }
+div#orders_list .list-header > span.pull-right a:hover i { text-decoration: none; }
 
-div#orders_list > span.pull-right i {
+div#orders_list .list-header > span.pull-right i {
 	position: relative;
 	top: 2px;
 	margin-right: 8px;
@@ -212,69 +245,128 @@ div#orders_list .collapse td:last-child i {
 	vertical-align: middle;
 }
 
-/*************** Reformat Default Table CSS ***************/
+/********************** Account List **********************/
 
-div#orders_list .table {
-	margin-bottom: 0;
-	border: none;
+#orders_list .accounts-list .account-section:not(:first-child) {
+	margin-top: 8px;
 }
 
-div#orders_list .table.table-bordered {
-	border-top:  1px solid #DDD;
-	border-right:  1px solid #DDD;
-	border-bottom:  1px solid #DDD;
-	border-radius: 10px;
+#orders_list .accounts-list .account-section .account-header {
+	height: 70px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	background: #f2f2f2;
+	background-image: -webkit-linear-gradient(top, #fafafa 0%, #f2f2f2 100%);
+	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:     -ms-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
+	line-height: 70px;
 }
 
-div#orders_list .table th {
-	padding-top: 20px;
-	background-color: #f9f9f9;
-	color: #78838a;
+#orders_list .accounts-list .account-section:first-child .account-header {
+	border: 1px solid #CCCCCC;
+}
+
+#orders_list .accounts-list .account-section .account-header:hover {
+	cursor: pointer;
+	background: #f0f0f0;
+}
+
+
+#orders_list .accounts-list .account-section .account-header .left-part {
+	margin-left: 20px;
+}
+
+#orders_list .accounts-list .account-section .account-header .expandable {
+	margin: 0 304px 0 50px;
+	font-size: 18px;
+}
+
+#orders_list .accounts-list .account-section.active .account-header {
+	color: #ffffff;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	background-color:#22ccff;
+	background-image:linear-gradient(to bottom,#22ccff,#22a5ff);
+	background-image:-moz-linear-gradient(top,#22ccff,#22a5ff);
+	background-image:-webkit-gradient(linear,0 0,0 100%,from(#22ccff),to(#22a5ff));
+	background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
+	background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
+	filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+}
+
+#orders_list .accounts-list .account-section.animate .account-header {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+#orders_list .accounts-list .account-section .requests-wrapper {
+	display: none;
+}
+
+#orders_list .accounts-list .account-section.active .requests-wrapper {
+	display: block;
+}
+
+#orders_list .accounts-list .requests-wrapper > div {
+	padding: 5px 50px;
+	border: 1px solid #ccc;
+	border-bottom-width: 0;
+}
+
+#orders_list .accounts-list .requests-header {
+	line-height: 30px;
+	height: 30px;
+	background-color: #ccc;
+}
+
+#orders_list .accounts-list .requests-header > div,
+#orders_list .accounts-list .request-box .pull-left > div {
+	display: inline-block;
+}
+
+#orders_list .accounts-list .request-box {
+	line-height: 50px;
+	height: 50px;
+}
+
+#orders_list .accounts-list .account-section .requests-wrapper .request-box:last-child {
+	border-bottom-width: 1px;
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+#orders_list .accounts-list .request-box .request-name,
+#orders_list .accounts-list .request-box .request-created {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: normal;
+	white-space: nowrap;
+}
+
+#orders_list .accounts-list .request-name {
+	width: 200px;
+	max-height: 50px;
+}
+
+#orders_list .accounts-list .request-created {
+	width: 120px;
+	margin: 0 10px;
 	text-align: center;
-	text-shadow: none;
-	font-weight: normal;
 }
 
-div#orders_list .table tr,
-div#orders_list .table tbody tr:nth-child(odd) { background: #fff; }
-
-div#orders_list .table-bordered thead tr:first-child > th:first-child { border-top-left-radius: 10px; }
-div#orders_list .table-bordered thead tr:last-child > th:last-child { border-top-right-radius: 10px; }
-div#orders_list .table-bordered tbody tr:last-child > td:first-child { border-bottom-left-radius: 10px; }
-div#orders_list .table-bordered tbody tr:last-child > td:last-child { border-bottom-right-radius: 10px; }
-
-div#orders_list table th:first-child { text-align: left; }
-div#orders_list table th:not(:first-child) { border-left: 1px solid transparent; }
-
-div#orders_list table td {
-	padding: 12px inherit;
-	color: #78838a;
+#orders_list .accounts-list .request-state {
+	width: 170px;
 }
 
-div#orders_list table td:first-child { padding-left: 40px; }
-
-div#orders_list table th:first-child,
-div#orders_list table tr.collapse td:first-child { padding-left: 30px; }
-
-div#orders_list table th:last-child,
-div#orders_list table td:last-child { padding-right: 20px; }
-
-div#orders_list table td:not(:first-child) { text-align: center; }
-
-div#orders_list table td:first-child i {
-	position: relative;
-	top: 2px;
-	right: 15px;
+#orders_list .accounts-list .actions:hover {
+	cursor: pointer;
 }
 
-div#orders_list table tr.collapse,
-div#orders_list table tr.collapse:nth-child(odd) { background-color: #f9f9f9; }
-
-div#orders_list table tr.collapse:hover { cursor: pointer; }
-
-div#orders_list table tr[data-id]:not(.collapse) { display: none; }
-
-div#orders_list table tr.active td { border-top: 2px solid #2CF; }
+#orders_list .accounts-list .actions .dropdown-menu a:hover i {
+	color: #fff !important;
+}
 
 /********************* Comments Popup *********************/
 
@@ -332,6 +424,10 @@ div#port_comments_popup .actions .checkbox {
 #port_request_info span.text {
 	font-size: 14px;
 	line-height: 30px;
+}
+
+#port_request_info .order {
+	width: 180px;
 }
 
 

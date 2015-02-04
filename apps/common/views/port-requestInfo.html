@@ -68,5 +68,17 @@
 				</div>
 			</div>
 		</fieldset>
+		<fieldset>
+			<legend>{{i18n.port.infoPopup.numbers.legend}}}</legend>
+			<div class="order">
+				<div class="scroll">
+					<ul>
+					{{#each numbers}}
+						<li>{{formatPhoneNumber this}}</li>
+					{{/each}}
+					</ul>
+				</div>
+			</div>
+		</fieldset>
 	</form>
 </div>
