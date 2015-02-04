@@ -21,6 +21,8 @@ define(function(require){
 			'common.port.render': 'portRender'
 		},
 
+		isLaunchedInAppMode: true,
+
 		portRender: function(args) {
 			var self = this,
 				args = args || {},
@@ -29,9 +31,14 @@ define(function(require){
 					width: '940px',
 					position: ['center', 20],
 					title: self.i18n.active().port.dialogTitle,
-					autoOpen: false
+					autoOpen: false,
+					dialogClass: 'port-container-dialog'
 				},
 				parent = args.hasOwnProperty('parent') ? args.parent : monster.ui.dialog('', dialogOptions);
+
+			if (args.hasOwnProperty('accountId')) {
+				self.isLaunchedInAppMode = false;
+			}
 
 			self.portRenderPendingOrder(parent, accountId);
 		},
@@ -39,15 +46,15 @@ define(function(require){
 		portRenderPendingOrder: function(parent, accountId) {
 			var self = this;
 
-			self.portRequestList(accountId, function(data) {
+			parent.empty();
+
+			self.portListRequests(accountId, function(data) {
 				var template = monster.template(self, 'port-pendingOrders', {
 						data: data,
 						isAdmin: monster.apps.auth.originalAccount.superduper_admin
 					});
 
-				parent
-					.empty()
-					.append(template);
+				parent.append(template);
 
 				if (parent.hasClass('ui-dialog-content')) {
 					parent.dialog('open');
@@ -68,65 +75,42 @@ define(function(require){
 				self.portRenderAddNumber(parent, accountId);
 			});
 
-			container.find('tr.collapse').on('click', function() {
-				var el = $(this),
-					caret = el.find('i[class^="icon-caret-"]'),
-					changeCaretDiretion = function(element, direction) {
-						element.prop('class', 'icon-caret-' + direction);
-					};
+			container.find('.account-header').on('click', function() {
+				var section = $(this).parents('.account-section');
 
-				if (!el.hasClass('active')) {
-					changeCaretDiretion(container.find('tr.collapse.active').find('i.icon-caret-down'), 'right');
+				if (section.hasClass('active')) {
+					section.find('.requests-wrapper').slideUp(function() {
+						section.find('.left-part i')
+							.removeClass('icon-chevron-down icon-white')
+							.addClass('icon-chevron-right');
 
-					container.find('tr.collapse.active')
-						.removeClass('active');
-
-					container.find('tr[data-id]:not(.collapse)')
-						.css('display', 'none');
-
-					container.find('tr[data-id="' + el.data('id') + '"]:not(.collapse)')
-						.css('display', 'table-row');
-
-					changeCaretDiretion(caret, 'down');
-
-					el.addClass('active');
+						section.removeClass('active');
+					});
 				}
 				else {
-					container.find('tr[data-id="' + el.data('id') + '"]:not(.collapse)')
-						.css('display', 'none');
+					section.addClass('animate');
+					section.find('.requests-wrapper').slideDown(function() {
+						section.find('.left-part i')
+							.removeClass('icon-chevron-right')
+							.addClass('icon-chevron-down icon-white');
 
-					changeCaretDiretion(caret, 'right');
-
-					el.removeClass('active');
+						section.removeClass('animate');
+						section.addClass('active');
+					});
 				}
 			});
 
-			container.find('.collapse td:nth-child(3)').on('click', '.switch-state', function(event) {
-				event.stopPropagation();
-			});
-
-			container.find('.collapse td:nth-child(3)').on('change', '.switch-state', function(event) {
+			container.find('.request-box .request-state').on('change', '.switch-state', function(event) {
 				var el = $(this),
-					portRequestId = el.parents('.collapse').data('id'),
+					box = el.parents('.request-box'),
+					portRequestId = box.data('id'),
 					newState = el.val();
 
 				self.portRequestChangeState(accountId, portRequestId, newState, function() {
-					var button = el.parents('.collapse').find('td:last-child button');
-
 					self.portRenderStateCell(container, newState, portRequestId);
 
-					if (newState === 'unconfirmed') {
-						button
-							.removeClass('btn-info')
-							.addClass('btn-success')
-							.text(self.i18n.active().port.pendingOrders.continueButton);
-					}
-					else {
-						button
-							.removeClass('btn-success')
-							.addClass('btn-info')
-							.text(self.i18n.active().port.pendingOrders.infoButton);
-					}
+					box.find('.continue-request, .delete-request')
+						.remove();
 
 					toastr.success(self.i18n.active().port.toastr.success.request.update);
 				}, function() {
@@ -134,14 +118,13 @@ define(function(require){
 				});
 			});
 
-			container.find('td:last-child').find('button').on('click', function(event) {
-				var el = $(this),
-					portRequestId = el.parent().parent().data('id');
-
-				event.stopPropagation();
+			container.find('.actions li').on('click', function() {
+				var li = $(this),
+					portRequestId = li.parents('.request-box').data('id');
 
 				self.portRequestGet(accountId, portRequestId, function(data) {
-					if (el.hasClass('btn-success')) {
+
+					if (li.hasClass('continue-request')) {
 						var template = monster.template(self, 'port-submitDocuments', data),
 							dataList = { orders: [data] };
 
@@ -151,7 +134,7 @@ define(function(require){
 
 						self.portRenderSubmitDocuments(parent, accountId, dataList);
 					}
-					else {
+					else if (li.hasClass('info-request')) {
 						var template = monster.template(self, 'port-requestInfo', data),
 							dialogOptions = {
 								width: '560px',
@@ -161,20 +144,21 @@ define(function(require){
 
 						monster.ui.dialog(template, dialogOptions);
 					}
+					else if (li.hasClass('delete-request')) {
+						self.portRequestDelete(accountId, portRequestId, function() {
+							li.parents('.request-box')
+								.remove();
+
+							toastr.success(self.i18n.active().port.toastr.success.request.delete);
+						});
+					}
+					/*
+					 * TODO: Uncomment and add HTML when we figured out how to manage comment's notifications
+					else if (li.hasClass('comments-request')) {
+						self.portRenderComments(parent, accountId, portRequestId);
+					}
+					*/
 				})
-			});
-
-			container.find('.collapse td:last-child .icon-comments').on('click', function(event) {
-				var el = $(this),
-					portRequestId = el.parents('.collapse').data('id');
-
-				event.stopPropagation();
-
-				self.portRenderComments(parent, accountId, portRequestId);
-			});
-
-			container.find('.collapse td:last-child .icon-comments').hover(function() {
-				$(this).toggleClass('icon-comments icon-comments-alt');
 			});
 		},
 
@@ -841,6 +825,46 @@ define(function(require){
 		},
 
 		/* Methods */
+		portListRequests: function(accountId, callback) {
+			var self = this;
+
+			monster.parallel({
+					requests: function(callback) {
+						self.portRequestList(accountId, function(data) {
+							callback(null, data);
+						});
+					},
+					descendants: function(callback) {
+						if (self.isLaunchedInAppMode) {
+							self.portRequestListByDescendants(accountId, function(data) {
+								callback(null, data);
+							});
+						}
+						else {
+							callback(null, []);
+						}
+					}
+				},
+				function(err, results) {
+					var requests = results.descendants;
+
+					if (results.requests.length) {
+						requests.unshift({
+							account_id: accountId,
+							account_name: monster.apps.auth.currentAccount.name,
+							port_requests: results.requests
+						});
+					}
+
+					for (var i = 0, len = requests.length; i < len; i++) {
+						requests[i].amount = requests[i].port_requests.length;
+					}
+
+					callback(requests);
+				}
+			);
+		},
+
 		portRenderStateCell: function(parent, data, portRequestId) {
 			var self = this,
 				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
@@ -879,37 +903,39 @@ define(function(require){
 				if (isAdmin) {
 					if (data === 'completed') {
 						parent
-							.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
+							.find('.request-box[data-id="' + portRequestId + '"] .request-state')
 							.empty()
 							.text(self.i18n.active().port.state[data]);
 					}
 					else {
 						parent
-							.find('.collapse[data-id="' + portRequestId + '"] td:nth-child(3)')
+							.find('.request-box[data-id="' + portRequestId + '"] .request-state')
 							.empty()
 							.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(data) })));
 					}
 				}
 			}
 			else {
-				_.each(data, function(val, key) {
-					var td = parent .find('.collapse[data-id="' + val.id + '"] td:nth-child(3)');
+				for (var i = 0, len = data.length; i < len; i++) {
+					_.each(data[i].port_requests, function(val, key) {
+						var box = parent .find('.request-box[data-id="' + val.id + '"] .request-state');
 
-					if (isAdmin) {
-						if (val.port_state === 'completed') {
-							td.empty()
-								.text(self.i18n.active().port.state[val.port_state]);
+						if (isAdmin) {
+							if (val.port_state === 'completed') {
+								box.empty()
+									.text(self.i18n.active().port.state[val.port_state]);
+							}
+							else {
+								box.empty()
+									.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(val.port_state) })));
+							}
 						}
 						else {
-							td.empty()
-								.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(val.port_state) })));
+							box.empty()
+								.text(self.i18n.active().port.state[val.port_state]);
 						}
-					}
-					else {
-						td.empty()
-							.text(self.i18n.active().port.state[val.port_state]);
-					}
-				});
+					});
+				}
 			}
 		},
 
@@ -965,12 +991,11 @@ define(function(require){
 
 		portReloadApp: function(parent, accountId) {
 			var self = this,
-				args = {
-					accountId: accountId
-				};
+				args = {};
 
 			if (parent.hasClass('ui-dialog-content')) {
 				parent.dialog('close');
+				args.accountId = accountId;
 			}
 			else {
 				parent.empty();
@@ -1216,6 +1241,32 @@ define(function(require){
 					callbackSuccess && callbackSuccess(self.portObjectsToArray(data.data));
 				},
 				error: function(data, status){
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestListByDescendants: function(accountId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listDescendants',
+				data: {
+					accountId: accountId,
+					filters: {
+						paginate: false
+					}
+				},
+				success: function(data, status) {
+					var data = data.data;
+
+					for (var k in data) {
+						data[k].port_requests = self.portObjectsToArray(data[k].port_requests);
+					}
+
+					callbackSuccess && callbackSuccess(data);
+				},
+				error: function(data, status) {
 					callbackError && callbackError();
 				}
 			});
