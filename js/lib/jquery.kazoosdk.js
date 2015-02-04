@@ -124,7 +124,9 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/callflows/{callflowId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' },
+			'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}'},
+			'searchByNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=number&v={value}'}
 		},
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
@@ -397,7 +399,7 @@
 
 			options.onRequestError && options.onRequestError(error, options);
 
-			options.error && options.error(parsedError, error);
+			options.error && options.error(parsedError, error, options.onRequestError);
 		};
 
 		settings.success = function requestSuccess(responseData, status, jqXHR) {
@@ -405,7 +407,7 @@
 
 			options.onRequestSuccess && options.onRequestSuccess(responseData, options);
 
-			options.success && options.success(responseData);
+			options.success && options.success(responseData, options.onRequestSuccess);
 		};
 
 		settings.url = settings.url.replace(rurlData, function (m, key) {
