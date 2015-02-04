@@ -41,23 +41,19 @@ define(function(require){
 						delete dataNumber.cnam.display_name;
 					}
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.callerIdUpdateNumber(dataNumber.id, dataNumber,
-								function(data) {
-									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-										template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
+					self.callerIdUpdateNumber(dataNumber.id, dataNumber,
+						function(data) {
+							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+								template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
 
-									toastr.success(template);
+							toastr.success(template);
 
-									popup.dialog('destroy').remove();
+							popup.dialog('destroy').remove();
 
-									callbacks.success && callbacks.success(data);
-								},
-								function(data) {
-									callbacks.error && callbacks.error(data);
-								}
-							);
+							callbacks.success && callbacks.success(data);
+						},
+						function(data) {
+							callbacks.error && callbacks.error(data);
 						}
 					);
 				}
