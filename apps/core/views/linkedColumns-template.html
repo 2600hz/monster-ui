@@ -1,6 +1,6 @@
 <div class="items-selector{{#if options.containerClasses}} {{options.containerClasses}}{{/if}} clearfix">
 	<div class="box-selector">
-		<div class="box-title">{{options.titles.available}}</div>
+		<div class="box-title">{{options.columnsTitles.available}}</div>
 		<ul class="available connected">
 			{{#each unselectedItems}}
 				<li class="item-selector" data-key="{{key}}"><div class="item-handle"></div>{{value}}</li>
@@ -9,7 +9,7 @@
 	</div>
 
 	<div class="box-selector">
-		<div class="box-title">{{options.titles.selected}}</div>
+		<div class="box-title">{{options.columnsTitles.selected}}</div>
 		<ul class="selected connected">
 			{{#each selectedItems}}
 				<li class="item-selector" data-key="{{key}}"><div class="item-handle"></div>{{value}}</li>

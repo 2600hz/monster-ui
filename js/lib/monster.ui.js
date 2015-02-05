@@ -1126,14 +1126,15 @@ define(function(require){
 					return unselectedItems;
 				})(items, selectedItems),
 				 defaultOptions = {
-					insertionType: 'insertAfter',
+					insertionType: 'appendTo',
 					columnsTitles: {
 						available: coreApp.i18n.active().available,
 						selected: coreApp.i18n.active().selected
 					}
 				},
 				widgetTemplate,
-				dataTemplate;
+				dataTemplate,
+				widget;
 
 			options = $.extend(true, defaultOptions, options || {});
 
@@ -1146,9 +1147,21 @@ define(function(require){
 			widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate));
 
 			widgetTemplate.find('.available, .selected')
-				.sortable({ connectWith: '.connected' });
+						  .sortable({ connectWith: '.connected' });
 
-			return widgetTemplate[options.insertionType](target);
+			widget = widgetTemplate[options.insertionType](target);
+
+			widget.getSelectedItems = function getSelectedItems() {
+				var results = [];
+
+				widgetTemplate.find('ul.selected .item-selector').each(function(k, item) {
+					results.push($(item).data('key'));
+				});
+
+				return results;
+			};
+
+			return widget;
 		}
 	};
 
