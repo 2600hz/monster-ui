@@ -1195,13 +1195,21 @@ define(function(require){
 					'H263': codecsI18n.video['H263'],
 					'H261': codecsI18n.video['H261']
 				},
+				mapMigrateAudioCodec = {
+					'Speex': 'speex@16000h',
+					'G722_16': 'G7221@16000h',
+					'G722_32': 'G7221@32000h',
+					'CELT_48': 'CELT@48000h',
+					'CELT_64': 'CELT@64000h'
+				},
 				selectedItems = [],
 				items = [],
 				codecValue;
 
 			if(type === 'audio') {
 				_.each(selectedCodecs, function(codec) {
-					codecValue = defaultAudioList.hasOwnProperty(codec) ? defaultAudioList[codec] : codec;
+					// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
+					codecValue = defaultAudioList.hasOwnProperty(codec) ? defaultAudioList[codec] : (mapMigrateAudioCodec.hasOwnProperty(codec) ? defaultAudioList[mapMigrateAudioCodec[codec]] : codec);
 
 					selectedItems.push({ key: codec, value: codecValue });
 				});
