@@ -1,0 +1,12 @@
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-inputs {
+    display: inline-block;
+}
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container .card .front,
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container .card .back {
+	background: #808089;
+}
