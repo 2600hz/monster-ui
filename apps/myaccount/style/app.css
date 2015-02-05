@@ -1,4 +1,5 @@
 @import url('../submodules/balance/balance.css');
+@import url('../submodules/billing/billing.css');
 @import url('../submodules/servicePlan/servicePlan.css');
 @import url('../submodules/transactions/transactions.css');
 @import url('../submodules/trunks/trunks.css');
@@ -41,8 +42,7 @@
 	box-sizing: border-box;
 }
 #myaccount .myaccount-right {
-	float: left;
-	width: 80%;
+	margin-left: 20%;
 }
 
 #myaccount .myaccount-menu .nav {
@@ -135,11 +135,16 @@
 }
 
 /* MYACCOUNT CONTENT */
+#myaccount .myaccount-right .clearfix:after,
+#myaccount .myaccount-right .row-fluid:after,
+#myaccount .myaccount-right .container-fluid:after,
+#myaccount .myaccount-right .control-group:after {
+	clear: right;
+}
+
 #myaccount .myaccount-content {
 	background-color: white;
-	height: 406px;
 	padding: 20px 30px;
-	overflow-x: hidden;
 }
 
 #myaccount .myaccount-titlebar {
@@ -187,6 +192,10 @@
 	#myaccount .myaccount-menu .nav li.nav-header,
 	#myaccount .myaccount-menu .nav a .element-name {
 		display: none;
+	}
+
+	#myaccount .myaccount-right {
+		margin-left: 47px;
 	}
 }
 
@@ -359,6 +368,14 @@
 	display: none;
 }
 
+#myaccount .myaccount-content .list-settings .control-label {
+    width: 200px;
+    text-align: left;
+}
+
+#myaccount .myaccount-content .list-settings .controls {
+    margin-left: 220px;
+}
 
 #myaccount .myaccount-content .list-settings .controls button, #myaccount .myaccount-content .list-settings .controls input {
 	margin-right: 5px;

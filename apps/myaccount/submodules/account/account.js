@@ -44,7 +44,12 @@ define(function(require){
 			});
 
 			timezone.populateDropdown(template.find('#account_timezone'), data.account.timezone);
-			template.find('#account_timezone').chosen({ search_contains: true, width: '100%' });
+			template.find('#account_timezone').chosen({ search_contains: true, width: '220px' });
+
+			//Temporary button design fix until we redesign the Accounts Manager
+			template.find('#accountsmanager_carrier_save')
+					.removeClass('btn btn-success')
+					.addClass('monster-button-success');
 
 			monster.pub('myaccount.events', {
 				template: template,

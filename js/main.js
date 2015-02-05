@@ -7,6 +7,7 @@ require.config({
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'chart': 'js/lib/chart.min',
+		'card': 'js/lib/card',
 		'chosen': 'js/lib/jquery.chosen.min',
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',

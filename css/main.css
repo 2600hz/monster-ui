@@ -2,7 +2,7 @@ html, body, #main, #main section {
 	height: 100%;
 }
 
-body, .monster-content {
+body, .monster-content, #myaccount {
 	min-width: 600px;
 }
 
