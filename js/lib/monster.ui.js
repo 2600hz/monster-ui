@@ -1128,8 +1128,8 @@ define(function(require){
 				 defaultOptions = {
 					insertionType: 'appendTo',
 					columnsTitles: {
-						available: coreApp.i18n.active().available,
-						selected: coreApp.i18n.active().selected
+						available: coreApp.i18n.active().linkedColumns.available,
+						selected: coreApp.i18n.active().linkedColumns.selected
 					}
 				},
 				widgetTemplate,
@@ -1162,6 +1162,72 @@ define(function(require){
 			};
 
 			return widget;
+		},
+
+		/**
+		 * @desc Helper that builds a 2 columns UI component using our linkedColumns helper, with preset dataset for video and audio codecs
+		 * @param target - mandatory jQuery Object
+		 * @param type - mandatory type of codec selector, either 'audio' or 'video', will set the dataset of available items
+		 * @param selectedCodecs - array of codecs, ex : ['OPUS',' Speex']
+		 * @param options - optional list of settings, same options as the linked columns helper
+		 */
+		codecSelector: function(type, target, selectedCodecs, options) {
+			var self = this,
+				codecsI18n = monster.apps.core.i18n.active().codecs,
+				defaultAudioList = {
+					'OPUS': codecsI18n.audio['OPUS'],
+					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
+					'G7221@32000h': codecsI18n.audio['G7221@32000h'],
+					'G7221@16000h': codecsI18n.audio['G7221@16000h'],
+					'G722': codecsI18n.audio['G722'],
+					'speex@32000h':codecsI18n.audio['speex@32000h'],
+					'speex@16000h': codecsI18n.audio['speex@16000h'],
+					'PCMU': codecsI18n.audio['PCMU'],
+					'PCMA': codecsI18n.audio['PCMA'],
+					'G729':codecsI18n.audio['G729'],
+					'GSM': codecsI18n.audio['GSM'],
+					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
+					'CELT@64000h': codecsI18n.audio['CELT@64000h']
+				},
+				defaultVideoList = {
+					'VP8': codecsI18n.video['VP8'],
+					'H264': codecsI18n.video['H264'],
+					'H263': codecsI18n.video['H263'],
+					'H261': codecsI18n.video['H261']
+				},
+				selectedItems = [],
+				items = [],
+				codecValue;
+
+			if(type === 'audio') {
+				_.each(selectedCodecs, function(codec) {
+					codecValue = defaultAudioList.hasOwnProperty(codec) ? defaultAudioList[codec] : codec;
+
+					selectedItems.push({ key: codec, value: codecValue });
+				});
+
+				_.each(defaultAudioList, function(description, codec) {
+					items.push({ key: codec, value: description });
+				})
+
+				return self.linkedColumns(target, items, selectedItems, options)
+			}
+			else if(type === 'video') {
+				_.each(selectedCodecs, function(codec) {
+					codecValue = defaultVideoList.hasOwnProperty(codec) ? defaultVideoList[codec] : codec;
+
+					selectedItems.push({ key: codec, value: codecValue });
+				});
+
+				_.each(defaultVideoList, function(description, codec) {
+					items.push({ key: codec, value: description });
+				})
+
+				return self.linkedColumns(target, items, selectedItems, options);
+			}
+			else {
+				console.error('This is not a valid type for our codec selector: ', type);
+			}
 		}
 	};
 
