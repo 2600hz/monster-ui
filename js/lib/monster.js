@@ -81,6 +81,9 @@ define(function(require){
 			settings.error = function requestError (error, one, two, three) {
 				monster.pub('monster.requestEnd');
 
+				// Added this for debugging reasons, just in 3.19
+				console.log(error);
+
 				var parsedError = error;
 
 				if('response' in error && error.response) {
@@ -331,6 +334,10 @@ define(function(require){
 					},
 					onRequestError: function(error, requestOptions) {
 						var parsedError = error;
+
+						// Added this for debugging reasons, just in 3.19
+						console.log(error);
+
 						if('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
