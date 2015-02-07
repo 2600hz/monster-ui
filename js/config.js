@@ -42,6 +42,10 @@ define(function(require){
 				// Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior
 				// 		logout: 'http://www.google.com'
 			}
+		},
+		developerFlags: {
+			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
+			//showSmartPBXCallflows: true
 		}
 	};
 });
