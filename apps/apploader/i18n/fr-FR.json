@@ -1,6 +1,22 @@
 {
-	"apploader": {
-		"appStore": "App Store",
-		"default": "défaut"
+	"defaultApp": {
+		"title": "Application par défault",
+		"label": "Définir une application par défaut permet de la charger automatiquement lors de la connexion."
+	},
+	"noDefaultApp": {
+		"label": "Aucune Application par Défaut Séléctionnée"
+	},
+	"appDescription": {
+		"title": "Définir une application par défaut",
+		"label": "Pour définir ou changer l'application par défaut, il suffit de glisser/déposer l'application voulue dans la zone dédiée"
+	},
+	"searchQuery": {
+		"placeholder": "Rechercher les applications"
+	},
+	"appstore": {
+		"button": "App Exchange"
+	},
+	"appList": {
+		"title": "Vos Applications"
 	}
 }
