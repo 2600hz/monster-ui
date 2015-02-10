@@ -179,11 +179,9 @@ define(function(require){
 
 			parent.on('click', '.right-div .app-element, #launch_appstore', function() {
 				var $this = $(this),
-					newAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
-					newDefaultAppId = parent.find('.left-div .app-element').data('id'),
 					appName = $this.data('name');
 
-				self.appListUpdate(newDefaultAppId, newAppList, function() {
+				self.appListUpdate(parent, appList, function() {
 					monster.apps.load(appName, function(app) {
 						parent.find('.right-div .app-element.active')
 							.removeClass('active');
@@ -202,10 +200,7 @@ define(function(require){
 			});
 
 			parent.find('#close_app').on('click', function() {
-				var newAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
-					newDefaultAppId = parent.find('.left-div .app-element').data('id');
-
-				self.appListUpdate(newDefaultAppId, newAppList, function() {
+				self.appListUpdate(parent, appList, function() {
 					self._hide(parent);
 				});
 			});
@@ -218,10 +213,7 @@ define(function(require){
 						target.val('');
 					}
 					else {
-						var newAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
-							newDefaultAppId = parent.find('.left-div .app-element').data('id');
-
-						self.appListUpdate(newDefaultAppId, newAppList, function() {
+						self.appListUpdate(parent, appList, function() {
 							self._hide(parent);
 						});
 					}
@@ -427,19 +419,40 @@ define(function(require){
 			);
 		},
 
-		appListUpdate: function(defaultAppId, appList, callback) {
-			var self = this;
+		appListUpdate: function(parent, appList, callback) {
+			var self = this,
+				domAppList = $.map( parent .find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
+				domDefaultAppId = parent.find('.left-div .app-element').data('id'),
+				sameDefaultApp = appList[0].id === domDefaultAppId,
+				sameOrder= true;
 
-			for (var i = 0, len = appList.length; i < len; i++) {
-				if (defaultAppId === appList[i]) {
-					appList.unshift(appList.splice(i, 1)[0]);
-					break;
+			// Check if the apps in the DOM are in the same order than in the original app list
+			appList.every(function(v, i) {
+				if (v.id !== domAppList[i]) {
+					sameOrder = false
+					return false;
 				}
+				else {
+					return true;
+				}
+			});
+
+			if (sameDefaultApp && sameOrder) {
+				callback();
 			}
+			else {
+				// Move the new default app to the top of the new app list
+				for (var i = 0, len = appList.length; i < len; i++) {
+					if (domDefaultAppId === domAppList[i]) {
+						domAppList.unshift(domAppList.splice(i, 1)[0]);
+						break;
+					}
+				}
 
-			monster.apps.auth.currentUser.appList = appList;
+				monster.apps.auth.currentUser.appList = domAppList;
 
-			self.userUpdate(callback);
+				self.userUpdate(callback);
+			}
 		},
 
 		userUpdate: function(callback) {
