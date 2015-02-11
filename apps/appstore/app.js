@@ -136,7 +136,7 @@ define(function(require){
 						}),
 						getIcon = function(appId, iconCallback) {
 							var request = new XMLHttpRequest(),
-								url = self.apiUrl + 'apps_store/' + appId + '/icon?auth_token=' + self.authToken;
+								url = self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken;
 								
 							request.open('GET', url, true);
 							request.onreadystatechange = function() {
