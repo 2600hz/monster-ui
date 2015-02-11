@@ -179,12 +179,6 @@ define(function(require){
 			});
 
 			if(monster.config.whitelabel.hasOwnProperty('nav')) {
-				if(monster.config.whitelabel.nav.hasOwnProperty('help') && monster.config.whitelabel.nav.help.length > 0) {
-					container.find('#ws-navbar a.help')
-							 .unbind('click')
-							 .attr('href', monster.config.whitelabel.nav.help);
-				}
-
 				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
 					container.find('#ws-navbar .links a.signout')
 							 .unbind('click')
