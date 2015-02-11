@@ -58,7 +58,7 @@
 	"disabled": "Disabled",
 	"download": "Download",
 	"enabled": "Enabled",
-	"endDate": "End Date",
+	"endDate": "End:",
 	"examplePhoneNumber": "+1 (415) 482-9912",
 	"filter": "Filter",
 	"info": "Info",
@@ -80,7 +80,7 @@
 	"saveChanges": "Save Changes",
 	"search": "Search",
 	"select": "Select",
-	"startDate": "Start Date",
+	"startDate": "Start:",
 	"submit": "Submit",
 	"table" : {
 		"search": "Search...",
@@ -272,5 +272,8 @@
 			"H263": "H263",
 			"H261": "H261"
 		}
-	}
+	},
+	"__comment": "UI-1014: Redesign of MyAccount",
+	"__version": "v3.20_s0",
+	"refresh": "Refresh"
 }

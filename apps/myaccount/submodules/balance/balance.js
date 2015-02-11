@@ -109,7 +109,7 @@ define(function(require){
 								self._balanceRenderContent(args);
 							});
 
-							balance.find('#filter_transactions').on('click', function() {
+							balance.find('.filter-transactions').on('click', function() {
 								/* Bug because of Infinite scrolling... we need to manually remove tr */
 								monster.ui.table.balance.find('tbody tr').remove();
 								monster.ui.table.balance.fnClearTable();
@@ -120,7 +120,7 @@ define(function(require){
 								self.balanceRefreshTransactionsTable(balance, from, to, defaults.fieldData.accounts);
 							});
 
-							balance.find('.action-number#download').on('click', function() {
+							balance.find('.download-transactions').on('click', function() {
 								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 									dlTo = monster.util.dateToEndOfGregorianDay(to);
 

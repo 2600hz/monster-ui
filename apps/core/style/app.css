@@ -109,35 +109,35 @@
 
 /* Fancy dropdown menu */
 .nav .dropdown-toggle .caret {
-    border-top-color: whiteSmoke;
-    border-bottom-color: whiteSmoke;
+	border-top-color: whiteSmoke;
+	border-bottom-color: whiteSmoke;
 }
 
 .nav .dropdown-toggle:hover .caret {
-    border-top-color: #22ccff;
-    border-bottom-color: #22ccff;
+	border-top-color: #22ccff;
+	border-bottom-color: #22ccff;
 }
 
 /* Bottom navbar */
 .navbar.navbar-fixed-bottom.blue {
-    background: rgb(17,17,17); /* Old browsers */
-    background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
-    background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
+	background: rgb(17,17,17); /* Old browsers */
+	background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
+	background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
 
-    border-top: 5px solid #22ccff;
-    border-radius: 0;
-    box-shadow: none;
-    height: 85px;
-    margin: 20px 0 0;
-    padding: 15px 5px;
-    position: fixed;
-    width: auto;
-    z-index: 10;
+	border-top: 5px solid #22ccff;
+	border-radius: 0;
+	box-shadow: none;
+	height: 85px;
+	margin: 20px 0 0;
+	padding: 15px 5px;
+	position: fixed;
+	width: auto;
+	z-index: 10;
 }
 
 /* Common.css */
@@ -273,12 +273,40 @@ table.table tr td {
 }
 
 /* JQuery datepicker */
-.ui-datepicker th { font-weight: 600; }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: 600; color: #333; }
-.ui-widget-header { background: #22ccff; }
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #22ccff; text-decoration: none; }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { font-weight: bold; color: #22ccff; }
-.ui-state-hover a, .ui-state-hover a:hover { color: #22ccff; text-decoration: none; }
+.ui-datepicker {
+	background: #303039;
+	border: none;
+	margin-top: 2px;
+	border-radius: 2px;
+}
+.ui-datepicker-calendar thead {
+	color: #808089;
+}
+.ui-datepicker-calendar .ui-state-default {
+	background: transparent;
+	color: #c0c0c9;
+	border-color: transparent;
+	text-align: center;
+	font-weight: 600;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-active {
+	color: #22a5ff;
+	border-color: #22a5ff;
+	font-weight: 600;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-hover {
+	background-color: #202029;
+	border-color: #202029;
+}
+.ui-datepicker-header {
+	background: inherit;
+	border: none;
+}
+.ui-datepicker-prev.ui-state-hover,
+.ui-datepicker-next.ui-state-hover {
+	background: inherit;
+	border-color: transparent;
+}
 
 /* Confirm Box */
 .alert-dialog {
@@ -647,14 +675,14 @@ table.table tr td {
 
 .items-selector .box-selector .box-title {
 	background: none repeat scroll 0 0 #22CCFF;
-    border-radius: 4px 4px 0 0;
-    color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 600;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 20px;
-    text-align: left;
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: 600;
+	height: 50px;
+	line-height: 50px;
+	padding-left: 20px;
+	text-align: left;
 }
 
 .items-selector .box-selector ul {
@@ -907,11 +935,11 @@ input[type="checkbox"]:checked:before {
 }*/
 
 label.monster-invalid {
-    color: red;
-    font-size: 12px;
-    margin: 0;
-    line-height: 16px;
-    position: absolute;
+	color: red;
+	font-size: 12px;
+	margin: 0;
+	line-height: 16px;
+	position: absolute;
 }
 
 /* Confirm Charges popup */
@@ -1237,6 +1265,28 @@ label.monster-invalid {
 	font-size: inherit;
 }
 
+/********** New title boxes **********/
+.title-box {
+	background-color: #fff;
+	display: inline-block;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	padding: 5px 15px;
+	text-align: center;
+}
+.title-box .title {
+	line-height: 25px;
+	font-weight: 600;
+}
+.title-box .value {
+	color: #22a5ff;
+	font-size: 24px;
+	line-height: 35px;
+	font-weight: 600;
+}
+.title-box.single-line > * {
+	line-height: 60px;
+}
 
 /********** New button designs **********/
 *[class*="monster-button"] {
@@ -1248,27 +1298,34 @@ label.monster-invalid {
 	border-radius: 2px;
 	color: #c0c0c9;
 }
-.monster-button-primary {
-	color: #fff;
-	background-color: #22a5ff;
+*[class*="monster-button"] > i {
+	color: inherit;
+	margin-right: 6px;
+	vertical-align: text-top;
 }
-.monster-button-primary:hover, .monster-button-primary:focus {
+
+*[class*="monster-button-primary"] {
+	border-color: #0297e5;
+	color: #22a5ff;
+}
+.monster-button-primary-filled {
+	background-color: #22a5ff;
+	color: #0d456b;
+}
+/*.monster-button-primary:hover, .monster-button-primary:focus {
 	background-color: #4db8ff;
 }
 .monster-button-primary:active {
 	background-color: #008be8;
-}
-.monster-button-success {
+}*/
+
+*[class*="monster-button-success"] {
 	border-color: #13c85e;
 	color: #2c7705;
+}
+.monster-button-success-filled {
 	background-color: #1def36;
 }
-/*.monster-button-success:hover, .monster-button-success:focus {
-	background-color: #4db8ff;
-}
-.monster-button-success:active {
-	background-color: #008be8;
-}*/
 
 /********** New checkbox designs **********/
 
@@ -1278,7 +1335,7 @@ label.monster-invalid {
 }
 
 .monster-checkbox input[type="checkbox"] {
-    display: none;
+	display: none;
 }
 
 .monster-checkbox label {
@@ -1289,20 +1346,20 @@ label.monster-invalid {
 }
 
 .monster-checkbox label::before {
-    content: '';
-    background-color: transparent;
-    position: absolute;
-    top: 3px;
-    width: 12px;
-    height: 12px;
-    left: 0px;
-    border-radius: 3px;
-    border: 1px solid;
-    border-image-source: initial;
-    border-image-slice: initial;
-    border-image-width: initial;
-    border-image-outset: initial;
-    border-image-repeat: initial;
+	content: '';
+	background-color: transparent;
+	position: absolute;
+	top: 3px;
+	width: 12px;
+	height: 12px;
+	left: 0px;
+	border-radius: 3px;
+	border: 1px solid;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
 }
 
 .monster-checkbox label:after {

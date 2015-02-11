@@ -1,9 +1,18 @@
 <div class="action-bar-wrapper">
-	<i class="refresh-filter icon-refresh icon-blue" title="{{i18n.callLogs.resetFilter}}"></i>
-	<span>{{i18n.startDate}}:</span>
+	<button type="button" class="refresh-filter monster-button-primary">
+		<i class="icon-refresh" title="{{i18n.callLogs.resetFilter}}"></i>
+		{{ i18n.refresh }}
+	</button>
+	<span>{{i18n.startDate}}</span>
 	<input id="startDate" readonly="readonly" type="text"/>
-	<span>{{i18n.endDate}}:</span>
+	<span>{{i18n.endDate}}</span>
 	<input id="endDate" readonly="readonly" type="text"/>
-	<button class="btn btn-primary button-search" id="filter_transactions">{{ i18n.filter }}</button>
-    <a href="#" id="download" role="button" class="action-number"><i class="icon-download-alt icon-green"></i>{{ i18n.download }}</a>
+	<button type="button" class="filter-transactions monster-button-primary">
+		<i class="icon-filter" title="{{i18n.filter}}"></i>
+		{{ i18n.filter }}
+	</button>
+	<button type="button" class="download-transactions monster-button-primary">
+		<i class="icon-download-alt" title="{{i18n.download}}"></i>
+		{{ i18n.download }}
+	</button>
 </div>
