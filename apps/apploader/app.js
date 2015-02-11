@@ -1,7 +1,6 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		nicescroll = require('nicescroll'),
 		monster = require('monster');
 
 	var app = {
@@ -50,36 +49,23 @@ define(function(require){
 		},
 
 		isRendered: function() {
-			return ($('#apploader').length !== 0);
+			return $('#apploader').length !== 0;
 		},
 
 		render: function() {
 			var self = this;
+
 			if(!self.isRendered()) {
 				self.getUserApps(function(appList) {
 					var template = $(monster.template(self, 'app', {
-						apps: appList,
-						allowAppstore: (monster.apps['auth'].currentUser.priv_level === "admin")
-					}));
+							allowAppstore: monster.apps.auth.currentUser.priv_level === "admin",
+							defaultApp: appList[0],
+							apps: appList
+						}));
+
 					$('#topbar').after(template);
 
-					template.find('.app-list').sortable({
-						axis: "y",
-						cursor: "move",
-						containment: "parent",
-						handle: ".app-draggable",
-						placeholder: "app-list-element-placeholder",
-						revert: 100,
-						tolerance: "pointer"
-					});
-
-					self.niceScrollId = template.find('.app-list').niceScroll({
-						cursorcolor:"#333",
-						cursoropacitymin:0.5,
-						hidecursordelay:1000
-					}).hide().id;
-
-					self.bindEvents(template);
+					self.bindEvents(template, appList);
 					self.show();
 				});
 			} else {
@@ -87,110 +73,191 @@ define(function(require){
 			}
 		},
 
-		bindEvents: function(parent) {
+		bindEvents: function(parent, appList) {
 			var self = this,
 				defaultDiv = parent.find('.app-default');
 
-			parent.find('.app-list').on('sortupdate', function(e, ui) {
-				var $this = $(this),
-					firstElement = $this.find('.app-list-element:first-child');
-				if(!firstElement.find('.app-default').length) {
-					defaultDiv.fadeOut(function() {
-						firstElement.append(defaultDiv);
-						defaultDiv.fadeIn();
+			parent.find('.app-container').sortable({
+				cancel: '.ui-sortable-disabled',
+				receive: function(event, ui) {
+					var item = $(ui.item)
+						itemId = item.data('id');
+
+					item
+						.addClass('ui-sortable-disabled')
+						.unbind()
+
+					$.each(parent.find('.left-div .app-element'), function(idx, el) {
+
+						if ($(el).data('id') !== itemId) {
+							$(el).remove();
+						}
 					});
+
+					$(ui.sender).data('copied', true);
+				},
+				over: function() {
+					parent.find('.left-div .app-element.ui-sortable-disabled')
+						.hide();
+				},
+				out: function() {
+					parent.find('.left-div .app-element.ui-sortable-disabled')
+						.show();
 				}
-
-				monster.apps['auth'].currentUser.appList = $.map(
-					$this.find('.app-list-element'),
-					function(val) {
-						return $(val).data('id');
-					}
-				);
-
-				self.userUpdate();
 			});
 
-			parent.find('.app-list-element, .appstore-link').on('click', function(e) {
+			parent.find('.app-list').sortable({
+				delay: 100,
+				appendTo: parent.find('.app-container'),
+				connectWith: '.app-container',
+				sort: function() {
+					parent.find('.app-container')
+						.addClass('dragging');
+				},
+				helper: function (event, ui) {
+					this.copyHelper = ui.clone().css('opacity', '0.2').insertAfter(ui);
+
+					$(this).data('copied', false);
+
+					return ui.clone();
+				},
+				stop: function () {
+					var copied = $(this).data('copied');
+
+					$(this.copyHelper).css('opacity', '1');
+
+					if (!copied) {
+						this.copyHelper.remove();
+					}
+
+					this.copyHelper = null;
+
+
+					parent.find('.app-container')
+						.removeClass('dragging');
+				},
+				over: function(event, ui) {
+					parent.find('.right-div .ui-sortable-placeholder')
+						.hide();
+				}
+			});
+
+			parent.find('.search-query').on('keyup', function() {
+				var searchString = $(this).val().toLowerCase(),
+					items = parent.find('.right-div .app-element');
+
+				_.each(items, function(item) {
+					var item = $(item);
+
+					item.data('search').toLowerCase().indexOf(searchString) < 0 ? item.hide() : item.show();
+				});
+			});
+
+			parent.find('.search-query').on('blur', function() {
+				$(this)
+					.val('');
+
+				parent.find('.right-div .app-element')
+					.show();
+			});
+
+			parent.find('.right-div').on('mouseenter', '.app-element', function() {
+				var container = parent.find('.app-description'),
+					id = $(this).data('id');
+
+				container.find('h4').text(appList.filter(function(v, i) { return id === v.id; })[0].label);
+				container.find('p').text(appList.filter(function(v, i) { return id === v.id; })[0].description);
+			});
+
+			parent.find('.right-div').on('mouseleave', '.app-element', function() {
+				var container = parent.find('.app-description'),
+					id = parent.find('.left-div .app-element').data('id');
+
+				container.find('h4').text(appList.filter(function(v, i) { return id === v.id; })[0].label);
+				container.find('p').text(appList.filter(function(v, i) { return id === v.id; })[0].description);
+			});
+
+			parent.on('click', '.right-div .app-element, #launch_appstore', function() {
 				var $this = $(this),
 					appName = $this.data('name');
 
-				parent.find('.app-list-element.active').removeClass('active');
+				self.appListUpdate(parent, appList, function() {
+					monster.apps.load(appName, function(app) {
+						parent.find('.right-div .app-element.active')
+							.removeClass('active');
 
-				if (appName !== 'appstore') {
-					$this.addClass('active');
-				}
+						if (appName !== 'appstore') {
+							$this.addClass('active');
+						}
 
-				//Cleaning up nicescrolls from the DOM
-				$('.nicescroll-rails:not(#'+self.niceScrollId+',#'+self.niceScrollId+'-hr)').remove();
+						app.render();
+						monster.pub('core.showAppName', appName);
 
-				monster.apps.load(appName, function(app){
-					app.render();
-					monster.pub('core.showAppName', appName);
+						self._hide(parent);
+						monster.pub('myaccount.hide');
+					});
 				});
-
-				self._hide(parent);
-				monster.pub('myaccount.hide');
 			});
 
-			parent.find('.app-list-element .app-draggable').on('click', function(e) {
-				e.stopPropagation();
-			});
-
-			$(document).on('click', function(e) {
-				var homeLink = $('#home_link');
-				if(!parent.is(e.target)
-				&& !parent.has(e.target).length
-				&& !homeLink.is(e.target)
-				&& !homeLink.has(e.target).length) {
+			parent.find('#close_app').on('click', function() {
+				self.appListUpdate(parent, appList, function() {
 					self._hide(parent);
+				});
+			});
+
+			$(document).on('keydown', function(e) {
+				if (e.keyCode === 27) {
+					var target = $(e.target);
+
+					if (target.hasClass('search-query')) {
+						target.val('');
+					}
+					else {
+						self.appListUpdate(parent, appList, function() {
+							self._hide(parent);
+						});
+					}
 				}
 			});
 		},
 
 		show: function(app) {
-			var self =  this,
-				apploader = app || $('#apploader'),
-				niceScrollBar = apploader.find('.app-list').getNiceScroll()[0];
+			var self = this,
+				apploader = app || $('#apploader');
 
-			if(!apploader.hasClass('active')) {
-				apploader.addClass('active')
-						 .animate(
-						 	{ left: 0 },
-						 	400,
-						 	"swing",
-						 	function() {
-						 		niceScrollBar.resize();
-						 		niceScrollBar.show();
-						 	}
-						 );
+			if (!apploader.hasClass('active')) {
+				apploader
+					.addClass('active')
+					.fadeIn(250);
 			}
 		},
 
 		_hide: function(app) {
 			var self =  this,
-				apploader = app || $('#apploader'),
-				niceScrollBar = apploader.find('.app-list').getNiceScroll()[0];
+				apploader = app || $('#apploader');
 
-			if(apploader.hasClass('active')) {
-				niceScrollBar.hide();
-				apploader.removeClass('active')
-						 .animate(
-						 	{ left: "-310px" },
-						 	400,
-						 	"swing",
-						 	niceScrollBar.resize
-						 );
+			if (apploader.hasClass('active')) {
+				apploader
+					.removeClass('active')
+					.fadeOut(250);
 			}
 		},
 
 		_toggle: function() {
 			var self = this;
-			if(!self.isRendered()) {
-				self.render();
-			} else {
+
+			if (self.isRendered()) {
 				var apploader = $('#apploader');
-				apploader.hasClass('active') ? self._hide(apploader) : self.show(apploader);
+
+				if (apploader.hasClass('active')) {
+					self._hide(apploader);
+				}
+				else {
+					self.show(apploader);
+				}
+			}
+			else {
+				self.render();
 			}
 		},
 
@@ -200,13 +267,14 @@ define(function(require){
 		_currentApp: function (callback) {
 			var self = this,
 				apploader = $('#apploader'),
+				activeApp = apploader.find('.right-div .app-element.active'),
 				app = {};
 
-			if(apploader.find('li.app-list-element.active').data() !== null) {
+			if(activeApp.length) {
 				//If apploader is loaded get data from document.
 				app = {
-					id: apploader.find('li.app-list-element.active').data().id,
-					name: apploader.find('li.app-list-element.active').data().name
+					id: activeApp.data('id'),
+					name: activeApp.data('name')
 				}
 				callback && callback(app);
 			} else {
@@ -225,11 +293,11 @@ define(function(require){
 			var self = this,
 				parallelRequest = {};
 
-			_.each(monster.apps['auth'].installedApps, function(val) {
+			_.each(monster.apps.auth.installedApps, function(val) {
 				parallelRequest[val.id] = function(parallelCallback) {
 					var request = new XMLHttpRequest(),
 						url = self.apiUrl + 'apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
-						
+
 					request.open('GET', url, true);
 					request.onreadystatechange = function() {
 						if(request.readyState === 4) {
@@ -249,15 +317,32 @@ define(function(require){
 		getUserApps: function(callback) {
 			var self = this;
 
-			self.callApi({
-				resource: 'account.get',
-				data: {
-					accountId: self.accountId,
+			monster.parallel({
+					accountApps: function(callback) {
+						self.callApi({
+							resource: 'account.get',
+							data: {
+								accountId: self.accountId
+							},
+							success: function(data, status) {
+								callback(null, data.data.apps);
+							}
+						});
+					},
+					allApps: function(callback) {
+						self.callApi({
+							resource: 'appsStore.list',
+							data: {},
+							success: function(data, status) {
+								callback(null, data.data);
+							}
+						});
+					}
 				},
-				success: function(data, status) {
+				function(err, results) {
 					self.getFullAppList(function(fullAppList) {
-						var accountApps = $.extend(true, {}, data.data.apps), // List of apps available on the account, with list of enabled user
-							userApps = monster.apps['auth'].currentUser.appList || [], // List of apps on the user, used for ordering and default app only
+						var accountApps = $.extend(true, {}, results.accountApps), // List of apps available on the account, with list of enabled user
+							userApps = monster.apps.auth.currentUser.appList || [], // List of apps on the user, used for ordering and default app only
 							updateUserApps = false,
 							appList = []; // List of apps available for this user, to be return
 
@@ -272,7 +357,7 @@ define(function(require){
 								}
 								/*****************************************************************************************/
 								if(accountApps[appId].allowed_users === 'all'
-								|| (accountApps[appId].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin")
+								|| (accountApps[appId].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin")
 								|| userArray.indexOf(self.userId) >= 0) {
 									appList.push({
 										id: appId,
@@ -297,7 +382,7 @@ define(function(require){
 								delete accountApps[key].all;
 							}
 							/*****************************************************************************************/
-							if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps['auth'].currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
+							if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
 								appList.push({
 									id: key,
 									name: fullAppList[key].name,
@@ -311,18 +396,66 @@ define(function(require){
 						});
 
 						if(updateUserApps) {
-							monster.apps['auth'].currentUser.appList = userApps;
+							monster.apps.auth.currentUser.appList = userApps;
 
 							self.userUpdate();
 						}
 
+						_.each(results.allApps, function(v1, k1) {
+							_.each(appList, function(v2, k2) {
+								if (v1.id === v2.id) {
+									var lang = monster.config.whitelabel.language,
+										isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
+										currentLang = v1.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US';
+
+									v2.description = v1.i18n[currentLang].description;
+								}
+							});
+						});
+
 						callback && callback(appList);
 					});
 				}
-			});
+			);
 		},
 
-		userUpdate: function(userId, data) {
+		appListUpdate: function(parent, appList, callback) {
+			var self = this,
+				domAppList = $.map( parent .find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
+				domDefaultAppId = parent.find('.left-div .app-element').data('id'),
+				sameDefaultApp = appList[0].id === domDefaultAppId,
+				sameOrder= true;
+
+			// Check if the apps in the DOM are in the same order than in the original app list
+			appList.every(function(v, i) {
+				if (v.id !== domAppList[i]) {
+					sameOrder = false
+					return false;
+				}
+				else {
+					return true;
+				}
+			});
+
+			if (sameDefaultApp && sameOrder) {
+				callback();
+			}
+			else {
+				// Move the new default app to the top of the new app list
+				for (var i = 0, len = appList.length; i < len; i++) {
+					if (domDefaultAppId === domAppList[i]) {
+						domAppList.unshift(domAppList.splice(i, 1)[0]);
+						break;
+					}
+				}
+
+				monster.apps.auth.currentUser.appList = domAppList;
+
+				self.userUpdate(callback);
+			}
+		},
+
+		userUpdate: function(callback) {
 			var self = this;
 
 			self.callApi({
@@ -333,6 +466,7 @@ define(function(require){
 					data: monster.apps.auth.currentUser
 				},
 				success: function(data, status) {
+					callback && callback();
 				}
 			});
 		}

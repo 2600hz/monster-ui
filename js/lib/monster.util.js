@@ -15,7 +15,7 @@ define(function(require){
 				var i18n = monster.apps['core'].i18n.active(),
 					timerAlert,
 					timerLogout,
-					wait = monster.config.logoutTimer || 15,
+					wait = monster.config.logoutTimer || 30,
 					alertBeforeLogout = 2,
 					alertTriggered = false,
 					alertDialog,

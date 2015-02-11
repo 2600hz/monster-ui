@@ -1147,7 +1147,10 @@ define(function(require){
 			widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate));
 
 			widgetTemplate.find('.available, .selected')
-						  .sortable({ connectWith: '.connected' });
+						  .sortable({ 
+							connectWith: '.connected',
+							tolerance: 'pointer'
+						});
 
 			widget = widgetTemplate[options.insertionType](target);
 
