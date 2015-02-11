@@ -49,7 +49,7 @@ define(function(require){
 			//Temporary button design fix until we redesign the Accounts Manager
 			template.find('#accountsmanager_carrier_save')
 					.removeClass('btn btn-success')
-					.addClass('monster-button-success');
+					.addClass('monster-button-success-filled');
 
 			monster.pub('myaccount.events', {
 				template: template,

@@ -138,7 +138,9 @@
 #myaccount .myaccount-right .clearfix:after,
 #myaccount .myaccount-right .row-fluid:after,
 #myaccount .myaccount-right .container-fluid:after,
-#myaccount .myaccount-right .control-group:after {
+#myaccount .myaccount-right .control-group:after,
+#myaccount .myaccount-right .dataTables_wrapper,
+#myaccount .myaccount-right .dataTables_scroll {
 	clear: right;
 }
 
@@ -286,7 +288,7 @@
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .description .number {
 	font-weight: bold;
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .update {
@@ -369,16 +371,26 @@
 }
 
 #myaccount .myaccount-content .list-settings .control-label {
-    width: 200px;
-    text-align: left;
+	width: 200px;
+	text-align: left;
 }
 
 #myaccount .myaccount-content .list-settings .controls {
-    margin-left: 220px;
+	margin-left: 220px;
 }
 
 #myaccount .myaccount-content .list-settings .controls button, #myaccount .myaccount-content .list-settings .controls input {
 	margin-right: 5px;
+}
+
+#myaccount .myaccount-content .list-settings .controls input {
+	border-radius: 2px;
+	box-shadow: none;
+	border-color: #c0c0c9;
+}
+
+#myaccount .myaccount-content .list-settings .controls input:focus {
+	border-color: #22a5ff;
 }
 
 #myaccount .myaccount-content .list-settings .action-group {
@@ -402,8 +414,17 @@
 	padding-top: 5px;
 }
 
-#myaccount .myaccount-content .fancy-header .right-block .content .main-title {
-	line-height: 80px
+#myaccount .myaccount-content .title-bar
+{
+	background-color: #f0f0f9;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+}
+
+#myaccount .myaccount-content .title-bar > *:not(.pull-right) {
+	float: left;
 }
 
 /***** Animations *****/

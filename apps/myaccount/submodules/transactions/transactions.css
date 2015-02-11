@@ -1,22 +1,19 @@
-.transactions-content-wrapper .fancy-header .left-image {
-	width: 65px;
-}
-
-.transactions-content-wrapper .fancy-header .right-block .content .main-title {
-	font-size: 30px;
-	font-weight: bold;
-	line-height: 75px;
-	height: 80px;
-}
-
-.transactions-content-wrapper .fancy-header .title-block .billing-date {
-	color: #22ccff;
-	font-weight: bold;
+.transactions-content-wrapper .title-box:first-of-type {
+	margin-right: 10px;
 }
 
 .transactions-content-wrapper .action-bar-wrapper input {
-	margin: 0 5px 0 0;
+	margin: 0 10px 0 5px;
 	width: 80px;
+	cursor: pointer;
+	background-color: #f0f0f9;
+	border-radius: 2px;
+	box-shadow: none;
+	text-align: center;
+}
+
+.transactions-content-wrapper .action-bar-wrapper > * {
+	vertical-align: baseline; 
 }
 
 .transactions-content-wrapper .action-bar-wrapper .dropdown {
@@ -35,104 +32,102 @@
 	text-align: center;
 }
 
-.transactions-content-wrapper .list-transactions .transaction {
+.transactions-content-wrapper .list-transactions .transaction-box {
 	line-height: 65px;
 	margin-bottom: 15px;
+	background-color: #f0f0f9;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+}
+.transactions-content-wrapper .list-transactions .transaction-box.open {
+	background-color: #fff;
+	border-color: #22a5ff;
 }
 
-.transactions-content-wrapper .list-transactions .transaction > *:not(.expandable) {
+.transactions-content-wrapper .list-transactions .transaction-box > *:not(.expandable) {
 	line-height: 65px;
 	height: 65px;
 }
 
-.transactions-content-wrapper .list-transactions .transaction .expandable .table {
+.transactions-content-wrapper .list-transactions .transaction-box .expandable .table {
 	margin-bottom: 0;
 }
 
-.transactions-content-wrapper .list-transactions .transaction .expand-box {
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box {
 	float: left;
-	border-right: 1px solid #DDDDDD;
 	text-align: center;
 	width: 80px;
 }
-
-.transactions-content-wrapper .list-transactions .transaction .expand-box > * {
-	color: #CCCCCC;
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box:not(.disabled) {
 	cursor: pointer;
-	font-size: 90px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box > * {
 	height: 65px;
 	line-height: 65px;
 	text-align: center;
-	text-shadow: 0 -1px 1px #777777;
+	font-size: 11px;
 }
 
-.transactions-content-wrapper .list-transactions .transaction .text-box {
-	margin-left: 120px;
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box i {
+	color: #303039;
+}
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box.disabled i {
+	color: #c0c0c9;
 }
 
-.transactions-content-wrapper .list-transactions .transaction .text-box.declined {
+.transactions-content-wrapper .list-transactions .transaction-box .text-box {
+	margin-left: 80px;
+}
+
+.transactions-content-wrapper .list-transactions .transaction-box .text-box.declined {
 	color: red;
 }
 
-.transactions-content-wrapper .list-transactions .transaction .text-box > * {
+.transactions-content-wrapper .list-transactions .transaction-box .text-box > * {
 	float: left;
 	width: 33%;
 	overflow: hidden;
 	white-space: nowrap;
-}
-
-.transactions-content-wrapper .list-transactions .transaction .date {
 	text-align: center;
-	color: #22ccff;
-	font-weight: bold;
-}
-
-.transactions-content-wrapper .list-transactions .transaction .text-box .price {
-	font-weight: bold;
-	font-size: 16px;
-	text-align: right;
-}
-/* Table Customization */
-.transactions-content-wrapper .list-transactions .transaction table{
-	font-size: 14px;
-}
-
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:first-child,
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:first-child {
-	padding-left: 10%;
-}
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(2),
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(2) {
-	width: 100px;
-	text-align: right;
-}
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(3),
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(3) {
-	width: 40px;
-	text-align: center;
-}
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(4),
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(4) {
-	width: 20px;
-	text-align: left;
-}
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(5),
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(5) {
-	width: 100px;
-	text-align: right;
-}
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(5) {
-	color: #44cc44;
 	font-weight: 600;
 }
 
-.transactions-content-wrapper .list-transactions .transaction table.table thead th:nth-child(6),
-.transactions-content-wrapper .list-transactions .transaction table.table tbody td:nth-child(6) {
-	text-align: right;
-	padding-right: 10%;
+/* Table Customization */
+.transactions-content-wrapper .list-transactions .transaction-box .table-content {
+	margin: 0 20px 20px;
+	padding-top: 20px;
+	border-top: solid 1px #c0c0c9;
 }
 
-.transactions-content-wrapper .list-transactions .transaction table.table td.no-data {
+.transactions-content-wrapper .list-transactions .transaction-box table.table {
+	border: solid 1px #c0c0c9;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table th {
 	text-align: center;
-	padding-right: 10%;
+	background: #f0f0f9;
+	color: #303039;
+	text-shadow: none;
+	border-bottom: solid 1px #c0c0c9;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr {
+	background: #fff;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table td {
+	text-align: center;
+	border: none;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr:not(:first-child) td {
+	border-top: solid 1px #c0c0c9;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr th:first-child,
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr th:last-child {
+	width: 10px;
+	padding: 0;
+}
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr td:first-child,
+.transactions-content-wrapper .list-transactions .transaction-box table.table tr td:last-child {
+	width: 10px;
+	padding: 0;
+	border: none;
 }
