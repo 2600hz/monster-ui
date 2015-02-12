@@ -109,14 +109,14 @@ a.monster-link.disabled i {
 	line-height: inherit;
 }
 
-#main section > .navbar .nav > li.nav-masquerading .name-text {
+#main section > .navbar .nav > li.nav-masquerading a > div {
 	overflow: hidden;
-
 	max-width: 150px;
-
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
 
+#main section > .navbar .nav > li.nav-masquerading .name-text {
 	color: #22a5ff;
 }
 
@@ -307,7 +307,7 @@ body div {
 	}
 }
 
-@media (max-width: 906px) {
+@media (max-width: 959px) {
 	#main section > .navbar .navbar-inner .current-app {
 		display: none;
 	}
@@ -319,7 +319,7 @@ body div {
 	}
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1153px) {
 	#main section > .navbar .navbar-inner #home_link {
 		padding-left: 20px;
 	}
@@ -328,7 +328,7 @@ body div {
 	}
 }
 
-@media (max-width: 1064px) {
+@media (max-width: 1067px) {
 	#main section > .navbar .navbar-inner .logo {
 		padding-right: 0px;
 		padding-left: 0px;
