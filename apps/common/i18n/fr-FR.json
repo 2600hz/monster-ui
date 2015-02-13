@@ -96,7 +96,6 @@
 		"addressLine2":"Ligne Adresse 2",
 		"city":"Ville",
 		"dialogTitle":"Modifier location d'urgence",
-		"errorUpdate":"Impossible de mettre à jour la location d'urgence pour ce numéro",
 		"gmapPinLabel":"Votre+Adresse+d'Urgence",
 		"infoBox":"Cette adresse sera affichée lorsque vous appelerez les services d'urgence depuis ce numéro.",
 		"label":"Adresse d'urgence (e911)",
