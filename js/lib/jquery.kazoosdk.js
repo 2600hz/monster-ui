@@ -24,8 +24,8 @@
 			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'}
 		},
 		appsStore: {
-			'get': { verb: 'GET', 'url': 'apps_store/{appId}' },
-			'list': { verb: 'GET', 'url': 'apps_store' }
+			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
+			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' }
 		},
 		auth: {
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }

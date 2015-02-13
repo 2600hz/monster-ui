@@ -92,15 +92,15 @@
 	line-height: 62px;
 	text-align: center;
 	text-decoration: none;
-	border-left: 1px solid #353535;
+	border-left: 1px solid #202029;
 }
 
 .links .top-link i {
-	color: #FFF;
+	color: #c0c0c9;
 }
 
 .links .top-link:hover i {
-	color: #22CCFF;
+	color: #22a5ff;
 }
 
 .links .signout {

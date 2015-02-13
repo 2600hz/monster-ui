@@ -35,7 +35,7 @@
 			"account_has_descendants": "You can not delete an account that has sub-accounts."
 		}
 	},
-	"apps": "apps",
+	"apps": "Apps",
 	"add": "Add",
 	"alertLogout": "Your current session is expiring and you're about to be logged off due to inactivity. Please move your cursor if you want to remain logged in.",
 	"cancel": "Cancel",

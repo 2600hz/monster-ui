@@ -296,7 +296,7 @@ define(function(require){
 			_.each(monster.apps.auth.installedApps, function(val) {
 				parallelRequest[val.id] = function(parallelCallback) {
 					var request = new XMLHttpRequest(),
-						url = self.apiUrl + 'apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+						url = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 
 					request.open('GET', url, true);
 					request.onreadystatechange = function() {
@@ -332,7 +332,9 @@ define(function(require){
 					allApps: function(callback) {
 						self.callApi({
 							resource: 'appsStore.list',
-							data: {},
+							data: {
+								accountId: self.accountId
+							},
 							success: function(data, status) {
 								callback(null, data.data);
 							}
