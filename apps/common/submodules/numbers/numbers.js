@@ -149,14 +149,17 @@ define(function(require){
 				if(value.used_by) {
 					if(data.viewType === 'pbx') {
 						if(value.used_by === 'callflow') {
+							value.isLocal = value.features.indexOf('local') > -1;
 							thisAccount.usedNumbers.push(value);
 						}
 					}
 					else {
+						value.isLocal = value.features.indexOf('local') > -1;
 						thisAccount.usedNumbers.push(value);
 					}
 				}
 				else {
+					value.isLocal = value.features.indexOf('local') > -1;
 					thisAccount.spareNumbers.push(value);
 				}
 			});

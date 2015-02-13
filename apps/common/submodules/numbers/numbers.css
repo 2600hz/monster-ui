@@ -89,9 +89,19 @@
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box {
+	position: relative;
 	border: 1px solid #ccc;
     border-bottom-width: 0px;
     margin-top: -1px;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .number-options {
+	position: absolute;
+	right: 0;
+}
+
+#numbers_container .account-section .numbers-wrapper .number-box .features {
+	margin-right: 44px;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .number-options .dropdown {
@@ -101,7 +111,7 @@
 #numbers_container .account-section .numbers-wrapper .number-box .phone-number,
 .dialog-spare-container .numbers .number-box .phone-number {
 	display: inline-block;
-	width: 150px;
+	width: 120px;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality,
