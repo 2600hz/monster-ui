@@ -75,7 +75,16 @@ define(function(require){
 
 		bindEvents: function(parent, appList) {
 			var self = this,
-				defaultDiv = parent.find('.app-default');
+				defaultDiv = parent.find('.app-default')
+				updateAppInfo = function updateAppInfo(id) {
+					var app = appList.filter(function(v, i) { return id === v.id })[0];
+
+					parent.find('.app-default')
+						.find('h4')
+							.text(app.label)
+						.addBack().find('.description')
+							.text(app.description);
+				};
 
 			parent.find('.app-container').sortable({
 				cancel: '.ui-sortable-disabled',
@@ -93,6 +102,8 @@ define(function(require){
 							$(el).remove();
 						}
 					});
+
+					updateAppInfo(itemId);
 
 					$(ui.sender).data('copied', true);
 				},
@@ -162,19 +173,11 @@ define(function(require){
 			});
 
 			parent.find('.right-div').on('mouseenter', '.app-element', function() {
-				var container = parent.find('.app-description'),
-					id = $(this).data('id');
-
-				container.find('h4').text(appList.filter(function(v, i) { return id === v.id; })[0].label);
-				container.find('p').text(appList.filter(function(v, i) { return id === v.id; })[0].description);
+				updateAppInfo($(this).data('id'));
 			});
 
 			parent.find('.right-div').on('mouseleave', '.app-element', function() {
-				var container = parent.find('.app-description'),
-					id = parent.find('.left-div .app-element').data('id');
-
-				container.find('h4').text(appList.filter(function(v, i) { return id === v.id; })[0].label);
-				container.find('p').text(appList.filter(function(v, i) { return id === v.id; })[0].description);
+				updateAppInfo(parent.find('.left-div .app-element').data('id'));
 			});
 
 			parent.on('click', '.right-div .app-element, #launch_appstore', function() {
