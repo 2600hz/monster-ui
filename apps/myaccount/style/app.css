@@ -52,6 +52,11 @@
 	box-sizing: border-box;
 	right: 280px;
 	margin-left: -100%;
+
+	-webkit-transition:width 0.3s;
+	-moz-transition:width 0.3s;
+	-o-transition:width 0.3s;
+	transition:width 0.3s;
 }
 #myaccount .myaccount-right {
 	width: 100%;
@@ -181,10 +186,6 @@
 	#myaccount .myaccount-menu {
 		width: 47px;
 		right: 47px;
-		-webkit-transition:width 0.5s;
-		-moz-transition:width 0.5s;
-		-o-transition:width 0.5s;
-		transition:width 0.5s;
 	}
 
 	#myaccount .myaccount-menu .nav li {
