@@ -115,6 +115,12 @@ define(function(require){
 		return monster.util.formatPrice(price, decimals);
 	});
 
+	Handlebars.registerHelper('monsterSwitch', function(options) {
+		return monster.template(monster.apps.core, 'monster-switch-template', {
+			checkbox: new Handlebars.SafeString(options.fn(this))
+		});
+	});
+
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title: function(title) {
 			if (!this.options.title ) {

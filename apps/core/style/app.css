@@ -302,10 +302,46 @@ table.table tr td {
 	background: inherit;
 	border: none;
 }
+.ui-datepicker-prev .ui-icon,
+.ui-datepicker-next .ui-icon {
+	background: transparent;
+}
+.ui-datepicker-prev .ui-icon:after,
+.ui-datepicker-next .ui-icon:after {
+	content: '';
+	border: solid 2px #fff;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+	top: 4px;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.ui-datepicker-prev .ui-icon:after {
+	border-top: none;  
+	border-right: none;
+	left: 8px;
+}
+.ui-datepicker-next .ui-icon:after {
+	border-bottom: none;  
+	border-left: none;
+	right: 8px;
+}
 .ui-datepicker-prev.ui-state-hover,
 .ui-datepicker-next.ui-state-hover {
 	background: inherit;
 	border-color: transparent;
+}
+.ui-datepicker-prev:not(.ui-state-disabled),
+.ui-datepicker-next:not(.ui-state-disabled) {
+	cursor: pointer;
+}
+.ui-datepicker-prev.ui-state-hover:not(.ui-state-disabled) .ui-icon:after,
+.ui-datepicker-next.ui-state-hover:not(.ui-state-disabled) .ui-icon:after {
+	border-color: #22a5ff;
 }
 
 /* Confirm Box */
@@ -1400,4 +1436,79 @@ label.monster-invalid {
 	background-color: #22a5ff;
 	box-shadow: none;
 	border-color: #22a5ff;
+}
+
+/********** New switch designs **********/
+
+/*	Expected HTML structure:
+ *	<label class="monster-switch">
+ *		<input type="checkbox">
+ *		<span>
+ *			<span>On</span>
+ *			<span>Off</span>
+ *			</span>
+ *		<a></a>
+ *	</label>
+ */
+
+.monster-switch {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.monster-switch > input {
+	display: none;
+}
+.monster-switch > span {
+	display: block;
+	padding: 4px 14px;
+	border-radius: 20px;
+	line-height: 20px;
+	width: 40px;
+	font-family: 'Source Sans Pro';
+	font-weight: 600;
+	font-size: 14px;
+	text-align: right;
+	background: #fff;
+	border: solid 1px #c0c0c9;
+	color: #909099;
+	transition: all 0.4s ease-out;
+}
+.monster-switch > span span {
+	display: none;
+}
+.monster-switch > a {
+	width: 22px;
+	height: 22px;
+	border: solid 1px #c0c0c9;
+	border-radius: 15px;
+	background: #f0f0f9;
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	transition: all 0.2s ease-out;
+}
+.monster-switch > input:checked ~ span span:first-child {
+	display:inline;
+}
+.monster-switch > input:not(:checked) ~ span span:last-child {
+	display:inline;
+}
+.monster-switch > input:checked + span {
+	text-align: left;
+	background: #22a5ff;
+	border-color: #1e8dd9;
+	color: #0d456b;
+}
+.monster-switch > input:checked ~ a {
+	left: 43px;
+	background: #fff;
+	border-color: #1e8dd9;
 }
