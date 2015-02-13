@@ -1,24 +1,17 @@
 <div class="trunks-content">
-	<div class="fancy-header clearfix">
-		<div class="left-image">
-			<i class="icon-arrow-left"></i>
-		</div>
-
-		<div class="title-block">
-			{{ i18n.trunks.outboundCalling }} <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.trunks.helpOutbound }}"></i>
-		</div>
-		<div class="right-block box-white-border">
-			<div class="content box-white-content">
-				<div class="main-title">
-					{{outbound}}
-				</div>
+	<div class="title-bar clearfix">
+		<div class="title-box">
+			<div class="value">
+				{{outbound}}
+			</div>
+			<div class="title">
+				{{ i18n.trunks.currentLimit }}
 			</div>
 		</div>
-	</div>
-
-	<div class="section-slider-value clearfix">
-		<div class="slider-value-wrapper clearfix">
-			<div class="slider-value">{{outbound}}</div>
+		<div class="title-box message-box">
+			<div class="title">
+				{{ i18n.trunks.helpOutbound }}
+			</div>
 		</div>
 	</div>
 
@@ -26,10 +19,17 @@
 		<div class="slider-title">{{ i18n.trunks.quantity }}</div>
 		<div class="slider-wrapper">
 			<div id="slider_outbound"></div>
+			<div class="slider-value">{{outbound}}</div>
+		</div>
+		<div class="question-box">
+			<div class="icon"><i class="icon-question-sign"></i></div>
+			<div class="message">
+				{{ i18n.trunks.exampleOutbound }}
+			</div>
 		</div>
 	</div>
 
-	<div class="section-button">
-		<button type="submit" class="btn btn-success update-limits">{{ i18n.trunks.updateLimits }}</button>
+	<div class="section-button clearfix">
+		<button type="submit" class="monster-button-primary-filled update-limits pull-right">{{ i18n.trunks.updateLimits }}</button>
 	</div>
 </div>
