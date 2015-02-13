@@ -83,10 +83,10 @@ define(function(require){
 						totalAmountInbound = ui.value*amountInbound;
 						trunksInboundView.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
 
-						trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					}
 				});
 
@@ -117,7 +117,7 @@ define(function(require){
 
 				monster.pub('myaccount.renderSubmodule', trunksInboundView);
 
-				trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+				trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});
@@ -150,10 +150,10 @@ define(function(require){
 
 						trunksOutboundView.find('.total-amount .total-amount-value').html(totalAmountOutbound.toFixed(2));
 
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					}
 				});
 
@@ -184,7 +184,7 @@ define(function(require){
 
 				monster.pub('myaccount.renderSubmodule', trunksOutboundView);
 
-				trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+				trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});
@@ -217,10 +217,10 @@ define(function(require){
 
 						trunksTwowayView.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
 
-						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					}
 				});
 
@@ -250,7 +250,7 @@ define(function(require){
 
 				monster.pub('myaccount.renderSubmodule', trunksTwowayView);
 
-				trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+				trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});

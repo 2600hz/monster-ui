@@ -2,7 +2,6 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		nicescroll = require('nicescroll'),
 		toastr = require('toastr');
 
 	var app = {
@@ -270,7 +269,7 @@ define(function(require){
 
 			container.find('.myaccount-close').on('click', function() {
 				self.toggle();
-            });
+			});
 
 			container.find('.myaccount-element').on('click', function() {
 				var $this = $(this),
@@ -341,12 +340,6 @@ define(function(require){
 				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 				callback: function(uiRestrictions) {
 					var myaccount = $(self.mainContainer),
-						scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
-						niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
-																			cursorcolor:"#333",
-																			cursoropacitymin:0.5,
-																			hidecursordelay:1000
-																		}),
 						firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
 						uiRestrictions = uiRestrictions,
 						defaultApp = self.defaultApp;
@@ -359,7 +352,7 @@ define(function(require){
 					}
 
 					if(myaccount.hasClass('myaccount-open')) {
-						self.hide(myaccount, niceScrollBar);
+						self.hide(myaccount);
 					}
 					else {
 						var args = {
@@ -367,9 +360,7 @@ define(function(require){
 							module: defaultApp.name,
 							callback: function() {
 								myaccount
-									.slideDown(300, function() {
-										niceScrollBar.show().resize();
-									})
+									.slideDown(300, function() { $('#monster-content').hide(); })
 									.addClass('myaccount-open');
 
 								callback && callback();
@@ -387,20 +378,20 @@ define(function(require){
 		},
 
 		activateSubmodule: function(args) {
-            var self = this,
-                myaccount = $(self.mainContainer),
-                submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
+			var self = this,
+				myaccount = $(self.mainContainer),
+				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
 
-            myaccount.find('.myaccount-menu .nav li').removeClass('active');
-            submodule.addClass('active');
+			myaccount.find('.myaccount-menu .nav li').removeClass('active');
+			submodule.addClass('active');
 
-            myaccount.find('.myaccount-module-title').html(args.title);
-            myaccount.find('.myaccount-content').empty();
+			myaccount.find('.myaccount-module-title').html(args.title);
+			myaccount.find('.myaccount-content').empty();
 
-            monster.pub('myaccount.' + args.module + '.renderContent', args);
-        },
+			monster.pub('myaccount.' + args.module + '.renderContent', args);
+		},
 
-        _renderSubmodule: function(template) {
+		_renderSubmodule: function(template) {
 			var parent = $('#myaccount');
 
 			parent.find('.myaccount-right .myaccount-content').html(template);
@@ -413,14 +404,13 @@ define(function(require){
 
 		hide: function(myaccount, scrollbar) {
 			var self = this,
-				myaccount = myaccount || $(self.mainContainer),
-				niceScrollBar = scrollbar || myaccount.find('.myaccount-menu ul.nav.nav-list').getNiceScroll()[0];
+				myaccount = myaccount || $(self.mainContainer);
 
 			myaccount.find('.myaccount-right .myaccount-content').empty();
-			niceScrollBar.hide();
 			myaccount
-				.slideUp(300, niceScrollBar.resize)
+				.slideUp(300)
 				.removeClass('myaccount-open');
+			$('#monster-content').show();
 		},
 
 		_hide: function() {
