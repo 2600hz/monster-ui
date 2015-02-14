@@ -373,9 +373,37 @@ define(function(require){
 				parent = params.parent,
 				data = params.data,
 				stateSwitch = 'manual',
-				autoRecharge = data.topup.enabled;
+				autoRecharge = data.topup.enabled || false,
+				autoRechargeSwitch = parent.find('#auto_recharge_trigger');
 
 			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+
+			autoRechargeSwitch.on('change', function() {
+				if($(this).is(':checked')) {
+					parent.find('#recharge_content').slideDown('fast')
+				} else {
+					parent.find('#recharge_content').slideUp();
+
+					if(autoRecharge === true) {
+						monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
+							function() {
+								self.balanceTurnOffTopup(function() {
+									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
+									autoRecharge = false;
+									//autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+								})
+							},
+							function() {
+								parent.find('#recharge_content').slideDown();
+								stateSwitch = 'manual';
+								autoRechargeSwitch.prop('checked', autoRecharge);
+							}
+						);
+					}
+				}
+			});
+			autoRechargeSwitch.prop('checked', autoRecharge);
+			parent.find('#recharge_content').toggle(autoRecharge);
 
 			// parent.find('.switch').bootstrapSwitch()
 			// 					 .on('switch-change', function (e, dataSwitch) {

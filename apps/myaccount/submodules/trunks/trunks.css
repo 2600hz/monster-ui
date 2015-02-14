@@ -99,16 +99,16 @@
 	display: inline-block;
 }
 
-#myaccount .myaccount-content .trunks-content .question-box .message {
+#myaccount .myaccount-content .trunks-content .question-box .box-message {
 	width: 240px;
 }
 
-#myaccount .myaccount-content .trunks-content .question-box .icon {
+#myaccount .myaccount-content .trunks-content .question-box .box-icon {
 	width: 40px;
 	vertical-align: top;
 }
 
-#myaccount .myaccount-content .trunks-content .question-box .icon i {
+#myaccount .myaccount-content .trunks-content .question-box .box-icon i {
 	color: #c0c0c9;
 	font-size: 30px;
 }
