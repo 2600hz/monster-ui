@@ -192,10 +192,11 @@
 		"comingSoon": "Prochainement",
 		"state": {
 			"completed": "Effectué",
+			"pending": "En attente",
 			"rejected": "Refusé",
 			"scheduled": "Programmé",
-			"submitted": "En attante",
-			"unconfirmed": "Unconfirmed"
+			"submitted": "Envoyé",
+			"unconfirmed": "En cours de création"
 		},
 		"commentsPopup": {
 			"title": "Commentaires",
