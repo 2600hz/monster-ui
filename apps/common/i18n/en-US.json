@@ -199,6 +199,7 @@
 		"comingSoon": "Coming Soon!",
 		"state": {
 			"completed": "Completed",
+			"pending": "Pending",
 			"rejected": "Rejected",
 			"scheduled": "Scheduled",
 			"submitted": "Submitted",

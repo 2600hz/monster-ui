@@ -1,3 +1,4 @@
+
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
@@ -870,9 +871,10 @@ define(function(require){
 				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
 				states = [
 					{ value: 'unconfirmed', next: [1] },
-					{ value: 'submitted', next: [2,3,4] },
-					{ value: 'scheduled', next: [3,4] },
-					{ value: 'rejected', next: [1,4] },
+					{ value: 'submitted', next: [2,4] },
+					{ value: 'pending', next: [3,4,5] },
+					{ value: 'scheduled', next: [4,5] },
+					{ value: 'rejected', next: [1,5] },
 					{ value: 'completed', next: [] }
 				],
 				getStatesToDisplay = function(nextState) {
