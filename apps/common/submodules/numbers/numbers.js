@@ -435,8 +435,6 @@ define(function(require){
 					}
 					e911ErrorMessage = '';
 
-				$('body').css('overflow', 'hidden');
-
 				parent.find('.number-box.selected').each(function(k, v) {
 					var box = $(v),
 						number = box.data('phonenumber');
@@ -495,7 +493,6 @@ define(function(require){
 
 				if(e911ErrorMessage) {
 					monster.ui.alert('error', e911ErrorMessage);
-					$('body').css('overflow', 'auto');
 				} else {
 					var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
 						requestData = {
@@ -563,7 +560,6 @@ define(function(require){
 								var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
 
 								dialogTemplate.parent().parent().remove();
-								$('body').css('overflow', 'auto');
 
 								toastr.success(template);
 							});
@@ -575,138 +571,135 @@ define(function(require){
 
 			/* to plugin */
 			var moveNumbersToAccount = function(accountId, accountName) {
-					var listNumbers = [],
-						destinationAccountId = accountId,
-						destinationIndex = -1,
-						mapAccounts = {},
-						dataTemplate = {
-							destinationAccountName: accountName,
-							move: true,
-							accountList: []
+				var listNumbers = [],
+					destinationAccountId = accountId,
+					destinationIndex = -1,
+					mapAccounts = {},
+					dataTemplate = {
+						destinationAccountName: accountName,
+						move: true,
+						accountList: []
+					};
+
+				parent.find('.number-box.selected').each(function(k, v) {
+					var box = $(v),
+						number = box.data('phonenumber');
+						accountId = box.parents('.account-section').data('id'),
+						accountName = box.parents('.account-section').data('name');
+
+					if(!(accountId in mapAccounts)) {
+						mapAccounts[accountId] = {};
+						dataTemplate.accountList.push({
+							accountName: accountName
+						});
+					}
+
+					for (var account in dataTemplate.accountList) {
+						if ( typeof dataTemplate.accountList[account].numbers == 'undefined' ) {
+							dataTemplate.accountList[account].numbers = new Array();
 						}
 
-					$('body').css('overflow', 'hidden');
+						if ( dataTemplate.accountList[account].accountName == accountName ) {
+							dataTemplate.accountList[account].numbers.push(number);
+						}
+					}
 
-					parent.find('.number-box.selected').each(function(k, v) {
-						var box = $(v),
-							number = box.data('phonenumber');
-							accountId = box.parents('.account-section').data('id'),
-							accountName = box.parents('.account-section').data('name');
+					mapAccounts[accountId][number] = true;
+					listNumbers.push(number);
+				});
 
-						if(!(accountId in mapAccounts)) {
-							mapAccounts[accountId] = {};
-							dataTemplate.accountList.push({
-								accountName: accountName
-							});
+				dataTemplate.numberCount = listNumbers.length;
+
+				var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
+					requestData = {
+						numbers: listNumbers,
+						accountId: destinationAccountId
+					};
+
+				monster.ui.dialog(dialogTemplate, {
+					width: '540px',
+					title: "Move Numbers - Confirmation"
+				});
+
+				dialogTemplate.on('click', '.remove-number', function() {
+					for (var number in requestData.numbers) {
+						if ( $(this).parent().data('number') == requestData.numbers[number] ) {
+							var tbody = $(this).parent().parent().parent(),
+								childCount = tbody[0].childElementCount,
+								numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
+
+							requestData.numbers.splice(number, 1);
+							$(this).parent().parent().remove();
+
+							if ( childCount == 1 ) {
+								tbody[0].previousElementSibling.remove();
+								tbody.remove();
+							}
+							numbersCount.text(numbersCount.text() - 1);
 						}
 
-						for (var account in dataTemplate.accountList) {
-							if ( typeof dataTemplate.accountList[account].numbers == 'undefined' ) {
-								dataTemplate.accountList[account].numbers = new Array();
-							}
-
-							if ( dataTemplate.accountList[account].accountName == accountName ) {
-								dataTemplate.accountList[account].numbers.push(number);
-							}
+						if ( requestData.numbers.length == 0 ) {
+							dialogTemplate.parent().parent().remove();
 						}
+					}
+				});
 
-						mapAccounts[accountId][number] = true;
-						listNumbers.push(number);
-					});
+				dialogTemplate.on('click', '.cancel-link', function() {
+					dialogTemplate
+						.parent()
+						.parent()
+						.remove();
+				});
 
-					dataTemplate.numberCount = listNumbers.length;
+				dialogTemplate.on('click', '#move_action', function() {
+					self.numbersMove(requestData, function(data) {
+						var countMove = 0;
 
-					var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
-						requestData = {
-							numbers: listNumbers,
-							accountId: destinationAccountId
-						};
-
-					monster.ui.dialog(dialogTemplate, {
-						width: '540px',
-						title: "Move Numbers - Confirmation"
-					});
-
-					dialogTemplate.on('click', '.remove-number', function() {
-						for (var number in requestData.numbers) {
-							if ( $(this).parent().data('number') == requestData.numbers[number] ) {
-								var tbody = $(this).parent().parent().parent(),
-									childCount = tbody[0].childElementCount,
-									numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
-
-								requestData.numbers.splice(number, 1);
-								$(this).parent().parent().remove();
-
-								if ( childCount == 1 ) {
-									tbody[0].previousElementSibling.remove();
-									tbody.remove();
-								}
-								numbersCount.text(numbersCount.text() - 1);
+						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+							if(account.id === destinationAccountId) {
+								destinationIndex = indexAccount;
 							}
 
-							if ( requestData.numbers.length == 0 ) {
-								dialogTemplate.parent().parent().remove();
-							}
-						}
-					});
-
-					dialogTemplate.on('click', '.cancel-link', function() {
-						dialogTemplate
-							.parent()
-							.parent()
-							.remove();
-					});
-
-					dialogTemplate.on('click', '#move_action', function() {
-						self.numbersMove(requestData, function(data) {
-							var countMove = 0;
-
-							_.each(dataNumbers.listAccounts, function(account, indexAccount) {
-								if(account.id === destinationAccountId) {
-									destinationIndex = indexAccount;
-								}
-
-								if(account.id in mapAccounts) {
-									var newList = [];
-									_.each(account.spareNumbers, function(number, indexNumber) {
-										if(!(number.phoneNumber in data.success)) {
-											newList.push(number);
-										}
-										else {
-											data.success[number.phoneNumber] = number;
-											countMove++;
-										}
-									});
-
-									dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
-									dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
-								}
-							});
-
-							/* If we didn't open it yet, it will be automatically updated when we click on it */
-							if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
-								_.each(data.success, function(value, number) {
-									dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
+							if(account.id in mapAccounts) {
+								var newList = [];
+								_.each(account.spareNumbers, function(number, indexNumber) {
+									if(!(number.phoneNumber in data.success)) {
+										newList.push(number);
+									}
+									else {
+										data.success[number.phoneNumber] = number;
+										countMove++;
+									}
 								});
 
-								dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
+								dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+								dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
 							}
+						});
 
-							self.numbersPaintSpare(parent, dataNumbers, function() {
-								var dataTemplate = {
-										count: countMove,
-										accountName: dataNumbers.listAccounts[destinationIndex].name
-									},
-									template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
-
-								dialogTemplate.parent().parent().remove();
-								$('body').css('overflow', 'auto');
-
-								toastr.success(template);
+						/* If we didn't open it yet, it will be automatically updated when we click on it */
+						if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
+							_.each(data.success, function(value, number) {
+								dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
 							});
+
+							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
+						}
+
+						self.numbersPaintSpare(parent, dataNumbers, function() {
+							var dataTemplate = {
+									count: countMove,
+									accountName: dataNumbers.listAccounts[destinationIndex].name
+								},
+								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
+
+							dialogTemplate.parent().parent().remove();
+
+							toastr.success(template);
 						});
 					});
-				};
+				});
+			};
 
 			parent.on('click', '#move_numbers', function() {
 				monster.pub('common.accountBrowser.render', {
