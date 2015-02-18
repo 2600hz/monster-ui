@@ -123,12 +123,12 @@ define(function(){
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
-					if(monster._fileExists(fileName)){
+					monster._fileExists(fileName, function() {
 						monster.css(fileName);
-					}
-					else {
+					},
+					function() {
 						console.info('File Name doesn\'t exist: ', fileName);
-					}
+					});
 				};
 
 			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
