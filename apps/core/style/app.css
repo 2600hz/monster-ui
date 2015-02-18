@@ -107,12 +107,6 @@
 	display: none;
 }
 
-@media (min-width: 768px) and (max-width: 979px) {
-    .hello {
-        margin: 30px 0;
-    }
-}
-
 /* Fancy dropdown menu */
 .nav .dropdown-toggle .caret {
     border-top-color: whiteSmoke;
@@ -1241,4 +1235,97 @@ label.monster-invalid {
 
 .wysiwyg-container .wysiwyg-editor i {
 	font-size: inherit;
+}
+
+
+/********** New button designs **********/
+*[class*="monster-button"] {
+	font-size: 24px;
+	padding: 12px 20px;
+	border: none;
+}
+.monster-button-primary {
+	color: #fff;
+	background-color: #22a5ff;
+}
+.monster-button-primary:hover, .monster-button-primary:focus {
+	background-color: #4db8ff;
+}
+.monster-button-primary:active {
+	background-color: #008be8;
+}
+
+/********** New checkbox designs **********/
+
+.monster-checkbox {
+	display: inline-block;
+	position: relative;
+}
+
+.monster-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.monster-checkbox label {
+	cursor: pointer;
+	display: inline-block;
+	padding-left: 20px;
+	margin: 0;
+}
+
+.monster-checkbox label::before {
+    content: '';
+    background-color: transparent;
+    position: absolute;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    left: 0px;
+    border-radius: 3px;
+    border: 1px solid;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+}
+
+.monster-checkbox label:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
+	content: '';
+	position: absolute;
+	width: 6px;
+	height: 3px;
+	background: transparent;
+	top: 6px;
+	left: 3px;
+	border: 3px solid #fcfff4;
+	border-top: none;
+	border-right: none;
+
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+.monster-checkbox label:hover::after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	filter: alpha(opacity=30);
+	opacity: 0.3;
+}
+
+.monster-checkbox input[type=checkbox]:checked + label:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	filter: alpha(opacity=100);
+	opacity: 1;
+}
+
+.monster-checkbox input[type=checkbox]:checked + label:before {
+	background-color: #22a5ff;
+	box-shadow: none;
+	border-color: #22a5ff;
 }

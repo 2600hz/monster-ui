@@ -64,11 +64,6 @@ define(function(require){
 								popup.dialog('destroy').remove();
 
 								callbacks.success && callbacks.success(data);
-							},
-							function(data, status) {
-								monster.ui.alert(self.i18n.active().e911.errorUpdate + ': ' + data.message);
-
-								callbacks.error && callbacks.error(data);
 							}
 						);
 					}
@@ -102,11 +97,6 @@ define(function(require){
 											popup.dialog('destroy').remove();
 
 											callbacks.success && callbacks.success(data);
-										},
-										function(data, status) {
-											monster.ui.alert(self.i18n.active().e911.errorUpdate + ': ' + data.message);
-
-											callbacks.error && callbacks.error(data);
 										}
 									);
 								}

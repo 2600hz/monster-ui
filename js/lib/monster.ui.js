@@ -757,6 +757,11 @@ define(function(require){
 				else return true;
 			}, localization.customRules['checkList']);
 
+			// Adding advanced custom rules
+			$.validator.addMethod('regex', function(value, element, regexpr) {
+				return regexpr.test(value);
+			});
+
 			this.customValidationInitialized = true;
 		},
 
@@ -1084,6 +1089,18 @@ define(function(require){
 							}
 						}
 					});
+		},
+
+		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
+			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
+
+			for (var key in formData) {
+				if (key === '') {
+					delete formData[key];
+				}
+			}
+
+			return formData;
 		}
 	};
 

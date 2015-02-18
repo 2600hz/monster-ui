@@ -29,45 +29,37 @@ define(function(require){
 			var self = this,
 				mainContainer = $('#monster-content');
 
-			self.getWhitelabel(function(data) {
-				// Merge the whitelabel info to replace the hardcoded info
-				if(data && data.hasOwnProperty('company_name')) {
-					data.companyName = data.company_name;
-				}
-				monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, data);
+			if(!$.cookie('monster-auth')) {
+				if('authentication' in monster.config.whitelabel) {
+					self.customAuth = monster.config.whitelabel.authentication;
 
-				if(!$.cookie('monster-auth')) {
-					if('authentication' in data) {
-						self.customAuth = data.authentication;
+					var options = {
+						sourceUrl: self.customAuth.source_url,
+						apiUrl: self.customAuth.api_url
+					};
 
-						var options = {
-							sourceUrl: self.customAuth.source_url,
-							apiUrl: self.customAuth.api_url
-						};
-
-						monster.apps.load(self.customAuth.name, function(app) {
-							app.render(mainContainer);
-						}, options);
-					}
-					else {
-						self.renderLoginPage(mainContainer);
-					}
+					monster.apps.load(self.customAuth.name, function(app) {
+						app.render(mainContainer);
+					}, options);
 				}
 				else {
-					var cookieData = $.parseJSON($.cookie('monster-auth'));
-
-					self.authToken = cookieData.authToken;
-					self.accountId = cookieData.accountId;
-					self.userId = cookieData.userId;
-					self.isReseller = cookieData.isReseller;
-					self.resellerId = cookieData.resellerId;
-					self.installedApps = cookieData.installedApps;
-
-					self.afterLoggedIn();
+					self.renderLoginPage(mainContainer);
 				}
+			}
+			else {
+				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				callback && callback(self);
-			});
+				self.authToken = cookieData.authToken;
+				self.accountId = cookieData.accountId;
+				self.userId = cookieData.userId;
+				self.isReseller = cookieData.isReseller;
+				self.resellerId = cookieData.resellerId;
+				self.installedApps = cookieData.installedApps;
+
+				self.afterLoggedIn();
+			}
+
+			callback && callback(self);
 		},
 
 		render: function(container){
@@ -194,7 +186,9 @@ define(function(require){
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
-			$('#monster-content').empty();
+			$('#monster-content').addClass('monster-content');
+			$('#main .footer-wrapper').append($('#monster-content .powered-by-block .powered-by'));
+			$('#monster-content ').empty();
 
 			self.afterLoggedIn();
 		},
@@ -405,6 +399,8 @@ define(function(require){
 				callback = function() {
 					container.append(template);
 					self.renderLoginBlock();
+					template.find('.powered-by-block').append($('#main .footer-wrapper .powered-by'));
+					$('#monster-content').removeClass('monster-content');
 				};
 
 			if(monster.config.whitelabel.custom_welcome) {
@@ -415,7 +411,7 @@ define(function(require){
 						generateError: false
 					},
 					success: function(data, status) {
-						template.find('.left_div').empty().html(data);
+						template.find('.left-div').empty().html(data);
 						callback();
 					},
 					error: function(data, status) {
@@ -444,7 +440,7 @@ define(function(require){
 					showRegister: monster.config.hide_registration || false
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
-				content = $('#welcome_page .right_div');
+				content = $('#auth_container .right-div .login-block');
 
 			loginHtml.find('.login-tabs a').click(function(e) {
 				e.preventDefault();
@@ -452,6 +448,8 @@ define(function(require){
 			});
 
 			content.empty().append(loginHtml);
+
+
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
@@ -636,24 +634,6 @@ define(function(require){
 					if(typeof error === 'function') {
 						error(err);
 					}
-				}
-			});
-		},
-
-		getWhitelabel: function(callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'whitelabel.getByDomain',
-				data: {
-					domain: window.location.hostname,
-					generateError: false
-				},
-				success: function(_data) {
-					callback && callback(_data.data);
-				},
-				error: function(err) {
-					callback && callback({});
 				}
 			});
 		}

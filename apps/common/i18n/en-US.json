@@ -100,7 +100,6 @@
 		"addressLine2": "Address Line 2",
 		"city": "City",
 		"dialogTitle": "Edit 911 Location",
-		"errorUpdate": "Failed to update the E911 Settings for this phone number",
 		"gmapPinLabel": "Your+E911+Location",
 		"infoBox": "This address will show up to 911 emergency services when you dial it from your number.",
 		"label": "e911",
