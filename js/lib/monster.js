@@ -12,12 +12,17 @@ define(function(require){
 	var monster = {
 		_channel: postal.channel('monster'),
 
-		// ping the server to see if a file exists. this is not an exhaustive or intensive operation.
-		_fileExists: function(url){
-			var http = new XMLHttpRequest();
-			http.open('HEAD', url, false);
-			http.send();
-			return http.status != 404;
+		_fileExists: function(url, success, error) {
+			$.ajax({
+				url: url,
+				type:'HEAD',
+				error: function(status) {
+					error && error();
+				},
+				success: function(status) {
+					success && success();
+				}
+			});
 		},
 
 		_requests: {},
