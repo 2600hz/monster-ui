@@ -1340,27 +1340,21 @@ label.monster-invalid {
 	vertical-align: text-top;
 }
 
-*[class*="monster-button-primary"] {
+.monster-button-primary {
 	border-color: #0297e5;
-	color: #22a5ff;
-}
-.monster-button-primary-filled {
 	background-color: #22a5ff;
 	color: #0d456b;
 }
-/*.monster-button-primary:hover, .monster-button-primary:focus {
-	background-color: #4db8ff;
-}
-.monster-button-primary:active {
-	background-color: #008be8;
-}*/
 
-*[class*="monster-button-success"] {
+.monster-button-secondary {
+	border-color: #0297e5;
+	color: #22a5ff;
+}
+
+.monster-button-success {
+	background-color: #1def36;
 	border-color: #13c85e;
 	color: #2c7705;
-}
-.monster-button-success-filled {
-	background-color: #1def36;
 }
 
 /********** New checkbox designs **********/
