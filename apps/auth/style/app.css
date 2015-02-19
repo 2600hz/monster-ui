@@ -34,7 +34,7 @@
 	height: 100%;
 	margin-right: 330px;
 
-	background: url(static/images/bg-step1.svg.png) no-repeat center center #303039;
+	background: url(static/images/bg-step1.svg) no-repeat center center #303039;
 
 	-webkit-animation: animate-bg 22s infinite;
 	   -moz-animation: animate-bg 22s infinite;
