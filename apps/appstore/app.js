@@ -155,31 +155,27 @@ define(function(require){
 					if(!("apps" in results.account)) {
 						results.account.apps = {};
 					}
-					results.apps = _.filter(results.apps, function(val, key) {
-						if(installedAppIds.indexOf(val.id) >= 0) {
-							if(val.id in results.account.apps) {
-								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-								if('all' in results.account.apps[val.id]) {
-									results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
-									delete results.account.apps[val.id].all;
-								}
-								/*****************************************************************************************/
-								if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
-									val.tags ? val.tags.push("installed") : val.tags = ["installed"];
-								}
-							}
-							var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
 
-							val.label = i18n.label;
-							val.description = i18n.description;
-							parallelIconRequests.push(function(parallelCallback) {
-								getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
-							});
-							delete val.i18n;
-							return true;
-						} else {
-							return false;
+					results.apps.forEach(function(val, idx) {
+						if(val.id in results.account.apps) {
+							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+							if('all' in results.account.apps[val.id]) {
+								results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
+								delete results.account.apps[val.id].all;
+							}
+							/*****************************************************************************************/
+							if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
+								val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+							}
 						}
+						var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
+
+						val.label = i18n.label;
+						val.description = i18n.description;
+						parallelIconRequests.push(function(parallelCallback) {
+							getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
+						});
+						delete val.i18n;
 					});
 
 					monster.parallel(parallelIconRequests, function(iconsErr, iconsResults) {
@@ -378,6 +374,32 @@ define(function(require){
 								users: []
 							},
 							function() {
+								var cookieData = $.parseJSON($.cookie('monster-auth')),
+									lang = monster.config.whitelabel.language,
+									isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
+									currentLang = app.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US',
+									appData = {
+										api_url: app.api_url,
+										icon: self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.authToken,
+										id: app.id,
+										label: app.i18n[currentLang].label,
+										name: app.name
+									};
+
+								// Add source_url only if it defined 
+								if (app.hasOwnProperty('source_url')) {
+									appData.source_url = app.source_url;
+								}
+
+								// Update local installedApps list by adding the new app
+								monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
+
+								// Update installedApps list of the cookie by adding the new app
+								cookieData.installedApps.push(appData);
+
+								// Update cookie
+								$.cookie('monster-auth', JSON.stringify(cookieData));
+
 								parent.find('.permissions-bloc').slideDown();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
 								$('#appstore_container .app-filter.active').click();
@@ -394,6 +416,17 @@ define(function(require){
 								users: []
 							},
 							function() {
+								var cookieData = $.parseJSON($.cookie('monster-auth'));
+
+								// Remove app from local installedApp list
+								monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+
+								// Remove app from installedApps of the cookie
+								cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+
+								// Update cookie
+								$.cookie('monster-auth', JSON.stringify(cookieData));
+
 								parent.find('.permissions-bloc').slideUp();
 								$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
 								$('#appstore_container .app-filter.active').click();
