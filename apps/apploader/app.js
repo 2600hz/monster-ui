@@ -184,7 +184,9 @@ define(function(require){
 				var $this = $(this),
 					appName = $this.data('name');
 
-				self.appListUpdate(parent, appList, function() {
+				self.appListUpdate(parent, appList, function(newAppList) {
+					appList = newAppList;
+
 					monster.apps.load(appName, function(app) {
 						parent.find('.right-div .app-element.active')
 							.removeClass('active');
@@ -203,20 +205,24 @@ define(function(require){
 			});
 
 			parent.find('#close_app').on('click', function() {
-				self.appListUpdate(parent, appList, function() {
+				self.appListUpdate(parent, appList, function(newAppList) {
+					appList = newAppList;
+
 					self._hide(parent);
 				});
 			});
 
 			$(document).on('keydown', function(e) {
-				if (e.keyCode === 27) {
+				if (parent.is(':visible') && e.keyCode === 27) {
 					var target = $(e.target);
 
 					if (target.hasClass('search-query')) {
 						target.val('');
 					}
 					else {
-						self.appListUpdate(parent, appList, function() {
+						self.appListUpdate(parent, appList, function(newAppList) {
+							appList = newAppList;
+
 							self._hide(parent);
 						});
 					}
@@ -242,7 +248,15 @@ define(function(require){
 			if (apploader.hasClass('active')) {
 				apploader
 					.removeClass('active')
-					.fadeOut(250);
+					.fadeOut(250, function() {
+						// Put the default app at the beginning of the list in the DOM
+						if (defaultAppId !== apploader.find('.right-div .app-element').first().data('id')) {
+							var defaultAppId = apploader.find('.left-div .app-element').data('id');
+
+							apploader.find('.right-div .app-list')
+								.prepend(apploader.find('.right-div .app-element[data-id="' + defaultAppId + '"]'));
+						}
+					});
 			}
 		},
 
@@ -426,37 +440,27 @@ define(function(require){
 
 		appListUpdate: function(parent, appList, callback) {
 			var self = this,
-				domAppList = $.map( parent .find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
+				domAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
+				sameOrder = appList.every(function(v, i) { return v.id === domAppList[i] }),
 				domDefaultAppId = parent.find('.left-div .app-element').data('id'),
-				sameDefaultApp = appList[0].id === domDefaultAppId,
-				sameOrder= true;
-
-			// Check if the apps in the DOM are in the same order than in the original app list
-			appList.every(function(v, i) {
-				if (v.id !== domAppList[i]) {
-					sameOrder = false
-					return false;
-				}
-				else {
-					return true;
-				}
-			});
+				sameDefaultApp = appList[0].id === domDefaultAppId;
 
 			if (sameDefaultApp && sameOrder) {
-				callback();
+				callback(appList);
 			}
 			else {
-				// Move the new default app to the top of the new app list
-				for (var i = 0, len = appList.length; i < len; i++) {
-					if (domDefaultAppId === domAppList[i]) {
-						domAppList.unshift(domAppList.splice(i, 1)[0]);
-						break;
-					}
-				}
+				var newAppList = [];
+
+				domAppList.unshift(domAppList.splice(domAppList.indexOf(domDefaultAppId), 1)[0]);
+
+				appList.forEach(function(v, i) {
+					newAppList[domAppList.indexOf(v.id)] = v;
+				});
 
 				monster.apps.auth.currentUser.appList = domAppList;
+				monster.apps.auth.defaultApp = newAppList[0].name;
 
-				self.userUpdate(callback);
+				self.userUpdate(callback(newAppList));
 			}
 		},
 
