@@ -600,7 +600,7 @@ table.table tr td {
 	padding: 10px;
 }
 
-[data-toggle="tooltip"] {
+i[data-toggle="tooltip"] {
 	cursor: default;
 	margin-right: 5px;
 	margin-left: 5px;
@@ -1505,4 +1505,86 @@ label.monster-invalid {
 	left: 43px;
 	background: #fff;
 	border-color: #1e8dd9;
+}
+
+/* Quick List */
+/* Could be used when we add flags on a carrier, is used when we add recipients to a Voicemail Box in the SmartPBX */
+.list-entities .create-entity {
+	padding: 15px 0px;
+}
+
+.list-entities .create-entity > * {
+	color: #CCC;
+}
+
+.list-entities .entity-wrapper {
+	border: 1px solid #999;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.list-entities .entity-wrapper:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) {
+	background: #EEE;
+	height: 20px;
+	text-align: left;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity {
+	display: inline-block;
+	float: right;
+	padding: 0 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity:hover {
+	cursor: pointer;
+	text-shadow: 0px 0px 1px #777;
+}
+
+.list-entities .entity-wrapper.placeholder {
+	border: 1px dashed #CCC;
+}
+
+.list-entities .entity-wrapper.placeholder:not(.active) {
+	cursor: pointer;
+}
+
+.list-entities .entity-wrapper.placeholder.active,
+.list-entities .entity-wrapper.placeholder:hover {
+	background: #EEE;
+	border: 1px dashed #999;
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-inputs {
+	display: inherit;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-text {
+	display: none;
+}
+
+.list-entities .entity-wrapper.placeholder:hover > i {
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder i {
+	color: #CCC;
+	margin-right: 10px;
+}
+
+.list-entities .entity-wrapper .create-inputs {
+	display: none;
+}
+
+.list-entities .entity-wrapper .create-inputs > * {
+	margin: 0 0 0 10px;
+}
+
+.list-entities .saved-entities {
+	max-height: 210px;
+	overflow: auto;
 }
