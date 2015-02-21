@@ -536,7 +536,7 @@ table.table tr td {
 	padding: 10px;
 }
 
-[data-toggle="tooltip"] {
+i[data-toggle="tooltip"] {
 	cursor: default;
 	margin-right: 5px;
 	margin-left: 5px;
@@ -1328,4 +1328,161 @@ label.monster-invalid {
 	background-color: #22a5ff;
 	box-shadow: none;
 	border-color: #22a5ff;
+}
+
+/********** New switch designs **********/
+
+/*	Expected HTML structure:
+ *	<label class="monster-switch">
+ *		<input type="checkbox">
+ *		<span>
+ *			<span>On</span>
+ *			<span>Off</span>
+ *			</span>
+ *		<a></a>
+ *	</label>
+ */
+
+.monster-switch {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.monster-switch > input {
+	display: none;
+}
+.monster-switch > span {
+	display: block;
+	padding: 4px 14px;
+	border-radius: 20px;
+	line-height: 20px;
+	width: 40px;
+	font-family: 'Source Sans Pro';
+	font-weight: 600;
+	font-size: 14px;
+	text-align: right;
+	background: #fff;
+	border: solid 1px #c0c0c9;
+	color: #909099;
+	transition: all 0.4s ease-out;
+}
+.monster-switch > span span {
+	display: none;
+}
+.monster-switch > a {
+	width: 22px;
+	height: 22px;
+	border: solid 1px #c0c0c9;
+	border-radius: 15px;
+	background: #f0f0f9;
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	transition: all 0.2s ease-out;
+}
+.monster-switch > input:checked ~ span span:first-child {
+	display:inline;
+}
+.monster-switch > input:not(:checked) ~ span span:last-child {
+	display:inline;
+}
+.monster-switch > input:checked + span {
+	text-align: left;
+	background: #22a5ff;
+	border-color: #1e8dd9;
+	color: #0d456b;
+}
+.monster-switch > input:checked ~ a {
+	left: 43px;
+	background: #fff;
+	border-color: #1e8dd9;
+}
+
+/* Quick List */
+/* Could be used when we add flags on a carrier, is used when we add recipients to a Voicemail Box in the SmartPBX */
+.list-entities .create-entity {
+	padding: 15px 0px;
+}
+
+.list-entities .create-entity > * {
+	color: #CCC;
+}
+
+.list-entities .entity-wrapper {
+	border: 1px solid #999;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.list-entities .entity-wrapper:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) {
+	background: #EEE;
+	height: 20px;
+	text-align: left;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity {
+	display: inline-block;
+	float: right;
+	padding: 0 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity:hover {
+	cursor: pointer;
+	text-shadow: 0px 0px 1px #777;
+}
+
+.list-entities .entity-wrapper.placeholder {
+	border: 1px dashed #CCC;
+}
+
+.list-entities .entity-wrapper.placeholder:not(.active) {
+	cursor: pointer;
+}
+
+.list-entities .entity-wrapper.placeholder.active,
+.list-entities .entity-wrapper.placeholder:hover {
+	background: #EEE;
+	border: 1px dashed #999;
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-inputs {
+	display: inherit;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-text {
+	display: none;
+}
+
+.list-entities .entity-wrapper.placeholder:hover > i {
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder i {
+	color: #CCC;
+	margin-right: 10px;
+}
+
+.list-entities .entity-wrapper .create-inputs {
+	display: none;
+}
+
+.list-entities .entity-wrapper .create-inputs > * {
+	margin: 0 0 0 10px;
+}
+
+.list-entities .saved-entities {
+	max-height: 210px;
+	overflow: auto;
 }
