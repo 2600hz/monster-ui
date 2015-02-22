@@ -1,0 +1,22 @@
+{
+	"defaultApp": {
+		"title": "Standaard App",
+		"label": "Wanneer u een standaard app kiest kunt u die direct gebruiken na het inloggen."
+	},
+	"noDefaultApp": {
+		"label": "Geen standard app geselecteerd"
+	},
+	"appDescription": {
+		"title": "De default app instellen",
+		"label": "Om de default app in te stellen sleept u deze naar de aangewezen ruimte hierboven."
+	},
+	"searchQuery": {
+		"placeholder": "Zoek Apps"
+	},
+	"appstore": {
+		"button": "App Exchange"
+	},
+	"appList": {
+		"title": "Uw Apps"
+	}
+}
