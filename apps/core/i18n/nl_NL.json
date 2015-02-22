@@ -132,8 +132,8 @@
 "confirmCharges": {
 "title": "Kosten Overzicht",
 "withChargesPartOne": "U betaald een ${{variable}}",
-"withChargesPartTwo": " eenmalige {{variable}}. ",
-"withoutCharges": ""Er zijn geen {{variable}}.",
+"withChargesPartTwo": "eenmalige {{variable}}. ",
+"withoutCharges": "Er zijn geen {{variable}}.",
 "detail": "Een overzicht van de maandelijkste kosten voor deze service:",
 "service": "Service",
 "rate": "Tarief",
