@@ -31,7 +31,7 @@
 		},
 		"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
 		"errorMessages": {
-			"datastore_conflict": "An error was cause by conflicting database documents. Please try again, and contact your administrator if it reoccurs.",
+			"datastore_conflict": "An error was caused by conflicting database documents. Please try again, and contact your administrator if it reoccurs.",
 			"account_has_descendants": "You can not delete an account that has sub-accounts."
 		}
 	},
@@ -129,7 +129,7 @@
 	"confirmCharges": {
 		"title": "Charges Confirmation",
 		"withChargesPartOne": "You will pay a ${{variable}}",
-		"withChargesPartTwo": " on-time {{variable}}. ",
+		"withChargesPartTwo": " one-time {{variable}}. ",
 		"withoutCharges": "There is no {{variable}}.",
 		"detail": "Here is the detail of the monthly charges attached to your account for this service:",
 		"service": "Service",
