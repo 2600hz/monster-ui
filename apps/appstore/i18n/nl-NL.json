@@ -1,0 +1,31 @@
+{
+"description": "Omschrijving",
+"featuresTitle": "Functies:",
+"undefinedFeatures": "Functielijst is nog niet beschikbaar..",
+"author": "Auteur
+"version": "Versie",
+"license": "Licentie",
+"price": "Prijs",
+"free": "Gratis",
+"save": "Opslaan",
+"filters": {
+"all": "Alle Apps",
+"installed": "Mijn Apps",
+"resellers": "Resellers Apps",
+"carriers": "Carriers Apps",
+"developers": "Ontwikkelaars Apps"
+},
+"permissions": {
+"title": "Wie kan deze app gebruiken?",
+"all": "Alle gebruikers",
+"admins": "Alleen Admins",
+"specific": "Specifieke Gebruikers"
+},
+"selectedUsers": "Geselecteerde Gebruikers",
+"selectAll": "Selecteer Alles",
+"unselectAll": "Deselecteer Alles",
+"selectUsersLink": "Geselecteerde Gebruikers ({{selectedUsers}})",
+"alerts": {
+"noUserSelected": "U moet minimaal 1 gebruiker selecteren voor deze app.<br><br>Als niet wilt dat iemand dze app gebruikt kunt u deze uitschakelen."
+}
+}
