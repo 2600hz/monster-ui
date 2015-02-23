@@ -23,24 +23,25 @@
 			<div class="numbers-wrapper">
 				{{#each usedNumbers}}
 					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
-					{{#unless isLocal}}
 						<div class="number-options">
 							<div class="navbar">
 								<ul class="nav pull-right">
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
 										<ul class="dropdown-menu">
+										{{#unless isLocal}}
 											<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../../../i18n.callerId.label }}</a></li>
 											<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../../../i18n.e911.label }}</a></li>
 											{{#compare this.used_by "===" "trunkstore"}}
 												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../../../i18n.failover.label }}</a></li>
 											{{/compare}}
+										{{/unless}}
+											<li><a class="prepend-number" href="#"><i class="icon-file-text-alt"></i>{{ ../../i18n.numberPrepend.label }}</a></li>
 										</ul>
 									</li>
 								</ul>
 							</div>
 						</div>
-					{{/unless}}
 						<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
 						<div class="locality">
 							{{#if this.isoCountry }}

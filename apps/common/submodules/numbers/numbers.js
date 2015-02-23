@@ -78,7 +78,8 @@ define(function(require){
 					inbound_cnam: { icon: 'icon-green icon-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
 					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
 					local: { icon: 'icon-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'icon-phone icon-yellow feature-port' }
+					port: { icon: 'icon-phone icon-yellow feature-port' },
+					prepend: { icon: 'icon-orange icon-file-text-alt feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
 
 			if(callback) {
@@ -141,7 +142,7 @@ define(function(require){
 			var sortByDate = function(a,b) {
 					return a.updated > b.updated ? -1 : 1;
 				},
-			    sortByName = function(a,b) {
+				sortByName = function(a,b) {
 					return a.phoneNumber > b.phoneNumber;
 				};
 
@@ -186,7 +187,7 @@ define(function(require){
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
 								usedNumbers = [],
-			    				sortByName = function(a,b) {
+								sortByName = function(a,b) {
 									return a.phoneNumber > b.phoneNumber;
 								};
 
@@ -754,6 +755,28 @@ define(function(require){
 				}
 			});
 
+			parent.on('click', '.prepend-number', function() {
+				var prependCell = $(this).parents('.number-box').first(),
+					phoneNumber = prependCell.data('phonenumber');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if('prepend' in data.data && data.data.prepend.enabled) {
+									prependCell.find('.features i.feature-prepend').addClass('active');
+								} else {
+									prependCell.find('.features i.feature-prepend').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.numberPrepend.renderPopup', args);
+				}
+			});
+
 			var searchListNumbers = function(searchString, parent) {
 				var viewList = parent;
 
@@ -944,26 +967,26 @@ define(function(require){
 				data.accountName = accountName;
 
 				var formattedData = self.numbersFormatDialogSpare(data),
-				    spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
+					spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
 
-                spareTemplate.find('.empty-search-row').hide();
+				spareTemplate.find('.empty-search-row').hide();
 
 				spareTemplate.on('keyup', '.search-query', function() {
-                	var rows = spareTemplate.find('.number-box'),
-                    	emptySearch = spareTemplate.find('.empty-search-row'),
-                    	currentRow;
+					var rows = spareTemplate.find('.number-box'),
+						emptySearch = spareTemplate.find('.empty-search-row'),
+						currentRow;
 
-                	currentNumberSearch = $(this).val().toLowerCase();
+					currentNumberSearch = $(this).val().toLowerCase();
 
-                	_.each(rows, function(row) {
-                    	currentRow = $(row);
-                    	currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
-                	});
+					_.each(rows, function(row) {
+						currentRow = $(row);
+						currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+					});
 
-                	if(rows.size() > 0) {
-                    	rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
-                	}
-            	});
+					if(rows.size() > 0) {
+						rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+					}
+				});
 
 				spareTemplate.find('#proceed').on('click', function() {
 					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),

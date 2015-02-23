@@ -75,7 +75,11 @@
 				"questionPartThree": "?",
 				"button": "move number(s)"
 			}
-		}
+		},
+
+		"__comment": "UI-1219: Adding the prepend feature to numbers",
+		"__version": "v3.20_s1",
+		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone"
 	},
 
 	"callerId": {
@@ -393,5 +397,15 @@
 		},
 		"saveSuccess": "You successfully updated the Carrier settings for this account!",
 		"huntError": "Your existing settings for your no_match route are not supported in Monster UI, don't change anything in this screen if you wish to continue to use these settings. Otherwise, select one of the option in the dropdown!"
+	},
+
+	"__comment": "UI-1219: Adding the prepend feature to numbers",
+	"__version": "v3.20_s1",
+	"numberPrepend": {
+		"dialogTitle": "Number Prepend Setup",
+		"title": "Text to prepend",
+		"label": "Prepend",
+		"help": "This text will appear before your number when receiving a call. This can be used to better identify which number was called when you use more than one.",
+		"successUpdate": "You successfully updated the prepended text for {{phoneNumber}}"
 	}
 }
