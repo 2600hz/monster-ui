@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<title>Monster UI Styleguide</title>
+		<link href="css/normalize.css" rel="stylesheet" type="text/css">
+		<link href="css/spyder.css" rel="stylesheet" type="text/css">
+		<link href="css/animate.css" rel="stylesheet" type="text/css">
+		<!-- insert Google web fonts link here -->
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+		<link href="font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+			<!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700' rel='stylesheet' type='text/css'> -->
+		<link href="css/components.css" rel="stylesheet" type="text/css">
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+	</head>
+	 
+	<body>
+		<header>
+			<div class="content-wrap">
+				<div class="row">
+					<h1 class="wordmark">Monster <span>UI</span></h1>
+
+					<nav role="navigation">
+						<ul class="list-horizontal main-nav">
+							<li class=""><a href="index.html">Styles</a></li>  
+							<li class="active"><a href="">Components</a></li>  
+						</ul>
+					</nav>
+				</div> <!-- /row -->
+			</div> <!-- /content-wrap -->
+		</header>
+
+		<div class="page-nav">
+			<div class="content-wrap">
+				<div class="row">
+					<nav role="sub-navigation">
+						<ul class="list-horizontal sub-nav">
+							<li class=""><a href="#buttons">Buttons</a></li>
+							<li><a href="">Component 2</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div> <!-- /content-wrap -->
+		</div>
+
+		<!-- 
+		======================================
+		        COMPONENET > BUTTONS     
+		======================================
+		 -->
+		<section class="alpha" id="buttons">
+			<div class="content-wrap">
+				<div class="row">
+					<h2 class="section-title gutter-add--left">Buttons</h2>
+				</div>
+				
+				
+				<ul class="btn-toggle list-horizontal gutter-add--left">
+					<li class="active" data-toggle="btn-structure">Structure</li>
+					<li data-toggle="roles">Roles &amp; Styling</li>
+					<li data-toggle="btn-interactions">Interaction</li>
+				</ul>
+
+				<!-- ***** button STRUCTURE toggle section ***** -->
+				<div class="btn-toggle-wrap visible" data-toggle="btn-structure">
+					<div class="row">
+						<div class="col-7">
+							<p class="description">The base styling for buttons can be seen below&mdash;please note that there is a <span class="highlight">min-width</span> and <span class="highlight">padding</span>  specified. This is to keep all buttons uniform, and these properties should not be changed. This base <code class="inline"><span class="selector">.btn</span></code> class will never be used on its own, rather it will always be accompanied with a modifier class that specifies what Role &amp; Styling the button obtains (as seen in the utility button below).
+							<span class="line-break"></span>
+							There are currently two button structures: <span class="highlight">Base and Utility</span>. Each can be seen below with their corresponding code. Note that utility buttons contain icons, implemented with <code class="inline">&lt;i&gt;</code> tags. Monster UI currently makes use of the Font Awesome icon library as well as a proprietary icon library known as Telicon.</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12">
+							<button class="btn">Base Style</button>
+							<button class="btn utility mt-30"><i class="fa fa-cog"></i>Utility Button</button>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="col-7">
+							<div class="row">
+								<div class="code-wrapper">
+									<code class="html">
+										<span class="tag">&lt;button
+										<span class="attribute">class</span>=<span class="value">"btn"</span>&gt;Base Style&lt;/button&gt;</span>
+										<br>
+										<br>
+										<span class="tag">&lt;button
+										<span class="attribute">class</span>=<span class="value">"btn utility"</span>&gt;<br>
+										<span class="indent"></span>&lt;i <span class="attribute">class</span>=<span class="value">"fa fa-cog"</span>&gt;Utility Button <br>
+										&lt;/button&gt;</span>
+									</code>
+								</div>
+							</div>
+
+							<div class="row mt-30">
+								<div class="code-wrapper">
+									<code class="css">
+										<span class="selector">.btn</span> { <br>
+											<span class="indent"></span>font-size: 15px; <br>
+											<span class="indent"></span>padding: 7px 20px; <br>
+											<span class="indent"></span>min-width: 140px; <br>
+											<span class="indent"></span>border: 1px solid; <br>
+											<span class="indent"></span>border-radius: 2px; <br>
+											<span class="indent"></span>position: relative; <br>
+											<span class="indent"></span>letter-spacing: .02em; <br>
+										} 
+										<br>
+										<br>
+										<span class="selector">.btn.utility</span> { <br>
+											<span class="indent"></span>background: transparent; <br>
+											<span class="indent"></span>border-color: #22a5ff; <br>
+											<span class="indent"></span>color: #22a5ff; <br>
+										} <br>
+										<span class="selector">.btn.utility i</span> { <br>
+											<span class="indent"></span>margin-right: 8px;<br>
+										}
+									</code>
+								</div>
+							</div>
+						</div> <!-- /col-7 -->
+					</div>
+
+					
+				</div>
+
+				<!-- ***** button ROLES toggle section ***** -->
+				<div class="btn-toggle-wrap" data-toggle="roles">
+					<div class="row">
+						<div class="col-7">
+							<p class="description">There are currently six different levels of button hierarchy, with each button having a specific role and style.</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="f-col-275">
+							<button class="btn primary splash">Update Info</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Primary</h2>
+							
+							<p class="category-overview">Primary buttons are only to be used when there is a clear call-to-action that the user needs to take. A few examples are actions such as <span class="highlight">Add Credit</span>, <span class="highlight">Change Info</span>, or <span class="highlight">Update Limit</span>.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.primary</span> {<br>
+										<span class="indent">background: #22a5ff;</span> <br>
+										<span class="indent">border-color: #0087e0;</span> <br>
+										<span class="indent">color: #004c80;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="f-col-275">
+							<button class="btn utility splash"><i class="fa fa-download"></i>Download</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Utility / Functionality</h2>
+							
+							<p class="category-overview">Utility buttons signify secondary actions that usually address another element. Some examples are actions like <span class="highlight">Refresh</span>, <span class="highlight">Filter</span>, or <span class="highlight">Download</span>.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.utility</span> {<br>
+										<span class="indent">background: transparent;</span> <br>
+										<span class="indent">border-color: #22a5ff;</span> <br>
+										<span class="indent">color: #22a5ff;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="f-col-275">
+							<button class="btn confirm splash">Purchase</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Confirmation / Finalization</h2>
+							
+							<p class="category-overview">These buttons are <span class="highlight">ONLY</span> used for final confirmation of actions, and almost solely live within confirmation dialogue modals. Confirmations such as <span class="highlight">Save Changes</span> or <span class="highlight">Purchase</span> fall under this role.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.confirm</span> {<br>
+										<span class="indent">background: #33DB24;</span> <br>
+										<span class="indent">border-color: #18b309;</span> <br>
+										<span class="indent">color: #0e6b06;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="f-col-275">
+							<button class="btn cancel splash">Cancel</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Cancel / Undo / Disregard Changes</h2>
+							
+							<p class="category-overview">These buttons are used to cancel actions/ changes before a Confirming. As such, they are almost always paired with a Confirmation button.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.cancel</span> {<br>
+										<span class="indent">background: transparent;</span> <br>
+										<span class="indent">border-color: #c0c0c9;</span> <br>
+										<span class="indent">color: #909099;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="f-col-275">
+							<button class="btn warning splash">Deactivate</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Warning Implications</h2>
+							
+							<p class="category-overview">Used very sparingly, these are used for actions that can alter serious funcitonality of the platform, but are most likely temporary changes. An example would be to <span class="highlight">Deactivate</span> an account until an overdue balance is paid.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.warning</span> {<br>
+										<span class="indent">background: #ffcc33;</span> <br>
+										<span class="indent">border-color: #f0b400;</span> <br>
+										<span class="indent">color: #8f6b00;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-55">
+						<div class="f-col-275">
+							<button class="btn delete splash">Delete</button>
+						</div>
+						<div class="col-5">
+							<h2 class="category-title">Removal / Finalization</h2>
+							
+							<p class="category-overview">This role is pretty self-explanatory, and is <span class="highlight">ONLY</span> used as a final confirmation to delete/ remove something from the system.</p>
+
+							<span class="code-toggle">View Class Styles</span>
+							<div class="code-wrapper hidden">
+								<code class="css">
+									<span class="selector">.btn.delete</span> {<br>
+										<span class="indent">background: #ff3d24;</span> <br>
+										<span class="indent">border-color: #e01a00;</span> <br>
+										<span class="indent">color: #8a1000;</span> <br>
+									}
+								</code>
+							</div>
+						</div>
+					</div>
+				</div> 
+
+				<!-- ***** button INTERACTION toggle section ***** -->
+				<div class="btn-toggle-wrap" data-toggle="btn-interactions">
+					<div class="row">
+						<div class="col-7">
+							<p class="description">Description introducing the Splash interaction.</p>
+						</div>
+					</div>
+
+
+
+				</div> <!-- /btn-interactions-toggle -->
+			</div>
+		</section>
+
+		<!-- 
+		======================================
+		        ??? COMPONENET SECTION     
+		======================================
+		 -->
+		<section class="" id="">
+			<div class="content-wrap">
+				<div class="row">
+					<h2 class="section-title gutter-add--left">More Component Specs Coming Soon...</h2>
+				</div>
+			</div>
+		</section>
+
+		<script type="text/javascript" src="js/components.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+	</body>
+</html>

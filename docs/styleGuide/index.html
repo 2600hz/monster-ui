@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<title>Monster UI Styleguide</title>
+		<link href="css/normalize.css" rel="stylesheet" type="text/css">
+		<link href="css/spyder.css" rel="stylesheet" type="text/css">
+		<link href="css/animate.css" rel="stylesheet" type="text/css">
+		<!-- insert Google web fonts link here -->
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700|Inconsolata' rel='stylesheet' type='text/css'>
+		<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+			<!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700' rel='stylesheet' type='text/css'> -->
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+	</head>
+	 
+	<body>
+		<header>
+			<div class="content-wrap">
+				<div class="row">
+					<h1 class="wordmark">Monster <span>UI</span></h1>
+
+					<nav role="navigation">
+						<ul class="list-horizontal main-nav">
+							<li class="active"><a href="">Styles</a></li>  
+							<li class=""><a href="components.html">Components</a></li>  
+						</ul>
+					</nav>
+				</div> <!-- /row -->
+			</div> <!-- /content-wrap -->
+		</header>
+
+		<div class="page-nav">
+			<div class="content-wrap">
+				<div class="row">
+					<nav role="sub-navigation">
+						<ul class="list-horizontal sub-nav">
+							<li class="active"><a href="#colors">Colors</a></li>
+							<li><a href="#typography">Typography</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div> <!-- /content-wrap -->
+		</div>
+
+		<section class="alpha" id="colors">
+			<div class="content-wrap">
+				<div class="row">
+					<h2 class="section-title gutter-add--left">Colors</h2>
+				</div>
+				<div class="row">
+					<div class="col-7">
+						<p class="description">Monster UI is a robust interface that displays very large quantites of information with variying levels of functionality. Due to the vast levels of hierarchy needed, a larger, more versatile color scheme is required to help with categorization.
+						<span class="line-break"></span>
+						Included in the base color scheme are the main app color (Monster Blue), three tertiary colors (Emerald, Custard, and Candy Red), and nine neutral shades, which are broken down into three dark (Charcoal), three mid (Steel), and three light (Smoke) variations.</p>
+					</div>
+				</div>
+
+				<ul class="color-toggle list-horizontal gutter-add--left">
+					<li class="active" data-toggle="colors">Colors</li>
+					<li data-toggle="neutrals">Neutrals</li>
+				</ul>
+
+				<div class="color-toggle-wrap visible" data-toggle="colors">
+					<div class="row"> 
+						<ul class="swatch-list col-6"> <!-- Monster Blue -->
+							<li class="swatch secondary alpha"> 
+								<div class="color monBlue-light"></div>
+								<span class="value">#57bcff</span>
+							</li>
+							<li class="swatch primary">
+								<div class="color monBlue"></div>
+								<span class="title">Monster Blue</span>
+								<span class="value">#22a5ff</span>
+							</li>
+							<li class="swatch secondary">
+								<div class="color monBlue-mid"></div>
+								<span class="value">#0087e0</span>
+							</li>
+							<li class="swatch secondary omega">
+								<div class="color monBlue-dark"></div>
+								<span class="value">#004c80</span>
+							</li>
+						</ul>
+
+						<ul class="swatch-list col-6"> <!-- Emerald -->
+							<li class="swatch secondary alpha">
+								<div class="color emerald-light"></div>
+								<span class="value">#6ff862</span>
+							</li>
+							<li class="swatch primary">
+								<div class="color emerald"></div>
+								<span class="title">Emerald</span>
+								<span class="value">#33db24</span>
+							</li>
+							<li class="swatch secondary">
+								<div class="color emerald-mid"></div>
+								<span class="value">#18b309</span>
+							</li>
+							<li class="swatch secondary omega">
+								<div class="color emerald-dark"></div>
+								<span class="value">#0e6b06</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="next-row"> 
+						<ul class="swatch-list col-6"> <!-- Custard -->
+							<li class="swatch secondary alpha">
+								<div class="color custard-light"></div>
+								<span class="value">#ffd966</span>
+							</li>
+							<li class="swatch primary">
+								<div class="color custard"></div>
+								<span class="title">Custard</span>
+								<span class="value">#ffcc33</span>
+							</li>
+							<li class="swatch secondary">
+								<div class="color custard-mid"></div>
+								<span class="value">#f0b400</span>
+							</li>
+							<li class="swatch secondary omega">
+								<div class="color custard-dark"></div>
+								<span class="value">#8f6b00</span>
+							</li>
+						</ul>
+
+						<ul class="swatch-list col-6"> <!-- Candy Red -->
+							<li class="swatch secondary alpha">
+								<div class="color candyRed-light"></div>
+								<span class="value">#ff6a57</span>
+							</li>
+							<li class="swatch primary">
+								<div class="color candyRed"></div>
+								<span class="title">Candy Red</span>
+								<span class="value">#ff3d24</span>
+							</li>
+							<li class="swatch secondary">
+								<div class="color candyRed-mid"></div>
+								<span class="value">#e01a00</span>
+							</li>
+							<li class="swatch secondary omega">
+								<div class="color candyRed-dark"></div>
+								<span class="value">#8a1000</span>
+							</li>
+						</ul>
+					</div>
+				</div> <!-- /dataToggle-colors -->
+
+				<div class="color-toggle-wrap gutter-add--left" data-toggle="neutrals">
+					<div class="row"> 
+						<ul class="swatch-list"> <!-- Charcoals -->
+							<li class="swatch primary solo alpha">
+								<div class="color char-1"></div>
+								<span class="title">Charcoal-1</span>
+								<span class="value">#202029</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color char-2"></div>
+								<span class="title">Charcoal-2</span>
+								<span class="value">#303039</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color char-3"></div>
+								<span class="title">Charcoal-3</span>
+								<span class="value">#404049</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="row mt-30"> 
+						<ul class="swatch-list"> <!-- Steels -->
+							<li class="swatch primary solo alpha">
+								<div class="color steel-1"></div>
+								<span class="title">Steel-1</span>
+								<span class="value">#606069</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color steel-2"></div>
+								<span class="title">Steel-2</span>
+								<span class="value">#808089</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color steel-3"></div>
+								<span class="title">Steel-3</span>
+								<span class="value">#909099</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="row mt-30"> 
+						<ul class="swatch-list"> <!-- Steels -->
+							<li class="swatch primary solo alpha">
+								<div class="color smoke-1"></div>
+								<span class="title">Smoke-1</span>
+								<span class="value">#c0c0c9</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color smoke-2"></div>
+								<span class="title">Smoke-2</span>
+								<span class="value">#e0e0e9</span>
+							</li>
+							<li class="swatch primary solo">
+								<div class="color smoke-3"></div>
+								<span class="title">Smoke-3</span>
+								<span class="value">#f0f0f9</span>
+							</li>
+						</ul>
+					</div>
+				</div> <!-- /dataToggle-neutrals -->
+
+			</div>
+		</section>
+
+		<section class="" id="typography">
+			<div class="content-wrap">
+				<div class="row">
+					<h2 class="section-title gutter-add--left">Typography</h2>
+				</div>
+
+				<div class="row">
+					<div class="col-7">
+						<p class="description">Typography guidelines and rules coming soon...</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<script type="text/javascript" src="js/script.js"></script>
+	</body>
+</html>

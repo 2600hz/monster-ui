@@ -1,0 +1,185 @@
+/*
+ *  SPYDER 1.0
+ *  A bare bones grid framework for the web, void of all pre-designed elements, for the designer who respects and takes their craft serious.
+ *  -------------------------------------------------------
+ *
+ *  License
+ *  -------------------------------------------------------
+ *  - SPYDER is licensed under the MIT License - http://opensource.org/licenses/mit-license.html
+ *  - SPYDER is licensed under the CC BY 3.0 License - http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is NOT required in your designs. However, this comment content must NOT be removed.
+ *
+ *  Contact
+ *  -------------------------------------------------------
+ *  Email: joshsandersdesign@gmail.com
+ *  Work: Visual Designer at 2600hz
+ */
+
+/* =============================== */
+/*           Basic Reset           */
+/* =============================== */
+
+/* Changes the default behavior of padding/margins for all elements */
+*,
+*:after,
+*:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* =============================== */
+/*       SPYDER Declarations       */
+/* =============================== */
+.row,
+.next-row {
+	width: 100%;
+}
+.row img {
+	max-width: 100%;
+}
+/***********  clearfix  ************/
+.row:before,
+.row:after,
+.next-row:before,
+.next-row:after {
+	content: "";
+	clear: both;
+	display: block;
+}
+.row:after,
+.next-row:after {
+	clear: both;
+}
+[class^="col-"],
+[class*=" col-"] {
+	display: inline-block;
+	vertical-align: top;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0% .5%;
+	float: left;
+}
+@media (max-width: 480px) {
+	.row > [class ^="col"] {
+		width:100%;
+	}
+
+	.row > [class^="push-"],
+	.row > [class*=" push-"] {
+		margin-left: 0;
+	}
+}
+/*******  Columns and Pushes  *******/
+.col-1 {
+	width: 8.33333333333333%;
+}
+.push-1 {
+	margin-left: 8.33333333333333%;
+}
+.col-2 {
+	width: 16.66666666666666%;
+}
+.push-2 {
+	margin-left: 16.66666666666666%;
+}
+.col-3 {
+	width: 25%;
+}
+.push-3 {
+	margin-left: 25%;
+}
+.col-4 {
+	width: 33.33333333333333%;
+}
+.push-4 {
+	margin-left: 33.33333333333333%;
+}
+.col-5 {
+	width: 41.66666666666666%;
+}
+.push-5 {
+	margin-left: 41.66666666666666%;
+}
+.col-6 {
+	width: 50%;
+}
+.push-6 {
+	margin-left: 50%;
+}
+.col-7 {
+	width: 58.33333333333333%;
+}
+.push-7 {
+	margin-left: 58.33333333333333%;
+}
+.col-8 {
+	width: 66.66666666666666%;
+}
+.push-8 {
+	margin-left: 66.66666666666666%;
+}
+.col-9 {
+	width: 75%;
+}
+.push-9 {
+	margin-left: 75%;
+}
+.col-10 {
+	width: 83.33333333333333%;
+}
+.push-10 {
+	margin-left: 83.33333333333333%;
+}
+.col-11 {
+	width: 91.66666666666666%;
+}
+.push-11 {
+	margin-left: 91.66666666666666%;
+}
+.col-12 {
+	width: 100%;
+}
