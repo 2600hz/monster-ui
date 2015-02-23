@@ -1,0 +1,104 @@
+/* 
+===================================== 
+              Buttons                 
+===================================== 
+*/
+.btn {
+	font-size: 15px;
+	padding: 7px 20px;
+	min-width: 140px;
+	border: 1px solid;
+	border-radius: 2px;
+
+	position: relative;
+  	display: block;
+
+  	/*-webkit-transition: box-shadow .25s ease;
+	-moz-transition: 	box-shadow .25s ease;
+	-o-transition: 		box-shadow .25s ease;
+	-ms-transition: 	box-shadow .25s ease;
+	transition: 		box-shadow .25s ease;*/
+}
+.btn:focus {
+	outline: none;
+}
+/*.btn:not(.function):hover {
+	box-shadow: 1px 2px 8px -1px rgba(32, 32, 41, 0.4);
+}*/
+.btn.primary {
+	background: #22a5ff;
+	color: #004c80;
+	border-color: #0087e0;
+}
+.btn.utility {
+	background: transparent;
+	color: #22a5ff;
+	border-color: #22a5ff;
+}
+.btn.utility i {
+	margin-right: 8px;
+}
+.btn.confirm {
+	background: #33DB24;
+	color: #0e6b06;
+	border-color: #18b309;
+}
+.btn.cancel {
+	background: transparent;
+	color: #909099;
+	border-color: #c0c0c9;
+}
+.btn.warning {
+	background: #ffcc33;
+	color: #8f6b00;
+	border-color: #f0b400;
+}
+.btn.delete {
+	background: #ff3d24;
+	color: #8a1000;
+	border-color: #e01a00;
+}
+.splash {
+ 	overflow: hidden;
+}
+@keyframes splash-animation {
+    from {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    to {
+      transform: scale(100);
+      opacity: 0;
+    }
+}
+@-webkit-keyframes splash-animation {
+	from {
+      -webkit-transform: scale(1);
+      opacity: 0.4;
+    }
+    to {
+      -webkit-transform: scale(100);
+      opacity: 0;
+    }
+}
+@-moz-keyframes splash-animation {
+	from {
+      -moz-transform: scale(1);
+      opacity: 0.4;
+    }
+    to {
+      -moz-transform: scale(100);
+      opacity: 0;
+    }
+}
+.splash-effect {
+  position: absolute;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background: white;
+  
+  animation: 			splash-animation 1.5s;
+  -webkit-animation: 	splash-animation 1.5s;
+  -moz-animation: 		splash-animation 1.5s;
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<title>Monster UI Styleguide</title>
+		<link href="css/normalize.css" rel="stylesheet" type="text/css">
+		<link href="css/spyder.css" rel="stylesheet" type="text/css">
+		<link href="css/animate.css" rel="stylesheet" type="text/css">
+		<!-- insert Google web fonts link here -->
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+		<link href="font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+			<!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700' rel='stylesheet' type='text/css'> -->
+		<link href="css/components.css" rel="stylesheet" type="text/css">
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+
+		<!-- FOR TESTING STYLES ONLY -->
+		<style type="text/css">
+			@keyframes animate-bg {
+			    0% { background-image: url('img/WorldMap-BG--step1.svg'); }
+			    20% { background-image: url('img/WorldMap-BG--step2.svg'); }
+			    40% { background-image: url('img/WorldMap-BG--step3.svg'); }
+			    60% { background-image: url('img/WorldMap-BG--step4.svg'); }
+			    80% { background-image: url('img/WorldMap-BG--step5.svg'); }
+			}
+			@-webkit-keyframes animate-bg {
+				0% { background-image: url('img/WorldMap-BG--step1.svg'); }
+			    20% { background-image: url('img/WorldMap-BG--step2.svg'); }
+			    40% { background-image: url('img/WorldMap-BG--step3.svg'); }
+			    60% { background-image: url('img/WorldMap-BG--step4.svg'); }
+			    80% { background-image: url('img/WorldMap-BG--step5.svg'); }
+			}
+			@-moz-keyframes animate-bg {
+				0% { background-image: url('img/WorldMap-BG--step1.svg'); }
+			    20% { background-image: url('img/WorldMap-BG--step2.svg'); }
+			    40% { background-image: url('img/WorldMap-BG--step3.svg'); }
+			    60% { background-image: url('img/WorldMap-BG--step4.svg'); }
+			    80% { background-image: url('img/WorldMap-BG--step5.svg'); }
+			}
+			.cycle {
+				width: 94%;
+				margin: 0 auto;
+				height: 700px;
+				background: #303039;
+				text-align: center;
+				
+
+				background-position: 70px 110px;
+
+				
+				background-image: url('img/WorldMap-BG--step1.svg'); 
+				background-repeat: no-repeat;
+
+			  	animation: 				animate-bg 22s infinite;
+ 			 	-webkit-animation: 		animate-bg 22s infinite;
+  				-moz-animation: 		animate-bg 22s infinite;
+			}
+			.cycle h2 {
+				position: relative;
+				top: 50%;
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+				color: #ffffff;
+				font-size: 38px;
+				font-weight: 300;
+			}
+		</style>
+	</head>
+	 
+	<body>
+		<header>
+			<div class="content-wrap">
+				<div class="row">
+					<h1 class="wordmark">Monster <span>UI</span></h1>
+
+					<nav role="navigation">
+						<ul class="list-horizontal main-nav">
+							<li class=""><a href="index.html">Styles</a></li>  
+							<li class=""><a href="">Components</a></li>
+							<li class="active"><a href="">Testing</a></li>  
+						</ul>
+					</nav>
+				</div> <!-- /row -->
+			</div> <!-- /content-wrap -->
+		</header>
+
+		<div class="page-nav">
+			<div class="content-wrap">
+				<div class="row">
+					<nav role="sub-navigation">
+						<ul class="list-horizontal sub-nav">
+							<li class=""><a href="#buttons">TEST</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div> <!-- /content-wrap -->
+		</div>
+
+		<!-- 
+		======================================
+		        TEST     
+		======================================
+		 -->
+		<section class="alpha" id="">
+			<div class="cycle">
+				<h2>Your Unified Communications Platform</h2>
+
+			</div>
+		</section>
+
+		<script type="text/javascript" src="js/components.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+	</body>
+</html>
