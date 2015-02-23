@@ -7,15 +7,15 @@ define(function(require){
 	var util = {
 
 		/*
-			This function will automatically logout the user after %wait% minutes (defaults to 15).
+			This function will automatically logout the user after %wait% minutes (defaults to 30).
 		   	This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
 		*/
 		autoLogout: function() {
-			if(!monster.config.hasOwnProperty('logoutTimer') || monster.config.logoutTimer > 0) {
+			if(!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
 				var i18n = monster.apps['core'].i18n.active(),
 					timerAlert,
 					timerLogout,
-					wait = monster.config.logoutTimer || 15,
+					wait = monster.config.whitelabel.logoutTimer || 30,
 					alertBeforeLogout = 2,
 					alertTriggered = false,
 					alertDialog,
