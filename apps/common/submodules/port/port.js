@@ -1384,7 +1384,9 @@ define(function(require){
 					callbackSuccess && callbackSuccess();
 				},
 				error: function(data, status) {
-					callbackError && callbackError();
+					if (parseInt(data.error, 10) !== 402) {
+						callbackError && callbackError();
+					}
 				}
 			});
 		},
