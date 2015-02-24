@@ -57,7 +57,7 @@ define(function(require) {
 							expiryInput: '#expiration_date_month, #expiration_date_year',
 							cvcInput: '#security_code',
 							values: {
-								number: '•••• •••• •••• '+results.billing.credit_card.last_four
+								number: '•••• •••• •••• '+(results.billing.credit_card.last_four || '••••')
 							}
 						});
 
