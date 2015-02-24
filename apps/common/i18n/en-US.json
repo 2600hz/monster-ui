@@ -201,6 +201,7 @@
 		"progressBarRight": "Confirm Order",
 		"requiredConditions": "Please agree with all the conditions",
 		"comingSoon": "Coming Soon!",
+		"unknownCarrier": "Unknown Carrier",
 		"state": {
 			"completed": "Completed",
 			"rejected": "Rejected",
@@ -327,10 +328,6 @@
 				},
 				"mimeTypes": "The following files are not in a supported format: ",
 				"size": "The following files are too big: ",
-				"number": {
-					"single": "The number you entered is invalid !!!",
-					"multiple": "The numbers you entered are invalid !!!"
-				},
 				"submit": {
 					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
 				}
