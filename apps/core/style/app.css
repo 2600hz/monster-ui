@@ -979,45 +979,79 @@ label.monster-invalid {
 }
 
 /* Confirm Charges popup */
-.charges-dialog {
-	max-width: 800px;
-	width: auto;
+.dialog-charges {
+	width: 520px;
+	padding: 30px;
 }
 
-.charges-dialog .help-box .text-wrapper {
-	padding: 25px 30px 15px;
+.dialog-charges .content > div {
+	padding: 10px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	background-color: #f0f0f9;
 }
 
-.charges-dialog .help-box .text-wrapper p {
-	text-align: justify;
+.dialog-charges .content > .section:not(:first-child) {
+	margin-top: 20px;
 }
 
-.charges-dialog .help-box .text-wrapper table {
-	margin: 15px 0;
-	min-width: 400px;
+.dialog-charges .content .title-block {
+	line-height: 47px;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(2),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(5),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(6),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(2),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(5),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(6) {
-	text-align: right;
+.dialog-charges .charges-info .icon-warning-sign {
+	font-size: 39px;
+	color: #c0c0c9;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(4),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(4) {
-	text-align: left;
+.dialog-charges .charges-list {
+	margin-top: 20px
 }
 
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(3),
-.charges-dialog .help-box .text-wrapper p:last-child {
+.dialog-charges .charges-element {
+	padding: 10px;
 	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
 }
 
-.charges-dialog .help-box .text-wrapper table tbody tr {
-	background: #fdfdfd;
+.dialog-charges .charges-element:not(:first-child) {
+	margin-top: 5px;
+}
+
+.dialog-charges .charges-element table {
+	width: 100%;
+}
+
+.dialog-charges .charges-element tr:first-child {
+	height: 40px;
+}
+
+.dialog-charges .charges-element td {
+	font-size: 20px;
+}
+
+.dialog-charges .charges-element td:nth-child(odd) {
+	font-weight: bold;
+	min-width: 100px;
+	color: #22a5ff;
+}
+
+.dialog-charges .charges-element th {
+	font-weight: normal;
+}
+
+.dialog-charges .actions {
+	margin-top: 30px;
+	padding-top: 20px;
+	text-align: right;
+	border-top: 1px solid #c0c0c9;
+}
+
+.dialog-charges .actions button:last-child {
+	width: 130px;
+	margin-left: 20px;
 }
 
 /* Left Menu */
@@ -1326,36 +1360,101 @@ label.monster-invalid {
 
 /********** New button designs **********/
 *[class*="monster-button"] {
-	font-size: 14px;
-	font-weight: 600;
-	padding: 4px 20px;
-	background-color: transparent;
-	border: solid 1px #c0c0c9;
+	font-size: 15px;
+	padding: 6px 20px;
+	min-width: 140px;
+	letter-spacing: .02em;
+	border: solid 1px;
 	border-radius: 2px;
-	color: #c0c0c9;
+	position:relative;
+	overflow: hidden;
+
+	border-color: #c0c0c9;
+	background-color: transparent;
+	color: #909099;
 }
 *[class*="monster-button"] > i {
 	color: inherit;
-	margin-right: 6px;
-	vertical-align: text-top;
+	margin-right: 8px;
+	vertical-align: text-bottom;
 }
 
 .monster-button-primary {
-	border-color: #0297e5;
+	border-color: #0087e0;
 	background-color: #22a5ff;
-	color: #0d456b;
+	color: #004c80;
 }
 
 .monster-button-secondary {
-	border-color: #0297e5;
+	border-color: #22a5ff;
 	color: #22a5ff;
 }
 
 .monster-button-success {
-	background-color: #1def36;
-	border-color: #13c85e;
-	color: #2c7705;
+	background-color: #33db24;
+	border-color: #18b309;
+	color: #0e6b06;
 }
+
+.monster-button-warning {
+	background-color: #ffcc33;
+	border-color: #f0b400;
+	color: #8f6b00;
+}
+
+.monster-button-danger {
+	background-color: #ff3d24;
+	border-color: #e01a00;
+	color: #8a1000;
+}
+
+@-webkit-keyframes monster-splash-animation {
+	from {
+		-webkit-transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		-webkit-transform: scale(100);
+		opacity: 0;
+	}
+}
+@-moz-keyframes monster-splash-animation {
+	from {
+		-moz-transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		-moz-transform: scale(100);
+		opacity: 0;
+	}
+}
+@keyframes monster-splash-animation {
+	from {
+		transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		transform: scale(100);
+		opacity: 0;
+	}
+}
+
+*[class*="monster-splash-effect"] {
+	position: absolute;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	background: rgba(32,32,41, .2);
+
+	-webkit-animation: monster-splash-animation 1.5s;
+	   -moz-animation: monster-splash-animation 1.5s;
+	        animation: monster-splash-animation 1.5s;
+}
+.monster-splash-effect-primary { background: rgba(255,255,255, .35); }
+.monster-splash-effect-secondary { background: rgba(87,188,255, .6); }
+.monster-splash-effect-success { background: rgba(255,255,255, .4); }
+.monster-splash-effect-warning { background: rgba(255,255,255, .5); }
+.monster-splash-effect-danger { background: rgba(255,255,255, .4); }
 
 /********** New checkbox designs **********/
 
@@ -1403,7 +1502,7 @@ label.monster-invalid {
 	background: transparent;
 	top: 6px;
 	left: 3px;
-	border: 3px solid #fcfff4;
+	border: 3px solid #fff;
 	border-top: none;
 	border-right: none;
 
@@ -1414,10 +1513,11 @@ label.monster-invalid {
 	transform: rotate(-45deg);
 }
 
-.monster-checkbox label:hover::after {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-	filter: alpha(opacity=30);
-	opacity: 0.3;
+.monster-checkbox input[type=checkbox]:not(:checked) + label:hover::after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+	filter: alpha(opacity=75);
+	opacity: 0.75;
+	border-color: #22a5ff;
 }
 
 .monster-checkbox input[type=checkbox]:checked + label:after {
