@@ -275,7 +275,9 @@ define(function(require){
 					var duration = self.i18n.active().balance.active_call,
 						friendlyDate = monster.util.toFriendlyDate(v.created),
 						accountName = '-',
-						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3);
+						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
+						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
+						toField = monster.util.formatPhoneNumber(v.metadata.to || '').replace(/@.*/, '');
 
 					if('duration' in v.metadata) {
 						duration = Math.ceil((parseInt(v.metadata.duration))/60),
@@ -296,8 +298,8 @@ define(function(require){
 						v.call_id || '-',
 						v.metadata.call || '-',
 						friendlyDate || '-',
-						monster.util.formatPhoneNumber(v.metadata.from) || '-',
-						monster.util.formatPhoneNumber(v.metadata.to) || '-',
+						fromField || '-',
+						toField || '-',
 						accountName || '-',
 						duration || '-',
 						friendlyAmount || '-'
