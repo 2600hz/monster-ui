@@ -1,0 +1,31 @@
+{
+	"description": "Omschrijving",
+	"featuresTitle": "Kenmerken:",
+	"undefinedFeatures": "Kenmerken lijst komt binnenkort eraan...",
+	"author": "Auteur",
+	"version": "Version",
+	"license": "License",
+	"price": "Prijs",
+	"free": "gratis",
+	"save": "Opslaan",
+	"filters": {
+		"all": "Alle Apps",
+		"installed": "Mijn Apps",
+		"resellers": "Resellers Apps",
+		"carriers": "Carriers Apps",
+		"developers": "Developers Apps"
+	},
+	"permissions": {
+		"title": "Wie mag de App gebruiken?",
+		"all": "Alle gebruikers",
+		"admins": "Admins",
+		"specific": "Specifieke gebruikers"
+	},
+	"selectedUsers": "Geselecteerde gebruikers",
+	"selectAll": "Selecteer Alle",
+	"unselectAll": "Deselecteer Alle",
+	"selectUsersLink": "Geslecteerde Gebruikers ({{selectedUsers}})",
+	"alerts": {
+		"noUserSelected": "U moet minimaal 1 gebruiker selecteren voor deze app.<br><br>Als u niet wilt dat iemand deze gebruikt, zet hem dan uit."
+	}
+}

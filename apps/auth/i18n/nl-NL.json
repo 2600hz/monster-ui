@@ -1,0 +1,92 @@
+{
+"welcome": "Uw Unified Communications Platform",
+"password": "Wachtwoord",
+"rememberMe": "Onthoud Mij",
+"forgotPassword": "Wachtwoord Vergeten",
+"username": "Gebruikersnaam",
+"registerMessage": "Gebruik 1 account voor alle 2600Hz diensten",
+"registerLink": "registreer",
+"or": "OF",
+"errorLoadingAccount": "Er ging iets fout met het laden van uw account",
+"confirmLogout": "Weet u zeker dat u wilt uitloggen?",
+"account": {
+"name": "Account Naam",
+"namePlaceholder": "Bedrijfsnaam",
+"realm": "Account Realm",
+"realmPlaceholder": "Account Realm"
+},
+"login":{
+"buttonText": "Log In"
+},
+"conferenceLogin": {
+"userTab": "Gebruiker",
+"adminTab": "Administrator",
+"headerLabel": "Conference Login",
+"pinLabel": "Pin Nummer",
+"nameLabel": "Naam",
+"callInLabel": "Uw 'Call-in' Telefoon Nummer",
+"optionalSplitter": "Optioneel",
+"buttonLabel": "Log-in op Conference"
+},
+"passwordRecovery": {
+"title": "W Rechtwoord herstel",
+"label": {
+"phoneNumber": "Telefoonnummer"
+},
+"placeholder": {
+"username": "john@doe.com",
+"account": {
+"name": "2600hz",
+"realm": "sip.2600hz.com"
+},
+"phoneNumber": "+14151234567"
+},
+"help": {
+"text": "Geef aub uw gebruikersnaam plus een account realm of een telefoonnummer uit uw account op."
+},
+"button": {
+"recover": "Herstel Wachtwoord"
+},
+"toastr": {
+"success": {
+"reset": "Uw wachtwoord is succesvol hersteld"
+},
+"error": {
+"reset": {
+"account_name": "De opgegeven account naam werd niet gevonden",
+"account_realm": "De opgegeven account realm werd niet gevonden",
+"phone_number": "Het opgegeven telefoonnummer werd niet gevonden",
+"username": "De opgegeven gebruikersnaam werd niet gevonden"
+},
+"missing": "Geef aub een account naam, account realm of een telefoonnummer uit uw account in"
+}
+}
+},
+"passwordUpdate": {
+"title": "Wachtwoord Bijwerken",
+"label": {
+"password": {
+"new": "Nieuw Wachtwoord",
+"confirmation": "Bevestig Nieuwe Wachtwoord"
+}
+},
+"help": {
+"text": "U heeft uw wachtwoord veranderd en gebruikt nu een automatisch gegenereerde. U kunt deze veranderen of blijven gebruiken."
+},
+"button": {
+"update": "Wachtwoord Bijwerken"
+},
+"toastr": {
+"success": {
+"update": "Uw wachtwoord is succesvol bijgewerkt"
+},
+"error": {
+"password": "De wachtwoorden komen niet overeen, probeert u het opnieuw."
+}
+}
+},
+"toastrMessages": {
+"appListError": "Er is een probleem met het laden van de lijst met uw applicaties."
+}
+}
+ 
