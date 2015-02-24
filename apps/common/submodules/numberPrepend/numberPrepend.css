@@ -1,0 +1,26 @@
+/* NUMBER-PREPEND POPUP */
+.trunkstore_popup.number-prepend {
+	width: 510px;
+}
+
+.trunkstore_popup.number-prepend form,
+.trunkstore_popup.number-prepend input {
+	margin: 0;
+}
+
+.trunkstore_popup.number-prepend .popup-content {
+	padding: 15px 25px;
+}
+
+.trunkstore_popup.number-prepend .popup-content:not(:first-child) {
+	border-top: 1px solid #ccc;
+}
+
+.trunkstore_popup.number-prepend .popup-content .popup-label {
+	margin: 0 10px 0 0;
+	display: inline-block;
+}
+
+.trunkstore_popup.number-prepend .help-box {
+	margin-top: 20px;
+}

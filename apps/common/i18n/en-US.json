@@ -75,7 +75,11 @@
 				"questionPartThree": "?",
 				"button": "move number(s)"
 			}
-		}
+		},
+
+		"__comment": "UI-1219: Adding the prepend feature to numbers",
+		"__version": "v3.20_s1",
+		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone"
 	},
 
 	"callerId": {
@@ -362,5 +366,15 @@
 		"distribute": "Distribute",
 		"maxDurationTooltip": "Click this box to change the maximum duration for your ring group. You must enter a number between 30 and 999.",
 		"doNotRing": "Do not ring"
+	},
+
+	"__comment": "UI-1219: Adding the prepend feature to numbers",
+	"__version": "v3.20_s1",
+	"numberPrepend": {
+		"dialogTitle": "Number Prepend Setup",
+		"title": "Text to prepend",
+		"label": "Prepend",
+		"help": "This text will appear before your number when receiving a call. This can be used to better identify which number was called when you use more than one.",
+		"successUpdate": "You successfully updated the prepended text for {{phoneNumber}}"
 	}
 }

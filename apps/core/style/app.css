@@ -915,45 +915,79 @@ label.monster-invalid {
 }
 
 /* Confirm Charges popup */
-.charges-dialog {
-	max-width: 800px;
-	width: auto;
+.dialog-charges {
+	width: 520px;
+	padding: 30px;
 }
 
-.charges-dialog .help-box .text-wrapper {
-	padding: 25px 30px 15px;
+.dialog-charges .content > div {
+	padding: 10px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	background-color: #f0f0f9;
 }
 
-.charges-dialog .help-box .text-wrapper p {
-	text-align: justify;
+.dialog-charges .content > .section:not(:first-child) {
+	margin-top: 20px;
 }
 
-.charges-dialog .help-box .text-wrapper table {
-	margin: 15px 0;
-	min-width: 400px;
+.dialog-charges .content .title-block {
+	line-height: 47px;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(2),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(5),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(6),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(2),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(5),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(6) {
-	text-align: right;
+.dialog-charges .charges-info .icon-warning-sign {
+	font-size: 39px;
+	color: #c0c0c9;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(4),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(4) {
-	text-align: left;
+.dialog-charges .charges-list {
+	margin-top: 20px
 }
 
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(3),
-.charges-dialog .help-box .text-wrapper p:last-child {
+.dialog-charges .charges-element {
+	padding: 10px;
 	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
 }
 
-.charges-dialog .help-box .text-wrapper table tbody tr {
-	background: #fdfdfd;
+.dialog-charges .charges-element:not(:first-child) {
+	margin-top: 5px;
+}
+
+.dialog-charges .charges-element table {
+	width: 100%;
+}
+
+.dialog-charges .charges-element tr:first-child {
+	height: 40px;
+}
+
+.dialog-charges .charges-element td {
+	font-size: 20px;
+}
+
+.dialog-charges .charges-element td:nth-child(odd) {
+	font-weight: bold;
+	min-width: 100px;
+	color: #22a5ff;
+}
+
+.dialog-charges .charges-element th {
+	font-weight: normal;
+}
+
+.dialog-charges .actions {
+	margin-top: 30px;
+	padding-top: 20px;
+	text-align: right;
+	border-top: 1px solid #c0c0c9;
+}
+
+.dialog-charges .actions button:last-child {
+	width: 130px;
+	margin-left: 20px;
 }
 
 /* Left Menu */
