@@ -47,6 +47,7 @@
 	"delete": "Supprimer",
 	"dialog":{
 		"showError":"Détails erreur",
+		"confirm": "Confirmer",
 		"confirmOk":"OK",
 		"confirmCancel":"Annuler",
 		"confirmTitle":"Confirmation"
@@ -125,17 +126,13 @@
 	
 	"confirmCharges": {
 		"title":"Confirmation de frais",
-		"withChargesPartOne": "You will pay a {{variable}}€",
-		"withChargesPartTwo": " on-time {{variable}}. ",
-		"withoutCharges": "There is no {{variable}}.",
-		"detail":"Voici les détails des frais mensuels de ce compte pour ce service:",
-		"service": "Service",
+		"oneTimeFee": "Frais unique",
+		"detail":"Voici les détails mis à jour des frais mensuels de ce compte pour ce service:",
 		"rate":"Taux",
 		"quantity":"Quantité",
-		"discount": "Discount",
+		"discount": "Réduction",
 		"monthlyCharges":"Frais mensuels",
-		"amount": "{{variable}}€",
-		"actions":"Pressez OK pour confirmer ou Annuler pour revenir en arrière."
+		"amount": "${{variable}}"
 	},
 	"languages":{
 		"auto":"Par Défaut",
