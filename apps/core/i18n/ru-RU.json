@@ -125,13 +125,11 @@
 		"withChargesPartTwo": " on-time {{variable}}. ",
 		"withoutCharges": "Не существует {{variable}}.",
 		"detail": "Детализация ежемесячных платежей по вашим услугам:",
-		"service": "Услуга",
 		"rate": "Ставка",
 		"quantity": "Количество",
 		"discount": "Скидка",
 		"monthlyCharges": "Ежемесячный платёж",
-		"amount": "{{variable}}",
-		"actions": "Нажмите OK для подтверждения или Отменить для отказа."
+		"amount": "{{variable}}"
 	},
 	"languages": {
 		"auto": "Автоматически",

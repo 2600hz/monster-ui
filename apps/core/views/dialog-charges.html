@@ -1,52 +1,50 @@
-<div class="alert-dialog charges-dialog">
-	<div class="help-box gray-box">
-		<div class="wrapper-icon">
-			<i class="icon-question-sign2"></i>
+<div class="dialog-charges">
+	<div class="content">
+	{{#if activation_charges}}
+		<div class="section">
+			<div class="title-box pull-right">
+				<div class="value">{{replaceVar i18n.confirmCharges.amount activation_charges}}</div>
+			</div>
+			<div class="title-block">{{i18n/confirmCharges.oneTimeFee}}</div>
 		</div>
-		<div class="text-wrapper">
-			<p>
-			{{#if activation_charges_description}}
-				{{#if activation_charges}}
-				{{replaceVar i18n.confirmCharges.withChargesPartOne activation_charges}}{{replaceVar i18n.confirmCharges.withChargesPartTwo activation_charges_description}}
-				{{else}}
-				{{replaceVar i18n.confirmCharges.withoutCharges activation_charges_description}}
-				{{/if}}
-			{{/if}}
-			{{#if charges}}
-			{{i18n.confirmCharges.detail}}
-			{{/if}}
-			</p>
-			{{#if charges}}
-			<table class="table charges-summary">
-				<thead>
-					<tr>
-						<th>{{i18n.confirmCharges.service}}</th>
-						<th>{{i18n.confirmCharges.rate}}</th>
-						<th></th>
-						<th>{{i18n.confirmCharges.quantity}}</th>
-						<th>{{i18n.confirmCharges.discount}}</th>
-						<th>{{i18n.confirmCharges.monthlyCharges}}</th>
-					</tr>
-				</thead>
-				<tbody>
-				{{#each charges}}
-					<tr>
-						<td>{{service}}</td>
-						<td>{{replaceVar ../i18n.confirmCharges.amount rate}}</td>
-						<td>x</td>
-						<td>{{quantity}}</td>
-						<td>{{#if discount}}-{{replaceVar ../../i18n.confirmCharges.amount discount}}{{else}}0{{/if}}</td>
-						<td>{{replaceVar ../i18n.confirmCharges.amount monthlyCharges}}</td>
-					</tr>
-				{{/each}}
-				</tbody>
-			</table>
-			{{/if}}
-			<p>{{i18n.confirmCharges.actions}}</p>
+	{{/if}}
+	{{#if charges}}
+		<div class="section">
+			<div class="charges-info">
+				<i class="icon-warning-sign pull-left"></i>
+				<span>{{i18n/confirmCharges.detail}}</span>
+			</div>
+			<div class="charges-list">
+			{{#each charges}}
+				<div class="charges-element">
+					<table>
+						<tr>
+							<td>{{quantity}}</td>
+							<td>x</td>
+							<td>{{replaceVar ../i18n.confirmCharges.amount rate}}</td>
+							<td>-</td>
+							<td>{{#if discount}}{{replaceVar ../i18n.confirmCharges.amount discount}}{{else}}{{discount}}{{/if}}</td>
+							<td>=</td>
+							<td>{{replaceVar ../i18n.confirmCharges.amount monthlyCharges}}</td>
+						</tr>
+						<tr>
+							<th>{{service}}</th>
+							<th></th>
+							<th>{{../i18n.confirmCharges.rate}}</th>
+							<th></th>
+							<th>{{../i18n.confirmCharges.discount}}</th>
+							<th></th>
+							<th>{{../i18n.confirmCharges.monthlyCharges}}</th>
+						</tr>
+					</table>
+				</div>
+			{{/each}}
+			</div>
 		</div>
+	{{/if}}
 	</div>
-	<div class="alert-buttons-wrapper clearfix">
-		<button id="cancel_button" class="btn btn-danger confirm_button">{{ i18n.dialog.confirmCancel }}</button>
-		<button id="confirm_button" class="btn btn-success confirm_button">{{ i18n.dialog.confirmOk }}</button>
+	<div class="actions">
+		<button id="cancel_button" class="monster-button-cancel confirm_button">{{ i18n.dialog.confirmCancel }}</button>
+		<button id="confirm_button" class="monster-button-success confirm_button">{{ i18n.dialog.confirm }}</button>
 	</div>
 </div>
