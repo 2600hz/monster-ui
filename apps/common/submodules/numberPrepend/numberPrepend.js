@@ -31,7 +31,7 @@ define(function(require){
 				var prependFormData = monster.ui.getFormData('number_prepend');
 				prependFormData.enabled = (prependFormData.name && prependFormData.name.length > 0) ? true : false;
 
-				_.extend(true, dataNumber, { prepend: prependFormData });
+				$.extend(true, dataNumber, { prepend: prependFormData });
 
 				self.numberPrependUpdateNumber(dataNumber.id, dataNumber,
 					function(data) {
