@@ -531,8 +531,6 @@ define(function(require){
 					var currentElement = $(v);
 					currentElement.val(currentElement.data('original_value'));
 				});
-
-				e.stopPropagation();
 			});
 
 			template.find('.change').on('click', function(e) {

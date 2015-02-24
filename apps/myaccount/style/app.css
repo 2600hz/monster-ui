@@ -182,7 +182,19 @@
 #myaccount .myaccount-right .myaccount-titlebar .myaccount-close:hover span > * {
 	color: #22ccff;
 }
-@media (max-width: 767px) {
+@media (min-width: 769px) and (max-width: 1024px) {
+	#myaccount .myaccount-menu {
+		width: 200px;
+		right: 200px;
+	}
+	#myaccount .myaccount-container {
+		padding-left: 200px;
+	}
+	#myaccount .myaccount-menu .badge {
+		display: none;
+	}
+}
+@media (max-width: 768px) {
 	#myaccount .myaccount-menu {
 		width: 47px;
 		right: 47px;

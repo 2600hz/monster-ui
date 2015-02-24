@@ -178,6 +178,26 @@ define(function(require){
 				}
 			});
 
+			$('body').on('click', '*[class*="monster-button"]', function() {
+				var $this = $(this),
+					classSuffix = $this.attr('class').replace(/.*monster-button(-\w+)?.*/g, '$1'),
+					splashDiv = $('<div class="monster-splash-effect'+classSuffix+'"/>'),
+					offset = $this.offset(),
+					xPos = event.pageX - offset.left,
+					yPos = event.pageY - offset.top;
+				
+				splashDiv.css({
+					height: $this.height(),
+					width: $this.height(),
+					top: yPos - (splashDiv.height()/2),
+					left: xPos - (splashDiv.width()/2)
+				}).appendTo($this);
+
+				window.setTimeout(function(){
+					splashDiv.remove();
+				}, 1500);
+			});
+
 			if(monster.config.whitelabel.hasOwnProperty('nav')) {
 				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
 					container.find('#ws-navbar .links a.signout')
