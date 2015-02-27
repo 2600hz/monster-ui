@@ -128,6 +128,14 @@
 			'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}'},
 			'searchByNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=number&v={value}'}
 		},
+		clickToCall: {
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/clicktocall' },
+			'get': { verb: 'GET',  url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'update': { verb: 'GET', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/clicktocall' },
+			'connect': { verb: 'POST', url: 'accounts/{accountId}/clicktocall/{clickToCallId}/connect' }
+		},
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' }
