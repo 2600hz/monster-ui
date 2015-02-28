@@ -1,0 +1,20 @@
+{
+	"demo": {
+		"welcome": "Welkom bij onze Kazoocon Demo app",
+		"listDevices": "Geregistreerde Devices",
+		"listEvents": "Lijst van live Events",
+		"clearEvents": "Clear Events",
+		"events": {
+			"CHANNEL_CREATE": "Gesprek aan het plaatsen...",
+			"CHANNEL_ANSWER": "Gesprek aangenomen...",
+			"CHANNEL_DESTROY": "Ophangen"
+		},
+		"table": {
+			"caller": "Beller",
+			"callee": "Gebelde",
+			"eventType": "Event Type",
+			"time": "Tijd",
+			"noEvents": "Er gebeurde nog niets tot nu toe......."
+		}
+	}
+}

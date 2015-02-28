@@ -1,0 +1,397 @@
+ {
+	"accountBrowser": {
+		"missingInfo": "Onbekende informatie",
+		"addAccount": "Voeg Nieuw Account Toe",
+		"searchDatabase": "Zoek in alle account naar",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "zoekresultaten voor \"{{searchValue}}\""
+	},
+	"numbers": {
+		"mainNumber": "Hoofdnummer",
+		"conferenceNumber": "Hoofd Conference Nummer",
+		"dialogSpare": {
+			"title": "Lijst Van Reserve Nummers",
+			"headline": "Reserve Nummers van",
+			"headlineNoAccount": "Selecteer nummers",
+			"noMatchingNumbers": "Er kwane geen nummer overen met uw zoekopdracht.",
+			"noNumberSelected": "U selecteerde geen nummer. U dient minimaal 1 nummer te selecteren door erop te klikken in de lijst.",
+			"proceed": "Voeg selectie toe"
+		},
+		"bulkActions": "Bulk Acties",
+		"buy": "Koop",
+		"buyNumberLinks" : {
+			"regular": "Lokaal",
+			"tollfree": "0800 Gratis",
+			"vanity": "Naambellen"
+		},
+		"port": "Portering",
+		"assignTo": "Toewijzen Aan",
+		"confirmDelete": "Weet u zeker dat u de geselecteerde nummers wilt verwijderen uit uw account?",
+		"delete": "Verwijderen",
+		"deleteE911Error": {
+			"message": "De volgende nummers kunnen niet worden verwijderd omdat dat de enige zijn die een 112 instelling hebben in de bijbehorende account. U moet minimaal 1 nummer actief hebben in uw acount die de 112 informatie bevat.",
+			"account": "Account:",
+			"numbers": "Nummers:"
+		},
+		"numbers": "Nummers",
+		"addNumbers": "Nummers Toevoegen",
+		"moveNumbers": "Verplaatsen Naar",
+		"searchNumbers": "Zoek een Nummer...",
+		"go": "Ga",
+		"deleteNumbers": "Verwijderen",
+		"successDelete": "U heeft succesvol {{count}} telefoonnummer(s)verwijderd uit uw account(s)",
+		"successMove": "U heeft succesvol {{count}} telefoonnummers verplaatst naar dit account: {{ accountName }}",
+		"noSpareNumber": "Er zijn geen reserve nummers aanwezig in dit account.",
+		"noUsedNumber": "Er worden in geen enkele applicatie nummers gebruikt voor dit account.",
+		"spareNumbers": "Reserve Nummers",
+		"usedNumbers": "Nummers in Gebruik",
+		"helpSpareNumbers": "Dit toont nummers die niet in gebruik zijn in uw account. U kunt deze toewijzen aan subaccounts of verwijderen uit uw account.",
+		"helpUsedNumbers": "Deze lijst toont de nummer die nu in gebruik zijn. U kunt hier ook de lijst van actieve nummers van uw subaccounts zien.",
+		"callflow": "Smart PBX",
+		"trunkstore": "Trunking",
+		"notUsedNumber": "{{number}}: Dit nummer is niet in gebruik maar hoort bij {{accountName}}. (Schakel naar Reserve NummersSwitch to Spare Numbers view to see this number)",
+		"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Swit om dit nummer te bekijken)",
+		"numberNotFound": "Het gezochte nummer is niet gevonden! Zorg ervoor dat u het gehele nummer invoert, we zoeken niet op gedeeltelijke nummers (de formatering maakt niet uit).",
+
+		"failoverIconHelp": "Dit icoon betekend dat u een failover actie heeft ingesteld voor dit nummer",
+		"cnamOutboundIconHelp": "Dit icoon betekend dat u een Outbound Caller-ID heeft ingesteld voor dit nummer",
+		"cnamInboundIconHelp": "Dit icoon betekend dat een Inbound Caller-ID heeft ingesteld voor dit nummer",
+		"e911IconHelp": "Dit icoon betekend dat 112 heeft ingesteld voor dit nummer",
+		"localIconHelp": "Dit icoon betekend dat dit een lokaal nummer is",
+
+		"dialogConfirm": {
+			"from": "Van ",
+			"cancel": "Annuleren",
+			"delete": {
+				"title": "Bevestig: Verwijderen van Nummers",
+				"questionPartOne": "Weet u zeker dat u deze nummer(s) ",
+				"questionPartTwo": " wilt verwijderen?",
+				"button": "Verwijder Nummer(s)"
+			},
+			"move": {
+				"title": "Bevestig: verplaats Nummers",
+				"questionPartOne": "eet u zeker dat u dit/deze nummers ",
+				"questionPartTwo": " wilt verplaasten naar ",
+				"questionPartThree": "?",
+				"button": "Verplaats nummer(s)"
+			}
+		}
+	},
+
+	"callerId": {
+		"callerIdName": "Caller ID Naam",
+		"callerIdPlaceholder": "John Doe",
+		"dialogTitle": "Caller ID Naam Selectie",
+		"errorUpdate": "Het bijwerken van de Caller ID voor dit nummer is NIET gelukt",
+		"help": {
+			"outbound": "Deze naam verschijnt als  Caller ID wanneer u naar buiten belt (15 karakters max.). Het kan 72 uur duren voordat dit actief is.",
+			"inbound": "Indien actief verschijnt de naam van degene die u op belt op uw scherm bij een inkomend gesprek."
+		},
+		"label": "Caller-ID",
+		"successCnam": "De Caller-ID {{phoneNumber}} is succesvol bijgewerkt",
+		"successRemoveCnam": "De Caller-ID van {{phoneNumber}} is succesvol verwijderd",
+		"noCallerId": "Er is geen Caller-ID voor nummer {{phoneNumber}}",
+		"inboundTitle": "Inbound Caller ID Naam",
+		"outboundTitle": "Outbound Caller ID Naam"
+	},
+
+	"e911": {
+		"addressLine1": "Adres Lijn 1",
+		"addressLine2": "Adres Lijn 2",
+		"city": "Stad",
+		"dialogTitle": "Bewerk 112 locatie",
+		"gmapPinLabel": "Uw+112+Locatie",
+		"infoBox": "Dit adres verschijnt in het beeldscherm van de 112 alarmcentrale operator wanneer u belt vanaf uw nummer.",
+		"label": "112 Alarmcentrale",
+		"lastE911Error": "U moet op tenminste 1 nummer de instellingen voor 112 actief hebben.Stel dit aub in op een ander nummer voordat u dit nummer verwijderd.",
+		"postalCode": "Postcode",
+		"rotatedText": "Voor alarmdiensten",
+		"state": "Provincie",
+		"successE911": "U werkte met succes het 112 alarmdienst adres bij voor {{phoneNumber}}",
+		"title": "112 Adres",
+		"verifyLocation": "Check de Locatie"
+	},
+
+	"failover": {
+		"activate": "Activeer",
+		"alternateNumber": "Backup Bestemming",
+		"errorUpdate": "Backup Bestemmng bijwerken mislukt vor dit nummer.",
+		"failoverTitle": "Setup Backup Bestemming",
+		"failoverText": "Wanneer een inkomend gesprek niet kan worden afgehandeld sturen we door naar",
+		"helpFailover": "Als uw ysteem onbereikbaar is kunnen we een gesprek elders afleveren, dit kan een nummer zijn, of een SIP bestemming. Is het een extern nummer dan betaald u kosten voor het inbound en outbound gesprek.",
+		"invalidFailoverNumber": "Incorrect Backup Nummer, probeer het opnieuw",
+		"label": "Backup bestemming",
+		"noDataFailover": "Geen data ingevoerd, probeer het opnieuw",
+		"or": "OF",
+		"removeFailover": "Verwijder",
+		"sipAddress": "SIP Adres",
+		"successFailover": "Backup bestemming voor {{ phoneNumber }} succesvol bijgewerkt.",
+		"successRemove": "Backup bestemming voor {{ phoneNumber }} succesvol verwijderd"
+	},
+
+	"buyNumbers": {
+		"buyDialogTitle": "Koop Nummers",
+		"countrySelectLabel": "Selecteer Land",
+		"cityInputLabel": "Zoek op stad of kengetal",
+		"seqCheckboxLabel": "Toon alleen opvolgende nummers.",
+		"seqInputLabel": "Hoeveel per rij?",
+		"seqNumAlert": "U moet aangeven hoeveel opvolgende nummers u wilt zien per rij (waarde tussen 2- 999).",
+		"seqNumParamLabel": "van {{sequentialNumbers}} opvolgende nummers",
+		"areaCodeRadioLabel": "Selecteer kengetal",
+		"noInputAlert": "U moet een Kengetal of Stad ingeven om door te gaan!",
+		"searchResults": "Zoekresultaten voor",
+		"backToSearch": "Terug naar Zoeken",
+		"loadingNumbers": "Nummers aan het Laden...",
+		"numberAddedSingle": "Nummer Toegevoegd",
+		"numberAddedPlural": "Nummers Toegevoegd",
+		"selectedNumbers": "Selecteer Nummers",
+		"moreInfo": "Klik hier voor meer info",
+		"tollfreeRadioLabel": "Selecteer een Gratis prefix (0800):",
+		"buyNumbers": "Koop Nummers",
+		"noSelectedNumAlert": "U selecteerde geen numer om te kopen.",
+		"buyNumber": "Koop Nummer",
+		"searchAgain": "Zoek een ander Nummer",
+		"summaryTotalNumbers": "Totaal geselecteerde nummers",
+		"summaryTotalCharges": "Totaal kosten",
+		"noSearchResult": "Sorry, we kunnen geen nummers vinden die aan uw verzoek voldoen, probeer het opnieuw. Lukt het echt niet? Neem contact op met support. Wellicht kunnen we u toch helpen.",
+		"partialNumAlert": "Voer een geldig nummer in, gedeelteijke nummers zijn niet toegestaan.",
+		"areaCode": "Kengetal",
+		"add": "Toevoegen",
+		"month": "Maand",
+		"search": "Zoeken",
+		"checkingMessage": "We controleren de beschikbaarheid...",
+		"processingMessage1": "Activeren van de nummers...",
+		"processingMessage2": "Wacht u aub tot het procces is voltooid.",
+		"unavailable": "Onbeschikbaar",
+		"unavailableMessage": "Oops! Deze nummers zijn net niet meer beschikbaar (( ga door met de rest van de beschikbare nummers, of ga terug naar de zoekresultaten en voeg andere nummers toe.",
+		"unavailableServiceAlert": "Service momenteel niet beschikbaar, sorry voor het ongemak. Probeer het later opnieuw.",
+		"continue": "Continue",
+		"backToSearchResults": "Ga terug naar de zoekresultaten",
+		"cancel": "Annuleren",
+		"confirm": "Bevestigen",
+		"confirmInfoMsg1": "De nummers worden aan uw account toegevoegd en zullen na 15 minuten actief zijn.",
+		"confirmInfoMsg2": "Uw creditcard wordt direct belast voor abonnementen, die kosten worden pro rate berekend aan het einde van de maand.",
+		"vanitySearchLabel": "Zoek een lokaal of 0800 (gratis) Naambellen Nummer:",
+		"vanitySearchInfo1": "U kunt zoeken naar een combinatie van cijfers of letters.",
+		"vanitySearchInfo2": "Indien u een bepaald nummerniet kunt vinden raden we u aan contact met ons op te nemen, we kunnen dan kijken of we niet toch kunnen helpen aan het nummer wat u wenst, berekenen we een fee van €20.",
+		"sendRequest": "Stuur ons uw verzoek",
+		"to": "naar",
+		"partialPurchaseFailure": "Sorry, deze nummers konden niet worden aangeschaft:"
+	},
+
+	"port": {
+		"dialogTitle": "Porteer nummers",
+		"addButton": "Toevoegen",
+		"saveButtonPartOne": "Opslaan",
+		"saveButtonPartTwo": "Later doorgaan..",
+		"labelSaveButton": "Indien u nu niet alle documentatie voorhanden hebt, klik dan op opslaan en km later terug om door te gaan.",
+		"cancelButton": "Annuleren",
+		"cancelOrderButton": "Annuleer deze order",
+		"cancelOrderPopup": "Waat u zeker dat u deze portering wilt annuleren??",
+		"faqLink": "bekijk Portings FAQs",
+		"videoLink": "bekijk video",
+		"contactUsLink": "NContact met ons",
+		"nextButton": "volgende",
+		"progressBarLeft": "Nummers toevoegen",
+		"progressBarMiddle": "Verstuur Documenten",
+		"progressBarRight": "Bevestig Order",
+		"requiredConditions": "Gaat u aub akkoord met alle voorwaarden",
+		"comingSoon": "Coming Soon!",
+		"state": {
+			"completed": "Voltooid",
+			"pending": "In Afwachting",
+			"rejected": "Afgewezen",
+			"scheduled": "Geplanned",
+			"submitted": "Aangevraagd",
+			"unconfirmed": "Onbevestigd"
+		},
+		"commentsPopup": {
+			"title": "Commentaar",
+			"private": "Prive",
+			"comment": "Commentaar",
+			"timestamp": "commentaar toegevoegd"
+		},
+		"infoPopup": {
+			"title": "Verzoek Info",
+			"transfer": {
+				"legend": "Porterings info",
+				"label": {
+					"name": "Naam",
+					"notificationEmail": "Notificatie email",
+					"transferDate": "Porteringsdatum",
+					"temporaryNumbers": "Tijdelijke nummers",
+					"carrier": "Carrier"
+				}
+			},
+			"bill": {
+				"legend": "factuur info"
+			},
+			"numbers": {
+				"legend": "Nummers"
+			},
+			"confirm": {
+				"deleteComment": "Weet u zeker dat u dit commentaar wilt verwijderen?"
+			}
+		},
+		"addNumbers": {
+			"title": "We stellen het op prijs dat u uw nummers naar ons verhuist!",
+			"labelAddNumbers": "Welke nummers wilt u porteren? type 1 nummer per regel of plak er een aantal tegelijk. Geen extra tekens, alleen nummers."
+		},
+		"confirmOrder" : {
+			"titlePartOne": "Goed zo!",
+			"titlePartTwo": "nummer is klaar voor portering!",
+			"titlePartTwoBis": "nummers zijn klaar voor portering!",
+			"labelEmail": "Wie stellen we op de hoogte bij afronding?",
+			"labelDate": "wanneer wilt u de nummers porteren?",
+			"dateInfoPartOne": "belangrijk:",
+			"dateInfoPartTwo": "We garanderen geen data maar doen ons best u op de hoogte te houden van evt veranderingen, porteringen duren tussen de 3 dagen en 4 weken. Dit hangt van veel factoren af en u bent er 1 van. Zorg voor de juiste gegevens en het gaat vast vlug",
+			"labelTemporaryNumbers": "Wilt u tijdelijke nummers gebruiken? Dit i s handig, u kunt alvast uw account gaan inrichtenen testen.",
+			"toggleButtonOn": "JA",
+			"toggleButtonOff": "Nee",
+			"labelTemporaryNumbersCount": "Hoeveel nummers wilt u kopen?",
+			"temporaryNumbersInfoPartOne": "Deze nummers worden aan uw applicatie/account toegevoegd. We brengen hiervoor kosten in rekening a",
+			"temporaryNumbersInfoPartTwo": "1/Maand/Nummer. Verwijder de tijdelijke nummers nadat de portering is geslaagd om verdere kosten te vermijden.",
+			"orderSummaryTitle": "Order Overzicht",
+			"labelOrderDate": "Order Datum:",
+			"labelTransferDate": "Portering Planningsdatum:",
+			"labelNumbersTotal": "Totaal Nummers:",
+			"labelOrderTotal": "Totaal Order:",
+			"orderTotalInfoPartOne": "Eenmalige kosten van",
+			"orderTotalInfoPartTwo": "5/nummer zullen in rekening gebracht worden.",
+			"submitButton": "order Verwerken"
+		},
+		"manageOrders": {
+			"orderListInfo": "Door de eigenschappen van de gevraagde nummers kan het zijn dat we uw order splitsen. U kunt de orders dan 1 voor 1 verwerken.",
+			"eulaInfo": "In de volgende stap vragen we om een recenterekening waarop dit nummer voorkomt, daarmee toont u aan dat u er de eigenaar van bent. Dit is een vereiste van de wet. Het kan voorkomen dat we uw order verder splitsen wanneer er nummers niet op de rekening staan die u dadelijk upload.",
+			"eulaWarningPartOne": "Belangrijk!",
+			"eulaWarningPartTwo": "Lees onderstaande zorgvuldig en geef an dat u het begrijpt door verder te gaan (bent u onzeker? Ga dan NIET verder)",
+			"labelCancelService": "Ik zal mijn oude service niet opzeggen tot de nummers zijn geporteerd,",
+			"labelCancelNumbers": "Ik begrijp dat andere nummers die ik heb bij de latende provider kunnen worden geannuleerd als ik deze niet verhuis, ik heb dit nagevraagd en ben er zelf verantwoordelijk voor,",
+			"labelChangeFee": "Ik begrijp dat ikzelf de overeenkomst met de latende provider dien op te zeggen indien dat niet automatisch gebeurt. Ik begrijp dat eventuele kosten voor mijn eigen rekening zijn,",
+			"labelStandardNumbers": "Dit zijn standaard telefoonnummers, geen fratsen zoals alarm lijnen en dergelijke. (Vraag dit na bij twijfel!!)"
+		},
+		"pendingOrders": {
+			"title": "Wachtende Orders",
+			"newPortLink": "Start Nieuwe Portering",
+			"tableOrderName": "Verzoek naam",
+			"tableOrderDate": "Gedaan op",
+			"tableOrderState": "Verzoek status",
+			"continueButton": "Doorgaan",
+			"deleteButton": "verwijderen",
+			"infoButton": "Info",
+			"commentsButton": "Commentaar",
+			"noOrder": "Geen Portering"
+		},
+		"resumeOrder": {
+			"title": "Voltooi de volgende porteringen, 1 voor 1!!",
+			"labelOrder": "Order",
+			"completeOrderButton": "Voltooi deze Order"
+		},
+		"submitDocuments": {
+			"labelOrderName": "Referentienaam die u help deze portering te ondersheiden",
+			"labelOrderNameHelper": "bijv. Jansen BV, kantoor nummers, 100 reeks +3120650XXX",
+			"billInfoPartOne": "Upload uw huidige factuur waarop deze nummers voorkomen en vul de account data zoals op die factuur in.",
+			"billInfoPartTwo": "Meer uitleg",
+			"uploadBillButton": "upload telefoonrekening",
+			"uploadBillHelper": "alleen pdf formaat",
+			"labelAccountName": "Bedrijfsnaam op Factuur",
+			"labelAddress": "Adres",
+			"labelCity": "Stad",
+			"labelState": "Provincie",
+			"labelZipCode": "Postcode",
+			"orderListInfoPartOne": "Bevestig aub dat de nummers die u wilt porteren inderdaad op de factuur staan die u upload.",
+			"orderListInfoPartTwo": "Indien er bepaalde nummers niet op staan, VERWIJDER die nummers dan uit deze order! 1 fout nummer zorgt ervoor dat het gehele order wordt afgewezen.",
+			"loaTitlePartOne": "Vul alstublieft de LoA in, dat is een officieel document waarin u aangeeft dat u de nummers wilt verhuizen.",
+			"loaTitlePartTwo": "Wat is een LOA?",
+			"loaDownloadStep": "download loa",
+			"loaSignStep": "Teken loa formulier",
+			"loaUploadStep": "upload loa",
+			"loaHelperPartOne": "Voor degene zonder tijd, een printer of scanner bieden we ook een digitale handtekening service aan voor en eenmalige fee van ",
+			"loaHelperPartTwo": "5.",
+			"loaHelperPartThree": "Digitale LOA formuler.",
+			"loaHelperPartFour": "Hoe de documenten te tekenen",
+			"loaHelperPartFive": "digitaal zonder te betalen.",
+			"changeButton": "verander"
+		},
+		"toastr": {
+			"success": {
+				"request": {
+					"update": "Het porteringsverzoek is bijgewerkt",
+					"delete": "Het porteringsverzoek is verwijderd"
+				},
+				"comment": {
+					"delete": "Het commentaar is succesvol verwijderd"
+				}
+			},
+			"error": {
+				"request": {
+					"update": "Er ging iets fout met het bijwerken van het porteringsverzoek"
+				},
+				"mimeTypes": "De volgende bestanden hebben een niet ondersteund bestandsformaat: ",
+				"size": "De volgende bestanden zijn te groot: ",
+				"number": {
+					"single": "Het nummer wat u invoerde lijken ongeldig !!!",
+					"multiple": "De nummers die u invoerde lijken ongeldig !!!"
+				},
+				"submit": {
+					"document": "Upload alstublieft de getekende LoA en de factuur van de latende provider die overeenkomen met de nummers die u wilt porteren"
+				}
+			}
+		}
+	},
+
+	"chooseModel": {
+		"brandHeadline": "Selecteer het merk van het apparaat:",
+		"deviceHeadline": "Selecteer het model van het merk:",
+		"deviceSelected": "U selecteerde {{brand}} {{model}}",
+		"missingBrand": "Mijn merk staat er niet tussen",
+		"missingDevice": "Mijn apparaat staat er niet tussen",
+		"title": "Selectie van het apparaat",
+		"create": "Maak Apparaat Aan"
+	},
+
+	"servicePlanDetails": {
+		"rate": "Tarief:",
+		"activationCharge": "Activatie Fee:",
+		"exceptions": "Uitzonderingen:",
+		"planLines": {
+			"phone_numbers": "Telefoonnummers",
+			"number_services": "Nummer Diensten",
+			"limits": "Limieten",
+			"devices": "Devices",
+			"users": "Gebruikers"
+		},
+		"noServicePlan": "Geen pakket geselecterd."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Distibutie",
+		"maxDurationTooltip": "klik in deze box om de maximale duur van de ringgroep te veranderen, u dient een waarde in te geven tussen de 30 en 999.",
+		"doNotRing": "Niet laten overgaan"
+	},
+
+	"__comment": "UI-966: We want to be able to customize the carrier choice in different plances, so we build a common control",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Uitgaande gesprekken via..",
+		"headline": "Selecteer welke carrier de uitgaande gesprekken van dit account afhandeld (ook wel trunk, of provider genoemd)",
+		"useBlended": {
+			"friendlyName": "Gebruik de default",
+			"help": "Dit zorgt ervoor dat de gesprekken door ons worden afgehandeld"
+		},
+		"useReseller": {
+			"friendlyName": "gebruik {{variable}}'s Carriers",
+			"help": "Dot zorgt ervoor dat gesprekken door {{variable}}'s carriers worden afgehandeld.",
+			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "gebruik Reseller's Carriers",
+			"defaultHelp": "Dit zorgt ervoor dat gesprekken door uw resellers Carriers worden afgehandeld"
+		},
+		"byoc": {
+			"friendlyName": "gebruik uw eigen Carrier",
+			"help": "Dit zorgt ervoor dat gesprekken worden afgehandeld door de Carrier die u aangeeft in de Carriers app van dit account."
+		},
+		"saveSuccess": "De Carrier instellingen zijn succesvol verwerkt voor dit account!",
+		"huntError": "Uw bestande instellingen voor de No_match route worden niet ondersteund door de MONSTER UI, wilt u toch doorgaan verander dan niets in dit scherm. U kunt een en ander ook aanpassen door een optie te selecteren in de dropdown!"
+	}
+}

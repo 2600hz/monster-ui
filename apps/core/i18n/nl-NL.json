@@ -1,0 +1,272 @@
+{
+"_comment": "I have not translated a lot of this as it is used by developers mostly, or people that have the skills to see these replyS, Englis error messages are better, even for debugging and googling",
+"poweredBy": "Powered by ",
+"error": "Error",
+"olderVersion": "Het lijkt erop dat de gegevens die u wilt bijwerken zijn gemaakt buiten deze grafische omgeving, wilt u toch doorgaan?",
+"errors": {
+"generic": "Er ging iets fout (details onbekend), probeer het over een paar secode nog eens!",
+"genericLabel": "API Response",
+"401": "Foutieve inlog-gegevens, controleer uw gebruikersnaam en account naam.",
+"403": "Verboden Toegang.",
+"500": "Interne server fout, neem alsublieft contact met ons op",
+"invalidData": {
+"errorLabel": "Invalid Data:",
+"required": "Het veld \"{{field}}\" is verplicht.",
+"minimum": "De waarde van het veld \"{{field}}\" moet minstens {{value}} zijn.",
+"maximum": "De waarde van het veld \"{{field}}\" mag niet meer dan {{value}} zijn.",
+"minLength": "De string van het veld \"{{field}}\" must be at least {{value}} characters.",
+"maxLength": "De string van het veld \"{{field}}\" mag niet meer dan {{value}} tekens/karakters hebben.",
+"enum:": "De waarde van het veld \"{{field}}\" werd niet gevonden in de lijst van te accepteren waardes.",
+"minItems": "De lijst van het veld \"{{field}}\" moet minstens {{value}} items bevatten.",
+"maxItems": "De lijst van het veld \"{{field}}\" mag niet meer dan {{value}} items bevatten.",
+"minProperties": "De object van het veld \"{{field}}\" heef niet genoeg kinderen.",
+"uniqueItems": "De lijst van het veld \"{{field}}\" moet uniek zijn.",
+"pattern": "De waarde van het veld \"{{field}}\" voldoet niet aan patroon \"{{value}}\".",
+"divisibleBy": "De waarde van het veld \"{{field}}\" is niet deelbaar door {{value}}.",
+"disallow": "De waarde van het veld \"{{field}}\" is niet toegestaan.",
+"type": "De waarde van het veld \"{{field}}\" moet van het \"{{value}}\" type zijn.",
+"unique": "De waarde van het veld \"{{field}}\" moet uniek zijn.",
+"forbidden": "De waarde van het veld \"{{field}}\" kan niet worden bijgewerkt.",
+"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
+"service_restriction": "Niet genoeg krediet om het nummer te kopen \"{{field}}\" (${{value}})."
+},
+"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
+"errorMessages": {
+"datastore_conflict": "An error was cause by conflicting database documents. Please try again, and contact your administrator if it reoccurs.",
+"_comment":"above not translated as it might be a nasty error and googling that should have some results",
+"account_has_descendants": "U kunt geen account verwijderen waaronder nog actieve subaccounts in aanwezig zijn."
+}
+},
+"apps": "Apps",
+"add": "Voeg Toe",
+"alertLogout": "Uw huidige sessie verloopt dadelijk en u wordt om veiligheids redenen automatisch uitgelogd, beweeg uw muis om dit te voorkomen, zo weten we dat er nog iemand actief is.",
+"cancel": "Annuleren",
+"change": "Pas Aan",
+"chargeReminder" : {
+"line1": "Er worden direct kosten berekend voor zaken die u hier aanpast. Indien u een abonnement heeft met maandelijkse betaling wordt dit pro rata gefactureerd.",
+"line2": "Weet u zeker dat u wilt doorgaan?"
+},
+"close" : "Sluiten",
+"conferencingLogo": "Conferencing",
+"csv": "CSV",
+"currencyUsed": "$",
+"delete": "Verwijder",
+"dialog" : {
+"showError": "Toon Fout",
+"confirmOk": "OK",
+"confirmCancel" : "Annuleren",
+"confirmTitle" : "Bevestigen"
+},
+"disabled": "Uitgeschakeld",
+"download": "Download",
+"enabled": "Ingeschakeld",
+"endDate": "Einde:",
+"examplePhoneNumber": "+31 (222) 123456",
+"filter": "Filter",
+"info": "Info",
+"next": "Volgende",
+"on": "Aan",
+"off": "Uit",
+"show": "Toon",
+"hide": "verberg",
+"paging": {
+"first": "Eerste",
+"previous": "Vorige",
+"next": "Volgende",
+"last": "Laatste"
+},
+"pdf": "PDF",
+"previous": "Vorige",
+"remove": "Verwijder",
+"save": "Opslaan",
+"saveChanges": "Veranderingen Opslaan",
+"search": "Zoek",
+"select": "Selecteer",
+"startDate": "Start:",
+"submit": "Submit",
+"table" : {
+"search": "Zoek...",
+"empty" : "Geen data beschikbaar in tabel...",
+"processing" : "verwerken...",
+"showEntries": "Show _MENU_ entries",
+"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries",
+"zeroRecords": "Geen overeenkomsten gevonden",
+"loading": "Aan het laden...",
+"filtered": "(filtered from _MAX_ total entries)",
+"infoEmpty": ""
+},
+"unexpectedError": "Een onverwachte fout!.. oh nee.. mmm probeer het nog eens!",
+"update": "Update",
+"upload": "Upload",
+"validation": {
+"defaultRules": {
+"required": "Dit veld is verplicht.",
+"remote": "Controleer dit veld.",
+"email": "Voer een geldig emailadres in aub.",
+"url": "Voer en geldige URL in aub.",
+"date": "Voer een geldigedatum in aub.",
+"dateISO": "Voer een geldige datum in aub (ISO).",
+"number": "Geef een geldig nummer.",
+"digits": "Voer alleen getallen in.",
+"creditcard": "Voer en geldig creditcard nummer in.",
+"equalTo": "Voer dezelfde waardenogmaals in.",
+"maxlength": "Niet meer dan {0} tekens aub.",
+"minlength": "Minimaal {0} tekens aub.",
+"rangelength": "Voer  aub een waarde in tussen de {0} en {1} tekens.",
+"range": "Voer  aub een waarde in tussen de {0} en {1} tekens.",
+"max": "Voer een waarde in die kleiner dan of gelijk is aan {0}.",
+"min": "Voer een waarde in die groter dan of gelijk is aan {0}."
+},
+"customRules": {
+"checkList": "Bestaat al",
+"mac": "Voer een geldig MAC address in.",
+"ipv4": "Voer een geldig IP v4 address in.",
+"_comment": "two above not translated as user might google for the meaning.",
+"time12h": "Geef een geldige tijd in in het 12-hour AM/PM formaat.",
+"greaterDate": "Startijd moet voor de eindtijd zijn.",
+"realm": "Geef alstublieft alleen cijfers, een punt of hekje in."
+},
+"required": "Benodigd."
+},
+"warning": "Waarschuwing!",
+"confirmCharges": {
+"title": "Kosten Overzicht",
+"withChargesPartOne": "U betaald een ${{variable}}",
+"withChargesPartTwo": "eenmalige {{variable}}. ",
+"withoutCharges": "Er zijn geen {{variable}}.",
+"detail": "Een overzicht van de maandelijkste kosten voor deze service:",
+"service": "Service",
+"rate": "Tarief",
+"quantity": "Aantal",
+"discount": "Korting",
+"monthlyCharges": "Maandelijkste bijdrage",
+"amount": "${{variable}}",
+"actions": "Klik op OK om te bevestigen of op Annuleren om te annuleren."
+},
+"languages": {
+"auto": "Standaard",
+"americanEnglish": "English (en-US)",
+"dutchDUTCH": "Dutch (NL-NL)",
+"frenchFrench": "French (fr-FR)",
+"russianRussian": "Russian (ru-RU)"
+},
+"services": {
+"cnam": "CNAM",
+"did_us": "US DIDs",
+"e911": "112",
+"inbound_cnam": "Inbound CNAM",
+"inbound_trunk": "Inbound Trunks",
+"inbound_trunks": "Inbound Trunks",
+"port": "Porteringen",
+"sip_devices": "SIP Devices",
+"sip_device": "SIP Devices",
+"tollfree_us": "US Tollfree",
+"twoway_trunk": "Twoway Trunks",
+"twoway_trunks": "Twoway Trunks",
+"outbound_trunk": "Outbound Trunks",
+"outbound_trunks": "Outbound Trunks",
+"user": "Gebruikers"
+},
+"wysiwyg": {
+"toastr": {
+"error": {
+"format": " is not a supported format",
+"upload": "Error while uploading the file"
+}
+},
+"title": {
+"fontSize": "Font Size",
+"bold": "Bold (Ctrl/Cmd+B)",
+"italic": "Italic (Ctrl/Cmd+I)",
+"underline": "Underline (Ctrl/Cmd+U)",
+"strikethrough" : "Strikethrough",
+"fontColor": "Font Color",
+"alignment": "Alignment",
+"alignLeft": "Align Left (Ctrl/Cmd+L)",
+"center": "Center (Ctrl/Cmd+E)",
+"alignRight": "Align Right (Ctrl/Cmd+R)",
+"justify": "Justify (Ctrl/Cmd+J)",
+"list": "List",
+"bulletList": "Bullet list",
+"numberList": "Number list",
+"reduceIndent": "Reduce indent (Shift+Tab)",
+"indent": "Indent (Tab)",
+"createLink": "Hyperlink",
+"removeLink": "Remove Hyperlink",
+"upload": "Insert picture (or just drag & drop)",
+"undo": "Undo (Ctrl/Cmd+Z)",
+"redo": "Redo (Ctrl/Cmd+Y)",
+"horizontalRule": "Horizontal Rule",
+"macro": "Macro"
+},
+"text": {
+"big": "Big",
+"normal": "Normal",
+"small" : "Small"
+},
+"placeholder": {
+"createLink": "URL"
+}
+},
+"calendar": {
+"suffix": {
+"am": "AM",
+"pm": "PM"
+},
+"day": {
+"0": "Sunday",
+"1": "Monday",
+"2": "Tuesday",
+"3": "Wednesday",
+"4": "Thursday",
+"5": "Friday",
+"6": "Saturday"
+},
+"month": {
+"0": "January",
+"1": "February",
+"2": "March",
+"3": "April",
+"4": "May",
+"5": "June",
+"6": "July",
+"7": "August",
+"8": "September",
+"9": "October",
+"10": "November",
+"11": "December"
+}
+},
+"__comment": "UI-735: Added codec/linked column common control",
+"__version": "v3.20_s0",
+"linkedColumns": {
+"available": "Beschikbaar",
+"selected": "Geselecteerd"
+},
+"codecs": {
+"audio": {
+"OPUS": "OPUS",
+"CELT@32000h": "Siren @ 32Khz",
+"G7221@32000h": "G722.1 @ 32khz",
+"G7221@16000h": "G722.1 @ 16khz",
+"G722": "G722",
+"speex@32000h": "Speex @ 32khz",
+"speex@16000h": "Speex @ 16khz",
+"PCMU": "G711u / PCMU - 64kbps (NA)",
+"PCMA": "G711a / PCMA - 64kbps (Elsewhere)",
+"G729":"G729 - 8kbps (Requires License)",
+"GSM":"GSM",
+"CELT@48000h": "Siren (HD) @ 48kHz",
+"CELT@64000h": "Siren (HD) @ 64kHz"
+},
+"video": {
+"VP8": "VP8",
+"H264": "H264",
+"H263": "H263",
+"H261": "H261"
+}
+},
+"__comment": "UI-1014: Redesign of MyAccount",
+"__version": "v3.20_s0",
+"refresh": "Refresh"
+}
