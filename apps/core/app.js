@@ -178,7 +178,7 @@ define(function(require){
 				}
 			});
 
-			$('body').on('click', '*[class*="monster-button"]', function() {
+			$('body').on('click', '*[class*="monster-button"]', function(event) {
 				var $this = $(this),
 					classSuffix = $this.attr('class').replace(/.*monster-button(-\w+)?.*/g, '$1'),
 					splashDiv = $('<div class="monster-splash-effect'+classSuffix+'"/>'),

@@ -190,6 +190,7 @@
 		"progressBarRight":"Confirmer le transfert",
 		"requiredConditions": "Veuillez accepter les condictions",
 		"comingSoon": "Prochainement",
+		"unknownCarrier": "Opérateur inconnu",
 		"state": {
 			"completed": "Effectué",
 			"pending": "En attente",
@@ -329,11 +330,7 @@
 					"update": "La mise à jour de la demande de transfert à échoué"
 				},
 				"mimeType": "Les fichiers suivants ne sont pas dans un format accepter: ",
-				"size": "Les fichiers suivants sont trop gros: ",
-				"number": {
-					"single": "Le numéro que vous avez saisi est invalide !!!",
-					"multiple": "Les numéros que vous avez saisi sont invalides !!!"
-				},
+				"size": "Les fichiers suivants sont trop volumineux: ",
 				"submit": {
 					"document": "Veuillez joindre la lettre d'autorisation signée ainsi que la facture correspondant aux numéros que vous souhaitez transférer"
 				}
