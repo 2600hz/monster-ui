@@ -377,8 +377,8 @@ define(function(require){
 									errorMessage = errorsI18n[error.status];
 								}
 
-								if(error.message) {
-									errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + error.message;
+								if(parsedError.message) {
+									errorMessage += '<br/><br/>' + errorsI18n.genericLabel + ': ' + parsedError.message;
 								}
 
 								monster.ui.alert('error', errorMessage);
