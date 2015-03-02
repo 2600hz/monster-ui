@@ -136,6 +136,10 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/clicktocall' },
 			'connect': { verb: 'POST', url: 'accounts/{accountId}/clicktocall/{clickToCallId}/connect' }
 		},
+		pivot: {
+			'listDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug' },
+			'getDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug/{callId}' }
+		},
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' }
