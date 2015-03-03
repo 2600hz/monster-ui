@@ -421,7 +421,40 @@ define(function(require){
 							}
 						}
 					},
-					options = $.extend(true, {}, defaultOptions, options);
+					options = $.extend(true, {}, defaultOptions, options),
+					applyFunctions = function applyFunctions(table) {
+						table.addData = function(data) {
+							var self = this;
+
+							self.fnAddData(data);
+						};
+
+						table.destroy = function() {
+							var self = this;
+
+							self.fnDestroy();
+
+							monster.ui.table[self.name] = null;
+						};
+					},
+					applyModifications = function applyModifications(table) {
+						var search_wrapper = table.parents('.dataTables_wrapper').find('.dataTables_filter');
+							search = search_wrapper.find('input[type="text"]'),
+							btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
+							btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
+							i18n = monster.apps['core'].i18n.active();
+
+						search.attr('placeholder', i18n.table.search);
+
+						search_wrapper.contents().filter(function() {
+							return this.nodeType == Node.TEXT_NODE;
+						}).remove();
+
+						// This is backwards because of the float right
+						search.before(btn_cancel);
+						search.after(btn_search);
+					};
+
 
 				tableObj = element.dataTable(options);
 				tableObj.name = name;;
@@ -430,40 +463,6 @@ define(function(require){
 				self.applyModifications(tableObj);
 
 				self[name] = tableObj;
-			},
-
-			applyFunctions: function(table) {
-				table.addData = function(data) {
-					var self = this;
-
-					self.fnAddData(data);
-				};
-
-				table.destroy = function() {
-					var self = this;
-
-					self.fnDestroy();
-
-					monster.ui.table[self.name] = null;
-				};
-			},
-
-			applyModifications: function(table) {
-				var search_wrapper = table.parents('.dataTables_wrapper').find('.dataTables_filter');
-					search = search_wrapper.find('input[type="text"]'),
-					btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
-					btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
-					i18n = monster.apps['core'].i18n.active();
-
-				search.attr('placeholder', i18n.table.search);
-
-				search_wrapper.contents().filter(function() {
-					return this.nodeType == Node.TEXT_NODE;
-				}).remove();
-
-				// This is backwards because of the float right
-				search.before(btn_cancel);
-				search.after(btn_search);
 			}
 		},
 
