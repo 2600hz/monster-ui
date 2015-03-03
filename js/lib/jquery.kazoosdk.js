@@ -103,6 +103,10 @@
 			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
 			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
+		inspector: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/call_inspector/{callId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/call_inspector' }
+		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
