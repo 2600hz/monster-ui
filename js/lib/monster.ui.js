@@ -1118,13 +1118,7 @@ define(function(require){
 				coreApp = monster.apps.core,
 				unselectedItems = (function findUnselectedItems(items, selectedItems) {
 					var selectedKeys = selectedItems.map(function(item) { return item.key; }),
-						unselectedItems = [];
-
-					for (var i = 0, len = items.length; i < len; i++) {
-						if (selectedKeys.indexOf(items[i].key) === -1) {
-							unselectedItems.push(items[i]);
-						}
-					}
+						unselectedItems = items.filter(function(item) { return selectedKeys.indexOf(item.id) < 0; });
 
 					return unselectedItems;
 				})(items, selectedItems),
