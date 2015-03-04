@@ -8,20 +8,21 @@
 		</div>
 		<div class="accounts-list">
 		{{#each data}}
-			<div class="account-section active" data-id="{{account_id}}">
+			<div class="account-section{{#if port_requests}} active{{/if}}" data-id="{{account_id}}">
 				<div class="account-header">
 					<div class="left-part pull-left">
-						<i class="icon-chevron-down icon-white"></i>
+						<i class="icon-chevron-{{#if port_requests}}down icon-white{{else}}right{{/if}}"></i>
 					</div>
 					<div class="expandable">
 						<span class="account-name">{{account_name}}</span> <span class="request-amount">({{amount}})</span>
 					</div>
 				</div>
 				<div class="requests-wrapper">
+				{{#if port_requests}}
 					<div class="requests-header">
-							<div class="request-name">{{../i18n.port.pendingOrders.tableOrderName}}</div>
-							<div class="request-created">{{../i18n.port.pendingOrders.tableOrderDate}}</div>
-							<div class="request-state">{{../i18n.port.pendingOrders.tableOrderState}}</div>
+							<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
+							<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
+							<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
 					</div>
 				{{#each port_requests}}
 					<div class="request-box" data-id="{{id}}">
@@ -44,6 +45,9 @@
 						</div>
 					</div>
 				{{/each}}
+				{{else}}
+				<div class="request-box empty">{{../../i18n.port.pendingOrders.noOrder}}</div>
+				{{/if}}
 				</div>
 			</div>
 		{{/each}}

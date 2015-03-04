@@ -274,15 +274,7 @@
 			"deleteButton": "Supprimer",
 			"infoButton":"Information",
 			"commentsButton": "Commentaires",
-			"noOrder":"Aucun transfert",
-			"states": {
-				"completion": "Completion",
-				"progress": "Progress",
-				"ready": "Ready",
-				"rejection": "Rejection",
-				"waiting": "Waiting",
-				"unconfirmed": "Unconfirmed"
-			}
+			"noOrder":"Aucun transfert"
 		},
 		"resumeOrder":{
 			"title":"Compléter les demandes de transfert, un à la fois !",
