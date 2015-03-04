@@ -459,8 +459,8 @@ define(function(require){
 				tableObj = element.dataTable(options);
 				tableObj.name = name;;
 
-				self.applyFunctions(tableObj);
-				self.applyModifications(tableObj);
+				applyFunctions(tableObj);
+				applyModifications(tableObj);
 
 				self[name] = tableObj;
 			}
