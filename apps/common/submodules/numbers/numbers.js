@@ -931,7 +931,7 @@ define(function(require){
 		},
 
 		/* AccountID and Callback in args */
-		numbersFormatDialogSpare: function(data) {
+		numbersFormatDialogSpare: function(data, ignoreNumbers, extraNumbers) {
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
@@ -943,7 +943,7 @@ define(function(require){
 				};
 
 			_.each(data.numbers, function(number, id) {
-				if(number.used_by === '') {
+				if((number.used_by === '' || extraNumbers.indexOf(id) >= 0) && ignoreNumbers.indexOf(id) === -1) {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
 
@@ -961,12 +961,14 @@ define(function(require){
 			var self = this,
 				accountId = args.accountId,
 				accountName = args.accountName || '',
+				ignoreNumbers = args.ignoreNumbers || [],
+				extraNumbers = args.extraNumbers || [],
 				callback = args.callback;
 
 			self.numbersList(accountId, function(data) {
 				data.accountName = accountName;
 
-				var formattedData = self.numbersFormatDialogSpare(data),
+				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers),
 					spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
 
 				spareTemplate.find('.empty-search-row').hide();
@@ -990,6 +992,7 @@ define(function(require){
 
 				spareTemplate.find('#proceed').on('click', function() {
 					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
+						remainingQuantity = formattedData.sortedNumbers.length - selectedNumbersRow.length,
 						selectedNumbers = [];
 
 					_.each(selectedNumbersRow, function(row) {
@@ -999,7 +1002,7 @@ define(function(require){
 					});
 
 					if(selectedNumbers.length > 0) {
-						args.callback && args.callback(selectedNumbers);
+						args.callback && args.callback(selectedNumbers, remainingQuantity);
 
 						popup.dialog('close').remove();
 					}
@@ -1008,7 +1011,7 @@ define(function(require){
 					}
 				});
 
-				spareTemplate.find('.number-box').on('click', function(event) {
+				spareTemplate.find('.number-box:not(.no-data)').on('click', function(event) {
 					var $this = $(this);
 
 					$this.toggleClass('selected');

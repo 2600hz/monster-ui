@@ -342,6 +342,11 @@
 	border: 1px solid #DDD;
 }
 
+.dialog-spare-container .grid-numbers .numbers .number-box.no-data:hover {
+	cursor: default;
+	background: inherit; 
+}
+
 .dialog-spare-container .grid-numbers .empty-search-row {
 	text-align: center;
 	padding: 10px;
