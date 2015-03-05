@@ -285,7 +285,7 @@
 			"deleteButton": "Delete",
 			"infoButton": "Info",
 			"commentsButton": "Comments",
-			"noOrder": "No port"
+			"noOrder": "No existing port request for this account"
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",

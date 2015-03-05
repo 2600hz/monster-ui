@@ -337,6 +337,11 @@ div#orders_list .collapse td:last-child i {
 	border-bottom-left-radius: 8px;
 }
 
+#orders_list .accounts-list .account-section .requests-wrapper .request-box.empty {
+	border-top: 0;
+	text-align: center;
+}
+
 #orders_list .accounts-list .request-box .request-name,
 #orders_list .accounts-list .request-box .request-created {
 	overflow: hidden;

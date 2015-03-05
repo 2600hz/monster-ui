@@ -8,20 +8,21 @@
 		</div>
 		<div class="accounts-list">
 		{{#each data}}
-			<div class="account-section active" data-id="{{account_id}}">
+			<div class="account-section{{#if port_requests}} active{{/if}}" data-id="{{account_id}}">
 				<div class="account-header">
 					<div class="left-part pull-left">
-						<i class="icon-chevron-down icon-white"></i>
+						<i class="icon-chevron-{{#if port_requests}}down icon-white{{else}}right{{/if}}"></i>
 					</div>
 					<div class="expandable">
 						<span class="account-name">{{account_name}}</span> <span class="request-amount">({{amount}})</span>
 					</div>
 				</div>
 				<div class="requests-wrapper">
+				{{#if port_requests}}
 					<div class="requests-header">
-							<div class="request-name">{{../i18n.port.pendingOrders.tableOrderName}}</div>
-							<div class="request-created">{{../i18n.port.pendingOrders.tableOrderDate}}</div>
-							<div class="request-state">{{../i18n.port.pendingOrders.tableOrderState}}</div>
+							<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
+							<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
+							<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
 					</div>
 				{{#each port_requests}}
 					<div class="request-box" data-id="{{id}}">
@@ -35,15 +36,18 @@
 								<i class="icon-cog dropdown-toggle" data-toggle="dropdown"></i>
 								<ul class="dropdown-menu">
 								{{#compare port_state '===' 'unconfirmed'}}
-									<li class="continue-request"><a href="#"><i class="icon-play icon-green"></i> {{../../../i18n.port.pendingOrders.continueButton}}</a></li>
-									<li class="delete-request"><a href="#"><i class="icon-remove icon-red"></i> {{../../../i18n.port.pendingOrders.deleteButton}}</a></li>
+									<li class="continue-request"><a href="#"><i class="icon-play icon-green"></i> {{../../../../i18n.port.pendingOrders.continueButton}}</a></li>
+									<li class="delete-request"><a href="#"><i class="icon-remove icon-red"></i> {{../../../../i18n.port.pendingOrders.deleteButton}}</a></li>
 								{{/compare}}
-									<li class="info-request"><a href="#"><i class="icon-info icon-yellow"></i> {{../../i18n.port.pendingOrders.infoButton}}</a></li>
+									<li class="info-request"><a href="#"><i class="icon-info icon-yellow"></i> {{../../../i18n.port.pendingOrders.infoButton}}</a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 				{{/each}}
+				{{else}}
+				<div class="request-box empty">{{../../i18n.port.pendingOrders.noOrder}}</div>
+				{{/if}}
 				</div>
 			</div>
 		{{/each}}

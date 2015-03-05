@@ -847,7 +847,9 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var requests = results.descendants;
+					var requests = results.descendants.sort(function(a, b) {
+							return a.account_name.toLowerCase() > b.account_name.toLowerCase() ? 1 : -1;
+						});
 
 					if (results.requests.length) {
 						requests.unshift({
