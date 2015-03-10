@@ -272,5 +272,8 @@
 			"H263": "H263",
 			"H261": "H261"
 		}
-	}
+	},
+
+	"__comment": "UI-1177: Say Un-assign instead of remove in Main Number",
+	"unassign": "Retirer"
 }

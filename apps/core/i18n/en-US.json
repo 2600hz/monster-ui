@@ -272,5 +272,8 @@
 	},
 	"__comment": "UI-1014: Redesign of MyAccount",
 	"__version": "v3.20_s0",
-	"refresh": "Refresh"
+	"refresh": "Refresh",
+
+	"__comment": "UI-1177: Say Un-assign instead of remove in Main Number",
+	"unassign": "Un-assign"
 }
