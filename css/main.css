@@ -419,8 +419,15 @@ input[type="color"],
 .model-image.yealink-t20 {
 	background: url('images/models/yealinkt20.jpg') center no-repeat;
 }
+.model-image.yealink-t21 {
+	background: url('images/models/yealinkt21.jpg') center no-repeat;
+}
 .model-image.yealink-t22 {
 	background: url('images/models/yealinkt22.jpg') center no-repeat;
+}
+.model-image.yealink-t23,
+.model-image.yealink-t23g {
+	background: url('images/models/yealinkt23.jpg') center no-repeat;
 }
 .model-image.yealink-t26 {
 	background: url('images/models/yealinkt26.jpg') center no-repeat;
@@ -466,8 +473,11 @@ input[type="color"],
 .model-image.cisco-962 {
 	background: url('images/models/cisco962.jpg') center no-repeat;
 }
-.model-image.cisco-303 {
-	background: url('images/models/cisco303.jpg') center no-repeat;
+.model-image.cisco-301g {
+	background: url('images/models/cisco301g.jpg') center no-repeat;
+}
+.model-image.cisco-303g {
+	background: url('images/models/cisco303g.jpg') center no-repeat;
 }
 .model-image.cisco-501g {
 	background: url('images/models/cisco501g.jpg') center no-repeat;
@@ -477,6 +487,18 @@ input[type="color"],
 }
 .model-image.cisco-504g {
 	background: url('images/models/cisco504g.jpg') center no-repeat;
+}
+.model-image.cisco-508g {
+	background: url('images/models/cisco508g.jpg') center no-repeat;
+}
+.model-image.cisco-509g {
+	background: url('images/models/cisco509g.jpg') center no-repeat;
+}
+.model-image.cisco-512g {
+	background: url('images/models/cisco512g.jpg') center no-repeat;
+}
+.model-image.cisco-514g {
+	background: url('images/models/cisco514g.jpg') center no-repeat;
 }
 .model-image.cisco-525g {
 	background: url('images/models/cisco525g.jpg') center no-repeat;
@@ -489,8 +511,17 @@ input[type="color"],
 .model-image.polycom-1500 {
 	background: url('images/models/polycom1500.jpg') center no-repeat;
 }
+.model-image.polycom-301 {
+	background: url('images/models/polycom301.jpg') center no-repeat;
+}
+.model-image.polycom-320 {
+	background: url('images/models/polycom320.jpg') center no-repeat;
+}
 .model-image.polycom-321 {
 	background: url('images/models/polycom321.jpg') center no-repeat;
+}
+.model-image.polycom-330 {
+	background: url('images/models/polycom330.jpg') center no-repeat;
 }
 .model-image.polycom-331 {
 	background: url('images/models/polycom331.jpg') center no-repeat;
@@ -498,11 +529,20 @@ input[type="color"],
 .model-image.polycom-335 {
 	background: url('images/models/polycom335.jpg') center no-repeat;
 }
+.model-image.polycom-4000 {
+	background: url('images/models/polycom4000.jpg') center no-repeat;
+}
+.model-image.polycom-430 {
+	background: url('images/models/polycom430.jpg') center no-repeat;
+}
 .model-image.polycom-450 {
 	background: url('images/models/polycom450.jpg') center no-repeat;
 }
 .model-image.polycom-5000 {
 	background: url('images/models/polycom5000.jpg') center no-repeat;
+}
+.model-image.polycom-501 {
+	background: url('images/models/polycom501.jpg') center no-repeat;
 }
 .model-image.polycom-550 {
 	background: url('images/models/polycom550.jpg') center no-repeat;
@@ -512,6 +552,12 @@ input[type="color"],
 }
 .model-image.polycom-6000 {
 	background: url('images/models/polycom6000.jpg') center no-repeat;
+}
+.model-image.polycom-600 {
+	background: url('images/models/polycom600.jpg') center no-repeat;
+}
+.model-image.polycom-601 {
+	background: url('images/models/polycom601.jpg') center no-repeat;
 }
 .model-image.polycom-650 {
 	background: url('images/models/polycom650.jpg') center no-repeat;
