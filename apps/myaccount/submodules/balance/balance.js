@@ -140,7 +140,7 @@ define(function(require){
 								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 									dlTo = monster.util.dateToEndOfGregorianDay(to);
 
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.authToken;
 							});
 
 							monster.ui.table.balance.fnAddData(renderData.tabData);
