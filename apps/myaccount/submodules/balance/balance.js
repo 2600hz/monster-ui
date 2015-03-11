@@ -369,6 +369,9 @@ define(function(require){
 					}
 
 					monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
+						bScrollInfinite: true,
+						bScrollCollapse: true,
+						sScrollY: '300px',
 						sDom: '<"table-custom-actions">frtlip',
 						aaSorting: [[0, 'desc']]
 					});

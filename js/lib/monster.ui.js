@@ -395,9 +395,6 @@ define(function(require){
 						sPaginationType: 'full_numbers',
 						aaData: data || {},
 						aoColumns: columns,
-						bScrollInfinite: true,
-						bScrollCollapse: true,
-						sScrollY: '300px',
 						oLanguage: {
 							sEmptyTable: i18n.table.empty,
 							sProcessing: i18n.table.processing,
