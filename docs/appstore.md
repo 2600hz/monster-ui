@@ -1,7 +1,21 @@
 ## Adding your application to the App Store
 The Monster-UI Framework has been built to allow developers to code their own apps and to allow them to reach their users via the Monster-UI.
 
-As of now, in order to see your app inside the app store, you need to manually add it to the database. In order to do so, you need to add a document in the Master Account database. So first, go in your master account database. At the top-right of the page, there is a dropdown listing the different views of this database, click and select the apps_store, crossbar_listing view in the dropdown. This will list all the current apps of your app store. In a fresh install, this should be empty! If not, make sure you didn't create that document already... :)
+There are 2 ways to add your applications inside the database. 
+
+### Automatic way with a Kazoo Command
+Assuming you've installed your Monster applications to `/path/to/monster-ui/apps`, you can run the following SUP command on the server:
+
+    sup crossbar_maintenance init_apps '/path/to/monster-ui/apps' 'http://your.api.server:8000/v2'
+
+This will load the apps (and let you know which apps it couldn't automatically load) into the master account (including icons, if present). For any apps that failed to be loaded automatically, you can follow the manual instructions below.
+
+If you want to install a single Monster application:
+
+    sup crossbar_maintenance init_app '/path/to/monster-ui/apps/{APP}' 'http://your.api.server:8000/v2'
+
+### Manual way by adding a document to the database
+In order to add your application manually, you have to add a document in the Master Account database. So first, go in your master account database. At the top-right of the page, there is a dropdown listing the different views of this database, click and select the apps_store, crossbar_listing view in the dropdown. This will list all the current apps of your app store. In a fresh install, this should be empty! If not, make sure you didn't create that document already... :)
 
 Now click on "New Document", and we'll create that document.
 
