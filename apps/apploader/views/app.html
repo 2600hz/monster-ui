@@ -5,7 +5,7 @@
 				<h4>{{i18n.defaultApp.title}}</h4>
 				<p>{{i18n.defaultApp.label}}</p>
 			</div>
-			<div class="app-container">
+			<div class="app-container{{#unless defaultApp}} no-app{{/unless}}">
 			{{#if defaultApp}}
 				<div class="app-element ui-sortable-disabled" data-id="{{defaultApp.id}}" data-name="{{defaultApp.name}}" data-search="{{defaultApp.label}}">
 					<div class="app-icon"{{#if defaultApp.icon}} style="background-image:url({{defaultApp.icon}})"{{/if}}></div>

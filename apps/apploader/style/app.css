@@ -79,7 +79,7 @@
 	color: #6c6c74;
 }
 
-#apploader .default-app .app-container:hover {
+#apploader .default-app .app-container:not(.no-app):hover {
 	cursor: pointer;
 	border-color: #22a5ff;
 }
