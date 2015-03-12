@@ -45,6 +45,8 @@ define(function(require){
 				else {
 					self.renderLoginPage(mainContainer);
 				}
+
+				callback && callback(self);
 			}
 			else {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
@@ -54,12 +56,46 @@ define(function(require){
 				self.userId = cookieData.userId;
 				self.isReseller = cookieData.isReseller;
 				self.resellerId = cookieData.resellerId;
-				self.installedApps = cookieData.installedApps;
+				
+				self.transformAppIdsToData(cookieData.installedApps, cookieData.language, function(data) {
+					self.installedApps = data;
 
-				self.afterLoggedIn();
+					self.afterLoggedIn();
+
+					callback && callback(self);
+				});
 			}
+		},
 
-			callback && callback(self);
+		// Transform an array of app ids to a array of object with apps information
+		// We didn't want to store all the metadata in the cookie (because otherwise it would become too big) so we created this
+		transformAppIdsToData: function(apps, lang, callback) {
+			var self = this,
+				formattedApps = [],
+				mapApps = {};
+
+			self.getAppsStore(function(appData) {
+				_.each(appData, function(app) {
+					var i18nLabel = app.i18n.hasOwnProperty(lang) ? app.i18n[lang].label : app.i18n['en-US'].label;
+
+					// We use this formatting to match whatever is sent from the user_auth request
+					mapApps[app.id] = {
+						api_url: app.api_url,
+						id: app.id,
+						label: i18nLabel,
+						name: app.name,
+						source_url: app.source_url
+					};
+				});
+
+				_.each(apps, function(id) {
+					if(mapApps.hasOwnProperty(id)) {
+						formattedApps.push(mapApps[id]);
+					}
+				});
+
+				callback && callback(formattedApps);
+			});
 		},
 
 		render: function(container){
@@ -180,9 +216,10 @@ define(function(require){
 				accountId: self.accountId,
 				userId: self.userId,
 				isReseller: self.isReseller,
-				resellerId: self.resellerId,
-				installedApps: self.installedApps
+				resellerId: self.resellerId
 			};
+
+			cookieAuth.installedApps = _.map(self.installedApps, function(app) { return app.id });
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
@@ -612,6 +649,20 @@ define(function(require){
 					if(typeof error === 'function') {
 						error(err);
 					}
+				}
+			});
+		},
+
+		getAppsStore: function(callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'appsStore.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(_data) {
+					callback && callback(_data.data)
 				}
 			});
 		},

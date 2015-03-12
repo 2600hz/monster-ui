@@ -78,11 +78,10 @@ define(function(require){
 				defaultDiv = parent.find('.app-default')
 				updateAppInfo = function updateAppInfo(id) {
 					var app = appList.filter(function(v, i) { return id === v.id })[0];
-
-					parent.find('.app-default')
+					parent.find('.app-description')
 						.find('h4')
 							.text(app.label)
-						.addBack().find('.description')
+						.addBack().find('p')
 							.text(app.description);
 				};
 
@@ -92,9 +91,7 @@ define(function(require){
 					var item = $(ui.item)
 						itemId = item.data('id');
 
-					item
-						.addClass('ui-sortable-disabled')
-						.unbind()
+					item.addClass('ui-sortable-disabled');
 
 					$.each(parent.find('.left-div .app-element'), function(idx, el) {
 
@@ -180,28 +177,30 @@ define(function(require){
 				updateAppInfo(parent.find('.left-div .app-element').data('id'));
 			});
 
-			parent.on('click', '.right-div .app-element, #launch_appstore', function() {
+			parent.on('click', '.right-div .app-element, #launch_appstore, .default-app .app-element', function() {
 				var $this = $(this),
 					appName = $this.data('name');
 
-				self.appListUpdate(parent, appList, function(newAppList) {
-					appList = newAppList;
+				if(appName) {
+					self.appListUpdate(parent, appList, function(newAppList) {
+						appList = newAppList;
 
-					monster.apps.load(appName, function(app) {
-						parent.find('.right-div .app-element.active')
-							.removeClass('active');
+						monster.apps.load(appName, function(app) {
+							parent.find('.right-div .app-element.active')
+								.removeClass('active');
 
-						if (appName !== 'appstore') {
-							$this.addClass('active');
-						}
+							if (appName !== 'appstore') {
+								$this.addClass('active');
+							}
 
-						app.render();
-						monster.pub('core.showAppName', appName);
+							app.render();
+							monster.pub('core.showAppName', appName);
 
-						self._hide(parent);
-						monster.pub('myaccount.hide');
+							self._hide(parent);
+							monster.pub('myaccount.hide');
+						});
 					});
-				});
+				}
 			});
 
 			parent.find('#close_app').on('click', function() {
@@ -443,8 +442,10 @@ define(function(require){
 				domAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
 				sameOrder = appList.every(function(v, i) { return v.id === domAppList[i] }),
 				domDefaultAppId = parent.find('.left-div .app-element').data('id'),
-				sameDefaultApp = appList[0].id === domDefaultAppId;
+				// If the user doesn't have any app in its list, we verify that the default app is still unset
+				sameDefaultApp = appList.length ? appList[0].id === domDefaultAppId : (domDefaultAppId === undefined);
 
+			// If new user with nothing configured, sameDefault App && sameOrder should be true
 			if (sameDefaultApp && sameOrder) {
 				callback(appList);
 			}

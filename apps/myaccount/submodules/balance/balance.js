@@ -124,7 +124,7 @@ define(function(require){
 								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 									dlTo = monster.util.dateToEndOfGregorianDay(to);
 
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.authToken;
 							});
 
 							monster.ui.table.balance.fnAddData(renderData.tabData);
@@ -257,7 +257,7 @@ define(function(require){
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
 					var duration = self.i18n.active().balance.active_call,
-						friendlyDate = monster.util.toFriendlyDate(v.created),
+						friendlyDate = monster.util.toFriendlyDate(v.created, 'MM/DD/year - hh:mm'),
 						accountName = '-',
 						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
 						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
@@ -353,6 +353,9 @@ define(function(require){
 					}
 
 					monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
+						bScrollInfinite: true,
+						bScrollCollapse: true,
+						sScrollY: '300px',
 						sDom: '<"table-custom-actions">frtlip',
 						aaSorting: [[0, 'desc']]
 					});

@@ -256,6 +256,9 @@
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' }
 		},
+		registrations: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
+		},
 		webhooks: {
 			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'create': { 'verb': 'PUT', 'url': 'accounts/{accountId}/webhooks' },

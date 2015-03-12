@@ -79,6 +79,11 @@
 	color: #6c6c74;
 }
 
+#apploader .default-app .app-container:not(.no-app):hover {
+	cursor: pointer;
+	border-color: #22a5ff;
+}
+
 #apploader .default-app > div:not(:last-child) {
 	margin-bottom: 30px;
 }
@@ -202,6 +207,8 @@
 #apploader .app-list {
 	margin-bottom: 35px;
 }
+
+
 
 #apploader .right-div .app-element:hover {
 	cursor: pointer;
