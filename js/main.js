@@ -42,7 +42,7 @@ require.config({
 		'timepicker': 'js/lib/jquery.timepicker.min',
 		'toastr': 'js/lib/toastr-1.3.0',
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
-		'underscore': 'js/lib/underscore-1.4.4.min',
+		'underscore': 'js/lib/underscore.min',
 		'validate': 'js/lib/jquery.validate.min',
 		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min'
 	},
