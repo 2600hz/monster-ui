@@ -1,6 +1,5 @@
 {{#each listTransactions}}
-	<div class="box-top-blue transaction">
-		{{debug this}}
+	<div class="box-top-blue transaction{{#if this.isARefund}} refund{{/if}}">
 		{{#compare this.type '===' 'charges'}}
 				<div class="expand-box">
 				</div>
@@ -30,13 +29,12 @@
 						{{/unless}}
 
 						{{ this.friendlyName }}
-
 						{{#unless this.approved}}
 							&nbsp;({{ this.errorMessage }})
 						{{/unless}}
 					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>
-					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
+					<div class="price">{{ ../../i18n.currencyUsed }}{{#if this.isARefund}}-{{/if}}{{ this.amount }}</div>
 				</div>
 				<div class="expandable">
 					<div class="table-content">

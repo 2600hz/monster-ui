@@ -40,6 +40,10 @@
 	margin-bottom: 15px;
 }
 
+.transactions-content-wrapper .list-transactions .transaction.refund {
+	color: #22A5FF;
+}
+
 .transactions-content-wrapper .list-transactions .transaction > *:not(.expandable) {
 	line-height: 65px;
 	height: 65px;

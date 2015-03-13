@@ -89,9 +89,9 @@ define(function(require){
 
 					parent.find('.expandable').hide();
 
-					parent.find('.start-date .value').html(data.billingStartDate);
-					parent.find('.end-date .value').html(data.billingEndDate);
-					parent.find('.total-amount .value').html(self.i18n.active().currencyUsed + data.amount);
+					parent.find('.billing-date.start').html(data.billingStartDate);
+					parent.find('.billing-date.end').html(data.billingEndDate);
+					parent.find('.total-amount').html(self.i18n.active().currencyUsed + data.amount);
 				});
 			});
 		},
@@ -133,7 +133,13 @@ define(function(require){
 									arrayCharges.push(v);
 
 									if(v.approved) {
-										defaults.amount += parseFloat(v.amount);
+										// All the codes that are in the 5xx and above are refunds
+										if(v.code % 1000 > 500) {
+											defaults.amount -= parseFloat(v.amount);
+										}
+										else {
+											defaults.amount += parseFloat(v.amount);
+										}
 									}
 								}
 							});
@@ -152,25 +158,6 @@ define(function(require){
 					callback(renderData);
 				}
 			);
-		},
-
-		transactionsGetMonthly: function(from, to, success, error) {
-			var self = this;
-
-			monster.request({
-				resource: 'myaccount.transactions.getMonthly',
-				data: {
-					accountId: self.accountId,
-					from: from,
-					to: to
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});
 		},
 
 		transactionsGetCharges: function(from, to, success, error) {
