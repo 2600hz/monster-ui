@@ -122,7 +122,13 @@ define(function(require){
 									arrayCharges.push(v);
 
 									if(v.approved) {
-										defaults.amount += parseFloat(v.amount);
+										// All the codes that are in the 5xx and above are refunds
+										if(v.code % 1000 > 500) {
+											defaults.amount -= parseFloat(v.amount);
+										}
+										else {
+											defaults.amount += parseFloat(v.amount);
+										}
 									}
 								}
 							});
@@ -141,25 +147,6 @@ define(function(require){
 					callback(renderData);
 				}
 			);
-		},
-
-		transactionsGetMonthly: function(from, to, success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'balance.getMonthly',
-				data: {
-					accountId: self.accountId,
-					from: from,
-					to: to
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});
 		},
 
 		transactionsGetCharges: function(from, to, success, error) {

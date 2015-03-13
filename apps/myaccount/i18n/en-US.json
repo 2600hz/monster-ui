@@ -218,6 +218,7 @@
 
 		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
 		"__version": "3.19",
+		"refundText": "(Refund)",
 		"codes": {
 			"1001": "Per Minute Call",
 			"1002": "Sub-Account Per Minute Call",
@@ -235,11 +236,13 @@
 			"5000": "Recurring",
 			"5001": "Monthly Recurring",
 			"5002": "Monthly Recurring (Pro-rated)",
-			"9999": "Unknown"
+			"9999": "Unknown Refund",
+			"0": "Unknown"
 		},
 		"errorStatuses": {
 			"voided": "Voided",
-			"declined": "Declined"
+			"declined": "Declined",
+			"processor_declined": "Declined"
 		}
 	}
 }
