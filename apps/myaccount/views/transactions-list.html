@@ -1,27 +1,6 @@
 {{#each listTransactions}}
 	<div class="transaction-box">
-		{{#compare this.type '===' 'charges'}}
-		<div class="expand-box disabled">
-			<span class="icon-stack">
-				<i class="icon-circle-blank icon-stack-base"></i>
-				<i class="icon-plus icon-stack-content"></i>
-			</span>
-		</div>
-		<div class="text-box {{#unless this.approved}}declined{{/unless}}">
-			<div class="title">
-				{{#if this.approved}}
-					{{ this.reason }}
-				{{else}}
-					<i class="icon-red icon-warning-sign"></i>
-					&nbsp;{{ this.reason }}
-					&nbsp;({{../../../i18n.transactions.declined}})
-				{{/if}}
-			</div>
-			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
-		</div>
-		{{else}}
-		<div class="expand-box">
+		<div class="expand-box{{#compare this.type '===' 'charges'}} disabled{{/compare}}">
 			<span class="icon-stack">
 				<i class="icon-circle-blank icon-stack-base"></i>
 				<i class="icon-plus icon-stack-content"></i>
@@ -34,49 +13,46 @@
 					&nbsp;
 				{{/unless}}
 
-				{{#compare this.type '===' 'monthly'}}
-					{{ ../../../i18n.transactions.monthlyCharge }}
-				{{else}}
-					{{ ../../../i18n.transactions.serviceCharge }}
-				{{/compare}}
+				{{ this.friendlyName }}
 
 				{{#unless this.approved}}
-					&nbsp;({{../../../i18n.transactions.declined}})
+					&nbsp;({{ this.errorMessage }})
 				{{/unless}}
 			</div>
 			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
+			<div class="price">{{ ../i18n.currencyUsed }}{{ this.amount }}</div>
 		</div>
-		<div class="expandable">
-			<div class="table-content">
-				<table class="table">
-					<thead>
-						<tr>
-							<th></th>
-							<th>{{ ../../i18n.transactions.serviceTitle }}</th>
-							<th>{{ ../../i18n.transactions.rateTitle }}</th>
-							<th>{{ ../../i18n.transactions.quantityTitle }}</th>
-							<th>{{ ../../i18n.transactions.discount }}</th>
-							<th>{{ ../../i18n.transactions.monthlyChargesTitle }}</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{{#services}}
+		{{#compare this.type '!==' 'charges'}}
+			<div class="expandable">
+				<div class="table-content">
+					<table class="table">
+						<thead>
 							<tr>
-								<td></td>
-								<td>{{ service }}</td>
-								<td>{{ ../../../i18n.currencyUsed }}{{ rate }}</td>
-								<td>{{ quantity }}</td>
-								<td>{{ discount }}</td>
-								<td>{{ ../../../i18n.currencyUsed }}{{ monthly_charges }}</td>
-								<td></td>
+								<th></th>
+								<th>{{ ../../i18n.transactions.serviceTitle }}</th>
+								<th>{{ ../../i18n.transactions.rateTitle }}</th>
+								<th>{{ ../../i18n.transactions.quantityTitle }}</th>
+								<th>{{ ../../i18n.transactions.discount }}</th>
+								<th>{{ ../../i18n.transactions.monthlyChargesTitle }}</th>
+								<th></th>
 							</tr>
-						{{/services}}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{{#services}}
+								<tr>
+									<td></td>
+									<td>{{ service }}</td>
+									<td>{{ ../../i18n.currencyUsed }}{{ rate }}</td>
+									<td>{{ quantity }}</td>
+									<td>{{ discount }}</td>
+									<td>{{ ../../i18n.currencyUsed }}{{ monthly_charges }}</td>
+									<td></td>
+								</tr>
+							{{/services}}
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</div>
 		{{/compare}}
 	</div>
 {{else}}

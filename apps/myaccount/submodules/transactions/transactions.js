@@ -49,12 +49,6 @@ define(function(require){
 				return a.created < b.created;
 			});
 
-			if(data.listTransactions) {
-				$.each(data.listTransactions, function(k, v) {
-					v.reason = self.i18n.active().transactions[v.reason ? v.reason : 'oneTimeCharge'];
-				});
-			}
-
 			return data;
 		},
 
@@ -84,9 +78,9 @@ define(function(require){
 
 					parent.find('.expandable').hide();
 
-					parent.find('.billing-date.start').html(data.billingStartDate);
-					parent.find('.billing-date.end').html(data.billingEndDate);
-					parent.find('.total-amount').html(data.amount);
+					parent.find('.start-date .value').html(data.billingStartDate);
+					parent.find('.end-date .value').html(data.billingEndDate);
+					parent.find('.total-amount .value').html(self.i18n.active().currencyUsed + data.amount);
 				});
 			});
 		},
@@ -116,32 +110,20 @@ define(function(require){
 			};
 
 			monster.parallel({
-					monthly: function(callback) {
-						self.transactionsGetMonthly(from, to, function(dataMonthly) {
-							var arrayTransactions = [];
-
-							$.each(dataMonthly.data, function(k, v) {
-								v = monster.util.formatTransaction(v, false, self);
-
-								if(v.approved) {
-									defaults.amount += parseFloat(v.amount);
-								}
-							});
-
-							callback(null, arrayTransactions);
-						});
-					},
 					charges: function(callback) {
 						self.transactionsGetCharges(from, to, function(dataCharges) {
 							var arrayCharges = [];
 
 							$.each(dataCharges.data, function(k, v) {
-								v = monster.util.formatTransaction(v, true, self);
+								// We don't want to display Balance Carry-Over anymore
+								if(v.code !== 4000) {
+									v = monster.util.formatTransaction(v, self);
 
-								arrayCharges.push(v);
+									arrayCharges.push(v);
 
-								if(v.approved) {
-									defaults.amount += parseFloat(v.amount);
+									if(v.approved) {
+										defaults.amount += parseFloat(v.amount);
+									}
 								}
 							});
 
@@ -152,7 +134,7 @@ define(function(require){
 				function(err, results) {
 					var renderData = defaults;
 
-					renderData.listTransactions = (results.charges).concat(results.monthly);
+					renderData.listTransactions = results.charges;
 
 					renderData = self.transactionsFormatData(renderData);
 
