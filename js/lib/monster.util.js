@@ -368,12 +368,18 @@ define(function(require){
 			transaction.amount = parseFloat(transaction.amount).toFixed(2);
 
 			if(transaction.hasOwnProperty('code')) {
-				if(transaction.code === 9999 || transaction.code % 1000 < 500) {
+				if(transaction.code % 1000 < 500) {
 					transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
 				}
 				else {
 					transaction.isARefund = true;
-					transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code - 500] + ' ' + app.i18n.active().transactions.refundText;
+
+					if(transaction.code === 9999) {
+						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
+					}
+					else {
+						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code - 500] + ' ' + app.i18n.active().transactions.refundText;
+					}
 				}
 			}
 

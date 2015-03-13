@@ -14,7 +14,7 @@
 						{{/if}}
 					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>
-					<div class="price">{{ ../../i18n.currencyUsed }}{{ this.amount }}</div>
+					<div class="price">{{ ../../i18n.currencyUsed }}{{#if this.isARefund}}-{{/if}}{{ this.amount }}</div>
 				</div>
 			</div>
 		{{else}}
