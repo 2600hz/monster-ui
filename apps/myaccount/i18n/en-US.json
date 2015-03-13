@@ -199,6 +199,37 @@
 		"admin_discretion": "Admin Discretion",
 		"__comment": "UI-383: Fixing transactions for good",
 		"__version": "v3.20_s0",
-		"unknown": "Charge"
+		"unknown": "Charge",
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"total": "Total",
+
+		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
+		"__version": "3.19",
+		"codes": {
+			"1001": "Per Minute Call",
+			"1002": "Sub-Account Per Minute Call",
+			"2001": "Feature Activation",
+			"2002": "Sub-Account Feature Activation",
+			"2003": "Number Activation",
+			"2004": "Sub-Account Number Activation",
+			"3001": "Manual Addition",
+			"3002": "Sub-Account Manual Addition",
+			"3003": "Auto-Addition",
+			"3004": "Sub-Account Auto-Addition",
+			"3005": "Admin Discretion",
+			"3006": "Top Up",
+			"4000": "Balance Carry-over",
+			"5000": "Recurring",
+			"5001": "Monthly Recurring",
+			"5002": "Monthly Recurring (Pro-rated)",
+			"9999": "Unknown"
+		},
+		"errorStatuses": {
+			"voided": "Voided",
+			"declined": "Declined"
+		}
 	}
 }

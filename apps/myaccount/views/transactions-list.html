@@ -1,16 +1,17 @@
 {{#each listTransactions}}
 	<div class="box-top-blue transaction">
+		{{debug this}}
 		{{#compare this.type '===' 'charges'}}
 				<div class="expand-box">
 				</div>
 				<div class="text-box {{#unless this.approved}}declined{{/unless}}">
 					<div class="title">
 						{{#if this.approved}}
-							{{ this.reason }}
+							{{ this.friendlyName }}
 						{{else}}
 							<i class="icon-red icon-warning-sign"></i>
-							&nbsp;{{ this.reason }}
-							&nbsp;({{../../../i18n.transactions.declined}})
+							&nbsp;{{ this.friendlyName }}
+							&nbsp;({{ this.errorMessage }})
 						{{/if}}
 					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>
@@ -28,14 +29,10 @@
 							&nbsp;
 						{{/unless}}
 
-						{{#compare this.type '===' 'monthly'}}
-							{{ ../../../i18n.transactions.monthlyCharge }}
-						{{else}}
-							{{ ../../../i18n.transactions.serviceCharge }}
-						{{/compare}}
+						{{ this.friendlyName }}
 
 						{{#unless this.approved}}
-							&nbsp;({{../../../i18n.transactions.declined}})
+							&nbsp;({{ this.errorMessage }})
 						{{/unless}}
 					</div>
 					<div class="date">{{ this.friendlyCreated }}</div>

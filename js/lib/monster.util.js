@@ -319,7 +319,7 @@ define(function(require){
 
 		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
 		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, isProrated, app) {
+		formatTransaction: function(transaction, app) {
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
 			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
 				&& !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
@@ -329,7 +329,7 @@ define(function(require){
 					mapDiscounts[discount.id] = discount;
 				});
 
-				transaction.type = isProrated ? 'prorated' : 'monthly';
+				transaction.type = 'monthly';
 				transaction.services = [];
 
 				$.each(transaction.metadata.add_ons, function(k, addOn) {
@@ -365,12 +365,21 @@ define(function(require){
 
 			transaction.amount = parseFloat(transaction.amount).toFixed(2);
 
-			// If there are no processor response text, we assume it was approved
-			transaction.approved = transaction.hasOwnProperty('processor_response_text') ? transaction.processor_response_text === 'Approved' : true,
+			if(transaction.hasOwnProperty('code')) {
+				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
+			}
+
+			// If status is missing or among the following list, the transaction is approved
+			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized','settled','settlement_confirmed'].indexOf(transaction.status) >= 0;
+
+			if(!transaction.approved) {
+				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
+			}
+
 			// Our API return created but braintree returns created_at
 			transaction.created = transaction.created_at || transaction.created; 
 
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created, 'short');
+			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created, 'MM/DD/year hh:mm:ss');
 
 			return transaction;
 		},
