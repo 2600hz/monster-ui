@@ -423,7 +423,17 @@
 	float: left;
 }
 
-#appstore_popup_container .right-container .user-list-view .user-list-buttons a {
-	color: #22ccff;
-	line-height: 30px;
+#appstore_popup_container .right-container .user-list-view .user-list-buttons button {
+	width: 85px;
+}
+
+#appstore_popup_container .action-bar {
+	border-top: solid 1px #c0c0c9;
+	margin-top: 20px;
+	padding-top: 20px;
+	text-align: right;
+}
+
+#appstore_popup_container .action-bar :not(:last-child) {
+	margin-right: 10px;
 }

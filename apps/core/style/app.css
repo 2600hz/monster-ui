@@ -1379,6 +1379,11 @@ label.monster-invalid {
 	vertical-align: text-bottom;
 }
 
+.monster-button-small {
+	min-width: initial;
+	padding: 4px 16px;
+}
+
 .monster-button-primary {
 	border-color: #0087e0;
 	background-color: #22a5ff;
@@ -1549,6 +1554,7 @@ label.monster-invalid {
 	display: inline-block;
 	position: relative;
 	cursor: pointer;
+	margin: 0;
 
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
