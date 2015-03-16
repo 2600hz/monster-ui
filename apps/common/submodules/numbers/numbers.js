@@ -365,6 +365,22 @@ define(function(require){
 				});
 			});
 
+			function syncNumbers (accountId) {
+				self.numbersSyncUsedBy(accountId, function(numbers) {
+					displayNumberList(accountId, function(numbers) {
+						toastr.success(self.i18n.active().numbers.sync.success);
+					}, true);
+				});
+			};
+
+			parent.on('click', '.account-header .action-number.sync', function(e) {
+				syncNumbers($(this).parents('.account-section').data('id'));
+			});
+
+			parent.on('click', '.actions-wrapper .action-number.sync', function(e) {
+				syncNumbers(self.accountId);
+			});
+
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
 			parent.on('click', '.number-box:not(.disabled)', function(event) {
 				var currentBox = $(this);
@@ -1108,6 +1124,20 @@ define(function(require){
 			});
 
 			return data;
+		},
+
+		numbersSyncUsedBy: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.sync',
+				data: {
+					accountId: accountId
+				},
+				success: function(numbers) {
+					callback && callback(numbers.data);
+				}
+			});
 		},
 
 		numbersListUsers: function(accountId, callback) {

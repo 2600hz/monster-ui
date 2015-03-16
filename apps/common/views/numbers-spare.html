@@ -25,7 +25,8 @@
 					</ul>
 				</li>
 			</ul>
-			<a href="#" id="port_numbers" class="action-number port"><i class="icon-random icon-blue"></i><span class="action-text">{{ ../i18n.numbers.port }}</span></a>
+			<a href="#" id="port_numbers" class="action-number port"><i class="icon-external-link icon-blue"></i><span class="action-text">{{ ../i18n.numbers.port }}</span></a>
+			<a href="#" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ ../i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="icon-refresh icon-orange"></i><span class="action-text">{{ ../i18n.numbers.sync.label }}</span></a>
 		{{/compare}}
 
 		<div class="input-append pull-right search-custom">
@@ -45,13 +46,14 @@
 							<li class="dropdown">
 								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="icon-shopping-cart"></i><span class="action-text">{{ ../../i18n.numbers.buy }}</span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a class="buy-numbers-link" data-type="regular" href="#">{{../../i18n.numbers.buyNumberLinks.regular}}</a></li>
-									<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{../../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
-									<li><a class="buy-numbers-link" data-type="vanity" href="#">{{../../i18n.numbers.buyNumberLinks.vanity}}</a></li>
+									<li><a class="buy-numbers-link" data-type="regular" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.regular}}</a></li>
+									<li><a class="buy-numbers-link" data-type="tollfree" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+									<li><a class="buy-numbers-link" data-type="vanity" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.vanity}}</a></li>
 								</ul>
 							</li>
 						</ul>
-						<a href="#" id="port_numbers" class="action-number port"><i class="icon-random"></i><span class="action-text">{{ ../../i18n.numbers.port }}</span></a>
+						<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="icon-external-link"></i><span class="action-text">{{ ../../i18n.numbers.port }}</span></a>
+						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ ../../i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="icon-refresh"></i><span class="action-text">{{ ../../i18n.numbers.sync.label }}</span></a>
 					</div>
 					<div class="left-part">
 						<input type="checkbox"></input>

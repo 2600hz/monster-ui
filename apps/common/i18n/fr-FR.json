@@ -73,6 +73,14 @@
 				"questionPartThree":"?",
 				"button":"déplacer numéro(s)"
 			}
+		},
+
+		"__comment": "UI-1285: Adding the Sync Action to the Number Manager",
+		"__version": "3.19",
+		"sync": {
+			"label": "Sync",
+			"success": "Mise à jour des numéros réussie",
+			"help": "Si certains numéros n'apparaissent pas dans la bonne colonne, vous pouvez cliquer sur ce lien afin d'essayer de régler ce problème."
 		}
 	},
 	"callerId":{
