@@ -138,7 +138,8 @@
 			'matchClassifier': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers/{phoneNumber}' },
 			'search': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 			'searchBlocks': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
-			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' }
+			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' },
+			'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' }
 		},
 		device: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
