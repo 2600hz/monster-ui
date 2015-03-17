@@ -39,8 +39,8 @@
 		"searchNumbers": "Search a number...",
 		"go": "Go",
 		"deleteNumbers": "Delete",
-		"successDelete": "You successfuly deleted {{count}} phone number(s) from your account(s)",
-		"successMove": "You successfuly moved {{count}} phone number(s) to the following account: {{ accountName }}",
+		"successDelete": "You successfully deleted {{count}} phone number(s) from your account(s)",
+		"successMove": "You successfully moved {{count}} phone number(s) to the following account: {{ accountName }}",
 		"noSpareNumber": "There are no spare numbers in this account.",
 		"noUsedNumber": "There are no numbers used in any application for this account.",
 		"spareNumbers": "Spare Numbers",
@@ -79,7 +79,15 @@
 
 		"__comment": "UI-1219: Adding the prepend feature to numbers",
 		"__version": "v3.20_s1",
-		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone"
+		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
+
+		"__comment": "UI-1285: Adding the Sync Action to the Number Manager",
+		"__version": "3.19",
+		"sync": {
+			"label": "Sync",
+			"success": "You successfully re-synced the numbers with the database",
+			"help": "If you think some of the numbers are not displayed in the right category (Spare/In Use), you can use this feature to re-synchronize your numbers with the database."
+		}
 	},
 
 	"callerId": {
