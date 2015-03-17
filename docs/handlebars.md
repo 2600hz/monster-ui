@@ -144,5 +144,34 @@ example.html
 		<span class="item-price">{{formatPrice price 2}}</span>
 	</div>
 
+##### monsterSwitch
+This helper allows you to generate a switch from a simple checkbox.
+
+```handlebars
+{{#monsterSwitch}}
+	<input type="checkbox" />
+{{/monsterSwitch}}
+```
+
+Any property (class, id, checked, data-something ,etc...) set on the input will be conserved.
+	
+##### monsterCheckbox
+This helper allows you to generate a pretty checkbox from a simple checkbox.
+
+```handlebars
+{{#monsterCheckbox}}
+	<input type="checkbox" />
+{{/monsterCheckbox}}
+```
+
+Any property (class, id, checked, data-something ,etc...) set on the input will be conserved.
+You can also provide parameters to define a label, set its positioning, and set the size of the checkbox. All optional.
+
+```handlebars
+{{#monsterCheckbox "large-checkbox" "prepend-label" "My Checkbox's label"}}
+	<input type="checkbox" />
+{{/monsterCheckbox}}
+```
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
