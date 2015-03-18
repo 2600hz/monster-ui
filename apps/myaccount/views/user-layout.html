@@ -138,10 +138,9 @@
 							<div class="control-group">
 								<label class="control-label" for="user_colorblind">{{ i18n.user.enableColorblind }}</label>
 								<div class="controls checkbox-container">
-									<div class="monster-checkbox">
+									{{#monsterCheckbox}}
 										<input type="checkbox" id="user_colorblind" name="ui_flags.colorblind" {{#if user.ui_flags.colorblind}}checked{{/if}} />
-										<label for="user_colorblind"></label>
-									</div>
+									{{/monsterCheckbox}}
 								</div>
 							</div>
 							<div class="action-group clearfix">

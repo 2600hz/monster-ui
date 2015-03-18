@@ -121,6 +121,32 @@ define(function(require){
 		});
 	});
 
+	Handlebars.registerHelper('monsterCheckbox', function() {
+		var templateData = {
+			cssClass: 'monster-checkbox',
+			checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+		};
+
+		for(var i=0; i<arguments.length-1; i++) {
+			if(_.isString(arguments[i])) {
+				switch(arguments[i]) {
+					case 'large-checkbox':
+					case 'checkbox-large':
+						templateData.cssClass = 'monster-checkbox-large';
+						break;
+					case 'prepend-label':
+						templateData.prepend = true;
+						break;
+					default:
+						templateData.label = arguments[i];
+						break;
+				}
+			}
+		}
+
+		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+	});
+
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title: function(title) {
 			if (!this.options.title ) {

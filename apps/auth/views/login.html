@@ -15,10 +15,9 @@
 	</div>
 
 	<div class="row-login row-action">
-		<div class="monster-checkbox">
+		{{#monsterCheckbox i18n.rememberMe}}
 			<input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
-			<label for="remember_me">{{ i18n.rememberMe }}</label>
-		</div>
+		{{/monsterCheckbox}}
 		<a href="#" class="forgot-password pull-right">{{ i18n.forgotPassword }}</a>
 	</div>
 
