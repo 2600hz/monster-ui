@@ -332,7 +332,10 @@
 
 						if('filters' in methodSettings) {
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
-								requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + filterValue;
+								var valueArray = [].concat(filterValue);
+								$.each(valueArray, function(key, value) {
+									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+								});
 							});
 						}
 
