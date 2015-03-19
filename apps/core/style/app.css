@@ -1054,6 +1054,67 @@ label.monster-invalid {
 	margin-left: 20px;
 }
 
+/* Advanced Error Dialog */
+.alert-dialog-advanced {
+	max-width: 800px;
+	padding: 20px;
+}
+
+.alert-dialog-advanced .error-line {
+	margin: 5px 0;
+}
+
+.alert-dialog-advanced .error-line.title {
+	font-size: 14px;
+	margin-bottom: 20px
+}
+
+.alert-dialog-advanced .error-line.api-name .verb {
+	margin-right: 5px;
+}
+
+.alert-dialog-advanced .details-box .headline {
+	cursor: pointer;
+	margin: 10px 0;
+}
+
+.alert-dialog-advanced .details-box .headline i {
+	margin-right: 5px;
+}
+
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-down,
+.alert-dialog-advanced .details-box .headline i.icon-angle-up {
+	display: none;
+}
+
+.alert-dialog-advanced .details-box .headline i.icon-angle-down,
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-up {
+	display: inline-block;
+}
+
+.alert-dialog-advanced .details-box .error-details-wrapper {
+	display: none;
+}
+
+.alert-dialog-advanced .details-box .error-details-wrapper pre {
+	background: #FFF;
+}
+
+/* Javascript Errors */
+.alert-dialog-javascript {
+	padding: 20px;
+}
+
+.alert-dialog-javascript .title {
+	font-size: 22px;
+	padding: 15px 0;
+}
+
+.alert-dialog-javascript table.table tr td {
+	line-height: 15px;
+	white-space: pre-line;
+}
+
 /* Left Menu */
 .container-menu {
 	margin: auto;

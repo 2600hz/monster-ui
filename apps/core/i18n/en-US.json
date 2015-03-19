@@ -275,5 +275,25 @@
 	"refresh": "Refresh",
 
 	"__comment": "UI-1177: Say Un-assign instead of remove in Main Number",
-	"unassign": "Un-assign"
+	"__version": "v3.20_s2",
+	"unassign": "Un-assign",
+
+	"__comment": "UI-1074: New Error Popup",
+	"__version": "v3.20_s2",
+	"advancedErrorDialog": {
+		"title": "Oops...",
+		"viewDetails": "More Information",
+		"requestId": "Request ID",
+		"apiUrl": "API URL",
+		"verb": "API Type"
+	},
+
+	"javascriptErrorDialog": {
+		"title": "A wild Javascript error appears...",
+		"message": "Message",
+		"line": "Line",
+		"column": "Column",
+		"stackTrace": "Stack Trace",
+		"file": "File Name"
+	}
 }
