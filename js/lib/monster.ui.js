@@ -368,6 +368,74 @@ define(function(require){
 			return dialog;
 		},
 
+		// New Popup to show advanced API errors via a "More" Link.
+		requestErrorDialog: function(error) {
+			var self = this,
+				dialog,
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active(),
+				dataTemplate = {
+					message: error.data.message,
+					requestId: error.data.requestId,
+					url: error.data.url,
+					apiResponse: error.data.response,
+					verb: error.data.verb.toUpperCase()
+				},
+				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
+				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true)),
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						width: 'auto',
+						title: i18n.advancedErrorDialog.title,
+						position: ['center', 20]
+					},
+					options
+				);
+
+			template.find('.headline').on('click', function() {
+				template.find('.error-details-wrapper').slideToggle();
+				$(this).toggleClass('active');
+			});
+
+			dialog = this.dialog(template, options);
+
+			return dialog;
+		},
+
+		// New Popup to show advanced Javascript errors.
+		jsErrorDialog: function(error) {
+			var self = this, 
+				dialog,
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active();
+
+			var dataTemplate = {
+					title: error.data.title,
+					file: error.data.file,
+					line: error.data.line,
+					column: error.data.column,
+					stackTrace: error.data.stackTrace
+				},
+				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
+				template = $(monster.template(coreApp, 'dialog-errorJavascript', dataTemplate, false, false, true)),
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						width: 'auto',
+						title: i18n.advancedErrorDialog.title,
+						position: ['center', 20]
+					},
+					options
+				);
+
+			dialog = this.dialog(template, options);
+
+			return dialog;
+		},
+
 		// Highlight then fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
 		highlight: function(element, options) {
 			var options = $.extend(true, {

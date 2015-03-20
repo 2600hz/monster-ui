@@ -65,7 +65,6 @@ define(function(require){
 			document.title = monster.config.whitelabel.applicationTitle;
 
 			self.bindEvents(mainTemplate);
-
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
 
@@ -142,6 +141,16 @@ define(function(require){
 		bindEvents: function(container) {
 			var self = this,
 				spinner = container.find('.loading-wrapper');
+
+			window.onerror = function(message, fileName, lineNumber, columnNumber, error) {
+				monster.error('js', {
+					message: message,
+					fileName: fileName,
+					lineNumber: lineNumber,
+					columnNumber: columnNumber || '',
+					error: error || {}
+				});
+			};
 
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
 			monster.sub('monster.requestStart', function() {

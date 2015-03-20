@@ -411,6 +411,13 @@
 			rurlData = /\{([^\}]+)\}/g,
 			data = $.extend({}, options.data);
 
+		settings.url = settings.url.replace(rurlData, function (m, key) {
+			if (key in data) {
+				mappedKeys.push(key);
+				return data[key];
+			}
+		});
+
 		settings.error = function requestError (error, status) {
 			options.onRequestEnd && options.onRequestEnd(error, options);
 
@@ -418,6 +425,12 @@
 
 			if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
 				parsedError = $.parseJSON(error.responseText);
+			}
+
+			// Added this to be able to display more data in the UI
+			error.monsterData = {
+				url: settings.url,
+				verb: settings.type
 			}
 
 			options.onRequestError && options.onRequestError(error, options);
@@ -433,25 +446,29 @@
 			options.success && options.success(responseData, options.onRequestSuccess);
 		};
 
-		settings.url = settings.url.replace(rurlData, function (m, key) {
-			if (key in data) {
-				mappedKeys.push(key);
-				return data[key];
-			}
-		});
-
 		// We delete the keys later so duplicates are still replaced
 		$.each(mappedKeys, function(index, name) {
 			delete data[name];
 		});
 
 		if(settings.type.toLowerCase() !== 'get'){
-			var postData = data.data;
+			var postData = data.data,
+				envelopeKeys = {};
+
+			if(data.hasOwnProperty('envelopeKeys')) {
+				var protectedKeys = ['data', 'accept_charges'];
+
+				_.each(data.envelopeKeys, function(value, key) {
+					if(protectedKeys.indexOf(key) < 0) {
+						envelopeKeys[key] = value
+					}
+				});
+			};
 
 			if(settings.contentType === 'application/json') {
-				var payload = {
+				var payload = $.extend(true, {
 					data: data.data || {}
-				};
+				}, envelopeKeys);
 
 				if('uiMetadata' in options) {
 					payload.data.ui_metadata = options.uiMetadata;

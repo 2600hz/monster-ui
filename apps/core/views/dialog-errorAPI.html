@@ -1,0 +1,35 @@
+<div class="alert-dialog-advanced">
+	<div class="help-box red-box">
+		<div class="wrapper-icon">
+			<i class="icon-warning-sign icon-red"></i>
+		</div>
+		<div class="text-wrapper">
+			<div class="error-line title">
+				{{{ message }}}
+			</div>
+
+			<div class="details-box">
+				<a class="headline monster-link">
+					<i class="icon-angle-up"></i><i class="icon-angle-down"></i>{{ i18n.advancedErrorDialog.viewDetails }}
+				</a>
+
+				<div class="error-details-wrapper">
+					{{#if requestId}}
+						<div class="error-line request-id">
+							{{ i18n.advancedErrorDialog.requestId }}: {{requestId}}
+						</div>
+					{{/if}}
+
+					<div class="error-line api-name">
+						<span class="verb">{{#if verb}}{{ verb }}{{/if}}</span>
+						<span class="url">{{#if url}}{{ url }}{{/if}}</span>
+					</div>
+
+					{{#if apiResponse}}
+						<pre class="response"><code>{{ apiResponse }}</code></pre>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
