@@ -1715,3 +1715,76 @@ label.monster-invalid {
 	max-height: 210px;
 	overflow: auto;
 }
+
+/********* Custom CSS for Chosen **********/
+.chosen-container .chosen-single {
+	width: 220px;
+	border: 1px solid #cccccc;
+	background: #fff;
+	box-sizing: border-box;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 4px;
+	box-shadow: none;
+}
+.chosen-container.chosen-with-drop .chosen-single {
+	background: #fff;
+}
+
+.chosen-container .chosen-drop {
+	box-sizing: border-box;
+	width: 220px;
+}
+
+.chosen-container {
+	margin-bottom: 10px;
+}
+
+.chosen-container .chosen-single div b {
+	background-image: none !important;
+	background-color: transparent;
+	position: relative;
+}
+
+.chosen-container .chosen-single div b:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 7px;
+	border-color: #000 transparent;
+	transform: translateY(-50%);
+	border-style: solid;
+	border-width: 6px 3px 0;
+}
+
+/* Special rules to fit firefox's dropdown style */
+@-moz-document url-prefix() {
+	.chosen-container .chosen-single div b {
+		border: solid 1px #aaa;
+		background-color: #eee;
+		box-sizing: border-box;
+	}
+	.chosen-container .chosen-single div b:before {
+		top: 11px;
+		right: 4px;
+		border-color: #555 transparent;
+		border-width: 6px 4px 0px;
+		transform: none;
+	}
+	.chosen-container .chosen-single div b:after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		right: 4px;
+		border-style: solid;
+		border-color: #eee transparent;
+		border-width: 6px 4px 0px;
+	}
+	.chosen-container.chosen-with-drop .chosen-single div b:before {
+		border-color: #000 transparent;
+	}
+	.chosen-container.chosen-with-drop .chosen-single div b {
+		background-color: #e7f2fc;
+		border-color: #7eb4ea;
+	}
+}
