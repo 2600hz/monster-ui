@@ -147,12 +147,23 @@ define(function(require){
 			});
 
 			if(settings.method.toLowerCase() !== 'get'){
-				var postData = data.data;
+				var postData = data.data,
+					envelopeKeys = {};
+
+				if(data.hasOwnProperty('envelopeKeys')) {
+					var protectedKeys = ['data', 'accept_charges'];
+
+					_.each(data.envelopeKeys, function(value, key) {
+						if(protectedKeys.indexOf(key) < 0) {
+							envelopeKeys[key] = value
+						}
+					});
+				}
 
 				if(settings.contentType === 'application/json') {
-					var payload = {
+					var payload = $.extend(true, {
 						data: data.data || {}
-					};
+					}, envelopeKeys);
 
 					payload.data.ui_metadata = {
 						version: monster.config.version,
