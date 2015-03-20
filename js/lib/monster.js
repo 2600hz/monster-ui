@@ -284,9 +284,10 @@ define(function(require){
 
 		formatMonsterError: function(error) {
 			var self = this,
-				parsedError = error;
+				parsedError = error,
+				isJsonResponse = error.hasOwnProperty('getResponseHeader') && error.getResponseHeader('content-type') === 'application/json';
 
-			if('responseText' in error && error.responseText) {
+			if('responseText' in error && error.responseText && isJsonResponse) {
 				parsedError = $.parseJSON(error.responseText);
 			}
 			
@@ -336,7 +337,7 @@ define(function(require){
 			return {
 				message: errorMessage,
 				requestId: requestId || '',
-				response: error.hasOwnProperty('responseText') ? JSON.stringify($.parseJSON(error.responseText), null, 4) : '',
+				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : '',
 				url: url || '',
 				verb: verb || ''
 			};
@@ -427,6 +428,11 @@ define(function(require){
 						monster.pub('monster.requestEnd');
 					},
 					onRequestError: function(error, requestOptions) {
+						var parsedError = error;
+						if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
+							parsedError = $.parseJSON(error.responseText);
+						}
+
 						if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
 							var parsedError = error;
 							if('responseText' in error && error.responseText) {

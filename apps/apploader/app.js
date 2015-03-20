@@ -315,17 +315,23 @@ define(function(require){
 
 			_.each(monster.apps.auth.installedApps, function(val) {
 				parallelRequest[val.id] = function(parallelCallback) {
-					var request = new XMLHttpRequest(),
-						url = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
-
-					request.open('GET', url, true);
-					request.onreadystatechange = function() {
-						if(request.readyState === 4) {
-							val.icon = request.status === 200 ? url : null;
+					//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
+					self.callApi({
+						resource: 'appsStore.getIcon',
+						data: {
+							accountId: self.accountId,
+							appId: val.id,
+							generateError: false
+						},
+						success: function(data, status) {
+							val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+							parallelCallback && parallelCallback(null, val);
+						},
+						error: function(data, status) {
+							val.icon = null;
 							parallelCallback && parallelCallback(null, val);
 						}
-					};
-					request.send();
+					});
 				}
 			});
 

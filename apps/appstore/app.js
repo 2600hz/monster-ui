@@ -135,20 +135,21 @@ define(function(require){
 							return val.id;
 						}),
 						getIcon = function(appId, iconCallback) {
-							var request = new XMLHttpRequest(),
-								url = self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken;
-								
-							request.open('GET', url, true);
-							request.onreadystatechange = function() {
-								if(request.readyState === 4) {
-									if(request.status === 200) {
-										iconCallback && iconCallback(url);
-									} else {
-										iconCallback && iconCallback(null);
-									}
+							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
+							self.callApi({
+								resource: 'appsStore.getIcon',
+								data: {
+									accountId: self.accountId,
+									appId: appId,
+									generateError: false
+								},
+								success: function(data, status) {
+									iconCallback && iconCallback(self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken);
+								},
+								error: function(data, status) {
+									iconCallback && iconCallback(null);
 								}
-							};
-							request.send();
+							});
 						},
 						parallelIconRequests = [];
 

@@ -25,7 +25,8 @@
 		},
 		appsStore: {
 			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
-			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' }
+			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' },
+			'getIcon': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/icon', dataType: 'text' }
 		},
 		auth: {
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
