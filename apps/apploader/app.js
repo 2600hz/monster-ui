@@ -236,7 +236,9 @@ define(function(require){
 			if (!apploader.hasClass('active')) {
 				apploader
 					.addClass('active')
-					.fadeIn(250);
+					.fadeIn(250, function() {
+						$('#monster-content').hide();
+					});
 			}
 		},
 
@@ -245,6 +247,8 @@ define(function(require){
 				apploader = app || $('#apploader');
 
 			if (apploader.hasClass('active')) {
+				$('#monster-content').show();
+
 				apploader
 					.removeClass('active')
 					.fadeOut(250, function() {
