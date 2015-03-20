@@ -10,13 +10,22 @@
 
 #apploader > div {
 	height: 100%;
-	margin-bottom: 35px;
-	padding: 35px;
+	padding: 0 35px;
 }
 
 /************************************************************/
 /*********************** common style ***********************/
 /************************************************************/
+
+#apploader .left-div > div:first-child,
+#apploader .right-div > h3 {
+	margin-top: 35px;
+}
+
+#apploader .left-div > div:last-child,
+#apploader .right-div > div:last-child {
+	margin-bottom: 35px;
+}
 
 #apploader .vertical-align {
 	position: relative;
@@ -72,7 +81,6 @@
 	text-transform: uppercase;
 	color: #fff;
 }
-
 
 #apploader .left-div p {
 	margin-bottom: 0;
@@ -154,7 +162,7 @@
 #apploader #launch_appstore {
 	font-size: 18px;
 	position: relative;
-	width: 100%;
+	width: 210px;
 	margin: 0;
 	padding: 26px 18px 25px 73px;
 	text-align: left;
@@ -199,16 +207,13 @@
 
 #apploader .right-div h3 {
 	font-weight: 600;
-	margin: 0 0 97px 0;
+	margin-bottom: 97px;
 	text-align: center;
 }
-
 
 #apploader .app-list {
 	margin-bottom: 35px;
 }
-
-
 
 #apploader .right-div .app-element:hover {
 	cursor: pointer;
@@ -224,4 +229,58 @@
 
 #apploader .right-div .app-element.ui-sortable-placeholder {
 	display: none;
+}
+
+/************************************************************/
+/*********************** media queries **********************/
+/************************************************************/
+
+@media (max-height: 771px) {
+	#apploader .left-div > div:not(:first-child) {
+		margin-top: 15px;
+		margin-bottom: 15px;
+		padding-top: 15px;
+	}
+	#apploader .default-app > div:not(:last-child) {
+		margin-bottom: 15px;
+	}
+	#apploader .right-div h3 {
+		margin-bottom: 82px;
+	}
+}
+
+@media (max-height: 661px) {
+	#apploader .left-div .app-description {
+		margin-top: 0 !important;
+		border-top: 0 !important;
+	}
+	#apploader .app-store {
+		margin-top: 0 !important;
+		padding-top: 0 !important;
+		border-top: 0 !important;
+	}
+	#apploader #launch_appstore {
+		padding: 15px 0;
+		text-align: center;
+	}
+	#apploader #launch_appstore i {
+		display: none;
+	}
+	#apploader .right-div h3 {
+		margin-bottom: 0;
+	}
+}
+
+@media (max-height: 607px) {
+	#apploader .left-div {
+		overflow-y: auto;
+		padding-left: 15px;
+	}
+	#apploader .right-div {
+		margin-left: 260px;
+	}
+	#apploader .left-div .default-app,
+	#apploader .right-div h3 {
+		margin-top: 15px !important;
+	}
 }
