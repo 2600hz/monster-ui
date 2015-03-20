@@ -71,6 +71,8 @@ define(function(require){
 			var self = this,
 				settings =  _.extend({}, this._requests[options.resource]);
 
+
+
 			if(!settings){
 				throw('The resource requested could not be found.', options.resource);
 			}
@@ -111,7 +113,7 @@ define(function(require){
 						verb: settings.method
 					}
 
-					monster.error('api', error, options.generateError);
+					monster.error('api', error, settings.customFlags.generateError);
 				}
 
 				options.error && options.error(parsedError, error);
