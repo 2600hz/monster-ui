@@ -391,7 +391,8 @@ define(function(require){
 				url: 'VERSION',
 				cache: false,
 				success: function(version) {
-					version = version.replace(/[\n\s]/g,'')
+					version = version.replace(/\n.*/g,'')
+					                 .trim();
 
 					callback(version);
 				}
