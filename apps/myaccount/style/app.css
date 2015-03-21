@@ -4,6 +4,7 @@
 @import url('../submodules/transactions/transactions.css');
 @import url('../submodules/trunks/trunks.css');
 @import url('../submodules/account/account.css');
+@import url('../submodules/errorTracker/errorTracker.css');
 
 /* My account */
 #myaccount {
@@ -79,6 +80,7 @@
 }
 
 #myaccount .myaccount-menu .nav li {
+	cursor: pointer;
 	font-size: 14px;
 	font-weight: 600;
 	padding: 10px 20px;

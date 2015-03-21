@@ -71,8 +71,6 @@ define(function(require){
 			var self = this,
 				settings =  _.extend({}, this._requests[options.resource]);
 
-
-
 			if(!settings){
 				throw('The resource requested could not be found.', options.resource);
 			}
@@ -335,6 +333,7 @@ define(function(require){
 			}
 
 			return {
+				status: error.status,
 				message: errorMessage,
 				requestId: requestId || '',
 				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : '',
