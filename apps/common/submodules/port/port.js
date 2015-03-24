@@ -618,6 +618,11 @@ define(function(require){
 
 					self.portSaveOrder(parent, accountId, data, index);
 				}
+				else {
+					$('html, body').animate({
+						scrollTop: container.find('.monster-invalid').first().offset().top - 10
+					}, 300);
+				}
 			});
 
 			container.find('#footer button.btn-success').on('click', function() {
@@ -657,6 +662,11 @@ define(function(require){
 					$.extend(true, order, billFormData, transferNameFormData);
 
 					self.portRenderConfirmOrder(parent, accountId, data, index);
+				}
+				else {
+					$('html, body').animate({
+						scrollTop: container.find('.monster-invalid').first().offset().top - 10
+					}, 300);
 				}
 			});
 		},
@@ -821,6 +831,11 @@ define(function(require){
 							});
 						});
 					}
+				}
+				else {
+					$('html, body').animate({
+						scrollTop: container.find('.monster-invalid').first().offset().top - 10
+					}, 300);
 				}
 			});
 		},
