@@ -359,9 +359,8 @@ define(function(require){
 							title: self.i18n.active()[defaultApp.name].title,
 							module: defaultApp.name,
 							callback: function() {
-								myaccount
-									.slideDown(300, function() { $('#monster-content').hide(); })
-									.addClass('myaccount-open');
+								myaccount.addClass('myaccount-open');
+								setTimeout(function() { $('#monster-content').hide(); }, 300);
 
 								callback && callback();
 							}
@@ -407,9 +406,7 @@ define(function(require){
 				myaccount = myaccount || $(self.mainContainer);
 
 			myaccount.find('.myaccount-right .myaccount-content').empty();
-			myaccount
-				.slideUp(300)
-				.removeClass('myaccount-open');
+			myaccount.removeClass('myaccount-open');
 			$('#monster-content').show();
 		},
 

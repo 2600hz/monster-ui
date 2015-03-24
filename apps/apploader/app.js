@@ -234,6 +234,7 @@ define(function(require){
 				apploader = app || $('#apploader');
 
 			if (!apploader.hasClass('active')) {
+				monster.pub('myaccount.hide');
 				apploader
 					.addClass('active')
 					.fadeIn(250, function() {

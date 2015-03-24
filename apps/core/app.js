@@ -171,6 +171,7 @@ define(function(require){
 			});
 
 			container.find('#ws-navbar .current-app').on('click', function() {
+				monster.pub('myaccount.hide');
 				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
 					app.render();
 				});
@@ -180,6 +181,7 @@ define(function(require){
 				var appName = monster.apps.auth.defaultApp;
 
 				if(appName) {
+					monster.pub('myaccount.hide');
 					monster.apps.load(appName, function(app) {
 						self.showAppName(appName);
 						app.render();
