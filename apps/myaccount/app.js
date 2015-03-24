@@ -32,7 +32,7 @@ define(function(require){
 			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility'
 		},
 
-		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user'],
+		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
 
 		mainContainer: '#myaccount',
 		defaultApp: {
@@ -89,6 +89,9 @@ define(function(require){
 				},
 				user: {
 					show_tab: true
+				},
+				errorTracker: {
+					show_tab: true
 				}
 			};
 		},
@@ -133,7 +136,8 @@ define(function(require){
 				categories = {
 					settings: ['account', 'user'],
 					billing: ['billing', 'transactions', 'service_plan', 'balance'],
-					trunking: ['inbound', 'outbound']
+					trunking: ['inbound', 'outbound'],
+					misc: ['errorTracker']
 				},
 				_callback = function(billing, uiRestrictions) {
 					if ( _.isEmpty(billing) ) {

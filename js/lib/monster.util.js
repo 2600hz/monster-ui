@@ -85,80 +85,75 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(timestamp, format){
-			var self = this;
+		toFriendlyDate: function(date, format){
+			var self = this
+				i18n = monster.apps.core.i18n.active(),
+				format2Digits = function(number) {
+					return number < 10 ? '0'.concat(number) : number;
+				},
+				today = new Date(),
+				todayYear = today.getFullYear(),
+				todayMonth = format2Digits(today.getMonth() + 1),
+				todayDay = format2Digits(today.getDate()),
+				// date can be either a JS Date or a gregorian timestamp
+				date = typeof date === 'object' ? date : self.gregorianToDate(date),
+				year = date.getFullYear().toString().substr(2, 2),
+				fullYear = date.getFullYear(),
+				month = format2Digits(date.getMonth() + 1),
+				calendarMonth = i18n.calendar.month[date.getMonth()],
+				day = format2Digits(date.getDate()),
+				weekDay = i18n.calendar.day[date.getDay()],
+				hours = format2Digits(date.getHours()),
+				minutes = format2Digits(date.getMinutes()),
+				seconds = format2Digits(date.getSeconds()),
+				patterns = {
+					'year': fullYear,
+					'YY': year,
+					'month': calendarMonth,
+					'MM': month,
+					'day': weekDay,
+					'DD': day,
+					'hh': hours,
+					'mm': minutes,
+					'ss': seconds
+				};
 
-			if (typeof timestamp === 'number') {
-				var i18n = monster.apps.core.i18n.active(),
-					format2Digits = function(number) {
-						return number < 10 ? '0'.concat(number) : number;
-					},
-					today = new Date(),
-					todayYear = today.getFullYear(),
-					todayMonth = format2Digits(today.getMonth() + 1),
-					todayDay = format2Digits(today.getDate()),
-					date = self.gregorianToDate(timestamp),
-					year = date.getFullYear().toString().substr(2, 2),
-					fullYear = date.getFullYear(),
-					month = format2Digits(date.getMonth() + 1),
-					calendarMonth = i18n.calendar.month[date.getMonth()],
-					day = format2Digits(date.getDate()),
-					weekDay = i18n.calendar.day[date.getDay()],
-					hours = format2Digits(date.getHours()),
-					minutes = format2Digits(date.getMinutes()),
-					seconds = format2Digits(date.getSeconds()),
-					patterns = {
-						'year': fullYear,
-						'YY': year,
-						'month': calendarMonth,
-						'MM': month,
-						'day': weekDay,
-						'DD': day,
-						'hh': hours,
-						'mm': minutes,
-						'ss': seconds
-					};
-
-				if (typeof format === 'string') {
-					if (format === 'short') {
-						format = 'MM/DD/year'
-					}
+			if (typeof format === 'string') {
+				if (format === 'short') {
+					format = 'MM/DD/year'
 				}
-				else {
-					format = 'MM/DD/year - hh:mm12h'
-				}
-
-				if (format.indexOf('12h') > -1) {
-					var suffix;
-
-					if (hours >= 12) {
-						if (hours !== 12) {
-							hours -= 12;
-						}
-
-						suffix = i18n.calendar.suffix.pm;
-					}
-					else {
-						if (hours === '00') {
-							hours = 12
-						}
-
-						suffix = i18n.calendar.suffix.am;
-					}
-
-					patterns.hh = hours;
-					patterns['12h'] = suffix;
-				}
-
-				_.each(patterns, function(v, k){
-					format = format.replace(k, v);
-				});
-
-				return format;
 			}
 			else {
-				console.log('Timestamp should be a number');
+				format = 'MM/DD/year - hh:mm12h'
 			}
+
+			if (format.indexOf('12h') > -1) {
+				var suffix;
+
+				if (hours >= 12) {
+					if (hours !== 12) {
+						hours -= 12;
+					}
+
+					suffix = i18n.calendar.suffix.pm;
+				}
+				else {
+					if (hours === '00') {
+						hours = 12
+					}
+
+					suffix = i18n.calendar.suffix.am;
+				}
+
+				patterns.hh = hours;
+				patterns['12h'] = suffix;
+			}
+
+			_.each(patterns, function(v, k){
+				format = format.replace(k, v);
+			});
+
+			return format;
 		},
 
 		friendlyTimer: function(seconds) {

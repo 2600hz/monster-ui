@@ -244,5 +244,14 @@
 			"declined": "Declined",
 			"processor_declined": "Declined"
 		}
+	},
+
+	"miscCategory": "Misc",
+	"errorTracker": {
+		"title": "UI Errors Log",
+		"errorTotal": "Number of Errors:",
+		"apiTotal": "Erlang",
+		"jsTotal": "Javascript",
+		"viewDetails": "Details"
 	}
 }

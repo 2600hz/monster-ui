@@ -133,6 +133,22 @@
 					</a>
 				</li>
 				{{/if}}
+
+				{{#if restrictions.categories.misc.show}}
+				<li id="misc" class="nav-header">
+					{{ i18n.miscCategory }}
+				</li>
+				{{/if}}
+				{{#if restrictions.errorTracker.show_tab}}
+				<li class="myaccount-element" data-module="errorTracker">
+					<a href="javascript:void(0);">
+						<span class="active-highlight">
+							<i class="icon-bug"></i>
+							<span class="element-name">{{ i18n.errorTracker.title }}</span>
+						</span>
+					</a>
+				</li>
+				{{/if}}
 			</ul>
 		</div>
 	</div>

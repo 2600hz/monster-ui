@@ -1,0 +1,52 @@
+.errorTracker-content-wrapper .header {
+	margin-bottom: 10px;
+}
+.errorTracker-content-wrapper .api {
+	border: 1px solid #F75D59;
+	background: #FFE4E1;
+}
+.errorTracker-content-wrapper .js {
+	border: 1px solid yellow;
+	background: #FFE5B4;
+}
+
+.errorTracker-content-wrapper .api-text {
+	font-weight: bold;
+	color: red;
+}
+
+.errorTracker-content-wrapper .js-text {
+	font-weight: bold;
+	color: orange;
+}
+
+.errorTracker-content-wrapper .score .number {
+	margin: 0 4px;
+}
+
+.errorTracker-content-wrapper .box-total .number {
+	font-weight: bold;
+	font-size: 18px;
+	margin-left: 5px;
+}
+
+.errorTracker-content-wrapper .error-line {
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.errorTracker-content-wrapper .error-line .row-fluid > * {
+	line-height: 30px;
+}
+
+.errorTracker-content-wrapper .error-line .details {
+	text-align: right;
+}
+
+.errorTracker-content-wrapper .error-line .verb {
+	margin-right: 10px;
+}
+
+.errorTracker-content-wrapper .error-line .status {
+	margin-left: 10px;
+}
