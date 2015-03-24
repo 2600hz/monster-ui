@@ -66,7 +66,7 @@
 							<span class="element-name">{{ i18n.balance.title }}</span>
 
 						{{#compare restrictions.balance.show_credit '!==' false }}
-							<span class="badge pull-right">$<span class="amount">{{ amount }}</span></span>
+							<span class="badge pull-right">{{ ../i18n.currencyUsed }}<span class="amount">{{ amount }}</span></span>
 						{{/compare}}
 						</div>
 					</a>
