@@ -333,7 +333,8 @@
 				"size": "Les fichiers suivants sont trop volumineux: ",
 				"submit": {
 					"document": "Veuillez joindre la lettre d'autorisation signée ainsi que la facture correspondant aux numéros que vous souhaitez transférer"
-				}
+				},
+				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format !"
 			}
 		}
 	},

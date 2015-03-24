@@ -311,7 +311,7 @@ define(function(require){
 				});
 
 				if (numbersArray.length === 0) {
-					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
+					toastr.error(self.i18n.active().port.toastr.error.number);
 
 					container.find('div.row-fluid')
 						.addClass('error');
@@ -370,7 +370,7 @@ define(function(require){
 				});
 
 				if (numbersArray.length === 0) {
-					toastr.error(self.i18n.active().port.toastr.error.number.multiple);
+					toastr.error(self.i18n.active().port.toastr.error.number);
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')

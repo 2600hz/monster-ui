@@ -344,7 +344,8 @@
 				"size": "The following files are too big: ",
 				"submit": {
 					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
-				}
+				},
+				"number": "One or more numbers you entered are not in the right format!"
 			}
 		}
 	},
