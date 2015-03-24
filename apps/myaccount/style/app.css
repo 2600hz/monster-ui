@@ -10,15 +10,23 @@
 #myaccount {
 	width: 100%;
 	background-color: #fff;
-	display: none;
 	position: absolute;
 	top: 67px;
 	bottom: 0px;
 	z-index: 20;
+
+	-webkit-transform: scale(0);
+	    -ms-transform: scale(0);
+	        transform: scale(0);
+	-webkit-transition: all 0.3s ease-in;
+	    -ms-transition: all 0.3s ease-in;
+	        transition: all 0.3s ease-in;
 }
-/*#myaccount[style*="display: block"] + #monster-content {
-	overflow: hidden;
-}*/
+#myaccount.myaccount-open {
+	-webkit-transform: scale(1);
+	    -ms-transform: scale(1);
+	        transform: scale(1);
+}
 
 #myaccount > .container-fluid {
 	height: 100%;
@@ -170,20 +178,11 @@
 }
 
 #myaccount .myaccount-right .myaccount-titlebar .myaccount-close {
-	background: #fff;
-	cursor: pointer;
-	padding: 0px 5px;
-	text-align: center;
-	width: 100px;
 	position: absolute;
-	right: 5%;
-	top: 0;
-	display: none; /* TEMPORARY */
+	top: 20px;
+	right: 30px;
 }
 
-#myaccount .myaccount-right .myaccount-titlebar .myaccount-close:hover span > * {
-	color: #22ccff;
-}
 @media (min-width: 769px) and (max-width: 1024px) {
 	#myaccount .myaccount-menu {
 		width: 200px;
