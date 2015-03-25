@@ -425,6 +425,7 @@
 
 #appstore_popup_container .right-container .user-list-view .user-list-buttons button {
 	width: 85px;
+	min-width: initial;
 }
 
 #appstore_popup_container .action-bar {

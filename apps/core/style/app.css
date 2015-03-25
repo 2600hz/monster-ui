@@ -1441,8 +1441,13 @@ label.monster-invalid {
 }
 
 .monster-button-small {
-	min-width: initial;
+	min-width: 100px;
 	padding: 4px 16px;
+}
+
+.monster-button-mini {
+	min-width: 80px;
+	padding: 0 6px;
 }
 
 .monster-button-primary {
