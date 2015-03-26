@@ -282,7 +282,14 @@
 			"deleteButton": "Supprimer",
 			"infoButton":"Information",
 			"commentsButton": "Commentaires",
-			"noOrder":"Aucun transfert"
+			"noOrder":"Aucun transfert",
+			"tableOrderScheduled": "Date prévue",
+			"scheduledDatePopup": {
+				"title": "Modifier la date prévue",
+				"label": {
+					"scheduledDate": "Date prévue"
+				}
+			}
 		},
 		"resumeOrder":{
 			"title":"Compléter les demandes de transfert, un à la fois !",
@@ -336,7 +343,9 @@
 				},
 				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format !"
 			}
-		}
+		},
+		"noScheduledDate": "Aucune",
+		"addDate": "Ajouter"
 	},
 	"chooseModel": {
 		"brandHeadline": "Sélectionner la marque du téléphone:",

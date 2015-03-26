@@ -355,7 +355,8 @@ div#orders_list .collapse td:last-child i {
 	max-height: 50px;
 }
 
-#orders_list .accounts-list .request-created {
+#orders_list .accounts-list .request-created,
+#orders_list .accounts-list .scheduled-date {
 	width: 120px;
 	margin: 0 10px;
 	text-align: center;
@@ -435,6 +436,22 @@ div#port_comments_popup .actions .checkbox {
 	width: 180px;
 }
 
+/**************** Edit Scheduled Date Popup ***************/
+
+.edit-shceduled-date .actions {
+	border-top: 1px solid #CCCCCC;
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+.edit-shceduled-date .actions button {
+	margin-left: 5px;
+}
+
+.edit-shceduled-date .content {
+	padding: 15px;
+}
 
 /**********************************************************/
 
