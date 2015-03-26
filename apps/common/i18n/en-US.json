@@ -293,7 +293,16 @@
 			"deleteButton": "Delete",
 			"infoButton": "Info",
 			"commentsButton": "Comments",
-			"noOrder": "No existing port request for this account"
+			"noOrder": "No existing port request for this account",
+			"__comment": "UI-1302: Add scheduled date when state is set to pending",
+			"__version": "v3.20_s3",
+			"tableOrderScheduled": "Scheduled date",
+			"scheduledDatePopup": {
+				"title": "Edit Scheduled Date",
+				"label": {
+					"scheduledDate": "Scheduled date"
+				}
+			}
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",
@@ -347,7 +356,11 @@
 				},
 				"number": "One or more numbers you entered are not in the right format!"
 			}
-		}
+		},
+		"__comment": "UI-1302: Add scheduled date when state is set to pending",
+		"__version": "v3.20_s3",
+		"noScheduledDate": "None",
+		"addDate": "Add date"
 	},
 
 	"chooseModel": {
