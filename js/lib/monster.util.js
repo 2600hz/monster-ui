@@ -509,6 +509,32 @@ define(function(require){
 				roundedValue = Math.round(Number(value)*Math.pow(10,decimalCount))/Math.pow(10,decimalCount);
 			
 			return roundedValue.toFixed( ((parseInt(value) == value) && (isNaN(decimals) || decimals < 0)) ? 0 : decimalCount );
+		},
+
+		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
+		// internal function used by different apps to set their own help flags.
+		helpFlags: {
+			user: {
+				get: function(appName, flagName, user) {
+					var user = user || monster.apps.auth.currentUser,
+						value = undefined;
+
+					if(user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
+						value = user.ui_help[appName][flagName];
+					}
+
+					return value;
+				},
+				set: function(appName, flagName, value, user) {
+					var user = user || monster.apps.auth.currentUser;
+
+					user.ui_help = user.ui_help || {};
+					user.ui_help[appName] = user.ui_help[appName] || {};
+					user.ui_help[appName][flagName] = value;
+
+					return user;
+				}
+			}
 		}
 	};
 

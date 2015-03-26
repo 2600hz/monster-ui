@@ -23,6 +23,7 @@
 							<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
 							<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
 							<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
+							<div class="scheduled-date">{{../../i18n.port.pendingOrders.tableOrderScheduled}}</div>
 					</div>
 				{{#each port_requests}}
 					<div class="request-box" data-id="{{id}}">
@@ -30,6 +31,7 @@
 							<div class="request-name">{{name}}</div>
 							<div class="request-created">{{toFriendlyDate created 'short'}}</div>
 							<div class="request-state"></div>
+							<div class="scheduled-date"></div>
 						</div>
 						<div class="actions pull-right">
 							<div class="dropdown">

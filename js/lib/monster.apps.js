@@ -25,6 +25,17 @@ define(function(){
 
 			app.apiUrl = app.apiUrl || monster.config.api.default;
 
+			app.helpSettings = {
+				user: {
+					set: function(flagName, value, user) {
+						return monster.util.helpFlags.user.set(app.name, flagName, value, user);
+					},
+					get: function(flagName, user) {
+						return monster.util.helpFlags.user.get(app.name, flagName, user);
+					}
+				}
+			};
+
 			app.callApi = function(params) {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
@@ -52,6 +63,9 @@ define(function(){
 							// If we're updating the user we're logged in with
 							if(params.data.userId === monster.apps['auth'].userId) {
 								successCallback = function(data, status) {
+									monster.apps.auth.currentUser = data.data;
+									monster.pub('auth.currentUserUpdated', data.data);
+
 									var cookieData = $.parseJSON($.cookie('monster-auth'));
 
 									// If the language stored in the cookie is not the same as the one we have in the updated data, we update the cookie.

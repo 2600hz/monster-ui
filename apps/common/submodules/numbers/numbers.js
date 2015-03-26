@@ -1146,7 +1146,8 @@ define(function(require){
 			self.callApi({
 				resource: 'user.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(users, status) {
 					callback && callback(users.data);
@@ -1160,7 +1161,8 @@ define(function(require){
 			self.callApi({
 				resource: 'callflow.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(callflows, status) {
 					callback && callback(callflows.data);
@@ -1174,7 +1176,8 @@ define(function(require){
 			self.callApi({
 				resource: 'group.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(groups, status) {
 					callback && callback(groups.data);
@@ -1188,7 +1191,8 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
