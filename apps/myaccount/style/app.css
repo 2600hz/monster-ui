@@ -55,7 +55,7 @@
 	/* Hack to keep both columns at the same height */
 }
 #myaccount .myaccount-menu {
-	background-color: #f3f3f3;
+	background-color: #f0f0f9;
 	width: 280px;
 	border-right: 1px solid #c0c0c9;
 	box-sizing: border-box;
@@ -88,7 +88,6 @@
 }
 
 #myaccount .myaccount-menu .nav li {
-	cursor: pointer;
 	font-size: 14px;
 	font-weight: 600;
 	padding: 10px 20px;
@@ -102,6 +101,7 @@
 
 #myaccount .myaccount-menu .nav > li:not(.nav-header):hover {
 	background-color: #e0e0e9;
+	cursor: pointer;
 }
 
 #myaccount .myaccount-menu .nav li.nav-header {

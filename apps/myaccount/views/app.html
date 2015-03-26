@@ -62,12 +62,11 @@
 				<li class="myaccount-element" data-module="balance">
 					<a href="javascript:void(0);">
 						<div class="active-highlight">
-							<i class="icon-time"></i>
-							<span class="element-name">{{ i18n.balance.title }}</span>
-
 						{{#compare restrictions.balance.show_credit '!==' false }}
 							<span class="badge pull-right">{{ ../i18n.currencyUsed }}<span class="amount">{{ amount }}</span></span>
 						{{/compare}}
+							<i class="icon-time"></i>
+							<span class="element-name">{{ i18n.balance.title }}</span>
 						</div>
 					</a>
 				</li>
@@ -102,9 +101,9 @@
 				<li class="myaccount-element" data-module="trunks" data-key="outbound">
 					<a href="javascript:void(0);">
 						<div class="active-highlight">
+							<span class="badge pull-right">
 							<i class="icon-arrow-left"></i>
 							<span class="element-name">{{ i18n.trunks.outbound }}</span>
-							<span class="badge pull-right">
 							</span>
 						</div>
 					</a>
@@ -114,9 +113,9 @@
 				<li class="myaccount-element" data-module="trunks" data-key="inbound">
 					<a href="javascript:void(0)">
 						<div class="active-highlight">
+							<span class="badge pull-right">
 							<i class="icon-arrow-right"></i>
 							<span class="element-name">{{ i18n.trunks.inbound }}</span>
-							<span class="badge pull-right">
 							</span>
 					 </div>
 					</a>
@@ -126,9 +125,9 @@
 				<li class="myaccount-element" data-module="trunks" data-key="twoway">
 					<a href="javascript:void(0)">
 						<div class="active-highlight">
+							<span class="badge pull-right"></span>
 							<i class="icon-resize-horizontal"></i>
 							<span class="element-name">{{ i18n.trunks.twoway }}</span>
-							<span class="badge pull-right"></span>
 						</div>
 					</a>
 				</li>
