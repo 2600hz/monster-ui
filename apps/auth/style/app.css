@@ -4,7 +4,6 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	overflow: auto;
 }
 
 @-webkit-keyframes animate-bg {
@@ -60,10 +59,17 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	padding-bottom: 40px;
 	width: 330px;
-	min-height: 100%;
+	height: 100%;
+	overflow: auto;
 	background-color: #202029;
+}
+
+#auth_container .right-div .right-div-content {
+	position: relative;
+	padding-bottom: 60px;
+	min-height: 100%;
+	box-sizing: border-box;
 }
 
 #auth_container .right-div .logo-block {
