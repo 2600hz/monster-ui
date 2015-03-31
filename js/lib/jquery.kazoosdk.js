@@ -267,8 +267,8 @@
 			'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
-			'accountSummary': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/summary' },
-			'summary': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/summary' }
+			'accountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
+			'attempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' }
 		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
