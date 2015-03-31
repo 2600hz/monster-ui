@@ -305,7 +305,12 @@
 				"label": {
 					"scheduledDate": "Scheduled date"
 				}
-			}
+			},
+			"__comment": "UI-1303: ",
+			"__version": "v3.20_3",
+			"accounts": "Accounts",
+			"requests": "Requests",
+			"all": "All"
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",
