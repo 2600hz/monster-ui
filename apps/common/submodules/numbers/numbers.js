@@ -690,6 +690,7 @@ define(function(require){
 				monster.pub('common.accountBrowser.render', {
 					container: parent.find('.list-numbers[data-type="spare"] .accounts-dropdown'),
 					customClass: 'ab-dropdown',
+					addCurrentAccount: true,
 					onAccountClick: function(accountId, accountName) {
 						moveNumbersToAccount(accountId, accountName);
 						parent.find('.list-numbers[data-type="spare"] .dropdown-move').removeClass('open');

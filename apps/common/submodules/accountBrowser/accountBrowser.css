@@ -1,7 +1,7 @@
 .account-browser-container {
 	float: left;
 	background-color: #F3F3F3;
-	border-right: solid 1px #999;
+	border-right: solid 1px #909099;
 	width: 240px;
 	overflow: hidden;
 	border-radius: inherit;
@@ -10,7 +10,7 @@
 .account-browser-container .search-box {
 	width: 220px;
 	padding: 20px 10px;
-	border-bottom: solid 1px #999;
+	border-bottom: solid 1px #909099;
 }
 
 .account-browser-container .search-box .search-query {
@@ -56,34 +56,32 @@
 }
 
 .account-browser-container .account-list-add:hover {
-	background: #ccc;
-	/*color: #22ccff;*/
+	background: #c0c0c9;
 	cursor: pointer;
-}
-
-.account-browser-container .account-list-add:hover i {
-	/*color: #22ccff;*/
 }
 
 .account-browser-container .account-list-loader {
 	padding: 10px;
-	border-top: solid 1px #ccc;
-	border-bottom: solid 1px #ccc;
+	border-top: solid 1px #c0c0c9;
+	border-bottom: solid 1px #c0c0c9;
 }
 
 .account-browser-container .account-list-element {
 	line-height: 60px;
 	max-height: 60px;
 	overflow: hidden;
-	border-top: solid 1px #ccc;
+	border-bottom: solid 1px #c0c0c9;
+}
+.account-browser-container .account-list-element.current-account {
+	border-color: #909099;
 }
 .account-browser-container .account-search-link {
-    border-top: solid 1px #ccc;
-    text-align: center;
-    font-size: 12px;
-    line-height: 15px;
-    padding: 5px;
-    color: #555;
+	border-bottom: solid 1px #c0c0c9;
+	text-align: center;
+	font-size: 12px;
+	line-height: 15px;
+	padding: 5px;
+	color: #555;
 	background-color: #f6f6f6;
 	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
 	background-image:    -moz-linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
@@ -92,19 +90,30 @@
 	background-image:         linear-gradient(top, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 85%) 100%);
 }
 .account-browser-container .account-search-link:hover {
-	background: #eee;
+	background: #e0e0e9;
 	cursor: pointer;
 }
-
-.account-browser-container .account-search-link  .account-search-value {
-    font-weight: 600;
-    text-shadow: 1px 1px 0px #ccc;
+.account-browser-container .account-search-link .account-search-value {
+	font-weight: 600;
+	text-shadow: 1px 1px 0px #c0c0c9;
 }
+.account-browser-container .account-search-link .search-reset {
+	color: #22a5ff;
+	line-height: 30px;
+	font-weight: 600;
+}
+.account-browser-container .account-search-link:not(.active) .search-reset {
+	display: none;
+}
+.account-browser-container .account-search-link.active > *:not(.search-reset) {
+	display: none;
+}
+
 .account-browser-container .account-list > li:first-child {
 	border-top: none;
 }
 .account-browser-container .account-list > li:last-child {
-	border-bottom: solid 1px #ccc;
+	border-bottom: solid 1px #c0c0c9;
 }
 .account-browser-container.ab-dropdown .account-list-element {
 	line-height: 40px;
@@ -112,7 +121,7 @@
 }
 
 .account-browser-container.ab-sidebar .account-list-element.active {
-	border-top: solid 2px #22ccff;
+	border-top: solid 2px #22a5ff;
 }
 .account-browser-container.ab-sidebar .account-list-element.active > div {
 	background: #fff;
@@ -129,13 +138,8 @@
 }
 
 .account-browser-container .account-list-element > div:hover {
-	background: #eee;
+	background: #e0e0e9;
 	cursor: pointer;
-	/*color: #22ccff;*/
-}
-
-.account-browser-container .account-list-element > div:hover > i {
-	/*color: #22ccff;*/
 }
 
 .account-browser-container .account-link {
@@ -160,11 +164,11 @@
 	white-space: nowrap;
 }
 .account-browser-container.ab-dropdown .account-link .account-realm {
-    display: none;
+	display: none;
 }
 
 .account-browser-container .account-children-link {
-	border-left: solid 1px #ccc;
+	border-left: solid 1px #c0c0c9;
 	float: right;
 	vertical-align: top;
 }
@@ -201,10 +205,10 @@
 }
 
 .account-browser-breadcrumbs .account-browser-breadcrumb .missing-info {
-	color: #999;
+	color: #909099;
 	font-style: italic;
 }
 
 .account-browser-breadcrumbs .account-browser-breadcrumb:not(:last-child) a {
-	color: #666;
+	color: #606069;
 }

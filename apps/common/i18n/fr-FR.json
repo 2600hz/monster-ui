@@ -4,7 +4,10 @@
 		"addAccount": "Ajouter un compte",
 		"searchDatabase": "Rechercher dans tous les comptes:",
 		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
-		"breadcrumbSearchResults": "résultats de la recherche pour \"{{searchValue}}\""
+		"breadcrumbSearchResults": "résultats de la recherche pour \"{{searchValue}}\"",
+		"__comment": "UI-1271: Updating the search link",
+		"__version": "v3.20_s3",
+		"searchReset": "Cliquez pour effacer la recherche"
 	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",
