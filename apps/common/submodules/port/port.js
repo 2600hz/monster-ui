@@ -1,4 +1,3 @@
-
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
@@ -23,6 +22,15 @@ define(function(require){
 		},
 
 		isLaunchedInAppMode: true,
+
+		states: [
+			{ value: 'unconfirmed', next: [1] },
+			{ value: 'submitted', next: [2,4] },
+			{ value: 'pending', next: [3,4,5] },
+			{ value: 'scheduled', next: [4,5] },
+			{ value: 'rejected', next: [1,5] },
+			{ value: 'completed', next: [] }
+		],
 
 		portRender: function(args) {
 			var self = this,
@@ -50,9 +58,40 @@ define(function(require){
 			parent.empty();
 
 			self.portListRequests(accountId, function(data) {
-				var template = monster.template(self, 'port-pendingOrders', {
-						data: data,
-						isAdmin: monster.apps.auth.originalAccount.superduper_admin
+				var formatDataToTempalte = function formatDataToTempalte(accounts) {
+						// Remove accounts without any port requests
+						accounts = accounts.filter(function(v) { return v.port_requests.length > 0; });
+
+						// Sort requests by scheduled
+						accounts.forEach(function(account, i) {
+							var unscheduledRequests = [],
+									scheduledRequests = [];
+
+							account.port_requests.forEach(function(request, j) {
+								if (request.hasOwnProperty('scheduled_date')) {
+									scheduledRequests.push(request);
+								}
+								else {
+									unscheduledRequests.push(request);
+								}
+							});
+
+							scheduledRequests.sort(function(a, b) {
+								return a.scheduled_date > b.scheduled_date ? 1 : -1;
+							});
+
+							unscheduledRequests.sort(function(a, b) {
+								return a.created > b.created ? 1 : -1;
+							});
+
+							account.port_requests = scheduledRequests.concat(unscheduledRequests);
+						});
+
+						return accounts;
+					},
+					template = monster.template(self, 'port-pendingOrders', {
+						data: formatDataToTempalte(data),
+						isAdmin: monster.apps.auth.originalAccount.superduper_admin,
 					});
 
 				parent.append(template);
@@ -61,7 +100,7 @@ define(function(require){
 					parent.dialog('open');
 				}
 
-				self.portRenderStateCell(parent, {
+				self.portRenderDynamicCells(parent, {
 					data: data
 				});
 				self.portBindPendingOrderEvents(parent, accountId, data);
@@ -110,7 +149,7 @@ define(function(require){
 					newState = el.val();
 
 				self.portRequestChangeState(accountId, portRequestId, newState, function() {
-					self.portRenderStateCell(container, {
+					self.portRenderDynamicCells(container, {
 						data: data,
 						state: newState,
 						portRequestId: portRequestId
@@ -191,7 +230,7 @@ define(function(require){
 				});
 			});
 
-			container.find('.actions li').on('click', function() {
+			container.find('.request-box .actions li').on('click', function() {
 				var li = $(this),
 					portRequestId = li.parents('.request-box').data('id');
 
@@ -232,6 +271,110 @@ define(function(require){
 					}
 					*/
 				})
+			});
+
+			container.find('.filter-options .btn-group .btn:first-child').addClass('active');
+
+			container.find('.filter-options .btn-group:first-child .btn').on('click', function() {
+				var requestWrapper = container.find('.accounts-list > .requests-wrapper'),
+					requestWrapperIsEmpty = requestWrapper.hasClass('empty'),
+					accountSection = container.find('.account-section'),
+					filterBy = $(this).data('value');
+
+				if (filterBy === 'accounts') {
+					if (!$(this).hasClass('active') && !requestWrapperIsEmpty) {
+						$(this).siblings().removeClass('active');
+						$(this).addClass('active');
+						requestWrapper.addClass('empty');
+						requestWrapper.find('.request-box').each(function(idx, el) {
+							var el = $(el),
+								accountId = el.data('account_id');
+
+							container.find('.account-section[data-id="' + accountId + '"] .requests-wrapper').append(el);
+						});
+					}
+
+					accountSection.fadeIn(400);
+				}
+				else if (filterBy === 'requests') {
+					if (!$(this).hasClass('active') && requestWrapperIsEmpty) {
+						$(this).siblings().removeClass('active');
+						$(this).addClass('active');
+						requestWrapper.removeClass('empty');
+						accountSection.fadeOut(400, function() {
+							container.find('.request-box').each(function(idx, el) {
+								var el = $(el);
+
+								requestWrapper.append(el);
+							});
+						});
+					}
+				}
+			});
+
+			container.find('.filter-options .btn-group:last-child .btn').on('click', function() {
+				var $this = $(this),
+					btnGroup = $this.parent(),
+					btnAll = btnGroup.find('.btn:first-child'),
+					filterBy = [];
+
+				if ($this.data('value') === 'all') {
+					if (!$this.hasClass('active')) {
+						btnGroup.find('.btn.active').removeClass('active');
+						$this.addClass('active');
+					}
+				}
+				else {
+					var allButtonsToggled = true;
+
+					if (btnAll.hasClass('active')) {
+						btnAll.removeClass('active');
+					}
+
+					$this.toggleClass('active');
+
+					if (!btnGroup.find('.btn').hasClass('active')) {
+						btnAll.addClass('active');
+					}
+
+					btnGroup.find('.btn:not(:first-child)').each(function(idx, el) {
+						if (!$(el).hasClass('active')) {
+							allButtonsToggled = false;
+							return false;
+						}
+					});
+
+					if (allButtonsToggled) {
+						btnGroup.find('.btn.active').removeClass('active');
+						btnAll.addClass('active');
+					}
+				}
+
+				btnGroup.find('.btn.active').each(function(idx, el) {
+					filterBy.push($(el).data('value'));
+				});
+
+				if (filterBy.indexOf('all') > -1) {
+					container.find('.request-box')
+						.removeClass('hide')
+						.fadeIn();
+				}
+				else {
+					container.find('.request-box').each(function(idx, el) {
+						var el = $(el);
+
+						if (filterBy.indexOf(el.data('state')) > -1) {
+							el.removeClass('hide').fadeIn();
+						}
+						else {
+							el.fadeOut(400, function() {
+								el.addClass('hide');
+							});
+						}
+
+						// el['fade'.concat(filterBy.indexOf(el.data('state')) > -1 ? 'In' : 'Out')]();
+					});
+				}
 			});
 		},
 
@@ -955,18 +1098,11 @@ define(function(require){
 			);
 		},
 
-		portRenderStateCell: function(parent, args) {
+		portRenderDynamicCells: function(parent, args) {
 			var self = this,
-				data = args.data,
 				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
-				states = [
-					{ value: 'unconfirmed', next: [1] },
-					{ value: 'submitted', next: [2,4] },
-					{ value: 'pending', next: [3,4,5] },
-					{ value: 'scheduled', next: [4,5] },
-					{ value: 'rejected', next: [1,5] },
-					{ value: 'completed', next: [] }
-				],
+				states = self.states,
+				data = args.data,
 				getStatesToDisplay = function(nextState) {
 					var statesList = [];
 
@@ -986,12 +1122,14 @@ define(function(require){
 
 					return statesList;
 				},
-				populateStateCell = function populateStateCell(id, state) {
+				populateDynamicCells = function populateDynamicCells(id, state) {
 					var box = parent.find('.request-box[data-id="' + id + '"]'),
 						accountId = box.parents('.account-section').data('id'),
 						scheduledDate = box.find('.scheduled-date'),
 						select = box.find('.request-state'),
 						currentRequest;
+
+					box.data('state', state);
 
 					for (var i = 0, len = data.length; i < len; i++) {
 						if (data[i].account_id === accountId) {
@@ -1007,10 +1145,6 @@ define(function(require){
 						}
 					}
 
-					/**
-					 * Render the scheduled date cell according to the state of port request
-					 * and the value of scheduled_date (if it is set or not)
-					 */
 					if (isAdmin) {
 						if (state === 'completed') {
 							select
@@ -1026,16 +1160,11 @@ define(function(require){
 								.empty()
 								.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(state) })));
 
-							if (state === 'pending') {
-								if (currentRequest.hasOwnProperty('scheduled_date')) {
-									dataCell = { scheduledDate: currentRequest.scheduled_date };
-								}
-
-								scheduledDate
-									.empty()
-									.append($(monster.template(self, 'port-scheduledDateCell', dataCell)));
-							}
-							else if (state === 'scheduled') {
+							/**
+							 * Render the scheduled date cell according to the state of port request
+							 * and the value of scheduled_date (if it is set or not)
+							 */
+							if (state === 'scheduled') {
 								if (currentRequest.hasOwnProperty('scheduled_date')) {
 									dataCell = { scheduledDate: currentRequest.scheduled_date };
 								}
@@ -1056,7 +1185,11 @@ define(function(require){
 							.empty()
 							.text(self.i18n.active().port.state[state]);
 
-						if (state === 'pending' || state === 'scheduled') {
+						/**
+						 * Render the scheduled date cell according to the state of port request
+						 * and the value of scheduled_date (if it is set or not)
+						 */
+						if (state === 'scheduled') {
 							scheduledDate
 								.empty()
 								.text(monster.util.toFriendlyDate(currentRequest.scheduled_date, 'short'));
@@ -1074,12 +1207,12 @@ define(function(require){
 			}
 
 			if (args.hasOwnProperty('portRequestId')) {
-				populateStateCell(args.portRequestId, args.state);
+				populateDynamicCells(args.portRequestId, args.state);
 			}
 			else {
 				for (var i = 0, len = data.length; i < len; i++) {
 					_.each(data[i].port_requests, function(port) {
-						populateStateCell(port.id, port.port_state);
+						populateDynamicCells(port.id, port.port_state);
 					});
 				}
 			}

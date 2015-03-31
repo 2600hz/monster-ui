@@ -51,7 +51,7 @@
 		},
 		"toastr": {
 			"success": {
-				"reset": "Votre mot de passe a été réinitialisé avec succès"
+				"reset": "Votre mot de passe a été réinitialisé avec succès. Un email a été envoyé à votre adresse de login."
 			},
 			"error": {
 				"reset": {

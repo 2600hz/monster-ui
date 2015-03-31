@@ -54,7 +54,7 @@
 		},
 		"toastr": {
 			"success": {
-				"reset": "Your password has been successfully reset"
+				"reset": "Your password has been successfully reset, an email has been sent to your login address"
 			},
 			"error": {
 				"reset": {
