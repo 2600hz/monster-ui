@@ -236,6 +236,11 @@ div#orders_list .list-header > span.pull-right i {
 	font-size: 20px;
 }
 
+div#orders_list .filter-options .btn {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
 div#orders_list .collapse td:last-child button {
 	margin-right: 10px;
 }
@@ -301,18 +306,23 @@ div#orders_list .collapse td:last-child i {
 	border-bottom-left-radius: 0;
 }
 
+#orders_list .accounts-list > .requests-wrapper.empty,
 #orders_list .accounts-list .account-section .requests-wrapper {
 	display: none;
 }
 
+#orders_list .accounts-list .requests-wrapper:not(.empty),
 #orders_list .accounts-list .account-section.active .requests-wrapper {
 	display: block;
+	border: 1px solid #ccc;
+	border-top: 0;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }
 
 #orders_list .accounts-list .requests-wrapper > div {
 	padding: 5px 50px;
-	border: 1px solid #ccc;
-	border-bottom-width: 0;
+	border-top: 1px solid #ccc;
 }
 
 #orders_list .accounts-list .requests-header {
@@ -331,13 +341,7 @@ div#orders_list .collapse td:last-child i {
 	height: 50px;
 }
 
-#orders_list .accounts-list .account-section .requests-wrapper .request-box:last-child {
-	border-bottom-width: 1px;
-	border-bottom-right-radius: 8px;
-	border-bottom-left-radius: 8px;
-}
-
-#orders_list .accounts-list .account-section .requests-wrapper .request-box.empty {
+#orders_list .accounts-list .requests-wrapper .request-box.empty {
 	border-top: 0;
 	text-align: center;
 }
