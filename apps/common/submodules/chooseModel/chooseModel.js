@@ -37,24 +37,34 @@ define(function(require){
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var formattedData = {
-				brands: []
-			};
+			var formattedData = { 
+					brands: []
+				},
+				families,
+				models;
 
-			_.each(data, function(brand) {
-				var families = [];
+			_.each(data, function(brand, brandKey) {
+				families = [];
 
-				_.each(brand.families, function(family) {
-					var models = {};
+				_.each(brand.families, function(family, familyKey) {
+					models = [];
 
-					_.each(family.models, function(model) {
-						models[model.name] = model.name;
+					_.each(family.models, function(model, modelKey) {
+						models.push({
+							id: modelKey.toLowerCase(),
+							name: model.name
+						});
 					});
 
-					families.push({ name: family.name, models: models });
+					families.push({
+						id: familyKey.toLowerCase(),
+						name: family.name,
+						models: models
+					});
 				});
 
 				formattedData.brands.push({
+					id: brandKey.toLowerCase(),
 					name: brand.name,
 					families: families
 				});

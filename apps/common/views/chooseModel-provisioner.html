@@ -9,7 +9,7 @@
 
 		<div class="brand-selection">
 			{{#each brands}}
-			<div class="brand-box {{this.name}}" data-brand="{{this.name}}"/>
+			<div class="brand-box {{id}}" data-brand="{{id}}"/>
 			{{/each}}
 		</div>
 	</div>
@@ -24,12 +24,12 @@
 
 		<div class="model-selection">
 			{{#each brands}}
-				<div class="models-brand" data-brand="{{toLowerCase this.name}}">
-					{{#each this.families}}
-						{{#each this.models}}
-							<div class="model-box" data-family="{{toLowerCase ../name}}" data-model="{{toLowerCase @key}}">
-								<div class="model-image {{toLowerCase ../../name}}-{{toLowerCase ../name}}-{{toLowerCase @key}}" />
-								<div class="model-name">{{@key}}</div>
+				<div class="models-brand" data-brand="{{id}}">
+					{{#each families}}
+						{{#each models}}
+							<div class="model-box" data-family="{{../id}}" data-model="{{id}}">
+								<div class="model-image {{../../id}}-{{../id}}-{{id}}"></div>
+								<div class="model-name">{{name}}</div>
 							</div>
 						{{/each}}
 					{{/each}}
