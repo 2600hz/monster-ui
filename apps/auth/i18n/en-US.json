@@ -1,10 +1,11 @@
 {
-	"welcome": "Hosted Telecom Services",
-	"hello": "Welcome!",
+	"welcome": "Your Unified Communications Platform",
 	"password": "Password",
 	"rememberMe": "Remember me",
-	"forgotPassword": "Forgot your Password?",
+	"forgotPassword": "Forgot Info?",
 	"username": "Username",
+	"registerMessage": "Use one account for all 2600Hz services",
+	"registerLink": "Register",
 	"or": "OR",
 	"errorLoadingAccount": "An error occured while loading your account",
 
@@ -53,7 +54,7 @@
 		},
 		"toastr": {
 			"success": {
-				"reset": "Your password has been successfully reset"
+				"reset": "Your password has been successfully reset, an email has been sent to your login address"
 			},
 			"error": {
 				"reset": {

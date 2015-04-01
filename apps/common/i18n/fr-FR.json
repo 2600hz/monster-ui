@@ -2,7 +2,12 @@
 	"accountBrowser": {
 		"missingInfo": "Information Manquante",
 		"addAccount": "Ajouter un compte",
-		"searchDatabase": "Rechercher dans tous les comptes:"
+		"searchDatabase": "Rechercher dans tous les comptes:",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "résultats de la recherche pour \"{{searchValue}}\"",
+		"__comment": "UI-1271: Updating the search link",
+		"__version": "v3.20_s3",
+		"searchReset": "Cliquez pour effacer la recherche"
 	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",
@@ -71,7 +76,17 @@
 				"questionPartThree":"?",
 				"button":"déplacer numéro(s)"
 			}
-		}
+		},
+
+		"__comment": "UI-1285: Adding the Sync Action to the Number Manager",
+		"__version": "3.19",
+		"sync": {
+			"label": "Sync",
+			"success": "Mise à jour des numéros réussie",
+			"help": "Si certains numéros n'apparaissent pas dans la bonne colonne, vous pouvez cliquer sur ce lien afin d'essayer de régler ce problème."
+		},
+
+		"portIconHelp": "Ce numéro est en cours de transfert et sera supprimé si celui-ci échoue. Il peut être configuré mais ne sera pas utilisable"
 	},
 	"callerId":{
 		"callerIdName":"Nom de Caller ID",
@@ -94,7 +109,6 @@
 		"addressLine2":"Ligne Adresse 2",
 		"city":"Ville",
 		"dialogTitle":"Modifier location d'urgence",
-		"errorUpdate":"Impossible de mettre à jour la location d'urgence pour ce numéro",
 		"gmapPinLabel":"Votre+Adresse+d'Urgence",
 		"infoBox":"Cette adresse sera affichée lorsque vous appelerez les services d'urgence depuis ce numéro.",
 		"label":"Adresse d'urgence (e911)",
@@ -187,12 +201,16 @@
 		"progressBarLeft":"Ajouter des numéros",
 		"progressBarMiddle":"Envoyer les documents",
 		"progressBarRight":"Confirmer le transfert",
+		"requiredConditions": "Veuillez accepter les condictions",
+		"comingSoon": "Prochainement",
+		"unknownCarrier": "Opérateur inconnu",
 		"state": {
 			"completed": "Effectué",
+			"pending": "En attente",
 			"rejected": "Refusé",
 			"scheduled": "Programmé",
-			"submitted": "En attante",
-			"unconfirmed": "Unconfirmed"
+			"submitted": "Envoyé",
+			"unconfirmed": "En cours de création"
 		},
 		"commentsPopup": {
 			"title": "Commentaires",
@@ -214,6 +232,9 @@
 			},
 			"bill": {
 				"legend": "Détail de la facture"
+			},
+			"numbers": {
+				"legend": "Numéros"
 			},
 			"confirm": {
 				"deleteComment": "Êtes-vous sur de vouloir supprimer ce commentaire ?"
@@ -261,18 +282,18 @@
 			"newPortLink":"Commencer un nouveau transfert",
 			"tableOrderName":"Nom",
 			"tableOrderDate":"Date demandé",
-			"tableOrderStatus":"Status",
-			"tableOrderAction":"Actions",
-			"continueButton":"continuer",
-			"infoButton":"information",
+			"tableOrderStatus":"État",
+			"continueButton":"Continuer",
+			"deleteButton": "Supprimer",
+			"infoButton":"Information",
+			"commentsButton": "Commentaires",
 			"noOrder":"Aucun transfert",
-			"states": {
-				"completion": "Completion",
-				"progress": "Progress",
-				"ready": "Ready",
-				"rejection": "Rejection",
-				"waiting": "Waiting",
-				"unconfirmed": "Unconfirmed"
+			"tableOrderScheduled": "Date prévue",
+			"scheduledDatePopup": {
+				"title": "Modifier la date prévue",
+				"label": {
+					"scheduledDate": "Date prévue"
+				}
 			}
 		},
 		"resumeOrder":{
@@ -309,7 +330,8 @@
 		"toastr": {
 			"success": {
 				"request": {
-					"update": "La demande de transfert a été mise à jour"
+					"update": "La demande de transfert a été mise à jour",
+					"delete": "La demande de transfert a été supprimé"
 				},
 				"comment": {
 					"delete": "Le commentaire a été suprimé avec succès"
@@ -320,13 +342,15 @@
 					"update": "La mise à jour de la demande de transfert à échoué"
 				},
 				"mimeType": "Les fichiers suivants ne sont pas dans un format accepter: ",
-				"size": "Les fichiers suivants sont trop gros: ",
-				"number": {
-					"single": "Le numéro que vous avez saisi est invalide !!!",
-					"multiple": "Les numéros que vous avez saisi sont invalides !!!"
-				}
+				"size": "Les fichiers suivants sont trop volumineux: ",
+				"submit": {
+					"document": "Veuillez joindre la lettre d'autorisation signée ainsi que la facture correspondant aux numéros que vous souhaitez transférer"
+				},
+				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format !"
 			}
-		}
+		},
+		"noScheduledDate": "Aucune",
+		"addDate": "Ajouter"
 	},
 	"chooseModel": {
 		"brandHeadline": "Sélectionner la marque du téléphone:",
@@ -349,5 +373,36 @@
 			"users": "Utilisateurs"
 		},
 		"noServicePlan": "Aucun abonnement sélectionné."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Répartir",
+		"maxDurationTooltip": "Cliquez sur le label ci-contre pour changer la durée maximale de ce groupe d'appel. Vous devez saisir un nombre crompris entre 30 et 999.",
+		"doNotRing": "Ne pas faire sonner"
+	},
+	
+	"__comment": "UI-966: We want to be able to customize the carrier choice in different plances, so we build a common control",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Opérateur téléphonique",
+		"headline": "Sélectionner comment configurer les opérateurs de ce compte",
+		"useBlended": {
+			"friendlyName": "Utiliser les Opérateurs mixtes",
+			"help": "En sélectionnant \"Utiliser les opérateurs mixtes\", tous les appels de ce compte utiliseront les opérateurs configurés sur le compte principal"
+		},
+		"useReseller": {
+			"friendlyName": "Utiliser les opérateurs de {{variable}}",
+			"help": "En sélectionnant \"Utiliser les opérateurs de {{variable}}\", tous les appels de ce compte utiliseront les opérateurs configurés de {{variable}}",
+			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "Utiliser les opérateurs de votre revendeur",
+			"defaultHelp": "En sélectionnant \"Utiliser les opérateurs de votre revendeur\", tous les appels de ce compte utiliseront les opérateurs configurés de votre revendeur"
+		},
+		"byoc": {
+			"friendlyName": "Configurer vos propres opérateurs",
+			"help": "En sélectionnant \"Configurer vos propres opérateurs\", vous laisserez ce compte configurer ses opérateurs manuellement via la Carrier App."
+		},
+		"saveSuccess": "Vous avez mis à jours les options d'opérateurs avec succès!",
+		"huntError": "Vos réglages d'opérateur actuels ne fonctionnent pas dans cette interface, si vous souhaitez conserver ces réglages, ne changez rien dans ce menu. Sinon, vous pouvez sélectionner une option dans le menu et sauvegarder!"
 	}
 }

@@ -1,0 +1,219 @@
+{
+	"hello": "Hallo",
+	"signout": "Uitloggen",
+	"myaccount": "Account",
+	"closeSlide": "Sluiten",
+	"store": "Store",
+
+	"settingsCategory": "Settings",
+	"billingCategory": "Administratie",
+	"trunkingCategory": "Trunking",
+
+	"editSettings": "Bewerk",
+	"changesSaved": "Wijzigingen Opgeslagen!",
+	"placeholderEmail": "jon_doe@yumminova.eu",
+	"phoneNumber": "Telefoonnummer",
+	"placeholderNumber": "+31222xxxxxx",
+
+	"user": {
+		"title": "Gebruiker",
+		"passwordsNotMatching": "Uw wachtwoorden komen niet overeen",
+
+		"email": "Emailadres",
+
+		"password": "Wachtwoord",
+		"newPassword": "Nieuw Wachtwoord",
+		"confirmPassword": "Bevestig Nieuwe wachtwoord",
+
+		"timezoneTitle": "Tijdzone & Taal",
+		"userTimezone": "Tijdzone",
+		"userLanguage": "Taal",
+
+		"colorblindTitle": "Kleurenblind-modus",
+		"colorblindEnabled": "Ingeschakeld",
+		"colorblindDisabled": "Uitgeschakeld",
+		"enableColorblind": "Kleurenblind-modus Inschakelen"
+	},
+
+	"account": {
+		"title": "Account",
+
+		"accountName": "Account Naam",
+		"accountId": "Account ID",
+
+		"accountRealm": "Account Realm",
+
+		"technicalContact": "Technisch Contact",
+		"technicalContactEmail": "Technisch Contact Email",
+		"technicalContactNumber": "Telefonnummer",
+
+		"timezoneTitle": "Tijdzone & Taal",
+		"userTimezone": "Tijdzone",
+		"userLanguage": "Taal",
+		"__comment": "UI-966: Added common control to select carrier in myaccount",
+		"__version": "v3.20_s0",
+		"carrierTitle": "Carrier (uitgaand) Instellingen"
+	},
+
+	"billing": {
+		"title": "Credit Card",
+		"missingCard": "Uw credit card info is incorrect, verlopen of niet aanwezig, update deze aub.",
+
+		"cardOnFile": "Kaart zoals bij ons bekend",
+		"billingName": "Naam",
+		"firstName": "Voornaam",
+		"lastName": "Achternaam",
+		"creditCardNumber": "Nummer",
+		"expirationDate": "Vervaldatum",
+		"year": "YYYY",
+		"month": "MM",
+		"securityCode": "CVV",
+		"changeCard": "Wijzigingen Opslaan",
+
+		"accountAdministrator": "Administratie Contact",
+		"accountAdministratorEmail": "Administratie Contact Emailadres",
+		"accountAdministratorNumber": "Telefoonnummer"
+	},
+
+	"trunks": {
+		"title": "Trunks",
+		"outbound": "Outbound",
+		"inbound": "Inbound",
+		"outboundTitle": "Outbound Trunking Limieten",
+		"inboundTitle": "Inbound Trunking Limieten",
+		"inboundCalling": "Unlimited Inbound Trunks",
+		"simultaneousTwoway": "$_Variable__/maand",
+		"simultaneousInbound": "$_Variable__/maand",
+		"perMonth": "/maand",
+		"quantity": "Stel nieuwe limiet In",
+		"trunks": "Trunks",
+		"twoWayCalling": "Unlimited Two-way Trunks",
+		"updateLimits": "Update Limieten",
+		"helpTwoway": "Het aantal Two-way trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (inkomend en uitgaand).",
+		"helpInbound": "Het aantal Inbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteerd (inkomend).",
+		"monthlyCharges": "Maandelijkse Kosten",
+		"__comment": "UI-664: Adding the real twoway sliders",
+		"__version": "v3.19_s2",
+		"twowayTitle": "Twoway Trunking Limits",
+		"twoway": "Two-way",
+		"outboundCalling": "Unlimited Outbound Trunks",
+		"helpOutbound": "Het aantal Outbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (uitgaand).",
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"currentLimit": "Huidige Limiet",
+		"exampleTwoway": "VOORBEELD: 10 Two-way Trunks stellen u in staat bijv. 4 inbound en 6 outbound gesprekken te voeren op het zelfde moment.",
+		"exampleInbound": "VOORBEELD: 5 Inbound Trunks stellen u in staat om 5 gelijktijdige inkommende gesprekken te voeren",
+		"exampleOutbound": "VOORBEELD: 10 Outbound Trunks stellen u in staat om 10 gelijktijdige gesprkken te voerne naar een extern nummer"
+	},
+
+	"balance" : {
+		"availableCredits": "Beschikbaar Krediet",
+		"minutesUsed": "Gebruikte minuten",
+		"callCharges": "Gesprekskosten",
+		"activeCall": "actief",
+
+		"title": "Per Minuut",
+		"creditBalance": "Beschikbaar Krediet",
+		"addCreditOne": "Voeg eenmalig Krediet toe",
+		"helpAddCreditOne": "Hiermeevoegt u eenmalig krediet toe aan uw account, dat krediet stelt u in staat onze diensten te gebruiken waaronder de kosten van gesprekken en eventueel nummers.",
+		"autoRecharge": "Auto Herladen",
+		"whenBalanceFalls": "Wanneer mijn krediet minder is dan",
+		"recharge": "Voeg dan dit bedrag automatisch toe",
+		"helpAutoRecharge": "Door auto herladen aan te zetten kunt u een ondergrens instellen, wanneer die grens is bereikt wordt uw account aangevuld met een herlading, die herlading specificeert u zelf. U hoeft dan niet meer handmatig krediet toe te voegen. maar vindt u dat prettiger, dan kan dat natuurlijk wel..",
+		"helpWhenBalanceFalls": "Geef de ondergrens aan, wanneer deze grens bereikt wordt proberen we uw krediet aan te vullen",
+		"helpRecharge": "Geef aan hoeveel krediet u wilt laten toevoegen. Wij adviseren te kijken naar uw verbruiks historie om een goed bedrag te bepalen.",
+		"payPerMinute": "Pay-per-minute stelt u in staat alleen te betalen voor wat u verbuikt.Voeg krediet toe aan uw account, de belkosten en dergelijke worden hier vanaf geboekt..",
+		"currentBalance": "Uw huidige krediet: $",
+		"turnoffRechargeConfirm": "Door Auto herladen uit te zetten moet u handmatig krediet toevoegen aan uw account, daarmee loopt u het risico dat wanneer dit niet snel genoeg gebeurt, u geen gesprekken meer kunt voeren. Wilt u doorgaan?",
+		"amount": "Bedrag",
+		"confirm": "Bevestig",
+		"placeholderThresholdRecharge": "5.00",
+		"placeholderRecharge": "50.00",
+		"placeholderAmount": "10.00",
+		"addCredit": "Voeg Krediet Toe",
+		"invalidAmount": "Er is iets mis met het gevraagde bedrag!Type een bedrag met enkel cijfers,een '.' of een ','",
+		"autoRechargeEnabled": "Auto Herladen is ingeschakeld!",
+		"autoRechargeCancelled": "Auto herladen is uitgeschakeld.",
+		"creditsAdded": "U heeft succesvol {{amount}} toegevoegd aan uw account",
+		"addCreditDialogTitle": "Voeg Krediet Toe",
+
+		"dateColumn": "Datum",
+		"durationColumn": "Minuten",
+		"amountColumn": "Bedrag",
+		"fromColumn": "Van",
+		"toColumn": "Naar",
+		"directionColumn": " ",
+		"accountColumn": "Account"
+	},
+
+	"servicePlan": {
+		"discount": "Korting",
+		"dueOn": "Te betalen voor",
+		"empty": "Uw service plan is leeg!",
+		"monthlyChargesTitle": "Maandelijkse Kosten",
+		"quantityTitle": "Aantal",
+		"rateTitle": "Tarief",
+		"serviceTitle": "Dienst",
+		"title": "Service Plan",
+		"titleHeader": "Service Plan",
+		"titles": {
+			"cnam": "CNAM",
+			"did_us": "US DIDs",
+			"e911": "112",
+			"inbound_cnam": "Inbound CNAM",
+			"inbound_trunk": "Inbound Trunks",
+			"inbound_trunks": "Inbound Trunks",
+			"port": "Porteringen",
+			"sip_device": "SIP Devices",
+			"sip_devices": "SIP Devices",
+			"tollfree_us": "US Tollfree",
+			"twoway_trunk": "Twoway Trunks",
+			"twoway_trunks": "Twoway Trunks",
+			"__comment": "UI-815: Improve how the prices and categories are displayed for the Trunks",
+			"__version": "v3.19_s1",
+			"outbound_trunk": "Outbound Trunks",
+			"outbound_trunks": "Outbound Trunks",
+			"user": "Gebruikers",
+			"users": "Gebruikers"
+		},
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"dueAmount": "Openstaand bedrag"
+	},
+
+	"transactions": {
+		"title": "Transacties",
+		"billingCycle": "Facturatie Cyclus",
+		"oneTimeCharge": "Eenmalige Kosten",
+		"monthlyCharge": "maandelijkse Kosten",
+		"serviceCharge": "Service Kosten - Pro rata",
+
+		"noData": "Tussen die twee datums waren er geen transacties !",
+
+		"serviceTitle": "Dienst",
+		"discount": "Korting",
+		"rateTitle": "Tarief",
+		"quantityTitle": "Aantal",
+		"monthlyChargesTitle": "Maandelijkse Kosten",
+		"declined": "Geweigerd",
+
+		"database_rollup": "Balance Carry-over",
+		"per_minute_call": "Per-Minute Gesprek",
+		"sub_account_per_minute_call": "Per-Minute Gesprekken (Sub-Account)",
+		"feature_activation": "Feature Activatie",
+		"sub_account_feature_activation": "Feature Activatie (Sub-Account)",
+		"number_activation": "Number Activation",
+		"sub_account_number_activation": "Number Activatie (Sub-Account)",
+		"manual_addition": "Manual Addition",
+		"sub_account_manual_addition": "Manual Additie (Sub-Account)",
+		"admin_discretion": "Admin Discretion",
+		"__comment": "UI-383: Fixing transactions for good",
+		"__version": "v3.20_s0",
+		"unknown": "Kosten",
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"startDate": "Start Datum",
+		"endDate": "Eind Datum",
+		"total": "Totaal"
+	}
+}

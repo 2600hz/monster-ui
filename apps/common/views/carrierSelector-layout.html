@@ -1,0 +1,24 @@
+<div class="carrier-selector">
+{{#unless carrierInfo.disabled}}
+	<legend>{{ i18n.carrierSelector.headline }}</legend>
+
+	{{#if carrierInfo.huntError}}
+		<div class="hunt-error alert">
+			{{ i18n.carrierSelector.huntError }}
+		</div>
+	{{/if}}
+
+	<div class="choices-wrapper clearfix">
+		{{#each carrierInfo.choices}}
+			<div class="carrier-choice{{#compare ../carrierInfo.type "===" value}} selected{{/compare}}" data-type="{{ value }}">
+				<i class="help-popover icon-question-sign" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>{{ friendlyName }}
+			</div>
+			<div class="table-split"></div>
+		{{/each}}
+	</div>
+
+	<div class="clearfix buttons-div">
+		<button type="button" id="accountsmanager_carrier_save" class="btn btn-success disabled carrier-save">{{ i18n.update }}</button>
+	</div>
+{{/unless}}
+</div>

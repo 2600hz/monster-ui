@@ -20,10 +20,10 @@
 									<input type="email" placeholder="{{ i18n.placeholderEmail }}" id="email" name="email" value="{{user.email}}" data-original_value="{{user.email}}"/>
 								</div>
 							</div>
-							<div class="control-group">
-								<div class="controls action-bar">
-									<a href="#" class="cancel">{{ i18n.cancel }}</a>
-									<button class="btn btn-success change" data-module="user" data-field="email">{{ i18n.saveChanges }}</button>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="email">{{ i18n.saveChanges }}</button>
 								</div>
 							</div>
 						</form>
@@ -57,10 +57,10 @@
 									<input type="password" id="confirm_password" name="confirm_password" data-original_value=""/>
 								</div>
 							</div>
-							<div class="control-group">
-								<div class="controls action-bar">
-									<a href="#" class="cancel">{{ i18n.cancel }}</a>
-									<button type="submit" class="btn btn-success change" data-module="user" data-field="password">{{ i18n.saveChanges }}</button>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="password">{{ i18n.saveChanges }}</button>
 								</div>
 							</div>
 						</form>
@@ -100,13 +100,14 @@
 										<option value="auto">{{i18n.languages.auto}}</option>
 										<option value="en-US"{{#compare user.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
 										<option value="fr-FR"{{#compare user.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+										<option value="ru-RU"{{#compare user.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
 									</select>
 								</div>
 							</div>
-							<div class="control-group">
-								<div class="controls action-bar">
-									<a href="#" class="cancel">{{ i18n.cancel }}</a>
-									<button type="submit" class="btn btn-success change" data-module="user" data-field="timezone">{{ i18n.saveChanges }}</button>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="timezone">{{ i18n.saveChanges }}</button>
 								</div>
 							</div>
 						</form>
@@ -137,13 +138,15 @@
 							<div class="control-group">
 								<label class="control-label" for="user_colorblind">{{ i18n.user.enableColorblind }}</label>
 								<div class="controls checkbox-container">
-									<input type="checkbox" id="user_colorblind" name="ui_flags.colorblind" {{#if user.ui_flags.colorblind}}checked{{/if}} />
+									{{#monsterCheckbox}}
+										<input type="checkbox" id="user_colorblind" name="ui_flags.colorblind" {{#if user.ui_flags.colorblind}}checked{{/if}} />
+									{{/monsterCheckbox}}
 								</div>
 							</div>
-							<div class="control-group">
-								<div class="controls action-bar">
-									<a href="#" class="cancel">{{ i18n.cancel }}</a>
-									<button type="submit" class="btn btn-success change" data-module="user" data-field="colorblind">{{ i18n.saveChanges }}</button>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="colorblind">{{ i18n.saveChanges }}</button>
 								</div>
 							</div>
 						</form>

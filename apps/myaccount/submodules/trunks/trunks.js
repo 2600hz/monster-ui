@@ -6,14 +6,6 @@ define(function(require){
 	var trunks = {
 
 		requests: {
-			'myaccount.trunks.getLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'GET'
-			},
-			'myaccount.trunks.updateLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -23,7 +15,6 @@ define(function(require){
 
 		_trunksRenderContent: function(args) {
 			var self = this;
-			console.log(args.key);
 			if(args.key === 'inbound') {
 				self.trunksRenderInbound(args.callback);
 			}
@@ -92,45 +83,41 @@ define(function(require){
 						totalAmountInbound = ui.value*amountInbound;
 						trunksInboundView.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
 
-						trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					}
 				});
 
 				trunksInboundView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									inbound_trunks: trunksInboundView.find('#slider_inbound').slider('value'),
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							inbound_trunks: trunksInboundView.find('#slider_inbound').slider('value'),
+							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										key: 'inbound',
-										data: updateData.inbound_trunks
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								key: 'inbound',
+								data: updateData.inbound_trunks
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderInbound();
-									//TODO toastr saved
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderInbound();
+							//TODO toastr saved
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksInboundView);
 
-				trunksInboundView.find('.slider-value-wrapper').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
+				trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});
@@ -163,45 +150,41 @@ define(function(require){
 
 						trunksOutboundView.find('.total-amount .total-amount-value').html(totalAmountOutbound.toFixed(2));
 
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					}
 				});
 
 				trunksOutboundView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									outbound_trunks: trunksOutboundView.find('#slider_outbound').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							outbound_trunks: trunksOutboundView.find('#slider_outbound').slider('value'),
+							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
+							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										data: updateData.outbound_trunks,
-										key: 'outbound'
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								data: updateData.outbound_trunks,
+								key: 'outbound'
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderOutbound();
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderOutbound();
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksOutboundView);
 
-				trunksOutboundView.find('.slider-value-wrapper').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
+				trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});
@@ -234,44 +217,40 @@ define(function(require){
 
 						trunksTwowayView.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
 
-						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					},
 					change: function(event, ui) {
-						trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					}
 				});
 
 				trunksTwowayView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-						function() {
-							self.trunksGetLimits(function(dataLimits) {
-								var updateData = {
-									twoway_trunks: trunksTwowayView.find('#slider_twoway').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
-								};
+					self.trunksGetLimits(function(dataLimits) {
+						var updateData = {
+							twoway_trunks: trunksTwowayView.find('#slider_twoway').slider('value'),
+							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+						};
 
-								updateData = $.extend(true, dataLimits.data, updateData);
+						updateData = $.extend(true, dataLimits.data, updateData);
 
-								self.trunksUpdateLimits(updateData, function(_data) {
-									var argsMenu = {
-										module: self.name,
-										data: updateData.twoway_trunks,
-										key: 'twoway'
-									};
+						self.trunksUpdateLimits(updateData, function(_data) {
+							var argsMenu = {
+								module: self.name,
+								data: updateData.twoway_trunks,
+								key: 'twoway'
+							};
 
-									monster.pub('myaccount.updateMenu', argsMenu);
-									self.trunksRenderTwoway();
-								});
-							});
-						}
-					);
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self.trunksRenderTwoway();
+						});
+					});
 				});
 
 				monster.pub('myaccount.renderSubmodule', trunksTwowayView);
 
-				trunksTwowayView.find('.slider-value-wrapper').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
+				trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 
 				callback && callback();
 			});
@@ -281,8 +260,8 @@ define(function(require){
 		trunksGetLimits: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.trunks.getLimits',
+			self.callApi({
+				resource: 'limits.get',
 				data: {
 					accountId: self.accountId,
 				},
@@ -298,8 +277,8 @@ define(function(require){
 		trunksUpdateLimits: function(limits, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.trunks.updateLimits',
+			self.callApi({
+				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
 					data: limits

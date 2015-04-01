@@ -8,22 +8,6 @@ define(function(require){
 	var balance = {
 
 		requests: {
-			'myaccount.balance.getFilteredTransactions': {
-				url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason=only_calls',
-				verb: 'GET'
-			},
-			'myaccount.balance.getDescendants': {
-				url: 'accounts/{accountId}/descendants',
-				verb: 'GET'
-			},
-			'myaccount.balance.getLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'GET'
-			},
-			'myaccount.balance.updateLimits': {
-				url: 'accounts/{accountId}/limits',
-				verb: 'POST'
-			}
 		},
 
 		subscribe: {
@@ -125,7 +109,7 @@ define(function(require){
 								self._balanceRenderContent(args);
 							});
 
-							balance.find('#filter_transactions').on('click', function() {
+							balance.find('.filter-transactions').on('click', function() {
 								/* Bug because of Infinite scrolling... we need to manually remove tr */
 								monster.ui.table.balance.find('tbody tr').remove();
 								monster.ui.table.balance.fnClearTable();
@@ -136,11 +120,11 @@ define(function(require){
 								self.balanceRefreshTransactionsTable(balance, from, to, defaults.fieldData.accounts);
 							});
 
-							balance.find('.action-number#download').on('click', function() {
+							balance.find('.download-transactions').on('click', function() {
 								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 									dlTo = monster.util.dateToEndOfGregorianDay(to);
 
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=2&identifier=metadata&accept=csv&auth_token=' + self.authToken;
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.authToken;
 							});
 
 							monster.ui.table.balance.fnAddData(renderData.tabData);
@@ -273,17 +257,22 @@ define(function(require){
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
 					var duration = self.i18n.active().balance.active_call,
-						friendlyDate = monster.util.toFriendlyDate(v.created),
+						friendlyDate = monster.util.toFriendlyDate(v.created, 'MM/DD/year - hh:mm'),
 						accountName = '-',
-						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3);
+						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
+						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
+						toField = monster.util.formatPhoneNumber(v.metadata.to || '').replace(/@.*/, '');
 
 					if('duration' in v.metadata) {
 						duration = Math.ceil((parseInt(v.metadata.duration))/60),
 						data.totalMinutes += duration;
 					}
 
-					if('account_id' in v.metadata) {
-						accountName = mapAccounts[v.metadata.account_id].name;
+					if(v.hasOwnProperty('sub_account_name')) {
+						accountName = v.sub_account_name;
+					}
+					else if(v.hasOwnProperty('sub_account_id')) {
+						accountName = mapAccounts.hasOwnProperty(v.sub_account_id) ? mapAccounts[v.sub_account_id].name : '-';
 					}
 
 					data.totalCharges += parseFloat(v.amount);
@@ -293,8 +282,8 @@ define(function(require){
 						v.call_id || '-',
 						v.metadata.call || '-',
 						friendlyDate || '-',
-						monster.util.formatPhoneNumber(v.metadata.from) || '-',
-						monster.util.formatPhoneNumber(v.metadata.to) || '-',
+						fromField || '-',
+						toField || '-',
 						accountName || '-',
 						duration || '-',
 						friendlyAmount || '-'
@@ -364,6 +353,9 @@ define(function(require){
 					}
 
 					monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
+						bScrollInfinite: true,
+						bScrollCollapse: true,
+						sScrollY: '300px',
 						sDom: '<"table-custom-actions">frtlip',
 						aaSorting: [[0, 'desc']]
 					});
@@ -386,16 +378,15 @@ define(function(require){
 				parent = params.parent,
 				data = params.data,
 				stateSwitch = 'manual',
-				autoRecharge = data.topup.enabled;
+				autoRecharge = data.topup.enabled || false,
+				autoRechargeSwitch = parent.find('#auto_recharge_trigger');
 
 			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
 
-			parent.find('.switch').bootstrapSwitch()
-								 .on('switch-change', function (e, dataSwitch) {
-				if(dataSwitch.value === true) {
+			autoRechargeSwitch.on('change', function() {
+				if($(this).is(':checked')) {
 					parent.find('#recharge_content').slideDown('fast')
-				}
-				else {
+				} else {
 					parent.find('#recharge_content').slideUp();
 
 					if(autoRecharge === true) {
@@ -410,12 +401,41 @@ define(function(require){
 							function() {
 								parent.find('#recharge_content').slideDown();
 								stateSwitch = 'manual';
-								parent.find('.switch').bootstrapSwitch('setState', true);
+								autoRechargeSwitch.prop('checked', autoRecharge);
 							}
 						);
 					}
 				}
-			}).bootstrapSwitch('setState', autoRecharge);
+			});
+			autoRechargeSwitch.prop('checked', autoRecharge);
+			parent.find('#recharge_content').toggle(autoRecharge);
+
+			// parent.find('.switch').bootstrapSwitch()
+			// 					 .on('switch-change', function (e, dataSwitch) {
+			// 	if(dataSwitch.value === true) {
+			// 		parent.find('#recharge_content').slideDown('fast')
+			// 	}
+			// 	else {
+			// 		parent.find('#recharge_content').slideUp();
+
+			// 		if(autoRecharge === true) {
+			// 			monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
+			// 				function() {
+			// 					self.balanceTurnOffTopup(function() {
+			// 						toastr.success(self.i18n.active().balance.autoRechargeCancelled);
+			// 						autoRecharge = false;
+			// 						//autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+			// 					})
+			// 				},
+			// 				function() {
+			// 					parent.find('#recharge_content').slideDown();
+			// 					stateSwitch = 'manual';
+			// 					parent.find('.switch').bootstrapSwitch('setState', true);
+			// 				}
+			// 			);
+			// 		}
+			// 	}
+			// }).bootstrapSwitch('setState', autoRecharge);
 
 			parent.find('#confirm_recharge').on('click', function() {
 				var dataTopUp = {
@@ -548,10 +568,10 @@ define(function(require){
 		balanceGetAccounts: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.getDescendants',
+			self.callApi({
+				resource: 'account.listDescendants',
 				data: {
-					accountId: self.accountId,
+					accountId: self.accountId
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -566,8 +586,8 @@ define(function(require){
 		balanceGetLimits: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.getLimits',
+			self.callApi({
+				resource: 'limits.get',
 				data: {
 					accountId: self.accountId,
 				},
@@ -594,15 +614,16 @@ define(function(require){
 				params.from = dates.from;
 			}
 
-			var from = monster.util.dateToBeginningOfGregorianDay(params.from);
-			to = monster.util.dateToEndOfGregorianDay(params.to);
+			var from = monster.util.dateToBeginningOfGregorianDay(params.from),
+				to = monster.util.dateToEndOfGregorianDay(params.to);
 
-			monster.request({
-				resource: 'myaccount.balance.getFilteredTransactions',
+			self.callApi({
+				resource: 'balance.filtered',
 				data: {
 					accountId: self.accountId,
 					from: from,
-					to: to
+					to: to,
+					reason: 'only_calls'
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -616,8 +637,8 @@ define(function(require){
 		balanceUpdateLimits: function(limits, success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.balance.updateLimits',
+			self.callApi({
+				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
 					data: limits

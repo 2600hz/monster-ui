@@ -7,9 +7,11 @@ require.config({
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'chart': 'js/lib/chart.min',
+		'card': 'js/lib/card',
 		'chosen': 'js/lib/jquery.chosen.min',
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
+		'dependClass': 'js/lib/jquery.dependClass',
 		'ddslick': 'js/lib/jquery.ddslick.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
@@ -35,11 +37,12 @@ require.config({
 		'plugins': 'js/plugins',
 		'postal': 'js/lib/postal-0.8.2',
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
+		'slider': 'js/lib/jquery.slider',
 		'socket': 'js/lib/socket.io.min',
 		'timepicker': 'js/lib/jquery.timepicker.min',
 		'toastr': 'js/lib/toastr-1.3.0',
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
-		'underscore': 'js/lib/underscore-1.4.4.min',
+		'underscore': 'js/lib/underscore.min',
 		'validate': 'js/lib/jquery.validate.min',
 		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min'
 	},
@@ -54,6 +57,7 @@ require.config({
 		'handlebars': {
 			'exports': 'Handlebars'
 		},
+		'slider': ['dependClass'],
 		'plugins': ['jquery'],
 		'kazoosdk': ['jquery'],
 		'touch-punch': ['jqueryui'],

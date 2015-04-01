@@ -2,7 +2,12 @@
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",
-		"searchDatabase": "Search in every account for"
+		"searchDatabase": "Search in every account for",
+		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
+		"breadcrumbSearchResults": "search results for \"{{searchValue}}\"",
+		"__comment": "UI-1271: Updating the search link",
+		"__version": "v3.20_s3",
+		"searchReset": "Click again to clear the search"
 	},
 	"numbers": {
 		"mainNumber": "Office Number",
@@ -37,8 +42,8 @@
 		"searchNumbers": "Search a number...",
 		"go": "Go",
 		"deleteNumbers": "Delete",
-		"successDelete": "You successfuly deleted {{count}} phone number(s) from your account(s)",
-		"successMove": "You successfuly moved {{count}} phone number(s) to the following account: {{ accountName }}",
+		"successDelete": "You successfully deleted {{count}} phone number(s) from your account(s)",
+		"successMove": "You successfully moved {{count}} phone number(s) to the following account: {{ accountName }}",
 		"noSpareNumber": "There are no spare numbers in this account.",
 		"noUsedNumber": "There are no numbers used in any application for this account.",
 		"spareNumbers": "Spare Numbers",
@@ -73,7 +78,23 @@
 				"questionPartThree": "?",
 				"button": "move number(s)"
 			}
-		}
+		},
+
+		"__comment": "UI-1219: Adding the prepend feature to numbers",
+		"__version": "v3.20_s1",
+		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
+
+		"__comment": "UI-1285: Adding the Sync Action to the Number Manager",
+		"__version": "3.19",
+		"sync": {
+			"label": "Sync",
+			"success": "You successfully re-synced the numbers with the database",
+			"help": "If you think some of the numbers are not displayed in the right category (Spare/In Use), you can use this feature to re-synchronize your numbers with the database."
+		},
+
+		"__comment": "UI-1153: Show warning icon next to numbers being transfered",
+		"__version": "v3.20_s3",
+		"portIconHelp": "This number is in the process of being ported and will be deleted if the port fails. It only appears for setting up purposes and is not configured to handle calls"
 	},
 
 	"callerId": {
@@ -98,7 +119,6 @@
 		"addressLine2": "Address Line 2",
 		"city": "City",
 		"dialogTitle": "Edit 911 Location",
-		"errorUpdate": "Failed to update the E911 Settings for this phone number",
 		"gmapPinLabel": "Your+E911+Location",
 		"infoBox": "This address will show up to 911 emergency services when you dial it from your number.",
 		"label": "e911",
@@ -194,8 +214,12 @@
 		"progressBarLeft": "Add Numbers",
 		"progressBarMiddle": "Submit Documents",
 		"progressBarRight": "Confirm Order",
+		"requiredConditions": "Please agree with all the conditions",
+		"comingSoon": "Coming Soon!",
+		"unknownCarrier": "Unknown Carrier",
 		"state": {
 			"completed": "Completed",
+			"pending": "Pending",
 			"rejected": "Rejected",
 			"scheduled": "Scheduled",
 			"submitted": "Submitted",
@@ -221,6 +245,9 @@
 			},
 			"bill": {
 				"legend": "Bill info"
+			},
+			"numbers": {
+				"legend": "Numbers"
 			},
 			"confirm": {
 				"deleteComment": "Are you sure you want to delete this comment?"
@@ -266,13 +293,28 @@
 		"pendingOrders": {
 			"title": "Pending Orders",
 			"newPortLink": "Start New Transfert (port)",
-			"tableOrderName": "Name",
-			"tableOrderDate": "Requested Date",
-			"tableOrderStatus": "State",
-			"tableOrderAction": "Actions",
-			"continueButton": "continue",
-			"infoButton": "info",
-			"noOrder": "No port"
+			"tableOrderName": "Request name",
+			"tableOrderDate": "Created on",
+			"tableOrderState": "Request state",
+			"continueButton": "Continue",
+			"deleteButton": "Delete",
+			"infoButton": "Info",
+			"commentsButton": "Comments",
+			"noOrder": "No existing port request for this account",
+			"__comment": "UI-1302: Add scheduled date when state is set to pending",
+			"__version": "v3.20_s3",
+			"tableOrderScheduled": "Scheduled date",
+			"scheduledDatePopup": {
+				"title": "Edit Scheduled Date",
+				"label": {
+					"scheduledDate": "Scheduled date"
+				}
+			},
+			"__comment": "UI-1303: ",
+			"__version": "v3.20_3",
+			"accounts": "Accounts",
+			"requests": "Requests",
+			"all": "All"
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",
@@ -308,7 +350,8 @@
 		"toastr": {
 			"success": {
 				"request": {
-					"update": "The port request has been updated"
+					"update": "The port request has been updated",
+					"delete": "The port request has been deleted"
 				},
 				"comment": {
 					"delete": "The comment was deleted successfully"
@@ -320,12 +363,16 @@
 				},
 				"mimeTypes": "The following files are not in a supported format: ",
 				"size": "The following files are too big: ",
-				"number": {
-					"single": "The number you entered is invalid !!!",
-					"multiple": "The numbers you entered are invalid !!!"
-				}
+				"submit": {
+					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
+				},
+				"number": "One or more numbers you entered are not in the right format!"
 			}
-		}
+		},
+		"__comment": "UI-1302: Add scheduled date when state is set to pending",
+		"__version": "v3.20_s3",
+		"noScheduledDate": "None",
+		"addDate": "Add date"
 	},
 
 	"chooseModel": {
@@ -335,7 +382,7 @@
 		"missingBrand": "The brand of my device is not listed here",
 		"missingDevice": "My device is not listed here",
 		"title": "Selection of the device",
-		"create": "create device"
+		"create": "Create Device"
 	},
 
 	"servicePlanDetails": {
@@ -350,5 +397,46 @@
 			"users": "Users"
 		},
 		"noServicePlan": "No Service Plan selected."
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Distribute",
+		"maxDurationTooltip": "Click this box to change the maximum duration for your ring group. You must enter a number between 30 and 999.",
+		"doNotRing": "Do not ring"
+	},
+
+	"__comment": "UI-966: We want to be able to customize the carrier choice in different plances, so we build a common control",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Carrier",
+		"headline": "Select the carrier strategy for this account",
+		"useBlended": {
+			"friendlyName": "Use Blended Carriers",
+			"help": "This will route the calls to the global carriers set up on the master account"
+		},
+		"useReseller": {
+			"friendlyName": "Use {{variable}}'s Carriers",
+			"help": "This will route the calls to {{variable}}'s carriers.",
+			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "Use your Reseller's Carriers",
+			"defaultHelp": "This will route the calls to your Reseller's Carriers"
+		},
+		"byoc": {
+			"friendlyName": "Bring your Own Carrier (Custom)",
+			"help": "This will route the calls to the carriers set up for this account via the Carriers app."
+		},
+		"saveSuccess": "You successfully updated the Carrier settings for this account!",
+		"huntError": "Your existing settings for your no_match route are not supported in Monster UI, don't change anything in this screen if you wish to continue to use these settings. Otherwise, select one of the option in the dropdown!"
+	},
+
+	"__comment": "UI-1219: Adding the prepend feature to numbers",
+	"__version": "v3.20_s1",
+	"numberPrepend": {
+		"dialogTitle": "Number Prepend Setup",
+		"title": "Text to prepend",
+		"label": "Prepend",
+		"help": "This text will appear before your number when receiving a call. This can be used to better identify which number was called when you use more than one.",
+		"successUpdate": "You successfully updated the prepended text for {{phoneNumber}}"
 	}
 }

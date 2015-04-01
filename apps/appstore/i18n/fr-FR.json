@@ -27,5 +27,6 @@
 	"selectUsersLink": "Utilisateurs Sélectionnés ({{selectedUsers}})",
 	"alerts": {
 		"noUserSelected": "Vous devez sélectionner au moins un utilisateur pour cette app.<br><br>Si vous ne voulez autoriser aucun utilisateur pour cette app, vous pouvez simplement la désactiver (Off)."
-	}
+	},
+	"ok": "OK"
 }

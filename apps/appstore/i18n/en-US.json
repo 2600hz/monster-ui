@@ -27,5 +27,8 @@
 	"selectUsersLink": "Selected Users ({{selectedUsers}})",
 	"alerts": {
 		"noUserSelected": "You must select at least one user for this app.<br><br>If you don't want any user to use this app, you can turn it off."
-	}
+	},
+	"__comment": "UI-1190: Updating the way apps are turned on/off",
+	"__version": "v3.20_s2",
+	"ok": "OK"
 }

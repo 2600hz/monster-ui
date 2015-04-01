@@ -19,13 +19,23 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}' },
 			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
-			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' }
+			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
+			'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
+			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'}
+		},
+		appsStore: {
+			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
+			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' },
+			'getIcon': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/icon', dataType: 'text' }
 		},
 		auth: {
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
 		},
 		directory: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
 		},
 		channel: {
@@ -94,13 +104,18 @@
 			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
 			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
+		inspector: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/call_inspector/{callId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/call_inspector' }
+		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
-			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'}
+			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'},
+			'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' }
 		},
 		group: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/groups/{groupId}' },
@@ -114,7 +129,21 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/callflows/{callflowId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' },
+			'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}'},
+			'searchByNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=number&v={value}'}
+		},
+		clickToCall: {
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/clicktocall' },
+			'get': { verb: 'GET',  url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'update': { verb: 'GET', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/clicktocall' },
+			'connect': { verb: 'POST', url: 'accounts/{accountId}/clicktocall/{clickToCallId}/connect' }
+		},
+		pivot: {
+			'listDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug' },
+			'getDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug/{callId}' }
 		},
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
@@ -130,9 +159,11 @@
 			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
 			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
+			'matchClassifier': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers/{phoneNumber}' },
 			'search': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 			'searchBlocks': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
-			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' }
+			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' },
+			'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' }
 		},
 		device: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
@@ -191,7 +222,9 @@
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
+			'getCsv': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv' },
 			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
+			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
 			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 		},
@@ -201,6 +234,10 @@
 		},
 		balance: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
+			'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
+			'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
+			'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
+			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
 			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' }
 		},
 		billing: {
@@ -221,10 +258,22 @@
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' }
 		},
+		registrations: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
+		},
+		webhooks: {
+			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'create': { 'verb': 'PUT', 'url': 'accounts/{accountId}/webhooks' },
+			'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
+			'accountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
+			'attempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' }
+		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
-			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome' },
+			'getWelcomeByDomain': { verb: 'GET', url: 'whitelabel/{domain}/welcome', type: 'text/html', dataType: 'html' },
 			'get': { verb: 'GET', url: 'accounts/{accountId}/whitelabel' },
 			'getLogo': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/logo' },
 			'getWelcome': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/welcome', type: 'text/html', dataType: 'html' },
@@ -240,7 +289,8 @@
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}' },
 			'updateNotificationText': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/plain', dataType: 'text' },
 			'updateNotificationHtml': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/html', dataType: 'html' },
-			'previewNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}/preview' }
+			'previewNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}/preview' },
+			'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' }
 		}
 	},
 	authTokens = {};
@@ -283,7 +333,10 @@
 
 						if('filters' in methodSettings) {
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
-								requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + filterValue;
+								var valueArray = [].concat(filterValue);
+								$.each(valueArray, function(key, value) {
+									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+								});
 							});
 						}
 
@@ -359,6 +412,13 @@
 			rurlData = /\{([^\}]+)\}/g,
 			data = $.extend({}, options.data);
 
+		settings.url = settings.url.replace(rurlData, function (m, key) {
+			if (key in data) {
+				mappedKeys.push(key);
+				return data[key];
+			}
+		});
+
 		settings.error = function requestError (error, status) {
 			options.onRequestEnd && options.onRequestEnd(error, options);
 
@@ -368,9 +428,15 @@
 				parsedError = $.parseJSON(error.responseText);
 			}
 
+			// Added this to be able to display more data in the UI
+			error.monsterData = {
+				url: settings.url,
+				verb: settings.type
+			}
+
 			options.onRequestError && options.onRequestError(error, options);
 
-			options.error && options.error(parsedError, error);
+			options.error && options.error(parsedError, error, options.onRequestError);
 		};
 
 		settings.success = function requestSuccess(responseData, status, jqXHR) {
@@ -378,15 +444,8 @@
 
 			options.onRequestSuccess && options.onRequestSuccess(responseData, options);
 
-			options.success && options.success(responseData);
+			options.success && options.success(responseData, options.onRequestSuccess);
 		};
-
-		settings.url = settings.url.replace(rurlData, function (m, key) {
-			if (key in data) {
-				mappedKeys.push(key);
-				return data[key];
-			}
-		});
 
 		// We delete the keys later so duplicates are still replaced
 		$.each(mappedKeys, function(index, name) {
@@ -394,12 +453,23 @@
 		});
 
 		if(settings.type.toLowerCase() !== 'get'){
-			var postData = data.data;
+			var postData = data.data,
+				envelopeKeys = {};
+
+			if(data.hasOwnProperty('envelopeKeys')) {
+				var protectedKeys = ['data', 'accept_charges'];
+
+				_.each(data.envelopeKeys, function(value, key) {
+					if(protectedKeys.indexOf(key) < 0) {
+						envelopeKeys[key] = value
+					}
+				});
+			};
 
 			if(settings.contentType === 'application/json') {
-				var payload = {
+				var payload = $.extend(true, {
 					data: data.data || {}
-				};
+				}, envelopeKeys);
 
 				if('uiMetadata' in options) {
 					payload.data.ui_metadata = options.uiMetadata;

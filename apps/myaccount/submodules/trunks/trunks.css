@@ -1,77 +1,114 @@
-.myaccount-content .trunks-content {
-	display: block;
-	margin: auto;
-	width: 500px;
+#myaccount .myaccount-content .trunks-content .title-bar .title-box.message-box {
+	height: 60px;
+	float: right;
+	width: 200px;
+	overflow: hidden;
 }
 
-.myaccount-content .trunks-content .slider-value {
-	background: #22ccff;
-	border: 1px solid #FFFFFF;
-	box-shadow: 1px 1px 4px #CCCCCC;
-	color: #FFFFFF;
-	height: 40px;
-	margin: 0 10px 0 46px;
-	text-align: center;
-	width: 50px;
+#myaccount .myaccount-content .trunks-content .title-bar .title-box.message-box .title {
+	line-height: 20px;
+	font-weight: 400;
+	font-size: 12px;
 }
 
-.myaccount-content .trunks-content .slider-value:after {
-	border-color: #22CCFF transparent;
-	border-style: solid;
-	border-width: 7px 7px 0;
-	content: "";
-	display: block;
-	left: 18px;
+#myaccount .myaccount-content .trunks-content .section-button {
+	margin-top: 40px;
+	padding-top: 20px;
+	border-top: solid 1px #c0c0c9;
+}
+
+#myaccount .myaccount-content .trunks-content .slider-title {
+	display: inline-block;
+}
+
+#myaccount .myaccount-content .trunks-content .slider-wrapper {
+	display: inline-block;
+	width: 300px;
+	margin-left: 20px;
+	padding-top: 50px;
 	position: relative;
-	width: 0;
 }
 
-.myaccount-content .trunks-content .total-amount {
+.ui-slider-range {
+	background: #22a5ff;
+}
+
+#myaccount .myaccount-content .trunks-content .slider-wrapper .ui-slider {
+	border: solid 1px #c0c0c9;
+	height: 6px;
+	background: #fff;
+}
+
+#myaccount .myaccount-content .trunks-content .slider-wrapper .ui-slider .ui-slider-handle {
+	height: 18px;
+	width: 18px;
+	border-radius: 10px;
+	top: -7px;
+	background: #f0f0f9;
+	border: solid 1px #c0c0c9;
+	cursor: pointer;
+}
+
+#myaccount .myaccount-content .trunks-content .slider-wrapper .slider-value {
+	position: absolute;
+	top: 0px;
+	color: #22a5ff;
+	border: solid 1px #0297e5;
+	padding: 6px 4px;
+	font-size: 24px;
 	font-weight: 600;
+	transform: translateX(-50%);
+	margin-left: 0.5%;
+	background: #fff;
 }
 
-.myaccount-content .trunks-content #slider_twoway .ui-slider-range, .myaccount-content .trunks-content #slider_twoway .ui-slider-handle, .myaccount-content .trunks-content #slider_inbound .ui-slider-range, .myaccount-content .trunks-content #slider_inbound .ui-slider-handle {
-	background-color: #22ccff;
+#myaccount .myaccount-content .trunks-content .slider-wrapper .slider-value:after {
+	border-color: #fff transparent;
+	border-style: solid;
+	border-width: 9px 6px 0;
+	content: "";
+	left: 50%;
+	bottom: -7px;
+	transform: translateX(-50%);
+	position: absolute;
+	
 }
 
-.myaccount-content .trunks-content .section-button {
-	text-align: right;
+#myaccount .myaccount-content .trunks-content .slider-wrapper .slider-value:before {
+	border-color: #22a5ff transparent;
+	border-style: solid;
+	border-width: 9px 6px 0;
+	content: "";
+	left: 50%;
+	bottom: -9px;
+	transform: translateX(-50%);
+	position: absolute;
 }
 
-.myaccount-content .trunks-content .section-button .update-limits {
-	margin-top: 50px;
+#myaccount .myaccount-content .trunks-content .question-box {
+	display: inline-block;
+	float: right;
+	background-color: #f0f0f9;
+	padding: 10px;
+	font-size: 12px;
+	border: solid 1px #c0c0c9;
+	margin-top: 10px;
 }
 
-.myaccount-content .trunks-content .section-slider-value{
-	max-width: 580px;
+#myaccount .myaccount-content .trunks-content .question-box > * {
+	display: inline-block;
 }
 
-.myaccount-content .trunks-content .section-slider {
-	margin-top: 20px;
+#myaccount .myaccount-content .trunks-content .question-box .box-message {
+	width: 240px;
 }
 
-.myaccount-content .trunks-content  .slider-title {
-	width: 60px;
-	float: left;
-	margin: -5px 10px 0 0;
+#myaccount .myaccount-content .trunks-content .question-box .box-icon {
+	width: 40px;
+	vertical-align: top;
 }
 
-.myaccount-content .trunks-content .section-slider .slider-wrapper {
-	width: 430px;
-	float: left;
-}
-
-.myaccount-content .trunks-content .slider-value-wrapper {
-	display: block;
-	position: relative;
-}
-
-.myaccount-content .trunks-content .slider-value-wrapper > * {
-	float: left;
-	line-height: 40px;
-}
-
-.myaccount-content .trunks-content  .value-slider {
-	position: relative;
-	display: block;
+#myaccount .myaccount-content .trunks-content .question-box .box-icon i {
+	color: #c0c0c9;
+	font-size: 30px;
 }

@@ -10,9 +10,11 @@
 
 @import url('toastr.css');
 @import url('jquery.isotope.css');
+@import url('jslider/jslider.css');
 @import url('jquery.timepicker.css');
 @import url('tables/tables.css');
 @import url('icheck/flat.css');
+@import url('card.css');
 
 @import url('leaflet/leaflet.min.css');
 @import url('leaflet/leaflet.ie.min.css');

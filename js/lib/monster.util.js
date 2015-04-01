@@ -7,15 +7,15 @@ define(function(require){
 	var util = {
 
 		/*
-			This function will automatically logout the user after %wait% minutes (defaults to 15).
+			This function will automatically logout the user after %wait% minutes (defaults to 30).
 		   	This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
 		*/
 		autoLogout: function() {
-			if(!monster.config.hasOwnProperty('logoutTimer') || monster.config.logoutTimer > 0) {
+			if(!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
 				var i18n = monster.apps['core'].i18n.active(),
 					timerAlert,
 					timerLogout,
-					wait = monster.config.logoutTimer || 15,
+					wait = monster.config.whitelabel.logoutTimer || 30,
 					alertBeforeLogout = 2,
 					alertTriggered = false,
 					alertDialog,
@@ -85,80 +85,75 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(timestamp, format){
-			var self = this;
+		toFriendlyDate: function(date, format){
+			var self = this
+				i18n = monster.apps.core.i18n.active(),
+				format2Digits = function(number) {
+					return number < 10 ? '0'.concat(number) : number;
+				},
+				today = new Date(),
+				todayYear = today.getFullYear(),
+				todayMonth = format2Digits(today.getMonth() + 1),
+				todayDay = format2Digits(today.getDate()),
+				// date can be either a JS Date or a gregorian timestamp
+				date = typeof date === 'object' ? date : self.gregorianToDate(date),
+				year = date.getFullYear().toString().substr(2, 2),
+				fullYear = date.getFullYear(),
+				month = format2Digits(date.getMonth() + 1),
+				calendarMonth = i18n.calendar.month[date.getMonth()],
+				day = format2Digits(date.getDate()),
+				weekDay = i18n.calendar.day[date.getDay()],
+				hours = format2Digits(date.getHours()),
+				minutes = format2Digits(date.getMinutes()),
+				seconds = format2Digits(date.getSeconds()),
+				patterns = {
+					'year': fullYear,
+					'YY': year,
+					'month': calendarMonth,
+					'MM': month,
+					'day': weekDay,
+					'DD': day,
+					'hh': hours,
+					'mm': minutes,
+					'ss': seconds
+				};
 
-			if (typeof timestamp === 'number') {
-				var i18n = monster.apps.core.i18n.active(),
-					format2Digits = function(number) {
-						return number < 10 ? '0'.concat(number) : number;
-					},
-					today = new Date(),
-					todayYear = today.getFullYear(),
-					todayMonth = format2Digits(today.getMonth() + 1),
-					todayDay = format2Digits(today.getDate()),
-					date = self.gregorianToDate(timestamp),
-					year = date.getFullYear().toString().substr(2, 2),
-					fullYear = date.getFullYear(),
-					month = format2Digits(date.getMonth() + 1),
-					calendarMonth = i18n.calendar.month[date.getMonth()],
-					day = format2Digits(date.getDate()),
-					weekDay = i18n.calendar.day[date.getDay()],
-					hours = format2Digits(date.getHours()),
-					minutes = format2Digits(date.getMinutes()),
-					seconds = format2Digits(date.getSeconds()),
-					patterns = {
-						'year': fullYear,
-						'YY': year,
-						'month': calendarMonth,
-						'MM': month,
-						'day': weekDay,
-						'DD': day,
-						'hh': hours,
-						'mm': minutes,
-						'ss': seconds
-					};
-
-				if (typeof format === 'string') {
-					if (format === 'short') {
-						format = 'MM/DD/year'
-					}
+			if (typeof format === 'string') {
+				if (format === 'short') {
+					format = 'MM/DD/year'
 				}
-				else {
-					format = 'MM/DD/year - hh:mm12h'
-				}
-
-				if (format.indexOf('12h') > -1) {
-					var suffix;
-
-					if (hours >= 12) {
-						if (hours !== 12) {
-							hours -= 12;
-						}
-
-						suffix = i18n.calendar.suffix.pm;
-					}
-					else {
-						if (hours === '00') {
-							hours = 12
-						}
-
-						suffix = i18n.calendar.suffix.am;
-					}
-
-					patterns.hh = hours;
-					patterns['12h'] = suffix;
-				}
-
-				_.each(patterns, function(v, k){
-					format = format.replace(k, v);
-				});
-
-				return format;
 			}
 			else {
-				console.log('Timestamp should be a number');
+				format = 'MM/DD/year - hh:mm12h'
 			}
+
+			if (format.indexOf('12h') > -1) {
+				var suffix;
+
+				if (hours >= 12) {
+					if (hours !== 12) {
+						hours -= 12;
+					}
+
+					suffix = i18n.calendar.suffix.pm;
+				}
+				else {
+					if (hours === '00') {
+						hours = 12
+					}
+
+					suffix = i18n.calendar.suffix.am;
+				}
+
+				patterns.hh = hours;
+				patterns['12h'] = suffix;
+			}
+
+			_.each(patterns, function(v, k){
+				format = format.replace(k, v);
+			});
+
+			return format;
 		},
 
 		friendlyTimer: function(seconds) {
@@ -317,6 +312,88 @@ define(function(require){
 			return randomString;
 		},
 
+		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
+		// The input needed is an object from the array of transaction returned by the /transactions API.
+		formatTransaction: function(transaction, app) {
+			transaction.isARefund = false;
+
+			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
+			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
+				&& !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
+
+				var mapDiscounts = {};
+				_.each(transaction.metadata.discounts, function(discount) {
+					mapDiscounts[discount.id] = discount;
+				});
+
+				transaction.type = 'monthly';
+				transaction.services = [];
+
+				$.each(transaction.metadata.add_ons, function(k, addOn) {
+					var discount = 0,
+						discountName = 'discount_' + addOn.id,
+						discountItem;
+
+					if(mapDiscounts.hasOwnProperty('discountName')) {
+						discountItem = mapDiscounts[discountName];
+						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
+					}
+
+					addOn.amount = parseFloat(addOn.amount).toFixed(2);
+					addOn.quantity = parseFloat(addOn.quantity);
+					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
+
+					transaction.services.push({
+						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
+						rate: addOn.amount,
+						quantity: addOn.quantity,
+						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+						monthly_charges: addOn.monthly_charges
+					});
+				});
+
+				transaction.services.sort(function(a, b) {
+					return parseFloat(a.rate) <= parseFloat(b.rate);
+				});
+			}
+			else {
+				transaction.type = 'charges';
+			}
+
+			transaction.amount = parseFloat(transaction.amount).toFixed(2);
+
+
+			if(transaction.hasOwnProperty('code')) {
+				if(transaction.code % 1000 < 500) {
+					transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
+				}
+				else {
+					transaction.isARefund = true;
+
+					if(transaction.code === 9999) {
+						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
+					}
+					else {
+						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code - 500] + ' ' + app.i18n.active().transactions.refundText;
+					}
+				}
+			}
+			
+			// If status is missing or among the following list, the transaction is approved
+			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized','settled','settlement_confirmed'].indexOf(transaction.status) >= 0;
+
+			if(!transaction.approved) {
+				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
+			}
+
+			// Our API return created but braintree returns created_at
+			transaction.created = transaction.created_at || transaction.created; 
+
+			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created, 'MM/DD/year hh:mm:ss');
+
+			return transaction;
+		},
+
 		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
     	sort: function(dataSet, secondArg) {
 			var fieldName = 'name',
@@ -424,6 +501,40 @@ define(function(require){
 			}
 
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
+		},
+
+		formatPrice: function(value, decimals) {
+			var decimals = parseInt(decimals),
+				decimalCount = decimals >= 0 ? decimals : 2,
+				roundedValue = Math.round(Number(value)*Math.pow(10,decimalCount))/Math.pow(10,decimalCount);
+			
+			return roundedValue.toFixed( ((parseInt(value) == value) && (isNaN(decimals) || decimals < 0)) ? 0 : decimalCount );
+		},
+
+		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
+		// internal function used by different apps to set their own help flags.
+		helpFlags: {
+			user: {
+				get: function(appName, flagName, user) {
+					var user = user || monster.apps.auth.currentUser,
+						value = undefined;
+
+					if(user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
+						value = user.ui_help[appName][flagName];
+					}
+
+					return value;
+				},
+				set: function(appName, flagName, value, user) {
+					var user = user || monster.apps.auth.currentUser;
+
+					user.ui_help = user.ui_help || {};
+					user.ui_help[appName] = user.ui_help[appName] || {};
+					user.ui_help[appName][flagName] = value;
+
+					return user;
+				}
+			}
 		}
 	};
 

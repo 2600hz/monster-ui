@@ -1,13 +1,13 @@
 {
 	"hello": "Hello",
-    "signout": "Sign Out",
-    "myaccount": "Account",
-    "closeSlide": "Close",
-    "store": "Store",
+	"signout": "Sign Out",
+	"myaccount": "Account",
+	"closeSlide": "Close",
+	"store": "Store",
 
-    "settingsCategory": "Settings",
-    "billingCategory": "Billing",
-    "trunkingCategory": "Trunking",
+	"settingsCategory": "Settings",
+	"billingCategory": "Billing",
+	"trunkingCategory": "Trunking",
 
 	"editSettings": "Edit",
 	"changesSaved": "Changes Saved!",
@@ -49,7 +49,10 @@
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",
-		"userLanguage": "Language"
+		"userLanguage": "Language",
+		"__comment": "UI-966: Added common control to select carrier in myaccount",
+		"__version": "v3.20_s0",
+		"carrierTitle": "Carrier Settings"
 	},
 
 	"billing": {
@@ -82,19 +85,25 @@
 		"simultaneousTwoway": "$_Variable__/month",
 		"simultaneousInbound": "$_Variable__/month",
 		"perMonth": "/month",
-		"quantity": "Quantity",
+		"quantity": "Set New Limit",
 		"trunks": "Trunks",
 		"twoWayCalling": "Unlimited Two-way Trunks",
 		"updateLimits": "Update Limits",
-		"helpTwoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time (Example: 10 Two-way Trunks would allow your system to handle 6 inbound calls and 4 outbound calls at the same time)",
-		"helpInbound": "The number of Outbound trunks defines how many simultaneous calls you can receive to your phone system (ie: 5 Inbound Trunks allow your platform to handle 5 simultaneous incoming calls)",
+		"helpTwoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time.",
+		"helpInbound": "The number of Inbound trunks defines how many simultaneous calls you can receive to your phone system.",
 		"monthlyCharges": "Monthly Charges",
 		"__comment": "UI-664: Adding the real twoway sliders",
 		"__version": "v3.19_s2",
 		"twowayTitle": "Twoway Trunking Limits",
 		"twoway": "Two-way",
 		"outboundCalling": "Unlimited Outbound Trunks",
-		"helpOutbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time (ie: 10 Outbound Trunks allow your platform to handle 10 simultaneous calls to external numbers)"
+		"helpOutbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time.",
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"currentLimit": "Current Limit",
+		"exampleTwoway": "EXAMPLE: 10 Two-way Trunks would allow your system to handle 6 inbound calls and 4 outbound calls at the same time.",
+		"exampleInbound": "EXAMPLE: 5 Inbound Trunks allow your platform to handle 5 simultaneous incoming calls",
+		"exampleOutbound": "EXAMPLE: 10 Outbound Trunks allow your platform to handle 10 simultaneous calls to external numbers"
 	},
 
 	"balance" : {
@@ -104,7 +113,7 @@
 		"activeCall": "active",
 
 		"title": "Per Minute",
-		"creditBalance": "Credit Balance",
+		"creditBalance": "Available Credit Balance",
 		"addCreditOne": "Add Credit One Time",
 		"helpAddCreditOne": "By using this, you will add some credits to your current balance, which will allow you to enable features such as e911 or Caller-ID, but also to place per-minute calls.",
 		"autoRecharge": "Auto Recharge",
@@ -139,7 +148,7 @@
 
 	"servicePlan": {
 		"discount": "Discount",
-		"dueOn": "Due on",
+		"dueOn": "Due By",
 		"empty": "Your current service plan is empty!",
 		"monthlyChargesTitle": "Monthly Charges",
 		"quantityTitle": "Quantity",
@@ -166,14 +175,15 @@
 			"outbound_trunks": "Outbound Trunks",
 			"user": "Users",
 			"users": "Users"
-		}
+		},
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"dueAmount": "Amount Due"
 	},
 
 	"transactions": {
 		"title": "Transactions",
-		"titleHeader": "Transaction History",
 		"billingCycle": "Billing Cycle",
-		"to": "to",
 		"oneTimeCharge": "One-Time Charge",
 		"monthlyCharge": "Monthly Charge",
 		"serviceCharge": "Service Charge - Prorated",
@@ -187,7 +197,7 @@
 		"monthlyChargesTitle": "Monthly Charges",
 		"declined": "Declined",
 
-		"database_rollup": "Database Rollup",
+		"database_rollup": "Balance Carry-over",
 		"per_minute_call": "Per-Minute Call",
 		"sub_account_per_minute_call": "Per-Minute Call (Sub-Account)",
 		"feature_activation": "Feature Activation",
@@ -196,6 +206,52 @@
 		"sub_account_number_activation": "Number Activation (Sub-Account)",
 		"manual_addition": "Manual Addition",
 		"sub_account_manual_addition": "Manual Addition (Sub-Account)",
-		"admin_discretion": "Admin Discretion"
+		"admin_discretion": "Admin Discretion",
+		"__comment": "UI-383: Fixing transactions for good",
+		"__version": "v3.20_s0",
+		"unknown": "Charge",
+		"__comment": "UI-1014: Redesign of MyAccount",
+		"__version": "v3.20_s1",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"total": "Total",
+
+		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
+		"__version": "3.19",
+		"refundText": "(Refund)",
+		"codes": {
+			"1001": "Per Minute Call",
+			"1002": "Sub-Account Per Minute Call",
+			"2001": "Feature Activation",
+			"2002": "Sub-Account Feature Activation",
+			"2003": "Number Activation",
+			"2004": "Sub-Account Number Activation",
+			"3001": "Manual Addition",
+			"3002": "Sub-Account Manual Addition",
+			"3003": "Auto-Addition",
+			"3004": "Sub-Account Auto-Addition",
+			"3005": "Admin Discretion",
+			"3006": "Top Up",
+			"4000": "Balance Carry-over",
+			"5000": "Recurring",
+			"5001": "Monthly Recurring",
+			"5002": "Monthly Recurring (Pro-rated)",
+			"9999": "Unknown Refund",
+			"0": "Unknown"
+		},
+		"errorStatuses": {
+			"voided": "Voided",
+			"declined": "Declined",
+			"processor_declined": "Declined"
+		}
+	},
+
+	"miscCategory": "Misc",
+	"errorTracker": {
+		"title": "UI Errors Log",
+		"errorTotal": "Number of Errors:",
+		"apiTotal": "Erlang",
+		"jsTotal": "Javascript",
+		"viewDetails": "Details"
 	}
 }

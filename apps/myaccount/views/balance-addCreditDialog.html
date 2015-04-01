@@ -1,66 +1,73 @@
 <div class="add-credits-content-wrapper">
-    <div class="fancy-header">
-        <div class="left-image">{{ i18n.currencyUsed }}</div>
-        <div class="title-block">{{ i18n.balance.creditBalance }}</div>
-        <div class="right-block box-white-border"><div class="box-white-content content"><div class="main-title">{{ i18n.currencyUsed }}{{amount}}</div></div></div>
-    </div>
+	<div class="add-credits-header clearfix">
+		<div class="title-box pull-right">
+			<div class="value">{{ i18n.currencyUsed }}{{amount}}</div>
+		</div>
+		<div class="title-block">{{ i18n.balance.creditBalance }}</div>
+	</div>
 
-    <div class="box-content gray-box">
-        <div class="line-content">
-            <div class="line-label">
-                <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpAddCreditOne }}"></i>
-                {{ i18n.balance.addCreditOne }}
-            </div>
-            <div class="line-value">
-                <div class="fancy-dollar-sign">{{ i18n.currencyUsed }}</div>
-                <input type="text" pattern="\d+(\.\d{2})?" id="amount" placeholder="{{ i18n.balance.placeholderAmount }}" name="amount"/>
-            </div>
-            <div class="line-button">
-                <button class="btn btn-success add-credit">{{ i18n.balance.addCredit }}</button>
-            </div>
-        </div>
+	<div class="box-content">
+		<div class="line-content">
+			<div class="line-label">
+				<i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpAddCreditOne }}"></i>
+				{{ i18n.balance.addCreditOne }}
+			</div>
+			<div class="line-value">
+				<div class="input-currency">{{ i18n.currencyUsed }}</div>
+				<input type="text" pattern="\d+(\.\d{2})?" id="amount" placeholder="{{ i18n.balance.placeholderAmount }}" name="amount"/>
+			</div>
+			<div class="line-button">
+				<button class="monster-button-primary add-credit">{{ i18n.balance.addCredit }}</button>
+			</div>
+		</div>
+	</div>
 
-        <hr/>
-
-        <div class="line-content">
-            <div class="line-label">
-                <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpAutoRecharge }}"></i>
-                {{ i18n.balance.autoRecharge }}
-            </div>
-            <div class="line-value">
-            </div>
-            <div class="line-button">
-                <div class="switch">
-                    <input type="checkbox" id="auto-recharge-trigger">
-                </div>
-            </div>
-        </div>
-        <div id="recharge_content" {{#unless topup.enabled}}style="display: none;"{{/unless}}>
-            <div class="line-content">
-                <div class="line-label smaller">
-                    <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpWhenBalanceFalls }}"></i>
-                    {{ i18n.balance.whenBalanceFalls }}
-                </div>
-                <div class="line-value">
-                    <div class="fancy-dollar-sign">{{ i18n.currencyUsed }}</div>
-                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderThresholdRecharge }}" id="threshold_recharge" name="threshold_recharge" value="{{topup.threshold}}"/>
-                </div>
-                <div class="line-button">
-                </div>
-            </div>
-            <div class="line-content">
-                <div class="line-label smaller">
-                    <i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpRecharge }}"></i>
-                    {{ i18n.balance.recharge }}
-                </div>
-                <div class="line-value">
-                    <div class="fancy-dollar-sign">{{ i18n.currencyUsed }}</div>
-                    <input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderRecharge }}" id="recharge_amount" name="recharge_amount" value="{{topup.amount}}"/>
-                </div>
-                <div class="line-button">
-                    <button id="confirm_recharge" class="btn btn-success">{{ i18n.balance.confirm }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="box-content">
+		<div class="line-content">
+			<div class="line-label">
+				<i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpAutoRecharge }}"></i>
+				{{ i18n.balance.autoRecharge }}
+			</div>
+			<div class="line-value">
+			</div>
+			<div class="line-button">
+				<div class="switch">
+					{{#monsterSwitch}}<input type="checkbox" id="auto_recharge_trigger">{{/monsterSwitch}}
+				</div>
+			</div>
+		</div>
+		<div id="recharge_content" {{#unless topup.enabled}}style="display: none;"{{/unless}}>
+			<div class="line-content">
+				<div class="line-label smaller">
+					<i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpWhenBalanceFalls }}"></i>
+					{{ i18n.balance.whenBalanceFalls }}
+				</div>
+				<div class="line-value">
+					<div class="input-currency">{{ i18n.currencyUsed }}</div>
+					<input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderThresholdRecharge }}" id="threshold_recharge" name="threshold_recharge" value="{{topup.threshold}}"/>
+				</div>
+				<div class="line-button">
+				</div>
+			</div>
+			<div class="line-content">
+				<div class="line-label smaller">
+					<i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpRecharge }}"></i>
+					{{ i18n.balance.recharge }}
+				</div>
+				<div class="line-value">
+					<div class="input-currency">{{ i18n.currencyUsed }}</div>
+					<input type="text" pattern="\d+(\.\d{2})?" placeholder="{{ i18n.balance.placeholderRecharge }}" id="recharge_amount" name="recharge_amount" value="{{topup.amount}}"/>
+				</div>
+				<div class="line-button">
+				</div>
+			</div>
+			<div class="line-content">
+				<div class="line-label"></div>
+				<div class="line-value"></div>
+				<div class="line-button">
+					<button id="confirm_recharge" class="monster-button-success">{{ i18n.balance.confirm }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

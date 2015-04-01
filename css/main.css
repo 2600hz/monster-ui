@@ -2,7 +2,7 @@ html, body, #main, #main section {
 	height: 100%;
 }
 
-body, .monster-content {
+body, .monster-content, #myaccount, #auth_container {
 	min-width: 600px;
 }
 
@@ -53,7 +53,7 @@ a.monster-link.disabled i {
 #main section > .navbar  {
 	margin-bottom: 0;
 
-	border-top: 5px solid #22ccff;
+	border-top: 5px solid #22a5ff;
 }
 
 #main section > .navbar .navbar-inner {
@@ -61,16 +61,8 @@ a.monster-link.disabled i {
 
 	border: none;
 	border-radius: 0;
-	background: rgb(17,17,17); /* Old browsers */
-	background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
-	background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
+	background: #303039;
 	box-shadow: none;
-
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
 }
 
 #main section > .navbar .btn-navbar {
@@ -78,14 +70,14 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .btn-navbar .icon-bar {
-	background-color: #22ccff;
+	background-color: #22a5ff;
 }
 
 #main section > .navbar .nav > li > a {
 	height: 62px;
-	padding: 0 22px 0 0;
+	padding: 0 22px;
 
-	color: whiteSmoke;
+	color: #c0c0c9;
 	text-shadow: none;
 
 	font-size: 14px;
@@ -101,10 +93,11 @@ a.monster-link.disabled i {
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	line-height: 62px;
 }
 
 #main section > .navbar .nav > li.nav-masquerading {
-	border-right: 1px solid #353535;
+	border-right: 1px solid #202029;
 }
 
 #main section > .navbar .nav > li.nav-masquerading > a {
@@ -116,15 +109,15 @@ a.monster-link.disabled i {
 	line-height: inherit;
 }
 
-#main section > .navbar .nav > li.nav-masquerading .name-text {
+#main section > .navbar .nav > li.nav-masquerading a > div {
 	overflow: hidden;
-
 	max-width: 150px;
-
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
 
-	color: #22ccff;
+#main section > .navbar .nav > li.nav-masquerading .name-text {
+	color: #22a5ff;
 }
 
 #main section > .navbar .nav > li.myaccount-link .name-text {
@@ -137,11 +130,12 @@ a.monster-link.disabled i {
 
 	margin-left: 8px;
 
-	color: #FFF;
+	line-height: 62px;
+	color: #c0c0c9;
 }
 
 #main section > .navbar .nav > li.myaccount-link:hover i {
-	color: #22CCFF
+	color: #22a5ff
 }
 
 #main section > .navbar .nav-collapse .nav > li > a:hover,
@@ -151,11 +145,11 @@ a.monster-link.disabled i {
 
 #main section > .navbar .nav > li > a:focus,
 #main section > .navbar .nav > li > a:hover {
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 #main section > .navbar .nav > li > a:hover i {
-	color: #22ccff !important;
+	color: #22a5ff !important;
 }
 
 #main section > .navbar .nav > li.myaccount-link.disabled a:hover {
@@ -179,8 +173,6 @@ a.monster-link.disabled i {
 
 	height: 62px;
 	padding: 0 30px;
-
-	border-right: 1px solid #353535;
 }
 #main section > .navbar .navbar-inner .active-app > div {
 	display: inline-block;
@@ -196,21 +188,21 @@ a.monster-link.disabled i {
 #main section > .navbar .navbar-inner .app-name {
 	overflow: hidden;
 
-	max-width: 200px;
+	max-width: 266px;
 
 	white-space: nowrap;
 	letter-spacing: 0.5px;
 	text-transform: uppercase;
 	text-overflow: ellipsis;
 
-	color: #F5F5F5;
+	color: #fff;
 
 	font-size: 18px;
 	line-height: 62px;
 }
 
 #main section > .navbar .navbar-inner .current-app:hover .app-name {
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 #main section > .navbar .navbar-inner .logo {
@@ -222,7 +214,7 @@ a.monster-link.disabled i {
 
 	cursor: pointer;
 
-	border-right: 1px solid #353535;
+	border-right: 1px solid #202029;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -236,20 +228,21 @@ a.monster-link.disabled i {
 #main section > .navbar .navbar-inner .logo.conferencing:hover {
 	text-decoration: none;
 
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 #main section > .navbar .navbar-inner .home {
 	display: none;
 
-	padding: 0 20px 0 10px;
+	padding: 0 20px;
 
 	text-decoration: none;
 
-	border-right: 1px solid #353535;
+	border-left: 1px solid #202029;
+	border-right: 1px solid #202029;
 }
 #main section > .navbar .navbar-inner .home * {
-	display: block;
+	display: inline-block;
 
 	margin: 0;
 
@@ -257,18 +250,21 @@ a.monster-link.disabled i {
 }
 #main section > .navbar .navbar-inner .home span {
 	overflow: hidden;
+	display: inline-block;
 
 	max-width: 66px;
-	margin-left: 44px;
+	margin-right: 20px;
 
 	white-space: nowrap;
 	letter-spacing: 0.5px;
-	text-transform: uppercase;
 	text-overflow: ellipsis;
 
-	color: #F5F5F5;
+	color: #c0c0c9;
 
-	font-size: 18px;
+	font-size: 14px;
+}
+#main section > .navbar .navbar-inner .home i {
+	color: #c0c0c9;
 }
 
 #main section > .navbar .navbar-inner .home.active {
@@ -276,7 +272,7 @@ a.monster-link.disabled i {
 }
 
 #main section > .navbar .navbar-inner .home:hover * {
-	color: #22ccff !important;
+	color: #22a5ff !important;
 }
 #main section > .navbar .navbar-inner .home.conferencing {
 	width: 240px;
@@ -311,7 +307,7 @@ body div {
 	}
 }
 
-@media (max-width: 906px) {
+@media (max-width: 959px) {
 	#main section > .navbar .navbar-inner .current-app {
 		display: none;
 	}
@@ -323,7 +319,7 @@ body div {
 	}
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1153px) {
 	#main section > .navbar .navbar-inner #home_link {
 		padding-left: 20px;
 	}
@@ -332,7 +328,7 @@ body div {
 	}
 }
 
-@media (max-width: 1064px) {
+@media (max-width: 1067px) {
 	#main section > .navbar .navbar-inner .logo {
 		padding-right: 0px;
 		padding-left: 0px;
@@ -343,9 +339,6 @@ body div {
 	}
 	#main section > .navbar .navbar-inner .links .top-link {
 		width: 52px;
-	}
-	#main section > .navbar .navbar-inner .active-app {
-		padding: 0 10px;
 	}
 }
 
@@ -390,28 +383,19 @@ input[type="color"],
 	box-shadow: inset 1px 1px #ddd;
 }
 
+.brand-box,
+.model-image {
+	background: center no-repeat;
+}
+
 /* Devices Brands */
-.brand-box.polycom {
-	background: url('images/brands/polycom.png') center no-repeat;
-}
-.brand-box.yealink {
-	background: url('images/brands/yealink.png') center no-repeat;
-}
-.brand-box.cisco {
-	background: url('images/brands/cisco.png') center no-repeat;
-}
-.brand-box.mocet {
-	background: url('images/brands/mocet.png') center no-repeat;
-}
-.brand-box.snom {
-	background: url('images/brands/snom.png') center no-repeat;
-}
-.brand-box.audiocodes {
-	background: url('images/brands/audiocodes.png') center no-repeat;
-}
-.brand-box.grandstream {
-	background: url('images/brands/grandstream.png') center no-repeat;
-}
+.brand-box.polycom { background-image: url('images/brands/polycom.png'); }
+.brand-box.yealink { background-image: url('images/brands/yealink.png'); }
+.brand-box.cisco { background-image: url('images/brands/cisco.png'); }
+/*.brand-box.mocet { background-image: url('images/brands/mocet.png'); }
+.brand-box.snom { background-image: url('images/brands/snom.png'); }
+.brand-box.audiocodes { background-image: url('images/brands/audiocodes.png'); }
+.brand-box.grandstream { background-image: url('images/brands/grandstream.png'); }*/
 
 /* Devices Models */
 .model-image {
@@ -420,136 +404,70 @@ input[type="color"],
 }
 
 /* Yealink */
-.model-image.yealink-t18 {
-	background: url('images/models/yealinkt18.jpg') center no-repeat;
-}
-.model-image.yealink-t20 {
-	background: url('images/models/yealinkt20.jpg') center no-repeat;
-}
-.model-image.yealink-t22 {
-	background: url('images/models/yealinkt22.jpg') center no-repeat;
-}
-.model-image.yealink-t26 {
-	background: url('images/models/yealinkt26.jpg') center no-repeat;
-}
-.model-image.yealink-t28 {
-	background: url('images/models/yealinkt28.jpg') center no-repeat;
-}
-.model-image.yealink-t32 {
-	background: url('images/models/yealinkt32.jpg') center no-repeat;
-}
-.model-image.yealink-t38 {
-	background: url('images/models/yealinkt38.jpg') center no-repeat;
-}
-.model-image.yealink-t41 {
-	background: url('images/models/yealinkt41.jpg') center no-repeat;
-}
-.model-image.yealink-t42 {
-	background: url('images/models/yealinkt42.jpg') center no-repeat;
-}
-.model-image.yealink-t46 {
-	background: url('images/models/yealinkt46.jpg') center no-repeat;
-}
-.model-image.yealink-t48 {
-	background: url('images/models/yealinkt48.jpg') center no-repeat;
-}
+/*.model-image.yealink-t1x-t18p { background-image: url('images/models/yealink_t1x_t18p.jpg'); }*/
+.model-image.yealink-t1x-t19p { background-image: url('images/models/yealink_t1x_t19p.jpg'); }
+.model-image.yealink-t2x-t20p { background-image: url('images/models/yealink_t2x_t20p.jpg'); }
+.model-image.yealink-t2x-t21p { background-image: url('images/models/yealink_t2x_t21p.jpg'); }
+.model-image.yealink-t2x-t22p { background-image: url('images/models/yealink_t2x_t22p.jpg'); }
+.model-image.yealink-2tx-t23p { background-image: url('images/models/yealink_t2x_t23p.jpg'); }
+.model-image.yealink-t2x-t26p { background-image: url('images/models/yealink_t2x_t26p.jpg'); }
+.model-image.yealink-t2x-t28p { background-image: url('images/models/yealink_t2x_t28p.jpg'); }
+.model-image.yealink-t3x-t32g { background-image: url('images/models/yealink_t3x_t32g.jpg'); }
+.model-image.yealink-t3x-t38g { background-image: url('images/models/yealink_t3x_t38g.jpg'); }
+.model-image.yealink-t4x-t41p { background-image: url('images/models/yealink_t4x_t41p.jpg'); }
+.model-image.yealink-t4x-t42g { background-image: url('images/models/yealink_t4x_t42g.jpg'); }
+.model-image.yealink-t4x-t46g { background-image: url('images/models/yealink_t4x_t46g.jpg'); }
+.model-image.yealink-t4x-t48g { background-image: url('images/models/yealink_t4x_t48g.jpg'); }
 
 /* Cisco */
-.model-image.cisco-901 {
-	background: url('images/models/cisco901.jpg') center no-repeat;
-}
-.model-image.cisco-921 {
-	background: url('images/models/cisco921.jpg') center no-repeat;
-}
-.model-image.cisco-922 {
-	background: url('images/models/cisco922.jpg') center no-repeat;
-}
-.model-image.cisco-941 {
-	background: url('images/models/cisco941.jpg') center no-repeat;
-}
-.model-image.cisco-942 {
-	background: url('images/models/cisco942.jpg') center no-repeat;
-}
-.model-image.cisco-962 {
-	background: url('images/models/cisco962.jpg') center no-repeat;
-}
-.model-image.cisco-303 {
-	background: url('images/models/cisco303.jpg') center no-repeat;
-}
-.model-image.cisco-501g {
-	background: url('images/models/cisco501g.jpg') center no-repeat;
-}
-.model-image.cisco-502g {
-	background: url('images/models/cisco502g.jpg') center no-repeat;
-}
-.model-image.cisco-504g {
-	background: url('images/models/cisco504g.jpg') center no-repeat;
-}
-.model-image.cisco-525g {
-	background: url('images/models/cisco525g.jpg') center no-repeat;
-}
-.model-image.cisco-525g2 {
-	background: url('images/models/cisco525g2.jpg') center no-repeat;
-}
+/*.model-image.cisco-901 { background-image: url('images/models/cisco901.jpg'); }
+.model-image.cisco-921 { background-image: url('images/models/cisco921.jpg'); }
+.model-image.cisco-922 { background-image: url('images/models/cisco922.jpg'); }
+.model-image.cisco-941 { background-image: url('images/models/cisco941.jpg'); }
+.model-image.cisco-942 { background-image: url('images/models/cisco942.jpg'); }
+.model-image.cisco-962 { background-image: url('images/models/cisco962.jpg'); }*/
+.model-image.cisco-spa3xx-301g { background-image: url('images/models/cisco_spa3xx_301g.jpg'); }
+.model-image.cisco-spa3xx-303g { background-image: url('images/models/cisco_spa3xx_303g.jpg'); }
+.model-image.cisco-spa5xx-501g { background-image: url('images/models/cisco_spa5xx_501g.jpg'); }
+.model-image.cisco-spa5xx-502g { background-image: url('images/models/cisco_spa5xx_502g.jpg'); }
+.model-image.cisco-spa5xx-504g { background-image: url('images/models/cisco_spa5xx_504g.jpg'); }
+.model-image.cisco-spa5xx-508g { background-image: url('images/models/cisco_spa5xx_508g.jpg'); }
+.model-image.cisco-spa5xx-509g { background-image: url('images/models/cisco_spa5xx_509g.jpg'); }
+.model-image.cisco-spa5xx-512g { background-image: url('images/models/cisco_spa5xx_512g.jpg'); }
+.model-image.cisco-spa5xx-514g { background-image: url('images/models/cisco_spa5xx_514g.jpg'); }
+.model-image.cisco-spa5xx-525g { background-image: url('images/models/cisco_spa5xx_525g.jpg'); }
+.model-image.cisco-spa5xx-525g2 { background-image: url('images/models/cisco_spa5xx_525g2.jpg'); }
 
 /* Polycom */
-.model-image.polycom-1500 {
-	background: url('images/models/polycom1500.jpg') center no-repeat;
-}
-.model-image.polycom-321 {
-	background: url('images/models/polycom321.jpg') center no-repeat;
-}
-.model-image.polycom-331 {
-	background: url('images/models/polycom331.jpg') center no-repeat;
-}
-.model-image.polycom-335 {
-	background: url('images/models/polycom335.jpg') center no-repeat;
-}
-.model-image.polycom-450 {
-	background: url('images/models/polycom450.jpg') center no-repeat;
-}
-.model-image.polycom-5000 {
-	background: url('images/models/polycom5000.jpg') center no-repeat;
-}
-.model-image.polycom-550 {
-	background: url('images/models/polycom550.jpg') center no-repeat;
-}
-.model-image.polycom-560 {
-	background: url('images/models/polycom560.jpg') center no-repeat;
-}
-.model-image.polycom-6000 {
-	background: url('images/models/polycom6000.jpg') center no-repeat;
-}
-.model-image.polycom-650 {
-	background: url('images/models/polycom650.jpg') center no-repeat;
-}
-.model-image.polycom-670 {
-	background: url('images/models/polycom670.jpg') center no-repeat;
-}
-.model-image.polycom-7000 {
-	background: url('images/models/polycom7000.jpg') center no-repeat;
-}
-.model-image.polycom-vvx300,
-.model-image.polycom-vvx310 {
-	background: url('images/models/polycomvvx300.jpg') center no-repeat;
-}
-.model-image.polycom-vvx400,
-.model-image.polycom-vvx410 {
-	background: url('images/models/polycomvvx400.jpg') center no-repeat;
-}
-.model-image.polycom-vvx500 {
-	background: url('images/models/polycomvvx500.jpg') center no-repeat;
-}
-.model-image.polycom-vvx600 {
-	background: url('images/models/polycomvvx600.jpg') center no-repeat;
-}
+.model-image.polycom-spip-301 { background-image: url('images/models/polycom_spip_301.jpg'); }
+.model-image.polycom-spip-320 { background-image: url('images/models/polycom_spip_320.jpg'); }
+.model-image.polycom-spip-321 { background-image: url('images/models/polycom_spip_321.jpg'); }
+.model-image.polycom-spip-330 { background-image: url('images/models/polycom_spip_330.jpg'); }
+/*.model-image.polycom-spip-331 { background-image: url('images/models/polycom_spip_331.jpg'); }*/
+.model-image.polycom-spip-335 { background-image: url('images/models/polycom_spip_335.jpg'); }
+.model-image.polycom-spip-430 { background-image: url('images/models/polycom_spip_430.jpg'); }
+.model-image.polycom-spip-450 { background-image: url('images/models/polycom_spip_450.jpg'); }
+.model-image.polycom-spip-501 { background-image: url('images/models/polycom_spip_501.jpg'); }
+.model-image.polycom-spip-550 { background-image: url('images/models/polycom_spip_550.jpg'); }
+.model-image.polycom-spip-560 { background-image: url('images/models/polycom_spip_560.jpg'); }
+.model-image.polycom-spip-600 { background-image: url('images/models/polycom_spip_600.jpg'); }
+.model-image.polycom-spip-601 { background-image: url('images/models/polycom_spip_601.jpg'); }
+.model-image.polycom-spip-650 { background-image: url('images/models/polycom_spip_650.jpg'); }
+.model-image.polycom-spip-670 { background-image: url('images/models/polycom_spip_670.jpg'); }
+/*.model-image.polycom-spip-1500 { background-image: url('images/models/polycom_spip_1500.jpg'); }*/
+.model-image.polycom-spip-4000 { background-image: url('images/models/polycom_spip_4000.jpg'); }
+.model-image.polycom-spip-5000 { background-image: url('images/models/polycom_spip_5000.jpg'); }
+.model-image.polycom-spip-6000 { background-image: url('images/models/polycom_spip_6000.jpg'); }
+.model-image.polycom-spip-7000 { background-image: url('images/models/polycom_spip_7000.jpg'); }
+.model-image.polycom-vvx-300,
+.model-image.polycom-vvx-310 { background-image: url('images/models/polycom_vvx_300.jpg'); }
+.model-image.polycom-vvx-400,
+.model-image.polycom-vvx-410 { background-image: url('images/models/polycom_vvx_400.jpg'); }
+.model-image.polycom-vvx-500 { background-image: url('images/models/polycom_vvx_500.jpg'); }
+.model-image.polycom-vvx-600 { background-image: url('images/models/polycom_vvx_600.jpg'); }
 
 /* Audiocodes */
-.model-image.audiocodes-420 {
-	background: url('images/models/audiocodes420.jpg') center no-repeat;
-}
+/*.model-image.audiocodes-420 { background-image: url('images/models/audiocodes420.jpg'); }*/
 
 /* Grandstream */
-.model-image.grandstream-ht502 {
-	background: url('images/models/grandstreamht502.jpg') center no-repeat;
-}
+/*.model-image.grandstream-ht502 { background-image: url('images/models/grandstreamht502.jpg'); }*/

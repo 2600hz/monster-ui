@@ -8,20 +8,17 @@
 
 		<div id="topbar" class="navbar navbar-inverse">
 			<div id="ws-navbar" class="navbar-inner clearfix">
-				<a id="home_link" class="pull-left home" href="javascript:void(0);">
-					<i class="icon-white pull-left icon-th icon-large"></i>
-					<span class="title">{{ i18n.apps }}</span>
-				</a>
 				<a class="logo" href="javascript:void(0);"></a>
 				<div class="current-app"></div>
 				<ul class="nav whapps"></ul>
 				<ul class="nav pull-right links">
+					<a id="home_link" class="pull-left home" href="javascript:void(0);">
+						<span class="title pull-left">{{ i18n.apps }}</span>
+						<i class="icon-th icon-large"></i>
+					</a>
 					<div class="pull-right">
 						<a class="top-link signout" href="javascript:void(0)">
 							<i class="icon-signout signout"></i>
-						</a>
-						<a target="_blank" class="top-link help" href="https://2600hz.atlassian.net/wiki/display/docs/Trunking.io">
-							<i class="icon-question-sign"></i>
 						</a>
 					</div>
 				</ul>
@@ -33,10 +30,11 @@
 	</section>
 
 	<div class="footer-wrapper">
+		{{#unless hidePowered}}
 		<span class="powered-by">
 			<a href="http://www.2600hz.com/" target="_blank" id="powered">{{i18n.poweredBy}} 2600hz</a>
 			<span class="tag-version"></span>
 		</span>
+		{{/unless}}
 	</div>
 </div>
-

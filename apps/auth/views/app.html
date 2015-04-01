@@ -1,14 +1,21 @@
 <div id="auth_container" class="login-background">
-    <div class="row-fluid welcome-page" id="welcome_page">
-        <div class="span6 left_div hidden-phone">
-			<div class="hello">
-			    <h1 class="lobster">{{ i18n.hello }}</h1>
-			    <p class="hello-subtitle">{{ i18n.welcome }}</p>
+	<div class="right-div">
+		<div class="right-div-content clearfix">
+			<div class="logo-block"></div>
+			<div class="login-block"></div>
+			<div class="register-block">
+				<div class="register-message">{{ i18n.registerMessage }}</div>
+				<a class="register-link">
+					{{ i18n.registerLink }}
+					<i class="icon-double-angle-right"></i>
+				</a>
 			</div>
-        </div>
-
-        <div class="span6 right_div">
-
-        </div>
-    </div>
+			<div class="powered-by-block"></div>
+		</div>
+	</div>
+	<div class="left-div">
+		<div class="hello">
+			{{ i18n.welcome }}
+		</div>
+	</div>
 </div>

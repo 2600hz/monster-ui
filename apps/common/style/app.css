@@ -6,7 +6,10 @@
 @import url('../submodules/numbers/numbers.css');
 @import url('../submodules/port/port.css');
 @import url('../submodules/chooseModel/chooseModel.css');
+@import url('../submodules/carrierSelector/carrierSelector.css');
 @import url('../submodules/servicePlanDetails/servicePlanDetails.css');
+@import url('../submodules/ringingDurationControl/ringingDurationControl.css');
+@import url('../submodules/numberPrepend/numberPrepend.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {

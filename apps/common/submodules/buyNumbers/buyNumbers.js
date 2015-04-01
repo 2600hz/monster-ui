@@ -5,28 +5,8 @@ define(function(require){
 		ddslick = require('ddslick');
 
 	var buyNumbers = {
+
 		requests: {
-			/* Buy Number Resrouces */
-			'buyNumbers.activateNumbers': {
-				url: 'accounts/{accountId}/phone_numbers/collection/activate',
-				verb: 'PUT'
-			},
-			'buyNumbers.searchCity': {
-				url: 'phone_numbers/prefix?city={city}',
-				verb: 'GET'
-			},
-			'buyNumbers.searchNumbers': {
-				url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}',
-				verb: 'GET'
-			},
-			'buyNumbers.searchNumberBlocks': {
-				url: 'phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}',
-				verb: 'GET'
-			},
-			'buyNumbers.getCurrentServicePlan': {
-				url: 'accounts/{accountId}/service_plans/current',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -87,8 +67,8 @@ define(function(require){
 
 		buyNumbersGetPrices: function(callback) {
 			var self = this;
-			monster.request({
-				resource: 'buyNumbers.getCurrentServicePlan',
+			self.callApi({
+				resource: 'servicePlan.listCurrent',
 				data: {
 					accountId: self.assignedAccountId
 				},
@@ -314,8 +294,8 @@ define(function(require){
 				processingDiv.show();
 				processingDiv.find('i.icon-spinner').addClass('icon-spin');
 				
-				monster.request({
-					resource: 'buyNumbers.activateNumbers',
+				self.callApi({
+					resource: 'numbers.activateBlock',
 					data: {
 						accountId: self.assignedAccountId,
 						data: {
@@ -478,8 +458,8 @@ define(function(require){
 				vanityInputDiv.children('i.icon-spinner').show();
 				searchButton.prop('disabled', true);
 				if(countryValidation) {
-					monster.request({
-						resource: 'buyNumbers.searchNumbers',
+					self.callApi({
+						resource: 'numbers.search',
 						data: {
 							pattern: number,
 							offset:0,
@@ -528,8 +508,8 @@ define(function(require){
 			vanitySearchDiv.find('#vanity_buy_button').on('click', function(ev) {
 				ev.preventDefault();
 				if(number.length > 0) {
-					monster.request({
-						resource: 'buyNumbers.activateNumbers',
+					self.callApi({
+						resource: 'numbers.activateBlock',
 						data: {
 							accountId: self.assignedAccountId,
 							data: {
@@ -613,8 +593,8 @@ define(function(require){
 					loadingNewNumbers = true;
 					resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 					resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
-					monster.request({
-						resource: 'buyNumbers.searchNumbers',
+					self.callApi({
+						resource: 'numbers.search',
 						data: {
 							pattern: tollfreePrefix,
 							offset: _offset,
@@ -717,8 +697,8 @@ define(function(require){
 					container.find('#area_code_radio_div').empty().slideUp();
 					selectedCity = undefined;
 					if(!request.term.match(/^\d+/)) {
-						monster.request({
-							resource: 'buyNumbers.searchCity',
+						self.callApi({
+							resource: 'numbers.searchCity',
 							data: {
 								city: request.term
 							},
@@ -798,8 +778,8 @@ define(function(require){
 							loadingNewNumbers = true;
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
-							monster.request({
-								resource: 'buyNumbers.searchNumberBlocks',
+							self.callApi({
+								resource: 'numbers.searchBlocks',
 								data: {
 									pattern: "%2B"+availableCountries[self.selectedCountryCode].prefix+areacode,
 									size: seqNumIntvalue,
@@ -845,8 +825,8 @@ define(function(require){
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 							resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 
-							monster.request({
-								resource: 'buyNumbers.searchNumbers',
+							self.callApi({
+								resource: 'numbers.search',
 								data: {
 									pattern: areacode,
 									offset: _offset,

@@ -17,7 +17,7 @@
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.transferDate}}</label>
 				<div class="controls">
-					<span class="text">{{transfer_date}}</span>
+					<span class="text">{{toFriendlyDate transfer_date 'short'}}</span>
 				</div>
 			</div>
 		{{#if temporary_numbers}}
@@ -65,6 +65,18 @@
 				<label class="control-label">{{i18n.port.submitDocuments.labelState}}</label>
 				<div class="controls">
 					<span class="text">{{bill.region}}</span>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>{{i18n.port.infoPopup.numbers.legend}}}</legend>
+			<div class="order">
+				<div class="scroll">
+					<ul>
+					{{#each numbers}}
+						<li>{{formatPhoneNumber this}}</li>
+					{{/each}}
+					</ul>
 				</div>
 			</div>
 		</fieldset>

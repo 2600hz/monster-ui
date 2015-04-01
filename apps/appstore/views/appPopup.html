@@ -30,9 +30,9 @@
 			<div class="app-details-view">
 				<div class="toggle-button-bloc">
 					<i class="icon-spinner icon-large"></i>
-					<div class="switch" data-on="success" data-off="default">
-					    <input type="checkbox" name="installed" checked />
-					</div>
+					{{#monsterSwitch}}
+					<input type="checkbox" name="installed" id="app_switch" checked />
+					{{/monsterSwitch}}
 				</div>
 				<div class="info-bloc">
 					<ul>
@@ -76,8 +76,8 @@
 					</ul>
 				</form>
 				<div class="user-list-buttons bottom-right-div">
-					<a href="#" id="user_list_cancel">{{i18n.cancel}}</a>
-					<button id="user_list_save" type="button" class="btn btn-success pull-right">{{i18n.save}}</button>
+					<button id="user_list_cancel" type="button" class="monster-button-small">{{i18n.cancel}}</button>
+					<button id="user_list_save" type="button" class="monster-button-primary monster-button-small pull-right">{{i18n.ok}}</button>
 				</div>
 			</div>
 		</div>
@@ -98,5 +98,9 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+	<div class="action-bar clearfix">
+		<button type="button" id="appstore_popup_cancel" class="monster-button">{{i18n.cancel}}</button>
+		<button type="button" id="appstore_popup_save" class="monster-button-success">{{i18n.save}}</button>
 	</div>
 </div>

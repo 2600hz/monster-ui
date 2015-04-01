@@ -1,42 +1,85 @@
 <div id="port_container">
 	<div id="orders_list">
-		<h3 class="pull-left">{{ i18n.port.pendingOrders.title}}</h3>
-		<span class="pull-right">
-			<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
-		</span>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>{{ i18n.port.pendingOrders.tableOrderName }}</th>
-					<th>{{ i18n.port.pendingOrders.tableOrderDate }}</th>
-					<th>{{ i18n.port.pendingOrders.tableOrderStatus }}</th>
-					<th>{{ i18n.port.pendingOrders.tableOrderAction }}</th>
-				</tr>
-			</thead>
-			<tbody>
-			{{#if data}}
+		<div class="list-header">
+			<h3 class="pull-left">{{ i18n.port.pendingOrders.title}}</h3>
+			<span class="pull-right">
+				<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
+			</span>
+		</div>
+		<div class="filter-options">
+			<div class="btn-toolbar">
+				<div class="btn-group">
+					<button type="button" class="btn" data-value="accounts">{{i18n.port.pendingOrders.accounts}}</button>
+					<button type="button" class="btn" data-value="requests">{{i18n.port.pendingOrders.requests}}</button>
+				</div>
+				<div class="btn-group pull-right">
+					<button type="button" class="btn" data-value="all">{{i18n.port.pendingOrders.all}}</button>
+					<button type="button" class="btn" data-value="unconfirmed">{{i18n.port.state.unconfirmed}}</button>
+					<button type="button" class="btn" data-value="submitted">{{i18n.port.state.submitted}}</button>
+					<button type="button" class="btn" data-value="pending">{{i18n.port.state.pending}}</button>
+					<button type="button" class="btn" data-value="scheduled">{{i18n.port.state.scheduled}}</button>
+					<button type="button" class="btn" data-value="rejected">{{i18n.port.state.rejected}}</button>
+					<button type="button" class="btn" data-value="completed">{{i18n.port.state.completed}}</button>
+				</div>
+			</div>
+		</div>
+		<div class="accounts-list">
+			<div class="requests-wrapper empty">
+				<div class="requests-header">
+					<div class="request-name">{{i18n.port.pendingOrders.tableOrderName}}</div>
+					<div class="request-created">{{i18n.port.pendingOrders.tableOrderDate}}</div>
+					<div class="request-state">{{i18n.port.pendingOrders.tableOrderState}}</div>
+					<div class="scheduled-date">{{i18n.port.pendingOrders.tableOrderScheduled}}</div>
+				</div>
+			</div>
+			<div class="accounts-wrapper">
 			{{#each data}}
-				<tr class="collapse" data-id="{{id}}">
-					<td><i class="icon-caret-right"></i>{{name}}</td>
-					<td>{{#if created}}{{toFriendlyDate created 'short'}}{{else}}.....{{/if}}</td>
-					<td></td>
-					<td>
-					{{#compare port_state '===' 'unconfirmed'}}
-						<button class="btn btn-success">{{ ../../i18n.port.pendingOrders.continueButton }}</button>
+				<div class="account-section{{#if port_requests}} active{{/if}}" data-id="{{account_id}}">
+					<div class="account-header">
+						<div class="left-part pull-left">
+							<i class="icon-chevron-{{#if port_requests}}down icon-white{{else}}right{{/if}}"></i>
+						</div>
+						<div class="expandable">
+							<span class="account-name">{{account_name}}</span> <span class="request-amount">({{amount}})</span>
+						</div>
+					</div>
+					<div class="requests-wrapper">
+					{{#if port_requests}}
+						<div class="requests-header">
+							<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
+							<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
+							<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
+							<div class="scheduled-date">{{../../i18n.port.pendingOrders.tableOrderScheduled}}</div>
+						</div>
+					{{#each port_requests}}
+						<div class="request-box" data-account_id="{{../account_id}}" data-id="{{id}}" data-state="{{port_state}}">
+							<div class="pull-left">
+								<div class="request-name">{{name}}</div>
+								<div class="request-created">{{toFriendlyDate created 'short'}}</div>
+								<div class="request-state"></div>
+								<div class="scheduled-date"></div>
+							</div>
+							<div class="actions pull-right">
+								<div class="dropdown">
+									<i class="icon-cog dropdown-toggle" data-toggle="dropdown"></i>
+									<ul class="dropdown-menu">
+									{{#compare port_state '===' 'unconfirmed'}}
+										<li class="continue-request"><a href="#"><i class="icon-play icon-green"></i> {{../../../../i18n.port.pendingOrders.continueButton}}</a></li>
+										<li class="delete-request"><a href="#"><i class="icon-remove icon-red"></i> {{../../../../i18n.port.pendingOrders.deleteButton}}</a></li>
+									{{/compare}}
+										<li class="info-request"><a href="#"><i class="icon-info icon-yellow"></i> {{../../../i18n.port.pendingOrders.infoButton}}</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					{{/each}}
 					{{else}}
-						<button class="btn btn-info">{{ ../../i18n.port.pendingOrders.infoButton }}</button>
-					{{/compare}}
-						<i class="icon-comments"></i>
-					</td>
-				</tr>
-				{{#each numbers}}
-				<tr data-id="{{../id}}"><td colspan="4">{{this}}</td></tr>
-				{{/each}}
+					<div class="request-box empty">{{../../i18n.port.pendingOrders.noOrder}}</div>
+					{{/if}}
+					</div>
+				</div>
 			{{/each}}
-			{{else}}
-				<tr><td colspan="4">{{ i18n.port.pendingOrders.noOrder}}</td></tr>
-			{{/if}}
-			</tbody>
-		</table>
+			</div>
+		</div>
 	</div>
 </div>

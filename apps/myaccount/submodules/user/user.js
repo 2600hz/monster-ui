@@ -39,7 +39,7 @@ define(function(require) {
 			var self = this;
 
 			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone);
-			template.find('#user_timezone').chosen({ search_contains: true, width: '100%' });
+			template.find('#user_timezone').chosen({ search_contains: true, width: '220px' });
 
 			monster.pub('myaccount.events', {
 				template: template,

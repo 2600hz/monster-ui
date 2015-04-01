@@ -2,7 +2,6 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		nicescroll = require('nicescroll'),
 		toastr = require('toastr');
 
 	var app = {
@@ -12,7 +11,8 @@ define(function(require){
 
 		i18n: { 
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'fr-FR': { customCss: false },
+			'ru-RU': { customCss: false }
 		},
 
 		requests: {
@@ -32,7 +32,7 @@ define(function(require){
 			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility'
 		},
 
-		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user'],
+		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
 
 		mainContainer: '#myaccount',
 		defaultApp: {
@@ -89,6 +89,9 @@ define(function(require){
 				},
 				user: {
 					show_tab: true
+				},
+				errorTracker: {
+					show_tab: true
 				}
 			};
 		},
@@ -133,7 +136,8 @@ define(function(require){
 				categories = {
 					settings: ['account', 'user'],
 					billing: ['billing', 'transactions', 'service_plan', 'balance'],
-					trunking: ['inbound', 'outbound']
+					trunking: ['inbound', 'outbound'],
+					misc: ['errorTracker']
 				},
 				_callback = function(billing, uiRestrictions) {
 					if ( _.isEmpty(billing) ) {
@@ -269,7 +273,7 @@ define(function(require){
 
 			container.find('.myaccount-close').on('click', function() {
 				self.toggle();
-            });
+			});
 
 			container.find('.myaccount-element').on('click', function() {
 				var $this = $(this),
@@ -340,12 +344,6 @@ define(function(require){
 				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 				callback: function(uiRestrictions) {
 					var myaccount = $(self.mainContainer),
-						scrollingUL = myaccount.find('.myaccount-menu ul.nav.nav-list'),
-						niceScrollBar = scrollingUL.getNiceScroll()[0] || scrollingUL.niceScroll({
-																			cursorcolor:"#333",
-																			cursoropacitymin:0.5,
-																			hidecursordelay:1000
-																		}),
 						firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
 						uiRestrictions = uiRestrictions,
 						defaultApp = self.defaultApp;
@@ -358,18 +356,15 @@ define(function(require){
 					}
 
 					if(myaccount.hasClass('myaccount-open')) {
-						self.hide(myaccount, niceScrollBar);
+						self.hide(myaccount);
 					}
 					else {
 						var args = {
 							title: self.i18n.active()[defaultApp.name].title,
 							module: defaultApp.name,
 							callback: function() {
-								myaccount
-									.slideDown(300, function() {
-										niceScrollBar.show().resize();
-									})
-									.addClass('myaccount-open');
+								myaccount.addClass('myaccount-open');
+								setTimeout(function() { $('#monster-content').hide(); }, 300);
 
 								callback && callback();
 							}
@@ -386,20 +381,20 @@ define(function(require){
 		},
 
 		activateSubmodule: function(args) {
-            var self = this,
-                myaccount = $(self.mainContainer),
-                submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
+			var self = this,
+				myaccount = $(self.mainContainer),
+				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
 
-            myaccount.find('.myaccount-menu .nav li').removeClass('active');
-            submodule.addClass('active');
+			myaccount.find('.myaccount-menu .nav li').removeClass('active');
+			submodule.addClass('active');
 
-            myaccount.find('.myaccount-module-title').html(args.title);
-            myaccount.find('.myaccount-content').empty();
+			myaccount.find('.myaccount-module-title').html(args.title);
+			myaccount.find('.myaccount-content').empty();
 
-            monster.pub('myaccount.' + args.module + '.renderContent', args);
-        },
+			monster.pub('myaccount.' + args.module + '.renderContent', args);
+		},
 
-        _renderSubmodule: function(template) {
+		_renderSubmodule: function(template) {
 			var parent = $('#myaccount');
 
 			parent.find('.myaccount-right .myaccount-content').html(template);
@@ -412,14 +407,11 @@ define(function(require){
 
 		hide: function(myaccount, scrollbar) {
 			var self = this,
-				myaccount = myaccount || $(self.mainContainer),
-				niceScrollBar = scrollbar || myaccount.find('.myaccount-menu ul.nav.nav-list').getNiceScroll()[0];
+				myaccount = myaccount || $(self.mainContainer);
 
 			myaccount.find('.myaccount-right .myaccount-content').empty();
-			niceScrollBar.hide();
-			myaccount
-				.slideUp(300, niceScrollBar.resize)
-				.removeClass('myaccount-open');
+			myaccount.removeClass('myaccount-open');
+			$('#monster-content').show();
 		},
 
 		_hide: function() {
@@ -540,8 +532,6 @@ define(function(require){
 					var currentElement = $(v);
 					currentElement.val(currentElement.data('original_value'));
 				});
-
-				e.stopPropagation();
 			});
 
 			template.find('.change').on('click', function(e) {
@@ -557,7 +547,7 @@ define(function(require){
 						}
 
 						return data;
-					})(moduleToUpdate, form2object('form_'+fieldName));
+					})(moduleToUpdate, monster.ui.getFormData('form_'+fieldName));
 
 				settingsValidate(fieldName, newData,
 					function() {
@@ -565,8 +555,6 @@ define(function(require){
 							function(data) {
 								var args = {
 									callback: function(parent) {
-										var link = parent.find('li[data-name='+fieldName+']');
-
 										if(fieldName === 'credit_card') {
 											parent.find('.edition').hide();
 											parent.find('.uneditable').show();
@@ -574,20 +562,7 @@ define(function(require){
 											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 										}
 
-										link.find('.update').hide();
-										link.find('.changes-saved').show()
-																	.fadeOut(1500, function() {
-																			link.find('.update').fadeIn(500);
-																	});
-
-										link.css('background-color', '#22ccff')
-												.animate({
-												backgroundColor: '#f6f6f6'
-											}, 2000
-										);
-
-										parent.find('li.settings-item .settings-item-content').hide();
-										parent.find('li.settings-item a.settings-link').show();
+										self.highlightField(parent, fieldName);
 
 										/* TODO USELESS? */
 										if(typeof callbackUpdate === 'function') {
@@ -608,6 +583,26 @@ define(function(require){
 					}
 				);
 			});
+		},
+
+		highlightField: function(parent, fieldName) {
+			var	link = parent.find('li[data-name='+fieldName+']');
+
+			link.find('.update').hide();
+			link.find('.changes-saved').show()
+										.fadeOut(1500, function() {
+												link.find('.update').fadeIn(500);
+										});
+
+			link.css('background-color', '#22ccff')
+					.animate({
+					backgroundColor: '#f6f6f6'
+				}, 2000
+			);
+
+			parent.find('li.settings-item .settings-item-content').hide();
+			parent.find('li.settings-item a.settings-link').show();
+
 		},
 
 		_openAccordionGroup: function(args) {

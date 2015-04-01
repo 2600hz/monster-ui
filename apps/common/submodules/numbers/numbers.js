@@ -7,38 +7,6 @@ define(function(require){
 	var numbers = {
 
 		requests: {
-			'common.numbers.list': {
-				url: 'accounts/{accountId}/phone_numbers',
-				verb: 'GET'
-			},
-			'common.numbers.delete': {
-				url: 'accounts/{accountId}/phone_numbers/collection',
-				verb: 'DELETE'
-			},
-			'common.numbers.move': {
-				url: 'accounts/{accountId}/phone_numbers/collection/activate',
-				verb: 'PUT'
-			},
-			'common.numbers.listChildren': {
-				url: 'accounts/{accountId}/children',
-				verb: 'GET'
-			},
-			'common.numbers.listDescendants': {
-				url: 'accounts/{accountId}/descendants',
-				verb: 'GET'
-			},
-			'common.numbers.listCallflows': {
-				url: 'accounts/{accountId}/callflows',
-				verb: 'GET'
-			},
-			'common.numbers.listUsers': {
-				url: 'accounts/{accountId}/users',
-				verb: 'GET'
-			},
-			'common.numbers.listGroups': {
-				url: 'accounts/{accountId}/groups',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -110,7 +78,8 @@ define(function(require){
 					inbound_cnam: { icon: 'icon-green icon-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
 					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
 					local: { icon: 'icon-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'icon-phone icon-yellow feature-port' }
+					port: { icon: 'icon-phone icon-yellow feature-port' },
+					prepend: { icon: 'icon-orange icon-file-text-alt feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
 
 			if(callback) {
@@ -149,14 +118,17 @@ define(function(require){
 				if(value.used_by) {
 					if(data.viewType === 'pbx') {
 						if(value.used_by === 'callflow') {
+							value.isLocal = value.features.indexOf('local') > -1;
 							thisAccount.usedNumbers.push(value);
 						}
 					}
 					else {
+						value.isLocal = value.features.indexOf('local') > -1;
 						thisAccount.usedNumbers.push(value);
 					}
 				}
 				else {
+					value.isLocal = value.features.indexOf('local') > -1;
 					thisAccount.spareNumbers.push(value);
 				}
 			});
@@ -170,7 +142,7 @@ define(function(require){
 			var sortByDate = function(a,b) {
 					return a.updated > b.updated ? -1 : 1;
 				},
-			    sortByName = function(a,b) {
+				sortByName = function(a,b) {
 					return a.phoneNumber > b.phoneNumber;
 				};
 
@@ -215,7 +187,7 @@ define(function(require){
 						self.numbersList(accountId, function(numbers) {
 							var spareNumbers = [],
 								usedNumbers = [],
-			    				sortByName = function(a,b) {
+								sortByName = function(a,b) {
 									return a.phoneNumber > b.phoneNumber;
 								};
 
@@ -393,6 +365,22 @@ define(function(require){
 				});
 			});
 
+			function syncNumbers (accountId) {
+				self.numbersSyncUsedBy(accountId, function(numbers) {
+					displayNumberList(accountId, function(numbers) {
+						toastr.success(self.i18n.active().numbers.sync.success);
+					}, true);
+				});
+			};
+
+			parent.on('click', '.account-header .action-number.sync', function(e) {
+				syncNumbers($(this).parents('.account-section').data('id'));
+			});
+
+			parent.on('click', '.actions-wrapper .action-number.sync', function(e) {
+				syncNumbers(self.accountId);
+			});
+
 			/* Add class selected when you click on a number box, check/uncheck  the account checkbox if all/no numbers are checked */
 			parent.on('click', '.number-box:not(.disabled)', function(event) {
 				var currentBox = $(this);
@@ -431,8 +419,6 @@ define(function(require){
 						accountList: []
 					}
 					e911ErrorMessage = '';
-
-				$('body').css('overflow', 'hidden');
 
 				parent.find('.number-box.selected').each(function(k, v) {
 					var box = $(v),
@@ -492,7 +478,6 @@ define(function(require){
 
 				if(e911ErrorMessage) {
 					monster.ui.alert('error', e911ErrorMessage);
-					$('body').css('overflow', 'auto');
 				} else {
 					var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
 						requestData = {
@@ -560,7 +545,6 @@ define(function(require){
 								var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
 
 								dialogTemplate.parent().parent().remove();
-								$('body').css('overflow', 'auto');
 
 								toastr.success(template);
 							});
@@ -572,143 +556,141 @@ define(function(require){
 
 			/* to plugin */
 			var moveNumbersToAccount = function(accountId, accountName) {
-					var listNumbers = [],
-						destinationAccountId = accountId,
-						destinationIndex = -1,
-						mapAccounts = {},
-						dataTemplate = {
-							destinationAccountName: accountName,
-							move: true,
-							accountList: []
+				var listNumbers = [],
+					destinationAccountId = accountId,
+					destinationIndex = -1,
+					mapAccounts = {},
+					dataTemplate = {
+						destinationAccountName: accountName,
+						move: true,
+						accountList: []
+					};
+
+				parent.find('.number-box.selected').each(function(k, v) {
+					var box = $(v),
+						number = box.data('phonenumber');
+						accountId = box.parents('.account-section').data('id'),
+						accountName = box.parents('.account-section').data('name');
+
+					if(!(accountId in mapAccounts)) {
+						mapAccounts[accountId] = {};
+						dataTemplate.accountList.push({
+							accountName: accountName
+						});
+					}
+
+					for (var account in dataTemplate.accountList) {
+						if ( typeof dataTemplate.accountList[account].numbers == 'undefined' ) {
+							dataTemplate.accountList[account].numbers = new Array();
 						}
 
-					$('body').css('overflow', 'hidden');
+						if ( dataTemplate.accountList[account].accountName == accountName ) {
+							dataTemplate.accountList[account].numbers.push(number);
+						}
+					}
 
-					parent.find('.number-box.selected').each(function(k, v) {
-						var box = $(v),
-							number = box.data('phonenumber');
-							accountId = box.parents('.account-section').data('id'),
-							accountName = box.parents('.account-section').data('name');
+					mapAccounts[accountId][number] = true;
+					listNumbers.push(number);
+				});
 
-						if(!(accountId in mapAccounts)) {
-							mapAccounts[accountId] = {};
-							dataTemplate.accountList.push({
-								accountName: accountName
-							});
+				dataTemplate.numberCount = listNumbers.length;
+
+				var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
+					requestData = {
+						numbers: listNumbers,
+						accountId: destinationAccountId
+					};
+
+				monster.ui.dialog(dialogTemplate, {
+					width: '540px',
+					title: "Move Numbers - Confirmation"
+				});
+
+				dialogTemplate.on('click', '.remove-number', function() {
+					for (var number in requestData.numbers) {
+						if ( $(this).parent().data('number') == requestData.numbers[number] ) {
+							var tbody = $(this).parent().parent().parent(),
+								childCount = tbody[0].childElementCount,
+								numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
+
+							requestData.numbers.splice(number, 1);
+							$(this).parent().parent().remove();
+
+							if ( childCount == 1 ) {
+								tbody[0].previousElementSibling.remove();
+								tbody.remove();
+							}
+							numbersCount.text(numbersCount.text() - 1);
 						}
 
-						for (var account in dataTemplate.accountList) {
-							if ( typeof dataTemplate.accountList[account].numbers == 'undefined' ) {
-								dataTemplate.accountList[account].numbers = new Array();
-							}
-
-							if ( dataTemplate.accountList[account].accountName == accountName ) {
-								dataTemplate.accountList[account].numbers.push(number);
-							}
+						if ( requestData.numbers.length == 0 ) {
+							dialogTemplate.parent().parent().remove();
 						}
+					}
+				});
 
-						mapAccounts[accountId][number] = true;
-						listNumbers.push(number);
-					});
+				dialogTemplate.on('click', '.cancel-link', function() {
+					dialogTemplate
+						.parent()
+						.parent()
+						.remove();
+				});
 
-					dataTemplate.numberCount = listNumbers.length;
+				dialogTemplate.on('click', '#move_action', function() {
+					self.numbersMove(requestData, function(data) {
+						var countMove = 0;
 
-					var dialogTemplate = $(monster.template(self, "numbers-actionsConfirmation", dataTemplate)),
-						requestData = {
-							numbers: listNumbers,
-							accountId: destinationAccountId
-						};
-
-					monster.ui.dialog(dialogTemplate, {
-						width: '540px',
-						title: "Move Numbers - Confirmation"
-					});
-
-					dialogTemplate.on('click', '.remove-number', function() {
-						for (var number in requestData.numbers) {
-							if ( $(this).parent().data('number') == requestData.numbers[number] ) {
-								var tbody = $(this).parent().parent().parent(),
-									childCount = tbody[0].childElementCount,
-									numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
-
-								requestData.numbers.splice(number, 1);
-								$(this).parent().parent().remove();
-
-								if ( childCount == 1 ) {
-									tbody[0].previousElementSibling.remove();
-									tbody.remove();
-								}
-								numbersCount.text(numbersCount.text() - 1);
+						_.each(dataNumbers.listAccounts, function(account, indexAccount) {
+							if(account.id === destinationAccountId) {
+								destinationIndex = indexAccount;
 							}
 
-							if ( requestData.numbers.length == 0 ) {
-								dialogTemplate.parent().parent().remove();
-							}
-						}
-					});
-
-					dialogTemplate.on('click', '.cancel-link', function() {
-						dialogTemplate
-							.parent()
-							.parent()
-							.remove();
-					});
-
-					dialogTemplate.on('click', '#move_action', function() {
-						self.numbersMove(requestData, function(data) {
-							var countMove = 0;
-
-							_.each(dataNumbers.listAccounts, function(account, indexAccount) {
-								if(account.id === destinationAccountId) {
-									destinationIndex = indexAccount;
-								}
-
-								if(account.id in mapAccounts) {
-									var newList = [];
-									_.each(account.spareNumbers, function(number, indexNumber) {
-										if(!(number.phoneNumber in data.success)) {
-											newList.push(number);
-										}
-										else {
-											data.success[number.phoneNumber] = number;
-											countMove++;
-										}
-									});
-
-									dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
-									dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
-								}
-							});
-
-							/* If we didn't open it yet, it will be automatically updated when we click on it */
-							if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
-								_.each(data.success, function(value, number) {
-									dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
+							if(account.id in mapAccounts) {
+								var newList = [];
+								_.each(account.spareNumbers, function(number, indexNumber) {
+									if(!(number.phoneNumber in data.success)) {
+										newList.push(number);
+									}
+									else {
+										data.success[number.phoneNumber] = number;
+										countMove++;
+									}
 								});
 
-								dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
+								dataNumbers.listAccounts[indexAccount].spareNumbers = newList;
+								dataNumbers.listAccounts[indexAccount].countSpareNumbers = newList.length;
 							}
+						});
 
-							self.numbersPaintSpare(parent, dataNumbers, function() {
-								var dataTemplate = {
-										count: countMove,
-										accountName: dataNumbers.listAccounts[destinationIndex].name
-									},
-									template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
-
-								dialogTemplate.parent().parent().remove();
-								$('body').css('overflow', 'auto');
-
-								toastr.success(template);
+						/* If we didn't open it yet, it will be automatically updated when we click on it */
+						if(_.indexOf(listSearchedAccounts, destinationAccountId) > -1) {
+							_.each(data.success, function(value, number) {
+								dataNumbers.listAccounts[destinationIndex].spareNumbers.push(value);
 							});
+
+							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
+						}
+
+						self.numbersPaintSpare(parent, dataNumbers, function() {
+							var dataTemplate = {
+									count: countMove,
+									accountName: dataNumbers.listAccounts[destinationIndex].name
+								},
+								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
+
+							dialogTemplate.parent().parent().remove();
+
+							toastr.success(template);
 						});
 					});
-				};
+				});
+			};
 
 			parent.on('click', '#move_numbers', function() {
 				monster.pub('common.accountBrowser.render', {
 					container: parent.find('.list-numbers[data-type="spare"] .accounts-dropdown'),
 					customClass: 'ab-dropdown',
+					addCurrentAccount: true,
 					onAccountClick: function(accountId, accountName) {
 						moveNumbersToAccount(accountId, accountName);
 						parent.find('.list-numbers[data-type="spare"] .dropdown-move').removeClass('open');
@@ -790,6 +772,28 @@ define(function(require){
 				}
 			});
 
+			parent.on('click', '.prepend-number', function() {
+				var prependCell = $(this).parents('.number-box').first(),
+					phoneNumber = prependCell.data('phonenumber');
+
+				if(phoneNumber) {
+					var args = {
+						phoneNumber: phoneNumber,
+						callbacks: {
+							success: function(data) {
+								if('prepend' in data.data && data.data.prepend.enabled) {
+									prependCell.find('.features i.feature-prepend').addClass('active');
+								} else {
+									prependCell.find('.features i.feature-prepend').removeClass('active');
+								}
+							}
+						}
+					};
+
+					monster.pub('common.numberPrepend.renderPopup', args);
+				}
+			});
+
 			var searchListNumbers = function(searchString, parent) {
 				var viewList = parent;
 
@@ -803,7 +807,7 @@ define(function(require){
 
 							if(numberBox.size() > 0) {
 								section.addClass('open');
-								monster.ui.hightlight(numberBox, {
+								monster.ui.highlight(numberBox, {
 									timer: 5000
 								});
 							}
@@ -891,8 +895,8 @@ define(function(require){
 		numbersMove: function(args, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.move',
+			self.callApi({
+				resource: 'numbers.activateBlock',
 				data: {
 					accountId: args.accountId,
 					data: {
@@ -929,8 +933,8 @@ define(function(require){
 		numbersDelete: function(args, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.delete',
+			self.callApi({
+				resource: 'numbers.deleteBlock',
 				data: {
 					accountId: args.accountId,
 					data: {
@@ -944,7 +948,7 @@ define(function(require){
 		},
 
 		/* AccountID and Callback in args */
-		numbersFormatDialogSpare: function(data) {
+		numbersFormatDialogSpare: function(data, ignoreNumbers, extraNumbers) {
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
@@ -956,7 +960,7 @@ define(function(require){
 				};
 
 			_.each(data.numbers, function(number, id) {
-				if(number.used_by === '') {
+				if((number.used_by === '' || extraNumbers.indexOf(id) >= 0) && ignoreNumbers.indexOf(id) === -1) {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
 
@@ -974,35 +978,40 @@ define(function(require){
 			var self = this,
 				accountId = args.accountId,
 				accountName = args.accountName || '',
+				ignoreNumbers = args.ignoreNumbers || [],
+				extraNumbers = args.extraNumbers || [],
 				callback = args.callback;
 
 			self.numbersList(accountId, function(data) {
 				data.accountName = accountName;
 
-				var formattedData = self.numbersFormatDialogSpare(data),
-				    spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
+				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers),
+					spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
 
-                spareTemplate.find('.empty-search-row').hide();
+				spareTemplate.find('[data-toggle="tooltip"]').tooltip();
+
+				spareTemplate.find('.empty-search-row').hide();
 
 				spareTemplate.on('keyup', '.search-query', function() {
-                	var rows = spareTemplate.find('.number-box'),
-                    	emptySearch = spareTemplate.find('.empty-search-row'),
-                    	currentRow;
+					var rows = spareTemplate.find('.number-box'),
+						emptySearch = spareTemplate.find('.empty-search-row'),
+						currentRow;
 
-                	currentNumberSearch = $(this).val().toLowerCase();
+					currentNumberSearch = $(this).val().toLowerCase();
 
-                	_.each(rows, function(row) {
-                    	currentRow = $(row);
-                    	currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
-                	});
+					_.each(rows, function(row) {
+						currentRow = $(row);
+						currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
+					});
 
-                	if(rows.size() > 0) {
-                    	rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
-                	}
-            	});
+					if(rows.size() > 0) {
+						rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
+					}
+				});
 
 				spareTemplate.find('#proceed').on('click', function() {
 					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
+						remainingQuantity = formattedData.sortedNumbers.length - selectedNumbersRow.length,
 						selectedNumbers = [];
 
 					_.each(selectedNumbersRow, function(row) {
@@ -1012,7 +1021,7 @@ define(function(require){
 					});
 
 					if(selectedNumbers.length > 0) {
-						args.callback && args.callback(selectedNumbers);
+						args.callback && args.callback(selectedNumbers, remainingQuantity);
 
 						popup.dialog('close').remove();
 					}
@@ -1021,7 +1030,7 @@ define(function(require){
 					}
 				});
 
-				spareTemplate.find('.number-box').on('click', function(event) {
+				spareTemplate.find('.number-box:not(.no-data)').on('click', function(event) {
 					var $this = $(this);
 
 					$this.toggleClass('selected');
@@ -1120,13 +1129,28 @@ define(function(require){
 			return data;
 		},
 
+		numbersSyncUsedBy: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.sync',
+				data: {
+					accountId: accountId
+				},
+				success: function(numbers) {
+					callback && callback(numbers.data);
+				}
+			});
+		},
+
 		numbersListUsers: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listUsers',
+			self.callApi({
+				resource: 'user.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(users, status) {
 					callback && callback(users.data);
@@ -1137,10 +1161,11 @@ define(function(require){
 		numbersListCallflows: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listCallflows',
+			self.callApi({
+				resource: 'callflow.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(callflows, status) {
 					callback && callback(callflows.data);
@@ -1151,10 +1176,11 @@ define(function(require){
 		numbersListGroups: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listGroups',
+			self.callApi({
+				resource: 'group.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(groups, status) {
 					callback && callback(groups.data);
@@ -1165,10 +1191,11 @@ define(function(require){
 		numbersListNumbers: function(accountId, callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.list',
+			self.callApi({
+				resource: 'numbers.list',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					filters: { paginate:false }
 				},
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
@@ -1179,8 +1206,8 @@ define(function(require){
 		numbersListAccounts: function(callback) {
 			var self = this;
 
-			monster.request({
-				resource: 'common.numbers.listChildren',
+			self.callApi({
+				resource: 'account.listChildren',
 				data: {
 					accountId: self.accountId
 				},

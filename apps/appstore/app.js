@@ -13,30 +13,11 @@ define(function(require){
 
 		i18n: { 
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'fr-FR': { customCss: false },
+			'ru-RU': { customCss: false }
 		},
 
 		requests: {
-			'appstore.list': {
-				url: 'apps_store',
-				verb: 'GET'
-			},
-			'appstore.get': {
-				url: 'apps_store/{appId}',
-				verb: 'GET'
-			},
-			'appstore.account.get': {
-				url: 'accounts/{accountId}',
-				verb: 'GET'
-			},
-			'appstore.account.update': {
-				url: 'accounts/{accountId}',
-				verb: 'POST'
-			},
-			'appstore.users.list': {
-				url: 'accounts/{accountId}/users',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -116,8 +97,8 @@ define(function(require){
 
 			monster.parallel({
 					apps: function(callback) {
-						monster.request({
-							resource: 'appstore.list',
+						self.callApi({
+							resource: 'appsStore.list',
 							data: {
 								accountId: self.accountId,
 							},
@@ -127,8 +108,8 @@ define(function(require){
 						});
 					},
 					account: function(callback) {
-						monster.request({
-							resource: 'appstore.account.get',
+						self.callApi({
+							resource: 'account.get',
 							data: {
 								accountId: self.accountId
 							},
@@ -138,8 +119,8 @@ define(function(require){
 						});
 					},
 					users: function(callback) {
-						monster.request({
-							resource: 'appstore.users.list',
+						self.callApi({
+							resource: 'user.list',
 							data: {
 								accountId: self.accountId
 							},
@@ -154,51 +135,48 @@ define(function(require){
 							return val.id;
 						}),
 						getIcon = function(appId, iconCallback) {
-							var request = new XMLHttpRequest(),
-								url = self.apiUrl + 'apps_store/' + appId + '/icon?auth_token=' + self.authToken;
-								
-							request.open('GET', url, true);
-							request.onreadystatechange = function() {
-								if(request.readyState === 4) {
-									if(request.status === 200) {
-										iconCallback && iconCallback(url);
-									} else {
-										iconCallback && iconCallback(null);
-									}
+							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
+							self.callApi({
+								resource: 'appsStore.getIcon',
+								data: {
+									accountId: self.accountId,
+									appId: appId,
+									generateError: false
+								},
+								success: function(data, status) {
+									iconCallback && iconCallback(self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken);
+								},
+								error: function(data, status) {
+									iconCallback && iconCallback(null);
 								}
-							};
-							request.send();
+							});
 						},
 						parallelIconRequests = [];
 
 					if(!("apps" in results.account)) {
 						results.account.apps = {};
 					}
-					results.apps = _.filter(results.apps, function(val, key) {
-						if(installedAppIds.indexOf(val.id) >= 0) {
-							if(val.id in results.account.apps) {
-								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-								if('all' in results.account.apps[val.id]) {
-									results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
-									delete results.account.apps[val.id].all;
-								}
-								/*****************************************************************************************/
-								if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
-									val.tags ? val.tags.push("installed") : val.tags = ["installed"];
-								}
-							}
-							var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
 
-							val.label = i18n.label;
-							val.description = i18n.description;
-							parallelIconRequests.push(function(parallelCallback) {
-								getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
-							});
-							delete val.i18n;
-							return true;
-						} else {
-							return false;
+					results.apps.forEach(function(val, idx) {
+						if(val.id in results.account.apps) {
+							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
+							if('all' in results.account.apps[val.id]) {
+								results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
+								delete results.account.apps[val.id].all;
+							}
+							/*****************************************************************************************/
+							if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
+								val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+							}
 						}
+						var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
+
+						val.label = i18n.label;
+						val.description = i18n.description;
+						parallelIconRequests.push(function(parallelCallback) {
+							getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
+						});
+						delete val.i18n;
 					});
 
 					monster.parallel(parallelIconRequests, function(iconsErr, iconsResults) {
@@ -237,8 +215,8 @@ define(function(require){
 				userList = appstoreData.users,
 				account = appstoreData.account;
 
-			monster.request({
-				resource: 'appstore.get',
+			self.callApi({
+				resource: 'appsStore.get',
 				data: {
 					accountId: self.accountId,
 					appId: appId
@@ -253,7 +231,7 @@ define(function(require){
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
 								icon: _.find(appstoreData.apps, function(app) { return app.id === data.data.id }).icon,
-								screenshots: $.map(data.data.screenshots, function(val, key) {
+								screenshots: $.map(data.data.screenshots || [], function(val, key) {
 									return self.apiUrl + "apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
 								})
 							}
@@ -275,20 +253,17 @@ define(function(require){
 						template = $(monster.template(self, 'appPopup', {
 							app: app,
 							users: users,
-						 	i18n: {
+							i18n: {
 								selectedUsers: selectedUsersLength,
-							  	totalUsers: users.length
-						  	}
+								totalUsers: users.length
+							}
 						})),
 						leftContainer = template.find('.left-container'),
 						rightContainer = template.find('.right-container'),
-						userListContainer = rightContainer.find('.user-list'),
-						appSwitch = rightContainer.find('.switch');
-
-					appSwitch.bootstrapSwitch();
+						userListContainer = rightContainer.find('.user-list');
 
 					if(!("apps" in account) || !(appId in account.apps) || (account.apps[appId].allowed_users === 'specific' && account.apps[appId].users.length === 0)) {
-						appSwitch.bootstrapSwitch('setState', false);
+						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
 					} else if(account.apps[appId].allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
@@ -307,19 +282,6 @@ define(function(require){
 
 					monster.ui.prettyCheck.create(userListContainer);
 					monster.ui.dialog(template, {title: app.extra.label});
-
-					// userListContainer.niceScroll({
-					// 	cursorcolor:"#333",
-					// 	cursoropacitymin:0.5,
-					// 	hidecursordelay:1000
-					// });
-
-					// if(leftContainer.height() > rightContainer.height()) {
-					// 	rightContainer.height(leftContainer.height());
-					// } else {
-					// 	leftContainer.height(rightContainer.height());
-					// }
-					// userListContainer.css('maxHeight', rightContainer.height()-182);
 
 					template.find('#screenshot_carousel').carousel();
 				}
@@ -346,8 +308,8 @@ define(function(require){
 						.addClass('icon-spinner icon-spin')
 						.show();
 
-					monster.request({
-						resource: 'appstore.account.get',
+					self.callApi({
+						resource: 'account.get',
 						data: {
 							accountId: appstoreData.account.id
 						},
@@ -357,8 +319,8 @@ define(function(require){
 								appstoreData.account.apps = {};
 							}
 							appstoreData.account.apps[app.id] = appInstallInfo;
-							monster.request({
-								resource: 'appstore.account.update',
+							self.callApi({
+								resource: 'account.update',
 								data: {
 									accountId: appstoreData.account.id,
 									data: appstoreData.account
@@ -385,44 +347,12 @@ define(function(require){
 					});
 				};
 
-			parent.find('.toggle-button-bloc .switch').on('switch-change', function(e, data) {
-				var $this = $(this),
-					previousSettings = $.extend(true, {}, appstoreData.account.apps[app.id]),
-					isInstalled = (app.id in appstoreData.account.apps && (previousSettings.allowed_users !== 'specific' || previousSettings.users.length > 0));
-				if(data.value != isInstalled) {
-					if(data.value) {
-						updateAppInstallInfo(
-							{
-								allowed_users: 'all',
-								users: []
-							},
-							function() {
-								parent.find('.permissions-bloc').slideDown();
-								$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
-								$('#appstore_container .app-filter.active').click();
-							},
-							function() {
-								appstoreData.account.apps[app.id] = previousSettings;
-								$this.bootstrapSwitch('setState', false);
-							}
-						);
-					} else {
-						updateAppInstallInfo(
-							{
-								allowed_users: 'specific',
-								users: []
-							},
-							function() {
-								parent.find('.permissions-bloc').slideUp();
-								$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
-								$('#appstore_container .app-filter.active').click();
-							},
-							function() {
-								appstoreData.account.apps[app.id] = previousSettings;
-								$this.bootstrapSwitch('setState', true);
-							}
-						);
-					}
+
+			parent.find('#app_switch').on('change', function() {
+				if($(this).is(':checked')) {
+					parent.find('.permissions-bloc').slideDown();
+				} else {
+					parent.find('.permissions-bloc').slideUp();
 				}
 			});
 
@@ -431,20 +361,7 @@ define(function(require){
 				if(allowedUsers === 'specific') {
 					parent.find('.permissions-link').show();
 				} else {
-					var previousSettings = $.extend(true, {}, appstoreData.account.apps[app.id]);
-					updateAppInstallInfo(
-						{
-							allowed_users: allowedUsers,
-							users: []
-						},
-						function() {
-							parent.find('.permissions-link').hide();
-						},
-						function() {
-							appstoreData.account.apps[app.id] = previousSettings;
-							parent.find('#app_popup_specific_users_radiobtn').prop('checked', true);
-						}
-					);
+					parent.find('.permissions-link').hide();
 				}
 			});
 
@@ -454,7 +371,6 @@ define(function(require){
 				parent.find('.user-list-view').show();
 
 				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
-				// userList.getNiceScroll()[0].resize();
 			});
 
 			userList.on('ifToggled', 'input', function(e) {
@@ -495,35 +411,100 @@ define(function(require){
 				});
 				parent.find('.user-list-view').hide();
 				parent.find('.app-details-view').show();
-				// userList.getNiceScroll()[0].resize();
 			});
 
 			parent.find('#user_list_save').on('click', function(e) {
 				e.preventDefault();
-				var selectedUsers = form2object('app_popup_user_list_form').users;
+				var selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users;
 				if(selectedUsers) {
-					var appInstallInfo = {
-						allowed_users: 'specific',
-						users: $.map(selectedUsers, function(val) {
-							return { id: val };
-						})
-					};
-
 					$.each(userList.find('input'), function() {
 						$(this).data('original', (this.checked ? 'check' : 'uncheck'));
 					});
 
 					parent.find('#app_popup_select_users_link').html(
-						monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: appInstallInfo.users.length })
+						monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: selectedUsers.length })
 					);
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();
-					// userList.getNiceScroll()[0].resize();
-
-					updateAppInstallInfo(appInstallInfo);
 				} else {
-					monster.ui.alert(self.i18n.active().alerts.noUserSelected)
+					monster.ui.alert(self.i18n.active().alerts.noUserSelected);
+				}
+			});
+
+			parent.find('#appstore_popup_cancel').on('click', function() {
+				parent.closest(':ui-dialog').dialog('close');
+			});
+
+			parent.find('#appstore_popup_save').on('click', function() {
+				if(parent.find('#app_switch').is(':checked')) {
+					var allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
+						selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users || [];
+
+					if(allowedUsers === 'specific' && selectedUsers.length === 0) {
+						monster.ui.alert(self.i18n.active().alerts.noUserSelected);
+					} else {
+						updateAppInstallInfo({
+							allowed_users: allowedUsers,
+							users: allowedUsers === 'specific' ? $.map(selectedUsers, function(val) {
+								return { id: val };
+							}) : []
+						},
+						function() {
+							var cookieData = $.parseJSON($.cookie('monster-auth')),
+								lang = monster.config.whitelabel.language,
+								isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
+								currentLang = app.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US',
+								appData = {
+									api_url: app.api_url,
+									icon: self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.authToken,
+									id: app.id,
+									label: app.i18n[currentLang].label,
+									name: app.name
+								};
+
+							// Add source_url only if it defined 
+							if(app.hasOwnProperty('source_url')) {
+								appData.source_url = app.source_url;
+							}
+
+							// Update local installedApps list by adding the new app
+							monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
+
+							// Update installedApps list of the cookie by adding the new app
+							cookieData.installedApps.push(appData);
+
+							// Update cookie
+							$.cookie('monster-auth', JSON.stringify(cookieData));
+
+							$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
+							$('#appstore_container .app-filter.active').click();
+
+							parent.closest(':ui-dialog').dialog('close');
+						});
+					}
+				} else {
+					updateAppInstallInfo({
+						allowed_users: 'specific',
+						users: []
+					},
+					function() {
+						var cookieData = $.parseJSON($.cookie('monster-auth'));
+
+						// Remove app from local installedApp list
+						monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+
+						// Remove app from installedApps of the cookie
+						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+
+						// Update cookie
+						$.cookie('monster-auth', JSON.stringify(cookieData));
+
+						$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
+						$('#appstore_container .app-filter.active').click();
+
+						parent.closest(':ui-dialog').dialog('close');
+					});
 				}
 			});
 		}

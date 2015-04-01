@@ -1,0 +1,43 @@
+<div class="errorTracker-content-wrapper">
+	<div class="header row-fluid">
+		<div class="box-total span3">
+			<span class="title">{{ i18n.errorTracker.errorTotal }}</span>
+			<span class="number">{{ totalErrors }}</span>
+		</div>
+
+		<div class="scoreboard span3 offset1">
+			<span class="title api-text">{{ i18n.errorTracker.apiTotal }}</span>
+			<span class="score"><span class="number">{{ apiErrors }}</span>-<span class="number">{{ jsErrors }}</span></span>
+			<span class="title js-text">{{ i18n.errorTracker.jsTotal }}</span>
+		</div>
+	</div>
+
+	<div class="list-errors">
+		{{#each errors}}
+			<div class="error-line {{type}}" data-type="{{type}}" data-index="{{@index}}">
+				{{#compare type "===" "api"}}
+					<div class="row-fluid">
+						<div class="time span2">{{ toFriendlyDate timestamp 'DD-MM-year hh:mm:ss'}}</div>
+						<div class="api-url span8">
+							<span class="verb">{{data.verb}}</span>
+							{{data.url}}
+							<span class="status">({{data.status}})</span>
+						</div>
+						<div class="details span2"><a class="monster-link" href="javascript:void(0);">{{ ../../i18n.errorTracker.viewDetails }}</a></div>
+					</div>
+				{{/compare}}
+
+				{{#compare type "===" "js"}}
+					<div class="row-fluid">
+						<div class="time span2">{{ toFriendlyDate timestamp 'DD-MM-year hh:mm:ss'}}</div>
+						<div class="api-url span8">{{ data.title }}</div>
+						<div class="details span2"><a class="monster-link" href="javascript:void(0);">{{ ../../i18n.errorTracker.viewDetails }}</a></div>
+						<div class="row-fluid">
+							<div class="api-url span8 offset2">{{ data.file }}</div>
+						</div>
+					</div>
+				{{/compare}}
+			</div>
+		{{/each}}
+	</div>
+</div>

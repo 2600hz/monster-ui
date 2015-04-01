@@ -1,27 +1,58 @@
 <div id="apploader">
-	<div class="app-list-container">
-		<ul class="app-list {{#if allowAppstore}}has-appstore{{/if}}">
-			{{#each apps}}
-				<li class="app-list-element{{#compare @index '===' 0}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}">
-					<div class="app-draggable">
-						<div class="app-draggable-inner"></div>
-					</div>
-					<div class="app-icon" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
-					<div class="app-name">{{label}}</div>
-					{{#unless @index }}
-					<div class="app-default">
-						<div class="app-default-top"><i class="icon-circle icon-green icon-small"></i></div>
-						<div class="app-default-bottom">{{ ../../i18n.apploader.default }}</div>
-					</div>
-					{{/unless}}
-				</li>
-			{{/each}}
-		</ul>
-	</div>
+	<div class="left-div">
+		<div class="default-app">
+			<div class="info">
+				<h4>{{i18n.defaultApp.title}}</h4>
+				<p>{{i18n.defaultApp.label}}</p>
+			</div>
+			<div class="app-container{{#unless defaultApp}} no-app{{/unless}}">
+			{{#if defaultApp}}
+				<div class="app-element ui-sortable-disabled" data-id="{{defaultApp.id}}" data-name="{{defaultApp.name}}" data-search="{{defaultApp.label}}">
+					<div class="app-icon"{{#if defaultApp.icon}} style="background-image:url({{defaultApp.icon}})"{{/if}}></div>
+					<div class="app-name">{{defaultApp.label}}</div>
+				</div>
+			{{else}}
+				<div class="app-element">
+					<div class="app-icon"></div>
+					<div class="app-name">{{i18n.noDefaultApp.label}}</div>
+				</div>
+			{{/if}}
+			</div>
+			<div class="search-box">
+				<input type="text" class="search-query" placeholder="{{i18n.searchQuery.placeholder}}">
+				<i class="icon-search"></i>
+			</div>
+		</div>
+		<div class="app-description">
+			<div class="vertical-align">
+			{{#if defaultApp}}
+				<h4>{{defaultApp.label}}</h4>
+				<p>{{defaultApp.description}}</p>
+			{{else}}
+				<h4>{{i18n.appDescription.title}}</h4>
+				<p>{{i18n.appDescription.label}}</p>
+			{{/if}}
+			</div>
+		</div>
 	{{#if allowAppstore}}
-		<div class="appstore-link" data-name="appstore">
-			<div class="appstore-link-icon"><i class="icon-cog icon-large icon-white"></i></div>
-			<div class="appstore-link-label">{{ i18n.apploader.appStore }}</div>
+		<div class="app-store">
+			<button id="launch_appstore" data-name="appstore">
+				<i class="icon-stackexchange icon-white"></i>
+				{{i18n.appstore.button}}
+			</button>
 		</div>
 	{{/if}}
+	</div>
+	<div class="right-div">
+		<i class="icon-remove-circle" id="close_app"></i>
+		<h3>{{i18n.appList.title}}</h3>
+		<div class="app-list">
+		{{#each apps}}
+			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}">
+				<div class="app-icon"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
+				<div class="app-name">{{label}}</div>
+			</div>
+		{{/each}}
+		</div>
+	</div>
 </div>

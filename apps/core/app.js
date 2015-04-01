@@ -10,7 +10,8 @@ define(function(require){
 
 		i18n: {
 			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'fr-FR': { customCss: false },
+			'ru-RU': { customCss: false }
 		},
 
 		requests: {},
@@ -35,17 +36,35 @@ define(function(require){
 		load: function(callback){
 			var self = this;
 
-			callback(this);
+			self.callApi({
+				resource: 'whitelabel.getByDomain',
+				data: {
+					domain: window.location.hostname,
+					generateError: false
+				},
+				success: function(data) {
+					var whitelabelData = data.data;
+					// Merge the whitelabel info to replace the hardcoded info
+					if(whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
+						whitelabelData.companyName = whitelabelData.company_name;
+					}
+					monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
+
+					callback(self);
+				},
+				error: function(err) {
+					callback(self);
+				}
+			});
 		},
 
 		render: function(container){
 			var self = this,
-				mainTemplate = $(monster.template(self, 'app', {}));
+				mainTemplate = $(monster.template(self, 'app', { hidePowered: monster.config.whitelabel.hide_powered }));
 				
 			document.title = monster.config.whitelabel.applicationTitle;
 
 			self.bindEvents(mainTemplate);
-
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
 
@@ -123,6 +142,16 @@ define(function(require){
 			var self = this,
 				spinner = container.find('.loading-wrapper');
 
+			window.onerror = function(message, fileName, lineNumber, columnNumber, error) {
+				monster.error('js', {
+					message: message,
+					fileName: fileName,
+					lineNumber: lineNumber,
+					columnNumber: columnNumber || '',
+					error: error || {}
+				});
+			};
+
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
 			monster.sub('monster.requestStart', function() {
 				self.onRequestStart(spinner);
@@ -142,6 +171,7 @@ define(function(require){
 			});
 
 			container.find('#ws-navbar .current-app').on('click', function() {
+				monster.pub('myaccount.hide');
 				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
 					app.render();
 				});
@@ -151,6 +181,7 @@ define(function(require){
 				var appName = monster.apps.auth.defaultApp;
 
 				if(appName) {
+					monster.pub('myaccount.hide');
 					monster.apps.load(appName, function(app) {
 						self.showAppName(appName);
 						app.render();
@@ -158,13 +189,27 @@ define(function(require){
 				}
 			});
 
-			if(monster.config.whitelabel.hasOwnProperty('nav')) {
-				if(monster.config.whitelabel.nav.hasOwnProperty('help') && monster.config.whitelabel.nav.help.length > 0) {
-					container.find('#ws-navbar a.help')
-							 .unbind('click')
-							 .attr('href', monster.config.whitelabel.nav.help);
-				}
+			$('body').on('click', '*[class*="monster-button"]', function(event) {
+				var $this = $(this),
+					classSuffix = $this.attr('class').replace(/.*monster-button(-\w+)?.*/g, '$1'),
+					splashDiv = $('<div class="monster-splash-effect'+classSuffix+'"/>'),
+					offset = $this.offset(),
+					xPos = event.pageX - offset.left,
+					yPos = event.pageY - offset.top;
+				
+				splashDiv.css({
+					height: $this.height(),
+					width: $this.height(),
+					top: yPos - (splashDiv.height()/2),
+					left: xPos - (splashDiv.width()/2)
+				}).appendTo($this);
 
+				window.setTimeout(function(){
+					splashDiv.remove();
+				}, 1500);
+			});
+
+			if(monster.config.whitelabel.hasOwnProperty('nav')) {
 				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
 					container.find('#ws-navbar .links a.signout')
 							 .unbind('click')

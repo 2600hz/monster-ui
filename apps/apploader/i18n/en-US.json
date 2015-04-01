@@ -1,6 +1,22 @@
 {
-	"apploader": {
-		"appStore": "App Store",
-		"default": "default"
+	"defaultApp": {
+		"title": "Default App",
+		"label": "Having a default app allows you to dive straight into that app once you are signed in."
+	},
+	"noDefaultApp": {
+		"label": "No Default App Selected"
+	},
+	"appDescription": {
+		"title": "Setting a default app",
+		"label": "To set or change your default app, drag the desired app inside the designated area above."
+	},
+	"searchQuery": {
+		"placeholder": "Search Apps"
+	},
+	"appstore": {
+		"button": "App Exchange"
+	},
+	"appList": {
+		"title": "Your Apps"
 	}
 }

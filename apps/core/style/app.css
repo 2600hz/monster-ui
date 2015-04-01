@@ -92,58 +92,52 @@
 	line-height: 62px;
 	text-align: center;
 	text-decoration: none;
-	border-left: 1px solid #353535;
+	border-left: 1px solid #202029;
 }
 
 .links .top-link i {
-	color: #FFF;
+	color: #c0c0c9;
 }
 
 .links .top-link:hover i {
-	color: #22CCFF;
+	color: #22a5ff;
 }
 
 .links .signout {
 	display: none;
 }
 
-@media (min-width: 768px) and (max-width: 979px) {
-    .hello {
-        margin: 30px 0;
-    }
-}
-
 /* Fancy dropdown menu */
 .nav .dropdown-toggle .caret {
-    border-top-color: whiteSmoke;
-    border-bottom-color: whiteSmoke;
+	border-top-color: whiteSmoke;
+	border-bottom-color: whiteSmoke;
 }
 
 .nav .dropdown-toggle:hover .caret {
-    border-top-color: #22ccff;
-    border-bottom-color: #22ccff;
+	border-top-color: #22ccff;
+	border-bottom-color: #22ccff;
 }
 
 /* Bottom navbar */
 .navbar.navbar-fixed-bottom.blue {
-    background: rgb(17,17,17); /* Old browsers */
-    background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
-    background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
+	background: rgb(17,17,17); /* Old browsers */
+	background: -moz-linear-gradient(left,  rgba(17,17,17,1) 0%, rgba(51,51,51,1) 50%, rgba(17,17,17,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(17,17,17,1)), color-stop(50%,rgba(51,51,51,1)), color-stop(100%,rgba(17,17,17,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* IE10+ */
+	background: linear-gradient(to right,  rgba(17,17,17,1) 0%,rgba(51,51,51,1) 50%,rgba(17,17,17,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#111111',GradientType=1 ); /* IE6-9 */
 
-    border-top: 5px solid #22ccff;
-    border-radius: 0;
-    box-shadow: none;
-    height: 85px;
-    margin: 20px 0 0;
-    padding: 15px 5px;
-    position: fixed;
-    width: auto;
-    z-index: 10;
+	border-top: 5px solid #22ccff;
+	border-radius: 0;
+	box-shadow: none;
+	height: 85px;
+	margin: 20px 0 0;
+	padding: 15px 5px;
+	position: fixed;
+	width: auto;
+	z-index: 10;
 }
 
 /* Common.css */
@@ -279,12 +273,76 @@ table.table tr td {
 }
 
 /* JQuery datepicker */
-.ui-datepicker th { font-weight: 600; }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: 600; color: #333; }
-.ui-widget-header { background: #22ccff; }
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #22ccff; text-decoration: none; }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { font-weight: bold; color: #22ccff; }
-.ui-state-hover a, .ui-state-hover a:hover { color: #22ccff; text-decoration: none; }
+.ui-datepicker {
+	background: #303039;
+	border: none;
+	margin-top: 2px;
+	border-radius: 2px;
+}
+.ui-datepicker-calendar thead {
+	color: #808089;
+}
+.ui-datepicker-calendar .ui-state-default {
+	background: transparent;
+	color: #c0c0c9;
+	border-color: transparent;
+	text-align: center;
+	font-weight: 600;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-active {
+	color: #22a5ff;
+	border-color: #22a5ff;
+	font-weight: 600;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-hover {
+	background-color: #202029;
+	border-color: #202029;
+}
+.ui-datepicker-header {
+	background: inherit;
+	border: none;
+}
+.ui-datepicker-prev .ui-icon,
+.ui-datepicker-next .ui-icon {
+	background: transparent;
+}
+.ui-datepicker-prev .ui-icon:after,
+.ui-datepicker-next .ui-icon:after {
+	content: '';
+	border: solid 2px #fff;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+	top: 4px;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.ui-datepicker-prev .ui-icon:after {
+	border-top: none;  
+	border-right: none;
+	left: 8px;
+}
+.ui-datepicker-next .ui-icon:after {
+	border-bottom: none;  
+	border-left: none;
+	right: 8px;
+}
+.ui-datepicker-prev.ui-state-hover,
+.ui-datepicker-next.ui-state-hover {
+	background: inherit;
+	border-color: transparent;
+}
+.ui-datepicker-prev:not(.ui-state-disabled),
+.ui-datepicker-next:not(.ui-state-disabled) {
+	cursor: pointer;
+}
+.ui-datepicker-prev.ui-state-hover:not(.ui-state-disabled) .ui-icon:after,
+.ui-datepicker-next.ui-state-hover:not(.ui-state-disabled) .ui-icon:after {
+	border-color: #22a5ff;
+}
 
 /* Confirm Box */
 .alert-dialog {
@@ -351,6 +409,10 @@ table.table tr td {
 
 .red-box {
 	background: #fce3e3;
+}
+
+.green-box {
+	background: #cceca0;
 }
 
 .blue-box {
@@ -538,7 +600,7 @@ table.table tr td {
 	padding: 10px;
 }
 
-[data-toggle="tooltip"] {
+i[data-toggle="tooltip"] {
 	cursor: default;
 	margin-right: 5px;
 	margin-left: 5px;
@@ -649,14 +711,14 @@ table.table tr td {
 
 .items-selector .box-selector .box-title {
 	background: none repeat scroll 0 0 #22CCFF;
-    border-radius: 4px 4px 0 0;
-    color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 600;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 20px;
-    text-align: left;
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: 600;
+	height: 50px;
+	line-height: 50px;
+	padding-left: 20px;
+	text-align: left;
 }
 
 .items-selector .box-selector ul {
@@ -706,7 +768,7 @@ table.table tr td {
 	background: #f9f9f9;
 	height: 50px;
 	line-height: 50px;
-	padding: 5px 0px 5px 10px;
+	padding: 5px 10px;
 	cursor: pointer;
 }
 
@@ -909,53 +971,148 @@ input[type="checkbox"]:checked:before {
 }*/
 
 label.monster-invalid {
-    color: red;
-    font-size: 12px;
-    margin: 0;
-    line-height: 16px;
-    position: absolute;
+	color: red;
+	font-size: 12px;
+	margin: 0;
+	line-height: 16px;
+	position: absolute;
 }
 
 /* Confirm Charges popup */
-.charges-dialog {
-	max-width: 800px;
-	width: auto;
+.dialog-charges {
+	width: 520px;
+	padding: 30px;
 }
 
-.charges-dialog .help-box .text-wrapper {
-	padding: 25px 30px 15px;
+.dialog-charges .content > div {
+	padding: 10px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	background-color: #f0f0f9;
 }
 
-.charges-dialog .help-box .text-wrapper p {
-	text-align: justify;
+.dialog-charges .content > .section:not(:first-child) {
+	margin-top: 20px;
 }
 
-.charges-dialog .help-box .text-wrapper table {
-	margin: 15px 0;
-	min-width: 400px;
+.dialog-charges .content .title-block {
+	line-height: 47px;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(2),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(5),
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(6),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(2),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(5),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(6) {
-	text-align: right;
+.dialog-charges .charges-info .icon-warning-sign {
+	font-size: 39px;
+	color: #c0c0c9;
 }
 
-.charges-dialog .help-box .text-wrapper table thead th:nth-child(4),
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(4) {
-	text-align: left;
+.dialog-charges .charges-list {
+	margin-top: 20px
 }
 
-.charges-dialog .help-box .text-wrapper table tbody td:nth-child(3),
-.charges-dialog .help-box .text-wrapper p:last-child {
+.dialog-charges .charges-element {
+	padding: 10px;
 	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
 }
 
-.charges-dialog .help-box .text-wrapper table tbody tr {
-	background: #fdfdfd;
+.dialog-charges .charges-element:not(:first-child) {
+	margin-top: 5px;
+}
+
+.dialog-charges .charges-element table {
+	width: 100%;
+}
+
+.dialog-charges .charges-element tr:first-child {
+	height: 40px;
+}
+
+.dialog-charges .charges-element td {
+	font-size: 20px;
+}
+
+.dialog-charges .charges-element td:nth-child(odd) {
+	font-weight: bold;
+	min-width: 100px;
+	color: #22a5ff;
+}
+
+.dialog-charges .charges-element th {
+	font-weight: normal;
+}
+
+.dialog-charges .actions {
+	margin-top: 30px;
+	padding-top: 20px;
+	text-align: right;
+	border-top: 1px solid #c0c0c9;
+}
+
+.dialog-charges .actions button:last-child {
+	width: 130px;
+	margin-left: 20px;
+}
+
+/* Advanced Error Dialog */
+.alert-dialog-advanced {
+	max-width: 800px;
+	padding: 20px;
+}
+
+.alert-dialog-advanced .error-line {
+	margin: 5px 0;
+}
+
+.alert-dialog-advanced .error-line.title {
+	font-size: 14px;
+	margin-bottom: 20px
+}
+
+.alert-dialog-advanced .error-line.api-name .verb {
+	margin-right: 5px;
+}
+
+.alert-dialog-advanced .details-box .headline {
+	cursor: pointer;
+	margin: 10px 0;
+}
+
+.alert-dialog-advanced .details-box .headline i {
+	margin-right: 5px;
+}
+
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-down,
+.alert-dialog-advanced .details-box .headline i.icon-angle-up {
+	display: none;
+}
+
+.alert-dialog-advanced .details-box .headline i.icon-angle-down,
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-up {
+	display: inline-block;
+}
+
+.alert-dialog-advanced .details-box .error-details-wrapper {
+	display: none;
+}
+
+.alert-dialog-advanced .details-box .error-details-wrapper pre {
+	background: #FFF;
+}
+
+/* Javascript Errors */
+.alert-dialog-javascript {
+	padding: 20px;
+}
+
+.alert-dialog-javascript .title {
+	font-size: 22px;
+	padding: 15px 0;
+}
+
+.alert-dialog-javascript table.table tr td {
+	line-height: 15px;
+	white-space: pre-line;
 }
 
 /* Left Menu */
@@ -1237,4 +1394,463 @@ label.monster-invalid {
 
 .wysiwyg-container .wysiwyg-editor i {
 	font-size: inherit;
+}
+
+/********** New title boxes **********/
+.title-box {
+	background-color: #fff;
+	display: inline-block;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	padding: 5px 15px;
+	text-align: center;
+}
+.title-box .title {
+	line-height: 25px;
+	font-weight: 600;
+}
+.title-box .value {
+	color: #22a5ff;
+	font-size: 24px;
+	line-height: 35px;
+	font-weight: 600;
+}
+.title-box.single-line > * {
+	line-height: 60px;
+}
+
+/********** New button designs **********/
+*[class*="monster-button"] {
+	font-size: 15px;
+	padding: 6px 20px;
+	min-width: 140px;
+	letter-spacing: .02em;
+	border: solid 1px;
+	border-radius: 2px;
+	position:relative;
+	overflow: hidden;
+
+	border-color: #c0c0c9;
+	background-color: transparent;
+	color: #909099;
+}
+*[class*="monster-button"] > i {
+	color: inherit;
+	margin-right: 8px;
+	vertical-align: text-bottom;
+}
+
+.monster-button-small {
+	min-width: 100px;
+	padding: 4px 16px;
+}
+
+.monster-button-mini {
+	min-width: 80px;
+	padding: 0 6px;
+}
+
+.monster-button-primary {
+	border-color: #0087e0;
+	background-color: #22a5ff;
+	color: #004c80;
+}
+
+.monster-button-secondary {
+	border-color: #22a5ff;
+	color: #22a5ff;
+}
+
+.monster-button-success {
+	background-color: #33db24;
+	border-color: #18b309;
+	color: #0e6b06;
+}
+
+.monster-button-warning {
+	background-color: #ffcc33;
+	border-color: #f0b400;
+	color: #8f6b00;
+}
+
+.monster-button-danger {
+	background-color: #ff3d24;
+	border-color: #e01a00;
+	color: #8a1000;
+}
+
+@-webkit-keyframes monster-splash-animation {
+	from {
+		-webkit-transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		-webkit-transform: scale(100);
+		opacity: 0;
+	}
+}
+@-moz-keyframes monster-splash-animation {
+	from {
+		-moz-transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		-moz-transform: scale(100);
+		opacity: 0;
+	}
+}
+@keyframes monster-splash-animation {
+	from {
+		transform: scale(1);
+		opacity: 0.4;
+	}
+	to {
+		transform: scale(100);
+		opacity: 0;
+	}
+}
+
+*[class*="monster-splash-effect"] {
+	position: absolute;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	background: rgba(32,32,41, .2);
+
+	-webkit-animation: monster-splash-animation 1.5s;
+	   -moz-animation: monster-splash-animation 1.5s;
+	        animation: monster-splash-animation 1.5s;
+}
+.monster-splash-effect-primary { background: rgba(255,255,255, .35); }
+.monster-splash-effect-secondary { background: rgba(87,188,255, .6); }
+.monster-splash-effect-success { background: rgba(255,255,255, .4); }
+.monster-splash-effect-warning { background: rgba(255,255,255, .5); }
+.monster-splash-effect-danger { background: rgba(255,255,255, .4); }
+
+/********** New checkbox designs **********/
+
+/*	Expected HTML structure:
+ *	<label class="monster-checkbox[-large, prepend-label]">
+ *		<input type="checkbox">
+ *		<i></i>
+ *		<span>You label</span> [optional]
+ *	</label>
+ */
+
+*[class*="monster-checkbox"] {
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	min-width: 14px;
+	min-height: 20px;
+	margin: 0;
+}
+*[class*="monster-checkbox"] > input {
+	display:none;
+}
+*[class*="monster-checkbox"] > span {
+	margin: 0 0 0 14px;
+	padding: 0 0 0 6px;
+	display: inline-block;
+	height: 20px;
+	line-height: 20px;
+}
+*[class*="monster-checkbox"] > i {
+	position: absolute;
+	top: 3px;
+	left: 0px;
+	width: 14px;
+	height: 14px;
+	border: solid 1px #606069;
+	border-radius: 2px;
+	box-sizing: border-box;
+}
+*[class*="monster-checkbox"] > i:after {
+	content: '';
+	position: absolute;
+	width: 6px;
+	height: 3px;
+	background: transparent;
+	top: 2px;
+	left: 2px;
+	border: 3px solid #fff;
+	border-top: none;
+	border-right: none;
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	opacity: 0;
+}
+*[class*="monster-checkbox"] > input:checked + i {
+	background-color: #22a5ff;
+	border-color: #22a5ff;
+}
+*[class*="monster-checkbox"] > input:checked + i:after {
+	opacity: 1;
+}
+*[class*="monster-checkbox"]:hover > input:not(:checked) + i:after {
+	opacity: 1;
+	border-color: #c0c0c9;
+}
+
+.monster-checkbox-large {
+	min-width: 20px;
+}
+.monster-checkbox-large > span {
+	margin-left: 20px;
+}
+.monster-checkbox-large > i {
+	width: 20px;
+	height: 20px;
+	top: 0px;
+}
+.monster-checkbox-large > i:after {
+	width: 10px;
+	height: 5px;
+	border-width: 4px;
+}
+
+*[class*="monster-checkbox"].prepend-label > i {
+	right: 0px;
+	left: initial;
+}
+*[class*="monster-checkbox"].prepend-label > span {
+	margin: 0 14px 0 0;
+	padding: 0 6px 0 0;
+}
+.monster-checkbox-large.prepend-label > span {
+	margin-right: 20px;
+}
+
+/********** New switch designs **********/
+
+/*	Expected HTML structure:
+ *	<label class="monster-switch">
+ *		<input type="checkbox">
+ *		<span>
+ *			<span>On</span>
+ *			<span>Off</span>
+ *			</span>
+ *		<a></a>
+ *	</label>
+ */
+
+.monster-switch {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	margin: 0;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.monster-switch > input {
+	display: none;
+}
+.monster-switch > span {
+	display: block;
+	padding: 4px 14px;
+	border-radius: 20px;
+	line-height: 20px;
+	width: 40px;
+	font-family: 'Source Sans Pro';
+	font-weight: 600;
+	font-size: 14px;
+	text-align: right;
+	background: #fff;
+	border: solid 1px #c0c0c9;
+	color: #909099;
+	transition: all 0.4s ease-out;
+}
+.monster-switch > span span {
+	display: none;
+}
+.monster-switch > a {
+	width: 22px;
+	height: 22px;
+	border: solid 1px #c0c0c9;
+	border-radius: 15px;
+	background: #f0f0f9;
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	transition: all 0.2s ease-out;
+}
+.monster-switch > input:checked ~ span span:first-child {
+	display:inline;
+}
+.monster-switch > input:not(:checked) ~ span span:last-child {
+	display:inline;
+}
+.monster-switch > input:checked + span {
+	text-align: left;
+	background: #22a5ff;
+	border-color: #1e8dd9;
+	color: #0d456b;
+}
+.monster-switch > input:checked ~ a {
+	left: 43px;
+	background: #fff;
+	border-color: #1e8dd9;
+}
+
+/* Quick List */
+/* Could be used when we add flags on a carrier, is used when we add recipients to a Voicemail Box in the SmartPBX */
+.list-entities .create-entity {
+	padding: 15px 0px;
+}
+
+.list-entities .create-entity > * {
+	color: #CCC;
+}
+
+.list-entities .entity-wrapper {
+	border: 1px solid #999;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.list-entities .entity-wrapper:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) {
+	background: #EEE;
+	height: 20px;
+	text-align: left;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity {
+	display: inline-block;
+	float: right;
+	padding: 0 5px;
+}
+
+.list-entities .entity-wrapper:not(.placeholder) .delete-entity:hover {
+	cursor: pointer;
+	text-shadow: 0px 0px 1px #777;
+}
+
+.list-entities .entity-wrapper.placeholder {
+	border: 1px dashed #CCC;
+}
+
+.list-entities .entity-wrapper.placeholder:not(.active) {
+	cursor: pointer;
+}
+
+.list-entities .entity-wrapper.placeholder.active,
+.list-entities .entity-wrapper.placeholder:hover {
+	background: #EEE;
+	border: 1px dashed #999;
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-inputs {
+	display: inherit;
+}
+
+.list-entities .entity-wrapper.placeholder.active .create-text {
+	display: none;
+}
+
+.list-entities .entity-wrapper.placeholder:hover > i {
+	color: #333;
+}
+
+.list-entities .entity-wrapper.placeholder i {
+	color: #CCC;
+	margin-right: 10px;
+}
+
+.list-entities .entity-wrapper .create-inputs {
+	display: none;
+}
+
+.list-entities .entity-wrapper .create-inputs > * {
+	margin: 0 0 0 10px;
+}
+
+.list-entities .saved-entities {
+	max-height: 210px;
+	overflow: auto;
+}
+
+/********* Custom CSS for Chosen **********/
+.chosen-container .chosen-single {
+	width: 220px;
+	border: 1px solid #cccccc;
+	background: #fff;
+	box-sizing: border-box;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 4px;
+	box-shadow: none;
+}
+.chosen-container.chosen-with-drop .chosen-single {
+	background: #fff;
+}
+
+.chosen-container .chosen-drop {
+	box-sizing: border-box;
+	width: 220px;
+}
+
+.chosen-container {
+	margin-bottom: 10px;
+}
+
+.chosen-container .chosen-single div b {
+	background-image: none !important;
+	background-color: transparent;
+	position: relative;
+}
+
+.chosen-container .chosen-single div b:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 7px;
+	border-color: #000 transparent;
+	transform: translateY(-50%);
+	border-style: solid;
+	border-width: 6px 3px 0;
+}
+
+/* Special rules to fit firefox's dropdown style */
+@-moz-document url-prefix() {
+	.chosen-container .chosen-single div b {
+		border: solid 1px #aaa;
+		background-color: #eee;
+		box-sizing: border-box;
+	}
+	.chosen-container .chosen-single div b:before {
+		top: 11px;
+		right: 4px;
+		border-color: #555 transparent;
+		border-width: 6px 4px 0px;
+		transform: none;
+	}
+	.chosen-container .chosen-single div b:after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		right: 4px;
+		border-style: solid;
+		border-color: #eee transparent;
+		border-width: 6px 4px 0px;
+	}
+	.chosen-container.chosen-with-drop .chosen-single div b:before {
+		border-color: #000 transparent;
+	}
+	.chosen-container.chosen-with-drop .chosen-single div b {
+		background-color: #e7f2fc;
+		border-color: #7eb4ea;
+	}
 }

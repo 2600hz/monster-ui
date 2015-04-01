@@ -23,6 +23,7 @@ define(function(require){
 				onChildrenClick = args.onChildrenClick,
 				onBreadcrumbClick = args.onBreadcrumbClick,
 				onNewAccountClick = args.onNewAccountClick,
+				addCurrentAccount = args.addCurrentAccount || false,
 				callback = args.callback,
 				layout = $(monster.template(self, 'accountBrowser-layout', {
 					customClass: args.customClass || 'ab-sidebar',
@@ -38,6 +39,7 @@ define(function(require){
 					container: layout.find('.account-list-container'),
 					parentId: parentId,
 					selectedId: selectedId,
+					addCurrentAccount: addCurrentAccount,
 					callback: callback
 				});
 
@@ -78,6 +80,7 @@ define(function(require){
 					onChildrenClick: onChildrenClick,
 					onBreadcrumbClick: onBreadcrumbClick,
 					onNewAccountClick: onNewAccountClick,
+					addCurrentAccount: addCurrentAccount,
 					searchLink: searchLink
 				});
 			} else {
@@ -93,7 +96,11 @@ define(function(require){
 				onChildrenClick = args.onChildrenClick,
 				onBreadcrumbClick = args.onBreadcrumbClick,
 				onNewAccountClick = args.onNewAccountClick,
-				searchLink = args.searchLink;
+				searchLink = args.searchLink,
+				addCurrentAccount = args.addCurrentAccount,
+				accountList = template.find('.account-list'),
+				isLoading = false,
+				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spin icon-spinner"></i></li>');
 
 			//Prevents autoclosing of dropdown on click
 			template.on('click', function(e) {
@@ -101,7 +108,7 @@ define(function(require){
 			});
 
 			template.find('.account-list-add').on('click', function() {
-				var currentAccountId = template.find('.account-list').data('current'),
+				var currentAccountId = accountList.data('current'),
 					breadcrumbsList = $.map(
 						breadcrumbsTemplate.find('.account-browser-breadcrumb a'),
 						function(elem) {
@@ -131,14 +138,14 @@ define(function(require){
 							$elem.hide();
 						}
 					});
-					template.find('.account-list').append(searchLink);
+					accountList.prepend(searchLink);
 				} else {
 					template.find('.account-list-element').show();
 					searchLink.remove();
 				}
 			});
 
-			template.find('.account-list').on('click', '.account-link', function() {
+			accountList.on('click', '.account-link', function() {
 				var accountElement = $(this).parents('.account-list-element');
 				template.find('.account-list-element').removeClass('active');
 				accountElement.addClass('active');
@@ -146,27 +153,60 @@ define(function(require){
 				onAccountClick && onAccountClick(accountElement.data('id'), accountElement.find('.account-name').text());
 			});
 
-			template.find('.account-list').on('click', '.account-children-link', function() {
+			accountList.on('click', '.account-children-link', function() {
 				var parentElement = $(this).parents('.account-list-element'),
 					accountId = parentElement.data('id'),
 					accountName = parentElement.find('.account-name').text(),
-					parentAccountId = template.find('.account-list').data('current');
+					parentAccountId = accountList.data('current'),
+					isSearchResult = accountList.data('search-value');
 
-				template.find('.account-browser-search').val('');
+				template.find('.account-browser-search').prop('disabled', false)
+														.val('');
 				self.accountBrowserRenderList({
 					container: template.find('.account-list-container'),
 					parentId: accountId,
 					slide: true,
+					addCurrentAccount: addCurrentAccount,
 					callback: function() {
 						if(breadcrumbsTemplate) {
-							var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
-								id: accountId,
-								name: accountName,
-								parentId: parentAccountId
-							}));
+							var addBreadcrumb = function(_id, _name, _parentId) {
+								var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
+									id: _id,
+									name: _name,
+									parentId: _parentId
+								}));
 
-							breadcrumbsTemplate.find('.account-browser-breadcrumbs')
-											   .append(breadcrumbTemplate);
+								breadcrumbsTemplate.find('.account-browser-breadcrumbs')
+												   .append(breadcrumbTemplate);
+							};
+
+							if(isSearchResult) {
+								var homeBreadcrumb = breadcrumbsTemplate.find('.account-browser-breadcrumb').first(),
+									homeId = homeBreadcrumb.find('a').data('id');
+								homeBreadcrumb.nextAll()
+											  .remove();
+
+								self.callApi({
+									resource: 'account.listParents',
+									data: {
+										accountId: accountId
+									},
+									success: function(data, status) {
+										var previousId = null;
+										_.each(data.data, function(val) {
+											if(val.id === homeId) {
+												previousId = val.id;
+											} else if(previousId) {
+												addBreadcrumb(val.id, val.name, previousId);
+												previousId = val.id;
+											}
+										});
+										addBreadcrumb(accountId, accountName, previousId || homeId);
+									}
+								});
+							} else {
+								addBreadcrumb(accountId, accountName, parentAccountId);
+							}
 						}
 
 						onChildrenClick && onChildrenClick(accountId);
@@ -174,22 +214,68 @@ define(function(require){
 				});
 			});
 
-			var accountList = template.find('.account-list'),
-				isLoading = false,
-				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spin icon-spinner"></i></li>');
+			accountList.on('click', '.account-search-link', function() {
+				if(searchLink.hasClass('active')) {
+					accountList.data('search-value', null);
+					searchLink.removeClass('active')
+							  .remove();
+					template.find('.account-browser-search').prop('disabled', false)
+															.val('');
+
+					if(breadcrumbsTemplate) {
+						breadcrumbsTemplate.find('.account-browser-breadcrumb:not(:first-child)').remove();
+					}
+
+					self.accountBrowserRenderList({
+						container: template.find('.account-list-container'),
+						addCurrentAccount: addCurrentAccount
+					});
+				} else {
+					var searchValue = searchLink.find('.account-search-value').text();
+					searchLink.addClass('active')
+							  .remove();
+					self.accountBrowserRenderList({
+						container: template.find('.account-list-container'),
+						searchValue: searchValue,
+						slide: false,
+						addCurrentAccount: addCurrentAccount,
+						callback: function() {
+							template.find('.account-browser-search').prop('disabled', true);
+							accountList.prepend(searchLink);
+							if(breadcrumbsTemplate) {
+								var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
+									search: monster.template(self, '!' + self.i18n.active().accountBrowser.breadcrumbSearchResults, { searchValue: searchValue })
+								}));
+
+								breadcrumbsTemplate.find('.account-browser-breadcrumb')
+												   .first()
+												   .nextAll()
+												   .remove();
+
+								breadcrumbsTemplate.find('.account-browser-breadcrumbs')
+												   .append(breadcrumbTemplate);
+							}
+						}
+					});
+				}
+			});
 
 			accountList.on('scroll', function() {
 				if(!isLoading && accountList.data('next-key') && (accountList.scrollTop() >= (accountList[0].scrollHeight - accountList.innerHeight() - 100))) {
 					isLoading = true;
 					accountList.append(loader);
+					var searchValue = accountList.data('search-value'),
+						apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
+						apiData = searchValue ? { accountName: searchValue } : { accountId: accountList.data('current') },
+						nextStartKey = accountList.data('next-key');
+
 					self.callApi({
-						resource: 'account.listChildren',
-						data: {
-							accountId: accountList.data('current'),
+						resource: apiResource,
+						data: $.extend(true, apiData, {
 							filters: {
-								'start_key': accountList.data('next-key')
+								'start_key': encodeURIComponent(nextStartKey)
 							}
-						},
+						}),
 						success: function(data, status) {
 							var nextStartKey = data.next_start_key,
 								listTemplate = $(monster.template(self, 'accountBrowser-list', {
@@ -224,11 +310,13 @@ define(function(require){
 							 .remove();
 					}
 
-					template.find('.account-browser-search').val('');
+					template.find('.account-browser-search').prop('disabled', false)
+															.val('');
 					self.accountBrowserRenderList({
 						container: template.find('.account-list-container'),
 						parentId: parentId || accountId,
 						selectedId: parentId ? accountId : null,
+						addCurrentAccount: addCurrentAccount,
 						callback: function() {
 							onBreadcrumbClick && onBreadcrumbClick(accountId, parentId);
 						}
@@ -244,21 +332,29 @@ define(function(require){
 				parentId = args.parentId || self.accountId,
 				selectedId = args.selectedId,
 				slide = args.slide,
-				callback = args.callback;
+				searchValue = args.searchValue,
+				addCurrentAccount = args.addCurrentAccount,
+				callback = args.callback,
+				apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
+				apiData = searchValue ? { accountName: searchValue } : { accountId: parentId };
 
 			self.callApi({
-				resource: 'account.listChildren',
-				data: {
-					accountId: parentId
-				},
+				resource: apiResource,
+				data: apiData,
 				success: function(data, status) {
 					var nextStartKey = data.next_start_key,
 						slider = container.find('.account-list-slider'),
 						list = container.find('.account-list'),
-						template = $(monster.template(self, 'accountBrowser-list', {
+						templateData = {
 							accounts: monster.util.sort(data.data),
 							selectedId: selectedId
-						}));
+						};
+
+					if(addCurrentAccount) {
+						templateData.currentAccount = monster.apps.auth.currentAccount;
+					}
+
+					var template = $(monster.template(self, 'accountBrowser-list', templateData));
 
 					if(slide) {
 						slider.empty()
@@ -278,6 +374,7 @@ define(function(require){
 
 					list.data('next-key', nextStartKey || null);
 					list.data('current', parentId);
+					list.data('search-value', searchValue || null);
 
 					callback && callback();
 				}

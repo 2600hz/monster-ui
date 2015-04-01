@@ -16,14 +16,10 @@ define(function(require){
 	});
 
 	Handlebars.registerHelper('debug', function(optionalValue) {
-		console.log('Current Context');
-		console.log('====================');
-		console.log(this);
+		console.log('Current Context: ', this);
 
 		if (optionalValue) {
-			console.log('Value');
-			console.log('====================');
-			console.log(optionalValue);
+			console.log('Value: ', optionalValue);
 		}
 	});
 
@@ -63,6 +59,14 @@ define(function(require){
 			}
 		}
 		return select.innerHTML;
+	});
+
+	Handlebars.registerHelper('ifInArray', function(elem, list, options) {
+		if(list.indexOf(elem) > -1) {
+			return options.fn(this);
+		}
+
+		return options.inverse(this);
 	});
 
 	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
@@ -105,6 +109,42 @@ define(function(require){
 
 	Handlebars.registerHelper('toFriendlyDate', function(timestamp, format) {
 		return monster.util.toFriendlyDate(timestamp, format);
+	});
+
+	Handlebars.registerHelper('formatPrice', function(price, decimals) {
+		return monster.util.formatPrice(price, decimals);
+	});
+
+	Handlebars.registerHelper('monsterSwitch', function(options) {
+		return monster.template(monster.apps.core, 'monster-switch-template', {
+			checkbox: new Handlebars.SafeString(options.fn(this))
+		});
+	});
+
+	Handlebars.registerHelper('monsterCheckbox', function() {
+		var templateData = {
+			cssClass: 'monster-checkbox',
+			checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+		};
+
+		for(var i=0; i<arguments.length-1; i++) {
+			if(_.isString(arguments[i])) {
+				switch(arguments[i]) {
+					case 'large-checkbox':
+					case 'checkbox-large':
+						templateData.cssClass = 'monster-checkbox-large';
+						break;
+					case 'prepend-label':
+						templateData.prepend = true;
+						break;
+					default:
+						templateData.label = arguments[i];
+						break;
+				}
+			}
+		}
+
+		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
 	});
 
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
@@ -273,16 +313,16 @@ define(function(require){
 						renderData = [];
 
 					$.each(data, function(categoryName, category) {
-						if (categoryName != 'activation_charges' && categoryName != 'activation_charges_description') {
+						if (categoryName != 'activation_charges') {
 							$.each(category, function(itemName, item) {
 								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
 									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
 								if(monthlyCharges > 0) {
 									renderData.push({
-										service: i18n.services[itemName],
-										rate: item.rate || 0,
+										service: i18n.services.hasOwnProperty(itemName) ? i18n.services[itemName] : itemName.replace(/_/, ' '),
+										rate: item.rate.toFixed(2) || 0,
 										quantity: item.quantity || 0,
-										discount: discount > 0 ? parseFloat(discount).toFixed(2) : '',
+										discount: discount > 0 ? parseFloat(discount).toFixed(2) : 0,
 										monthlyCharges: monthlyCharges
 									});
 
@@ -294,9 +334,9 @@ define(function(require){
 
 					return renderData;
 				},
+				charges = data.activation_charges ? data.activation_charges.toFixed(2) : 0,
 				template = $(monster.template(coreApp, 'dialog-charges', {
-						activation_charges: data.hasOwnProperty('activation_charges') ? data.activation_charges : false,
-						activation_charges_description: data.hasOwnProperty('activation_charges_description') ? data.activation_charges_description : false,
+						activation_charges: charges,
 						charges: formatData(data)
 					}
 				)),
@@ -328,8 +368,76 @@ define(function(require){
 			return dialog;
 		},
 
+		// New Popup to show advanced API errors via a "More" Link.
+		requestErrorDialog: function(error) {
+			var self = this,
+				dialog,
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active(),
+				dataTemplate = {
+					message: error.data.message,
+					requestId: error.data.requestId,
+					url: error.data.url,
+					apiResponse: error.data.response,
+					verb: error.data.verb.toUpperCase()
+				},
+				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
+				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true)),
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						width: 'auto',
+						title: i18n.advancedErrorDialog.title,
+						position: ['center', 20]
+					},
+					options
+				);
+
+			template.find('.headline').on('click', function() {
+				template.find('.error-details-wrapper').slideToggle();
+				$(this).toggleClass('active');
+			});
+
+			dialog = this.dialog(template, options);
+
+			return dialog;
+		},
+
+		// New Popup to show advanced Javascript errors.
+		jsErrorDialog: function(error) {
+			var self = this, 
+				dialog,
+				coreApp = monster.apps.core,
+				i18n = coreApp.i18n.active();
+
+			var dataTemplate = {
+					title: error.data.title,
+					file: error.data.file,
+					line: error.data.line,
+					column: error.data.column,
+					stackTrace: error.data.stackTrace
+				},
+				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
+				template = $(monster.template(coreApp, 'dialog-errorJavascript', dataTemplate, false, false, true)),
+				options = $.extend(
+					true,
+					{
+						closeOnEscape: false,
+						width: 'auto',
+						title: i18n.advancedErrorDialog.title,
+						position: ['center', 20]
+					},
+					options
+				);
+
+			dialog = this.dialog(template, options);
+
+			return dialog;
+		},
+
 		// Highlight then fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
-		hightlight: function(element, options) {
+		highlight: function(element, options) {
 			var options = $.extend(true, {
 				startColor: '#22CCFF',
 				endColor: '#F2F2F2',
@@ -387,9 +495,6 @@ define(function(require){
 						sPaginationType: 'full_numbers',
 						aaData: data || {},
 						aoColumns: columns,
-						bScrollInfinite: true,
-						bScrollCollapse: true,
-						sScrollY: '300px',
 						oLanguage: {
 							sEmptyTable: i18n.table.empty,
 							sProcessing: i18n.table.processing,
@@ -407,49 +512,48 @@ define(function(require){
 							}
 						}
 					},
-					options = $.extend(true, {}, defaultOptions, options);
+					options = $.extend(true, {}, defaultOptions, options),
+					applyFunctions = function applyFunctions(table) {
+						table.addData = function(data) {
+							var self = this;
+
+							self.fnAddData(data);
+						};
+
+						table.destroy = function() {
+							var self = this;
+
+							self.fnDestroy();
+
+							monster.ui.table[self.name] = null;
+						};
+					},
+					applyModifications = function applyModifications(table) {
+						var search_wrapper = table.parents('.dataTables_wrapper').find('.dataTables_filter');
+							search = search_wrapper.find('input[type="text"]'),
+							btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
+							btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
+							i18n = monster.apps['core'].i18n.active();
+
+						search.attr('placeholder', i18n.table.search);
+
+						search_wrapper.contents().filter(function() {
+							return this.nodeType == Node.TEXT_NODE;
+						}).remove();
+
+						// This is backwards because of the float right
+						search.before(btn_cancel);
+						search.after(btn_search);
+					};
+
 
 				tableObj = element.dataTable(options);
 				tableObj.name = name;;
 
-				self.applyFunctions(tableObj);
-				self.applyModifications(tableObj);
+				applyFunctions(tableObj);
+				applyModifications(tableObj);
 
 				self[name] = tableObj;
-			},
-
-			applyFunctions: function(table) {
-				table.addData = function(data) {
-					var self = this;
-
-					self.fnAddData(data);
-				};
-
-				table.destroy = function() {
-					var self = this;
-
-					self.fnDestroy();
-
-					monster.ui.table[self.name] = null;
-				};
-			},
-
-			applyModifications: function(table) {
-				var search_wrapper = table.parents('.dataTables_wrapper').find('.dataTables_filter');
-					search = search_wrapper.find('input[type="text"]'),
-					btn_search = '',//<input class="submit-search" type="image" src="img/search_left.png">';
-					btn_cancel = '',//<input class="cancel-search" type="image" src="img/search_right.png">';
-					i18n = monster.apps['core'].i18n.active();
-
-				search.attr('placeholder', i18n.table.search);
-
-				search_wrapper.contents().filter(function() {
-					return this.nodeType == Node.TEXT_NODE;
-				}).remove();
-
-				// This is backwards because of the float right
-				search.before(btn_cancel);
-				search.after(btn_search);
 			}
 		},
 
@@ -746,6 +850,11 @@ define(function(require){
 				}
 				else return true;
 			}, localization.customRules['checkList']);
+
+			// Adding advanced custom rules
+			$.validator.addMethod('regex', function(value, element, regexpr) {
+				return regexpr.test(value);
+			});
 
 			this.customValidationInitialized = true;
 		},
@@ -1074,6 +1183,150 @@ define(function(require){
 							}
 						}
 					});
+		},
+
+		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
+			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
+
+			for (var key in formData) {
+				if (key === '') {
+					delete formData[key];
+				}
+			}
+
+			return formData;
+		},
+
+		/**
+		 * @desc Two columns UI element with sortable items
+		 * @param target - mandatory jQuery Object
+		 * @param data - mandatory object of items
+		 * @param selectedData - mandatory object of selected items
+		 * @param options - optional list of settings
+		 */
+		linkedColumns: function(target, items, selectedItems, options) {
+			var self = this,
+				coreApp = monster.apps.core,
+				unselectedItems = (function findUnselectedItems(items, selectedItems) {
+					var selectedKeys = selectedItems.map(function(item) { return item.key; }),
+						unselectedItems = items.filter(function(item) { return selectedKeys.indexOf(item.id) < 0; });
+
+					return unselectedItems;
+				})(items, selectedItems),
+				 defaultOptions = {
+					insertionType: 'appendTo',
+					columnsTitles: {
+						available: coreApp.i18n.active().linkedColumns.available,
+						selected: coreApp.i18n.active().linkedColumns.selected
+					}
+				},
+				widgetTemplate,
+				dataTemplate,
+				widget;
+
+			options = $.extend(true, defaultOptions, options || {});
+
+			dataTemplate = {
+				unselectedItems: unselectedItems,
+				selectedItems: selectedItems,
+				options: options
+			};
+
+			widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate));
+
+			widgetTemplate.find('.available, .selected')
+						  .sortable({ 
+							connectWith: '.connected',
+							tolerance: 'pointer'
+						});
+
+			widget = widgetTemplate[options.insertionType](target);
+
+			widget.getSelectedItems = function getSelectedItems() {
+				var results = [];
+
+				widgetTemplate.find('ul.selected .item-selector').each(function(k, item) {
+					results.push($(item).data('key'));
+				});
+
+				return results;
+			};
+
+			return widget;
+		},
+
+		/**
+		 * @desc Helper that builds a 2 columns UI component using our linkedColumns helper, with preset dataset for video and audio codecs
+		 * @param target - mandatory jQuery Object
+		 * @param type - mandatory type of codec selector, either 'audio' or 'video', will set the dataset of available items
+		 * @param selectedCodecs - array of codecs, ex : ['OPUS',' Speex']
+		 * @param options - optional list of settings, same options as the linked columns helper
+		 */
+		codecSelector: function(type, target, selectedCodecs, options) {
+			var self = this,
+				codecsI18n = monster.apps.core.i18n.active().codecs,
+				defaultAudioList = {
+					'OPUS': codecsI18n.audio['OPUS'],
+					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
+					'G7221@32000h': codecsI18n.audio['G7221@32000h'],
+					'G7221@16000h': codecsI18n.audio['G7221@16000h'],
+					'G722': codecsI18n.audio['G722'],
+					'speex@32000h':codecsI18n.audio['speex@32000h'],
+					'speex@16000h': codecsI18n.audio['speex@16000h'],
+					'PCMU': codecsI18n.audio['PCMU'],
+					'PCMA': codecsI18n.audio['PCMA'],
+					'G729':codecsI18n.audio['G729'],
+					'GSM': codecsI18n.audio['GSM'],
+					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
+					'CELT@64000h': codecsI18n.audio['CELT@64000h']
+				},
+				defaultVideoList = {
+					'VP8': codecsI18n.video['VP8'],
+					'H264': codecsI18n.video['H264'],
+					'H263': codecsI18n.video['H263'],
+					'H261': codecsI18n.video['H261']
+				},
+				mapMigrateAudioCodec = {
+					'Speex': 'speex@16000h',
+					'G722_16': 'G7221@16000h',
+					'G722_32': 'G7221@32000h',
+					'CELT_48': 'CELT@48000h',
+					'CELT_64': 'CELT@64000h'
+				},
+				selectedItems = [],
+				items = [],
+				codecValue;
+
+			if(type === 'audio') {
+				_.each(selectedCodecs, function(codec) {
+					// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
+					codecValue = defaultAudioList.hasOwnProperty(codec) ? defaultAudioList[codec] : (mapMigrateAudioCodec.hasOwnProperty(codec) ? defaultAudioList[mapMigrateAudioCodec[codec]] : codec);
+
+					selectedItems.push({ key: codec, value: codecValue });
+				});
+
+				_.each(defaultAudioList, function(description, codec) {
+					items.push({ key: codec, value: description });
+				})
+
+				return self.linkedColumns(target, items, selectedItems, options)
+			}
+			else if(type === 'video') {
+				_.each(selectedCodecs, function(codec) {
+					codecValue = defaultVideoList.hasOwnProperty(codec) ? defaultVideoList[codec] : codec;
+
+					selectedItems.push({ key: codec, value: codecValue });
+				});
+
+				_.each(defaultVideoList, function(description, codec) {
+					items.push({ key: codec, value: description });
+				})
+
+				return self.linkedColumns(target, items, selectedItems, options);
+			}
+			else {
+				console.error('This is not a valid type for our codec selector: ', type);
+			}
 		}
 	};
 

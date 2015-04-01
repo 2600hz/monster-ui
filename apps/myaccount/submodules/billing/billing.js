@@ -1,7 +1,8 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		card = require('card');
 
 	var billing = {
 
@@ -48,6 +49,17 @@ define(function(require) {
 						self.billingBindEvents(billingTemplate, results);
 
 						monster.pub('myaccount.renderSubmodule', billingTemplate);
+
+						billingTemplate.find('#form_credit_card').card({
+							container: '.credit-card-container',
+							nameInput: '#first_name, #last_name',
+							numberInput: '#credit_card_number',
+							expiryInput: '#expiration_date_month, #expiration_date_year',
+							cvcInput: '#security_code',
+							values: {
+								number: '•••• •••• •••• '+(results.billing.credit_card.last_four || '••••')
+							}
+						});
 
 						if(typeof args.callback === 'function') {
 							args.callback(billingTemplate);
@@ -130,6 +142,13 @@ define(function(require) {
 				}, 0);
 			});
 
+			//Refreshing the card info when opening the settings-item
+			template.find('.settings-item[data-name="credit_card"] .settings-link').on('click', function() {
+				var settingsItem = $(this).parents('.settings-item');
+				if(!settingsItem.hasClass('open')) {
+					settingsItem.find('input').keyup();
+				}
+			});
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data

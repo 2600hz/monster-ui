@@ -6,20 +6,6 @@ define(function(require){
 	var servicePlan = {
 
 		requests: {
-			'myaccount.servicePlan.get': {
-				url: 'accounts/{accountId}/service_plans/current',
-				generateError: false,
-				verb: 'GET'
-			},
-			'myaccount.servicePlan.getSubscription': {
-				url: 'accounts/{accountId}/transactions/subscriptions',
-				generateError: false,
-				verb: 'GET'
-			},
-			'myaccount.servicePlan.downloadCsv': {
-				url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv',
-				verb: 'GET'
-			}
 		},
 
 		subscribe: {
@@ -48,18 +34,18 @@ define(function(require){
 								$.each(data.data.items, function(categoryName, category) {
 									$.each(category, function(itemName, item) {
 										var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-											monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
+											monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
 
 										if(monthlyCharges > 0) {
 											dataArray.push({
 												service: self.i18n.active().servicePlan.titles[itemName],
 												rate: item.rate || 0,
 												quantity: item.quantity || 0,
-												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + monster.util.formatPrice(discount, 2) : '',
 												monthlyCharges: monthlyCharges
 											});
 
-											totalAmount += parseFloat(monthlyCharges);
+											totalAmount += monthlyCharges;
 										}
 									});
 								});
@@ -72,7 +58,7 @@ define(function(require){
 							dataArray.sort(sortByPrice);
 
 							renderData.servicePlanArray = dataArray;
-							renderData.totalAmount = parseFloat(totalAmount).toFixed(2);
+							renderData.totalAmount = totalAmount;
 
 							callback(null, data);
 						},
@@ -138,8 +124,8 @@ define(function(require){
 		servicePlanDownloadCsv: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.downloadCsv',
+			self.callApi({
+				resource: 'servicePlan.getCsv',
 				data: {
 					accountId: self.accountId
 				},
@@ -155,10 +141,11 @@ define(function(require){
 		servicePlanGet: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.get',
+			self.callApi({
+				resource: 'servicePlan.listCurrent',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -172,10 +159,11 @@ define(function(require){
 		servicePlanGetSubscription: function(success, error) {
 			var self = this;
 
-			monster.request({
-				resource: 'myaccount.servicePlan.getSubscription',
+			self.callApi({
+				resource: 'balance.getSubscriptions',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);

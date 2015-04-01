@@ -8,24 +8,26 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.servicePlanDetails.render': 'render'
+			'common.servicePlanDetails.render': 'servicePlanDetailsRender'
 		},
 
 		/* Arguments:
 		** container: jQuery Div
 		** servicePlan: servicePlanId or servicePlan data
+		** useOwnPlans: if true, get the plan details from the account own plans, instead of its reseller's ones
 		** callback: callback executed once we rendered the number control
 		*/
-		render: function(args){
+		servicePlanDetailsRender: function(args) {
 			var self = this,
 				container = args.container,
 				servicePlan = args.servicePlan || null,
+				useOwnPlans = args.useOwnPlans || false,
 				callback = args.callback;
 
 			if(container) {
 				if(typeof servicePlan === 'string') {
 					self.callApi({
-						resource: 'servicePlan.get',
+						resource: useOwnPlans ? 'servicePlan.get' : 'servicePlan.getAvailable',
 						data: {
 							accountId: self.accountId,
 							planId: servicePlan
