@@ -90,7 +90,11 @@
 			"label": "Sync",
 			"success": "You successfully re-synced the numbers with the database",
 			"help": "If you think some of the numbers are not displayed in the right category (Spare/In Use), you can use this feature to re-synchronize your numbers with the database."
-		}
+		},
+
+		"__comment": "UI-1153: Show warning icon next to numbers being transfered",
+		"__version": "v3.20_s3",
+		"portIconHelp": "This number is in the process of being ported and will be deleted if the port fails. It only appears for setting up purposes and is not configured to handle calls"
 	},
 
 	"callerId": {
