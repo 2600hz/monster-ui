@@ -768,7 +768,7 @@ i[data-toggle="tooltip"] {
 	background: #f9f9f9;
 	height: 50px;
 	line-height: 50px;
-	padding: 5px 0px 5px 10px;
+	padding: 5px 10px;
 	cursor: pointer;
 }
 

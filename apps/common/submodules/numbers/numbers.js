@@ -987,6 +987,8 @@ define(function(require){
 				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers),
 					spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
 
+				spareTemplate.find('[data-toggle="tooltip"]').tooltip();
+
 				spareTemplate.find('.empty-search-row').hide();
 
 				spareTemplate.on('keyup', '.search-query', function() {
