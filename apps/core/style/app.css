@@ -1546,7 +1546,8 @@ label.monster-invalid {
 	margin: 0;
 }
 *[class*="monster-checkbox"] > input {
-	display:none;
+	position: absolute;
+	width: 0;
 }
 *[class*="monster-checkbox"] > span {
 	margin: 0 0 0 14px;
@@ -1582,6 +1583,9 @@ label.monster-invalid {
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 	opacity: 0;
+}
+*[class*="monster-checkbox"] > input:focus + i {
+	box-shadow: 0px 0px 3px 2px #0087e0;
 }
 *[class*="monster-checkbox"] > input:checked + i {
 	background-color: #22a5ff;
@@ -1651,7 +1655,8 @@ label.monster-invalid {
 	user-select: none;
 }
 .monster-switch > input {
-	display: none;
+	position: absolute;
+	width: 0;
 }
 .monster-switch > span {
 	display: block;
@@ -1681,6 +1686,9 @@ label.monster-invalid {
 	left: 3px;
 	top: 3px;
 	transition: all 0.2s ease-out;
+}
+.monster-switch > input:focus + span {
+	box-shadow: 0px 0px 2px 1px #0087e0;
 }
 .monster-switch > input:checked ~ span span:first-child {
 	display:inline;
