@@ -8,7 +8,7 @@ define(function(require){
 
 		/*
 			This function will automatically logout the user after %wait% minutes (defaults to 30).
-		   	This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
+			This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
 		*/
 		autoLogout: function() {
 			if(!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
@@ -85,9 +85,12 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(date, format){
+		toFriendlyDate: function(date, format, user){
 			var self = this
 				i18n = monster.apps.core.i18n.active(),
+				user = user || monster.apps.auth.currentUser,
+				user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
+				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
 				format2Digits = function(number) {
 					return number < 10 ? '0'.concat(number) : number;
 				},
@@ -106,6 +109,11 @@ define(function(require){
 				hours = format2Digits(date.getHours()),
 				minutes = format2Digits(date.getMinutes()),
 				seconds = format2Digits(date.getSeconds()),
+				shortDateFormats = {
+					'dmy': 'DD/MM/year',
+					'mdy': 'MM/DD/year',
+					'ymd': 'year/MM/DD'
+				}
 				patterns = {
 					'year': fullYear,
 					'YY': year,
@@ -119,12 +127,35 @@ define(function(require){
 				};
 
 			if (typeof format === 'string') {
-				if (format === 'short') {
-					format = 'MM/DD/year'
+				var formatString = format.toLowerCase();
+				switch(formatString) {
+					case 'short':
+					case 'date':
+						format = shortDateFormats[userDateFormat];
+						break;
+					case 'shortdate':
+						format = shortDateFormats[userDateFormat].replace('year','YY');
+						break;
+					case 'time':
+						format = 'hh:mm:ss';
+						break;
+					case 'shorttime':
+						format = 'hh:mm';
+						break;
+					case 'shortdatetime':
+						format = shortDateFormats[userDateFormat].replace('year','YY') + ' hh:mm';
+						break;
+					case 'datetime':
+						format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
+						break;
 				}
 			}
 			else {
-				format = 'MM/DD/year - hh:mm12h'
+				format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
+			}
+
+			if(format.indexOf('hh') > -1 && format.indexOf('12h') == -1 && user12hMode) {
+				format += ' 12h'
 			}
 
 			if (format.indexOf('12h') > -1) {
@@ -218,8 +249,8 @@ define(function(require){
 						if(!currentAcc) {
 							if(!result[parents[i]]) { result[parents[i]] = {}; }
 
-						 	currentAcc = result[parents[i]];
- 	 	 	 	 	 	}
+							currentAcc = result[parents[i]];
+						}
 						else {
 							if(!currentAcc.children) { currentAcc.children = {}; }
 							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
@@ -256,20 +287,20 @@ define(function(require){
 
 		formatMacAddress: function(macAddress) {
 			var regex = /[^0-9a-fA-F]/g,
-			    macAddress = macAddress.replace(regex, ''),
+				macAddress = macAddress.replace(regex, ''),
 				formattedMac = '';
 
 			if(macAddress.length === 12) {
 				var i = 0;
 
 				for(var c in macAddress) {
-    				if((i%2 === 0) && (i !== 0)) {
-        				formattedMac += ':' + macAddress[i];
-    				}
-    				else {
-        				formattedMac += macAddress[i];
-    				}
-    				i++;
+					if((i%2 === 0) && (i !== 0)) {
+						formattedMac += ':' + macAddress[i];
+					}
+					else {
+						formattedMac += macAddress[i];
+					}
+					i++;
 				}
 			}
 
@@ -389,37 +420,37 @@ define(function(require){
 			// Our API return created but braintree returns created_at
 			transaction.created = transaction.created_at || transaction.created; 
 
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created, 'MM/DD/year hh:mm:ss');
+			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
 
 			return transaction;
 		},
 
 		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
-    	sort: function(dataSet, secondArg) {
+		sort: function(dataSet, secondArg) {
 			var fieldName = 'name',
-    			sortFunction = function(a, b) {
-    				var aString = a[fieldName].toLowerCase(),
-    					bString = b[fieldName].toLowerCase(),
-    					result = (aString > bString) ? 1 : (aString < bString) ? -1 : 0;
+				sortFunction = function(a, b) {
+					var aString = a[fieldName].toLowerCase(),
+						bString = b[fieldName].toLowerCase(),
+						result = (aString > bString) ? 1 : (aString < bString) ? -1 : 0;
 
 					return result;
-    			};
+				};
 
-    		if(typeof secondArg === 'function') {
+			if(typeof secondArg === 'function') {
 				sortFunction = secondArg;
-    		}
-    		else if(typeof secondArg === 'string') {
+			}
+			else if(typeof secondArg === 'string') {
 				fieldName = secondArg;
-    		}
+			}
 
-    		result = dataSet.sort(sortFunction);
+			result = dataSet.sort(sortFunction);
 
 			return result;
-    	},
+		},
 
 		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
 		timeToSeconds: function(time) {
-			var suffix = time.substring(time.length-2),
+			var suffix = time.substring(time.length-2).toLowerCase(),
 				timeArr = time.split(':'),
 				h = parseInt(timeArr[0],10),
 				m = parseInt(timeArr[1],10);

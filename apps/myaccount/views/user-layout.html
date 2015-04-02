@@ -115,6 +115,75 @@
 				</div>
 			</div>
 		</li>
+		<li class="settings-item clearfix" data-name="datetime">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.dateTimeTitle }}</span>
+				<span class="description">
+					<ul>
+						<li>
+						{{#compare user.ui_flags.date_format '===' 'dmy'}}
+							{{ i18n.user.dateFormats.dmy }}
+						{{else}} {{#compare user.ui_flags.date_format '===' 'dmy'}}
+							{{ ../i18n.user.dateFormats.ymd }}
+						{{else}}
+							{{ ../i18n.user.dateFormats.mdy }}
+						{{/compare}} {{/compare}}
+						</li>
+						<li>
+						{{#if user.ui_flags.twelve_hours_mode}}
+							{{ i18n.user.twelveHoursModeEnabled }}
+						{{else}}
+							{{ i18n.user.twelveHoursModeDisabled }}
+						{{/if}}
+						</li>
+					</ul>
+				</span>
+				<span class="update">
+					<i class="icon-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_datetime">
+							<div class="control-group">
+								<label class="control-label">{{ i18n.user.dateFormatTitle }}</label>
+								<div class="controls checkbox-container">
+									<label>
+										<input type="radio" value="mdy" name="ui_flags.date_format" checked />
+										<span>{{ i18n.user.dateFormats.mdy }}</span>
+									</label>
+									<label>
+										<input type="radio" value="dmy" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'dmy'}}checked{{/compare}} />
+										<span>{{ i18n.user.dateFormats.dmy }}</span>
+									</label>
+									<label>
+										<input type="radio" value="ymd" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'ymd'}}checked{{/compare}} />
+										<span>{{ i18n.user.dateFormats.ymd }}</span>
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="user_twelve_hours_mode">{{ i18n.user.enableTwelveHoursMode }}</label>
+								<div class="controls checkbox-container">
+									{{#monsterCheckbox}}
+										<input type="checkbox" id="user_twelve_hours_mode" name="ui_flags.twelve_hours_mode" {{#if user.ui_flags.twelve_hours_mode}}checked{{/if}} />
+									{{/monsterCheckbox}}
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="datetime">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
 		<li class="settings-item clearfix" data-name="colorblind">
 			<a class="settings-link clearfix">
 				<span class="title">{{ i18n.user.colorblindTitle }}</span>

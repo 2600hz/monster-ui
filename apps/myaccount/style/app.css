@@ -406,6 +406,9 @@
 	box-shadow: none;
 	border-color: #c0c0c9;
 }
+#myaccount .myaccount-content .list-settings .controls input[type="radio"] {
+	margin-top: 0;
+}
 
 #myaccount .myaccount-content .list-settings .controls input:focus {
 	border-color: #22a5ff;

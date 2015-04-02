@@ -121,7 +121,8 @@
 			"checkList":"Éxiste déjà",
 			"mac":"Veuillez entrer une adresse MAC valide.",
 			"ipv4":"Veuillez entrer une addresse IPv4 valide.",
-			"time12h":"Veuillez entrer une heure au format 12-h AM/PM.",
+			"time12h":"Veuillez entrer une heure au format 12h AM/PM.",
+			"time24h":"Veuillez entrer une heure au format 24h.",
 			"greaterDate":"L'heure de début doit précéder l'heure de fin.",
 			"realm": "Veuillez entrer uniquement des caractères alphanumérique, points ou tirets."
 		},

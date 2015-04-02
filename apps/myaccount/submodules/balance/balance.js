@@ -257,7 +257,7 @@ define(function(require){
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
 					var duration = self.i18n.active().balance.active_call,
-						friendlyDate = monster.util.toFriendlyDate(v.created, 'MM/DD/year - hh:mm'),
+						friendlyDate = monster.util.toFriendlyDate(v.created),
 						accountName = '-',
 						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
 						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),

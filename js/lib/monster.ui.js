@@ -827,6 +827,7 @@ define(function(require){
 			addSimpleRule('mac', /^(?:[0-9A-F]{2}(\:|\-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i);
 			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
 			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\ ?[AP]M))$/i);
+			addSimpleRule('time24h', /^(([01]?[1-9]|2[0-3])(:[0-5]\d){1,2})$/i);
 			addSimpleRule('realm', /^[0-9A-Z\.\-]+$/i);
 
 			// Adding advanced custom rules

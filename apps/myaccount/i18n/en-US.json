@@ -32,7 +32,20 @@
 		"colorblindTitle": "Colorblind Mode",
 		"colorblindEnabled": "Enabled",
 		"colorblindDisabled": "Disabled",
-		"enableColorblind": "Enable Colorblind Mode"
+		"enableColorblind": "Enable Colorblind Mode",
+
+		"__comment": "UI-1335: Adding hours settings to the user settings",
+		"__version": "v3.20_s3",
+		"dateTimeTitle": "Date and Time Display",
+		"twelveHoursModeEnabled": "12 Hours Mode (AM/PM)",
+		"twelveHoursModeDisabled": "24 Hours Mode",
+		"enableTwelveHoursMode": "Time in 12 Hours Mode (AM/PM)",
+		"dateFormatTitle": "Date format",
+		"dateFormats": {
+			"dmy": "Day/Month/Year",
+			"mdy": "Month/Day/Year",
+			"ymd": "Year/Month/Day"
+		}
 	},
 
 	"account": {
