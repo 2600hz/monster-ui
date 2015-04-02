@@ -84,7 +84,9 @@
 			"label": "Sync",
 			"success": "Mise à jour des numéros réussie",
 			"help": "Si certains numéros n'apparaissent pas dans la bonne colonne, vous pouvez cliquer sur ce lien afin d'essayer de régler ce problème."
-		}
+		},
+
+		"portIconHelp": "Ce numéro est en cours de transfert et sera supprimé si celui-ci échoue. Il peut être configuré mais ne sera pas utilisable"
 	},
 	"callerId":{
 		"callerIdName":"Nom de Caller ID",
