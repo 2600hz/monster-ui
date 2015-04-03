@@ -411,12 +411,12 @@ input[type="color"],
 }
 
 /* Yealink */
-/*.model-image.yealink-t1x-t18p { background-image: url('images/models/yealink_t1x_t18p.jpg'); }*/
+.model-image.yealink-t1x-t18p { background-image: url('images/models/yealink_t1x_t18p.jpg'); }
 .model-image.yealink-t1x-t19p { background-image: url('images/models/yealink_t1x_t19p.jpg'); }
 .model-image.yealink-t2x-t20p { background-image: url('images/models/yealink_t2x_t20p.jpg'); }
 .model-image.yealink-t2x-t21p { background-image: url('images/models/yealink_t2x_t21p.jpg'); }
 .model-image.yealink-t2x-t22p { background-image: url('images/models/yealink_t2x_t22p.jpg'); }
-.model-image.yealink-2tx-t23p { background-image: url('images/models/yealink_t2x_t23p.jpg'); }
+.model-image.yealink-t2x-t23p { background-image: url('images/models/yealink_t2x_t23p.jpg'); }
 .model-image.yealink-t2x-t26p { background-image: url('images/models/yealink_t2x_t26p.jpg'); }
 .model-image.yealink-t2x-t28p { background-image: url('images/models/yealink_t2x_t28p.jpg'); }
 .model-image.yealink-t3x-t32g { background-image: url('images/models/yealink_t3x_t32g.jpg'); }
@@ -427,12 +427,6 @@ input[type="color"],
 .model-image.yealink-t4x-t48g { background-image: url('images/models/yealink_t4x_t48g.jpg'); }
 
 /* Cisco */
-/*.model-image.cisco-901 { background-image: url('images/models/cisco901.jpg'); }
-.model-image.cisco-921 { background-image: url('images/models/cisco921.jpg'); }
-.model-image.cisco-922 { background-image: url('images/models/cisco922.jpg'); }
-.model-image.cisco-941 { background-image: url('images/models/cisco941.jpg'); }
-.model-image.cisco-942 { background-image: url('images/models/cisco942.jpg'); }
-.model-image.cisco-962 { background-image: url('images/models/cisco962.jpg'); }*/
 .model-image.cisco-spa3xx-301g { background-image: url('images/models/cisco_spa3xx_301g.jpg'); }
 .model-image.cisco-spa3xx-303g { background-image: url('images/models/cisco_spa3xx_303g.jpg'); }
 .model-image.cisco-spa5xx-501g { background-image: url('images/models/cisco_spa5xx_501g.jpg'); }
@@ -444,13 +438,19 @@ input[type="color"],
 .model-image.cisco-spa5xx-514g { background-image: url('images/models/cisco_spa5xx_514g.jpg'); }
 .model-image.cisco-spa5xx-525g { background-image: url('images/models/cisco_spa5xx_525g.jpg'); }
 .model-image.cisco-spa5xx-525g2 { background-image: url('images/models/cisco_spa5xx_525g2.jpg'); }
+.model-image.cisco-spa9xx-901 { background-image: url('images/models/cisco_spa9xx_901.jpg'); }
+.model-image.cisco-spa9xx-921 { background-image: url('images/models/cisco_spa9xx_921.jpg'); }
+.model-image.cisco-spa9xx-922 { background-image: url('images/models/cisco_spa9xx_922.jpg'); }
+.model-image.cisco-spa9xx-941 { background-image: url('images/models/cisco_spa9xx_941.jpg'); }
+.model-image.cisco-spa9xx-942 { background-image: url('images/models/cisco_spa9xx_942.jpg'); }
+.model-image.cisco-spa9xx-962 { background-image: url('images/models/cisco_spa9xx_962.jpg'); }
 
 /* Polycom */
 .model-image.polycom-spip-301 { background-image: url('images/models/polycom_spip_301.jpg'); }
 .model-image.polycom-spip-320 { background-image: url('images/models/polycom_spip_320.jpg'); }
 .model-image.polycom-spip-321 { background-image: url('images/models/polycom_spip_321.jpg'); }
 .model-image.polycom-spip-330 { background-image: url('images/models/polycom_spip_330.jpg'); }
-/*.model-image.polycom-spip-331 { background-image: url('images/models/polycom_spip_331.jpg'); }*/
+.model-image.polycom-spip-331 { background-image: url('images/models/polycom_spip_331.jpg'); }
 .model-image.polycom-spip-335 { background-image: url('images/models/polycom_spip_335.jpg'); }
 .model-image.polycom-spip-430 { background-image: url('images/models/polycom_spip_430.jpg'); }
 .model-image.polycom-spip-450 { background-image: url('images/models/polycom_spip_450.jpg'); }
@@ -461,7 +461,7 @@ input[type="color"],
 .model-image.polycom-spip-601 { background-image: url('images/models/polycom_spip_601.jpg'); }
 .model-image.polycom-spip-650 { background-image: url('images/models/polycom_spip_650.jpg'); }
 .model-image.polycom-spip-670 { background-image: url('images/models/polycom_spip_670.jpg'); }
-/*.model-image.polycom-spip-1500 { background-image: url('images/models/polycom_spip_1500.jpg'); }*/
+.model-image.polycom-spip-1500 { background-image: url('images/models/polycom_spip_1500.jpg'); }
 .model-image.polycom-spip-4000 { background-image: url('images/models/polycom_spip_4000.jpg'); }
 .model-image.polycom-spip-5000 { background-image: url('images/models/polycom_spip_5000.jpg'); }
 .model-image.polycom-spip-6000 { background-image: url('images/models/polycom_spip_6000.jpg'); }
