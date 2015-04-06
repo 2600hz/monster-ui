@@ -6,6 +6,12 @@
 		</div>
 	</li>
 {{/if}}
+{{#if addBackButton}}
+	<li class="account-previous-link">
+		<i class="icon-caret-left"></i>
+		<div>{{ i18n.accountBrowser.backButton }}</div>
+	</li>
+{{/if}}
 {{#each accounts}}
 	<li class="account-list-element{{#compare this.id "===" ../selectedId}} active{{/compare}}" data-id="{{this.id}}">
 		{{#if this.descendants_count}}

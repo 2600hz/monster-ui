@@ -212,3 +212,25 @@
 .account-browser-breadcrumbs .account-browser-breadcrumb:not(:last-child) a {
 	color: #606069;
 }
+
+
+.account-browser-container .account-previous-link {
+	height: 30px;
+	line-height: 30px;
+	padding: 0px 20px;
+	border-bottom: solid 1px #c0c0c9;
+	cursor: pointer;
+}
+
+.account-browser-container .account-previous-link > * {
+	display: inline-block;
+}
+
+.account-browser-container .account-previous-link > i {
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+.account-browser-container .account-previous-link:hover > * {
+	color: #22a5ff;
+}

@@ -7,7 +7,8 @@
 		"breadcrumbSearchResults": "search results for \"{{searchValue}}\"",
 		"__comment": "UI-1271: Updating the search link",
 		"__version": "v3.20_s3",
-		"searchReset": "Click again to clear the search"
+		"searchReset": "Click again to clear the search",
+		"backButton": "Back to parent"
 	},
 	"numbers": {
 		"mainNumber": "Office Number",

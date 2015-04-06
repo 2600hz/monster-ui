@@ -7,7 +7,8 @@
 		"breadcrumbSearchResults": "résultats de la recherche pour \"{{searchValue}}\"",
 		"__comment": "UI-1271: Updating the search link",
 		"__version": "v3.20_s3",
-		"searchReset": "Cliquez pour effacer la recherche"
+		"searchReset": "Cliquez pour effacer la recherche",
+		"backButton": "Retour au parent"
 	},
 	"numbers":{
 		"mainNumber":"Numéro du bureau",

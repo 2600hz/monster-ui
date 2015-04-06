@@ -691,6 +691,7 @@ define(function(require){
 					container: parent.find('.list-numbers[data-type="spare"] .accounts-dropdown'),
 					customClass: 'ab-dropdown',
 					addCurrentAccount: true,
+					addBackButton: true,
 					onAccountClick: function(accountId, accountName) {
 						moveNumbersToAccount(accountId, accountName);
 						parent.find('.list-numbers[data-type="spare"] .dropdown-move').removeClass('open');
