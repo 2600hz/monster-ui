@@ -103,6 +103,8 @@ define(function(require){
 					monster.ui.charges(parsedError.data, function() {
 						options.acceptCharges = true;
 						monster.request(options);
+					}, function () {
+						options.onChargesCancelled && options.onChargesCancelled();
 					});
 				} else {
 					// Added this to be able to display more data in the UI
@@ -442,6 +444,8 @@ define(function(require){
 							monster.ui.charges(parsedError.data, function() {
 								requestOptions.acceptCharges = true;
 								monster.kazooSdk.request(requestOptions);
+							}, function () {
+								requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
 							});
 						} else {
 							monster.error('api', error, requestOptions.generateError);
