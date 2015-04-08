@@ -145,28 +145,99 @@ define(function(require){
 			container.find('.request-box .request-state').on('change', '.switch-state', function(event) {
 				var el = $(this),
 					box = el.parents('.request-box'),
-					portRequestId = box.data('id'),
-					newState = el.val();
+					accountId = box.data('account_id'),
+					requestId = box.data('id'),
+					newState = el.val(),
+					currentRequest;
 
-				self.portRequestChangeState(accountId, portRequestId, newState, function() {
-					self.portRenderDynamicCells(container, {
-						data: data,
-						state: newState,
-						portRequestId: portRequestId
+				for (var i = 0, len = data.length; i < len; i++) {
+					if (data[i].account_id === accountId) {
+						for (var j = 0, len = data[i].port_requests.length; j < len; j++) {
+							if (data[i].port_requests[j].id === requestId) {
+								currentRequest = data[i].port_requests[j];
+							}
+						}
+					}
+				}
+
+				if (newState === 'rejected') {
+					delete currentRequest.scheduled_date;
+
+					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
+						delete newRequest.scheduled_date;
+
+						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
+							currentRequest = updatedRequest;
+
+							self.portRenderDynamicCells(container, {
+								state: newState,
+								request: currentRequest,
+								portRequestId: requestId
+							});
+
+							toastr.success(self.i18n.active().port.toastr.success.request.update);
+						});
 					});
+				}
+				else if (newState === 'scheduled') {
+					self.portRenderScheduledDatePopup(parent, {
+						callbackSave: function (newScheduledDate) {
+							self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
+								newRequest.scheduled_date = newScheduledDate;
 
-					box.find('.continue-request, .delete-request')
-						.remove();
+								self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
+									currentRequest = updatedRequest;
 
-					toastr.success(self.i18n.active().port.toastr.success.request.update);
-				}, function() {
-					toastr.error(self.i18n.active().port.toastr.error.request.update);
-				});
+									self.portRenderDynamicCells(container, {
+										state: currentRequest.port_state,
+										request: currentRequest,
+										portRequestId: requestId
+									});
+
+									toastr.success(self.i18n.active().port.toastr.success.request.update);
+								});
+							}, function() {
+								toastr.error(self.i18n.active().port.toastr.error.request.update);
+							});
+						},
+						callbackCancel: function() {
+							self.portRenderDynamicCells(container, {
+								state: currentRequest.port_state,
+								request: currentRequest,
+								portRequestId: requestId
+							});
+						}
+					});
+				}
+				else {
+					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
+						currentRequest = newRequest;
+
+						self.portRenderDynamicCells(container, {
+							state: currentRequest.port_state,
+							request: currentRequest,
+							portRequestId: requestId
+						});
+
+						box.find('.continue-request, .delete-request')
+							.remove();
+
+						toastr.success(self.i18n.active().port.toastr.success.request.update);
+					}, function() {
+						toastr.error(self.i18n.active().port.toastr.error.request.update);
+					}, function() {
+						self.portRenderDynamicCells(container, {
+							state: currentRequest.port_state,
+							request: currentRequest,
+							portRequestId: requestId
+						});
+					});
+				}
 			});
 
 			container.find('.request-box .scheduled-date').on('click', '.edit', function() {
 				var $this = $(this),
-					accountId = $this.parents('.account-section').data('id'),
+					accountId = $this.parents('.request-box').data('account_id'),
 					requestId = $this.parents('.request-box').data('id'),
 					currentRequest,
 					scheduledDate;
@@ -189,44 +260,19 @@ define(function(require){
 					}
 				}
 
-				template = $(monster.template(self, 'port-editScheduledDate', { scheduledDate: scheduledDate }));
-				popup = monster.ui.dialog(template, {
-					title: self.i18n.active().port.pendingOrders.scheduledDatePopup.title
-				});
+				self.portRenderScheduledDatePopup(parent, {
+					scheduledDate: scheduledDate,
+					callbackSave: function(newScheduledDate) {
+						$.extend(true, currentRequest, {
+							scheduled_date: newScheduledDate
+						});
 
-				popup.find('#scheduled_date').datepicker({
-					minDate: new Date(),
-					beforeShowDay: $.datepicker.noWeekends,
-					constrainInput: true,
-					dateFormat: 'mm/dd/yy'
-				});
+						self.portRequestUpdate(accountId, requestId, currentRequest, function(updatedRequest) {
+							currentRequest = updatedRequest;
 
-				popup.find('.cancel-link').on('click', function() {
-					popup.dialog('close');
-				});
-
-				popup.find('.save-link').on('click', function() {
-					$.extend(true, currentRequest, {
-						scheduled_date: monster.util.dateToGregorian(new Date(monster.ui.getFormData('edit_scheduled_date').scheduled_date))
-					});
-
-					self.portRequestUpdate(accountId, requestId, currentRequest, function () {
-						popup.dialog('close');
-
-						for (var i = 0, len = data.length; i < len; i++) {
-							if (data[i].account_id === accountId) {
-								for (var j = 0, len = data[i].port_requests.length; j < len; j++) {
-									data[i].port_requests[j] = currentRequest;
-								}
-
-								break;
-							}
-
-							break;
-						}
-
-						$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(currentRequest.scheduled_date), 'short'));
-					});
+							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(currentRequest.scheduled_date), 'short'));
+						});
+					}
 				});
 			});
 
@@ -375,6 +421,42 @@ define(function(require){
 						// el['fade'.concat(filterBy.indexOf(el.data('state')) > -1 ? 'In' : 'Out')]();
 					});
 				}
+			});
+		},
+
+		portRenderScheduledDatePopup: function(parent, args) {
+			var self = this,
+				dataTemplate = args.hasOwnProperty('scheduledDate') ? { scheduledDate: args.scheduledDate } : {}
+				template = $(monster.template(self, 'port-editScheduledDate', dataTemplate)),
+				popup = monster.ui.dialog(template, {
+					title: self.i18n.active().port.pendingOrders.scheduledDatePopup.title
+				});
+
+			self.portBindScheduledDatePopupEvents(parent, popup, args);
+		},
+
+		portBindScheduledDatePopupEvents: function(parent, popup, args) {
+			var self = this;
+
+			popup.find('#scheduled_date').datepicker({
+				minDate: new Date(),
+				beforeShowDay: $.datepicker.noWeekends,
+				constrainInput: true,
+				dateFormat: 'mm/dd/yy'
+			});
+
+			popup.find('.save-link').on('click', function() {
+				var newScheduledDate = monster.util.dateToGregorian(new Date(monster.ui.getFormData('edit_scheduled_date').scheduled_date));
+
+				popup.dialog('close');
+
+				args.hasOwnProperty('callbackSave') && args.callbackSave(newScheduledDate);
+			});
+
+			popup.find('.cancel-link').on('click', function() {
+				popup.dialog('close');
+
+				args.hasOwnProperty('callbackCancel') && args.callbackCancel();
 			});
 		},
 
@@ -1103,6 +1185,7 @@ define(function(require){
 				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
 				states = self.states,
 				data = args.data,
+				request = args.request,
 				getStatesToDisplay = function(nextState) {
 					var statesList = [];
 
@@ -1122,28 +1205,14 @@ define(function(require){
 
 					return statesList;
 				},
-				populateDynamicCells = function populateDynamicCells(id, state) {
+				populateDynamicCells = function populateDynamicCells(id, state, portRequest) {
 					var box = parent.find('.request-box[data-id="' + id + '"]'),
-						accountId = box.parents('.account-section').data('id'),
+						accountId = box.data('account_id'),
 						scheduledDate = box.find('.scheduled-date'),
-						select = box.find('.request-state'),
-						currentRequest;
+						select = box.find('.request-state');
 
 					box.data('state', state);
-
-					for (var i = 0, len = data.length; i < len; i++) {
-						if (data[i].account_id === accountId) {
-							for (var j = 0, len = data[i].port_requests.length; j < len; j++) {
-								if (data[i].port_requests[j].id === id) {
-									currentRequest = data[i].port_requests[j];
-
-									break;
-								}
-							}
-
-							break;
-						}
-					}
+					box.data('scheduled_date', portRequest.scheduled_date);
 
 					if (isAdmin) {
 						if (state === 'completed') {
@@ -1165,8 +1234,8 @@ define(function(require){
 							 * and the value of scheduled_date (if it is set or not)
 							 */
 							if (state === 'scheduled') {
-								if (currentRequest.hasOwnProperty('scheduled_date')) {
-									dataCell = { scheduledDate: currentRequest.scheduled_date };
+								if (portRequest.hasOwnProperty('scheduled_date')) {
+									dataCell = { scheduledDate: portRequest.scheduled_date };
 								}
 
 								scheduledDate
@@ -1192,7 +1261,7 @@ define(function(require){
 						if (state === 'scheduled') {
 							scheduledDate
 								.empty()
-								.text(monster.util.toFriendlyDate(currentRequest.scheduled_date, 'short'));
+								.text(monster.util.toFriendlyDate(portRequest.scheduled_date, 'short'));
 						}
 						else {
 							scheduledDate
@@ -1207,12 +1276,12 @@ define(function(require){
 			}
 
 			if (args.hasOwnProperty('portRequestId')) {
-				populateDynamicCells(args.portRequestId, args.state);
+				populateDynamicCells(args.portRequestId, args.state, request);
 			}
 			else {
 				for (var i = 0, len = data.length; i < len; i++) {
 					_.each(data[i].port_requests, function(port) {
-						populateDynamicCells(port.id, port.port_state);
+						populateDynamicCells(port.id, port.port_state, port);
 					});
 				}
 			}
@@ -1677,7 +1746,7 @@ define(function(require){
 			});
 		},
 
-		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError) {
+		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError, callbackCancel) {
 			var self = this;
 
 			self.callApi({
@@ -1689,12 +1758,15 @@ define(function(require){
 					data: {}
 				},
 				success: function(data, status) {
-					callbackSuccess && callbackSuccess();
+					callbackSuccess && callbackSuccess(data.data);
 				},
 				error: function(data, status) {
 					if (parseInt(data.error, 10) !== 402) {
 						callbackError && callbackError();
 					}
+				},
+				onChargesCancelled: function () {
+					callbackCancel && callbackCancel();
 				}
 			});
 		},
