@@ -3,10 +3,10 @@ define(function(require){
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			default: 'http://api.zswitch.net:8000/v2/'
+			default: 'http://10.26.0.41:8000/v2/',
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600hz, add the URL in the 'provisioner' key below
-			// 		provisioner: 'your_provisioner_url',
+			 		provisioner: 'http://10.26.0.41/2600hz-provisioner/',
 
 			// If you want to use WebSockets you need to turn blackhole on in the back-end and then put the URL in the 'socket' key below
 			// 		socket: 'your_web_socket_url'
@@ -30,7 +30,7 @@ define(function(require){
 			//		language: 'en-US',
 
 			// Application title, displayed in the browser tab
-			applicationTitle: 'Monster UI - 2600hz',
+			applicationTitle: 'Monster UI - WebDev',
 
 			// Company Name, used in many places in the UI
 			companyName: '2600hz',
@@ -45,7 +45,8 @@ define(function(require){
 		},
 		developerFlags: {
 			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
-			//showSmartPBXCallflows: true
+			showSmartPBXCallflows: true,
+			showJSErrors: true
 		}
 	};
 });

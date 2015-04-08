@@ -3,7 +3,6 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster'),
 		hotkeys = require('hotkeys'),
-		icheck = require('icheck'),
 		toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg');
@@ -744,66 +743,6 @@ define(function(require){
 			});
 
 			return result;
-		},
-
-		prettyCheck: {
-			/**
-			 * target: Either an element containing checkboxes/radio or the checkbox/radio itself
-			 * inputType: The type of input to prettify, Allowed values are 'checkbox', 'radio' and 'all'
-			**/
-			create: function(target, inputType) {
-				var self = this,
-					type = inputType || 'checkbox',
-					options = {
-						checkboxClass: 'icheckbox_flat',
-						radioClass: 'iradio_flat'
-					};
-
-				if(target.is("input:not(.not-pretty)")) {
-					target.iCheck(options);
-				} else {
-					/* Only update fields without the not-pretty class (we added this class to checkboxes with alternates stylings, such as the ones impacted by the bootstrapSwitch library) */
-					target.find('input'+(type !== "all" ? '[type="'+type+'"]' : '')+':not(.not-pretty)').iCheck(options);
-				}
-			},
-
-			/**
-			 * target: Either an element containing checkboxes/radio or the checkbox/radio itself
-			 *
-			 * action: The action to perform on target. Allowed actions are:
-			 *	'check' (change input's state to 'checked')
-			 *	'uncheck' (remove 'checked' state)
-			 *	'toggle' (toggle 'checked' state)
-			 *	'disable' (change input's state to 'disabled')
-			 *	'enable' (remove 'disabled' state)
-			 *	'indeterminate' (change input's state to 'indeterminate')
-			 *	'determinate' (remove 'indeterminate' state)
-			 *	'update' (apply input changes, which were done outside the plugin)
-			 *	'destroy' (remove all traces of iCheck)
-			 *
-			 * callback: A callback function that will be executed after EACH time the action is performed on a checkbox/radio
-			**/
-			action: function(target, action, callback) {
-				target.iCheck(action, callback);
-			}
-
-
-			/**
-			 * The following events can be binded on the prettyfied inputs:
-			 *	'ifClicked' (user clicked on a customized input or an assigned label)
-			 *	'ifChanged' (input's "checked", "disabled" or "indeterminate" state is changed)
-			 *	'ifChecked' (input's state is changed to "checked")
-			 *	'ifUnchecked' ("checked" state is removed)
-			 *	'ifToggled' (input's "checked" state is changed)
-			 *	'ifDisabled' (input's state is changed to "disabled")
-			 *	'ifEnabled' ("disabled" state is removed)
-			 *	'ifIndeterminate' (input's state is changed to "indeterminate")
-			 *	'ifDeterminate' ("indeterminate" state is removed)
-			 *	'ifCreated' (input is just customized)
-			 *	'ifDestroyed' (customization is just removed)
-			 *
-			 * For more info, please refer to https://github.com/fronteed/iCheck
-			**/
 		},
 
 		customValidationInitialized: false,

@@ -280,7 +280,6 @@ define(function(require){
 					rightContainer.find('.selected-users-number').html(selectedUsersLength);
 					rightContainer.find('.total-users-number').html(users.length);
 
-					monster.ui.prettyCheck.create(userListContainer);
 					monster.ui.dialog(template, {title: app.extra.label});
 
 					template.find('#screenshot_carousel').carousel();
@@ -373,18 +372,15 @@ define(function(require){
 				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
 			});
 
-			userList.on('ifToggled', 'input', function(e) {
-				if(this.checked) {
-					selectedUsersCount++;
-				} else {
-					selectedUsersCount--;
-				}
-				parent.find('.selected-users-number').html(selectedUsersCount);
+			userList.on('change', 'input', function(e) {
+				parent.find('.selected-users-number').html(userList.find('input[type="checkbox"]:checked').length);
 			});
 
 			parent.find('.user-list-links a').on('click', function(e) {
 				e.preventDefault();
-				monster.ui.prettyCheck.action(userList, $(this).data('action'));
+				userList.find('input[type="checkbox"]').prop('checked', $(this).data('action') === 'check');
+
+				parent.find('.selected-users-number').html(userList.find('input[type="checkbox"]:checked').length);
 			});
 
 			parent.find('.user-list-filter input.search-query').on('keyup', function(e) {
@@ -407,7 +403,7 @@ define(function(require){
 				e.preventDefault();
 				$.each(userList.find('input'), function() {
 					var $this = $(this);
-					monster.ui.prettyCheck.action($this, $this.data('original'));
+					$this.prop('checked', $this.data('original') === 'check');
 				});
 				parent.find('.user-list-view').hide();
 				parent.find('.app-details-view').show();

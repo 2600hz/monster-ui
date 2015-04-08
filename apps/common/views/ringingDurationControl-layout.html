@@ -35,7 +35,9 @@
 				{{/if}}
 				{{#if ../hasDisableColumn}}
 				<div class="action">
-					<input type="checkbox" class="disable-row"{{#if disabled}} checked{{/if}}>
+					{{#monsterCheckbox}}
+						<input type="checkbox" class="disable-row"{{#if disabled}} checked{{/if}}>
+					{{/monsterCheckbox}}
 				</div>
 				{{/if}}
 			</div>

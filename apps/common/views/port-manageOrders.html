@@ -27,22 +27,30 @@
 	<form action="">
 		<div class="control-group">
 			<label class="control-label" for="cancel_service">
-				<input type="checkbox" id="cancel_service" name="conditions[]" required minlength="4"> {{ i18n.port.manageOrders.labelCancelService }}
+				{{#monsterCheckbox i18n.port.manageOrders.labelCancelService}}
+					<input type="checkbox" id="cancel_service" name="conditions[]" required minlength="4">
+				{{/monsterCheckbox}}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="cancel_numbers">
-				<input type="checkbox" id="cancel_numbers" name="conditions[]"> {{ i18n.port.manageOrders.labelCancelNumbers }}
+				{{#monsterCheckbox i18n.port.manageOrders.labelCancelNumbers}}
+					<input type="checkbox" id="cancel_numbers" name="conditions[]">
+				{{/monsterCheckbox}}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="change_fee">
-				<input type="checkbox" id="change_fee" name="conditions[]"> {{ i18n.port.manageOrders.labelChangeFee }}
+				{{#monsterCheckbox i18n.port.manageOrders.labelChangeFee}}
+					<input type="checkbox" id="change_fee" name="conditions[]">
+				{{/monsterCheckbox}}
 			</label>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="not_featured">
-				<input type="checkbox" id="not_featured" name="conditions[]"> {{ i18n.port.manageOrders.labelStandardNumbers }}
+				{{#monsterCheckbox i18n.port.manageOrders.labelStandardNumbers}}
+					<input type="checkbox" id="not_featured" name="conditions[]">
+				{{/monsterCheckbox}}
 			</label>
 		</div>
 	</form>

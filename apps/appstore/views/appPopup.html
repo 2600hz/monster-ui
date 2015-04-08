@@ -68,7 +68,9 @@
 						{{#each users}}
 						<li class="user-list-element" data-name="{{first_name}} {{last_name}}">
 							<label title="{{first_name}} {{last_name}}">
-								<input type="checkbox" name="users[]" value={{this.id}} data-original={{#if this.selected}}"check" checked{{else}}"uncheck"{{/if}}>
+								{{#monsterCheckbox}}
+									<input type="checkbox" name="users[]" value={{this.id}} data-original={{#if this.selected}}"check" checked{{else}}"uncheck"{{/if}}>
+								{{/monsterCheckbox}}
 								{{first_name}} {{last_name}}
 							</label>
 						</li>
