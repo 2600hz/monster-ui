@@ -1154,6 +1154,9 @@ define(function(require){
 								else {
 									self.portReloadApp(parent, accountId);
 								}
+							}, function() {
+							}, function() {
+								self.portRequestDelete(accountId, portRequestId);
 							});
 						});
 					}

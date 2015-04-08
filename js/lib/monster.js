@@ -286,7 +286,7 @@ define(function(require){
 			var self = this,
 				parsedError = error,
 				isJsonResponse = error.hasOwnProperty('getResponseHeader') && error.getResponseHeader('content-type') === 'application/json';
-			console.log(error);
+
 			if('responseText' in error && error.responseText && isJsonResponse) {
 				parsedError = $.parseJSON(error.responseText);
 			}
