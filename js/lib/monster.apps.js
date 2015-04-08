@@ -93,6 +93,10 @@ define(function(){
 							error: errorCallback
 						}, params.data);
 
+					if (params.hasOwnProperty('onChargesCancelled')) {
+						apiSettings.onChargesCancelled = params.onChargesCancelled;
+					}
+
 					return monster.kazooSdk[module][method](apiSettings);
 				} else {
 					console.error('This api does not exist. Module: ' + module + ', Method: ' + method);
