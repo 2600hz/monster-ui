@@ -286,7 +286,7 @@ define(function(require){
 			var self = this,
 				parsedError = error,
 				isJsonResponse = error.hasOwnProperty('getResponseHeader') && error.getResponseHeader('content-type') === 'application/json';
-
+			console.log(error);
 			if('responseText' in error && error.responseText && isJsonResponse) {
 				parsedError = $.parseJSON(error.responseText);
 			}
@@ -312,7 +312,7 @@ define(function(require){
 				_.each(parsedError.data, function(fieldError, fieldErrorKey) {
 					if(fieldErrorKey in errorsI18n.errorMessages) {
 						errMsg += errorsI18n.errorMessages[fieldErrorKey] + '<br>';
-					} else if('message' in fieldError) {
+					} else if(fieldError.hasOwnProperty('message')) {
 						errMsg += fieldError.message + '<br>';
 					}
 				});

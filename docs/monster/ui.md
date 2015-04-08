@@ -12,12 +12,10 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [wysiwyg()][wysiwyg]
 
 ### Objects
-* [prettyCheck][pretty_check]
 * [table][table]
 
 [monster]: ../monster.md
 
-[pretty_check]: ui/prettyCheck.md
 [table]: ui/table.md
 
 [alert]: ui/alert().md

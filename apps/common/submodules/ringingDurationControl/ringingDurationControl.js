@@ -29,7 +29,6 @@ define(function(require){
 					 .append(template);
 
 			template.find('[data-toggle="tooltip"]').tooltip();
-			monster.ui.prettyCheck.create(template);
 			template.find('.grid-time').sortable({
 				items: '.grid-time-row:not(.title)',
 				placeholder: 'grid-time-row-placeholder'
@@ -60,9 +59,9 @@ define(function(require){
 				});
 			});
 
-			template.find('.disable-row').on('ifToggled', function() {
+			template.find('.disable-row').on('change', function() {
 				var parentRow = $(this).parents('.grid-time-row');
-				if(this.checked) {
+				if($(this).prop('checked')) {
 					parentRow.find('.times').stop().animate({ opacity: 0 });
 					parentRow.find('.name').stop().animate({ opacity: 0.5 });
 					parentRow.addClass('disabled');

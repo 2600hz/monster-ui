@@ -683,8 +683,6 @@ define(function(require){
 			self.portCancelOrder(parent, accountId, container);
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
-			monster.ui.prettyCheck.create(container.find('#eula'));
-
 			container.on('click', 'div#add_numbers button', function() {
 				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
 
@@ -792,7 +790,10 @@ define(function(require){
 				else {
 					container.find('div#eula').find('input').each(function() {
 						if (!$(this).is(':checked')) {
-							$(this).parent().parent().addClass('error');
+							$(this).parents('.control-group').addClass('error');
+						}
+						else {
+							$(this).parents('.control-group').removeClass('error');
 						}
 					});
 				}
