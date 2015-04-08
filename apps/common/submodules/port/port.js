@@ -62,13 +62,17 @@ define(function(require){
 						// Remove accounts without any port requests
 						accounts = accounts.filter(function(v) { return v.port_requests.length > 0; });
 
-						// Sort requests by scheduled
+						// Sort requests by updated date
 						accounts.forEach(function(account, i) {
 							var unscheduledRequests = [],
-									scheduledRequests = [];
+								scheduledRequests = [],
+								completedRequests = [];
 
 							account.port_requests.forEach(function(request, j) {
-								if (request.hasOwnProperty('scheduled_date')) {
+								if (request.port_state === 'completed') {
+									completedRequests.push(request);
+								}
+								else if (request.hasOwnProperty('scheduled_date')) {
 									scheduledRequests.push(request);
 								}
 								else {
@@ -77,14 +81,14 @@ define(function(require){
 							});
 
 							scheduledRequests.sort(function(a, b) {
-								return a.scheduled_date > b.scheduled_date ? 1 : -1;
+								return a.updated < b.updated ? 1 : -1;
 							});
 
 							unscheduledRequests.sort(function(a, b) {
-								return a.created > b.created ? 1 : -1;
+								return a.updated < b.updated ? 1 : -1;
 							});
 
-							account.port_requests = scheduledRequests.concat(unscheduledRequests);
+							account.port_requests = scheduledRequests.concat(unscheduledRequests, completedRequests);
 						});
 
 						return accounts;
@@ -322,15 +326,16 @@ define(function(require){
 			container.find('.filter-options .btn-group .btn:first-child').addClass('active');
 
 			container.find('.filter-options .btn-group:first-child .btn').on('click', function() {
-				var requestWrapper = container.find('.accounts-list > .requests-wrapper'),
+				var $this = $(this),
+					requestWrapper = container.find('.accounts-list > .requests-wrapper'),
 					requestWrapperIsEmpty = requestWrapper.hasClass('empty'),
 					accountSection = container.find('.account-section'),
-					filterBy = $(this).data('value');
+					filterBy = $this.data('value');
 
 				if (filterBy === 'accounts') {
-					if (!$(this).hasClass('active') && !requestWrapperIsEmpty) {
-						$(this).siblings().removeClass('active');
-						$(this).addClass('active');
+					if (!$this.hasClass('active') && !requestWrapperIsEmpty) {
+						$this.siblings().removeClass('active');
+						$this.addClass('active');
 						requestWrapper.addClass('empty');
 						requestWrapper.find('.request-box').each(function(idx, el) {
 							var el = $(el),
@@ -343,16 +348,39 @@ define(function(require){
 					accountSection.fadeIn(400);
 				}
 				else if (filterBy === 'requests') {
-					if (!$(this).hasClass('active') && requestWrapperIsEmpty) {
-						$(this).siblings().removeClass('active');
-						$(this).addClass('active');
-						requestWrapper.removeClass('empty');
+					if (!$this.hasClass('active') && requestWrapperIsEmpty) {
+						$this.siblings().removeClass('active');
+						$this.addClass('active');
 						accountSection.fadeOut(400, function() {
+							var unscheduledRequests = [],
+								scheduledRequests = [],
+								completedRequests = [];
+
+							requestWrapper.removeClass('empty');
+
 							container.find('.request-box').each(function(idx, el) {
 								var el = $(el);
 
-								requestWrapper.append(el);
+								if (el.data('state') === 'completed') {
+									completedRequests.push(el);
+								}
+								else if (el.data('scheduled_date')) {
+									scheduledRequests.push(el);
+								}
+								else {
+									unscheduledRequests.push(el);
+								}
 							});
+
+							unscheduledRequests.sort(function(a, b) {
+								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
+							});
+
+							scheduledRequests.sort(function(a, b) {
+								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
+							});
+
+							requestWrapper.append(scheduledRequests.concat(unscheduledRequests, completedRequests));
 						});
 					}
 				}
@@ -1212,7 +1240,8 @@ define(function(require){
 						select = box.find('.request-state');
 
 					box.data('state', state);
-					box.data('scheduled_date', portRequest.scheduled_date);
+					box.data('scheduled_date', portRequest.hasOwnProperty('scheduled_date') ? portRequest.scheduled_date : '');
+					box.data('updated_date', portRequest.updated);
 
 					if (isAdmin) {
 						if (state === 'completed') {

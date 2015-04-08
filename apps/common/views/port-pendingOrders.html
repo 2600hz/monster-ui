@@ -52,7 +52,7 @@
 							<div class="scheduled-date">{{../../i18n.port.pendingOrders.tableOrderScheduled}}</div>
 						</div>
 					{{#each port_requests}}
-						<div class="request-box" data-account_id="{{../account_id}}" data-id="{{id}}" data-state="{{port_state}}" data-scheduled_date="{{scheduled_date}}">
+						<div class="request-box" data-account_id="{{../account_id}}" data-id="{{id}}" data-state="{{port_state}}" data-scheduled_date="{{scheduled_date}}" data-updated_date="{{updated}}">
 							<div class="pull-left">
 								<div class="request-name">{{name}}</div>
 								<div class="request-created">{{toFriendlyDate created 'short'}}</div>
