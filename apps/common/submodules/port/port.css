@@ -599,7 +599,7 @@ div#transfer_date input { margin-bottom: 0; }
 
 div#notification .row-fluid label,
 div#transfer_date .row-fluid label,
-div#temporary_numbers .row-fluid label {
+div#temporary_numbers .row-fluid .span6:first-child label {
 	margin: 0;
 	padding: 4px 0;
 	text-align: right;

@@ -55,11 +55,9 @@
 					<label for="have_temporary_numbers">{{ i18n.port.confirmOrder.labelTemporaryNumbers }}</label>
 				</div>
 				<div class="span6">
-					<div class="toggle-button-bloc">
-						<div class="switch" data-on="success" data-off="default" data-on-label="{{ i18n.port.confirmOrder.toggleButtonOn }}" data-off-label="{{ i18n.port.confirmOrder.toggleButtonOff }}">
-							<input type="checkbox" id="have_temporary_numbers" checked />
-						</div>
-				</div>
+					<div class="switch">
+						{{#monsterSwitch}}<input type="checkbox" id="have_temporary_numbers">{{/monsterSwitch}}
+					</div>
 				</div>
 			</div>
 			<div class="row-fluid">
