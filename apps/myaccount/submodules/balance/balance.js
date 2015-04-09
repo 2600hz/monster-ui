@@ -410,33 +410,6 @@ define(function(require){
 			autoRechargeSwitch.prop('checked', autoRecharge);
 			parent.find('#recharge_content').toggle(autoRecharge);
 
-			// parent.find('.switch').bootstrapSwitch()
-			// 					 .on('switch-change', function (e, dataSwitch) {
-			// 	if(dataSwitch.value === true) {
-			// 		parent.find('#recharge_content').slideDown('fast')
-			// 	}
-			// 	else {
-			// 		parent.find('#recharge_content').slideUp();
-
-			// 		if(autoRecharge === true) {
-			// 			monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
-			// 				function() {
-			// 					self.balanceTurnOffTopup(function() {
-			// 						toastr.success(self.i18n.active().balance.autoRechargeCancelled);
-			// 						autoRecharge = false;
-			// 						//autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
-			// 					})
-			// 				},
-			// 				function() {
-			// 					parent.find('#recharge_content').slideDown();
-			// 					stateSwitch = 'manual';
-			// 					parent.find('.switch').bootstrapSwitch('setState', true);
-			// 				}
-			// 			);
-			// 		}
-			// 	}
-			// }).bootstrapSwitch('setState', autoRecharge);
-
 			parent.find('#confirm_recharge').on('click', function() {
 				var dataTopUp = {
 					threshold: parseFloat(parent.find('#threshold_recharge').val()),
