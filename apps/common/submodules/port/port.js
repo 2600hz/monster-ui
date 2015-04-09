@@ -63,31 +63,9 @@ define(function(require){
 
 						// Sort requests by updated date
 						accounts.forEach(function(account, i) {
-							var unscheduledRequests = [],
-								scheduledRequests = [],
-								completedRequests = [];
-
-							account.port_requests.forEach(function(request, j) {
-								if (request.port_state === 'completed') {
-									completedRequests.push(request);
-								}
-								else if (request.hasOwnProperty('scheduled_date')) {
-									scheduledRequests.push(request);
-								}
-								else {
-									unscheduledRequests.push(request);
-								}
-							});
-
-							scheduledRequests.sort(function(a, b) {
+							account.port_requests.sort(function(a, b) {
 								return a.updated < b.updated ? 1 : -1;
 							});
-
-							unscheduledRequests.sort(function(a, b) {
-								return a.updated < b.updated ? 1 : -1;
-							});
-
-							account.port_requests = scheduledRequests.concat(unscheduledRequests, completedRequests);
 						});
 
 						return accounts;
@@ -333,6 +311,8 @@ define(function(require){
 
 				if (filterBy === 'accounts') {
 					if (!$this.hasClass('active') && !requestWrapperIsEmpty) {
+						var accountsList = {};
+
 						$this.siblings().removeClass('active');
 						$this.addClass('active');
 						requestWrapper.addClass('empty');
@@ -340,8 +320,23 @@ define(function(require){
 							var el = $(el),
 								accountId = el.data('account_id');
 
+							if (accountsList.hasOwnProperty(accountId)) {
+								accountsList[accountId].push(el);
+							}
+							else {
+								accountsList[accountId] = [ el ];
+							}
+
 							container.find('.account-section[data-id="' + accountId + '"] .requests-wrapper').append(el);
 						});
+
+						for (var accountId in accountsList) {
+							container
+								.find('.account-section[data-id="' + accountId + '"] .requests-wrapper')
+								.append(accountsList[accountId].sort(function(a, b) {
+									return $(a).data('updated_date') < b.data('updated_date') ? 1 : -1;
+								}));
+						}
 					}
 
 					accountSection.fadeIn(400);
@@ -351,35 +346,11 @@ define(function(require){
 						$this.siblings().removeClass('active');
 						$this.addClass('active');
 						accountSection.fadeOut(400, function() {
-							var unscheduledRequests = [],
-								scheduledRequests = [],
-								completedRequests = [];
+							requestWrapper.append(container.find('.request-box').sort(function(a, b) {
+								return $(a).data('updated_date') < $(b).data('updated_date') ? 1 : -1;
+							}));
 
 							requestWrapper.removeClass('empty');
-
-							container.find('.request-box').each(function(idx, el) {
-								var el = $(el);
-
-								if (el.data('state') === 'completed') {
-									completedRequests.push(el);
-								}
-								else if (el.data('scheduled_date')) {
-									scheduledRequests.push(el);
-								}
-								else {
-									unscheduledRequests.push(el);
-								}
-							});
-
-							unscheduledRequests.sort(function(a, b) {
-								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
-							});
-
-							scheduledRequests.sort(function(a, b) {
-								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
-							});
-
-							requestWrapper.append(scheduledRequests.concat(unscheduledRequests, completedRequests));
 						});
 					}
 				}
