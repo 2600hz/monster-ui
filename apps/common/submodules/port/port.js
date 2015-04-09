@@ -1,7 +1,6 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		bootstrapSwitch = require('bootstrap-switch'),
 		fileUpload = require('fileupload'),
 		monster = require('monster'),
 		timepicker = require('timepicker'),
@@ -1022,7 +1021,7 @@ define(function(require){
 			var self = this,
 				container = parent.find('#port_container'),
 				datePickerInput = container.find('input.date-input'),
-				toggleInput = container.find('.switch'),
+				toggleInput = container.find('#have_temporary_numbers'),
 				order = data.orders[index];
 
 			self.portPositionDialogBox(),
@@ -1046,14 +1045,12 @@ define(function(require){
 				},
 			});
 
-			toggleInput.bootstrapSwitch();
-
 			container.find('#numbers_to_buy option')
 				.last()
 				.prop('selected', 'selected');
 
 			if (order.hasOwnProperty('temporary_numbers') && order.temporary_numbers > 0) {
-				toggleInput.bootstrapSwitch('setState', true);
+				toggleInput.prop('checked', true);
 
 				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 					.slideDown('400', function() {
@@ -1063,7 +1060,7 @@ define(function(require){
 					});
 			}
 			else {
-				toggleInput.bootstrapSwitch('setState', false);
+				toggleInput.prop('checked', false)
 
 				container.find('#numbers_to_buy')
 						.prop('disabled', true);
@@ -1072,16 +1069,17 @@ define(function(require){
 					.slideUp('400');
 			}
 
-			toggleInput.on('switch-change', function() {
+			toggleInput.on('change', function() {
 				var input = $(this);
 
-				if (input.find('div.switch-animate').hasClass('switch-off')) {
+				if (!input.prop('checked')) {
 					container.find('#numbers_to_buy')
 						.prop('disabled', true);
 
 					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 						.slideUp('400');
-				} else if (input.find('div.switch-animate').hasClass('switch-on')) {
+				}
+				else {
 					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 						.slideDown('400', function() {
 							container.find('#numbers_to_buy')
@@ -1106,7 +1104,7 @@ define(function(require){
 
 				order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
 
-				if (container.find('.switch-animate').hasClass('switch-off')) {
+				if (!container.find('#have_temporary_numbers').prop('checked')) {
 					delete order.temporary_numbers;
 				}
 
@@ -1127,7 +1125,7 @@ define(function(require){
 
 					order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
 
-					if (container.find('.switch-animate').hasClass('switch-off')) {
+					if (!container.find('#have_temporary_numbers').prop('checked')) {
 						delete order.temporary_numbers;
 					}
 
