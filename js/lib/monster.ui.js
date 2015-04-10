@@ -115,8 +115,15 @@ define(function(require){
 	});
 
 	Handlebars.registerHelper('monsterSwitch', function(options) {
+		var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
+			checkbox = $(checkboxHtml),
+			onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
+			offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+
 		return monster.template(monster.apps.core, 'monster-switch-template', {
-			checkbox: new Handlebars.SafeString(options.fn(this))
+			checkbox: new Handlebars.SafeString(checkboxHtml),
+			on: onLabel,
+			off: offLabel
 		});
 	});
 
