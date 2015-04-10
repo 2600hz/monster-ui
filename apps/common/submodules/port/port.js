@@ -1,7 +1,6 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		bootstrapSwitch = require('bootstrap-switch'),
 		fileUpload = require('fileupload'),
 		monster = require('monster'),
 		timepicker = require('timepicker'),
@@ -64,31 +63,9 @@ define(function(require){
 
 						// Sort requests by updated date
 						accounts.forEach(function(account, i) {
-							var unscheduledRequests = [],
-								scheduledRequests = [],
-								completedRequests = [];
-
-							account.port_requests.forEach(function(request, j) {
-								if (request.port_state === 'completed') {
-									completedRequests.push(request);
-								}
-								else if (request.hasOwnProperty('scheduled_date')) {
-									scheduledRequests.push(request);
-								}
-								else {
-									unscheduledRequests.push(request);
-								}
-							});
-
-							scheduledRequests.sort(function(a, b) {
+							account.port_requests.sort(function(a, b) {
 								return a.updated < b.updated ? 1 : -1;
 							});
-
-							unscheduledRequests.sort(function(a, b) {
-								return a.updated < b.updated ? 1 : -1;
-							});
-
-							account.port_requests = scheduledRequests.concat(unscheduledRequests, completedRequests);
 						});
 
 						return accounts;
@@ -334,6 +311,8 @@ define(function(require){
 
 				if (filterBy === 'accounts') {
 					if (!$this.hasClass('active') && !requestWrapperIsEmpty) {
+						var accountsList = {};
+
 						$this.siblings().removeClass('active');
 						$this.addClass('active');
 						requestWrapper.addClass('empty');
@@ -341,8 +320,23 @@ define(function(require){
 							var el = $(el),
 								accountId = el.data('account_id');
 
+							if (accountsList.hasOwnProperty(accountId)) {
+								accountsList[accountId].push(el);
+							}
+							else {
+								accountsList[accountId] = [ el ];
+							}
+
 							container.find('.account-section[data-id="' + accountId + '"] .requests-wrapper').append(el);
 						});
+
+						for (var accountId in accountsList) {
+							container
+								.find('.account-section[data-id="' + accountId + '"] .requests-wrapper')
+								.append(accountsList[accountId].sort(function(a, b) {
+									return $(a).data('updated_date') < b.data('updated_date') ? 1 : -1;
+								}));
+						}
 					}
 
 					accountSection.fadeIn(400);
@@ -352,35 +346,11 @@ define(function(require){
 						$this.siblings().removeClass('active');
 						$this.addClass('active');
 						accountSection.fadeOut(400, function() {
-							var unscheduledRequests = [],
-								scheduledRequests = [],
-								completedRequests = [];
+							requestWrapper.append(container.find('.request-box').sort(function(a, b) {
+								return $(a).data('updated_date') < $(b).data('updated_date') ? 1 : -1;
+							}));
 
 							requestWrapper.removeClass('empty');
-
-							container.find('.request-box').each(function(idx, el) {
-								var el = $(el);
-
-								if (el.data('state') === 'completed') {
-									completedRequests.push(el);
-								}
-								else if (el.data('scheduled_date')) {
-									scheduledRequests.push(el);
-								}
-								else {
-									unscheduledRequests.push(el);
-								}
-							});
-
-							unscheduledRequests.sort(function(a, b) {
-								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
-							});
-
-							scheduledRequests.sort(function(a, b) {
-								return a.data('updated_date') < b.data('updated_date') ? 1 : -1;
-							});
-
-							requestWrapper.append(scheduledRequests.concat(unscheduledRequests, completedRequests));
 						});
 					}
 				}
@@ -1022,7 +992,7 @@ define(function(require){
 			var self = this,
 				container = parent.find('#port_container'),
 				datePickerInput = container.find('input.date-input'),
-				toggleInput = container.find('.switch'),
+				toggleInput = container.find('#have_temporary_numbers'),
 				order = data.orders[index];
 
 			self.portPositionDialogBox(),
@@ -1046,14 +1016,12 @@ define(function(require){
 				},
 			});
 
-			toggleInput.bootstrapSwitch();
-
 			container.find('#numbers_to_buy option')
 				.last()
 				.prop('selected', 'selected');
 
 			if (order.hasOwnProperty('temporary_numbers') && order.temporary_numbers > 0) {
-				toggleInput.bootstrapSwitch('setState', true);
+				toggleInput.prop('checked', true);
 
 				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 					.slideDown('400', function() {
@@ -1063,7 +1031,7 @@ define(function(require){
 					});
 			}
 			else {
-				toggleInput.bootstrapSwitch('setState', false);
+				toggleInput.prop('checked', false)
 
 				container.find('#numbers_to_buy')
 						.prop('disabled', true);
@@ -1072,16 +1040,17 @@ define(function(require){
 					.slideUp('400');
 			}
 
-			toggleInput.on('switch-change', function() {
+			toggleInput.on('change', function() {
 				var input = $(this);
 
-				if (input.find('div.switch-animate').hasClass('switch-off')) {
+				if (!input.prop('checked')) {
 					container.find('#numbers_to_buy')
 						.prop('disabled', true);
 
 					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 						.slideUp('400');
-				} else if (input.find('div.switch-animate').hasClass('switch-on')) {
+				}
+				else {
 					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
 						.slideDown('400', function() {
 							container.find('#numbers_to_buy')
@@ -1106,7 +1075,7 @@ define(function(require){
 
 				order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
 
-				if (container.find('.switch-animate').hasClass('switch-off')) {
+				if (!container.find('#have_temporary_numbers').prop('checked')) {
 					delete order.temporary_numbers;
 				}
 
@@ -1127,7 +1096,7 @@ define(function(require){
 
 					order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
 
-					if (container.find('.switch-animate').hasClass('switch-off')) {
+					if (!container.find('#have_temporary_numbers').prop('checked')) {
 						delete order.temporary_numbers;
 					}
 
