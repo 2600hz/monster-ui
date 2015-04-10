@@ -642,10 +642,10 @@ define(function(require){
 
 			template.insertAfter(parent.find('#add_numbers'));
 
-			self.portBindManageOrdersEvents(parent, accountId);
+			self.portBindManageOrdersEvents(parent, accountId, data);
 		},
 
-		portBindManageOrdersEvents: function(parent, accountId) {
+		portBindManageOrdersEvents: function(parent, accountId, data) {
 			var self = this,
 				container = parent.find('#port_container');
 
@@ -680,7 +680,7 @@ define(function(require){
 
 						for (var order in formattedData.orders) {
 							container.find('#manage_orders').find('div.order').each(function(index, el) {
-								var carrier = $(this).find('h4').text();
+								var carrier = $(el).data('carrier');
 
 								if (carrier == formattedData.orders[order].carrier) {
 									for (var number in formattedData.orders[order].numbers) {
@@ -753,6 +753,16 @@ define(function(require){
 						order.numbers = numbersList;
 
 						ordersList.orders.push(order);
+					});
+
+					data.orders.forEach(function(order, idx) {
+						for (var i = 0, len = ordersList.orders.length; i < len; i++) {
+							if (ordersList.orders[i].carrier === order.carrier) {
+								$.extend(true, ordersList.orders[i], order);
+
+								break;
+							}
+						}
 					});
 
 					self[ordersList.orders.length === 1 ? 'portRenderSubmitDocuments' : 'portRenderResumeOrders'](parent, accountId, ordersList);
@@ -899,6 +909,13 @@ define(function(require){
 						self.portReloadApp(parent, accountId);
 					}
 				}
+			});
+
+			container.find('div#continue_later').find('button:not(.btn-info)').on('click', function() {
+				parent.empty()
+					.append(monster.template(self, 'port-addNumbers'));
+
+				self.portRenderManagerOrders(parent, accountId, data);
 			});
 
 			container.find('div#continue_later').find('button.btn-info').on('click', function() {
@@ -1080,6 +1097,13 @@ define(function(require){
 				}
 
 				self.portSaveOrder(parent, accountId, data, index);
+			});
+
+			container.find('div#continue_later').find('button:not(.btn-info)').on('click', function() {
+				parent.empty()
+					.append(monster.template(self, 'port-addNumbers'));
+
+				self.portRenderManagerOrders(parent, accountId, data);
 			});
 
 			container.find('#footer button.btn-success').on('click', function() {
