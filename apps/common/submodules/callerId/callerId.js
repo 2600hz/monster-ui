@@ -16,7 +16,6 @@ define(function(require){
 		callerIdRender: function(dataNumber, callbacks) {
 			var self = this,
 				popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
-				inboundSwitch = popup_html.find('.switch').bootstrapSwitch(),
 				popup,
 				form = popup_html.find('#cnam');
 

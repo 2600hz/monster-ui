@@ -5,7 +5,6 @@ require.config({
 		'async': 'js/lib/async',
 		'bootstrap': 'js/lib/bootstrap-2.3.1.min',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
-		'bootstrap-switch': 'js/lib/bootstrapSwitch-1.8.min',
 		'chart': 'js/lib/chart.min',
 		'card': 'js/lib/card',
 		'chosen': 'js/lib/jquery.chosen.min',
@@ -49,7 +48,6 @@ require.config({
 		'footable-sort': ['footable'],
 		'footable-filter': ['footable'],
 		'bootstrap': ['jqueryui'],
-		'bootstrap-switch': ['bootstrap'],
 		'bootstrap-clickover': ['bootstrap'],
 		'datatables': ['jquery'],
 		'jqueryui': ['jquery'],
@@ -67,7 +65,7 @@ require.config({
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
-require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-switch', 'bootstrap-clickover', 'touch-punch'], function($, monster){
+require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'touch-punch'], function($, monster){
 	$.support.cors = true;
 
 	monster.initSDK();

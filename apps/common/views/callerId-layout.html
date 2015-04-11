@@ -38,9 +38,7 @@
 		</div>
 		<div class="popup-content">
 			<label class="popup-label" for="inbound_caller_id">{{ i18n.callerId.inboundTitle }}</label>
-			<div class="switch" data-on="success" data-off="default" data-on-label="{{i18n.on}}" data-off-label="{{i18n.off}}">
-				<input type="checkbox" id="inbound_caller_id" name="inbound_lookup"{{#if inbound_lookup}} checked="checked"{{/if}}></input>
-	        </div>
+			{{#monsterSwitch}}<input type="checkbox" id="inbound_caller_id" name="inbound_lookup"{{#if inbound_lookup}} checked="checked"{{/if}}>{{/monsterSwitch}}
 			<div class="help-box gray-box">
 				<div class="wrapper-icon">
 					&nbsp;<i class="icon-info-sign2"></i>&nbsp;

@@ -373,7 +373,10 @@
 		"__comment": "UI-1302: Add scheduled date when state is set to pending",
 		"__version": "v3.20_s3",
 		"noScheduledDate": "None",
-		"addDate": "Add date"
+		"addDate": "Add date",
+		"__comment": "UI-1144: Can now add numbers to port request even after its creation",
+		"__version": "v3.20_s3",
+		"addMoreNumbers": "add more numbers"
 	},
 
 	"chooseModel": {
