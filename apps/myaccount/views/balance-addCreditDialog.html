@@ -6,7 +6,11 @@
 		<div class="title-block">{{ i18n.balance.creditBalance }}</div>
 	</div>
 
+	{{#if disableBraintree}}
+	<div class="box-content disabled" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.balance.disabledAddCreditTooltip }}">
+	{{else}}
 	<div class="box-content">
+	{{/if}}
 		<div class="line-content">
 			<div class="line-label">
 				<i class="icon-question-sign" data-toggle="tooltip" data-placement="right" data-original-title="{{ i18n.balance.helpAddCreditOne }}"></i>
@@ -14,10 +18,10 @@
 			</div>
 			<div class="line-value">
 				<div class="input-currency">{{ i18n.currencyUsed }}</div>
-				<input type="text" pattern="\d+(\.\d{2})?" id="amount" placeholder="{{ i18n.balance.placeholderAmount }}" name="amount"/>
+				<input type="text" pattern="\d+(\.\d{2})?" id="amount" placeholder="{{ i18n.balance.placeholderAmount }}" name="amount"{{#if disableBraintree}} disabled{{/if}}/>
 			</div>
 			<div class="line-button">
-				<button class="monster-button-primary add-credit">{{ i18n.balance.addCredit }}</button>
+				<button class="monster-button-primary add-credit"{{#if disableBraintree}} disabled{{/if}}>{{ i18n.balance.addCredit }}</button>
 			</div>
 		</div>
 	</div>

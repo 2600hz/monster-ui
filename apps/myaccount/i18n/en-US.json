@@ -156,7 +156,10 @@
 		"fromColumn": "From",
 		"toColumn": "To",
 		"directionColumn": " ",
-		"accountColumn": "Account"
+		"accountColumn": "Account",
+		"__comment": "UI-1324: Adding the option to disable Braintree through a config flag",
+		"__version": "v3.20_s4",
+		"disabledAddCreditTooltip": "Braintree is required to perform this action. Please contact your administrator for more information."
 	},
 
 	"servicePlan": {

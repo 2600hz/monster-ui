@@ -41,7 +41,8 @@ define(function(){
 					module = apiSplit[0],
 					method = apiSplit[1],
 					successCallback = params.success,
-					errorCallback = params.error;
+					errorCallback = params.error,
+					cancelCall = false; //Used to cancel the Api Call before it is actually sent
 					
 				if(apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
 
@@ -79,25 +80,38 @@ define(function(){
 							}
 							break;
 						}
+
+						case 'balance.add':
+						case 'billing.get':
+						case 'billing.update': {
+							if(monster.config.disableBraintree) {
+								cancelCall = true;
+							}
+							break;
+						}
 					}
 
-					var apiSettings = $.extend({
-							authToken: app.authToken,
-							apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
-							uiMetadata: {
-								version: monster.config.version,
-								ui: 'monster-ui',
-								origin: app.name
-							},
-							success: successCallback,
-							error: errorCallback
-						}, params.data);
+					if(cancelCall) {
+						return errorCallback && errorCallback();
+					} else {
+						var apiSettings = $.extend({
+								authToken: app.authToken,
+								apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
+								uiMetadata: {
+									version: monster.config.version,
+									ui: 'monster-ui',
+									origin: app.name
+								},
+								success: successCallback,
+								error: errorCallback
+							}, params.data);
 
-					if (params.hasOwnProperty('onChargesCancelled')) {
-						apiSettings.onChargesCancelled = params.onChargesCancelled;
+						if (params.hasOwnProperty('onChargesCancelled')) {
+							apiSettings.onChargesCancelled = params.onChargesCancelled;
+						}
+
+						return monster.kazooSdk[module][method](apiSettings);
 					}
-
-					return monster.kazooSdk[module][method](apiSettings);
 				} else {
 					console.error('This api does not exist. Module: ' + module + ', Method: ' + method);
 				}

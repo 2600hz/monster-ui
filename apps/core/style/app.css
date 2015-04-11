@@ -1586,7 +1586,7 @@ label.monster-invalid {
 	opacity: 0;
 }
 *[class*="monster-checkbox"] > input:focus + i {
-	box-shadow: 0px 0px 3px 2px #0087e0;
+	box-shadow: 0px 0px 2px 1px #0087e0;
 }
 *[class*="monster-checkbox"] > input:checked + i {
 	background-color: #22a5ff;

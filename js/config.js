@@ -16,6 +16,9 @@ define(function(require){
 		// For example it won't prompt for a credit card the subaccounts that have a different resellerId than this resellerId
 		// resellerId: 'your_master_account_id',
 
+		// If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it:
+		// disableBraintree: true,
+
 		// whitelabel: Contains all the flags that are whitelabel-able via the Branding app. 
 		// Setting them in the config file will set the defaults if you don't use any whitelabel
 		// If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document

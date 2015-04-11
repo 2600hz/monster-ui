@@ -199,7 +199,7 @@ define(function(require){
 				popup;
 
 			self.balanceGetDialogData(function(data) {
-				var addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', data)),
+				var addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', $.extend({ disableBraintree: monster.config.disableBraintree }, data))),
 					dataUpdate = {
 						module: self.name,
 						data: parseFloat(data.amount).toFixed(2)
@@ -381,7 +381,7 @@ define(function(require){
 				autoRecharge = data.topup.enabled || false,
 				autoRechargeSwitch = parent.find('#auto_recharge_trigger');
 
-			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+			parent.find('[data-toggle="tooltip"]').tooltip();
 
 			autoRechargeSwitch.on('change', function() {
 				if($(this).is(':checked')) {

@@ -123,7 +123,8 @@
 		"amountColumn": "Montant",
 		"fromColumn": "De",
 		"toColumn": "À",
-		"accountColumn": "Compte"
+		"accountColumn": "Compte",
+		"disabledAddCreditTooltip": "Braintree est requis pour ajouter du crédit. Pour plus d'informations, veuillez contacter votre administrateur."
 	},
 
 	"transactions": {

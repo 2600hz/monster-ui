@@ -470,6 +470,9 @@ define(function(require){
 				},
 				success: function(dataBraintree) {
 					callback && callback(dataBraintree.data);
+				},
+				error: function(data, status) {
+					callback && callback({});
 				}
 			});
 		},
