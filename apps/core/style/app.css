@@ -1658,6 +1658,7 @@ label.monster-invalid {
 .monster-switch > input {
 	position: absolute;
 	width: 0;
+	opacity: 0;
 }
 .monster-switch > span {
 	display: block;
