@@ -468,7 +468,7 @@ define(function(require){
 							monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
 
 							// Update installedApps list of the cookie by adding the new app
-							cookieData.installedApps.push(appData);
+							cookieData.installedApps.push(appData.id);
 
 							// Update cookie
 							$.cookie('monster-auth', JSON.stringify(cookieData));
@@ -491,7 +491,7 @@ define(function(require){
 						monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
 
 						// Remove app from installedApps of the cookie
-						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val !== app.id; });
 
 						// Update cookie
 						$.cookie('monster-auth', JSON.stringify(cookieData));
