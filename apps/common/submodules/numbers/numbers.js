@@ -43,6 +43,12 @@ define(function(require){
 					.empty()
 					.append(numbersView);
 
+				setTimeout(function() {
+					var viewType = container.find('.half-box.selected').data('type');
+
+					container.find('.list-numbers[data-type="' + viewType + '"] .search-custom input').focus();
+				});
+
 				callbackAfterRender && callbackAfterRender(container);
 			});
 		},
@@ -261,6 +267,10 @@ define(function(require){
 				if(!box.hasClass('selected')) {
 					parent.find('.half-box').removeClass('selected');
 					parent.find('.list-numbers').hide();
+
+					setTimeout(function() {
+						parent.find('.list-numbers[data-type="' + type + '"] .search-custom input').focus();
+					});
 
 					box.addClass('selected');
 					parent.find('.list-numbers[data-type="'+ type + '"]').show();

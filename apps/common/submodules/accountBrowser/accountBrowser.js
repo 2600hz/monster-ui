@@ -106,6 +106,8 @@ define(function(require){
 				isLoading = false,
 				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spin icon-spinner"></i></li>');
 
+			setTimeout(function () { template.find('.search-query').focus(); });
+
 			//Prevents autoclosing of dropdown on click
 			template.on('click', function(e) {
 				e.stopPropagation();

@@ -59,6 +59,8 @@ define(function(require){
 			var self = this,
 				searchInput = parent.find('.search-bar input.search-query');
 
+			setTimeout(function () { searchInput.focus(); });
+
 			parent.find('.app-filter').on('click', function(e) {
 				var $this = $(this),
 					filter = $this.data('filter');
@@ -70,7 +72,7 @@ define(function(require){
 					filter: '.app-element' + (filter ? '.'+filter : '')
 				});
 
-				searchInput.val('');
+				searchInput.val('').focus();;
 			});
 
 			parent.find('.app-list-container').on('click', '.app-element', function(e) {
@@ -368,6 +370,7 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+				parent.find('.search-query').focus();
 
 				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
 			});
