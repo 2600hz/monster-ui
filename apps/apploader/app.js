@@ -85,6 +85,8 @@ define(function(require){
 							.text(app.description);
 				};
 
+			setTimeout(function() { parent.find('.search-query').focus(); });
+
 			parent.find('.app-container').sortable({
 				cancel: '.ui-sortable-disabled',
 				receive: function(event, ui) {
@@ -275,6 +277,8 @@ define(function(require){
 				}
 				else {
 					self.show(apploader);
+
+					apploader.find('.search-query').focus();
 				}
 			}
 			else {

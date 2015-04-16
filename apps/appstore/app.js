@@ -59,6 +59,8 @@ define(function(require){
 			var self = this,
 				searchInput = parent.find('.search-bar input.search-query');
 
+			setTimeout(function () { searchInput.focus(); });
+
 			parent.find('.app-filter').on('click', function(e) {
 				var $this = $(this),
 					filter = $this.data('filter');
@@ -70,7 +72,7 @@ define(function(require){
 					filter: '.app-element' + (filter ? '.'+filter : '')
 				});
 
-				searchInput.val('');
+				searchInput.val('').focus();;
 			});
 
 			parent.find('.app-list-container').on('click', '.app-element', function(e) {
@@ -313,19 +315,21 @@ define(function(require){
 							accountId: appstoreData.account.id
 						},
 						success: function(data, status) {
+							var apiResource = 'appsStore.update';
 							appstoreData.account = data.data;
-							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps)) {
-								appstoreData.account.apps = {};
+							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps) || !(app.id in appstoreData.account.apps)) {
+								apiResource = 'appsStore.add'
 							}
-							appstoreData.account.apps[app.id] = appInstallInfo;
+
 							self.callApi({
-								resource: 'account.update',
+								resource: apiResource,
 								data: {
 									accountId: appstoreData.account.id,
-									data: appstoreData.account
+									appId: app.id,
+									data: appInstallInfo
 								},
 								success: function(_data, status) {
-									appstoreData.account = _data.data;
+									appstoreData.account.apps[app.id] = _data.data;
 									icon.stop(true, true)
 										.show()
 										.removeClass('icon-spin icon-spinner')
@@ -368,6 +372,7 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+				parent.find('.search-query').focus();
 
 				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
 			});

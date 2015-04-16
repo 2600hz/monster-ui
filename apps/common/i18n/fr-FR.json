@@ -406,5 +406,14 @@
 		},
 		"saveSuccess": "Vous avez mis à jours les options d'opérateurs avec succès!",
 		"huntError": "Vos réglages d'opérateur actuels ne fonctionnent pas dans cette interface, si vous souhaitez conserver ces réglages, ne changez rien dans ce menu. Sinon, vous pouvez sélectionner une option dans le menu et sauvegarder!"
+	},
+
+	"__comment": "UI-228: Adding the numberSelector common control",
+	"__version": "v3.20_s4",
+	"numberSelector": {
+		"emptyValue": "- Selectionnez un numéro -",
+		"removeLink": "Retirer",
+		"spareLink": "Choisir un numéro disponible",
+		"buyLink": "Acheter un nouveau numéro"
 	}
 }

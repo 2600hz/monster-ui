@@ -26,7 +26,9 @@
 		appsStore: {
 			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
 			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' },
-			'getIcon': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/icon', dataType: 'text' }
+			'getIcon': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/icon', dataType: 'text' },
+			'update': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/{appId}' },
+			'add': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}' }
 		},
 		auth: {
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
