@@ -30,5 +30,5 @@ This helper will transform a field into a jQuery Date Picker. It will automatica
 
 [monster]: ../../monster.md
 [ui]: ../ui.md
-
+[jquery]: http://api.jquery.com/Types/#jQuery
 [PlainObject]: http://api.jquery.com/Types/#PlainObject
