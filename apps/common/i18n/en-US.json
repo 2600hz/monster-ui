@@ -442,5 +442,14 @@
 		"label": "Prepend",
 		"help": "This text will appear before your number when receiving a call. This can be used to better identify which number was called when you use more than one.",
 		"successUpdate": "You successfully updated the prepended text for {{phoneNumber}}"
+	},
+
+	"__comment": "UI-228: Adding the numberSelector common control",
+	"__version": "v3.20_s4",
+	"numberSelector": {
+		"emptyValue": "- Select a number -",
+		"removeLink": "Remove",
+		"spareLink": "Select a spare number",
+		"buyLink": "Buy a new number"
 	}
 }

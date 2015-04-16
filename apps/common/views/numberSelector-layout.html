@@ -1,0 +1,28 @@
+<div class="number-selector">
+	<div class="number-selector-content">
+		<input class="number-selector-input" type="hidden" name="{{inputName}}" value="{{number}}">
+		<div class="number-selector-dropdown" tabindex="0">
+			<div class="number-selector-clickable"></div>
+			<div class="number-selector-element remove-element {{#unless number}}hidden{{/unless}}" data-action="remove">
+				<span class="link">{{i18n.numberSelector.removeLink}}</span>
+				<span class="number">{{formatPhoneNumber number}}</span>
+			</div>
+			<div class="number-selector-element" data-action="spare">
+				<span class="link">{{i18n.numberSelector.spareLink}}</span>
+			</div>
+			<div class="number-selector-element" data-action="buy">
+				<span class="link">{{i18n.numberSelector.buyLink}}</span>
+			</div>
+		</div>
+		<div class="number-selector-displayed">
+			<span class="number">
+			{{#if number}}
+				{{formatPhoneNumber number}}
+			{{else}}
+				{{i18n.numberSelector.emptyValue}}
+			{{/if}}
+			</span>
+			<span class="handle"></span>
+		</div>
+	</div>
+</div>
