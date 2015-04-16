@@ -315,19 +315,21 @@ define(function(require){
 							accountId: appstoreData.account.id
 						},
 						success: function(data, status) {
+							var apiResource = 'appsStore.update';
 							appstoreData.account = data.data;
-							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps)) {
-								appstoreData.account.apps = {};
+							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps) || !(app.id in appstoreData.account.apps)) {
+								apiResource = 'appsStore.add'
 							}
-							appstoreData.account.apps[app.id] = appInstallInfo;
+
 							self.callApi({
-								resource: 'account.update',
+								resource: apiResource,
 								data: {
 									accountId: appstoreData.account.id,
-									data: appstoreData.account
+									appId: app.id,
+									data: appInstallInfo
 								},
 								success: function(_data, status) {
-									appstoreData.account = _data.data;
+									appstoreData.account.apps[app.id] = _data.data;
 									icon.stop(true, true)
 										.show()
 										.removeClass('icon-spin icon-spinner')
