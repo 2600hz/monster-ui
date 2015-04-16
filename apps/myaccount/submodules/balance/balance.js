@@ -466,6 +466,8 @@ define(function(require){
 		balanceBindEvents: function(parent) {
 			var self = this;
 
+			setTimeout(function() { parent.find('.search-query').focus(); });
+
 			parent.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {

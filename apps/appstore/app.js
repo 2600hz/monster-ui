@@ -59,6 +59,8 @@ define(function(require){
 			var self = this,
 				searchInput = parent.find('.search-bar input.search-query');
 
+			setTimeout(function () { searchInput.focus(); });
+
 			parent.find('.app-filter').on('click', function(e) {
 				var $this = $(this),
 					filter = $this.data('filter');
@@ -70,7 +72,7 @@ define(function(require){
 					filter: '.app-element' + (filter ? '.'+filter : '')
 				});
 
-				searchInput.val('');
+				searchInput.val('').focus();;
 			});
 
 			parent.find('.app-list-container').on('click', '.app-element', function(e) {
@@ -368,6 +370,7 @@ define(function(require){
 				e.preventDefault();
 				parent.find('.app-details-view').hide();
 				parent.find('.user-list-view').show();
+				parent.find('.search-query').focus();
 
 				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
 			});
@@ -468,7 +471,7 @@ define(function(require){
 							monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
 
 							// Update installedApps list of the cookie by adding the new app
-							cookieData.installedApps.push(appData);
+							cookieData.installedApps.push(appData.id);
 
 							// Update cookie
 							$.cookie('monster-auth', JSON.stringify(cookieData));
@@ -491,7 +494,7 @@ define(function(require){
 						monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
 
 						// Remove app from installedApps of the cookie
-						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val !== app.id; });
 
 						// Update cookie
 						$.cookie('monster-auth', JSON.stringify(cookieData));
