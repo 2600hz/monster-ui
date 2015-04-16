@@ -586,7 +586,7 @@ define(function(require){
 			}
 			startDate.setDate(startDate.getDate() + 1);
 
-			container.find('#startDate, #endDate').datepicker({
+			monster.ui.datepicker(container.find('#startDate, #endDate'), {
 				beforeShow: customRange,
 				onSelect: customSelect
 			});
@@ -617,7 +617,7 @@ define(function(require){
 						dateMaxRange = today;
 					}
 
-					inputEndDate.val(toStringDate(dateMaxRange));
+					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'short'));
 				}
 			};
 
@@ -656,17 +656,6 @@ define(function(require){
 					maxDate: dateMax
 				};
 			};
-
-			function toStringDate(date) {
-				var day = date.getDate(),
-					month = date.getMonth()+1,
-					year = date.getFullYear();
-
-				day < 10 ? day = '0' + day : true;
-				month < 10 ? month = '0' + month : true;
-
-				return month+'/'+day+'/'+year;
-			}
 		},
 
 		friendlyError: function(dataError) {
@@ -1142,6 +1131,38 @@ define(function(require){
 			}
 
 			return formData;
+		},
+
+
+		/**
+		 * @desc Wrapper of the Jquery date picker that uses the date format settings from the logged-in user if it exists.
+		 * @param target - mandatory jQuery Object
+		 * @param options - optional list of settings. Get the full list in the doc of the jQuery Date Picker.
+		 */
+		datepicker: function(target, options) {
+			var self = this,
+				datePickerFormat = 'mm/dd/yy',
+				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
+							 monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format') ?
+							 monster.apps.auth.currentUser.ui_flags.date_format : 'mdy' ;
+
+			if(userFormat === 'mdy') {
+				datePickerFormat = 'mm/dd/yy';
+			}
+			else if(userFormat === 'dmy') {
+				datePickerFormat = 'dd/mm/yy';
+			}
+			else if(userFormat === 'ymd') {
+				datePickerFormat = 'yy/mm/dd';
+			}
+
+			var defaultOptions = {
+					dateFormat: datePickerFormat,
+					constraintInput: true
+				},
+				optionsDatePicker = $.extend(true, defaultOptions, options);
+
+			return target.datepicker(optionsDatePicker);
 		},
 
 		/**

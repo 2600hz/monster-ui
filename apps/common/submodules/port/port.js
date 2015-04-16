@@ -436,15 +436,13 @@ define(function(require){
 		portBindScheduledDatePopupEvents: function(parent, popup, args) {
 			var self = this;
 
-			popup.find('#scheduled_date').datepicker({
+			monster.ui.datepicker(popup.find('#scheduled_date'), {
 				minDate: new Date(),
-				beforeShowDay: $.datepicker.noWeekends,
-				constrainInput: true,
-				dateFormat: 'mm/dd/yy'
+				beforeShowDay: $.datepicker.noWeekends
 			});
 
 			popup.find('.save-link').on('click', function() {
-				var newScheduledDate = monster.util.dateToGregorian(new Date(monster.ui.getFormData('edit_scheduled_date').scheduled_date));
+				var newScheduledDate = monster.util.dateToGregorian(popup.find('#scheduled_date').datepicker('getDate'));
 
 				popup.dialog('close');
 
@@ -1016,11 +1014,9 @@ define(function(require){
 			self.portCancelOrder(parent, accountId, container, data, index);
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
-			datePickerInput.datepicker({
+			monster.ui.datepicker(datePickerInput, {
 				minDate: monster.util.getBusinessDate(4),
 				beforeShowDay: $.datepicker.noWeekends,
-				constrainInput: true,
-				dateFormat: 'mm/dd/yy',
 				onSelect: function(dateText, inst) {
 					var span = container.find('#transfer_schedule_date'),
 						textColor = span.css('color'),
