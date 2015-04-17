@@ -123,11 +123,13 @@
 						<li>
 						{{#compare user.ui_flags.date_format '===' 'dmy'}}
 							{{ i18n.user.dateFormats.dmy }}
-						{{else}} {{#compare user.ui_flags.date_format '===' 'dmy'}}
-							{{ ../i18n.user.dateFormats.ymd }}
-						{{else}}
-							{{ ../i18n.user.dateFormats.mdy }}
-						{{/compare}} {{/compare}}
+						{{else}} 
+							{{#compare user.ui_flags.date_format '===' 'ymd'}}
+								{{ ../i18n.user.dateFormats.ymd }}
+							{{else}}
+								{{ ../i18n.user.dateFormats.mdy }}
+							{{/compare}} 
+						{{/compare}}
 						</li>
 						<li>
 						{{#if user.ui_flags.twelve_hours_mode}}
