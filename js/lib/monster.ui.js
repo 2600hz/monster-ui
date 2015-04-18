@@ -153,6 +153,14 @@ define(function(require){
 		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
 	});
 
+	Handlebars.registerHelper('helpBlock', function(text, type) {
+		var validTypes = ['info', 'question', 'error', 'warning'],
+			type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+			template = monster.template(monster.apps.core, 'monster-text-' + type, { text: text });
+
+		return new Handlebars.SafeString(template);
+	});
+
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title: function(title) {
 			if (!this.options.title ) {

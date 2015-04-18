@@ -173,5 +173,16 @@ You can also provide parameters to define a label, set its positioning, and set 
 {{/monsterCheckbox}}
 ```
 
+##### helpBlock
+This helper allows you to generate a wrapper around your text, with a pre-set design used in many different places in the Monster-UI, so it looks consistent with the rest of the UI.
+
+First argument is a String that will be wrapped in a container. 
+The Second argument is optional and defaults to 'info'. Choices are 'info', 'question', 'error', 'warning'. Error will display a wrapper of the red color, Warning will display a wrapper of the yellow color, and question will show a question mark instead of the standard info icon.
+
+```handlebars
+{{helpBlock 'My String'}}
+{{helpBlock 'My String 2' 'error'}}
+```
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates

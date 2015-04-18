@@ -1,52 +1,16 @@
 <div class="trunkstore_popup cnam clearfix">
-<!-- 	<div class="row-fluid">
-		<div class="left_image"></div>
-
-		<div class="right_part">
-			<div class="row-fluid">
-				<div class="row-fluid">
-					{{ i18n.callerId.callerIdName }}
-				</div>
-
-				<div class="row-fluid">
-					<form id="cnam">
-						<input type="text" class="caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerId.callerIdPlaceholder }}"/>
-					</form>
-				</div>
-
-				<div class="row-fluid">
-					<button class="btn btn-success">{{ i18n.add }}</button>
-					{{#if display_name}}
-					<button class="btn btn-danger">{{ i18n.remove }}</button>
-					{{/if}}
-				</div>
-			</div>
-		</div>
-	</div> -->
 	<form id="cnam">
 		<div class="popup-content">
 			<label class="popup-label" for="outbound_caller_id">{{ i18n.callerId.outboundTitle }}</label>
 			<input type="text" id="outbound_caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerId.callerIdPlaceholder }}"/>
-			<div class="help-box gray-box">
-				<div class="wrapper-icon">
-					&nbsp;<i class="icon-info-sign2"></i>&nbsp;
-				</div>
-				<div class="text-wrapper">
-					<p>{{ i18n.callerId.help.outbound }}</p>
-				</div>
-			</div>
+
+			{{helpBlock i18n.callerId.help.outbound}}
 		</div>
 		<div class="popup-content">
 			<label class="popup-label" for="inbound_caller_id">{{ i18n.callerId.inboundTitle }}</label>
 			{{#monsterSwitch}}<input type="checkbox" id="inbound_caller_id" name="inbound_lookup"{{#if inbound_lookup}} checked="checked"{{/if}}>{{/monsterSwitch}}
-			<div class="help-box gray-box">
-				<div class="wrapper-icon">
-					&nbsp;<i class="icon-info-sign2"></i>&nbsp;
-				</div>
-				<div class="text-wrapper">
-					<p>{{ i18n.callerId.help.inbound }}</p>
-				</div>
-			</div>
+
+			{{helpBlock i18n.callerId.help.inbound}}
 		</div>
 		<div class="popup-content popup-actions clearfix">
 			<div class="pull-right">
