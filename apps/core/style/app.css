@@ -1871,3 +1871,29 @@ label.monster-invalid {
 		border-color: #7eb4ea;
 	}
 }
+
+/* Styling for the password strength control */
+div.monster-password-strength {
+	border: solid 1px #c0c0c9;
+	margin-top: 5px;
+	height: 20px;
+	line-height: 18px;
+	box-sizing: border-box;
+	width: 100%;
+	border-radius: 2px;
+}
+
+div.monster-password-strength > div {
+	font-size: 12px;
+	box-sizing: border-box;
+	cursor: default;
+}
+div.monster-password-strength > div > span {
+	white-space: nowrap;
+	margin-left: 5px;
+}
+
+i.monster-password-strength {
+	margin-left: 5px;
+	color: #c0c0c9;
+}

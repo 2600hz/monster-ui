@@ -1309,6 +1309,99 @@ define(function(require){
 			else {
 				console.error('This is not a valid type for our codec selector: ', type);
 			}
+		},
+
+		showPasswordStrength: function(input, options) {
+			if(input) {
+				var i18n = monster.apps.core.i18n.active(),
+					options = options || {},
+					display = options.display || "bar",
+					tooltipPosition = options.tooltipPosition || "top",
+					regexes = [
+						{
+							key: "strong",
+							regex: new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$"),
+							color: "#18b309",
+							size: 100
+						},
+						{
+							key: "good",
+							regex: new RegExp("^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$"),
+							color: "#33db24",
+							size: 70
+						},
+						{
+							key: "medium",
+							regex: new RegExp("^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$"),
+							color: "#ffcc33",
+							size: 50
+						},
+						{
+							key: "weak",
+							regex: new RegExp("^(?=.{6,}).*$"),
+							color: "#ff6a57",
+							size: 40
+						},
+						{
+							key: "bad",
+							regex: new RegExp("^.+$"),
+							color: "#ff3d24",
+							size: 20
+						},
+						{
+							key: "empty",
+							regex: new RegExp("^\\s*$"),
+							color: "#c0c0c9",
+							size: 0
+						}
+					],
+					strengthDisplay;
+				
+				switch(display) {
+					case 'icon': {
+						strengthDisplay = $('<i class="monster-password-strength icon-lock icon-small" data-original-title="'+i18n.passwordStrength.empty+'" data-placement="'+tooltipPosition+'" data-toggle="tooltip"></i>');
+						input.on('keyup keypress change', function(e) {
+							$.each(regexes, function(key, val) {
+								if(val.regex.test(input.val())) {
+									strengthDisplay
+										.css('color', val.color)
+										.attr('data-original-title', i18n.passwordStrength[val.key])
+										.tooltip('fixTitle');
+									return false;
+								}
+							});
+						});
+						break;
+					}
+					case 'bar':
+					default: {
+						strengthDisplay = $('<div class="monster-password-strength"><div><span>'+i18n.passwordStrength.empty+'</span></div></div>');
+						input.on('keyup keypress change', function(e) {
+							$.each(regexes, function(key, val) {
+								if(val.regex.test(input.val())) {
+									strengthDisplay
+										.children('div')
+										.css({
+											backgroundColor: val.color,
+											width: val.size+'%'
+										}).children('span')
+										.html(i18n.passwordStrength[val.key]);
+									return false;
+								}
+							});
+						});
+						break;
+					}
+				}
+				
+				if(options.container) {
+					options.container.append(strengthDisplay);
+				} else {
+					input.after(strengthDisplay);
+				}
+			} else {
+				throw 'You must provide at least one input field';
+			}
 		}
 	};
 

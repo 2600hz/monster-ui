@@ -464,5 +464,16 @@
 		},
 		"GATEWAY_DOWN": {
 		}
+	},
+
+	"__comment": "UI-243: Adding a password strength control",
+	"__version": "v3.20_s4",
+	"passwordStrength": {
+		"strong": "Strong",
+		"good": "Good",
+		"medium": "Okay",
+		"weak": "Weak",
+		"bad": "Bad",
+		"empty": "Enter a password"
 	}
 }

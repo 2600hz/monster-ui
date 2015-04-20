@@ -8,6 +8,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [getFormData()][getFormData]
 * [highlight()][highlight]
 * [protectField()][protect_field]
+* [showPasswordStrength()][show_password_strength]
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
 
@@ -24,5 +25,6 @@ The `monster.ui` object contains different methods and objects used to easily re
 [getFormData]: ui/getFormData().md
 [highlight]: ui/highlight().md
 [protect_field]: ui/protectField().md
+[show_password_strength]: ui/showPasswordStrength().md
 [validate]: ui/validate().md
 [wysiwyg]: ui/wysiwyg().md
