@@ -1,5 +1,7 @@
 <div class="alert-dialog">
-	{{helpBlock content 'question'}}
+	{{#monsterText 'question'}}
+		{{ content }}
+	{{/monsterText}}
 
 	<div class="alert-buttons-wrapper clearfix">
 		<button id="cancel_button" class="btn btn-danger confirm_button">{{ i18n.dialog.confirmCancel }}</button>

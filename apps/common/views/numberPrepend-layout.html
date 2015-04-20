@@ -4,7 +4,9 @@
 			<label class="popup-label" for="number_prepend_value">{{ i18n.numberPrepend.title }}</label>
 			<input type="text" id="number_prepend_value" name="name" value="{{name}}"/>
 
-			{{helpBlock i18n.numberPrepend.help}}
+			{{#monsterText}}
+				{{i18n.numberPrepend.help}}
+			{{/monsterText}}
 		</div>
 		<div class="popup-content popup-actions clearfix">
 			<div class="pull-right">

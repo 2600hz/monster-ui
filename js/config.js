@@ -3,10 +3,10 @@ define(function(require){
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			default: 'http://api.zswitch.net:8000/v2/',
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600hz, add the URL in the 'provisioner' key below
-			 		//provisioner: 'http://xx.xx.xx.xx/2600hz-provisioner/',
+			 		provisioner: 'http://10.26.0.41/2600hz-provisioner/',
+			default: 'http://10.26.0.41:8000/v2/'
 
 			// If you want to use WebSockets you need to turn blackhole on in the back-end and then put the URL in the 'socket' key below
 			// 		socket: 'your_web_socket_url'
@@ -48,10 +48,10 @@ define(function(require){
 		},
 		developerFlags: {
 			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
-			//showSmartPBXCallflows: true,
+			showSmartPBXCallflows: true,
 
 			// Settings this flag to true will show JS error when they happen, but in general we want to hide those so we comment it
-			//showJSErrors: true
+			showJSErrors: true
 		}
 	};
 });

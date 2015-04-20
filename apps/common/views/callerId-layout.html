@@ -4,13 +4,17 @@
 			<label class="popup-label" for="outbound_caller_id">{{ i18n.callerId.outboundTitle }}</label>
 			<input type="text" id="outbound_caller_id" name="display_name" value="{{display_name}}" placeholder="{{ i18n.callerId.callerIdPlaceholder }}"/>
 
-			{{helpBlock i18n.callerId.help.outbound}}
+			{{#monsterText}}
+				{{i18n.callerId.help.outbound}}
+			{{/monsterText}}
 		</div>
 		<div class="popup-content">
 			<label class="popup-label" for="inbound_caller_id">{{ i18n.callerId.inboundTitle }}</label>
 			{{#monsterSwitch}}<input type="checkbox" id="inbound_caller_id" name="inbound_lookup"{{#if inbound_lookup}} checked="checked"{{/if}}>{{/monsterSwitch}}
 
-			{{helpBlock i18n.callerId.help.inbound}}
+			{{#monsterText}}
+				{{i18n.callerId.help.inbound}}
+			{{/monsterText}}
 		</div>
 		<div class="popup-content popup-actions clearfix">
 			<div class="pull-right">

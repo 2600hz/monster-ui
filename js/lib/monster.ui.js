@@ -153,10 +153,16 @@ define(function(require){
 		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
 	});
 
-	Handlebars.registerHelper('helpBlock', function(text, type) {
-		var validTypes = ['info', 'question', 'error', 'warning'],
+	Handlebars.registerHelper('monsterText', function(type, className) {
+		var htmlContent = arguments[arguments.length-1].fn(this),
+			validTypes = ['info', 'question', 'error', 'warning'],
 			type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-			template = monster.template(monster.apps.core, 'monster-text-' + type, { text: text });
+			templateData = {
+				className: className || '',
+				content: new Handlebars.SafeString(htmlContent)
+			},
+			// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+			template = monster.template(monster.apps.core, 'monster-text-' + type, templateData, false, false, true);
 
 		return new Handlebars.SafeString(template);
 	});
