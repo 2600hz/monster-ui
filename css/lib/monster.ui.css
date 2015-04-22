@@ -1,0 +1,368 @@
+/************************************************************/
+/******************* ALERT/CONFIRM DIALOG *******************/
+/************************************************************/
+
+.alert-dialog {
+	width: 400px;
+	max-width: 400px;
+	padding: 20px;
+}
+.alert-dialog .help-box .text-wrapper {
+	padding: 25px 10px 15px 30px;
+}
+.alert-dialog .alert-buttons-wrapper {
+	margin-top: 20px;
+}
+.alert-dialog .alert-buttons-wrapper > button {
+	float: left;
+	width: 48%;
+}
+.alert-dialog .alert-buttons-wrapper > button:first-child {
+	margin-right: 4%;
+}
+
+/************************************************************/
+/********************** CHARGES DIALOG **********************/
+/************************************************************/
+
+.dialog-charges {
+	width: 520px;
+	padding: 30px;
+}
+.dialog-charges .content > div {
+	padding: 10px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	background: #f0f0f9;
+}
+.dialog-charges .content > .section:not(:first-child) {
+	margin-top: 20px;
+}
+.dialog-charges .content .title-block {
+	line-height: 47px;
+}
+.dialog-charges .charges-info .icon-warning-sign {
+	font-size: 39px;
+	color: #c0c0c9;
+}
+.dialog-charges .charges-list {
+	margin-top: 20px;
+}
+.dialog-charges .charges-element {
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background: #fff;
+}
+.dialog-charges .charges-element:not(:first-child) {
+	margin-top: 5px;
+}
+.dialog-charges .charges-element table {
+	width: 100%;
+}
+.dialog-charges .charges-element tr:first-child {
+	height: 40px;
+}
+.dialog-charges .charges-element td {
+	font-size: 20px;
+}
+.dialog-charges .charges-element td:nth-child(odd) {
+	font-weight: bold;
+	min-width: 100px;
+	color: #22a5ff;
+}
+.dialog-charges .charges-element th {
+	font-weight: normal;
+}
+.dialog-charges .actions {
+	margin-top: 30px;
+	padding-top: 20px;
+	text-align: right;
+	border-top: 1px solid #c0c0c9;
+}
+.dialog-charges .actions button:last-child {
+	width: 130px;
+	margin-left: 20px;
+}
+
+/************************************************************/
+/******************* ADVANCED ERROR DIALOG ******************/
+/************************************************************/
+
+.alert-dialog-advanced {
+	max-width: 800px;
+	padding: 20px;
+}
+.alert-dialog-advanced .error-line {
+	margin: 5px 0;
+}
+.alert-dialog-advanced .error-line.title {
+	font-size: 14px;
+	margin-bottom: 20px;
+}
+.alert-dialog-advanced .error-line.api-name .verb {
+	margin-right: 5px;
+}
+.alert-dialog-advanced .details-box .headline {
+	margin: 10px 0;
+	cursor: pointer;
+}
+.alert-dialog-advanced .details-box .headline i {
+	margin-right: 5px;
+}
+.alert-dialog-advanced .details-box .headline i.icon-angle-up,
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-down {
+	display: none;
+}
+.alert-dialog-advanced .details-box .headline i.icon-angle-down,
+.alert-dialog-advanced .details-box .headline.active i.icon-angle-up {
+	display: inline-block;
+}
+.alert-dialog-advanced .details-box .error-details-wrapper {
+	display: none;
+}
+.alert-dialog-advanced .details-box .error-details-wrapper pre {
+	background: #fff;
+}
+
+/************************************************************/
+/****************** JAVASCRIPT ERROR DIALOG *****************/
+/************************************************************/
+
+.alert-dialog-javascript {
+	padding: 20px;
+}
+.alert-dialog-javascript .title {
+	font-size: 22px;
+	padding: 15px 0;
+}
+.alert-dialog-javascript table.table tr td {
+	line-height: 15px;
+	white-space: pre-line;
+}
+
+/************************************************************/
+/*************************** TABS ***************************/
+/************************************************************/
+
+.tabs-section {
+	display: none;
+}
+.tabs-section.active {
+	display: block;
+}
+
+/************************************************************/
+/************************ VALIDATION ************************/
+/************************************************************/
+
+label.monster-invalid {
+	font-size: 12px;
+	line-height: 16px;
+	position: absolute;
+	margin: 0;
+	color: red;
+}
+
+/************************************************************/
+/************************** WYSIWYG *************************/
+/************************************************************/
+
+.wysiwyg-container {
+	clear: both;
+}
+
+/**************** TOOLBAR ***************/
+.wysiwyg-container .wysiwyg-toolbar {
+	margin: 0;
+	padding: 6px 0;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	background: #eee;
+}
+.wysiwyg-container.transparent .wysiwyg-toolbar {
+	border-color: transparent;
+	background: transparent;
+}
+
+
+/**************** OPTIONS ***************/
+.wysiwyg-container .btn-group {
+	margin-left: 4px;
+	padding-right: 5px;
+	border-right: 1px solid #ccc;
+}
+.wysiwyg-container .btn-group:last-child {
+	border: none;
+}
+.wysiwyg-container .btn-group .btn:not(button) {
+	background-image: none;
+	box-shadow: none;
+}
+.wysiwyg-container .btn-group .btn:first-child {
+	margin-left: 0;
+}
+.wysiwyg-container .btn-group .btn:hover,
+.wysiwyg-container .btn-group .btn.selected {
+	border: 1px solid #bbb;
+	background: #ddd;
+}
+.wysiwyg-container .btn-group .dropdown-menu {
+	min-width: 0;
+}
+.wysiwyg-container .btn-group .dropdown-menu:after {
+	border-bottom-color: #ccc;
+}
+.wysiwyg-container .btn-group .dropdown-menu .btn:first-child {
+	margin-left: 5px;
+}.wysiwyg-container .btn-group .dropdown-menu .btn:last-child {
+	margin-right: 5px;
+}
+.wysiwyg-container .btn-group .dropdown-menu input {
+	margin-left: 5px;
+}
+.wysiwyg-container .btn-group .dropdown-menu i {
+	margin-right: 0;
+}
+.wysiwyg-container .btn-group .color-menu {
+	width: 210px;
+	padding: 5px;
+}
+.wysiwyg-container .btn-group .color-menu a {
+	float: left;
+	width: 15px;
+	height: 15px;
+	padding: 0;
+	border: 2px solid #fff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .2) inset;
+}
+.wysiwyg-container .btn-group .submenu {
+	background: #eee;
+}
+
+/************* UPLOAD BUTTON ************/
+.wysiwyg-container .wysiwyg-upload {
+	overflow: hidden;
+}
+.wysiwyg-container .wysiwyg-upload input {
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	width: 38px;
+	height: 30px;
+	opacity: 0;
+}
+
+/**************** EDITOR ****************/
+.wysiwyg-container .wysiwyg-editor {
+	font-size: 16px;
+	overflow: auto;
+	-webkit-box-sizing: content-box;
+	   -moz-box-sizing: content-box;
+	        box-sizing: content-box;
+	height: 320px;
+	margin-bottom: 20px;
+	padding: 10px;
+	border-collapse: separate;
+	border: 1px solid #ccc;
+	outline: none;
+	background: #fff;
+	-webkit-box-shadow: rgba(0, 0, 0, .0745098) 0 1px 1px 0 inset;
+	   -moz-box-shadow: rgba(0, 0, 0, .0745098) 0 1px 1px 0 inset;
+	        box-shadow: rgba(0, 0, 0, .0745098) 0 1px 1px 0 inset;
+}
+.wysiwyg-container .wysiwyg-editor i {
+	font-size: inherit;
+}
+
+/************************************************************/
+/********************** LINKED COLUMNS **********************/
+/************************************************************/
+
+.items-selector .box-selector {
+	float: left;
+	width: 300px;
+}
+.items-selector .box-selector:first-child {
+	margin-right: 20px;
+}
+.items-selector .box-selector ul {
+	margin: 0;
+	list-style: none;
+	border: 1px solid #ccc;
+	border-radius: 0 0 4px 4px;
+	background: #eee;
+}
+.items-selector .box-selector .box-title {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 50px;
+	height: 50px;
+	padding-left: 20px;
+	text-align: left;
+	color: #fff;
+	border-radius: 4px 4px 0 0;
+	background: none repeat scroll 0 0 #2cf;
+}
+.items-selector .box-selector .item-selector {
+	font-size: 14px;
+	line-height: 40px;
+	height: 40px;
+	padding: 0 5px;
+	border-bottom: 1px solid #ddd;
+	background: #fff;
+}
+.items-selector .box-selector .item-selector:hover {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor: move;
+	background: #fcfcfc;
+}
+.items-selector .box-selector .item-selector .item-handle {
+	float: left;
+	width: 5px;
+	height: 30px;
+	margin: 5px 10px 0 0;
+	background: url('images/drag.png');
+}
+.items-selector .box-selector .item-selector.ui-sortable-helper {
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor: move;
+}
+
+/************************************************************/
+/********************* PASSWORD STRENGTH ********************/
+/************************************************************/
+
+div.monster-password-strength {
+	line-height: 18px;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	width: 100%;
+	height: 20px;
+	margin-top: 5px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+}
+div.monster-password-strength > div {
+	font-size: 12px;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	cursor: default;
+}
+div.monster-password-strength > div > span {
+	margin-left: 5px;
+	white-space: nowrap;
+}
+i.monster-password-strength {
+	margin-left: 5px;
+	color: #c0c0c9;
+}
