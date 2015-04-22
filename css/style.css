@@ -1,24 +1,36 @@
-@import url('ui-lightness/jquery-ui-1.10.3.custom.min.css');
-@import url('boilertplate.css');
-@import url('normalize.css');
-@import url('bootstrap/bootstrap.min.css');
-@import url('bootstrap/bootstrap-add.css');
+@import url('vendor/boilertplate.css');
 
-@import url('bootstrap/font-awesome.min.css');
-@import url('bootstrap/telicon.css');
+@import url('vendor/normalize.css');
 
-@import url('toastr.css');
-@import url('jquery.isotope.css');
-@import url('jslider/jslider.css');
-@import url('jquery.timepicker.css');
-@import url('tables/tables.css');
-@import url('card.css');
+@import url('vendor/bootstrap.min.css');
+@import url('lib/custom/bootstrap-add.css');
 
-@import url('leaflet/leaflet.min.css');
-@import url('leaflet/leaflet.ie.min.css');
+@import url('vendor/jquery/ui/jquery-ui-1.10.3.custom.min.css');
+@import url('lib/custom/jquery-ui-add.css');
 
-@import url('footable.core.min.css');
+@import url('vendor/jquery/jquery.isotope.css');
 
-@import url('chosen/chosen.min.css');
+@import url('vendor/jquery/jquery.timepicker.css');
 
-@import url('main.css');
+@import url('vendor/chosen/chosen.min.css');
+@import url('lib/custom/chosen-add.css');
+
+@import url('vendor/font-awesome/css/font-awesome.min.css');
+@import url('lib/custom/font-awesome-add.css');
+
+@import url('vendor/footable/footable.core.min.css');
+
+@import url('vendor/jslider/jslider.css');
+
+@import url('vendor/tables/tables.css');
+@import url('lib/custom/tables-add.css');
+
+@import url('vendor/card.css');
+
+@import url('vendor/toastr.css');
+
+@import url('lib/telicon/css/telicon.css');
+
+@import url('lib/monster.css');
+
+@import url('lib/monster.ui.css');
