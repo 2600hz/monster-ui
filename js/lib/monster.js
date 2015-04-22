@@ -106,7 +106,17 @@ define(function(require){
 					}, function () {
 						options.onChargesCancelled && options.onChargesCancelled();
 					});
-				} else {
+				}
+				// If we have a 401 after being logged in, it means our session expired
+				else if(monster.apps.auth.hasOwnProperty('authToken') && error.status === 401) {
+					// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+					monster.error('api', error, false);
+
+					monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+						monster.util.logoutAndReload();
+					});
+				}
+				else {
 					// Added this to be able to display more data in the UI
 					error.monsterData = {
 						url: settings.url,
@@ -447,7 +457,17 @@ define(function(require){
 							}, function () {
 								requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
 							});
-						} else {
+						}
+						// If we have a 401 after being logged in, it means our session expired
+						else if(monster.apps.auth.hasOwnProperty('authToken') && error.status === 401) {
+							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+							monster.error('api', error, false);
+
+							monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+								monster.util.logoutAndReload();
+							});
+						}
+						else {
 							monster.error('api', error, requestOptions.generateError);
 						}
 					}

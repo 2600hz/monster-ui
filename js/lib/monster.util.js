@@ -566,6 +566,14 @@ define(function(require){
 					return user;
 				}
 			}
+		},
+
+		logoutAndReload: function() {
+			var self = this;
+
+			$.cookie('monster-auth', null);
+
+			window.location.reload();
 		}
 	};
 

@@ -255,8 +255,7 @@ define(function(require){
 				var defaultApp;
 
 				if(err) {
-					$.cookie('monster-auth', null);
-					window.location.reload();
+					monster.util.logoutAndReload();
 				}
 				else {
 					if ( results.user.hasOwnProperty('require_password_update') && results.user.require_password_update ) {
@@ -557,9 +556,7 @@ define(function(require){
 		_logout: function() {
 			var self = this;
 
-			$.cookie('monster-auth', null);
-
-			window.location.reload();
+			monster.util.logoutAndReload();
 		},
 
 		loginClick: function(data) {

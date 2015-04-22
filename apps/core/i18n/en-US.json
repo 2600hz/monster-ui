@@ -475,5 +475,9 @@
 		"weak": "Weak",
 		"bad": "Bad",
 		"empty": "Enter a password"
-	}
+	},
+
+	"__comment": "UI-1388: Adding a message when 401 error",
+	"__version": "3.20",
+	"invalidCredentialsMessage": "Your session expired. Close this popup to be redirected to the login page."
 }
