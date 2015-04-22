@@ -108,7 +108,7 @@ define(function(require){
 					});
 				}
 				// If we have a 401 after being logged in, it means our session expired
-				else if(monster.apps.auth.hasOwnProperty('authToken') && error.status === 401) {
+				else if(monster.util.isLoggedIn() && error.status === 401) {
 					// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 					monster.error('api', error, false);
 
@@ -459,7 +459,7 @@ define(function(require){
 							});
 						}
 						// If we have a 401 after being logged in, it means our session expired
-						else if(monster.apps.auth.hasOwnProperty('authToken') && error.status === 401) {
+						else if(monster.util.isLoggedIn() && error.status === 401) {
 							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 							monster.error('api', error, false);
 

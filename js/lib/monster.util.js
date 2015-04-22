@@ -568,6 +568,12 @@ define(function(require){
 			}
 		},
 
+		isLoggedIn: function() {
+			var self = this;
+
+			return monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('authToken') && typeof monster.apps.auth.authToken !== 'undefined';
+		},
+
 		logoutAndReload: function() {
 			var self = this;
 
