@@ -451,5 +451,17 @@
 		"removeLink": "Remove",
 		"spareLink": "Select a spare number",
 		"buyLink": "Buy a new number"
+	},
+
+	"__comment": "UI-1386: Adding the numberListing common control",
+	"__version": "v3.20_s4",
+	"numberListing": {
+		"title": "List of Numbers",
+		"headline": "Select numbers",
+		"headlineSingle": "Select a number",
+		"noMatchingNumber": "No numbers matched your search.",
+		"noNumber": "No numbers a available.",
+		"noNumberSelected": "You didn't select any number. You need to select at least one number by clicking on a number in the list.",
+		"proceed": "Select"
 	}
 }

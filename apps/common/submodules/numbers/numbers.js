@@ -959,28 +959,35 @@ define(function(require){
 		},
 
 		/* AccountID and Callback in args */
-		numbersFormatDialogSpare: function(data, ignoreNumbers, extraNumbers) {
+		numbersFormatDialogSpare: function(data, ignoreNumbers, extraNumbers, featureFilters) {
 			var self = this,
 				formattedData = {
 					accountName: data.accountName,
-					sortedNumbers: [],
 					numbers: {}
 				},
-				sortByNumber = function(a,b) {
-					return a.phoneNumber > b.phoneNumber;
-				};
-
-			_.each(data.numbers, function(number, id) {
-				if((number.used_by === '' || extraNumbers.indexOf(id) >= 0) && ignoreNumbers.indexOf(id) === -1) {
+				addNumber = function(id, number) {
 					number.phoneNumber = id;
 					number = self.numbersFormatNumber(number);
 
-					formattedData.sortedNumbers.push(number);
 					formattedData.numbers[id] = number;
+				};
+
+			_.each(data.numbers, function(number, id) {
+				if(extraNumbers.indexOf(id) >= 0) {
+					addNumber(id, number);
+				} else if(number.used_by === '' && ignoreNumbers.indexOf(id) === -1) {
+					if(!featureFilters || featureFilters.length === 0) {
+						addNumber(id, number);
+					} else {
+						$.each(featureFilters, function(k, feature) {
+							if(number.features && number.features.indexOf(feature) >= 0) {
+								addNumber(id, number);
+								return false;
+							}
+						});
+					}
 				}
 			});
-
-			formattedData.sortedNumbers.sort(sortByNumber);
 
 			return formattedData;
 		},
@@ -991,77 +998,22 @@ define(function(require){
 				accountName = args.accountName || '',
 				ignoreNumbers = args.ignoreNumbers || [],
 				extraNumbers = args.extraNumbers || [],
+				featureFilters = args.featureFilters || [],
+				singleNumber = args.singleNumber || false,
 				callback = args.callback;
 
 			self.numbersList(accountId, function(data) {
 				data.accountName = accountName;
 
-				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers),
-					spareTemplate = $(monster.template(self, 'numbers-dialogSpare', formattedData));
-
-				spareTemplate.find('[data-toggle="tooltip"]').tooltip();
-
-				spareTemplate.find('.empty-search-row').hide();
-
-				spareTemplate.on('keyup', '.search-query', function() {
-					var rows = spareTemplate.find('.number-box'),
-						emptySearch = spareTemplate.find('.empty-search-row'),
-						currentRow;
-
-					currentNumberSearch = $(this).val().toLowerCase();
-
-					_.each(rows, function(row) {
-						currentRow = $(row);
-						currentRow.data('search').toLowerCase().indexOf(currentNumberSearch) < 0 ? currentRow.hide() : currentRow.show();
-					});
-
-					if(rows.size() > 0) {
-						rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
-					}
-				});
-
-				spareTemplate.find('#proceed').on('click', function() {
-					var selectedNumbersRow = spareTemplate.find('.number-box.selected'),
-						remainingQuantity = formattedData.sortedNumbers.length - selectedNumbersRow.length,
-						selectedNumbers = [];
-
-					_.each(selectedNumbersRow, function(row) {
-						var number = $(row).data('number');
-
-						selectedNumbers.push(formattedData.numbers[number]);
-					});
-
-					if(selectedNumbers.length > 0) {
-						args.callback && args.callback(selectedNumbers, remainingQuantity);
-
-						popup.dialog('close').remove();
-					}
-					else {
-						monster.ui.alert('error', self.i18n.active().numbers.dialogSpare.noNumberSelected);
-					}
-				});
-
-				spareTemplate.find('.number-box:not(.no-data)').on('click', function(event) {
-					var $this = $(this);
-
-					$this.toggleClass('selected');
-
-					if(!$(event.target).is('input:checkbox')) {
-						var $current_cb = $this.find('input[type="checkbox"]'),
-							cb_value = $current_cb.prop('checked');
-
-						$current_cb.prop('checked', !cb_value);
-					}
-				});
-
-				spareTemplate.find('.cancel-link').on('click', function(e) {
-					e.preventDefault();
-					popup.dialog('close');
-				});
-
-				var popup = monster.ui.dialog(spareTemplate, {
+				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers, featureFilters);
+				
+				monster.pub('common.numberListing.render', {
+					numbers: formattedData.numbers,
 					title: self.i18n.active().numbers.dialogSpare.title,
-					position: ['center', 20]
+					headline: formattedData.accountName ? (self.i18n.active().numbers.dialogSpare.headline + ' ' + formattedData.accountName) : self.i18n.active().numbers.dialogSpare.headlineNoAccount,
+					okButton: self.i18n.active().numbers.dialogSpare.proceed,
+					okCallback: args.callback,
+					singleNumber: singleNumber
 				});
 			});
 		},

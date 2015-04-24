@@ -108,14 +108,14 @@
 	margin-top: 4px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .phone-number,
-.dialog-spare-container .numbers .number-box .phone-number {
+#numbers_container .account-section .numbers-wrapper .number-box .phone-number/*,
+.dialog-spare-container .numbers .number-box .phone-number*/ {
 	display: inline-block;
 	width: 120px;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality,
-.dialog-spare-container .numbers .number-box .locality {
+#numbers_container .account-section .numbers-wrapper .number-box .locality/*,
+.dialog-spare-container .numbers .number-box .locality*/ {
 	width: 250px;
 }
 
@@ -124,14 +124,14 @@
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality,
-#numbers_container .account-section .numbers-wrapper .number-box .used-by,
-.dialog-spare-container .numbers .number-box .locality {
+#numbers_container .account-section .numbers-wrapper .number-box .used-by/*,
+.dialog-spare-container .numbers .number-box .locality*/ {
 	margin-left: 30px;
 	display: inline-block;
 }
 
-#numbers_container .account-section .numbers-wrapper .number-box .locality .flag,
-.dialog-spare-container .numbers .number-box .locality .flag {
+#numbers_container .account-section .numbers-wrapper .number-box .locality .flag/*,
+.dialog-spare-container .numbers .number-box .locality .flag*/ {
 	margin-right: 10px;
 }
 
@@ -312,7 +312,7 @@
 }
 
 /* Dialog Spare Numbers */
-.dialog-spare-container {
+/*.dialog-spare-container {
 	padding: 15px;
 }
 
@@ -356,7 +356,7 @@
 	margin-right: 30px;
 	vertical-align: middle;
 	color: #22ccff;
-}
+}*/
 
 /* Dialog Confirmation Actions */
 #action_confirmation h4 {

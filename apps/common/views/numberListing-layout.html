@@ -1,12 +1,7 @@
-<div class="dialog-spare-container">
+<div class="number-listing-container">
 	<div class="grid-numbers">
 		<div class="title blue-gradient-reverse">
-			{{#if accountName}}
-				{{ i18n.numbers.dialogSpare.headline }} {{accountName}}
-			{{else}}
-				{{ i18n.numbers.dialogSpare.headlineNoAccount}}
-			{{/if}}
-
+			{{headline}}
 			<span class="search-box pull-right">
 				<i class="icon-search"></i>
 				<input type="text" class="search-query" placeholder="{{ i18n.search }}..."></input>
@@ -14,11 +9,17 @@
 		</div>
 		<div class="numbers">
 			<div class="empty-search-row">
-                {{ i18n.numbers.dialogSpare.noMatchingNumbers }}
-            </div>
-			{{#each sortedNumbers}}
+				{{ i18n.numberListing.noMatchingNumbers }}
+			</div>
+			{{#each numbers}}
 				<div class="number-box" data-number="{{this.phoneNumber}}" data-search="{{this.phoneNumber}} {{formatPhoneNumber this.phoneNumber}}">
-					<input type="checkbox"></input>
+					<div class="checkbox-container">
+					{{#if ../singleNumber}}
+						<input type="radio" name="numberbox"></input>
+					{{else}}
+						{{#monsterCheckbox}}<input type="checkbox"></input>{{/monsterCheckbox}}
+					{{/if}}
+					</div>
 					<span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>
 					<span class="locality">
 						{{#if this.isoCountry }}
@@ -28,22 +29,27 @@
 							<span class="city">{{ this.friendlyLocality }}</span>
 						{{/if}}
 					</span>
-				{{#compare this.state '===' 'port_in'}}
+
+
 					<div class="features pull-right">
-						<i class="icon-warning-sign icon-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{../../i18n.numbers.portIconHelp}}"></i>
+						{{#each this.viewFeatures}}
+							<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+						{{/each}}
+						{{#compare this.state '===' 'port_in'}}
+							<i class="icon-warning-sign icon-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{../../i18n.numbers.portIconHelp}}"></i>
+						{{/compare}}
 					</div>
-				{{/compare}}
 				</div>
 			{{else}}
 				<div class="number-box no-data">
-					{{ i18n.numbers.noSpareNumber }}
+					{{ i18n.numberListing.noNumber }}
 				</div>
 			{{/each}}
 		</div>
 	</div>
 
 	<div class="dialog-buttons-wrapper">
-		<a href="#" class="cancel-link">{{i18n.cancel}}</a>
-		<button id="proceed" class="btn btn-success">{{i18n.numbers.dialogSpare.proceed}}</button>
+		<button class="monster-button cancel">{{cancelButton}}</button>
+		<button class="monster-button-primary proceed">{{okButton}}</button>
 	</div>
 </div>

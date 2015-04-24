@@ -415,5 +415,17 @@
 		"removeLink": "Retirer",
 		"spareLink": "Choisir un numéro disponible",
 		"buyLink": "Acheter un nouveau numéro"
+	},
+
+	"__comment": "UI-1386: Adding the numberListing common control",
+	"__version": "v3.20_s4",
+	"numberListing": {
+		"title": "Liste des numéros disponibles",
+		"headline": "Sélectionner numéros",
+		"headlineSingle": "Sélectionner un numéro",
+		"noMatchingNumber": "Aucun numéro correspondant à votre recherche.",
+		"noNumber": "Aucun numéro disponible.",
+		"noNumberSelected": "Vous n'avez sélectionné aucun numéro. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
+		"proceed": "Sélectionner"
 	}
 }

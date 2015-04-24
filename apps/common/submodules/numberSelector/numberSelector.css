@@ -54,7 +54,8 @@
 	line-height: 30px;
 	padding: 0px 10px;
 	background: #fff;
-	border-top: solid 1px #c0c0c9;
+	border: solid 1px #c0c0c9;
+	border-bottom: none;
 }
 .number-selector .number-selector-dropdown.open .number-selector-element:not(.hidden) {
 	display: block;
