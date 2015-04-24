@@ -36,26 +36,72 @@ define(function(require){
 			popupHtml.find('button.btn.btn-success').on('click', function(ev) {
 				ev.preventDefault();
 
-				var e911FormData = monster.ui.getFormData('e911');
+				var e911FormData = monster.ui.getFormData('e911'),
+					popupContent = self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2;
 
 				_.extend(dataNumber, { dash_e911: e911FormData });
 
-				monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-					function() {
-						self.e911UpdateNumber(dataNumber.id, dataNumber,
-							function(data) {
-								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-									template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+				monster.ui.confirm(popupContent, function() {
+					var callbackSuccess = function callbackSuccess(data) {
+							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+								template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
 
 								toastr.success(template);
 
 								popup.dialog('destroy').remove();
 
 								callbacks.success && callbacks.success(data);
-							}
-						);
-					}
-				);
+						};
+
+					self.e911UpdateNumber(dataNumber.id, dataNumber, {
+						success: function(data) {
+
+							callbackSuccess(data);
+						},
+						multipleChoices: function(addresses) {
+							var templatePopupAddresses = $(monster.template(self, 'e911-addressesDialog', addresses)),
+								popupAddress;
+
+							templatePopupAddresses.find('.address-option').on('click', function() {
+								templatePopupAddresses.find('.address-option.active').removeClass('active');
+								$(this).addClass('active');
+								templatePopupAddresses.find('.save-address').removeClass('disabled');
+							});
+
+							templatePopupAddresses.find('.cancel-link').on('click', function() {
+								popupAddress
+									.dialog('destroy')
+									.remove();
+							});
+
+							templatePopupAddresses.find('.save-address').on('click', function() {
+								if (templatePopupAddresses.find('.address-option').hasClass('active')) {
+									var index = templatePopupAddresses.find('.address-option.active').data('id'),
+										dataAddress = addresses.details[index];
+
+									_.extend(dataNumber, { dash_e911: dataAddress });
+
+									self.e911UpdateNumber(dataNumber.id, dataNumber, {
+										success: function(data) {
+											popupAddress
+												.dialog('destroy')
+												.remove();
+
+											callbackSuccess(data);
+										}
+									});
+								}
+							});
+
+							popupAddress = monster.ui.dialog(templatePopupAddresses, {
+								title: self.i18n.active().e911.chooseAddressPopup.title
+							});
+						},
+						invalidAddress: function(data) {
+							monster.ui.alert('error', self.i18n.active().e911.invalidAddress);
+						}
+					});
+				});
 			});
 
 			popupHtml.find('#remove_e911_btn').on('click', function(e) {
@@ -75,8 +121,8 @@ define(function(require){
 							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
 								function() {
 									delete dataNumber.dash_e911;
-									self.e911UpdateNumber(dataNumber.id, dataNumber,
-										function(data) {
+									self.e911UpdateNumber(dataNumber.id, dataNumber, {
+										success: function(data) {
 											var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 												template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
 
@@ -86,7 +132,7 @@ define(function(require){
 
 											callbacks.success && callbacks.success(data);
 										}
-									);
+									});
 								}
 							);
 						} else {
@@ -137,7 +183,7 @@ define(function(require){
 			});
 		},
 
-		e911UpdateNumber: function(phoneNumber, data, success, error) {
+		e911UpdateNumber: function(phoneNumber, data, callbacks) {
 			var self = this;
 
 			self.callApi({
@@ -145,16 +191,23 @@ define(function(require){
 				data: {
 					accountId: self.accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
-					data: data
+					data: data,
+					generateError: false
 				},
 				success: function(_data, status) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
+					callbacks.success && callbacks.success(_data);
 				},
 				error: function(_data, status) {
-					if(typeof error === 'function') {
-						error(_data);
+					if (_data.error === '400') {
+						if (data.message === 'multiple_choice') {
+							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.dash_e911);
+						}
+						else {
+							callbacks.invalidAddress && callbacks.invalidAddress(_data.data.address.invalid);
+						}
+					}
+					else {
+						callbacks.error && callbacks.error(_data.data);
 					}
 				}
 			});

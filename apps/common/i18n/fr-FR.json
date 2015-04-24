@@ -119,7 +119,14 @@
 		"state":"État",
 		"successE911":"Mise à jour de l'Adresse d'Urgence de {{phoneNumber}} réussie",
 		"title":"Adresse d'Urgence",
-		"verifyLocation":"Vérifier Adresse"
+		"verifyLocation":"Vérifier Adresse",
+		"invalidAddress": "Malheureusement, l'adresse que vous avez entré n'a pas été trouvé. Veuillez la vérifier et essayez à nouveau.",
+		"chooseAddressPopup": {
+			"title": "Choisissez une adresse",
+			"youEntered": "Vous avez entré:",
+			"choicesAvailable": "Choix disponibles:",
+			"content": "Plusieurs adresses correpondent à celle que vous avez entré. Peut-être que vous n'avez pas spécifié un numéro de rue ou le bâtiment à plusieurs appartements."
+		}
 	},
 	"failover":{
 		"activate":"Activer",
