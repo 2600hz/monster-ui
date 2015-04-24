@@ -366,3 +366,51 @@ i.monster-password-strength {
 	margin-left: 5px;
 	color: #c0c0c9;
 }
+
+/*********************************************************************************************************/
+/********************* RESULTS COLUMNS (Used in carriers + Number Manager) *******************************/
+/*********************************************************************************************************/
+.monster-results {
+	margin-top: 30px;
+	width: 600px;
+}
+
+.monster-results .column-wrapper {
+	float: left;
+	width: 290px;
+}
+
+.monster-results .column-wrapper:first-child {
+	margin-right: 20px;
+}
+
+.monster-results .column-wrapper .row-title {
+	line-height: 40px;
+}
+
+.monster-results .column-wrapper .stats {
+	float: right;
+	font-weight: 600;
+}
+
+.monster-results .column-wrapper .list-entities {
+	background: #EEE;
+	border: 1px solid #999;
+	border-radius: 4px;
+	height: 300px;
+	overflow: auto;
+	margin-top: 5px;
+}
+
+.monster-results .column-wrapper .list-entities .row-entity {
+	border-bottom: 1px solid #999;
+	padding: 4px 0px 4px 15px;
+}
+
+.monster-results .column-wrapper .list-entities .row-entity i {
+	padding: 0 10px;
+}
+
+.monster-results .column-wrapper .result-status-wrapper i {
+	margin-right: 5px;
+}

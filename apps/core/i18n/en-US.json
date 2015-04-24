@@ -479,5 +479,14 @@
 
 	"__comment": "UI-1388: Adding a message when 401 error",
 	"__version": "3.20",
-	"invalidCredentialsMessage": "Your session expired. Close this popup to be redirected to the login page."
+	"invalidCredentialsMessage": "Your session expired. Close this popup to be redirected to the login page.",
+
+	"__comment": "UI-901: Show a recap of deleting numbers",
+	"__version": "3.20",
+	"monsterResults": {
+		"titles": {
+			"success": "Success",
+			"error": "Error"
+		}
+	}
 }
