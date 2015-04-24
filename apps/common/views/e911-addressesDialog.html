@@ -1,0 +1,43 @@
+<div class="e911-address-dialog">
+	<p>{{i18n.e911.chooseAddressPopup.content}}</p>
+
+	<div class="header">
+		<h4>{{i18n.e911.chooseAddressPopup.youEntered}}</h4>
+
+	{{#with cause}}
+		<p>
+			{{street_address}}
+			<br>
+		{{#if extended_address}}
+			{{extended_address}}
+			<br>
+		{{/if}}
+			{{locality}} {{region}} {{postal_code}}
+		</p>
+	{{/with}}
+	</div>
+
+	<div class="content">
+		<h4>{{i18n.e911.chooseAddressPopup.choicesAvailable}}</h4>
+		<div class="list-choices">
+		{{#each details}}
+			<div class="address-option" data-id="{{@index}}">
+				{{street_address}}
+				<br>
+			{{#if extended_address}}
+				{{extended_address}}
+				<br>
+			{{/if}}
+				{{locality}} {{region}} {{postal_code}}
+			</div>
+		{{/each}}
+		</div>
+	</div>
+
+	<div class="actions clearfix">
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{i18n.cancel}}</a>
+			<button type="button" class="btn btn-success save-address disabled">{{i18n.save}}</button>
+		</div>
+	</div>
+</div>

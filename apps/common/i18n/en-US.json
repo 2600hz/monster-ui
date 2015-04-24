@@ -129,7 +129,16 @@
 		"state": "State",
 		"successE911": "You successfully updated the e911 address of {{phoneNumber}}",
 		"title": "E911 Address",
-		"verifyLocation": "Verify Location"
+		"verifyLocation": "Verify Location",
+		"__comment": "UI-1355: Add USPS format to addresses",
+		"__version": "v3.20_s4",
+		"invalidAddress": "Unfortunately, the address you specified wasn't found. Please double-check it and try again.",
+		"chooseAddressPopup": {
+			"title": "Choose correct address",
+			"youEntered": "You entered:",
+			"choicesAvailable": "Choices available:",
+			"content": "Several addresses matched the information you provided. Perhaps you didn't enter a street number or the building has multiple units."
+		}
 	},
 
 	"failover": {
