@@ -4,22 +4,28 @@
 		<div class="number-selector-dropdown" tabindex="0">
 			<div class="number-selector-clickable"></div>
 			<div class="number-selector-element remove-element {{#unless number}}hidden{{/unless}}" data-action="remove">
-				<span class="link">{{i18n.numberSelector.removeLink}}</span>
+				<span class="link">{{labels.remove}}</span>
+				{{#unless labels.hideNumber}}
 				<span class="number">{{formatPhoneNumber number}}</span>
+				{{/unless}}
 			</div>
+			{{#unless noSpare}}
 			<div class="number-selector-element" data-action="spare">
-				<span class="link">{{i18n.numberSelector.spareLink}}</span>
+				<span class="link">{{labels.spare}}</span>
 			</div>
+			{{/unless}}
+			{{#unless noBuy}}
 			<div class="number-selector-element" data-action="buy">
-				<span class="link">{{i18n.numberSelector.buyLink}}</span>
+				<span class="link">{{labels.buy}}</span>
 			</div>
+			{{/unless}}
 		</div>
 		<div class="number-selector-displayed">
 			<span class="number">
 			{{#if number}}
 				{{formatPhoneNumber number}}
 			{{else}}
-				{{i18n.numberSelector.emptyValue}}
+				{{labels.empty}}
 			{{/if}}
 			</span>
 			<span class="handle"></span>

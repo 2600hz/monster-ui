@@ -1,141 +1,86 @@
 /* Provisioner Popup */
-.device-popup
-{
+.device-popup {
 	width: 700px;
 }
-
-.device-popup .actions
-{
+.device-popup .actions {
 	padding: 10px;
-
 	text-align: right;
 }
-
-.device-popup .block-brand
-{
+.device-popup .block-brand {
 	border: 1px solid #ddd;
 	background: #eee;
 }
-
-.device-popup .title-bar
-{
+.device-popup .title-bar {
 	padding: 20px 10px;
 }
-
-.device-popup .block-brand .brand-selection
-{
+.device-popup .block-brand .brand-selection {
 	overflow-x: auto;
-
 	width: auto;
 	padding: 10px 0 5px;
-
 	white-space: nowrap;
-
 	border-top: 2px solid #2cf;
 	background: #ccc;
 }
-
-.device-popup .block-brand .brand-selection .brand-box
-{
+.device-popup .block-brand .brand-selection .brand-box {
 	font-weight: bold;
 	line-height: 69px;
-
 	display: inline-block;
-
 	width: 95px;
 	height: 67px;
 	margin: auto 10px;
-
 	text-align: center;
-
 	color: #666;
 	border: 2px solid #666;
 	border-radius: 5px 5px 5px 5px;
 }
-
-.device-popup .block-brand .brand-selection .brand-box.unselected
-{
+.device-popup .block-brand .brand-selection .brand-box.unselected {
 	opacity: .5;
 }
-
 .device-popup .block-brand .brand-selection .brand-box.selected,
-.device-popup .block-brand .brand-selection .brand-box:hover
-{
+.device-popup .block-brand .brand-selection .brand-box:hover {
 	cursor: pointer;
-
 	border: 2px solid #2cf;
 }
-
 /* Default state */
 .device-popup .block-model,
-.device-popup .block-footer
-{
+.device-popup .block-footer {
 	display: none;
 }
-
 .device-popup .block-model .model-selection,
-.device-popup .block-device-info .device-info
-{
+.device-popup .block-device-info .device-info {
 	padding: 10px;
-
 	border: 1px solid #ccc;
 	background: #fff;
 }
-
-.device-popup .block-model .model-selection .model-box
-{
+.device-popup .block-model .model-selection .model-box {
 	display: inline-block;
-
 	margin: 0 0 10px;
 	padding: 3px;
-
 	border: 2px solid #fff;
 	border-radius: 4px;
 }
-
-.device-popup .block-model .model-selection .model-box.selected
-{
+.device-popup .block-model .model-selection .model-box.selected {
 	border: 2px solid #2cf !important;
 }
-.device-popup .block-model .model-selection .model-box:hover
-{
+.device-popup .block-model .model-selection .model-box:hover {
 	cursor: pointer;
-
 	border: 2px solid #ddd;
 }
-
-.device-popup .block-model .model-selection .model-box .model-image
-{
-	width: 100px;
-	height: 80px;
-}
-
-.device-popup .block-model .model-selection .model-box .model-name
-{
+.device-popup .block-model .model-selection .model-box .model-name {
 	text-align: center;
 }
-
-.device-popup .block-model .model-selection .models-brand
-{
+.device-popup .block-model .model-selection .models-brand {
 	display: none;
 }
-
-.device-popup .block-model .model-selection .models-brand.active
-{
+.device-popup .block-model .model-selection .models-brand.active {
 	display: block;
 }
-
-.device-popup .block-device-info .device-info
-{
+.device-popup .block-device-info .device-info {
 	padding: 30px 10px 10px;
 }
-
-.device-popup .actions .selection
-{
+.device-popup .actions .selection {
 	font-size: 16px;
 	font-weight: 600;
-
 	display: inline-block;
-
 	margin-right: 20px;
 }

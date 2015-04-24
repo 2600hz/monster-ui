@@ -437,26 +437,47 @@ define(function(require){
 					self.renderLoginBlock();
 					template.find('.powered-by-block').append($('#main .footer-wrapper .powered-by'));
 					$('#monster-content').removeClass('monster-content');
-				};
-
-			if(monster.config.whitelabel.custom_welcome) {
-				self.callApi({
-					resource: 'whitelabel.getWelcomeByDomain',
-					data: {
-						domain: window.location.hostname,
-						generateError: false
-					},
-					success: function(data, status) {
-						template.find('.left-div').empty().html(data);
-						callback();
-					},
-					error: function(data, status) {
+				}
+				loadWelcome = function() {
+					if(monster.config.whitelabel.custom_welcome) {
+						self.callApi({
+							resource: 'whitelabel.getWelcomeByDomain',
+							data: {
+								domain: window.location.hostname,
+								generateError: false
+							},
+							success: function(data, status) {
+								template.find('.left-div').empty().html(data);
+								callback();
+							},
+							error: function(data, status) {
+								callback();
+							}
+						});
+					} else {
 						callback();
 					}
-				});
-			} else {
-				callback();
-			}
+				},
+				domain = window.location.hostname;
+
+			self.callApi({
+				resource: 'whitelabel.getLogoByDomain',
+				data: {
+					domain: domain,
+					generateError: false,
+					dataType: '*'
+				},
+				success: function(_data) {
+					template.find('.logo-block').css('background-image', 'url(' + monster.config.api.default + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+					loadWelcome();
+				},
+				error: function(error) {
+					template.find('.logo-block').css('background-image', 'url("apps/auth/style/static/images/logo.svg")');
+					loadWelcome();
+				}
+			});
+
+			
 		},
 
 		renderLoginBlock: function() {

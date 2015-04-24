@@ -1,0 +1,75 @@
+.number-listing-container {
+	padding: 15px;
+}
+
+.number-listing-container .grid-numbers .title {
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding: 10px;
+	min-width: 600px;
+}
+
+.number-listing-container .grid-numbers {
+	padding-bottom: 10px;
+}
+
+.number-listing-container .grid-numbers .numbers {
+	border: 1px solid #e0e0e9;
+	max-height: 372px;
+	overflow: auto;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box {
+	border: 1px solid #e0e0e9;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box.no-data:hover {
+	cursor: default;
+	background: inherit; 
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .checkbox-container {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .checkbox-container > * {
+	vertical-align: middle;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .checkbox-container > input[type="radio"] {
+	margin: 0px;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .phone-number {
+	display: inline-block;
+	width: 120px;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .locality {
+	width: 250px;
+	margin-left: 30px;
+	display: inline-block;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .locality .flag {
+	margin-right: 10px;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .features i {
+	display: none;
+}
+
+.number-listing-container .grid-numbers .numbers .number-box .features i.active {
+	display: inline-block;
+}
+
+.number-listing-container .grid-numbers .empty-search-row {
+	text-align: center;
+	padding: 10px;
+}
+
+.number-listing-container .dialog-buttons-wrapper .cancel {
+	margin-right: 10px;
+}
