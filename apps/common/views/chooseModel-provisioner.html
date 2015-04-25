@@ -9,7 +9,7 @@
 
 		<div class="brand-selection">
 			{{#each brands}}
-			<div class="brand-box {{id}}" data-brand="{{id}}"/>
+			<div class="brand-box" data-brand="{{id}}" style="background-image: url('css/assets/brands/{{id}}.png');" />
 			{{/each}}
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 					{{#each families}}
 						{{#each models}}
 							<div class="model-box" data-family="{{../id}}" data-model="{{id}}">
-								<div class="model-image {{../../id}}-{{../id}}-{{id}}"></div>
+								<div class="model-image" style="background-image: url('css/assets/models/{{../../id}}_{{../id}}_{{id}}.jpg');"></div>
 								<div class="model-name">{{name}}</div>
 							</div>
 						{{/each}}

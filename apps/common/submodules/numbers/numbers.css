@@ -396,3 +396,14 @@
 #action_confirmation .actions a { text-decoration: none; }
 
 #action_confirmation .actions a:hover { text-decoration: underline; }
+
+/* Delete confirmation popup */
+.delete-confirmation-popup {
+	width: 600px;
+	padding: 15px;
+}
+
+.delete-confirmation-popup .actions {
+	padding-top: 20px;
+	text-align: center;
+}

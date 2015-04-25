@@ -344,10 +344,9 @@
 
 						if('type' in methodInfo) { requestSettings.type = methodInfo.type; }
 						if('dataType' in methodInfo) { requestSettings.dataType = methodInfo.dataType; }
-						if(methodInfo.verb.toLowerCase() === 'delete') {
-							requestSettings.data.data = {};
-						} else if(methodInfo.verb.toLowerCase() === 'post' || methodInfo.verb.toLowerCase() === 'put') {
-							requestSettings.data.data = methodSettings.data;
+
+						if(['post', 'delete', 'put'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
+							requestSettings.data.data = methodSettings.data || {};
 							delete methodSettings.data;
 						}
 

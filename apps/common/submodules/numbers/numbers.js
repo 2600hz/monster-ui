@@ -495,7 +495,7 @@ define(function(require){
 							accountId: self.accountId
 						};
 
-					monster.ui.dialog(dialogTemplate, {
+					var popup = monster.ui.dialog(dialogTemplate, {
 						width: '540px',
 						title: "Delete Numbers - Confirmation"
 					});
@@ -524,10 +524,7 @@ define(function(require){
 					});
 
 					dialogTemplate.on('click', '.cancel-link', function() {
-						dialogTemplate
-							.parent()
-							.parent()
-							.remove();
+						popup.remove();
 					});
 
 					dialogTemplate.on('click', '#delete_action', function() {
@@ -551,12 +548,14 @@ define(function(require){
 								}
 							});
 
+							popup.remove();
+
+							self.numbersShowDeletedNumbers(data);
+
 							self.numbersPaintSpare(parent, dataNumbers, function() {
-								var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
+								//var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
 
-								dialogTemplate.parent().parent().remove();
-
-								toastr.success(template);
+								//toastr.success(template);
 							});
 						});
 					});
@@ -867,6 +866,36 @@ define(function(require){
 						searchListNumbers(val, usedList);
 					}
 				}
+			});
+		},
+
+		numbersShowDeletedNumbers: function(data) {
+			var self = this,
+				deleteRecapTemplate = $(monster.template(self, 'numbers-deleteConfirmation')),
+				formattedData = {
+					errors: [],
+					successes: [],
+					countTotal: 0
+				};
+
+			_.each(data.error, function(obj, phoneNumber) {
+				formattedData.errors.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber)});
+			});
+
+			_.each(data.success, function(obj, phoneNumber) {
+				formattedData.successes.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber)});
+			});
+
+			formattedData.countTotal = formattedData.successes.length + formattedData.errors.length;
+
+			deleteRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
+
+			deleteRecapTemplate.find('#continue').on('click', function() {
+				popup.remove();
+			});
+
+			var popup = monster.ui.dialog(deleteRecapTemplate, {
+				title: self.i18n.active().numbers.deleteRecapDialog.title
 			});
 		},
 

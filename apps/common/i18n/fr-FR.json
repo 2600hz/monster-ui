@@ -87,7 +87,15 @@
 			"help": "Si certains numéros n'apparaissent pas dans la bonne colonne, vous pouvez cliquer sur ce lien afin d'essayer de régler ce problème."
 		},
 
-		"portIconHelp": "Ce numéro est en cours de transfert et sera supprimé si celui-ci échoue. Il peut être configuré mais ne sera pas utilisable"
+		"portIconHelp": "Ce numéro est en cours de transfert et sera supprimé si celui-ci échoue. Il peut être configuré mais ne sera pas utilisable",
+
+		"__comment": "UI-901: Delete recap popup",
+		"__version": "3.20",
+		"deleteRecapDialog": {
+			"headline": "Certains numéros que vous avez sélectionné n'ont pas pu être supprimés. Vous pouvez consulter le récapitulatif ci-dessous. Cliquez sur Continuez pour retourner à la liste des Numéros.",
+			"title": "Récapitulatif de l'opération",
+			"continue": "Continuer"
+		}
 	},
 	"callerId":{
 		"callerIdName":"Nom de Caller ID",
