@@ -1407,7 +1407,9 @@ define(function(require){
 		results: function(data) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active(),
-				template = monster.template(monster.apps.core, 'monster-results', data);
+				template = $(monster.template(monster.apps.core, 'monster-results', data));
+
+			template.find('[data-toggle="tooltip"]').tooltip();
 
 			return template;
 		}
