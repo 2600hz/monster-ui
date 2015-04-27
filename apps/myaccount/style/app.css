@@ -217,6 +217,9 @@
 	#myaccount .myaccount-container {
 		padding-left: 47px;
 	}
+	#myaccount .myaccount-menu .badge {
+		display: none;
+	}
 }
 
 #myaccount .myaccount-content .list-settings .card-type.visa {
