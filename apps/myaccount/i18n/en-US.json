@@ -269,5 +269,13 @@
 		"apiTotal": "Erlang",
 		"jsTotal": "Javascript",
 		"viewDetails": "Details"
+	},
+
+	"__comment": "UI-1397: Clean up topbar of unnecessary HTML",
+	"__version": "v3.20_s4",
+	"isMasquerading": {
+		"switchBackTo": "Switch back to",
+		"myAccount": "My account",
+		"currentlyViewing": "Currently Viewing"
 	}
 }

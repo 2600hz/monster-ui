@@ -63,7 +63,7 @@ define(function(require){
 							apps: appList
 						}));
 
-					$('#topbar').after(template);
+					$('#main_topbar').after(template);
 
 					self.bindEvents(template, appList);
 					self.show();

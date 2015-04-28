@@ -6,6 +6,7 @@ body,
 }
 
 body,
+#main_topbar,
 #myaccount,
 #auth_container,
 #monster-content {
@@ -13,254 +14,129 @@ body,
 }
 
 /************************************************************/
-/************************** NAVBAR **************************/
+/************************** TOPBAR **************************/
 /************************************************************/
 
-#main section > .navbar {
-	margin-bottom: 0;
+#main_topbar {
+	height: 62px;
 	border-top: 5px solid #22a5ff;
-}
-#main section > .navbar .navbar-inner {
-	padding: 0 0 0 0;
-	border: none;
-	border-radius: 0;
 	background: #303039;
-	box-shadow: none;
 }
-#main section > .navbar .btn-navbar {
-	margin-top: 15px;
+#main_topbar .main-links {
+	height: inherit;
 }
-#main section > .navbar .btn-navbar .icon-bar {
-	background: #22a5ff;
-}
-#main section > .navbar .nav > li > a {
-	font-size: 14px;
-	line-height: 58px;
-	height: 62px;
-	padding: 0 22px;
-	color: #c0c0c9;
-	text-shadow: none;
-}
-#main section > .navbar .nav > li > a .user-name {
-	line-height: 62px;
-	display: inline-block;
+#main_topbar .main-links,
+#main_topbar .nav {
 	float: left;
-	overflow: hidden;
-	max-width: 200px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-#main section > .navbar .nav > li.nav-masquerading {
-	border-right: 1px solid #202029;
-}
-#main section > .navbar .nav > li.nav-masquerading > a {
-	line-height: inherit;
-	height: 52px;
-	padding: 10px 22px 0 22px;
-	text-align: center;
-}
-#main section > .navbar .nav > li.nav-masquerading a > div {
-	overflow: hidden;
-	max-width: 150px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-#main section > .navbar .nav > li.nav-masquerading .name-text {
-	color: #22a5ff;
-}
-#main section > .navbar .nav > li.myaccount-link .name-text {
-	font-size: 16px;
-}
-#main section > .navbar .nav > li.myaccount-link i {
-	line-height: 62px;
-	position: relative;
-	top: 2px;
-	margin-left: 8px;
-	color: #c0c0c9;
-}
-#main section > .navbar .nav > li.myaccount-link:hover i {
-	color: #22a5ff;
-}
-#main section > .navbar .nav-collapse .nav > li > a:hover,
-#main section > .navbar .nav-collapse .dropdown-menu a:hover {
-	background: transparent;
-}
-#main section > .navbar .nav > li > a:focus,
-#main section > .navbar .nav > li > a:hover {
-	color: #22a5ff;
-}
-#main section > .navbar .nav > li > a:hover i {
-	color: #22a5ff !important;
-}
-#main section > .navbar .nav > li.myaccount-link.disabled a:hover {
-	cursor: default;
-	color: whiteSmoke;
-}
-#main section > .navbar .nav.links .top-link {
-	line-height: 62px;
-	display: block;
-	float: left;
-	width: 62px;
-	height: 62px;
-	text-align: center;
-	text-decoration: none;
-	border-left: 1px solid #202029;
-}
-#main section > .navbar .nav.links .top-link i {
-	color: #c0c0c9;
-}
-#main section > .navbar .nav.links .top-link:hover i {
-	color: #22a5ff;
-}
-#main section > .navbar .nav.links .signout {
-	display: none;
-}
-#main section > .navbar .navbar-inner .current-app {
-	display: inline-block;
-	float: left;
-}
-#main section > .navbar .navbar-inner .current-app:hover {
-	cursor: pointer;
-}
-#main section > .navbar .navbar-inner .active-app {
-	display: none;
-	float: left;
-	height: 62px;
-	padding: 0 30px;
-}
-#main section > .navbar .navbar-inner .active-app > div {
-	display: inline-block;
-	float: left;
-}
-#main section > .navbar .navbar-inner .app-icon {
-	width: 40px;
-	height: 100%;
-	background: no-repeat center;
-	background-size: contain;
-}
-#main section > .navbar .navbar-inner .app-name {
-	font-size: 18px;
-	line-height: 62px;
-	overflow: hidden;
-	max-width: 266px;
-	white-space: nowrap;
-	letter-spacing: .5px;
-	text-transform: uppercase;
-	text-overflow: ellipsis;
-	color: #fff;
-}
-#main section > .navbar .navbar-inner .current-app:hover .app-name {
-	color: #22a5ff;
-}
-#main section > .navbar .navbar-inner .logo {
-	float: left;
-	width: 192px;
-	height: 62px;
-	padding: 0 15px;
-	cursor: pointer;
-	border-right: 1px solid #202029;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-#main section > .navbar .navbar-inner .logo.conferencing {
-	font-size: 20px;
-	line-height: 62px;
-	text-align: center;
-	text-transform: uppercase;
-}
-#main section > .navbar .navbar-inner .logo.conferencing:hover {
-	text-decoration: none;
-	color: #22a5ff;
-}
-#main section > .navbar .navbar-inner .home {
-	display: none;
-	padding: 0 20px;
-	text-decoration: none;
-	border-right: 1px solid #202029;
-	border-left: 1px solid #202029;
-}
-#main section > .navbar .navbar-inner .home * {
-	line-height: 62px;
-	display: inline-block;
 	margin: 0;
 }
-#main section > .navbar .navbar-inner .home span {
-	font-size: 14px;
+#main_topbar .links {
+	line-height: 62px;
 	display: inline-block;
-	overflow: hidden;
-	max-width: 66px;
-	margin-right: 20px;
-	white-space: nowrap;
+	color: #c0c0c9;
+}
+#main_topbar .links:hover,
+#main_topbar .links:focus {
+	cursor: pointer;
+	background: transparent;
+}
+#main_topbar .links i {
+	vertical-align: middle;
+	color: #c0c0c9;
+}
+#main_topbar .links .inline-text {
+	display: inline-block;
+	float: left;
+	margin-right: 10px;
+}
+#main_topbar .links .cell-text {
+	line-height: 21px;
+	text-align: center;
+}
+#main_topbar .nav {
+	float: right;
+}
+#main_topbar .nav .links {
+	padding: 0 20px;
+}
+#main_topbar .nav > li {
+	border-left: 1px solid #202029;
+}
+#main_topbar .nav > li {
+	float: left;
+	height: 62px;
+	text-decoration: none;
+}
+#main_topbar .links.cell {
+	padding: 10px 20px;
+}
+#main_topbar #main_topbar_brand {
+	width: 192px;
+	height: 100%;
+	padding: 0 20px;
+	background: no-repeat center center;
+}
+#main_topbar #main_topbar_current_app_name {
+	font-size: 18px;
+	max-width: 318px;
+	padding: 0 20px;
 	letter-spacing: .5px;
+	text-transform: uppercase;
+	color: #fff;
+	border-left: 1px solid #202029;
+}
+#main_topbar #main_topbar_apploader {
+	display: none;
+}
+#main_topbar #main_topbar_links_apps_label {
+	max-width: 70px;
+}
+#main_topbar #main_topbar_leave_masquerade {
+	max-width: 140px;
+}
+#main_topbar #main_topbar_myaccount_user,
+#main_topbar #main_topbar_myaccount_masquerade_link {
+	max-width: 190px;
+}
+#main_topbar .links:hover,
+#main_topbar .links:hover i,
+#main_topbar #main_topbar_current_app_name:hover,
+#main_topbar #main_topbar_leave_masquerade_label,
+#main_topbar #main_topbar_myaccount_masquerade_label {
+	color: #22a5ff;
+}
+#main_topbar .inline-text,
+#main_topbar .cell-text,
+#main_topbar #main_topbar_current_app_name {
+	overflow: hidden;
+	white-space: nowrap;
 	text-overflow: ellipsis;
-	color: #c0c0c9;
 }
-#main section > .navbar .navbar-inner .home i {
-	color: #c0c0c9;
-}
-#main section > .navbar .navbar-inner .home.active {
-	display: inline-block;
-}
-#main section > .navbar .navbar-inner .home:hover * {
-	color: #22a5ff !important;
-}
-#main section > .navbar .navbar-inner .home.conferencing {
-	width: 240px;
-	height: 52px;
-	padding: 5px;
-}
-@media (max-width: 979px) {
-	#main section > .navbar .navbar-inner .home.conferencing {
-		width: 140px;
-	}
-}
-#main section > .monster-content {
-	position: absolute;
-	top: 67px;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	width: auto;
-	height: auto;
-}
-@media (max-width: 630px) {
-	#main section > .navbar .nav > li > a .user-name {
-		max-width: 169px;
-	}
-}
-
-@media (max-width: 959px) {
-	#main section > .navbar .navbar-inner .current-app {
+@media (max-width: 1199px) {
+	#main_topbar #main_topbar_links_apps_label {
 		display: none;
 	}
-}
 
-@media (max-width: 685px) {
-	#main section > .navbar .navbar-inner .logo {
-		display: none;
-	}
-}
-
-@media (max-width: 1153px) {
-	#main section > .navbar .navbar-inner #home_link {
-		padding-left: 20px;
-	}
-	#main section > .navbar .navbar-inner #home_link .title {
-		display: none;
+	#main_topbar #main_topbar_brand,
+	#main_topbar #main_topbar_current_app_name,
+	#main_topbar .nav .links {
+		padding-right: 10px;
+		padding-left: 10px;
 	}
 }
-
-@media (max-width: 1067px) {
-	#main section > .navbar .navbar-inner .logo {
-		padding-right: 0;
-		padding-left: 0;
-	}
-	#main section > .navbar .nav > li.nav-masquerading > a {
+@media (max-width: 999px) {
+	#main_topbar #main_topbar_brand {
 		padding-right: 5px;
-		padding-left: 5px;
+		padding-left: 4px;
 	}
-	#main section > .navbar .navbar-inner .links .top-link {
-		width: 52px;
+	#main_topbar #main_topbar_current_app {
+		display: none !important;
+	}
+	#main_topbar #main_topbar_leave_masquerade {
+		max-width: 120px;
+	}
+	#main_topbar #main_topbar_myaccount_masquerade_link {
+		max-width: 160px;
 	}
 }
 

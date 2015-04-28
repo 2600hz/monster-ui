@@ -225,7 +225,7 @@ define(function(require){
 					});
 				}
 
-				$('#topbar').after(myaccountHtml);
+				$('#main_topbar').after(myaccountHtml);
 
 				self._renderNavLinks();
 
@@ -244,7 +244,7 @@ define(function(require){
 			self._UIRestrictionsCompatibility({
 				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 				callback: function(uiRestrictions, showMyaccount) {
-					var navLinks = $('#ws-navbar .links'),
+					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
 							name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
 							isMasquerading: args && args.isMasquerading || false,
@@ -255,7 +255,7 @@ define(function(require){
 
 					/* Hack to redraw myaccount links on masquerading */
 					navLinks.find('.myaccount-common-link').remove();
-					navLinks.append(navHtml);
+					navHtml.insertAfter(navLinks.find('#main_topbar_apploader'));
 				}
 			});
 		},
@@ -279,7 +279,7 @@ define(function(require){
 		bindEvents: function(container) {
 			var self = this,
 				mainContainer = $(self.mainContainer);
-				navLinks = $('#ws-navbar .links');
+				navLinks = $('#main_topbar_nav');
 
 			container.find('.myaccount-close').on('click', function() {
 				self.toggle();
@@ -310,7 +310,7 @@ define(function(require){
 				});
 			});
 
-			navLinks.on('click', '.myaccount-link', function(e) {
+			navLinks.on('click', '#main_topbar_myaccount', function(e) {
 				e.preventDefault();
 
 				self._UIRestrictionsCompatibility({
@@ -328,7 +328,7 @@ define(function(require){
 				});
 			});
 
-			navLinks.on('click', '.restore-masquerading-link', function(e) {
+			navLinks.on('click', '#main_topbar_leave_masquerade', function(e) {
 				e.preventDefault();
 
 				var appList = $('.app-list');

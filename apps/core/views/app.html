@@ -6,27 +6,25 @@
 			</div>
 		</div>
 
-		<div id="topbar" class="navbar navbar-inverse">
-			<div id="ws-navbar" class="navbar-inner clearfix">
-				<a class="logo" href="javascript:void(0);"></a>
-				<div class="current-app"></div>
-				<ul class="nav whapps"></ul>
-				<ul class="nav pull-right links">
-					<a id="home_link" class="pull-left home" href="javascript:void(0);">
-						<span class="title pull-left">{{ i18n.apps }}</span>
-						<i class="icon-th icon-large"></i>
+		<div id="main_topbar">
+			<a href="#" class="links main-links" id="main_topbar_brand"></a>
+			<a href="#" class="links main-links" id="main_topbar_current_app"></a>
+			<ul class="nav" id="main_topbar_nav">
+				<li id="main_topbar_apploader">
+					<a href="#" class="links" id="main_topbar_apploader_link">
+						<span class="inline-text" id="main_topbar_links_apps_label">{{i18n.apps}}</span>
+						<i class="icon-th"></i>
 					</a>
-					<div class="pull-right">
-						<a class="top-link signout" href="javascript:void(0)">
-							<i class="icon-signout signout"></i>
-						</a>
-					</div>
-				</ul>
-			</div>
+				</li>
+				<li id="main_topbar_signout">
+					<a href="#" class="links" id="main_topbar_signout_link">
+						<i class="icon-signout"></i>
+					</a>
+				</li>
+			</ul>
 		</div>
 
 		<div class="monster-content" id="monster-content"></div>
-		
 	</section>
 
 	<div class="footer-wrapper">

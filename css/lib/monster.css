@@ -66,6 +66,9 @@ h1 {
 	vertical-align: text-bottom;
 	color: inherit;
 }
+.input-append > *[class*='monster-button'] {
+	margin-left: -1px;
+}
 
 /***************** SIZES ****************/
 .monster-button-small {
