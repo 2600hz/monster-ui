@@ -162,7 +162,7 @@ define(function(require){
 		afterLoggedIn: function() {
 			var self = this;
 
-			$('#home_link').addClass('active');
+			$('#main_topbar_apploader').show();
 
 			self.loadAccount();
 		},
@@ -263,7 +263,7 @@ define(function(require){
 					}
 
 					monster.util.autoLogout();
-					$('.signout').show();
+					$('#main_topbar_signout').show();
 
 					results.user.account_name = results.account.name;
 					results.user.apps = results.user.apps || {};

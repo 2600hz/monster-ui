@@ -278,7 +278,13 @@ textarea {
 }
 
 a {
-	color: #2cf;
+	color: #22a5ff;
+}
+
+a:focus,
+a:hover {
+	color: #22a5ff;
+	text-decoration: none;
 }
 
 ::-webkit-input-placeholder {

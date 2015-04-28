@@ -83,7 +83,8 @@ define(function(require){
 
 		showAppName: function(appName) {
 			var self = this,
-				navbar = $('#ws-navbar'),
+				navbar = $('#main_topbar'),
+				currentApp = navbar.find('#main_topbar_current_app'),
 				defaultApp;
 
 			_.each(monster.apps.auth.installedApps, function(val) {
@@ -93,21 +94,18 @@ define(function(require){
 			});
 
 			if ( appName === 'appstore' ) {
-				navbar.find('.current-app').empty();
-			} else if ( navbar.find('.current-app').is(':empty') ) {
-				navbar
-					.find('.current-app')
-					.append(monster.template(self, 'current-app', defaultApp));
+				currentApp.empty();
+			} else if ( currentApp.is(':empty') ) {
+				currentApp.append(monster.template(self, 'current-app', defaultApp));
 
-				navbar.find('.active-app').fadeIn(100);
+				navbar.find('#main_topbar_current_app_name').fadeIn(100);
 			} else {
-				navbar.find('.active-app').fadeOut(100, function() {
-					navbar
-						.find('.current-app')
+				navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
+					currentApp
 						.empty()
 						.append(monster.template(self, 'current-app', defaultApp));
 
-					navbar.find('.active-app').fadeIn(100);
+					navbar.find('#main_topbar_current_app_name').fadeIn(100);
 				});
 			}
 		},
@@ -161,23 +159,23 @@ define(function(require){
 				self.onRequestEnd(spinner);
 			});
 
-			container.find('#home_link').on('click', function(e) {
+			container.find('#main_topbar_apploader_link').on('click', function(e) {
 				e.preventDefault();
 				monster.pub('apploader.toggle');
 			});
 
-			container.find('a.signout').on('click', function() {
+			container.find('#main_topbar_signout_link').on('click', function() {
 				monster.pub('auth.clickLogout');
 			});
 
-			container.find('#ws-navbar .current-app').on('click', function() {
+			container.find('#main_topbar_current_app').on('click', function() {
 				monster.pub('myaccount.hide');
-				monster.apps.load($(this).find('.active-app').data('name'), function(app) {
+				monster.apps.load($(this).find('#main_topbar_current_app_name').data('name'), function(app) {
 					app.render();
 				});
 			});
 
-			container.find('.logo').on('click', function() {
+			container.find('main_topbar_brand').on('click', function() {
 				var appName = monster.apps.auth.defaultApp;
 
 				if(appName) {
@@ -210,7 +208,7 @@ define(function(require){
 
 			if(monster.config.whitelabel.hasOwnProperty('nav')) {
 				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
-					container.find('#ws-navbar .links a.signout')
+					container.find('#main_topbar_signout_link')
 							 .unbind('click')
 							 .attr('href', monster.config.whitelabel.nav.logout);
 				}
@@ -240,10 +238,10 @@ define(function(require){
 					dataType: '*'
 				},
 				success: function(_data) {
-					container.find('#ws-navbar .logo').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+					container.find('#main_topbar_brand').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
 				error: function(error) {
-					container.find('#ws-navbar .logo').css('background-image', 'url("apps/core/style/static/images/logo.png")');
+					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.png")');
 				}
 			});
 		},
