@@ -40,7 +40,7 @@
 
 .dataTables_wrapper {
 	position: relative;
-	clear: both;
+/*	clear: both; JR MANUAL Comment, why do we need this*/
 	zoom: 1; /* Feeling sorry for IE */
     margin-bottom: 63px;
 }
