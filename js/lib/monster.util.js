@@ -573,6 +573,18 @@ define(function(require){
 
 			return monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('authToken') && typeof monster.apps.auth.authToken !== 'undefined';
 		},
+		
+		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
+		isMasquerading: function() {
+			var self = this,
+				isMasquerading = false;
+
+			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
+				isMasquerading = !(monster.apps.auth.originalAccount.id === monster.apps.auth.currentAccount.id);
+			}
+
+			return isMasquerading;
+		},
 
 		logoutAndReload: function() {
 			var self = this;

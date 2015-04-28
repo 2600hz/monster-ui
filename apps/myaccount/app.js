@@ -35,9 +35,6 @@ define(function(require){
 		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
 
 		mainContainer: '#myaccount',
-		defaultApp: {
-			name: 'user'
-		},
 
 		load: function(callback){
 			var self = this;
@@ -56,6 +53,19 @@ define(function(require){
 				app: self,
 				callback: _callback
 			});
+		},
+		
+		getDefaultCategory: function() {
+			var self = this,
+				defaultApp = {
+					name: 'user'
+				};
+
+			if(monster.util.isMasquerading()) {
+				defaultApp.name = 'account';
+			}
+
+			return defaultApp;
 		},
 
 		getDefaultRestrictions: function() {
@@ -346,7 +356,7 @@ define(function(require){
 					var myaccount = $(self.mainContainer),
 						firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
 						uiRestrictions = uiRestrictions,
-						defaultApp = self.defaultApp;
+						defaultApp = self.getDefaultCategory();
 
 					if (uiRestrictions && uiRestrictions[defaultApp.name] && uiRestrictions[defaultApp.name].show_tab === false) {
 						defaultApp.name = firstTab.data('module');
@@ -363,6 +373,8 @@ define(function(require){
 							title: self.i18n.active()[defaultApp.name].title,
 							module: defaultApp.name,
 							callback: function() {
+								self.displayUserSection();
+
 								myaccount.addClass('myaccount-open');
 								setTimeout(function() { $('#monster-content').hide(); }, 300);
 
@@ -378,6 +390,13 @@ define(function(require){
 					}
 				}
 			});
+		},
+
+		displayUserSection: function() {
+			var self = this,
+				fnToUse = monster.util.isMasquerading() ? 'hide' : 'show';
+
+			$('.myaccount-menu .myaccount-element[data-module="user"]')[fnToUse]();
 		},
 
 		activateSubmodule: function(args) {
