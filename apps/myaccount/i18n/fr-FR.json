@@ -112,7 +112,7 @@
 		"placeholderAmount": "10.00",
 		"addCredit": "Ajouter de l'argent",
 		"invalidAmount": "Le montant de crédits à rajouter est invalide!",
-		"creditsAdded": "Vous venez d'ajouter _Variable__ à votre balance!",
+		"creditsAdded": "Vous venez d'ajouter {{amount}} à votre balance!",
 		"autoRechargeEnabled": "La recharge automatique de vos crédits est désormais activée!",
 		"autoRechargeCancelled": "Vous avez annulé la recharge automatique de crédits avec succès.",
 		"addCreditDialogTitle": "Add Credits",

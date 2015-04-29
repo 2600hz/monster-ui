@@ -1,6 +1,6 @@
 {{#each listTransactions}}
-	<div class="transaction-box{{#if this.isARefund}} refund{{/if}}">
-		<div class="expand-box{{#compare this.type '===' 'charges'}} disabled{{/compare}}">
+	<div class="transaction-box{{#compare this.type "===" "credit"}} refund{{/compare}}">
+		<div class="expand-box{{#unless this.hasAddOns}} disabled{{/unless}}">
 			<span class="icon-stack">
 				<i class="icon-circle-blank icon-stack-base"></i>
 				<i class="icon-plus icon-stack-content"></i>
@@ -20,9 +20,9 @@
 				{{/unless}}
 			</div>
 			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{ ../i18n.currencyUsed }}{{#if this.isARefund}}-{{/if}}{{ this.amount }}</div>
+			<div class="price">{{ ../i18n.currencyUsed }}{{#compare this.type "===" "credit"}}-{{/compare}}{{ this.amount }}</div>
 		</div>
-		{{#compare this.type '!==' 'charges'}}
+		{{#if this.hasAddOns}}
 			<div class="expandable">
 				<div class="table-content">
 					<table class="table">
@@ -53,7 +53,7 @@
 					</table>
 				</div>
 			</div>
-		{{/compare}}
+		{{/if}}
 	</div>
 {{else}}
 	<div class="no-data">{{ i18n.transactions.noData }}</div>

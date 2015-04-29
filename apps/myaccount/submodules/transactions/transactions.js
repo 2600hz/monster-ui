@@ -122,8 +122,7 @@ define(function(require){
 									arrayCharges.push(v);
 
 									if(v.approved) {
-										// All the codes that are in the 5xx and above are refunds
-										if(v.code % 1000 > 500) {
+										if(v.type === 'credit') {
 											defaults.amount -= parseFloat(v.amount);
 										}
 										else {

@@ -346,7 +346,7 @@ define(function(require){
 		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
 		// The input needed is an object from the array of transaction returned by the /transactions API.
 		formatTransaction: function(transaction, app) {
-			transaction.isARefund = false;
+			transaction.hasAddOns = false;
 
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
 			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') 
@@ -357,7 +357,7 @@ define(function(require){
 					mapDiscounts[discount.id] = discount;
 				});
 
-				transaction.type = 'monthly';
+				transaction.hasAddOns = true;
 				transaction.services = [];
 
 				$.each(transaction.metadata.add_ons, function(k, addOn) {
@@ -387,26 +387,14 @@ define(function(require){
 					return parseFloat(a.rate) <= parseFloat(b.rate);
 				});
 			}
-			else {
-				transaction.type = 'charges';
-			}
 
 			transaction.amount = parseFloat(transaction.amount).toFixed(2);
 
-
 			if(transaction.hasOwnProperty('code')) {
-				if(transaction.code % 1000 < 500) {
-					transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
-				}
-				else {
-					transaction.isARefund = true;
+				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
 
-					if(transaction.code === 9999) {
-						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
-					}
-					else {
-						transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code - 500] + ' ' + app.i18n.active().transactions.refundText;
-					}
+				if(transaction.type === 'credit') {
+					transaction.friendlyName += ' ' + app.i18n.active().transactions.refundText;
 				}
 			}
 			
