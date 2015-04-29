@@ -10,7 +10,7 @@
 			<div class="scroll">
 				<ul>
 				{{#each numbers}}
-					<li data-value="{{this}}" data-carrier="{{../carrier}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+					<li data-value="{{this}}" data-carrier="{{../carrier}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right remove-number"></i></li>
 				{{/each}}
 				</ul>
 			</div>
@@ -68,7 +68,7 @@
 		</ul>
 	</div>
 	<div class="span2 offset1">
-		<button class="btn btn-success pull-right">{{ i18n.port.nextButton }}</button>
+		<button class="btn btn-success pull-right" id="manage_orders_next_link">{{ i18n.port.nextButton }}</button>
 	</div>
 	</div>
 </div>
