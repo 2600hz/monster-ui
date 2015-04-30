@@ -3,12 +3,8 @@ More doc coming soon, we're using [datatables.net](http://datatables.net/) for o
 
 ### Methods
 * [create()][create]
-* [applyFunction()][apply_function]
-* [applyModifications()][apply_modifications]
 
 [monster]: ../../monster.md
 [ui]: ../ui.md
 
 [create]: table/create().md
-[apply_function]: table/applyFunction().md
-[apply_modifications]: table/applyModifications().md

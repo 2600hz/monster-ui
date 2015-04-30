@@ -58,7 +58,7 @@
 					<div class="scroll">
 						<ul>
 						{{#each numbers}}
-							<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right"></i></li>
+							<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right remove-number"></i></li>
 						{{/each}}
 						</ul>
 					</div>
@@ -94,10 +94,10 @@
 	<div id="continue_later">
 		<div class="row-fluid">
 			<div class="span3">
-				<button class="btn span12">{{ i18n.port.addMoreNumbers }}</button>
+				<button class="btn span12" id="submit_documents_add_numbers_link">{{ i18n.port.addMoreNumbers }}</button>
 			</div>
 			<div class="span3">
-				<button class="btn btn-info span12">{{ i18n.port.saveButtonPartOne }} &amp; {{ i18n.port.saveButtonPartTwo}}</button>
+				<button class="btn btn-info span12" id="submit_documents_save_link">{{ i18n.port.saveButtonPartOne }} &amp; {{ i18n.port.saveButtonPartTwo}}</button>
 			</div>
 			<div class="span6">
 				<p>{{ i18n.port.labelSaveButton }}</p>
@@ -119,7 +119,7 @@
 			</ul>
 		</div>
 		<div class="span2 offset1">
-			<button class="btn btn-success pull-right">{{ i18n.port.nextButton }}</button>
+			<button class="btn btn-success pull-right" id="submit_documents_next_link">{{ i18n.port.nextButton }}</button>
 		</div>
 		</div>
 	</div>

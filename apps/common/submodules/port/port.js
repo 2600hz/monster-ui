@@ -415,8 +415,6 @@ define(function(require){
 								el.addClass('hide');
 							});
 						}
-
-						// el['fade'.concat(filterBy.indexOf(el.data('state')) > -1 ? 'In' : 'Out')]();
 					});
 				}
 			});
@@ -594,7 +592,7 @@ define(function(require){
 			self.portPositionDialogBox();
 			self.portComingSoon(container, ['.help-links li:not(.separator) a']);
 
-			container.find('button').on('click', function() {
+			container.find('#add_numbers_link').on('click', function() {
 				var numbersArray = container.find('input').val().split(' ');
 
 				numbersArray = numbersArray.filter(function(el, idx) {
@@ -651,7 +649,7 @@ define(function(require){
 			self.portCancelOrder(parent, accountId, container);
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
-			container.on('click', 'div#add_numbers button', function() {
+			container.on('click', '#add_numbers_link', function() {
 				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
 
 				numbersArray = numbersArray.filter(function(el, idx) {
@@ -700,7 +698,7 @@ define(function(require){
 				}
 			});
 
-			container.on('click', '#manage_orders li i.icon-remove-sign', function() {
+			container.on('click', '#manage_orders li .remove-number', function() {
 				var elem = $(this),
 					ul = elem.parent().parent();
 
@@ -720,7 +718,7 @@ define(function(require){
 				}
 			});
 
-			container.find('div#footer').find('button.btn-success').on('click', function() {
+			container.find('#manage_orders_next_link').on('click', function() {
 				var formToValidate = container.find('#eula form');
 
 				monster.ui.validate(formToValidate, {
@@ -802,7 +800,7 @@ define(function(require){
 
 			self.portPositionDialogBox();
 
-			container.find('button').on('click', function() {
+			container.find('.resume-order-btn').on('click', function() {
 				var index = $(this).data('index');
 
 				self.portRenderSubmitDocuments(parent, accountId, data, index);
@@ -885,7 +883,7 @@ define(function(require){
 				input.fileUpload(options);
 			});
 
-			container.find('div#upload_bill').find('i.icon-remove-sign').on('click', function() {
+			container.find('#upload_bill .remove-number').on('click', function() {
 				var li = $(this).parent(),
 					ul = li.parent(),
 					numberToRemove = li.data('value'),
@@ -909,14 +907,14 @@ define(function(require){
 				}
 			});
 
-			container.find('div#continue_later').find('button:not(.btn-info)').on('click', function() {
+			container.find('#submit_documents_add_numbers_link').on('click', function() {
 				parent.empty()
 					.append(monster.template(self, 'port-addNumbers'));
 
 				self.portRenderManagerOrders(parent, accountId, data);
 			});
 
-			container.find('div#continue_later').find('button.btn-info').on('click', function() {
+			container.find('#submit_documents_save_link').on('click', function() {
 				var transferNameForm = container.find('#transfer_name_form');
 
 				monster.ui.validate(transferNameForm);
@@ -930,13 +928,15 @@ define(function(require){
 					self.portSaveOrder(parent, accountId, data, index);
 				}
 				else {
-					$('html, body').animate({
-						scrollTop: container.find('.monster-invalid').first().offset().top - 10
-					}, 300);
+					if (container.find('.monster-invalid').length > 0) {
+						$('html, body').animate({
+							scrollTop: container.find('.monster-invalid').first().offset().top - 10
+						}, 300);
+					}
 				}
 			});
 
-			container.find('#footer button.btn-success').on('click', function() {
+			container.find('#submit_documents_next_link').on('click', function() {
 				var order = data.orders[index],
 					hasBillAttachment = order.hasOwnProperty('bill_attachment') || order.hasOwnProperty('uploads') && order.uploads.hasOwnProperty('bill.pdf') ? true : false,
 					hasLoaAttachment = order.hasOwnProperty('loa_attachment') || order.hasOwnProperty('uploads') && order.uploads.hasOwnProperty('loa.pdf') ? true : false,
@@ -975,9 +975,11 @@ define(function(require){
 					self.portRenderConfirmOrder(parent, accountId, data, index);
 				}
 				else {
-					$('html, body').animate({
-						scrollTop: container.find('.monster-invalid').first().offset().top - 10
-					}, 300);
+					if (container.find('.monster-invalid').length > 0) {
+						$('html, body').animate({
+							scrollTop: container.find('.monster-invalid').first().offset().top - 10
+						}, 300);
+					}
 				}
 			});
 		},
@@ -1079,7 +1081,7 @@ define(function(require){
 					.text(elem.val());
 			});
 
-			container.find('#continue_later button').on('click', function() {
+			container.find('confirm_order_save_link').on('click', function() {
 				var notificationEmailFormData = monster.ui.getFormData('notification_email_form', '.', true),
 					temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
 					transferDateFormData = monster.ui.getFormData('transfer_date_form');
@@ -1095,14 +1097,14 @@ define(function(require){
 				self.portSaveOrder(parent, accountId, data, index);
 			});
 
-			container.find('div#continue_later').find('button:not(.btn-info)').on('click', function() {
+			container.find('#confirm_order_add_numbers_link').on('click', function() {
 				parent.empty()
 					.append(monster.template(self, 'port-addNumbers'));
 
 				self.portRenderManagerOrders(parent, accountId, data);
 			});
 
-			container.find('#footer button.btn-success').on('click', function() {
+			container.find('#confirm_order_submit_link').on('click', function() {
 				var notificationEmailForm = container.find("#notification_email_form");
 
 				monster.ui.validate(notificationEmailForm);
@@ -1151,9 +1153,11 @@ define(function(require){
 					}
 				}
 				else {
-					$('html, body').animate({
-						scrollTop: container.find('.monster-invalid').first().offset().top - 10
-					}, 300);
+					if (container.find('.monster-invalid').length > 0) {
+						$('html, body').animate({
+							scrollTop: container.find('.monster-invalid').first().offset().top - 10
+						}, 300);
+					}
 				}
 			});
 		},
