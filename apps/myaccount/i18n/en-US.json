@@ -252,8 +252,7 @@
 			"5000": "Recurring",
 			"5001": "Monthly Recurring",
 			"5002": "Monthly Recurring (Pro-rated)",
-			"9999": "Unknown Refund",
-			"0": "Unknown"
+			"9999": "Unknown"
 		},
 		"errorStatuses": {
 			"voided": "Voided",

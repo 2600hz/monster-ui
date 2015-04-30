@@ -399,7 +399,7 @@ define(function(require){
 			}
 			
 			// If status is missing or among the following list, the transaction is approved
-			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized','settled','settlement_confirmed'].indexOf(transaction.status) >= 0;
+			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized','settled','settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
 
 			if(!transaction.approved) {
 				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;

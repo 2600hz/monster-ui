@@ -660,8 +660,7 @@ define(function(require){
 				resource: 'balance.add',
 				data: {
 					accountId: self.accountId,
-					data: data,
-					generateError: false
+					data: data
 				},
 				success: function(data, status) {
 					success && success(data, status);
