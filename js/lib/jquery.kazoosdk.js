@@ -203,9 +203,11 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes/' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' },
-			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/smtp_log'},
-			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/smtp_log/{logId}'},
+			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' }
+		},
+		faxes: {
+			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
+			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'}
 		},
 		connectivity: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
