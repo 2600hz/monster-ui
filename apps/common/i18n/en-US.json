@@ -472,13 +472,36 @@
 
 	"__comment": "UI-1386: Adding the numberListing common control",
 	"__version": "v3.20_s4",
-	"numberListing": {
-		"title": "List of Numbers",
-		"headline": "Select numbers",
-		"headlineSingle": "Select a number",
-		"noMatchingNumber": "No numbers matched your search.",
-		"noNumber": "No numbers a available.",
-		"noNumberSelected": "You didn't select any number. You need to select at least one number by clicking on a number in the list.",
-		"proceed": "Select"
+	"monsterListing": {
+		"numbers": {
+			"title": "List of Numbers",
+			"headline": "Select numbers",
+			"headlineSingle": "Select a number",
+			"noMatch": "No numbers matched your search.",
+			"noData": "No numbers are available.",
+			"noDataSelected": "You didn't select any number. You need to select at least one number by clicking on a number in the list.",
+			"okButton": "Select",
+			"cancelButton": "Cancel"
+		},
+		"devices": {
+			"title": "List of devices",
+			"headline": "Select devices",
+			"headlineSingle": "Select a device",
+			"noMatch": "No device matched your search.",
+			"noData": "No devices are available.",
+			"noDataSelected": "You didn't select any device. You need to select at least one device by clicking on an device in the list.",
+			"okButton": "Select",
+			"cancelButton": "Cancel"
+		},
+		"default": {
+			"title": "List of items",
+			"headline": "Select items",
+			"headlineSingle": "Select an item",
+			"noMatch": "No item matched your search.",
+			"noData": "No items are available.",
+			"noDataSelected": "You didn't select any item. You need to select at least one item by clicking on an item in the list.",
+			"okButton": "Select",
+			"cancelButton": "Cancel"
+		}
 	}
 }

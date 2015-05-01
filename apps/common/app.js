@@ -8,7 +8,7 @@ define(function(require){
 
 		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers',
 					 'port', 'chooseModel', 'servicePlanDetails', 'ringingDurationControl',
-					 'carrierSelector', 'numberPrepend', 'numberSelector', 'numberListing'],
+					 'carrierSelector', 'numberPrepend', 'numberSelector', 'monsterListing'],
 
 		css: [ 'app' ],
 

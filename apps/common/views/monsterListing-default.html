@@ -1,0 +1,23 @@
+<div class="monster-listing-default">
+	<div class="empty-search-row">
+		{{ labels.noMatch }}
+	</div>
+	{{#each dataList}}
+		<div class="monster-listing-box" data-id="{{this.id}}" data-search="{{this.id}} {{this.name}}">
+			<div class="checkbox-container">
+			{{#if ../singleSelect}}
+				<input type="radio" name="listingbox"></input>
+			{{else}}
+				{{#monsterCheckbox}}<input type="checkbox"></input>{{/monsterCheckbox}}
+			{{/if}}
+			</div>
+			<div class="box-content">
+				{{this.name}}
+			</div>
+		</div>
+	{{else}}
+		<div class="monster-listing-box no-data">
+			{{ labels.noData }}
+		</div>
+	{{/each}}
+</div>
