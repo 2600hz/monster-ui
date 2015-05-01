@@ -1028,7 +1028,7 @@ define(function(require){
 				ignoreNumbers = args.ignoreNumbers || [],
 				extraNumbers = args.extraNumbers || [],
 				featureFilters = args.featureFilters || [],
-				singleNumber = args.singleNumber || false,
+				singleSelect = args.singleSelect || false,
 				callback = args.callback;
 
 			self.numbersList(accountId, function(data) {
@@ -1036,13 +1036,16 @@ define(function(require){
 
 				var formattedData = self.numbersFormatDialogSpare(data, ignoreNumbers, extraNumbers, featureFilters);
 				
-				monster.pub('common.numberListing.render', {
-					numbers: formattedData.numbers,
-					title: self.i18n.active().numbers.dialogSpare.title,
-					headline: formattedData.accountName ? (self.i18n.active().numbers.dialogSpare.headline + ' ' + formattedData.accountName) : self.i18n.active().numbers.dialogSpare.headlineNoAccount,
-					okButton: self.i18n.active().numbers.dialogSpare.proceed,
-					okCallback: args.callback,
-					singleNumber: singleNumber
+				monster.pub('common.monsterListing.render', {
+					dataList: formattedData.numbers,
+					dataType: 'numbers',
+					labels: {
+						title: self.i18n.active().numbers.dialogSpare.title,
+						headline: formattedData.accountName ? (self.i18n.active().numbers.dialogSpare.headline + ' ' + formattedData.accountName) : self.i18n.active().numbers.dialogSpare.headlineNoAccount,
+						okButton: self.i18n.active().numbers.dialogSpare.proceed
+					},
+					singleSelect: singleSelect,
+					okCallback: args.callback
 				});
 			});
 		},

@@ -1,0 +1,39 @@
+<div class="monster-listing-numbers">
+	<div class="empty-search-row">
+		{{ labels.noMatch }}
+	</div>
+	{{#each dataList}}
+		<div class="monster-listing-box" data-id="{{this.phoneNumber}}" data-search="{{this.phoneNumber}} {{formatPhoneNumber this.phoneNumber}}">
+			<div class="checkbox-container">
+			{{#if ../singleSelect}}
+				<input type="radio" name="listingbox"></input>
+			{{else}}
+				{{#monsterCheckbox}}<input type="checkbox"></input>{{/monsterCheckbox}}
+			{{/if}}
+			</div>
+			<span class="phone-number">{{formatPhoneNumber this.phoneNumber}}</span>
+			<span class="locality">
+				{{#if this.isoCountry }}
+					<span class="flag"><img src="css/assets/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
+				{{/if}}
+				{{#if this.friendlyLocality }}
+					<span class="city">{{ this.friendlyLocality }}</span>
+				{{/if}}
+			</span>
+
+
+			<div class="features pull-right">
+				{{#each this.viewFeatures}}
+					<i class="{{icon}} {{active}} help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{ help }}"></i>
+				{{/each}}
+				{{#compare this.state '===' 'port_in'}}
+					<i class="icon-warning-sign icon-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{../../i18n.numbers.portIconHelp}}"></i>
+				{{/compare}}
+			</div>
+		</div>
+	{{else}}
+		<div class="monster-listing-box no-data">
+			{{ labels.noData }}
+		</div>
+	{{/each}}
+</div>

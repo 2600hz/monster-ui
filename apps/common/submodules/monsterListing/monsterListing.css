@@ -1,0 +1,103 @@
+.monster-listing-container {
+	padding: 15px;
+}
+
+.monster-listing-container .monster-listing-grid .grid-title {
+	border-radius: 4px 4px 0 0;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding: 10px;
+	min-width: 600px;
+}
+
+.monster-listing-container .monster-listing-grid {
+	padding-bottom: 10px;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content {
+	border: 1px solid #e0e0e9;
+	max-height: 372px;
+	overflow: auto;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box {
+	line-height: 50px;
+	height: 50px;
+	padding: 5px 10px;
+	cursor: pointer;
+	background: #f9f9f9;
+	border: 1px solid #e0e0e9;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box:hover {
+	background: rgb(240,240,240); /* Old browsers */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(240,240,240,1)), color-stop(100%,rgba(249,249,249,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* Chrome10+,Safari5.1+ */
+	background:    -moz-linear-gradient(top, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* FF3.6+ */
+	background:     -ms-linear-gradient(top, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* IE10+ */
+	background:      -o-linear-gradient(top, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* Opera 11.10+ */
+	background:         linear-gradient(to bottom, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box.selected {
+	font-weight: 600;
+	border-top: 1px solid #22a5ff !important;
+	background: #f0f0f9;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box.no-data:hover {
+	cursor: default;
+	background: inherit; 
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box .checkbox-container {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box .checkbox-container > * {
+	vertical-align: middle;
+}
+
+.monster-listing-container .monster-listing-grid .grid-content .monster-listing-box .checkbox-container > input[type="radio"] {
+	margin: 0px;
+}
+
+.monster-listing-container .monster-listing-grid .empty-search-row {
+	text-align: center;
+	padding: 10px;
+}
+
+.monster-listing-container .dialog-buttons-wrapper .cancel {
+	margin-right: 10px;
+}
+
+/********** Default Listing **********/
+.monster-listing-container .monster-listing-default .monster-listing-box .box-content {
+	display: inline-block;
+}
+
+/********** Number Listing **********/
+.monster-listing-container .monster-listing-numbers .monster-listing-box .phone-number {
+	display: inline-block;
+	width: 120px;
+}
+
+.monster-listing-container .monster-listing-numbers .monster-listing-box .locality {
+	width: 250px;
+	margin-left: 30px;
+	display: inline-block;
+}
+
+.monster-listing-container .monster-listing-numbers .monster-listing-box .locality .flag {
+	margin-right: 10px;
+}
+
+.monster-listing-container .monster-listing-numbers .monster-listing-box .features i {
+	display: none;
+}
+
+.monster-listing-container .monster-listing-numbers .monster-listing-box .features i.active {
+	display: inline-block;
+}

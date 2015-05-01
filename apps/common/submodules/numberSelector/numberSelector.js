@@ -82,9 +82,10 @@ define(function(require){
 					}
 					case 'spare': {
 						if(customNumbers) {
-							monster.pub('common.numberListing.render', {
-								numbers: customNumbers,
-								singleNumber: true,
+							monster.pub('common.monsterListing.render', {
+								dataList: customNumbers,
+								dataType: 'numbers',
+								singleSelect: true,
 								okCallback: addNumberCallback
 							});
 						} else {
@@ -92,7 +93,7 @@ define(function(require){
 								accountName: monster.apps['auth'].currentAccount.name,
 								accountId: self.accountId,
 								featureFilters: spareFilters,
-								singleNumber: true,
+								singleSelect: true,
 								callback: addNumberCallback
 							});
 						}

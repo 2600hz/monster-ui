@@ -434,13 +434,36 @@
 
 	"__comment": "UI-1386: Adding the numberListing common control",
 	"__version": "v3.20_s4",
-	"numberListing": {
-		"title": "Liste des numéros disponibles",
-		"headline": "Sélectionner numéros",
-		"headlineSingle": "Sélectionner un numéro",
-		"noMatchingNumber": "Aucun numéro correspondant à votre recherche.",
-		"noNumber": "Aucun numéro disponible.",
-		"noNumberSelected": "Vous n'avez sélectionné aucun numéro. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
-		"proceed": "Sélectionner"
+	"monsterListing": {
+		"numbers": {
+			"title": "Liste des numéros disponibles",
+			"headline": "Sélectionner numéros",
+			"headlineSingle": "Sélectionner un numéro",
+			"noMatch": "Aucun numéro correspondant à votre recherche.",
+			"noData": "Aucun numéro disponible.",
+			"noDataSelected": "Vous n'avez sélectionné aucun numéro. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
+			"okButton": "Sélectionner",
+			"cancelButton": "Annuler"
+		},
+		"devices": {
+			"title": "Liste des téléphones disponibles",
+			"headline": "Sélectionner téléphones",
+			"headlineSingle": "Sélectionner un téléphone",
+			"noMatch": "Aucun téléphone correspondant à votre recherche.",
+			"noData": "Aucun téléphone disponible.",
+			"noDataSelected": "Vous n'avez sélectionné aucun téléphone. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
+			"okButton": "Sélectionner",
+			"cancelButton": "Annuler"
+		},
+		"default": {
+			"title": "Liste des éléments disponibles",
+			"headline": "Sélectionner éléments",
+			"headlineSingle": "Sélectionner un élément",
+			"noMatch": "Aucun élément correspondant à votre recherche.",
+			"noData": "Aucun élément disponible.",
+			"noDataSelected": "Vous n'avez sélectionné aucun élément. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
+			"okButton": "Sélectionner",
+			"cancelButton": "Annuler"
+		}
 	}
 }
