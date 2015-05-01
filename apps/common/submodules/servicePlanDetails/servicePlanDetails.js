@@ -22,14 +22,15 @@ define(function(require){
 				container = args.container,
 				servicePlan = args.servicePlan || null,
 				useOwnPlans = args.useOwnPlans || false,
-				callback = args.callback;
+				callback = args.callback,
+				accountId = args.accountId || self.accountId;
 
 			if(container) {
 				if(typeof servicePlan === 'string') {
 					self.callApi({
 						resource: useOwnPlans ? 'servicePlan.get' : 'servicePlan.getAvailable',
 						data: {
-							accountId: self.accountId,
+							accountId: accountId,
 							planId: servicePlan
 						},
 						success: function(data, status) {
