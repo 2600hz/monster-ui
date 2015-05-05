@@ -92,7 +92,7 @@
 		"__comment": "UI-901: Delete recap popup",
 		"__version": "3.20",
 		"deleteRecapDialog": {
-			"headline": "Certains numéros que vous avez sélectionné n'ont pas pu être supprimés. Vous pouvez consulter le récapitulatif ci-dessous. Cliquez sur Continuez pour retourner à la liste des Numéros.",
+			"headline": "Vous pouvez consulter le récapitulatif de l'opération ci-dessous. Cliquez sur Continuez pour retourner à la liste des Numéros.",
 			"title": "Récapitulatif de l'opération",
 			"continue": "Continuer"
 		}

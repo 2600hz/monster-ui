@@ -175,6 +175,7 @@ define(function(require){
 		},
 
 		numbersBindEvents: function(parent, dataNumbers) {
+
 			var self = this,
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
@@ -221,7 +222,7 @@ define(function(require){
 									parent
 										.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-spareAccount', { spareNumbers: spareNumbers }))
+										.append(monster.template(self, 'numbers-spareAccount', { viewType: dataNumbers.viewType, spareNumbers: spareNumbers }))
 										.parent()
 										.find('.count')
 										.html('('+ spareNumbers.length +')');
@@ -229,7 +230,7 @@ define(function(require){
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-usedAccount', { usedNumbers: usedNumbers }))
+										.append(monster.template(self, 'numbers-usedAccount', { viewType: dataNumbers.viewType, usedNumbers: usedNumbers }))
 										.parent()
 										.find('.count')
 										.html('('+ usedNumbers.length +')');

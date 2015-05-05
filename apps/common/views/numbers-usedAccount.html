@@ -25,6 +25,30 @@
 			{{/if}}
 		</span>
 
+		<div class="used-by">
+			{{#compare ../viewType '!==' 'pbx'}}
+				{{ this.friendlyUsedBy }}
+			{{else}}
+				{{#compare this.ownerType '===' 'user'}}
+					<i class="icon-telicon-seats"></i>
+				{{else}}
+					{{#compare this.ownerType '===' 'group'}}
+						<i class="icon-group"></i>
+					{{else}}
+						{{#compare this.ownerType '===' 'main'}}
+							<i class="icon-telicon-home-phone"></i>
+						{{else}}
+							{{#compare this.ownerType '===' 'conference'}}
+								<i class="icon-comments"></i>
+							{{/compare}}
+						{{/compare}}
+					{{/compare}}
+				{{/compare}}
+
+				{{ this.owner }}
+			{{/compare}}
+		</div>
+
 		<div class="features pull-right">
 			{{#if this.viewFeatures}}
 				{{#each this.viewFeatures}}

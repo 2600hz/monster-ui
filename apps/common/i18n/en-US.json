@@ -100,7 +100,7 @@
 		"__comment": "UI-901: Delete recap popup",
 		"__version": "3.20",
 		"deleteRecapDialog": {
-			"headline": "It appears that some of the numbers you wanted to delete couldn't get deleted by the system. Find below the summary of which numbers have been deleted and the ones who haven't. Click on Continue to go back to the Numbers inventory.",
+			"headline": "Find below the summary of which numbers have been successfully deleted and the ones which haven't. Click on Continue to go back to the Numbers inventory.",
 			"title": "Recap of the Delete operation",
 			"continue": "Continue"
 		}
