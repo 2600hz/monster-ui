@@ -1,9 +1,16 @@
 {{#if isMasquerading}}
-<li class="myaccount-common-link">
+<li class="myaccount-common-link" id="main_topbar_switch_masquerade" tabindex="0">
 	<a href="#" class="links cell" id="main_topbar_leave_masquerade">
 		<div class="cell-text">{{i18n.isMasquerading.switchBackTo}}</div>
-		<div class="cell-text" id="main_topbar_leave_masquerade_label">{{i18n.isMasquerading.myAccount}}</div>
+		<div class="cell-text">{{i18n.isMasquerading.myAccount}}</div>
 	</a>
+	{{#if parentsList.length}}
+	<div id="main_topbar_masquerade_links">
+		{{#each parentsList}}
+		<div data-id="{{id}}">{{name}}</div>
+		{{/each}}
+	</div>
+	{{/if}}
 </li>
 <li class="myaccount-common-link" id="main_topbar_myaccount">
 	<a href="#" class="links cell" id="main_topbar_myaccount_masquerade_link">

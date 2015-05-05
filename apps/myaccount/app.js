@@ -248,6 +248,7 @@ define(function(require){
 						dataTemplate = {
 							name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
 							isMasquerading: args && args.isMasquerading || false,
+							parentsList: args && args.parentsList || [],
 							showMyaccount: showMyaccount
 						},
 						navHtml = $(monster.template(self, 'nav', dataTemplate)),
@@ -342,6 +343,19 @@ define(function(require){
 
 				appList.find('.app-list-element.active').removeClass('active');
 				appList.find('.app-list-element[data-name="accounts"]').addClass('active');
+			});
+
+			navLinks.on('click', '#main_topbar_masquerade_links > div', function(e) {
+				var accountId = $(this).data('id');
+				self.callApi({
+					resource: 'account.get',
+					data: {
+						accountId: accountId
+					},
+					success: function(data, status) {
+						monster.pub('accountsManager.triggerMasquerading', data.data);
+					}
+				});
 			});
 		},
 

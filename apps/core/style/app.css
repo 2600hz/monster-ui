@@ -91,8 +91,34 @@ body,
 #main_topbar #main_topbar_links_apps_label {
 	max-width: 70px;
 }
-#main_topbar #main_topbar_leave_masquerade {
+#main_topbar #main_topbar_switch_masquerade {
 	max-width: 140px;
+}
+#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links {
+	background-color: #303039;
+	border: solid 1px #202029;
+	border-top: none;
+	border-radius: 0px 0px 4px 4px;
+	display: none;
+}
+#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div {
+	box-sizing: border-box;
+	height: 30px;
+	padding: 5px;
+	text-align: center;
+	color: #c0c0c9;
+	cursor: pointer;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div:hover {
+	color: #22a5ff;
+}
+#main_topbar #main_topbar_switch_masquerade:hover #main_topbar_masquerade_links,
+#main_topbar #main_topbar_switch_masquerade:focus #main_topbar_masquerade_links {
+	display: block;
 }
 #main_topbar #main_topbar_myaccount_user,
 #main_topbar #main_topbar_myaccount_masquerade_link {
@@ -101,7 +127,6 @@ body,
 #main_topbar .links:hover,
 #main_topbar .links:hover i,
 #main_topbar #main_topbar_current_app_name:hover,
-#main_topbar #main_topbar_leave_masquerade_label,
 #main_topbar #main_topbar_myaccount_masquerade_label {
 	color: #22a5ff;
 }
