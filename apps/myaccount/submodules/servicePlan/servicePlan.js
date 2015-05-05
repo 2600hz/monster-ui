@@ -26,7 +26,8 @@ define(function(require){
 					servicePlan: function(callback) {
 						self.servicePlanGet(function success (data) {
 							var dataArray = [],
-								totalAmount = 0;
+								totalAmount = 0,
+								serviceName;
 
 							renderData.hasServicePlan = true;
 
@@ -37,8 +38,10 @@ define(function(require){
 											monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
 
 										if(monthlyCharges > 0) {
+											serviceName = self.i18n.active().servicePlan.titles.hasOwnProperty(itemName) ? self.i18n.active().servicePlan.titles[itemName] : monster.util.formatVariableToDisplay(itemName)
+
 											dataArray.push({
-												service: self.i18n.active().servicePlan.titles[itemName],
+												service: serviceName,
 												rate: item.rate || 0,
 												quantity: item.quantity || 0,
 												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + monster.util.formatPrice(discount, 2) : '',
