@@ -158,7 +158,7 @@
 
 #myaccount .myaccount-menu .menu-bottom .signout:hover {
 	cursor: pointer;
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 /* MYACCOUNT CONTENT */
@@ -346,7 +346,7 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content label.uneditable {
-	color: #22ccff;
+	color: #22a5ff;
 	cursor: default;
 	font-weight: 600;
 	padding-top: 5px;

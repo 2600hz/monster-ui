@@ -292,13 +292,7 @@ div#orders_list .collapse td:last-child i {
 	color: #ffffff;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
-	background-color:#22ccff;
-	background-image:linear-gradient(to bottom,#22ccff,#22a5ff);
-	background-image:-moz-linear-gradient(top,#22ccff,#22a5ff);
-	background-image:-webkit-gradient(linear,0 0,0 100%,from(#22ccff),to(#22a5ff));
-	background-image:-webkit-linear-gradient(top,#22ccff,#22a5ff);
-	background-image:-o-linear-gradient(top,#22ccff,#22a5ff);
-	filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff22ccff',endColorstr='#ff22a5ff',GradientType=0);
+	background-color:#22a5ff;
 }
 
 #orders_list .accounts-list .account-section.animate .account-header {
@@ -400,7 +394,7 @@ div#port_comments_popup .comment:last-child {
 }
 
 div#port_comments_popup .comment .comment-author {
-	color: #22ccff;
+	color: #22a5ff;
 }
 
 div#port_comments_popup .comment .delete-comment:hover {

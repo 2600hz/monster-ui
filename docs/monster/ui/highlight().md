@@ -26,7 +26,7 @@ monster.ui.highlight(element[, options]);
  Default:
  ```javascript
  	{
-		startColor: '#22CCFF',
+		startColor: '#22a5ff',
 		endColor: '#F2F2F2',
 		timer: 2000
 	}
