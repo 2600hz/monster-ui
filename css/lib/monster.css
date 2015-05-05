@@ -232,7 +232,7 @@ h1 {
 }
 .monster-switch > input:checked + span {
 	padding-right: 34px;
-	color: #0d456b;
+	color: #FFF;
 	border-color: #1e8dd9;
 	background: #22a5ff;
 }
