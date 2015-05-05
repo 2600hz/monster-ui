@@ -201,6 +201,11 @@ label.monster-invalid {
 	border: none;
 }
 .wysiwyg-container .btn-group .btn:not(button) {
+	margin-left: 5px;
+	padding: 4px 8px;
+	border: 1px solid rgba(0, 0, 0, 0);
+	border-radius: 0;
+	background-color: transparent;
 	background-image: none;
 	box-shadow: none;
 }
@@ -215,7 +220,7 @@ label.monster-invalid {
 .wysiwyg-container .btn-group .dropdown-menu {
 	min-width: 0;
 }
-.wysiwyg-container .btn-group .dropdown-menu:after {
+.wysiwyg-container .btn-group .dropdown-menu::after {
 	border-bottom-color: #ccc;
 }
 .wysiwyg-container .btn-group .dropdown-menu .btn:first-child {

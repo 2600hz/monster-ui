@@ -291,12 +291,9 @@ define(function(require){
 							toastr.success(self.i18n.active().port.toastr.success.request.delete);
 						});
 					}
-					/*
-					 * TODO: Uncomment and add HTML when we figured out how to manage comment's notifications
 					else if (li.hasClass('comments-request')) {
 						self.portRenderComments(parent, accountId, portRequestId);
 					}
-					*/
 				})
 			});
 
