@@ -329,6 +329,7 @@ define(function(require){
 									data: appInstallInfo
 								},
 								success: function(_data, status) {
+									appstoreData.account.apps = appstoreData.account.apps || {};
 									appstoreData.account.apps[app.id] = _data.data;
 									icon.stop(true, true)
 										.show()
@@ -349,7 +350,6 @@ define(function(require){
 						}
 					});
 				};
-
 
 			parent.find('#app_switch').on('change', function() {
 				if($(this).is(':checked')) {
