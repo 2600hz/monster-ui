@@ -433,27 +433,23 @@ define(function(require){
 				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',','.'));
 
 				if(creditsToAdd) {
-					monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
+					self.balanceAddCredits(creditsToAdd,
 						function() {
-							self.balanceAddCredits(creditsToAdd,
-								function() {
-									var dataToastr = {
-										amount: self.i18n.active().currencyUsed + creditsToAdd
-									};
+							var dataToastr = {
+								amount: self.i18n.active().currencyUsed + creditsToAdd
+							};
 
-									toastr.success(monster.template(self, '!' + self.i18n.active().balance.creditsAdded, dataToastr));
+							toastr.success(monster.template(self, '!' + self.i18n.active().balance.creditsAdded, dataToastr));
 
-									if(typeof params.callback === 'function') {
-										self.balanceGet(function(data) {
-											params.callback(data.data.balance);
-											parent.dialog('close');
-										});
-									}
-									else {
-										parent.dialog('close');
-									}
-								}
-							);
+							if(typeof params.callback === 'function') {
+								self.balanceGet(function(data) {
+									params.callback(data.data.balance);
+									parent.dialog('close');
+								});
+							}
+							else {
+								parent.dialog('close');
+							}
 						}
 					);
 				}

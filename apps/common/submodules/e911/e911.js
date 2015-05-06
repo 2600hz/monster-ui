@@ -36,71 +36,68 @@ define(function(require){
 			popupHtml.find('button.btn.btn-success').on('click', function(ev) {
 				ev.preventDefault();
 
-				var e911FormData = monster.ui.getFormData('e911'),
-					popupContent = self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2;
+				var e911FormData = monster.ui.getFormData('e911');
 
 				_.extend(dataNumber, { dash_e911: e911FormData });
 
-				monster.ui.confirm(popupContent, function() {
-					var callbackSuccess = function callbackSuccess(data) {
-							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-								template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+				var callbackSuccess = function callbackSuccess(data) {
+					var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+						template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
 
-								toastr.success(template);
+						toastr.success(template);
 
-								popup.dialog('destroy').remove();
+						popup.dialog('destroy').remove();
 
-								callbacks.success && callbacks.success(data);
-						};
+						callbacks.success && callbacks.success(data);
+				};
 
-					self.e911UpdateNumber(dataNumber.id, dataNumber, {
-						success: function(data) {
+				self.e911UpdateNumber(dataNumber.id, dataNumber, {
+					success: function(data) {
 
-							callbackSuccess(data);
-						},
-						multipleChoices: function(addresses) {
-							var templatePopupAddresses = $(monster.template(self, 'e911-addressesDialog', addresses)),
-								popupAddress;
+						callbackSuccess(data);
+					},
+					multipleChoices: function(addresses) {
+						var templatePopupAddresses = $(monster.template(self, 'e911-addressesDialog', addresses)),
+							popupAddress;
 
-							templatePopupAddresses.find('.address-option').on('click', function() {
-								templatePopupAddresses.find('.address-option.active').removeClass('active');
-								$(this).addClass('active');
-								templatePopupAddresses.find('.save-address').removeClass('disabled');
-							});
+						templatePopupAddresses.find('.address-option').on('click', function() {
+							templatePopupAddresses.find('.address-option.active').removeClass('active');
+							$(this).addClass('active');
+							templatePopupAddresses.find('.save-address').removeClass('disabled');
+						});
 
-							templatePopupAddresses.find('.cancel-link').on('click', function() {
-								popupAddress
-									.dialog('destroy')
-									.remove();
-							});
+						templatePopupAddresses.find('.cancel-link').on('click', function() {
+							popupAddress
+								.dialog('destroy')
+								.remove();
+						});
 
-							templatePopupAddresses.find('.save-address').on('click', function() {
-								if (templatePopupAddresses.find('.address-option').hasClass('active')) {
-									var index = templatePopupAddresses.find('.address-option.active').data('id'),
-										dataAddress = addresses.details[index];
+						templatePopupAddresses.find('.save-address').on('click', function() {
+							if (templatePopupAddresses.find('.address-option').hasClass('active')) {
+								var index = templatePopupAddresses.find('.address-option.active').data('id'),
+									dataAddress = addresses.details[index];
 
-									_.extend(dataNumber, { dash_e911: dataAddress });
+								_.extend(dataNumber, { dash_e911: dataAddress });
 
-									self.e911UpdateNumber(dataNumber.id, dataNumber, {
-										success: function(data) {
-											popupAddress
-												.dialog('destroy')
-												.remove();
+								self.e911UpdateNumber(dataNumber.id, dataNumber, {
+									success: function(data) {
+										popupAddress
+											.dialog('destroy')
+											.remove();
 
-											callbackSuccess(data);
-										}
-									});
-								}
-							});
+										callbackSuccess(data);
+									}
+								});
+							}
+						});
 
-							popupAddress = monster.ui.dialog(templatePopupAddresses, {
-								title: self.i18n.active().e911.chooseAddressPopup.title
-							});
-						},
-						invalidAddress: function(data) {
-							monster.ui.alert('error', self.i18n.active().e911.invalidAddress);
-						}
-					});
+						popupAddress = monster.ui.dialog(templatePopupAddresses, {
+							title: self.i18n.active().e911.chooseAddressPopup.title
+						});
+					},
+					invalidAddress: function(data) {
+						monster.ui.alert('error', self.i18n.active().e911.invalidAddress);
+					}
 				});
 			});
 
@@ -118,23 +115,19 @@ define(function(require){
 						}).true;
 						
 						if(e911Count > 1) {
-							monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-								function() {
-									delete dataNumber.dash_e911;
-									self.e911UpdateNumber(dataNumber.id, dataNumber, {
-										success: function(data) {
-											var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-												template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+							delete dataNumber.dash_e911;
+							self.e911UpdateNumber(dataNumber.id, dataNumber, {
+								success: function(data) {
+									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+										template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
 
-											toastr.success(template);
+									toastr.success(template);
 
-											popup.dialog('destroy').remove();
+									popup.dialog('destroy').remove();
 
-											callbacks.success && callbacks.success(data);
-										}
-									});
+									callbacks.success && callbacks.success(data);
 								}
-							);
+							});
 						} else {
 							monster.ui.alert(self.i18n.active().e911.lastE911Error);
 						}

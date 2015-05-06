@@ -61,25 +61,21 @@ define(function(require){
 					_.extend(dataNumber, failoverFormData);
 
 					if(dataNumber.failover.e164 || dataNumber.failover.sip) {
-						monster.ui.confirm(self.i18n.active().chargeReminder.line1 + '<br/><br/>' + self.i18n.active().chargeReminder.line2,
-							function() {
-								self.failoverUpdateNumber(dataNumber.id, dataNumber,
-									function(data) {
-										var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-											template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
+						self.failoverUpdateNumber(dataNumber.id, dataNumber,
+							function(data) {
+								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+									template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
 
-										toastr.success(template);
+								toastr.success(template);
 
-										popup.dialog('destroy').remove();
+								popup.dialog('destroy').remove();
 
-										callbacks.success && callbacks.success(data);
-									},
-									function(data) {
-										monster.ui.alert(self.i18n.active().failover.errorUpdate + '' + data.data.message);
+								callbacks.success && callbacks.success(data);
+							},
+							function(data) {
+								monster.ui.alert(self.i18n.active().failover.errorUpdate + '' + data.data.message);
 
-										callbacks.error && callbacks.error(data);
-									}
-								);
+								callbacks.error && callbacks.error(data);
 							}
 						);
 					}
