@@ -169,7 +169,7 @@
 	"buyNumbers": {
 		"buyDialogTitle": "Buy Numbers",
 		"countrySelectLabel": "Select Country",
-		"cityInputLabel": "Search by City or Area Code",
+		"cityInputLabel": "Search by Area Code",
 		"seqCheckboxLabel": "Display only sequential numbers.",
 		"seqInputLabel": "How many in a row?",
 		"seqNumAlert": "You must specify how many sequential numbers you want in a row (any integer between 2 and 999).",
