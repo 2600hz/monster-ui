@@ -65,63 +65,26 @@
 
 /***************** TABS *****************/
 .nav.nav-tabs {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	border-bottom: 0;
 }
-.nav.nav-tabs li:not(:first-child):not(:last-child) a {
+.nav.nav-tabs > li {
+	margin-bottom: 0;
+}
+.nav.nav-tabs > li > a {
+	margin-right: 0;
+	border: 0;
 	border-radius: 0;
 }
-.nav.nav-tabs li:not(:first-child) a {
-	border-left: 0;
+.nav.nav-tabs > li > a:hover,
+.nav.nav-tabs > li > a:focus {
+	background-color: transparent;
+	background-image: none;
 }
-.nav.nav-tabs li:first-child a {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-.nav.nav-tabs li:last-child a {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-.nav-tabs > li > a {
-	margin-right: 0;
-	padding: 5px 20px;
-	color: #333;
-	border: 1px solid #eee;
-	border-radius: 4px;
-	background: #fff; /* Old browsers */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, hsl(0, 0%, 100%)), color-stop(100%, hsl(0, 0%, 91%))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 91%) 100%); /* Chrome10+,Safari5.1+ */
-	background:    -moz-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 91%) 100%); /* FF3.6+ */
-	background:     -ms-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 91%) 100%); /* IE10+ */
-	background:      -o-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 91%) 100%); /* Opera 11.10+ */
-	background:         linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 91%) 100%); /* W3C */
-
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e8e8e8', GradientType=0 ); /* IE6-9 */
-}
-.nav-tabs > li > a i {
-	margin-right: 8px;
-}
-.nav-tabs > li > a:hover {
-	background: #fff; /* Old browsers */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, hsl(0, 0%, 100%)), color-stop(100%, hsl(0, 0%, 87%))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 87%) 100%); /* Chrome10+,Safari5.1+ */
-	background:    -moz-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 87%) 100%); /* FF3.6+ */
-	background:     -ms-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 87%) 100%); /* IE10+ */
-	background:      -o-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 87%) 100%); /* Opera 11.10+ */
-	background:         linear-gradient(to bottom,  hsl(0, 0%, 100%) 0%, hsl(0, 0%, 87%) 100%); /* W3C */
-
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd', GradientType=0 ); /* IE6-9 */
-}
-.nav-tabs > li.active > a {
-	color: #fff !important;
-	background-color: #22a5ff;
-}
-.nav-tabs > li.active > a i {
+.nav.nav-tabs > .active > a:hover,
+.nav.nav-tabs > .active > a:focus {
 	color: #fff;
-}
-.tab-content {
-	border: 1px solid #ccc;
-	background-color: #f3f3f3;
+	background-color: #22a5ff;
 }
 
 /***************** PILLS ****************/
@@ -455,6 +418,51 @@ a:hover {
 
 .content-centered {
 	text-align: center;
+}
+
+.tab-content {
+	border: 1px solid #ccc;
+	background-color: #f3f3f3;
+}
+
+.nav.nav-tabs > li > a {
+	padding: 6px 20px;
+	color: #909099;
+	border: 1px solid #c0c0c9;
+}
+.nav.nav-tabs > li:not(:first-child) > a {
+	border-left: 0;
+}
+.nav.nav-tabs > li:first-child > a {
+	border-radius: 2px 0 0 2px;
+}
+.nav.nav-tabs > li:last-child > a {
+	border-radius: 0 2px 2px 0;
+}
+.nav.nav-tabs > li > a i {
+	color: #909099;
+}
+.nav.nav-tabs > li > a:hover,
+.nav.nav-tabs > li > a:focus,
+.nav.nav-tabs > li > a:hover i,
+.nav.nav-tabs > li > a:focus i {
+	color: #22a5ff;
+}
+.nav.nav-tabs > .active > a {
+	background-color: #22a5ff;
+}
+.nav.nav-tabs > .active > a,
+.nav.nav-tabs > .active > a i,
+.nav.nav-tabs > .active > a:hover i,
+.nav.nav-tabs > .active > a:focus i {
+	color: #fff;
+}
+.nav.nav-tabs > .active > a:hover,
+.nav.nav-tabs > .active > a:focus {
+	border-color: #c0c0c9;
+}
+.nav-tabs > li > a i {
+	margin-right: 8px;
 }
 
 /******** FIX BOOTSTRAP OR CHANGE *******/
