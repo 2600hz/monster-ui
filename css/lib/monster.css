@@ -21,7 +21,6 @@ h1 {
 /************************************************************/
 
 .monster-link {
-	margin: 0 10px;
 	cursor: pointer;
 	color: #666;
 }
@@ -39,6 +38,9 @@ h1 {
 }
 .monster-link.disabled i {
 	color: #999;
+}
+.monster-link:hover {
+	text-decoration: underline;
 }
 
 /************************************************************/

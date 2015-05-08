@@ -549,6 +549,19 @@ define(function(require){
 			window.location.reload();
 		},
 
+		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
+		isSuperDuper: function(account) {
+			var self = this,
+				isSuperDuper = false,
+				account = account || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			if(account.hasOwnProperty('superduper_admin')) {
+				isSuperDuper = account.superduper_admin;
+			}
+
+			return isSuperDuper;
+		},
+
 		// Function returning a Boolean indicating whether the end-user is logged in or not.
 		isLoggedIn: function() {
 			var self = this;
