@@ -27,10 +27,7 @@ define(function(require){
 
 			self.buyNumbersGetAvailableCountries(function(countries) {
 				args.availableCountries = countries;
-				self.buyNumbersGetPrices(function(prices) {
-					args.prices = prices;
-					self.buyNumbersShowPopup(args, params.callbacks);
-				});
+				self.buyNumbersShowPopup(args, params.callbacks);
 			});
 		},
 
@@ -61,41 +58,6 @@ define(function(require){
 					"vanity": true,
 					"prefix": 1,
 					"name": "United States"
-				}
-			});
-		},
-
-		buyNumbersGetPrices: function(callback) {
-			var self = this;
-			self.callApi({
-				resource: 'servicePlan.listCurrent',
-				data: {
-					accountId: self.assignedAccountId
-				},
-				success: function(data, status) {
-					var prices = {
-						regular: 0,
-						tollfree: 0,
-						vanity: 0
-					};
-					if(data.data && data.data.items && data.data.items.phone_numbers) {
-						var phoneNumbers = data.data.items.phone_numbers;
-						if(phoneNumbers.did_us && phoneNumbers.did_us.rate) {
-							prices.regular = phoneNumbers.did_us.rate
-						}
-						if(phoneNumbers.tollfree_us && phoneNumbers.tollfree_us.rate) {
-							prices.tollfree = phoneNumbers.tollfree_us.rate
-						} else {
-							prices.tollfree = prices.regular;
-						}
-						if(phoneNumbers.vanity_us && phoneNumbers.vanity_us.rate) {
-							prices.vanity = phoneNumbers.vanity_us.rate
-						}
-					}
-					callback(prices);
-				},
-				error: function(data, status) {
-					monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 				}
 			});
 		},
@@ -147,7 +109,46 @@ define(function(require){
 			var self = this,
 				container = args.container,
 				searchResultDiv = container.find('#search_result_div'),
-				resultDiv = searchResultDiv.find('.left-div');
+				resultDiv = searchResultDiv.find('.left-div'),
+				purchaseNumbers = function() {
+					var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix),
+						processingDiv = container.find('#processing_purchase_div');
+					
+					processingDiv.show();
+					processingDiv.find('i.icon-spinner').addClass('icon-spin');
+					
+					self.callApi({
+						resource: 'numbers.activateBlock',
+						data: {
+							accountId: self.assignedAccountId,
+							data: {
+								numbers: numbers
+							},
+							onChargesCancelled: function() {
+								self.buyNumbersShowSearchResults(args);
+								processingDiv.hide();
+							}
+						},
+						success: function(data, status) {
+							if('data' in data) {
+								if('error' in data.data && !$.isEmptyObject(data.data.error)) {
+									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
+											   + '<br/>' + Object.keys(data.data.error).join('<br/>');
+									monster.ui.alert('error', errMsg);
+								}
+
+								if('success' in data.data && !$.isEmptyObject(data.data.success)) {
+									callbacks.success && callbacks.success(data.data.success, data.data.error);
+								} else {
+									callbacks.error && callbacks.error(data.data.error);
+								}
+							} else {
+								callbacks.error && callbacks.error(data);
+							}
+							args.popup.dialog('close');
+						}
+					});
+				};
 
 			searchResultDiv.on('click', 'i.remove-number', function(ev) {
 				ev.preventDefault();
@@ -180,7 +181,7 @@ define(function(require){
 				ev.preventDefault();
 				var totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers);
 
-				if(totalNumbers.totalSelectedNumbers > 0) {
+				if(totalNumbers > 0) {
 					container.find('#search_top_div').hide();
 					container.find('#search_result_div').hide();
 					container.find('#check_numbers_div').show();
@@ -224,7 +225,7 @@ define(function(require){
 					// 		} else {
 					// 			container.find('#check_numbers_div').hide();
 					// 			container.find('#confirm_div').show();
-					// 			container.find('#summary_total_numbers').html(totalNumbers.totalSelectedNumbers);
+					// 			container.find('#summary_total_numbers').html(totalNumbers);
 					// 			container.find('#summary_total_price').html(totalNumbers.totalPrice);
 					// 		}
 					// 	},
@@ -249,11 +250,8 @@ define(function(require){
 									 .empty()
 									 .append(monster.template(self, 'buyNumbers-unavailableNumbers', {numbers: unavailableNumbers}));
 						} else {
-							var totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers)
 							container.find('#check_numbers_div').hide();
-							container.find('#confirm_div').show();
-							container.find('#summary_total_numbers').html(totalNumbers.totalSelectedNumbers);
-							container.find('#summary_total_price').html(totalNumbers.totalPrice);
+							purchaseNumbers();
 						}
 					}, 1000);
 					/*********************************************************************************/
@@ -271,56 +269,8 @@ define(function(require){
 
 			container.find('#continue_buy_button').on('click', function(ev) {
 				ev.preventDefault();
-				var totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers);
 				container.find('#check_numbers_div').hide();
-				container.find('#confirm_div').show();
-				container.find('#summary_total_numbers').html(totalNumbers.totalSelectedNumbers);
-				container.find('#summary_total_price').html(totalNumbers.totalPrice);
-			});
-
-			container.find('#cancel_buy_link').on('click', function(ev) {
-				ev.preventDefault();
-				self.buyNumbersShowSearchResults(args);
-				container.find('#confirm_div').hide();
-			});
-
-			container.find('#confirm_buy_button').on('click', function(ev) {
-				ev.preventDefault();
-				var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix),
-					confirmDiv = container.find('#confirm_div'),
-					processingDiv = container.find('#processing_purchase_div');
-				
-				confirmDiv.hide();
-				processingDiv.show();
-				processingDiv.find('i.icon-spinner').addClass('icon-spin');
-				
-				self.callApi({
-					resource: 'numbers.activateBlock',
-					data: {
-						accountId: self.assignedAccountId,
-						data: {
-							numbers: numbers
-						}
-					},
-					success: function(data, status) {
-						if('data' in data) {
-							if('error' in data.data && !$.isEmptyObject(data.data.error)) {
-								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
-										   + '<br/>' + Object.keys(data.data.error).join('<br/>');
-								monster.ui.alert('error', errMsg);
-							}
-
-							if('success' in data.data && !$.isEmptyObject(data.data.success)) {
-								callbacks.success && callbacks.success(data.data.success, data.data.error);
-							} else {
-								callbacks.error && callbacks.error(data.data.error);
-							}
-						} else {
-							callbacks.error && callbacks.error(data);
-						}
-						args.popup.dialog('close');
-					}
-				});
+				purchaseNumbers();
 			});
 		},
 
@@ -606,8 +556,7 @@ define(function(require){
 									args.displayedNumbers.push({
 										array_index: args.displayedNumbers.length,
 										number_value: num,
-										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode),
-										price: args.prices.tollfree
+										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode)
 									});
 								});
 
@@ -644,7 +593,8 @@ define(function(require){
 
 			resultDiv.on('scroll', function(ev) {
 				var $this = $(this);
-				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() == $this[0].scrollHeight - $this.innerHeight()) {
+				// Added a 20px offset to the scroll condition to avoid issues caused by zooming and low resolutions
+				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() >= $this[0].scrollHeight - $this.innerHeight() - 20) {
 					performSearch(searchOffset, self.searchLimit, function() {
 						self.buyNumbersRefreshDisplayedNumbersList(args);
 					});
@@ -796,8 +746,7 @@ define(function(require){
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
 												number_value: startNum + "_" + value.size,
-												formatted_value: self.buyNumbersFormatNumber(startNum, self.selectedCountryCode, endNum),
-												price: value.size * args.prices.regular
+												formatted_value: self.buyNumbersFormatNumber(startNum, self.selectedCountryCode, endNum)
 											});
 										});
 
@@ -840,8 +789,7 @@ define(function(require){
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
 												number_value: num,
-												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode),
-												price: seqNumIntvalue * args.prices.regular
+												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode)
 											});
 										});
 
@@ -890,7 +838,8 @@ define(function(require){
 
 			resultDiv.on('scroll', function(ev) {
 				var $this = $(this);
-				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() == $this[0].scrollHeight - $this.innerHeight()) {
+				// Added a 20px offset to the scroll condition to avoid issues caused by zooming and low resolutions
+				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() >= $this[0].scrollHeight - $this.innerHeight() - 20) {
 					performSearch(searchOffset, self.searchLimit, function() {
 						self.buyNumbersRefreshDisplayedNumbersList(args);
 					});
@@ -923,16 +872,12 @@ define(function(require){
 
 		buyNumbersGetTotalNumbers: function(selectedNumbers) {
 			var matched,
-				result = {
-					totalSelectedNumbers: 0,
-					totalPrice: 0
-				};
+				result = 0;
 
 			$.each(selectedNumbers, function(key, value) {
 				matched = value.number_value.match(/\d+_(\d+)/);
-				if(matched) { result.totalSelectedNumbers += parseInt(matched[1], 10); }
-				else { result.totalSelectedNumbers += 1; }
-				result.totalPrice += parseInt(value.price, 10);
+				if(matched) { result += parseInt(matched[1], 10); }
+				else { result += 1; }
 			});
 
 			return result;
@@ -953,10 +898,10 @@ define(function(require){
 				totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers);
 
 			container.find('#search_result_div .right-div .center-div').empty().append(selectedNumbersList);
-			container.find('#total_num_span').html(totalNumbers.totalSelectedNumbers);
+			container.find('#total_num_span').html(totalNumbers);
 
 			// display the plural if there's more than 1 number added
-			textAdded = (totalNumbers.totalSelectedNumbers === 0 || totalNumbers.totalSelectedNumbers === 1) ? self.i18n.active().buyNumbers.numberAddedSingle : self.i18n.active().buyNumbers.numberAddedPlural;
+			textAdded = (totalNumbers === 0 || totalNumbers === 1) ? self.i18n.active().buyNumbers.numberAddedSingle : self.i18n.active().buyNumbers.numberAddedPlural;
 			container.find('.number-added').html(textAdded);
 		},
 

@@ -2,7 +2,6 @@
 	<div id="{{this.array_index}}_div" class="number-box number-wrapper" {{#if this.selected}}style="display:none;"{{/if}}>
 		<button data-array_index="{{this.array_index}}" class="btn btn-mini btn-primary add-number">{{../i18n.buyNumbers.add}}</button>
 		<span class="number-value">{{this.formatted_value}}</span>
-		<span class="number-price">${{this.price}}/{{../i18n.buyNumbers.month}}</span>
 	</div>
 {{else}}
 	<div class="no-result">{{../i18n.buyNumbers.noSearchResult}}</div>
