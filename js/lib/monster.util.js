@@ -6,113 +6,134 @@ define(function(require){
 
 	var util = {
 		toFriendlyDate: function(date, format, user){
-			var self = this
-				i18n = monster.apps.core.i18n.active(),
-				user = user || monster.apps.auth.currentUser,
-				user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
-				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-				format2Digits = function(number) {
-					return number < 10 ? '0'.concat(number) : number;
-				},
-				today = new Date(),
-				todayYear = today.getFullYear(),
-				todayMonth = format2Digits(today.getMonth() + 1),
-				todayDay = format2Digits(today.getDate()),
-				// date can be either a JS Date or a gregorian timestamp
-				date = typeof date === 'object' ? date : self.gregorianToDate(date),
-				year = date.getFullYear().toString().substr(2, 2),
-				fullYear = date.getFullYear(),
-				month = format2Digits(date.getMonth() + 1),
-				calendarMonth = i18n.calendar.month[date.getMonth()],
-				day = format2Digits(date.getDate()),
-				weekDay = i18n.calendar.day[date.getDay()],
-				hours = format2Digits(date.getHours()),
-				minutes = format2Digits(date.getMinutes()),
-				seconds = format2Digits(date.getSeconds()),
-				shortDateFormats = {
-					'dmy': 'DD/MM/year',
-					'mdy': 'MM/DD/year',
-					'ymd': 'year/MM/DD'
-				}
-				patterns = {
-					'year': fullYear,
-					'YY': year,
-					'month': calendarMonth,
-					'MM': month,
-					'day': weekDay,
-					'DD': day,
-					'hh': hours,
-					'mm': minutes,
-					'ss': seconds
-				};
-
-			if (typeof format === 'string') {
-				var formatString = format.toLowerCase();
-				switch(formatString) {
-					case 'short':
-					case 'date':
-						format = shortDateFormats[userDateFormat];
-						break;
-					case 'shortdate':
-						format = shortDateFormats[userDateFormat].replace('year','YY');
-						break;
-					case 'time':
-						format = 'hh:mm:ss';
-						break;
-					case 'shorttime':
-						format = 'hh:mm';
-						break;
-					case 'shortdatetime':
-						format = shortDateFormats[userDateFormat].replace('year','YY') + ' hh:mm';
-						break;
-					case 'datetime':
-						format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
-						break;
-				}
-			}
-			else {
-				format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
-			}
-
-			if(format.indexOf('hh') > -1 && format.indexOf('12h') == -1 && user12hMode) {
-				format += ' 12h'
-			}
-
-			if (format.indexOf('12h') > -1) {
-				var suffix;
-
-				if (hours >= 12) {
-					if (hours !== 12) {
-						hours -= 12;
+			// If Date is undefined, then we return an empty string.
+			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
+			// Otherwise it would display NaN/NaN/NaN in Firefox for example
+			if(typeof date !== 'undefined') {
+				var self = this
+					i18n = monster.apps.core.i18n.active(),
+					user = user || monster.apps.auth.currentUser,
+					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
+					userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
+					format2Digits = function(number) {
+						return number < 10 ? '0'.concat(number) : number;
+					},
+					today = new Date(),
+					todayYear = today.getFullYear(),
+					todayMonth = format2Digits(today.getMonth() + 1),
+					todayDay = format2Digits(today.getDate()),
+					// date can be either a JS Date or a gregorian timestamp
+					date = typeof date === 'object' ? date : self.gregorianToDate(date),
+					year = date.getFullYear().toString().substr(2, 2),
+					fullYear = date.getFullYear(),
+					month = format2Digits(date.getMonth() + 1),
+					calendarMonth = i18n.calendar.month[date.getMonth()],
+					day = format2Digits(date.getDate()),
+					weekDay = i18n.calendar.day[date.getDay()],
+					hours = format2Digits(date.getHours()),
+					minutes = format2Digits(date.getMinutes()),
+					seconds = format2Digits(date.getSeconds()),
+					shortDateFormats = {
+						'dmy': 'DD/MM/year',
+						'mdy': 'MM/DD/year',
+						'ymd': 'year/MM/DD'
 					}
+					patterns = {
+						'year': fullYear,
+						'YY': year,
+						'month': calendarMonth,
+						'MM': month,
+						'day': weekDay,
+						'DD': day,
+						'hh': hours,
+						'mm': minutes,
+						'ss': seconds
+					};
 
-					suffix = i18n.calendar.suffix.pm;
+				if (typeof format === 'string') {
+					var formatString = format.toLowerCase();
+					switch(formatString) {
+						case 'short':
+						case 'date':
+							format = shortDateFormats[userDateFormat];
+							break;
+						case 'shortdate':
+							format = shortDateFormats[userDateFormat].replace('year','YY');
+							break;
+						case 'time':
+							format = 'hh:mm:ss';
+							break;
+						case 'shorttime':
+							format = 'hh:mm';
+							break;
+						case 'shortdatetime':
+							format = shortDateFormats[userDateFormat].replace('year','YY') + ' hh:mm';
+							break;
+						case 'datetime':
+							format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
+							break;
+					}
 				}
 				else {
-					if (hours === '00') {
-						hours = 12
-					}
-
-					suffix = i18n.calendar.suffix.am;
+					format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
 				}
 
-				patterns.hh = hours;
-				patterns['12h'] = suffix;
+				if(format.indexOf('hh') > -1 && format.indexOf('12h') == -1 && user12hMode) {
+					format += ' 12h'
+				}
+
+				if (format.indexOf('12h') > -1) {
+					var suffix;
+
+					if (hours >= 12) {
+						if (hours !== 12) {
+							hours -= 12;
+						}
+
+						suffix = i18n.calendar.suffix.pm;
+					}
+					else {
+						if (hours === '00') {
+							hours = 12
+						}
+
+						suffix = i18n.calendar.suffix.am;
+					}
+
+					patterns.hh = hours;
+					patterns['12h'] = suffix;
+				}
+
+				_.each(patterns, function(v, k){
+					format = format.replace(k, v);
+				});
+
+				return format;
 			}
-
-			_.each(patterns, function(v, k){
-				format = format.replace(k, v);
-			});
-
-			return format;
+			else {
+				return '';
+			}
 		},
 
 		gregorianToDate: function(timestamp) {
-			return (new Date((timestamp  - 62167219200)*1000));
+			var formattedResponse = undefined;
+
+			if(typeof timestamp === 'number') {
+				formattedResponse = new Date((timestamp - 62167219200)*1000);
+			}
+
+			return formattedResponse;
 		},
 
 		dateToGregorian: function(date) {
-			return parseInt((date.getTime() / 1000) + 62167219200);
+			var formattedResponse = undefined;
+
+			// This checks that the parameter is an object and not null
+			if(typeof date === 'object' && date) {
+				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
+			}
+
+			return formattedResponse
 		},
 
 		unformatPhoneNumber: function(formattedNumber, specialRule) {
