@@ -40,16 +40,7 @@
 }
 
 .carrier-selector .choices-wrapper .carrier-choice.selected {
-	border: 1px solid #009ED8;
+	border: 1px solid #22a5ff;
 	color: #FFF;
-	line-height: 30px;
-
-	background: #1dc8ff; /* Old browsers */
-	background: -moz-linear-gradient(top, #1dc8ff 0%, #04b0ee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1dc8ff), color-stop(100%,#04b0ee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #1dc8ff 0%,#04b0ee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #1dc8ff 0%,#04b0ee 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1dc8ff', endColorstr='#04b0ee',GradientType=0 ); /* IE6-9 */
+	background: #22a5ff;
 }
