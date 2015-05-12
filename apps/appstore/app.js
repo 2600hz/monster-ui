@@ -452,8 +452,7 @@ define(function(require){
 							}) : []
 						},
 						function() {
-							var cookieData = $.parseJSON($.cookie('monster-auth')),
-								lang = monster.config.whitelabel.language,
+							var lang = monster.config.whitelabel.language,
 								isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
 								currentLang = app.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US',
 								appData = {
@@ -469,15 +468,20 @@ define(function(require){
 								appData.source_url = app.source_url;
 							}
 
-							// Update local installedApps list by adding the new app
-							monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
+							// Only update variable + cookie if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
+							if(!monster.util.isMasquerading()) {
+								var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-							// Update installedApps list of the cookie by adding the new app
-							cookieData.installedApps.push(appData.id);
+								// Update local installedApps list by adding the new app
+								monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
 
-							// Update cookie
-							$.cookie('monster-auth', JSON.stringify(cookieData));
+								// Update installedApps list of the cookie by adding the new app
+								cookieData.installedApps.push(appData.id);
 
+								// Update cookie
+								$.cookie('monster-auth', JSON.stringify(cookieData));
+							}
+							
 							$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
 							$('#appstore_container .app-filter.active').click();
 
@@ -490,16 +494,19 @@ define(function(require){
 						users: []
 					},
 					function() {
-						var cookieData = $.parseJSON($.cookie('monster-auth'));
+						// Only update variable + cookie if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
+						if(!monster.util.isMasquerading()) {
+							var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-						// Remove app from local installedApp list
-						monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+							// Remove app from local installedApp list
+							monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
 
-						// Remove app from installedApps of the cookie
-						cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val !== app.id; });
+							// Remove app from installedApps of the cookie
+							cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val !== app.id; });
 
-						// Update cookie
-						$.cookie('monster-auth', JSON.stringify(cookieData));
+							// Update cookie
+							$.cookie('monster-auth', JSON.stringify(cookieData));
+						}
 
 						$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
 						$('#appstore_container .app-filter.active').click();
