@@ -122,7 +122,7 @@ define(function(require){
 				paramResellerId = data.accountData.reseller_id,
 				noMatchFlow = data.noMatch;
 
-			contentHtml.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(contentHtml);
 
 			contentHtml.find('.carrier-choice').on('click', function() {
 				var $this = $(this),

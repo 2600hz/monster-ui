@@ -28,7 +28,8 @@ define(function(require){
 			container.empty()
 					 .append(template);
 
-			template.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(template);
+
 			template.find('.grid-time').sortable({
 				items: '.grid-time-row:not(.title)',
 				placeholder: 'grid-time-row-placeholder'

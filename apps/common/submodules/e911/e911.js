@@ -18,8 +18,6 @@ define(function(require){
 				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.dash_e911 || {})),
 				popup;
 
-			popupHtml.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
-
 			popupHtml.find('#postal_code').blur(function() {
 				$.getJSON('http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?', { postalcode: $(this).val() }, function(response) {
 					if (response && response.postalcodes.length && response.postalcodes[0].placeName) {

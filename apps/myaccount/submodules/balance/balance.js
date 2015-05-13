@@ -381,7 +381,7 @@ define(function(require){
 				autoRecharge = data.topup.enabled || false,
 				autoRechargeSwitch = parent.find('#auto_recharge_trigger');
 
-			parent.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(parent);
 
 			autoRechargeSwitch.on('change', function() {
 				if($(this).is(':checked')) {
