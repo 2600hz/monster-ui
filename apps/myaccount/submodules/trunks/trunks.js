@@ -71,7 +71,7 @@ define(function(require){
 					},
 					trunksInboundView = $(monster.template(self, 'trunks-inbound', dataTemplate));
 
-				trunksInboundView.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+				monster.ui.tooltips(trunksInboundView);
 
 				trunksInboundView.find('#slider_inbound').slider({
 					min: 0,
@@ -137,7 +137,7 @@ define(function(require){
 					},
 					trunksOutboundView = $(monster.template(self, 'trunks-outbound', dataTemplate));
 
-				trunksOutboundView.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+				monster.ui.tooltips(trunksOutboundView);
 
 				trunksOutboundView.find('#slider_outbound').slider({
 					min: 0,
@@ -204,7 +204,7 @@ define(function(require){
 					},
 					trunksTwowayView = $(monster.template(self, 'trunks-twoway', dataTemplate));
 
-				trunksTwowayView.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+				monster.ui.tooltips(trunksTwowayView);
 
 				trunksTwowayView.find('#slider_twoway').slider({
 					min: 0,

@@ -1090,12 +1090,14 @@ define(function(require){
 				}
 
 				dataTemplate.tools = sortByWeight(options);
-
 				wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', dataTemplate));
 
-				wysiwygTemplate
-					.find('a[title]')
-					.tooltip({container: 'body'});
+				monster.ui.tooltips(wysiwygTemplate, {
+					selector: 'a[title]',
+					options: {
+						container: 'body'
+					}
+				});
 
 				if (options.hasOwnProperty('fontColor')) {
 					wysiwygTemplate.find('.color-menu a').each(function(idx, el) {
@@ -1409,9 +1411,28 @@ define(function(require){
 				i18n = monster.apps.core.i18n.active(),
 				template = $(monster.template(monster.apps.core, 'monster-results', data));
 
-			template.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(template);
 
 			return template;
+		},
+
+		/**
+		 * @desc Helper that will load the tooltip of a template only when we mouseover them by default.
+		 * @param target - mandatory jQuery Object
+		 * @param args - optional object including options for this helper
+		 * args.selector - optional, to change the default CSS selector that will find the tooltips, defaults to '[data-toggle="tooltip"]'
+		 * args.options - optional, to add some options to the Bootstrap tooltips,
+		 * args.trigger - optional, to change the default trigger of the tooltip, defaults to 'mouseover'
+		 */
+		tooltips: function(target, args) {
+			var args = args || {},
+				selector = args.selector || '[data-toggle="tooltip"]',
+				options = args.options || {},
+				trigger = args.trigger || 'mouseover';
+
+			target.on(trigger, selector + ':not(.monster-tooltip-loaded)', function(e) {
+				$(this).data('isTooltipLoaded', true).tooltip(options).addClass('monster-tooltip-loaded').trigger(trigger);
+			});
 		}
 	};
 

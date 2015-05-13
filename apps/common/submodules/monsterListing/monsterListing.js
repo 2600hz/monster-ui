@@ -21,7 +21,7 @@ define(function(require){
 
 			layout.find('.grid-content').append(monster.template(self, formattedData.templateName, formattedData));
 
-			layout.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(layout);
 			layout.find('.empty-search-row').hide();
 
 			if(container) {

@@ -248,7 +248,7 @@ define(function(require){
 				};
 
 			/* On init */
-			parent.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(parent);
 
 			if(dataNumbers.viewType === 'pbx') {
 				parent.find('.list-numbers[data-type="spare"]').hide();

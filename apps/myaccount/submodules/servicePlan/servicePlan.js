@@ -116,7 +116,7 @@ define(function(require){
 		servicePlanBindEvents: function(parent) {
 			var self = this;
 
-			parent.find('.icon-question-sign[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(parent);
 
 			parent.find('.action-number#download').on('click', function() {
 				window.location.href = self.apiUrl+'accounts/'+self.accountId+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.authToken;

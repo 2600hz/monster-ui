@@ -51,7 +51,7 @@ define(function(require){
 					servicePlan: servicePlanData
 				}));
 
-			template.find('[data-toggle="tooltip"]').tooltip();
+			monster.ui.tooltips(template);
 
 			container.empty().append(template);
 
