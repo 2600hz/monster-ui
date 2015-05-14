@@ -88,26 +88,59 @@ define(function(require){
 				currentApp = navbar.find('#main_topbar_current_app'),
 				defaultApp;
 
-			_.each(monster.apps.auth.installedApps, function(val) {
-				if ( val.name === appName ) {
-					defaultApp = val;
-				}
-			});
+			if (appName === 'myaccount') {
+				var myaccount = {
+						name: appName,
+						label: 'Control Center'
+					};
 
-			if ( appName === 'appstore' ) {
-				currentApp.empty();
-			} else if ( currentApp.is(':empty') ) {
-				currentApp.append(monster.template(self, 'current-app', defaultApp));
+				if (currentApp.is(':empty')) {
+					currentApp.append(monster.template(self, 'current-app', myaccount));
 
-				navbar.find('#main_topbar_current_app_name').fadeIn(100);
-			} else {
-				navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-					currentApp
-						.empty()
-						.append(monster.template(self, 'current-app', defaultApp));
+					navbar
+						.find('#main_topbar_current_app_name')
+						.data('originalName', 'appstore');
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+				}
+				else {
+					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
+
+					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
+						currentApp
+							.empty()
+							.append(monster.template(self, 'current-app', myaccount));
+
+						navbar
+							.find('#main_topbar_current_app_name')
+							.data('originalName', originalName);
+
+						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+					});
+				}
+			}
+			else {
+				_.each(monster.apps.auth.installedApps, function(val) {
+					if ( val.name === appName ) {
+						defaultApp = val;
+					}
 				});
+
+				if ( appName === 'appstore' ) {
+					currentApp.empty();
+				} else if ( currentApp.is(':empty') ) {
+					currentApp.append(monster.template(self, 'current-app', defaultApp));
+
+					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+				} else {
+					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
+						currentApp
+							.empty()
+							.append(monster.template(self, 'current-app', defaultApp));
+
+						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+					});
+				}
 			}
 		},
 
@@ -170,13 +203,21 @@ define(function(require){
 			});
 
 			container.find('#main_topbar_current_app').on('click', function() {
-				monster.pub('myaccount.hide');
-				monster.apps.load($(this).find('#main_topbar_current_app_name').data('name'), function(app) {
-					app.render();
-				});
+				var appName = $(this).find('#main_topbar_current_app_name').data('name');
+
+				if (appName === 'myaccount') {
+					monster.apps.load(appName, function(app) {
+						app.renderDropdown(false);
+					});
+				}
+				else {
+					monster.apps.load(appName, function(app) {
+						app.render();
+					});
+				}
 			});
 
-			container.find('main_topbar_brand').on('click', function() {
+			container.find('#main_topbar_brand').on('click', function() {
 				var appName = monster.apps.auth.defaultApp;
 
 				if(appName) {
