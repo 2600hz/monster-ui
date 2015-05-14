@@ -289,5 +289,8 @@
 			"success": "Succès",
 			"error": "Erreur"
 		}
-	}
+	},
+	"__comment": "UI-1474: Show the name of myaccount app when the dropdown is open and update click event accordingly",
+	"__version": "v3.20_s5",
+	"controlCenter": "Centre de Contrôle"
 }
