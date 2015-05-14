@@ -67,6 +67,7 @@ define(function(require){
 			self.bindEvents(mainTemplate);
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
+			self.displayFavicon();
 
 			container.append(mainTemplate);
 
@@ -242,6 +243,43 @@ define(function(require){
 				},
 				error: function(error) {
 					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.png")');
+				}
+			});
+		},
+
+		displayFavicon: function() {
+			var self = this,
+				domain = window.location.hostname,
+				apiUrl = monster.config.api.default,
+				changeFavIcon = function(src) {
+					var link = document.createElement('link'),
+						oldLink = document.getElementById('dynamicFavicon');
+
+					link.id = 'dynamicFavicon';
+					link.rel = 'shortcut icon';
+					link.href = src;
+
+					if (oldLink) {
+						document.head.removeChild(oldLink);
+					}
+
+					document.head.appendChild(link);
+				};
+
+			self.callApi({
+				resource: 'whitelabel.getIconByDomain',
+				data: {
+					domain: domain,
+					generateError: false,
+					dataType: '*'
+				},
+				success: function(_data) {
+					var src = apiUrl + 'whitelabel/' + domain + '/icon?_='+new Date().getTime();
+					changeFavIcon(src);
+				},
+				error: function(error) {
+					var src = 'apps/core/style/static/images/favicon.png';
+					changeFavIcon(src);
 				}
 			});
 		},
