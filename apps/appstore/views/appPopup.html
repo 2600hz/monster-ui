@@ -44,9 +44,21 @@
 				</div>
 				<div class="permissions-bloc">
 					<div class="permissions-title">{{ i18n.permissions.title }}</div>
-					<label><input id="app_popup_all_users_radiobtn" type="radio" name="permissions" value="all" checked>{{ i18n.permissions.all }}</label>
-					<label><input id="app_popup_admin_only_radiobtn" type="radio" name="permissions" value="admins">{{ i18n.permissions.admins }}</label>
-					<label><input id="app_popup_specific_users_radiobtn" type="radio" name="permissions" value="specific">{{ i18n.permissions.specific }}</label>
+					<div>
+						{{#monsterRadio i18n.permissions.all}}
+						<input id="app_popup_all_users_radiobtn" type="radio" name="permissions" value="all" checked>
+						{{/monsterRadio}}
+					</div>
+					<div>
+						{{#monsterRadio i18n.permissions.admins}}
+						<input id="app_popup_admin_only_radiobtn" type="radio" name="permissions" value="admins">
+						{{/monsterRadio}}
+					</div>
+					<div>
+						{{#monsterRadio i18n.permissions.specific}}
+						<input id="app_popup_specific_users_radiobtn" type="radio" name="permissions" value="specific">
+						{{/monsterRadio}}
+					</div>
 					<div class="permissions-link">
 						<a href="#" id="app_popup_select_users_link">No selected user</a>
 					</div>

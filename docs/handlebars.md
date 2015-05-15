@@ -156,7 +156,7 @@ This helper allows you to generate a switch from a simple checkbox.
 Any property (class, id, checked, data-something ,etc...) set on the input will be conserved.
 	
 ##### monsterCheckbox
-This helper allows you to generate a pretty checkbox from a simple checkbox.
+This helper allows you to generate a pretty checkbox from a simple checkbox input.
 
 ```handlebars
 {{#monsterCheckbox}}
@@ -179,6 +179,24 @@ This helper allows you to generate a wrapper around your text, with a pre-set de
 First argument is optional and defaults to 'info'. Choices are 'info', 'question', 'error', 'warning'. Error will display a wrapper of the red color, Warning will display a wrapper of the yellow color, and question will show a question mark instead of the standard info icon.
 
 Second argument is optional and let you define a className that will be added to the main wrapper so you can apply some CSS rules to it.
+
+##### monsterRadio
+Similar to monsterCheckbox, this helper allows you to generate a pretty radio button from a simple radio input.
+
+```handlebars
+{{#monsterRadio}}
+	<input type="radio" name="myRadioName" />
+{{/monsterRadio}}
+```
+
+Any property (class, id, checked, data-something ,etc...) set on the input will be conserved.
+You can also provide parameters to define a label, set its positioning, and set the size of the radio. All optional.
+
+```handlebars
+{{#monsterRadio "large-radio" "prepend-label" "My Radio Button's label"}}
+	<input type="radio" name="myRadioName" />
+{{/monsterRadio}}
+```
 
 ```handlebars
 {{#monsterText}} Monster is <h3>awesome</h3> {{/monsterText}}

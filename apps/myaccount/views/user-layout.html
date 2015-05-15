@@ -154,16 +154,19 @@
 								<label class="control-label">{{ i18n.user.dateFormatTitle }}</label>
 								<div class="controls checkbox-container">
 									<label>
+										{{#monsterRadio i18n.user.dateFormats.mdy}}
 										<input type="radio" value="mdy" name="ui_flags.date_format" checked />
-										<span>{{ i18n.user.dateFormats.mdy }}</span>
+										{{/monsterRadio}}
 									</label>
 									<label>
+										{{#monsterRadio i18n.user.dateFormats.dmy}}
 										<input type="radio" value="dmy" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'dmy'}}checked{{/compare}} />
-										<span>{{ i18n.user.dateFormats.dmy }}</span>
+										{{/monsterRadio}}
 									</label>
 									<label>
+										{{#monsterRadio i18n.user.dateFormats.ymd}}
 										<input type="radio" value="ymd" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'ymd'}}checked{{/compare}} />
-										<span>{{ i18n.user.dateFormats.ymd }}</span>
+										{{/monsterRadio}}
 									</label>
 								</div>
 							</div>
