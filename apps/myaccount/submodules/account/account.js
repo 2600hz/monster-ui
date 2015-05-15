@@ -27,22 +27,6 @@ define(function(require){
 		accountBindEvents: function(template, data) {
 			var self = this;
 
-			monster.pub('common.carrierSelector', {
-				container: template.find('#carrierSelectorContainer'),
-				data: { 
-					noMatch: data.noMatch,
-					accountData: data.account
-				},
-				callbackAfterSave: function(data) {
-					// Refresh page and highlight field
-					self._accountRenderContent({ 
-						callback: function(accountTemplate) {
-							self.highlightField(accountTemplate, 'carrier');
-						}
-					});
-				}
-			});
-
 			timezone.populateDropdown(template.find('#account_timezone'), data.account.timezone);
 			template.find('#account_timezone').chosen({ search_contains: true, width: '220px' });
 
@@ -118,17 +102,7 @@ define(function(require){
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
 
-			monster.pub('common.carrierSelector.getDescription', {
-				data: {
-					noMatch: data.noMatch,
-					accountData: data.account
-				},
-				callback: function(description) {
-					data.carrierDescription = description;
-
-					globalCallback && globalCallback(data);
-				}
-			});
+			globalCallback && globalCallback(data);
 		}
 	};
 
