@@ -141,6 +141,7 @@ define(function(require){
 						templateData.cssClass = 'monster-checkbox-large';
 						break;
 					case 'prepend-label':
+					case 'label-prepend':
 						templateData.prepend = true;
 						break;
 					default:
@@ -151,6 +152,33 @@ define(function(require){
 		}
 
 		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+	});
+
+	Handlebars.registerHelper('monsterRadio', function() {
+		var templateData = {
+			cssClass: 'monster-radio',
+			checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+		};
+
+		for(var i=0; i<arguments.length-1; i++) {
+			if(_.isString(arguments[i])) {
+				switch(arguments[i]) {
+					case 'large-radio':
+					case 'radio-large':
+						templateData.cssClass = 'monster-radio-large';
+						break;
+					case 'prepend-label':
+					case 'label-prepend':
+						templateData.prepend = true;
+						break;
+					default:
+						templateData.label = arguments[i];
+						break;
+				}
+			}
+		}
+
+		return monster.template(monster.apps.core, 'monster-radio-template', templateData);
 	});
 
 	Handlebars.registerHelper('monsterText', function(type, className) {
