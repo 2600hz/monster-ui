@@ -6,7 +6,7 @@
 		<div class="monster-listing-box" data-id="{{this.id}}" data-search="{{this.id}} {{this.name}}">
 			<div class="checkbox-container">
 			{{#if ../singleSelect}}
-				<input type="radio" name="listingbox"></input>
+				{{#monsterRadio}}<input type="radio" name="listingbox"></input>{{/monsterRadio}}
 			{{else}}
 				{{#monsterCheckbox}}<input type="checkbox"></input>{{/monsterCheckbox}}
 			{{/if}}

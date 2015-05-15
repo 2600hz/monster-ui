@@ -67,6 +67,7 @@ define(function(require){
 			self.bindEvents(mainTemplate);
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
+			self.displayFavicon();
 
 			container.append(mainTemplate);
 
@@ -87,26 +88,59 @@ define(function(require){
 				currentApp = navbar.find('#main_topbar_current_app'),
 				defaultApp;
 
-			_.each(monster.apps.auth.installedApps, function(val) {
-				if ( val.name === appName ) {
-					defaultApp = val;
-				}
-			});
+			if (appName === 'myaccount') {
+				var myaccount = {
+						name: appName,
+						label: 'Control Center'
+					};
 
-			if ( appName === 'appstore' ) {
-				currentApp.empty();
-			} else if ( currentApp.is(':empty') ) {
-				currentApp.append(monster.template(self, 'current-app', defaultApp));
+				if (currentApp.is(':empty')) {
+					currentApp.append(monster.template(self, 'current-app', myaccount));
 
-				navbar.find('#main_topbar_current_app_name').fadeIn(100);
-			} else {
-				navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-					currentApp
-						.empty()
-						.append(monster.template(self, 'current-app', defaultApp));
+					navbar
+						.find('#main_topbar_current_app_name')
+						.data('originalName', 'appstore');
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+				}
+				else {
+					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
+
+					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
+						currentApp
+							.empty()
+							.append(monster.template(self, 'current-app', myaccount));
+
+						navbar
+							.find('#main_topbar_current_app_name')
+							.data('originalName', originalName);
+
+						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+					});
+				}
+			}
+			else {
+				_.each(monster.apps.auth.installedApps, function(val) {
+					if ( val.name === appName ) {
+						defaultApp = val;
+					}
 				});
+
+				if ( appName === 'appstore' ) {
+					currentApp.empty();
+				} else if ( currentApp.is(':empty') ) {
+					currentApp.append(monster.template(self, 'current-app', defaultApp));
+
+					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+				} else {
+					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
+						currentApp
+							.empty()
+							.append(monster.template(self, 'current-app', defaultApp));
+
+						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+					});
+				}
 			}
 		},
 
@@ -169,13 +203,21 @@ define(function(require){
 			});
 
 			container.find('#main_topbar_current_app').on('click', function() {
-				monster.pub('myaccount.hide');
-				monster.apps.load($(this).find('#main_topbar_current_app_name').data('name'), function(app) {
-					app.render();
-				});
+				var appName = $(this).find('#main_topbar_current_app_name').data('name');
+
+				if (appName === 'myaccount') {
+					monster.apps.load(appName, function(app) {
+						app.renderDropdown(false);
+					});
+				}
+				else {
+					monster.apps.load(appName, function(app) {
+						app.render();
+					});
+				}
 			});
 
-			container.find('main_topbar_brand').on('click', function() {
+			container.find('#main_topbar_brand').on('click', function() {
 				var appName = monster.apps.auth.defaultApp;
 
 				if(appName) {
@@ -242,6 +284,43 @@ define(function(require){
 				},
 				error: function(error) {
 					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.png")');
+				}
+			});
+		},
+
+		displayFavicon: function() {
+			var self = this,
+				domain = window.location.hostname,
+				apiUrl = monster.config.api.default,
+				changeFavIcon = function(src) {
+					var link = document.createElement('link'),
+						oldLink = document.getElementById('dynamicFavicon');
+
+					link.id = 'dynamicFavicon';
+					link.rel = 'shortcut icon';
+					link.href = src;
+
+					if (oldLink) {
+						document.head.removeChild(oldLink);
+					}
+
+					document.head.appendChild(link);
+				};
+
+			self.callApi({
+				resource: 'whitelabel.getIconByDomain',
+				data: {
+					domain: domain,
+					generateError: false,
+					dataType: '*'
+				},
+				success: function(_data) {
+					var src = apiUrl + 'whitelabel/' + domain + '/icon?_='+new Date().getTime();
+					changeFavIcon(src);
+				},
+				error: function(error) {
+					var src = 'apps/core/style/static/images/favicon.png';
+					changeFavIcon(src);
 				}
 			});
 		},

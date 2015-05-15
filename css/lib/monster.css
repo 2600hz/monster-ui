@@ -261,10 +261,11 @@ h1 {
 }
 
 /************************************************************/
-/************************ CHECKBOXES ************************/
+/******************* CHECKBOXES & RADIOS ********************/
 /************************************************************/
 
-*[class*='monster-checkbox'] {
+label[class*='monster-checkbox'],
+label[class*='monster-radio'] {
 	position: relative;
 	display: inline-block;
 	min-width: 14px;
@@ -272,43 +273,60 @@ h1 {
 	margin: 0;
 	cursor: pointer;
 }
-*[class*='monster-checkbox'] > input {
+label[class*='monster-checkbox'] > input,
+label[class*='monster-radio'] > input {
 	position: absolute;
 	width: 0;
 	opacity: 0;
 }
-*[class*='monster-checkbox'] > span {
-	line-height: 20px;
+label[class*='monster-checkbox'] > span,
+label[class*='monster-radio'] > span {
 	display: inline-block;
+	line-height: 20px;
 	height: 20px;
 	margin: 0 0 0 14px;
 	padding: 0 0 0 6px;
 }
-*[class*='monster-checkbox'] > i {
+label[class*='monster-checkbox'] > i,
+label[class*='monster-radio'] > i {
+	box-sizing: border-box;
 	position: absolute;
 	top: 3px;
 	left: 0;
-	box-sizing: border-box;
 	width: 14px;
 	height: 14px;
 	border: solid 1px #606069;
 	border-radius: 2px;
 }
-*[class*='monster-checkbox'] > input:focus + i {
-	box-shadow: 0 0 2px 1px #0087e0;
+label[class*='monster-radio'] > i {
+	border-radius: 20px;
 }
-*[class*='monster-checkbox'] > input:checked + i {
+/*label[class*='monster-checkbox'] > input:focus + i {
+	box-shadow: 0 0 2px 1px #0087e0;
+}*/
+label[class*='monster-checkbox'] > input:checked + i,
+label[class*='monster-radio'] > input:checked + i {
 	border-color: #22a5ff;
 	background: #22a5ff;
 }
-*[class*='monster-checkbox'] > input:checked + i:after {
+label[class*='monster-checkbox'] > input:checked + i:after,
+label[class*='monster-radio'] > input:checked + i:after {
 	opacity: 1;
 }
-*[class*='monster-checkbox']:hover > input:not(:checked) + i:after {
+label[class*='monster-checkbox'] > input:focus + i:after,
+label[class*='monster-checkbox']:hover > input + i:after,
+label[class*='monster-radio'] > input:focus + i:after,
+label[class*='monster-radio']:hover > input + i:after {
 	opacity: 1;
 	border-color: #c0c0c9;
 }
-*[class*='monster-checkbox'] > i:after {
+label[class*='monster-checkbox'] > input:checked:focus + i:after,
+label[class*='monster-checkbox']:hover > input:checked + i:after,
+label[class*='monster-radio'] > input:checked:focus + i:after,
+label[class*='monster-radio']:hover > input:checked + i:after {
+	border-color: #e0e0e9;
+}
+label[class*='monster-checkbox'] > i:after {
 	position: absolute;
 	top: 2px;
 	left: 2px;
@@ -326,31 +344,54 @@ h1 {
 	border-right: none;
 	background: transparent;
 }
-.monster-checkbox-large {
+label[class*="monster-radio"] > i:after {
+	content: '';
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	background: #fff;
+	top: 3px;
+	left: 3px;
+	border-radius: 10px;
+	opacity: 0;
+}
+label.monster-checkbox-large,
+label.monster-radio-large {
 	min-width: 20px;
 }
-.monster-checkbox-large > span {
+label.monster-checkbox-large > span,
+label.monster-radio-large > span {
 	margin-left: 20px;
 }
-.monster-checkbox-large > i {
+label.monster-checkbox-large > i,
+label.monster-radio-large > i {
 	top: 0;
 	width: 20px;
 	height: 20px;
 }
-.monster-checkbox-large > i:after {
+label.monster-checkbox-large > i:after {
 	width: 10px;
 	height: 5px;
 	border-width: 4px;
 }
-*[class*='monster-checkbox'].prepend-label > i {
+label.monster-radio-large > i:after {
+	width: 10px;
+	height: 10px;
+	top: 4px;
+	left: 4px;
+}
+label[class*='monster-checkbox'].prepend-label > i,
+label[class*='monster-radio'].prepend-label > i {
 	right: 0;
 	left: initial;
 }
-*[class*='monster-checkbox'].prepend-label > span {
+label[class*='monster-checkbox'].prepend-label > span,
+label[class*='monster-radio'].prepend-label > span {
 	margin: 0 14px 0 0;
 	padding: 0 6px 0 0;
 }
-.monster-checkbox-large.prepend-label > span {
+.monster-checkbox-large.prepend-label > span,
+.monster-radio-large.prepend-label > span {
 	margin-right: 20px;
 }
 

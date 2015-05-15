@@ -261,17 +261,24 @@ define(function(require){
 			});
 		},
 
-		renderDropdown: function(callback) {
+		/**
+		 * Refresh myaccount information
+		 * @param  {boolean}   toggle   mandatory : toggle or not myaccount dropdown
+		 * @param  {Function} callback  optional  : callback called once dropdown is toggled
+		 */
+		renderDropdown: function(toggle, callback) {
 			var self = this,
 				countBadges = 3;
 
 			monster.pub('myaccount.refreshBadges', {
 				callback: function() {
-					/* when all the badges have been updated, display my account */
-					if(!--countBadges) {
-						self.toggle({
-							callback: callback
-						});
+					if (toggle) {
+						/* when all the badges have been updated, display my account */
+						if(!--countBadges) {
+							self.toggle({
+								callback: callback
+							});
+						}
 					}
 				}
 			});
@@ -322,7 +329,9 @@ define(function(require){
 								self.hide();
 							}
 							else {
-								self.renderDropdown();
+								self.renderDropdown(true, function() {
+									monster.pub('core.showAppName', 'myaccount');
+								});
 							}
 						}
 					}
@@ -442,6 +451,7 @@ define(function(require){
 			var self = this,
 				myaccount = myaccount || $(self.mainContainer);
 
+			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.removeClass('myaccount-open');
 			$('#monster-content').show();
@@ -471,7 +481,7 @@ define(function(require){
 
 			self.getBraintree(function(data) {
 				if(data.credit_cards.length === 0) {
-					self.renderDropdown(function() {
+					self.renderDropdown(true, function() {
 						var module = 'billing';
 
 						self.activateSubmodule({
