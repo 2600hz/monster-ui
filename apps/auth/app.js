@@ -424,24 +424,28 @@ define(function(require){
 					$('#monster-content').removeClass('monster-content');
 				}
 				loadWelcome = function() {
-					if(monster.config.whitelabel.custom_welcome) {
-						self.callApi({
-							resource: 'whitelabel.getWelcomeByDomain',
-							data: {
-								domain: window.location.hostname,
-								generateError: false
-							},
-							success: function(data, status) {
-								template.find('.left-div').empty().html(data);
-								callback();
-							},
-							error: function(data, status) {
-								callback();
-							}
-						});
-					} else {
-						callback();
+					// if(monster.config.whitelabel.custom_welcome) {
+					// 	self.callApi({
+					// 		resource: 'whitelabel.getWelcomeByDomain',
+					// 		data: {
+					// 			domain: window.location.hostname,
+					// 			generateError: false
+					// 		},
+					// 		success: function(data, status) {
+					// 			template.find('.left-div').empty().html(data);
+					// 			callback();
+					// 		},
+					// 		error: function(data, status) {
+					// 			callback();
+					// 		}
+					// 	});
+					// } else {
+					// 	callback();
+					// }
+					if(monster.config.whitelabel.custom_welcome_message) {
+						template.find('.left-div .hello').empty().html(monster.config.whitelabel.custom_welcome_message.replace(/\r?\n/g, '<br />'));
 					}
+					callback();
 				},
 				domain = window.location.hostname;
 
