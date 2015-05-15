@@ -125,7 +125,7 @@ define(function(require){
 					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
-                    args.callback && args.callback();
+					args.callback && args.callback();
 				},
 				installedApp = _.find(self.installedApps, function(val) {
 					return val.name === args.app.name;
@@ -138,24 +138,9 @@ define(function(require){
 				}
 			}
 
-			if(self.apiUrl !== args.app.apiUrl) {
-				/* Hacking the API URL */
-				self.callApi({
-					apiUrl: args.app.apiUrl,
-                    data: restData,
-					resource: 'auth.sharedAuth',
-                    success: function (json, xhr) {
-						args.app.authToken = json.auth_token;
+			args.app.authToken = this.authToken;
 
-						success(args.app);
-                    }
-                });
-			}
-			else {
-				args.app.authToken = this.authToken;
-
-				success(args.app);
-			}
+			success(args.app);
 		},
 
 		//Methods
