@@ -14,3 +14,7 @@
 	width: 80px;
 	margin-bottom: 0;
 }
+
+table.display thead th {
+	font-weight: 500;
+}

@@ -70,6 +70,9 @@
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
+		contactList: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
+		},
 		resourceTemplates: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/resource_templates' },
@@ -149,7 +152,8 @@
 		},
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' },
+			'listByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/cdrs'}
 		},
 		numbers: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
