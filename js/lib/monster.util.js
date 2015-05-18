@@ -118,7 +118,11 @@ define(function(require){
 		gregorianToDate: function(timestamp) {
 			var formattedResponse = undefined;
 
-			if(typeof timestamp === 'number') {
+			if(typeof timestamp === 'string') {
+				timestamp = parseInt(timestamp);
+			}
+
+			if(typeof timestamp === 'number' && !_.isNaN(timestamp)) {
 				formattedResponse = new Date((timestamp - 62167219200)*1000);
 			}
 
