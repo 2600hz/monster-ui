@@ -21,7 +21,7 @@ This method checks if a user is currently logged in and returns a boolean as a r
 if(monster.util.isLoggedIn()) { 
 	// do something if user is logged in 
 };
-
+```
 
 [monster]: ../../monster.md
 [util]: ../util.md

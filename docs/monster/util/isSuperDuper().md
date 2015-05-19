@@ -26,7 +26,7 @@ This method checks if a user is currently logged in on a Superduper account. By 
 if(monster.util.isSuperDuper()) { 
 	// do something if user is on a superduper account
 };
-
+```
 
 [monster]: ../../monster.md
 [util]: ../util.md

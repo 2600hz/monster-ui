@@ -21,7 +21,7 @@ This method checks if the current session is using the account that was used to 
 if(monster.util.isMasquerading()) { 
 	// do something specific for users who are using a sub-account.
 };
-
+```
 
 [monster]: ../../monster.md
 [util]: ../util.md
