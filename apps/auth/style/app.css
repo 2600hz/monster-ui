@@ -393,3 +393,8 @@
 #password_update .help-box {
 	margin: 15px 25px;
 }
+
+#password_recovery .cancel-link,
+#password_update .cancel-link {
+	margin-right: 10px;
+}

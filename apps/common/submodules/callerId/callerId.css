@@ -27,3 +27,8 @@
 .trunkstore_popup.cnam .help-box {
 	margin-top: 20px;
 }
+
+
+.trunkstore_popup.cnam .popup-actions .cancel-link {
+	margin-right: 10px;
+}
