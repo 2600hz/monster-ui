@@ -24,3 +24,7 @@
 .trunkstore_popup.number-prepend .help-box {
 	margin-top: 20px;
 }
+
+.trunkstore_popup.number-prepend .popup-actions .cancel-link {
+	margin-right: 10px;
+}
