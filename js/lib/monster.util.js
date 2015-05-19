@@ -263,6 +263,38 @@ define(function(require){
 			return formattedString;
 		},
 
+		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
+		isSuperDuper: function(account) {
+			var self = this,
+				isSuperDuper = false,
+				account = account || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			if(account.hasOwnProperty('superduper_admin')) {
+				isSuperDuper = account.superduper_admin;
+			}
+
+			return isSuperDuper;
+		},
+
+		// Function returning a Boolean indicating whether the end-user is logged in or not.
+		isLoggedIn: function() {
+			var self = this;
+
+			return monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('authToken') && typeof monster.apps.auth.authToken !== 'undefined';
+		},
+		
+		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
+		isMasquerading: function() {
+			var self = this,
+				isMasquerading = false;
+
+			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
+				isMasquerading = !(monster.apps.auth.originalAccount.id === monster.apps.auth.currentAccount.id);
+			}
+
+			return isMasquerading;
+		},
+
 		/****************** Helpers not documented because people shoudln't need to use them *******************/
 
 		// Helper only used in conference app, takes seconds and transforms it into a timer
@@ -540,6 +572,14 @@ define(function(require){
 			return (h*3600 + m*60).toString();
 		},
 
+		logoutAndReload: function() {
+			var self = this;
+
+			$.cookie('monster-auth', null);
+
+			window.location.reload();
+		},
+
 		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
 		// internal function used by different apps to set their own help flags.
 		helpFlags: {
@@ -564,46 +604,6 @@ define(function(require){
 					return user;
 				}
 			}
-		},
-
-		logoutAndReload: function() {
-			var self = this;
-
-			$.cookie('monster-auth', null);
-
-			window.location.reload();
-		},
-
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isSuperDuper: function(account) {
-			var self = this,
-				isSuperDuper = false,
-				account = account || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if(account.hasOwnProperty('superduper_admin')) {
-				isSuperDuper = account.superduper_admin;
-			}
-
-			return isSuperDuper;
-		},
-
-		// Function returning a Boolean indicating whether the end-user is logged in or not.
-		isLoggedIn: function() {
-			var self = this;
-
-			return monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('authToken') && typeof monster.apps.auth.authToken !== 'undefined';
-		},
-		
-		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
-		isMasquerading: function() {
-			var self = this,
-				isMasquerading = false;
-
-			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
-				isMasquerading = !(monster.apps.auth.originalAccount.id === monster.apps.auth.currentAccount.id);
-			}
-
-			return isMasquerading;
 		},
 
 		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
