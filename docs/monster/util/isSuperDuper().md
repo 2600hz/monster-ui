@@ -8,6 +8,7 @@
 ### Syntax
 ```javascript
 monster.util.isSuperDuper([account]);
+```
 
 ### Parameters
 * `account` (optional)
