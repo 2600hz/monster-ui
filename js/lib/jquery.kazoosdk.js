@@ -420,6 +420,15 @@
 			rurlData = /\{([^\}]+)\}/g,
 			data = $.extend({}, options.data);
 
+		if(options.hasOwnProperty('uploadProgress')) {
+			settings.xhr = function() {
+				var xhr = new window.XMLHttpRequest();
+				//Upload progress
+				xhr.upload.addEventListener("progress", options.uploadProgress, false);
+				return xhr;
+			}
+		}
+
 		settings.url = settings.url.replace(rurlData, function (m, key) {
 			if (key in data) {
 				mappedKeys.push(key);
