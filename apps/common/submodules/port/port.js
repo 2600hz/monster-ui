@@ -104,7 +104,7 @@ define(function(require){
 				if (section.hasClass('active')) {
 					section.find('.requests-wrapper').slideUp(function() {
 						section.find('.left-part i')
-							.removeClass('icon-chevron-down icon-white')
+							.removeClass('icon-chevron-down monster-white')
 							.addClass('icon-chevron-right');
 
 						section.removeClass('active');
@@ -115,7 +115,7 @@ define(function(require){
 					section.find('.requests-wrapper').slideDown(function() {
 						section.find('.left-part i')
 							.removeClass('icon-chevron-right')
-							.addClass('icon-chevron-down icon-white');
+							.addClass('icon-chevron-down monster-white');
 
 						section.removeClass('animate');
 						section.addClass('active');

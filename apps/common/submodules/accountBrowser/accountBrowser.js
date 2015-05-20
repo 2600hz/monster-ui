@@ -104,7 +104,7 @@ define(function(require){
 				addBackButton = args.addBackButton,
 				accountList = template.find('.account-list'),
 				isLoading = false,
-				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spin icon-spinner"></i></li>');
+				loader = $('<li class="content-centered account-list-loader"> <i class="icon-spinning icon-spinner"></i></li>');
 
 			setTimeout(function () { template.find('.search-query').focus(); });
 

@@ -341,7 +341,7 @@ define(function(require){
 					break;
 				default:
 					closeBtnText = '<span class="icon-stack">'
-								 + '<i class="icon-circle icon-stack-base icon-white"></i>'
+								 + '<i class="icon-circle icon-stack-base monster-white"></i>'
 								 + '<i class="icon-remove-sign"></i>'
 								 + '</span>';
 					break;

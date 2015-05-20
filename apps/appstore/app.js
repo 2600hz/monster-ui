@@ -298,15 +298,15 @@ define(function(require){
 						errorFunction = function() {
 							icon.stop(true, true)
 								.show()
-								.removeClass('icon-spin icon-spinner')
-								.addClass('icon-remove icon-red')
+								.removeClass('icon-spinning icon-spinner')
+								.addClass('icon-remove monster-red')
 								.fadeOut(3000);
 							errorCallback && errorCallback();
 						};
 
 					icon.stop(true, true)
-						.removeClass('icon-remove icon-red icon-ok icon-green')
-						.addClass('icon-spinner icon-spin')
+						.removeClass('icon-remove monster-red icon-ok monster-green')
+						.addClass('icon-spinner icon-spinning')
 						.show();
 
 					self.callApi({
@@ -333,8 +333,8 @@ define(function(require){
 									appstoreData.account.apps[app.id] = _data.data;
 									icon.stop(true, true)
 										.show()
-										.removeClass('icon-spin icon-spinner')
-										.addClass('icon-ok icon-green')
+										.removeClass('icon-spinning icon-spinner')
+										.addClass('icon-ok monster-green')
 										.fadeOut(3000);
 
 									$('#apploader').remove();

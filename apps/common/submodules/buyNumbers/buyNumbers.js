@@ -115,7 +115,7 @@ define(function(require){
 						processingDiv = container.find('#processing_purchase_div');
 					
 					processingDiv.show();
-					processingDiv.find('i.icon-spinner').addClass('icon-spin');
+					processingDiv.find('i.icon-spinner').addClass('icon-spinning');
 					
 					self.callApi({
 						resource: 'numbers.activateBlock',
@@ -946,11 +946,11 @@ define(function(require){
 			if(toggle) {
 				unavailableDiv.hide();
 				checkingDiv.show();
-				checkingDiv.find('i.icon-spinner').addClass('icon-spin');
+				checkingDiv.find('i.icon-spinner').addClass('icon-spinning');
 			} else {
 				unavailableDiv.show();
 				checkingDiv.hide();
-				checkingDiv.find('i.icon-spinner').removeClass('icon-spin');
+				checkingDiv.find('i.icon-spinner').removeClass('icon-spinning');
 			}
 		},
 
