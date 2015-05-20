@@ -6,6 +6,13 @@ define(function(){
 	var apps = {
 		defaultLanguage: 'en-US',
 
+		// Global var used to show the loading gif
+		uploadProgress: {
+			amount: 0,
+			active: false,
+			runningApis: 0
+		},
+
 		monsterizeApp: function(app, callback) {
 			var self = this;
 
@@ -86,6 +93,69 @@ define(function(){
 						case 'billing.update': {
 							if(monster.config.disableBraintree) {
 								cancelCall = true;
+							}
+							break;
+						}
+
+						// APIs that will trigger the upload progress bar
+						case 'media.upload':
+						case 'port.createAttachment':
+						case 'port.updateAttachment':
+						case 'whitelabel.updateLogo':
+						case 'whitelabel.updateIcon': {
+							if(!params.data.hasOwnProperty('uploadProgress')) {
+								self.uploadProgress.runningApis++;
+								var progressId = "progress_" + Math.trunc(Math.random()*Math.pow(10,16)),
+									container = $('#upload_progress'),
+									hideContainer = function() {
+										if(!self.uploadProgress.active && self.uploadProgress.runningApis === 0) {
+											container.hide();
+										}
+									};
+
+								params.data.uploadProgress = function(progress) {
+									if(progress.lengthComputable) {
+										var progressValue = progress.loaded/progress.total * 100,
+											progressBar = container.find('#'+progressId);
+										if(progressValue === 100) {
+											if(self.uploadProgress.active && progressBar.length) {
+												progressBar.children('div').width('99%')
+																		   .html('99%');
+												self.uploadProgress.amount--;
+												if(self.uploadProgress.amount === 0) {
+													self.uploadProgress.active = false;
+													hideContainer();
+												}
+											}
+										} else {
+											if(!self.uploadProgress.active) {
+												container.show();
+												self.uploadProgress.active = true;
+											}
+											if(!progressBar.length) {
+												progressBar = $('<div id="'+progressId+'" class="upload-progress-bar"><div>0%</div></div>');
+												container.find('.upload-progress-content').append(progressBar);
+												self.uploadProgress.amount++;
+											}
+											progressBar.children('div').width(progressValue+'%')
+																	   .html(Math.floor(progressValue)+'%');
+										}
+									}
+								}
+
+								successCallback = function(data, status) {
+									self.uploadProgress.runningApis--;
+									container.find('#'+progressId).remove();
+									hideContainer();
+									params.success && params.success(data, status);
+								}
+
+								errorCallback = function(error, status) {
+									self.uploadProgress.runningApis--;
+									container.find('#'+progressId).remove();
+									hideContainer();
+									params.error && params.error(error, status);
+								}
 							}
 							break;
 						}

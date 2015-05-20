@@ -491,5 +491,8 @@
 	},
 	"__comment": "UI-1474: Show the name of myaccount app when the dropdown is open and update click event accordingly",
 	"__version": "v3.20_s5",
-	"controlCenter": "Control Center"
+	"controlCenter": "Control Center",
+	"__comment": "UI-343: Added an uploading progress bar",
+	"__version": "v3.20_s5",
+	"uploadProgressTitle": "Uploading file(s)..."
 }
