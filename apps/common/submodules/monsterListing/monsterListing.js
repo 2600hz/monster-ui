@@ -21,7 +21,12 @@ define(function(require){
 
 			layout.find('.grid-content').append(monster.template(self, formattedData.templateName, formattedData));
 
-			monster.ui.tooltips(layout);
+			monster.ui.tooltips(layout, {
+				options: {
+					container: 'body'
+				}
+			});
+
 			layout.find('.empty-search-row').hide();
 
 			if(container) {
