@@ -341,8 +341,8 @@ define(function(require){
 					break;
 				default:
 					closeBtnText = '<span class="fa-stack">'
-								 + '<i class="fa fa-circle monster-white"></i>'
-								 + '<i class="fa fa-times-circle"></i>'
+								 + '<i class="fa fa-circle fa-stack-2x monster-white"></i>'
+								 + '<i class="fa fa-times-circle fa-stack-1x"></i>'
 								 + '</span>';
 					break;
 			}

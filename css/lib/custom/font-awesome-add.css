@@ -8,14 +8,9 @@ i[class~='icon-']::before {
 	line-height: normal;
 	text-decoration: none;
 }
+
 i.icon-small {
 	font-size: 14px;
-}
-i.icon-spinning {
-	-webkit-animation: 1s linear 0s normal none infinite spin;
-	   -moz-animation: 1s linear 0s normal none infinite spin;
-	     -o-animation: 1s linear 0s normal none infinite spin;
-	        animation: 1s linear 0s normal none infinite spin;
 }
 
 /* Custom icons */

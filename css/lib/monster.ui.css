@@ -333,7 +333,7 @@ label.monster-invalid {
 	width: 5px;
 	height: 30px;
 	margin: 5px 10px 0 0;
-	background: url('css/assets/drag.png');
+	background: url('../assets/drag.png');
 }
 .items-selector .box-selector .item-selector.ui-sortable-helper {
 	cursor: -webkit-grabbing;
