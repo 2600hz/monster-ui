@@ -298,7 +298,7 @@ define(function(require){
 						errorFunction = function() {
 							icon.stop(true, true)
 								.show()
-								.removeClass('icon-spinning icon-spinner')
+								.removeClass('icon-spinning fa-spinner')
 								.addClass('fa-times monster-red')
 								.fadeOut(3000);
 							errorCallback && errorCallback();
@@ -306,7 +306,7 @@ define(function(require){
 
 					icon.stop(true, true)
 						.removeClass('fa fa-times monster-red fa-check monster-green')
-						.addClass('icon-spinner icon-spinning')
+						.addClass('fa-spinner icon-spinning')
 						.show();
 
 					self.callApi({
@@ -333,7 +333,7 @@ define(function(require){
 									appstoreData.account.apps[app.id] = _data.data;
 									icon.stop(true, true)
 										.show()
-										.removeClass('icon-spinning icon-spinner')
+										.removeClass('icon-spinning fa-spinner')
 										.addClass('fa-check monster-green')
 										.fadeOut(3000);
 

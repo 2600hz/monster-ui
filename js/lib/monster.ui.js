@@ -340,8 +340,8 @@ define(function(require){
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
 				default:
-					closeBtnText = '<span class="icon-stack">'
-								 + '<i class="icon-circle icon-stack-base monster-white"></i>'
+					closeBtnText = '<span class="fa-stack">'
+								 + '<i class="fa fa-circle monster-white"></i>'
 								 + '<i class="fa fa-times-circle"></i>'
 								 + '</span>';
 					break;
@@ -890,7 +890,7 @@ define(function(require){
 						fontSize: {
 							weight: 10,
 							title: i18n.title.fontSize,
-							icon: 'icon-text-height',
+							icon: 'fa fa-text-height',
 							command: 'fontSize',
 							options: {
 								small: {
@@ -916,25 +916,25 @@ define(function(require){
 								bold: {
 									weight: 10,
 									title: i18n.title.bold,
-									icon: 'icon-bold',
+									icon: 'fa fa-bold',
 									command: 'bold'
 								},
 								italic: {
 									weight: 20,
 									title: i18n.title.italic,
-									icon: 'icon-italic',
+									icon: 'fa fa-italic',
 									command: 'italic'
 								},
 								underline: {
 									weight: 30,
 									title: i18n.title.underline,
-									icon: 'icon-underline',
+									icon: 'fa fa-underline',
 									command: 'underline'
 								},
 								strikethrough: {
 									weight: 40,
 									title: i18n.title.strikethrough,
-									icon: 'icon-strikethrough',
+									icon: 'fa fa-strikethrough',
 									command: 'strikethrough'
 								}
 							}
@@ -942,7 +942,7 @@ define(function(require){
 						fontColor: {
 							weight: 30,
 							title: i18n.title.fontColor,
-							icon: 'icon-font',
+							icon: 'fa fa-font',
 							command: 'foreColor',
 							options: [],
 							ante: '#'
@@ -950,30 +950,30 @@ define(function(require){
 						textAlign: {
 							weight: 40,
 							title: i18n.title.alignment,
-							icon: 'icon-file-text',
+							icon: 'fa fa-file-text',
 							options: {
 								left: {
 									weight: 10,
 									title: i18n.title.alignLeft,
-									icon: 'icon-align-left',
+									icon: 'fa fa-align-left',
 									command: 'justifyLeft'
 								},
 								center: {
 									weight: 20,
 									title: i18n.title.center,
-									icon: 'icon-align-center',
+									icon: 'fa fa-align-center',
 									command: 'justifyCenter'
 								},
 								right: {
 									weight: 30,
 									title: i18n.title.alignRight,
-									icon: 'icon-align-right',
+									icon: 'fa fa-align-right',
 									command: 'justifyRight'
 								},
 								justify: {
 									weight: 40,
 									title: i18n.title.justify,
-									icon: 'icon-align-justify',
+									icon: 'fa fa-align-justify',
 									command: 'justifyFull'
 								}
 							}
@@ -981,18 +981,18 @@ define(function(require){
 						list: {
 							weight: 50,
 							title: i18n.title.list,
-							icon: 'icon-list',
+							icon: 'fa fa-list',
 							options: {
 								unordered: {
 									weight: 10,
 									title: i18n.title.bulletList,
-									icon: 'icon-list-ul',
+									icon: 'fa fa-list-ul',
 									command: 'insertUnorderedList'
 								},
 								ordered: {
 									weight: 20,
 									title: i18n.title.numberList,
-									icon: 'icon-list-ol',
+									icon: 'fa fa-list-ol',
 									command: 'insertOrderedList'
 								}
 							}
@@ -1020,7 +1020,7 @@ define(function(require){
 								create: {
 									weight: 10,
 									title: i18n.title.createLink,
-									icon: 'icon-link',
+									icon: 'fa fa-link',
 									command: 'createLink'
 								},
 								delete: {
@@ -1043,13 +1043,13 @@ define(function(require){
 								undo: {
 									weight: 10,
 									title: i18n.title.undo,
-									icon: 'icon-undo',
+									icon: 'fa fa-undo',
 									command: 'undo'
 								},
 								redo: {
 									weight: 20,
 									title: i18n.title.redo,
-									icon: 'icon-repeat',
+									icon: 'fa fa-repeat',
 									command: 'redo'
 								}
 							}
@@ -1057,7 +1057,7 @@ define(function(require){
 						horizontalRule: {
 							weight: 100,
 							title: i18n.title.horizontalRule,
-							icon: 'icon-minus',
+							icon: 'fa fa-minus',
 							command: 'insertHorizontalRule'
 						},
 						macro: {
@@ -1389,7 +1389,7 @@ define(function(require){
 				
 				switch(display) {
 					case 'icon': {
-						strengthDisplay = $('<i class="monster-password-strength icon-lock icon-small" data-original-title="'+i18n.passwordStrength.empty+'" data-placement="'+tooltipPosition+'" data-toggle="tooltip"></i>');
+						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="'+i18n.passwordStrength.empty+'" data-placement="'+tooltipPosition+'" data-toggle="tooltip"></i>');
 						input.on('keyup keypress change', function(e) {
 							$.each(regexes, function(key, val) {
 								if(val.regex.test(input.val())) {

@@ -2,13 +2,13 @@
 .ui-accordion h3 .pull-right i {
 	margin: 8px 8px 0 0;
 }
-.ui-accordion .ui-accordion-header i.icon-chevron-down {
+.ui-accordion .ui-accordion-header i.fa-chevron-down {
 	display: none;
 }
-.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-right {
+.ui-accordion .ui-accordion-header.ui-state-active i.fa-chevron-right {
 	display: none;
 }
-.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-down {
+.ui-accordion .ui-accordion-header.ui-state-active i.fa-chevron-down {
 	display: inline-block;
 }
 

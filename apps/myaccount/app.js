@@ -659,7 +659,7 @@ define(function(require){
 
 			settingsItem.addClass('open');
 			link.find('.update .text').text(self.i18n.active().close);
-			link.find('.update i').removeClass('icon-cog').addClass('fa-times');
+			link.find('.update i').removeClass('fa-cog').addClass('fa-times');
 			settingsItem.find('.settings-item-content').slideDown('fast');
 
 			/* If there is no credit-card data, we skip the step that just displays the creditcard info */

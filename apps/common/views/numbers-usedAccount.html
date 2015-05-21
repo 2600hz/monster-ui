@@ -4,11 +4,11 @@
 			<div class="navbar">
 				<ul class="nav pull-right">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
 						<ul class="dropdown-menu">
-							<li><a class="cnam-number" href="#"><i class="icon-user"></i>{{ ../i18n.callerId.label }}</a></li>
-							<li><a class="e911-number" href="#"><i class="icon-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
-							<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../i18n.failover.label }}</a></li>
+							<li><a class="cnam-number" href="#"><i class="fa fa-user"></i>{{ ../i18n.callerId.label }}</a></li>
+							<li><a class="e911-number" href="#"><i class="fa fa-ambulance"></i>{{ ../i18n.e911.label }}</a></li>
+							<li><a class="failover-number" href="#"><i class="fa fa-thumbs-down"></i>{{ ../i18n.failover.label }}</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -39,7 +39,7 @@
 							<i class="icon-telicon-home-phone"></i>
 						{{else}}
 							{{#compare this.ownerType '===' 'conference'}}
-								<i class="icon-comments"></i>
+								<i class="fa fa-comments"></i>
 							{{/compare}}
 						{{/compare}}
 					{{/compare}}

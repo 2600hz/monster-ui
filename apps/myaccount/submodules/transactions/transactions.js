@@ -62,7 +62,7 @@ define(function(require){
 					transactionBox = current.parents('.transaction-box'),
 					expandable = transactionBox.first().find('.expandable');
 
-				current.find('.icon-stack-content').toggleClass('icon-plus icon-minus')
+				current.find('.fa-stack-content').toggleClass('fa-plus fa-minus')
 				transactionBox.toggleClass('open')
 				expandable.slideToggle('fast');
 			});

@@ -111,12 +111,12 @@
 .alert-dialog-advanced .details-box .headline i {
 	margin-right: 5px;
 }
-.alert-dialog-advanced .details-box .headline i.icon-angle-up,
-.alert-dialog-advanced .details-box .headline.active i.icon-angle-down {
+.alert-dialog-advanced .details-box .headline i.fa-angle-up,
+.alert-dialog-advanced .details-box .headline.active i.fa-angle-down {
 	display: none;
 }
-.alert-dialog-advanced .details-box .headline i.icon-angle-down,
-.alert-dialog-advanced .details-box .headline.active i.icon-angle-up {
+.alert-dialog-advanced .details-box .headline i.fa-angle-down,
+.alert-dialog-advanced .details-box .headline.active i.fa-angle-up {
 	display: inline-block;
 }
 .alert-dialog-advanced .details-box .error-details-wrapper {

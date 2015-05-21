@@ -115,7 +115,7 @@ define(function(require){
 						processingDiv = container.find('#processing_purchase_div');
 					
 					processingDiv.show();
-					processingDiv.find('i.icon-spinner').addClass('icon-spinning');
+					processingDiv.find('i.fa-spinner').addClass('icon-spinning');
 					
 					self.callApi({
 						resource: 'numbers.activateBlock',
@@ -402,7 +402,7 @@ define(function(require){
 				}
 
 				vanityInputDiv.children('i').hide();
-				vanityInputDiv.children('i.icon-spinner').show();
+				vanityInputDiv.children('i.fa-spinner').show();
 				searchButton.prop('disabled', true);
 				if(countryValidation) {
 					self.callApi({
@@ -424,20 +424,20 @@ define(function(require){
 								number = "";
 							}
 
-							vanityInputDiv.children('i.icon-spinner').hide();
+							vanityInputDiv.children('i.fa-spinner').hide();
 							searchButton.prop('disabled', false);
 						},
 						error: function(data, status) {
 							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 
-							vanityInputDiv.children('i.icon-spinner').hide();
+							vanityInputDiv.children('i.fa-spinner').hide();
 							searchButton.prop('disabled', false);
 						}
 					});
 				} else {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.partialNumAlert);
 					number = "";
-					vanityInputDiv.children('i.icon-spinner').hide();
+					vanityInputDiv.children('i.fa-spinner').hide();
 					searchButton.prop('disabled', false);
 				}
 			});
@@ -946,11 +946,11 @@ define(function(require){
 			if(toggle) {
 				unavailableDiv.hide();
 				checkingDiv.show();
-				checkingDiv.find('i.icon-spinner').addClass('icon-spinning');
+				checkingDiv.find('i.fa-spinner').addClass('icon-spinning');
 			} else {
 				unavailableDiv.show();
 				checkingDiv.hide();
-				checkingDiv.find('i.icon-spinner').removeClass('icon-spinning');
+				checkingDiv.find('i.fa-spinner').removeClass('icon-spinning');
 			}
 		},
 

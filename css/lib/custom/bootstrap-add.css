@@ -98,7 +98,7 @@
 .search-box {
 	line-height: 26px;
 }
-.search-box > i.icon-search {
+.search-box > i.fa-search {
 	position: absolute;
 	margin: 4px 0 0 8px;
 }
