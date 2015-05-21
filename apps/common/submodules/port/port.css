@@ -292,7 +292,7 @@ div#orders_list .collapse td:last-child i {
 	color: #ffffff;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
-	background-color:#22a5ff;
+	background:#22a5ff;
 }
 
 #orders_list .accounts-list .account-section.animate .account-header {
