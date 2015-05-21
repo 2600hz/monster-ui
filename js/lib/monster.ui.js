@@ -337,12 +337,12 @@ define(function(require){
 
 			switch(dialogType) {
 				case 'conference':
-					closeBtnText = '<i class="icon-remove icon-small"></i>';
+					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
 				default:
 					closeBtnText = '<span class="icon-stack">'
 								 + '<i class="icon-circle icon-stack-base monster-white"></i>'
-								 + '<i class="icon-remove-sign"></i>'
+								 + '<i class="fa fa-times-circle"></i>'
 								 + '</span>';
 					break;
 			}
@@ -1003,13 +1003,13 @@ define(function(require){
 								indent: {
 									weight: 10,
 									title: i18n.title.indent,
-									icon: 'icon-indent-right',
+									icon: 'fa fa-indent',
 									command: 'indent'
 								},
 								outdent: {
 									weight: 20,
 									title: i18n.title.reduceIndent,
-									icon: 'icon-indent-left',
+									icon: 'fa fa-outdent',
 									command: 'outdent'
 								}
 							}
@@ -1026,7 +1026,7 @@ define(function(require){
 								delete: {
 									weight: 20,
 									title: i18n.title.removeLink,
-									icon: 'icon-unlink',
+									icon: 'fa fa-chain-broken',
 									command: 'unlink'
 								}
 							}
@@ -1034,7 +1034,7 @@ define(function(require){
 						image: {
 							weight: 80,
 							title: i18n.title.upload,
-							icon: 'icon-picture',
+							icon: 'fa fa-picture-o',
 							command: 'insertImage'
 						},
 						editing: {

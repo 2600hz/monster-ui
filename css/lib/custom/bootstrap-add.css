@@ -131,7 +131,7 @@ table.table tr td {
 }
 
 /*************** TOOLTIPS ***************/
-.icon-question-sign[data-toggle='tooltip'] {
+.fa-question-circle[data-toggle='tooltip'] {
 	font-size: 14px;
 	margin-top: 4px;
 	color: #888;

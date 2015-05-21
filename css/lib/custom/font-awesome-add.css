@@ -3,8 +3,8 @@ i {
 	color: #555;
 }
 
-*[class^='icon-']::before,
-*[class*=' icon-']::before {
+i.fa,
+i[class~='icon-']::before {
 	line-height: normal;
 	text-decoration: none;
 }
@@ -25,6 +25,6 @@ i.fa-info-sign2::before {
 i.fa-question-sign2::before {
 	content: '?';
 }
-i.fa-warning-sign2:before {
+i.fa-warning-sign2::before {
 	content: '!';
 }

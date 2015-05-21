@@ -414,13 +414,13 @@ define(function(require){
 						},
 						success: function(data, status) {
 							if(data.data && data.data.length > 0) {
-								vanityInputDiv.children('i.icon-ok').show();
+								vanityInputDiv.children('i.fa-check').show();
 								vanitySearchDiv.find('#vanity_buy_button').show();
 								vanitySearchDiv.find('#back_to_vanity_search').show();
 								searchButton.hide();
 								vanityInputDiv.find('input:text').prop('disabled',true);
 							} else {
-								vanityInputDiv.children('i.icon-remove').show();
+								vanityInputDiv.children('i.fa-times').show();
 								number = "";
 							}
 

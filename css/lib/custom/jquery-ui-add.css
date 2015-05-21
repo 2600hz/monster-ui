@@ -59,7 +59,7 @@
 	font-size: 20px;
 	color: #626769;
 }
-.ui-dialog .ui-dialog-titlebar-close:hover i.icon-remove-sign {
+.ui-dialog .ui-dialog-titlebar-close:hover i.fa-times-circle {
 	color: #22a5ff;
 }
 .ui-widget-overlay {

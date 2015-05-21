@@ -299,13 +299,13 @@ define(function(require){
 							icon.stop(true, true)
 								.show()
 								.removeClass('icon-spinning icon-spinner')
-								.addClass('icon-remove monster-red')
+								.addClass('fa-times monster-red')
 								.fadeOut(3000);
 							errorCallback && errorCallback();
 						};
 
 					icon.stop(true, true)
-						.removeClass('icon-remove monster-red icon-ok monster-green')
+						.removeClass('fa fa-times monster-red fa-check monster-green')
 						.addClass('icon-spinner icon-spinning')
 						.show();
 
@@ -334,7 +334,7 @@ define(function(require){
 									icon.stop(true, true)
 										.show()
 										.removeClass('icon-spinning icon-spinner')
-										.addClass('icon-ok monster-green')
+										.addClass('fa-check monster-green')
 										.fadeOut(3000);
 
 									$('#apploader').remove();

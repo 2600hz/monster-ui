@@ -85,7 +85,7 @@ define(function(require){
 					dash_e911: { icon: 'monster-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
 					local: { icon: 'monster-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'icon-phone monster-yellow feature-port' },
-					prepend: { icon: 'monster-orange icon-file-text-alt feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
+					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
 
 			if(callback) {

@@ -220,7 +220,7 @@
 	background-color: #F0F0F0;
 }
 
-#buy_number #search_result_div .result-content-div .right-div .center-div .icon-trash:hover {
+#buy_number #search_result_div .result-content-div .right-div .center-div .fa-trash-o:hover {
 	text-shadow: 0 0 15px;
 	cursor: pointer;
 }

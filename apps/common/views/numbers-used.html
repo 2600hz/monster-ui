@@ -36,7 +36,7 @@
 												<li><a class="failover-number" href="#"><i class="icon-thumbs-down"></i>{{ ../../../../i18n.failover.label }}</a></li>
 											{{/compare}}
 										{{/unless}}
-											<li><a class="prepend-number" href="#"><i class="icon-file-text-alt"></i>{{ ../../i18n.numberPrepend.label }}</a></li>
+											<li><a class="prepend-number" href="#"><i class="fa fa-file-text-o"></i>{{ ../../i18n.numberPrepend.label }}</a></li>
 										</ul>
 									</li>
 								</ul>
@@ -60,7 +60,7 @@
 									<i class="icon-telicon-seats"></i>
 								{{else}}
 									{{#compare this.ownerType '===' 'group'}}
-										<i class="icon-group"></i>
+										<i class="fa fa-users"></i>
 									{{else}}
 										{{#compare this.ownerType '===' 'main'}}
 											<i class="icon-telicon-home-phone"></i>

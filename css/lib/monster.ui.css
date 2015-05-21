@@ -41,7 +41,7 @@
 .dialog-charges .content .title-block {
 	line-height: 47px;
 }
-.dialog-charges .charges-info .icon-warning-sign {
+.dialog-charges .charges-info .fa-exclamation-triangle {
 	font-size: 39px;
 	color: #c0c0c9;
 }
