@@ -61,6 +61,18 @@ define(function(require){
 					formattedData.templateName = 'monsterListing-numbers';
 					break;
 				}
+				case 'users': {
+					formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
+						val.name = val.first_name + ' ' + val.last_name;
+						return val;
+					});
+					if(_.isArray(args.dataList)) {
+						formattedData.dataList = _.indexBy(args.dataList, 'id');
+					}
+					monster.util.sort(formattedData.sortedDataList);
+					formattedData.templateName = 'monsterListing-default';
+					break;
+				}
 				default: {
 					if(_.isArray(args.dataList)) {
 						formattedData.sortedDataList = args.dataList;
