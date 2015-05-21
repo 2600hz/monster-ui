@@ -2,15 +2,15 @@
 	<div id="name_transfer">
 		<div class="row-fluid" id="transfer_status">
 			<div class="span4 done">
-				<i class="icon-ok-sign"></i>
+				<i class="fa fa-check-circle"></i>
 				<div class="title">{{ i18n.port.progressBarLeft }}</div>
 			</div>
 			<div class="span4 todo">
-				<i class="icon-circle"></i>
+				<i class="fa fa-circle"></i>
 				<div class="title">{{ i18n.port.progressBarMiddle }}</div>
 			</div>
 			<div class="span4 todo">
-				<i class="icon-circle"></i>
+				<i class="fa fa-circle"></i>
 				<div class="title">{{ i18n.port.progressBarRight }}</div>
 			</div>
 		</div>
@@ -28,7 +28,7 @@
 		<div class="row-fluid">
 			<div class="span6">
 				<div class="row-fluid info">
-					<i class="icon-info-sign"></i>
+					<i class="fa fa-info-circle"></i>
 					<p>{{ i18n.port.submitDocuments.billInfoPartOne }} <a href="#">{{ i18n.port.submitDocuments.billInfoPartTwo }}</a></p>
 				</div>
 				<form action="" id="bill_form" class="row-fluid">
@@ -50,7 +50,7 @@
 			</div>
 			<div class="span6">
 				<div class="row-fluid info">
-					<i class="icon-info-sign"></i>
+					<i class="fa fa-info-circle"></i>
 					<p>{{ i18n.port.submitDocuments.orderListInfoPartOne }} <span class="text-error">{{ i18n.port.submitDocuments.orderListInfoPartTwo }}</span></p>
 				</div>
 				<div class="order">
@@ -58,7 +58,7 @@
 					<div class="scroll">
 						<ul>
 						{{#each numbers}}
-							<li data-value="{{this}}"><i class="icon-warning-sign"></i>{{this}}<i class="icon-remove-sign pull-right remove-number"></i></li>
+							<li data-value="{{this}}"><i class="fa fa-exclamation-triangle"></i>{{this}}<i class="fa fa-times-circle pull-right remove-number"></i></li>
 						{{/each}}
 						</ul>
 					</div>

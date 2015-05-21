@@ -115,7 +115,7 @@ define(function(require){
 						processingDiv = container.find('#processing_purchase_div');
 					
 					processingDiv.show();
-					processingDiv.find('i.icon-spinner').addClass('icon-spin');
+					processingDiv.find('i.fa-spinner').addClass('fa-spin');
 					
 					self.callApi({
 						resource: 'numbers.activateBlock',
@@ -402,7 +402,7 @@ define(function(require){
 				}
 
 				vanityInputDiv.children('i').hide();
-				vanityInputDiv.children('i.icon-spinner').show();
+				vanityInputDiv.children('i.fa-spinner').show();
 				searchButton.prop('disabled', true);
 				if(countryValidation) {
 					self.callApi({
@@ -414,30 +414,30 @@ define(function(require){
 						},
 						success: function(data, status) {
 							if(data.data && data.data.length > 0) {
-								vanityInputDiv.children('i.icon-ok').show();
+								vanityInputDiv.children('i.fa-check').show();
 								vanitySearchDiv.find('#vanity_buy_button').show();
 								vanitySearchDiv.find('#back_to_vanity_search').show();
 								searchButton.hide();
 								vanityInputDiv.find('input:text').prop('disabled',true);
 							} else {
-								vanityInputDiv.children('i.icon-remove').show();
+								vanityInputDiv.children('i.fa-times').show();
 								number = "";
 							}
 
-							vanityInputDiv.children('i.icon-spinner').hide();
+							vanityInputDiv.children('i.fa-spinner').hide();
 							searchButton.prop('disabled', false);
 						},
 						error: function(data, status) {
 							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 
-							vanityInputDiv.children('i.icon-spinner').hide();
+							vanityInputDiv.children('i.fa-spinner').hide();
 							searchButton.prop('disabled', false);
 						}
 					});
 				} else {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.partialNumAlert);
 					number = "";
-					vanityInputDiv.children('i.icon-spinner').hide();
+					vanityInputDiv.children('i.fa-spinner').hide();
 					searchButton.prop('disabled', false);
 				}
 			});
@@ -946,11 +946,11 @@ define(function(require){
 			if(toggle) {
 				unavailableDiv.hide();
 				checkingDiv.show();
-				checkingDiv.find('i.icon-spinner').addClass('icon-spin');
+				checkingDiv.find('i.fa-spinner').addClass('fa-spin');
 			} else {
 				unavailableDiv.show();
 				checkingDiv.hide();
-				checkingDiv.find('i.icon-spinner').removeClass('icon-spin');
+				checkingDiv.find('i.fa-spinner').removeClass('fa-spin');
 			}
 		},
 

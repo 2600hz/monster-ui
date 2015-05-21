@@ -315,9 +315,9 @@ define(function(require){
 							{
 								'sTitle': self.i18n.active().balance.directionColumn,
 								'fnRender': function(obj) {
-									var icon = '<i class="icon-arrow-left icon-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
+									var icon = '<i class="fa fa-arrow-left monster-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
 									if(obj.aData[obj.iDataColumn].direction === 'inbound') {
-										icon = '<i class="icon-arrow-right icon-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
+										icon = '<i class="fa fa-arrow-right monster-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
 									}
 									return icon;
 								},

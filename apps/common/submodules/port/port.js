@@ -104,8 +104,8 @@ define(function(require){
 				if (section.hasClass('active')) {
 					section.find('.requests-wrapper').slideUp(function() {
 						section.find('.left-part i')
-							.removeClass('icon-chevron-down icon-white')
-							.addClass('icon-chevron-right');
+							.removeClass('fa-chevron-down monster-white')
+							.addClass('fa-chevron-right');
 
 						section.removeClass('active');
 					});
@@ -114,8 +114,8 @@ define(function(require){
 					section.addClass('animate');
 					section.find('.requests-wrapper').slideDown(function() {
 						section.find('.left-part i')
-							.removeClass('icon-chevron-right')
-							.addClass('icon-chevron-down icon-white');
+							.removeClass('fa-chevron-right')
+							.addClass('fa-chevron-down monster-white');
 
 						section.removeClass('animate');
 						section.addClass('active');
@@ -677,7 +677,7 @@ define(function(require){
 
 								if (carrier == formattedData.orders[order].carrier) {
 									for (var number in formattedData.orders[order].numbers) {
-										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="icon-warning-sign"></i>' + formattedData.orders[order].numbers[number] + '<i class="icon-remove-sign pull-right"></i></li>');
+										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="fa fa-exclamation-triangle"></i>' + formattedData.orders[order].numbers[number] + '<i class="fa fa-times-circle pull-right"></i></li>');
 									}
 
 									formattedData.orders.splice(order, 1);

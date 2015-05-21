@@ -48,7 +48,7 @@
     margin-top: 87px;
 }
 
-.trunkstore_popup.failover .icon-phone {
+.trunkstore_popup.failover .fa-phone {
     background-color: #BBBBBB;
     border-radius: 22px 22px 22px 22px;
     color: #EEEEEE;
@@ -56,7 +56,7 @@
     padding: 6px 10px;
 }
 
-.trunkstore_popup.failover .wrapper-phone-icon.selected .icon-phone {
+.trunkstore_popup.failover .wrapper-phone-icon.selected .fa-phone {
     background-color: #44cc44;
 }
 

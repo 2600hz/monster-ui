@@ -2,15 +2,15 @@
 	<div id="notification">
 		<div class="row-fluid" id="transfer_status">
 			<div class="span4 done">
-				<i class="icon-ok-sign"></i>
+				<i class="fa fa-check-circle"></i>
 				<div class="title">{{ i18n.port.progressBarLeft }}</div>
 			</div>
 			<div class="span4 done">
-				<i class="icon-ok-sign"></i>
+				<i class="fa fa-check-circle"></i>
 				<div class="title">{{ i18n.port.progressBarMiddle }}</div>
 			</div>
 			<div class="span4 todo">
-				<i class="icon-circle"></i>
+				<i class="fa fa-circle"></i>
 				<div class="title">{{ i18n.port.progressBarRight }}</div>
 			</div>
 		</div>
@@ -30,7 +30,7 @@
 			</div>
 			<div class="span6">
 				<input type="text" class="span8" id="notification_email" name="notifications.email.send_to" placeholder="Email address" value="{{#if notifications.email.send_to}}{{notifications.email.send_to}}{{/if}}" required>
-				<span class="help-inline"><i class="icon-warning-sign"></i></span>
+				<span class="help-inline"><i class="fa fa-exclamation-triangle"></i></span>
 			</div>
 		</form>
 	</div>
@@ -44,7 +44,7 @@
 			</div>
 		</form>
 		<div class="row-fluid info">
-			<i class="icon-info-sign"></i>
+			<i class="fa fa-info-circle"></i>
 			<p><span class="important">{{ i18n.port.confirmOrder.dateInfoPartOne }}</span> {{ i18n.port.confirmOrder.dateInfoPartTwo }}</p>
 		</div>
 	</div>
@@ -74,7 +74,7 @@
 			</div>
 		</form>
 		<div class="row-fluid info">
-			<i class="icon-info-sign"></i>
+			<i class="fa fa-info-circle"></i>
 			<p>{{ i18n.port.confirmOrder.temporaryNumbersInfoPartOne }} &#36;{{ i18n.port.confirmOrder.temporaryNumbersInfoPartTwo }}</p>
 		</div>
 	</div>
@@ -92,7 +92,7 @@
 			<div class="span6">
 				<p>{{ i18n.port.confirmOrder.labelOrderTotal }} &#36;{{price}}</p>
 				<div class="row-fluid info">
-					<i class="icon-info-sign"></i>
+					<i class="fa fa-info-circle"></i>
 					<p>{{ i18n.port.confirmOrder.orderTotalInfoPartOne }} &#36;{{ i18n.port.confirmOrder.orderTotalInfoPartTwo }}</p>
 				</div>
 			</div>

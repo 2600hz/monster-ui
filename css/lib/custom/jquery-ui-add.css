@@ -2,13 +2,13 @@
 .ui-accordion h3 .pull-right i {
 	margin: 8px 8px 0 0;
 }
-.ui-accordion .ui-accordion-header i.icon-chevron-down {
+.ui-accordion .ui-accordion-header i.fa-chevron-down {
 	display: none;
 }
-.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-right {
+.ui-accordion .ui-accordion-header.ui-state-active i.fa-chevron-right {
 	display: none;
 }
-.ui-accordion .ui-accordion-header.ui-state-active i.icon-chevron-down {
+.ui-accordion .ui-accordion-header.ui-state-active i.fa-chevron-down {
 	display: inline-block;
 }
 
@@ -59,7 +59,7 @@
 	font-size: 20px;
 	color: #626769;
 }
-.ui-dialog .ui-dialog-titlebar-close:hover i.icon-remove-sign {
+.ui-dialog .ui-dialog-titlebar-close:hover i.fa-times-circle {
 	color: #22a5ff;
 }
 .ui-widget-overlay {

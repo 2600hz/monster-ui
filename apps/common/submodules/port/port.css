@@ -102,8 +102,8 @@ div#port_container h2 {
 	border-bottom: none;
 }
 
-#port_container .order li .icon-warning-sign,
-#port_request_info .order li .icon-warning-sign {
+#port_container .order li .fa-exclamation-triangle,
+#port_request_info .order li .fa-exclamation-triangle {
 	position: relative;
 	top: 1px;
 	right: 10px;
@@ -116,8 +116,8 @@ div#port_container h2 {
 	#port_request_info .order li {
 		position: relative;
 	}
-	#port_container .order li .icon-remove-sign,
-	#port_request_info .order li .icon-remove-sign {
+	#port_container .order li .fa-times-circle,
+	#port_request_info .order li .fa-times-circle {
 		float: none;
 		position: absolute;
 		top: 11px;
@@ -125,18 +125,18 @@ div#port_container h2 {
 	}
 }
 
-#port_container .order .icon-remove-sign:hover,
-#port_request_info .order .icon-remove-sign:hover {
+#port_container .order .fa-times-circle:hover,
+#port_request_info .order .fa-times-circle:hover {
 	cursor: pointer;
 }
 
-#port_container .order li .icon-warning-sign.visible,
-#port_request_info .order li .icon-warning-sign.visible {
+#port_container .order li .fa-exclamation-triangle.visible,
+#port_request_info .order li .fa-exclamation-triangle.visible {
 	visibility: visible;
 }
 
-#port_container .order h3 .icon-remove-sign,
-#port_request_info .order h3 .icon-remove-sign {
+#port_container .order h3 .fa-times-circle,
+#port_request_info .order h3 .fa-times-circle {
 	margin-top: 11px;
 }
 
@@ -157,19 +157,19 @@ div#continue_later p { margin: 5px 0; }
 #transfer_status .todo,
 #transfer_status .todo i { color: #909090; }
 
-#transfer_status .span4:not(:last-child).done i:after,
-#transfer_status .span4:not(:last-child).todo i:after {
+#transfer_status .span4:not(:last-child).done i::after,
+#transfer_status .span4:not(:last-child).todo i::after {
 	position: absolute;
-	top: 8px;
-	right: -56%;
+	top: 6px;
+	left: 12px;
 	display: block;
-	width: 103%;
+	width: 269px;
 	height: 2px;
 	content: "";
 }
 
-#transfer_status .span4:not(:last-child).done i:after { background-color: #22a5ff; }
-#transfer_status .span4:not(:last-child).todo i:after { background-color: #909090; }
+#transfer_status .span4:not(:last-child).done i::after { background-color: #22a5ff; }
+#transfer_status .span4:not(:last-child).todo i::after { background-color: #909090; }
 
 #port_container label { font-size: 16px; }
 

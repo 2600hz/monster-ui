@@ -8,14 +8,14 @@
 {{/if}}
 {{#if addBackButton}}
 	<li class="account-previous-link">
-		<i class="icon-caret-left"></i>
+		<i class="fa fa-caret-left"></i>
 		<div>{{ i18n.accountBrowser.backButton }}</div>
 	</li>
 {{/if}}
 {{#each accounts}}
 	<li class="account-list-element{{#compare this.id "===" ../selectedId}} active{{/compare}}" data-id="{{this.id}}">
 		{{#if this.descendants_count}}
-			<div class="account-children-link"><i class="icon-caret-right"></i></div>
+			<div class="account-children-link"><i class="fa fa-caret-right"></i></div>
 			<div class="account-link smaller-link">
 				<div class="account-name">{{this.name}}</div>
 				<div class="account-realm">{{this.realm}}</div>

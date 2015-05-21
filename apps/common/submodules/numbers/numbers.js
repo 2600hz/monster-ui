@@ -79,13 +79,13 @@ define(function(require){
 		numbersGetFeatures: function(callback) {
 			var self = this,
 				features = {
-					failover: { icon: 'icon-green icon-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-					outbound_cnam: { icon: 'icon-blue icon-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp },
-					inbound_cnam: { icon: 'icon-green icon-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
-					dash_e911: { icon: 'icon-red icon-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
-					local: { icon: 'icon-purple icon-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'icon-phone icon-yellow feature-port' },
-					prepend: { icon: 'icon-orange icon-file-text-alt feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
+					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
+					outbound_cnam: { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp },
+					inbound_cnam: { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
+					dash_e911: { icon: 'monster-red fa fa-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
+					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
+					port: { icon: 'fa fa-phone monster-yellow feature-port' },
+					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
 
 			if(callback) {

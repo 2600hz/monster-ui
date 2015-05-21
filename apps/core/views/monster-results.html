@@ -2,7 +2,7 @@
 	<div class="column-wrapper">
 		<div class="row-title">
 			<span class="result-status-wrapper" data-status="success">
-				<i class="icon-check icon-green"></i>
+				<i class="fa fa-check-square-o monster-green"></i>
 				{{ i18n.monsterResults.titles.success }}
 			</span>
 			<div class="stats">{{successes.length}} / {{countTotal}}</div>
@@ -20,7 +20,7 @@
 	<div class="column-wrapper">
 		<div class="row-title">
 			<span class="result-status-wrapper" data-status="failed">
-				<i class="icon-warning-sign icon-red"></i>
+				<i class="fa fa-exclamation-triangle monster-red"></i>
 				{{ i18n.monsterResults.titles.error }}
 			</span>
 			<div class="stats">{{errors.length}} / {{countTotal}}</div>
@@ -32,7 +32,7 @@
 					{{this.value}}
 					{{#if this.errorMessage}}
 					<div class="pull-right">
-						<i class="icon-info" data-toggle="tooltip" data-placement="top" data-original-title="{{this.errorMessage}}"></i>
+						<i class="fa fa-info" data-toggle="tooltip" data-placement="top" data-original-title="{{this.errorMessage}}"></i>
 					</div>
 					{{/if}}
 				</div>

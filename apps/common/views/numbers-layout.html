@@ -3,12 +3,12 @@
 		<div id="box_spare_numbers" class="half-box {{#compare viewType '===' 'pbx'}}pull-right{{else}}pull-left{{/compare}}" data-type="spare">
 			<span class="title"> {{ accountName }} {{ i18n.numbers.spareNumbers }} </span>
 			<span class="count"> {{ countSpareNumbers }} </span>
-			<i class="help-popover icon-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpSpareNumbers }}"></i>
+			<i class="help-popover fa fa-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpSpareNumbers }}"></i>
 		</div>
 		<div id="box_used_numbers" class="half-box {{#compare viewType '!==' 'pbx'}}pull-right{{else}}pull-left{{/compare}}" data-type="used">
 			<span class="title"> {{ i18n.numbers.usedNumbers }} </span>
 			<span class="count"> {{ countUsedNumbers }} </span>
-			<i class="help-popover icon-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpUsedNumbers }}"></i>
+			<i class="help-popover fa fa-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpUsedNumbers }}"></i>
 		</div>
 	</div>
 

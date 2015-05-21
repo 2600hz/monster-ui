@@ -11,7 +11,7 @@
 	<div class="choices-wrapper clearfix">
 		{{#each carrierInfo.choices}}
 			<div class="carrier-choice{{#compare ../carrierInfo.type "===" value}} selected{{/compare}}" data-type="{{ value }}">
-				<i class="help-popover icon-question-sign" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>{{ friendlyName }}
+				<i class="help-popover fa fa-question-circle" data-original-title="{{this.help}}" data-placement="top" data-toggle="tooltip"></i>{{ friendlyName }}
 			</div>
 			<div class="table-split"></div>
 		{{/each}}

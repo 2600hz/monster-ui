@@ -41,7 +41,7 @@
 .dialog-charges .content .title-block {
 	line-height: 47px;
 }
-.dialog-charges .charges-info .icon-warning-sign {
+.dialog-charges .charges-info .fa-exclamation-triangle {
 	font-size: 39px;
 	color: #c0c0c9;
 }
@@ -111,12 +111,12 @@
 .alert-dialog-advanced .details-box .headline i {
 	margin-right: 5px;
 }
-.alert-dialog-advanced .details-box .headline i.icon-angle-up,
-.alert-dialog-advanced .details-box .headline.active i.icon-angle-down {
+.alert-dialog-advanced .details-box .headline i.fa-angle-up,
+.alert-dialog-advanced .details-box .headline.active i.fa-angle-down {
 	display: none;
 }
-.alert-dialog-advanced .details-box .headline i.icon-angle-down,
-.alert-dialog-advanced .details-box .headline.active i.icon-angle-up {
+.alert-dialog-advanced .details-box .headline i.fa-angle-down,
+.alert-dialog-advanced .details-box .headline.active i.fa-angle-up {
 	display: inline-block;
 }
 .alert-dialog-advanced .details-box .error-details-wrapper {
@@ -333,7 +333,7 @@ label.monster-invalid {
 	width: 5px;
 	height: 30px;
 	margin: 5px 10px 0 0;
-	background: url('css/assets/drag.png');
+	background: url('../assets/drag.png');
 }
 .items-selector .box-selector .item-selector.ui-sortable-helper {
 	cursor: -webkit-grabbing;

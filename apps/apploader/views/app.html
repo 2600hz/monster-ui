@@ -20,7 +20,7 @@
 			</div>
 			<div class="search-box">
 				<input type="text" class="search-query" placeholder="{{i18n.searchQuery.placeholder}}">
-				<i class="icon-search"></i>
+				<i class="fa fa-search"></i>
 			</div>
 		</div>
 		<div class="app-description">
@@ -37,14 +37,14 @@
 	{{#if allowAppstore}}
 		<div class="app-store">
 			<button id="launch_appstore" data-name="appstore">
-				<i class="icon-stackexchange icon-white"></i>
+				<i class="fa fa-th monster-white"></i>
 				{{i18n.appstore.button}}
 			</button>
 		</div>
 	{{/if}}
 	</div>
 	<div class="right-div">
-		<i class="icon-remove-circle" id="close_app"></i>
+		<i class="fa fa-times-circle-o" id="close_app"></i>
 		<h3>{{i18n.appList.title}}</h3>
 		<div class="app-list">
 		{{#each apps}}

@@ -1,15 +1,15 @@
 {{#each listTransactions}}
 	<div class="transaction-box{{#compare this.type "===" "credit"}} refund{{/compare}}">
 		<div class="expand-box{{#unless this.hasAddOns}} disabled{{/unless}}">
-			<span class="icon-stack">
-				<i class="icon-circle-blank icon-stack-base"></i>
-				<i class="icon-plus icon-stack-content"></i>
+			<span class="fa-stack">
+				<i class="fa fa-circle-o fa-stack-2x"></i>
+				<i class="fa fa-plus fa-stack-1x"></i>
 			</span>
 		</div>
 		<div class="text-box {{#unless this.approved}}declined{{/unless}}">
 			<div class="title">
 				{{#unless this.approved}}
-					<i class="icon-red icon-warning-sign"></i>
+					<i class="monster-red fa fa-exclamation-triangle"></i>
 					&nbsp;
 				{{/unless}}
 

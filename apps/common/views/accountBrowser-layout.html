@@ -1,18 +1,18 @@
 <div class="account-browser-container {{customClass}}">
 	<div class="search-box">
-		<i class="icon-search"></i>
+		<i class="fa fa-search"></i>
 		<input type="text" class="account-browser-search search-query" placeholder="{{ i18n.search }}">
 	</div>
 	{{#if addAccountEnabled}}
 	<div class="account-list-add">
-		<i class="icon-plus-sign icon-large"></i>
+		<i class="fa fa-plus-circle fa-lg"></i>
 		<span>{{ i18n.accountBrowser.addAccount }}</span>
 	</div>
 	{{/if}}
 	<div class="account-list-container clearfix">
 		<ul class="account-list">
 			<li class="content-centered account-list-loader">
-				<i class="icon-spin icon-spinner"></i>
+				<i class="fa fa-spinner fa-spin"></i>
 			</li>
 			<li class="account-search-link">
 				<div>{{ i18n.accountBrowser.searchDatabase }}</div>

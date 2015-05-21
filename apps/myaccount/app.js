@@ -530,7 +530,7 @@ define(function(require){
 
 					liSettings.find('.settings-item-content').slideUp('fast', function() {
 						aSettings.find('.update .text').text(self.i18n.active().editSettings);
-						aSettings.find('.update i').removeClass('icon-remove').addClass('icon-cog');
+						aSettings.find('.update i').removeClass('fa fa-times').addClass('fa-times');
 						liSettings.removeClass('open');
 						liSettings.find('.uneditable').show();
 						liSettings.find('.edition').hide();
@@ -659,7 +659,7 @@ define(function(require){
 
 			settingsItem.addClass('open');
 			link.find('.update .text').text(self.i18n.active().close);
-			link.find('.update i').removeClass('icon-cog').addClass('icon-remove');
+			link.find('.update i').removeClass('fa-cog').addClass('fa-times');
 			settingsItem.find('.settings-item-content').slideDown('fast');
 
 			/* If there is no credit-card data, we skip the step that just displays the creditcard info */

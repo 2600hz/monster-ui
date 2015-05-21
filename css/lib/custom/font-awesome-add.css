@@ -2,56 +2,24 @@ i {
 	font-size: 18px;
 	color: #555;
 }
-*[class^='icon-']:before,
-*[class*=' icon-']:before {
+
+i.fa,
+i[class~='icon-']::before {
 	line-height: normal;
 	text-decoration: none;
 }
+
 i.icon-small {
 	font-size: 14px;
 }
-.icon-white {
-	color: #fff !important;
-}
-.icon-blue {
-	color: #22a5ff !important;
-}
-.icon-green {
-	color: #4c4 !important;
-}
-.icon-red {
-	color: #ee1212 !important;
-}
-.icon-orange {
-	color: #f89406 !important;
-}
-.icon-purple {
-	color: #d2e !important;
-}
-.icon-pink {
-	color: #e7c !important;
-}
-.icon-yellow {
-	color: #ffc40d !important;
-}
-.icon-grey {
-	color: #333 !important;
-}
-.icon-lightgrey {
-	color: #999 !important;
-}
-i.icon-spin {
-	-webkit-animation: 1s linear 0s normal none infinite spin;
-	   -moz-animation: 1s linear 0s normal none infinite spin;
-	     -o-animation: 1s linear 0s normal none infinite spin;
-	        animation: 1s linear 0s normal none infinite spin;
-}
-i.icon-info-sign2:before {
+
+/* Custom icons */
+i.fa-info-sign2::before {
 	content: 'i';
 }
-i.icon-question-sign2:before {
+i.fa-question-sign2::before {
 	content: '?';
 }
-i.icon-warning-sign2:before {
+i.fa-warning-sign2::before {
 	content: '!';
 }
