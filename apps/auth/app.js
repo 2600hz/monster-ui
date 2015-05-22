@@ -180,8 +180,6 @@ define(function(require){
 				accountId: self.accountId
 			};
 
-			cookieAuth.installedApps = _.map(self.installedApps, function(app) { return app.id });
-
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
 			$('#monster-content').addClass('monster-content');
