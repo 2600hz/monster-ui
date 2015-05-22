@@ -468,18 +468,10 @@ define(function(require){
 								appData.source_url = app.source_url;
 							}
 
-							// Only update variable + cookie if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
+							// Only update variable if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
 							if(!monster.util.isMasquerading()) {
-								var cookieData = $.parseJSON($.cookie('monster-auth'));
-
 								// Update local installedApps list by adding the new app
 								monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
-
-								// Update installedApps list of the cookie by adding the new app
-								cookieData.installedApps.push(appData.id);
-
-								// Update cookie
-								$.cookie('monster-auth', JSON.stringify(cookieData));
 							}
 							
 							$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
@@ -494,18 +486,10 @@ define(function(require){
 						users: []
 					},
 					function() {
-						// Only update variable + cookie if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
+						// Only update variable if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
 						if(!monster.util.isMasquerading()) {
-							var cookieData = $.parseJSON($.cookie('monster-auth'));
-
 							// Remove app from local installedApp list
 							monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
-
-							// Remove app from installedApps of the cookie
-							cookieData.installedApps = cookieData.installedApps.filter(function(val, idx) { return val !== app.id; });
-
-							// Update cookie
-							$.cookie('monster-auth', JSON.stringify(cookieData));
 						}
 
 						$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');

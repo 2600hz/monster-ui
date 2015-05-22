@@ -31,6 +31,7 @@
 			'add': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}' }
 		},
 		auth: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
 		},
 		directory: {
@@ -366,6 +367,7 @@
 								requestSettings.data[v] = requestSettings.data.data.id;
 							} else {
 								requestSettings.data[v] = methodSettings[v];
+								checkReservedKeywords(v, requestSettings);
 								delete methodSettings[v];
 							}
 						});
@@ -401,6 +403,14 @@
 			},
 			error: settings.error
 		}));
+	}
+
+	function checkReservedKeywords(key, request) {
+		var reservedKeys = [ 'apiRoot', 'authToken', 'cache', 'url', 'dataType', 'verb', 'type', 'dataType', 'onRequestStart', 'onRequestEnd', 'onRequestEnd', 'onRequestSuccess', 'uploadProgress' ];
+
+		if(reservedKeys.indexOf(key) >= 0) {
+			console.warn('URL Parameter "' + key + '" is overriding a core option of the AJAX request - ' + request.url);
+		}
 	}
 
 	function request(options) {
