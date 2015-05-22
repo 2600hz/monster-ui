@@ -108,7 +108,7 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 
 ##### Naming
 
-- HTML tags and attributes should be lowercase.
+- HTML tags and attributes should be lowercased.
 - Classes attributes should be lowercased, each word separated by a dash.
 - Ids attributes should be lowercased, each word separated by an underscore.
 
@@ -129,7 +129,7 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 ```
 
 - Data attributes should be lowercased, each word __after__ the `data-` separated by an underscore.
-- The content of data attributes may follow any convention, depending on their usage. Most of the time they will be used directly in the `app.js` and should follow the JavaScript convention (camel case).
+- The content of data attributes may follow any convention, depending on their usage. Most of the time they will be used directly in the `app.js` and should follow the JavaScript convention (camelCase).
 - When using common terms as id attributes, make sure to prepend your application's name to ensure unity.
 
 ```html
