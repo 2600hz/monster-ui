@@ -679,6 +679,9 @@ define(function(require){
 			if(type === 'user') {
 				params.accountId = monster.apps.auth.originalAccount.id;
 				params.userId = self.userId;
+				if(params.data.timezone && params.data.timezone === 'inherit') {
+					delete params.data.timezone;
+				}
 			}
 			else if(type === 'billing') {
 				params.data = newData;
