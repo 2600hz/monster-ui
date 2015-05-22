@@ -392,18 +392,24 @@ define(function(require) {
 			"Pacific/Yap"
 		],
 
-		populateDropdown: function(dropdown, _selected) {
+		populateDropdown: function(dropdown, _selected, extraOptions) {
 			var self = this,
 				selected = _selected || self.getLocaleTimezone();
 
 			$.each(self.list, function(i, data) {
 				if(selected == data) {
-					dropdown.append('<option value="' + data + '" SELECTED>' + data + '</option>');
+					dropdown.append('<option value="' + data + '" selected>' + data + '</option>');
 				}
 				else {
 					dropdown.append('<option value="' + data + '">' + data + '</option>');
 				}
 			});
+
+			if(extraOptions) {
+				_.each(extraOptions, function(name, value) {
+					dropdown.prepend('<option value="' + value + '"'+(selected===value?'selected':'')+'>' + name + '</option>');
+				});
+			}
 		},
 
 		getLocaleTimezone: function() {

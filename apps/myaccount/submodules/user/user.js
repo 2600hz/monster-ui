@@ -38,7 +38,7 @@ define(function(require) {
 		userBindingEvents: function(template, data) {
 			var self = this;
 
-			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone);
+			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone||'inherit', {inherit: self.i18n.active().defaultTimezone});
 			template.find('#user_timezone').chosen({ search_contains: true, width: '220px' });
 
 			monster.pub('myaccount.events', {

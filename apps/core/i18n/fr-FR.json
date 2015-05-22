@@ -295,5 +295,8 @@
 	"controlCenter": "Centre de Contrôle",
 	"__comment": "UI-343: Added an uploading progress bar",
 	"__version": "v3.20_s5",
-	"uploadProgressTitle": "Envoi de fichier(s)..."
+	"uploadProgressTitle": "Envoi de fichier(s)...",
+	"__comment": "UI-1499: Added an account default option to timezones",
+	"__version": "v3.20_s5",
+	"defaultTimezone": "- Valeur du compte/utilisateur par défaut -"
 }
