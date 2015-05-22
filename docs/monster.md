@@ -2,8 +2,8 @@
 The `monster` object expose two objects containing a lot of methods to build Monster apps easily.
 
 ### Objects
-* [monster.ui][ui]
-* [monster.util][util]
+* [ui][ui]
+* [util][util]
 
 [parallel]: monster/parallel().md
 [pub]: monster/pub().md

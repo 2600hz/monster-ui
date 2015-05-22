@@ -8,7 +8,7 @@
 
 ### Syntax
 ```javascript
-monster.util.unformatPhoneNumber(phoneNumber);
+monster.util.unformatPhoneNumber(phoneNumber[, specialRule]);
 ```
 
 ### Parameters
@@ -52,7 +52,7 @@ console.log(unformattedPhoneNUmber);
 * Unformat phone number and keep `+`
 ```javascript
 var phoneNumber = '+1 (415) 123-4567',
-    unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber);
+    unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber, 'keepPlus');
 
 console.log(unformattedPhoneNUmber);
 // output: "+14151234567"

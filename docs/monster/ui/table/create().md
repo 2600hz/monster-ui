@@ -57,6 +57,7 @@ monster.ui.table.create(name, element, columns[, data, options]);
         sLoadingRecords: i18n.loading,
         sInfoEmpty: i18n.infoEmpty,
         sInfoFiltered: i18n.filtered,
+        sSearch: i18n.search,
         oPaginate: {
             sFirst: i18n.first,
             sPrevious: i18n.previous,
