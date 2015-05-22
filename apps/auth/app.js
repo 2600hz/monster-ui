@@ -29,6 +29,7 @@ define(function(require){
 			var self = this,
 				mainContainer = $('#monster-content');
 
+			// If we don't have a cookie, we send user to login page
 			if(!$.cookie('monster-auth')) {
 				if('authentication' in monster.config.whitelabel) {
 					self.customAuth = monster.config.whitelabel.authentication;
@@ -48,54 +49,17 @@ define(function(require){
 
 				callback && callback(self);
 			}
+			// Otherwise, we get the information from the auth token stored in the cookie, and continue normally
 			else {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
 				self.authToken = cookieData.authToken;
-				self.accountId = cookieData.accountId;
-				self.userId = cookieData.userId;
-				self.isReseller = cookieData.isReseller;
-				self.resellerId = cookieData.resellerId;
-				
-				self.transformAppIdsToData(cookieData.installedApps, cookieData.language, function(data) {
-					self.installedApps = data;
 
-					self.afterLoggedIn();
+				// We use new API that give us information of the user for his auth token, same results as a put user_auth with creds md5
+				self.authenticateAuthtoken(cookieData.accountId, cookieData.authToken);
 
-					callback && callback(self);
-				});
+				callback && callback(self);
 			}
-		},
-
-		// Transform an array of app ids to a array of object with apps information
-		// We didn't want to store all the metadata in the cookie (because otherwise it would become too big) so we created this
-		transformAppIdsToData: function(apps, lang, callback) {
-			var self = this,
-				formattedApps = [],
-				mapApps = {};
-
-			self.getAppsStore(function(appData) {
-				_.each(appData, function(app) {
-					var i18nLabel = app.i18n.hasOwnProperty(lang) ? app.i18n[lang].label : app.i18n['en-US'].label;
-
-					// We use this formatting to match whatever is sent from the user_auth request
-					mapApps[app.id] = {
-						api_url: app.api_url,
-						id: app.id,
-						label: i18nLabel,
-						name: app.name,
-						source_url: app.source_url
-					};
-				});
-
-				_.each(apps, function(id) {
-					if(mapApps.hasOwnProperty(id)) {
-						formattedApps.push(mapApps[id]);
-					}
-				});
-
-				callback && callback(formattedApps);
-			});
 		},
 
 		render: function(container){
@@ -166,6 +130,21 @@ define(function(require){
 			});
 		},
 
+		authenticateAuthtoken: function(accountId, authToken) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.get',
+				data: {
+					accountId: accountId,
+					token: authToken
+				},
+				success: function(data) {
+					self._afterAuthenticate(data);
+				}
+			});
+		},
+
 		_afterAuthenticate: function(data) {
 			var self = this;
 
@@ -198,10 +177,7 @@ define(function(require){
 			var cookieAuth = {
 				language: data.data.language,
 				authToken: self.authToken,
-				accountId: self.accountId,
-				userId: self.userId,
-				isReseller: self.isReseller,
-				resellerId: self.resellerId
+				accountId: self.accountId
 			};
 
 			cookieAuth.installedApps = _.map(self.installedApps, function(app) { return app.id });
