@@ -68,7 +68,6 @@
 }
 
 .transactions-content-wrapper .list-transactions .transaction-box .expand-box > * {
-	height: 65px;
 	line-height: 65px;
 	text-align: center;
 	font-size: 11px;
