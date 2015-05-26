@@ -35,6 +35,10 @@ define(function(require){
 			// Application title, displayed in the browser tab
 			applicationTitle: 'Monster UI',
 
+			// E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified.
+			// This address can either be set here in the config file, or through the Branding app.
+			callReportEmail: 'support@2600hz.com',
+
 			// Company Name, used in many places in the UI
 			companyName: '2600hz',
 
