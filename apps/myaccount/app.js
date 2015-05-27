@@ -530,7 +530,7 @@ define(function(require){
 
 					liSettings.find('.settings-item-content').slideUp('fast', function() {
 						aSettings.find('.update .text').text(self.i18n.active().editSettings);
-						aSettings.find('.update i').removeClass('fa fa-times').addClass('fa-times');
+						aSettings.find('.update i').removeClass('fa-times').addClass('fa-cog');
 						liSettings.removeClass('open');
 						liSettings.find('.uneditable').show();
 						liSettings.find('.edition').hide();
