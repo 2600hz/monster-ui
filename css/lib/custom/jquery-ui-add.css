@@ -15,53 +15,77 @@
 /**************** DIALOG ****************/
 .ui-dialog {
 	padding: 0;
-	border: solid 1px #777;
-	border-radius: 5px;
-	box-shadow: 1px 1px 3px #333;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px 1px #606069;
 }
 .ui-dialog .ui-dialog-content {
 	min-width: 300px;
 	padding: 0;
-	border-radius: 5px;
-	background: #f9f9f9;
+	border-radius: 2px;
+	background: #fff;
 }
 .ui-dialog .ui-dialog-titlebar {
-	padding: 15px 20px;
+	padding: 10px 20px;
 	border: 0;
-	border-bottom: 1px solid #c1c1c1;
-	border-radius: 5px 5px 0 0;
-	background:    -moz-linear-gradient(top, hsl(0,0%,94%) 0%, hsl(0,0%,88%) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,94%)), color-stop(100%,hsl(0,0%,88%)));
-	background: -webkit-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
-	background:      -o-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
-	background:     -ms-linear-gradient(top, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
-	background:         linear-gradient(to bottom, hsl(0,0%,94%) 0%,hsl(0,0%,88%) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EFEFEF', endColorstr='#D7D7D7',GradientType=0 );
+	border-radius: 2px 2px 0 0;
+	background: #22a5ff;
+}
+.ui-dialog .ui-dialog-title {
+	font-size: 24px;
+	line-height: 40px;
+	margin: 0;
+	font-weight: 400;
+	letter-spacing: .4px;
+	color: #fff;
 }
 .ui-dialog .ui-dialog-titlebar-close {
 	width: 40px;
-	color: #777;
 	border: none;
 	background: none;
 }
-.ui-dialog .ui-dialog-title {
-	font-size: 18px;
-	font-weight: 600;
-	letter-spacing: .4px;
-	color: #424749;
-	text-shadow: 1px 1px 1px #f7f7f7;
+.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close {
+	color: #fff;
+	border: solid 1px;
+	border-radius: 10px;
+	height: 20px;
+	width: 20px;
+	box-sizing: border-box;
+	display: inline-block;
+	position: relative;
 }
-.ui-dialog .ui-dialog-titlebar-close span {
-	line-height: 20px;
-	width: 2em;
+.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:before,
+.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:after {
+	content: '';
+	position: absolute;
+	border: solid 1px;
+	width: 8px;
+	top: 8px;
+	left: 4px;
+	transform:rotate(45deg);
 }
-.ui-dialog .ui-dialog-titlebar-close i {
-	font-size: 20px;
-	color: #626769;
+.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:after {
+	transform:rotate(-45deg);
 }
-.ui-dialog .ui-dialog-titlebar-close:hover i.fa-times-circle {
-	color: #22a5ff;
+/* Special rules for alerts & confirms */
+.ui-dialog.monster-alert .ui-dialog-titlebar,
+.ui-dialog.monster-confirm .ui-dialog-titlebar {
+	background: #f0f0f9;
+	border-bottom: solid 1px #c0c0c9;
 }
+
+.ui-dialog.monster-alert .ui-dialog-titlebar .ui-dialog-title,
+.ui-dialog.monster-confirm .ui-dialog-titlebar .ui-dialog-title {
+	color: #303039;
+}
+
+.ui-dialog.monster-alert .ui-dialog-titlebar-close i.monster-dialog-titlebar-close {
+	color: #303039;
+}
+.ui-dialog.monster-confirm .ui-dialog-titlebar-close {
+	display: none;
+}
+/**********/
 .ui-widget-overlay {
 	background: #333;
 }

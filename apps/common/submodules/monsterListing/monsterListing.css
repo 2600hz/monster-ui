@@ -4,10 +4,13 @@
 
 .monster-listing-container .monster-listing-grid .grid-title {
 	border-radius: 4px 4px 0 0;
-	color: #FFFFFF;
+	background: #f0f0f9;
+	color: #303039;
 	line-height: 30px;
 	padding: 10px;
 	min-width: 600px;
+	border: solid 2px #e0e0e9;
+	border-bottom: none;
 }
 
 .monster-listing-container .monster-listing-grid {

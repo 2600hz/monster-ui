@@ -229,6 +229,8 @@ define(function(require){
 				),
 				dialog;
 
+			options.dialogClass = 'monster-alert' + (options.dialogClass ? ' '+options.dialogClass : '');
+
 			dialog = this.dialog(content, options);
 
 			dialog.find('.btn.alert_button').click(function() {
@@ -266,6 +268,8 @@ define(function(require){
 					options
 				),
 				ok = false;
+
+			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
 
 			dialog = this.dialog(confirmBox, options);
 
@@ -340,10 +344,7 @@ define(function(require){
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
 				default:
-					closeBtnText = '<span class="fa-stack">'
-								 + '<i class="fa fa-circle fa-stack-2x monster-white"></i>'
-								 + '<i class="fa fa-times-circle fa-stack-1x"></i>'
-								 + '</span>';
+					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
 					break;
 			}
 			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
@@ -401,6 +402,8 @@ define(function(require){
 					options
 				),
 				ok = false;
+
+			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
 
 			dialog = this.dialog(template, options);
 
