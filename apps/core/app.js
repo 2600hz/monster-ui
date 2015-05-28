@@ -229,7 +229,7 @@ define(function(require){
 				}
 			});
 
-			$('body').on('click', '*[class*="monster-button"]', function(event) {
+			$('body').on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
 				var $this = $(this),
 					splashDiv = $('<div class="monster-splash-effect"/>'),
 					offset = $this.offset(),

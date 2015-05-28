@@ -332,8 +332,8 @@
 			animation-duration: 0.5s;
 	-webkit-animation-fill-mode: both;
 			animation-fill-mode: both;
-	-webkit-animation-name: showEdit;
-			animation-name: showEdit;
+	-webkit-animation-name: myAccountShowEdit;
+			animation-name: myAccountShowEdit;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content {
@@ -453,7 +453,7 @@
 
 /***** Animations *****/
 
-@-webkit-keyframes showEdit {
+@-webkit-keyframes myAccountShowEdit {
 	0% {
 		opacity: 0;
 		margin-right: -50px;
@@ -463,7 +463,7 @@
 		margin-right: 0px;
 	}
 }
-@keyframes showEdit {
+@keyframes myAccountShowEdit {
 	0% {
 		opacity: 0;
 		margin-right: -50px;
