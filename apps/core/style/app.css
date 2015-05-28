@@ -177,6 +177,7 @@ body,
 	width: 200px;
 	height: 200px;
 	background: #22a5ff;
+	box-shadow: 0px 0px 10px 0px #303039;
 }
 .loading-wrapper.fixed-left {
 	left: 0;
