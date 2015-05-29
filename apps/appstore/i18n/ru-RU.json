@@ -27,5 +27,8 @@
 	"selectUsersLink": "Выбранные пользователи ({{selectedUsers}})",
 	"alerts": {
 		"noUserSelected": "Вы можете выбрать по крайней мере одного пользователя для этого приложения.<br><br>Если вы не хотите использовать это приложение, просто отключите его."
-	}
+	},
+        "__comment": "UI-1190: Updating the way apps are turned on/off",
+        "__version": "v3.20_s2",
+        "ok": "OK"
 }
