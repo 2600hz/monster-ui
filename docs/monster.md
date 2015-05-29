@@ -1,5 +1,8 @@
 # monster
-The `monster` object expose two objects containing a lot of methods to build Monster apps easily.
+The `monster` object exposes several core methods used to perform essential actions, as well as two objects containing a lot of helpers useful to build Monster apps easily.
+
+### Methods
+* [parallel()][parallel]
 
 ### Objects
 * [ui][ui]
