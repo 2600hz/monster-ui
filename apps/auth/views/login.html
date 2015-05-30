@@ -18,7 +18,9 @@
 		{{#monsterCheckbox i18n.rememberMe}}
 			<input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
 		{{/monsterCheckbox}}
+		{{#unless hidePasswordRecovery}}
 		<a href="#" class="forgot-password pull-right">{{ i18n.forgotPassword }}</a>
+		{{/unless}}
 	</div>
 
 	<div class="row-login">

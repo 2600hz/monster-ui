@@ -457,7 +457,8 @@ define(function(require){
 					requestAccountName: (realm || accountName) ? false : true,
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
-					showRegister: monster.config.hide_registration || false
+					showRegister: monster.config.hide_registration || false,
+					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
 				loginHtml = $(monster.template(self, templateName, templateData)),
 				content = $('#auth_container .right-div .login-block');
