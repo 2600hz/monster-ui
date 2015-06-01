@@ -278,9 +278,10 @@ define(function(require){
 
 		// Function returning a Boolean indicating whether the end-user is logged in or not.
 		isLoggedIn: function() {
-			var self = this;
+			var self = this,
+				isLoggedIn = monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('appFlags') && monster.apps.auth.appFlags.isAuthentified;
 
-			return monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('authToken') && typeof monster.apps.auth.authToken !== 'undefined';
+			return isLoggedIn;
 		},
 		
 		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
@@ -293,6 +294,24 @@ define(function(require){
 			}
 
 			return isMasquerading;
+		},
+
+		// Function returning map of URL parameters
+		// Optional key, returns value of specific GET parameter
+		// keepHashes was added because having hashes sometimes crashed some requests
+		getUrlVars: function(key, keepHashes) {
+			var vars = {},
+				hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&'),
+				hash,
+				keepHashes = keepHashes || false;
+
+			for(var i = 0; i < hashes.length; i++) {
+				hash = hashes[i].split('=');
+				vars[hash[0]] = keepHashes ? hash[1] : (hash[1] || '').replace(/#/g , '');
+			}
+
+			// If we were looking for a specific key, then we only return that value, otherwise, return the full map of GET parameters
+			return key ? vars[key] : vars;
 		},
 
 		/****************** Helpers not documented because people shoudln't need to use them *******************/

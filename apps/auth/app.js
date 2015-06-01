@@ -16,54 +16,121 @@ define(function(require){
 			'ru-RU': { customCss: false }
 		},
 
+		appFlags: {
+			mainContainer: undefined,
+			isAuthentified: false
+		},
+
 		requests: {},
 
 		subscribe: {
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp' : '_initApp',
-			'auth.afterAuthenticate': '_afterAuthenticate'
+			'auth.afterAuthenticate': '_afterSuccessfulAuth'
 		},
 
-		load: function(callback){
+		load: function(callback) {
+			var self = this;
+
+			callback && callback(self);
+		},
+
+		render: function(mainContainer) {
+			var self = this;
+
+			self.appFlags.mainContainer = mainContainer;
+
+			self.triggerLoginMechanism();
+		},
+
+		// Order of importance: Cookie > GET Parameters > External Auth > Default Case
+		triggerLoginMechanism: function() {
 			var self = this,
-				mainContainer = $('#monster-content');
+				urlParams = monster.util.getUrlVars(),
+				successfulAuth = function(authData) {
+					self._afterSuccessfulAuth(authData);
+				};
 
-			// If we don't have a cookie, we send user to login page
-			if(!$.cookie('monster-auth')) {
-				if('authentication' in monster.config.whitelabel) {
-					self.customAuth = monster.config.whitelabel.authentication;
+			// First check if there is a custom authentication mechanism
+			if('authentication' in monster.config.whitelabel) {
+				self.customAuth = monster.config.whitelabel.authentication;
 
-					var options = {
-						sourceUrl: self.customAuth.source_url,
-						apiUrl: self.customAuth.api_url
-					};
+				var options = {
+					sourceUrl: self.customAuth.source_url,
+					apiUrl: self.customAuth.api_url
+				};
 
-					monster.apps.load(self.customAuth.name, function(app) {
-						app.render(mainContainer);
-					}, options);
-				}
-				else {
-					self.renderLoginPage(mainContainer);
-				}
-
-				callback && callback(self);
+				monster.apps.load(self.customAuth.name, function(app) {
+					app.render(self.appFlags.mainContainer);
+				}, options);
 			}
-			// Otherwise, we get the information from the auth token stored in the cookie, and continue normally
-			else {
+			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
+			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				self.authToken = cookieData.authToken;
-
-				// We use new API that give us information of the user for his auth token, same results as a put user_auth with creds md5
-				self.authenticateAuthtoken(cookieData.accountId, cookieData.authToken);
-
-				callback && callback(self);
+				self.authenticateAuthToken(cookieData.accountId, cookieData.authToken, successfulAuth);
+			}
+			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
+			else if(urlParams.hasOwnProperty('t') && urlParams.hasOwnProperty('a') && urlParams.t.length === 32 && urlParams.a.length === 32) {
+				self.authenticateAuthToken(urlParams.a, urlParams.t, successfulAuth);
+			}
+			// Default case, we didn't find any way to log in automatically, we render the login page
+			else {
+				self.renderLoginPage(self.appFlags.mainContainer);
 			}
 		},
 
-		render: function(container){
+		authenticateAuthToken: function(accountId, authToken, callback) {
+			var self = this;
 
+			// Hack: We set the auth token on the app because otherwise the getAuth request won't send any X-Auth-Token HTTP Header
+			// If the request fails, we delete the Auth-Token so it doesn't impact anything else
+			self.authToken = authToken;
+
+			self.getAuth(accountId, authToken, 
+				function(authData) {
+					callback && callback(authData);
+				},
+				function() {
+					delete self.authToken;
+
+					self.renderLoginPage(self.appFlags.mainContainer);
+				}
+			);
+		},
+
+		_afterSuccessfulAuth: function(data) {
+			var self = this;
+
+			self.accountId = data.data.account_id;
+			self.authToken = data.auth_token;
+			self.userId = data.data.owner_id;
+			self.isReseller = data.data.is_reseller;
+			self.resellerId = data.data.reseller_id;
+
+			self.appFlags.isAuthentified = true;
+
+			if('apps' in data.data) {
+				self.installedApps = data.data.apps;
+			} else {
+				self.installedApps = [];
+				toastr.error(self.i18n.active().toastrMessages.appListError);
+			}
+
+			var cookieAuth = {
+				language: data.data.language,
+				authToken: self.authToken,
+				accountId: self.accountId
+			};
+
+			$.cookie('monster-auth', JSON.stringify(cookieAuth));
+
+			self.appFlags.mainContainer.addClass('monster-content');
+			$('#main .footer-wrapper').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
+			self.appFlags.mainContainer.empty();
+
+			self.afterLoggedIn();
 		},
 
 		//Events handler
@@ -75,38 +142,6 @@ define(function(require){
 			});
 		},
 
-		_initApp: function (args) {
-			var self = this,
-				restData = {
-					data: {
-						realm : self.realm,
-						accountId : self.accountId,
-						shared_token : self.authToken
-					}
-				},
-				success = function(app) {
-					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
-					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
-					app.userId = self.userId;
-
-					args.callback && args.callback();
-				},
-				installedApp = _.find(self.installedApps, function(val) {
-					return val.name === args.app.name;
-				});
-
-			if(installedApp && installedApp.api_url) {
-				args.app.apiUrl = installedApp.api_url;
-				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
-					args.app.apiUrl += "/";
-				}
-			}
-
-			args.app.authToken = this.authToken;
-
-			success(args.app);
-		},
-
 		//Methods
 		afterLoggedIn: function() {
 			var self = this;
@@ -114,79 +149,6 @@ define(function(require){
 			$('#main_topbar_apploader').show();
 
 			self.loadAccount();
-		},
-
-		authenticate: function(loginData) {
-			var self = this;
-
-			self.callApi({
-				resource: 'auth.userAuth',
-				data: {
-					data: loginData
-				},
-				success: function (data, status) {
-					self._afterAuthenticate(data);
-				}
-			});
-		},
-
-		authenticateAuthtoken: function(accountId, authToken) {
-			var self = this;
-
-			self.callApi({
-				resource: 'auth.get',
-				data: {
-					accountId: accountId,
-					token: authToken
-				},
-				success: function(data) {
-					self._afterAuthenticate(data);
-				}
-			});
-		},
-
-		_afterAuthenticate: function(data) {
-			var self = this;
-
-			self.accountId = data.data.account_id;
-			self.authToken = data.auth_token;
-			self.userId = data.data.owner_id;
-			self.isReseller = data.data.is_reseller;
-			self.resellerId = data.data.reseller_id;
-
-			if('apps' in data.data) {
-				self.installedApps = data.data.apps;
-			} else {
-				self.installedApps = [];
-				toastr.error(self.i18n.active().toastrMessages.appListError);
-			}
-
-			if($('#remember_me').is(':checked')) {
-				var templateLogin = $('.login-block form');
-				    cookieLogin = {
-						login: templateLogin.find('#login').val(),
-						accountName: templateLogin.find('#account_name').val()
-					};
-
-				$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
-			}
-			else{
-				$.cookie('monster-login', null);
-			}
-
-			var cookieAuth = {
-				language: data.data.language,
-				authToken: self.authToken,
-				accountId: self.accountId
-			};
-
-			$.cookie('monster-auth', JSON.stringify(cookieAuth));
-
-			$('#monster-content').addClass('monster-content');
-			$('#main .footer-wrapper').append($('#monster-content .powered-by-block .powered-by'));
-			$('#monster-content ').empty();
-
-			self.afterLoggedIn();
 		},
 
 		loadAccount: function() {
@@ -346,48 +308,6 @@ define(function(require){
 			});
 		},
 
-		newPassword: function(userData) {
-			var self = this,
-				template = $(monster.template(self, 'dialogPasswordUpdate')),
-				form = template.find('#form_password_update'),
-				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
-
-			monster.ui.validate(form);
-
-			template.find('.update-password').on('click', function() {
-				if ( monster.ui.valid(form) ) {
-					var formData = monster.ui.getFormData('form_password_update');
-
-					if ( formData.new_password === formData.new_password_confirmation ) {
-						var newUserData = {
-								password: formData.new_password,
-								require_password_update: false
-							},
-							data = $.extend(true, {}, userData, newUserData);
-
-						self.callApi({
-							resource: 'user.update',
-							data: {
-								accountId: self.accountId,
-								userId: self.userId,
-								data: data
-							},
-							success: function(data, status) {
-								popup.dialog('close').remove();
-								toastr.success(self.i18n.active().passwordUpdate.toastr.success.update);
-							}
-						});
-					} else {
-						toastr.error(self.i18n.active().passwordUpdate.toastr.error.password);
-					}
-				}
-			});
-
-			template.find('.cancel-link').on('click', function() {
-				popup.dialog('close').remove();
-			});
-		},
-
 		renderLoginPage: function(container) {
 			var self = this,
 				template = $(monster.template(self, 'app')),
@@ -395,7 +315,7 @@ define(function(require){
 					container.append(template);
 					self.renderLoginBlock();
 					template.find('.powered-by-block').append($('#main .footer-wrapper .powered-by'));
-					$('#monster-content').removeClass('monster-content');
+					self.appFlags.mainContainer.removeClass('monster-content');
 				}
 				loadWelcome = function() {
 					// if(monster.config.whitelabel.custom_welcome) {
@@ -439,8 +359,6 @@ define(function(require){
 					loadWelcome();
 				}
 			});
-
-			
 		},
 
 		renderLoginBlock: function() {
@@ -469,8 +387,6 @@ define(function(require){
 			});
 
 			content.empty().append(loginHtml);
-
-
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
@@ -538,12 +454,6 @@ define(function(require){
 			});
 		},
 
-		_logout: function() {
-			var self = this;
-
-			monster.util.logoutAndReload();
-		},
-
 		loginClick: function(data) {
 			var self = this,
 				loginUsername = $('#login').val(),
@@ -567,7 +477,70 @@ define(function(require){
 
 			loginData =  _.extend({ credentials: hashedCreds }, loginData);
 
-			self.authenticate(loginData);
+			self.putAuth(loginData, function (data) {
+				if($('#remember_me').is(':checked')) {
+					var templateLogin = $('.login-block form');
+						cookieLogin = {
+							login: templateLogin.find('#login').val(),
+							accountName: templateLogin.find('#account_name').val()
+						};
+
+					$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
+				}
+				else {
+					$.cookie('monster-login', null);
+				}
+
+				self._afterSuccessfulAuth(data);
+			});
+		},
+
+		_logout: function() {
+			var self = this;
+
+			monster.util.logoutAndReload();
+		},
+
+		newPassword: function(userData) {
+			var self = this,
+				template = $(monster.template(self, 'dialogPasswordUpdate')),
+				form = template.find('#form_password_update'),
+				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
+
+			monster.ui.validate(form);
+
+			template.find('.update-password').on('click', function() {
+				if ( monster.ui.valid(form) ) {
+					var formData = monster.ui.getFormData('form_password_update');
+
+					if ( formData.new_password === formData.new_password_confirmation ) {
+						var newUserData = {
+								password: formData.new_password,
+								require_password_update: false
+							},
+							data = $.extend(true, {}, userData, newUserData);
+
+						self.callApi({
+							resource: 'user.update',
+							data: {
+								accountId: self.accountId,
+								userId: self.userId,
+								data: data
+							},
+							success: function(data, status) {
+								popup.dialog('close').remove();
+								toastr.success(self.i18n.active().passwordUpdate.toastr.success.update);
+							}
+						});
+					} else {
+						toastr.error(self.i18n.active().passwordUpdate.toastr.error.password);
+					}
+				}
+			});
+
+			template.find('.cancel-link').on('click', function() {
+				popup.dialog('close').remove();
+			});
 		},
 
 		conferenceLogin: function() {
@@ -589,14 +562,14 @@ define(function(require){
 					self.isReseller = data.data.is_reseller;
 					self.resellerId = data.data.reseller_id;
 
-					$('#monster-content').empty();
+					self.appFlags.mainContainer.empty();
 
 					monster.apps.load('conferences', function(app) {
 						app.userType = 'unregistered';
 						app.user = formData;
 						app.isModerator = data.data.is_moderator;
 						app.conferenceId = data.data.conference_id;
-						app.render($('#monster-content'));
+						app.render(self.appFlags.mainContainer);
 					});
 				},
 				error: function(apiResponse, rawError) {
@@ -610,6 +583,40 @@ define(function(require){
 					}
 
 					monster.ui.alert('error', errorMessage);
+				}
+			});
+		},
+
+		// API Calls
+		putAuth: function(loginData, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.userAuth',
+				data: {
+					data: loginData
+				},
+				success: function (data, status) {
+					callback && callback(data);
+				}
+			});
+		},
+
+		getAuth: function(accountId, authToken, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.get',
+				data: {
+					accountId: accountId,
+					token: authToken,
+					generateError: false
+				},
+				success: function(data) {
+					callbackSuccess && callbackSuccess(data);
+				},
+				error: function(data) {
+					callbackError && callbackError();
 				}
 			});
 		},
@@ -669,6 +676,39 @@ define(function(require){
 					}
 				}
 			});
+		},
+
+		// Method used to authenticate other apps
+		_initApp: function (args) {
+			var self = this,
+				restData = {
+					data: {
+						realm : self.realm,
+						accountId : self.accountId,
+						shared_token : self.authToken
+					}
+				},
+				success = function(app) {
+					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
+					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
+					app.userId = self.userId;
+
+					args.callback && args.callback();
+				},
+				installedApp = _.find(self.installedApps, function(val) {
+					return val.name === args.app.name;
+				});
+
+			if(installedApp && installedApp.api_url) {
+				args.app.apiUrl = installedApp.api_url;
+				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
+					args.app.apiUrl += "/";
+				}
+			}
+
+			args.app.authToken = this.authToken;
+
+			success(args.app);
 		}
 	}
 
