@@ -31,7 +31,7 @@ define(function(require){
 				popup.find('.gmap_link_div').hide();
 			});
 
-			popupHtml.find('button.btn.btn-success').on('click', function(ev) {
+			popupHtml.find('#submit_btn').on('click', function(ev) {
 				ev.preventDefault();
 
 				var e911FormData = monster.ui.getFormData('e911');

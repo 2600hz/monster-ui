@@ -265,10 +265,6 @@
 	display: inline-block;
 }
 
-#numbers_container .search-custom {
-	line-height: 26px;
-}
-
 #numbers_container .actions-wrapper label{
     font-size: 16px;
     font-weight: 600;
@@ -296,6 +292,10 @@
 
 #numbers_container .features i.active {
 	display: inline-block;
+}
+
+#numbers_container .search-custom input {
+	padding: 6px;
 }
 
 @media (max-width: 962px) {

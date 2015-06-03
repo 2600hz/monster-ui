@@ -5,7 +5,7 @@
 /************* INPUT ********************/
 select,
 textarea,
-input[type="text"],
+input[type="text"]:not(.search-query),
 input[type="password"],
 input[type="datetime"],
 input[type="datetime-local"],
