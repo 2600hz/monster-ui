@@ -680,6 +680,7 @@ label[class*='monster-radio'].prepend-label > span {
 	position: relative;
 	color: #fff;
 	background: #22a5ff;
+	border: 1px solid #22a5ff;
 }
 .container-menu > .left-menu .category.active::after {
 	position: absolute;
