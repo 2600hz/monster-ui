@@ -710,7 +710,8 @@ define(function(require){
 			});
 
 			parent.on('click', '.cnam-number', function() {
-				var cnamCell = $(this).parents('.number-box').first(),
+				var row = $(this).parents('.number-box'),
+					cnamCell = row.first(),
 					phoneNumber = cnamCell.data('phonenumber');
 
 				if(phoneNumber) {
@@ -718,6 +719,8 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
+								monster.ui.highlight(row);
+
 								if('cnam' in data.data && data.data.cnam.display_name) {
 									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
 								} else {
@@ -738,7 +741,8 @@ define(function(require){
 			});
 
 			parent.on('click', '.e911-number', function() {
-				var e911Cell = $(this).parents('.number-box').first(),
+				var row = $(this).parents('.number-box'),
+					e911Cell = row.first(),
 					phoneNumber = e911Cell.data('phonenumber');
 
 				if(phoneNumber) {
@@ -746,6 +750,8 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
+								monster.ui.highlight(row);
+
 								if(!($.isEmptyObject(data.data.dash_e911))) {
 									e911Cell.find('.features i.feature-dash_e911').addClass('active');
 								}
@@ -761,7 +767,8 @@ define(function(require){
 			});
 
 			parent.on('click', '.failover-number', function() {
-				var failoverCell = $(this).parents('.number-box').first(),
+				var row = $(this).parents('.number-box'),
+					failoverCell = row.first(),
 					phoneNumber = failoverCell.data('phonenumber');
 
 				if(phoneNumber) {
@@ -769,6 +776,8 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
+								monster.ui.highlight(row);
+
 								if(!($.isEmptyObject(data.data.failover))) {
 									failoverCell.find('.features i.feature-failover').addClass('active');
 								}
@@ -784,7 +793,8 @@ define(function(require){
 			});
 
 			parent.on('click', '.prepend-number', function() {
-				var prependCell = $(this).parents('.number-box').first(),
+				var row = $(this).parents('.number-box'),
+					prependCell = row.first(),
 					phoneNumber = prependCell.data('phonenumber');
 
 				if(phoneNumber) {
@@ -792,9 +802,12 @@ define(function(require){
 						phoneNumber: phoneNumber,
 						callbacks: {
 							success: function(data) {
+								monster.ui.highlight(row);
+
 								if('prepend' in data.data && data.data.prepend.enabled) {
 									prependCell.find('.features i.feature-prepend').addClass('active');
-								} else {
+								} 
+								else {
 									prependCell.find('.features i.feature-prepend').removeClass('active');
 								}
 							}
