@@ -4,10 +4,10 @@ div {
 }
 
 a:active,
-a:focus,
 a.hover,
+a:not(.monster-link):focus,
 button:active,
-button:focus,
+button:not(.monster-button):focus,
 button:hover {
 	outline: none !important;
 }
@@ -24,24 +24,37 @@ h1 {
 	cursor: pointer;
 	color: #666;
 }
+
 .monster-link.blue {
 	color: #22a5ff;
 }
+
 .monster-link i {
 	margin-right: 5px;
 	text-decoration: none;
 }
+
 .monster-link.disabled {
 	cursor: default;
 	text-decoration: none;
 	color: #999;
 }
+
 .monster-link.disabled i {
 	color: #999;
 }
-.monster-link:hover {
+
+.monster-link:hover,
+.monster-link:focus {
+	color: #666;
 	text-decoration: underline;
 }
+
+.monster-link.blue:hover,
+.monster-link.blue:focus {
+	color: #22a5ff;
+}
+
 
 /************************************************************/
 /************************** BUTTONS *************************/
@@ -64,6 +77,10 @@ h1 {
 
 *[class*='monster-button'].non-fixed {
 	min-width: 0;
+}
+
+*[class*='monster-button']:focus {
+	box-shadow: 0px 0px 4px #888;
 }
 
 *[class*='monster-button'][disabled],

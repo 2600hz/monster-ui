@@ -249,8 +249,8 @@ a {
 	color: #22a5ff;
 }
 
-a:focus,
-a:hover {
+a:not(.monster-link):focus,
+a:not(.monster-link):hover {
 	color: #22a5ff;
 	text-decoration: none;
 }
