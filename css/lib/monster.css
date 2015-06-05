@@ -8,7 +8,8 @@ a.hover,
 a:not(.monster-link):focus,
 button:active,
 button:not(.monster-button):focus,
-button:hover {
+button:hover,
+a.disabled {
 	outline: none !important;
 }
 
@@ -44,8 +45,8 @@ h1 {
 	color: #999;
 }
 
-.monster-link:hover,
-.monster-link:focus {
+.monster-link:not(.disabled):hover,
+.monster-link:not(.disabled):focus {
 	color: #666;
 	text-decoration: underline;
 }
