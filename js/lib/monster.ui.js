@@ -5,7 +5,8 @@ define(function(require){
 		hotkeys = require('hotkeys'),
 		toastr = require('toastr'),
 		validate = require('validate'),
-		wysiwyg = require('wysiwyg');
+		wysiwyg = require('wysiwyg'),
+		introJs = require('introJs');
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
@@ -1457,6 +1458,33 @@ define(function(require){
 			target.on(trigger, selector + ':not(.monster-tooltip-loaded)', function(e) {
 				$(this).data('isTooltipLoaded', true).tooltip(options).addClass('monster-tooltip-loaded').trigger(trigger);
 			});
+		},
+
+		/**
+		 * @desc Helper that will load introJs if not existing and use the same set of options everytime we invoke it.
+		 * @param steps - mandatory Array containing every single step (see introJS for format of a step)
+		 * @param callback - function to run after step by step is skipped or ended
+		 */
+		stepByStep: function(steps, callback) {
+			var self = this,
+				coreI18n = monster.apps.core.i18n.active();
+
+			introJs().setOptions({
+				exitOnOverlayClick: false,
+				exitOnEsc: false,
+				keyboardNavigation: false,
+				tooltipClass: 'monster-intro-tooltip',
+				highlightClass: 'monster-intro-highlight',
+				nextLabel: coreI18n.stepByStep.nextLabel,
+				prevLabel: coreI18n.stepByStep.prevLabel,
+				skipLabel: coreI18n.stepByStep.skipLabel,
+				doneLabel: coreI18n.stepByStep.doneLabel,
+				showStepNumbers: false,
+				steps: steps
+			})
+			.oncomplete(callback)
+			.onexit(callback)
+			.start();
 		}
 	};
 

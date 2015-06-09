@@ -265,13 +265,13 @@ tr.even {
 	*margin-top: -1px;
 }
 
-.top, .bottom {
+.dataTables .top, .dataTables .bottom {
 	padding: 15px;
 	background-color: #F5F5F5;
 	border: 1px solid #CCCCCC;
 }
 
-.top .dataTables_info {
+.dataTables .top .dataTables_info {
 	float: none;
 }
 

@@ -19,6 +19,7 @@ require.config({
 		'form2object': 'js/lib/form2object',
 		'handlebars': 'js/lib/handlebars-1.0.10',
 		'hotkeys': 'js/lib/jquery.hotkeys.min',
+		'introJs': 'js/lib/intro.min',
 		'isotope': 'js/lib/jquery.isotope.min',
 		'jquery': 'js/lib/jquery-1.9.1.min',
 		'jqueryui': 'js/lib/jquery-ui-1.10.3.custom.min',

@@ -60,6 +60,7 @@ body,
 	padding: 0 20px;
 }
 #main_topbar .nav > li {
+	background: #303039;
 	border-left: 1px solid #202029;
 }
 #main_topbar .nav > li {

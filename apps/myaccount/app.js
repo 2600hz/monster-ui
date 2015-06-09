@@ -234,6 +234,8 @@ define(function(require){
 				if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab) {
 					self.checkCreditCard();
 				}
+
+				self.checkIfDisplayWalkthrough(myaccountHtml);
 			});
 		},
 
@@ -275,6 +277,7 @@ define(function(require){
 					if (toggle) {
 						/* when all the badges have been updated, display my account */
 						if(!--countBadges) {
+							monster.pub('core.showAppName', 'myaccount');
 							self.toggle({
 								callback: callback
 							});
@@ -329,9 +332,7 @@ define(function(require){
 								self.hide();
 							}
 							else {
-								self.renderDropdown(true, function() {
-									monster.pub('core.showAppName', 'myaccount');
-								});
+								self.renderDropdown(true);
 							}
 						}
 					}
@@ -499,6 +500,141 @@ define(function(require){
 						});
 					});
 				}
+			});
+		},
+
+		// First we check if the user hasn't seen the walkthrough already
+		// if he hasn't we show the walkthrough, and once they're done with it, we update their user doc so they won't see the walkthrough again
+		checkIfDisplayWalkthrough: function(template) {
+			var self = this;
+
+			self.hasWalkthrough(function() {
+				self.showWalkthrough(template, function() {
+					self.updateWalkthroughFlagUser();
+				});
+			});
+		},
+
+		// if flag "showfirstUseWalkthrough" is not set to false, we trigger a callback
+		hasWalkthrough: function(callback) {
+			var self = this,
+				flag = self.helpSettings.user.get('showfirstUseWalkthrough');
+
+			if(flag !== false) {
+				callback && callback();
+			}
+		},
+
+		// function to set the flag "showfirstUseWalkthrough" to false and update the user in the database.
+		updateWalkthroughFlagUser: function(callback) {
+			var self = this,
+				userToSave = self.helpSettings.user.set('showfirstUseWalkthrough', false);
+
+			self.updateUser(userToSave, function(user) {
+				callback && callback(user);
+			});
+		},
+
+		// Triggers firstUseWalkthrough. First we render the dropdown, then we show a greeting popup, and once they click go, we render the step by step.
+		showWalkthrough: function(template, callback) {
+			var self = this;
+
+			self.showMyAccount(function() {
+				self.showGreetingWalkthrough(function() {
+					self.renderStepByStepWalkthrough(template, callback);
+				});
+			});
+		},
+
+		// Render the myaccount dropdown
+		showMyAccount: function(callback) {
+			var self = this,
+				module = 'user';
+
+			self.renderDropdown(true, function() {
+				self.activateSubmodule({
+					title: self.i18n.active()[module].title,
+					module: module,
+					callback: function() {
+						callback && callback();
+					}
+				});
+			});
+		},
+
+		showGreetingWalkthrough: function(callback) {
+			var self = this,
+				popup = $(monster.template(self, 'walkthrough-greetingsDialog'));
+
+			popup.find('#start_walkthrough').on('click', function() {
+				dialog.dialog('close').remove();
+
+				callback && callback();
+			});
+
+			var dialog = monster.ui.dialog(popup, {
+				title: self.i18n.active().walkthrough.greetingsDialog.title
+			});
+		},
+
+		showEndWalkthrough: function(callback) {
+			console.log('show end walktrhough');
+			var self = this,
+				popup = $(monster.template(self, 'walkthrough-endDialog'));
+
+			popup.find('#end_walkthrough').on('click', function() {
+				dialog.dialog('close').remove();
+
+				callback && callback();
+			});
+
+			var dialog = monster.ui.dialog(popup, {
+				title: self.i18n.active().walkthrough.endDialog.title
+			});
+		},
+
+		renderStepByStepWalkthrough: function(template, callback) {
+			var self = this,
+				steps =  [
+					{
+						element: $('#main_topbar_myaccount')[0],
+						intro: self.i18n.active().walkthrough.steps['1'],
+						position: 'left'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="user"]')[0],
+						intro: self.i18n.active().walkthrough.steps['2'],
+						position: 'right'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="account"]')[0],
+						intro: self.i18n.active().walkthrough.steps['3'],
+						position: 'right'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="billing"]')[0],
+						intro: self.i18n.active().walkthrough.steps['4'],
+						position: 'right'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="balance"]')[0],
+						intro: self.i18n.active().walkthrough.steps['5'],
+						position: 'right'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="servicePlan"]')[0],
+						intro: self.i18n.active().walkthrough.steps['6'],
+						position: 'right'
+					},
+					{
+						element: template.find('.myaccount-element[data-module="transactions"]')[0],
+						intro: self.i18n.active().walkthrough.steps['7'],
+						position: 'right'
+					}
+				];
+
+			monster.ui.stepByStep(steps, function() {
+				self.showEndWalkthrough(callback);
 			});
 		},
 
@@ -717,6 +853,22 @@ define(function(require){
 				}
 			});
 		},
+
+		updateUser: function(userToUpdate, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'user.update',
+				data: {
+					userId: userToUpdate.id,
+					accountId: monster.apps.auth.originalAccount.id,
+					data: userToUpdate
+				},
+				success: function(savedUser) {
+					callback && callback(savedUser.data);
+				}
+			});
+		}
 	};
 
 	return app;

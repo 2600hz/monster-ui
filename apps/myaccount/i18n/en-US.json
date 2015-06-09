@@ -15,6 +15,29 @@
 	"phoneNumber": "Phone Number",
 	"placeholderNumber": "4152223333",
 
+	"walkthrough": {
+		"greetingsDialog": {
+			"go": "Let's get started",
+			"content": "The step-by-step wizard will help familiarize you with your account settings so that you can begin setting up your business phone system. Your essential account information has been entered during registration.",
+			"title": "Welcome to Kazoo"
+		},
+		"steps": {
+			"1": "Access your Account Settings by clicking on your name.",
+			"2": "Your Admin User settings can be viewed in the User tab. Individual settings such as Timezone, Language and Date & Time can be changed based on your preferences.",
+			"3": "Your Admin Account settings can be viewed in the Account tab. Here you can add a Technical Contact if you wish, and set Timezone & Language for the entire account.",
+			"4": "If you would like to update or change your credit card, please do so here. Please note that the credit card that you used during registration is currently on file in this tab.",
+			"5": "If you need/plan to make international calls, you will need to set up per-minute credits here.",
+			"6": "Review your current service plan and associated charges",
+			"7": "View all transactions made under your account, including all one-time fees and charges"
+
+		},
+		"endDialog": {
+			"roger": "Roger that",
+			"content": "Now that you're familiarized with the different settings, you can take a few moments to change or update any of the information to fit your needs. When you're ready to begin setting up your phone system, close out of these settings by clicking the close button in the upper right or by simply clicking on your name again.",
+			"title": "Done!"
+		}
+	},
+
 	"user": {
 		"title": "User",
 		"passwordsNotMatching": "The passwords you typed don't match",

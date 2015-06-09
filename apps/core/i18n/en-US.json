@@ -497,5 +497,14 @@
 	"uploadProgressTitle": "Uploading file(s)...",
 	"__comment": "UI-1499: Added an account default option to timezones",
 	"__version": "v3.20_s5",
-	"defaultTimezone": "- Account/User default -"
+	"defaultTimezone": "- Account/User default -",
+
+	"__comment": "UI-1421: Adding walkthrough to Monster",
+	"__version": "3.21",
+	"stepByStep": {
+		"nextLabel": "Next",
+		"prevLabel": "Back",
+		"skipLabel": "Skip",
+		"doneLabel": "Done"
+	}
 }
