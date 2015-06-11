@@ -989,13 +989,3 @@ label[class*='monster-radio'].prepend-label > span {
 .monster-lightgrey {
 	color: #999 !important;
 }
-
-/***** Custom CSS for IntroJS *****/
-.monster-intro-highlight {
-	/* Ugly background - for testing purpose only */
-	background: #F9F9F9;
-}
-
-.monster-intro-tooltip {
-	box-shadow: 0px 0px 2px #22A5FF inset;
-}

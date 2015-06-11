@@ -1,8 +1,48 @@
-.introjs-button {
-	font-size: 15px;
-	padding: 6px 20px;
-	letter-spacing: 0.02em;
-	border-radius: 2px;
-	background: transparent;
-	border: 1px solid #c0c0c9;
+.introjs-disabled {
+	display: none;
+}
+
+.introjs-arrow.top {
+	left: 50%;
+	top: -8px;
+}
+
+.introjs-arrow.bottom {
+	left: 50%;
+	bottom: -8px;
+}
+
+a.monster-button.introjs-button:hover, 
+a.monster-button.introjs-button:focus,
+a.monster-button.introjs-button:active{
+	color: #909099;
+}
+
+a.monster-button.monster-button-primary.introjs-button:hover, 
+a.monster-button.monster-button-primary.introjs-button:focus,
+a.monster-button.monster-button-primary.introjs-button:active{
+	color: #004c80;
+}
+
+a.monster-button.monster-button-success.introjs-button:hover, 
+a.monster-button.monster-button-success.introjs-button:focus,
+a.monster-button.monster-button-success.introjs-button:active{
+	color: #0e6b06;
+}
+
+
+/***** Custom CSS for IntroJS *****/
+.monster-intro-highlight {
+	/* Ugly background - for testing purpose only */
+	background: #F9F9F9;
+}
+
+.monster-intro-tooltip {
+	box-shadow: 0px 0px 2px #22A5FF inset;
+	min-width: 370px;
+}
+
+.monster-intro-tooltip.last-step .introjs-skipbutton {
+	float: right;
+	margin-left: 10px;
 }

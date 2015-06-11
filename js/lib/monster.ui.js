@@ -1467,9 +1467,21 @@ define(function(require){
 		 */
 		stepByStep: function(steps, callback) {
 			var self = this,
-				coreI18n = monster.apps.core.i18n.active();
+				coreI18n = monster.apps.core.i18n.active(),
+				countSteps = steps.length,
+				isLastStep = function() {
+					// If next button is hidden, it's because we hide it when it's the last step, so it's our ghetto way to know that the step by step is at the last step...
+					return $('.introjs-nextbutton').css('display') !== 'inline-block';
+				};
+
+			// If we don't already override it, add a last-step class.
+			// We use it to style the skip button (float right)
+			if(!steps[countSteps-1].hasOwnProperty('tooltipClass')) {
+				steps[countSteps-1]['tooltipClass'] = 'monster-intro-tooltip last-step';
+			}
 
 			introJs().setOptions({
+				steps: steps,
 				exitOnOverlayClick: false,
 				exitOnEsc: false,
 				keyboardNavigation: false,
@@ -1479,8 +1491,21 @@ define(function(require){
 				prevLabel: coreI18n.stepByStep.prevLabel,
 				skipLabel: coreI18n.stepByStep.skipLabel,
 				doneLabel: coreI18n.stepByStep.doneLabel,
-				showStepNumbers: false,
-				steps: steps
+				showStepNumbers: false
+			})
+			.onafterchange(function() {
+				var $buttons = $('.introjs-tooltipbuttons');
+
+				$buttons.find('.introjs-button').addClass('monster-button non-fixed');
+
+				if(isLastStep()) {
+					$buttons.find('.introjs-skipbutton').addClass('monster-button-success');
+				}
+				else {
+					$buttons.find('.introjs-skipbutton').removeClass('monster-button-success');
+					$buttons.find('.introjs-nextbutton').addClass('monster-button-primary');
+				}
+				
 			})
 			.oncomplete(callback)
 			.onexit(callback)

@@ -456,6 +456,8 @@ define(function(require){
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.removeClass('myaccount-open');
 			$('#monster-content').show();
+
+			monster.pub('myaccount.closed');
 		},
 
 		_hide: function() {
