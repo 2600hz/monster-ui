@@ -40,6 +40,7 @@ define(function(require) {
 
 			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone||'inherit', {inherit: self.i18n.active().defaultTimezone});
 			template.find('#user_timezone').chosen({ search_contains: true, width: '220px' });
+			monster.ui.showPasswordStrength(template.find('#password'));
 
 			monster.pub('myaccount.events', {
 				template: template,

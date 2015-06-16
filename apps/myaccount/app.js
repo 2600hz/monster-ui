@@ -659,6 +659,25 @@ define(function(require){
 			});
 		},
 
+		validatePasswordForm: function(formPassword, callback) {
+			var self = this;
+
+			monster.ui.validate(formPassword, {
+				rules: {
+					'password': {
+						minlength: 6
+					},
+					'confirm_password': {
+						equalTo: 'input[name="password"]'
+					}
+				}
+			});
+
+			if(monster.ui.valid(formPassword)) {
+				callback && callback();
+			}
+		},
+
 		_myaccountEvents: function(args) {
 			var self = this,
 				data = args.data,
@@ -675,21 +694,17 @@ define(function(require){
 						liSettings.find('.edition').hide();
 					});
 				},
-				settingsValidate = function(fieldName, dataForm, callbackSuccess, callbackError) {
-					var validate = true,
-						error = false;
+				settingsValidate = function(fieldName, dataForm, callback) {
+					var formPassword = template.find('#form_password');
 
-					if(fieldName === 'password') {
-						if(!(dataForm.password === dataForm.confirm_password)) {
-							error = self.i18n.active().user.passwordsNotMatching;
-						}
+					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
+					// If the field is password, we start custom validation
+					if(formPassword.length) {
+						self.validatePasswordForm(formPassword, callback);
 					}
-
-					if(error && typeof callbackError === 'function') {
-						callbackError(error);
-					}
-					else if(validate === true && error === false && typeof callbackSuccess === 'function') {
-						callbackSuccess();
+					// otherwise we don't have any validation for this field, we execute the callback
+					else {
+						callback && callback();
 					}
 				};
 
@@ -762,9 +777,6 @@ define(function(require){
 								monster.ui.friendlyError(dataError);
 							}
 						);
-					},
-					function(error) {
-						monster.ui.alert(error);
 					}
 				);
 			});

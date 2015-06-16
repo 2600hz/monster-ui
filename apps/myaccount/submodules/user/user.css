@@ -1,0 +1,7 @@
+.user-content-wrapper #form_password .monster-password-strength {
+	width: 220px;
+}
+
+.user-content-wrapper #form_password label.monster-invalid[for="password"] {
+	margin-top: 25px;
+}
