@@ -43,6 +43,11 @@ define(function(){
 				}
 			};
 
+			// Active means it's in the DOM. It could be hidden by the Myaccount or apploader and still be "active".
+			app.isActive = function() {
+				return app.name === monster.apps.getActiveApp();
+			};
+
 			app.callApi = function(params) {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
@@ -367,16 +372,25 @@ define(function(){
 		},
 
 		load: function(name, callback, options) {
-			var self = this;
+			var self = this,
+				afterLoad = function(app) {
+					monster.apps.lastLoadedApp = app.name;
+
+					callback && callback(app);
+				};
 
 			if(!(name in monster.apps)) {
 				self._loadApp(name, function(app) {
-					callback && callback(app);
+					afterLoad(app);
 				}, options);
 			}
 			else {
-				callback && callback(monster.apps[name]);
+				afterLoad(monster.apps[name]);
 			}
+		},
+
+		getActiveApp: function() {
+			return monster.apps.lastLoadedApp;
 		},
 
 		loadLocale: function(app, language, callback) {
