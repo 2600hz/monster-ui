@@ -7,6 +7,7 @@
 * [Using Monster Events][events]
 * [Using a Common control][common_controls]
 * [Adding I18n to your application][i18n]
+* [Using application flags][flags]
 * [Coding standards (Basic)][coding_standards]
 * [Coding standards (Advanced)][js_style_guide]
 * [How to use the validation in your UI][validation]
@@ -21,6 +22,7 @@
 [events]: events.md
 [common_controls]: commonControls.md
 [i18n]: internationalization.md
+[flags]: flags.md
 [coding_standards]: codingStandards.md
 [js_style_guide]: javascriptStyleGuide.md
 [validation]: validation.md
