@@ -1,5 +1,5 @@
 ### What will I learn in this documentation?
-A Monster Application is a folder containing JavaScript, HTML, and CSS to represent an application in our Monster Framework. In order to get more help on how to create the application, check [here](tutorial).
+A Monster Application is a folder containing JavaScript, HTML, and CSS to represent an application in our Monster Framework. In order to get more help on how to create the application, check [here][tutorial].
 
 This article is written to cover what's available once you're done with the tutorial; which flags and helpers are available to developers but also how they can add external files such as JS libraries or custom CSS.
 
@@ -16,7 +16,7 @@ Once you're in the code of your application (everything contained in the `app` o
 ### Available flags & helpers
 ##### apiUrl
 
-The `apiUrl` flag is most often used in conjunction with the `self.callApi` helper. It contains the API URL defined by the application document for this application. For more information about this document, check [this document](appstore)
+The `apiUrl` flag is most often used in conjunction with the `self.callApi` helper. It contains the API URL defined by the application document for this application. For more information about this document, check [this document][appstore]
 
 ##### appPath
 
@@ -40,7 +40,7 @@ The `userId` flag contains the ID of the user that logged in. This is is often u
 
 ##### i18n
 
-The `i18n` flag is actually a JavaScript object that contains all the loaded i18n Strings (to know more about i18n, check [this document](i18n)).
+The `i18n` flag is actually a JavaScript object that contains all the loaded i18n Strings (to know more about i18n, check [this document][i18n]).
 To get the list of i18n Strings of the language to use for the current session, you can use `self.i18n.active()` which will return the entire list of String for the active language of your application. The active language is determined by Monster automatically after log-in. Basically it checks: the user first, then the account, then the browser language. If any of this 3 has a default `language` set, it will use it, otherwise it will fall back to `en-US` automatically.
 
 ##### helpSettings
@@ -52,8 +52,6 @@ If you want to add specific settings for users, you HAVE to use this method, oth
 ##### isMasqueradable
 
 Used internally to let admins masquerade an app or not. If it's set to false, an admin wouldn't be able to see that app from another account perspective.
-console.log(self.i18n);
-console.log(self.helpSettings);
 
 
 ##### callApi
@@ -79,3 +77,4 @@ This new helper lets you know if your app is the one being currently in use in M
 
 [appstore]: appstore.md
 [i18n]: internationalization.md
+[tutorial]: tutorial.md
