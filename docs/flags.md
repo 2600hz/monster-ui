@@ -16,7 +16,7 @@ Once you're in the code of your application (everything contained in the `app` o
 ### Available flags & helpers
 ##### apiUrl
 
-The `apiUrl` flag is most often used in conjunction with the `self.callApi` helper. It contains the API URL defined by the application document for this application. For more information about this document, check [this document][appstore]
+The `apiUrl` flag is most often used in conjunction with the `self.callApi` helper. It contains the API URL defined by the application document for this application. For more information about this document, check [this document][appstore].
 
 ##### appPath
 
@@ -73,7 +73,6 @@ Probably the most used helper by developers! Every time you want to call a Kazoo
 ##### isActive
 
 This new helper lets you know if your app is the one being currently in use in Monster. There's only one app that can be rendered at a certain time (except internal core apps that run simultaneously such as core, auth, myaccount...). This can be used if you want to execute some code only if your app is being displayed and bypass some code if it's not. For example you could want to display a popup when a user click on the "Close" button of "My Account", a way to do that would be to subscribe to the event "myaccount.close", and in the function check `self.isActive()` and if it's `true` then run some code.
-
 
 [appstore]: appstore.md
 [i18n]: internationalization.md
