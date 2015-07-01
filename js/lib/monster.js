@@ -387,8 +387,10 @@ define(function(require){
 			monster.logs.error.push(monsterError);
 		},
 
-		parallel: function(methods, callback) {
-			async.parallel(methods, function(err, results) {
+		parallel: function(methods, callback, pLimit) {
+			var limit = pLimit && pLimit >= 1 ? pLimit : 5;
+
+			async.parallelLimit(methods, limit, function(err, results) {
 				callback(err, results);
 			});
 		},
