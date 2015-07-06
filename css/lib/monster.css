@@ -80,7 +80,7 @@ h1 {
 	min-width: 0;
 }
 
-*[class*='monster-button']:focus {
+*[class*='monster-button']:not(.disabled):focus {
 	box-shadow: 0px 0px 4px #888;
 }
 
