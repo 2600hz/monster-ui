@@ -1302,36 +1302,35 @@ define(function(require){
 					'CELT_48': 'CELT@48000h',
 					'CELT_64': 'CELT@64000h'
 				},
+				mapMigrateVideoCodec = {},
 				selectedItems = [],
 				items = [],
-				codecValue;
+				codecValue,
+				mapSelected = {},
+				getLinkedColumn = function(selectedCodecs, defaultList, mapMigrate) {
+					_.each(selectedCodecs, function(codec) {
+						// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
+						codecValue = defaultList.hasOwnProperty(codec) ? defaultList[codec] : (mapMigrate.hasOwnProperty(codec) ? defaultList[mapMigrate[codec]] : codec);
+
+						mapSelected[codec] = true;
+						selectedItems.push({ key: codec, value: codecValue });
+					});
+
+					_.each(defaultList, function(description, codec) {
+						if(!mapSelected.hasOwnProperty(codec)) {
+							items.push({ key: codec, value: description });
+						}
+						
+					});
+
+					return self.linkedColumns(target, items, selectedItems, options)
+				};
 
 			if(type === 'audio') {
-				_.each(selectedCodecs, function(codec) {
-					// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
-					codecValue = defaultAudioList.hasOwnProperty(codec) ? defaultAudioList[codec] : (mapMigrateAudioCodec.hasOwnProperty(codec) ? defaultAudioList[mapMigrateAudioCodec[codec]] : codec);
-
-					selectedItems.push({ key: codec, value: codecValue });
-				});
-
-				_.each(defaultAudioList, function(description, codec) {
-					items.push({ key: codec, value: description });
-				})
-
-				return self.linkedColumns(target, items, selectedItems, options)
+				return getLinkedColumn(selectedCodecs, defaultAudioList, mapMigrateAudioCodec);
 			}
 			else if(type === 'video') {
-				_.each(selectedCodecs, function(codec) {
-					codecValue = defaultVideoList.hasOwnProperty(codec) ? defaultVideoList[codec] : codec;
-
-					selectedItems.push({ key: codec, value: codecValue });
-				});
-
-				_.each(defaultVideoList, function(description, codec) {
-					items.push({ key: codec, value: description });
-				})
-
-				return self.linkedColumns(target, items, selectedItems, options);
+				return getLinkedColumn(selectedCodecs, defaultVideoList, mapMigrateVideoCodec);
 			}
 			else {
 				console.error('This is not a valid type for our codec selector: ', type);
