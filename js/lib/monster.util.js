@@ -9,7 +9,7 @@ define(function(require){
 			// If Date is undefined, then we return an empty string.
 			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
 			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			if(typeof date !== 'undefined') {
+			if(typeof pDate !== 'undefined') {
 				var self = this,
 					i18n = monster.apps.core.i18n.active(),
 					user = pUser || monster.apps.auth.currentUser,
