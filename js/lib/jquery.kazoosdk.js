@@ -180,7 +180,7 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
 			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{deviceId}/quickcall/{number}'},
-			'restart': { verb: 'POST', url: 'accounts/{accountId}/users/{deviceId}/sync'}
+			'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync'}
 		},
 		media: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
