@@ -133,20 +133,20 @@ table.table {
 	border: 1px solid #ddd;
 	border-top: 0 solid; /* hack infinite scroll */
 }
-table.table thead th {
+table.table > thead > th {
 	font-weight: 600;
 	line-height: 30px;
 	color: #fff;
 	background-color: #999;
 	text-shadow: 1px 1px 1px #666;
 }
-table.table tr {
+table.table > tbody > tr {
 	background: #eee;
 }
-table.table tbody tr:nth-child(odd) {
+table.table > tbody > tr:nth-child(odd) {
 	background: #fdfdfd;
 }
-table.table tr td {
+table.table tr > td {
 	line-height: 30px;
 	white-space: nowrap;
 }
