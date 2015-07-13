@@ -133,6 +133,11 @@ table.table {
 	border: 1px solid #ddd;
 	border-top: 0 solid; /* hack infinite scroll */
 }
+
+table.table.not-infinite {
+	border-top: 1px solid #ddd;
+}
+
 table.table > thead > th {
 	font-weight: 600;
 	line-height: 30px;
