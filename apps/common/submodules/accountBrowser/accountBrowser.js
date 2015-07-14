@@ -9,7 +9,8 @@ define(function(require){
 		},
 
 		subscribe: {
-			'common.accountBrowser.render': 'accountBrowserRender'
+			'common.accountBrowser.render': 'accountBrowserRender',
+			'common.accountBrowser.getBreadcrumbsList': 'accountBrowserGetBreadcrumbsList'
 		},
 
 		accountBrowserRender: function(args) {
@@ -91,6 +92,24 @@ define(function(require){
 			}
 		},
 
+		accountBrowserGetBreadcrumbsList: function(args) {
+			var breadcrumbsContainer = args.container || args,
+				breadcrumbsList = $.map(
+					breadcrumbsContainer.find('.account-browser-breadcrumb a'),
+					function(elem) {
+						var $elem = $(elem);
+						return {
+							id: $elem.data('id'),
+							name: $elem.text(),
+							parentId: $elem.data('parent')
+						}
+					}
+				);
+
+			args.callback && args.callback(breadcrumbsList);
+			return breadcrumbsList;
+		},
+
 		accountBrowserBindEvents: function(args) {
 			var self = this,
 				template = args.template,
@@ -115,17 +134,7 @@ define(function(require){
 
 			template.find('.account-list-add').on('click', function() {
 				var currentAccountId = accountList.data('current'),
-					breadcrumbsList = $.map(
-						breadcrumbsTemplate.find('.account-browser-breadcrumb a'),
-						function(elem) {
-							var $elem = $(elem);
-							return {
-								id: $elem.data('id'),
-								name: $elem.text(),
-								parentId: $elem.data('parent')
-							}
-						}
-					);
+					breadcrumbsList = self.accountBrowserGetBreadcrumbsList(breadcrumbsTemplate);
 
 				onNewAccountClick && onNewAccountClick(currentAccountId, breadcrumbsList);
 			});
@@ -340,7 +349,7 @@ define(function(require){
 			if(addBackButton) {
 				accountList.on('click', '.account-previous-link', function() {
 					var currentAccountId = accountList.data('current') || self.accountId;
-					if(currentAccountId != self.accountId) {
+					if(currentAccountId !== self.accountId) {
 
 						self.callApi({
 							resource: 'account.listParents',
