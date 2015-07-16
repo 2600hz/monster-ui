@@ -403,6 +403,7 @@
 				authTokens[apiRoot] = data.auth_token;
 				settings.success && settings.success(data, status, jqXHR);
 			},
+			headers: settings.headers,
 			error: settings.error
 		}));
 	}

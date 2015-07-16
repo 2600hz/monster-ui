@@ -14,9 +14,15 @@ define(function(){
 		},
 
 		monsterizeApp: function(app, callback) {
-			var self = this;
+			var self = this,
+				hasClusterFlag = monster.config.hasOwnProperty('kazooClusterId');
 
 			_.each(app.requests, function(request, id){
+				if(hasClusterFlag) {
+					request.headers = request.headers || {};
+					request.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
+				}
+
 				monster._defineRequest(id, request, app);
 			});
 
@@ -178,8 +184,13 @@ define(function(){
 									origin: app.name
 								},
 								success: successCallback,
-								error: errorCallback
+								error: errorCallback,
+								headers: {}
 							}, params.data);
+
+						if(monster.config.hasOwnProperty('kazooClusterId')) {
+							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
+						}
 
 						if (params.hasOwnProperty('onChargesCancelled')) {
 							apiSettings.onChargesCancelled = params.onChargesCancelled;
