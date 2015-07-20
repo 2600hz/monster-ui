@@ -101,6 +101,8 @@ body,
 	border-top: none;
 	border-radius: 0px 0px 4px 4px;
 	display: none;
+	z-index: 25;
+	position: relative;
 }
 #main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div {
 	box-sizing: border-box;

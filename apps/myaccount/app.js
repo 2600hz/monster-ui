@@ -302,7 +302,7 @@ define(function(require){
 
 		bindEvents: function(container) {
 			var self = this,
-				mainContainer = $(self.mainContainer);
+				mainContainer = $(self.mainContainer),
 				navLinks = $('#main_topbar_nav');
 
 			container.find('.myaccount-close').on('click', function() {
@@ -377,6 +377,7 @@ define(function(require){
 					},
 					success: function(data, status) {
 						monster.pub('accountsManager.triggerMasquerading', data.data);
+						self.hide();
 					}
 				});
 			});
