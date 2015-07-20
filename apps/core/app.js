@@ -283,7 +283,7 @@ define(function(require){
 					container.find('#main_topbar_brand').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
 				},
 				error: function(error) {
-					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.png")');
+					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.svg")');
 				}
 			});
 		},
