@@ -1,0 +1,57 @@
+<div class="requests-wrapper empty">
+	<div class="requests-header">
+		<div class="request-name">{{i18n.port.pendingOrders.tableOrderName}}</div>
+		<div class="request-created">{{i18n.port.pendingOrders.tableOrderDate}}</div>
+		<div class="request-state">{{i18n.port.pendingOrders.tableOrderState}}</div>
+		<div class="scheduled-date">{{i18n.port.pendingOrders.tableOrderScheduled}}</div>
+	</div>
+</div>
+<div class="accounts-wrapper">
+{{#each data}}
+	<div class="account-section{{#if port_requests}} active{{/if}}" data-id="{{account_id}}">
+		<div class="account-header">
+			<div class="left-part pull-left">
+				<i class="fa fa-chevron-{{#if port_requests}}down monster-white{{else}}right{{/if}}"></i>
+			</div>
+			<div class="expandable">
+				<span class="account-name">{{account_name}}</span> <span class="request-amount">({{amount}})</span>
+			</div>
+		</div>
+		<div class="requests-wrapper">
+		{{#if port_requests}}
+			<div class="requests-header">
+				<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
+				<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
+				<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
+				<div class="scheduled-date">{{../../i18n.port.pendingOrders.tableOrderScheduled}}</div>
+			</div>
+			{{#each port_requests}}
+			<div class="request-box" data-account_id="{{../account_id}}" data-id="{{id}}" data-state="{{port_state}}" data-scheduled_date="{{scheduled_date}}" data-updated_date="{{updated}}">
+				<div class="pull-left">
+					<div class="request-name">{{name}}</div>
+					<div class="request-created">{{toFriendlyDate created 'short'}}</div>
+					<div class="request-state"></div>
+					<div class="scheduled-date"></div>
+				</div>
+				<div class="actions pull-right">
+					<div class="dropdown">
+						<i class="fa fa-cog dropdown-toggle" data-toggle="dropdown"></i>
+						<ul class="dropdown-menu">
+						{{#compare port_state '===' 'unconfirmed'}}
+							<li class="continue-request"><a href="#"><i class="fa fa-play monster-green"></i> {{../../../../i18n.port.pendingOrders.continueButton}}</a></li>
+							<li class="delete-request"><a href="#"><i class="fa fa-times monster-red"></i> {{../../../../i18n.port.pendingOrders.deleteButton}}</a></li>
+						{{/compare}}
+							<li class="info-request"><a href="#"><i class="fa fa-info monster-yellow"></i> {{../../../i18n.port.pendingOrders.infoButton}}</a></li>
+							<li class="comments-request"><a href="#"><i class="fa fa-comments"></i> {{../../../i18n.port.pendingOrders.commentsButton}}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			{{/each}}
+		{{/if}}
+		</div>
+	</div>
+{{else}}
+	<div class="request-box empty">{{../i18n.port.pendingOrders.noOrder}}</div>
+{{/each}}
+</div>

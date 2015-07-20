@@ -318,7 +318,7 @@
 			"deleteButton": "Delete",
 			"infoButton": "Info",
 			"commentsButton": "Comments",
-			"noOrder": "No existing port request for this account",
+			"noOrder": "No existing port request for this state",
 			"__comment": "UI-1302: Add scheduled date when state is set to pending",
 			"__version": "v3.20_s3",
 			"tableOrderScheduled": "Scheduled date",
@@ -332,7 +332,10 @@
 			"__version": "v3.20_3",
 			"accounts": "Accounts",
 			"requests": "Requests",
-			"all": "All"
+			"all": "All",
+			"__comment": "UI-1690: Changing the filter buttons into a dropdown",
+			"__version": "v3.21",
+			"portState": "State:"
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",

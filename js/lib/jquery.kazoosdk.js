@@ -263,7 +263,9 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/port_requests' },
-			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/port_requests/descendants' },
+			'listByState': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{state}' },
+			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests' },
+			'listDescendantsByState': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests/{state}' },
 			'listAttachments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments' },
 			'getAttachment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
@@ -403,7 +405,6 @@
 				authTokens[apiRoot] = data.auth_token;
 				settings.success && settings.success(data, status, jqXHR);
 			},
-			headers: settings.headers,
 			error: settings.error
 		}));
 	}

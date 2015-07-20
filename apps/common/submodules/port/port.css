@@ -241,6 +241,12 @@ div#orders_list .filter-options .btn {
 	padding-left: 10px;
 }
 
+div#orders_list .filter-options .filter-select-label {
+	font-size: 15px;
+	margin-right: 10px;
+	font-weight: 600;
+}
+
 div#orders_list .collapse td:last-child button {
 	margin-right: 10px;
 }
@@ -335,8 +341,14 @@ div#orders_list .collapse td:last-child i {
 	height: 50px;
 }
 
+#orders_list .accounts-list .request-box.empty {
+	padding: 10px 50px;
+	border: 1px solid #c0c0c9;
+	border-radius: 8px;
+	font-weight: 600;
+}
 #orders_list .accounts-list .requests-wrapper .request-box.empty {
-	border-top: 0;
+	border: 0;
 	text-align: center;
 }
 
