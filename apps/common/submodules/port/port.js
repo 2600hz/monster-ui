@@ -10,8 +10,8 @@ define(function(require){
 
 		requests: {
 			'common.numbers.metadata': {
-				apiRoot: 'http://69.164.206.244/number_manager/api/index.php/',
-				url: 'numbers/{country}/meta',
+				apiRoot: monster.config.api.phonebooks,
+				url: '/locality/metadata?lerg_lookup=true',
 				verb: 'POST'
 			}
 		},
@@ -1362,50 +1362,71 @@ define(function(require){
 			})
 		},
 
-		portFormatNumbers: function(numbersArray, callback) {
-			var self = this;
+		portFormatNumbers: function(numbersArray, globalCallback) {
+			var self = this,
+				formattedData = { orders: [] },
+				callbackError = function() {
+					var order = {
+						carrier: self.i18n.active().port.unknownCarrier,
+						numbers: numbersArray
+					};
 
-			monster.request({
-				resource: 'common.numbers.metadata',
-				data: {
-					data: numbersArray,
-					country: 'US'
-				},
-				success: function(data) {
-					data = data.data;
+					formattedData.orders.push(order);
 
-					var carriersList = [],
-						formattedData = { orders: [] };
+					globalCallback && globalCallback(formattedData);
+				};
 
-					for (var number in data) {
-						if (data[number].company == null || data[number].company == 'undefined' || data[number].company == "") {
-							data[number].company = self.i18n.active().port.unknownCarrier;
-						}
+			if(monster.config.api.hasOwnProperty('phonebooks')) {
+				monster.request({
+					resource: 'common.numbers.metadata',
+					data: {
+						data: numbersArray,
+						country: 'US'
+					},
+					success: function(data) {
+						var formattedData = { orders: [] },
+							carriersMap = {},
+							addNumberToCarrier = function(carrierName, number) {
+								var found = -1;
+								
+								if(carriersMap.hasOwnProperty(carrierName)) {
+									formattedData.orders[carriersMap[carrierName]].numbers.push(number);
+								}
+								else {
+									var newIndex = formattedData.orders.length;
 
-						if (carriersList.indexOf(data[number].company) === -1) {
-							carriersList.push(data[number].company);
-						}
-					}
+									formattedData.orders.push({
+										carrier: carrierName,
+										numbers: [ number ]
+									});
 
-					for (var carrier in carriersList) {
-						var numbersArray = [],
-							order = {};
+									carriersMap[carrierName] = newIndex;
+								}
+							};
 
-						for (var number in data) {
-							if (data[number].company == carriersList[carrier]) {
-								numbersArray.push(number);
+						_.each(data.data, function(numberData, did) {
+							if(numberData.hasOwnProperty('lrn') && numberData.lrn.hasOwnProperty('lerg') && numberData.lrn.lerg.hasOwnProperty('company') && numberData.lrn.lerg.company) {
+								addNumberToCarrier(numberData.lrn.lerg.company, did);
 							}
-						}
+							else if(numberData.hasOwnProperty('lrn') && numberData.lrn.hasOwnProperty('carrier') && numberData.lrn.carrier.hasOwnProperty('dba') && numberData.lrn.carrier.dba) {
+								addNumberToCarrier(numberData.lrn.carrier.dba, did);
+							}
+							else if(numberData.hasOwnProperty('carrier') && numberData.carrier.hasOwnProperty('dba') && numberData.carrier.dba) {
+								addNumberToCarrier(numberData.carrier.dba, did);
+							}
+							else {
+								addNumberToCarrier(self.i18n.active().port.unknownCarrier, did);
+							}
+						});
 
-						order.carrier = carriersList[carrier];
-						order.numbers = numbersArray;
-
-						formattedData.orders[carrier] = order;
-					}
-
-					callback(formattedData);
-				}
-			});
+						globalCallback(formattedData);
+					},
+					error: callbackError
+				});
+			}
+			else {
+				callbackError();
+			}
 		},
 
 		portSaveOrder: function(parent, accountId, data, index) {
