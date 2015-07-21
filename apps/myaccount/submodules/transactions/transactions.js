@@ -68,8 +68,8 @@ define(function(require){
 			});
 
 			parent.find('#filter_transactions').on('click', function() {
-				var from = new Date(parent.find('#startDate').val()),
-					to = new Date(parent.find('#endDate').val());
+				var from = monster.util.parseDateString(parent.find('#startDate').val()),
+					to = monster.util.parseDateString(parent.find('#endDate').val());
 
 				self.listTransactions(from, to, function(data) {
 					var listTransactions = parent.find('.list-transactions').empty();
