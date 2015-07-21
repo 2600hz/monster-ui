@@ -115,6 +115,24 @@ define(function(require){
 			}
 		},
 
+		parseDateString: function(dateString, dateFormat) {
+			var self = this,
+				regex = new RegExp(/(\d+)[\/\-](\d+)[\/\-](\d+)/),
+				dateFormats = {
+					'mdy': '$1/$2/$3',
+					'dmy': '$2/$1/$3',
+					'ymd': '$2/$3/$1'
+				},
+				format = (dateFormat in dateFormats) ? dateFormat : null;
+
+			if(!format) {
+				var user = monster.apps.auth.currentUser;
+				format = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy';
+			}
+
+			return new Date(dateString.replace(regex, dateFormats[format]));
+		},
+
 		gregorianToDate: function(timestamp) {
 			var formattedResponse;
 
