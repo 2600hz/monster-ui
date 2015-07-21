@@ -564,7 +564,9 @@ define(function(require){
 			self.portPositionDialogBox();
 			self.portComingSoon(container, ['.help-links li:not(.separator) a']);
 
-			container.find('#add_numbers_link').on('click', function() {
+			container.find('#add_numbers_link').on('click', function(e) {
+				//e.stopPropagation();
+
 				var numbersArray = container.find('input').val().split(' ');
 
 				numbersArray = numbersArray.filter(function(el, idx) {
@@ -621,7 +623,7 @@ define(function(require){
 			self.portCancelOrder(parent, accountId, container);
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
-			container.on('click', '#add_numbers_link', function() {
+			container.find('#add_numbers_link').on('click', function() {
 				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
 
 				numbersArray = numbersArray.filter(function(el, idx) {
@@ -650,7 +652,7 @@ define(function(require){
 							container.find('#manage_orders').find('div.order').each(function(index, el) {
 								var carrier = $(el).data('carrier');
 
-								if (carrier == formattedData.orders[order].carrier) {
+								if (carrier === formattedData.orders[order].carrier) {
 									for (var number in formattedData.orders[order].numbers) {
 										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="fa fa-exclamation-triangle"></i>' + formattedData.orders[order].numbers[number] + '<i class="fa fa-times-circle pull-right"></i></li>');
 									}
