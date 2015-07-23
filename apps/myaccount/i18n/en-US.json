@@ -19,7 +19,7 @@
 		"greetingsDialog": {
 			"go": "Let's get started",
 			"content": "The step-by-step wizard will help familiarize you with your account settings so that you can begin setting up your business phone system. Your essential account information has been entered during registration.",
-			"title": "Welcome to Kazoo"
+			"title": "Welcome to the platform"
 		},
 		"steps": {
 			"1": "Access your Account Settings by clicking on your name.",
