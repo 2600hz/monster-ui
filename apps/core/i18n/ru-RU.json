@@ -88,7 +88,7 @@
 	},
 	"unexpectedError": "Произошла неожиданная ошибка, пожалуйста, попробуйте ещё раз!",
 	"update": "Обновить",
-	"upload": "Загрузить на сервер",
+	"upload": "Загрузить",
 	"validation": {
 		"defaultRules": {
 			"required": "Это поле является обязательным.",
@@ -135,7 +135,7 @@
 		"auto": "Автоматически",
 		"americanEnglish": "English (en-US)",
 		"frenchFrench": "French (fr-FR)",
-		"russianRussian": "Russian (ru-RU)",
+		"russianRussian": "Russian (ru-RU)"
 	},
 	"services": {
 		"cnam": "CNAM",
