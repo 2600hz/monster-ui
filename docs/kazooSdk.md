@@ -1612,3 +1612,23 @@ kazooSdk.auth.userAuth({
 | Response Content Type: | json |
 | Mandatory _settings_: | `domain` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __whitelabel.getDnsEntries(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/whitelabel/domains |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __whitelabel.checkDnsEntries(__*settings*__)__ |
+| Request Type: | POST |
+| Request URL: | {apiRoot}/whitelabel/domains?domain={domain} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `domain` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |

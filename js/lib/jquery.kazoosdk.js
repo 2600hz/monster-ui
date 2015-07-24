@@ -284,7 +284,7 @@
 			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
 			'accountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
 			'attempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' }
-		},
+		},4
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
@@ -308,7 +308,9 @@
 			'updateNotificationText': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/plain', dataType: 'text' },
 			'updateNotificationHtml': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}', type: 'text/html', dataType: 'html' },
 			'previewNotification': { verb: 'POST', url: 'accounts/{accountId}/notifications/{notificationId}/preview' },
-			'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' }
+			'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
+			'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
+			'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
 		}
 	},
 	authTokens = {};
