@@ -1,0 +1,13 @@
+<li id="main_topbar_trial" class="visible-desktop">
+	<a href="#" class="links" id="main_topbar_trial_link">
+		{{#compare daysLeft ">=" 0}}
+			<span class="inline-text blue" id="main_topbar_trial_link_label">
+				{{replaceVar i18n.trialDaysLeft daysLeft}}
+			</span>
+		{{else}}
+			<span class="inline-text red" id="main_topbar_trial_link_label">
+				{{replaceVar i18n.trialExpired}}
+			</span>
+		{{/compare}}
+	</a>
+</li>

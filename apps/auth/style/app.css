@@ -398,3 +398,17 @@
 #password_update .cancel-link {
 	margin-right: 10px;
 }
+
+/* Trial Upgrade Popup */
+#trial_upgrade_popup {
+	padding: 15px;
+	width: 284px;
+}
+
+#trial_upgrade_popup .actions {
+	margin-top: 20px;
+}
+
+#trial_upgrade_popup .actions #upgrade {
+	margin-left: 15px;
+}

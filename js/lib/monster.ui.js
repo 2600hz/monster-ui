@@ -333,7 +333,8 @@ define(function(require){
 				defaults = {
 					width: 'auto',
 					modal: true,
-					resizable: false
+					resizable: false,
+					open: function(event, ui) { if(options.hideClose) $(".ui-dialog-titlebar-close", ui.dialog | ui).hide(); }
 				};
 
 			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
@@ -1461,12 +1462,13 @@ define(function(require){
 
 		/**
 		 * @desc Helper that will load introJs if not existing and use the same set of options everytime we invoke it.
-		 * @param steps - mandatory Array containing every single step (see introJS for format of a step)
+		 * @param stepList - mandatory Array containing every single step (see introJS for format of a step)
 		 * @param callback - function to run after step by step is skipped or ended
 		 */
-		stepByStep: function(steps, callback) {
+		stepByStep: function(stepList, callback) {
 			var self = this,
 				coreI18n = monster.apps.core.i18n.active(),
+				steps = _.filter(stepList, function(step) { return step.element }), //Filtering out steps where the element does not exist
 				countSteps = steps.length,
 				isLastStep = function() {
 					// If next button is hidden, it's because we hide it when it's the last step, so it's our ghetto way to know that the step by step is at the last step...

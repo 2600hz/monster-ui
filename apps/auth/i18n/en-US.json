@@ -94,5 +94,17 @@
 
 	"toastrMessages": {
 		"appListError": "A problem occured while loading your list of applications."
+	},
+
+	"__comment": "UI-1666: Show # of days left in account",
+	"__version": "3.22",
+	"trialDaysLeft": "{{variable}} days left in trial",
+	"trialExpired": "Trial Expired!",
+	"trialPopup": {
+		"title": "Trial status",
+		"closeButton": "Continue Trial",
+		"upgradeButton": "Upgrade Now",
+		"mainMessage": "Welcome back to your trial. You have {{variable}} days left to try out the platform.",
+		"trialExpired": "Your trial expired, please click on the Upgrade button to continue using the platform."
 	}
 }

@@ -115,6 +115,13 @@ define(function(require){
 			} else {
 				args.restrictions = self.getDefaultRestrictions();
 			}
+			if(monster.apps.auth.currentUser.priv_level === 'user') {
+				_.each(args.restrictions, function(restriction, tab) {
+					if(tab !== 'user' && tab !== 'errorTracker') {
+						restriction.show_tab = false;
+					}
+				})
+			}
 
 			if ( !args.restrictions.hasOwnProperty('user') ) {
 				args.restrictions = $.extend(args.restrictions, {
