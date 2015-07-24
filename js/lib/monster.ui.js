@@ -333,7 +333,8 @@ define(function(require){
 				defaults = {
 					width: 'auto',
 					modal: true,
-					resizable: false
+					resizable: false,
+					open: function(event, ui) { if(options.hideClose) $(".ui-dialog-titlebar-close", ui.dialog | ui).hide(); }
 				};
 
 			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.

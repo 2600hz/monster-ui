@@ -91,5 +91,17 @@
 
 	"toastrMessages": {
 		"appListError": "Un problème est intervenu durant le chargement de vos applications."
+	},
+
+	"__comment": "UI-1666: Show # of days left in account",
+	"__version": "3.22",
+	"trialDaysLeft": "{{variable}} jours de test restants",
+	"trialExpired": "Version expirée!",
+	"trialPopup": {
+		"title": "Statut du Test",
+		"closeButton": "Continuer période d'essai",
+		"upgradeButton": "Améliorer",
+		"mainMessage": "Bievenue dans votre phase de test. Vous avez {{variable}} jours restants pour tester la plateforme!",
+		"trialExpired": "Votre période d'essai est terminé. Veuillez cliquer sur le bouton Améliorer afin de continuer à utiliser la plateforme."
 	}
 }

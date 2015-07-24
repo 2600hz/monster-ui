@@ -217,7 +217,8 @@ define(function(require){
 									}
 								}
 							}
-						} else {
+						} 
+						else {
 							var userAppList = $.map(fullAppList, function(val) {
 								if(val.id in accountApps) {
 									var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
@@ -267,6 +268,14 @@ define(function(require){
 
 						self.defaultApp = defaultApp;
 
+						if('ui_flags' in results.user && results.user.ui_flags.colorblind) {
+							$('body').addClass('colorblind');
+						}
+
+						if(results.account.hasOwnProperty('trial_time_left')) {
+							self.showTrialInfo(results.account.trial_time_left);
+						}
+
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp
 						});
@@ -300,12 +309,48 @@ define(function(require){
 					else {
 						afterLanguageLoaded && afterLanguageLoaded();
 					}
-
-					if('ui_flags' in results.user && results.user.ui_flags.colorblind) {
-						$('body').addClass('colorblind');
-					}
 				}
 			});
+		},
+
+		showTrialInfo: function(timeLeft) {
+			var self = this,
+				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60*60*24*4)) : -1,
+				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
+
+			template.find('.links').on('click', function() {
+				self.showTrialPopup(daysLeft);
+			});
+
+			$('#main_topbar_nav').prepend(template);
+
+			self.showTrialPopup(daysLeft);
+		},
+
+		showTrialPopup: function(daysLeft) {
+			var self = this,
+				template = $(monster.template(self, 'trial-upgradePopup', { daysLeft: daysLeft })),
+				dialog;
+
+			template.find('#close').on('click', function() {
+				dialog.dialog('close').remove();
+			});
+
+			template.find('#upgrade').on('click', function() {
+				// Add upgrade stuff
+				dialog.dialog('close').remove();
+			});
+
+			dialog = monster.ui.dialog(template, {
+				title: self.i18n.active().trialPopup.title,
+				hideClose: true,
+				closeOnEscape: false
+			});
+
+			if(daysLeft < 0) {
+				console.log(dialog,dialog.find('.ui-dialog-titlebar-close'));
+				dialog.find('.ui-dialog-titlebar-close').remove();
+			}
 		},
 
 		renderLoginPage: function(container) {
