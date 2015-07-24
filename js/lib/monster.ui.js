@@ -1462,12 +1462,13 @@ define(function(require){
 
 		/**
 		 * @desc Helper that will load introJs if not existing and use the same set of options everytime we invoke it.
-		 * @param steps - mandatory Array containing every single step (see introJS for format of a step)
+		 * @param stepList - mandatory Array containing every single step (see introJS for format of a step)
 		 * @param callback - function to run after step by step is skipped or ended
 		 */
-		stepByStep: function(steps, callback) {
+		stepByStep: function(stepList, callback) {
 			var self = this,
 				coreI18n = monster.apps.core.i18n.active(),
+				steps = _.filter(stepList, function(step) { return step.element }), //Filtering out steps where the element does not exist
 				countSteps = steps.length,
 				isLastStep = function() {
 					// If next button is hidden, it's because we hide it when it's the last step, so it's our ghetto way to know that the step by step is at the last step...
