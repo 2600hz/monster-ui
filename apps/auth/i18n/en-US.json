@@ -4,7 +4,7 @@
 	"rememberMe": "Remember me",
 	"forgotPassword": "Forgot Info?",
 	"username": "Username",
-	"registerMessage": "Use one account for all 2600Hz services",
+	"registerMessage": "Use one account for all your services",
 	"registerLink": "Register",
 	"or": "OR",
 	"errorLoadingAccount": "An error occured while loading your account",
@@ -41,8 +41,8 @@
 		"placeholder": {
 			"username":  "john@doe.com",
 			"account": {
-				"name": "2600hz",
-				"realm": "sip.2600hz.com"
+				"name": "My Company",
+				"realm": "sip.mycompany.com"
 			},
 			"phoneNumber": "+14151234567"
 		},

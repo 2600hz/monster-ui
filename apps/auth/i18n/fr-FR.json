@@ -38,8 +38,8 @@
 		"placeholder": {
 			"username":  "alain@durand.com",
 			"account": {
-				"name": "2600hz",
-				"realm": "sip.2600hz.com"
+				"name": "Ma companie",
+				"realm": "sip.macompanie.com"
 			},
 			"phoneNumber": "+33123456789"
 		},

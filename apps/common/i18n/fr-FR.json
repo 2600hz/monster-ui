@@ -319,7 +319,7 @@
 		},
 		"submitDocuments":{
 			"labelOrderName":"Nom vous permettant de vous rappeler de ce trasnfert",
-			"labelOrderNameHelper":"Par exemple: numéros du bureau 2600hz",
+			"labelOrderNameHelper":"Par exemple: numéros du bureau de la companie",
 			"billInfoPartOne":"Veuillez envoyer votre facture de téléphone actuelle and remplir les informations de votre compte mentionnées sur votre facture.",
 			"billInfoPartTwo":"En savoir plus",
 			"uploadBillButton":"Envoyer la facture",

@@ -344,7 +344,7 @@
 		},
 		"submitDocuments": {
 			"labelOrderName": "Name that helps you remember this transfer",
-			"labelOrderNameHelper": "For eg. 2600hz office local DIDs, NY office numbers",
+			"labelOrderNameHelper": "For eg. company office local DIDs, NY office numbers",
 			"billInfoPartOne": "Please submit your current phone bill and fill out account details as mentioned on the bill you upload.",
 			"billInfoPartTwo": "Learn More",
 			"uploadBillButton": "upload phone bill",
