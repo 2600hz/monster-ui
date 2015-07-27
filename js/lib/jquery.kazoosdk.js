@@ -284,7 +284,7 @@
 			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
 			'accountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
 			'attempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' }
-		},4
+		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
