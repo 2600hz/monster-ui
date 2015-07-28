@@ -418,7 +418,12 @@
 			"number_services": "Number Services",
 			"limits": "Limits",
 			"devices": "Devices",
-			"users": "Users"
+			"users": "Users",
+			"__comment": "UI-1737: Adding i18n for new service plans",
+			"__version": "3.21",
+			"branding": "Branding",
+			"ips": "IPs",
+			"ui_apps": "UI Apps"
 		},
 		"noServicePlan": "No Service Plan selected."
 	},
