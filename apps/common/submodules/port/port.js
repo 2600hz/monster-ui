@@ -196,7 +196,7 @@ define(function(require){
 
 				for (var i = 0, len = data.length; i < len; i++) {
 					if (data[i].account_id === accountId) {
-						for (var j = 0, len = data[i].port_requests.length; j < len; j++) {
+						for (var j = 0, len2 = data[i].port_requests.length; j < len2; j++) {
 							if (data[i].port_requests[j].id === requestId) {
 								currentRequest = data[i].port_requests[j];
 							}
@@ -288,7 +288,7 @@ define(function(require){
 
 				for (var i = 0, len = data.length; i < len; i++) {
 					if (data[i].account_id === accountId) {
-						for (var j = 0, len = data[i].port_requests.length; j < len; j++) {
+						for (var j = 0, len2 = data[i].port_requests.length; j < len2; j++) {
 							if (data[i].port_requests[j].id === requestId) {
 								currentRequest = data[i].port_requests[j];
 
