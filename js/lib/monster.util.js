@@ -717,6 +717,25 @@ define(function(require){
 			});
 
 			return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
+		},
+
+		findCallflowNode: function(callflow, module, data) {
+			var self = this,
+				result = [],
+				matchNode = function(node) {
+					if(node.module === module) {
+						if(!data || _.isEqual(data, node.data)) {
+							result.push(node);	
+						}
+					}
+					_.each(node.children, function(child) {
+						matchNode(child);
+					});
+				};
+
+			matchNode(callflow.flow);
+
+			return result.length > 1 ? result : result[0];
 		}
 	};
 
