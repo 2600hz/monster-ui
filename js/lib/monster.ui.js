@@ -29,6 +29,10 @@ define(function(require){
 		return monster.util.formatPhoneNumber(phoneNumber);
 	});
 
+	Handlebars.registerHelper('formatVariableToDisplay', function(variable) {
+		return monster.util.formatVariableToDisplay(variable);
+	});
+
 	Handlebars.registerHelper('toLowerCase', function(stringValue) {
 		return stringValue.toString().toLowerCase();
 	});
