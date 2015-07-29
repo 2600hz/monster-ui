@@ -241,7 +241,8 @@
 			"rejected": "Rejected",
 			"scheduled": "Scheduled",
 			"submitted": "Submitted",
-			"unconfirmed": "Unconfirmed"
+			"unconfirmed": "Unconfirmed",
+			"canceled": "Canceled"
 		},
 		"commentsPopup": {
 			"title": "Comments",
