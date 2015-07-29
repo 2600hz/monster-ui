@@ -61,26 +61,25 @@ define(function(){
 					successCallback = params.success,
 					errorCallback = params.error,
 					cancelCall = false; //Used to cancel the Api Call before it is actually sent
-					
+
 				if(apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
 
 					//Handling special cases:
 					switch(params.resource) {
-						case 'account.update': {
-							if(params.data.accountId === monster.apps['auth'].currentAccount.id) {
+						case 'account.update':
+							if(params.data.accountId === monster.apps.auth.currentAccount.id) {
 								successCallback = function(data, status) {
-									monster.apps['auth'].currentAccount = data.data;
+									monster.apps.auth.currentAccount = data.data;
 									monster.pub('auth.currentAccountUpdated', data.data);
 
 									params.success && params.success(data, status);
 								}
 							}
 							break;
-						}
 
-						case 'user.update': {
+						case 'user.update':
 							// If we're updating the user we're logged in with
-							if(params.data.userId === monster.apps['auth'].userId) {
+							if(params.data.userId === monster.apps.auth.userId) {
 								successCallback = function(data, status) {
 									monster.apps.auth.currentUser = data.data;
 									monster.pub('auth.currentUserUpdated', data.data);
@@ -97,23 +96,21 @@ define(function(){
 								}
 							}
 							break;
-						}
 
 						case 'balance.add':
 						case 'billing.get':
-						case 'billing.update': {
+						case 'billing.update':
 							if(monster.config.disableBraintree) {
 								cancelCall = true;
 							}
 							break;
-						}
 
 						// APIs that will trigger the upload progress bar
 						case 'media.upload':
 						case 'port.createAttachment':
 						case 'port.updateAttachment':
 						case 'whitelabel.updateLogo':
-						case 'whitelabel.updateIcon': {
+						case 'whitelabel.updateIcon':
 							if(!params.data.hasOwnProperty('uploadProgress')) {
 								self.uploadProgress.runningApis++;
 								var progressId = "progress_" + Math.trunc(Math.random()*Math.pow(10,16)),
@@ -169,7 +166,6 @@ define(function(){
 								}
 							}
 							break;
-						}
 					}
 
 					if(cancelCall) {
