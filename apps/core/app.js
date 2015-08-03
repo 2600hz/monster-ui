@@ -43,13 +43,6 @@ define(function(require){
 					generateError: false
 				},
 				success: function(data) {
-					var whitelabelData = data.data;
-					// Merge the whitelabel info to replace the hardcoded info
-					if(whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
-						whitelabelData.companyName = whitelabelData.company_name;
-					}
-					monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
-
 					callback(self);
 				},
 				error: function(err) {
