@@ -105,6 +105,24 @@ define(function(){
 							}
 							break;
 
+						case 'whitelabel.getByDomain':
+						case 'whitelabel.create':
+						case 'whitelabel.update':
+						case 'whitelabel.get':
+							successCallback = function(data, status) {
+								if(data && data.hasOwnProperty('data') && data.data.hasOwnProperty('domain') && window.location.hostname === data.data.domain) {
+									var whitelabelData = data.data;
+									// Merge the whitelabel info to replace the hardcoded info
+									if(whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
+										whitelabelData.companyName = whitelabelData.company_name;
+									}
+									monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
+								}
+
+								params.success && params.success(data, status);
+							}
+							break;
+
 						// APIs that will trigger the upload progress bar
 						case 'media.upload':
 						case 'port.createAttachment':
