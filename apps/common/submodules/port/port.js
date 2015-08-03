@@ -28,7 +28,8 @@ define(function(require){
 			{ value: 'pending', next: [3,4,5] },
 			{ value: 'scheduled', next: [4,5] },
 			{ value: 'rejected', next: [1,5] },
-			{ value: 'completed', next: [] }
+			{ value: 'completed', next: [] },
+			{ value: 'canceled', next: [] }
 		],
 
 		portRender: function(args) {
@@ -46,6 +47,8 @@ define(function(require){
 
 			if (args.hasOwnProperty('accountId')) {
 				self.isLaunchedInAppMode = false;
+			} else {
+				self.isLaunchedInAppMode = true;
 			}
 
 			self.portRenderPendingOrder(parent, accountId);
@@ -79,7 +82,13 @@ define(function(require){
 
 				template.find('.accounts-list')
 						.empty()
-						.append(listTemplate)
+						.append(listTemplate);
+
+				if(!self.isLaunchedInAppMode) {
+					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
+					template.find('.filter-options')
+							.remove();
+				}
 
 				parent.append(template);
 
@@ -94,66 +103,67 @@ define(function(require){
 			});
 		},
 
+		portToggleRequestsDisplay: function(container, accountId, displayType, noFade) {
+			var requestWrapper = container.find('.accounts-list > .requests-wrapper'),
+				requestWrapperIsEmpty = requestWrapper.hasClass('empty'),
+				accountSection = container.find('.account-section');
+
+			if (displayType === 'accounts') {
+				if (!requestWrapperIsEmpty) {
+					var accountsList = {};
+
+					requestWrapper.addClass('empty');
+					requestWrapper.find('.request-box').each(function(idx, el) {
+						var $el = $(el),
+							accountId = $el.data('account_id');
+
+						if (accountsList.hasOwnProperty(accountId)) {
+							accountsList[accountId].push($el);
+						}
+						else {
+							accountsList[accountId] = [ $el ];
+						}
+
+						container.find('.account-section[data-id="' + accountId + '"] .requests-wrapper').append($el);
+					});
+
+					for (var accountId in accountsList) {
+						container
+							.find('.account-section[data-id="' + accountId + '"] .requests-wrapper')
+							.append(accountsList[accountId].sort(function(a, b) {
+								return $(a).data('updated_date') < b.data('updated_date') ? 1 : -1;
+							}));
+					}
+				}
+
+				if(noFade) {
+					accountSection.show();
+				} else {
+					accountSection.fadeIn(400);
+				}
+			}
+			else if (displayType === 'requests') {
+				if (requestWrapperIsEmpty) {
+					var showRequests = function() {
+						requestWrapper.append(container.find('.request-box').sort(function(a, b) {
+							return $(a).data('updated_date') < $(b).data('updated_date') ? 1 : -1;
+						}));
+
+						requestWrapper.removeClass('empty');
+					};
+					if(noFade) {
+						accountSection.hide();
+						showRequests();
+					} else {
+						accountSection.fadeOut(400, showRequests);
+					}
+				}
+			}
+		},
+
 		portBindPendingOrderEvents: function(parent, accountId, data) {
 			var self = this,
-				container = parent.find('#orders_list'),
-				toggleRequestsDisplay = function(displayType, noFade) {
-					var requestWrapper = container.find('.accounts-list > .requests-wrapper'),
-						requestWrapperIsEmpty = requestWrapper.hasClass('empty'),
-						accountSection = container.find('.account-section');
-
-					if (displayType === 'accounts') {
-						if (!requestWrapperIsEmpty) {
-							var accountsList = {};
-
-							requestWrapper.addClass('empty');
-							requestWrapper.find('.request-box').each(function(idx, el) {
-								var $el = $(el),
-									accountId = $el.data('account_id');
-
-								if (accountsList.hasOwnProperty(accountId)) {
-									accountsList[accountId].push($el);
-								}
-								else {
-									accountsList[accountId] = [ $el ];
-								}
-
-								container.find('.account-section[data-id="' + accountId + '"] .requests-wrapper').append($el);
-							});
-
-							for (var accountId in accountsList) {
-								container
-									.find('.account-section[data-id="' + accountId + '"] .requests-wrapper')
-									.append(accountsList[accountId].sort(function(a, b) {
-										return $(a).data('updated_date') < b.data('updated_date') ? 1 : -1;
-									}));
-							}
-						}
-
-						if(noFade) {
-							accountSection.show();
-						} else {
-							accountSection.fadeIn(400);
-						}
-					}
-					else if (displayType === 'requests') {
-						if (requestWrapperIsEmpty) {
-							var showRequests = function() {
-								requestWrapper.append(container.find('.request-box').sort(function(a, b) {
-									return $(a).data('updated_date') < $(b).data('updated_date') ? 1 : -1;
-								}));
-
-								requestWrapper.removeClass('empty');
-							};
-							if(noFade) {
-								accountSection.hide();
-								showRequests();
-							} else {
-								accountSection.fadeOut(400, showRequests);
-							}
-						}
-					}
-				};
+				container = parent.find('#orders_list');
 
 			self.portPositionDialogBox();
 
@@ -365,7 +375,7 @@ define(function(require){
 				if (!$this.hasClass('active')) {
 					$this.siblings().removeClass('active');
 					$this.addClass('active');
-					toggleRequestsDisplay($this.data('value'));
+					self.portToggleRequestsDisplay(container, accountId, $this.data('value'));
 				}
 			});
 
@@ -387,7 +397,7 @@ define(function(require){
 						data: data
 					});
 
-					toggleRequestsDisplay(container.find('.filter-options .btn-group:first-child .btn.active').data('value'), true);
+					self.portToggleRequestsDisplay(container, accountId, container.find('.filter-options .btn-group:first-child .btn.active').data('value'), true);
 				});
 			});
 		},
@@ -1142,7 +1152,7 @@ define(function(require){
 
 			monster.parallel({
 					requests: function(callback) {
-						self.portRequestList(accountId, state, function(data) {
+						self.portRequestList(accountId, (self.isLaunchedInAppMode ? state : 'all'), function(data) {
 							callback(null, data);
 						});
 					},
@@ -1588,17 +1598,24 @@ define(function(require){
 		},
 
 		portRequestList: function(accountId, state, callbackSuccess, callbackError) {
-			var self = this;
+			var self = this,
+				apiResource = (state === 'all') ? 'port.list' : 'port.listByState',
+				apiData = {
+					accountId: accountId,
+					filters: {
+						paginate: false
+					}
+				};
+
+			if(state !== 'all') {
+				apiData.state = state || 'submitted';
+			}
 
 			self.callApi({
-				resource: 'port.listByState',
-				data: {
-					accountId: accountId,
-					state: state || 'submitted',
-					data: {}
-				},
+				resource: apiResource,
+				data: apiData,
 				success: function(data, status) {
-					var requests = data.data.length === 1 ? data.data[0].port_requests : data.data;
+					var requests = (data.data.length === 1 && 'port_requests' in data.data[0]) ? data.data[0].port_requests : data.data;
 					callbackSuccess && callbackSuccess(self.portObjectsToArray(requests));
 				},
 				error: function(data, status){
