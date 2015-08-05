@@ -241,7 +241,7 @@
 				"label": {
 					"name": "Nom",
 					"notificationEmail": "Adresse à notifier",
-					"transferDate": "Date du transfert",
+					"transferDate": "Date demandée du transfert",
 					"temporaryNumbers": "Numéros temporaires",
 					"carrier": "Opérateur"
 				}
