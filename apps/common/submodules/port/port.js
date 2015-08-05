@@ -23,11 +23,11 @@ define(function(require){
 		isLaunchedInAppMode: true,
 
 		states: [
-			{ value: 'unconfirmed', next: [1] },
-			{ value: 'submitted', next: [2,4] },
-			{ value: 'pending', next: [3,4,5] },
-			{ value: 'scheduled', next: [4,5] },
-			{ value: 'rejected', next: [1,5] },
+			{ value: 'unconfirmed', next: [1,6] },
+			{ value: 'submitted', next: [2,4,6] },
+			{ value: 'pending', next: [3,4,5,6] },
+			{ value: 'scheduled', next: [4,5,6] },
+			{ value: 'rejected', next: [1,5,6] },
 			{ value: 'completed', next: [] },
 			{ value: 'canceled', next: [] }
 		],
