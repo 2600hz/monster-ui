@@ -257,9 +257,11 @@
 				"label": {
 					"name": "Name",
 					"notificationEmail": "Notification email",
-					"transferDate": "Transfer date",
 					"temporaryNumbers": "Temporary numbers",
-					"carrier": "Carrier"
+					"carrier": "Carrier",
+					"__comment": "UI-1750: Change label to 'Requested transfer date'",
+					"__version": "3.21",
+					"transferDate": "Requested transfer date"
 				}
 			},
 			"bill": {
