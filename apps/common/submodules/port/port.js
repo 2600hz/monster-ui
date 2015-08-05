@@ -971,14 +971,16 @@ define(function(require){
 		portRenderConfirmOrder: function(parent, accountId, data, index) {
 			var self = this,
 				order = data.orders[index],
-				date = monster.util.dateToGregorian(monster.util.getBusinessDate(4)),
-				created = order.hasOwnProperty('created') ? order.created : date,
-				transferDate = order.hasOwnProperty('transfer_date') ? order.transfer_date : date,
+				todayDate = new Date(),
+				businessDate = monster.util.getBusinessDate(4),
+				createdDate = order.hasOwnProperty('created') ? order.created : todayDate,
+				transferDate = order.hasOwnProperty('transfer_date') ? order.transfer_date : businessDate,
+				isTransferDateNotValid = businessDate.getTime() >= transferDate.getTime(),
 				dataTemplate = $.extend(true, {}, order, {
 					total: order.numbers.length,
 					price: order.numbers.length * 5,
-					transfer_date: date - transferDate >= 0 ? date : transferDate,
-					created: created
+					transfer_date: isTransferDateNotValid ? businessDate : transferDate,
+					created: createdDate
 				}),
 				template = $(monster.template(self, 'port-confirmOrder', dataTemplate));
 
