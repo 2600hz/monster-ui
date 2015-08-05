@@ -5,12 +5,13 @@ define(function(require){
 		monster = require("monster");
 
 	var util = {
-		toFriendlyDate: function(pDate, format, pUser){
+		toFriendlyDate: function(pDate, format, pUser, pIsGregorian){
 			// If Date is undefined, then we return an empty string.
 			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
 			// Otherwise it would display NaN/NaN/NaN in Firefox for example
 			if(typeof pDate !== 'undefined') {
 				var self = this,
+					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
 					i18n = monster.apps.core.i18n.active(),
 					user = pUser || monster.apps.auth.currentUser,
 					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
@@ -23,7 +24,7 @@ define(function(require){
 					todayMonth = format2Digits(today.getMonth() + 1),
 					todayDay = format2Digits(today.getDate()),
 					// date can be either a JS Date or a gregorian timestamp
-					date = typeof pDate === 'object' ? pDate : self.gregorianToDate(pDate),
+					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
 					year = date.getFullYear().toString().substr(2, 2),
 					fullYear = date.getFullYear(),
 					month = format2Digits(date.getMonth() + 1),
@@ -156,6 +157,31 @@ define(function(require){
 			}
 
 			return formattedResponse
+		},
+
+		unixToDate: function(timestamp) {
+			var formattedResponse;
+
+			if(typeof timestamp === 'string') {
+				timestamp = parseInt(timestamp);
+			}
+
+			if(typeof timestamp === 'number' && !_.isNaN(timestamp)) {
+				formattedResponse = new Date((timestamp)*1000);
+			}
+
+			return formattedResponse;
+		},
+
+		dateToUnix: function(date) {
+			var formattedResponse;
+
+			// This checks that the parameter is an object and not null
+			if(typeof date === 'object' && date) {
+				formattedResponse = parseInt(date.getTime() / 1000);
+			}
+
+			return formattedResponse;
 		},
 
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
