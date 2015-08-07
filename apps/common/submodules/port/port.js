@@ -11,7 +11,7 @@ define(function(require){
 		requests: {
 			'common.numbers.metadata': {
 				apiRoot: monster.config.api.phonebooks,
-				url: '/locality/metadata?lerg_lookup=true',
+				url: 'locality/metadata?lerg_lookup=true',
 				verb: 'POST'
 			}
 		},
@@ -579,10 +579,14 @@ define(function(require){
 
 				var numbersArray = container.find('input').val().split(' ');
 
-				numbersArray = numbersArray.filter(function(el, idx) {
-					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
-						return el;
+				numbersArray.forEach(function(val, idx, array) {
+					if (/^(\+1|1[0-9]{10})/.test(val)) {
+						array[idx] = val.replace(/(\+1|1)?([0-9]{10})/, '$2');
 					}
+				});
+
+				numbersArray = numbersArray.filter(function(el, idx, list) {
+					return el && /^[0-9]{10}$/.test(el);
 				});
 
 				if (numbersArray.length === 0) {
@@ -634,12 +638,23 @@ define(function(require){
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
 			container.find('#add_numbers_link').on('click', function() {
-				var numbersArray = container.find('div#add_numbers').find('input').val().split(' ');
+				var numbersArray = container.find('div#add_numbers').find('input').val().split(' '),
+					listedNumbers = [];
 
-				numbersArray = numbersArray.filter(function(el, idx) {
-					if ( el && /(^1[0-9]{10}$)|(^[0-9]{10}$)/.test(el) ) {
-						return el;
+				container
+					.find('#manage_orders li')
+						.each(function() {
+							listedNumbers.push($(this).data('value').toString());
+						});
+
+				numbersArray.forEach(function(val) {
+					if (/^(\+1|1[0-9]{10})/.test(val)) {
+						val = val.replace(/^(\+1|1)?([0-9]{10})$/, '$2');
 					}
+				});
+
+				numbersArray = numbersArray.filter(function(el) {
+					return el && /^[0-9]{10}$/.test(el) && listedNumbers.indexOf(el) < 0;
 				});
 
 				if (numbersArray.length === 0) {
@@ -658,26 +673,37 @@ define(function(require){
 							.find('div.row-fluid')
 							.removeClass('error');
 
-						for (var order in formattedData.orders) {
-							container.find('#manage_orders').find('div.order').each(function(index, el) {
-								var carrier = $(el).data('carrier');
+						_.each(formattedData.orders, function(orderValue, orderKey) {
+							container
+								.find('#manage_orders .order')
+									.each(function() {
+										var $this = $(this),
+											carrier = $this.data('carrier');
 
-								if (carrier === formattedData.orders[order].carrier) {
-									for (var number in formattedData.orders[order].numbers) {
-										$(this).find('ul').append('<li data-value="' + formattedData.orders[order].numbers[number] + '" data-carrier="' + carrier + '"><i class="fa fa-exclamation-triangle"></i>' + formattedData.orders[order].numbers[number] + '<i class="fa fa-times-circle pull-right"></i></li>');
-									}
+										if (carrier === orderValue.carrier) {
+											_.each(orderValue.numbers, function(numberValue) {
+													$this
+														.find('ul')
+															.append(
+																'<li data-value="' + numberValue + '" data-carrier="' + carrier + '">' + 
+																	'<i class="fa fa-exclamation-triangle"></i>' + 
+																	monster.util.formatPhoneNumber(numberValue) + 
+																	'<i class="fa fa-times-circle pull-right"></i>' + 
+																'</li>'
+															);
+											});
 
-									formattedData.orders.splice(order, 1);
-								}
-							});
+											formattedData.orders.splice(orderKey, 1);
+										}
+									});
 
-							if (formattedData.orders.length != 0) {
+							if (formattedData.orders.length !== 0) {
 								container
-									.find('div#manage_orders')
-									.find('div.row-fluid:last-child')
-									.append($(monster.template(self, 'port-order', formattedData.orders[order])));
+									.find('#manage_orders')
+										.find('.row-fluid:last-child')
+											.append($(monster.template(self, 'port-order', formattedData.orders[orderKey])));
 							}
-						}
+						});
 					});
 				}
 			});
