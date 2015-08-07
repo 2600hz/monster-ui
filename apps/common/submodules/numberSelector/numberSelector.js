@@ -45,6 +45,13 @@ define(function(require){
 				removeCallback = args.removeCallback,
 				spareCallback = args.spareCallback,
 				buyCallback = args.buyCallback,
+				/**
+				 * If specified, globalAddNumberCallback will override
+				 * buyCallback and spareCallback and be called without
+				 * consideration of the source of the selected number.
+				 * @type {Function}
+				 */
+				globalAddNumberCallback = args.globalAddNumberCallback,
 				spareFilters = args.spareFilters,
 				customNumbers = args.customNumbers,
 				dropdown = template.find('.number-selector-dropdown'),
@@ -58,7 +65,12 @@ define(function(require){
 						displayed.text(monster.util.formatPhoneNumber(num));
 						removeElement.find('.number').text(monster.util.formatPhoneNumber(num));
 						removeElement.removeClass('hidden');
-						spareCallback && spareCallback(num);
+						if (globalAddNumberCallback) {
+							globalAddNumberCallback(num);
+						}
+						else {
+							spareCallback && spareCallback(num);
+						}
 					}
 				};
 
@@ -104,7 +116,7 @@ define(function(require){
 							accountId: self.accountId,
 							searchType: 'regular',
 							callbacks: {
-								success: addNumberCallback
+								success: globalAddNumberCallback ? globalAddNumberCallback : buyCallback
 							}
 						});
 						break;
