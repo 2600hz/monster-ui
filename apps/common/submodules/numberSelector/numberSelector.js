@@ -53,7 +53,7 @@ define(function(require){
 				removeElement = template.find('.remove-element'),
 				addNumberCallback = function(numberList) {
 					if(numberList && !_.isEmpty(numberList)) {
-						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numbers)[0];
+						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numberList)[0];
 						input.val(num);
 						displayed.text(monster.util.formatPhoneNumber(num));
 						removeElement.find('.number').text(monster.util.formatPhoneNumber(num));
@@ -90,7 +90,7 @@ define(function(require){
 							});
 						} else {
 							monster.pub('common.numbers.dialogSpare', {
-								accountName: monster.apps['auth'].currentAccount.name,
+								accountName: monster.apps.auth.currentAccount.name,
 								accountId: self.accountId,
 								featureFilters: spareFilters,
 								singleSelect: true,
