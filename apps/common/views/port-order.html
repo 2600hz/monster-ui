@@ -3,7 +3,7 @@
 	<div class="scroll">
 		<ul>
 		{{#each numbers}}
-			<li data-value="{{this}}" data-carrier="{{../carrier}}"><i class="fa fa-exclamation-triangle"></i>{{this}}<i class="fa fa-times-circle pull-right"></i></li>
+			<li data-value="{{this}}" data-carrier="{{../carrier}}"><i class="fa fa-exclamation-triangle"></i>{{formatPhoneNumber this}}<i class="fa fa-times-circle pull-right"></i></li>
 		{{/each}}
 		</ul>
 	</div>
