@@ -45,6 +45,13 @@ define(function(require){
 				removeCallback = args.removeCallback,
 				spareCallback = args.spareCallback,
 				buyCallback = args.buyCallback,
+				/**
+				 * If specified, globalAddNumberCallback will override
+				 * buyCallback and spareCallback and be called without
+				 * consideration of the source of the selected number.
+				 * @type {Function}
+				 */
+				globalAddNumberCallback = args.globalAddNumberCallback,
 				spareFilters = args.spareFilters,
 				customNumbers = args.customNumbers,
 				dropdown = template.find('.number-selector-dropdown'),
@@ -53,12 +60,17 @@ define(function(require){
 				removeElement = template.find('.remove-element'),
 				addNumberCallback = function(numberList) {
 					if(numberList && !_.isEmpty(numberList)) {
-						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numbers)[0];
+						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numberList)[0];
 						input.val(num);
 						displayed.text(monster.util.formatPhoneNumber(num));
 						removeElement.find('.number').text(monster.util.formatPhoneNumber(num));
 						removeElement.removeClass('hidden');
-						spareCallback && spareCallback(num);
+						if (globalAddNumberCallback) {
+							globalAddNumberCallback(num);
+						}
+						else {
+							spareCallback && spareCallback(num);
+						}
 					}
 				};
 
@@ -90,7 +102,7 @@ define(function(require){
 							});
 						} else {
 							monster.pub('common.numbers.dialogSpare', {
-								accountName: monster.apps['auth'].currentAccount.name,
+								accountName: monster.apps.auth.currentAccount.name,
 								accountId: self.accountId,
 								featureFilters: spareFilters,
 								singleSelect: true,
@@ -104,7 +116,7 @@ define(function(require){
 							accountId: self.accountId,
 							searchType: 'regular',
 							callbacks: {
-								success: addNumberCallback
+								success: globalAddNumberCallback ? globalAddNumberCallback : buyCallback
 							}
 						});
 						break;

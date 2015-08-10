@@ -282,8 +282,11 @@
 			'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks' },
-			'accountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
-			'attempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' }
+			'listAccountAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/attempts' },
+			'listAttempts': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}/attempts' },
+			'listAvailable': { 'verb': 'GET', 'url': 'webhooks' },
+			'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
+			'patchAll': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks' }
 		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
@@ -363,7 +366,7 @@
 						if('type' in methodInfo) { requestSettings.type = methodInfo.type; }
 						if('dataType' in methodInfo) { requestSettings.dataType = methodInfo.dataType; }
 
-						if(['post', 'delete', 'put'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
+						if(['post', 'delete', 'put', 'patch'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
 							requestSettings.data.data = methodSettings.data || {};
 							delete methodSettings.data;
 						}

@@ -257,9 +257,11 @@
 				"label": {
 					"name": "Name",
 					"notificationEmail": "Notification email",
-					"transferDate": "Transfer date",
 					"temporaryNumbers": "Temporary numbers",
-					"carrier": "Carrier"
+					"carrier": "Carrier",
+					"__comment": "UI-1750: Change label to 'Requested transfer date'",
+					"__version": "3.21",
+					"transferDate": "Requested transfer date"
 				}
 			},
 			"bill": {
@@ -388,7 +390,7 @@
 				"submit": {
 					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
 				},
-				"number": "One or more numbers you entered are not in the right format!"
+				"number": "One or more numbers you entered are not in the right format or are already listed!"
 			}
 		},
 		"__comment": "UI-1302: Add scheduled date when state is set to pending",

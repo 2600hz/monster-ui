@@ -668,6 +668,29 @@ define(function(require){
 				}
 			}
 		},
+		uiFlags: {
+			account: {
+				get: function(appName, flagName, pAccount) {
+					var account = pAccount || monster.apps.auth.currentAccount,
+						value;
+
+					if(account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty(appName) && account.ui_flags[appName].hasOwnProperty(flagName)) {
+						value = account.ui_flags[appName][flagName];
+					}
+
+					return value;
+				},
+				set: function(appName, flagName, value, pAccount) {
+					var account = pAccount || monster.apps.auth.currentAccount;
+
+					account.ui_flags = account.ui_flags || {};
+					account.ui_flags[appName] = account.ui_flags[appName] || {};
+					account.ui_flags[appName][flagName] = value;
+
+					return account;
+				}
+			}
+		},
 
 		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
 		// without this, img with relative path would  be displayed from the domain name of the browser, which we want to avoid since we're loading sources from external URLs for some apps

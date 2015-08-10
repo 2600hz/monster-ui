@@ -241,7 +241,7 @@
 				"label": {
 					"name": "Nom",
 					"notificationEmail": "Adresse à notifier",
-					"transferDate": "Date du transfert",
+					"transferDate": "Date demandée du transfert",
 					"temporaryNumbers": "Numéros temporaires",
 					"carrier": "Opérateur"
 				}
@@ -362,7 +362,7 @@
 				"submit": {
 					"document": "Veuillez joindre la lettre d'autorisation signée ainsi que la facture correspondant aux numéros que vous souhaitez transférer"
 				},
-				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format !"
+				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format ou sont déjà listés !"
 			}
 		},
 		"noScheduledDate": "Aucune",
