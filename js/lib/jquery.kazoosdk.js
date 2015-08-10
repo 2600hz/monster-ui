@@ -238,7 +238,8 @@
 			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
+			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
+			'addOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}/override' }
 		},
 		limits: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },

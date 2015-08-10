@@ -341,6 +341,18 @@ define(function(require){
 			return isMasquerading;
 		},
 
+		// Function returning a Boolean indicating whether the logged in account is a reseller or not.
+		isReseller: function() {
+			var self = this,
+				isReseller = false;
+
+			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.originalAccount.hasOwnProperty('is_reseller')) {
+				isReseller = monster.apps.auth.originalAccount.is_reseller;
+			}
+
+			return isReseller;
+		},
+
 		// Function returning map of URL parameters
 		// Optional key, returns value of specific GET parameter
 		// keepHashes was added because having hashes sometimes crashed some requests

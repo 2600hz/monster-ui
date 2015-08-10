@@ -45,11 +45,26 @@ define(function(require){
 			}
 		},
 
+		// We use the same view to display 2 different API GET /service_plan/available/xxx and /current, so we use this function to format them the same
+		servicePlanDetailsFormatData: function(servicePlanData) {
+			var self = this,
+				formattedData = {
+					servicePlan: {}
+				};
+
+			if(servicePlanData.hasOwnProperty('items') && !servicePlanData.hasOwnProperty('plan')) {
+				servicePlanData.plan = servicePlanData.items;
+			}
+
+			formattedData.servicePlan = servicePlanData;
+
+			return formattedData;
+		},
+
 		renderServicePlanDetails: function(container, servicePlanData, callback) {
 			var self = this,
-				template = $(monster.template(self, 'servicePlanDetails-layout', {
-					servicePlan: servicePlanData
-				}));
+				formattedData = self.servicePlanDetailsFormatData(servicePlanData),
+				template = $(monster.template(self, 'servicePlanDetails-layout', formattedData));
 
 			monster.ui.tooltips(template);
 
