@@ -1,0 +1,16 @@
+<div id="faq_accordion_container">
+{{#each i18n.port.faqContent}}
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a href="#faq_question_{{@index}}" class="accordion-toggle" data-toggle="collapse" data-parent="#faq_accordion_container">
+				{{question}}
+			</a>
+		</div>
+		<div class="accordion-body collapse" id="faq_question_{{@index}}">
+			<div class="accordion-inner">
+				{{answer}}
+			</div>
+		</div>
+	</div>
+{{/each}}
+</div>
