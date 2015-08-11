@@ -253,19 +253,22 @@ define(function(require){
 		servicePlanCustomizeInternalSaveData: function(data, globalCallback) {
 			var self = this,
 				parallelFunctionsOverrides= {},
-				parallelFunctions = {};
+				parallelFunctionsDelete = {};
 
 			_.each(data.plansToDelete, function(v,k) {
-				parallelFunctions['delete_'+k] = function(callback) {
+				parallelFunctionsDelete[k] = function(callback) {
 					self.servicePlanDetailsRemoveSP(k, data.accountId, function(dataDelete) {
 						callback && callback(null, dataDelete);
 					});
 				}
 			});
 
-			parallelFunctions.addSP = function(callback) {
+			// First delete all plans to delete
+			monster.parallel(parallelFunctionsDelete, function(err, results) {
+				// Then add new SP to use
 				self.servicePlanDetailsAddManySP(data.plansToUse, data.accountId, function() {
 					_.each(data.plansToUse, function(planId) {
+						// Then for each of them, set the overrides
 						parallelFunctionsOverrides['add_' + planId + '_override'] = function(callback) {
 							if(data.overrides.hasOwnProperty(planId)) {
 								self.servicePlanDetailsAddOverride(planId, data.accountId, data.overrides[planId], function() {
@@ -279,14 +282,10 @@ define(function(require){
 					});
 
 					monster.parallel(parallelFunctionsOverrides, function(err, results) {
-						callback && callback(null, {});
+						self.servicePlanDetailsGetCurrentSP(data.accountId, function(data) {
+							globalCallback && globalCallback(data);
+						});
 					});
-				});
-			}
-
-			monster.parallel(parallelFunctions, function(err, results) {
-				self.servicePlanDetailsGetCurrentSP(data.accountId, function(data) {
-					globalCallback && globalCallback(data);
 				});
 			});
 		},
