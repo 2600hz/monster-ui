@@ -367,7 +367,57 @@
 		},
 		"noScheduledDate": "Aucune",
 		"addDate": "Ajouter",
-		"addMoreNumbers": "ajouter des numéros"
+		"addMoreNumbers": "ajouter des numéros",
+		"faqContent": [
+			{
+				"question": "Quelle est la différence entre LdA et RespOrg ?",
+				"answer": "Une LdA (Lettre d'Autorisation) est utilisée lors du transfert de numéros de téléphone normaux. Une RespOrg (Responsible Organization) est utilisé lors du transfert de numéros Verts."
+			},
+			{
+				"question": "Combien de temps prendra la procédure de transfert ?",
+				"answer": "Le temps du transfert ne peut pas être déterminé lors de sa soumission. Nous avons enregistré des transferts programmés trois à quatre jours après leur soumission ainsi que des transferts prenant entre plusieurs semaines à un mois avoir d'être programmés (à cause de plusieurs rejets du transfert)."
+			},
+			{
+				"question": "J'ai insepecté une copie récente de ma facture et remarqué que les numéros que je souhaite transférer ne sont pas listés. Puis-je utiliser cette facture pour soumettre les numéros à un transfert ?",
+				"answer": "Vous pouvez toujours soumettre une demande transfert avec une copie de cette facture, tant que vous connaissez tous les numéros associés à cette facture/compte."
+			},
+			{
+				"question": "Serai-je informé de la date prévu du transfert pour que je puisse m'assurer que le compte de mon client est convenablement configuré ?",
+				"answer": "Vous serez informé de la date prévu du transfert entre un à deux jours avant celle-ci. Vous serez aussi informé lorsque le transfert sera effectué."
+			},
+			{
+				"question": "Est-ce que je peux configurer le routage d'appels avant que le transfert ne soit accepté ?",
+				"answer": "Oui, et nous recommendont de le faire pour assurer que le transfert soit fluide."
+			},
+			{
+				"question": "Mon client à des numéros internationaux. Est-il possible de transférer ces numéros ?",
+				"answer": "Pour l'instant, nous pouvont seulement transférer certains numéros Canadien. Cela peut aussi dépendre de votre fournisseur et s'il couvre la région des numéros concernés."
+			},
+			{
+				"question": "À quel moment serai-je informé que mon transfert a été rejeté ?",
+				"answer": "Vous serez informé qu'un transfert a été rejecté le jour même ou le jour suivant le reçu de la notification du rejet."
+			},
+			{
+				"question": "Comment puis-je annuler un transfert en cours ?",
+				"answer": "Si vous décidez d'annuler un transfert, postez un commentaire dans la section commentaires du transfert concerné dans l'application Gestionnaire de Transferts ou Smart PBX."
+			},
+			{
+				"question": "Qu'est-ce que le processus de 'port-out' (de votre fournisseur à un nouveau fournisseur) ?",
+				"answer": "Pour transérer un numéro, soumettez une demande chez le nouveau forunisseur. Si vous recevez une notification de refus du nouveau fournisseur, veulliez contacter notre centre de Support et nous ferons notre possible pour vous aider. Une fois que la date du transfert vous a été spécifié par le nouveau fournisseur, vous êtez tenu de supprimer de votre compte les numéros transférés."
+			},
+			{
+				"question": "Qu'est-ce qu'un 'transfert en gros' ?",
+				"answer": "Nous considérons un transfert comme étant 'en gros' au dela de cent numéros transférés."
+			},
+			{
+				"question": "Existe-t-il une réduction pour les 'transferts en gros' ?",
+				"answer": "Les 'transferts en gros' consernent plus de cent numéros. Pour plus d'information sur les réductions disponibles, veuillez contacter le gestionnaire de votre compte."
+			},
+			{
+				"question": "Dois-je soumettre un 'transfert en gros' à travers l'interface utilisateur ?",
+				"answer": "Non, les 'transfers en gros' doivent être soumis à notre centre de Support et nous nous chargerons de les gérer pour vous. En soumettant un ticket à notre centre de Support, assurer vous d'y joindre une LdA (Lettre d'Autorisation) et une facture récente."
+			}
+		]
 	},
 	"chooseModel": {
 		"brandHeadline": "Sélectionner la marque du téléphone:",
