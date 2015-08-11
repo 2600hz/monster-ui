@@ -1,0 +1,35 @@
+<div class="customize-service-plan-container">
+	{{#each categories}}
+		<div class="category-wrapper">
+			<div class="customize-details-wrapper">
+				<div class="dropdown-container">
+					<label class="control-label">{{friendlierName}}</label>
+					<div class="controls">
+						<select name="{{@key}}" class="service-plan-selector">
+							<option value="none">- None -</option>
+							{{#each plans}}
+								<option value="{{id}}"{{#if selected}} selected{{/if}}>{{name}}</option>
+							{{/each}}
+						</select>
+					</div>
+				</div>
+
+				<div class="details-selected-service-plan"></div>
+			</div>
+
+			<div class="customize-override-wrapper">
+				{{#each overrides}}
+					<div>{{@key}}</div>
+					{{#each this}}
+						<div>{{@key}}</div>
+						<div>
+							{{#each this}}
+								{{@key}}: {{this}}
+							{{/each}}
+						</div>
+					{{/each}}
+				{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>

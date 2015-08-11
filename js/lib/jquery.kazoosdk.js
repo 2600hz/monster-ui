@@ -231,6 +231,7 @@
 		servicePlan: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },

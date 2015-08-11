@@ -8,7 +8,9 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.servicePlanDetails.render': 'servicePlanDetailsRender'
+			'common.servicePlanDetails.render': 'servicePlanDetailsRender',
+			'common.servicePlanDetails.getServicePlanTemplate': 'servicePlanCustomizeGetTemplate',
+			'common.servicePlanDetails.customizeSave': 'servicePlanCustomizeSave'
 		},
 
 		/* Arguments:
@@ -73,6 +75,330 @@ define(function(require){
 			callback && callback({
 				template: template,
 				data: servicePlanData
+			});
+		},
+
+		/* New common stuff */
+		servicePlanCustomizeGetOverrideDefault: function() {
+			var self = this,
+				 overrideOptions = {
+					number_services: {
+						port: [ 'rate', 'activation_charge', 'minimum '],
+						cnam: [ 'rate', 'activation_charge', 'minimum '],
+						e911: [ 'rate', 'activation_charge', 'minimum ']
+					},
+					devices: {
+						ata: [ 'rate', 'activation_charge', 'minimum '],
+						cellphone: [ 'rate', 'activation_charge', 'minimum '],
+						fax: [ 'rate', 'activation_charge', 'minimum '],
+						landline: [ 'rate', 'activation_charge', 'minimum '],
+						mobile: [ 'rate', 'activation_charge', 'minimum '],
+						sip_device: [ 'rate', 'activation_charge', 'minimum '],
+						sip_uri: [ 'rate', 'activation_charge', 'minimum '],
+						smartphone: [ 'rate', 'activation_charge', 'minimum '],
+						softphone: [ 'rate', 'activation_charge', 'minimum ']
+					},
+					limits: {
+						outbound_trunks: [ 'rate', 'activation_charge', 'minimum '],
+						inbound_trunks: [ 'rate', 'activation_charge', 'minimum '],
+						twoway_trunks: [ 'rate', 'activation_charge', 'minimum ']
+					},
+					phone_numbers: {
+						tollfree_us: [ 'rate', 'activation_charge', 'minimum '],
+						did_us: [ 'rate', 'activation_charge', 'minimum ']
+					}
+				};
+
+			return overrideOptions;
+		},
+
+		servicePlanCustomizeGetTemplate: function(pArgs) {
+			var self = this,
+				args = pArgs,
+				mode = pArgs.mode || 'edit',
+				accountId = args.accountId || self.accountId,
+				overrideOptions = self.servicePlanCustomizeGetOverrideDefault();
+
+			monster.parallel({
+					current: function(callback) {
+						if(mode === 'new') {
+							callback(null, {});
+						}
+						else {
+							self.servicePlanDetailsGetCurrentSP(accountId, function(data) {
+								var response = {
+									details: data,
+									selectedPlans: {}
+								};
+
+								if(data && data.plans && !_.isEmpty(data.plans)) {
+									var listSP = {};
+
+									_.each(data.plans, function(v,k) {
+										listSP[k] = function(callback) {
+											self.servicePlanDetailsGetSP(k, accountId, function(detailSP) {
+												callback && callback(null, detailSP);
+											});
+										}
+									});
+
+									monster.parallel(listSP, function(err, results) {
+										response.selectedPlans = results;
+
+										callback && callback(null, response);
+									});
+								}
+								else {
+									callback(null, response);
+								}
+							});
+						}
+					},
+					listAvailable: function(callback) {
+						self.servicePlanDetailsListSP(accountId, function(data) {
+							callback(null, data)
+						});
+					}
+				},
+				function(err, results) {
+					var data = self.servicePlanCustomizeFormatData(results),
+						template = $(monster.template(self, 'servicePlanDetails-customizeView', data)),
+						divContainer;
+
+					_.each(data.selectedPlans, function(v,k) {
+						divContainer = template.find('[value="'+ k + '"]:selected').parents('.customize-details-wrapper').find('.details-selected-service-plan');
+						self.servicePlanDetailsRender({ accountId: accountId, servicePlan: v, container: divContainer });
+					});
+
+					template.find('.service-plan-selector').on('change', function() {
+						var $this = $(this),
+							servicePlanId = $this.val(),
+							divContainer = $this.parents('.customize-details-wrapper').find('.details-selected-service-plan');
+
+						if(servicePlanId !== 'none') {
+							self.servicePlanDetailsGetSP(servicePlanId, accountId, function(data) {
+								self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divContainer });
+							});
+						} else {
+							divContainer.empty();
+						}
+					});
+
+					args.afterRender && args.afterRender(template, data);
+				}
+			);
+		},
+
+		servicePlanCustomizeFormatData: function(data) {
+			var self = this,
+				formattedPlan = {},
+				formattedData = {};
+
+			_.each(data.listAvailable, function(plan) {
+				if(!formattedData.hasOwnProperty(plan.category)) {
+					formattedData[plan.category] = {
+						friendlierName: plan.category,
+						plans: []
+					};
+				}
+
+				formattedPlan = {
+					id: plan.id,
+					name: plan.name,
+					overrides: {}
+				}
+
+				if(data.current && data.current.details && data.current.details.hasOwnProperty('plans') && data.current.details.plans.hasOwnProperty(plan.id)) {
+					formattedPlan.selected = true;
+
+					if(data.current.details.plans[plan.id].overrides) {
+						formattedPlan.overrides = data.current.details.plans[plan.id].overrides;
+					}
+				}
+
+				formattedData[plan.category].plans.push(formattedPlan);
+			});
+
+			return { categories: formattedData, selectedPlans: data.current.selectedPlans };
+		},
+
+		servicePlanDetailsGetDataToSave: function(accountId, template, previousPlans) {
+			var self = this,
+				formattedData = {
+					accountId: accountId,
+					plansToDelete: {},
+					plansToUse: [],
+					overrides: {}
+				};
+
+			_.each(previousPlans, function(v,k) {
+				formattedData.plansToDelete[k] = true;
+			});
+
+			template.find('select').each(function() {
+				var value = $(this).val();
+
+				if(value !== 'none') {
+					if(formattedData.plansToDelete.hasOwnProperty(value)) {
+						delete formattedData.plansToDelete[value];
+					}
+
+					formattedData.plansToUse.push(value);
+				}
+			});
+
+			return formattedData;
+		},
+
+		servicePlanCustomizeInternalSaveData: function(data, globalCallback) {
+			var self = this,
+				parallelFunctionsOverrides= {},
+				parallelFunctions = {};
+
+			_.each(data.plansToDelete, function(v,k) {
+				parallelFunctions['delete_'+k] = function(callback) {
+					self.servicePlanDetailsRemoveSP(k, data.accountId, function(dataDelete) {
+						callback && callback(null, dataDelete);
+					});
+				}
+			});
+
+			parallelFunctions.addSP = function(callback) {
+				self.servicePlanDetailsAddManySP(data.plansToUse, data.accountId, function() {
+					_.each(data.plansToUse, function(planId) {
+						parallelFunctionsOverrides['add_' + planId + '_override'] = function(callback) {
+							if(data.overrides.hasOwnProperty(planId)) {
+								self.servicePlanDetailsAddOverride(planId, data.accountId, data.overrides[planId], function() {
+									callback(null, {});
+								})
+							}
+							else {
+								callback(null, {});
+							}
+						}
+					});
+
+					monster.parallel(parallelFunctionsOverrides, function(err, results) {
+						callback && callback(null, {});
+					});
+				});
+			}
+
+			monster.parallel(parallelFunctions, function(err, results) {
+				self.servicePlanDetailsGetCurrentSP(data.accountId, function(data) {
+					globalCallback && globalCallback(data);
+				});
+			});
+		},
+
+		servicePlanCustomizeSave: function(pArgs) {
+			var self = this,
+				args = pArgs,
+				accountId = args.accountId || self.accountId,
+				previousPlans = args.previousPlans || {},
+				divResult = args.divResult || undefined,
+				container = args.container,
+				dataToSave = self.servicePlanDetailsGetDataToSave(accountId, container, previousPlans);
+
+			self.servicePlanCustomizeInternalSaveData(dataToSave, function(data) {
+				if(divResult) {
+					self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divResult });
+				}
+
+				args.callback && args.callback(data);
+			});
+		},
+
+		servicePlanDetailsListSP: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.listAvailable',
+				data: {
+					accountId: accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsGetSP: function(planId, accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.getAvailable',
+				data: {
+					planId: planId,
+					accountId: accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsGetCurrentSP: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.listCurrent',
+				data: {
+					accountId: accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsAddManySP: function(plans, accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.addMany',
+				data: {
+					accountId: accountId,
+					data: {
+						plans: plans
+					}
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsRemoveSP: function(planId, accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.remove',
+				data: {
+					planId: planId,
+					accountId: accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsAddOverride: function(planId, accountId, overrides, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.addOverrides',
+				data: {
+					planId: planId,
+					accountId: accountId,
+					data: {
+						overrides: overrides
+					}
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
 			});
 		}
 	}

@@ -42,3 +42,16 @@
 .service-plan-details *[data-toggle="tooltip"] {
 	cursor: help;
 }
+
+/* Customize service plan */
+.customize-service-plan-container .category-wrapper {
+	margin-bottom: 15px;
+}
+
+.customize-service-plan-container .dropdown-container {
+	margin-bottom: 10px;
+}
+
+.customize-service-plan-container .customize-details-wrapper {
+	margin-right: 5px;
+}
