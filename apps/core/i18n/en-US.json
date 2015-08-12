@@ -509,5 +509,17 @@
 		"prevLabel": "Back",
 		"skipLabel": "Skip",
 		"doneLabel": "Done"
+	},
+	"__comment": "UI-1772: Add internationalization support for the jQuery timepicker plugin",
+	"__version": "3.22",
+	"timepicker": {
+		"am": "am",
+		"pm": "pm",
+		"AM": "AM",
+		"PM": "PM",
+		"decimal": ".",
+		"min": "mins",
+		"hr": "hr",
+		"hrs": "hrs"
 	}
 }

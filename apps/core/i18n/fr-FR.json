@@ -308,5 +308,15 @@
 		"prevLabel": "Précédent",
 		"skipLabel": "Sauter",
 		"doneLabel": "Terminé"
+	},
+	"timepicker": {
+		"am": "am",
+		"pm": "pm",
+		"AM": "AM",
+		"PM": "PM",
+		"decimal": ",",
+		"min": "min",
+		"hr": "h",
+		"hrs": "h"
 	}
 }
