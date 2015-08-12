@@ -1222,7 +1222,7 @@ define(function(require){
 		 */
 		timepicker: function(target, pOptions) {
 			var self = this,
-				is12hMode = monster.hasOwnProperty('app') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
+				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
 						    monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode') ?
 						    monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
 				defaultOptions = {
