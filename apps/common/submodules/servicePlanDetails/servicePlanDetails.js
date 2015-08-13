@@ -116,8 +116,7 @@ define(function(require){
 			var self = this,
 				args = pArgs,
 				mode = pArgs.mode || 'edit',
-				accountId = args.accountId || self.accountId,
-				overrideOptions = self.servicePlanCustomizeGetOverrideDefault();
+				accountId = args.accountId || self.accountId;
 
 			monster.parallel({
 					current: function(callback) {
@@ -163,11 +162,20 @@ define(function(require){
 				function(err, results) {
 					var data = self.servicePlanCustomizeFormatData(results),
 						template = $(monster.template(self, 'servicePlanDetails-customizeView', data)),
-						divContainer;
+						divContainerPlan,
+						divContainerOverride;
 
 					_.each(data.selectedPlans, function(v,k) {
-						divContainer = template.find('[value="'+ k + '"]:selected').parents('.customize-details-wrapper').find('.details-selected-service-plan');
-						self.servicePlanDetailsRender({ accountId: accountId, servicePlan: v, container: divContainer });
+						divContainerPlan = template.find('[value="'+ k + '"]:selected').parents('.customize-details-wrapper').find('.details-selected-service-plan');
+						self.servicePlanDetailsRender({ accountId: accountId, servicePlan: v, container: divContainerPlan });
+					});
+
+					_.each(data.categories, function(v,k) {
+						if(v.overrides) {
+							divContainerOverride = template.find('select[name="'+ k + '"]').parents('.customize-details-wrapper').find('.details-overrides');
+
+							self.servicePlanDetailsRenderOverride(divContainerOverride, v.overrides);
+						}
 					});
 
 					template.find('.service-plan-selector').on('change', function() {
@@ -175,12 +183,15 @@ define(function(require){
 							servicePlanId = $this.val(),
 							divContainer = $this.parents('.customize-details-wrapper').find('.details-selected-service-plan');
 
+						divContainer.empty();
+
 						if(servicePlanId !== 'none') {
+							$this.parents('.category-wrapper').addClass('has-selected');
 							self.servicePlanDetailsGetSP(servicePlanId, accountId, function(data) {
 								self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divContainer });
 							});
 						} else {
-							divContainer.empty();
+							$this.parents('.category-wrapper').removeClass('has-selected');
 						}
 					});
 
@@ -204,90 +215,105 @@ define(function(require){
 
 				formattedPlan = {
 					id: plan.id,
-					name: plan.name,
-					overrides: {}
+					name: plan.name
 				}
 
 				if(data.current && data.current.details && data.current.details.hasOwnProperty('plans') && data.current.details.plans.hasOwnProperty(plan.id)) {
 					formattedPlan.selected = true;
+					formattedData[plan.category].hasSelected = true;
+					formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 
 					if(data.current.details.plans[plan.id].overrides) {
-						formattedPlan.overrides = data.current.details.plans[plan.id].overrides;
+						//formattedPlan.overrides = data.current.details.plans[plan.id].overrides;
+						formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 					}
 				}
 
 				formattedData[plan.category].plans.push(formattedPlan);
 			});
 
-			return { categories: formattedData, selectedPlans: data.current.selectedPlans };
+			return { 
+				categories: formattedData, 
+				selectedPlans: data.current.selectedPlans,
+				allowedOverrides: self.servicePlanCustomizeGetOverrideDefault()
+			};
 		},
 
 		servicePlanDetailsGetDataToSave: function(accountId, template, previousPlans) {
 			var self = this,
+				mapToDelete = {},
 				formattedData = {
 					accountId: accountId,
-					plansToDelete: {},
-					plansToUse: [],
+					plansToDelete: [],
+					plansToAdd: [],
 					overrides: {}
 				};
 
 			_.each(previousPlans, function(v,k) {
-				formattedData.plansToDelete[k] = true;
+				mapToDelete[k] = true;
 			});
 
 			template.find('select').each(function() {
 				var value = $(this).val();
 
 				if(value !== 'none') {
-					if(formattedData.plansToDelete.hasOwnProperty(value)) {
-						delete formattedData.plansToDelete[value];
+					// If we selected a plan we already have, we don't delete it
+					if(mapToDelete.hasOwnProperty(value)) {
+						delete mapToDelete[value];
 					}
-
-					formattedData.plansToUse.push(value);
+					// And if we didn't have it before we add it to the plans to add
+					else {
+						formattedData.plansToAdd.push(value);
+					}
 				}
 			});
+
+			_.each(mapToDelete, function(v,k) {
+				formattedData.plansToDelete.push(k);
+			});
+
+			template.find('.details-overrides [data-field]').each(function() {
+				var $this = $(this),
+					plan = $this.parents('.category-wrapper').find(':selected').val(),
+					category = $this.parents('[data-key]').siblings('[data-category]').data('category'),
+					key = $this.parents('[data-key]').data('key'),
+					field = $this.data('field'),
+					value = $this.data('value');
+
+				if(plan !== 'none') {
+					formattedData.overrides[plan] = formattedData.overrides[plan] || {};
+					formattedData.overrides[plan][category] = formattedData.overrides[plan][category] || {};
+					formattedData.overrides[plan][category][key] = formattedData.overrides[plan][category][key] || {};
+					formattedData.overrides[plan][category][key][field] = value;
+				}
+			});
+
+			console.log(formattedData);
 
 			return formattedData;
 		},
 
 		servicePlanCustomizeInternalSaveData: function(data, globalCallback) {
 			var self = this,
-				parallelFunctionsOverrides= {},
-				parallelFunctionsDelete = {};
+				parallelFunctionsOverrides= {};
 
-			_.each(data.plansToDelete, function(v,k) {
-				parallelFunctionsDelete[k] = function(callback) {
-					self.servicePlanDetailsRemoveSP(k, data.accountId, function(dataDelete) {
-						callback && callback(null, dataDelete);
-					});
-				}
-			});
-
+			console.log(data);
 			// First delete all plans to delete
-			monster.parallel(parallelFunctionsDelete, function(err, results) {
-				// Then add new SP to use
-				self.servicePlanDetailsAddManySP(data.plansToUse, data.accountId, function() {
-					_.each(data.plansToUse, function(planId) {
-						// Then for each of them, set the overrides
-						parallelFunctionsOverrides['add_' + planId + '_override'] = function(callback) {
-							if(data.overrides.hasOwnProperty(planId)) {
-								self.servicePlanDetailsAddOverride(planId, data.accountId, data.overrides[planId], function() {
-									callback(null, {});
-								})
-							}
-							else {
-								callback(null, {});
-							}
-						}
-					});
-
-					monster.parallel(parallelFunctionsOverrides, function(err, results) {
-						self.servicePlanDetailsGetCurrentSP(data.accountId, function(data) {
-							globalCallback && globalCallback(data);
-						});
+			self.servicePlanDetailsUpdateSP(data.plansToDelete, data.plansToAdd, data.accountId, function() {
+				self.servicePlanDetailsAddManyOverrideSP(data.overrides, data.accountId, function() {
+					self.servicePlanDetailsGetCurrentSP(data.accountId, function(data) {
+						globalCallback && globalCallback(data);
 					});
 				});
 			});
+		},
+
+		servicePlanDetailsRenderOverride: function(container, overrides) {
+			console.log(container, overrides);
+			var self = this,
+				template = monster.template(self, 'servicePlanDetails-overrideView', { overrides: overrides });
+
+			container.append(template);
 		},
 
 		servicePlanCustomizeSave: function(pArgs) {
@@ -354,18 +380,24 @@ define(function(require){
 		servicePlanDetailsAddManySP: function(plans, accountId, callback) {
 			var self = this;
 
-			self.callApi({
-				resource: 'servicePlan.addMany',
-				data: {
-					accountId: accountId,
+			if(plans.length) {
+				self.callApi({
+					resource: 'servicePlan.addMany',
 					data: {
-						plans: plans
+						accountId: accountId,
+						data: {
+							plans: plans
+						}
+					},
+					success: function(data) {
+						callback && callback(data.data);
 					}
-				},
-				success: function(data) {
-					callback && callback(data.data);
-				}
-			});
+				});
+			}
+			else {
+				callback && callback({});
+			}
+			
 		},
 
 		servicePlanDetailsRemoveSP: function(planId, accountId, callback) {
@@ -383,13 +415,29 @@ define(function(require){
 			});
 		},
 
-		servicePlanDetailsAddOverride: function(planId, accountId, overrides, callback) {
+		servicePlanDetailsRemoveManySP: function(plansToDelete, accountId, callback) {
 			var self = this;
 
 			self.callApi({
-				resource: 'servicePlan.addOverrides',
+				resource: 'servicePlan.removeMany',
 				data: {
-					planId: planId,
+					accountId: accountId,
+					data: {
+						plans: plansToDelete
+					}
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		servicePlanDetailsAddManyOverrideSP: function(overrides, accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'servicePlan.addManyOverrides',
+				data: {
 					accountId: accountId,
 					data: {
 						overrides: overrides
@@ -399,6 +447,30 @@ define(function(require){
 					callback && callback(data.data);
 				}
 			});
+		},
+
+		servicePlanDetailsUpdateSP: function(plansToDelete, plansToAdd, accountId, callback) {
+			var self = this;
+
+			// If both arrays are empty, no need to do anything
+			if(plansToAdd.length + plansToDelete.length) {
+				self.callApi({
+					resource: 'servicePlan.update',
+					data: {
+						accountId: accountId,
+						data: {
+							add: plansToAdd,
+							delete: plansToDelete
+						}
+					},
+					success: function(data) {
+						callback && callback(data.data);
+					}
+				});
+			}
+			else {
+				callback && callback();
+			}
 		}
 	}
 

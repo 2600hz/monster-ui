@@ -1,0 +1,19 @@
+
+	{{#each overrides}}
+		<div class="line header" data-category="{{@key}}">
+			<div>{{ @key}}</div>
+			<div></div>
+			<div></div>
+		</div>
+		{{#each this}}
+			<div class="line" data-key="{{@key}}">
+				<div class="name">{{ @key}}</div>
+				<div class="charges">
+					{{#each this}}
+						<div data-field="{{@key}}" data-value="{{this}}">{{ @key}}: {{this}}</div>
+					{{/each}}
+				</div>
+				<div></div>
+			</div>
+		{{/each}}
+	{{/each}}

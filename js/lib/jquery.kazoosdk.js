@@ -233,14 +233,16 @@
 			'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 			'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+			'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
 			'getCsv': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv' },
 			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
-			'addOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}/override' }
+			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 		},
 		limits: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },

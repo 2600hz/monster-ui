@@ -1,34 +1,55 @@
 <div class="customize-service-plan-container">
 	{{#each categories}}
-		<div class="category-wrapper">
+		<div class="category-wrapper{{#if hasSelected}} has-selected{{/if}}">
 			<div class="customize-details-wrapper">
 				<div class="dropdown-container">
-					<label class="control-label">{{friendlierName}}</label>
-					<div class="controls">
-						<select name="{{@key}}" class="service-plan-selector">
-							<option value="none">- None -</option>
-							{{#each plans}}
-								<option value="{{id}}"{{#if selected}} selected{{/if}}>{{name}}</option>
-							{{/each}}
-						</select>
+					<label>{{friendlierName}}</label>
+					<select name="{{@key}}" class="service-plan-selector">
+						<option value="none">- None -</option>
+						{{#each plans}}
+							<option value="{{id}}"{{#if selected}} selected{{/if}}>{{name}}</option>
+						{{/each}}
+					</select>
+				</div>
+
+				<div class="customize-override-wrapper clearfix">
+					<div class="override-header">
+						<div class="override-header">
+							Overrides
+							<div class="dropdown add-link-container">
+								<a href="#" class="add-override monster-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus monster-green"></i>Add</a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+									{{#each ../allowedOverrides}}
+										<li class="dropdown-submenu">
+											<a tabindex="-1" href="#">{{formatVariableToDisplay @key}}</a>
+											<ul class="dropdown-menu">
+												{{#each this}}
+													<li class="dropdown-submenu">
+														<a tabindex="-1" href="#">{{formatVariableToDisplay @key}}</a>
+														<ul class="dropdown-menu">
+															{{#each this}}
+																<li><a tabindex="-1" href="#">{{formatVariableToDisplay this}}</a></li>
+															{{/each}}
+														</ul>
+													</li>
+												{{/each}}
+											</ul>
+										</li>
+									{{/each}}
+								</ul>
+							</div>
+
+							<div class="service-plan-details details-overrides">
+							</div>
+						</div>
+
 					</div>
 				</div>
 
-				<div class="details-selected-service-plan"></div>
-			</div>
-
-			<div class="customize-override-wrapper">
-				{{#each overrides}}
-					<div>{{@key}}</div>
-					{{#each this}}
-						<div>{{@key}}</div>
-						<div>
-							{{#each this}}
-								{{@key}}: {{this}}
-							{{/each}}
-						</div>
-					{{/each}}
-				{{/each}}
+				<div class="details-selected-service-plan-wrapper">
+					<div class="title">Plan</div>
+					<div class="details-selected-service-plan"></div>
+				</div>
 			</div>
 		</div>
 	{{/each}}

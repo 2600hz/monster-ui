@@ -44,8 +44,29 @@
 }
 
 /* Customize service plan */
+.customize-service-plan-container {
+	font-size: 14px;
+}
+
 .customize-service-plan-container .category-wrapper {
 	margin-bottom: 15px;
+}
+
+.customize-service-plan-container .customize-override-wrapper {
+	display: none;
+}
+
+.customize-service-plan-container .category-wrapper.has-selected .customize-override-wrapper {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.customize-service-plan-container .category-wrapper .details-selected-service-plan-wrapper {
+	display: none;
+}
+
+.customize-service-plan-container .category-wrapper.has-selected .details-selected-service-plan-wrapper {
+	display: block;
 }
 
 .customize-service-plan-container .dropdown-container {
@@ -54,4 +75,27 @@
 
 .customize-service-plan-container .customize-details-wrapper {
 	margin-right: 5px;
+}
+
+.customize-service-plan-container .customize-details-wrapper .dropdown-menu:after,
+.customize-service-plan-container .customize-details-wrapper .dropdown-menu:before {
+	display: none;
+}
+
+.customize-service-plan-container label {
+	display: inline-block;
+	height: 30px;
+	text-align: right;
+	width: 150px;
+}
+
+.customize-service-plan-container select {
+	margin-bottom: 0;
+	margin-left: 10px;
+}
+
+.customize-service-plan-container .add-link-container {
+	display: inline-block;
+	font-size: 14px;
+	margin-left: 10px;
 }
