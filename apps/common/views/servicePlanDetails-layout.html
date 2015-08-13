@@ -32,12 +32,15 @@
 			</span>
 			</div>
 			<div class="charges">
-				{{#if this.rate}}
+				{{#compare this.rate ">" 0}}
 				<div>{{../../../i18n.servicePlanDetails.rate}} {{../../../i18n.currencyUsed}}{{formatPrice this.rate}}</div>
-				{{/if}}
-				{{#if this.activation_charge}}
+				{{/compare}}
+				{{#compare this.activation_charge ">" 0}}
 				<div>{{../../../i18n.servicePlanDetails.activationCharge}} {{../../../i18n.currencyUsed}}{{formatPrice this.activation_charge}}</div>
-				{{/if}}
+				{{/compare}}
+				{{#compare this.minimum ">" 0}}
+				<div>{{../../../i18n.servicePlanDetails.minimum}} {{formatPrice this.minimum}}</div>
+				{{/compare}}
 			</div>
 			<div class="exceptions">
 			{{#if this.exceptions.length}}

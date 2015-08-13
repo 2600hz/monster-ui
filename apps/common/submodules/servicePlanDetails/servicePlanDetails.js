@@ -83,29 +83,29 @@ define(function(require){
 			var self = this,
 				 overrideOptions = {
 					number_services: {
-						port: [ 'rate', 'activation_charge', 'minimum '],
-						cnam: [ 'rate', 'activation_charge', 'minimum '],
-						e911: [ 'rate', 'activation_charge', 'minimum ']
+						port: { rate: {},activation_charge: {}, minimum: {} },
+						cnam: { rate: {},activation_charge: {}, minimum: {} },
+						e911: { rate: {},activation_charge: {}, minimum: {} },
 					},
 					devices: {
-						ata: [ 'rate', 'activation_charge', 'minimum '],
-						cellphone: [ 'rate', 'activation_charge', 'minimum '],
-						fax: [ 'rate', 'activation_charge', 'minimum '],
-						landline: [ 'rate', 'activation_charge', 'minimum '],
-						mobile: [ 'rate', 'activation_charge', 'minimum '],
-						sip_device: [ 'rate', 'activation_charge', 'minimum '],
-						sip_uri: [ 'rate', 'activation_charge', 'minimum '],
-						smartphone: [ 'rate', 'activation_charge', 'minimum '],
-						softphone: [ 'rate', 'activation_charge', 'minimum ']
+						ata: { rate: {},activation_charge: {}, minimum: {} },
+						cellphone: { rate: {},activation_charge: {}, minimum: {} },
+						fax: { rate: {},activation_charge: {}, minimum: {} },
+						landline: { rate: {},activation_charge: {}, minimum: {} },
+						mobile: { rate: {},activation_charge: {}, minimum: {} },
+						sip_device: { rate: {},activation_charge: {}, minimum: {} },
+						sip_uri: { rate: {},activation_charge: {}, minimum: {} },
+						smartphone: { rate: {},activation_charge: {}, minimum: {} },
+						softphone: { rate: {},activation_charge: {}, minimum: {} },
 					},
 					limits: {
-						outbound_trunks: [ 'rate', 'activation_charge', 'minimum '],
-						inbound_trunks: [ 'rate', 'activation_charge', 'minimum '],
-						twoway_trunks: [ 'rate', 'activation_charge', 'minimum ']
+						outbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
+						inbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
+						twoway_trunks: { rate: {},activation_charge: {}, minimum: {} },
 					},
 					phone_numbers: {
-						tollfree_us: [ 'rate', 'activation_charge', 'minimum '],
-						did_us: [ 'rate', 'activation_charge', 'minimum ']
+						tollfree_us: { rate: {},activation_charge: {}, minimum: {} },
+						did_us: { rate: {},activation_charge: {}, minimum: {} },
 					}
 				};
 
@@ -171,11 +171,9 @@ define(function(require){
 					});
 
 					_.each(data.categories, function(v,k) {
-						if(v.overrides) {
-							divContainerOverride = template.find('select[name="'+ k + '"]').parents('.customize-details-wrapper').find('.details-overrides');
+						divContainerOverride = template.find('select[name="'+ k + '"]').parents('.customize-details-wrapper').find('.customize-override-wrapper');
 
-							self.servicePlanDetailsRenderOverride(divContainerOverride, v.overrides);
-						}
+						self.servicePlanDetailsRenderOverride(divContainerOverride, v.overrides);
 					});
 
 					template.find('.service-plan-selector').on('change', function() {
@@ -275,10 +273,10 @@ define(function(require){
 			template.find('.details-overrides [data-field]').each(function() {
 				var $this = $(this),
 					plan = $this.parents('.category-wrapper').find(':selected').val(),
-					category = $this.parents('[data-key]').siblings('[data-category]').data('category'),
+					category = $this.parents('[data-category]').data('category'),
 					key = $this.parents('[data-key]').data('key'),
 					field = $this.data('field'),
-					value = $this.data('value');
+					value = $this.find('.input-value').val();
 
 				if(plan !== 'none') {
 					formattedData.overrides[plan] = formattedData.overrides[plan] || {};
@@ -288,8 +286,6 @@ define(function(require){
 				}
 			});
 
-			console.log(formattedData);
-
 			return formattedData;
 		},
 
@@ -297,7 +293,6 @@ define(function(require){
 			var self = this,
 				parallelFunctionsOverrides= {};
 
-			console.log(data);
 			// First delete all plans to delete
 			self.servicePlanDetailsUpdateSP(data.plansToDelete, data.plansToAdd, data.accountId, function() {
 				self.servicePlanDetailsAddManyOverrideSP(data.overrides, data.accountId, function() {
@@ -308,12 +303,98 @@ define(function(require){
 			});
 		},
 
-		servicePlanDetailsRenderOverride: function(container, overrides) {
-			console.log(container, overrides);
+		servicePlanDetailsFormatOverride: function(overrides) {
 			var self = this,
-				template = monster.template(self, 'servicePlanDetails-overrideView', { overrides: overrides });
+				allowedOverridesFull = self.servicePlanCustomizeGetOverrideDefault(),
+				formattedData = {
+					overrides: overrides,
+					allowedOverrides: {}
+				};
 
-			container.append(template);
+			_.each(overrides, function(category, categoryName) {
+				_.each(category, function(key, keyName) {
+					_.each(key, function(field, fieldName) {
+						if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
+							delete allowedOverridesFull[categoryName][keyName][fieldName];
+						}
+					});
+				});
+			});
+
+			formattedData.allowedOverrides = allowedOverridesFull;
+
+			return formattedData;
+		},
+
+		servicePlanDetailsRenderOverride: function(container, pOverrides, pCssToFocus) {
+			var self = this,
+				cssToFocus = pCssToFocus || '',
+				overrides = pOverrides || {},
+				formattedData = self.servicePlanDetailsFormatOverride(overrides),
+				template = $(monster.template(self, 'servicePlanDetails-overrideView', formattedData)),
+				getOverridenValues = function() {
+					var overrides = {};
+
+					// Get all current overrides, not necesseraly saved but updated via the inputs
+					template.find('.details-overrides [data-field]').each(function() {
+						var $this = $(this),
+							category = $this.parents('[data-category]').data('category'),
+							key = $this.parents('[data-key]').data('key'),
+							field = $this.data('field'),
+							value = $this.find('.input-value').val();
+
+						overrides[category] = overrides[category] || {};
+						overrides[category][key] = overrides[category][key] || {};
+						overrides[category][key][field] = value;
+					});
+
+					return overrides;
+				};
+
+			template.find('.remove-line').on('click', function() {
+				var overrides = getOverridenValues(),
+					$this = $(this),
+					category = $this.parents('[data-category]').data('category'),
+					key = $this.parents('[data-key]').data('key'),
+					field = $this.parents('[data-field]').data('field');
+
+				delete overrides[category][key][field];
+
+				if(_.isEmpty(overrides[category][key])) {
+					delete overrides[category][key];
+				}
+
+				if(_.isEmpty(overrides[category])) {
+					delete overrides[category];
+				}
+
+				self.servicePlanDetailsRenderOverride(container, overrides);
+			});
+
+			template.find('.select-field-override [data-field]').on('click', function() {
+				var overrides = getOverridenValues(),
+					$this = $(this),
+					category = $this.parents('[data-category]').data('category'),
+					key = $this.parents('[data-key]').data('key'),
+					field = $this.data('field');
+
+				overrides[category] = overrides[category] || {};
+				overrides[category][key] = overrides[category][key] || {};
+				overrides[category][key][field] = overrides[category][key][field] || {};
+
+				overrides[category][key][field] = 0;
+
+				cssToFocus = '[data-category="' + category + '"] [data-key="' + key + '"] [data-field="' + field + '"] input';
+
+				self.servicePlanDetailsRenderOverride(container, overrides, cssToFocus);
+			});
+
+			container.empty()
+					 .append(template);
+
+			if(cssToFocus) {
+				template.find(cssToFocus).focus();
+			}
 		},
 
 		servicePlanCustomizeSave: function(pArgs) {

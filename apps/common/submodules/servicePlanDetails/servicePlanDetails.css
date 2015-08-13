@@ -99,3 +99,47 @@
 	font-size: 14px;
 	margin-left: 10px;
 }
+
+.customize-override-wrapper .input-value {
+	display: inline-block;
+	margin-left: 5px;
+	width: 40px;
+}
+/*
+.customize-override-wrapper .override-category .line {
+	display: block;
+}*/
+
+.customize-override-wrapper .override-category .line .remove-line {
+	cursor: pointer;
+	margin-left: 5px;
+	padding: 2px;
+}
+
+/* Can't figure out how to make this part look OK with the table-cell so for the override part I just use blocks instead, not pretty but it works.. */
+.service-plan-details.details-overrides {
+	display: block;
+}
+
+.service-plan-details.details-overrides .line {
+	display: block;
+}
+
+.service-plan-details.details-overrides .line > div {
+	display: inline-block;
+	width: 45%;
+}
+
+.service-plan-details.details-overrides .line:not(.header) > div:not(:last-child) {
+	border-right: none;
+}
+
+.service-plan-details.details-overrides .line .charges > div {
+	border-left: 1px solid #ccc;
+}
+
+.service-plan-details.details-overrides .no-overrides {
+	text-align: center;
+	font-style: italic;
+	padding: 5px;
+}
