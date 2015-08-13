@@ -24,6 +24,10 @@ define(function(require){
 		}
 	});
 
+	Handlebars.registerHelper('tryI18n', function(mapI18n, key) {
+		return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
+	});
+
 	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
 		phoneNumber = (phoneNumber || '').toString();
 

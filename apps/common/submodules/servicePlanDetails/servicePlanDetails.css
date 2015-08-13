@@ -48,6 +48,10 @@
 	font-size: 14px;
 }
 
+.customize-service-plan-container .title {
+	font-weight: bold;
+}
+
 .customize-service-plan-container .category-wrapper {
 	margin-bottom: 15px;
 }
@@ -105,10 +109,6 @@
 	margin-left: 5px;
 	width: 40px;
 }
-/*
-.customize-override-wrapper .override-category .line {
-	display: block;
-}*/
 
 .customize-override-wrapper .override-category .line .remove-line {
 	cursor: pointer;

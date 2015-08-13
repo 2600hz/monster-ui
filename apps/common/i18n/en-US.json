@@ -465,9 +465,6 @@
 	},
 
 	"servicePlanDetails": {
-		"rate": "Rate:",
-		"activationCharge": "Activation charge:",
-		"exceptions": "Exceptions:",
 		"planLines": {
 			"phone_numbers": "Phone Numbers",
 			"number_services": "Number Services",
@@ -483,10 +480,41 @@
 		"noServicePlan": "No Service Plan selected.",
 		"__comment": "UI-1662: Adding minimum to customization",
 		"__version": "3.22",
-		"minimum": "Minimum",
 		"overrides": "Overrides",
 		"addOverrides": "Add",
-		"noOverrides": "No Overriden Values. Click on the Add link to customize this service plan!"
+		"noOverrides": "No Overriden Values. Click on the Add link to customize this service plan!",
+		"planTitle": "Details Service Plan",
+		"keys": {
+			"phone_numbers": "Phone Numbers",
+			"number_services": "Number Services",
+			"limits": "Limits",
+			"devices": "Devices",
+			"users": "Users",
+			"branding": "Branding",
+			"ips": "IPs",
+			"ui_apps": "UI Apps",
+			"port": "Port Request",
+			"cnam": "CNAM Update",
+			"e911": "e911",
+			"ata": "ATA",
+			"cellphone": "Cell Phone",
+			"fax": "Fax",
+			"landline": "Landline",
+			"mobile": "Mobile",
+			"sip_device": "SIP Device",
+			"sip_uri": "SIP URI",
+			"smartphone": "Smartphone",
+			"softphone": "Softphone",
+			"outbound_trunks": "Outbound Trunks",
+			"inbound_trunks": "Inbound Trunks",
+			"twoway_trunks": "Twoway Trunks",
+			"did_us": "US DID",
+			"tollfree_us": "US Tollfree",
+			"rate": "Rate",
+			"activation_charge": "Activation charge",
+			"minimum": "Minimum",
+			"exceptions": "Exceptions"
+		}
 	},
 
 	"ringingDurationControl": {

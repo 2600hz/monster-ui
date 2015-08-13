@@ -1,18 +1,18 @@
 <div class="override-header">
-	{{ i18n.servicePlanDetails.overrides }}
+	<span class="title">{{ i18n.servicePlanDetails.overrides }}</span>
 	<div class="dropdown add-link-container">
 		<a href="#" class="add-override monster-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus monster-green"></i>{{ i18n.servicePlanDetails.addOverrides }}</a>
 		<ul class="dropdown-menu select-field-override" role="menu" aria-labelledby="dropdownMenu">
 			{{#each allowedOverrides}}
 				<li class="dropdown-submenu" data-category="{{@key}}">
-					<a tabindex="-1" href="#">{{ @key}}</a>
+					<a tabindex="-1" href="#">{{ tryI18n ../i18n.servicePlanDetails.keys @key }}</a>
 					<ul class="dropdown-menu">
 						{{#each this}}
 							<li class="dropdown-submenu" data-key="{{@key}}">
-								<a tabindex="-1" href="#">{{ @key}}</a>
+								<a tabindex="-1" href="#">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}</a>
 								<ul class="dropdown-menu">
 									{{#each this}}
-										<li><a tabindex="-1" href="#" data-field="{{@key}}">{{ @key}}</a></li>
+										<li><a tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a></li>
 									{{/each}}
 								</ul>
 							</li>
@@ -27,16 +27,16 @@
 		{{#each overrides}}
 			<div class="override-category" data-category="{{@key}}">
 				<div class="line header">
-					<div>{{ @key}}</div>
+					<div>{{ tryI18n ../i18n.servicePlanDetails.keys @key }}</div>
 					<div></div>
 				</div>
 				{{#each this}}
 					<div class="line" data-key="{{@key}}">
-						<div class="name">{{ @key}}</div>
+						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}</div>
 						<div class="charges">
 							{{#each this}}
 								<div data-field="{{@key}}">
-									{{@key}}: <input class="input-value" value="{{this}}">
+									{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}: <input class="input-value" value="{{this}}">
 									<i class="fa fa-remove monster-red remove-line"></i>
 								</div>
 							{{/each}}
