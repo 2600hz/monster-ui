@@ -45,6 +45,11 @@ define(function(require){
 				},
 				parent = args.hasOwnProperty('parent') ? args.parent : monster.ui.dialog('', dialogOptions);
 
+			// Add the corresponding text to each state to display it in the dropdowns
+			_.each(self.states, function(state, idx) {
+				state.text = self.i18n.active().port.state[state.value];
+			});
+
 			if (args.hasOwnProperty('accountId')) {
 				self.isLaunchedInAppMode = false;
 			} else {
@@ -70,8 +75,12 @@ define(function(require){
 
 		portRenderPendingOrder: function(parent, accountId) {
 			var self = this,
-				template = $(monster.template(self, 'port-pendingOrders')),
-				defaultDisplayedState = 'submitted';
+				defaultDisplayedState = 'submitted',
+				template = $(monster.template(self, 'port-pendingOrders', {
+					states: self.states,
+					selectedState: defaultDisplayedState,
+					isLaunchedInAppMode: self.isLaunchedInAppMode
+				}));
 
 			parent.empty();
 
@@ -86,8 +95,6 @@ define(function(require){
 
 				if(!self.isLaunchedInAppMode) {
 					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
-					template.find('.filter-options')
-							.remove();
 				}
 
 				parent.append(template);
@@ -1308,10 +1315,6 @@ define(function(require){
 						}
 					}
 				};
-
-			for (var k in states) {
-				states[k].text = self.i18n.active().port.state[states[k].value];
-			}
 
 			if (args.hasOwnProperty('portRequestId')) {
 				populateDynamicCells(args.portRequestId, args.state, request);
