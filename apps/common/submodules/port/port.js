@@ -1397,7 +1397,25 @@ define(function(require){
 			targets.forEach(function(val, idx) {
 				context.find(val).on('click', function(event) {
 					event.preventDefault();
-					monster.ui.alert(self.i18n.active().port.comingSoon);
+
+					var type = $(this).data('type');
+
+					if (type === 'faq') {
+						var popup = monster.ui.dialog(monster.template(self, 'port-faqPopup'), {
+								title: 'Porting Manager FAQ',
+								width: '800px'
+							}),
+							toggles = popup.find('.accordion-toggle');
+
+						toggles
+							.on('click', function() {
+								toggles.removeClass('in');
+								$(this).addClass('in');
+							});
+					}
+					else {
+						monster.ui.alert(self.i18n.active().port.comingSoon);
+					}
 				});
 			})
 		},

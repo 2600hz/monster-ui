@@ -642,3 +642,19 @@ div#order_summary .row-fluid .span6:first-child ul {
 div#order_summary .row-fluid .span6:first-child ul li:not(:last-child) { margin-bottom: 5px; }
 
 div#order_summary .row-fluid .span6:last-child { padding: 20px; }
+
+#faq_accordion_container {
+	padding: 10px;
+}
+#faq_accordion_container .accordion-heading {
+	font-weight: bold;
+}
+#faq_accordion_container .accordion-inner {
+	font-style: italic;
+}
+#faq_accordion_container .accordion-toggle:not(.in):not(:hover):focus {
+	color: #333;
+}
+#faq_accordion_container .accordion-toggle.in {
+	color: #22a5ff;
+}

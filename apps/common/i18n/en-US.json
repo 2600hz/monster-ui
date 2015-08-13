@@ -399,7 +399,59 @@
 		"addDate": "Add date",
 		"__comment": "UI-1144: Can now add numbers to port request even after its creation",
 		"__version": "v3.20_s3",
-		"addMoreNumbers": "add more numbers"
+		"addMoreNumbers": "add more numbers",
+		"__comment": "UI-1756: Add FAQ popup for Port Manager app",
+		"__version": "v3.22",
+		"faqContent": [
+			{
+				"question": "What is the difference between an LOA and a RespOrg?",
+				"answer": "The LOA (Letter Of Authorization) is used when porting regular telephone numbers. The RespOrg (Responsible Organization) is used when porting Toll-free numbers."
+			},
+			{
+				"question": "How long will my port take?",
+				"answer": "This cannot be determined until the port request is submitted. We have seen port requests scheduled within 3 to 4 days from the submittal date, but have come across some that take several weeks to a month before a scheduled date is granted, due to rejections."
+			},
+			{
+				"question": "I looked at the current bill copy and noticed the numbers I am requesting to port are not listed. Can I still submit the request using this bill copy?",
+				"answer": "Yes, you are more than welcome to submit using the bill copy as long as you know all numbers that are associated with the bill/account."
+			},
+			{
+				"question": "Will I be notified of a scheduled port date so I can ensure my client's account is set up?",
+				"answer": "Yes, we will notify you of the scheduled port date at least a day or two prior to the scheduled date. We will also notify you once the port completes."
+			},
+			{
+				"question": "Can I set up call routing prior to the scheduled port date?",
+				"answer": "Yes, and we recommend this for a smooth transition."
+			},
+			{
+				"question": "My client has international numbers. Can I port international numbers?",
+				"answer": "At this time, we can only port some Canadian numbers. This may vary depending upon if your provider has coverage in the region of the number(s)."
+			},
+			{
+				"question": "How quickly will I know if my port request has been rejected?",
+				"answer": "You will be notified, by our Porting Department, that a request has been rejected within that day or the subsequent day we receive the notice."
+			},
+			{
+				"question": "How do I cancel a port in progress?",
+				"answer": "If you decide to cancel a port, update the note section in the Porting Manager App of Smart PBX"
+			},
+			{
+				"question": "What is the port-out process (from your provider to a new provider)?",
+				"answer": "To port out a number, submit the request to the gaining provider. If you receive a rejection notification from the gaining carrier for an additional document, please contact Support and we will try to help. Once you receive a port date from the gaining provider, you are responsible for deleting the number from the Account."
+			},
+			{
+				"question": "What is a bulk port?",
+				"answer": "We consider a bulk port to be 100+ numbers."
+			},
+			{
+				"question": "Is there a discount available for bulk ports?",
+				"answer": "Bulk ports are considered over 100 numbers. For inquiries about discounts, please contact your Account Manager."
+			},
+			{
+				"question": "Do I have to submit a bulk port through the UI?",
+				"answer": "No, submit bulk ports to Support and our Porting Department will handle them for you. When submitting a Support Ticket ensure to include the LOA (Letter Of Authorization?  and a current bill pay."
+			}
+		]
 	},
 
 	"chooseModel": {

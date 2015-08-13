@@ -10,6 +10,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [highlight()][highlight]
 * [protectField()][protect_field]
 * [showPasswordStrength()][show_password_strength]
+* [timepicker()][timepicker]
 * [tooltips()][tooltips]
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
@@ -29,6 +30,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 [highlight]: ui/highlight().md
 [protect_field]: ui/protectField().md
 [show_password_strength]: ui/showPasswordStrength().md
+[timepicker]: ui/timepicker().md
 [tooltips]: ui/tooltips().md
 [validate]: ui/validate().md
 [wysiwyg]: ui/wysiwyg().md
