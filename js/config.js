@@ -6,9 +6,7 @@ define(function(require){
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600hz, add the URL in the 'provisioner' key below
 				//provisioner: 'http://URL/2600hz-provisioner/',
-				//default: 'http://api.zswitch.net:8000/v2/'
-
-				default: 'http://10.26.0.41:8000/v2/'
+				default: 'http://api.zswitch.net:8000/v2/'
 
 			// If you want to use WebSockets you need to turn blackhole on in the back-end and then put the URL in the 'socket' key below
 			// 		socket: 'your_web_socket_url'
