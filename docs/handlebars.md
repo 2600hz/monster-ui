@@ -180,6 +180,13 @@ First argument is optional and defaults to 'info'. Choices are 'info', 'question
 
 Second argument is optional and let you define a className that will be added to the main wrapper so you can apply some CSS rules to it.
 
+```handlebars
+{{#monsterText}} Monster is <h3>awesome</h3> {{/monsterText}}
+{{#monsterText 'error'}} Monster is <strong>NOT</strong> awesome {{/monsterText}}
+{{#monsterText 'warning' 'myClassName'}} Monster could be awesome {{/monsterText}}
+{{#monsterText 'question'}} Is Monster Awesome?{{/monsterText}}
+```
+
 ##### monsterRadio
 Similar to monsterCheckbox, this helper allows you to generate a pretty radio button from a simple radio input.
 
@@ -236,13 +243,6 @@ Test 1
 Test 2
 
 test_3
-```
-
-```handlebars
-{{#monsterText}} Monster is <h3>awesome</h3> {{/monsterText}}
-{{#monsterText 'error'}} Monster is <strong>NOT</strong> awesome {{/monsterText}}
-{{#monsterText 'warning' 'myClassName'}} Monster could be awesome {{/monsterText}}
-{{#monsterText 'question'}} Is Monster Awesome?{{/monsterText}}
 ```
 
 [i18n]: internationalization.md
