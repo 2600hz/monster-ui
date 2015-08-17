@@ -52,7 +52,9 @@
 								</ul>
 							</li>
 						</ul>
-						<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ ../../i18n.numbers.port }}</span></a>
+						{{#unless ../../hidePort}}
+							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ ../../../i18n.numbers.port }}</span></a>
+						{{/unless}}
 						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ ../../i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh"></i><span class="action-text">{{ ../../i18n.numbers.sync.label }}</span></a>
 					</div>
 					<div class="left-part">

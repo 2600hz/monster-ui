@@ -102,6 +102,7 @@ define(function(require){
 					usedNumbers: []
 				},
 				templateData = {
+					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
 					listAccounts: []
 				};
