@@ -198,6 +198,46 @@ You can also provide parameters to define a label, set its positioning, and set 
 {{/monsterRadio}}
 ```
 
+##### tryI18n
+If you want to display data from the back-end, often times you'll try to parse the text and have a better text displayed instead.
+But what if the back-end moves faster and add more keys? You still want to be able to display text for that key. This is what tryI18n is for. 
+Basically, it will check if a key has a translation in a JSON object. If it has one, it will display the friendly text, if not, it will display the variable name!
+
+
+Let's say we have a i18n file like:
+```JSON
+{
+	"demoHandlebars": {
+		"test_1": "Test 1",
+		"test_2": "Test 2"
+	}
+}
+```
+
+and a HTML template named 'templateName' like:
+```handlebars
+{{#each keys}}
+	{{ tryI18n i18n.demoHandlebars this }}<br/>
+{{/each}}
+```
+
+And we use this in JS: 
+```javascript
+var obj = { keys: ['test_1','test_2','test_3'] };
+
+monster.template(self, 'templateName', obj);
+```
+
+The final output would be something like
+
+```text
+Test 1
+
+Test 2
+
+test_3
+```
+
 ```handlebars
 {{#monsterText}} Monster is <h3>awesome</h3> {{/monsterText}}
 {{#monsterText 'error'}} Monster is <strong>NOT</strong> awesome {{/monsterText}}
