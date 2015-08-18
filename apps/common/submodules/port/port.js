@@ -22,6 +22,8 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
+		defaultDisplayedState: 'submitted',
+
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
 			{ value: 'submitted', next: [2,4,6] },
@@ -44,6 +46,11 @@ define(function(require){
 					dialogClass: 'port-container-dialog'
 				},
 				parent = args.hasOwnProperty('parent') ? args.parent : monster.ui.dialog('', dialogOptions);
+
+			// Add the corresponding text to each state to display it in the dropdowns
+			_.each(self.states, function(state, idx) {
+				state.text = self.i18n.active().port.state[state.value];
+			});
 
 			if (args.hasOwnProperty('accountId')) {
 				self.isLaunchedInAppMode = false;
@@ -70,37 +77,22 @@ define(function(require){
 
 		portRenderPendingOrder: function(parent, accountId) {
 			var self = this,
-				template = $(monster.template(self, 'port-pendingOrders')),
-				defaultDisplayedState = 'submitted';
+				template = $(monster.template(self, 'port-pendingOrders', {
+					states: self.states,
+					defaultDisplayedState: self.defaultDisplayedState,
+					isLaunchedInAppMode: self.isLaunchedInAppMode
+				}));
 
-			parent.empty();
+			parent
+				.empty()
+				.append(template);
 
-			self.portListRequests(accountId, defaultDisplayedState, function(data) {
-				var listTemplate = monster.template(self, 'port-pendingOrdersList', {
-						data: self.portFormatPendingOrderData(data)
-					});
+			self.portBindPendingOrderEvents(parent, accountId);
+			self.portRenderPendingOrderListing(parent, accountId, self.defaultDisplayedState);
 
-				template.find('.accounts-list')
-						.empty()
-						.append(listTemplate);
-
-				if(!self.isLaunchedInAppMode) {
-					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
-					template.find('.filter-options')
-							.remove();
-				}
-
-				parent.append(template);
-
-				if (parent.hasClass('ui-dialog-content')) {
-					parent.dialog('open');
-				}
-
-				self.portRenderDynamicCells(parent, {
-					data: data
-				});
-				self.portBindPendingOrderEvents(parent, accountId, data);
-			});
+			if (parent.hasClass('ui-dialog-content')) {
+				parent.dialog('open');
+			}
 		},
 
 		portToggleRequestsDisplay: function(container, accountId, displayType, noFade) {
@@ -171,6 +163,51 @@ define(function(require){
 				self.portRenderAddNumber(parent, accountId);
 			});
 
+			container.find('.filter-options .btn-group:first-child .btn').on('click', function() {
+				var $this = $(this);
+				if (!$this.hasClass('active')) {
+					$this.siblings().removeClass('active');
+					$this.addClass('active');
+					self.portToggleRequestsDisplay(container, accountId, $this.data('value'));
+				}
+			});
+
+			container.find('.filter-options .btn-group:last-child .filter-select').on('change', function() {
+				self.portRenderPendingOrderListing(parent, accountId, $(this).val());
+			});
+		},
+
+
+
+
+
+		portRenderPendingOrderListing: function (parent, accountId, state) {
+			var self = this,
+				container = parent.find('.accounts-list');
+
+			self.portListRequests(accountId, state, function (data) {
+				var dataToTemplate = {
+						data: self.portFormatPendingOrderData(data)
+					},
+					template = monster.template(self, 'port-pendingOrdersList', dataToTemplate);
+
+				container
+					.empty()
+					.append(template);
+
+				if (!self.isLaunchedInAppMode) {
+					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
+				}
+
+				self.portRenderDynamicCells(parent, { data: data });
+				self.portBindPendingOrderListingEvents(parent, accountId, data);
+			});
+		},
+
+		portBindPendingOrderListingEvents: function (parent, accountId, data) {
+			var self = this,
+				container = parent.find('.accounts-list');
+
 			container.find('.account-header').on('click', function() {
 				var section = $(this).parents('.account-section');
 
@@ -196,36 +233,21 @@ define(function(require){
 				}
 			});
 
-			container.on('change', '.request-box .request-state .switch-state', function(event) {
+			container.find('.request-box .request-state').on('change', '.switch-state', function(event) {
 				var el = $(this),
 					box = el.parents('.request-box'),
 					accountId = box.data('account_id'),
 					requestId = box.data('id'),
-					newState = el.val(),
-					currentRequest;
-
-				for (var i = 0, len = data.length; i < len; i++) {
-					if (data[i].account_id === accountId) {
-						for (var j = 0, len2 = data[i].port_requests.length; j < len2; j++) {
-							if (data[i].port_requests[j].id === requestId) {
-								currentRequest = data[i].port_requests[j];
-							}
-						}
-					}
-				}
+					newState = el.val();
 
 				if (newState === 'rejected') {
-					delete currentRequest.scheduled_date;
-
 					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
 						delete newRequest.scheduled_date;
 
 						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
-							currentRequest = updatedRequest;
-
 							self.portRenderDynamicCells(container, {
 								state: newState,
-								request: currentRequest,
+								request: updatedRequest,
 								portRequestId: requestId
 							});
 
@@ -240,11 +262,9 @@ define(function(require){
 								newRequest.scheduled_date = newScheduledDate;
 
 								self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
-									currentRequest = updatedRequest;
-
 									self.portRenderDynamicCells(container, {
-										state: currentRequest.port_state,
-										request: currentRequest,
+										state: updatedRequest.port_state,
+										request: updatedRequest,
 										portRequestId: requestId
 									});
 
@@ -289,7 +309,7 @@ define(function(require){
 				}
 			});
 
-			container.on('click', '.request-box .scheduled-date .edit', function() {
+			container.find('.request-box .scheduled-date .edit').on('click', function() {
 				var $this = $(this),
 					accountId = $this.parents('.request-box').data('account_id'),
 					requestId = $this.parents('.request-box').data('id'),
@@ -330,7 +350,7 @@ define(function(require){
 				});
 			});
 
-			container.on('click', '.request-box .actions li', function() {
+			container.find('.request-box .actions li').on('click', function() {
 				var li = $(this),
 					portRequestId = li.parents('.request-box').data('id');
 
@@ -369,38 +389,11 @@ define(function(require){
 					}
 				})
 			});
-
-			container.find('.filter-options .btn-group:first-child .btn').on('click', function() {
-				var $this = $(this);
-				if (!$this.hasClass('active')) {
-					$this.siblings().removeClass('active');
-					$this.addClass('active');
-					self.portToggleRequestsDisplay(container, accountId, $this.data('value'));
-				}
-			});
-
-			container.find('.filter-options .btn-group:last-child .filter-select').on('change', function() {
-				var $this = $(this),
-					btnGroup = $this.parent(),
-					filterBy = $this.val();
-
-				self.portListRequests(accountId, filterBy, function(data) {
-					var listTemplate = monster.template(self, 'port-pendingOrdersList', {
-							data: self.portFormatPendingOrderData(data)
-						});
-
-					parent.find('.accounts-list')
-						.empty()
-						.append(listTemplate)
-
-					self.portRenderDynamicCells(parent, {
-						data: data
-					});
-
-					self.portToggleRequestsDisplay(container, accountId, container.find('.filter-options .btn-group:first-child .btn.active').data('value'), true);
-				});
-			});
 		},
+
+
+
+
 
 		portRenderScheduledDatePopup: function(parent, args) {
 			var self = this,
@@ -1308,10 +1301,6 @@ define(function(require){
 						}
 					}
 				};
-
-			for (var k in states) {
-				states[k].text = self.i18n.active().port.state[states[k].value];
-			}
 
 			if (args.hasOwnProperty('portRequestId')) {
 				populateDynamicCells(args.portRequestId, args.state, request);
