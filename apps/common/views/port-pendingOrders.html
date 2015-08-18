@@ -6,6 +6,7 @@
 				<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
 			</span>
 		</div>
+	{{#if isLaunchedInAppMode}}
 		<div class="filter-options">
 			<div class="btn-toolbar">
 				<div class="btn-group">
@@ -15,17 +16,16 @@
 				<div class="btn-group pull-right">
 					<span class="filter-select-label">{{i18n.port.pendingOrders.portState}}</span>
 					<select class="filter-select">
-						<option value="unconfirmed">{{i18n.port.state.unconfirmed}}</option>
-						<option value="submitted" selected>{{i18n.port.state.submitted}}</option>
-						<option value="pending">{{i18n.port.state.pending}}</option>
-						<option value="scheduled">{{i18n.port.state.scheduled}}</option>
-						<option value="rejected">{{i18n.port.state.rejected}}</option>
-						<option value="completed">{{i18n.port.state.completed}}</option>
-						<option value="canceled">{{i18n.port.state.canceled}}</option>
+					{{#select defaultStateToDisplay}}
+						{{#each states}}
+							<option value="{{value}}">{{text}}</option>
+						{{/each}}
+					{{/select}}
 					</select>
 				</div>
 			</div>
 		</div>
+	{{/if}}
 		<div class="accounts-list">
 		</div>
 	</div>
