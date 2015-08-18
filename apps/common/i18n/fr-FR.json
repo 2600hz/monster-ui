@@ -308,7 +308,8 @@
 			"scheduledDatePopup": {
 				"title": "Modifier la date prévue",
 				"label": {
-					"scheduledDate": "Date prévue"
+					"scheduledDate": "Date prévue",
+					"scheduledTime": "Heure prévue"
 				}
 			}
 		},
