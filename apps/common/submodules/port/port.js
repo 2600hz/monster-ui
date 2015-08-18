@@ -344,7 +344,7 @@ define(function(require){
 						self.portRequestUpdate(accountId, requestId, currentRequest, function(updatedRequest) {
 							currentRequest = updatedRequest;
 
-							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(currentRequest.scheduled_date), 'short'));
+							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(currentRequest.scheduled_date), 'shortdatetime'));
 						});
 					}
 				});
@@ -1292,7 +1292,7 @@ define(function(require){
 						if (state === 'scheduled') {
 							scheduledDate
 								.empty()
-								.text(monster.util.toFriendlyDate(portRequest.scheduled_date, 'short'));
+								.text(monster.util.toFriendlyDate(portRequest.scheduled_date, 'shortdatetime'));
 						}
 						else {
 							scheduledDate
