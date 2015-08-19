@@ -194,7 +194,7 @@ define(function(require){
 					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
 				}
 
-				self.portRenderDynamicCells(parent, { data: data });
+				self.portRenderDynamicCells(parent, data);
 				self.portBindPendingOrderListingEvents(parent, accountId, data);
 			});
 		},
@@ -242,11 +242,7 @@ define(function(require){
 
 						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
 							self.portUpdateData(accountId, updatedRequest, data);
-							self.portRenderDynamicCells(container, {
-								state: updatedRequest.port_state,
-								request: updatedRequest,
-								portRequestId: updatedRequest.id
-							});
+							self.portRenderDynamicCells(container, updatedRequest);
 
 							toastr.success(self.i18n.active().port.toastr.success.request.update);
 						});
@@ -260,11 +256,7 @@ define(function(require){
 
 								self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
 									self.portUpdateData(accountId, updatedRequest, data);
-									self.portRenderDynamicCells(container, {
-										state: updatedRequest.port_state,
-										request: updatedRequest,
-										portRequestId: updatedRequest.id
-									});
+									self.portRenderDynamicCells(container, updatedRequest);
 
 									toastr.success(self.i18n.active().port.toastr.success.request.update);
 								});
@@ -273,22 +265,14 @@ define(function(require){
 							});
 						},
 						callbackCancel: function() {
-							self.portRenderDynamicCells(container, {
-								state: currentRequest.port_state,
-								request: currentRequest,
-								portRequestId: currentRequest.id
-							});
+							self.portRenderDynamicCells(container, currentRequest);
 						}
 					});
 				}
 				else {
 					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
 						self.portUpdateData(accountId, newRequest, data);
-						self.portRenderDynamicCells(container, {
-							state: newRequest.port_state,
-							request: newRequest,
-							portRequestId: newRequest.id
-						});
+						self.portRenderDynamicCells(container, newRequest);
 
 						box.find('.continue-request, .delete-request')
 							.remove();
@@ -297,11 +281,7 @@ define(function(require){
 					}, function() {
 						toastr.error(self.i18n.active().port.toastr.error.request.update);
 					}, function() {
-						self.portRenderDynamicCells(container, {
-							state: currentRequest.port_state,
-							request: currentRequest,
-							portRequestId: currentRequest.id
-						});
+						self.portRenderDynamicCells(container, currentRequest);
 					});
 				}
 			});
@@ -1195,105 +1175,102 @@ define(function(require){
 
 		portRenderDynamicCells: function(parent, args) {
 			var self = this,
-				isAdmin = monster.apps.auth.originalAccount.superduper_admin,
-				states = self.states,
-				data = args.data,
-				request = args.request,
-				getStatesToDisplay = function(nextState) {
-					var statesList = [];
+				getStatesToDisplay = function(newState) {
+					var states = self.states,
+						statesList = [];
 
-					for (var i = 0, len = states.length; i < len; i++) {
-						if (nextState === states[i].value) {
-							var indexList = states[i].next;
+					newState = _.find(states, function(stateValue, stateIdx) {
+						return stateValue.value === newState;
+					});
 
-							indexList.forEach(function(v, idx) {
-								statesList.push(states[v]);
-							});
+					_.each(newState.next, function(indexValue, indexIdx) {
+						statesList.push(states[indexValue]);
+					});
 
-							statesList.unshift(states[i]);
-
-							break;
-						}
-					}
+					statesList.unshift(newState);
 
 					return statesList;
 				},
-				populateDynamicCells = function populateDynamicCells(id, state, portRequest) {
-					var box = parent.find('.request-box[data-id="' + id + '"]'),
-						accountId = box.data('account_id'),
-						scheduledDate = box.find('.scheduled-date'),
-						select = box.find('.request-state');
+				populateDynamicCells = function populateDynamicCells(requestData) {
+					var $box = parent.find('.request-box[data-id="' + requestData.id + '"]'),
+						isAdmin = monster.apps.auth.originalAccount.superduper_admin,
+						$scheduledDate = $box.find('.scheduled-date'),
+						$selectState = $box.find('.request-state'),
+						requestState = requestData. port_state;
 
-					box.data('state', state);
-					box.data('scheduled_date', portRequest.hasOwnProperty('scheduled_date') ? portRequest.scheduled_date : '');
-					box.data('updated_date', portRequest.updated);
+					$box
+						.data({
+							state: requestState,
+							scheduled_date: requestData.hasOwnProperty('scheduled_date') ? requestData.scheduled_date : '',
+							updated_date: requestData.updated
+						});
 
 					if (isAdmin) {
-						if (state === 'completed') {
-							select
+						if (requestState === 'completed') {
+							$selectState
 								.empty()
-								.text(self.i18n.active().port.state[state]);
+								.text(self.i18n.active().port.state[requestState]);
 
-							scheduledDate.empty();
+							$scheduledDate.empty();
 						}
 						else {
 							var dataCell;
 
-							select
+							$selectState
 								.empty()
-								.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(state) })));
+								.append($(monster.template(self, 'port-selectStates', { states: getStatesToDisplay(requestState) })));
 
 							/**
 							 * Render the scheduled date cell according to the state of port request
 							 * and the value of scheduled_date (if it is set or not)
 							 */
-							if (state === 'scheduled') {
-								if (portRequest.hasOwnProperty('scheduled_date')) {
-									dataCell = { scheduledDate: portRequest.scheduled_date };
+							if (requestState === 'scheduled') {
+								if (requestData.hasOwnProperty('scheduled_date')) {
+									dataCell = { scheduledDate: requestData.scheduled_date };
 								}
 
-								scheduledDate
+								$scheduledDate
 									.empty()
 									.append($(monster.template(self, 'port-scheduledDateCell', dataCell)));
 							}
 							else {
-								scheduledDate
+								$scheduledDate
 									.empty()
 									.text(self.i18n.active().port.noScheduledDate);
 							}
 						}
 					}
 					else {
-						select
+						$selectState
 							.empty()
-							.text(self.i18n.active().port.state[state]);
+							.text(self.i18n.active().port.state[requestState]);
 
 						/**
 						 * Render the scheduled date cell according to the state of port request
 						 * and the value of scheduled_date (if it is set or not)
 						 */
-						if (state === 'scheduled') {
-							scheduledDate
+						if (requestState === 'scheduled') {
+							$scheduledDate
 								.empty()
-								.text(monster.util.toFriendlyDate(portRequest.scheduled_date, 'shortdatetime'));
+								.text(monster.util.toFriendlyDate(requestData.scheduled_date, 'shortdatetime'));
 						}
 						else {
-							scheduledDate
+							$scheduledDate
 								.empty()
 								.text(self.i18n.active().port.noScheduledDate);
 						}
 					}
 				};
 
-			if (args.hasOwnProperty('portRequestId')) {
-				populateDynamicCells(args.portRequestId, args.state, request);
+			if (args instanceof Array) {
+				_.each(args, function(accountValue, accountIdx) {
+					_.each(accountValue.port_requests, function(requestValue, requestIdx) {
+						populateDynamicCells(requestValue);
+					});
+				});
 			}
 			else {
-				for (var i = 0, len = data.length; i < len; i++) {
-					_.each(data[i].port_requests, function(port) {
-						populateDynamicCells(port.id, port.port_state, port);
-					});
-				}
+				populateDynamicCells(args);
 			}
 		},
 
