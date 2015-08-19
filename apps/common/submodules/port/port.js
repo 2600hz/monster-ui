@@ -21,7 +21,7 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultDisplayedState: 'submitted',
+		defaultStateToDisplay: 'submitted',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
@@ -78,7 +78,7 @@ define(function(require){
 			var self = this,
 				template = $(monster.template(self, 'port-pendingOrders', {
 					states: self.states,
-					defaultDisplayedState: self.defaultDisplayedState,
+					defaultStateToDisplay: self.defaultStateToDisplay,
 					isLaunchedInAppMode: self.isLaunchedInAppMode
 				}));
 
@@ -87,7 +87,7 @@ define(function(require){
 				.append(template);
 
 			self.portBindPendingOrderEvents(parent, accountId);
-			self.portRenderPendingOrderListing(parent, accountId, self.defaultDisplayedState);
+			self.portRenderPendingOrderListing(parent, accountId, self.defaultStateToDisplay);
 
 			if (parent.hasClass('ui-dialog-content')) {
 				parent.dialog('open');
@@ -176,10 +176,6 @@ define(function(require){
 			});
 		},
 
-
-
-
-
 		portRenderPendingOrderListing: function (parent, accountId, state) {
 			var self = this,
 				container = parent.find('.accounts-list');
@@ -237,6 +233,7 @@ define(function(require){
 					box = el.parents('.request-box'),
 					accountId = box.data('account_id'),
 					requestId = box.data('id'),
+					currentRequest = self.portGetRequest(accountId, requestId, data),
 					newState = el.val();
 
 				if (newState === 'rejected') {
@@ -244,10 +241,11 @@ define(function(require){
 						delete newRequest.scheduled_date;
 
 						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
+							self.portUpdateData(accountId, updatedRequest, data);
 							self.portRenderDynamicCells(container, {
-								state: newState,
+								state: updatedRequest.port_state,
 								request: updatedRequest,
-								portRequestId: requestId
+								portRequestId: updatedRequest.id
 							});
 
 							toastr.success(self.i18n.active().port.toastr.success.request.update);
@@ -261,10 +259,11 @@ define(function(require){
 								newRequest.scheduled_date = newScheduledDate;
 
 								self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
+									self.portUpdateData(accountId, updatedRequest, data);
 									self.portRenderDynamicCells(container, {
 										state: updatedRequest.port_state,
 										request: updatedRequest,
-										portRequestId: requestId
+										portRequestId: updatedRequest.id
 									});
 
 									toastr.success(self.i18n.active().port.toastr.success.request.update);
@@ -277,19 +276,18 @@ define(function(require){
 							self.portRenderDynamicCells(container, {
 								state: currentRequest.port_state,
 								request: currentRequest,
-								portRequestId: requestId
+								portRequestId: currentRequest.id
 							});
 						}
 					});
 				}
 				else {
 					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
-						currentRequest = newRequest;
-
+						self.portUpdateData(accountId, newRequest, data);
 						self.portRenderDynamicCells(container, {
-							state: currentRequest.port_state,
-							request: currentRequest,
-							portRequestId: requestId
+							state: newRequest.port_state,
+							request: newRequest,
+							portRequestId: newRequest.id
 						});
 
 						box.find('.continue-request, .delete-request')
@@ -302,7 +300,7 @@ define(function(require){
 						self.portRenderDynamicCells(container, {
 							state: currentRequest.port_state,
 							request: currentRequest,
-							portRequestId: requestId
+							portRequestId: currentRequest.id
 						});
 					});
 				}
@@ -312,26 +310,8 @@ define(function(require){
 				var $this = $(this),
 					accountId = $this.parents('.request-box').data('account_id'),
 					requestId = $this.parents('.request-box').data('id'),
-					currentRequest,
-					scheduledDate;
-
-				for (var i = 0, len = data.length; i < len; i++) {
-					if (data[i].account_id === accountId) {
-						for (var j = 0, len2 = data[i].port_requests.length; j < len2; j++) {
-							if (data[i].port_requests[j].id === requestId) {
-								currentRequest = data[i].port_requests[j];
-
-								if (currentRequest.hasOwnProperty('scheduled_date')) {
-									scheduledDate = currentRequest.scheduled_date;
-								}
-
-								break;
-							}
-						}
-
-						break;
-					}
-				}
+					currentRequest = self.portGetRequest(accountId, requestId, data),
+					scheduledDate = currentRequest.scheduled_date;
 
 				self.portRenderScheduledDatePopup(parent, {
 					scheduledDate: scheduledDate,
@@ -341,65 +321,65 @@ define(function(require){
 						});
 
 						self.portRequestUpdate(accountId, requestId, currentRequest, function(updatedRequest) {
-							currentRequest = updatedRequest;
-
-							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(currentRequest.scheduled_date), 'shortdatetime'));
+							self.portUpdateData(accountId, updatedRequest, data);
+							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(updatedRequest.scheduled_date), 'shortdatetime'));
 						});
 					}
 				});
 			});
 
 			container.find('.request-box .actions li').on('click', function() {
-				var li = $(this),
-					portRequestId = li.parents('.request-box').data('id');
+				var $this = $(this),
+					accountId = $this.parents('.request-box').data('account_id'),
+					requestId = $this.parents('.request-box').data('id'),
+					currentRequest = self.portGetRequest(accountId, requestId, data),
+					template;
 
-				self.portRequestGet(accountId, portRequestId, function(data) {
+				if ($this.hasClass('continue-request')) {
+					var dataList = { orders: [currentRequest] };
 
-					if (li.hasClass('continue-request')) {
-						var template = monster.template(self, 'port-submitDocuments', data),
-							dataList = { orders: [data] };
+					template = monster.template(self, 'port-submitDocuments', currentRequest),
 
-						parent
-							.empty()
-							.append(template);
+					parent
+						.empty()
+						.append(template);
 
-						self.portRenderSubmitDocuments(parent, accountId, dataList);
-					}
-					else if (li.hasClass('info-request')) {
-						var template = monster.template(self, 'port-requestInfo', data),
-							dialogOptions = {
-								width: '560px',
-								position: ['center', 20],
-								title: self.i18n.active().port.infoPopup.title
-							};
+					self.portRenderSubmitDocuments(parent, accountId, dataList);
+				}
+				else if ($this.hasClass('info-request')) {
+					var dialogOptions = {
+							width: '560px',
+							position: ['center', 20],
+							title: self.i18n.active().port.infoPopup.title
+						};
 
-						monster.ui.dialog(template, dialogOptions);
-					}
-					else if (li.hasClass('delete-request')) {
-						self.portRequestDelete(accountId, portRequestId, function() {
-							li.parents('.request-box')
-								.remove();
+					template = monster.template(self, 'port-requestInfo', currentRequest),
 
-							toastr.success(self.i18n.active().port.toastr.success.request.delete);
-						});
-					}
-					else if (li.hasClass('comments-request')) {
-						self.portRenderComments(parent, accountId, portRequestId);
-					}
-				})
+					monster.ui.dialog(template, dialogOptions);
+				}
+				else if ($this.hasClass('delete-request')) {
+					self.portRequestDelete(accountId, requestId, function() {
+						$this.parents('.request-box')
+							.remove();
+
+						toastr.success(self.i18n.active().port.toastr.success.request.delete);
+					});
+				}
+				else if ($this.hasClass('comments-request')) {
+					self.portRenderComments(parent, accountId, requestId);
+				}
 			});
 		},
 
-
-
-
-
 		portRenderScheduledDatePopup: function(parent, args) {
 			var self = this,
-				dataTemplate = args.hasOwnProperty('scheduledDate') ? { scheduledDate: args.scheduledDate } : {}
+				dataTemplate = args.hasOwnProperty('scheduledDate') ? { scheduledDate: args.scheduledDate } : {},
 				template = $(monster.template(self, 'port-editScheduledDate', dataTemplate)),
 				popup = monster.ui.dialog(template, {
-					title: self.i18n.active().port.pendingOrders.scheduledDatePopup.title
+					title: self.i18n.active().port.pendingOrders.scheduledDatePopup.title,
+					beforeClose: function (event, ui) {
+						args.hasOwnProperty('callbackCancel') && args.callbackCancel();
+					}
 				});
 
 			self.portBindScheduledDatePopupEvents(parent, popup, args);
@@ -429,8 +409,6 @@ define(function(require){
 
 			popup.find('.cancel-link').on('click', function() {
 				popup.dialog('close');
-
-				args.hasOwnProperty('callbackCancel') && args.callbackCancel();
 			});
 		},
 
@@ -1530,6 +1508,28 @@ define(function(require){
 					});
 				}
 			});
+		},
+
+		portGetRequest: function(accountId, requestId, data) {
+			return data.filter(function(accountValue, accountIdx) {
+				return accountValue.account_id === accountId;
+			})[0].port_requests.filter(function(requestValue, requestIdx) {
+				return requestValue.id === requestId;
+			})[0];
+		},
+
+		portUpdateData: function(accountId, newRequest, data) {
+			for (var accountIdx in data) {
+				if (data[accountIdx].account_id === accountId) {
+					for (var requestIdx in data[accountIdx].port_requests) {
+						if (data[accountIdx].port_requests[requestIdx].id === newRequest.id) {
+							data[accountIdx].port_requests[requestIdx] = newRequest;
+						}
+						break;
+					}
+				}
+				break;
+			}
 		},
 
 		/* Request */
