@@ -3,7 +3,6 @@ define(function(require){
 		_ = require('underscore'),
 		fileUpload = require('fileupload'),
 		monster = require('monster'),
-		timepicker = require('timepicker'),
 		toastr = require('toastr');
 
 	var app = {
@@ -407,15 +406,21 @@ define(function(require){
 		},
 
 		portBindScheduledDatePopupEvents: function(parent, popup, args) {
-			var self = this;
+			var self = this,
+				$timepicker = popup.find('#scheduled_time'),
+				$datepicker = popup.find('#scheduled_date'),
+				datepickerOptions = {
+					minDate: new Date(),
+					beforeShowDay: $.datepicker.noWeekends
+				};
 
-			monster.ui.datepicker(popup.find('#scheduled_date'), {
-				minDate: new Date(),
-				beforeShowDay: $.datepicker.noWeekends
-			});
+			monster.ui.timepicker($timepicker);
+			monster.ui.datepicker($datepicker, datepickerOptions);
 
 			popup.find('.save-link').on('click', function() {
-				var newScheduledDate = monster.util.dateToGregorian(popup.find('#scheduled_date').datepicker('getDate'));
+				var scheduledTimeInMiliSeconds = $timepicker.timepicker('getSecondsFromMidnight') * 1000,
+					scheduledDateInMiliSeconds = $datepicker.datepicker('getDate').getTime(),
+					newScheduledDate = monster.util.dateToGregorian(new Date(scheduledDateInMiliSeconds + scheduledTimeInMiliSeconds));
 
 				popup.dialog('close');
 
