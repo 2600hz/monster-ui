@@ -329,27 +329,38 @@ define(function(require){
 
 		showTrialPopup: function(daysLeft) {
 			var self = this,
-				template = $(monster.template(self, 'trial-upgradePopup', { daysLeft: daysLeft })),
-				dialog;
+				upgradeRedirectFunction = function() {
+					// Add upgrade stuff
+				};
 
-			template.find('#close').on('click', function() {
-				dialog.dialog('close').remove();
-			});
-
-			template.find('#upgrade').on('click', function() {
-				// Add upgrade stuff
-				dialog.dialog('close').remove();
-			});
-
-			dialog = monster.ui.dialog(template, {
-				title: self.i18n.active().trialPopup.title,
-				hideClose: true,
-				closeOnEscape: false
-			});
-
-			if(daysLeft < 0) {
-				console.log(dialog,dialog.find('.ui-dialog-titlebar-close'));
-				dialog.find('.ui-dialog-titlebar-close').remove();
+			if(daysLeft >= 0) {
+				monster.ui.confirm(
+					'', // Marketing content goes here
+					function() {
+						upgradeRedirectFunction();
+					},
+					null, // No action on cancel
+					{
+						title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
+						cancelButtonText: self.i18n.active().trialPopup.closeButton,
+						confirmButtonText: self.i18n.active().trialPopup.upgradeButton,
+						confirmButtonClass: 'monster-button-primary',
+						type: 'warning'
+					}
+				);
+			} else {
+				monster.ui.alert(
+					'error',
+					'', // Marketing content goes here
+					function() {
+						upgradeRedirectFunction();
+					},
+					{
+						title: self.i18n.trialPopup.trialExpired,
+						closeButtonText: self.i18n.active().trialPopup.upgradeButton,
+						closeButtonClass: 'monster-button-primary'
+					}
+				);
 			}
 		},
 
