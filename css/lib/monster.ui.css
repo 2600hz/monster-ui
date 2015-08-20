@@ -139,9 +139,13 @@
 }
 .alert-dialog-advanced .details-box .error-details-wrapper {
 	display: none;
+	overflow: auto;
 }
 .alert-dialog-advanced .details-box .error-details-wrapper pre {
 	background: #fff;
+}
+.alert-dialog-advanced .details-box .error-details-wrapper .url {
+	word-wrap: break-word;
 }
 
 /************************************************************/
