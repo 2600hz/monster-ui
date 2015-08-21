@@ -7,6 +7,11 @@ define(function(require){
 	var buyNumbers = {
 
 		requests: {
+			'phonebook.search': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'numbers/us/search?prefix={pattern}&limit={limit}&offset={offset}',
+				verb: 'GET'
+			}
 		},
 
 		subscribe: {
@@ -15,6 +20,7 @@ define(function(require){
 
 		searchLimit: 15,
 		selectedCountryCode: "US",
+		isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
 
 		buyNumbersRender: function(params) {
 			var self = this,
@@ -960,6 +966,20 @@ define(function(require){
 		},
 
 		/**************************************************
+		 *            Data manipulation helpers           *
+		 **************************************************/
+
+		/**
+		 * If the 'structure' parameter is an Object, coerce it to an Array and
+		 * returns it or returns the Array if 'structure' is already an Array.
+		 * @param  {Object|Array} structure List to coerce to Array
+		 * @return {Array}                  Array created from 'structure'
+		 */
+		buyNumbersCoerceObjectToArray: function(structure) {
+			return _.isArray(structure) ? structure : _.map(structure, function(v) { return v; });
+		},
+
+		/**************************************************
 		 *              Requests declarations             *
 		 **************************************************/
 
@@ -984,18 +1004,24 @@ define(function(require){
 
 		// Search Requests
 		buyNumbersRequestSearchNumbers: function(args) {
-			var self = this;
+			var self = this,
+				settings = {
+					resource: self.isPhonebookConfigured ? 'phonebook.search' : 'numbers.search',
+					data: args.data,
+					success: function(data, status) {
+						args.hasOwnProperty('success') && args.success(self.buyNumbersCoerceObjectToArray(data.data));
+					},
+					error: function(data, status) {
+						args.hasOwnProperty('error') && args.error();
+					}
+				};
 
-			self.callApi({
-				resource: 'numbers.search',
-				data: args.data,
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(data, status) {
-					args.hasOwnProperty('error') && args.error();
-				}
-			});
+			if (self.isPhonebookConfigured) {
+				monster.request(settings);
+			}
+			else {
+				self.callApi(settings);
+			}
 		},
 		buyNumbersRequestSearchBlockOfNumbers: function(args) {
 			var self = this;
