@@ -106,5 +106,11 @@
 		"upgradeButton": "Upgrade Now",
 		"mainMessage": "Welcome back to your trial. You have {{variable}} days left to try out the platform.",
 		"trialExpired": "Your trial expired, please click on the Upgrade button to continue using the platform."
+	},
+
+	"__comment": "UI-1787: now handling upgrade of trial accounts",
+	"__version": "3.22",
+	"trial": {
+		"noCreditCard": "Please try to upgrade again once you filled your credit card information..."
 	}
 }

@@ -29,7 +29,9 @@ define(function(require){
 			'myaccount.renderNavLinks': '_renderNavLinks',
 			'myaccount.renderSubmodule': '_renderSubmodule',
 			'myaccount.openAccordionGroup': '_openAccordionGroup',
-			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility'
+			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility',
+			'myaccount.showCreditCardTab': 'showCreditCardTab',
+			'myaccount.hasCreditCards': 'hasCreditCards'
 		},
 
 		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
@@ -247,12 +249,16 @@ define(function(require){
 		// If yes, we display it and update that user to not display it again once it's completed
 		// If no, we check if we need to remind them to fill their credit card info
 		afterRender: function(template, uiRestrictions) {
-			var self = this;
+			var self = this,
+				currentAccount = monster.apps.auth.currentAccount;
 
 			if(self.hasToShowWalkthrough()) {
 				self.showWalkthrough(template, function() {
 					self.updateWalkthroughFlagUser();
 				});
+			}
+			else if(currentAccount.hasOwnProperty('trial_time_left')) {
+				monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
 			}
 			else {
 				self.checkCreditCard(uiRestrictions);
@@ -505,28 +511,50 @@ define(function(require){
 
 			// If this is a sub-account of the super duper admin, has the billing tab, and is not the super duper admin itself.
 			if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
-				self.getBraintree(function(data) {
-					if(data.credit_cards.length === 0) {
-						self.renderDropdown(true, function() {
-							var module = 'billing';
-
-							self.activateSubmodule({
-								title: self.i18n.active()[module].title,
-								module: module,
-								callback: function() {
-									var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
-
-									self._openAccordionGroup({
-										link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
-									});
-
-									toastr.error(self.i18n.active().billing.missingCard);
-								}
-							});
-						});
+				self.hasCreditCards(function(response) {
+					if(response === false) {
+						self.showCreditCardTab();
 					}
 				});
 			}
+		},
+
+		hasCreditCards: function(callback) {
+			var self = this,
+				response = false;
+
+			self.getBraintree(
+				function(data) {
+					response = (data.credit_cards || []).length > 0;
+
+					callback && callback(response);
+				},
+				function() {
+					callback && callback(response);
+				}
+			);
+		},
+
+		showCreditCardTab: function() {
+			var self = this;
+
+			self.renderDropdown(true, function() {
+				var module = 'billing';
+
+				self.activateSubmodule({
+					title: self.i18n.active()[module].title,
+					module: module,
+					callback: function() {
+						var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
+
+						self._openAccordionGroup({
+							link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
+						});
+
+						toastr.error(self.i18n.active().billing.missingCard);
+					}
+				});
+			});
 		},
 
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough

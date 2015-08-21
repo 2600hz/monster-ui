@@ -27,7 +27,8 @@ define(function(require){
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp' : '_initApp',
-			'auth.afterAuthenticate': '_afterSuccessfulAuth'
+			'auth.afterAuthenticate': '_afterSuccessfulAuth',
+			'auth.showTrialInfo': 'showTrialInfo'
 		},
 
 		load: function(callback) {
@@ -272,10 +273,6 @@ define(function(require){
 							$('body').addClass('colorblind');
 						}
 
-						if(results.account.hasOwnProperty('trial_time_left')) {
-							self.showTrialInfo(results.account.trial_time_left);
-						}
-
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp
 						});
@@ -338,7 +335,7 @@ define(function(require){
 
 			template.find('#upgrade').on('click', function() {
 				// Add upgrade stuff
-				dialog.dialog('close').remove();
+				self.handleUpgradeClick(dialog);
 			});
 
 			dialog = monster.ui.dialog(template, {
@@ -351,6 +348,29 @@ define(function(require){
 				console.log(dialog,dialog.find('.ui-dialog-titlebar-close'));
 				dialog.find('.ui-dialog-titlebar-close').remove();
 			}
+		},
+
+		handleUpgradeClick: function(dialog) {
+			var self = this;
+
+			monster.pub('myaccount.hasCreditCards', function(response) {
+				if(response) {
+					// query api stuff to create account and upgrade
+					// remove time trial left
+					// move account to prod
+					// create crm lead
+
+					dialog.dialog('close').remove();
+				}
+				else {
+					monster.pub('myaccount.showCreditCardTab');
+
+					dialog.dialog('close').remove();
+
+					toastr.error(self.i18n.active().trial.noCreditCard);
+				}
+			})
+			
 		},
 
 		renderLoginPage: function(container) {
