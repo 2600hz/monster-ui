@@ -9,7 +9,7 @@ define(function(require){
 
 		requests: {
 			'common.numbers.metadata': {
-				apiRoot: monster.config.api.phonebooks,
+				apiRoot: monster.config.api.phonebook,
 				url: 'locality/metadata?lerg_lookup=true',
 				verb: 'POST'
 			}
@@ -1383,7 +1383,7 @@ define(function(require){
 					globalCallback && globalCallback(formattedData);
 				};
 
-			if(monster.config.api.hasOwnProperty('phonebooks')) {
+			if(monster.config.api.hasOwnProperty('phonebook')) {
 				monster.request({
 					resource: 'common.numbers.metadata',
 					data: {
