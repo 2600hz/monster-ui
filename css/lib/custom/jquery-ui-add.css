@@ -23,7 +23,7 @@
 	min-width: 300px;
 	padding: 0;
 	border-radius: 2px;
-	background: #f9f9f9;
+	background: #fff;
 }
 .ui-dialog .ui-dialog-titlebar {
 	padding: 10px 20px;
@@ -70,18 +70,27 @@
 /* Special rules for alerts & confirms */
 .ui-dialog.monster-alert .ui-dialog-titlebar,
 .ui-dialog.monster-confirm .ui-dialog-titlebar {
-	background: #f0f0f9;
-	border-bottom: solid 1px #c0c0c9;
+	background: #fff;
+	padding-top: 20px;
+	padding-bottom: 0px;
 }
 
 .ui-dialog.monster-alert .ui-dialog-titlebar .ui-dialog-title,
 .ui-dialog.monster-confirm .ui-dialog-titlebar .ui-dialog-title {
 	color: #303039;
+	width: 100%;
+	font-size: 60px;
+	text-align: center;
+}
+.ui-dialog.monster-alert .ui-dialog-titlebar .ui-dialog-title .monster-warning-sign,
+.ui-dialog.monster-confirm .ui-dialog-titlebar .ui-dialog-title .monster-warning-sign {
+	margin: auto;
 }
 
 .ui-dialog.monster-alert .ui-dialog-titlebar-close i.monster-dialog-titlebar-close {
 	color: #303039;
 }
+.ui-dialog.monster-alert .ui-dialog-titlebar-close,
 .ui-dialog.monster-confirm .ui-dialog-titlebar-close {
 	display: none;
 }

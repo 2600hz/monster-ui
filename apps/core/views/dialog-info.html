@@ -1,5 +1,11 @@
 <div class="alert-dialog">
-	{{#monsterText}}
-		{{content}}
-	{{/monsterText}}
+	<div class="dialog-content">
+		{{#if title}}
+		<div class="dialog-header">{{title}}</div>
+		{{/if}}
+		<div class="dialog-text">{{ content }}</div>
+	</div>
+	<div class="alert-buttons-wrapper single-button clearfix">
+		<button id="close_button" class="{{ closeButtonClass }}">{{ closeButtonText }}</button>
+	</div>
 </div>

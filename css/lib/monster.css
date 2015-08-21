@@ -966,10 +966,10 @@ label[class*='monster-radio'].prepend-label > span {
 	color: #22a5ff !important;
 }
 .monster-green {
-	color: #4c4 !important;
+	color: #33db24 !important;
 }
 .monster-red {
-	color: #ee1212 !important;
+	color: #ff3d24 !important;
 }
 .monster-orange {
 	color: #f89406 !important;
@@ -981,11 +981,11 @@ label[class*='monster-radio'].prepend-label > span {
 	color: #e7c !important;
 }
 .monster-yellow {
-	color: #ffc40d !important;
+	color: #ffcc33 !important;
 }
 .monster-grey {
-	color: #333 !important;
+	color: #303039 !important;
 }
 .monster-lightgrey {
-	color: #999 !important;
+	color: #909099 !important;
 }

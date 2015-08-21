@@ -54,7 +54,10 @@
 		"confirm": "Confirm",
 		"confirmOk": "OK",
 		"confirmCancel" : "Cancel",
-		"confirmTitle" : "Confirmation"
+		"confirmTitle" : "Confirmation",
+		"errorTitle": "Oops! Something went wrong!",
+		"infoTitle": "Info",
+		"warningTitle": "Warning!"
 	},
 	"disabled": "Disabled",
 	"download": "Download",

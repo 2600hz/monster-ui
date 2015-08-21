@@ -3,32 +3,49 @@
 /************************************************************/
 
 .alert-dialog {
-	width: 400px;
-	max-width: 400px;
+	width: 460px;
+	max-width: 460px;
+}
+.alert-dialog .dialog-content {
 	padding: 20px;
+	text-align: center;
+}
+.alert-dialog .dialog-content .dialog-header {
+	font-size: 30px;
+	margin-bottom: 20px;
+	line-height: 30px;
+}
+.alert-dialog .dialog-content .dialog-text {
+	font-size: 13px;
 }
 .alert-dialog .help-box .text-wrapper {
 	padding: 25px 10px 15px 30px;
 }
 .alert-dialog .alert-buttons-wrapper {
-	margin-top: 20px;
-	padding-top: 20px;
 	border-top: solid 1px #c0c0c9;
 }
-.alert-dialog .alert-buttons-wrapper > button {
-	float: right;
+.alert-dialog .alert-buttons-wrapper button {
+	border: none;
+	border-radius: 0px;
+	width: 50%;
+	height: 50px;
 }
-.alert-dialog .alert-buttons-wrapper > button:not(:last-child) {
-	margin-left: 10px;
+.alert-dialog .alert-buttons-wrapper.single-button button {
+	width: 100%;
+}
+.alert-dialog .alert-buttons-wrapper > button:not(:first-child) {
+	border-left: solid 1px;
 }
 
 /************************************************************/
 /********************** CHARGES DIALOG **********************/
 /************************************************************/
-
+.monster-charges .alert-dialog {
+	width: auto;
+	max-width: initial;
+}
 .dialog-charges {
 	width: 520px;
-	padding: 30px;
 }
 .dialog-charges .content > div {
 	padding: 10px;
@@ -93,7 +110,7 @@
 
 .alert-dialog-advanced {
 	max-width: 800px;
-	padding: 20px;
+	text-align: left;
 }
 .alert-dialog-advanced .error-line {
 	margin: 5px 0;
@@ -122,21 +139,21 @@
 }
 .alert-dialog-advanced .details-box .error-details-wrapper {
 	display: none;
+	overflow: auto;
 }
 .alert-dialog-advanced .details-box .error-details-wrapper pre {
 	background: #fff;
+}
+.alert-dialog-advanced .details-box .error-details-wrapper .url {
+	word-wrap: break-word;
 }
 
 /************************************************************/
 /****************** JAVASCRIPT ERROR DIALOG *****************/
 /************************************************************/
 
-.alert-dialog-javascript {
-	padding: 20px;
-}
-.alert-dialog-javascript .title {
-	font-size: 22px;
-	padding: 15px 0;
+.alert-dialog-javascript table {
+	margin: 0;
 }
 .alert-dialog-javascript table.table tr td {
 	line-height: 15px;

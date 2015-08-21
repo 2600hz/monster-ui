@@ -224,13 +224,19 @@ define(function(require){
 			}
 
 			var coreApp = monster.apps['core'],
-				template = monster.template(coreApp, 'dialog-' + type, { content: content, data: content.data || 'No extended information.' }),
-				content = $(template),
 				i18n = coreApp.i18n.active(),
+				alertOptions = options || {},
+				templateData = {
+					content: content,
+					title: alertOptions.title || i18n.dialog[type+'Title'],
+					data: content.data || 'No extended information.',
+					closeButtonText: alertOptions.closeButtonText || i18n.close,
+					closeButtonClass: alertOptions.closeButtonClass || 'monster-button'
+				},
+				alertBox = $(monster.template(coreApp, 'dialog-' + type, templateData)),
 				options = $.extend(
 					true,
 					{
-						title: i18n[type],
 						onClose: function(){
 							callback && callback();
 						}
@@ -239,9 +245,40 @@ define(function(require){
 				),
 				dialog;
 
+			if(alertOptions.htmlContent) {
+				alertBox.find('.dialog-text').html(content);
+			}
+			if(alertOptions.htmlTitle && alertOptions.title) {
+				alertBox.find('.dialog-header').html(alertOptions.title);
+			}
+
+			switch(type) {
+				case 'warning': {
+					options.title = '<i class="fa fa-exclamation-triangle monster-yellow"></i>';
+					break;
+				}
+				case 'error': {
+					options.title = '<i class="fa fa-times-circle monster-red"></i>';
+					break;
+				}
+				case 'confirm': {
+					options.title = '<i class="fa fa-question-circle monster-blue"></i>';
+					break;
+				}
+				case 'info':
+				default: {
+					options.title = '<i class="fa fa-info-circle monster-blue"></i>';
+					break;
+				}
+			}
+
 			options.dialogClass = 'monster-alert' + (options.dialogClass ? ' '+options.dialogClass : '');
 
-			dialog = this.dialog(content, options);
+			dialog = this.dialog(alertBox, options);
+
+			alertBox.find('#close_button').on('click', function() {
+				dialog.dialog('close');
+			});
 
 			dialog.find('.btn.alert_button').click(function() {
 				dialog.dialog('close');
@@ -264,13 +301,22 @@ define(function(require){
 				dialog,
 				coreApp = monster.apps['core'],
 				i18n = coreApp.i18n.active(),
-				template = monster.template(coreApp, 'dialog-confirm', { content: content, data: content.data || 'No extended information.' }),
-				confirmBox = $(template),
+				confirmOptions = options || {},
+				type = confirmOptions.type || 'confirm',
+				templateData = {
+					content: content,
+					title: confirmOptions.title || i18n.dialog.confirmTitle,
+					data: content.data || 'No extended information.',
+					cancelButtonText: confirmOptions.cancelButtonText || i18n.dialog.confirmCancel,
+					confirmButtonText: confirmOptions.confirmButtonText || i18n.dialog.confirmOk,
+					cancelButtonClass: confirmOptions.cancelButtonClass || 'monster-button',
+					confirmButtonClass: confirmOptions.confirmButtonClass || 'monster-button-success'
+				},
+				confirmBox = $(monster.template(coreApp, 'dialog-confirm', templateData)),
 				options = $.extend(
 					true,
 					{
 						closeOnEscape: false,
-						title: i18n.dialog.confirmTitle,
 						onClose: function() {
 							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
 						}
@@ -278,6 +324,33 @@ define(function(require){
 					options
 				),
 				ok = false;
+
+			if(confirmOptions.htmlContent) {
+				confirmBox.find('.dialog-text').html(content);
+			}
+			if(confirmOptions.htmlTitle && confirmOptions.title) {
+				confirmBox.find('.dialog-header').html(confirmOptions.title);
+			}
+
+			switch(type) {
+				case 'warning': {
+					options.title = '<i class="fa fa-exclamation-triangle monster-yellow"></i>';
+					break;
+				}
+				case 'error': {
+					options.title = '<i class="fa fa-times-circle monster-red"></i>';
+					break;
+				}
+				case 'info': {
+					options.title = '<i class="fa fa-info-circle monster-blue"></i>';
+					break;
+				}
+				case 'confirm':
+				default: {
+					options.title = '<i class="fa fa-question-circle monster-blue"></i>';
+					break;
+				}
+			}
 
 			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
 
@@ -400,40 +473,45 @@ define(function(require){
 						charges: formatData(data)
 					}
 				)),
-				options = $.extend(
-					true,
-					{
-						closeOnEscape: false,
-						width: 'auto',
-						title: i18n.confirmCharges.title,
-						onClose: function() {
-							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
-						}
-					},
-					options
-				),
+				// options = $.extend(
+				// 	true,
+				// 	{
+				// 		closeOnEscape: false,
+				// 		width: 'auto',
+				// 		title: i18n.confirmCharges.title,
+				// 		onClose: function() {
+				// 			ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
+				// 		}
+				// 	},
+				// 	options
+				// ),
 				ok = false;
 
-			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
+			// options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
 
-			dialog = this.dialog(template, options);
+			// dialog = this.dialog(template, options);
 
-			template.find('#confirm_button').on('click', function() {
-				ok = true;
-				dialog.dialog('close');
+			// template.find('#confirm_button').on('click', function() {
+			// 	ok = true;
+			// 	dialog.dialog('close');
+			// });
+
+			// template.find('#cancel_button').on('click', function() {
+			// 	dialog.dialog('close');
+			// });
+
+			// return dialog;
+
+			return self.confirm(template, callbackOk, callbackCancel, {
+				htmlContent: true,
+				title: i18n.confirmCharges.title,
+				dialogClass: 'monster-charges'
 			});
-
-			template.find('#cancel_button').on('click', function() {
-				dialog.dialog('close');
-			});
-
-			return dialog;
 		},
 
 		// New Popup to show advanced API errors via a "More" Link.
 		requestErrorDialog: function(error) {
 			var self = this,
-				dialog,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
 				dataTemplate = {
@@ -444,32 +522,21 @@ define(function(require){
 					verb: error.data.verb.toUpperCase()
 				},
 				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
-				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true)),
-				options = $.extend(
-					true,
-					{
-						closeOnEscape: false,
-						width: 'auto',
-						title: i18n.advancedErrorDialog.title,
-						position: ['center', 20]
-					},
-					options
-				);
+				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true));
 
 			template.find('.headline').on('click', function() {
 				template.find('.error-details-wrapper').slideToggle();
 				$(this).toggleClass('active');
 			});
 
-			dialog = this.dialog(template, options);
-
-			return dialog;
+			return self.alert('error', template, null, {
+				htmlContent: true
+			});
 		},
 
 		// New Popup to show advanced Javascript errors.
 		jsErrorDialog: function(error) {
-			var self = this, 
-				dialog,
+			var self = this,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active();
 
@@ -481,21 +548,12 @@ define(function(require){
 					stackTrace: error.data.stackTrace
 				},
 				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
-				template = $(monster.template(coreApp, 'dialog-errorJavascript', dataTemplate, false, false, true)),
-				options = $.extend(
-					true,
-					{
-						closeOnEscape: false,
-						width: 'auto',
-						title: i18n.advancedErrorDialog.title,
-						position: ['center', 20]
-					},
-					options
-				);
+				template = $(monster.template(coreApp, 'dialog-errorJavascript', dataTemplate, false, false, true));
 
-			dialog = this.dialog(template, options);
-
-			return dialog;
+			return self.alert('error', template, null, {
+				htmlContent: true,
+				title: i18n.javascriptErrorDialog.title
+			});
 		},
 
 		// Highlight then fades an element, from blue to gray by default. We use it to highlight a recent change for example in SmartPBX
