@@ -329,32 +329,13 @@ define(function(require){
 				template = $(monster.template(self, 'trial-upgradePopup', { daysLeft: daysLeft })),
 				dialog;
 
-			template.find('#close').on('click', function() {
-				dialog.dialog('close').remove();
-			});
-
-			template.find('#upgrade').on('click', function() {
-				// Add upgrade stuff
-				self.handleUpgradeClick(dialog);
-			});
-
-			dialog = monster.ui.dialog(template, {
-				title: self.i18n.active().trialPopup.title,
-				hideClose: true,
-				closeOnEscape: false
-			});
-
-			var upgradeRedirectFunction = function() {
-				self.handleUpgradeClick(dialog);
-			};
-
 			if(daysLeft >= 0) {
 				monster.ui.confirm(
 					'', // Marketing content goes here
 					function() {
-						upgradeRedirectFunction();
+						self.handleUpgradeClick();
 					},
-					null, // No action on cancel
+					null,
 					{
 						title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
 						cancelButtonText: self.i18n.active().trialPopup.closeButton,
@@ -368,10 +349,11 @@ define(function(require){
 					'error',
 					'', // Marketing content goes here
 					function() {
-						upgradeRedirectFunction();
+						self.handleUpgradeClick();
 					},
 					{
-						title: self.i18n.trialPopup.trialExpired,
+						closeOnEscape: false,
+						title: self.i18n.active().trialPopup.trialExpired,
 						closeButtonText: self.i18n.active().trialPopup.upgradeButton,
 						closeButtonClass: 'monster-button-primary'
 					}
@@ -379,7 +361,7 @@ define(function(require){
 			}
 		},
 
-		handleUpgradeClick: function(dialog) {
+		handleUpgradeClick: function() {
 			var self = this;
 
 			monster.pub('myaccount.hasCreditCards', function(response) {
@@ -388,13 +370,9 @@ define(function(require){
 					// remove time trial left
 					// move account to prod
 					// create crm lead
-
-					dialog.dialog('close').remove();
 				}
 				else {
 					monster.pub('myaccount.showCreditCardTab');
-
-					dialog.dialog('close').remove();
 
 					toastr.error(self.i18n.active().trial.noCreditCard);
 				}
