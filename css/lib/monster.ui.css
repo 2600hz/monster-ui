@@ -359,6 +359,11 @@ label.monster-invalid {
 	cursor: move;
 }
 
+.items-selector .box-selector ul {
+	height: 328px;
+	overflow: auto;
+}
+
 /************************************************************/
 /********************* PASSWORD STRENGTH ********************/
 /************************************************************/
