@@ -75,7 +75,7 @@ define(function(require){
 
 		bindEvents: function(parent, appList) {
 			var self = this,
-				defaultDiv = parent.find('.app-default')
+				defaultDiv = parent.find('.app-default'),
 				updateAppInfo = function updateAppInfo(id) {
 					var app = appList.filter(function(v, i) { return id === v.id })[0];
 					parent.find('.app-description')
@@ -90,7 +90,7 @@ define(function(require){
 			parent.find('.app-container').sortable({
 				cancel: '.ui-sortable-disabled',
 				receive: function(event, ui) {
-					var item = $(ui.item)
+					var item = $(ui.item),
 						itemId = item.data('id');
 
 					item.addClass('ui-sortable-disabled');
@@ -349,17 +349,6 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					accountApps: function(callback) {
-						self.callApi({
-							resource: 'account.get',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data.apps);
-							}
-						});
-					},
 					allApps: function(callback) {
 						self.callApi({
 							resource: 'appsStore.list',
@@ -374,23 +363,18 @@ define(function(require){
 				},
 				function(err, results) {
 					self.getFullAppList(function(fullAppList) {
-						var accountApps = $.extend(true, {}, results.accountApps), // List of apps available on the account, with list of enabled user
+						var allApps = _.indexBy(results.allApps, 'id'), // List of apps available on the account, with list of enabled user
 							userApps = monster.apps.auth.currentUser.appList || [], // List of apps on the user, used for ordering and default app only
 							updateUserApps = false,
 							appList = []; // List of apps available for this user, to be return
 
 						userApps = $.grep(userApps, function(appId) {
 							var app = fullAppList[appId],
-								userArray = appId in accountApps ? $.map(accountApps[appId].users, function(val) { return val.id }) : [];
-							if(app && appId in accountApps) {
-								/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-								if('all' in accountApps[appId]) {
-									accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
-									delete accountApps[appId].all;
-								}
-								/*****************************************************************************************/
-								if(accountApps[appId].allowed_users === 'all'
-								|| (accountApps[appId].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin")
+								userArray = appId in allApps ? $.map(allApps[appId].users, function(val) { return val.id }) : [];
+							
+							if(app && appId in allApps) {
+								if(allApps[appId].allowed_users === 'all'
+								|| (allApps[appId].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === 'admin')
 								|| userArray.indexOf(self.userId) >= 0) {
 									appList.push({
 										id: appId,
@@ -398,7 +382,7 @@ define(function(require){
 										icon: app.icon,
 										label: app.label
 									});
-									delete accountApps[appId];
+									delete allApps[appId];
 									return true;
 								}
 							}
@@ -406,20 +390,15 @@ define(function(require){
 							return false;
 						});
 
-						_.each(accountApps, function(val, key) {
+						_.each(allApps, function(val, key) {
 							var app = fullAppList[key],
-								userArray = key in accountApps ? $.map(accountApps[key].users, function(val) { return val.id }) : [];
-							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-							if('all' in accountApps[key]) {
-								accountApps[key].allowed_users = accountApps[key].all ? 'all' : 'specific';
-								delete accountApps[key].all;
-							}
-							/*****************************************************************************************/
-							if(app && (accountApps[key].allowed_users === 'all' || (accountApps[key].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
+								userArray = key in allApps ? $.map(allApps[key].users, function(val) { return val.id }) : [];
+							
+							if(app && (allApps[key].allowed_users === 'all' || (allApps[key].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
 								appList.push({
 									id: key,
 									name: fullAppList[key].name,
-									icon: app.icon,
+									icon: fullAppList[key].icon,
 									label: fullAppList[key].label
 								});
 

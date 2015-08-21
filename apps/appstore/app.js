@@ -155,21 +155,9 @@ define(function(require){
 						},
 						parallelIconRequests = [];
 
-					if(!("apps" in results.account)) {
-						results.account.apps = {};
-					}
-
 					results.apps.forEach(function(val, idx) {
-						if(val.id in results.account.apps) {
-							/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-							if('all' in results.account.apps[val.id]) {
-								results.account.apps[val.id].allowed_users = results.account.apps[val.id].all ? 'all' : 'specific';
-								delete results.account.apps[val.id].all;
-							}
-							/*****************************************************************************************/
-							if(results.account.apps[val.id].allowed_users !== 'specific' || results.account.apps[val.id].users.length > 0) {
-								val.tags ? val.tags.push("installed") : val.tags = ["installed"];
-							}
+						if((val.hasOwnProperty('allowed_users') && val.allowed_users !== 'specific') || (val.hasOwnProperty('users') && val.users.length > 0)) {
+							val.tags ? val.tags.push("installed") : val.tags = ["installed"];
 						}
 						var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
 

@@ -156,6 +156,11 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
+				apps: function(callback) {
+					self.getAppsStore(function(data) {
+						callback(null, data);
+					});
+				},
 				account: function(callback) {
 					self.getAccount(function(data) {
 						callback(null, data.data);
@@ -192,7 +197,7 @@ define(function(require){
 					results.account.apps = results.account.apps || {};
 
 					var afterLanguageLoaded = function() {
-						var accountApps = results.account.apps,
+						var accountApps = _.indexBy(results.apps, 'id'),
 							fullAppList = {};
 
 						_.each(self.installedApps, function(val) {
@@ -204,12 +209,7 @@ define(function(require){
 								var appId = results.user.appList[i];
 								if(appId in fullAppList && appId in accountApps) {
 									var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
-									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-									if('all' in accountApps[appId]) {
-										accountApps[appId].allowed_users = accountApps[appId].all ? 'all' : 'specific';
-										delete accountApps[appId].all;
-									}
-									/*****************************************************************************************/
+									
 									if(accountApps[appId].allowed_users === 'all'
 									|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
 									|| accountAppUsers.indexOf(results.user.id) >= 0) {
@@ -218,17 +218,12 @@ define(function(require){
 									}
 								}
 							}
-						} 
+						}
 						else {
 							var userAppList = $.map(fullAppList, function(val) {
 								if(val.id in accountApps) {
 									var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
-									/* Temporary code to allow retro-compatibility with old app structure (changed in v3.07) */
-									if('all' in accountApps[val.id]) {
-										accountApps[val.id].allowed_users = accountApps[val.id].all ? 'all' : 'specific';
-										delete accountApps[val.id].all;
-									}
-									/*****************************************************************************************/
+									
 									if(accountApps[val.id].allowed_users === 'all'
 									|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
 									|| accountAppUsers.indexOf(results.user.id) >= 0) {
