@@ -1,30 +1,24 @@
 <div class="alert-dialog-javascript">
-	{{#monsterText 'error'}}
-		<div class="title">
-			{{ i18n.javascriptErrorDialog.title }}
-		</div>
-
-		<table class="table">
-			<tr>
-				<td>{{ i18n.javascriptErrorDialog.message }}</td>
-				<td>{{ title }} </td>
-			</tr>
-			<tr>
-				<td>{{ i18n.javascriptErrorDialog.file }}</td>
-				<td>{{ file }} </td>
-			</tr>
-			<tr>
-				<td>{{ i18n.javascriptErrorDialog.line }}</td>
-				<td>{{ line }} </td>
-			</tr>
-			<tr>
-				<td>{{ i18n.javascriptErrorDialog.column }}</td>
-				<td>{{ column }} </td>
-			</tr>
-			<tr>
-				<td>{{ i18n.javascriptErrorDialog.stackTrace }}</td>
-				<td>{{ stackTrace }} </td>
-			</tr>
-		</table>
-	{{/monsterText}}
+	<table class="table">
+		<tr>
+			<td>{{ i18n.javascriptErrorDialog.message }}</td>
+			<td>{{ title }} </td>
+		</tr>
+		<tr>
+			<td>{{ i18n.javascriptErrorDialog.file }}</td>
+			<td>{{ file }} </td>
+		</tr>
+		<tr>
+			<td>{{ i18n.javascriptErrorDialog.line }}</td>
+			<td>{{ line }} </td>
+		</tr>
+		<tr>
+			<td>{{ i18n.javascriptErrorDialog.column }}</td>
+			<td>{{ column }} </td>
+		</tr>
+		<tr>
+			<td>{{ i18n.javascriptErrorDialog.stackTrace }}</td>
+			<td>{{ stackTrace }} </td>
+		</tr>
+	</table>
 </div>

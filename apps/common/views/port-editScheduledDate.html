@@ -2,6 +2,12 @@
 	<div class="content">
 		<form class="form-horizontal" id="edit_scheduled_date">
 			<div class="control-group">
+				<label for="scheduled_time" class="control-label">{{i18n.port.pendingOrders.scheduledDatePopup.label.scheduledTime}}</label>
+				<div class="controls">
+					<input type="text" id="scheduled_time" name="scheduled_time"{{#if scheduledDate}} value="{{toFriendlyDate scheduledDate 'shorttime'}}"{{/if}}>
+				</div>
+			</div>
+			<div class="control-group">
 				<label for="scheduled_date" class="control-label">{{i18n.port.pendingOrders.scheduledDatePopup.label.scheduledDate}}</label>
 				<div class="controls">
 					<input type="text" id="scheduled_date" name="scheduled_date"{{#if scheduledDate}} value="{{toFriendlyDate scheduledDate 'short'}}"{{/if}} readonly="true">

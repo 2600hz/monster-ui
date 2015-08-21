@@ -1,10 +1,12 @@
 <div class="alert-dialog">
-	{{#monsterText 'question'}}
-		{{ content }}
-	{{/monsterText}}
-
+	<div class="dialog-content">
+		{{#if title}}
+		<div class="dialog-header">{{title}}</div>
+		{{/if}}
+		<div class="dialog-text">{{ content }}</div>
+	</div>
 	<div class="alert-buttons-wrapper clearfix">
-		<button id="confirm_button" class="monster-button-success">{{ i18n.dialog.confirmOk }}</button>
-		<button id="cancel_button" class="monster-button">{{ i18n.dialog.confirmCancel }}</button>
+		<button id="cancel_button" class="{{ cancelButtonClass }}">{{ cancelButtonText }}</button>
+		<button id="confirm_button" class="{{ confirmButtonClass }}">{{ confirmButtonText }}</button>
 	</div>
 </div>

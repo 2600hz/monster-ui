@@ -305,7 +305,7 @@ define(function(require){
 						};
 
 					icon.stop(true, true)
-						.removeClass('fa fa-times monster-red fa-check monster-green')
+						.removeClass('fa-times monster-red fa-check monster-green')
 						.addClass('fa-spinner fa-spin')
 						.show();
 

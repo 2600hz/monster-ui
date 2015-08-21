@@ -328,7 +328,10 @@
 			"scheduledDatePopup": {
 				"title": "Edit Scheduled Date",
 				"label": {
-					"scheduledDate": "Scheduled date"
+					"scheduledDate": "Scheduled date",
+					"__comment": "UI-1753: Add ability to customize the time when setting a scheduled date",
+					"__version": "3.21",
+					"scheduledTime": "Scheduled time"
 				}
 			},
 			"__comment": "UI-1303: ",

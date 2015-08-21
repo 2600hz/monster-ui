@@ -344,9 +344,38 @@ define(function(require){
 				closeOnEscape: false
 			});
 
-			if(daysLeft < 0) {
-				console.log(dialog,dialog.find('.ui-dialog-titlebar-close'));
-				dialog.find('.ui-dialog-titlebar-close').remove();
+			var upgradeRedirectFunction = function() {
+				self.handleUpgradeClick(dialog);
+			};
+
+			if(daysLeft >= 0) {
+				monster.ui.confirm(
+					'', // Marketing content goes here
+					function() {
+						upgradeRedirectFunction();
+					},
+					null, // No action on cancel
+					{
+						title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
+						cancelButtonText: self.i18n.active().trialPopup.closeButton,
+						confirmButtonText: self.i18n.active().trialPopup.upgradeButton,
+						confirmButtonClass: 'monster-button-primary',
+						type: 'warning'
+					}
+				);
+			} else {
+				monster.ui.alert(
+					'error',
+					'', // Marketing content goes here
+					function() {
+						upgradeRedirectFunction();
+					},
+					{
+						title: self.i18n.trialPopup.trialExpired,
+						closeButtonText: self.i18n.active().trialPopup.upgradeButton,
+						closeButtonClass: 'monster-button-primary'
+					}
+				);
 			}
 		},
 
