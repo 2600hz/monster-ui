@@ -134,14 +134,15 @@ define(function(require){
 							if (data.hasOwnProperty('success') && !_.isEmpty(data.success)) {
 								callbacks.hasOwnProperty('success') && callbacks.success(data.success);
 							}
-							else {
-								if (!_.isEmpty(data)) {
-									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + '<br/>' + Object.keys(data).join('<br/>');
-									monster.ui.alert('error', errMsg);
-								}
-								callbacks.hasOwnProperty('error') && callbacks.error();
+							args.popup.dialog('close');
+						},
+						error: function(data) {
+							if (!_.isEmpty(data)) {
+								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + ' ' + Object.keys(data).join(' ');
+								monster.ui.alert('error', errMsg);
 							}
 							args.popup.dialog('close');
+							callbacks.hasOwnProperty('error') && callbacks.error();
 						},
 						cancel: function() {
 							self.buyNumbersShowSearchResults(args);
@@ -989,12 +990,16 @@ define(function(require){
 
 			self.callApi({
 				resource: 'numbers.activateBlock',
-				data: args.data,
+				data: $.extend(true, {}, args.data, {
+					generateError: false
+				}),
 				success: function (data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function (data, status) {
-					args.hasOwnProperty('error') && args.error();
+					if (data.error !== 402) {
+						args.hasOwnProperty('error') && args.error(data.data);
+					}
 				},
 				onChargesCancelled: function () {
 					args.hasOwnProperty('cancel') && args.cancel();
