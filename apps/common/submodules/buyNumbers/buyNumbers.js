@@ -11,6 +11,11 @@ define(function(require){
 				apiRoot: monster.config.api.phonebook,
 				url: 'numbers/us/search?prefix={pattern}&limit={limit}&offset={offset}',
 				verb: 'GET'
+			},
+			'phonebook.searchBlocks': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'blocks/us/search?prefix={pattern}&limit={limit}&offset={offset}&size={size}',
+				verb: 'GET'
 			}
 		},
 
@@ -997,7 +1002,7 @@ define(function(require){
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function (data, status) {
-					if (data.error !== 402) {
+					if (data.error !== '402') {
 						args.hasOwnProperty('error') && args.error(data.data);
 					}
 				},
@@ -1029,18 +1034,24 @@ define(function(require){
 			}
 		},
 		buyNumbersRequestSearchBlockOfNumbers: function(args) {
-			var self = this;
+			var self = this,
+				settings = {
+					resource: self.isPhonebookConfigured ? 'phonebook.searchBlocks' : 'numbers.searchBlocks',
+					data: args.data,
+					success: function(data, status) {
+						args.hasOwnProperty('success') && args.success(data.data);
+					},
+					error: function(data, status) {
+						args.hasOwnProperty('error') && args.error();
+					}
+				};
 
-			self.callApi({
-				resource: 'numbers.searchBlocks',
-				data: args.data,
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(data, status) {
-					args.hasOwnProperty('error') && args.error();
-				}
-			});
+			if (self.isPhonebookConfigured) {
+				monster.request(settings);
+			}
+			else {
+				self.callApi(settings);
+			}
 		},
 		buyNumbersRequestSearchNumbersByCity: function(args) {
 			var self = this;
