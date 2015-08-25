@@ -374,12 +374,21 @@ define(function(require){
 		/****************** Helpers not documented because people shoudln't need to use them *******************/
 
 		// Helper only used in conference app, takes seconds and transforms it into a timer
-		friendlyTimer: function(pSeconds) {
+		friendlyTimer: function(pSeconds, pMode) {
 			var seconds = Math.floor(pSeconds),
+				mode = pMode || 'normal',
 				hours = Math.floor(seconds / 3600),
 				minutes = Math.floor(seconds / 60) % 60,
 				remainingSeconds = seconds % 60,
+				i18n = monster.apps.core.i18n.active(),
+				displayTime;
+
+			if(mode === 'verbose') {
+				displayTime = hours + ' ' + i18n.friendlyTimer.hours + ', ' + minutes + ' ' +  i18n.friendlyTimer.minutesAnd + ' ' + remainingSeconds + ' ' + i18n.friendlyTimer.seconds;
+			}
+			else {
 				displayTime = (hours < 10 ? '0' + hours : '' + hours) + ':' + (minutes < 10 ? '0' + minutes : '' + minutes) + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : '' + remainingSeconds);
+			}
 
 			return seconds >= 0 ? displayTime : '00:00:00';
 		},

@@ -513,6 +513,7 @@
 		"skipLabel": "Skip",
 		"doneLabel": "Done"
 	},
+
 	"__comment": "UI-1772: Add internationalization support for the jQuery timepicker plugin",
 	"__version": "3.22",
 	"timepicker": {
@@ -524,5 +525,13 @@
 		"min": "mins",
 		"hr": "hr",
 		"hrs": "hrs"
+	},
+
+	"__comment": "CM-150: Adding i18n for verbose timers",
+	"__version": "3.22",
+	"friendlyTimer": {
+		"minutesAnd": "minutes and",
+		"hours": "hours",
+		"seconds": "seconds"
 	}
 }
