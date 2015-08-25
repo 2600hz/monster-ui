@@ -989,3 +989,11 @@ label[class*='monster-radio'].prepend-label > span {
 .monster-lightgrey {
 	color: #909099 !important;
 }
+
+/************************************************************/
+/********************** MONSTER COLORS **********************/
+/************************************************************/
+
+.monster-default-app-icon {
+	background-image: url('../assets/defaultAppIcon.png');
+}

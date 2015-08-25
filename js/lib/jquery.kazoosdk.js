@@ -28,7 +28,9 @@
 			'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' },
 			'getIcon': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/icon', dataType: 'text' },
 			'update': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/{appId}' },
-			'add': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}' }
+			'add': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}' },
+			'getBlacklist': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/blacklist' },
+			'updateBlacklist': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/blacklist' }
 		},
 		auth: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },

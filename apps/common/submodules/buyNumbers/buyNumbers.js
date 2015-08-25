@@ -7,6 +7,16 @@ define(function(require){
 	var buyNumbers = {
 
 		requests: {
+			'phonebook.search': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'numbers/us/search?prefix={pattern}&limit={limit}&offset={offset}',
+				verb: 'GET'
+			},
+			'phonebook.searchBlocks': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'blocks/us/search?prefix={pattern}&limit={limit}&offset={offset}&size={size}',
+				verb: 'GET'
+			}
 		},
 
 		subscribe: {
@@ -15,6 +25,7 @@ define(function(require){
 
 		searchLimit: 15,
 		selectedCountryCode: "US",
+		isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
 
 		buyNumbersRender: function(params) {
 			var self = this,
@@ -117,35 +128,30 @@ define(function(require){
 					processingDiv.show();
 					processingDiv.find('i.fa-spinner').addClass('fa-spin');
 					
-					self.callApi({
-						resource: 'numbers.activateBlock',
+					self.buyNumbersRequestActivateBlock({
 						data: {
 							accountId: self.assignedAccountId,
 							data: {
 								numbers: numbers
-							},
-							onChargesCancelled: function() {
-								self.buyNumbersShowSearchResults(args);
-								processingDiv.hide();
 							}
 						},
-						success: function(data, status) {
-							if('data' in data) {
-								if('error' in data.data && !$.isEmptyObject(data.data.error)) {
-									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
-											   + '<br/>' + Object.keys(data.data.error).join('<br/>');
-									monster.ui.alert('error', errMsg);
-								}
-
-								if('success' in data.data && !$.isEmptyObject(data.data.success)) {
-									callbacks.success && callbacks.success(data.data.success, data.data.error);
-								} else {
-									callbacks.error && callbacks.error(data.data.error);
-								}
-							} else {
-								callbacks.error && callbacks.error(data);
+						success: function(data) {
+							if (data.hasOwnProperty('success') && !_.isEmpty(data.success)) {
+								callbacks.hasOwnProperty('success') && callbacks.success(data.success);
 							}
 							args.popup.dialog('close');
+						},
+						error: function(data) {
+							if (!_.isEmpty(data)) {
+								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + ' ' + Object.keys(data).join(' ');
+								monster.ui.alert('error', errMsg);
+							}
+							args.popup.dialog('close');
+							callbacks.hasOwnProperty('error') && callbacks.error();
+						},
+						cancel: function() {
+							self.buyNumbersShowSearchResults(args);
+							processingDiv.hide();
 						}
 					});
 				};
@@ -405,15 +411,14 @@ define(function(require){
 				vanityInputDiv.children('i.fa-spinner').show();
 				searchButton.prop('disabled', true);
 				if(countryValidation) {
-					self.callApi({
-						resource: 'numbers.search',
+					self.buyNumbersRequestSearchNumbers({
 						data: {
 							pattern: number,
 							offset:0,
 							limit:1
 						},
-						success: function(data, status) {
-							if(data.data && data.data.length > 0) {
+						success: function(data) {
+							if(data && data.length > 0) {
 								vanityInputDiv.children('i.fa-check').show();
 								vanitySearchDiv.find('#vanity_buy_button').show();
 								vanitySearchDiv.find('#back_to_vanity_search').show();
@@ -427,7 +432,7 @@ define(function(require){
 							vanityInputDiv.children('i.fa-spinner').hide();
 							searchButton.prop('disabled', false);
 						},
-						error: function(data, status) {
+						error: function() {
 							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 
 							vanityInputDiv.children('i.fa-spinner').hide();
@@ -455,24 +460,23 @@ define(function(require){
 			vanitySearchDiv.find('#vanity_buy_button').on('click', function(ev) {
 				ev.preventDefault();
 				if(number.length > 0) {
-					self.callApi({
-						resource: 'numbers.activateBlock',
+					self.buyNumbersRequestActivateBlock({
 						data: {
 							accountId: self.assignedAccountId,
 							data: {
 								numbers: ["+" + args.availableCountries[self.selectedCountryCode].prefix + number]
 							}
 						},
-						success: function(data, status) {
-							if(!$.isEmptyObject(data.data.success)) {
-								if(!$.isEmptyObject(data.data.error)) {
-									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure
-										   + '<br/>' + Object.keys(data.data.error).join('<br/>');
+						success: function(data) {
+							if (data.hasOwnProperty('success') && !_.isEmpty(data.success)) {
+								callbacks.hasOwnProperty('success') && callbacks.success(data.success);
+							}
+							else {
+								if (!_.isEmpty(data)) {
+									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + '<br/>' + Object.keys(data.error).join('<br/>');
 									monster.ui.alert('error', errMsg);
 								}
-								callbacks.success && callbacks.success(data.data.success);
-							} else {
-								callbacks.error && callbacks.error(data.data.error);
+								callbacks.hasOwnProperty('error') && callbacks.error();
 							}
 							args.popup.dialog('close');
 						}
@@ -540,16 +544,15 @@ define(function(require){
 					loadingNewNumbers = true;
 					resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 					resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
-					self.callApi({
-						resource: 'numbers.search',
+					self.buyNumbersRequestSearchNumbers({
 						data: {
 							pattern: tollfreePrefix,
 							offset: _offset,
 							limit: _limit
 						},
-						success: function(data, status) {
-							if(data.data && data.data.length > 0) {
-								$.each(data.data, function(key, value) {
+						success: function(data) {
+							if(data && data.length > 0) {
+								$.each(data, function(key, value) {
 									var num = value.number,
 										prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
 									if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
@@ -568,7 +571,7 @@ define(function(require){
 							_callback && _callback();
 							loadingNewNumbers = false;
 						},
-						error: function(data, status) {
+						error: function() {
 							monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 							_callback && _callback();
 							loadingNewNumbers = false;
@@ -644,14 +647,13 @@ define(function(require){
 					container.find('#area_code_radio_div').empty().slideUp();
 					selectedCity = undefined;
 					if(!request.term.match(/^\d+/)) {
-						self.callApi({
-							resource: 'numbers.searchCity',
+						self.buyNumbersRequestSearchNumbersByCity({
 							data: {
 								city: request.term
 							},
-							success: function(data, status) {
-								if(data.data) {
-									cityList = data.data;
+							success: function(data) {
+								if(data) {
+									cityList = data;
 									response(
 										$.map( cityList, function(val, key) {
 											return {
@@ -665,8 +667,7 @@ define(function(require){
 										.slice(0,10)
 									);
 								}
-							},
-							error: function(data, status) {}
+							}
 						});
 					}
 				},
@@ -725,17 +726,16 @@ define(function(require){
 							loadingNewNumbers = true;
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
-							self.callApi({
-								resource: 'numbers.searchBlocks',
+							self.buyNumbersRequestSearchBlockOfNumbers({
 								data: {
-									pattern: "%2B"+availableCountries[self.selectedCountryCode].prefix+areacode,
+									pattern: "+"+availableCountries[self.selectedCountryCode].prefix+areacode,
 									size: seqNumIntvalue,
 									offset: _offset,
 									limit: _limit
 								},
-								success: function(data, status) {
-									if(data.data && data.data.length > 0) {
-										$.each(data.data, function(key, value) {
+								success: function(data) {
+									if(data && data.length > 0) {
+										$.each(data, function(key, value) {
 											var startNum = value.start_number,
 												endNum = value.end_number,
 												prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
@@ -758,7 +758,7 @@ define(function(require){
 									_callback && _callback();
 									loadingNewNumbers = false;
 								},
-								error: function(data, status) {
+								error: function() {
 									monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 									_callback && _callback();
 									loadingNewNumbers = false;
@@ -771,16 +771,15 @@ define(function(require){
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 							resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 
-							self.callApi({
-								resource: 'numbers.search',
+							self.buyNumbersRequestSearchNumbers({
 								data: {
 									pattern: areacode,
 									offset: _offset,
 									limit: _limit
 								},
-								success: function(data, status) {
-									if(data.data && data.data.length > 0) {
-										$.each(data.data, function(key, value) {
+								success: function(data) {
+									if(data && data.length > 0) {
+										$.each(data, function(key, value) {
 											var num = value.number,
 												prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
 
@@ -801,7 +800,7 @@ define(function(require){
 									_callback && _callback();
 									loadingNewNumbers = false;
 								},
-								error: function(data, status) {
+								error: function() {
 									monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
 									_callback && _callback();
 									loadingNewNumbers = false;
@@ -970,6 +969,103 @@ define(function(require){
 			});
 
 			return result;
+		},
+
+		/**************************************************
+		 *            Data manipulation helpers           *
+		 **************************************************/
+
+		/**
+		 * If the 'structure' parameter is an Object, coerce it to an Array and
+		 * returns it or returns the Array if 'structure' is already an Array.
+		 * @param  {Object|Array} structure List to coerce to Array
+		 * @return {Array}                  Array created from 'structure'
+		 */
+		buyNumbersCoerceObjectToArray: function(structure) {
+			return _.isArray(structure) ? structure : _.map(structure, function(v) { return v; });
+		},
+
+		/**************************************************
+		 *              Requests declarations             *
+		 **************************************************/
+
+		// Activation Requests
+		buyNumbersRequestActivateBlock: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.activateBlock',
+				data: $.extend(true, {}, args.data, {
+					generateError: false
+				}),
+				success: function (data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function (data, status) {
+					if (data.error !== '402') {
+						args.hasOwnProperty('error') && args.error(data.data);
+					}
+				},
+				onChargesCancelled: function () {
+					args.hasOwnProperty('cancel') && args.cancel();
+				}
+			});
+		},
+
+		// Search Requests
+		buyNumbersRequestSearchNumbers: function(args) {
+			var self = this,
+				settings = {
+					resource: self.isPhonebookConfigured ? 'phonebook.search' : 'numbers.search',
+					data: args.data,
+					success: function(data, status) {
+						args.hasOwnProperty('success') && args.success(self.buyNumbersCoerceObjectToArray(data.data));
+					},
+					error: function(data, status) {
+						args.hasOwnProperty('error') && args.error();
+					}
+				};
+
+			if (self.isPhonebookConfigured) {
+				monster.request(settings);
+			}
+			else {
+				self.callApi(settings);
+			}
+		},
+		buyNumbersRequestSearchBlockOfNumbers: function(args) {
+			var self = this,
+				settings = {
+					resource: self.isPhonebookConfigured ? 'phonebook.searchBlocks' : 'numbers.searchBlocks',
+					data: args.data,
+					success: function(data, status) {
+						args.hasOwnProperty('success') && args.success(data.data);
+					},
+					error: function(data, status) {
+						args.hasOwnProperty('error') && args.error();
+					}
+				};
+
+			if (self.isPhonebookConfigured) {
+				monster.request(settings);
+			}
+			else {
+				self.callApi(settings);
+			}
+		},
+		buyNumbersRequestSearchNumbersByCity: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.searchCity',
+				data: args.data,
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(data, status) {
+					args.hasOwnProperty('error') && args.error();
+				}
+			});
 		}
 
 		/*add_numbers: function(numbers_data, callback, numbers_bought) {
