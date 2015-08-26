@@ -992,6 +992,21 @@ define(function(require){
 			return _.isArray(structure) ? structure : _.map(structure, function(v) { return v; });
 		},
 
+		/**
+		 * Extract the area code of each prefix value for each city and remove
+		 * duplicate occurences.
+		 * @param  {Object} cities List of cities containing prefixes
+		 * @return {Object}        Same list with duplicate area codes removed
+		 */
+		buyNumbersGetUniqueAreaCodes: function(cities) {
+			_.each(cities, function(cityValue, cityKey, citiesObject) {
+				cityValue.prefixes = _.map(cityValue.prefixes, function(prefixValue, prefixIdx) { return prefixValue.substr(0, 3); });
+				citiesObject[cityKey].prefixes = _.uniq(cityValue.prefixes);
+			});
+
+			return cities;
+		},
+
 		/**************************************************
 		 *              Requests declarations             *
 		 **************************************************/
@@ -1085,7 +1100,9 @@ define(function(require){
 					}, args.data)
 				},
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
+					args.hasOwnProperty('success') && args.success($.extend(true, data.data, {
+						locales: self.buyNumbersGetUniqueAreaCodes(data.data.locales)
+					}));
 				},
 				error: function(data, status) {
 					args.hasOwnProperty('error') && args.error();
