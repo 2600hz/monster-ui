@@ -202,8 +202,9 @@ define(function(require){
 
 		showAppPopup: function(appId, appstoreData) {
 			var self = this,
-				userList = appstoreData.users,
-				account = appstoreData.account;
+				userList = appstoreData.users;
+
+			console.log(appstoreData)
 
 			self.callApi({
 				resource: 'appsStore.get',
@@ -212,7 +213,7 @@ define(function(require){
 					appId: appId
 				},
 				success: function(data, status) {
-					dataI18n = data.data.i18n[monster.config.whitelabel.language] || data.data.i18n['en-US'];
+					var dataI18n = data.data.i18n[monster.config.whitelabel.language] || data.data.i18n['en-US'];
 
 					var app = $.extend(true, data.data, {
 							extra: {
@@ -226,8 +227,8 @@ define(function(require){
 								})
 							}
 						}),
-						selectedUsersLength = appId in account.apps ? account.apps[appId].users.length : 0,
-						selectedUsersList = appId in account.apps ? $.extend(true, [], account.apps[appId].users) : [],
+						selectedUsersLength = appId in appstoreData.apps ? appstoreData.apps[appId].users.length : 0,
+						selectedUsersList = appId in appstoreData.apps ? $.extend(true, [], appstoreData.apps[appId].users) : [],
 						users = $.map($.extend(true, [], userList), function(val, key) {
 							if(selectedUsersList.length) {
 								for(var i=0; i<selectedUsersList.length; i++) {
@@ -252,12 +253,12 @@ define(function(require){
 						rightContainer = template.find('.right-container'),
 						userListContainer = rightContainer.find('.user-list');
 
-					if(!("apps" in account) || !(appId in account.apps) || (account.apps[appId].allowed_users === 'specific' && account.apps[appId].users.length === 0)) {
+					if(!appstoreData.apps || !(appId in appstoreData.apps) || !('allowed_users' in appstoreData.apps[appId]) || (appstoreData.apps[appId].allowed_users === 'specific' && appstoreData.apps[appId].users.length === 0)) {
 						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
-					} else if(account.apps[appId].allowed_users === 'admins') {
+					} else if(appstoreData.apps[appId].allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
-					} else if(account.apps[appId].users.length > 0) {
+					} else if(appstoreData.apps[appId].users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
 						rightContainer.find('#app_popup_select_users_link').html(
@@ -280,7 +281,7 @@ define(function(require){
 		bindPopupEvents: function(parent, app, appstoreData) {
 			var self = this,
 				userList = parent.find('.user-list'),
-				selectedUsersCount = app.id in appstoreData.account.apps ? appstoreData.account.apps[app.id].users.length : 0,
+				selectedUsersCount = app.id in appstoreData.apps ? appstoreData.apps[app.id].users.length : 0,
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
 					var icon = parent.find('.toggle-button-bloc i'),
 						errorFunction = function() {
@@ -290,7 +291,8 @@ define(function(require){
 								.addClass('fa-times monster-red')
 								.fadeOut(3000);
 							errorCallback && errorCallback();
-						};
+						},
+						apiResource = appInstallInfo.hasOwnProperty('allowed_users') ? (app.hasOwnProperty('allowed_users') ? 'appsStore.update' : 'appsStore.add') : 'appsStore.delete';
 
 					icon.stop(true, true)
 						.removeClass('fa-times monster-red fa-check monster-green')
@@ -298,40 +300,21 @@ define(function(require){
 						.show();
 
 					self.callApi({
-						resource: 'account.get',
+						resource: apiResource,
 						data: {
-							accountId: appstoreData.account.id
+							accountId: self.accountId,
+							appId: app.id,
+							data: appInstallInfo
 						},
-						success: function(data, status) {
-							var apiResource = 'appsStore.update';
-							appstoreData.account = data.data;
-							if(!("apps" in appstoreData.account) || _.isArray(appstoreData.account.apps) || !(app.id in appstoreData.account.apps)) {
-								apiResource = 'appsStore.add'
-							}
+						success: function(_data, status) {
+							icon.stop(true, true)
+								.show()
+								.removeClass('fa-spin fa-spinner')
+								.addClass('fa-check monster-green')
+								.fadeOut(3000);
 
-							self.callApi({
-								resource: apiResource,
-								data: {
-									accountId: appstoreData.account.id,
-									appId: app.id,
-									data: appInstallInfo
-								},
-								success: function(_data, status) {
-									appstoreData.account.apps = appstoreData.account.apps || {};
-									appstoreData.account.apps[app.id] = _data.data;
-									icon.stop(true, true)
-										.show()
-										.removeClass('fa-spin fa-spinner')
-										.addClass('fa-check monster-green')
-										.fadeOut(3000);
-
-									$('#apploader').remove();
-									successCallback && successCallback();
-								},
-								error: function(_data, status) {
-									errorFunction();
-								}
-							});
+							$('#apploader').remove();
+							successCallback && successCallback();
 						},
 						error: function(_data, status) {
 							errorFunction();

@@ -370,7 +370,7 @@ define(function(require){
 
 						userApps = $.grep(userApps, function(appId) {
 							var app = fullAppList[appId],
-								userArray = appId in allApps ? $.map(allApps[appId].users, function(val) { return val.id }) : [];
+								userArray = appId in allApps ? $.map(allApps[appId].users||[], function(val) { return val.id }) : [];
 							
 							if(app && appId in allApps) {
 								if(allApps[appId].allowed_users === 'all'
@@ -392,7 +392,7 @@ define(function(require){
 
 						_.each(allApps, function(val, key) {
 							var app = fullAppList[key],
-								userArray = key in allApps ? $.map(allApps[key].users, function(val) { return val.id }) : [];
+								userArray = key in allApps ? $.map(allApps[key].users||[], function(val) { return val.id }) : [];
 							
 							if(app && (allApps[key].allowed_users === 'all' || (allApps[key].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
 								appList.push({
