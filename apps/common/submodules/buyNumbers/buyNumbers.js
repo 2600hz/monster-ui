@@ -7,6 +7,7 @@ define(function(require){
 	var buyNumbers = {
 
 		requests: {
+			// Numbers endpoints
 			'phonebook.search': {
 				apiRoot: monster.config.api.phonebook,
 				url: 'numbers/us/search?prefix={pattern}&limit={limit}&offset={offset}',
@@ -16,6 +17,12 @@ define(function(require){
 				apiRoot: monster.config.api.phonebook,
 				url: 'blocks/us/search?prefix={pattern}&limit={limit}&offset={offset}&size={size}',
 				verb: 'GET'
+			},
+			// Locality endpoints
+			'phonebook.searchByAddress': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'locality/address',
+				verb: 'POST'
 			}
 		},
 
@@ -1059,6 +1066,24 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.searchCity',
 				data: args.data,
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(data, status) {
+					args.hasOwnProperty('error') && args.error();
+				}
+			});
+		},
+		buyNumbersRequestSearchAreaCodeByAddress: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'phonebook.searchByAddress',
+				data: {
+					data: $.extend({
+						distance: 10
+					}, args.data)
+				},
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
