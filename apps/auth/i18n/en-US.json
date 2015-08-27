@@ -105,13 +105,17 @@
 		"closeButton": "Continue Trial",
 		"upgradeButton": "Upgrade Now",
 		"mainMessage": "Welcome back to your trial. You have {{variable}} days left to try out the platform.",
-		"trialExpired": "Your trial expired, please click on the Upgrade button to continue using the platform."
+		"trialExpired": "Your trial expired, please click on the Upgrade button to continue using the platform.",
+		"alreadyUpgraded": "Welcome back to your trial. You have already requested an upgrade for your account, you will be notified via email when the upgrade is active!"
 	},
 
 	"__comment": "UI-1787: now handling upgrade of trial accounts",
 	"__version": "3.22",
 	"trial": {
 		"noCreditCard": "Please try to upgrade again once you filled your credit card information...",
-		"successUpgrade": "Thank you for ugprading your account, our support will be in touch shortly!"
+		"successUpgrade": {
+			"content": "Once your order is processed, you will receive instructions via email on how to sign into your new account. If you have any questions in the meantime, please contact sales@2600hz.com and someone will assist you.",
+			"title": "Thank you for your order!"
+		}
 	}
 }

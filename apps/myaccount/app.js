@@ -561,13 +561,13 @@ define(function(require){
 		hasToShowWalkthrough: function(callback) {
 			var self = this;
 
-			return self.helpSettings.user.get('showfirstUseWalkthrough') !== false;
+			return self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 		},
 
 		// function to set the flag "showfirstUseWalkthrough" to false and update the user in the database.
 		updateWalkthroughFlagUser: function(callback) {
 			var self = this,
-				userToSave = self.helpSettings.user.set('showfirstUseWalkthrough', false);
+				userToSave = self.uiFlags.user.set('showfirstUseWalkthrough', false);
 
 			self.updateUser(userToSave, function(user) {
 				callback && callback(user);
