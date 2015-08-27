@@ -38,13 +38,21 @@ define(function(){
 
 			app.apiUrl = app.apiUrl || monster.config.api.default;
 
-			app.helpSettings = {
+			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
-						return monster.util.helpFlags.user.set(app.name, flagName, value, user);
+						return monster.util.uiFlags.user.set(app.name, flagName, value, user);
 					},
 					get: function(flagName, user) {
-						return monster.util.helpFlags.user.get(app.name, flagName, user);
+						return monster.util.uiFlags.user.get(app.name, flagName, user);
+					}
+				},
+				account: {
+					set: function(flagName, value, account) {
+						return monster.util.uiFlags.account.set(app.name, flagName, value, account);
+					},
+					get: function(flagName, account) {
+						return monster.util.uiFlags.account.get(app.name, flagName, account);
 					}
 				}
 			};
