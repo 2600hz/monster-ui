@@ -84,7 +84,10 @@ define(function(require){
 			var self = this,
 				searchType = args.searchType,
 				availableCountries = args.availableCountries,
-				template = $(monster.template(self, 'buyNumbers-layout', {}));
+				template = $(monster.template(self, 'buyNumbers-layout', {
+					isPhonebookConfigured: self.isPhonebookConfigured,
+					googleMapsApiKey: monster.config.googleMapsApiKey
+				}));
 
 
 			args.popup = monster.ui.dialog(template, {
@@ -976,6 +979,63 @@ define(function(require){
 			});
 
 			return result;
+		},
+
+		/**
+		 * Initialize and render the map with the list of locations displayed as
+		 * markers. Bind a click event on each marker to show the related data.
+		 * Initialize the map and show the list of locations as markers
+		 * @param  {Object} mapData         List of locations to show on the map
+		 */
+		buyNumbersInitAreaCodeMap: function(mapData) {
+			var self = this,
+				init = function init () {
+					var bounds = new google.maps.LatLngBounds(),
+						infoWindow = new google.maps.InfoWindow(),
+						mapOptions = {
+							panControl: false,
+							zoomControl: true,
+							mapTypeControl: false,
+							scaleControl: true,
+							streetViewControl: false,
+							overviewMapControl: true
+						},
+						map = new google.maps.Map(document.getElementById('area_code_map'), mapOptions);
+
+					_.each(mapData.locales, function(markerValue, markerKey) {
+						bounds.extend(setMarker(map, infoWindow, markerKey, markerValue).getPosition());
+					});
+
+					// Center the map to the geometric center of all bounds
+					map.setCenter(bounds.getCenter());
+					// Sets the viewport to contain the given bounds
+					map.fitBounds(bounds);
+				},
+				setMarker = function setMarker (map, infoWindow, key, value) {
+					var position = new google.maps.LatLng(parseFloat(value.latitude), parseFloat(value.longitude)),
+						markerOptions = {
+							animation: google.maps.Animation.DROP,
+							areaCodes: value.prefixes,
+							position: position,
+							title: key,
+							map: map
+						},
+						marker = new google.maps.Marker(markerOptions);
+
+					marker.addListener('click', function () {
+						infoWindow.setContent(
+							'<p>Area code(s) for ' + this.title + ':</p/>' + 
+							'<ul>' + 
+								'<li><b>' + this.areaCodes.join('<b/></li><li><b>') + '</b>' + '</li>' + 
+							'</ul>'
+						);
+						infoWindow.open(map, marker);
+					});
+
+					return marker;
+				};
+
+			init();
 		},
 
 		/**************************************************

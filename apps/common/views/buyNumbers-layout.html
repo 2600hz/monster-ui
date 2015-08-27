@@ -15,6 +15,9 @@
 							<input type="text" id="city_input"/>
 						</div>
 					</div>
+				{{#if isPhonebookConfigured}}
+					<div class="row-fluid row-popup" id="area_code_map"></div>
+				{{/if}}
 					<div id="area_code_radio_div" class="radio-group start-hidden">
 					</div>
 
@@ -168,3 +171,5 @@
 
 	</div>
 </div>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{googleMapsApiKey}}&callback=initMap"></script>
