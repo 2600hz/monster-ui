@@ -726,7 +726,20 @@ define(function(require){
 								 + " " + cityInput : selectedCity + " ("+areacode+")")
 								 + (isSeqNumChecked ? " " + monster.template(self, '!'+self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : "");
 
-				if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
+				if (self.isPhonebookConfigured && self.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
+					self.buyNumbersRequestSearchAreaCodeByAddress({
+						data: {
+							address: parseInt(cityInput, 10)
+						},
+						success: function(data) {
+							container
+								.find('#area_code_map')
+									.slideDown(400, function () {
+										self.buyNumbersInitAreaCodeMap(data);
+									});
+						}
+					});
+				} else if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.noInputAlert);
 				} else if( isSeqNumChecked && !(seqNumIntvalue > 1) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.seqNumAlert);
