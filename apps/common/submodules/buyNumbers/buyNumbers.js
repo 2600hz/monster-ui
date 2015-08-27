@@ -2,6 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
+		toastr = require('toastr'),
 		ddslick = require('ddslick');
 
 	var buyNumbers = {
@@ -22,7 +23,8 @@ define(function(require){
 			'phonebook.searchByAddress': {
 				apiRoot: monster.config.api.phonebook,
 				url: 'locality/address',
-				verb: 'POST'
+				verb: 'POST',
+				generateError: false
 			}
 		},
 
@@ -737,7 +739,14 @@ define(function(require){
 									.slideDown(400, function () {
 										self.buyNumbersInitAreaCodeMap(data);
 									});
-						}
+						},
+						error: function() {
+							container.find('#area_code_map').slideUp(function () {
+								$(this).empty();
+							});
+
+							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
+						},
 					});
 				} else if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.noInputAlert);
@@ -1178,7 +1187,9 @@ define(function(require){
 					}));
 				},
 				error: function(data, status) {
-					args.hasOwnProperty('error') && args.error();
+					if (status.status === 404) {
+						args.hasOwnProperty('error') && args.error();
+					}
 				}
 			});
 		}

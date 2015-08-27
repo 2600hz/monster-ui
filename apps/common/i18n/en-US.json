@@ -214,7 +214,10 @@
 		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want. There would be a onetime $20 fee for requesting a special number.",
 		"sendRequest": "Send us a request",
 		"to": "to",
-		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:"
+		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:",
+		"__comment": "UI-1716: Handle errors when the ZIP code searched does not exist and show a toastr",
+		"__version": "3.22",
+		"zipCodeDoesNotExist": "The ZIP code you entered does not exist"
 	},
 
 	"port": {
