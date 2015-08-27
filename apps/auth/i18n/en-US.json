@@ -111,6 +111,7 @@
 	"__comment": "UI-1787: now handling upgrade of trial accounts",
 	"__version": "3.22",
 	"trial": {
-		"noCreditCard": "Please try to upgrade again once you filled your credit card information..."
+		"noCreditCard": "Please try to upgrade again once you filled your credit card information...",
+		"successUpgrade": "Thank you for ugprading your account, our support will be in touch shortly!"
 	}
 }

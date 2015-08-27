@@ -21,7 +21,13 @@ define(function(require){
 			isAuthentified: false
 		},
 
-		requests: {},
+		requests: {
+			'auth.upgradeTrial': {
+				apiRoot: monster.config.api.screwdriver,
+				url: 'upgrade',
+				verb: 'POST'
+			}
+		},
 
 		subscribe: {
 			'auth.logout': '_logout',
@@ -361,18 +367,32 @@ define(function(require){
 
 			monster.pub('myaccount.hasCreditCards', function(response) {
 				if(response) {
-					// query api stuff to create account and upgrade
-					// remove time trial left
-					// move account to prod
-					// create crm lead
+					self.upgradeAccount(self.accountId, function() {
+						toastr.success(self.i18n.active().trial.successUpgrade);
+					});
 				}
 				else {
 					monster.pub('myaccount.showCreditCardTab');
 
 					toastr.error(self.i18n.active().trial.noCreditCard);
 				}
-			})
-			
+			});
+		},
+
+		upgradeAccount: function(accountId, callback) {
+			var self = this;
+
+			monster.request({
+				resource: 'auth.upgradeTrial',
+				data: {
+					envelopeKeys: { 
+						id: accountId 
+					}
+				},
+				success: function(data, status) {
+					callback && callback(data);
+				}
+			});
 		},
 
 		renderLoginPage: function(container) {

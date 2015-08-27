@@ -257,7 +257,7 @@ define(function(require){
 					self.updateWalkthroughFlagUser();
 				});
 			}
-			else if(currentAccount.hasOwnProperty('trial_time_left')) {
+			else if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 				monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
 			}
 			else {
