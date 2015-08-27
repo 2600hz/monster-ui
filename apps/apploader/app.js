@@ -157,9 +157,9 @@ define(function(require){
 					items = parent.find('.right-div .app-element');
 
 				_.each(items, function(item) {
-					var item = $(item);
+					var $item = $(item);
 
-					item.data('search').toLowerCase().indexOf(searchString) < 0 ? item.hide() : item.show();
+					$item.data('search').toLowerCase().indexOf(searchString) < 0 ? $item.hide() : $item.show();
 				});
 			});
 
@@ -348,87 +348,103 @@ define(function(require){
 		getUserApps: function(callback) {
 			var self = this;
 
-			monster.parallel({
-					allApps: function(callback) {
-						self.callApi({
-							resource: 'appsStore.list',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					}
+			self.callApi({
+				resource: 'appsStore.list',
+				data: {
+					accountId: self.accountId
 				},
-				function(err, results) {
-					self.getFullAppList(function(fullAppList) {
-						var allApps = _.indexBy(results.allApps, 'id'), // List of apps available on the account, with list of enabled user
-							userApps = monster.apps.auth.currentUser.appList || [], // List of apps on the user, used for ordering and default app only
-							updateUserApps = false,
-							appList = []; // List of apps available for this user, to be return
+				success: function(data, status) {
+					var parallelRequest = {},
+					lang = monster.config.whitelabel.language,
+					isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase());
 
-						userApps = $.grep(userApps, function(appId) {
-							var app = fullAppList[appId],
-								userArray = appId in allApps ? $.map(allApps[appId].users||[], function(val) { return val.id }) : [];
-							
-							if(app && appId in allApps) {
-								if(allApps[appId].allowed_users === 'all'
-								|| (allApps[appId].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === 'admin')
-								|| userArray.indexOf(self.userId) >= 0) {
-									appList.push({
-										id: appId,
-										name: app.name,
-										icon: app.icon,
-										label: app.label
-									});
-									delete allApps[appId];
-									return true;
+					_.each(data.data, function(val) {
+						var currentLang = val.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US';
+						val.description = val.i18n[currentLang].description;
+						val.label = val.i18n[currentLang].label;
+						parallelRequest[val.id] = function(parallelCallback) {
+							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
+							self.callApi({
+								resource: 'appsStore.getIcon',
+								data: {
+									accountId: self.accountId,
+									appId: val.id,
+									generateError: false
+								},
+								success: function(data, status) {
+									val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+									parallelCallback && parallelCallback(null, val);
+								},
+								error: function(data, status) {
+									val.icon = null;
+									parallelCallback && parallelCallback(null, val);
 								}
+							});
+						}
+					});
+
+					monster.parallel(parallelRequest, function(err, results) {
+						var allApps = results, // List of apps available on the account, with list of enabled user
+							currentUser = monster.apps.auth.currentUser,
+							userApps = currentUser.appList || [], // List of apps on the user, used for ordering and default app only
+							updateUserApps = false,
+							appList = [], // List of apps available for this user, to be return
+							isAppInstalled = function(app) {
+								var appUsers = _.map(app.users||[], function(val) { return val.id });
+								if (app &&
+									app.allowed_users && 
+									(
+										(app.allowed_users === 'all') ||
+										(app.allowed_users === 'admins' && currentUser.priv_level === 'admin') ||
+										(app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
+									)) {
+									return true;
+								} else {
+									return false;
+								}
+							};
+
+						userApps = _.filter(userApps, function(appId) {
+							var app = allApps[appId];
+							if(isAppInstalled(app)) {
+								appList.push({
+									id: app.id,
+									name: app.name,
+									icon: app.icon,
+									label: app.label,
+									description: app.description
+								});
+								return true;
+							} else {
+								updateUserApps = true;
+								return false;
 							}
-							updateUserApps = true;
-							return false;
 						});
 
-						_.each(allApps, function(val, key) {
-							var app = fullAppList[key],
-								userArray = key in allApps ? $.map(allApps[key].users||[], function(val) { return val.id }) : [];
-							
-							if(app && (allApps[key].allowed_users === 'all' || (allApps[key].allowed_users === 'admins' && monster.apps.auth.currentUser.priv_level === "admin") || userArray.indexOf(self.userId) >= 0)) {
+						_.each(allApps, function(app) {
+							if(userApps.indexOf(app.id) === -1 && isAppInstalled(app)) {
 								appList.push({
-									id: key,
-									name: fullAppList[key].name,
-									icon: fullAppList[key].icon,
-									label: fullAppList[key].label
+									id: app.id,
+									name: app.name,
+									icon: app.icon,
+									label: app.label,
+									description: app.description
 								});
 
-								userApps.push(key);
+								userApps.push(app.id);
 								updateUserApps = true;
 							}
 						});
 
 						if(updateUserApps) {
 							monster.apps.auth.currentUser.appList = userApps;
-
 							self.userUpdate();
 						}
-
-						_.each(results.allApps, function(v1, k1) {
-							_.each(appList, function(v2, k2) {
-								if (v1.id === v2.id) {
-									var lang = monster.config.whitelabel.language,
-										isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
-										currentLang = v1.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US';
-
-									v2.description = v1.i18n[currentLang].description;
-								}
-							});
-						});
 
 						callback && callback(appList);
 					});
 				}
-			);
+			});
 		},
 
 		appListUpdate: function(parent, appList, callback) {

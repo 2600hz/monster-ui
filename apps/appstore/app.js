@@ -133,10 +133,7 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var installedAppIds = _.map(monster.apps['auth'].installedApps, function(val) {
-							return val.id;
-						}),
-						getIcon = function(appId, iconCallback) {
+					var getIcon = function(appId, iconCallback) {
 							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
 							self.callApi({
 								resource: 'appsStore.getIcon',
@@ -181,7 +178,7 @@ define(function(require){
 
 		renderApps: function(parent, appstoreData) {
 			var self = this,
-				appList = appstoreData.apps
+				appList = appstoreData.apps,
 				template = $(monster.template(self, 'appList', {
 				apps: appList
 			}));
@@ -202,7 +199,7 @@ define(function(require){
 
 		showAppPopup: function(appId, appstoreData) {
 			var self = this,
-				userList = appstoreData.users;
+				userList = $.extend(true, [], appstoreData.users);
 
 			console.log(appstoreData)
 
@@ -213,31 +210,27 @@ define(function(require){
 					appId: appId
 				},
 				success: function(data, status) {
-					var dataI18n = data.data.i18n[monster.config.whitelabel.language] || data.data.i18n['en-US'];
-
-					var app = $.extend(true, data.data, {
+					var appData = data.data,
+						dataI18n = appData.i18n[monster.config.whitelabel.language] || appData.i18n['en-US'],
+						app = $.extend(true, appData, {
 							extra: {
 								label: dataI18n.label,
 								description: dataI18n.description,
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
-								icon: _.find(appstoreData.apps, function(app) { return app.id === data.data.id }).icon,
-								screenshots: $.map(data.data.screenshots || [], function(val, key) {
-									return self.apiUrl + "apps_store/" + data.data.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+								icon: _.find(appstoreData.apps, function(app) { return app.id === appData.id }).icon,
+								screenshots: _.map(appData.screenshots || [], function(val, key) {
+									return self.apiUrl + "apps_store/" + appData.id + "/screenshot/" + key + "?auth_token=" + self.authToken
 								})
 							}
 						}),
-						selectedUsersLength = appId in appstoreData.apps ? appstoreData.apps[appId].users.length : 0,
-						selectedUsersList = appId in appstoreData.apps ? $.extend(true, [], appstoreData.apps[appId].users) : [],
-						users = $.map($.extend(true, [], userList), function(val, key) {
-							if(selectedUsersList.length) {
-								for(var i=0; i<selectedUsersList.length; i++) {
-									if(selectedUsersList[i].id === val.id) {
-										val.selected = true;
-										selectedUsersList.slice(i, 1);
-										break;
-									}
-								}
+						selectedUsersLength = app.users ? app.users.length : 0,
+						selectedUsersList = _.map(app.users || [], function(val) {
+							return val.id;
+						}),
+						users = _.map(userList, function(val, key) {
+							if(selectedUsersList.indexOf(val.id) >= 0) {
+								val.selected = true;
 							}
 							return val;
 						}),
@@ -253,12 +246,12 @@ define(function(require){
 						rightContainer = template.find('.right-container'),
 						userListContainer = rightContainer.find('.user-list');
 
-					if(!appstoreData.apps || !(appId in appstoreData.apps) || !('allowed_users' in appstoreData.apps[appId]) || (appstoreData.apps[appId].allowed_users === 'specific' && appstoreData.apps[appId].users.length === 0)) {
+					if(!app.hasOwnProperty('allowed_users') || (app.allowed_users === 'specific' && (app.users||[]).length === 0)) {
 						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
-					} else if(appstoreData.apps[appId].allowed_users === 'admins') {
+					} else if(app.allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
-					} else if(appstoreData.apps[appId].users.length > 0) {
+					} else if(app.users && app.users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
 						rightContainer.find('#app_popup_select_users_link').html(
@@ -281,23 +274,8 @@ define(function(require){
 		bindPopupEvents: function(parent, app, appstoreData) {
 			var self = this,
 				userList = parent.find('.user-list'),
-				selectedUsersCount = app.id in appstoreData.apps ? appstoreData.apps[app.id].users.length : 0,
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
-					var icon = parent.find('.toggle-button-bloc i'),
-						errorFunction = function() {
-							icon.stop(true, true)
-								.show()
-								.removeClass('fa-spin fa-spinner')
-								.addClass('fa-times monster-red')
-								.fadeOut(3000);
-							errorCallback && errorCallback();
-						},
-						apiResource = appInstallInfo.hasOwnProperty('allowed_users') ? (app.hasOwnProperty('allowed_users') ? 'appsStore.update' : 'appsStore.add') : 'appsStore.delete';
-
-					icon.stop(true, true)
-						.removeClass('fa-times monster-red fa-check monster-green')
-						.addClass('fa-spinner fa-spin')
-						.show();
+					var apiResource = appInstallInfo.hasOwnProperty('allowed_users') ? (app.hasOwnProperty('allowed_users') ? 'appsStore.update' : 'appsStore.add') : 'appsStore.delete';
 
 					self.callApi({
 						resource: apiResource,
@@ -307,17 +285,11 @@ define(function(require){
 							data: appInstallInfo
 						},
 						success: function(_data, status) {
-							icon.stop(true, true)
-								.show()
-								.removeClass('fa-spin fa-spinner')
-								.addClass('fa-check monster-green')
-								.fadeOut(3000);
-
 							$('#apploader').remove();
 							successCallback && successCallback();
 						},
 						error: function(_data, status) {
-							errorFunction();
+							errorCallback && errorCallback();
 						}
 					});
 				};
@@ -439,10 +411,10 @@ define(function(require){
 								appData.source_url = app.source_url;
 							}
 
-							// Only update variable if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
-							if(!monster.util.isMasquerading()) {
+							// Only update variable if we're not masquerading and app isn't in installed apps yet.
+							if(!monster.util.isMasquerading() && !_.find(monster.apps.auth.installedApps, function(val) { return val.id === app.id })) {
 								// Update local installedApps list by adding the new app
-								monster.apps.auth.installedApps.push(_.find(appstoreData.apps, function(val, idx) { return val.id === app.id; }));
+								monster.apps.auth.installedApps.push(appData);
 							}
 							
 							$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
@@ -452,10 +424,7 @@ define(function(require){
 						});
 					}
 				} else {
-					updateAppInstallInfo({
-						allowed_users: 'specific',
-						users: []
-					},
+					updateAppInstallInfo({},
 					function() {
 						// Only update variable if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
 						if(!monster.util.isMasquerading()) {

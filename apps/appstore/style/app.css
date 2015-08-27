@@ -293,26 +293,6 @@
 	display: none;
 }
 
-#appstore_popup_container .right-container .toggle-button-bloc i {
-	margin: 3px 10px;
-	float: right;
-	display: none;
-}
-
-#appstore_popup_container .right-container .toggle-button-bloc i.fa-check {
-	text-shadow: 5px 5px 40px #1FFF00,
-				 5px -5px 40px #1FFF00,
-				-5px 5px 40px #1FFF00,
-				-5px -5px 40px #1FFF00;
-}
-
-#appstore_popup_container .right-container .toggle-button-bloc i.fa-times {
-	text-shadow: 5px 5px 40px #FF5757,
-				 5px -5px 40px #FF5757,
-				-5px 5px 40px #FF5757,
-				-5px -5px 40px #FF5757;
-}
-
 #appstore_popup_container .right-container > div > div {
 	padding: 10px;
 }

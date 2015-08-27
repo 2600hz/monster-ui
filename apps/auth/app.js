@@ -198,62 +198,15 @@ define(function(require){
 
 					var afterLanguageLoaded = function() {
 						var accountApps = _.indexBy(results.apps, 'id'),
-							fullAppList = {};
-
-						_.each(self.installedApps, function(val) {
-							fullAppList[val.id] = val;
-						});
-
-						if(results.user.appList && results.user.appList.length > 0) {
-							for(var i = 0; i < results.user.appList.length; i++) {
-								var appId = results.user.appList[i];
-								if(appId in fullAppList && appId in accountApps) {
-									var accountAppUsers = $.map(accountApps[appId].users, function(val) {return val.id;});
-									
-									if(accountApps[appId].allowed_users === 'all'
-									|| (accountApps[appId].allowed_users === 'admins' && results.user.priv_level === 'admin')
-									|| accountAppUsers.indexOf(results.user.id) >= 0) {
-										defaultApp = fullAppList[appId].name;
-										break;
-									}
-								}
-							}
-						}
-						else {
-							var userAppList = $.map(fullAppList, function(val) {
-								if(val.id in accountApps) {
-									var accountAppUsers = $.map(accountApps[val.id].users, function(val) {return val.id;});
-									
-									if(accountApps[val.id].allowed_users === 'all'
-									|| (accountApps[val.id].allowed_users === 'admins' && results.user.priv_level === 'admin')
-									|| accountAppUsers.indexOf(results.user.id) >= 0) {
-										return val;
-									}
-								}
+							fullAppList = _.indexBy(self.installedApps, 'id'),
+							defaultAppId = _.find(results.user.appList || [], function(appId) {
+								return fullAppList.hasOwnProperty(appId);
 							});
 
-							if(userAppList && userAppList.length > 0) {
-								userAppList.sort(function(a, b) {
-									return a.label < b.label ? -1 : 1;
-								});
-
-								results.user.appList = $.map(userAppList, function(val) {
-									return val.id;
-								});
-
-								defaultApp = fullAppList[results.user.appList[0]].name;
-
-								self.callApi({
-									resource: 'user.update',
-									data: {
-										accountId: results.account.id,
-										userId: results.user.id,
-										data: results.user
-									},
-									success: function(_data, status) {},
-									error: function(_data, status) {}
-								});
-							}
+						if(defaultAppId) {
+							defaultApp = fullAppList[defaultAppId].name;
+						} else if(self.installedApps.length > 0) {
+							defaultApp = self.installedApps[0].name;
 						}
 
 						self.currentUser = results.user;
