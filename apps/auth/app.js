@@ -337,7 +337,7 @@ define(function(require){
 					// 	callback();
 					// }
 					if(monster.config.whitelabel.custom_welcome) {
-						template.find('.left-div .hello').empty().html(monster.config.whitelabel.custom_welcome_message.replace(/\r?\n/g, '<br />'));
+						template.find('.left-div .hello').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
 					}
 					callback();
 				},
