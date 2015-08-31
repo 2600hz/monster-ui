@@ -3,13 +3,16 @@ define(function(require){
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
+			default: 'http://api.zswitch.net:8000/v2/'
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600hz, add the URL in the 'provisioner' key below
-				//provisioner: 'http://URL/2600hz-provisioner/',
-				default: 'http://api.zswitch.net:8000/v2/'
+			// provisioner: 'http://URL/2600hz-provisioner/'
 
 			// If you want to use WebSockets you need to turn blackhole on in the back-end and then put the URL in the 'socket' key below
-			// 		socket: 'your_web_socket_url'
+			// socket: 'your_web_socket_url'
+
+			// Set Project Phonebook URL if you want to use it to search phone numbers
+			// phonebook: 'project_phonebook_url'
 		},
 
 		// The resellerId key is the accountId of your master account, and is needed for some reseller features
