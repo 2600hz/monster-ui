@@ -155,7 +155,8 @@
 	"buyNumbers":{
 		"buyDialogTitle":"Acheter numéros",
 		"countrySelectLabel":"Sélectionner Pays",
-		"cityInputLabel":"Chercher par Ville ou Indicatif téléphonique",
+		"cityInputLabel":"Chercher par Indicatif téléphonique",
+		"cityInputLabelZipCode": " ou code postal",
 		"seqCheckboxLabel":"Montrer uniquement des numéros séquentiels.",
 		"seqInputLabel":"Combien à la suite?",
 		"seqNumAlert":"Vous devez spécifier combien de numéros séquentiels vous souhaitez acheter (chiffre compris entre 2 et 999 ).",
@@ -199,7 +200,9 @@
 		"vanitySearchInfo2":"Si vous ne trouvez pas un numéro et souhaitez vraiment l'avoir, vous pouvez nous contacter et nous rechercherons dans toutes les bases de données disponibles. Une charge de $20 sera appliquée pour une telle requête.",
 		"sendRequest":"Envoyer une requête",
 		"to":"à",
-		"partialPurchaseFailure":"Désolé, les numéros suivants n'ont pas pu être achetés :"
+		"partialPurchaseFailure":"Désolé, les numéros suivants n'ont pas pu être achetés :",
+		"areaCodeDoesNotExist": "Le code postal que vous cherchez n'existe pas",
+		"markerAreaCodes": "Indicatif téléphonique pour "
 	},
 	"port":{
 		"dialogTitle":"Transfert de numéros",
