@@ -7,6 +7,8 @@ define(function(require){
 
 	var buyNumbers = {
 
+		externalScripts: [ 'buyNumbers-googleMapsLoader' ],
+
 		requests: {
 			// Numbers endpoints
 			'phonebook.search': {
@@ -87,8 +89,7 @@ define(function(require){
 				searchType = args.searchType,
 				availableCountries = args.availableCountries,
 				template = $(monster.template(self, 'buyNumbers-layout', {
-					isPhonebookConfigured: self.isPhonebookConfigured,
-					googleMapsApiKey: monster.config.googleMapsApiKey
+					isPhonebookConfigured: self.isPhonebookConfigured
 				}));
 
 
@@ -1046,7 +1047,7 @@ define(function(require){
 
 					marker.addListener('click', function () {
 						infoWindow.setContent(
-							'<p>Area code(s) for ' + this.title + ':</p/>' + 
+							'<p>' + self.i18n.active().buyNumbers.markerAreaCodes + this.title + ':</p/>' + 
 							'<ul>' + 
 								'<li><b>' + this.areaCodes.join('<b/></li><li><b>') + '</b>' + '</li>' + 
 							'</ul>'

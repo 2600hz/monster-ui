@@ -201,7 +201,8 @@
 		"sendRequest":"Envoyer une requête",
 		"to":"à",
 		"partialPurchaseFailure":"Désolé, les numéros suivants n'ont pas pu être achetés :",
-		"areaCodeDoesNotExist": "Le code postal que vous cherchez n'existe pas"
+		"areaCodeDoesNotExist": "Le code postal que vous cherchez n'existe pas",
+		"markerAreaCodes": "Indicatif téléphonique pour "
 	},
 	"port":{
 		"dialogTitle":"Transfert de numéros",

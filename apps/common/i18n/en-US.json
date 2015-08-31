@@ -217,7 +217,10 @@
 		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:",
 		"__comment": "UI-1716: Handle errors when the ZIP code searched does not exist and show a toastr",
 		"__version": "3.22",
-		"zipCodeDoesNotExist": "The ZIP code you entered does not exist"
+		"zipCodeDoesNotExist": "The ZIP code you entered does not exist",
+		"__comment": "UI-1716: Use an external script to load the google maps script",
+		"__version": "3.22",
+		"markerAreaCodes": "Area codes for "
 	},
 
 	"port": {
