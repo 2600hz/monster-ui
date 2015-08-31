@@ -11,10 +11,13 @@
 							<div id="regular_country_select"></div>
 						</div>
 						<div class="input-div">
-							<label>{{i18n.buyNumbers.cityInputLabel}}</label>
-							<input type="text" id="city_input"/>
+							<label>{{i18n.buyNumbers.cityInputLabel}}{{#if isPhonebookConfigured}}{{i18n.buyNumbers.cityInputLabelZipCode}}{{/if}}</label>
+							<input type="text" id="city_input" maxlength="{{#if isPhonebookConfigured}}5{{else}}3{{/if}}" />
 						</div>
 					</div>
+				{{#if isPhonebookConfigured}}
+					<div class="row-fluid row-popup" id="area_code_map"></div>
+				{{/if}}
 					<div id="area_code_radio_div" class="radio-group start-hidden">
 					</div>
 

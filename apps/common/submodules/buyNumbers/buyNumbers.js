@@ -2,11 +2,15 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
+		toastr = require('toastr'),
 		ddslick = require('ddslick');
 
 	var buyNumbers = {
 
+		externalScripts: [ 'buyNumbers-googleMapsLoader' ],
+
 		requests: {
+			// Numbers endpoints
 			'phonebook.search': {
 				apiRoot: monster.config.api.phonebook,
 				url: 'numbers/us/search?prefix={pattern}&limit={limit}&offset={offset}',
@@ -16,6 +20,13 @@ define(function(require){
 				apiRoot: monster.config.api.phonebook,
 				url: 'blocks/us/search?prefix={pattern}&limit={limit}&offset={offset}&size={size}',
 				verb: 'GET'
+			},
+			// Locality endpoints
+			'phonebook.searchByAddress': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'locality/address',
+				verb: 'POST',
+				generateError: false
 			}
 		},
 
@@ -77,7 +88,9 @@ define(function(require){
 			var self = this,
 				searchType = args.searchType,
 				availableCountries = args.availableCountries,
-				template = $(monster.template(self, 'buyNumbers-layout', {}));
+				template = $(monster.template(self, 'buyNumbers-layout', {
+					isPhonebookConfigured: self.isPhonebookConfigured
+				}));
 
 
 			args.popup = monster.ui.dialog(template, {
@@ -716,7 +729,27 @@ define(function(require){
 								 + " " + cityInput : selectedCity + " ("+areacode+")")
 								 + (isSeqNumChecked ? " " + monster.template(self, '!'+self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : "");
 
-				if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
+				if (self.isPhonebookConfigured && self.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
+					self.buyNumbersRequestSearchAreaCodeByAddress({
+						data: {
+							address: parseInt(cityInput, 10)
+						},
+						success: function(data) {
+							container
+								.find('#area_code_map')
+									.slideDown(400, function () {
+										self.buyNumbersInitAreaCodeMap(data);
+									});
+						},
+						error: function() {
+							container.find('#area_code_map').slideUp(function () {
+								$(this).empty();
+							});
+
+							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
+						},
+					});
+				} else if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.noInputAlert);
 				} else if( isSeqNumChecked && !(seqNumIntvalue > 1) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.seqNumAlert);
@@ -971,6 +1004,63 @@ define(function(require){
 			return result;
 		},
 
+		/**
+		 * Initialize and render the map with the list of locations displayed as
+		 * markers. Bind a click event on each marker to show the related data.
+		 * Initialize the map and show the list of locations as markers
+		 * @param  {Object} mapData         List of locations to show on the map
+		 */
+		buyNumbersInitAreaCodeMap: function(mapData) {
+			var self = this,
+				init = function init () {
+					var bounds = new google.maps.LatLngBounds(),
+						infoWindow = new google.maps.InfoWindow(),
+						mapOptions = {
+							panControl: false,
+							zoomControl: true,
+							mapTypeControl: false,
+							scaleControl: true,
+							streetViewControl: false,
+							overviewMapControl: true
+						},
+						map = new google.maps.Map(document.getElementById('area_code_map'), mapOptions);
+
+					_.each(mapData.locales, function(markerValue, markerKey) {
+						bounds.extend(setMarker(map, infoWindow, markerKey, markerValue).getPosition());
+					});
+
+					// Center the map to the geometric center of all bounds
+					map.setCenter(bounds.getCenter());
+					// Sets the viewport to contain the given bounds
+					map.fitBounds(bounds);
+				},
+				setMarker = function setMarker (map, infoWindow, key, value) {
+					var position = new google.maps.LatLng(parseFloat(value.latitude), parseFloat(value.longitude)),
+						markerOptions = {
+							animation: google.maps.Animation.DROP,
+							areaCodes: value.prefixes,
+							position: position,
+							title: key,
+							map: map
+						},
+						marker = new google.maps.Marker(markerOptions);
+
+					marker.addListener('click', function () {
+						infoWindow.setContent(
+							'<p>' + self.i18n.active().buyNumbers.markerAreaCodes + this.title + ':</p/>' + 
+							'<ul>' + 
+								'<li><b>' + this.areaCodes.join('<b/></li><li><b>') + '</b>' + '</li>' + 
+							'</ul>'
+						);
+						infoWindow.open(map, marker);
+					});
+
+					return marker;
+				};
+
+			init();
+		},
+
 		/**************************************************
 		 *            Data manipulation helpers           *
 		 **************************************************/
@@ -983,6 +1073,21 @@ define(function(require){
 		 */
 		buyNumbersCoerceObjectToArray: function(structure) {
 			return _.isArray(structure) ? structure : _.map(structure, function(v) { return v; });
+		},
+
+		/**
+		 * Extract the area code of each prefix value for each city and remove
+		 * duplicate occurences.
+		 * @param  {Object} cities List of cities containing prefixes
+		 * @return {Object}        Same list with duplicate area codes removed
+		 */
+		buyNumbersGetUniqueAreaCodes: function(cities) {
+			_.each(cities, function(cityValue, cityKey, citiesObject) {
+				cityValue.prefixes = _.map(cityValue.prefixes, function(prefixValue, prefixIdx) { return prefixValue.substr(0, 3); });
+				citiesObject[cityKey].prefixes = _.uniq(cityValue.prefixes);
+			});
+
+			return cities;
 		},
 
 		/**************************************************
@@ -1064,6 +1169,28 @@ define(function(require){
 				},
 				error: function(data, status) {
 					args.hasOwnProperty('error') && args.error();
+				}
+			});
+		},
+		buyNumbersRequestSearchAreaCodeByAddress: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'phonebook.searchByAddress',
+				data: {
+					data: $.extend({
+						distance: 10
+					}, args.data)
+				},
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success($.extend(true, data.data, {
+						locales: self.buyNumbersGetUniqueAreaCodes(data.data.locales)
+					}));
+				},
+				error: function(data, status) {
+					if (status.status === 404) {
+						args.hasOwnProperty('error') && args.error();
+					}
 				}
 			});
 		}

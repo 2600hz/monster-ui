@@ -370,6 +370,11 @@
 	vertical-align: bottom;
 }
 
+#buy_number #area_code_map {
+	display: none;
+	height: 570px;
+}
+
 /***************** Temporary fix for country select *******************/
 
 #vanity_country_select, #tollfree_country_select {
