@@ -124,7 +124,8 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'},
-			'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' }
+			'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
+			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
 		},
 		group: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/groups/{groupId}' },
@@ -167,7 +168,8 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
 			'deleteBlock': { verb: 'DELETE', url: 'accounts/{accountId}/phone_numbers/collection' },
 			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?filter_state=in_service' },
+			'listAll': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
 			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
 			'matchClassifier': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers/{phoneNumber}' },
 			'search': { verb: 'GET', url: 'phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
@@ -183,7 +185,8 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
 			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}/quickcall/{number}'},
-			'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync'}
+			'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync'},
+			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' }
 		},
 		media: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
@@ -230,6 +233,10 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
+		},
+		presence: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
 		},
 		servicePlan: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
