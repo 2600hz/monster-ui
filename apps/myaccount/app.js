@@ -250,12 +250,16 @@ define(function(require){
 		// If no, we check if we need to remind them to fill their credit card info
 		afterRender: function(template, uiRestrictions) {
 			var self = this,
-				currentAccount = monster.apps.auth.currentAccount;
+				currentAccount = monster.apps.auth.currentAccount,
+				currentUser = monster.apps.auth.currentUser,
+				hasRequirePasswordUpdate = currentUser.hasOwnProperty('require_password_update');
 
 			if(self.hasToShowWalkthrough()) {
-				self.showWalkthrough(template, function() {
-					self.updateWalkthroughFlagUser();
-				});
+				if (!hasRequirePasswordUpdate || (hasRequirePasswordUpdate && !currentUser.require_password_update)) {
+					self.showWalkthrough(template, function() {
+						self.updateWalkthroughFlagUser();
+					});
+				}
 			}
 			else if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 				monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
