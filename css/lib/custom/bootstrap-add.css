@@ -62,6 +62,12 @@ input[type="color"],
 	border-left: 7px solid transparent;
 }
 
+.dropdown-menu li a i {
+	display: inline-block;
+	min-width: 20px;
+	text-align: center;
+}
+
 /************* BOTTOM NAVBAR *************/
 .navbar.navbar-fixed-bottom.blue {
 	position: fixed;
