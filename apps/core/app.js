@@ -268,6 +268,8 @@ define(function(require){
 							 .attr('href', monster.config.whitelabel.nav.logout);
 				}
 			}
+
+			container.find('[data-toggle="tooltip"]').tooltip();
 		},
 
 		hideAccountToggle: function() {

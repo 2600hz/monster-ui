@@ -538,7 +538,8 @@
 	"__comment": "UI-1779: Adding account toggle",
 	"__version": "3.22",
 	"accountToggle": {
-		"currentAccountLabel": "Browsing"
+		"currentAccountLabel": "Browsing",
+		"toggleTooltip": "Account Jump"
 	},
 	"triggerMasquerading": "You are now masquerading the account \"{{accountName}}\".",
 	"restoreMasquerading": "You are not masquerading anymore."
