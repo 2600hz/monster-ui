@@ -202,7 +202,8 @@
 		"to":"à",
 		"partialPurchaseFailure":"Désolé, les numéros suivants n'ont pas pu être achetés :",
 		"areaCodeDoesNotExist": "Le code postal que vous cherchez n'existe pas",
-		"markerAreaCodes": "Indicatif téléphonique pour "
+		"markerAreaCodes": "Indicatif téléphonique pour ",
+		"singleSelectInfo": "Un seul numéro peut être sélectionné pour cette opération."
 	},
 	"port":{
 		"dialogTitle":"Transfert de numéros",

@@ -8,6 +8,7 @@
 }
 
 #buy_number .top-splitter {
+	position: relative;
 	border-top: 1px solid #ccc;
 }
 
@@ -373,6 +374,12 @@
 #buy_number #area_code_map {
 	display: none;
 	height: 570px;
+}
+
+#buy_number #single_select_info {
+	position: absolute;
+	bottom: 0;
+	margin-bottom: 0;
 }
 
 /***************** Temporary fix for country select *******************/
