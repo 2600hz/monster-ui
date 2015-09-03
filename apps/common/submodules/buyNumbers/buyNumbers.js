@@ -37,12 +37,14 @@ define(function(require){
 		searchLimit: 15,
 		selectedCountryCode: "US",
 		isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
+		isSelectedNumbersEmpty: true,
 
 		buyNumbersRender: function(params) {
 			var self = this,
 				params = params || {},
 				args = {
-					searchType: params.searchType || 'regular'
+					searchType: params.searchType || 'regular',
+					singleSelect: params.singleSelect || false
 				};
 
 			self.assignedAccountId = params.accountId || self.accountId;
@@ -174,7 +176,17 @@ define(function(require){
 				var $this = $(this),
 					removedIndex = $this.data('index'),
 					removedArrayIndex = $this.data('array_index');
-
+					if (args.singleSelect) {
+						$.each(container.find('.add-number'), function(idx, val) {
+							$(this)
+								.removeClass('disabled')
+								.prop('disabled', false);
+						});
+						self.isSelectedNumbersEmpty = true;
+						container
+							.find('#single_select_info')
+								.removeClass('hidden');
+					}
 				args.selectedNumbers.splice(removedIndex,1);
 				self.buyNumbersRefreshSelectedNumbersList(args);
 
@@ -185,7 +197,17 @@ define(function(require){
 			searchResultDiv.on('click', 'button.add-number', function(ev) {
 				ev.preventDefault();
 				var addedIndex = $(this).data('array_index');
-
+				if (args.singleSelect) {
+					$.each(container.find('.add-number'), function(idx, val) {
+						$(this)
+							.addClass('disabled')
+							.prop('disabled', true);
+					});
+					self.isSelectedNumbersEmpty = false;
+						container
+							.find('#single_select_info')
+								.addClass('hidden');
+				}
 				args.selectedNumbers.push(args.displayedNumbers[addedIndex]);
 				self.buyNumbersRefreshSelectedNumbersList(args);
 
@@ -926,7 +948,10 @@ define(function(require){
 		buyNumbersRefreshSelectedNumbersList: function(args) {
 			var self = this,
 				container = args.container,
-				selectedNumbersList = monster.template(self, 'buyNumbers-selectedNumbers', { numbers: args.selectedNumbers }),
+				selectedNumbersList = monster.template(self, 'buyNumbers-selectedNumbers', {
+					numbers: args.selectedNumbers,
+					isSingleSelect: args.singleSelect
+				}),
 				totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers);
 
 			container.find('#search_result_div .right-div .center-div').empty().append(selectedNumbersList);
@@ -944,6 +969,16 @@ define(function(require){
 				resultDiv = container.find('#search_result_div .left-div');
 
 			resultDiv.empty().append(searchResultsList);
+
+			if (args.singleSelect) {
+				if (!self.isSelectedNumbersEmpty) {
+					$.each(resultDiv.find('.add-number'), function(idx, val) {
+						$(this)
+							.addClass('disabled')
+							.prop('disabled', true);
+					});
+				}
+			}
 
 			if(!args.isSearchFunctionEnabled && resultDiv[0].scrollHeight > resultDiv.height()) {
 				resultDiv.children('.number-box.number-wrapper').last().css('border-bottom','none');

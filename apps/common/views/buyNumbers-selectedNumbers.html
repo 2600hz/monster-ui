@@ -3,3 +3,8 @@
     <li><span>{{formatted_value}}</span><i data-index="{{@index}}" data-array_index="{{array_index}}" class="fa fa-trash-o monster-red remove-number"></i></li>
 {{/each}}
 </ul>
+{{#if isSingleSelect}}
+<div class="alert alert-info" id="single_select_info">
+    {{i18n.buyNumbers.singleSelectInfo}}
+</div>
+{{/if}}

@@ -220,7 +220,10 @@
 		"zipCodeDoesNotExist": "The ZIP code you entered does not exist",
 		"__comment": "UI-1716: Use an external script to load the google maps script",
 		"__version": "3.22",
-		"markerAreaCodes": "Area codes for "
+		"markerAreaCodes": "Area codes for ",
+		"__comment": "UI-1210: Add singleSelect flag to allow users to only buy one number at a time",
+		"__version": "3.22",
+		"singleSelectInfo": "You can only select one number for this action."
 	},
 
 	"port": {
