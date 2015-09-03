@@ -278,9 +278,7 @@ define(function(require){
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.apps['auth'].currentUser.first_name + ' ' + monster.apps['auth'].currentUser.last_name,
-							isMasquerading: args && args.isMasquerading || false,
-							parentsList: args && args.parentsList || [],
+							name: args && args.name || monster.apps.auth.currentUser.first_name + ' ' + monster.apps.auth.currentUser.last_name,
 							showMyaccount: showMyaccount
 						},
 						navHtml = $(monster.template(self, 'nav', dataTemplate)),
@@ -368,36 +366,6 @@ define(function(require){
 					}
 				});
 			});
-
-			navLinks.on('click', '#main_topbar_leave_masquerade', function(e) {
-				e.preventDefault();
-
-				var appList = $('.app-list');
-
-				// Closing myaccount (if open) before restoring from masquerading
-				if(mainContainer.hasClass('myaccount-open')) {
-					self.toggle();
-				}
-				monster.pub('accountsManager.restoreMasquerading');
-				monster.pub('core.showAppName', 'accounts');
-
-				appList.find('.app-list-element.active').removeClass('active');
-				appList.find('.app-list-element[data-name="accounts"]').addClass('active');
-			});
-
-			navLinks.on('click', '#main_topbar_masquerade_links > div', function(e) {
-				var accountId = $(this).data('id');
-				self.callApi({
-					resource: 'account.get',
-					data: {
-						accountId: accountId
-					},
-					success: function(data, status) {
-						monster.pub('accountsManager.triggerMasquerading', data.data);
-						self.hide();
-					}
-				});
-			});
 		},
 
 		// events
@@ -410,14 +378,13 @@ define(function(require){
 				callback: function(uiRestrictions) {
 					var myaccount = $(self.mainContainer),
 						firstTab = myaccount.find('.myaccount-menu .myaccount-element').first(),
-						uiRestrictions = uiRestrictions,
 						defaultApp = self.getDefaultCategory();
 
 					if (uiRestrictions && uiRestrictions[defaultApp.name] && uiRestrictions[defaultApp.name].show_tab === false) {
 						defaultApp.name = firstTab.data('module');
 						if (firstTab.data('key')) {
 							defaultApp.key =  firstTab.data('key');
-						};
+						}
 					}
 
 					if(myaccount.hasClass('myaccount-open')) {

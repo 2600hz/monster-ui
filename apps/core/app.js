@@ -1,7 +1,8 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toastr = require('toastr');
 
 	var app = {
 		name: 'core',
@@ -18,7 +19,9 @@ define(function(require){
 
 		subscribe: {
 			'core.loadApps': '_loadApps',
-			'core.showAppName' : 'showAppName'
+			'core.showAppName' : 'showAppName',
+			'core.triggerMasquerading': 'triggerMasquerading',
+			'core.restoreMasquerading': 'restoreMasquerading'
 		},
 
 		//List of apps required once the user is logged in (LIFO)
@@ -191,6 +194,23 @@ define(function(require){
 				monster.pub('apploader.toggle');
 			});
 
+			container.find('#main_topbar_account_toggle_link').on('click', function(e) {
+				e.preventDefault();
+				self.toggleAccountToggle();
+			});
+
+			container.find('#main_topbar_account_toggle').on('click', '.home-account-link', function() {
+				self.restoreMasquerading({
+					callback: function() {
+						var currentApp = monster.apps.getActiveApp();
+						if(currentApp in monster.apps) {
+							monster.apps[currentApp].render();
+						}
+						self.hideAccountToggle();
+					}
+				});
+			});
+
 			container.find('#main_topbar_signout_link').on('click', function() {
 				monster.pub('auth.clickLogout');
 			});
@@ -248,6 +268,89 @@ define(function(require){
 							 .attr('href', monster.config.whitelabel.nav.logout);
 				}
 			}
+		},
+
+		hideAccountToggle: function() {
+			$('#main_topbar_account_toggle_container .account-toggle-content').empty();
+			 $('#main_topbar_account_toggle_container .current-account-container').empty();
+			$('#main_topbar_account_toggle').removeClass('open');
+		},
+
+		showAccountToggle: function() {
+			var self = this;
+			monster.pub('common.accountBrowser.render', {
+				container: $('#main_topbar_account_toggle_container .account-toggle-content'),
+				breadcrumbsContainer: $('#main_topbar_account_toggle_container .current-account-container'),
+				customClass: 'ab-dropdown',
+				addBackButton: true,
+				onAccountClick: function(accountId, accountName) {
+					self.triggerMasquerading({
+						account: { id: accountId, name: accountName },
+						callback: function() {
+							var currentApp = monster.apps.getActiveApp();
+							if(currentApp in monster.apps) {
+								monster.apps[currentApp].render();
+							}
+							self.hideAccountToggle();
+						}
+					});
+				}
+			});
+			$('#main_topbar_account_toggle').addClass('open');
+		},
+
+		toggleAccountToggle: function() {
+			var self = this;
+			if($('#main_topbar_account_toggle').hasClass('open')) {
+				self.hideAccountToggle();
+			} else {
+				self.showAccountToggle();
+			}
+		},
+
+		triggerMasquerading: function(args) {
+			var self = this,
+				account = args.account,
+				callback = args.callback;
+
+			monster.apps.auth.currentAccount = $.extend(true, {}, account);
+			self.updateApps(account.id);
+
+			monster.pub('myaccount.renderNavLinks', {
+				name: account.name,
+				isMasquerading: true
+			});
+			$('#main_topbar_account_toggle').addClass('masquerading');
+
+			toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
+
+			callback && callback();
+		},
+
+		updateApps: function(accountId) {
+			$.each(monster.apps, function(key, val) {
+				// TODO Removed 8/5/2015 to fix cluster manager issue, shouldn't cause any issue, but a little worried to remove it so just leaving it in case issues arise in the near future
+				// we should remove it in 2-3 months if nothing comes up!
+				//if( (val.isMasqueradable && val.apiUrl === monster.apps.accounts.apiUrl) || key === 'auth' ) {
+				if( val.isMasqueradable || key === 'auth') {
+					val.accountId = accountId;
+				}
+			});
+		},
+
+		restoreMasquerading: function(args) {
+			var self = this,
+				callback = args.callback;
+
+			monster.apps.auth.currentAccount = $.extend(true, {}, monster.apps.auth.originalAccount);
+			self.updateApps(monster.apps.auth.originalAccount.id);
+
+			monster.pub('myaccount.renderNavLinks');
+			$('#main_topbar_account_toggle').removeClass('masquerading');
+
+			toastr.info(self.i18n.active().restoreMasquerading);
+
+			callback && callback();
 		},
 
 		displayVersion: function(container) {

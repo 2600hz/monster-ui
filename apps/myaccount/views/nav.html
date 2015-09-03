@@ -1,24 +1,3 @@
-{{#if isMasquerading}}
-<li class="myaccount-common-link" id="main_topbar_switch_masquerade" tabindex="0">
-	<a href="#" class="links cell" id="main_topbar_leave_masquerade">
-		<div class="cell-text">{{i18n.isMasquerading.switchBackTo}}</div>
-		<div class="cell-text">{{i18n.isMasquerading.myAccount}}</div>
-	</a>
-	{{#if parentsList.length}}
-	<div id="main_topbar_masquerade_links">
-		{{#each parentsList}}
-		<div data-id="{{id}}">{{name}}</div>
-		{{/each}}
-	</div>
-	{{/if}}
-</li>
-<li class="myaccount-common-link" id="main_topbar_myaccount">
-	<a href="#" class="links cell" id="main_topbar_myaccount_masquerade_link">
-		<div class="cell-text">{{i18n.isMasquerading.currentlyViewing}}</div>
-		<div class="cell-text" id="main_topbar_myaccount_masquerade_label">{{name}}</div>
-	</a>
-</li>
-{{else}}
 <li class="myaccount-common-link" id="main_topbar_myaccount">
 	<a href="#" class="links{{#compare showMyaccount '===' false}} disalbed{{/compare}}">
 		<span class="inline-text" id="main_topbar_myaccount_user">{{name}}</span>
@@ -27,4 +6,3 @@
 	{{/compare}}
 	</a>
 </li>
-{{/if}}

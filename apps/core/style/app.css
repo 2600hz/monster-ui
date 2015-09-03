@@ -154,6 +154,12 @@ body,
 		padding-right: 10px;
 		padding-left: 10px;
 	}
+
+	/* Needed to allow enough space for the account toggle */
+	#main_topbar #main_topbar_myaccount {
+		min-width: 118px;
+		text-align: center;
+	}
 }
 @media (max-width: 999px) {
 	#main_topbar #main_topbar_brand {
@@ -169,6 +175,135 @@ body,
 	#main_topbar #main_topbar_myaccount_masquerade_link {
 		max-width: 160px;
 	}
+}
+
+/***** Account Toggle *****/
+#main_topbar #main_topbar_account_toggle.open {
+	background-color: #202029;
+}
+#main_topbar #main_topbar_account_toggle.open #main_topbar_account_toggle_link i {
+	color: #22a5ff;
+}
+#main_topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
+	display: none;
+}
+
+#main_topbar #main_topbar_account_toggle_container {
+	position: absolute;
+	z-index: 21; /* 1 more than myAccount */
+}
+
+#main_topbar #main_topbar_account_toggle_container .account-browser-container {
+	background-color: #202029;
+	width: 220px;
+	padding: 1px;
+	border-right: none;
+}
+#main_topbar #main_topbar_account_toggle_container .search-box {
+	width: auto;
+	padding: 10px;
+	border-bottom: none;
+}
+#main_topbar #main_topbar_account_toggle_container .search-box i {
+	color: #c0c0c9;
+	margin: 8px 0 0 8px;
+}
+#main_topbar #main_topbar_account_toggle_container .search-box .search-query {
+	background-color: #404049;
+	color: #c0c0c9;
+	box-sizing: border-box;
+	width: 100%;
+	border-radius: 0px;
+	border: solid 1px #909099;
+	box-shadow: none;
+	height: 30px;
+}
+#main_topbar #main_topbar_account_toggle_container .account-list-container {
+	width: 440px;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list,
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-slider {
+	width: 220px;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element {
+	border-color: #202029;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element > div {
+	background: #303039;
+	color: #c0c0c9;
+	border-color: #202029;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
+	font-size: 14px;
+}
+#main_topbar #main_topbar_account_toggle_container .account-children-link i:before {
+	content: "\f054";
+	font-size: 10px;
+	color: #c0c0c9;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link {
+	color: #c0c0c9;
+	background: #202029;
+	border-color: #909099;
+	border-top: solid 1px;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link .account-search-value {
+	text-shadow: none;
+	font-weight: 700;
+}
+
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link {
+	line-height: 20px;
+	border: none;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link * {
+	color: #909099;
+	font-size: 12px;
+	vertical-align: middle;
+}
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link i:before {
+	content: "\f060";
+}
+
+#main_topbar #main_topbar_account_toggle_container .account-toggle-header {
+	background: #202029;
+	color: #c0c0c9;
+	padding: 10px 12px 0px 12px;
+	position: relative;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-label {
+	font-size: 12px;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-container {
+	pointer-events: none;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb {
+	text-shadow: none;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb:not(:last-child) {
+	display: none;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb .divider {
+	display: none;
+}
+#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumbs {
+	padding: 0;
+	background:  inherit;
+	border-radius: 0;
+	height: 20px;
+}
+#main_topbar #main_topbar_account_toggle_container .home-account-link {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	cursor: pointer;
+	color: #606069;
+}
+#main_topbar #main_topbar_account_toggle:not(.masquerading) .home-account-link {
+	display: none;
+}
+#main_topbar #main_topbar_account_toggle_container .home-account-link:hover {
+	color: #c0c0c9;
 }
 
 /************************************************************/
@@ -189,17 +324,17 @@ body,
 	left: 0;
 	-webkit-transform: translateX(-50%) translateY(-50%) rotate(315deg);
 	   -moz-transform: translateX(-50%) translateY(-50%) rotate(315deg);
-	    -ms-transform: translateX(-50%) translateY(-50%) rotate(315deg);
-	     -o-transform: translateX(-50%) translateY(-50%) rotate(315deg);
-	        transform: translateX(-50%) translateY(-50%) rotate(315deg);
+		-ms-transform: translateX(-50%) translateY(-50%) rotate(315deg);
+		 -o-transform: translateX(-50%) translateY(-50%) rotate(315deg);
+			transform: translateX(-50%) translateY(-50%) rotate(315deg);
 }
 .loading-wrapper.fixed-right {
 	right: 0;
 	-webkit-transform: translateX(50%) translateY(-50%) rotate(45deg);
 	   -moz-transform: translateX(50%) translateY(-50%) rotate(45deg);
-	    -ms-transform: translateX(50%) translateY(-50%) rotate(45deg);
-	     -o-transform: translateX(50%) translateY(-50%) rotate(45deg);
-	        transform: translateX(50%) translateY(-50%) rotate(45deg);
+		-ms-transform: translateX(50%) translateY(-50%) rotate(45deg);
+		 -o-transform: translateX(50%) translateY(-50%) rotate(45deg);
+			transform: translateX(50%) translateY(-50%) rotate(45deg);
 }
 .loading-wrapper.active {
 	display: block;
@@ -209,7 +344,7 @@ body,
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
-	        box-sizing: border-box;
+			box-sizing: border-box;
 	padding: .5em;
 	text-align: center;
 	vertical-align: middle;
@@ -224,13 +359,13 @@ body,
 	left: 80px;
 	-webkit-animation: half-spin 1s infinite;
 	   -moz-animation: half-spin 1s infinite;
-	     -o-animation: half-spin 1s infinite;
-	        animation: half-spin 1s infinite;
+		 -o-animation: half-spin 1s infinite;
+			animation: half-spin 1s infinite;
 }
 .loading-wrapper .line.inner {
 	-moz-animation: half-spin-reverse 1s infinite;
 	  -o-animation: half-spin-reverse 1s infinite;
-	     animation: half-spin-reverse 1s infinite;
+		 animation: half-spin-reverse 1s infinite;
 
 	webkit-animation: half-spin-reverse 1s infinite;
 }
