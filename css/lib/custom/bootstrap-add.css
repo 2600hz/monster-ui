@@ -191,6 +191,7 @@ table.table tr > td {
 	padding: 10px;
 	text-align: left;
 	background: #222;
+	white-space: pre-wrap;
 }
 i[data-toggle="tooltip"] {
 	cursor: default;
