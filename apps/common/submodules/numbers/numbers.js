@@ -24,10 +24,11 @@ define(function(require){
 		numbersRender: function(args){
 			var self = this,
 				container = args.container || $('#monster-content'),
-				callbackAfterRender = args.callbackAfterRender;
+				callbackAfterRender = args.callbackAfterRender,
+				viewType = args.viewType || 'manager';
 
-			self.numbersGetData(function(data) {
-				data.viewType = args.viewType || 'manager';
+			self.numbersGetData(viewType, function(data) {
+				data.viewType = viewType;
 				data = self.numbersFormatData(data);
 
 				var numbersView = $(monster.template(self, 'numbers-layout', data)),
@@ -176,8 +177,8 @@ define(function(require){
 		},
 
 		numbersBindEvents: function(parent, dataNumbers) {
-
 			var self = this,
+				listType = dataNumbers.viewType && dataNumbers.viewType === 'manager' ? 'full' : 'partial',
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
 					if(parent.find('.number-box.selected').size() > 0) {
@@ -241,7 +242,7 @@ define(function(require){
 							});
 
 							callback && callback();
-						});
+						}, listType);
 					}
 					else {
 						callback && callback();
@@ -926,14 +927,15 @@ define(function(require){
 			callback && callback();
 		},
 
-		numbersGetData: function(callback) {
-			var self = this;
+		numbersGetData: function(viewType, callback) {
+			var self = this,
+				listType = viewType && viewType === 'manager' ? 'full' : 'partial';
 
 			monster.parallel({
 					numbers: function(callback) {
 						self.numbersList(self.accountId, function(numbers) {
 							callback(null, numbers)
-						});
+						}, listType);
 					},
 					accounts: function(callback) {
 						self.numbersListAccounts(function(accounts) {
@@ -1065,7 +1067,7 @@ define(function(require){
 			});
 		},
 
-		numbersList: function(accountId, globalCallback) {
+		numbersList: function(accountId, globalCallback, pListType) {
 			var self = this;
 
 			monster.parallel({
@@ -1087,7 +1089,7 @@ define(function(require){
 					numbers: function(callback) {
 						self.numbersListNumbers(accountId, function(numbers) {
 							callback && callback(null, numbers);
-						});
+						}, pListType);
 					}
 				},
 				function(err, results) {
@@ -1198,11 +1200,14 @@ define(function(require){
 			});
 		},
 
-		numbersListNumbers: function(accountId, callback) {
-			var self = this;
+		// If view asking this list is the number manager, then we use the FULL list (with reserved, port_in numbers), otherwise, we just use the "in_service" filter 
+		numbersListNumbers: function(accountId, callback, pListType) {
+			var self = this,
+				type = pListType || 'partial',
+				apiName = type === 'partial' ? 'numbers.list' : 'numbers.listAll';
 
 			self.callApi({
-				resource: 'numbers.list',
+				resource: apiName,
 				data: {
 					accountId: accountId,
 					filters: { paginate:false }
