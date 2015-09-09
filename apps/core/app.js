@@ -285,15 +285,24 @@ define(function(require){
 				breadcrumbsContainer: $('#main_topbar_account_toggle_container .current-account-container'),
 				customClass: 'ab-dropdown',
 				addBackButton: true,
+				allowBackOnMasquerading: true,
 				onAccountClick: function(accountId, accountName) {
-					self.triggerMasquerading({
-						account: { id: accountId, name: accountName },
-						callback: function() {
-							var currentApp = monster.apps.getActiveApp();
-							if(currentApp in monster.apps) {
-								monster.apps[currentApp].render();
-							}
-							self.hideAccountToggle();
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: accountId
+						},
+						success: function(data, status) {
+							self.triggerMasquerading({
+								account: data.data,
+								callback: function() {
+									var currentApp = monster.apps.getActiveApp();
+									if(currentApp in monster.apps) {
+										monster.apps[currentApp].render();
+									}
+									self.hideAccountToggle();
+								}
+							});
 						}
 					});
 				}

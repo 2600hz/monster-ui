@@ -26,6 +26,7 @@ define(function(require){
 				onNewAccountClick = args.onNewAccountClick,
 				addCurrentAccount = args.addCurrentAccount || false,
 				addBackButton = args.addBackButton || false,
+				allowBackOnMasquerading = args.allowBackOnMasquerading || false, // needs addBackButton to be true, add back button up to original account when masquerading
 				callback = args.callback,
 				layout = $(monster.template(self, 'accountBrowser-layout', {
 					customClass: args.customClass || 'ab-sidebar',
@@ -43,6 +44,7 @@ define(function(require){
 					selectedId: selectedId,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					allowBackOnMasquerading: allowBackOnMasquerading,
 					callback: callback
 				});
 
@@ -85,6 +87,7 @@ define(function(require){
 					onNewAccountClick: onNewAccountClick,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					allowBackOnMasquerading: allowBackOnMasquerading,
 					searchLink: searchLink
 				});
 			} else {
@@ -121,6 +124,7 @@ define(function(require){
 				searchLink = args.searchLink,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				accountList = template.find('.account-list'),
 				isLoading = false,
 				loader = $('<li class="content-centered account-list-loader"> <i class="fa fa-spinner fa-spin"></i></li>');
@@ -186,6 +190,7 @@ define(function(require){
 					slide: true,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					allowBackOnMasquerading: allowBackOnMasquerading,
 					callback: function() {
 						if(breadcrumbsTemplate) {
 							var addBreadcrumb = function(_id, _name, _parentId) {
@@ -248,6 +253,7 @@ define(function(require){
 					self.accountBrowserRenderList({
 						container: template.find('.account-list-container'),
 						addBackButton: addBackButton,
+						allowBackOnMasquerading: allowBackOnMasquerading,
 						addCurrentAccount: addCurrentAccount
 					});
 				} else {
@@ -260,6 +266,7 @@ define(function(require){
 						slide: false,
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
+						allowBackOnMasquerading: allowBackOnMasquerading,
 						callback: function() {
 							template.find('.account-browser-search').prop('disabled', true);
 							accountList.prepend(searchLink);
@@ -339,6 +346,7 @@ define(function(require){
 						selectedId: parentId ? accountId : null,
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
+						allowBackOnMasquerading: allowBackOnMasquerading,
 						callback: function() {
 							onBreadcrumbClick && onBreadcrumbClick(accountId, parentId);
 						}
@@ -348,8 +356,10 @@ define(function(require){
 
 			if(addBackButton) {
 				accountList.on('click', '.account-previous-link', function() {
-					var currentAccountId = accountList.data('current') || self.accountId;
-					if(currentAccountId !== self.accountId) {
+					var currentAccountId = accountList.data('current') || self.accountId,
+						topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
+
+					if(currentAccountId !== topAccountId) {
 
 						self.callApi({
 							resource: 'account.listParents',
@@ -374,7 +384,8 @@ define(function(require){
 										container: template.find('.account-list-container'),
 										parentId: accountId,
 										addCurrentAccount: addCurrentAccount,
-										addBackButton: addBackButton
+										addBackButton: addBackButton,
+										allowBackOnMasquerading: allowBackOnMasquerading
 									});
 								}
 							}
@@ -397,11 +408,13 @@ define(function(require){
 				searchValue = args.searchValue,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				callback = args.callback,
 				apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
-				apiData = searchValue ? { accountName: searchValue } : { accountId: parentId };
+				apiData = searchValue ? { accountName: searchValue } : { accountId: parentId },
+				topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
 
-			if(parentId === self.accountId) {
+			if(parentId === topAccountId) {
 				addBackButton = false;
 			}
 

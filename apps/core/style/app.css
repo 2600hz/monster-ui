@@ -305,6 +305,9 @@ body,
 #main_topbar #main_topbar_account_toggle_container .home-account-link:hover {
 	color: #c0c0c9;
 }
+#main_topbar_account_toggle.masquerading ~ #main_topbar_myaccount i.fa:before {
+	content: "\f085";
+}
 
 /************************************************************/
 /********************** LOADING SPINNER *********************/
