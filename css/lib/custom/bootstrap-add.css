@@ -140,10 +140,15 @@ table.table > thead > th {
 	background-color: #999;
 	text-shadow: 1px 1px 1px #666;
 }
-table.table > tbody > tr {
+
+table.table.mono-color > tbody > tr {
+	background: #FDFDFD;
+}
+
+table.table:not(.mono-color) > tbody > tr {
 	background: #eee;
 }
-table.table > tbody > tr:nth-child(odd) {
+table.table:not(.mono-color) > tbody > tr:nth-child(odd) {
 	background: #fdfdfd;
 }
 table.table tr > td {
@@ -283,6 +288,22 @@ a:not(.monster-link):hover {
 }
 .dropdown-menu i {
 	margin-right: 10px;
+}
+
+.progress .bar {
+	box-shadow: none;
+}
+
+.progress-success .bar, .progress .bar-success {
+	background: #4C4;
+}
+
+.progress-danger .bar, .progress .bar-danger {
+	background: #ee1212;
+}
+
+.progress-warning .bar, .progress .bar-warning {
+	background: #ffc40d;
 }
 
 .btn {
