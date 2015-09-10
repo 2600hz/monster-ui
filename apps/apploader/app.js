@@ -390,18 +390,19 @@ define(function(require){
 							updateUserApps = false,
 							appList = [], // List of apps available for this user, to be return
 							isAppInstalled = function(app) {
-								var appUsers = _.map(app.users||[], function(val) { return val.id });
-								if (app &&
-									app.allowed_users && 
-									(
-										(app.allowed_users === 'all') ||
-										(app.allowed_users === 'admins' && currentUser.priv_level === 'admin') ||
-										(app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
-									)) {
-									return true;
-								} else {
-									return false;
+								if(app) {
+									var appUsers = _.map(app.users||[], function(val) { return val.id });
+									if (app &&
+										app.allowed_users && 
+										(
+											(app.allowed_users === 'all') ||
+											(app.allowed_users === 'admins' && currentUser.priv_level === 'admin') ||
+											(app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
+										)) {
+										return true;
+									}
 								}
+								return false;
 							};
 
 						userApps = _.filter(userApps, function(appId) {
