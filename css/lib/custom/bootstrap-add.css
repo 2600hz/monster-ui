@@ -133,6 +133,7 @@ input[type="color"],
 .search-box .search-query {
 	padding-left: 26px;
 	border-radius: 0;
+	height: 24px;
 	width: 150px;
 }
 
