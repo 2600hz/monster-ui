@@ -91,15 +91,15 @@ define(function(require){
 			});
 
 			settings.error = function requestError (error, one, two, three) {
+				var parsedError = error;
+
 				monster.pub('monster.requestEnd');
 
+				if('response' in error && error.response) {
+					parsedError = $.parseJSON(error.response);
+				}
+
 				if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
-					var parsedError = error;
-
-					if('response' in error && error.response) {
-						parsedError = $.parseJSON(error.response);
-					}
-
 					monster.ui.charges(parsedError.data, function() {
 						options.acceptCharges = true;
 						monster.request(options);

@@ -137,6 +137,9 @@ define(function(require){
 			$('#main .footer-wrapper').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
 			self.appFlags.mainContainer.empty();
 
+			//Adding the authtoken to the Core app
+			monster.apps.core.authToken = data.auth_token;
+
 			self.afterLoggedIn();
 		},
 
