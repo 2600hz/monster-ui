@@ -121,10 +121,12 @@ input[type="color"],
 }
 .search-box > i.fa-search {
 	position: absolute;
-	margin: 4px 0 0 8px;
+	margin: 8px 0 0 8px;
 }
 .search-box .search-query {
 	padding-left: 26px;
+	border-radius: 0;
+	width: 150px;
 }
 
 /***************** TABLE ****************/
