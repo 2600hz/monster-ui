@@ -393,8 +393,7 @@ define(function(require){
 							function() {
 								self.balanceTurnOffTopup(function() {
 									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
-									autoRecharge = false;
-									//autoRecharge = 'recharge' in dataLimits.data ? dataLimits.data.recharge.enabled || false : false;
+									parent.dialog('close');
 								})
 							},
 							function() {
@@ -417,7 +416,7 @@ define(function(require){
 
 				if(dataTopUp.threshold && dataTopUp.amount) {
 					self.balanceUpdateTopUp(dataTopUp, function() {
-						autoRecharge = true;
+						parent.dialog('close');
 						toastr.success(self.i18n.active().balance.autoRechargeEnabled);
 					});
 				}
