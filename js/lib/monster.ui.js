@@ -111,8 +111,8 @@ define(function(require){
 		}
 	});
 
-	Handlebars.registerHelper('toFriendlyDate', function(timestamp, format) {
-		return monster.util.toFriendlyDate(timestamp, format);
+	Handlebars.registerHelper('toFriendlyDate', function(timestamp, format, user, isGregorian) {
+		return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
 	});
 
 	Handlebars.registerHelper('formatPrice', function(price, decimals) {
