@@ -235,9 +235,6 @@ define(function(require){
 				if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
 					_template = name.substring(1);
 				}
-				else if($(name).length){ // template is in the dom. eg. <script type='text/html' />
-					_template = $(name).html();
-				}
 				else{
 					monster.pub('monster.requestStart');
 
