@@ -1607,10 +1607,10 @@ define(function(require){
 		 * @param  {Object} thisArg Context used when calling onClick callback for each tab
 		 * @param  {Object} menus   List of tabs per menu to display
 		 */
-		generateAppsNavbar: function(thisArg, menus) {
+		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
 				parent = $('#monster-content'),
-				navbarTemplate = monster.template(monster.apps.core, 'monster-apps-navbar', menus);
+				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus });
 
 			parent
 				.find('.app-navbar')
@@ -1652,20 +1652,20 @@ define(function(require){
 		 * @param  {Object} thisArg Context used when calling onClick callback for active tab
 		 * @param  {Object} args    List of options to render the navbar and layout template
 		 */
-		generateAppsLayout: function(thisArg, args) {
+		generateAppLayout: function(thisArg, args) {
 			var self = this,
 				parent = $('#monster-content'),
 				dataTemplate = {
 					appName: args.appName,
 					cssId: args.appName.toLowerCase().split(' ').join('_')
 				},
-				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-apps-layout', dataTemplate);
+				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate);
 
 			parent
 				.empty()
 				.append(layoutTemplate);
 
-			self.generateAppsNavbar(thisArg, args.menus);
+			self.generateAppNavbar(thisArg, args.menus);
 
 			args.menus[0].tabs[0].onClick.call(thisArg, {
 				parent: parent,
