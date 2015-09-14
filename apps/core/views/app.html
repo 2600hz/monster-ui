@@ -1,57 +1,55 @@
-<div>
-	<section>
-		<div class="loading-wrapper fixed-right">
-			<div class="line outer">
-				<div class="line inner"></div>
-			</div>
+<section>
+	<div class="loading-wrapper fixed-right">
+		<div class="line outer">
+			<div class="line inner"></div>
 		</div>
-
-		<div id="main_topbar">
-			<a href="#" class="links main-links" id="main_topbar_brand"></a>
-			<a href="#" class="links main-links" id="main_topbar_current_app"></a>
-			<ul class="nav" id="main_topbar_nav">
-				<li id="main_topbar_account_toggle">
-					<a href="#" class="links" id="main_topbar_account_toggle_link" data-original-title="{{i18n.accountToggle.toggleTooltip}}" data-placement="bottom" data-toggle="tooltip">
-						<i class="fa fa-sitemap"></i>
-					</a>
-					<div id="main_topbar_account_toggle_container">
-						<div class="account-toggle-header">
-							<div class="current-account-label">{{i18n.accountToggle.currentAccountLabel}}</div>
-							<div class="current-account-container"></div>
-							<i class="home-account-link fa fa-undo"></i>
-						</div>
-						<div class="account-toggle-content"></div>
-					</div>
-				</li>
-				<li id="main_topbar_apploader">
-					<a href="#" class="links" id="main_topbar_apploader_link" data-original-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip">
-						<i class="fa fa-th"></i>
-					</a>
-				</li>
-				<li id="main_topbar_signout">
-					<a href="#" class="links" id="main_topbar_signout_link">
-						<i class="fa fa-sign-out"></i>
-					</a>
-				</li>
-			</ul>
-		</div>
-
-		<div id="upload_progress">
-			<div class="upload-progress-overlay"></div>
-			<div class="upload-progress-content">
-				<div class="upload-progress-title">{{i18n.uploadProgressTitle}}</div>
-			</div>
-		</div>
-
-		<div class="monster-content" id="monster-content"></div>
-	</section>
-
-	<div class="footer-wrapper">
-		{{#unless hidePowered}}
-		<span class="powered-by">
-			<a href="http://www.2600hz.com/" target="_blank" id="powered">{{i18n.poweredBy}} 2600hz</a>
-			<span class="tag-version"></span>
-		</span>
-		{{/unless}}
 	</div>
+
+	<div id="main_topbar">
+		<a href="#" class="links main-links" id="main_topbar_brand"></a>
+		<a href="#" class="links main-links" id="main_topbar_current_app"></a>
+		<ul class="nav" id="main_topbar_nav">
+			<li id="main_topbar_account_toggle">
+				<a href="#" class="links" id="main_topbar_account_toggle_link" data-original-title="{{i18n.accountToggle.toggleTooltip}}" data-placement="bottom" data-toggle="tooltip">
+					<i class="fa fa-sitemap"></i>
+				</a>
+				<div id="main_topbar_account_toggle_container">
+					<div class="account-toggle-header">
+						<div class="current-account-label">{{i18n.accountToggle.currentAccountLabel}}</div>
+						<div class="current-account-container"></div>
+						<i class="home-account-link fa fa-undo"></i>
+					</div>
+					<div class="account-toggle-content"></div>
+				</div>
+			</li>
+			<li id="main_topbar_apploader">
+				<a href="#" class="links" id="main_topbar_apploader_link" data-original-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip">
+					<i class="fa fa-th"></i>
+				</a>
+			</li>
+			<li id="main_topbar_signout">
+				<a href="#" class="links" id="main_topbar_signout_link">
+					<i class="fa fa-sign-out"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div id="upload_progress">
+		<div class="upload-progress-overlay"></div>
+		<div class="upload-progress-content">
+			<div class="upload-progress-title">{{i18n.uploadProgressTitle}}</div>
+		</div>
+	</div>
+
+	<div class="monster-content" id="monster-content"></div>
+</section>
+
+<div class="footer-wrapper">
+	{{#unless hidePowered}}
+	<span class="powered-by">
+		<a href="http://www.2600hz.com/" target="_blank" id="powered">{{i18n.poweredBy}} 2600hz</a>
+		<span class="tag-version"></span>
+	</span>
+	{{/unless}}
 </div>

@@ -1600,6 +1600,77 @@ define(function(require){
 			.oncomplete(callback)
 			.onexit(callback)
 			.start();
+		},
+
+		/**
+		 * Render app menu and bind corresponding 'click' events with related callbacks
+		 * @param  {Object} thisArg Context used when calling onClick callback for each tab
+		 * @param  {Object} menus   List of tabs per menu to display
+		 */
+		generateAppsNavbar: function(thisArg, menus) {
+			var self = this,
+				parent = $('#monster-content'),
+				navbarTemplate = monster.template(monster.apps.core, 'monster-apps-navbar', menus);
+
+			parent
+				.find('.app-navbar')
+					.empty()
+					.append(navbarTemplate);
+
+			parent
+				.find('.app-menu-item-link')
+					.on('click', function() {
+						var $this = $(this),
+							menuId = $this.parents('.app-menu').data('menu_id'),
+							tabId = $this.data('tab_id');
+
+						if (!$this.hasClass('active')) {
+							parent
+								.find('.app-menu-item-link.active')
+									.removeClass('active');
+
+							$this.addClass('active');
+						}
+
+						parent
+							.find('.app-content-wrapper')
+								.fadeOut(function() {
+									$(this).empty();
+
+									menus[menuId].tabs[tabId].onClick.call(thisArg, {
+										parent: parent,
+										container: parent.find('.app-content-wrapper')
+									});
+								});
+					})
+				.first()
+					.addClass('active');
+		},
+
+		/**
+		 * Render a generique layout so each app has the same look
+		 * @param  {Object} thisArg Context used when calling onClick callback for active tab
+		 * @param  {Object} args    List of options to render the navbar and layout template
+		 */
+		generateAppsLayout: function(thisArg, args) {
+			var self = this,
+				parent = $('#monster-content'),
+				dataTemplate = {
+					appName: args.appName,
+					cssId: args.appName.toLowerCase().split(' ').join('_')
+				},
+				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-apps-layout', dataTemplate);
+
+			parent
+				.empty()
+				.append(layoutTemplate);
+
+			self.generateAppsNavbar(thisArg, args.menus);
+
+			args.menus[0].tabs[0].onClick.call(thisArg, {
+				parent: parent,
+				container: parent.find('.app-content-wrapper')
+			});
 		}
 	};
 
