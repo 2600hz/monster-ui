@@ -36,8 +36,6 @@ define(function(){
 
 			self._addAppI18n(app);
 
-			app.apiUrl = app.apiUrl || monster.config.api.default;
-
 			app.helpSettings = {
 				user: {
 					set: function(flagName, value, user) {
@@ -195,7 +193,7 @@ define(function(){
 					} else {
 						var apiSettings = $.extend({
 								authToken: app.authToken,
-								apiRoot: params.apiUrl || app.apiUrl || monster.config.api.default,
+								apiRoot: params.apiUrl || app.apiUrl,
 								uiMetadata: {
 									version: monster.config.version,
 									ui: 'monster-ui',
@@ -322,7 +320,8 @@ define(function(){
 				customKey = 'app-' + name,
 				requirePaths = {},
 				options = options || {},
-				externalUrl = options.sourceUrl || false;
+				externalUrl = options.sourceUrl || false,
+				apiUrl = monster.config.api.default;
 
 			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
 			if('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
@@ -332,6 +331,10 @@ define(function(){
 
 				if(storedApp && 'source_url' in storedApp) {
 					externalUrl = storedApp.source_url;
+				}
+
+				if(storedApp && storedApp.hasOwnProperty('api_url')) {
+					apiUrl = storedApp.api_url;
 				}
 			}
 
@@ -348,7 +351,7 @@ define(function(){
 			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
 			require([path], function(app){
-				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name]);
+				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
 
 				if(options && 'apiUrl' in options) {
 					app.apiUrl = options.apiUrl;
