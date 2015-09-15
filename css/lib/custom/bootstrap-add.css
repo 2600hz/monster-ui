@@ -23,6 +23,11 @@ input[type="color"],
 	border-radius: 0;
 }
 
+pre {
+	background: #f0f0f9 none repeat scroll 0 0;
+	border: 1px solid #999;
+}
+
 /************* DROPDOWN MENU *************/
 .nav .dropdown-toggle .caret {
 	border-top-color: whiteSmoke;
