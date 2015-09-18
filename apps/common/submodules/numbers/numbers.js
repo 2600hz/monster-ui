@@ -827,23 +827,27 @@ define(function(require){
 
 				self.numbersSearchAccount(searchString, function(data) {
 					if(data.account_id) {
-						displayNumberList(data.account_id, function() {
-							var section = viewList.find('[data-id="' + data.account_id + '"]'),
-								numberBox = section.find('[data-phonenumber="' + data.number + '"]');
+						if(_.find(dataNumbers.listAccounts, function(val) { return val.id === data.account_id})) {
+							displayNumberList(data.account_id, function() {
+								var section = viewList.find('[data-id="' + data.account_id + '"]'),
+									numberBox = section.find('[data-phonenumber="' + data.number + '"]');
 
-							if(numberBox.size() > 0) {
-								section.addClass('open');
-								monster.ui.highlight(numberBox, {
-									timer: 5000
-								});
-							}
-							else {
-								var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-									template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
+								if(numberBox.size() > 0) {
+									section.addClass('open');
+									monster.ui.highlight(numberBox, {
+										timer: 5000
+									});
+								}
+								else {
+									var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
+										template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
 
-								toastr.warning(template);
-							}
-						});
+									toastr.warning(template);
+								}
+							});
+						} else {
+							self.numbersRenderNumberPopup(searchString, data.account_id);
+						}
 					}
 				});
 			};
@@ -882,6 +886,103 @@ define(function(require){
 						searchListNumbers(val, usedList);
 					}
 				}
+			});
+		},
+
+		numbersRenderNumberPopup: function(number, accountId) {
+			var self = this;
+			self.numbersGetNumberPopupData({
+				number: number,
+				accountId: accountId,
+				callback: function(numberData) {
+					console.log(numberData)
+					var numberPopupTemplate = $(monster.template(self, 'numbers-searchResult', {
+							parents: numberData.parentAccounts.concat({
+								id: numberData.account.id,
+								name: numberData.account.name,
+								isAccountFound: true
+							}),
+							ownedBy: numberData.account.name,
+							usedBy: numberData.number.used_by ?  self.i18n.active().numbers[numberData.number.used_by] : undefined
+						})),
+						numberPopup = monster.ui.dialog(numberPopupTemplate, {
+							title: monster.util.formatPhoneNumber(numberData.number.id)
+						});
+
+					monster.ui.tooltips(numberPopupTemplate);
+
+					self.numbersBindNumberPopupEvents({
+						popup: numberPopup,
+						template: numberPopupTemplate,
+						data: numberData
+					});
+				}
+			});
+		},
+
+		numbersGetNumberPopupData: function(args) {
+			var self = this,
+				number = args.number,
+				accountId = args.accountId,
+				callback = args.callback;
+
+			monster.parallel({
+				number: function(parallelCallback) {
+					self.callApi({
+						resource: 'numbers.get',
+						data: {
+							accountId: accountId,
+							phoneNumber: number
+						},
+						success: function(data, status) {
+							parallelCallback(null, data.data);
+						}
+					});
+				},
+				account: function(parallelCallback) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: accountId
+						},
+						success: function(data, status) {
+							parallelCallback(null, data.data);
+						}
+					});
+				},
+				parentAccounts: function(parallelCallback) {
+					self.callApi({
+						resource: 'account.listParents',
+						data: {
+							accountId: accountId
+						},
+						success: function(data, status) {
+							parallelCallback(null, data.data);
+						}
+					});
+				}
+			}, function(err, results) {
+				callback && callback(results);
+			});
+		},
+
+		numbersBindNumberPopupEvents: function(args) {
+			var self = this,
+				popup = args.popup,
+				template = args.template,
+				numberData = args.data;
+
+			template.find('.account-name.masqueradable').on('click', function() {
+				monster.pub('core.triggerMasquerading', {
+					account: numberData.account,
+					callback: function() {
+						var currentApp = monster.apps.getActiveApp();
+						if(currentApp in monster.apps) {
+							monster.apps[currentApp].render();
+							popup.dialog('close');
+						}
+					}
+				});
 			});
 		},
 

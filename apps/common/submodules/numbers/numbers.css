@@ -8,15 +8,15 @@
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
 
-    background: #f9f9f9;
+	background: #f9f9f9;
 	border-left: 4px solid #E2E2E2;
 	border-right: 4px solid #E2E2E2;
 	border-bottom: 4px solid #E2E2E2;
-    border-radius: 4px;
+	border-radius: 4px;
 	font-size: 16px;
-    width: 100%;
+	width: 100%;
 
-    height: 80px;
+	height: 80px;
 }
 
 #numbers_container .top-box > .half-box {
@@ -26,31 +26,31 @@
 
 	border-top: 4px solid #ddd;
 	color: #333;
-    cursor: pointer;
-    font-size: 20px;
-    height: 80px;
+	cursor: pointer;
+	font-size: 20px;
+	height: 80px;
 	line-height: 65px;
-    padding: 5px 0px 5px 25px;
+	padding: 5px 0px 5px 25px;
 	width: 50%;
 }
 
 #numbers_container .top-box > .half-box:hover {
-    background: rgb(240,240,240); /* Old browsers */
-    background: -moz-linear-gradient(top,  rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(240,240,240,1)), color-stop(100%,rgba(249,249,249,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+	background: rgb(240,240,240); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(240,240,240,1)), color-stop(100%,rgba(249,249,249,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(240,240,240,1) 0%,rgba(249,249,249,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 
 #numbers_container .top-box > .half-box.selected  {
-    background: #fefefe;
+	background: #fefefe;
 	border-top: 4px solid #22a5ff;
-    box-shadow: inset 0 0 5px #cccccc;
+	box-shadow: inset 0 0 5px #cccccc;
 	color: #22a5ff;
-    font-weight: 600;
+	font-weight: 600;
 }
 
 #numbers_container .top-box > .half-box .count {
@@ -61,16 +61,16 @@
 
 #numbers_container .top-box > .half-box .help-popover {
 	background: none repeat scroll 0 0 #FAFAFA;
-    border-radius: 15px 15px 15px 15px;
-    box-shadow: 0 1px 1px #999999;
-    color: #999999;
-    font-size: 17px;
-    height: 20px;
-    line-height: 20px;
-    margin-right: 15px;
-    margin-top: 20px;
-    text-align: center;
-    width: 20px;
+	border-radius: 15px 15px 15px 15px;
+	box-shadow: 0 1px 1px #999999;
+	color: #999999;
+	font-size: 17px;
+	height: 20px;
+	line-height: 20px;
+	margin-right: 15px;
+	margin-top: 20px;
+	text-align: center;
+	width: 20px;
 
 	float: right;
 }
@@ -91,8 +91,8 @@
 #numbers_container .account-section .numbers-wrapper .number-box {
 	position: relative;
 	border: 1px solid #ccc;
-    border-bottom-width: 0px;
-    margin-top: -1px;
+	border-bottom-width: 0px;
+	margin-top: -1px;
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .number-options {
@@ -145,13 +145,13 @@
 
 #numbers_container .account-section .account-header {
 	background: #F2F2F2;
-    border-left: 1px solid #CCCCCC;
-    border-right: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
-    font-size: 18px;
-    height: 70px;
-    line-height: 70px;
-    padding-left: 10px;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	font-size: 18px;
+	height: 70px;
+	line-height: 70px;
+	padding-left: 10px;
 }
 
 #numbers_container .account-section .account-header:hover {
@@ -196,7 +196,7 @@
 
 #numbers_container .account-section .account-header .right-links a {
 	font-size: 14px;
-    white-space: nowrap;
+	white-space: nowrap;
 }
 
 #numbers_container .account-section .account-header .right-links > * {
@@ -213,7 +213,7 @@
 }
 
 #numbers_container .dropdown-toggle > i:hover {
-    color: #000;
+	color: #000;
 }
 
 #numbers_container .account-section .account-header input[type="checkbox"], #numbers_container .account-section .account-header .count {
@@ -244,11 +244,11 @@
 #numbers_container .account-section:nth-last-of-type(1) .account-header {
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-    border-bottom: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
 }
 
 #numbers_container .account-section:nth-last-of-type(1) .numbers-wrapper .number-box:nth-last-of-type(1) {
-    border-bottom-width: 1px;
+	border-bottom-width: 1px;
 }
 
 #numbers_container .actions-wrapper {
@@ -258,7 +258,7 @@
 }
 
 #numbers_container .actions-wrapper #trigger_links {
-    display: none;
+	display: none;
 }
 
 #numbers_container .buy-numbers-dropdown {
@@ -266,24 +266,24 @@
 }
 
 #numbers_container .actions-wrapper label{
-    font-size: 16px;
-    font-weight: 600;
+	font-size: 16px;
+	font-weight: 600;
 	margin-right: 20px;
 }
 
 #numbers_container .actions-wrapper a.action-number {
-    margin-right: 20px;
-    color: #666666;
-    white-space: nowrap;
-    text-decoration: none !important;
+	margin-right: 20px;
+	color: #666666;
+	white-space: nowrap;
+	text-decoration: none !important;
 }
 
 #numbers_container .actions-wrapper a.action-number:hover .action-text {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 #numbers_container .actions-wrapper a i{
-    margin-right: 5px;
+	margin-right: 5px;
 }
 
 #numbers_container .features i {
@@ -399,4 +399,54 @@
 .delete-confirmation-popup .actions {
 	padding-top: 20px;
 	text-align: center;
+}
+
+
+#numbers_search_result_popup {
+	padding: 20px;
+	min-width: 400px;
+}
+#numbers_search_result_popup > div:not(:first-child) {
+	margin-top: 20px;
+}
+
+#numbers_search_result_popup .account-tree {
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+	padding: 5px 10px;
+	line-height: 25px;
+}
+
+#numbers_search_result_popup .account-tree > .account-line .account-line {
+	margin-left:35px;
+	position: relative;
+}
+#numbers_search_result_popup .account-tree > .account-line .account-line:before {
+	position: absolute;
+	content: "";
+	border-width: 0px 0px 1px 1px;
+	border-style: solid;
+	border-color: #c0c0c9;
+	width: 10px;
+	height: 15px;
+	left: -25px;
+	top: -1px;
+}
+#numbers_search_result_popup .account-tree > .account-line .account-line:after {
+	position: absolute;
+	content: "";
+	left: -15px;
+	top: 11px;
+	border-top: 3px solid transparent;
+	border-left: 10px solid #c0c0c9;
+	border-bottom: 3px solid transparent;
+}
+
+#numbers_search_result_popup .account-tree .account-line .account-name {
+	display: inline-block;
+}
+
+#numbers_search_result_popup .account-tree .account-line .account-name.masqueradable {
+	color: #22a5ff;
+	cursor: pointer;
 }
