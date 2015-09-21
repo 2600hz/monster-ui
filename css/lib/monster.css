@@ -180,8 +180,8 @@ h1 {
 	height: 20px;
 	-webkit-animation: monster-splash-animation 1.5s;
 	   -moz-animation: monster-splash-animation 1.5s;
-	     -o-animation: monster-splash-animation 1.5s;
-	        animation: monster-splash-animation 1.5s;
+		 -o-animation: monster-splash-animation 1.5s;
+			animation: monster-splash-animation 1.5s;
 	border-radius: 50%;
 	background: rgba(32,32,41, .2);
 }
@@ -212,8 +212,8 @@ h1 {
 	cursor: pointer;
 	-webkit-user-select: none;
 	   -moz-user-select: none;
-	    -ms-user-select: none;
-	        user-select: none;
+		-ms-user-select: none;
+			user-select: none;
 
 	-webkit-touch-callout: none;
 }
@@ -232,8 +232,8 @@ h1 {
 	padding: 4px 14px;
 	-webkit-transition: all .4s ease-out;
 	   -moz-transition: all .4s ease-out;
-	     -o-transition: all .4s ease-out;
-	        transition: all .4s ease-out;
+		 -o-transition: all .4s ease-out;
+			transition: all .4s ease-out;
 	text-align: center;
 	color: #909099;
 	border: solid 1px #c0c0c9;
@@ -248,8 +248,8 @@ h1 {
 	height: 22px;
 	-webkit-transition: all .2s ease-out;
 	   -moz-transition: all .2s ease-out;
-	     -o-transition: all .2s ease-out;
-	        transition: all .2s ease-out;
+		 -o-transition: all .2s ease-out;
+			transition: all .2s ease-out;
 	border: solid 1px #c0c0c9;
 	border-radius: 15px;
 	background: #f0f0f9;
@@ -360,9 +360,9 @@ label[class*='monster-checkbox'] > i:after {
 	content: '';
 	-webkit-transform: rotate(-45deg);
 	   -moz-transform: rotate(-45deg);
-	    -ms-transform: rotate(-45deg);
-	     -o-transform: rotate(-45deg);
-	        transform: rotate(-45deg);
+		-ms-transform: rotate(-45deg);
+		 -o-transform: rotate(-45deg);
+			transform: rotate(-45deg);
 	opacity: 0;
 	border: 3px solid #fff;
 	border-top: none;
@@ -690,6 +690,10 @@ label[class*='monster-radio'].prepend-label > span {
 	background-image:      -o-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 	background-image:         linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
 }
+.container-menu > .left-menu .category.loading {
+	opacity: 0.5;
+	cursor: default;
+}
 .container-menu > .left-menu .category:hover {
 	background: #eee;
 }
@@ -779,8 +783,8 @@ label[class*='monster-radio'].prepend-label > span {
 		width: 59px;
 		-webkit-transition: width .5s;
 		   -moz-transition: width .5s;
-		     -o-transition: width .5s;
-		        transition: width .5s;
+			 -o-transition: width .5s;
+				transition: width .5s;
 	}
 	.container-menu:not(.not-responsive) > .left-menu .category {
 		padding: 15px !important;
@@ -794,8 +798,8 @@ label[class*='monster-radio'].prepend-label > span {
 		margin-left: 81px;
 		-webkit-transition: margin .5s;
 		   -moz-transition: margin .5s;
-		     -o-transition: margin .5s;
-		        transition: margin .5s;
+			 -o-transition: margin .5s;
+				transition: margin .5s;
 	}
 }
 
