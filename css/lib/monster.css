@@ -1001,3 +1001,74 @@ label[class*='monster-radio'].prepend-label > span {
 .monster-default-app-icon {
 	background-image: url('../assets/defaultAppIcon.png');
 }
+
+/************************************************************/
+/********************** MONSTER TABLES **********************/
+/************************************************************/
+
+table.monster-table {
+	width: 100%;
+	margin-top: 30px;
+	border: 1px solid #c0c0c9;
+}
+
+table.monster-table thead {
+	border-bottom: 1px solid #c0c0c9;
+	background-color: #f0f0f9;
+}
+table.monster-table thead tr::before {
+	display: table-cell;
+	width: 2%;
+	content: '';
+}
+table.monster-table thead tr::after {
+	display: table-cell;
+	width: 2%;
+	content: '';
+}
+table.monster-table thead th {
+	font-weight: 600;
+	height: 45px;
+	text-align: left;
+	color: #909099;
+}
+
+table.monster-table tbody {
+	background-color: #fff;
+}
+table.monster-table tbody tr {
+	height: 66px;
+}
+table.monster-table tbody tr::before {
+	display: table-cell;
+	width: 2%;
+	content: '';
+	border-bottom: 1px solid transparent;
+}
+table.monster-table tbody tr::after {
+	display: table-cell;
+	width: 2%;
+	content: '';
+	border-bottom: 1px solid transparent;
+}
+table.monster-table tbody tr:last-child::before,
+table.monster-table tbody tr:last-child::after {
+	border-bottom: 0;
+}
+table.monster-table td {
+	border-bottom: 1px solid #c0c0c9;
+}
+table.monster-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+table.monster-table td:last-child {
+	text-align: right;
+}
+table.monster-table .actions .action-item {
+	margin-left: 10px;
+	padding: 5px;
+	cursor: pointer;
+}
+table.monster-table .actions .action-item:first-child {
+	margin-left: 0;
+}
