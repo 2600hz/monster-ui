@@ -3,6 +3,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 
 ### Methods
 * [alert()][alert]
+* [codecSelector()][codecSelector]
 * [confirm()][confirm]
 * [datepicker()][datepicker]
 * [dialog()][dialog]
@@ -23,6 +24,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 [table]: ui/table.md
 
 [alert]: ui/alert().md
+[codecSelector]: ui/codecSelector().md
 [confirm]: ui/confirm().md
 [datepicker]: ui/datepicker().md
 [dialog]: ui/dialog().md
