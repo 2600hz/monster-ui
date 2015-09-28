@@ -553,7 +553,7 @@ define(function(require){
 			self.showMyAccount(function() {
 				self.showGreetingWalkthrough(function() {
 					self.renderStepByStepWalkthrough(template, callback);
-				});
+				}, callback);
 			});
 		},
 
@@ -573,7 +573,7 @@ define(function(require){
 			});
 		},
 
-		showGreetingWalkthrough: function(callback) {
+		showGreetingWalkthrough: function(callback, callbackClose) {
 			var self = this,
 				popup = $(monster.template(self, 'walkthrough-greetingsDialog'));
 
@@ -585,6 +585,11 @@ define(function(require){
 
 			var dialog = monster.ui.dialog(popup, {
 				title: self.i18n.active().walkthrough.greetingsDialog.title
+			});
+
+			// Update the flag of the walkthrough is they don't care about it
+			dialog.siblings().find('.ui-dialog-titlebar-close').on('click', function() {
+				callbackClose && callbackClose()
 			});
 		},
 
