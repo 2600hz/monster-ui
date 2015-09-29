@@ -454,22 +454,27 @@ define(function(require){
 			container.find('.comments').on('click', '.delete-comment', function() {
 				var el = $(this),
 					comment = el.parents('.comment'),
-					id = el.data('id');
-
-				monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
-					comments.forEach(function(v, i, a) {
-						if (v.timestamp === id) {
-							comments.splice(i, 1);
-						}
+					id = el.data('id'),
+					index = _.findIndex(comments, function(val) {
+						return val.timestamp === id;
 					});
 
-					data.comments = comments;
+				monster.ui.confirm(self.i18n.active().port.infoPopup.confirm.deleteComment, function() {
+					// comments.forEach(function(v, i, a) {
+					// 	if (v.timestamp === id) {
+					// 		comments.splice(i, 1);
+					// 	}
+					// });
 
-					self.portRequestUpdate(accountId, data.id, data, function(data) {
+					// data.comments = comments;
+
+					// self.portRequestUpdate(accountId, data.id, data, function(data) {
+					self.portRequestDeleteComment(accountId, data.id, index, function(newComments) {
+						comments = newComments;
 						comment.fadeOut('400', function() {
 							$(this).remove();
 
-							if (_.isEmpty(data.comments)) {
+							if (container.find('.comment').length === 0) {
 								container.find('.comments').slideUp();
 							}
 
@@ -479,7 +484,7 @@ define(function(require){
 				});
 			});
 
-			container.find('.actions .btn-success').on('click', function() {
+			container.find('.actions .add-comment').on('click', function() {
 				var currentUser = monster.apps.auth.currentUser,
 					newComment = {
 						user_id: self.userId,
@@ -488,10 +493,11 @@ define(function(require){
 						superduper_comment: container.find('#superduper_comment').is(':checked')
 					};
 
-				comments.push(newComment);
-				data.comments = comments;
+				// comments.push(newComment);
+				// data.comments = comments;
 
-				self.portRequestUpdate(accountId, data.id, data, function() {
+				self.portRequestAddComment(accountId, data.id, newComment, function(newComments) {
+					comments = newComments;
 					newComment.author = currentUser.first_name.concat(' ', currentUser.last_name);
 					newComment.isAdmin = monster.apps.auth.originalAccount.superduper_admin;
 
@@ -510,6 +516,41 @@ define(function(require){
 
 					container.find('.wysiwyg-editor').empty();
 				});
+			});
+		},
+
+		portRequestAddComment: function(accountId, portRequestId, comment, callback) {
+			var self = this,
+				commentData = {
+					comments: _.isArray(comment) ? comment : [comment]
+				};
+
+			self.callApi({
+				resource: 'port.addComment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					data: commentData
+				},
+				success: function(data, status) {
+					callback && callback(data.data && data.data.comments);
+				}
+			});
+		},
+
+		portRequestDeleteComment: function(accountId, portRequestId, commentId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.deleteComment',
+				data: {
+					accountId: accountId,
+					portRequestId: portRequestId,
+					commentId: commentId
+				},
+				success: function(data, status) {
+					callback && callback(data.data && data.data.comments);
+				}
 			});
 		},
 

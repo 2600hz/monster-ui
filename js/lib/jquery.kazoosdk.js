@@ -285,7 +285,13 @@
 			'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 			'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 			'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
-			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' }
+			'changeState': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' },
+			'listComments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
+			'getComment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
+			'addComment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
+			'updateComment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
+			'deleteComment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
+			'deleteAllComments': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' }
 		},
 		registrations: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
