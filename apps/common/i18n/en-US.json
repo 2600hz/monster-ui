@@ -359,7 +359,11 @@
 			"all": "All",
 			"__comment": "UI-1690: Changing the filter buttons into a dropdown",
 			"__version": "v3.21",
-			"portState": "State:"
+			"portState": "State:",
+			"__comment": "UI-1786: Add search number feature to Port Manager",
+			"__version": "v3.22",
+			"searchANumber": "Search a number...",
+			"searchingFor": "Searching for"
 		},
 		"resumeOrder": {
 			"title": "Complete the following orders, one at a time!",
@@ -411,7 +415,10 @@
 				"submit": {
 					"document": "Please upload the signed LOA and the bill corresponding to the numbers you want to port"
 				},
-				"number": "One or more numbers you entered are not in the right format or are already listed!"
+				"numbers": "One or more numbers you entered are not in the right format or are already listed!",
+				"__comment": "UI-1786: Add search number feature to Port Manager",
+				"__version": "v3.22",
+				"number": "You did not entered a valid number!"
 			}
 		},
 		"__comment": "UI-1302: Add scheduled date when state is set to pending",

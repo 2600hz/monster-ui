@@ -315,7 +315,9 @@
 					"scheduledDate": "Date prévue",
 					"scheduledTime": "Heure prévue"
 				}
-			}
+			},
+			"searchANumber": "Cherchez un numéro...",
+			"searchingFor": "En train de chercher"
 		},
 		"resumeOrder":{
 			"title":"Compléter les demandes de transfert, un à la fois !",
@@ -367,7 +369,9 @@
 				"submit": {
 					"document": "Veuillez joindre la lettre d'autorisation signée ainsi que la facture correspondant aux numéros que vous souhaitez transférer"
 				},
-				"number": "Un ou plusieurs numéros saisis ne sont pas dans le bon format ou sont déjà listés !"
+				"numbers": "Un ou plusieurs numéros saisis ne sont pas dans le bon format ou sont déjà listés !",
+				"number": "Vous n'avez pas saisi un numéro valide !"
+
 			}
 		},
 		"noScheduledDate": "Aucune",

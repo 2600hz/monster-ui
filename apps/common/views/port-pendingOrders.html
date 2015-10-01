@@ -6,6 +6,18 @@
 				<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
 			</span>
 		</div>
+		<div class="search-header">
+			<div class="input-append pull-left">
+				<input class="span2" id="search_input" type="text" placeholder="{{i18n.port.pendingOrders.searchingANumber}}">
+				<button class="monster-button-success non-fixed search-numbers" type="button">
+					Go
+				</button>
+			</div>
+			<div class="alert alert-info pull-left hidden" id="search_indicator">
+				<button class="close" type="button">x</button>
+				{{i18n.port.pendingOrders.searchingFor}} <span id="number_searched"></span>
+			</div>
+		</div>
 	{{#if isLaunchedInAppMode}}
 		<div class="filter-options">
 			<div class="btn-toolbar">
