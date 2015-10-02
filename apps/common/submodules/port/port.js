@@ -209,6 +209,10 @@ define(function(require){
 							.find('.filter-options')
 								.show();
 
+						container
+							.find('.filter-select')
+								.val(self.defaultStateToDisplay);
+
 						self.portRenderPendingOrderListing(parent, accountId, self.defaultStateToDisplay);
 					});
 
