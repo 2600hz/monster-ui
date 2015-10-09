@@ -162,6 +162,60 @@ define(function(require){
 				self.portRenderAddNumber(parent, accountId);
 			});
 
+			container
+				.find('.search-numbers')
+					.on('click', function() {
+						var numberToSearch = container.find('#search_input').val();
+
+						if (/(\+1|1)?([0-9]{10})/.test(numberToSearch)) {
+							self.portSearchNumber({
+								data: {
+									accountId: accountId,
+									number: numberToSearch
+								},
+								success: function(data) {
+									container
+										.find('.filter-options')
+											.hide();
+
+									container
+										.find('#number_searched')
+											.text(monster.util.formatPhoneNumber(numberToSearch));
+
+									container
+										.find('#search_indicator')
+											.removeClass('hidden');
+
+									self.portRenderPendingOrderListing(parent, accountId, undefined, data);
+								}
+							});
+						}
+						else {
+							toastr.error(self.i18n.active().port.toastr.error.number);
+						}
+					});
+
+			container
+				.find('#search_indicator')
+					.on('click', function() {
+						$(this)
+							.addClass('hidden');
+
+						container
+							.find('#search_input')
+								.val('');
+
+						container
+							.find('.filter-options')
+								.show();
+
+						container
+							.find('.filter-select')
+								.val(self.defaultStateToDisplay);
+
+						self.portRenderPendingOrderListing(parent, accountId, self.defaultStateToDisplay);
+					});
+
 			container.find('.filter-options .btn-group:first-child .btn').on('click', function() {
 				var $this = $(this);
 				if (!$this.hasClass('active')) {
@@ -176,27 +230,35 @@ define(function(require){
 			});
 		},
 
-		portRenderPendingOrderListing: function (parent, accountId, state) {
+		portRenderPendingOrderListing: function (parent, accountId, state, dataSearch) {
 			var self = this,
-				container = parent.find('.accounts-list');
+				container = parent.find('.accounts-list'),
+				generateTemplate = function (data) {
+					var dataToTemplate = {
+							data: self.portFormatPendingOrderData(data)
+						},
+						template = $(monster.template(self, 'port-pendingOrdersList', dataToTemplate));
 
-			self.portListRequests(accountId, state, function (data) {
-				var dataToTemplate = {
-						data: self.portFormatPendingOrderData(data)
-					},
-					template = monster.template(self, 'port-pendingOrdersList', dataToTemplate);
+					container
+						.empty()
+						.append(template);
 
-				container
-					.empty()
-					.append(template);
+					if (!self.isLaunchedInAppMode || dataSearch) {
+						self.portToggleRequestsDisplay(container, accountId, 'requests', true);
+					}
 
-				if (!self.isLaunchedInAppMode) {
-					self.portToggleRequestsDisplay(template, accountId, 'requests', true);
-				}
+					self.portRenderDynamicCells(parent, data);
+					self.portBindPendingOrderListingEvents(parent, accountId, data);
+				};
 
-				self.portRenderDynamicCells(parent, data);
-				self.portBindPendingOrderListingEvents(parent, accountId, data);
-			});
+			if (dataSearch) {
+				generateTemplate(dataSearch);
+			}
+			else {
+				self.portListRequests(accountId, state, function (data) {
+					generateTemplate(data);
+				});
+			}
 		},
 
 		portBindPendingOrderListingEvents: function (parent, accountId, data) {
@@ -587,7 +649,7 @@ define(function(require){
 				});
 
 				if (numbersArray.length === 0) {
-					toastr.error(self.i18n.active().port.toastr.error.number);
+					toastr.error(self.i18n.active().port.toastr.error.numbers);
 
 					container.find('div.row-fluid')
 						.addClass('error');
@@ -655,7 +717,7 @@ define(function(require){
 				});
 
 				if (numbersArray.length === 0) {
-					toastr.error(self.i18n.active().port.toastr.error.number);
+					toastr.error(self.i18n.active().port.toastr.error.numbers);
 					container
 						.find('div#add_numbers')
 						.find('div.row-fluid')
@@ -1090,7 +1152,7 @@ define(function(require){
 					.text(elem.val());
 			});
 
-			container.find('confirm_order_save_link').on('click', function() {
+			container.find('#confirm_order_save_link').on('click', function() {
 				var notificationEmailFormData = monster.ui.getFormData('notification_email_form', '.', true),
 					temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
 					transferDateFormData = monster.ui.getFormData('transfer_date_form');
@@ -1172,6 +1234,54 @@ define(function(require){
 		},
 
 		/* Methods */
+		portSearchNumber: function(args) {
+			var self = this,
+				accountId = args.data.accountId,
+				number = args.data.number;
+
+			monster.parallel({
+					account: function(callback) {
+						self.portRequestSearchNumber(accountId, number, function (data) {
+							callback(null, data);
+						});
+					},
+					descendants: function(callback) {
+						if (self.isLaunchedInAppMode) {
+							self.portRequestSearchNumberByDescendants(accountId, number, function (data) {
+								callback(null, data);
+							});
+						}
+						else {
+							callback(null, []);
+						}
+					}
+				},
+				function(err, results) {
+					var requests = results.account.concat(results.descendants);
+
+					// TODO: Remove this block once KAZOO-4248 is resolved
+					if (requests.length > 1) {
+						requests = _.uniq(requests, function(val, idx) {
+							return val.id;
+						});
+					}
+
+					if (requests.length === 1) {
+						self.portRequestGetAccount(requests[0].account_id, function (account) {
+							args.success([{
+								account_id: requests[0].account_id,
+								account_name: account.name,
+								port_requests: requests
+							}]);
+						});
+					}
+					else {
+						args.success([]);
+					}
+				}
+			);
+		},
+
 		portListRequests: function(accountId, state, callback) {
 			var self = this;
 
@@ -1896,6 +2006,59 @@ define(function(require){
 
 			self.callApi({
 				resource: 'user.list',
+				data: {
+					accountId: accountId
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestSearchNumber: function(accountId, number, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.searchNumber',
+				data: {
+					accountId: accountId,
+					number: number
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestSearchNumberByDescendants: function(accountId, number, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.searchNumberByDescendants',
+				data: {
+					accountId: accountId,
+					number: number
+				},
+				success: function(data, status) {
+					callbackSuccess && callbackSuccess(data.data);
+				},
+				error: function(data, status) {
+					callbackError && callbackError();
+				}
+			});
+		},
+
+		portRequestGetAccount: function(accountId, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
 				data: {
 					accountId: accountId
 				},

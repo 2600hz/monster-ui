@@ -236,6 +236,23 @@ div#orders_list .list-header > span.pull-right i {
 	font-size: 20px;
 }
 
+div#orders_list .search-header::after {
+	display: block;
+	content: '';
+	clear: both;
+}
+
+div#orders_list .search-header input {
+	height: 24px;
+}
+
+div#orders_list .search-header .alert {
+	cursor: pointer;
+	margin-left: 20px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
 div#orders_list .filter-options .btn {
 	padding-right: 10px;
 	padding-left: 10px;
