@@ -171,7 +171,7 @@ define(function(require){
 		};
 
 		for(var i=0; i<arguments.length-1; i++) {
-			if(_.isString(arguments[i])) {
+			if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
 				switch(arguments[i]) {
 					case 'large-radio':
 					case 'radio-large':
