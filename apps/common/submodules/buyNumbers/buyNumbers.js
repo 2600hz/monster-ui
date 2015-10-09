@@ -76,10 +76,11 @@ define(function(require){
 					"local": true,
 					"toll_free": [
 						800,
-						888,
-						877,
+						844,
+						855,
 						866,
-						855
+						877,
+						888
 					],
 					"vanity": true,
 					"prefix": 1,
