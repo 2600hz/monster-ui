@@ -895,7 +895,6 @@ define(function(require){
 				number: number,
 				accountId: accountId,
 				callback: function(numberData) {
-					console.log(numberData)
 					var numberPopupTemplate = $(monster.template(self, 'numbers-searchResult', {
 							parents: numberData.parentAccounts.concat({
 								id: numberData.account.id,

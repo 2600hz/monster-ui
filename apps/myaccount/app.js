@@ -593,7 +593,6 @@ define(function(require){
 		},
 
 		showEndWalkthrough: function(callback) {
-			console.log('show end walktrhough');
 			var self = this,
 				popup = $(monster.template(self, 'walkthrough-endDialog'));
 

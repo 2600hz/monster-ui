@@ -542,5 +542,9 @@
 		"toggleTooltip": "Account Jump"
 	},
 	"triggerMasquerading": "You are now masquerading the account \"{{accountName}}\".",
-	"restoreMasquerading": "You are not masquerading anymore."
+	"restoreMasquerading": "You are not masquerading anymore.",
+
+	"__comment": "UI-1814: Adding warning for app we can't masquerade",
+	"__version": "3.22",
+	"noMasqueradingAllowed": "We are redirecting you to your \"Apps\" page because the app you were using doesn't allow \"Account Jumping\"."
 }

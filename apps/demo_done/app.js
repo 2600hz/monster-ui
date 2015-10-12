@@ -82,7 +82,6 @@ define(function(require){
 		bindSocketsEvents: function(template, globalData) {
 			var self = this,
 				addEvent = function(data) {
-					console.log(data);
 					var formattedEvent = self.formatEvent(data),
 						eventTemplate = monster.template(self, 'event', formattedEvent);
 

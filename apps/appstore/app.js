@@ -201,8 +201,6 @@ define(function(require){
 			var self = this,
 				userList = $.extend(true, [], appstoreData.users);
 
-			console.log(appstoreData)
-
 			self.callApi({
 				resource: 'appsStore.get',
 				data: {
