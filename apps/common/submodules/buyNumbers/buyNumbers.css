@@ -104,8 +104,13 @@
 }
 
 #buy_number #tollfree_radio_group label {
-	line-height: 30px;
+	line-height: 20px;
 	margin-bottom: 0;
+	margin-left: 20px;
+}
+
+#buy_number #tollfree_radio_group label:first-child {
+	margin-left: 0;
 }
 
 #buy_number #tollfree_radio_group label:first-child input {

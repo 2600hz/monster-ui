@@ -34,10 +34,12 @@ define(function(require){
 			'common.buyNumbers': 'buyNumbersRender'
 		},
 
-		searchLimit: 15,
-		selectedCountryCode: "US",
-		isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
-		isSelectedNumbersEmpty: true,
+		appFlags: {
+			searchLimit: 15,
+			selectedCountryCode: "US",
+			isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
+			isSelectedNumbersEmpty: true
+		},
 
 		buyNumbersRender: function(params) {
 			var self = this,
@@ -74,10 +76,11 @@ define(function(require){
 					"local": true,
 					"toll_free": [
 						800,
-						888,
-						877,
+						844,
+						855,
 						866,
-						855
+						877,
+						888
 					],
 					"vanity": true,
 					"prefix": 1,
@@ -91,7 +94,7 @@ define(function(require){
 				searchType = args.searchType,
 				availableCountries = args.availableCountries,
 				template = $(monster.template(self, 'buyNumbers-layout', {
-					isPhonebookConfigured: self.isPhonebookConfigured
+					isPhonebookConfigured: self.appFlags.isPhonebookConfigured
 				}));
 
 
@@ -137,7 +140,7 @@ define(function(require){
 				searchResultDiv = container.find('#search_result_div'),
 				resultDiv = searchResultDiv.find('.left-div'),
 				purchaseNumbers = function() {
-					var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.selectedCountryCode].prefix),
+					var numbers = self.buyNumbersSelectedNumbersToArray(args.selectedNumbers, args.availableCountries[self.appFlags.selectedCountryCode].prefix),
 						processingDiv = container.find('#processing_purchase_div');
 					
 					processingDiv.show();
@@ -182,7 +185,7 @@ define(function(require){
 								.removeClass('disabled')
 								.prop('disabled', false);
 						});
-						self.isSelectedNumbersEmpty = true;
+						self.appFlags.isSelectedNumbersEmpty = true;
 						container
 							.find('#single_select_info')
 								.removeClass('hidden');
@@ -203,7 +206,7 @@ define(function(require){
 							.addClass('disabled')
 							.prop('disabled', true);
 					});
-					self.isSelectedNumbersEmpty = false;
+					self.appFlags.isSelectedNumbersEmpty = false;
 						container
 							.find('#single_select_info')
 								.addClass('hidden');
@@ -233,9 +236,9 @@ define(function(require){
 					// 	resource: 'buyNumbers.getStatus',
 					// 	data: {
 					// 		accountId: self.assignedAccountId,
-					// 		country: self.selectedCountryCode,
+					// 		country: self.appFlags.selectedCountryCode,
 					// 		data: $.map(args.selectedNumbers, function(val) {
-					// 			return args.availableCountries[self.selectedCountryCode].prefix + val.number_value;
+					// 			return args.availableCountries[self.appFlags.selectedCountryCode].prefix + val.number_value;
 					// 		})
 					// 	},
 					// 	success: function(_data, _status) {
@@ -249,7 +252,7 @@ define(function(require){
 					// 			});
 
 					// 			args.selectedNumbers = $.grep(args.selectedNumbers, function(value, index) {
-					// 				if($.inArray(args.availableCountries[self.selectedCountryCode].prefix + value.number_value, tmpUnavailableNumbers) >= 0) {
+					// 				if($.inArray(args.availableCountries[self.appFlags.selectedCountryCode].prefix + value.number_value, tmpUnavailableNumbers) >= 0) {
 					// 					unavailableNumbers.push(value);
 					// 					return false;
 					// 				}
@@ -329,7 +332,7 @@ define(function(require){
 				defaultSelectedIndex:0,
 				onSelected: function(data) {
 					// Country select generic code:
-					self.selectedCountryCode = data.selectedData.value;
+					self.appFlags.selectedCountryCode = data.selectedData.value;
 
 					// Country select specific code (should be set in switch above):
 					countrySelectFunction(data);
@@ -433,7 +436,7 @@ define(function(require){
 					number += $(v).val().toUpperCase();
 				});
 
-				switch(self.selectedCountryCode) {
+				switch(self.appFlags.selectedCountryCode) {
 					case "US":
 						countryValidation = (number.length === 10);
 						break;
@@ -499,7 +502,7 @@ define(function(require){
 						data: {
 							accountId: self.assignedAccountId,
 							data: {
-								numbers: ["+" + args.availableCountries[self.selectedCountryCode].prefix + number]
+								numbers: ["+" + args.availableCountries[self.appFlags.selectedCountryCode].prefix + number]
 							}
 						},
 						success: function(data) {
@@ -547,7 +550,7 @@ define(function(require){
 			// 		radioGroup.find('input:radio:first').prop('checked', true);
 			// 	}
 			// });
-			var tollfreePrefixes = availableCountries[self.selectedCountryCode].toll_free,
+			var tollfreePrefixes = availableCountries[self.appFlags.selectedCountryCode].toll_free,
 				radioGroup = container.find('#tollfree_radio_group');
 
 			radioGroup.empty()
@@ -589,12 +592,12 @@ define(function(require){
 							if(data && data.length > 0) {
 								$.each(data, function(key, value) {
 									var num = value.number,
-										prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
+										prefix = "+"+availableCountries[self.appFlags.selectedCountryCode].prefix;
 									if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 									args.displayedNumbers.push({
 										array_index: args.displayedNumbers.length,
 										number_value: num,
-										formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode)
+										formatted_value: self.buyNumbersFormatNumber(num, self.appFlags.selectedCountryCode)
 									});
 								});
 
@@ -619,7 +622,7 @@ define(function(require){
 				searchOffset = 0;
 				args.isSearchFunctionEnabled = true;
 				resultDiv.empty();
-				performSearch(searchOffset, self.searchLimit, function() {
+				performSearch(searchOffset, self.appFlags.searchLimit, function() {
 					self.buyNumbersRefreshDisplayedNumbersList(args);
 					self.buyNumbersRefreshSelectedNumbersList(args);
 				});
@@ -633,7 +636,7 @@ define(function(require){
 				var $this = $(this);
 				// Added a 20px offset to the scroll condition to avoid issues caused by zooming and low resolutions
 				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() >= $this[0].scrollHeight - $this.innerHeight() - 20) {
-					performSearch(searchOffset, self.searchLimit, function() {
+					performSearch(searchOffset, self.appFlags.searchLimit, function() {
 						self.buyNumbersRefreshDisplayedNumbersList(args);
 					});
 				}
@@ -751,7 +754,7 @@ define(function(require){
 								 + " " + cityInput : selectedCity + " ("+areacode+")")
 								 + (isSeqNumChecked ? " " + monster.template(self, '!'+self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : "");
 
-				if (self.isPhonebookConfigured && self.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
+				if (self.appFlags.isPhonebookConfigured && self.appFlags.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
 					self.buyNumbersRequestSearchAreaCodeByAddress({
 						data: {
 							address: parseInt(cityInput, 10)
@@ -771,7 +774,7 @@ define(function(require){
 							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
 						},
 					});
-				} else if(!areacode || (self.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
+				} else if(!areacode || (self.appFlags.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.noInputAlert);
 				} else if( isSeqNumChecked && !(seqNumIntvalue > 1) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.seqNumAlert);
@@ -783,7 +786,7 @@ define(function(require){
 							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 							self.buyNumbersRequestSearchBlockOfNumbers({
 								data: {
-									pattern: "+"+availableCountries[self.selectedCountryCode].prefix+areacode,
+									pattern: "+"+availableCountries[self.appFlags.selectedCountryCode].prefix+areacode,
 									size: seqNumIntvalue,
 									offset: _offset,
 									limit: _limit
@@ -793,7 +796,7 @@ define(function(require){
 										$.each(data, function(key, value) {
 											var startNum = value.start_number,
 												endNum = value.end_number,
-												prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
+												prefix = "+"+availableCountries[self.appFlags.selectedCountryCode].prefix;
 
 											if(startNum.indexOf(prefix) === 0) { startNum = startNum.substring(prefix.length); }
 											if(endNum.indexOf(prefix) === 0) { endNum = endNum.substring(prefix.length); }
@@ -801,7 +804,7 @@ define(function(require){
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
 												number_value: startNum + "_" + value.size,
-												formatted_value: self.buyNumbersFormatNumber(startNum, self.selectedCountryCode, endNum)
+												formatted_value: self.buyNumbersFormatNumber(startNum, self.appFlags.selectedCountryCode, endNum)
 											});
 										});
 
@@ -836,14 +839,14 @@ define(function(require){
 									if(data && data.length > 0) {
 										$.each(data, function(key, value) {
 											var num = value.number,
-												prefix = "+"+availableCountries[self.selectedCountryCode].prefix;
+												prefix = "+"+availableCountries[self.appFlags.selectedCountryCode].prefix;
 
 											if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
 												number_value: num,
-												formatted_value: self.buyNumbersFormatNumber(num, self.selectedCountryCode)
+												formatted_value: self.buyNumbersFormatNumber(num, self.appFlags.selectedCountryCode)
 											});
 										});
 
@@ -871,7 +874,7 @@ define(function(require){
 					searchOffset = 0;
 					args.isSearchFunctionEnabled = true;
 					resultDiv.empty();
-					performSearch(searchOffset, self.searchLimit, function() {
+					performSearch(searchOffset, self.appFlags.searchLimit, function() {
 						self.buyNumbersRefreshDisplayedNumbersList(args);
 						self.buyNumbersRefreshSelectedNumbersList(args);
 					});
@@ -894,7 +897,7 @@ define(function(require){
 				var $this = $(this);
 				// Added a 20px offset to the scroll condition to avoid issues caused by zooming and low resolutions
 				if(args.isSearchFunctionEnabled && !loadingNewNumbers && $this.scrollTop() >= $this[0].scrollHeight - $this.innerHeight() - 20) {
-					performSearch(searchOffset, self.searchLimit, function() {
+					performSearch(searchOffset, self.appFlags.searchLimit, function() {
 						self.buyNumbersRefreshDisplayedNumbersList(args);
 					});
 				}
@@ -971,7 +974,7 @@ define(function(require){
 			resultDiv.empty().append(searchResultsList);
 
 			if (args.singleSelect) {
-				if (!self.isSelectedNumbersEmpty) {
+				if (!self.appFlags.isSelectedNumbersEmpty) {
 					$.each(resultDiv.find('.add-number'), function(idx, val) {
 						$(this)
 							.addClass('disabled')
@@ -1156,7 +1159,7 @@ define(function(require){
 		buyNumbersRequestSearchNumbers: function(args) {
 			var self = this,
 				settings = {
-					resource: self.isPhonebookConfigured ? 'phonebook.search' : 'numbers.search',
+					resource: self.appFlags.isPhonebookConfigured ? 'phonebook.search' : 'numbers.search',
 					data: args.data,
 					success: function(data, status) {
 						args.hasOwnProperty('success') && args.success(self.buyNumbersCoerceObjectToArray(data.data));
@@ -1166,7 +1169,7 @@ define(function(require){
 					}
 				};
 
-			if (self.isPhonebookConfigured) {
+			if (self.appFlags.isPhonebookConfigured) {
 				monster.request(settings);
 			}
 			else {
@@ -1176,7 +1179,7 @@ define(function(require){
 		buyNumbersRequestSearchBlockOfNumbers: function(args) {
 			var self = this,
 				settings = {
-					resource: self.isPhonebookConfigured ? 'phonebook.searchBlocks' : 'numbers.searchBlocks',
+					resource: self.appFlags.isPhonebookConfigured ? 'phonebook.searchBlocks' : 'numbers.searchBlocks',
 					data: args.data,
 					success: function(data, status) {
 						args.hasOwnProperty('success') && args.success(data.data);
@@ -1186,7 +1189,7 @@ define(function(require){
 					}
 				};
 
-			if (self.isPhonebookConfigured) {
+			if (self.appFlags.isPhonebookConfigured) {
 				monster.request(settings);
 			}
 			else {
