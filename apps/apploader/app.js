@@ -1,10 +1,13 @@
 define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toastr = require('toastr');
 
 	var app = {
 		name: 'apploader',
+
+		isMasqueradable: false,
 
 		css: [ 'app' ],
 
@@ -184,24 +187,29 @@ define(function(require){
 					appName = $this.data('name');
 
 				if(appName) {
-					self.appListUpdate(parent, appList, function(newAppList) {
-						appList = newAppList;
+					if(!(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
+						self.appListUpdate(parent, appList, function(newAppList) {
+							appList = newAppList;
 
-						monster.apps.load(appName, function(app) {
-							parent.find('.right-div .app-element.active')
-								.removeClass('active');
+							monster.apps.load(appName, function(app) {
+								parent.find('.right-div .app-element.active')
+									.removeClass('active');
 
-							if (appName !== 'appstore') {
-								$this.addClass('active');
-							}
+								if (appName !== 'appstore') {
+									$this.addClass('active');
+								}
 
-							app.render();
-							monster.pub('core.showAppName', appName);
+								app.render();
+								monster.pub('core.showAppName', appName);
 
-							self._hide(parent);
-							monster.pub('myaccount.hide');
+								self._hide(parent);
+								monster.pub('myaccount.hide');
+							});
 						});
-					});
+					}
+					else {
+						toastr.error(self.i18n.active().noMasqueradingError);
+					}
 				}
 			});
 

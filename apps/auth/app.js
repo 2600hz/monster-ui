@@ -165,7 +165,7 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-				apps: function(callback) {
+				appsStore: function(callback) {
 					self.getAppsStore(function(data) {
 						callback(null, data);
 					});
@@ -206,8 +206,7 @@ define(function(require){
 					results.account.apps = results.account.apps || {};
 
 					var afterLanguageLoaded = function() {
-						var accountApps = _.indexBy(results.apps, 'id'),
-							fullAppList = _.indexBy(self.installedApps, 'id'),
+						var fullAppList = _.indexBy(self.installedApps, 'id'),
 							defaultAppId = _.find(results.user.appList || [], function(appId) {
 								return fullAppList.hasOwnProperty(appId);
 							});
@@ -217,6 +216,8 @@ define(function(require){
 						} else if(self.installedApps.length > 0) {
 							defaultApp = self.installedApps[0].name;
 						}
+
+						monster.appsStore = _.indexBy(results.appsStore, 'name');
 
 						self.currentUser = results.user;
 						// This account will remain unchanged, it should be used by non-masqueradable apps
@@ -768,7 +769,8 @@ define(function(require){
 					}
 				},
 				success = function(app) {
-					if(app.isMasqueradable !== false) { app.isMasqueradable = true; }
+					// If isMasqueradable flag is set in the code itself, use it, otherwise check if it's set in the DB, otherwise defaults to true
+					app.isMasqueradable = app.hasOwnProperty('isMasqueradable') ? app.isMasqueradable : (monster.appsStore.hasOwnProperty(app.name) ? monster.appsStore[app.name].masqueradable : true);
 					app.accountId = app.isMasqueradable && self.currentAccount ? self.currentAccount.id : self.accountId;
 					app.userId = self.userId;
 
