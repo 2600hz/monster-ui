@@ -252,20 +252,21 @@ define(function(require){
 			var self = this,
 				currentAccount = monster.apps.auth.currentAccount,
 				currentUser = monster.apps.auth.currentUser,
-				hasRequirePasswordUpdate = currentUser.hasOwnProperty('require_password_update');
+				requirePasswordUpdate = currentUser.hasOwnProperty('require_password_update') && currentUser.require_password_update;
 
-			if(self.hasToShowWalkthrough()) {
-				if (!hasRequirePasswordUpdate || (hasRequirePasswordUpdate && !currentUser.require_password_update)) {
-					self.showWalkthrough(template, function() {
-						self.updateWalkthroughFlagUser();
-					});
+			// Only show information if we're not already showing a password update popup
+			if(!requirePasswordUpdate) {
+				if(self.hasToShowWalkthrough()) {
+						self.showWalkthrough(template, function() {
+							self.updateWalkthroughFlagUser();
+						});
 				}
-			}
-			else if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
-				monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
-			}
-			else {
-				self.checkCreditCard(uiRestrictions);
+				else if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
+					monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
+				}
+				else {
+					self.checkCreditCard(uiRestrictions);
+				}
 			}
 		},
 
@@ -481,7 +482,7 @@ define(function(require){
 			var self = this;
 
 			// If this is a sub-account of the super duper admin, has the billing tab, and is not the super duper admin itself.
-			if(monster.apps['auth'].resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
+			if(monster.apps.auth.resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
 				self.hasCreditCards(function(response) {
 					if(response === false) {
 						self.showCreditCardTab();
