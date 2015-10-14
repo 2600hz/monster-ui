@@ -546,5 +546,9 @@
 
 	"__comment": "UI-1814: Adding warning for app we can't masquerade",
 	"__version": "3.22",
-	"noMasqueradingAllowed": "We are redirecting you to your \"Apps\" page because the app you were using doesn't allow \"Account Jumping\"."
+	"noMasqueradingAllowed": "We are redirecting you to your \"Apps\" page because the app you were using doesn't allow \"Account Jumping\".",
+
+	"__comment": "OOB: Only allow Kazoo APIs to automatically logout user on authentication error (invalid/expired token)",
+	"__version": "3.22",
+	"authenticationIssue": "An authentication error occurred during this operation!"
 }

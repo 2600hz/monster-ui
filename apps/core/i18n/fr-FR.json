@@ -327,5 +327,7 @@
 		"minutesAnd": "minutes et",
 		"hours": "heures",
 		"seconds": "secondes"
-	}
+	},
+
+	"authenticationIssue": "Une erreur d'authentification est survenue lors de cette opération !"
 }
