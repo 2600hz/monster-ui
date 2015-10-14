@@ -1,5 +1,5 @@
 {{#if currentAccount}}
-	<li class="account-list-element current-account" data-id="{{currentAccount.id}}">
+	<li class="account-list-element current-account" data-id="{{currentAccount.id}}" data-realm="{{currentAccount.realm}}" data-name="{{currentAccount.name}}">
 		<div class="account-link">
 			<div class="account-name">{{currentAccount.name}}</div>
 			<div class="account-realm">{{currentAccount.realm}}</div>
@@ -13,7 +13,7 @@
 	</li>
 {{/if}}
 {{#each accounts}}
-	<li class="account-list-element{{#compare this.id "===" ../selectedId}} active{{/compare}}" data-id="{{this.id}}">
+	<li class="account-list-element{{#compare this.id "===" ../selectedId}} active{{/compare}}" data-id="{{this.id}}" data-realm="{{this.realm}}" data-name="{{this.name}}">
 		{{#if this.descendants_count}}
 			<div class="account-children-link"><i class="fa fa-caret-right"></i></div>
 			<div class="account-link smaller-link">

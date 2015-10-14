@@ -21,7 +21,8 @@
 			'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
 			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
 			'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
-			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'}
+			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'},
+			'searchAll': { verb: 'GET', url: 'search/multi?t=account&name={searchValue}&realm={searchValue}&id={searchValue}'}
 		},
 		appsStore: {
 			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
@@ -393,11 +394,16 @@
 							delete methodSettings.data;
 						}
 
+						// We extend methodSettings into a new map that we'll use to map the value with the right variable
+						// With a URL like /accounts/search={test}&name={test}, if we don't use a new map, then the {test} variable is set to undefined during the second iteration
+						// after we delete it from methodSettings a few line below, which creates a bug as the new URL will be /accounts/search=undefined&name=undefined.
+						var staticValues = $.extend(true, {}, methodSettings);
+
 						$.each(ids, function(k, v) {
 							if(methodInfo.verb.toLowerCase() === 'post' && k === ids.length-1 && !(v in methodSettings)) {
 								requestSettings.data[v] = requestSettings.data.data.id;
 							} else {
-								requestSettings.data[v] = methodSettings[v];
+								requestSettings.data[v] = staticValues[v];
 								checkReservedKeywords(v, requestSettings);
 								delete methodSettings[v];
 							}

@@ -143,6 +143,18 @@ define(function(require){
 				onNewAccountClick && onNewAccountClick(currentAccountId, breadcrumbsList);
 			});
 
+			var findElemInData = function(searchString, data) {
+				var found = false;
+
+				_.each(data, function(val) {
+					if(val.toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
+						found = true;
+					}
+				});
+
+				return found;
+			};
+
 			template.find('.account-browser-search').on('keyup', function() {
 				var $this = $(this),
 					search = $this.val();
@@ -150,12 +162,10 @@ define(function(require){
 				searchLink.find('.account-search-value').text(search);
 				if(search) {
 					$.each(template.find('.account-list-element'), function() {
-						var $elem = $(this);
-						if($elem.find('.account-name').text().toLowerCase().indexOf(search.toLowerCase()) >= 0) {
-							$elem.show();
-						} else {
-							$elem.hide();
-						}
+						var $elem = $(this),
+							data = $elem.data();
+
+						findElemInData(search, data) ? $elem.show() : $elem.hide();
 					});
 					accountList.prepend(searchLink);
 				} else {
@@ -169,14 +179,14 @@ define(function(require){
 				template.find('.account-list-element').removeClass('active');
 				accountElement.addClass('active');
 
-				onAccountClick && onAccountClick(accountElement.data('id'), accountElement.find('.account-name').text());
+				onAccountClick && onAccountClick(accountElement.data('id'), accountElement.data('name'));
 			});
 
 			accountList.on('click', '.account-children-link:not(.disabled)', function() {
 				var $this = $(this),
 					parentElement = $this.parents('.account-list-element'),
 					accountId = parentElement.data('id'),
-					accountName = parentElement.find('.account-name').text(),
+					accountName = parentElement.data('name'),
 					parentAccountId = accountList.data('current'),
 					isSearchResult = accountList.data('search-value');
 
@@ -390,9 +400,6 @@ define(function(require){
 								}
 							}
 						});
-
-						
-
 					}
 				});
 			}
@@ -410,56 +417,96 @@ define(function(require){
 				addBackButton = args.addBackButton,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				callback = args.callback,
-				apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
-				apiData = searchValue ? { accountName: searchValue } : { accountId: parentId },
 				topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
 
 			if(parentId === topAccountId) {
 				addBackButton = false;
 			}
 
+			self.accountBrowserGetData(searchValue, parentId, function(data) {
+				var nextStartKey = data.next_start_key,
+					slider = container.find('.account-list-slider'),
+					list = container.find('.account-list'),
+					templateData = {
+						accounts: monster.util.sort(data.data),
+						selectedId: selectedId,
+						addBackButton: addBackButton
+					};
+
+				if(addCurrentAccount) {
+					templateData.currentAccount = monster.apps.auth.currentAccount;
+				}
+
+				var template = $(monster.template(self, 'accountBrowser-list', templateData));
+
+				if(slide) {
+					slider.empty()
+						  .append(template);
+
+					list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
+						list.empty()
+							.append(slider.html())
+							.css('marginLeft','0px');
+						slider.empty();
+					});
+
+				} else {
+					list.empty()
+						.append(template);
+				}
+
+				list.data('next-key', nextStartKey || null);
+				list.data('current', parentId);
+				list.data('search-value', searchValue || null);
+
+				callback && callback();
+			});
+		},
+
+		accountBrowserGetData: function(searchValue, parentId, callback) {
+			var self = this,
+				apiResource = searchValue ? 'account.searchAll' : 'account.listChildren',
+				apiData = searchValue ? { searchValue: searchValue } : { accountId: parentId };
+
 			self.callApi({
 				resource: apiResource,
 				data: apiData,
-				success: function(data, status) {
-					var nextStartKey = data.next_start_key,
-						slider = container.find('.account-list-slider'),
-						list = container.find('.account-list'),
-						templateData = {
-							accounts: monster.util.sort(data.data),
-							selectedId: selectedId,
-							addBackButton: addBackButton
-						};
+				success: function(data) {
+					var formattedData = self.accountBrowserFormatGetData(data);
 
-					if(addCurrentAccount) {
-						templateData.currentAccount = monster.apps.auth.currentAccount;
-					}
-
-					var template = $(monster.template(self, 'accountBrowser-list', templateData));
-
-					if(slide) {
-						slider.empty()
-							  .append(template);
-
-						list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
-							list.empty()
-								.append(slider.html())
-								.css('marginLeft','0px');
-							slider.empty();
-						});
-
-					} else {
-						list.empty()
-							.append(template);
-					}
-
-					list.data('next-key', nextStartKey || null);
-					list.data('current', parentId);
-					list.data('search-value', searchValue || null);
-
-					callback && callback();
+					callback && callback(formattedData);
 				}
 			});
+		},
+
+		accountBrowserFormatGetData: function(data) {
+			var self = this,
+				formattedData = {
+					data: []
+				};
+
+			// Normal use case, just listing children
+			if(_.isArray(data.data)) {
+				formattedData = data;
+			}
+			// the Search API returns 3 arrays, we merge them together and remove duplicated before continuing
+			else {
+				var mapAdded = {},
+					addAccounts = function(arr) {
+						_.each(arr, function(account) {
+							if(!mapAdded.hasOwnProperty(account.id)) {
+								formattedData.data.push(account);
+								mapAdded[account.id] = true;
+							}
+						})
+					};
+
+				_.each(data.data, function(arrayField) {
+					addAccounts(arrayField);
+				});
+			}
+
+			return formattedData;
 		}
 	};
 
