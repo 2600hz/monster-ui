@@ -22,7 +22,7 @@
 			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
 			'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
 			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'},
-			'searchAll': { verb: 'GET', url: 'search/multi?t=account&name={searchValue}&realm={searchValue}&id={searchValue}'}
+			'searchAll': { verb: 'GET', url: 'search/multi?t=account&by_name={searchValue}&by_realm={searchValue}&by_id={searchValue}'}
 		},
 		appsStore: {
 			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
