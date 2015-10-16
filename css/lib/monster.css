@@ -1072,3 +1072,135 @@ table.monster-table .actions .action-item {
 table.monster-table .actions .action-item:first-child {
 	margin-left: 0;
 }
+
+/************************************************************/
+/***************** SIGNAL STRENGTH INDICATOR ****************/
+/************************************************************/
+
+.signal-indicator-container > * {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.signal-indicator-container > *:last-child:not(:first-child) {
+	margin-top: 25px;
+}
+
+.signal-indicator-container .signal-strength {
+	overflow: hidden;
+	width: 110px;
+	height: 66px;
+}
+
+.signal-indicator-container .signal {
+	position: relative;
+	display: inline-block;
+	border: 10px solid transparent;
+	border-top-color: #efeff8;
+	border-radius: 100%;
+}
+
+.signal-indicator-container .optimal {
+	width: 90px;
+	height: 90px;
+}
+
+.signal-indicator-container .strong {
+	width: 60px;
+	height: 60px;
+	margin: 8px 0 0;
+}
+
+.signal-indicator-container .medium {
+	width: 30px;
+	height: 30px;
+	margin: 8px 0 0;
+}
+
+.signal-indicator-container .weak {
+	width: 12px;
+	height: 12px;
+	margin: 8px 0 0;
+	border-width: 0;
+	background-color: #22a5ff;
+}
+
+.signal-indicator-container .signal-strength[data-strength='1'] .medium,
+.signal-indicator-container .signal-strength[data-strength='2'] .medium,
+.signal-indicator-container .signal-strength[data-strength='3'] .medium,
+.signal-indicator-container .signal-strength[data-strength='2'] .strong,
+.signal-indicator-container .signal-strength[data-strength='3'] .strong,
+.signal-indicator-container .signal-strength[data-strength='3'] .optimal {
+	border-top-color: #22a5ff;
+}
+
+.signal-indicator-container .signal:not(.weak)::before,
+.signal-indicator-container .signal:not(.weak)::after {
+	position: absolute;
+	display: block;
+	width: 10px;
+	height: 5px;
+	content: '';
+	border-radius: 10px 10px 0 0;
+	background-color: #efeff8;
+}
+
+.signal-indicator-container .signal:not(.weak)::before {
+	-webkit-transform: rotate(-135deg);
+	   -moz-transform: rotate(-135deg);
+	    -ms-transform: rotate(-135deg);
+	     -o-transform: rotate(-135deg);
+	        transform: rotate(-135deg);
+}
+.signal-indicator-container .signal:not(.weak)::after {
+	-webkit-transform: rotate(135deg);
+	   -moz-transform: rotate(135deg);
+	    -ms-transform: rotate(135deg);
+	     -o-transform: rotate(135deg);
+	        transform: rotate(135deg);
+}
+
+.signal-indicator-container .signal.medium::before {
+	top: -1px;
+	left: -5px;
+}
+.signal-indicator-container .signal.medium::after {
+	top: -1px;
+	right: -5px;
+}
+.signal-indicator-container .signal.strong::before {
+	top: 4px;
+	left: -1px;
+}
+.signal-indicator-container .signal.strong::after {
+	top: 4px;
+	right: -1px;
+}
+.signal-indicator-container .signal.optimal::before {
+	top: 8px;
+	left: 4px;
+}
+.signal-indicator-container .signal.optimal::after {
+	top: 8px;
+	right: 4px;
+}
+
+.signal-indicator-container .signal-strength[data-strength='1'] .medium::before,
+.signal-indicator-container .signal-strength[data-strength='1'] .medium::after,
+.signal-indicator-container .signal-strength[data-strength='2'] .medium::before,
+.signal-indicator-container .signal-strength[data-strength='2'] .medium::after,
+.signal-indicator-container .signal-strength[data-strength='3'] .medium::before,
+.signal-indicator-container .signal-strength[data-strength='3'] .medium::after,
+.signal-indicator-container .signal-strength[data-strength='2'] .strong::before,
+.signal-indicator-container .signal-strength[data-strength='2'] .strong::after,
+.signal-indicator-container .signal-strength[data-strength='3'] .strong::before,
+.signal-indicator-container .signal-strength[data-strength='3'] .strong::after,
+.signal-indicator-container .signal-strength[data-strength='3'] .optimal::before,
+.signal-indicator-container .signal-strength[data-strength='3'] .optimal::after {
+	background-color: #22a5ff;
+}
+
+.signal-indicator-container .signal-type {
+	font-size: 15px;
+	font-weight: 500;
+}
