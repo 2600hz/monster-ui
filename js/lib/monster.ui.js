@@ -1604,7 +1604,7 @@ define(function(require){
 
 		/**
 		 * Render app menu and bind corresponding 'click' events with related callbacks
-		 * @param  {Object} thisArg Context used when calling onClick callback for each tab
+		 * @param  {Object} thisArg Context used when calling the callback for each tab
 		 * @param  {Object} menus   List of tabs per menu to display
 		 */
 		generateAppNavbar: function(thisArg, menus) {
@@ -1637,7 +1637,7 @@ define(function(require){
 								.fadeOut(function() {
 									$(this).empty();
 
-									menus[menuId].tabs[tabId].onClick.call(thisArg, {
+									menus[menuId].tabs[tabId].callback.call(thisArg, {
 										parent: parent,
 										container: parent.find('.app-content-wrapper')
 									});
@@ -1649,7 +1649,7 @@ define(function(require){
 
 		/**
 		 * Render a generique layout so each app has the same look
-		 * @param  {Object} thisArg Context used when calling onClick callback for active tab
+		 * @param  {Object} thisArg Context used when calling the callback for active tab
 		 * @param  {Object} args    List of options to render the navbar and layout template
 		 */
 		generateAppLayout: function(thisArg, args) {
@@ -1667,7 +1667,7 @@ define(function(require){
 
 			self.generateAppNavbar(thisArg, args.menus);
 
-			args.menus[0].tabs[0].onClick.call(thisArg, {
+			args.menus[0].tabs[0].callback.call(thisArg, {
 				parent: parent,
 				container: parent.find('.app-content-wrapper')
 			});
