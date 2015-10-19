@@ -1610,12 +1610,20 @@ define(function(require){
 		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
 				parent = $('#monster-content'),
-				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus });
+				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
+				hasDefaultTab = _.find($(navbarTemplate).find('.app-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
 
 			parent
 				.find('.app-navbar')
 					.empty()
 					.append(navbarTemplate);
+
+			if (!hasDefaultTab) {
+				parent
+					.find('.app-menu-item-link')
+						.first()
+							.addClass('active');
+			}
 
 			parent
 				.find('.app-menu-item-link')
@@ -1642,9 +1650,7 @@ define(function(require){
 										container: parent.find('.app-content-wrapper')
 									});
 								});
-					})
-				.first()
-					.addClass('active');
+					});
 		},
 
 		/**
@@ -1659,7 +1665,16 @@ define(function(require){
 					appName: args.appName,
 					cssId: args.appName.toLowerCase().split(' ').join('_')
 				},
-				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate);
+				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
+				callDefaultTabCallback = function callDefaultTabCallback () {
+					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
+						defaultTab = _.find(tabs, function(val, idx) { return val.hasOwnProperty('default') && val.default === true; });
+
+					(defaultTab ? defaultTab : tabs[0]).callback.call(thisArg, {
+						parent: parent,
+						container: parent.find('.app-content-wrapper')
+					});
+				};
 
 			parent
 				.empty()
@@ -1667,10 +1682,7 @@ define(function(require){
 
 			self.generateAppNavbar(thisArg, args.menus);
 
-			args.menus[0].tabs[0].callback.call(thisArg, {
-				parent: parent,
-				container: parent.find('.app-content-wrapper')
-			});
+			callDefaultTabCallback();
 		}
 	};
 
