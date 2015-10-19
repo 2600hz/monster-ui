@@ -1632,6 +1632,13 @@ define(function(require){
 							menuId = $this.parents('.app-menu').data('menu_id'),
 							tabId = $this.data('tab_id');
 
+						if (menus[menuId].tabs[tabId].hasOwnProperty('onClick')) {
+							menus[menuId].tabs[tabId].onClick.call(thisArg, {
+								parent: parent,
+								container: parent.find('.app-content-wrapper')
+							});
+						}
+
 						if (!$this.hasClass('active')) {
 							parent
 								.find('.app-menu-item-link.active')
