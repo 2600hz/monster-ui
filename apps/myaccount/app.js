@@ -256,13 +256,14 @@ define(function(require){
 
 			// Only show information if we're not already showing a password update popup
 			if(!requirePasswordUpdate) {
-				if(self.hasToShowWalkthrough()) {
-						self.showWalkthrough(template, function() {
-							self.updateWalkthroughFlagUser();
-						});
-				}
-				else if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
+				if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 					monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
+				}
+				// Only direct them to my account walkthrough if it's not a trial account
+				else if(self.hasToShowWalkthrough()) {
+					self.showWalkthrough(template, function() {
+						self.updateWalkthroughFlagUser();
+					});
 				}
 				else {
 					self.checkCreditCard(uiRestrictions);
@@ -361,7 +362,14 @@ define(function(require){
 								self.hide();
 							}
 							else {
-								self.renderDropdown(true);
+								if(self.hasToShowWalkthrough()) {
+									self.showWalkthrough(mainContainer, function() {
+										self.updateWalkthroughFlagUser();
+									});
+								}
+								else {
+									self.renderDropdown(true);
+								}
 							}
 						}
 					}
