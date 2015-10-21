@@ -661,7 +661,7 @@ define(function(require){
 
 			$.cookie('monster-auth', null);
 
-			window.location.reload();
+			window.location = window.location.pathname;
 		},
 
 		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
