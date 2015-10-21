@@ -1630,33 +1630,39 @@ define(function(require){
 					.on('click', function() {
 						var $this = $(this),
 							menuId = $this.parents('.app-menu').data('menu_id'),
-							tabId = $this.data('tab_id');
+							tabId = $this.data('tab_id'),
+							currentTab = menus[menuId].tabs[tabId],
+							loadTabContent = function loadTabContent () {
+								if (!$this.hasClass('active')) {
+									parent
+										.find('.app-menu-item-link.active')
+											.removeClass('active');
 
-						if (menus[menuId].tabs[tabId].hasOwnProperty('onClick')) {
-							menus[menuId].tabs[tabId].onClick.call(thisArg, {
+									$this.addClass('active');
+								}
+
+								parent
+									.find('.app-content-wrapper')
+										.fadeOut(function() {
+											$(this).empty();
+
+											currentTab.callback.call(thisArg, {
+												parent: parent,
+												container: parent.find('.app-content-wrapper')
+											});
+										});
+							};
+
+						if (currentTab.hasOwnProperty('onClick')) {
+							currentTab.onClick.call(thisArg, {
 								parent: parent,
-								container: parent.find('.app-content-wrapper')
+								container: parent.find('.app-content-wrapper'),
+								callback: loadTabContent
 							});
 						}
-
-						if (!$this.hasClass('active')) {
-							parent
-								.find('.app-menu-item-link.active')
-									.removeClass('active');
-
-							$this.addClass('active');
+						else {
+							loadTabContent();
 						}
-
-						parent
-							.find('.app-content-wrapper')
-								.fadeOut(function() {
-									$(this).empty();
-
-									menus[menuId].tabs[tabId].callback.call(thisArg, {
-										parent: parent,
-										container: parent.find('.app-content-wrapper')
-									});
-								});
 					});
 		},
 
