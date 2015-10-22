@@ -1204,3 +1204,47 @@ table.monster-table .actions .action-item:first-child {
 	font-size: 15px;
 	font-weight: 500;
 }
+
+/************************************************************/
+/****************** MONSTER LOADING SPINNER *****************/
+/************************************************************/
+
+@keyframes monster-spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.monster-spinner {
+	position: relative;
+	width: 35px;
+	height: 35px;
+	margin: 0 auto;
+	animation: monster-spin 1.5s ease-in-out infinite;
+	border: 9px solid transparent;
+	border-top-color: #22a5ff;
+	border-radius: 100%;
+}
+
+.monster-spinner::before,
+.monster-spinner::after {
+	position: absolute;
+	display: block;
+	content: '';
+	border: 3px solid #22a5ff;
+	border-radius: 100%;
+}
+
+.monster-spinner::before {
+	top: -11px;
+	left: -11px;
+	width: 51px;
+	height: 51px;
+}
+
+.monster-spinner::after {
+	top: -1px;
+	left: -1px;
+	width: 31px;
+	height: 31px;
+}
