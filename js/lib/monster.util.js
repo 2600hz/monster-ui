@@ -805,6 +805,28 @@ define(function(require){
 			matchNode(callflow.flow);
 
 			return result.length > 1 ? result : result[0];
+		},
+
+		/**
+		 * Determine if a number feature is enalbed on the current account
+		 * @param  {String} feature Number feature to check if it is enabled (e.g. e911, cnam)
+		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
+		 */
+		isNumberFeatureEnabled: function (feature) {
+			var self = this,
+				currentAccount = monster.apps.auth.currentAccount,
+				hasNumbersFeatures = currentAccount.hasOwnProperty('numbers_features');
+
+			if (hasNumbersFeatures) {
+				if (currentAccount.numbers_features[feature + '_enabled']) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			} else {
+				return true;
+			}
 		}
 	};
 
