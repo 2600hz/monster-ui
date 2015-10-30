@@ -31,6 +31,7 @@ require.config({
 		'monster': 'js/lib/monster',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
+		'monster-routing': 'js/lib/monster.routing',
 		'monster-util': 'js/lib/monster.util',
 		'nicescroll': 'js/lib/jquery.nicescroll.min',
 		'monster-apps': 'js/lib/monster.apps',
@@ -75,10 +76,11 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'to
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'socket'], function(util, ui, apps, socket){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'socket'], function(util, ui, apps, routing, socket){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
+		monster.routing = routing;
 
 		monster.util.setDefaultLanguage();
 

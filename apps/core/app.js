@@ -147,9 +147,10 @@ define(function(require){
 				/* If admin with no app, go to app store, otherwise, oh well... */
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
-				// Now that the user information is loaded properly, start handling routes.
-				monster.routing.init();
+				// Now that the user information is loaded properly, check if we tried to force the load of an app via URL.
+				monster.routing.parseHash();
 
+				// If there wasn't any match, trigger the default app
 				if(!monster.routing.hasMatch()) {
 					if(typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
@@ -333,20 +334,48 @@ define(function(require){
 		triggerMasquerading: function(args) {
 			var self = this,
 				account = args.account,
-				callback = args.callback;
+				callback = args.callback,
+				afterGetData = function(account) {
+					monster.apps.auth.currentAccount = $.extend(true, {}, account);
+					self.updateApps(account.id);
 
-			monster.apps.auth.currentAccount = $.extend(true, {}, account);
-			self.updateApps(account.id);
+					monster.pub('myaccount.renderNavLinks', {
+						name: account.name,
+						isMasquerading: true
+					});
+					$('#main_topbar_account_toggle').addClass('masquerading');
 
-			monster.pub('myaccount.renderNavLinks', {
-				name: account.name,
-				isMasquerading: true
-			});
-			$('#main_topbar_account_toggle').addClass('masquerading');
+					toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
 
-			toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
+					callback && callback();
+				};
 
-			callback && callback();
+			if(args.account.id === monster.apps.auth.originalAccount.id) {
+				self.restoreMasquerading({
+					callback: callback
+				});
+			}
+			else if(!args.account.hasOwnProperty('name')) {
+				self.callApi({
+					resource: 'account.get',
+					data: {
+						accountId: account.id,
+						generateError: false
+					},
+					success: function(data, status) {
+						account = data.data;
+
+						afterGetData(account);
+					},
+					error: function() {
+						// If we couldn't get the account, the id must have been wrong, we just continue with the original callback
+						callback && callback();
+					}
+				});
+			}
+			else {
+				afterGetData(args.account);
+			}
 		},
 
 		updateApps: function(accountId) {
