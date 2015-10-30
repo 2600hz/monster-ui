@@ -407,13 +407,18 @@ define(function(){
 			});
 		},
 
-		load: function(name, callback, options) {
+		load: function(name, callback, options, pChangeHash) {
 			var self = this,
+				changeHash = pChangeHash === true ? true : false,
 				afterLoad = function(app) {
 					monster.apps.lastLoadedApp = app.name;
 
 					callback && callback(app);
 				};
+
+			if(changeHash) {
+				monster.routing.updateHash('apps/'+name);
+			}
 
 			if(!(name in monster.apps)) {
 				self._loadApp(name, function(app) {

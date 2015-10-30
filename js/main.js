@@ -8,6 +8,7 @@ require.config({
 		'chart': 'js/lib/chart.min',
 		'card': 'js/lib/card',
 		'chosen': 'js/lib/jquery.chosen.min',
+		'crossroads': 'js/lib/crossroads.min',
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
 		'dependClass': 'js/lib/jquery.dependClass',
@@ -18,6 +19,7 @@ require.config({
 		'footable-sort': 'js/lib/footable/footable.sort.min',
 		'form2object': 'js/lib/form2object',
 		'handlebars': 'js/lib/handlebars-1.0.10',
+		'hasher': 'js/lib/hasher.min',
 		'hotkeys': 'js/lib/jquery.hotkeys.min',
 		'introJs': 'js/lib/intro.min',
 		'isotope': 'js/lib/jquery.isotope.min',
@@ -35,6 +37,7 @@ require.config({
 		'plugins': 'js/plugins',
 		'postal': 'js/lib/postal-0.8.2',
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
+		'signals': 'js/lib/signals.min',
 		'slider': 'js/lib/jquery.slider',
 		'socket': 'js/lib/socket.io.min',
 		'timepicker': 'js/lib/jquery.timepicker.min',
@@ -54,6 +57,8 @@ require.config({
 		'handlebars': {
 			'exports': 'Handlebars'
 		},
+		'crossroads': ['signals'],
+		'hasher': ['signals'],
 		'slider': ['dependClass'],
 		'plugins': ['jquery'],
 		'kazoosdk': ['jquery'],

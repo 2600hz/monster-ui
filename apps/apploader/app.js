@@ -21,7 +21,7 @@ define(function(require){
 		},
 
 		subscribe: {
-			'apploader.show': '_render',
+			'apploader.show': 'render',
 			'apploader.hide': '_hide',
 			'apploader.toggle': '_toggle',
 			'apploader.current': '_currentApp'
@@ -48,7 +48,6 @@ define(function(require){
 
 		_render: function() {
 			var self = this;
-
 		},
 
 		isRendered: function() {
@@ -188,23 +187,17 @@ define(function(require){
 
 				if(appName) {
 					if(!(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
+						monster.routing.goTo('apps/' + appName);
+
+						parent.find('.right-div .app-element.active')
+							  .removeClass('active');
+
+						if (appName !== 'appstore') {
+							$this.addClass('active');
+						}
+
 						self.appListUpdate(parent, appList, function(newAppList) {
 							appList = newAppList;
-
-							monster.apps.load(appName, function(app) {
-								parent.find('.right-div .app-element.active')
-									.removeClass('active');
-
-								if (appName !== 'appstore') {
-									$this.addClass('active');
-								}
-
-								app.render();
-								monster.pub('core.showAppName', appName);
-
-								self._hide(parent);
-								monster.pub('myaccount.hide');
-							});
 						});
 					}
 					else {
@@ -239,9 +232,9 @@ define(function(require){
 			});
 		},
 
-		show: function(app) {
+		show: function() {
 			var self = this,
-				apploader = app || $('#apploader');
+				apploader = $('#apploader');
 
 			if (!apploader.hasClass('active')) {
 				monster.pub('myaccount.hide');
@@ -253,9 +246,9 @@ define(function(require){
 			}
 		},
 
-		_hide: function(app) {
+		_hide: function() {
 			var self =  this,
-				apploader = app || $('#apploader');
+				apploader = $('#apploader');
 
 			if (apploader.hasClass('active')) {
 				$('#monster-content').show();

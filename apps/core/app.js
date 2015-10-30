@@ -146,15 +146,20 @@ define(function(require){
 			if(!self._baseApps.length) {
 				/* If admin with no app, go to app store, otherwise, oh well... */
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
-				
-				if(typeof defaultApp !== 'undefined') {
-					monster.apps.load(defaultApp, function(app) {
-						self.showAppName(defaultApp);
-						app.render($('#monster-content'));
-					});
-				}
-				else {
-					console.warn('Current user doesn\'t have a default app');
+
+				// Now that the user information is loaded properly, start handling routes.
+				monster.routing.init();
+
+				if(!monster.routing.hasMatch()) {
+					if(typeof defaultApp !== 'undefined') {
+						monster.apps.load(defaultApp, function(app) {
+							self.showAppName(defaultApp);
+							app.render($('#monster-content'));
+						}, {}, true);
+					}
+					else {
+						console.warn('Current user doesn\'t have a default app');
+					}
 				}
 			}
 			else {
