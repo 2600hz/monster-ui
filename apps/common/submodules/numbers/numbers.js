@@ -83,11 +83,14 @@ define(function(require){
 					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
 					outbound_cnam: { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp },
 					inbound_cnam: { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
-					dash_e911: { icon: 'monster-red fa fa-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp },
 					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'fa fa-phone monster-yellow feature-port' },
 					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
+
+			if (monster.util.isNumberFeatureEnabled('e911')) {
+				features.dash_e911 = { icon: 'monster-red fa fa-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp };
+			}
 
 			if(callback) {
 				callback && callback(features);
@@ -173,6 +176,9 @@ define(function(require){
 			/* Append our current account with the numbers at the top */
 			templateData.listAccounts.unshift(mapAccounts[self.accountId]);
 
+			/* Hide e911 feature if disabled on the account */
+			templateData.isE911Enabled = monster.util.isNumberFeatureEnabled('e911');
+
 			return templateData;
 		},
 
@@ -232,7 +238,11 @@ define(function(require){
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-usedAccount', { viewType: dataNumbers.viewType, usedNumbers: usedNumbers }))
+										.append(monster.template(self, 'numbers-usedAccount', {
+											viewType: dataNumbers.viewType,
+											usedNumbers: usedNumbers,
+											isE911Enabled: monster.util.isNumberFeatureEnabled('e911')
+										}))
 										.parent()
 										.find('.count')
 										.html('('+ usedNumbers.length +')');
@@ -742,31 +752,33 @@ define(function(require){
 				}
 			});
 
-			parent.on('click', '.e911-number', function() {
-				var row = $(this).parents('.number-box'),
-					e911Cell = row.first(),
-					phoneNumber = e911Cell.data('phonenumber');
+			if (monster.util.isNumberFeatureEnabled('e911')) {
+				parent.on('click', '.e911-number', function() {
+					var row = $(this).parents('.number-box'),
+						e911Cell = row.first(),
+						phoneNumber = e911Cell.data('phonenumber');
 
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								monster.ui.highlight(row);
+					if(phoneNumber) {
+						var args = {
+							phoneNumber: phoneNumber,
+							callbacks: {
+								success: function(data) {
+									monster.ui.highlight(row);
 
-								if(!($.isEmptyObject(data.data.dash_e911))) {
-									e911Cell.find('.features i.feature-dash_e911').addClass('active');
-								}
-								else {
-									e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+									if(!($.isEmptyObject(data.data.dash_e911))) {
+										e911Cell.find('.features i.feature-dash_e911').addClass('active');
+									}
+									else {
+										e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+									}
 								}
 							}
-						}
-					};
+						};
 
-					monster.pub('common.e911.renderPopup', args);
-				}
-			});
+						monster.pub('common.e911.renderPopup', args);
+					}
+				});
+			}
 
 			parent.on('click', '.failover-number', function() {
 				var row = $(this).parents('.number-box'),

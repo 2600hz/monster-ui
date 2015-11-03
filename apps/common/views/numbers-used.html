@@ -6,7 +6,6 @@
 		</div>
 	</div>
 </div>
-
 <div class="accounts-numbers">
 	{{#each listAccounts}}
 		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
@@ -31,7 +30,9 @@
 										<ul class="dropdown-menu">
 										{{#unless isLocal}}
 											<li><a class="cnam-number" href="#"><i class="fa fa-user"></i>{{ ../../../i18n.callerId.label }}</a></li>
-											<li><a class="e911-number" href="#"><i class="fa fa-ambulance"></i>{{ ../../../i18n.e911.label }}</a></li>
+										{{#if ../../../isE911Enabled}}
+											<li><a class="e911-number" href="#"><i class="fa fa-ambulance"></i>{{ ../../../../i18n.e911.label }}</a></li>
+										{{/if}}
 											{{#compare this.used_by "===" "trunkstore"}}
 												<li><a class="failover-number" href="#"><i class="fa fa-thumbs-down"></i>{{ ../../../../i18n.failover.label }}</a></li>
 											{{/compare}}
