@@ -296,7 +296,7 @@ define(function(){
 			// We automatically load the default language (en-US) i18n files
 			self.loadLocale(app, self.defaultLanguage, function() {
 				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
-				if(monster.config.whitelabel.language !== self.defaultLanguage) {
+				if(monster.config.whitelabel.language.toLowerCase() !== self.defaultLanguage.toLowerCase()) {
 					self.loadLocale(app, monster.config.whitelabel.language, function() {
 						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 						addCoreI18n();
