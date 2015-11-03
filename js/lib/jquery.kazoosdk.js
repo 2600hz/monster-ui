@@ -434,6 +434,7 @@
 			data: {
 				data: settings.data
 			},
+			generateError: settings.hasOwnProperty('generateError') ? settings.generateError : true,
 			success: function(data, status, jqXHR) {
 				authTokens[apiRoot] = data.auth_token;
 				settings.success && settings.success(data, status, jqXHR);

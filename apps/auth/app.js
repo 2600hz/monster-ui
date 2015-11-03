@@ -674,10 +674,25 @@ define(function(require){
 			self.callApi({
 				resource: 'auth.userAuth',
 				data: {
-					data: loginData
+					data: loginData,
+					generateError: false
 				},
 				success: function (data, status) {
 					callback && callback(data);
+				},
+				error: function(errorPayload, data, globalHandler) {
+					if(data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
+						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'short'),
+							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
+
+						monster.ui.alert('warning', errorMessage);
+					}
+					else if(data.status === 423) {
+						monster.ui.alert('error', self.i18n.active().disabledAccount);
+					}
+					else {
+						globalHandler(errorPayload, { generateError: true });
+					}
 				}
 			});
 		},
