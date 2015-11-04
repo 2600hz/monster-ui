@@ -1676,7 +1676,7 @@ define(function(require){
 				parent = $('#monster-content'),
 				dataTemplate = {
 					appName: args.appName,
-					cssId: args.appName.toLowerCase().split(' ').join('_')
+					appId: thisArg.name
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback () {
