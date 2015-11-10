@@ -186,7 +186,7 @@ define(function(require){
 					appName = $this.data('name');
 
 				if(appName) {
-					if(!(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
+					if(appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
 						monster.routing.goTo('apps/' + appName);
 
 						parent.find('.right-div .app-element.active')
