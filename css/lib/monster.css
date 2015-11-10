@@ -1057,11 +1057,13 @@ table.monster-table tbody tr:last-child::after {
 }
 table.monster-table td {
 	border-bottom: 1px solid #c0c0c9;
+	text-align: left;
 }
 table.monster-table tbody tr:last-child td {
 	border-bottom: 0;
 }
-table.monster-table td:last-child {
+table.monster-table td:last-child,
+table.monster-table th:last-child {
 	text-align: right;
 }
 table.monster-table .actions .action-item {
