@@ -187,7 +187,7 @@ define(function(require){
 					appName = $this.data('name');
 
 				if(appName) {
-					if(!(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
+					if(appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
 						self.appListUpdate(parent, appList, function(newAppList) {
 							appList = newAppList;
 
