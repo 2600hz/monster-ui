@@ -35,7 +35,9 @@
 				</div>
 				<div class="info-bloc">
 					<ul>
-						<li>{{ i18n.author }}: {{ app.author }}</li>
+						{{#unless isWhitelabeling}}
+							<li>{{ i18n.author }}: {{ app.author }}</li>
+						{{/unless}}
 						<li>{{ i18n.version }}: {{ app.version }}</li>
 						<li>{{ i18n.license }}: {{ app.license }}</li>
 						<li>{{ i18n.price}}: {{#compare app.price '==' 0}}{{ i18n.free }}{{else}}{{ app.price }}{{/compare}}</li>
