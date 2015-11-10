@@ -233,6 +233,7 @@ define(function(require){
 							return val;
 						}),
 						template = $(monster.template(self, 'appPopup', {
+							isWhitelabeling: monster.util.isWhitelabeling(),
 							app: app,
 							users: users,
 							i18n: {

@@ -321,6 +321,11 @@ define(function(require){
 			return isSuperDuper;
 		},
 
+		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
+		isWhitelabeling: function() {
+			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
+		},
+
 		// Function returning a Boolean indicating whether the end-user is logged in or not.
 		isLoggedIn: function() {
 			var self = this,

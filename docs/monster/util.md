@@ -12,6 +12,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [isLoggedIn()][is_logged_in]
 * [isMasquerading()][is_masquerading]
 * [isSuperDuper()][is_super_duper]
+* [isWhitelabeling()][is_whitelabeling]
 * [randomString()][random_string]
 * [sort()][sort]
 * [toFriendlyDate()][to_friendly_date]
@@ -29,6 +30,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [is_logged_in]: util/isLoggedIn().md
 [is_masquerading]: util/isMasquerading().md
 [is_super_duper]: util/isSuperDuper().md
+[is_whitelabeling]: util/isWhitelabeling().md
 [random_string]: util/randomString().md
 [sort]: util/sort().md
 [to_friendly_date]: util/toFriendlyDate().md
