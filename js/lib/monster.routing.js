@@ -28,7 +28,6 @@ define(function(require){
 			monster.pub('core.triggerMasquerading', {
 				account: accountData,
 				callback: function() {
-					console.log('render app');
 					renderApp();
 				}
 			});
