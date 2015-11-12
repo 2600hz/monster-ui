@@ -407,6 +407,8 @@ define(function(){
 			});
 		},
 
+
+		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
 		load: function(name, callback, options, pChangeHash) {
 			var self = this,
 				changeHash = pChangeHash === true ? true : false,
@@ -454,7 +456,7 @@ define(function(){
 							afterLoading && afterLoading({});
 
 							monster.pub('monster.requestEnd')
-							
+
 							console.log('_loadLocale error: ', status, error);
 						}
 					});

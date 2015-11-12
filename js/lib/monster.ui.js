@@ -678,6 +678,7 @@ define(function(require){
 			var self = this,
 				container = options.container,
 				range = options.range || 7,
+				initRange = options.initRange || options.range || 1,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
 				now = new Date(),
@@ -689,7 +690,7 @@ define(function(require){
 				startDate.setMonth(startDate.getMonth() - 1);
 			}
 			else {
-				startDate.setDate(startDate.getDate() - range);
+				startDate.setDate(startDate.getDate() - initRange);
 			}
 			startDate.setDate(startDate.getDate() + 1);
 
