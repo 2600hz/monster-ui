@@ -9,6 +9,7 @@ define(function(require){
 		var renderApp = function() {
 				monster.apps.load(appName, function(loadedApp) {
 					monster.pub('core.showAppName', appName);
+					$('#monster-content').empty();
 
 					loadedApp.render();
 				});
@@ -42,6 +43,8 @@ define(function(require){
 
 		goTo: function(url) {
 			this.updateHash(url);
+
+			this.parseHash(url);
 		},
 
 		getUrl: function() {
@@ -108,14 +111,11 @@ define(function(require){
 			crossroads.parse(newHash);
 		},
 
-		// This is only used by monster.routing.goTo which is called manually. 
-		// We need to silence the change signal to make sure that we force a crossroads.parse without relying on hasher.change firing. 
-		// Because if we reload the same hash, hasher won't fire the event, which mean we won't reload that path.
+		// We silence the event so it only changes the URL.
 		updateHash: function(url) {
 			hasher.changed.active = false; //disable changed signal
 
 			hasher.setHash(url); //set hash without dispatching changed signal
-			this.parseHash(url);
 
 			hasher.changed.active = true; //re-enable signal
 		}
