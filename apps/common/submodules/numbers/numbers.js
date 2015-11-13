@@ -81,8 +81,6 @@ define(function(require){
 			var self = this,
 				features = {
 					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-					outbound_cnam: { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp },
-					inbound_cnam: { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp },
 					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'fa fa-phone monster-yellow feature-port' },
 					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
@@ -90,6 +88,11 @@ define(function(require){
 
 			if (monster.util.isNumberFeatureEnabled('e911')) {
 				features.dash_e911 = { icon: 'monster-red fa fa-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp };
+			}
+
+			if (monster.util.isNumberFeatureEnabled('cnam')) {
+				features.outbound_cnam = { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp };
+				features.inbound_cnam = { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp };
 			}
 
 			if(callback) {
@@ -176,8 +179,9 @@ define(function(require){
 			/* Append our current account with the numbers at the top */
 			templateData.listAccounts.unshift(mapAccounts[self.accountId]);
 
-			/* Hide e911 feature if disabled on the account */
+			/* Hide cnam & e911 features if disabled on the account */
 			templateData.isE911Enabled = monster.util.isNumberFeatureEnabled('e911');
+			templateData.isCnamEnabled = monster.util.isNumberFeatureEnabled('cnam');
 
 			return templateData;
 		},
@@ -241,6 +245,7 @@ define(function(require){
 										.append(monster.template(self, 'numbers-usedAccount', {
 											viewType: dataNumbers.viewType,
 											usedNumbers: usedNumbers,
+											isCnamEnabled: monster.util.isNumberFeatureEnabled('cnam'),
 											isE911Enabled: monster.util.isNumberFeatureEnabled('e911')
 										}))
 										.parent()
@@ -721,36 +726,38 @@ define(function(require){
 				});
 			});
 
-			parent.on('click', '.cnam-number', function() {
-				var row = $(this).parents('.number-box'),
-					cnamCell = row.first(),
-					phoneNumber = cnamCell.data('phonenumber');
+			if (monster.util.isNumberFeatureEnabled('cnam')) {
+				parent.on('click', '.cnam-number', function() {
+					var row = $(this).parents('.number-box'),
+						cnamCell = row.first(),
+						phoneNumber = cnamCell.data('phonenumber');
 
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								monster.ui.highlight(row);
+					if(phoneNumber) {
+						var args = {
+							phoneNumber: phoneNumber,
+							callbacks: {
+								success: function(data) {
+									monster.ui.highlight(row);
 
-								if('cnam' in data.data && data.data.cnam.display_name) {
-									cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
-								} else {
-									cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
-								}
+									if('cnam' in data.data && data.data.cnam.display_name) {
+										cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
+									} else {
+										cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
+									}
 
-								if('cnam' in data.data && data.data.cnam.inbound_lookup) {
-									cnamCell.find('.features i.feature-inbound_cnam').addClass('active');
-								} else {
-									cnamCell.find('.features i.feature-inbound_cnam').removeClass('active');
+									if('cnam' in data.data && data.data.cnam.inbound_lookup) {
+										cnamCell.find('.features i.feature-inbound_cnam').addClass('active');
+									} else {
+										cnamCell.find('.features i.feature-inbound_cnam').removeClass('active');
+									}
 								}
 							}
-						}
-					};
+						};
 
-					monster.pub('common.callerId.renderPopup', args);
-				}
-			});
+						monster.pub('common.callerId.renderPopup', args);
+					}
+				});
+			}
 
 			if (monster.util.isNumberFeatureEnabled('e911')) {
 				parent.on('click', '.e911-number', function() {
