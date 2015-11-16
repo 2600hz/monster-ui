@@ -1,6 +1,7 @@
 @import url('vendor/boilertplate.css');
 
 @import url('vendor/normalize.css');
+@import url('vendor/animate.css');
 
 @import url('vendor/bootstrap.min.css');
 @import url('lib/custom/bootstrap-add.css');

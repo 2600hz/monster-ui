@@ -33,41 +33,6 @@
 		"buttonLabel": "Log-in to Conference"
 	},
 
-	"passwordRecovery": {
-		"title": "Password Recovery",
-		"label": {
-			"phoneNumber": "Phone Number"
-		},
-		"placeholder": {
-			"username":  "john@doe.com",
-			"account": {
-				"name": "My Company",
-				"realm": "sip.mycompany.com"
-			},
-			"phoneNumber": "+14151234567"
-		},
-		"help": {
-			"text": "Please input a username and either an account name, an account realm or a phone number linked to your account."
-		},
-		"button": {
-			"recover": "recover password"
-		},
-		"toastr": {
-			"success": {
-				"reset": "Your password has been successfully reset, an email has been sent to your login address"
-			},
-			"error": {
-				"reset": {
-					"account_name": "The account name provided could not be found",
-					"account_realm": "The account realm provided could not be found",
-					"phone_number": "The phone number provided could not be found",
-					"username": "The username provided could not be found"
-				},
-				"missing": "Please input either an account name, an account realm or a phone number linked to your account"
-			}
-		}
-	},
-
 	"passwordUpdate": {
 		"title": "Password Update",
 		"label": {
@@ -117,5 +82,33 @@
 			"content": "Once your order is processed, you will receive instructions via email on how to sign into your new account. If you have any questions in the meantime, please contact sales@2600hz.com and someone will assist you.",
 			"title": "Thank you for your order!"
 		}
+	},
+
+	"__comment": "UI-1848: new password recovery process",
+	"__version": "3.23",
+	"recoverPassword": {
+		"toastr": {
+			"success": {
+				"reset": "An email has been sent to the address you provided. Please check that email for temporary credentials that you can use to access your account. Once signed in, you will need to change/update your password."
+			},
+			"error": {
+				"reset": {
+					"account_name": "The account name provided could not be found",
+					"account_realm": "The account realm provided could not be found",
+					"phone_number": "The phone number provided could not be found",
+					"username": "The username provided could not be found"
+				},
+				"missing": "Please input either an account name or a phone number linked to your account"
+			}
+		},
+		"successReset": "An email has been sent to the address you provided. Please check that email for temporary credentials that you can use to access your account. Once signed in, you will need to change/update your password.",
+		"headline": "In order to recover your password, please enter your Email/Username:",
+		"emailPlaceholder": "Email/Username",
+		"headline2": "And one of the following (only one is required):",
+		"accountNamePlaceholder": "Account Name",
+		"phoneNumberPlaceholder": "Phone Number",
+		"resetPassword": "Reset Password",
+		"rememberPassword": "Remember your password?",
+		"backToSignIn": "Back to Sign In"
 	}
 }
