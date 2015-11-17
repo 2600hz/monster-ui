@@ -271,6 +271,7 @@ define(function(require){
 		showTrialInfo: function(timeLeft) {
 			var self = this,
 				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60*60*24*4)) : -1,
+				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
 				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
 
 			template.find('.links').on('click', function() {
@@ -279,7 +280,52 @@ define(function(require){
 
 			$('#main_topbar_nav').prepend(template);
 
-			self.showTrialPopup(daysLeft);
+			hasAlreadyLogIn ? self.showTrialPopup(daysLeft) : self.showFirstTrialGreetings();
+		},
+
+		showFirstTrialGreetings: function() {
+			var self = this,
+				updateUser = function(callback) {
+					var userToSave = self.uiFlags.user.set('hasLoggedIn', true);
+
+					self.updateUser(userToSave, function(user) {
+						callback && callback(user);
+					});
+
+					monster.pub('auth.continueTrial');
+				};
+
+			var popup = $(monster.template(self, 'trial-greetingsDialog'));
+
+			popup.find('#acknowledge').on('click', function() {
+				dialog.dialog('close').remove();
+
+				updateUser && updateUser();
+			});
+
+			var dialog = monster.ui.dialog(popup, {
+				title: self.i18n.active().trialGreetingsDialog.title
+			});
+
+			// Update the flag of the walkthrough is they don't care about it
+			dialog.siblings().find('.ui-dialog-titlebar-close').on('click', function() {
+				updateUser && updateUser()
+			});
+		},
+
+		updateUser: function(data, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'user.update',
+				data: {
+					accountId: self.accountId,
+					data: data
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		},
 
 		showTrialPopup: function(daysLeft) {
@@ -297,7 +343,9 @@ define(function(require){
 						function() {
 							self.handleUpgradeClick();
 						},
-						null,
+						function() {
+							monster.pub('auth.continueTrial');
+						},
 						{
 							title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
 							cancelButtonText: self.i18n.active().trialPopup.closeButton,

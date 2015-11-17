@@ -562,3 +562,17 @@
 #trial_upgrade_popup .actions #upgrade {
 	margin-left: 15px;
 }
+
+
+/* Walkthrough popups */
+.trial-first-greeting-popup {
+	padding: 15px;
+	width: 450px;
+}
+
+.trial-first-greeting-popup .actions-wrapper {
+	border-top: 1px solid #777;
+	margin-top: 25px;
+	padding-top: 15px;
+	text-align: right;
+}

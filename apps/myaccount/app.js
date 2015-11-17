@@ -559,9 +559,14 @@ define(function(require){
 			var self = this;
 
 			self.showMyAccount(function() {
-				self.showGreetingWalkthrough(function() {
+				if(monster.apps.auth.currentAccount.hasOwnProperty('trial_time_left')) {
 					self.renderStepByStepWalkthrough(template, callback);
-				}, callback);
+				}
+				else {
+					self.showGreetingWalkthrough(function() {
+						self.renderStepByStepWalkthrough(template, callback);
+					}, callback);
+				}
 			});
 		},
 

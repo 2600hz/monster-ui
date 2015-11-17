@@ -110,5 +110,13 @@
 		"resetPassword": "Reset Password",
 		"rememberPassword": "Remember your password?",
 		"backToSignIn": "Back to Sign In"
+	},
+
+	"__comment": "UI-1874: new trial greeting mechanism",
+	"__version": "4.0",
+	"trialGreetingsDialog": {
+		"title": "Welcome to the Platform!",
+		"content": "The step-by-step wizard will help familiarize you with the platform so that you can begin setting up your business phone system.",
+		"go": "Go"
 	}
 }
