@@ -31,7 +31,8 @@ define(function(require){
 			'myaccount.openAccordionGroup': '_openAccordionGroup',
 			'myaccount.UIRestrictionsCompatibility': '_UIRestrictionsCompatibility',
 			'myaccount.showCreditCardTab': 'showCreditCardTab',
-			'myaccount.hasCreditCards': 'hasCreditCards'
+			'myaccount.hasCreditCards': 'hasCreditCards',
+			'core.changedAccount': 'refreshMyAccount',
 		},
 
 		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
@@ -317,6 +318,34 @@ define(function(require){
 			});
 		},
 
+		// Hack created to trigger when we masquerade
+		refreshMyAccount: function() {
+			var self = this,
+				myaccount = $(self.mainContainer);
+
+			if(myaccount.hasClass('myaccount-open')) {
+				self.displayUserSection();
+
+				var firstTab = myaccount.find('.myaccount-menu .myaccount-element.active').first(),
+					module = firstTab.data('module'),
+					args = {
+						module: module,
+						title: self.i18n.active()[module].title
+					};
+
+				if (firstTab.data('key')) {
+					args.key =  firstTab.data('key');
+				}
+
+				self.activateSubmodule(args);
+
+				monster.pub('myaccount.refreshBadges', {
+					except: module
+				});
+			}
+			
+		},
+
 		bindEvents: function(container) {
 			var self = this,
 				mainContainer = $(self.mainContainer),
@@ -424,10 +453,21 @@ define(function(require){
 		},
 
 		displayUserSection: function() {
-			var self = this,
-				fnToUse = monster.util.isMasquerading() ? 'hide' : 'show';
+			var self = this;
 
-			$('.myaccount-menu .myaccount-element[data-module="user"]')[fnToUse]();
+			if(monster.util.isMasquerading()) {
+				var userTab = $('.myaccount-menu .myaccount-element[data-module="user"]');
+
+				userTab.hide();
+
+				if(userTab.hasClass('active')) {
+					userTab.removeClass('active');
+					$('.myaccount-menu .myaccount-element:visible').first().addClass('active');
+				}
+			}
+			else {
+				$('.myaccount-menu .myaccount-element[data-module="user"]').show();
+			}
 		},
 
 		activateSubmodule: function(args) {
