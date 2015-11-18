@@ -338,6 +338,7 @@ define(function(require){
 				isMasquerading: true
 			});
 			$('#main_topbar_account_toggle').addClass('masquerading');
+			monster.pub('core.changedAccount');
 
 			toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
 
@@ -363,6 +364,8 @@ define(function(require){
 			$('#main_topbar_account_toggle').removeClass('masquerading');
 
 			toastr.info(self.i18n.active().restoreMasquerading);
+
+			monster.pub('core.changedAccount');
 
 			callback && callback();
 		},
