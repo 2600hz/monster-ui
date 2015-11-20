@@ -111,7 +111,12 @@
 			"usedBy": "It is currently used by {{usedBy}}",
 			"notUsed": "It is currently not in use.",
 			"masqueradeTooltip": "Click here to masquerade to this account"
-		}
+		},
+
+		"__comment": "UI-1888: List MDNs in Numbers Manager without the ability to configure features (e911, cnam, prepend)",
+		"__version": "v4.0",
+		"mobile": "Mobile Manager",
+		"mobileIconHelp": "This number is linked to a Mobile device and therefore, the only way to move it around, is by managing the corresponding device"
 	},
 
 	"callerId": {
