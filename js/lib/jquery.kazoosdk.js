@@ -282,6 +282,13 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
 		},
+		temporalSet: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules_sets' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
+		},
 		user: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
