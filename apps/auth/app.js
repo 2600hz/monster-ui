@@ -536,6 +536,8 @@ define(function(require){
 				if ( monster.ui.valid(form) ) {
 					var object = monster.ui.getFormData('form_password_recovery', '.', true);
 
+					object.ui_url = window.location.href;
+
 					if ( object.hasOwnProperty('account_name') || object.hasOwnProperty('phone_number') ) {
 						self.callApi({
 							resource: 'auth.recovery',
