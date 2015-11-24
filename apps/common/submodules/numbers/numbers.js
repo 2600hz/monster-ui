@@ -80,6 +80,7 @@ define(function(require){
 		numbersGetFeatures: function(callback) {
 			var self = this,
 				features = {
+					mobile: { icon: 'monster-grey fa fa-mobile-phone', help: self.i18n.active().numbers.mobileIconHelp },
 					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
 					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
 					port: { icon: 'fa fa-phone monster-yellow feature-port' },
@@ -131,7 +132,7 @@ define(function(require){
 
 				if(value.used_by) {
 					if(data.viewType === 'pbx') {
-						if(value.used_by === 'callflow') {
+						if(value.used_by === 'callflow' || value.used_by === 'mobile') {
 							value.isLocal = value.features.indexOf('local') > -1;
 							thisAccount.usedNumbers.push(value);
 						}
@@ -1195,6 +1196,11 @@ define(function(require){
 							callback && callback(null, callflows);
 						});
 					},
+					devices: function (callback) {
+						self.numbersListMobileDevices(accountId, function (devices) {
+							callback && callback(null, devices);
+						})
+					},
 					groups: function(callback) {
 						self.numbersListGroups(accountId, function(groups) {
 							callback && callback(null, groups);
@@ -1212,14 +1218,14 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					self.numbersFormatList(results);
+					self.numbersFormatList(accountId, results);
 
 					globalCallback && globalCallback(results.numbers);
 				}
 			);
 		},
 
-		numbersFormatList: function(data) {
+		numbersFormatList: function(accountId, data) {
 			var self = this,
 				mapUsers = {},
 				mapGroups = {};
@@ -1255,6 +1261,25 @@ define(function(require){
 						}
 					}
 				});
+			});
+
+			_.each(data.devices, function(device, idx) {
+				data.numbers.numbers[device.mobile.mdn] = {
+					assigned_to: accountId,
+					features: [ 'mobile' ],
+					isLocal: false,
+					phoneNumber: device.mobile.mdn,
+					state: 'in_service',
+					used_by: 'mobile'
+				};
+
+				if (device.hasOwnProperty('owner_id')) {
+					$.extend(true, data.numbers.numbers[device.mobile.mdn], {
+						owner_id: device.owner_id,
+						ownerType: 'user',
+						owner: mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name
+					});
+				}
 			});
 
 			return data;
@@ -1347,6 +1372,24 @@ define(function(require){
 				},
 				success: function(_dataAccounts, status) {
 					callback && callback(_dataAccounts.data);
+				}
+			});
+		},
+
+		numbersListMobileDevices: function (accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'device.list',
+				data: {
+					accountId: accountId,
+					filters: {
+						filter_device_type: 'mobile',
+						has_key: 'mobile'
+					}
+				},
+				success: function(_dataDevices, status) {
+					callback && callback(_dataDevices.data)
 				}
 			});
 		}
