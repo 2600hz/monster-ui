@@ -472,55 +472,6 @@ i.monster-password-strength {
 	color: #303039;
 }
 
-.monster-content .app-layout .app-navbar {
-	height: 40px;
-	margin-top: 34px;
-}
-
-.monster-content .app-layout .app-menu {
-	float: left;
-	height: 40px;
-	margin: 0;
-}
-
-.monster-content .app-layout .app-menu:not(:last-child) {
-	margin-right: 45px;
-}
-
-.monster-content .app-layout .app-menu.pull-right {
-	float: right;
-}
-
-.monster-content .app-layout .app-menu-item {
-	display: block;
-	float: left;
-}
-
-.monster-content .app-layout .app-menu-item:not(:last-child) {
-	margin-right: 15px;
-}
-
-.monster-content .app-layout .app-menu-item-link {
-	line-height: 40px;
-	padding: 11px 0 8px;
-	color: #303039;
-	border-bottom: 3px solid transparent;
-}
-
-.monster-content .app-layout .app-menu-item-link:not(.active):not(:hover):focus {
-	color: #303039 !important;
-}
-
-.monster-content .app-layout .app-menu-item-link.active {
-	color: #22a5ff;
-	border-color: #22a5ff;
-}
-
-.monster-content .app-layout .app-navbar.reverse .app-menu-item-link.active {
-	color: #fff;
-	border-color: #fff;
-}
-
 .monster-content .app-layout .app-content-wrapper {
 	max-width: 1200px;
 	margin: 0 auto;

@@ -1250,3 +1250,59 @@ table.monster-table .actions .action-item:first-child {
 	width: 31px;
 	height: 31px;
 }
+
+/************************************************************/
+/********************** MONSTER NAVBAR **********************/
+/************************************************************/
+
+.monster-navbar {
+	height: 40px;
+	margin-top: 34px;
+}
+
+.monster-navbar .navbar-menu {
+	float: left;
+	height: 40px;
+	margin: 0;
+}
+
+.monster-navbar .navbar-menu:not(:last-child) {
+	margin-right: 45px;
+}
+
+.monster-navbar .navbar-menu.pull-right {
+	float: right;
+}
+.monster-navbar .navbar-menu.pull-left {
+	float: left;
+}
+
+.monster-navbar .navbar-menu-item {
+	display: block;
+	float: left;
+}
+
+.monster-navbar .navbar-menu-item:not(:last-child) {
+	margin-right: 15px;
+}
+
+.monster-navbar .navbar-menu-item-link {
+	line-height: 40px;
+	padding: 11px 0 8px;
+	color: #303039;
+	border-bottom: 3px solid transparent;
+}
+
+.monster-navbar .navbar-menu-item-link:not(.active):not(:hover):focus {
+	color: #303039 !important;
+}
+
+.monster-navbar .navbar-menu-item-link.active {
+	color: #22a5ff;
+	border-color: #22a5ff;
+}
+
+.monster-navbar.reverse .navbar-menu-item-link.active {
+	color: #fff;
+	border-color: #fff;
+}
