@@ -833,6 +833,20 @@ define(function(require){
 			} else {
 				return true;
 			}
+		},
+
+		// Check if the object is parsable or not
+		isJSON: function(obj) {
+			var self = this;
+
+			try {
+				JSON.stringify(obj);
+			}
+			catch (e) {
+				return false;
+			}
+
+			return true;
 		}
 	};
 

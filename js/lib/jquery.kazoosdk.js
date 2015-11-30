@@ -318,6 +318,11 @@
 			'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'patchAll': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks' }
 		},
+		websockets: {
+			'listEvents': { 'verb': 'GET', 'url': 'websockets' },
+			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/websockets' },
+			'listBindings': { 'verb': 'GET', 'url': 'accounts/{accountId}/websockets/{websocketId}' }
+		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
 			'getLogoByDomain': { verb: 'GET', url: 'whitelabel/{domain}/logo' },
