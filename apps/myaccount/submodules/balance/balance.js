@@ -178,7 +178,14 @@ define(function(require){
 		balanceFormatDialogData: function(data) {
 			var self = this,
 				amount = data.balance.balance.toFixed(2) || '0.00',
+				thresholdData = { enabled: false },
 				topupData = { enabled: false };
+
+			if (data.account.hasOwnProperty('threshold')) {
+				thresholdData.enabled = true;
+
+				$.extend(true, thresholdData, data.account.threshold);
+			}
 
 			if(data.account.hasOwnProperty('topup')) {
 				topupData.enabled = true;
@@ -188,6 +195,7 @@ define(function(require){
 
 			var templateData = {
 				amount: amount,
+				threshold: thresholdData,
 				topup: topupData
 			};
 
@@ -376,56 +384,75 @@ define(function(require){
 			var self = this,
 				parent = params.parent,
 				data = params.data,
-				stateSwitch = 'manual',
+				thresholdAlerts = data.threshold.enabled,
 				autoRecharge = data.topup.enabled || false,
-				autoRechargeSwitch = parent.find('#auto_recharge_trigger');
+				tabAnimationInProgress = false,
+				thresholdAlertsContent = parent.find('#threshold_alerts_content'),
+				thresholdAlertsSwitch = parent.find('#threshold_alerts_switch'),
+				autoRechargeContent = parent.find('#auto_recharge_content'),
+				autoRechargeSwitch = parent.find('#auto_recharge_switch');
 
-			monster.ui.tooltips(parent);
+			parent
+				.find('.navbar-menu-item-link')
+					.on('click', function(event) {
+						event.preventDefault();
 
-			autoRechargeSwitch.on('change', function() {
-				if($(this).is(':checked')) {
-					parent.find('#recharge_content').slideDown('fast')
-				} else {
-					parent.find('#recharge_content').slideUp();
+						var $this = $(this),
+							renderTabContent = function () {
+								if (!tabAnimationInProgress) {
+									tabAnimationInProgress = true;
 
-					if(autoRecharge === true) {
-						monster.ui.confirm(self.i18n.active().balance.turnoffRechargeConfirm,
-							function() {
-								self.balanceTurnOffTopup(function() {
-									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
-									parent.dialog('close');
-								})
-							},
-							function() {
-								parent.find('#recharge_content').slideDown();
-								stateSwitch = 'manual';
-								autoRechargeSwitch.prop('checked', autoRecharge);
+									parent
+										.find('.add-credits-content-wrapper.active')
+											.fadeOut(function() {
+												parent
+													.find('.navbar-menu-item-link.active')
+														.removeClass('active');
+												$this
+													.addClass('active');
+
+												$(this)
+													.removeClass('active');
+
+												parent
+													.find(event.toElement.hash)
+														.fadeIn(function() {
+															$(this)
+																.addClass('active');
+
+															tabAnimationInProgress = false;
+														});
+											});
+								}
+							};
+
+						if (parent.find('.add-credits-content-wrapper.active input[type="checkbox"]').is(':checked')) {
+							var formId = parent.find('.add-credits-content-wrapper.active form').prop('id'),
+								hasEmptyValue = false,
+								formData = monster.ui.getFormData(formId);
+
+							for (var key in formData) {
+								if (formData[key] === '') {
+									hasEmptyValue = true;
+									break;
+								}
 							}
-						);
-					}
-				}
-			});
-			autoRechargeSwitch.prop('checked', autoRecharge);
-			parent.find('#recharge_content').toggle(autoRecharge);
 
-			parent.find('#confirm_recharge').on('click', function() {
-				var dataTopUp = {
-					threshold: parseFloat(parent.find('#threshold_recharge').val()),
-					amount: parseFloat(parent.find('#recharge_amount').val())
-				};
-
-				if(dataTopUp.threshold && dataTopUp.amount) {
-					self.balanceUpdateTopUp(dataTopUp, function() {
-						parent.dialog('close');
-						toastr.success(self.i18n.active().balance.autoRechargeEnabled);
+							if (hasEmptyValue) {
+								monster.ui.alert('warning', self.i18n.active().balance.addCreditPopup.alerts.missingValue[formId], function () {}, {
+									title: self.i18n.active().balance.addCreditPopup.alerts.missingValue.title
+								});
+							}
+							else {
+								renderTabContent();
+							}
+						}
+						else {
+							renderTabContent();
+						}
 					});
-				}
-				else{
-					monster.ui.alert(self.i18n.active().balance.invalidAmount);
-				}
-			});
 
-			parent.find('.add-credit').on('click', function(ev) {
+			parent.find('#add_credit').on('click', function(ev) {
 				ev.preventDefault();
 
 				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',','.'));
@@ -455,6 +482,107 @@ define(function(require){
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
+
+			thresholdAlertsSwitch
+				.on('change', function() {
+					if ($(this).is(':checked')) {
+						thresholdAlertsContent.slideDown();
+					}
+					else {
+						if (thresholdAlerts) {
+							self.balanceTurnOffThreshold(function () {
+								thresholdAlertsContent
+									.slideUp(function () {
+										thresholdAlerts  = false;
+										toastr.success(self.i18n.active().balance.thresholdAlertsCancelled);
+									});
+							});
+						}
+						thresholdAlertsContent.slideUp();
+					}
+				});
+
+			thresholdAlertsSwitch
+				.prop('checked', thresholdAlerts);
+
+			thresholdAlertsContent.toggle(thresholdAlerts);
+
+			parent
+				.find('#save_threshold')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var thresholdAlertsFormData = monster.ui.getFormData('threshold_alerts_content'),
+							dataAlerts = {
+								threshold: parseFloat(thresholdAlertsFormData.threshold_alerts_amount.replace(',','.'))
+							};
+
+						if(dataAlerts.threshold) {
+
+							if (dataAlerts.threshold) {
+								self.balanceUpdateThreshold(dataAlerts, function () {
+									parent.dialog('close');
+									toastr.success(self.i18n.active().balance.thresholdAlertsEnabled);
+								});
+							}
+							else {
+								monster.ui.alert(self.i18n.active().balance.invalidAmount);
+							}
+						}
+						else {
+							monster.ui.alert(self.i18n.active().balance.invalidAmount);
+						}
+					});
+
+			autoRechargeSwitch.on('change', function() {
+				if($(this).is(':checked')) {
+					autoRechargeContent.slideDown();
+				} else {
+					if (autoRecharge) {
+						self.balanceTurnOffTopup(function() {
+							autoRechargeContent
+								.slideUp(function () {
+									autoRecharge = false;
+									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
+								});
+						});
+					}
+					else {
+						autoRechargeContent.slideUp();
+					}
+				}
+			});
+
+			autoRechargeSwitch
+				.prop('checked', autoRecharge);
+
+			autoRechargeContent.toggle(autoRecharge);
+
+			parent.find('#confirm_recharge').on('click', function(event) {
+				event.preventDefault();
+
+				var autoRechargeFormData = monster.ui.getFormData('auto_recharge_content'),
+					dataTopUp = {
+						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',','.')),
+						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',','.'))
+					};
+
+				if (dataTopUp.threshold && dataTopUp.amount) {
+					if(dataTopUp.threshold && dataTopUp.amount) {
+						self.balanceUpdateTopUp(dataTopUp, function() {
+							parent.dialog('close');
+							toastr.success(self.i18n.active().balance.autoRechargeEnabled);
+						});
+					}
+					else{
+						monster.ui.alert(self.i18n.active().balance.invalidAmount);
+					}
+				}
+				else {
+					monster.ui.alert(self.i18n.active().balance.invalidAmount);
+				}
+
+			});
 		},
 
 		balanceBindEvents: function(parent) {
@@ -482,6 +610,58 @@ define(function(require){
 		},
 
 		//utils
+		balanceTurnOffThreshold: function (callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					if (data.data.hasOwnProperty('threshold')) {
+						delete data.data.threshold;
+
+						self.callApi({
+							resource: 'account.update',
+							data: {
+								accountId: self.accountId,
+								data: data.data
+							},
+							success: function(dataUpdate) {
+								callback && callback(dataUpdate);
+							}
+						});
+					}
+				}
+			});
+		},
+
+		balanceUpdateThreshold: function (dataThreshold, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					data.data.threshold = dataThreshold;
+
+					self.callApi({
+						resource: 'account.update',
+						data: {
+							accountId: self.accountId,
+							data: data.data
+						},
+						success: function(dataUpdate) {
+							callback && callback(dataUpdate);
+						}
+					});
+				}
+			});
+		},
+
 		balanceTurnOffTopup: function(callback) {
 			var self = this;
 

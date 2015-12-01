@@ -98,112 +98,97 @@
 }
 
 /* ADD CREDITS POPUP */
-.add-credits-content-wrapper {
+.add-credits-popup-wrapper {
 	display: block;
 	margin: auto;
 	width: 500px;
+}
+
+.add-credits-popup-wrapper label {
+	line-height: 28px;
+	margin-bottom: 0;
+}
+
+.add-credits-popup-wrapper form label {
+	margin-bottom: 25px;
+}
+
+.add-credits-popup-wrapper form label:last-child {
+	margin-bottom: 0;
+}
+
+.add-credits-popup-wrapper form label::after {
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.add-credits-popup-wrapper input {
+	margin-bottom: 0;
+}
+
+.add-credits-popup-wrapper .dynamic-content {
+	display: none;
+	margin-top: 25px;
+	margin-bottom: 0;
+}
+
+.add-credits-popup-wrapper .monster-switch {
+	margin-left: 20px;
+}
+
+.add-credits-popup-wrapper .currency-container {
+	float: right;
+}
+
+.add-credits-popup-wrapper .currency-container input {
+	margin-left: 5px;
+}
+
+.add-credits-popup-wrapper .add-credits-content-wrapper:not(.active) {
+	display: none;
+}
+
+.add-credits-popup-wrapper .add-credits-header-wrapper {
+	padding: 20px;
+	border-bottom: 1px solid #c0c0c9;
+}
+
+.add-credits-popup-wrapper .add-credits-header-balance {
+	font-size: 22pt;
+	font-weight: 600;
+	color: #22a5ff;
+}
+
+.add-credits-popup-wrapper .add-credits-menu-wrapper {
+	margin-top: 0;
+	padding: 20px 20px 0;
+}
+
+.add-credits-popup-wrapper .add-credits-menu-wrapper ul {
+	width: 100%;
+	border-bottom: 1px solid #c0c0c9;
+}
+
+.add-credits-popup-wrapper .add-credits-content-wrapper {
 	padding: 20px;
 }
 
-.add-credits-content-wrapper .add-credits-header {
-	background-color: #f0f0f9;
-	border: solid 1px #c0c0c9;
-	border-radius: 2px;
-	padding: 10px;
+.add-credits-popup-wrapper .add-credits-content .text {
+	margin-bottom: 20px;
+	font-size: 14px;
 }
 
-.add-credits-content-wrapper .add-credits-header .title-block {
-	line-height: 55px;
-}
-
-.add-credits-content-wrapper .add-credits-header .title-box {
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-.add-credits-content-wrapper .box-content {
-	background-color: #f0f0f9;
-	border: solid 1px #c0c0c9;
-	border-radius: 2px;
-	padding: 10px;
+.add-credits-popup-wrapper .add-credits-actions {
 	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #c0c0c9;
+
 }
-.add-credits-content-wrapper .box-content.disabled {
-	position: relative;
-	-webkit-filter: grayscale(100%);
-	-moz-filter: grayscale(100%);
-	-ms-filter: grayscale(100%);
-	-o-filter: grayscale(100%);
-	filter: grayscale(100%);
-	filter: url(grayscale.svg); /* Firefox 4+ */
-	filter: gray; /* IE 6-9 */;
-}
-.add-credits-content-wrapper .box-content.disabled:after {
+
+.add-credits-popup-wrapper .add-credits-header::after,
+.add-credits-popup-wrapper .add-credits-actions::after {
+	display: block;
 	content: '';
-	cursor: not-allowed;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: #090909;
-	opacity: 0.5;
-	top: 0;
-	left: 0;
-}
-
-.add-credits-content-wrapper .box-content .line-content {
-	height: 50px;
-	line-height: 50px;
-}
-
-.add-credits-content-wrapper .box-content .line-content > * {
-	float: left;
-	height: 50px;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-label {
-	font-weight: 600;
-	width: 200px;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-label.smaller {
-	font-weight: 400;
-	font-size: 12px;
-	margin-left: 4px;
-	width: 196px;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-value {
-	width: 120px;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-value > *:not(.pull-right) {
-	float: left;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-value input {
-	margin: 10px 0 0 5px;
-	width: 70px;
-	border-radius: 2px;
-	box-shadow: none;
-	border-color: #c0c0c9;
-}
-.add-credits-content-wrapper .box-content .line-content .line-value input:focus {
-	border-color: #22a5ff;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-button {
-	width: 138px;
-	padding: 0 10px;
-	text-align: right;
-}
-
-.add-credits-content-wrapper .box-content .line-content .line-button button {
-	margin-top: -3px;
-	width: 100%;
-}
-.add-credits-content-wrapper .box-content #recharge_content,
-.add-credits-content-wrapper .box-content #recharge_content > .line-content:last-child {
-	border-top: solid 1px #c0c0c9;
-	margin-top: 10px;
-	padding-top: 10px;
+	clear: both;
 }
