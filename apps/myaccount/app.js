@@ -33,6 +33,7 @@ define(function(require){
 			'myaccount.showCreditCardTab': 'showCreditCardTab',
 			'myaccount.hasCreditCards': 'hasCreditCards',
 			'core.changedAccount': 'refreshMyAccount',
+			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough'
 		},
 
 		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
@@ -579,9 +580,15 @@ define(function(require){
 
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
-			var self = this;
+			var self = this,
+				response = self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 
-			return self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+			if(typeof callback === 'function') {
+				callback(response);
+			}
+			else {
+				return response;
+			}
 		},
 
 		// function to set the flag "showfirstUseWalkthrough" to false and update the user in the database.
