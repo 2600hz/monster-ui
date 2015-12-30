@@ -1059,7 +1059,7 @@ define(function(require){
 				todayDate = new Date(),
 				businessDate = monster.util.getBusinessDate(4),
 				createdDate = order.hasOwnProperty('created') ? order.created : todayDate,
-				transferDate = order.hasOwnProperty('transfer_date') ? order.transfer_date : businessDate,
+				transferDate = order.hasOwnProperty('transfer_date') ? monster.util.gregorianToDate(order.transfer_date) : businessDate,
 				isTransferDateNotValid = businessDate.getTime() >= transferDate.getTime(),
 				dataTemplate = $.extend(true, {}, order, {
 					total: order.numbers.length,
