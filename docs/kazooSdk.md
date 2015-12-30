@@ -1293,11 +1293,11 @@ kazooSdk.auth.userAuth({
 |||
 |---|---|
 | Method: | __port.changeState(__*settings*__)__ |
-| Request Type: | POST |
+| Request Type: | PATCH |
 | Request URL: | {apiRoot}/accounts/{accountId}/port_requests/{portRequestId}/{state} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `portRequestId`, `state`, `data` |
+| Mandatory _settings_: | `accountId`, `portRequestId`, `state` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 

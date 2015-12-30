@@ -1963,8 +1963,7 @@ define(function(require){
 				data: {
 					accountId: accountId,
 					portRequestId: portRequestId,
-					state: state,
-					data: {}
+					state: state
 				},
 				success: function(data, status) {
 					callbackSuccess && callbackSuccess(data.data);
