@@ -844,9 +844,6 @@ define(function(require){
 								};
 
 								monster.pub('myaccount.' + module + '.renderContent', args);
-							},
-							function(dataError) {
-								monster.ui.friendlyError(dataError);
 							}
 						);
 					}
@@ -933,7 +930,7 @@ define(function(require){
 						callbackSuccess(_data, status);
 					}
 				},
-				error: function() {
+				error: function(_data, status) {
 					if ( typeof callbackError === 'function' ) {
 						callbackError(_data, status);
 					}
