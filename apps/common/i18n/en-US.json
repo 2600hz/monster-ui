@@ -336,7 +336,7 @@
 		},
 		"pendingOrders": {
 			"title": "Pending Orders",
-			"newPortLink": "Initiate new Port Request",
+			"newPortLink": "New Port Request",
 			"tableOrderName": "Request name",
 			"tableOrderDate": "Created on",
 			"tableOrderState": "Request state",
