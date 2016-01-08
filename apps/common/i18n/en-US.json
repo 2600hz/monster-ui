@@ -108,7 +108,7 @@
 		"__version": "3.22",
 		"searchPopup": {
 			"numberFound": "This number was found in the sub-account {{variable}}.",
-			"usedBy": "It is currently used by {{usedBy}}",
+			"usedBy": "It is currently used by {{variable}}",
 			"notUsed": "It is currently not in use.",
 			"masqueradeTooltip": "Click here to masquerade to this account"
 		},
