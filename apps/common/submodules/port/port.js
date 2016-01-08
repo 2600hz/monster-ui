@@ -1063,7 +1063,6 @@ define(function(require){
 				isTransferDateNotValid = businessDate.getTime() >= transferDate.getTime(),
 				dataTemplate = $.extend(true, {}, order, {
 					total: order.numbers.length,
-					price: order.numbers.length * 5,
 					transfer_date: isTransferDateNotValid ? businessDate : transferDate,
 					created: createdDate
 				}),

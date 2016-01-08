@@ -51,20 +51,13 @@
 	<div id="order_summary">
 		<h2>{{ i18n.port.confirmOrder.orderSummaryTitle }}</h2>
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span6 offset4">
 				<p>{{name}}</p>
 				<ul>
 					<li>{{ i18n.port.confirmOrder.labelOrderDate }} {{toFriendlyDate created 'short'}}</li>
 					<li>{{ i18n.port.confirmOrder.labelTransferDate }} <span id="transfer_schedule_date">{{toFriendlyDate transfer_date 'short'}}</span></li>
 					<li>{{ i18n.port.confirmOrder.labelNumbersTotal }} {{total}}</li>
 				</ul>
-			</div>
-			<div class="span6">
-				<p>{{ i18n.port.confirmOrder.labelOrderTotal }} &#36;{{price}}</p>
-				<div class="row-fluid info">
-					<i class="fa fa-info-circle"></i>
-					<p>{{ i18n.port.confirmOrder.orderTotalInfoPartOne }} &#36;{{ i18n.port.confirmOrder.orderTotalInfoPartTwo }}</p>
-				</div>
 			</div>
 		</div>
 	</div>

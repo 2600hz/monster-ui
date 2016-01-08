@@ -319,9 +319,6 @@
 			"labelOrderDate": "Order Date:",
 			"labelTransferDate": "Transfer Schedule Date:",
 			"labelNumbersTotal": "Total Numbers:",
-			"labelOrderTotal": "Total Order:",
-			"orderTotalInfoPartOne": "One time fees of",
-			"orderTotalInfoPartTwo": "5/number will be charged to your account.",
 			"submitButton": "submit"
 		},
 		"manageOrders": {

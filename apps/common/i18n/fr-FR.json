@@ -285,9 +285,6 @@
 			"labelOrderDate":"Date de demande du transfert:",
 			"labelTransferDate":"Date du transfert demandée:",
 			"labelNumbersTotal":"Total des numéros:",
-			"labelOrderTotal":"Montant total du transfert:",
-			"orderTotalInfoPartOne":"Frais unique de",
-			"orderTotalInfoPartTwo":"5/numéro vous serons facturé sur votre compte.",
 			"submitButton":"envoyer"
 		},
 		"manageOrders":{
