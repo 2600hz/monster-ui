@@ -48,36 +48,6 @@
 			<p><span class="important">{{ i18n.port.confirmOrder.dateInfoPartOne }}</span> {{ i18n.port.confirmOrder.dateInfoPartTwo }}</p>
 		</div>
 	</div>
-	<div id="temporary_numbers">
-		<form id="temporary_numbers_form">
-			<div class="row-fluid">
-				<div class="span6">
-					<label for="have_temporary_numbers">{{ i18n.port.confirmOrder.labelTemporaryNumbers }}</label>
-				</div>
-				<div class="span6">
-					<div class="switch">
-						{{#monsterSwitch}}<input type="checkbox" id="have_temporary_numbers">{{/monsterSwitch}}
-					</div>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span6">
-					<label for="numbers_to_buy">{{ i18n.port.confirmOrder.labelTemporaryNumbersCount }}</label>
-				</div>
-				<div class="span6">
-					<select class="span2" name="temporary_numbers" id="numbers_to_buy">
-					{{#each numbers}}
-						<option value="{{@index}}">{{@index}}</option>
-					{{/each}}
-					</select>
-				</div>
-			</div>
-		</form>
-		<div class="row-fluid info">
-			<i class="fa fa-info-circle"></i>
-			<p>{{ i18n.port.confirmOrder.temporaryNumbersInfoPartOne }} &#36;{{ i18n.port.confirmOrder.temporaryNumbersInfoPartTwo }}</p>
-		</div>
-	</div>
 	<div id="order_summary">
 		<h2>{{ i18n.port.confirmOrder.orderSummaryTitle }}</h2>
 		<div class="row-fluid">
