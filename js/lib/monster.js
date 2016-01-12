@@ -363,7 +363,7 @@ define(function(require){
 				status: error.status,
 				message: errorMessage,
 				requestId: requestId || '',
-				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : '',
+				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
 				url: url || '',
 				verb: verb || ''
 			};
