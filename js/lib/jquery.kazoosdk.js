@@ -1,14 +1,14 @@
 (function ( $ ) {
 	var baseMethods = {
 		auth: {
-			userAuth: function(settings) {
-				authFunction(settings, this.parent.defaultSettings, 'user_auth');
+			pinAuth: function(settings) {
+				authFunction(settings, this.parent.defaultSettings, 'pin_auth');
 			},
 			sharedAuth: function(settings) {
 				authFunction(settings, this.parent.defaultSettings, 'shared_auth');
 			},
-			pinAuth: function(settings) {
-				authFunction(settings, this.parent.defaultSettings, 'pin_auth');
+			userAuth: function(settings) {
+				authFunction(settings, this.parent.defaultSettings, 'user_auth');
 			}
 		}
 	},
@@ -38,15 +38,43 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
 		},
-		directory: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
+		balance: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
+			'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
+			'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
+			'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
+			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
+			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
+			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit'}
+		},
+		billing: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
+		},
+		callflow: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/callflows/{callflowId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' },
+			'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}'},
+			'searchByNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=number&v={value}'}
+		},
+		cdrs: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' },
+			'listByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/cdrs'}
 		},
 		channel: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/channels' }
+		},
+		clickToCall: {
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/clicktocall' },
+			'get': { verb: 'GET',  url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'update': { verb: 'GET', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/clicktocall' },
+			'connect': { verb: 'POST', url: 'accounts/{accountId}/clicktocall/{clickToCallId}/connect' }
 		},
 		conference: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}' },
@@ -75,26 +103,43 @@
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
 		},
+		connectivity: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/connectivity' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/connectivity' }
+		},
 		contactList: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 		},
-		resourceTemplates: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/resource_templates' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
+		device: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
+			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
+			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}/quickcall/{number}'},
+			'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync'},
+			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' }
 		},
-		localResources: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/resources/{resourceId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/resources' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/resources/{resourceId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resources/{resourceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/resources' },
-			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/resources/collection' },
-			'listJobs': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs' },
-			'getJob': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs/{jobId}' },
-			'createJob':  { verb: 'PUT', url: 'accounts/{accountId}/resources/jobs' }
+		directory: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/directories' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
+		},
+		faxbox: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes/' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' }
+		},
+		faxes: {
+			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
+			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'}
 		},
 		globalResources: {
 			'get': { verb: 'GET', url: 'resources/{resourceId}' },
@@ -107,27 +152,6 @@
 			'getJob': { verb: 'GET', url: 'resources/jobs/{jobId}' },
 			'createJob':  { verb: 'PUT', url: 'resources/jobs' }
 		},
-		ips: {
-			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/ips/{ip}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/ips?zone={zone}&quantity={quantity}' },
-			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
-			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
-		},
-		inspector: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/call_inspector/{callId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/call_inspector' }
-		},
-		user: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
-			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'},
-			'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
-			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
-		},
 		group: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/groups/{groupId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/groups' },
@@ -135,31 +159,46 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/groups/{groupId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/groups' }
 		},
-		callflow: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/callflows/{callflowId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' },
-			'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}'},
-			'searchByNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=number&v={value}'}
+		inspector: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/call_inspector/{callId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/call_inspector' }
 		},
-		clickToCall: {
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/clicktocall' },
-			'get': { verb: 'GET',  url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
-			'update': { verb: 'GET', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/clicktocall/{clickToCallId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/clicktocall' },
-			'connect': { verb: 'POST', url: 'accounts/{accountId}/clicktocall/{clickToCallId}/connect' }
+		ips: {
+			'add': { verb: 'POST', url: 'accounts/{accountId}/ips/{ip}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/ips/{ip}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ips?zone={zone}&quantity={quantity}' },
+			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
+			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
-		pivot: {
-			'listDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug' },
-			'getDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug/{callId}' }
+		limits: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/limits' }
 		},
-		cdrs: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' },
-			'listByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/cdrs'}
+		localResources: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/resources' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resources/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/resources' },
+			'updateCollection': { verb: 'POST', url: 'accounts/{accountId}/resources/collection' },
+			'listJobs': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs' },
+			'getJob': { verb: 'GET', url: 'accounts/{accountId}/resources/jobs/{jobId}' },
+			'createJob':  { verb: 'PUT', url: 'accounts/{accountId}/resources/jobs' }
+		},
+		media: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/media' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/media/{mediaId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/media' },
+			'upload': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}/raw', type: 'application/x-base64' }
+		},
+		menu: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/menus/{menuId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/menus' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/menus/{menuId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
 		},
 		numbers: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
@@ -178,99 +217,9 @@
 			'searchCity': { verb: 'GET', url: 'phone_numbers/prefix?city={city}' },
 			'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' }
 		},
-		device: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
-			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
-			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}/quickcall/{number}'},
-			'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync'},
-			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' }
-		},
-		media: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/media/{mediaId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/media' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/media/{mediaId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/media' },
-			'upload': { verb: 'POST', url: 'accounts/{accountId}/media/{mediaId}/raw', type: 'application/x-base64' }
-		},
-		menu: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/menus/{menuId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/menus' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/menus/{menuId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
-		},
-		voicemail: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' }
-		},
-		faxbox: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes/' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' }
-		},
-		faxes: {
-			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
-			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'}
-		},
-		connectivity: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/connectivity' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/connectivity' }
-		},
-		temporalRule: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
-			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
-		},
-		presence: {
-			'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
-		},
-		servicePlan: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
-			'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
-			'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
-			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
-			'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
-			'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
-			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
-			'getCsv': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv' },
-			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
-			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
-			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
-		},
-		limits: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/limits' }
-		},
-		balance: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-			'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
-			'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-			'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-			'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit'}
-		},
-		billing: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
-			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
+		pivot: {
+			'listDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug' },
+			'getDebug': { verb: 'GET', url: 'accounts/{accountId}/pivot/debug/{callId}' }
 		},
 		port: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}' },
@@ -296,8 +245,66 @@
 			'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
 			'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' }
 		},
+		presence: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
+		},
 		registrations: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
+		},
+		resourceTemplates: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/resource_templates' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
+		},
+		servicePlan: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
+			'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+			'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
+			'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
+			'getCsv': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current?depth=4&identifier=items&accept=csv' },
+			'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
+			'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
+			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
+			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
+		},
+		temporalRule: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
+		},
+		temporalSet: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules_sets' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
+		},
+		user: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
+			'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}'},
+			'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
+			'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
+		},
+		voicemail: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' }
 		},
 		webhooks: {
 			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
@@ -310,6 +317,11 @@
 			'listAvailable': { 'verb': 'GET', 'url': 'webhooks' },
 			'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
 			'patchAll': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/webhooks' }
+		},
+		websockets: {
+			'listEvents': { 'verb': 'GET', 'url': 'websockets' },
+			'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/websockets' },
+			'listBindings': { 'verb': 'GET', 'url': 'accounts/{accountId}/websockets/{websocketId}' }
 		},
 		whitelabel: {
 			'getByDomain': { verb: 'GET', url: 'whitelabel/{domain}' },
@@ -434,6 +446,7 @@
 			data: {
 				data: settings.data
 			},
+			generateError: settings.hasOwnProperty('generateError') ? settings.generateError : true,
 			success: function(data, status, jqXHR) {
 				authTokens[apiRoot] = data.auth_token;
 				settings.success && settings.success(data, status, jqXHR);

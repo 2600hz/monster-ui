@@ -95,7 +95,10 @@
 			"headline": "Vous pouvez consulter le récapitulatif de l'opération ci-dessous. Cliquez sur Continuez pour retourner à la liste des Numéros.",
 			"title": "Récapitulatif de l'opération",
 			"continue": "Continuer"
-		}
+		},
+
+		"mobile": "Mobile Manager",
+		"mobileIconHelp": "Ce numéro est associé à un téléphone mobile, ce qui le rend dépendant de ce téléphone."
 	},
 	"callerId":{
 		"callerIdName":"Nom de Caller ID",
@@ -282,9 +285,6 @@
 			"labelOrderDate":"Date de demande du transfert:",
 			"labelTransferDate":"Date du transfert demandée:",
 			"labelNumbersTotal":"Total des numéros:",
-			"labelOrderTotal":"Montant total du transfert:",
-			"orderTotalInfoPartOne":"Frais unique de",
-			"orderTotalInfoPartTwo":"5/numéro vous serons facturé sur votre compte.",
 			"submitButton":"envoyer"
 		},
 		"manageOrders":{

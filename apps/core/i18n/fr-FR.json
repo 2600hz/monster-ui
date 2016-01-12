@@ -55,7 +55,10 @@
 		"confirm": "Confirmer",
 		"confirmOk":"OK",
 		"confirmCancel":"Annuler",
-		"confirmTitle":"Confirmation"
+		"confirmTitle":"Confirmation",
+		"errorTitle": "Oups!",
+		"infoTitle": "Info",
+		"warningTitle": "Attention!"
 	},
 	"disabled":"Desactivé",
 	"download":"Télécharger",
@@ -329,5 +332,29 @@
 		"seconds": "secondes"
 	},
 
-	"authenticationIssue": "Une erreur d'authentification est survenue lors de cette opération !"
+	"authenticationIssue": "Une erreur d'authentification est survenue lors de cette opération !",
+
+	"__comment": "UI-1074: New Error Popup",
+	"__version": "v3.20_s2",
+	"advancedErrorDialog": {
+		"title": "Oups...",
+		"viewDetails": "Plus de détails",
+		"requestId": "ID de la requête",
+		"apiUrl": "URL de l'API",
+		"verb": "Type d'API"
+	},
+
+	"javascriptErrorDialog": {
+		"title": "Une erreur sauvage Javascript apparaît...",
+		"message": "Message",
+		"line": "Ligne",
+		"column": "Colonne",
+		"stackTrace": "Trace d'erreur",
+		"file": "Nom de fichier"
+	},
+
+	"__comment": "UI-1847: Showing proper message when attempting to login on an expired account",
+	"__version": "3.23",
+	"expiredTrial": "Votre période d'essai a expiré le {{date}}, veuillez contacter notre service client afin d'obtenir les informations pour continuer à utiliser ce service.",
+	"disabledAccount": "Votre compte a été desactivé."
 }

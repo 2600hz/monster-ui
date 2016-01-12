@@ -1057,11 +1057,13 @@ table.monster-table tbody tr:last-child::after {
 }
 table.monster-table td {
 	border-bottom: 1px solid #c0c0c9;
+	text-align: left;
 }
 table.monster-table tbody tr:last-child td {
 	border-bottom: 0;
 }
-table.monster-table td:last-child {
+table.monster-table td:last-child,
+table.monster-table th:last-child {
 	text-align: right;
 }
 table.monster-table .actions .action-item {
@@ -1203,4 +1205,104 @@ table.monster-table .actions .action-item:first-child {
 .signal-indicator-container .signal-type {
 	font-size: 15px;
 	font-weight: 500;
+}
+
+/************************************************************/
+/****************** MONSTER LOADING SPINNER *****************/
+/************************************************************/
+
+@keyframes monster-spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.monster-spinner {
+	position: relative;
+	width: 35px;
+	height: 35px;
+	margin: 0 auto;
+	animation: monster-spin 1.5s ease-in-out infinite;
+	border: 9px solid transparent;
+	border-top-color: #22a5ff;
+	border-radius: 100%;
+}
+
+.monster-spinner::before,
+.monster-spinner::after {
+	position: absolute;
+	display: block;
+	content: '';
+	border: 3px solid #22a5ff;
+	border-radius: 100%;
+}
+
+.monster-spinner::before {
+	top: -11px;
+	left: -11px;
+	width: 51px;
+	height: 51px;
+}
+
+.monster-spinner::after {
+	top: -1px;
+	left: -1px;
+	width: 31px;
+	height: 31px;
+}
+
+/************************************************************/
+/********************** MONSTER NAVBAR **********************/
+/************************************************************/
+
+.monster-navbar {
+	height: 40px;
+	margin-top: 34px;
+}
+
+.monster-navbar .navbar-menu {
+	float: left;
+	height: 40px;
+	margin: 0;
+}
+
+.monster-navbar .navbar-menu:not(:last-child) {
+	margin-right: 45px;
+}
+
+.monster-navbar .navbar-menu.pull-right {
+	float: right;
+}
+.monster-navbar .navbar-menu.pull-left {
+	float: left;
+}
+
+.monster-navbar .navbar-menu-item {
+	display: block;
+	float: left;
+}
+
+.monster-navbar .navbar-menu-item:not(:last-child) {
+	margin-right: 15px;
+}
+
+.monster-navbar .navbar-menu-item-link {
+	line-height: 40px;
+	padding: 11px 0 8px;
+	color: #303039;
+	border-bottom: 3px solid transparent;
+}
+
+.monster-navbar .navbar-menu-item-link:not(.active):not(:hover):focus {
+	color: #303039 !important;
+}
+
+.monster-navbar .navbar-menu-item-link.active {
+	color: #22a5ff;
+	border-color: #22a5ff;
+}
+
+.monster-navbar.reverse .navbar-menu-item-link.active {
+	color: #fff;
+	border-color: #fff;
 }

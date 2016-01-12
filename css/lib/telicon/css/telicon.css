@@ -1,82 +1,265 @@
 /*
- *	Telicon v1.2
- *	The telecom-centric icon font, designed by Josh Sanders, to be used as a stand-alone font, or in conjunction with the Font Awesome Library
+ *	Telicon v2.0
+ *	------------
+ *	The telecom-centric .svg icon font designed for KAZOO, a Unified Communications Platform created by 2600Hz
+ *
+ *	Designed By:
+ * 	------------ 
+ *	Josh Sanders | Design Director, 2600Hz
+ *	joshsandersdesign@gmail.com
 */
 
 @font-face {
 	font-family: 'telicon';
-	src:url('../font/telicon.eot');
-	src:url('../font/telicon.eot?#iefix') format('embedded-opentype'),
-		url('../font/telicon.woff') format('woff'),
-		url('../font/telicon.ttf') format('truetype'),
-		url('../font/telicon.svg#telicon') format('svg');
 	font-weight: normal;
 	font-style: normal;
+
+	src: url('../fonts/telicon.eot?s56r18');
+	src: url('../fonts/telicon.eot?s56r18#iefix') format('embedded-opentype'),
+	url('../fonts/telicon.ttf?s56r18') format('truetype'),
+	url('../fonts/telicon.woff?s56r18') format('woff'),
+	url('../fonts/telicon.svg?s56r18#telicon') format('svg');
 }
 
-/*
- * --------------------------------------
- *			telicon styles
- * --------------------------------------
-*/
-
-[class^="icon-telicon-"],
-[class*=" icon-telicon-"] {
+[class^='icon-telicon-'],
+[class*=' icon-telicon-'] {
 	font-family: 'telicon';
-	speak: none;
-	font-style: normal;
 	font-weight: normal;
+	font-style: normal;
 	font-variant: normal;
-	text-transform: none;
 	line-height: 1;
+	text-transform: none;
+
+	speak: none;
+	/* Better Font Rendering */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
 /*
  *  Telicon uses the Unicode Private Use Area (PUA) to ensure screen
- *	readers do not read off random characters that represent icons
+ *	readers do not read off random characters that represent icons 
 */
 
-.icon-telicon-fax:before 					{ content: "\e000"; }
-.icon-telicon-ata:before 					{ content: "\e001"; }
-.icon-telicon-home-phone:before 			{ content: "\e002"; }
-.icon-telicon-sprint-phone:before  			{ content: "\e603"; }
-.icon-telicon-mobile-phone:before 			{ content: "\e601"; }
-.icon-telicon-tablet:before 				{ content: "\e005"; }
-.icon-telicon-soft-phone:before 			{ content: "\e006"; }
-.icon-telicon-voip-phone:before 			{ content: "\e007"; }
-.icon-telicon-calendar:before 				{ content: "\e008"; }
-.icon-telicon-user:before 					{ content: "\e009"; }
-.icon-telicon-unassign:before 				{ content: "\e00a"; }
-.icon-telicon-speaking:before 				{ content: "\e00b"; }
-.icon-telicon-seats:before 					{ content: "\e00c"; }
-.icon-telicon-prorated-charge:before 		{ content: "\e00d"; }
-.icon-telicon-porting:before 				{ content: "\e00e"; }
-.icon-telicon-pbx:before 					{ content: "\e00f"; }
-.icon-telicon-outbound-trunk:before 		{ content: "\e010"; }
-.icon-telicon-outbound-call:before 			{ content: "\e011"; }
-.icon-telicon-onetime-charge:before 		{ content: "\e012"; }
-.icon-telicon-deafen:before 				{ content: "\e013"; }
-.icon-telicon-credit-card:before 			{ content: "\e014"; }
-.icon-telicon-configuration:before 			{ content: "\e015"; }
-.icon-telicon-calling-id:before 			{ content: "\e016"; }
-.icon-telicon-caller-id:before 				{ content: "\e017"; }
-.icon-telicon-billing:before 				{ content: "\e018"; }
-.icon-telicon-billing-history:before 		{ content: "\e019"; }
-.icon-telicon-available-balance:before 		{ content: "\e01a"; }
-.icon-telicon-assign:before 				{ content: "\e01b"; }
-.icon-telicon-add-user:before 				{ content: "\e01c"; }
-.icon-telicon-add-credit:before 			{ content: "\e01d"; }
-.icon-telicon-moderator:before 				{ content: "\e01e"; }
-.icon-telicon-ip:before 					{ content: "\e01f"; }
-.icon-telicon-international-number:before 	{ content: "\e020"; }
-.icon-telicon-international-call:before 	{ content: "\e021"; }
-.icon-telicon-inbound-trunk:before 			{ content: "\e022"; }
-.icon-telicon-inbound-call:before 			{ content: "\e023"; }
-.icon-telicon-hangup:before 				{ content: "\e024"; }
-.icon-telicon-global:before 				{ content: "\e025"; }
-.icon-telicon-failover:before 				{ content: "\e026"; }
-.icon-telicon-multiple-items:before 		{ content: "\e027"; }
-.icon-telicon-extension:before 				{ content: "\e600"; }
-.icon-telicon-voicemail:before 				{ content: "\e602"; }
+.icon-telicon-account-jump::before {
+	content: '\e900';
+}
+.icon-telicon-account-settings::before {
+	content: '\e901';
+}
+.icon-telicon-account::before {
+	content: '\e902';
+}
+.icon-telicon-add-credit::before {
+	content: '\e903';
+}
+.icon-telicon-add-user::before {
+	content: '\e904';
+}
+.icon-telicon-apps::before {
+	content: '\e905';
+}
+.icon-telicon-arrow-down::before {
+	content: '\e906';
+}
+.icon-telicon-arrow-left::before {
+	content: '\e907';
+}
+.icon-telicon-arrow-right::before {
+	content: '\e908';
+}
+.icon-telicon-arrow-up::before {
+	content: '\e909';
+}
+.icon-telicon-assign::before {
+	content: '\e90a';
+}
+.icon-telicon-ata::before {
+	content: '\e90b';
+}
+.icon-telicon-available-balance::before {
+	content: '\e90c';
+}
+.icon-telicon-billing-history::before {
+	content: '\e90d';
+}
+.icon-telicon-billing::before {
+	content: '\e90e';
+}
+.icon-telicon-calendar::before {
+	content: '\e90f';
+}
+.icon-telicon-caret-down::before {
+	content: '\e910';
+}
+.icon-telicon-caret-left::before {
+	content: '\e911';
+}
+.icon-telicon-caret-right::before {
+	content: '\e912';
+}
+.icon-telicon-caret-up::before {
+	content: '\e913';
+}
+.icon-telicon-check-circle::before {
+	content: '\e914';
+}
+.icon-telicon-configuration::before {
+	content: '\e915';
+}
+.icon-telicon-credit-card::before {
+	content: '\e916';
+}
+.icon-telicon-dashboard::before {
+	content: '\e917';
+}
+.icon-telicon-deafen::before {
+	content: '\e918';
+}
+.icon-telicon-exit::before {
+	content: '\e919';
+}
+.icon-telicon-extensions::before {
+	content: '\e91a';
+}
+.icon-telicon-failover::before {
+	content: '\e91b';
+}
+.icon-telicon-fax::before {
+	content: '\e91c';
+}
+.icon-telicon-forward::before {
+	content: '\e91d';
+}
+.icon-telicon-global::before {
+	content: '\e91e';
+}
+.icon-telicon-hangup::before {
+	content: '\e91f';
+}
+.icon-telicon-home::before {
+	content: '\e920';
+}
+.icon-telicon-inbound-call::before {
+	content: '\e921';
+}
+.icon-telicon-inbound-trunk::before {
+	content: '\e922';
+}
+.icon-telicon-info-circled::before {
+	content: '\e923';
+}
+.icon-telicon-international-call::before {
+	content: '\e924';
+}
+.icon-telicon-international-number::before {
+	content: '\e925';
+}
+.icon-telicon-ip::before {
+	content: '\e926';
+}
+.icon-telicon-list::before {
+	content: '\e927';
+}
+.icon-telicon-loading-circle::before {
+	content: '\e928';
+}
+.icon-telicon-main-office::before {
+	content: '\e929';
+}
+.icon-telicon-minus-circled::before {
+	content: '\e92a';
+}
+.icon-telicon-mobile-phone::before {
+	content: '\e92b';
+}
+.icon-telicon-moderator::before {
+	content: '\e92c';
+}
+.icon-telicon-multiple-items::before {
+	content: '\e92d';
+}
+.icon-telicon-onetime-charge::before {
+	content: '\e92e';
+}
+.icon-telicon-outbound-call::before {
+	content: '\e92f';
+}
+.icon-telicon-outbound-trunk::before {
+	content: '\e930';
+}
+.icon-telicon-pbx::before {
+	content: '\e931';
+}
+.icon-telicon-per-minute::before {
+	content: '\e932';
+}
+.icon-telicon-plus-circled::before {
+	content: '\e933';
+}
+.icon-telicon-porting::before {
+	content: '\e934';
+}
+.icon-telicon-prioritize::before {
+	content: '\e935';
+}
+.icon-telicon-prorated-charge::before {
+	content: '\e936';
+}
+.icon-telicon-question-circled::before {
+	content: '\e937';
+}
+.icon-telicon-root-level::before {
+	content: '\e938';
+}
+.icon-telicon-seats::before {
+	content: '\e939';
+}
+.icon-telicon-service-plan::before {
+	content: '\e93a';
+}
+.icon-telicon-service-providers::before {
+	content: '\e93b';
+}
+.icon-telicon-setting-cog-double::before {
+	content: '\e93c';
+}
+.icon-telicon-setting-cog::before {
+	content: '\e93d';
+}
+.icon-telicon-soft-phone::before {
+	content: '\e93e';
+}
+.icon-telicon-speaking::before {
+	content: '\e93f';
+}
+.icon-telicon-sprint-phone::before {
+	content: '\e940';
+}
+.icon-telicon-tablet::before {
+	content: '\e941';
+}
+.icon-telicon-transactions::before {
+	content: '\e942';
+}
+.icon-telicon-two-way::before {
+	content: '\e943';
+}
+.icon-telicon-unassign::before {
+	content: '\e944';
+}
+.icon-telicon-user::before {
+	content: '\e945';
+}
+.icon-telicon-voicemail::before {
+	content: '\e946';
+}
+.icon-telicon-voip-phone::before {
+	content: '\e947';
+}
+.icon-telicon-warning::before {
+	content: '\e948';
+}
+.icon-telicon-x-circled::before {
+	content: '\e949';
+}

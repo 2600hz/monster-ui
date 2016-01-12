@@ -1611,8 +1611,9 @@ define(function(require){
 		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
 				parent = $('#monster-content'),
+				appHeaderWrapper = parent.find('.app-header-wrapper'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
-				hasDefaultTab = _.find($(navbarTemplate).find('.app-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
+				hasDefaultTab = _.find($(navbarTemplate).find('.navbar-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
 
 			parent
 				.find('.app-navbar')
@@ -1620,23 +1621,23 @@ define(function(require){
 					.append(navbarTemplate);
 
 			if (!hasDefaultTab) {
-				parent
-					.find('.app-menu-item-link')
+				appHeaderWrapper
+					.find('.navbar-menu-item-link')
 						.first()
 							.addClass('active');
 			}
 
-			parent
-				.find('.app-menu-item-link')
+			appHeaderWrapper
+				.find('.navbar-menu-item-link')
 					.on('click', function() {
 						var $this = $(this),
-							menuId = $this.parents('.app-menu').data('menu_id'),
+							menuId = $this.parents('.navbar-menu').data('menu_id'),
 							tabId = $this.data('tab_id'),
 							currentTab = menus[menuId].tabs[tabId],
 							loadTabContent = function loadTabContent () {
 								if (!$this.hasClass('active')) {
-									parent
-										.find('.app-menu-item-link.active')
+									appHeaderWrapper
+										.find('.navbar-menu-item-link.active')
 											.removeClass('active');
 
 									$this.addClass('active');

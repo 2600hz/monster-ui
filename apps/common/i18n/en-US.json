@@ -108,10 +108,15 @@
 		"__version": "3.22",
 		"searchPopup": {
 			"numberFound": "This number was found in the sub-account {{variable}}.",
-			"usedBy": "It is currently used by {{usedBy}}",
+			"usedBy": "It is currently used by {{variable}}",
 			"notUsed": "It is currently not in use.",
 			"masqueradeTooltip": "Click here to masquerade to this account"
-		}
+		},
+
+		"__comment": "UI-1888: List MDNs in Numbers Manager without the ability to configure features (e911, cnam, prepend)",
+		"__version": "v4.0",
+		"mobile": "Mobile Manager",
+		"mobileIconHelp": "This number is linked to a Mobile device and therefore, the only way to move it around, is by managing the corresponding device"
 	},
 
 	"callerId": {
@@ -314,9 +319,6 @@
 			"labelOrderDate": "Order Date:",
 			"labelTransferDate": "Transfer Schedule Date:",
 			"labelNumbersTotal": "Total Numbers:",
-			"labelOrderTotal": "Total Order:",
-			"orderTotalInfoPartOne": "One time fees of",
-			"orderTotalInfoPartTwo": "5/number will be charged to your account.",
 			"submitButton": "submit"
 		},
 		"manageOrders": {
@@ -331,7 +333,7 @@
 		},
 		"pendingOrders": {
 			"title": "Pending Orders",
-			"newPortLink": "Initiate new Port Request",
+			"newPortLink": "New Port Request",
 			"tableOrderName": "Request name",
 			"tableOrderDate": "Created on",
 			"tableOrderState": "Request state",

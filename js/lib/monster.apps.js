@@ -296,7 +296,7 @@ define(function(){
 			// We automatically load the default language (en-US) i18n files
 			self.loadLocale(app, self.defaultLanguage, function() {
 				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
-				if(monster.config.whitelabel.language !== self.defaultLanguage) {
+				if(monster.config.whitelabel.language.toLowerCase() !== self.defaultLanguage.toLowerCase()) {
 					self.loadLocale(app, monster.config.whitelabel.language, function() {
 						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 						addCoreI18n();
@@ -407,13 +407,20 @@ define(function(){
 			});
 		},
 
-		load: function(name, callback, options) {
+
+		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
+		load: function(name, callback, options, pChangeHash) {
 			var self = this,
+				changeHash = pChangeHash === true ? true : false,
 				afterLoad = function(app) {
 					monster.apps.lastLoadedApp = app.name;
 
 					callback && callback(app);
 				};
+
+			if(changeHash) {
+				monster.routing.updateHash('apps/'+name);
+			}
 
 			if(!(name in monster.apps)) {
 				self._loadApp(name, function(app) {
@@ -449,7 +456,7 @@ define(function(){
 							afterLoading && afterLoading({});
 
 							monster.pub('monster.requestEnd')
-							
+
 							console.log('_loadLocale error: ', status, error);
 						}
 					});

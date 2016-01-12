@@ -30,41 +30,6 @@
 		"buttonLabel": "Se connecter"
 	},
 
-	"passwordRecovery": {
-		"title": "Récupération de mot de passe",
-		"label": {
-			"phoneNumber": "Numéro de téléphone"
-		},
-		"placeholder": {
-			"username":  "alain@durand.com",
-			"account": {
-				"name": "Ma companie",
-				"realm": "sip.macompanie.com"
-			},
-			"phoneNumber": "+33123456789"
-		},
-		"help": {
-			"text": " Veuillez spécifier un nom d'utilisateur, ainsi, qu'un nom de compte ou un royaume de compte ou un numéro de téléphone lié à votre compte."
-		},
-		"button": {
-			"recover": "récupérer le mot de passe"
-		},
-		"toastr": {
-			"success": {
-				"reset": "Votre mot de passe a été réinitialisé avec succès. Un email a été envoyé à votre adresse de login."
-			},
-			"error": {
-				"reset": {
-					"account_name": "Le nom de compte fourni n'a pas pu être trouvé",
-					"account_realm": "Le royaume de compte fourni n'a pas pu être trouvé",
-					"phone_number": "Le numéro de téléphone fourni n'a pas pu être trouvé",
-					"username": "Le nom d'utilisateur founi n'a pas pu être trouvé"
-				},
-				"missing": "Veuillez spécifier un nom de compte ou un royaume de compte ou un numéro de téléphone lié à votre compte"
-			}
-		}
-	},
-
 	"passwordUpdate": {
 		"title": "Nouveau mot de passe",
 		"label": {
@@ -103,5 +68,34 @@
 		"upgradeButton": "Améliorer",
 		"mainMessage": "Bievenue dans votre phase de test. Vous avez {{variable}} jours restants pour tester la plateforme!",
 		"trialExpired": "Votre période d'essai est terminé. Veuillez cliquer sur le bouton Améliorer afin de continuer à utiliser la plateforme."
+	},
+
+
+	"__comment": "UI-1848: new password recovery process",
+	"__version": "3.23",
+	"recoverPassword": {
+		"toastr": {
+			"success": {
+				"reset": "Votre mot de passe a été réinitialisé avec succès. Un email a été envoyé à votre adresse de login."
+			},
+			"error": {
+				"reset": {
+					"account_name": "Le nom de compte fourni n'a pas pu être trouvé",
+					"account_realm": "Le royaume de compte fourni n'a pas pu être trouvé",
+					"phone_number": "Le numéro de téléphone fourni n'a pas pu être trouvé",
+					"username": "Le nom d'utilisateur founi n'a pas pu être trouvé"
+				},
+				"missing": "Veuillez spécifier un nom de compte ou un numéro de téléphone lié à votre compte"
+			}
+		},
+		"successReset": "Votre mot de passe a été réinitialisé avec succès. Un email a été envoyé à votre adresse de login.",
+		"headline": "Afin de récuperer votre mot de passe, vous devez fournir votre identifiant:",
+		"emailPlaceholder": "Identifiant",
+		"headline2": "Et un de ces deux champs (un seul est nécessaire):",
+		"accountNamePlaceholder": "Nom de Compte",
+		"phoneNumberPlaceholder": "Numéro de téléphone",
+		"resetPassword": "Réinitialiser Mot de Passe",
+		"rememberPassword": "Vous vous souvenez de votre mot de passe?",
+		"backToSignIn": "Retourner à l'identification"
 	}
 }

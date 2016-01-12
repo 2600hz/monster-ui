@@ -666,7 +666,7 @@ define(function(require){
 
 			$.cookie('monster-auth', null);
 
-			window.location.reload();
+			window.location = window.location.pathname;
 		},
 
 		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
@@ -815,15 +815,16 @@ define(function(require){
 		/**
 		 * Determine if a number feature is enalbed on the current account
 		 * @param  {String} feature Number feature to check if it is enabled (e.g. e911, cnam)
+		 * @param  {Object} account Optional account object to check from
 		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
 		 */
-		isNumberFeatureEnabled: function (feature) {
+		isNumberFeatureEnabled: function (feature, account) {
 			var self = this,
-				currentAccount = monster.apps.auth.currentAccount,
-				hasNumbersFeatures = currentAccount.hasOwnProperty('numbers_features');
+				accountToCheck = account || monster.apps.auth.currentAccount,
+				hasNumbersFeatures = accountToCheck.hasOwnProperty('numbers_features');
 
 			if (hasNumbersFeatures) {
-				if (currentAccount.numbers_features[feature + '_enabled']) {
+				if (accountToCheck.numbers_features[feature + '_enabled']) {
 					return true;
 				}
 				else {
@@ -832,6 +833,20 @@ define(function(require){
 			} else {
 				return true;
 			}
+		},
+
+		// Check if the object is parsable or not
+		isJSON: function(obj) {
+			var self = this;
+
+			try {
+				JSON.stringify(obj);
+			}
+			catch (e) {
+				return false;
+			}
+
+			return true;
 		}
 	};
 

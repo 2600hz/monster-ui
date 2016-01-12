@@ -1,6 +1,7 @@
 @import url('vendor/boilertplate.css');
 
 @import url('vendor/normalize.css');
+@import url('vendor/animate.css');
 
 @import url('vendor/bootstrap.min.css');
 @import url('lib/custom/bootstrap-add.css');
@@ -19,6 +20,7 @@
 @import url('lib/custom/font-awesome-add.css');
 
 @import url('vendor/footable/footable.core.min.css');
+@import url('lib/custom/footable-add.css');
 
 @import url('vendor/jslider/jslider.css');
 

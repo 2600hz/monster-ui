@@ -41,6 +41,7 @@ define(function(require){
 			var self = this,
 				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
 				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
+				hasRemoveHeaders = request.hasOwnProperty('removeHeaders'),
 				settings = {
 					cache: request.cache || false,
 					url: apiUrl + request.url,
@@ -55,7 +56,10 @@ define(function(require){
 					before: function(ampXHR, settings) {
 						monster.pub('monster.requestStart');
 
-						ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
+						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('X-Auth-Token') < 0)) {
+							ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
+						}
+
 						_.each(request.headers, function(val, key) {
 							ampXHR.setRequestHeader(key, val);
 						});
@@ -63,6 +67,12 @@ define(function(require){
 						return true;
 					}
 				};
+
+			if (hasRemoveHeaders) {
+				if (request.removeHeaders.indexOf('Content-Type') > -1) {
+					delete settings.contentType;
+				}
+			}
 
 			this._requests[id] = settings;
 		},
@@ -306,9 +316,10 @@ define(function(require){
 			}
 			
 			var errorsI18n = monster.apps.core.i18n.active().errors,
-				errorMessage = errorsI18n.generic;
+				errorMessage = errorsI18n.generic,
+				errorNumber = error.status > 0 ? error.status : parseInt(error.error);
 
-			if(error.status === 400 && 'data' in parsedError) {
+			if(errorNumber === 400 && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
 					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
@@ -321,7 +332,7 @@ define(function(require){
 						}
 					});
 				});
-			} else if((error.status === 409 || error.status === 500) && 'data' in parsedError) {
+			} else if((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';
 				_.each(parsedError.data, function(fieldError, fieldErrorKey) {
 					if(fieldErrorKey in errorsI18n.errorMessages) {
@@ -331,8 +342,8 @@ define(function(require){
 					}
 				});
 				if(errMsg) { errorMessage = errMsg; }
-			} else if(error.status in errorsI18n) {
-				errorMessage = errorsI18n[error.status];
+			} else if(errorsI18n.hasOwnProperty(errorNumber)) {
+				errorMessage = errorsI18n[errorNumber];
 			}
 
 			var requestId = '',
@@ -352,7 +363,7 @@ define(function(require){
 				status: error.status,
 				message: errorMessage,
 				requestId: requestId || '',
-				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : '',
+				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
 				url: url || '',
 				verb: verb || ''
 			};

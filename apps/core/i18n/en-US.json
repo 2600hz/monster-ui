@@ -550,5 +550,10 @@
 
 	"__comment": "OOB: Only allow Kazoo APIs to automatically logout user on authentication error (invalid/expired token)",
 	"__version": "3.22",
-	"authenticationIssue": "An authentication error occurred during this operation!"
+	"authenticationIssue": "An authentication error occurred during this operation!",
+
+	"__comment": "UI-1847: Showing proper message when attempting to login on an expired account",
+	"__version": "3.23",
+	"expiredTrial": "Your trial expired on {{date}}, please contact your sales representative for information on how to proceed.",
+	"disabledAccount": "Your account has been disabled."
 }

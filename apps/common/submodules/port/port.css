@@ -644,7 +644,6 @@ div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 40px; }
 
 div#order_summary > .row-fluid {
 	border: 1px solid #ddd;
-	box-shadow: 10px 10px 15px 0px #ddd;
 }
 
 div#order_summary .row-fluid .span6:first-child {

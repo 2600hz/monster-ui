@@ -1063,7 +1063,6 @@ define(function(require){
 				isTransferDateNotValid = businessDate.getTime() >= transferDate.getTime(),
 				dataTemplate = $.extend(true, {}, order, {
 					total: order.numbers.length,
-					price: order.numbers.length * 5,
 					transfer_date: isTransferDateNotValid ? businessDate : transferDate,
 					created: createdDate
 				}),
@@ -1080,7 +1079,6 @@ define(function(require){
 			var self = this,
 				container = parent.find('#port_container'),
 				datePickerInput = container.find('input.date-input'),
-				toggleInput = container.find('#have_temporary_numbers'),
 				order = data.orders[index];
 
 			self.portPositionDialogBox(),
@@ -1106,45 +1104,6 @@ define(function(require){
 				.last()
 				.prop('selected', 'selected');
 
-			if (order.hasOwnProperty('temporary_numbers') && order.temporary_numbers > 0) {
-				toggleInput.prop('checked', true);
-
-				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
-					.slideDown('400', function() {
-						container.find('#numbers_to_buy')
-							.val(order.temporary_numbers - 1)
-							.prop('disabled', false);
-					});
-			}
-			else {
-				toggleInput.prop('checked', false)
-
-				container.find('#numbers_to_buy')
-						.prop('disabled', true);
-
-				container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
-					.slideUp('400');
-			}
-
-			toggleInput.on('change', function() {
-				var input = $(this);
-
-				if (!input.prop('checked')) {
-					container.find('#numbers_to_buy')
-						.prop('disabled', true);
-
-					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
-						.slideUp('400');
-				}
-				else {
-					container.find('#temporary_numbers_form div.row-fluid:nth-child(2)')
-						.slideDown('400', function() {
-							container.find('#numbers_to_buy')
-								.prop('disabled', false);
-						});
-				}
-			});
-
 			container.find('#numbers_to_buy option').each(function(idx, el) {
 				var elem = $(el);
 
@@ -1154,16 +1113,11 @@ define(function(require){
 
 			container.find('#confirm_order_save_link').on('click', function() {
 				var notificationEmailFormData = monster.ui.getFormData('notification_email_form', '.', true),
-					temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
 					transferDateFormData = monster.ui.getFormData('transfer_date_form');
 
-				$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
+				$.extend(true, order, notificationEmailFormData, transferDateFormData);
 
 				order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
-
-				if (!container.find('#have_temporary_numbers').prop('checked')) {
-					delete order.temporary_numbers;
-				}
 
 				self.portSaveOrder(parent, accountId, data, index);
 			});
@@ -1182,16 +1136,11 @@ define(function(require){
 
 				if (monster.ui.valid(notificationEmailForm)) {
 					var notificationEmailFormData = monster.ui.getFormData('notification_email_form'),
-						temporaryNumbersFormData = monster.ui.getFormData('temporary_numbers_form'),
 						transferDateFormData = monster.ui.getFormData('transfer_date_form');
 
-					$.extend(true, order, notificationEmailFormData, transferDateFormData, temporaryNumbersFormData);
+					$.extend(true, order, notificationEmailFormData, transferDateFormData);
 
 					order.transfer_date = monster.util.dateToGregorian(new Date(order.transfer_date));
-
-					if (!container.find('#have_temporary_numbers').prop('checked')) {
-						delete order.temporary_numbers;
-					}
 
 					if (order.hasOwnProperty('id')) {
 						self.portRequestUpdate(accountId, order.id, order, function() {

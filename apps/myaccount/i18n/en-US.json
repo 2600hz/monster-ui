@@ -149,23 +149,9 @@
 		"activeCall": "active",
 
 		"title": "Per Minute",
-		"creditBalance": "Available Credit Balance",
-		"addCreditOne": "Add Credit One Time",
-		"helpAddCreditOne": "By using this, you will add some credits to your current balance, which will allow you to enable features such as e911 or Caller-ID, but also to place per-minute calls.",
-		"autoRecharge": "Auto Recharge",
-		"whenBalanceFalls": "When balance falls below",
-		"recharge": "Recharge this account with",
-		"helpAutoRecharge": "By turning on Auto Recharge, you will define a low threshold and how much credits to add when this threshold is reached and you will no longer need to manually add credits.",
-		"helpWhenBalanceFalls": "Input the amount of credits to reach before auto-recharging your account",
-		"helpRecharge": "Input how much credits you would like to add once the threshold you defined is reached",
 		"payPerMinute": "Pay-per-minute allows you to pay only for what you use. Deposit money into your account to get started, then pay-as-you-go for usage.",
 		"currentBalance": "Your current balance: $",
-		"turnoffRechargeConfirm": "By turning off the Auto-recharge, you will have to manually add credits to your balance in order to continue to place per-minute calls and enable features such as e911 or Caller-ID. Do you want to continue?",
 		"amount": "Amount",
-		"confirm": "Confirm",
-		"placeholderThresholdRecharge": "5.00",
-		"placeholderRecharge": "50.00",
-		"placeholderAmount": "10.00",
 		"addCredit": "Add Credit",
 		"invalidAmount": "There is an error with the amount you typed! Please make sure to type a number using only digits '.' or ','",
 		"autoRechargeEnabled": "The Automatic Recharge of credits is now enabled!",
@@ -180,9 +166,70 @@
 		"toColumn": "To",
 		"directionColumn": " ",
 		"accountColumn": "Account",
+
 		"__comment": "UI-1324: Adding the option to disable Braintree through a config flag",
 		"__version": "v3.20_s4",
-		"disabledAddCreditTooltip": "Braintree is required to perform this action. Please contact your administrator for more information."
+		"disabledAddCreditTooltip": "Braintree is required to perform this action. Please contact your administrator for more information.",
+
+		"__comment": "UI-1810: Implement new mock-up for 'Add Credits' popup with the ability to set Threshold Alerts",
+		"__version": "v4.0",
+		"thresholdAlertsEnabled": "Threshold Alerts are now enabled!",
+		"thresholdAlertsCancelled": "You successfully disabled Threshold Alerts.",
+		"addCreditPopup": {
+			"creditBalance": "Available Credit Balance",
+			"menus": {
+				"manageCredits": "Manage Credits",
+				"thresholdAlerts": "Threshold Alerts",
+				"autoRecharge": "Auto Recharge"
+			},
+			"alerts": {
+				"missingValue": {
+					"title": "Something seems to be missing!",
+					"threshold_alerts_content": "You've turned on Threshold Alerts, but it looks like you forgot to define the threshold amount. This is required in order for Threshold Alerts to take effect. Please either set a threshold amount, or turn off Threshold Alerts.",
+					"auto_recharge_content": "You've turned on Auto Recharge, but it looks like you forgot to define the Low balance threshold and/or Recharge Amount. These are both required in order for Auto Recharge to work. Please set the Threshold and/or Recharge Amount or turn Auto Recharge off."
+				}
+			},
+			"manageCredits": {
+				"text": "Adding Credits Manually allows you to immediately increase your Current Balance. Maintaining a Current Balance is very important, as it is necessary for international or per-minute calls, e911, caller ID, and other system features that incur a charge.",
+				"placeholder": "10.00",
+				"button": "Add Credit"
+			},
+			"thresholdAlerts": {
+				"text": "Threshold Alerts help you prevent shut off of services to your account by notifying you when your Current Balance gets low. It is strongly recommended to have Threshold Alerts turned on for your account.",
+				"labels": {
+					"turnOn": "Turn on Threshold Alerts",
+					"notifyMe": "Notify me when balance falls bellow this amount"
+				},
+				"placeholder": "10",
+				"button": "Save Threshold Alert",
+				"alert": {
+					"title": "",
+					"text": ""
+				}
+			},
+			"autoRecharge": {
+				"text": "Auto Recharge enables you to set up a threshold to automatically add credit, and determines how much will be refilled each time. Auto Recharge also will notify you via email when an account is recharged.",
+				"labels": {
+					"turnOn": "Turn on Auto Recharge",
+					"balanceFalls": "When balance falls below this amount",
+					"rechargeAccount": "Recharge this account with this amount"
+				},
+				"placeholders": {
+					"balanceFalls": "10",
+					"rechargeAccount": "50"
+				},
+				"help": {
+					"firstPart": "In order to prevent fraud, ",
+					"secondPart": "Auto Recharge will only run once per day.",
+					"thirdPart": "If the low balance threshold hits for the second time in one day and Auto Recharge has already occurred, you will receive an email notifying you that your account has reached the low balance threshold, however, the Account Admin must add more credit manually."
+				},
+				"button": "Confirm Auto Recharge",
+				"alert": {
+					"title": "",
+					"text": ""
+				}
+			}
+		}
 	},
 
 	"servicePlan": {
