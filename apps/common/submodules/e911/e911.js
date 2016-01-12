@@ -188,7 +188,7 @@ define(function(require){
 				success: function(_data, status) {
 					callbacks.success && callbacks.success(_data);
 				},
-				error: function(_data, status) {
+				error: function(_data, status, globalHandler) {
 					if (_data.error === '400') {
 						if (data.message === 'multiple_choice') {
 							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.dash_e911);
@@ -198,7 +198,7 @@ define(function(require){
 						}
 					}
 					else {
-						callbacks.error && callbacks.error(_data.data);
+						globalHandler(_data, { generateError: true });
 					}
 				}
 			});
