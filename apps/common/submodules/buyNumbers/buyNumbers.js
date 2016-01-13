@@ -231,64 +231,10 @@ define(function(require){
 					container.find('#check_numbers_div').show();
 
 					self.buyNumbersToggleCheckingDiv(container, true);
-
-					// monster.request({
-					// 	resource: 'buyNumbers.getStatus',
-					// 	data: {
-					// 		accountId: self.assignedAccountId,
-					// 		country: self.appFlags.selectedCountryCode,
-					// 		data: $.map(args.selectedNumbers, function(val) {
-					// 			return args.availableCountries[self.appFlags.selectedCountryCode].prefix + val.number_value;
-					// 		})
-					// 	},
-					// 	success: function(_data, _status) {
-					// 		var unavailableNumbers = [];
-					// 		if(_data.data && _data.status === "success") {
-					// 			var tmpUnavailableNumbers = $.grep(_data.data, function(v) {
-					// 				if(v.status !== "success") {
-					// 					return true;
-					// 				}
-					// 				return false;
-					// 			});
-
-					// 			args.selectedNumbers = $.grep(args.selectedNumbers, function(value, index) {
-					// 				if($.inArray(args.availableCountries[self.appFlags.selectedCountryCode].prefix + value.number_value, tmpUnavailableNumbers) >= 0) {
-					// 					unavailableNumbers.push(value);
-					// 					return false;
-					// 				}
-					// 				return true;
-					// 			});
-					// 		}
-
-					// 		self.buyNumbersToggleCheckingDiv(container, false);
-
-					// 		if(unavailableNumbers.length > 0) {
-					// 			container.find('#check_numbers_div .unavailable-div .unavailable-numbers')
-					// 					 .empty()
-					// 					 .append(monster.template(self, 'buyNumbers-unavailableNumbers', {numbers: unavailableNumbers}));
-					// 		} else {
-					// 			container.find('#check_numbers_div').hide();
-					// 			container.find('#confirm_div').show();
-					// 			container.find('#summary_total_numbers').html(totalNumbers);
-					// 			container.find('#summary_total_price').html(totalNumbers.totalPrice);
-					// 		}
-					// 	},
-					// 	error: function(_data, _status) {
-					// 		monster.ui.alert('error', self.i18n.active().buyNumbers.unavailableServiceAlert);
-					// 	}
-					// });
-
 					/********** TEMPORARILY FAKING THE CHECK SINCE THERE IS NO STATUS API **********/
 					setTimeout(function() {
 						self.buyNumbersToggleCheckingDiv(container, false);
 						var unavailableNumbers = [];
-						// args.selectedNumbers = $.grep(args.selectedNumbers, function(value,index) {
-						// 	if(Math.floor(Math.random()*10) === 0) {
-						// 		unavailableNumbers.push(value);
-						// 		return false;
-						// 	}
-						// 	return true;
-						// });
 						if(unavailableNumbers.length > 0) {
 							container.find('#check_numbers_div .unavailable-div .unavailable-numbers')
 									 .empty()
@@ -1141,16 +1087,21 @@ define(function(require){
 				data: $.extend(true, {}, args.data, {
 					generateError: false
 				}),
-				success: function (data, status) {
+				success: function (data, status, globalHandler) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
-				error: function (data, status) {
-					if (data.error !== '402') {
-						args.hasOwnProperty('error') && args.error(data.data);
+				error: function (data, status, globalHandler) {
+					if (data.error !== '402' && typeof data.data !== 'string') {
+						args.error && args.error(data.data);
+					}
+					else {
+						globalHandler(data, { generateError: true });
+
+						args.cancel && args.cancel();
 					}
 				},
 				onChargesCancelled: function () {
-					args.hasOwnProperty('cancel') && args.cancel();
+					args.cancel && args.cancel();
 				}
 			});
 		},
