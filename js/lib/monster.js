@@ -306,7 +306,7 @@ define(function(require){
 			return result;
 		},
 
-		formatMonsterError: function(error) {
+		formatMonsterAPIError: function(error) {
 			var self = this,
 				parsedError = error,
 				isJsonResponse = error.hasOwnProperty('getResponseHeader') && error.getResponseHeader('content-type') === 'application/json';
@@ -317,9 +317,14 @@ define(function(require){
 			
 			var errorsI18n = monster.apps.core.i18n.active().errors,
 				errorMessage = errorsI18n.generic,
-				errorNumber = error.status > 0 ? error.status : parseInt(error.error);
+				errorNumber = error.status > 0 ? error.status : parseInt(error.error),
+				customTitle;
 
-			if(errorNumber === 400 && 'data' in parsedError) {
+			if(typeof parsedError.data === 'string' && typeof parsedError.message === 'string' && errorsI18n.errorMessages.hasOwnProperty(parsedError.message)) {
+				errorMessage = errorsI18n.errorMessages[parsedError.message].text;
+				customTitle = errorsI18n.errorMessages[parsedError.message].title;
+			}
+			else if(errorNumber === 400 && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
 					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
@@ -334,14 +339,18 @@ define(function(require){
 				});
 			} else if((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';
+
 				_.each(parsedError.data, function(fieldError, fieldErrorKey) {
 					if(fieldErrorKey in errorsI18n.errorMessages) {
-						errMsg += errorsI18n.errorMessages[fieldErrorKey] + '<br>';
+						errMsg += errorsI18n.errorMessages[fieldErrorKey].text + '<br>';
 					} else if(fieldError.hasOwnProperty('message')) {
 						errMsg += fieldError.message + '<br>';
 					}
 				});
-				if(errMsg) { errorMessage = errMsg; }
+
+				if(errMsg) { 
+					errorMessage = errMsg;
+				}
 			} else if(errorsI18n.hasOwnProperty(errorNumber)) {
 				errorMessage = errorsI18n[errorNumber];
 			}
@@ -365,7 +374,8 @@ define(function(require){
 				requestId: requestId || '',
 				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
 				url: url || '',
-				verb: verb || ''
+				verb: verb || '',
+				customTitle: customTitle
 			};
 		},
 
@@ -379,7 +389,7 @@ define(function(require){
 				};
 
 			if(type === 'api') {
-				monsterError.data = self.formatMonsterError(data);
+				monsterError.data = self.formatMonsterAPIError(data);
 
 				if(showDialog) {
 					monster.ui.requestErrorDialog(monsterError);

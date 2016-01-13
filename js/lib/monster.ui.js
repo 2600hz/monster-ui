@@ -521,6 +521,10 @@ define(function(require){
 					apiResponse: error.data.response,
 					verb: error.data.verb.toUpperCase()
 				},
+				alertOptions = {
+					htmlContent: true,
+					title: error.data.customTitle
+				},
 				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
 				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true));
 
@@ -529,9 +533,7 @@ define(function(require){
 				$(this).toggleClass('active');
 			});
 
-			return self.alert('error', template, null, {
-				htmlContent: true
-			});
+			return self.alert('error', template, null, alertOptions);
 		},
 
 		// New Popup to show advanced Javascript errors.
