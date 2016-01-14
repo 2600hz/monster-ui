@@ -114,8 +114,8 @@ define(function(require){
 								monster.ui.table.balance.find('tbody tr').remove();
 								monster.ui.table.balance.fnClearTable();
 
-								from = new Date(balance.find('#startDate').val());
-								to = new Date(balance.find('#endDate').val());
+								from = balance.find('#startDate').datepicker('getDate');
+								to = balance.find('#endDate').datepicker('getDate');
 
 								self.balanceRefreshTransactionsTable(balance, from, to, defaults.fieldData.accounts);
 							});
