@@ -83,29 +83,29 @@ define(function(require){
 			var self = this,
 				 overrideOptions = {
 					number_services: {
-						port: { rate: {},activation_charge: {}, minimum: {} },
-						cnam: { rate: {},activation_charge: {}, minimum: {} },
-						e911: { rate: {},activation_charge: {}, minimum: {} },
+						port: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						cnam: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						e911: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
 					},
 					devices: {
-						ata: { rate: {},activation_charge: {}, minimum: {} },
-						cellphone: { rate: {},activation_charge: {}, minimum: {} },
-						fax: { rate: {},activation_charge: {}, minimum: {} },
-						landline: { rate: {},activation_charge: {}, minimum: {} },
-						mobile: { rate: {},activation_charge: {}, minimum: {} },
-						sip_device: { rate: {},activation_charge: {}, minimum: {} },
-						sip_uri: { rate: {},activation_charge: {}, minimum: {} },
-						smartphone: { rate: {},activation_charge: {}, minimum: {} },
-						softphone: { rate: {},activation_charge: {}, minimum: {} },
+						ata: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						cellphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						fax: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						landline: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						mobile: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						sip_device: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						sip_uri: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						smartphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						softphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
 					},
 					limits: {
-						outbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
-						inbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
-						twoway_trunks: { rate: {},activation_charge: {}, minimum: {} },
+						outbound_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						inbound_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						twoway_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
 					},
 					phone_numbers: {
-						tollfree_us: { rate: {},activation_charge: {}, minimum: {} },
-						did_us: { rate: {},activation_charge: {}, minimum: {} },
+						tollfree_us: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						did_us: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
 					}
 				};
 
@@ -234,7 +234,6 @@ define(function(require){
 					formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 
 					if(data.current.details.plans[plan.id].overrides) {
-						//formattedPlan.overrides = data.current.details.plans[plan.id].overrides;
 						formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 					}
 				}
@@ -289,6 +288,10 @@ define(function(require){
 					key = $this.parents('[data-key]').data('key'),
 					field = $this.data('field'),
 					value = $this.find('.input-value').val();
+
+				if(field === 'exceptions') {
+					value = value.split(',');
+				}
 
 				if(plan !== 'none') {
 					formattedData.overrides[plan] = formattedData.overrides[plan] || {};
