@@ -110,6 +110,10 @@
 	width: 40px;
 }
 
+.customize-override-wrapper [data-field="exceptions"] .input-value {
+	width: 140px;
+}
+
 .customize-override-wrapper .override-category .line .remove-line {
 	cursor: pointer;
 	margin-left: 5px;
