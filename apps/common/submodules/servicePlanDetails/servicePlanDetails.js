@@ -138,11 +138,22 @@ define(function(require){
 										listSP[k] = function(callback) {
 											self.servicePlanDetailsGetSP(k, accountId, false, function(detailSP) {
 												callback && callback(null, detailSP);
+											},
+											function(data) {
+												callback(null, data);
 											});
 										}
 									});
 
 									monster.parallel(listSP, function(err, results) {
+										_.each(results, function(value, plan) {
+											// if value is empty, there was an error, so we remove the service plan from the list of service plan to show
+											// Once KAZOO-4495 is done, we will be able to remove these next 3 lines, so that the service plan gets automatically deleted by the UI tool.
+											if(_.isEmpty(value)) {
+												delete results[plan];
+											}
+										});
+
 										response.selectedPlans = results;
 
 										callback && callback(null, response);
@@ -430,17 +441,29 @@ define(function(require){
 			});
 		},
 
-		servicePlanDetailsGetSP: function(planId, accountId, useOwnPlans, callback) {
+		servicePlanDetailsGetSP: function(planId, accountId, useOwnPlans, success, error) {
 			var self = this;
 
 			self.callApi({
 				resource: useOwnPlans ? 'servicePlan.get' : 'servicePlan.getAvailable',
 				data: {
 					planId: planId,
-					accountId: accountId
+					accountId: accountId,
+					generateError: false
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					success && success(data.data);
+				},
+				error: function(data, status, globalHandler) {
+					// We added this so that if the plan has been deleted, we can still continue to edit the plan normally
+					// This allow us to edit accounts that have old SP that have been deleted.
+					// Before it would just crash and wouldn't let us access the service plan selector
+					if(data && data.data && data.data.hasOwnProperty('message') && data.data.message === 'bad identifier') {
+						error && error({});
+					}
+					else {
+						globalHandler(data, { generateError: true });
+					}
 				}
 			});
 		},
