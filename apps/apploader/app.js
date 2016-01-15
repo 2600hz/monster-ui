@@ -322,22 +322,22 @@ define(function(require){
 			_.each(monster.apps.auth.installedApps, function(val) {
 				parallelRequest[val.id] = function(parallelCallback) {
 					//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-					self.callApi({
+					/*self.callApi({
 						resource: 'appsStore.getIcon',
 						data: {
 							accountId: self.accountId,
 							appId: val.id,
 							generateError: false
 						},
-						success: function(data, status) {
+						success: function(data, status) {*/
 							val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 							parallelCallback && parallelCallback(null, val);
-						},
+						/*},
 						error: function(data, status) {
 							val.icon = null;
 							parallelCallback && parallelCallback(null, val);
 						}
-					});
+					});*/
 				}
 			});
 
@@ -365,22 +365,22 @@ define(function(require){
 						val.label = val.i18n[currentLang].label;
 						parallelRequest[val.id] = function(parallelCallback) {
 							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-							self.callApi({
+							/*self.callApi({
 								resource: 'appsStore.getIcon',
 								data: {
 									accountId: self.accountId,
 									appId: val.id,
 									generateError: false
 								},
-								success: function(data, status) {
+								success: function(data, status) {*/
 									val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 									parallelCallback && parallelCallback(null, val);
-								},
+								/*},
 								error: function(data, status) {
 									val.icon = null;
 									parallelCallback && parallelCallback(null, val);
 								}
-							});
+							});*/
 						}
 					});
 
