@@ -227,6 +227,8 @@ define(function(require){
 
 						self.defaultApp = defaultApp;
 
+						self.showAnnouncement(self.originalAccount.announcement);
+
 						if('ui_flags' in results.user && results.user.ui_flags.colorblind) {
 							$('body').addClass('colorblind');
 						}
@@ -266,6 +268,15 @@ define(function(require){
 					}
 				}
 			});
+		},
+
+		showAnnouncement: function() {
+			var self = this,
+				announcement = self.originalAccount.announcement || monster.config.whitelabel.announcement;
+
+			if(announcement) {
+				monster.ui.alert('info', announcement, null, { title: self.i18n.active().announcementTitle });
+			}
 		},
 
 		showTrialInfo: function(timeLeft) {
