@@ -281,7 +281,7 @@ define(function(require){
 
 		showTrialInfo: function(timeLeft) {
 			var self = this,
-				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60*60*24*4)) : -1,
+				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60*60*24)) : -1,
 				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
 				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
 
