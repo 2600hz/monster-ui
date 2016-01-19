@@ -155,12 +155,17 @@ define(function(require){
 				return found;
 			};
 
-			template.find('.account-browser-search').on('keyup', function() {
+			template.find('.account-browser-search').on('keyup', function(e) {
 				var $this = $(this),
 					search = $this.val();
 
 				searchLink.find('.account-search-value').text(search);
-				if(search) {
+
+				//If user presses "Enter" and the list of current results is empty, we trigger a deeper search
+				if(e.which == 13 && template.find('.account-list-element:visible').length === 0) {
+					template.find('.account-search-link').click();
+				}
+				else if(search) {
 					$.each(template.find('.account-list-element'), function() {
 						var $elem = $(this),
 							data = $elem.data();
