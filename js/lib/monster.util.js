@@ -321,6 +321,19 @@ define(function(require){
 			return isSuperDuper;
 		},
 
+		// Function returning if an account is in trial or not
+		isTrial: function(pAccount) {
+			var self = this,
+				isTrial = false,
+				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			if(account.hasOwnProperty('trial_time_left')) {
+				isTrial = true;
+			}
+
+			return isTrial;
+		},
+
 		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
 		isWhitelabeling: function() {
 			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
