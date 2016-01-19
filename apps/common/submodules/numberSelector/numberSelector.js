@@ -58,13 +58,18 @@ define(function(require){
 				input = template.find('.number-selector-input'),
 				displayed = template.find('.number-selector-displayed .number'),
 				removeElement = template.find('.remove-element'),
+				addNumberToControl = function(number) {
+					input.val(number);
+					displayed.text(monster.util.formatPhoneNumber(number));
+					removeElement.find('.number').text(monster.util.formatPhoneNumber(number));
+					removeElement.removeClass('hidden');
+				},
 				addNumberCallback = function(numberList) {
 					if(numberList && !_.isEmpty(numberList)) {
 						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numberList)[0];
-						input.val(num);
-						displayed.text(monster.util.formatPhoneNumber(num));
-						removeElement.find('.number').text(monster.util.formatPhoneNumber(num));
-						removeElement.removeClass('hidden');
+
+						addNumberToControl(num);
+
 						if (globalAddNumberCallback) {
 							globalAddNumberCallback(num);
 						}
@@ -116,7 +121,16 @@ define(function(require){
 							accountId: self.accountId,
 							searchType: 'regular',
 							callbacks: {
-								success: globalAddNumberCallback ? globalAddNumberCallback : buyCallback
+								success: function(numbers) {
+									// We changed this code, so that we can give ways to code using that common control to still add a number to the control, without having to know the logic of said control.
+									// Before they had no access to the addNumberToControl method, so we give it to them here.
+									if(globalAddNumberCallback) {
+										globalAddNumberCallback(numbers, addNumberToControl);
+									}
+									else {
+										buyCallback(numbers);
+									}
+								}
 							}
 						});
 						break;
