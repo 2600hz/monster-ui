@@ -147,7 +147,7 @@ define(function(require){
 				var found = false;
 
 				_.each(data, function(val) {
-					if(val.toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
+					if(val.toString().toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
 						found = true;
 					}
 				});
