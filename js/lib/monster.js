@@ -67,7 +67,6 @@ define(function(require){
                                                         if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
                                                                 ampXHR.setRequestHeader(key, val);
                                                         }
-							ampXHR.setRequestHeader(key, val);
 						});
 
 						return true;
