@@ -38,6 +38,9 @@ define(function(require){
 		},
 
 		_defineRequest: function(id, request, app){
+                        if (request.hasOwnProperty('removeHeaders')) {
+                               request.removeHeaders = $.map(request.removeHeaders, function(n,i){return n.toLowerCase();});
+                        }
 			var self = this,
 				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
 				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
@@ -56,12 +59,14 @@ define(function(require){
 					before: function(ampXHR, settings) {
 						monster.pub('monster.requestStart');
 
-						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('X-Auth-Token') < 0)) {
+						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('x-auth-token') < 0)) {
 							ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
 						}
 
 						_.each(request.headers, function(val, key) {
-							ampXHR.setRequestHeader(key, val);
+                                                        if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
+                                                                ampXHR.setRequestHeader(key, val);
+                                                        }
 						});
 
 						return true;
@@ -69,7 +74,7 @@ define(function(require){
 				};
 
 			if (hasRemoveHeaders) {
-				if (request.removeHeaders.indexOf('Content-Type') > -1) {
+				if (request.removeHeaders.indexOf('content-type') > -1) {
 					delete settings.contentType;
 				}
 			}
