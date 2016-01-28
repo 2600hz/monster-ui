@@ -74,6 +74,8 @@ define(function(require){
 				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}
 
+			value.isLocal = value.features.indexOf('local') > -1;
+
 			return value;
 		},
 
@@ -130,21 +132,14 @@ define(function(require){
 
 				value = self.numbersFormatNumber(value);
 
-				if(value.used_by) {
-					if(data.viewType === 'pbx') {
-						if(value.used_by === 'callflow' || value.used_by === 'mobile') {
-							value.isLocal = value.features.indexOf('local') > -1;
-							thisAccount.usedNumbers.push(value);
-						}
-					}
-					else {
-						value.isLocal = value.features.indexOf('local') > -1;
-						thisAccount.usedNumbers.push(value);
-					}
-				}
-				else {
-					value.isLocal = value.features.indexOf('local') > -1;
+				if(!value.used_by) {
 					thisAccount.spareNumbers.push(value);
+				}
+				else if(data.viewType !== 'pbx') {
+					thisAccount.usedNumbers.push(value)
+				}
+				else if(value.used_by === 'callflow' || value.used_by === 'mobile') {
+					thisAccount.usedNumbers.push(value);
 				}
 			});
 
@@ -221,7 +216,15 @@ define(function(require){
 
 									value = self.numbersFormatNumber(value);
 
-									value.used_by ? usedNumbers.push(value) : spareNumbers.push(value);
+									if(!value.used_by) {
+										spareNumbers.push(value)
+									}
+									else if(listType === 'full') {
+										usedNumbers.push(value);
+									}
+									else if(value.used_by === 'callflow' || value.used_by === 'mobile') {
+										usedNumbers.push(value);
+									}
 								}
 							});
 
