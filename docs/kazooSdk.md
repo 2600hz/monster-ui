@@ -51,9 +51,10 @@ Note that each of these settings, if provided, will override the similar ones se
 You can also include custom settings that you will then handle using the `options` parameter in the callbacks defined when initializing the SDK (`onRequestStart`, `onRequestEnd`, `onRequestSuccess`, `onRequestError`). You can see such a custom setting (`generateError`) in the example below.
 
 ##### Usage example
-```
+```javascript
+// Note that this example requires the jQuery-MD5 plugin
 var kazooSdk = $.getKazooSdk({
-	apiRoot: 'http://crossbarserver.yourdomain.com:8000/',
+	apiRoot: 'http://crossbarserver.yourdomain.com:8000/v2/',
 	uiMetadata: {
 		ui: 'demo-ui',
 		version: '1.0'
@@ -79,7 +80,7 @@ kazooSdk.auth.userAuth({
 	},
 	success: function(data, status) {
 		kazooSdk.account.get({
-			accountId: data.data.accountId,
+			accountId: data.data.account_id,
 			success: function(data, status) {
 				console.log('Account data:', data.data);
 			},
