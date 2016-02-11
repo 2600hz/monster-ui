@@ -116,7 +116,7 @@ define(function(){
 						case 'whitelabel.update':
 						case 'whitelabel.get':
 							successCallback = function(data, status) {
-								if(data && data.hasOwnProperty('data') && data.data.hasOwnProperty('domain') && window.location.hostname === data.data.domain) {
+								if(data && data.hasOwnProperty('data') && data.data.hasOwnProperty('domain') && window.location.hostname === data.data.domain.toLowerCase()) {
 									var whitelabelData = data.data;
 									// Merge the whitelabel info to replace the hardcoded info
 									if(whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
