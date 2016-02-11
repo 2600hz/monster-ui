@@ -1260,14 +1260,17 @@ table.monster-table .actions .action-item:first-child {
 	margin-top: 34px;
 }
 
+.monster-navbar .separator:not(:first-child) {
+	float: left;
+	height: 18px;
+	margin: 11px 20px;
+	border-left: 1px solid #c0c0c9;
+}
+
 .monster-navbar .navbar-menu {
 	float: left;
 	height: 40px;
 	margin: 0;
-}
-
-.monster-navbar .navbar-menu:not(:last-child) {
-	margin-right: 45px;
 }
 
 .monster-navbar .navbar-menu.pull-right {
