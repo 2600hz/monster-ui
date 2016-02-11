@@ -50,7 +50,6 @@
 	background: url('../img/kazoo-logo.svg');
 	background-repeat: no-repeat;
 	background-position: center;
-	background-size: cover;
 	margin: 0 auto;
 }
 #auth_container .intro h1 {
