@@ -543,7 +543,13 @@
 			"rate": "Rate",
 			"activation_charge": "Activation charge",
 			"minimum": "Minimum",
-			"exceptions": "Exceptions"
+			"exceptions": "Exceptions",
+			"__comment": "UI-2046: All category",
+			"__version": "v3.22",
+			"_all": "All",
+			"as": "As",
+			"user": "Standard User",
+			"admin": "Account Admin"
 		}
 	},
 
