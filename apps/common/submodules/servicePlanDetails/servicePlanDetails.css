@@ -110,6 +110,10 @@
 	width: 40px;
 }
 
+.customize-override-wrapper select.input-value {
+	width: 150px;
+}
+
 .customize-override-wrapper [data-field="exceptions"] .input-value {
 	width: 140px;
 }

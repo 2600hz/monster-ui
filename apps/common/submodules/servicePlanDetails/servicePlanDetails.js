@@ -83,29 +83,43 @@ define(function(require){
 			var self = this,
 				 overrideOptions = {
 					number_services: {
-						port: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						cnam: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						e911: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
+						port: { rate: {},activation_charge: {}, minimum: {} },
+						cnam: { rate: {},activation_charge: {}, minimum: {} },
+						e911: { rate: {},activation_charge: {}, minimum: {} }
 					},
 					devices: {
-						ata: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						cellphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						fax: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						landline: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						mobile: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						sip_device: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						sip_uri: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						smartphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						softphone: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						_all: { rate: {},activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
+						ata: { rate: {},activation_charge: {}, minimum: {} },
+						cellphone: { rate: {},activation_charge: {}, minimum: {} },
+						fax: { rate: {},activation_charge: {}, minimum: {} },
+						landline: { rate: {},activation_charge: {}, minimum: {} },
+						mobile: { rate: {},activation_charge: {}, minimum: {} },
+						sip_device: { rate: {},activation_charge: {}, minimum: {} },
+						sip_uri: { rate: {},activation_charge: {}, minimum: {} },
+						smartphone: { rate: {},activation_charge: {}, minimum: {} },
+						softphone: { rate: {},activation_charge: {}, minimum: {} }
 					},
 					limits: {
-						outbound_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						inbound_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						twoway_trunks: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
+						outbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
+						inbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
+						twoway_trunks: { rate: {},activation_charge: {}, minimum: {} }
 					},
 					phone_numbers: {
-						tollfree_us: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
-						did_us: { rate: {},activation_charge: {}, minimum: {}, exceptions: {} },
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
+						tollfree_us: { rate: {},activation_charge: {}, minimum: {} },
+						toll_us: { rate: {},activation_charge: {}, minimum: {} },
+						emergency: { rate: {},activation_charge: {}, minimum: {} },
+						caribbean: { rate: {},activation_charge: {}, minimum: {} },
+						did_us: { rate: {},activation_charge: {}, minimum: {} },
+						international: { rate: {},activation_charge: {}, minimum: {} },
+						unknown: { rate: {},activation_charge: {}, minimum: {} }
+					},
+					users: {
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
+						user: { rate: {},activation_charge: {}, minimum: {} }, 
+						admin: { rate: {},activation_charge: {}, minimum: {} }
 					}
 				};
 
@@ -262,7 +276,7 @@ define(function(require){
 				mapToDelete[k] = true;
 			});
 
-			template.find('select').each(function() {
+			template.find('select.service-plan-selector').each(function() {
 				var value = $(this).val();
 
 				if(value !== 'none') {
@@ -326,10 +340,25 @@ define(function(require){
 					allowedOverrides: {}
 				};
 
+			var mapAsCategories = {};
+
+			_.each(allowedOverridesFull, function(category, categoryName) {
+				mapAsCategories[categoryName] = [];
+				_.each(category, function(subCategory, key) {
+					if(key !== '_all') {
+						mapAsCategories[categoryName].push(key);
+					}
+				});
+			});
+
 			_.each(overrides, function(category, categoryName) {
 				_.each(category, function(key, keyName) {
 					_.each(key, function(field, fieldName) {
 						if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
+							if(fieldName === 'as') {
+								key.asCategories = mapAsCategories[categoryName];
+							}
+
 							delete allowedOverridesFull[categoryName][keyName][fieldName];
 						}
 					});
@@ -397,7 +426,7 @@ define(function(require){
 				overrides[category][key] = overrides[category][key] || {};
 				overrides[category][key][field] = overrides[category][key][field] || {};
 
-				overrides[category][key][field] = 0;
+				overrides[category][key][field] = '';
 
 				cssToFocus = '[data-category="' + category + '"] [data-key="' + key + '"] [data-field="' + field + '"] input';
 

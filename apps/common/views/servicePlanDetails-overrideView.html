@@ -35,10 +35,21 @@
 						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}</div>
 						<div class="charges">
 							{{#each this}}
-								<div data-field="{{@key}}">
-									{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}: <input class="input-value" value="{{this}}">
-									<i class="fa fa-remove monster-red remove-line"></i>
-								</div>
+								{{#compare @key "!==" "asCategories"}}
+									<div data-field="{{@key}}">
+										{{ tryI18n ../../../../i18n.servicePlanDetails.keys @key }}: 
+										{{#compare @key "===" "as"}}
+											<select class="input-value">
+												{{#each ../../../asCategories}}
+													<option value="{{this}}">{{ tryI18n ../../../../../../i18n.servicePlanDetails.keys this }}</option>
+												{{/each}}
+											</select>
+										{{else}}
+											<input class="input-value" value="{{this}}">
+										{{/compare}}
+										<i class="fa fa-remove monster-red remove-line"></i>
+									</div>
+								{{/compare}}
 							{{/each}}
 						</div>
 					</div>
