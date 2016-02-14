@@ -335,10 +335,16 @@ define(function(){
 
 				if(storedApp && 'source_url' in storedApp) {
 					externalUrl = storedApp.source_url;
+                                        if(externalUrl.substr(externalUrl.length-1) !== "/") {
+                                                externalUrl += "/";
+                                        }
 				}
 
 				if(storedApp && storedApp.hasOwnProperty('api_url')) {
 					apiUrl = storedApp.api_url;
+					if(apiUrl.substr(apiUrl.length-1) !== "/") {
+                                                apiUrl += "/";
+                                        }
 				}
 			}
 
