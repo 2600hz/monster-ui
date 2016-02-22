@@ -22,7 +22,9 @@
 			'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
 			'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
 			'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}'},
-			'searchAll': { verb: 'GET', url: 'search/multi?t=account&by_name={searchValue}&by_realm={searchValue}&by_id={searchValue}'}
+			'searchAll': { verb: 'GET', url: 'search/multi?t=account&by_name={searchValue}&by_realm={searchValue}&by_id={searchValue}'},
+			'promote': { verb: 'PUT', url: 'accounts/{accountId}/reseller' },
+			'demote': { verb: 'DELETE', url: 'accounts/{accountId}/reseller' }
 		},
 		appsStore: {
 			'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
