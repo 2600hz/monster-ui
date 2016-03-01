@@ -177,6 +177,14 @@ body,
 }
 
 /***** Account Toggle *****/
+#main_topbar .links#main_topbar_account_toggle_link {
+	display: none;
+}
+
+#main_topbar .links#main_topbar_account_toggle_link.visible {
+	display: block;
+}
+
 #main_topbar #main_topbar_account_toggle.open {
 	background-color: #202029;
 }
