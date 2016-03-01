@@ -233,6 +233,10 @@ define(function(require){
 							$('body').addClass('colorblind');
 						}
 
+						if(monster.util.isAdmin()) {
+							$('#main_topbar_account_toggle_link').addClass('visible');
+						}
+
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp
 						});
