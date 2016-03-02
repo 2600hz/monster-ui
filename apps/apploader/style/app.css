@@ -41,14 +41,25 @@
 	height: 134px;
 	padding-top: 42px;
 	text-align: center;
-}
 
+	cursor: move; /* fallback if grab cursor is unsupported */
+	cursor: grab;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
+}
 #apploader .app-element .app-icon {
 	width: 64px;
 	height: 64px;
 	margin: 0 auto 15px;
 	background: url('static/images/default_icon.png') no-repeat center;
 	background-size: contain;
+	border-radius: 14px;
+	transition: transform .15s ease-in, box-shadow: .062s ease-in;
+}
+
+#apploader .app-element:hover .app-icon { 
+	box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.24);
+	transform: scale(1.15);
 }
 
 #apploader .app-element .app-name {
@@ -76,15 +87,16 @@
 
 #apploader .left-div h4 {
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 400;
 	margin-top: 0;
 	text-transform: uppercase;
-	color: #fff;
+	color: #e0e0e9;
+	letter-spacing: .04em;
 }
 
 #apploader .left-div p {
 	margin-bottom: 0;
-	color: #6c6c74;
+	color: #808089;
 }
 
 #apploader .default-app .app-container:not(.no-app):hover {
@@ -111,7 +123,7 @@
 
 #apploader .left-div .app-name {
 	text-align: center;
-	color: #c0c0c9;
+	color: #e0e0c9;
 }
 
 #apploader .left-div .search-box {
@@ -206,7 +218,7 @@
 }
 
 #apploader .right-div h3 {
-	font-weight: 600;
+	font-weight: 400;
 	margin-bottom: 97px;
 	text-align: center;
 }
@@ -215,16 +227,14 @@
 	margin-bottom: 35px;
 }
 
-#apploader .right-div .app-element:hover {
-	cursor: pointer;
-	background-color: #202029;
+#apploader .right-div .app-element:active {
+	background-color: inherit;
 }
 
-#apploader .right-div .app-element:active {
+#apploader .app-element.ui-sortable-helper {
+	cursor: grabbing;
+	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
-	cursor:    -moz-grabbing;
-	cursor: move;
-	background-color: inherit;
 }
 
 #apploader .right-div .app-element.ui-sortable-placeholder {
