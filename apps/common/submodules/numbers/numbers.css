@@ -386,7 +386,7 @@
 
 #action_confirmation .actions { padding: 15px; }
 
-#action_confirmation .actions a { text-decoration: none; }
+#action_confirmation .actions a { text-decoration: none; margin-right: 10px; }
 
 #action_confirmation .actions a:hover { text-decoration: underline; }
 
@@ -449,4 +449,24 @@
 #numbers_search_result_popup .account-tree .account-line .account-name.masqueradable {
 	color: #22a5ff;
 	cursor: pointer;
+}
+
+/* Add External */
+#numbers_add_external {
+	padding: 20px;
+}
+
+#numbers_add_external .list-numbers {
+	height: 200px;
+	width: 508px;
+}
+
+#numbers_add_external .help-text {
+	color: #999;
+	font-size: 12px;
+	font-style: italic;
+}
+
+#numbers_add_external .cancel-link {
+	margin-right: 10px;
 }

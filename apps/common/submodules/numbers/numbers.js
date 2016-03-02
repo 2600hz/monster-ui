@@ -21,8 +21,9 @@ define(function(require){
 		** viewType: default to 'pbx', can be set to 'pbx', basically changes the view from Number Manager to SmartPBX the if set to 'pbx'
 		*/
 
-		numbersRender: function(args){
+		numbersRender: function(pArgs){
 			var self = this,
+				args = pArgs || {},
 				container = args.container || $('#monster-content'),
 				callbackAfterRender = args.callbackAfterRender,
 				viewType = args.viewType || 'manager';
@@ -114,6 +115,7 @@ define(function(require){
 				templateData = {
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
+					canAddExternalNumbers: monster.util.canAddExternalNumbers(),
 					listAccounts: []
 				};
 
@@ -404,6 +406,12 @@ define(function(require){
 					}, true);
 				});
 			};
+
+			parent.on('click', '.account-header .action-number.add-external', function(e) {
+				self.numbersAddExternalNumbers($(this).parents('.account-section').data('id'), function() {
+					self.numbersRender({ container: $('#number_manager') });
+				});
+			});
 
 			parent.on('click', '.account-header .action-number.sync', function(e) {
 				syncNumbers($(this).parents('.account-section').data('id'));
@@ -912,6 +920,83 @@ define(function(require){
 			});
 		},
 
+		numbersAddIndividualNumber: function(phoneNumber, accountId, success, error) {
+			var self = this;
+
+			if(monster.util.canAddExternalNumbers()) {
+				self.numbersCreateNumber(phoneNumber, accountId, function() {
+					self.numbersActivateNumber(phoneNumber, accountId, function() {
+						success && success();
+					}, error);
+				}, error)
+			}
+			else {
+				error();
+			}
+		},
+		
+		numbersAddFreeformNumbers: function(numbers_data, accountId, callback) {
+			var self = this,
+				parallelRequests = {};
+
+			_.each(numbers_data, function(phoneNumber) {
+				parallelRequests[phoneNumber] = function(callback) {
+					self.numbersAddIndividualNumber(phoneNumber, accountId, function(data) {
+						callback(null, data);
+					},
+					function(data) {
+						callback(null, {});
+					});
+				};
+			});
+
+			monster.parallel(parallelRequests, function(err, results) {
+				callback && callback(results);
+			});
+		},
+
+		numbersAddExternalNumbers: function(accountId, callback) {
+			var self = this,
+				dialogTemplate = $(monster.template(self, 'numbers-addExternal'));
+
+			dialogTemplate.on('click', '.cancel-link', function() {
+				popup.remove();
+			});
+
+			dialogTemplate.on('click', '#add_numbers', function(ev) {
+				ev.preventDefault();
+
+				var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
+					numbersData = [],
+					phoneNumber;
+
+				phoneNumbers = phoneNumbers.replace(/[\s-\(\)\.]/g, '').split(',');
+
+				_.each(phoneNumbers, function(number) {
+					phoneNumber = number.match(/^\+(.*)$/);
+
+					if(phoneNumber && phoneNumber[1]) {
+						numbersData.push(number);
+					}
+				});
+
+				if(numbersData.length > 0) {
+					self.numbersAddFreeformNumbers(numbersData, accountId, function() {
+						popup.dialog('close');
+
+						callback && callback();
+					});
+				}
+				else {
+					monster.ui.alert(self.i18n.active().numbers.addExternal.dialog.invalidNumbers);
+				}
+			});
+
+			var popup = monster.ui.dialog(dialogTemplate, {
+				title: self.i18n.active().numbers.addExternal.dialog.title
+			});
+		},
+
 		numbersRenderNumberPopup: function(number, accountId) {
 			var self = this;
 			self.numbersGetNumberPopupData({
@@ -1123,6 +1208,42 @@ define(function(require){
 				},
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
+				}
+			});
+		},
+
+		numbersCreateNumber: function(number, accountId, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.create',
+				data: {
+					accountId: accountId,
+					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function(data) {
+					error && error(data);
+				}
+			});
+		},
+
+		numbersActivateNumber: function(number, accountId, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.activate',
+				data: {
+					accountId: accountId,
+					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function(data) {
+					error && error(data);
 				}
 			});
 		},

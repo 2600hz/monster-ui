@@ -70,7 +70,7 @@
 				"title": "Delete Numbers - Confirmation",
 				"questionPartOne": "Are you sure you want to delete ",
 				"questionPartTwo": " number(s)?",
-				"button": "delete number(s)"
+				"button": "Delete number(s)"
 			},
 			"move": {
 				"title": "Move Numbers - Confirmation",
@@ -114,9 +114,24 @@
 		},
 
 		"__comment": "UI-1888: List MDNs in Numbers Manager without the ability to configure features (e911, cnam, prepend)",
-		"__version": "v4.0",
+		"__version": "3.22",
 		"mobile": "Mobile Manager",
-		"mobileIconHelp": "This number is linked to a Mobile device and therefore, the only way to move it around, is by managing the corresponding device"
+		"mobileIconHelp": "This number is linked to a Mobile device and therefore, the only way to move it around, is by managing the corresponding device",
+
+		"__comment": "UI-1285: Adding the Add External Action to the Number Manager",
+		"__version": "3.22",
+		"addExternal": {
+			"label": "Add",
+			"help": "Add numbers to the selected account (You have access to this option because you're logged in with an account that has the wnm_allow_additions flag set to true).",
+			"dialog": {
+				"title": "Add your phone numbers to the platform",
+				"fieldText": "Input numbers to be imported",
+				"beginImport": "Begin Import",
+				"help1": "Format Example: +14157775555 (+[country code][phone number])",
+				"help2": "** If importing multiple numbers, each number must be separated by a comma (,)",
+				"invalidNumbers": "We couldn't find any valid phone number to add to the system in the list of numbers you submitted."
+			}
+		}
 	},
 
 	"callerId": {

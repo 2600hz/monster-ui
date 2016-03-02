@@ -334,6 +334,19 @@ define(function(require){
 			return isTrial;
 		},
 
+		// Function returning if an account can add external numbers or not
+		canAddExternalNumbers: function(pAccount) {
+			var self = this,
+				hasRights = false,
+				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			if(account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
+				hasRights = true;
+			}
+
+			return hasRights;
+		},
+
 		// Function returning if a user is an admin or not
 		isAdmin: function(pUser) {
 			var self = this,
