@@ -329,7 +329,7 @@ define(function(require){
 				errorMessage = errorsI18n.errorMessages[parsedError.message].text;
 				customTitle = errorsI18n.errorMessages[parsedError.message].title;
 			}
-			else if(errorNumber === 400 && 'data' in parsedError) {
+			else if((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
 					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
