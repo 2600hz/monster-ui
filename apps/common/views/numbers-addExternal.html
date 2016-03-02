@@ -1,0 +1,24 @@
+<div id="numbers_add_external">
+	<form id="form_add_numbers">
+		<div class="control-group">
+			<label class="control-label" for="list-numbers">
+				{{ i18n.numbers.addExternal.dialog.fieldText }}
+				<div class="help-text">
+					{{ i18n.numbers.addExternal.dialog.help1 }}
+				</div>
+			</label>
+
+			<div class="controls">
+				<textarea name="numbers" class="list-numbers"></textarea>
+				<div class="help-text">
+					{{ i18n.numbers.addExternal.dialog.help2 }}
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="dialog-buttons-wrapper">
+		<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+		<button id="add_numbers" class="monster-button monster-button-success">{{ i18n.numbers.addExternal.dialog.beginImport }}</button>
+	</div>
+</div>
