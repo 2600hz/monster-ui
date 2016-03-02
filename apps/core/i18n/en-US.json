@@ -27,7 +27,10 @@
 			"unique": "The value for the field \"{{field}}\" must be unique.",
 			"forbidden": "The value for the field \"{{field}}\" can not be updated.",
 			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
-			"service_restriction": "Not enought credit to purchase the number \"{{field}}\" (${{value}})."
+			"service_restriction": "Not enought credit to purchase the number \"{{field}}\" (${{value}}).",
+			"__comment": "UI-1882: Add error handling for upload too big",
+			"__version": "3.22",
+			"maxSize": "The content for the field \"{{field}}\" must not be more than {{value}} bytes."
 		},
 		"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
 		"errorMessages": {
