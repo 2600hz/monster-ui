@@ -8,6 +8,11 @@
 	background-size: cover;
 }
 
+/* Nasty hack to remove yellow autofill which don't look good with current login design */
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 1000px #202029 inset !important;
+	-webkit-text-fill-color: #e0e0e9 !important;
+}
 
 #auth_container ::selection {
 	background: #00B8FF;
