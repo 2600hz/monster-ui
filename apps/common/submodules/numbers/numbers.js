@@ -1383,6 +1383,10 @@ define(function(require){
 							data.numbers.numbers[number].owner = self.i18n.active().numbers.conferenceNumber;
 							data.numbers.numbers[number].ownerType = 'conference';
 						}
+						else {
+							data.numbers.numbers[number].owner = self.i18n.active().numbers.callflows;
+							data.numbers.numbers[number].ownerType = 'callflows';
+						}
 					}
 				});
 			});
@@ -1397,14 +1401,23 @@ define(function(require){
 					used_by: 'mobile'
 				};
 
+				var mobileOwner = {};
 				if (device.hasOwnProperty('owner_id')) {
-					$.extend(true, data.numbers.numbers[device.mobile.mdn], {
+					mobileOwner = {
 						owner_id: device.owner_id,
-						ownerType: 'user',
+						ownerType: 'mobileUser',
 						owner: mapUsers[device.owner_id].first_name + ' ' + mapUsers[device.owner_id].last_name
-					});
+					}
 				}
+				else {
+					mobileOwner = {
+						owner: self.i18n.active().numbers.unassigned
+					}
+				}
+				$.extend(true, data.numbers.numbers[device.mobile.mdn], mobileOwner);
 			});
+
+			console.log(data.numbers.numbers);
 
 			return data;
 		},

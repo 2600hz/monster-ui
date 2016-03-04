@@ -32,7 +32,7 @@
 		</span>
 
 		<div class="used-by">
-			{{#compare ../viewType '!==' 'pbx'}}
+			{{#compare ../../viewType '!==' 'pbx'}}
 				{{ this.friendlyUsedBy }}
 			{{else}}
 				{{#compare this.ownerType '===' 'user'}}
@@ -46,6 +46,14 @@
 						{{else}}
 							{{#compare this.ownerType '===' 'conference'}}
 								<i class="fa fa-comments"></i>
+							{{else}}
+								{{#compare this.ownerType '===' 'callflows'}}
+									<i class="fa fa-random"></i>
+								{{else}}
+									{{#compare this.ownerType '===' 'mobileUser'}}
+										<i class="icon-telicon-mobile-phone"></i>
+									{{/compare}}
+								{{/compare}}
 							{{/compare}}
 						{{/compare}}
 					{{/compare}}

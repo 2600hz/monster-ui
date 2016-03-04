@@ -131,7 +131,12 @@
 				"help2": "** If importing multiple numbers, each number must be separated by a comma (,)",
 				"invalidNumbers": "We couldn't find any valid phone number to add to the system in the list of numbers you submitted."
 			}
-		}
+		},
+
+		"__comment": "UI-1935: Properly display a description next to a used number",
+		"__version": "3.22",
+		"unassigned": "Unassigned",
+		"callflows": "Callflows"
 	},
 
 	"callerId": {
