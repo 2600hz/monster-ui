@@ -5,6 +5,35 @@ define(function(require){
 		monster = require("monster");
 
 	var util = {
+
+		/**
+		 * Format bytes to display its decimal multiple
+		 * @param  {Number} bytes   Number in bytes to format
+		 * @param  {Number} pDigits Number of digits after decimal point
+		 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
+		 * @return {Object}         Object containing the formatted data about the initial bytes value
+		 */
+		formatBytes: function (bytes, pDigits) {
+			var base = 1000,
+				sizes = monster.apps.core.i18n.active().unitsMultiple.byte,
+				exponent = Math.floor(Math.log(bytes) / Math.log(base)),
+				value = bytes / Math.pow(base, exponent),
+				digits = pDigits || (exponent > 2 ? 1 : 0);
+
+			if (bytes === 0) {
+				return {
+					value: 0,
+					unit: sizes[0]
+				};
+			}
+			else {
+				return {
+					value: value.toFixed(digits),
+					unit: sizes[exponent]
+				};
+			}
+		},
+
 		toFriendlyDate: function(pDate, format, pUser, pIsGregorian){
 			// If Date is undefined, then we return an empty string.
 			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
