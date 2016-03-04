@@ -565,5 +565,48 @@
 	"__comment": "UI-1847: Showing proper message when attempting to login on an expired account",
 	"__version": "3.23",
 	"expiredTrial": "Your trial expired on {{date}}, please contact your sales representative for information on how to proceed.",
-	"disabledAccount": "Your account has been disabled."
+	"disabledAccount": "Your account has been disabled.",
+
+	"__comment": "UI-1972: Create a wrapper for jQuery UI slider element",
+	"__version": "3.22",
+	"unitsMultiple": {
+		"byte": [
+			{
+				"symbole": "bytes",
+				"multiple": "bytes"
+			},
+			{
+				"symbole": "kB",
+				"multiple": "kilobyte"
+			},
+			{
+				"symbole": "MB",
+				"multiple": "megabyte"
+			},
+			{
+				"symbole": "GB",
+				"multiple": "gigabyte"
+			},
+			{
+				"symbole": "TB",
+				"multiple": "terabyte"
+			},
+			{
+				"symbole": "PB",
+				"multiple": "petabyte"
+			},
+			{
+				"symbole": "EB",
+				"multiple": "exabyte"
+			},
+			{
+				"symbole": "ZB",
+				"multiple": "zettabyte"
+			},
+			{
+				"symbole": "YB",
+				"multiple": "yottabyte"
+			}
+		]
+	}
 }

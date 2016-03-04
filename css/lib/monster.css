@@ -1305,7 +1305,16 @@ table.monster-table .actions .action-item:first-child {
 	border-color: #22a5ff;
 }
 
+.monster-navbar.reverse .navbar-menu-item-link,
+.monster-navbar .navbar-menu-item-link:not(.active):not(:hover):focus {
+	color: #004c80;
+}
+
 .monster-navbar.reverse .navbar-menu-item-link.active {
 	color: #fff;
 	border-color: #fff;
+}
+
+.monster-navbar.reverse .navbar-menu-item-link:not(.active):hover {
+	color: #fff;
 }
