@@ -8,14 +8,20 @@
 					<a tabindex="-1" href="#">{{ tryI18n ../i18n.servicePlanDetails.keys @key }}</a>
 					<ul class="dropdown-menu">
 						{{#each this}}
-							<li class="dropdown-submenu" data-key="{{@key}}">
-								<a tabindex="-1" href="#">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}</a>
-								<ul class="dropdown-menu">
-									{{#each this}}
-										<li><a tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a></li>
-									{{/each}}
-								</ul>
-							</li>
+							{{#if this.hasOptions}}
+								<li class="dropdown-submenu" data-key="{{@key}}">
+									<a tabindex="-1" href="#">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a>
+									<ul class="dropdown-menu">
+										{{#each this}}
+											{{#compare @key "!==" "hasOptions"}}
+												<li><a class="selectable" tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
+											{{/compare}}
+										{{/each}}
+									</ul>
+								</li>
+							{{else}}
+								<li><a class="selectable" tabindex="-1" href="#" data-key="{{@key}}">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a></li>
+							{{/if}}
 						{{/each}}
 					</ul>
 				</li>
@@ -32,7 +38,7 @@
 				</div>
 				{{#each this}}
 					<div class="line" data-key="{{@key}}">
-						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}</div>
+						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}<i class="fa fa-remove monster-red remove-line"></i></div>
 						<div class="charges">
 							{{#each this}}
 								{{#compare @key "!==" "asCategories"}}
@@ -40,9 +46,11 @@
 										{{ tryI18n ../../../../i18n.servicePlanDetails.keys @key }}: 
 										{{#compare @key "===" "as"}}
 											<select class="input-value">
-												{{#each ../../../asCategories}}
-													<option value="{{this}}">{{ tryI18n ../../../../../../i18n.servicePlanDetails.keys this }}</option>
-												{{/each}}
+												{{#select this}}
+													{{#each ../../../../asCategories}}
+														<option value="{{this}}">{{ tryI18n ../../../../../../../i18n.servicePlanDetails.keys this }}</option>
+													{{/each}}
+												{{/select}}
 											</select>
 										{{else}}
 											<input class="input-value" value="{{this}}">

@@ -120,8 +120,33 @@ define(function(require){
 						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
 						user: { rate: {},activation_charge: {}, minimum: {} }, 
 						admin: { rate: {},activation_charge: {}, minimum: {} }
+					},
+					ui_apps: {
+						accounts: { },
+						branding: { },
+						callflows: {},
+						carriers: {},
+						cluster: {},
+						debug: {},
+						migration: {},
+						mobile: {},
+						numbers: {},
+						pbxs: {},
+						pivot: {},
+						port: {},
+						provisioner: {},
+						reporting: {},
+						userportal: {},
+						voip: {},
+						webhooks: {}
 					}
 				};
+
+			_.each(overrideOptions, function(category) {
+				_.each(category, function(subCategory) {
+					subCategory.hasOptions = !_.isEmpty(subCategory);
+				});
+			});
 
 			return overrideOptions;
 		},
@@ -295,23 +320,41 @@ define(function(require){
 				formattedData.plansToDelete.push(k);
 			});
 
-			template.find('.details-overrides [data-field]').each(function() {
+			template.find('.details-overrides [data-key]').each(function() {
 				var $this = $(this),
 					plan = $this.parents('.category-wrapper').find(':selected').val(),
 					category = $this.parents('[data-category]').data('category'),
-					key = $this.parents('[data-key]').data('key'),
-					field = $this.data('field'),
-					value = $this.find('.input-value').val();
-
-				if(field === 'exceptions') {
-					value = value.split(',');
-				}
+					key = $this.data('key'),
+					hasFields = $this.find('[data-field]').length > 0;
 
 				if(plan !== 'none') {
 					formattedData.overrides[plan] = formattedData.overrides[plan] || {};
 					formattedData.overrides[plan][category] = formattedData.overrides[plan][category] || {};
 					formattedData.overrides[plan][category][key] = formattedData.overrides[plan][category][key] || {};
-					formattedData.overrides[plan][category][key][field] = value;
+
+					if(category === 'ui_apps') {
+						formattedData.overrides[plan][category][key] = {
+							enabled: true,
+							app_id: monster.appsStore[key].id,
+							name: monster.appsStore[key].i18n['en-US'].label,
+							account_id: monster.apps.auth.originalAccount.id
+						}
+					}
+				}
+
+				if(hasFields) {
+					var field,
+						value;
+
+					$this.find('[data-field]').each(function(el) {
+						var $el = $(this);
+						field = $el.data('field'),
+						value = $el.find('.input-value').val();
+
+						if(field === 'exceptions') { value = value.split(','); }
+
+						formattedData.overrides[plan][category][key][field] = value;
+					});
 				}
 			});
 
@@ -353,15 +396,22 @@ define(function(require){
 
 			_.each(overrides, function(category, categoryName) {
 				_.each(category, function(key, keyName) {
-					_.each(key, function(field, fieldName) {
-						if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
-							if(fieldName === 'as') {
-								key.asCategories = mapAsCategories[categoryName];
-							}
+					if(categoryName === 'ui_apps') {
+						delete allowedOverridesFull[categoryName][keyName];
 
-							delete allowedOverridesFull[categoryName][keyName][fieldName];
-						}
-					});
+						overrides.ui_apps[keyName] = {}
+					}
+					else {
+						_.each(key, function(field, fieldName) {
+							if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
+								if(fieldName === 'as') {
+									key.asCategories = mapAsCategories[categoryName];
+								}
+
+								delete allowedOverridesFull[categoryName][keyName][fieldName];
+							}
+						});
+					}
 				});
 			});
 
@@ -380,7 +430,7 @@ define(function(require){
 					var overrides = {};
 
 					// Get all current overrides, not necesseraly saved but updated via the inputs
-					template.find('.details-overrides [data-field]').each(function() {
+					/*template.find('.details-overrides [data-field]').each(function() {
 						var $this = $(this),
 							category = $this.parents('[data-category]').data('category'),
 							key = $this.parents('[data-key]').data('key'),
@@ -390,22 +440,50 @@ define(function(require){
 						overrides[category] = overrides[category] || {};
 						overrides[category][key] = overrides[category][key] || {};
 						overrides[category][key][field] = value;
-					});
+					});*/
 
+					template.find('.details-overrides [data-key]').each(function() {
+						var $this = $(this),
+							category = $this.parents('[data-category]').data('category'),
+							key = $this.data('key'),
+							hasFields = $this.find('[data-field]').length > 0;
+
+						overrides[category] = overrides[category] || {};
+						overrides[category][key] = overrides[category][key] || {};
+
+						if(hasFields) {
+							var field,
+								value;
+
+							$this.find('[data-field]').each(function(el) {
+								var $el = $(this);
+								field = $el.data('field'),
+								value = $el.find('.input-value').val();
+
+								overrides[category][key][field] = value;
+							});
+						}
+					});
 					return overrides;
 				};
 
 			template.find('.remove-line').on('click', function() {
 				var overrides = getOverridenValues(),
 					$this = $(this),
+					isKey = $this.parents('[data-field]').length === 0,
 					category = $this.parents('[data-category]').data('category'),
 					key = $this.parents('[data-key]').data('key'),
-					field = $this.parents('[data-field]').data('field');
+					field = isKey ? '' : $this.parents('[data-field]').data('field');
 
-				delete overrides[category][key][field];
-
-				if(_.isEmpty(overrides[category][key])) {
+				if(isKey) {
 					delete overrides[category][key];
+				}
+				else {
+					delete overrides[category][key][field];
+
+					if(_.isEmpty(overrides[category][key])) {
+						delete overrides[category][key];
+					}
 				}
 
 				if(_.isEmpty(overrides[category])) {
@@ -415,18 +493,21 @@ define(function(require){
 				self.servicePlanDetailsRenderOverride(container, overrides);
 			});
 
-			template.find('.select-field-override [data-field]').on('click', function() {
-				var overrides = getOverridenValues(),
-					$this = $(this),
+			template.find('.select-field-override .selectable').on('click', function() {
+				var $this = $(this),
+					isKey = typeof $this.attr('data-key') !== 'undefined',
+					overrides = getOverridenValues(),
 					category = $this.parents('[data-category]').data('category'),
-					key = $this.parents('[data-key]').data('key'),
-					field = $this.data('field');
+					key = isKey ? $this.data('key') : $this.parents('[data-key]').data('key'),
+					field = isKey ? '' : $this.data('field');
 
 				overrides[category] = overrides[category] || {};
 				overrides[category][key] = overrides[category][key] || {};
-				overrides[category][key][field] = overrides[category][key][field] || {};
 
-				overrides[category][key][field] = '';
+				if(field) {
+					overrides[category][key][field] = overrides[category][key][field] || {};
+					overrides[category][key][field] = '';
+				}
 
 				cssToFocus = '[data-category="' + category + '"] [data-key="' + key + '"] [data-field="' + field + '"] input';
 
