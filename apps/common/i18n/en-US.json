@@ -569,7 +569,24 @@
 			"_all": "All",
 			"as": "As",
 			"user": "Standard User",
-			"admin": "Account Admin"
+			"admin": "Account Admin",
+			"accounts": "Accounts Manager",
+			"branding": "Branding",
+			"callflows": "Advanced Callflows",
+			"carriers": "Carriers",
+			"cluster": "Cluster Manager",
+			"debug": "Debug App",
+			"migration": "Migration",
+			"mobile": "Mobile",
+			"numbers": "Numbers Manager",
+			"pbxs": "PBX Connector",
+			"pivot": "Pivot",
+			"port": "Port Manager",
+			"provisioner": "Provisioner",
+			"reporting": "Reseller Reporting",
+			"userportal": "Userportal",
+			"voip": "Smart PBX",
+			"webhooks": "Webhooks"
 		}
 	},
 
