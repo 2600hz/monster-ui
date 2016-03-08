@@ -13,9 +13,24 @@
 									<a tabindex="-1" href="#">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a>
 									<ul class="dropdown-menu">
 										{{#each this}}
-											{{#compare @key "!==" "hasOptions"}}
-												<li><a class="selectable" tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
-											{{/compare}}
+
+											{{#if this.hasOptions}}
+												<li class="dropdown-submenu" data-field="{{@key}}">
+													<a tabindex="-1" href="#">{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}</a>
+													<ul class="dropdown-menu">
+														{{#each this}}
+															{{#compare @key "!==" "hasOptions"}}
+																<li><a class="selectable" tabindex="-1" href="#" data-subfield="{{@key}}">{{ tryI18n ../../../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
+															{{/compare}}
+														{{/each}}
+													</ul>
+												</li>
+											{{else}}
+												{{#compare @key "!==" "hasOptions"}}
+													<li><a class="selectable" tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
+												{{/compare}}
+											{{/if}}
+
 										{{/each}}
 									</ul>
 								</li>
@@ -41,22 +56,32 @@
 						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}<i class="fa fa-remove monster-red remove-line"></i></div>
 						<div class="charges">
 							{{#each this}}
-								{{#compare @key "!==" "asCategories"}}
-									<div data-field="{{@key}}">
-										{{ tryI18n ../../../../i18n.servicePlanDetails.keys @key }}: 
-										{{#compare @key "===" "as"}}
-											<select class="input-value">
-												{{#select this}}
-													{{#each ../../../../asCategories}}
-														<option value="{{this}}">{{ tryI18n ../../../../../../../i18n.servicePlanDetails.keys this }}</option>
-													{{/each}}
-												{{/select}}
-											</select>
-										{{else}}
+								{{#compare @key "===" "discounts"}}
+									{{#each this}}
+										<div data-field="discounts" data-subfield="{{@key}}">
+											{{ tryI18n ../../../../../i18n.servicePlanDetails.keys 'discounts' }} - {{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}
 											<input class="input-value" value="{{this}}">
-										{{/compare}}
-										<i class="fa fa-remove monster-red remove-line"></i>
-									</div>
+											<i class="fa fa-remove monster-red remove-line"></i>
+										</div>
+									{{/each}}
+								{{else}}
+									{{#compare @key "!==" "asCategories"}}
+										<div data-field="{{@key}}">
+											{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}: 
+											{{#compare @key "===" "as"}}
+												<select class="input-value">
+													{{#select this}}
+														{{#each ../../../../../asCategories}}
+															<option value="{{this}}">{{ tryI18n ../../../../../../../../i18n.servicePlanDetails.keys this }}</option>
+														{{/each}}
+													{{/select}}
+												</select>
+											{{else}}
+												<input class="input-value" value="{{this}}">
+											{{/compare}}
+											<i class="fa fa-remove monster-red remove-line"></i>
+										</div>
+									{{/compare}}
 								{{/compare}}
 							{{/each}}
 						</div>
