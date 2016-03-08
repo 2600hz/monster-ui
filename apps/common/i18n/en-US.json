@@ -586,7 +586,9 @@
 			"reporting": "Reseller Reporting",
 			"userportal": "Userportal",
 			"voip": "Smart PBX",
-			"webhooks": "Webhooks"
+			"webhooks": "Webhooks",
+			"discounts": "Discounts",
+			"maximum": "Maximum"
 		}
 	},
 
