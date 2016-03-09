@@ -343,39 +343,39 @@ define(function(require){
 							account_id: monster.apps.auth.originalAccount.id
 						}
 					}
-				}
 
-				if(hasFields) {
-					var field,
-						value,
-						subField;
+					if(hasFields) {
+						var field,
+							value,
+							subField;
 
-					$this.find('[data-field]').each(function(el) {
-						var $el = $(this);
-						field = $el.data('field'),
-						value = $el.find('.input-value').val();
-						subField = $el.data('subfield');
+						$this.find('[data-field]').each(function(el) {
+							var $el = $(this);
+							field = $el.data('field'),
+							value = $el.find('.input-value').val();
+							subField = $el.data('subfield');
 
-						if(field === 'exceptions') { value = value.split(','); }
+							if(field === 'exceptions') { value = value.split(','); }
 
-						if(!subField) {
-							formattedData.overrides[plan][category][key][field] = value;
-						}
-						else {
-							formattedData.overrides[plan][category][key][field] = formattedData.overrides[plan][category][key][field] || {};
-
-							if(!field === 'discounts') {
-								formattedData.overrides[plan][category][key][field][subField] = value;
+							if(!subField) {
+								formattedData.overrides[plan][category][key][field] = value;
 							}
 							else {
-								if(!formattedData.overrides[plan][category][key][field].hasOwnProperty('cumulative')) {
-									formattedData.overrides[plan][category][key][field]['cumulative'] = {};
-								}
+								formattedData.overrides[plan][category][key][field] = formattedData.overrides[plan][category][key][field] || {};
 
-								formattedData.overrides[plan][category][key][field]['cumulative'][subField] = value;
+								if(!field === 'discounts') {
+									formattedData.overrides[plan][category][key][field][subField] = value;
+								}
+								else {
+									if(!formattedData.overrides[plan][category][key][field].hasOwnProperty('cumulative')) {
+										formattedData.overrides[plan][category][key][field]['cumulative'] = {};
+									}
+
+									formattedData.overrides[plan][category][key][field]['cumulative'][subField] = value;
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			});
 
