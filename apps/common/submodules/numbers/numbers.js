@@ -970,7 +970,9 @@ define(function(require){
 					numbersData = [],
 					phoneNumber;
 
-				phoneNumbers = phoneNumbers.replace(/[\s-\(\)\.]/g, '').split(',');
+				// Users might think a space == new line, so if they added numbers and separated each of them by a new line, we make sure to replace these by a space so our script works
+				phoneNumbers = phoneNumbers.replace(/[\n]/g, ' ');
+				phoneNumbers = phoneNumbers.replace(/[-\(\)\.]/g, '').split(' ');
 
 				_.each(phoneNumbers, function(number) {
 					phoneNumber = number.match(/^\+(.*)$/);

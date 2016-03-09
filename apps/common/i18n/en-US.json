@@ -128,7 +128,7 @@
 				"fieldText": "Input numbers to be imported",
 				"beginImport": "Begin Import",
 				"help1": "Format Example: +14157775555 (+[country code][phone number])",
-				"help2": "** If importing multiple numbers, each number must be separated by a comma (,)",
+				"help2": "** If importing multiple numbers, each number must be separated by a space.",
 				"invalidNumbers": "We couldn't find any valid phone number to add to the system in the list of numbers you submitted."
 			}
 		},
