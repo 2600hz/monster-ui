@@ -124,6 +124,13 @@ define(function(require){
 		return monster.util.formatPrice(price, decimals);
 	});
 
+	Handlebars.registerHelper('formatBytes', function (bytes, pDigits) {
+		var digits = typeof pDigits === 'number' ? pDigits : undefined,
+			data = monster.util.formatBytes(bytes, digits);
+
+		return data.value + ' ' + data.unit.symbole;
+	});
+
 	Handlebars.registerHelper('monsterSwitch', function(options) {
 		var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
 			checkbox = $(checkboxHtml),
@@ -205,6 +212,10 @@ define(function(require){
 		return new Handlebars.SafeString(template);
 	});
 
+	Handlebars.registerHelper('monsterSlider', function (settings, options) {
+		return new Handlebars.SafeString(monster.ui.slider(settings));
+	});
+
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title: function(title) {
 			if (!this.options.title ) {
@@ -216,6 +227,63 @@ define(function(require){
 	}));
 
 	var ui = {
+
+		slider: function (target, pOptions) {
+			var id = Date.now(),
+				defaultOptions = {
+					slide: function (event, ui) {
+						$(ui.handle)
+							.find('.ui-slider-tooltip .tooltip-value')
+								.text(ui.value);
+					}
+				},
+				options = $.extend(true, {}, pOptions, defaultOptions),
+				templateData = {
+					id: id,
+					min: options.min,
+					max: options.max,
+					unit: options.unit
+				},
+				sliderTemplate,
+				handlePosition;
+
+			if (options.range === 'min') {
+				handlePosition = 'top';
+
+				templateData.minHandle = {
+					text: options.i18n.minHandle.text,
+					value: options.value
+				};
+			}
+			else if (options.range === 'max') {
+				handlePosition = 'bottom';
+
+				templateData.maxHandle = {
+					text: options.i18n.maxHandle.text,
+					value: options.value
+				};
+			}
+			else if (options.range) {
+				handlePosition = 'both';
+
+				templateData.minHandle = {
+					text: options.i18n.minHandle.text,
+					value: options.value
+				};
+
+				templateData.maxHandle = {
+					text: options.i18n.maxHandle.text,
+					value: options.value
+				};
+			}
+
+			templateData.handlePosition = handlePosition;
+
+			sliderTemplate = $(monster.template(monster.apps.core, 'monster-slider', templateData));
+
+			return $(target).append(sliderTemplate).find('#monster_slider_' + id).slider(options);
+		},
+
 		//3 types: info (blue), warning (yellow), error (red)
 		alert: function(type, content, callback, options){
 			if(typeof content === "undefined"){

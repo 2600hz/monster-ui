@@ -1394,11 +1394,13 @@ define(function(require){
 			});
 
 			_.each(data.devices, function(device, idx) {
-				data.numbers.numbers[device.mobile.mdn] = {
+				var mdn = '+1' + device.mobile.mdn;
+
+				data.numbers.numbers[mdn] = {
 					assigned_to: accountId,
 					features: [ 'mobile' ],
 					isLocal: false,
-					phoneNumber: device.mobile.mdn,
+					phoneNumber: mdn,
 					state: 'in_service',
 					used_by: 'mobile'
 				};
@@ -1416,10 +1418,8 @@ define(function(require){
 						owner: self.i18n.active().numbers.unassigned
 					}
 				}
-				$.extend(true, data.numbers.numbers[device.mobile.mdn], mobileOwner);
+				$.extend(true, data.numbers.numbers[mdn], mobileOwner);
 			});
-
-			console.log(data.numbers.numbers);
 
 			return data;
 		},

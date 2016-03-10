@@ -1,0 +1,28 @@
+<div class="monster-slider handle-{{handlePosition}}" id="monster_slider_{{id}}">
+	<div class="ui-slider-limit min">
+		<span class="limit-value">{{min}}</span> {{unit}}
+	</div>
+{{#if minHandle}}
+	<div class="ui-slider-handle min">
+		<div class="ui-slider-tooltip">
+			<div class="tooltip-text">{{minHandle.text}}</div>
+			<div class="tooltip-value-wrapper">
+				<span class="tooltip-value">{{minHandle.value}}</span> {{unit}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+{{#if maxHandle}}
+	<div class="ui-slider-handle max">
+		<div class="ui-slider-tooltip">
+			<div class="tooltip-text">{{maxHandle.text}}</div>
+			<div class="tooltip-value-wrapper">
+				<span class="tooltip-value">{{maxHandle.value}}</span> {{unit}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+	<div class="ui-slider-limit max">
+		<span class="limit-value">{{max}}</span> {{unit}}
+	</div>
+</div>
