@@ -83,43 +83,43 @@ define(function(require){
 			var self = this,
 				 overrideOptions = {
 					number_services: {
-						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
-						port: { rate: {},activation_charge: {}, minimum: {} },
-						cnam: { rate: {},activation_charge: {}, minimum: {} },
-						e911: { rate: {},activation_charge: {}, minimum: {} }
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						port: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						cnam: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						e911: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					devices: {
-						_all: { rate: {},activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
-						ata: { rate: {},activation_charge: {}, minimum: {} },
-						cellphone: { rate: {},activation_charge: {}, minimum: {} },
-						fax: { rate: {},activation_charge: {}, minimum: {} },
-						landline: { rate: {},activation_charge: {}, minimum: {} },
-						mobile: { rate: {},activation_charge: {}, minimum: {} },
-						sip_device: { rate: {},activation_charge: {}, minimum: {} },
-						sip_uri: { rate: {},activation_charge: {}, minimum: {} },
-						smartphone: { rate: {},activation_charge: {}, minimum: {} },
-						softphone: { rate: {},activation_charge: {}, minimum: {} }
+						_all: { rate: {},activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						ata: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						cellphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						fax: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						landline: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						mobile: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						sip_device: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						sip_uri: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						smartphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						softphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					limits: {
-						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
-						outbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
-						inbound_trunks: { rate: {},activation_charge: {}, minimum: {} },
-						twoway_trunks: { rate: {},activation_charge: {}, minimum: {} }
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						outbound_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						inbound_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						twoway_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					phone_numbers: {
-						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
-						tollfree_us: { rate: {},activation_charge: {}, minimum: {} },
-						toll_us: { rate: {},activation_charge: {}, minimum: {} },
-						emergency: { rate: {},activation_charge: {}, minimum: {} },
-						caribbean: { rate: {},activation_charge: {}, minimum: {} },
-						did_us: { rate: {},activation_charge: {}, minimum: {} },
-						international: { rate: {},activation_charge: {}, minimum: {} },
-						unknown: { rate: {},activation_charge: {}, minimum: {} }
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						tollfree_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						toll_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						emergency: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						caribbean: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						did_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						international: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						unknown: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					users: {
-						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {} },
-						user: { rate: {},activation_charge: {}, minimum: {} }, 
-						admin: { rate: {},activation_charge: {}, minimum: {} }
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						user: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }, 
+						admin: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					ui_apps: {
 						accounts: { },
@@ -145,6 +145,9 @@ define(function(require){
 			_.each(overrideOptions, function(category) {
 				_.each(category, function(subCategory) {
 					subCategory.hasOptions = !_.isEmpty(subCategory);
+					_.each(subCategory, function(subSubCategory) {
+						subSubCategory.hasOptions = !_.isEmpty(subSubCategory);
+					});
 				});
 			});
 
@@ -340,21 +343,39 @@ define(function(require){
 							account_id: monster.apps.auth.originalAccount.id
 						}
 					}
-				}
 
-				if(hasFields) {
-					var field,
-						value;
+					if(hasFields) {
+						var field,
+							value,
+							subField;
 
-					$this.find('[data-field]').each(function(el) {
-						var $el = $(this);
-						field = $el.data('field'),
-						value = $el.find('.input-value').val();
+						$this.find('[data-field]').each(function(el) {
+							var $el = $(this);
+							field = $el.data('field'),
+							value = $el.find('.input-value').val();
+							subField = $el.data('subfield');
 
-						if(field === 'exceptions') { value = value.split(','); }
+							if(field === 'exceptions') { value = value.split(','); }
 
-						formattedData.overrides[plan][category][key][field] = value;
-					});
+							if(!subField) {
+								formattedData.overrides[plan][category][key][field] = value;
+							}
+							else {
+								formattedData.overrides[plan][category][key][field] = formattedData.overrides[plan][category][key][field] || {};
+
+								if(!field === 'discounts') {
+									formattedData.overrides[plan][category][key][field][subField] = value;
+								}
+								else {
+									if(!formattedData.overrides[plan][category][key][field].hasOwnProperty('cumulative')) {
+										formattedData.overrides[plan][category][key][field]['cumulative'] = {};
+									}
+
+									formattedData.overrides[plan][category][key][field]['cumulative'][subField] = value;
+								}
+							}
+						});
+					}
 				}
 			});
 
@@ -403,12 +424,27 @@ define(function(require){
 					}
 					else {
 						_.each(key, function(field, fieldName) {
-							if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
-								if(fieldName === 'as') {
-									key.asCategories = mapAsCategories[categoryName];
+							if(fieldName === 'discounts') {
+								if(field.hasOwnProperty('cumulative')) {
+									// If it comes straight from db, it has cumulative in it so we skip it
+									overrides[categoryName][keyName][fieldName] = field.cumulative;
+									field = field.cumulative;
 								}
+								
+								_.each(field, function(subField, subFieldName) {
+									if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName) && allowedOverridesFull[categoryName][keyName].hasOwnProperty(fieldName)) {
+										delete allowedOverridesFull[categoryName][keyName][fieldName][subFieldName];
+									}
+								});
+							}
+							else {
+								if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
+									if(fieldName === 'as') {
+										key.asCategories = mapAsCategories[categoryName];
+									}
 
-								delete allowedOverridesFull[categoryName][keyName][fieldName];
+									delete allowedOverridesFull[categoryName][keyName][fieldName];
+								}
 							}
 						});
 					}
@@ -429,19 +465,6 @@ define(function(require){
 				getOverridenValues = function() {
 					var overrides = {};
 
-					// Get all current overrides, not necesseraly saved but updated via the inputs
-					/*template.find('.details-overrides [data-field]').each(function() {
-						var $this = $(this),
-							category = $this.parents('[data-category]').data('category'),
-							key = $this.parents('[data-key]').data('key'),
-							field = $this.data('field'),
-							value = $this.find('.input-value').val();
-
-						overrides[category] = overrides[category] || {};
-						overrides[category][key] = overrides[category][key] || {};
-						overrides[category][key][field] = value;
-					});*/
-
 					template.find('.details-overrides [data-key]').each(function() {
 						var $this = $(this),
 							category = $this.parents('[data-category]').data('category'),
@@ -458,12 +481,20 @@ define(function(require){
 							$this.find('[data-field]').each(function(el) {
 								var $el = $(this);
 								field = $el.data('field'),
+								subField = $el.data('subfield'),
 								value = $el.find('.input-value').val();
 
-								overrides[category][key][field] = value;
+								if(subField) {
+									overrides[category][key][field] = overrides[category][key][field] || {};
+									overrides[category][key][field][subField] = value;
+								}
+								else {
+									overrides[category][key][field] = value;
+								}
 							});
 						}
 					});
+
 					return overrides;
 				};
 
@@ -471,19 +502,28 @@ define(function(require){
 				var overrides = getOverridenValues(),
 					$this = $(this),
 					isKey = $this.parents('[data-field]').length === 0,
+					isSubField = $this.parents('[data-subfield]').length > 0,
 					category = $this.parents('[data-category]').data('category'),
 					key = $this.parents('[data-key]').data('key'),
-					field = isKey ? '' : $this.parents('[data-field]').data('field');
+					field = isKey ? '' : $this.parents('[data-field]').data('field'),
+					subField = isSubField ? $this.parents('[data-subfield]').data('subfield') : '';
 
 				if(isKey) {
 					delete overrides[category][key];
 				}
+				else if(isSubField) {
+					delete overrides[category][key][field][subField];
+				}
 				else {
 					delete overrides[category][key][field];
+				}
 
-					if(_.isEmpty(overrides[category][key])) {
-						delete overrides[category][key];
-					}
+				if(overrides[category].hasOwnProperty(key) && overrides[category][key].hasOwnProperty(field) && _.isEmpty(overrides[category][key][field])) {
+					delete overrides[category][key][field];
+				}
+
+				if(overrides[category].hasOwnProperty(key) && _.isEmpty(overrides[category][key])) {
+					delete overrides[category][key];
 				}
 
 				if(_.isEmpty(overrides[category])) {
@@ -496,17 +536,20 @@ define(function(require){
 			template.find('.select-field-override .selectable').on('click', function() {
 				var $this = $(this),
 					isKey = typeof $this.attr('data-key') !== 'undefined',
+					isSubField = typeof $this.attr('data-subfield') !== 'undefined',
 					overrides = getOverridenValues(),
 					category = $this.parents('[data-category]').data('category'),
 					key = isKey ? $this.data('key') : $this.parents('[data-key]').data('key'),
-					field = isKey ? '' : $this.data('field');
+					field = isKey ? '' : (isSubField ? $this.parents('[data-field]').data('field') : $this.data('field')),
+					subField = isSubField ? $this.data('subfield') : '';
 
 				overrides[category] = overrides[category] || {};
 				overrides[category][key] = overrides[category][key] || {};
 
 				if(field) {
 					overrides[category][key][field] = overrides[category][key][field] || {};
-					overrides[category][key][field] = '';
+
+					!subField ? overrides[category][key][field] = '' : overrides[category][key][field][subField] = '';
 				}
 
 				cssToFocus = '[data-category="' + category + '"] [data-key="' + key + '"] [data-field="' + field + '"] input';
