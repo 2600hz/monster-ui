@@ -272,9 +272,16 @@
 
 @media screen and (max-width: 968px) {
 
-	html, #auth_container.login-background {
+	/* Hack, we still need to fix height of html/body not filling full page */
+	#auth_container .form-container {
+		height: auto !important;
 		background: #202029;
 	}
+
+	#auth_container.login-background {
+		background: #202029;
+	}
+
 	#auth_container .intro {
 		margin: 0 auto;
 		display: block;
@@ -311,180 +318,6 @@
 
 }
 
-/* #auth_container .left-div {
-	position: relative;
-	height: 100%;
-	margin-right: 330px;
-
-	background: url(static/images/bg.svg) no-repeat center center #303039;
-} */
-/* 
-#auth_container .hello {
-	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
-	text-align: center;
-	color: #fff;
-	font-size: 38px;
-	line-height: 38px;
-	padding: 0 20px;
-}
-
-#auth_container .right-div {
-	float: right;
-	position: relative;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	width: 330px;
-	height: 100%;
-	overflow: auto;
-	background-color: #202029;
-}
-
-#auth_container .right-div .right-div-content {
-	position: relative;
-	padding-bottom: 60px;
-	min-height: 100%;
-	box-sizing: border-box;
-}
-
-#auth_container .right-div .logo-block {
-	background: no-repeat center center;
-	width: 100%;
-	height: 60px;
-	margin: 40px 0;
-}
-
-#auth_container .login-block {
-	color: #fff;
-	padding: 30px;
-}
-
-#auth_container .login-block .row-login:not(:first-child) {
-	margin-top: 15px
-}
-
-#auth_container .login-block .row-action {
-	padding: 30px 0 8px 0;
-	border-bottom: solid 1px #808089;
-}
-
-#auth_container .login-block .row-action label {
-	color: #808089;
-	font-size: 14px;
-}
-
-#auth_container .login-block .row-action a,
-#auth_container .login-block .row-action a:visited {
-	color: #808089;
-	font-size: 14px;
-}
-#auth_container .login-block .row-action a:hover,
-#auth_container .login-block .row-action a:focus,
-#auth_container .login-block .row-action a:active {
-	color: #c0c0c9;
-	text-decoration: none;
-}
-
-#auth_container .login-block form {
-	margin: 0;
-}
-
-#auth_container .login-block form .input-prepend .add-on {
-	width: 17px;
-	text-align: center;
-}
-
-#auth_container .login-block form .control-group:last-child {
-	margin-bottom: 0;
-}
-
-#auth_container .login-input {
-	position: relative;
-}
-
-#auth_container .login-input > i {
-	color: #808089;
-	position: absolute;
-	left: 3px;
-	bottom: 10px;
-}
-
-#auth_container .login-input > input {
-	background: transparent;
-	color: #c0c0c9;
-	box-shadow: none;
-	border-radius: 0;
-	border: none;
-	border-bottom: solid 1px #808089;
-	font-size: 16px;
-	width: 100%;
-	height: 40px;
-	padding-left: 30px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-#auth_container .login-input > input:focus {
-	color: #22a5ff;
-	box-shadow: inherit;
-	border-color: #22a5ff;
-}
-
-#auth_container .login-input > input:focus + i {
-	color: #22a5ff;
-}
-
-#auth_container .login-input > input::-webkit-input-placeholder {color: #808089;}
-#auth_container .login-input > input:-moz-placeholder {color: #808089;}
-#auth_container .login-input > input::-moz-placeholder {color: #808089;}
-#auth_container .login-input > input:-ms-input-placeholder {color: #808089;}
-
-#auth_container .login {
-	width: 100%;
-	font-size: 24px;
-	padding: 12px 20px;
-	border: none;
-	color: #fff;
-	background-color: #22a5ff;
-}
-#auth_container .login:hover, #auth_container .login:focus {
-	background-color: #4db8ff;
-}
-#auth_container .login:active {
-	background-color: #008be8;
-}
-
-#auth_container .register-block {
-	text-align: center;
-	display: none; Temporarily hiding this until we have a register page
-}
-#auth_container .register-message {
-	color: #808089;
-	font-size: 14px;
-}
-#auth_container .register-link {
-	font-size: 14px;
-	color: #22a5ff;
-	cursor: pointer;
-}
-#auth_container .register-link i {
-	color: #22a5ff;
-	font-size: 12px;
-	margin-left: 3px;
-}
-#auth_container .register-link:hover {
-	color: #4db8ff;
-	text-decoration: none;
-}
-#auth_container .register-link:hover i {
-	color: #4db8ff;
-}
- */
 #auth_container .powered-by-block {
 	position: absolute;
 	bottom: 0;
@@ -505,54 +338,6 @@
 	color: #646469;
 	text-decoration: none;
 }
-/* 
-.popup_recover_password form {
-	margin: 20px 0 40px 0;
-}
-
-.popup_recover_password form input {
-	width: 166px;
-}
-
-.popup_recover_password .group-or {
-	margin-top: -10px;
-	margin-bottom: 10px;
-	text-align: center;
-	font-weight: bold;
-} */
-
-
-/**************************************** Password Recovery ****************************************/
-/* #password_recovery {
-	width: 510px;
-}
-
-#password_update {
-	width: 455px;
-}
-
-#password_recovery form,
-#password_update form {
-	padding: 20px 55px 0 0;
-}
-
-#password_recovery .action,
-#password_update .action {
-	padding: 20px;
-	border-top: 1px solid #C1C1C1;
-	text-align: center;
-}
-
-#password_recovery .help-box,
-#password_update .help-box {
-	margin: 15px 25px;
-}
-
-#password_recovery .cancel-link,
-#password_update .cancel-link {
-	margin-right: 10px;
-} */
-
 /* Trial Upgrade Popup */
 #trial_upgrade_popup {
 	padding: 15px;
