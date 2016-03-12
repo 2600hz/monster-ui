@@ -54,7 +54,7 @@
 	background: url('static/images/default_icon.png') no-repeat center;
 	background-size: contain;
 	border-radius: 14px;
-	transition: transform .15s ease-in, box-shadow: .062s ease-in;
+	transition: transform .15s ease-in, box-shadow .062s ease-in;
 }
 
 #apploader .app-element:hover .app-icon { 
