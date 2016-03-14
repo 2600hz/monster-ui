@@ -158,7 +158,7 @@
 .account-browser-container .account-link .account-realm {
 	font-size: 10px;
 	height: 20px;
-	line-height: 6px;
+	line-height: 12px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

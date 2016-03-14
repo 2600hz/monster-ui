@@ -442,7 +442,34 @@ define(function(require){
 					templateData.currentAccount = monster.apps.auth.currentAccount;
 				}
 
-				var template = $(monster.template(self, 'accountBrowser-list', templateData));
+				var template = $(monster.template(self, 'accountBrowser-list', templateData)),
+					afterRender = function() {
+						hackMacChrome();
+
+						list.data('next-key', nextStartKey || null);
+						list.data('current', parentId);
+						list.data('search-value', searchValue || null);
+
+						callback && callback();
+					}, 
+					// For some god damn reason, the text doesn't display normally for accounts who have less than a screen of sub-accounts
+					// The css works fine on all environment except mac/chrome, where the text gets hidden.
+					// Trying to debug the code is hard because as soon as you inspect the element, the text appears again
+					// Suspecting the scrollbar from mac/chrome to mess up our CSS but can't find a good way to fix it consistently
+					// Hiding/showing the list resolve the issue even though it's super dirty, we'll leave it like that for the moment
+					// Need to investigate further...
+					// Current fix is just to force the browser to re-render the element, which seems to fix the issue.
+					// So we just set the margin-left to a set value and reset it 1ms after
+					hackMacChrome = function() {
+						if (navigator.userAgent.indexOf('Mac OS X') != -1 && navigator.userAgent.toLowerCase().indexOf('chrome') != -1) {
+							var oldMargin = list.css('margin-left');
+							list.css('margin-left','1px');
+
+							setTimeout(function(){
+								list.css('margin-left',oldMargin);
+							}, 1);
+						}
+					};
 
 				if(slide) {
 					slider.empty()
@@ -453,18 +480,16 @@ define(function(require){
 							.append(slider.html())
 							.css('marginLeft','0px');
 						slider.empty();
+
+						afterRender();
 					});
 
 				} else {
 					list.empty()
 						.append(template);
+
+					afterRender();
 				}
-
-				list.data('next-key', nextStartKey || null);
-				list.data('current', parentId);
-				list.data('search-value', searchValue || null);
-
-				callback && callback();
 			});
 		},
 
