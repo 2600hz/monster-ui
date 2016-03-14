@@ -1062,8 +1062,8 @@ table.monster-table td {
 table.monster-table tbody tr:last-child td {
 	border-bottom: 0;
 }
-table.monster-table td:last-child,
-table.monster-table th:last-child {
+table.monster-table:not(.no-actions) td:last-child,
+table.monster-table:not(.no-actions) th:last-child {
 	text-align: right;
 }
 table.monster-table .actions .action-item {
