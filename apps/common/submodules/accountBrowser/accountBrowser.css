@@ -127,6 +127,10 @@
 	background: #fff;
 }
 
+.account-browser-container .account-list-element.active > div {
+	color: #22a5ff;
+}
+
 .account-browser-container .account-list-element > div {
 	background-color: #f6f6f6;
 	background-image: -webkit-linear-gradient(top, hsl(0, 0%, 98%) 0%, hsl(0, 0%, 95%) 100%);
@@ -143,7 +147,7 @@
 }
 
 .account-browser-container .account-link {
-	padding: 0 10px;
+	padding: 0 5px;
 }
 
 .account-browser-container .account-link .account-name {
@@ -153,6 +157,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	padding-left: 5px;
 }
 
 .account-browser-container .account-link .account-realm {
@@ -162,9 +167,15 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	padding-left: 5px;
 }
 .account-browser-container.ab-dropdown .account-link .account-realm {
 	display: none;
+}
+
+.account-browser-container .account-children-link.local-back {
+	border-right: solid 1px #c0c0c9;
+	float: left;
 }
 
 .account-browser-container .account-children-link {
@@ -179,7 +190,6 @@
 .account-browser-container.ab-sidebar .account-children-link {
 	height: 60px;
 	width: 40px;
-	padding: 0px 10px;
 }
 
 .account-browser-container .account-children-link > i {

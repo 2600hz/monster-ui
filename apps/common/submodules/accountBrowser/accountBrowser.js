@@ -193,64 +193,111 @@ define(function(require){
 					accountId = parentElement.data('id'),
 					accountName = parentElement.data('name'),
 					parentAccountId = accountList.data('current'),
-					isSearchResult = accountList.data('search-value');
+					isSearchResult = accountList.data('search-value'),
+					isLocalBackButton = $this.hasClass('local-back');
 
 				$this.addClass('disabled');
 
 				template.find('.account-browser-search').prop('disabled', false)
 														.val('');
-				self.accountBrowserRenderList({
-					container: template.find('.account-list-container'),
-					parentId: accountId,
-					slide: true,
-					addCurrentAccount: addCurrentAccount,
-					addBackButton: addBackButton,
-					allowBackOnMasquerading: allowBackOnMasquerading,
-					callback: function() {
-						if(breadcrumbsTemplate) {
-							var addBreadcrumb = function(_id, _name, _parentId) {
-								var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
-									id: _id,
-									name: _name,
-									parentId: _parentId
-								}));
 
-								breadcrumbsTemplate.find('.account-browser-breadcrumbs')
-												   .append(breadcrumbTemplate);
-							};
+				var renderList = function(accountId, selectedId, dataBackButton) {
+					self.accountBrowserRenderList({
+						container: template.find('.account-list-container'),
+						parentId: accountId,
+						selectedId: selectedId,
+						slide: true,
+						addCurrentAccount: addCurrentAccount,
+						addBackButton: addBackButton,
+						allowBackOnMasquerading: allowBackOnMasquerading,
+						callback: function() {
+							if(breadcrumbsTemplate) {
+								var addBreadcrumb = function(_id, _name, _parentId) {
+										var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
+											id: _id,
+											name: _name,
+											parentId: _parentId
+										}));
 
-							if(isSearchResult) {
-								var homeBreadcrumb = breadcrumbsTemplate.find('.account-browser-breadcrumb').first(),
-									homeId = homeBreadcrumb.find('a').data('id');
-								homeBreadcrumb.nextAll()
-											  .remove();
-
-								self.callApi({
-									resource: 'account.listParents',
-									data: {
-										accountId: accountId
+										breadcrumbsTemplate.find('.account-browser-breadcrumbs')
+														   .append(breadcrumbTemplate);
 									},
-									success: function(data, status) {
-										var previousId = null;
-										_.each(data.data, function(val) {
+									updateBreadcrumbsFromTree = function(data, pIsBackButton) {
+										var homeBreadcrumb = breadcrumbsTemplate.find('.account-browser-breadcrumb').first(),
+											homeId = homeBreadcrumb.find('a').data('id'),
+											previousId = null,
+											isBackButton = typeof pIsBackButton !== 'undefined' ? pIsBackButton : false;
+
+										homeBreadcrumb.nextAll()
+												  .remove();
+
+										_.each(data, function(val, i) {
 											if(val.id === homeId) {
 												previousId = val.id;
-											} else if(previousId) {
-												addBreadcrumb(val.id, val.name, previousId);
-												previousId = val.id;
+											} 
+											else if(previousId) {
+												// If it's not back button, then we add all the breadcrumbs
+												// If it's from the back button, we display all breadcrumbs until the parent of the parent of the account we clicked on
+												// Ex: (account a > b > c > d, if we click on back button of account d, it means we want to show sub-accounts of account b)
+												if(!isBackButton || i<data.length - 1) {
+													addBreadcrumb(val.id, val.name, previousId);
+													previousId = val.id;
+												}
 											}
 										});
-										addBreadcrumb(accountId, accountName, previousId || homeId);
-									}
-								});
-							} else {
-								addBreadcrumb(accountId, accountName, parentAccountId);
+									};
+
+								if(dataBackButton) {
+									updateBreadcrumbsFromTree(dataBackButton, true);
+								}
+								else if(isSearchResult) {
+									self.callApi({
+										resource: 'account.listParents',
+										data: {
+											accountId: accountId
+										},
+										success: function(data, status) {
+											updateBreadcrumbsFromTree(data.data);
+										}
+									});
+								} 
+								else {
+									addBreadcrumb(accountId, accountName, parentAccountId);
+								}
+							}
+
+							if(dataBackButton) {
+								template.find('.account-list').scrollTop(0);
+								var pos = template.find('.account-list li.active').position().top - template.find('.account-list li:first-child').position().top;
+								template.find('.account-list').scrollTop(pos);
+							}
+
+							onChildrenClick && onChildrenClick(accountId);
+						}
+					});
+				}
+
+				if(isLocalBackButton) {
+					self.callApi({
+						resource: 'account.listParents',
+						data: {
+							accountId: accountId
+						},
+						success: function(data, status) {
+							// if account we clicked back on has more than 2 levels in the tree, then we render the sub-accounts of it's grandfather
+							if(data.data.length > 1) {
+								renderList(data.data[data.data.length-2].id, data.data[data.data.length-1].id, data.data);
+							}
+							// otherwise, we just render the sub-accounts of the father
+							else {
+								renderList(data.data[data.data.length-1].id);
 							}
 						}
-
-						onChildrenClick && onChildrenClick(accountId);
-					}
-				});
+					});
+				}
+				else {
+					renderList(accountId);
+				}
 			});
 
 			accountList.on('click', '.account-search-link', function() {
@@ -282,6 +329,7 @@ define(function(require){
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
 						allowBackOnMasquerading: allowBackOnMasquerading,
+						showLocalBackButton: true,
 						callback: function() {
 							template.find('.account-browser-search').prop('disabled', true);
 							accountList.prepend(searchLink);
@@ -420,6 +468,7 @@ define(function(require){
 				searchValue = args.searchValue,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				showLocalBackButton = args.showLocalBackButton,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				callback = args.callback,
 				topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
@@ -435,7 +484,8 @@ define(function(require){
 					templateData = {
 						accounts: monster.util.sort(data.data),
 						selectedId: selectedId,
-						addBackButton: addBackButton
+						addBackButton: addBackButton,
+						showLocalBackButton: showLocalBackButton
 					};
 
 				if(addCurrentAccount) {

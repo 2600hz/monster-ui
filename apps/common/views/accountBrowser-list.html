@@ -14,17 +14,18 @@
 {{/if}}
 {{#each accounts}}
 	<li class="account-list-element{{#compare this.id "===" ../selectedId}} active{{/compare}}" data-id="{{this.id}}" data-realm="{{this.realm}}" data-name="{{this.name}}">
+		{{#if ../showLocalBackButton}}
+			<div class="account-children-link local-back"><i class="fa fa-caret-left"></i></div>
+		{{/if}}
+
 		{{#if this.descendants_count}}
 			<div class="account-children-link"><i class="fa fa-caret-right"></i></div>
 			<div class="account-link smaller-link">
-				<div class="account-name">{{this.name}}</div>
-				<div class="account-realm">{{this.realm}}</div>
-			</div>
 		{{else}}
 			<div class="account-link">
-				<div class="account-name">{{this.name}}</div>
-				<div class="account-realm">{{this.realm}}</div>
-			</div>
 		{{/if}}
+			<div class="account-name">{{this.name}}</div>
+			<div class="account-realm">{{this.realm}}</div>
+		</div>
 	</li>
 {{/each}}
