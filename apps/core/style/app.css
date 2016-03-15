@@ -240,13 +240,21 @@ body,
 	color: #c0c0c9;
 	border-color: #202029;
 }
+
+#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element.active > div {
+	color: #22a5ff;
+}
+
 #main_topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
 	font-size: 14px;
 }
 #main_topbar #main_topbar_account_toggle_container .account-children-link i:before {
-	content: "\f054";
 	font-size: 10px;
 	color: #c0c0c9;
+	content: "\f054";
+}
+#main_topbar #main_topbar_account_toggle_container .account-children-link.local-back i:before {
+	content: "\f053";
 }
 #main_topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link {
 	color: #c0c0c9;
