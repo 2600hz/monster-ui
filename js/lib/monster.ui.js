@@ -38,6 +38,10 @@ define(function(require){
 		return monster.util.formatVariableToDisplay(variable);
 	});
 
+	Handlebars.registerHelper('toUpperCase', function (stringValue) {
+		return stringValue.toString().toUpperCase();
+	});
+
 	Handlebars.registerHelper('toLowerCase', function(stringValue) {
 		return stringValue.toString().toLowerCase();
 	});
