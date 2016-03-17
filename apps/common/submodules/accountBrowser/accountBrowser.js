@@ -137,10 +137,15 @@ define(function(require){
 			});
 
 			template.find('.account-list-add').on('click', function() {
-				var currentAccountId = accountList.data('current'),
-					breadcrumbsList = self.accountBrowserGetBreadcrumbsList(breadcrumbsTemplate);
+				if(breadcrumbsTemplate) {
+					var currentAccountId = accountList.data('current'),
+						breadcrumbsList = self.accountBrowserGetBreadcrumbsList(breadcrumbsTemplate);
 
-				onNewAccountClick && onNewAccountClick(currentAccountId, breadcrumbsList);
+					onNewAccountClick && onNewAccountClick(currentAccountId, breadcrumbsList);
+				}
+				else {
+					onNewAccountClick && onNewAccountClick(currentAccountId);
+				}
 			});
 
 			var findElemInData = function(searchString, data) {
