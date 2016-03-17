@@ -58,12 +58,44 @@ define(function(require){
 				servicePlanData.plan = servicePlanData.items;
 			}
 
+			var sortObject = function(objectToSort) {
+				var orderedObject = {},
+					keys = [],
+					formattedKey,
+					obj = {},
+					i18nKeys = self.i18n.active().servicePlanDetails.keys;
+
+				_.each(objectToSort, function(item, key) {
+					formattedKey = item.hasOwnProperty('name') ? item.name : (i18nKeys.hasOwnProperty(key) ? i18nKeys[key] : key);
+					obj = { 
+						key:key,
+						value: formattedKey.toLowerCase()
+					};
+					keys.push(obj);
+				});
+
+				keys.sort(function(a,b) {
+					return a.value > b.value ? 1 : -1;
+				});
+
+				_.each(keys, function(item) {
+					orderedObject[item.key] = objectToSort[item.key];
+				});
+
+				return orderedObject;
+			}
+
+			servicePlanData.plan = sortObject(servicePlanData.plan);
+			_.each(servicePlanData.plan, function(item, key) {
+				servicePlanData.plan[key] = sortObject(item);
+			});
 			formattedData.servicePlan = servicePlanData;
 
 			return formattedData;
 		},
 
 		renderServicePlanDetails: function(container, servicePlanData, callback) {
+			console.log(servicePlanData);
 			var self = this,
 				formattedData = self.servicePlanDetailsFormatData(servicePlanData),
 				template = $(monster.template(self, 'servicePlanDetails-layout', formattedData));
@@ -121,25 +153,15 @@ define(function(require){
 						user: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }, 
 						admin: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
-					ui_apps: {
-						accounts: { },
-						branding: { },
-						callflows: {},
-						carriers: {},
-						cluster: {},
-						debug: {},
-						migration: {},
-						mobile: {},
-						numbers: {},
-						pbxs: {},
-						pivot: {},
-						port: {},
-						provisioner: {},
-						reporting: {},
-						userportal: {},
-						voip: {},
-						webhooks: {}
-					}
+					ui_apps: function() {
+						var obj = {};
+
+						_.each(monster.appsStore, function(app, name) {
+							obj[name] = {};
+						});
+
+						return obj;
+					}()
 				};
 
 			_.each(overrideOptions, function(category) {
