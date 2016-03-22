@@ -517,6 +517,10 @@ define(function(require){
 				content.find('.placeholder-shift').addClass('fixed');
 			}
 
+			content.find('.input-wrap input').on('focus', function() {
+				$(this).parents('.input-wrap').removeClass('error');
+			});
+
 			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change' , function() {
 				if( this.value !== '') {
 					$(this).next('.placeholder-shift').addClass('fixed'); 
@@ -564,7 +568,7 @@ define(function(require){
 								content.find('.form-content').addClass('hidden');
 								content.find('.reset-notification').addClass('animated fadeIn').removeClass('hidden');
 							},
-							error: function(data, error) {
+							error: function(data, error, globalHandler) {
 								if ( error.status === 400) {
 									_.keys(data.data).forEach(function(val) {
 										if ( self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val) ) {
@@ -575,6 +579,9 @@ define(function(require){
 											}
 										}
 									});
+								}
+								else {
+									globalHandler(data);
 								}
 							}
 						});
@@ -596,21 +603,31 @@ define(function(require){
 					account_name: loginAccountName
 				};
 
-			self.putAuth(loginData, function (data) {
-				if($('#remember_me').is(':checked')) {
-					var cookieLogin = {
-						login: loginUsername,
-						accountName: loginAccountName
-					};
+			if(loginUsername && loginPassword) {
+				self.putAuth(loginData, function (data) {
+					if($('#remember_me').is(':checked')) {
+						var cookieLogin = {
+							login: loginUsername,
+							accountName: loginAccountName
+						};
 
-					$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
-				}
-				else {
-					$.cookie('monster-login', null);
-				}
+						$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
+					}
+					else {
+						$.cookie('monster-login', null);
+					}
 
-				self._afterSuccessfulAuth(data);
-			});
+					self._afterSuccessfulAuth(data);
+				});
+			}
+			else {
+				if(!loginUsername) {
+					$('#login').parents('.input-wrap').addClass('error');
+				}
+				if(!loginPassword) {
+					$('#password').parents('.input-wrap').addClass('error');
+				}
+			}
 		},
 
 		_logout: function() {
