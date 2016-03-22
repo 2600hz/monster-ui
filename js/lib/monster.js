@@ -472,7 +472,9 @@ define(function(require){
 						monster.pub('monster.requestEnd');
 					},
 					onRequestError: function(error, requestOptions) {
-						var parsedError = error;
+						var parsedError = error,
+							requestOptions = requestOptions || { generateError: true };
+
 						if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
 							parsedError = $.parseJSON(error.responseText);
 						}
