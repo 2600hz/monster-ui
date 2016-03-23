@@ -9,21 +9,19 @@ define(function(require){
 		},
 
 		subscribe: {
-			'common.accountBrowser.render': 'accountBrowserRender',
-			'common.accountBrowser.getBreadcrumbsList': 'accountBrowserGetBreadcrumbsList'
+			'common.accountBrowser.render': 'accountBrowserRender'
 		},
 
 		accountBrowserRender: function(args) {
 			var self = this,
 				container = args.container,
-				breadcrumbsContainer = args.breadcrumbsContainer,
-				breadcrumbsList = args.breadcrumbsList,
 				parentId = args.parentId,
 				selectedId = args.selectedId,
 				onAccountClick = args.onAccountClick,
 				onChildrenClick = args.onChildrenClick,
-				onBreadcrumbClick = args.onBreadcrumbClick,
+				onBackToParentClick = args.onBackToParentClick,
 				onNewAccountClick = args.onNewAccountClick,
+				onSearch = args.onSearch,
 				addCurrentAccount = args.addCurrentAccount || false,
 				addBackButton = args.addBackButton || false,
 				allowBackOnMasquerading = args.allowBackOnMasquerading || false, // needs addBackButton to be true, add back button up to original account when masquerading
@@ -48,83 +46,35 @@ define(function(require){
 					callback: callback
 				});
 
-				if(breadcrumbsContainer) {
-					if(breadcrumbsList && breadcrumbsList.length) {
-						var breadcrumbsTemplate = $(monster.template(self, 'accountBrowser-breadcrumbs', {
-								id: breadcrumbsList[0].id,
-								name: breadcrumbsList[0].name
-							}));
-
-						for(var i=1; i<breadcrumbsList.length; i++) {
-							breadcrumbsTemplate.append(monster.template(self, 'accountBrowser-breadcrumb', {
-								id: breadcrumbsList[i].id,
-								name: breadcrumbsList[i].name,
-								parentId: breadcrumbsList[i].parentId
-							}));
-						}
-						
-						breadcrumbsContainer.empty().append(breadcrumbsTemplate);
-					} else {
-						var breadcrumbsTemplate = $(monster.template(self, 'accountBrowser-breadcrumbs', {
-							id: self.accountId,
-							name: monster.apps['auth'].currentAccount.name
-						}));
-
-						if(parentId && parentId !== self.accountId) {
-							breadcrumbsTemplate.append(monster.template(self, 'accountBrowser-breadcrumb', {}));
-						}
-
-						breadcrumbsContainer.empty().append(breadcrumbsTemplate);
-					}
-				}
-
 				self.accountBrowserBindEvents({
 					template: layout,
-					breadcrumbsTemplate: breadcrumbsContainer,
 					onAccountClick: onAccountClick,
 					onChildrenClick: onChildrenClick,
-					onBreadcrumbClick: onBreadcrumbClick,
+					onBackToParentClick: onBackToParentClick,
 					onNewAccountClick: onNewAccountClick,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
 					allowBackOnMasquerading: allowBackOnMasquerading,
-					searchLink: searchLink
+					searchLink: searchLink,
+					onSearch: onSearch
 				});
 			} else {
 				throw new ReferenceError('The "container" arg is required to load the account browser.');
 			}
 		},
 
-		accountBrowserGetBreadcrumbsList: function(args) {
-			var breadcrumbsContainer = args.container || args,
-				breadcrumbsList = $.map(
-					breadcrumbsContainer.find('.account-browser-breadcrumb a'),
-					function(elem) {
-						var $elem = $(elem);
-						return {
-							id: $elem.data('id'),
-							name: $elem.text(),
-							parentId: $elem.data('parent')
-						}
-					}
-				);
-
-			args.callback && args.callback(breadcrumbsList);
-			return breadcrumbsList;
-		},
-
 		accountBrowserBindEvents: function(args) {
 			var self = this,
 				template = args.template,
-				breadcrumbsTemplate = args.breadcrumbsTemplate,
 				onAccountClick = args.onAccountClick,
 				onChildrenClick = args.onChildrenClick,
-				onBreadcrumbClick = args.onBreadcrumbClick,
+				onBackToParentClick = args.onBackToParentClick,
 				onNewAccountClick = args.onNewAccountClick,
 				searchLink = args.searchLink,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
+				onSearch = args.onSearch,
 				accountList = template.find('.account-list'),
 				isLoading = false,
 				loader = $('<li class="content-centered account-list-loader"> <i class="fa fa-spinner fa-spin"></i></li>');
@@ -137,15 +87,7 @@ define(function(require){
 			});
 
 			template.find('.account-list-add').on('click', function() {
-				if(breadcrumbsTemplate) {
-					var currentAccountId = accountList.data('current'),
-						breadcrumbsList = self.accountBrowserGetBreadcrumbsList(breadcrumbsTemplate);
-
-					onNewAccountClick && onNewAccountClick(currentAccountId, breadcrumbsList);
-				}
-				else {
-					onNewAccountClick && onNewAccountClick(currentAccountId);
-				}
+				onNewAccountClick && onNewAccountClick(currentAccountId);
 			});
 
 			var findElemInData = function(searchString, data) {
@@ -215,72 +157,32 @@ define(function(require){
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
 						allowBackOnMasquerading: allowBackOnMasquerading,
-						callback: function() {
-							if(breadcrumbsTemplate) {
-								var addBreadcrumb = function(_id, _name, _parentId) {
-										var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
-											id: _id,
-											name: _name,
-											parentId: _parentId
-										}));
-
-										breadcrumbsTemplate.find('.account-browser-breadcrumbs')
-														   .append(breadcrumbTemplate);
-									},
-									updateBreadcrumbsFromTree = function(data, pIsBackButton) {
-										var homeBreadcrumb = breadcrumbsTemplate.find('.account-browser-breadcrumb').first(),
-											homeId = homeBreadcrumb.find('a').data('id'),
-											previousId = null,
-											isBackButton = typeof pIsBackButton !== 'undefined' ? pIsBackButton : false;
-
-										homeBreadcrumb.nextAll()
-												  .remove();
-
-										_.each(data, function(val, i) {
-											if(val.id === homeId) {
-												previousId = val.id;
-											} 
-											else if(previousId) {
-												// If it's not back button, then we add all the breadcrumbs
-												// If it's from the back button, we display all breadcrumbs until the parent of the parent of the account we clicked on
-												// Ex: (account a > b > c > d, if we click on back button of account d, it means we want to show sub-accounts of account b)
-												if(!isBackButton || i<data.length - 1) {
-													addBreadcrumb(val.id, val.name, previousId);
-													previousId = val.id;
-												}
-											}
-										});
-									};
-
-								if(dataBackButton) {
-									updateBreadcrumbsFromTree(dataBackButton, true);
-								}
-								else if(isSearchResult) {
-									self.callApi({
-										resource: 'account.listParents',
-										data: {
-											accountId: accountId
-										},
-										success: function(data, status) {
-											updateBreadcrumbsFromTree(data.data);
-										}
-									});
-								} 
-								else {
-									addBreadcrumb(accountId, accountName, parentAccountId);
-								}
-							}
+						callback: function(data) {
+							var callbackData = {
+								parentName: accountName,
+								children: data.accounts
+							};
 
 							if(dataBackButton) {
-								template.find('.account-list').scrollTop(0);
-								var pos = template.find('.account-list li.active').position().top - template.find('.account-list li:first-child').position().top;
-								template.find('.account-list').scrollTop(pos);
+								if(selectedId) {
+									template.find('.account-list').scrollTop(0);
+									var pos = template.find('.account-list li.active').position().top - template.find('.account-list li:first-child').position().top;
+									template.find('.account-list').scrollTop(pos);
+								}
+
+								_.each(dataBackButton, function(account) {
+									if(account.id === accountId) {
+										callbackData.parentName = account.name;
+									}
+								});
 							}
 
-							onChildrenClick && onChildrenClick(accountId);
+							onChildrenClick && onChildrenClick(callbackData);
 						}
 					});
 				}
+
+				template.find('.account-search-link').removeClass('active').remove();
 
 				if(isLocalBackButton) {
 					self.callApi({
@@ -295,7 +197,7 @@ define(function(require){
 							}
 							// otherwise, we just render the sub-accounts of the father
 							else {
-								renderList(data.data[data.data.length-1].id);
+								renderList(data.data[data.data.length-1].id, null, data.data);
 							}
 						}
 					});
@@ -313,9 +215,7 @@ define(function(require){
 					template.find('.account-browser-search').prop('disabled', false)
 															.val('');
 
-					if(breadcrumbsTemplate) {
-						breadcrumbsTemplate.find('.account-browser-breadcrumb:not(:first-child)').remove();
-					}
+					onSearch && onSearch();
 
 					self.accountBrowserRenderList({
 						container: template.find('.account-list-container'),
@@ -327,6 +227,9 @@ define(function(require){
 					var searchValue = searchLink.find('.account-search-value').text();
 					searchLink.addClass('active')
 							  .remove();
+
+					onSearch && onSearch(searchValue);
+
 					self.accountBrowserRenderList({
 						container: template.find('.account-list-container'),
 						searchValue: searchValue,
@@ -338,19 +241,6 @@ define(function(require){
 						callback: function() {
 							template.find('.account-browser-search').prop('disabled', true);
 							accountList.prepend(searchLink);
-							if(breadcrumbsTemplate) {
-								var breadcrumbTemplate = (monster.template(self, 'accountBrowser-breadcrumb', {
-									search: monster.template(self, '!' + self.i18n.active().accountBrowser.breadcrumbSearchResults, { searchValue: searchValue })
-								}));
-
-								breadcrumbsTemplate.find('.account-browser-breadcrumb')
-												   .first()
-												   .nextAll()
-												   .remove();
-
-								breadcrumbsTemplate.find('.account-browser-breadcrumbs')
-												   .append(breadcrumbTemplate);
-							}
 						}
 					});
 				}
@@ -388,40 +278,6 @@ define(function(require){
 				}
 			});
 
-			if(breadcrumbsTemplate) {
-				breadcrumbsTemplate.on('click', '.account-browser-breadcrumb a', function() {
-					var $this = $(this),
-						accountId = $this.data('id'),
-						parentId = $this.data('parent');
-
-					if(parentId) {
-						breadcrumbsTemplate
-							.find('a[data-id="'+parentId+'"]')
-							.parents('.account-browser-breadcrumb')
-							.nextAll()
-							.remove();
-					} else {
-						$this.parents('.account-browser-breadcrumb')
-							 .nextAll()
-							 .remove();
-					}
-
-					template.find('.account-browser-search').prop('disabled', false)
-															.val('');
-					self.accountBrowserRenderList({
-						container: template.find('.account-list-container'),
-						parentId: parentId || accountId,
-						selectedId: parentId ? accountId : null,
-						addCurrentAccount: addCurrentAccount,
-						addBackButton: addBackButton,
-						allowBackOnMasquerading: allowBackOnMasquerading,
-						callback: function() {
-							onBreadcrumbClick && onBreadcrumbClick(accountId, parentId);
-						}
-					});
-				});
-			}
-
 			if(addBackButton) {
 				accountList.on('click', '.account-previous-link', function() {
 					var currentAccountId = accountList.data('current') || self.accountId,
@@ -436,14 +292,8 @@ define(function(require){
 							},
 							success: function(data, status) {
 								if(data.data && data.data.length > 0) {
-									var accountId = data.data[data.data.length-1].id;
-									if(breadcrumbsTemplate) {
-										breadcrumbsTemplate
-											.find('a[data-id="'+accountId+'"]')
-											.parents('.account-browser-breadcrumb')
-											.nextAll()
-											.remove();
-									}
+									var accountId = data.data[data.data.length-1].id,
+										accountName = data.data[data.data.length-1].name;
 
 									template.find('.account-browser-search').prop('disabled', false)
 																			.val('');
@@ -453,7 +303,15 @@ define(function(require){
 										parentId: accountId,
 										addCurrentAccount: addCurrentAccount,
 										addBackButton: addBackButton,
-										allowBackOnMasquerading: allowBackOnMasquerading
+										allowBackOnMasquerading: allowBackOnMasquerading,
+										callback: function(data) {
+											var callbackData = {
+												parentName: accountName,
+												children: data.accounts
+											};
+
+											onBackToParentClick && onBackToParentClick(callbackData);
+										}
 									});
 								}
 							}
@@ -505,7 +363,7 @@ define(function(require){
 						list.data('current', parentId);
 						list.data('search-value', searchValue || null);
 
-						callback && callback();
+						callback && callback(templateData);
 					}, 
 					// For some god damn reason, the text doesn't display normally for accounts who have less than a screen of sub-accounts
 					// The css works fine on all environment except mac/chrome, where the text gets hidden.

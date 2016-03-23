@@ -285,13 +285,24 @@ define(function(require){
 		},
 
 		showAccountToggle: function() {
-			var self = this;
+			var self = this,
+				mainContainer = $('#main_topbar_account_toggle_container');
+
 			monster.pub('common.accountBrowser.render', {
-				container: $('#main_topbar_account_toggle_container .account-toggle-content'),
-				breadcrumbsContainer: $('#main_topbar_account_toggle_container .current-account-container'),
+				container: mainContainer.find('.account-toggle-content'),
 				customClass: 'ab-dropdown',
 				addBackButton: true,
 				allowBackOnMasquerading: true,
+				onSearch: function(searchValue) {
+					if(searchValue) {
+						var template = monster.template(self, 'accountToggle-search', { searchValue: searchValue });
+
+						mainContainer.find('.current-account-container').html(template);
+					}
+					else {
+						mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name);
+					}
+				},
 				onAccountClick: function(accountId, accountName) {
 					self.callApi({
 						resource: 'account.get',
@@ -317,6 +328,15 @@ define(function(require){
 							});
 						}
 					});
+				},
+				onChildrenClick: function(data) {
+					mainContainer.find('.current-account-container').html(data.parentName);
+				},
+				onBackToParentClick: function(data) {
+					mainContainer.find('.current-account-container').html(data.parentName);
+				},
+				callback: function(data) {
+					mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name);
 				}
 			});
 			$('#main_topbar_account_toggle').addClass('open');

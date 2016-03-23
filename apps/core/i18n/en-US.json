@@ -552,7 +552,10 @@
 	"__version": "3.22",
 	"accountToggle": {
 		"currentAccountLabel": "Browsing",
-		"toggleTooltip": "Account Jump"
+		"toggleTooltip": "Account Jump",
+		"__comment": "UI-2092: adding search-related labels",
+		"__version": "3.22",
+		"breadcrumbSearchResults": "search results for \"{{variable}}\""
 	},
 	"triggerMasquerading": "You are now masquerading the account \"{{accountName}}\".",
 	"restoreMasquerading": "You are not masquerading anymore.",
