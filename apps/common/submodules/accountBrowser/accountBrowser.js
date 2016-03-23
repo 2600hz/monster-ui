@@ -153,7 +153,7 @@ define(function(require){
 						container: template.find('.account-list-container'),
 						parentId: accountId,
 						selectedId: selectedId,
-						slide: true,
+						slide: dataBackButton ? false : true,
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
 						allowBackOnMasquerading: allowBackOnMasquerading,
@@ -396,8 +396,8 @@ define(function(require){
 
 						afterRender();
 					});
-
-				} else {
+				}
+				else {
 					list.empty()
 						.append(template);
 
