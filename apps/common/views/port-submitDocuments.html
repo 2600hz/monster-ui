@@ -19,7 +19,7 @@
 				<label class="control-label" for="transfer_helper">{{ i18n.port.submitDocuments.labelOrderName }}</label>
 			</div>
 			<div class="span6">
-				<input type="text" class="span8" id="transfer_helper" name="name" placeholder="AT&amp;T Local Numbers" value="{{#if name}}{{name}}{{/if}}" required>
+				<input type="text" class="span8" id="transfer_helper" name="name" placeholder="AT&amp;T Local Numbers" value="{{#if port.name}}{{port.name}}{{/if}}" required>
 				<span class="help-block">{{ i18n.port.submitDocuments.labelOrderNameHelper }}</span>
 			</div>
 		</form>
@@ -37,15 +37,15 @@
 					</div>
 					<span class="help-block">{{ i18n.port.submitDocuments.uploadBillHelper }}</span>
 					<label for="account_name">{{ i18n.port.submitDocuments.labelAccountName }}</label>
-					<input type="text" class="span12" id="account_name" value="{{#if bill.name}}{{bill.name}}{{/if}}" name="bill.name" required>
+					<input type="text" class="span12" id="account_name" value="{{#if port.bill.name}}{{port.bill.name}}{{/if}}" name="bill.name" required>
 					<label for="address">{{ i18n.port.submitDocuments.labelAddress }}</label>
-					<input type="text" class="span12" id="address" value="{{#if bill.address}}{{bill.address}}{{/if}}" name="bill.address" required>
+					<input type="text" class="span12" id="address" value="{{#if port.bill.address}}{{port.bill.address}}{{/if}}" name="bill.address" required>
 					<label for="locality">{{ i18n.port.submitDocuments.labelCity }}</label>
-					<input type="text" class="span12" id="locality" value="{{#if bill.locality}}{{bill.locality}}{{/if}}" name="bill.locality" required>
+					<input type="text" class="span12" id="locality" value="{{#if port.bill.locality}}{{port.bill.locality}}{{/if}}" name="bill.locality" required>
 					<label for="region">{{ i18n.port.submitDocuments.labelState }}</label>
-					<input type="text" class="span12" id="region" value="{{#if bill.region}}{{bill.region}}{{/if}}" name="bill.region" required>
+					<input type="text" class="span12" id="region" value="{{#if port.bill.region}}{{port.bill.region}}{{/if}}" name="bill.region" required>
 					<label for="postal_code">{{ i18n.port.submitDocuments.labelZipCode }}</label>
-					<input type="text" class="span12" id="postal_code" value="{{#if bill.postal_code}}{{bill.postal_code}}{{/if}}" name="bill.postal_code" required>
+					<input type="text" class="span12" id="postal_code" value="{{#if port.bill.postal_code}}{{port.bill.postal_code}}{{/if}}" name="bill.postal_code" required>
 				</form>
 			</div>
 			<div class="span6">
@@ -54,10 +54,10 @@
 					<p>{{ i18n.port.submitDocuments.orderListInfoPartOne }} <span class="text-error">{{ i18n.port.submitDocuments.orderListInfoPartTwo }}</span></p>
 				</div>
 				<div class="order">
-					<h4>{{carrier}}</h4>
+					<h4>{{port.carrier}}</h4>
 					<div class="scroll">
 						<ul>
-						{{#each numbers}}
+						{{#each port.numbers}}
 							<li data-value="{{this}}"><i class="fa fa-exclamation-triangle"></i>{{this}}<i class="fa fa-times-circle pull-right remove-number"></i></li>
 						{{/each}}
 						</ul>
@@ -71,7 +71,7 @@
 		<div class="row-fluid">
 			<div class="span4">
 				<span class="span1 number">1.</span>
-				<a id="loa_link" href="http://2600hz.com/porting/2600hz_loa.pdf" class="btn span10 offset1" target="_blank">{{ i18n.port.submitDocuments.loaDownloadStep }}</a>
+				<a id="loa_link" href="{{ whitelabelPort.loa }}" class="btn span10 offset1" target="_blank">{{ i18n.port.submitDocuments.loaDownloadStep }}</a>
 			</div>
 			<div class="span3">
 				<span class="span1 offset3 number">2.</span>

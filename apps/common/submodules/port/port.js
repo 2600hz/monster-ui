@@ -380,7 +380,7 @@ define(function(require){
 				if ($this.hasClass('continue-request')) {
 					var dataList = { orders: [currentRequest] };
 
-					template = monster.template(self, 'port-submitDocuments', currentRequest),
+					template = monster.template(self, 'port-submitDocuments', { whitelabelPort: monster.config.whitelabel.port, port: currentRequest });
 
 					parent
 						.empty()
@@ -879,7 +879,7 @@ define(function(require){
 		portRenderSubmitDocuments: function(parent, accountId, data, index) {
 			var self = this,
 				index = index || 0,
-				template = $(monster.template(self, 'port-submitDocuments', data.orders[index]));
+				template = $(monster.template(self, 'port-submitDocuments', { whitelabelPort: monster.config.whitelabel.port, port: data.orders[index] }));
 
 			parent
 				.empty()
