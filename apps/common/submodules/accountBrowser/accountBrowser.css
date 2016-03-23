@@ -197,33 +197,6 @@
 	margin-left: 17px;
 }
 
-/**************** Breadcrumbs ******************/
-.account-browser-breadcrumbs {
-	margin: 0;
-	padding: 20px;
-	overflow: hidden;
-	height: 30px;
-}
-
-.account-browser-breadcrumbs .account-browser-breadcrumb .divider {
-	margin: 0px 5px;
-	vertical-align: middle;
-}
-
-.account-browser-breadcrumbs .account-browser-breadcrumb a {
-	cursor: pointer;
-}
-
-.account-browser-breadcrumbs .account-browser-breadcrumb .missing-info {
-	color: #909099;
-	font-style: italic;
-}
-
-.account-browser-breadcrumbs .account-browser-breadcrumb:not(:last-child) a {
-	color: #606069;
-}
-
-
 .account-browser-container .account-previous-link {
 	height: 30px;
 	line-height: 30px;

@@ -290,23 +290,15 @@ body,
 	font-size: 12px;
 }
 #main_topbar #main_topbar_account_toggle_container .current-account-container {
+	color: #22A5FF;
 	pointer-events: none;
 }
-#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb {
-	text-shadow: none;
+
+#main_topbar #main_topbar_account_toggle_container .missing-info {
+	color: #909099;
+	font-style: italic;
 }
-#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb:not(:last-child) {
-	display: none;
-}
-#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumb .divider {
-	display: none;
-}
-#main_topbar #main_topbar_account_toggle_container .current-account-container .account-browser-breadcrumbs {
-	padding: 0;
-	background:  inherit;
-	border-radius: 0;
-	height: 20px;
-}
+
 #main_topbar #main_topbar_account_toggle_container .home-account-link {
 	position: absolute;
 	top: 15px;

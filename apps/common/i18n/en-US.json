@@ -3,8 +3,6 @@
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",
 		"searchDatabase": "Search in every account for",
-		"__comment": "UI-786 (v3.19_s3): adding search-related labels",
-		"breadcrumbSearchResults": "search results for \"{{searchValue}}\"",
 		"__comment": "UI-1271: Updating the search link",
 		"__version": "v3.20_s3",
 		"searchReset": "Click again to clear the search",
