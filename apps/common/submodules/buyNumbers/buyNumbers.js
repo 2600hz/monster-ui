@@ -1094,11 +1094,6 @@ define(function(require){
 					if (data.error !== '402' && typeof data.data !== 'string') {
 						args.error && args.error(data.data);
 					}
-					else {
-						globalHandler(data, { generateError: true });
-
-						args.cancel && args.cancel();
-					}
 				},
 				onChargesCancelled: function () {
 					args.cancel && args.cancel();
