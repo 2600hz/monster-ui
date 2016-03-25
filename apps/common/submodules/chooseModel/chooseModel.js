@@ -90,7 +90,7 @@ define(function(require){
 				}
 			});
 
-			templateDevice.find('#mac_address').mask("hh:hh:hh:hh:hh:hh", {placeholder:" "});
+			templateDevice.find('#mac_address').mask('FF:FF:FF:FF:FF:FF', {translation: {"F": { pattern:/[A-Fa-f0-9]/ }}});
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
