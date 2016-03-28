@@ -90,7 +90,7 @@ define(function(require){
 				}
 			});
 
-			templateDevice.find('#mac_address').mask('FF:FF:FF:FF:FF:FF', {translation: {"F": { pattern:/[A-Fa-f0-9]/ }}});
+			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
