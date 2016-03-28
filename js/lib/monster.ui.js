@@ -7,7 +7,8 @@ define(function(require){
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
 		timepicker = require('timepicker'),
-		introJs = require('introJs');
+		introJs = require('introJs'),
+		mask = require('mask');
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
@@ -1772,6 +1773,32 @@ define(function(require){
 			self.generateAppNavbar(thisArg, args.menus);
 
 			callDefaultTabCallback();
+		},
+
+		mask: function(target, type) {
+			var validations = {
+				phoneNumber: {
+					mask:'AZZZZZZZZZZZZZZZZ',
+					options: {translation:  {'Z': {pattern: /[0-9]/, optional: true}, 'A': {pattern: /\+/, optional: true}}}
+				},
+				macAddress: {
+					mask: 'FF:FF:FF:FF:FF:FF',
+					options: {translation: {"F": { pattern:/[A-Fa-f0-9]/ }}}
+				},
+				extension: {
+					mask:'ZZZZZZZZZZZZZZZZ',
+					options: {translation:  {'Z': {pattern: /[0-9]/, optional: true}}}
+				}
+			}
+
+			if(validations.hasOwnProperty(type)) {
+				var data = validations[type];
+
+				target.mask(data.mask, data.options);
+			}
+			else {
+				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option')
+			}
 		}
 	};
 

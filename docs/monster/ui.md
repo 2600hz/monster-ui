@@ -9,6 +9,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [dialog()][dialog]
 * [getFormData()][getFormData]
 * [highlight()][highlight]
+* [mask()][mask]
 * [protectField()][protect_field]
 * [showPasswordStrength()][show_password_strength]
 * [timepicker()][timepicker]
@@ -30,6 +31,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 [dialog]: ui/dialog().md
 [getFormData]: ui/getFormData().md
 [highlight]: ui/highlight().md
+[mask]: ui/mask().md
 [protect_field]: ui/protectField().md
 [show_password_strength]: ui/showPasswordStrength().md
 [timepicker]: ui/timepicker().md
