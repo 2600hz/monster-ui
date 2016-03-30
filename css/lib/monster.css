@@ -30,6 +30,10 @@ h1 {
 	color: #22a5ff;
 }
 
+.monster-link.orange {
+	color: #f8a506;
+}
+
 .monster-link i {
 	margin-right: 5px;
 	text-decoration: none;
@@ -54,6 +58,11 @@ h1 {
 .monster-link.blue:hover,
 .monster-link.blue:focus {
 	color: #22a5ff;
+}
+
+.monster-link.orange:hover,
+.monster-link.orange:focus {
+	color: #f8a506;
 }
 
 
@@ -1285,8 +1294,8 @@ table.monster-table .actions .action-item:first-child {
 	float: left;
 }
 
-.monster-navbar .navbar-menu-item:not(:last-child) {
-	margin-right: 15px;
+.monster-navbar .navbar-menu-item:not(:first-child) {
+	margin-left: 15px;
 }
 
 .monster-navbar .navbar-menu-item-link {
@@ -1317,4 +1326,94 @@ table.monster-table .actions .action-item:first-child {
 
 .monster-navbar.reverse .navbar-menu-item-link:not(.active):hover {
 	color: #fff;
+}
+
+/************************************************************/
+/********************* MONSTER STATUSES *********************/
+/************************************************************/
+
+.monster-statuses .node.small {
+	margin-bottom: 56px;
+}
+
+.monster-statuses .node.large {
+	margin-bottom: 148px;
+}
+
+.monster-statuses .node .iconography {
+	float: left;
+	width: 20px;
+	text-align: center;
+	position: relative;
+	height: 20px;
+}
+
+.monster-statuses .node.small .iconography::after,
+.monster-statuses .node.large .iconography::after {
+	position: absolute;
+	display: block;
+	content: '';
+	top: 29px;
+	width: 3px;
+	background-color: #e1e1ea;
+	transform: translate(-50%, 0);
+	left: 50%;
+}
+
+.monster-statuses .node.small .iconography::after {
+	height: 36px;
+}
+
+.monster-statuses .node.large .iconography::after {
+	height: 130px;
+}
+
+.monster-statuses .node.success:not(:last-child) .iconography::after {
+	background-color: #33db24;
+}
+
+.monster-statuses .node.in-progress:not(:last-child) .iconography::after {
+	background-color: #22a5ff;
+}
+
+.monster-statuses .node i {
+	font-size: 15pt;
+	color: #e1e1ea;
+}
+
+.monster-statuses .node .status {
+	margin-left: 40px;
+	color: #909099;
+}
+
+.monster-statuses .node.success i {
+	color: #33db24;
+}
+
+.monster-statuses .node.in-progress i {
+	color: #22a5ff;
+}
+
+.monster-statuses .node.in-progress .status,
+.monster-statuses .node.success .status {
+	color: #303039;
+	font-weight: 600;
+}
+
+.monster-statuses .node.warning i,
+.monster-statuses .node.warning .status {
+	color: #f8a506;
+}
+
+.monster-statuses .node.warning .status {
+	font-weight: 600;
+}
+
+.monster-statuses .node.error i,
+.monster-statuses .node.error .status {
+	color: #ff3d24;
+}
+
+.monster-statuses .node.error .status {
+	font-weight: 600;
 }
