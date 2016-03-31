@@ -87,7 +87,7 @@ define(function(require){
 			});
 
 			template.find('.account-list-add').on('click', function() {
-				onNewAccountClick && onNewAccountClick(currentAccountId);
+				onNewAccountClick && onNewAccountClick();
 			});
 
 			var findElemInData = function(searchString, data) {
