@@ -614,5 +614,19 @@
 				"multiple": "yottabyte"
 			}
 		]
+	},
+
+	"__comment": "UI-2033: Adding shortcuts to monster",
+	"__version": "3.22",
+	"shortcuts": {
+		"categories": {
+			"general": "Global Shortcuts"
+		},
+		"popupTitle": "Keyboard Shortcuts Summary",
+		"keys": {
+			"a": { "title": "Show Current Account ID", "warningNotLoggedIn": "You are not logged in to any account right now"},
+			"shift+l": { "title": "Instant Log Out"},
+			"?": { "title": "Show Shortcuts Summary" }
+		}
 	}
 }

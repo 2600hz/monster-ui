@@ -232,7 +232,6 @@ define(function(require){
 	}));
 
 	var ui = {
-
 		slider: function (target, pOptions) {
 			var id = Date.now(),
 				defaultOptions = {
@@ -1799,6 +1798,37 @@ define(function(require){
 			else {
 				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option')
 			}
+		},
+
+		keyboardShortcuts: {},
+
+		addShortcut: function(category, key, title, callback) {
+			var self = this,
+				i18nShortcuts = monster.apps.core.i18n.active().shortcuts;
+
+			if(!self.keyboardShortcuts.hasOwnProperty(category)) {
+				self.keyboardShortcuts[category] = {
+					title: i18nShortcuts.categories.hasOwnProperty(category) ? i18nShortcuts.categories[category] : category,
+					keys: {}
+				}
+			}
+
+			if(!self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+				self.keyboardShortcuts[category].keys[key] = {
+					key: key,
+					title: title,
+					callback: callback
+				};
+
+				Mousetrap.bind(key, callback);
+			}
+			else {
+				console.warning('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
+			}
+		},
+
+		getShortcuts: function() {
+			return this.keyboardShortcuts;
 		}
 	};
 
