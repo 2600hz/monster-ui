@@ -1,0 +1,16 @@
+<div class="shortcuts-dialog">
+	{{#each categories}}
+		<h4 class="items-title">{{title}}</h4>
+
+		<ul class="items">
+			{{#each keys}}
+				<li>
+					<dl>
+						<dt>{{title}}:</dt>
+						<dd><kbd>{{key}}</kbd></dd>
+					</dl>
+				</li>
+			{{/each}}
+		</ul>
+	{{/each}}
+</div>

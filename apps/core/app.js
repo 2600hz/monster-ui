@@ -2,7 +2,8 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		mousetrap = require('mousetrap');
 
 	var app = {
 		name: 'core',
@@ -64,6 +65,7 @@ define(function(require){
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
 			self.displayFavicon();
+			self.initializeShortcuts();
 
 			container.append(mainTemplate);
 
@@ -280,7 +282,7 @@ define(function(require){
 
 		hideAccountToggle: function() {
 			$('#main_topbar_account_toggle_container .account-toggle-content').empty();
-			 $('#main_topbar_account_toggle_container .current-account-container').empty();
+			$('#main_topbar_account_toggle_container .current-account-container').empty();
 			$('#main_topbar_account_toggle').removeClass('open');
 		},
 
@@ -533,6 +535,59 @@ define(function(require){
 						clearTimeout(self.spinner.endTimeout);
 					}
 				}, waitTime)
+			}
+		},
+
+		initializeShortcuts: function() {
+			var self = this,
+				shortcuts = [
+					{
+						category: 'general',
+						key: 'a',
+						title: self.i18n.active().shortcuts.keys['a'].title,
+						callback: function() {
+							
+							if(monster.util.isLoggedIn()) {
+								var acc = monster.apps.auth.currentAccount;
+								monster.ui.alert('info', acc.id, undefined, { title: acc.name + ' Account ID'});
+							}
+							else {
+								monster.ui.alert('warning', self.i18n.active().shortcuts.keys['a'].warningNotLoggedIn);
+							}
+						}
+					},
+					{
+						category: 'general',
+						key: '?',
+						title: self.i18n.active().shortcuts.keys['?'].title,
+						callback: function() {
+							self.showShortcutsPopup();
+						}
+					},
+					{
+						category: 'general',
+						key: 'shift+l',
+						title: self.i18n.active().shortcuts.keys['shift+l'].title,
+						callback: function() {
+							monster.pub('auth.logout');
+						}
+					}
+				];
+
+			_.each(shortcuts, function(shortcut) {
+				monster.ui.addShortcut(shortcut.category, shortcut.key, shortcut.title, shortcut.callback);
+			});
+		},
+
+		showShortcutsPopup: function() {
+			if(!$('.shortcuts-dialog').length) {
+				var self = this,
+					shortcuts = monster.ui.getShortcuts(),
+					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts }),
+					popup = monster.ui.dialog(shortcutsTemplate, {
+						title: self.i18n.active().shortcuts.popupTitle,
+						width: 500
+					});
 			}
 		}
 	};
