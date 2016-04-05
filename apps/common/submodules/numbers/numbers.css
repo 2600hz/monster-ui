@@ -401,56 +401,6 @@
 	text-align: center;
 }
 
-
-#numbers_search_result_popup {
-	padding: 20px;
-	min-width: 400px;
-}
-#numbers_search_result_popup > div:not(:first-child) {
-	margin-top: 20px;
-}
-
-#numbers_search_result_popup .account-tree {
-	border: solid 1px #c0c0c9;
-	border-radius: 2px;
-	padding: 5px 10px;
-	line-height: 25px;
-}
-
-#numbers_search_result_popup .account-tree > .account-line .account-line {
-	margin-left:35px;
-	position: relative;
-}
-#numbers_search_result_popup .account-tree > .account-line .account-line:before {
-	position: absolute;
-	content: "";
-	border-width: 0px 0px 1px 1px;
-	border-style: solid;
-	border-color: #c0c0c9;
-	width: 10px;
-	height: 15px;
-	left: -25px;
-	top: -1px;
-}
-#numbers_search_result_popup .account-tree > .account-line .account-line:after {
-	position: absolute;
-	content: "";
-	left: -15px;
-	top: 11px;
-	border-top: 3px solid transparent;
-	border-left: 10px solid #c0c0c9;
-	border-bottom: 3px solid transparent;
-}
-
-#numbers_search_result_popup .account-tree .account-line .account-name {
-	display: inline-block;
-}
-
-#numbers_search_result_popup .account-tree .account-line .account-name.masqueradable {
-	color: #22a5ff;
-	cursor: pointer;
-}
-
 /* Add External */
 #numbers_add_external {
 	padding: 20px;
