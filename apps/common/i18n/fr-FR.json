@@ -524,5 +524,20 @@
 			"okButton": "Sélectionner",
 			"cancelButton": "Annuler"
 		}
+	},
+
+	"accountAncestors": {
+		"tooltip": "Cliquez ici pour vous rendre sur ce compte",
+		"entities": {
+			"number": {
+				"ownedBy": "Ce numéro se trouve dans le sous-compte {{variable}}.",
+				"usedBy": "Il est utilisé par {{variable}}.",
+				"notUsed": "Il n'est pas utilisé."
+			},
+			"macAddress": {
+				"ownedBy": "Cette adresse MAC se trouve dans le sous-compte {{variable}}.",
+				"usedBy": "Elle correspond au téléphone nommé {{variable}}."
+			}
+		}
 	}
 }

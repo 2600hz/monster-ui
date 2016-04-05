@@ -1,0 +1,46 @@
+#account_ancestors_popup {
+	min-width: 400px;
+	padding: 20px;
+}
+
+#account_ancestors_popup > div:not(:first-child) {
+	margin-top: 20px;
+}
+
+#account_ancestors_popup .account-tree {
+	line-height: 25px;
+	padding: 5px 10px;
+	border: solid 1px #c0c0c9;
+	border-radius: 2px;
+}
+
+#account_ancestors_popup .account-tree > .account-line .account-line {
+	position: relative;
+	margin-left: 35px;
+}
+
+#account_ancestors_popup .account-tree > .account-line .account-line::before {
+	position: absolute;
+	top: -1px;
+	left: -25px;
+	width: 10px;
+	height: 15px;
+	content: '';
+	border-width: 0 0 1px 1px;
+	border-style: solid;
+	border-color: #c0c0c9;
+}
+
+#account_ancestors_popup .account-tree > .account-line .account-line::after {
+	position: absolute;
+	top: 11px;
+	left: -15px;
+	content: '';
+	border-top: 3px solid transparent;
+	border-bottom: 3px solid transparent;
+	border-left: 10px solid #c0c0c9;
+}
+
+#account_ancestors_popup .account-tree .account-line .account-name {
+	display: inline-block;
+}
