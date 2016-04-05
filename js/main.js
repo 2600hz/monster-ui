@@ -33,6 +33,7 @@ require.config({
 		'monster-timezone': 'js/lib/monster.timezone',
 		'monster-routing': 'js/lib/monster.routing',
 		'monster-util': 'js/lib/monster.util',
+		'mousetrap': 'js/lib/mousetrap-1.5.3.min',
 		'nicescroll': 'js/lib/jquery.nicescroll.min',
 		'monster-apps': 'js/lib/monster.apps',
 		'plugins': 'js/plugins',
