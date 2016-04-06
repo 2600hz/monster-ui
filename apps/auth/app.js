@@ -140,6 +140,8 @@ define(function(require){
 			//Adding the authtoken to the Core app
 			monster.apps.core.authToken = data.auth_token;
 
+			monster.pub('core.initializeShortcuts', data.data.apps);
+
 			self.afterLoggedIn();
 		},
 
