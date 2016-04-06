@@ -2,7 +2,6 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		Handlebars = require('handlebars'),
 		hotkeys = require('hotkeys'),
 		toastr = require('toastr'),
 		validate = require('validate'),
