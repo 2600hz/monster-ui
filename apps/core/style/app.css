@@ -572,3 +572,17 @@ body,
 	text-shadow: 0 1px 0 #fff;
 	vertical-align: bottom;
 }
+
+
+/* Short cut debug account Info */
+.debug-dialog {
+	padding: 20px;
+}
+
+.debug-dialog table {
+	margin: 0;
+}
+
+.debug-dialog table tr td:nth-child(1) {
+	font-weight: bold;
+}

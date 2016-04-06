@@ -608,9 +608,17 @@ define(function(require){
 
 		showDebugPopup: function() {
 			var self = this,
-				acc = monster.apps.auth.currentAccount;
+				acc = monster.apps.auth.currentAccount,
+				dataTemplate = {
+					account: acc,
+					authToken: self.authToken,
+					apiUrl: self.apiUrl
+				}
+				template = monster.template(self, 'dialog-accountInfo', dataTemplate);
 
-			monster.ui.alert('info', acc.id, undefined, { title: acc.name + ' Account ID'});
+			monster.ui.dialog(template, {
+				title: self.i18n.active().debugAccountDialog.title
+			});
 		},
 
 		showShortcutsPopup: function() {
