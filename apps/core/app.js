@@ -575,6 +575,22 @@ define(function(require){
 					},
 					{
 						category: 'general',
+						key: 'shift+m',
+						title: self.i18n.active().globalShortcuts.keys['shift+m'].title,
+						callback: function() {
+							self.restoreMasquerading({
+								callback: function() {
+									var currentApp = monster.apps.getActiveApp();
+									if(currentApp in monster.apps) {
+										monster.apps[currentApp].render();
+									}
+									self.hideAccountToggle();
+								}
+							});
+						}
+					},
+					{
+						category: 'general',
 						key: 'd',
 						title: self.i18n.active().globalShortcuts.keys['d'].title,
 						callback: function() {

@@ -632,7 +632,8 @@
 			"#": { "title": "App Loader" },
 			"@": { "title": "My Account"},
 			"shift+l": { "title": "Instant Log Out"},
-			"?": { "title": "Show Shortcuts Summary" }
+			"?": { "title": "Show Shortcuts Summary" },
+			"shift+m": { "title": "Stop Masquerading" }
 		}
 	},
 
