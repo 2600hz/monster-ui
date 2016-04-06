@@ -95,7 +95,6 @@ define(function(require){
 		},
 
 		renderServicePlanDetails: function(container, servicePlanData, callback) {
-			console.log(servicePlanData);
 			var self = this,
 				formattedData = self.servicePlanDetailsFormatData(servicePlanData),
 				template = $(monster.template(self, 'servicePlanDetails-layout', formattedData));
