@@ -544,7 +544,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: '?',
-						title: self.i18n.active().shortcuts.keys['?'].title,
+						title: self.i18n.active().globalShortcuts.keys['?'].title,
 						callback: function() {
 							self.showShortcutsPopup();
 						}
@@ -552,7 +552,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: '@',
-						title: self.i18n.active().shortcuts.keys['@'].title,
+						title: self.i18n.active().globalShortcuts.keys['@'].title,
 						callback: function() {
 							monster.pub('myaccount.renderDropdown');
 						}
@@ -560,7 +560,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: '#',
-						title: self.i18n.active().shortcuts.keys['#'].title,
+						title: self.i18n.active().globalShortcuts.keys['#'].title,
 						callback: function() {
 							monster.pub('apploader.toggle');
 						}
@@ -568,7 +568,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'a',
-						title: self.i18n.active().shortcuts.keys['a'].title,
+						title: self.i18n.active().globalShortcuts.keys['a'].title,
 						callback: function() {
 							self.toggleAccountToggle();
 						}
@@ -576,7 +576,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'd',
-						title: self.i18n.active().shortcuts.keys['d'].title,
+						title: self.i18n.active().globalShortcuts.keys['d'].title,
 						callback: function() {
 							self.showDebugPopup();
 						}
@@ -584,7 +584,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'r',
-						title: self.i18n.active().shortcuts.keys['r'].title,
+						title: self.i18n.active().globalShortcuts.keys['r'].title,
 						callback: function() {
 							monster.routing.goTo('apps/' + monster.apps.getActiveApp());
 						}
@@ -592,7 +592,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'shift+l',
-						title: self.i18n.active().shortcuts.keys['shift+l'].title,
+						title: self.i18n.active().globalShortcuts.keys['shift+l'].title,
 						callback: function() {
 							monster.pub('auth.logout');
 						}
@@ -619,7 +619,7 @@ define(function(require){
 					shortcuts = monster.ui.getShortcuts(),
 					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts }),
 					popup = monster.ui.dialog(shortcutsTemplate, {
-						title: self.i18n.active().shortcuts.popupTitle,
+						title: self.i18n.active().globalShortcuts.popupTitle,
 						width: 500
 					});
 			}

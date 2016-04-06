@@ -80,15 +80,19 @@ This is an object at the top of your application where you'll reference special 
 
 	Example: Shortcut to render New Account in the Account Manager
 	shortcuts: {
-		'a': {
-			event: 'accountsManager.renderNewAccount',
-			title: 'Render New Account'
-		}
+		'a': 'accountsManager.renderNewAccount'
 	}
 
-`shortcuts` is a Javascript Object. Each key is the keyboard shortcut to be used to trigger the event (note that all the App-Specific shortcuts will be prefixed by `alt` automatically).
-The `event` key is the Monster event to publish when "alt+" your key is triggered. The `title` is used to show the shortcut in the Shortcut summary (accessible by pressing `?` in Monster)
+`shortcuts` is a Javascript Object. Each key of this object is a keyboard shortcut to be used to trigger the event set as the value. The value needs to be set to an event that Monster is subscribed to (for example any event set in the `subscribe` attribute of your application ([For more details on events, check this document][events])
+
+In order for your users to see what the shortcut does, it's important to set the `shortcuts` key in the [i18n][i18n] files.
+
+	Example: Setting title for our event
+	"shortcuts": {
+		"a": "Render New Account"
+	}
 
 [appstore]: appstore.md
 [i18n]: internationalization.md
 [tutorial]: tutorial.md
+[events]: events.md

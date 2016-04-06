@@ -618,7 +618,7 @@
 
 	"__comment": "UI-2033: Adding shortcuts to monster",
 	"__version": "3.22",
-	"shortcuts": {
+	"globalShortcuts": {
 		"categories": {
 			"general": "Global Shortcuts",
 			"apps": "Go to Application",

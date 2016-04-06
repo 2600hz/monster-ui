@@ -437,15 +437,17 @@ define(function(){
 		changeAppShortcuts: function(app) {
 			monster.ui.removeShortcut('appSpecific');
 
+			var i18nShortcuts = app.i18n.active().shortcuts;
+
 			if(app.hasOwnProperty('shortcuts')) {
-				_.each(app.shortcuts, function(shortcut, key) {
+				_.each(app.shortcuts, function(event, key) {
 					monster.ui.addShortcut({
 						category: 'appSpecific',
 						key: 'alt+'+key,
 						callback: function() {
-							monster.pub(shortcut.event);
+							monster.pub(event);
 						},
-						title: shortcut.title
+						title: i18nShortcuts && i18nShortcuts.hasOwnProperty(key) ? i18nShortcuts[key] : event
 					});
 				});
 			}
