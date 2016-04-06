@@ -1803,9 +1803,13 @@ define(function(require){
 
 		keyboardShortcuts: {},
 
-		addShortcut: function(category, key, title, callback) {
+		addShortcut: function(shortcut) {
 			var self = this,
-				i18nShortcuts = monster.apps.core.i18n.active().shortcuts;
+				i18nShortcuts = monster.apps.core.i18n.active().shortcuts,
+				category = shortcut.category,
+				key = shortcut.key,
+				title = shortcut.title,
+				callback = shortcut.callback;
 
 			if(!self.keyboardShortcuts.hasOwnProperty(category)) {
 				self.keyboardShortcuts[category] = {
@@ -1825,6 +1829,19 @@ define(function(require){
 			}
 			else {
 				console.warning('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
+			}
+		},
+
+		removeShortcut: function(category, key) {
+			var self = this;
+			Mousetrap.unbind(key);
+
+			if(self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+				delete self.keyboardShortcuts[category].keys[key];
+
+				if(_.isEmpty(self.keyboardShortcuts[category].keys)) {
+					delete self.keyboardShortcuts[category];
+				}
 			}
 		},
 

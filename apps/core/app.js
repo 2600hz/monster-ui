@@ -22,7 +22,8 @@ define(function(require){
 			'core.loadApps': '_loadApps',
 			'core.showAppName' : 'showAppName',
 			'core.triggerMasquerading': 'triggerMasquerading',
-			'core.restoreMasquerading': 'restoreMasquerading'
+			'core.restoreMasquerading': 'restoreMasquerading',
+			'core.initializeShortcuts': 'initializeShortcuts'
 		},
 
 		//List of apps required once the user is logged in (LIFO)
@@ -65,7 +66,6 @@ define(function(require){
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
 			self.displayFavicon();
-			self.initializeShortcuts();
 
 			container.append(mainTemplate);
 
@@ -538,30 +538,55 @@ define(function(require){
 			}
 		},
 
-		initializeShortcuts: function() {
+		initializeShortcuts: function(apps) {
 			var self = this,
 				shortcuts = [
-					{
-						category: 'general',
-						key: 'a',
-						title: self.i18n.active().shortcuts.keys['a'].title,
-						callback: function() {
-							
-							if(monster.util.isLoggedIn()) {
-								var acc = monster.apps.auth.currentAccount;
-								monster.ui.alert('info', acc.id, undefined, { title: acc.name + ' Account ID'});
-							}
-							else {
-								monster.ui.alert('warning', self.i18n.active().shortcuts.keys['a'].warningNotLoggedIn);
-							}
-						}
-					},
 					{
 						category: 'general',
 						key: '?',
 						title: self.i18n.active().shortcuts.keys['?'].title,
 						callback: function() {
 							self.showShortcutsPopup();
+						}
+					},
+					{
+						category: 'general',
+						key: '@',
+						title: self.i18n.active().shortcuts.keys['@'].title,
+						callback: function() {
+							monster.pub('myaccount.renderDropdown');
+						}
+					},
+					{
+						category: 'general',
+						key: '#',
+						title: self.i18n.active().shortcuts.keys['#'].title,
+						callback: function() {
+							monster.pub('apploader.toggle');
+						}
+					},
+					{
+						category: 'general',
+						key: 'a',
+						title: self.i18n.active().shortcuts.keys['a'].title,
+						callback: function() {
+							self.toggleAccountToggle();
+						}
+					},
+					{
+						category: 'general',
+						key: 'd',
+						title: self.i18n.active().shortcuts.keys['d'].title,
+						callback: function() {
+							self.showDebugPopup();
+						}
+					},
+					{
+						category: 'general',
+						key: 'r',
+						title: self.i18n.active().shortcuts.keys['r'].title,
+						callback: function() {
+							monster.routing.goTo('apps/' + monster.apps.getActiveApp());
 						}
 					},
 					{
@@ -575,8 +600,17 @@ define(function(require){
 				];
 
 			_.each(shortcuts, function(shortcut) {
-				monster.ui.addShortcut(shortcut.category, shortcut.key, shortcut.title, shortcut.callback);
+				monster.ui.addShortcut(shortcut);
 			});
+
+			self.addShortcutsGoToApps(apps);
+		},
+
+		showDebugPopup: function() {
+			var self = this,
+				acc = monster.apps.auth.currentAccount;
+
+			monster.ui.alert('info', acc.id, undefined, { title: acc.name + ' Account ID'});
 		},
 
 		showShortcutsPopup: function() {
@@ -589,7 +623,36 @@ define(function(require){
 						width: 500
 					});
 			}
-		}
+		},
+
+		addShortcutsGoToApps: function(apps) {
+			var self = this,
+				shortcut,
+				appsToBind = {
+					voip: 'shift+v',
+					accounts: 'shift+a',
+					callflows: 'shift+c',
+					branding: 'shift+b',
+					provisioner: 'shift+p'
+				};
+
+			_.each(apps, function(app) {
+				shortcut = {};
+
+				if(appsToBind.hasOwnProperty(app.name)) {
+					shortcut = {
+						key: appsToBind[app.name],
+						callback: function() {
+							monster.routing.goTo('apps/' + app.name);
+						},
+						category: 'apps',
+						title: app.label
+					};
+
+					monster.ui.addShortcut(shortcut);
+				}
+			});
+		},
 	};
 
 	return app;

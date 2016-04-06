@@ -620,11 +620,16 @@
 	"__version": "3.22",
 	"shortcuts": {
 		"categories": {
-			"general": "Global Shortcuts"
+			"general": "Global Shortcuts",
+			"apps": "Go to Application"
 		},
 		"popupTitle": "Keyboard Shortcuts Summary",
 		"keys": {
-			"a": { "title": "Show Current Account ID", "warningNotLoggedIn": "You are not logged in to any account right now"},
+			"a": { "title": "Account Jump" },
+			"d": { "title": "Advanced Account Info" },
+			"r": { "title": "Refresh App" },
+			"#": { "title": "App Loader" },
+			"@": { "title": "My Account"},
 			"shift+l": { "title": "Instant Log Out"},
 			"?": { "title": "Show Shortcuts Summary" }
 		}
