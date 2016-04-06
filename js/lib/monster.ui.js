@@ -1828,20 +1828,33 @@ define(function(require){
 				Mousetrap.bind(key, callback);
 			}
 			else {
-				console.warning('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
+				console.warn('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
 			}
 		},
 
 		removeShortcut: function(category, key) {
-			var self = this;
-			Mousetrap.unbind(key);
+			var self = this,
+				shortcuts = self.keyboardShortcuts;
 
-			if(self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
-				delete self.keyboardShortcuts[category].keys[key];
+			if(typeof key === 'undefined') {
+				if(shortcuts.hasOwnProperty(category)) {
+					_.each(shortcuts[category].keys, function(shortcut, key) {
+						Mousetrap.unbind(key);
+					});
 
-				if(_.isEmpty(self.keyboardShortcuts[category].keys)) {
-					delete self.keyboardShortcuts[category];
+					delete shortcuts[category];
 				}
+			}
+			else {
+				if(self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+					delete self.keyboardShortcuts[category].keys[key];
+
+					if(_.isEmpty(self.keyboardShortcuts[category].keys)) {
+						delete self.keyboardShortcuts[category];
+					}
+				}
+
+				Mousetrap.unbind(key);
 			}
 		},
 
