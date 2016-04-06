@@ -6,9 +6,23 @@ define(function(require){
 	var app = {
 		name: 'common',
 
-		subModules: ['accountBrowser', 'buyNumbers', 'callerId', 'e911', 'failover', 'numbers',
-					 'port', 'chooseModel', 'servicePlanDetails', 'ringingDurationControl',
-					 'carrierSelector', 'numberPrepend', 'numberSelector', 'monsterListing'],
+		subModules: [
+			'accountAncestors',
+			'accountBrowser',
+			'buyNumbers',
+			'callerId',
+			'e911',
+			'failover',
+			'numbers',
+			'port',
+			'chooseModel',
+			'servicePlanDetails',
+			'ringingDurationControl',
+			'carrierSelector',
+			'numberPrepend',
+			'numberSelector',
+			'monsterListing'
+		],
 
 		css: [ 'app' ],
 

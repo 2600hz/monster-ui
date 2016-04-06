@@ -18,7 +18,7 @@ require.config({
 		'footable-filter': 'js/lib/footable/footable.filter.min',
 		'footable-sort': 'js/lib/footable/footable.sort.min',
 		'form2object': 'js/lib/form2object',
-		'handlebars': 'js/lib/handlebars-1.0.10',
+		'handlebars': 'js/lib/handlebars-v4.0.5',
 		'hasher': 'js/lib/hasher.min',
 		'hotkeys': 'js/lib/jquery.hotkeys.min',
 		'introJs': 'js/lib/intro.min',
