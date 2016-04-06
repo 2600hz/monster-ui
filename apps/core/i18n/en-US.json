@@ -634,5 +634,13 @@
 			"shift+l": { "title": "Instant Log Out"},
 			"?": { "title": "Show Shortcuts Summary" }
 		}
+	},
+
+	"debugAccountDialog": {
+		"title": "Debug Account Info",
+		"accountName": "Account Name",
+		"accountId": "Account ID",
+		"authToken": "Auth Token",
+		"apiUrl": "API URL"
 	}
 }
