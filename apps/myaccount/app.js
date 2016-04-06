@@ -33,7 +33,8 @@ define(function(require){
 			'myaccount.showCreditCardTab': 'showCreditCardTab',
 			'myaccount.hasCreditCards': 'hasCreditCards',
 			'core.changedAccount': 'refreshMyAccount',
-			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough'
+			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough',
+			'myaccount.renderDropdown': 'clickMyAccount'
 		},
 
 		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
@@ -384,26 +385,33 @@ define(function(require){
 			navLinks.on('click', '#main_topbar_myaccount', function(e) {
 				e.preventDefault();
 
-				self._UIRestrictionsCompatibility({
-					restrictions: monster.apps.auth.originalAccount.ui_restrictions,
-					callback: function(uiRestrictions, showMyaccount) {
-						if ( showMyaccount ) {
-							if(mainContainer.hasClass('myaccount-open')) {
-								self.hide();
+				self.clickMyAccount();
+			});
+		},
+
+		clickMyAccount: function() {
+			var self = this,
+				mainContainer = $(self.mainContainer);
+
+			self._UIRestrictionsCompatibility({
+				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+				callback: function(uiRestrictions, showMyaccount) {
+					if ( showMyaccount ) {
+						if(mainContainer.hasClass('myaccount-open')) {
+							self.hide();
+						}
+						else {
+							if(self.hasToShowWalkthrough()) {
+								self.showWalkthrough(mainContainer, function() {
+									self.updateWalkthroughFlagUser();
+								});
 							}
 							else {
-								if(self.hasToShowWalkthrough()) {
-									self.showWalkthrough(mainContainer, function() {
-										self.updateWalkthroughFlagUser();
-									});
-								}
-								else {
-									self.renderDropdown(true);
-								}
+								self.renderDropdown(true);
 							}
 						}
 					}
-				});
+				}
 			});
 		},
 
