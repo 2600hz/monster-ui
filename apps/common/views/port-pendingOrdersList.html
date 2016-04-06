@@ -20,10 +20,10 @@
 		<div class="requests-wrapper">
 		{{#if port_requests}}
 			<div class="requests-header">
-				<div class="request-name">{{../../i18n.port.pendingOrders.tableOrderName}}</div>
-				<div class="request-created">{{../../i18n.port.pendingOrders.tableOrderDate}}</div>
-				<div class="request-state">{{../../i18n.port.pendingOrders.tableOrderState}}</div>
-				<div class="scheduled-date">{{../../i18n.port.pendingOrders.tableOrderScheduled}}</div>
+				<div class="request-name">{{@root.i18n.port.pendingOrders.tableOrderName}}</div>
+				<div class="request-created">{{@root.i18n.port.pendingOrders.tableOrderDate}}</div>
+				<div class="request-state">{{@root.i18n.port.pendingOrders.tableOrderState}}</div>
+				<div class="scheduled-date">{{@root.i18n.port.pendingOrders.tableOrderScheduled}}</div>
 			</div>
 			{{#each port_requests}}
 			<div class="request-box" data-account_id="{{../account_id}}" data-id="{{id}}" data-state="{{port_state}}" data-scheduled_date="{{scheduled_date}}" data-updated_date="{{updated}}">
@@ -38,11 +38,11 @@
 						<i class="fa fa-cog dropdown-toggle" data-toggle="dropdown"></i>
 						<ul class="dropdown-menu">
 						{{#compare port_state '===' 'unconfirmed'}}
-							<li class="continue-request"><a href="#"><i class="fa fa-play monster-green"></i> {{../../../../i18n.port.pendingOrders.continueButton}}</a></li>
-							<li class="delete-request"><a href="#"><i class="fa fa-times monster-red"></i> {{../../../../i18n.port.pendingOrders.deleteButton}}</a></li>
+							<li class="continue-request"><a href="#"><i class="fa fa-play monster-green"></i> {{@root.i18n.port.pendingOrders.continueButton}}</a></li>
+							<li class="delete-request"><a href="#"><i class="fa fa-times monster-red"></i> {{@root.i18n.port.pendingOrders.deleteButton}}</a></li>
 						{{/compare}}
-							<li class="info-request"><a href="#"><i class="fa fa-info monster-yellow"></i> {{../../../i18n.port.pendingOrders.infoButton}}</a></li>
-							<li class="comments-request"><a href="#"><i class="fa fa-comments"></i> {{../../../i18n.port.pendingOrders.commentsButton}}</a></li>
+							<li class="info-request"><a href="#"><i class="fa fa-info monster-yellow"></i> {{@root.i18n.port.pendingOrders.infoButton}}</a></li>
+							<li class="comments-request"><a href="#"><i class="fa fa-comments"></i> {{@root.i18n.port.pendingOrders.commentsButton}}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -52,6 +52,6 @@
 		</div>
 	</div>
 {{else}}
-	<div class="request-box empty">{{../i18n.port.pendingOrders.noOrder}}</div>
+	<div class="request-box empty">{{@root.i18n.port.pendingOrders.noOrder}}</div>
 {{/each}}
 </div>

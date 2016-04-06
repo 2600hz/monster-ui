@@ -205,8 +205,8 @@ results.html
 		{{#each numbers}}
 			<span>{{this}}</span>
 		{{else}}
-			<!-- In a loop, you need to use '../' to come back to the global scope and use the i18n variable -->
-			<span>{{ ../i18n.demo.noNumber }}</span>
+			<!-- In a loop, you need to use '@root' to come back to the global scope and use the i18n variable -->
+			<span>{{ @root.i18n.demo.noNumber }}</span>
 		{{/each}}
 	</div>
 
