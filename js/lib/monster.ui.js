@@ -1805,7 +1805,7 @@ define(function(require){
 
 		addShortcut: function(shortcut) {
 			var self = this,
-				i18nShortcuts = monster.apps.core.i18n.active().shortcuts,
+				i18nShortcuts = monster.apps.core.i18n.active().globalShortcuts,
 				category = shortcut.category,
 				key = shortcut.key,
 				title = shortcut.title,
