@@ -21,20 +21,20 @@
 						<tr>
 							<td>{{quantity}}</td>
 							<td>x</td>
-							<td>{{replaceVar ../i18n.confirmCharges.amount rate}}</td>
+							<td>{{replaceVar @root.i18n.confirmCharges.amount rate}}</td>
 							<td>-</td>
-							<td>{{#if discount}}{{replaceVar ../../i18n.confirmCharges.amount discount}}{{else}}{{discount}}{{/if}}</td>
+							<td>{{#if discount}}{{replaceVar @root.i18n.confirmCharges.amount discount}}{{else}}{{discount}}{{/if}}</td>
 							<td>=</td>
-							<td>{{replaceVar ../i18n.confirmCharges.amount monthlyCharges}}</td>
+							<td>{{replaceVar @root.i18n.confirmCharges.amount monthlyCharges}}</td>
 						</tr>
 						<tr>
 							<th>{{service}}</th>
 							<th></th>
-							<th>{{../i18n.confirmCharges.rate}}</th>
+							<th>{{@root.i18n.confirmCharges.rate}}</th>
 							<th></th>
-							<th>{{../i18n.confirmCharges.discount}}</th>
+							<th>{{@root.i18n.confirmCharges.discount}}</th>
 							<th></th>
-							<th>{{../i18n.confirmCharges.monthlyCharges}}</th>
+							<th>{{@root.i18n.confirmCharges.monthlyCharges}}</th>
 						</tr>
 					</table>
 				</div>

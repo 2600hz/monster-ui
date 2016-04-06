@@ -126,9 +126,9 @@
 							{{ i18n.user.dateFormats.dmy }}
 						{{else}} 
 							{{#compare user.ui_flags.date_format '===' 'ymd'}}
-								{{ ../i18n.user.dateFormats.ymd }}
+								{{ @root.i18n.user.dateFormats.ymd }}
 							{{else}}
-								{{ ../i18n.user.dateFormats.mdy }}
+								{{ @root.i18n.user.dateFormats.mdy }}
 							{{/compare}} 
 						{{/compare}}
 						</li>

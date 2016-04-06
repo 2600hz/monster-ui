@@ -23,8 +23,8 @@
 				<a class="btn{{#compare command '===' 'createLink'}} dropdown-toggle" data-toggle="dropdown{{/compare}}" data-edit="{{command}}" title="{{title}}"><i class="{{icon}}"></i></a>
 				{{#compare command '===' 'createLink'}}
 					<div class="dropdown-menu input-append">
-						<input type="text" class="span2" placeholder="{{../../../../../i18n.wysiwyg.placeholder.createLink}}" data-edit="{{command}}">
-						<button class="btn" type="button">{{../../../../../i18n.add}}</button>
+						<input type="text" class="span2" placeholder="{{@root.i18n.wysiwyg.placeholder.createLink}}" data-edit="{{command}}">
+						<button class="btn" type="button">{{@root.i18n.add}}</button>
 					</div>
 				{{/compare}}
 			{{/each}}
