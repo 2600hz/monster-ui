@@ -621,7 +621,8 @@
 	"shortcuts": {
 		"categories": {
 			"general": "Global Shortcuts",
-			"apps": "Go to Application"
+			"apps": "Go to Application",
+			"appSpecific": "Current Application"
 		},
 		"popupTitle": "Keyboard Shortcuts Summary",
 		"keys": {

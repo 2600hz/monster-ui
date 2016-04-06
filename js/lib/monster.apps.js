@@ -421,6 +421,8 @@ define(function(){
 				afterLoad = function(app) {
 					monster.apps.lastLoadedApp = app.name;
 
+					self.changeAppShortcuts(app);
+
 					callback && callback(app);
 				};
 
@@ -435,6 +437,23 @@ define(function(){
 			}
 			else {
 				afterLoad(monster.apps[name]);
+			}
+		},
+
+		changeAppShortcuts: function(app) {
+			monster.ui.removeShortcut('appSpecific');
+
+			if(app.hasOwnProperty('shortcuts')) {
+				_.each(app.shortcuts, function(shortcut, key) {
+					monster.ui.addShortcut({
+						category: 'appSpecific',
+						key: 'alt+'+key,
+						callback: function() {
+							monster.pub(shortcut.event);
+						},
+						title: shortcut.title
+					});
+				});
 			}
 		},
 
