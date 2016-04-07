@@ -21,8 +21,7 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultStateToDisplay: 'completed',
-		// defaultStateToDisplay: 'submitted',
+		defaultStateToDisplay: 'submitted',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
