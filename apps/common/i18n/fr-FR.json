@@ -529,6 +529,9 @@
 	"accountAncestors": {
 		"tooltip": "Cliquez ici pour vous rendre sur ce compte",
 		"entities": {
+			"account": {
+				"text": "Voici les parents du compte sélectionné:"
+			},
 			"number": {
 				"ownedBy": "Ce numéro se trouve dans le sous-compte {{variable}}.",
 				"usedBy": "Il est utilisé par {{variable}}.",
