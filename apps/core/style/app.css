@@ -546,7 +546,7 @@ body,
 	font-weight: normal;
 	text-align: right;
 	vertical-align: top;
-	width: 250px;
+	width: 220px;
 }
 
 .shortcuts-dialog .items dl>dd {
@@ -571,6 +571,11 @@ body,
 	text-align: center;
 	text-shadow: 0 1px 0 #fff;
 	vertical-align: bottom;
+}
+
+.shortcuts-dialog .shortcuts-category {
+	float: left;
+	width: 50%;
 }
 
 
