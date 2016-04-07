@@ -30,10 +30,10 @@
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
 										<ul class="dropdown-menu">
 										{{#unless isLocal}}
-											{{#if ../../../../isCnamEnabled}}
+											{{#if ../../isCnamEnabled}}
 												<li><a class="cnam-number" href="#"><i class="fa fa-user"></i>{{ @root.i18n.callerId.label }}</a></li>
 											{{/if}}
-											{{#if ../../../../isE911Enabled}}
+											{{#if ../../isE911Enabled}}
 												<li><a class="e911-number" href="#"><i class="fa fa-ambulance"></i>{{ @root.i18n.e911.label }}</a></li>
 											{{/if}}
 											{{#compare this.used_by "===" "trunkstore"}}

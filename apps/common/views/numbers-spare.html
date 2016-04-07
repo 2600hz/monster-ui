@@ -25,7 +25,7 @@
 					</ul>
 				</li>
 			</ul>
-			{{#unless ../hidePort}}
+			{{#unless hidePort}}
 				<a href="#" id="port_numbers" class="action-number port"><i class="fa fa-external-link monster-blue"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 			{{/unless}}
 			<a href="#" id="sync_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh monster-orange"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
@@ -44,7 +44,7 @@
 			{{#compare ../viewType '!==' 'pbx'}}
 				<div class="account-header">
 					<div class="right-links pull-right">
-						{{#if ../../canAddExternalNumbers}}
+						{{#if ../canAddExternalNumbers}}
 							<a href="javascript:void(0);" id="add_external_number" class="action-number add-external help-popover" data-original-title="{{ @root.i18n.numbers.addExternal.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-plus"></i><span class="action-text">{{ @root.i18n.numbers.addExternal.label }}</span></a>
 						{{/if}}
 						<ul class="nav buy-numbers-dropdown">
@@ -57,7 +57,7 @@
 								</ul>
 							</li>
 						</ul>
-						{{#unless ../../hidePort}}
+						{{#unless ../hidePort}}
 							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 						{{/unless}}
 						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
