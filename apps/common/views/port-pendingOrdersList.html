@@ -14,7 +14,17 @@
 				<i class="fa fa-chevron-{{#if port_requests}}down monster-white{{else}}right{{/if}}"></i>
 			</div>
 			<div class="expandable">
-				<span class="account-name">{{account_name}}</span>{{#if amount}} <span class="request-amount">({{amount}})</span>{{/if}}
+				<span class="account-name">
+					{{account_name}}
+				</span> 
+			{{#if amount}}
+				<span class="request-amount">
+					({{amount}})
+				</span>
+			{{/if}}
+			{{#if ../isAdmin}}
+				<i class="fa fa-sitemap account-ancestors"></i>
+			{{/if}}
 			</div>
 		</div>
 		<div class="requests-wrapper">

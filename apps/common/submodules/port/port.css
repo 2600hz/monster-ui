@@ -311,6 +311,16 @@ div#orders_list .collapse td:last-child i {
 	font-size: 18px;
 }
 
+#orders_list .accounts-list .account-section .account-header .account-ancestors {
+	margin-left: 10px;
+	padding: 10px;
+	color: #000;
+}
+
+#orders_list .accounts-list .account-section.active .account-header .account-ancestors {
+	color: #fff;
+}
+
 #orders_list .accounts-list .account-section.active .account-header {
 	color: #ffffff;
 	border-bottom-right-radius: 0;
