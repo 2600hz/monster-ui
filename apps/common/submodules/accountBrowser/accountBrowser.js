@@ -108,8 +108,8 @@ define(function(require){
 
 				searchLink.find('.account-search-value').text(search);
 
-				//If user presses "Enter" and the list of current results is empty, we trigger a deeper search
-				if(e.which == 13 && template.find('.account-list-element:visible').length === 0) {
+				// When they press enter, we want to trigger the global search
+				if(e.which == 13) {
 					template.find('.account-search-link').click();
 				}
 				else if(search) {
