@@ -672,6 +672,9 @@
 	"accountAncestors": {
 		"tooltip": "Click here to masquerade to this account",
 		"entities": {
+			"account": {
+				"text": "Here is the parents of the selected account:"
+			},
 			"number": {
 				"ownedBy": "This number was found in the sub-account {{variable}}.",
 				"usedBy": "It is currently used by {{variable}}.",

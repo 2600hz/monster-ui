@@ -20,12 +20,13 @@ define(function(require){
 					accountId: args.accountId
 				},
 				success: function(accounts) {
-					var dataToTemplate = $.extend(true, self.accountAncestorsFormatDataToTemplate(args.entity, accounts[accounts.length - 1]), {
+					var account = accounts[accounts.length - 1],
+						dataToTemplate = $.extend(true, self.accountAncestorsFormatDataToTemplate(args.entity, account), {
 							parents: accounts
 						}),
 						template = monster.template(self, 'accountAncestors', dataToTemplate),
 						popup = monster.ui.dialog(template, {
-							title: self.accountAncestorsGeneratePopupTitle(args.entity)
+							title: self.accountAncestorsGeneratePopupTitle(args.entity, account)
 						});
 
 					monster.ui.tooltips(popup);
@@ -33,7 +34,7 @@ define(function(require){
 					self.accountAncestorsBindEvents({
 						container: popup,
 						data: {
-							account: accounts[accounts.length - 1]
+							account: account
 						}
 					});
 
@@ -64,8 +65,8 @@ define(function(require){
 					});
 		},
 
-		accountAncestorsGeneratePopupTitle: function(entity) {
-			var type = entity.type;
+		accountAncestorsGeneratePopupTitle: function(entity, account) {
+			var type = entity ? entity.type : 'account';
 
 			if (type === 'number') {
 				return monster.util.formatPhoneNumber(entity.data.id);
@@ -73,27 +74,35 @@ define(function(require){
 			else if (type === 'macAddress') {
 				return entity.data.mac_address.match(/[0-9a-f]{2}/gi).join(':');
 			}
+			else if (type === 'account') {
+				return account.name;
+			}
 		},
 
 		accountAncestorsFormatDataToTemplate: function(entity, account) {
 			var self = this,
-				type = entity.type,
+				type = entity ? entity.type : 'account',
+				data = entity ? entity.data : undefined,
 				i18n = self.i18n.active().accountAncestors.entities[type],
-				data = entity.data,
-				dataToTemplate = {
-					ownedBy: i18n.ownedBy.replace('{{variable}}', account.name)
-				};
+				dataToTemplate = {};
 
-			if (type === 'number') {
-				if (data.hasOwnProperty('usedBy')) {
-					dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', self.i18n.active().numbers[data.used_by]);
-				}
-				else {
-					dataToTemplate.usedBy = i18n.notUsed;
-				}
+			if (type === 'account') {
+				dataToTemplate
 			}
-			else if (type === 'macAddress') {
-				dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', data.name)
+			else {
+				if (type === 'number') {
+					if (data.hasOwnProperty('usedBy')) {
+						dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', self.i18n.active().numbers[data.used_by]);
+					}
+					else {
+						dataToTemplate.usedBy = i18n.notUsed;
+					}
+				}
+				else if (type === 'macAddress') {
+					dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', data.name)
+				}
+
+				dataToTemplate.ownedBy = i18n.ownedBy.replace('{{variable}}', account.name);
 			}
 
 			return dataToTemplate;
