@@ -21,7 +21,8 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultStateToDisplay: 'submitted',
+		defaultStateToDisplay: 'completed',
+		// defaultStateToDisplay: 'submitted',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
@@ -235,7 +236,8 @@ define(function(require){
 				container = parent.find('.accounts-list'),
 				generateTemplate = function (data) {
 					var dataToTemplate = {
-							data: self.portFormatPendingOrderData(data)
+							data: self.portFormatPendingOrderData(data),
+							isAdmin: monster.util.isSuperDuper()
 						},
 						template = $(monster.template(self, 'port-pendingOrdersList', dataToTemplate));
 
@@ -289,6 +291,18 @@ define(function(require){
 					});
 				}
 			});
+
+			container
+				.find('.account-ancestors')
+					.on('click', function(event) {
+						event.stopPropagation();
+
+						var accountId = $(this).parents('.account-section').data('id');
+
+						monster.pub('common.accountAncestors.render', {
+							accountId: accountId
+						});
+					});
 
 			container.find('.request-box .request-state').on('change', '.switch-state', function(event) {
 				var el = $(this),
