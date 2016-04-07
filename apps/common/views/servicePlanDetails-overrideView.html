@@ -72,7 +72,6 @@
 												<select class="input-value">
 													{{#select this}}
 														{{#each ../../asCategories}}
-															{{debug @root}}
 															<option value="{{this}}">{{ tryI18n @root.i18n.servicePlanDetails.keys this }}</option>
 														{{/each}}
 													{{/select}}
