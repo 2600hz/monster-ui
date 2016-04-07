@@ -644,7 +644,7 @@ define(function(require){
 					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts }),
 					popup = monster.ui.dialog(shortcutsTemplate, {
 						title: self.i18n.active().globalShortcuts.popupTitle,
-						width: 500
+						width: 700
 					});
 			}
 		},
