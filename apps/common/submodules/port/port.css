@@ -658,7 +658,6 @@ div#order_summary > .row-fluid {
 
 div#order_summary .row-fluid .span6:first-child {
 	padding: 20px;
-	border-right: 1px solid #ddd;
 }
 
 div#order_summary .row-fluid .span6:first-child ul {

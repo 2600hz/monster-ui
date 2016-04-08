@@ -319,6 +319,9 @@ define(function(require){
 							self.portUpdateData(accountId, updatedRequest, data);
 							self.portRenderDynamicCells(container, updatedRequest);
 
+							box.find('.actions .dropdown-menu')
+								.prepend(monster.template(self, 'port-orderActions'));
+
 							toastr.success(self.i18n.active().port.toastr.success.request.update);
 						});
 					});
@@ -383,7 +386,7 @@ define(function(require){
 				});
 			});
 
-			container.find('.request-box .actions li').on('click', function() {
+			container.find('.request-box .actions').on('click', 'li', function() {
 				var $this = $(this),
 					accountId = $this.parents('.request-box').data('account_id'),
 					requestId = $this.parents('.request-box').data('id'),
