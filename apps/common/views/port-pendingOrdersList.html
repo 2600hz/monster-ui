@@ -51,6 +51,10 @@
 							<li class="continue-request"><a href="#"><i class="fa fa-play monster-green"></i> {{@root.i18n.port.pendingOrders.continueButton}}</a></li>
 							<li class="delete-request"><a href="#"><i class="fa fa-times monster-red"></i> {{@root.i18n.port.pendingOrders.deleteButton}}</a></li>
 						{{/compare}}
+						{{#compare port_state '===' 'rejected'}}
+							<li class="continue-request"><a href="#"><i class="fa fa-play monster-green"></i> {{@root.i18n.port.pendingOrders.continueButton}}</a></li>
+							<li class="delete-request"><a href="#"><i class="fa fa-times monster-red"></i> {{@root.i18n.port.pendingOrders.deleteButton}}</a></li>
+						{{/compare}}
 							<li class="info-request"><a href="#"><i class="fa fa-info monster-yellow"></i> {{@root.i18n.port.pendingOrders.infoButton}}</a></li>
 							<li class="comments-request"><a href="#"><i class="fa fa-comments"></i> {{@root.i18n.port.pendingOrders.commentsButton}}</a></li>
 						</ul>
