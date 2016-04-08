@@ -1684,6 +1684,7 @@ define(function(require){
 		 */
 		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
+				isLoadingInProgress = false,
 				parent = $('#monster-content'),
 				appHeaderWrapper = parent.find('.app-header-wrapper'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
@@ -1720,6 +1721,7 @@ define(function(require){
 								parent
 									.find('.app-content-wrapper')
 										.fadeOut(function() {
+											isLoadingInProgress = false;
 											$(this).empty();
 
 											currentTab.callback.call(thisArg, {
@@ -1729,15 +1731,19 @@ define(function(require){
 										});
 							};
 
-						if (currentTab.hasOwnProperty('onClick')) {
-							currentTab.onClick.call(thisArg, {
-								parent: parent,
-								container: parent.find('.app-content-wrapper'),
-								callback: loadTabContent
-							});
-						}
-						else {
-							loadTabContent();
+						if (!isLoadingInProgress) {
+							isLoadingInProgress = true;
+
+							if (currentTab.hasOwnProperty('onClick')) {
+								currentTab.onClick.call(thisArg, {
+									parent: parent,
+									container: parent.find('.app-content-wrapper'),
+									callback: loadTabContent
+								});
+							}
+							else {
+								loadTabContent();
+							}
 						}
 					});
 		},
