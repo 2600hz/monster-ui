@@ -21,7 +21,8 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultStateToDisplay: 'submitted',
+		defaultStateToDisplay: 'unconfirmed',
+		// defaultStateToDisplay: 'submitted',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
@@ -405,15 +406,48 @@ define(function(require){
 					self.portRenderSubmitDocuments(parent, accountId, dataList);
 				}
 				else if ($this.hasClass('info-request')) {
-					var dialogOptions = {
-							width: '560px',
-							position: ['center', 20],
-							title: self.i18n.active().port.infoPopup.title
-						};
+					var attachmentsParallelRequests = {},
+						uploads = {};
 
-					template = monster.template(self, 'port-requestInfo', currentRequest),
+					if (currentRequest.hasOwnProperty('uploads')) {
+						_.each(currentRequest.uploads, function(upload, key) {
+							var type = key.slice(0, -4);
 
-					monster.ui.dialog(template, dialogOptions);
+							uploads[type] = _.extend(upload, {
+								name: key
+							});
+
+							attachmentsParallelRequests[type] = function(callback) {
+								self.portRequestGetAttachment(accountId, currentRequest.id, key, function(attachmentData) {
+									callback(null, attachmentData);
+								}, function(attachmentData) {
+									callback(null, attachmentData);
+								});
+							};
+						});
+					}
+
+					monster.parallel(attachmentsParallelRequests,
+						function(err, results) {
+							var dialogOptions = {
+									width: '560px',
+									position: ['center', 20],
+									title: self.i18n.active().port.infoPopup.title
+								},
+								dialog;
+
+							_.each(results, function(attachment, key) {
+								uploads[key].path = attachment.responseText;
+							});
+
+							template = monster.template(self, 'port-requestInfo', {
+								request: currentRequest,
+								uploads: uploads
+							});
+
+							dialog = monster.ui.dialog(template, dialogOptions);
+						}
+					);
 				}
 				else if ($this.hasClass('delete-request')) {
 					self.portRequestDelete(accountId, requestId, function() {
@@ -1909,13 +1943,14 @@ define(function(require){
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
-					data: {}
+					data: {},
+					generateError: false
 				},
 				success: function(data, status) {
-					callbackSuccess && callbackSuccess(data.data);
+					callbackSuccess && callbackSuccess(data);
 				},
 				error: function(data, status) {
-					callbackError && callbackError();
+					callbackError && callbackError(data);
 				}
 			});
 		},
