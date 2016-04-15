@@ -198,7 +198,7 @@
 				"text": "Threshold Alerts help you prevent shut off of services to your account by notifying you when your Current Balance gets low. It is strongly recommended to have Threshold Alerts turned on for your account.",
 				"labels": {
 					"turnOn": "Turn on Threshold Alerts",
-					"notifyMe": "Notify me when balance falls bellow this amount"
+					"notifyMe": "Notify me when balance falls below this amount"
 				},
 				"placeholder": "10",
 				"button": "Save Threshold Alert",

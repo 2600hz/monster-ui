@@ -26,7 +26,7 @@ monster.ui.wysiwyg(target[, options]);
 
  Type: [Object][object_literal] OR [Boolean][boolean_literal]
 
- If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If it is a JavaScript object, it can be used to add new options or override existing options available by default listed bellow:
+ If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If it is a JavaScript object, it can be used to add new options or override existing options available by default listed below:
     - fontSize (dropdown list)
         + small
         + normal
@@ -216,7 +216,7 @@ By default, macros will be bold and inserted between a couple of pair of curly b
 
 ![Macro](http://i.imgur.com/jCgTEXk.png)
 
-If you want to change the surrounding elements of the macro, you need to use the `ante` and `post` keys and specify it as their value like shown bellow:
+If you want to change the surrounding elements of the macro, you need to use the `ante` and `post` keys and specify it as their value like shown below:
 ```javascript
 var target = $(document.getElementsByClassName('wysiwyg-container')),
     options = {
