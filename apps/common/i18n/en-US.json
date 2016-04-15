@@ -294,11 +294,19 @@
 					"carrier": "Carrier",
 					"__comment": "UI-1750: Change label to 'Requested transfer date'",
 					"__version": "3.21",
-					"transferDate": "Requested transfer date"
+					"transferDate": "Requested transfer date",
+					"__comment": "UI-1901: Force browser to prompt the user for downloading attachments",
+					"__version": "3.22",
+					"downloadLoa": "Download LOA"
 				}
 			},
 			"bill": {
-				"legend": "Bill info"
+				"legend": "Bill info",
+				"label": {
+					"__comment": "UI-1901: Force browser to prompt the user for downloading attachments",
+					"__version": "3.22",
+					"downloadBill": "Download bill"
+				}
 			},
 			"numbers": {
 				"legend": "Numbers"

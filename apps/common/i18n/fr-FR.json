@@ -250,11 +250,15 @@
 					"notificationEmail": "Adresse à notifier",
 					"transferDate": "Date demandée du transfert",
 					"temporaryNumbers": "Numéros temporaires",
-					"carrier": "Opérateur"
+					"carrier": "Opérateur",
+					"downloadLoa": "Télécharger la LdA"
 				}
 			},
 			"bill": {
-				"legend": "Détail de la facture"
+				"legend": "Détail de la facture",
+				"label": {
+					"downloadBill": "Télécharger la facture"
+				}
 			},
 			"numbers": {
 				"legend": "Numéros"
