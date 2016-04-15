@@ -21,8 +21,7 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultStateToDisplay: 'unconfirmed',
-		// defaultStateToDisplay: 'submitted',
+		defaultStateToDisplay: 'submitted',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
@@ -406,8 +405,7 @@ define(function(require){
 					self.portRenderSubmitDocuments(parent, accountId, dataList);
 				}
 				else if ($this.hasClass('info-request')) {
-					var attachmentsParallelRequests = {},
-						uploads = {};
+					var uploads = {};
 
 					if (currentRequest.hasOwnProperty('uploads')) {
 						_.each(currentRequest.uploads, function(upload, key) {
@@ -416,38 +414,33 @@ define(function(require){
 							uploads[type] = _.extend(upload, {
 								name: key
 							});
-
-							attachmentsParallelRequests[type] = function(callback) {
-								self.portRequestGetAttachment(accountId, currentRequest.id, key, function(attachmentData) {
-									callback(null, attachmentData);
-								}, function(attachmentData) {
-									callback(null, attachmentData);
-								});
-							};
 						});
 					}
 
-					monster.parallel(attachmentsParallelRequests,
-						function(err, results) {
-							var dialogOptions = {
-									width: '560px',
-									position: ['center', 20],
-									title: self.i18n.active().port.infoPopup.title
-								},
-								dialog;
+					var dialogOptions = {
+							position: ['center', 20],
+							title: self.i18n.active().port.infoPopup.title
+						},
+						dialog;
 
-							_.each(results, function(attachment, key) {
-								uploads[key].path = attachment.responseText;
+					template = monster.template(self, 'port-requestInfo', {
+						request: currentRequest,
+						uploads: uploads
+					});
+
+					dialog = $(monster.ui.dialog(template, dialogOptions));
+
+					dialog
+						.find('.download')
+							.on('click', function(event) {
+								event.preventDefault();
+
+								var type = $(this).data('type');
+
+								self.portRequestGetAttachment(accountId, currentRequest.id, uploads[type].name, function(attachmentData) {
+									self.portGhettoAttachmentDownload(uploads[type].name, attachmentData);
+								});
 							});
-
-							template = monster.template(self, 'port-requestInfo', {
-								request: currentRequest,
-								uploads: uploads
-							});
-
-							dialog = monster.ui.dialog(template, dialogOptions);
-						}
-					);
 				}
 				else if ($this.hasClass('delete-request')) {
 					self.portRequestDelete(accountId, requestId, function() {
@@ -1657,6 +1650,22 @@ define(function(require){
 				}
 				break;
 			}
+		},
+
+		/**
+		 * Because of the way attachments are stored (in base64),
+		 * we needed a way to trigger the browser modal download
+		 * and the jQuery .click() method was not triggering it
+		 * automaticaly so we had to use the HTMLElement.click()
+		 * @param  {String} type name of the attachment
+		 * @param  {String} data base64 pdf to download
+		 */
+		portGhettoAttachmentDownload: function(name, data) {
+			var link = document.getElementById('download_attachment');
+
+			link.href = data;
+			link.download = name;
+			link.click();
 		},
 
 		/* Request */

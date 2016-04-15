@@ -1,6 +1,6 @@
 <div id="port_request_info">
-	<form class="form-horizontal">
-		<fieldset>
+	<form class="form-horizontal row-fluid">
+		<fieldset class="span6">
 			<legend>{{i18n.port.infoPopup.transfer.legend}}</legend>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.name}}</label>
@@ -36,14 +36,14 @@
 			</div>
 		{{#if uploads.loa}}
 			<div class="control-group">
-				<label class="control-label">Download LOA</label>
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.downloadLoa}}</label>
 				<div class="controls">
-					<a href="{{uploads.loa.path}}" class="monster-link blue text" download="{{uploads.loa.name}}">{{uploads.loa.name}}</a>
+					<a href="#" class="monster-link blue text download" data-type="loa">{{uploads.loa.name}}</a>
 				</div>
 			</div>
 		{{/if}}
 		</fieldset>
-		<fieldset>
+		<fieldset class="span6">
 			<legend>{{i18n.port.infoPopup.bill.legend}}</legend>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelAccountName}}</label>
@@ -77,14 +77,14 @@
 			</div>
 		{{#if uploads.bill}}
 			<div class="control-group">
-				<label class="control-label">Download bill</label>
+				<label class="control-label">{{i18n.port.infoPopup.bill.label.downloadBill}}</label>
 				<div class="controls">
-					<a href="{{uploads.bill.path}}" class="monster-link blue text" download="{{uploads.bill.name}}">{{uploads.bill.name}}</a>
+					<a href="#" class="monster-link blue text download" data-type="bill">{{uploads.bill.name}}</a>
 				</div>
 			</div>
 		{{/if}}
 		</fieldset>
-		<fieldset>
+		<fieldset class="span12">
 			<legend>{{i18n.port.infoPopup.numbers.legend}}</legend>
 			<div class="order">
 				<div class="scroll">
@@ -97,4 +97,6 @@
 			</div>
 		</fieldset>
 	</form>
+
+	<a class="hidden" id="download_attachment"></a>
 </div>

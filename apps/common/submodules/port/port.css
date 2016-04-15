@@ -464,7 +464,7 @@ div#port_comments_popup .actions .checkbox {
 	margin-bottom: -20px;
 }
 
-#port_request_info span.text {
+#port_request_info .text {
 	font-size: 14px;
 	line-height: 30px;
 }
