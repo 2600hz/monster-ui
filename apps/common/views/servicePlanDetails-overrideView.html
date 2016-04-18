@@ -5,29 +5,29 @@
 		<ul class="dropdown-menu select-field-override" role="menu" aria-labelledby="dropdownMenu">
 			{{#each allowedOverrides}}
 				<li class="dropdown-submenu" data-category="{{@key}}">
-					<a tabindex="-1" href="#">{{ tryI18n ../i18n.servicePlanDetails.keys @key }}</a>
+					<a tabindex="-1" href="#">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a>
 					<ul class="dropdown-menu">
 						{{#each this}}
 							{{#if this.hasOptions}}
 								<li class="dropdown-submenu" data-key="{{@key}}">
-									<a tabindex="-1" href="#">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a>
+									<a tabindex="-1" href="#">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a>
 									<ul class="dropdown-menu">
 										{{#each this}}
 
 											{{#if this.hasOptions}}
 												<li class="dropdown-submenu" data-field="{{@key}}">
-													<a tabindex="-1" href="#">{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}</a>
+													<a tabindex="-1" href="#">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a>
 													<ul class="dropdown-menu">
 														{{#each this}}
 															{{#compare @key "!==" "hasOptions"}}
-																<li><a class="selectable" tabindex="-1" href="#" data-subfield="{{@key}}">{{ tryI18n ../../../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
+																<li><a class="selectable" tabindex="-1" href="#" data-subfield="{{@key}}">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a></li>
 															{{/compare}}
 														{{/each}}
 													</ul>
 												</li>
 											{{else}}
 												{{#compare @key "!==" "hasOptions"}}
-													<li><a class="selectable" tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n ../../../../../../i18n.servicePlanDetails.keys @key }}</a></li>
+													<li><a class="selectable" tabindex="-1" href="#" data-field="{{@key}}">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a></li>
 												{{/compare}}
 											{{/if}}
 
@@ -35,7 +35,7 @@
 									</ul>
 								</li>
 							{{else}}
-								<li><a class="selectable" tabindex="-1" href="#" data-key="{{@key}}">{{ tryI18n ../../../i18n.servicePlanDetails.keys @key }}</a></li>
+								<li><a class="selectable" tabindex="-1" href="#" data-key="{{@key}}">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</a></li>
 							{{/if}}
 						{{/each}}
 					</ul>
@@ -48,18 +48,18 @@
 		{{#each overrides}}
 			<div class="override-category" data-category="{{@key}}">
 				<div class="line header">
-					<div>{{ tryI18n ../i18n.servicePlanDetails.keys @key }}</div>
+					<div>{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</div>
 					<div></div>
 				</div>
 				{{#each this}}
 					<div class="line" data-key="{{@key}}">
-						<div class="name">{{ tryI18n ../../i18n.servicePlanDetails.keys @key }}<i class="fa fa-remove monster-red remove-line"></i></div>
+						<div class="name">{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}<i class="fa fa-remove monster-red remove-line"></i></div>
 						<div class="charges">
 							{{#each this}}
 								{{#compare @key "===" "discounts"}}
 									{{#each this}}
 										<div data-field="discounts" data-subfield="{{@key}}">
-											{{ tryI18n ../../../../../i18n.servicePlanDetails.keys 'discounts' }} - {{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}
+											{{ tryI18n @root.i18n.servicePlanDetails.keys 'discounts' }} - {{ tryI18n @root.i18n.servicePlanDetails.keys @key }}
 											<input class="input-value" value="{{this}}">
 											<i class="fa fa-remove monster-red remove-line"></i>
 										</div>
@@ -67,12 +67,12 @@
 								{{else}}
 									{{#compare @key "!==" "asCategories"}}
 										<div data-field="{{@key}}">
-											{{ tryI18n ../../../../../i18n.servicePlanDetails.keys @key }}: 
+											{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}: 
 											{{#compare @key "===" "as"}}
 												<select class="input-value">
 													{{#select this}}
-														{{#each ../../../../../asCategories}}
-															<option value="{{this}}">{{ tryI18n ../../../../../../../../i18n.servicePlanDetails.keys this }}</option>
+														{{#each ../../asCategories}}
+															<option value="{{this}}">{{ tryI18n @root.i18n.servicePlanDetails.keys this }}</option>
 														{{/each}}
 													{{/select}}
 												</select>

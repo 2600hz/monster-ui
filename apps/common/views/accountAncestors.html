@@ -1,0 +1,35 @@
+<div id="account_ancestors_popup">
+	<div class="header">
+	{{#if ownedBy}}
+		<div class="owned-by">
+			{{ownedBy}}
+		</div>
+		<div class="used-by">
+			{{#if usedBy}}
+				{{usedBy}}
+			{{else}}
+				{{notUsed}}
+			{{/if}}
+		</div>
+	{{else}}
+		{{i18n.accountAncestors.entities.account.text}}
+	{{/if}}
+	</div>
+	<div class="account-tree">
+	{{#each parents}}
+		<div class="account-line">
+		{{#if @last}}
+			<a href="#" class="monster-link blue" id="masqueradable" data-id="{{id}}" data-toggle="tooltip" data-placement="right" data-original-title="{{@root.i18n.accountAncestors.tooltip}}">
+				{{name}}
+			</a>
+		{{else}}
+			<div class="account-name" data-id="{{id}}">
+				{{name}}
+			</div>
+		{{/if}}
+	{{/each}}
+	{{#each parents}}
+		</div>
+	{{/each}}
+	</div>
+</div>

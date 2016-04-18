@@ -514,3 +514,80 @@ body,
 	text-decoration: none;
 	color: #333;
 }
+
+
+/** Shortcuts **/
+.shortcuts-dialog .items-title {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.shortcuts-dialog .items {
+	list-style: none;
+	margin: 0;
+	padding: 10px;
+}
+
+.shortcuts-dialog .items > li {
+	margin-top: 5px;
+}
+
+.shortcuts-dialog .items dl {
+	border-spacing: 0;
+	display: table;
+	table-layout: fixed;
+	margin: 0;
+	width: 100%;
+}
+
+.shortcuts-dialog .items dl>dt {
+	color: #707070;
+	display: table-cell;
+	font-weight: normal;
+	text-align: right;
+	vertical-align: top;
+	width: 220px;
+}
+
+.shortcuts-dialog .items dl>dd {
+	display: table-cell;
+	padding-left: 10px;
+}
+
+.shortcuts-dialog .items kbd {
+	box-sizing: border-box;
+	background-color: #f7f7f7;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+	color: #333;
+	display: inline-block;
+	font-family: inherit;
+	font-size: 13px;
+	line-height: 20px;
+	margin: 0 .1em;
+	min-width: 2em;
+	padding: .1em .6em;
+	text-align: center;
+	text-shadow: 0 1px 0 #fff;
+	vertical-align: bottom;
+}
+
+.shortcuts-dialog .shortcuts-category {
+	float: left;
+	width: 50%;
+}
+
+
+/* Short cut debug account Info */
+.debug-dialog {
+	padding: 20px;
+}
+
+.debug-dialog table {
+	margin: 0;
+}
+
+.debug-dialog table tr td:nth-child(1) {
+	font-weight: bold;
+}

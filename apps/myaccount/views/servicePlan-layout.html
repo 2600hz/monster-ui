@@ -46,10 +46,10 @@
 						<tr>
 							<td></td>
 							<td>{{ this.service }}</td>
-							<td>{{ ../i18n.currencyUsed }}{{ formatPrice this.rate 2 }}</td>
+							<td>{{ @root.i18n.currencyUsed }}{{ formatPrice this.rate 2 }}</td>
 							<td>{{ this.quantity }}</td>
 							<td>{{ this.discount }}</td>
-							<td>{{ ../i18n.currencyUsed }}{{ formatPrice this.monthlyCharges 2 }}</td>
+							<td>{{ @root.i18n.currencyUsed }}{{ formatPrice this.monthlyCharges 2 }}</td>
 							<td></td>
 						</tr>
 					{{else}}

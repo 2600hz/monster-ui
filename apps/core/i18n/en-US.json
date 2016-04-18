@@ -614,5 +614,34 @@
 				"multiple": "yottabyte"
 			}
 		]
+	},
+
+	"__comment": "UI-2033: Adding shortcuts to monster",
+	"__version": "3.22",
+	"globalShortcuts": {
+		"categories": {
+			"general": "Global Shortcuts",
+			"apps": "Go to Application",
+			"appSpecific": "Current Application"
+		},
+		"popupTitle": "Keyboard Shortcuts Summary",
+		"keys": {
+			"a": { "title": "Account Jump" },
+			"d": { "title": "Advanced Account Info" },
+			"r": { "title": "Refresh App" },
+			"#": { "title": "App Loader" },
+			"@": { "title": "My Account"},
+			"shift+l": { "title": "Instant Log Out"},
+			"?": { "title": "Show Shortcuts Summary" },
+			"shift+m": { "title": "Stop Masquerading" }
+		}
+	},
+
+	"debugAccountDialog": {
+		"title": "Debug Account Info",
+		"accountName": "Account Name",
+		"accountId": "Account ID",
+		"authToken": "Auth Token",
+		"apiUrl": "API URL"
 	}
 }

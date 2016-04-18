@@ -235,7 +235,8 @@ define(function(require){
 				container = parent.find('.accounts-list'),
 				generateTemplate = function (data) {
 					var dataToTemplate = {
-							data: self.portFormatPendingOrderData(data)
+							data: self.portFormatPendingOrderData(data),
+							isAdmin: monster.util.isSuperDuper()
 						},
 						template = $(monster.template(self, 'port-pendingOrdersList', dataToTemplate));
 
@@ -290,6 +291,18 @@ define(function(require){
 				}
 			});
 
+			container
+				.find('.account-ancestors')
+					.on('click', function(event) {
+						event.stopPropagation();
+
+						var accountId = $(this).parents('.account-section').data('id');
+
+						monster.pub('common.accountAncestors.render', {
+							accountId: accountId
+						});
+					});
+
 			container.find('.request-box .request-state').on('change', '.switch-state', function(event) {
 				var el = $(this),
 					box = el.parents('.request-box'),
@@ -305,6 +318,9 @@ define(function(require){
 						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
 							self.portUpdateData(accountId, updatedRequest, data);
 							self.portRenderDynamicCells(container, updatedRequest);
+
+							box.find('.actions .dropdown-menu')
+								.prepend(monster.template(self, 'port-orderActions'));
 
 							toastr.success(self.i18n.active().port.toastr.success.request.update);
 						});
@@ -370,7 +386,7 @@ define(function(require){
 				});
 			});
 
-			container.find('.request-box .actions li').on('click', function() {
+			container.find('.request-box .actions').on('click', 'li', function() {
 				var $this = $(this),
 					accountId = $this.parents('.request-box').data('account_id'),
 					requestId = $this.parents('.request-box').data('id'),
@@ -389,15 +405,42 @@ define(function(require){
 					self.portRenderSubmitDocuments(parent, accountId, dataList);
 				}
 				else if ($this.hasClass('info-request')) {
+					var uploads = {};
+
+					if (currentRequest.hasOwnProperty('uploads')) {
+						_.each(currentRequest.uploads, function(upload, key) {
+							var type = key.slice(0, -4);
+
+							uploads[type] = _.extend(upload, {
+								name: key
+							});
+						});
+					}
+
 					var dialogOptions = {
-							width: '560px',
 							position: ['center', 20],
 							title: self.i18n.active().port.infoPopup.title
-						};
+						},
+						dialog;
 
-					template = monster.template(self, 'port-requestInfo', currentRequest),
+					template = monster.template(self, 'port-requestInfo', {
+						request: currentRequest,
+						uploads: uploads
+					});
 
-					monster.ui.dialog(template, dialogOptions);
+					dialog = $(monster.ui.dialog(template, dialogOptions));
+
+					dialog
+						.find('.download')
+							.on('click', function(event) {
+								event.preventDefault();
+
+								var type = $(this).data('type');
+
+								self.portRequestGetAttachment(accountId, currentRequest.id, uploads[type].name, function(attachmentData) {
+									self.portGhettoAttachmentDownload(uploads[type].name, attachmentData);
+								});
+							});
 				}
 				else if ($this.hasClass('delete-request')) {
 					self.portRequestDelete(accountId, requestId, function() {
@@ -1609,6 +1652,22 @@ define(function(require){
 			}
 		},
 
+		/**
+		 * Because of the way attachments are stored (in base64),
+		 * we needed a way to trigger the browser modal download
+		 * and the jQuery .click() method was not triggering it
+		 * automaticaly so we had to use the HTMLElement.click()
+		 * @param  {String} type name of the attachment
+		 * @param  {String} data base64 pdf to download
+		 */
+		portGhettoAttachmentDownload: function(name, data) {
+			var link = document.getElementById('download_attachment');
+
+			link.href = data;
+			link.download = name;
+			link.click();
+		},
+
 		/* Request */
 		portRequestAdd: function(accountId, order, callbackSuccess, callbackError) {
 			var self = this,
@@ -1893,13 +1952,14 @@ define(function(require){
 					accountId: accountId,
 					portRequestId: portRequestId,
 					documentName: documentName,
-					data: {}
+					data: {},
+					generateError: false
 				},
 				success: function(data, status) {
-					callbackSuccess && callbackSuccess(data.data);
+					callbackSuccess && callbackSuccess(data);
 				},
 				error: function(data, status) {
-					callbackError && callbackError();
+					callbackError && callbackError(data);
 				}
 			});
 		},

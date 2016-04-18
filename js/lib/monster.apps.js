@@ -421,6 +421,8 @@ define(function(){
 				afterLoad = function(app) {
 					monster.apps.lastLoadedApp = app.name;
 
+					self.changeAppShortcuts(app);
+
 					callback && callback(app);
 				};
 
@@ -435,6 +437,25 @@ define(function(){
 			}
 			else {
 				afterLoad(monster.apps[name]);
+			}
+		},
+
+		changeAppShortcuts: function(app) {
+			monster.ui.removeShortcut('appSpecific');
+
+			var i18nShortcuts = app.i18n.active().shortcuts;
+
+			if(app.hasOwnProperty('shortcuts')) {
+				_.each(app.shortcuts, function(event, key) {
+					monster.ui.addShortcut({
+						category: 'appSpecific',
+						key: 'alt+'+key,
+						callback: function() {
+							monster.pub(event);
+						},
+						title: i18nShortcuts && i18nShortcuts.hasOwnProperty(key) ? i18nShortcuts[key] : event
+					});
+				});
 			}
 		},
 
