@@ -102,14 +102,6 @@
 			"title": "Recap of the Delete operation",
 			"continue": "Continue"
 		},
-		"__comment": "UI-1802: Adding a search popup",
-		"__version": "3.22",
-		"searchPopup": {
-			"numberFound": "This number was found in the sub-account {{variable}}.",
-			"usedBy": "It is currently used by {{variable}}",
-			"notUsed": "It is currently not in use.",
-			"masqueradeTooltip": "Click here to masquerade to this account"
-		},
 
 		"__comment": "UI-1888: List MDNs in Numbers Manager without the ability to configure features (e911, cnam, prepend)",
 		"__version": "3.22",
@@ -302,11 +294,19 @@
 					"carrier": "Carrier",
 					"__comment": "UI-1750: Change label to 'Requested transfer date'",
 					"__version": "3.21",
-					"transferDate": "Requested transfer date"
+					"transferDate": "Requested transfer date",
+					"__comment": "UI-1901: Force browser to prompt the user for downloading attachments",
+					"__version": "3.22",
+					"downloadLoa": "Download LOA"
 				}
 			},
 			"bill": {
-				"legend": "Bill info"
+				"legend": "Bill info",
+				"label": {
+					"__comment": "UI-1901: Force browser to prompt the user for downloading attachments",
+					"__version": "3.22",
+					"downloadBill": "Download bill"
+				}
 			},
 			"numbers": {
 				"legend": "Numbers"
@@ -672,6 +672,26 @@
 			"noDataSelected": "You didn't select any item. You need to select at least one item by clicking on an item in the list.",
 			"okButton": "Select",
 			"cancelButton": "Cancel"
+		}
+	},
+
+	"__comment": "UI-2008: Create a common control to display the account's ancestors of an entity (e.g. numbers & MAC address atm)",
+	"__version": "v3.22",
+	"accountAncestors": {
+		"tooltip": "Click here to masquerade to this account",
+		"entities": {
+			"account": {
+				"text": "Here is the parents of the selected account:"
+			},
+			"number": {
+				"ownedBy": "This number was found in the sub-account {{variable}}.",
+				"usedBy": "It is currently used by {{variable}}.",
+				"notUsed": "It is currently not in use."
+			},
+			"macAddress": {
+				"ownedBy": "This MAC address was found in the sub-account {{variable}}.",
+				"usedBy": "It corresponds with the device named {{variable}}."
+			}
 		}
 	}
 }

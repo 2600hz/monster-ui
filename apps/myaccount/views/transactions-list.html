@@ -20,7 +20,7 @@
 				{{/unless}}
 			</div>
 			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{ ../i18n.currencyUsed }}{{#compare this.type "===" "credit"}}-{{/compare}}{{ this.amount }}</div>
+			<div class="price">{{ @root.i18n.currencyUsed }}{{#compare this.type "===" "credit"}}-{{/compare}}{{ this.amount }}</div>
 		</div>
 		{{#if this.hasAddOns}}
 			<div class="expandable">
@@ -29,11 +29,11 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th>{{ ../../i18n.transactions.serviceTitle }}</th>
-								<th>{{ ../../i18n.transactions.rateTitle }}</th>
-								<th>{{ ../../i18n.transactions.quantityTitle }}</th>
-								<th>{{ ../../i18n.transactions.discount }}</th>
-								<th>{{ ../../i18n.transactions.monthlyChargesTitle }}</th>
+								<th>{{ @root.i18n.transactions.serviceTitle }}</th>
+								<th>{{ @root.i18n.transactions.rateTitle }}</th>
+								<th>{{ @root.i18n.transactions.quantityTitle }}</th>
+								<th>{{ @root.i18n.transactions.discount }}</th>
+								<th>{{ @root.i18n.transactions.monthlyChargesTitle }}</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -42,10 +42,10 @@
 								<tr>
 									<td></td>
 									<td>{{ service }}</td>
-									<td>{{ ../../i18n.currencyUsed }}{{ rate }}</td>
+									<td>{{ @root.i18n.currencyUsed }}{{ rate }}</td>
 									<td>{{ quantity }}</td>
 									<td>{{ discount }}</td>
-									<td>{{ ../../i18n.currencyUsed }}{{ monthly_charges }}</td>
+									<td>{{ @root.i18n.currencyUsed }}{{ monthly_charges }}</td>
 									<td></td>
 								</tr>
 							{{/services}}

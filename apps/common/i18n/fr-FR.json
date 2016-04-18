@@ -250,11 +250,15 @@
 					"notificationEmail": "Adresse à notifier",
 					"transferDate": "Date demandée du transfert",
 					"temporaryNumbers": "Numéros temporaires",
-					"carrier": "Opérateur"
+					"carrier": "Opérateur",
+					"downloadLoa": "Télécharger la LdA"
 				}
 			},
 			"bill": {
-				"legend": "Détail de la facture"
+				"legend": "Détail de la facture",
+				"label": {
+					"downloadBill": "Télécharger la facture"
+				}
 			},
 			"numbers": {
 				"legend": "Numéros"
@@ -523,6 +527,24 @@
 			"noDataSelected": "Vous n'avez sélectionné aucun élément. Vous pouvez en sélectionner en cliquant sur une ligne dans la liste!",
 			"okButton": "Sélectionner",
 			"cancelButton": "Annuler"
+		}
+	},
+
+	"accountAncestors": {
+		"tooltip": "Cliquez ici pour vous rendre sur ce compte",
+		"entities": {
+			"account": {
+				"text": "Voici les parents du compte sélectionné:"
+			},
+			"number": {
+				"ownedBy": "Ce numéro se trouve dans le sous-compte {{variable}}.",
+				"usedBy": "Il est utilisé par {{variable}}.",
+				"notUsed": "Il n'est pas utilisé."
+			},
+			"macAddress": {
+				"ownedBy": "Cette adresse MAC se trouve dans le sous-compte {{variable}}.",
+				"usedBy": "Elle correspond au téléphone nommé {{variable}}."
+			}
 		}
 	}
 }

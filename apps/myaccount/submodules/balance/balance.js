@@ -181,10 +181,12 @@ define(function(require){
 				thresholdData = { enabled: false },
 				topupData = { enabled: false };
 
-			if (data.account.hasOwnProperty('threshold')) {
-				thresholdData.enabled = true;
-
+			if (data.account.hasOwnProperty('notifications') && data.account.notifications.hasOwnProperty('low_balance')) {
+				$.extend(true, thresholdData, data.account.notifications.low_balance);
+			}
+			else if (data.account.hasOwnProperty('threshold')) {
 				$.extend(true, thresholdData, data.account.threshold);
+				thresholdData.enabled = true;
 			}
 
 			if(data.account.hasOwnProperty('topup')) {
@@ -376,7 +378,19 @@ define(function(require){
 			return data;
 		},
 
-		balanceFormatData: function(data) {
+		balanceFormatThresholdData: function(data) {
+			data.notifications = data.notifications || {};
+			data.notifications.low_balance = data.notifications.low_balance || {
+				enabled: false
+			};
+
+			if(data.hasOwnProperty('threshold')) {
+				data.notifications.low_balance.enabled = true;
+				data.notifications.low_balance.threshold = data.threshold.threshold;
+
+				delete data.threshold;
+			}
+
 			return data;
 		},
 
@@ -402,20 +416,17 @@ define(function(require){
 								if (!tabAnimationInProgress) {
 									tabAnimationInProgress = true;
 
-									parent
-										.find('.add-credits-content-wrapper.active')
+									parent.find('.add-credits-content-wrapper.active')
 											.fadeOut(function() {
 												parent
 													.find('.navbar-menu-item-link.active')
-														.removeClass('active');
-												$this
-													.addClass('active');
-
-												$(this)
 													.removeClass('active');
+												
+												$this.addClass('active');
+												$(this).removeClass('active');
 
 												parent
-													.find(event.toElement.hash)
+													.find(event.target.hash)
 														.fadeIn(function() {
 															$(this)
 																.addClass('active');
@@ -520,7 +531,7 @@ define(function(require){
 						if(dataAlerts.threshold) {
 
 							if (dataAlerts.threshold) {
-								self.balanceUpdateThreshold(dataAlerts, function () {
+								self.balanceUpdateThreshold(dataAlerts.threshold, function () {
 									parent.dialog('close');
 									toastr.success(self.i18n.active().balance.thresholdAlertsEnabled);
 								});
@@ -619,25 +630,24 @@ define(function(require){
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					if (data.data.hasOwnProperty('threshold')) {
-						delete data.data.threshold;
+					data.data = self.balanceFormatThresholdData(data.data);
+					data.data.notifications.low_balance.enabled = false;
 
-						self.callApi({
-							resource: 'account.update',
-							data: {
-								accountId: self.accountId,
-								data: data.data
-							},
-							success: function(dataUpdate) {
-								callback && callback(dataUpdate);
-							}
-						});
-					}
+					self.callApi({
+						resource: 'account.update',
+						data: {
+							accountId: self.accountId,
+							data: data.data
+						},
+						success: function(dataUpdate) {
+							callback && callback(dataUpdate);
+						}
+					});
 				}
 			});
 		},
 
-		balanceUpdateThreshold: function (dataThreshold, callback) {
+		balanceUpdateThreshold: function (valueThreshold, callback) {
 			var self = this;
 
 			self.callApi({
@@ -646,7 +656,9 @@ define(function(require){
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					data.data.threshold = dataThreshold;
+					data.data = self.balanceFormatThresholdData(data.data);
+					data.data.notifications.low_balance.enabled = true;
+					data.data.notifications.low_balance.threshold = valueThreshold;
 
 					self.callApi({
 						resource: 'account.update',

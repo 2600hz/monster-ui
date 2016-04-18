@@ -1,79 +1,95 @@
 <div id="port_request_info">
-	<form class="form-horizontal">
-		<fieldset>
+	<form class="form-horizontal row-fluid">
+		<fieldset class="span6">
 			<legend>{{i18n.port.infoPopup.transfer.legend}}</legend>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.name}}</label>
 				<div class="controls">
-					<span class="text">{{name}}</span>
+					<span class="text">{{request.name}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.notificationEmail}}</label>
 				<div class="controls">
-					<span class="text">{{notifications.email.send_to}}</span>
+					<span class="text">{{request.notifications.email.send_to}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.transferDate}}</label>
 				<div class="controls">
-					<span class="text">{{toFriendlyDate transfer_date 'short'}}</span>
+					<span class="text">{{toFriendlyDate request.transfer_date 'short'}}</span>
 				</div>
 			</div>
-		{{#if temporary_numbers}}
+		{{#if request.temporary_numbers}}
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.temporaryNumbers}}</label>
 				<div class="controls">
-					<span class="text">{{temporary_numbers}}</span>
+					<span class="text">{{request.temporary_numbers}}</span>
 				</div>
 			</div>
 		{{/if}}
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.infoPopup.transfer.label.carrier}}</label>
 				<div class="controls">
-					<span class="text">{{carrier}}</span>
+					<span class="text">{{request.carrier}}</span>
 				</div>
 			</div>
+		{{#if uploads.loa}}
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.transfer.label.downloadLoa}}</label>
+				<div class="controls">
+					<a href="#" class="monster-link blue text download" data-type="loa">{{uploads.loa.name}}</a>
+				</div>
+			</div>
+		{{/if}}
 		</fieldset>
-		<fieldset>
-			<legend>{{i18n.port.infoPopup.bill.legend}}}</legend>
+		<fieldset class="span6">
+			<legend>{{i18n.port.infoPopup.bill.legend}}</legend>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelAccountName}}</label>
 				<div class="controls">
-					<span class="text">{{bill.name}}</span>
+					<span class="text">{{request.bill.name}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelAddress}}</label>
 				<div class="controls">
-					<span class="text">{{bill.address}}</span>
+					<span class="text">{{request.bill.address}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelCity}}</label>
 				<div class="controls">
-					<span class="text">{{bill.locality}}</span>
+					<span class="text">{{request.bill.locality}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelZipCode}}</label>
 				<div class="controls">
-					<span class="text">{{bill.postal_code}}</span>
+					<span class="text">{{request.bill.postal_code}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">{{i18n.port.submitDocuments.labelState}}</label>
 				<div class="controls">
-					<span class="text">{{bill.region}}</span>
+					<span class="text">{{request.bill.region}}</span>
 				</div>
 			</div>
+		{{#if uploads.bill}}
+			<div class="control-group">
+				<label class="control-label">{{i18n.port.infoPopup.bill.label.downloadBill}}</label>
+				<div class="controls">
+					<a href="#" class="monster-link blue text download" data-type="bill">{{uploads.bill.name}}</a>
+				</div>
+			</div>
+		{{/if}}
 		</fieldset>
-		<fieldset>
-			<legend>{{i18n.port.infoPopup.numbers.legend}}}</legend>
+		<fieldset class="span12">
+			<legend>{{i18n.port.infoPopup.numbers.legend}}</legend>
 			<div class="order">
 				<div class="scroll">
 					<ul>
-					{{#each numbers}}
+					{{#each request.numbers}}
 						<li>{{formatPhoneNumber this}}</li>
 					{{/each}}
 					</ul>
@@ -81,4 +97,6 @@
 			</div>
 		</fieldset>
 	</form>
+
+	<a class="hidden" id="download_attachment"></a>
 </div>

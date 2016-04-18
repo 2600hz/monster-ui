@@ -74,6 +74,25 @@ Probably the most used helper by developers! Every time you want to call a Kazoo
 
 This new helper lets you know if your app is the one being currently in use in Monster. There's only one app that can be rendered at a certain time (except internal core apps that run simultaneously such as core, auth, myaccount...). This can be used if you want to execute some code only if your app is being displayed and bypass some code if it's not. For example you could want to display a popup when a user click on the "Close" button of "My Account", a way to do that would be to subscribe to the event "myaccount.close", and in the function check `self.isActive()` and if it's `true` then run some code.
 
+##### shortcuts
+
+This is an object at the top of your application where you'll reference special shortcuts to use within the application
+
+	Example: Shortcut to render New Account in the Account Manager
+	shortcuts: {
+		'a': 'accountsManager.renderNewAccount'
+	}
+
+`shortcuts` is a Javascript Object. Each key of this object is a keyboard shortcut to be used to trigger the event set as the value. The value needs to be set to an event that Monster is subscribed to (for example any event set in the `subscribe` attribute of your application ([For more details on events, check this document][events])
+
+In order for your users to see what the shortcut does, it's important to set the `shortcuts` key in the [i18n][i18n] files.
+
+	Example: Setting title for our event
+	"shortcuts": {
+		"a": "Render New Account"
+	}
+
 [appstore]: appstore.md
 [i18n]: internationalization.md
 [tutorial]: tutorial.md
+[events]: events.md

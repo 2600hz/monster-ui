@@ -2,6 +2,7 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
+		Handlebars = require('handlebars'),
 		hotkeys = require('hotkeys'),
 		toastr = require('toastr'),
 		validate = require('validate'),
@@ -232,7 +233,6 @@ define(function(require){
 	}));
 
 	var ui = {
-
 		slider: function (target, pOptions) {
 			var id = Date.now(),
 				defaultOptions = {
@@ -1685,6 +1685,7 @@ define(function(require){
 		 */
 		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
+				isLoadingInProgress = false,
 				parent = $('#monster-content'),
 				appHeaderWrapper = parent.find('.app-header-wrapper'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
@@ -1721,6 +1722,7 @@ define(function(require){
 								parent
 									.find('.app-content-wrapper')
 										.fadeOut(function() {
+											isLoadingInProgress = false;
 											$(this).empty();
 
 											currentTab.callback.call(thisArg, {
@@ -1730,15 +1732,19 @@ define(function(require){
 										});
 							};
 
-						if (currentTab.hasOwnProperty('onClick')) {
-							currentTab.onClick.call(thisArg, {
-								parent: parent,
-								container: parent.find('.app-content-wrapper'),
-								callback: loadTabContent
-							});
-						}
-						else {
-							loadTabContent();
+						if (!isLoadingInProgress) {
+							isLoadingInProgress = true;
+
+							if (currentTab.hasOwnProperty('onClick')) {
+								currentTab.onClick.call(thisArg, {
+									parent: parent,
+									container: parent.find('.app-content-wrapper'),
+									callback: loadTabContent
+								});
+							}
+							else {
+								loadTabContent();
+							}
 						}
 					});
 		},
@@ -1799,6 +1805,67 @@ define(function(require){
 			else {
 				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option')
 			}
+		},
+
+		keyboardShortcuts: {},
+
+		addShortcut: function(shortcut) {
+			var self = this,
+				i18nShortcuts = monster.apps.core.i18n.active().globalShortcuts,
+				category = shortcut.category,
+				key = shortcut.key,
+				title = shortcut.title,
+				callback = shortcut.callback;
+
+			if(!self.keyboardShortcuts.hasOwnProperty(category)) {
+				self.keyboardShortcuts[category] = {
+					title: i18nShortcuts.categories.hasOwnProperty(category) ? i18nShortcuts.categories[category] : category,
+					keys: {}
+				}
+			}
+
+			if(!self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+				self.keyboardShortcuts[category].keys[key] = {
+					key: key,
+					title: title,
+					callback: callback
+				};
+
+				Mousetrap.bind(key, callback);
+			}
+			else {
+				console.warn('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
+			}
+		},
+
+		removeShortcut: function(category, key) {
+			var self = this,
+				shortcuts = self.keyboardShortcuts;
+
+			if(typeof key === 'undefined') {
+				if(shortcuts.hasOwnProperty(category)) {
+					_.each(shortcuts[category].keys, function(shortcut, key) {
+						Mousetrap.unbind(key);
+					});
+
+					delete shortcuts[category];
+				}
+			}
+			else {
+				if(self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+					delete self.keyboardShortcuts[category].keys[key];
+
+					if(_.isEmpty(self.keyboardShortcuts[category].keys)) {
+						delete self.keyboardShortcuts[category];
+					}
+				}
+
+				Mousetrap.unbind(key);
+			}
+		},
+
+		getShortcuts: function() {
+			return this.keyboardShortcuts;
 		}
 	};
 

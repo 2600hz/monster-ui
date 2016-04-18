@@ -17,18 +17,18 @@
 		{{#compare viewType '===' 'pbx'}}
 			<ul class="nav buy-numbers-dropdown">
 				<li class="dropdown">
-					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ ../i18n.numbers.buy }}</span></a>
+					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a class="buy-numbers-link" data-type="regular" href="#">{{../i18n.numbers.buyNumberLinks.regular}}</a></li>
-						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
-						<li><a class="buy-numbers-link" data-type="vanity" href="#">{{../i18n.numbers.buyNumberLinks.vanity}}</a></li>
+						<li><a class="buy-numbers-link" data-type="regular" href="#">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
+						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+						<li><a class="buy-numbers-link" data-type="vanity" href="#">{{@root.i18n.numbers.buyNumberLinks.vanity}}</a></li>
 					</ul>
 				</li>
 			</ul>
-			{{#unless ../hidePort}}
-				<a href="#" id="port_numbers" class="action-number port"><i class="fa fa-external-link monster-blue"></i><span class="action-text">{{ ../i18n.numbers.port }}</span></a>
+			{{#unless hidePort}}
+				<a href="#" id="port_numbers" class="action-number port"><i class="fa fa-external-link monster-blue"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 			{{/unless}}
-			<a href="#" id="sync_numbers" class="action-number sync help-popover" data-original-title="{{ ../i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh monster-orange"></i><span class="action-text">{{ ../i18n.numbers.sync.label }}</span></a>
+			<a href="#" id="sync_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh monster-orange"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
 		{{/compare}}
 
 		<div class="input-append pull-right search-custom">
@@ -44,23 +44,23 @@
 			{{#compare ../viewType '!==' 'pbx'}}
 				<div class="account-header">
 					<div class="right-links pull-right">
-						{{#if ../../canAddExternalNumbers}}
-							<a href="javascript:void(0);" id="add_external_number" class="action-number add-external help-popover" data-original-title="{{ ../../../i18n.numbers.addExternal.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-plus"></i><span class="action-text">{{ ../../../i18n.numbers.addExternal.label }}</span></a>
+						{{#if ../canAddExternalNumbers}}
+							<a href="javascript:void(0);" id="add_external_number" class="action-number add-external help-popover" data-original-title="{{ @root.i18n.numbers.addExternal.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-plus"></i><span class="action-text">{{ @root.i18n.numbers.addExternal.label }}</span></a>
 						{{/if}}
 						<ul class="nav buy-numbers-dropdown">
 							<li class="dropdown">
-								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ ../../i18n.numbers.buy }}</span></a>
+								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a class="buy-numbers-link" data-type="regular" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.regular}}</a></li>
-									<li><a class="buy-numbers-link" data-type="tollfree" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.tollfree}}</a></li>
-									<li><a class="buy-numbers-link" data-type="vanity" href="javascript:void(0);">{{../../i18n.numbers.buyNumberLinks.vanity}}</a></li>
+									<li><a class="buy-numbers-link" data-type="regular" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
+									<li><a class="buy-numbers-link" data-type="tollfree" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+									<li><a class="buy-numbers-link" data-type="vanity" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.vanity}}</a></li>
 								</ul>
 							</li>
 						</ul>
-						{{#unless ../../hidePort}}
-							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ ../../../i18n.numbers.port }}</span></a>
+						{{#unless ../hidePort}}
+							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 						{{/unless}}
-						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ ../../i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh"></i><span class="action-text">{{ ../../i18n.numbers.sync.label }}</span></a>
+						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
 					</div>
 					<div class="left-part">
 						<input type="checkbox"></input>
@@ -87,13 +87,13 @@
 						</span>
 						{{#compare this.state '===' 'port_in'}}
 							<div class="features pull-right">
-								<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{../../../i18n.numbers.portIconHelp}}"></i>
+								<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{@root.i18n.numbers.portIconHelp}}"></i>
 							</div>
 						{{/compare}}
 					</div>
 				{{else}}
 					<div class="number-box no-data">
-						{{ ../../i18n.numbers.noSpareNumber }}
+						{{ @root.i18n.numbers.noSpareNumber }}
 					</div>
 				{{/each}}
 			</div>
