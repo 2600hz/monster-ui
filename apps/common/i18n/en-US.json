@@ -158,7 +158,7 @@
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
 		"state": "State",
-		"successE911": "You successfully updated the e911 address of {{phoneNumber}}",
+		"successE911": "You successfully updated the e911 address of <br> {{phoneNumber}}",
 		"title": "E911 Address",
 		"verifyLocation": "Verify Location",
 		"__comment": "UI-1355: Add USPS format to addresses",
