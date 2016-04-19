@@ -128,7 +128,7 @@
 		"postalCode":"Code Postal",
 		"rotatedText":"Pour Services d'Urgences",
 		"state":"État",
-		"successE911":"Mise à jour de l'Adresse d'Urgence de {{phoneNumber}} réussie",
+		"successE911":"Mise à jour de l'Adresse d'Urgence de <br> {{phoneNumber}} réussie",
 		"title":"Adresse d'Urgence",
 		"verifyLocation":"Vérifier Adresse",
 		"invalidAddress": "Malheureusement, l'adresse que vous avez entré n'a pas été trouvé. Veuillez la vérifier et essayez à nouveau.",
