@@ -499,7 +499,13 @@
 				"question": "Do I have to submit a bulk port through the UI?",
 				"answer": "No, submit bulk ports to Support and our Porting Department will handle them for you. When submitting a Support Ticket ensure to include the LOA (Letter Of Authorization?  and a current bill pay."
 			}
-		]
+		],
+		"__comment": "UI-2127: Can now filter All Port Requests and all open Port requests",
+		"__version": "v3.22",
+		"extraStatuses": {
+			"all": "All",
+			"allOpen": "All Open"
+		}
 	},
 
 	"chooseModel": {

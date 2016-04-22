@@ -21,7 +21,7 @@ define(function(require){
 
 		isLaunchedInAppMode: true,
 
-		defaultStateToDisplay: 'submitted',
+		defaultStateToDisplay: 'allOpenState',
 
 		states: [
 			{ value: 'unconfirmed', next: [1,6] },
@@ -76,8 +76,12 @@ define(function(require){
 
 		portRenderPendingOrder: function(parent, accountId) {
 			var self = this,
+				fullUIStates = [
+					{ value: 'allOpenState', text: self.i18n.active().port.extraStatuses.allOpen },
+					{ value: 'allState', text: self.i18n.active().port.extraStatuses.all }
+				].concat(self.states),
 				template = $(monster.template(self, 'port-pendingOrders', {
-					states: self.states,
+					states: fullUIStates,
 					defaultStateToDisplay: self.defaultStateToDisplay,
 					isLaunchedInAppMode: self.isLaunchedInAppMode
 				}));
@@ -1279,15 +1283,29 @@ define(function(require){
 
 			monster.parallel({
 					requests: function(callback) {
-						self.portRequestList(accountId, (self.isLaunchedInAppMode ? state : 'all'), function(data) {
-							callback(null, data);
-						});
+						var args = {
+							accountId: accountId,
+							state: (self.isLaunchedInAppMode ? state : 'all'),
+							withDescendants: false,
+							success: function(data) {
+								callback(null, data);
+							}
+						};
+
+						self.portRequestList(args);
 					},
 					descendants: function(callback) {
 						if (self.isLaunchedInAppMode) {
-							self.portRequestListByDescendants(accountId, state, function(data) {
-								callback(null, data);
-							});
+							var args = {
+								accountId: accountId,
+								state: state,
+								withDescendants: true,
+								success: function(data) {
+									callback(null, data);
+								}
+							};
+
+							self.portRequestList(args);
 						}
 						else {
 							callback(null, []);
@@ -1773,7 +1791,40 @@ define(function(require){
 			});
 		},
 
-		portRequestList: function(accountId, state, callbackSuccess, callbackError) {
+		portRequestList: function(args) {
+			var self = this,
+				mapStates = {
+					allOpenState: ['unconfirmed', 'submitted', 'pending', 'scheduled', 'rejected'],
+					allState : ['all']
+				},
+				fnToUse = args.withDescendants ? 'portRequestListByDescendants' : 'portRequestListUniqueState';
+
+			if(mapStates.hasOwnProperty(args.state)) {
+				var parallelRequests = {},
+					resultsArray = [];
+
+				_.each(mapStates[args.state], function(loopState) {
+					parallelRequests[loopState] = function(callback) {
+						self[fnToUse](args.accountId, loopState, function(res) {
+							callback(null, res);
+						});
+					}
+				});
+
+				monster.parallel(parallelRequests, function(err, results) {
+					_.each(results, function(stateArray) {
+						resultsArray = resultsArray.concat(stateArray);
+					});
+
+					args.success(resultsArray);
+				});
+			}
+			else {
+				self[fnToUse](args.accountId, args.state, args.success, args.error);
+			}
+		},
+
+		portRequestListUniqueState: function(accountId, state, callbackSuccess, callbackError) {
 			var self = this,
 				apiResource = (state === 'all') ? 'port.list' : 'port.listByState',
 				apiData = {
@@ -1801,17 +1852,22 @@ define(function(require){
 		},
 
 		portRequestListByDescendants: function(accountId, state, callbackSuccess, callbackError) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.listDescendantsByState',
-				data: {
+			var self = this,
+				apiResource = (state === 'all') ? 'port.listDescendants' : 'port.listDescendantsByState',
+				apiData = {
 					accountId: accountId,
-					state: state || 'submitted',
 					filters: {
 						paginate: false
 					}
-				},
+				};
+
+			if(state !== 'all') {
+				apiData.state = state || 'submitted';
+			}
+
+			self.callApi({
+				resource: apiResource,
+				data: apiData,
 				success: function(data, status) {
 					var data = data.data;
 
