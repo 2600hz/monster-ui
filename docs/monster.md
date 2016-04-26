@@ -3,6 +3,7 @@ The `monster` object exposes several core methods used to perform essential acti
 
 ### Methods
 * [parallel()][parallel]
+* [pub()][pub]
 
 ### Objects
 * [ui][ui]
@@ -11,7 +12,6 @@ The `monster` object exposes several core methods used to perform essential acti
 [parallel]: monster/parallel().md
 [pub]: monster/pub().md
 [request]: monster/request().md
-[sub]: monster/sub().md
 [template]: monster/template().md
 
 [ui]: monster/ui.md
