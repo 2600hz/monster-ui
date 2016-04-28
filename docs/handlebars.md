@@ -5,29 +5,29 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 Let's start with an easy example. We want to display a banner displaying `Hello Georges!` whenever the User georges logs in. The HTML to do that could be something like this:
 
 hello.html
-
-	<div class="banner-hello">
-		<span>Hello Georges!</span>
-	</div>
-
+```html
+<div class="banner-hello">
+	<span>Hello Georges!</span>
+</div>
+```
 This hello.html file is a template. In order to add it somewhere in your UI, you would do `container.append(monster.template(self, 'hello'))` and it would add this HTML inside the container.
 
 Now let's add some dynamic data, since that's why we need to use Handlebars in the first place! The problem with our template above, is that we need to say Hello to the user, and we don't want to display Hello Georges! but Hello followed by the first name of the user. In order to do so, we need to have a variable inside this template. We know that in order to give a variable to our template we need to do:
 
 app.js
-
-	var dataTemplate = {
-			firstName: 'Pedro'
-		},
-		template = monster.template(self, 'hello', dataTemplate);
-
+```javascript
+var dataTemplate = {
+		firstName: 'Pedro'
+	},
+	template = monster.template(self, 'hello', dataTemplate);
+```
 
 hello.html
-
-	<div class="banner-hello">
-		<span>Hello {{firstName}}!</span>
-	</div>
-
+```html
+<div class="banner-hello">
+	<span>Hello {{firstName}}!</span>
+</div>
+```
 It's almost exactly the same template as above, except that we're now using the firstName variable, and we can now dislpay it properly for all the users.
 
 ## Going further
@@ -43,37 +43,40 @@ The debug helper is really helpful to debug your templates. Sometimes you lose t
 You can also add an argument after it to output a specific object. Here's an example:
 
 example.html
-
-	{{debug}} <!-- Would output the entire context, containing users and anything else -->
-	{{debug users}} <!-- Would output the entire users object}} -->
-	{{each users}}
-		{{debug}} <!-- Would output the object representing the current user -->
-		<div class="user-div">
-			<span class="user-first-name">{{firstName}}</span>
-			<span class="user-last-name">{{lastName}}</span>
-		</div>
-	{{/each}}
+```handlebars
+{{debug}} <!-- Would output the entire context, containing users and anything else -->
+{{debug users}} <!-- Would output the entire users object}} -->
+{{each users}}
+	{{debug}} <!-- Would output the object representing the current user -->
+	<div class="user-div">
+		<span class="user-first-name">{{firstName}}</span>
+		<span class="user-last-name">{{lastName}}</span>
+	</div>
+{{/each}}
+```
 
 ##### formatPhoneNumber
 The formatPhoneNumber helper can display a phone-number with proper formatting automatically. It's useful because a lot of numbers are stored in the database with a format such as `+14151993821` and we want to display them to the user like `+1 (415) 199-3821`.
 
 example.html
+```handlebars
+<div class="user-div">
+	<span class="user-first-name">{{firstName}}</span>
+	<span class="user-last-name">{{lastName}}</span>
 
-	<div class="user-div">
-		<span class="user-first-name">{{firstName}}</span>
-		<span class="user-last-name">{{lastName}}</span>
-
-		<div class="user-phone-number">{{formatPhoneNumber phoneNumber}}</div>
-	</div>
+	<div class="user-phone-number">{{formatPhoneNumber phoneNumber}}</div>
+</div>
+```
 
 ##### toLowerCase
 This helper is pretty simple, and is basically executing the toLowerCase() JS function, to a string in a template. For example it would transform `Giorgio` in `giorgio`.
 
 example.html
-
-	<div class="user-div">
-		<span class="small-user-first-name">{{toLowerCase firstName}}</span>
-	</div>
+```handlebars
+<div class="user-div">
+	<span class="small-user-first-name">{{toLowerCase firstName}}</span>
+</div>
+```
 
 ##### compare
 There is no way natively in Handlebars to compare if a string is equals to "test2" for example. Although it makes sense to try and avoid doing logic in the views, there are some places where we need this logic in the view instead of adding tons of code in the JS. The compare helper is here to help us with it.
@@ -86,13 +89,13 @@ In order to use it, you need to give 3 arguments:
 Let's see an example:
 
 example.html
-
-	{{compare role "===" "admin"}}
-		<div class="admin-welcome">You're an admin! You must be so cool!</div>
-	{{else}}
-		<div class="peon-welcome">You're a user! That's cool.</div>
-	{{/compare}}
-
+```handlebars
+{{compare role "===" "admin"}}
+	<div class="admin-welcome">You're an admin! You must be so cool!</div>
+{{else}}
+	<div class="peon-welcome">You're a user! That's cool.</div>
+{{/compare}}
+```
 In the above example, we check if the role of a user is `"admin"` and if it is we display a special div, otherwise we display another one. We can use it the same way to compare values, for example `{{compare moneyLeft ">=" 10000}}You're so rich...{{/compare}}`. You get the idea!
 
 ##### replaceVar
@@ -138,11 +141,12 @@ The formatPrice helper can display a price with the proper amount of decimals. I
 The example below will round off the price to two (2) decimals, and display it with two (2) decimals even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
 
 example.html
-
-	<div class="item-row">
-		<span class="item-name">{{name}}</span>
-		<span class="item-price">{{formatPrice price 2}}</span>
-	</div>
+```handlebars
+<div class="item-row">
+	<span class="item-name">{{name}}</span>
+	<span class="item-price">{{formatPrice price 2}}</span>
+</div>
+```
 
 ##### monsterSwitch
 This helper allows you to generate a switch from a simple checkbox.
@@ -154,7 +158,7 @@ This helper allows you to generate a switch from a simple checkbox.
 ```
 
 Any property (class, id, checked, data-something ,etc...) set on the input will be conserved.
-	
+
 ##### monsterCheckbox
 This helper allows you to generate a pretty checkbox from a simple checkbox input.
 
@@ -216,7 +220,8 @@ Let's say we have a i18n file like:
 {
 	"demoHandlebars": {
 		"test_1": "Test 1",
-		"test_2": "Test 2"
+		"test_2": "Test 2",
+		"test_3": "Test 3"
 	}
 }
 ```
@@ -242,7 +247,7 @@ Test 1
 
 Test 2
 
-test_3
+Test 3
 ```
 
 [i18n]: internationalization.md
