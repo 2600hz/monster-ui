@@ -5,6 +5,7 @@ The `monster` object exposes several core methods used to perform essential acti
 * [parallel()][parallel]
 * [pub()][pub]
 * [request()][request]
+* [template()][template]
 
 ### Objects
 * [ui][ui]
