@@ -250,5 +250,14 @@ Test 2
 Test 3
 ```
 
+##### ifInArray
+This helper will check if an array contains a specific value and display the related HTML.
+
+example.html
+```handlebars
+<input type="checkbox"{{#ifInArray 'VP8' media.video.codecs}} checked="checked"{{/ifInArray}} value="{{codec}}"/>
+```
+Here we tick the checkbox depending on the 'VP8' video codec being in the list of available codecs.
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
