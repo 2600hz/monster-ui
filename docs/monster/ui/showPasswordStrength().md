@@ -31,12 +31,12 @@ This method allows you to add a password strength indicator for a specific input
 ### Examples
 
 * Using the default options to show a bar below the input
-```
+```javascript
 monster.ui.showPasswordStrength(yourTemplate.find(':password'));
 ```
 
 * Using custom options to show an icon in a specific container
-```
+```javascript
 monster.ui.showPasswordStrength(yourTemplate.find(':password'), {
     display: 'icon',
     container: yourTemplate.find('.your-password-strength-container')
