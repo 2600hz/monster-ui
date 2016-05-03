@@ -122,7 +122,7 @@ var families = new Array();
 var families = [];
 ```
 
-- If you don't know array length use Array#push.
+- If you don't know the length of an array, use Array#push.
 
 ```javascript
 var spareNumbers = [];
@@ -985,7 +985,7 @@ function() {
 }
 ```
 
-- All our applications are defined as a JSON object. By convention, every function defined at the root of the application should declare a variable `self` to reference the scope of the application (`this`).
+- All our applications are defined as an object. By convention, every function defined at the root of the application should declare a variable `self` to reference the scope of the application (`this`).
 
 ```javascript
 {

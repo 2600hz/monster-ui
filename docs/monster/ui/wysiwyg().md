@@ -1,5 +1,5 @@
 # [monster][monster].[ui][ui].wysiwyg()
-The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of overridable options and insert it inside a jQuery object.
+The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizable options and insert it inside a jQuery object.
 
 * [Syntax](#syntax)
 * [Parameters](#parameters)
