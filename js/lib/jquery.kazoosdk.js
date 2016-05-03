@@ -211,7 +211,7 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
 			'deleteBlock': { verb: 'DELETE', url: 'accounts/{accountId}/phone_numbers/collection' },
 			'identify': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/identify' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?filter_state=in_service' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?filter_state=["in_service","port_in"]' },
 			'listAll': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers' },
 			'listClassifiers': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers' },
 			'matchClassifier': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/classifiers/{phoneNumber}' },

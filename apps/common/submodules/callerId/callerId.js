@@ -13,6 +13,18 @@ define(function(require){
 			'common.callerId.renderPopup': 'callerIdEdit'
 		},
 
+		callerIdEdit: function(args) {
+			var self = this,
+				argsCommon = {
+					success: function(dataNumber) {
+						self.callerIdRender(dataNumber, args.callbacks);
+					},
+					number: args.phoneNumber
+				};
+				
+			monster.pub('common.numbers.editFeatures', argsCommon);
+		},
+
 		callerIdRender: function(dataNumber, callbacks) {
 			var self = this,
 				popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
@@ -65,36 +77,6 @@ define(function(require){
 
 			popup = monster.ui.dialog(popup_html, {
 				title: self.i18n.active().callerId.dialogTitle
-			});
-		},
-
-		callerIdEdit: function(args) {
-			var self = this;
-
-			self.callerIdGetNumber(args.phoneNumber, function(dataNumber) {
-				self.callerIdRender(dataNumber.data, args.callbacks);
-			});
-		},
-
-		callerIdGetNumber: function(phoneNumber, success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.get',
-				data: {
-					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
-				},
-				success: function(_data, status) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
-				},
-				error: function(_data, status) {
-					if(typeof error === 'function') {
-						error(_data);
-					}
-				}
 			});
 		},
 
