@@ -55,12 +55,6 @@
 		"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Switch to the Numbers in Use view to see this number)",
 		"numberNotFound": "The number you searched was not found! Make sure to enter the full number as we don't allow partial searches (but the formatting doesn't matter).",
 
-		"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
-		"cnamOutboundIconHelp": "This icon means that you set up the Outbound Caller-ID for this phone number",
-		"cnamInboundIconHelp": "This icon means that you set up the Inbound Caller-ID for this phone number",
-		"e911IconHelp": "This icon means that you set up e911 for this phone number",
-		"localIconHelp": "This icon means that this number is a local number",
-
 		"dialogConfirm": {
 			"from": "From ",
 			"cancel": "Cancel",
@@ -90,10 +84,6 @@
 			"success": "You successfully re-synced the numbers with the database",
 			"help": "If you think some of the numbers are not displayed in the right category (Spare/In Use), you can use this feature to re-synchronize your numbers with the database."
 		},
-
-		"__comment": "UI-1153: Show warning icon next to numbers being transfered",
-		"__version": "v3.20_s3",
-		"portIconHelp": "This number is in the process of being ported and will be deleted if the port fails. It only appears for setting up purposes and is not configured to handle calls",
 
 		"__comment": "UI-901: Delete recap popup",
 		"__version": "3.20",
@@ -126,7 +116,19 @@
 		"__comment": "UI-1935: Properly display a description next to a used number",
 		"__version": "3.22",
 		"unassigned": "Unassigned",
-		"callflows": "Callflows"
+		"callflows": "Callflows",
+
+		"__comment": "UI-: Added help for port icon",
+		"__version": "3.22",
+		"portFeatureIconHelp": "This icon means that the number is being ported to the system.",
+		"portIconHelp": "This number is in the process of being ported and will be deleted if the port fails. It only appears for setting up purposes and is not configured to handle calls",
+		"failoverIconHelp": "This icon means that you set up a failover number for this phone number",
+		"cnamOutboundIconHelp": "This icon means that you set up the Outbound Caller-ID for this phone number",
+		"cnamInboundIconHelp": "This icon means that you set up the Inbound Caller-ID for this phone number",
+		"e911IconHelp": "This icon means that you set up e911 for this phone number",
+		"localIconHelp": "This icon means that this number is a local number",
+		"notInService": "This number ({{variable}}) has not been fully activated and is not in service. You need to wait for this number to be in service to set features on it.",
+		"errorFetchingNumber": "We were unable to get information for this number ({{variable}}). Please try again later!"
 	},
 
 	"callerId": {

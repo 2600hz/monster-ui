@@ -13,6 +13,18 @@ define(function(require){
 			'common.failover.renderPopup': 'failoverEdit'
 		},
 
+		failoverEdit: function(args) {
+			var self = this,
+				argsCommon = {
+					success: function(dataNumber) {
+						self.failoverRender(dataNumber, args.callbacks);
+					},
+					number: args.phoneNumber
+				};
+				
+			monster.pub('common.numbers.editFeatures', argsCommon);
+		},
+
 		failoverRender: function(dataNumber, callbacks) {
 			var self = this,
 				radio = '';
@@ -115,36 +127,6 @@ define(function(require){
 			popup = monster.ui.dialog(popupHtml, {
 				title: self.i18n.active().failover.failoverTitle,
 				width: '540px'
-			});
-		},
-
-		failoverEdit: function(args) {
-			var self = this;
-
-			self.failoverGetNumber(args.phoneNumber, function(dataNumber) {
-				self.failoverRender(dataNumber.data, args.callbacks);
-			});
-		},
-
-		failoverGetNumber: function(phoneNumber, success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.get',
-				data: {
-					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
-				},
-				success: function(_data, status) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
-				},
-				error: function(_data, status) {
-					if(typeof error === 'function') {
-						error(_data);
-					}
-				}
 			});
 		},
 

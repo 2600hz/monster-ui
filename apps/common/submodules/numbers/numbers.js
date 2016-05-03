@@ -12,7 +12,8 @@ define(function(require){
 		subscribe: {
 			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
-			'common.numbers.getListFeatures': 'numbersGetFeatures'
+			'common.numbers.getListFeatures': 'numbersGetFeatures',
+			'common.numbers.editFeatures': 'numbersEditFeatures'
 		},
 
 		/* Arguments:
@@ -86,7 +87,7 @@ define(function(require){
 					mobile: { icon: 'monster-grey fa fa-mobile-phone', help: self.i18n.active().numbers.mobileIconHelp },
 					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
 					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'fa fa-phone monster-yellow feature-port' },
+					port: { icon: 'fa fa-phone monster-yellow feature-port', help: self.i18n.active().numbers.portIconHelp },
 					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
 				};
 
@@ -1454,6 +1455,60 @@ define(function(require){
 				},
 				success: function(_dataDevices, status) {
 					callback && callback(_dataDevices.data)
+				}
+			});
+		},
+
+		numbersGetNumber: function(phoneNumber, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.get',
+				data: {
+					accountId: self.accountId,
+					phoneNumber: encodeURIComponent(phoneNumber)
+				},
+				success: function(_data, status) {
+					success && success(_data.data);
+				},
+				error: function(_data, status) {
+					error && error(_data.data);
+				}
+			});
+		},
+
+		numbersEditFeatures: function(args) {
+			var self = this,
+				phoneNumber = args.number,
+				isValid = false;
+
+			self.numbersGetNumber(phoneNumber, function(number) {
+				if(number.state === 'in_service') {
+					isValid = true;
+				}
+
+				if(isValid) {
+					args.success && args.success(number);
+				}
+				else {
+					if(args.hasOwnProperty('error')) {
+						args.error('invalid');
+					}
+					else {
+						var message = monster.template(self, '!' + self.i18n.active().numbers.notInService, { variable: monster.util.formatPhoneNumber(number.id) });
+
+						monster.ui.alert('warning', message);
+					}
+				}
+			},
+			function() {
+				if(args.hasOwnProperty('error')) {
+					args.error('errorGetNumber');
+				}
+				else {
+					var message = monster.template(self, '!' + self.i18n.active().numbers.errorFetchingNumber, { variable: monster.util.formatPhoneNumber(number.id) });
+
+					monster.ui.alert(message);
 				}
 			});
 		}

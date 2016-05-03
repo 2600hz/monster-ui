@@ -12,13 +12,16 @@ define(function(require){
 		subscribe: {
 			'common.numberPrepend.renderPopup': 'numberPrependEdit'
 		},
-
 		numberPrependEdit: function(args) {
-			var self = this;
-
-			self.numberPrependGetNumber(args.phoneNumber, function(dataNumber) {
-				self.numberPrependRender(dataNumber.data, args.callbacks);
-			});
+			var self = this,
+				argsCommon = {
+					success: function(dataNumber) {
+						self.numberPrependRender(dataNumber, args.callbacks);
+					},
+					number: args.phoneNumber
+				};
+				
+			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
 		numberPrependRender: function(dataNumber, callbacks) {
@@ -58,24 +61,6 @@ define(function(require){
 
 			popup = monster.ui.dialog(popup_html, {
 				title: self.i18n.active().numberPrepend.dialogTitle
-			});
-		},
-
-		numberPrependGetNumber: function(phoneNumber, success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.get',
-				data: {
-					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
-				},
-				success: function(_data, status) {
-					success && success(_data);
-				},
-				error: function(_data, status) {
-					error && error(_data);
-				}
 			});
 		},
 

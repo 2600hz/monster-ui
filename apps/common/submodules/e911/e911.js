@@ -13,6 +13,18 @@ define(function(require){
 			'common.e911.renderPopup': 'e911Edit'
 		},
 
+		e911Edit: function(args) {
+			var self = this,
+				argsCommon = {
+					success: function(dataNumber) {
+						self.e911Render(dataNumber, args.callbacks);
+					},
+					number: args.phoneNumber
+				};
+				
+			monster.pub('common.numbers.editFeatures', argsCommon);
+		},
+
 		e911Render: function(dataNumber, callbacks) {
 			var self = this,
 				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.dash_e911 || {})),
@@ -142,36 +154,6 @@ define(function(require){
 				rotatedTextOffset = rotatedText.width()/2;
 
 			rotatedText.css({'top': 40+rotatedTextOffset +'px', 'left': 25-rotatedTextOffset +'px'});
-		},
-
-		e911Edit: function(args) {
-			var self = this;
-
-			self.e911GetNumber(args.phoneNumber, function(dataNumber) {
-				self.e911Render(dataNumber.data, args.callbacks);
-			});
-		},
-
-		e911GetNumber: function(phoneNumber, success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.get',
-				data: {
-					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
-				},
-				success: function(_data, status) {
-					if(typeof success === 'function') {
-						success(_data);
-					}
-				},
-				error: function(_data, status) {
-					if(typeof error === 'function') {
-						error(_data);
-					}
-				}
-			});
 		},
 
 		e911UpdateNumber: function(phoneNumber, data, callbacks) {
