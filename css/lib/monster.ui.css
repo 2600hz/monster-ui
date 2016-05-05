@@ -6,6 +6,7 @@
 	width: 460px;
 	max-width: 460px;
 }
+
 .alert-dialog .dialog-content {
 	padding: 20px;
 	text-align: center;
@@ -108,6 +109,11 @@
 /******************* ADVANCED ERROR DIALOG ******************/
 /************************************************************/
 
+.api-error-dialog .alert-dialog {
+	width: 600px;
+	max-width: 600px;
+}
+
 .alert-dialog-advanced {
 	max-width: 800px;
 	text-align: left;
@@ -141,11 +147,13 @@
 	display: none;
 	overflow: auto;
 }
-.alert-dialog-advanced .details-box .error-details-wrapper pre {
-	background: #fff;
-}
 .alert-dialog-advanced .details-box .error-details-wrapper .url {
 	word-wrap: break-word;
+}
+
+.alert-dialog-advanced .json-viewer {
+	max-height: 400px;
+	overflow: auto;
 }
 
 /************************************************************/
@@ -661,15 +669,28 @@ i.monster-password-strength {
 
 
 /* Pretty JSON */
-.renderjson                { background: #333; }
-.renderjson a              { text-decoration: none; }
-.renderjson .disclosure    { color: #EEE };
-                             font-size: 150%; }
-.renderjson .syntax        { color: grey; }
-.renderjson .string        { color: peru; }
-.renderjson .number        { color: cyan; }
-.renderjson .boolean       { color: plum; }
-.renderjson .key           { color: lightblue; }
-.renderjson .keyword       { color: lightgoldenrodyellow; }
-.renderjson .object.syntax { color: lightseagreen; }
-.renderjson .array.syntax  { color: lightsalmon; }
+.renderjson a              { color: #AAA, text-decoration: none; }
+.renderjson .disclosure    { font-size: 150%; }
+.renderjson .key           { font-weight: bold; }
+
+.renderjson.theme-dark                { background: #333; }
+.renderjson.theme-dark .disclosure    { color: #EEE };
+.renderjson.theme-dark .object.syntax { color: #EEE; }
+.renderjson.theme-dark .array.syntax { color: #EEE; }
+.renderjson.theme-dark .syntax        { color: #EEE; }
+.renderjson.theme-dark .key           { color: #EEE; }
+.renderjson.theme-dark .boolean       { color: yellow; }
+.renderjson.theme-dark .number        { color: yellow; }
+.renderjson.theme-dark .string        { color: peru; }
+.renderjson.theme-dark .keyword       { color: red; }
+
+.renderjson.theme-light                { background: #EEE; }
+.renderjson.theme-light .disclosure    { color: #8a8a8a };
+.renderjson.theme-light .object.syntax { color: #333; }
+.renderjson.theme-light .array.syntax { color: #333; }
+.renderjson.theme-light .syntax        { color: #333; }
+.renderjson.theme-light .key           { color: #333; }
+.renderjson.theme-light .boolean       { color: blue; }
+.renderjson.theme-light .number        { color: blue; }
+.renderjson.theme-light .string        { color: green; }
+.renderjson.theme-light .keyword       { color: red; }
