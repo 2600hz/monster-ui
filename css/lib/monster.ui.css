@@ -151,11 +151,6 @@
 	word-wrap: break-word;
 }
 
-.alert-dialog-advanced .json-viewer {
-	max-height: 400px;
-	overflow: auto;
-}
-
 /************************************************************/
 /****************** JAVASCRIPT ERROR DIALOG *****************/
 /************************************************************/
@@ -669,6 +664,7 @@ i.monster-password-strength {
 
 
 /* Pretty JSON */
+.renderjson                { max-height: 400px; overflow: auto; }
 .renderjson a              { color: #AAA, text-decoration: none; }
 .renderjson .disclosure    { font-size: 150%; }
 .renderjson .key           { font-weight: bold; }
