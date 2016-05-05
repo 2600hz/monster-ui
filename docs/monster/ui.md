@@ -11,6 +11,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [highlight()][highlight]
 * [mask()][mask]
 * [protectField()][protect_field]
+* [renderJSON()][renderJSON]
 * [showPasswordStrength()][show_password_strength]
 * [timepicker()][timepicker]
 * [tooltips()][tooltips]

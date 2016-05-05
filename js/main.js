@@ -38,6 +38,7 @@ require.config({
 		'monster-apps': 'js/lib/monster.apps',
 		'plugins': 'js/plugins',
 		'postal': 'js/lib/postal-0.8.2',
+		'renderjson': 'js/lib/renderjson',
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
 		'signals': 'js/lib/signals.min',
 		'slider': 'js/lib/jquery.slider',

@@ -658,3 +658,18 @@ i.monster-password-strength {
 	left: 100%;
 	padding-left: 10px;
 }
+
+
+/* Pretty JSON */
+.renderjson                { background: #333; }
+.renderjson a              { text-decoration: none; }
+.renderjson .disclosure    { color: #EEE };
+                             font-size: 150%; }
+.renderjson .syntax        { color: grey; }
+.renderjson .string        { color: peru; }
+.renderjson .number        { color: cyan; }
+.renderjson .boolean       { color: plum; }
+.renderjson .key           { color: lightblue; }
+.renderjson .keyword       { color: lightgoldenrodyellow; }
+.renderjson .object.syntax { color: lightseagreen; }
+.renderjson .array.syntax  { color: lightsalmon; }

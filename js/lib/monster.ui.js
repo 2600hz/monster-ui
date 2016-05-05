@@ -9,7 +9,8 @@ define(function(require){
 		wysiwyg = require('wysiwyg'),
 		timepicker = require('timepicker'),
 		introJs = require('introJs'),
-		mask = require('mask');
+		mask = require('mask'),
+		renderJSON = require('renderjson');
 
 	Handlebars.registerHelper('times', function(n, options) {
 		var ret = '';
@@ -1866,6 +1867,17 @@ define(function(require){
 
 		getShortcuts: function() {
 			return this.keyboardShortcuts;
+		},
+
+		renderJSON: function(data, container, pOptions) {
+			var options = pOptions || {},
+				finalOptions = {
+					sort: options.hasOwnProperty('sort') ? options.sort : false,
+					level: options.hasOwnProperty('level') ? options.level : 2,
+				},
+				html = renderjson.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
+
+			$(container).append(html);
 		}
 	};
 
