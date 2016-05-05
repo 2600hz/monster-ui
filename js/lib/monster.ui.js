@@ -597,10 +597,14 @@ define(function(require){
 				},
 				alertOptions = {
 					htmlContent: true,
-					title: error.data.customTitle
+					title: error.data.customTitle,
+					position: ['center', 20],
+					dialogClass: 'api-error-dialog'
 				},
 				// Since we have code in it, we don't want to trim spaces, so we set the 6th argument to true
 				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true));
+
+			monster.ui.renderJSON(error.data.jsonResponse, template.find('.json-viewer'));
 
 			template.find('.headline').on('click', function() {
 				template.find('.error-details-wrapper').slideToggle();
@@ -1871,11 +1875,15 @@ define(function(require){
 
 		renderJSON: function(data, container, pOptions) {
 			var options = pOptions || {},
+				validThemes = ['dark', 'light'],
 				finalOptions = {
-					sort: options.hasOwnProperty('sort') ? options.sort : false,
-					level: options.hasOwnProperty('level') ? options.level : 2,
+					sort: options.hasOwnProperty('sort') ? options.sort : true,
+					level: options.hasOwnProperty('level') ? options.level : 4,
+					theme: options.hasOwnProperty('theme') && validThemes.indexOf(options.theme) >= 0 ?  options.theme : 'light'
 				},
 				html = renderjson.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
+
+			$(html).addClass('theme-' + finalOptions.theme);
 
 			$(container).append(html);
 		}

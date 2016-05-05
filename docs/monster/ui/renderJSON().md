@@ -40,11 +40,17 @@ Type: [Boolean][Boolean]
 
 Sets whether the keys will be sorted alphabetically or not.
 
- * `args.trigger` (optional)
+ * `args.level` (optional)
 Type: [Integer][Integer]
  Default: `2`
 
 Set the number of level that will be expanded automatically.
+
+ * `args.theme` (optional)
+Type: [String][String]
+ Default: `light`
+ 
+Choose a theme for the JSON viewer. 'light' or 'dark' are the only accepted options at the moment. Choose dark for a dark background :)
 
 ### Description
 This helper will use the data provided in parameter and show it in a JSON viewer in the UI, in the container provided
