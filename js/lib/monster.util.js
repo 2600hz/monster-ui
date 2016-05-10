@@ -46,6 +46,9 @@ define(function(require){
 					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
 					userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
 					format2Digits = function(number) {
+						if(typeof number === 'string') {
+							number = parseInt(number);
+						}
 						return number < 10 ? '0'.concat(number) : number;
 					},
 					today = new Date(),
@@ -130,7 +133,7 @@ define(function(require){
 						suffix = i18n.calendar.suffix.am;
 					}
 
-					patterns.hh = hours;
+					patterns.hh = format2Digits(hours);
 					patterns['12h'] = suffix;
 				}
 
