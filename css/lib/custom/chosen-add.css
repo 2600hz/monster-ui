@@ -45,15 +45,20 @@
 	border-color: #000 transparent;
 }
 
+
+.chosen-container-single .chosen-single span {
+	color: #444;
+}
+
 /********* FIREFOX DROPDOWN STYLE *******/
 @-moz-document url-prefix() {
 	.chosen-container .chosen-single div b {
 		-moz-box-sizing: border-box;
 		border: solid 1px #aaa;
-		background: #eee;
+		background: #e0e0e0;
 	}
 	.chosen-container .chosen-single div b:before {
-		top: 11px;
+		top: 13px;
 		right: 4px;
 		-webkit-transform: none;
 		border-width: 6px 4px 0;
@@ -66,7 +71,7 @@
 		content: '';
 		border-width: 6px 4px 0;
 		border-style: solid;
-		border-color: #eee transparent;
+		border-color: #e0e0e0 transparent;
 	}
 	.chosen-container.chosen-with-drop .chosen-single div b:before {
 		border-color: #000 transparent;

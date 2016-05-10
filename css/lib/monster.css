@@ -107,6 +107,15 @@ h1 {
 	padding: 0 6px;
 }
 
+.monster-button-fit {
+	min-width: auto;
+	padding: 5px 10px;
+}
+
+.monster-button-fit i {
+	margin-right: 0;
+}
+
 /***************** TYPES ****************/
 .monster-button-primary {
 	color: #004c80;
@@ -1030,6 +1039,7 @@ table.monster-table thead th {
 	font-weight: 600;
 	height: 45px;
 	text-align: left;
+	text-transform: uppercase;
 	color: #909099;
 }
 
