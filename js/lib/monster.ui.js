@@ -13,226 +13,246 @@ define(function(require){
 		renderJSON = require('renderjson'),
 		footable = require('footable');
 
-	Handlebars.registerHelper('times', function(n, options) {
-		var ret = '';
-		for(var i = 1; i <= n; ++i)
-			ret += options.fn(i);
-		return ret;
-	});
-
-	Handlebars.registerHelper('debug', function(optionalValue) {
-		console.log('Current Context: ', this);
-
-		if (optionalValue) {
-			console.log('Value: ', optionalValue);
-		}
-	});
-
-	Handlebars.registerHelper('tryI18n', function(mapI18n, key) {
-		return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
-	});
-
-	Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
-		phoneNumber = (phoneNumber || '').toString();
-
-		return monster.util.formatPhoneNumber(phoneNumber);
-	});
-
-	Handlebars.registerHelper('formatVariableToDisplay', function(variable) {
-		return monster.util.formatVariableToDisplay(variable);
-	});
-
-	Handlebars.registerHelper('toUpperCase', function (stringValue) {
-		return stringValue.toString().toUpperCase();
-	});
-
-	Handlebars.registerHelper('toLowerCase', function(stringValue) {
-		return stringValue.toString().toLowerCase();
-	});
-
-	Handlebars.registerHelper('replaceVar', function(stringValue, variable) {
-		return stringValue.replace('{{variable}}', variable);
-	});
-
-	Handlebars.registerHelper('select', function(value, options) {
-		// Create a select element 
-		var select = document.createElement('select');
-
-		// Populate it with the option HTML
-		$(select).html(options.fn(this));
-
-		//below statement doesn't work in IE9 so used the above one
-		//select.innerHTML = options.fn(this); 
-
-		// Set the value
-		select.value = value;
-
-		// Find the selected node, if it exists, add the selected attribute to it
-		if (select.children[select.selectedIndex]) {
-			select.children[select.selectedIndex].setAttribute('selected', 'selected');
-		} else { //select first option if that exists
-			if (select.children[0]) {
-				select.children[0].setAttribute('selected', 'selected');
-			}
-		}
-		return select.innerHTML;
-	});
-
-	Handlebars.registerHelper('ifInArray', function(elem, list, options) {
-		if(list.indexOf(elem) > -1) {
-			return options.fn(this);
-		}
-
-		return options.inverse(this);
-	});
-
-	Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
-		var operators, result;
-
-		if (arguments.length < 3) {
-			throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-		}
-
-		if (options === undefined) {
-			options = rvalue;
-			rvalue = operator;
-			operator = '===';
-		}
-
-		operators = {
-			'==': function (l, r) { return l == r; },
-			'===': function (l, r) { return l === r; },
-			'!=': function (l, r) { return l != r; },
-			'!==': function (l, r) { return l !== r; },
-			'<': function (l, r) { return l < r; },
-			'>': function (l, r) { return l > r; },
-			'<=': function (l, r) { return l <= r; },
-			'>=': function (l, r) { return l >= r; },
-			'typeof': function (l, r) { return typeof l == r; }
-		};
-
-		if (!operators[operator]) {
-			throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
-		}
-
-		result = operators[operator](lvalue, rvalue);
-
-		if (result) {
-			return options.fn(this);
-		} else {
-			return options.inverse(this);
-		}
-	});
-
-	Handlebars.registerHelper('toFriendlyDate', function(timestamp, format, user, isGregorian) {
-		return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
-	});
-
-	Handlebars.registerHelper('formatPrice', function(price, decimals) {
-		return monster.util.formatPrice(price, decimals);
-	});
-
-	Handlebars.registerHelper('formatBytes', function (bytes, pDigits) {
-		var digits = typeof pDigits === 'number' ? pDigits : undefined,
-			data = monster.util.formatBytes(bytes, digits);
-
-		return data.value + ' ' + data.unit.symbol;
-	});
-
-	Handlebars.registerHelper('monsterSwitch', function(options) {
-		var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
-			checkbox = $(checkboxHtml),
-			onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
-			offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
-
-		return monster.template(monster.apps.core, 'monster-switch-template', {
-			checkbox: new Handlebars.SafeString(checkboxHtml),
-			on: onLabel,
-			off: offLabel
+	function initializeHandlebarsHelper() {
+		Handlebars.registerHelper('times', function(n, options) {
+			var ret = '';
+			for(var i = 1; i <= n; ++i)
+				ret += options.fn(i);
+			return ret;
 		});
-	});
 
-	Handlebars.registerHelper('monsterCheckbox', function() {
-		var templateData = {
-			cssClass: 'monster-checkbox',
-			checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
-		};
+		Handlebars.registerHelper('debug', function(optionalValue) {
+			console.log('Current Context: ', this);
 
-		for(var i=0; i<arguments.length-1; i++) {
-			if(_.isString(arguments[i])) {
-				switch(arguments[i]) {
-					case 'large-checkbox':
-					case 'checkbox-large':
-						templateData.cssClass = 'monster-checkbox-large';
-						break;
-					case 'prepend-label':
-					case 'label-prepend':
-						templateData.prepend = true;
-						break;
-					default:
-						templateData.label = arguments[i];
-						break;
+			if (optionalValue) {
+				console.log('Value: ', optionalValue);
+			}
+		});
+
+		Handlebars.registerHelper('tryI18n', function(mapI18n, key) {
+			return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
+		});
+
+		Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
+			phoneNumber = (phoneNumber || '').toString();
+
+			return monster.util.formatPhoneNumber(phoneNumber);
+		});
+
+		Handlebars.registerHelper('formatVariableToDisplay', function(variable) {
+			return monster.util.formatVariableToDisplay(variable);
+		});
+
+		Handlebars.registerHelper('toUpperCase', function (stringValue) {
+			return stringValue.toString().toUpperCase();
+		});
+
+		Handlebars.registerHelper('toLowerCase', function(stringValue) {
+			return stringValue.toString().toLowerCase();
+		});
+
+		Handlebars.registerHelper('replaceVar', function(stringValue, variable) {
+			return stringValue.replace('{{variable}}', variable);
+		});
+
+		Handlebars.registerHelper('select', function(value, options) {
+			// Create a select element 
+			var select = document.createElement('select');
+
+			// Populate it with the option HTML
+			$(select).html(options.fn(this));
+
+			//below statement doesn't work in IE9 so used the above one
+			//select.innerHTML = options.fn(this); 
+
+			// Set the value
+			select.value = value;
+
+			// Find the selected node, if it exists, add the selected attribute to it
+			if (select.children[select.selectedIndex]) {
+				select.children[select.selectedIndex].setAttribute('selected', 'selected');
+			} else { //select first option if that exists
+				if (select.children[0]) {
+					select.children[0].setAttribute('selected', 'selected');
 				}
 			}
-		}
+			return select.innerHTML;
+		});
 
-		return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
-	});
-
-	Handlebars.registerHelper('monsterRadio', function() {
-		var templateData = {
-			cssClass: 'monster-radio',
-			checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
-		};
-
-		for(var i=0; i<arguments.length-1; i++) {
-			if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
-				switch(arguments[i]) {
-					case 'large-radio':
-					case 'radio-large':
-						templateData.cssClass = 'monster-radio-large';
-						break;
-					case 'prepend-label':
-					case 'label-prepend':
-						templateData.prepend = true;
-						break;
-					default:
-						templateData.label = arguments[i];
-						break;
-				}
+		Handlebars.registerHelper('ifInArray', function(elem, list, options) {
+			if(list.indexOf(elem) > -1) {
+				return options.fn(this);
 			}
-		}
 
-		return monster.template(monster.apps.core, 'monster-radio-template', templateData);
-	});
+			return options.inverse(this);
+		});
 
-	Handlebars.registerHelper('monsterText', function(type, className) {
-		var htmlContent = arguments[arguments.length-1].fn(this),
-			validTypes = ['info', 'question', 'error', 'warning'],
-			type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-			templateData = {
-				className: className || '',
-				content: new Handlebars.SafeString(htmlContent)
-			},
-			// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-			template = monster.template(monster.apps.core, 'monster-text-' + type, templateData, false, false, true);
+		Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
+			var operators, result;
 
-		return new Handlebars.SafeString(template);
-	});
+			if (arguments.length < 3) {
+				throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+			}
 
-	Handlebars.registerHelper('monsterSlider', function (settings, options) {
-		return new Handlebars.SafeString(monster.ui.slider(settings));
-	});
+			if (options === undefined) {
+				options = rvalue;
+				rvalue = operator;
+				operator = '===';
+			}
 
-	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
-		_title: function(title) {
-			if (!this.options.title ) {
-				title.html("&#160;");
+			operators = {
+				'==': function (l, r) { return l == r; },
+				'===': function (l, r) { return l === r; },
+				'!=': function (l, r) { return l != r; },
+				'!==': function (l, r) { return l !== r; },
+				'<': function (l, r) { return l < r; },
+				'>': function (l, r) { return l > r; },
+				'<=': function (l, r) { return l <= r; },
+				'>=': function (l, r) { return l >= r; },
+				'typeof': function (l, r) { return typeof l == r; }
+			};
+
+			if (!operators[operator]) {
+				throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+			}
+
+			result = operators[operator](lvalue, rvalue);
+
+			if (result) {
+				return options.fn(this);
 			} else {
-				title.html(this.options.title);
+				return options.inverse(this);
 			}
-		}
-	}));
+		});
+
+		Handlebars.registerHelper('toFriendlyDate', function(timestamp, format, user, isGregorian) {
+			return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
+		});
+
+		Handlebars.registerHelper('formatPrice', function(price, decimals) {
+			return monster.util.formatPrice(price, decimals);
+		});
+
+		Handlebars.registerHelper('formatBytes', function (bytes, pDigits) {
+			var digits = typeof pDigits === 'number' ? pDigits : undefined,
+				data = monster.util.formatBytes(bytes, digits);
+
+			return data.value + ' ' + data.unit.symbol;
+		});
+
+		Handlebars.registerHelper('monsterSwitch', function(options) {
+			var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
+				checkbox = $(checkboxHtml),
+				onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
+				offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+
+			return monster.template(monster.apps.core, 'monster-switch-template', {
+				checkbox: new Handlebars.SafeString(checkboxHtml),
+				on: onLabel,
+				off: offLabel
+			});
+		});
+
+		Handlebars.registerHelper('monsterCheckbox', function() {
+			var templateData = {
+				cssClass: 'monster-checkbox',
+				checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+			};
+
+			for(var i=0; i<arguments.length-1; i++) {
+				if(_.isString(arguments[i])) {
+					switch(arguments[i]) {
+						case 'large-checkbox':
+						case 'checkbox-large':
+							templateData.cssClass = 'monster-checkbox-large';
+							break;
+						case 'prepend-label':
+						case 'label-prepend':
+							templateData.prepend = true;
+							break;
+						default:
+							templateData.label = arguments[i];
+							break;
+					}
+				}
+			}
+
+			return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+		});
+
+		Handlebars.registerHelper('monsterRadio', function() {
+			var templateData = {
+				cssClass: 'monster-radio',
+				checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+			};
+
+			for(var i=0; i<arguments.length-1; i++) {
+				if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
+					switch(arguments[i]) {
+						case 'large-radio':
+						case 'radio-large':
+							templateData.cssClass = 'monster-radio-large';
+							break;
+						case 'prepend-label':
+						case 'label-prepend':
+							templateData.prepend = true;
+							break;
+						default:
+							templateData.label = arguments[i];
+							break;
+					}
+				}
+			}
+
+			return monster.template(monster.apps.core, 'monster-radio-template', templateData);
+		});
+
+		Handlebars.registerHelper('monsterText', function(type, className) {
+			var htmlContent = arguments[arguments.length-1].fn(this),
+				validTypes = ['info', 'question', 'error', 'warning'],
+				type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+				templateData = {
+					className: className || '',
+					content: new Handlebars.SafeString(htmlContent)
+				},
+				// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+				template = monster.template(monster.apps.core, 'monster-text-' + type, templateData, false, false, true);
+
+			return new Handlebars.SafeString(template);
+		});
+
+		Handlebars.registerHelper('monsterSlider', function (settings, options) {
+			return new Handlebars.SafeString(monster.ui.slider(settings));
+		});
+	}
+
+	function initializeUIComponents() {
+		// We have a special component, allowing checkbox in bootstrap dropdown
+		// By default Bootstrap expands the dropdown items, so we need to prevent that if the checkbox is selected
+		$('body').on('click', '.monster-select-dropdown', function(e) {
+			e.stopPropagation();
+			var $this = $(this);
+
+			if($this.find('.monster-checkbox').has(e.target).length === 0) {
+				$this.find('.dropdown').toggleClass('open');
+			}
+		});
+
+		$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+			_title: function(title) {
+				if (!this.options.title ) {
+					title.html("&#160;");
+				} else {
+					title.html(this.options.title);
+				}
+			}
+		}));
+	}
+
+	function initialize() {
+		initializeUIComponents();
+		initializeHandlebarsHelper();
+	}
 
 	var ui = {
 		slider: function (target, pOptions) {
@@ -1914,6 +1934,8 @@ define(function(require){
 			container.footable(finalOptions);
 		}
 	};
+
+	initialize();
 
 	return ui;
 });

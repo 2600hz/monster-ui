@@ -70,6 +70,9 @@ pre {
 	border-bottom: 7px solid rgba(0, 0, 0, .2);
 	border-left: 7px solid transparent;
 }
+.dropdown-menu {
+	border-radius: 2px;
+}
 
 .dropdown-menu li a i {
 	display: inline-block;
