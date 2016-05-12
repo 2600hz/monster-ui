@@ -15,8 +15,6 @@ require.config({
 		'ddslick': 'js/lib/jquery.ddslick.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
-		'footable-filter': 'js/lib/footable/footable.filter.min',
-		'footable-sort': 'js/lib/footable/footable.sort.min',
 		'form2object': 'js/lib/form2object',
 		'handlebars': 'js/lib/handlebars-v4.0.5',
 		'hasher': 'js/lib/hasher.min',
