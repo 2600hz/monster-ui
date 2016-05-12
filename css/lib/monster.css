@@ -109,7 +109,7 @@ h1 {
 
 .monster-button-fit {
 	min-width: auto;
-	padding: 5px 10px;
+	padding: 5px 15px;
 }
 
 .monster-button-fit i {
@@ -1327,4 +1327,53 @@ table.monster-table .actions .action-item:first-child {
 
 .monster-navbar.reverse .navbar-menu-item-link:not(.active):hover {
 	color: #fff;
+}
+
+/* Monster Select Dropdown, as used in Voicemail Manager */
+.monster-select-dropdown > .dropdown {
+	line-height: 14px;
+	border: 1px solid #22a5ff;
+	border-radius: 2px;
+	color: #22a5ff;
+	list-style: none;
+	padding: 5px 10px 6px 10px;
+}
+
+.monster-select-dropdown > .dropdown .dropdown-toggle .monster-checkbox {
+	margin-bottom: -3px;
+}
+
+.monster-select-dropdown > .dropdown .dropdown-toggle i {
+	color: #22a5ff;
+}
+
+.monster-select-dropdown > .dropdown.open {
+	background: #22a5ff;
+	color: #FFF;
+}
+
+.monster-select-dropdown > .dropdown.open .dropdown-toggle i {
+	color: #FFF;
+}
+
+.monster-select-dropdown > .dropdown .dropdown-menu li a {
+	padding: 10px 15px;
+}
+
+.monster-select-dropdown .icon-telicon-caret-down {
+	margin-left: 20px;
+}
+
+.monster-select-dropdown .dropdown-menu {
+	margin-top: 10px;
+}
+
+.monster-select-dropdown label[class*="monster-checkbox"] > i,
+.monster-select-dropdown label[class*="monster-radio"] > i {
+	border: 1px solid #22a5ff;
+}
+
+.monster-select-dropdown .open label[class*="monster-checkbox"] > i,
+.monster-select-dropdown .open label[class*="monster-radio"] > i {
+	border: 1px solid #FFF;
 }
