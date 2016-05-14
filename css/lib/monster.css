@@ -1051,34 +1051,59 @@ table.monster-table thead .footable-header::after {
 	border-bottom: 1px solid transparent;
 }*/
 
-table.monster-table thead th {
-	font-weight: 600;
+table.monster-table > thead > tr > th {
+/*	font-weight: 600;
 	height: 45px;
 	text-align: left;
 	text-transform: uppercase;
-	color: #909099;
+	color: #909099;*/
+	color: #9aa2a8;
+	font-weight: normal;
+	height: 37px;
+	text-align: left;
+	text-shadow: none;
+	text-transform: uppercase;
 }
 
-table.monster-table tbody {
+table.monster-table > tbody > tr > td {
+    max-width: 600px;
+    overflow: hidden;
+    padding: 10px 25px 10px 0;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+table.monster-table > tbody {
 	background-color: #fff;
 	border-bottom: 1px solid #c0c0c9;
 	border-left: 1px solid #c0c0c9;
 	border-right: 1px solid #c0c0c9;
 }
-table.monster-table tbody tr {
+table.monster-table > tbody > tr {
 	height: 66px;
 }
-table.monster-table tbody tr:last-child::before,
-table.monster-table tbody tr:last-child::after {
+table.monster-table > tbody > tr:last-child::before,
+table.monster-table > tbody > tr:last-child::after {
 	border-bottom: 0;
 }
-table.monster-table tbody td {
+table.monster-table > tbody > tr> td {
 	border-bottom: 1px solid #c0c0c9;
 	text-align: left;
 }
-table.monster-table tbody tr:last-child td {
+table.monster-table > tbody > tr:last-child > td {
 	border-bottom: 0;
 }
+
+table.monster-table > thead > tr.footable-header > th:first-child,
+table.monster-table > tbody > tr > td:first-child { 
+	padding-left: 25px;
+}
+
+table.monster-table > thead > tr.footable-header > th:last-child,
+table.monster-table > tbody > tr > td:last-child {
+	padding-right: 25px;
+}
+
 table.monster-table:not(.no-actions) td:last-child,
 table.monster-table:not(.no-actions) th:last-child {
 	text-align: right;
@@ -1090,16 +1115,6 @@ table.monster-table .actions .action-item {
 }
 table.monster-table .actions .action-item:first-child {
 	margin-left: 0;
-}
-
-table.monster-table thead tr.footable-header td:first-child,
-table.monster-table tbody tr td:first-child { 
-	padding-left: 25px;
-}
-
-table.monster-table thead tr.footable-header td:last-child,
-table.monster-table tbody tr td:last-child {
-	padding-right: 25px;
 }
 
 /************************************************************/
