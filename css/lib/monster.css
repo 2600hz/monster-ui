@@ -1017,7 +1017,7 @@ label[class*='monster-radio'].prepend-label > span {
 
 table.monster-table {
 	width: 100%;
-	margin-top: 30px;
+	margin-top: 25px;
 }
 
 table.monster-table thead .footable-header{
@@ -1066,11 +1066,12 @@ table.monster-table > thead > tr > th {
 }
 
 table.monster-table > tbody > tr > td {
-    max-width: 600px;
-    overflow: hidden;
-    padding: 10px 25px 10px 0;
-    text-overflow: ellipsis;
-    vertical-align: middle;
+	max-width: 600px;
+	overflow: hidden;
+	padding: 10px 25px 10px 0;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
 table.monster-table > tbody {
