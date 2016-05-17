@@ -195,13 +195,9 @@ table.table tr > td {
 .tooltip.right .tooltip-arrow {
 	border-right-color: #222;
 }
+
 .tooltip.top .tooltip-arrow {
-	border-top-color: #222;
-}
-.tooltip.bottom .tooltip-arrow {
-	border-bottom-color: #222;
-}
-.tooltip.top .tooltip-arrow {
+	margin-left: 0;
 	border-top-color: #333;
 }
 .tooltip.bottom .tooltip-arrow {
