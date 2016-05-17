@@ -13,6 +13,9 @@
 		}
 	},
 	methodsGenerator = {
+		system: {
+			'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' }
+		},
 		account: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}' },
