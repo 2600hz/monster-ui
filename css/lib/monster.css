@@ -1017,61 +1017,94 @@ label[class*='monster-radio'].prepend-label > span {
 
 table.monster-table {
 	width: 100%;
-	margin-top: 30px;
+	margin-top: 25px;
+}
+
+table.monster-table thead .footable-header{
+	background-color: #f0f0f9;
 	border: 1px solid #c0c0c9;
 }
 
-table.monster-table thead {
-	border-bottom: 1px solid #c0c0c9;
-	background-color: #f0f0f9;
-}
-table.monster-table thead tr::before {
+/*table.monster-table thead .footable-header th::before {
 	display: table-cell;
 	width: 2%;
 	content: '';
 }
-table.monster-table thead tr::after {
+table.monster-table thead .footable-header th::after {
 	display: table-cell;
 	width: 2%;
 	content: '';
 }
-table.monster-table thead th {
-	font-weight: 600;
+
+table.monster-table tbody tr::before.
+table.monster-table thead .footable-header::before {
+	display: table-cell;
+	width: 2%;
+	content: '';
+	border-bottom: 1px solid transparent;
+}
+table.monster-table tbody tr::after,
+table.monster-table thead .footable-header::after {
+	display: table-cell;
+	width: 2%;
+	content: '';
+	border-bottom: 1px solid transparent;
+}*/
+
+table.monster-table > thead > tr > th {
+/*	font-weight: 600;
 	height: 45px;
 	text-align: left;
 	text-transform: uppercase;
-	color: #909099;
+	color: #909099;*/
+	color: #9aa2a8;
+	font-weight: normal;
+	height: 37px;
+	text-align: left;
+	text-shadow: none;
+	text-transform: uppercase;
 }
 
-table.monster-table tbody {
-	background-color: #fff;
+table.monster-table > tbody > tr > td {
+	max-width: 600px;
+	overflow: hidden;
+	padding: 10px 25px 10px 0;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	white-space: nowrap;
 }
-table.monster-table tbody tr {
+
+table.monster-table > tbody {
+	background-color: #fff;
+	border-bottom: 1px solid #c0c0c9;
+	border-left: 1px solid #c0c0c9;
+	border-right: 1px solid #c0c0c9;
+}
+table.monster-table > tbody > tr {
 	height: 66px;
 }
-table.monster-table tbody tr::before {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}
-table.monster-table tbody tr::after {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}
-table.monster-table tbody tr:last-child::before,
-table.monster-table tbody tr:last-child::after {
+table.monster-table > tbody > tr:last-child::before,
+table.monster-table > tbody > tr:last-child::after {
 	border-bottom: 0;
 }
-table.monster-table td {
+table.monster-table > tbody > tr> td {
 	border-bottom: 1px solid #c0c0c9;
 	text-align: left;
 }
-table.monster-table tbody tr:last-child td {
+table.monster-table > tbody > tr:last-child > td {
 	border-bottom: 0;
 }
+
+table.monster-table > thead > tr.footable-header > th:first-child,
+table.monster-table > tbody > tr > td:first-child { 
+	padding-left: 25px;
+}
+
+table.monster-table > thead > tr.footable-header > th:last-child,
+table.monster-table > tbody > tr > td:last-child {
+	padding-right: 25px;
+}
+
 table.monster-table:not(.no-actions) td:last-child,
 table.monster-table:not(.no-actions) th:last-child {
 	text-align: right;

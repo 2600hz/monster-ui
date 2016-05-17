@@ -19,7 +19,7 @@
 @import url('vendor/font-awesome/css/font-awesome.min.css');
 @import url('lib/custom/font-awesome-add.css');
 
-@import url('vendor/footable/footable.core.min.css');
+@import url('vendor/footable/footable.standalone.min.css');
 @import url('lib/custom/footable-add.css');
 
 @import url('vendor/jslider/jslider.css');

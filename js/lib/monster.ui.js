@@ -10,7 +10,8 @@ define(function(require){
 		timepicker = require('timepicker'),
 		introJs = require('introJs'),
 		mask = require('mask'),
-		renderJSON = require('renderjson');
+		renderJSON = require('renderjson'),
+		footable = require('footable');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper('times', function(n, options) {
@@ -1906,6 +1907,31 @@ define(function(require){
 			$(html).addClass('theme-' + finalOptions.theme);
 
 			$(container).append(html);
+		},
+
+		// Layer above footable to use the default options everywhere
+		footable: function(container, options) {
+			var self = this,
+				defaults = {
+					filtering: {
+						enabled: true,
+						placeholder: monster.apps.core.i18n.active().footable.search,
+						delay: 20,
+						connectors: false
+					},
+					sorting: {
+						enabled: true
+					},
+					paging: {
+						enabled: true,
+						size: 10,
+						limit: 0,
+						countFormat: monster.apps.core.i18n.active().footable.format
+					}
+				},
+				finalOptions = $.extend(true, defaults, options || {});
+
+			container.footable(finalOptions);
 		}
 	};
 

@@ -1,3 +1,95 @@
-.footable .footable-sort-indicator {
-	margin-left: 5px;
+table.footable.monster-table td.footable-sortable > span.fooicon, 
+table.footable.monster-table th.footable-sortable > span.fooicon {
+	margin-left: 10px;
+	margin-top: 0;
+	position: initial;
+	right: 0;
+	top: 0;
 }
+
+table.footable.monster-table .footable-filtering .btn .caret {
+	margin-top: -2px;
+}
+
+table.footable.monster-table .footable-filtering input[type="text"] {
+	height: 20px;
+	width: 150px;
+}
+
+table.footable.monster-table .footable-empty td {
+	text-align: center
+}
+
+table.footable.monster-table .btn-primary {
+	background: #22a5ff;
+}
+
+table.footable.monster-table .pagination > .active > a,
+table.footable.monster-table .pagination > .active > a:focus,
+table.footable.monster-table .pagination > .active > a:hover,
+table.footable.monster-table .pagination > .active > span,
+table.footable.monster-table .pagination > .active > span:focus,
+table.footable.monster-table .pagination > .active > span:hover {
+	border-color: #22a5ff;
+	background-color: #22a5ff;
+}
+
+table.footable.monster-table .pagination > li > a,
+table.footable.monster-table .pagination > li > span {
+	color: #22a5ff;
+}
+
+table.footable.monster-table .pagination .footable-page-nav[data-page="first"],
+table.footable.monster-table .pagination .footable-page-nav[data-page="last"],
+table.footable.monster-table .pagination .footable-page {
+	display: none !important;
+}
+
+table.footable.monster-table .footable-paging ul.pagination {
+	float: right;
+}
+
+table.footable.monster-table > tfoot > tr.footable-paging > td > span.label {
+	background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+	color: #333;
+	float: right;
+	font-size: 14px;
+	font-weight: normal;
+	margin-right: 10px;
+	margin-top: 16px;
+}
+
+table.footable.monster-table .pagination > li > a,
+table.footable.monster-table .pagination > li > span {
+	background: #f0f0f9 none repeat scroll 0 0;
+	border-color: #02a5ff;
+	font-size: 39px;
+	height: 30px;
+	line-height: 22px;
+	padding: 0 17px;
+}
+
+table.footable.monster-table .pagination > li.disabled > a,
+table.footable.monster-table .pagination > li.disabled:hover > a {
+	background: #f0f0f9 none repeat scroll 0 0;
+	border-color: #02a5ff;
+	color: #777;
+}
+
+table.footable.monster-table .footable-empty td {
+	text-align: center !important;
+}
+
+table.footable.monster-table .footable-filtering .form-group {
+	margin-right: -2px;
+}
+
+table.footable.monster-table .footable-filtering .form-group .btn.dropdown-toggle {
+	border-radius: 0 2px 2px 0;
+}
+
+/*.monster-table.footable .footable-filtering > th {
+	position: absolute;
+	right: 0;
+	top: -65px;
+}*/

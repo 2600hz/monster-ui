@@ -643,5 +643,12 @@
 		"accountId": "Account ID",
 		"authToken": "Auth Token",
 		"apiUrl": "API URL"
+	},
+
+	"__comment": "UI-2232: Adding layer around footable so we can reuse same options everywhere easily",
+	"__version": "3.22",
+	"footable": {
+		"search": "Search",
+		"format": "{PF}-{PL} of {TR}"
 	}
 }
