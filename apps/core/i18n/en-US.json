@@ -45,6 +45,10 @@
 			"no_payment_token": {
 				"text": "It appears your billing information is invalid and is preventing this application to work as intended. Please go to your Account Settings and make sure the credit card is valid.",
 				"title": "Invalid Credit Card"
+			},
+			"account_billing_invalid": {
+				"text": "It appears your billing information is invalid and is preventing this application to work as intended. Please contact an Administrator to get this fixed.",
+				"title": "Invalid Billing Information"
 			}
 		}
 	},
