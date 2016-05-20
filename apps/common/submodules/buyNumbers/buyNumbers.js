@@ -75,12 +75,12 @@ define(function(require){
 				"US": {
 					"local": true,
 					"toll_free": [
-						800,
-						844,
-						855,
-						866,
-						877,
-						888
+						'80*',
+						'84*',
+						'85*',
+						'86*',
+						'87*',
+						'88*'
 					],
 					"vanity": true,
 					"prefix": 1,
