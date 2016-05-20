@@ -1153,7 +1153,9 @@ define(function(require){
 					success && success(data.data);
 				},
 				error: function(data) {
-					error && error(data);
+					if(data.error !== '402') {
+						error && error(data);
+					}
 				}
 			});
 		},
@@ -1171,7 +1173,9 @@ define(function(require){
 					success && success(data.data);
 				},
 				error: function(data) {
-					error && error(data);
+					if(data.error !== '402') {
+						error && error(data);
+					}
 				}
 			});
 		},
