@@ -178,7 +178,7 @@ define(function(require){
 		balanceFormatDialogData: function(data) {
 			var self = this,
 				amount = data.balance.balance.toFixed(2) || '0.00',
-				thresholdData = { enabled: false },
+				thresholdData = {},
 				topupData = { enabled: false };
 
 			if (data.account.hasOwnProperty('notifications') && data.account.notifications.hasOwnProperty('low_balance')) {
@@ -187,6 +187,14 @@ define(function(require){
 			else if (data.account.hasOwnProperty('threshold')) {
 				$.extend(true, thresholdData, data.account.threshold);
 				thresholdData.enabled = true;
+			}
+
+			if(!thresholdData.hasOwnProperty('enabled')) {
+				thresholdData.enabled = true;
+
+				if(!thresholdData.hasOwnProperty('threshold')) {
+					thresholdData.threshold = 5;
+				}
 			}
 
 			if(data.account.hasOwnProperty('topup')) {
@@ -380,15 +388,18 @@ define(function(require){
 
 		balanceFormatThresholdData: function(data) {
 			data.notifications = data.notifications || {};
-			data.notifications.low_balance = data.notifications.low_balance || {
-				enabled: false
-			};
+			data.notifications.low_balance = data.notifications.low_balance || {};
 
 			if(data.hasOwnProperty('threshold')) {
 				data.notifications.low_balance.enabled = true;
 				data.notifications.low_balance.threshold = data.threshold.threshold;
 
 				delete data.threshold;
+			}
+
+			if(!data.notifications.low_balance.hasOwnProperty('enabled')) {
+				data.notifications.low_balance.enabled = true;
+				data.notifications.low_balance.threshold = 5;
 			}
 
 			return data;
