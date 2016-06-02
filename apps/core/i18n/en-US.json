@@ -582,39 +582,39 @@
 	"unitsMultiple": {
 		"byte": [
 			{
-				"symbole": "bytes",
+				"symbol": "bytes",
 				"multiple": "bytes"
 			},
 			{
-				"symbole": "kB",
+				"symbol": "kB",
 				"multiple": "kilobyte"
 			},
 			{
-				"symbole": "MB",
+				"symbol": "MB",
 				"multiple": "megabyte"
 			},
 			{
-				"symbole": "GB",
+				"symbol": "GB",
 				"multiple": "gigabyte"
 			},
 			{
-				"symbole": "TB",
+				"symbol": "TB",
 				"multiple": "terabyte"
 			},
 			{
-				"symbole": "PB",
+				"symbol": "PB",
 				"multiple": "petabyte"
 			},
 			{
-				"symbole": "EB",
+				"symbol": "EB",
 				"multiple": "exabyte"
 			},
 			{
-				"symbole": "ZB",
+				"symbol": "ZB",
 				"multiple": "zettabyte"
 			},
 			{
-				"symbole": "YB",
+				"symbol": "YB",
 				"multiple": "yottabyte"
 			}
 		]
