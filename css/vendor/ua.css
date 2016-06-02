@@ -1,0 +1,39 @@
+
+/* UA */
+.ua {
+  width: 80px;
+  height: 64px;
+  background-size: 80px 64px;  
+}
+
+.ua-cisco-spa-504g {
+  background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
+}
+
+.ua-polycom {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.ua-polycom-vvx {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.ua-polycom-vvx-400 {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.ua-grandstream {
+  background-image: url(../assets/models/grandstream_gxp_2130.jpg);
+}
+
+.ua-grandstream-gxp {
+  background-image: url(../assets/models/grandstream_gxp_2130.jpg);
+}
+
+.ua-grandstream-gxp-2130 {
+  background-image: url(../assets/models/grandstream_gxp_2130.jpg);
+}
+
+.ua-counterpath-bria {
+  background-image: url(../assets/models/bria.png);
+}
