@@ -36,6 +36,7 @@ require.config({
 		'monster-apps': 'js/lib/monster.apps',
 		'plugins': 'js/plugins',
 		'postal': 'js/lib/postal-0.8.2',
+		'prettify':'js/lib/prettify'
 		'renderjson': 'js/lib/renderjson',
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
 		'signals': 'js/lib/signals.min',
@@ -46,6 +47,7 @@ require.config({
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
 		'underscore': 'js/lib/underscore.min',
 		'validate': 'js/lib/jquery.validate.min',
+		'vkbeautify':'js/lib/vkbeautify',
 		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min'
 	},
 	shim: {
