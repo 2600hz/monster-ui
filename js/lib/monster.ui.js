@@ -14,215 +14,217 @@ define(function(require){
 		footable = require('footable');
 
 	function initializeHandlebarsHelper() {
-		Handlebars.registerHelper('times', function(n, options) {
-			var ret = '';
-			for(var i = 1; i <= n; ++i)
-				ret += options.fn(i);
-			return ret;
-		});
+		Handlebars.registerHelper({
+			times: function(n, options) {
+				var ret = '';
+				for(var i = 1; i <= n; ++i)
+					ret += options.fn(i);
+				return ret;
+			},
 
-		Handlebars.registerHelper('debug', function(optionalValue) {
-			console.log('Current Context: ', this);
+			debug: function(optionalValue) {
+				console.log('Current Context: ', this);
 
-			if (optionalValue) {
-				console.log('Value: ', optionalValue);
-			}
-		});
-
-		Handlebars.registerHelper('tryI18n', function(mapI18n, key) {
-			return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
-		});
-
-		Handlebars.registerHelper('formatPhoneNumber', function(phoneNumber) {
-			phoneNumber = (phoneNumber || '').toString();
-
-			return monster.util.formatPhoneNumber(phoneNumber);
-		});
-
-		Handlebars.registerHelper('formatVariableToDisplay', function(variable) {
-			return monster.util.formatVariableToDisplay(variable);
-		});
-
-		Handlebars.registerHelper('toUpperCase', function (stringValue) {
-			return stringValue.toString().toUpperCase();
-		});
-
-		Handlebars.registerHelper('toLowerCase', function(stringValue) {
-			return stringValue.toString().toLowerCase();
-		});
-
-		Handlebars.registerHelper('replaceVar', function(stringValue, variable) {
-			return stringValue.replace('{{variable}}', variable);
-		});
-
-		Handlebars.registerHelper('select', function(value, options) {
-			// Create a select element 
-			var select = document.createElement('select');
-
-			// Populate it with the option HTML
-			$(select).html(options.fn(this));
-
-			//below statement doesn't work in IE9 so used the above one
-			//select.innerHTML = options.fn(this); 
-
-			// Set the value
-			select.value = value;
-
-			// Find the selected node, if it exists, add the selected attribute to it
-			if (select.children[select.selectedIndex]) {
-				select.children[select.selectedIndex].setAttribute('selected', 'selected');
-			} else { //select first option if that exists
-				if (select.children[0]) {
-					select.children[0].setAttribute('selected', 'selected');
+				if (optionalValue) {
+					console.log('Value: ', optionalValue);
 				}
-			}
-			return select.innerHTML;
-		});
+			},
 
-		Handlebars.registerHelper('ifInArray', function(elem, list, options) {
-			if(list.indexOf(elem) > -1) {
-				return options.fn(this);
-			}
+			tryI18n: function(mapI18n, key) {
+				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
+			},
 
-			return options.inverse(this);
-		});
+			formatPhoneNumber: function(phoneNumber) {
+				phoneNumber = (phoneNumber || '').toString();
 
-		Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
-			var operators, result;
+				return monster.util.formatPhoneNumber(phoneNumber);
+			},
 
-			if (arguments.length < 3) {
-				throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-			}
+			formatVariableToDisplay: function(variable) {
+				return monster.util.formatVariableToDisplay(variable);
+			},
 
-			if (options === undefined) {
-				options = rvalue;
-				rvalue = operator;
-				operator = '===';
-			}
+			toUpperCase: function (stringValue) {
+				return stringValue.toString().toUpperCase();
+			},
 
-			operators = {
-				'==': function (l, r) { return l == r; },
-				'===': function (l, r) { return l === r; },
-				'!=': function (l, r) { return l != r; },
-				'!==': function (l, r) { return l !== r; },
-				'<': function (l, r) { return l < r; },
-				'>': function (l, r) { return l > r; },
-				'<=': function (l, r) { return l <= r; },
-				'>=': function (l, r) { return l >= r; },
-				'typeof': function (l, r) { return typeof l == r; }
-			};
+			toLowerCase: function(stringValue) {
+				return stringValue.toString().toLowerCase();
+			},
 
-			if (!operators[operator]) {
-				throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
-			}
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace('{{variable}}', variable);
+			},
 
-			result = operators[operator](lvalue, rvalue);
+			select: function(value, options) {
+				// Create a select element 
+				var select = document.createElement('select');
 
-			if (result) {
-				return options.fn(this);
-			} else {
+				// Populate it with the option HTML
+				$(select).html(options.fn(this));
+
+				//below statement doesn't work in IE9 so used the above one
+				//select.innerHTML = options.fn(this); 
+
+				// Set the value
+				select.value = value;
+
+				// Find the selected node, if it exists, add the selected attribute to it
+				if (select.children[select.selectedIndex]) {
+					select.children[select.selectedIndex].setAttribute('selected', 'selected');
+				} else { //select first option if that exists
+					if (select.children[0]) {
+						select.children[0].setAttribute('selected', 'selected');
+					}
+				}
+				return select.innerHTML;
+			},
+
+			ifInArray: function(elem, list, options) {
+				if(list.indexOf(elem) > -1) {
+					return options.fn(this);
+				}
+
 				return options.inverse(this);
-			}
-		});
+			},
 
-		Handlebars.registerHelper('toFriendlyDate', function(timestamp, format, user, isGregorian) {
-			return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
-		});
+			compare: function (lvalue, operator, rvalue, options) {
+				var operators, result;
 
-		Handlebars.registerHelper('formatPrice', function(price, decimals) {
-			return monster.util.formatPrice(price, decimals);
-		});
+				if (arguments.length < 3) {
+					throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+				}
 
-		Handlebars.registerHelper('formatBytes', function (bytes, pDigits) {
-			var digits = typeof pDigits === 'number' ? pDigits : undefined,
-				data = monster.util.formatBytes(bytes, digits);
+				if (options === undefined) {
+					options = rvalue;
+					rvalue = operator;
+					operator = '===';
+				}
 
-			return data.value + ' ' + data.unit.symbol;
-		});
+				operators = {
+					'==': function (l, r) { return l == r; },
+					'===': function (l, r) { return l === r; },
+					'!=': function (l, r) { return l != r; },
+					'!==': function (l, r) { return l !== r; },
+					'<': function (l, r) { return l < r; },
+					'>': function (l, r) { return l > r; },
+					'<=': function (l, r) { return l <= r; },
+					'>=': function (l, r) { return l >= r; },
+					'typeof': function (l, r) { return typeof l == r; }
+				};
 
-		Handlebars.registerHelper('monsterSwitch', function(options) {
-			var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
-				checkbox = $(checkboxHtml),
-				onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
-				offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+				if (!operators[operator]) {
+					throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+				}
 
-			return monster.template(monster.apps.core, 'monster-switch-template', {
-				checkbox: new Handlebars.SafeString(checkboxHtml),
-				on: onLabel,
-				off: offLabel
-			});
-		});
+				result = operators[operator](lvalue, rvalue);
 
-		Handlebars.registerHelper('monsterCheckbox', function() {
-			var templateData = {
-				cssClass: 'monster-checkbox',
-				checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
-			};
+				if (result) {
+					return options.fn(this);
+				} else {
+					return options.inverse(this);
+				}
+			},
 
-			for(var i=0; i<arguments.length-1; i++) {
-				if(_.isString(arguments[i])) {
-					switch(arguments[i]) {
-						case 'large-checkbox':
-						case 'checkbox-large':
-							templateData.cssClass = 'monster-checkbox-large';
-							break;
-						case 'prepend-label':
-						case 'label-prepend':
-							templateData.prepend = true;
-							break;
-						default:
-							templateData.label = arguments[i];
-							break;
+			toFriendlyDate: function(timestamp, format, user, isGregorian) {
+				return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
+			},
+
+			formatPrice: function(price, decimals) {
+				return monster.util.formatPrice(price, decimals);
+			},
+
+			formatBytes: function (bytes, pDigits) {
+				var digits = typeof pDigits === 'number' ? pDigits : undefined,
+					data = monster.util.formatBytes(bytes, digits);
+
+				return data.value + ' ' + data.unit.symbol;
+			},
+
+			monsterSwitch: function(options) {
+				var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
+					checkbox = $(checkboxHtml),
+					onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
+					offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+
+				return monster.template(monster.apps.core, 'monster-switch-template', {
+					checkbox: new Handlebars.SafeString(checkboxHtml),
+					on: onLabel,
+					off: offLabel
+				});
+			},
+
+			monsterCheckbox: function() {
+				var templateData = {
+					cssClass: 'monster-checkbox',
+					checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+				};
+
+				for(var i=0; i<arguments.length-1; i++) {
+					if(_.isString(arguments[i])) {
+						switch(arguments[i]) {
+							case 'large-checkbox':
+							case 'checkbox-large':
+								templateData.cssClass = 'monster-checkbox-large';
+								break;
+							case 'prepend-label':
+							case 'label-prepend':
+								templateData.prepend = true;
+								break;
+							default:
+								templateData.label = arguments[i];
+								break;
+						}
 					}
 				}
-			}
 
-			return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
-		});
+				return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+			},
 
-		Handlebars.registerHelper('monsterRadio', function() {
-			var templateData = {
-				cssClass: 'monster-radio',
-				checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
-			};
+			monsterRadio: function() {
+				var templateData = {
+					cssClass: 'monster-radio',
+					checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+				};
 
-			for(var i=0; i<arguments.length-1; i++) {
-				if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
-					switch(arguments[i]) {
-						case 'large-radio':
-						case 'radio-large':
-							templateData.cssClass = 'monster-radio-large';
-							break;
-						case 'prepend-label':
-						case 'label-prepend':
-							templateData.prepend = true;
-							break;
-						default:
-							templateData.label = arguments[i];
-							break;
+				for(var i=0; i<arguments.length-1; i++) {
+					if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
+						switch(arguments[i]) {
+							case 'large-radio':
+							case 'radio-large':
+								templateData.cssClass = 'monster-radio-large';
+								break;
+							case 'prepend-label':
+							case 'label-prepend':
+								templateData.prepend = true;
+								break;
+							default:
+								templateData.label = arguments[i];
+								break;
+						}
 					}
 				}
+
+				return monster.template(monster.apps.core, 'monster-radio-template', templateData);
+			},
+
+			monsterText: function(type, className) {
+				var htmlContent = arguments[arguments.length-1].fn(this),
+					validTypes = ['info', 'question', 'error', 'warning'],
+					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+					templateData = {
+						className: className || '',
+						content: new Handlebars.SafeString(htmlContent)
+					},
+					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+					template = monster.template(monster.apps.core, 'monster-text-' + type, templateData, false, false, true);
+
+				return new Handlebars.SafeString(template);
+			},
+
+			monsterSlider: function (settings, options) {
+				return new Handlebars.SafeString(monster.ui.slider(settings));
 			}
-
-			return monster.template(monster.apps.core, 'monster-radio-template', templateData);
-		});
-
-		Handlebars.registerHelper('monsterText', function(type, className) {
-			var htmlContent = arguments[arguments.length-1].fn(this),
-				validTypes = ['info', 'question', 'error', 'warning'],
-				type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-				templateData = {
-					className: className || '',
-					content: new Handlebars.SafeString(htmlContent)
-				},
-				// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-				template = monster.template(monster.apps.core, 'monster-text-' + type, templateData, false, false, true);
-
-			return new Handlebars.SafeString(template);
-		});
-
-		Handlebars.registerHelper('monsterSlider', function (settings, options) {
-			return new Handlebars.SafeString(monster.ui.slider(settings));
 		});
 	}
 
