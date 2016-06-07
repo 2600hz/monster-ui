@@ -136,7 +136,7 @@ define(function(require){
 		var digits = typeof pDigits === 'number' ? pDigits : undefined,
 			data = monster.util.formatBytes(bytes, digits);
 
-		return data.value + ' ' + data.unit.symbole;
+		return data.value + ' ' + data.unit.symbol;
 	});
 
 	Handlebars.registerHelper('monsterSwitch', function(options) {
