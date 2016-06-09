@@ -29,32 +29,31 @@ define(function(require){
 		_trunksRefreshBadges: function(args) {
 			var self = this;
 
-			if(!args.hasOwnProperty('except') || args.except !== 'trunks') {
-				self.trunksGetLimits(function(dataLimits) {
-					var argsMenuInbound = {
-							module: 'trunks',
-							key: 'inbound',
-							data: dataLimits.data.inbound_trunks || 0,
-							callback: args.callback
-						},
-						argsMenuOutbound = {
-							module: 'trunks',
-							key: 'outbound',
-							data: dataLimits.data.outbound_trunks || 0,
-							callback: args.callback
-						},
-						argsMenuTwoway = {
-							module: 'trunks',
-							key: 'twoway',
-							data: dataLimits.data.twoway_trunks || 0,
-							callback: args.callback
-						};
+			// We can't do the except logic for trunks,  because we need to update the 2 other tabs anyway, and they're all using the same API
+			self.trunksGetLimits(function(dataLimits) {
+				var argsMenuInbound = {
+						module: 'trunks',
+						key: 'inbound',
+						data: dataLimits.data.inbound_trunks || 0,
+						callback: args.callback
+					},
+					argsMenuOutbound = {
+						module: 'trunks',
+						key: 'outbound',
+						data: dataLimits.data.outbound_trunks || 0,
+						callback: args.callback
+					},
+					argsMenuTwoway = {
+						module: 'trunks',
+						key: 'twoway',
+						data: dataLimits.data.twoway_trunks || 0,
+						callback: args.callback
+					};
 
-					monster.pub('myaccount.updateMenu', argsMenuInbound);
-					monster.pub('myaccount.updateMenu', argsMenuOutbound);
-					monster.pub('myaccount.updateMenu', argsMenuTwoway);
-				});
-			}
+				monster.pub('myaccount.updateMenu', argsMenuInbound);
+				monster.pub('myaccount.updateMenu', argsMenuOutbound);
+				monster.pub('myaccount.updateMenu', argsMenuTwoway);
+			});
 		},
 
 		trunksRenderInbound: function(callback) {
