@@ -1,4 +1,4 @@
 /* Loading Spinner */
-section .loading-wrapper {
+.loading-wrapper {
 	background: green;
 }

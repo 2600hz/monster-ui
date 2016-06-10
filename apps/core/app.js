@@ -82,7 +82,7 @@ define(function(require){
 
 		showAppName: function(appName) {
 			var self = this,
-				navbar = $('#main_topbar'),
+				navbar = $('.core-topbar'),
 				currentApp = navbar.find('#main_topbar_current_app'),
 				defaultApp;
 
@@ -431,7 +431,7 @@ define(function(require){
 			var self = this;
 
 			monster.getVersion(function(version) {
-				container.find('.footer-wrapper .tag-version').html('('+version+')');
+				container.find('.core-footer .tag-version').html('('+version+')');
 
 				monster.config.version = version;
 			});
