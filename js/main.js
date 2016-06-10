@@ -91,8 +91,7 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'to
 		}
 
 		monster.apps.load('core', function(app){
-			app.render($('#main'));
+			app.render($('.core-wrapper'));
 		});
 	});
 });
-

@@ -237,7 +237,7 @@ define(function(require){
 					});
 				}
 
-				$('#main_topbar').after(myaccountHtml);
+				$('.core-absolute').append(myaccountHtml);
 
 				self._renderNavLinks();
 

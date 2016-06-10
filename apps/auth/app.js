@@ -133,8 +133,7 @@ define(function(require){
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
-			self.appFlags.mainContainer.addClass('monster-content');
-			$('#main .footer-wrapper').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
+			$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
 			self.appFlags.mainContainer.empty();
 
 			//Adding the authtoken to the Core app
@@ -474,8 +473,7 @@ define(function(require){
 
 					container.append(template);
 					self.bindLoginBlock(templateData);
-					template.find('.powered-by-block').append($('#main .footer-wrapper .powered-by'));
-					self.appFlags.mainContainer.removeClass('monster-content');
+					template.find('.powered-by-block').append($('.core-footer .powered-by'));
 				},
 				domain = window.location.hostname;
 
