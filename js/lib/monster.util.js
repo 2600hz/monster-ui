@@ -191,6 +191,25 @@ define(function(require){
 			return formattedResponse
 		},
 
+		getModbID: function(id, timestamp) {
+			var jsDate = monster.util.gregorianToDate(timestamp),
+				UTCYear = jsDate.getUTCFullYear() + '',
+				UTCMonth = jsDate.getUTCMonth() + 1,
+				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
+				modbDBprefix = UTCYear + formattedUTCMonth + '-',
+				modbString;
+
+			// Verify that the ID we got is not already a MODB ID
+			if(id.substr(7) !== modbDBprefix) {
+				modbString = UTCYear + formattedUTCMonth + '-' + id;
+			}
+			else {
+				modbString = id;
+			}
+
+			return modbString;
+		},
+
 		unixToDate: function(timestamp) {
 			var formattedResponse;
 
@@ -232,12 +251,11 @@ define(function(require){
 		formatPhoneNumber: function(phoneNumber){
 			if(phoneNumber) {
 				phoneNumber = phoneNumber.toString();
+				var length = phoneNumber.length;
 
-				if(phoneNumber.substr(0,2) === "+1" && phoneNumber.length === 12) {
-					phoneNumber = phoneNumber.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
-				}
-				else if(phoneNumber.length === 10) {
-					phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '+1 ($1) $2-$3');
+				if(length >= 10 && length <= 12) {
+					// Try US Regex
+					phoneNumber = phoneNumber.replace(/\+?1?([2-9][0-9]{2})([2-9][0-9]{2})([0-9]{4})$/, '+1 ($1) $2-$3');
 				}
 			}
 
