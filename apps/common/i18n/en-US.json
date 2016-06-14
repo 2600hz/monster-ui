@@ -416,7 +416,18 @@
 			"loaHelperPartThree": "Digital LOA form.",
 			"loaHelperPartFour": "How to sign documents",
 			"loaHelperPartFive": "electronically without paying.",
-			"changeButton": "change"
+			"changeButton": "change",
+			"__comment": "UI-2098: Add RespOrg section to Porting process",
+			"__version": "v4.0",
+			"resporg": {
+				"title": {
+					"partOne": "If you are porting toll-free numbers, please fill out the Responsible Organization (RespOrg)",
+					"partTwo": "What is RespOrg?"
+				},
+				"downloadStep": "download resporg",
+				"signStep": "sign repsog form",
+				"uploadStep": "upload resporg"
+			}
 		},
 		"toastr": {
 			"success": {

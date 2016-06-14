@@ -943,7 +943,6 @@ define(function(require){
 			self.portCancelOrder(parent, accountId, container, data, index);
 			self.portComingSoon(container, [
 				'#upload_bill .row-fluid.info a',
-				'#loa h4 a',
 				'#loa p a:not(#sign_doc)',
 				'#footer .help-links li:not(.separator) a'
 			]);
@@ -956,19 +955,26 @@ define(function(require){
 						mimeTypes: ['application/pdf'],
 						wrapperClass: 'input-append',
 						success: function(results) {
+console.log(type);
 							if (data.orders[index].hasOwnProperty('id')) {
+console.log('existing order');
 								if (data.orders[index].hasOwnProperty(type.concat('.pdf'))) {
+console.log('existing file');
 									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
+console.log('file uploaded');
 										data.orders[index][type.concat('_attachment')] = results[0].file;
 									});
 								}
 								else {
+console.log('new file');
 									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
+console.log('file uploaded');
 										data.orders[index][type.concat('_attachment')] = results[0].file;
 									});
 								}
 							}
 							else {
+console.log('new order');
 								data.orders[index][type.concat('_attachment')] = results[0].file;
 							}
 						},
@@ -990,10 +996,16 @@ define(function(require){
 					options['bigBtnText'] = self.i18n.active().port.submitDocuments.uploadBillButton;
 					options['btnClass'] = 'btn btn-success';
 				}
-				else if (type === 'loa') {
+				else {
 					options['bigBtnClass'] = 'btn span10';
-					options['bigBtnText'] = self.i18n.active().port.submitDocuments.loaUploadStep;
 					options['btnClass'] = 'btn';
+
+					if (type === 'loa') {
+						options['bigBtnText'] = self.i18n.active().port.submitDocuments.loaUploadStep;
+					}
+					else if (type === 'resporg') {
+						options['bigBtnText'] = self.i18n.active().port.submitDocuments.resporg.uploadStep;
+					}
 				}
 
 				input.fileUpload(options);
@@ -1084,6 +1096,7 @@ define(function(require){
 					if (order.hasOwnProperty('id')) {
 						delete order.bill_attachment;
 						delete order.loa_attachment;
+						delete order.resporg_attachment;
 					}
 
 					$.extend(true, order, billFormData, transferNameFormData);
@@ -1701,6 +1714,11 @@ define(function(require){
 				delete order.loa_attachment;
 			}
 
+			if (order.hasOwnProperty('resporg_attachment')) {
+				attachments.resporg = order.resporg_attachment;
+				delete order.resporg_attachment;
+			}
+
 			order = $.extend(true, order, { port_state: 'unconfirmed' });
 
 			order = self.portArrayToObjects(order);
@@ -1712,30 +1730,27 @@ define(function(require){
 					data: order
 				},
 				success: function(data, status) {
-					var portRequestId = data.data.id;
+					var portRequestId = data.data.id,
+						serializedRequests = {};
 
-					if (attachments.hasOwnProperty('bill')) {
-						self.portRequestAddAttachment(accountId, portRequestId, 'bill.pdf', attachments.bill, function(data) {
-							if (attachments.hasOwnProperty('loa')) {
-								self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
-									callbackSuccess && callbackSuccess(portRequestId);
-								});
+					_.each(attachments, function(value, key) {
+						serializedRequests[key] = function(callback) {
+							self.portRequestAddAttachment(accountId, portRequestId, key.concat('.pdf'), value, function(data) {
+								callback(null, data);
+							});
+						}
+					});
+
+					monster.series(serializedRequests,
+						function(err, results) {
+							if (err) {
+								callbackError && callbackError();
 							}
 							else {
 								callbackSuccess && callbackSuccess(portRequestId);
 							}
-						});
-					}
-					else {
-						if (attachments.hasOwnProperty('loa')) {
-							self.portRequestAddAttachment(accountId, portRequestId, 'loa.pdf', attachments.loa, function(data) {
-								callbackSuccess && callbackSuccess(portRequestId);
-							});
 						}
-						else {
-							callbackSuccess && callbackSuccess(portRequestId);
-						}
-					}
+					);
 				},
 				error: function(data, status){
 					callbackError && callbackError();
@@ -1754,6 +1769,10 @@ define(function(require){
 
 			if (order.hasOwnProperty('loa_attachment')) {
 				delete order.loa_attachment;
+			}
+
+			if (order.hasOwnProperty('resporg_attachment')) {
+				delete order.resporg_attachment;
 			}
 
 			self.callApi({

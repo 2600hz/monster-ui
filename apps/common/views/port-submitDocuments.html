@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	<div id="loa">
-		<h4>{{ i18n.port.submitDocuments.loaTitlePartOne }} <a href="#">{{ i18n.port.submitDocuments.loaTitlePartTwo }}</a></h4>
+		<h4>{{ i18n.port.submitDocuments.loaTitlePartOne }} <a href="https://www.wikiwand.com/en/Letter_of_Agency" target="_blank">{{ i18n.port.submitDocuments.loaTitlePartTwo }}</a></h4>
 		<div class="row-fluid">
 			<div class="span4">
 				<span class="span1 number">1.</span>
@@ -90,6 +90,30 @@
 			</div>
 		</div>
 		<p>{{ i18n.port.submitDocuments.loaHelperPartOne }} &#36;{{ i18n.port.submitDocuments.loaHelperPartTwo }} <a href="#">{{ i18n.port.submitDocuments.loaHelperPartThree }}</a> <a id="sign_doc" href="http://www.howtogeek.com/164668/how-to-electronically-sign-documents-without-printing-and-scanning-them/" target="_blank">{{ i18n.port.submitDocuments.loaHelperPartFour }}</a> {{ i18n.port.submitDocuments.loaHelperPartFive }}</p>
+	</div>
+	<div id="resporg">
+		<h4>{{ i18n.port.submitDocuments.resporg.title.partOne }} <a href="https://www.wikiwand.com/en/RespOrg" target="_blank">{{ i18n.port.submitDocuments.resporg.title.partTwo }}</a></h4>
+		<div class="row-fluid">
+			<div class="span4">
+				<div class="span1 number">1.</div>
+				<a href="{{ whitelabelPort.resporg }}" class="btn span10 offset1" id="resporg_link" target="_blank">{{ i18n.port.submitDocuments.resporg.downloadStep }}</a>
+			</div>
+			<div class="span3">
+				<span class="span1 offset3 number">2.</span>
+				<span class="span8">{{ i18n.port.submitDocuments.resporg.signStep }}</span>
+			</div>
+			<div class="span5">
+				<div class="row-fluid">
+					<div class="span1 offset1 number">3.</div>
+					<div class="span10 file-upload-container">
+						<input type="file" data-name="resporg">
+					</div>
+				</div>
+				<div class="row-fluid">
+					<span class="help-block offset2">{{ i18n.port.submitDocuments.uploadBillHelper }}</span>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id="continue_later">
 		<div class="row-fluid">
