@@ -55,7 +55,7 @@ define(function(require){
 
 			// In the Port Manager, we use a LOA Form link. By changing this attribute, you'll change the default link. If any user has a whitelabel profile set via the Branding app, he can override that value.
 			port: {
-				// loa: 'custom_loa_url'
+				loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
 				resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
 			}
 		},
