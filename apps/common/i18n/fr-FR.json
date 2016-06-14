@@ -352,7 +352,16 @@
 			"loaHelperPartThree":"Formulaire LdA numérique.",
             "loaHelperPartFour": "Comment signer un docment",
             "loaHelperPartFive": "électroniquement sans avoir à payer.",
-            "buttonChange": "changer"
+            "buttonChange": "changer",
+            "resporg": {
+				"title": {
+					"partOne": "Si vous transférez des numéros SVA, veuilliez remplir le Responsible Organization (RespOrg)",
+					"partTwo": "Qu'est-ce qu'un RespOrg ?"
+				},
+				"downloadStep": "Télécharger le RespOrg",
+				"signStep": "Signez le RespOrg",
+				"uploadStep": "Envoyez le RespOrg"
+			}
 		},
 		"toastr": {
 			"success": {
