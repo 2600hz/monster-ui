@@ -137,14 +137,20 @@
 		},
 		faxbox: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes/' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/faxboxes' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes' },
 		},
 		faxes: {
 			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
-			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'}
+			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'},
+			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound' },
+			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}' },
+			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}/attachment' },
+			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing' },
+			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}' },
+			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}/attachment' },
 		},
 		globalResources: {
 			'get': { verb: 'GET', url: 'resources/{resourceId}' },
@@ -281,6 +287,15 @@
 			'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
 			'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 		},
+		tasks: {
+			'summary': { verb: 'GET', url: 'tasks'},
+			'list': { verb: 'GET', url: 'accounts/{accountId}/tasks'},
+			'add': { verb: 'PUT', url: 'accounts/{accountId}/tasks?category={category}&action={action}'},
+			'get': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}'},
+			'start': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}' },
+			'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/plain', dataType: 'text' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/tasks/{taskId}' },
+		},
 		temporalRule: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
@@ -310,7 +325,9 @@
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
-			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
+			'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'},
+			'updateMessages': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'}
 		},
 		webhooks: {
 			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
