@@ -581,7 +581,8 @@ div#upload_bill form {
 div#upload_bill form input.upload { display: none; }
 
 div#upload_bill form .help-block,
-div#loa .help-block {
+div#loa .help-block,
+div#resporg .help-block {
 	text-align: right;
 }
 
@@ -596,28 +597,41 @@ div#upload_bill .order {
 	height: 100%;
 }
 
-div#loa h4 {
+div#loa h4,
+div#resporg h4 {
 	margin: 0;
 	font-weight: normal;
 }
 
-div#loa .row-fluid { text-align: center; }
+div#loa .row-fluid,
+div#resporg .row-fluid {
+	text-align: center;
+}
 
-div#loa .row-fluid > div .number { font-size: 25px; }
+div#loa .row-fluid > div .number,
+div#resporg .row-fluid > div .number {
+	font-size: 25px;
+}
 
-div#loa input.upload { display: none; }
+div#loa input.upload,
+div#resporg input.upload {
+	display: none;
+}
 
-div#loa > p { margin-bottom: 0; }
+div#loa > p {margin-bottom: 0; }
 
-div#loa #loa_link {
+div#loa #loa_link,
+div#resporg #resporg_link {
 	color: #333;
 }
 
-div#loa .file-upload-container {
+div#loa .file-upload-container,
+div#resporg .file-upload-container {
 	text-align: right;
 }
 
-div#loa .file-upload-container > button {
+div#loa .file-upload-container > button,
+div#resporg .file-upload-container > button {
 	float: right;
 }
 
