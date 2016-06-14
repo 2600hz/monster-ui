@@ -418,6 +418,12 @@ define(function(require){
 			monster.logs.error.push(monsterError);
 		},
 
+		series: function(methods, callback) {
+			async.series(methods, function(err, results) {
+				callback(err, results);
+			});
+		},
+
 		parallel: function(methods, callback, pLimit) {
 			var limit = pLimit && pLimit >= 1 ? pLimit : 5;
 
