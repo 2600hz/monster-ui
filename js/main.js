@@ -35,6 +35,7 @@ require.config({
 		'nicescroll': 'js/lib/jquery.nicescroll.min',
 		'monster-apps': 'js/lib/monster.apps',
 		'plugins': 'js/plugins',
+		'papaparse': 'js/lib/papaparse-4.1.2.min',
 		'postal': 'js/lib/postal-0.8.2',
 		'prettify':'js/lib/prettify',
 		'renderjson': 'js/lib/renderjson',
