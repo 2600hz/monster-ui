@@ -51,6 +51,12 @@ define(function(require){
 
 				// Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior
 				// logout: 'http://www.google.com'
+			},
+
+			// In the Port Manager, we use a LOA Form link. By changing this attribute, you'll change the default link. If any user has a whitelabel profile set via the Branding app, he can override that value.
+			port: {
+				// loa: 'custom_loa_url'
+				resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
 			}
 		},
 		developerFlags: {
