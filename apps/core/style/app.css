@@ -13,7 +13,7 @@ body,
 }
 
 .core-content {
-	height: calc(100% - 67px);
+	height: calc(100% - 70px);
 }
 
 /************************************************************/
@@ -21,7 +21,7 @@ body,
 /************************************************************/
 
 .core-topbar {
-	height: 62px;
+	height: 65px;
 	border-top: 5px solid #22a5ff;
 	background: #303039;
 }
@@ -34,7 +34,7 @@ body,
 	margin: 0;
 }
 .core-topbar .links {
-	line-height: 62px;
+	line-height: 65px;
 	display: inline-block;
 	color: #c0c0c9;
 }
@@ -78,59 +78,45 @@ body,
 	padding: 10px 20px;
 }
 .core-topbar #main_topbar_brand {
-	width: 192px;
-	height: 100%;
-	padding: 0 24px;
+	width: 125px;
+	height: 30px;
+	margin: 17.5px 25px 17.5px 10px;
 	background: no-repeat center center;
+}
+.core-topbar #main_topbar_current_app {
+	padding: 0 25px;
+	border-left: 1px solid #202029;
+}
+.core-topbar #main_topbar_current_app_icon {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: no-repeat center;
+	background-size: contain;
+
+	-webkit-transform: translateY(-50%);
+	   -moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
 }
 .core-topbar #main_topbar_current_app_name {
 	font-size: 18px;
+	display: inline-block;
 	max-width: 318px;
-	padding: 0 20px;
+	padding-left: 25px;
 	letter-spacing: .5px;
 	text-transform: uppercase;
 	color: #fff;
-	border-left: 1px solid #202029;
+}
+.core-topbar #main_topbar_trial_link_label {
+	display: inline-block;
+	float: left;
+	max-width: 148px;
 }
 .core-topbar #main_topbar_apploader {
 	display: none;
 }
-.core-topbar #main_topbar_links_apps_label {
-	max-width: 70px;
-}
-.core-topbar #main_topbar_switch_masquerade {
-	max-width: 140px;
-}
-.core-topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links {
-	background-color: #303039;
-	border: solid 1px #202029;
-	border-top: none;
-	border-radius: 0px 0px 4px 4px;
-	display: none;
-	z-index: 25;
-	position: relative;
-}
-.core-topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div {
-	box-sizing: border-box;
-	height: 30px;
-	padding: 5px;
-	text-align: center;
-	color: #c0c0c9;
-	cursor: pointer;
-	width: 100%;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-.core-topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div:hover {
-	color: #22a5ff;
-}
-.core-topbar #main_topbar_switch_masquerade:hover #main_topbar_masquerade_links,
-.core-topbar #main_topbar_switch_masquerade:focus #main_topbar_masquerade_links {
-	display: block;
-}
-.core-topbar #main_topbar_myaccount_user,
-.core-topbar #main_topbar_myaccount_masquerade_link {
+.core-topbar #main_topbar_myaccount_user {
 	max-width: 190px;
 }
 .core-topbar .links:hover,
@@ -141,37 +127,42 @@ body,
 }
 .core-topbar .inline-text,
 .core-topbar .cell-text,
-.core-topbar #main_topbar_current_app_name {
+.core-topbar #main_topbar_current_app_name,
+.core-topbar #main_topbar_trial_link_label {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 @media (max-width: 1199px) {
-	.core-topbar #main_topbar_links_apps_label {
-		display: none;
+	.core-topbar #main_topbar_brand {
+		margin-right: 10px;
 	}
 
-	.core-topbar #main_topbar_current_app_name,
-	.core-topbar .nav .links {
+	.core-topbar .nav .links,
+	.core-topbar #main_topbar_current_app {
 		padding-right: 10px;
 		padding-left: 10px;
 	}
 
+	.core-topbar #main_topbar_current_app_name {
+		padding-left: 10px;
+	}
+
 	/* Needed to allow enough space for the account toggle */
-	.core-topbar #main_topbar_myaccount {
-		min-width: 118px;
-		text-align: center;
+	.core-topbar #main_topbar_myaccount_user {
+		max-width: 118px;
 	}
 }
 @media (max-width: 999px) {
-	.core-topbar #main_topbar_current_app {
-		display: none !important;
+	.core-topbar #main_topbar_current_app_icon {
+		transform: none;
+		vertical-align: middle;
 	}
-	.core-topbar #main_topbar_leave_masquerade {
-		max-width: 120px;
+	.core-topbar #main_topbar_current_app_name {
+		display: none;
 	}
-	.core-topbar #main_topbar_myaccount_masquerade_link {
-		max-width: 160px;
+	.core-topbar #main_topbar_trial_link_label {
+		max-width: 108px;
 	}
 }
 
