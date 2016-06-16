@@ -89,7 +89,7 @@ define(function(require){
 			if (appName === 'myaccount') {
 				var myaccount = {
 						name: appName,
-						label: 'Control Center'
+						label: self.i18n.active().controlCenter
 					};
 
 				if (currentApp.is(':empty')) {
@@ -121,6 +121,7 @@ define(function(require){
 				_.each(monster.apps.auth.installedApps, function(val) {
 					if ( val.name === appName ) {
 						defaultApp = val;
+						defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.currentAccount.id + '/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 					}
 				});
 
