@@ -82,14 +82,14 @@ define(function(require){
 
 		showAppName: function(appName) {
 			var self = this,
-				navbar = $('#main_topbar'),
+				navbar = $('.core-topbar'),
 				currentApp = navbar.find('#main_topbar_current_app'),
 				defaultApp;
 
 			if (appName === 'myaccount') {
 				var myaccount = {
 						name: appName,
-						label: 'Control Center'
+						label: self.i18n.active().controlCenter
 					};
 
 				if (currentApp.is(':empty')) {
@@ -121,6 +121,7 @@ define(function(require){
 				_.each(monster.apps.auth.installedApps, function(val) {
 					if ( val.name === appName ) {
 						defaultApp = val;
+						defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.currentAccount.id + '/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 					}
 				});
 
@@ -431,7 +432,7 @@ define(function(require){
 			var self = this;
 
 			monster.getVersion(function(version) {
-				container.find('.footer-wrapper .tag-version').html('('+version+')');
+				container.find('.core-footer .tag-version').html('('+version+')');
 
 				monster.config.version = version;
 			});

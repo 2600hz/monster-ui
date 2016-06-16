@@ -450,32 +450,32 @@ i.monster-password-strength {
 /************************ APPS LAYOUT ***********************/
 /************************************************************/
 
-.monster-content .app-layout {
+.core-content .app-layout {
 	min-height: 100%;
 	background-color: #f0f0f9;
 }
 
-.monster-content .app-layout .app-header-wrapper {
+.core-content .app-layout .app-header-wrapper {
 	border-bottom: 1px solid #c0c0c9;
 	background-color: #fff;
 	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 }
 
-.monster-content .app-layout .app-header {
+.core-content .app-layout .app-header {
 	max-width: 1200px;
 	height: 98px;
 	margin: 0 auto;
 	padding: 40px 20px 0;
 }
 
-.monster-content .app-layout .app-name {
+.core-content .app-layout .app-name {
 	font-weight: normal;
 	line-height: 24px;
 	margin: 0;
 	color: #303039;
 }
 
-.monster-content .app-layout .app-content-wrapper {
+.core-content .app-layout .app-content-wrapper {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 50px 20px;

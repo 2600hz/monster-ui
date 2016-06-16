@@ -65,7 +65,7 @@ define(function(require){
 							apps: appList
 						}));
 
-					$('#main_topbar').after(template);
+					$('.core-absolute').append(template);
 
 					self.bindEvents(template, appList);
 					self.show();
