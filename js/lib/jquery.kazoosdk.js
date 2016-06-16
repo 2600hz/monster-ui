@@ -41,7 +41,8 @@
 		},
 		auth: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },
-			'recovery': { verb: 'PUT', url: 'user_auth/recovery' }
+			'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
+			'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery/{resetId}'}
 		},
 		balance: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },

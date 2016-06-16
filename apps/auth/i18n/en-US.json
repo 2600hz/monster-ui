@@ -42,10 +42,10 @@
 			}
 		},
 		"help": {
-			"text": "You have reset your password and are now using a temporary password. You may change it or continue using it."
+			"text": "You have successfully reset your password. Set your new password above, and you'll be able to log in with it the next time you use the application!"
 		},
 		"button": {
-			"update": "update password"
+			"update": "Update Password"
 		},
 		"toastr": {
 			"success": {

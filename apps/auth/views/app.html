@@ -74,7 +74,7 @@
 				{{/monsterCheckbox}}
 
 				{{#unless hidePasswordRecovery}}
-					<a href="#" class="form-toggle" data-form="forgot_info">{{ i18n.forgotPassword }}</a>
+					<a href="javascript:void(0);" class="form-toggle" data-form="forgot_info">{{ i18n.forgotPassword }}</a>
 				{{/unless}}
 			</div>
 			<button class="btn-submit login" type="submit">{{ i18n.login.buttonText }}</button>
@@ -89,7 +89,7 @@
 				<p class="form-info">{{ i18n.recoverPassword.headline }}</p>
 
 				<div class="input-wrap">
-					<input name="username" type="email">
+					<input name="username" type="text">
 					<span class="placeholder-shift">{{ i18n.recoverPassword.emailPlaceholder }}</span>
 					<span class="border-grow"></span>
 
@@ -114,14 +114,14 @@
 
 				<button class="btn-submit recover-password" id="btn_reset_password" type="button">{{ i18n.recoverPassword.resetPassword }}</button>
 				
-				<p class="form-info dark">{{ i18n.recoverPassword.rememberPassword }}<a href="#" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a></p>
+				<p class="form-info dark">{{ i18n.recoverPassword.rememberPassword }}<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a></p>
 			</div>
 
 
 			<div class="reset-notification hidden">
 				<p>{{ i18n.recoverPassword.successReset }}</p>
 
-				<a href="#" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a>
+				<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a>
 			</div>
 		</form>
 	</div>

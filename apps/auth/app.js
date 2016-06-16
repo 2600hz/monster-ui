@@ -82,6 +82,11 @@ define(function(require){
 			else if(urlParams.hasOwnProperty('t') && urlParams.hasOwnProperty('a') && urlParams.t.length === 32 && urlParams.a.length === 32) {
 				self.authenticateAuthToken(urlParams.a, urlParams.t, successfulAuth);
 			}
+			else if(urlParams.hasOwnProperty('recovery')) {
+				self.checkRecovery(urlParams.recovery, function(accountId, token) {
+					self.authenticateAuthToken(accountId, token, successfulAuth);
+				});
+			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
 			else {
 				self.renderLoginPage(self.appFlags.mainContainer);
@@ -722,6 +727,20 @@ define(function(require){
 			});
 		},
 
+		checkRecovery: function(recoveryId, callback) {
+			self.recovery(recoveryId, function(data) {
+				if(data.hasOwnProperty('auth_token') && data.hasOwnProperty('account_id')) {
+					callback && callback(data.auth_token, data.account_id);
+				}
+				else {
+					self.renderLoginPage();
+				}
+			},
+			function() {
+				self.renderLoginPage();
+			});
+		},
+
 		// API Calls
 		putAuth: function(loginData, callback) {
 			var self = this;
@@ -748,6 +767,24 @@ define(function(require){
 					else {
 						globalHandler(errorPayload, { generateError: true });
 					}
+				}
+			});
+		},
+
+		recovery: function(recoveryId, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.recovery',
+				data: {
+					accountId: self.accountId,
+					recoveryId: recoveryId
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function() {
+					error && error();
 				}
 			});
 		},
