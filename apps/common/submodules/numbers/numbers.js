@@ -1197,7 +1197,7 @@ define(function(require){
 			_.each(data.numbers, function(number, id) {
 				if(extraNumbers.indexOf(id) >= 0) {
 					addNumber(id, number);
-				} else if(number.used_by === '' && ignoreNumbers.indexOf(id) === -1) {
+				} else if((!number.hasOwnProperty('used_by') || number.used_by === '') && ignoreNumbers.indexOf(id) === -1) {
 					if(!featureFilters || featureFilters.length === 0) {
 						addNumber(id, number);
 					} else {
