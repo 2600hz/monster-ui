@@ -78,9 +78,9 @@ body,
 	padding: 10px 20px;
 }
 .core-topbar #main_topbar_brand {
-	width: 125px;
-	height: 30px;
-	margin: 17.5px 25px 17.5px 10px;
+	width: 192px;
+	height: 62px;
+	margin: auto 25px auto 10px;
 	background: no-repeat center center;
 }
 .core-topbar #main_topbar_current_app {
@@ -102,7 +102,7 @@ body,
 .core-topbar #main_topbar_current_app_name {
 	font-size: 18px;
 	display: inline-block;
-	max-width: 318px;
+	max-width: 269px;
 	padding-left: 25px;
 	letter-spacing: .5px;
 	text-transform: uppercase;
@@ -111,7 +111,7 @@ body,
 .core-topbar #main_topbar_trial_link_label {
 	display: inline-block;
 	float: left;
-	max-width: 148px;
+	max-width: 130px;
 }
 .core-topbar #main_topbar_apploader {
 	display: none;
@@ -158,11 +158,9 @@ body,
 		transform: none;
 		vertical-align: middle;
 	}
-	.core-topbar #main_topbar_current_app_name {
+	.core-topbar #main_topbar_current_app_name,
+	.core-topbar #main_topbar_trial {
 		display: none;
-	}
-	.core-topbar #main_topbar_trial_link_label {
-		max-width: 108px;
 	}
 }
 
