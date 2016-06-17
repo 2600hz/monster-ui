@@ -200,7 +200,7 @@ define(function(require){
 				modbString;
 
 			// Verify that the ID we got is not already a MODB ID
-			if(id.substr(7) !== modbDBprefix) {
+			if(id.substr(0, 7) !== modbDBprefix) {
 				modbString = UTCYear + formattedUTCMonth + '-' + id;
 			}
 			else {
