@@ -181,6 +181,11 @@
 			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
 			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
+		ledgers: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers'},
+			'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}'},
+			'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}'}
+		},
 		limits: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/limits' }
