@@ -1299,8 +1299,8 @@ table.monster-table .actions .action-item:first-child {
 /************************************************************/
 
 .monster-navbar {
+	clear: both;
 	height: 40px;
-	margin-top: 34px;
 }
 
 .monster-navbar .separator:not(:first-child) {

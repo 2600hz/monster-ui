@@ -462,21 +462,13 @@ i.monster-password-strength {
 }
 
 .core-content .app-layout .app-header {
-	max-width: 1200px;
-	height: 98px;
+	max-width: 1280px;
 	margin: 0 auto;
-	padding: 40px 20px 0;
-}
-
-.core-content .app-layout .app-name {
-	font-weight: normal;
-	line-height: 24px;
-	margin: 0;
-	color: #303039;
+	padding: 25px 20px 0;
 }
 
 .core-content .app-layout .app-content-wrapper {
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
 	padding: 50px 20px;
 }
