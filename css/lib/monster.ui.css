@@ -455,16 +455,32 @@ i.monster-password-strength {
 	background-color: #f0f0f9;
 }
 
-.core-content .app-layout .app-header-wrapper {
+.core-content .app-header .app-nav-bg {
+	position: relative;
 	border-bottom: 1px solid #c0c0c9;
-	background-color: #fff;
 	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 }
+.core-content .app-header .app-navbar-bg {
+	z-index: 10;
+	background-color: #fff;
+}
 
-.core-content .app-layout .app-header {
+.core-content .app-header .app-navbar-wrapper {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 25px 20px 0;
+}
+
+.core-content .app-header .app-subnav-bg {
+	z-index: 9;
+	display: none;
+	background-color: #e0e0e9;
+}
+
+.core-content .app-header .app-subnav-wrapper {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 20px 20px 0;
 }
 
 .core-content .app-layout .app-content-wrapper {

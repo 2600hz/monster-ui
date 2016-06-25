@@ -1697,7 +1697,7 @@ define(function(require){
 			var self = this,
 				isLoadingInProgress = false,
 				parent = $('#monster-content'),
-				appHeaderWrapper = parent.find('.app-header-wrapper'),
+				appHeader = parent.find('.app-header'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
 				hasDefaultTab = _.find($(navbarTemplate).find('.navbar-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
 
@@ -1707,13 +1707,13 @@ define(function(require){
 					.append(navbarTemplate);
 
 			if (!hasDefaultTab) {
-				appHeaderWrapper
+				appHeader
 					.find('.navbar-menu-item-link')
 						.first()
 							.addClass('active');
 			}
 
-			appHeaderWrapper
+			appHeader
 				.find('.navbar-menu-item-link')
 					.on('click', function() {
 						var $this = $(this),
@@ -1722,7 +1722,7 @@ define(function(require){
 							currentTab = menus[menuId].tabs[tabId],
 							loadTabContent = function loadTabContent () {
 								if (!$this.hasClass('active')) {
-									appHeaderWrapper
+									appHeader
 										.find('.navbar-menu-item-link.active')
 											.removeClass('active');
 

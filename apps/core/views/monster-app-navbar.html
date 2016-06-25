@@ -1,8 +1,10 @@
 {{#each menus}}
 
-{{#unless float}}
-	<div class="separator"></div>
-{{/unless}}
+{{#if @index}}
+	{{#unless float}}
+		<div class="separator"></div>
+	{{/unless}}
+{{/if}}
 
 	<ul class="navbar-menu{{#if float}} pull-{{float}}{{/if}}" data-menu_id="{{@index}}">
 	{{#each tabs}}
