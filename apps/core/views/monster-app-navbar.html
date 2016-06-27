@@ -8,7 +8,11 @@
 
 	<ul class="navbar-menu{{#if float}} pull-{{float}}{{/if}}" data-menu_id="{{@index}}">
 	{{#each tabs}}
-		<li class="navbar-menu-item"><a href="#" class="navbar-menu-item-link{{#if default}} active{{/if}}" data-tab_id="{{@index}}">{{text}}</a></li>
+		<li class="navbar-menu-item">
+			<a href="javascript:void(0);" class="navbar-menu-item-link{{#if default}} active{{/if}}" data-tab_id="{{@index}}">
+				{{text}}
+			</a>
+		</li>
 	{{/each}}
 	</ul>
 {{/each}}
