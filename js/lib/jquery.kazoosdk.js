@@ -299,6 +299,7 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}'},
 			'start': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}' },
 			'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/plain', dataType: 'text' },
+			'getInput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/input', type: 'text/plain', dataType: 'text' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/tasks/{taskId}' },
 		},
 		temporalRule: {
