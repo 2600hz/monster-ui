@@ -76,7 +76,7 @@ define(function(require){
 				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}
 
-			value.isLocal = value.features.indexOf('local') > -1;
+			value.isLocal = 'features' in value ? value.features.indexOf('local') > -1 : false;
 
 			return value;
 		},
