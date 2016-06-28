@@ -477,6 +477,10 @@ define(function(require){
 			}
 			else {
 				displayTime = (hours < 10 ? '0' + hours : '' + hours) + ':' + (minutes < 10 ? '0' + minutes : '' + minutes) + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : '' + remainingSeconds);
+
+				if(displayTime.substr(0,2) === '00') {
+					displayTime = displayTime.substr(3, displayTime.length);
+				}
 			}
 
 			return seconds >= 0 ? displayTime : '00:00:00';

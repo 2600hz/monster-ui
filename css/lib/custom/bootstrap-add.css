@@ -197,11 +197,10 @@ table.table tr > td {
 }
 
 .tooltip.top .tooltip-arrow {
-	margin-left: 0;
-	border-top-color: #333;
+	border-top-color: #222;
 }
 .tooltip.bottom .tooltip-arrow {
-	border-bottom-color: #333;
+	border-bottom-color: #222;
 }
 .tooltip .tooltip-inner {
 	line-height: 15px;

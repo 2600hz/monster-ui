@@ -31,7 +31,7 @@
  */
 
 /* Fix bootstrap for tables */
-.tooltip.top, .tooltip.bottom {
+.dataTables_wrapper .tooltip.top, .dataTables_wrapper .tooltip.bottom {
     background-color: transparent;
     border: medium none;
     padding: 5px;
