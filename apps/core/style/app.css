@@ -20,10 +20,13 @@ body,
 /************************** TOPBAR **************************/
 /************************************************************/
 
+.core-topbar-wrapper {
+	background-color: #303039;
+	border-top: 5px solid #22a5ff;
+}
+
 .core-topbar {
 	height: 65px;
-	border-top: 5px solid #22a5ff;
-	background: #303039;
 }
 .core-topbar .main-links {
 	height: inherit;
@@ -66,7 +69,6 @@ body,
 	padding: 0 20px;
 }
 .core-topbar .nav > li {
-	background: #303039;
 	border-left: 1px solid #202029;
 }
 .core-topbar .nav > li {
