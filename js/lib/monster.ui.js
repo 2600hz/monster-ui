@@ -211,22 +211,32 @@ define(function(require){
 	}
 
 	function initializeUIComponents() {
-		// We have a special component, allowing checkbox in bootstrap dropdown
-		// By default Bootstrap expands the dropdown items, so we need to prevent that if the checkbox is selected
-		$('body').on('click', '.monster-select-dropdown', function(e) {
-			e.stopPropagation();
-			var $this = $(this);
+		var $coreWrapper = $('.core-wrapper');
 
-			if($this.find('.monster-checkbox').has(e.target).length === 0) {
-				$this.find('.dropdown').toggleClass('open');
-			}
-		});
+		/**
+		 * We have a special component allowing checkbox in Bootstrap dropwdown
+		 * By default Bootstrap expands the dropdown elements so we need to
+		 * prevent that if the checkbox is selected
+		 */
+		$coreWrapper
+			.on('click', '.monster-select-dropdown', function(event) {
+				event.stopPropagation();
 
-		$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+				var $this = $(this);
+
+				if ($this.find('.monster-checkbox').has(event.target).length === 0) {
+					$this
+						.find('.dropdown')
+							.toggleClass('open');
+				}
+			});
+
+		$.widget('ui-dialog', $.extend({}, $.ui.dialog.prototype, {
 			_title: function(title) {
-				if (!this.options.title ) {
-					title.html("&#160;");
-				} else {
+				if (!this.options.title) {
+					title.html('&#160');
+				}
+				else {
 					title.html(this.options.title);
 				}
 			}
