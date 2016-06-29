@@ -52,6 +52,10 @@
 			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit'}
 		},
+		ledgers: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
+		},
 		billing: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
@@ -104,6 +108,10 @@
 			'undeafParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/undeaf/{participantId}' },
 			'kickParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}' },
 
+			'lock': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/lock' },
+			'mute': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/mute' },
+			'hangup': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/hangup' },
+
 			'createNotification': { verb: 'PUT', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' },
 			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
 			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
@@ -142,9 +150,13 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/faxboxes' },
 		},
+		smtpLogs: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}'},
+		},
 		faxes: {
-			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
-			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'},
+			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog'},
+			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}'},
 			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound' },
 			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}' },
 			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}/attachment' },
