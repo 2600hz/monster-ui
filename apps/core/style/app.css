@@ -1,221 +1,209 @@
 html,
 body,
-#main,
-#main section {
+.core-wrapper {
 	height: 100%;
 }
 
 body,
-#main_topbar,
+.core-topbar,
 #myaccount,
 #auth_container,
-#monster-content {
+.core-content {
 	min-width: 600px;
 }
 
-#monster-content {
-	height: calc(100% - 67px);
+.core-content {
+	height: calc(100% - 70px);
 }
 
 /************************************************************/
 /************************** TOPBAR **************************/
 /************************************************************/
 
-#main_topbar {
-	height: 62px;
+.core-topbar {
+	height: 65px;
 	border-top: 5px solid #22a5ff;
 	background: #303039;
 }
-#main_topbar .main-links {
+.core-topbar .main-links {
 	height: inherit;
 }
-#main_topbar .main-links,
-#main_topbar .nav {
+.core-topbar .main-links,
+.core-topbar .nav {
 	float: left;
 	margin: 0;
 }
-#main_topbar .links {
-	line-height: 62px;
+.core-topbar .links {
+	line-height: 65px;
 	display: inline-block;
 	color: #c0c0c9;
 }
-#main_topbar .links:hover,
-#main_topbar .links:focus {
+.core-topbar .links:hover,
+.core-topbar .links:focus {
 	cursor: pointer;
 	background: transparent;
 }
-#main_topbar .links i {
+.core-topbar .links i {
 	vertical-align: middle;
 	color: #c0c0c9;
 }
-#main_topbar .links .inline-text {
+.core-topbar .links .inline-text {
 	display: inline-block;
 	float: left;
 	margin-right: 10px;
 }
-#main_topbar .links .inline-text.red {
+.core-topbar .links .inline-text.red {
 	color: red;
 }
-#main_topbar .links .cell-text {
+.core-topbar .links .cell-text {
 	line-height: 21px;
 	text-align: center;
 }
-#main_topbar .nav {
+.core-topbar .nav {
 	float: right;
 }
-#main_topbar .nav .links {
+.core-topbar .nav .links {
 	padding: 0 20px;
 }
-#main_topbar .nav > li {
+.core-topbar .nav > li {
 	background: #303039;
 	border-left: 1px solid #202029;
 }
-#main_topbar .nav > li {
+.core-topbar .nav > li {
 	float: left;
 	height: 62px;
 	text-decoration: none;
 }
-#main_topbar .links.cell {
+.core-topbar .links.cell {
 	padding: 10px 20px;
 }
-#main_topbar #main_topbar_brand {
+.core-topbar #main_topbar_brand {
 	width: 192px;
-	height: 100%;
-	padding: 0 24px;
+	height: 62px;
+	margin: auto 25px auto 10px;
 	background: no-repeat center center;
 }
-#main_topbar #main_topbar_current_app_name {
+.core-topbar #main_topbar_current_app {
+	padding: 0 25px;
+	border-left: 1px solid #202029;
+}
+.core-topbar #main_topbar_current_app_icon {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: no-repeat center;
+	background-size: contain;
+
+	-webkit-transform: translateY(-50%);
+	   -moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+}
+.core-topbar #main_topbar_current_app_name {
 	font-size: 18px;
-	max-width: 318px;
-	padding: 0 20px;
+	display: inline-block;
+	max-width: 269px;
+	padding-left: 25px;
 	letter-spacing: .5px;
 	text-transform: uppercase;
 	color: #fff;
-	border-left: 1px solid #202029;
 }
-#main_topbar #main_topbar_apploader {
+.core-topbar #main_topbar_trial_link_label {
+	display: inline-block;
+	float: left;
+	max-width: 130px;
+}
+.core-topbar #main_topbar_apploader {
 	display: none;
 }
-#main_topbar #main_topbar_links_apps_label {
-	max-width: 70px;
-}
-#main_topbar #main_topbar_switch_masquerade {
-	max-width: 140px;
-}
-#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links {
-	background-color: #303039;
-	border: solid 1px #202029;
-	border-top: none;
-	border-radius: 0px 0px 4px 4px;
-	display: none;
-	z-index: 25;
-	position: relative;
-}
-#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div {
-	box-sizing: border-box;
-	height: 30px;
-	padding: 5px;
-	text-align: center;
-	color: #c0c0c9;
-	cursor: pointer;
-	width: 100%;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-#main_topbar #main_topbar_switch_masquerade #main_topbar_masquerade_links > div:hover {
-	color: #22a5ff;
-}
-#main_topbar #main_topbar_switch_masquerade:hover #main_topbar_masquerade_links,
-#main_topbar #main_topbar_switch_masquerade:focus #main_topbar_masquerade_links {
-	display: block;
-}
-#main_topbar #main_topbar_myaccount_user,
-#main_topbar #main_topbar_myaccount_masquerade_link {
+.core-topbar #main_topbar_myaccount_user {
 	max-width: 190px;
 }
-#main_topbar .links:hover,
-#main_topbar .links:hover i,
-#main_topbar #main_topbar_current_app_name:hover,
-#main_topbar #main_topbar_myaccount_masquerade_label {
+.core-topbar .links:hover,
+.core-topbar .links:hover i,
+.core-topbar #main_topbar_current_app_name:hover,
+.core-topbar #main_topbar_myaccount_masquerade_label {
 	color: #22a5ff;
 }
-#main_topbar .inline-text,
-#main_topbar .cell-text,
-#main_topbar #main_topbar_current_app_name {
+.core-topbar .inline-text,
+.core-topbar .cell-text,
+.core-topbar #main_topbar_current_app_name,
+.core-topbar #main_topbar_trial_link_label {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 @media (max-width: 1199px) {
-	#main_topbar #main_topbar_links_apps_label {
-		display: none;
+	.core-topbar #main_topbar_brand {
+		margin-right: 10px;
 	}
 
-	#main_topbar #main_topbar_current_app_name,
-	#main_topbar .nav .links {
+	.core-topbar .nav .links,
+	.core-topbar #main_topbar_current_app {
 		padding-right: 10px;
 		padding-left: 10px;
 	}
 
+	.core-topbar #main_topbar_current_app_name {
+		padding-left: 10px;
+	}
+
 	/* Needed to allow enough space for the account toggle */
-	#main_topbar #main_topbar_myaccount {
-		min-width: 118px;
-		text-align: center;
+	.core-topbar #main_topbar_myaccount_user {
+		max-width: 118px;
 	}
 }
 @media (max-width: 999px) {
-	#main_topbar #main_topbar_current_app {
-		display: none !important;
+	.core-topbar #main_topbar_current_app_icon {
+		transform: none;
+		vertical-align: middle;
 	}
-	#main_topbar #main_topbar_leave_masquerade {
-		max-width: 120px;
-	}
-	#main_topbar #main_topbar_myaccount_masquerade_link {
-		max-width: 160px;
+	.core-topbar #main_topbar_current_app_name,
+	.core-topbar #main_topbar_trial {
+		display: none;
 	}
 }
 
 /***** Account Toggle *****/
-#main_topbar .links#main_topbar_account_toggle_link {
+.core-topbar .links#main_topbar_account_toggle_link {
 	display: none;
 }
 
-#main_topbar .links#main_topbar_account_toggle_link.visible {
+.core-topbar .links#main_topbar_account_toggle_link.visible {
 	display: block;
 }
 
-#main_topbar #main_topbar_account_toggle.open {
+.core-topbar #main_topbar_account_toggle.open {
 	background-color: #202029;
 }
-#main_topbar #main_topbar_account_toggle.open #main_topbar_account_toggle_link i {
+.core-topbar #main_topbar_account_toggle.open #main_topbar_account_toggle_link i {
 	color: #22a5ff;
 }
-#main_topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
+.core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
 	display: none;
 }
 
-#main_topbar #main_topbar_account_toggle_container {
+.core-topbar #main_topbar_account_toggle_container {
 	position: absolute;
 	z-index: 21; /* 1 more than myAccount */
 }
 
-#main_topbar #main_topbar_account_toggle_container .account-browser-container {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container {
 	background-color: #202029;
 	width: 220px;
 	padding: 1px;
 	border-right: none;
 }
-#main_topbar #main_topbar_account_toggle_container .search-box {
+.core-topbar #main_topbar_account_toggle_container .search-box {
 	width: auto;
 	padding: 10px;
 	border-bottom: none;
 }
-#main_topbar #main_topbar_account_toggle_container .search-box i {
+.core-topbar #main_topbar_account_toggle_container .search-box i {
 	color: #c0c0c9;
 	margin: 8px 0 0 8px;
 }
-#main_topbar #main_topbar_account_toggle_container .search-box .search-query {
+.core-topbar #main_topbar_account_toggle_container .search-box .search-query {
 	background-color: #404049;
 	color: #c0c0c9;
 	box-sizing: border-box;
@@ -225,91 +213,91 @@ body,
 	box-shadow: none;
 	height: 30px;
 }
-#main_topbar #main_topbar_account_toggle_container .account-list-container {
+.core-topbar #main_topbar_account_toggle_container .account-list-container {
 	width: 440px;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list,
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-slider {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list,
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-slider {
 	width: 220px;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element {
 	border-color: #202029;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element > div {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element > div {
 	background: #303039;
 	color: #c0c0c9;
 	border-color: #202029;
 }
 
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element.active > div {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element.active > div {
 	color: #22a5ff;
 }
 
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
 	font-size: 14px;
 }
-#main_topbar #main_topbar_account_toggle_container .account-children-link i:before {
+.core-topbar #main_topbar_account_toggle_container .account-children-link i:before {
 	font-size: 10px;
 	color: #c0c0c9;
 	content: "\f054";
 }
-#main_topbar #main_topbar_account_toggle_container .account-children-link.local-back i:before {
+.core-topbar #main_topbar_account_toggle_container .account-children-link.local-back i:before {
 	content: "\f053";
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link {
 	color: #c0c0c9;
 	background: #202029;
 	border-color: #909099;
 	border-top: solid 1px;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link .account-search-value {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link .account-search-value {
 	text-shadow: none;
 	font-weight: 700;
 }
 
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link {
 	line-height: 20px;
 	border: none;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link * {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link * {
 	color: #909099;
 	font-size: 12px;
 	vertical-align: middle;
 }
-#main_topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link i:before {
+.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link i:before {
 	content: "\f060";
 }
 
-#main_topbar #main_topbar_account_toggle_container .account-toggle-header {
+.core-topbar #main_topbar_account_toggle_container .account-toggle-header {
 	background: #202029;
 	color: #c0c0c9;
 	padding: 10px 12px 0px 12px;
 	position: relative;
 }
-#main_topbar #main_topbar_account_toggle_container .current-account-label {
+.core-topbar #main_topbar_account_toggle_container .current-account-label {
 	font-size: 12px;
 }
-#main_topbar #main_topbar_account_toggle_container .current-account-container {
+.core-topbar #main_topbar_account_toggle_container .current-account-container {
 	color: #22A5FF;
 	pointer-events: none;
 }
 
-#main_topbar #main_topbar_account_toggle_container .missing-info {
+.core-topbar #main_topbar_account_toggle_container .missing-info {
 	color: #909099;
 	font-style: italic;
 }
 
-#main_topbar #main_topbar_account_toggle_container .home-account-link {
+.core-topbar #main_topbar_account_toggle_container .home-account-link {
 	position: absolute;
 	top: 15px;
 	right: 15px;
 	cursor: pointer;
 	color: #606069;
 }
-#main_topbar #main_topbar_account_toggle:not(.masquerading) .home-account-link {
+.core-topbar #main_topbar_account_toggle:not(.masquerading) .home-account-link {
 	display: none;
 }
-#main_topbar #main_topbar_account_toggle_container .home-account-link:hover {
+.core-topbar #main_topbar_account_toggle_container .home-account-link:hover {
 	color: #c0c0c9;
 }
 #main_topbar_account_toggle.masquerading ~ #main_topbar_myaccount i.fa:before {
@@ -503,12 +491,12 @@ body,
 /********************** FLOATING FOOTER *********************/
 /************************************************************/
 
-.footer-wrapper {
+.core-footer {
 	position: fixed;
 	right: 2px;
 	bottom: 2px;
 }
-.footer-wrapper .powered-by > * {
+.core-footer .powered-by > * {
 	font-size: 11px;
 	margin-right: 5px;
 	text-decoration: none;

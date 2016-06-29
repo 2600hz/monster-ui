@@ -193,6 +193,11 @@
 			'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/ips/assigned' },
 			'listZones': { verb: 'GET', url: 'accounts/{accountId}/ips/zones' }
 		},
+		ledgers: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers'},
+			'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}'},
+			'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}'}
+		},
 		limits: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/limits' }
@@ -306,6 +311,7 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}'},
 			'start': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}' },
 			'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/plain', dataType: 'text' },
+			'getInput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/input', type: 'text/plain', dataType: 'text' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/tasks/{taskId}' },
 		},
 		temporalRule: {
