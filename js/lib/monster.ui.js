@@ -231,6 +231,35 @@ define(function(require){
 				}
 			});
 
+		/**
+		 * Add 'splash effect' on click for every monster-button
+		 */
+		$coreWrapper
+			.on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
+				event.preventDefault();
+
+				var $this = $(this),
+					$splash = $('<div>', {
+						class: 'monster-splash-effect'
+					}),
+					offset = $this.offset(),
+					xPos = event.pageX - offset.left,
+					yPos = event.pageY - offset.top;
+
+				$splash
+					.css({
+						width: $this.height(),
+						height: $this.height(),
+						top: yPos - ($splash.height() / 2),
+						left: xPos - ($splash.width() / 2)
+					})
+					.appendTo($this);
+
+				window.setTimeout(function() {
+					$splash.remove();
+				}, 1500);
+			});
+
 		$.widget('ui-dialog', $.extend({}, $.ui.dialog.prototype, {
 			_title: function(title) {
 				if (!this.options.title) {

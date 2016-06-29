@@ -251,25 +251,6 @@ define(function(require){
 				}
 			});
 
-			$('.core-topbar, .core-content, .core-footer, .core-absolute').on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
-				var $this = $(this),
-					splashDiv = $('<div class="monster-splash-effect"/>'),
-					offset = $this.offset(),
-					xPos = event.pageX - offset.left,
-					yPos = event.pageY - offset.top;
-				
-				splashDiv.css({
-					height: $this.height(),
-					width: $this.height(),
-					top: yPos - (splashDiv.height()/2),
-					left: xPos - (splashDiv.width()/2)
-				}).appendTo($this);
-
-				window.setTimeout(function(){
-					splashDiv.remove();
-				}, 1500);
-			});
-
 			if(monster.config.whitelabel.hasOwnProperty('nav')) {
 				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
 					container.find('#main_topbar_signout_link')
