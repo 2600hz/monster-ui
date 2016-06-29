@@ -1738,19 +1738,51 @@ define(function(require){
 				parent = $('#monster-content'),
 				appHeader = parent.find('.app-header'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
-				hasDefaultTab = _.find($(navbarTemplate).find('.navbar-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
+				subnavTemplate = monster.template(monster.apps.core, 'monster-app-subnav', { menus: menus }),
+				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html());
 
-			parent
-				.find('.app-navbar')
-					.empty()
-					.append(navbarTemplate);
-
-			if (!hasDefaultTab) {
+			function initNavbar() {
 				appHeader
-					.find('.navbar-menu-item-link')
+					.find('.app-navbar')
+						.empty()
+						.append(navbarTemplate);
+
+				appHeader
+					.find('.app-navbar .navbar-menu-item-link')
 						.first()
 							.addClass('active');
 			}
+
+			function initSubnav() {
+				if (hasSubnav) {
+					appHeader
+						.append(subnavTemplate);
+
+					$.each(appHeader.find('.app-subnav'), function(idx, el) {
+						$(el)
+							.find('.navbar-menu-item-link')
+								.first()
+									.addClass('active');
+					});
+
+					var firstSubnav = appHeader.find('.app-subnav').first(),
+						menuId = firstSubnav.data('menu_id'),
+						tabId = firstSubnav.data('tab_id');
+
+					if (menuId === 0 && tabId === 0) {
+						appHeader
+							.find('.app-subnav-bg')
+								.show();
+
+						appHeader
+							.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]')
+								.addClass('active');
+					}
+				}
+			}
+
+			initNavbar();
+			initSubnav();
 
 			appHeader
 				.find('.navbar-menu-item-link')

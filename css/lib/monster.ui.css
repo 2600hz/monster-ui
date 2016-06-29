@@ -483,6 +483,10 @@ i.monster-password-strength {
 	padding: 20px 20px 0;
 }
 
+.core-content .app-header .app-subnav:not(.active) {
+	display: none;
+}
+
 .core-content .app-layout .app-content-wrapper {
 	max-width: 1280px;
 	margin: 0 auto;
