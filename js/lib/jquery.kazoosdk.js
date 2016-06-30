@@ -310,8 +310,8 @@
 			'add': { verb: 'PUT', url: 'accounts/{accountId}/tasks?category={category}&action={action}'},
 			'get': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}'},
 			'start': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}' },
-			'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/plain', dataType: 'text' },
-			'getInput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/input', type: 'text/plain', dataType: 'text' },
+			'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/csv', dataType: 'text' },
+			'getInput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/input', type: 'text/csv', dataType: 'text' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/tasks/{taskId}' },
 		},
 		temporalRule: {
