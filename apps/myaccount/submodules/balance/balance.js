@@ -72,7 +72,7 @@ define(function(require){
 						callback: function(uiRestrictions) {
 							var renderData = $.extend(true, {},
 													  defaults,
-													  self.balanceFormatTableData(results.transactions.data, defaults.fieldData.accounts),
+													  self.balanceFormatTableData(results.transactions, defaults.fieldData.accounts),
 													  {uiRestrictions: uiRestrictions}
 													 );
 
@@ -247,7 +247,7 @@ define(function(require){
 				};
 
 			self.balanceGetTransactions(params, function(dataTransactions) {
-				var data = self.balanceFormatTableData(dataTransactions.data, mapAccounts);
+				var data = self.balanceFormatTableData(dataTransactions, mapAccounts);
 
 				monster.ui.table.balance.addData(data.tabData);
 
@@ -274,28 +274,21 @@ define(function(require){
 					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
 
 					var duration = self.i18n.active().balance.active_call,
-						friendlyDate = monster.util.toFriendlyDate(v.created),
-						accountName = '-',
+						friendlyDate = monster.util.toFriendlyDate(v.period.start),
+						accountName = v.account.name,
 						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
 						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
 						toField = monster.util.formatPhoneNumber(v.metadata.to || '').replace(/@.*/, '');
 
-					if('duration' in v.metadata) {
-						duration = Math.ceil((parseInt(v.metadata.duration))/60),
+					if(v.usage && v.usage.hasOwnProperty('quantity')) {
+						duration = Math.ceil((parseInt(v.usage.quantity))/60),
 						data.totalMinutes += duration;
-					}
-
-					if(v.hasOwnProperty('sub_account_name')) {
-						accountName = v.sub_account_name;
-					}
-					else if(v.hasOwnProperty('sub_account_id')) {
-						accountName = mapAccounts.hasOwnProperty(v.sub_account_id) ? mapAccounts[v.sub_account_id].name : '-';
 					}
 
 					data.totalCharges += parseFloat(v.amount);
 
 					data.tabData.push([
-						v.created || '-',
+						v.period.start || '-',
 						v.call_id || '-',
 						v.metadata.call || '-',
 						friendlyDate || '-',
@@ -789,19 +782,68 @@ define(function(require){
 			var from = monster.util.dateToBeginningOfGregorianDay(params.from),
 				to = monster.util.dateToEndOfGregorianDay(params.to);
 
+			self.balanceGetLedgersTransactions(from, to, function(data) {
+				success && success(data);
+			});
+		},
+
+		balanceGetLedgersTransactions: function(from, to, callback) {
+			var self = this
+				parallelRequests = {};
+
+			self.balanceListLedgers(function(ledgers) {
+				_.each(ledgers, function(ledger, name) {
+					parallelRequests[name] = function(callback) {
+						self.balanceGetLedgerDocuments(name, from, to, function(documents) {
+							callback && callback(null, documents);
+						});
+					}
+				});
+
+				monster.parallel(parallelRequests, function(err, results) {
+					var arrayResults = [];
+
+					_.each(results, function(ledgerDocuments, type) {
+						// for now we only want to list per minute voip, will change once we have more data from ledgers
+						if(type === 'per-minute-voip') {
+							arrayResults = arrayResults.concat(ledgerDocuments);
+						}
+					});
+
+					callback && callback(arrayResults)
+				});
+			});
+		},
+
+		balanceListLedgers: function(callback) {
+			var self = this;
+
 			self.callApi({
-				resource: 'balance.filtered',
+				resource: 'ledgers.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		balanceGetLedgerDocuments: function(ledgerId, from, to, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'ledgers.get',
 				data: {
 					accountId: self.accountId,
-					from: from,
-					to: to,
-					reason: 'only_calls'
+					ledgerId: ledgerId,
+					filters: {
+						created_from: from,
+						created_to: to
+					}
 				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
+				success: function(data) {
+					callback && callback(data.data);
 				}
 			});
 		},

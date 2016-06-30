@@ -52,10 +52,6 @@
 			'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
 			'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit'}
 		},
-		ledgers: {
-			'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
-			'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
-		},
 		billing: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
