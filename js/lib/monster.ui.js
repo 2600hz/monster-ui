@@ -1790,14 +1790,85 @@ define(function(require){
 						var $this = $(this),
 							menuId = $this.parents('.navbar-menu').data('menu_id'),
 							tabId = $this.data('tab_id'),
+							isSubnav = $this.parents('nav').hasClass('app-subnav'),
 							currentTab = menus[menuId].tabs[tabId],
 							loadTabContent = function loadTabContent () {
-								if (!$this.hasClass('active')) {
-									appHeader
-										.find('.navbar-menu-item-link.active')
-											.removeClass('active');
+								var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]');
 
-									$this.addClass('active');
+								// Add 'active' class to menu element
+								if (!$this.hasClass('active')) {
+									$this
+										.parents('nav')
+											.find('.navbar-menu-item-link.active')
+												.removeClass('active');
+									$this
+										.addClass('active');
+								}
+
+								// Subnav container handling
+								if (!isSubnav) {
+									// Display correct subnav element
+									if (currentTab.hasOwnProperty('menus')) {
+										if (currentSubnav.hasClass('active')) {
+											currentSubnav
+												.find('.navbar-menu-item-link.active')
+													.removeClass('active');
+
+											currentSubnav
+												.find('.navbar-menu-item-link')
+													.first()
+														.addClass('active');
+										}
+										else {
+											if (appHeader.find('.app-subnav-bg').is(':visible')) {
+												appHeader
+													.find('.app-subnav.active')
+														.fadeOut(200, function() {
+															$(this).removeClass('active');
+
+															currentSubnav
+																.find('.navbar-menu-item-link.active')
+																	.removeClass('active');
+
+															currentSubnav
+																.find('.navbar-menu-item-link')
+																	.first()
+																		.addClass('active');
+
+															currentSubnav
+																.fadeIn(200, function() {
+																	$(this).addClass('active');
+																});
+														});
+											}
+											else {
+												appHeader
+													.find('.app-subnav.active')
+														.hide()
+														.removeClass('active');
+
+												currentSubnav
+													.show()
+													.addClass('active');
+											}
+										}
+									}
+
+									// Show/hide subnav container
+									if (currentTab.hasOwnProperty('menus')) {
+										if (appHeader.find('.app-subnav-bg').is(':hidden')) {
+											appHeader
+												.find('.app-subnav-bg')
+													.slideDown();
+										}
+									}
+									else {
+										if (appHeader.find('.app-subnav-bg').is(':visible')) {
+											appHeader
+												.find('.app-subnav-bg')
+													.slideUp();
+										}
+									}
 								}
 
 								parent
@@ -1806,12 +1877,22 @@ define(function(require){
 											isLoadingInProgress = false;
 											$(this).empty();
 
-											currentTab.callback.call(thisArg, {
+											(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, {
 												parent: parent,
 												container: parent.find('.app-content-wrapper')
 											});
 										});
 							};
+
+						if (isSubnav) {
+							var subnavMenuId = $this.parents('ul').data('menu_id'),
+								subnavTabId = $this.data('tab_id');
+
+							menuId = $this.parents('nav').data('menu_id');
+							tabId = $this.parents('nav').data('tab_id');
+
+							currentTab = menus[menuId].tabs[tabId].menus[subnavMenuId].tabs[subnavTabId];
+						}
 
 						if (!isLoadingInProgress) {
 							isLoadingInProgress = true;
@@ -1843,10 +1924,9 @@ define(function(require){
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback () {
-					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
-						defaultTab = _.find(tabs, function(val, idx) { return val.hasOwnProperty('default') && val.default === true; });
+					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
 
-					(defaultTab ? defaultTab : tabs[0]).callback.call(thisArg, {
+					(tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0]).callback.call(thisArg, {
 						parent: parent,
 						container: parent.find('.app-content-wrapper')
 					});
