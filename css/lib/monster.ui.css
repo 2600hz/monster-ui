@@ -455,30 +455,47 @@ i.monster-password-strength {
 	background-color: #f0f0f9;
 }
 
-.core-content .app-layout .app-header-wrapper {
+.core-content .app-header .app-nav-bg {
+	position: relative;
 	border-bottom: 1px solid #c0c0c9;
-	background-color: #fff;
 	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 }
-
-.core-content .app-layout .app-header {
-	max-width: 1200px;
-	height: 98px;
-	margin: 0 auto;
-	padding: 40px 20px 0;
+.core-content .app-header .app-navbar-bg {
+	z-index: 10;
+	background-color: #fff;
 }
 
-.core-content .app-layout .app-name {
-	font-weight: normal;
-	line-height: 24px;
-	margin: 0;
-	color: #303039;
+.core-content .app-header .app-navbar-wrapper {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 25px 20px 0;
+}
+
+.core-content .app-header .app-subnav-bg {
+	z-index: 9;
+	display: none;
+	background-color: #e0e0e9;
+}
+
+.core-content .app-header .app-subnav-wrapper {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 20px 20px 0;
+}
+
+.core-content .app-header .app-subnav:not(.active) {
+	display: none;
 }
 
 .core-content .app-layout .app-content-wrapper {
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
 	padding: 40px 20px;
+}
+
+.core-content .app-layout .app-content-wrapper.fullscreen,
+.core-content .app-layout .app-content-wrapper.dashboard {
+	max-width: none;
 }
 
 /************************************************************/

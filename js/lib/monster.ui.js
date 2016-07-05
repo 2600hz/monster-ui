@@ -211,22 +211,61 @@ define(function(require){
 	}
 
 	function initializeUIComponents() {
-		// We have a special component, allowing checkbox in bootstrap dropdown
-		// By default Bootstrap expands the dropdown items, so we need to prevent that if the checkbox is selected
-		$('body').on('click', '.monster-select-dropdown', function(e) {
-			e.stopPropagation();
-			var $this = $(this);
+		var $coreWrapper = $('.core-wrapper');
 
-			if($this.find('.monster-checkbox').has(e.target).length === 0) {
-				$this.find('.dropdown').toggleClass('open');
-			}
-		});
+		/**
+		 * We have a special component allowing checkbox in Bootstrap dropwdown
+		 * By default Bootstrap expands the dropdown elements so we need to
+		 * prevent that if the checkbox is selected
+		 */
+		$coreWrapper
+			.on('click', '.monster-select-dropdown', function(event) {
+				event.stopPropagation();
 
-		$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+				var $this = $(this);
+
+				if ($this.find('.monster-checkbox').has(event.target).length === 0) {
+					$this
+						.find('.dropdown')
+							.toggleClass('open');
+				}
+			});
+
+		/**
+		 * Add 'splash effect' on click for every monster-button
+		 */
+		$coreWrapper
+			.on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
+				event.preventDefault();
+
+				var $this = $(this),
+					$splash = $('<div>', {
+						class: 'monster-splash-effect'
+					}),
+					offset = $this.offset(),
+					xPos = event.pageX - offset.left,
+					yPos = event.pageY - offset.top;
+
+				$splash
+					.css({
+						width: $this.height(),
+						height: $this.height(),
+						top: yPos - ($splash.height() / 2),
+						left: xPos - ($splash.width() / 2)
+					})
+					.appendTo($this);
+
+				window.setTimeout(function() {
+					$splash.remove();
+				}, 1500);
+			});
+
+		$.widget('ui-dialog', $.extend({}, $.ui.dialog.prototype, {
 			_title: function(title) {
-				if (!this.options.title ) {
-					title.html("&#160;");
-				} else {
+				if (!this.options.title) {
+					title.html('&#160');
+				}
+				else {
 					title.html(this.options.title);
 				}
 			}
@@ -1697,36 +1736,139 @@ define(function(require){
 			var self = this,
 				isLoadingInProgress = false,
 				parent = $('#monster-content'),
-				appHeaderWrapper = parent.find('.app-header-wrapper'),
+				appHeader = parent.find('.app-header'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
-				hasDefaultTab = _.find($(navbarTemplate).find('.navbar-menu-item-link'), function(val, idx) { return $(val).hasClass('active'); });
+				subnavTemplate = monster.template(monster.apps.core, 'monster-app-subnav', { menus: menus }),
+				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html());
 
-			parent
-				.find('.app-navbar')
-					.empty()
-					.append(navbarTemplate);
+			function initNavbar() {
+				appHeader
+					.find('.app-navbar')
+						.empty()
+						.append(navbarTemplate);
 
-			if (!hasDefaultTab) {
-				appHeaderWrapper
-					.find('.navbar-menu-item-link')
+				appHeader
+					.find('.app-navbar .navbar-menu-item-link')
 						.first()
 							.addClass('active');
 			}
 
-			appHeaderWrapper
+			function initSubnav() {
+				if (hasSubnav) {
+					appHeader
+						.append(subnavTemplate);
+
+					$.each(appHeader.find('.app-subnav'), function(idx, el) {
+						$(el)
+							.find('.navbar-menu-item-link')
+								.first()
+									.addClass('active');
+					});
+
+					var firstSubnav = appHeader.find('.app-subnav').first(),
+						menuId = firstSubnav.data('menu_id'),
+						tabId = firstSubnav.data('tab_id');
+
+					if (menuId === 0 && tabId === 0) {
+						appHeader
+							.find('.app-subnav-bg')
+								.show();
+
+						appHeader
+							.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]')
+								.addClass('active');
+					}
+				}
+			}
+
+			initNavbar();
+			initSubnav();
+
+			appHeader
 				.find('.navbar-menu-item-link')
 					.on('click', function() {
 						var $this = $(this),
 							menuId = $this.parents('.navbar-menu').data('menu_id'),
 							tabId = $this.data('tab_id'),
+							isSubnav = $this.parents('nav').hasClass('app-subnav'),
 							currentTab = menus[menuId].tabs[tabId],
 							loadTabContent = function loadTabContent () {
-								if (!$this.hasClass('active')) {
-									appHeaderWrapper
-										.find('.navbar-menu-item-link.active')
-											.removeClass('active');
+								var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]');
 
-									$this.addClass('active');
+								// Add 'active' class to menu element
+								if (!$this.hasClass('active')) {
+									$this
+										.parents('nav')
+											.find('.navbar-menu-item-link.active')
+												.removeClass('active');
+									$this
+										.addClass('active');
+								}
+
+								// Subnav container handling
+								if (!isSubnav) {
+									// Display correct subnav element
+									if (currentTab.hasOwnProperty('menus')) {
+										if (currentSubnav.hasClass('active')) {
+											currentSubnav
+												.find('.navbar-menu-item-link.active')
+													.removeClass('active');
+
+											currentSubnav
+												.find('.navbar-menu-item-link')
+													.first()
+														.addClass('active');
+										}
+										else {
+											if (appHeader.find('.app-subnav-bg').is(':visible')) {
+												appHeader
+													.find('.app-subnav.active')
+														.fadeOut(200, function() {
+															$(this).removeClass('active');
+
+															currentSubnav
+																.find('.navbar-menu-item-link.active')
+																	.removeClass('active');
+
+															currentSubnav
+																.find('.navbar-menu-item-link')
+																	.first()
+																		.addClass('active');
+
+															currentSubnav
+																.fadeIn(200, function() {
+																	$(this).addClass('active');
+																});
+														});
+											}
+											else {
+												appHeader
+													.find('.app-subnav.active')
+														.hide()
+														.removeClass('active');
+
+												currentSubnav
+													.show()
+													.addClass('active');
+											}
+										}
+									}
+
+									// Show/hide subnav container
+									if (currentTab.hasOwnProperty('menus')) {
+										if (appHeader.find('.app-subnav-bg').is(':hidden')) {
+											appHeader
+												.find('.app-subnav-bg')
+													.slideDown();
+										}
+									}
+									else {
+										if (appHeader.find('.app-subnav-bg').is(':visible')) {
+											appHeader
+												.find('.app-subnav-bg')
+													.slideUp();
+										}
+									}
 								}
 
 								parent
@@ -1735,12 +1877,22 @@ define(function(require){
 											isLoadingInProgress = false;
 											$(this).empty();
 
-											currentTab.callback.call(thisArg, {
+											(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, {
 												parent: parent,
 												container: parent.find('.app-content-wrapper')
 											});
 										});
 							};
+
+						if (isSubnav) {
+							var subnavMenuId = $this.parents('ul').data('menu_id'),
+								subnavTabId = $this.data('tab_id');
+
+							menuId = $this.parents('nav').data('menu_id');
+							tabId = $this.parents('nav').data('tab_id');
+
+							currentTab = menus[menuId].tabs[tabId].menus[subnavMenuId].tabs[subnavTabId];
+						}
 
 						if (!isLoadingInProgress) {
 							isLoadingInProgress = true;
@@ -1768,15 +1920,14 @@ define(function(require){
 			var self = this,
 				parent = $('#monster-content'),
 				dataTemplate = {
-					appName: args.appName,
+					appType: args.hasOwnProperty('appType') ? args.appType : 'default',
 					appId: thisArg.name
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback () {
-					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
-						defaultTab = _.find(tabs, function(val, idx) { return val.hasOwnProperty('default') && val.default === true; });
+					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
 
-					(defaultTab ? defaultTab : tabs[0]).callback.call(thisArg, {
+					(tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0]).callback.call(thisArg, {
 						parent: parent,
 						container: parent.find('.app-content-wrapper')
 					});

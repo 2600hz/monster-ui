@@ -1,0 +1,30 @@
+<div class="app-subnav-bg app-nav-bg">
+	<div class="app-subnav-wrapper">
+	{{#each menus}}
+		{{#each tabs}}
+			{{#if menus}}
+				<nav class="app-subnav monster-navbar" data-menu_id="{{@../index}}" data-tab_id="{{@index}}">
+				{{#each menus}}
+
+				{{#if @index}}
+					{{#unless float}}
+						<div class="separator"></div>
+					{{/unless}}
+				{{/if}}
+
+					<ul class="navbar-menu{{#if float}} pull-{{float}}{{/if}}" data-menu_id="{{@index}}">
+					{{#each tabs}}
+						<li class="navbar-menu-item">
+							<a href="javascript:void(0);" class="navbar-menu-item-link{{#if default}} active{{/if}}" data-tab_id="{{@index}}">
+								{{text}}
+							</a>
+						</li>
+					{{/each}}
+					</ul>
+				{{/each}}
+				</nav>
+			{{/if}}
+		{{/each}}
+	{{/each}}
+	</div>
+</div>

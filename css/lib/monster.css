@@ -1299,11 +1299,11 @@ table.monster-table .actions .action-item:first-child {
 /************************************************************/
 
 .monster-navbar {
+	clear: both;
 	height: 40px;
-	margin-top: 34px;
 }
 
-.monster-navbar .separator:not(:first-child) {
+.monster-navbar .separator {
 	float: left;
 	height: 18px;
 	margin: 11px 20px;

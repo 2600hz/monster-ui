@@ -1,13 +1,13 @@
 <div id="{{appId}}_app_container" class="app-layout">
-	<div class="app-header-wrapper">
-		<div class="app-header">
-			<header>
-				<h3 class="app-name">{{appName}}</h3>
-			</header>
-			<nav class="app-navbar monster-navbar">
-			</nav>
+{{#compare appType '!==' 'dashboard'}}
+	<header class="app-header">
+		<div class="app-navbar-bg app-nav-bg">
+			<div class="app-navbar-wrapper">
+				<nav class="app-navbar monster-navbar"></nav>
+			</div>
 		</div>
-	</div>
-	<div class="app-content-wrapper">
-	</div>
+	</header>
+{{/compare}}
+
+	<div class="app-content-wrapper{{#compare appType "!==" "default"}} {{appType}}{{/compare}}"></div>
 </div>
