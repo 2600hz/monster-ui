@@ -87,30 +87,10 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/conferences/{conferenceId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/conferences' },
-			'getPins': { verb: 'GET', url: 'accounts/{accountId}/conferences/pins' },
-			'view': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}/status' },
-			'action': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/{action}' },
-
-			'getServer': { verb: 'GET', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
-			'createServer': { verb: 'PUT', url: 'accounts/{accountId}/conferences_servers' },
-			'updateServer': { verb: 'POST', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
-			'deleteServer': { verb: 'DELETE', url: 'accounts/{accountId}/conferences_servers/{serverId}' },
-			'listServers': { verb: 'GET', url: 'accounts/{accountId}/conferences_servers' },
-
-			'addParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/add_participant' },
-			'muteParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/mute/{participantId}' },
-			'unmuteParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/unmute/{participantId}' },
-			'deafParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/deaf/{participantId}' },
-			'undeafParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/undeaf/{participantId}' },
-			'kickParticipant': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/kick/{participantId}' },
-
-			'lock': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/lock' },
-			'mute': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/mute' },
-			'hangup': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/hangup' },
-
-			'createNotification': { verb: 'PUT', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' },
-			'getNotification': { verb: 'GET', url: 'accounts/{accountId}/notify/conference_{notificationType}/{contentType}', type: 'text/html', dataType: 'text/html' },
-			'updateNotification': { verb: 'POST', url: 'accounts/{accountId}/notify/conference_{notificationType}', type: 'text/html', dataType: 'text/html' }
+			'action': { verb: 'PATCH', url: 'accounts/{accountId}/conferences/{conferenceId}' },
+			'participantsList': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}/participants' },
+			'participantsBulkAction': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/participants' },
+			'participantsAction': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/participants/{participantId}' }
 		},
 		connectivity: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
@@ -151,8 +131,8 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}'},
 		},
 		faxes: {
-			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog'},
-			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}'},
+			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
+			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'},
 			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound' },
 			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}' },
 			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}/attachment' },
