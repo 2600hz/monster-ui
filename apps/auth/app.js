@@ -83,13 +83,11 @@ define(function(require){
 				self.authenticateAuthToken(urlParams.a, urlParams.t, successfulAuth);
 			}
 			else if(urlParams.hasOwnProperty('recovery')) {
-				self.checkRecovery(urlParams.recovery, function(accountId, token) {
-					self.authenticateAuthToken(accountId, token, successfulAuth);
-				});
+				self.checkRecoveryId(urlParams.recovery, successfulAuth);
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
 			else {
-				self.renderLoginPage(self.appFlags.mainContainer);
+				self.renderLoginPage();
 			}
 		},
 
@@ -107,7 +105,7 @@ define(function(require){
 				function() {
 					delete self.authToken;
 
-					self.renderLoginPage(self.appFlags.mainContainer);
+					self.renderLoginPage();
 				}
 			);
 		},
@@ -457,8 +455,9 @@ define(function(require){
 			});
 		},
 
-		renderLoginPage: function(container) {
+		renderLoginPage: function() {
 			var self = this,
+				container = self.appFlags.mainContainer,
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
@@ -727,10 +726,12 @@ define(function(require){
 			});
 		},
 
-		checkRecovery: function(recoveryId, callback) {
-			self.recovery(recoveryId, function(data) {
-				if(data.hasOwnProperty('auth_token') && data.hasOwnProperty('account_id')) {
-					callback && callback(data.auth_token, data.account_id);
+		checkRecoveryId: function(recoveryId, callback) {
+			var self = this;
+
+			self.recoveryWithResetId(recoveryId, function(data) {
+				if(data.hasOwnProperty('auth_token') && data.data.hasOwnProperty('account_id')) {
+					callback && callback(data);
 				}
 				else {
 					self.renderLoginPage();
@@ -738,6 +739,26 @@ define(function(require){
 			},
 			function() {
 				self.renderLoginPage();
+			});
+		},
+
+		recoveryWithResetId: function(resetId, success ,error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.recoveryResetId',
+				data: {
+					accountId: self.accountId,
+					data: {
+						reset_id: resetId
+					}
+				},
+				success: function(data) {
+					success && success(data);
+				},
+				error: function(data) {
+					error && error(data);
+				}
 			});
 		},
 
