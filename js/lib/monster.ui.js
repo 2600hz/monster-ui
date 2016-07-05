@@ -260,10 +260,10 @@ define(function(require){
 				}, 1500);
 			});
 
-		$.widget('ui-dialog', $.extend({}, $.ui.dialog.prototype, {
+		$.widget('ui.dialog', $.extend({}, $.ui.dialog.prototype, {
 			_title: function(title) {
 				if (!this.options.title) {
-					title.html('&#160');
+					title.html('&#160;');
 				}
 				else {
 					title.html(this.options.title);
