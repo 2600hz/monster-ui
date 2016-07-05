@@ -1,4 +1,5 @@
 <div id="{{appId}}_app_container" class="app-layout">
+{{#compare appType '!==' 'dashboard'}}
 	<header class="app-header">
 		<div class="app-navbar-bg app-nav-bg">
 			<div class="app-navbar-wrapper">
@@ -6,6 +7,7 @@
 			</div>
 		</div>
 	</header>
+{{/compare}}
 
-	<div class="app-content-wrapper"></div>
+	<div class="app-content-wrapper{{#compare appType "!==" "default"}} {{appType}}{{/compare}}"></div>
 </div>

@@ -493,6 +493,11 @@ i.monster-password-strength {
 	padding: 50px 20px;
 }
 
+.core-content .app-layout .app-content-wrapper.fullscreen,
+.core-content .app-layout .app-content-wrapper.dashboard {
+	max-width: none;
+}
+
 /************************************************************/
 /********************** MONSTER SLIDER **********************/
 /************************************************************/

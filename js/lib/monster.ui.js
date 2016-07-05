@@ -1920,6 +1920,7 @@ define(function(require){
 			var self = this,
 				parent = $('#monster-content'),
 				dataTemplate = {
+					appType: args.hasOwnProperty('appType') ? args.appType : 'default',
 					appId: thisArg.name
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
