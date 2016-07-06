@@ -1919,15 +1919,31 @@ define(function(require){
 		generateAppLayout: function(thisArg, args) {
 			var self = this,
 				parent = $('#monster-content'),
+				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
 				dataTemplate = {
-					appType: args.hasOwnProperty('appType') ? args.appType : 'default',
+					appType: appType,
 					appId: thisArg.name
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback () {
-					var tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
+					var context,
+						tabs;
 
-					(tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0]).callback.call(thisArg, {
+					if (appType === 'dashboard') {
+						context = args;
+					}
+					else {
+						tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
+
+						if (tabs[0].hasOwnProperty('menus')) {
+							context = tabs[0].menus[0].tabs[0];
+						}
+						else {
+							context = tabs[0];
+						}
+					}
+
+					context.callback.call(thisArg, {
 						parent: parent,
 						container: parent.find('.app-content-wrapper')
 					});
