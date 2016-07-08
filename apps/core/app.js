@@ -610,7 +610,8 @@ define(function(require){
 				dataTemplate = {
 					account: acc,
 					authToken: self.authToken,
-					apiUrl: self.apiUrl
+					apiUrl: self.apiUrl,
+					version: monster.config.version
 				}
 				template = monster.template(self, 'dialog-accountInfo', dataTemplate);
 
