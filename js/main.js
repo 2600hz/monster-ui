@@ -42,7 +42,6 @@ require.config({
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
 		'signals': 'js/lib/signals.min',
 		'slider': 'js/lib/jquery.slider',
-		'socket': 'js/lib/socket.io.min',
 		'timepicker': 'js/lib/jquery.timepicker.min',
 		'toastr': 'js/lib/toastr-1.3.0',
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
@@ -79,7 +78,7 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'to
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'socket'], function(util, ui, apps, routing, socket){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing'], function(util, ui, apps, routing){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
@@ -87,8 +86,8 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'to
 
 		monster.util.setDefaultLanguage();
 
-		if('socket' in monster.config.api) {
-			monster.socket = io.connect(monster.config.api.socket);
+		if(monster.config.api.hasOwnProperty('socket')) {
+			monster.socket = new WebSocket(monster.config.api.socket);
 		}
 
 		monster.apps.load('core', function(app){

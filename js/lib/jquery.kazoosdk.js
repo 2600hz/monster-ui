@@ -88,10 +88,10 @@
 			'update': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/conferences/{conferenceId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/conferences' },
-			'action': { verb: 'PATCH', url: 'accounts/{accountId}/conferences/{conferenceId}' },
+			'action': { verb: 'PUT', url: 'accounts/{accountId}/conferences/{conferenceId}' },
 			'participantsList': { verb: 'GET', url: 'accounts/{accountId}/conferences/{conferenceId}/participants' },
-			'participantsBulkAction': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/participants' },
-			'participantsAction': { verb: 'POST', url: 'accounts/{accountId}/conferences/{conferenceId}/participants/{participantId}' }
+			'participantsBulkAction': { verb: 'PUT', url: 'accounts/{accountId}/conferences/{conferenceId}/participants' },
+			'participantsAction': { verb: 'PUT', url: 'accounts/{accountId}/conferences/{conferenceId}/participants/{participantId}' }
 		},
 		connectivity: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/connectivity/{connectivityId}' },
