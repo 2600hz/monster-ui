@@ -27,13 +27,14 @@ require.config({
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'mask': 'js/lib/jquery.mask',
 		'monster': 'js/lib/monster',
+		'monster-apps': 'js/lib/monster.apps',
 		'monster-ui': 'js/lib/monster.ui',
 		'monster-timezone': 'js/lib/monster.timezone',
 		'monster-routing': 'js/lib/monster.routing',
+		'monster-socket': 'js/lib/monster.socket',
 		'monster-util': 'js/lib/monster.util',
 		'mousetrap': 'js/lib/mousetrap-1.5.3.min',
 		'nicescroll': 'js/lib/jquery.nicescroll.min',
-		'monster-apps': 'js/lib/monster.apps',
 		'plugins': 'js/plugins',
 		'papaparse': 'js/lib/papaparse-4.1.2.min',
 		'postal': 'js/lib/postal-0.8.2',
@@ -78,17 +79,14 @@ require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'to
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing'], function(util, ui, apps, routing){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket'], function(util, ui, apps, routing, socket){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
 		monster.routing = routing;
+		monster.socket = socket;
 
 		monster.util.setDefaultLanguage();
-
-		if(monster.config.api.hasOwnProperty('socket')) {
-			monster.socket = new WebSocket(monster.config.api.socket);
-		}
 
 		monster.apps.load('core', function(app){
 			app.render($('.core-wrapper'));

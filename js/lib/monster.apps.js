@@ -60,6 +60,21 @@ define(function(){
 				return app.name === monster.apps.getActiveApp();
 			};
 
+			app.subscribeWebSocket = function(params) {
+				var accountId = app.accountId || params.accountId,
+					authToken = app.authToken || params.authToken,
+					requiredSelector = params.hasOwnProperty('requiredSelector') ? params.requiredSelector : false;
+
+				monster.socket.bind(params.binding, params.event, requiredSelector, accountId, authToken, params.callback, app.name);
+			};
+
+			app.unsubscribeWebSocket = function(params) {
+				var accountId = app.accountId || params.accountId,
+					authToken = app.authToken || params.authToken;
+
+				monster.socket.unbind(params.binding, accountId, authToken, app.name);
+			};
+
 			app.callApi = function(params) {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
