@@ -114,24 +114,20 @@ define(function(require){
 		},
 		onEvent: function(data) {
 			var self = this,
-				category = data.event_category,
-				name = data.event_name;
+				category = data.hasOwnProperty('Event-Category') ? data['Event-Category'] : data.event_category,
+				name = data.hasOwnProperty('Event-Name') ? data['Event-Name'] : data.event_name;
 
-			console.log(self.handlers);
 			if (typeof self.handlers[category] !== 'undefined' && typeof self.handlers[category][name] !== 'undefined') {
 				_.each(self.handlers[category][name], function(subscriptions, bindingName) {
 					var newSubscriptions = [];
 					_.each(subscriptions, function(subscription) {
 						if(subscription.hasOwnProperty('requiredSelector') && subscription.requiredSelector !== false) {
 							if($(subscription.requiredSelector).length) {
-								console.log('callback executed', subscription);
 								subscription.callback(data);
 								newSubscriptions.push(subscription);
 							}
 							else {
 								self.removeBinding(subscription.accountId, subscription.authToken, bindingName);
-								console.log(subscription.requiredSelector, $(subscription.requiredSelector), $(subscription.requiredSelector).length);
-								console.log('required selector not visible, not executing');
 							}
 						}
 						else {
