@@ -63,9 +63,15 @@ define(function(){
 			app.subscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
 					authToken = app.authToken || params.authToken,
-					requiredSelector = params.hasOwnProperty('requiredSelector') ? params.requiredSelector : false;
+					requiredElement = params.hasOwnProperty('requiredElement') ? params.requiredElement : false;
 
-				monster.socket.bind(params.binding, params.event, requiredSelector, accountId, authToken, params.callback, app.name);
+				if(requiredElement) {
+					requiredElement.on('remove', function() {
+						monster.socket.unbind(params.binding, accountId, authToken, app.name);
+					});
+				}
+
+				monster.socket.bind(params.binding, accountId, authToken, params.callback, app.name);
 			};
 
 			app.unsubscribeWebSocket = function(params) {

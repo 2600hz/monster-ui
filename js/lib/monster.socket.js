@@ -4,6 +4,7 @@ define(function(require){
 		monster = require('monster');
 
 	var privateSocket = {
+		hardCodedTestSubId: 'monster-binding-123',
 		initialize: function() {
 			var self = this;
 
@@ -23,10 +24,19 @@ define(function(require){
 				socket.trigger(parsedEvent);
 			}
 		},
-		handlers: {},
 		object: {},
+		subscriptions: [],
 		bindings: {},
-		addBinding: function(accountId, authToken, binding) {
+		onEvent: function(data) {
+			var self = this;
+
+			_.each(self.subscriptions, function(subscription) {
+				if(subscription.id === (data.subscription_id || self.hardCodedTestSubId)) {
+					subscription.callback(data);
+				}
+			});
+		},
+		addSubscription: function(binding, accountId, authToken, callback, source) {
 			var self = this,
 				id = accountId + authToken;
 
@@ -35,114 +45,56 @@ define(function(require){
 			}
 
 			if(!self.bindings[id].hasOwnProperty(binding)) {
-				self.bindings[id][binding] = 1;
-				var subscriptionString = JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding});
-				self.object.send(subscriptionString);
+				var subscriptionId = self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+
+				self.bindings[id][binding] = {
+					subscriptionId: subscriptionId || self.hardCodedTestSubId,
+					count: 0
+				};
+			}
+
+			var found = false;
+			_.each(self.subscriptions, function(subscription) {
+				if(subscription.binding === binding && subscription.accountId === accountId && subscription.authToken === authToken && subscription.source === source) {
+					found = true;
+				}
+			});
+
+			if(found === false) {
+				self.bindings[id][binding].count++;
+				self.subscriptions.push({ id: self.bindings[id][binding].subscriptionId, callback: callback, source: source, accountId: accountId, authToken:authToken, binding: binding });
 			}
 			else {
-				self.bindings[id][binding]++;
+				console.log('subscription already exist, ignored');
 			}
 		},
-		removeBinding: function(accountId, authToken, binding) {
+
+		removeSubscription: function(binding, accountId, authToken, source) {
 			var self = this,
-				id = accountId + authToken,
-				unsubscriptionString = JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding});
+				id = accountId + authToken;
 
-			if(!self.bindings.hasOwnProperty(id) || !self.bindings[id].hasOwnProperty(binding)) {
-				self.object.send(unsubscriptionString);
-			}
-			else if(self.bindings[id][binding] === 1) {
-				self.object.send(unsubscriptionString);
-				delete self.bindings[id][binding];
-			}
-			else {
-				self.bindings[id][binding]--;
-			}
-		},
-		addHandler: function(binding, event, requiredSelector, accountId, authToken, func, source) {
-			var self = this;
-
-			if(typeof self.handlers[event.category] === 'undefined') {
-				self.handlers[event.category] = {};
-			}
-			if(typeof self.handlers[event.category][event.name] === 'undefined') {
-				self.handlers[event.category][event.name] = {};
-			}
-
-			var subscription = { source: source, callback: func, requiredSelector: requiredSelector, accountId: accountId, authToken: authToken };
-
-			if(typeof self.handlers[event.category][event.name][binding] === 'undefined') {
-				self.handlers[event.category][event.name][binding] = [subscription];
-				self.addBinding(accountId, authToken, binding);
-			}
-			else {
-				var found = false;
-				// we only allow one same binding per source (app)
-				_.each(self.handlers[event.category][event.name][binding], function(subscription) {
-					if(subscription.source === source) {
-						found = true;
-					}
-				});
-
-				if(!found) {
-					self.handlers[event.category][event.name][binding].push(subscription);
-					self.addBinding(accountId, authToken, binding);
-				}
-			}
-		},
-		removeHandler: function(binding, event, accountId, authToken, func, source) {
-			var self = this;
-
-			if(self.handlers.hasOwnProperty(event.category) && self.handlers[event.category].hasOwnProperty(event.name) && self.handlers[event.category][event.name].hasOwnProperty(binding)) {
-				var handlersToKeep = [];
-				_.each(self.handlers[event.category][event.name][binding], function(handler) {
-					if(handler.source !== source) {
-						handlersToKeep.push(handler);
-					}
-					else {
-						self.removeBinding(accountId, authToken, binding);
-					}
-				});
-
-				if(handlersToKeep.length === 0) {
-					delete self.handlers[event.category][event.name][binding];
-				}
-				else {
-					self.handlers[event.category][event.name][binding] = handlersToKeep;
-				}
-			}
-		},
-		onEvent: function(data) {
-			var self = this,
-				category = data.hasOwnProperty('Event-Category') ? data['Event-Category'] : data.event_category,
-				name = data.hasOwnProperty('Event-Name') ? data['Event-Name'] : data.event_name;
-
-			if (typeof self.handlers[category] !== 'undefined' && typeof self.handlers[category][name] !== 'undefined') {
-				_.each(self.handlers[category][name], function(subscriptions, bindingName) {
-					var newSubscriptions = [];
-					_.each(subscriptions, function(subscription) {
-						if(subscription.hasOwnProperty('requiredSelector') && subscription.requiredSelector !== false) {
-							if($(subscription.requiredSelector).length) {
-								subscription.callback(data);
-								newSubscriptions.push(subscription);
-							}
-							else {
-								self.removeBinding(subscription.accountId, subscription.authToken, bindingName);
-							}
+			if(self.bindings.hasOwnProperty(id)) {
+				if(self.bindings[id].hasOwnProperty(binding)) {
+					var subscriptionsToKeep = [];
+					_.each(self.subscriptions, function(subscription) {
+						if(subscription.binding === binding && subscription.accountId === accountId && subscription.authToken === authToken && subscription.source === source) {
+							self.bindings[id][binding].count--;
 						}
 						else {
-							subscription.callback(data);
-							newSubscriptions.push(subscription);
+							subscriptionsToKeep.push(subscription);
 						}
 					});
+					self.subscriptions = subscriptionsToKeep;
 
-					if(newSubscriptions.length) {
-						self.handlers[category][name][bindingName] = newSubscriptions;
+					if(self.bindings[id][binding].count === 0) {
+						self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+						delete self.bindings[id][binding];
 					}
-					else {
-						delete self.handlers[category][name][bindingName];
-					}
-				});
+				}
+
+				if(_.isEmpty(self.bindings[id])) {
+					delete self.bindings[id];
+				}
 			}
 		}
 	};
@@ -160,12 +112,12 @@ define(function(require){
 	if(monster.config.api.hasOwnProperty('socket')) {
 		privateSocket.initialize();
 
-		socket.bind = function(binding, event, requiredSelector, accountId, authToken, func, source) {
-			privateSocket.addHandler(binding, event, requiredSelector, accountId, authToken, func, source);
+		socket.bind = function(binding, accountId, authToken, func, source) {
+			privateSocket.addSubscription(binding, accountId, authToken, func, source);
 		};
 
-		socket.unbind = function(binding, event, accountId, authToken, source) {
-			privateSocket.removeHandler(binding, event, accountId, authToken, source);
+		socket.unbind = function(binding, accountId, authToken, source) {
+			privateSocket.removeSubscription(binding, accountId, authToken, source);
 		},
 
 		socket.trigger = function(data) {
