@@ -19,81 +19,99 @@ define(function(require){
 			}
 
 			self.object.onmessage = function(event) {
-				var parsedEvent = JSON.parse(event.data);
-
-				socket.trigger(parsedEvent);
+				self.onEvent(JSON.parse(event.data));
 			}
 		},
 		object: {},
-		subscriptions: [],
-		bindings: {},
+		subscriptions: {},
+		uniqueSubscriptionId: 0,
+
 		onEvent: function(data) {
-			var self = this;
-
-			_.each(self.subscriptions, function(subscription) {
-				if(subscription.id === (data.subscription_id || self.hardCodedTestSubId)) {
-					subscription.callback(data);
-				}
-			});
-		},
-		addSubscription: function(binding, accountId, authToken, callback, source) {
 			var self = this,
-				id = accountId + authToken;
-
-			if(!self.bindings.hasOwnProperty(id)) {
-				self.bindings[id] = {};
-			}
-
-			if(!self.bindings[id].hasOwnProperty(binding)) {
-				var subscriptionId = self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
-
-				self.bindings[id][binding] = {
-					subscriptionId: subscriptionId || self.hardCodedTestSubId,
-					count: 0
+				subscriptionId = data.subscription_id,
+				executeCallbacks = function(subscription) {
+					_.each(subscription.listeners, function(listener) {
+						listener.callback(data);
+					});
 				};
-			}
 
-			var found = false;
-			_.each(self.subscriptions, function(subscription) {
-				if(subscription.binding === binding && subscription.accountId === accountId && subscription.authToken === authToken && subscription.source === source) {
-					found = true;
+			if(subscriptionId) {
+				if(self.subscriptions.hasOwnProperty(subscriptionId)) {
+					executeCallbacks(self.subscriptions[subscriptionId]);
 				}
+			}
+			else {
+				_.each(self.subscriptions, function(subscription) {
+					executeCallbacks(subscription);
+				});
+			}
+		},
+
+		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
+		// If there's more than one listener, then we just remove the listener from the array or listeners for that subscription
+		removeListener(binding, accountId, authToken, source) {
+			var self = this,
+				found = false;
+
+			_.each(self.subscriptions, function(subscription, id) {
+				if(!found) {
+					var listenersToKeep = [];
+
+					_.each(subscription.listeners, function(listener) {
+						if(!(listener.binding === binding && listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
+							listenersToKeep.push(listener);
+						}
+						else {
+							found = true;
+						}
+					});
+
+					if(listenersToKeep.length) {
+						self.subscriptions[id].listeners = listenersToKeep;
+					}
+					else {
+						self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+						delete self.subscriptions[id];
+					}
+				}
+			})
+		},
+
+		// We only allow one same listener (binding / accountId / authToken) per source.
+		// We look for the same exact listener, if we find it and the listener is for a different source, we store the subscription id as we can reuse the same subscription for our new source
+		// If we don't find it, then we start a new subscription and add our listener to it
+		addListener(binding, accountId, authToken, func, source) {
+			var self = this,
+				found = false,
+				foundBindingId;
+
+			_.each(self.subscriptions, function(subscription, subId) {
+				_.each(subscription.listeners, function(listener) {
+					if(listener.binding === binding && listener.accountId === accountId && listener.authToken === authToken) {
+						if(listener.source === source) {
+							found = true;
+							console.log(source + ' is already bound to ' + binding);
+						}
+						else {
+							foundBindingId = subId;
+						}
+					}
+				})
 			});
 
 			if(found === false) {
-				self.bindings[id][binding].count++;
-				self.subscriptions.push({ id: self.bindings[id][binding].subscriptionId, callback: callback, source: source, accountId: accountId, authToken:authToken, binding: binding });
-			}
-			else {
-				console.log('subscription already exist, ignored');
-			}
-		},
+				var newListener = { binding: binding, accountId, authToken: authToken, source: source, callback: func };
 
-		removeSubscription: function(binding, accountId, authToken, source) {
-			var self = this,
-				id = accountId + authToken;
-
-			if(self.bindings.hasOwnProperty(id)) {
-				if(self.bindings[id].hasOwnProperty(binding)) {
-					var subscriptionsToKeep = [];
-					_.each(self.subscriptions, function(subscription) {
-						if(subscription.binding === binding && subscription.accountId === accountId && subscription.authToken === authToken && subscription.source === source) {
-							self.bindings[id][binding].count--;
-						}
-						else {
-							subscriptionsToKeep.push(subscription);
-						}
-					});
-					self.subscriptions = subscriptionsToKeep;
-
-					if(self.bindings[id][binding].count === 0) {
-						self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
-						delete self.bindings[id][binding];
-					}
+				if(foundBindingId) {
+					self.subscriptions[foundBindingId].listeners.push(newListener);
 				}
+				else {
+					self.uniqueSubscriptionId++;
+					var id = (self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding})) || self.uniqueSubscriptionId);
 
-				if(_.isEmpty(self.bindings[id])) {
-					delete self.bindings[id];
+					self.subscriptions[id] = {
+						listeners: [ newListener ]
+					}
 				}
 			}
 		}
@@ -102,10 +120,6 @@ define(function(require){
 	var socket = {
 		bind: function() {
 			console.log('no websockets defined');
-		},
-
-		trigger: function() {
-			console.log('no websockets defined');
 		}
 	};
 
@@ -113,15 +127,11 @@ define(function(require){
 		privateSocket.initialize();
 
 		socket.bind = function(binding, accountId, authToken, func, source) {
-			privateSocket.addSubscription(binding, accountId, authToken, func, source);
+			privateSocket.addListener(binding, accountId, authToken, func, source);
 		};
 
 		socket.unbind = function(binding, accountId, authToken, source) {
-			privateSocket.removeSubscription(binding, accountId, authToken, source);
-		},
-
-		socket.trigger = function(data) {
-			privateSocket.onEvent(data);
+			privateSocket.removeListener(binding, accountId, authToken, source);
 		}
 	}
 
