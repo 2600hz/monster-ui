@@ -134,12 +134,14 @@
 		faxes: {
 			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
 			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'},
-			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound' },
+			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox' },
+			'deleteInbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}' },
 			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}/attachment' },
-			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing' },
+			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox' },
+			'deleteOutbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
 			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}' },
-			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}/attachment' },
+			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}/attachment' }
 		},
 		globalResources: {
 			'get': { verb: 'GET', url: 'resources/{resourceId}' },
