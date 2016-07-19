@@ -19,7 +19,11 @@ define(function(require){
 			}
 
 			self.object.onmessage = function(event) {
-				self.onEvent(JSON.parse(event.data));
+				var data = JSON.parse(event.data);
+
+				if (!(data.hasOwnProperty('Server-ID') || data.hasOwnProperty('server_id'))) {
+					self.onEvent(data);
+				}
 			}
 		},
 		object: {},
