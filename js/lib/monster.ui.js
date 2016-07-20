@@ -1920,7 +1920,9 @@ define(function(require){
 			var self = this,
 				parent = $('#monster-content'),
 				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
+				hasNavbar = args.hasOwnProperty('menus'),
 				dataTemplate = {
+					hasNavbar: hasNavbar,
 					appType: appType,
 					appId: thisArg.name
 				},
@@ -1929,10 +1931,7 @@ define(function(require){
 					var context,
 						tabs;
 
-					if (appType === 'dashboard') {
-						context = args;
-					}
-					else {
+					if (hasNavbar) {
 						tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
 
 						if (tabs[0].hasOwnProperty('menus')) {
@@ -1941,6 +1940,9 @@ define(function(require){
 						else {
 							context = tabs[0];
 						}
+					}
+					else {
+						context = args;
 					}
 
 					context.callback.call(thisArg, {
@@ -1953,7 +1955,9 @@ define(function(require){
 				.empty()
 				.append(layoutTemplate);
 
-			self.generateAppNavbar(thisArg, args.menus);
+			if (hasNavbar) {
+				self.generateAppNavbar(thisArg, args.menus);
+			}
 
 			callDefaultTabCallback();
 		},

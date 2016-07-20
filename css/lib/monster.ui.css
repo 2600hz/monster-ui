@@ -471,6 +471,10 @@ i.monster-password-strength {
 	padding: 25px 20px 0;
 }
 
+.core-content .app-header .app-navbar {
+	clear: both;
+}
+
 .core-content .app-header .app-subnav-bg {
 	z-index: 9;
 	display: none;
@@ -493,8 +497,7 @@ i.monster-password-strength {
 	padding: 40px 20px;
 }
 
-.core-content .app-layout .app-content-wrapper.fullscreen,
-.core-content .app-layout .app-content-wrapper.dashboard {
+.core-content .app-layout .app-content-wrapper.fullscreen {
 	max-width: none;
 }
 
