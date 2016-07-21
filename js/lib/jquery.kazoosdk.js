@@ -138,13 +138,13 @@
 			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox' },
 			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}' },
 			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}/attachment' },
-			'updateInbound': { verb: 'POST', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
+			'updateInbound': { verb: 'PUT', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 			'deleteInbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 
 			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox' },
 			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}' },
 			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}/attachment' },
-			'updateOutbound': { verb: 'POST', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
+			'updateOutbound': { verb: 'PUT', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
 			'deleteOutbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/outbox/{faxId}'}
 		},
 		globalResources: {
