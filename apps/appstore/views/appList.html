@@ -2,7 +2,7 @@
 	{{#each apps}}
 	<li class="app-element{{#each tags}} {{this}}{{/each}}" data-id="{{ id }}" data-name="{{toLowerCase label }}">
 		<div class="app-element-left">
-			<div class="app-icon" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
+			<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
 		</div>
 		<div class="app-element-right">
 			<div class="app-title">{{ label }}</div>

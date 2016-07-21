@@ -92,6 +92,8 @@ define(function(require){
 						label: self.i18n.active().controlCenter
 					};
 
+				monster.ui.formatIconApp(myaccount);
+
 				if (currentApp.is(':empty')) {
 					currentApp.append(monster.template(self, 'current-app', myaccount));
 
@@ -124,6 +126,8 @@ define(function(require){
 						defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.currentAccount.id + '/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
 					}
 				});
+
+				monster.ui.formatIconApp(defaultApp);
 
 				if ( appName === 'appstore' ) {
 					currentApp.empty();

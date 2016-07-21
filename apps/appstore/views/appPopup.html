@@ -2,7 +2,7 @@
 	<div class="top-container clearfix">
 		<div class="left-container">
 			<div class="title-container clearfix">
-				<div class="icon" {{#if app.extra.icon}}style="background-image:url({{app.extra.icon}})"{{/if}}></div>
+				<div class="icon {{app.extraCssClass}}" {{#if app.extra.icon}}style="background-image:url({{app.extra.icon}})"{{/if}}></div>
 				<div class="title">{{ app.extra.label }}</div>
 			</div>
 			<div class="screenshot-container">

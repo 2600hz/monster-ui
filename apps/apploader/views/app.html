@@ -8,7 +8,7 @@
 			<div class="app-container{{#unless defaultApp}} no-app{{/unless}}">
 			{{#if defaultApp}}
 				<div class="app-element ui-sortable-disabled" data-id="{{defaultApp.id}}" data-name="{{defaultApp.name}}" data-search="{{defaultApp.label}}">
-					<div class="app-icon"{{#if defaultApp.icon}} style="background-image:url({{defaultApp.icon}})"{{/if}}></div>
+					<div class="app-icon {{defaultApp.extraCssClass}}"{{#if defaultApp.icon}} style="background-image:url({{defaultApp.icon}})"{{/if}}></div>
 					<div class="app-name">{{defaultApp.label}}</div>
 				</div>
 			{{else}}
@@ -49,7 +49,7 @@
 		<div class="app-list">
 		{{#each apps}}
 			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}">
-				<div class="app-icon"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
+				<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image: url({{icon}})"{{/if}}></div>
 				<div class="app-name">{{label}}</div>
 			</div>
 		{{/each}}

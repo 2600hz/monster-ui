@@ -135,20 +135,20 @@ define(function(require){
 				function(err, results) {
 					var getIcon = function(appId, iconCallback) {
 							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-							self.callApi({
+							/*self.callApi({
 								resource: 'appsStore.getIcon',
 								data: {
 									accountId: self.accountId,
 									appId: appId,
 									generateError: false
 								},
-								success: function(data, status) {
+								success: function(data, status) {*/
 									iconCallback && iconCallback(self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken);
-								},
+								/*},
 								error: function(data, status) {
 									iconCallback && iconCallback(null);
 								}
-							});
+							});*/
 						},
 						parallelIconRequests = [];
 
@@ -160,6 +160,7 @@ define(function(require){
 
 						val.label = i18n.label;
 						val.description = i18n.description;
+						monster.ui.formatIconApp(val);
 						parallelIconRequests.push(function(parallelCallback) {
 							getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
 						});
@@ -208,7 +209,7 @@ define(function(require){
 					appId: appId
 				},
 				success: function(data, status) {
-					var appData = data.data,
+					var appData = monster.ui.formatIconApp(data.data),
 						dataI18n = appData.i18n[monster.config.whitelabel.language] || appData.i18n['en-US'],
 						app = $.extend(true, appData, {
 							extra: {

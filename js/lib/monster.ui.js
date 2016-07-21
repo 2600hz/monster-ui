@@ -2083,6 +2083,21 @@ define(function(require){
 				finalOptions = $.extend(true, defaults, options || {});
 
 			return container.footable(finalOptions);
+		},
+
+		formatIconApp: function(app) {			
+			if(app && app.hasOwnProperty('name')) {
+				if(monster.appsStore.hasOwnProperty(app.name)) {
+					if(monster.appsStore[app.name].phase === 'beta') {
+						app.extraCssClass = 'beta-overlay-icon';
+					}
+					else if(monster.appsStore[app.name].phase === 'alpha') {
+						app.extraCssClass = 'alpha-overlay-icon';
+					}
+				}
+			}
+
+			return app;
 		}
 	};
 

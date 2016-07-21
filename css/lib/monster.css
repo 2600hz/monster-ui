@@ -1011,6 +1011,24 @@ label[class*='monster-radio'].prepend-label > span {
 	background-image: url('../assets/defaultAppIcon.png');
 }
 
+.beta-overlay-icon::after {
+	background: url('../assets/beta_icon.png') center no-repeat;
+	background-size: contain;
+	height: 100%;
+	width: 100%;
+	display: block;
+	content: "";
+}
+
+.alpha-overlay-icon::after {
+	background: url('../assets/alpha_icon.png') center no-repeat;
+	background-size: contain;
+	height: 100%;
+	width: 100%;
+	display: block;
+	content: "";
+}
+
 /************************************************************/
 /********************** MONSTER TABLES **********************/
 /************************************************************/
@@ -1111,7 +1129,7 @@ table.monster-table:not(.no-actions) th:last-child {
 }
 table.monster-table .actions .action-item {
 	margin-left: 10px;
-	padding: 5px;
+	padding: 0 5px;
 	cursor: pointer;
 }
 table.monster-table .actions .action-item:first-child {

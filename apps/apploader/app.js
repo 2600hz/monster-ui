@@ -61,7 +61,7 @@ define(function(require){
 				self.getUserApps(function(appList) {
 					var template = $(monster.template(self, 'app', {
 							allowAppstore: monster.apps.auth.currentUser.priv_level === "admin",
-							defaultApp: appList[0],
+							defaultApp: monster.ui.formatIconApp(appList[0]),
 							apps: appList
 						}));
 
@@ -310,6 +310,7 @@ define(function(require){
 						id: apps[0].id,
 						name: apps[0].name
 					}
+
 					callback && callback(app);
 				});
 			}
@@ -409,13 +410,16 @@ define(function(require){
 						userApps = _.filter(userApps, function(appId) {
 							var app = allApps[appId];
 							if(isAppInstalled(app)) {
-								appList.push({
+								var formattedApp = {
 									id: app.id,
 									name: app.name,
 									icon: app.icon,
 									label: app.label,
 									description: app.description
-								});
+								};
+
+								monster.ui.formatIconApp(formattedApp);
+								appList.push(formattedApp);
 								return true;
 							} else {
 								updateUserApps = true;
@@ -425,13 +429,16 @@ define(function(require){
 
 						_.each(allApps, function(app) {
 							if(userApps.indexOf(app.id) === -1 && isAppInstalled(app)) {
-								appList.push({
+								var formattedApp = {
 									id: app.id,
 									name: app.name,
 									icon: app.icon,
 									label: app.label,
 									description: app.description
-								});
+								};
+
+								monster.ui.formatIconApp(formattedApp);
+								appList.push(formattedApp);
 
 								userApps.push(app.id);
 								updateUserApps = true;
