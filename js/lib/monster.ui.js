@@ -1920,7 +1920,8 @@ define(function(require){
 			var self = this,
 				parent = $('#monster-content'),
 				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
-				hasNavbar = args.hasOwnProperty('menus'),
+				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
+				hasNavbar = tabs.length === 1 ?  false : true,
 				dataTemplate = {
 					hasNavbar: hasNavbar,
 					appType: appType,
@@ -1928,21 +1929,13 @@ define(function(require){
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback () {
-					var context,
-						tabs;
+					var context;
 
-					if (hasNavbar) {
-						tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []);
-
-						if (tabs[0].hasOwnProperty('menus')) {
-							context = tabs[0].menus[0].tabs[0];
-						}
-						else {
-							context = tabs[0];
-						}
+					if (tabs[0].hasOwnProperty('menus')) {
+						context = tabs[0].menus[0].tabs[0];
 					}
 					else {
-						context = args;
+						context = tabs[0];
 					}
 
 					context.callback.call(thisArg, {
