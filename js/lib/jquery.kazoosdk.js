@@ -134,14 +134,18 @@
 		faxes: {
 			'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog'},
 			'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}'},
+
 			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox' },
+			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}' },
+			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}/attachment' },
+			'updateInbound': { verb: 'POST', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 			'deleteInbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
-			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}' },
-			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbound/{faxId}/attachment' },
+
 			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox' },
-			'deleteOutbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
-			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}' },
-			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outgoing/{faxId}/attachment' }
+			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}' },
+			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}/attachment' },
+			'updateOutbound': { verb: 'POST', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
+			'deleteOutbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/outbox/{faxId}'}
 		},
 		globalResources: {
 			'get': { verb: 'GET', url: 'resources/{resourceId}' },
@@ -557,10 +561,10 @@
 			var postData = data.data,
 				envelopeKeys = {};
 
-			if(data.hasOwnProperty('envelopeKeys')) {
+			if(options.hasOwnProperty('envelopeKeys')) {
 				var protectedKeys = ['data', 'accept_charges'];
 
-				_.each(data.envelopeKeys, function(value, key) {
+				_.each(options.envelopeKeys, function(value, key) {
 					if(protectedKeys.indexOf(key) < 0) {
 						envelopeKeys[key] = value
 					}

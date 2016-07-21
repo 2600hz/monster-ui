@@ -180,7 +180,6 @@ define(function(require){
 					var payload = $.extend(true, {
 						data: data.data || {}
 					}, envelopeKeys);
-
 					payload.data.ui_metadata = {
 						version: monster.config.version,
 						ui: 'monster-ui'
