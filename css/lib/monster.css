@@ -1092,12 +1092,20 @@ table.monster-table > tbody > tr > td {
 	white-space: nowrap;
 }
 
+table.monster-table.skinny > tbody > tr > td {
+	padding: 3px 25px 3px 0;
+}
+
 table.monster-table > tbody {
 	background-color: #fff;
 	border-bottom: 1px solid #c0c0c9;
 	border-left: 1px solid #c0c0c9;
 	border-right: 1px solid #c0c0c9;
 }
+table.monster-table.skinny > tbody > tr {
+	height: 20px;
+}
+
 table.monster-table > tbody > tr {
 	height: 66px;
 }
@@ -1394,8 +1402,13 @@ table.monster-table .actions .action-item:first-child {
 	margin-bottom: -3px;
 }
 
+.monster-select-dropdown > .dropdown .dropdown-toggle {
+	vertical-align: middle;
+}
+
 .monster-select-dropdown > .dropdown .dropdown-toggle i {
 	color: #22a5ff;
+	vertical-align: middle;
 }
 
 .monster-select-dropdown > .dropdown.open {
@@ -1403,6 +1416,7 @@ table.monster-table .actions .action-item:first-child {
 	color: #FFF;
 }
 
+.monster-select-dropdown > .dropdown.open .dropdown-toggle,
 .monster-select-dropdown > .dropdown.open .dropdown-toggle i {
 	color: #FFF;
 }

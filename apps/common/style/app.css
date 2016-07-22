@@ -13,6 +13,7 @@
 @import url('../submodules/numberPrepend/numberPrepend.css');
 @import url('../submodules/numberSelector/numberSelector.css');
 @import url('../submodules/monsterListing/monsterListing.css');
+@import url('../submodules/extensionTools/extensionTools.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {

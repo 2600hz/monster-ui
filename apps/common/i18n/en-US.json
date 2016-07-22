@@ -712,5 +712,23 @@
 				"usedBy": "It corresponds with the device named {{variable}}."
 			}
 		}
+	},
+
+	"__comment": "UI-2326: Adding extension manager to common controls",
+	"__version": "v4.0",
+	"extensionTools": {
+		"getNew": {
+			"title": "Get Extensions",
+			"proceedGetExtension": "Select Extension",
+			"typeNewExtension": "Type Extension to Use",
+			"table": {
+				"unNamedCallflow": "Unnamed Callflow",
+				"name": "Extensions Directory",
+				"columns": {
+					"extension": "Extension",
+					"callflowName": "Callflow Name"
+				}
+			}
+		}
 	}
 }

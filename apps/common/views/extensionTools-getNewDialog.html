@@ -1,0 +1,30 @@
+<div id="extension_tools_get_dialog">
+	<div class="extension-selection">
+		<form id="select_extension_form">
+			<div class="extension-selection-title">{{i18n.extensionTools.getNew.typeNewExtension}}</div>
+			<input type="text" name="extension" class="input-mini" id="extension_number">
+			<button class="monster-button-success" id="proceed_select_extension">{{i18n.extensionTools.getNew.proceedGetExtension}}</button>
+		</form>
+	</div>
+
+	<div class="existing-extensions-wrapper">
+		<span class="table-title">{{i18n.extensionTools.getNew.table.name}}</span>
+		<table class="monster-table skinny footable">
+			<thead>
+				<tr class="footable-header">
+					<th>{{i18n.extensionTools.getNew.table.columns.extension}}</th>
+					<th data-breakpoints="xs">{{i18n.extensionTools.getNew.table.columns.callflowName}}</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{{#each extensions}}
+					<tr>
+						<td>{{ extension }}</td>
+						<td data-breakpoints="xs">{{ callflow }}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

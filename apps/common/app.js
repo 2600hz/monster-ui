@@ -21,7 +21,8 @@ define(function(require){
 			'carrierSelector',
 			'numberPrepend',
 			'numberSelector',
-			'monsterListing'
+			'monsterListing',
+			'extensionTools'
 		],
 
 		css: [ 'app' ],
