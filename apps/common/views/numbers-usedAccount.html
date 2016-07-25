@@ -13,7 +13,9 @@
 						{{#if ../isE911Enabled}}
 							<li><a class="e911-number" href="#"><i class="fa fa-ambulance"></i>{{ @root.i18n.e911.label }}</a></li>
 						{{/if}}
+						{{#compare this.used_by "===" "trunkstore"}}
 							<li><a class="failover-number" href="#"><i class="fa fa-thumbs-down"></i>{{ @root.i18n.failover.label }}</a></li>
+						{{/compare}}
 							<li><a class="prepend-number" href="#"><i class="fa fa-file-text-o"></i>{{ @root.i18n.numberPrepend.label }}</a></li>
 						</ul>
 					</li>
