@@ -120,6 +120,7 @@ define(function(require){
 						monster.pub('common.buyNumbers', {
 							accountId: self.accountId,
 							searchType: 'regular',
+							singleSelect: true,
 							callbacks: {
 								success: function(numbers) {
 									// We changed this code, so that we can give ways to code using that common control to still add a number to the control, without having to know the logic of said control.
