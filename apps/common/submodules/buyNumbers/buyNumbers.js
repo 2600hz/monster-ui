@@ -399,7 +399,8 @@ define(function(require){
 						data: {
 							pattern: number,
 							offset:0,
-							limit:1
+							limit:1,
+							accountId: self.accountId
 						},
 						success: function(data) {
 							if(data && data.length > 0) {
@@ -532,7 +533,8 @@ define(function(require){
 						data: {
 							pattern: tollfreePrefix,
 							offset: _offset,
-							limit: _limit
+							limit: _limit,
+							accountId: self.accountId
 						},
 						success: function(data) {
 							if(data && data.length > 0) {
@@ -735,7 +737,8 @@ define(function(require){
 									pattern: "+"+availableCountries[self.appFlags.selectedCountryCode].prefix+areacode,
 									size: seqNumIntvalue,
 									offset: _offset,
-									limit: _limit
+									limit: _limit,
+									accountId: self.accountId
 								},
 								success: function(data) {
 									if(data && data.length > 0) {
@@ -779,7 +782,8 @@ define(function(require){
 								data: {
 									pattern: areacode,
 									offset: _offset,
-									limit: _limit
+									limit: _limit,
+									accountId: self.accountId
 								},
 								success: function(data) {
 									if(data && data.length > 0) {
