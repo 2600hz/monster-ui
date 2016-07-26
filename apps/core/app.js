@@ -212,6 +212,15 @@ define(function(require){
 				self.toggleAccountToggle();
 			});
 
+			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
+			$('.core-wrapper').on('click', '#monster-content', function() {
+				var $accountToggle = $('#main_topbar_account_toggle');
+
+				if($accountToggle.hasClass('open')) {
+					$accountToggle.removeClass('open');
+				}
+			});
+
 			container.find('#main_topbar_account_toggle').on('click', '.home-account-link', function() {
 				self.restoreMasquerading({
 					callback: function() {
