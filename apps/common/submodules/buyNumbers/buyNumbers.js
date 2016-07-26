@@ -399,7 +399,8 @@ define(function(require){
 						data: {
 							pattern: number,
 							offset:0,
-							limit:1
+							limit:1,
+							accountId: self.accountId
 						},
 						success: function(data) {
 							if(data && data.length > 0) {
@@ -532,7 +533,8 @@ define(function(require){
 						data: {
 							pattern: tollfreePrefix,
 							offset: _offset,
-							limit: _limit
+							limit: _limit,
+							accountId: self.accountId
 						},
 						success: function(data) {
 							if(data && data.length > 0) {
@@ -735,7 +737,8 @@ define(function(require){
 									pattern: "+"+availableCountries[self.appFlags.selectedCountryCode].prefix+areacode,
 									size: seqNumIntvalue,
 									offset: _offset,
-									limit: _limit
+									limit: _limit,
+									accountId: self.accountId
 								},
 								success: function(data) {
 									if(data && data.length > 0) {
@@ -779,7 +782,8 @@ define(function(require){
 								data: {
 									pattern: areacode,
 									offset: _offset,
-									limit: _limit
+									limit: _limit,
+									accountId: self.accountId
 								},
 								success: function(data) {
 									if(data && data.length > 0) {
@@ -1119,6 +1123,8 @@ define(function(require){
 				monster.request(settings);
 			}
 			else {
+				settings.data.accountId = self.accountId;
+
 				self.callApi(settings);
 			}
 		},
@@ -1139,6 +1145,8 @@ define(function(require){
 				monster.request(settings);
 			}
 			else {
+				settings.data.accountId = self.accountId;
+
 				self.callApi(settings);
 			}
 		},
@@ -1147,7 +1155,9 @@ define(function(require){
 
 			self.callApi({
 				resource: 'numbers.searchCity',
-				data: args.data,
+				data: _.extend({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
