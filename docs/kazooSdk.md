@@ -1151,32 +1151,32 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
-| Method: | __numbers.searchNumbers(__*settings*__)__ |
+| Method: | __numbers.search(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/phone_numbers?prefix={pattern}&quantity={limit}&offset={offset} |
+| Request URL: | {apiRoot}/accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={limit}&offset={offset} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `pattern`, `limit`, `offset` |
+| Mandatory _settings_: | `accountId`, `pattern`, `limit`, `offset` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
 | Method: | __numbers.searchBlocks(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit} |
+| Request URL: | {apiRoot}/accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `pattern`, `size`, `offset`, `limit` |
+| Mandatory _settings_: | `accountId`, `pattern`, `size`, `offset`, `limit` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||
 |---|---|
 | Method: | __numbers.searchCity(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/phone_numbers/prefix?city={city} |
+| Request URL: | {apiRoot}/accounts/{accountId}/phone_numbers/prefix?city={city} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `city` |
+| Mandatory _settings_: | `accountId`, `city` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Port
