@@ -73,7 +73,7 @@ body,
 }
 .core-topbar .nav > li {
 	float: left;
-	height: 65px;
+	height: 100%;
 	text-decoration: none;
 }
 .core-topbar .links.cell {
@@ -81,7 +81,7 @@ body,
 }
 .core-topbar #main_topbar_brand {
 	width: 192px;
-	height: 62px;
+	height: 100%;
 	margin: auto 25px auto 10px;
 	background: no-repeat center center;
 }
