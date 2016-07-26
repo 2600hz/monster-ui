@@ -1499,3 +1499,125 @@ table.monster-table .actions .action-item:first-child {
 	border-radius: 2px;
 	box-shadow: none;
 }
+
+/************************************************************/
+/****************** MONSTER FEATURE DIALOG ******************/
+/************************************************************/
+.monster-feature-popup-container {}
+
+.monster-feature-popup-container .feature-fa-wrapper{
+	display: inline-block;
+	margin: 20px;
+	width: 60px;
+	height: 60px;
+
+	border: 5px solid #DDDDDD;
+	border-radius: 60px 60px 60px 60px;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  hsl(0,0%,100%) 0%, hsl(0,0%,87%) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,100%)), color-stop(100%,hsl(0,0%,87%))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  hsl(0,0%,100%) 0%,hsl(0,0%,87%) 100%); /* W3C */
+/*	box-shadow: 0 -1px 2px #666666 inset;*/
+	text-align: center;
+	line-height: 60px;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+}
+
+.monster-feature-popup-container .feature-fa-wrapper.active{
+	background: #19d332; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%, hsl(132,46%,46%) 61%, hsl(0,0%,0%) 99%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,hsl(128,79%,46%)), color-stop(61%,hsl(132,46%,46%)), color-stop(99%,hsl(0,0%,0%))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  hsl(128,79%,46%) 0%,hsl(132,46%,46%) 61%,hsl(0,0%,0%) 99%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#19d332', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.monster-feature-popup-container {
+	width: 510px;
+}
+
+.monster-feature-popup-container .actions,
+.monster-feature-popup-container .content {
+	padding: 15px 25px;
+	border-top: 1px solid #ccc;
+}
+
+.monster-feature-popup-container .actions .monster-link {
+	margin-right: 10px;
+}
+
+.monster-feature-popup-container .switch {
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.monster-feature-popup-container .content.disabled {
+	display: none;
+}
+
+.monster-feature-popup-container form {
+	margin-bottom: 40px;
+}
+
+.monster-feature-popup-container form .main-line {
+	position: relative;
+	height: 70px; /* Adding extra space for validation messages */
+	line-height: 60px;
+}
+
+.monster-feature-popup-container form .main-line label.monster-invalid {
+	top: 45px;
+}
+
+.monster-feature-popup-container input,
+.monster-feature-popup-container select {
+	margin-left: 10px;
+}
+
+/************************************************************/
+/***************** MONSTER MEDIA SELECTION ******************/
+/************************************************************/
+.monster-media-selection {
+	margin-left: 40px;
+}
+.monster-media-selection .media-dropdown {
+	margin-bottom: 0px;
+	margin-left: 10px
+}
+.monster-media-selection .upload-toggle {
+	margin-left: 10px;
+	min-width: 117px;
+}
+.monster-media-selection .upload-div {
+	display: none;
+	margin-top: 20px;
+}
+.monster-media-selection .upload-div .upload-input {
+	margin: 0;
+	width: 330px;
+}
+.monster-media-selection .upload-div button.upload-action {
+	margin-left: 10px;
+	padding-left: 19px;
+	padding-right: 19px;
+}
+
+.monster-media-selection .upload-div button > i {
+	margin-right: 0;
+	padding-right: 0;
+}
+
+.monster-media-selection .upload-div .file-upload {
+	margin: 0;
+	display: inline-block;
+}
+.monster-media-selection .upload-div .file-upload > input {
+	margin: 0;
+	padding: 6px;
+	width: 140px;
+}

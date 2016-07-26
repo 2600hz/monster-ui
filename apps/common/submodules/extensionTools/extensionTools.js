@@ -15,8 +15,8 @@ define(function(require){
 		extensionToolsRenderSelect: function(args) {
 			var self = this,
 				accountId = args.accountId,
-				callbackSuccess = function() {
-					args.callback();
+				callbackSuccess = function(extension) {
+					args.callback(extension);
 
 					popup.dialog('close').remove();
 				},
