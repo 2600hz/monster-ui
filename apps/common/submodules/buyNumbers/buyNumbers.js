@@ -1123,6 +1123,8 @@ define(function(require){
 				monster.request(settings);
 			}
 			else {
+				settings.data.accountId = self.accountId;
+
 				self.callApi(settings);
 			}
 		},
@@ -1143,6 +1145,8 @@ define(function(require){
 				monster.request(settings);
 			}
 			else {
+				settings.data.accountId = self.accountId;
+
 				self.callApi(settings);
 			}
 		},
@@ -1151,7 +1155,9 @@ define(function(require){
 
 			self.callApi({
 				resource: 'numbers.searchCity',
-				data: args.data,
+				data: _.extend({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
