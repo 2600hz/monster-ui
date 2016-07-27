@@ -730,5 +730,13 @@
 				}
 			}
 		}
+	},
+
+	"__comment": "UI-2318: building common control for media selection",
+	"__version": "v4.0",
+	"mediaSelect": {
+		"defaultLabel": "Media",
+		"emptyUploadAlert": "Empty Upload",
+		"fileTooBigAlert": "File Too Big"
 	}
 }

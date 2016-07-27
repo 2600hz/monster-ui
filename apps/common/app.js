@@ -22,7 +22,8 @@ define(function(require){
 			'numberPrepend',
 			'numberSelector',
 			'monsterListing',
-			'extensionTools'
+			'extensionTools',
+			'mediaSelect'
 		],
 
 		css: [ 'app' ],

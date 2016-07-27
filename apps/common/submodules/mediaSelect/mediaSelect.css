@@ -1,0 +1,43 @@
+
+/************************************************************/
+/***************** MONSTER MEDIA SELECTION ******************/
+/************************************************************/
+.monster-media-selection {
+	margin-left: 40px;
+}
+.monster-media-selection .media-dropdown {
+	margin-bottom: 0px;
+	margin-left: 10px
+}
+.monster-media-selection .upload-toggle {
+	margin-left: 10px;
+	min-width: 117px;
+}
+.monster-media-selection .upload-div {
+	display: none;
+	margin-top: 20px;
+}
+.monster-media-selection .upload-div .upload-input {
+	margin: 0;
+	width: 330px;
+}
+.monster-media-selection .upload-div button.upload-action {
+	margin-left: 10px;
+	padding-left: 19px;
+	padding-right: 19px;
+}
+
+.monster-media-selection .upload-div button > i {
+	margin-right: 0;
+	padding-right: 0;
+}
+
+.monster-media-selection .upload-div .file-upload {
+	margin: 0;
+	display: inline-block;
+}
+.monster-media-selection .upload-div .file-upload > input {
+	margin: 0;
+	padding: 6px;
+	width: 140px;
+}
