@@ -55,7 +55,7 @@ define(function(require){
 				},
 				error: function(errors) {
 					if(errors.hasOwnProperty('size') && errors.size.length > 0) {
-						monster.ui.alert(self.i18n.active().common.mediaSelect.fileTooBigAlert);
+						monster.ui.alert(self.i18n.active().mediaSelect.fileTooBigAlert);
 					}
 					template.find('.upload-div input').val('');
 					mediaToUpload = undefined;
@@ -114,7 +114,7 @@ define(function(require){
 						}
 					});
 				} else {
-					monster.ui.alert(self.i18n.active().common.mediaSelect.emptyUploadAlert);
+					monster.ui.alert(self.i18n.active().mediaSelect.emptyUploadAlert);
 				}
 			});
 		}
