@@ -20,6 +20,7 @@ define(function(require){
 					remove: self.i18n.active().numberSelector.removeLink,
 					spare: self.i18n.active().numberSelector.spareLink,
 					buy: self.i18n.active().numberSelector.buyLink,
+					extension: self.i18n.active().numberSelector.extensionLink,
 					hideNumber: false
 				}, args.labels),
 				layout = $(monster.template(self, 'numberSelector-layout', {
@@ -27,7 +28,8 @@ define(function(require){
 					inputName: args.inputName || '',
 					number: args.number,
 					noSpare: args.noSpare === true ? true : false,
-					noBuy: args.noBuy === true ? true : false
+					noBuy: args.noBuy === true ? true : false,
+					noExtension: args.noExtension === true ? true : false
 				}));
 
 			if(container) {
@@ -43,15 +45,7 @@ define(function(require){
 			var self = this,
 				template = args.template,
 				removeCallback = args.removeCallback,
-				spareCallback = args.spareCallback,
-				buyCallback = args.buyCallback,
-				/**
-				 * If specified, globalAddNumberCallback will override
-				 * buyCallback and spareCallback and be called without
-				 * consideration of the source of the selected number.
-				 * @type {Function}
-				 */
-				globalAddNumberCallback = args.globalAddNumberCallback,
+				afterCallback = args.afterCallback,
 				spareFilters = args.spareFilters,
 				customNumbers = args.customNumbers,
 				dropdown = template.find('.number-selector-dropdown'),
@@ -64,19 +58,18 @@ define(function(require){
 					removeElement.find('.number').text(monster.util.formatPhoneNumber(number));
 					removeElement.removeClass('hidden');
 				},
+				// Handles return from spare control or from buy numbers, one being an array, the other being a map
 				addNumberCallback = function(numberList) {
 					if(numberList && !_.isEmpty(numberList)) {
 						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numberList)[0];
 
-						addNumberToControl(num);
-
-						if (globalAddNumberCallback) {
-							globalAddNumberCallback(num);
-						}
-						else {
-							spareCallback && spareCallback(num);
-						}
+						standardCallback(num);
 					}
+				},
+				standardCallback = function(number) {
+					addNumberToControl(number);
+
+					afterCallback && afterCallback(number);
 				};
 
 			dropdown.on('click', function() {
@@ -116,22 +109,19 @@ define(function(require){
 						}
 						break;
 					}
+					case 'extension': {
+						monster.pub('common.extensionTools.select', {
+							callback: standardCallback
+						});
+						break;
+					}
 					case 'buy': {
 						monster.pub('common.buyNumbers', {
 							accountId: self.accountId,
 							searchType: 'regular',
 							singleSelect: true,
 							callbacks: {
-								success: function(numbers) {
-									// We changed this code, so that we can give ways to code using that common control to still add a number to the control, without having to know the logic of said control.
-									// Before they had no access to the addNumberToControl method, so we give it to them here.
-									if(globalAddNumberCallback) {
-										globalAddNumberCallback(numbers, addNumberToControl);
-									}
-									else {
-										buyCallback(numbers);
-									}
-								}
+								success: addNumberCallback
 							}
 						});
 						break;

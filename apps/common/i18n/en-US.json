@@ -656,7 +656,10 @@
 		"emptyValue": "- Select a number -",
 		"removeLink": "Remove",
 		"spareLink": "Select a spare number",
-		"buyLink": "Buy a new number"
+		"buyLink": "Buy a new number",
+		"__comment": "UI-2334: adding extension selector to common control",
+		"__version": "v4.0",
+		"extensionLink": "Assign a New Extension"
 	},
 
 	"__comment": "UI-1386: Adding the numberListing common control",
