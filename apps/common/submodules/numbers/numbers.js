@@ -947,9 +947,7 @@ define(function(require){
 
 			if(monster.util.canAddExternalNumbers()) {
 				self.numbersCreateNumber(phoneNumber, accountId, function() {
-					self.numbersActivateNumber(phoneNumber, accountId, function() {
-						success && success();
-					}, error);
+					success && success();
 				}, error)
 			}
 			else {

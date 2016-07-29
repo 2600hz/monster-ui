@@ -69,7 +69,9 @@
 		cdrs: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/cdrs/{cdrId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/cdrs' },
-			'listByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/cdrs'}
+			'listByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/cdrs'},
+			'listByInteraction': { verb: 'GET', url: 'accounts/{accountId}/cdrs/interaction' },
+			'listLegs': { verb: 'GET', url: 'accounts/{accountId}/cdrs/legs/{callId}' }
 		},
 		channel: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/channels' }
