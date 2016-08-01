@@ -78,6 +78,12 @@ define(function(require){
 				}
 			});
 
+			template.find('#extension_number').keyup(function(event){
+				if(event.keyCode === 13){
+					template.find('#proceed_select_extension').click();
+				}
+			});
+
 			template.find('#proceed_select_extension').on('click', function(e) {
 				e.preventDefault();
 
