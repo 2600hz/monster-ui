@@ -21,32 +21,29 @@ define(function(require){
 			self.object.onmessage = function(event) {
 				var data = JSON.parse(event.data);
 
-				if (!(data.hasOwnProperty('Server-ID') || data.hasOwnProperty('server_id'))) {
-					self.onEvent(data);
-				}
+				self.onEvent(data);
 			}
 		},
 		object: {},
-		subscriptions: {},
-		uniqueSubscriptionId: 0,
+		bindings: {},
 
 		onEvent: function(data) {
 			var self = this,
-				subscriptionId = data.subscription_id,
+				bindingId = data.binding,
 				executeCallbacks = function(subscription) {
 					_.each(subscription.listeners, function(listener) {
 						listener.callback(data);
 					});
 				};
 
-			if(subscriptionId) {
-				if(self.subscriptions.hasOwnProperty(subscriptionId)) {
-					executeCallbacks(self.subscriptions[subscriptionId]);
+			if(bindingId) {
+				if(self.bindings.hasOwnProperty(bindingId)) {
+					executeCallbacks(self.bindings[bindingId]);
 				}
 			}
 			else {
-				_.each(self.subscriptions, function(subscription) {
-					executeCallbacks(subscription);
+				_.each(self.bindings, function(binding) {
+					executeCallbacks(binding);
 				});
 			}
 		},
@@ -55,30 +52,23 @@ define(function(require){
 		// If there's more than one listener, then we just remove the listener from the array or listeners for that subscription
 		removeListener(binding, accountId, authToken, source) {
 			var self = this,
-				found = false;
+				listenersToKeep = [];
 
-			_.each(self.subscriptions, function(subscription, id) {
-				if(!found) {
-					var listenersToKeep = [];
-
-					_.each(subscription.listeners, function(listener) {
-						if(!(listener.binding === binding && listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
-							listenersToKeep.push(listener);
-						}
-						else {
-							found = true;
-						}
-					});
-
-					if(listenersToKeep.length) {
-						self.subscriptions[id].listeners = listenersToKeep;
+			if(self.bindings.hasOwnProperty(binding)) {
+				_.each(binding.listeners, function(listener) {
+					if(!(listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
+						listenersToKeep.push(listener);
 					}
-					else {
-						self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
-						delete self.subscriptions[id];
-					}
-				}
-			})
+				});
+			}
+
+			if(listenersToKeep.length) {
+				self.bindings[binding].listeners = listenersToKeep;
+			}
+			else {
+				self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+				delete self.bindings[binding];
+			}
 		},
 
 		// We only allow one same listener (binding / accountId / authToken) per source.
@@ -86,36 +76,26 @@ define(function(require){
 		// If we don't find it, then we start a new subscription and add our listener to it
 		addListener(binding, accountId, authToken, func, source) {
 			var self = this,
-				found = false,
-				foundBindingId;
+				newListener = { accountId, authToken: authToken, source: source, callback: func };
 
-			_.each(self.subscriptions, function(subscription, subId) {
-				_.each(subscription.listeners, function(listener) {
-					if(listener.binding === binding && listener.accountId === accountId && listener.authToken === authToken) {
-						if(listener.source === source) {
-							found = true;
-							console.log(source + ' is already bound to ' + binding);
-						}
-						else {
-							foundBindingId = subId;
-						}
+			if(self.bindings.hasOwnProperty(binding)) {
+				_.each(self.bindings[binding].listeners, function(listener) {
+					if(listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
+						found = true;
 					}
 				})
-			});
 
-			if(found === false) {
-				var newListener = { binding: binding, accountId, authToken: authToken, source: source, callback: func };
-
-				if(foundBindingId) {
-					self.subscriptions[foundBindingId].listeners.push(newListener);
+				if(!found) {
+					self.bindings[binding].listeners.push(newListener);
 				}
 				else {
-					self.uniqueSubscriptionId++;
-					var id = (self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding})) || self.uniqueSubscriptionId);
-
-					self.subscriptions[id] = {
-						listeners: [ newListener ]
-					}
+					console.log('already bound!')
+				}
+			}
+			else {
+				self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+				self.bindings[binding] = {
+					listeners: [ newListener ]
 				}
 			}
 		}
