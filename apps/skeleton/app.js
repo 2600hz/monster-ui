@@ -20,7 +20,7 @@ define(function(require){
 		subscribe: {},
 
 		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {
@@ -40,16 +40,21 @@ define(function(require){
 		},
 
 		// Entry Point of the app
-		render: function(container){
+		render: function(container) {
 			var self = this,
-				skeletonTemplate = $(monster.template(self, 'layout')),
 				parent = _.isEmpty(container) ? $('#monster-content') : container;
 
-			//self.bindEvents(skeletonTemplate);
-
-			(parent)
-				.empty()
-				.append(skeletonTemplate);
+			monster.ui.generateAppLayout(self, {
+				menus: [
+					{
+						tabs: [
+							{
+								callback: ''
+							}
+						]
+					}
+				]
+			});
 		}
 	};
 
