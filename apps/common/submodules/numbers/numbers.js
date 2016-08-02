@@ -942,37 +942,26 @@ define(function(require){
 			});
 		},
 
-		numbersAddIndividualNumber: function(phoneNumber, accountId, success, error) {
+		numbersAddFreeformNumbers: function(numbers_data, accountId, callback) {
 			var self = this;
 
 			if(monster.util.canAddExternalNumbers()) {
-				self.numbersCreateNumber(phoneNumber, accountId, function() {
-					success && success();
-				}, error)
+				self.numbersCreateBlockNumber(numbers_data, accountId, function(data) {
+					// If we need to BULK activate, uncomment following
+					/*var validNumbers = [];
+					_.each(data.success, function(number) {
+						validNumbers.push(number.id);
+					});
+					self.numbersMove({ accountId: accountId, numbers: validNumbers }, function(data) {
+						callback && callback();
+					});*/
+
+					callback && callback();
+				});
 			}
 			else {
-				error();
+				monster.ui.alert(self.i18n.active().numbers.noRightsAddNumber);
 			}
-		},
-		
-		numbersAddFreeformNumbers: function(numbers_data, accountId, callback) {
-			var self = this,
-				parallelRequests = {};
-
-			_.each(numbers_data, function(phoneNumber) {
-				parallelRequests[phoneNumber] = function(callback) {
-					self.numbersAddIndividualNumber(phoneNumber, accountId, function(data) {
-						callback(null, data);
-					},
-					function(data) {
-						callback(null, {});
-					});
-				};
-			});
-
-			monster.parallel(parallelRequests, function(err, results) {
-				callback && callback(results);
-			});
 		},
 
 		numbersAddExternalNumbers: function(accountId, callback) {
@@ -1146,6 +1135,28 @@ define(function(require){
 				data: {
 					accountId: accountId,
 					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function(data) {
+					if(data.error !== '402') {
+						error && error(data);
+					}
+				}
+			});
+		},
+
+		numbersCreateBlockNumber: function(numbers, accountId, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.createBlock',
+				data: {
+					accountId: accountId,
+					data: {
+						numbers: numbers
+					}
 				},
 				success: function(data) {
 					success && success(data.data);
