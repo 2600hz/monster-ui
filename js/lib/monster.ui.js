@@ -31,7 +31,7 @@ define(function(require){
 			},
 
 			tryI18n: function(mapI18n, key) {
-				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : key;
+				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : monster.util.formatVariableToDisplay(key);
 			},
 
 			formatPhoneNumber: function(phoneNumber) {
