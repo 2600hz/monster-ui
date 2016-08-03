@@ -8,6 +8,12 @@ define(function(require){
 
 		},
 
+		appFlags: {
+			accountBrowser: {
+				documentEventInitialized: false
+			}
+		},
+
 		subscribe: {
 			'common.accountBrowser.render': 'accountBrowserRender'
 		},
@@ -24,6 +30,7 @@ define(function(require){
 				onSearch = args.onSearch,
 				addCurrentAccount = args.addCurrentAccount || false,
 				addBackButton = args.addBackButton || false,
+				noFocus = args.noFocus || false,
 				allowBackOnMasquerading = args.allowBackOnMasquerading || false, // needs addBackButton to be true, add back button up to original account when masquerading
 				callback = args.callback,
 				layout = $(monster.template(self, 'accountBrowser-layout', {
@@ -54,6 +61,7 @@ define(function(require){
 					onNewAccountClick: onNewAccountClick,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					noFocus: noFocus,
 					allowBackOnMasquerading: allowBackOnMasquerading,
 					searchLink: searchLink,
 					onSearch: onSearch
@@ -73,13 +81,16 @@ define(function(require){
 				searchLink = args.searchLink,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				noFocus = args.noFocus,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				onSearch = args.onSearch,
 				accountList = template.find('.account-list'),
 				isLoading = false,
 				loader = $('<li class="content-centered account-list-loader"> <i class="fa fa-spinner fa-spin"></i></li>');
 
-			setTimeout(function () { template.find('.search-query').focus(); });
+			if(!noFocus) {
+				setTimeout(function () { template.find('.search-query').focus(); });
+			}
 
 			//Prevents autoclosing of dropdown on click
 			template.on('click', function(e) {
@@ -102,14 +113,35 @@ define(function(require){
 				return found;
 			};
 
+			// We have to do it on keydown because of a weird behavior in Firefox.
+			// Pressing escape "restors the old value" of the field if the field is emptied, this is triggered on keydown.
+			// So if we used keyup, it's too late and the field has a value set.
+			// So we use keydown and preventDefault to prevent that behavior
+			// More details on that bug: https://bugzilla.mozilla.org/show_bug.cgi?id=598819
+			template.find('.account-browser-search').on('keydown', function(e) {
+				var $this = $(this);
+
+				// Escape KEY
+				if(e.which === 27) {
+					e.preventDefault();
+					if($this.val() !== '') {
+						$this.val('');
+						template.find('.account-list-element').show();
+						searchLink.remove();
+					}
+					else {
+						$this.parents('#main_topbar_account_toggle').removeClass('open')
+					}
+				}
+			});
+
 			template.find('.account-browser-search').on('keyup', function(e) {
 				var $this = $(this),
 					search = $this.val();
 
 				searchLink.find('.account-search-value').text(search);
-
 				// When they press enter, we want to trigger the global search
-				if(e.which == 13) {
+				if(e.which === 13) {
 					template.find('.account-search-link').click();
 				}
 				else if(search) {
@@ -125,6 +157,19 @@ define(function(require){
 					searchLink.remove();
 				}
 			});
+
+			// We can't bind on anything else than document for this event, since the input is disabled, it won't fire
+			if(self.appFlags.accountBrowser.documentEventInitialized === false) {
+				self.appFlags.accountBrowser.documentEventInitialized = true;
+				var container = $('#main_topbar_account_toggle');
+				$(document).on('keydown', function(e) {
+					if(e.which === 13) {
+						if(container.hasClass('open') && container.find('.account-list-element').length === 0 && container.find('.account-search-link').hasClass('active')) {
+							container.find('.account-search-link.active').trigger('click');
+						}
+					}
+				});
+			}
 
 			accountList.on('click', '.account-link', function() {
 				var accountElement = $(this).parents('.account-list-element');
@@ -213,7 +258,8 @@ define(function(require){
 					searchLink.removeClass('active')
 							  .remove();
 					template.find('.account-browser-search').prop('disabled', false)
-															.val('');
+															.val('')
+															.focus();
 
 					onSearch && onSearch();
 
@@ -239,7 +285,12 @@ define(function(require){
 						allowBackOnMasquerading: allowBackOnMasquerading,
 						showLocalBackButton: true,
 						callback: function() {
-							template.find('.account-browser-search').prop('disabled', true);
+							// We blur it so we can still detect keydown events
+							// if focus on disabled field, it won't fire
+							template.find('.account-browser-search')
+									.prop('disabled', true)
+									.blur();
+
 							accountList.prepend(searchLink);
 						}
 					});
