@@ -4,28 +4,79 @@ define(function(require){
 		monster = require('monster');
 
 	var privateSocket = {
-		hardCodedTestSubId: 'monster-binding-123',
+		connected: false,
+
+		close: function() {
+			var self = this;
+			self.object.close();
+		},
+
 		initialize: function() {
+			var self = this,
+				socket = self.initializeSocket();
+
+			socket.onopen = function(data) {
+				self.connected = true;
+				self.object = socket;
+				self.initializeSocketEvents(socket);
+				monster.pub('socket.connected');
+			}
+		},
+
+		initializeSocket: function() {
 			var self = this;
 
-			self.object = new WebSocket(monster.config.api.socket);
+			return new WebSocket(monster.config.api.socket);
+		},
 
-			self.object.onopen = function(data) {
-				console.log('open', data);
-			}
+		initializeSocketEvents: function(socket) {
+			var self = this;
 
-			self.object.onclose = function(data) {
-				console.log('close', data);
-			}
+			socket.onclose = function(data) {
+				self.connected = false;
+				self.connect();
+				console.log('WebSocket connection closed');
+			};
 
-			self.object.onmessage = function(event) {
+			socket.onmessage = function(event) {
 				var data = JSON.parse(event.data);
 
 				self.onEvent(data);
-			}
+			};
+
+			_.each(self.bindings, function(binding, name) {
+				_.each(binding.listeners, function(listener) {
+					self.subscribe(listener.accountId, listener.authToken, name);
+				});
+			});
+		},
+
+		connect: function() {
+			var self = this,
+				interval = setInterval(function() {
+					if(!self.connected) {
+						self.initialize();
+					}
+					else {
+						clearInterval(interval);
+					}
+				}, 3000);
+
+			self.initialize();
 		},
 		object: {},
 		bindings: {},
+
+		subscribe: function(accountId, authToken, binding) {
+			var self = this;
+
+			self.object.send(JSON.stringify({'action': 'subscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+		},
+		unsubscribe: function(accountId, authToken, binding) {
+			var self = this;
+
+			self.object.send(JSON.stringify({'action': 'unsubscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+		},
 
 		onEvent: function(data) {
 			var self = this,
@@ -66,7 +117,7 @@ define(function(require){
 				self.bindings[binding].listeners = listenersToKeep;
 			}
 			else {
-				self.object.send(JSON.stringify({"action": "unsubscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+				self.unsubscribe(accountId, authToken, binding);
 				delete self.bindings[binding];
 			}
 		},
@@ -99,7 +150,7 @@ define(function(require){
 				}
 			}
 			else {
-				self.object.send(JSON.stringify({"action": "subscribe", "account_id": accountId, "auth_token": authToken, "binding": binding}));
+				self.subscribe(accountId, authToken, binding);
 				self.bindings[binding] = {
 					listeners: [ newListener ]
 				}
@@ -114,7 +165,7 @@ define(function(require){
 	};
 
 	if(monster.config.api.hasOwnProperty('socket')) {
-		privateSocket.initialize();
+		privateSocket.connect();
 
 		socket.bind = function(binding, accountId, authToken, func, source) {
 			privateSocket.addListener(binding, accountId, authToken, func, source);
@@ -122,6 +173,10 @@ define(function(require){
 
 		socket.unbind = function(binding, accountId, authToken, source) {
 			privateSocket.removeListener(binding, accountId, authToken, source);
+		}
+
+		socket.close = function() {
+			privateSocket.close();
 		}
 	}
 
