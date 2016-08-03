@@ -139,13 +139,13 @@
 
 			'listInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox' },
 			'getDetailsInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}' },
-			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}/attachment' },
+			'getAttachmentInbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/inbox/{faxId}/attachment', dataType: 'text' },
 			'updateInbound': { verb: 'PUT', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 			'deleteInbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/inbox/{faxId}'},
 
 			'listOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox' },
 			'getDetailsOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}' },
-			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}/attachment' },
+			'getAttachmentOutbound': { verb: 'GET', url: 'accounts/{accountId}/faxes/outbox/{faxId}/attachment', dataType: 'text' },
 			'updateOutbound': { verb: 'PUT', url: 'accounts/{accountId}/faxes/outbox/{faxId}'},
 			'deleteOutbound': { verb: 'DELETE', url: 'accounts/{accountId}/faxes/outbox/{faxId}'}
 		},
@@ -216,6 +216,7 @@
 		numbers: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
+			'createBlock': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/collection' },
 			'activate': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}/activate' },
 			'activateBlock': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/collection/activate' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },

@@ -128,7 +128,11 @@
 		"e911IconHelp": "This icon means that you set up e911 for this phone number",
 		"localIconHelp": "This icon means that this number is a local number",
 		"notInService": "This number ({{variable}}) has not been fully activated and is not in service. You need to wait for this number to be in service to set features on it.",
-		"errorFetchingNumber": "We were unable to get information for this number ({{variable}}). Please try again later!"
+		"errorFetchingNumber": "We were unable to get information for this number ({{variable}}). Please try again later!",
+
+		"__comment": "UI-2346: add bulk api to add numbers",
+		"__version": "4.0",
+		"noRightsAddNumber": "You do not have the rights to add numbers to this account."
 	},
 
 	"callerId": {

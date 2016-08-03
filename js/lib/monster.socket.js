@@ -50,7 +50,7 @@ define(function(require){
 
 		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
 		// If there's more than one listener, then we just remove the listener from the array or listeners for that subscription
-		removeListener(binding, accountId, authToken, source) {
+		removeListener: function removeListener(binding, accountId, authToken, source) {
 			var self = this,
 				listenersToKeep = [];
 
@@ -74,9 +74,15 @@ define(function(require){
 		// We only allow one same listener (binding / accountId / authToken) per source.
 		// We look for the same exact listener, if we find it and the listener is for a different source, we store the subscription id as we can reuse the same subscription for our new source
 		// If we don't find it, then we start a new subscription and add our listener to it
-		addListener(binding, accountId, authToken, func, source) {
+		addListener: function addListener(binding, accountId, authToken, func, source) {
 			var self = this,
-				newListener = { accountId, authToken: authToken, source: source, callback: func };
+				found = false,
+				newListener = {
+					accountId: accountId,
+					authToken: authToken,
+					source: source,
+					callback: func
+				};
 
 			if(self.bindings.hasOwnProperty(binding)) {
 				_.each(self.bindings[binding].listeners, function(listener) {
