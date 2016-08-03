@@ -2005,7 +2005,7 @@ define(function(require){
 					callback: callback
 				};
 
-				Mousetrap.bind(key, callback);
+				Mousetrap.bind(key, callback, 'keyup');
 			}
 			else {
 				console.warn('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
