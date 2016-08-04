@@ -16,6 +16,7 @@ define(function(require){
 				socket = self.initializeSocket();
 
 			socket.onopen = function(data) {
+				console.log('Successful WebSocket connection');
 				self.connected = true;
 				self.object = socket;
 				self.initializeSocketEvents(socket);
@@ -55,6 +56,7 @@ define(function(require){
 			var self = this,
 				interval = setInterval(function() {
 					if(!self.connected) {
+						console.log('Attempting to reconnect to WebSocket');
 						self.initialize();
 					}
 					else {
