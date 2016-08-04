@@ -1787,11 +1787,12 @@ define(function(require){
 			appHeader
 				.find('.navbar-menu-item-link')
 					.on('click', function() {
+
 						var $this = $(this),
 							menuId = $this.parents('.navbar-menu').data('menu_id'),
 							tabId = $this.data('tab_id'),
 							isSubnav = $this.parents('nav').hasClass('app-subnav'),
-							currentTab = menus[menuId].tabs[tabId],
+							currentTab,
 							loadTabContent = function loadTabContent () {
 								var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]');
 
@@ -1892,6 +1893,9 @@ define(function(require){
 							tabId = $this.parents('nav').data('tab_id');
 
 							currentTab = menus[menuId].tabs[tabId].menus[subnavMenuId].tabs[subnavTabId];
+						}
+						else {
+							currentTab = menus[menuId].tabs[tabId];
 						}
 
 						if (!isLoadingInProgress) {
