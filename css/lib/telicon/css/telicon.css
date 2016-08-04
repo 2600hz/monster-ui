@@ -23,6 +23,7 @@
 
 [class^='icon-telicon-'],
 [class*=' icon-telicon-'] {
+	display: inline-block;
 	font-family: 'telicon';
 	font-weight: normal;
 	font-style: normal;
