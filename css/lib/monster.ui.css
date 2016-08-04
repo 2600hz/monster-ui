@@ -482,13 +482,16 @@ i.monster-password-strength {
 .core-content .app-header .app-subnav-bg {
 	z-index: 9;
 	display: none;
-	background-color: #e0e0e9;
 }
 
 .core-content .app-header .app-subnav-wrapper {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 20px 20px 0;
+}
+
+.core-content .app-header .app-subnav-wrapper .app-subnav {
+	border-bottom: 1px solid #c0c0c9;
 }
 
 .core-content .app-header .app-subnav:not(.active) {
