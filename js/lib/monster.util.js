@@ -350,8 +350,9 @@ define(function(require){
 
 		// Takes a string and replace all the "_" from it with a " ". Also capitalizes every word. 
 		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
-		formatVariableToDisplay: function(str) {
-			var formattedString = str.replace(/_/g,' ');
+		formatVariableToDisplay: function(variable) {
+			var str = variable || '',
+				formattedString = str.replace(/_/g,' ');
 
 			formattedString = formattedString.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
 
