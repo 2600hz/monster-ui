@@ -471,16 +471,22 @@ define(function(require){
 				minutes = Math.floor(seconds / 60) % 60,
 				remainingSeconds = seconds % 60,
 				i18n = monster.apps.core.i18n.active(),
+				format2Digits = function(number) {
+					if(typeof number === 'string') {
+						number = parseInt(number);
+					}
+					return (number < 10 ? '0' : '') + number;
+				},
 				displayTime;
 
 			if(mode === 'verbose') {
-				displayTime = hours + ' ' + i18n.friendlyTimer.hours + ', ' + minutes + ' ' +  i18n.friendlyTimer.minutesAnd + ' ' + remainingSeconds + ' ' + i18n.friendlyTimer.seconds;
+				displayTime = ''.concat(hours, ' ', i18n.friendlyTimer.hours, ', ', minutes, ' ', i18n.friendlyTimer.minutesAnd, ' ', remainingSeconds, ' ', i18n.friendlyTimer.seconds);
 			}
 			else {
-				displayTime = (hours < 10 ? '0' + hours : '' + hours) + ':' + (minutes < 10 ? '0' + minutes : '' + minutes) + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : '' + remainingSeconds);
+				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
 
-				if(displayTime.substr(0,2) === '00') {
-					displayTime = displayTime.substr(3, displayTime.length);
+				if (hours) {
+					displayTime = format2Digits(hours) + ':' + displayTime;
 				}
 			}
 
