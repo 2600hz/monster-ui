@@ -5,6 +5,7 @@ define(function(require){
 
 	var privateSocket = {
 		connected: false,
+		reconnectTimeout: 500,
 
 		close: function() {
 			var self = this;
@@ -16,11 +17,17 @@ define(function(require){
 				socket = self.initializeSocket();
 
 			socket.onopen = function(data) {
-				console.log('Successful WebSocket connection');
-				self.connected = true;
-				self.object = socket;
-				self.initializeSocketEvents(socket);
-				monster.pub('socket.connected');
+				if(self.connected === false) {
+					console.log('Successful WebSocket connection');
+					self.connected = true;
+					self.object = socket;
+					self.initializeSocketEvents(socket);
+					monster.pub('socket.connected');
+				}
+				else {
+					console.log('Socket already active');
+					socket.close();
+				}
 			}
 		},
 
@@ -62,7 +69,7 @@ define(function(require){
 					else {
 						clearInterval(interval);
 					}
-				}, 3000);
+				}, self.reconnectTimeout);
 
 			self.initialize();
 		},
