@@ -106,7 +106,6 @@ define(function(){
 
 						case 'user.list': 
 							successCallback = function(data, status) {
-								console.log(data);
 								data.data.sort(function(a,b) {
 									return a.first_name > b.first_name ? 1 : -1;
 								});
