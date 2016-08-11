@@ -75,9 +75,20 @@
 
 .transactions-content-wrapper .list-transactions .transaction-box .expand-box i {
 	color: #303039;
+	font-size: 16px;
 }
 .transactions-content-wrapper .list-transactions .transaction-box .expand-box.disabled i {
 	color: #c0c0c9;
+}
+
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box i.collapsed,
+.transactions-content-wrapper .list-transactions .transaction-box.open .expand-box i.expanded {
+	display: inline-block;
+}
+
+.transactions-content-wrapper .list-transactions .transaction-box.open .expand-box i.collapsed,
+.transactions-content-wrapper .list-transactions .transaction-box .expand-box i.expanded {
+	display: none;
 }
 
 .transactions-content-wrapper .list-transactions .transaction-box .text-box {
