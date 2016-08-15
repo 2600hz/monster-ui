@@ -205,6 +205,7 @@ define(function(){
 
 								errorCallback = function(error, status) {
 									self.uploadProgress.runningApis--;
+									self.uploadProgress.active = false;
 									container.find('#'+progressId).remove();
 									hideContainer();
 									params.error && params.error(error, status);
