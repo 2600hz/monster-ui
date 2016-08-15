@@ -104,6 +104,16 @@ define(function(){
 							}
 							break;
 
+						case 'user.list': 
+							successCallback = function(data, status) {
+								data.data.sort(function(a,b) {
+									return a.first_name > b.first_name ? 1 : -1;
+								});
+
+								params.success && params.success(data, status);
+							}
+							break;
+
 						case 'user.update':
 							// If we're updating the user we're logged in with
 							if(params.data.userId === monster.apps.auth.userId) {
