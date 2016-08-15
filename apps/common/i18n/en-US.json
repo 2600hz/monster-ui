@@ -132,7 +132,11 @@
 
 		"__comment": "UI-2346: add bulk api to add numbers",
 		"__version": "4.0",
-		"noRightsAddNumber": "You do not have the rights to add numbers to this account."
+		"noRightsAddNumber": "You do not have the rights to add numbers to this account.",
+
+		"__comment": "OOB: Add title of Move Numbers popup to I18n",
+		"__version": "4.0",
+		"moveNumbersConfirmationTitle": "Move Numbers - Confirmation"
 	},
 
 	"callerId": {

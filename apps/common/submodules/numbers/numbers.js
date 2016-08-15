@@ -610,12 +610,12 @@ define(function(require){
 					var box = $(v),
 						number = box.data('phonenumber');
 						accountId = box.parents('.account-section').data('id'),
-						accountName = box.parents('.account-section').data('name');
+						accountNameFrom = box.parents('.account-section').data('name');
 
 					if(!(accountId in mapAccounts)) {
 						mapAccounts[accountId] = {};
 						dataTemplate.accountList.push({
-							accountName: accountName
+							accountName: accountNameFrom
 						});
 					}
 
@@ -624,7 +624,7 @@ define(function(require){
 							dataTemplate.accountList[account].numbers = new Array();
 						}
 
-						if ( dataTemplate.accountList[account].accountName == accountName ) {
+						if ( dataTemplate.accountList[account].accountName == accountNameFrom ) {
 							dataTemplate.accountList[account].numbers.push(number);
 						}
 					}
@@ -643,7 +643,7 @@ define(function(require){
 
 				monster.ui.dialog(dialogTemplate, {
 					width: '540px',
-					title: "Move Numbers - Confirmation"
+					title: self.i18n.active().numbers.moveNumbersConfirmationTitle
 				});
 
 				dialogTemplate.on('click', '.remove-number', function() {
@@ -714,7 +714,7 @@ define(function(require){
 						self.numbersPaintSpare(parent, dataNumbers, function() {
 							var dataTemplate = {
 									count: countMove,
-									accountName: dataNumbers.listAccounts[destinationIndex].name
+									accountName: accountName
 								},
 								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
 
