@@ -89,7 +89,7 @@ define(function(require){
 				startingTimeout = 250,
 				maxTimeout = 1000*60,
 				multiplier = 2,
-				connect = function(){
+				connectAttempt = function(){
 					if(!self.connected) {
 						self.initialize();
 
@@ -111,11 +111,11 @@ define(function(require){
 						}
 
 						
-						timeout = setTimeout(connect, timeoutDuration);
+						timeout = setTimeout(connectAttempt, timeoutDuration);
 					}
 				};
 
-			connect();
+			connectAttempt();
 		},
 
 		connectOld: function() {
