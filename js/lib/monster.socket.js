@@ -118,20 +118,6 @@ define(function(require){
 			connectAttempt();
 		},
 
-		connectOld: function() {
-			var self = this,
-				interval = setInterval(function() {
-					if(!self.connected) {
-						console.log('Attempting to reconnect to WebSocket');
-						self.initialize();
-					}
-					else {
-						clearInterval(interval);
-					}
-				}, self.reconnectTimeout);
-
-			self.initialize();
-		},
 		object: {},
 		bindings: {},
 
