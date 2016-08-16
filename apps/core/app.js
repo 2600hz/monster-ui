@@ -70,6 +70,13 @@ define(function(require){
 			container.append(mainTemplate);
 
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
+			self.startSocket();
+		},
+
+		startSocket: function() {
+			var self = this;
+
+			monster.socket.connect();
 		},
 
 		loadAuth: function(){

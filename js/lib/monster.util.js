@@ -42,7 +42,7 @@ define(function(require){
 				var self = this,
 					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
 					i18n = monster.apps.core.i18n.active(),
-					user = pUser || monster.apps.auth.currentUser,
+					user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
 					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
 					userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
 					format2Digits = function(number) {

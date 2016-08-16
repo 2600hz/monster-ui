@@ -5,11 +5,20 @@ define(function(require){
 
 	var privateSocket = {
 		connected: false,
-		reconnectTimeout: 500,
+
+		printLogs: true,
 
 		close: function() {
 			var self = this;
 			self.object.close();
+		},
+
+		log: function(str, force) {
+			var self = this;
+
+			if(self.printLogs || force) {
+				console.log(str);
+			}
 		},
 
 		initialize: function() {
@@ -18,14 +27,14 @@ define(function(require){
 
 			socket.onopen = function(data) {
 				if(self.connected === false) {
-					console.log('Successful WebSocket connection');
+					self.log('Successful WebSocket connection');
 					self.connected = true;
 					self.object = socket;
 					self.initializeSocketEvents(socket);
 					monster.pub('socket.connected');
 				}
 				else {
-					console.log('Socket already active');
+					self.log('Socket already active');
 					socket.close();
 				}
 			}
@@ -43,7 +52,7 @@ define(function(require){
 			socket.onclose = function(data) {
 				self.connected = false;
 				self.connect();
-				console.log('WebSocket connection closed');
+				self.log('WebSocket connection closed');
 			};
 
 			socket.onmessage = function(event) {
@@ -57,9 +66,59 @@ define(function(require){
 					self.subscribe(listener.accountId, listener.authToken, name);
 				});
 			});
+
+			monster.socket.bind = function(binding, accountId, authToken, func, source) {
+				self.addListener(binding, accountId, authToken, func, source);
+			};
+
+			monster.socket.unbind = function(binding, accountId, authToken, source) {
+				self.removeListener(binding, accountId, authToken, source);
+			}
+
+			monster.socket.close = function() {
+				self.close();
+			}
 		},
 
+		// Reconnect loop that retries to connect after {{startingTimeout}} ms
+		// In case it fails, we multiply the previous timeout by {{multiplier}}, and then try again once that time has gone by
+		// The max timer is set to {{maxtimeout}}
 		connect: function() {
+			var self = this,
+				timeoutDuration,
+				startingTimeout = 250,
+				maxTimeout = 1000*60,
+				multiplier = 2,
+				connect = function(){
+					if(!self.connected) {
+						self.initialize();
+
+						if(timeoutDuration) {
+							if((timeoutDuration * multiplier) < maxTimeout) {
+								timeoutDuration *= multiplier;
+							}
+							else {
+								timeoutDuration = maxTimeout;
+							}
+
+							self.log('Attempting to reconnect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
+							self.log('Next try in ' + timeoutDuration/1000 + ' seconds');
+						} 
+						else {
+							timeoutDuration = startingTimeout;
+
+							self.log('Attempting to connect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
+						}
+
+						
+						timeout = setTimeout(connect, timeoutDuration);
+					}
+				};
+
+			connect();
+		},
+
+		connectOld: function() {
 			var self = this,
 				interval = setInterval(function() {
 					if(!self.connected) {
@@ -155,7 +214,7 @@ define(function(require){
 					self.bindings[binding].listeners.push(newListener);
 				}
 				else {
-					console.log('already bound!')
+					self.log('already bound!', true)
 				}
 			}
 			else {
@@ -169,25 +228,17 @@ define(function(require){
 
 	var socket = {
 		bind: function() {
-			console.log('no websockets defined');
+			privateSocket.log('No WebSockets defined', true);
+		},
+		connect: function() {
+			if(monster.config.api.hasOwnProperty('socket')) {
+				privateSocket.connect();
+			}
+			else {
+				privateSocket.log('No WebSocket API URL set in the config.js file', true)
+			}
 		}
 	};
-
-	if(monster.config.api.hasOwnProperty('socket')) {
-		privateSocket.connect();
-
-		socket.bind = function(binding, accountId, authToken, func, source) {
-			privateSocket.addListener(binding, accountId, authToken, func, source);
-		};
-
-		socket.unbind = function(binding, accountId, authToken, source) {
-			privateSocket.removeListener(binding, accountId, authToken, source);
-		}
-
-		socket.close = function() {
-			privateSocket.close();
-		}
-	}
 
 	return socket;
 });
