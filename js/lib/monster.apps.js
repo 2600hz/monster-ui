@@ -114,6 +114,30 @@ define(function(){
 							}
 							break;
 
+						case 'conference.get': 
+							successCallback = function(data, status) {
+								if(data.data.member.numbers.length && data.data.conference_numbers.length === 0) {
+									data.data.conference_numbers = data.data.member.numbers;
+									data.data.member.numbers = [];
+
+									app.callApi({
+										resource: 'conference.update',
+										data: {
+											accountId: app.accountId,
+											conferenceId: data.data.id,
+											data: data.data
+										},
+										success: function(data, status) {
+											params.success && params.success(data, status);
+										}
+									});
+								}
+								else {
+									params.success && params.success(data, status);
+								}
+							}
+							break;
+
 						case 'user.update':
 							// If we're updating the user we're logged in with
 							if(params.data.userId === monster.apps.auth.userId) {
