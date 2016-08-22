@@ -249,7 +249,7 @@ define(function(require){
 		},
 
 		formatPhoneNumber: function(phoneNumber){
-			if(phoneNumber) {
+			if(!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
 				phoneNumber = phoneNumber.toString();
 				var length = phoneNumber.length;
 

@@ -57,7 +57,11 @@ define(function(require){
 			port: {
 				loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
 				resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
-			}
+			},
+
+			// If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly... 
+			// while we're working on a better fix, this is a quick way to disable the pretty printing from the time being.
+			preventDIDFormatting: false
 		},
 		developerFlags: {
 			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
