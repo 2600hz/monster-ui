@@ -49,7 +49,9 @@ require.config({
 		'underscore': 'js/lib/underscore.min',
 		'validate': 'js/lib/jquery.validate.min',
 		'vkbeautify':'js/lib/vkbeautify',
-		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min'
+		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min',
+		'pdfjs-dist/build/pdf': 'js/lib/pdfjs/build/pdf',
+		'pdfjs-dist/build/pdf.worker': 'js/lib/pdfjs/build/pdf.worker'
 	},
 	shim: {
 		'footable-sort': ['footable'],

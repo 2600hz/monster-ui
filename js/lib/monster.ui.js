@@ -2099,6 +2099,44 @@ define(function(require){
 			}
 
 			return app;
+		},
+
+		renderPDF: function(file, container, pOptions) {
+			var self = this;
+
+			require(['pdfjs-dist/build/pdf'], function(app){
+				var base64ToUint8Array = function(base64) {
+						var raw = atob(base64),
+							uint8Array = new Uint8Array(raw.length);
+
+						for (var i = 0; i < raw.length; i++) {
+							uint8Array[i] = raw.charCodeAt(i);
+						}
+
+						return uint8Array;
+					},
+					base64Data = file.split(',')[1],
+					pdfData = base64ToUint8Array(base64Data),
+					defaultOptions = {
+						width: '100%',
+						height: '700px'
+					},
+					options = $.extend(true, defaultOptions, pOptions),
+					iframe,
+					hasIframe = container.find('.monster-pdf-viewer-iframe').length;
+
+				if(hasIframe) {
+					iframe = container.find('.monster-pdf-viewer-iframe')[0];
+					iframe.contentWindow.PDFViewerApplication.open(pdfData);
+				}
+				else {
+					iframe = $('<iframe class="monster-pdf-viewer-iframe" src="js/lib/pdfjs/web/viewer.html" style="width: '+ options.width + '; height: '+ options.height +';" allowfullscreen="" webkitallowfullscreen=""></iframe>')[0];
+					iframe.onload = function() {
+						iframe.contentWindow.PDFViewerApplication.open(pdfData);
+					}
+					container.append(iframe);
+				}
+			});
 		}
 	};
 
