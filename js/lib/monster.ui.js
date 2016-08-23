@@ -2081,9 +2081,28 @@ define(function(require){
 						countFormat: monster.apps.core.i18n.active().footable.format
 					}
 				},
+				nextKey,
 				finalOptions = $.extend(true, defaults, options || {});
 
-			return container.footable(finalOptions);
+			var newTable =  container.footable(finalOptions);
+
+			newTable.find('.footable-filtering').append('<button class="load-more monster-button">Load More</button>')
+
+			if(finalOptions.hasOwnProperty('backendPagination')) {
+				nextKey = finalOptions.backendPagination.initKey;
+			}
+
+			newTable.find('.load-more').on('click', function() {
+				if(finalOptions.hasOwnProperty('backendPagination')) {
+
+					finalOptions.backendPagination.nextPage(nextKey, function(data) {
+						nextKey = data.next_start_key;
+						
+					});
+				}
+			});
+
+			return newTable;
 		},
 
 		formatIconApp: function(app) {			
