@@ -1140,6 +1140,12 @@ table.monster-table .actions .action-item {
 	padding: 0 5px;
 	cursor: pointer;
 }
+
+table.monster-table .actions .action-item.disabled {
+	color: #bbb;
+	cursor: default;
+}
+
 table.monster-table .actions .action-item:first-child {
 	margin-left: 0;
 }
