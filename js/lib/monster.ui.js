@@ -2101,11 +2101,11 @@ define(function(require){
 			return app;
 		},
 
+		// Takes a file in parameter, and then outputs the PDF preview of that file in an iframe that's added to the container
 		renderPDF: function(file, container, pOptions) {
-			var self = this;
-
-			require(['pdfjs-dist/build/pdf'], function(app){
-				var base64ToUint8Array = function(base64) {
+			var self = this,
+				castFileToPDFString = function(file) {
+					var base64ToUint8Array = function(base64) {
 						var raw = atob(base64),
 							uint8Array = new Uint8Array(raw.length);
 
@@ -2116,8 +2116,15 @@ define(function(require){
 						return uint8Array;
 					},
 					base64Data = file.split(',')[1],
-					pdfData = base64ToUint8Array(base64Data),
-					defaultOptions = {
+					pdfData = base64ToUint8Array(base64Data)
+
+					return pdfData;
+				},
+				pdfData = castFileToPDFString(file);
+
+			// Get PDFJS library if not already initialized
+			require(['pdfjs-dist/build/pdf'], function(app){
+				var defaultOptions = {
 						width: '100%',
 						height: '700px'
 					},
