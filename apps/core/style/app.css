@@ -581,3 +581,25 @@ body,
 .debug-dialog table tr td:nth-child(1) {
 	font-weight: bold;
 }
+
+/* Backend Pagination Tables */
+.backend-pagination {
+	display: inline-block;
+	text-transform: none;
+	margin-right: 5px;
+}
+
+.backend-pagination button {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.backend-pagination.full .partial-load,
+.backend-pagination .full-load {
+	display: none;
+}
+
+.backend-pagination.full .full-load,
+.backend-pagination .partial-load {
+	display: inline-block
+}

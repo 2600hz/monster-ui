@@ -655,5 +655,18 @@
 	"footable": {
 		"search": "Search",
 		"format": "{PF}-{PL} of {TR}"
+	},
+
+	"__comment": "UI-2382: Adding control for back-end pagination",
+	"__version": "4.0",
+	"backendPagination": {
+		"loadMore": "Load More",
+		"loadAll": "Load All",
+		"title": "Back-end Pagination enabled",
+		"help": "This table uses data from a database that is expensive to look up. The data presented by this table is only a small subset of the available data, if you'd like to get more data, please click on Load More, or click on Load All to fetch all the data. This can take several minutes for large databases.",
+		"allDataLoaded": "You successfully loaded all the rows available for that table; therefore the \"Load\" buttons are now disabled.",
+		"empty": "No results. Click on the \"Load\" buttons above to widen the search.",
+		"emptyForSure": "No results.",
+		"entireDataSetLoaded": "All available data has been loaded."
 	}
 }

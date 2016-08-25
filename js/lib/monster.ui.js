@@ -2061,6 +2061,82 @@ define(function(require){
 			$(container).append(html);
 		},
 
+		handleBackendPaginationFootable: function(container, finalOptions) {
+			var id = '#' + container.attr('id'),
+				filters = {
+					page_size: finalOptions.backendPagination.pageSize || 50
+				},
+				loadedRows = [],
+				isAllDataLoaded = false,
+				paintRows = function(rows) {
+					container.find('tbody').empty();
+					_.each(rows, function(row) {
+						container.find('tbody').append(row);
+					});
+
+					paintFootable();
+				},
+				allDataLoaded = function() {
+					//container.find('.load-more, .load-all').addClass('disabled');
+					toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
+					finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
+
+					isAllDataLoaded = true;
+				},
+				loadRows = function(filters, callback) {
+					finalOptions.backendPagination.getRows(filters, function(rows, data) {
+						_.each(rows, function(row) {
+							loadedRows.push(row);
+						});
+
+						filters.start_key = encodeURIComponent(data.next_start_key);
+
+						if(!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
+							allDataLoaded();
+						}
+
+						paintRows(loadedRows);
+
+						callback && callback();
+					});
+				},
+				loadAllRows = function(filters) {
+					filters.paginate = false;
+					delete filters.page_size;
+					delete filters.start_key;
+
+					finalOptions.backendPagination.getRows(filters, function(rows, data) {
+						allDataLoaded();
+
+						paintRows(rows);
+					});
+				},
+				paintFootable = function() {
+					// If we don't re-render the backendTemplate every time, the tooltips don't show up for some reason.
+					var newTable = container.footable(finalOptions),
+						backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
+
+					monster.ui.tooltips(backendTemplate);
+
+					container.find('.footable-filtering th form').prepend(backendTemplate);
+				};
+
+			finalOptions.empty = monster.apps.core.i18n.active().backendPagination.empty;
+
+			container.on('click', '.load-more:not(.disabled)', function() {
+				loadRows(filters);
+			});
+
+			container.on('click', '.load-all:not(.disabled)', function() {
+				loadAllRows(filters);
+			});
+
+			// Finally, once everything is initialized properly, we load the first set of data.
+			loadRows(filters, function() {
+				finalOptions.backendPagination.afterInitialized();
+			});
+		},
+
 		// Layer above footable to use the default options everywhere
 		footable: function(container, options) {
 			var self = this,
@@ -2081,28 +2157,14 @@ define(function(require){
 						countFormat: monster.apps.core.i18n.active().footable.format
 					}
 				},
-				nextKey,
 				finalOptions = $.extend(true, defaults, options || {});
 
-			var newTable =  container.footable(finalOptions);
-
-			newTable.find('.footable-filtering').append('<button class="load-more monster-button">Load More</button>')
-
 			if(finalOptions.hasOwnProperty('backendPagination')) {
-				nextKey = finalOptions.backendPagination.initKey;
+				self.handleBackendPaginationFootable(container, finalOptions);
 			}
-
-			newTable.find('.load-more').on('click', function() {
-				if(finalOptions.hasOwnProperty('backendPagination')) {
-
-					finalOptions.backendPagination.nextPage(nextKey, function(data) {
-						nextKey = data.next_start_key;
-						
-					});
-				}
-			});
-
-			return newTable;
+			else {
+				var newTable = container.footable(finalOptions);
+			}
 		},
 
 		formatIconApp: function(app) {			
