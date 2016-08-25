@@ -2061,80 +2061,96 @@ define(function(require){
 			$(container).append(html);
 		},
 
-		handleBackendPaginationFootable: function(container, finalOptions) {
-			var id = '#' + container.attr('id'),
-				filters = {
-					page_size: finalOptions.backendPagination.pageSize || 50
-				},
-				loadedRows = [],
-				isAllDataLoaded = false,
-				paintRows = function(rows) {
+		handleDisplayFootable: function(container, finalOptions) {
+			var self = this,
+				addRowsToBody = function(pages, callback) {
 					container.find('tbody').empty();
-					_.each(rows, function(row) {
-						container.find('tbody').append(row);
-					});
-
-					paintFootable();
-				},
-				allDataLoaded = function() {
-					//container.find('.load-more, .load-all').addClass('disabled');
-					toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
-					finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
-
-					isAllDataLoaded = true;
-				},
-				loadRows = function(filters, callback) {
-					finalOptions.backendPagination.getRows(filters, function(rows, data) {
-						_.each(rows, function(row) {
-							loadedRows.push(row);
-						});
-
-						filters.start_key = encodeURIComponent(data.next_start_key);
-
-						if(!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
-							allDataLoaded();
-						}
-
-						paintRows(loadedRows);
-
-						callback && callback();
+					_.each(pages, function(rows) {
+						container.find('tbody').append(rows);
 					});
 				},
-				loadAllRows = function(filters) {
-					filters.paginate = false;
-					delete filters.page_size;
-					delete filters.start_key;
-
-					finalOptions.backendPagination.getRows(filters, function(rows, data) {
-						allDataLoaded();
-
-						paintRows(rows);
-					});
-				},
-				paintFootable = function() {
-					// If we don't re-render the backendTemplate every time, the tooltips don't show up for some reason.
-					var newTable = container.footable(finalOptions),
-						backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
-
-					monster.ui.tooltips(backendTemplate);
-
-					container.find('.footable-filtering th form').prepend(backendTemplate);
+				filters = {
+					paginate: false
 				};
 
-			finalOptions.empty = monster.apps.core.i18n.active().backendPagination.empty;
+			if(finalOptions.hasOwnProperty('backendPagination') && finalOptions.backendPagination.enabled) {
+				var paginateFilters = {
+						page_size: finalOptions.backendPagination.pageSize || 50
+					},
+					loadedPages = [],
+					isAllDataLoaded = false,
+					allDataLoaded = function() {
+						//toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
+						finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
 
-			container.on('click', '.load-more:not(.disabled)', function() {
-				loadRows(filters);
-			});
+						isAllDataLoaded = true;
+					},
+					loadPaginatedRows = function(filters, callback) {
+						finalOptions.getData(filters, function(rows, data) {
+							loadedPages.push(rows);
 
-			container.on('click', '.load-all:not(.disabled)', function() {
-				loadAllRows(filters);
-			});
+							filters.start_key = encodeURIComponent(data.next_start_key);
+							if(!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
+								allDataLoaded();
+							}
 
-			// Finally, once everything is initialized properly, we load the first set of data.
-			loadRows(filters, function() {
-				finalOptions.backendPagination.afterInitialized();
-			});
+							addRowsToBody(loadedPages);
+
+							paintPaginatedFootable();
+
+							callback && callback();
+						});
+					},
+					paintPaginatedFootable = function() {
+						// If we don't re-render the backendTemplate every time, the tooltips don't show up for some reason.
+						var newTable = container.footable(finalOptions),
+							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
+
+						monster.ui.tooltips(backendTemplate);
+
+						container.find('.footable-filtering th form').prepend(backendTemplate);
+					};
+
+				finalOptions.empty = monster.apps.core.i18n.active().backendPagination.empty;
+
+				container.on('click', '.load-more:not(.disabled)', function() {
+					loadPaginatedRows(paginateFilters);
+				});
+
+				container.on('click', '.load-all:not(.disabled)', function() {
+					paginateFilters.paginate = false;
+					delete paginateFilters.page_size;
+					delete paginateFilters.start_key;
+
+					finalOptions.getData(paginateFilters, function(rows, data) {
+						loadedPages = [ rows ];
+						allDataLoaded();
+
+						addRowsToBody(loadedPages);
+
+						paintPaginatedFootable();
+					});
+				});
+
+				// Finally, once everything is initialized properly, we load the first set of data.
+				loadPaginatedRows(paginateFilters, function() {
+					finalOptions.afterInitialized();
+				});
+			}
+			else if(finalOptions.hasOwnProperty('getData')) {
+				finalOptions.getData(filters, function(rows, data) {
+					addRowsToBody([ rows ]);
+
+					container.footable(finalOptions);
+
+					finalOptions.afterInitialized && finalOptions.afterInitialized();
+				});
+			}
+			else {
+				container.footable(finalOptions);
+
+				finalOptions.afterInitialized && finalOptions.afterInitialized();
+			}
 		},
 
 		// Layer above footable to use the default options everywhere
@@ -2159,12 +2175,7 @@ define(function(require){
 				},
 				finalOptions = $.extend(true, defaults, options || {});
 
-			if(finalOptions.hasOwnProperty('backendPagination')) {
-				self.handleBackendPaginationFootable(container, finalOptions);
-			}
-			else {
-				var newTable = container.footable(finalOptions);
-			}
+			self.handleDisplayFootable(container, finalOptions);
 		},
 
 		formatIconApp: function(app) {			
