@@ -321,37 +321,6 @@ define(function(require){
 			}
 		},
 
-		getFullAppList: function(callback) {
-			var self = this,
-				parallelRequest = {};
-
-			_.each(monster.apps.auth.installedApps, function(val) {
-				parallelRequest[val.id] = function(parallelCallback) {
-					//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-					/*self.callApi({
-						resource: 'appsStore.getIcon',
-						data: {
-							accountId: self.accountId,
-							appId: val.id,
-							generateError: false
-						},
-						success: function(data, status) {*/
-							val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
-							parallelCallback && parallelCallback(null, val);
-						/*},
-						error: function(data, status) {
-							val.icon = null;
-							parallelCallback && parallelCallback(null, val);
-						}
-					});*/
-				}
-			});
-
-			monster.parallel(parallelRequest, function(err, results) {
-				callback && callback(results);
-			});
-		},
-
 		getUserApps: function(callback) {
 			var self = this;
 
@@ -379,7 +348,8 @@ define(function(require){
 									generateError: false
 								},
 								success: function(data, status) {*/
-									val.icon = self.apiUrl + 'accounts/' + self.accountId +'/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+									val.icon = monster.util.getAppIconPath(val);
+
 									parallelCallback && parallelCallback(null, val);
 								/*},
 								error: function(data, status) {

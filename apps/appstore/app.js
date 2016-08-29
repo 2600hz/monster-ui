@@ -133,24 +133,7 @@ define(function(require){
 					}
 				},
 				function(err, results) {
-					var getIcon = function(appId, iconCallback) {
-							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-							/*self.callApi({
-								resource: 'appsStore.getIcon',
-								data: {
-									accountId: self.accountId,
-									appId: appId,
-									generateError: false
-								},
-								success: function(data, status) {*/
-									iconCallback && iconCallback(self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + appId + '/icon?auth_token=' + self.authToken);
-								/*},
-								error: function(data, status) {
-									iconCallback && iconCallback(null);
-								}
-							});*/
-						},
-						parallelIconRequests = [];
+					var parallelIconRequests = [];
 
 					results.apps.forEach(function(val, idx) {
 						if((val.hasOwnProperty('allowed_users') && val.allowed_users !== 'specific') || (val.hasOwnProperty('users') && val.users.length > 0)) {
@@ -162,7 +145,7 @@ define(function(require){
 						val.description = i18n.description;
 						monster.ui.formatIconApp(val);
 						parallelIconRequests.push(function(parallelCallback) {
-							getIcon(val.id, function(iconUrl) { parallelCallback(null, iconUrl); });
+							parallelCallback(null, monster.util.getAppIconPath(val));
 						});
 						delete val.i18n;
 					});
@@ -400,7 +383,7 @@ define(function(require){
 								currentLang = app.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US',
 								appData = {
 									api_url: app.api_url,
-									icon: self.apiUrl + 'accounts/' + self.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.authToken,
+									icon: monster.util.getAppIconPath(app),
 									id: app.id,
 									label: app.i18n[currentLang].label,
 									name: app.name

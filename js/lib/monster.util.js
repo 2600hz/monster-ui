@@ -942,6 +942,24 @@ define(function(require){
 			}
 
 			return true;
+		},
+
+		// Monster helper used to get the path to the icon of an app
+		// Some app have their icons loaded locally, whereas some new apps won't have them
+		getAppIconPath: function(app) {
+			var self = this,
+				response,
+				authApp = monster.apps.auth,
+				localIcons = ['accounts', 'branding', 'callflows', 'callqueues', 'carriers', 'cluster', 'conferences', 'debug', 'developer', 'dialplans', 'fax', 'migration', 'mobile', 'nuumbers', 'operator', 'pbxs', 'pivot', 'port', 'provisioner' ,'reseller_reporting', 'tasks', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
+
+			if(localIcons.indexOf(app.name) >= 0) {
+				response = 'css/assets/appIcons/' + app.name + '.png';
+			}
+			else {
+				response = authApp.apiUrl + 'accounts/' + authApp.accountId +'/apps_store/' + app.id + '/icon?auth_token=' + authApp.authToken;
+			}
+
+			return response;
 		}
 	};
 

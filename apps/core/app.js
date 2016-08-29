@@ -130,7 +130,7 @@ define(function(require){
 				_.each(monster.apps.auth.installedApps, function(val) {
 					if ( val.name === appName ) {
 						defaultApp = val;
-						defaultApp.icon = self.apiUrl + 'accounts/' + monster.apps.auth.currentAccount.id + '/apps_store/' + val.id + '/icon?auth_token=' + self.authToken;
+						defaultApp.icon = monster.util.getAppIconPath(val);
 					}
 				});
 
