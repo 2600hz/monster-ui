@@ -18,6 +18,7 @@ define(function(require){
 				formattedData = {
 					selectedOption: args.selectedOption || false,
 					options: args.options || [],
+					name: args.name || undefined,
 					label: args.label || self.i18n.active().mediaSelect.defaultLabel
 				},
 				template = $(monster.template(self, 'mediaSelect-layout', formattedData));

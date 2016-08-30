@@ -1433,7 +1433,7 @@ define(function(require){
 				coreApp = monster.apps.core,
 				unselectedItems = (function findUnselectedItems(items, selectedItems) {
 					var selectedKeys = selectedItems.map(function(item) { return item.key; }),
-						unselectedItems = items.filter(function(item) { return selectedKeys.indexOf(item.id) < 0; });
+						unselectedItems = items.filter(function(item) { return selectedKeys.indexOf(item.key) < 0; });
 
 					return unselectedItems;
 				})(items, selectedItems),
@@ -1490,52 +1490,54 @@ define(function(require){
 			var self = this,
 				codecsI18n = monster.apps.core.i18n.active().codecs,
 				defaultAudioList = {
-					'OPUS': codecsI18n.audio['OPUS'],
 					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
-					'G7221@32000h': codecsI18n.audio['G7221@32000h'],
-					'G7221@16000h': codecsI18n.audio['G7221@16000h'],
-					'G722': codecsI18n.audio['G722'],
-					'speex@32000h':codecsI18n.audio['speex@32000h'],
-					'speex@16000h': codecsI18n.audio['speex@16000h'],
-					'PCMU': codecsI18n.audio['PCMU'],
-					'PCMA': codecsI18n.audio['PCMA'],
-					'G729':codecsI18n.audio['G729'],
-					'GSM': codecsI18n.audio['GSM'],
 					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
-					'CELT@64000h': codecsI18n.audio['CELT@64000h']
+					'CELT@64000h': codecsI18n.audio['CELT@64000h'],
+					'G722': codecsI18n.audio['G722'],
+					'G729':codecsI18n.audio['G729'],
+					'G7221@16000h': codecsI18n.audio['G7221@16000h'],
+					'G7221@32000h': codecsI18n.audio['G7221@32000h'],
+					'GSM': codecsI18n.audio['GSM'],
+					'OPUS': codecsI18n.audio['OPUS'],
+					'PCMA': codecsI18n.audio['PCMA'],
+					'PCMU': codecsI18n.audio['PCMU'],
+					'speex@16000h': codecsI18n.audio['speex@16000h'],
+					'speex@32000h':codecsI18n.audio['speex@32000h']
 				},
 				defaultVideoList = {
-					'VP8': codecsI18n.video['VP8'],
-					'H264': codecsI18n.video['H264'],
+					'H261': codecsI18n.video['H261'],
 					'H263': codecsI18n.video['H263'],
-					'H261': codecsI18n.video['H261']
+					'H264': codecsI18n.video['H264'],
+					'VP8': codecsI18n.video['VP8']
 				},
 				mapMigrateAudioCodec = {
-					'Speex': 'speex@16000h',
+					'CELT_48': 'CELT@48000h',
+					'CELT_64': 'CELT@64000h',
 					'G722_16': 'G7221@16000h',
 					'G722_32': 'G7221@32000h',
-					'CELT_48': 'CELT@48000h',
-					'CELT_64': 'CELT@64000h'
+					'Speex': 'speex@16000h'
 				},
 				mapMigrateVideoCodec = {},
 				selectedItems = [],
 				items = [],
-				codecValue,
-				mapSelected = {},
 				getLinkedColumn = function(selectedCodecs, defaultList, mapMigrate) {
-					_.each(selectedCodecs, function(codec) {
-						// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
-						codecValue = defaultList.hasOwnProperty(codec) ? defaultList[codec] : (mapMigrate.hasOwnProperty(codec) ? defaultList[mapMigrate[codec]] : codec);
-
-						mapSelected[codec] = true;
-						selectedItems.push({ key: codec, value: codecValue });
+					selectedItems = _.map(selectedCodecs, function(codec, idx) {
+						return {
+							key: codec,
+							// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
+							value: defaultList.hasOwnProperty(codec) ? defaultList[codec] : (mapMigrate.hasOwnProperty(codec) ? defaultList[mapMigrate[codec]] : codec)
+						};
+					}).sort(function(a, b) {
+						return a.value > b.value ? 1 : -1;
 					});
 
-					_.each(defaultList, function(description, codec) {
-						if(!mapSelected.hasOwnProperty(codec)) {
-							items.push({ key: codec, value: description });
-						}
-						
+					items = _.map(defaultList, function(description, codec) {
+						return {
+							key: codec,
+							value: description
+						};
+					}).sort(function(a, b) {
+						return a.value > b.value ? 1 : -1;
 					});
 
 					return self.linkedColumns(target, items, selectedItems, options)
