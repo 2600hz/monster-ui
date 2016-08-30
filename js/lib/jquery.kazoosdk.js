@@ -267,6 +267,22 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/presence?include_presentity=true' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
 		},
+		qubicleQueues: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_queues' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues' },
+			'getRoster': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
+			'updateRoster': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
+			'deleteRoster': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
+			'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' }
+		},
+		qubicleRecipients: {
+			'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
+			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
+			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
+			'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/status' },
+			'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' }
+		},
 		registrations: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
 		},
