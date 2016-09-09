@@ -499,6 +499,11 @@ body,
 	bottom: 2px;
 }
 
+/* Hack for jira collector issue */
+#atlwdg-trigger {
+	z-index: 200;
+}
+
 .core-footer.feedback-enabled {
 	right: 117px;
 }
