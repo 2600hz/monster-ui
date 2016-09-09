@@ -498,6 +498,11 @@ body,
 	right: 2px;
 	bottom: 2px;
 }
+
+.core-footer.feedback-enabled {
+	right: 117px;
+}
+
 .core-footer .powered-by > * {
 	font-size: 11px;
 	margin-right: 5px;

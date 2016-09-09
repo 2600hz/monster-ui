@@ -32,13 +32,17 @@
 
 <div class="core-content" id="monster-content"></div>
 
-<footer class="core-footer">
+<footer class="core-footer{{#if jiraFeedback.enabled}} feedback-enabled{{/if}}">
 	{{#unless hidePowered}}
 	<span class="powered-by">
 		<a href="http://www.2600hz.com/" target="_blank" id="powered">{{i18n.poweredBy}} 2600hz</a>
 		<span class="tag-version"></span>
 	</span>
 	{{/unless}}
+
+	{{#if jiraFeedback.enabled}}
+		<script type="text/javascript" src="{{jiraFeedback.url}}"></script>
+	{{/if}}
 </footer>
 
 <div class="core-absolute">

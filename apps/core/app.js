@@ -58,7 +58,14 @@ define(function(require){
 
 		render: function(container){
 			var self = this,
-				mainTemplate = $(monster.template(self, 'app', { hidePowered: monster.config.whitelabel.hide_powered }));
+				dataTemplate = {
+					hidePowered: monster.config.whitelabel.hide_powered,
+					jiraFeedback: {
+						enabled: monster.config.whitelabel.hasOwnProperty('jiraFeedback') && monster.config.whitelabel.jiraFeedback.enabled === true,
+						url: monster.config.whitelabel.hasOwnProperty('jiraFeedback') ? monster.config.whitelabel.jiraFeedback.url : ''
+					}
+				},
+				mainTemplate = $(monster.template(self, 'app', dataTemplate));
 				
 			document.title = monster.config.whitelabel.applicationTitle;
 
