@@ -280,7 +280,7 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
-			'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/status' },
+			'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
 			'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' }
 		},
 		registrations: {
