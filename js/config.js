@@ -61,7 +61,14 @@ define(function(require){
 
 			// If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly... 
 			// while we're working on a better fix, this is a quick way to disable the pretty printing from the time being.
-			preventDIDFormatting: false
+			preventDIDFormatting: false,
+
+			// If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property.
+			// if this item is removed or set to enabled: false, nothing will appear in the UI.
+			jiraFeedback: {
+				enabled: false,
+				url: ''
+			}
 		},
 		developerFlags: {
 			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
