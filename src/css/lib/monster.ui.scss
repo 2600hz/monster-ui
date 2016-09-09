@@ -1,3 +1,5 @@
+@import "../partials/base";
+
 /************************************************************/
 /******************* ALERT/CONFIRM DIALOG *******************/
 /************************************************************/
@@ -52,7 +54,7 @@
 	padding: 10px;
 	border: solid 1px #c0c0c9;
 	border-radius: 2px;
-	background: #f0f0f9;
+	background: $background-primary-color;
 }
 .dialog-charges .content > .section:not(:first-child) {
 	margin-top: 20px;
@@ -456,7 +458,7 @@ i.monster-password-strength {
 
 .core-content .app-layout {
 	min-height: 100%;
-	background-color: #f0f0f9;
+	background-color: $background-primary-color;
 }
 
 .core-content .app-header .app-nav-bg {
@@ -692,7 +694,7 @@ i.monster-password-strength {
 
 /* Pretty JSON */
 .renderjson                { max-height: 400px; overflow: auto; }
-.renderjson a              { color: #AAA, text-decoration: none; }
+.renderjson a              { color: #AAA; text-decoration: none; }
 .renderjson .disclosure    { font-size: 150%; }
 .renderjson .key           { font-weight: bold; }
 

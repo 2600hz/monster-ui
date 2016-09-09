@@ -1,0 +1,32 @@
+/* _colors.scss */
+/* unique color names */
+$dodger-blue: #22A5FF;
+$emerald: #33DB24;
+$sunglow: #FFCC33;
+$red-orange: #FF3D25;
+
+// names found with http://chir.ag/projects/name-that-color
+// Neutral Dark
+$shark: #202029;
+$tuna: #303039;
+$tuna2: #404049;
+
+// Neutral grays
+$midgray: #606069;
+$jumbo: #808089;
+$manatee: #909099;
+
+//Neutral Lightgrays
+$french-gray: #c0c0c9;
+$mischka: #e0e0e9;
+$white-lilac: #F0F0F9;
+
+
+/* semantic color names */
+$primary-color: $dodger-blue;
+$error-color: $red-orange;
+$success-color: $emerald;
+$warning-color: $sunglow;
+
+$background-primary-color: $white-lilac;
+$font-primary-color: $tuna;
