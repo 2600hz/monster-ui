@@ -1,0 +1,6 @@
+- Install node v4.5.0
+- update NPM to 3.10.6: npm install npm -g
+- Install gulp: npm install -g gulp  
+- initialize project package.json npm init
+- creates node_modules and add gulp-sass package npm install gulp-sass  
+- add dependency to package.json npm install --save gulp  
