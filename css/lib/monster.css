@@ -1407,7 +1407,7 @@ table.monster-table .actions .action-item:first-child {
 }
 
 .monster-select-dropdown > .dropdown .dropdown-toggle .monster-checkbox {
-	margin-bottom: -3px;
+	min-height: 13px;
 }
 
 .monster-select-dropdown > .dropdown .dropdown-toggle {
