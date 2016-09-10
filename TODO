@@ -1,6 +1,9 @@
-- Install node v4.5.0
-- update NPM to 3.10.6: npm install npm -g
-- Install gulp: npm install -g gulp  
-- initialize project package.json npm init
-- creates node_modules and add gulp-sass package npm install gulp-sass  
-- add dependency to package.json npm install --save gulp  
+Near future
+= Change all CSS files to SCSS files. Importing base.scss in each file.
+= Have a mode for dev where we don't concatenate and a mode for prod where we do concatenate: goal is to load only one scss file at the end.
+= Add require.js r.js to gulp and see if we can make it work so we could skip the build process that currently exists.
+
+Dream future
+= Add a mode in prod to automatically add a version to the files so we can bust cache automatically
+= Add minification of the JS with dev / prod mode
+= Add minification of the HTML with dev / prod mode. Seei f Handlebars can work with one big js file containing all our templates.
