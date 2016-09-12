@@ -4,8 +4,30 @@ define(function(require){
 		monster = require('monster'),
 		toastr = require('toastr');
 
+	require([
+		'./submodules/account/account',
+		'./submodules/balance/balance',
+		'./submodules/billing/billing',
+		'./submodules/servicePlan/servicePlan',
+		'./submodules/transactions/transactions',
+		'./submodules/trunks/trunks',
+		'./submodules/user/user',
+		'./submodules/errorTracker/errorTracker'
+	]);
+
 	var app = {
 		name: 'myaccount',
+
+		subModules: [
+			'account',
+			'balance',
+			'billing',
+			'servicePlan',
+			'transactions',
+			'trunks',
+			'user',
+			'errorTracker'
+		],
 
 		css: [ 'app' ],
 
@@ -36,8 +58,6 @@ define(function(require){
 			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough',
 			'myaccount.renderDropdown': 'clickMyAccount'
 		},
-
-		subModules: ['account', 'balance', 'billing', 'servicePlan', 'transactions', 'trunks', 'user', 'errorTracker'],
 
 		mainContainer: '#myaccount',
 

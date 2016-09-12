@@ -317,12 +317,14 @@ define(function(){
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
-					monster._fileExists(fileName, function() {
+					/*monster._fileExists(fileName, function() {
 						monster.css(fileName);
 					},
 					function() {
 						console.info('File Name doesn\'t exist: ', fileName);
-					});
+					});*/
+
+					monster.css(fileName);
 				};
 
 			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
@@ -427,17 +429,9 @@ define(function(){
 					var toInit = app.subModules.length,
 						loadModule = function(subModule, callback) {
 							var pathSubModule = app.appPath + '/submodules/',
-								key = 'app-' + app.name + '-' + subModule,
-								path = pathSubModule + subModule + '/' + subModule,
-								paths = {};
+								path = pathSubModule + subModule + '/' + subModule;
 
-							paths[key] = path;
-
-							require.config({
-								paths: paths
-							});
-
-							require([key], function(module) {
+							require([path], function(module) {
 								/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
 								var oldSubscribes = $.extend(true, {}, app.subscribe);
 								$.extend(true, app, module);

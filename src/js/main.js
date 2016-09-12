@@ -26,6 +26,7 @@ require.config({
 		'jstz': 'js/lib/jstz.min',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'mask': 'js/lib/jquery.mask',
+		'modernizr': 'js/lib/modernizr-2.6.2.min',
 		'monster': 'js/lib/monster',
 		'monster-apps': 'js/lib/monster.apps',
 		'monster-ui': 'js/lib/monster.ui',
@@ -76,17 +77,18 @@ require.config({
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
-require(['jquery', 'monster', 'plugins', 'bootstrap', 'bootstrap-clickover', 'touch-punch'], function($, monster){
+require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-clickover', 'touch-punch'], function($, monster){
 	$.support.cors = true;
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket'], function(util, ui, apps, routing, socket){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone'], function(util, ui, apps, routing, socket, timezone){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
 		monster.routing = routing;
 		monster.socket = socket;
+		monster.timezone = timezone;
 
 		monster.util.setDefaultLanguage();
 

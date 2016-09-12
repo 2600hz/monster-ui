@@ -3,6 +3,26 @@ define(function(require){
 		_ = require('underscore'),
 		monster = require('monster');
 
+	require([
+		'./submodules/accountAncestors/accountAncestors',
+		'./submodules/accountBrowser/accountBrowser',
+		'./submodules/buyNumbers/buyNumbers',
+		'./submodules/callerId/callerId',
+		'./submodules/e911/e911',
+		'./submodules/failover/failover',
+		'./submodules/numbers/numbers',
+		'./submodules/port/port',
+		'./submodules/chooseModel/chooseModel',
+		'./submodules/servicePlanDetails/servicePlanDetails',
+		'./submodules/ringingDurationControl/ringingDurationControl',
+		'./submodules/carrierSelector/carrierSelector',
+		'./submodules/numberPrepend/numberPrepend',
+		'./submodules/numberSelector/numberSelector',
+		'./submodules/monsterListing/monsterListing',
+		'./submodules/extensionTools/extensionTools',
+		'./submodules/mediaSelect/mediaSelect'
+	]);
+
 	var app = {
 		name: 'common',
 

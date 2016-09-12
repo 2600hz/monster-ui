@@ -7,7 +7,12 @@ define(function(require){
 		async = require('async'),
 		form2object = require('form2object'),
 		config = require('config'),
-		kazoosdk = require('kazoosdk');
+		kazoosdk = require('kazoosdk'),
+		chosen = require('chosen'),
+		card = require('card'),
+		dataTables = require('datatables'),
+		ddslick = require('ddslick'),
+		fileupload = require('fileupload');
 
 	var monster = {
 		_channel: postal.channel('monster'),

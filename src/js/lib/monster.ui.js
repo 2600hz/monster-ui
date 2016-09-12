@@ -11,7 +11,8 @@ define(function(require){
 		introJs = require('introJs'),
 		mask = require('mask'),
 		renderJSON = require('renderjson'),
-		footable = require('footable');
+		footable = require('footable'),
+		mousetrap = require('mousetrap');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
