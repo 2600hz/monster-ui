@@ -1499,11 +1499,16 @@ table.monster-table .actions .action-item:first-child {
 
 .monster-search > input {
 	width: 183px;
+	margin-bottom: 0;
 	padding-left: 29px;
 	color: #303039;
 	border-color: #c0c0c9;
 	border-radius: 2px;
 	box-shadow: none;
+}
+
+.monster-search.transparent > input {
+	background-color: transparent;
 }
 
 /************************************************************/

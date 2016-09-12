@@ -1428,41 +1428,62 @@ define(function(require){
 		 * @param selectedData - mandatory object of selected items
 		 * @param options - optional list of settings
 		 */
-		linkedColumns: function(target, items, selectedItems, options) {
+		linkedColumns: function(target, items, selectedItems, pOptions) {
 			var self = this,
 				coreApp = monster.apps.core,
+				defaultOptions = {
+					insertionType: 'appendTo',
+					searchable: true,
+					i18n: {
+						search: coreApp.i18n.active().search,
+						columnsTitles: {
+							available: coreApp.i18n.active().linkedColumns.available,
+							selected: coreApp.i18n.active().linkedColumns.selected
+						}
+					}
+				},
 				unselectedItems = (function findUnselectedItems(items, selectedItems) {
 					var selectedKeys = selectedItems.map(function(item) { return item.key; }),
 						unselectedItems = items.filter(function(item) { return selectedKeys.indexOf(item.key) < 0; });
 
 					return unselectedItems;
 				})(items, selectedItems),
-				 defaultOptions = {
-					insertionType: 'appendTo',
-					columnsTitles: {
-						available: coreApp.i18n.active().linkedColumns.available,
-						selected: coreApp.i18n.active().linkedColumns.selected
-					}
+				options = $.extend(true, defaultOptions, pOptions || {}),
+				dataTemplate = {
+					unselectedItems: unselectedItems,
+					selectedItems: selectedItems,
+					options: options
 				},
-				widgetTemplate,
-				dataTemplate,
+				widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate)),
 				widget;
 
-			options = $.extend(true, defaultOptions, options || {});
+			widgetTemplate
+				.find('.available, .selected')
+					.sortable({
+						items: '.item-selector',
+						connectWith: '.connected',
+						tolerance: 'pointer'
+					});
 
-			dataTemplate = {
-				unselectedItems: unselectedItems,
-				selectedItems: selectedItems,
-				options: options
-			};
+			if (options.searchable) {
+				widgetTemplate
+					.find('.search-wrapper')
+						.on('keyup', function(event) {
+							event.preventDefault();
 
-			widgetTemplate = $(monster.template(coreApp, 'linkedColumns-template', dataTemplate));
+							var $this = $(this),
+								$input = $this.find('input'),
+								searchString = $input.val().toLowerCase(),
+								items = $(this).siblings('ul').find('.item-selector');
 
-			widgetTemplate.find('.available, .selected')
-						  .sortable({ 
-							connectWith: '.connected',
-							tolerance: 'pointer'
+							_.each(items, function(item) {
+								var $item = $(item),
+									value = $item.find('.item-value').html().toLowerCase();
+
+								value.indexOf(searchString) < 0 ? $item.hide() : $item.show();
+							});
 						});
+			}
 
 			widget = widgetTemplate[options.insertionType](target);
 

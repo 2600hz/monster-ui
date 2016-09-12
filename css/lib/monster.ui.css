@@ -315,36 +315,47 @@ input.monster-invalid {
 /************************************************************/
 
 .items-selector .box-selector {
-	float: left;
-	width: 300px;
+	width: 100%;
+	max-width: 376px;
 }
 .items-selector .box-selector:first-child {
-	margin-right: 20px;
+	float: left;
+}
+.items-selector .box-selector:last-child {
+	float: right;
 }
 .items-selector .box-selector ul {
 	margin: 0;
 	list-style: none;
-	border: 1px solid #ccc;
-	border-radius: 0 0 4px 4px;
-	background: #eee;
+	background: #f0f0f9;
+	height: 327px;
+	overflow: auto;
 }
 .items-selector .box-selector .box-title {
-	font-size: 18px;
-	font-weight: 600;
-	line-height: 50px;
-	height: 50px;
-	padding-left: 20px;
-	text-align: left;
-	color: #fff;
-	border-radius: 4px 4px 0 0;
-	background: none repeat scroll 0 0 #22a5ff;
+	font-size: 16px;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	color: #22a5ff;
+	border-bottom: 1px solid #c0c0c9;
+}
+.items-selector .box-selector .box-content {
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+}
+.items-selector .box-selector .search-wrapper {
+	padding: 10px 7px;
+	border-bottom:  1px solid #c0c0c9;
+	background-color: #f0f0f9;
+}
+.items-selector .box-selector .search-wrapper input {
+	width: 323px;
 }
 .items-selector .box-selector .item-selector {
 	font-size: 14px;
 	line-height: 40px;
 	height: 40px;
-	padding: 0 5px;
-	border-bottom: 1px solid #ddd;
+	padding: 0 7px;
+	border-bottom: 1px solid #c0c0c9;
 	background: #fff;
 }
 .items-selector .box-selector .item-selector:hover {
@@ -355,20 +366,21 @@ input.monster-invalid {
 }
 .items-selector .box-selector .item-selector .item-handle {
 	float: left;
-	width: 5px;
-	height: 30px;
-	margin: 5px 10px 0 0;
-	background: url('../assets/drag.png');
+	width: 3px;
+	height: 16px;
+	margin: 12px 10px 12px 0;
+	border-right: 1px solid #c0c0c9;
+	border-left: 1px solid #c0c0c9;
 }
 .items-selector .box-selector .item-selector.ui-sortable-helper {
 	cursor: -webkit-grabbing;
 	cursor:    -moz-grabbing;
 	cursor: move;
+	background-color: #22a5ff;
+	color: #fff;
 }
-
-.items-selector .box-selector ul {
-	height: 328px;
-	overflow: auto;
+.items-selector .box-selector .item-selector.ui-sortable-helper .item-handle {
+	border-color:  #fff;
 }
 
 /************************************************************/
