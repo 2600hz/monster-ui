@@ -513,7 +513,16 @@ define(function(require){
 					}
 				}
 			);
-		}
+		},
+
+               guid: function() {
+                        var r = "";
+                        for(n=0; n <4; n++) {
+                           r = r + (Math.random().toString(16)+"000000000").substr(2,8);
+                        }
+                        return r;
+               }
+
 	};
 
 	// We added this so Google Maps could execute a callback in the global namespace

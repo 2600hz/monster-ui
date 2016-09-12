@@ -57,13 +57,19 @@ define(function(require){
 
 			socket.onmessage = function(event) {
 				var data = JSON.parse(event.data);
-
-				self.onEvent(data);
+                                console.log(event);
+                                if(data.action == "reply") {
+                                   self.onReply(data);
+                                } else if(data.action == "event") {
+   				   self.onEvent(data);
+                                }
 			};
 
 			_.each(self.bindings, function(binding, name) {
 				_.each(binding.listeners, function(listener) {
-					self.subscribe(listener.accountId, listener.authToken, name);
+					self.subscribe(listener.accountId, listener.authToken, name, function(result) {
+                                              console.log(result);
+                                        });
 				});
 			});
 
@@ -120,37 +126,57 @@ define(function(require){
 
 		object: {},
 		bindings: {},
+                commands: {},
 
-		subscribe: function(accountId, authToken, binding) {
+		subscribe: function(accountId, authToken, binding, OnReply) {
 			var self = this;
+                        var request_id = monster.guid();
+                        self.commands[request_id] = {
+					onreply: OnReply
+				};
 
-			self.object.send(JSON.stringify({'action': 'subscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+			return self.object.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id' : request_id, 'data'  : {'binding': binding, 'account_id': accountId}}));
 		},
-		unsubscribe: function(accountId, authToken, binding) {
+		unsubscribe: function(accountId, authToken, binding, OnReply) {
 			var self = this;
+                        var request_id = monster.guid();
+                        self.commands[request_id] = {
+					onreply: OnReply
+				};
 
-			self.object.send(JSON.stringify({'action': 'unsubscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+			self.object.send(JSON.stringify({'action': 'unsubscribe', 'auth_token': authToken, 'request_id' : request_id, 'data' : {'binding': binding, 'account_id': accountId}}));
 		},
 
 		onEvent: function(data) {
 			var self = this,
-				bindingId = data.binding,
-				executeCallbacks = function(subscription) {
+				bindingId = data.subscribed_key,
+                                event = data.data,
+				executeCallbacks = function(subscription, ev) {
 					_.each(subscription.listeners, function(listener) {
-						listener.callback(data);
+						listener.callback(ev);
 					});
 				};
 
+                        event.binding = bindingId;
+
 			if(bindingId) {
 				if(self.bindings.hasOwnProperty(bindingId)) {
-					executeCallbacks(self.bindings[bindingId]);
+					executeCallbacks(self.bindings[bindingId], event);
 				}
 			}
 			else {
 				_.each(self.bindings, function(binding) {
-					executeCallbacks(binding);
+					executeCallbacks(binding, event);
 				});
 			}
+		},
+
+		onReply: function(data) {
+			var self = this,
+				requestId = data.request_id;
+
+                        self.commands[requestId].onreply(data);
+			delete self.commands[requestId];
 		},
 
 		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
@@ -171,8 +197,10 @@ define(function(require){
 				self.bindings[binding].listeners = listenersToKeep;
 			}
 			else {
-				self.unsubscribe(accountId, authToken, binding);
-				delete self.bindings[binding];
+				self.unsubscribe(accountId, authToken, binding, function(result) {
+                                      console.log(result);
+    				      delete self.bindings[binding];
+                                 });
 			}
 		},
 
@@ -197,17 +225,23 @@ define(function(require){
 				})
 
 				if(!found) {
-					self.bindings[binding].listeners.push(newListener);
+   				      self.subscribe(accountId, authToken, binding, function(result) {
+                                           console.log(result);
+                                           self.bindings[binding].listeners.push(newListener);
+                                          });
+
 				}
 				else {
 					self.log('already bound!', true)
 				}
 			}
 			else {
-				self.subscribe(accountId, authToken, binding);
+				self.subscribe(accountId, authToken, binding, function(result) {
+                                console.log(result);
 				self.bindings[binding] = {
 					listeners: [ newListener ]
 				}
+                                });
 			}
 		}
 	};
