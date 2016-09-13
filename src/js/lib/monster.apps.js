@@ -312,13 +312,18 @@ define(function(){
 
 		_addAppCss: function(app) {
 			var self = this,
-				listCss = app.css || [],
+				listCss = [],
 				currentLanguage = monster.config.whitelabel.language,
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
 					monster.css(fileName);
 				};
+
+			// If the app wasn't already loaded by our build (it minifies and concatenate some apps)
+			if((monster.config.developerFlags.build.preloadedApps || []).indexOf(app.name) < 0) {
+				listCss = app.css;
+			}
 
 			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
 			if(currentLanguage !== self.defaultLanguage) {

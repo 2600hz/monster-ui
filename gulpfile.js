@@ -11,21 +11,21 @@ var gulp = require('gulp'),
 	wrap = require('gulp-wrap'),
 	declare = require('gulp-declare'),
 	concat = require('gulp-concat'),
-	rename = require('gulp-rename');
+	rename = require('gulp-rename'),
+	jeditor = require('gulp-json-editor');
 
 // Constants
 var _dist_path = './dist',
 	_dist_require_path = './distRequired',
-	_src_path = './src/**/*.*',
+	_src_path = './src/**/*',
 	_scss_path = './src/**/*.scss',
 	_minify_css_path = './distRequired/css/style-concat.css',
 	_final_css_name = './distRequired/css/style.css';
 
 var _require_js_paths = [],
-	_css_path = [
+	_concat_css_path = [
 		'./distRequired/css/style.css'
 	],
-	lazyLoadingEnabled = false,
 	coreApps = [
 		// core apps
 		'core',
@@ -61,18 +61,28 @@ var _require_js_paths = [],
 		'webhooks',
 		'websockets'
 	],
-	appsToInclude = lazyLoadingEnabled ? coreApps : coreApps.concat(otherApps);
+	appsToInclude = coreApps.concat(otherApps);
+
+function getAppsToInclude(mode) {
+	var apps = [];
+
+	if(mode === 'prod') {
+		apps = coreApps.concat(otherApps);
+	}
+
+	return apps;
+}
 
 for(var i in appsToInclude) {
 	_require_js_paths.push('apps/' + appsToInclude[i] + '/app');
 }
 
 for(var i in appsToInclude) {
-	_css_path.push('./distRequired/apps/'+ appsToInclude[i] +'/style/*.css');
+	_concat_css_path.push('./distRequired/apps/'+ appsToInclude[i] +'/style/*.css');
 }
 
 gulp.task('concatCss', function() {
-	return gulp.src(_css_path)
+	return gulp.src(_concat_css_path)
 				.pipe(concatCss('style-concat.css'))
 				.pipe(gulp.dest('./distRequired/css/'))
 });
@@ -165,11 +175,11 @@ gulp.task('buildRequire', function(cb){
 });
 
 gulp.task('buildProd', function() {
-	runSequence( 'build', 'sass', 'buildRequire', 'css');
+	runSequence( 'build', 'sass', 'buildRequire', 'css', 'write-config-prod');
 });
 
 gulp.task('buildDev', function() {
-	runSequence('build', 'sass', function() {
+	runSequence('build', 'sass', 'write-config-dev', function() {
 
 	});
 });
@@ -203,6 +213,22 @@ gulp.task('watch', function (){
 
 		gulp.watch(_scss_path, ['sass']);
 	});
+});
+
+gulp.task('write-config-dev', function() {
+	gulp.src('build-config.json')
+		.pipe(jeditor({
+			preloadedApps: getAppsToInclude()
+		}))
+		.pipe(gulp.dest('./dist'))
+});
+
+gulp.task('write-config-prod', function() {
+	gulp.src('build-config.json')
+		.pipe(jeditor({
+			preloadedApps: getAppsToInclude('prod')
+		}))
+		.pipe(gulp.dest('./distRequired'))
 });
 
 gulp.task('default', ['buildProd']);

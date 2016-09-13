@@ -221,11 +221,8 @@ define(function(require){
 			}
 		}, config),
 
-		css: function(href, forceLoad){
-			var hasLazyLoading = monster.config.developerFlags.lazyLoading || false;
-			if(hasLazyLoading || forceLoad) {
-				$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
-			}
+		css: function(href){
+			$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
 		},
 
 		domain: function(){
@@ -454,6 +451,19 @@ define(function(require){
 					                 .trim();
 
 					callback(version);
+				}
+			});
+		},
+
+		loadBuildConfig: function(callback) {
+			$.ajax({
+				url: 'build-config.json',
+				dataType: 'json',
+				cache: false,
+				success: function(config) {
+					monster.config.developerFlags.build = config;
+
+					callback();
 				}
 			});
 		},

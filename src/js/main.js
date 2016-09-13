@@ -92,8 +92,10 @@ require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-cl
 
 		monster.util.setDefaultLanguage();
 
-		monster.apps.load('core', function(app){
-			app.render($('.core-wrapper'));
+		monster.loadBuildConfig(function() {
+			monster.apps.load('core', function(app){
+				app.render($('.core-wrapper'));
+			});
 		});
 	});
 });
