@@ -98,6 +98,10 @@ h1 {
 }
 
 /***************** SIZES ****************/
+.monster-button-long {
+	padding-left: 50px;
+	padding-right: 50px;
+}
 .monster-button-small {
 	min-width: 100px;
 	padding: 4px 16px;
