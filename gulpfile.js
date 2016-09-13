@@ -216,6 +216,8 @@ gulp.task('watch', function (){
 });
 
 gulp.task('write-config-dev', function() {
+	require('fs').writeFileSync('build-config.json', '{}');
+
 	gulp.src('build-config.json')
 		.pipe(jeditor({
 			preloadedApps: getAppsToInclude()
@@ -224,6 +226,8 @@ gulp.task('write-config-dev', function() {
 });
 
 gulp.task('write-config-prod', function() {
+	require('fs').writeFileSync('build-config.json', '{}');
+
 	gulp.src('build-config.json')
 		.pipe(jeditor({
 			preloadedApps: getAppsToInclude('prod')
