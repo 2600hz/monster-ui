@@ -221,8 +221,11 @@ define(function(require){
 			}
 		}, config),
 
-		css: function(href){
-			$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
+		css: function(href, forceLoad){
+			var hasLazyLoading = monster.config.developerFlags.lazyLoading || false;
+			if(hasLazyLoading || forceLoad) {
+				$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
+			}
 		},
 
 		domain: function(){
@@ -250,12 +253,19 @@ define(function(require){
 			var raw = raw || false,
 				ignoreCache = ignoreCache || false,
 				ignoreSpaces = ignoreSpaces || false,
-				conical = (app.name || 'global') + '.' + name, // this should always be a module instance
 				_template,
 				result;
 
-			if(monster.cache.templates[conical] && !ignoreCache){
-				_template = monster.cache.templates[conical];
+			if(monster.cache.templates === undefined) {
+				monster.cache.templates = {};
+			}
+
+			if(monster.cache.templates[app.name] === undefined) {
+				monster.cache.templates[app.name] = {};
+			}
+
+			if(monster.cache.templates[app.name][name] && !ignoreCache){
+				_template = monster.cache.templates[app.name][name];
 			}
 			else {
 				if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
@@ -280,7 +290,7 @@ define(function(require){
 				}
 			}
 
-			monster.cache.templates[conical] = _template;
+			monster.cache.templates[app.name][name] = _template;
 
 			if(!raw){
 				_template = handlebars.compile(_template);
@@ -300,12 +310,6 @@ define(function(require){
 			if(!ignoreSpaces) {
 				result = result.replace(/(\r\n|\n|\r|\t)/gm,'')
 							   .trim();
-			}
-
-			if(typeof data === 'object') {
-				_.each(data.i18n, function(value, key) {
-					result = result.replace('{{'+ key +'}}', value);
-				});
 			}
 
 			if(name.substring(0,1) !== '!') {

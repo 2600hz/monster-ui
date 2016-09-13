@@ -22,7 +22,14 @@
     "gulp-sass": "^2.3.2"
   },
   "devDependencies": {
+    "gulp-clean-css": "^2.0.12",
+    "gulp-concat": "^2.6.0",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-declare": "^0.3.0",
+    "gulp-handlebars": "^4.0.0",
     "gulp-livereload": "^3.8.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-wrap": "^0.13.0",
     "requirejs": "^2.3.1",
     "run-sequence": "^1.2.2"
   }

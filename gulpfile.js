@@ -4,23 +4,38 @@ var gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	livereload = require('gulp-livereload'),
 	runSequence = require('run-sequence'),
-	rjs = require('requirejs');
+	rjs = require('requirejs'),
+	concatCss = require('gulp-concat-css'),
+	cleanCSS = require('gulp-clean-css'),
+	handlebars = require('gulp-handlebars'),
+	wrap = require('gulp-wrap'),
+	declare = require('gulp-declare'),
+	concat = require('gulp-concat'),
+	rename = require('gulp-rename');
 
 // Constants
 var _dist_path = './dist',
 	_dist_require_path = './distRequired',
 	_src_path = './src/**/*.*',
-	_scss_path = './src/**/*.scss';
+	_scss_path = './src/**/*.scss',
+	_minify_css_path = './distRequired/css/style-concat.css',
+	_final_css_name = './distRequired/css/style.css';
 
-var paths = [],
-	appsToInclude = [
+var _require_js_paths = [],
+	_css_path = [
+		'./distRequired/css/style.css'
+	],
+	lazyLoadingEnabled = false,
+	coreApps = [
 		// core apps
 		'core',
-		'myaccount',
-		'common',
-		'apploader',
-		'appstore',
 		'auth',
+		'common',
+		'myaccount',
+		'apploader',
+		'appstore'
+	],
+	otherApps = [
 		// apps
 		'accounts',
 		'branding',
@@ -45,11 +60,53 @@ var paths = [],
 		'voip',
 		'webhooks',
 		'websockets'
-	];
+	],
+	appsToInclude = lazyLoadingEnabled ? coreApps : coreApps.concat(otherApps);
 
 for(var i in appsToInclude) {
-	paths.push('apps/' + appsToInclude[i] + '/app');
+	_require_js_paths.push('apps/' + appsToInclude[i] + '/app');
 }
+
+for(var i in appsToInclude) {
+	_css_path.push('./distRequired/apps/'+ appsToInclude[i] +'/style/*.css');
+}
+
+gulp.task('concatCss', function() {
+	return gulp.src(_css_path)
+				.pipe(concatCss('style-concat.css'))
+				.pipe(gulp.dest('./distRequired/css/'))
+});
+
+gulp.task('minifyCss', function() {
+	return gulp.src('./distRequired/css/style-concat.css')
+		.pipe(cleanCSS({debug: true}, function(details) {
+			console.log(details.name + ': ' + details.stats.originalSize);
+			console.log(details.name + ': ' + details.stats.minifiedSize);
+		}))
+		.pipe(rename({
+			suffix: '.min'
+		}))
+		.pipe(gulp.dest('./distRequired/css/'));
+});
+
+gulp.task('removeCss', function() {
+	return gulp.src(['./distRequired/css/style-concat.css', './distRequired/css/style.css'])
+				.pipe(clean());
+});
+
+gulp.task('renameCss', function() {
+	gulp.src('./distRequired/css/style-concat.min.css')
+				.pipe(rename('style.css'))
+				.pipe(gulp.dest('./distRequired/css/'));
+
+	return gulp.src('./distRequired/css/style-concat.min.css').pipe(clean());
+});
+
+gulp.task('css', function() {
+	runSequence( 'concatCss', 'minifyCss', 'removeCss', 'renameCss', function() {
+
+	});
+})
 
 var requireConfig = {  
 	dir:'distRequired',
@@ -65,9 +122,9 @@ var requireConfig = {
 		{
 			name:'js/main',
 			exclude:[
-				'config',
+				'config'
 			],
-			include: paths 
+			include: _require_js_paths 
 		}
 	]
 };
@@ -108,18 +165,44 @@ gulp.task('buildRequire', function(cb){
 });
 
 gulp.task('buildProd', function() {
-	runSequence('build', 'sass', 'buildRequire', function() {
+	runSequence( 'build', 'sass', 'buildRequire', 'css');
+});
+
+gulp.task('buildDev', function() {
+	runSequence('build', 'sass', function() {
 
 	});
 });
 
+gulp.task('templates', function(){
+	gulp.src('src/apps/*/views/*.html')
+		.pipe(handlebars())
+		.pipe(wrap('Handlebars.template(<%= contents %>)'))
+		.pipe(declare({
+			namespace: 'monster.cache.templates',
+			noRedeclare: true, // Avoid duplicate declarations ,
+			processName: function(filePath) {
+				// Allow nesting based on path using gulp-declare's processNameByPath()
+				// You can remove this option completely if you aren't using nested folders
+				// Drop the client/templates/ folder from the namespace path by removing it from the filePath
+				//return declare.processNameByPath(filePath.replace('client/templates/', ''));
+				var splits = filePath.split('\\');
+				var newName = splits[splits.length - 3] +'.' + splits[splits.length-1];
+				//console.log(newName);
+				return declare.processNameByPath(newName);
+			}
+		}))
+		.pipe(concat('templates.js'))
+		.pipe(gulp.dest(_dist_path +'/js/'));
+});
+
 // watch our scss files so that when we change a variable it reloads the browser with the new css
 gulp.task('watch', function (){
-	runSequence('build', 'sass', function() {
+	runSequence('buildDev', function() {
 		livereload.listen();
 
 		gulp.watch(_scss_path, ['sass']);
 	});
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['buildProd']);

@@ -317,13 +317,6 @@ define(function(){
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
-					/*monster._fileExists(fileName, function() {
-						monster.css(fileName);
-					},
-					function() {
-						console.info('File Name doesn\'t exist: ', fileName);
-					});*/
-
 					monster.css(fileName);
 				};
 
