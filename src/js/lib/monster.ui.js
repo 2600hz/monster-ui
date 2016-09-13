@@ -381,12 +381,12 @@ define(function(require){
 					break;
 				}
 				case 'confirm': {
-					options.title = '<i class="fa fa-question-circle monster-blue"></i>';
+					options.title = '<i class="fa fa-question-circle monster-primary-color"></i>';
 					break;
 				}
 				case 'info':
 				default: {
-					options.title = '<i class="fa fa-info-circle monster-blue"></i>';
+					options.title = '<i class="fa fa-info-circle monster-primary-color"></i>';
 					break;
 				}
 			}
@@ -461,12 +461,12 @@ define(function(require){
 					break;
 				}
 				case 'info': {
-					options.title = '<i class="fa fa-info-circle monster-blue"></i>';
+					options.title = '<i class="fa fa-info-circle monster-primary-color"></i>';
 					break;
 				}
 				case 'confirm':
 				default: {
-					options.title = '<i class="fa fa-question-circle monster-blue"></i>';
+					options.title = '<i class="fa fa-question-circle monster-primary-color"></i>';
 					break;
 				}
 			}

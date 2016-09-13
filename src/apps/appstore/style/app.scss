@@ -1,3 +1,5 @@
+@import "../../../css/partials/base";
+
 #appstore_container {
 	padding: 15px;
 	max-width: 1136px;
@@ -51,8 +53,8 @@
 }
 
 #appstore_container .left-menu .app-filter.active {
-	background: #22a5ff;
-	border: 1px solid #22a5ff;
+	background: $primary-color;
+	border: 1px solid $primary-color;
 	color: #fff;
 }
 
@@ -166,7 +168,7 @@
 
 #appstore_container .right-content .app-list-container .app-element-right .app-title {
 	text-transform: uppercase;
-	color: #22a5ff;
+	color: $primary-color;
 	font-weight: bold;
 	height: 30px;
 	line-height: 30px;
@@ -239,7 +241,7 @@
 }
 
 #appstore_popup_container .description-title {
-	color: #22a5ff;
+	color: $primary-color;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
@@ -322,7 +324,7 @@
 #appstore_popup_container .right-container .permissions-bloc .permissions-link a,
 #appstore_popup_container .right-container .permissions-bloc .permissions-link a:hover {
 	font-size: 13px;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #appstore_popup_container .right-container .permissions-bloc input[type="radio"] {
@@ -350,7 +352,7 @@
 } 
 
 #appstore_popup_container .right-container .help-bloc a:hover {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #appstore_popup_container .right-container .user-list-view {
@@ -400,7 +402,7 @@
 }
 
 #appstore_popup_container .right-container .user-list-view .user-list-links a {
-	color: #22a5ff;
+	color: $primary-color;
 	font-size: 13px;
 	width: 50%;
 	text-align: center;

@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 div#port_container {
 	margin: 0 auto;
 	max-width: 940px;
@@ -18,7 +20,7 @@ div#port_container > div > *:not(:last-child) {
 
 div#port_container h2 {
 	margin-top: 0px;
-	color: #22a5ff;
+	color: $primary-color;
 	text-align: center;
 	font-weight: normal;
 }
@@ -35,7 +37,7 @@ div#port_container h2 {
 
 #port_container ul.help-links li.separator {
 	margin: 0 5px;
-	border-left: 1px solid #22a5ff;
+	border-left: 1px solid $primary-color;
 }
 
 #port_container div.row-fluid.info { position: relative; }
@@ -70,7 +72,7 @@ div#port_container h2 {
 	overflow: hidden;
 	margin: 0 0 10px 0;
 	padding: 0 10px;
-	color: #22a5ff;
+	color: $primary-color;
 	font-weight: normal;
 	text-transform: lowercase;
 	text-transform: capitalize;
@@ -153,7 +155,7 @@ div#continue_later p { margin: 5px 0; }
 #transfer_status .span4 { position: relative; }
 
 #transfer_status .done,
-#transfer_status .done i { color: #22a5ff; }
+#transfer_status .done i { color: $primary-color; }
 #transfer_status .todo,
 #transfer_status .todo i { color: #909090; }
 
@@ -168,7 +170,7 @@ div#continue_later p { margin: 5px 0; }
 	content: "";
 }
 
-#transfer_status .span4:not(:last-child).done i::after { background-color: #22a5ff; }
+#transfer_status .span4:not(:last-child).done i::after { background-color: $primary-color; }
 #transfer_status .span4:not(:last-child).todo i::after { background-color: #909090; }
 
 #port_container label { font-size: 16px; }
@@ -232,7 +234,7 @@ div#orders_list .list-header > span.pull-right i {
 	position: relative;
 	top: 2px;
 	margin-right: 8px;
-	color: #22a5ff;
+	color: $primary-color;
 	font-size: 20px;
 }
 
@@ -325,7 +327,7 @@ div#orders_list .collapse td:last-child i {
 	color: #ffffff;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
-	background:#22a5ff;
+	background:$primary-color;
 }
 
 #orders_list .accounts-list .account-section.animate .account-header {
@@ -433,7 +435,7 @@ div#port_comments_popup .comment:last-child {
 }
 
 div#port_comments_popup .comment .comment-author {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 div#port_comments_popup .comment .delete-comment:hover {
@@ -695,5 +697,5 @@ div#order_summary .row-fluid .span6:last-child { padding: 20px; }
 	color: #333;
 }
 #faq_accordion_container .accordion-toggle.in {
-	color: #22a5ff;
+	color: $primary-color;
 }

@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 #numbers_container {
 	display: block;
 	max-width: 902px;
@@ -47,9 +49,9 @@
 
 #numbers_container .top-box > .half-box.selected  {
 	background: #fefefe;
-	border-top: 4px solid #22a5ff;
+	border-top: 4px solid $primary-color;
 	box-shadow: inset 0 0 5px #cccccc;
-	color: #22a5ff;
+	color: $primary-color;
 	font-weight: 600;
 }
 
@@ -186,7 +188,7 @@
 }
 
 #numbers_container .account-section .account-header .right-links a > *{
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #numbers_container .account-section .account-header .right-links i{
@@ -225,7 +227,7 @@
 }
 
 #numbers_container .account-section.open .account-header {
-	background-color:#22a5ff;
+	background-color:$primary-color;
 	color: #ffffff;
 
 	border-bottom-right-radius: 0px !important;
@@ -348,7 +350,7 @@
 .dialog-spare-container .dialog-buttons-wrapper a.cancel-link {
 	margin-right: 30px;
 	vertical-align: middle;
-	color: #22a5ff;
+	color: $primary-color;
 }*/
 
 /* Dialog Confirmation Actions */
@@ -358,8 +360,6 @@
 	border-bottom: 1px solid #ddd;
 	text-align: center;
 }
-
-#action_confirmation .monster-blue { color: #22a5ff; }
 
 #action_confirmation .table-wrapper {
 	max-height: 420px;

@@ -1,3 +1,5 @@
+@import "../../partials/base";
+
 /************** ACCORDION *************/
 .ui-accordion h3 .pull-right i {
 	margin: 8px 8px 0 0;
@@ -29,7 +31,7 @@
 	padding: 10px 20px;
 	border: 0;
 	border-radius: 2px 2px 0 0;
-	background: #22a5ff;
+	background: $primary-color;
 }
 .ui-dialog .ui-dialog-title {
 	font-size: 24px;
@@ -128,8 +130,8 @@
 }
 .ui-datepicker-calendar .ui-state-default.ui-state-active {
 	font-weight: 600;
-	color: #22a5ff;
-	border-color: #22a5ff;
+	color: $primary-color;
+	border-color: $primary-color;
 }
 .ui-datepicker-calendar .ui-state-default.ui-state-hover {
 	border-color: #202029;
@@ -178,5 +180,5 @@
 }
 .ui-datepicker-prev.ui-state-hover:not(.ui-state-disabled) .ui-icon:after,
 .ui-datepicker-next.ui-state-hover:not(.ui-state-disabled) .ui-icon:after {
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }

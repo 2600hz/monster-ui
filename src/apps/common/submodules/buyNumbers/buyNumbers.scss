@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 #buy_number a {
 	color: #009DE6;
 	font-size: 12px;
@@ -264,7 +266,7 @@
 #buy_number #vanity_search_div .vanity-input-div .vanity-input.US-input span {
 	font-size: 50px;
 	vertical-align: text-bottom;
-	color: #22a5ff
+	color: $primary-color
 }
 
 #buy_number #vanity_search_div .vanity-input-div .vanity-input input {
@@ -312,7 +314,7 @@
 	margin-left: 15px;
 	font-weight: 600;
 	font-size: 20px;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #buy_number #check_numbers_div .unavailable-div .unavailable-numbers {
@@ -347,7 +349,7 @@
 }
 
 #buy_number #confirm_div .summary-div .summary-label.summary-value {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #buy_number #confirm_div .summary-div .summary-label.large-value {
@@ -371,7 +373,7 @@
 	margin-left: 15px;
 	font-weight: 600;
 	font-size: 20px;
-	color: #22a5ff;
+	color: $primary-color;
 	line-height: 32px;
 	vertical-align: bottom;
 }

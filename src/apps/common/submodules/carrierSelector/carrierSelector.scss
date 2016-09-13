@@ -1,3 +1,4 @@
+@import "../../../../css/partials/base";
 
 .carrier-selector .choices-wrapper {
 	margin-top: 20px;
@@ -35,12 +36,12 @@
 }
 
 .carrier-selector .choices-wrapper .carrier-choice:hover {
-	border: 1px solid #22a5ff;
+	border: 1px solid $primary-color;
 	cursor: pointer;
 }
 
 .carrier-selector .choices-wrapper .carrier-choice.selected {
-	border: 1px solid #22a5ff;
+	border: 1px solid $primary-color;
 	color: #FFF;
-	background: #22a5ff;
+	background: $primary-color;
 }

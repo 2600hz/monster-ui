@@ -1,3 +1,5 @@
+@import "../../../css/partials/base";
+
 #auth_container.login-background {
 	position: absolute;
 	top: 0;
@@ -142,7 +144,7 @@
 #auth_container .input-wrap input:focus + .placeholder-shift {
 	top: -12px;
 	font-size: 12px;
-	color: #22a5ff;
+	color: $primary-color;
 	letter-spacing: .02em;
 }
 #auth_container .input-wrap .placeholder-shift.fixed {
@@ -157,7 +159,7 @@
 	bottom: -1px;
 	width: 0;
 	height: 2px;
-	background: #22a5ff;
+	background: $primary-color;
 	-webkit-transition: width 0.2s ease-out;
 	-moz-transition: 	width 0.2s ease-out;
 	-o-transition: 		width 0.2s ease-out;
@@ -175,7 +177,7 @@
 	color: #ffffff;
 	height: 50px;
 	font-size: 20px;
-	background: #22a5ff;
+	background: $primary-color;
 	-webkit-transition: all 0.2s ease-in;
 	-moz-transition: 	all 0.2s ease-in;
 	-o-transition: 		all 0.2s ease-in;
@@ -210,7 +212,7 @@
 	text-align: center;
 	display: block;
 	font-size: 13px;
-	color: #22a5ff;
+	color: $primary-color;
 	margin: 0 auto;
 	cursor: pointer;
 }

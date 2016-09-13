@@ -1,3 +1,5 @@
+@import "../../partials/base";
+
 /************************************************************/
 /************************* OVERRIDES ************************/
 /************************************************************/
@@ -38,8 +40,8 @@ pre {
 	border-bottom-color: whiteSmoke;
 }
 .nav .dropdown-toggle:hover .caret {
-	border-top-color: #22a5ff;
-	border-bottom-color: #22a5ff;
+	border-top-color: $primary-color;
+	border-bottom-color: $primary-color;
 }
 
 .pull-right.dropdown-menu::after {
@@ -88,7 +90,7 @@ pre {
 	height: 85px;
 	margin: 20px 0 0;
 	padding: 15px 5px;
-	border-top: 5px solid #22a5ff;
+	border-top: 5px solid $primary-color;
 	border-radius: 0;
 	background: rgb(17,17,17); /* Old browsers */
 	background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(17, 17, 17, 1)), color-stop(50%, rgba(51, 51, 51,1)), color-stop(100%, rgba(17, 17, 17, 1))); /* Chrome,Safari4+ */
@@ -123,14 +125,14 @@ pre {
 .nav.nav-tabs > .active > a:hover,
 .nav.nav-tabs > .active > a:focus {
 	color: #fff;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 /***************** PILLS ****************/
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover,
 .nav-pills > .active > a:focus {
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 /************** SEARCH BOX **************/
@@ -218,7 +220,7 @@ i[data-toggle="tooltip"] {
 /*************** CLICKOVER **************/
 .clickover .popover-title {
 	color: #fff;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 /************* INPUTS SHADOW ************/
@@ -274,12 +276,12 @@ textarea {
 }
 
 a {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 a:not(.monster-link):focus,
 a:not(.monster-link):hover {
-	color: #22a5ff;
+	color: $primary-color;
 	text-decoration: none;
 }
 
@@ -300,7 +302,7 @@ a:not(.monster-link):hover {
 .dropdown-submenu:hover > a {
 	cursor: pointer;
 	color: #eee;
-	background: #22a5ff;
+	background: $primary-color;
 }
 .dropdown-menu li > a:hover i,
 .dropdown-menu li > a:focus i,
@@ -465,7 +467,7 @@ a:not(.monster-link):hover {
 }
 .hero-unit.hero-unit-blue {
 	color: whiteSmoke;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 .well-dark {
@@ -511,10 +513,10 @@ a:not(.monster-link):hover {
 .nav.nav-tabs > li > a:focus,
 .nav.nav-tabs > li > a:hover i,
 .nav.nav-tabs > li > a:focus i {
-	color: #22a5ff;
+	color: $primary-color;
 }
 .nav.nav-tabs > .active > a {
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 .nav.nav-tabs > .active > a,
 .nav.nav-tabs > .active > a i,

@@ -1,3 +1,4 @@
+@import "../../../css/partials/base";
 @import url('../submodules/balance/balance.css');
 @import url('../submodules/billing/billing.css');
 @import url('../submodules/servicePlan/servicePlan.css');
@@ -83,7 +84,7 @@
 #myaccount .myaccount-menu .badge {
 	background: #fff;
 	border: 1px solid #c0c0c9;
-	color: #22a5ff;
+	color: $primary-color;
 	border-radius: 0;
 	padding: 3px 9px;
 }
@@ -97,7 +98,7 @@
 
 #myaccount .myaccount-menu .nav > li.active {
 	background-color: #fff !important;
-	border-right-color: #22a5ff;
+	border-right-color: $primary-color;
 }
 
 #myaccount .myaccount-menu .nav > li:not(.nav-header):hover {
@@ -140,7 +141,7 @@
 }
 
 #myaccount .myaccount-menu .nav li.active .active-highlight > * {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #myaccount .myaccount-menu .menu-bottom .signout {
@@ -159,7 +160,7 @@
 
 #myaccount .myaccount-menu .menu-bottom .signout:hover {
 	cursor: pointer;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 /* MYACCOUNT CONTENT */
@@ -267,7 +268,7 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item.open {
-	border: 1px solid #22a5ff;
+	border: 1px solid $primary-color;
 	background-color: #fff;
 }
 
@@ -310,7 +311,7 @@
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .description .number {
 	font-weight: bold;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #myaccount .myaccount-content .list-settings .settings-item .settings-link .update {
@@ -347,7 +348,7 @@
 }
 
 #myaccount .myaccount-content .list-settings .settings-item-content label.uneditable {
-	color: #22a5ff;
+	color: $primary-color;
 	cursor: default;
 	font-weight: 600;
 	padding-top: 5px;
@@ -415,7 +416,7 @@
 }
 
 #myaccount .myaccount-content .list-settings .controls input:focus {
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }
 
 #myaccount .myaccount-content .list-settings .action-group {

@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .monster-listing-container {
 	padding: 15px;
 }
@@ -45,7 +47,7 @@
 
 .monster-listing-container .monster-listing-grid .grid-content .monster-listing-box.selected {
 	font-weight: 600;
-	border-top: 1px solid #22a5ff !important;
+	border-top: 1px solid $primary-color !important;
 	background: #f0f0f9;
 }
 

@@ -1,3 +1,5 @@
+@import "../../../css/partials/base";
+
 #apploader {
 	position: fixed;
 	z-index: 1000;
@@ -101,7 +103,7 @@
 
 #apploader .default-app .app-container:not(.no-app):hover {
 	cursor: pointer;
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }
 
 #apploader .default-app > div:not(:last-child) {
@@ -118,7 +120,7 @@
 }
 
 #apploader .app-container.dragging {
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }
 
 #apploader .left-div .app-name {
@@ -148,12 +150,12 @@
 }
 
 #apploader .left-div .search-query:focus {
-	color: #22a5ff;
-	border-color: #22a5ff;
+	color: $primary-color;
+	border-color: $primary-color;
 }
 
 #apploader .left-div .search-query:focus + i {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #apploader .app-description {
@@ -180,7 +182,7 @@
 	text-align: left;
 	color: #fff;
 	border: none;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 	box-shadow: none;
 }
 

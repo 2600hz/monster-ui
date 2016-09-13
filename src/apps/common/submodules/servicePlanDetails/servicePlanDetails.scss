@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .service-plan-details {
 	border: solid 1px #aaa;
 	background-color: rgba(36, 204, 255, 0.1);
@@ -15,7 +17,7 @@
 .service-plan-details .line.header {
 	border-bottom: solid 1px #ccc;
 	font-size:16px;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 	color: #fff;
 }
 .service-plan-details .line > div {

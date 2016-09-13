@@ -1,69 +1,71 @@
+@import "../../../../css/partials/base";
+
 /* e911 POPUP */
 .trunkstore_popup.e911 {
-    padding:15px 15px 5px 15px;
-    width: 480px
+	padding:15px 15px 5px 15px;
+	width: 480px
 }
 
 .trunkstore_popup.e911 .e911-title {
-    margin-left: 320px;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
+	margin-left: 320px;
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 15px;
 }
 
 .trunkstore_popup.e911 .rotated-text {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    text-transform: uppercase;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    font-size: 20px;
-    font-weight: 600;
-    color: #ccc;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	text-transform: uppercase;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	font-size: 20px;
+	font-weight: 600;
+	color: #ccc;
 }
 
 .trunkstore_popup.e911 .e911_image {
-    width: 80px;
-    height: 265px;
-    margin: 0 10px 0 30px;
+	width: 80px;
+	height: 265px;
+	margin: 0 10px 0 30px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal {
-    margin-bottom: 0px;
+	margin-bottom: 0px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group .control-label {
-    width: 140px;
-    padding-top: 10px;
+	width: 140px;
+	padding-top: 10px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group .control-label.remove-btn-container {
-    padding-top: 0;
+	padding-top: 0;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group .controls {
-    margin-left: 160px;
+	margin-left: 160px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group .controls input {
-    width: 186px;
-    padding: 10px 5px;
+	width: 186px;
+	padding: 10px 5px;
 }
 
 .trunkstore_popup.e911 form.form-horizontal .control-group .controls button {
-    width: 200px;
-    text-transform: uppercase;
+	width: 200px;
+	text-transform: uppercase;
 }
 
 .trunkstore_popup.e911 .e911_text {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 30px;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 30px;
 }
 
 /* MULTIPLE ADDRESSES POPUP */
@@ -90,5 +92,5 @@
 
 .e911-address-dialog .list-choices .address-option.active {
 	background-color: #FFF;
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }

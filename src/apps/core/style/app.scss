@@ -1,3 +1,5 @@
+@import "../../../css/partials/base";
+
 html,
 body,
 .core-wrapper {
@@ -22,7 +24,7 @@ body,
 
 .core-topbar-wrapper {
 	background-color: #303039;
-	border-top: 5px solid #22a5ff;
+	border-top: 5px solid $primary-color;
 }
 
 .core-topbar {
@@ -125,7 +127,7 @@ body,
 .core-topbar .links:hover i,
 .core-topbar #main_topbar_current_app_name:hover,
 .core-topbar #main_topbar_myaccount_masquerade_label {
-	color: #22a5ff;
+	color: $primary-color;
 }
 .core-topbar .inline-text,
 .core-topbar .cell-text,
@@ -179,7 +181,7 @@ body,
 	background-color: #202029;
 }
 .core-topbar #main_topbar_account_toggle.open #main_topbar_account_toggle_link i {
-	color: #22a5ff;
+	color: $primary-color;
 }
 .core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
 	display: none;
@@ -232,7 +234,7 @@ body,
 }
 
 .core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element.active > div {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 .core-topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
@@ -280,7 +282,7 @@ body,
 	font-size: 12px;
 }
 .core-topbar #main_topbar_account_toggle_container .current-account-container {
-	color: #22A5FF;
+	color: $primary-color;
 	pointer-events: none;
 }
 
@@ -317,7 +319,7 @@ body,
 	display: none;
 	width: 200px;
 	height: 200px;
-	background: #22a5ff;
+	background: $primary-color;
 	box-shadow: 0px 0px 2px 0px #303039;
 }
 .loading-wrapper.fixed-left {
@@ -481,7 +483,7 @@ body,
 }
 
 #upload_progress .upload-progress-bar > div {
-	background: #22a5ff;
+	background: $primary-color;
 	height: 100%;
 	width: 0%;
 	text-align: center;

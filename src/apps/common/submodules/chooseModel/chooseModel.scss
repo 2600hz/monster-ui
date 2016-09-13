@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 /* Provisioner Popup */
 .device-popup {
 	width: 700px;
@@ -18,7 +20,7 @@
 	width: auto;
 	padding: 10px 0 5px;
 	white-space: nowrap;
-	border-top: 2px solid #22a5ff;
+	border-top: 2px solid $primary-color;
 	background: #ccc;
 }
 .device-popup .block-brand .brand-selection .brand-box {
@@ -39,7 +41,7 @@
 .device-popup .block-brand .brand-selection .brand-box.selected,
 .device-popup .block-brand .brand-selection .brand-box:hover {
 	cursor: pointer;
-	border: 2px solid #22a5ff;
+	border: 2px solid $primary-color;
 }
 /* Default state */
 .device-popup .block-model,
@@ -60,7 +62,7 @@
 	border-radius: 4px;
 }
 .device-popup .block-model .model-selection .model-box.selected {
-	border: 2px solid #22a5ff !important;
+	border: 2px solid $primary-color !important;
 }
 .device-popup .block-model .model-selection .model-box:hover {
 	cursor: pointer;

@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .number-selector .number-selector-content {
 	position: relative;
 	display: inline-block;
@@ -69,7 +71,7 @@
 	border-bottom: solid 1px #c0c0c9;
 }
 .number-selector .number-selector-dropdown .link {
-	color: #22a5ff;
+	color: $primary-color;
 }
 .number-selector .number-selector-dropdown .number {
 	margin-left: 5px;

@@ -1,14 +1,14 @@
 <div id="action_confirmation">
 	{{#if delete}}
-		<h4>{{i18n.numbers.dialogConfirm.delete.questionPartOne}}<span class="monster-blue">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.delete.questionPartTwo}}</h4>
+		<h4>{{i18n.numbers.dialogConfirm.delete.questionPartOne}}<span class="monster-primary-color">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.delete.questionPartTwo}}</h4>
 	{{/if}}
 
 	{{#if move}}
 		<h4>
 			{{i18n.numbers.dialogConfirm.move.questionPartOne}}
-			<span class="monster-blue">{{numberCount}}</span>
+			<span class="monster-primary-color">{{numberCount}}</span>
 			{{i18n.numbers.dialogConfirm.move.questionPartTwo}}
-			<span class="monster-blue">{{destinationAccountName}}</span>
+			<span class="monster-primary-color">{{destinationAccountName}}</span>
 			{{i18n.numbers.dialogConfirm.move.questionPartThree}}
 		</h4>
 	{{/if}}
@@ -18,7 +18,7 @@
 			{{#each accountList}}
 				<thead>
 					<tr>
-						<th>{{@root.i18n.numbers.dialogConfirm.from}}<span class="monster-blue">{{accountName}}</span></th>
+						<th>{{@root.i18n.numbers.dialogConfirm.from}}<span class="monster-primary-color">{{accountName}}</span></th>
 					</tr>
 				</thead>
 				<tbody>

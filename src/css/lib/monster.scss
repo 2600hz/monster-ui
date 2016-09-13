@@ -120,8 +120,8 @@ h1 {
 
 /***************** TYPES ****************/
 .monster-button-primary {
-	color: #004c80;
-	border-color: #0087e0;
+	color: darken($primary-color, 25%);
+	border-color: darken($primary-color, 10%);
 	background: $primary-color;
 }
 .monster-button-secondary {
@@ -271,7 +271,7 @@ h1 {
 .monster-switch > input:checked + span {
 	padding-right: 34px;
 	color: #FFF;
-	border-color: #1e8dd9;
+	border-color: darken($primary-color, 20%);
 	background: $primary-color;
 }
 .monster-switch > input:not(:checked) + span {
@@ -292,13 +292,18 @@ h1 {
 	right: 3px;
 	left: initial;
 	left: calc(100% - 27px);
-	border-color: #1e8dd9;
+	border-color: darken($primary-color, 20%);
 	background: #fff;
 }
 
 /************************************************************/
-/******************* CHECKBOXES & RADIOS ********************/
+/*********** INPUT & CHECKBOXES & RADIOS ********************/
 /************************************************************/
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba($primary-color,.6);
+	border-color: $primary-color;
+}
 
 label[class*='monster-checkbox'],
 label[class*='monster-radio'] {
@@ -973,6 +978,10 @@ label[class*='monster-radio'].prepend-label > span {
 /************************************************************/
 /********************** MONSTER COLORS **********************/
 /************************************************************/
+
+.monster-primary-color {
+	color: $primary-color !important;
+}
 
 .monster-white {
 	color: #fff !important;

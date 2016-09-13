@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .account-browser-container {
 	float: left;
 	background-color: #F3F3F3;
@@ -98,7 +100,7 @@
 	text-shadow: 1px 1px 0px #c0c0c9;
 }
 .account-browser-container .account-search-link .search-reset {
-	color: #22a5ff;
+	color: $primary-color;
 	line-height: 30px;
 	font-weight: 600;
 }
@@ -121,14 +123,14 @@
 }
 
 .account-browser-container.ab-sidebar .account-list-element.active {
-	border-top: solid 2px #22a5ff;
+	border-top: solid 2px $primary-color;
 }
 .account-browser-container.ab-sidebar .account-list-element.active > div {
 	background: #fff;
 }
 
 .account-browser-container .account-list-element.active > div {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 .account-browser-container .account-list-element > div {
@@ -215,5 +217,5 @@
 }
 
 .account-browser-container .account-previous-link:hover > * {
-	color: #22a5ff;
+	color: $primary-color;
 }
