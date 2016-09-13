@@ -12,19 +12,20 @@ var gulp = require('gulp'),
 	declare = require('gulp-declare'),
 	concat = require('gulp-concat'),
 	rename = require('gulp-rename'),
-	jeditor = require('gulp-json-editor');
+	jeditor = require('gulp-json-editor'),
+	gutil = require('gulp-util'),
+	uglify = require('gulp-uglify');
 
 // Constants
 var _dist_path = './dist',
 	_dist_require_path = './distRequired',
 	_src_path = './src/**/*',
-	_scss_path = './src/**/*.scss',
-	_minify_css_path = './distRequired/css/style-concat.css',
-	_final_css_name = './distRequired/css/style.css';
+	_scss_path = './src/**/*.scss';
 
-var _require_js_paths = [],
+var environment = gutil.env.env || 'dev',
+	_require_js_paths = [],
 	_concat_css_path = [
-		'./distRequired/css/style.css'
+		'./dist/css/style.css'
 	],
 	coreApps = [
 		// core apps
@@ -63,10 +64,10 @@ var _require_js_paths = [],
 	],
 	appsToInclude = coreApps.concat(otherApps);
 
-function getAppsToInclude(mode) {
+function getAppsToInclude() {
 	var apps = [];
 
-	if(mode === 'prod') {
+	if(environment === 'prod') {
 		apps = coreApps.concat(otherApps);
 	}
 
@@ -78,48 +79,69 @@ for(var i in appsToInclude) {
 }
 
 for(var i in appsToInclude) {
-	_concat_css_path.push('./distRequired/apps/'+ appsToInclude[i] +'/style/*.css');
+	_concat_css_path.push('./dist/apps/'+ appsToInclude[i] +'/style/*.css');
 }
 
 gulp.task('concatCss', function() {
 	return gulp.src(_concat_css_path)
 				.pipe(concatCss('style-concat.css'))
-				.pipe(gulp.dest('./distRequired/css/'))
+				.pipe(gulp.dest('./dist/css/'))
 });
 
 gulp.task('minifyCss', function() {
-	return gulp.src('./distRequired/css/style-concat.css')
-		.pipe(cleanCSS({debug: true}, function(details) {
-			console.log(details.name + ': ' + details.stats.originalSize);
-			console.log(details.name + ': ' + details.stats.minifiedSize);
-		}))
+	return gulp.src('./dist/css/style-concat.css')
+		.pipe(cleanCSS())
 		.pipe(rename({
 			suffix: '.min'
 		}))
-		.pipe(gulp.dest('./distRequired/css/'));
+		.pipe(gulp.dest('./dist/css/'));
 });
 
 gulp.task('removeCss', function() {
-	return gulp.src(['./distRequired/css/style-concat.css', './distRequired/css/style.css'])
+	return gulp.src(['./dist/css/style-concat.css', './dist/css/style.css'])
 				.pipe(clean());
 });
 
 gulp.task('renameCss', function() {
-	gulp.src('./distRequired/css/style-concat.min.css')
+	gulp.src('./dist/css/style-concat.min.css')
 				.pipe(rename('style.css'))
-				.pipe(gulp.dest('./distRequired/css/'));
+				.pipe(gulp.dest('./dist/css/'));
 
-	return gulp.src('./distRequired/css/style-concat.min.css').pipe(clean());
+	return gulp.src('./dist/css/style-concat.min.css').pipe(clean());
 });
 
-gulp.task('css', function() {
-	runSequence( 'concatCss', 'minifyCss', 'removeCss', 'renameCss', function() {
+gulp.task('css', function(cb) {
+	runSequence('concatCss', 'minifyCss', 'removeCss', 'renameCss', cb);
+});
 
-	});
-})
+gulp.task('compressJs', function() {
+	return gulp.src('./dist/js/main.js')
+		.pipe(uglify())
+		.pipe(rename({
+			suffix: '.min'
+		}))
+		.pipe(gulp.dest('./dist/js/'));
+});
+
+gulp.task('removeJs', function() {
+	return gulp.src(['./dist/js/main.js'])
+				.pipe(clean());
+});
+
+gulp.task('renameJs', function() {
+	gulp.src('./dist/js/main.min.js')
+		.pipe(rename('main.js'))
+		.pipe(gulp.dest('./dist/js/'));
+
+	return gulp.src('./dist/js/main.min.js').pipe(clean());
+});
+
+gulp.task('js', function(cb) {
+	runSequence('compressJs', 'removeJs', 'renameJs', cb);
+});
 
 var requireConfig = {  
-	dir:'distRequired',
+	dir: 'distRequired',
 	appDir: 'dist/',
 	baseUrl:'./',
 	mainConfigFile:'dist/js/main.js',
@@ -143,7 +165,7 @@ var requireConfig = {
 // remove all files in dist
 gulp.task('clean-require', function() {
 	return gulp.src(_dist_require_path, {read: false})
-		.pipe(clean());
+			.pipe(clean());
 });
 
 gulp.task('clean-dist', function() {
@@ -152,7 +174,7 @@ gulp.task('clean-dist', function() {
 });
 
 // move all src files to dist, except scss files
-gulp.task('build', ['clean-require', 'clean-dist'], function() {
+gulp.task('move-files', ['clean-require', 'clean-dist'], function() {
 	return gulp.src([
 			'!'+_scss_path, // remove scss files from the move since we'll use the sass operations on them to compile them and use them in css
 			_src_path // specify everything else
@@ -168,21 +190,40 @@ gulp.task('sass', function() {
 		.pipe(livereload()); // reload browser
 });
 
+gulp.task('require', function(cb) {
+	runSequence('buildRequire', 'move-require', 'clean-require', cb);
+})
+
 gulp.task('buildRequire', function(cb){
 	rjs.optimize(requireConfig, function(buildResponse){
 		cb();
 	}, cb);
 });
 
-gulp.task('buildProd', function() {
-	runSequence( 'build', 'sass', 'buildRequire', 'css', 'write-config-prod');
+gulp.task('move-require', ['clean-dist'], function() {
+	return gulp.src(_dist_require_path + '/**/*')
+		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('buildDev', function() {
-	runSequence('build', 'sass', 'write-config-dev', function() {
-
-	});
-});
+gulp.task('build', function() {
+	if(environment === 'prod') {
+		runSequence( 
+			'move-files', // moves all files to dist
+			'sass', // compiles all scss files into css and moves them to dist
+			'require', // from dist, run the optimizer and output it into dist
+			'js', // minifies js/main.js
+			'css', // takes all the apps provided up top and concatenate and minify them
+			'write-config' // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
+		);
+	}
+	else {
+		runSequence(
+			'move-files',
+			'sass',
+			'write-config'
+		);
+	}
+})
 
 gulp.task('templates', function(){
 	gulp.src('src/apps/*/views/*.html')
@@ -208,14 +249,14 @@ gulp.task('templates', function(){
 
 // watch our scss files so that when we change a variable it reloads the browser with the new css
 gulp.task('watch', function (){
-	runSequence('buildDev', function() {
+	runSequence('build', function() {
 		livereload.listen();
 
 		gulp.watch(_scss_path, ['sass']);
 	});
 });
 
-gulp.task('write-config-dev', function() {
+gulp.task('write-config', function() {
 	require('fs').writeFileSync('build-config.json', '{}');
 
 	gulp.src('build-config.json')
@@ -223,16 +264,6 @@ gulp.task('write-config-dev', function() {
 			preloadedApps: getAppsToInclude()
 		}))
 		.pipe(gulp.dest('./dist'))
-});
-
-gulp.task('write-config-prod', function() {
-	require('fs').writeFileSync('build-config.json', '{}');
-
-	gulp.src('build-config.json')
-		.pipe(jeditor({
-			preloadedApps: getAppsToInclude('prod')
-		}))
-		.pipe(gulp.dest('./distRequired'))
 });
 
 gulp.task('default', ['buildProd']);
