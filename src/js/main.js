@@ -52,7 +52,8 @@ require.config({
 		'vkbeautify':'js/lib/vkbeautify',
 		'wysiwyg': 'js/lib/bootstrap.wysiwyg.min',
 		'pdfjs-dist/build/pdf': 'js/lib/pdfjs/build/pdf',
-		'pdfjs-dist/build/pdf.worker': 'js/lib/pdfjs/build/pdf.worker'
+		'pdfjs-dist/build/pdf.worker': 'js/lib/pdfjs/build/pdf.worker',
+		'templates': 'js/templates'
 	},
 	shim: {
 		'footable-sort': ['footable'],
@@ -61,9 +62,6 @@ require.config({
 		'bootstrap-clickover': ['bootstrap'],
 		'datatables': ['jquery'],
 		'jqueryui': ['jquery'],
-		'handlebars': {
-			'exports': 'Handlebars'
-		},
 		'crossroads': ['signals'],
 		'hasher': ['signals'],
 		'slider': ['dependClass'],
@@ -82,7 +80,7 @@ require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-cl
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone'], function(util, ui, apps, routing, socket, timezone){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone', 'templates'], function(util, ui, apps, routing, socket, timezone, templates){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;

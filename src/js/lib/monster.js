@@ -250,48 +250,10 @@ define(function(require){
 			var raw = raw || false,
 				ignoreCache = ignoreCache || false,
 				ignoreSpaces = ignoreSpaces || false,
-				_template,
+				_template = Handlebars.getTemplate(app, name, ignoreCache),
 				result;
 
-			if(monster.cache.templates === undefined) {
-				monster.cache.templates = {};
-			}
-
-			if(monster.cache.templates[app.name] === undefined) {
-				monster.cache.templates[app.name] = {};
-			}
-
-			if(monster.cache.templates[app.name][name] && !ignoreCache){
-				_template = monster.cache.templates[app.name][name];
-			}
-			else {
-				if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
-					_template = name.substring(1);
-				}
-				else{
-					monster.pub('monster.requestStart');
-
-					$.ajax({
-						url: app.appPath + '/views/' + name + '.html',
-						dataType: 'text',
-						async: false,
-						success: function(result){
-							_template = result;
-							monster.pub('monster.requestEnd');
-						},
-						error: function(xhr, status, err){
-							_template = status + ': ' + err;
-							monster.pub('monster.requestEnd');
-						}
-					});
-				}
-			}
-
-			monster.cache.templates[app.name][name] = _template;
-
 			if(!raw){
-				_template = handlebars.compile(_template);
-
 				var i18n = app.i18n.active();
 
 				i18n._whitelabel = monster.config.whitelabel;
@@ -538,6 +500,7 @@ define(function(require){
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager
 	window.monster = monster;
+	window.Handlebars = handlebars;
 
 	return monster;
 });

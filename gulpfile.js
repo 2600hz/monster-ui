@@ -22,8 +22,7 @@ var _dist_path = './dist',
 	_src_path = './src/**/*',
 	_scss_path = './src/**/*.scss';
 
-var environment = gutil.env.env || 'dev',
-	_require_js_paths = [],
+var _require_js_paths = [],
 	_concat_css_path = [
 		'./dist/css/style.css'
 	],
@@ -67,7 +66,7 @@ var environment = gutil.env.env || 'dev',
 function getAppsToInclude() {
 	var apps = [];
 
-	if(environment === 'prod') {
+	if(gutil.env.env === 'prod') {
 		apps = coreApps.concat(otherApps);
 	}
 
@@ -114,30 +113,10 @@ gulp.task('css', function(cb) {
 	runSequence('concatCss', 'minifyCss', 'removeCss', 'renameCss', cb);
 });
 
-gulp.task('compressJs', function() {
-	return gulp.src('./dist/js/main.js')
+gulp.task('minifyJS', function() {
+	return gulp.src(['./dist/js/main.js', './dist/js/templates.js'])
 		.pipe(uglify())
-		.pipe(rename({
-			suffix: '.min'
-		}))
 		.pipe(gulp.dest('./dist/js/'));
-});
-
-gulp.task('removeJs', function() {
-	return gulp.src(['./dist/js/main.js'])
-				.pipe(clean());
-});
-
-gulp.task('renameJs', function() {
-	gulp.src('./dist/js/main.min.js')
-		.pipe(rename('main.js'))
-		.pipe(gulp.dest('./dist/js/'));
-
-	return gulp.src('./dist/js/main.min.js').pipe(clean());
-});
-
-gulp.task('js', function(cb) {
-	runSequence('compressJs', 'removeJs', 'renameJs', cb);
 });
 
 var requireConfig = {  
@@ -154,7 +133,8 @@ var requireConfig = {
 		{
 			name:'js/main',
 			exclude:[
-				'config'
+				'config',
+				'templates'
 			],
 			include: _require_js_paths 
 		}
@@ -170,6 +150,16 @@ gulp.task('clean-require', function() {
 
 gulp.task('clean-dist', function() {
 	return gulp.src(_dist_path, {read: false})
+			.pipe(clean());
+});
+
+gulp.task('clean-dist-dev', function() {
+	return gulp.src('./dist-dev', {read: false})
+			.pipe(clean());
+});
+
+gulp.task('clean-tmp', function() {
+	return gulp.src('./tmp', {read: false})
 		.pipe(clean());
 });
 
@@ -205,29 +195,66 @@ gulp.task('move-require', ['clean-dist'], function() {
 		.pipe(gulp.dest('dist'));
 });
 
+gulp.task('move-dist-dev', ['clean-dist-dev'], function() {
+	return gulp.src('./dist/**/*')
+			.pipe(gulp.dest('dist-dev'));
+});
+
+gulp.task('build-all', function(cb) {
+	runSequence( 
+		'build-dev',
+		'move-dist-dev',
+		'build-prod',
+		cb
+	);
+})
+
+gulp.task('build-dev', function(cb) {
+	gutil.env.env = 'dev';
+
+	runSequence(
+		'move-files',
+		'sass',
+		'write-config',
+		cb
+	);
+});
+
+gulp.task('build-prod', function(cb) {
+	gutil.env.env = 'prod';
+
+	runSequence( 
+		'move-files', // moves all files to dist
+		'sass', // compiles all scss files into css and moves them to dist
+		'templates', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js,
+		'require', // from dist, run the optimizer and output it into dist
+		'minifyJS', // minifies js/main.js, we don't use the optimize from requirejs as we don't want to minify config.js
+		'css', // takes all the apps provided up top and concatenate and minify them
+		'write-config', // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
+		cb
+	);
+});
+
 gulp.task('build', function() {
+	environment = gutil.env.env || 'dev';
+
 	if(environment === 'prod') {
 		runSequence( 
-			'move-files', // moves all files to dist
-			'sass', // compiles all scss files into css and moves them to dist
-			'require', // from dist, run the optimizer and output it into dist
-			'js', // minifies js/main.js
-			'css', // takes all the apps provided up top and concatenate and minify them
-			'write-config' // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
+			'build-prod'
 		);
 	}
 	else {
-		runSequence(
-			'move-files',
-			'sass',
-			'write-config'
+		runSequence( 
+			'build-dev'
 		);
 	}
 })
 
-gulp.task('templates', function(){
-	gulp.src('src/apps/*/views/*.html')
-		.pipe(handlebars())
+gulp.task('compileTemplates', function(){
+	return gulp.src('src/apps/*/views/*.html')
+		.pipe(handlebars({
+			handlebars: require('handlebars')
+		}))
 		.pipe(wrap('Handlebars.template(<%= contents %>)'))
 		.pipe(declare({
 			namespace: 'monster.cache.templates',
@@ -236,16 +263,29 @@ gulp.task('templates', function(){
 				// Allow nesting based on path using gulp-declare's processNameByPath()
 				// You can remove this option completely if you aren't using nested folders
 				// Drop the client/templates/ folder from the namespace path by removing it from the filePath
-				//return declare.processNameByPath(filePath.replace('client/templates/', ''));
-				var splits = filePath.split('\\');
-				var newName = splits[splits.length - 3] +'.' + splits[splits.length-1];
-				//console.log(newName);
+				var splits = filePath.split('\\'),
+					// our files are all in folder such as apps/accounts/views/test.html, so we want to extract the last and 2 before last parts to have the app name and the template name
+					newName = splits[splits.length - 3] +'.' + splits[splits.length-1];
 				return declare.processNameByPath(newName);
 			}
 		}))
-		.pipe(concat('templates.js'))
-		.pipe(gulp.dest(_dist_path +'/js/'));
+		.pipe(concat('templates-compiled.js'))
+		.pipe(gulp.dest('tmp/js/'));
 });
+
+gulp.task('concatTemplates', function() {
+	return gulp.src(['src/js/templates.js', 'tmp/js/templates-compiled.js'])
+		.pipe(concat('templates.js'))
+		.pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('removeDistTemplates', function() {
+	return gulp.src('./dist/js/templates.js').pipe(clean());
+});
+
+gulp.task('templates', function(cb) {
+	runSequence('removeDistTemplates', 'compileTemplates', 'concatTemplates', 'clean-tmp', cb);
+})
 
 // watch our scss files so that when we change a variable it reloads the browser with the new css
 gulp.task('watch', function (){
@@ -259,11 +299,11 @@ gulp.task('watch', function (){
 gulp.task('write-config', function() {
 	require('fs').writeFileSync('build-config.json', '{}');
 
-	gulp.src('build-config.json')
-		.pipe(jeditor({
-			preloadedApps: getAppsToInclude()
-		}))
-		.pipe(gulp.dest('./dist'))
+	return gulp.src('build-config.json')
+			.pipe(jeditor({
+				preloadedApps: getAppsToInclude()
+			}))
+			.pipe(gulp.dest('./dist'))
 });
 
-gulp.task('default', ['buildProd']);
+gulp.task('default', ['build']);
