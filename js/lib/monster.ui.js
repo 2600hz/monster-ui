@@ -15,61 +15,6 @@ define(function(require){
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
-			times: function(n, options) {
-				var ret = '';
-				for(var i = 1; i <= n; ++i)
-					ret += options.fn(i);
-				return ret;
-			},
-
-			debug: function(optionalValue) {
-				console.log('Current Context: ', this);
-
-				if (optionalValue) {
-					console.log('Value: ', optionalValue);
-				}
-			},
-
-			tryI18n: function(mapI18n, key) {
-				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : monster.util.formatVariableToDisplay(key);
-			},
-
-			formatPhoneNumber: function(phoneNumber) {
-				phoneNumber = (phoneNumber || '').toString();
-
-				return monster.util.formatPhoneNumber(phoneNumber);
-			},
-
-			formatVariableToDisplay: function(variable) {
-				return monster.util.formatVariableToDisplay(variable);
-			},
-
-			toUpperCase: function (stringValue) {
-				return stringValue.toString().toUpperCase();
-			},
-
-			toLowerCase: function(stringValue) {
-				return stringValue.toString().toLowerCase();
-			},
-
-			replaceVar: function(stringValue, variable) {
-				return stringValue.replace('{{variable}}', variable);
-			},
-
-			select: function(value, options) {
-				var $el = $('<select />').html( options.fn(this) );
-				$el.find('[value="' + value + '"]').attr({'selected':'selected'});
-				return $el.html();
-			},
-
-			ifInArray: function(elem, list, options) {
-				if(list.indexOf(elem) > -1) {
-					return options.fn(this);
-				}
-
-				return options.inverse(this);
-			},
-
 			compare: function (lvalue, operator, rvalue, options) {
 				var operators, result;
 
@@ -108,12 +53,12 @@ define(function(require){
 				}
 			},
 
-			toFriendlyDate: function(timestamp, format, user, isGregorian) {
-				return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
-			},
+			debug: function(optionalValue) {
+				console.log('Current Context: ', this);
 
-			formatPrice: function(price, decimals) {
-				return monster.util.formatPrice(price, decimals);
+				if (optionalValue) {
+					console.log('Value: ', optionalValue);
+				}
 			},
 
 			formatBytes: function (bytes, pDigits) {
@@ -123,17 +68,26 @@ define(function(require){
 				return data.value + ' ' + data.unit.symbol;
 			},
 
-			monsterSwitch: function(options) {
-				var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
-					checkbox = $(checkboxHtml),
-					onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
-					offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+			formatPhoneNumber: function(phoneNumber) {
+				phoneNumber = (phoneNumber || '').toString();
 
-				return monster.template(monster.apps.core, 'monster-switch-template', {
-					checkbox: new Handlebars.SafeString(checkboxHtml),
-					on: onLabel,
-					off: offLabel
-				});
+				return monster.util.formatPhoneNumber(phoneNumber);
+			},
+
+			formatPrice: function(price, decimals) {
+				return monster.util.formatPrice(price, decimals);
+			},
+
+			formatVariableToDisplay: function(variable) {
+				return monster.util.formatVariableToDisplay(variable);
+			},
+
+			ifInArray: function(elem, list, options) {
+				if(list.indexOf(elem) > -1) {
+					return options.fn(this);
+				}
+
+				return options.inverse(this);
 			},
 
 			monsterCheckbox: function() {
@@ -190,6 +144,23 @@ define(function(require){
 				return monster.template(monster.apps.core, 'monster-radio-template', templateData);
 			},
 
+			monsterSlider: function (settings, options) {
+				return new Handlebars.SafeString(monster.ui.slider(settings));
+			},
+
+			monsterSwitch: function(options) {
+				var checkboxHtml = options.fn(this).trim() || '<input type="checkbox">',
+					checkbox = $(checkboxHtml),
+					onLabel = checkbox.data('on') || monster.apps.core.i18n.active().on,
+					offLabel = checkbox.data('off') || monster.apps.core.i18n.active().off;
+
+				return monster.template(monster.apps.core, 'monster-switch-template', {
+					checkbox: new Handlebars.SafeString(checkboxHtml),
+					on: onLabel,
+					off: offLabel
+				});
+			},
+
 			monsterText: function(type, className) {
 				var htmlContent = arguments[arguments.length-1].fn(this),
 					validTypes = ['info', 'question', 'error', 'warning'],
@@ -204,8 +175,37 @@ define(function(require){
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterSlider: function (settings, options) {
-				return new Handlebars.SafeString(monster.ui.slider(settings));
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace('{{variable}}', variable);
+			},
+
+			select: function(value, options) {
+				var $el = $('<select />').html( options.fn(this) );
+				$el.find('[value="' + value + '"]').attr({'selected':'selected'});
+				return $el.html();
+			},
+
+			times: function(n, options) {
+				var ret = '';
+				for(var i = 1; i <= n; ++i)
+					ret += options.fn(i);
+				return ret;
+			},
+
+			toFriendlyDate: function(timestamp, format, user, isGregorian) {
+				return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
+			},
+
+			toLowerCase: function(stringValue) {
+				return stringValue.toString().toLowerCase();
+			},
+
+			toUpperCase: function (stringValue) {
+				return stringValue.toString().toUpperCase();
+			},
+
+			tryI18n: function(mapI18n, key) {
+				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : monster.util.formatVariableToDisplay(key);
 			}
 		});
 	}
