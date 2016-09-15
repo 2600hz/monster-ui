@@ -1,6 +1,10 @@
 Near future
+= improving readability and organization of our gulpfile
 = Change all CSS files to SCSS files. Importing base.scss in each file.
+= Improve our watch tasks so dev becomes easier
+= see about organizing sass in a better fashion
 
 Dream future
 = Add a mode in prod to automatically add a version to the files so we can bust cache automatically
-= Add minification of the HTML with dev / prod mode. Seei f Handlebars can work with one big js file containing all our templates.
+= See about adding min suffixes
+= see about sitemaps
