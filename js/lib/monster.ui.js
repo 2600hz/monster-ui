@@ -82,6 +82,10 @@ define(function(require){
 				return monster.util.formatVariableToDisplay(variable);
 			},
 
+			friendlyTimer: function(seconds) {
+				return monster.util.friendlyTimer(seconds);
+			},
+
 			ifInArray: function(elem, list, options) {
 				if(list.indexOf(elem) > -1) {
 					return options.fn(this);
