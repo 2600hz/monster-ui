@@ -426,6 +426,10 @@ define(function(require){
 					monster.config.developerFlags.build = config;
 
 					callback();
+				},
+				error: function() {
+					monster.config.developerFlags.build = monster.config.developerFlags.build || {};
+					callback();
 				}
 			});
 		},

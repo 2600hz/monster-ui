@@ -76,6 +76,13 @@ gulp.task('minifyCss', function() {
 		.pipe(gulp.dest('./dist/css/'));
 });
 
+gulp.task('minify-css-app', function() {
+		var app = gutil.env.app;
+		return gulp.src('./dist/apps/'+app+'/style/app.css')
+			.pipe(cleanCSS())
+			.pipe(gulp.dest('./dist/apps/'+app+'/style'));
+});
+
 gulp.task('removeCss', function() {
 	return gulp.src(['./dist/css/style-concat.css', './dist/css/style.css'])
 				.pipe(clean());
@@ -365,7 +372,7 @@ gulp.task('build-prod', function(cb) {
 
 gulp.task('build', function() {
 	gutil.env.env = gutil.env.env || 'dev';
-console.log(gutil.env.env);
+
 	if(gutil.env.env === 'prod') {
 		runSequence( 
 			'build-prod'
@@ -382,11 +389,10 @@ gulp.task('build-app', function(cb) {
 	runSequence( 
 		'move-files', // moves all files but css to dist
 		'sass', // compiles all scss files into css and moves them to dist
-		'templates-app', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js,
-		'require-app', // from dist, run the optimizer and output it into dist
-		'minify-js-app', // minifies js/main.js, we don't use the optimize from requirejs as we don't want to minify config.js
-		//'css', // takes all the apps provided up top and concatenate and minify them
-		//'write-config', // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
+		'templates-app', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js, also removes all the html files from the folder
+		'require-app', // require whole directory, skipping all the optimizing of the core modules, but focusing on the specific app
+		'minify-js-app', // minifies app.js
+		'minify-css-app', // uglifies app.css
 		cb
 	);
 });
