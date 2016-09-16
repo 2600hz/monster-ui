@@ -1,3 +1,7 @@
+Immediate future
+= commit apps/* to their own repos
+= see where we use gutil
+
 Near future
 = improving readability and organization of our gulpfile
 = Change all CSS files to SCSS files. Importing base.scss in each file.
@@ -8,3 +12,91 @@ Dream future
 = Add a mode in prod to automatically add a version to the files so we can bust cache automatically
 = See about adding min suffixes
 = see about sitemaps
+= i18n concat?
+
+Cleanup gulpfile
+= casing
+= use del.sync to delete stuff
+
+======================================================================================================================
+Build Prod.
+
+runSequence( 
+	'move-files', // moves all files to dist
+	'sass', // compiles all scss files into css and moves them to dist
+	'templates', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js,
+	'require', // from dist, run the optimizer and output it into dist
+	'minifyJS', // minifies js/main.js, we don't use the optimize from requirejs as we don't want to minify config.js
+	'css', // takes all the apps provided up top and concatenate and minify them
+	'write-config', // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
+	cb
+);
+
+move-files => Move everything to tmp.
+sass => take all tmp/scss files and compile them and make them css files
+templates => take all html templates in tmp/apps/*/views/*.html and compile them into js/templates.js file, remove all the apps/*/views/*html files from tmp
+require => run require on whole setting, from tmp to tmpRequire, then move eveyrhting back to tmp
+minifyjs => takes tmp/js/main.js and tmp/js/templates.js and minify them
+css => takes tmp/css/style.css and minifies it
+write-config => writes a config file for monster to know which apps were bundled (used by monster.css, to prevent it from loading css files)
+move-to-dist => move the whole folder except scss files, html files, to /dist. clean tmp
+======================================================================================================================
+Build Dev.
+
+runSequence( 
+	'move-files',
+	'sass',
+	'write-config',
+	cb
+);
+
+move-files => Move everything to tmp.
+sass => // compiles all scss files into css and moves them to tmp
+write-config => writes a config file for monster to know which apps were bundled (used by monster.css, to prevent it from loading css files)
+move-to-dist => move the whole folder except scss files, html files, to /dist. clean tmp
+======================================================================================================================
+Build App.
+
+runSequence( 
+	'move-files', // moves all files but css to tmp
+	'sass', // compiles all scss files into css and moves them to dist
+	'templates-app', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js, also removes all the html files from the folder
+	'require-app', // require whole directory, skipping all the optimizing of the core modules, but focusing on the specific app
+	'minify-js-app', // minifies app.js
+	'minify-css-app', // uglifies app.css
+	cb
+);
+
+move-files => Move everything to tmp.
+sass => take all tmp/scss files and compile them and make them css files
+templates-app => take all html templates in tmp/apps/{{APP_NAME}}/views/*.html and compile them into tmp/apps/{{APP_NAME}}/views/templates.js file
+ remove all the  tmp/apps/{{APP_NAME}}/views/*.html files from tmp, 
+ concatenate  tmp/apps/{{APP_NAME}}/views/templates.js and tmp/apps/{{APP_NAME}}/app.js into tmp/apps/{{APP_NAME}}/app.js
+ remove tmp/apps/{{APP_NAME}}/views/templates.js file
+
+require-app => run require on whole setting, from tmp to tmpRequire, then move eveyrhting back to tmp
+minify-js-app =>  tmp/apps/{{APP_NAME}}/app.js and minifies it
+minify-css-app => tmp/apps/{{APP_NAME}}/style/app.css and minifies it
+move-to-dist => move the whole folder except scss files, html files, to /dist. clean tmp
+======================================================================================================================
+
+COMPANY Build
+GIT CLONE MONSTER-UI 
+cd monster-ui
+gulp build-prod
+mv monster-ui/dist/ ../final_build
+
+GIT CLONE MONSTER-UI
+cd monster-ui/apps
+GIT CLONE MONSTER-UI-{{APP_NAME}} {{APP_NAME}}
+cd ../
+gulp build-app --app={{APP_NAME}}
+mv monster-ui/dist/apps/{{APP_NAME}} ../final_build/apps
+
+FINAL DIST BUILD IS IN final_build
+
+
+
+
+
+
