@@ -1,9 +1,16 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var requireDir = require('require-dir');
+var cache = require('gulp-cached');
+var sass = require('gulp-sass');
+
+var paths = require('./gulp/paths.js');
 
 
 requireDir('./gulp/tasks', { recurse: true});
+
+var browserSync = require('browser-sync').create();
+var reload      = browserSync.reload;
 
 gulp.task('build-prod', function(cb) {
 	runSequence( 
@@ -20,7 +27,7 @@ gulp.task('build-prod', function(cb) {
 });
 
 gulp.task('build-dev', function(cb) {
-	runSequence(
+	return runSequence(
 		'move-files-to-tmp',
 		'sass',
 		'write-config-dev',
@@ -50,4 +57,41 @@ gulp.task('build-all', function(cb) {
 		'build-prod',
 		cb
 	);
+});
+
+gulp.task('default', ['serve']);
+
+gulp.task('serve', ['build-dev'], function() {
+	browserSync.init({
+		server: {
+			baseDir: './dist'
+		}
+	});
+
+	gulp.watch(paths.src + '/**/*.scss', ['watch:sass']);
+	gulp.watch(paths.src + '/**/*.html', ['watch:html']);
+	gulp.watch(paths.src + '/**/*.js', ['watch:js']);
+});
+
+// compile our scss files to css files
+gulp.task('watch:sass', function() {
+	return gulp.src(paths.src + '/**/*.scss') // Select all the scss files
+		//.pipe(cache('sass')) // when we cache it seems to not reload the files
+		.pipe(sass().on('error', sass.logError)) // compile them using the sass plug-in
+		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
+		.pipe(reload({stream: true}));
+});
+
+gulp.task('watch:js', function() {
+	return gulp.src(paths.src + '/**/*.js') // Select all the scss files
+		.pipe(cache('js'))
+		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
+		.pipe(reload({stream: true}));
+});
+
+gulp.task('watch:html', function() {
+	return gulp.src(paths.src + '/**/*.html') // Select all the scss files
+		.pipe(cache('html'))
+		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
+		.pipe(reload({stream: true}));
 });
