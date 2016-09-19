@@ -58,7 +58,12 @@ define(function(require){
 			socket.onmessage = function(event) {
 				var data = JSON.parse(event.data);
 
-				self.onEvent(data);
+				if(data.action === 'reply') { 
+					self.onReply(data);
+				}
+				else if(data.action === 'event') {
+					self.onEvent(data);
+				}
 			};
 
 			_.each(self.bindings, function(binding, name) {
@@ -120,26 +125,39 @@ define(function(require){
 
 		object: {},
 		bindings: {},
+		commands: {},
 
-		subscribe: function(accountId, authToken, binding) {
-			var self = this;
+		subscribe: function(accountId, authToken, binding, onReply) {
+			var self = this,
+				requestId = monster.util.guid();
 
-			self.object.send(JSON.stringify({'action': 'subscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+			self.commands[requestId] = {
+				onReply: onReply
+			};
+
+			return self.object.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId,  'binding': binding }}));
 		},
-		unsubscribe: function(accountId, authToken, binding) {
-			var self = this;
+		unsubscribe: function(accountId, authToken, binding, onReply) {
+			var self = this,
+				requestId = monster.util.guid();
 
-			self.object.send(JSON.stringify({'action': 'unsubscribe', 'account_id': accountId, 'auth_token': authToken, 'binding': binding}));
+			self.commands[requestId] = {
+				onReply: onReply
+			};
+
+			self.object.send(JSON.stringify({'action': 'unsubscribe','auth_token': authToken, 'request_id': requestId, 'data': {'binding': binding, 'account_id': accountId}}));
 		},
 
 		onEvent: function(data) {
 			var self = this,
-				bindingId = data.binding,
+				bindingId = data.subscribed_key,
 				executeCallbacks = function(subscription) {
 					_.each(subscription.listeners, function(listener) {
-						listener.callback(data);
+						listener.callback(data.data);
 					});
 				};
+
+			data.data.binding = bindingId;
 
 			if(bindingId) {
 				if(self.bindings.hasOwnProperty(bindingId)) {
@@ -151,6 +169,14 @@ define(function(require){
 					executeCallbacks(binding);
 				});
 			}
+		},
+
+		onReply: function(data) {
+			var self = this,
+				requestId = data.request_id;
+
+			self.commands[requestId].onReply(data);
+			delete self.commands[requestId];
 		},
 
 		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
@@ -171,8 +197,9 @@ define(function(require){
 				self.bindings[binding].listeners = listenersToKeep;
 			}
 			else {
-				self.unsubscribe(accountId, authToken, binding);
-				delete self.bindings[binding];
+				self.unsubscribe(accountId, authToken, binding, function(result) {
+					delete self.bindings[binding];
+				});
 			}
 		},
 
@@ -204,10 +231,11 @@ define(function(require){
 				}
 			}
 			else {
-				self.subscribe(accountId, authToken, binding);
-				self.bindings[binding] = {
-					listeners: [ newListener ]
-				}
+				self.subscribe(accountId, authToken, binding, function(result) {
+					self.bindings[binding] = {
+						listeners: [ newListener ]
+					}
+				});
 			}
 		}
 	};

@@ -960,6 +960,16 @@ define(function(require){
 			}
 
 			return response;
+		},
+
+		guid: function() {
+			var r = '';
+
+			for(n=0; n<4; n++) {
+				r = r + (Math.random().toString(16)+'000000000').substr(2,8);
+			}
+
+			return r;
 		}
 	};
 
