@@ -21,6 +21,7 @@ src/apps/inspector
 src/apps/migration
 src/apps/mobile
 src/apps/numbers
+src/apps/operator
 src/apps/pivot
 src/apps/pbxs
 src/apps/port
