@@ -198,7 +198,13 @@ define(function(require){
 			}
 			else {
 				self.unsubscribe(accountId, authToken, binding, function(result) {
-					delete self.bindings[binding];
+					if(result.status === 'success') {
+						delete self.bindings[binding];
+					}
+					else {
+						self.log('monster.socket: unsubscribe ' + binding + ' failed', true);
+						self.log(result);
+					}
 				});
 			}
 		},
@@ -232,8 +238,14 @@ define(function(require){
 			}
 			else {
 				self.subscribe(accountId, authToken, binding, function(result) {
-					self.bindings[binding] = {
-						listeners: [ newListener ]
+					if(result.status === 'success') {
+						self.bindings[binding] = {
+							listeners: [ newListener ]
+						}
+					}
+					else {
+						self.log('monster.socket: subscribe ' + binding + ' failed', true);
+						self.log(result);
 					}
 				});
 			}
