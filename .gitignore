@@ -11,6 +11,7 @@ dist-dev/
 src/apps/accounts
 src/apps/branding
 src/apps/callflows
+src/apps/callqueues
 src/apps/carriers
 src/apps/cluster
 src/apps/conferences
