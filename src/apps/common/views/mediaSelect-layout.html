@@ -8,9 +8,15 @@
 				{{/each}}
 			{{/select}}
 		</select>
+	{{#if uploadButton}}
 		<button type="button" class="monster-button-primary non-fixed upload-toggle" data-toggle="button">
-			{{ i18n.upload }}
+			{{ uploadLabel }}
 		</button>
+	{{else}}
+		<a href="javascript:void(0);" class="upload-toggle" data-toggle="button">
+			{{uploadLabel}}
+		</a>
+	{{/if}}
 	</div>
 	<div class="upload-div">
 		<input type="file" class="upload-input" accept="audio/*">

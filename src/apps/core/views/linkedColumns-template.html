@@ -1,19 +1,49 @@
 <div class="items-selector{{#if options.containerClasses}} {{options.containerClasses}}{{/if}} clearfix">
 	<div class="box-selector">
-		<div class="box-title">{{options.columnsTitles.available}}</div>
-		<ul class="available connected">
-			{{#each unselectedItems}}
-				<li class="item-selector" data-key="{{key}}"><div class="item-handle"></div>{{value}}</li>
-			{{/each}}
-		</ul>
+		<div class="box-title">{{options.i18n.columnsTitles.available}}</div>
+		<div class="box-content">
+		{{#if options.searchable}}
+			<div class="search-wrapper">
+				<div class="monster-search transparent">
+					<i class="fa fa-search"></i>
+					<input type="text" placeholder="{{options.i18n.search}}">
+				</div>
+			</div>
+		{{/if}}
+			<ul class="available connected">
+				{{#each unselectedItems}}
+					<li class="item-selector" data-key="{{key}}">
+						<span class="item-handle"></span>
+						<span class="item-value">
+							{{value}}
+						</span>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
 
 	<div class="box-selector">
-		<div class="box-title">{{options.columnsTitles.selected}}</div>
-		<ul class="selected connected">
-			{{#each selectedItems}}
-				<li class="item-selector" data-key="{{key}}"><div class="item-handle"></div>{{value}}</li>
-			{{/each}}
-		</ul>
+		<div class="box-title">{{options.i18n.columnsTitles.selected}}</div>
+		<div class="box-content">
+		{{#if options.searchable}}
+			<div class="search-wrapper">
+				<div class="monster-search transparent">
+					<i class="fa fa-search"></i>
+					<input type="text" placeholder="{{options.i18n.search}}">
+				</div>
+			</div>
+		{{/if}}
+			<ul class="selected connected">
+				{{#each selectedItems}}
+					<li class="item-selector" data-key="{{key}}">
+						<span class="item-handle"></span>
+						<span class="item-value">
+							{{value}}
+						</span>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
 </div>

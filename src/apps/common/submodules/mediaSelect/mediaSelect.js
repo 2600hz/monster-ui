@@ -11,16 +11,18 @@ define(function(require){
 			'common.mediaSelect.render': 'mediaSelectRender'
 		},
 
-		mediaSelectRender: function(args){
+		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
-				options = args.options || [],
-				formattedData = {
-					selectedOption: args.selectedOption || false,
-					options: args.options || [],
-					name: args.name || undefined,
-					label: args.label || self.i18n.active().mediaSelect.defaultLabel
+				defaultData = {
+					selectedOption: false,
+					uploadButton: true,
+					options: [],
+					name: undefined,
+					uploadLabel: self.i18n.active().upload,
+					label: self.i18n.active().mediaSelect.defaultLabel
 				},
+				formattedData = $.extend(true, {}, defaultData, args),
 				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
 
 			self.mediaSelectBindEvents(template);
