@@ -66,9 +66,14 @@ define(function(require){
 				}
 			};
 
-			_.each(self.bindings, function(binding, name) {
+			// Try to reconnect to all the old bindings, empty the key before trying so the addListener logic works properly
+			var oldBindings = $.extend(true, {}, self.bindings);
+
+			self.bindings = {};
+
+			_.each(oldBindings, function(binding, name) {
 				_.each(binding.listeners, function(listener) {
-					self.subscribe(listener.accountId, listener.authToken, name);
+					self.addListener(name, listener.accountId, listener.authToken, listener.callback, listener.source);
 				});
 			});
 
