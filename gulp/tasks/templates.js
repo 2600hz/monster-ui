@@ -6,6 +6,7 @@ var declare = require('gulp-declare');
 var concat = require('gulp-concat');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
+var path = require('path');
 
 var paths = require('../paths.js');
 var helpers = require('../helpers/getAppsToInclude.js');
@@ -32,7 +33,6 @@ var pathsTemplates = {
 
 gulp.task('compile-templates', function(){
 	var mode = gutil.env.app ? 'app' : 'whole';
-
 	return gulp.src(pathsTemplates[mode].src)
 		.pipe(handlebars({
 			handlebars: require('handlebars')
@@ -42,9 +42,11 @@ gulp.task('compile-templates', function(){
 			namespace: 'monster.cache.templates',
 			noRedeclare: true, // Avoid duplicate declarations ,
 			processName: function(filePath) {
-				var splits = filePath.split('\\'),
+				var splits = filePath.split(path.sep),
+				//var splits = filePath.split('\\'),
 					// our files are all in folder such as apps/accounts/views/test.html, so we want to extract the last and 2 before last parts to have the app name and the template name
 					newName = splits[splits.length - 3] +'.' + splits[splits.length-1];
+
 				return declare.processNameByPath(newName);
 			}
 		}))
