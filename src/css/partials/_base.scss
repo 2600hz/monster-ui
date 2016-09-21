@@ -4,6 +4,7 @@ $dodger-blue: #22A5FF;
 $emerald: #33DB24;
 $sunglow: #FFCC33;
 $red-orange: #FF3D25;
+$white: #FFF;
 
 // names found with http://chir.ag/projects/name-that-color
 // Neutral Dark
@@ -22,6 +23,8 @@ $mischka: #e0e0e9;
 $white-lilac: #F0F0F9;
 
 
+
+
 /* semantic color names */
 $primary-color: $dodger-blue;
 $error-color: $red-orange;
@@ -29,4 +32,8 @@ $success-color: $emerald;
 $warning-color: $sunglow;
 
 $background-primary-color: $white-lilac;
+$background-off-color: $white-lilac;
 $font-primary-color: $tuna;
+
+$panel-border-color: $french-gray;
+$panel-background-color: $white;

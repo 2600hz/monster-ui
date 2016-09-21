@@ -69,6 +69,7 @@ gulp.task('serve', ['build-dev'], function() {
 	});
 
 	gulp.watch(paths.src + '/**/*.scss', ['watch:sass']);
+	gulp.watch(paths.src + '/**/*.css', ['watch:css']);
 	gulp.watch(paths.src + '/**/*.html', ['watch:html']);
 	gulp.watch(paths.src + '/**/*.js', ['watch:js']);
 });
@@ -78,6 +79,13 @@ gulp.task('watch:sass', function() {
 	return gulp.src(paths.src + '/**/*.scss') // Select all the scss files
 		//.pipe(cache('sass')) // when we cache it seems to not reload the files
 		.pipe(sass().on('error', sass.logError)) // compile them using the sass plug-in
+		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
+		.pipe(reload({stream: true}));
+});
+
+// compile our scss files to css files
+gulp.task('watch:css', function() {
+	return gulp.src(paths.src + '/**/*.css') // Select all the scss files
 		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
 		.pipe(reload({stream: true}));
 });

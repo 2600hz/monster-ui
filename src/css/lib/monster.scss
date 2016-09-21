@@ -133,9 +133,9 @@ h1 {
 	border-color: $primary-color;
 }
 .monster-button-success {
-	color: #0e6b06;
-	border-color: #18b309;
-	background: #33db24;
+	color: darken($success-color, 25%);
+	border-color: darken($success-color, 10%);
+	background: $success-color;
 }
 .monster-button-warning {
 	color: #8f6b00;
