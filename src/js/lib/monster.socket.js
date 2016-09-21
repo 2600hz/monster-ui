@@ -175,8 +175,10 @@ define(function(require){
 			var self = this,
 				requestId = data.request_id;
 
-			self.commands[requestId].onReply(data);
-			delete self.commands[requestId];
+			if(self.commands.hasOwnProperty(requestId)) {
+				self.commands[requestId].onReply(data);
+				delete self.commands[requestId];
+			}
 		},
 
 		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
