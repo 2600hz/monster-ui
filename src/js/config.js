@@ -3,36 +3,21 @@ define(function(require){
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			//default: '//ui.zswitch.net/v2/',
-			//default: 'http://10.26.0.11:8000/v2/',
-			//default: '//api.sandbox.2600hz.com:8000/v2/',
-			//default: 'https://api.sipvoice.com.au:8443/v2/',
-			//default: 'http://api.networkedvoice.com:8000/v2/',
-			//default: 'http://45.55.2.159:8000/v2/',
-			default: 'http://api.sandbox.2600hz.com:8000/v2/',
-			//default: 'http://10.26.0.11:8000/v2/',
-			//default: '//52.90.121.223:8000/v2/',
-			
-			
+			default: 'http://your_API_URL/' // could be formatted like http://api.server.net:8000/v2/
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600Hz, add the URL in the 'provisioner' key below
-			//provisioner: '//provisioner.sandbox.2600hz.com/',
-			//provisioner: "https://p3.zswitch.net/",
+			// provisioner: 'http://URL/2600hz-provisioner/'
 
 			// If you want to use WebSockets you need to turn Blackhole on in the back-end and then put the URL in the 'socket' key below
 			// socket: 'your_web_socket_url'
-			socket: 'wss://sandbox.2600hz.com:5443'
 
 			// Set Project Phonebook URL if you want to use it to search phone numbers
 			// phonebook: 'project_phonebook_url'
-
-			
-			//screwdriver: "https://screwdriver.2600hz.com/v1/screwdriver/"
 		},
 
 		// The resellerId key is the accountId of your master account, and is needed for some reseller features
 		// For example it won't prompt for a credit card the sub-accounts that have a different resellerId than this resellerId
-		resellerId: 'b6bcca6222424e2cb41dbc5a572d428e',
+		// resellerId: 'your_master_account_id',
 
 		// If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it:
 		// disableBraintree: true,
@@ -78,21 +63,19 @@ define(function(require){
 			// while we're working on a better fix, this is a quick way to disable the pretty printing from the time being.
 			preventDIDFormatting: false,
 
-			//announcement: '<h1>Welcome to Monster-UI Whitelabeled</h1><br/> 2600hz Is awesome!',
-
 			// If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property.
 			// if this item is removed or set to enabled: false, nothing will appear in the UI.
 			jiraFeedback: {
-				enabled: true,
-				url: 'https://2600hz.atlassian.net/s/97fa9439eb5877d16b5da001bbf48dc3-T/-7ct1es/100012/c/1000.0.9/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=3bd5d144'
+				enabled: false,
+				url: ''
 			}
 		},
 		developerFlags: {
 			// Setting this flag to true will show the SmartPBX Callflows in the Callflows app
-			showSmartPBXCallflows: true,
+			// showSmartPBXCallflows: true,
 
 			// Settings this flag to true will show JS error when they happen, but in general we want to hide those so we comment it
-			showJSErrors: true
+			// showJSErrors: true
 		}
 	};
 });
