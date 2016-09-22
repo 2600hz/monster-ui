@@ -14,3 +14,9 @@ which will build the website, build the css files from scss files and serve it t
 If you install all the separate apps via GIT as submodules in the /monster-ui/src/apps folder and then run "gulp build-prod", all the apps code (JS/HTML/CSS) will be concatenated together and minified
 
 Reach us at #2600hz for Feedback
+
+Build Pro version
+gulp build-prod --pro=test1,test2,test3
+
+Build Pro version app level 
+gulp build-prod with core only, then add the app repo to /apps and gulp-build-app --app=test1 --pro

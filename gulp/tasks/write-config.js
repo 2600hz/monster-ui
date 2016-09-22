@@ -6,28 +6,60 @@ var jeditor = require('gulp-json-editor');
 var paths = require('../paths');
 var helpers = require('../helpers/helpers.js');
 
+var writeFile = function(fileName, content) {
+		var json = JSON.stringify(content);
+
+		fs.writeFileSync(fileName, json);
+	},
+	writeBulkAppsConfig = function() {
+		var apps = helpers.listAllApps(),
+			fileName,
+			content;
+
+		for(var i in apps) {
+			fileName = paths.tmp + '/apps/' + apps[i] + '/app-build-config.json';
+			content = {
+				version: helpers.getProApps().indexOf(apps[i]) >= 0 ? 'pro' : 'standard'
+			};
+
+			writeFile(fileName, content);
+		};
+	};
+
 gulp.task('write-config-prod', function() {
-	var fileName = paths.tmp + '/build-config.json';
+	var mainFileName = paths.tmp + '/build-config.json',
+		content = {
+			preloadedApps: helpers.getAppsToInclude()
+		};
 
-	fs.writeFileSync(fileName, '{}');
+	writeFile(mainFileName, content);
 
-	return gulp.src(fileName)
-			.pipe(jeditor({
-				preloadedApps: helpers.getAppsToInclude(),
-				proApps: helpers.getProApps()
-			}))
-			.pipe(gulp.dest(paths.tmp));
+	writeBulkAppsConfig();
+
+	return gulp.src(mainFileName);
 });
 
 gulp.task('write-config-dev', function() {
-	var fileName = paths.tmp + '/build-config.json';
+	var fileName = paths.tmp + '/build-config.json',
+		content = {
+			preloadedApps: []
+		};
 
-	fs.writeFileSync(fileName, '{}');
+	writeFile(fileName, content);
 
-	return gulp.src(fileName)
-			.pipe(jeditor({
-				preloadedApps: [],
-				proApps: helpers.getProApps()
-			}))
-			.pipe(gulp.dest(paths.tmp));
+	writeBulkAppsConfig();
+
+	return gulp.src(fileName);
+});
+
+
+gulp.task('write-config-app', function() {
+	var fileName = paths.app + 'app-build-config.json',
+		content = {
+			version: gutil.env.pro ? 'pro' : 'standard'
+		};
+
+	writeFile(fileName, content);
+
+	return gulp.src(fileName);
 });

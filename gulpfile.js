@@ -44,6 +44,7 @@ gulp.task('build-app', function(cb) {
 		'require-app', // require whole directory, skipping all the optimizing of the core modules, but focusing on the specific app
 		'minify-js-app', // minifies app.js
 		'minify-css-app', // uglifies app.css
+		'write-config-app', // add flags if needed, like pro/lite version
 		'clean-folders',
 		cb
 	);

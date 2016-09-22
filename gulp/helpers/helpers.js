@@ -14,6 +14,11 @@ function getDirectories(pathToParse) {
 }
 
 module.exports = {
+	listAllApps: function() {
+		var apps = getDirectories(paths.src + '/apps');
+
+		return apps;
+	},
 	getAppsToInclude: function() {
 		var apps = getDirectories(paths.src + '/apps'),
 			appsToExclude = getAppsToExclude(),
@@ -28,7 +33,7 @@ module.exports = {
 	},
 	getProApps: function() {
 		var apps = [];
-		if(gutil.env.pro) {
+		if(gutil.env.pro && gutil.env.pro.length) {
 			var apps = gutil.env.pro.split(',');
 		}
 		return apps;

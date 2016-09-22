@@ -423,52 +423,77 @@ define(function(){
 					app.apiUrl = options.apiUrl;
 				}
 
-				if(monster.hasProVersion(app)) {
-					if(!app.hasOwnProperty('subModules')) {
-						app.subModules = [];
+				var afterConfig = function(config) {
+					app.buildConfig = config;
+
+					if(app.buildConfig.version === 'pro') {
+						if(!app.hasOwnProperty('subModules')) {
+							app.subModules = [];
+						}
+
+						app.subModules.push('pro');
 					}
 
-					app.subModules.push('pro');
-				}
+					if('subModules' in app && app.subModules.length > 0) {
+						var toInit = app.subModules.length,
+							loadModule = function(subModule, callback) {
+								var pathSubModule = app.appPath + '/submodules/',
+									path = pathSubModule + subModule + '/' + subModule;
 
-				if('subModules' in app && app.subModules.length > 0) {
-					var toInit = app.subModules.length,
-						loadModule = function(subModule, callback) {
-							var pathSubModule = app.appPath + '/submodules/',
-								path = pathSubModule + subModule + '/' + subModule;
+								require([path], function(module) {
+									/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
+									var oldSubscribes = $.extend(true, {}, app.subscribe);
+									$.extend(true, app, module);
+									app.subscribe = oldSubscribes;
 
-							require([path], function(module) {
-								/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
-								var oldSubscribes = $.extend(true, {}, app.subscribe);
-								$.extend(true, app, module);
-								app.subscribe = oldSubscribes;
+									_.each(module.subscribe, function(callback, topic){
+										var cb = typeof callback === 'string' ? app[callback] : callback;
 
-								_.each(module.subscribe, function(callback, topic){
-									var cb = typeof callback === 'string' ? app[callback] : callback;
+										monster.sub(topic, cb, app);
+									});
 
-									monster.sub(topic, cb, app);
+									callback && callback();
 								});
+							};
 
-								callback && callback();
+						_.each(app.subModules, function(subModule) {
+							loadModule(subModule, function() {
+								toInit--;
+
+								if(toInit === 0) {
+									self.monsterizeApp(app, callback);
+								}
 							});
-						};
-
-					_.each(app.subModules, function(subModule) {
-						loadModule(subModule, function() {
-							toInit--;
-
-							if(toInit === 0) {
-								self.monsterizeApp(app, callback);
-							}
 						});
+					}
+					else {
+						self.monsterizeApp(app, callback);
+					}
+				};
+
+				if(app.hasConfigFile) {
+					monster.pub('monster.requestStart');
+					$.ajax({
+						url: app.appPath + '/app-build-config.json',
+						dataType: 'json',
+						async: false,
+						success: function(data){
+							afterConfig(data);
+
+							monster.pub('monster.requestEnd');
+						},
+						error: function(data, status, error){
+							afterConfig({});
+
+							monster.pub('monster.requestEnd')
+						}
 					});
 				}
 				else {
-					self.monsterizeApp(app, callback);
+					afterConfig({});
 				}
 			});
 		},
-
 
 		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
 		load: function(name, callback, options, pChangeHash) {
