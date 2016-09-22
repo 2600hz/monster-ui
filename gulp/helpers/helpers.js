@@ -25,5 +25,12 @@ module.exports = {
 			}
 		}
 		return filteredApps;
+	},
+	getProApps: function() {
+		var apps = [];
+		if(gutil.env.pro) {
+			var apps = gutil.env.pro.split(',');
+		}
+		return apps;
 	}
 };

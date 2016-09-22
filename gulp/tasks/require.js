@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var rjs = require('requirejs');
-var helpers = require('../helpers/getAppsToInclude.js');
+var helpers = require('../helpers/helpers.js');
 var clean = require('gulp-clean');
 var gutil = require('gulp-util');
 
@@ -9,14 +9,21 @@ var paths = require('../paths.js');
 
 
 var requireJsAppsToInclude = [],
-	appsToInclude = helpers.getAppsToInclude();
+	appsToInclude = helpers.getAppsToInclude(),
+	proApps = helpers.getProApps();
 
 for(var i in appsToInclude) {
 	requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/app');
+
+	if(proApps.indexOf(appsToInclude[i]) >= 0) {
+		requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/submodules/pro/pro');
+	}
 }
 
 var getConfigRequire = function(mode, app) {
-	var librariesToExclude = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','crossroads','config','datatables','dependClass','ddslick','fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider','timepicker','toastr','touch-punch','underscore','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'];
+	var	isProApp = proApps.indexOf(app) >= 0,
+		librariesToExclude = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','crossroads','config','datatables','dependClass','ddslick','fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider','timepicker','toastr','touch-punch','underscore','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'];
+
 	if(mode === 'app') {
 		modules = [
 			{
@@ -28,7 +35,8 @@ var getConfigRequire = function(mode, app) {
 			},
 			{
 				name: 'apps/' + app + '/app',
-				exclude: librariesToExclude
+				exclude: librariesToExclude,
+				include: isProApp ? ['apps/' + app + '/submodules/pro/pro'] : []
 			}
 		];
 	}

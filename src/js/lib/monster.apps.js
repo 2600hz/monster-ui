@@ -423,6 +423,14 @@ define(function(){
 					app.apiUrl = options.apiUrl;
 				}
 
+				if(monster.hasProVersion(app)) {
+					if(!app.hasOwnProperty('subModules')) {
+						app.subModules = [];
+					}
+
+					app.subModules.push('pro');
+				}
+
 				if('subModules' in app && app.subModules.length > 0) {
 					var toInit = app.subModules.length,
 						loadModule = function(subModule, callback) {

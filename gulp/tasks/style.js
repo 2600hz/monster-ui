@@ -7,7 +7,7 @@ var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 
 var paths = require('../paths.js');
-var helpers = require('../helpers/getAppsToInclude.js');
+var helpers = require('../helpers/helpers.js');
 
 var concatCssPaths = [ paths.tmp + '/css/style.css'];
 	appsToInclude = helpers.getAppsToInclude();

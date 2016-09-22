@@ -498,6 +498,12 @@ define(function(require){
 					}
 				}
 			);
+		},
+
+		hasProVersion: function(app) {
+			var self = this;
+
+			return monster.config.developerFlags.build.proApps.indexOf(app.name) >= 0;
 		}
 	};
 

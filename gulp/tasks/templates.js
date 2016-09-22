@@ -9,7 +9,7 @@ var clean = require('gulp-clean');
 var path = require('path');
 
 var paths = require('../paths.js');
-var helpers = require('../helpers/getAppsToInclude.js');
+var helpers = require('../helpers/helpers.js');
 
 var tmpAppsHTML = [],
 	appsToInclude = helpers.getAppsToInclude();

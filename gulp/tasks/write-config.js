@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 var jeditor = require('gulp-json-editor');
 
 var paths = require('../paths');
-var helpers = require('../helpers/getAppsToInclude.js');
+var helpers = require('../helpers/helpers.js');
 
 gulp.task('write-config-prod', function() {
 	var fileName = paths.tmp + '/build-config.json';
@@ -13,7 +13,8 @@ gulp.task('write-config-prod', function() {
 
 	return gulp.src(fileName)
 			.pipe(jeditor({
-				preloadedApps: helpers.getAppsToInclude()
+				preloadedApps: helpers.getAppsToInclude(),
+				proApps: helpers.getProApps()
 			}))
 			.pipe(gulp.dest(paths.tmp));
 });
@@ -25,7 +26,8 @@ gulp.task('write-config-dev', function() {
 
 	return gulp.src(fileName)
 			.pipe(jeditor({
-				preloadedApps: []
+				preloadedApps: [],
+				proApps: helpers.getProApps()
 			}))
 			.pipe(gulp.dest(paths.tmp));
 });
