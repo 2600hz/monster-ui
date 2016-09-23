@@ -626,12 +626,13 @@ body,
 	border-top-right-radius: 2px;
 	background: $primary-color;
 	border: 1px solid darken($primary-color, 10%);
-	color: $white;
+	color:  $foreground-primary-color;
 	padding: 1em;
 	width: 100%;
 	font-weight: bold;
 }
 
 :not(.drop-target).monster-popover .monster-popover-content {
+	background:  $foreground-primary-color;
 	padding: 1em;
 }

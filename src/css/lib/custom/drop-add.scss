@@ -1,0 +1,16 @@
+@import "../../partials/base";
+
+.drop-element.drop-theme-arrows .drop-content {
+	padding: 0;
+	border-radius: 2px;
+	border-width: 1px;
+}
+
+.drop-element.drop-theme-arrows .drop-content::before {
+	border-width: 10px;
+	filter: none;
+}
+
+.drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-top .drop-content::before {
+	border-top-color: $foreground-primary-color;
+}

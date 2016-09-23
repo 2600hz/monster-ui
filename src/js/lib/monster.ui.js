@@ -2269,7 +2269,12 @@ define(function(require){
 
 		popover: function(options) {
 			var self = this,
-				template = $(monster.template(monster.apps.core, 'monster-popover', { title: options.title, content: options.content }));
+				template = $(monster.template(monster.apps.core, 'monster-popover', { title: options.title }));
+
+			template.find('.monster-popover-content')
+					.append(options.content);
+
+			//monster.ui.tooltips(template);
 
 			var defaultDropOptions = {
 					target: options.target[0],
@@ -2292,6 +2297,15 @@ define(function(require){
 
 			options.target.on('remove', function() {
 				dropInstance.destroy();
+			});
+
+			// since drops aren't attached to the templates, if you try to add tooltips to the templates, they won't work, so we have to re-do it here, once it's displayed
+			dropInstance.on('open', function() {
+				monster.ui.tooltips($('body .drop.monster-popover'), {
+					options: {
+						container: 'body'
+					}
+				});
 			});
 		}
 	};
