@@ -12,7 +12,8 @@ define(function(require){
 		mask = require('mask'),
 		renderJSON = require('renderjson'),
 		footable = require('footable'),
-		mousetrap = require('mousetrap');
+		mousetrap = require('mousetrap'),
+		Drop = require('drop');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -2263,6 +2264,34 @@ define(function(require){
 					}
 					container.append(iframe);
 				}
+			});
+		},
+
+		popover: function(options) {
+			var self = this,
+				template = $(monster.template(monster.apps.core, 'monster-popover', { title: options.title, content: options.content }));
+
+			var defaultDropOptions = {
+					target: options.target[0],
+					content: template.html(),
+					classes: '',
+					openOn: 'click',
+					tetherOptions: {
+						constraints: [{
+							to: 'window',
+							pin: true,
+							attachment: 'together'
+						}]
+					}
+				},
+				finalDropOptions = $.extend(true, {}, defaultDropOptions, options.dropOptions);
+			
+			finalDropOptions.classes += ' monster-popover drop-theme-arrows'
+
+			var dropInstance = new Drop(finalDropOptions);
+
+			options.target.on('remove', function() {
+				dropInstance.destroy();
 			});
 		}
 	};

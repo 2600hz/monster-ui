@@ -615,3 +615,23 @@ body,
 .backend-pagination .partial-load {
 	display: inline-block
 }
+
+/* Monster-popover */
+:not(.drop-target).monster-popover {
+	padding: 10px;
+}
+
+:not(.drop-target).monster-popover .monster-popover-title {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	background: $primary-color;
+	border: 1px solid darken($primary-color, 10%);
+	color: $white;
+	padding: 1em;
+	width: 100%;
+	font-weight: bold;
+}
+
+:not(.drop-target).monster-popover .monster-popover-content {
+	padding: 1em;
+}
