@@ -38,6 +38,9 @@
 @import url('vendor/toastr.css');
 @import url('lib/custom/toastr-add.css');
 
+@import url('vendor/drop-theme-arrows.min.css');
+@import url('lib/custom/drop-add.css');
+
 @import url('lib/telicon/css/telicon.css');
 
 @import url('lib/monster.css');

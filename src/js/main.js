@@ -13,6 +13,7 @@ require.config({
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
 		'dependClass': 'js/lib/jquery.dependClass',
 		'ddslick': 'js/lib/jquery.ddslick.min',
+		'drop': 'js/lib/drop.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
 		'form2object': 'js/lib/form2object',
@@ -44,6 +45,7 @@ require.config({
 		'reqwest': 'js/lib/reqwest-0.7.3.min',
 		'signals': 'js/lib/signals.min',
 		'slider': 'js/lib/jquery.slider',
+		'tether': 'js/lib/tether.min',
 		'timepicker': 'js/lib/jquery.timepicker.min',
 		'toastr': 'js/lib/toastr-1.3.0',
 		'touch-punch': 'js/lib/jquery.ui.touch-punch.min',
@@ -56,6 +58,7 @@ require.config({
 		'templates': 'js/templates'
 	},
 	shim: {
+		'drop': ['tether'],
 		'footable-sort': ['footable'],
 		'footable-filter': ['footable'],
 		'bootstrap': ['jqueryui'],
