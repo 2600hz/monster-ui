@@ -270,6 +270,7 @@
 		qubicleQueues: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_queues' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues' },
 			'getRoster': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
 			'updateRoster': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
