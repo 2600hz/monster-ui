@@ -2269,16 +2269,17 @@ define(function(require){
 
 		popover: function(options) {
 			var self = this,
-				template = $(monster.template(monster.apps.core, 'monster-popover', { title: options.title }));
+				template = $(monster.template(monster.apps.core, 'monster-popover', { title: options.title })),
+				// In some cases, like when a drop is embedded in a drop, we need to specify manually the parent element to watch to trigger the destroy method of the drop.
+				// See operator console for example
+				removeTarget = options.removeTarget || options.target;
 
 			template.find('.monster-popover-content')
 					.append(options.content);
 
-			//monster.ui.tooltips(template);
-
 			var defaultDropOptions = {
 					target: options.target[0],
-					content: template.html(),
+					content: template[0],
 					classes: '',
 					openOn: 'click',
 					tetherOptions: {
@@ -2290,23 +2291,16 @@ define(function(require){
 					}
 				},
 				finalDropOptions = $.extend(true, {}, defaultDropOptions, options.dropOptions);
-			
+
 			finalDropOptions.classes += ' monster-popover drop-theme-arrows'
 
 			var dropInstance = new Drop(finalDropOptions);
 
-			options.target.on('remove', function() {
+			removeTarget.on('remove', function() {
 				dropInstance.destroy();
 			});
 
-			// since drops aren't attached to the templates, if you try to add tooltips to the templates, they won't work, so we have to re-do it here, once it's displayed
-			dropInstance.on('open', function() {
-				monster.ui.tooltips($('body .drop.monster-popover'), {
-					options: {
-						container: 'body'
-					}
-				});
-			});
+			return dropInstance;
 		}
 	};
 
