@@ -7,7 +7,8 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.webphone.getUserDevice': 'webphoneGetUserDevice',
+			'common.webphone.getOrCreateUserDevice': 'webphoneGetOrCreateUserDevice',
+			'common.webphone.getUserDevices': 'webphoneGetUserDevices',
 			'common.webphone.createUserDevice': 'webphoneCreateUserDevice'
 		},
 
@@ -54,7 +55,7 @@ define(function(require){
 			);
 		},
 
-		webphoneListDevices: function(callback) {
+		webphoneGetUserDevices: function(callback) {
 			var self = this
 				app = monster.apps.auth;
 
@@ -88,10 +89,10 @@ define(function(require){
 			});
 		},
 
-		webphoneGetUserDevice: function(args) {
+		webphoneGetOrCreateUserDevice: function(args) {
 			var self = this;
 
-			self.webphoneListDevices(function(devices) {
+			self.webphoneGetUserDevices(function(devices) {
 				if(devices.length && devices.length === 1) {
 					self.webphoneGetDevice(devices[0].id, function(device) {
 						args.success && args.success(device);

@@ -59,7 +59,7 @@ define(function(require){
 						args.onAccepted && args.onAccepted(call);
 					},
 					onConnected: function() {
-						args.success && args.success(args.device);
+						args.onConnected && args.onConnected(args.device);
 					},
 					onHangup: function(ev) {
 						args.onHangup && args.onHangup();
@@ -72,7 +72,7 @@ define(function(require){
 					//onTransfer: onTransfer,
 					//onNotified: onNotified,
 					onError: function(a) {
-						args.error();
+						args.onError();
 					},
 					//reconnectMaxAttempts: 3, // Unlimited autoreconnect attempts
 					//reconnectDelay: 5000 // New autoreconnect attempt every 5 seconds
@@ -91,13 +91,13 @@ define(function(require){
 				newArgs = {
 					success: function(device) {
 						args.device = device;
-						console.log('login device');
+
 						self.login(args);
 					},
 					error: args.error
 				};
 
-			monster.pub('common.webphone.getUserDevice', newArgs);
+			monster.pub('common.webphone.getOrCreateUserDevice', newArgs);
 		},
 
 		hangup: function() {
@@ -110,6 +110,10 @@ define(function(require){
 
 		muteMicrophone: function(isMuted, callback) {
 			kazooWebphone.muteMicrophone(isMuted, callback);
+		},
+
+		logout: function() {
+			kazooWebphone.logout();
 		}
 	};
 
@@ -120,7 +124,7 @@ define(function(require){
 		login: function() {
 			privateWebphone.login();
 		},
-		loginUser: function(args) {
+		login: function(args) {
 			privateWebphone.loginWebphoneUser(args);
 		},
 		hangup: function() {
@@ -131,6 +135,9 @@ define(function(require){
 		},
 		muteMicrophone: function(isMuted, callback) {
 			privateWebphone.muteMicrophone(isMuted, callback);
+		},
+		logout: function() {
+			privateWebphone.logout();
 		}
 	};
 
