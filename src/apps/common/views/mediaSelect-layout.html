@@ -1,7 +1,7 @@
 <div class="monster-media-selection">
 	<div>
 		<span>{{ label }}</span>
-		<select name="{{ name }}" class="media-dropdown">
+		<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
 			{{#select selectedOption}}
 				{{#each options}}
 					<option value="{{id}}">{{name}}</option>
