@@ -20,7 +20,8 @@ define(function(require){
 		'./submodules/numberSelector/numberSelector',
 		'./submodules/monsterListing/monsterListing',
 		'./submodules/extensionTools/extensionTools',
-		'./submodules/mediaSelect/mediaSelect'
+		'./submodules/mediaSelect/mediaSelect',
+		'./submodules/webphone/webphone'
 	]);
 
 	var app = {
@@ -43,7 +44,8 @@ define(function(require){
 			'numberSelector',
 			'monsterListing',
 			'extensionTools',
-			'mediaSelect'
+			'mediaSelect',
+			'webphone'
 		],
 
 		css: [ 'app' ],
