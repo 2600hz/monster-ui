@@ -2301,6 +2301,66 @@ define(function(require){
 			});
 
 			return dropInstance;
+		},
+
+		dialpad: function(args) {
+			var self = this,
+				dataToTemplate = {
+					dtmf: [
+						{ value: '1' },
+						{ value: '2', text: 'abc' },
+						{ value: '3', text: 'def' },
+						{ value: '4', text: 'ghi' },
+						{ value: '5', text: 'jkl' },
+						{ value: '6', text: 'mno' },
+						{ value: '7', text: 'pqrs' },
+						{ value: '8', text: 'tuv' },
+						{ value: '9', text: 'wxyz' },
+						{ value: '*' },
+						{ value: '0' },
+						{ value: '#' }
+					]
+				},
+				template = $(monster.template(monster.apps.core, 'dialpad-template', dataToTemplate));
+
+			template
+				.find('.dialpad-item')
+					.on('mouseup', function(event) {
+						event.preventDefault();
+
+						var dtmf = $(this).data('dtmf'),
+							dialboxValue = template.find('.dialbox').val(),
+							newDialboxValue = dialboxValue.concat(dtmf);
+
+						template
+							.find('.dialbox')
+								.val(newDialboxValue)
+								.focus();
+
+						if (args.hasOwnProperty('onDtmfClick')) {
+							args.onDtmfClick(dtmf, newDialboxValue);
+						}
+					});
+
+			template
+				.find('.backspace')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var dialboxValue = template.find('.dialbox').val(),
+							newDialboxValue = dialboxValue.slice(0, -1);
+
+						template
+							.find('.dialbox')
+								.val(newDialboxValue)
+								.focus();
+
+						if (args.hasOwnProperty('onBackSpaceClick')) {
+							args.onBackSpaceClick(newDialboxValue);
+						}
+					});
+
+			return template;
 		}
 	};
 

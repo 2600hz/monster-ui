@@ -1,0 +1,22 @@
+<div class="monster-dialpad phone-dialer">
+	<div class="phone-header">
+		<div class="dialbox-container">
+			<input type="tel" class="dialbox">
+			<i class="fa fa-caret-left dialbox-icon backspace"></i>
+		</div>
+	</div>
+	<div class="dialpad-container">
+	{{#each dtmf}}
+		<button class="dialpad-item" data-dtmf="{{value}}">
+			<span class="item-text">
+				{{value}}
+			</span>
+		{{#if text}}
+			<span class="item-legend">
+				{{text}}
+			</span>
+		{{/if}}
+		</button>
+	{{/each}}
+	</div>
+</div>

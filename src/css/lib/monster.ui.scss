@@ -731,3 +731,95 @@ i.monster-password-strength {
 .renderjson.theme-light .number        { color: blue; }
 .renderjson.theme-light .string        { color: green; }
 .renderjson.theme-light .keyword       { color: red; }
+
+/************************************************************/
+/************************** DIALPAD *************************/
+/************************************************************/
+
+.monster-dialpad {
+	width: 230px;
+}
+
+.monster-dialpad .phone-header {
+	padding: 15px 20px 15px 4px;
+	background-color: #22a5ff;
+}
+
+.monster-dialpad .dialbox-container {
+	position: relative;
+}
+
+.monster-dialpad .dialbox {
+	font-size: 24px;
+	width: 100%;
+	margin-bottom: 0;
+	color: #fff;
+	border: 0;
+	background-color: transparent;
+	box-shadow: none;
+}
+
+.monster-dialpad .dialbox:focus {
+	box-shadow: none;
+}
+
+.monster-dialpad .dialbox-icon {
+	font-size: 24px;
+	position: absolute;
+	top: 4px;
+	cursor: pointer;
+	color: #fff;
+}
+
+.monster-dialpad .dialpad-container {
+	padding-top: 10px;
+	background-color: #fff;
+}
+
+.monster-dialpad .dialpad-container::after {
+	display: block;
+	clear: both;
+	content: '';
+}
+
+.monster-dialpad .dialpad-item {
+	display: block;
+	float: left;
+	width: 33.333333%;
+	min-height: 36px;
+	padding: 0;
+	padding-top: 20px;
+	text-align: left;
+	border: 0;
+	background-color: #fff;
+}
+
+.monster-dialpad .dialpad-item .item-text {
+	font-size: 24px;
+	margin-left: 10px;
+	color: #22a5ff;
+}
+
+.monster-dialpad .dialpad-item .item-legend {
+	font-size: 12px;
+	margin-left: 8px;
+	text-transform: uppercase;
+	color: #c0c0c9;
+}
+
+.monster-dialpad .dialpad-item:hover {
+	cursor: pointer;
+	background-color: #f0f0f9;
+}
+
+.monster-dialpad .call-actions {
+	padding: 25px 30px 30px 25px;
+	border: 1px solid #c0c0c9;
+	border-top: 0;
+}
+
+.monster-dialpad .call-actions button {
+	font-size: 24px;
+	width: 100%;
+	height: 55px;
+}
