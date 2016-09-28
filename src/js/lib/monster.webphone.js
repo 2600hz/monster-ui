@@ -114,15 +114,17 @@ define(function(require){
 
 		logout: function() {
 			kazooWebphone.logout();
+		},
+
+		sendDTMF: function(dtmf) {
+			dtmf += ''; // cast to string
+			kazooWebphone.sendDTMF(dtmf);
 		}
 	};
 
 	var webphone = {
 		init: function() {
 			privateWebphone.init();
-		},
-		login: function() {
-			privateWebphone.login();
 		},
 		login: function(args) {
 			privateWebphone.loginWebphoneUser(args);
@@ -138,6 +140,9 @@ define(function(require){
 		},
 		logout: function() {
 			privateWebphone.logout();
+		},
+		sendDTMF: function(dtmf) {
+			privateWebphone.sendDTMF(dtmf);
 		}
 	};
 

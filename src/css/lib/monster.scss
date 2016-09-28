@@ -232,6 +232,11 @@ h1 {
 
 	-webkit-touch-callout: none;
 }
+
+.monster-switch.disabled {
+	opacity: 0.3;
+}
+
 .monster-switch > input {
 	position: absolute;
 	width: 0;
