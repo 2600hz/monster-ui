@@ -73,6 +73,7 @@ gulp.task('serve', ['build-dev'], function() {
 	gulp.watch(paths.src + '/**/*.css', ['watch:css']);
 	gulp.watch(paths.src + '/**/*.html', ['watch:html']);
 	gulp.watch(paths.src + '/**/*.js', ['watch:js']);
+	gulp.watch(paths.src + '/**/*.json', ['watch:json']);
 });
 
 // compile our scss files to css files
@@ -101,6 +102,13 @@ gulp.task('watch:js', function() {
 gulp.task('watch:html', function() {
 	return gulp.src(paths.src + '/**/*.html') // Select all the scss files
 		.pipe(cache('html'))
+		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
+		.pipe(reload({stream: true}));
+});
+
+gulp.task('watch:json', function() {
+	return gulp.src(paths.src + '/**/*.json') // Select all the scss files
+		.pipe(cache('json'))
 		.pipe(gulp.dest(paths.dist)) // move them to the dist folder
 		.pipe(reload({stream: true}));
 });

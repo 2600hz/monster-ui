@@ -77,12 +77,19 @@ define(function(require){
 
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
 			self.startSocket();
+			self.startWebphone();
 		},
 
 		startSocket: function() {
 			var self = this;
 
 			monster.socket.connect();
+		},
+
+		startWebphone: function() {
+			var self = this;
+
+			monster.webphone.init();
 		},
 
 		loadAuth: function(){

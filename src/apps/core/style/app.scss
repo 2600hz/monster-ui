@@ -503,7 +503,7 @@ body,
 
 /* Hack for jira collector issue */
 #atlwdg-trigger {
-	z-index: 200;
+	z-index: 95; // otherwise it covers popup overlays at 100
 }
 
 .core-footer.feedback-enabled {

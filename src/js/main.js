@@ -25,6 +25,7 @@ require.config({
 		'jquery': 'js/lib/jquery-1.9.1.min',
 		'jqueryui': 'js/lib/jquery-ui-1.10.3.custom.min',
 		'jstz': 'js/lib/jstz.min',
+		'kazoo': 'js/lib/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'mask': 'js/lib/jquery.mask',
 		'modernizr': 'js/lib/modernizr-2.6.2.min',
@@ -35,6 +36,7 @@ require.config({
 		'monster-routing': 'js/lib/monster.routing',
 		'monster-socket': 'js/lib/monster.socket',
 		'monster-util': 'js/lib/monster.util',
+		'monster-webphone': 'js/lib/monster.webphone',
 		'mousetrap': 'js/lib/mousetrap-1.5.3.min',
 		'nicescroll': 'js/lib/jquery.nicescroll.min',
 		'plugins': 'js/plugins',
@@ -73,6 +75,9 @@ require.config({
 		'touch-punch': ['jqueryui'],
 		'underscore': {
 			'exports': '_'
+		},
+		'kazoo': {
+			'exports': 'kazoo'
 		}
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
@@ -83,13 +88,14 @@ require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-cl
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone', 'templates'], function(util, ui, apps, routing, socket, timezone, templates){
+	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone', 'monster-webphone', 'templates'], function(util, ui, apps, routing, socket, timezone, webphone, templates){
 		monster.util = util;
 		monster.ui = ui;
 		monster.apps = apps;
 		monster.routing = routing;
 		monster.socket = socket;
 		monster.timezone = timezone;
+		monster.webphone = webphone;
 
 		monster.util.setDefaultLanguage();
 

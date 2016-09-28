@@ -749,5 +749,12 @@
 		"defaultLabel": "Media",
 		"emptyUploadAlert": "Empty Upload",
 		"fileTooBigAlert": "File Too Big"
+	},
+
+	"__comment": "UI-2279: Webphone strings",
+	"__version": "v4.0",
+	"webphoneSubmodule": {
+		"createADevice": "We didn't find any Webphone associated with your user, would you like to create one now?",
+		"deviceName": "Webphone"
 	}
 }

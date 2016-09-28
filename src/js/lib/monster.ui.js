@@ -2292,7 +2292,7 @@ define(function(require){
 				},
 				finalDropOptions = $.extend(true, {}, defaultDropOptions, options.dropOptions);
 
-			finalDropOptions.classes += ' monster-popover drop-theme-arrows'
+			finalDropOptions.classes += ' monster-popover drop-theme-arrows';
 
 			var dropInstance = new Drop(finalDropOptions);
 
@@ -2361,6 +2361,28 @@ define(function(require){
 					});
 
 			return template;
+		},
+
+		timer: function(target, pDuration, pShowOnlyWhenVisible) {
+			var self = this,
+				duration = pDuration || 0,
+				showOnlyWhenVisible = pShowOnlyWhenVisible === false ? false : true;
+
+			target.html(monster.util.friendlyTimer(duration));
+
+			var interval = setInterval(function() {
+				target.html(monster.util.friendlyTimer(duration++));
+
+				if(showOnlyWhenVisible && !target.is(':visible')) {
+					clearInterval(interval);
+				}
+			}, 1000);
+
+			target.on('remove', function() {
+				clearInterval(interval);
+			});
+
+			return interval;
 		}
 	};
 
