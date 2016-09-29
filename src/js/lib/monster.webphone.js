@@ -64,7 +64,9 @@ define(function(require){
 					onHangup: function(ev) {
 						args.onHangup && args.onHangup();
 					},
-					//onCancel: onCancel,
+					onCancel: function() {
+						args.onCancel && args.onCancel();
+					},
 					onIncoming: function(call) {
 						args.onIncoming && args.onIncoming(call);
 					},
