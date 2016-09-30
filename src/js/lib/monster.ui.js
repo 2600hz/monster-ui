@@ -2281,8 +2281,6 @@ define(function(require){
 					target: options.target[0],
 					content: template[0],
 					tetherOptions: {
-						attachment: 'bottom middle',
-						targetAttachment: 'top middle', 
 						constraints: [{
 							to: 'window',
 							pin: true,

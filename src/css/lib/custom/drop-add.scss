@@ -14,3 +14,7 @@
 .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-top .drop-content::before {
 	border-top-color: $foreground-primary-color;
 }
+
+.drop-element.drop-theme-arrows.drop-element-attached-left.drop-element-attached-middle .drop-content::before {
+	border-right-color: $foreground-primary-color;
+}
