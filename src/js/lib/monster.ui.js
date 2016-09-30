@@ -2280,15 +2280,18 @@ define(function(require){
 			var defaultDropOptions = {
 					target: options.target[0],
 					content: template[0],
-					classes: '',
-					openOn: 'click',
 					tetherOptions: {
+						attachment: 'bottom middle',
+						targetAttachment: 'top middle', 
 						constraints: [{
 							to: 'window',
 							pin: true,
-							attachment: 'together'
+							attachment: 'both'
 						}]
-					}
+					},
+					remove: true,
+					openOn: 'click',
+					classes: ''
 				},
 				finalDropOptions = $.extend(true, {}, defaultDropOptions, options.dropOptions);
 
