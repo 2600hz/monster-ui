@@ -107,6 +107,7 @@ define(function(require){
 		},
 
 		connect: function(destination) {
+			destination += '';
 			kazooWebphone.connect(destination);
 		},
 

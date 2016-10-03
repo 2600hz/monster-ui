@@ -74,7 +74,8 @@
 			'listLegs': { verb: 'GET', url: 'accounts/{accountId}/cdrs/legs/{callId}' }
 		},
 		channel: {
-			'list': { verb: 'GET', url: 'accounts/{accountId}/channels' }
+			'list': { verb: 'GET', url: 'accounts/{accountId}/channels' },
+			'action': { verb: 'PUT', url: 'accounts/{accountId}/channels/{callId}', removeMetadataAPI: true}
 		},
 		clickToCall: {
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/clicktocall' },
@@ -445,8 +446,9 @@
 							});
 						}
 
-						if('type' in methodInfo) { requestSettings.type = methodInfo.type; }
-						if('dataType' in methodInfo) { requestSettings.dataType = methodInfo.dataType; }
+						if(methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
+						if(methodInfo.hasOwnProperty('dataType')) { requestSettings.dataType = methodInfo.dataType; }
+						if(methodInfo.hasOwnProperty('removeMetadataAPI')) { requestSettings.removeMetadataAPI = methodInfo.removeMetadataAPI; }
 
 						if(['post', 'delete', 'put', 'patch'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
 							requestSettings.data.data = methodSettings.data || {};
@@ -599,7 +601,8 @@
 					data: data.data || {}
 				}, envelopeKeys);
 
-				if('uiMetadata' in options) {
+				// If the metadata is set, and the removeMetadataAPI key is either missing or set to false then we set the metadata
+				if(options.hasOwnProperty('uiMetadata') && (!options.hasOwnProperty('removeMetadataAPI') || options.removeMetadataAPI === false)) {
 					payload.data.ui_metadata = options.uiMetadata;
 				}
 

@@ -2295,11 +2295,25 @@ define(function(require){
 
 			finalDropOptions.classes += ' monster-popover drop-theme-arrows';
 
+			if(options.mode === 'showOnceOnClick') {
+				finalDropOptions.openOn = 'click';
+				finalDropOptions.remove = false;
+			}
+
 			var dropInstance = new Drop(finalDropOptions);
 
-			removeTarget.on('remove', function() {
-				dropInstance.destroy();
-			});
+			if(options.mode === 'showOnceOnClick') {
+				dropInstance.open();
+
+				dropInstance.on('close', function() {
+					dropInstance.destroy();
+				});
+			}
+			else {
+				removeTarget.on('remove', function() {
+					dropInstance.destroy();
+				});
+			}
 
 			return dropInstance;
 		},

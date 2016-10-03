@@ -13,7 +13,7 @@ require.config({
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
 		'dependClass': 'js/lib/jquery.dependClass',
 		'ddslick': 'js/lib/jquery.ddslick.min',
-		'drop': 'js/lib/drop.min',
+		'drop': 'js/lib/drop',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/lib/footable/footable.min',
 		'form2object': 'js/lib/form2object',
