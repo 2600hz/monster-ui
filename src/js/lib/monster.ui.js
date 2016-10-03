@@ -2372,7 +2372,7 @@ define(function(require){
 			target.html(monster.util.friendlyTimer(duration));
 
 			var interval = setInterval(function() {
-				target.html(monster.util.friendlyTimer(duration++));
+				target.html(monster.util.friendlyTimer(++duration));
 
 				if(showOnlyWhenVisible && !target.is(':visible')) {
 					clearInterval(interval);
