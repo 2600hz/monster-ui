@@ -740,9 +740,14 @@ i.monster-password-strength {
 	width: 230px;
 }
 
+.monster-dialpad .dialpad-action-button {
+	width: 100%;
+	margin-top: 20px;
+}
+
 .monster-dialpad .phone-header {
 	padding: 15px 20px 15px 4px;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 .monster-dialpad .dialbox-container {
@@ -798,7 +803,7 @@ i.monster-password-strength {
 .monster-dialpad .dialpad-item .item-text {
 	font-size: 24px;
 	margin-left: 10px;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 .monster-dialpad .dialpad-item .item-legend {

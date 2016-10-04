@@ -12,13 +12,17 @@
 }
 
 .drop-element.drop-theme-arrows.drop-element-attached-bottom .drop-content::before {
-	border-top-color: $foreground-primary-color;
+	border-top-color: $foreground-primary-color !important;
 }
 
 .drop-element.drop-theme-arrows.drop-element-attached-left.drop-element-attached-middle .drop-content::before {
-	border-right-color: $foreground-primary-color;
+	border-right-color: $foreground-primary-color !important;
 }
 
 .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-center .drop-content::before {
-	border-top-color: $foreground-primary-color;
+	border-top-color: $foreground-primary-color !important;
+}
+
+.drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-left.drop-target-attached-bottom .drop-content::before {
+	border-bottom-color: $foreground-primary-color !important;
 }

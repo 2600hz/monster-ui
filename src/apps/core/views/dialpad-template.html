@@ -19,4 +19,7 @@
 		</button>
 	{{/each}}
 	</div>
+	{{#if button}}
+		<button class="{{button.class}} dialpad-action-button">{{button.text}}</button>
+	{{/if}}
 </div>

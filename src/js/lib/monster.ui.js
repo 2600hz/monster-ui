@@ -2300,16 +2300,24 @@ define(function(require){
 				finalDropOptions.remove = false;
 			}
 
-			var dropInstance = new Drop(finalDropOptions);
+			var dropInstance;
 
 			if(options.mode === 'showOnceOnClick') {
-				dropInstance.open();
+				// if the drop is not already opened, we open it, if not we don't do anything as it will be automatically destroyed since the outside click will close the popover and that's what we want
+				if(!options.target.hasClass('drop-enabled')) {
+					dropInstance = new Drop(finalDropOptions);
 
-				dropInstance.on('close', function() {
-					dropInstance.destroy();
-				});
+					dropInstance.open();
+
+					dropInstance.on('close', function() {
+						$('.tooltip').hide();
+						dropInstance.destroy();
+					});
+				}
 			}
 			else {
+				dropInstance = new Drop(finalDropOptions);
+
 				removeTarget.on('remove', function() {
 					dropInstance.destroy();
 				});
