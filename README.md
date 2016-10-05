@@ -21,6 +21,7 @@ Alternatively, try this Docker one liner:
 
 ```shell
 docker run --rm \
+  -it \
   -p 8444:3000 -p 8443:3001 \
   -v "$PWD":/var/www \
   node:4.6 \
