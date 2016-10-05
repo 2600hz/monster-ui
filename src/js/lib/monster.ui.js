@@ -2343,8 +2343,13 @@ define(function(require){
 						{ value: '0' },
 						{ value: '#' }
 					]
-				},
-				template = $(monster.template(monster.apps.core, 'dialpad-template', dataToTemplate));
+				};
+
+			if(args.hasOwnProperty('button')) {
+				dataToTemplate.button = args.button;
+			}
+
+			var template = $(monster.template(monster.apps.core, 'dialpad-template', dataToTemplate));
 
 			template
 				.find('.dialpad-item')
@@ -2382,6 +2387,12 @@ define(function(require){
 							args.onBackSpaceClick(newDialboxValue);
 						}
 					});
+
+			if(args.hasOwnProperty('button') && args.button.hasOwnProperty('onClick')) {
+				template.find('.dialpad-action-button').on('click', function() {
+					args.button.onClick && args.button.onClick(template.find('.dialbox').val());
+				});
+			}
 
 			return template;
 		},
