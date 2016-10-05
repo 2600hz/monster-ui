@@ -17,16 +17,10 @@ Once that's done, you can just run
 which will build the website, build the css files from scss files and serve it to a webbrowser.
 
 
-Alternatively, try this Docker one liner:
+If you are using Docker, this will setup a local dev server:
 
 ```shell
-docker run --rm \
-  -it \
-  -p 8444:3000 -p 8443:3001 \
-  --net=host \
-  -v "$PWD":/var/www \
-  node:4.6 \
-  /bin/bash -c 'npm install -g npm && npm install -g gulp && cd /var/www && npm install && gulp'
+./serve.sh
 ```
 
 
