@@ -277,6 +277,7 @@
 			'getRoster': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
 			'updateRoster': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
 			'deleteRoster': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
+			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 			'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' }
 		},
 		qubicleRecipients: {
