@@ -590,6 +590,13 @@ body,
 	margin: 0;
 }
 
+.debug-dialog table td {
+	max-width: 850px;
+	overflow-wrap: break-word;
+	white-space: initial !important;
+	word-break: break-all;
+}
+
 .debug-dialog table tr td:nth-child(1) {
 	font-weight: bold;
 }

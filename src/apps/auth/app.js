@@ -79,7 +79,7 @@ define(function(require){
 				self.authenticateAuthToken(cookieData.accountId, cookieData.authToken, successfulAuth);
 			}
 			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
-			else if(urlParams.hasOwnProperty('t') && urlParams.hasOwnProperty('a') && urlParams.t.length === 32 && urlParams.a.length === 32) {
+			else if(urlParams.hasOwnProperty('t') && urlParams.hasOwnProperty('a')) {
 				self.authenticateAuthToken(urlParams.a, urlParams.t, successfulAuth);
 			}
 			else if(urlParams.hasOwnProperty('recovery')) {
