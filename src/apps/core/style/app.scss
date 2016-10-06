@@ -590,10 +590,10 @@ body,
 	margin: 0;
 }
 
-.debug-dialog table td {
+.debug-dialog table tr > td {
 	max-width: 850px;
 	overflow-wrap: break-word;
-	white-space: initial !important;
+	white-space: initial;
 	word-break: break-all;
 }
 
