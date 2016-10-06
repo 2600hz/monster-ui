@@ -20,6 +20,11 @@ define(function(require){
 					device_type: 'softphone',
 					name: user.first_name + ' ' + user.last_name + ' - ' + self.i18n.active().webphoneSubmodule.deviceName,
 					owner_id: user.id,
+					media: {
+						audio: {
+							codecs: ['OPUS']
+						}
+					},
 					ui_flags: {
 						source: 'monster-webphone'
 					},
