@@ -32,6 +32,8 @@ Reach us at #2600hz for Feedback
 
 Build Pro version
 
+Some apps might have a pro version. If that's the case, and you want to build it with the "pro" assets you need to specify the name of the app in the pro flag.
+
 
     gulp build-prod --pro=test1,test2,test3
 
