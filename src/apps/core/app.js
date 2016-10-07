@@ -642,7 +642,7 @@ define(function(require){
 				acc = monster.apps.auth.currentAccount,
 				dataTemplate = {
 					account: acc,
-					authToken: self.authToken,
+					authToken: self.getAuthToken(),
 					apiUrl: self.apiUrl,
 					version: monster.config.version
 				}

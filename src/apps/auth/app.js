@@ -17,8 +17,10 @@ define(function(require){
 		},
 
 		appFlags: {
+			kazooConnectionName: 'kazooAPI',
 			mainContainer: undefined,
-			isAuthentified: false
+			isAuthentified: false,
+			connections: {}
 		},
 
 		requests: {
@@ -94,32 +96,84 @@ define(function(require){
 		authenticateAuthToken: function(accountId, authToken, callback) {
 			var self = this;
 
-			// Hack: We set the auth token on the app because otherwise the getAuth request won't send any X-Auth-Token HTTP Header
-			// If the request fails, we delete the Auth-Token so it doesn't impact anything else
-			self.authToken = authToken;
-
 			self.getAuth(accountId, authToken, 
 				function(authData) {
 					callback && callback(authData);
 				},
 				function() {
-					delete self.authToken;
-
 					self.renderLoginPage();
 				}
 			);
+		},
+
+		// We update the token with the value stored in the auth cookie.
+		// If the value is null, we force a logout
+		setKazooAPIToken: function(token) {
+			var self = this;
+
+			if(token) {
+				self.appFlags.connections[self.appFlags.kazooConnectionName].authToken = token;
+			}
+			else {
+				self._logout();
+			}
+		},
+
+		updateTokenFromCookie: function() {
+			var self = this,
+				tokenCookie = $.cookie(monster.config.whitelabel.tokenCookie);
+
+			self.setKazooAPIToken(tokenCookie);
+		},
+
+		updateTokenFromMonsterCookie: function() {
+			var self = this,
+				cookieMonster = $.cookie('monster-auth'),
+				tokenCookie = cookieMonster ? $.parseJSON(cookieMonster).authToken : undefined;
+
+			self.setKazooAPIToken(tokenCookie);
+		},
+
+		getAuthTokenByConnection: function(pConnectionName) {
+			var self = this,
+				connectionName = pConnectionName || self.appFlags.kazooConnectionName,
+				hasConnection = self.appFlags.connections.hasOwnProperty(connectionName),
+				authToken;
+
+			if(hasConnection) {
+				if(connectionName === self.appFlags.kazooConnectionName) {
+					if(monster.config.whitelabel.hasOwnProperty('cookieLogin')) {
+						self.updateTokenFromWhitelabelCookie();
+					}
+					else {
+						self.updateTokenFromMonsterCookie();
+					}
+				}
+
+				authToken = self.appFlags.connections[connectionName].authToken;
+			}
+
+			return authToken;
 		},
 
 		_afterSuccessfulAuth: function(data) {
 			var self = this;
 
 			self.accountId = data.data.account_id;
-			self.authToken = data.auth_token;
+
+			// We removed the auth token as we no longer want it to be static, we need to use a function to get a dynamic value (if it's stored in a cookie, we need to check every time)
+			// Down the road we should probably remove userId, accountId etc from the self here.
 			self.userId = data.data.owner_id;
 			self.isReseller = data.data.is_reseller;
 			self.resellerId = data.data.reseller_id;
 
 			self.appFlags.isAuthentified = true;
+
+			self.appFlags.connections[self.appFlags.kazooConnectionName] = {
+				accountId: data.data.account_id,
+				authToken: data.auth_token,
+				userId: data.data.owner_id
+			};
 
 			if('apps' in data.data) {
 				self.installedApps = data.data.apps;
@@ -128,19 +182,17 @@ define(function(require){
 				toastr.error(self.i18n.active().toastrMessages.appListError);
 			}
 
+			// We store the language so we can load the right language before having to query anything in our back-end. (no need to query account, user etc)
 			var cookieAuth = {
 				language: data.data.language,
-				authToken: self.authToken,
-				accountId: self.accountId
+				authToken: data.auth_token,
+				accountId: data.data.account_id
 			};
 
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
 			$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
 			self.appFlags.mainContainer.empty();
-
-			//Adding the authtoken to the Core app
-			monster.apps.core.authToken = data.auth_token;
 
 			monster.pub('core.initializeShortcuts', data.data.apps);
 
@@ -682,50 +734,6 @@ define(function(require){
 			});
 		},
 
-		conferenceLogin: function() {
-			var self = this,
-				formData = monster.ui.getFormData('user_login_form');
-
-			_.each(formData.update, function(val, key) {
-				if(!val) { delete formData.update[key]; }
-			});
-			self.callApi({
-				resource: 'auth.pinAuth',
-				data: {
-					data: formData
-				},
-				success: function (data, status) {
-					self.accountId = data.data.account_id;
-					self.authToken = data.auth_token;
-					self.userId = null;
-					self.isReseller = data.data.is_reseller;
-					self.resellerId = data.data.reseller_id;
-
-					self.appFlags.mainContainer.empty();
-
-					monster.apps.load('conferences', function(app) {
-						app.userType = 'unregistered';
-						app.user = formData;
-						app.isModerator = data.data.is_moderator;
-						app.conferenceId = data.data.conference_id;
-						app.render(self.appFlags.mainContainer);
-					});
-				},
-				error: function(apiResponse, rawError) {
-					var errorMessage = self.i18n.active().errors.generic;
-
-					if(rawError.status in self.i18n.active().errors) {
-						errorMessage = self.i18n.active().errors[rawError.status];
-					}
-					else if(apiResponse.message) {
-						errorMessage += "<br/><br/>" + self.i18n.active().errors.genericLabel + ': ' + apiResponse.message;
-					}
-
-					monster.ui.alert('error', errorMessage);
-				}
-			});
-		},
-
 		checkRecoveryId: function(recoveryId, callback) {
 			var self = this;
 
@@ -815,6 +823,7 @@ define(function(require){
 
 			self.callApi({
 				resource: 'auth.get',
+				authToken: authToken,
 				data: {
 					accountId: accountId,
 					token: authToken,
@@ -889,13 +898,6 @@ define(function(require){
 		// Method used to authenticate other apps
 		_initApp: function (args) {
 			var self = this,
-				restData = {
-					data: {
-						realm : self.realm,
-						accountId : self.accountId,
-						shared_token : self.authToken
-					}
-				},
 				success = function(app) {
 					// If isMasqueradable flag is set in the code itself, use it, otherwise check if it's set in the DB, otherwise defaults to true
 					app.isMasqueradable = app.hasOwnProperty('isMasqueradable') ? app.isMasqueradable : (monster.appsStore.hasOwnProperty(app.name) ? monster.appsStore[app.name].masqueradable : true);
@@ -914,8 +916,6 @@ define(function(require){
 					args.app.apiUrl += "/";
 				}
 			}
-
-			args.app.authToken = this.authToken;
 
 			success(args.app);
 		}

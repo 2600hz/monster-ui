@@ -43,9 +43,10 @@ define(function(require){
 		},
 
 		_defineRequest: function(id, request, app){
-                        if (request.hasOwnProperty('removeHeaders')) {
-                               request.removeHeaders = $.map(request.removeHeaders, function(n,i){return n.toLowerCase();});
-                        }
+			if (request.hasOwnProperty('removeHeaders')) {
+				request.removeHeaders = $.map(request.removeHeaders, function(n,i){return n.toLowerCase();});
+			}
+
 			var self = this,
 				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
 				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
@@ -65,13 +66,13 @@ define(function(require){
 						monster.pub('monster.requestStart');
 
 						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('x-auth-token') < 0)) {
-							ampXHR.setRequestHeader('X-Auth-Token', app.authToken);
+							ampXHR.setRequestHeader('X-Auth-Token', app.getAuthToken());
 						}
 
 						_.each(request.headers, function(val, key) {
-                                                        if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
-                                                                ampXHR.setRequestHeader(key, val);
-                                                        }
+							if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
+								ampXHR.setRequestHeader(key, val);
+							}
 						});
 
 						return true;

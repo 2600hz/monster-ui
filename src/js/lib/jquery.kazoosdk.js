@@ -524,7 +524,6 @@
 				processData: false,
 				beforeSend: function(jqXHR, settings) {
 					options.onRequestStart && options.onRequestStart(jqXHR, options);
-
 					jqXHR.setRequestHeader('X-Auth-Token', options.authToken || authTokens[options.apiRoot]);
 					$.each(options.headers || [], function(key, val) {
 						jqXHR.setRequestHeader(key, val);

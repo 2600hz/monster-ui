@@ -965,11 +965,22 @@ define(function(require){
 		guid: function() {
 			var r = '';
 
-			for(n=0; n<4; n++) {
+			for(var n=0; n<4; n++) {
 				r = r + (Math.random().toString(16)+'000000000').substr(2,8);
 			}
 
 			return r;
+		},
+
+		getAuthToken: function(pConnectionName) {
+			var self = this,
+				authToken;
+
+			if(monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
+				authToken = monster.apps.auth.getAuthTokenByConnection(pConnectionName);
+			}
+			
+			return authToken;
 		}
 	};
 

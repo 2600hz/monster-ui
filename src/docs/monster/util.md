@@ -8,6 +8,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [formatVariableToDisplay()][format_variable_to_display]
 * [getBusinessDate()][get_business_date]
 * [getUrlVars()][get_url_vars]
+* [getAuthToken()][get_auth_token]
 * [gregorianToDate()][gregorian_to_date]
 * [isAdmin()][is_admin]
 * [isLoggedIn()][is_logged_in]
@@ -27,6 +28,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [format_variable_to_display]: util/formatVariableToDisplay().md
 [get_business_date]: util/getBusinessDate().md
 [get_url_vars]: util/getUrlVars().md
+[get_auth_token]: util/getAuthToken().md
 [gregorian_to_date]: util/gregorianToDate().md
 [is_admin]: util/isAdmin().md
 [is_logged_in]: util/isLoggedIn().md

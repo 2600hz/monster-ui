@@ -119,7 +119,7 @@ define(function(require){
 			monster.ui.tooltips(parent);
 
 			parent.find('.action-number#download').on('click', function() {
-				window.location.href = self.apiUrl+'accounts/'+self.accountId+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.authToken;
+				window.location.href = self.apiUrl+'accounts/'+self.accountId+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.getAuthToken();
 			});
 		},
 

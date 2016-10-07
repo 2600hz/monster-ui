@@ -22,10 +22,6 @@ The `apiUrl` flag is most often used in conjunction with the `self.callApi` help
 
 This flag contains the actual path to the file on the Web Server. It can be relative or absolute, based on the configuration of the `source_url` flag in the application document.
 
-##### authToken
-
-The `authToken` flag contains the auth_token of the logged in session, that allow the client to use the Kazoo APIs. Every authenticated API requires the authToken to be transmitted as part of the HTTP request, so the application use it automatically for every API. Most developers should never have to use this.
-
 ##### name
 
 This flag simply contains the internal name of the application. This, again, is mostly used internally for different purposes but developers shouldn't need to use it.

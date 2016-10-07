@@ -62,7 +62,7 @@ define(function(){
 
 			app.subscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
-					authToken = app.authToken || params.authToken,
+					authToken = app.getAuthToken() || params.authToken,
 					requiredElement = params.hasOwnProperty('requiredElement') ? params.requiredElement : false;
 
 				if(requiredElement) {
@@ -76,7 +76,7 @@ define(function(){
 
 			app.unsubscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
-					authToken = app.authToken || params.authToken;
+					authToken = app.getAuthToken() || params.authToken;
 
 				monster.socket.unbind(params.binding, accountId, authToken, app.name);
 			};
@@ -252,7 +252,7 @@ define(function(){
 						return errorCallback && errorCallback();
 					} else {
 						var apiSettings = $.extend({
-								authToken: app.authToken,
+								authToken: params.authToken || app.getAuthToken(),
 								apiRoot: params.apiUrl || app.apiUrl,
 								uiMetadata: {
 									version: monster.config.version,
@@ -277,6 +277,11 @@ define(function(){
 				} else {
 					console.error('This api does not exist. Module: ' + module + ', Method: ' + method);
 				}
+			};
+
+			// We want to abstract this function at the app layer in case we'd need to check things like masquerading here.
+			app.getAuthToken = function(connectionName) {
+				return monster.util.getAuthToken(connectionName);
 			};
 
 			monster.apps[app.name] = app;

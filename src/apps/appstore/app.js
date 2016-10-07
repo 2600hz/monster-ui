@@ -202,7 +202,7 @@ define(function(require){
 								features: dataI18n.features,
 								icon: _.find(appstoreData.apps, function(app) { return app.id === appData.id }).icon,
 								screenshots: _.map(appData.screenshots || [], function(val, key) {
-									return self.apiUrl + "apps_store/" + appData.id + "/screenshot/" + key + "?auth_token=" + self.authToken
+									return self.apiUrl + "apps_store/" + appData.id + "/screenshot/" + key + "?auth_token=" + self.getAuthToken()
 								})
 							}
 						}),
