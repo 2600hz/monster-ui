@@ -142,7 +142,7 @@ define(function(require){
 
 			if(hasConnection) {
 				if(connectionName === self.appFlags.kazooConnectionName) {
-					if(monster.config.whitelabel.hasOwnProperty('cookieLogin')) {
+					if(monster.config.whitelabel.hasOwnProperty('tokenCookie')) {
 						self.updateTokenFromWhitelabelCookie();
 					}
 					else {
