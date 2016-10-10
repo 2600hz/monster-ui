@@ -761,7 +761,16 @@ define(function(require){
 
 			$.cookie('monster-auth', null);
 
-			window.location = window.location.pathname;
+			if(monster.config.whitelabel.hasOwnProperty('sso')) {
+				var sso = monster.config.whitelabel.sso;
+				/* this didn't work
+					$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
+				*/
+
+				window.location = sso.logout;
+			} else {
+				window.location = window.location.pathname;
+			} 
 		},
 
 		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure

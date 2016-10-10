@@ -40,7 +40,7 @@
 			'updateBlacklist': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/blacklist' }
 		},
 		auth: {
-			'get': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },
+			'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token']},
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
 			'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery'}
 		},
@@ -451,6 +451,7 @@
 						if(methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
 						if(methodInfo.hasOwnProperty('dataType')) { requestSettings.dataType = methodInfo.dataType; }
 						if(methodInfo.hasOwnProperty('removeMetadataAPI')) { requestSettings.removeMetadataAPI = methodInfo.removeMetadataAPI; }
+						if(methodInfo.hasOwnProperty('removeHeaders')) { requestSettings.removeHeaders = methodInfo.removeHeaders; }
 
 						if(['post', 'delete', 'put', 'patch'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
 							requestSettings.data.data = methodSettings.data || {};
@@ -524,9 +525,15 @@
 				processData: false,
 				beforeSend: function(jqXHR, settings) {
 					options.onRequestStart && options.onRequestStart(jqXHR, options);
-					jqXHR.setRequestHeader('X-Auth-Token', options.authToken || authTokens[options.apiRoot]);
+
+					if(!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf('X-Auth-Token') < 0) {
+						jqXHR.setRequestHeader('X-Auth-Token', options.authToken || authTokens[options.apiRoot]);
+					}
+					
 					$.each(options.headers || [], function(key, val) {
-						jqXHR.setRequestHeader(key, val);
+						if(!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf(key) < 0) {
+							jqXHR.setRequestHeader(key, val);
+						}
 					});
 				}
 			},

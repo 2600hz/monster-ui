@@ -59,10 +59,13 @@ define(function(require){
 				urlParams = monster.util.getUrlVars(),
 				successfulAuth = function(authData) {
 					self._afterSuccessfulAuth(authData);
+				},
+				errorAuth = function() {
+					self.renderLoginPage();
 				};
 
 			// First check if there is a custom authentication mechanism
-			if('authentication' in monster.config.whitelabel) {
+			if(monster.config.whitelabel.hasOwnProperty('authentication')) {
 				self.customAuth = monster.config.whitelabel.authentication;
 
 				var options = {
@@ -74,15 +77,23 @@ define(function(require){
 					app.render(self.appFlags.mainContainer);
 				}, options);
 			}
+			else if(monster.config.whitelabel.hasOwnProperty('sso')) {
+				var sso = monster.config.whitelabel.sso,
+					token = $.cookie(sso.cookie.name);
+
+				self.authenticateAuthToken(token, successfulAuth, function() {
+					window.location = sso.login
+				});
+			}
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				self.authenticateAuthToken(cookieData.accountId, cookieData.authToken, successfulAuth);
+				self.authenticateAuthToken(cookieData.authToken, successfulAuth, errorAuth);
 			}
 			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
-			else if(urlParams.hasOwnProperty('t') && urlParams.hasOwnProperty('a')) {
-				self.authenticateAuthToken(urlParams.a, urlParams.t, successfulAuth);
+			else if(urlParams.hasOwnProperty('t')) {
+				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			}
 			else if(urlParams.hasOwnProperty('recovery')) {
 				self.checkRecoveryId(urlParams.recovery, successfulAuth);
@@ -93,15 +104,15 @@ define(function(require){
 			}
 		},
 
-		authenticateAuthToken: function(accountId, authToken, callback) {
+		authenticateAuthToken: function(authToken, callback, errorCallback) {
 			var self = this;
 
-			self.getAuth(accountId, authToken, 
+			self.getAuth(authToken, 
 				function(authData) {
 					callback && callback(authData);
 				},
 				function() {
-					self.renderLoginPage();
+					errorCallback && errorCallback();
 				}
 			);
 		},
@@ -119,9 +130,9 @@ define(function(require){
 			}
 		},
 
-		updateTokenFromCookie: function() {
+		updateTokenFromWhitelabelCookie: function() {
 			var self = this,
-				tokenCookie = $.cookie(monster.config.whitelabel.tokenCookie);
+				tokenCookie = monster.config.whitelabel.sso.hasOwnProperty('cookie') && monster.config.whitelabel.sso.cookie.name ? $.cookie(monster.config.whitelabel.sso.cookie.name) : undefined;
 
 			self.setKazooAPIToken(tokenCookie);
 		},
@@ -142,7 +153,7 @@ define(function(require){
 
 			if(hasConnection) {
 				if(connectionName === self.appFlags.kazooConnectionName) {
-					if(monster.config.whitelabel.hasOwnProperty('tokenCookie')) {
+					if(monster.config.whitelabel.hasOwnProperty('sso')) {
 						self.updateTokenFromWhitelabelCookie();
 					}
 					else {
@@ -818,14 +829,12 @@ define(function(require){
 			});
 		},
 
-		getAuth: function(accountId, authToken, callbackSuccess, callbackError) {
+		getAuth: function(authToken, callbackSuccess, callbackError) {
 			var self = this;
 
 			self.callApi({
 				resource: 'auth.get',
-				authToken: authToken,
 				data: {
-					accountId: accountId,
 					token: authToken,
 					generateError: false
 				},
