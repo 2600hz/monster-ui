@@ -2397,17 +2397,25 @@ define(function(require){
 			return template;
 		},
 
-		timer: function(target, pDuration, pShowOnlyWhenVisible) {
+		timer: function(target, pDuration, pShowOnlyWhenVisible, pCountdown) {
 			var self = this,
 				duration = pDuration || 0,
-				showOnlyWhenVisible = pShowOnlyWhenVisible === false ? false : true;
+				showOnlyWhenVisible = pShowOnlyWhenVisible === false ? false : true,
+				countdown = pCountdown || false;
 
 			target.html(monster.util.friendlyTimer(duration));
 
 			var interval = setInterval(function() {
-				target.html(monster.util.friendlyTimer(++duration));
+				if (countdown) {
+					--duration;
+				}
+				else {
+					++duration;
+				}
 
-				if(showOnlyWhenVisible && !target.is(':visible')) {
+				target.html(monster.util.friendlyTimer(duration));
+
+				if((showOnlyWhenVisible && !target.is(':visible')) || duration === 0) {
 					clearInterval(interval);
 				}
 			}, 1000);
