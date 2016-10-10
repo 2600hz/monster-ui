@@ -40,7 +40,6 @@
 			'updateBlacklist': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/blacklist' }
 		},
 		auth: {
-			'oldGet': { verb: 'GET', url: 'accounts/{accountId}/user_auth/{token}' },
 			'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token']},
 			'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
 			'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery'}
