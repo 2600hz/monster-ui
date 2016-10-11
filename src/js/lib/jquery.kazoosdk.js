@@ -272,6 +272,7 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_queues' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
+			'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues' },
 			'getRoster': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roster' },
