@@ -2417,6 +2417,59 @@ define(function(require){
 			});
 
 			return interval;
+		},
+
+		overlay: {
+			isActive: false,
+
+			id: 'monster_overlay',
+
+			show: function(pArgs) {
+				var self = this,
+					args = pArgs || {},
+					cssToExclude = args.cssToExclude || [],
+					onClick = args.onClick,
+					template = $('<div id="'+ self.id +'"></div>');
+
+				self.hide();
+
+				// We support unique selector or array of selector
+				cssToExclude = _.isArray(cssToExclude) ? cssToExclude : [ cssToExclude ];
+
+				self.isActive = true;
+
+				template.on('click', function() {
+					self.hide(args);
+
+					onClick && onClick();
+				});
+
+				_.each(cssToExclude, function($selector) {
+					$selector.addClass('over-monster-overlay');
+				});
+
+				$('body').append(template);
+
+				args.afterShow && args.afterShow();
+			},
+
+			hide: function(pArgs) {
+				var self = this,
+					args = pArgs || {},
+					cssToExclude = args.cssToExclude || [];
+
+				$('.over-monster-overlay').removeClass('over-monster-overlay');
+
+				self.isActive = false;
+
+				$('#'+ self.id +'').remove();
+
+				args.afterHide && args.afterHide();
+			},
+
+			toggle: function(args) {
+				this.isActive ? this.hide(args) : this.show(args);
+			}
 		}
 	};
 

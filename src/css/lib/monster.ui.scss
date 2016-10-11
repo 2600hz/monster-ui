@@ -846,3 +846,20 @@ i.monster-password-strength {
 	background:  $foreground-primary-color;
 	padding: 1em;
 }
+
+/* Monster Overlay */
+
+#monster_overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: .3;
+}
+
+.over-monster-overlay {
+	/* position: relative !important; */
+	z-index: 4 !important;
+}
