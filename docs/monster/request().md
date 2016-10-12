@@ -93,7 +93,7 @@ var app = {
 ```
 In this example, we had to remove a set of headers using the `removeHeaders` key so the server would accept the request and also had to disable the automatic Monster Error Popup with `generateError`.
 
-[monster]: ../../monster.md
+[monster]: ../monster.md
 
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [kazooSdk]: ../kazooSdk.md
