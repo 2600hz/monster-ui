@@ -118,7 +118,7 @@ var app = {
 };
 ```
 
-[monster]: ../../monster.md
+[monster]: ../monster.md
 
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
