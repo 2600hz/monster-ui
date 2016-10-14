@@ -965,7 +965,7 @@ define(function(require){
 				response = 'css/assets/appIcons/' + app.name + '.png';
 			}
 			else {
-				response = authApp.apiUrl + 'accounts/' + authApp.accountId +'/apps_store/' + app.id + '/icon?auth_token=' + authApp.authToken;
+				response = authApp.apiUrl + 'accounts/' + authApp.accountId +'/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
 			}
 
 			return response;
