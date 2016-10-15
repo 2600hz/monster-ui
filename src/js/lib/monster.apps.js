@@ -424,6 +424,8 @@ define(function(){
 			require([path], function(app){
 				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
 
+				app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
+
 				if(options && 'apiUrl' in options) {
 					app.apiUrl = options.apiUrl;
 				}
