@@ -201,12 +201,12 @@ monster.ui.wysiwyg(target, overrideOptions);
 var target = $(document.getElementsByClassName('wysiwyg-container')),
     options = {
         macro: {
-            options: {
+            options: [
                 { weight: 1, text: "Title", args: "title" },
                 { weight: 2, text: "Last name", args: "last_name" },
                 { weight: 3, text: "Conference's date", args: "conference_date" },
                 { weight: 4, text: "Conference's time", args: "conference_start_time" }
-            }
+            ]
         }
     };
 
@@ -221,7 +221,7 @@ If you want to change the surrounding elements of the macro, you need to use the
 var target = $(document.getElementsByClassName('wysiwyg-container')),
     options = {
         macro: {
-            options: { ... },
+            options: [ ... ],
             ante: "[",
             post: "]"
         }
