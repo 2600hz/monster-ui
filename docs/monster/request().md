@@ -63,7 +63,7 @@ var app = {
     requests: {
         'google.geocode.zipCode': {
             apiRoot: 'https://maps.googleapis.com/',
-            url: 'maps/api/geocode/json?components=country:{country}|postal_code:}zipCode}',
+            url: 'maps/api/geocode/json?components=country:{country}|postal_code:{zipCode}',
             verb: 'GET',
             generateError: false,
             removeHeaders: [
