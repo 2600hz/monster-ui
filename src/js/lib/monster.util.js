@@ -67,19 +67,19 @@ define(function(require){
 					minutes = format2Digits(date.getMinutes()),
 					seconds = format2Digits(date.getSeconds()),
 					ordinal = (function oridnalSuffix(day) {
-						var i = day % 10,
-							j = day % 100;
+						var digit = day % 10,
+							tens = day % 100;
 
 						// 'st' is used with numbers ending in 1 except 11
-						if (i === 1 && j !== 11) {
+						if (digit === 1 && tens !== 11) {
 							return 'st';
 						}
 						// 'nd' is used with numbers ending in 2 except 12
-						if (i === 2 && j !== 12) {
+						if (digit === 2 && tens !== 12) {
 							return 'nd';
 						}
 						// 'rd' is used with numbers ending in 3 except 13
-						if (i === 3 && j !== 13) {
+						if (digit === 3 && tens !== 13) {
 							return 'rd';
 						}
 						// 'th' is used for all other numbers
