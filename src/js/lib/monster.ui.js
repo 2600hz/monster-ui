@@ -2388,9 +2388,19 @@ define(function(require){
 						}
 					});
 
-			if(args.hasOwnProperty('button') && args.button.hasOwnProperty('onClick')) {
-				template.find('.dialpad-action-button').on('click', function() {
-					args.button.onClick && args.button.onClick(template.find('.dialbox').val());
+			template.find('.dialbox').on('keydown', function(e) {
+				if(e.keyCode === 13) {
+					template.find('.dialpad-action-button').click();
+				}
+			});
+
+			if(args.hasOwnProperty('button')) {
+				template.find('.dialpad-action-button').on('click', function(e) {
+					e.preventDefault();
+
+					if(args.button.hasOwnProperty('onClick')) {
+						args.button.onClick && args.button.onClick(template.find('.dialbox').val());
+					}
 				});
 			}
 
