@@ -85,7 +85,7 @@ define(function(require){
 						// 'th' is used for all other numbers
 						return 'th';
 					})(day),
-					shortDateFormats = {
+					dateFormats = {
 						'dmy': 'DD/MM/year',
 						'mdy': 'MM/DD/year',
 						'ymd': 'year/MM/DD'
@@ -101,34 +101,23 @@ define(function(require){
 						'hh': hours,
 						'mm': minutes,
 						'ss': seconds
+					},
+					shortcuts = {
+						shortDateTime: dateFormats[userDateFormat].replace('year','YY') + ' hh:mm',
+						dateTime: dateFormats[userDateFormat] + ' - hh:mm:ss',
+						shortDate: dateFormats[userDateFormat].replace('year','YY'),
+						shortTime: 'hh:mm',
+						time: 'hh:mm:ss',
+						date: dateFormats[userDateFormat]
 					};
 
 				if (typeof format === 'string') {
-					var formatString = format.toLowerCase();
-					switch(formatString) {
-						case 'short':
-						case 'date':
-							format = shortDateFormats[userDateFormat];
-							break;
-						case 'shortdate':
-							format = shortDateFormats[userDateFormat].replace('year','YY');
-							break;
-						case 'time':
-							format = 'hh:mm:ss';
-							break;
-						case 'shorttime':
-							format = 'hh:mm';
-							break;
-						case 'shortdatetime':
-							format = shortDateFormats[userDateFormat].replace('year','YY') + ' hh:mm';
-							break;
-						case 'datetime':
-							format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
-							break;
-					}
+					_.each(shortcuts, function(v, k) {
+						format = format.replace(k, v);
+					});
 				}
 				else {
-					format = shortDateFormats[userDateFormat] + ' - hh:mm:ss';
+					format = dateFormats[userDateFormat] + ' - hh:mm:ss';
 				}
 
 				if(format.indexOf('hh') > -1 && format.indexOf('12h') === -1 && user12hMode) {
