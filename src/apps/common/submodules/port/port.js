@@ -384,7 +384,7 @@ define(function(require){
 
 						self.portRequestUpdate(accountId, requestId, currentRequest, function(updatedRequest) {
 							self.portUpdateData(accountId, updatedRequest, data);
-							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(updatedRequest.scheduled_date), 'shortdatetime'));
+							$this.text(monster.util.toFriendlyDate(monster.util.gregorianToDate(updatedRequest.scheduled_date), 'shortDateTime'));
 						});
 					}
 				});
@@ -1426,7 +1426,7 @@ console.log('new order');
 						if (requestState === 'scheduled') {
 							$scheduledDate
 								.empty()
-								.text(monster.util.toFriendlyDate(requestData.scheduled_date, 'shortdatetime'));
+								.text(monster.util.toFriendlyDate(requestData.scheduled_date, 'shortDateTime'));
 						}
 						else {
 							$scheduledDate

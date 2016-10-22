@@ -796,7 +796,7 @@ define(function(require){
 				},
 				error: function(errorPayload, data, globalHandler) {
 					if(data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
-						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'short'),
+						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'date'),
 							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
 
 						monster.ui.alert('warning', errorMessage);
