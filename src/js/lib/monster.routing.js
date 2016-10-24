@@ -61,12 +61,16 @@ define(function(require){
 		},
 
 		addDefaultRoutes: function() {
-			var appWhitelist = ['appstore'];
+			var appWhitelist = {
+				'appstore': { onlyAdmins: true }
+			};
 
 			this.add('apps/{appName}:?query:', function(appName, query) {
 				if(monster && monster.apps && monster.apps.auth) {
-					if(appWhitelist.indexOf(appName) >= 0) {
-						loadApp(appName, query);
+					if(appWhitelist.hasOwnProperty(appName)) {
+						if(!appWhitelist[appName].onlyAdmins || monster.util.isAdmin()) {
+							loadApp(appName, query);
+						}
 					}
 					else {
 						var found = false;
