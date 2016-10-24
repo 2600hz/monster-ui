@@ -2022,7 +2022,8 @@ define(function(require){
 				category = shortcut.category,
 				key = shortcut.key,
 				title = shortcut.title,
-				callback = shortcut.callback;
+				callback = shortcut.callback,
+				adminOnly = shortcut.hasOwnProperty('adminOnly') ? shortcut.adminOnly : false;
 
 			if(!self.keyboardShortcuts.hasOwnProperty(category)) {
 				self.keyboardShortcuts[category] = {
@@ -2032,13 +2033,15 @@ define(function(require){
 			}
 
 			if(!self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
-				self.keyboardShortcuts[category].keys[key] = {
-					key: key,
-					title: title,
-					callback: callback
-				};
+				if(!adminOnly || monster.util.isAdmin()) {
+					self.keyboardShortcuts[category].keys[key] = {
+						key: key,
+						title: title,
+						callback: callback
+					};
 
-				Mousetrap.bind(key, callback, 'keyup');
+					Mousetrap.bind(key, callback, 'keyup');
+				}
 			}
 			else {
 				console.warn('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');

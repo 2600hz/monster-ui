@@ -205,9 +205,7 @@ define(function(require){
 			$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
 			self.appFlags.mainContainer.empty();
 
-			monster.pub('core.initializeShortcuts', data.data.apps);
-
-			self.afterLoggedIn();
+			self.afterLoggedIn(data.data);
 		},
 
 		//Events handler
@@ -220,15 +218,15 @@ define(function(require){
 		},
 
 		//Methods
-		afterLoggedIn: function() {
+		afterLoggedIn: function(dataLogin) {
 			var self = this;
 
 			$('#main_topbar_apploader').show();
 
-			self.loadAccount();
+			self.loadAccount(dataLogin);
 		},
 
-		loadAccount: function() {
+		loadAccount: function(dataLogin) {
 			var self = this;
 
 			monster.parallel({
@@ -303,6 +301,8 @@ define(function(require){
 						if(monster.util.isAdmin()) {
 							$('#main_topbar_account_toggle_link').addClass('visible');
 						}
+
+						monster.pub('core.initializeShortcuts', dataLogin.apps);
 
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp

@@ -581,6 +581,7 @@ define(function(require){
 						}
 					},
 					{
+						adminOnly: true,
 						category: 'general',
 						key: 'a',
 						title: self.i18n.active().globalShortcuts.keys['a'].title,
@@ -589,6 +590,7 @@ define(function(require){
 						}
 					},
 					{
+						adminOnly: true,
 						category: 'general',
 						key: 'shift+m',
 						title: self.i18n.active().globalShortcuts.keys['shift+m'].title,
