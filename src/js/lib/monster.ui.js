@@ -2190,7 +2190,9 @@ define(function(require){
 						enabled: true,
 						placeholder: monster.apps.core.i18n.active().footable.search,
 						delay: 20,
-						connectors: false
+						connectors: false,
+						min: 1,
+						ignoreCase: true
 					},
 					sorting: {
 						enabled: true
