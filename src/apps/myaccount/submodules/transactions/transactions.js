@@ -104,8 +104,8 @@ define(function(require){
 
 			var defaults = {
 				amount: 0.00,
-				billingStartDate: monster.util.toFriendlyDate(from, 'short'),
-				billingEndDate: monster.util.toFriendlyDate(to, 'short')
+				billingStartDate: monster.util.toFriendlyDate(from, 'date'),
+				billingEndDate: monster.util.toFriendlyDate(to, 'date')
 			};
 
 			monster.parallel({

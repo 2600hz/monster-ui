@@ -40,7 +40,7 @@
 				<label for="transfer_numbers_date">{{ i18n.port.confirmOrder.labelDate }}</label>
 			</div>
 			<div class="span6">
-				<input class="date-input span8" type="text" id="transfer_numbers_date" name="transfer_date" value="{{#if transfer_date}}{{toFriendlyDate transfer_date 'short'}}{{/if}}" readonly="true">
+				<input class="date-input span8" type="text" id="transfer_numbers_date" name="transfer_date" value="{{#if transfer_date}}{{toFriendlyDate transfer_date 'date'}}{{/if}}" readonly="true">
 			</div>
 		</form>
 		<div class="row-fluid info">
@@ -54,8 +54,8 @@
 			<div class="span6 offset4">
 				<p>{{name}}</p>
 				<ul>
-					<li>{{ i18n.port.confirmOrder.labelOrderDate }} {{toFriendlyDate created 'short'}}</li>
-					<li>{{ i18n.port.confirmOrder.labelTransferDate }} <span id="transfer_schedule_date">{{toFriendlyDate transfer_date 'short'}}</span></li>
+					<li>{{ i18n.port.confirmOrder.labelOrderDate }} {{toFriendlyDate created 'date'}}</li>
+					<li>{{ i18n.port.confirmOrder.labelTransferDate }} <span id="transfer_schedule_date">{{toFriendlyDate transfer_date 'date'}}</span></li>
 					<li>{{ i18n.port.confirmOrder.labelNumbersTotal }} {{total}}</li>
 				</ul>
 			</div>

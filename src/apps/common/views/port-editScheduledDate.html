@@ -10,7 +10,7 @@
 			<div class="control-group">
 				<label for="scheduled_date" class="control-label">{{i18n.port.pendingOrders.scheduledDatePopup.label.scheduledDate}}</label>
 				<div class="controls">
-					<input type="text" id="scheduled_date" name="scheduled_date"{{#if scheduledDate}} value="{{toFriendlyDate scheduledDate 'short'}}"{{/if}} readonly="true">
+					<input type="text" id="scheduled_date" name="scheduled_date"{{#if scheduledDate}} value="{{toFriendlyDate scheduledDate 'date'}}"{{/if}} readonly="true">
 				</div>
 			</div>
 		</form>

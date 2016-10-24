@@ -79,7 +79,7 @@ define(function(require){
 								// Hack to find the Active subscription
 								data.data.forEach(function(subscription) {
 									if(subscription.status === 'Active') {
-										renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'short');
+										renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'date');
 										
 										return false;
 									}

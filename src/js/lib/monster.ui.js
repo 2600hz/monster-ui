@@ -855,7 +855,7 @@ define(function(require){
 						dateMaxRange = today;
 					}
 
-					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'short'));
+					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'date'));
 				}
 			};
 
