@@ -57,6 +57,7 @@ define(function(require){
 
 		render: function(container){
 			var self = this,
+				urlVars = monster.util.getUrlVars(),
 				dataTemplate = {
 					hidePowered: monster.config.whitelabel.hide_powered,
 					jiraFeedback: {
@@ -68,6 +69,8 @@ define(function(require){
 				
 			document.title = monster.config.whitelabel.applicationTitle;
 
+			self.checkURLVars(urlVars);
+
 			self.bindEvents(mainTemplate);
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
@@ -78,6 +81,16 @@ define(function(require){
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
 			self.startSocket();
 			self.startWebphone();
+		},
+
+		checkURLVars: function(urlVars) {
+			var self = this;
+
+			// In dashboard mode we want to disable the logout timer, and also remove some css elements
+			if(urlVars.hasOwnProperty('view') && urlVars.view === 'dashboard') {
+				$('.core-wrapper').addClass('dashboard');
+				monster.config.whitelabel.logoutTimer = 0;
+			}
 		},
 
 		startSocket: function() {
