@@ -474,10 +474,11 @@ define(function(require){
 
 		// Helper only used in conference app, takes seconds and transforms it into a timer
 		friendlyTimer: function(pSeconds, pMode) {
-			var seconds = Math.floor(pSeconds),
-				mode = pMode || 'normal',
-				hours = Math.floor(seconds / 3600),
+			var mode = pMode || 'normal',
+				seconds = Math.floor(pSeconds),
 				minutes = Math.floor(seconds / 60) % 60,
+				hours = Math.floor(seconds / 3600) % 24,
+				days = Math.floor(seconds / 86400),
 				remainingSeconds = seconds % 60,
 				i18n = monster.apps.core.i18n.active(),
 				format2Digits = function(number) {
@@ -496,6 +497,10 @@ define(function(require){
 
 				if (hours) {
 					displayTime = format2Digits(hours) + ':' + displayTime;
+				}
+
+				if (days) {
+					displayTime = format2Digits(days) + ':' + displayTime;
 				}
 			}
 
