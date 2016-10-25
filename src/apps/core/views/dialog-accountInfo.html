@@ -15,10 +15,12 @@
 			<td>{{authToken}}</td>
 		</tr>
 
-		<tr>
-			<td>{{ i18n.debugAccountDialog.apiUrl }}</td>
-			<td>{{apiUrl}}</td>
-		</tr>
+		{{#unless hideApiUrl}}
+			<tr>
+				<td>{{ i18n.debugAccountDialog.apiUrl }}</td>
+				<td>{{apiUrl}}</td>
+			</tr>
+		{{/unless}}
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.version }}</td>

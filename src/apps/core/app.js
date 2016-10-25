@@ -659,8 +659,9 @@ define(function(require){
 					account: acc,
 					authToken: self.getAuthToken(),
 					apiUrl: self.apiUrl,
-					version: monster.config.version
-				}
+					version: monster.config.version,
+					hideApiUrl: monster.util.isWhitelabeling() && !monster.util.isSuperDuper()
+				},
 				template = monster.template(self, 'dialog-accountInfo', dataTemplate);
 
 			monster.ui.dialog(template, {
