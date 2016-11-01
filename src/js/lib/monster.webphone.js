@@ -62,7 +62,7 @@ define(function(require){
 						args.onConnected && args.onConnected(args.device);
 					},
 					onHangup: function(ev) {
-						args.onHangup && args.onHangup();
+						args.onHangup && args.onHangup(ev);
 					},
 					onCancel: function() {
 						args.onCancel && args.onCancel();
@@ -102,8 +102,8 @@ define(function(require){
 			monster.pub('common.webphone.getOrCreateUserDevice', newArgs);
 		},
 
-		hangup: function() {
-			kazooWebphone.hangup();
+		hangup: function(callId) {
+			kazooWebphone.hangup(callId);
 		},
 
 		connect: function(destination) {
@@ -111,17 +111,29 @@ define(function(require){
 			kazooWebphone.connect(destination);
 		},
 
-		muteMicrophone: function(isMuted, callback) {
-			kazooWebphone.muteMicrophone(isMuted, callback);
+		mute: function(callId) {
+			kazooWebphone.mute(callId);
+		},
+
+		unmute: function(callId) {
+			kazooWebphone.unmute(callId);
+		},
+
+		hold: function(callId) {
+			kazooWebphone.hold(callId);
+		},
+
+		unhold: function(callId) {
+			kazooWebphone.unhold(callId);
 		},
 
 		logout: function() {
 			kazooWebphone.logout();
 		},
 
-		sendDTMF: function(dtmf) {
+		sendDTMF: function(dtmf, callId) {
 			dtmf += ''; // cast to string
-			kazooWebphone.sendDTMF(dtmf);
+			kazooWebphone.sendDTMF(dtmf, callId);
 		}
 	};
 
@@ -132,20 +144,29 @@ define(function(require){
 		login: function(args) {
 			privateWebphone.loginWebphoneUser(args);
 		},
-		hangup: function() {
-			privateWebphone.hangup();
+		hangup: function(callId) {
+			privateWebphone.hangup(callId);
 		},
 		connect: function(destination) {
 			privateWebphone.connect(destination);
 		},
-		muteMicrophone: function(isMuted, callback) {
-			privateWebphone.muteMicrophone(isMuted, callback);
+		hold: function(callId) {
+			privateWebphone.hold(callId);
+		},
+		unhold: function(callId) {
+			privateWebphone.unhold(callId);
+		},
+		mute: function(callId) {
+			privateWebphone.mute(callId);
+		},
+		unmute: function(callId) {
+			privateWebphone.unmute(callId);
 		},
 		logout: function() {
 			privateWebphone.logout();
 		},
-		sendDTMF: function(dtmf) {
-			privateWebphone.sendDTMF(dtmf);
+		sendDTMF: function(dtmf, callId) {
+			privateWebphone.sendDTMF(dtmf, callId);
 		}
 	};
 
