@@ -304,7 +304,7 @@ define(function(require){
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
 					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-						if(typeof fieldError === 'string') {
+						if(typeof fieldError === 'string' || typeof fieldError === 'number') {
 							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
 						} else if(fieldErrorKey in errorsI18n.invalidData) {
 							errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });

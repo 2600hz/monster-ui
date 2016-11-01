@@ -14,6 +14,13 @@
 					{{ i18n.numbers.addExternal.dialog.help2 }}
 				</div>
 			</div>
+
+			<label class="force-activate-cb control-label checkbox">
+				{{#monsterCheckbox i18n.numbers.addExternal.dialog.forceActivate.text }}
+					<input type="checkbox" name="force_activate" id="force_activate" checked />
+				{{/monsterCheckbox}}
+				<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{i18n.numbers.addExternal.dialog.forceActivate.help}}" data-placement="top" data-toggle="tooltip"></i>
+			</label>
 		</div>
 	</form>
 
