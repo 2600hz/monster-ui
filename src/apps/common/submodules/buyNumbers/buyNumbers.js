@@ -161,7 +161,7 @@ define(function(require){
 						},
 						error: function(data) {
 							if (!_.isEmpty(data)) {
-								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + ' ' + Object.keys(data).join(' ');
+								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + ' ' + _.keys(data).join(' ');
 								monster.ui.alert('error', errMsg);
 							}
 							args.popup.dialog('close');
@@ -457,7 +457,7 @@ define(function(require){
 							}
 							else {
 								if (!_.isEmpty(data)) {
-									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + '<br/>' + Object.keys(data.error).join('<br/>');
+									var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + '<br/>' + _.keys(data.error);.join('<br/>');
 									monster.ui.alert('error', errMsg);
 								}
 								callbacks.hasOwnProperty('error') && callbacks.error();

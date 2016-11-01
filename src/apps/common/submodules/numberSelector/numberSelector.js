@@ -61,7 +61,7 @@ define(function(require){
 				// Handles return from spare control or from buy numbers, one being an array, the other being a map
 				addNumberCallback = function(numberList) {
 					if(numberList && !_.isEmpty(numberList)) {
-						var num = _.isArray(numberList) ? numberList[0].phoneNumber : Object.keys(numberList)[0];
+						var num = _.isArray(numberList) ? numberList[0].phoneNumber : _.keys(numberList)[0];
 
 						standardCallback(num);
 					}
