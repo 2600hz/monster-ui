@@ -942,21 +942,24 @@ define(function(require){
 			});
 		},
 
-		numbersAddFreeformNumbers: function(numbers_data, accountId, callback) {
+		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, callback) {
 			var self = this;
 
 			if(monster.util.canAddExternalNumbers()) {
 				self.numbersCreateBlockNumber(numbers_data, accountId, function(data) {
 					// If we need to BULK activate, uncomment following
-					/*var validNumbers = [];
-					_.each(data.success, function(number) {
-						validNumbers.push(number.id);
-					});
-					self.numbersMove({ accountId: accountId, numbers: validNumbers }, function(data) {
+					if(forceActivate) {
+						var validNumbers = [];
+						_.each(data.success, function(number) {
+							validNumbers.push(number.id);
+						});
+						self.numbersMove({ accountId: accountId, numbers: validNumbers }, function(data) {
+							callback && callback();
+						});
+					}
+					else {
 						callback && callback();
-					});*/
-
-					callback && callback();
+					}
 				});
 			}
 			else {
@@ -968,6 +971,8 @@ define(function(require){
 			var self = this,
 				dialogTemplate = $(monster.template(self, 'numbers-addExternal'));
 
+			monster.ui.tooltips(dialogTemplate);
+
 			dialogTemplate.on('click', '.cancel-link', function() {
 				popup.remove();
 			});
@@ -977,7 +982,8 @@ define(function(require){
 
 				var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
 					numbersData = [],
-					phoneNumber;
+					phoneNumber,
+					forceActivate = dialogTemplate.find('#force_activate').is(':checked');
 
 				// Users might think a space == new line, so if they added numbers and separated each of them by a new line, we make sure to replace these by a space so our script works
 				phoneNumbers = phoneNumbers.replace(/[\n]/g, ' ');
@@ -992,7 +998,7 @@ define(function(require){
 				});
 
 				if(numbersData.length > 0) {
-					self.numbersAddFreeformNumbers(numbersData, accountId, function() {
+					self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, function() {
 						popup.dialog('close');
 
 						callback && callback();
