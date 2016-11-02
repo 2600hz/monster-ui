@@ -81,6 +81,8 @@ define(function(require){
 				var sso = monster.config.whitelabel.sso,
 					token = $.cookie(sso.cookie.name);
 
+				monster.config.whitelabel.logoutTimer = 0;
+
 				if(token && token.length) {
 					self.authenticateAuthToken(token, successfulAuth, function() {
 						window.location = sso.newAccount;
