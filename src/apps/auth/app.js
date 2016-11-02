@@ -81,9 +81,14 @@ define(function(require){
 				var sso = monster.config.whitelabel.sso,
 					token = $.cookie(sso.cookie.name);
 
-				self.authenticateAuthToken(token, successfulAuth, function() {
+				if(token && token.length) {
+					self.authenticateAuthToken(token, successfulAuth, function() {
+						window.location = sso.newAccount;
+					});
+				}
+				else {
 					window.location = sso.login
-				});
+				}
 			}
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
