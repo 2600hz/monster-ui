@@ -32,7 +32,7 @@ define(function(require){
 				resellerString = self.i18n.active().carrierSelector['useReseller'].defaultFriendlyName,
 				resellerHelp = self.i18n.active().carrierSelector['useReseller'].defaultHelp;
 
-			if(monster.config.whitelabel.hasOwnProperty('companyName')) {
+			if(monster.config.whitelabel.hasOwnProperty('companyName') && monster.config.whitelabel.companyName.length) {
 				resellerString = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].friendlyName, { variable: monster.config.whitelabel.companyName });
 				resellerHelp = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].help, { variable: monster.config.whitelabel.companyName });
 			}
