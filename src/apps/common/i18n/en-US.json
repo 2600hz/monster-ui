@@ -637,7 +637,7 @@
 			"help": "This will route the calls to the global carriers set up on the master account"
 		},
 		"useReseller": {
-			"friendlyName": "Use Partner \"{{variable}}\" Carriers",
+			"friendlyName": "Use Partner \"{{{variable}}}\" Carriers",
 			"help": "This will route the calls to {{variable}}'s carriers.",
 			"__comment": "UI-1041: Needed to add a default message for people who aren't white labeling",
 			"__version": "v3.19_s3",
