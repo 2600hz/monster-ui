@@ -1609,3 +1609,21 @@ table.monster-table .actions .action-item:first-child {
 .monster-feature-popup-container select {
 	margin-left: 10px;
 }
+
+/* Monster Phone Number */
+
+.monster-phone-number[data-state="in_service"] {
+	color: $font-primary-color;
+}
+
+.monster-phone-number[data-state="available"] {
+	color: $dodger-blue;
+}
+
+.monster-phone-number[data-state="reserved"] {
+	color: orange;
+}
+
+.monster-phone-number {
+	color: $red-orange;
+}
