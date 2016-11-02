@@ -1,7 +1,7 @@
 {{#each spareNumbers}}
 	<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
 		<input type="checkbox"></input>
-		<div class="phone-number">{{formatPhoneNumber this.phoneNumber}}</div>
+		<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">{{formatPhoneNumber this.phoneNumber}}</div>
 		<span class="locality">
 			{{#if this.isoCountry }}
 				<span class="flag"><img src="css/assets/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>
