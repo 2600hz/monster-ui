@@ -107,7 +107,7 @@ define(function(){
 						case 'user.list': 
 							successCallback = function(data, status) {
 								data.data.sort(function(a,b) {
-									return a.first_name > b.first_name ? 1 : -1;
+									return monster.util.cmp(a.first_name.toLowerCase(), b.first_name.toLowerCase()) || monster.util.cmp(a.last_name.toLowerCase(), b.last_name.toLowerCase());
 								});
 
 								params.success && params.success(data, status);
