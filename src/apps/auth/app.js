@@ -85,7 +85,7 @@ define(function(require){
 
 				if(token && token.length) {
 					self.authenticateAuthToken(token, successfulAuth, function() {
-						window.location = sso.newAccount;
+						window.location = sso.no_account;
 					});
 				}
 				else {
