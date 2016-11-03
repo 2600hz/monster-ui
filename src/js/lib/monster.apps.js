@@ -166,6 +166,28 @@ define(function(){
 							}
 							break;
 
+						case 'numbers.get': 
+							// MIGRATION AWAY FROM PROVIDER SPECIFIC e911
+							successCallback = function(data, status) {
+								if(data.data.hasOwnProperty('dash_e911') && !data.data.hasOwnProperty('e911')) {
+									data.data.e911 = data.data.dash_e911;
+									delete data.data.dash_e911;
+								}
+
+								params.success && params.success(data, status);
+							}
+							break;
+						case 'numbers.update': 
+							// MIGRATION AWAY FROM PROVIDER SPECIFIC e911
+							if(params.data.data.hasOwnProperty('dash_e911')) {
+								if(!params.data.data.hasOwnProperty('e911')) {
+									params.data.data.e911 = $.extend(true, params.data.data.dash_e911);
+								}
+
+								delete params.data.data.dash_e911;
+							}
+							break;
+
 						case 'whitelabel.getByDomain':
 						case 'whitelabel.create':
 						case 'whitelabel.update':
