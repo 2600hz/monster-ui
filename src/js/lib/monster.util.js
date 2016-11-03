@@ -284,13 +284,13 @@ define(function(require){
 
 		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
 		sort: function(dataSet, secondArg) {
-			var fieldName = 'name',
+			var self = this,
+				fieldName = 'name',
 				sortFunction = function(a, b) {
-					var aString = a[fieldName].toLowerCase(),
-						bString = b[fieldName].toLowerCase(),
-						result = (aString > bString) ? 1 : (aString < bString) ? -1 : 0;
+					var aFormatted = typeof a[fieldName] === 'string' ? a[fieldName].toLowerCase() : a,
+						bFormatted = typeof b[fieldName] === 'string' ? b[fieldName].toLowerCase() : b;
 
-					return result;
+					return self.cmp(aFormatted, bFormatted);
 				},
 				result;
 
@@ -304,6 +304,10 @@ define(function(require){
 			result = dataSet.sort(sortFunction);
 
 			return result;
+		},
+
+		cmp: function(a,b) {
+			return  (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
 
 		/**
