@@ -92,7 +92,7 @@ define(function(require){
 				};
 
 			if (monster.util.isNumberFeatureEnabled('e911')) {
-				features.dash_e911 = { icon: 'monster-red fa fa-ambulance feature-dash_e911', help: self.i18n.active().numbers.e911IconHelp };
+				features.e911 = { icon: 'monster-red fa fa-ambulance feature-e911', help: self.i18n.active().numbers.e911IconHelp };
 			}
 
 			if (monster.util.isNumberFeatureEnabled('cnam')) {
@@ -494,9 +494,9 @@ define(function(require){
 
 					var account = _.find(dataNumbers.listAccounts, function(account) { return account.name === val.accountName }),
 						e911Numbers = _.filter(account.spareNumbers, function(num) {
-										return num.features.indexOf('dash_e911') >= 0
+										return num.features.indexOf('e911') >= 0
 									}).concat(_.filter(account.usedNumbers, function(num) {
-										return num.features.indexOf('dash_e911') >= 0
+										return num.features.indexOf('e911') >= 0
 									})),
 						selectedE911Numbers = [];
 
@@ -785,11 +785,11 @@ define(function(require){
 								success: function(data) {
 									monster.ui.highlight(row);
 
-									if(!($.isEmptyObject(data.data.dash_e911))) {
-										e911Cell.find('.features i.feature-dash_e911').addClass('active');
+									if(!($.isEmptyObject(data.data.e911))) {
+										e911Cell.find('.features i.feature-e911').addClass('active');
 									}
 									else {
-										e911Cell.find('.features i.feature-dash_e911').removeClass('active');
+										e911Cell.find('.features i.feature-e911').removeClass('active');
 									}
 								}
 							}

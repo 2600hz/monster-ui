@@ -27,7 +27,7 @@ define(function(require){
 
 		e911Render: function(dataNumber, callbacks) {
 			var self = this,
-				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.dash_e911 || {})),
+				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.e911 || {})),
 				popup;
 
 			popupHtml.find('#postal_code').blur(function() {
@@ -48,7 +48,7 @@ define(function(require){
 
 				var e911FormData = monster.ui.getFormData('e911');
 
-				_.extend(dataNumber, { dash_e911: e911FormData });
+				_.extend(dataNumber, { e911: e911FormData });
 
 				var callbackSuccess = function callbackSuccess(data) {
 					var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
@@ -87,7 +87,7 @@ define(function(require){
 								var index = templatePopupAddresses.find('.address-option.active').data('id'),
 									dataAddress = addresses.details[index];
 
-								_.extend(dataNumber, { dash_e911: dataAddress });
+								_.extend(dataNumber, { e911: dataAddress });
 
 								self.e911UpdateNumber(dataNumber.id, dataNumber, {
 									success: function(data) {
@@ -121,11 +121,12 @@ define(function(require){
 					},
 					success: function(data, status) {
 						var e911Count = _.countBy(data.data.numbers, function(number) {
-							return ('features' in number && number.features.indexOf('dash_e911') >= 0)
+							return (number.hasOwnProperty('features') && number.features.indexOf('e911') >= 0)
 						}).true;
 						
 						if(e911Count > 1) {
-							delete dataNumber.dash_e911;
+							delete dataNumber.e911;
+
 							self.e911UpdateNumber(dataNumber.id, dataNumber, {
 								success: function(data) {
 									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
@@ -173,7 +174,7 @@ define(function(require){
 				error: function(_data, status, globalHandler) {
 					if (_data.error === '400') {
 						if (data.message === 'multiple_choice') {
-							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.dash_e911);
+							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.e911);
 						}
 						else {
 							callbacks.invalidAddress && callbacks.invalidAddress(_data.data.address.invalid);
