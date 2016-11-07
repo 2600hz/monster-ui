@@ -19,7 +19,13 @@
 				<span class="verb">{{#if verb}}{{ verb }}{{/if}}</span>
 				<span class="url">{{#if url}}{{ url }}{{/if}}</span>
 			</div>
-			
+
+			{{#if showReport}}
+				<div class="error-line report-error">
+					<a class="monster-link" target="_blank" href="{{ mailToLink }}">{{ @root.i18n.advancedErrorDialog.report }}</a>
+				</div>
+			{{/if}}
+
 			<div class="json-viewer"></div>
 		</div>
 
