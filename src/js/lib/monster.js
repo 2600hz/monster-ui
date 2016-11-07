@@ -112,49 +112,56 @@ define(function(require){
 			});
 
 			settings.error = function requestError (error, one, two, three) {
-				var parsedError = error;
+				var parsedError,
+					handleError = function(error, options) {
+						parsedError = error;
 
-				monster.pub('monster.requestEnd');
+						var generateError = options && options.hasOwnProperty('generateError') ? options.generateError : settings.customFlags.generateError;
 
-				if('response' in error && error.response) {
-					parsedError = $.parseJSON(error.response);
-				}
+						monster.pub('monster.requestEnd');
 
-				if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
-					monster.ui.charges(parsedError.data, function() {
-						options.acceptCharges = true;
-						monster.request(options);
-					}, function () {
-						options.onChargesCancelled && options.onChargesCancelled();
-					});
-				}
-				// If we have a 401 after being logged in, it means our session expired
-				else if(monster.util.isLoggedIn() && error.status === 401) {
-					// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
-					monster.error('api', error, false);
+						if('response' in error && error.response) {
+							parsedError = $.parseJSON(error.response);
+						}
 
-					var isUsingKazooApi = settings.url.indexOf(monster.config.api.default) > -1;
+						if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
+							monster.ui.charges(parsedError.data, function() {
+								options.acceptCharges = true;
+								monster.request(options);
+							}, function () {
+								options.onChargesCancelled && options.onChargesCancelled();
+							});
+						}
+						// If we have a 401 after being logged in, it means our session expired
+						else if(monster.util.isLoggedIn() && error.status === 401) {
+							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+							monster.error('api', error, false);
 
-					if (isUsingKazooApi) {
-						monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-							monster.util.logoutAndReload();
-						});
-					}
-					else {
-						monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
-					}
-				}
-				else {
-					// Added this to be able to display more data in the UI
-					error.monsterData = {
-						url: settings.url,
-						verb: settings.method
-					}
+							var isUsingKazooApi = settings.url.indexOf(monster.config.api.default) > -1;
 
-					monster.error('api', error, settings.customFlags.generateError);
-				}
+							if (isUsingKazooApi) {
+								monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+									monster.util.logoutAndReload();
+								});
+							}
+							else {
+								monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
+							}
+						}
+						else {
+							// Added this to be able to display more data in the UI
+							error.monsterData = {
+								url: settings.url,
+								verb: settings.method
+							}
 
-				options.error && options.error(parsedError, error);
+							monster.error('api', error, generateError);
+						}
+					};
+
+				handleError(error);
+
+				options.error && options.error(parsedError, error, handleError);
 			};
 
 			settings.success = function requestSuccess (resp) {
@@ -285,9 +292,9 @@ define(function(require){
 		formatMonsterAPIError: function(error) {
 			var self = this,
 				parsedError = error,
-				isJsonResponse = error.hasOwnProperty('getResponseHeader') && error.getResponseHeader('content-type') === 'application/json';
+				isParsable = error.hasOwnProperty('getResponseHeader') ? (error.getResponseHeader('content-type') === 'application/json') : typeof error === 'object' && 'responseText' in error;// for unknown reason hasOwnProperty returns false?
 
-			if('responseText' in error && error.responseText && isJsonResponse) {
+			if(isParsable) {
 				parsedError = $.parseJSON(error.responseText);
 			}
 			
@@ -348,11 +355,11 @@ define(function(require){
 				status: error.status,
 				message: errorMessage,
 				requestId: requestId || '',
-				response: (error.hasOwnProperty('responseText') && isJsonResponse) ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
+				response: isParsable ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
 				url: url || '',
 				verb: verb || '',
 				customTitle: customTitle,
-				jsonResponse: (error.hasOwnProperty('responseText') && isJsonResponse) ? $.parseJSON(error.responseText) : error
+				jsonResponse: isParsable ? $.parseJSON(error.responseText) : error
 			};
 		},
 
@@ -367,7 +374,6 @@ define(function(require){
 
 			if(type === 'api') {
 				monsterError.data = self.formatMonsterAPIError(data);
-
 				if(showDialog) {
 					monster.ui.requestErrorDialog(monsterError);
 				}

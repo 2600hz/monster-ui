@@ -812,7 +812,7 @@ define(function(require){
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
 					}
 					else {
-						globalHandler(errorPayload, { generateError: true });
+						globalHandler(data, { generateError: true });
 					}
 				}
 			});
