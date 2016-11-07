@@ -646,12 +646,16 @@ define(function(require){
 					verb: error.data.verb.toUpperCase(),
 					showReport: monster.config.whitelabel.hasOwnProperty('callReportEmail'),
 					mailToLink: "mailto:" + monster.config.whitelabel.callReportEmail
-								  + "?subject=UI Error Report"
+								  + "?subject=UI Error Report "
 								  + "&body=I encountered an error in the UI. Here are the technical details:"
 								  + "%0D%0A____________________________________________________________%0D%0A"
+								  + "%0D%0A"
+								  + "%0D%0AURL: " + error.data.verb.toUpperCase() + " " + encodeURIComponent(error.data.url)
+								  + "%0D%0A"
 								  + "%0D%0AMessage: " + error.data.message
-								  + "%0D%0ARequest ID: " + error.data.requestId
-								  + "%0D%0AURL: " + error.data.verb.toUpperCase() + " " + error.data.url
+								  + "%0D%0A"
+								  + "%0D%0ARequest ID: " + error.data.requestId								  + "%0D%0A"
+								  + "%0D%0A"
 								  + "%0D%0AAPI Response: " + error.data.response
 				},
 				alertOptions = {
