@@ -58,7 +58,8 @@ define(function(require){
 
 		//_util
 		numbersFormatNumber: function(value) {
-			var self = this;
+			var self = this,
+				featuresNumber = value.hasOwnProperty('features_available') && value.features_available.length ? value.features_available : [];
 
 			value.viewFeatures = self.numbersGetFeatures();
 			if('locality' in value) {
@@ -76,7 +77,13 @@ define(function(require){
 				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}
 
-			value.isLocal = 'features' in value ? value.features.indexOf('local') > -1 : false;
+			value.extra = value.extra || {};
+
+			value.extra.hasE911 = featuresNumber.indexOf('e911') >= 0 && monster.util.isNumberFeatureEnabled('e911');
+			value.extra.hasFailover = featuresNumber.indexOf('failover') >= 0;
+			value.extra.hasPrepend = featuresNumber.indexOf('prepend') >= 0;
+			value.extra.hasCnam = featuresNumber.indexOf('cnam') >= 0 && monster.util.isNumberFeatureEnabled('cnam');
+			value.extra.hasFeatures = value.extra.hasE911 || value.extra.hasFailover || value.extra.hasPrepend || value.extra.hasCnam;
 
 			return value;
 		},
@@ -1344,7 +1351,6 @@ define(function(require){
 				data.numbers.numbers[mdn] = {
 					assigned_to: accountId,
 					features: [ 'mobile' ],
-					isLocal: false,
 					phoneNumber: mdn,
 					state: 'in_service',
 					used_by: 'mobile'
