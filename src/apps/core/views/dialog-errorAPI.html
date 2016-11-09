@@ -4,7 +4,7 @@
 	</div>
 
 	<div class="details-box">
-		<a class="headline monster-link">
+		<a class="headline monster-link blue">
 			<i class="fa fa-angle-up"></i><i class="fa fa-angle-down"></i>{{ i18n.advancedErrorDialog.viewDetails }}
 		</a>
 
@@ -20,13 +20,13 @@
 				<span class="url">{{#if url}}{{ url }}{{/if}}</span>
 			</div>
 
+			<div class="json-viewer"></div>
+
 			{{#if showReport}}
 				<div class="error-line report-error">
-					<a class="monster-link" target="_blank" href="{{ mailToLink }}">{{ @root.i18n.advancedErrorDialog.report }}</a>
+					<a class="monster-link blue" target="_blank" href="{{ mailToLink }}">{{ @root.i18n.advancedErrorDialog.report }}</a>
 				</div>
 			{{/if}}
-
-			<div class="json-viewer"></div>
 		</div>
 
 	</div>
