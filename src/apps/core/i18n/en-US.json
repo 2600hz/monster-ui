@@ -314,7 +314,7 @@
 		"verb": "API Type",
 		"__comment": " Add Report Error Feature",
 		"__version": "v4.0",
-		"report": "Report Error"
+		"report": "Report Error via Email"
 	},
 
 	"javascriptErrorDialog": {
