@@ -1,0 +1,155 @@
+@import "../../../../css/partials/base";
+
+.service-plan-details {
+	border: solid 1px #aaa;
+	background-color: rgba(36, 204, 255, 0.1);
+	border-collapse: collapse;
+	display: table;
+	width: 100%;
+}
+.service-plan-details .line {
+	border-top: solid 1px #ccc;
+	display: table-row;
+}
+.service-plan-details .line.header:not(:first-child) {
+	border-top: solid 1px #aaa;
+}
+.service-plan-details .line.header {
+	border-bottom: solid 1px #ccc;
+	font-size:16px;
+	background-color: $primary-color;
+	color: #fff;
+}
+.service-plan-details .line > div {
+	display: table-cell;
+	width: 33.33%;
+	vertical-align: middle;
+}
+.service-plan-details .line > div:not(.charges) {
+	padding: 5px;
+}
+.service-plan-details .line:not(.header) > div:not(:last-child) {
+	border-right: solid 1px #ccc;
+}
+.service-plan-details .line .charges > div {
+	padding: 5px;
+}
+.service-plan-details .no-service-plan {
+	padding: 10px;
+	font-weight: 600;
+	font-size: 16px;
+	font-style: italic;
+	color: #009de6;
+}
+.service-plan-details *[data-toggle="tooltip"] {
+	cursor: help;
+}
+
+/* Customize service plan */
+.customize-service-plan-container {
+	font-size: 14px;
+}
+
+.customize-service-plan-container .title {
+	font-weight: bold;
+}
+
+.customize-service-plan-container .category-wrapper {
+	margin-bottom: 15px;
+}
+
+.customize-service-plan-container .customize-override-wrapper {
+	display: none;
+}
+
+.customize-service-plan-container .category-wrapper.has-selected .customize-override-wrapper {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.customize-service-plan-container .category-wrapper .details-selected-service-plan-wrapper {
+	display: none;
+}
+
+.customize-service-plan-container .category-wrapper.has-selected .details-selected-service-plan-wrapper {
+	display: block;
+}
+
+.customize-service-plan-container .dropdown-container {
+	margin-bottom: 10px;
+}
+
+.customize-service-plan-container .customize-details-wrapper {
+	margin-right: 5px;
+}
+
+.customize-service-plan-container .customize-details-wrapper .dropdown-menu:after,
+.customize-service-plan-container .customize-details-wrapper .dropdown-menu:before {
+	display: none;
+}
+
+.customize-service-plan-container label {
+	display: inline-block;
+	height: 30px;
+	text-align: right;
+	width: 150px;
+}
+
+.customize-service-plan-container select {
+	margin-bottom: 0;
+	margin-left: 10px;
+}
+
+.customize-service-plan-container .add-link-container {
+	display: inline-block;
+	font-size: 14px;
+	margin-left: 10px;
+}
+
+.customize-override-wrapper .input-value {
+	display: inline-block;
+	margin-left: 5px;
+	width: 40px;
+}
+
+.customize-override-wrapper select.input-value {
+	width: 150px;
+}
+
+.customize-override-wrapper [data-field="exceptions"] .input-value {
+	width: 140px;
+}
+
+.customize-override-wrapper .override-category .line .remove-line {
+	cursor: pointer;
+	margin-left: 5px;
+	padding: 2px;
+}
+
+/* Can't figure out how to make this part look OK with the table-cell so for the override part I just use blocks instead, not pretty but it works.. */
+.service-plan-details.details-overrides {
+	display: block;
+}
+
+.service-plan-details.details-overrides .line {
+	display: block;
+}
+
+.service-plan-details.details-overrides .line > div {
+	display: inline-block;
+	width: 45%;
+}
+
+.service-plan-details.details-overrides .line:not(.header) > div:not(:last-child) {
+	border-right: none;
+}
+
+.service-plan-details.details-overrides .line .charges > div {
+	border-left: 1px solid #ccc;
+}
+
+.service-plan-details.details-overrides .no-overrides {
+	text-align: center;
+	font-style: italic;
+	padding: 5px;
+}

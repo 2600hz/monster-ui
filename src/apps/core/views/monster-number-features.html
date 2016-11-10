@@ -1,0 +1,28 @@
+{{#if features}}
+	{{#each features}}
+		{{#compare this "e911"}}
+			<i class="feature-e911 monster-red fa fa-ambulance" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.e911.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "failover"}}
+			<i class="feature-failover monster-green fa fa-thumbs-down" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.failover.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "outbound_cnam"}}
+			<i class="feature-outbound_cnam monster-blue fa fa-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.outbound_cnam.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "inbound_cnam"}}
+			<i class="feature-inbound_cnam monster-green fa fa-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.inbound_cnam.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "prepend"}}
+			<i class="feature-prepend monster-orange fa fa-file-text-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.prepend.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "local"}}
+			<i class="feature-local monster-purple fa fa-rocket" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.local.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "port"}}
+			<i class="features-port fa fa-phone monster-yellow" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.port.tooltip }}"></i>
+		{{/compare}}
+		{{#compare this "mobile"}}
+			<i class="features-mobile fa fa-mobile-phone monster-yellow" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.mobile.tooltip }}"></i>
+		{{/compare}}
+	{{/each}}
+{{/if}}

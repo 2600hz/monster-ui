@@ -671,5 +671,41 @@
 		"empty": "No results. Click on the \"Load\" buttons above to widen the search.",
 		"emptyForSure": "No results.",
 		"entireDataSetLoaded": "All available data has been loaded."
+	},
+
+	"__comment": "UI-2425: Number features monster.ui.helper",
+	"__version": "v4.0",
+	"iconNumberFeatures": {
+		"e911": {
+			"label": "E911",
+			"tooltip": "E911"
+		},
+		"failover": {
+			"label": "Failover",
+			"tooltip": "Failover"
+		},
+		"callerId": {
+			"label": "Caller-ID"
+		},
+		"prepend": {
+			"label": "Prepend",
+			"tooltip": "Prepend"
+		},
+
+		"outbound_cnam": {
+			"tooltip": "Outbound CNAM"
+		},
+		"inbound_cnam": {
+			"tooltip": "Inbound CNAM"
+		},
+		"local": {
+			"tooltip": "Local"
+		},
+		"port": {
+			"tooltip": "Port"
+		},
+		"mobile": {
+			"tooltip": "Mobile"
+		}
 	}
 }

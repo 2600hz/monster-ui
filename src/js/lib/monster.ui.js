@@ -181,6 +181,10 @@ define(function(require){
 				return new Handlebars.SafeString(template);
 			},
 
+			numberFeatures: function(features) {
+				return monster.ui.paintNumberFeaturesIcon(features);
+			},
+
 			replaceVar: function(stringValue, variable) {
 				return stringValue.replace('{{variable}}', variable);
 			},
@@ -2505,6 +2509,23 @@ define(function(require){
 
 			toggle: function(args) {
 				this.isActive ? this.hide(args) : this.show(args);
+			}
+		},
+
+		paintNumberFeaturesIcon: function(features, target) {
+			// Can't jQuery it as it's used by Handlebars with a helper, and it needs to return HTML
+			var sortedFeatures = features && features.length ? features.sort() : [],
+				template = monster.template(monster.apps.core, 'monster-number-features', { features: sortedFeatures });
+
+			monster.ui.tooltips($(template));
+
+			if(target) {
+				target.empty();
+
+				target.append(template);
+			}
+			else {
+				return template;
 			}
 		}
 	};
