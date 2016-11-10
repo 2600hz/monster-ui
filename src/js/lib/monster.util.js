@@ -1008,29 +1008,6 @@ define(function(require){
 			}
 			
 			return authToken;
-		},
-
-		// Function to standardize how we show features, we'll probably want to move this to a common control one day
-		populateBooleansNumberFeatures: function(number) {
-			var self = this,
-				featuresNumber;
-
-			if(number.hasOwnProperty('features_available') && number.features_available.length) {
-				featuresNumber = number.features_available;
-			}
-			else if(number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
-				featuresNumber = number._read_only.features_available;
-			}
-			else {
-				featuresNumber = [];
-			}
-
-			number.extra = number.extra || {};
-
-			number.extra.hasE911 = featuresNumber.indexOf('e911') >= 0 && monster.util.isNumberFeatureEnabled('e911');
-			number.extra.hasFailover = featuresNumber.indexOf('failover') >= 0;
-			number.extra.hasCnam = featuresNumber.indexOf('cnam') >= 0 && monster.util.isNumberFeatureEnabled('cnam');
-			number.extra.hasPrepend = featuresNumber.indexOf('prepend') >= 0;
 		}
 	};
 

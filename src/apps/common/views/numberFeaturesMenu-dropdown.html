@@ -1,0 +1,23 @@
+{{#if features}}
+	<div class="navbar">
+		<ul class="nav pull-right">
+			<li class="dropdown">
+				<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+				<ul class="dropdown-menu">
+					{{#ifInArray 'cnam' features}}
+						<li><a class="cnam-number" href="javascript:void(0);"><i class="fa fa-user"></i>{{ @root.i18n.callerId.label }}</a></li>
+					{{/ifInArray}}
+					{{#ifInArray 'e911' features}}
+						<li><a class="e911-number" href="javascript:void(0);"><i class="fa fa-ambulance"></i>{{ @root.i18n.e911.label }}</a></li>
+					{{/ifInArray}}
+					{{#ifInArray 'prepend' features}}
+						<li><a class="prepend-number" href="javascript:void(0);"><i class="fa fa-file-text-o"></i>{{ @root.i18n.numberPrepend.label }}</a></li>
+					{{/ifInArray}}
+					{{#ifInArray 'failover' features}}
+						<li><a class="failover-number" href="javascript:void(0);"><i class="fa fa-thumbs-down"></i>{{ @root.i18n.failover.label }}</a></li>
+					{{/ifInArray}}
+				</ul>
+			</li>
+		</ul>
+	</div>
+{{/if}}
