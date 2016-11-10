@@ -181,6 +181,10 @@ define(function(require){
 				return new Handlebars.SafeString(template);
 			},
 
+			numberFeatures: function(features) {
+				return monster.ui.paintNumberFeaturesIcon(features);
+			},
+
 			replaceVar: function(stringValue, variable) {
 				return stringValue.replace('{{variable}}', variable);
 			},
@@ -643,7 +647,20 @@ define(function(require){
 					requestId: error.data.requestId,
 					url: error.data.url,
 					apiResponse: error.data.response,
-					verb: error.data.verb.toUpperCase()
+					verb: error.data.verb.toUpperCase(),
+					showReport: monster.config.whitelabel.hasOwnProperty('callReportEmail'),
+					mailToLink: "mailto:" + monster.config.whitelabel.callReportEmail
+								  + "?subject=UI Error Report "
+								  + "&body=I encountered an error in the UI. Here are the technical details:"
+								  + "%0D%0A____________________________________________________________%0D%0A"
+								  + "%0D%0A"
+								  + "%0D%0AURL: " + error.data.verb.toUpperCase() + " " + encodeURIComponent(error.data.url)
+								  + "%0D%0A"
+								  + "%0D%0AMessage: " + error.data.message
+								  + "%0D%0A"
+								  + "%0D%0ARequest ID: " + error.data.requestId								  + "%0D%0A"
+								  + "%0D%0A"
+								  + "%0D%0AAPI Response: " + error.data.response
 				},
 				alertOptions = {
 					htmlContent: true,
@@ -2492,6 +2509,23 @@ define(function(require){
 
 			toggle: function(args) {
 				this.isActive ? this.hide(args) : this.show(args);
+			}
+		},
+
+		paintNumberFeaturesIcon: function(features, target) {
+			// Can't jQuery it as it's used by Handlebars with a helper, and it needs to return HTML
+			var sortedFeatures = features && features.length ? features.sort() : [],
+				template = monster.template(monster.apps.core, 'monster-number-features', { features: sortedFeatures });
+
+			monster.ui.tooltips($(template));
+
+			if(target) {
+				target.empty();
+
+				target.append(template);
+			}
+			else {
+				return template;
 			}
 		}
 	};

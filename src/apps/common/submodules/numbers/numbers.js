@@ -12,7 +12,6 @@ define(function(require){
 		subscribe: {
 			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
-			'common.numbers.getListFeatures': 'numbersGetFeatures',
 			'common.numbers.editFeatures': 'numbersEditFeatures'
 		},
 
@@ -21,6 +20,24 @@ define(function(require){
 		** callbackAfterRender: callback executed once we rendered the number control
 		** viewType: default to 'pbx', can be set to 'pbx', basically changes the view from Number Manager to SmartPBX the if set to 'pbx'
 		*/
+
+		numbersDisplayFeaturesMenu: function(arrayNumbers, parent) {
+			var self = this;
+
+			_.each(arrayNumbers, function(number) {
+				var numberDiv = parent.find('[data-phonenumber="'+number.phoneNumber+'"]'),
+					args = {
+						target: numberDiv.find('.number-options'),
+						numberData: number,
+						afterUpdate: function(features) {
+							monster.ui.highlight(numberDiv);
+							monster.ui.paintNumberFeaturesIcon(features, numberDiv.find('.features'));
+						}
+					};
+
+				monster.pub('common.numberFeaturesMenu.render', args);
+			});
+		},
 
 		numbersRender: function(pArgs){
 			var self = this,
@@ -35,7 +52,11 @@ define(function(require){
 
 				var numbersView = $(monster.template(self, 'numbers-layout', data)),
 					spareView = monster.template(self, 'numbers-spare', data),
-					usedView = monster.template(self, 'numbers-used', data);
+					usedView = $(monster.template(self, 'numbers-used', data));
+
+				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
+
+				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
 
 				numbersView.find('.list-numbers[data-type="spare"]').append(spareView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
@@ -60,50 +81,16 @@ define(function(require){
 		numbersFormatNumber: function(value) {
 			var self = this;
 
-			value.viewFeatures = self.numbersGetFeatures();
 			if('locality' in value) {
 				value.isoCountry = value.locality.country || '';
 				value.friendlyLocality = 'city' in value.locality ? value.locality.city + ('state' in value.locality ? ', ' + value.locality.state : '') : '';
 			}
 
-			_.each(value.features, function(feature) {
-				if(feature in value.viewFeatures) {
-					value.viewFeatures[feature].active = 'active';
-				}
-			});
-
 			if('used_by' in value) {
 				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}
 
-			value.isLocal = 'features' in value ? value.features.indexOf('local') > -1 : false;
-
 			return value;
-		},
-
-		numbersGetFeatures: function(callback) {
-			var self = this,
-				features = {
-					mobile: { icon: 'monster-grey fa fa-mobile-phone', help: self.i18n.active().numbers.mobileIconHelp },
-					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'fa fa-phone monster-yellow feature-port', help: self.i18n.active().numbers.portIconHelp },
-					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
-				};
-
-			if (monster.util.isNumberFeatureEnabled('e911')) {
-				features.e911 = { icon: 'monster-red fa fa-ambulance feature-e911', help: self.i18n.active().numbers.e911IconHelp };
-			}
-
-			if (monster.util.isNumberFeatureEnabled('cnam')) {
-				features.outbound_cnam = { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp };
-				features.inbound_cnam = { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp };
-			}
-
-			if(callback) {
-				callback && callback(features);
-			}
-			else return features;
 		},
 
 		numbersFormatData: function(data) {
@@ -178,10 +165,6 @@ define(function(require){
 			/* Append our current account with the numbers at the top */
 			templateData.listAccounts.unshift(mapAccounts[self.accountId]);
 
-			/* Hide cnam & e911 features if disabled on the account */
-			templateData.isE911Enabled = monster.util.isNumberFeatureEnabled('e911');
-			templateData.isCnamEnabled = monster.util.isNumberFeatureEnabled('cnam');
-
 			return templateData;
 		},
 
@@ -251,13 +234,13 @@ define(function(require){
 										.empty()
 										.append(monster.template(self, 'numbers-usedAccount', {
 											viewType: dataNumbers.viewType,
-											usedNumbers: usedNumbers,
-											isCnamEnabled: monster.util.isNumberFeatureEnabled('cnam'),
-											isE911Enabled: monster.util.isNumberFeatureEnabled('e911')
+											usedNumbers: usedNumbers
 										}))
 										.parent()
 										.find('.count')
 										.html('('+ usedNumbers.length +')');
+
+									self.numbersDisplayFeaturesMenu(usedNumbers, parent.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"]'));
 
 									return false;
 								}
@@ -737,119 +720,6 @@ define(function(require){
 						parent.find('.list-numbers[data-type="spare"] .dropdown-move').removeClass('open');
 					}
 				});
-			});
-
-			if (monster.util.isNumberFeatureEnabled('cnam')) {
-				parent.on('click', '.cnam-number', function() {
-					var row = $(this).parents('.number-box'),
-						cnamCell = row.first(),
-						phoneNumber = cnamCell.data('phonenumber');
-
-					if(phoneNumber) {
-						var args = {
-							phoneNumber: phoneNumber,
-							callbacks: {
-								success: function(data) {
-									monster.ui.highlight(row);
-
-									if('cnam' in data.data && data.data.cnam.display_name) {
-										cnamCell.find('.features i.feature-outbound_cnam').addClass('active');
-									} else {
-										cnamCell.find('.features i.feature-outbound_cnam').removeClass('active');
-									}
-
-									if('cnam' in data.data && data.data.cnam.inbound_lookup) {
-										cnamCell.find('.features i.feature-inbound_cnam').addClass('active');
-									} else {
-										cnamCell.find('.features i.feature-inbound_cnam').removeClass('active');
-									}
-								}
-							}
-						};
-
-						monster.pub('common.callerId.renderPopup', args);
-					}
-				});
-			}
-
-			if (monster.util.isNumberFeatureEnabled('e911')) {
-				parent.on('click', '.e911-number', function() {
-					var row = $(this).parents('.number-box'),
-						e911Cell = row.first(),
-						phoneNumber = e911Cell.data('phonenumber');
-
-					if(phoneNumber) {
-						var args = {
-							phoneNumber: phoneNumber,
-							callbacks: {
-								success: function(data) {
-									monster.ui.highlight(row);
-
-									if(!($.isEmptyObject(data.data.e911))) {
-										e911Cell.find('.features i.feature-e911').addClass('active');
-									}
-									else {
-										e911Cell.find('.features i.feature-e911').removeClass('active');
-									}
-								}
-							}
-						};
-
-						monster.pub('common.e911.renderPopup', args);
-					}
-				});
-			}
-
-			parent.on('click', '.failover-number', function() {
-				var row = $(this).parents('.number-box'),
-					failoverCell = row.first(),
-					phoneNumber = failoverCell.data('phonenumber');
-
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								monster.ui.highlight(row);
-
-								if(!($.isEmptyObject(data.data.failover))) {
-									failoverCell.find('.features i.feature-failover').addClass('active');
-								}
-								else {
-									failoverCell.find('.features i.feature-failover').removeClass('active');
-								}
-							}
-						}
-					};
-
-					monster.pub('common.failover.renderPopup', args);
-				}
-			});
-
-			parent.on('click', '.prepend-number', function() {
-				var row = $(this).parents('.number-box'),
-					prependCell = row.first(),
-					phoneNumber = prependCell.data('phonenumber');
-
-				if(phoneNumber) {
-					var args = {
-						phoneNumber: phoneNumber,
-						callbacks: {
-							success: function(data) {
-								monster.ui.highlight(row);
-
-								if('prepend' in data.data && data.data.prepend.enabled) {
-									prependCell.find('.features i.feature-prepend').addClass('active');
-								} 
-								else {
-									prependCell.find('.features i.feature-prepend').removeClass('active');
-								}
-							}
-						}
-					};
-
-					monster.pub('common.numberPrepend.renderPopup', args);
-				}
 			});
 
 			var searchListNumbers = function(searchString, parent) {
@@ -1344,7 +1214,6 @@ define(function(require){
 				data.numbers.numbers[mdn] = {
 					assigned_to: accountId,
 					features: [ 'mobile' ],
-					isLocal: false,
 					phoneNumber: mdn,
 					state: 'in_service',
 					used_by: 'mobile'
