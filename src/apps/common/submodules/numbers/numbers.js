@@ -12,7 +12,6 @@ define(function(require){
 		subscribe: {
 			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
-			'common.numbers.getListFeatures': 'numbersGetFeatures',
 			'common.numbers.editFeatures': 'numbersEditFeatures'
 		},
 
@@ -92,32 +91,6 @@ define(function(require){
 			}
 
 			return value;
-		},
-
-		numbersGetFeatures: function(callback) {
-			console.log('get features');
-			var self = this,
-				features = {
-					mobile: { icon: 'monster-grey fa fa-mobile-phone', help: self.i18n.active().numbers.mobileIconHelp },
-					failover: { icon: 'monster-green fa fa-thumbs-down feature-failover', help: self.i18n.active().numbers.failoverIconHelp },
-					local: { icon: 'monster-purple fa fa-rocket feature-local', help: self.i18n.active().numbers.localIconHelp },
-					port: { icon: 'fa fa-phone monster-yellow feature-port', help: self.i18n.active().numbers.portIconHelp },
-					prepend: { icon: 'monster-orange fa fa-file-text-o feature-prepend', help: self.i18n.active().numbers.prependIconHelp }
-				};
-
-			if (monster.util.isNumberFeatureEnabled('e911')) {
-				features.e911 = { icon: 'monster-red fa fa-ambulance feature-e911', help: self.i18n.active().numbers.e911IconHelp };
-			}
-
-			if (monster.util.isNumberFeatureEnabled('cnam')) {
-				features.outbound_cnam = { icon: 'monster-blue fa fa-user feature-outbound_cnam', help: self.i18n.active().numbers.cnamOutboundIconHelp };
-				features.inbound_cnam = { icon: 'monster-green fa fa-user feature-inbound_cnam', help: self.i18n.active().numbers.cnamInboundIconHelp };
-			}
-
-			if(callback) {
-				callback && callback(features);
-			}
-			else return features;
 		},
 
 		numbersFormatData: function(data) {
