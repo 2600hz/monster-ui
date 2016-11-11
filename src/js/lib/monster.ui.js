@@ -2183,7 +2183,7 @@ define(function(require){
 
 				// Finally, once everything is initialized properly, we load the first set of data.
 				loadPaginatedRows(paginateFilters, function() {
-					finalOptions.afterInitialized();
+					finalOptions.afterInitialized && finalOptions.afterInitialized();
 				});
 			}
 			else if(finalOptions.hasOwnProperty('getData')) {
