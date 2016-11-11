@@ -1092,7 +1092,12 @@ define(function(require){
 				},
 				error: function (data, status, globalHandler) {
 					if (data.error !== '402' && typeof data.data !== 'string') {
-						args.error && args.error(data.data);
+						if(args.hasOwnProperty('error')) {
+							args.error(data.data)
+						}
+						else {
+							globalHandler(data, { generateError: true });
+						}
 					}
 				},
 				onChargesCancelled: function () {
