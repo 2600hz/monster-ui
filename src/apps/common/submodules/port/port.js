@@ -955,26 +955,19 @@ define(function(require){
 						mimeTypes: ['application/pdf'],
 						wrapperClass: 'input-append',
 						success: function(results) {
-console.log(type);
 							if (data.orders[index].hasOwnProperty('id')) {
-console.log('existing order');
 								if (data.orders[index].hasOwnProperty(type.concat('.pdf'))) {
-console.log('existing file');
 									self.portRequestUpdateAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
-console.log('file uploaded');
 										data.orders[index][type.concat('_attachment')] = results[0].file;
 									});
 								}
 								else {
-console.log('new file');
 									self.portRequestAddAttachment(accountId, data.orders[index].id, type.concat('.pdf'), results[0].file, function() {
-console.log('file uploaded');
 										data.orders[index][type.concat('_attachment')] = results[0].file;
 									});
 								}
 							}
 							else {
-console.log('new order');
 								data.orders[index][type.concat('_attachment')] = results[0].file;
 							}
 						},
