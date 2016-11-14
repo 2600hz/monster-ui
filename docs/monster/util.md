@@ -20,8 +20,12 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [toFriendlyDate()][to_friendly_date]
 * [unformatPhoneNumber()][unformat_phone_number]
 
+### Objects
+* [dataFlags][dataFlags]
+
 [monster]: ../monster.md
 
+[dataFlags]: util/dataFlags.md
 [date_to_gregorian]: util/dateToGregorian().md
 [format_phone_number]: util/formatPhoneNumber().md
 [format_price]: util/formatPrice().md
