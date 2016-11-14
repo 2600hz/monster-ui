@@ -2280,7 +2280,7 @@ define(function(require){
 					iframe.contentWindow.PDFViewerApplication.open(pdfData);
 				}
 				else {
-					iframe = $('<iframe class="monster-pdf-viewer-iframe" src="js/lib/pdfjs/web/viewer.html" style="width: '+ options.width + '; height: '+ options.height +';" allowfullscreen="" webkitallowfullscreen=""></iframe>')[0];
+					iframe = $('<iframe class="monster-pdf-viewer-iframe" src="js/vendor/pdfjs/web/viewer.html" style="width: '+ options.width + '; height: '+ options.height +';" allowfullscreen="" webkitallowfullscreen=""></iframe>')[0];
 					iframe.onload = function() {
 						iframe.contentWindow.PDFViewerApplication.open(pdfData);
 					}
