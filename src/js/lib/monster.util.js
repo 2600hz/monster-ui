@@ -1008,6 +1008,33 @@ define(function(require){
 			}
 			
 			return authToken;
+		},
+
+		dataFlags: {
+			get: function(flagName, object) {
+				object.markers = object.markers || {};
+				object.markers.monster = object.markers.monster || {};
+
+				return object.markers.monster[flagName];
+			},
+
+			add: function(flags, object) {
+				object.markers = object.markers || {};
+				object.markers.monster = object.markers.monster || {};
+
+				$.extend(true, object.markers.monster, flags);
+
+				return object;
+			},
+
+			delete: function(flagName, object) {
+				object.markers = object.markers || {};
+				object.markers.monster = object.markers.monster || {};
+
+				delete object.markers.monster[flagName];
+
+				return object;
+			}
 		}
 	};
 
