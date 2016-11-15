@@ -7,6 +7,17 @@ define(function(require){
 	var e911 = {
 
 		requests: {
+			'google.geocode.address': {
+				apiRoot: '//maps.googleapis.com/',
+				url: 'maps/api/geocode/json?address={zipCode}',
+				verb: 'GET',
+				generateError: false,
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID',
+					'X-Auth-Token',
+					'Content-Type'
+				]
+			}
 		},
 
 		subscribe: {
@@ -183,6 +194,21 @@ define(function(require){
 					else {
 						globalHandler(_data, { generateError: true });
 					}
+				}
+			});
+		},
+
+		e911GetAddressFromZipCode: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'google.geocode.address',
+				data: args.data,
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.results);
+				},
+				error: function(errorPayload, data, globalHandler) {
+					args.hasOwnProperty('error') ? args.error() : globalHandler(data, { generateError: true });
 				}
 			});
 		}
