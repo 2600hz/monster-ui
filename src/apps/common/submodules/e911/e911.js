@@ -42,12 +42,17 @@ define(function(require){
 				popup;
 
 			popupHtml.find('#postal_code').blur(function() {
-				$.getJSON('http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?', { postalcode: $(this).val() }, function(response) {
-					if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
-						popupHtml.find('#locality').val(response.postalcodes[0].placeName);
-						popupHtml.find('#region').val(response.postalcodes[0].adminName1);
-					}
-				});
+				self.e911GetAddressFromZipCode({
+						data: {
+							zipCode: $(this).val()
+						},
+						success: function(results) {
+							if (!_.isEmpty(results)) {
+								popupHtml.find('#locality').val(results[0].address_components[1].long_name);
+								popupHtml.find('#region').val(results[0].address_components[3].short_name);
+							}
+						}
+					});
 			});
 
 			popupHtml.find('.inline_field > input').keydown(function() {
