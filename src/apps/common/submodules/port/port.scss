@@ -154,6 +154,10 @@ div#continue_later p { margin: 5px 0; }
 
 #transfer_status .span4 { position: relative; }
 
+#transfer_status .span4 i {
+	position: relative;
+}
+
 #transfer_status .done,
 #transfer_status .done i { color: $primary-color; }
 #transfer_status .todo,

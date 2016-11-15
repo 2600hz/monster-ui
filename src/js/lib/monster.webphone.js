@@ -26,7 +26,7 @@ define(function(require){
 				var paramsInit = {
 					forceRTMP: false,
 					//flashContainer: 'flash_div',
-					prefixScripts: 'js/lib/kazooDependencies/',
+					prefixScripts: 'js/lib/kazoo/dependencies/',
 					onLoaded: function() {
 						self.log('Kazoo.js loaded successfully');
 						self.initialized = true;
