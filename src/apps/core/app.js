@@ -25,9 +25,6 @@ define(function(require){
 			'core.initializeShortcuts': 'initializeShortcuts'
 		},
 
-		//List of apps required once the user is logged in (LIFO)
-		_baseApps: ['apploader', 'appstore', 'myaccount', 'common'],
-
 		//Default app to render if the user is logged in, can be changed by setting a default app
 		_defaultApp: 'appstore',
 
@@ -36,6 +33,8 @@ define(function(require){
 			requestAmount: 0,
 			active: false
 		},
+
+		appFlags: {},
 
 		load: function(callback){
 			var self = this;
@@ -180,10 +179,25 @@ define(function(require){
 			}
 		},
 
+		initializeBaseApps: function() {
+			var self = this,
+				baseApps = ['apploader', 'appstore', 'myaccount', 'common'];
+
+			if(monster.config.whitelabel.hasOwnProperty('additionalLoggedInApps')) {
+				baseApps = baseApps.concat(monster.config.whitelabel.additionalLoggedInApps);
+			}
+
+			self.appFlags.baseApps = baseApps;
+		},
+
 		_loadApps: function(args) {
 			var self = this;
 
-			if(!self._baseApps.length) {
+			if(!self.appFlags.hasOwnProperty('baseApps')) {
+				self.initializeBaseApps();
+			}
+
+			if(!self.appFlags.baseApps.length) {
 				/* If admin with no app, go to app store, otherwise, oh well... */
 				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
@@ -204,7 +218,7 @@ define(function(require){
 				}
 			}
 			else {
-				var appName = self._baseApps.pop();
+				var appName = self.appFlags.baseApps.pop();
 
 				monster.apps.load(appName, function(app) {
 					self._loadApps(args);

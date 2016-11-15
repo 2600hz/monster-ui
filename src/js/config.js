@@ -31,6 +31,9 @@ define(function(require){
 			// If you want to change the default duration (15), you can set this value with a number > 0
 			// 		logoutTimer: 0,
 
+			// Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..)
+			// additionalLoggedInApps: ['sso'],
+
 			// By default the language is set by the browser, and once the user is log in it will take what's set in the account/user.
 			// If you want to force the language of the UI before the user is logged in, you can set it here.
 			//		language: 'en-US',
