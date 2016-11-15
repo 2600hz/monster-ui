@@ -1518,18 +1518,19 @@ define(function(require){
 			return orders;
 		},
 
-		portArrayToObjects: function(order) {
-			if (Array.isArray(order.numbers)) {
-				var numbers = order.numbers;
+		portArrayToObjects: function(node) {
+			if (_.isArray(node)) {
+				var object = {};
 
-				delete order.numbers;
-				order.numbers = new Object();
-				for (var number in numbers) {
-					order.numbers[numbers[number]] = new Object();
-				}
+				_.each(node, function(value, idx) {
+					object[value] = {};
+				});
+
+				return object;
 			}
-
-			return order;
+			else {
+				return node;
+			}
 		},
 
 		portReloadApp: function(parent, accountId) {
@@ -1755,7 +1756,7 @@ define(function(require){
 
 			order = $.extend(true, order, { port_state: 'unconfirmed' });
 
-			order = self.portArrayToObjects(order);
+			order.numbers = self.portArrayToObjects(order.numbers);
 
 			self.callApi({
 				resource: 'port.create',
@@ -1795,7 +1796,7 @@ define(function(require){
 		portRequestUpdate: function(accountId, portRequestId, order, callbackSuccess, callbackError) {
 			var self = this;
 
-			order = self.portArrayToObjects(order);
+			order.numbers = self.portArrayToObjects(order.numbers);
 
 			if (order.hasOwnProperty('bill_attachment')) {
 				delete order.bill_attachment;
