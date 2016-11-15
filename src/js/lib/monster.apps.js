@@ -145,6 +145,10 @@ define(function(){
 									monster.apps.auth.currentUser = data.data;
 									monster.pub('auth.currentUserUpdated', data.data);
 
+									if(params.data.data.hasOwnProperty('password')) {
+										monster.pub('auth.currentUserUpdatedPassword', { user: data.data, password: params.data.data.password });
+									}
+
 									var cookieData = $.parseJSON($.cookie('monster-auth'));
 
 									// If the language stored in the cookie is not the same as the one we have in the updated data, we update the cookie.
