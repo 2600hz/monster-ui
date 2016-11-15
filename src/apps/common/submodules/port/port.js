@@ -344,7 +344,10 @@ define(function(require){
 								data: {
 									accountId: accountId,
 									requestId: requestId,
-									state: newState
+									state: newState,
+									data: {
+										scheduled_date: newScheduledDate
+									}
 								},
 								success: function(newRequest) {
 									newRequest.scheduled_date = newScheduledDate;
