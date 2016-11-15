@@ -41,10 +41,13 @@ define(function(require){
 				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.e911 || {})),
 				popup;
 
-			popupHtml.find('#postal_code').blur(function() {
-				self.e911GetAddressFromZipCode({
+			popupHtml.find('#postal_code').change(function() {
+				var zipCode = $(this).val();
+
+				if (zipCode) {
+					self.e911GetAddressFromZipCode({
 						data: {
-							zipCode: $(this).val()
+							zipCode: zipCode
 						},
 						success: function(results) {
 							if (!_.isEmpty(results)) {
@@ -53,6 +56,7 @@ define(function(require){
 							}
 						}
 					});
+				}
 			});
 
 			popupHtml.find('.inline_field > input').keydown(function() {
