@@ -2021,9 +2021,9 @@ define(function(require){
 			callDefaultTabCallback();
 		},
 
-		loadTab: function(thisArg, name) {
+		loadTab: function(thisArg, id) {
 			var self = this,
-				$tab = $('.navbar-menu-item-link[data-name="' + name + '"]');
+				$tab = $('.navbar-menu-item-link[data-id="' + id + '"]');
 
 			self.onNavbarTabClick(thisArg, $tab);
 		},
