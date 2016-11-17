@@ -2025,7 +2025,9 @@ define(function(require){
 			var self = this,
 				$tab = $('.navbar-menu-item-link[data-id="' + id + '"]');
 
-			self.onNavbarTabClick(thisArg, $tab);
+			if (!$tab.hasClass('active')) {
+				self.onNavbarTabClick(thisArg, $tab);
+			}
 		},
 
 		mask: function(target, type) {
