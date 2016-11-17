@@ -2021,6 +2021,13 @@ define(function(require){
 			callDefaultTabCallback();
 		},
 
+		loadTab: function(thisArg, name) {
+			var self = this,
+				$tab = $('.navbar-menu-item-link[data-name="' + name + '"]');
+
+			self.onNavbarTabClick(thisArg, $tab);
+		},
+
 		mask: function(target, type) {
 			var validations = {
 				phoneNumber: {
