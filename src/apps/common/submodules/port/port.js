@@ -316,8 +316,14 @@ define(function(require){
 					newState = el.val();
 
 				if (newState === 'rejected') {
-					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
-						delete newRequest.scheduled_date;
+					self.portRequestChangeState({
+						data: {
+							accountId: accountId,
+							requestId: requestId,
+							state: newState
+						},
+						success: function(newRequest) {
+							delete newRequest.scheduled_date;
 
 						self.portRequestUpdate(accountId, requestId, newRequest, function(updatedRequest) {
 							self.portUpdateData(accountId, updatedRequest, data);
@@ -328,22 +334,34 @@ define(function(require){
 
 							toastr.success(self.i18n.active().port.toastr.success.request.update);
 						});
+						}
 					});
 				}
 				else if (newState === 'scheduled') {
 					self.portRenderScheduledDatePopup(parent, {
 						callbackSave: function (newScheduledDate) {
-							self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
-								newRequest.scheduled_date = newScheduledDate;
+							self.portRequestChangeState({
+								data: {
+									accountId: accountId,
+									requestId: requestId,
+									state: newState,
+									data: {
+										scheduled_date: newScheduledDate
+									}
+								},
+								success: function(newRequest) {
+									newRequest.scheduled_date = newScheduledDate;
 
-								self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
-									self.portUpdateData(accountId, updatedRequest, data);
-									self.portRenderDynamicCells(container, updatedRequest);
+									self.portRequestUpdate(accountId, requestId, newRequest, function (updatedRequest) {
+										self.portUpdateData(accountId, updatedRequest, data);
+										self.portRenderDynamicCells(container, updatedRequest);
 
-									toastr.success(self.i18n.active().port.toastr.success.request.update);
-								});
-							}, function() {
-								toastr.error(self.i18n.active().port.toastr.error.request.update);
+										toastr.success(self.i18n.active().port.toastr.success.request.update);
+									});
+								},
+								error: function() {
+									toastr.error(self.i18n.active().port.toastr.error.request.update);
+								}
 							});
 						},
 						callbackCancel: function() {
@@ -352,18 +370,27 @@ define(function(require){
 					});
 				}
 				else {
-					self.portRequestChangeState(accountId, requestId, newState, function(newRequest) {
-						self.portUpdateData(accountId, newRequest, data);
-						self.portRenderDynamicCells(container, newRequest);
+					self.portRequestChangeState({
+						data: {
+							accountId: accountId,
+							requestId: requestId,
+							state: newState
+						},
+						success: function(newRequest) {
+							self.portUpdateData(accountId, newRequest, data);
+							self.portRenderDynamicCells(container, newRequest);
 
-						box.find('.continue-request, .delete-request')
-							.remove();
+							box.find('.continue-request, .delete-request')
+								.remove();
 
-						toastr.success(self.i18n.active().port.toastr.success.request.update);
-					}, function() {
-						toastr.error(self.i18n.active().port.toastr.error.request.update);
-					}, function() {
-						self.portRenderDynamicCells(container, currentRequest);
+							toastr.success(self.i18n.active().port.toastr.success.request.update);
+						},
+						error: function() {
+							toastr.error(self.i18n.active().port.toastr.error.request.update);
+						},
+						cancel: function() {
+							self.portRenderDynamicCells(container, currentRequest);
+						}
 					});
 				}
 			});
@@ -1201,8 +1228,15 @@ define(function(require){
 								self.portReloadApp(parent, accountId);
 							}
 							else {
-								self.portRequestChangeState(accountId, order.id, 'submitted', function() {
-									self.portReloadApp(parent, accountId);
+								self.portRequestChangeState({
+									data: {
+										accountId: accountId,
+										requestId: order.id,
+										state: 'submitted'
+									},
+									success: function() {
+										self.portReloadApp(parent, accountId);
+									}
 								});
 							}
 						});
@@ -1211,16 +1245,23 @@ define(function(require){
 						self.portRequestAdd(accountId, order, function(portRequestId) {
 							data.orders.splice(index, 1);
 
-							self.portRequestChangeState(accountId, portRequestId, 'submitted', function() {
-								if (data.orders.length > 0) {
-									self.portRenderResumeOrders(parent, accountId, data);
+							self.portRequestChangeState({
+								data: {
+									accountId: accountId,
+									requestId: portRequestId,
+									state: 'submitted'
+								},
+								success: function() {
+									if (data.orders.length > 0) {
+										self.portRenderResumeOrders(parent, accountId, data);
+									}
+									else {
+										self.portReloadApp(parent, accountId);
+									}
+								},
+								cancel: function() {
+									self.portRequestDelete(accountId, portRequestId);
 								}
-								else {
-									self.portReloadApp(parent, accountId);
-								}
-							}, function() {
-							}, function() {
-								self.portRequestDelete(accountId, portRequestId);
 							});
 						});
 					}
@@ -1477,18 +1518,19 @@ define(function(require){
 			return orders;
 		},
 
-		portArrayToObjects: function(order) {
-			if (Array.isArray(order.numbers)) {
-				var numbers = order.numbers;
+		portArrayToObjects: function(node) {
+			if (_.isArray(node)) {
+				var object = {};
 
-				delete order.numbers;
-				order.numbers = new Object();
-				for (var number in numbers) {
-					order.numbers[numbers[number]] = new Object();
-				}
+				_.each(node, function(value, idx) {
+					object[value] = {};
+				});
+
+				return object;
 			}
-
-			return order;
+			else {
+				return node;
+			}
 		},
 
 		portReloadApp: function(parent, accountId) {
@@ -1714,7 +1756,7 @@ define(function(require){
 
 			order = $.extend(true, order, { port_state: 'unconfirmed' });
 
-			order = self.portArrayToObjects(order);
+			order.numbers = self.portArrayToObjects(order.numbers);
 
 			self.callApi({
 				resource: 'port.create',
@@ -1754,7 +1796,7 @@ define(function(require){
 		portRequestUpdate: function(accountId, portRequestId, order, callbackSuccess, callbackError) {
 			var self = this;
 
-			order = self.portArrayToObjects(order);
+			order.numbers = self.portArrayToObjects(order.numbers);
 
 			if (order.hasOwnProperty('bill_attachment')) {
 				delete order.bill_attachment;
@@ -2032,26 +2074,24 @@ define(function(require){
 			});
 		},
 
-		portRequestChangeState: function(accountId, portRequestId, state, callbackSuccess, callbackError, callbackCancel) {
+		portRequestChangeState: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.changeState',
-				data: {
-					accountId: accountId,
-					portRequestId: portRequestId,
-					state: state
-				},
+				data: _.extend({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data, status) {
-					callbackSuccess && callbackSuccess(data.data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(data, status) {
 					if (parseInt(data.error, 10) !== 402) {
-						callbackError && callbackError();
+						args.hasOwnProperty('error') && args.error();
 					}
 				},
-				onChargesCancelled: function () {
-					callbackCancel && callbackCancel();
+				onChargesCancelled: function() {
+					args.hasOwnProperty('cancel') && args.cancel();
 				}
 			});
 		},
