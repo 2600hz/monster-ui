@@ -1933,7 +1933,7 @@ define(function(require){
 							.first()
 								.addClass('active');
 				},
-				initSubnav =  function initSubnav() {
+				initSubnav = function initSubnav() {
 					if (hasSubnav) {
 						appHeader
 							.append(subnavTemplate);
