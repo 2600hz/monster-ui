@@ -7,7 +7,6 @@ define(function(require){
 
 	var privateWebphone = {
 		initialized: false,
-		connected: false,
 
 		printLogs: true,
 
@@ -59,6 +58,8 @@ define(function(require){
 						args.onAccepted && args.onAccepted(call);
 					},
 					onConnected: function() {
+						self.connected = true;
+
 						args.onConnected && args.onConnected(args.device);
 					},
 					onHangup: function(ev) {
@@ -93,6 +94,8 @@ define(function(require){
 				newArgs = {
 					success: function(device) {
 						args.device = device;
+
+						webphone.device = device;
 
 						self.login(args);
 					},
@@ -134,6 +137,36 @@ define(function(require){
 		sendDTMF: function(dtmf, callId) {
 			dtmf += ''; // cast to string
 			kazooWebphone.sendDTMF(dtmf, callId);
+		},
+
+		listCalls: function() {
+			return kazooWebphone.listCalls();
+		},
+
+		hangupAll: function(callId) {
+			var self = this,
+				calls = self.listCalls();
+
+			for(var i in calls) {
+				if(calls[i].callId !== callId) {
+					kazooWebphone.hangup(calls[i].callId);
+				}
+			}
+		},
+
+		holdAll: function(callId) {
+			var self = this,
+				calls = self.listCalls();
+
+			for(var i in calls) {
+				if(calls[i].callId !== callId) {
+					kazooWebphone.hold(calls[i].callId);
+				}
+			}
+		},
+
+		isConnected: function() {
+			return kazooWebphone.connected;
 		}
 	};
 
@@ -167,6 +200,18 @@ define(function(require){
 		},
 		sendDTMF: function(dtmf, callId) {
 			privateWebphone.sendDTMF(dtmf, callId);
+		},
+		holdAll: function(callId) {
+			privateWebphone.holdAll(callId);
+		},
+		hangupAll: function(callId) {
+			privateWebphone.hangupAll(callId);
+		},
+		listCalls: function() {
+			return privateWebphone.listCalls();
+		},
+		isConnected: function() {
+			return privateWebphone.isConnected();
 		}
 	};
 
