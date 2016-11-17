@@ -1778,12 +1778,12 @@ define(function(require){
 		/**
 		 * Render app menu and bind corresponding 'click' events with related callbacks
 		 * @param  {Object} thisArg Context used when calling the callback for each tab
-		 * @param  {Object} menus   List of tabs per menu to display
 		 */
-		generateAppNavbar: function(thisArg, menus) {
+		generateAppNavbar: function(thisArg) {
 			var self = this,
 				parent = $('#monster-content'),
 				appHeader = parent.find('.app-header'),
+				menus = thisArg.appFlags._menus,
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
 				subnavTemplate = monster.template(monster.apps.core, 'monster-app-subnav', { menus: menus }),
 				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html()),
@@ -1997,8 +1997,14 @@ define(function(require){
 				.empty()
 				.append(layoutTemplate);
 
+			$.extend(true, thisArg, {
+				appFlags: {
+					_menus: args.menus
+				}
+			});
+
 			if (hasNavbar) {
-				self.generateAppNavbar(thisArg, args.menus);
+				self.generateAppNavbar(thisArg);
 			}
 
 			callDefaultTabCallback();
