@@ -1773,6 +1773,8 @@ define(function(require){
 			.start();
 		},
 
+		isTabLoadingInProgress: false,
+
 		/**
 		 * Render app menu and bind corresponding 'click' events with related callbacks
 		 * @param  {Object} thisArg Context used when calling the callback for each tab
@@ -1780,52 +1782,49 @@ define(function(require){
 		 */
 		generateAppNavbar: function(thisArg, menus) {
 			var self = this,
-				isLoadingInProgress = false,
 				parent = $('#monster-content'),
 				appHeader = parent.find('.app-header'),
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
 				subnavTemplate = monster.template(monster.apps.core, 'monster-app-subnav', { menus: menus }),
-				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html());
-
-			function initNavbar() {
-				appHeader
-					.find('.app-navbar')
-						.empty()
-						.append(navbarTemplate);
-
-				appHeader
-					.find('.app-navbar .navbar-menu-item-link')
-						.first()
-							.addClass('active');
-			}
-
-			function initSubnav() {
-				if (hasSubnav) {
+				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html()),
+				initNavbar = function initNavbar() {
 					appHeader
-						.append(subnavTemplate);
+						.find('.app-navbar')
+							.empty()
+							.append(navbarTemplate);
 
-					$.each(appHeader.find('.app-subnav'), function(idx, el) {
-						$(el)
-							.find('.navbar-menu-item-link')
-								.first()
-									.addClass('active');
-					});
-
-					var firstSubnav = appHeader.find('.app-subnav').first(),
-						menuId = firstSubnav.data('menu_id'),
-						tabId = firstSubnav.data('tab_id');
-
-					if (menuId === 0 && tabId === 0) {
-						appHeader
-							.find('.app-subnav-bg')
-								.show();
-
-						appHeader
-							.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]')
+					appHeader
+						.find('.app-navbar .navbar-menu-item-link')
+							.first()
 								.addClass('active');
+				},
+				initSubnav =  function initSubnav() {
+					if (hasSubnav) {
+						appHeader
+							.append(subnavTemplate);
+
+						$.each(appHeader.find('.app-subnav'), function(idx, el) {
+							$(el)
+								.find('.navbar-menu-item-link')
+									.first()
+										.addClass('active');
+						});
+
+						var firstSubnav = appHeader.find('.app-subnav').first(),
+							menuId = firstSubnav.data('menu_id'),
+							tabId = firstSubnav.data('tab_id');
+
+						if (menuId === 0 && tabId === 0) {
+							appHeader
+								.find('.app-subnav-bg')
+									.show();
+
+							appHeader
+								.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]')
+									.addClass('active');
+						}
 					}
-				}
-			}
+				};
 
 			initNavbar();
 			initSubnav();
@@ -1921,7 +1920,7 @@ define(function(require){
 								parent
 									.find('.app-content-wrapper')
 										.fadeOut(function() {
-											isLoadingInProgress = false;
+											self.isTabLoadingInProgress = false;
 											$(this).empty();
 
 											(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, {
@@ -1944,8 +1943,8 @@ define(function(require){
 							currentTab = menus[menuId].tabs[tabId];
 						}
 
-						if (!isLoadingInProgress) {
-							isLoadingInProgress = true;
+						if (!self.isTabLoadingInProgress) {
+							self.isTabLoadingInProgress = true;
 
 							if (currentTab.hasOwnProperty('onClick')) {
 								currentTab.onClick.call(thisArg, {
