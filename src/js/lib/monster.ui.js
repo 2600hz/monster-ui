@@ -2021,6 +2021,11 @@ define(function(require){
 			callDefaultTabCallback();
 		},
 
+		/**
+		 * Programmatically loads the navbar tab corresponding to the tab ID passed as argument
+		 * @param  {Object} thisArg Context of the app
+		 * @param  {String} id      Unique ID to identify the tab
+		 */
 		loadTab: function(thisArg, id) {
 			var self = this,
 				$tab = $('.navbar-menu-item-link[data-id="' + id + '"]');
