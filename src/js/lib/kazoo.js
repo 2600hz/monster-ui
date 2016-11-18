@@ -101,10 +101,11 @@
 		private.calls[callId] = {
 			callId: callId,
 			duration: 0,
-			interval: interval,
+			intervals: [ interval ],
 			session: session,
 			isMuted: false,
 			isOnHold: false,
+			status: 'ringing',
 			getCallerId: function() {
 				var callerId = {
 					name: session.request.from.displayName,
@@ -118,9 +119,20 @@
 		bindSessionEvents(private.calls[callId].session);
 	};
 
+	function acceptCall(callId) {
+		private.calls[callId].status = 'accepted';
+		private.calls[callId].acceptedDuration = 0;
+		interval = setInterval(function() {
+			++private.calls[callId].acceptedDuration;
+		}, 1000);
+		private.calls[callId].intervals.push(interval);
+	}
+
 	function removeCall(callId) {
 		if(private.calls.hasOwnProperty(callId)) {
-			clearInterval(private.calls[callId].interval);
+			for(var i in private.calls[callId].intervals) {
+				clearInterval(private.calls[callId].intervals[i]);
+			}
 
 			delete private.calls[callId];
 		}
@@ -129,15 +141,46 @@
 		}
 	};
 
-	function getFirstCallId() {
-		var found = false,
+	function getActiveCall() {
+		var calls = kazoo.listCalls(),
+			foundCall,
+			firstCall;
+
+		_.each(calls, function(call) {
+			if(!firstCall) {
+				firstCall = call;
+			}
+
+			if(!foundCall && call.status === 'accepted' && !call.isOnHold) {
+				foundCall = call;
+			}
+		});
+
+		if(!foundCall) {
+			foundCall = firstCall;
+		}
+
+		return foundCall;
+	};
+
+	function getActiveCallId() {
+		var call = getActiveCall(),
+			id;
+
+		if(call) {
+			id = call.callId;
+		}
+
+		return id;
+	};
+
+	function findCallIdInResponse(response) {
+		var regex = /Call-ID\:\s([^\s]+)/g,
+			matches = regex.exec(response),
 			callId;
 
-		for(var i in private.calls) {
-			if(!found) {
-				callId = i;
-				found = true;
-			}
+		if(matches.length && matches[1]) {
+			callId = matches[1];
 		}
 
 		return callId;
@@ -147,7 +190,7 @@
 		var session;
 
 		if(!callId) {
-			callId = getFirstCallId();
+			callId = getActiveCallId();
 		}
 
 		if(private.calls.hasOwnProperty(callId)) {
@@ -207,8 +250,13 @@
 			}
 		});
 
-		session.on('accepted', function(arg) {
-			console.info('accepted', arg);
+		session.on('accepted', function(response) {
+			var callId = findCallIdInResponse(response);
+
+			if(callId) {
+				acceptCall(callId);
+			}
+
 			params.onAccepted && params.onAccepted();
 		});
 
@@ -574,7 +622,7 @@
 	};
 
 	kazoo.hold = function(callId) {
-		var callId = callId || getFirstCallId(),
+		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
 		if(session.isOnHold().local === false) {
@@ -587,7 +635,7 @@
 	};
 
 	kazoo.unhold = function(callId) {
-		var callId = callId || getFirstCallId(),
+		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
 		if(session.isOnHold().local === true) {
@@ -625,7 +673,7 @@
 	};
 
 	kazoo.mute = function(callId) {
-		var callId = callId || getFirstCallId(),
+		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
 		private.calls[callId].isMuted = true;
@@ -634,7 +682,7 @@
 	};
 
 	kazoo.unmute = function(callId) {
-		var callId = callId || getFirstCallId(),
+		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
 		private.calls[callId].isMuted = false;
@@ -652,8 +700,10 @@
 				isMuted: private.calls[i].isMuted,
 				isOnHold: private.calls[i].isOnHold,
 				duration: private.calls[i].duration,
+				acceptedDuration: private.calls[i].acceptedDuration,
 				callerIdName: private.calls[i].getCallerId().name,
-				callerIdNumber: private.calls[i].getCallerId().number
+				callerIdNumber: private.calls[i].getCallerId().number,
+				status: private.calls[i].status
 			}
 
 			bindCallEvents(call);
@@ -662,6 +712,10 @@
 		}
 
 		return publicCalls;
+	};
+
+	kazoo.getActiveCall = function() {
+		return getActiveCall();
 	};
 
 	/*kazoo.startAutoReconnect = function() {
