@@ -167,6 +167,10 @@ define(function(require){
 
 		isConnected: function() {
 			return kazooWebphone.connected;
+		},
+
+		getActiveCall: function() {
+			return kazoo.getActiveCall();
 		}
 	};
 
@@ -212,6 +216,9 @@ define(function(require){
 		},
 		isConnected: function() {
 			return privateWebphone.isConnected();
+		},
+		getActiveCall: function() {
+			return privateWebphone.getActiveCall();
 		}
 	};
 
