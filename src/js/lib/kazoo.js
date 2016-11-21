@@ -418,7 +418,6 @@
 		});
 
 		private.userAgent.on('disconnected', function(arg) {
-			console.log(kazoo.connected, private.manualDisconnect)
 			if(!kazoo.connected) {
 				params.onError && params.onError({
 					key: errors.serverNotReachable.key,
@@ -480,7 +479,6 @@
 		});
 
 		private.userAgent.on('invite', function(session) {
-			console.log('invite', session);
 			var callId = session.request.call_id;
 
 			addCall(session);
