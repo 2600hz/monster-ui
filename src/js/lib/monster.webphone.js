@@ -71,6 +71,12 @@ define(function(require){
 					onIncoming: function(call) {
 						args.onIncoming && args.onIncoming(call);
 					},
+					onHold: function(call) {
+						args.onHold && args.onHold(call);
+					},
+					onUnhold: function(call) {
+						args.onUnhold && args.onUnhold(call);
+					},
 					//onConnecting: onConnecting,
 					//onTransfer: onTransfer,
 					//onNotified: onNotified,
@@ -171,6 +177,20 @@ define(function(require){
 
 		getActiveCall: function() {
 			return kazoo.getActiveCall();
+		},
+
+		isRetrievable: function(callId) {
+			var self = this,
+				calls = self.listCalls(),
+				response = false;
+
+			for(var i in calls) {
+				if(calls[i].callId === callId) {
+					response = true;
+				}
+			}
+
+			return response;
 		}
 	};
 
@@ -219,6 +239,9 @@ define(function(require){
 		},
 		getActiveCall: function() {
 			return privateWebphone.getActiveCall();
+		},
+		isRetrievable: function(callId) {
+			return privateWebphone.isRetrievable(callId);
 		}
 	};
 
