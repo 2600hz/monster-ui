@@ -75,7 +75,12 @@
 
 ## Authors
 
-*List active 2600Hz contributors*
+List of [2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
+
+* [**Jean-Roch Maitre**](https://github.com/JRMaitre)
+* [**Joris Tirado**](https://github.com/azefiel)
+
+See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participated in this project.
 
 ## License
 
