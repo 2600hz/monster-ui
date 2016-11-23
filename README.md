@@ -84,4 +84,4 @@ See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/
 
 ## License
 
-*What license is used and link to the license.md*
+This project is licensed under the Mozilla Public License - see the [LICENSE.md](LICENSE.md) file for details.
