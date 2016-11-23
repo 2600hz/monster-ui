@@ -75,7 +75,7 @@ define(function(require){
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
-			showAllCallflows: true,
+			// showAllCallflows: true,
 
 			// Settings this flag to true will show JS error when they happen, but in general we want to hide those so we comment it
 			// showJSErrors: true
