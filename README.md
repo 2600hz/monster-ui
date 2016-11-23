@@ -1,51 +1,63 @@
-Required Softwares:
+# Monster UI
 
-- Node >= 4.5.0 (from their website)
-- NPM >= 3.10.6 (npm install -g npm)
-- GULP >= 3.9.1 (npm install -g gulp)
+*One Paragraph of project description goes here*
 
-After cloning a fresh repo, you'll want to run
+## Getting Started
 
-- npm install
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See [Deployment](#deployment) for notes on how to realize the following steps with a Docker container*
 
-which will initialize all the node dependencies for gulp
+### Prerequisites
 
-Once that's done, you can just run
+*What things you need to install the software and how to install them*
 
-- gulp
+### Installing
 
-which will build the website, build the css files from scss files and serve it to a webbrowser.
+*A step by step series of examples that tell you have to get a development environment running*
 
+### Configure
 
-If you are using Docker, this will setup a local dev server:
+*Explain how to plug the APIs/WS URLs in the config.js file*
 
-```shell
-./serve.sh
-```
+### Build It
 
+*Simply demo how to get the UI up and running in a dev environment by running the `gulp` command and link to the Build section for more info*
 
+*For nore info on how the `gulp` command works, head to the [Build System](#build-system) section*
 
-If you install all the separate apps via GIT as submodules in the /monster-ui/src/apps folder and then run `gulp build-prod`, all the apps code (JS/HTML/CSS) will be concatenated together and minified
+## Deployment
 
-Reach us at #2600hz for Feedback
+*Add notes about how to deploy this using Docker*
 
+## Build System
 
-Build Pro version
+### Synopsis
 
-Some apps might have a pro version. If that's the case, and you want to build it with the "pro" assets you need to specify the name of the app in the pro flag.
+*Show command signature with available options*
 
+### Description
 
-    gulp build-prod --pro=test1,test2,test3
+*Explain what task runner we user*
 
+### Options
 
-Build Pro version app level
+*List the different options available when building the project*
 
+### Examples
 
-    gulp build-prod
+*Show one example per command/option*
 
+## Contributing
 
-with core only, then add the app repo to /apps and
+*Basic contributing steps*
 
+## Versioning
 
-    gulp-build-app --app=test1 --pro
+*What versioning process do we follow*
 
+## Authors
+
+*List active 2600Hz contributors*
+
+## License
+
+*What license is used and link to the license.md*
