@@ -2,6 +2,21 @@
 
 *One Paragraph of project description goes here*
 
+* [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installing](#installing)
+    - [Configure](#configure)
+    - [Build It](#build-it)
+* [Deployment](#deployment)
+* [Build System](#build-system)
+    - [Synopsis](#synopsis)
+    - [Description](#description)
+    - [Options](#options)
+* [Contributing](#contributing)
+* [Versioning](#versioning)
+* [Author](#author)
+* [License](#license)
+
 ## Getting Started
 
 *These instructions will get you a copy of the project up and running on your local machine for development purposes. See [Deployment](#deployment) for notes on how to realize the following steps with a Docker container*
