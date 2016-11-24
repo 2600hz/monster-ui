@@ -49,7 +49,23 @@ npm install
 
 ### Configure
 
-*Explain how to plug the APIs/WS URLs in the config.js file*
+In order for the UI to load the data from your server, we need to specify which API to use. For that, open the `config.js` file located in the `src/js/` folder and add the URL of your server as the value of the `default` property.
+
+```javascript
+define(function(require) {
+
+  return {
+    api: {
+      // The default API URL defines what API is used to log in to your back-end
+      default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
+
+      ...
+    },
+
+    ...
+  };
+});
+```
 
 ### Build It
 
