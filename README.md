@@ -23,7 +23,9 @@
 
 ### Prerequisites
 
-*What things you need to install the software and how to install them*
+* [node](https://nodejs.org/en/download/) v4.5.0 or superior
+* [npm](https://docs.npmjs.com/getting-started/installing-node) v3.10.6 or superior
+* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) v3.9.1 or superior
 
 ### Installing
 
