@@ -29,7 +29,23 @@
 
 ### Installing
 
-*A step by step series of examples that tell you have to get a development environment running*
+Clone the official `monster-ui` repository:
+
+```
+git clone https://github.com/2600hz/monster-ui.git monster-ui
+```
+
+Go to the project's folder:
+
+```
+cd monster-ui
+```
+
+Install dependencies:
+
+```
+npm install
+```
 
 ### Configure
 
