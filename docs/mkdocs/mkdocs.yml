@@ -6,8 +6,9 @@ pages:
 pages:
 - 'index.md'
 - 'Helpers':
-  - 'Intro': docs/monster.md'
+  - 'Intro': 'docs/monster.md'
   - 'monster.ui':
+    - 'Intro': 'docs/monster/ui.md'
     - 'docs/monster/ui/table.md'
     - 'docs/monster/ui/alert().md'
     - 'docs/monster/ui/codecSelector().md'
@@ -27,6 +28,7 @@ pages:
     - 'docs/monster/ui/validate().md'
     - 'docs/monster/ui/wysiwyg().md'
   - 'monster.util':
+    - 'Intro': 'docs/monster/util.md'
     - 'docs/monster/util/dateToGregorian().md'
     - 'docs/monster/util/formatPhoneNumber().md'
     - 'docs/monster/util/formatPrice().md'
