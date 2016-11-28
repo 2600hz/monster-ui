@@ -1,4 +1,4 @@
 site_name: UI Development
-
+theme_dir: 2600Hz_theme
 pages:
 - 'index.md'
