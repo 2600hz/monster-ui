@@ -35,19 +35,19 @@ Build Pro version
 Some apps might have a pro version. If that's the case, and you want to build it with the "pro" assets you need to specify the name of the app in the pro flag.
 
 
-    gulp build-prod --pro=test1,test2,test3
+	gulp build-prod --pro=test1,test2,test3
 
 
 Build Pro version app level
 
 
-    gulp build-prod
+	gulp build-prod
 
 
 with core only, then add the app repo to /apps and
 
 
-    gulp-build-app --app=test1 --pro
+	gulp-build-app --app=test1 --pro
 
 
 
