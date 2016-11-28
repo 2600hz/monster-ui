@@ -75,7 +75,7 @@ define(function(require) {
 
 ## Using Docker
 
-If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Installing](#installing) and [Configure](#configure) sections. After that, execute our custom made `serve.sh` script in your Docker container:
+If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Installing](#installing) and [Configure](#configure) sections. After that, execute our custom `serve.sh` script (made by [**Pierre Fenoll**](https://github.com/fenollp)) in your Docker container:
 
 ```shell
 ./serve.sh
