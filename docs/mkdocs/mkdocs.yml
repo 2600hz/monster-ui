@@ -5,8 +5,29 @@ pages:
 
 pages:
 - 'index.md'
+- 'Tutorials':
+  - 'Tutorial: How to build your own MonsterUI app': 'docs/tutorial.md'
+  - 'How to use a Kazoo API': 'docs/api.md'
+  - 'Using Monster methods': 'docs/monster.md'
+  - 'Using Handlebars for your templates': 'docs/handlebars.md'
+  - 'Add your application to the app store': 'docs/appstore.md'
+  - 'Using Monster Events': 'docs/events.md'
+  - 'Using a Common control': 'docs/commonControls.md'
+  - 'Adding I18n to your application': 'docs/internationalization.md'
+  - 'Using application flags': 'docs/flags.md'
+  - 'Coding standards (Basic)': 'docs/codingStandards.md'
+  - 'Coding standards (Advanced)': 'docs/javascriptStyleGuide.md'
+  - 'How to use the validation in your UI': 'docs/validation.md'
+  - 'How to write/update a test plan for your app': 'docs/testPlan.md'
+  - 'How to use the JavaScript Kazoo SDK': 'docs/kazooSdk.md'
 - 'Helpers':
-  - 'Intro': 'docs/monster.md'
+  - 'monster':
+    - 'Intro': 'docs/monster.md'
+    - 'docs/monster/parallel().md'
+    - 'docs/monster/pub().md'
+    - 'docs/monster/request().md'
+    - 'docs/monster/series().md'
+    - 'docs/monster/template().md'
   - 'monster.ui':
     - 'Intro': 'docs/monster/ui.md'
     - 'docs/monster/ui/table.md'
@@ -46,3 +67,8 @@ pages:
     - 'docs/monster/util/sort().md'
     - 'docs/monster/util/toFriendlyDate().md'
     - 'docs/monster/util/unformatPhoneNumber().md'
+    - 'Data Flags': 
+      - 'Intro': 'docs/monster/util/dataFlags.md'
+      - 'add()': 'docs/monster/util/dataFlags/add().md'
+      - 'delete()': 'docs/monster/util/dataFlags/delete().md'
+      - 'get()': 'docs/monster/util/dataFlags/get().md'
