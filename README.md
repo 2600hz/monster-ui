@@ -7,7 +7,7 @@
     - [Installing](#installing)
     - [Configure](#configure)
     - [Build It](#build-it)
-* [Deployment](#deployment)
+* [Using Docker](#using-docker)
 * [Build System](#build-system)
     - [Synopsis](#synopsis)
     - [Description](#description)
@@ -19,7 +19,7 @@
 
 ## Getting Started
 
-*These instructions will get you a copy of the project up and running on your local machine for development purposes. See [Deployment](#deployment) for notes on how to realize the following steps with a Docker container*
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See [Using Docker](#using-docker) for notes on how to realize the following steps with a Docker container*
 
 ### Prerequisites
 
@@ -73,9 +73,15 @@ define(function(require) {
 
 *For nore info on how the `gulp` command works, head to the [Build System](#build-system) section*
 
-## Deployment
+## Using Docker
 
-*Add notes about how to deploy this using Docker*
+If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Installing](#installing) and [Configure](#configure) sections. After that, execute our custom made `serve.sh` script in your Docker container:
+
+```shell
+./serve.sh
+```
+
+This script will install npm and gulp, as well as the npm dependencies and finally run the gulp command. You will be able to access the development environment at `http://localhost:3000/`.
 
 ## Build System
 
