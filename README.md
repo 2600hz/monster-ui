@@ -19,7 +19,7 @@
 
 ## Getting Started
 
-*These instructions will get you a copy of the project up and running on your local machine for development purposes. See [Using Docker](#using-docker) for notes on how to realize the following steps with a Docker container*
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
 
 ### Prerequisites
 
@@ -81,13 +81,15 @@ If you are using Docker containers, we made it easy for you to set up a developm
 ./serve.sh
 ```
 
-This script will install npm and gulp, as well as the npm dependencies and finally run the gulp command. You will be able to access the development environment at `http://localhost:3000/`.
+This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
 ## Build System
 
 ### Synopsis
 
-*Show command signature with available options*
+```
+gulp [build-dev|build-pro] [--pro=<name>]
+```
 
 ### Description
 
@@ -95,11 +97,17 @@ This script will install npm and gulp, as well as the npm dependencies and final
 
 ### Options
 
-*List the different options available when building the project*
+* no options | `build-dev`
 
-### Examples
+  launch a Web server, CSS changes are immediate, automatically reloads the page on save
 
-*Show one example per command/option*
+* `build-pro`
+
+  bundles files together, located in `dist` folder
+
+* `--pro=<name>`
+
+  Some apps might have a pro version. If that is the case and you want to build it with the 'pro' assets, you need to set the pro flag and specify the name of the app.
 
 ## Contributing
 
@@ -124,4 +132,4 @@ See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/
 
 ## License
 
-This project is licensed under the Mozilla Public License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the Mozilla Public License - see the [LICENSE](LICENSE) file for details.
