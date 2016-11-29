@@ -5,22 +5,21 @@ pages:
 
 pages:
 - 'index.md'
-- 'Tutorials':
-  - 'Tutorial: How to build your own MonsterUI app': 'docs/tutorial.md'
-  - 'How to use a Kazoo API': 'docs/api.md'
+- 'Building an App':
+  - 'Tutorial': 'docs/tutorial.md'
+  - 'Add your app to the App Store': 'docs/appstore.md'
+  - 'Adding I18n to your application': 'docs/internationalization.md'
+  - 'Using Kazoo APIs': 'docs/api.md'
+  - 'How to use the JavaScript Kazoo SDK': 'docs/kazooSdk.md'
   - 'Using Monster methods': 'docs/monster.md'
   - 'Using Handlebars for your templates': 'docs/handlebars.md'
-  - 'Add your application to the app store': 'docs/appstore.md'
   - 'Using Monster Events': 'docs/events.md'
   - 'Using a Common control': 'docs/commonControls.md'
-  - 'Adding I18n to your application': 'docs/internationalization.md'
   - 'Using application flags': 'docs/flags.md'
   - 'Coding standards (Basic)': 'docs/codingStandards.md'
   - 'Coding standards (Advanced)': 'docs/javascriptStyleGuide.md'
   - 'How to use the validation in your UI': 'docs/validation.md'
-  - 'How to write/update a test plan for your app': 'docs/testPlan.md'
-  - 'How to use the JavaScript Kazoo SDK': 'docs/kazooSdk.md'
-- 'Helpers':
+- 'Monster Helpers':
   - 'monster':
     - 'Intro': 'docs/monster.md'
     - 'docs/monster/parallel().md'
