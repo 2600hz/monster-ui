@@ -84,9 +84,13 @@ define(function(require){
 				monster.config.whitelabel.logoutTimer = 0;
 
 				if(token && token.length) {
-					self.authenticateAuthToken(token, successfulAuth, function() {
-						window.location = sso.no_account;
-					});
+					self.authenticateAuthToken(token, successfulAuth, function(data) {
+						if(data.error === 404) {
+							window.location = sso.no_account;
+						}
+						else {
+							window.location = sso.login;
+						}
 				}
 				else {
 					window.location = sso.login
@@ -118,8 +122,8 @@ define(function(require){
 				function(authData) {
 					callback && callback(authData);
 				},
-				function() {
-					errorCallback && errorCallback();
+				function(error) {
+					errorCallback && errorCallback(error);
 				}
 			);
 		},
@@ -848,8 +852,8 @@ define(function(require){
 				success: function(data) {
 					callbackSuccess && callbackSuccess(data);
 				},
-				error: function(data) {
-					callbackError && callbackError();
+				error: function(error) {
+					callbackError && callbackError(error);
 				}
 			});
 		},
