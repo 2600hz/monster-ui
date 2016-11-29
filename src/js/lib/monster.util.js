@@ -264,7 +264,7 @@ define(function(require){
 
 				if(length >= 10 && length <= 12) {
 					// Try US Regex
-					phoneNumber = phoneNumber.replace(/\+?1?([2-9][0-9]{2})([2-9][0-9]{2})([0-9]{4})$/, '+1 ($1) $2-$3');
+					phoneNumber = phoneNumber.replace(/^\+?1?([2-9][0-9]{2})([2-9][0-9]{2})([0-9]{4})$/, '+1 ($1) $2-$3');
 				}
 			}
 
