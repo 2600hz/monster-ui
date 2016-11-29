@@ -85,13 +85,10 @@ define(function(require){
 
 				if(token && token.length) {
 					self.authenticateAuthToken(token, successfulAuth, function(data) {
-						console.log(data);
-						if(data.error == 404) {
-							console.log(sso.no_account);
+						if(data.error === 404) {
 							window.location = sso.no_account;
 						}
 						else {
-							console.log(sso.login);
 							window.location = sso.login;
 						}
 				}
