@@ -91,6 +91,7 @@ define(function(require){
 						else {
 							window.location = sso.login;
 						}
+					});
 				}
 				else {
 					window.location = sso.login
