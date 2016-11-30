@@ -8,7 +8,7 @@
     - [Configure](#configure)
     - [Build It](#build-it)
 * [Using Docker](#using-docker)
-* [Build System](#build-system)
+* [Gulp Command](#gulp-command)
     - [Synopsis](#synopsis)
     - [Description](#description)
     - [Options](#options)
@@ -71,7 +71,7 @@ define(function(require) {
 
 *Simply demo how to get the UI up and running in a dev environment by running the `gulp` command and link to the Build section for more info*
 
-*For nore info on how the `gulp` command works, head to the [Build System](#build-system) section*
+*For nore info on how the `gulp` command works, head to the [Gulp Command](#gulp-command) section*
 
 ## Using Docker
 
@@ -83,7 +83,7 @@ If you are using Docker containers, we made it easy for you to set up a developm
 
 This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
-## Build System
+## Gulp Command
 
 ### Synopsis
 
@@ -99,7 +99,7 @@ gulp [build-dev|build-pro] [--pro=<name>]
 
 * no options | `build-dev`
 
-  launch a Web server, CSS changes are immediate, automatically reloads the page on save
+  launch a Web server, CSS changes are immediate, automatically reloads the page on save (Browsersync)
 
 * `build-pro`
 
