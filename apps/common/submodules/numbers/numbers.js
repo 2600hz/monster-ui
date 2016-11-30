@@ -1437,7 +1437,8 @@ define(function(require){
 			self.callApi({
 				resource: 'account.listChildren',
 				data: {
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: { paginate:false }
 				},
 				success: function(_dataAccounts, status) {
 					callback && callback(_dataAccounts.data);
