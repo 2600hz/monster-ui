@@ -1,5 +1,5 @@
 # [monster][monster].ui
-The `monster.ui` object contains different methods and objects used to easily render common UI elements in apps with Monster UI look and feel and helps keep an unified UI.
+The `monster.ui` object contains different methods used to easily render common UI elements in apps with Monster UI look and feel and helps keep an unified UI.
 
 ### Methods
 * [alert()][alert]
@@ -20,13 +20,7 @@ The `monster.ui` object contains different methods and objects used to easily re
 * [validate()][validate]
 * [wysiwyg()][wysiwyg]
 
-### Objects
-* [table][table]
-
 [monster]: ../monster.md
-
-[table]: ui/table.md
-
 [alert]: ui/alert().md
 [codecSelector]: ui/codecSelector().md
 [confirm]: ui/confirm().md
