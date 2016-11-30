@@ -179,7 +179,7 @@ define(function(require){
 							callbacks.invalidAddress && callbacks.invalidAddress(_data.data.address.invalid);
 						}
 					}
-					else {
+					else if (_data.error !== '402') {
 						globalHandler(_data, { generateError: true });
 					}
 				}
