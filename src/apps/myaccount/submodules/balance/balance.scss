@@ -24,6 +24,11 @@
 	border-right: none;
 }
 
+.balance-content-wrapper .action-bar-wrapper {
+	position: absolute;
+	z-index: 25;
+}
+
 .balance-content-wrapper .action-bar-wrapper > * {
 	margin: 0 10px 0 0;
 	vertical-align: middle;
@@ -39,6 +44,7 @@
 	border-radius: 2px;
 	box-shadow: none;
 	text-align: center;
+	width: 80px;
 }
 
 .balance-content-wrapper .action-bar-wrapper i.refresh-filter:hover {
@@ -71,34 +77,14 @@
 }
 
 /* TABLES */
-.balance-content-wrapper table.table {
-	margin-bottom: 0;
-	border: solid 1px #c0c0c9;
-	border-bottom: none;
+.balance-content-wrapper table {
+	margin-bottom: 35px;
 }
 
-.balance-content-wrapper table.table th {
-	background: #f0f0f9;
-	color: #303039;
-	text-shadow: none;
+.balance-content-wrapper table .arrow-direction {
+	margin-left: 20px;
+	margin-right: 20px;
 }
-
-.balance-content-wrapper table.table td {
-	border: none;
-}
-
-.balance-content-wrapper table.table tr:not(:first-child) {
-	border-top: solid 1px #c0c0c9;
-}
-
-.balance-content-wrapper table.table tbody tr {
-	background: #fff;
-}
-
-.balance-content-wrapper .dataTables_scrollBody {
-	border-bottom: solid 1px #c0c0c9;
-}
-
 /* ADD CREDITS POPUP */
 .add-credits-popup-wrapper {
 	display: block;

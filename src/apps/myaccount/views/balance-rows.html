@@ -1,0 +1,19 @@
+{{#each transactions}}
+	<tr class="transaction-row">
+		<td data-filter-value="{{callId}}">
+			{{#compare direction '===' 'inbound'}}
+				<i class="fa fa-arrow-right monster-green arrow-direction"></i>
+			{{else}}
+				<i class="fa fa-arrow-left monster-orange arrow-direction"></i>
+			{{/compare}}
+		</td>
+		<td>{{ toFriendlyDate timestamp }}</td>
+		<td>{{ formatPhoneNumber fromField }}</td>
+		<td>{{ formatPhoneNumber toField }}</td>
+		<td>{{ accountName}}</td>
+		<td>{{ duration }}</td>
+		{{#if @root.showCredits}}
+			<td>{{ friendlyAmount }}</td>
+		{{/if}}
+	</tr>
+{{/each}}

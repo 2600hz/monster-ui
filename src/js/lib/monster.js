@@ -10,7 +10,6 @@ define(function(require){
 		kazoosdk = require('kazoosdk'),
 		chosen = require('chosen'),
 		card = require('card'),
-		dataTables = require('datatables'),
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload');
 

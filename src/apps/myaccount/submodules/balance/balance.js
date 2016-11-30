@@ -2,7 +2,6 @@ define(function(require){
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
-		dataTables = require('datatables'),
 		toastr = require('toastr');
 
 	var balance = {
@@ -34,6 +33,40 @@ define(function(require){
 			}
 		},
 
+		balanceInitActionBar: function(template, showCredits, afterRender) {
+			var self = this,
+				optionsDatePicker = {
+					container: template,
+					range: self.balanceRange
+				},
+				dates = monster.util.getDefaultRangeDates(self.balanceRange),
+				fromDate = dates.from,
+				toDate = dates.to;
+
+			monster.ui.initRangeDatepicker(optionsDatePicker);
+
+			template.find('#startDate').datepicker('setDate', fromDate);
+			template.find('#endDate').datepicker('setDate', toDate);
+
+			template.find('.refresh-filter').on('click', function() {
+				self.balanceDisplayTransactionsTable(template, showCredits, afterRender);
+			});
+
+			template.find('.filter-transactions').on('click', function() {
+				self.balanceDisplayTransactionsTable(template, showCredits, afterRender);
+			});
+
+			template.find('.download-transactions').on('click', function() {
+				var from = new Date(template.find('#startDate').val()),
+					to = new Date(template.find('#endDate').val()),
+					dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
+					dlTo = monster.util.dateToEndOfGregorianDay(to),
+					url = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.getAuthToken();
+
+				window.open(url,'_blank');
+			});
+		},
+
 		_balanceRenderContent: function(args) {
 			var self = this,
 				argsCallback = args.callback,
@@ -44,25 +77,11 @@ define(function(require){
 				};
 
 			monster.parallel({
-					accounts: function(callback) {
-						self.balanceGetAccounts(function(dataAccounts) {
-							$.each(dataAccounts.data, function(k, v) {
-								defaults.fieldData.accounts[v.id] = v;
-							});
-
-							callback(null, defaults);
-						});
-					},
 					balance: function(callback) {
 						self.balanceGet(function(data) {
-							defaults.amount = parseFloat(data.data.balance).toFixed(2);
+							var amount = parseFloat(data.data.balance).toFixed(2);
 
-							callback(null, data)
-						});
-					},
-					transactions: function(callback) {
-						self.balanceGetTransactions(function(dataTransactions) {
-							callback(null, dataTransactions)
+							callback(null, amount)
 						});
 					}
 				},
@@ -70,11 +89,7 @@ define(function(require){
 					monster.pub('myaccount.UIRestrictionsCompatibility', {
 						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 						callback: function(uiRestrictions) {
-							var renderData = $.extend(true, {},
-													  defaults,
-													  self.balanceFormatTableData(results.transactions, defaults.fieldData.accounts),
-													  {uiRestrictions: uiRestrictions}
-													 );
+							var renderData = $.extend(true, {}, {uiRestrictions: uiRestrictions, amount: results.balance });
 
 							renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
@@ -87,49 +102,13 @@ define(function(require){
 							self.balanceBindEvents(balance);
 
 							monster.pub('myaccount.updateMenu', args);
-							monster.pub('myaccount.renderSubmodule', balance);
+							
 
-							self.balanceInitTable(balance);
+							self.balanceInitActionBar(balance, renderData.uiRestrictions.balance.show_credit);
 
-							$.fn.dataTableExt.afnFiltering.pop();
-
-							balance.find('div.table-custom-actions').html(monster.template(self, 'balance-tableActionBar'));
-
-							var optionsDatePicker = {
-								container: balance,
-								range: self.balanceRange
-							};
-
-							monster.ui.initRangeDatepicker(optionsDatePicker);
-
-							var from = new Date(balance.find('#startDate').val()),
-								to = new Date(balance.find('#endDate').val());
-
-							balance.find('.refresh-filter').on('click', function() {
-								self._balanceRenderContent(args);
+							self.balanceDisplayTransactionsTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
+								monster.pub('myaccount.renderSubmodule', balance);
 							});
-
-							balance.find('.filter-transactions').on('click', function() {
-								/* Bug because of Infinite scrolling... we need to manually remove tr */
-								monster.ui.table.balance.find('tbody tr').remove();
-								monster.ui.table.balance.fnClearTable();
-
-								from = balance.find('#startDate').datepicker('getDate');
-								to = balance.find('#endDate').datepicker('getDate');
-
-								self.balanceRefreshTransactionsTable(balance, from, to, defaults.fieldData.accounts);
-							});
-
-							balance.find('.download-transactions').on('click', function() {
-								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
-									dlTo = monster.util.dateToEndOfGregorianDay(to);
-
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.getAuthToken();
-							});
-
-							monster.ui.table.balance.fnAddData(renderData.tabData);
-
-							balance.find('.popup-marker').clickover();
 
 							if (typeof argsCallback === 'function') {
 								argsCallback(balance);
@@ -239,29 +218,51 @@ define(function(require){
 			});
 		},
 
-		balanceRefreshTransactionsTable: function(parent, from, to, mapAccounts) {
+		balanceDisplayTransactionsTable: function(template, showCredits, afterRender) {
 			var self = this,
-				params = {
-					from: from,
-					to: to,
-				};
+				fromDate = template.find('input.filter-from').datepicker('getDate'),
+				toDate = template.find('input.filter-to').datepicker('getDate');
 
-			self.balanceGetTransactions(params, function(dataTransactions) {
-				var data = self.balanceFormatTableData(dataTransactions, mapAccounts);
+			monster.ui.footable(template.find('.footable'), {
+				getData: function(filters, callback) {
+					filters = $.extend(true, filters, {
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate),
+					});
 
-				monster.ui.table.balance.addData(data.tabData);
-
-				parent.find('#call_charges').html(data.totalCharges);
-				parent.find('#minutes_used').html(data.totalMinutes);
+					self.balanceTransactionsGetRows(template, filters, showCredits, callback);
+				},
+				backendPagination: {
+					enabled: true
+				},
+				afterInitialized: function() {
+					afterRender && afterRender();
+				}
 			});
 		},
 
-		balanceFormatTableData: function(dataRequest, mapAccounts) {
+		balanceTransactionsGetRows: function(template, filters, showCredits, callback) {
+			var self = this;
+
+			self.balanceGetLedgersTransactions(filters, function(data) {
+				var formattedData = self.balanceFormatDataTable(data, showCredits),
+					$rows = $(monster.template(self, 'balance-rows', formattedData));
+
+				template.find('#call_charges').html(formattedData.totalCharges);
+				template.find('#minutes_used').html(formattedData.totalMinutes);
+
+				// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+				callback && callback($rows, data);
+			});
+		},
+
+		balanceFormatDataTable: function(dataRequest, showCredits) {
 			var self = this,
 				data = {
-					tabData: [],
+					transactions: [],
 					totalMinutes: 0,
-					totalCharges: 0
+					totalCharges: 0,
+					showCredits: showCredits
 				};
 
 			if(dataRequest.length > 0) {
@@ -287,17 +288,16 @@ define(function(require){
 
 					data.totalCharges += parseFloat(v.amount);
 
-					data.tabData.push([
-						v.period.start || '-',
-						v.call_id || '-',
-						v.metadata.call || '-',
-						friendlyDate || '-',
-						fromField || '-',
-						toField || '-',
-						accountName || '-',
-						duration || '-',
-						friendlyAmount || '-'
-					]);
+					data.transactions.push({
+						direction: v.metadata.call.direction,
+						callId: v.id,
+						timestamp: v.period.start,
+						fromField: fromField,
+						toField: toField,
+						accountName: accountName,
+						duration: duration,
+						friendlyAmount: friendlyAmount
+					});
 				});
 				
 				data.totalCharges = data.totalCharges.toFixed(3);
@@ -306,69 +306,18 @@ define(function(require){
 			return data;
 		},
 
-		balanceInitTable: function(parent) {
+		balanceGetData: function(filters, webhookId, callback) {
 			var self = this;
 
-			monster.pub('myaccount.UIRestrictionsCompatibility',{
-				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
-				callback: function(uiRestrictions) {
-					var showCredit = uiRestrictions.balance && uiRestrictions.balance.show_credit == false ? false : true,
-						columns = [
-							{
-								'sTitle': 'timestamp',
-								'bVisible': false
-							},
-							{
-								'sTitle': 'call_id',
-								'bVisible': false
-							},
-							{
-								'sTitle': self.i18n.active().balance.directionColumn,
-								'fnRender': function(obj) {
-									var icon = '<i class="fa fa-arrow-left monster-orange popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>';
-									if(obj.aData[obj.iDataColumn].direction === 'inbound') {
-										icon = '<i class="fa fa-arrow-right monster-green popup-marker" data-placement="right" data-original-title="Call ID" data-content="'+obj.aData[obj.iDataColumn].call_id+'"></i>'
-									}
-									return icon;
-								},
-								'sWidth': '5%'
-
-							},
-							{
-								'sTitle': self.i18n.active().balance.dateColumn,
-								'sWidth': '20%'
-
-							},
-							{
-								'sTitle': self.i18n.active().balance.fromColumn,
-								'sWidth': '20%'
-							},
-							{
-								'sTitle': self.i18n.active().balance.toColumn,
-								'sWidth': '20%'
-							},
-							{
-								'sTitle': self.i18n.active().balance.accountColumn,
-								'sWidth': '25%'
-							},
-							{
-								'sTitle': self.i18n.active().balance.durationColumn,
-								'sWidth': '10%'
-							}
-						];
-
-					if (showCredit) {
-						columns[7].sWidth = '5%';
-						columns.push({'sTitle': self.i18n.active().balance.amountColumn,'sWidth': '5%'});
-					}
-
-					monster.ui.table.create('balance', parent.find('#transactions_grid'), columns, {}, {
-						bScrollInfinite: true,
-						bScrollCollapse: true,
-						sScrollY: '300px',
-						sDom: '<"table-custom-actions">frtlip',
-						aaSorting: [[0, 'desc']]
-					});
+			self.callApi({
+				resource: 'webhooks.listAttempts',
+				data: {
+					accountId: self.accountId,
+					webhookId: webhookId,
+					filters: filters
+				},
+				success: function(data) {
+					callback && callback(data);
 				}
 			});
 		},
@@ -765,36 +714,14 @@ define(function(require){
 			});
 		},
 
-	 	balanceGetTransactions: function(params, success, error) {
-			var self = this;
-
-			if(typeof params === 'function') {
-				success = params;
-				error = success;
-
-				var dates = monster.util.getDefaultRangeDates(self.balanceRange),
-					params = {};
-
-				params.to = dates.to;
-				params.from = dates.from;
-			}
-
-			var from = monster.util.dateToBeginningOfGregorianDay(params.from),
-				to = monster.util.dateToEndOfGregorianDay(params.to);
-
-			self.balanceGetLedgersTransactions(from, to, function(data) {
-				success && success(data);
-			});
-		},
-
-		balanceGetLedgersTransactions: function(from, to, callback) {
+		balanceGetLedgersTransactions: function(filters, callback) {
 			var self = this
 				parallelRequests = {};
 
 			self.balanceListLedgers(function(ledgers) {
 				_.each(ledgers, function(ledger, name) {
 					parallelRequests[name] = function(callback) {
-						self.balanceGetLedgerDocuments(name, from, to, function(documents) {
+						self.balanceGetLedgerDocuments(name, filters, function(documents) {
 							callback && callback(null, documents);
 						});
 					}
@@ -829,7 +756,7 @@ define(function(require){
 			});
 		},
 
-		balanceGetLedgerDocuments: function(ledgerId, from, to, callback) {
+		balanceGetLedgerDocuments: function(ledgerId, filters, callback) {
 			var self = this;
 
 			self.callApi({
@@ -837,10 +764,7 @@ define(function(require){
 				data: {
 					accountId: self.accountId,
 					ledgerId: ledgerId,
-					filters: {
-						created_from: from,
-						created_to: to
-					}
+					filters: filters
 				},
 				success: function(data) {
 					callback && callback(data.data);
