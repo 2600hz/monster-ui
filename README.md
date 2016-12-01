@@ -93,13 +93,17 @@ gulp [build-dev|build-pro] [--pro=<name>]
 
 ### Description
 
-*Explain what task runner we user*
+*Explain what task runner we use*
 
 ### Options
 
-* no options | `build-dev`
+* no options
 
-  launch a Web server, CSS changes are immediate, automatically reloads the page on save (Browsersync)
+  launch a Web server, CSS changes are immediate, automatically reloads the page on save ([browsersync](https://www.npmjs.com/package/browser-sync) + [livereload](https://www.npmjs.com/package/gulp-livereload))
+
+* `build-dev`
+
+  same as no options except that you need to launch your own Web server to serve the files
 
 * `build-pro`
 
