@@ -27,6 +27,7 @@ pages:
     - 'docs/monster/request().md'
     - 'docs/monster/series().md'
     - 'docs/monster/template().md'
+    - 'docs/monster/waterfall().md'
   - 'monster.ui':
     - 'Intro': 'docs/monster/ui.md'
     - 'docs/monster/ui/table.md'

@@ -7,6 +7,7 @@ The `monster` object exposes several core methods used to perform essential acti
 * [request()][request]
 * [series()][series]
 * [template()][template]
+* [waterfall()][waterfall]
 
 ### Objects
 * [ui][ui]
@@ -17,6 +18,7 @@ The `monster` object exposes several core methods used to perform essential acti
 [request]: monster/request().md
 [series]: monster/series().md
 [template]: monster/template().md
+[waterfall]: monster/waterfall().md
 
 [ui]: monster/ui.md
 [util]: monster/util.md
