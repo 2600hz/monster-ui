@@ -4,14 +4,15 @@
 
 * [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-    - [Installing](#installing)
+    - [Install](#install)
     - [Configure](#configure)
-    - [Build It](#build-it)
+    - [Build](#build)
 * [Using Docker](#using-docker)
 * [Gulp Command](#gulp-command)
     - [Synopsis](#synopsis)
     - [Description](#description)
     - [Options](#options)
+    - [Flags](#flags)
 * [Contributing](#contributing)
 * [Author](#author)
 * [License](#license)
@@ -26,7 +27,7 @@
 * [npm](https://docs.npmjs.com/getting-started/installing-node) v3.10.6 or higher
 * [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) v3.9.1 or higher
 
-### Installing
+### Install
 
 Clone the official `monster-ui` repository:
 
@@ -66,18 +67,21 @@ define(function(require) {
 });
 ```
 
-### Build It
+### Build
 
-*Simply demo how to get the UI up and running in a dev environment by running the `gulp` command and link to the Build section for more info*
+Use the `gulp` command to build and launch the web server
 
-* use `gulp` command to build and launch web server
-* access development environment at `http://localhost:3000/`
+```
+gulp
+```
 
-*For nore info on how the `gulp` command works, head to the [Gulp Command](#gulp-command) section*
+Access your development environment at `http://localhost:3000/`
+
+*For more info on how the `gulp` command works, head to the [Gulp Command](#gulp-command) section*
 
 ## Using Docker
 
-If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Installing](#installing) and [Configure](#configure) sections. After that, execute our custom `serve.sh` script (made by [**Pierre Fenoll**](https://github.com/fenollp)) in your Docker container:
+If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Install](#install) and [Configure](#configure) sections. After that, execute our custom `serve.sh` script (made by [**Pierre Fenoll**](https://github.com/fenollp)) in your Docker container:
 
 ```shell
 ./serve.sh
@@ -109,7 +113,9 @@ gulp [build-dev|build-pro] [--pro=<name>]
 
 * `build-pro`
 
-  bundles files together, located in `dist` folder
+  bundles files together
+
+### Flags
 
 * `--pro=<name>`
 
