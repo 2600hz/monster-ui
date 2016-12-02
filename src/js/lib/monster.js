@@ -378,18 +378,14 @@ define(function(require){
 			monster.logs.error.push(monsterError);
 		},
 
-		series: function(methods, callback) {
-			async.series(methods, function(err, results) {
-				callback(err, results);
-			});
+		series: function(tasks, callback) {
+			async.series(tasks, callback);
 		},
 
-		parallel: function(methods, callback, pLimit) {
+		parallel: function(tasks, callback, pLimit) {
 			var limit = pLimit && pLimit >= 1 ? pLimit : 5;
 
-			async.parallelLimit(methods, limit, function(err, results) {
-				callback(err, results);
-			});
+			async.parallelLimit(tasks, limit, callback);
 		},
 
 		shift: function(chain){
