@@ -405,6 +405,10 @@ define(function(require){
 			async.parallelLimit(tasks, limit, callback);
 		},
 
+		waterfall: function(tasks, callback) {
+			async.waterfall(tasks, callback);
+		},
+
 		shift: function(chain){
 			var next = chain.shift();
 			next && next();
