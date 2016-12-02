@@ -122,5 +122,9 @@
 
 	"__comment": "UI-1995: New Announcement Mechanism",
 	"__version": "3.22",
-	"announcementTitle": "Announcement"
+	"announcementTitle": "Announcement",
+
+	"__comment": "UI-2463: New Announcement Mechanism",
+	"__version": "4.0",
+	"invalidCredentials": "Invalid Credentials"
 }

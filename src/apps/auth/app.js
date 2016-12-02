@@ -597,7 +597,9 @@ define(function(require){
 			}
 
 			content.find('.input-wrap input').on('focus', function() {
-				$(this).parents('.input-wrap').removeClass('error');
+				content.find('.input-wrap').removeClass('error');
+				content.find('.error-message-wrapper').hide();
+				content.find('.error-message-wrapper').find('.text').html('');
 			});
 
 			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change' , function() {
@@ -697,6 +699,11 @@ define(function(require){
 					}
 
 					self._afterSuccessfulAuth(data);
+				},
+				function() {
+					$('#login, #password, #account_name').parents('.input-wrap').addClass('error');
+					$('.error-message-wrapper').find('.text').html(self.i18n.active().invalidCredentials);
+					$('.error-message-wrapper').show();
 				});
 			}
 			else {
@@ -794,7 +801,7 @@ define(function(require){
 		},
 
 		// API Calls
-		putAuth: function(loginData, callback) {
+		putAuth: function(loginData, callback, wrongCredsCallback) {
 			var self = this;
 
 			self.callApi({
@@ -815,6 +822,9 @@ define(function(require){
 					}
 					else if(data.status === 423) {
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
+					}
+					else if(data.status === 401) {
+						wrongCredsCallback && wrongCredsCallback();
 					}
 					else {
 						globalHandler(data, { generateError: true });

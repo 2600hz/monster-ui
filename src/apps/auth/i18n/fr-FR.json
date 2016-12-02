@@ -97,5 +97,9 @@
 		"resetPassword": "Réinitialiser Mot de Passe",
 		"rememberPassword": "Vous vous souvenez de votre mot de passe?",
 		"backToSignIn": "Retourner à l'identification"
-	}
+	},
+
+	"__comment": "UI-2463: New Announcement Mechanism",
+	"__version": "4.0",
+	"invalidCredentials": "Identifiants non valides"
 }

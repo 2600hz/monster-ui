@@ -10,6 +10,16 @@
 	background-size: cover;
 }
 
+#auth_container .error-message-wrapper {
+	display: none;
+}
+
+#auth_container .error-message-wrapper .text {
+	margin-left: 5px;
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
 /* Nasty hack to remove yellow autofill which don't look good with current login design */
 #auth_container input:-webkit-autofill {
 	-webkit-box-shadow: 0 0 0 1000px #202029 inset !important;
