@@ -395,19 +395,14 @@ define(function(require){
 			monster.logs.error.push(monsterError);
 		},
 
-		series: function(tasks, callback) {
-			async.series(tasks, callback);
-		},
-
 		parallel: function(tasks, callback, pLimit) {
 			var limit = pLimit && pLimit >= 1 ? pLimit : 5;
 
 			async.parallelLimit(tasks, limit, callback);
 		},
 
-		waterfall: function(tasks, callback) {
-			async.waterfall(tasks, callback);
-		},
+		series: async.series,
+		waterfall: async.series,
 
 		shift: function(chain){
 			var next = chain.shift();
