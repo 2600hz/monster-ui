@@ -13,7 +13,6 @@
     - [Description](#description)
     - [Options](#options)
 * [Contributing](#contributing)
-* [Versioning](#versioning)
 * [Author](#author)
 * [License](#license)
 
@@ -71,6 +70,9 @@ define(function(require) {
 
 *Simply demo how to get the UI up and running in a dev environment by running the `gulp` command and link to the Build section for more info*
 
+* use `gulp` command to build and launch web server
+* access development environment at `http://localhost:3000/`
+
 *For nore info on how the `gulp` command works, head to the [Gulp Command](#gulp-command) section*
 
 ## Using Docker
@@ -120,10 +122,6 @@ gulp [build-dev|build-pro] [--pro=<name>]
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
-
-## Versioning
-
-*What versioning process do we follow*
 
 ## Authors
 
