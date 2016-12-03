@@ -62,6 +62,10 @@ h1 {
 /************************************************************/
 /************************** BUTTONS *************************/
 /************************************************************/
+.btn-group [class*="monster-button"]:focus:not(.disabled) {
+	box-shadow: none;
+}
+
 .btn-group *[class*='monster-button']{
 	border-radius: 0;
 	margin-left: -1px;
