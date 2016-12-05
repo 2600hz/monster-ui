@@ -55,7 +55,7 @@ define(function(require){
 				monster.ui.tooltips(template);
 
 				self.conferenceViewerBind(template, data, args);
-console.log(template, formattedData);
+
 				args.callback && args.callback(template, formattedData)
 
 				self.conferenceViewerBindSocketEvents(conferenceId, template);
