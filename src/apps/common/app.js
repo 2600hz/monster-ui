@@ -22,7 +22,8 @@ define(function(require){
 		'./submodules/monsterListing/monsterListing',
 		'./submodules/extensionTools/extensionTools',
 		'./submodules/mediaSelect/mediaSelect',
-		'./submodules/webphone/webphone'
+		'./submodules/webphone/webphone',
+		'./submodules/conferenceViewer/conferenceViewer'
 	]);
 
 	var app = {
@@ -47,7 +48,8 @@ define(function(require){
 			'monsterListing',
 			'extensionTools',
 			'mediaSelect',
-			'webphone'
+			'webphone',
+			'conferenceViewer'
 		],
 
 		css: [ 'app' ],

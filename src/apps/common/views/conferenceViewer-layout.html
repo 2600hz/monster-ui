@@ -1,0 +1,42 @@
+<div class="view-conference-wrapper" data-id="{{ conference.id }}">
+	<div class="view-header clearfix">
+		<div class="conference-name">{{ conference.name }} (<span class="conference-duration main-conference-timer"></span>)</div>
+		<ul class="admin-actions">
+			<li data-action="lock" class="conference-action negative togglable{{#unless conference.isLocked}} active{{/unless}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.lock }}">
+				<i class="fa fa-lock active-off"></i>
+			</li>
+
+			<li data-action="unlock" class="conference-action togglable{{#if conference.isLocked}} active{{/if}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unlock }}">
+				<i class="fa fa-unlock-alt active-on"></i>
+			</li>
+
+			<li data-action="mute" class="conference-action negative" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.mute }}">
+				<i class="fa fa-microphone-slash"></i>
+			</li>
+			<li data-action="unmute" class="conference-action" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unmute }}">
+				<i class="fa fa-microphone"></i>
+			</li>
+
+			<li data-action="kick" class="conference-action negative" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.hangup }}">
+				<i class="icon-telicon-hangup"></i>
+			</li>
+		</ul>
+
+		{{#if backButton}}
+			<button id="back_button" class="pull-right monster-button">{{ backButton.label }}</button>
+		{{/if}}
+	</div>
+
+	<div class="view-content">
+		<div class="moderators-wrapper">
+			<div class="title">{{ i18n.conferenceViewer.moderators }}</div>
+			<div class="users">
+			</div>
+		</div>
+
+		<div class="participants-wrapper">
+			<div class="title">{{ i18n.conferenceViewer.participants }}</div>
+			<div class="users">
+			</div>
+		</div>
+</div>

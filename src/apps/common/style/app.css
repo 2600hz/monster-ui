@@ -15,6 +15,7 @@
 @import url('../submodules/monsterListing/monsterListing.css');
 @import url('../submodules/extensionTools/extensionTools.css');
 @import url('../submodules/mediaSelect/mediaSelect.css');
+@import url('../submodules/conferenceViewer/conferenceViewer.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {
@@ -36,4 +37,80 @@
 #vanity_country_select, #tollfree_country_select, #regular_country_select {
     background-image: url('static/images/US_flag.png');
     background-repeat: no-repeat;
+}
+
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="0"] {
+	background-image: url('static/images/conferenceAvatars/avatar-0.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="1"] {
+	background-image: url('static/images/conferenceAvatars/avatar-1.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="2"] {
+	background-image: url('static/images/conferenceAvatars/avatar-2.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="3"] {
+	background-image: url('static/images/conferenceAvatars/avatar-3.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="4"] {
+	background-image: url('static/images/conferenceAvatars/avatar-4.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="5"] {
+	background-image: url('static/images/conferenceAvatars/avatar-5.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="6"] {
+	background-image: url('static/images/conferenceAvatars/avatar-6.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="7"] {
+	background-image: url('static/images/conferenceAvatars/avatar-7.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="8"] {
+	background-image: url('static/images/conferenceAvatars/avatar-8.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="9"] {
+	background-image: url('static/images/conferenceAvatars/avatar-9.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="10"] {
+	background-image: url('static/images/conferenceAvatars/avatar-10.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="11"] {
+	background-image: url('static/images/conferenceAvatars/avatar-11.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="12"] {
+	background-image: url('static/images/conferenceAvatars/avatar-12.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="13"] {
+	background-image: url('static/images/conferenceAvatars/avatar-13.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="14"] {
+	background-image: url('static/images/conferenceAvatars/avatar-14.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="15"] {
+	background-image: url('static/images/conferenceAvatars/avatar-15.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="16"] {
+	background-image: url('static/images/conferenceAvatars/avatar-16.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="17"] {
+	background-image: url('static/images/conferenceAvatars/avatar-17.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="18"] {
+	background-image: url('static/images/conferenceAvatars/avatar-18.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="19"] {
+	background-image: url('static/images/conferenceAvatars/avatar-19.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="20"] {
+	background-image: url('static/images/conferenceAvatars/avatar-20.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="21"] {
+	background-image: url('static/images/conferenceAvatars/avatar-21.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="22"] {
+	background-image: url('static/images/conferenceAvatars/avatar-22.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="23"] {
+	background-image: url('static/images/conferenceAvatars/avatar-23.png');
+}
+.view-conference-wrapper .conference-user-wrapper .icon-user[data-avatar-id="24"] {
+	background-image: url('static/images/conferenceAvatars/avatar-24.png');
 }
