@@ -11,10 +11,10 @@
 * [Gulp Command](#gulp-command)
     - [Synopsis](#synopsis)
     - [Description](#description)
+    - [Commands](#commands)
     - [Options](#options)
-    - [Flags](#flags)
 * [Contributing](#contributing)
-* [Author](#author)
+* [Authors](#authors)
 * [License](#license)
 
 ## Getting Started
@@ -94,18 +94,20 @@ This script will install `npm` and `gulp`, as well as the `npm` dependencies and
 ### Synopsis
 
 ```
-gulp [build-dev|build-pro] [--pro=<name>]
+gulp            [--pro=<name>]
+gulp build-dev  [--pro=<name>]
+gulp build-prod [--pro=<name>]
 ```
 
 ### Description
 
 *Explain what task runner we use*
 
-### Options
+### Commands
 
 * no options
 
-  launch a Web server, CSS changes are immediate, automatically reloads the page on save ([browsersync](https://www.npmjs.com/package/browser-sync) + [livereload](https://www.npmjs.com/package/gulp-livereload))
+  Launch a Web server, CSS changes are immediate, automatically reloads the page on save ([browsersync](https://www.npmjs.com/package/browser-sync) + [livereload](https://www.npmjs.com/package/gulp-livereload))
 
 * `build-dev`
 
@@ -115,11 +117,11 @@ gulp [build-dev|build-pro] [--pro=<name>]
 
   bundles files together
 
-### Flags
+### Options
 
 * `--pro=<name>`
 
-  Some apps might have a pro version. If that is the case and you want to build it with the 'pro' assets, you need to set the pro flag and specify the name of the app.
+  Some applications might have a pro version. If that is the case and you want to build it with the 'pro' assets, you need to set the `pro` option and specify the name of the application.
 
 ## Contributing
 
