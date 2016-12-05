@@ -1,0 +1,173 @@
+@import "../../../../css/partials/base";
+
+.view-conference-wrapper .conference-name {
+	display: inline-block;
+	float: left;
+	font-size: 24px;
+	line-height: 36px;
+}
+	
+.view-conference-wrapper .admin-actions {
+	display: inline-block;
+	float: left;
+	margin-left: 18px;
+	margin-bottom: 0;
+}
+.view-conference-wrapper .admin-actions li {
+	display: inline-block;
+	padding: 0 6px;
+	cursor: pointer;
+	margin-left: 4px;
+	margin-right: 4px;
+	color: #f0f0f9;
+	font-size: 20px;
+	background: #33db24;
+	width: 24px;
+	height: 36px;
+	border-radius: 30px;
+	vertical-align: middle;
+	position: relative;
+	transition: background .2s ease-out;
+	-webkit-transition: background .2s ease-out;
+}
+
+.view-conference-wrapper .admin-actions li.negative {
+	background: #ff3d24;
+}
+
+.view-conference-wrapper .admin-actions li.togglable.active {
+	display: inline-block;
+}
+
+.view-conference-wrapper .admin-actions li.togglable {
+	display: none;
+}
+
+.view-conference-wrapper .admin-actions li i {
+	position: absolute;
+	color: #FFF;
+	color: #f0f0f9;
+	top: 7px;
+	left: 11px;
+	cursor: pointer;
+}
+
+.view-conference-wrapper .admin-actions li[data-action="kick"] i {
+	left: 9px;
+	top: 9px;
+}
+
+.view-conference-wrapper .title {
+	color: #999;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.view-conference-wrapper .moderators-wrapper {
+	margin-bottom: 30px;
+	margin-top: 30px;
+}
+
+.view-conference-wrapper .empty-user-category {
+	border: 1px solid #c0c0c9;
+	background: #fff;
+	border-radius: 2px;
+	margin-top: 12px;
+	padding: 17px 17px 12px;
+	text-align: center;
+}
+
+.view-conference-wrapper .conference-user-wrapper {
+	border: 1px solid #c0c0c9;
+	background: #fff;
+	border-radius: 2px;
+	padding: 12px 12px 12px;
+	margin-right: 15px;
+	margin-top: 12px;
+	box-shadow: none;
+	transition: box-shadow .1s ease-out, transform .1s ease-out;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	width: 273px;
+	display: inline-block;
+}
+.view-conference-wrapper .conference-user-wrapper:hover {
+	box-shadow: 0px 0px 10px -1px rgba(96,96,105,0.4);
+}
+
+
+.view-conference-wrapper .conference-user-wrapper .user-data {
+	float: left;
+	width: 183px;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user.togglable.active i.active-on, 
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user.togglable i.active-off{
+	display:inline-block;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user.togglable i.active-on, 
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user.togglable.active i.active-off{
+	display: none;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .user-name {
+	font-size: 20px;
+	height: 24px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.view-conference-wrapper .conference-user-wrapper .caller-id-number {
+	margin-top: -4px;
+	color: #a0a0a0;
+	font-style: italic;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .user-actions {
+	margin-top: 8px;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user {
+	cursor: pointer;
+	display: inline-block;
+	font-size: 20px;
+	min-width: 35px;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user.hangup {
+	margin-left: -6px;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user i {
+	cursor: pointer;
+	color: #333;
+	font-size: 20px;
+	display: inline-block;
+	margin: 0 15px 0 0;
+	vertical-align: middle;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .action-user i:first-child {
+	margin-left: 0;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .duration {
+	text-align: right;
+	color: #a0a0a0;
+	margin-top: 2px;
+}
+
+.view-conference-wrapper .conference-user-wrapper.speaking {
+	border: 1px solid #22a5ff;
+	box-shadow: 0px 0px 10px -1px #22a5ff;
+}
+
+.view-conference-wrapper .conference-user-wrapper .icon-user {
+	background-size: cover;
+	float: left;
+	margin-right: 20px;
+	height: 70px;
+	width: 70px;
+}

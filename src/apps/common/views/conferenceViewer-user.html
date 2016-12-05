@@ -1,0 +1,27 @@
+<div class="conference-user-wrapper{{#if talking}} speaking{{/if}}" data-id="{{participant_id}}" data-name="{{displayName}}">
+	<div class="icon-user" data-avatar-id="{{avatarId}}">
+	</div>
+
+	<div class="user-data">
+		<div class="user-name">{{displayName}}</div>
+		<div class="caller-id-number">{{caller_id_number}}</div>
+		<div class="user-actions clearfix">
+			<div class="actions-user pull-left">
+				<div class="action-user togglable{{#unless hear}} active{{/unless}}" data-action-category="deaf">
+					<i class="fa fa-headphones active-off" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.userDeaf }}" data-action="deaf"></i>
+					<i class="icon-telicon-deafen monster-red active-on" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.userUndeaf }}" data-action="undeaf"></i>
+				</div>
+
+				<div class="action-user togglable{{#unless speak}} active{{/unless}}" data-action-category="mute">
+					<i class="fa fa-microphone active-off" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.userMute }}" data-action="mute"></i>
+					<i class="fa fa-microphone-slash monster-red active-on" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.userUnMute }}" data-action="unmute"></i>
+				</div>
+				<div class="action-user hangup">
+					<i class="icon-telicon-hangup monster-red" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.userKick }}" data-action="kick"></i>
+				</div>
+			</div>
+			<div class="duration pull-right">(<span class="conference-timer" data-duration="{{duration}}"></span>)</div>
+		</div>
+	</div>
+
+</div>

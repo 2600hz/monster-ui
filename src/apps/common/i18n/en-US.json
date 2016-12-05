@@ -760,5 +760,37 @@
 	"webphoneSubmodule": {
 		"createADevice": "We didn't find any Webphone associated with your user, would you like to create one now?",
 		"deviceName": "Webphone"
+	},
+
+	"conferenceViewer": {
+		"actionBar": {
+			"tooltips": {
+				"lock": "Lock",
+				"unlock": "Unlock",
+				"mute": "Mute All",
+				"unmute": "Unmute All",
+				"hangup": "Hangup",
+				"userMute": "Mute",
+				"userUnMute": "Unmute",
+				"userDeaf": "Deaf",
+				"userUndeaf": "Undeaf",
+				"userKick": "Kick"
+			}
+		},
+		"moderators": "Moderators",
+		"participants": "Participants",
+		"userActions": {
+			"mute-member": "{{name}} has been muted",
+			"unmute-member": "{{name}} has been unmuted",
+			"deaf-member": "{{name}} can no longer hear other participants",
+			"undeaf-member": "{{name}} can now hear other participants",
+			"del-member": "{{name}} has left the conference",
+			"lock": "The conference is now locked",
+			"unlock": "The conference has been unlocked"
+		},
+		"emptyModerators": "There are currently no moderators in the conference",
+		"emptyParticipants": "There are currently no participants in the conference",
+		"notStarted": "Not Started",
+		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
 	}
 }
