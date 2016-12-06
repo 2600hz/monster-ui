@@ -314,7 +314,10 @@
 		"verb": "API Type",
 		"__comment": " Add Report Error Feature",
 		"__version": "v4.0",
-		"report": "Report Error via Email"
+		"report": "Report Error via Email",
+		"__comment": " Add Copy to Clipboard feature",
+		"__version": "v4.0",
+		"copyToClipboard": "Copy to Clipboard"
 	},
 
 	"javascriptErrorDialog": {

@@ -25,6 +25,8 @@
 			{{#if showReport}}
 				<div class="error-line report-error">
 					<a class="monster-link blue" target="_blank" href="{{ mailToLink }}">{{ @root.i18n.advancedErrorDialog.report }}</a>
+					-
+					<a class="copy-clipboard monster-link blue" href="javascript:void(0);" type="button">{{ @root.i18n.advancedErrorDialog.copyToClipboard }}</button>
 				</div>
 			{{/if}}
 		</div>

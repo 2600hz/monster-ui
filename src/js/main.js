@@ -8,6 +8,7 @@ require.config({
 		'chart': 'js/vendor/chart.min',
 		'card': 'js/vendor/card',
 		'chosen': 'js/vendor/jquery.chosen.min',
+		'clipboard': 'js/vendor/clipboard.min',
 		'crossroads': 'js/vendor/crossroads.min',
 		'config': 'js/config',
 		'dependClass': 'js/vendor/jquery.dependClass',
