@@ -105,15 +105,15 @@ gulp build-prod [--pro=<name>]
 
 ### Commands
 
-* no options
+* `gulp`
 
   Launch a Web server, CSS changes are immediate, automatically reloads the page on save ([browsersync](https://www.npmjs.com/package/browser-sync) + [livereload](https://www.npmjs.com/package/gulp-livereload))
 
-* `build-dev`
+* `gulp build-dev`
 
   same as no options except that you need to launch your own Web server to serve the files
 
-* `build-pro`
+* `gulp build-pro`
 
   bundles files together
 
@@ -133,12 +133,12 @@ gulp build-prod [--pro=<name>]
 
 ## Authors
 
-List of [2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
+[2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
 
 * [**Jean-Roch Maitre**](https://github.com/JRMaitre)
 * [**Joris Tirado**](https://github.com/azefiel)
 
-See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
 
 ## License
 
