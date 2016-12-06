@@ -9,6 +9,7 @@ require.config({
 		'card': 'js/lib/card',
 		'chosen': 'js/lib/jquery.chosen.min',
 		'crossroads': 'js/lib/crossroads.min',
+		'clipboard': 'js/lib/clipboard.min',
 		'config': 'js/config',
 		'datatables': 'js/lib/tables/jquery.dataTables-1.8',
 		'dependClass': 'js/lib/jquery.dependClass',

@@ -13,7 +13,8 @@ define(function(require){
 		renderJSON = require('renderjson'),
 		footable = require('footable'),
 		mousetrap = require('mousetrap'),
-		Drop = require('drop');
+		Drop = require('drop'),
+		Clipboard = require('clipboard');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -662,6 +663,7 @@ define(function(require){
 								  + "%0D%0A"
 								  + "%0D%0AAPI Response: " + error.data.response
 				},
+				copyTextError = "Date: " + new Date() + " | URL: " + error.data.verb.toUpperCase() + " " + error.data.url + " | Message: " + error.data.message + " | API Response " + error.data.response,
 				alertOptions = {
 					htmlContent: true,
 					title: error.data.customTitle,
@@ -672,6 +674,8 @@ define(function(require){
 				template = $(monster.template(coreApp, 'dialog-errorAPI', dataTemplate, false, false, true));
 
 			monster.ui.renderJSON(error.data.jsonResponse, template.find('.json-viewer'));
+
+			monster.ui.clipboard(template.find('.copy-clipboard'), copyTextError);
 
 			template.find('.headline').on('click', function() {
 				template.find('.error-details-wrapper').slideToggle();
@@ -2557,6 +2561,19 @@ define(function(require){
 			else {
 				return template;
 			}
+		},
+
+		clipboard: function(pTarget, value) {
+			// Have to do this so it works...
+			$.ui.dialog.prototype._focusTabbable = $.noop;
+
+			var target = pTarget[0];
+
+			new Clipboard(target, {
+				text: function () {
+					return value;
+				}
+			});
 		}
 	};
 
