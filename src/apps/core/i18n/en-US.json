@@ -710,5 +710,10 @@
 		"mobile": {
 			"tooltip": "Mobile"
 		}
+	},
+	"__comment": "UI-2492: show a success message when copying to clipboard",
+	"__version": "v4.0",
+	"clipboard": {
+		"successCopy": "Successfully Copied to Clipboard!"
 	}
 }
