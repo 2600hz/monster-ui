@@ -319,7 +319,7 @@ define(function(require){
 					self.portRequestChangeState({
 						data: {
 							accountId: accountId,
-							requestId: requestId,
+							portRequestId: requestId,
 							state: newState
 						},
 						success: function(newRequest) {
@@ -343,7 +343,7 @@ define(function(require){
 							self.portRequestChangeState({
 								data: {
 									accountId: accountId,
-									requestId: requestId,
+									portRequestId: requestId,
 									state: newState,
 									data: {
 										scheduled_date: newScheduledDate
@@ -373,7 +373,7 @@ define(function(require){
 					self.portRequestChangeState({
 						data: {
 							accountId: accountId,
-							requestId: requestId,
+							portRequestId: requestId,
 							state: newState
 						},
 						success: function(newRequest) {
@@ -1231,7 +1231,7 @@ define(function(require){
 								self.portRequestChangeState({
 									data: {
 										accountId: accountId,
-										requestId: order.id,
+										portRequestId: order.id,
 										state: 'submitted'
 									},
 									success: function() {
@@ -1248,7 +1248,7 @@ define(function(require){
 							self.portRequestChangeState({
 								data: {
 									accountId: accountId,
-									requestId: portRequestId,
+									portRequestId: portRequestId,
 									state: 'submitted'
 								},
 								success: function() {
