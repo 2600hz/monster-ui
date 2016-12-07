@@ -2504,10 +2504,14 @@ define(function(require){
 
 			var target = pTarget[0];
 
-			new Clipboard(target, {
+			var cb = new Clipboard(target, {
 				text: function () {
 					return value;
 				}
+			});
+
+			cb.on('success', function() {
+				toastr.success(monster.apps.core.i18n.active().clipboard.successCopy);
 			});
 		}
 	};
