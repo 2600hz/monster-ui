@@ -8,11 +8,6 @@
     - [Configure](#configure)
     - [Build](#build)
 * [Using Docker](#using-docker)
-* [Gulp Command](#gulp-command)
-    - [Synopsis](#synopsis)
-    - [Description](#description)
-    - [Commands](#commands)
-    - [Options](#options)
 * [Contributing](#contributing)
 * [Authors](#authors)
 * [License](#license)
@@ -77,7 +72,7 @@ gulp
 
 Access your development environment at `http://localhost:3000/`
 
-*For more info on how the `gulp` command works, head to the [Gulp Command](#gulp-command) section*
+*For more info on how the `gulp` command works, head to the [dedicated](docs/gulpCommand.md) documentation.*
 
 ## Using Docker
 
@@ -88,40 +83,6 @@ If you are using Docker containers, we made it easy for you to set up a developm
 ```
 
 This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
-
-## Gulp Command
-
-### Synopsis
-
-```
-gulp            [--pro=<name>]
-gulp build-dev  [--pro=<name>]
-gulp build-prod [--pro=<name>]
-```
-
-### Description
-
-*Explain what task runner we use*
-
-### Commands
-
-* `gulp`
-
-  Launch a Web server, CSS changes are immediate, automatically reloads the page on save ([browsersync](https://www.npmjs.com/package/browser-sync) + [livereload](https://www.npmjs.com/package/gulp-livereload))
-
-* `gulp build-dev`
-
-  same as no options except that you need to launch your own Web server to serve the files
-
-* `gulp build-pro`
-
-  bundles files together
-
-### Options
-
-* `--pro=<name>`
-
-  Some applications might have a pro version. If that is the case and you want to build it with the 'pro' assets, you need to set the `pro` option and specify the name of the application.
 
 ## Contributing
 
