@@ -23,8 +23,7 @@ Start running tasks to build the project for a development or production environ
 
 * `gulp`
 
-    Compile SCSS to CSS, launch Web server ([browsersync](https://www.npmjs.com/package/browser-sync)) and serve project at `http://localhost:3000/`, include a CSS watcher that make changes immediate in the browser ([livereload](https://www.npmjs.com/package/gulp-livereload))
-    UI reloads automatically on file save.
+    Compile SCSS to CSS, launch Web server ([browsersync](https://www.npmjs.com/package/browser-sync)) and serve project at `http://localhost:3000/`, include a CSS watcher that make changes immediate in the browser ([livereload](https://www.npmjs.com/package/gulp-livereload)), UI reloads automatically on file save.
 
 * `gulp build-dev`
 
