@@ -401,7 +401,7 @@ define(function(require){
 		},
 
 		series: async.series,
-		waterfall: async.series,
+		waterfall: async.waterfall,
 
 		shift: function(chain){
 			var next = chain.shift();
