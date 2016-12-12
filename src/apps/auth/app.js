@@ -101,7 +101,14 @@ define(function(require){
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				self.authenticateAuthToken(cookieData.authToken, successfulAuth, errorAuth);
+				self.authenticateAuthToken(cookieData.authToken, function(data) {
+					data.loginData = {
+						credentials: cookieData.credentials,
+						account_name: cookieData.accountName
+					};
+
+					successfulAuth && successfulAuth(data);
+				}, errorAuth);
 			}
 			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
 			else if(urlParams.hasOwnProperty('t')) {
@@ -179,8 +186,9 @@ define(function(require){
 			return authToken;
 		},
 
-		_afterSuccessfulAuth: function(data) {
-			var self = this;
+		_afterSuccessfulAuth: function(data, pUpdateLayout) {
+			var self = this,
+				updateLayout = pUpdateLayout === false ? false : true;
 
 			self.accountId = data.data.account_id;
 
@@ -212,12 +220,20 @@ define(function(require){
 				accountId: data.data.account_id
 			};
 
+			if(data.hasOwnProperty('loginData')) {
+				cookieAuth.credentials = data.loginData.credentials;
+				cookieAuth.accountName = data.loginData.account_name;
+			}
+
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
-			$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
-			self.appFlags.mainContainer.empty();
+			// In the case of the retry login, we don't want to re-update the UI, we just want to re-update the flags set above, that's why we added this parameter.
+			if(updateLayout) {
+				$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
+				self.appFlags.mainContainer.empty();
 
-			self.afterLoggedIn(data.data);
+				self.afterLoggedIn(data.data);
+			}
 		},
 
 		//Events handler
@@ -698,6 +714,8 @@ define(function(require){
 						$.cookie('monster-login', null);
 					}
 
+					data.loginData = loginData;
+
 					self._afterSuccessfulAuth(data);
 				},
 				function() {
@@ -831,6 +849,45 @@ define(function(require){
 					}
 				}
 			});
+		},
+
+		retryLogin: function(success, error) {
+			var self = this,
+				loginData;
+
+			if($.cookie('monster-auth')) {
+				var cookieData = $.parseJSON($.cookie('monster-auth'));
+
+				if(cookieData.hasOwnProperty('credentials') && cookieData.hasOwnProperty('accountName')) {
+					loginData = {
+						credentials: cookieData.credentials,
+						account_name: cookieData.accountName
+					}
+				}
+			}
+
+			if(loginData) {
+				self.callApi({
+					resource: 'auth.userAuth',
+					data: {
+						data: loginData,
+						generateError: false
+					},
+					success: function (data, status) {
+						data.loginData = loginData;
+
+						self._afterSuccessfulAuth(data, false);
+
+						success && success(data.auth_token);
+					},
+					error: function(errorPayload, data, globalHandler) {
+						error && error();
+					}
+				});
+			}
+			else {
+				error && error();
+			}
 		},
 
 		recovery: function(recoveryId, success, error) {
