@@ -576,7 +576,9 @@
 
 			options.onRequestError && options.onRequestError(error, options);
 
-			options.error && options.error(parsedError, error, options.onRequestError);
+			if(!options.hasOwnProperty('preventCallbackError') || options.preventCallbackError === false) {
+				options.error && options.error(parsedError, error, options.onRequestError);
+			}
 		};
 
 		settings.success = function requestSuccess(responseData, status, jqXHR) {

@@ -492,9 +492,28 @@ define(function(require){
 							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 							monster.error('api', error, false);
 
-							monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-								monster.util.logoutAndReload();
-							});
+							if(!requestOptions.hasOwnProperty('preventCallbackError')) {
+								// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
+								// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
+								requestOptions.preventCallbackError = true;
+
+								monster.apps.auth.retryLogin(function(newToken) {
+									// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+									var updatedRequestOptions = $.extend(true, requestOptions, { preventCallbackError: false, authToken: newToken });
+
+									monster.kazooSdk.request(updatedRequestOptions);
+								},
+								function() {
+									monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+										monster.util.logoutAndReload();
+									});
+								});
+							}
+							else {
+								monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+									monster.util.logoutAndReload();
+								});
+							}
 						}
 						else {
 							monster.error('api', error, requestOptions.generateError);
