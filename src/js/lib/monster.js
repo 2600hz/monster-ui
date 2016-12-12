@@ -124,29 +124,12 @@ define(function(require){
 							parsedError = $.parseJSON(error.response);
 						}
 
-						if(error.status === 402 && typeof options.acceptCharges === 'undefined') {
-							monster.ui.charges(parsedError.data, function() {
-								options.acceptCharges = true;
-								monster.request(options);
-							}, function () {
-								options.onChargesCancelled && options.onChargesCancelled();
-							});
-						}
 						// If we have a 401 after being logged in, it means our session expired
-						else if(monster.util.isLoggedIn() && error.status === 401) {
+						if(monster.util.isLoggedIn() && error.status === 401) {
 							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 							monster.error('api', error, false);
 
-							var isUsingKazooApi = settings.url.indexOf(monster.config.api.default) > -1;
-
-							if (isUsingKazooApi) {
-								monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-									monster.util.logoutAndReload();
-								});
-							}
-							else {
-								monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
-							}
+							monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
 						}
 						else {
 							// Added this to be able to display more data in the UI
