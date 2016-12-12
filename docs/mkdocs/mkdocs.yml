@@ -19,6 +19,7 @@ pages:
   - 'Coding standards (Basic)': 'docs/codingStandards.md'
   - 'Coding standards (Advanced)': 'docs/javascriptStyleGuide.md'
   - 'How to use the validation in your UI': 'docs/validation.md'
+  - 'Gulp command': 'docs/gulpCommand.md'
 - 'Monster Helpers':
   - 'monster':
     - 'Intro': 'docs/monster.md'

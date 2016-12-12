@@ -1,51 +1,104 @@
-Required Softwares:
+# Monster UI
 
-- Node >= 4.5.0 (from their website)
-- NPM >= 3.10.6 (npm install -g npm)
-- GULP >= 3.9.1 (npm install -g gulp)
+* [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Install](#install)
+    - [Configure](#configure)
+    - [Build](#build)
+* [Using Docker](#using-docker)
+* [Contributing](#contributing)
+* [Authors](#authors)
+* [License](#license)
 
-After cloning a fresh repo, you'll want to run
+## Getting Started
 
-- npm install
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
 
-which will initialize all the node dependencies for gulp
+### Prerequisites
 
-Once that's done, you can just run
+* [node](https://nodejs.org/en/download/) >= 4.5.0
+* [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
+* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 3.9.1
 
-- gulp
+### Install
 
-which will build the website, build the css files from scss files and serve it to a webbrowser.
+Clone the official `monster-ui` repository:
 
+```
+git clone https://github.com/2600hz/monster-ui.git monster-ui
+```
 
-If you are using Docker, this will setup a local dev server:
+Go to the project's folder:
+
+```
+cd monster-ui
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
+### Configure
+
+In order for the UI to load the data from your server, we need to specify which API to use. For that, open the `config.js` file located in the `src/js/` folder and add the URL of your server as the value of the `default` property.
+
+```javascript
+define(function(require) {
+
+  return {
+    api: {
+      // The default API URL defines what API is used to log in to your back-end
+      default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
+
+      ...
+    },
+
+    ...
+  };
+});
+```
+
+### Build
+
+Use the `gulp` command to build and launch the web server
+
+```
+gulp
+```
+
+Access your development environment at `http://localhost:3000/`
+
+*For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+
+## Using Docker
+
+If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Install](#install) and [Configure](#configure) sections. After that, execute our custom `serve.sh` script (made by [**Pierre Fenoll**](https://github.com/fenollp)) in your Docker container:
 
 ```shell
 ./serve.sh
 ```
 
+This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
+## Contributing
 
-If you install all the separate apps via GIT as submodules in the /monster-ui/src/apps folder and then run `gulp build-prod`, all the apps code (JS/HTML/CSS) will be concatenated together and minified
+1. [Fork it!](https://github.com/2600hz/monster-ui/fork)
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
 
-Reach us at #2600hz for Feedback
+## Authors
 
+[2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
 
-Build Pro version
+* [**Jean-Roch Maitre**](https://github.com/JRMaitre)
+* [**Joris Tirado**](https://github.com/azefiel)
 
-Some apps might have a pro version. If that's the case, and you want to build it with the "pro" assets you need to specify the name of the app in the pro flag.
+See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
 
+## License
 
-    gulp build-prod --pro=test1,test2,test3
-
-
-Build Pro version app level
-
-
-    gulp build-prod
-
-
-with core only, then add the app repo to /apps and
-
-
-    gulp-build-app --app=test1 --pro
-
+This project is licensed under the Mozilla Public License - see the [LICENSE](LICENSE) file for details.
