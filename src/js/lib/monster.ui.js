@@ -1173,7 +1173,8 @@ define(function(require){
 									weight: 10,
 									title: i18n.title.createLink,
 									icon: 'fa fa-link',
-									command: 'createLink'
+									command: 'createLink',
+									inputType: 'text'
 								},
 								delete: {
 									weight: 20,
@@ -1185,9 +1186,22 @@ define(function(require){
 						},
 						image: {
 							weight: 80,
-							title: i18n.title.upload,
-							icon: 'fa fa-picture-o',
-							command: 'insertImage'
+							options: {
+								link: {
+									weight: 10,
+									title: 'Link image',
+									icon: 'fa fa-picture-o',
+									'command': 'insertImage',
+									inputType: 'text'
+								},
+								upload: {
+									weight: 20,
+									title: 'Upload image',
+									icon: 'fa fa-file-image-o',
+									'command': 'insertImage',
+									inputType: 'file'
+								}
+							}
 						},
 						editing: {
 							weight: 90,
