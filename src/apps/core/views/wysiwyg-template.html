@@ -20,21 +20,27 @@
 			</ul>
 		{{else}}
 			{{#each options}}
-				<a class="btn{{#compare command '===' 'createLink'}} dropdown-toggle" data-toggle="dropdown{{/compare}}" data-edit="{{command}}" title="{{title}}"><i class="{{icon}}"></i></a>
-				{{#compare command '===' 'createLink'}}
+				<a class="btn{{#compare inputType '===' 'text'}} dropdown-toggle" data-toggle="dropdown"{{/compare}}{{#compare inputType '===' 'file'}} wysiwyg-upload"{{/compare}} data-edit="{{command}}" title="{{title}}">
+					<i class="{{icon}}"></i>
+				{{#compare inputType '!==' 'file'}}
+				</a>
+				{{/compare}}
+
+				{{#compare inputType '===' 'text'}}
 					<div class="dropdown-menu input-append">
-						<input type="text" class="span2" placeholder="{{@root.i18n.wysiwyg.placeholder.createLink}}" data-edit="{{command}}">
+						<input type="text" class="span2" placeholder="{{@root.i18n.wysiwyg.placeholder.url}}" data-edit="{{command}}">
 						<button class="btn" type="button">{{@root.i18n.add}}</button>
 					</div>
+				{{/compare}}
+				{{#compare inputType '===' 'file'}}
+					<input type="file" data-edit="{{command}}">
+				</a>
 				{{/compare}}
 			{{/each}}
 		{{/if}}
 	{{else}}
-		<a class="btn{{#compare command '===' 'insertImage'}} wysiwyg-upload{{else}}" data-edit="{{command}}{{/compare}}" title="{{title}}">
+		<a class="btn" data-edit="{{command}}" title="{{title}}">
 			<i class="{{icon}}"></i>
-		{{#compare command '===' 'insertImage'}}
-			<input type="file" data-edit="{{command}}">
-		{{/compare}}
 		</a>
 	{{/if}}
 	</div>
