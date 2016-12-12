@@ -176,7 +176,7 @@ The `options` object is used to list the different options inside a dropdown or 
 When defining an option containing the `args` key, you can specify parameters before and after it. See the "Change color model to RGB" and "Add macro" examples.
 
 ##### inputType
-The `inputType` key is specifically used in grouped buttons that need an input to render an HTML tag (<a> and <img>). The two values handled are `text` and `file`, and they will set the input type in the DOM. If `text` is used, clicking on the button will prompt a dropdown with an input, if `file` is used, the browser will prompt the user to upload an image from their computer.
+The `inputType` key is specifically used in grouped buttons that need an input to render an HTML tag (`<a>` and `<img>`). The two values handled are `text` and `file`, and they will set the input type in the DOM. If `text` is used, clicking on the button will prompt a dropdown with an input, if `file` is used, the browser will prompt the user to upload an image from their computer.
 
 ### Examples
 * Remove some elements from the toolbar
