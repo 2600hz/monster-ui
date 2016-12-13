@@ -5,7 +5,7 @@ The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizab
 * [Parameters](#parameters)
 * [Return](#return)
 * [Description](#description)
-* [Customization](#cutomization)
+* [Customization](#customization)
 * [Examples](#examples)
 
 ![WYSIWYG](http://i.imgur.com/Y5CESZv.png)
