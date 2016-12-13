@@ -92,6 +92,30 @@ define(function(require){
 					template.find('.list-events tbody').prepend(eventTemplate);
 				};
 
+			self.subscribeWebSocket({
+				binding: 'call.CHANNEL_CREATE.*',
+				requiredElement: template,
+				callback: function(event) {
+					addEvent(event);
+				}
+			});
+
+			self.subscribeWebSocket({
+				binding: 'call.CHANNEL_ANSWER.*',
+				requiredElement: template,
+				callback: function(event) {
+					addEvent(event);
+				}
+			});
+
+			self.subscribeWebSocket({
+				binding: 'call.CHANNEL_DESTROY.*',
+				requiredElement: template,
+				callback: function(event) {
+					addEvent(event);
+				}
+			});
+/*
 			// subscribe to call events
 			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_CREATE.*"});
 			monster.socket.emit("subscribe", { account_id: self.accountId, auth_token: self.authToken, binding: "call.CHANNEL_ANSWER.*"});
@@ -108,7 +132,7 @@ define(function(require){
 
 			monster.socket.on("CHANNEL_DESTROY", function (data) {
 				addEvent(data);
-			});
+			});*/
 		},
 
 		// Formatting data
@@ -117,13 +141,13 @@ define(function(require){
 				formattedData = data;
 
 			formattedData.extra = {};
+console.log(data);
+			formattedData.extra.to = data['to'].substr(0, data['to'].indexOf('@'));
+			formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data['event_name']];
+			formattedData.extra.classEvent = data['event_name'] === 'CHANNEL_CREATE' ? 'info' : (data['event_name'] === 'CHANNEL_ANSWER' ? 'success' : 'error');
 
-			formattedData.extra.to = data['To'].substr(0, data['To'].indexOf('@'));
-			formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data['Event-Name']];
-			formattedData.extra.classEvent = data['Event-Name'] === 'CHANNEL_CREATE' ? 'info' : (data['Event-Name'] === 'CHANNEL_ANSWER' ? 'success' : 'error');
-
-			if('Custom-Channel-Vars' in data && 'Authorizing-Type' in data['Custom-Channel-Vars'] && data['Custom-Channel-Vars']['Authorizing-Type'] === 'device') {
-				formattedData.extra.deviceId = data['Custom-Channel-Vars']['Authorizing-ID'];
+			if('custom_channel_vars' in data && 'authorizing_type' in data['custom_channel_vars'] && data['custom_channel_vars']['authorizing_type'] === 'device') {
+				formattedData.extra.deviceId = data['custom_channel_vars']['authorizing_id'];
 			}
 
 			return formattedData;

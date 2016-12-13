@@ -145,8 +145,8 @@ In order to do so, we'll add this code:
 		var self = this;
 
 		template.find('#search').on('click', function(e) {
-			self.searchNumbers(415, 15, function(listNumbers) {
-				var results = monster.template(self, 'results', listNumbers);
+			self.searchNumbers(650, 15, function(listNumbers) {
+				var results = monster.template(self, 'results', { numbers: listNumbers});
 
 				template
 					.find('.results')
@@ -202,12 +202,14 @@ layout.html
 results.html
 
 	<div class="results-wrapper">
+		<ul>
 		{{#each numbers}}
-			<span>{{this}}</span>
+			<li>{{this.number}}</li>
 		{{else}}
 			<!-- In a loop, you need to use '@root' to come back to the global scope and use the i18n variable -->
-			<span>{{ @root.i18n.demo.noNumber }}</span>
+			<li>{{ @root.i18n.skeleton.noNumber }}</li>
 		{{/each}}
+		</ul>
 	</div>
 
 You can see that those templates don't use hardcoded labels, but use i18n variables. It allows your application to be internationalizable in a very simple way. The only thing to do is to add a en-US.json file in the /demo/i18n folder. It should contain the different labels you used in your templates:

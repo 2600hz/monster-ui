@@ -49,12 +49,27 @@ define(function(require) {
 					{
 						tabs: [
 							{
-								callback: ''
+								callback: self.renderWelcome
 							}
 						]
 					}
 				]
 			});
+		},
+
+		renderWelcome: function(pArgs) {
+			var self = this,
+				args = pArgs || {},
+				parent = args.container || $('#skeleton_app_container .app-content-wrapper'),
+				template = $(monster.template(self, 'layout', { user: monster.apps.auth.currentUser }));
+
+			parent
+				.fadeOut(function() {
+					$(this)
+						.empty()
+						.append(template)
+						.fadeIn();
+				});
 		}
 	};
 
