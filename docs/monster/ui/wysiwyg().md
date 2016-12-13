@@ -5,7 +5,7 @@ The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizab
 * [Parameters](#parameters)
 * [Return](#return)
 * [Description](#description)
-* [Customization](#cutomization)
+* [Customization](#customization)
 * [Examples](#examples)
 
 ![WYSIWYG](http://i.imgur.com/Y5CESZv.png)
@@ -51,7 +51,9 @@ monster.ui.wysiwyg(target[, options]);
     - link (grouped buttons)
         + create
         + delete
-    - image (single button)
+    - image (grouped button)
+        + upload
+        + link
     - editing (grouped buttons)
         + undo
         + redo
@@ -123,14 +125,15 @@ textAlign: {
 * grouped buttons
 
 ```javascript
-fontEffect: {
+image: {
     weight: 0,
     options: {
         bold: {
             weight: 0,
             title: '',
             icon: '',
-            command: ''
+            command: '',
+            inputType: ''
         },
         { ... }
     }
@@ -140,7 +143,7 @@ fontEffect: {
 * single button
 
 ```javascript
-image: {
+horizontalRule: {
     weight: 0,
     title: '',
     icon: '',
@@ -149,7 +152,7 @@ image: {
 ```
 
 ##### weight
-This value of the `weight` key is used to sort the options in the toolbar. By default, the value of `weight` is a multiple of 10.
+The value of the `weight` key is used to sort the options in the toolbar. By default, the value of `weight` is a multiple of 10.
 
 ##### title
 The value of the `title` key is the text that will be displayed when hovering the corresponding button/label in the toolbar.
@@ -171,6 +174,9 @@ The `options` object is used to list the different options inside a dropdown or 
 
 ##### ante, post
 When defining an option containing the `args` key, you can specify parameters before and after it. See the "Change color model to RGB" and "Add macro" examples.
+
+##### inputType
+The `inputType` key is specifically used in grouped buttons that need an input to render an HTML tag (`<a>` and `<img>`). The two values handled are `text` and `file`, and they will set the input type in the DOM. If `text` is used, clicking on the button will prompt a dropdown with an input, if `file` is used, the browser will prompt the user to upload an image from their computer.
 
 ### Examples
 * Remove some elements from the toolbar
