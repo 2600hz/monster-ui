@@ -20,7 +20,7 @@
 			</ul>
 		{{else}}
 			{{#each options}}
-				<a class="btn{{#compare inputType '===' 'text'}} dropdown-toggle" data-toggle="dropdown"{{/compare}}{{#compare inputType '===' 'file'}} wysiwyg-upload"{{/compare}} data-edit="{{command}}" title="{{title}}">
+				<a class="btn{{#compare inputType '===' 'file'}} wysiwyg-upload{{/compare}}{{#compare inputType '===' 'text'}} dropdown-toggle" data-toggle="dropdown{{/compare}}" data-edit="{{command}}" title="{{title}}">
 					<i class="{{icon}}"></i>
 				{{#compare inputType '!==' 'file'}}
 				</a>
