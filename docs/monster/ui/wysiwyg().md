@@ -8,7 +8,7 @@ The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizab
 * [Customization](#customization)
 * [Examples](#examples)
 
-![WYSIWYG](http://i.imgur.com/Y5CESZv.png)
+![WYSIWYG](http://i.imgur.com/GtwyxyL.png)
 
 ### Syntax
 ```javascript
