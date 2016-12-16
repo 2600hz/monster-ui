@@ -60,6 +60,10 @@ require.config({
 		'templates': 'js/templates'
 	},
 	shim: {
+		'card': ['jquery'],
+		'chosen': ['jquery'],
+		'ddslick': ['jquery'],
+		'fileupload': ['jquery'],
 		'drop': ['tether'],
 		'footable-sort': ['footable'],
 		'footable-filter': ['footable'],
