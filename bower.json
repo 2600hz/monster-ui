@@ -1,0 +1,17 @@
+{
+  "name": "monster-ui",
+  "main": "index.js",
+  "license": "MPL 1.1",
+  "homepage": "https://github.com/2600hz/monster-ui",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/js/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

@@ -18,3 +18,4 @@ src/apps/*
 !src/apps/myaccount
 !src/apps/skeleton
 !src/apps/tutorial
+bower_components/
