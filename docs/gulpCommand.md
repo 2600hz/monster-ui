@@ -17,7 +17,7 @@ gulp build-prod [--pro=<name>]
 
 ## Description
 
-Start running tasks to build the project for a development or production environment, the output of which is located in the `/dist` folder.
+Start running tasks to build the project for a development or production environment, the result of which is located in the `dist` folder, at the root level of the project.
 
 ## Commands
 
@@ -29,7 +29,7 @@ Start running tasks to build the project for a development or production environ
 
   Only compile SCSS to CSS.
 
-* `gulp build-pro`
+* `gulp build-prod`
 
   Compile SCSS to CSS, merge all templates in a single `templates.js` file, run require, minify `main.js` and `templates.js` and minify CSS files.
 
