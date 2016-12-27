@@ -227,7 +227,17 @@ define(function(require){
 			}
 
 			if(typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp)*1000);
+				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
+				while(timestamp > 9999999999999) {
+					timestamp /= 1000;
+				}
+
+				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
+				if(timestamp < 1000000000) {
+					timestamp *= 1000;
+				}
+
+				formattedResponse = new Date(timestamp);
 			}
 
 			return formattedResponse;
