@@ -630,3 +630,22 @@ body,
 .backend-pagination .partial-load {
 	display: inline-block
 }
+
+/* Page Size Table */
+.table-page-size {
+	float: right;
+	display: inline-block;
+	margin-top: 11px;
+	margin-right: 50px;
+}
+
+.table-page-size select {
+	width: 60px;
+	margin: 0 5px 3px;
+}
+
+/* hacky class to use the same style as footable labels */
+.table-page-size span.label {
+	float: none !important;
+	margin-right: 0 !important;
+}

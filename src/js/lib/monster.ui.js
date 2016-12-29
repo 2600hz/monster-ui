@@ -2164,6 +2164,25 @@ define(function(require){
 						container.find('tbody').append(rows);
 					});
 				},
+				addPageSizeComponent = function(container, table, pPageSize) {
+					var pageSize = pPageSize || finalOptions.paging.size || 10,
+						pageSizeTemplate = $(monster.template(monster.apps.core, 'monster-table-pageSize', { pageSize: pageSize })),
+						footableInstance;
+
+					pageSizeTemplate.find('select').on('change', function() {
+						pageSize = parseInt($(this).val());
+						footableInstance = footable.get('#'+table.attr('id'));
+
+						footableInstance.pageSize(pageSize);
+
+						addPageSizeComponent(container, table, pageSize);
+
+						// This is useful so when we use the "load more" button, it uses the right page size we just set
+						finalOptions.paging.size = pageSize;
+					});
+
+					container.find('.footable-paging td').append(pageSizeTemplate);
+				},
 				filters = {
 					paginate: false
 				};
@@ -2201,6 +2220,8 @@ define(function(require){
 						var newTable = container.footable(finalOptions),
 							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
 
+						addPageSizeComponent(container, newTable);
+
 						monster.ui.tooltips(backendTemplate);
 
 						container.find('.footable-filtering th form').prepend(backendTemplate);
@@ -2236,13 +2257,17 @@ define(function(require){
 				finalOptions.getData(filters, function(rows, data) {
 					addRowsToBody([ rows ]);
 
-					container.footable(finalOptions);
+					var table = container.footable(finalOptions);
+
+					addPageSizeComponent(container, table);
 
 					finalOptions.afterInitialized && finalOptions.afterInitialized();
 				});
 			}
 			else {
-				container.footable(finalOptions);
+				var table = container.footable(finalOptions);
+
+				addPageSizeComponent(container, table);
 
 				finalOptions.afterInitialized && finalOptions.afterInitialized();
 			}

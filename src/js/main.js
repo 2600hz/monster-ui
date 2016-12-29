@@ -74,6 +74,9 @@ require.config({
 		'plugins': ['jquery'],
 		'kazoosdk': ['jquery'],
 		'touch-punch': ['jqueryui'],
+		'footable': {
+			'exports': 'FooTable'
+		},
 		'underscore': {
 			'exports': '_'
 		},

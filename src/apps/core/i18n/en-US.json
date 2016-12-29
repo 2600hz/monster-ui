@@ -715,5 +715,16 @@
 	"__version": "v4.0",
 	"clipboard": {
 		"successCopy": "Successfully Copied to Clipboard!"
+	},
+
+	"__comment": "UI-2516: allow users to display more entities",
+	"__version": "v4.0",
+	"tablePageSize": {
+		"show": "Show",
+		"entries": "entries",
+		"ten": "10",
+		"twentyFive": "25",
+		"fifty": "50",
+		"hundred": "100"
 	}
 }
