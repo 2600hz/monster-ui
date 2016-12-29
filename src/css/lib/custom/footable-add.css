@@ -57,7 +57,7 @@ table.footable.monster-table .footable-paging ul.pagination {
 	float: right;
 }
 
-table.footable.monster-table > tfoot > tr.footable-paging > td > span.label {
+table.footable.monster-table > tfoot > tr.footable-paging > td span.label {
 	background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
 	color: #333;
 	float: right;
