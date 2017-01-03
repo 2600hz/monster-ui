@@ -15,6 +15,9 @@ define(function(require){
 			// phonebook: 'project_phonebook_url'
 		},
 
+		// The kazooClusterId is the cluster id generated when creating a cluster doc for provisioner.
+                // kazooClusterId: '',
+
 		// The resellerId key is the accountId of your master account, and is needed for some reseller features
 		// For example it won't prompt for a credit card the sub-accounts that have a different resellerId than this resellerId
 		// resellerId: 'your_master_account_id',
