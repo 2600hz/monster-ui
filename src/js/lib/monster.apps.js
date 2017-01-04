@@ -281,7 +281,7 @@ define(function(){
 								authToken: params.authToken || app.getAuthToken(),
 								apiRoot: params.apiUrl || app.apiUrl,
 								uiMetadata: {
-									version: monster.config.version,
+									version: monster.util.getVersion(),
 									ui: 'monster-ui',
 									origin: app.name
 								},
@@ -585,7 +585,7 @@ define(function(){
 					monster.pub('monster.requestStart');
 
 					$.ajax({
-						url: app.appPath + '/i18n/' + language + '.json',
+						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
 						async: false,
 						success: function(data){

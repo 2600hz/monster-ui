@@ -21,7 +21,7 @@ Handlebars.getTemplate = function(app, name, ignoreCache) {
 			monster.pub('monster.requestStart');
 
 			$.ajax({
-				url: app.appPath + '/views/' + name + '.html',
+				url: monster.util.cacheUrl(app.appPath + '/views/' + name + '.html'),
 				dataType: 'text',
 				async: false,
 				success: function(result){
