@@ -29,6 +29,7 @@ var writeFile = function(fileName, content) {
 gulp.task('write-config-prod', function() {
 	var mainFileName = paths.tmp + '/build-config.json',
 		content = {
+			type: 'production',
 			preloadedApps: helpers.getAppsToInclude()
 		};
 
@@ -42,6 +43,7 @@ gulp.task('write-config-prod', function() {
 gulp.task('write-config-dev', function() {
 	var fileName = paths.tmp + '/build-config.json',
 		content = {
+			type: 'development',
 			preloadedApps: []
 		};
 

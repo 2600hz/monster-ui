@@ -1020,6 +1020,31 @@ define(function(require){
 			return authToken;
 		},
 
+		getVersion: function(callback) {
+			return monster.config.developerFlags.build.version;
+		},
+
+		cacheUrl: function(url) {
+			var self = this;
+
+			return url;
+
+			/* Commenting this as we don't want to add this just yet. We have issues with this code because versions from apps != versions in VERSION
+			   If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change, which means we wouldn't change the query sting used to get assets from any app, even monster-ui-voip...
+			   This only gets incremented when master build runs, whereas we need it to be changed when an app is built as well...
+			   Leaving this here for now, might have to just remove and forget about it eventually :/
+	
+				var self = this,
+				prepend = url.indexOf('?') >= 0 ? '&' : '?',
+				isDev = monster.config.developerFlags.build.type === 'development',
+				devCacheString = (new Date()).getTime(),
+				prodCacheString = monster.util.getVersion(),
+				cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString),
+				finalString = url + cacheString;
+
+			return finalString;*/
+		},
+
 		dataFlags: {
 			get: function(flagName, object) {
 				object.markers = object.markers || {};

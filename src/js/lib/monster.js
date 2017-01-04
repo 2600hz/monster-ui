@@ -178,7 +178,7 @@ define(function(require){
 
 					if(!data.hasOwnProperty('removeMetadataAPI') || data.removeMetadataAPI === false) {
 						payload.data.ui_metadata = {
-							version: monster.config.version,
+							version: monster.util.getVersion(),
 							ui: 'monster-ui'
 						};
 					}
@@ -215,7 +215,7 @@ define(function(require){
 		}, config),
 
 		css: function(href){
-			$('<link/>', { rel: 'stylesheet', href: href }).appendTo('head');
+			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');
 		},
 
 		domain: function(){
@@ -391,34 +391,46 @@ define(function(require){
 			next && next();
 		},
 
-		getVersion: function(callback) {
-			$.ajax({
-				url: 'VERSION',
-				cache: false,
-				success: function(version) {
-					version = version.replace(/\n.*/g,'')
-					                 .trim();
+		loadBuildConfig: function(globalCallback) {
+			var self = this;
 
-					callback(version);
-				}
-			});
-		},
+			monster.parallel({
+					version: function(callback) {
+						$.ajax({
+							url: 'VERSION',
+							cache: false,
+							success: function(version) {
+								version = version.replace(/\n.*/g,'')
+								                 .trim();
 
-		loadBuildConfig: function(callback) {
-			$.ajax({
-				url: 'build-config.json',
-				dataType: 'json',
-				cache: false,
-				success: function(config) {
-					monster.config.developerFlags.build = config;
-
-					callback();
+								callback(null, version);
+							},
+							error: function() {
+								callback(null, null);
+							}
+						});
+					},
+					buildFile: function(callback) {
+						$.ajax({
+							url: 'build-config.json',
+							dataType: 'json',
+							cache: false,
+							success: function(config) {
+								callback(null, config);
+							},
+							error: function() {
+								callback(null, {});
+							}
+						});
+					}
 				},
-				error: function() {
-					monster.config.developerFlags.build = monster.config.developerFlags.build || {};
-					callback();
+				function(err, results) {
+					monster.config.developerFlags.build = results.buildFile;
+					monster.config.developerFlags.build.version = results.version;
+
+					globalCallback && globalCallback(monster.config.developerFlags.build);
 				}
-			});
+			);
 		},
 
 		getScript: function(url, callback) {

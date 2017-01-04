@@ -469,14 +469,25 @@ define(function(require){
 			callback && callback();
 		},
 
-		displayVersion: function(container) {
-			var self = this;
+		/* Had to update that code because mainTemplate is no longer the main container, it's an array of divs, where one of them is the core-footer,
+			so we look through that array and once we found it we add the version */
+		displayVersion: function(mainTemplate) {
+			var self = this,
+				version = monster.util.getVersion(),
+				container,
+				$potentialContainer;
 
-			monster.getVersion(function(version) {
-				container.find('.core-footer .tag-version').html('('+version+')');
+			_.each(mainTemplate, function(potentialContainer) {
+				$potentialContainer = $(potentialContainer);
 
-				monster.config.version = version;
+				if($potentialContainer.hasClass('core-footer')) {
+					container = $potentialContainer;
+				}
 			});
+
+			if(container) {
+				container.find('.tag-version').html('('+version+')');
+			}
 		},
 
 		displayLogo: function(container) {
@@ -673,7 +684,7 @@ define(function(require){
 					account: acc,
 					authToken: self.getAuthToken(),
 					apiUrl: self.apiUrl,
-					version: monster.config.version,
+					version: monster.util.getVersion(),
 					hideApiUrl: monster.util.isWhitelabeling() && !monster.util.isSuperDuper()
 				},
 				template = monster.template(self, 'dialog-accountInfo', dataTemplate);
