@@ -280,6 +280,32 @@ define(function(require){
 				});
 			});
 
+			container.find('#main_topbar_account_toggle').on('click', '.current-account-container', function() {
+				var $this = $(this);
+
+				if($this.attr('data-id') !== monster.apps.auth.currentAccount.id) {
+					self.triggerMasquerading({
+						account: {
+							id: $this.attr('data-id'),
+							name: $this.text()
+						},
+						callback: function() {
+							var currentApp = monster.apps.getActiveApp();
+							if(currentApp in monster.apps) {
+								if(monster.apps[currentApp].isMasqueradable) {
+									monster.apps[currentApp].render();
+								}
+								else {
+									toastr.warning(self.i18n.active().noMasqueradingAllowed);
+									monster.apps.apploader.render();
+								}
+							}
+							self.hideAccountToggle();
+						}
+					});
+				}
+			});
+
 			container.find('#main_topbar_signout_link').on('click', function() {
 				monster.pub('auth.clickLogout');
 			});
@@ -344,7 +370,7 @@ define(function(require){
 						mainContainer.find('.current-account-container').html(template);
 					}
 					else {
-						mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name);
+						mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name).attr('data-id', monster.apps.auth.currentAccount.id);
 					}
 				},
 				onAccountClick: function(accountId, accountName) {
@@ -374,13 +400,13 @@ define(function(require){
 					});
 				},
 				onChildrenClick: function(data) {
-					mainContainer.find('.current-account-container').html(data.parentName);
+					mainContainer.find('.current-account-container').html(data.parentName).attr('data-id', data.parentId);
 				},
 				onBackToParentClick: function(data) {
-					mainContainer.find('.current-account-container').html(data.parentName);
+					mainContainer.find('.current-account-container').html(data.parentName).attr('data-id', data.parentId);
 				},
 				callback: function(data) {
-					mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name);
+					mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name).attr('data-id', monster.apps.auth.currentAccount.id);
 				}
 			});
 			$('#main_topbar_account_toggle').addClass('open');
