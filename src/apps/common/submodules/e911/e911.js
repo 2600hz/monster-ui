@@ -51,8 +51,11 @@ define(function(require){
 						},
 						success: function(results) {
 							if (!_.isEmpty(results)) {
+								var length = results[0].address_components.length;
+
 								popupHtml.find('#locality').val(results[0].address_components[1].long_name);
-								popupHtml.find('#region').val(results[0].address_components[3].short_name);
+								// Last component is country, before last is state, before can be county if exists or city if no county, so we had to change from 3 to length-2.
+								popupHtml.find('#region').val(results[0].address_components[length-2].short_name); 
 							}
 						}
 					});
