@@ -204,6 +204,7 @@ define(function(require){
 						allowBackOnMasquerading: allowBackOnMasquerading,
 						callback: function(data) {
 							var callbackData = {
+								parentId: accountId,
 								parentName: accountName,
 								children: data.accounts
 							};
@@ -357,6 +358,7 @@ define(function(require){
 										allowBackOnMasquerading: allowBackOnMasquerading,
 										callback: function(data) {
 											var callbackData = {
+												parentId: accountId,
 												parentName: accountName,
 												children: data.accounts
 											};
