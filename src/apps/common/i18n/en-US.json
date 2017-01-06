@@ -767,8 +767,8 @@
 			"tooltips": {
 				"lock": "Lock",
 				"unlock": "Unlock",
-				"mute": "Mute All",
-				"unmute": "Unmute All",
+				"mute": "Mute Participants",
+				"unmute": "Unmute Participants",
 				"hangup": "Hangup",
 				"userMute": "Mute",
 				"userUnMute": "Unmute",
