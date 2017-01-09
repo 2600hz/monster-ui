@@ -57,6 +57,13 @@
 			'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
 		},
+		blacklist: {
+			'list': { verb: 'GET', url: 'accounts/{accountId}/blacklists' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/blacklists/{blacklistId}' },
+			'create': { verb: 'PUT', url: 'accounts/{accountId}/blacklists' },
+			'update': { verb: 'POST', url: 'accounts/{accountId}/blacklists/{blacklistId}' },
+			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/blacklists/{blacklistId}' }
+		},
 		callflow: {
 			'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
 			'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
