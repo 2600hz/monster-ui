@@ -8,7 +8,7 @@ The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizab
 * [Customization](#customization)
 * [Examples](#examples)
 
-![WYSIWYG](http://i.imgur.com/GtwyxyL.png)
+![WYSIWYG](http://i.imgur.com/xiQh04l.png)
 
 ### Syntax
 ```javascript
@@ -58,6 +58,7 @@ monster.ui.wysiwyg(target[, options]);
         + undo
         + redo
     - horizontalRule (single button)
+    - toggleView (single button)
     - macro (dropdown list) *disabled by default*
 
 ### Return

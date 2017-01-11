@@ -1226,6 +1226,12 @@ define(function(require){
 							icon: 'fa fa-minus',
 							command: 'insertHorizontalRule'
 						},
+						toggleView: {
+							weight: 200,
+							title: i18n.title.toggleViewMode,
+							icon: 'fa fa-code',
+							command: 'html'
+						},
 						macro: {
 							weight: 999,
 							title: i18n.title.macro,
@@ -1316,7 +1322,10 @@ define(function(require){
 				wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', dataTemplate));
 			}
 
-			return target.prepend(wysiwygTemplate).find('#wysiwyg_editor_' + id).wysiwyg({
+			target
+				.prepend(wysiwygTemplate)
+				.find('#wysiwyg_editor_' + id)
+					.wysiwyg({
 						toolbarSelector: '#wysiwyg_toolbar_' + id,
 						activeToolbarClass: 'selected',
 						fileUploadError: function(reason, detail) {
@@ -1329,6 +1338,8 @@ define(function(require){
 							}
 						}
 					});
+
+			return target.find('#wysiwyg_editor_' + id);
 		},
 
 		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
