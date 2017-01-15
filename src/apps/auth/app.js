@@ -105,7 +105,7 @@ define(function(require){
 			}
 			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
 			
-			//APIkey generated tokens also require username parameter to login.
+			//APIkey generated tokens also require UserId parameter to login.
 			else if(urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
 				self.authenticateGET(urlParams, successfulAuth, errorAuth);
 			}
