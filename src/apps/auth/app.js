@@ -105,10 +105,12 @@ define(function(require){
 			}
 			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
 			
-			//APIkey generated tokens also require UserId parameter to login.
+			//APIkey generated tokens require UserId parameter to login.
 			else if(urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
-				self.authenticateGET(urlParams, successfulAuth, errorAuth);
-			}
+				self.authenticateAuthToken(urlParams.t, function(authData) {
+					authData.data.owner_id = urlParams.u; 
+					successfulAuth(authData);
+			}, errorAuth);
 			// Username/password generated tokens do not require anything else to log in.
 			else if(urlParams.hasOwnProperty('t')) {
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
@@ -122,20 +124,6 @@ define(function(require){
 			}
 		},
 		
-		authenticateGET: function(GETdata, callback, errorCallback) {
-			var self = this;
-
-			self.getAuth(GETdata.t, 
-				function(authData) {
-					authData.data.owner_id = GETdata.u
-					callback && callback(authData);
-				},
-				function(error) {
-					errorCallback && errorCallback(error);
-				}
-			);
-		},
-
 		authenticateAuthToken: function(authToken, callback, errorCallback) {
 			var self = this;
 
