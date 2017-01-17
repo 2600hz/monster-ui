@@ -55,6 +55,12 @@ define(function(){
 				}
 			};
 
+			app.getTemplate = function(args) {
+				args.app = app;
+
+				return monster.getTemplate(args);
+			},
+
 			// Active means it's in the DOM. It could be hidden by the Myaccount or apploader and still be "active".
 			app.isActive = function() {
 				return app.name === monster.apps.getActiveApp();
