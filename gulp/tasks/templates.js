@@ -16,6 +16,7 @@ var tmpAppsHTML = [],
 
 for(var i in appsToInclude) {
 	tmpAppsHTML.push(paths.tmp + '/apps/' + appsToInclude[i] + '/views/*.html');
+	tmpAppsHTML.push(paths.tmp + '/apps/' + appsToInclude[i] + '/submodules/*/views/*.html');
 }
 
 var pathsTemplates = {
@@ -25,7 +26,7 @@ var pathsTemplates = {
 		concatName: 'templates-compiled.js'
 	},
 	app: {
-		src: paths.app + 'views/*.html',
+		src: [paths.app + 'views/*.html', paths.app + '/submodules/*/views/*.html'],
 		dest: paths.app + 'views/',
 		concatName: 'templates.js'
 	}
@@ -43,9 +44,16 @@ gulp.task('compile-templates', function(){
 			noRedeclare: true, // Avoid duplicate declarations ,
 			processName: function(filePath) {
 				var splits = filePath.split(path.sep),
-				//var splits = filePath.split('\\'),
+					indexSub = splits.indexOf('submodules'),
+					newName;
 					// our files are all in folder such as apps/accounts/views/test.html, so we want to extract the last and 2 before last parts to have the app name and the template name
-					newName = splits[splits.length - 3] +'.' + splits[splits.length-1];
+					// If it's in a submodule then it's like apps/common/accountBrowser/views/accountBrowser-list.html, so we want the last, 2 before last, and 4 before last to extract the app, submodule and template names
+					if(indexSub >= 0) {
+						newName = splits[splits.length - 5] + '._' + splits[splits.length - 3] + '.' + splits[splits.length-1];
+					}
+					else {
+						newName = splits[splits.length - 3] +'._main.' + splits[splits.length-1];
+					}
 
 				return declare.processNameByPath(newName);
 			}
@@ -88,6 +96,7 @@ gulp.task('concat-js-app', function() {
 });
 
 gulp.task('clean-templates-app', function() {
-	return gulp.src([paths.app + 'views/*.html', pathsTemplates.app.dest + pathsTemplates.app.concatName], {read: false})
+	var filesToClean = (pathsTemplates['app'].src).concat(pathsTemplates['app'].dest + pathsTemplates['app'].concatName);
+	return gulp.src(filesToClean, {read: false})
 		.pipe(clean());
 });

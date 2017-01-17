@@ -33,9 +33,14 @@ define(function(require){
 				noFocus = args.noFocus || false,
 				allowBackOnMasquerading = args.allowBackOnMasquerading || false, // needs addBackButton to be true, add back button up to original account when masquerading
 				callback = args.callback,
-				layout = $(monster.template(self, 'accountBrowser-layout', {
+				dataTemplate = {
 					customClass: args.customClass || 'ab-sidebar',
 					addAccountEnabled: (typeof onNewAccountClick === 'function')
+				},
+				layout = $(self.getTemplate({
+					name: 'accountBrowser-layout',
+					submodule: 'accountBrowser',
+					data: dataTemplate
 				})),
 				searchLink = layout.find('.account-search-link').remove();
 
@@ -316,8 +321,12 @@ define(function(require){
 						}),
 						success: function(data, status) {
 							var nextStartKey = data.next_start_key,
-								listTemplate = $(monster.template(self, 'accountBrowser-list', {
-									accounts: monster.util.sort(data.data)
+								listTemplate = $(self.getTemplate({
+									name: 'accountBrowser-list',
+									submodule: 'accountBrowser',
+									data: {
+										accounts: monster.util.sort(data.data)
+									}
 								}));
 
 							loader.remove();
@@ -408,7 +417,11 @@ define(function(require){
 					templateData.currentAccount = monster.apps.auth.currentAccount;
 				}
 
-				var template = $(monster.template(self, 'accountBrowser-list', templateData)),
+				var template = $(self.getTemplate({
+									name: 'accountBrowser-list',
+									submodule: 'accountBrowser',
+									data: templateData
+								})),
 					afterRender = function() {
 						hackMacChrome();
 

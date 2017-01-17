@@ -239,11 +239,32 @@ define(function(require){
 			}
 		},
 
+		getTemplate: function(args) {
+			var self = this,
+				data = args.data || {},
+				raw = args.hasOwnProperty('raw') ? args.raw : false,
+				ignoreCache = args.hasOwnProperty('ignoreCache') ? args.ignoreCache : false,
+				ignoreSpaces = args.hasOwnProperty('ignoreSpaces') ? args.ignoreSpaces : false,
+				submodule = args.hasOwnProperty('submodule') ? args.submodule : 'main',
+				_template = Handlebars.getTemplate(args.app, submodule, args.name, ignoreCache),
+				result = self.getFormattedTemplate(_template, args.app, args.name, data, raw, ignoreSpaces);
+
+			return result;
+		},
+
 		template: function(app, name, data, raw, ignoreCache, ignoreSpaces){
-			var raw = raw || false,
+			var self = this,
+				raw = raw || false,
 				ignoreCache = ignoreCache || false,
 				ignoreSpaces = ignoreSpaces || false,
-				_template = Handlebars.getTemplate(app, name, ignoreCache),
+				_template = Handlebars.getTemplate(app, 'main', name, ignoreCache),
+				result = self.getFormattedTemplate(_template, app, name, data, raw, ignoreSpaces);
+
+			return result;
+		},
+
+		getFormattedTemplate: function(_template, app, name, data, raw, ignoreSpaces) {
+			var self = this,
 				result;
 
 			if(!raw){
