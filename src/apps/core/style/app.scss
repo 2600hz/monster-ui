@@ -6,13 +6,14 @@ body,
 	height: 100%;
 }
 
-body,
+/* Disabling for now, remove if it no longer creates an issue */
+/* body,
 .core-topbar,
 #myaccount,
 #auth_container,
 .core-content {
-	min-width: 600px;
-}
+	min-width: 200px;
+} */
 
 .core-wrapper.dashboard .core-content {
 	height: 100%;
