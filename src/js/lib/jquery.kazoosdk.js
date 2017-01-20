@@ -363,7 +363,8 @@
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 			'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'},
-			'updateMessages': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'}
+			'updateMessages': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'},
+			'deleteMessages': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages'}
 		},
 		webhooks: {
 			'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/webhooks/{webhookId}' },
