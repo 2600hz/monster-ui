@@ -1535,8 +1535,6 @@ define(function(require){
 							// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
 							value: defaultList.hasOwnProperty(codec) ? defaultList[codec] : (mapMigrate.hasOwnProperty(codec) ? defaultList[mapMigrate[codec]] : codec)
 						};
-					}).sort(function(a, b) {
-						return a.value > b.value ? 1 : -1;
 					});
 
 					items = _.map(defaultList, function(description, codec) {
