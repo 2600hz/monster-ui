@@ -37,6 +37,9 @@ define(function(require){
 			// Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..)
 			// additionalLoggedInApps: ['sso'],
 
+			// Additional CSS files to load. Need to be in src/css folder.
+			// additionalCss: ['extra/mine.css', 'anotherOne.css'],
+
 			// By default the language is set by the browser, and once the user is log in it will take what's set in the account/user.
 			// If you want to force the language of the UI before the user is logged in, you can set it here.
 			//		language: 'en-US',
