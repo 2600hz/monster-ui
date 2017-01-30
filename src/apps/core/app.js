@@ -70,6 +70,7 @@ define(function(require){
 
 			self.checkURLVars(urlVars);
 
+			self.loadAdditionalStyles();
 			self.bindEvents(mainTemplate);
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
@@ -80,6 +81,15 @@ define(function(require){
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
 			self.startSocket();
 			self.startWebphone();
+		},
+
+		// We need the whitelabel profile to be loaded to execute this, that's why it's in core and not in monster directly
+		loadAdditionalStyles: function() {
+			var self = this;
+
+			_.each(monster.config.whitelabel.additionalCss, function(path) {
+				monster.css('css/' + path);
+			});
 		},
 
 		checkURLVars: function(urlVars) {
