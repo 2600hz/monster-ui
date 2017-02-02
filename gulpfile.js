@@ -29,6 +29,7 @@ gulp.task('build-prod', function(cb) {
 gulp.task('build-dev', function(cb) {
 	return runSequence(
 		'move-files-to-tmp',
+		//'lint', // Show linting error
 		'sass',
 		'write-config-dev',
 		'clean-folders',
