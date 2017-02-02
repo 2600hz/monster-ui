@@ -233,7 +233,7 @@ define(function(require){
 				}
 
 				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if(timestamp < 1000000000) {
+				if(timestamp < 10000000000) {
 					timestamp *= 1000;
 				}
 
