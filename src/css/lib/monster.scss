@@ -1203,9 +1203,34 @@ table.monster-table .actions .action-item:first-child {
 }
 
 .signal-indicator-container .signal-strength {
-	overflow: hidden;
+	position: relative;
 	width: 110px;
 	height: 66px;
+}
+
+.signal-indicator-container .signal-strength[data-strength='0']::before {
+	position: absolute;
+	z-index: 1;
+	top: 32px;
+	left: 12px;
+	display: block;
+	width: 90px;
+	content: '';
+	transform: rotate(-40deg);
+	border-top: 5px solid $error-color;
+}
+
+.signal-indicator-container .signal-strength[data-strength='0']::after {
+	position: absolute;
+	top: -18px;
+	left: 5px;
+	display: block;
+	width: 90px;
+	height: 90px;
+	content: '';
+	border: 5px solid $error-color;
+	border-radius: 100%;
+	background-color: transparent;
 }
 
 .signal-indicator-container .signal {
@@ -1238,15 +1263,21 @@ table.monster-table .actions .action-item:first-child {
 	height: 12px;
 	margin: 8px 0 0;
 	border-width: 0;
-	background-color: $primary-color;
+	background-color: #efeff8;
 }
 
-.signal-indicator-container .signal-strength[data-strength='1'] .medium,
+.signal-indicator-container .signal-strength[data-strength='1'] .weak,
+.signal-indicator-container .signal-strength[data-strength='2'] .weak,
+.signal-indicator-container .signal-strength[data-strength='3'] .weak,
+.signal-indicator-container .signal-strength[data-strength='4'] .weak {
+	background-color: $primary-color;
+}
 .signal-indicator-container .signal-strength[data-strength='2'] .medium,
 .signal-indicator-container .signal-strength[data-strength='3'] .medium,
-.signal-indicator-container .signal-strength[data-strength='2'] .strong,
+.signal-indicator-container .signal-strength[data-strength='4'] .medium,
 .signal-indicator-container .signal-strength[data-strength='3'] .strong,
-.signal-indicator-container .signal-strength[data-strength='3'] .optimal {
+.signal-indicator-container .signal-strength[data-strength='4'] .strong,
+.signal-indicator-container .signal-strength[data-strength='4'] .optimal {
 	border-top-color: $primary-color;
 }
 
@@ -1301,18 +1332,18 @@ table.monster-table .actions .action-item:first-child {
 	right: 4px;
 }
 
-.signal-indicator-container .signal-strength[data-strength='1'] .medium::before,
-.signal-indicator-container .signal-strength[data-strength='1'] .medium::after,
 .signal-indicator-container .signal-strength[data-strength='2'] .medium::before,
 .signal-indicator-container .signal-strength[data-strength='2'] .medium::after,
 .signal-indicator-container .signal-strength[data-strength='3'] .medium::before,
 .signal-indicator-container .signal-strength[data-strength='3'] .medium::after,
-.signal-indicator-container .signal-strength[data-strength='2'] .strong::before,
-.signal-indicator-container .signal-strength[data-strength='2'] .strong::after,
+.signal-indicator-container .signal-strength[data-strength='4'] .medium::before,
+.signal-indicator-container .signal-strength[data-strength='4'] .medium::after,
 .signal-indicator-container .signal-strength[data-strength='3'] .strong::before,
 .signal-indicator-container .signal-strength[data-strength='3'] .strong::after,
-.signal-indicator-container .signal-strength[data-strength='3'] .optimal::before,
-.signal-indicator-container .signal-strength[data-strength='3'] .optimal::after {
+.signal-indicator-container .signal-strength[data-strength='4'] .strong::before,
+.signal-indicator-container .signal-strength[data-strength='4'] .strong::after,
+.signal-indicator-container .signal-strength[data-strength='4'] .optimal::before,
+.signal-indicator-container .signal-strength[data-strength='4'] .optimal::after {
 	background-color: $primary-color;
 }
 
