@@ -294,7 +294,8 @@
 			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 			'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
-			'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' }
+			'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
+			'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
 		},
 		registrations: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
