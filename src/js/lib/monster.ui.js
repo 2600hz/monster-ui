@@ -90,7 +90,7 @@ define(function(require){
 			},
 
 			ifInArray: function(elem, list, options) {
-				if(list.indexOf(elem) > -1) {
+				if(list && list.indexOf(elem) > -1) {
 					return options.fn(this);
 				}
 
