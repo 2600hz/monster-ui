@@ -1752,9 +1752,11 @@ define(function(require){
 		 * Handles navbar animations and calls callback on tab click
 		 * @param  {Object}        thisArg Context of the app
 		 * @param  {jQuery Object} $tab    Tab that was clicked
+		 * @param  {jQuery Object} pArgs   Optional arguments to pass to the loader, see renderAlerts cluster mgr for example
 		 */
-		onNavbarTabClick: function(thisArg, $tab) {
+		onNavbarTabClick: function(thisArg, $tab, pArgs) {
 			var self = this,
+				args = pArgs || {},
 				menus = thisArg.appFlags._menus,
 				parent = $('#monster-content'),
 				appHeader = parent.find('.app-header'),
@@ -1847,10 +1849,16 @@ define(function(require){
 								self.isTabLoadingInProgress = false;
 								$(this).empty();
 
-								(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, {
+								var finalArgs = {
 									parent: parent,
 									container: parent.find('.app-content-wrapper')
-								});
+								};
+
+								if(!_.isEmpty(args)) {
+									finalArgs.data = args;
+								}
+
+								(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 							});
 				};
 
@@ -1998,12 +2006,13 @@ define(function(require){
 		 * Programmatically loads the navbar tab corresponding to the tab ID passed as argument
 		 * @param  {Object} thisArg Context of the app
 		 * @param  {String} id      Unique ID to identify the tab
+		 * @param  {Object} oArgs Optional Arguments
 		 */
-		loadTab: function(thisArg, id) {
+		loadTab: function(thisArg, id, oArgs) {
 			var self = this,
 				$tab = $('.navbar-menu-item-link[data-id="' + id + '"]');
 
-			self.onNavbarTabClick(thisArg, $tab);
+			self.onNavbarTabClick(thisArg, $tab, oArgs);
 		},
 
 		mask: function(target, type) {
