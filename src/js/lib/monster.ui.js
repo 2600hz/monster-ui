@@ -151,6 +151,17 @@ define(function(require){
 				return monster.template(monster.apps.core, 'monster-radio-template', templateData);
 			},
 
+			monsterSignalIndicator: function(strength) {
+				var label = _.last(Array.prototype.slice.call(arguments)).fn(this),
+					dataToTemplate = {
+						strength: strength,
+						label: new Handlebars.SafeString(label)
+					},
+					template = monster.template(monster.apps.core, 'monster-signal-indicator', dataToTemplate);
+
+				return new Handlebars.SafeString(template);
+			},
+
 			monsterSlider: function (settings, options) {
 				return new Handlebars.SafeString(monster.ui.slider(settings));
 			},
@@ -958,6 +969,7 @@ define(function(require){
 			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\ ?[AP]M))$/i);
 			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
 			addSimpleRule('realm', /^[0-9A-Z\.\-]+$/i);
+			addSimpleRule('hexa', /^[0-9A-F]+$/i);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('greaterDate', function(value, element, param) {

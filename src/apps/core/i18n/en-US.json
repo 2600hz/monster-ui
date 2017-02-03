@@ -137,6 +137,7 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
+			"hexadecimal": "Please only enter hexadecimal digits",
 			"checkList": "Already exists",
 			"mac": "Please enter a valid MAC address.",
 			"ipv4": "Please enter a valid IP v4 address.",
