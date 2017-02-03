@@ -151,6 +151,17 @@ define(function(require){
 				return monster.template(monster.apps.core, 'monster-radio-template', templateData);
 			},
 
+			monsterSignalIndicator: function(strength) {
+				var label = _.last(Array.prototype.slice.call(arguments)).fn(this),
+					dataToTemplate = {
+						strength: strength,
+						label: new Handlebars.SafeString(label)
+					},
+					template = monster.template(monster.apps.core, 'monster-signal-indicator', dataToTemplate);
+
+				return new Handlebars.SafeString(template);
+			},
+
 			monsterSlider: function (settings, options) {
 				return new Handlebars.SafeString(monster.ui.slider(settings));
 			},
