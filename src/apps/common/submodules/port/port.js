@@ -708,15 +708,7 @@ define(function(require){
 			self.portComingSoon(container, ['.help-links li:not(.separator) a']);
 
 			container.find('#add_numbers_link').on('click', function(e) {
-				//e.stopPropagation();
-
-				var numbersArray = container.find('input').val().split(' ');
-
-				numbersArray.forEach(function(val, idx, array) {
-					if (/^(\+1|1[0-9]{10})/.test(val)) {
-						array[idx] = val.replace(/(\+1|1)?([0-9]{10})/, '$2');
-					}
-				});
+				var numbersArray = self.portValidateNumbers(container.find('input').val().split(' '));
 
 				numbersArray = numbersArray.filter(function(el, idx, list) {
 					return el && /^[0-9]{10}$/.test(el);
@@ -771,7 +763,7 @@ define(function(require){
 			self.portComingSoon(container, ['#footer .help-links li:not(.separator) a']);
 
 			container.find('#add_numbers_link').on('click', function() {
-				var numbersArray = container.find('div#add_numbers').find('input').val().split(' '),
+				var numbersArray = self.portValidateNumbers(container.find('div#add_numbers').find('input').val().split(' ')),
 					listedNumbers = [];
 
 				container
@@ -779,12 +771,6 @@ define(function(require){
 						.each(function() {
 							listedNumbers.push($(this).data('value').toString());
 						});
-
-				numbersArray.forEach(function(val) {
-					if (/^(\+1|1[0-9]{10})/.test(val)) {
-						val = val.replace(/^(\+1|1)?([0-9]{10})$/, '$2');
-					}
-				});
 
 				numbersArray = numbersArray.filter(function(el) {
 					return el && /^[0-9]{10}$/.test(el) && listedNumbers.indexOf(el) < 0;
@@ -1277,6 +1263,16 @@ define(function(require){
 		},
 
 		/* Methods */
+		portValidateNumbers: function(numbersArray) {
+			numbersArray.forEach(function(val, idx, array) {
+				if (/^(\+1|1[0-9]{10})/.test(val)) {
+					array[idx] = val.replace(/^(\+1|1)?([0-9]{10})$/, '$2');
+				}
+			});
+
+			return numbersArray;
+		},
+
 		portSearchNumber: function(args) {
 			var self = this,
 				accountId = args.data.accountId,
