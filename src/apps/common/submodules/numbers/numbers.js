@@ -1221,7 +1221,7 @@ define(function(require){
 				};
 
 				var mobileOwner = {};
-				if (device.hasOwnProperty('owner_id')) {
+				if (device.hasOwnProperty('owner_id') && mapUsers.hasOwnProperty(device.owner_id)) {
 					mobileOwner = {
 						owner_id: device.owner_id,
 						ownerType: 'mobileUser',
