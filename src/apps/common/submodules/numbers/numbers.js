@@ -1210,7 +1210,7 @@ define(function(require){
 			});
 
 			_.each(data.devices, function(device, idx) {
-				var mdn = '+1' + device.mobile.mdn;
+				var mdn = device.mobile.mdn;
 
 				data.numbers.numbers[mdn] = {
 					assigned_to: accountId,
