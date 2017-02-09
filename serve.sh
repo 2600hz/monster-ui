@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$1" = 'update' ]]; then
+if [[ "$1" != 'no-update' ]]; then
     pushd src/apps
     for app in ./*/; do
         pushd "$app"
