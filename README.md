@@ -82,6 +82,8 @@ If you are using Docker containers, we made it easy for you to set up a developm
 
 This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
+It also starts by pulling your apps installed in `src/apps` before starting the server. To disable this behavior use `./serve.sh no-update`.
+
 ## Contributing
 
 1. [Fork it!](https://github.com/2600hz/monster-ui/fork)
