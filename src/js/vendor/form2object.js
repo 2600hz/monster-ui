@@ -248,7 +248,9 @@
 	        fieldValue = getFieldValue(node);
 
 	        if (fieldValue !== null)
-	            result = [ { name: node.name.replace(/\[\]$/, ''), value: fieldValue } ];
+	        	//2/10/2017: JR, Replacing this line by the next one. I don't understand why this line removes []. In the CM we use an array of variables from select, and this doesn't work without this comment.
+	            //result = [ { name: node.name.replace(/\[\]$/, ''), value: fieldValue } ];
+	        	result = [ { name: node.name, value: fieldValue } ];
         }
         else{
             result = getSubFormValues(node, nodeCallback);
