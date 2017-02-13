@@ -38,7 +38,7 @@ define(function(require){
 					addAccountEnabled: (typeof onNewAccountClick === 'function')
 				},
 				layout = $(self.getTemplate({
-					name: 'accountBrowser-layout',
+					name: 'layout',
 					submodule: 'accountBrowser',
 					data: dataTemplate
 				})),
@@ -322,7 +322,7 @@ define(function(require){
 						success: function(data, status) {
 							var nextStartKey = data.next_start_key,
 								listTemplate = $(self.getTemplate({
-									name: 'accountBrowser-list',
+									name: 'list',
 									submodule: 'accountBrowser',
 									data: {
 										accounts: monster.util.sort(data.data)
@@ -418,7 +418,7 @@ define(function(require){
 				}
 
 				var template = $(self.getTemplate({
-									name: 'accountBrowser-list',
+									name: 'list',
 									submodule: 'accountBrowser',
 									data: templateData
 								})),
