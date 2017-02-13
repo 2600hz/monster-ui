@@ -124,7 +124,7 @@ define(function(require){
 								var dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 									dlTo = monster.util.dateToEndOfGregorianDay(to);
 
-								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.getAuthToken();
+								window.location.href = self.apiUrl+'accounts/'+self.accountId+'/ledgers/per-minute-voip?created_from='+dlFrom+'&created_to='+dlTo+'&accept=csv&auth_token=' + self.getAuthToken();
 							});
 
 							monster.ui.table.balance.fnAddData(renderData.tabData);
