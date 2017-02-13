@@ -61,7 +61,7 @@ define(function(require){
 					to = new Date(template.find('#endDate').val()),
 					dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 					dlTo = monster.util.dateToEndOfGregorianDay(to),
-					url = self.apiUrl+'accounts/'+self.accountId+'/transactions?created_from='+dlFrom+'&created_to='+dlTo+'&depth=1&reason=only_calls&accept=csv&auth_token=' + self.getAuthToken();
+					url = self.apiUrl+'accounts/'+self.accountId+'/ledgers/per-minute-voip?created_from='+dlFrom+'&created_to='+dlTo+'&accept=csv&auth_token=' + self.getAuthToken();
 
 				window.open(url,'_blank');
 			});
@@ -112,7 +112,7 @@ define(function(require){
 
 							if (typeof argsCallback === 'function') {
 								argsCallback(balance);
-							};
+							}
 						}
 					});
 				}
@@ -715,7 +715,7 @@ define(function(require){
 		},
 
 		balanceGetLedgersTransactions: function(filters, callback) {
-			var self = this
+			var self = this,
 				parallelRequests = {};
 
 			self.balanceListLedgers(function(ledgers) {
