@@ -67,6 +67,9 @@ define(function(require){
 		numberPrependUpdateNumber: function(phoneNumber, data, success, error) {
 			var self = this;
 
+			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
+			delete data.features;
+
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
