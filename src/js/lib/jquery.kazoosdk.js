@@ -273,7 +273,7 @@
 		},
 		presence: {
 			'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
-			'detail': { verb: 'GET', url: 'accounts/{accountId}/presence/{presenceId}' },
+			'get': { verb: 'GET', url: 'accounts/{accountId}/presence/{presenceId}' },
 			'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
 		},
 		qubicleQueues: {
