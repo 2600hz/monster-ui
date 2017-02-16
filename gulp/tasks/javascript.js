@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
+var eslint = require('gulp-eslint');
 
 var paths = require('../paths.js');
 
@@ -18,7 +17,9 @@ gulp.task('minify-js-app', function() {
 });
 
 gulp.task('lint', function() {
-	return gulp.src([paths.src + '/**/*.js', '!'+ paths.src + '/js/vendor/**/*.js', '!'+ paths.src + '/js/lib/kazoo/dependencies/**/*.js'])
-				.pipe(jshint())
-				.pipe(jshint.reporter(stylish));
+	var pathToLint = [paths.src + '/**/*.js', '!'+ paths.src + '/js/vendor/**/*.js', '!'+ paths.src + '/js/lib/kazoo/dependencies/**/*.js'];
+
+	return gulp.src(pathToLint)
+				.pipe(eslint())
+				.pipe(eslint.format());
 });

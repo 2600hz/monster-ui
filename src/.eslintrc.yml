@@ -1,0 +1,91 @@
+# Original source from OpenTelecom:ci-linting, mira-t on github
+extends:
+  - standard
+plugins:
+  - standard
+  - promise
+env:
+  browser: true
+
+globals:
+  define: true
+
+rules:
+  no-tabs: off
+  indent:
+    - error
+    - tab
+  semi: 
+    - error
+    - always
+  keyword-spacing: off
+  space-before-function-paren: 
+    - error
+    - never
+  one-var: off
+  brace-style:
+    - error
+    - 1tbs
+    - allowSingleLine: true
+  spaced-comment: off
+  camelcase: off #The 2600Hz Javascript Style Guide states that variable names should be camel case. However, snake case is sometimes required in the existing code.
+  no-unneeded-ternary: off
+  eqeqeq: error #May need to turn "off" due to intentional use of "==" and "!=" in some files
+  no-unused-vars:
+    - error
+    - {
+      #Allow unused variable if they are requires or self-references as they are useful in future. Also allow charts because they are used globally but linter can't pick up on that.
+      varsIgnorePattern:
+        "_|self|toastr|.*[cC]hart",
+      #Allow arguments called status or data to be unused (They are required as arguments to the callbacks provided to monster#request()
+        argsIgnorePattern:
+        "status|_status|data|_data|e"
+      }
+  operator-linebreak: 
+    - error
+    - before
+  #Deprecated rule.
+  no-native-reassign: off
+  no-extend-native: off
+  no-new-object: error
+  no-array-constructor: error
+  quotes:
+    - error
+    - single
+  quote-props:
+    - warn
+    - as-needed
+    - {
+        keywords: true,
+        unnecessary: false
+      }
+  no-inner-declarations:
+    - error
+    - functions
+  dot-notation: error
+  vars-on-top: off #Should be "error" according to 2600Hz style guide. However, this can introduce bugs if enforced through the linter.
+  curly:
+    - error
+    - all
+  space-infix-ops:
+    - error
+  comma-style:
+    - error
+    - last
+  comma-dangle:
+    - error
+    - never
+  id-length:
+    - warn
+    - {
+        exceptions: ["$", "_", "e"]
+      }
+  handle-callback-err: off #Rule commonly broken in Monster due to Monster's automatic error handling for some cases.
+  no-redeclare: off # Should be "error" but this is commonly broken in Monster when the parameter to a function is redefined inside the function. A custom rule could be made in future to allow for this.
+### GIT-DEPENDENT RULES ###
+#Depending on your git settings, these rules may not apply, as git could automatically be enforcing them.
+#Only enable these rules if git is configured to commit as-is, or if you are otherwise sure you need to use them.
+  linebreak-style: off
+  eol-last:
+    - error
+    - always
