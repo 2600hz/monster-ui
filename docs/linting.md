@@ -17,7 +17,7 @@ Make sure to follow the specific instructions for each package as some node depe
 
 Once those packages are installed properly, restart Sublime, and then you should be able to see errors as soon as you open a file from Monster.
 
-This is what it looks like in the code: 
+This is what it looks like in the code:
 ![Image showing error in Sublime](http://imgur.com/0cfAmLK)
 
 And to see the detailled error, you just need to go on that line, and sublime will show you the verbose log at the bottom of the editor:
