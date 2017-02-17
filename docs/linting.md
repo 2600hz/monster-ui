@@ -18,10 +18,10 @@ Make sure to follow the specific instructions for each package as some node depe
 Once those packages are installed properly, restart Sublime, and then you should be able to see errors as soon as you open a file from Monster.
 
 This is what it looks like in the code:
-![Image showing error in Sublime](http://imgur.com/0cfAmLK)
+![Image showing error in Sublime](http://i.imgur.com/0cfAmLK.png)
 
 And to see the detailled error, you just need to go on that line, and sublime will show you the verbose log at the bottom of the editor:
-![Image showing the details of the Linting error](http://imgur.com/dktSgRT)
+![Image showing the details of the Linting error](http://i.imgur.com/dktSgRT.png)
 
 For more information about Sublime Packages, check out: https://packagecontrol.io/docs/usage.
 
@@ -37,7 +37,7 @@ If you wanted to see errors of your application only or a specific part of the p
 For example you could replace `var pathToLint = [paths.src + '/**/*.js', '!'+ paths.src + '/js/vendor/**/*.js', '!'+ paths.src + '/js/lib/kazoo/dependencies/**/*.js'];` by `var pathToLint = [paths.src + '/apps/debug/submodules/presence/**/*.js'];` to see all errors into the presence submodule of the debug application.
 
 The expected output will be something like:
-![Image showing the details of the gulp lint task](http://imgur.com/0nFtAF9)
+![Image showing the details of the gulp lint task](http://i.imgur.com/0nFtAF9.png)
 
 [eslintrc]: ../src/.eslintrc.yml
 [eslint]: http://eslint.org/
