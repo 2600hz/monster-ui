@@ -10,6 +10,7 @@
 * [Using application flags][flags]
 * [Coding standards (Basic)][coding_standards]
 * [Coding standards (Advanced)][js_style_guide]
+* [Coding standards linting][linting]
 * [How to use the validation in your UI][validation]
 * [How to write/update a test plan for your app][test_plan]
 * [How to use the JavaScript Kazoo SDK][sdk]
@@ -28,3 +29,4 @@
 [validation]: validation.md
 [test_plan]: testPlan.md
 [sdk]: kazooSdk.md
+[linting]: linting.md
