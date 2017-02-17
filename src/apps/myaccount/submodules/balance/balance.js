@@ -93,7 +93,7 @@ define(function(require){
 
 							renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
 
-							var balance = $(monster.template(self, 'balance-layout', renderData)),
+							var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
 								args = {
 									module: 'balance',
 									data: self.i18n.active().currencyUsed + renderData.amount
@@ -196,7 +196,8 @@ define(function(require){
 				popup;
 
 			self.balanceGetDialogData(function(data) {
-				var addCreditDialog = $(monster.template(self, 'balance-addCreditDialog', $.extend({ disableBraintree: monster.config.disableBraintree }, data))),
+				var templateData = $.extend({ disableBraintree: monster.config.disableBraintree }, data),
+					addCreditDialog = $(self.getTemplate({ name: 'addCreditDialog', data: templateData, submodule: 'balance' })),
 					dataUpdate = {
 						module: self.name,
 						data: parseFloat(data.amount).toFixed(2)
@@ -246,7 +247,7 @@ define(function(require){
 
 			self.balanceGetLedgersTransactions(filters, function(data) {
 				var formattedData = self.balanceFormatDataTable(data, showCredits),
-					$rows = $(monster.template(self, 'balance-rows', formattedData));
+					$rows = $(self.getTemplate({ name: 'rows', data: formattedData, submodule: 'balance' }));
 
 				template.find('#call_charges').html(formattedData.totalCharges);
 				template.find('#minutes_used').html(formattedData.totalMinutes);
