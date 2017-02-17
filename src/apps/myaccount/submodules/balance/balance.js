@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -61,97 +61,87 @@ define(function(require){
 					to = new Date(template.find('#endDate').val()),
 					dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 					dlTo = monster.util.dateToEndOfGregorianDay(to),
-					url = self.apiUrl+'accounts/'+self.accountId+'/ledgers/per-minute-voip?created_from='+dlFrom+'&created_to='+dlTo+'&accept=csv&auth_token=' + self.getAuthToken();
+					url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/per-minute-voip?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&auth_token=' + self.getAuthToken();
 
-				window.open(url,'_blank');
+				window.open(url, '_blank');
 			});
 		},
 
 		_balanceRenderContent: function(args) {
 			var self = this,
-				argsCallback = args.callback,
-				defaults = {
-					fieldData: {
-						accounts: {}
-					}
-				};
+				argsCallback = args.callback;
 
 			monster.parallel({
-					balance: function(callback) {
-						self.balanceGet(function(data) {
-							var amount = parseFloat(data.data.balance).toFixed(2);
+				balance: function(callback) {
+					self.balanceGet(function(data) {
+						var amount = parseFloat(data.data.balance).toFixed(2);
 
-							callback(null, amount)
-						});
-					}
-				},
-				function(err, results) {
-					monster.pub('myaccount.UIRestrictionsCompatibility', {
-						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
-						callback: function(uiRestrictions) {
-							var renderData = $.extend(true, {}, {uiRestrictions: uiRestrictions, amount: results.balance });
-
-							renderData.uiRestrictions.balance.show_header = ( renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false )  ? false : true;
-
-							var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
-								args = {
-									module: 'balance',
-									data: self.i18n.active().currencyUsed + renderData.amount
-								};
-
-							self.balanceBindEvents(balance);
-
-							monster.pub('myaccount.updateMenu', args);
-							
-
-							self.balanceInitActionBar(balance, renderData.uiRestrictions.balance.show_credit);
-
-							self.balanceDisplayTransactionsTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
-								monster.pub('myaccount.renderSubmodule', balance);
-							});
-
-							if (typeof argsCallback === 'function') {
-								argsCallback(balance);
-							}
-						}
+						callback(null, amount);
 					});
 				}
-			);
+			}, function(err, results) {
+				monster.pub('myaccount.UIRestrictionsCompatibility', {
+					restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+					callback: function(uiRestrictions) {
+						var renderData = $.extend(true, {}, { uiRestrictions: uiRestrictions, amount: results.balance });
+
+						renderData.uiRestrictions.balance.show_header = (renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false) ? false : true;
+
+						var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
+							args = {
+								module: 'balance',
+								data: self.i18n.active().currencyUsed + renderData.amount
+							};
+
+						self.balanceBindEvents(balance);
+
+						monster.pub('myaccount.updateMenu', args);
+
+						self.balanceInitActionBar(balance, renderData.uiRestrictions.balance.show_credit);
+
+						self.balanceDisplayTransactionsTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
+							monster.pub('myaccount.renderSubmodule', balance);
+						});
+
+						if (typeof argsCallback === 'function') {
+							argsCallback(balance);
+						}
+					}
+				});
+			});
 		},
 
 		balanceGetDialogData: function(callback) {
 			var self = this;
 
 			monster.parallel({
-					account: function(callback) {
-						self.callApi({
-							resource: 'account.get',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data) {
-								callback(null, data.data);
-							}
-						});
-					},
-					balance: function(callback) {
-						self.callApi({
-							resource: 'balance.get',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data) {
-								callback(null, data.data);
-							}
-						});
-					}
+				account: function(callback) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							callback(null, data.data);
+						}
+					});
 				},
-				function(err, results) {
-					var data = self.balanceFormatDialogData(results);
-
-					callback && callback(data);
+				balance: function(callback) {
+					self.callApi({
+						resource: 'balance.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							callback(null, data.data);
+						}
+					});
 				}
-			);
+			}, function(err, results) {
+				var data = self.balanceFormatDialogData(results);
+
+				callback && callback(data);
+			});
 		},
 
 		balanceFormatDialogData: function(data) {
@@ -162,8 +152,7 @@ define(function(require){
 
 			if (data.account.hasOwnProperty('notifications') && data.account.notifications.hasOwnProperty('low_balance')) {
 				$.extend(true, thresholdData, data.account.notifications.low_balance);
-			}
-			else if (data.account.hasOwnProperty('threshold')) {
+			} else if (data.account.hasOwnProperty('threshold')) {
 				$.extend(true, thresholdData, data.account.threshold);
 				thresholdData.enabled = true;
 			}
@@ -228,7 +217,7 @@ define(function(require){
 				getData: function(filters, callback) {
 					filters = $.extend(true, filters, {
 						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
 
 					self.balanceTransactionsGetRows(template, filters, showCredits, callback);
@@ -273,17 +262,16 @@ define(function(require){
 						from: '-'
 					};
 
-					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id }
+					v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id };
 
 					var duration = self.i18n.active().balance.active_call,
-						friendlyDate = monster.util.toFriendlyDate(v.period.start),
 						accountName = v.account.name,
 						friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
 						fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
 						toField = monster.util.formatPhoneNumber(v.metadata.to || '').replace(/@.*/, '');
 
 					if(v.usage && v.usage.hasOwnProperty('quantity')) {
-						duration = Math.ceil((parseInt(v.usage.quantity))/60),
+						duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
 						data.totalMinutes += duration;
 					}
 
@@ -300,7 +288,7 @@ define(function(require){
 						friendlyAmount: friendlyAmount
 					});
 				});
-				
+
 				data.totalCharges = data.totalCharges.toFixed(3);
 			}
 
@@ -366,7 +354,7 @@ define(function(require){
 						event.preventDefault();
 
 						var $this = $(this),
-							renderTabContent = function () {
+							renderTabContent = function() {
 								if (!tabAnimationInProgress) {
 									tabAnimationInProgress = true;
 
@@ -375,7 +363,7 @@ define(function(require){
 												parent
 													.find('.navbar-menu-item-link.active')
 													.removeClass('active');
-												
+
 												$this.addClass('active');
 												$(this).removeClass('active');
 
@@ -404,15 +392,13 @@ define(function(require){
 							}
 
 							if (hasEmptyValue) {
-								monster.ui.alert('warning', self.i18n.active().balance.addCreditPopup.alerts.missingValue[formId], function () {}, {
+								monster.ui.alert('warning', self.i18n.active().balance.addCreditPopup.alerts.missingValue[formId], function() {}, {
 									title: self.i18n.active().balance.addCreditPopup.alerts.missingValue.title
 								});
-							}
-							else {
+							} else {
 								renderTabContent();
 							}
-						}
-						else {
+						} else {
 							renderTabContent();
 						}
 					});
@@ -420,7 +406,7 @@ define(function(require){
 			parent.find('#add_credit').on('click', function(ev) {
 				ev.preventDefault();
 
-				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',','.'));
+				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',', '.'));
 
 				if(creditsToAdd) {
 					self.balanceAddCredits(creditsToAdd,
@@ -436,14 +422,12 @@ define(function(require){
 									params.callback(data.data.balance);
 									parent.dialog('close');
 								});
-							}
-							else {
+							} else {
 								parent.dialog('close');
 							}
 						}
 					);
-				}
-				else{
+				} else{
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
@@ -452,13 +436,12 @@ define(function(require){
 				.on('change', function() {
 					if ($(this).is(':checked')) {
 						thresholdAlertsContent.slideDown();
-					}
-					else {
+					} else {
 						if (thresholdAlerts) {
-							self.balanceTurnOffThreshold(function () {
+							self.balanceTurnOffThreshold(function() {
 								thresholdAlertsContent
-									.slideUp(function () {
-										thresholdAlerts  = false;
+									.slideUp(function() {
+										thresholdAlerts = false;
 										toastr.success(self.i18n.active().balance.thresholdAlertsCancelled);
 									});
 							});
@@ -479,22 +462,19 @@ define(function(require){
 
 						var thresholdAlertsFormData = monster.ui.getFormData('threshold_alerts_content'),
 							dataAlerts = {
-								threshold: parseFloat(thresholdAlertsFormData.threshold_alerts_amount.replace(',','.'))
+								threshold: parseFloat(thresholdAlertsFormData.threshold_alerts_amount.replace(',', '.'))
 							};
 
 						if(dataAlerts.threshold) {
-
 							if (dataAlerts.threshold) {
-								self.balanceUpdateThreshold(dataAlerts.threshold, function () {
+								self.balanceUpdateThreshold(dataAlerts.threshold, function() {
 									parent.dialog('close');
 									toastr.success(self.i18n.active().balance.thresholdAlertsEnabled);
 								});
-							}
-							else {
+							} else {
 								monster.ui.alert(self.i18n.active().balance.invalidAmount);
 							}
-						}
-						else {
+						} else {
 							monster.ui.alert(self.i18n.active().balance.invalidAmount);
 						}
 					});
@@ -506,13 +486,12 @@ define(function(require){
 					if (autoRecharge) {
 						self.balanceTurnOffTopup(function() {
 							autoRechargeContent
-								.slideUp(function () {
+								.slideUp(function() {
 									autoRecharge = false;
 									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
 								});
 						});
-					}
-					else {
+					} else {
 						autoRechargeContent.slideUp();
 					}
 				}
@@ -528,8 +507,8 @@ define(function(require){
 
 				var autoRechargeFormData = monster.ui.getFormData('auto_recharge_content'),
 					dataTopUp = {
-						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',','.')),
-						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',','.'))
+						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',', '.')),
+						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',', '.'))
 					};
 
 				if (dataTopUp.threshold && dataTopUp.amount) {
@@ -538,15 +517,12 @@ define(function(require){
 							parent.dialog('close');
 							toastr.success(self.i18n.active().balance.autoRechargeEnabled);
 						});
-					}
-					else{
+					} else{
 						monster.ui.alert(self.i18n.active().balance.invalidAmount);
 					}
-				}
-				else {
+				} else {
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
-
 			});
 		},
 
@@ -558,8 +534,8 @@ define(function(require){
 			parent.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {
-						var formattedAmount =  parseFloat(amount).toFixed(2),
-						    newAmount = self.i18n.active().currencyUsed + formattedAmount,
+						var formattedAmount = parseFloat(amount).toFixed(2),
+							newAmount = self.i18n.active().currencyUsed + formattedAmount,
 							argsEvent = {
 								module: 'balance',
 								data: newAmount
@@ -575,7 +551,7 @@ define(function(require){
 		},
 
 		//utils
-		balanceTurnOffThreshold: function (callback) {
+		balanceTurnOffThreshold: function(callback) {
 			var self = this;
 
 			self.callApi({
@@ -601,7 +577,7 @@ define(function(require){
 			});
 		},
 
-		balanceUpdateThreshold: function (valueThreshold, callback) {
+		balanceUpdateThreshold: function(valueThreshold, callback) {
 			var self = this;
 
 			self.callApi({
@@ -695,7 +671,6 @@ define(function(require){
 					error && error(data, status);
 				}
 			});
-
 		},
 
 		balanceGetLimits: function(success, error) {
@@ -704,7 +679,7 @@ define(function(require){
 			self.callApi({
 				resource: 'limits.get',
 				data: {
-					accountId: self.accountId,
+					accountId: self.accountId
 				},
 				success: function(data, status) {
 					success && success(data, status);
@@ -725,7 +700,7 @@ define(function(require){
 						self.balanceGetLedgerDocuments(name, filters, function(documents) {
 							callback && callback(null, documents);
 						});
-					}
+					};
 				});
 
 				monster.parallel(parallelRequests, function(err, results) {
@@ -738,7 +713,7 @@ define(function(require){
 						}
 					});
 
-					callback && callback(arrayResults)
+					callback && callback(arrayResults);
 				});
 			});
 		},
@@ -833,7 +808,7 @@ define(function(require){
 					error && error(data, status);
 				}
 			});
-		},
+		}
 	};
 
 	return balance;
