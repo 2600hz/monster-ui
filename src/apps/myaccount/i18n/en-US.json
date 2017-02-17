@@ -229,7 +229,18 @@
 					"text": ""
 				}
 			}
-		}
+		},
+		"__comment": "UI-2597: adding mobile usage to control center",
+		"__version": "4.0",
+		"mobileTable": {
+			"date": "Date",
+			"accountName": "Account Name",
+			"number": "Phone Number",
+			"quantity": "Quantity",
+			"amount": "Amount"
+		},
+		"perMinuteVoip": "Per Minute",
+		"mobileData": "Mobile Data"
 	},
 
 	"servicePlan": {

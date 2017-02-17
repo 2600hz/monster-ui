@@ -1,30 +1,37 @@
 <div class="balance-content-wrapper">
 	{{#if uiRestrictions.balance.show_header}}
-	<div class="title-bar clearfix">
-		{{#if uiRestrictions.balance.show_credit}}
-		<div class="title-box-group">
-			<div class="title-box">
-				<div class="value">{{ i18n.currencyUsed }}<span id="amount">{{amount}}</span></div>
-				<div class="title">{{ i18n.balance.availableCredits }}</div>
+		<div class="title-bar clearfix">
+			{{#if uiRestrictions.balance.show_credit}}
+			<div class="title-box-group">
+				<div class="title-box">
+					<div class="value">{{ i18n.currencyUsed }}<span id="amount">{{amount}}</span></div>
+					<div class="title">{{ i18n.balance.availableCredits }}</div>
+				</div>
+				<div class="title-box primary-box" id="add_credits">
+					<div class="value"><i class="fa fa-plus-circle monster-white"></i></div>
+					<div class="title">{{ i18n.balance.addCredit }}</div>
+				</div>
 			</div>
-			<div class="title-box primary-box" id="add_credits">
-				<div class="value"><i class="fa fa-plus-circle monster-white"></i></div>
-				<div class="title">{{ i18n.balance.addCredit }}</div>
+			<div class="title-box pull-right">
+				<div class="value">{{ i18n.currencyUsed }}<span id="call_charges"></span></div>
+				<div class="title">{{ i18n.balance.callCharges }}</div>
 			</div>
+			{{/if}}
+			{{#if uiRestrictions.balance.show_minutes}}
+			<div class="title-box pull-right">
+				<div class="value"><span id="minutes_used"></span></div>
+				<div class="title">{{ i18n.balance.minutesUsed }}</div>
+			</div>
+			{{/if}}
 		</div>
-		<div class="title-box pull-right">
-			<div class="value">{{ i18n.currencyUsed }}<span id="call_charges"></span></div>
-			<div class="title">{{ i18n.balance.callCharges }}</div>
-		</div>
-		{{/if}}
-		{{#if uiRestrictions.balance.show_minutes}}
-		<div class="title-box pull-right">
-			<div class="value"><span id="minutes_used"></span></div>
-			<div class="title">{{ i18n.balance.minutesUsed }}</div>
-		</div>
-		{{/if}}
-	</div>
 	{{/if}}
+
+	<div>
+		<ul class="nav nav-tabs">
+			<li data-type="per-minute-voip" class="tab-type-ledger active"><a href="javascript:void(0);">{{ i18n.balance.perMinuteVoip }}</a></li>
+			<li data-type="mobile_data" class="tab-type-ledger"><a href="javascript:void(0);">{{ i18n.balance.mobileData }}</a></li>
+		</ul>
+	</div>
 
 	<div class="table-custom-actions">
 		<div class="action-bar-wrapper">
@@ -51,22 +58,5 @@
 		</div>
 	</div>
 
-	<div class="table-wrapper">
-		<table id="transactions_grid" class="monster-table footable">
-			<thead>
-				<tr>
-					<th data-type="html"></th>
-					<th>{{ i18n.balance.dateColumn }}</th>
-					<th>{{ i18n.balance.fromColumn }}</th>
-					<th>{{ i18n.balance.toColumn }}</th>
-					<th data-breakpoints="xs">{{ i18n.balance.accountColumn }}</th>
-					<th data-type="number">{{ i18n.balance.durationColumn }}</th>
-					{{#if uiRestrictions.balance.show_credit}}
-						<th>{{ i18n.balance.amountColumn }}</th>
-					{{/if}}
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-	</div>
+	<div class="table-container"></div>
 </div>

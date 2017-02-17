@@ -1,0 +1,18 @@
+<div class="table-wrapper">
+	<table id="transactions_grid" class="monster-table footable">
+		<thead>
+			<tr>
+				<th data-type="html"></th>
+				<th>{{ i18n.balance.dateColumn }}</th>
+				<th>{{ i18n.balance.fromColumn }}</th>
+				<th>{{ i18n.balance.toColumn }}</th>
+				<th data-breakpoints="xs">{{ i18n.balance.accountColumn }}</th>
+				<th data-type="number">{{ i18n.balance.durationColumn }}</th>
+				{{#if uiRestrictions.balance.show_credit}}
+					<th>{{ i18n.balance.amountColumn }}</th>
+				{{/if}}
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
