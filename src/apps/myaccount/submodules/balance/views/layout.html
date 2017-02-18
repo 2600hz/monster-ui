@@ -23,10 +23,14 @@
 				<div class="title">{{ i18n.balance.minutesUsed }}</div>
 			</div>
 			{{/if}}
+			<div class="mobile-required title-box pull-right">
+				<div class="value"><span id="data_used"></span></div>
+				<div class="title">{{ i18n.balance.dataUsed }}</div>
+			</div>
 		</div>
 	{{/if}}
 
-	<div>
+	<div class="mobile-required">
 		<ul class="nav nav-tabs">
 			<li data-type="per-minute-voip" class="tab-type-ledger active"><a href="javascript:void(0);">{{ i18n.balance.perMinuteVoip }}</a></li>
 			<li data-type="mobile_data" class="tab-type-ledger"><a href="javascript:void(0);">{{ i18n.balance.mobileData }}</a></li>

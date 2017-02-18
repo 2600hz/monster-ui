@@ -240,7 +240,9 @@
 			"amount": "Amount"
 		},
 		"perMinuteVoip": "Per Minute",
-		"mobileData": "Mobile Data"
+		"mobileData": "Mobile Data",
+		"dataUsed": "Data Used",
+		"mb": "MB"
 	},
 
 	"servicePlan": {

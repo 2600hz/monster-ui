@@ -62,8 +62,6 @@ define(function(require) {
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
 
 						self.balanceGetAllTransactions(balance, function(data) {
-							self.balanceUpdateStats(balance, data);
-
 							self.balanceDisplayPerMinuteTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
 								monster.pub('myaccount.updateMenu', args);
 
@@ -72,23 +70,25 @@ define(function(require) {
 								if (typeof argsCallback === 'function') {
 									argsCallback(balance);
 								}
-							});
+							}, data);
 						});
 					}
 				});
 			});
 		},
 
-		balanceGetAllTransactions: function(template, callback) {
+		balanceGetAllTransactions: function(template, callback, optFilters) {
 			var self = this,
 				fromDate = template.find('input.filter-from').datepicker('getDate'),
 				toDate = template.find('input.filter-to').datepicker('getDate'),
-				filters = {
+				filters = $.extend({}, {
 					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
 					created_to: monster.util.dateToEndOfGregorianDay(toDate)
-				};
+				}, optFilters || {});
 
 			self.balanceGetLedgersTransactions(filters, function(data) {
+				self.balanceUpdateStats(template, data);
+
 				callback && callback(data);
 			});
 		},
@@ -99,32 +99,48 @@ define(function(require) {
 
 			template.find('#call_charges').html(formattedData.totalCharges);
 			template.find('#minutes_used').html(formattedData.totalMinutes);
+			template.find('#data_used').html(formattedData.totalMobileData);
+
+			if(formattedData.hasMobile === false) {
+				template.find('.mobile-required').hide();
+			} else {
+				template.find('.mobile-required').show();
+			}
 		},
 
 		balanceGetFormattedStats: function(data) {
-			var formattedData = {
-				totalMinutes: 0,
-				totalCharges: 0,
-				data: data
-			};
+			var self = this,
+				totalMb = 0,
+				formattedData = {
+					totalMinutes: 0,
+					totalCharges: 0,
+					totalMobileData: 0,
+					hasMobile: data.types.indexOf('mobile_data') >= 0,
+					hasVoip: data.types.indexOf('per-minute-voip') >= 0
+				};
 
-			if(data.length > 0) {
-				_.each(data, function(ledger) {
+			if(data.allLedgers.length > 0) {
+				_.each(data.allLedgers, function(ledger) {
 					if(ledger.source.service === 'per-minute-voip') {
 						var duration;
+
 						if(ledger.usage && ledger.usage.hasOwnProperty('quantity')) {
 							duration = Math.ceil((parseInt(ledger.usage.quantity)) / 60);
 							formattedData.totalMinutes += duration;
 						}
 
 						formattedData.totalCharges += parseFloat(ledger.amount);
+					} else if(ledger.source.service === 'mobile_data') {
+						totalMb += ledger.usage.quantity;
 					}
 				});
 
 				formattedData.totalCharges = formattedData.totalCharges.toFixed(3);
 			}
 
-			console.log(formattedData);
+			var bytes = monster.util.formatBytes(totalMb * 1000000);
+			formattedData.totalMobileData = bytes.value + ' ' + bytes.unit.symbol;
+
 			return formattedData;
 		},
 
@@ -225,7 +241,7 @@ define(function(require) {
 			});
 		},
 
-		balanceDisplayMobileTable: function(parent, showCredits, afterRender) {
+		balanceDisplayMobileTable: function(parent, showCredits, afterRender, preloadedData) {
 			var self = this,
 				template = $(self.getTemplate({ name: 'mobile-table', submodule: 'balance' })),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
@@ -238,7 +254,7 @@ define(function(require) {
 						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
 
-					self.balanceMobileGetRows(parent, filters, showCredits, callback);
+					self.balanceMobileGetRows(parent, filters, showCredits, callback, preloadedData);
 				},
 				backendPagination: {
 					enabled: true
@@ -250,16 +266,23 @@ define(function(require) {
 			});
 		},
 
-		balanceMobileGetRows: function(template, filters, showCredits, callback) {
-			var self = this;
+		balanceMobileGetRows: function(template, filters, showCredits, callback, preloadedData) {
+			var self = this,
+				afterDataFetched = function(data) {
+					var formattedData = self.balanceFormatMobileDataTable(data, showCredits),
+						$rows = $(self.getTemplate({ name: 'mobile-rows', data: formattedData, submodule: 'balance' }));
 
-			self.balanceGetLedgerDocuments('mobile_data', filters, function(data) {
-				var formattedData = self.balanceFormatMobileDataTable(data, showCredits),
-					$rows = $(self.getTemplate({ name: 'mobile-rows', data: formattedData, submodule: 'balance' }));
+					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+					callback && callback($rows, data);
+				};
 
-				// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
-				callback && callback($rows, data);
-			});
+			if(preloadedData) {
+				afterDataFetched(preloadedData);
+			} else {
+				self.balanceGetAllTransactions(template, function(data) {
+					afterDataFetched(data);
+				}, filters);
+			}
 		},
 
 		balanceFormatMobileDataTable: function(dataRequest, showCredits) {
@@ -267,9 +290,10 @@ define(function(require) {
 				data = {
 					transactions: []
 				};
+			var self = this;
 
-			if(dataRequest.length > 0) {
-				_.each(dataRequest, function(ledgerDoc) {
+			if(dataRequest.allLedgers.length > 0) {
+				_.each(dataRequest.allLedgers, function(ledgerDoc) {
 					if(ledgerDoc.source.service === 'mobile_data') {
 						data.transactions.push(ledgerDoc);
 					}
@@ -279,7 +303,7 @@ define(function(require) {
 			return data;
 		},
 
-		balanceDisplayPerMinuteTable: function(parent, showCredits, afterRender) {
+		balanceDisplayPerMinuteTable: function(parent, showCredits, afterRender, preloadedData) {
 			var self = this,
 				template = $(self.getTemplate({ name: 'per-minute-voip-table', submodule: 'balance' })),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
@@ -292,7 +316,7 @@ define(function(require) {
 						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
 
-					self.balancePerMinuteGetRows(parent, filters, showCredits, callback);
+					self.balancePerMinuteGetRows(parent, filters, showCredits, callback, preloadedData);
 				},
 				backendPagination: {
 					enabled: true
@@ -304,32 +328,34 @@ define(function(require) {
 			});
 		},
 
-		balancePerMinuteGetRows: function(template, filters, showCredits, callback) {
-			var self = this;
+		balancePerMinuteGetRows: function(template, filters, showCredits, callback, preloadedData) {
+			var self = this,
+				afterDataFetched = function(data) {
+					var formattedData = self.balanceFormatPerMinuteDataTable(data, showCredits),
+						$rows = $(self.getTemplate({ name: 'per-minute-voip-rows', data: formattedData, submodule: 'balance' }));
 
-			self.balanceGetLedgerDocuments('per-minute-voip', filters, function(data) {
-				var formattedData = self.balanceFormatPerMinuteDataTable(data, showCredits),
-					$rows = $(self.getTemplate({ name: 'per-minute-voip-rows', data: formattedData, submodule: 'balance' }));
+					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+					callback && callback($rows, data);
+				};
 
-				template.find('#call_charges').html(formattedData.totalCharges);
-				template.find('#minutes_used').html(formattedData.totalMinutes);
-
-				// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
-				callback && callback($rows, data);
-			});
+			if(preloadedData) {
+				afterDataFetched(preloadedData);
+			} else {
+				self.balanceGetAllTransactions(template, function(data) {
+					afterDataFetched(data);
+				}, filters);
+			}
 		},
 
 		balanceFormatPerMinuteDataTable: function(dataRequest, showCredits) {
 			var self = this,
 				data = {
 					transactions: [],
-					totalMinutes: 0,
-					totalCharges: 0,
 					showCredits: showCredits
 				};
 
-			if(dataRequest.length > 0) {
-				$.each(dataRequest, function(k, v) {
+			if(dataRequest.allLedgers.length > 0) {
+				$.each(dataRequest.allLedgers, function(k, v) {
 					if(v.source.service === 'per-minute-voip') {
 						v.metadata = v.metadata || {
 							to: '-',
@@ -346,10 +372,7 @@ define(function(require) {
 
 						if(v.usage && v.usage.hasOwnProperty('quantity')) {
 							duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
-							data.totalMinutes += duration;
 						}
-
-						data.totalCharges += parseFloat(v.amount);
 
 						data.transactions.push({
 							direction: v.metadata.call.direction,
@@ -363,8 +386,6 @@ define(function(require) {
 						});
 					}
 				});
-
-				data.totalCharges = data.totalCharges.toFixed(3);
 			}
 
 			return data;
@@ -665,7 +686,7 @@ define(function(require) {
 				dlTo = monster.util.dateToEndOfGregorianDay(to),
 				type = template.find('.tab-type-ledger.active').data('type'),
 				url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&auth_token=' + self.getAuthToken();
-console.log(url);
+
 			window.open(url, '_blank');
 		},
 
@@ -824,7 +845,11 @@ console.log(url);
 
 		balanceGetLedgersTransactions: function(filters, callback) {
 			var self = this,
-				parallelRequests = {};
+				parallelRequests = {},
+				formattedData = {
+					allLedgers: [],
+					types: []
+				};
 
 			self.balanceListLedgers(function(ledgers) {
 				_.each(ledgers, function(ledger, name) {
@@ -840,12 +865,15 @@ console.log(url);
 
 					_.each(results, function(ledgerDocuments, type) {
 						// for now we only want to list per minute voip, will change once we have more data from ledgers
-						if(type === 'per-minute-voip') {
-							arrayResults = arrayResults.concat(ledgerDocuments);
-						}
+						//if(type === 'per-minute-voip') {
+						formattedData.types.push(type);
+						arrayResults = arrayResults.concat(ledgerDocuments);
+						//}
 					});
 
-					callback && callback(arrayResults);
+					formattedData.allLedgers = arrayResults;
+
+					callback && callback(formattedData);
 				});
 			});
 		},
