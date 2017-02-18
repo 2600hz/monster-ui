@@ -18,7 +18,7 @@ rules:
   semi: 
     - error
     - always
-  keyword-spacing: off
+  keyword-spacing: ["error"]
   space-before-function-paren: 
     - error
     - never

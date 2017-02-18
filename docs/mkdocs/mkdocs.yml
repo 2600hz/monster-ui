@@ -18,6 +18,7 @@ pages:
   - 'Using application flags': 'docs/flags.md'
   - 'Coding standards (Basic)': 'docs/codingStandards.md'
   - 'Coding standards (Advanced)': 'docs/javascriptStyleGuide.md'
+  - 'Coding standards linting': 'docs/linting.md'
   - 'How to use the validation in your UI': 'docs/validation.md'
   - 'Gulp command': 'docs/gulpCommand.md'
 - 'Monster Helpers':
