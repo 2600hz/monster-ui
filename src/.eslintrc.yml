@@ -78,7 +78,7 @@ rules:
   id-length:
     - warn
     - {
-        exceptions: ["$", "_", "a", "b", "e", "i", "k", "v"]
+        exceptions: ["$", "_", "a", "b", "e", "i", "j", "k", "v"]
       }
   handle-callback-err: off #Rule commonly broken in Monster due to Monster's automatic error handling for some cases.
   no-redeclare: off # Should be "error" but this is commonly broken in Monster when the parameter to a function is redefined inside the function. A custom rule could be made in future to allow for this.
