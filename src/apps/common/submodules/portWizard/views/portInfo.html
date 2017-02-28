@@ -1,0 +1,35 @@
+<div class="app-content wizard">
+	<form class="port-info" id="form_port_info">
+		<h3 class="title">
+			{{i18n.portRequestWizard.portInfo.movingNumbers.title}}
+		</h3>
+		<p class="text">
+			{{i18n.portRequestWizard.portInfo.movingNumbers.text}}
+		</p>
+		<div class="contrlol-group">
+			<label for="name" class="control-label">
+				{{i18n.portRequestWizard.portInfo.movingNumbers.label}}
+			</label>
+			<div class="controls">
+				<input type="text" name="name" id="name" placeholder="{{i18n.portRequestWizard.portInfo.movingNumbers.placeholder}}">
+			</div>
+		</div>
+		<p>
+			{{i18n.portRequestWizard.portInfo.numbersType.text1}}
+			<br>
+			{{i18n.portRequestWizard.portInfo.numbersType.text2}}
+		</p>
+	{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.local}}
+		<input type="radio" class="numbers-type" name="extra.type" value="local">
+	{{/monsterRadio}}
+	{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.tollFree}}
+		<input type="radio" class="numbers-type" name="extra.type" value="tollFree">
+	{{/monsterRadio}}
+	</form>
+	<div class="bill-upload-wrapper"></div>
+	<div class="actions">
+		<button class="monster-button-cancel cancel">
+			{{i18n.portRequestWizard.buttons.cancel}}
+		</button>
+	</div>
+</div>

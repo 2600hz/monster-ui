@@ -792,5 +792,35 @@
 		"emptyParticipants": "There are currently no participants in the conference",
 		"notStarted": "Not Started",
 		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
+	},
+
+	"portRequestWizard": {
+		"buttons": {
+			"cancel": "Cancel Port Request"
+		},
+		"portInfo": {
+			"movingNumbers": {
+				"title": "We are excited you are moving numbers to our service!",
+				"text": "First, let's name this request so you can reference it in the future. Names like 'Company office local DIDs' or 'NY office numbers' can help you quickly identify this request once it is submitted or saved.",
+				"label": "Port Request Name",
+				"placeholder": "AT&T local numbers"
+			},
+			"numbersType": {
+				"text1": "What type of number will you be requesting to port?",
+				"text2": "(All numbers in a port request must be the same format).",
+				"label": {
+					"local": "U.S. Local Numbers",
+					"tollFree": "U.S. Toll-free Numbers"
+				}
+			},
+			"verifyOwner": {
+				"title": "We will need to verify ownership of the numbers you wish to port.",
+				"text1": "To do this, you will need to upload a recent (within 30 days) bill from your carrier which contains the numbers you want to port.",
+				"text2": "This proof of your account and ownership is required by law."
+			},
+			"buttons": {
+				"success": "Upload Phone Bill"
+			}
+		}
 	}
 }
