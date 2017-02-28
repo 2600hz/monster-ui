@@ -23,6 +23,7 @@ define(function(require){
 		'./submodules/extensionTools/extensionTools',
 		'./submodules/mediaSelect/mediaSelect',
 		'./submodules/webphone/webphone',
+		'./submodules/portWizard/portWizard',
 		'./submodules/conferenceViewer/conferenceViewer'
 	]);
 
@@ -49,6 +50,7 @@ define(function(require){
 			'extensionTools',
 			'mediaSelect',
 			'webphone',
+			'portWizard',
 			'conferenceViewer'
 		],
 
