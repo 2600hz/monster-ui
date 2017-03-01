@@ -115,17 +115,94 @@ define(function(require) {
 							}
 						});
 
-						console.log(args.data);
+						self.portWizardRenderAccountVerification(args);
 					}
 				});
 
 			container
 				.find('.cancel')
-				.on('click', function(event) {
-					event.preventDefault();
+					.on('click', function(event) {
+						event.preventDefault();
 
-					console.log('cancel');
-				});
+						console.log('cancel');
+					});
+		},
+
+		portWizardRenderAccountVerification: function(args) {
+			var self = this,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'accountVerification',
+					data: args.data.request,
+					submodule: 'portWizard'
+				}));
+
+			monster.ui.renderPDF(args.data.request.extra.billFileData.file, template.find('.pdf-container'));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindAccountVerificationEvents(args);
+		},
+
+		portWizardBindAccountVerificationEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.next')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var $form = container.find('#form_account_verification'),
+							formData = monster.ui.getFormData('form_account_verification');
+
+						monster.ui.validate($form, {
+							rules: {
+								'bill.name': {
+									minlength: 1,
+									maxlength: 128
+								},
+								'bill.steet_address': {
+									minlength: 1,
+									maxlength: 128
+								},
+								'bill.locality': {
+									minlength: 1,
+									maxlength: 128
+								},
+								'bill.region': {
+									minlength: 2,
+									maxlength: 2
+								},
+								'bill.postal_code': {
+									digits: true,
+									minlength: 5,
+									maxlength: 5
+								},
+								validation: {
+									required: true
+								}
+							}
+						});
+
+						if (monster.ui.valid($form)) {
+							$.extend(true, args.data.request, {
+								bill: formData.bill
+							});
+
+							console.log(args);
+						}
+					});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log('cancel');
+					});
 		}
 	};
 

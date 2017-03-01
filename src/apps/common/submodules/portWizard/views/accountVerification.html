@@ -1,0 +1,80 @@
+<div class="app-content wizard">
+	<h3 class="title">
+		{{i18n.portRequestWizard.accountVerification.title}}
+	</h3>
+	<p class="text">
+		{{i18n.portRequestWizard.accountVerification.text}}
+	</p>
+	<div class="row-fluid">
+		<form class="span6 form-horizontal" id="form_account_verification">
+			<legend>
+				{{i18n.portRequestWizard.accountVerification.form.legend}}
+			</legend>
+			<div class="control-group">
+				<label for="name" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.accountName}}
+				</label>
+				<div class="controls">
+					<input type="text" id="name" name="bill.name">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="address" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.billingAddress}}
+				</label>
+				<div class="controls-list">
+					<input type="text" name="bill.steet_address" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.street}}">
+					<input type="text" name="bill.locality" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.city}}">
+					<input type="text" name="bill.region" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.state}}">
+					<input type="text" name="bill.postal_code" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.zip}}">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="validation" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.billVerification}}
+				</label>
+				<div class="controls">
+				{{#monsterCheckbox i18n.portRequestWizard.accountVerification.form.label.acknowledgeBill}}
+					<input type="checkbox" id="validation" name="validation">
+				{{/monsterCheckbox}}
+				</div>
+			</div>
+			<p class="text">
+				{{i18n.portRequestWizard.accountVerification.form.text}}
+			</p>
+			<div class="control-group">
+				<label for="account_number" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.accountNumber}}
+				</label>
+				<div class="controls">
+					<input type="text" id="account_number" name="bill.account_number">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="pin" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.pin}}
+				</label>
+				<div class="controls">
+					<input type="text" id="pin" name="bill.pin">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="btn" class="control-label">
+					{{i18n.portRequestWizard.accountVerification.form.label.btn}}
+				</label>
+				<div class="controls">
+					<input type="text" id="btn" name="bill.btn">
+				</div>
+			</div>
+		</form>
+		<div class="span6 pdf-container"></div>
+	</div>
+	<div class="actions">
+		<button class="monster-button-primary next">
+			{{i18n.portRequestWizard.accountVerification.buttons.next}}
+		</button>
+		<a href="javascript:void(0);" class="monster-link">
+			{{i18n.portRequestWizard.buttons.cancel}}
+		</a>
+	</div>
+</div>
