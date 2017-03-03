@@ -31,7 +31,9 @@ define(function(require) {
 					.focus();
 
 			args.data = {
-				request: {}
+				request: {
+					numbers: {}
+				}
 			};
 
 			self.portWizardBindPortInfoEvents(args);
@@ -133,7 +135,6 @@ define(function(require) {
 				container = args.container,
 				template = $(self.getTemplate({
 					name: 'accountVerification',
-					data: args.data.request,
 					submodule: 'portWizard'
 				}));
 
@@ -192,8 +193,99 @@ define(function(require) {
 								bill: formData.bill
 							});
 
-							console.log(args);
+							self.portWizardRenderAddNumbers(args);
 						}
+					});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log('cancel');
+					});
+		},
+
+		portWizardRenderAddNumbers: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = $.extend(true, args.data, {
+					request: {
+						extra: {
+							numbers_count: _.keys(args.data.request.numbers).length
+						}
+					}
+				}),
+				template = $(self.getTemplate({
+					name: 'addNumbers',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			monster.ui.renderPDF(args.data.request.extra.billFileData.file, template.find('.pdf-container'));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindAddNumbersEvents(args);
+		},
+
+		portWizardBindAddNumbersEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.add-numbers')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var $form = container.find('#form_add_numbers'),
+							formData = monster.ui.getFormData('form_add_numbers'),
+							newNumbers;
+
+						monster.ui.validate($form, {
+							rules: {
+								numbers: {
+									required: true
+								}
+							}
+						});
+
+						if (monster.ui.valid($form)) {
+							newNumbers = formData.numbers.split(' ').reduce(function(object, number) {
+								object[monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(number), 'keepPlus')] = {};
+								return object;
+							}, {});
+
+							self.portWizardRenderAddNumbers($.extend(true, args, {
+								data: {
+									request: {
+										numbers: newNumbers
+									}
+								}
+							}));
+						}
+					});
+
+			container
+				.find('.remove')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var number = $(this).parents('.item').data('number');
+
+						delete args.data.request.numbers[number];
+
+						self.portWizardRenderAddNumbers(args);
+					});
+
+			container
+				.find('.next')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log(args.data.request);
 					});
 
 			container

@@ -796,7 +796,8 @@
 
 	"portRequestWizard": {
 		"buttons": {
-			"cancel": "Cancel Port Request"
+			"cancel": "Cancel Port Request",
+			"save": "Save & Continue Later"
 		},
 		"portInfo": {
 			"movingNumbers": {
@@ -846,6 +847,31 @@
 			},
 			"buttons": {
 				"next": "Next - Select Numbers"
+			}
+		},
+		"addNumbers": {
+			"title": "Now we can establish what numbers you would like to port.",
+			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
+			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
+			"form": {
+				"legend": "Input Numbers to Port",
+				"button": "Add Numbers"
+			},
+			"list": {
+				"title": "Numbers on This Port Request",
+				"text": "You have not added any numbers to your port request yet."
+			},
+			"buttons": {
+				"next": {
+					"manual": {
+						"loa": "Next - LoA Form (Manual LoA, no e-sign)",
+						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
+					},
+					"eSign": {
+						"loa": "Next - LoA Form (E-sign enabled on account)",
+						"resporg": "Next - RespOrg Form (E-sign enabled on account)"
+					}
+				}
 			}
 		}
 	}
