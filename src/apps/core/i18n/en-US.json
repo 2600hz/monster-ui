@@ -558,7 +558,13 @@
 	"friendlyTimer": {
 		"minutesAnd": "minutes and",
 		"hours": "hours",
-		"seconds": "seconds"
+		"seconds": "seconds",
+		"__comment": "UI-2570: adding short verbose timer",
+		"__version": "4.0",
+		"minute": "minute",
+		"minutes": "minutes",
+		"second": "second",
+		"hour": "hour"
 	},
 
 	"__comment": "UI-1779: Adding account toggle",

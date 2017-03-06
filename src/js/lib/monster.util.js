@@ -496,17 +496,31 @@ define(function(require){
 				remainingSeconds = seconds % 60,
 				i18n = monster.apps.core.i18n.active(),
 				format2Digits = function(number) {
-					if(typeof number === 'string') {
+					if (typeof number === 'string') {
 						number = parseInt(number);
 					}
 					return (number < 10 ? '0' : '') + number;
 				},
-				displayTime;
+				displayTime = '';
 
-			if(mode === 'verbose') {
+			if (mode === 'verbose') {
 				displayTime = ''.concat(hours, ' ', i18n.friendlyTimer.hours, ', ', minutes, ' ', i18n.friendlyTimer.minutesAnd, ' ', remainingSeconds, ' ', i18n.friendlyTimer.seconds);
-			}
-			else {
+			} else if (mode === 'shortVerbose') {
+				if (hours > 0) {
+					var stringHour = hours === 1 ? i18n.friendlyTimer.hour : i18n.friendlyTimer.hours;
+					displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
+				}
+
+				if (minutes > 0) {
+					var stringMinutes = minutes === 1 ? i18n.friendlyTimer.minute : i18n.friendlyTimer.minutes;
+					displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
+				}
+
+				if (remainingSeconds > 0) {
+					var stringSeconds = remainingSeconds === 1 ? i18n.friendlyTimer.second : i18n.friendlyTimer.seconds;
+					displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
+				}
+			} else {
 				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
 
 				if (hours) {
