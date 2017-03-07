@@ -22,7 +22,7 @@ monster.ui.slider(target, options);
 
  Type: [Object][object_literal]
 
- Let you specify a map of options for the slider, they are the same than for the [jQuery Slider][jquery_slider_options] method. It also takes two more custom parameters:
+ Let you specify a map of options for the slider, they are the same than for the [jQuery Slider][jquery_slider_options] method. It also takes three more custom, and optional, parameters:
     - i18n: to define the text in the tooltips
     - unit: unit of the value for the handles and limits
     - friendlyPrint: takes the value returned by the slider and returns a different value, to make it look friendlier to the end-user
@@ -55,9 +55,12 @@ var target = $('#slider'),
     };
 
 monster.ui.slider(target, options);
+```
 
-* Create a slider with a set of steps that the end-user will have to choose from. We also show the use of the friendlyPrint function, which will take the value selected by the user and return a different value, that would be more meaningful to the end-user. In this example, instead of displaying 3600 in the tooltip of the result, we would display "1 hour". In order to get the real value ("3600"), the developer needs to check the value stored in the data-real-value attribute of the slider ($('.slider-container [data-real-value]').attr('data-real-value') for example
-)
+* Create a slider with a set of steps that the end-user will have to choose from. We also show the use of the friendlyPrint function, which will take the value selected by the user and return a different value, that would be more meaningful to the end-user.
+
+In this example, instead of displaying 3600 in the tooltip of the result, we would display "1 hour". In order to get the real value ("3600"), the developer needs to check the value stored in the data-real-value attribute of the slider ($('.slider-container [data-real-value]').attr('data-real-value') for example).
+
 ```javascript
 var target = $('#slider'),
     options = {
