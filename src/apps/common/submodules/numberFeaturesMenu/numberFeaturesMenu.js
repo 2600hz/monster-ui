@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -8,7 +8,7 @@ define(function(require){
 		requests: {},
 
 		subscribe: {
-			'common.numberFeaturesMenu.render': 'numberFeaturesMenuRender',
+			'common.numberFeaturesMenu.render': 'numberFeaturesMenuRender'
 		},
 
 		numberFeaturesMenuRender: function(args) {
@@ -27,13 +27,11 @@ define(function(require){
 			var self = this,
 				featuresNumber;
 
-			if(number.hasOwnProperty('features_available') && number.features_available.length) {
+			if (number.hasOwnProperty('features_available') && number.features_available.length) {
 				featuresNumber = number.features_available;
-			}
-			else if(number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
+			} else if (number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
 				featuresNumber = number._read_only.features_available;
-			}
-			else {
+			} else {
 				featuresNumber = [];
 			}
 
@@ -94,8 +92,21 @@ define(function(require){
 
 				monster.pub('common.numberPrepend.renderPopup', args);
 			});
+
+			template.find('.rename-carrier-number').on('click', function() {
+				var args = {
+					phoneNumber: phoneNumber,
+					callbacks: {
+						success: function(data) {
+							afterUpdate && afterUpdate(data.data.features, template);
+						}
+					}
+				};
+
+				monster.pub('common.numberRenameCarrier.renderPopup', args);
+			});
 		}
-	}
+	};
 
 	return servicePlanDetails;
 });
