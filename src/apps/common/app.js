@@ -23,7 +23,8 @@ define(function(require){
 		'./submodules/extensionTools/extensionTools',
 		'./submodules/mediaSelect/mediaSelect',
 		'./submodules/webphone/webphone',
-		'./submodules/conferenceViewer/conferenceViewer'
+		'./submodules/conferenceViewer/conferenceViewer',
+		'./submodules/numberRenameCarrier/numberRenameCarrier'
 	]);
 
 	var app = {
@@ -49,7 +50,8 @@ define(function(require){
 			'extensionTools',
 			'mediaSelect',
 			'webphone',
-			'conferenceViewer'
+			'conferenceViewer',
+			'numberRenameCarrier'
 		],
 
 		css: [ 'app' ],

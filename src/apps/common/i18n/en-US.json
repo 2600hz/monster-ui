@@ -792,5 +792,16 @@
 		"emptyParticipants": "There are currently no participants in the conference",
 		"notStarted": "Not Started",
 		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
+	},
+
+	"__comment": "UI-2554: Add a way to customize carrier used by number",
+	"__version": "v4.0",
+	"numberRenameCarrier": {
+		"label": "Carrier Module",
+		"help": "By selecting a module from this list, you will change the carrier module used by the system for that phone number.",
+		"dialogTitle": "Rename Carrier Module",
+		"successUpdate": "You successfully updated the carrier moduled used by {{phoneNumber}} to be {{carrierName}}",
+		"custom": "Customize",
+		"customCarrierName": "Custom Carrier Module Name"
 	}
 }
