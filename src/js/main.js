@@ -2,7 +2,7 @@
 require.config({
 	waitSeconds: 200,
 	paths: {
-		'async': 'js/lib/async',
+		'async': 'js/lib/async.min',
 		'bootstrap': 'js/lib/bootstrap-2.3.1.min',
 		'bootstrap-clickover': 'js/lib/bootstrapx-clickover-1.0',
 		'chart': 'js/lib/chart.min',
