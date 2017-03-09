@@ -221,6 +221,13 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
 			},
+			multifactor: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/multi_factor' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' }
+			},
 			numbers: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
