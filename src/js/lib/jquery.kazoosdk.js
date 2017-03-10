@@ -225,8 +225,11 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/multi_factor' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' }
+				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' },
+				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts' },
+				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts/{attemptId}' }
 			},
 			numbers: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
