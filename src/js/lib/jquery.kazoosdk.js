@@ -116,6 +116,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
