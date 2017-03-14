@@ -14,8 +14,11 @@ Handlebars.getTemplate = function(app, submodule, name, ignoreCache) {
 		monster.cache.templates[app.name][pathSubmodule] = {};
 	}
 
-	if(monster.cache.templates[app.name][pathSubmodule][name] && !ignoreCache){
-		_template = monster.cache.templates[app.name][pathSubmodule][name];
+	// Have to do that in 4.0 to be retro compatible with old naming convention
+	var cachedTemplate = monster.cache.templates[app.name][pathSubmodule][name] || monster.cache.templates[app.name][name] || undefined;
+
+	if(cachedTemplate && !ignoreCache){
+		_template = cachedTemplate;
 	}
 	else {
 		if(name.substring(0, 1) === '!'){ // ! indicates that it's a string template
