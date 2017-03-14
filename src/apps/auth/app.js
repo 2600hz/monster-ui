@@ -841,22 +841,80 @@ define(function(require){
 					callback && callback(data);
 				},
 				error: function(errorPayload, data, globalHandler) {
-					if(data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
+					if (data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
 						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'date'),
 							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
 
 						monster.ui.alert('warning', errorMessage);
-					}
-					else if(data.status === 423) {
+					} else if (data.status === 423) {
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
-					}
-					else if(data.status === 401) {
+					} else if (data.status === 401) {
 						wrongCredsCallback && wrongCredsCallback();
-					}
-					else {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
+
+					/*var hasMultifactor = true;
+					if (hasMultifactor) {
+						self.handleMultiFactor(errorPayload, function(data) {
+							callback && callback(data);
+						}, function() {
+							monster.ui.alert('error', 'error multi factor')
+						});
+					}*/
 				}
+			});
+		},
+
+		handleMultiFactor: function(data, success, error) {
+			var self = this;
+
+			if (data.multi_factor_request.provider_name === 'duo') {
+				self.showDuoDialog(data, success, error);
+			} else {
+				error && error();
+			}
+		},
+
+		showDuoDialog: function(data, success, error) {
+			var data = {
+				'data': {
+					'messages': 'client needs to preform second-factor authentication',
+					'multi_factor_request': {
+						'provider_name': 'duo',
+						'settings': {
+						//any arbitrary data from the multi factor provider
+						}
+					}
+				}
+			};
+
+			var self = this,
+				dataTemplate = {
+					sigRequest: 'test',//data.multi_factor_request.settings.duo_sig_request,
+					apiHostname: 'test2', //data.multi_factor_request.settings.duo_api_hostname,
+					apiCallback: self.apiUrl + 'user_auth'
+				};
+
+
+
+			require(['duo'], function() {
+				console.log(Duo);
+
+				Duo.init({
+					sig_request: data.multi_factor_request.settings.duo_sig_request,
+					host: data.multi_factor_request.settings.duo_api_hostname,
+					submit_callback: function(a, b, c) {
+						console.log(a, b, c);
+						//success();
+					}
+				});
+
+				var template = self.getTemplate({ name: 'duo-dialog ', data: dataTemplate });
+
+				monster.ui.dialog(template, {
+					title: 'duo config'
+				});
 			});
 		},
 

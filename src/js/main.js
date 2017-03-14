@@ -14,6 +14,7 @@ require.config({
 		'dependClass': 'js/vendor/jquery.dependClass',
 		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'drop': 'js/vendor/drop',
+		'duo': 'js/vendor/duo.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/vendor/footable.min',
 		'form2object': 'js/vendor/form2object',
