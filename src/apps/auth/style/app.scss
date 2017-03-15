@@ -382,3 +382,18 @@
 #password_update_dialog .update-password {
 	margin-left: 10px;
 }
+
+/* Duo dialog */
+#duo_dialog {
+	width: 500px;
+	height: 350px;
+	overflow: hidden;
+}
+
+#duo_dialog #duo_iframe {
+	width: 100%;
+	min-width: 304px;
+	max-width: 620px;
+	height: 350px;
+	border: none;
+}
