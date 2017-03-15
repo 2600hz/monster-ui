@@ -325,7 +325,7 @@ define(function(require){
 									name: 'list',
 									submodule: 'accountBrowser',
 									data: {
-										accounts: monster.util.sort(data.data)
+										accounts: _.sortBy(data.data, 'name')
 									}
 								}));
 
@@ -407,7 +407,7 @@ define(function(require){
 					slider = container.find('.account-list-slider'),
 					list = container.find('.account-list'),
 					templateData = {
-						accounts: monster.util.sort(data.data),
+						accounts: _.sortBy(data.data, 'name'),
 						selectedId: selectedId,
 						addBackButton: addBackButton,
 						showLocalBackButton: showLocalBackButton
