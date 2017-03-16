@@ -140,7 +140,11 @@
 
 		"__comment": "OOB: Add title of Move Numbers popup to I18n",
 		"__version": "4.0",
-		"moveNumbersConfirmationTitle": "Move Numbers - Confirmation"
+		"moveNumbersConfirmationTitle": "Move Numbers - Confirmation",
+
+		"__comment": "OOB: when group no longer exist but it's still assigned to a callflow, we need to show unknown group",
+		"__version": "4.0",
+		"unknownGroup": "Deleted Group"
 	},
 
 	"callerId": {
