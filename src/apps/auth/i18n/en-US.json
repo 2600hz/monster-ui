@@ -132,5 +132,8 @@
 	"__version": "4.1",
 	"duoDialog": {
 		"title": "Multi-factor Authentication"
+	},
+	"multiFactor": {
+		"error": "The information sent by the multi-factor plugin isn't valid."
 	}
 }
