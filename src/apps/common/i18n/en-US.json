@@ -794,6 +794,17 @@
 		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
 	},
 
+	"__comment": "UI-2554: Add a way to customize carrier used by number",
+	"__version": "v4.0",
+	"numberRenameCarrier": {
+		"label": "Carrier Module",
+		"help": "By selecting a module from this list, you will change the carrier module used by the system for that phone number.",
+		"dialogTitle": "Rename Carrier Module",
+		"successUpdate": "You successfully updated the carrier moduled used by {{phoneNumber}} to be {{carrierName}}",
+		"custom": "Customize",
+		"customCarrierName": "Custom Carrier Module Name"
+	},
+
 	"portRequestWizard": {
 		"buttons": {
 			"cancel": "Cancel Port Request",
@@ -873,6 +884,36 @@
 					}
 				}
 			}
+		},
+		"uploadForm": {
+			"type": {
+				"loa": {
+					"compact": "LoA",
+					"extended": "Letter Of Authorization"
+				},
+				"resporg": {
+					"compact": "RespOrg",
+					"extended": "Responsible Organization"
+				}
+			},
+			"title": "We'll need a signed copy of your {{variable}}",
+			"text": "Please download the pre-generated {{variable}} form, double check the info is correct and sign it, then re-upload it.",
+			"link": "Learn more about {{variable}} here.",
+			"download": {
+				"title": "Step 1",
+				"text": "Download your {{variable}}",
+				"button": "Download Pre-filled {{variable}}"
+			},
+			"doubleCheck": {
+				"title": "Step 2",
+				"text": "Double check all the info and numbers on your {{variable}} to confirm that they are correct, and then sign your {{variable}} form."
+			},
+			"upload": {
+				"title": "Step 3",
+				"text": "Upload your {{variable}} form",
+				"format": ".pdf format ONLY"
+			},
+			"button": "Next - Notifications & Scheduling"
 		}
 	}
 }

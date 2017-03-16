@@ -60,21 +60,23 @@ define(function(require) {
 							template
 								.find('#bill_input')
 									.fileUpload({
+										btnClass: 'monster-button-primary',
+										inputOnly: true,
 										success: function(results) {
-											var template = $(self.getTemplate({
+											var actionsTemplate = $(self.getTemplate({
 												name: 'portInfo-actions',
 												submodule: 'portWizard'
 											})).css('display', 'none');
 
-											if (container.find('.success').length < 1) {
+											if (container.find('.portInfo-success').length < 1) {
 												billFileData = results[0];
 
 												container
 													.find('.actions')
-														.prepend(template);
+														.prepend(actionsTemplate);
 
 												container
-													.find('.success')
+													.find('.portInfo-success')
 														.fadeIn();
 											}
 										}
@@ -91,7 +93,7 @@ define(function(require) {
 					});
 
 			container
-				.on('click', '.success', function(event) {
+				.on('click', '.portInfo-success', function(event) {
 					event.preventDefault();
 
 					var $form = container.find('#form_port_info'),
@@ -285,7 +287,11 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log(args.data.request);
+						var sign = $(this).data('sign');
+
+						if (sign === 'manual') {
+							self.portWizardRenderUploadForm(args);
+						}
 					});
 
 			container
@@ -294,6 +300,72 @@ define(function(require) {
 						event.preventDefault();
 
 						console.log('cancel');
+					});
+		},
+
+		portWizardRenderUploadForm: function(args) {
+			var self = this,
+				container = args.container,
+				formType = args.data.request.extra.type === 'local' ? 'loa' : 'resporg',
+				dataToTemplate = {
+					type: self.i18n.active().portRequestWizard.uploadForm.type[formType],
+					link: monster.config.whitelabel.port[formType]
+				},
+				template = $(self.getTemplate({
+					name: 'uploadForm',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			template
+				.find('#form_input')
+					.fileUpload({
+						btnClass: 'monster-button-primary',
+						inputOnly: true,
+						success: function(results) {
+							var actionsTemplate = $(self.getTemplate({
+								name: 'uploadForm-actions',
+								submodule: 'portWizard'
+							})).css('display', 'none');
+
+							if (template.find('.uploadForm-success').length < 1) {
+								args.data.request.extra.formFileData = results[0];
+
+								template
+									.find('.actions')
+										.prepend(actionsTemplate);
+
+								template
+									.find('.uploadForm-success')
+										.fadeIn();
+							}
+						}
+					});
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindUploadFormEvents(args);
+		},
+
+		portWizardBindUploadFormEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.on('click', '.uploadForm-success', function(event) {
+					event.preventDefault();
+
+					console.log(args.data.request);
+				});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log(args.data.request);
 					});
 		}
 	};

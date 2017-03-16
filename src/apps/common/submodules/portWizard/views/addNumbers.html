@@ -44,14 +44,14 @@
 	<div class="actions">
 	{{#if request.extra.numbers_count}}
 		<div>
-			<button class="monster-button-primary next">
+			<button class="monster-button-primary next" data-sign="manual">
 			{{#compare request.extra.type '===' 'local'}}
 				{{i18n.portRequestWizard.addNumbers.buttons.next.manual.loa}}
 			{{else}}
 				{{i18n.portRequestWizard.addNumbers.buttons.next.manual.resporg}}
 			{{/compare}}
 			</button>
-			<button class="monster-button-primary next">
+			<button class="monster-button-primary next" data-sign="electronic">
 			{{#compare request.extra.type '===' 'local'}}
 				{{i18n.portRequestWizard.addNumbers.buttons.next.eSign.loa}}
 			{{else}}
