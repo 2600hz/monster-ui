@@ -258,8 +258,6 @@ define(function(require){
 		 */
 		$coreWrapper
 			.on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
-				event.preventDefault();
-
 				var $this = $(this),
 					$splash = $('<div>', {
 						class: 'monster-splash-effect'
