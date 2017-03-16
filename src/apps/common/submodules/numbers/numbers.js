@@ -1190,7 +1190,7 @@ define(function(require){
 							data.numbers.numbers[number].ownerType = 'user';
 						}
 						else if(callflow.group_id) {
-							data.numbers.numbers[number].owner = mapGroups[callflow.group_id].name;
+							data.numbers.numbers[number].owner = mapGroups.hasOwnProperty(callflow.group_id) ? mapGroups[callflow.group_id].name : self.i18n.active().numbers.unknownGroup;
 							data.numbers.numbers[number].ownerType = 'group';
 						}
 						else if(callflow.type && callflow.type === 'main') {
