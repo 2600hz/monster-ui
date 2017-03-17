@@ -249,7 +249,8 @@
 				'search': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 				'searchBlocks': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
-				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' }
+				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
+				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }

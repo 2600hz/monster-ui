@@ -807,5 +807,11 @@
 		"successUpdate": "You successfully updated the carrier moduled used by {{phoneNumber}} to be {{carrierName}}",
 		"custom": "Customize",
 		"customCarrierName": "Custom Carrier Module Name"
+	},
+
+	"__comment": "UI-2641",
+	"__version": "4.1",
+	"numberFeaturesMenu": {
+		"syncSuccess": "You successfully synced {{number}} with the system."
 	}
 }
