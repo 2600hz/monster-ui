@@ -914,6 +914,22 @@
 				"format": ".pdf format ONLY"
 			},
 			"button": "Next - Notifications & Scheduling"
+		},
+		"portNotify": {
+			"title": "Let us know who to notify of changes and choose a desired port date.",
+			"text": "Please fill out the last bits of information below.",
+			"email": {
+				"text1": "Who should we notify when the status of this port request changes?",
+				"text2": "(Changes can be status updates or notifications requiring further action).",
+				"label": "Notify by Email"
+			},
+			"target": {
+				"text1": "When would you like this port to occur?",
+				"text2": "Please note that we cannot guarantee this date, but will keep you notified of any changes or updates.",
+				"text3": "Port requests can take anywhere from 3 to 30 days, depending on the carrier.",
+				"label": "Target Date"
+			},
+			"button": "Next - Review Port Request"
 		}
 	}
 }

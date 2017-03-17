@@ -357,7 +357,7 @@ define(function(require) {
 				.on('click', '.uploadForm-success', function(event) {
 					event.preventDefault();
 
-					console.log(args.data.request);
+					self.portWizardRenderPortNotify(args);
 				});
 
 			container
@@ -366,6 +366,51 @@ define(function(require) {
 						event.preventDefault();
 
 						console.log(args.data.request);
+					});
+		},
+
+		portWizardRenderPortNotify: function(args) {
+			var self = this,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'portNotify',
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindPortNotifyEvents(args);
+		},
+
+		portWizardBindPortNotifyEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			monster.ui.datepicker(container.find('#transfer_date'), {
+				minDate: monster.util.getBusinessDate(4),
+				beforeShowDay: $.datepicker.noWeekends
+			});
+
+			container
+				.find('.success')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var formData = monster.ui.getFormData('form_notify');
+
+						$.extend(true, args.data.request, formData);
+
+						console.log(args.data.request);
+					});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log('cancel');
 					});
 		}
 	};
