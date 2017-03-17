@@ -400,7 +400,63 @@ define(function(require) {
 
 						var formData = monster.ui.getFormData('form_notify');
 
-						$.extend(true, args.data.request, formData);
+						$.extend(true, args.data.request, formData, {
+							transfer_date: monster.util.dateToGregorian(new Date(formData.transfer_date))
+						});
+
+						self.portWizardRenderSubmitPort(args);
+					});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log('cancel');
+					});
+		},
+
+		portWizardRenderSubmitPort: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = {
+					request: args.data.request,
+					today: new Date()
+				},
+				template = $(self.getTemplate({
+					name: 'portSubmit',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindPortSubmitEvents(args);
+		},
+
+		portWizardBindPortSubmitEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.conditions')
+					.on('change', function(event) {
+						event.preventDefault();
+
+						var formData = monster.ui.getFormData('form_conditions'),
+							disabled = formData.conditions.indexOf(false) > -1;
+
+						container
+							.find('.success')
+								.prop('disabled', disabled);
+					});
+
+			container
+				.find('.success')
+					.on('click', function(event) {
+						event.preventDefault();
 
 						console.log(args.data.request);
 					});

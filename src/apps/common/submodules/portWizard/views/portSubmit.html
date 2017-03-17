@@ -1,0 +1,100 @@
+<div class="app-content wizard">
+	<h3 class="title">
+		{{replaceVar i18n.portRequestWizard.portSubmit.title request.extra.numbers_count}}
+	</h3>
+	<p class="text">
+		{{i18n.portRequestWizard.portSubmit.text}}
+	</p>
+	<div class="row-fluid">
+		<div class="span6">
+			<h4 class="title">
+				{{i18n.portRequestWizard.portSubmit.review.title}}
+			</h4>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label">
+						{{i18n.portRequestWizard.portSubmit.review.label.name}}
+					</label>
+					<div class="controls">
+						<div class="control-text">
+							{{request.name}}
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">
+						{{i18n.portRequestWizard.portSubmit.review.label.amount}}
+					</label>
+					<div class="controls">
+						<div class="control-text">
+							{{request.extra.numbers_count}}
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">
+						{{i18n.portRequestWizard.portSubmit.review.label.requested}}
+					</label>
+					<div class="controls">
+						<div class="control-text">
+							{{toFriendlyDate today 'date'}}
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">
+						{{i18n.portRequestWizard.portSubmit.review.label.scheduled}}
+					</label>
+					<div class="controls">
+						<div class="control-text">
+							{{toFriendlyDate request.transfer_date 'date'}}
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="span6">
+			<h4 class="title">
+				{{i18n.portRequestWizard.portSubmit.agree.title}}
+			</h4>
+			<form id="form_conditions">
+				<div class="control-group">
+					<label for="service" class="control-label">
+					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.service}}
+						<input type="checkbox" id="service" class="conditions" name="conditions[]">
+					{{/monsterCheckbox}}
+					</label>
+				</div>
+				<div class="control-group">
+					<label for="canceled" class="control-label">
+					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.canceled}}
+						<input type="checkbox" id="canceled" class="conditions" name="conditions[]">
+					{{/monsterCheckbox}}
+					</label>
+				</div>
+				<div class="control-group">
+					<label for="fee" class="control-label">
+					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.fee}}
+						<input type="checkbox" id="fee" class="conditions" name="conditions[]">
+					{{/monsterCheckbox}}
+					</label>
+				</div>
+				<div class="control-group">
+					<label for="standard" class="control-label">
+					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.standard}}
+						<input type="checkbox" id="standard" class="conditions" name="conditions[]">
+					{{/monsterCheckbox}}
+					</label>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="monster-button-success success" disabled="true">
+			{{i18n.portRequestWizard.portSubmit.button}}
+		</button>
+		<a href="javascript:void(0);" class="monster-link cancel">
+			{{i18n.portRequestWizard.buttons.cancel}}
+		</a>
+	</div>
+</div>

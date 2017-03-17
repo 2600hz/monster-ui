@@ -930,6 +930,29 @@
 				"label": "Target Date"
 			},
 			"button": "Next - Review Port Request"
+		},
+		"portSubmit": {
+			"title": "You're almost ready to submit your request to port {{variable}} numbers.",
+			"text": "Please review you request and acknowledge the four (4) statements below. When you are ready, go ahead and submit your port request.",
+			"review": {
+				"title": "Port Request Review",
+				"label": {
+					"name": "Port Request Name",
+					"amount": "Amount of Ported Numbers",
+					"requested": "Requested On",
+					"scheduled": "Scheduled Date of Port"
+				}
+			},
+			"agree": {
+				"title": "IMPORTANT! Please understand and agree:",
+				"label": {
+					"service": "I will not cancel my old service until after the numbers are completely transfered",
+					"canceled": "I understand any other numbers on the old account may be canceled by the old provider",
+					"fee": "I understand my old carrier may charge an early termination fee",
+					"standard": "There are standard phone numbers, not featured (like star-ring)"
+				}
+			},
+			"button": "Submit This Port Request"
 		}
 	}
 }
