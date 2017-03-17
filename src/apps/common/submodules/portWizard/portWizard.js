@@ -291,6 +291,8 @@ define(function(require) {
 
 						if (sign === 'manual') {
 							self.portWizardRenderUploadForm(args);
+						} else {
+							self.portWizardRenderSignForm(args);
 						}
 					});
 
@@ -308,7 +310,7 @@ define(function(require) {
 				container = args.container,
 				formType = args.data.request.extra.type === 'local' ? 'loa' : 'resporg',
 				dataToTemplate = {
-					type: self.i18n.active().portRequestWizard.uploadForm.type[formType],
+					type: self.i18n.active().portRequestWizard.formTypes[formType],
 					link: monster.config.whitelabel.port[formType]
 				},
 				template = $(self.getTemplate({
@@ -366,6 +368,47 @@ define(function(require) {
 						event.preventDefault();
 
 						console.log(args.data.request);
+					});
+		},
+
+		portWizardRenderSignForm: function(args) {
+			var self = this,
+				container = args.container,
+				formType = args.data.request.extra.type === 'local' ? 'loa' : 'resporg',
+				dataToTemplate = {
+					type: self.i18n.active().portRequestWizard.formTypes[formType]
+				},
+				template = $(self.getTemplate({
+					name: 'signForm',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindSignFormEvents(args);
+		},
+
+		portWizardBindSignFormEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.success')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						self.portWizardRenderPortNotify(args);
+					});
+
+			container
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						console.log('cancel');
 					});
 		},
 

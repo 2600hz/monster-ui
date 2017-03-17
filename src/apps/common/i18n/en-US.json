@@ -806,6 +806,16 @@
 	},
 
 	"portRequestWizard": {
+		"formTypes": {
+			"loa": {
+				"compact": "LoA",
+				"extended": "Letter Of Authorization"
+			},
+			"resporg": {
+				"compact": "RespOrg",
+				"extended": "Responsible Organization"
+			}
+		},
 		"buttons": {
 			"cancel": "Cancel Port Request",
 			"save": "Save & Continue Later"
@@ -886,16 +896,6 @@
 			}
 		},
 		"uploadForm": {
-			"type": {
-				"loa": {
-					"compact": "LoA",
-					"extended": "Letter Of Authorization"
-				},
-				"resporg": {
-					"compact": "RespOrg",
-					"extended": "Responsible Organization"
-				}
-			},
 			"title": "We'll need a signed copy of your {{variable}}",
 			"text": "Please download the pre-generated {{variable}} form, double check the info is correct and sign it, then re-upload it.",
 			"link": "Learn more about {{variable}} here.",
@@ -913,6 +913,11 @@
 				"text": "Upload your {{variable}} form",
 				"format": ".pdf format ONLY"
 			},
+			"button": "Next - Notifications & Scheduling"
+		},
+		"signForm": {
+			"title": "For your convenience, you will be able to electronically sign you {{variable}}.",
+			"text": "Please review your {{variable}} form below, and then e-sign it before continuing on with this port request.",
 			"button": "Next - Notifications & Scheduling"
 		},
 		"portNotify": {
