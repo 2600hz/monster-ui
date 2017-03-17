@@ -21,6 +21,22 @@
 				{{/monsterCheckbox}}
 				<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{i18n.numbers.addExternal.dialog.forceActivate.help}}" data-placement="top" data-toggle="tooltip"></i>
 			</label>
+
+			<div class="customize-carrier">
+				<label class="popup-label" for="carrier_module">{{i18n.numbers.addExternal.renameCarrier.label}}</label>
+				<select class="select-module input-medium" id="carrier_module" name="carrier-module">
+					{{#select @root.selectedCarrier}}
+						{{#each @root.carriers}}
+							<option value="{{this.key}}">{{this.friendlyValue}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+
+				<div class="custom-carrier-block{{#compare selectedCarrier "===" "_uiCustomChoice"}} active{{/compare}}">
+					<label class="popup-label" for="custom_carrier_value">{{i18n.numbers.addExternal.renameCarrier.customCarrierName}}</label>
+					<input type="text" id="custom_carrier_value"/>
+				</div>
+			</div>
 		</div>
 	</form>
 

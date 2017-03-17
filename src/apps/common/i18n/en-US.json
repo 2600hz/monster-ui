@@ -114,6 +114,12 @@
 					"text": "Add and assign to account",
 					"help": "Unchecking this will only add the numbers to the numbers pool, so they can be purchased via the Number Search tool. Checking the box will add the numbers and purchase them immediately."
 				}
+			},
+			"__comment": "UI-2651: adding carrier selection to add numbers",
+			"__version": "4.1",
+			"renameCarrier": {
+				"label": "Carrier Module",
+				"customCarrierName": "Custom Carrier Module Name"
 			}
 		},
 
@@ -144,7 +150,13 @@
 
 		"__comment": "OOB: when group no longer exist but it's still assigned to a callflow, we need to show unknown group",
 		"__version": "4.0",
-		"unknownGroup": "Deleted Group"
+		"unknownGroup": "Deleted Group",
+
+		"__comment": "UI-2651: Let users select carrier module when adding bulk numbers. Moving carrier modules into its own function so it can be reused by various components",
+		"__version": "4.1",
+		"numbersCarrierModule": {
+			"custom": "Custom"
+		}
 	},
 
 	"callerId": {
@@ -805,7 +817,6 @@
 		"help": "By selecting a module from this list, you will change the carrier module used by the system for that phone number.",
 		"dialogTitle": "Rename Carrier Module",
 		"successUpdate": "You successfully updated the carrier moduled used by {{phoneNumber}} to be {{carrierName}}",
-		"custom": "Customize",
 		"customCarrierName": "Custom Carrier Module Name"
 	},
 

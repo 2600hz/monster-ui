@@ -13,7 +13,8 @@ define(function(require){
 			'common.numbers.dialogSpare': 'numbersDialogSpare',
 			'common.numbers.render': 'numbersRender',
 			'common.numbers.editFeatures': 'numbersEditFeatures',
-			'common.numbers.getListFeatures': 'numbersGetFeatures'
+			'common.numbers.getListFeatures': 'numbersGetFeatures',
+			'common.numbers.getCarriersModules': 'numbersGetCarriersModules'
 		},
 
 		/* Arguments:
@@ -817,11 +818,12 @@ define(function(require){
 			});
 		},
 
-		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, callback) {
+		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, carrierName, callback) {
 			var self = this;
 
 			if(monster.util.canAddExternalNumbers()) {
-				self.numbersCreateBlockNumber(numbers_data, accountId, function(data) {
+				console.log(numbers_data, carrierName);
+				/*self.numbersCreateBlockNumber(numbers_data, accountId, function(data) {
 					// If we need to BULK activate, uncomment following
 					if(forceActivate) {
 						var validNumbers = [];
@@ -835,18 +837,105 @@ define(function(require){
 					else {
 						callback && callback();
 					}
-				});
+				});*/
 			}
 			else {
 				monster.ui.alert(self.i18n.active().numbers.noRightsAddNumber);
 			}
 		},
 
+		numbersGetCarriersModules: function(callback) {
+			var self = this,
+				carriers = [
+					{
+						key: 'bandwidth2',
+						friendlyValue: 'bandwidth2'
+					},
+					{
+						key: 'bandwidth',
+						friendlyValue: 'bandwidth'
+					},
+					{
+						key: 'inum',
+						friendlyValue: 'inum'
+					},
+					{
+						key: 'local',
+						friendlyValue: 'local'
+					},
+					{
+						key: 'managed',
+						friendlyValue: 'managed'
+					},
+					{
+						key: 'mdn',
+						friendlyValue: 'mdn'
+					},
+					{
+						key: 'other',
+						friendlyValue: 'other'
+					},
+					{
+						key: 'reserved',
+						friendlyValue: 'reserved'
+					},
+					{
+						key: 'reserved_reseller',
+						friendlyValue: 'reserved_reseller'
+					},
+					{
+						key: 'simwood',
+						friendlyValue: 'simwood'
+					},
+					{
+						key: 'telnyx',
+						friendlyValue: 'telnyx'
+					},
+					{
+						key: 'vitelity',
+						friendlyValue: 'vitelity'
+					},
+					{
+						key: 'voip_innovations',
+						friendlyValue: 'voip_innovations'
+					}
+				];
+
+			if (monster.util.isSuperDuper()) {
+				carriers.push({
+					key: '_uiCustomChoice',
+					friendlyValue: self.i18n.active().numbers.numbersCarrierModule.custom
+				});
+			}
+
+			if (callback) {
+				callback && callback(carriers);
+			} else {
+				return carriers;
+			}
+		},
+
+		numbersAddExternalFormatCarriers: function() {
+			var self = this,
+				formattedData = {
+					selectedCarrier: 'local',
+					carriers: self.numbersGetCarriersModules()
+				};
+
+			return formattedData;
+		},
+
 		numbersAddExternalNumbers: function(accountId, callback) {
 			var self = this,
-				dialogTemplate = $(monster.template(self, 'numbers-addExternal'));
-
+				formattedData = self.numbersAddExternalFormatCarriers(),
+				dialogTemplate = $(monster.template(self, 'numbers-addExternal', formattedData)),
+				CUSTOM_CHOICE = '_uiCustomChoice';
+console.log(formattedData);
 			monster.ui.tooltips(dialogTemplate);
+
+			dialogTemplate.find('.select-module').on('change', function() {
+				dialogTemplate.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
+			});
 
 			dialogTemplate.on('click', '.cancel-link', function() {
 				popup.remove();
@@ -858,7 +947,12 @@ define(function(require){
 				var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
 					numbersData = [],
 					phoneNumber,
-					forceActivate = dialogTemplate.find('#force_activate').is(':checked');
+					forceActivate = dialogTemplate.find('#force_activate').is(':checked'),
+					carrierName = dialogTemplate.find('.select-module').val();
+
+				if (carrierName === CUSTOM_CHOICE) {
+					carrierName = dialogTemplate.find('#custom_carrier_value').val();
+				};
 
 				// Users might think a space == new line, so if they added numbers and separated each of them by a new line, we make sure to replace these by a space so our script works
 				phoneNumbers = phoneNumbers.replace(/[\n]/g, ' ');
@@ -867,19 +961,18 @@ define(function(require){
 				_.each(phoneNumbers, function(number) {
 					phoneNumber = number.match(/^\+(.*)$/);
 
-					if(phoneNumber && phoneNumber[1]) {
+					if (phoneNumber && phoneNumber[1]) {
 						numbersData.push(number);
 					}
 				});
 
-				if(numbersData.length > 0) {
-					self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, function() {
+				if (numbersData.length > 0) {
+					self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, carrierName, function() {
 						popup.dialog('close');
 
 						callback && callback();
 					});
-				}
-				else {
+				} else {
 					monster.ui.alert(self.i18n.active().numbers.addExternal.dialog.invalidNumbers);
 				}
 			});

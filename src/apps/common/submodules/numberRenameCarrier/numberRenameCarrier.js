@@ -23,125 +23,68 @@ define(function(require) {
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		numberRenameCarrierFormatData: function() {
+		numberRenameCarrierFormatData: function(carriers) {
 			var self = this,
 				formattedData = {
 					selectedCarrier: undefined,
-					carriers: [
-						{
-							key: 'bandwidth2',
-							friendlyValue: 'bandwidth2'
-						},
-						{
-							key: 'bandwidth',
-							friendlyValue: 'bandwidth'
-						},
-						{
-							key: 'inum',
-							friendlyValue: 'inum'
-						},
-						{
-							key: 'local',
-							friendlyValue: 'local'
-						},
-						{
-							key: 'managed',
-							friendlyValue: 'managed'
-						},
-						{
-							key: 'mdn',
-							friendlyValue: 'mdn'
-						},
-						{
-							key: 'other',
-							friendlyValue: 'other'
-						},
-						{
-							key: 'reserved',
-							friendlyValue: 'reserved'
-						},
-						{
-							key: 'reserved_reseller',
-							friendlyValue: 'reserved_reseller'
-						},
-						{
-							key: 'simwood',
-							friendlyValue: 'simwood'
-						},
-						{
-							key: 'telnyx',
-							friendlyValue: 'telnyx'
-						},
-						{
-							key: 'vitelity',
-							friendlyValue: 'vitelity'
-						},
-						{
-							key: 'voip_innovations',
-							friendlyValue: 'voip_innovations'
-						}
-					]
+					carriers: carriers
 				};
-
-			if (monster.util.isSuperDuper()) {
-				formattedData.carriers.push({
-					key: '_uiCustomChoice',
-					friendlyValue: self.i18n.active().numberRenameCarrier.custom
-				});
-			}
 
 			return formattedData;
 		},
 
 		numberRenameCarrierRender: function(dataNumber, callbacks) {
-			var self = this,
-				dataTemplate = self.numberRenameCarrierFormatData(),
-				CUSTOM_CHOICE = '_uiCustomChoice',
-				popup_html = $(self.getTemplate({
-					name: 'layout',
-					submodule: 'numberRenameCarrier',
-					data: dataTemplate
-				})),
-				popup;
+			var self = this;
 
-			popup_html.find('.select-module').on('change', function() {
-				popup_html.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
-			});
+			monster.pub('common.numbers.getCarriersModules', function(carriers) {
+				var dataTemplate = self.numberRenameCarrierFormatData(carriers),
+					CUSTOM_CHOICE = '_uiCustomChoice',
+					popup_html = $(self.getTemplate({
+						name: 'layout',
+						submodule: 'numberRenameCarrier',
+						data: dataTemplate
+					})),
+					popup;
 
-			popup_html.find('.save').on('click', function(ev) {
-				ev.preventDefault();
-				var carrierName = popup_html.find('.select-module').val();
+				popup_html.find('.select-module').on('change', function() {
+					popup_html.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
+				});
 
-				if (carrierName === CUSTOM_CHOICE) {
-					carrierName = popup_html.find('#custom_carrier_value').val();
-				}
+				popup_html.find('.save').on('click', function(ev) {
+					ev.preventDefault();
+					var carrierName = popup_html.find('.select-module').val();
 
-				$.extend(true, dataNumber, { carrier_name: carrierName });
-
-				self.numberPrependUpdateNumber(dataNumber.id, dataNumber,
-					function(data) {
-						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().numberRenameCarrier.successUpdate, { phoneNumber: phoneNumber, carrierName: carrierName });
-
-						toastr.success(template);
-
-						popup.dialog('destroy').remove();
-
-						callbacks.success && callbacks.success(data);
-					},
-					function(data) {
-						callbacks.error && callbacks.error(data);
+					if (carrierName === CUSTOM_CHOICE) {
+						carrierName = popup_html.find('#custom_carrier_value').val();
 					}
-				);
-			});
 
-			popup_html.find('.cancel-link').on('click', function(e) {
-				e.preventDefault();
-				popup.dialog('destroy').remove();
-			});
+					$.extend(true, dataNumber, { carrier_name: carrierName });
 
-			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().numberRenameCarrier.dialogTitle
+					self.numberPrependUpdateNumber(dataNumber.id, dataNumber,
+						function(data) {
+							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+								template = monster.template(self, '!' + self.i18n.active().numberRenameCarrier.successUpdate, { phoneNumber: phoneNumber, carrierName: carrierName });
+
+							toastr.success(template);
+
+							popup.dialog('destroy').remove();
+
+							callbacks.success && callbacks.success(data);
+						},
+						function(data) {
+							callbacks.error && callbacks.error(data);
+						}
+					);
+				});
+
+				popup_html.find('.cancel-link').on('click', function(e) {
+					e.preventDefault();
+					popup.dialog('destroy').remove();
+				});
+
+				popup = monster.ui.dialog(popup_html, {
+					title: self.i18n.active().numberRenameCarrier.dialogTitle
+				});
 			});
 		},
 
