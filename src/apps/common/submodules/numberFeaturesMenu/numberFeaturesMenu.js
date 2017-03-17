@@ -1,9 +1,10 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toastr = require('toastr');
 
-	var servicePlanDetails = {
+	var numbersFeatuesMenu = {
 
 		requests: {},
 
@@ -105,8 +106,35 @@ define(function(require) {
 
 				monster.pub('common.numberRenameCarrier.renderPopup', args);
 			});
+
+			template.find('.sync-number').on('click', function() {
+				var accountId = self.accountId;
+
+				if ($(this).parents('.account-section').length) {
+					accountId = $(this).parents('.account-section').data('id');
+				}
+
+				self.numbersSyncOne(phoneNumber, accountId, function() {
+					toastr.success(monster.template(self, '!' + self.i18n.active().numberFeaturesMenu.syncSuccess, { number: monster.util.formatPhoneNumber(phoneNumber) }));
+				});
+			});
+		},
+
+		numbersSyncOne: function(number, accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.syncOne',
+				data: {
+					accountId: accountId,
+					number: encodeURIComponent(number)
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		}
 	};
 
-	return servicePlanDetails;
+	return numbersFeatuesMenu;
 });

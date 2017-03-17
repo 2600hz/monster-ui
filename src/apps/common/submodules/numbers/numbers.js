@@ -52,12 +52,14 @@ define(function(require){
 				data = self.numbersFormatData(data);
 
 				var numbersView = $(monster.template(self, 'numbers-layout', data)),
-					spareView = monster.template(self, 'numbers-spare', data),
+					spareView = $(monster.template(self, 'numbers-spare', data)),
 					usedView = $(monster.template(self, 'numbers-used', data));
 
 				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
-
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
+
+				var arrayNumbersSpare = data.listAccounts.length ? data.listAccounts[0].spareNumbers : [];
+				self.numbersDisplayFeaturesMenu(arrayNumbersSpare, spareView);
 
 				numbersView.find('.list-numbers[data-type="spare"]').append(spareView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
@@ -229,6 +231,8 @@ define(function(require){
 										.parent()
 										.find('.count')
 										.html('('+ spareNumbers.length +')');
+
+									self.numbersDisplayFeaturesMenu(spareNumbers, parent.find('.list-numbers[data-type="spare"] .account-section[data-id="'+accountId+'"]'));
 
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="'+accountId+'"] .numbers-wrapper')
