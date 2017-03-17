@@ -431,3 +431,25 @@
 	margin-top: 2px;
 	vertical-align: top;
 }
+
+#numbers_add_external .customize-carrier {
+	margin-top: 5px;
+}
+
+#numbers_add_external .customize-carrier label {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+#numbers_add_external .customize-carrier select {
+	margin-bottom: 0
+}
+
+#numbers_add_external .customize-carrier .custom-carrier-block {
+	margin-top: 5px;
+	display: none;
+}
+
+#numbers_add_external .customize-carrier .custom-carrier-block.active {
+	display: block;
+}
