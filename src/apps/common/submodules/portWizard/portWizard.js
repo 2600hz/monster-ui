@@ -31,6 +31,7 @@ define(function(require) {
 					.focus();
 
 			args.data = {
+				attachments: {},
 				request: {
 					numbers: {}
 				}
@@ -106,16 +107,17 @@ define(function(require) {
 								minlength: 1,
 								maxlength: 128
 							},
-							'extra.type': {
+							'type': {
 								required: true
 							}
 						}
 					});
 
 					if (monster.ui.valid($form)) {
-						$.extend(true, args.data.request, formData, {
-							extra: {
-								billFileData: billFileData
+						$.extend(true, args.data, {
+							request: formData,
+							attachments: {
+								bill: billFileData
 							}
 						});
 
@@ -140,7 +142,7 @@ define(function(require) {
 					submodule: 'portWizard'
 				}));
 
-			monster.ui.renderPDF(args.data.request.extra.billFileData.file, template.find('.pdf-container'));
+			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
 
 			container
 				.empty()
@@ -224,7 +226,7 @@ define(function(require) {
 					submodule: 'portWizard'
 				}));
 
-			monster.ui.renderPDF(args.data.request.extra.billFileData.file, template.find('.pdf-container'));
+			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
 
 			container
 				.empty()
@@ -308,7 +310,7 @@ define(function(require) {
 		portWizardRenderUploadForm: function(args) {
 			var self = this,
 				container = args.container,
-				formType = args.data.request.extra.type === 'local' ? 'loa' : 'resporg',
+				formType = self.portWizardGetFormType(args.data.request),
 				dataToTemplate = {
 					type: self.i18n.active().portRequestWizard.formTypes[formType],
 					link: monster.config.whitelabel.port[formType]
@@ -331,7 +333,11 @@ define(function(require) {
 							})).css('display', 'none');
 
 							if (template.find('.uploadForm-success').length < 1) {
-								args.data.request.extra.formFileData = results[0];
+								$.extend(true, args.data, {
+									attachments: {
+										form: results[0]
+									}
+								});
 
 								template
 									.find('.actions')
@@ -374,7 +380,7 @@ define(function(require) {
 		portWizardRenderSignForm: function(args) {
 			var self = this,
 				container = args.container,
-				formType = args.data.request.extra.type === 'local' ? 'loa' : 'resporg',
+				formType = self.portWizardGetFormType(args.data.request),
 				dataToTemplate = {
 					type: self.i18n.active().portRequestWizard.formTypes[formType]
 				},
@@ -501,7 +507,16 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log(args.data.request);
+						self.portWizardHelperCreatePort($.extend(true, args, {
+							success: function(port) {
+								self.portWizardRequestUpdateState({
+									data: {
+										portRequestId: port.id,
+										state: 'submitted'
+									}
+								});
+							}
+						}));
 					});
 
 			container
@@ -511,6 +526,114 @@ define(function(require) {
 
 						console.log('cancel');
 					});
+		},
+
+		/**************************************************
+		 *              Data handling helpers             *
+		 **************************************************/
+
+		portWizardGetFormType: function(portData) {
+			return portData.type === 'local' ? 'loa' : 'resporg';
+		},
+
+		portWizardHelperCreatePort: function(args) {
+			var self = this,
+				attachments = _.extend({}, args.data.attachments);
+
+			delete args.data.request.extra;
+
+			self.portWizardRequestAddPort({
+				data: {
+					data: args.data.request
+				},
+				success: function(port) {
+					if (!_.isEmpty(attachments)) {
+						_.each(attachments, function(attachment, key, object) {
+							object[key] = function(callback) {
+								self.portWizardRequestAddAttachment({
+									data: {
+										portRequestId: port.id,
+										documentName: key + '.pdf',
+										data: attachment.file
+									},
+									success: function() {
+										callback(null);
+									}
+								});
+							};
+						});
+
+						monster.series(attachments, function(err, results) {
+							if (err) {
+								args.hasOwnProperty('error') && args.error();
+							} else {
+								args.hasOwnProperty('success') && args.success(port);
+							}
+						});
+					} else {
+						args.hasOwnProperty('success') && args.success(port);
+					}
+				},
+				error: function() {
+					args.hasOwnProperty('error') && args.error();
+				}
+			});
+		},
+
+		/**************************************************
+		 *              Requests declarations             *
+		 **************************************************/
+
+		// Port requests endpoints
+		portWizardRequestAddPort: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.create',
+				data: $.extend(true, {
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+		portWizardRequestUpdateState: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.changeState',
+				data: $.extend(true, {
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		// Attachments endpoints
+		portWizardRequestAddAttachment: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.createAttachment',
+				data: $.extend(true, {
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
 		}
 	};
 
