@@ -1,5 +1,5 @@
-(function ($) {
-	var id = 0;
+(function($) {
+	var id = 0,
 		defaultOptions = {
 			bigBtnText: 'Select a file',
 			btnText: 'Select a file',
@@ -21,17 +21,17 @@
 
 		options.hasOwnProperty('btnClass') && button.addClass(options.btnClass);
 		options.hasOwnProperty('inputClass') && input.addClass(options.inputClass);
+		options.hasOwnProperty('inputPlaceholder') && input.attr('placeholder', options.inputPlaceholder);
 		options.hasOwnProperty('bigBtnClass') && bigButton.addClass(options.bigBtnClass);
 		options.hasOwnProperty('wrapperClass') && wrapper.addClass(options.wrapperClass);
 
-		if ( options.inputOnly || (options.hasOwnProperty('filesList') && options.filesList.length > 0) ) {
-			if ( options.hasOwnProperty('filesList') && options.filesList.length > 0 ) {
+		if (options.inputOnly || (options.hasOwnProperty('filesList') && options.filesList.length > 0)) {
+			if (options.hasOwnProperty('filesList') && options.filesList.length > 0) {
 				input.val(options.filesList.join(', '));
 			}
 
 			wrapper.insertAfter(fileInput).append(fileInput, input, button);
-		}
-		else {
+		} else {
 			wrapper.insertAfter(fileInput).append(fileInput, input, button);
 			bigButton.insertBefore(wrapper);
 
@@ -58,35 +58,34 @@
 				results,
 				names;
 
-			if ( options.resultType === '[]' ) {
+			if (options.resultType === '[]') {
 				results = [];
-			}
-			else if ( options.resultType === '{}' ) {
+			} else if (options.resultType === '{}') {
 				results = {};
 			}
 
 			filesList.forEach(function(el) {
 				var pass = true;
 
-				if ( options.hasOwnProperty('mimeTypes') && options.mimeTypes.indexOf(el.type) === -1 ) {
+				if (options.hasOwnProperty('mimeTypes') && options.mimeTypes.indexOf(el.type) === -1) {
 					errorsList.mimeTypes.push(el.name);
 					error = true;
 					pass = false;
 				}
 
-				if ( options.hasOwnProperty('maxSize') && el.size > options.maxSize * 1000000 ) {
+				if (options.hasOwnProperty('maxSize') && el.size > options.maxSize * 1000000) {
 					errorsList.size.push(el.name);
 					error = true;
 					pass = false;
 				}
 
-				if ( pass ) {
+				if (pass) {
 					successList.push(el);
 					namesList.push(el.name);
 				}
 			});
 
-			if ( successList.length > 0 ) {
+			if (successList.length > 0) {
 				var i = successList.length;
 
 				successList.forEach(function(el) {
@@ -95,21 +94,20 @@
 					reader['readAs'.concat(options.dataFormat.charAt(0).toUpperCase(), options.dataFormat.slice(1))](el);
 
 					reader.onloadend = function() {
-						if ( options.resultType === '[]' ) {
+						if (options.resultType === '[]') {
 							results.push({ name: el.name, file: reader.result });
-						}
-						else if ( options.resultType === '{}' ) {
+						} else if (options.resultType === '{}') {
 							results[el.name] = reader.result;
 						}
 
-						if ( --i === 0 ) {
+						if (--i === 0) {
 							callbackSuccess && callbackSuccess(results);
 							button.trigger('blur');
 						}
 					};
 				});
 
-				if ( !options.inputOnly && bigButton.is(':visible') ) {
+				if (!options.inputOnly && bigButton.is(':visible')) {
 					bigButton.fadeOut(function() {
 						wrapper.fadeIn();
 					});
@@ -117,30 +115,28 @@
 
 				names = namesList.join(', ');
 
-				if ( names !== '') {
-					if ( input.val() !== '' ) {
+				if (names !== '') {
+					if (input.val() !== '') {
 						var color = input.css('color'),
 							bgColor = input.css('backgroundColor');
 
-						input.animate({'color': bgColor},300, function() {
+						input.animate({'color': bgColor}, 300, function() {
 							input.val(names);
-							input.animate({'color': color},300);
+							input.animate({'color': color}, 300);
 						});
-					}
-					else {
+					} else {
 						input.val(names);
 					}
 				}
 			}
 
-			if ( error ) {
+			if (error) {
 				callbackError && callbackError(errorsList);
 
-				if ( bigButton.is(':visible') ) {
+				if (bigButton.is(':visible')) {
 					bigButton.trigger('blur');
-				}
-				else {
-					button.trigger('blur')
+				} else {
+					button.trigger('blur');
 				}
 			}
 		});
@@ -150,7 +146,7 @@
 		});
 
 		wrapper.delegate('#file_upload_input_'.concat(id), 'keydown', function(event) {
-			switch ( event.which ) {
+			switch (event.which) {
 				case 8:
 				case 46:
 					fileInput.replaceWith(fileInput = fileInput.clone(true));
