@@ -163,7 +163,15 @@ define(function(require){
 			self.portPositionDialogBox();
 
 			container.find('span.pull-right a').on('click', function() {
-				self.portRenderAddNumber(parent, accountId);
+				monster.pub('common.portWizard.render', {
+					parent: $('#monster-content'),
+					container: $('#port_container'),
+					globalCallback: function() {
+						self.portRender({
+							parent: parent
+						});
+					}
+				});
 			});
 
 			container
