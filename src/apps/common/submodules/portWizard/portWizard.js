@@ -1,7 +1,8 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		monster = require('monster');
+		monster = require('monster'),
+		toastr = require('toastr');
 
 	var portWizard = {
 
@@ -12,6 +13,15 @@ define(function(require) {
 		// Define the events available for other apps
 		subscribe: {
 			'common.portWizard.render': 'portWizardRenderPortInfo'
+		},
+
+		appFlags: {
+			attachments: {
+				mimeTypes: [
+					'application/pdf'
+				],
+				maxSize: 8
+			}
 		},
 
 		portWizardRenderPortInfo: function(args) {
@@ -63,6 +73,9 @@ define(function(require) {
 									.fileUpload({
 										btnClass: 'monster-button-primary',
 										inputOnly: true,
+										inputPlaceholder: '.pdf',
+										mimeTypes: self.appFlags.attachments.mimeTypes,
+										maxSize: self.appFlags.attachments.maxSize,
 										success: function(results) {
 											var actionsTemplate = $(self.getTemplate({
 												name: 'portInfo-actions',
@@ -80,6 +93,9 @@ define(function(require) {
 													.find('.portInfo-success')
 														.fadeIn();
 											}
+										},
+										error: function(errorsList) {
+											self.portWizardFileUploadErrorsHandler(errorsList);
 										}
 									});
 
@@ -326,6 +342,9 @@ define(function(require) {
 					.fileUpload({
 						btnClass: 'monster-button-primary',
 						inputOnly: true,
+						inputPlaceholder: '.pdf',
+						mimeTypes: self.appFlags.attachments.mimeTypes,
+						maxSize: self.appFlags.attachments.maxSize,
 						success: function(results) {
 							var actionsTemplate = $(self.getTemplate({
 								name: 'uploadForm-actions',
@@ -347,6 +366,9 @@ define(function(require) {
 									.find('.uploadForm-success')
 										.fadeIn();
 							}
+						},
+						error: function(errorsList) {
+							self.portWizardFileUploadErrorsHandler(errorsList);
 						}
 					});
 
@@ -534,6 +556,25 @@ define(function(require) {
 
 		portWizardGetFormType: function(portData) {
 			return portData.type === 'local' ? 'loa' : 'resporg';
+		},
+
+		portWizardFileUploadErrorsHandler: function(errorsList) {
+			var self = this,
+				mimeTypes = self.appFlags.attachments.mimeTypes,
+				maxSize = self.appFlags.attachments.maxSize,
+				fileTypes;
+
+			_.each(errorsList, function(files, type) {
+				_.each(files, function(file) {
+					if (type === 'mimeTypes') {
+						fileTypes = mimeTypes.map(function(value) { return (/[^/]*$/.exec(value)[0]).toUpperCase(); }).join(', ');
+
+						toastr.warning(file + self.i18n.active().portRequestWizard.toastr.warning.mimeTypes.replace('{{variable}}', fileTypes));
+					} else if (type === 'size') {
+						toastr.warning(file + self.i18n.active().portRequestWizard.toastr.warning.size.replace('{{variable}}', maxSize));
+					}
+				});
+			});
 		},
 
 		portWizardHelperCreatePort: function(args) {

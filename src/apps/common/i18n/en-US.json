@@ -806,6 +806,12 @@
 	},
 
 	"portRequestWizard": {
+		"toastr": {
+			"warning": {
+				"mimeTypes": " is not a {{variable}}",
+				"size": " exceeds the {{variable}}MB size limit"
+			}
+		},
 		"formTypes": {
 			"loa": {
 				"compact": "LoA",
