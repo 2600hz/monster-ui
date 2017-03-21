@@ -91,7 +91,7 @@ define(function(require){
 			}
 			else {
 				if (type === 'number') {
-					if (data.hasOwnProperty('usedBy')) {
+					if (data.hasOwnProperty('used_by')) {
 						dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', self.i18n.active().numbers[data.used_by]);
 					}
 					else {
