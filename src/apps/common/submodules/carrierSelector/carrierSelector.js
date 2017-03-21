@@ -77,11 +77,6 @@ define(function(require){
 				carrierInfo.choices = newChoices;
 			}
 
-			// If we have only one choice, it means we want to hide that tab and not allow users to customize their carriers
-			if(carrierInfo.choices.length === 1) {
-				carrierInfo.disabled = true;
-			}
-
 			// if module is offnet, they use global carriers ("blended")
 			if(params.noMatch.flow.module === 'offnet') {
 				carrierInfo.type = 'useBlended';
