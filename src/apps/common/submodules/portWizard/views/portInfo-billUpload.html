@@ -2,12 +2,20 @@
 	<h3 class="title">
 		{{i18n.portRequestWizard.portInfo.verifyOwner.title}} 
 	</h3>
-	<p class="text">
+	<p class="title-help">
 		{{i18n.portRequestWizard.portInfo.verifyOwner.text1}}
 		<br>
 		{{i18n.portRequestWizard.portInfo.verifyOwner.text2}}
 	</p>
-	<div class="file-upload-container">
-		<input id="bill_input" type="file" name="bill">
+	<div class="file-upload-wrapper">
+		<h5 class="title">
+			{{i18n.portRequestWizard.fileUpload.title}}
+			<span class="hint">
+				{{i18n.portRequestWizard.fileUpload.hint}}
+			</span>
+		</h5>
+		<div class="file-upload-container">
+			<input id="bill_input" type="file" name="bill">
+		</div>
 	</div>
 </div>

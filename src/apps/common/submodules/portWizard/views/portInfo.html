@@ -1,12 +1,12 @@
-<div class="app-content wizard">
-	<form class="port-info" id="form_port_info">
+<div class="app-content" id="port_wizard">
+	<form class="form-horizontal" id="form_port_info">
 		<h3 class="title">
 			{{i18n.portRequestWizard.portInfo.movingNumbers.title}}
 		</h3>
-		<p class="text">
+		<p class="title-help">
 			{{i18n.portRequestWizard.portInfo.movingNumbers.text}}
 		</p>
-		<div class="contrlol-group">
+		<div class="contrlol-group single-group">
 			<label for="name" class="control-label">
 				{{i18n.portRequestWizard.portInfo.movingNumbers.label}}
 			</label>
@@ -14,20 +14,30 @@
 				<input type="text" name="name" id="name" placeholder="{{i18n.portRequestWizard.portInfo.movingNumbers.placeholder}}">
 			</div>
 		</div>
-		<p>
+		<p class="text">
 			{{i18n.portRequestWizard.portInfo.numbersType.text1}}
 			<br>
 			{{i18n.portRequestWizard.portInfo.numbersType.text2}}
 		</p>
-	{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.local}}
-		<input type="radio" class="numbers-type" name="type" value="local">
-	{{/monsterRadio}}
-	{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.tollFree}}
-		<input type="radio" class="numbers-type" name="type" value="tollFree">
-	{{/monsterRadio}}
+		<div class="control-group radio-group">
+			<div class="controls">
+			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.local}}
+				<input type="radio" class="numbers-type" name="type" value="local">
+			{{/monsterRadio}}
+			</div>
+		</div>
+		<div class="control-group radio-group">
+			<div class="controls">
+			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.tollFree}}
+				<input type="radio" class="numbers-type" name="type" value="tollFree">
+			{{/monsterRadio}}
+			</div>
+		</div>
 	</form>
 	<div class="bill-upload-wrapper"></div>
-	<div class="actions">
+	<div class="actions-wrapper">
+		<div class="actions">
+		</div>
 		<a href="javascript:void(0);" class="monster-link cancel">
 			{{i18n.portRequestWizard.buttons.cancel}}
 		</a>

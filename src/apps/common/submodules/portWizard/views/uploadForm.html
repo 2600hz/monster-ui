@@ -40,11 +40,20 @@
 				{{i18n.portRequestWizard.uploadForm.upload.format}}
 			</span>
 		</p>
-		<div class="file-upload-container">
-			<input id="form_input" type="file" name="form">
+		<div class="file-upload-wrapper">
+			<h5 class="title">
+				{{i18n.portRequestWizard.fileUpload.title}}
+				<span class="hint">
+					{{i18n.portRequestWizard.fileUpload.hint}}
+				</span>
+			</h5>
+			<div class="file-upload-container">
+				<input id="form_input" type="file" name="form">
+			</div>
 		</div>
 	</div>
-	<div class="actions">
+	<div class="actions-wrapper">
+		<div class="actions"></div>
 		<a href="javascript:void(0);" class="monster-link cancel">
 			{{i18n.portRequestWizard.buttons.cancel}}
 		</a>

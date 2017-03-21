@@ -1,0 +1,99 @@
+#port_wizard {
+	position: relative;
+	padding: 45px 20px;
+	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
+}
+
+#port_wizard .row-fluid {
+	text-align: left;
+}
+
+#port_wizard h3.title {
+	font-weight: normal;
+	margin-top: 0;
+	margin-bottom: 5px;
+	color: #303039;
+}
+
+#port_wizard p.title-help,
+#port_wizard p.text {
+	max-width: 860px;
+	margin: 0 auto 40px;
+}
+
+#port_wizard p.title-help {
+	color: #909099;
+}
+
+#port_wizard .single-group {
+	max-width: 400px;
+	margin: 0 auto 40px;
+}
+
+#port_wizard .radio-group {
+	width: 500px;
+	margin: 0 auto;
+	text-align: left;
+}
+
+#port_wizard .form-horizontal .control-label,
+#port_wizard .form-horizontal .controls {
+	text-align: left;
+}
+
+#port_wizard .control-label {
+	font-weight: 600;
+}
+
+#port_wizard .actions-wrapper {
+	margin-top: 40px;
+}
+
+#port_wizard .actions-wrapper .actions {
+	margin-bottom: 30px;
+}
+
+#port_wizard .row-fluid {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+#port_wizard .row-fluid h4.title {
+	color: #22a5ff;
+	font-weight: normal;
+}
+
+
+#port_wizard .file-upload-wrapper {
+	width: 380px;
+	margin: 0 auto;
+	padding: 20px 10px 5px;
+	border: 1px dashed #c0c0c9;
+	border-radius: 2px;
+}
+
+#port_wizard .file-upload-wrapper h5.title {
+	margin: 0 20px 30px;
+	text-align: left;
+}
+
+#port_wizard .file-upload-wrapper h5.title .hint {
+	font-size: 12px;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 15px;
+	color: #909099;
+}
+
+#port_wizard .file-upload-wrapper input {
+	width: 60% !important;
+}
+
+#port_wizard .file-upload-wrapper button {
+	vertical-align: top;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}

@@ -806,6 +806,12 @@
 	},
 
 	"portRequestWizard": {
+		"fileUpload": {
+			"title": "Choose a file",
+			"hint": ".pdf format ONLY",
+			"placeholder": ".pdf",
+			"button": "Browse..."
+		},
 		"toastr": {
 			"warning": {
 				"mimeTypes": " is not a {{variable}}",

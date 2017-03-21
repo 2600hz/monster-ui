@@ -71,9 +71,10 @@ define(function(require) {
 							template
 								.find('#bill_input')
 									.fileUpload({
-										btnClass: 'monster-button-primary',
+										btnClass: 'monster-button-primary monster-button-small',
+										btnText: self.i18n.active().portRequestWizard.fileUpload.button,
 										inputOnly: true,
-										inputPlaceholder: '.pdf',
+										inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
 										mimeTypes: self.appFlags.attachments.mimeTypes,
 										maxSize: self.appFlags.attachments.maxSize,
 										success: function(results) {
@@ -145,7 +146,7 @@ define(function(require) {
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
-
+args.globalCallback();
 						console.log('cancel');
 					});
 		},
@@ -340,9 +341,10 @@ define(function(require) {
 			template
 				.find('#form_input')
 					.fileUpload({
-						btnClass: 'monster-button-primary',
+						btnClass: 'monster-button-primary monster-button-small',
+						btnText: self.i18n.active().portRequestWizard.fileUpload.button,
 						inputOnly: true,
-						inputPlaceholder: '.pdf',
+						inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
 						mimeTypes: self.appFlags.attachments.mimeTypes,
 						maxSize: self.appFlags.attachments.maxSize,
 						success: function(results) {
