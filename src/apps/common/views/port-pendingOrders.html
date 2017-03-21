@@ -1,44 +1,46 @@
-<div id="port_container">
-	<div id="orders_list">
-		<div class="list-header">
-			<h3 class="pull-left">{{ i18n.port.pendingOrders.title}}</h3>
-			<span class="pull-right">
-				<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
-			</span>
-		</div>
-		<div class="search-header">
-			<div class="input-append pull-left">
-				<input class="span2" id="search_input" type="text" placeholder="{{i18n.port.pendingOrders.searchingANumber}}">
-				<button class="monster-button-success non-fixed search-numbers" type="button">
-					Go
-				</button>
+<div id="port_app_container" class="app-layout">
+	<div id="port_container" class="app-content-wrapper">
+		<div id="orders_list" class="app-content">
+			<div class="list-header">
+				<h3 class="pull-left">{{ i18n.port.pendingOrders.title}}</h3>
+				<span class="pull-right">
+					<a class="monster-link blue" href="#"><i class="icon-telicon-porting"></i>{{ i18n.port.pendingOrders.newPortLink }}</a>
+				</span>
 			</div>
-			<div class="alert alert-info pull-left hidden" id="search_indicator">
-				<button class="close" type="button">x</button>
-				{{i18n.port.pendingOrders.searchingFor}} <span id="number_searched"></span>
-			</div>
-		</div>
-	{{#if isLaunchedInAppMode}}
-		<div class="filter-options">
-			<div class="btn-toolbar">
-				<div class="btn-group">
-					<button type="button" class="btn active" data-value="accounts">{{i18n.port.pendingOrders.accounts}}</button>
-					<button type="button" class="btn" data-value="requests">{{i18n.port.pendingOrders.requests}}</button>
+			<div class="search-header">
+				<div class="input-append pull-left">
+					<input class="span2" id="search_input" type="text" placeholder="{{i18n.port.pendingOrders.searchingANumber}}">
+					<button class="monster-button-success non-fixed search-numbers" type="button">
+						Go
+					</button>
 				</div>
-				<div class="btn-group pull-right">
-					<span class="filter-select-label">{{i18n.port.pendingOrders.portState}}</span>
-					<select class="filter-select">
-					{{#select defaultStateToDisplay}}
-						{{#each states}}
-							<option value="{{value}}">{{text}}</option>
-						{{/each}}
-					{{/select}}
-					</select>
+				<div class="alert alert-info pull-left hidden" id="search_indicator">
+					<button class="close" type="button">x</button>
+					{{i18n.port.pendingOrders.searchingFor}} <span id="number_searched"></span>
 				</div>
 			</div>
-		</div>
-	{{/if}}
-		<div class="accounts-list">
+		{{#if isLaunchedInAppMode}}
+			<div class="filter-options">
+				<div class="btn-toolbar">
+					<div class="btn-group">
+						<button type="button" class="btn active" data-value="accounts">{{i18n.port.pendingOrders.accounts}}</button>
+						<button type="button" class="btn" data-value="requests">{{i18n.port.pendingOrders.requests}}</button>
+					</div>
+					<div class="btn-group pull-right">
+						<span class="filter-select-label">{{i18n.port.pendingOrders.portState}}</span>
+						<select class="filter-select">
+						{{#select defaultStateToDisplay}}
+							{{#each states}}
+								<option value="{{value}}">{{text}}</option>
+							{{/each}}
+						{{/select}}
+						</select>
+					</div>
+				</div>
+			</div>
+		{{/if}}
+			<div class="accounts-list">
+			</div>
 		</div>
 	</div>
 </div>

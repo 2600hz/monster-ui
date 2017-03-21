@@ -1,10 +1,5 @@
 @import "../../../../css/partials/base";
 
-div#port_container {
-	margin: 0 auto;
-	max-width: 940px;
-}
-
 div#port_container > div,
 div#port_comments_popup > div,
 div#port_request_info {
@@ -212,6 +207,12 @@ div#continue_later p { margin: 5px 0; }
 /**********************************************************/
 
 /*********************** Orders List **********************/
+
+div#orders_list {
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
+}
 
 div#orders_list .list-header {
 	margin-bottom: 10px;
