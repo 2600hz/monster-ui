@@ -63,6 +63,32 @@
 	text-align: left;
 }
 
+#port_wizard .form-text .control-group {
+	margin: 0;
+}
+
+#port_wizard .form-text .control-label {
+	width: 200px;
+}
+
+#port_wizard .form-text .controls {
+	margin-left: 220px;
+}
+
+#port_wizard .controls .control-text {
+	padding-top: 5px;
+}
+
+#port_wizard .form legend {
+	color:  #22a5ff;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+#port_wizard .form legend.important {
+	color: #ff3d24;
+}
+
 #port_wizard .control-label {
 	font-weight: 600;
 }
