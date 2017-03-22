@@ -1004,6 +1004,7 @@ define(function(require){
 			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
 			addSimpleRule('realm', /^[0-9A-Z\.\-]+$/i);
 			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
+			addSimpleRule('protocol', /:\/\//i);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('greaterDate', function(value, element, param) {
