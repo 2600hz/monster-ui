@@ -146,8 +146,8 @@ define(function(require) {
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
-args.globalCallback();
-						console.log('cancel');
+
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -223,7 +223,7 @@ args.globalCallback();
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log('cancel');
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -320,7 +320,7 @@ args.globalCallback();
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log('cancel');
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -438,7 +438,7 @@ args.globalCallback();
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log('cancel');
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -485,7 +485,7 @@ args.globalCallback();
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log('cancel');
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -548,7 +548,7 @@ args.globalCallback();
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log('cancel');
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -621,6 +621,12 @@ args.globalCallback();
 					args.hasOwnProperty('error') && args.error();
 				}
 			});
+		},
+
+		portWizardHelperCancelPort: function(args) {
+			var self = this;
+
+			args.globalCallback();
 		},
 
 		/**************************************************
