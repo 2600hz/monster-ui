@@ -97,6 +97,9 @@ define(function(require){
 					window.location = sso.login
 				}
 			}
+			else if(urlParams.hasOwnProperty('recovery')) {
+				self.checkRecoveryId(urlParams.recovery, successfulAuth);
+			}
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
@@ -122,9 +125,6 @@ define(function(require){
 			// Username/password generated tokens do not require anything else to log in.
 			else if(urlParams.hasOwnProperty('t')) {
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
-			}
-			else if(urlParams.hasOwnProperty('recovery')) {
-				self.checkRecoveryId(urlParams.recovery, successfulAuth);
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
 			else {
