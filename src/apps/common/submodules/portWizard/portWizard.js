@@ -454,17 +454,22 @@ define(function(require) {
 				.empty()
 				.append(template);
 
+			container
+				.find('#email')
+					.focus();
+
 			self.portWizardBindPortNotifyEvents(args);
 		},
 
 		portWizardBindPortNotifyEvents: function(args) {
 			var self = this,
-				container = args.container;
+				container = args.container,
+				minDate = monster.util.getBusinessDate(4);
 
 			monster.ui.datepicker(container.find('#transfer_date'), {
-				minDate: monster.util.getBusinessDate(4),
+				minDate: minDate,
 				beforeShowDay: $.datepicker.noWeekends
-			});
+			}).datepicker('setDate', minDate);
 
 			container
 				.find('.success')
