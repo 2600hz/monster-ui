@@ -910,7 +910,7 @@
 		"uploadForm": {
 			"title": "We'll need a signed copy of your {{variable}}",
 			"text": "Please download the pre-generated {{variable}} form, double check the info is correct and sign it, then re-upload it.",
-			"link": "Learn more about {{variable}} here.",
+			"link": "Learn more about {{variable}}'s' here.",
 			"download": {
 				"title": "Step 1",
 				"text": "Download your {{variable}}",

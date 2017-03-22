@@ -1,57 +1,53 @@
-<div class="app-content wizard">
+<div class="app-content" id="port_wizard">
 	<h3 class="title">
 		{{replaceVar i18n.portRequestWizard.uploadForm.title type.extended}} ({{type.compact}})
 	</h3>
-	<p class="text">
+	<p class="title-help">
 		{{replaceVar i18n.portRequestWizard.uploadForm.text type.compact}}
 		<br>
 		<a href="javascript:void(0);" class="monster-link">
 			{{replaceVar i18n.portRequestWizard.uploadForm.link type.compact}}
 		</a>
 	</p>
-	<div class="step">
-		<h4 class="title">
-			{{i18n.portRequestWizard.uploadForm.download.title}}
-		</h4>
-		<p class="text">
-			{{replaceVar i18n.portRequestWizard.uploadForm.download.text type.compact}}
-		</p>
-		<a href="{{link}}" target="_blank">
-			<button class="monster-button-primary">
-				{{replaceVar i18n.portRequestWizard.uploadForm.download.button type.compact}}
-			</button>
-		</a>
-	</div>
-	<div class="step">
-		<h4 class="title">
-			{{i18n.portRequestWizard.uploadForm.doubleCheck.title}}
-		</h4>
-		<p class="text">
-			{{replaceVar i18n.portRequestWizard.uploadForm.doubleCheck.text type.compact}}
-		</p>
-	</div>
-	<div class="step">
-		<h4 class="title">
-			{{i18n.portRequestWizard.uploadForm.upload.title}}
-		</h4>
-		<p class="text">
-			{{replaceVar i18n.portRequestWizard.uploadForm.upload.text type.compact}}
-			<span class="format">
-				{{i18n.portRequestWizard.uploadForm.upload.format}}
+	<ul class="steps">
+		<li class="item">
+			<h4 class="title">
+				{{i18n.portRequestWizard.uploadForm.download.title}}
+			</h4>
+			<span class="label-button">
+				{{replaceVar i18n.portRequestWizard.uploadForm.download.text type.compact}}
+				<a class="pull-right" href="{{link}}" target="_blank">
+					<button class="monster-button-primary">
+						{{replaceVar i18n.portRequestWizard.uploadForm.download.button type.compact}}
+					</button>
+				</a>
 			</span>
-		</p>
-		<div class="file-upload-wrapper">
-			<h5 class="title">
-				{{i18n.portRequestWizard.fileUpload.title}}
-				<span class="hint">
-					{{i18n.portRequestWizard.fileUpload.hint}}
-				</span>
-			</h5>
-			<div class="file-upload-container">
-				<input id="form_input" type="file" name="form">
+		</li>
+		<li class="item">
+			<h4 class="title">
+				{{i18n.portRequestWizard.uploadForm.doubleCheck.title}}
+			</h4>
+			<span class="text">
+				{{replaceVar i18n.portRequestWizard.uploadForm.doubleCheck.text type.compact}}
+			</span>
+		</li>
+		<li class="item">
+			<h4 class="title">
+				{{i18n.portRequestWizard.uploadForm.upload.title}}
+			</h4>
+			<div class="file-upload-wrapper">
+				<h5 class="title">
+					{{replaceVar i18n.portRequestWizard.uploadForm.upload.text type.compact}}
+					<span class="hint">
+						{{i18n.portRequestWizard.fileUpload.hint}}
+					</span>
+				</h5>
+				<div class="file-upload-container">
+					<input id="form_input" type="file" name="form">
+				</div>
 			</div>
-		</div>
-	</div>
+		</li>
+	</ul>
 	<div class="actions-wrapper">
 		<div class="actions"></div>
 		<a href="javascript:void(0);" class="monster-link cancel">
