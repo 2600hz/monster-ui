@@ -1,8 +1,8 @@
-<div class="app-content wizard">
+<div class="app-content" id="port_wizard">
 	<h3 class="title">
 		{{i18n.portRequestWizard.portNotify.title}}
 	</h3>
-	<p class="text">
+	<p class="title-help">
 		{{i18n.portRequestWizard.portNotify.text}}
 	</p>
 	<form id="form_notify" class="form-horizontal">
@@ -11,7 +11,7 @@
 			<br>
 			{{i18n.portRequestWizard.portNotify.email.text2}}
 		</p>
-		<div class="control-group">
+		<div class="control-group single-group">
 			<label for="email" class="control-label">
 				{{i18n.portRequestWizard.portNotify.email.label}}
 			</label>
@@ -22,24 +22,26 @@
 		<p class="text">
 			{{i18n.portRequestWizard.portNotify.target.text1}}
 		</p>
-		<div class="control-group">
+		<div class="control-group single-group control-date">
 			<label for="transfer_date" class="control-label">
 				{{i18n.portRequestWizard.portNotify.target.label}}
 			</label>
 			<div class="controls">
-				<input type="text" id="transfer_date" name="transfer_date" readonly="true">
+				<input type="text" id="transfer_date" name="transfer_date" readonly="true" class="input-small">
 			</div>
 		</div>
-		<p class="text">
+		<p class="note">
 			{{i18n.portRequestWizard.portNotify.target.text2}}
 			<br>
 			{{i18n.portRequestWizard.portNotify.target.text3}}
 		</p>
 	</form>
-	<div class="actions">
-		<button class="monster-button-primary success">
-			{{i18n.portRequestWizard.portNotify.button}}
-		</button>
+	<div class="actions-wrapper">
+		<div class="actions">
+			<button class="monster-button-primary success">
+				{{i18n.portRequestWizard.portNotify.button}}
+			</button>
+		</div>
 		<a href="javascript:void(0);" class="monster-link cancel">
 			{{i18n.portRequestWizard.buttons.cancel}}
 		</a>

@@ -19,9 +19,14 @@
 }
 
 #port_wizard p.title-help,
-#port_wizard p.text {
+#port_wizard p.text,
+#port_wizard p.note {
 	max-width: 860px;
 	margin: 0 auto 40px;
+}
+
+#port_wizard p.note {
+	font-style: italic;
 }
 
 #port_wizard p.title-help {
@@ -43,6 +48,16 @@
 	text-align: left;
 }
 
+#port_wizard .control-date {
+	width: 300px;
+	text-align: center;
+}
+
+#port_wizard .control-date input {
+	cursor: pointer;
+	background-color: initial;
+}
+
 #port_wizard .form-horizontal .control-label,
 #port_wizard .form-horizontal .controls {
 	text-align: left;
@@ -50,6 +65,10 @@
 
 #port_wizard .control-label {
 	font-weight: 600;
+}
+
+#port_wizard .control-date .control-label {
+	text-align: center;
 }
 
 #port_wizard .actions-wrapper {
