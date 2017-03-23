@@ -734,7 +734,18 @@ define(function(require) {
 		portWizardHelperCancelPort: function(args) {
 			var self = this;
 
-			args.globalCallback();
+			if (args.data.request.hasOwnProperty('id')) {
+				self.portWizardRequestDeletePort({
+					data: {
+						portRequestId: args.data.request.id
+					},
+					success: function() {
+						args.globalCallback();
+					}
+				});
+			} else {
+				args.globalCallback();
+			}
 		},
 
 		/**************************************************
@@ -763,6 +774,22 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'port.update',
+				data: $.extend(true, {
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+		portWizardRequestDeletePort: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.delete',
 				data: $.extend(true, {
 					accountId: self.accountId
 				}, args.data),
