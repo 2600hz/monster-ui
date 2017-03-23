@@ -15,7 +15,7 @@
 					{{i18n.portRequestWizard.accountVerification.form.label.accountName}}
 				</label>
 				<div class="controls">
-					<input type="text" id="name" name="bill.name">
+					<input type="text" id="name" name="bill.name" value="{{request.bill.name}}">
 				</div>
 			</div>
 			<div class="control-group">
@@ -23,10 +23,10 @@
 					{{i18n.portRequestWizard.accountVerification.form.label.billingAddress}}
 				</label>
 				<div class="controls-list">
-					<input type="text" name="bill.steet_address" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.street}}">
-					<input type="text" name="bill.locality" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.city}}">
-					<input type="text" name="bill.region" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.state}}">
-					<input type="text" name="bill.postal_code" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.zip}}">
+					<input type="text" name="bill.street_address" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.street}}" value="{{request.bill.street_address}}">
+					<input type="text" name="bill.locality" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.city}}" value="{{request.bill.locality}}">
+					<input type="text" name="bill.region" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.state}}" value="{{request.bill.region}}">
+					<input type="text" name="bill.postal_code" placeholder="{{i18n.portRequestWizard.accountVerification.form.placeholder.zip}}" value="{{request.bill.postal_code}}">
 				</div>
 			</div>
 			<div class="control-group">
@@ -47,7 +47,7 @@
 					{{i18n.portRequestWizard.accountVerification.form.label.accountNumber}}
 				</label>
 				<div class="controls">
-					<input type="text" id="account_number" name="bill.account_number">
+					<input type="text" id="account_number" name="bill.account_number" value="{{request.bill.account_number}}">
 				</div>
 			</div>
 			<div class="control-group">
@@ -55,7 +55,7 @@
 					{{i18n.portRequestWizard.accountVerification.form.label.pin}}
 				</label>
 				<div class="controls">
-					<input type="text" id="pin" name="bill.pin">
+					<input type="text" id="pin" name="bill.pin" value="{{request.bill.pin}}">
 				</div>
 			</div>
 			<div class="control-group">
@@ -63,7 +63,7 @@
 					{{i18n.portRequestWizard.accountVerification.form.label.btn}}
 				</label>
 				<div class="controls">
-					<input type="text" id="btn" name="bill.btn">
+					<input type="text" id="btn" name="bill.btn" value="{{request.bill.btn}}">
 				</div>
 			</div>
 		</form>
@@ -71,7 +71,10 @@
 	</div>
 	<div class="actions-wrapper">
 		<div class="actions">
-			<button class="monster-button-primary next">
+			<button class="monster-button-secondary next" data-action="save">
+				{{i18n.portRequestWizard.buttons.save}}
+			</button>
+			<button class="monster-button-primary next" data-action="next">
 				{{i18n.portRequestWizard.accountVerification.buttons.next}}
 			</button>
 		</div>

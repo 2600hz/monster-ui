@@ -1,4 +1,4 @@
-<div class="app-content wizard">
+<div class="app-content" id="port_wizard">
 	<h3 class="title">
 		{{i18n.portRequestWizard.addNumbers.title}}
 	</h3>
@@ -41,7 +41,11 @@
 		</div>
 		<div class="span6 pdf-container"></div>
 	</div>
-	<div class="actions">
+	<div class="actions-wrapper">
+		<div class="actions">
+			<button class="monster-button-secondary save">
+			{{i18n.portRequestWizard.buttons.save}}
+		</button>
 	{{#if request.extra.numbers_count}}
 		<div>
 			<button class="monster-button-primary next" data-sign="manual">
@@ -60,6 +64,7 @@
 			</button>
 		</div>
 	{{/if}}
+		</div>
 		<a href="javascript:void(0);" class="monster-link cancel">
 			{{i18n.portRequestWizard.buttons.cancel}}
 		</a>

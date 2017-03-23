@@ -11,7 +11,7 @@
 				{{i18n.portRequestWizard.portInfo.movingNumbers.label}}
 			</label>
 			<div class="controls">
-				<input type="text" name="name" id="name" placeholder="{{i18n.portRequestWizard.portInfo.movingNumbers.placeholder}}">
+				<input type="text" name="name" id="name" placeholder="{{i18n.portRequestWizard.portInfo.movingNumbers.placeholder}}" value="{{request.name}}">
 			</div>
 		</div>
 		<p class="text">
@@ -22,14 +22,14 @@
 		<div class="control-group radio-group">
 			<div class="controls">
 			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.local}}
-				<input type="radio" class="numbers-type" name="type" value="local">
+				<input type="radio" class="numbers-type" name="type" value="local"{{#compare request.type '===' 'local'}} checked="true" {{/compare}}>
 			{{/monsterRadio}}
 			</div>
 		</div>
 		<div class="control-group radio-group">
 			<div class="controls">
 			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.tollFree}}
-				<input type="radio" class="numbers-type" name="type" value="tollFree">
+				<input type="radio" class="numbers-type" name="type" value="tollFree"{{#compare request.type '===' 'tollFree'}} checked="true" {{/compare}}>
 			{{/monsterRadio}}
 			</div>
 		</div>

@@ -16,7 +16,7 @@
 				{{i18n.portRequestWizard.portNotify.email.label}}
 			</label>
 			<div class="controls">
-				<input type="text" id="email" name="notifications.email.send_to">
+				<input type="text" id="email" name="notifications.email.send_to" value="{{request.notifications.email.send_to}}">
 			</div>
 		</div>
 		<p class="text">
@@ -38,7 +38,10 @@
 	</form>
 	<div class="actions-wrapper">
 		<div class="actions">
-			<button class="monster-button-primary success">
+			<button class="monster-button-secondary next" data-action="save">
+				{{i18n.portRequestWizard.portNotify.button}}
+			</button>
+			<button class="monster-button-primary next" data-action="next">
 				{{i18n.portRequestWizard.portNotify.button}}
 			</button>
 		</div>

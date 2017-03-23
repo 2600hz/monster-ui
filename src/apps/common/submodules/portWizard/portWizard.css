@@ -105,6 +105,10 @@
 	margin-bottom: 30px;
 }
 
+#port_wizard .actions-wrapper .actions button:not(:first-child) {
+	margin-left: 15px;
+}
+
 #port_wizard .row-fluid {
 	max-width: 1000px;
 	margin: 0 auto;
