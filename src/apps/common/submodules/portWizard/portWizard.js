@@ -36,6 +36,47 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
+					if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
+						var billUploadTemplate = $(self.getTemplate({
+								name: 'portInfo-billUpload',
+								submodule: 'portWizard'
+							})),
+							actionsTemplate = $(self.getTemplate({
+								name: 'portInfo-actions',
+								submodule: 'portWizard'
+							}));
+
+						billUploadTemplate
+							.find('#bill_input')
+								.fileUpload({
+									btnClass: 'monster-button-primary monster-button-small',
+									btnText: self.i18n.active().portRequestWizard.fileUpload.button,
+									inputOnly: true,
+									inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
+									mimeTypes: self.appFlags.attachments.mimeTypes,
+									maxSize: self.appFlags.attachments.maxSize,
+									filesList: [ 'bill.pdf' ],
+									success: function(results) {
+										args.data.attachments.bill = results[0];
+									},
+									error: function(errorsList) {
+										self.portWizardFileUploadErrorsHandler(errorsList);
+									}
+								});
+
+						template
+							.find('.bill-upload-wrapper')
+								.append(billUploadTemplate);
+
+						template
+							.find('.actions')
+								.append(actionsTemplate);
+
+						template
+							.find('.bill-upload')
+								.show();
+					}
+
 					container
 						.empty()
 						.append(template);
@@ -163,21 +204,41 @@ define(function(require) {
 		portWizardRenderAccountVerification: function(args) {
 			var self = this,
 				container = args.container,
-				template = $(self.getTemplate({
-					name: 'accountVerification',
+				appendTemplate = function appendTemplate(billFileData) {
+					var template = $(self.getTemplate({
+						name: 'accountVerification',
+						data: {
+							request: args.data.request
+						},
+						submodule: 'portWizard'
+					}));
+
+					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
+
+					container
+						.empty()
+						.append(template);
+
+					self.portWizardBindAccountVerificationEvents(args);
+				};
+
+			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
+				self.portWizardRequestGetAttahcment({
 					data: {
-						request: args.data.request
+						portRequestId: args.data.request.id,
+						documentName: 'bill.pdf'
 					},
-					submodule: 'portWizard'
-				}));
+					success: function(billFileData) {
+						args.data.attachments.bill = {
+							file: billFileData
+						};
 
-			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
-
-			container
-				.empty()
-				.append(template);
-
-			self.portWizardBindAccountVerificationEvents(args);
+						appendTemplate(billFileData);
+					}
+				});
+			} else {
+				appendTemplate(args.data.attachments.bill.file);
+			}
 		},
 
 		portWizardBindAccountVerificationEvents: function(args) {
@@ -364,43 +425,58 @@ define(function(require) {
 					name: 'uploadForm',
 					data: dataToTemplate,
 					submodule: 'portWizard'
-				}));
+				})),
+				fileUploadoptions = {
+					btnClass: 'monster-button-primary monster-button-small',
+					btnText: self.i18n.active().portRequestWizard.fileUpload.button,
+					inputOnly: true,
+					inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
+					mimeTypes: self.appFlags.attachments.mimeTypes,
+					maxSize: self.appFlags.attachments.maxSize,
+					success: function(results) {
+						$.extend(true, args.data, {
+							attachments: {
+								form: results[0]
+							}
+						});
 
-			template
-				.find('#form_input')
-					.fileUpload({
-						btnClass: 'monster-button-primary monster-button-small',
-						btnText: self.i18n.active().portRequestWizard.fileUpload.button,
-						inputOnly: true,
-						inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
-						mimeTypes: self.appFlags.attachments.mimeTypes,
-						maxSize: self.appFlags.attachments.maxSize,
-						success: function(results) {
-							var actionsTemplate = $(self.getTemplate({
+						if (template.find('.uploadForm-success').length < 1) {
+							actionsTemplate = $(self.getTemplate({
 								name: 'uploadForm-actions',
 								submodule: 'portWizard'
 							})).css('display', 'none');
 
-							if (template.find('.uploadForm-success').length < 1) {
-								$.extend(true, args.data, {
-									attachments: {
-										form: results[0]
-									}
-								});
+							template
+								.find('.actions')
+									.append(actionsTemplate);
 
-								template
-									.find('.actions')
-										.append(actionsTemplate);
-
-								template
-									.find('.uploadForm-success')
-										.fadeIn();
-							}
-						},
-						error: function(errorsList) {
-							self.portWizardFileUploadErrorsHandler(errorsList);
+							template
+								.find('.uploadForm-success')
+									.fadeIn();
 						}
-					});
+					},
+					error: function(errorsList) {
+						self.portWizardFileUploadErrorsHandler(errorsList);
+					}
+				},
+				actionsTemplate;
+
+			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
+				fileUploadoptions.filesList = [ 'form.pdf' ];
+
+				actionsTemplate = $(self.getTemplate({
+					name: 'uploadForm-actions',
+					submodule: 'portWizard'
+				}));
+
+				template
+					.find('.actions')
+						.append(actionsTemplate);
+			}
+
+			template
+				.find('#form_input')
+					.fileUpload(fileUploadoptions);
 
 			container
 				.empty()
@@ -691,6 +767,12 @@ define(function(require) {
 			var self = this,
 				attachments = _.extend({}, args.data.attachments);
 
+			_.each(attachments, function(attachment, key, object) {
+				if (!attachment.hasOwnProperty('name')) {
+					delete object[key];
+				}
+			});
+
 			delete args.data.request.extra;
 
 			self.portWizardRequestUpdatePort({
@@ -700,18 +782,33 @@ define(function(require) {
 				success: function(port) {
 					if (!_.isEmpty(attachments)) {
 						_.each(attachments, function(attachment, key, object) {
-							object[key] = function(callback) {
-								self.portWizardRequestUpdateAttachment({
-									data: {
-										portRequestId: port.id,
-										documentName: key + '.pdf',
-										data: attachment.file
-									},
-									success: function() {
-										callback(null);
-									}
-								});
-							};
+							if (args.data.request.uploads.hasOwnProperty(key + '.pdf')) {
+								object[key] = function(callback) {
+									self.portWizardRequestUpdateAttachment({
+										data: {
+											portRequestId: port.id,
+											documentName: key + '.pdf',
+											data: attachment.file
+										},
+										success: function() {
+											callback(null);
+										}
+									});
+								};
+							} else {
+								object[key] = function(callback) {
+									self.portWizardRequestCreateAttachment({
+										data: {
+											portRequestId: port.id,
+											documentName: key + '.pdf',
+											data: attachment.file
+										},
+										success: function() {
+											callback(null);
+										}
+									});
+								};
+							}
 						});
 
 						monster.series(attachments, function(err, results) {
@@ -829,6 +926,23 @@ define(function(require) {
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+		portWizardRequestGetAttahcment: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.getAttachment',
+				data: $.extend(true, {
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					// `data` is a string representation of the PDF in base 64
+					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError, error, globalHandler) {
 					args.hasOwnProperty('error') && args.error(parsedError);
