@@ -821,11 +821,10 @@ define(function(require){
 		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, carrierName, callback) {
 			var self = this;
 
-			if(monster.util.canAddExternalNumbers()) {
-				console.log(numbers_data, carrierName);
-				/*self.numbersCreateBlockNumber(numbers_data, accountId, function(data) {
+			if (monster.util.canAddExternalNumbers()) {
+				self.numbersCreateBlockNumber(numbers_data, accountId, carrierName, function(data) {
 					// If we need to BULK activate, uncomment following
-					if(forceActivate) {
+					if (forceActivate) {
 						var validNumbers = [];
 						_.each(data.success, function(number) {
 							validNumbers.push(number.id);
@@ -833,13 +832,11 @@ define(function(require){
 						self.numbersMove({ accountId: accountId, numbers: validNumbers }, function(data) {
 							callback && callback();
 						});
-					}
-					else {
+					} else {
 						callback && callback();
 					}
-				});*/
-			}
-			else {
+				});
+			} else {
 				monster.ui.alert(self.i18n.active().numbers.noRightsAddNumber);
 			}
 		},
@@ -930,7 +927,7 @@ define(function(require){
 				formattedData = self.numbersAddExternalFormatCarriers(),
 				dialogTemplate = $(monster.template(self, 'numbers-addExternal', formattedData)),
 				CUSTOM_CHOICE = '_uiCustomChoice';
-console.log(formattedData);
+
 			monster.ui.tooltips(dialogTemplate);
 
 			dialogTemplate.find('.select-module').on('change', function() {
@@ -1121,7 +1118,7 @@ console.log(formattedData);
 			});
 		},
 
-		numbersCreateBlockNumber: function(numbers, accountId, success, error) {
+		numbersCreateBlockNumber: function(numbers, accountId, carrierName, success, error) {
 			var self = this;
 
 			self.callApi({
@@ -1129,7 +1126,8 @@ console.log(formattedData);
 				data: {
 					accountId: accountId,
 					data: {
-						numbers: numbers
+						numbers: numbers,
+						carrier_name: carrierName
 					}
 				},
 				success: function(data) {
