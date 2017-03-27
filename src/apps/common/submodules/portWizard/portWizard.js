@@ -352,7 +352,8 @@ define(function(require) {
 
 						var $form = container.find('#form_add_numbers'),
 							formData = monster.ui.getFormData('form_add_numbers'),
-							newNumbers;
+							newNumbers = {},
+							phoneNumber;
 
 						monster.ui.validate($form, {
 							rules: {
@@ -363,10 +364,16 @@ define(function(require) {
 						});
 
 						if (monster.ui.valid($form)) {
-							newNumbers = formData.numbers.split(' ').reduce(function(object, number) {
-								object[monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(number), 'keepPlus')] = {};
-								return object;
-							}, {});
+							formData.numbers = formData.numbers.replace(/[\n]/g, ' ');
+							formData.numbers = formData.numbers.replace(/[-().]/g, '').split(' ');
+
+							_.each(formData.numbers, function(number) {
+								phoneNumber = number.match(/^\+(.*)$/);
+
+								if (phoneNumber && phoneNumber[1]) {
+									newNumbers[number] = {};
+								}
+							});
 
 							self.portWizardRenderAddNumbers($.extend(true, args, {
 								data: {
