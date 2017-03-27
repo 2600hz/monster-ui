@@ -887,12 +887,27 @@
 			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
 			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
 			"form": {
+				"link": "Add More Numbers",
 				"legend": "Input Numbers to Port",
 				"button": "Add Numbers"
 			},
 			"list": {
 				"title": "Numbers on This Port Request",
 				"text": "You have not added any numbers to your port request yet."
+			},
+			"btn": {
+				"errorMessage": "It looks like you selected you current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
+				"text1": "Do these numbers make up the entire current account per your bill?",
+				"text2": "Or do these numbers male up only a select portion of numbers?",
+				"selection": {
+					"full": "Full Account Port",
+					"portion": "Portion Of Numbers"
+				},
+				"partial": {
+					"title": "Partial Port Additional Requirements",
+					"text": "Because you have selected to port your current account's BTN and your request will consist of only a portion of your account's numbers, you will need to choose a new BTN for that carrier or they will reject your request to port these numbers.",
+					"label": "New BTN"
+				}
 			},
 			"buttons": {
 				"next": {

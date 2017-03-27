@@ -8,38 +8,88 @@
 		{{i18n.portRequestWizard.addNumbers.text2}}
 	</p>
 	<div class="row-fluid">
-		<div class="span6">
-			<form id="form_add_numbers">
-				<legend>
-					{{i18n.portRequestWizard.addNumbers.form.legend}}
-				</legend>
-				<div class="control-group">
-					<div class="controls">
-						<textarea name="numbers" id="numbers" cols="50" rows="5"></textarea>
+		<div class="span5">
+			<div class="textarea-wrapper">
+				<a class="collapse">
+					{{i18n.portRequestWizard.addNumbers.form.link}}
+				</a>
+				<div class="accordion">
+					<h4 class="title">
+						{{i18n.portRequestWizard.addNumbers.form.legend}}
+					</h4>
+					<textarea name="numbers" id="numbers" cols="50" rows="5"></textarea>
+					<button class="monster-button-primary add-numbers">
+						{{i18n.portRequestWizard.addNumbers.form.button}}
+					</button>
+				</div>
+			</div>
+
+			<div class="list-wrapper">
+				<h4 class="title">
+					{{i18n.portRequestWizard.addNumbers.list.title}}{{#if request.extra.numbers_count}} ({{request.extra.numbers_count}}){{/if}}
+				</h4>
+			{{#if request.extra.numbers_count}}
+				<ul class="numbers-list">
+				{{#each request.numbers}}
+					<li class="item" data-number="{{@key}}">
+						{{formatPhoneNumber @key}} <i class="fa fa-times-circle-o pull-right remove"></i>
+					</li>
+				{{/each}}
+				</ul>
+			{{else}}
+				<span class="empty">
+					{{i18n.portRequestWizard.addNumbers.list.text}}
+				</span>
+			{{/if}}
+			</div>
+
+			<div class="btn-wrapper">
+				<div class="error-message">
+					<i class="fa fa-exclamation-triangle pull-left"></i>
+					<span class="pull-left">
+						{{i18n.portRequestWizard.addNumbers.btn.errorMessage}}
+					</span>
+				</div>
+				<p class="text">
+					{{i18n.portRequestWizard.addNumbers.btn.text1}}
+					<br>
+					{{i18n.portRequestWizard.addNumbers.btn.text2}}
+				</p>
+				<div class="portion-selection row-fluid">
+					<div class="portion-wrapper span4">
+						<div class="portion"></div>
+						<div class="title">
+							{{toUpperCase i18n.portRequestWizard.addNumbers.btn.selection.full}}
+						</div>
+					</div>
+					<div class="portion-wrapper span4 offset1">
+						<div class="portion partial"></div>
+						<div class="title">
+							{{toUpperCase i18n.portRequestWizard.addNumbers.btn.selection.portion}}
+						</div>
 					</div>
 				</div>
-				<button class="monster-button-primary add-numbers">
-					{{i18n.portRequestWizard.addNumbers.form.button}}
-				</button>
+			</div>
+
+			<form class="form form-horizontal btn-wrapper" id="form_btn">
+				<h4 class="title">
+					{{i18n.portRequestWizard.addNumbers.btn.partial.title}}
+				</h4>
+				<p class="text">
+					{{i18n.portRequestWizard.addNumbers.btn.partial.text}}
+				</p>
+				<div class="control-group">
+					<label for="new_btn" class="control-label">
+						{{i18n.portRequestWizard.addNumbers.btn.partial.label}}
+					</label>
+					<div class="controls">
+						<input type="text" id="new_btn" name="newBtn">
+					</div>
+				</div>
 			</form>
-			<h4 class="title">
-				{{i18n.portRequestWizard.addNumbers.list.title}}{{#if request.extra.numbers_count}} ({{request.extra.numbers_count}}){{/if}}
-			</h4>
-		{{#if request.extra.numbers_count}}
-			<ul class="numbers-list">
-			{{#each request.numbers}}
-				<li class="item" data-number="{{@key}}">
-					{{formatPhoneNumber @key}} <i class="fa fa-times-circle-o pull-right remove"></i>
-				</li>
-			{{/each}}
-			</ul>
-		{{else}}
-			<p class="empty">
-				{{i18n.portRequestWizard.addNumbers.list.text}}
-			</p>
-		{{/if}}
 		</div>
-		<div class="span6 pdf-container"></div>
+
+		<div class="span5 offset1 pdf-container"></div>
 	</div>
 	<div class="actions-wrapper">
 		<div class="actions">

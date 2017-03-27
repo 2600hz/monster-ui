@@ -80,9 +80,9 @@
 }
 
 #port_wizard .form legend {
-	color:  #22a5ff;
 	font-size: 16px;
 	font-weight: 600;
+	color: #22a5ff;
 }
 
 #port_wizard .form legend.important {
@@ -184,4 +184,77 @@
 	vertical-align: top;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+}
+
+
+
+
+
+#port_wizard .portion-wrapper {
+	cursor: pointer;
+	text-align: center;
+}
+
+#port_wizard .portion-wrapper .portion {
+	position: relative;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border: 27px solid #e0e0e9;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+#port_wizard .portion-wrapper .portion:not(:first-child) {
+	margin-left: 50px;
+}
+
+#port_wizard .portion-wrapper.active .portion {
+	border-color: #22a5ff;
+}
+
+#port_wizard .portion-wrapper .portion.partial {
+	transform: rotate(-45deg);
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+}
+
+#port_wizard .portion-wrapper .portion::before,
+#port_wizard .portion-wrapper .portion::after {
+	position: absolute;
+	display: block;
+	content: '';
+	border-radius: 50%;
+}
+
+#port_wizard .portion-wrapper .portion::before {
+	transform: translate(-33px, -33px);
+	width: 61px;
+	height: 61px;
+	border: 3px solid #e0e0e9;
+}
+
+#port_wizard .portion-wrapper.active .portion::before {
+	border-color: #22a5ff;
+}
+
+#port_wizard .portion.partial::after {
+	transform: translate(-27px, -27px);
+	border: 27px solid transparent;
+	border-bottom-color: #e0e0e9;
+}
+
+#port_wizard .portion-wrapper.active .portion.partial::after {
+	border-bottom-color: #22a5ff;
+}
+
+#port_wizard .portion-wrapper .title {
+	font-size: 12px;
+	font-weight: bold;
+	margin-top: 15px;
+	color: #b9b9bf;
+}
+
+#port_wizard .portion-wrapper.active .title {
+	color: #22a5ff;
 }
