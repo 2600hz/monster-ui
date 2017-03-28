@@ -4,7 +4,7 @@
 {{#if request.extra.numbers_count}}
 	<ul class="numbers-list">
 	{{#each request.numbers}}
-		<li class="item" data-number="{{@key}}">
+		<li class="item{{#compare @key '===' @root.request.bill.btn}} warning{{/compare}}" data-number="{{@key}}">
 			{{formatPhoneNumber @key}} <i class="icon-telicon-x-circled pull-right remove-number"></i>
 		</li>
 	{{/each}}

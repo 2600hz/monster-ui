@@ -405,15 +405,11 @@ define(function(require) {
 									});
 
 							self.portWizardRenderAddNumbersList(args);
+
+							if (args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
+								self.portWizardRenderAddNumbersPortion(args);
+							}
 						}
-					});
-
-			container
-				.find('.save')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						console.log(args.data.request.numbers);
 					});
 
 			container
@@ -501,10 +497,78 @@ define(function(require) {
 						$item = $this.parents('.item'),
 						number = $item.data('number');
 
+					if (args.data.request.bill.btn === number) {
+						container
+							.find('.portion-wrapper')
+								.slideUp(function() {
+									$(this)
+										.empty();
+								});
+
+						container
+							.find('.btn-wrapper')
+								.slideUp(function() {
+									$(this)
+										.emty();
+								});
+					}
+
 					delete args.data.request.numbers[number];
 
 					self.portWizardUpdateAddNumbersList(args);
 				});
+		},
+
+		portWizardRenderAddNumbersPortion: function(args) {
+			var self = this,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'addNumbers-portion',
+					submodule: 'portWizard'
+				}));
+
+			container
+				.find('.portion-wrapper')
+					.fadeOut(function() {
+						$(this)
+							.empty()
+							.append(template)
+							.fadeIn();
+
+						self.portWizardBindAddNumbersPortionEvents(args);
+					});
+		},
+
+		portWizardBindAddNumbersPortionEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.portion-item')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var $this = $(this),
+							portion = $this.data('portion');
+
+						if (!$this.hasClass('active')) {
+							$this
+								.siblings()
+									.removeClass('active');
+
+							$this
+								.addClass('active');
+
+							if (portion === 'full') {
+								container
+									.find('.btn-wrapper')
+										.slideUp(function() {
+											$(this)
+												.empty();
+										});
+							}
+						}
+					});
 		},
 
 		portWizardRenderUploadForm: function(args) {
