@@ -37,26 +37,9 @@
 	<div class="actions-wrapper">
 		<div class="actions">
 			<button class="monster-button-secondary save">
-			{{i18n.portRequestWizard.buttons.save}}
-		</button>
-	{{#if request.extra.numbers_count}}
-		<div>
-			<button class="monster-button-primary next" data-sign="manual">
-			{{#compare request.extra.type '===' 'local'}}
-				{{i18n.portRequestWizard.addNumbers.buttons.next.manual.loa}}
-			{{else}}
-				{{i18n.portRequestWizard.addNumbers.buttons.next.manual.resporg}}
-			{{/compare}}
+				{{i18n.portRequestWizard.buttons.save}}
 			</button>
-			<button class="monster-button-primary next" data-sign="electronic">
-			{{#compare request.extra.type '===' 'local'}}
-				{{i18n.portRequestWizard.addNumbers.buttons.next.eSign.loa}}
-			{{else}}
-				{{i18n.portRequestWizard.addNumbers.buttons.next.eSign.resporg}}
-			{{/compare}}
-			</button>
-		</div>
-	{{/if}}
+			<span class="success-wrapper"></span>
 		</div>
 		<a href="javascript:void(0);" class="monster-link cancel">
 			{{i18n.portRequestWizard.buttons.cancel}}

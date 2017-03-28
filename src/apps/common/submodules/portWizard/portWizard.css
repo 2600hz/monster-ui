@@ -220,9 +220,9 @@
 }
 
 #port_wizard .portion-item .portion::before {
-	transform: translate(-33px, -33px);
 	width: 61px;
 	height: 61px;
+	transform: translate(-33px, -33px);
 	border: 3px solid #e0e0e9;
 }
 
@@ -252,8 +252,8 @@
 }
 
 #port_wizard .textarea-wrapper .collapse {
-	cursor: pointer;
 	display: none;
+	cursor: pointer;
 }
 
 #port_wizard .textarea-wrapper .collapse,
@@ -271,9 +271,9 @@
 }
 
 #port_wizard .textarea-wrapper .accordion textarea {
+	box-sizing: border-box;
 	width: 100%;
 	margin: 10px 0 20px;
-	box-sizing: border-box;
 }
 
 #port_wizard .list-wrapper {
@@ -281,23 +281,23 @@
 }
 
 #port_wizard .list-wrapper h4.title {
-	border-bottom: 1px solid #c0c0c9;
-	padding-bottom: 20px;
 	margin-bottom: 30px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #c0c0c9;
 }
 
 #port_wizard .list-wrapper .empty-list {
-	border: 1px dashed #c0c0c9;
 	padding: 10px;
 	color: #909099;
+	border: 1px dashed #c0c0c9;
 	border-radius: 2px;
 }
 
 #port_wizard .list-wrapper .numbers-list {
-	list-style: none;
-	margin: 0;
-	max-height: 245px;
 	overflow-y: auto;
+	max-height: 245px;
+	margin: 0;
+	list-style: none;
 }
 
 #port_wizard .list-wrapper .item:not(:first-child) {
@@ -319,11 +319,11 @@
 }
 
 #port_wizard .portion-wrapper .error-message {
-	padding: 15px;
-	background-color: #FF3D24;
-	border-radius: 2px;
 	font-size: 13px;
 	margin-bottom: 30px;
+	padding: 15px;
+	border-radius: 2px;
+	background-color: #ff3d24;
 }
 
 #port_wizard .portion-wrapper .error-message,
@@ -332,11 +332,15 @@
 }
 
 #port_wizard .portion-wrapper .error-message .text {
-	margin-left: 33px;
 	display: block;
+	margin-left: 33px;
 }
 
 #port_wizard .btn-wrapper {
-	margin-top: 40px;
 	display: none;
+	margin: 40px 0 0;
+}
+
+#port_wizard .btn-wrapper h4.title {
+	margin-top: 0;
 }
