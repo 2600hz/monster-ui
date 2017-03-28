@@ -1,0 +1,16 @@
+<h4 class="title">
+	{{i18n.portRequestWizard.addNumbers.list.title}}{{#if request.extra.numbers_count}} ({{request.extra.numbers_count}}){{/if}}
+</h4>
+{{#if request.extra.numbers_count}}
+	<ul class="numbers-list">
+	{{#each request.numbers}}
+		<li class="item" data-number="{{@key}}">
+			{{formatPhoneNumber @key}} <i class="icon-telicon-x-circled pull-right remove-number"></i>
+		</li>
+	{{/each}}
+	</ul>
+{{else}}
+	<p class="empty-list">
+		{{i18n.portRequestWizard.addNumbers.list.text}}
+	</p>
+{{/if}}

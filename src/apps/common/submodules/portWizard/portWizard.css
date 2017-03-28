@@ -253,6 +253,7 @@
 
 #port_wizard .textarea-wrapper .collapse {
 	cursor: pointer;
+	display: none;
 }
 
 #port_wizard .textarea-wrapper .collapse,
@@ -273,6 +274,10 @@
 	width: 100%;
 	margin: 10px 0 20px;
 	box-sizing: border-box;
+}
+
+#port_wizard .list-wrapper {
+	display: none;
 }
 
 #port_wizard .list-wrapper h4.title {

@@ -319,16 +319,8 @@ define(function(require) {
 		portWizardRenderAddNumbers: function(args) {
 			var self = this,
 				container = args.container,
-				dataToTemplate = $.extend(true, args.data, {
-					request: {
-						extra: {
-							numbers_count: _.keys(args.data.request.numbers).length
-						}
-					}
-				}),
 				template = $(self.getTemplate({
 					name: 'addNumbers',
-					data: dataToTemplate,
 					submodule: 'portWizard'
 				}));
 
@@ -338,12 +330,29 @@ define(function(require) {
 				.empty()
 				.append(template);
 
+			self.portWizardRenderAddNumbersList(args);
+
 			self.portWizardBindAddNumbersEvents(args);
 		},
 
 		portWizardBindAddNumbersEvents: function(args) {
 			var self = this,
 				container = args.container;
+
+			container
+				.find('.collapse')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var $this = $(this);
+
+						$this
+							.fadeOut(function() {
+								container
+									.find('.accordion')
+										.slideDown();
+							});
+					});
 
 			container
 				.find('.add-numbers')
@@ -375,26 +384,36 @@ define(function(require) {
 								}
 							});
 
-							self.portWizardRenderAddNumbers($.extend(true, args, {
+							$.extend(true, args, {
 								data: {
 									request: {
 										numbers: newNumbers
 									}
 								}
-							}));
+							});
+
+							container
+								.find('.accordion')
+									.slideUp(function() {
+										$form
+											.find('textarea')
+												.val('');
+
+										container
+											.find('.collapse')
+												.fadeIn();
+									});
+
+							self.portWizardRenderAddNumbersList(args);
 						}
 					});
 
 			container
-				.find('.remove')
+				.find('.save')
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var number = $(this).parents('.item').data('number');
-
-						delete args.data.request.numbers[number];
-
-						self.portWizardRenderAddNumbers(args);
+						console.log(args.data.request.numbers);
 					});
 
 			container
@@ -418,6 +437,74 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort(args);
 					});
+		},
+
+		portWizardRenderAddNumbersList: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = $.extend(true, args.data, {
+					request: {
+						extra: {
+							numbers_count: _.keys(args.data.request.numbers).length
+						}
+					}
+				}),
+				template = $(self.getTemplate({
+					name: 'addNumbers-list',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.find('.list-wrapper')
+					.fadeOut(function() {
+						$(this)
+							.empty()
+							.append(template)
+							.slideDown();
+					});
+
+			self.portWizardBindAddNumbersListEvents(args);
+		},
+
+		portWizardUpdateAddNumbersList: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = $.extend(true, args.data, {
+					request: {
+						extra: {
+							numbers_count: _.keys(args.data.request.numbers).length
+						}
+					}
+				}),
+				template = $(self.getTemplate({
+					name: 'addNumbers-list',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.find('.list-wrapper')
+					.empty()
+					.append(template);
+		},
+
+		portWizardBindAddNumbersListEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.on('click', '.remove-number', function(event) {
+					event.preventDefault();
+
+					var $this = $(this),
+						$item = $this.parents('.item'),
+						number = $item.data('number');
+
+					delete args.data.request.numbers[number];
+
+					self.portWizardUpdateAddNumbersList(args);
+				});
 		},
 
 		portWizardRenderUploadForm: function(args) {
