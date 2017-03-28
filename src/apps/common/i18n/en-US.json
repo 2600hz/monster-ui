@@ -120,6 +120,15 @@
 			"renameCarrier": {
 				"label": "Carrier Module",
 				"customCarrierName": "Custom Carrier Module Name"
+			},
+
+			"__comment": "UI-2448: Delete recap popup",
+			"__version": "4.1",
+			"successAdd": "You successfully added phone numbers to the system!",
+			"resultsDialog": {
+				"headline": "Some of the numbers could not be added to the system. Here is the recap of which numbers were successfully added and those that weren't.",
+				"title": "Recap of the Add Number operation",
+				"continue": "Continue"
 			}
 		},
 

@@ -818,22 +818,67 @@ define(function(require){
 			});
 		},
 
+		numbersShowRecapAddNumbers: function(data) {
+			var self = this,
+				addRecapTemplate = $(monster.template(self, 'numbers-addExternalResults')),
+				formattedData = {
+					errors: [],
+					successes: [],
+					countTotal: 0
+				};
+
+			_.each(data.error, function(obj, phoneNumber) {
+				formattedData.errors.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber), errorMessage: obj.code + ' - ' + obj.error + ': ' + obj.message });
+			});
+
+			_.each(data.success, function(obj, phoneNumber) {
+				formattedData.successes.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber) });
+			});
+
+			formattedData.countTotal = formattedData.successes.length + formattedData.errors.length;
+
+			addRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
+
+			addRecapTemplate.find('#continue').on('click', function() {
+				popup.remove();
+			});
+
+			var popup = monster.ui.dialog(addRecapTemplate, {
+				title: self.i18n.active().numbers.addExternal.resultsDialog.title
+			});
+		},
+
 		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, carrierName, callback) {
-			var self = this;
+			var self = this,
+				afterAdd = function(data) {
+					if (data.hasOwnProperty('error')) {
+						self.numbersShowRecapAddNumbers(data);
+					} else {
+						toastr.success(self.i18n.active().numbers.addExternal.successAdd);
+					}
+
+					callback && callback();
+				};
 
 			if (monster.util.canAddExternalNumbers()) {
 				self.numbersCreateBlockNumber(numbers_data, accountId, carrierName, function(data) {
 					// If we need to BULK activate, uncomment following
 					if (forceActivate) {
 						var validNumbers = [];
+
 						_.each(data.success, function(number) {
 							validNumbers.push(number.id);
 						});
-						self.numbersMove({ accountId: accountId, numbers: validNumbers }, function(data) {
-							callback && callback();
-						});
+
+						if (validNumbers.length) {
+							self.numbersMove({ accountId: accountId, numbers: validNumbers }, function() {
+								afterAdd(data);
+							});
+						} else {
+							afterAdd(data);
+						}
 					} else {
-						callback && callback();
+						afterAdd(data);
 					}
 				});
 			} else {
@@ -1090,10 +1135,18 @@ define(function(require){
 					accountId: args.accountId,
 					data: {
 						numbers: args.numbers
-					}
+					},
+					generateError: false
 				},
 				success: function(_dataNumbers, status) {
 					callback && callback(_dataNumbers.data);
+				},
+				error: function(data, status, globalHandler) {
+					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
+						callback && callback(data.data);
+					} else if (data.error !== '402') {
+						globalHandler(data, { generateError: true });
+					}
 				}
 			});
 		},
@@ -1128,14 +1181,17 @@ define(function(require){
 					data: {
 						numbers: numbers,
 						carrier_name: carrierName
-					}
+					},
+					generateError: false
 				},
 				success: function(data) {
 					success && success(data.data);
 				},
-				error: function(data) {
-					if(data.error !== '402') {
-						error && error(data);
+				error: function(data, status, globalHandler) {
+					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
+						success && success(data.data);
+					} else if (data.error !== '402') {
+						globalHandler(data, { generateError: true });
 					}
 				}
 			});
