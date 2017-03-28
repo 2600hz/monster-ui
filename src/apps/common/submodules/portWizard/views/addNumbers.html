@@ -2,27 +2,28 @@
 	<h3 class="title">
 		{{i18n.portRequestWizard.addNumbers.title}}
 	</h3>
-	<p class="text">
+	<p class="title-help">
 		{{i18n.portRequestWizard.addNumbers.text1}}
 		<br>
 		{{i18n.portRequestWizard.addNumbers.text2}}
 	</p>
 	<div class="row-fluid">
 		<div class="span5">
-			<div class="textarea-wrapper">
+			<form class="form textarea-wrapper" id="form_add_numbers">
 				<a class="collapse">
+					<i class="icon-telicon-plus-circled"></i>
 					{{i18n.portRequestWizard.addNumbers.form.link}}
 				</a>
 				<div class="accordion">
 					<h4 class="title">
 						{{i18n.portRequestWizard.addNumbers.form.legend}}
 					</h4>
-					<textarea name="numbers" id="numbers" cols="50" rows="5"></textarea>
+					<textarea name="numbers" id="numbers" rows="5"></textarea>
 					<button class="monster-button-primary add-numbers">
 						{{i18n.portRequestWizard.addNumbers.form.button}}
 					</button>
 				</div>
-			</div>
+			</form>
 
 			<div class="list-wrapper">
 				<h4 class="title">
@@ -32,37 +33,37 @@
 				<ul class="numbers-list">
 				{{#each request.numbers}}
 					<li class="item" data-number="{{@key}}">
-						{{formatPhoneNumber @key}} <i class="fa fa-times-circle-o pull-right remove"></i>
+						{{formatPhoneNumber @key}} <i class="icon-telicon-x-circled pull-right remove"></i>
 					</li>
 				{{/each}}
 				</ul>
 			{{else}}
-				<span class="empty">
+				<p class="empty-list">
 					{{i18n.portRequestWizard.addNumbers.list.text}}
-				</span>
+				</p>
 			{{/if}}
 			</div>
 
-			<div class="btn-wrapper">
+			<div class="portion-wrapper">
 				<div class="error-message">
-					<i class="fa fa-exclamation-triangle pull-left"></i>
-					<span class="pull-left">
+					<i class="icon-telicon-warning pull-left"></i>
+					<div class="text">
 						{{i18n.portRequestWizard.addNumbers.btn.errorMessage}}
-					</span>
+					</div>
 				</div>
 				<p class="text">
 					{{i18n.portRequestWizard.addNumbers.btn.text1}}
 					<br>
 					{{i18n.portRequestWizard.addNumbers.btn.text2}}
 				</p>
-				<div class="portion-selection row-fluid">
-					<div class="portion-wrapper span4">
+				<div class="row-fluid">
+					<div class="portion-item span4">
 						<div class="portion"></div>
 						<div class="title">
 							{{toUpperCase i18n.portRequestWizard.addNumbers.btn.selection.full}}
 						</div>
 					</div>
-					<div class="portion-wrapper span4 offset1">
+					<div class="portion-item span4 offset1">
 						<div class="portion partial"></div>
 						<div class="title">
 							{{toUpperCase i18n.portRequestWizard.addNumbers.btn.selection.portion}}
@@ -71,7 +72,7 @@
 				</div>
 			</div>
 
-			<form class="form form-horizontal btn-wrapper" id="form_btn">
+			<form class="form form-horizontal btn-wrapper" id="form_new_btn">
 				<h4 class="title">
 					{{i18n.portRequestWizard.addNumbers.btn.partial.title}}
 				</h4>
@@ -89,7 +90,7 @@
 			</form>
 		</div>
 
-		<div class="span5 offset1 pdf-container"></div>
+		<div class="span6 offset1 pdf-container"></div>
 	</div>
 	<div class="actions-wrapper">
 		<div class="actions">

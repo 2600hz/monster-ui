@@ -146,10 +146,6 @@
 	border-bottom: 1px solid #c0c0c9;
 }
 
-
-
-
-
 #port_wizard .file-upload-wrapper {
 	width: 380px;
 	margin: 0 auto;
@@ -186,16 +182,12 @@
 	border-bottom-left-radius: 0;
 }
 
-
-
-
-
-#port_wizard .portion-wrapper {
+#port_wizard .portion-item {
 	cursor: pointer;
 	text-align: center;
 }
 
-#port_wizard .portion-wrapper .portion {
+#port_wizard .portion-item .portion {
 	position: relative;
 	display: inline-block;
 	width: 0;
@@ -205,36 +197,36 @@
 	background-color: #fff;
 }
 
-#port_wizard .portion-wrapper .portion:not(:first-child) {
+#port_wizard .portion-item .portion:not(:first-child) {
 	margin-left: 50px;
 }
 
-#port_wizard .portion-wrapper.active .portion {
+#port_wizard .portion-item.active .portion {
 	border-color: #22a5ff;
 }
 
-#port_wizard .portion-wrapper .portion.partial {
+#port_wizard .portion-item .portion.partial {
 	transform: rotate(-45deg);
 	border-right-color: transparent;
 	border-bottom-color: transparent;
 }
 
-#port_wizard .portion-wrapper .portion::before,
-#port_wizard .portion-wrapper .portion::after {
+#port_wizard .portion-item .portion::before,
+#port_wizard .portion-item .portion::after {
 	position: absolute;
 	display: block;
 	content: '';
 	border-radius: 50%;
 }
 
-#port_wizard .portion-wrapper .portion::before {
+#port_wizard .portion-item .portion::before {
 	transform: translate(-33px, -33px);
 	width: 61px;
 	height: 61px;
 	border: 3px solid #e0e0e9;
 }
 
-#port_wizard .portion-wrapper.active .portion::before {
+#port_wizard .portion-item.active .portion::before {
 	border-color: #22a5ff;
 }
 
@@ -244,17 +236,101 @@
 	border-bottom-color: #e0e0e9;
 }
 
-#port_wizard .portion-wrapper.active .portion.partial::after {
+#port_wizard .portion-item.active .portion.partial::after {
 	border-bottom-color: #22a5ff;
 }
 
-#port_wizard .portion-wrapper .title {
+#port_wizard .portion-item .title {
 	font-size: 12px;
 	font-weight: bold;
 	margin-top: 15px;
 	color: #b9b9bf;
 }
 
-#port_wizard .portion-wrapper.active .title {
+#port_wizard .portion-item.active .title {
 	color: #22a5ff;
+}
+
+#port_wizard .textarea-wrapper .collapse {
+	cursor: pointer;
+}
+
+#port_wizard .textarea-wrapper .collapse,
+#port_wizard .textarea-wrapper .collapse i {
+	color: #22a5ff;
+}
+
+#port_wizard .textarea-wrapper .collapse i {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+#port_wizard .textarea-wrapper .accordion {
+	margin-bottom: 30px;
+}
+
+#port_wizard .textarea-wrapper .accordion textarea {
+	width: 100%;
+	margin: 10px 0 20px;
+	box-sizing: border-box;
+}
+
+#port_wizard .list-wrapper h4.title {
+	border-bottom: 1px solid #c0c0c9;
+	padding-bottom: 20px;
+	margin-bottom: 30px;
+}
+
+#port_wizard .list-wrapper .empty-list {
+	border: 1px dashed #c0c0c9;
+	padding: 10px;
+	color: #909099;
+	border-radius: 2px;
+}
+
+#port_wizard .list-wrapper .numbers-list {
+	list-style: none;
+	margin: 0;
+	max-height: 245px;
+	overflow-y: auto;
+}
+
+#port_wizard .list-wrapper .item:not(:first-child) {
+	margin-top: 5px;
+}
+
+#port_wizard .list-wrapper .item i {
+	font-size: 13px;
+	cursor: pointer;
+}
+
+#port_wizard .list-wrapper .item.warning,
+#port_wizard .list-wrapper .item.warning i {
+	color: red;
+}
+
+#port_wizard .portion-wrapper {
+	margin-top: 40px;
+}
+
+#port_wizard .portion-wrapper .error-message {
+	padding: 15px;
+	background-color: #FF3D24;
+	border-radius: 2px;
+	font-size: 13px;
+	margin-bottom: 30px;
+}
+
+#port_wizard .portion-wrapper .error-message,
+#port_wizard .portion-wrapper .error-message i {
+	color: #fff;
+}
+
+#port_wizard .portion-wrapper .error-message .text {
+	margin-left: 33px;
+	display: block;
+}
+
+#port_wizard .btn-wrapper {
+	margin-top: 40px
 }
