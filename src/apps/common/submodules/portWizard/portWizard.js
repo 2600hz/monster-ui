@@ -92,7 +92,10 @@ define(function(require) {
 				data: {
 					attachments: {},
 					request: {
-						numbers: {}
+						numbers: args.data.request.numbers.reduce(function(object, value) {
+							object[value] = {};
+							return object;
+						}, {})
 					}
 				}
 			});
@@ -332,6 +335,10 @@ define(function(require) {
 
 			self.portWizardRenderAddNumbersList(args);
 
+			if (args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
+				self.portWizardRenderAddNumbersPortion(args);
+			}
+
 			self.portWizardBindAddNumbersEvents(args);
 		},
 
@@ -410,6 +417,28 @@ define(function(require) {
 								self.portWizardRenderAddNumbersPortion(args);
 							}
 						}
+					});
+
+			container
+				.find('.save')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var formData = monster.ui.getFormData('form_new_btn');
+
+						$.extend(true, args, {
+							data: {
+								request: {
+									bill: {
+										new_btn: formData.new_btn
+									}
+								}
+							}
+						});
+
+						self.portWizardHelperSavePort($.extend(true, args, {
+							success: args.globalCallback
+						}));
 					});
 
 			container
@@ -552,13 +581,13 @@ define(function(require) {
 												.empty();
 										});
 							} else {
-								self.portWozardRenderAddNumbersBtn(args);
+								self.portWizardRenderAddNumbersBtn(args);
 							}
 						}
 					});
 		},
 
-		portWozardRenderAddNumbersBtn: function(args) {
+		portWizardRenderAddNumbersBtn: function(args) {
 			var self = this,
 				container = args.container,
 				dataToTemplate = {
