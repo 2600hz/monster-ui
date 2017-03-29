@@ -814,6 +814,7 @@
 		},
 		"toastr": {
 			"warning": {
+				"invalidNumbers": "Please specify the plus sign and country code when adding numbers",
 				"mimeTypes": " is not a {{variable}}",
 				"size": " exceeds the {{variable}}MB size limit"
 			}

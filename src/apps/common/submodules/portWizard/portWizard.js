@@ -379,7 +379,8 @@ define(function(require) {
 						var $form = container.find('#form_add_numbers'),
 							formData = monster.ui.getFormData('form_add_numbers'),
 							newNumbers = {},
-							phoneNumber;
+							phoneNumber,
+							errors = false;
 
 						monster.ui.validate($form, {
 							rules: {
@@ -398,6 +399,8 @@ define(function(require) {
 
 								if (phoneNumber && phoneNumber[1]) {
 									newNumbers[number] = {};
+								} else {
+									errors = true;
 								}
 							});
 
@@ -409,17 +412,21 @@ define(function(require) {
 								}
 							});
 
-							container
-								.find('.accordion')
-									.slideUp(function() {
-										$form
-											.find('textarea')
-												.val('');
+							$form
+								.find('textarea')
+									.val('');
 
-										container
-											.find('.collapse')
-												.fadeIn();
-									});
+							if (errors) {
+								toastr.warning(self.i18n.active().portWizard.toastr.warning.invalidNumbers);
+							} else {
+								container
+									.find('.accordion')
+										.slideUp(function() {
+											container
+												.find('.collapse')
+													.fadeIn();
+										});
+							}
 
 							self.portWizardRenderAddNumbersList(args);
 							self.portWizardRenderAddNumbersPortion(args);
