@@ -699,7 +699,7 @@ define(function(require) {
 					data: dataToTemplate,
 					submodule: 'portWizard'
 				})),
-				fileUploadoptions = {
+				fileUploadOptions = {
 					btnClass: 'monster-button-primary monster-button-small',
 					btnText: self.i18n.active().portRequestWizard.fileUpload.button,
 					inputOnly: true,
@@ -735,7 +735,7 @@ define(function(require) {
 				actionsTemplate;
 
 			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
-				fileUploadoptions.filesList = [ 'form.pdf' ];
+				fileUploadOptions.filesList = [ 'form.pdf' ];
 
 				actionsTemplate = $(self.getTemplate({
 					name: 'uploadForm-actions',
@@ -749,7 +749,7 @@ define(function(require) {
 
 			template
 				.find('#form_input')
-					.fileUpload(fileUploadoptions);
+					.fileUpload(fileUploadOptions);
 
 			container
 				.empty()
