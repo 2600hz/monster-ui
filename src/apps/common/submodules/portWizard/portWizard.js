@@ -51,9 +51,9 @@ define(function(require) {
 							.find('#bill_input')
 								.fileUpload({
 									btnClass: 'monster-button-primary monster-button-small',
-									btnText: self.i18n.active().portRequestWizard.fileUpload.button,
+									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
-									inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
+									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
 									mimeTypes: self.appFlags.attachments.mimeTypes,
 									maxSize: self.appFlags.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
@@ -127,9 +127,9 @@ define(function(require) {
 								.find('#bill_input')
 									.fileUpload({
 										btnClass: 'monster-button-primary monster-button-small',
-										btnText: self.i18n.active().portRequestWizard.fileUpload.button,
+										btnText: self.i18n.active().portWizard.fileUpload.button,
 										inputOnly: true,
-										inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
+										inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
 										mimeTypes: self.appFlags.attachments.mimeTypes,
 										maxSize: self.appFlags.attachments.maxSize,
 										success: function(results) {
@@ -645,8 +645,8 @@ define(function(require) {
 					request: args.data.request,
 					eSignEnabled: false,
 					buttons: {
-						manual: self.i18n.active().portRequestWizard.addNumbers.buttons.next.manual[formType],
-						electronic: self.i18n.active().portRequestWizard.addNumbers.buttons.next.eSign[formType]
+						manual: self.i18n.active().portWizard.addNumbers.buttons.next.manual[formType],
+						electronic: self.i18n.active().portWizard.addNumbers.buttons.next.eSign[formType]
 					}
 				},
 				template = $(self.getTemplate({
@@ -716,7 +716,7 @@ define(function(require) {
 				container = args.container,
 				formType = self.portWizardGetFormType(args.data.request),
 				dataToTemplate = {
-					type: self.i18n.active().portRequestWizard.formTypes[formType],
+					type: self.i18n.active().portWizard.formTypes[formType],
 					link: monster.config.whitelabel.port[formType]
 				},
 				template = $(self.getTemplate({
@@ -726,9 +726,9 @@ define(function(require) {
 				})),
 				fileUploadOptions = {
 					btnClass: 'monster-button-primary monster-button-small',
-					btnText: self.i18n.active().portRequestWizard.fileUpload.button,
+					btnText: self.i18n.active().portWizard.fileUpload.button,
 					inputOnly: true,
-					inputPlaceholder: self.i18n.active().portRequestWizard.fileUpload.placeholder,
+					inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
 					mimeTypes: self.appFlags.attachments.mimeTypes,
 					maxSize: self.appFlags.attachments.maxSize,
 					success: function(results) {
@@ -818,7 +818,7 @@ define(function(require) {
 				container = args.container,
 				formType = self.portWizardGetFormType(args.data.request),
 				dataToTemplate = {
-					type: self.i18n.active().portRequestWizard.formTypes[formType]
+					type: self.i18n.active().portWizard.formTypes[formType]
 				},
 				template = $(self.getTemplate({
 					name: 'signForm',
@@ -999,9 +999,9 @@ define(function(require) {
 					if (type === 'mimeTypes') {
 						fileTypes = mimeTypes.map(function(value) { return (/[^/]*$/.exec(value)[0]).toUpperCase(); }).join(', ');
 
-						toastr.warning(file + self.i18n.active().portRequestWizard.toastr.warning.mimeTypes.replace('{{variable}}', fileTypes));
+						toastr.warning(file + self.i18n.active().portWizard.toastr.warning.mimeTypes.replace('{{variable}}', fileTypes));
 					} else if (type === 'size') {
-						toastr.warning(file + self.i18n.active().portRequestWizard.toastr.warning.size.replace('{{variable}}', maxSize));
+						toastr.warning(file + self.i18n.active().portWizard.toastr.warning.size.replace('{{variable}}', maxSize));
 					}
 				});
 			});

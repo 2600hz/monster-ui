@@ -1,19 +1,19 @@
 <div class="app-content" id="port_wizard">
 	<h3 class="title">
-		{{replaceVar i18n.portRequestWizard.portSubmit.title request.extra.numbers_count}}
+		{{replaceVar i18n.portWizard.portSubmit.title request.extra.numbers_count}}
 	</h3>
 	<p class="title-help">
-		{{i18n.portRequestWizard.portSubmit.text}}
+		{{i18n.portWizard.portSubmit.text}}
 	</p>
 	<div class="row-fluid">
 		<div class="span5">
 			<form class="form form-horizontal form-text">
 				<legend>
-					{{i18n.portRequestWizard.portSubmit.review.title}}
+					{{i18n.portWizard.portSubmit.review.title}}
 				</legend>
 				<div class="control-group">
 					<label class="control-label">
-						{{i18n.portRequestWizard.portSubmit.review.label.name}}
+						{{i18n.portWizard.portSubmit.review.label.name}}
 					</label>
 					<div class="controls">
 						<div class="control-text">
@@ -23,7 +23,7 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label">
-						{{i18n.portRequestWizard.portSubmit.review.label.amount}}
+						{{i18n.portWizard.portSubmit.review.label.amount}}
 					</label>
 					<div class="controls">
 						<div class="control-text">
@@ -33,7 +33,7 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label">
-						{{i18n.portRequestWizard.portSubmit.review.label.requested}}
+						{{i18n.portWizard.portSubmit.review.label.requested}}
 					</label>
 					<div class="controls">
 						<div class="control-text">
@@ -43,7 +43,7 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label">
-						{{i18n.portRequestWizard.portSubmit.review.label.scheduled}}
+						{{i18n.portWizard.portSubmit.review.label.scheduled}}
 					</label>
 					<div class="controls">
 						<div class="control-text">
@@ -56,32 +56,32 @@
 		<div class="span6 offset1">
 			<form class="form form-text" id="form_conditions">
 				<legend class="important">
-					{{i18n.portRequestWizard.portSubmit.agree.title}}
+					{{i18n.portWizard.portSubmit.agree.title}}
 				</legend>
 				<div class="control-group">
 					<label for="service">
-					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.service}}
+					{{#monsterCheckbox i18n.portWizard.portSubmit.agree.label.service}}
 						<input type="checkbox" id="service" class="conditions" name="conditions[]">
 					{{/monsterCheckbox}}
 					</label>
 				</div>
 				<div class="control-group">
 					<label for="canceled">
-					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.canceled}}
+					{{#monsterCheckbox i18n.portWizard.portSubmit.agree.label.canceled}}
 						<input type="checkbox" id="canceled" class="conditions" name="conditions[]">
 					{{/monsterCheckbox}}
 					</label>
 				</div>
 				<div class="control-group">
 					<label for="fee">
-					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.fee}}
+					{{#monsterCheckbox i18n.portWizard.portSubmit.agree.label.fee}}
 						<input type="checkbox" id="fee" class="conditions" name="conditions[]">
 					{{/monsterCheckbox}}
 					</label>
 				</div>
 				<div class="control-group">
 					<label for="standard">
-					{{#monsterCheckbox i18n.portRequestWizard.portSubmit.agree.label.standard}}
+					{{#monsterCheckbox i18n.portWizard.portSubmit.agree.label.standard}}
 						<input type="checkbox" id="standard" class="conditions" name="conditions[]">
 					{{/monsterCheckbox}}
 					</label>
@@ -92,11 +92,11 @@
 	<div class="actions-wrapper">
 		<div class="actions">
 			<button class="monster-button-success success" disabled="true">
-				{{i18n.portRequestWizard.portSubmit.button}}
+				{{i18n.portWizard.portSubmit.button}}
 			</button>
 		</div>
 		<a href="javascript:void(0);" class="monster-link cancel">
-			{{i18n.portRequestWizard.buttons.cancel}}
+			{{i18n.portWizard.buttons.cancel}}
 		</a>
 	</div>
 </div>
