@@ -247,7 +247,39 @@ define(function(require) {
 
 		portWizardBindAccountVerificationEvents: function(args) {
 			var self = this,
-				container = args.container;
+				container = args.container,
+				formValidationRules = {
+					'bill.name': {
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.street_address': {
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.locality': {
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.region': {
+						minlength: 2,
+						maxlength: 2
+					},
+					'bill.postal_code': {
+						digits: true,
+						minlength: 5,
+						maxlength: 5
+					},
+					'bill.account_number': {
+						maxlength: 128
+					},
+					'bill.pin': {
+						maxlength: 6
+					},
+					'bill.btn': {
+						maxlength: 20
+					}
+				};
 
 			container
 				.find('.next')
@@ -258,42 +290,16 @@ define(function(require) {
 							$form = container.find('#form_account_verification'),
 							formData = monster.ui.getFormData('form_account_verification');
 
-						monster.ui.validate($form, {
-							rules: {
-								'bill.name': {
-									minlength: 1,
-									maxlength: 128
-								},
-								'bill.street_address': {
-									minlength: 1,
-									maxlength: 128
-								},
-								'bill.locality': {
-									minlength: 1,
-									maxlength: 128
-								},
-								'bill.region': {
-									minlength: 2,
-									maxlength: 2
-								},
-								'bill.postal_code': {
-									digits: true,
-									minlength: 5,
-									maxlength: 5
-								},
-								'bill.account_number': {
-									maxlength: 128
-								},
-								'bill.pin': {
-									maxlength: 6
-								},
-								'bill.btn': {
-									maxlength: 20
-								},
+						if (action === 'next') {
+							$.extend(true, formValidationRules, {
 								validation: {
 									required: true
 								}
-							}
+							});
+						}
+
+						monster.ui.validate($form, {
+							rules: formValidationRules
 						});
 
 						if (monster.ui.valid($form)) {
