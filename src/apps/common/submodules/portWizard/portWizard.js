@@ -93,6 +93,7 @@ define(function(require) {
 				data: {
 					attachments: {},
 					request: {
+						ui_flags: {},
 						numbers: request.hasOwnProperty('numbers') ? request.numbers.reduce(function(object, value) {
 							object[value] = {};
 							return object;
@@ -444,7 +445,9 @@ define(function(require) {
 						$.extend(true, args, {
 							data: {
 								request: {
-									portion: portion,
+									ui_flags: {
+										portion: portion
+									},
 									bill: {
 										new_btn: formData.new_btn
 									}
@@ -554,12 +557,12 @@ define(function(require) {
 
 			if (request.numbers.hasOwnProperty(request.bill.btn)) {
 				template
-					.find('.portion-item[data-portion="' + request.portion + '"]')
+					.find('.portion-item[data-portion="' + request.ui_flags.portion + '"]')
 						.addClass('active');
 
-				if (request.portion === 'full') {
+				if (request.ui_flags.portion === 'full') {
 					self.portWizardRenderAddNumbersActions(args);
-				} else if (request.portion === 'partial') {
+				} else if (request.ui_flags.portion === 'partial') {
 					self.portWizardRenderAddNumbersBtn(args);
 				}
 
@@ -676,7 +679,9 @@ define(function(require) {
 						$.extend(true, args, {
 							data: {
 								request: {
-									portion: portion,
+									ui_flags: {
+										portion: portion
+									},
 									bill: {
 										new_btn: formData.new_btn
 									}
@@ -966,7 +971,7 @@ define(function(require) {
 		 **************************************************/
 
 		portWizardGetFormType: function(portData) {
-			return portData.type === 'local' ? 'loa' : 'resporg';
+			return portData.ui_flags.type === 'local' ? 'loa' : 'resporg';
 		},
 
 		portWizardFileUploadErrorsHandler: function(errorsList) {

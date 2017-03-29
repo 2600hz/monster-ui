@@ -22,14 +22,14 @@
 		<div class="control-group radio-group">
 			<div class="controls">
 			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.local}}
-				<input type="radio" class="numbers-type" name="type" value="local"{{#compare request.type '===' 'local'}} checked="true" {{/compare}}>
+				<input type="radio" class="numbers-type" name="ui_flags.type" value="local"{{#compare request.ui_flags.type '===' 'local'}} checked="true" {{/compare}}>
 			{{/monsterRadio}}
 			</div>
 		</div>
 		<div class="control-group radio-group">
 			<div class="controls">
 			{{#monsterRadio i18n.portRequestWizard.portInfo.numbersType.label.tollFree}}
-				<input type="radio" class="numbers-type" name="type" value="tollFree"{{#compare request.type '===' 'tollFree'}} checked="true" {{/compare}}>
+				<input type="radio" class="numbers-type" name="ui_flags.type" value="tollFree"{{#compare request.ui_flags.type '===' 'tollFree'}} checked="true" {{/compare}}>
 			{{/monsterRadio}}
 			</div>
 		</div>
