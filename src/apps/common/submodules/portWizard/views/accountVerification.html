@@ -35,7 +35,7 @@
 				</label>
 				<div class="controls">
 				{{#monsterCheckbox i18n.portWizard.accountVerification.form.label.acknowledgeBill}}
-					<input type="checkbox" id="validation" name="validation">
+					<input type="checkbox" id="validation" name="ui_flags.validation"{{#if request.ui_flags.validation}} checked="true"{{/if}}>
 				{{/monsterCheckbox}}
 				</div>
 			</div>

@@ -293,7 +293,7 @@ define(function(require) {
 
 						if (action === 'next') {
 							$.extend(true, formValidationRules, {
-								validation: {
+								'ui_flags.validation': {
 									required: true
 								}
 							});
@@ -305,6 +305,7 @@ define(function(require) {
 
 						if (monster.ui.valid($form)) {
 							$.extend(true, args.data.request, {
+								ui_flags: formData.ui_flags,
 								bill: formData.bill
 							});
 
