@@ -302,6 +302,7 @@
 	overflow-y: auto;
 	max-height: 245px;
 	margin: 0;
+	padding: 0 15px;
 	list-style: none;
 }
 

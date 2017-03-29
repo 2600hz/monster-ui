@@ -498,6 +498,8 @@ define(function(require) {
 			}
 
 			if (_.isEmpty(args.data.request.numbers)) {
+				delete args.data.request.ui_flags.portion;
+
 				container
 					.find('.success-wrapper')
 						.fadeOut(function() {
@@ -564,6 +566,7 @@ define(function(require) {
 					self.portWizardRenderAddNumbersActions(args);
 				} else if (request.ui_flags.portion === 'partial') {
 					self.portWizardRenderAddNumbersBtn(args);
+					self.portWizardRenderAddNumbersActions(args);
 				}
 
 				container
@@ -673,26 +676,37 @@ define(function(require) {
 						event.preventDefault();
 
 						var sign = $(this).data('sign'),
+							$form = container.find('#form_new_btn'),
 							formData = monster.ui.getFormData('form_new_btn'),
 							portion = container.find('.portion-item.active').data('portion');
 
-						$.extend(true, args, {
-							data: {
-								request: {
-									ui_flags: {
-										portion: portion
-									},
-									bill: {
-										new_btn: formData.new_btn
-									}
+						monster.ui.validate($form, {
+							rules: {
+								new_btn: {
+									required: true
 								}
 							}
 						});
 
-						if (sign === 'manual') {
-							self.portWizardRenderUploadForm(args);
-						} else {
-							self.portWizardRenderSignForm(args);
+						if (monster.ui.valid($form)) {
+							$.extend(true, args, {
+								data: {
+									request: {
+										ui_flags: {
+											portion: portion
+										},
+										bill: {
+											new_btn: formData.new_btn
+										}
+									}
+								}
+							});
+
+							if (sign === 'manual') {
+								self.portWizardRenderUploadForm(args);
+							} else {
+								self.portWizardRenderSignForm(args);
+							}
 						}
 					});
 		},
