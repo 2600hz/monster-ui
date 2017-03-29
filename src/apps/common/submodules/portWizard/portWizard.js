@@ -27,6 +27,7 @@ define(function(require) {
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
+				request = args.hasOwnProperty('data') ? args.data.request : {},
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'portInfo',
@@ -92,10 +93,10 @@ define(function(require) {
 				data: {
 					attachments: {},
 					request: {
-						numbers: args.data.request.numbers.reduce(function(object, value) {
+						numbers: request.hasOwnProperty('numbers') ? request.numbers.reduce(function(object, value) {
 							object[value] = {};
 							return object;
-						}, {})
+						}, {}) : {}
 					}
 				}
 			});
@@ -334,9 +335,10 @@ define(function(require) {
 				.append(template);
 
 			self.portWizardRenderAddNumbersList(args);
+			self.portWizardRenderAddNumbersPortion(args);
 
-			if (args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
-				self.portWizardRenderAddNumbersPortion(args);
+			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
+				self.portWizardRenderAddNumbersActions(args);
 			}
 
 			self.portWizardBindAddNumbersEvents(args);
@@ -412,9 +414,15 @@ define(function(require) {
 									});
 
 							self.portWizardRenderAddNumbersList(args);
+							self.portWizardRenderAddNumbersPortion(args);
 
 							if (args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
-								self.portWizardRenderAddNumbersPortion(args);
+								container
+									.find('.success-wrapper')
+										.fadeOut(function() {
+											$(this)
+												.empty();
+										});
 							}
 						}
 					});
@@ -424,11 +432,13 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var formData = monster.ui.getFormData('form_new_btn');
+						var formData = monster.ui.getFormData('form_new_btn'),
+							portion = container.find('.portion-item.active').data('portion');
 
 						$.extend(true, args, {
 							data: {
 								request: {
+									portion: portion,
 									bill: {
 										new_btn: formData.new_btn
 									}
@@ -439,20 +449,6 @@ define(function(require) {
 						self.portWizardHelperSavePort($.extend(true, args, {
 							success: args.globalCallback
 						}));
-					});
-
-			container
-				.find('.next')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						var sign = $(this).data('sign');
-
-						if (sign === 'manual') {
-							self.portWizardRenderUploadForm(args);
-						} else {
-							self.portWizardRenderSignForm(args);
-						}
 					});
 
 			container
@@ -483,16 +479,22 @@ define(function(require) {
 
 			if ($listWrapper.is(':empty')) {
 				$listWrapper
-					.fadeOut(function() {
-						$(this)
-							.empty()
-							.append(template)
-							.slideDown();
-					});
+					.hide()
+					.append(template)
+					.fadeIn();
 			} else {
 				$listWrapper
 					.empty()
 					.append(template);
+			}
+
+			if (_.isEmpty(args.data.request.numbers)) {
+				container
+					.find('.success-wrapper')
+						.fadeOut(function() {
+							$(this)
+								.empty();
+						});
 			}
 
 			self.portWizardBindAddNumbersListEvents(args);
@@ -525,6 +527,8 @@ define(function(require) {
 										$(this)
 											.empty();
 									});
+
+							self.portWizardRenderAddNumbersActions(args);
 						}
 
 						delete args.data.request.numbers[number];
@@ -535,22 +539,35 @@ define(function(require) {
 
 		portWizardRenderAddNumbersPortion: function(args) {
 			var self = this,
+				request = args.data.request,
 				container = args.container,
 				template = $(self.getTemplate({
 					name: 'addNumbers-portion',
 					submodule: 'portWizard'
 				}));
 
-			container
-				.find('.portion-wrapper')
-					.fadeOut(function() {
-						$(this)
-							.empty()
-							.append(template)
-							.fadeIn();
+			if (request.numbers.hasOwnProperty(request.bill.btn)) {
+				template
+					.find('.portion-item[data-portion="' + request.portion + '"]')
+						.addClass('active');
 
-						self.portWizardBindAddNumbersPortionEvents(args);
-					});
+				if (request.portion === 'full') {
+					self.portWizardRenderAddNumbersActions(args);
+				} else if (request.portion === 'partial') {
+					self.portWizardRenderAddNumbersBtn(args);
+				}
+
+				container
+					.find('.portion-wrapper')
+						.fadeOut(function() {
+							$(this)
+								.empty()
+								.append(template)
+								.fadeIn();
+
+							self.portWizardBindAddNumbersPortionEvents(args);
+						});
+			}
 		},
 
 		portWizardBindAddNumbersPortionEvents: function(args) {
@@ -583,6 +600,8 @@ define(function(require) {
 							} else {
 								self.portWizardRenderAddNumbersBtn(args);
 							}
+
+							self.portWizardRenderAddNumbersActions(args);
 						}
 					});
 		},
@@ -604,6 +623,67 @@ define(function(require) {
 					.empty()
 					.append(template)
 					.slideDown();
+		},
+
+		portWizardRenderAddNumbersActions: function(args) {
+			var self = this,
+				container = args.container,
+				formType = self.portWizardGetFormType(args.data.request),
+				dataToTemplate = {
+					request: args.data.request,
+					eSignEnabled: false,
+					buttons: {
+						manual: self.i18n.active().portRequestWizard.addNumbers.buttons.next.manual[formType],
+						electronic: self.i18n.active().portRequestWizard.addNumbers.buttons.next.eSign[formType]
+					}
+				},
+				template = $(self.getTemplate({
+					name: 'addNumbers-actions',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				})),
+				$successWrapper = container.find('.success-wrapper');
+
+			if ($successWrapper.is(':empty')) {
+				$successWrapper
+					.hide()
+					.append(template)
+					.fadeIn();
+
+				self.portWizardBindAddNumbersActionsEvents(args);
+			}
+		},
+
+		portWizardBindAddNumbersActionsEvents: function(args) {
+			var self = this,
+				container = args.container;
+
+			container
+				.find('.next')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var sign = $(this).data('sign'),
+							formData = monster.ui.getFormData('form_new_btn'),
+							portion = container.find('.portion-item.active').data('portion');
+
+						$.extend(true, args, {
+							data: {
+								request: {
+									portion: portion,
+									bill: {
+										new_btn: formData.new_btn
+									}
+								}
+							}
+						});
+
+						if (sign === 'manual') {
+							self.portWizardRenderUploadForm(args);
+						} else {
+							self.portWizardRenderSignForm(args);
+						}
+					});
 		},
 
 		portWizardRenderUploadForm: function(args) {
