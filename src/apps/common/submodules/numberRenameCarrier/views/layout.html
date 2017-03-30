@@ -10,9 +10,9 @@
 				{{/select}}
 			</select>
 
-			<div class="custom-carrier-block{{#compare selectedCarrier "===" "other"}} active{{/compare}}">
+			<div class="custom-carrier-block{{#compare selectedCarrier "===" "_uiCustomChoice"}} active{{/compare}}">
 				<label class="popup-label" for="custom_carrier_value">{{i18n.numberRenameCarrier.customCarrierName}}</label>
-				<input type="text" id="custom_carrier_value"/>
+				<input type="text" id="custom_carrier_value" value="{{ customCarrierName }}"/>
 			</div>
 
 			{{#monsterText}}
