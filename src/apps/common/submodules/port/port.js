@@ -165,7 +165,7 @@ define(function(require){
 			container.find('span.pull-right a').on('click', function() {
 				monster.pub('common.portWizard.render', {
 					parent: $('#monster-content'),
-					container: $('#port_container'),
+					container: $('.app-content-wrapper'),
 					globalCallback: function() {
 						self.portRender({
 							parent: parent
@@ -433,15 +433,18 @@ define(function(require){
 					template;
 
 				if ($this.hasClass('continue-request')) {
-					var dataList = { orders: [currentRequest] };
-
-					template = monster.template(self, 'port-submitDocuments', { whitelabelPort: monster.config.whitelabel.port, port: currentRequest });
-
-					parent
-						.empty()
-						.append(template);
-
-					self.portRenderSubmitDocuments(parent, accountId, dataList);
+					monster.pub('common.portWizard.render', {
+						parent: $('#monster-content'),
+						container: $('.app-content-wrapper'),
+						data: {
+							request: currentRequest
+						},
+						globalCallback: function() {
+							self.portRender({
+								parent: parent
+							});
+						}
+					});
 				}
 				else if ($this.hasClass('info-request')) {
 					var uploads = {};
@@ -764,7 +767,7 @@ define(function(require){
 
 		portBindManageOrdersEvents: function(parent, accountId, data) {
 			var self = this,
-				container = parent.find('#port_container');
+				container = parent.find('.app-content-wrapper');
 
 			self.portPositionDialogBox();
 			self.portCancelOrder(parent, accountId, container);
@@ -958,7 +961,7 @@ define(function(require){
 
 		portBindSubmitDocumentsEvents: function(parent, accountId, data, index) {
 			var self = this,
-				container = parent.find('#port_container');
+				container = parent.find('.app-content-wrapper');
 
 			self.portPositionDialogBox();
 			self.portCancelOrder(parent, accountId, container, data, index);
@@ -1151,7 +1154,7 @@ define(function(require){
 
 		portBindConfirmOrderEvents: function(parent, accountId, data, index) {
 			var self = this,
-				container = parent.find('#port_container'),
+				container = parent.find('.app-content-wrapper'),
 				datePickerInput = container.find('input.date-input'),
 				order = data.orders[index];
 
