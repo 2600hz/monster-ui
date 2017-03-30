@@ -826,7 +826,192 @@
 		"help": "By selecting a module from this list, you will change the carrier module used by the system for that phone number.",
 		"dialogTitle": "Rename Carrier Module",
 		"successUpdate": "You successfully updated the carrier moduled used by {{phoneNumber}} to be {{carrierName}}",
+		"custom": "Customize",
 		"customCarrierName": "Custom Carrier Module Name"
+	},
+
+	"portWizard": {
+		"fileUpload": {
+			"title": "Choose a file",
+			"hint": ".pdf format ONLY",
+			"placeholder": ".pdf",
+			"button": "Browse..."
+		},
+		"toastr": {
+			"warning": {
+				"invalidNumbers": "Please specify the plus sign and country code when adding numbers",
+				"mimeTypes": " is not a {{variable}}",
+				"size": " exceeds the {{variable}}MB size limit"
+			}
+		},
+		"formTypes": {
+			"loa": {
+				"compact": "LoA",
+				"extended": "Letter Of Authorization"
+			},
+			"resporg": {
+				"compact": "RespOrg",
+				"extended": "Responsible Organization"
+			}
+		},
+		"buttons": {
+			"cancel": "Cancel Port Request",
+			"save": "Save & Continue Later"
+		},
+		"portInfo": {
+			"movingNumbers": {
+				"title": "We are excited you are moving numbers to our service!",
+				"text": "First, let's name this request so you can reference it in the future. Names like 'Company office local DIDs' or 'NY office numbers' can help you quickly identify this request once it is submitted or saved.",
+				"label": "Port Request Name",
+				"placeholder": "AT&T local numbers"
+			},
+			"numbersType": {
+				"text1": "What type of number will you be requesting to port?",
+				"text2": "(All numbers in a port request must be the same format).",
+				"label": {
+					"local": "U.S. Local Numbers",
+					"tollFree": "U.S. Toll-free Numbers"
+				}
+			},
+			"verifyOwner": {
+				"title": "We will need to verify ownership of the numbers you wish to port.",
+				"text1": "To do this, you will need to upload a recent (within 30 days) bill from your carrier which contains the numbers you want to port.",
+				"text2": "This proof of your account and ownership is required by law."
+			},
+			"buttons": {
+				"next": "Upload Phone Bill"
+			}
+		},
+		"accountVerification": {
+			"title": "Now that your bill is uploaded, let's confirm some key information.",
+			"text": "Please make sure that the information you enter is exactly as it shows on your bill. If there are any discrepancies between your port request and your bill, carriers will automatically reject your request.",
+			"form": {
+				"legend": "Account Verification",
+				"text": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
+				"label": {
+					"accountName": "Name on Account",
+					"billingAddress": "Billing Address",
+					"billVerification": "Recent Bill Verification",
+					"acknowledgeBill": "I acknowledge the date on this bill is within the last 30 days",
+					"accountNumber": "Account Number",
+					"pin": "PIN",
+					"btn": "BTN"
+				},
+				"placeholder": {
+					"street": "1234 Street Name",
+					"city": "City",
+					"state": "State",
+					"zip": "ZIP Code"
+				}
+			},
+			"buttons": {
+				"next": "Next - Select Numbers"
+			}
+		},
+		"addNumbers": {
+			"title": "Now we can establish what numbers you would like to port.",
+			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
+			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
+			"textarea": {
+				"link": "Add More Numbers",
+				"legend": "Input Numbers to Port",
+				"button": "Add Numbers"
+			},
+			"list": {
+				"title": "Numbers on This Port Request",
+				"text": "You have not added any numbers to your port request yet."
+			},
+			"portion": {
+				"errorMessage": "It looks like you selected you current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
+				"text1": "Do these numbers make up the entire current account per your bill?",
+				"text2": "Or do these numbers male up only a select portion of numbers?",
+				"selection": {
+					"full": "Full Account Port",
+					"portion": "Portion Of Numbers"
+				}
+			},
+			"btn": {
+				"title": "Partial Port Additional Requirements",
+				"text": "Because you have selected to port your current account's BTN and your request will consist of only a portion of your account's numbers, you will need to choose a new BTN for that carrier or they will reject your request to port these numbers.",
+				"label": "New BTN"
+			},
+			"buttons": {
+				"next": {
+					"manual": {
+						"loa": "Next - LoA Form (Manual LoA, no e-sign)",
+						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
+					},
+					"eSign": {
+						"loa": "Next - LoA Form (E-sign enabled on account)",
+						"resporg": "Next - RespOrg Form (E-sign enabled on account)"
+					}
+				}
+			}
+		},
+		"uploadForm": {
+			"title": "We'll need a signed copy of your {{variable}}",
+			"text": "Please download the pre-generated {{variable}} form, double check the info is correct and sign it, then re-upload it.",
+			"link": "Learn more about {{variable}}'s' here.",
+			"download": {
+				"title": "Step 1",
+				"text": "Download your {{variable}}",
+				"button": "Download Pre-filled {{variable}}"
+			},
+			"doubleCheck": {
+				"title": "Step 2",
+				"text": "Double check all the info and numbers on your {{variable}} to confirm that they are correct, and then sign your {{variable}} form."
+			},
+			"upload": {
+				"title": "Step 3",
+				"text": "Upload your {{variable}} form",
+				"format": ".pdf format ONLY"
+			},
+			"button": "Next - Notifications & Scheduling"
+		},
+		"signForm": {
+			"title": "For your convenience, you will be able to electronically sign you {{variable}}.",
+			"text": "Please review your {{variable}} form below, and then e-sign it before continuing on with this port request.",
+			"button": "Next - Notifications & Scheduling"
+		},
+		"portNotify": {
+			"title": "Let us know who to notify of changes and choose a desired port date.",
+			"text": "Please fill out the last bits of information below.",
+			"email": {
+				"text1": "Who should we notify when the status of this port request changes?",
+				"text2": "(Changes can be status updates or notifications requiring further action).",
+				"label": "Notify by Email"
+			},
+			"target": {
+				"text1": "When would you like this port to occur?",
+				"text2": "Please note that we cannot guarantee this date, but will keep you notified of any changes or updates.",
+				"text3": "Port requests can take anywhere from 3 to 30 days, depending on the carrier.",
+				"label": "Target Date"
+			},
+			"button": "Next - Review Port Request"
+		},
+		"portSubmit": {
+			"title": "You're almost ready to submit your request to port {{variable}} numbers.",
+			"text": "Please review you request and acknowledge the four (4) statements below. When you are ready, go ahead and submit your port request.",
+			"review": {
+				"title": "Port Request Review",
+				"label": {
+					"name": "Port Request Name",
+					"amount": "Amount of Ported Numbers",
+					"requested": "Requested On",
+					"scheduled": "Scheduled Date of Port"
+				}
+			},
+			"agree": {
+				"title": "IMPORTANT! Please understand and agree:",
+				"label": {
+					"service": "I will not cancel my old service until after the numbers are completely transfered",
+					"canceled": "I understand any other numbers on the old account may be canceled by the old provider",
+					"fee": "I understand my old carrier may charge an early termination fee",
+					"standard": "There are standard phone numbers, not featured (like star-ring)"
+				}
+			},
+			"button": "Submit This Port Request"
+		}
 	},
 
 	"__comment": "UI-2641",
