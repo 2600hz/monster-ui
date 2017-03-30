@@ -730,7 +730,7 @@ define(function(require) {
 				formType = self.portWizardGetFormType(args.data.request),
 				dataToTemplate = {
 					type: self.i18n.active().portWizard.formTypes[formType],
-					link: monster.config.whitelabel.port[formType]
+					formLink: monster.config.whitelabel.port[formType]
 				},
 				template = $(self.getTemplate({
 					name: 'uploadForm',

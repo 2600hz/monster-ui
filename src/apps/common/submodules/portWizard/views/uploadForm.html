@@ -4,10 +4,10 @@
 	</h3>
 	<p class="title-help">
 		{{replaceVar i18n.portWizard.uploadForm.text type.compact}}
-		<br>
-		<a href="javascript:void(0);" class="monster-link">
+		{{!-- <br>
+		<a href="{{helpLink}}" class="monster-link">
 			{{replaceVar i18n.portWizard.uploadForm.link type.compact}}
-		</a>
+		</a> --}}
 	</p>
 	<ul class="steps">
 		<li class="item">
@@ -16,7 +16,7 @@
 			</h4>
 			<span class="label-button">
 				{{replaceVar i18n.portWizard.uploadForm.download.text type.compact}}
-				<a class="pull-right" href="{{link}}" target="_blank">
+				<a class="pull-right" href="{{formLink}}" target="_blank">
 					<button class="monster-button-primary">
 						{{replaceVar i18n.portWizard.uploadForm.download.button type.compact}}
 					</button>
