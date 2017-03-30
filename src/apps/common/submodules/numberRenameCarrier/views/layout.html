@@ -1,0 +1,30 @@
+<div class="trunkstore_popup number-rename-carrier clearfix">
+	<form id="rename_carrier">
+		<div class="popup-content">
+			<label class="popup-label" for="carrier_module">{{i18n.numberRenameCarrier.label}}</label>
+			<select class="select-module" id="carrier_module" name="carrier-module">
+				{{#select selectedCarrier}}
+					{{#each @root.carriers}}
+						<option value="{{this.key}}">{{this.friendlyValue}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+
+			<div class="custom-carrier-block{{#compare selectedCarrier "===" "other"}} active{{/compare}}">
+				<label class="popup-label" for="custom_carrier_value">{{i18n.numberRenameCarrier.customCarrierName}}</label>
+				<input type="text" id="custom_carrier_value"/>
+			</div>
+
+			{{#monsterText}}
+				{{i18n.numberRenameCarrier.help}}
+			{{/monsterText}}
+		</div>
+
+		<div class="popup-content popup-actions clearfix">
+			<div class="pull-right">
+				<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+				<button type="button" class="monster-button monster-button-success save">{{ i18n.saveChanges }}</button>
+			</div>
+		</div>
+	</form>
+</div>

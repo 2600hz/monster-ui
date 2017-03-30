@@ -146,7 +146,10 @@
 			"realm": "Please enter alphanumeric characters, dot or dash only.",
 			"__comment": "UI-1335: Adding validation rule for 24-hour date format",
 			"__version": "v3.20_s3",
-			"time24h": "Please enter a valid time in 24-hour format."
+			"time24h": "Please enter a valid time in 24-hour format.",
+			"__comment": "UI-2654: add protocol rule",
+			"__version": "v4.1",
+			"protocol": "Please include the \"://\" characters."
 		},
 		"required": "Required."
 	},
@@ -558,7 +561,13 @@
 	"friendlyTimer": {
 		"minutesAnd": "minutes and",
 		"hours": "hours",
-		"seconds": "seconds"
+		"seconds": "seconds",
+		"__comment": "UI-2570: adding short verbose timer",
+		"__version": "4.0",
+		"minute": "minute",
+		"minutes": "minutes",
+		"second": "second",
+		"hour": "hour"
 	},
 
 	"__comment": "UI-1779: Adding account toggle",

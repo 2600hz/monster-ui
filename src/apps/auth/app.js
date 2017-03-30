@@ -97,6 +97,9 @@ define(function(require){
 					window.location = sso.login
 				}
 			}
+			else if(urlParams.hasOwnProperty('recovery')) {
+				self.checkRecoveryId(urlParams.recovery, successfulAuth);
+			}
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
@@ -122,9 +125,6 @@ define(function(require){
 			// Username/password generated tokens do not require anything else to log in.
 			else if(urlParams.hasOwnProperty('t')) {
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
-			}
-			else if(urlParams.hasOwnProperty('recovery')) {
-				self.checkRecoveryId(urlParams.recovery, successfulAuth);
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
 			else {
@@ -841,22 +841,59 @@ define(function(require){
 					callback && callback(data);
 				},
 				error: function(errorPayload, data, globalHandler) {
-					if(data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
+					if (data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
 						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'date'),
 							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
 
 						monster.ui.alert('warning', errorMessage);
-					}
-					else if(data.status === 423) {
+					} else if (data.status === 423) {
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
-					}
-					else if(data.status === 401) {
-						wrongCredsCallback && wrongCredsCallback();
-					}
-					else {
+					} else if (data.status === 401) {
+						if(errorPayload.data.hasOwnProperty('multi_factor_request')) {
+							self.handleMultiFactor(errorPayload.data, loginData, function(data) {
+								callback && callback(data);
+							}, function() {
+								monster.ui.alert('error', 'error multi factor')
+							});
+						} else {
+							wrongCredsCallback && wrongCredsCallback();
+						}
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
+			});
+		},
+
+		handleMultiFactor: function(data, loginData, success, error) {
+			var self = this;
+
+			if (data.multi_factor_request.provider_name === 'duo') {
+				self.showDuoDialog(data, loginData, success, error);
+			} else {
+				error && error();
+			}
+		},
+
+		showDuoDialog: function(data, loginData, success, error) {
+			var self = this;
+
+			require(['duo'], function() {
+				var template = self.getTemplate({ name: 'duo-dialog' }),
+					dialog = monster.ui.dialog(template, {
+						title: self.i18n.active().duoDialog.title
+					});
+
+				Duo.init({
+					iframe: dialog.find('iframe')[0],
+					sig_request: data.multi_factor_request.settings.duo_sig_request,
+					host: data.multi_factor_request.settings.duo_api_hostname,
+					submit_callback: function(form) {
+						loginData.multi_factor_response = $(form).find('[name="sig_response"]').attr('value');
+						dialog.dialog('close').remove();
+						self.putAuth(loginData, success, error);
+					}
+				});
 			});
 		},
 

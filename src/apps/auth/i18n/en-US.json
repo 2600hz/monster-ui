@@ -126,5 +126,14 @@
 
 	"__comment": "UI-2463: New Announcement Mechanism",
 	"__version": "4.0",
-	"invalidCredentials": "Invalid Credentials"
+	"invalidCredentials": "Invalid Credentials",
+
+	"__comment": "UI-2552: Adding duo integration",
+	"__version": "4.1",
+	"duoDialog": {
+		"title": "Multi-factor Authentication"
+	},
+	"multiFactor": {
+		"error": "The information sent by the multi-factor plugin isn't valid."
+	}
 }

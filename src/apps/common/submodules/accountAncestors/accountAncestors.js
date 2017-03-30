@@ -1,12 +1,11 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
 
 	var accountAncestors = {
 
-		requests: {
-		},
+		requests: {},
 
 		subscribe: {
 			'common.accountAncestors.render': 'accountAncestorsRender'
@@ -37,7 +36,6 @@ define(function(require){
 							account: account
 						}
 					});
-
 				}
 			});
 		},
@@ -50,7 +48,7 @@ define(function(require){
 				.find('#masqueradable')
 					.on('click', function(event) {
 						event.preventDefault();
-						
+
 						monster.pub('core.triggerMasquerading', {
 							account: args.data.account,
 							callback: function() {
@@ -61,7 +59,7 @@ define(function(require){
 									container.dialog('close');
 								}
 							}
-						})
+						});
 					});
 		},
 
@@ -70,11 +68,9 @@ define(function(require){
 
 			if (type === 'number') {
 				return monster.util.formatPhoneNumber(entity.data.id);
-			}
-			else if (type === 'macAddress') {
+			} else if (type === 'macAddress') {
 				return entity.data.mac_address.match(/[0-9a-f]{2}/gi).join(':');
-			}
-			else if (type === 'account') {
+			} else if (type === 'account') {
 				return account.name;
 			}
 		},
@@ -86,22 +82,15 @@ define(function(require){
 				i18n = self.i18n.active().accountAncestors.entities[type],
 				dataToTemplate = {};
 
-			if (type === 'account') {
-				dataToTemplate
-			}
-			else {
-				if (type === 'number') {
-					if (data.hasOwnProperty('usedBy')) {
-						dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', self.i18n.active().numbers[data.used_by]);
-					}
-					else {
-						dataToTemplate.usedBy = i18n.notUsed;
-					}
+			if (type === 'number') {
+				if (data.hasOwnProperty('used_by')) {
+					dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', self.i18n.active().numbers[data.used_by]);
+				} else {
+					dataToTemplate.usedBy = i18n.notUsed;
 				}
-				else if (type === 'macAddress') {
-					dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', data.name)
-				}
-
+				dataToTemplate.ownedBy = i18n.ownedBy.replace('{{variable}}', account.name);
+			} else if (type === 'macAddress') {
+				dataToTemplate.usedBy = i18n.usedBy.replace('{{variable}}', data.name);
 				dataToTemplate.ownedBy = i18n.ownedBy.replace('{{variable}}', account.name);
 			}
 
@@ -112,38 +101,36 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					account: function(callback) {
-						self.callApi({
-							resource: 'account.get',
-							data: {
-								accountId: args.data.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					},
-					parents: function(callback) {
-						self.callApi({
-							resource: 'account.listParents',
-							data: {
-								accountId: args.data.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					}
-				},
-				function(err, results) {
-					results.parents.push({
-						id: results.account.id,
-						name: results.account.name
+				account: function(callback) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: args.data.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						}
 					});
-
-					args.hasOwnProperty('success') && args.success(results.parents);
+				},
+				parents: function(callback) {
+					self.callApi({
+						resource: 'account.listParents',
+						data: {
+							accountId: args.data.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						}
+					});
 				}
-			);
+			}, function(err, results) {
+				results.parents.push({
+					id: results.account.id,
+					name: results.account.name
+				});
+
+				args.hasOwnProperty('success') && args.success(results.parents);
+			});
 		}
 	};
 

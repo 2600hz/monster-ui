@@ -24,7 +24,8 @@ define(function(require){
 		'./submodules/mediaSelect/mediaSelect',
 		'./submodules/webphone/webphone',
 		'./submodules/portWizard/portWizard',
-		'./submodules/conferenceViewer/conferenceViewer'
+		'./submodules/conferenceViewer/conferenceViewer',
+		'./submodules/numberRenameCarrier/numberRenameCarrier'
 	]);
 
 	var app = {
@@ -51,7 +52,8 @@ define(function(require){
 			'mediaSelect',
 			'webphone',
 			'portWizard',
-			'conferenceViewer'
+			'conferenceViewer',
+			'numberRenameCarrier'
 		],
 
 		css: [ 'app' ],

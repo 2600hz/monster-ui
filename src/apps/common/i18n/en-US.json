@@ -114,6 +114,21 @@
 					"text": "Add and assign to account",
 					"help": "Unchecking this will only add the numbers to the numbers pool, so they can be purchased via the Number Search tool. Checking the box will add the numbers and purchase them immediately."
 				}
+			},
+			"__comment": "UI-2651: adding carrier selection to add numbers",
+			"__version": "4.1",
+			"renameCarrier": {
+				"label": "Carrier Module",
+				"customCarrierName": "Custom Carrier Module Name"
+			},
+
+			"__comment": "UI-2448: Delete recap popup",
+			"__version": "4.1",
+			"successAdd": "You successfully added phone numbers to the system!",
+			"resultsDialog": {
+				"headline": "Some of the numbers could not be added to the system. Here is the recap of which numbers were successfully added and those that weren't.",
+				"title": "Recap of the Add Number operation",
+				"continue": "Continue"
 			}
 		},
 
@@ -140,7 +155,17 @@
 
 		"__comment": "OOB: Add title of Move Numbers popup to I18n",
 		"__version": "4.0",
-		"moveNumbersConfirmationTitle": "Move Numbers - Confirmation"
+		"moveNumbersConfirmationTitle": "Move Numbers - Confirmation",
+
+		"__comment": "OOB: when group no longer exist but it's still assigned to a callflow, we need to show unknown group",
+		"__version": "4.0",
+		"unknownGroup": "Deleted Group",
+
+		"__comment": "UI-2651: Let users select carrier module when adding bulk numbers. Moving carrier modules into its own function so it can be reused by various components",
+		"__version": "4.1",
+		"numbersCarrierModule": {
+			"custom": "Custom"
+		}
 	},
 
 	"callerId": {
@@ -987,5 +1012,11 @@
 			},
 			"button": "Submit This Port Request"
 		}
+	},
+
+	"__comment": "UI-2641",
+	"__version": "4.1",
+	"numberFeaturesMenu": {
+		"syncSuccess": "You successfully synced {{number}} with the system."
 	}
 }

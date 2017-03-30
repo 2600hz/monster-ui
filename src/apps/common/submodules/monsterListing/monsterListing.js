@@ -61,7 +61,7 @@ define(function(require){
 						val.phoneNumber = key;
 						return val;
 					});
-					monster.util.sort(formattedData.sortedDataList, 'phoneNumber');
+					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'phoneNumber');
 					formattedData.templateName = 'monsterListing-numbers';
 					break;
 				}
@@ -73,7 +73,7 @@ define(function(require){
 					if(_.isArray(args.dataList)) {
 						formattedData.dataList = _.indexBy(args.dataList, 'id');
 					}
-					monster.util.sort(formattedData.sortedDataList);
+					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
 					formattedData.templateName = 'monsterListing-default';
 					break;
 				}
@@ -84,7 +84,7 @@ define(function(require){
 					} else {
 						formattedData.sortedDataList = _.toArray(args.dataList);
 					}
-					monster.util.sort(formattedData.sortedDataList);
+					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
 					formattedData.templateName = 'monsterListing-default';
 					break;
 				}

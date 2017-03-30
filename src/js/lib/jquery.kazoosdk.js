@@ -116,6 +116,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
@@ -221,6 +222,16 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
 			},
+			multifactor: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/multi_factor' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' },
+				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts' },
+				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts/{attemptId}' }
+			},
 			numbers: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
@@ -238,7 +249,8 @@
 				'search': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={limit}&offset={offset}' },
 				'searchBlocks': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers?prefix={pattern}&quantity={size}&offset={offset}&blocks={limit}' },
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
-				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' }
+				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
+				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }

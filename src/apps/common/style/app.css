@@ -17,6 +17,7 @@
 @import url('../submodules/mediaSelect/mediaSelect.css');
 @import url('../submodules/portWizard/portWizard.css');
 @import url('../submodules/conferenceViewer/conferenceViewer.css');
+@import url('../submodules/numberRenameCarrier/numberRenameCarrier.css');
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {

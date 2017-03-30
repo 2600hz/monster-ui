@@ -298,52 +298,86 @@ define(function(require){
 	}
 
 	var ui = {
-		slider: function (target, pOptions) {
+		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
+		// for the options, and this tool will take care of the standard configuration, with no need to provide the "step", "min" or "max" options.
+		slider: function(target, pOptions) {
 			var id = Date.now(),
+				friendlyPrint = function(val) {
+					var realValue = val;
+
+					// If the user uses a set of steps for its sliders, we need to get the "real" value instead of the step number.
+					if (pOptions.hasOwnProperty('steps')) {
+						realValue = pOptions.steps[val];
+					}
+
+					var friendlyValue = realValue;
+
+					// If the user has defined a way to print the value in a customized way, we execute his pretty printer and return the value
+					// This is useful for example if the developer uses a slider in seconds but wants to display a value in hours,
+					// Then for example the "real" slider value would be 3600 but the user would see "1 Hour" if the pretty printer was using util.friendlyTimer for example
+					if (pOptions.hasOwnProperty('friendlyPrint')) {
+						friendlyValue = pOptions.friendlyPrint(realValue);
+					}
+
+					return friendlyValue;
+				},
 				defaultOptions = {
-					slide: function (event, ui) {
+					slide: function(event, ui) {
+						// If the developer uses a set of steps, then we need to get the value corresponding to the step number
+						var realValue = pOptions.hasOwnProperty('steps') ? pOptions.steps[ui.value] : ui.value;
+
 						$(ui.handle)
-							.find('.ui-slider-tooltip .tooltip-value')
-								.text(ui.value);
+								.find('.ui-slider-tooltip .tooltip-value')
+									// We keep the "real" value in the DOM so the developer can get the real value to save in DB for example
+									.attr('data-real-value', realValue)
+									// And we present the friendlyPrinter value to the end-user
+									.text(friendlyPrint(ui.value));
 					}
 				},
 				options = $.extend(true, {}, pOptions, defaultOptions),
-				templateData = {
-					id: id,
-					min: options.min,
-					max: options.max,
-					unit: options.unit
-				},
 				sliderTemplate,
 				handlePosition;
+
+			// If the developer wants to use steps, we need to override min, max and step values to work accordingly to the steps provided.
+			if (pOptions.hasOwnProperty('steps')) {
+				options.step = 1;
+				options.min = 0;
+				options.max = pOptions.steps.length - 1;
+				options.value = pOptions.steps.indexOf(options.value);
+			}
+
+			var templateData = {
+				id: id,
+				min: friendlyPrint(options.min),
+				max: friendlyPrint(options.max),
+				unit: options.unit
+			};
 
 			if (options.range === 'min') {
 				handlePosition = 'top';
 
 				templateData.minHandle = {
 					text: options.i18n.minHandle.text,
-					value: options.value
+					value: friendlyPrint(options.value)
 				};
-			}
-			else if (options.range === 'max') {
+			} else if (options.range === 'max') {
 				handlePosition = 'bottom';
 
 				templateData.maxHandle = {
 					text: options.i18n.maxHandle.text,
-					value: options.value
+					value: friendlyPrint(options.value)
 				};
-			}
-			else if (options.range) {
+			} else if (options.range) {
 				handlePosition = 'both';
 
 				templateData.minHandle = {
 					text: options.i18n.minHandle.text,
-					value: options.value
+					value: friendlyPrint(options.value)
 				};
 
 				templateData.maxHandle = {
 					text: options.i18n.maxHandle.text,
-					value: options.value
+					value: friendlyPrint(options.value)
 				};
 			}
 
@@ -968,6 +1002,7 @@ define(function(require){
 			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
 			addSimpleRule('realm', /^[0-9A-Z\.\-]+$/i);
 			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
+			addSimpleRule('protocol', /:\/\//i);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('greaterDate', function(value, element, param) {
@@ -1665,7 +1700,6 @@ define(function(require){
 
 		results: function(data) {
 			var self = this,
-				i18n = monster.apps.core.i18n.active(),
 				template = $(monster.template(monster.apps.core, 'monster-results', data));
 
 			monster.ui.tooltips(template);

@@ -1,0 +1,37 @@
+/* NUMBER-Rename carrier POPUP */
+.trunkstore_popup.number-rename-carrier {
+	width: 510px;
+}
+.trunkstore_popup.number-rename-carrier form,
+.trunkstore_popup.number-rename-carrier input {
+	margin: 0;
+}
+
+.trunkstore_popup.number-rename-carrier .popup-content {
+	padding: 15px 25px;
+}
+
+.trunkstore_popup.number-rename-carrier .popup-content:not(:first-child) {
+	border-top: 1px solid #ccc;
+}
+
+.trunkstore_popup.number-rename-carrier .popup-content .popup-label {
+	margin: 0 10px 0 0;
+	display: inline-block;
+}
+
+.trunkstore_popup.number-rename-carrier .help-box {
+	margin-top: 20px;
+}
+
+.trunkstore_popup.number-rename-carrier .popup-actions .cancel-link {
+	margin-right: 10px;
+}
+
+.trunkstore_popup.number-rename-carrier .custom-carrier-block {
+	display: none;
+}
+
+.trunkstore_popup.number-rename-carrier .custom-carrier-block.active {
+	display: block;
+}
