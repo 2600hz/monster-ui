@@ -289,7 +289,8 @@ define(function(require) {
 
 						var action = $(this).data('action'),
 							$form = container.find('#form_account_verification'),
-							formData = monster.ui.getFormData('form_account_verification');
+							formData = monster.ui.getFormData('form_account_verification'),
+							btn = formData.bill.btn ? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus') : '';
 
 						if (action === 'next') {
 							$.extend(true, formValidationRules, {
@@ -306,7 +307,9 @@ define(function(require) {
 						if (monster.ui.valid($form)) {
 							$.extend(true, args.data.request, {
 								ui_flags: formData.ui_flags,
-								bill: formData.bill
+								bill: $.extend(true, formData.bill, {
+									btn: btn
+								})
 							});
 
 							if (action === 'save') {
