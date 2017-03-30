@@ -441,6 +441,8 @@ define(function(require) {
 											$(this)
 												.empty();
 										});
+							} else {
+								self.portWizardRenderAddNumbersActions(args);
 							}
 						}
 					});
@@ -820,7 +822,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						console.log(args.data.request);
+						self.portWizardHelperCancelPort(args);
 					});
 		},
 
@@ -974,7 +976,7 @@ define(function(require) {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
-										requestId: requestId,
+										portRequestId: requestId,
 										state: 'submitted'
 									}
 								});
