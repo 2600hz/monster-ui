@@ -8,6 +8,12 @@ define(function(require) {
 		requests: {
 		},
 
+		appFlags: {
+			renameCarrier: {
+				CUSTOM_CHOICE: '_uiCustomChoice'
+			}
+		},
+
 		subscribe: {
 			'common.numberRenameCarrier.renderPopup': 'numberRenameCarrierEdit'
 		},
@@ -23,12 +29,25 @@ define(function(require) {
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		numberRenameCarrierFormatData: function(carriers) {
+		numberRenameCarrierFormatData: function(carriers, dataNumber) {
 			var self = this,
 				formattedData = {
 					selectedCarrier: undefined,
 					carriers: carriers
 				};
+
+			if (dataNumber.hasOwnProperty('_read_only') && dataNumber._read_only.hasOwnProperty('carrier_module')) {
+				_.each(carriers, function(carrier) {
+					if (dataNumber._read_only.carrier_module === carrier.key) {
+						formattedData.selectedCarrier = dataNumber._read_only.carrier_module;
+					}
+				});
+
+				if (!formattedData.selectedCarrier) {
+					formattedData.selectedCarrier = self.appFlags.renameCarrier.CUSTOM_CHOICE;
+					formattedData.customCarrierName = dataNumber._read_only.carrier_module;
+				}
+			}
 
 			return formattedData;
 		},
@@ -37,8 +56,7 @@ define(function(require) {
 			var self = this;
 
 			monster.pub('common.numbers.getCarriersModules', function(carriers) {
-				var dataTemplate = self.numberRenameCarrierFormatData(carriers),
-					CUSTOM_CHOICE = '_uiCustomChoice',
+				var dataTemplate = self.numberRenameCarrierFormatData(carriers, dataNumber),
 					popup_html = $(self.getTemplate({
 						name: 'layout',
 						submodule: 'numberRenameCarrier',
@@ -47,14 +65,14 @@ define(function(require) {
 					popup;
 
 				popup_html.find('.select-module').on('change', function() {
-					popup_html.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
+					popup_html.find('.custom-carrier-block').toggleClass('active', $(this).val() === self.appFlags.renameCarrier.CUSTOM_CHOICE);
 				});
 
 				popup_html.find('.save').on('click', function(ev) {
 					ev.preventDefault();
 					var carrierName = popup_html.find('.select-module').val();
 
-					if (carrierName === CUSTOM_CHOICE) {
+					if (carrierName === self.appFlags.renameCarrier.CUSTOM_CHOICE) {
 						carrierName = popup_html.find('#custom_carrier_value').val();
 					}
 
