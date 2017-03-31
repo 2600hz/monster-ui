@@ -348,7 +348,7 @@ define(function(require) {
 			self.portWizardRenderAddNumbersList(args);
 			self.portWizardRenderAddNumbersPortion(args);
 
-			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn)) {
+			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn) & !_.isEmpty(args.data.request.numbers)) {
 				self.portWizardRenderAddNumbersActions(args);
 			}
 
