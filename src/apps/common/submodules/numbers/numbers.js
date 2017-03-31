@@ -1079,7 +1079,7 @@ define(function(require) {
 			});
 		},
 
-		numbersSearchAccount: function(phoneNumber, success, error) {
+		numbersSearchAccount: function(phoneNumber, success) {
 			var self = this;
 
 			self.callApi({
@@ -1093,9 +1093,11 @@ define(function(require) {
 					success && success(_data.data);
 				},
 				error: function(_data, status) {
-					error && error(_data);
-
-					toastr.error(self.i18n.active().numbers.numberNotFound);
+					if (_data.hasOwnProperty('data') && _data.data.hasOwnProperty('cause') && _data.data.cause === 'account_disabled' && _data.data.hasOwnProperty('number')) {
+						success && success(_data.data);
+					} else {
+						toastr.error(self.i18n.active().numbers.numberNotFound);
+					}
 				}
 			});
 		},
