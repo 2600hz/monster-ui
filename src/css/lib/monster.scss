@@ -36,6 +36,10 @@ h1 {
 	color: #f8a506;
 }
 
+.monster-link.orange {
+	color: #f8a506;
+}
+
 .monster-link i {
 	margin-right: 5px;
 	text-decoration: none;
@@ -60,6 +64,11 @@ h1 {
 .monster-link.blue:hover,
 .monster-link.blue:focus {
 	color: $primary-color;
+}
+
+.monster-link.orange:hover,
+.monster-link.orange:focus {
+	color: #f8a506;
 }
 
 .monster-link.orange:hover,
