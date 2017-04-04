@@ -18,26 +18,224 @@
   background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
 }
 
+.monster-ua-cisco-spa-525g {
+  background-image: url(../assets/models/cisco_spa5xx_525g.jpg);
+}
+
+.monster-ua-cisco-spa-525g2 {
+  background-image: url(../assets/models/cisco_spa5xx_525g2.jpg);
+}
+
 .monster-ua-obihai {
+  background-image: url(../assets/models/obihai_10xx_1022.jpg);
+}
+
+.monster-ua-obihai-1022 {
+  background-image: url(../assets/models/obihai_10xx_1022.jpg);
+}
+
+.monster-ua-obihai-1032 {
   background-image: url(../assets/models/obihai_10xx_1032.jpg);
 }
 
+
+/* Polycom */
 .monster-ua-polycom {
   background-image: url(../assets/models/polycom_vvx_400.jpg);
 }
 
-.monster-ua-yealink {
-  background-image: url(../assets/models/yealink_t2x_t22p.jpg);
+.monster-ua-polycom-vvx {
+  background-image: url(../assets/models/polycom_vvx_300.jpg);
 }
 
-.monster-ua-polycom-vvx {
-  background-image: url(../assets/models/polycom_vvx_400.jpg);
+.monster-ua-polycom-vvx-300 {
+  background-image: url(../assets/models/polycom_vvx_300.jpg);
+}
+
+.monster-ua-polycom-vvx-310 {
+  background-image: url(../assets/models/polycom_vvx_310.jpg);
 }
 
 .monster-ua-polycom-vvx-400 {
   background-image: url(../assets/models/polycom_vvx_400.jpg);
 }
 
+.monster-ua-polycom-vvx-410 {
+  background-image: url(../assets/models/polycom_vvx_410.jpg);
+}
+
+.monster-ua-polycom-vvx-500 {
+  background-image: url(../assets/models/polycom_vvx_500.jpg);
+}
+
+.monster-ua-polycom-vvx-600 {
+  background-image: url(../assets/models/polycom_vvx_600.jpg);
+}
+
+.monster-ua-polycom-vvx-1500 {
+  background-image: url(../assets/models/polycom_vvx_1500.jpg);
+}
+
+/* SPIP */
+.monster-ua-polycom-spip {
+  background-image: url(../assets/models/polycom_spip_550.jpg);
+}
+
+.monster-ua-polycom-spip-301 {
+  background-image: url(../assets/models/polycom_spip_301.jpg);
+}
+
+.monster-ua-polycom-spip-320 {
+  background-image: url(../assets/models/polycom_spip_320.jpg);
+}
+
+.monster-ua-polycom-spip-321 {
+  background-image: url(../assets/models/polycom_spip_321.jpg);
+}
+
+.monster-ua-polycom-spip-330 {
+  background-image: url(../assets/models/polycom_spip_330.jpg);
+}
+
+.monster-ua-polycom-spip-331 {
+  background-image: url(../assets/models/polycom_spip_331.jpg);
+}
+
+.monster-ua-polycom-spip-335 {
+  background-image: url(../assets/models/polycom_spip_335.jpg);
+}
+
+.monster-ua-polycom-spip-430 {
+  background-image: url(../assets/models/polycom_spip_430.jpg);
+}
+
+.monster-ua-polycom-spip-450 {
+  background-image: url(../assets/models/polycom_spip_450.jpg);
+}
+
+.monster-ua-polycom-spip-501 {
+  background-image: url(../assets/models/polycom_spip_501.jpg);
+}
+
+.monster-ua-polycom-spip-550 {
+  background-image: url(../assets/models/polycom_spip_550.jpg);
+}
+
+.monster-ua-polycom-spip-560 {
+  background-image: url(../assets/models/polycom_spip_560.jpg);
+}
+
+.monster-ua-polycom-spip-600 {
+  background-image: url(../assets/models/polycom_spip_600.jpg);
+}
+
+.monster-ua-polycom-spip-601 {
+  background-image: url(../assets/models/polycom_spip_601.jpg);
+}
+
+.monster-ua-polycom-spip-650 {
+  background-image: url(../assets/models/polycom_spip_650.jpg);
+}
+
+.monster-ua-polycom-spip-670 {
+  background-image: url(../assets/models/polycom_spip_670.jpg);
+}
+
+/* SSIP */
+.monster-ua-polycom-ssip {
+  background-image: url(../assets/models/polycom_ssip_7000.jpg);
+}
+
+.monster-ua-polycom-ssip-4000 {
+  background-image: url(../assets/models/polycom_ssip_4000.jpg);
+}
+
+.monster-ua-polycom-ssip-5000 {
+  background-image: url(../assets/models/polycom_ssip_5000.jpg);
+}
+
+.monster-ua-polycom-ssip-6000 {
+  background-image: url(../assets/models/polycom_ssip_6000.jpg);
+}
+
+.monster-ua-polycom-ssip-7000 {
+  background-image: url(../assets/models/polycom_ssip_7000.jpg);
+}
+
+/* Yealink */
+.monster-ua-yealink {
+  background-image: url(../assets/models/yealink_t2x_t22p.jpg);
+}
+
+.monster-ua-yealink-t21p {
+  background-image: url(../assets/models/yealink_t2x_t21p.jpg);
+}
+
+.monster-ua-yealink-t22p {
+  background-image: url(../assets/models/yealink_t2x_t22p.jpg);
+}
+
+.monster-ua-yealink-t23p {
+  background-image: url(../assets/models/yealink_t2x_t23p.jpg);
+}
+
+.monster-ua-yealink-t23g {
+  background-image: url(../assets/models/yealink_t2x_t23g.jpg);
+}
+
+.monster-ua-yealink-t26p {
+  background-image: url(../assets/models/yealink_t2x_t26p.jpg);
+}
+
+.monster-ua-yealink-t27p {
+  background-image: url(../assets/models/yealink_t2x_t27p.jpg);
+}
+
+.monster-ua-yealink-t28p {
+  background-image: url(../assets/models/yealink_t2x_t28p.jpg);
+}
+
+.monster-ua-yealink-t29g {
+  background-image: url(../assets/models/yealink_t2x_t29g.jpg);
+}
+
+.monster-ua-yealink-t32g {
+  background-image: url(../assets/models/yealink_t3x_t32g.jpg);
+}
+
+.monster-ua-yealink-t38g {
+  background-image: url(../assets/models/yealink_t3x_t38g.jpg);
+}
+
+.monster-ua-yealink-t41s {
+  background-image: url(../assets/models/yealink_t4x_t41p.jpg);
+}
+
+.monster-ua-yealink-t41p {
+  background-image: url(../assets/models/yealink_t4x_t41p.jpg);
+}
+
+.monster-ua-yealink-t42g {
+  background-image: url(../assets/models/yealink_t4x_t42g.jpg);
+}
+
+.monster-ua-yealink-t46g {
+  background-image: url(../assets/models/yealink_t4x_t46g.jpg);
+}
+
+.monster-ua-yealink-t48s {
+  background-image: url(../assets/models/yealink_t4x_t48g.jpg);
+}
+
+.monster-ua-yealink-t48g {
+  background-image: url(../assets/models/yealink_t4x_t48g.jpg);
+}
+
+.monster-ua-yealink-w52p {
+  background-image: url(../assets/models/w52p.jpg);
+}
+
+/* Grandstream */
 .monster-ua-grandstream {
   background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
 }
@@ -50,14 +248,34 @@
   background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
 }
 
+.monster-ua-grandstream-gxp-2135 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2135.jpg);
+}
+
+.monster-ua-grandstream-gxp-2140 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2140.jpg);
+}
+
+.monster-ua-grandstream-gxp-2160 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2160.jpg);
+}
+
+.monster-ua-grandstream-gxp-2170 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2170.jpg);
+}
+
+/* Bria */
 .monster-ua-counterpath-bria {
   background-image: url(../assets/models/bria.png);
 }
 
+
+/* Zoiper */
 .monster-ua-zoiper {
   background-image: url(../assets/models/zoiper.png);
 }
 
+/* X-Lite */
 .monster-ua-x-lite {
   background-image: url(../assets/models/x-lite.png);
 }
