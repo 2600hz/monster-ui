@@ -30,7 +30,6 @@
 @import url('vendor/card.css');
 
 @import url('vendor/pretty-print.css');
-@import url('vendor/ua.css');
 
 @import url('vendor/toastr.css');
 @import url('lib/custom/toastr-add.css');
@@ -43,3 +42,4 @@
 @import url('lib/monster.css');
 
 @import url('lib/monster.ui.css');
+@import url('lib/monster.ua.css');
