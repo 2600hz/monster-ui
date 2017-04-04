@@ -1,0 +1,63 @@
+
+/* UA */
+.monster-ua {
+  width: 80px;
+  height: 64px;
+  background-size: 80px 64px;  
+}
+
+.monster-ua-cisco {
+  background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
+}
+
+.monster-ua-cisco-spa {
+  background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
+}
+
+.monster-ua-cisco-spa-504g {
+  background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
+}
+
+.monster-ua-obihai {
+  background-image: url(../assets/models/obihai_10xx_1032.jpg);
+}
+
+.monster-ua-polycom {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.monster-ua-yealink {
+  background-image: url(../assets/models/yealink_t2x_t22p.jpg);
+}
+
+.monster-ua-polycom-vvx {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.monster-ua-polycom-vvx-400 {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.monster-ua-grandstream {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-grandstream-gxp {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-grandstream-gxp-2130 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-counterpath-bria {
+  background-image: url(../assets/models/bria.png);
+}
+
+.monster-ua-zoiper {
+  background-image: url(../assets/models/zoiper.png);
+}
+
+.monster-ua-x-lite {
+  background-image: url(../assets/models/x-lite.png);
+}

@@ -33,6 +33,7 @@ require.config({
 		'monster': 'js/lib/monster',
 		'monster-apps': 'js/lib/monster.apps',
 		'monster-ui': 'js/lib/monster.ui',
+		'monster-ua': 'js/lib/monster.ua',
 		'monster-timezone': 'js/lib/monster.timezone',
 		'monster-routing': 'js/lib/monster.routing',
 		'monster-socket': 'js/lib/monster.socket',
@@ -43,7 +44,7 @@ require.config({
 		'plugins': 'js/plugins',
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'postal': 'js/vendor/postal-0.8.2',
-		'prettify':'js/vendor/prettify',
+		'prettify': 'js/vendor/prettify',
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
@@ -54,7 +55,7 @@ require.config({
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
 		'underscore': 'js/vendor/underscore.min',
 		'validate': 'js/vendor/jquery.validate.min',
-		'vkbeautify':'js/vendor/vkbeautify',
+		'vkbeautify': 'js/vendor/vkbeautify',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
@@ -90,14 +91,15 @@ require.config({
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
 
-require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-clickover', 'touch-punch'], function($, monster){
+require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-clickover', 'touch-punch'], function($, monster) {
 	$.support.cors = true;
 
 	monster.initSDK();
 
-	require(['monster-util', 'monster-ui', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone', 'monster-webphone', 'templates'], function(util, ui, apps, routing, socket, timezone, webphone, templates){
+	require(['monster-util', 'monster-ui', 'monster-ua', 'monster-apps', 'monster-routing', 'monster-socket', 'monster-timezone', 'monster-webphone', 'templates'], function(util, ui, ua, apps, routing, socket, timezone, webphone, templates) {
 		monster.util = util;
 		monster.ui = ui;
+		monster.ua = ua;
 		monster.apps = apps;
 		monster.routing = routing;
 		monster.socket = socket;
@@ -107,7 +109,7 @@ require(['jquery', 'monster', 'modernizr', 'plugins', 'bootstrap', 'bootstrap-cl
 		monster.util.setDefaultLanguage();
 
 		monster.loadBuildConfig(function() {
-			monster.apps.load('core', function(app){
+			monster.apps.load('core', function(app) {
 				app.render($('.core-wrapper'));
 			});
 		});
