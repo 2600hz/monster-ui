@@ -6,6 +6,12 @@
   background-size: 80px 64px;  
 }
 
+/* Bria */
+.monster-ua-counterpath-bria {
+  background-image: url(../assets/models/bria.png);
+}
+
+/* Cisco */
 .monster-ua-cisco {
   background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
 }
@@ -14,8 +20,40 @@
   background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
 }
 
+.monster-ua-cisco-spa-301g {
+  background-image: url(../assets/models/cisco_spa3xx_301g.jpg);
+}
+
+.monster-ua-cisco-spa-303g {
+  background-image: url(../assets/models/cisco_spa3xx_303g.jpg);
+}
+
+.monster-ua-cisco-spa-501g {
+  background-image: url(../assets/models/cisco_spa5xx_501g.jpg);
+}
+
+.monster-ua-cisco-spa-502g {
+  background-image: url(../assets/models/cisco_spa5xx_502g.jpg);
+}
+
 .monster-ua-cisco-spa-504g {
   background-image: url(../assets/models/cisco_spa5xx_504g.jpg);
+}
+
+.monster-ua-cisco-spa-508g {
+  background-image: url(../assets/models/cisco_spa5xx_508g.jpg);
+}
+
+.monster-ua-cisco-spa-509g {
+  background-image: url(../assets/models/cisco_spa5xx_509g.jpg);
+}
+
+.monster-ua-cisco-spa-512g {
+  background-image: url(../assets/models/cisco_spa5xx_512g.jpg);
+}
+
+.monster-ua-cisco-spa-514g {
+  background-image: url(../assets/models/cisco_spa5xx_514g.jpg);
 }
 
 .monster-ua-cisco-spa-525g {
@@ -26,6 +64,76 @@
   background-image: url(../assets/models/cisco_spa5xx_525g2.jpg);
 }
 
+.monster-ua-cisco-spa-901 {
+  background-image: url(../assets/models/cisco_spa9xx_901.jpg);
+}
+
+.monster-ua-cisco-spa-921 {
+  background-image: url(../assets/models/cisco_spa9xx_921.jpg);
+}
+
+.monster-ua-cisco-spa-922 {
+  background-image: url(../assets/models/cisco_spa9xx_922.jpg);
+}
+
+.monster-ua-cisco-spa-941 {
+  background-image: url(../assets/models/cisco_spa9xx_941.jpg);
+}
+
+.monster-ua-cisco-spa-942 {
+  background-image: url(../assets/models/cisco_spa9xx_942.jpg);
+}
+
+.monster-ua-cisco-spa-962 {
+  background-image: url(../assets/models/cisco_spa9xx_962.jpg);
+}
+
+/* Grandstream */
+.monster-ua-grandstream {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-grandstream-gxp {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-grandstream-gxp-2130 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
+}
+
+.monster-ua-grandstream-gxp-2135 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2135.jpg);
+}
+
+.monster-ua-grandstream-gxp-2140 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2140.jpg);
+}
+
+.monster-ua-grandstream-gxp-2160 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2160.jpg);
+}
+
+.monster-ua-grandstream-gxp-2170 {
+  background-image: url(../assets/models/grandstream_gxp21xx_gxp2170.jpg);
+}
+
+.monster-ua-grandstream-ht-ht502 {
+  background-image: url(../assets/models/grandstream_ht_ht502.jpg);
+}
+
+.monster-ua-grandstream-ht-ht502fax {
+  background-image: url(../assets/models/grandstream_ht_ht502fax.jpg);
+}
+
+.monster-ua-grandstream-ht-ht704 {
+  background-image: url(../assets/models/grandstream_ht_ht704.jpg);
+}
+
+.monster-ua-grandstream-ht-ht704fax {
+  background-image: url(../assets/models/grandstream_ht_ht704fax.jpg);
+}
+
+/* Obihai */
 .monster-ua-obihai {
   background-image: url(../assets/models/obihai_10xx_1022.jpg);
 }
@@ -38,42 +146,37 @@
   background-image: url(../assets/models/obihai_10xx_1032.jpg);
 }
 
+.monster-ua-obihai-1062 {
+  background-image: url(../assets/models/obihai_10xx_1062.jpg);
+}
+
+.monster-ua-obihai-200 {
+  background-image: url(../assets/models/obihai_2xx_200.jpg);
+}
+
+.monster-ua-obihai-202 {
+  background-image: url(../assets/models/obihai_2xx_202.jpg);
+}
+
+.monster-ua-obihai-300 {
+  background-image: url(../assets/models/obihai_3xx_300.jpg);
+}
+
+.monster-ua-obihai-302 {
+  background-image: url(../assets/models/obihai_3xx_302.jpg);
+}
+
+.monster-ua-obihai-504 {
+  background-image: url(../assets/models/obihai_5xx_504vs.jpg);
+}
+
+.monster-ua-obihai-508 {
+  background-image: url(../assets/models/obihai_5xx_508vs.jpg);
+}
 
 /* Polycom */
 .monster-ua-polycom {
   background-image: url(../assets/models/polycom_vvx_400.jpg);
-}
-
-.monster-ua-polycom-vvx {
-  background-image: url(../assets/models/polycom_vvx_300.jpg);
-}
-
-.monster-ua-polycom-vvx-300 {
-  background-image: url(../assets/models/polycom_vvx_300.jpg);
-}
-
-.monster-ua-polycom-vvx-310 {
-  background-image: url(../assets/models/polycom_vvx_310.jpg);
-}
-
-.monster-ua-polycom-vvx-400 {
-  background-image: url(../assets/models/polycom_vvx_400.jpg);
-}
-
-.monster-ua-polycom-vvx-410 {
-  background-image: url(../assets/models/polycom_vvx_410.jpg);
-}
-
-.monster-ua-polycom-vvx-500 {
-  background-image: url(../assets/models/polycom_vvx_500.jpg);
-}
-
-.monster-ua-polycom-vvx-600 {
-  background-image: url(../assets/models/polycom_vvx_600.jpg);
-}
-
-.monster-ua-polycom-vvx-1500 {
-  background-image: url(../assets/models/polycom_vvx_1500.jpg);
 }
 
 /* SPIP */
@@ -162,13 +265,75 @@
   background-image: url(../assets/models/polycom_ssip_7000.jpg);
 }
 
+/* VVX */
+.monster-ua-polycom-vvx {
+  background-image: url(../assets/models/polycom_vvx_300.jpg);
+}
+
+.monster-ua-polycom-vvx-300 {
+  background-image: url(../assets/models/polycom_vvx_300.jpg);
+}
+
+.monster-ua-polycom-vvx-310 {
+  background-image: url(../assets/models/polycom_vvx_310.jpg);
+}
+
+.monster-ua-polycom-vvx-400 {
+  background-image: url(../assets/models/polycom_vvx_400.jpg);
+}
+
+.monster-ua-polycom-vvx-410 {
+  background-image: url(../assets/models/polycom_vvx_410.jpg);
+}
+
+.monster-ua-polycom-vvx-500 {
+  background-image: url(../assets/models/polycom_vvx_500.jpg);
+}
+
+.monster-ua-polycom-vvx-600 {
+  background-image: url(../assets/models/polycom_vvx_600.jpg);
+}
+
+.monster-ua-polycom-vvx-1500 {
+  background-image: url(../assets/models/polycom_vvx_1500.jpg);
+}
+
+/* X-Lite */
+.monster-ua-x-lite {
+  background-image: url(../assets/models/x-lite.png);
+}
+
 /* Yealink */
 .monster-ua-yealink {
   background-image: url(../assets/models/yealink_t2x_t22p.jpg);
 }
 
+.monster-ua-yealink-cp860 {
+  background-image: url(../assets/models/yealink_cp_cp860.jpg);
+}
+
+.monster-ua-yealink-t18p {
+  background-image: url(../assets/models/yealink_t1x_t18p.jpg);
+}
+
+.monster-ua-yealink-t19p {
+  background-image: url(../assets/models/yealink_t1x_t19p.jpg);
+}
+
+.monster-ua-yealink-t19pe2 {
+  background-image: url(../assets/models/yealink_t1x_t19pe2.jpg);
+}
+
+.monster-ua-yealink-t20p {
+  background-image: url(../assets/models/yealink_t2x_t20p.jpg);
+}
+
 .monster-ua-yealink-t21p {
   background-image: url(../assets/models/yealink_t2x_t21p.jpg);
+}
+
+.monster-ua-yealink-t21pe2 {
+  background-image: url(../assets/models/yealink_t2x_t21pe2.jpg);
 }
 
 .monster-ua-yealink-t22p {
@@ -232,50 +397,10 @@
 }
 
 .monster-ua-yealink-w52p {
-  background-image: url(../assets/models/w52p.jpg);
+  background-image: url(../assets/models/yealink_w5x_w52p.jpg);
 }
-
-/* Grandstream */
-.monster-ua-grandstream {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
-}
-
-.monster-ua-grandstream-gxp {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
-}
-
-.monster-ua-grandstream-gxp-2130 {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2130.jpg);
-}
-
-.monster-ua-grandstream-gxp-2135 {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2135.jpg);
-}
-
-.monster-ua-grandstream-gxp-2140 {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2140.jpg);
-}
-
-.monster-ua-grandstream-gxp-2160 {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2160.jpg);
-}
-
-.monster-ua-grandstream-gxp-2170 {
-  background-image: url(../assets/models/grandstream_gxp21xx_gxp2170.jpg);
-}
-
-/* Bria */
-.monster-ua-counterpath-bria {
-  background-image: url(../assets/models/bria.png);
-}
-
 
 /* Zoiper */
 .monster-ua-zoiper {
   background-image: url(../assets/models/zoiper.png);
-}
-
-/* X-Lite */
-.monster-ua-x-lite {
-  background-image: url(../assets/models/x-lite.png);
 }
