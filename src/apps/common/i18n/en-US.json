@@ -831,6 +831,10 @@
 	},
 
 	"portWizard": {
+		"loading": {
+			"title": "Saving your port request...",
+			"text": "This will take up to two minutes... thanks for your patience."
+		},
 		"fileUpload": {
 			"title": "Choose a file",
 			"hint": ".pdf format ONLY",

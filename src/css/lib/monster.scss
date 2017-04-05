@@ -1441,7 +1441,7 @@ table.monster-table .actions .action-item:first-child {
 }
 
 .monster-navbar .navbar-menu-item-link:not(.active):not(:hover):focus {
-	color: $font-primary-color !important;
+	color: $font-primary-color;
 }
 
 .monster-navbar .navbar-menu-item-link.active {
@@ -1450,7 +1450,7 @@ table.monster-table .actions .action-item:first-child {
 }
 
 .monster-navbar.reverse .navbar-menu-item-link,
-.monster-navbar .navbar-menu-item-link:not(.active):not(:hover):focus {
+.monster-navbar.reverse .navbar-menu-item-link:not(.active):not(:hover):focus {
 	color: #004c80;
 }
 

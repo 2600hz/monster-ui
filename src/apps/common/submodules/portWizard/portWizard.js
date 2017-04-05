@@ -978,6 +978,9 @@ define(function(require) {
 									data: {
 										portRequestId: requestId,
 										state: 'submitted'
+									},
+									success: function() {
+										args.globalCallback();
 									}
 								});
 							}
@@ -991,6 +994,41 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort(args);
 					});
+		},
+
+		/**************************************************
+		 *                   UI helpers                   *
+		 **************************************************/
+
+		portWizardUILoading: function(args, loadingData) {
+			var self = this,
+				container = args.container,
+				callback = _.isFunction(loadingData) ? loadingData : loadingData.callback,
+				dataToTemplate = _.isFunction(loadingData) ? {} : loadingData,
+				template = self.getTemplate({
+					name: 'loading',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				});
+
+			if (container.is(':empty')) {
+				container
+					.hide(0, function() {
+						$(this)
+							.append(template)
+							.fadeIn();
+					});
+			} else {
+				container
+					.fadeOut(function() {
+						$(this)
+							.empty()
+							.append(template)
+							.fadeIn();
+					});
+			}
+
+			callback();
 		},
 
 		/**************************************************
@@ -1023,11 +1061,17 @@ define(function(require) {
 		portWizardHelperSavePort: function(args) {
 			var self = this;
 
-			if (args.data.request.hasOwnProperty('id')) {
-				self.portWizardHelperUpdatePort(args);
-			} else {
-				self.portWizardHelperCreatePort(args);
-			}
+			self.portWizardUILoading(args, {
+				title: self.i18n.active().portWizard.loading.title,
+				text: self.i18n.active().portWizard.loading.text,
+				callback: function() {
+					if (args.data.request.hasOwnProperty('id')) {
+						self.portWizardHelperUpdatePort(args);
+					} else {
+						self.portWizardHelperCreatePort(args);
+					}
+				}
+			});
 		},
 
 		portWizardHelperCreatePort: function(args) {
