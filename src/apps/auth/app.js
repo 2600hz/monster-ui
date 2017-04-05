@@ -64,6 +64,7 @@ define(function(require){
 					self.renderLoginPage();
 				};
 
+			
 			// First check if there is a custom authentication mechanism
 			if(monster.config.whitelabel.hasOwnProperty('authentication')) {
 				self.customAuth = monster.config.whitelabel.authentication;
@@ -127,6 +128,14 @@ define(function(require){
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
+			else if(urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
+				var tmp = JSON.parse(atob(decodeURIComponent(urlParams.state)));
+				var url = window.location.protocol + '//' + window.location.host;
+				var data = $.extend(true, {redirect_uri: url}, tmp, urlParams);
+				self.authenticateAuthCallback(data , function(authData) {
+					self._afterSuccessfulAuthCallback(authData, url);
+				}, errorAuth);
+			}
 			else {
 				self.renderLoginPage();
 			}
@@ -145,6 +154,32 @@ define(function(require){
 			);
 		},
 
+		authenticateAuthCallback: function(data, callback, errorCallback) {
+			var self = this;
+
+			self.putAuthCallback(data,
+				function(authData) {
+					callback && callback(authData);
+				},
+				function(error) {
+					errorCallback && errorCallback(error);
+				}
+			);
+		},
+
+		_afterSuccessfulAuthCallback: function(data, url) {
+			var decoded = monster.util.jwt_decode(data.auth_token);
+			if(decoded.hasOwnProperty('account_id')) {
+				var cookieAuth = {
+						authToken: data.auth_token,
+					};
+				$.cookie('monster-auth', JSON.stringify(cookieAuth));
+			} else {
+				$.cookie('monster-sso-auth', JSON.stringify(decoded));
+			}
+			window.location.href = url;
+		},
+				
 		// We update the token with the value stored in the auth cookie.
 		// If the value is null, we force a logout
 		setKazooAPIToken: function(token) {
@@ -561,13 +596,23 @@ define(function(require){
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
+				ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {},
+				ssoProviders = monster.config.whitelabel.auth || {},
+				hasSSO = ssoUser.hasOwnProperty('auth_app_id'),
+				hasAccountId = ssoUser.hasOwnProperty('account_id'),
+				ssoPending = hasSSO && (!hasAccountId), 
 				templateData = {
 					username: cookieLogin.login || '',
 					requestAccountName: (realm || accountName) ? false : true,
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
-					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
+					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false,
+					ssoProviders: ssoProviders,
+					ssoUser : ssoUser,
+					ssoPending : ssoPending,
+					hasAccountId : hasAccountId,
+					hasSSO : hasSSO
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
@@ -602,7 +647,7 @@ define(function(require){
 		bindLoginBlock: function(templateData) {
 			var self = this,
 				content = $('#auth_container');
-
+console.log(templateData);
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
 			content.find('.btn-submit.login').on('click', function(e){
@@ -616,6 +661,8 @@ define(function(require){
 				self.loginClick();
 			});
 
+//            this._initAngular($('#oauth'));
+			
 			// New Design stuff
 			if (content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').val() !== '' ) {
 				content.find('.placeholder-shift').addClass('fixed');
@@ -972,6 +1019,24 @@ define(function(require){
 			});
 		},
 
+		putAuthCallback: function(odata, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.callback',
+				data: {
+					data: odata,
+					generateError: false
+				},
+				success: function(data) {
+					callbackSuccess && callbackSuccess(data);
+				},
+				error: function(error) {
+					callbackError && callbackError(error);
+				}
+			});
+		},
+
 		getAccount: function(accountId, success, error) {
 			var self = this;
 
@@ -1053,6 +1118,7 @@ define(function(require){
 
 			success(args.app);
 		}
+
 	}
 
 	return app;
