@@ -1,134 +1,209 @@
 <div id="auth_container" class="login-background">
-	<!-- <div class="right-div">
-		<div class="right-div-content clearfix">
-			<div class="logo-block"></div>
-			<div class="login-block"></div>
-			<div class="register-block">
-				<div class="register-message">{{ i18n.registerMessage }}</div>
-				<a class="register-link">
-					{{ i18n.registerLink }}
-					<i class="fa fa-angle-double-right"></i>
-				</a>
-			</div>
-			<div class="powered-by-block"></div>
-		</div>
-	</div>
-	<div class="left-div">
-		<div class="hello">
-			{{ i18n.welcome }}
-		</div>
-	</div>
-	
-	
-	<div class="intro">
-		<div class="content">
-			<div class="logo-block"></div>
-			<h1>{{ i18n.welcome }}</h1>
-		</div>
-	</div> -->
+    <!-- <div class="right-div">
+        <div class="right-div-content clearfix">
+            <div class="logo-block"></div>
+            <div class="login-block"></div>
+            <div class="register-block">
+                <div class="register-message">{{ i18n.registerMessage }}</div>
+                <a class="register-link">
+                    {{ i18n.registerLink }}
+                    <i class="fa fa-angle-double-right"></i>
+                </a>
+            </div>
+            <div class="powered-by-block"></div>
+        </div>
+    </div>
+    <div class="left-div">
+        <div class="hello">
+            {{ i18n.welcome }}
+        </div>
+    </div>
+    
+    
+    <div class="intro">
+        <div class="content">
+            <div class="logo-block"></div>
+            <h1>{{ i18n.welcome }}</h1>
+        </div>
+    </div> -->
 
-	<div class="intro">
-		<div class="content">
-			<div class="logo logo-block"></div>
-			<h1 class="welcome-message">{{ i18n.welcome }}</h1>
-		</div>
-	</div>
+    <div class="intro">
+        <div class="content">
+            <div class="logo logo-block"></div>
+            <h1 class="welcome-message">{{ i18n.welcome }}</h1>
+        </div>
+    </div>
 
-	<!-- Sign-In Form -->
-	<div class="form-container animated" data-form="login">
-		
-		<form id="form_login">
-			<div class="error-message-wrapper monster-orange">
-				<span class="icon"><i class="fa fa-warning monster-orange"></i></span>
-				<div class="text"></div>
-			</div>
+    <!-- Sign-In Form -->
+    <div class="form-container animated" data-form="login">
+        <form id="form_login">
 
-			<div class="input-wrap alpha">
-				<input type="text" id="login" name="login" value="{{username}}">
-				<span class="placeholder-shift">{{ i18n.username }}</span>
-				<span class="border-grow"></span>
+            <div class="sso" style="display:block; padding-bottom: 10px">
+{{#unless ssoPending}}
+<!-- this should be built with a template after getting the providers -->
+<!--
+            it should be a collection of provider where 
+            var provider = {
+                url : BASEURL,
+                name: "my_provider"
+                params : {
+                  client_id :"SOME_CLIENT_ID",
+                  response_type : "code",
+                  scopes: ["openid", "profile", "email", "https://www.googleapis.com/auth/drive.file"],
+                  include_granted_scopes : true,
+                  access_type : "offline",
+                  authuser : 0
+                }
+            };
+            should be augmented with
+            redirect_uri => THIS.URL (protocol+domain),
+            scope => provider.params.scopes.join(" "),
+            scopes should be removed
+            var urlParams = ....
+            
+            var href = BASEURL + "?" + jQuery.param( urlParams );
+ 
+            css rules for "my_provider"
+                 <img src="apps/auth/style/oauth/gplus.png" width="14">
+                 red
 
-				<span class="error-icon">
-					<i class="icon-telicon-x-circled"></i>
-				</span>
-			</div>
+  -->
+<!--  state parameter should be built with data template
+     stateData = {client_id : "d3c90b02-a4fc-4b19-a70f-fe8ab182b6a4" , provider : "microsoft"};
+     state = encodeURIComponent(btoa(JSON.stringify( stateData )))
+ -->
+            <div class="sso-buttons" style="display: block">
+                <a class="btn red btn-block text-left" data-original-title="Google" href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=998652435029-1ckgoclppjgvnhe1kds54obdb9958qmm.apps.googleusercontent.com&redirect_uri=https://dev-ui.smartpbx.pt&scope=openid+profile+email+https://www.googleapis.com/auth/drive.file&state=eyJjbGllbnRfaWQiOiI5OTg2NTI0MzUwMjktMWNrZ29jbHBwamd2bmhlMWtkczU0b2JkYjk5NThxbW0uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJwcm92aWRlciI6Imdvb2dsZSJ9&access_type=offline&include_granted_scopes=true&authuser=0&prompt=consent">
+<!--                    <a class="btn red btn-block text-left" data-original-title="Google" href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=998652435029-1ckgoclppjgvnhe1kds54obdb9958qmm.apps.googleusercontent.com&redirect_uri=http://localhost:3000&scope=openid+profile+email+https://www.googleapis.com/auth/drive.file&state=eyJjbGllbnRfaWQiOiI5OTg2NTI0MzUwMjktMWNrZ29jbHBwamd2bmhlMWtkczU0b2JkYjk5NThxbW0uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJwcm92aWRlciI6Imdvb2dsZSJ9&access_type=offline&include_granted_scopes=true&authuser=0&prompt=consent">  -->
+                        <i class=""><img src="apps/auth/style/oauth/gplus.png" width="14"></i> Google
+                    </a>
+                
+                    <a class="btn purple btn-block text-left" data-original-title="Office365" href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=d3c90b02-a4fc-4b19-a70f-fe8ab182b6a4&response_type=code&redirect_uri=https://dev-ui.smartpbx.pt&scope=openid+offline_access+profile+email+User.Read&response_mode=query&state=eyJjbGllbnRfaWQiOiJkM2M5MGIwMi1hNGZjLTRiMTktYTcwZi1mZThhYjE4MmI2YTQiLCJwcm92aWRlciI6Im1pY3Jvc29mdCJ9&nonce=678910">
+                        <i class=""><img src="apps/auth/style/oauth/office365.png" width="14"></i> Office365
+                    </a>
+                
+                    <a class="btn blue btn-block text-left" data-original-title="Salesforce" href="https://accounts.zang.io/sso/salesforce/?next=http%3A%2F%2Foffice.zang.io">
+                        <i class=""><img src="apps/auth/style/oauth/salesforce.png" width="14"></i> Salesforce
+                    </a>
+            </div>
+{{else}}
+<!-- this should be built with a template after getting the provider -->
+            <div class="sso-user" style="display: block">
+               <a class="btn purple btn-block text-left" data-original-title="Google">          
+               <div style="display: table; width: 100%;padding-left:5px">
+                    <div style="display: table-cell; width: 55px;vertical-align: middle;">
+                        <img src="https://lh5.googleusercontent.com/-ySXUmJsMIos/AAAAAAAAAAI/AAAAAAAAAsc/phXnW5wZ--c/photo.jpg?sz=150" width="45">                      
+                    </div>
+                    <div style="display: table-cell">
+                        <div style="margin-bottom: 2px;"><i class=""><img src="apps/auth/style/oauth/office365.png" width="14"></i> Office365</div>
+                        <div class="text-left">Luis Azedo</div>
+                    </div>            
+               </div>
+               </a>
+<!--  need a info here saying that the auth user will be associated after login
+if form login successful (user_auth)
+shuld call PUT /v2/auth/links/{app_auth_id} to associate the current user with the oauth user
+app_auth_id comes from template data field ssoUser. 
+should add a toast message after the fact (something like "[provider] user associated )
+should clear $.cookie('monster-sso-auth') 
+ -->               
+            </div>
+{{/unless}} 
+           </div>
+           
+           
+            <div class="error-message-wrapper monster-orange">
+                <span class="icon"><i class="fa fa-warning monster-orange"></i></span>
+                <div class="text"></div>
+            </div>
 
-			<div class="input-wrap">
-				<input name="password" id="password" type="password">
-				<span class="placeholder-shift">{{ i18n.password }}</span>
-				<span class="border-grow"></span>
+            <div class="input-wrap alpha">
+                <input type="text" id="login" name="login" value="{{username}}">
+                <span class="placeholder-shift">{{ i18n.username }}</span>
+                <span class="border-grow"></span>
 
-				<span class="error-icon">
-					<i class="icon-telicon-x-circled"></i>
-				</span>
-			</div>
+                <span class="error-icon">
+                    <i class="icon-telicon-x-circled"></i>
+                </span>
+            </div>
 
-			<div class="input-wrap">
-				<input type="text" id="account_name" name="account_name" value="{{accountName }}">
-				<span class="placeholder-shift">{{ i18n.account.name }}</span>
-				<span class="border-grow"></span>
+            <div class="input-wrap">
+                <input name="password" id="password" type="password">
+                <span class="placeholder-shift">{{ i18n.password }}</span>
+                <span class="border-grow"></span>
 
-				<span class="error-icon">
-					<i class="icon-telicon-x-circled"></i>
-				</span>
-			</div>
+                <span class="error-icon">
+                    <i class="icon-telicon-x-circled"></i>
+                </span>
+            </div>
 
-			<div class="alt-actions">
-				{{#monsterCheckbox i18n.rememberMe}}
-					<input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
-				{{/monsterCheckbox}}
+            <div class="input-wrap">
+                <input type="text" id="account_name" name="account_name" value="{{accountName }}">
+                <span class="placeholder-shift">{{ i18n.account.name }}</span>
+                <span class="border-grow"></span>
 
-				{{#unless hidePasswordRecovery}}
-					<a href="javascript:void(0);" class="form-toggle" data-form="forgot_info">{{ i18n.forgotPassword }}</a>
-				{{/unless}}
-			</div>
-			<button class="btn-submit login" type="submit">{{ i18n.login.buttonText }}</button>
-		</form>
-	</div>
-	
-	<!-- Forgot Info Form -->
-	<div class="form-container hidden animated" data-form="forgot_info">
-		<form id="form_password_recovery">
+                <span class="error-icon">
+                    <i class="icon-telicon-x-circled"></i>
+                </span>
+            </div>
 
-			<div class="form-content">
-				<p class="form-info">{{ i18n.recoverPassword.headline }}</p>
+            <div class="alt-actions">
+                {{#monsterCheckbox i18n.rememberMe}}
+                    <input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
+                {{/monsterCheckbox}}
 
-				<div class="input-wrap">
-					<input name="username" type="text">
-					<span class="placeholder-shift">{{ i18n.recoverPassword.emailPlaceholder }}</span>
-					<span class="border-grow"></span>
+                {{#unless hidePasswordRecovery}}
+                    <a href="javascript:void(0);" class="form-toggle" data-form="forgot_info">{{ i18n.forgotPassword }}</a>
+                {{/unless}}
+            </div>
+            <button class="btn-submit login" type="submit">{{ i18n.login.buttonText }}</button>     
+            
+        </form>     
+    </div>
+    
+    <!-- Forgot Info Form -->
+    <div class="form-container hidden animated" data-form="forgot_info">
+        <form id="form_password_recovery">
 
-					<span class="error-icon">
-						<i class="icon-telicon-x-circled"></i>
-					</span>
-				</div>
+            <div class="form-content">
+                <p class="form-info">{{ i18n.recoverPassword.headline }}</p>
 
-				<p class="form-info">{{ i18n.recoverPassword.headline2 }}</p>
+                <div class="input-wrap">
+                    <input name="username" type="text">
+                    <span class="placeholder-shift">{{ i18n.recoverPassword.emailPlaceholder }}</span>
+                    <span class="border-grow"></span>
 
-				<div class="input-wrap">
-					<input name="account_name" type="text">
-					<span class="placeholder-shift">{{ i18n.recoverPassword.accountNamePlaceholder }}</span>
-					<span class="border-grow"></span>
-				</div>
+                    <span class="error-icon">
+                        <i class="icon-telicon-x-circled"></i>
+                    </span>
+                </div>
 
-				<div class="input-wrap">
-					<input name="phone_number" type="text">
-					<span class="placeholder-shift">{{ i18n.recoverPassword.phoneNumberPlaceholder }}</span>
-					<span class="border-grow"></span>
-				</div>
+                <p class="form-info">{{ i18n.recoverPassword.headline2 }}</p>
 
-				<button class="btn-submit recover-password" id="btn_reset_password" type="button">{{ i18n.recoverPassword.resetPassword }}</button>
-				
-				<p class="form-info dark">{{ i18n.recoverPassword.rememberPassword }}<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a></p>
-			</div>
+                <div class="input-wrap">
+                    <input name="account_name" type="text">
+                    <span class="placeholder-shift">{{ i18n.recoverPassword.accountNamePlaceholder }}</span>
+                    <span class="border-grow"></span>
+                </div>
+
+                <div class="input-wrap">
+                    <input name="phone_number" type="text">
+                    <span class="placeholder-shift">{{ i18n.recoverPassword.phoneNumberPlaceholder }}</span>
+                    <span class="border-grow"></span>
+                </div>
+
+                <button class="btn-submit recover-password" id="btn_reset_password" type="button">{{ i18n.recoverPassword.resetPassword }}</button>
+                
+                <p class="form-info dark">{{ i18n.recoverPassword.rememberPassword }}<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a></p>
+            </div>
 
 
-			<div class="reset-notification hidden">
-				<p>{{ i18n.recoverPassword.successReset }}</p>
+            <div class="reset-notification hidden">
+                <p>{{ i18n.recoverPassword.successReset }}</p>
 
-				<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a>
-			</div>
-		</form>
-	</div>
+                <a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a>
+            </div>
+        </form>
+    </div>
 
 </div>

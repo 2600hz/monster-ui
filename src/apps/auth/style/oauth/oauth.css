@@ -1,0 +1,38 @@
+@import "5bde2bec.css";
+
+.sso-user {
+ margin-top: 5px;
+}
+
+.sso-buttons {
+ margin-top: 0px;
+}
+
+/*
+.sso-buttons a{
+    -webkit-transition:all .16s ease;
+    -moz-transition:all .16s ease;
+    -o-transition:all .16s ease;
+    transition:all .16s ease;
+}
+*/
+
+/*
+.sso-buttons a:hover{
+    transform: scale(1.05);
+}
+*/
+
+.sso-buttons .btn i,
+.login-form .form-title i
+{
+/*border-right: 1px solid #fff;*/
+padding-right: 5px;
+padding-left: 5px;
+margin-right: 3px;
+/*width:25px;*/
+}
+
+.text-left {
+text-align: left;
+}

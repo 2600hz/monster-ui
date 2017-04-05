@@ -9,6 +9,9 @@
 				},
 				userAuth: function(settings) {
 					authFunction(settings, this.parent.defaultSettings, 'user_auth');
+				},
+				callback: function(settings) {
+					authFunction(settings, this.parent.defaultSettings, 'auth/callback');
 				}
 			}
 		},
