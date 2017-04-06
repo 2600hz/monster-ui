@@ -1769,7 +1769,8 @@ table.monster-table .actions .action-item:first-child {
 }
 
 .monster-statuses .node.warning i,
-.monster-statuses .node.warning .status {
+.monster-statuses .node.warning .status,
+.monster-statuses .node.warning .status a {
 	color: #f8a506;
 }
 
