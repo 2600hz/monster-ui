@@ -778,6 +778,7 @@ define(function(require){
 			var self = this;
 
 			$.cookie('monster-auth', null);
+			$.cookie('monster-sso-auth', null);
 
 			if(monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso;
