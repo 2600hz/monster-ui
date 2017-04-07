@@ -45,7 +45,9 @@
 			auth: {
 				'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token'] },
 				'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
-				'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery' }
+				'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery' },
+				'link': { verb: 'PUT', url: 'auth/links/{auth_id}' },
+				'unlink': { verb: 'DELETE', url: 'auth/links/{auth_id}' }
 			},
 			balance: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
