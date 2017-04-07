@@ -1,0 +1,68 @@
+.sso-providers {
+	margin-bottom: 20px;
+}
+
+.sso-user {
+	margin-top: 5px;
+	color: #DDD;
+}
+
+.sso-buttons {
+	margin-top: 0px;
+}
+
+.sso-buttons .sso-button {
+	background: #22a5ff;
+	box-shadow: none;
+	color: #FFF;
+	display: block;
+	font-family: 'Open Sans',sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	margin-top: 5px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	text-align: left;
+}
+
+.sso-buttons .sso-button:hover {
+	color: #FFF !important;
+	outline: 0 !important;
+}
+
+.sso-buttons .sso-button-google {
+	background-color: #d84a38
+}
+
+.sso-buttons .sso-button-google:hover {
+	background-color: #bb2413;
+}
+
+.sso-buttons .sso-button-salesforce {
+	background-color: #4d90fe
+}
+
+.sso-buttons .sso-button-salesforce:hover {
+	background-color: #0362fd;
+}
+
+.sso-buttons .sso-button-microsoft {
+	background-color: #852b99
+}
+
+.sso-buttons .sso-button-microsoft:hover {
+	background-color: #6d1b81;
+}
+
+.sso-buttons .sso-button i,
+.login-form .form-title i {
+/*border-right: 1px solid #fff;*/
+padding-right: 5px;
+padding-left: 5px;
+margin-right: 3px;
+/*width:25px;*/
+}
+
+.text-left {
+	text-align: left;
+}

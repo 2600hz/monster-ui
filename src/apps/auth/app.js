@@ -10,7 +10,7 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -127,6 +127,15 @@ define(function(require){
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
+			else if(urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
+				var tmp = JSON.parse(atob(decodeURIComponent(urlParams.state))),
+					url = window.location.protocol + '//' + window.location.host,
+					data = $.extend(true, {redirect_uri: url}, tmp, urlParams);
+
+				self.authenticateAuthCallback(data, function(authData) {
+					self._afterSuccessfulAuthCallback(authData, url);
+				}, errorAuth);
+			}
 			else {
 				self.renderLoginPage();
 			}
@@ -143,6 +152,35 @@ define(function(require){
 					errorCallback && errorCallback(error);
 				}
 			);
+		},
+
+		authenticateAuthCallback: function(data, callback, errorCallback) {
+			var self = this;
+
+			self.putAuthCallback(data,
+				function(authData) {
+					callback && callback(authData);
+				},
+				function(error) {
+					errorCallback && errorCallback(error);
+				}
+			);
+		},
+
+		_afterSuccessfulAuthCallback: function(data, url) {
+			var decoded = monster.util.jwt_decode(data.auth_token);
+			//console.log(data, decoded);$.error();
+
+			if (decoded.hasOwnProperty('account_id')) {
+				var cookieAuth = {
+					authToken: data.auth_token
+				};
+
+				$.cookie('monster-auth', JSON.stringify(cookieAuth));
+			} else {
+				$.cookie('monster-sso-auth', JSON.stringify(decoded));
+			}
+			window.location.href = url;
 		},
 
 		// We update the token with the value stored in the auth cookie.
@@ -555,19 +593,86 @@ define(function(require){
 			});
 		},
 
+		formatSSOProviders: function() {
+			var self = this,
+				hardCodedProviders = [{
+					url: 'https://accounts.google.com/o/oauth2/auth',
+					name: 'google',
+					friendly_name: 'Google',
+					params: {
+						client_id: 'xxxxxx',
+						response_type: 'code',
+						scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
+						include_granted_scopes: true,
+						access_type: 'offline',
+						authuser: 0
+					}
+				},
+				{
+					url: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+					name: 'microsoft',
+					friendly_name: 'Office 365',
+					params: {
+						client_id: 'xxxxxxxxxx',
+						response_type: 'code',
+						scopes: ['openid', 'profile', 'email', 'User.Read'],
+						response_mode: 'query',
+						nonce: 678910
+					}
+				},
+				{
+					url: 'https://login.salesforce.com/services/oauth2/authorize',
+					name: 'salesforce',
+					friendly_name: 'Sales Force',
+					params: {
+						client_id: 'xxxxxxxxxx',
+						response_type: 'code',
+						scopes: ['openid', 'profile', 'email', 'User.Read'],
+						response_mode: 'query',
+						nonce: 678910
+					}
+				}],
+				providers = monster.config.whitelabel.sso_providers || [];// hardCodedProviders;
+
+			_.each(providers, function(provider) {
+				provider.params.scope = provider.params.scopes.join(' ');
+				provider.params.redirect_uri = window.location.protocol + '//' + window.location.host;
+				var stateData = {
+					client_id: provider.params.client_id,
+					provider: provider.name
+				};
+				provider.params.state = btoa(JSON.stringify(stateData));
+				delete provider.params.scopes;
+
+				provider.link_url = provider.url + '?' + $.param(provider.params);
+			});
+
+			return providers;
+		},
+
 		renderLoginPage: function() {
 			var self = this,
 				container = self.appFlags.mainContainer,
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
+				ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {},
+				ssoProviders = self.formatSSOProviders(),
+				hasSSO = ssoUser.hasOwnProperty('auth_app_id'),
+				hasAccountId = ssoUser.hasOwnProperty('account_id'),
+				ssoPending = hasSSO && (!hasAccountId),
 				templateData = {
 					username: cookieLogin.login || '',
 					requestAccountName: (realm || accountName) ? false : true,
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
-					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
+					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false,
+					ssoProviders: ssoProviders,
+					ssoUser: ssoUser,
+					ssoPending: ssoPending,
+					hasAccountId: hasAccountId,
+					hasSSO: hasSSO
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
@@ -605,13 +710,12 @@ define(function(require){
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
+			content.find('.kill-sso-session').on('click', function() {
+				monster.util.logoutAndReload();
+			});
+
 			content.find('.btn-submit.login').on('click', function(e){
 				e.preventDefault();
-
-				/*var dataLogin = {
-					realm: realm,
-					accountName: accountName
-				};*/
 
 				self.loginClick();
 			});
@@ -827,6 +931,44 @@ define(function(require){
 			});
 		},
 
+		unlinkUserSSO: function(authId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.unlink',
+				data: {
+					auth_id: authId
+				},
+				success: function(data) {
+					toastr.success(self.i18n.active().ssoSuccessUnlinking);
+					callback && callback(data.data);
+				},
+				error: function(data) {
+					toastr.error(self.i18n.active().ssoFailedUnlinking);
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		linkUserSSO: function(authId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.link',
+				data: {
+					auth_id: authId
+				},
+				success: function(data) {
+					toastr.success(self.i18n.active().ssoSuccessLinking);
+					callback && callback(data.data);
+				},
+				error: function(data) {
+					toastr.error(self.i18n.active().ssoFailedLinking);
+					callback && callback(data.data);
+				}
+			});
+		},
+
 		// API Calls
 		putAuth: function(loginData, callback, wrongCredsCallback) {
 			var self = this;
@@ -837,8 +979,16 @@ define(function(require){
 					data: loginData,
 					generateError: false
 				},
-				success: function (data, status) {
-					callback && callback(data);
+				success: function(data, status) {
+					var ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {};
+
+					if (ssoUser.hasOwnProperty('auth_id')) {
+						self.linkUserSSO(ssoUser.auth_id, function() {
+							callback && callback(data);
+						});
+					} else {
+						callback && callback(data);
+					}
 				},
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
@@ -972,6 +1122,24 @@ define(function(require){
 			});
 		},
 
+		putAuthCallback: function(odata, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.callback',
+				data: {
+					data: odata,
+					generateError: false
+				},
+				success: function(data) {
+					callbackSuccess && callbackSuccess(data);
+				},
+				error: function(error) {
+					callbackError && callbackError(error);
+				}
+			});
+		},
+
 		getAccount: function(accountId, success, error) {
 			var self = this;
 
@@ -1053,6 +1221,7 @@ define(function(require){
 
 			success(args.app);
 		}
+
 	}
 
 	return app;
