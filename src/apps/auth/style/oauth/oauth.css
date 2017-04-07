@@ -39,19 +39,19 @@
 }
 
 .sso-buttons .sso-button-salesforce {
-	background-color: #852b99
-}
-
-.sso-buttons .sso-button-salesforce:hover {
-	background-color: #6d1b81;
-}
-
-.sso-buttons .sso-button-microsoft {
 	background-color: #4d90fe
 }
 
-.sso-buttons .sso-button-microsoft:hover {
+.sso-buttons .sso-button-salesforce:hover {
 	background-color: #0362fd;
+}
+
+.sso-buttons .sso-button-microsoft {
+	background-color: #852b99
+}
+
+.sso-buttons .sso-button-microsoft:hover {
+	background-color: #6d1b81;
 }
 
 .sso-buttons .sso-button i,

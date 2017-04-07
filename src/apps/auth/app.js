@@ -619,6 +619,18 @@ define(function(require){
 						response_mode: 'query',
 						nonce: 678910
 					}
+				},
+				{
+					url: 'https://login.salesforce.com/services/oauth2/authorize',
+					name: 'salesforce',
+					friendly_name: 'Sales Force',
+					params: {
+						client_id: 'xxxxxxxxxx',
+						response_type: 'code',
+						scopes: ['openid', 'profile', 'email', 'User.Read'],
+						response_mode: 'query',
+						nonce: 678910
+					}
 				}],
 				providers = monster.config.whitelabel.sso_providers || [];// hardCodedProviders;
 
