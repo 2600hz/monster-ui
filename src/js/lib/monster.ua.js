@@ -11,6 +11,22 @@ define(function(require) {
 			},
 			inner: [
 				{
+					name: 'apple',
+					regexp: 'apple',
+					kind: 'brand',
+					info: {
+						css: 'monster-ua-mobile monster-ua-apple'
+					},
+					inner: [{
+						name: 'Iphone',
+						kind: 'family',
+						regexp: 'iphone',
+						info: {
+							css: 'monster-ua-mobile monster-ua-apple-iphone'
+						}
+					}]
+				},
+				{
 					name: 'bria',
 					regexp: 'bria',
 					kind: 'brand',

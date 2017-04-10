@@ -6,6 +6,25 @@
   background-size: 80px 64px;  
 }
 
+.monster-ua-mobile {
+  width: 30px;
+  height: 60px;
+  background-size: 30px 60px;  
+}
+
+/* Apple */
+.monster-ua-apple {
+  background-image: url(../assets/models/apple_iphone.jpg);
+}
+
+.monster-ua-apple-iphone {
+  background-image: url(../assets/models/apple_iphone.jpg);
+}
+
+.monster-ua-apple-iphone-5 {
+  background-image: url(../assets/models/apple_iphone.jpg);
+}
+
 /* Bria */
 .monster-ua-counterpath-bria {
   background-image: url(../assets/models/bria.png);
