@@ -170,7 +170,6 @@ define(function(require){
 		_afterSuccessfulAuthCallback: function(data, url) {
 			var decoded = monster.util.jwt_decode(data.auth_token);
 			//console.log(data, decoded);$.error();
-
 			if (decoded.hasOwnProperty('account_id')) {
 				var cookieAuth = {
 					authToken: data.auth_token
@@ -600,9 +599,9 @@ define(function(require){
 					name: 'google',
 					friendly_name: 'Google',
 					params: {
-						client_id: 'xxxxxx',
+						client_id: 'xxxxxxxxxx',
 						response_type: 'code',
-						scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
+						scopes: ['openid', 'profile', 'email'],
 						include_granted_scopes: true,
 						access_type: 'offline',
 						authuser: 0
@@ -1108,9 +1107,11 @@ define(function(require){
 			var self = this;
 
 			self.callApi({
-				resource: 'auth.get',
+				resource: 'auth.postTokenInfo',
 				data: {
-					token: authToken,
+					data: {
+						token: authToken
+					},
 					generateError: false
 				},
 				success: function(data) {

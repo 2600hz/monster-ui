@@ -44,6 +44,7 @@
 			},
 			auth: {
 				'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token'] },
+				'postTokenInfo': { verb: 'POST', url: 'auth/tokeninfo', removeHeaders: ['X-Auth-Token'] },
 				'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
 				'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery' },
 				'link': { verb: 'PUT', url: 'auth/links/{auth_id}' },
