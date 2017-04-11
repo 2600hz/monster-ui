@@ -11,7 +11,30 @@
   height: 60px;
   background-size: 30px 60px;  
 }
-
+/* HTC*/
+.monster-ua-htc-x325c {
+  background-image: url(../assets/models/htc_x325c.jpg);
+}
+.monster-ua-htc-831c {
+  background-image: url(../assets/models/htc_831c.jpg);
+}
+/* LG */
+.monster-ua-lg-h790 {
+  background-image: url(../assets/models/lg_h790.jpg);
+}
+.monster-ua-lg-d820 {
+  background-image: url(../assets/models/lg_d820.jpg);
+}
+.monster-ua-lg-ls670 {
+  background-image: url(../assets/models/lg_ls670.jpg);
+}
+/* Samsung */
+.monster-ua-samsung-l710 {
+  background-image: url(../assets/models/samsung_l710.png);
+}
+.monster-ua-samsung-g930 {
+  background-image: url(../assets/models/samsung_g930.jpg);
+}
 /* Apple */
 .monster-ua-apple {
   background-image: url(../assets/models/apple_iphone.jpg);
