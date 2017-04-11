@@ -84,9 +84,7 @@ define(function(require) {
 
 					container
 						.empty()
-						.append(template);
-
-					container
+						.append(template)
 						.find('#name')
 							.focus();
 
@@ -125,7 +123,9 @@ define(function(require) {
 
 					container
 						.empty()
-						.append(template);
+						.append(template)
+						.find('#name')
+							.focus();
 
 					self.portWizardBindAccountVerificationEvents(args);
 				};
@@ -383,9 +383,7 @@ define(function(require) {
 
 			container
 				.empty()
-				.append(template);
-
-			container
+				.append(template)
 				.find('#email')
 					.focus();
 
