@@ -11,6 +11,62 @@ define(function(require) {
 			},
 			inner: [
 				{
+					name: 'HTC X325C',
+					regexp: 'htc x325c',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-htc-x325c'
+					}
+				},
+				{
+					name: 'HTC 831C',
+					regexp: 'htc 831c',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-htc-831c'
+					}
+				},
+				{
+					name: 'Samsung L710',
+					regexp: 'samsung L710',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-samsung-l710'
+					}
+				},
+				{
+					name: 'Samsung G930',
+					regexp: 'sam g930',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-samsung-g930'
+					}
+				},
+				{
+					name: 'LG H790',
+					regexp: 'lg h790',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-lg-h790'
+					}
+				},
+				{
+					name: 'LG D820',
+					regexp: 'lg d820',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-lg-d820'
+					}
+				},
+				{
+					name: 'LG LS670',
+					regexp: 'lg ls670',
+					kind: 'model',
+					info: {
+						css: 'monster-ua-mobile monster-ua-lg-ls670'
+					}
+				},
+				{
 					name: 'apple',
 					regexp: 'apple',
 					kind: 'brand',
