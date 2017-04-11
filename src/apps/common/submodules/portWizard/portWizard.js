@@ -24,6 +24,10 @@ define(function(require) {
 			}
 		},
 
+		/**************************************************
+		 *               Templates rendering              *
+		 **************************************************/
+
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
@@ -104,6 +108,313 @@ define(function(require) {
 
 			appendTemplate();
 		},
+
+		portWizardRenderAccountVerification: function(args) {
+			var self = this,
+				container = args.container,
+				appendTemplate = function appendTemplate(billFileData) {
+					var template = $(self.getTemplate({
+						name: 'accountVerification',
+						data: {
+							request: args.data.request
+						},
+						submodule: 'portWizard'
+					}));
+
+					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
+
+					container
+						.empty()
+						.append(template);
+
+					self.portWizardBindAccountVerificationEvents(args);
+				};
+
+			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
+				self.portWizardRequestGetAttahcment({
+					data: {
+						portRequestId: args.data.request.id,
+						documentName: 'bill.pdf'
+					},
+					success: function(billFileData) {
+						args.data.attachments.bill = {
+							file: billFileData
+						};
+
+						appendTemplate(billFileData);
+					}
+				});
+			} else {
+				appendTemplate(args.data.attachments.bill.file);
+			}
+		},
+
+		portWizardRenderAddNumbers: function(args) {
+			var self = this,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'addNumbers',
+					submodule: 'portWizard'
+				}));
+
+			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardRenderAddNumbersList(args);
+			self.portWizardRenderAddNumbersPortion(args);
+
+			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn) & !_.isEmpty(args.data.request.numbers)) {
+				self.portWizardRenderAddNumbersActions(args);
+			}
+
+			self.portWizardBindAddNumbersEvents(args);
+		},
+
+		portWizardRenderAddNumbersList: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = $.extend(true, args.data, {
+					request: {
+						extra: {
+							numbers_count: _.keys(args.data.request.numbers).length
+						}
+					}
+				}),
+				template = $(self.getTemplate({
+					name: 'addNumbers-list',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				})),
+				$listWrapper = container.find('.list-wrapper');
+
+			if ($listWrapper.is(':empty')) {
+				$listWrapper
+					.hide()
+					.append(template)
+					.fadeIn();
+			} else {
+				$listWrapper
+					.empty()
+					.append(template);
+			}
+
+			if (_.isEmpty(args.data.request.numbers)) {
+				delete args.data.request.ui_flags.portion;
+
+				container
+					.find('.success-wrapper')
+						.fadeOut(function() {
+							$(this)
+								.empty();
+						});
+			}
+
+			self.portWizardBindAddNumbersListEvents(args);
+		},
+
+		portWizardRenderAddNumbersPortion: function(args) {
+			var self = this,
+				request = args.data.request,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'addNumbers-portion',
+					submodule: 'portWizard'
+				}));
+
+			if (request.numbers.hasOwnProperty(request.bill.btn)) {
+				template
+					.find('.portion-item[data-portion="' + request.ui_flags.portion + '"]')
+						.addClass('active');
+
+				if (request.ui_flags.portion === 'full') {
+					self.portWizardRenderAddNumbersActions(args);
+				} else if (request.ui_flags.portion === 'partial') {
+					self.portWizardRenderAddNumbersBtn(args);
+					self.portWizardRenderAddNumbersActions(args);
+				}
+
+				container
+					.find('.portion-wrapper')
+						.fadeOut(function() {
+							$(this)
+								.empty()
+								.append(template)
+								.fadeIn();
+
+							self.portWizardBindAddNumbersPortionEvents(args);
+						});
+			}
+		},
+
+		portWizardRenderAddNumbersActions: function(args) {
+			var self = this,
+				container = args.container,
+				formType = self.portWizardGetFormType(args.data.request),
+				dataToTemplate = {
+					request: args.data.request,
+					eSignEnabled: false,
+					buttons: {
+						manual: self.i18n.active().portWizard.addNumbers.buttons.next.manual[formType],
+						electronic: self.i18n.active().portWizard.addNumbers.buttons.next.eSign[formType]
+					}
+				},
+				template = $(self.getTemplate({
+					name: 'addNumbers-actions',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				})),
+				$successWrapper = container.find('.success-wrapper');
+
+			if ($successWrapper.is(':empty')) {
+				$successWrapper
+					.hide()
+					.append(template)
+					.fadeIn();
+
+				self.portWizardBindAddNumbersActionsEvents(args);
+			}
+		},
+
+		portWizardRenderUploadForm: function(args) {
+			var self = this,
+				container = args.container,
+				formType = self.portWizardGetFormType(args.data.request),
+				dataToTemplate = {
+					type: self.i18n.active().portWizard.formTypes[formType],
+					formLink: monster.config.whitelabel.port[formType]
+				},
+				template = $(self.getTemplate({
+					name: 'uploadForm',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				})),
+				fileUploadOptions = {
+					btnClass: 'monster-button-primary monster-button-small',
+					btnText: self.i18n.active().portWizard.fileUpload.button,
+					inputOnly: true,
+					inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+					mimeTypes: self.appFlags.attachments.mimeTypes,
+					maxSize: self.appFlags.attachments.maxSize,
+					success: function(results) {
+						$.extend(true, args.data, {
+							attachments: {
+								form: results[0]
+							}
+						});
+
+						if (template.find('.uploadForm-success').length < 1) {
+							actionsTemplate = $(self.getTemplate({
+								name: 'uploadForm-actions',
+								submodule: 'portWizard'
+							})).css('display', 'none');
+
+							template
+								.find('.actions')
+									.append(actionsTemplate);
+
+							template
+								.find('.uploadForm-success')
+									.fadeIn();
+						}
+					},
+					error: function(errorsList) {
+						self.portWizardFileUploadErrorsHandler(errorsList);
+					}
+				},
+				actionsTemplate;
+
+			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
+				fileUploadOptions.filesList = [ 'form.pdf' ];
+
+				actionsTemplate = $(self.getTemplate({
+					name: 'uploadForm-actions',
+					submodule: 'portWizard'
+				}));
+
+				template
+					.find('.actions')
+						.append(actionsTemplate);
+			}
+
+			template
+				.find('#form_input')
+					.fileUpload(fileUploadOptions);
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindUploadFormEvents(args);
+		},
+
+		portWizardRenderSignForm: function(args) {
+			var self = this,
+				container = args.container,
+				formType = self.portWizardGetFormType(args.data.request),
+				dataToTemplate = {
+					type: self.i18n.active().portWizard.formTypes[formType]
+				},
+				template = $(self.getTemplate({
+					name: 'signForm',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindSignFormEvents(args);
+		},
+
+		portWizardRenderPortNotify: function(args) {
+			var self = this,
+				container = args.container,
+				template = $(self.getTemplate({
+					name: 'portNotify',
+					data: {
+						request: args.data.request
+					},
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			container
+				.find('#email')
+					.focus();
+
+			self.portWizardBindPortNotifyEvents(args);
+		},
+
+		portWizardRenderSubmitPort: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = {
+					request: args.data.request,
+					today: new Date()
+				},
+				template = $(self.getTemplate({
+					name: 'portSubmit',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.empty()
+				.append(template);
+
+			self.portWizardBindPortSubmitEvents(args);
+		},
+
+		/**************************************************
+		 *                 Events bindings                *
+		 **************************************************/
 
 		portWizardBindPortInfoEvents: function(args) {
 			var self = this,
@@ -206,46 +517,6 @@ define(function(require) {
 					});
 		},
 
-		portWizardRenderAccountVerification: function(args) {
-			var self = this,
-				container = args.container,
-				appendTemplate = function appendTemplate(billFileData) {
-					var template = $(self.getTemplate({
-						name: 'accountVerification',
-						data: {
-							request: args.data.request
-						},
-						submodule: 'portWizard'
-					}));
-
-					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
-
-					container
-						.empty()
-						.append(template);
-
-					self.portWizardBindAccountVerificationEvents(args);
-				};
-
-			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
-				self.portWizardRequestGetAttahcment({
-					data: {
-						portRequestId: args.data.request.id,
-						documentName: 'bill.pdf'
-					},
-					success: function(billFileData) {
-						args.data.attachments.bill = {
-							file: billFileData
-						};
-
-						appendTemplate(billFileData);
-					}
-				});
-			} else {
-				appendTemplate(args.data.attachments.bill.file);
-			}
-		},
-
 		portWizardBindAccountVerificationEvents: function(args) {
 			var self = this,
 				container = args.container,
@@ -329,30 +600,6 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort(args);
 					});
-		},
-
-		portWizardRenderAddNumbers: function(args) {
-			var self = this,
-				container = args.container,
-				template = $(self.getTemplate({
-					name: 'addNumbers',
-					submodule: 'portWizard'
-				}));
-
-			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
-
-			container
-				.empty()
-				.append(template);
-
-			self.portWizardRenderAddNumbersList(args);
-			self.portWizardRenderAddNumbersPortion(args);
-
-			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn) & !_.isEmpty(args.data.request.numbers)) {
-				self.portWizardRenderAddNumbersActions(args);
-			}
-
-			self.portWizardBindAddNumbersEvents(args);
 		},
 
 		portWizardBindAddNumbersEvents: function(args) {
@@ -482,48 +729,6 @@ define(function(require) {
 					});
 		},
 
-		portWizardRenderAddNumbersList: function(args) {
-			var self = this,
-				container = args.container,
-				dataToTemplate = $.extend(true, args.data, {
-					request: {
-						extra: {
-							numbers_count: _.keys(args.data.request.numbers).length
-						}
-					}
-				}),
-				template = $(self.getTemplate({
-					name: 'addNumbers-list',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				})),
-				$listWrapper = container.find('.list-wrapper');
-
-			if ($listWrapper.is(':empty')) {
-				$listWrapper
-					.hide()
-					.append(template)
-					.fadeIn();
-			} else {
-				$listWrapper
-					.empty()
-					.append(template);
-			}
-
-			if (_.isEmpty(args.data.request.numbers)) {
-				delete args.data.request.ui_flags.portion;
-
-				container
-					.find('.success-wrapper')
-						.fadeOut(function() {
-							$(this)
-								.empty();
-						});
-			}
-
-			self.portWizardBindAddNumbersListEvents(args);
-		},
-
 		portWizardBindAddNumbersListEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -561,40 +766,6 @@ define(function(require) {
 					});
 		},
 
-		portWizardRenderAddNumbersPortion: function(args) {
-			var self = this,
-				request = args.data.request,
-				container = args.container,
-				template = $(self.getTemplate({
-					name: 'addNumbers-portion',
-					submodule: 'portWizard'
-				}));
-
-			if (request.numbers.hasOwnProperty(request.bill.btn)) {
-				template
-					.find('.portion-item[data-portion="' + request.ui_flags.portion + '"]')
-						.addClass('active');
-
-				if (request.ui_flags.portion === 'full') {
-					self.portWizardRenderAddNumbersActions(args);
-				} else if (request.ui_flags.portion === 'partial') {
-					self.portWizardRenderAddNumbersBtn(args);
-					self.portWizardRenderAddNumbersActions(args);
-				}
-
-				container
-					.find('.portion-wrapper')
-						.fadeOut(function() {
-							$(this)
-								.empty()
-								.append(template)
-								.fadeIn();
-
-							self.portWizardBindAddNumbersPortionEvents(args);
-						});
-			}
-		},
-
 		portWizardBindAddNumbersPortionEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -629,54 +800,6 @@ define(function(require) {
 							self.portWizardRenderAddNumbersActions(args);
 						}
 					});
-		},
-
-		portWizardRenderAddNumbersBtn: function(args) {
-			var self = this,
-				container = args.container,
-				dataToTemplate = {
-					request: args.data.request
-				},
-				template = $(self.getTemplate({
-					name: 'addNumbers-btn',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				}));
-
-			container
-				.find('.btn-wrapper')
-					.empty()
-					.append(template)
-					.slideDown();
-		},
-
-		portWizardRenderAddNumbersActions: function(args) {
-			var self = this,
-				container = args.container,
-				formType = self.portWizardGetFormType(args.data.request),
-				dataToTemplate = {
-					request: args.data.request,
-					eSignEnabled: false,
-					buttons: {
-						manual: self.i18n.active().portWizard.addNumbers.buttons.next.manual[formType],
-						electronic: self.i18n.active().portWizard.addNumbers.buttons.next.eSign[formType]
-					}
-				},
-				template = $(self.getTemplate({
-					name: 'addNumbers-actions',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				})),
-				$successWrapper = container.find('.success-wrapper');
-
-			if ($successWrapper.is(':empty')) {
-				$successWrapper
-					.hide()
-					.append(template)
-					.fadeIn();
-
-				self.portWizardBindAddNumbersActionsEvents(args);
-			}
 		},
 
 		portWizardBindAddNumbersActionsEvents: function(args) {
@@ -724,78 +847,6 @@ define(function(require) {
 					});
 		},
 
-		portWizardRenderUploadForm: function(args) {
-			var self = this,
-				container = args.container,
-				formType = self.portWizardGetFormType(args.data.request),
-				dataToTemplate = {
-					type: self.i18n.active().portWizard.formTypes[formType],
-					formLink: monster.config.whitelabel.port[formType]
-				},
-				template = $(self.getTemplate({
-					name: 'uploadForm',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				})),
-				fileUploadOptions = {
-					btnClass: 'monster-button-primary monster-button-small',
-					btnText: self.i18n.active().portWizard.fileUpload.button,
-					inputOnly: true,
-					inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-					mimeTypes: self.appFlags.attachments.mimeTypes,
-					maxSize: self.appFlags.attachments.maxSize,
-					success: function(results) {
-						$.extend(true, args.data, {
-							attachments: {
-								form: results[0]
-							}
-						});
-
-						if (template.find('.uploadForm-success').length < 1) {
-							actionsTemplate = $(self.getTemplate({
-								name: 'uploadForm-actions',
-								submodule: 'portWizard'
-							})).css('display', 'none');
-
-							template
-								.find('.actions')
-									.append(actionsTemplate);
-
-							template
-								.find('.uploadForm-success')
-									.fadeIn();
-						}
-					},
-					error: function(errorsList) {
-						self.portWizardFileUploadErrorsHandler(errorsList);
-					}
-				},
-				actionsTemplate;
-
-			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
-				fileUploadOptions.filesList = [ 'form.pdf' ];
-
-				actionsTemplate = $(self.getTemplate({
-					name: 'uploadForm-actions',
-					submodule: 'portWizard'
-				}));
-
-				template
-					.find('.actions')
-						.append(actionsTemplate);
-			}
-
-			template
-				.find('#form_input')
-					.fileUpload(fileUploadOptions);
-
-			container
-				.empty()
-				.append(template);
-
-			self.portWizardBindUploadFormEvents(args);
-		},
-
 		portWizardBindUploadFormEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -826,26 +877,6 @@ define(function(require) {
 					});
 		},
 
-		portWizardRenderSignForm: function(args) {
-			var self = this,
-				container = args.container,
-				formType = self.portWizardGetFormType(args.data.request),
-				dataToTemplate = {
-					type: self.i18n.active().portWizard.formTypes[formType]
-				},
-				template = $(self.getTemplate({
-					name: 'signForm',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				}));
-
-			container
-				.empty()
-				.append(template);
-
-			self.portWizardBindSignFormEvents(args);
-		},
-
 		portWizardBindSignFormEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -865,28 +896,6 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort(args);
 					});
-		},
-
-		portWizardRenderPortNotify: function(args) {
-			var self = this,
-				container = args.container,
-				template = $(self.getTemplate({
-					name: 'portNotify',
-					data: {
-						request: args.data.request
-					},
-					submodule: 'portWizard'
-				}));
-
-			container
-				.empty()
-				.append(template);
-
-			container
-				.find('#email')
-					.focus();
-
-			self.portWizardBindPortNotifyEvents(args);
 		},
 
 		portWizardBindPortNotifyEvents: function(args) {
@@ -928,26 +937,6 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort(args);
 					});
-		},
-
-		portWizardRenderSubmitPort: function(args) {
-			var self = this,
-				container = args.container,
-				dataToTemplate = {
-					request: args.data.request,
-					today: new Date()
-				},
-				template = $(self.getTemplate({
-					name: 'portSubmit',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				}));
-
-			container
-				.empty()
-				.append(template);
-
-			self.portWizardBindPortSubmitEvents(args);
 		},
 
 		portWizardBindPortSubmitEvents: function(args) {
