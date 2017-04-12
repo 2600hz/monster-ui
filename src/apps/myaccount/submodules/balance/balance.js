@@ -663,7 +663,7 @@ define(function(require) {
 							};
 
 						monster.pub('myaccount.updateMenu', argsEvent);
-						parent.find('#amount').html(formattedAmount);
+						template.find('#amount').html(formattedAmount);
 					}
 				};
 
