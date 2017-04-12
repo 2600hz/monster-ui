@@ -83,12 +83,18 @@ define(function(require) {
 					}
 
 					container
-						.empty()
-						.append(template)
-						.find('#name')
-							.focus();
+						.fadeOut(function() {
+							container
+								.empty()
+								.append(template)
+								.fadeIn(function() {
+									container
+										.find('#name')
+											.focus();
+								});
 
-					self.portWizardBindPortInfoEvents(args);
+							self.portWizardBindPortInfoEvents(args);
+						});
 				};
 
 			$.extend(true, args, {
@@ -122,12 +128,18 @@ define(function(require) {
 					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
 
 					container
-						.empty()
-						.append(template)
-						.find('#name')
-							.focus();
+						.fadeOut(function() {
+							container
+								.empty()
+								.append(template)
+								.fadeIn(function() {
+									container
+										.find('#name')
+											.focus();
+								});
 
-					self.portWizardBindAccountVerificationEvents(args);
+							self.portWizardBindAccountVerificationEvents(args);
+						});
 				};
 
 			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
@@ -160,17 +172,25 @@ define(function(require) {
 			monster.ui.renderPDF(args.data.attachments.bill.file, template.find('.pdf-container'));
 
 			container
-				.empty()
-				.append(template);
+				.fadeOut(function() {
+					container
+						.empty()
+						.append(template)
+						.fadeIn(function() {
+							container
+								.find('#numbers')
+									.focus();
+						});
 
-			self.portWizardRenderAddNumbersList(args);
-			self.portWizardRenderAddNumbersPortion(args);
+					self.portWizardRenderAddNumbersList(args);
+					self.portWizardRenderAddNumbersPortion(args);
 
-			if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn) & !_.isEmpty(args.data.request.numbers)) {
-				self.portWizardRenderAddNumbersActions(args);
-			}
+					if (!args.data.request.numbers.hasOwnProperty(args.data.request.bill.btn) & !_.isEmpty(args.data.request.numbers)) {
+						self.portWizardRenderAddNumbersActions(args);
+					}
 
-			self.portWizardBindAddNumbersEvents(args);
+					self.portWizardBindAddNumbersEvents(args);
+				});
 		},
 
 		portWizardRenderAddNumbersList: function(args) {
@@ -247,6 +267,25 @@ define(function(require) {
 							self.portWizardBindAddNumbersPortionEvents(args);
 						});
 			}
+		},
+
+		portWizardRenderAddNumbersBtn: function(args) {
+			var self = this,
+				container = args.container,
+				dataToTemplate = {
+					request: args.data.request
+				},
+				template = $(self.getTemplate({
+					name: 'addNumbers-btn',
+					data: dataToTemplate,
+					submodule: 'portWizard'
+				}));
+
+			container
+				.find('.btn-wrapper')
+					.empty()
+					.append(template)
+					.slideDown();
 		},
 
 		portWizardRenderAddNumbersActions: function(args) {
@@ -344,10 +383,14 @@ define(function(require) {
 					.fileUpload(fileUploadOptions);
 
 			container
-				.empty()
-				.append(template);
+				.fadeOut(function() {
+					container
+						.empty()
+						.append(template)
+						.fadeIn();
 
-			self.portWizardBindUploadFormEvents(args);
+					self.portWizardBindUploadFormEvents(args);
+				});
 		},
 
 		portWizardRenderSignForm: function(args) {
@@ -364,10 +407,14 @@ define(function(require) {
 				}));
 
 			container
-				.empty()
-				.append(template);
+				.fadeOut(function() {
+					container
+						.empty()
+						.append(template)
+						.fadeIn();
 
-			self.portWizardBindSignFormEvents(args);
+					self.portWizardBindSignFormEvents(args);
+				});
 		},
 
 		portWizardRenderPortNotify: function(args) {
@@ -382,12 +429,18 @@ define(function(require) {
 				}));
 
 			container
-				.empty()
-				.append(template)
-				.find('#email')
-					.focus();
+				.fadeOut(function() {
+					container
+						.empty()
+						.append(template)
+						.fadeIn(function() {
+							container
+								.find('#email')
+									.focus();
+						});
 
-			self.portWizardBindPortNotifyEvents(args);
+					self.portWizardBindPortNotifyEvents(args);
+				});
 		},
 
 		portWizardRenderSubmitPort: function(args) {
@@ -404,10 +457,14 @@ define(function(require) {
 				}));
 
 			container
-				.empty()
-				.append(template);
+				.fadeOut(function() {
+					container
+						.empty()
+						.append(template)
+						.fadeIn();
 
-			self.portWizardBindPortSubmitEvents(args);
+					self.portWizardBindPortSubmitEvents(args);
+				});
 		},
 
 		/**************************************************
