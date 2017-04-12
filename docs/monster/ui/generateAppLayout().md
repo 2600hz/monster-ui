@@ -7,10 +7,19 @@
 
 ### Syntax
 ```javascript
-monster.ui.generateAppLayout();
+monster.ui.generateAppLayout(thisArg, args);
 ```
 
 ### Parameters
+* `thisArg` (mandatory)
+
+ Type: [Object][object_literal]
+
+ The context of the app invoking the helper.
+
+* `args` (mandatory)
+
+ Type: [Object][object_literal]
 
 ### Description
 
@@ -18,3 +27,5 @@ monster.ui.generateAppLayout();
 
 [monster]: ../../monster.md
 [ui]: ../ui.md
+
+[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
