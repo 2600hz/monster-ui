@@ -1090,121 +1090,99 @@ label[class*='monster-radio'].prepend-label > span {
 /********************** MONSTER TABLES **********************/
 /************************************************************/
 
-table.monster-table {
+.monster-table {
 	width: 100%;
 	margin-top: 25px;
 }
 
-table.monster-table thead .footable-header{
+/************************** HEADER **************************/
+
+.monster-table .footable-header {
+	border: 1px solid $panel-border-color;
 	background-color: $background-primary-color;
-	border: 1px solid #c0c0c9;
 }
 
-/*table.monster-table thead .footable-header th::before {
-	display: table-cell;
-	width: 2%;
-	content: '';
-}
-table.monster-table thead .footable-header th::after {
-	display: table-cell;
-	width: 2%;
-	content: '';
-}
-
-table.monster-table tbody tr::before.
-table.monster-table thead .footable-header::before {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}
-table.monster-table tbody tr::after,
-table.monster-table thead .footable-header::after {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}*/
-
-table.monster-table > thead > tr > th {
-/*	font-weight: 600;
-	height: 45px;
-	text-align: left;
-	text-transform: uppercase;
-	color: #909099;*/
-	color: #9aa2a8;
+.monster-table .footable-header th {
 	font-weight: normal;
 	height: 37px;
 	text-align: left;
-	text-shadow: none;
 	text-transform: uppercase;
+	color: #9aa2a8;
 }
 
-table.monster-table > tbody > tr > td {
-	max-width: 600px;
-	overflow: hidden;
-	padding: 10px 25px 10px 0;
-	text-overflow: ellipsis;
-	vertical-align: middle;
-	white-space: nowrap;
-}
-
-table.monster-table.skinny > tbody > tr > td {
-	padding: 3px 25px 3px 0;
-}
-
-table.monster-table > tbody {
-	background-color: #fff;
-	border-bottom: 1px solid #c0c0c9;
-	border-left: 1px solid #c0c0c9;
-	border-right: 1px solid #c0c0c9;
-}
-table.monster-table.skinny > tbody > tr {
-	height: 20px;
-}
-
-table.monster-table > tbody > tr {
-	height: 66px;
-}
-table.monster-table > tbody > tr:last-child::before,
-table.monster-table > tbody > tr:last-child::after {
-	border-bottom: 0;
-}
-table.monster-table > tbody > tr> td {
-	border-bottom: 1px solid #c0c0c9;
-	text-align: left;
-}
-table.monster-table > tbody > tr:last-child > td {
-	border-bottom: 0;
-}
-
-table.monster-table > thead > tr.footable-header > th:first-child,
-table.monster-table > tbody > tr > td:first-child { 
+.monster-table .footable-header th:first-child {
 	padding-left: 25px;
 }
 
-table.monster-table > thead > tr.footable-header > th:last-child,
-table.monster-table > tbody > tr > td:last-child {
+.monster-table .footable-header th:last-child {
 	padding-right: 25px;
 }
 
-table.monster-table:not(.no-actions) td:last-child,
-table.monster-table:not(.no-actions) th:last-child {
-	text-align: right;
+/*************************** BODY ***************************/
+
+.monster-table tbody {
+	background-color: $panel-background-color;
 }
-table.monster-table .actions .action-item {
+
+.monster-table tbody tr {
+	height: 66px;
+}
+
+.monster-table tbody td {
+	overflow: hidden;
+	max-width: 600px;
+	padding: 10px 25px 10px 0;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	border-top: 1px solid $panel-border-color;
+}
+
+.monster-table tbody tr:last-child td {
+	border-bottom: 1px solid $panel-border-color;
+}
+
+.monster-table tbody tr td:first-child {
+	padding-left: 25px;
+	border-left: 1px solid $panel-border-color;
+}
+
+.monster-table tbody tr td:last-child {
+	padding-right: 25px;
+	border-right: 1px solid $panel-border-color;
+}
+
+/************************** ACTIONS *************************/
+
+.monster-table .actions .action-item {
 	margin-left: 10px;
 	padding: 0 5px;
 	cursor: pointer;
 }
 
-table.monster-table .actions .action-item.disabled {
-	color: #bbb;
+.monster-table .actions .action-item.disabled {
 	cursor: default;
+	color: #bbb;
 }
 
-table.monster-table .actions .action-item:first-child {
+.monster-table .actions .action-item:first-child {
 	margin-left: 0;
+}
+
+.monster-table:not(.no-actions) td:last-child,
+.monster-table:not(.no-actions) th:last-child {
+	text-align: right;
+}
+
+/************************** SKINNY **************************/
+
+.monster-table.skinny tbody tr {
+	height: 20px;
+}
+
+.monster-table.skinny tbody td {
+	padding: 3px 25px 3px 0;
 }
 
 /************************************************************/
