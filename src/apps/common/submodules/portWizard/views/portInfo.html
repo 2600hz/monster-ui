@@ -1,0 +1,45 @@
+<div class="app-content" id="port_wizard">
+	<form class="form-horizontal" id="form_port_info">
+		<h3 class="title">
+			{{i18n.portWizard.portInfo.movingNumbers.title}}
+		</h3>
+		<p class="title-help">
+			{{i18n.portWizard.portInfo.movingNumbers.text}}
+		</p>
+		<div class="contrlol-group single-group">
+			<label for="name" class="control-label">
+				{{i18n.portWizard.portInfo.movingNumbers.label}}
+			</label>
+			<div class="controls">
+				<input type="text" name="name" id="name" placeholder="{{i18n.portWizard.portInfo.movingNumbers.placeholder}}" value="{{request.name}}">
+			</div>
+		</div>
+		<p class="text">
+			{{i18n.portWizard.portInfo.numbersType.text1}}
+			<br>
+			{{i18n.portWizard.portInfo.numbersType.text2}}
+		</p>
+		<div class="control-group radio-group">
+			<div class="controls">
+			{{#monsterRadio i18n.portWizard.portInfo.numbersType.label.local}}
+				<input type="radio" class="numbers-type" name="ui_flags.type" value="local"{{#compare request.ui_flags.type '===' 'local'}} checked="true" {{/compare}}>
+			{{/monsterRadio}}
+			</div>
+		</div>
+		<div class="control-group radio-group">
+			<div class="controls">
+			{{#monsterRadio i18n.portWizard.portInfo.numbersType.label.tollFree}}
+				<input type="radio" class="numbers-type" name="ui_flags.type" value="tollFree"{{#compare request.ui_flags.type '===' 'tollFree'}} checked="true" {{/compare}}>
+			{{/monsterRadio}}
+			</div>
+		</div>
+	</form>
+	<div class="bill-upload-wrapper"></div>
+	<div class="actions-wrapper">
+		<div class="actions">
+		</div>
+		<a href="javascript:void(0);" class="monster-link cancel">
+			{{i18n.portWizard.buttons.cancel}}
+		</a>
+	</div>
+</div>

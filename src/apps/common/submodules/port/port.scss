@@ -1,208 +1,25 @@
 @import "../../../../css/partials/base";
 
-div#port_container {
-	margin: 0 auto;
-	max-width: 940px;
-}
-
-div#port_container > div,
 div#port_comments_popup > div,
 div#port_request_info {
 	padding: 40px 60px;
 }
-div#port_container > div:not(:first-child),
 div#port_comments_popup > div:not(:first-child) {
 	border-top: 1px solid #ddd;
 }
-div#port_container > div > *:not(:last-child) {
+#orders_list > *:not(:last-child) {
 	margin-bottom: 40px;
 }
 
-div#port_container h2 {
-	margin-top: 0px;
-	color: $primary-color;
-	text-align: center;
-	font-weight: normal;
-}
+#orders_list label { font-size: 16px; }
 
-#port_container ul.help-links {
-	margin: 5px auto 0;
-	text-align: center;
-}
+#orders_list .control-group { margin-bottom: 0; }
 
-#port_container ul.help-links li {
-	display: inline;
-	list-style: none;
-}
-
-#port_container ul.help-links li.separator {
-	margin: 0 5px;
-	border-left: 1px solid $primary-color;
-}
-
-#port_container div.row-fluid.info { position: relative; }
-
-#port_container div.row-fluid.info i {
-	position: absolute;
-	top: 2px;
-	left: -22px;
-}
-
-#port_container div.row-fluid.info p {
-	margin-bottom: 0;
-	font-size: 13px;
-}
-
-#port_container .order,
-#port_request_info .order {
-	display: inline-block;
-	padding-bottom: 10px;
-	width: 29.28%;
-	height: 100%;
-	vertical-align: top;
-}
-
-#port_container .order:not(:first-child),
-#port_request_info .order:not(:first-child) {
-	margin-left: 50px;
-}
-
-#port_container .order h4,
-#port_request_info .order h4 {
-	overflow: hidden;
-	margin: 0 0 10px 0;
-	padding: 0 10px;
-	color: $primary-color;
-	font-weight: normal;
-	text-transform: lowercase;
-	text-transform: capitalize;
-}
-
-#port_container .order .scroll,
-#port_request_info .order .scroll {
-	overflow-y: auto;
-	max-height: 327px;
-	border: 1px solid #ddd;
-	border-radius: 10px;
-}
-
-#port_container .order ul,
-#port_request_info .order ul {
-	margin-bottom: 0;
-	margin-left: 0;
-	list-style: none;
-}
-
-#port_container .order li,
-#port_request_info .order li {
-	padding: 10px 10px 10px 25px;
-	border-bottom: 1px solid #ddd;
-}
-
-#port_container .order li:last-child,
-#port_request_info .order li:last-child {
-	border-bottom: none;
-}
-
-#port_container .order li .fa-exclamation-triangle,
-#port_request_info .order li .fa-exclamation-triangle {
-	position: relative;
-	top: 1px;
-	right: 10px;
-	visibility: hidden;
-	color: red;
-}
-
-@-moz-document url-prefix() {
-	#port_container .order li,
-	#port_request_info .order li {
-		position: relative;
-	}
-	#port_container .order li .fa-times-circle,
-	#port_request_info .order li .fa-times-circle {
-		float: none;
-		position: absolute;
-		top: 11px;
-		right: 10px;
-	}
-}
-
-#port_container .order .fa-times-circle:hover,
-#port_request_info .order .fa-times-circle:hover {
-	cursor: pointer;
-}
-
-#port_container .order li .fa-exclamation-triangle.visible,
-#port_request_info .order li .fa-exclamation-triangle.visible {
-	visibility: visible;
-}
-
-#port_container .order h3 .fa-times-circle,
-#port_request_info .order h3 .fa-times-circle {
-	margin-top: 11px;
-}
-
-div#continue_later { text-align: center; }
-div#continue_later p { margin: 5px 0; }
-
-#port_container .help-block {
-	margin-bottom: 0;
-	font-size: 12px;
-}
-
-#transfer_status { text-align: center; }
-
-#transfer_status .span4 { position: relative; }
-
-#transfer_status .span4 i {
-	position: relative;
-}
-
-#transfer_status .done,
-#transfer_status .done i { color: $primary-color; }
-#transfer_status .todo,
-#transfer_status .todo i { color: #909090; }
-
-#transfer_status .span4:not(:last-child).done i::after,
-#transfer_status .span4:not(:last-child).todo i::after {
-	position: absolute;
-	top: 6px;
-	left: 12px;
-	display: block;
-	width: 269px;
-	height: 2px;
-	content: "";
-}
-
-#transfer_status .span4:not(:last-child).done i::after { background-color: $primary-color; }
-#transfer_status .span4:not(:last-child).todo i::after { background-color: #909090; }
-
-#port_container label { font-size: 16px; }
-
-#port_container .control-group { margin-bottom: 0; }
-
-#port_container .control-group:not(.error) .help-inline { display: none; }
-#port_container .control-group.error .help-inline {
+#orders_list .control-group:not(.error) .help-inline { display: none; }
+#orders_list .control-group.error .help-inline {
 	display: inline-block;
 	margin: 6px 0 0 5px;
 	vertical-align: top;
-}
-#port_container .control-group.error .help-inline i { color: #b94a48; }
-
-#port_container .file-upload-container {
-	margin-bottom: 5px;
-}
-
-#port_container .file-upload-container .input-append {
-	margin-bottom: 0;
-}
-
-#port_container .file-upload-container input[type="text"] {
-	width: auto;
-}
-
-#port_container label.monster-invalid {
-	font-size: 12px;
 }
 
 .port-container-dialog .ui-dialog-content {
@@ -213,8 +30,14 @@ div#continue_later p { margin: 5px 0; }
 
 /*********************** Orders List **********************/
 
+div#orders_list {
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
+	padding: 40px 60px;
+}
+
 div#orders_list .list-header {
-	margin-bottom: 10px;
 	height: 50px;
 }
 
@@ -494,212 +317,4 @@ div#port_comments_popup .actions .checkbox {
 
 .edit-shceduled-date .content {
 	padding: 15px;
-}
-
-/**********************************************************/
-
-/********************** Resume Orders *********************/
-
-div#resume_orders { width: 820px; }
-
-div#resume_orders h2 { margin-bottom: 50px; }
-
-div#resume_orders .row-fluid {
-	margin-bottom: 20px !important;
-	padding-top: 20px;
-	border-top: 1px solid #ddd;
-}
-
-/**********************************************************/
-
-/*********************** Add Numbers **********************/
-
-div#add_numbers > div { margin-bottom: 0; }
-
-div#add_numbers .row-fluid > .span6:first-child { text-align: center; }
-div#add_numbers .row-fluid > .span6:first-child label { margin-bottom: 20px; }
-
-div#add_numbers .search-custom {
-	display: block;
-	text-align: center;
-	font-size: 15px;
-}
-
-div#add_numbers input { height: 34px; }
-
-div#manage_orders > .row-fluid:last-child {
-	position: relative;
-	overflow-x: auto;
-	max-height: 445px;
-	white-space: nowrap;
-}
-
-div#eula .important {
-	color: red;
-	text-align: center;
-	font-size: 25px;
-}
-
-div#eula .important span { text-transform: uppercase; }
-
-div#eula form { margin-bottom: 0; }
-
-div#eula form .control-group:last-child label { margin-bottom: 0; }
-
-/**********************************************************/
-
-/******************** Submit Documents ********************/
-
-div#upload_bill label.monster-invalid {
-	right: 0;
-	margin-top: -10px;
-}
-
-div#name_transfer .row-fluid label {
-	margin: 0;
-	padding: 4px 0;
-	text-align: right;
-}
-
-div#name_transfer .row-fluid #transfer_helper {
-	margin-bottom: 0px;
-}
-
-div#name_transfer .row-fluid label.monster-invalid {
-	margin-top: 15px;
-}
-
-div#upload_bill .span6:first-child { padding-right: 12px; }
-div#upload_bill .span6:last-child { padding-left: 12px; }
-
-div#upload_bill .info { min-height: 80px; }
-
-div#upload_bill form {
-	margin: 0 auto;
-	max-width: 260px;
-	text-align: center;
-}
-
-div#upload_bill form {
-	position: relative;
-}
-
-div#upload_bill form input.upload { display: none; }
-
-div#upload_bill form .help-block,
-div#loa .help-block,
-div#resporg .help-block {
-	text-align: right;
-}
-
-div#upload_bill form label { text-align: left; }
-
-div#upload_bill span.imporant { color: #F00; }
-
-div#upload_bill .order {
-	margin: 0 16.5%;
-	max-width: 260px;
-	width: 100%;
-	height: 100%;
-}
-
-div#loa h4,
-div#resporg h4 {
-	margin: 0;
-	font-weight: normal;
-}
-
-div#loa .row-fluid,
-div#resporg .row-fluid {
-	text-align: center;
-}
-
-div#loa .row-fluid > div .number,
-div#resporg .row-fluid > div .number {
-	font-size: 25px;
-}
-
-div#loa input.upload,
-div#resporg input.upload {
-	display: none;
-}
-
-div#loa > p {margin-bottom: 0; }
-
-div#loa #loa_link,
-div#resporg #resporg_link {
-	color: #333;
-}
-
-div#loa .file-upload-container,
-div#resporg .file-upload-container {
-	text-align: right;
-}
-
-div#loa .file-upload-container > button,
-div#resporg .file-upload-container > button {
-	float: right;
-}
-
-/**********************************************************/
-
-/********************** Confirm Order *********************/
-
-div#notification h2 { margin-bottom: 0; }
-
-div#notification input,
-div#transfer_date input { margin-bottom: 0; }
-
-div#notification .row-fluid label,
-div#transfer_date .row-fluid label,
-div#temporary_numbers .row-fluid .span6:first-child label {
-	margin: 0;
-	padding: 4px 0;
-	text-align: right;
-}
-
-div#transfer_date .row-fluid:first-child { margin-bottom: 40px; }
-
-div#transfer_date #transfer_numbers_date {
-	cursor: pointer;
-	background-color: #fff;
-}
-
-div#transfer_date .info .important {
-	color: #F00;
-	text-transform: uppercase;
-}
-
-div#temporary_numbers .row-fluid:not(.info) { margin-bottom: 40px; }
-
-div#order_summary > .row-fluid {
-	border: 1px solid #ddd;
-}
-
-div#order_summary .row-fluid .span6:first-child {
-	padding: 20px;
-}
-
-div#order_summary .row-fluid .span6:first-child ul {
-	margin: 0 0 0 40px;
-}
-
-div#order_summary .row-fluid .span6:first-child ul li:not(:last-child) { margin-bottom: 5px; }
-
-div#order_summary .row-fluid .span6:last-child { padding: 20px; }
-
-#faq_accordion_container {
-	padding: 10px;
-}
-#faq_accordion_container .accordion-heading {
-	font-weight: bold;
-}
-#faq_accordion_container .accordion-inner {
-	font-style: italic;
-}
-#faq_accordion_container .accordion-toggle:not(.in):not(:hover):focus {
-	color: #333;
-}
-#faq_accordion_container .accordion-toggle.in {
-	color: $primary-color;
 }

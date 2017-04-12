@@ -198,7 +198,7 @@ define(function(require){
 			},
 
 			replaceVar: function(stringValue, variable) {
-				return stringValue.replace('{{variable}}', variable);
+				return stringValue.replace(/{{variable}}/g, variable);
 			},
 
 			select: function(value, options) {
@@ -258,8 +258,6 @@ define(function(require){
 		 */
 		$coreWrapper
 			.on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
-				event.preventDefault();
-
 				var $this = $(this),
 					$splash = $('<div>', {
 						class: 'monster-splash-effect'

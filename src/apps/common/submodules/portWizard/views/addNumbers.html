@@ -1,0 +1,48 @@
+<div class="app-content" id="port_wizard">
+	<h3 class="title">
+		{{i18n.portWizard.addNumbers.title}}
+	</h3>
+	<p class="title-help">
+		{{i18n.portWizard.addNumbers.text1}}
+		<br>
+		{{i18n.portWizard.addNumbers.text2}}
+	</p>
+	<div class="row-fluid">
+		<div class="span5">
+			<form class="form textarea-wrapper" id="form_add_numbers">
+				<a class="collapse">
+					<i class="icon-telicon-plus-circled"></i>
+					{{i18n.portWizard.addNumbers.textarea.link}}
+				</a>
+				<div class="accordion">
+					<h4 class="title">
+						{{i18n.portWizard.addNumbers.textarea.legend}}
+					</h4>
+					<textarea name="numbers" id="numbers" rows="5"></textarea>
+					<button class="monster-button-primary add-numbers">
+						{{i18n.portWizard.addNumbers.textarea.button}}
+					</button>
+				</div>
+			</form>
+
+			<div class="list-wrapper"></div>
+
+			<div class="portion-wrapper"></div>
+
+			<form class="form form-horizontal btn-wrapper" id="form_new_btn"></form>
+		</div>
+
+		<div class="span6 offset1 pdf-container"></div>
+	</div>
+	<div class="actions-wrapper">
+		<div class="actions">
+			<button class="monster-button-secondary save">
+				{{i18n.portWizard.buttons.save}}
+			</button>
+			<span class="success-wrapper"></span>
+		</div>
+		<a href="javascript:void(0);" class="monster-link cancel">
+			{{i18n.portWizard.buttons.cancel}}
+		</a>
+	</div>
+</div>

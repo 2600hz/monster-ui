@@ -550,6 +550,16 @@ form.form-horizontal .input-append {
 	margin-left: 40px;
 }
 
+.form-horizontal .control-group .controls-list {
+	margin-left: 180px;
+}
+.form-horizontal .control-group .controls-list input {
+	display: block;
+}
+.form-horizontal .control-group .controls-list > input:not(:first-child) {
+	margin-top: 20px;
+}
+
 @media (max-width: 767px) {
 	body {
 		padding-right: 0;

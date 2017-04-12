@@ -1,0 +1,352 @@
+#port_wizard {
+	position: relative;
+	padding: 45px 20px;
+	text-align: center;
+	border: 1px solid #c0c0c9;
+	border-radius: 2px;
+	background-color: #fff;
+}
+
+#port_wizard .row-fluid {
+	text-align: left;
+}
+
+#port_wizard h3.title {
+	font-weight: normal;
+	margin-top: 0;
+	margin-bottom: 5px;
+	color: #303039;
+}
+
+#port_wizard p.title-help,
+#port_wizard p.text,
+#port_wizard p.note {
+	max-width: 860px;
+	margin: 0 auto 40px;
+}
+
+#port_wizard p.note {
+	font-style: italic;
+}
+
+#port_wizard p.title-help {
+	color: #909099;
+}
+
+#port_wizard p.title-help a {
+	color: #22a5ff;
+}
+
+#port_wizard .single-group {
+	max-width: 400px;
+	margin: 0 auto 40px;
+}
+
+#port_wizard .radio-group {
+	width: 500px;
+	margin: 0 auto;
+	text-align: left;
+}
+
+#port_wizard .control-date {
+	width: 300px;
+	text-align: center;
+}
+
+#port_wizard .control-date input {
+	cursor: pointer;
+	background-color: initial;
+}
+
+#port_wizard .form-horizontal .control-label,
+#port_wizard .form-horizontal .controls {
+	text-align: left;
+}
+
+#port_wizard .form-text .control-group {
+	margin: 0;
+}
+
+#port_wizard .form-text .control-label {
+	width: 200px;
+}
+
+#port_wizard .form-text .controls {
+	margin-left: 220px;
+}
+
+#port_wizard .controls .control-text {
+	padding-top: 5px;
+}
+
+#port_wizard .form legend {
+	font-size: 16px;
+	font-weight: 600;
+	color: #22a5ff;
+}
+
+#port_wizard .form legend.important {
+	color: #ff3d24;
+}
+
+#port_wizard .control-label {
+	font-weight: 600;
+}
+
+#port_wizard .control-date .control-label {
+	text-align: center;
+}
+
+#port_wizard .actions-wrapper {
+	margin-top: 40px;
+}
+
+#port_wizard .actions-wrapper .actions {
+	margin-bottom: 30px;
+}
+
+#port_wizard .actions-wrapper .actions button:not(:first-child) {
+	margin-left: 15px;
+}
+
+#port_wizard .actions-wrapper .actions .success-wrapper {
+	display: none;
+	margin-left: 15px;
+}
+
+#port_wizard .row-fluid {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+#port_wizard .row-fluid h4.title {
+	font-weight: normal;
+	color: #22a5ff;
+}
+
+#port_wizard .steps {
+	width: 400px;
+	margin: 0 auto;
+	list-style: none;
+	text-align: left;
+}
+
+#port_wizard .steps h4.title {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0 0 15px;
+	color: #22a5ff;
+}
+
+#port_wizard .steps span.label-button {
+	line-height: 34px;
+}
+
+#port_wizard .steps .item:not(:first-child) {
+	margin-top: 50px;
+}
+
+#port_wizard .steps .item:not(:last-child) {
+	padding-bottom: 50px;
+	border-bottom: 1px solid #c0c0c9;
+}
+
+#port_wizard .file-upload-wrapper {
+	width: 380px;
+	margin: 0 auto;
+	padding: 20px 10px 5px;
+	border: 1px dashed #c0c0c9;
+	border-radius: 2px;
+}
+
+#port_wizard .file-upload-wrapper h5.title {
+	font-weight: 600;
+	margin: 0 20px 30px;
+	text-align: left;
+}
+
+#port_wizard .file-upload-wrapper h5.title .hint {
+	font-size: 12px;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 15px;
+	color: #909099;
+}
+
+#port_wizard .file-upload-wrapper .file-upload-container {
+	text-align: center;
+}
+
+#port_wizard .file-upload-wrapper input {
+	width: 60% !important;
+}
+
+#port_wizard .file-upload-wrapper button {
+	vertical-align: top;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+#port_wizard .portion-item {
+	cursor: pointer;
+	text-align: center;
+}
+
+#port_wizard .portion-item .portion {
+	position: relative;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border: 27px solid #e0e0e9;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+#port_wizard .portion-item .portion:not(:first-child) {
+	margin-left: 50px;
+}
+
+#port_wizard .portion-item.active .portion {
+	border-color: #22a5ff;
+}
+
+#port_wizard .portion-item .portion.partial {
+	transform: rotate(-45deg);
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+}
+
+#port_wizard .portion-item .portion::before,
+#port_wizard .portion-item .portion::after {
+	position: absolute;
+	display: block;
+	content: '';
+	border-radius: 50%;
+}
+
+#port_wizard .portion-item .portion::before {
+	width: 61px;
+	height: 61px;
+	transform: translate(-33px, -33px);
+	border: 3px solid #e0e0e9;
+}
+
+#port_wizard .portion-item.active .portion::before {
+	border-color: #22a5ff;
+}
+
+#port_wizard .portion.partial::after {
+	transform: translate(-27px, -27px);
+	border: 27px solid transparent;
+	border-bottom-color: #e0e0e9;
+}
+
+#port_wizard .portion-item.active .portion.partial::after {
+	border-bottom-color: #22a5ff;
+}
+
+#port_wizard .portion-item .title {
+	font-size: 12px;
+	font-weight: bold;
+	margin-top: 15px;
+	color: #b9b9bf;
+}
+
+#port_wizard .portion-item.active .title {
+	color: #22a5ff;
+}
+
+#port_wizard .textarea-wrapper .collapse {
+	display: none;
+	cursor: pointer;
+}
+
+#port_wizard .textarea-wrapper .collapse,
+#port_wizard .textarea-wrapper .collapse i {
+	color: #22a5ff;
+}
+
+#port_wizard .textarea-wrapper .collapse i {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+#port_wizard .textarea-wrapper .accordion {
+	margin-bottom: 30px;
+}
+
+#port_wizard .textarea-wrapper .accordion textarea {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 10px 0 20px;
+}
+
+#port_wizard .list-wrapper {
+	display: none;
+}
+
+#port_wizard .list-wrapper h4.title {
+	margin-bottom: 30px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #c0c0c9;
+}
+
+#port_wizard .list-wrapper .empty-list {
+	padding: 10px;
+	color: #909099;
+	border: 1px dashed #c0c0c9;
+	border-radius: 2px;
+}
+
+#port_wizard .list-wrapper .numbers-list {
+	overflow-y: auto;
+	max-height: 245px;
+	margin: 0;
+	padding: 0 15px;
+	list-style: none;
+}
+
+#port_wizard .list-wrapper .item:not(:first-child) {
+	margin-top: 5px;
+}
+
+#port_wizard .list-wrapper .item i {
+	font-size: 13px;
+	cursor: pointer;
+}
+
+#port_wizard .list-wrapper .item.warning,
+#port_wizard .list-wrapper .item.warning i {
+	color: red;
+}
+
+#port_wizard .portion-wrapper {
+	margin-top: 40px;
+}
+
+#port_wizard .portion-wrapper .error-message {
+	font-size: 13px;
+	margin-bottom: 30px;
+	padding: 15px;
+	border-radius: 2px;
+	background-color: #ff3d24;
+}
+
+#port_wizard .portion-wrapper .error-message,
+#port_wizard .portion-wrapper .error-message i {
+	color: #fff;
+}
+
+#port_wizard .portion-wrapper .error-message .text {
+	display: block;
+	margin-left: 33px;
+}
+
+#port_wizard .btn-wrapper {
+	display: none;
+	margin: 40px 0 0;
+}
+
+#port_wizard .btn-wrapper h4.title {
+	margin-top: 0;
+}

@@ -44,6 +44,7 @@
 			},
 			auth: {
 				'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token'] },
+				'postTokenInfo': { verb: 'POST', url: 'auth/tokeninfo', removeHeaders: ['X-Auth-Token'] },
 				'recovery': { verb: 'PUT', url: 'user_auth/recovery' },
 				'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery' },
 				'link': { verb: 'PUT', url: 'auth/links/{auth_id}' },
@@ -121,6 +122,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/devices' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },

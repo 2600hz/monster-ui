@@ -600,9 +600,9 @@ define(function(require){
 					name: 'google',
 					friendly_name: 'Google',
 					params: {
-						client_id: 'xxxxxx',
+						client_id: 'xxxxxxxxxx',
 						response_type: 'code',
-						scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
+						scopes: ['openid', 'profile', 'email'],
 						include_granted_scopes: true,
 						access_type: 'offline',
 						authuser: 0
@@ -1108,9 +1108,29 @@ define(function(require){
 			var self = this;
 
 			self.callApi({
-				resource: 'auth.get',
+				resource: 'auth.postTokenInfo',
 				data: {
-					token: authToken,
+					data: {
+						token: authToken
+					},
+					generateError: false
+				},
+				success: function(data) {
+					callbackSuccess && callbackSuccess(data);
+				},
+				error: function(error) {
+					callbackError && callbackError(error);
+				}
+			});
+		},
+
+		putAuthCallback: function(odata, callbackSuccess, callbackError) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.callback',
+				data: {
+					data: odata,
 					generateError: false
 				},
 				success: function(data) {

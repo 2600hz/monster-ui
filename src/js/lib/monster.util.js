@@ -292,30 +292,6 @@ define(function(require){
 			return randomString;
 		},
 
-		/* Automatically sorts an array of objects. secondArg can either be a custom sort to be applied to the dataset, or a fieldName to sort alphabetically on */
-		sort: function(dataSet, secondArg) {
-			var self = this,
-				fieldName = 'name',
-				sortFunction = function(a, b) {
-					var aFormatted = typeof a[fieldName] === 'string' ? a[fieldName].toLowerCase() : a,
-						bFormatted = typeof b[fieldName] === 'string' ? b[fieldName].toLowerCase() : b;
-
-					return self.cmp(aFormatted, bFormatted);
-				},
-				result;
-
-			if(typeof secondArg === 'function') {
-				sortFunction = secondArg;
-			}
-			else if(typeof secondArg === 'string') {
-				fieldName = secondArg;
-			}
-
-			result = dataSet.sort(sortFunction);
-
-			return result;
-		},
-
 		cmp: function(a,b) {
 			return  (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
