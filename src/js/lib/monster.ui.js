@@ -1891,7 +1891,13 @@ define(function(require){
 									finalArgs.data = args;
 								}
 
-								(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
+								if (!args.hasOwnProperty('subTab')) {
+									(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
+								} else {
+									var subTab = args.subTab;
+									delete args.subTab;
+									monster.ui.loadTab(thisArg, subTab, args);
+								}
 							});
 				};
 
