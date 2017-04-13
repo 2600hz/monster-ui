@@ -1090,121 +1090,174 @@ label[class*='monster-radio'].prepend-label > span {
 /********************** MONSTER TABLES **********************/
 /************************************************************/
 
+/* Override footable */
 table.monster-table {
-	width: 100%;
-	margin-top: 25px;
+	border-spacing: 0;
+	border-collapse: separate;
 }
 
-table.monster-table thead .footable-header{
+.monster-table form {
+	margin: 0;
+	border-spacing: 0;
+}
+
+/*********************** TABLE HEADER ***********************/
+
+.monster-table .footable-filtering th {
+	padding: 1em 0 2em;
+}
+
+.monster-table .footable-header {
 	background-color: $background-primary-color;
-	border: 1px solid #c0c0c9;
 }
 
-/*table.monster-table thead .footable-header th::before {
-	display: table-cell;
-	width: 2%;
-	content: '';
-}
-table.monster-table thead .footable-header th::after {
-	display: table-cell;
-	width: 2%;
-	content: '';
-}
-
-table.monster-table tbody tr::before.
-table.monster-table thead .footable-header::before {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}
-table.monster-table tbody tr::after,
-table.monster-table thead .footable-header::after {
-	display: table-cell;
-	width: 2%;
-	content: '';
-	border-bottom: 1px solid transparent;
-}*/
-
-table.monster-table > thead > tr > th {
-/*	font-weight: 600;
-	height: 45px;
-	text-align: left;
-	text-transform: uppercase;
-	color: #909099;*/
-	color: #9aa2a8;
+.monster-table .footable-header th {
 	font-weight: normal;
 	height: 37px;
 	text-align: left;
-	text-shadow: none;
 	text-transform: uppercase;
+	color: #9aa2a8;
+	border-top: 1px solid $panel-border-color;
 }
 
-table.monster-table > tbody > tr > td {
-	max-width: 600px;
-	overflow: hidden;
-	padding: 10px 25px 10px 0;
-	text-overflow: ellipsis;
-	vertical-align: middle;
-	white-space: nowrap;
+.monster-table .footable-header th:first-child {
+	padding-left: 25px;
+	border-left: 1px solid $panel-border-color;
+	border-top-left-radius: 2px;
 }
 
-table.monster-table.skinny > tbody > tr > td {
-	padding: 3px 25px 3px 0;
+.monster-table .footable-header th:last-child {
+	padding-right: 25px;
+	border-right: 1px solid $panel-border-color;
+	border-top-right-radius: 2px;
 }
 
-table.monster-table > tbody {
-	background-color: #fff;
-	border-bottom: 1px solid #c0c0c9;
-	border-left: 1px solid #c0c0c9;
-	border-right: 1px solid #c0c0c9;
-}
-table.monster-table.skinny > tbody > tr {
-	height: 20px;
+/************************ TABLE BODY ************************/
+
+.monster-table tbody {
+	background-color: $panel-background-color;
 }
 
-table.monster-table > tbody > tr {
+.monster-table tbody tr {
 	height: 66px;
 }
-table.monster-table > tbody > tr:last-child::before,
-table.monster-table > tbody > tr:last-child::after {
-	border-bottom: 0;
-}
-table.monster-table > tbody > tr> td {
-	border-bottom: 1px solid #c0c0c9;
+
+.monster-table tbody td {
+	overflow: hidden;
+	max-width: 600px;
+	padding: 10px 25px 10px 0;
 	text-align: left;
-}
-table.monster-table > tbody > tr:last-child > td {
-	border-bottom: 0;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	border-bottom: 1px solid $panel-border-color;
 }
 
-table.monster-table > thead > tr.footable-header > th:first-child,
-table.monster-table > tbody > tr > td:first-child { 
+.monster-table tbody tr:first-child td {
+	border-top: 1px solid $panel-border-color;
+}
+
+.monster-table tbody tr td:first-child {
 	padding-left: 25px;
+	border-left: 1px solid $panel-border-color;
 }
 
-table.monster-table > thead > tr.footable-header > th:last-child,
-table.monster-table > tbody > tr > td:last-child {
+.monster-table tbody tr td:last-child {
 	padding-right: 25px;
+	border-right: 1px solid $panel-border-color;
 }
 
-table.monster-table:not(.no-actions) td:last-child,
-table.monster-table:not(.no-actions) th:last-child {
-	text-align: right;
+.monster-table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 2px;
 }
-table.monster-table .actions .action-item {
+
+.monster-table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 2px;
+}
+
+/*********************** TABLE ACTIONS **********************/
+
+.monster-table .actions .action-item {
 	margin-left: 10px;
 	padding: 0 5px;
 	cursor: pointer;
 }
 
-table.monster-table .actions .action-item.disabled {
-	color: #bbb;
+.monster-table .actions .action-item.disabled {
 	cursor: default;
+	color: #bbb;
 }
 
-table.monster-table .actions .action-item:first-child {
+.monster-table .actions .action-item:first-child {
 	margin-left: 0;
+}
+
+.monster-table:not(.no-actions) td:last-child,
+.monster-table:not(.no-actions) th:last-child {
+	text-align: right;
+}
+
+/******************** TABLE MODE: skinny ********************/
+
+.monster-table.monster-table-skinny tbody tr {
+	height: 20px;
+}
+
+.monster-table.monster-table-skinny tbody td {
+	padding: 3px 25px 3px 0;
+}
+
+/******************** TABLE MODE: spaced ********************/
+
+.monster-table.monster-table-spaced .footable-filtering th {
+	padding: 0 0 1em;
+}
+
+.monster-table.monster-table-spaced .footable-header {
+	background-color: transparent;
+}
+
+.monster-table.monster-table-spaced .footable-header th {
+	border: 0;
+}
+
+.monster-table.monster-table-spaced {
+	border-spacing: 0 1em;
+}
+
+.monster-table.monster-table-spaced tbody td {
+	border-top: 1px solid $panel-border-color;
+}
+
+.monster-table.monster-table-spaced tbody tr td:first-child {
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}
+
+.monster-table.monster-table-spaced tbody tr td:last-child {
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+
+/************************** WRAPPER *************************/
+
+.monster-table-wrapper {
+	position: relative;
+}
+
+.monster-table-wrapper .monster-table-header {
+	position: absolute;
+	z-index: 20;
+	top: 1em;
+}
+
+.monster-table-wrapper .monster-table-header > * {
+	display: block;
+	float: left;
+}
+
+.monster-table-wrapper .monster-table-header > *:not(:first-child) {
+	margin-left: 15px;
 }
 
 /************************************************************/
