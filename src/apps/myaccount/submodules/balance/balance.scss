@@ -24,40 +24,30 @@
 	border-right: none;
 }
 
-.balance-content-wrapper .action-bar-wrapper {
-	position: absolute;
-	z-index: 25;
-	margin-top: 15px;
-}
-
-.balance-content-wrapper .action-bar-wrapper > * {
-	margin: 0 10px 0 0;
-	vertical-align: middle;
-}
-
-.balance-content-wrapper .action-bar-wrapper > span {
+.balance-content-wrapper .balance-table-header > span {
 	margin-right: 5px;
 }
 
-.balance-content-wrapper .action-bar-wrapper input {
+.balance-content-wrapper .balance-table-header input {
 	cursor: pointer;
 	background-color: #f0f0f9;
 	border-radius: 2px;
 	box-shadow: none;
 	text-align: center;
 	width: 80px;
+	margin: 0 0 0 5px;
 }
 
-.balance-content-wrapper .action-bar-wrapper i.refresh-filter:hover {
+.balance-content-wrapper .balance-table-header i.refresh-filter:hover {
 	text-shadow: 1px 1px 0px #999;
 	cursor: pointer;
 }
 
-.balance-content-wrapper .action-bar-wrapper .action-number#download {
+.balance-content-wrapper .balance-table-header .action-number#download {
 	color: #666;
 }
 
-.balance-content-wrapper .action-bar-wrapper .action-number#download i {
+.balance-content-wrapper .balance-table-header .action-number#download i {
 	text-decoration: none;
 	margin-right: 5px;
 }

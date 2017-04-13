@@ -1092,7 +1092,6 @@ label[class*='monster-radio'].prepend-label > span {
 
 /* Override footable */
 table.monster-table {
-	margin: -1em 0;
 	border-spacing: 0;
 	border-collapse: separate;
 }
@@ -1214,6 +1213,10 @@ table.monster-table {
 	padding: 0 0 1em;
 }
 
+.monster-table.monster-table-spaced .footable-header {
+	background-color: transparent;
+}
+
 .monster-table.monster-table-spaced .footable-header th {
 	border: 0;
 }
@@ -1244,7 +1247,7 @@ table.monster-table {
 
 .monster-table-wrapper .monster-table-header {
 	position: absolute;
-	z-index: 3;
+	z-index: 20;
 	top: 1em;
 }
 
