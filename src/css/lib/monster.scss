@@ -1090,15 +1090,23 @@ label[class*='monster-radio'].prepend-label > span {
 /********************** MONSTER TABLES **********************/
 /************************************************************/
 
-.monster-table {
-	width: 100%;
-	margin-top: 25px;
+/* Override footable */
+table.monster-table {
+	border-spacing: 0;
+	border-collapse: separate;
 }
 
-/************************** HEADER **************************/
+.monster-table form {
+	margin: 0;
+}
+
+/*********************** TABLE HEADER ***********************/
+
+.monster-table .footable-filtering th {
+	padding: 0 0 2em;
+}
 
 .monster-table .footable-header {
-	border: 1px solid $panel-border-color;
 	background-color: $background-primary-color;
 }
 
@@ -1108,17 +1116,22 @@ label[class*='monster-radio'].prepend-label > span {
 	text-align: left;
 	text-transform: uppercase;
 	color: #9aa2a8;
+	border-top: 1px solid $panel-border-color;
 }
 
 .monster-table .footable-header th:first-child {
 	padding-left: 25px;
+	border-left: 1px solid $panel-border-color;
+	border-top-left-radius: 2px;
 }
 
 .monster-table .footable-header th:last-child {
 	padding-right: 25px;
+	border-right: 1px solid $panel-border-color;
+	border-top-right-radius: 2px;
 }
 
-/*************************** BODY ***************************/
+/************************ TABLE BODY ************************/
 
 .monster-table tbody {
 	background-color: $panel-background-color;
@@ -1136,11 +1149,11 @@ label[class*='monster-radio'].prepend-label > span {
 	vertical-align: middle;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	border-top: 1px solid $panel-border-color;
+	border-bottom: 1px solid $panel-border-color;
 }
 
-.monster-table tbody tr:last-child td {
-	border-bottom: 1px solid $panel-border-color;
+.monster-table tbody tr:first-child td {
+	border-top: 1px solid $panel-border-color;
 }
 
 .monster-table tbody tr td:first-child {
@@ -1153,7 +1166,15 @@ label[class*='monster-radio'].prepend-label > span {
 	border-right: 1px solid $panel-border-color;
 }
 
-/************************** ACTIONS *************************/
+.monster-table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 2px;
+}
+
+.monster-table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 2px;
+}
+
+/*********************** TABLE ACTIONS **********************/
 
 .monster-table .actions .action-item {
 	margin-left: 10px;
@@ -1175,14 +1196,70 @@ label[class*='monster-radio'].prepend-label > span {
 	text-align: right;
 }
 
-/************************** SKINNY **************************/
+/******************** TABLE MODE: skinny ********************/
 
-.monster-table.skinny tbody tr {
+.monster-table.monster-table-skinny tbody tr {
 	height: 20px;
 }
 
-.monster-table.skinny tbody td {
+.monster-table.monster-table-skinny tbody td {
 	padding: 3px 25px 3px 0;
+}
+
+/******************** TABLE MODE: spaced ********************/
+
+.monster-table.monster-table-spaced .footable-filtering th {
+	padding: 0;
+}
+
+.monster-table.monster-table-spaced .footable-header th {
+	border: 0;
+}
+
+.monster-table.monster-table-spaced {
+	border-spacing: 0 1em;
+}
+
+.monster-table.monster-table-spaced tbody td {
+	border-top: 1px solid $panel-border-color;
+}
+
+.monster-table.monster-table-spaced tbody tr td:first-child {
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}
+
+.monster-table.monster-table-spaced tbody tr td:last-child {
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+
+/************************** WRAPPER *************************/
+
+.monster-table-wrapper {
+	position: relative;
+}
+
+.monster-table-wrapper .monster-table-header,
+.monster-table-wrapper .monster-table-spaced-header {
+	position: absolute;
+	z-index: 3;
+	top: 0;
+}
+
+.monster-table-wrapper .monster-table-spaced-header {
+	top: 2em;
+}
+
+.monster-table-wrapper .monster-table-header > *,
+.monster-table-wrapper .monster-table-spaced-header > * {
+	display: block;
+	float: left;
+}
+
+.monster-table-wrapper .monster-table-header > *:not(:first-child),
+.monster-table-wrapper .monster-table-spaced-header > *:not(:first-child) {
+	margin-left: 15px;
 }
 
 /************************************************************/
