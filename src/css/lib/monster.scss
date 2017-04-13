@@ -1092,18 +1092,20 @@ label[class*='monster-radio'].prepend-label > span {
 
 /* Override footable */
 table.monster-table {
+	margin: -1em 0;
 	border-spacing: 0;
 	border-collapse: separate;
 }
 
 .monster-table form {
 	margin: 0;
+	border-spacing: 0;
 }
 
 /*********************** TABLE HEADER ***********************/
 
 .monster-table .footable-filtering th {
-	padding: 0 0 2em;
+	padding: 1em 0 2em;
 }
 
 .monster-table .footable-header {
@@ -1209,7 +1211,7 @@ table.monster-table {
 /******************** TABLE MODE: spaced ********************/
 
 .monster-table.monster-table-spaced .footable-filtering th {
-	padding: 0;
+	padding: 0 0 1em;
 }
 
 .monster-table.monster-table-spaced .footable-header th {
@@ -1240,25 +1242,18 @@ table.monster-table {
 	position: relative;
 }
 
-.monster-table-wrapper .monster-table-header,
-.monster-table-wrapper .monster-table-spaced-header {
+.monster-table-wrapper .monster-table-header {
 	position: absolute;
 	z-index: 3;
-	top: 0;
+	top: 1em;
 }
 
-.monster-table-wrapper .monster-table-spaced-header {
-	top: 2em;
-}
-
-.monster-table-wrapper .monster-table-header > *,
-.monster-table-wrapper .monster-table-spaced-header > * {
+.monster-table-wrapper .monster-table-header > * {
 	display: block;
 	float: left;
 }
 
-.monster-table-wrapper .monster-table-header > *:not(:first-child),
-.monster-table-wrapper .monster-table-spaced-header > *:not(:first-child) {
+.monster-table-wrapper .monster-table-header > *:not(:first-child) {
 	margin-left: 15px;
 }
 
