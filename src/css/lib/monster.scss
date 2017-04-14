@@ -1096,15 +1096,15 @@ table.monster-table {
 	border-collapse: separate;
 }
 
-.monster-table form {
-	margin: 0;
-	border-spacing: 0;
-}
-
 /*********************** TABLE HEADER ***********************/
 
 .monster-table .footable-filtering th {
 	padding: 1em 0 2em;
+}
+
+.monster-table .footable-filtering th form {
+	margin: 0;
+	border-spacing: 0;
 }
 
 .monster-table .footable-header {
