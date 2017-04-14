@@ -2611,7 +2611,7 @@ define(function(require){
 
 			var cb = new Clipboard(target, {
 				text: function () {
-					return value;
+					return typeof value === 'function' ? value() : value;
 				}
 			});
 
