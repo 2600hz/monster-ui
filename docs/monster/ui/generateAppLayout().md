@@ -11,15 +11,23 @@ monster.ui.generateAppLayout(thisArg, args);
 ```
 
 ### Parameters
-* `thisArg` (mandatory)
 
- Type: [Object][object_literal]
+###### `thisArgs`: [Object][object_literal] (mandatory)
 
- The context of the app invoking the helper.
+The context of the app invoking the helper.
 
-* `args` (mandatory)
+###### `args`: [Object][object_literal] (mandatory)
 
- Type: [Object][object_literal]
+Customize application type and menus settings with the following object properties:
+
+* `appType`: `default`|`fullscreen`|`docked` [String][string_literal] (optional, default: `default`) - define wrapper behavior
+* `menus`: [Array][array_literal] (mandatory) of [Objects][object_literal]
+    - `pull`: `left`|`right` (optional, default: `left`) - floating direction
+    - `tabs`: [Array][array_literal] (mandatory) of [Objects][object_literal]
+        + `text`: [String][string_literal] (mandatory if more than on item in `tabs`) - tab menu label
+        + `callback`: [Function][function] (mandatory if no `menus` property) - callback on click
+        + `onClick`: [Function][function] (optional) - execute before `callback`
+        + `menus`: [Array][array_literal] (optional) of [Objects][object_literal] - same structure as parent `menus`
 
 ### Description
 
@@ -179,4 +187,7 @@ Since only one tab was defined, no `navbar` will be rendered.
 [monster]: ../../monster.md
 [ui]: ../ui.md
 
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
+[array_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Array_literals
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
