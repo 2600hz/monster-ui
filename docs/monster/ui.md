@@ -7,6 +7,7 @@ The `monster.ui` object contains different methods used to easily render common 
 * [confirm()][confirm]
 * [datepicker()][datepicker]
 * [dialog()][dialog]
+* [generateAppLayout()][generateAppLayout]
 * [getFormData()][getFormData]
 * [highlight()][highlight]
 * [insertTemplate()][insertTemplate]
@@ -28,6 +29,7 @@ The `monster.ui` object contains different methods used to easily render common 
 [confirm]: ui/confirm().md
 [datepicker]: ui/datepicker().md
 [dialog]: ui/dialog().md
+[generateAppLayout]: ui/generateAppLayout().md
 [getFormData]: ui/getFormData().md
 [highlight]: ui/highlight().md
 [insertTemplate]: ui/insertTemplate().md

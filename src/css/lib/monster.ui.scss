@@ -485,14 +485,12 @@ i.monster-password-strength {
 	padding-bottom: 15px;
 }
 
-.core-content .app-header .app-nav-bg {
-	position: relative;
-	border-bottom: 1px solid #c0c0c9;
-	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
-}
 .core-content .app-header .app-navbar-bg {
+	position: relative;
 	z-index: 10;
+	border-bottom: 1px solid #c0c0c9;
 	background-color: #fff;
+	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 }
 
 .core-content .app-header .app-navbar-wrapper {
@@ -541,6 +539,11 @@ i.monster-password-strength {
 
 .core-content .app-layout .app-content-wrapper.fullscreen {
 	max-width: none;
+}
+
+.core-content .app-layout .app-content-wrapper.docked {
+	max-width: none;
+	padding: 0;
 }
 
 /************************************************************/
