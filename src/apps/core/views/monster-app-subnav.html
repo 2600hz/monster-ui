@@ -7,15 +7,15 @@
 				{{#each menus}}
 
 				{{#if @index}}
-					{{#unless float}}
+					{{#unless pull}}
 						<div class="separator"></div>
 					{{/unless}}
 				{{/if}}
 
-					<ul class="navbar-menu{{#if float}} pull-{{float}}{{/if}}" data-menu_id="{{@index}}">
+					<ul class="navbar-menu{{#if pull}} pull-{{pull}}{{/if}}" data-menu_id="{{@index}}">
 					{{#each tabs}}
 						<li class="navbar-menu-item">
-							<a href="javascript:void(0);" class="navbar-menu-item-link{{#if default}} active{{/if}}" data-tab_id="{{@index}}"{{#if id}} data-id="{{id}}"{{/if}}>
+							<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab_id="{{@index}}"{{#if id}} data-id="{{id}}"{{/if}}>
 								{{text}}
 							</a>
 						</li>
