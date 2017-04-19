@@ -2,9 +2,25 @@
 	margin-bottom: 20px;
 }
 
+.sso-user-photo-div {
+  display: table-cell;
+  width: 40px;
+  vertical-align: middle;	
+}
+.sso-user-photo {
+	width:40px;
+	height:40px;
+}
+
 .sso-user {
 	margin-top: 5px;
-	color: #DDD;
+	padding-top:5px;
+    padding-bottom:5px;
+}
+
+.sso-user-info {
+    display: table-cell;
+    padding-left: 5px;
 }
 
 .sso-buttons {
@@ -65,4 +81,19 @@ margin-right: 3px;
 
 .text-left {
 	text-align: left;
+}
+
+.sso-logout {
+    color: #FFF !important;
+    text-align: right;
+    font-size: 12px;
+    line-height: 12px;
+    padding-right: 5px;
+}
+
+.kill-sso-session {
+    color: #FFF !important;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: right;
 }

@@ -103,6 +103,7 @@ define(function(require){
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
+				console.log("monster-auth ? ", cookieData);
 
 				self.authenticateAuthToken(cookieData.authToken, function(data) {
 					data.loginData = {
@@ -169,7 +170,7 @@ define(function(require){
 
 		_afterSuccessfulAuthCallback: function(data, url) {
 			var decoded = monster.util.jwt_decode(data.auth_token);
-			//console.log(data, decoded);$.error();
+			console.log(data, decoded);
 			if (decoded.hasOwnProperty('account_id')) {
 				var cookieAuth = {
 					authToken: data.auth_token
@@ -632,6 +633,7 @@ define(function(require){
 					}
 				}],
 				providers = monster.config.whitelabel.sso_providers || [];// hardCodedProviders;
+			console.log("providers", monster.config.whitelabel.sso_providers);
 
 			_.each(providers, function(provider) {
 				provider.params.scope = provider.params.scopes.join(' ');
@@ -703,12 +705,103 @@ define(function(require){
 			});
 		},
 
+		requestPhotoFromUrl: function(photoUrl, Token) {
+			var self = this,
+				content = $('#auth_container'),
+				defaultPhotoUrl = "apps/auth/style/oauth/no_photo_url.png";
+
+			request = new XMLHttpRequest;
+			request.open("GET",photoUrl);
+			request.setRequestHeader("Authorization", Token);
+			request.responseType = "blob";
+			request.onload = function () {
+				var imageElm = document.createElement("img");
+				imageElm.className = "sso-user-photo";
+				if(request.readyState == 4 && request.status == 200) {
+					var reader = new FileReader();
+					reader.onload = function () {
+		                // Add the base64 image to the src attribute
+		                imageElm.src = reader.result;
+		            }
+					reader.readAsDataURL(request.response);					 
+				} else {
+					imageElm.src = defaultPhotoUrl;
+				}
+				content.find('.sso-user-photo-div').append(imageElm);
+			};
+			request.send(null);
+		},
+		
+		findSSOPhotoUrlFromProvider: function(templateData) {
+			var self = this,
+			    ssoUser = templateData.ssoUser,
+				ssoProvider = ssoUser.auth_provider,
+				Token = ssoUser.auth_app_token_type + " " + ssoUser.auth_app_token;
+				ssoProviders = templateData.ssoProviders,
+				content = $('#auth_container'),
+				defaultPhotoUrl = "style/oauth/no_photo_url.png";
+
+			_.each(ssoProviders, function(provider) {
+				if(provider.name === ssoProvider) {
+					if(provider.hasOwnProperty('photoUrl')) {
+						self.requestPhotoFromUrl(provider.photoUrl, Token);
+					} else {
+						content.find('.sso-user-photo').src = defaultPhotoUrl;
+					}
+				}
+			});
+		},
+
+		findSSOPhotoUrlProvider: function(templateData) {
+			var self = this,
+				ssoName = templateData.ssoUser.auth_provider,
+				ssoProviders = templateData.ssoProviders,
+				ssoProvider = {};
+
+			_.each(ssoProviders, function(provider) {
+				if(provider.name === ssoName) {
+					ssoProvider = $.extend(true, {}, provider);
+				}
+			});
+			return ssoProvider;
+		},
+		
+		bindSSOPhotoUrl: function(templateData) {
+			var self = this,
+			    ssoUser = templateData.ssoUser,
+				content = $('#auth_container'),
+				photoUrl = "";
+
+			if(! templateData.ssoPending) {
+				return;
+			}
+			
+			var Token = ssoUser.auth_app_token_type + " " + ssoUser.auth_app_token;
+			
+			if(ssoUser.hasOwnProperty('photoUrl')) {
+				var provider = self.findSSOPhotoUrlProvider(templateData);
+				if(provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
+					 var imageElm = document.createElement("img");
+					 imageElm.className = "sso-user-photo";
+					 imageElm.src = ssoUser.photoUrl;
+					 content.find('.sso-user-photo-div').append(imageElm);
+				} else {
+					self.requestPhotoFromUrl(ssoUser.photoUrl, Token);					
+				}
+			} else {
+				self.findSSOPhotoUrlFromProvider(templateData);
+			}
+
+		},
+
 		bindLoginBlock: function(templateData) {
 			var self = this,
 				content = $('#auth_container');
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
+			self.bindSSOPhotoUrl(templateData);
+			
 			content.find('.kill-sso-session').on('click', function() {
 				monster.util.logoutAndReload();
 			});
