@@ -298,6 +298,49 @@ define(function(require){
 	}
 
 	var ui = {
+		/**
+		 * Show a loading view if a request starts before inoking the callback
+		 * to insert a template in the container once all requests finish
+		 * @param  {jQuey Object}   $container target where to insert the template
+		 * @param  {Function} callback   callback sending the template
+		 * @param  {Object}   pOptions   loading view options
+		 */
+		insertTemplate: function($container, callback, pOptions) {
+			var coreApp = monster.apps.core,
+				options = $.extend(true, {
+					title: coreApp.i18n.active().insertTemplate.title,
+					text: coreApp.i18n.active().insertTemplate.text,
+					duration: 250
+				}, pOptions),
+				dataToTemplate = {
+					title: options.title,
+					text: options.text
+				},
+				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
+				appendTemplate = function(template, fadeInCallback) {
+					if (subscription) {
+						monster.unsub(subscription);
+					}
+
+					$container
+						.empty()
+						.hide()
+						.append(template)
+						.fadeIn(options.duration, fadeInCallback);
+				},
+				subscription;
+
+			callback(appendTemplate);
+
+			if (monster.apps.core.spinner.active) {
+				appendTemplate(loadingTemplate);
+			} else {
+				subscription = monster.sub('core.onSpinnerStart', function() {
+					appendTemplate(loadingTemplate);
+				});
+			}
+		},
+
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
 		// for the options, and this tool will take care of the standard configuration, with no need to provide the "step", "min" or "max" options.
 		slider: function(target, pOptions) {
@@ -1878,27 +1921,26 @@ define(function(require){
 
 					parent
 						.find('.app-content-wrapper')
-							.fadeOut(function() {
-								self.isTabLoadingInProgress = false;
-								$(this).empty();
+							.empty();
 
-								var finalArgs = {
-									parent: parent,
-									container: parent.find('.app-content-wrapper')
-								};
+					self.isTabLoadingInProgress = false;
 
-								if(!_.isEmpty(args)) {
-									finalArgs.data = args;
-								}
+					var finalArgs = {
+						parent: parent,
+						container: parent.find('.app-content-wrapper')
+					};
 
-								if (!args.hasOwnProperty('subTab')) {
-									(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
-								} else {
-									var subTab = args.subTab;
-									delete args.subTab;
-									monster.ui.loadTab(thisArg, subTab, args);
-								}
-							});
+					if (!_.isEmpty(args)) {
+						finalArgs.data = args;
+					}
+
+					if (!args.hasOwnProperty('subTab')) {
+						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
+					} else {
+						var subTab = args.subTab;
+						delete args.subTab;
+						monster.ui.loadTab(thisArg, subTab, args);
+					}
 				};
 
 			if (isSubnav) {
