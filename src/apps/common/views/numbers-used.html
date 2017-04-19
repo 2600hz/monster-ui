@@ -24,7 +24,9 @@
 					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
 						<div class="number-options"></div>
 
-						<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">{{formatPhoneNumber this.phoneNumber}}</div>
+						<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">
+							{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
+						</div>
 
 						<div class="locality">
 							{{#if this.isoCountry }}
