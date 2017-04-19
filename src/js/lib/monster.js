@@ -237,6 +237,12 @@ define(function(require){
 			if(context){
 				sub.withContext(context);
 			}
+
+			return sub;
+		},
+
+		unsub: function(subscription) {
+			subscription.unsubscribe();
 		},
 
 		getTemplate: function(args) {
