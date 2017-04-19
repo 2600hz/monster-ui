@@ -597,6 +597,7 @@ define(function(require){
 			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
 			self.spinner.startTimeout = setTimeout(function() {
 				if(self.spinner.requestAmount !== 0 && self.spinner.active === false) {
+					monster.pub('core.onSpinnerStart');
 					self.spinner.active = true;
 					spinner.addClass('active');
 					
