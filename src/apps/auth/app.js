@@ -103,7 +103,6 @@ define(function(require){
 			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 			else if($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
-				console.log("monster-auth ? ", cookieData);
 
 				self.authenticateAuthToken(cookieData.authToken, function(data) {
 					data.loginData = {
@@ -633,7 +632,6 @@ define(function(require){
 					}
 				}],
 				providers = monster.config.whitelabel.sso_providers || [];// hardCodedProviders;
-			console.log("providers", monster.config.whitelabel.sso_providers);
 
 			_.each(providers, function(provider) {
 				provider.params.scope = provider.params.scopes.join(' ');
