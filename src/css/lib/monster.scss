@@ -1431,38 +1431,13 @@ table.monster-table {
 	}
 }
 
-.monster-spinner {
-	position: relative;
-	width: 35px;
-	height: 35px;
+.monster-loading-spinner {
+	font-size: 40px;
+	width: 40px;
+	height: 40px;
 	margin: 0 auto;
-	animation: monster-spin 1.5s ease-in-out infinite;
-	border: 9px solid transparent;
-	border-top-color: $primary-color;
-	border-radius: 100%;
-}
-
-.monster-spinner::before,
-.monster-spinner::after {
-	position: absolute;
-	display: block;
-	content: '';
-	border: 3px solid $primary-color;
-	border-radius: 100%;
-}
-
-.monster-spinner::before {
-	top: -11px;
-	left: -11px;
-	width: 51px;
-	height: 51px;
-}
-
-.monster-spinner::after {
-	top: -1px;
-	left: -1px;
-	width: 31px;
-	height: 31px;
+	animation: monster-spin 1.3s ease-in-out infinite;
+	color: $primary-color;
 }
 
 /************************************************************/

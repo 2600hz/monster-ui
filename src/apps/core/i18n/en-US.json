@@ -273,6 +273,10 @@
 			"11": "December"
 		}
 	},
+	"insertTemplate": {
+		"title": "Loading information...",
+		"text": "This may take a few moments."
+	},
 	"__comment": "UI-735: Added codec/linked column common control",
 	"__version": "v3.20_s0",
 	"linkedColumns": {

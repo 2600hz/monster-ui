@@ -612,6 +612,8 @@ define(function(require){
 				if (self.request.counter && !$spinner.hasClass('active')) {
 					$spinner.addClass('active');
 				}
+
+				clearTimeout(self.spinner.startTimeout);
 			}, waitTime);
 		},
 
