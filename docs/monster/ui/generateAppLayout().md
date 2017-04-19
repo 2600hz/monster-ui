@@ -1,8 +1,11 @@
 # [monster][monster].[ui][ui].generateAppLayout()
 
+![](images/generateAppLayout-preview.png)
+
 * [Syntax](#syntax)
 * [Parameters](#parameters)
 * [Description](#description)
+* [Customization](#customization)
 * [Examples](#examples)
 
 ### Syntax
@@ -31,7 +34,59 @@ Customize application type and menus settings with the following object properti
 
 ### Description
 
+The `monster.ui.generateAppLayout()` method generates a consistent markup to wrap the content of your Monster app. It also generates the navbar menu of the app and handles the clicks and animations. The goal of this method is to empower developers by giving them the basics (app navbar, tabs handling) so they can just an start coding the core of their app.
+
+The markup generated will looks like this:
+
+```html
+<div id="{appName}_app_container" class="app-layout">
+    <div class="app-header">
+        <div class="app-navbar-bg">
+            <div class="app-navbar-wrapper">
+                <nav class="app-navbar monster-navbar">
+                    /* app navbar */
+                </nav>
+            </div>
+        </div>
+        <div class="app-subnav-bg">
+            <div class="app-subnav-wrapper">
+                <nav class="app-subnav monster-navbar">
+                    /* app subnav */
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="app-content-wrapper">
+        /* app content */
+    </div>
+</div>
+```
+
+The `monster-navbar` will contain the navbar and subnav of the application, depending on the options passed to the method.
+
+### Customization
+
+#### appType
+
+An app can have three different types: `default`, `fullscreen` and `docked`. Those types will only impact the markup and styling of the generated layout.
+
+##### `default`
+Maximum width of 1280px with 20px of on each sides to keep it from hitting the sides on smaller screens.
+
+![](images/generateAppLayout-content-default.png)
+
+##### `fullscreen`
+Takes the full width of the window minus the 20px of padding on each side.
+
+![](images/generateAppLayout-content-fullscreen.png)
+
+##### `docked`
+No margin or padding around the wrapper, the content will be right next to the topbar and take full size of the window.
+
+![](images/generateAppLayout-content-docked.png)
+
 ### Examples
+
 * [Generate layout with `navbar` and menus](#generate-layout-with-navbar-and-menus)
 * [Generate layout with `navbar` and sub-menus](#generate-layout-with-navbar-and-sub-menus)
 * [Generate layout with `navbar` and menus pulled right](#generate-layout-with-navbar-and-menus-pulled-right)
