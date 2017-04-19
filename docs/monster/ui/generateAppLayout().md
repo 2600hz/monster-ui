@@ -34,7 +34,7 @@ Customize application type and menus settings with the following object properti
 
 ### Description
 
-The `monster.ui.generateAppLayout()` method generates a consistent markup to wrap the content of your Monster app. It also generates the navbar menu of the app and handles the clicks and animations. The goal of this method is to empower developers by giving them the basics (app navbar, tabs handling) so they can just an start coding the core of their app.
+The `monster.ui.generateAppLayout()` method generates a consistent markup to wrap the content of your Monster app. It also generates the navbar menu of the app and handles tab clicks and animations. The goal of this method is to empower developers by giving them the basics (app navbar, tabs handling) so they can just an start coding the core of their app.
 
 The markup generated will looks like this:
 
@@ -62,7 +62,7 @@ The markup generated will looks like this:
 </div>
 ```
 
-The `monster-navbar` will contain the navbar and subnav of the application, depending on the options passed to the method.
+The `monster-navbar` contains the navbar and subnav of the application, depending on the options passed to the method.
 
 ### Customization
 
