@@ -777,7 +777,7 @@ define(function(require){
 
 			if (templateData.ssoPending) {
 				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
-				console.log(ssoUser);
+
 				if (ssoUser.hasOwnProperty('photoUrl')) {
 					var provider = self.findSSOPhotoUrlProvider(templateData);
 
