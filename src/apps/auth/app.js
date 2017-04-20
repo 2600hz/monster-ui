@@ -703,46 +703,52 @@ define(function(require){
 			});
 		},
 
-		requestPhotoFromUrl: function(photoUrl, Token) {
+		paintSSOImgElement: function(container, src) {
+			var self = this,
+				imageElm = document.createElement('img');
+
+			imageElm.className = 'sso-user-photo';
+			imageElm.src = src;
+			container.find('.sso-user-photo-div').append(imageElm);
+		},
+
+		requestPhotoFromUrl: function(photoUrl, token) {
 			var self = this,
 				content = $('#auth_container'),
-				defaultPhotoUrl = "apps/auth/style/oauth/no_photo_url.png";
+				defaultPhotoUrl = 'apps/auth/style/oauth/no_photo_url.png';
 
-			request = new XMLHttpRequest;
-			request.open("GET",photoUrl);
-			request.setRequestHeader("Authorization", Token);
-			request.responseType = "blob";
-			request.onload = function () {
-				var imageElm = document.createElement("img");
-				imageElm.className = "sso-user-photo";
-				if(request.readyState == 4 && request.status == 200) {
+			var request = new XMLHttpRequest();
+			request.open('GET', photoUrl);
+			request.setRequestHeader('Authorization', token);
+			request.responseType = 'blob';
+
+			request.onload = function() {
+				if (request.readyState === 4 && request.status === 200) {
 					var reader = new FileReader();
-					reader.onload = function () {
-		                // Add the base64 image to the src attribute
-		                imageElm.src = reader.result;
-		            }
-					reader.readAsDataURL(request.response);					 
+					reader.onload = function() {
+						self.paintSSOImgElement(content, reader.result);
+					};
+					reader.readAsDataURL(request.response);
 				} else {
-					imageElm.src = defaultPhotoUrl;
+					self.paintSSOImgElement(content, defaultPhotoUrl);
 				}
-				content.find('.sso-user-photo-div').append(imageElm);
 			};
 			request.send(null);
 		},
-		
-		findSSOPhotoUrlFromProvider: function(templateData) {
+
+		findSSOPhotoUrlFromProvider: function(templateData, container) {
 			var self = this,
-			    ssoUser = templateData.ssoUser,
+				ssoUser = templateData.ssoUser,
 				ssoProvider = ssoUser.auth_provider,
-				Token = ssoUser.auth_app_token_type + " " + ssoUser.auth_app_token;
+				token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token,
 				ssoProviders = templateData.ssoProviders,
-				content = $('#auth_container'),
-				defaultPhotoUrl = "style/oauth/no_photo_url.png";
+				content = container,
+				defaultPhotoUrl = 'style/oauth/no_photo_url.png';
 
 			_.each(ssoProviders, function(provider) {
-				if(provider.name === ssoProvider) {
-					if(provider.hasOwnProperty('photoUrl')) {
-						self.requestPhotoFromUrl(provider.photoUrl, Token);
+				if (provider.name === ssoProvider) {
+					if (provider.hasOwnProperty('photoUrl')) {
+						self.requestPhotoFromUrl(provider.photoUrl, token);
 					} else {
 						content.find('.sso-user-photo').src = defaultPhotoUrl;
 					}
@@ -757,39 +763,36 @@ define(function(require){
 				ssoProvider = {};
 
 			_.each(ssoProviders, function(provider) {
-				if(provider.name === ssoName) {
+				if (provider.name === ssoName) {
 					ssoProvider = $.extend(true, {}, provider);
 				}
 			});
 			return ssoProvider;
 		},
-		
-		bindSSOPhotoUrl: function(templateData) {
+
+		bindSSOPhotoUrl: function(templateData, container) {
 			var self = this,
-			    ssoUser = templateData.ssoUser,
-				content = $('#auth_container'),
-				photoUrl = "";
+				ssoUser = templateData.ssoUser,
+				content = container;
 
-			if(! templateData.ssoPending) {
-				return;
-			}
-			
-			var Token = ssoUser.auth_app_token_type + " " + ssoUser.auth_app_token;
-			
-			if(ssoUser.hasOwnProperty('photoUrl')) {
-				var provider = self.findSSOPhotoUrlProvider(templateData);
-				if(provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
-					 var imageElm = document.createElement("img");
-					 imageElm.className = "sso-user-photo";
-					 imageElm.src = ssoUser.photoUrl;
-					 content.find('.sso-user-photo-div').append(imageElm);
+			if (templateData.ssoPending) {
+				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
+				console.log(ssoUser);
+				if (ssoUser.hasOwnProperty('photoUrl')) {
+					var provider = self.findSSOPhotoUrlProvider(templateData);
+
+					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
+						var imageElm = document.createElement('img');
+						imageElm.className = 'sso-user-photo';
+						imageElm.src = ssoUser.photoUrl;
+						content.find('.sso-user-photo-div').append(imageElm);
+					} else {
+						self.requestPhotoFromUrl(ssoUser.photoUrl, token);
+					}
 				} else {
-					self.requestPhotoFromUrl(ssoUser.photoUrl, Token);					
+					self.findSSOPhotoUrlFromProvider(templateData, container);
 				}
-			} else {
-				self.findSSOPhotoUrlFromProvider(templateData);
 			}
-
 		},
 
 		bindLoginBlock: function(templateData) {
@@ -798,8 +801,8 @@ define(function(require){
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
-			self.bindSSOPhotoUrl(templateData);
-			
+			self.bindSSOPhotoUrl(templateData, content);
+
 			content.find('.kill-sso-session').on('click', function() {
 				monster.util.logoutAndReload();
 			});

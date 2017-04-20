@@ -2,32 +2,54 @@
 	margin-bottom: 20px;
 }
 
-.sso-user-photo-div {
+.sso-providers .sso-user-photo-div {
   display: table-cell;
   width: 40px;
   vertical-align: middle;	
 }
-.sso-user-photo {
+.sso-providers .sso-user-photo {
 	width:40px;
 	height:40px;
 }
 
-.sso-user {
+.sso-providers .sso-buttons .sso-button.sso-user {
+	display: table;
+	width: 100%;
+	padding-left: 5px;
 	margin-top: 5px;
 	padding-top:5px;
-    padding-bottom:5px;
+	padding-bottom:5px;
 }
 
-.sso-user-info {
-    display: table-cell;
-    padding-left: 5px;
+.sso-providers .sso-user-info {
+	display: table-cell;
+	padding-left: 5px;
 }
 
-.sso-buttons {
+.sso-providers .sso-user-info .upper-info {
+	display: table;
+	width: 100%;
+}
+
+.sso-providers .sso-user-info .upper-info > div {
+	display: table-cell;
+}
+
+.sso-providers .user-not-linked {
+	background: #ffcc33;
+	margin-top: 10px;
+	padding: 2px 10px;
+}
+
+.sso-providers .user-not-linked i {
+	margin-right: 5px;
+}
+
+.sso-providers .sso-buttons {
 	margin-top: 0px;
 }
 
-.sso-buttons .sso-button {
+.sso-providers .sso-buttons .sso-button {
 	background: #22a5ff;
 	box-shadow: none;
 	color: #FFF;
@@ -41,67 +63,72 @@
 	text-align: left;
 }
 
-.sso-buttons .sso-button:hover {
+.sso-providers .sso-buttons .sso-button:hover {
 	color: #FFF !important;
 	outline: 0 !important;
 }
 
-.sso-buttons .sso-button-google {
+.sso-providers .sso-buttons .sso-button-google {
 	background-color: #d84a38
 }
 
-.sso-buttons .sso-button-google:hover {
+.sso-providers .sso-buttons .sso-button-google:not(.sso-user):hover {
 	background-color: #bb2413;
 }
 
-.sso-buttons .sso-button-salesforce {
+.sso-providers .sso-buttons .sso-button-salesforce {
 	background-color: #4d90fe
 }
 
-.sso-buttons .sso-button-salesforce:hover {
+.sso-providers .sso-buttons .sso-button-salesforce:not(.sso-user):hover {
 	background-color: #0362fd;
 }
 
-.sso-buttons .sso-button-microsoft {
+.sso-providers .sso-buttons .sso-button-microsoft {
 	background-color: #852b99
 }
 
-.sso-buttons .sso-button-microsoft:hover {
+.sso-providers .sso-buttons .sso-button-microsoft:not(.sso-user):hover {
 	background-color: #6d1b81;
 }
 
-.sso-buttons .sso-button-linkedin {
+.sso-providers .sso-buttons .sso-button-linkedin {
     background-color: #0073b2
 }
 
-.sso-buttons .sso-button-linkedin:hover {
+.sso-providers .sso-buttons .sso-button-linkedin:not(.sso-user):hover {
     background-color: #0693e0;
 }
 
-.sso-buttons .sso-button i,
-.login-form .form-title i {
-/*border-right: 1px solid #fff;*/
-padding-right: 5px;
-padding-left: 5px;
-margin-right: 3px;
-/*width:25px;*/
+.sso-providers .sso-buttons .sso-button i,
+.sso-providers .login-form .form-title i {
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-right: 3px;
 }
 
-.text-left {
+.sso-providers text-left {
 	text-align: left;
 }
 
-.sso-logout {
-    color: #FFF !important;
-    text-align: right;
-    font-size: 12px;
-    line-height: 12px;
-    padding-right: 5px;
+.sso-providers .sso-logout {
+	color: #FFF !important;
+	display: table-cell;
+	text-align: right;
+	font-size: 12px;
+	font-style: italic;
+	line-height: 12px;
+	padding-right: 5px;
 }
 
-.kill-sso-session {
-    color: #FFF !important;
-    font-size: 12px;
-    line-height: 12px;
-    text-align: right;
+
+.sso-providers .sso-logout img {
+	vertical-align: middle;
+}
+
+.sso-providers .kill-sso-session {
+	color: #FFF !important;
+	font-size: 12px;
+	line-height: 12px;
+	text-align: right;
 }

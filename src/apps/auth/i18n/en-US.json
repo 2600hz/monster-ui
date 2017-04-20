@@ -141,5 +141,12 @@
 	"ssoSuccessLinking": "We successfully linked your Single Sign-on account with your Kazoo Account.",
 	"ssoFailedLinking": "We couldn't link your Single Sign-on account with your Kazoo Account.",
 	"ssoSuccessUnlinking": "We successfully unlinked your Single Sign-On account with your Kazoo Account.",
-	"ssoFailedUnlinking": "We couldn't link your Single Sign-On account with your Kazoo Account."
+	"ssoFailedUnlinking": "We couldn't link your Single Sign-On account with your Kazoo Account.",
+
+	"__comment": "oauth2: adding i18n for oauth customizations",
+	"__version": "4.1",
+	"oauth": {
+		"logout": "logout",
+		"noLinkMsg": "We didn't find any account linked to this email address. To link your accounts together, please login to the platform with your usual credentials. You won't need to do that again."
+	}
 }
