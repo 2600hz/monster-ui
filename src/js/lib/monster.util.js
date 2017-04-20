@@ -472,7 +472,7 @@ define(function(require){
 		// keepHashes was added because having hashes sometimes crashed some requests
 		getUrlVars: function(key, pKeepHashes) {
 			var vars = {},
-				hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&'),
+				hashes = window.location.search.substring(1).split('&'),
 				hash,
 				keepHashes = pKeepHashes || false;
 
