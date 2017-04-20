@@ -70,6 +70,14 @@
 	background-color: #6d1b81;
 }
 
+.sso-buttons .sso-button-linkedin {
+    background-color: #0073b2
+}
+
+.sso-buttons .sso-button-linkedin:hover {
+    background-color: #0693e0;
+}
+
 .sso-buttons .sso-button i,
 .login-form .form-title i {
 /*border-right: 1px solid #fff;*/
