@@ -1086,7 +1086,7 @@ define(function(require) {
 				resource: 'numbers.identify',
 				data: {
 					accountId: self.accountId,
-					phoneNumber: phoneNumber,
+					phoneNumber: encodeURIComponent(phoneNumber),
 					generateError: false
 				},
 				success: function(_data, status) {
