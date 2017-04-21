@@ -38,6 +38,7 @@ pages:
     - 'docs/monster/ui/confirm().md'
     - 'docs/monster/ui/datepicker().md'
     - 'docs/monster/ui/dialog().md'
+    - 'docs/monster/ui/generateAppLayout().md'
     - 'docs/monster/ui/getFormData().md'
     - 'docs/monster/ui/highlight().md'
     - 'docs/monster/ui/insertTemplate().md'
