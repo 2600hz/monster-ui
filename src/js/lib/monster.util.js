@@ -3,7 +3,7 @@ define(function(require){
 	var $ = require("jquery"),
 		_ = require("underscore"),
 		monster = require("monster"),
-		libphonenumber = require('libphonenumber-js');
+		libphonenumber = require('libphonenumber');
 
 	var util = {
 
@@ -274,17 +274,7 @@ define(function(require){
 
 			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
 				//var resp = libphonenumber.parse(phoneNumber);
-				var resp = self.getFormatPhoneNumber(phoneNumber);
-
-				if (resp.hasOwnProperty('internationalFormat')) {
-					formattedPhoneNumber = resp.internationalFormat;
-					//var displayMode = 'International';
-
-					// Todo we might want to do something like this, with a parameter from account/user instead of whitelabel
-					/*if (resp.country === monster.config.whitelabel.defaultCountryPhoneNumber) {
-						displayMode = 'National';
-					}*/
-				}
+				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
 			}
 
 			return formattedPhoneNumber;
@@ -292,15 +282,41 @@ define(function(require){
 
 		getFormatPhoneNumber: function(phoneNumber) {
 			var resp = libphonenumber.parse(phoneNumber),
+				user = monster.apps.auth.currentUser || {},
 				formattedData = {
-					originalNumber: phoneNumber
+					originalNumber: phoneNumber,
+					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
 				};
 
 			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				formattedData.country = resp.country;
 				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
 				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
 				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
+
+				formattedData.country = {
+					code: resp.country,
+					name: monster.timezone.getCountryName(resp.country)
+				};
+
+				// Default to international mode
+				formattedData.userFormat = formattedData.internationalFormat;
+				formattedData.userFormatType = 'international';
+
+				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format')) {
+					formattedData.userFormatType = user.ui_flags.numbers_format;
+
+					if (user.ui_flags.numbers_format === 'national') {
+						formattedData.userFormat = formattedData.nationalFormat;
+					} else if (user.ui_flags.numbers_format === 'international') {
+						formattedData.userFormat = formattedData.internationalFormat;
+					} else if (user.ui_flags.numbers_format === 'international_with_exceptions') {
+						if (user.ui_flags.numbers_format_exceptions.length && user.ui_flags.numbers_format_exceptions.indexOf(formattedData.country.code) >= 0) {
+							formattedData.userFormat = formattedData.nationalFormat;
+						} else {
+							formattedData.userFormat = formattedData.internationalFormat;
+						}
+					}
+				}
 			}
 
 			return formattedData;

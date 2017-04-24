@@ -28,7 +28,7 @@ require.config({
 		'jstz': 'js/vendor/jstz.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
-		'libphonenumber-js': 'js/vendor/libphonenumber-js.min',
+		'libphonenumber': 'js/vendor/libphonenumber-js.min',
 		'mask': 'js/vendor/jquery.mask',
 		'modernizr': 'js/vendor/modernizr-2.6.2.min',
 		'monster': 'js/lib/monster',

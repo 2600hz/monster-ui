@@ -14,33 +14,61 @@ define(function(require) {
 		_userRenderContent: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'user.get',
-				data: {
-					accountId: monster.apps.auth.originalAccount.id,
-					userId: self.userId
+			monster.parallel({
+				'user': function(callback) {
+					self.callApi({
+						resource: 'user.get',
+						data: {
+							accountId: monster.apps.auth.originalAccount.id,
+							userId: self.userId
+						},
+						success: function(data, status) {
+							callback && callback(null, data.data);
+						}
+					});
 				},
-				success: function(data, status) {
-					var data = { user: data.data },
-						userTemplate = $(monster.template(self, 'user-layout', data));
+				'countries': function(callback) {
+					callback && callback(null, timezone.getCountries());
+				}
+			}, function(err, results) {
+				var formattedData = self.userLayoutFormatData(results),
+					userTemplate = $(monster.template(self, 'user-layout', formattedData));
 
-					self.userBindingEvents(userTemplate, data);
+				self.userBindingEvents(userTemplate, results);
 
-					monster.pub('myaccount.renderSubmodule', userTemplate);
+				monster.pub('myaccount.renderSubmodule', userTemplate);
 
-					if ( typeof args.callback === 'function') {
-						args.callback(userTemplate);
-					}
+				if (typeof args.callback === 'function') {
+					args.callback(userTemplate);
 				}
 			});
+		},
+
+		userLayoutFormatData: function(data) {
+			var self = this;
+
+			if (!(data.user.hasOwnProperty('ui_flags') && data.user.ui_flags.hasOwnProperty('numbers_format'))) {
+				data.user.ui_flags = data.ui_flags || {};
+				data.user.ui_flags.numbers_format = 'international';
+			}
+
+			return data;
 		},
 
 		userBindingEvents: function(template, data) {
 			var self = this;
 
-			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone||'inherit', {inherit: self.i18n.active().defaultTimezone});
+			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone || 'inherit', {inherit: self.i18n.active().defaultTimezone});
 			template.find('#user_timezone').chosen({ search_contains: true, width: '220px' });
 			monster.ui.showPasswordStrength(template.find('#password'));
+
+			template.find('#numbers_format_exceptions').chosen({ search_contains: true, width: '220px' });
+
+			template.find('[name="ui_flags.numbers_format"]').on('change', function() {
+				template.find('.group-for-exceptions').toggleClass('active', template.find('[name="ui_flags.numbers_format"]:checked').val() === 'international_with_exceptions');
+			});
+
+			monster.ui.tooltips(template);
 
 			monster.pub('myaccount.events', {
 				template: template,

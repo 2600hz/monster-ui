@@ -24,7 +24,7 @@
 					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
 						<div class="number-options"></div>
 
-						<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">
+						<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>
 							{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
 						</div>
 
