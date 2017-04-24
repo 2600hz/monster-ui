@@ -593,16 +593,19 @@ define(function(require){
 			// If we start a request, we cancel any existing timeout that was checking if the loading was over
 			clearTimeout(self.spinner.endTimeout);
 
+			if (self.spinner.requestAmount) {
+				self.spinner.active = true;
+				monster.pub('core.onSpinnerStart');
+			}
+
 			// And we start a timeout that will check if there are still some active requests after %waitTime%.
 			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
 			self.spinner.startTimeout = setTimeout(function() {
-				if(self.spinner.requestAmount !== 0 && self.spinner.active === false) {
-					monster.pub('core.onSpinnerStart');
-					self.spinner.active = true;
+				if(self.spinner.requestAmount && !spinner.hasClass('active')) {
 					spinner.addClass('active');
-					
-					clearTimeout(self.spinner.startTimeout);
 				}
+
+				clearTimeout(self.spinner.startTimeout);
 			}, waitTime);
 		},
 
@@ -615,16 +618,17 @@ define(function(require){
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
 			// If there are no active requests after the timeout, then we can safely remove the spinner.
 			// We do this to avoid showing and hiding the spinner too quickly
-			if(self.spinner.requestAmount === 0) {
-				self.spinner.endTimeout = setTimeout(function() {
-					if(self.spinner.requestAmount === 0 && self.spinner.active === true) {
-						spinner.removeClass('active');
-						self.spinner.active = false;
+			if(!self.spinner.requestAmount) {
+				self.spinner.active = false;
 
-						clearTimeout(self.spinner.startTimeout);
-						clearTimeout(self.spinner.endTimeout);
+				self.spinner.endTimeout = setTimeout(function() {
+					if(spinner.hasClass('active')) {
+						spinner.removeClass('active');
 					}
-				}, waitTime)
+
+					clearTimeout(self.spinner.startTimeout);
+					clearTimeout(self.spinner.endTimeout);
+				}, waitTime);
 			}
 		},
 
