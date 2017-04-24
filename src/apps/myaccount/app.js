@@ -930,6 +930,11 @@ define(function(require){
 				if(params.data.timezone && params.data.timezone === 'inherit') {
 					delete params.data.timezone;
 				}
+
+				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
+				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format') && newData.ui_flags.numbers_format !== 'international_with_exceptions') {
+					delete params.data.ui_flags.numbers_format_exceptions;
+				}
 			}
 			else if(type === 'billing') {
 				params.data = newData;
