@@ -1,0 +1,7 @@
+.account-content-wrapper #form_numbers_format .group-for-exceptions {
+	display: none;
+}
+
+.account-content-wrapper #form_numbers_format .group-for-exceptions.active {
+	display: block;
+}

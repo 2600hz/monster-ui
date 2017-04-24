@@ -47,9 +47,11 @@ define(function(require) {
 		userLayoutFormatData: function(data) {
 			var self = this;
 
+			data.defaultNumbersFormat = self.i18n.active().numbersFormat[monster.util.getDefaultNumbersFormat()];
+
 			if (!(data.user.hasOwnProperty('ui_flags') && data.user.ui_flags.hasOwnProperty('numbers_format'))) {
-				data.user.ui_flags = data.ui_flags || {};
-				data.user.ui_flags.numbers_format = 'international';
+				data.user.ui_flags = data.user.ui_flags || {};
+				data.user.ui_flags.numbers_format = 'inherit';
 			}
 
 			return data;

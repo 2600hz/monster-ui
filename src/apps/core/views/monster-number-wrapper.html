@@ -1,4 +1,4 @@
-<div class="monster-phone-number-wrapper" data-number="{{ numberData.number }}">
+<div class="monster-phone-number-wrapper" data-e164="{{numberData.e164Number}}" data-number="{{ numberData.originalNumber }}">
 	<span class="monster-phone-number-value">{{ numberData.formattedNumber }}</span>
 	{{#unless options.hideFlag}}
 		{{#if numberData.country}}
