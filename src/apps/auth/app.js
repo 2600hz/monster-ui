@@ -703,11 +703,105 @@ define(function(require){
 			});
 		},
 
+		paintSSOImgElement: function(container, src) {
+			var self = this,
+				imageElm = document.createElement('img');
+
+			imageElm.className = 'sso-user-photo';
+			imageElm.src = src;
+			container.find('.sso-user-photo-div').append(imageElm);
+		},
+
+		requestPhotoFromUrl: function(photoUrl, token) {
+			var self = this,
+				content = $('#auth_container'),
+				defaultPhotoUrl = 'apps/auth/style/oauth/no_photo_url.png';
+
+			var request = new XMLHttpRequest();
+			request.open('GET', photoUrl);
+			request.setRequestHeader('Authorization', token);
+			request.responseType = 'blob';
+
+			request.onload = function() {
+				if (request.readyState === 4 && request.status === 200) {
+					var reader = new FileReader();
+					reader.onload = function() {
+						self.paintSSOImgElement(content, reader.result);
+					};
+					reader.readAsDataURL(request.response);
+				} else {
+					self.paintSSOImgElement(content, defaultPhotoUrl);
+				}
+			};
+			request.send(null);
+		},
+
+		findSSOPhotoUrlFromProvider: function(templateData, container) {
+			var self = this,
+				ssoUser = templateData.ssoUser,
+				ssoProvider = ssoUser.auth_provider,
+				token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token,
+				ssoProviders = templateData.ssoProviders,
+				content = container,
+				defaultPhotoUrl = 'style/oauth/no_photo_url.png';
+
+			_.each(ssoProviders, function(provider) {
+				if (provider.name === ssoProvider) {
+					if (provider.hasOwnProperty('photoUrl')) {
+						self.requestPhotoFromUrl(provider.photoUrl, token);
+					} else {
+						content.find('.sso-user-photo').src = defaultPhotoUrl;
+					}
+				}
+			});
+		},
+
+		findSSOPhotoUrlProvider: function(templateData) {
+			var self = this,
+				ssoName = templateData.ssoUser.auth_provider,
+				ssoProviders = templateData.ssoProviders,
+				ssoProvider = {};
+
+			_.each(ssoProviders, function(provider) {
+				if (provider.name === ssoName) {
+					ssoProvider = $.extend(true, {}, provider);
+				}
+			});
+			return ssoProvider;
+		},
+
+		bindSSOPhotoUrl: function(templateData, container) {
+			var self = this,
+				ssoUser = templateData.ssoUser,
+				content = container;
+
+			if (templateData.ssoPending) {
+				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
+
+				if (ssoUser.hasOwnProperty('photoUrl')) {
+					var provider = self.findSSOPhotoUrlProvider(templateData);
+
+					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
+						var imageElm = document.createElement('img');
+						imageElm.className = 'sso-user-photo';
+						imageElm.src = ssoUser.photoUrl;
+						content.find('.sso-user-photo-div').append(imageElm);
+					} else {
+						self.requestPhotoFromUrl(ssoUser.photoUrl, token);
+					}
+				} else {
+					self.findSSOPhotoUrlFromProvider(templateData, container);
+				}
+			}
+		},
+
 		bindLoginBlock: function(templateData) {
 			var self = this,
 				content = $('#auth_container');
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
+
+			self.bindSSOPhotoUrl(templateData, content);
 
 			content.find('.kill-sso-session').on('click', function() {
 				monster.util.logoutAndReload();

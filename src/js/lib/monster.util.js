@@ -2,7 +2,8 @@ define(function(require){
 
 	var $ = require("jquery"),
 		_ = require("underscore"),
-		monster = require("monster");
+		monster = require("monster"),
+		libphonenumber = require('libphonenumber-js');
 
 	var util = {
 
@@ -255,30 +256,54 @@ define(function(require){
 		},
 
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var regex = /[^0-9]/g,
-				specialRule = pSpecialRule || 'none';
+			var resp = libphonenumber.parse(formattedNumber),
+				phoneNumber;
 
-			if(specialRule === 'keepPlus') {
-				regex = /[^0-9\+]/g;
+			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
+				phoneNumber = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
+			} else {
+				phoneNumber = formattedNumber.replace(/[^0-9+]/g, '');
 			}
-
-			var phoneNumber = formattedNumber.replace(regex, '');
 
 			return phoneNumber;
 		},
 
-		formatPhoneNumber: function(phoneNumber){
-			if(!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				phoneNumber = phoneNumber.toString();
-				var length = phoneNumber.length;
+		formatPhoneNumber: function(phoneNumber) {
+			var self = this,
+				formattedPhoneNumber = phoneNumber;
 
-				if(length >= 10 && length <= 12) {
-					// Try US Regex
-					phoneNumber = phoneNumber.replace(/^\+?1?([2-9][0-9]{2})([2-9][0-9]{2})([0-9]{4})$/, '+1 ($1) $2-$3');
+			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
+				//var resp = libphonenumber.parse(phoneNumber);
+				var resp = self.getFormatPhoneNumber(phoneNumber);
+
+				if (resp.hasOwnProperty('internationalFormat')) {
+					formattedPhoneNumber = resp.internationalFormat;
+					//var displayMode = 'International';
+
+					// Todo we might want to do something like this, with a parameter from account/user instead of whitelabel
+					/*if (resp.country === monster.config.whitelabel.defaultCountryPhoneNumber) {
+						displayMode = 'National';
+					}*/
 				}
 			}
 
-			return phoneNumber;
+			return formattedPhoneNumber;
+		},
+
+		getFormatPhoneNumber: function(phoneNumber) {
+			var resp = libphonenumber.parse(phoneNumber),
+				formattedData = {
+					originalNumber: phoneNumber
+				};
+
+			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
+				formattedData.country = resp.country;
+				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
+				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
+				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
+			}
+
+			return formattedData;
 		},
 
 		randomString: function(length, _chars) {
@@ -447,7 +472,7 @@ define(function(require){
 		// keepHashes was added because having hashes sometimes crashed some requests
 		getUrlVars: function(key, pKeepHashes) {
 			var vars = {},
-				hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&'),
+				hashes = window.location.search.substring(1).split('&'),
 				hash,
 				keepHashes = pKeepHashes || false;
 
@@ -1068,7 +1093,6 @@ define(function(require){
             var base64 = base64Url.replace('-', '+').replace('_', '/');
         	return JSON.parse(window.atob(base64));
 		}
-		
 	};
 
 	return util;

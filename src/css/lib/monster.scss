@@ -1706,6 +1706,19 @@ table.monster-table {
 	margin-left: 10px;
 }
 
+/* Monster Phone Number Wrapper */
+.monster-phone-number-wrapper {
+	display: inline-block;
+}
+
+.monster-phone-number-wrapper .monster-number-flag {
+	margin-left: 10px;
+}
+
+.monster-phone-number-wrapper .monster-number-flag.empty img {
+	display: none;
+}
+
 /* Monster Phone Number */
 
 .monster-phone-number[data-state="in_service"] {
@@ -1720,9 +1733,15 @@ table.monster-table {
 	color: orange;
 }
 
-.monster-phone-number {
+.monster-phone-number[data-state="port_in"] {
 	color: $red-orange;
 }
+
+.monster-phone-number {
+	color: $font-primary-color;
+}
+
+
 
 /************************************************************/
 /********************* MONSTER STATUSES *********************/

@@ -197,6 +197,10 @@ define(function(require){
 				return monster.ui.paintNumberFeaturesIcon(features);
 			},
 
+			monsterNumberWrapper: function(number) {
+				return monster.ui.getTemplatePhoneNumber(number);
+			},
+
 			replaceVar: function(stringValue, variable) {
 				return stringValue.replace(/{{variable}}/g, variable);
 			},
@@ -2626,6 +2630,27 @@ define(function(require){
 			toggle: function(args) {
 				this.isActive ? this.hide(args) : this.show(args);
 			}
+		},
+
+		getTemplatePhoneNumber: function(phoneNumber, pOptions) {
+			// Can't jQuery template it as it's used by Handlebars with a helper, and it needs to return HTML
+			var formattedNumber = monster.util.getFormatPhoneNumber(phoneNumber),
+				options = pOptions || {},
+				formattedData = {
+					numberData: {
+						country: formattedNumber.country,
+						number: formattedNumber.originalNumber,
+						formattedNumber: formattedNumber.hasOwnProperty('internationalFormat') ? formattedNumber.internationalFormat : formattedNumber.originalNumber
+					},
+					options: {
+						hideFlag: options.hasOwnProperty('hideFlag') ? options.hideFlag : false
+					}
+				},
+				template = monster.template(monster.apps.core, 'monster-number-wrapper', formattedData);
+
+			monster.ui.tooltips($(template));
+
+			return template;
 		},
 
 		paintNumberFeaturesIcon: function(features, target) {
