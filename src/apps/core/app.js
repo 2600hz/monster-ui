@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -19,7 +19,7 @@ define(function(require){
 
 		subscribe: {
 			'core.loadApps': '_loadApps',
-			'core.showAppName' : 'showAppName',
+			'core.showAppName': 'showAppName',
 			'core.triggerMasquerading': 'triggerMasquerading',
 			'core.restoreMasquerading': 'restoreMasquerading',
 			'core.initializeShortcuts': 'initializeShortcuts'
@@ -36,7 +36,7 @@ define(function(require){
 
 		appFlags: {},
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.callApi({
@@ -54,7 +54,7 @@ define(function(require){
 			});
 		},
 
-		render: function(container){
+		render: function(container) {
 			var self = this,
 				urlVars = monster.util.getUrlVars(),
 				dataTemplate = {
@@ -65,7 +65,7 @@ define(function(require){
 					}
 				},
 				mainTemplate = $(monster.template(self, 'app', dataTemplate));
-				
+
 			document.title = monster.config.whitelabel.applicationTitle;
 
 			self.checkURLVars(urlVars);
@@ -96,7 +96,7 @@ define(function(require){
 			var self = this;
 
 			// In dashboard mode we want to disable the logout timer, and also remove some css elements
-			if(urlVars.hasOwnProperty('view') && urlVars.view === 'dashboard') {
+			if (urlVars.hasOwnProperty('view') && urlVars.view === 'dashboard') {
 				$('.core-wrapper').addClass('dashboard');
 				monster.config.whitelabel.logoutTimer = 0;
 			}
@@ -114,10 +114,10 @@ define(function(require){
 			monster.webphone.init();
 		},
 
-		loadAuth: function(){
+		loadAuth: function() {
 			var self = this;
 
-			monster.apps.load('auth', function(app){
+			monster.apps.load('auth', function(app) {
 				app.render($('#monster-content'));
 			});
 		},
@@ -130,9 +130,9 @@ define(function(require){
 
 			if (appName === 'myaccount') {
 				var myaccount = {
-						name: appName,
-						label: self.i18n.active().controlCenter
-					};
+					name: appName,
+					label: self.i18n.active().controlCenter
+				};
 
 				monster.ui.formatIconApp(myaccount);
 
@@ -144,8 +144,7 @@ define(function(require){
 						.data('originalName', 'appstore');
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
-				}
-				else {
+				} else {
 					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
 
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
@@ -160,10 +159,9 @@ define(function(require){
 						navbar.find('#main_topbar_current_app_name').fadeIn(100);
 					});
 				}
-			}
-			else {
+			} else {
 				_.each(monster.apps.auth.installedApps, function(val) {
-					if ( val.name === appName ) {
+					if (val.name === appName) {
 						defaultApp = val;
 						defaultApp.icon = monster.util.getAppIconPath(val);
 					}
@@ -171,9 +169,9 @@ define(function(require){
 
 				monster.ui.formatIconApp(defaultApp);
 
-				if ( appName === 'appstore' ) {
+				if (appName === 'appstore') {
 					currentApp.empty();
-				} else if ( currentApp.is(':empty') ) {
+				} else if (currentApp.is(':empty')) {
 					currentApp.append(monster.template(self, 'current-app', defaultApp));
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
@@ -193,7 +191,7 @@ define(function(require){
 			var self = this,
 				baseApps = ['apploader', 'appstore', 'myaccount', 'common'];
 
-			if(monster.config.whitelabel.hasOwnProperty('additionalLoggedInApps')) {
+			if (monster.config.whitelabel.hasOwnProperty('additionalLoggedInApps')) {
 				baseApps = baseApps.concat(monster.config.whitelabel.additionalLoggedInApps);
 			}
 
@@ -203,34 +201,32 @@ define(function(require){
 		_loadApps: function(args) {
 			var self = this;
 
-			if(!self.appFlags.hasOwnProperty('baseApps')) {
+			if (!self.appFlags.hasOwnProperty('baseApps')) {
 				self.initializeBaseApps();
 			}
 
-			if(!self.appFlags.baseApps.length) {
+			if (!self.appFlags.baseApps.length) {
 				/* If admin with no app, go to app store, otherwise, oh well... */
-				var defaultApp = monster.apps['auth'].currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
+				var defaultApp = monster.apps.auth.currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
 
 				// Now that the user information is loaded properly, check if we tried to force the load of an app via URL.
 				monster.routing.parseHash();
 
 				// If there wasn't any match, trigger the default app
-				if(!monster.routing.hasMatch()) {
-					if(typeof defaultApp !== 'undefined') {
+				if (!monster.routing.hasMatch()) {
+					if (typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
 							self.showAppName(defaultApp);
 							app.render($('#monster-content'));
 						}, {}, true);
-					}
-					else {
+					} else {
 						console.warn('Current user doesn\'t have a default app');
 					}
 				}
-			}
-			else {
+			} else {
 				var appName = self.appFlags.baseApps.pop();
 
-				monster.apps.load(appName, function(app) {
+				monster.apps.load(appName, function() {
 					self._loadApps(args);
 				});
 			}
@@ -273,7 +269,7 @@ define(function(require){
 			$('.core-wrapper').on('click', '#monster-content', function() {
 				var $accountToggle = $('#main_topbar_account_toggle');
 
-				if($accountToggle.hasClass('open')) {
+				if ($accountToggle.hasClass('open')) {
 					$accountToggle.removeClass('open');
 				}
 			});
@@ -282,7 +278,7 @@ define(function(require){
 				self.restoreMasquerading({
 					callback: function() {
 						var currentApp = monster.apps.getActiveApp();
-						if(currentApp in monster.apps) {
+						if (currentApp in monster.apps) {
 							monster.apps[currentApp].render();
 						}
 						self.hideAccountToggle();
@@ -293,7 +289,7 @@ define(function(require){
 			container.find('#main_topbar_account_toggle').on('click', '.current-account-container', function() {
 				var $this = $(this);
 
-				if($this.attr('data-id') !== monster.apps.auth.currentAccount.id) {
+				if ($this.attr('data-id') !== monster.apps.auth.currentAccount.id) {
 					self.triggerMasquerading({
 						account: {
 							id: $this.attr('data-id'),
@@ -301,11 +297,10 @@ define(function(require){
 						},
 						callback: function() {
 							var currentApp = monster.apps.getActiveApp();
-							if(currentApp in monster.apps) {
-								if(monster.apps[currentApp].isMasqueradable) {
+							if (currentApp in monster.apps) {
+								if (monster.apps[currentApp].isMasqueradable) {
 									monster.apps[currentApp].render();
-								}
-								else {
+								} else {
 									toastr.warning(self.i18n.active().noMasqueradingAllowed);
 									monster.apps.apploader.render();
 								}
@@ -327,8 +322,7 @@ define(function(require){
 					monster.apps.load(appName, function(app) {
 						app.renderDropdown(false);
 					});
-				}
-				else {
+				} else {
 					monster.apps.load(appName, function(app) {
 						app.render();
 					});
@@ -338,7 +332,7 @@ define(function(require){
 			container.find('#main_topbar_brand').on('click', function() {
 				var appName = monster.apps.auth.defaultApp;
 
-				if(appName) {
+				if (appName) {
 					monster.pub('myaccount.hide');
 					monster.apps.load(appName, function(app) {
 						self.showAppName(appName);
@@ -347,11 +341,12 @@ define(function(require){
 				}
 			});
 
-			if(monster.config.whitelabel.hasOwnProperty('nav')) {
-				if(monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
-					container.find('#main_topbar_signout_link')
-							 .unbind('click')
-							 .attr('href', monster.config.whitelabel.nav.logout);
+			if (monster.config.whitelabel.hasOwnProperty('nav')) {
+				if (monster.config.whitelabel.nav.hasOwnProperty('logout') && monster.config.whitelabel.nav.logout.length > 0) {
+					container
+						.find('#main_topbar_signout_link')
+							.unbind('click')
+							.attr('href', monster.config.whitelabel.nav.logout);
 				}
 			}
 
@@ -374,12 +369,11 @@ define(function(require){
 				addBackButton: true,
 				allowBackOnMasquerading: true,
 				onSearch: function(searchValue) {
-					if(searchValue) {
+					if (searchValue) {
 						var template = monster.template(self, 'accountToggle-search', { searchValue: searchValue });
 
 						mainContainer.find('.current-account-container').html(template);
-					}
-					else {
+					} else {
 						mainContainer.find('.current-account-container').html(monster.apps.auth.currentAccount.name).attr('data-id', monster.apps.auth.currentAccount.id);
 					}
 				},
@@ -394,11 +388,10 @@ define(function(require){
 								account: data.data,
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
-									if(currentApp in monster.apps) {
-										if(monster.apps[currentApp].isMasqueradable) {
+									if (currentApp in monster.apps) {
+										if (monster.apps[currentApp].isMasqueradable) {
 											monster.apps[currentApp].render();
-										}
-										else {
+										} else {
 											toastr.warning(self.i18n.active().noMasqueradingAllowed);
 											monster.apps.apploader.render();
 										}
@@ -424,7 +417,7 @@ define(function(require){
 
 		toggleAccountToggle: function() {
 			var self = this;
-			if($('#main_topbar_account_toggle').hasClass('open')) {
+			if ($('#main_topbar_account_toggle').hasClass('open')) {
 				self.hideAccountToggle();
 			} else {
 				self.showAccountToggle();
@@ -452,12 +445,11 @@ define(function(require){
 					callback && callback();
 				};
 
-			if(args.account.id === monster.apps.auth.originalAccount.id) {
+			if (args.account.id === monster.apps.auth.originalAccount.id) {
 				self.restoreMasquerading({
 					callback: callback
 				});
-			}
-			else if(!args.account.hasOwnProperty('name')) {
+			} else if (!args.account.hasOwnProperty('name')) {
 				self.callApi({
 					resource: 'account.get',
 					data: {
@@ -474,15 +466,14 @@ define(function(require){
 						callback && callback();
 					}
 				});
-			}
-			else {
+			} else {
 				afterGetData(args.account);
 			}
 		},
 
 		updateApps: function(accountId) {
 			$.each(monster.apps, function(key, val) {
-				if(val.hasOwnProperty('isMasqueradable') ? val.isMasqueradable : true) {
+				if (val.hasOwnProperty('isMasqueradable') ? val.isMasqueradable : true) {
 					val.accountId = accountId;
 				}
 			});
@@ -516,13 +507,13 @@ define(function(require){
 			_.each(mainTemplate, function(potentialContainer) {
 				$potentialContainer = $(potentialContainer);
 
-				if($potentialContainer.hasClass('core-footer')) {
+				if ($potentialContainer.hasClass('core-footer')) {
 					container = $potentialContainer;
 				}
 			});
 
-			if(container) {
-				container.find('.tag-version').html('('+version+')');
+			if (container) {
+				container.find('.tag-version').html('(' + version + ')');
 			}
 		},
 
@@ -539,7 +530,7 @@ define(function(require){
 					dataType: '*'
 				},
 				success: function(_data) {
-					container.find('#main_topbar_brand').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+					container.find('#main_topbar_brand').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime() + ')');
 				},
 				error: function(error) {
 					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.svg")');
@@ -574,7 +565,7 @@ define(function(require){
 					dataType: '*'
 				},
 				success: function(_data) {
-					var src = apiUrl + 'whitelabel/' + domain + '/icon?_='+new Date().getTime();
+					var src = apiUrl + 'whitelabel/' + domain + '/icon?_=' + new Date().getTime();
 					changeFavIcon(src);
 				},
 				error: function(error) {
@@ -601,7 +592,7 @@ define(function(require){
 			// And we start a timeout that will check if there are still some active requests after %waitTime%.
 			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
 			self.spinner.startTimeout = setTimeout(function() {
-				if(self.spinner.requestAmount && !spinner.hasClass('active')) {
+				if (self.spinner.requestAmount && !spinner.hasClass('active')) {
 					spinner.addClass('active');
 				}
 
@@ -618,11 +609,11 @@ define(function(require){
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
 			// If there are no active requests after the timeout, then we can safely remove the spinner.
 			// We do this to avoid showing and hiding the spinner too quickly
-			if(!self.spinner.requestAmount) {
+			if (!self.spinner.requestAmount) {
 				self.spinner.active = false;
 
 				self.spinner.endTimeout = setTimeout(function() {
-					if(spinner.hasClass('active')) {
+					if (spinner.hasClass('active')) {
 						spinner.removeClass('active');
 					}
 
@@ -663,7 +654,7 @@ define(function(require){
 						adminOnly: true,
 						category: 'general',
 						key: 'a',
-						title: self.i18n.active().globalShortcuts.keys['a'].title,
+						title: self.i18n.active().globalShortcuts.keys.a.title,
 						callback: function() {
 							self.toggleAccountToggle();
 						}
@@ -677,7 +668,7 @@ define(function(require){
 							self.restoreMasquerading({
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
-									if(currentApp in monster.apps) {
+									if (currentApp in monster.apps) {
 										monster.apps[currentApp].render();
 									}
 									self.hideAccountToggle();
@@ -688,7 +679,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'd',
-						title: self.i18n.active().globalShortcuts.keys['d'].title,
+						title: self.i18n.active().globalShortcuts.keys.d.title,
 						callback: function() {
 							self.showDebugPopup();
 						}
@@ -696,7 +687,7 @@ define(function(require){
 					{
 						category: 'general',
 						key: 'r',
-						title: self.i18n.active().globalShortcuts.keys['r'].title,
+						title: self.i18n.active().globalShortcuts.keys.r.title,
 						callback: function() {
 							monster.routing.goTo('apps/' + monster.apps.getActiveApp());
 						}
@@ -736,14 +727,15 @@ define(function(require){
 		},
 
 		showShortcutsPopup: function() {
-			if(!$('.shortcuts-dialog').length) {
+			if (!$('.shortcuts-dialog').length) {
 				var self = this,
 					shortcuts = monster.ui.getShortcuts(),
-					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts }),
-					popup = monster.ui.dialog(shortcutsTemplate, {
-						title: self.i18n.active().globalShortcuts.popupTitle,
-						width: 700
-					});
+					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts });
+
+				monster.ui.dialog(shortcutsTemplate, {
+					title: self.i18n.active().globalShortcuts.popupTitle,
+					width: 700
+				});
 			}
 		},
 
@@ -761,7 +753,7 @@ define(function(require){
 			_.each(apps, function(app) {
 				shortcut = {};
 
-				if(appsToBind.hasOwnProperty(app.name)) {
+				if (appsToBind.hasOwnProperty(app.name)) {
 					shortcut = {
 						key: appsToBind[app.name],
 						callback: function() {
@@ -774,7 +766,7 @@ define(function(require){
 					monster.ui.addShortcut(shortcut);
 				}
 			});
-		},
+		}
 	};
 
 	return app;
