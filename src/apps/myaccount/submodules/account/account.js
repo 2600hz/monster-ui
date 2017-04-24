@@ -35,6 +35,14 @@ define(function(require){
 					.removeClass('btn btn-success')
 					.addClass('monster-button-success');
 
+			template.find('#numbers_format_exceptions').chosen({ search_contains: true, width: '220px' });
+
+			template.find('[name="ui_flags.numbers_format"]').on('change', function() {
+				template.find('.group-for-exceptions').toggleClass('active', template.find('[name="ui_flags.numbers_format"]:checked').val() === 'international_with_exceptions');
+			});
+
+			monster.ui.tooltips(template);
+
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data
@@ -76,31 +84,37 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					account: function(callback) {
-						self.callApi({
-							resource: 'account.get',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data, status) {
-								callback && callback(null, data.data);
-							}
-						});
-					},
-					noMatch: function(callback) {
-						self.accountGetNoMatch(function(data) {
-							callback && callback(null, data);
-						})
-					}
+				account: function(callback) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							callback && callback(null, data.data);
+						}
+					});
 				},
-				function(err, results) {
-					self.accountFormatData(results, globalCallback);
+				noMatch: function(callback) {
+					self.accountGetNoMatch(function(data) {
+						callback && callback(null, data);
+					});
+				},
+				countries: function(callback) {
+					callback && callback(null, timezone.getCountries());
 				}
-			);
+			}, function(err, results) {
+				self.accountFormatData(results, globalCallback);
+			});
 		},
 
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
+
+			if (!(data.account.hasOwnProperty('ui_flags') && data.account.ui_flags.hasOwnProperty('numbers_format'))) {
+				data.account.ui_flags = data.account.ui_flags || {};
+				data.account.ui_flags.numbers_format = 'international';
+			}
 
 			globalCallback && globalCallback(data);
 		}

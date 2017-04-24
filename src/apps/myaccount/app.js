@@ -924,19 +924,30 @@ define(function(require){
 					data: $.extend(true, {}, data, newData)
 				};
 
-			if(type === 'user') {
+			if (type === 'user') {
 				params.accountId = monster.apps.auth.originalAccount.id;
 				params.userId = self.userId;
-				if(params.data.timezone && params.data.timezone === 'inherit') {
+				if (params.data.timezone && params.data.timezone === 'inherit') {
 					delete params.data.timezone;
 				}
 
 				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
+				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format')) {
+					if (newData.ui_flags.numbers_format !== 'international_with_exceptions') {
+						delete params.data.ui_flags.numbers_format_exceptions;
+					}
+
+					// If it's set to default, then we want to delete the custom setting, so we can get properly inherit the account setting
+					if (newData.ui_flags.numbers_format === 'inherit') {
+						delete params.data.ui_flags.numbers_format;
+					}
+				}
+			} else if (type === 'account') {
+				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
 				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format') && newData.ui_flags.numbers_format !== 'international_with_exceptions') {
 					delete params.data.ui_flags.numbers_format_exceptions;
 				}
-			}
-			else if(type === 'billing') {
+			} else if (type === 'billing') {
 				params.data = newData;
 			}
 

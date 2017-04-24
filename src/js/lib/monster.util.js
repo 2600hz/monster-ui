@@ -273,7 +273,6 @@ define(function(require){
 				formattedPhoneNumber = phoneNumber;
 
 			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				//var resp = libphonenumber.parse(phoneNumber);
 				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
 			}
 
@@ -283,9 +282,26 @@ define(function(require){
 		getFormatPhoneNumber: function(phoneNumber) {
 			var resp = libphonenumber.parse(phoneNumber),
 				user = monster.apps.auth.currentUser || {},
+				account = monster.apps.auth.originalAccount || {},
 				formattedData = {
 					originalNumber: phoneNumber,
 					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
+				},
+				getUserFormatFromEntity = function(entity, data) {
+					var response = '';
+
+					if (entity.ui_flags.numbers_format === 'national') {
+						response = data.nationalFormat;
+					} else if (entity.ui_flags.numbers_format === 'international') {
+						response = data.internationalFormat;
+					} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
+						if (entity.ui_flags.numbers_format_exceptions.length && entity.ui_flags.numbers_format_exceptions.indexOf(data.country.code) >= 0) {
+							response = data.nationalFormat;
+						} else {
+							response = data.internationalFormat;
+						}
+					}
+					return response;
 				};
 
 			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
@@ -304,22 +320,26 @@ define(function(require){
 
 				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format')) {
 					formattedData.userFormatType = user.ui_flags.numbers_format;
-
-					if (user.ui_flags.numbers_format === 'national') {
-						formattedData.userFormat = formattedData.nationalFormat;
-					} else if (user.ui_flags.numbers_format === 'international') {
-						formattedData.userFormat = formattedData.internationalFormat;
-					} else if (user.ui_flags.numbers_format === 'international_with_exceptions') {
-						if (user.ui_flags.numbers_format_exceptions.length && user.ui_flags.numbers_format_exceptions.indexOf(formattedData.country.code) >= 0) {
-							formattedData.userFormat = formattedData.nationalFormat;
-						} else {
-							formattedData.userFormat = formattedData.internationalFormat;
-						}
-					}
+					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
+				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
+					formattedData.userFormatType = account.ui_flags.numbers_format;
+					formattedData.userFormat = getUserFormatFromEntity(account, formattedData);
 				}
 			}
 
 			return formattedData;
+		},
+
+		getDefaultNumbersFormat: function() {
+			var self = this,
+				account = monster.apps.auth.originalAccount || {},
+				format = 'international'; // default
+
+			if (account && account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
+				format = account.ui_flags.numbers_format;
+			}
+
+			return format;
 		},
 
 		randomString: function(length, _chars) {

@@ -2638,7 +2638,8 @@ define(function(require){
 				formattedData = {
 					numberData: {
 						country: formattedNumber.country,
-						number: formattedNumber.originalNumber,
+						originalNumber: formattedNumber.originalNumber,
+						e164Number: formattedNumber.e164Number,
 						formattedNumber: formattedNumber.userFormat
 					},
 					options: {
