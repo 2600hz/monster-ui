@@ -322,26 +322,18 @@ define(function(require){
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
 				appendTemplate = function(template, fadeInCallback) {
-					if (subscription) {
-						monster.unsub(subscription);
-					}
-
 					$container
 						.empty()
 						.hide()
 						.append(template)
 						.fadeIn(options.duration, fadeInCallback);
-				},
-				subscription;
+				};
 
 			callback(appendTemplate);
 
-			if (monster.apps.core.spinner.active) {
+			// Only insert the loading template if a request is in progress
+			if (monster.apps.core.request.active) {
 				appendTemplate(loadingTemplate);
-			} else {
-				subscription = monster.sub('core.onSpinnerStart', function() {
-					appendTemplate(loadingTemplate);
-				});
 			}
 		},
 
