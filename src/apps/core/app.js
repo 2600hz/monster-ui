@@ -128,7 +128,7 @@ define(function(require) {
 			var self = this;
 
 			monster.apps.load('auth', function(app) {
-				app.render($('#monster-content'));
+				app.render($('#monster_content'));
 			});
 		},
 
@@ -227,7 +227,7 @@ define(function(require) {
 					if (typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
 							self.showAppName(defaultApp);
-							app.render($('#monster-content'));
+							app.render($('#monster_content'));
 						}, {}, true);
 					} else {
 						console.warn('Current user doesn\'t have a default app');
@@ -276,7 +276,7 @@ define(function(require) {
 			});
 
 			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
-			$('.core-wrapper').on('click', '#monster-content', function() {
+			$('.core-wrapper').on('click', '#monster_content', function() {
 				var $accountToggle = $('#main_topbar_account_toggle');
 
 				if ($accountToggle.hasClass('open')) {

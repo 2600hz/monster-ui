@@ -465,7 +465,7 @@ define(function(require){
 								self.displayUserSection();
 
 								myaccount.addClass('myaccount-open');
-								setTimeout(function() { $('#monster-content').hide(); }, 300);
+								setTimeout(function() { $('#monster_content').hide(); }, 300);
 
 								callback && callback();
 							}
@@ -531,7 +531,7 @@ define(function(require){
 			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.removeClass('myaccount-open');
-			$('#monster-content').show();
+			$('#monster_content').show();
 
 			monster.pub('myaccount.closed');
 		},

@@ -44,7 +44,7 @@ define(function(require) {
 		numbersRender: function(pArgs) {
 			var self = this,
 				args = pArgs || {},
-				container = args.container || $('#monster-content'),
+				container = args.container || $('#monster_content'),
 				callbackAfterRender = args.callbackAfterRender,
 				viewType = args.viewType || 'manager';
 
