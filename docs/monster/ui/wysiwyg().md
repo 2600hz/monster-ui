@@ -16,50 +16,47 @@ monster.ui.wysiwyg(target[, options]);
 ```
 
 ### Parameters
-* `target` (mandatory)
 
- Type: [jQuery object][jquery]
+###### `target`: [jQuery Object][jquery] (mandatory)
 
- A jQuery object inside which the WYSIWYG will be inserted using the [prepend()][prepend] method.
+A jQuery object inside which the WYSIWYG will be inserted using the [prepend()][prepend] method.
 
-* `options` (optional)
+###### `options`: [Object][object_literal] | [Boolean][boolean_literal] (optional)
 
- Type: [Object][object_literal] OR [Boolean][boolean_literal]
-
- If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If it is a JavaScript object, it can be used to add new options or override existing options available by default listed below:
-    - fontSize (dropdown list)
-        + small
-        + normal
-        + huge
-    - fontEffect (grouped buttons)
-        + bold
-        + italic
-        + underline
-        + strikethrough
-    - fontColor (dropdown buttons)
-    - textAlign (dropdown buttons)
-        + left
-        + center
-        + right
-        + justify
-    - list (dropdown buttons)
-        + unordered
-        + ordered
-    - indentation (grouped buttons)
-        + indent
-        + outdent
-    - link (grouped buttons)
-        + create
-        + delete
-    - image (grouped button)
-        + upload
-        + link
-    - editing (grouped buttons)
-        + undo
-        + redo
-    - horizontalRule (single button)
-    - toggleView (single button)
-    - macro (dropdown list) *disabled by default*
+If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If it is a JavaScript object, it can be used to add new options or override existing options available by default listed below:
+* `fontSize`
+    - `small`
+    - `normal`
+    - `huge`
+* `fontEffect`
+    - `bold`
+    - `italic`
+    - `underline`
+    - `strikethrough`
+* `fontColor`
+* `textAlign`
+    - `left`
+    - `center`
+    - `right`
+    - `justify`
+* `list`
+    - `unordered`
+    - `ordered`
+* `indentation`
+    - `indent`
+    - `outdent`
+* `link`
+    - `create`
+    - `delete`
+* `image`
+    - `upload`
+    - `link`
+* `editing`
+    - `undo`
+    - `redo`
+* `horizontalRule`
+* `toggleView`
+* `macro` *disabled by default*
 
 ### Return
 This method returns the WYSIWYG editor container as a [jQuery object][jquery].
