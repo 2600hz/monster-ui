@@ -28,10 +28,12 @@ define(function(require){
 		//Default app to render if the user is logged in, can be changed by setting a default app
 		_defaultApp: 'appstore',
 
-		// Global var used to show the loading gif
-		spinner: {
-			requestAmount: 0,
-			active: false
+		spinner: {},
+
+		// Global var to determine if there is a request in progress
+		request: {
+			active: false,
+			counter: 0
 		},
 
 		appFlags: {},
@@ -584,46 +586,47 @@ define(function(require){
 			});
 		},
 
-		onRequestStart: function(spinner) {
+		onRequestStart: function($spinner) {
 			var self = this,
 				waitTime = 250;
 
-			self.spinner.requestAmount++;
+			self.request.counter++;
 
 			// If we start a request, we cancel any existing timeout that was checking if the loading was over
 			clearTimeout(self.spinner.endTimeout);
+			if (self.request.counter) {
+				self.request.active = true;
+			}
 
 			// And we start a timeout that will check if there are still some active requests after %waitTime%.
 			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
 			self.spinner.startTimeout = setTimeout(function() {
-				if(self.spinner.requestAmount !== 0 && self.spinner.active === false) {
-					self.spinner.active = true;
-					spinner.addClass('active');
-					
-					clearTimeout(self.spinner.startTimeout);
+				if (self.request.counter && !$spinner.hasClass('active')) {
+					$spinner.addClass('active');
 				}
 			}, waitTime);
 		},
 
-		onRequestEnd: function(spinner) {
+		onRequestEnd: function($spinner) {
 			var self = this,
 				waitTime = 50;
 
-			self.spinner.requestAmount--;
+			self.request.counter--;
 
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
 			// If there are no active requests after the timeout, then we can safely remove the spinner.
 			// We do this to avoid showing and hiding the spinner too quickly
-			if(self.spinner.requestAmount === 0) {
-				self.spinner.endTimeout = setTimeout(function() {
-					if(self.spinner.requestAmount === 0 && self.spinner.active === true) {
-						spinner.removeClass('active');
-						self.spinner.active = false;
+			if (!self.request.counter) {
+				self.request.active = false;
 
-						clearTimeout(self.spinner.startTimeout);
-						clearTimeout(self.spinner.endTimeout);
+				self.spinner.endTimeout = setTimeout(function() {
+					if ($spinner.hasClass('active')) {
+						$spinner.removeClass('active');
 					}
-				}, waitTime)
+
+					clearTimeout(self.spinner.startTimeout);
+					clearTimeout(self.spinner.endTimeout);
+				}, waitTime);
 			}
 		},
 
