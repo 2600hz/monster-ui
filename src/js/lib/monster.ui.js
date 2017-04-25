@@ -310,7 +310,6 @@ define(function(require){
 		 * @param  {Object}   pOptions   loading view options
 		 */
 		insertTemplate: function($container, callback, pOptions) {
-console.log('--------------------');
 			var coreApp = monster.apps.core,
 				options = $.extend(true, {
 					title: coreApp.i18n.active().insertTemplate.title,
@@ -322,21 +321,20 @@ console.log('--------------------');
 					text: options.text
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, fadeInCallback, isLocal) {
-console.time(isLocal ? 'loading' : 'callback');
+				appendTemplate = function(template, fadeInCallback) {
 					$container
 						.empty()
 						.hide()
 						.append(template)
-						.fadeIn(options.duration, function() {
-console.timeEnd(isLocal ? 'loading' : 'callback');
-							fadeInCallback && fadeInCallback();
-						});
+						.fadeIn(options.duration, fadeInCallback);
 				};
 
-			appendTemplate(loadingTemplate, undefined, true);
-
 			callback(appendTemplate);
+
+			// Only insert the loading template if a request is in progress
+			if (monster.apps.core.request.active) {
+				appendTemplate(loadingTemplate);
+			}
 		},
 
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
