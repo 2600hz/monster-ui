@@ -19,11 +19,14 @@ monster.util.getFormatPhoneNumber(phoneNumber);
 Phone number to analyze and get available formats for.
 
 ### Return
+
 This method returns an [Object][object_literal] with at least 2 fields:
-- originalNumber: [String][string_literal] contains the number submitted originally
-- userFormat: [String][string_literal] the way the user should see the number displayed (if the number doesn't have any proper format found, then it will most of the time be equal to the originalNumber)
+
+* `originalNumber`: [String][string_literal] contains the number submitted originally
+* `userFormat`: [String][string_literal] the way the user should see the number displayed (if the number doesn't have any proper format found, then it will most of the time be equal to the originalNumber)
 
 Then if the number submitted was a valid phone number, it should also return the following fields:
+
 * `country`: [Object][object_literal]
 	- `code`: [String][string_literal] Contains a valid ISO 3166-1 alpha-2 country code (example: `FR` for France, `US` for United States etc...)
 	- `name`: [String][string_literal] Friendly name of the country linked to the code (if code is US, name will be "`United States`" for instance)
@@ -35,11 +38,12 @@ Then if the number submitted was a valid phone number, it should also return the
 * `userFormatType`: [String][string_literal] This will indicate which "preference" was chosen from the user / account to format the phone number, can be `international`, `national` or `international_with_exceptions`
 
 ### Description
+
 The `monster.util.formatPhoneNumber()` method is used to get the available formats for a phone number and display information about it. This helper is also used by the "formatPhoneNumber" helper to automatically display phone numbers.
 
 ### Examples
-* Get available formats for proper e164 phone numbers
 
+* Get available formats for proper e164 phone numbers
 
 For a `US` Phone number
 ```javascript
