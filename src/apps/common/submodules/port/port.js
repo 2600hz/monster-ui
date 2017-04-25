@@ -164,7 +164,7 @@ define(function(require){
 
 			container.find('span.pull-right a').on('click', function() {
 				monster.pub('common.portWizard.render', {
-					parent: $('#monster-content'),
+					parent: $('#monster_content'),
 					container: $('.app-content-wrapper'),
 					globalCallback: function() {
 						self.portRender({
@@ -434,7 +434,7 @@ define(function(require){
 
 				if ($this.hasClass('continue-request')) {
 					monster.pub('common.portWizard.render', {
-						parent: $('#monster-content'),
+						parent: $('#monster_content'),
 						container: $('.app-content-wrapper'),
 						data: {
 							request: currentRequest
@@ -1550,7 +1550,7 @@ define(function(require){
 			}
 			else {
 				parent.empty();
-				args.parent = $('#monster-content');
+				args.parent = $('#monster_content');
 			}
 
 			self.portRender(args);

@@ -9,7 +9,7 @@ define(function(require){
 		var renderApp = function() {
 				monster.apps.load(appName, function(loadedApp) {
 					monster.pub('core.showAppName', appName);
-					$('#monster-content').empty();
+					$('#monster_content').empty();
 
 					loadedApp.render();
 				});
