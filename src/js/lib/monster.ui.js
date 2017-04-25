@@ -310,6 +310,7 @@ define(function(require){
 		 * @param  {Object}   pOptions   loading view options
 		 */
 		insertTemplate: function($container, callback, pOptions) {
+console.log('--------------------');
 			var coreApp = monster.apps.core,
 				options = $.extend(true, {
 					title: coreApp.i18n.active().insertTemplate.title,
@@ -321,15 +322,19 @@ define(function(require){
 					text: options.text
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, fadeInCallback) {
+				appendTemplate = function(template, fadeInCallback, isLocal) {
+console.time(isLocal ? 'loading' : 'callback');
 					$container
 						.empty()
 						.hide()
 						.append(template)
-						.fadeIn(options.duration, fadeInCallback);
+						.fadeIn(options.duration, function() {
+console.timeEnd(isLocal ? 'loading' : 'callback');
+							fadeInCallback && fadeInCallback();
+						});
 				};
 
-			appendTemplate(loadingTemplate);
+			appendTemplate(loadingTemplate, undefined, true);
 
 			callback(appendTemplate);
 		},
