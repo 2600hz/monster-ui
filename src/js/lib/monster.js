@@ -88,6 +88,9 @@ define(function(require){
 		},
 
 		request: function(options){
+console.log(
+	'request: 	', options.resource
+);
 			var self = this,
 				settings =  _.extend({}, this._requests[options.resource]);
 

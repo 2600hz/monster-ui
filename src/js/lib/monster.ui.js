@@ -310,6 +310,10 @@ define(function(require){
 		 * @param  {Object}   pOptions   loading view options
 		 */
 		insertTemplate: function($container, callback, pOptions) {
+console.log('----------------------------------------');
+console.log(
+	'callee: 	', arguments.callee.caller.name
+);
 			var coreApp = monster.apps.core,
 				options = $.extend(true, {
 					title: coreApp.i18n.active().insertTemplate.title,
@@ -321,7 +325,10 @@ define(function(require){
 					text: options.text
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, fadeInCallback) {
+				appendTemplate = function(template, fadeInCallback, isLocal) {
+console.log(
+	'template: 	', isLocal ? 'loading' : 'application'
+);
 					if (subscription) {
 						monster.unsub(subscription);
 					}
@@ -333,14 +340,16 @@ define(function(require){
 						.fadeIn(options.duration, fadeInCallback);
 				},
 				subscription;
-
+console.log(
+	'title: 		', options.title
+);
 			callback(appendTemplate);
 
 			if (monster.apps.core.spinner.active) {
-				appendTemplate(loadingTemplate);
+				appendTemplate(loadingTemplate, undefined, true);
 			} else {
 				subscription = monster.sub('core.onSpinnerStart', function() {
-					appendTemplate(loadingTemplate);
+					appendTemplate(loadingTemplate, undefined, true);
 				});
 			}
 		},
