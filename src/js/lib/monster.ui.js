@@ -1838,7 +1838,7 @@ define(function(require){
 			var self = this,
 				args = pArgs || {},
 				menus = thisArg.appFlags._menus,
-				parent = $('#monster-content'),
+				parent = $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				menuId = $tab.parents('.navbar-menu').data('menu_id'),
 				tabId = $tab.data('tab_id'),
@@ -1982,7 +1982,7 @@ define(function(require){
 		 */
 		generateAppNavbar: function(thisArg) {
 			var self = this,
-				parent = $('#monster-content'),
+				parent = $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				menus = thisArg.appFlags._menus,
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
@@ -2044,7 +2044,7 @@ define(function(require){
 		 */
 		generateAppLayout: function(thisArg, args) {
 			var self = this,
-				parent = $('#monster-content'),
+				parent = $('#monster_content'),
 				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
 				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
 				hasNavbar = tabs.length === 1 ?  false : true,
