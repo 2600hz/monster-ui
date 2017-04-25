@@ -310,10 +310,6 @@ define(function(require){
 		 * @param  {Object}   pOptions   loading view options
 		 */
 		insertTemplate: function($container, callback, pOptions) {
-console.log('----------------------------------------');
-console.log(
-	'callee: 	', arguments.callee.caller.name
-);
 			var coreApp = monster.apps.core,
 				options = $.extend(true, {
 					title: coreApp.i18n.active().insertTemplate.title,
@@ -325,33 +321,17 @@ console.log(
 					text: options.text
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, fadeInCallback, isLocal) {
-console.log(
-	'template: 	', isLocal ? 'loading' : 'application'
-);
-					if (subscription) {
-						monster.unsub(subscription);
-					}
-
+				appendTemplate = function(template, fadeInCallback) {
 					$container
 						.empty()
 						.hide()
 						.append(template)
 						.fadeIn(options.duration, fadeInCallback);
-				},
-				subscription;
-console.log(
-	'title: 		', options.title
-);
-			callback(appendTemplate);
+				};
 
-			if (monster.apps.core.spinner.active) {
-				appendTemplate(loadingTemplate, undefined, true);
-			} else {
-				subscription = monster.sub('core.onSpinnerStart', function() {
-					appendTemplate(loadingTemplate, undefined, true);
-				});
-			}
+			appendTemplate(loadingTemplate);
+
+			callback(appendTemplate);
 		},
 
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
