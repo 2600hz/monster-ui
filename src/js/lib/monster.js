@@ -303,6 +303,8 @@ define(function(require){
 				parsedError = error,
 				isParsable = error.hasOwnProperty('getResponseHeader') ? (error.getResponseHeader('content-type') === 'application/json') : typeof error === 'object' && 'responseText' in error;// for unknown reason hasOwnProperty returns false?
 
+			isParsable = isParsable && error.responseText !== '';
+
 			if(isParsable) {
 				parsedError = $.parseJSON(error.responseText);
 			}
