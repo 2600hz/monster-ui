@@ -10,6 +10,7 @@ The `monster.ui` object contains different methods used to easily render common 
 * [generateAppLayout()][generateAppLayout]
 * [getFormData()][getFormData]
 * [highlight()][highlight]
+* [insertTemplate()][insertTemplate]
 * [loadTab()][loadTab]
 * [mask()][mask]
 * [protectField()][protect_field]
@@ -31,6 +32,7 @@ The `monster.ui` object contains different methods used to easily render common 
 [generateAppLayout]: ui/generateAppLayout().md
 [getFormData]: ui/getFormData().md
 [highlight]: ui/highlight().md
+[insertTemplate]: ui/insertTemplate().md
 [loadTab]: ui/loadTab().md
 [mask]: ui/mask().md
 [protect_field]: ui/protectField().md
