@@ -154,5 +154,65 @@
 				</div>
 			</div>
 		</li>
+
+		<li class="settings-item clearfix" data-name="numbers_format">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.numbersFormat.title }}</span>
+				<span class="description">
+					{{tryI18n i18n.numbersFormat account.ui_flags.numbers_format}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_numbers_format">
+							<div class="control-group">
+								<label class="control-label">
+									{{ i18n.numbersFormat.globalSetting }}
+									<i class="help-popover fa fa-question-circle" data-original-title="{{ i18n.numbersFormat.help }}" data-placement="top" data-toggle="tooltip"></i></label>
+								<div class="controls checkbox-container">
+									<label>
+										{{#monsterRadio i18n.numbersFormat.international }}
+											<input type="radio" name="ui_flags.numbers_format" value="international"{{#compare account.ui_flags.numbers_format "===" "international"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.numbersFormat.national }}
+											<input type="radio" name="ui_flags.numbers_format" value="national"{{#compare account.ui_flags.numbers_format "===" "national"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.numbersFormat.international_with_exceptions }}
+											<input type="radio" name="ui_flags.numbers_format" value="international_with_exceptions"{{#compare account.ui_flags.numbers_format "===" "international_with_exceptions"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+								</div>
+							</div>
+							<div class="control-group group-for-exceptions{{#compare account.ui_flags.numbers_format "===" "international_with_exceptions"}} active{{/compare}}">
+								<label class="control-label" for="numbers_format_exceptions">{{ i18n.numbersFormat.listCountries }}</label>
+								<div class="controls">
+									<select multiple id="numbers_format_exceptions" name="ui_flags.numbers_format_exceptions">
+										{{#each countries}}
+											<option value="{{@key}}" {{#ifInArray @key @root.account.ui_flags.numbers_format_exceptions}} selected{{/ifInArray}}>{{this}}</option>
+										{{/each}}
+									</select>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="account" data-field="numbers_format">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
 	</ul>
 </div>

@@ -2,7 +2,7 @@
 	<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
 		<div class="number-options pull-right"></div>
 
-		<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}</div>
+		<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}</div>
 		<span class="locality">
 			{{#if this.isoCountry }}
 				<span class="flag"><img src="css/assets/flags/32/{{ this.isoCountry }}.png" height="32" width="32"></img></span>

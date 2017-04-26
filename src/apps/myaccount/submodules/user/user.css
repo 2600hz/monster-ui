@@ -5,3 +5,11 @@
 .user-content-wrapper #form_password label.monster-invalid[for="password"] {
 	margin-top: 25px;
 }
+
+.user-content-wrapper #form_numbers_format .group-for-exceptions {
+	display: none;
+}
+
+.user-content-wrapper #form_numbers_format .group-for-exceptions.active {
+	display: block;
+}

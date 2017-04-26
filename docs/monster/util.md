@@ -9,6 +9,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [getBusinessDate()][get_business_date]
 * [getUrlVars()][get_url_vars]
 * [getAuthToken()][get_auth_token]
+* [getFormatPhoneNumber()][get_format_phone_number]
 * [gregorianToDate()][gregorian_to_date]
 * [isAdmin()][is_admin]
 * [isLoggedIn()][is_logged_in]
@@ -33,6 +34,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [get_business_date]: util/getBusinessDate().md
 [get_url_vars]: util/getUrlVars().md
 [get_auth_token]: util/getAuthToken().md
+[get_format_phone_number]: util/getFormatPhoneNumber().md
 [gregorian_to_date]: util/gregorianToDate().md
 [is_admin]: util/isAdmin().md
 [is_logged_in]: util/isLoggedIn().md

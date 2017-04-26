@@ -1,8 +1,10 @@
-<div class="monster-phone-number-wrapper" data-number="{{ numberData.number }}">
-	<span class="monster-phone-number">{{ numberData.formattedNumber }}</span>
+<div class="monster-phone-number-wrapper" data-e164="{{numberData.e164Number}}" data-number="{{ numberData.originalNumber }}">
+	<span class="monster-phone-number-value">{{ numberData.formattedNumber }}</span>
 	{{#unless options.hideFlag}}
-		<span class="monster-number-flag flag{{#unless numberData.country}} empty{{/unless}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ numberData.country }}">
-			<img src="css/assets/flags/32/{{ numberData.country }}.png" height="32" width="32"></img>
-		</span>
+		{{#if numberData.country}}
+			<span class="monster-number-flag flag{{#unless numberData.country.code}} empty{{/unless}}" data-toggle="tooltip" data-placement="right" data-original-title="{{ numberData.country.name }}">
+				<img src="css/assets/flags/32/{{ numberData.country.code }}.png" height="32" width="32"></img>
+			</span>
+		{{/if}}
 	{{/unless}}
 </div>

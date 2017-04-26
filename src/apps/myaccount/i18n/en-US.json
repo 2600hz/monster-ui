@@ -91,6 +91,19 @@
 		"carrierTitle": "Carrier Settings"
 	},
 
+	"__comment": "UI-2596: Adding format choices to phone numbers",
+	"__version": "4.1",
+	"numbersFormat": {
+		"title": "Phone Numbers Format",
+		"listCountries": "Countries",
+		"globalSetting": "Format Mode",
+		"help": "By default, all phone numbers are displayed in their international standard (+1 415 222 3333 for a US number for instance), but you can also choose to display numbers in their national format ((415) 888-2222 for a US number). Finally you can choose to display all numbers in their international format, and then select countries that you wish to display in their national formats.",
+		"international": "International",
+		"national": "National",
+		"inherit": "Account Default",
+		"international_with_exceptions": "International with Exceptions"
+	},
+
 	"billing": {
 		"title": "Credit Card",
 		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",

@@ -730,7 +730,15 @@ define(function(require) {
 								}
 							});
 						} else {
-							self.numbersRenderAccountAncestorsPopup(searchString, data.account_id);
+							monster.pub('common.accountAncestors.render', {
+								accountId: data.account_id,
+								entity: {
+									type: 'number',
+									data: {
+										id: data.number
+									}
+								}
+							});
 						}
 					}
 				});
@@ -769,27 +777,6 @@ define(function(require) {
 					if (val) {
 						searchListNumbers(val, usedList);
 					}
-				}
-			});
-		},
-
-		numbersRenderAccountAncestorsPopup: function(number, accountId) {
-			var self = this;
-
-			self.callApi({
-				resource: 'numbers.get',
-				data: {
-					accountId: accountId,
-					phoneNumber: number
-				},
-				success: function(data, status) {
-					monster.pub('common.accountAncestors.render', {
-						accountId: accountId,
-						entity: {
-							type: 'number',
-							data: data.data
-						}
-					});
 				}
 			});
 		},

@@ -96,17 +96,25 @@ define(function(){
 					cancelCall = false; //Used to cancel the Api Call before it is actually sent
 
 				if(apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
-
 					//Handling special cases:
 					switch(params.resource) {
 						case 'account.update':
-							if(params.data.accountId === monster.apps.auth.currentAccount.id) {
+							if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 								successCallback = function(data, status) {
 									monster.apps.auth.currentAccount = data.data;
 									monster.pub('auth.currentAccountUpdated', data.data);
 
 									params.success && params.success(data, status);
-								}
+								};
+							}
+
+							if (params.data.accountId === monster.apps.auth.originalAccount.id) {
+								successCallback = function(data, status) {
+									monster.apps.auth.originalAccount = data.data;
+									monster.pub('auth.originalAccountUpdated', data.data);
+
+									params.success && params.success(data, status);
+								};
 							}
 							break;
 

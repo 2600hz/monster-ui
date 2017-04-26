@@ -3,7 +3,7 @@ define(function(require){
 	var $ = require("jquery"),
 		_ = require("underscore"),
 		monster = require("monster"),
-		libphonenumber = require('libphonenumber-js');
+		libphonenumber = require('libphonenumber');
 
 	var util = {
 
@@ -256,7 +256,7 @@ define(function(require){
 		},
 
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var resp = libphonenumber.parse(formattedNumber),
+			var resp = libphonenumber.parse(phoneNumber, { country: { default: 'US' } }),
 				phoneNumber;
 
 			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
@@ -273,37 +273,73 @@ define(function(require){
 				formattedPhoneNumber = phoneNumber;
 
 			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				//var resp = libphonenumber.parse(phoneNumber);
-				var resp = self.getFormatPhoneNumber(phoneNumber);
-
-				if (resp.hasOwnProperty('internationalFormat')) {
-					formattedPhoneNumber = resp.internationalFormat;
-					//var displayMode = 'International';
-
-					// Todo we might want to do something like this, with a parameter from account/user instead of whitelabel
-					/*if (resp.country === monster.config.whitelabel.defaultCountryPhoneNumber) {
-						displayMode = 'National';
-					}*/
-				}
+				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
 			}
 
 			return formattedPhoneNumber;
 		},
 
 		getFormatPhoneNumber: function(phoneNumber) {
-			var resp = libphonenumber.parse(phoneNumber),
+			var resp = libphonenumber.parse(phoneNumber, { country: { default: 'US' } }),
+				user = monster.apps.auth.currentUser || {},
+				account = monster.apps.auth.originalAccount || {},
 				formattedData = {
-					originalNumber: phoneNumber
+					originalNumber: phoneNumber,
+					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
+				},
+				getUserFormatFromEntity = function(entity, data) {
+					var response = '';
+
+					if (entity.ui_flags.numbers_format === 'national') {
+						response = data.nationalFormat;
+					} else if (entity.ui_flags.numbers_format === 'international') {
+						response = data.internationalFormat;
+					} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
+						if (entity.ui_flags.numbers_format_exceptions.length && entity.ui_flags.numbers_format_exceptions.indexOf(data.country.code) >= 0) {
+							response = data.nationalFormat;
+						} else {
+							response = data.internationalFormat;
+						}
+					}
+					return response;
 				};
 
 			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				formattedData.country = resp.country;
 				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
 				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
 				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
+
+				formattedData.country = {
+					code: resp.country,
+					name: monster.timezone.getCountryName(resp.country)
+				};
+
+				// Default to international mode
+				formattedData.userFormat = formattedData.internationalFormat;
+				formattedData.userFormatType = 'international';
+
+				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format')) {
+					formattedData.userFormatType = user.ui_flags.numbers_format;
+					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
+				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
+					formattedData.userFormatType = account.ui_flags.numbers_format;
+					formattedData.userFormat = getUserFormatFromEntity(account, formattedData);
+				}
 			}
 
 			return formattedData;
+		},
+
+		getDefaultNumbersFormat: function() {
+			var self = this,
+				account = monster.apps.auth.originalAccount || {},
+				format = 'international'; // default
+
+			if (account && account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
+				format = account.ui_flags.numbers_format;
+			}
+
+			return format;
 		},
 
 		randomString: function(length, _chars) {

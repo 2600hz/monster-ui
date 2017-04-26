@@ -2591,14 +2591,14 @@ define(function(require){
 		},
 
 		getTemplatePhoneNumber: function(phoneNumber, pOptions) {
-			// Can't jQuery template it as it's used by Handlebars with a helper, and it needs to return HTML
 			var formattedNumber = monster.util.getFormatPhoneNumber(phoneNumber),
 				options = pOptions || {},
 				formattedData = {
 					numberData: {
 						country: formattedNumber.country,
-						number: formattedNumber.originalNumber,
-						formattedNumber: formattedNumber.hasOwnProperty('internationalFormat') ? formattedNumber.internationalFormat : formattedNumber.originalNumber
+						originalNumber: formattedNumber.originalNumber,
+						e164Number: formattedNumber.e164Number,
+						formattedNumber: formattedNumber.userFormat
 					},
 					options: {
 						hideFlag: options.hasOwnProperty('hideFlag') ? options.hideFlag : false

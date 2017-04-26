@@ -289,5 +289,14 @@ example.html
 ```
 Here we tick the checkbox depending on the 'VP8' video codec being in the list of available codecs.
 
+
+#### monsterNumberWrapper
+This helper will generate a wrapper around a phone number that will automatically format that number based on user preferences, as well as showing a flag if the phone number was a valid phone number from a known country.
+
+example.html
+```handlebars
+{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
+```
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
