@@ -40,6 +40,7 @@ pages:
     - 'docs/monster/ui/dialog().md'
     - 'docs/monster/ui/getFormData().md'
     - 'docs/monster/ui/highlight().md'
+    - 'docs/monster/ui/insertTemplate().md'
     - 'docs/monster/ui/mask().md'
     - 'docs/monster/ui/protectField().md'
     - 'docs/monster/ui/renderJSON().md'

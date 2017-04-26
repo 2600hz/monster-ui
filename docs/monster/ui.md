@@ -9,6 +9,8 @@ The `monster.ui` object contains different methods used to easily render common 
 * [dialog()][dialog]
 * [getFormData()][getFormData]
 * [highlight()][highlight]
+* [insertTemplate()][insertTemplate]
+* [loadTab()][loadTab]
 * [mask()][mask]
 * [protectField()][protect_field]
 * [renderJSON()][render_json]
@@ -28,6 +30,8 @@ The `monster.ui` object contains different methods used to easily render common 
 [dialog]: ui/dialog().md
 [getFormData]: ui/getFormData().md
 [highlight]: ui/highlight().md
+[insertTemplate]: ui/insertTemplate().md
+[loadTab]: ui/loadTab().md
 [mask]: ui/mask().md
 [protect_field]: ui/protectField().md
 [render_json]: ui/renderJSON().md
