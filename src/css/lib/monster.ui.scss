@@ -386,6 +386,15 @@ input.monster-invalid {
 	border-color:  #fff;
 }
 
+.items-selector.skinny .box-selector {
+	width: 100%;
+	max-width: 246px;
+}
+
+.items-selector.skinny .box-selector .search-wrapper input {
+	width: 193px;
+}
+
 /************************************************************/
 /********************* PASSWORD STRENGTH ********************/
 /************************************************************/
