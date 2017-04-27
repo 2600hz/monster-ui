@@ -924,7 +924,8 @@ define(function(require) {
 			var self = this,
 				formattedData = {
 					selectedCarrier: 'local',
-					carriers: self.numbersGetCarriersModules()
+					carriers: self.numbersGetCarriersModules(),
+					isSuperDuperAdmin: monster.util.isSuperDuper()
 				};
 
 			return formattedData;
