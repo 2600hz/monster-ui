@@ -27,6 +27,7 @@ List of options to customize the loading view:
 * `title`: [String][string_literal] (optional) - title displayed in the loading view
 * `text`: [String][string_literal] (optional) - text displayed in the loading view
 * `duration`: [Number][integer] (optional, default: `250`) - duration of the fadeIn animation for the inserted template
+* `cssClass`: [String][string_literal] (optional, default: `app-content`) - custom CSS classes for the loading view
 
 ### Description
 
