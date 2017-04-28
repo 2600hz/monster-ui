@@ -317,6 +317,7 @@ define(function(require){
 					duration: 250
 				}, pOptions),
 				dataToTemplate = {
+					cssClass: options.cssClass,
 					title: options.title,
 					text: options.text
 				},

@@ -1,9 +1,13 @@
-<div class="app-content">
+<div  class="{{#if cssClass}}{{cssClass}}{{else}}app-content{{/if}} monster-loading-view">
+{{#if title}}
 	<h3 class="title">
 		{{title}}
 	</h3>
+{{/if}}
+{{#if text}}
 	<p class="text">
 		{{text}}
 	</p>
+{{/if}}
 	<i class="icon-telicon-loading-circle monster-loading-spinner"></i>
 </div>
