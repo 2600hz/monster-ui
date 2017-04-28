@@ -1501,6 +1501,12 @@ define(function(require){
 						tolerance: 'pointer'
 					});
 
+			widgetTemplate.find('.available, .selected').on('dblclick', '.item-selector', function() {
+				var newColumnClass = $(this).parent().hasClass('available') ? '.selected' : '.available';
+
+				$(this).appendTo(widgetTemplate.find(newColumnClass));
+			});
+
 			if (options.searchable) {
 				widgetTemplate
 					.find('.search-wrapper')
