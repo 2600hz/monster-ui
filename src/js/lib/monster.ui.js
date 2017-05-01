@@ -2214,22 +2214,25 @@ define(function(require){
 				},
 				addPageSizeComponent = function(container, table, pPageSize) {
 					var pageSize = pPageSize || finalOptions.paging.size || 10,
-						pageSizeTemplate = $(monster.template(monster.apps.core, 'monster-table-pageSize', { pageSize: pageSize })),
 						footableInstance;
 
-					pageSizeTemplate.find('select').on('change', function() {
-						pageSize = parseInt($(this).val());
-						footableInstance = footable.get('#'+table.attr('id'));
+					// If we gave a selector with many table, we need to add the component to each table, so we need to loop thru each table included in the jquery selector
+					$.each(table, function(k, singleTable) {
+						var $singleTable = $(singleTable);
 
-						footableInstance.pageSize(pageSize);
+						$singleTable.find('.footable-paging td').append($(monster.template(monster.apps.core, 'monster-table-pageSize', { pageSize: pageSize })));
 
-						addPageSizeComponent(container, table, pageSize);
+						$singleTable.find('.footable-paging td .table-page-size select').on('change', function() {
+							pageSize = parseInt($(this).val());
+							footableInstance = footable.get('#' + $singleTable.attr('id'));
 
-						// This is useful so when we use the "load more" button, it uses the right page size we just set
-						finalOptions.paging.size = pageSize;
+							footableInstance.pageSize(pageSize);
+							addPageSizeComponent(container, $singleTable, pageSize);
+
+							// This is useful so when we use the "load more" button, it uses the right page size we just set
+							finalOptions.paging.size = pageSize;
+						});
 					});
-
-					container.find('.footable-paging td').append(pageSizeTemplate);
 				},
 				filters = {
 					paginate: false
