@@ -11,6 +11,14 @@
 				{{i18n.portWizard.accountVerification.form.legend}}
 			</h4>
 			<div class="control-group">
+				<label for="carrier" class="control-label">
+					{{i18n.portWizard.accountVerification.form.label.carrier}}
+				</label>
+				<div class="controls">
+					<input type="text" id="carrier" name="carrier" value="{{request.carrier}}">
+				</div>
+			</div>
+			<div class="control-group">
 				<label for="name" class="control-label">
 					{{i18n.portWizard.accountVerification.form.label.accountName}}
 				</label>
@@ -23,7 +31,7 @@
 					{{i18n.portWizard.accountVerification.form.label.billingAddress}}
 				</label>
 				<div class="controls-list">
-					<input type="text" name="bill.street_address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.street}}" value="{{request.bill.street_address}}">
+					<input type="text" id="address" name="bill.street_address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.street}}" value="{{request.bill.street_address}}">
 					<input type="text" name="bill.locality" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.city}}" value="{{request.bill.locality}}">
 					<input type="text" name="bill.region" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.state}}" value="{{request.bill.region}}">
 					<input type="text" name="bill.postal_code" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.zip}}" value="{{request.bill.postal_code}}">
