@@ -891,6 +891,7 @@
 				"legend": "Account Verification",
 				"text": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
 				"label": {
+					"carrier": "Carrier",
 					"accountName": "Name on Account",
 					"billingAddress": "Billing Address",
 					"billVerification": "Recent Bill Verification",

@@ -134,7 +134,7 @@ define(function(require) {
 								.append(template)
 								.fadeIn(function() {
 									container
-										.find('#name')
+										.find('#carrier')
 											.focus();
 								});
 
