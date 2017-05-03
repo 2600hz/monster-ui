@@ -408,13 +408,13 @@ define(function(require){
 			return roundedValue.toFixed( ((parseInt(value) === value) && (isNaN(decimals) || decimals < 0)) ? 0 : decimalCount );
 		},
 
-		// Takes a string and replace all the "_" from it with a " ". Also capitalizes every word. 
+		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word. 
 		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 		formatVariableToDisplay: function(variable) {
 			var str = variable || '',
 				formattedString = str.replace(/_/g,' ');
 
-			formattedString = formattedString.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
+			formattedString = formattedString.replace(/\w\S*/, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
 
 			return formattedString;
 		},
