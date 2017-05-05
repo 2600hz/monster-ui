@@ -740,7 +740,7 @@
 		"tooltip": "Click here to masquerade to this account",
 		"entities": {
 			"account": {
-				"text": "Here is the parents of the selected account:"
+				"text": "Here are the parents of the selected account:"
 			},
 			"number": {
 				"ownedBy": "This number was found in the sub-account {{variable}}.",

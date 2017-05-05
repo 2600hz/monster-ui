@@ -6,6 +6,7 @@
 #extension_tools_get_dialog .existing-extensions-wrapper {
 	border-top: 1px solid #ddd;
 	margin-top: 25px;
+	max-height: 500px;
 }
 
 #extension_tools_get_dialog .table-title {
@@ -25,4 +26,8 @@
 
 #extension_tools_get_dialog .monster-invalid {
 	left: 197px;
+}
+
+#extension_tools_get_dialog #extension_listing_dialog_table {
+	margin-bottom: 15px;
 }
