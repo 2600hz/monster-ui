@@ -16,19 +16,17 @@
     "url": "https://github.com/2600hz/monster-ui/issues"
   },
   "homepage": "https://github.com/2600hz/monster-ui#readme",
-  "dependencies": {
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-sass": "^2.3.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.16.0",
     "eslint": "^3.15.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.1",
     "eslint-plugin-standard": "^2.0.1",
+    "gulp": "^3.9.1",
     "gulp-cached": "^1.1.0",
-    "gulp-clean-css": "^2.0.12",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.0.4",
     "gulp-concat": "^2.6.0",
     "gulp-concat-css": "^2.3.0",
     "gulp-declare": "^0.3.0",
@@ -38,10 +36,12 @@
     "gulp-json-editor": "^2.2.1",
     "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "gulp-wrap": "^0.13.0",
-    "handlebars": "^4.0.5",
+    "handlebars": "^4.0.8",
+    "jshint": "^2.9.4",
     "require-dir": "^0.3.0",
     "requirejs": "^2.3.1",
     "run-sequence": "^1.2.2"
