@@ -31,7 +31,7 @@ define(function(require) {
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
-				request = args.hasOwnProperty('data') ? args.data.request : {},
+				request = args.hasOwnProperty('data') && args.data.hasOwnProperty('request') ? args.data.request : {},
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'portInfo',
@@ -92,6 +92,15 @@ define(function(require) {
 										.find('#name')
 											.focus();
 								});
+
+							/*
+								If this common control is loaded in the global
+								app container, we need to remove custom classes
+								so that there is no conflict with the CSS rules
+							 */
+							if (container.hasClass('app-content-wrapper')) {
+								container.prop('class', 'app-content-wrapper');
+							}
 
 							self.portWizardBindPortInfoEvents(args);
 						});
