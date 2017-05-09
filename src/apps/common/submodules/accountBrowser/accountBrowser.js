@@ -30,11 +30,13 @@ define(function(require){
 				onSearch = args.onSearch,
 				addCurrentAccount = args.addCurrentAccount || false,
 				addBackButton = args.addBackButton || false,
+				hideRealm = args.hideRealm || false,
 				noFocus = args.noFocus || false,
 				allowBackOnMasquerading = args.allowBackOnMasquerading || false, // needs addBackButton to be true, add back button up to original account when masquerading
 				callback = args.callback,
 				dataTemplate = {
 					customClass: args.customClass || 'ab-sidebar',
+					hideRealm: hideRealm,
 					addAccountEnabled: (typeof onNewAccountClick === 'function')
 				},
 				layout = $(self.getTemplate({
@@ -54,6 +56,7 @@ define(function(require){
 					selectedId: selectedId,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					hideRealm: hideRealm,
 					allowBackOnMasquerading: allowBackOnMasquerading,
 					callback: callback
 				});
@@ -66,6 +69,7 @@ define(function(require){
 					onNewAccountClick: onNewAccountClick,
 					addCurrentAccount: addCurrentAccount,
 					addBackButton: addBackButton,
+					hideRealm: hideRealm,
 					noFocus: noFocus,
 					allowBackOnMasquerading: allowBackOnMasquerading,
 					searchLink: searchLink,
@@ -86,6 +90,7 @@ define(function(require){
 				searchLink = args.searchLink,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				hideRealm = args.hideRealm,
 				noFocus = args.noFocus,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				onSearch = args.onSearch,
@@ -206,6 +211,7 @@ define(function(require){
 						slide: dataBackButton ? false : true,
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
+						hideRealm: hideRealm,
 						allowBackOnMasquerading: allowBackOnMasquerading,
 						callback: function(data) {
 							var callbackData = {
@@ -272,6 +278,7 @@ define(function(require){
 					self.accountBrowserRenderList({
 						container: template.find('.account-list-container'),
 						addBackButton: addBackButton,
+						hideRealm: args.hideRealm,
 						allowBackOnMasquerading: allowBackOnMasquerading,
 						addCurrentAccount: addCurrentAccount
 					});
@@ -288,6 +295,7 @@ define(function(require){
 						slide: false,
 						addCurrentAccount: addCurrentAccount,
 						addBackButton: addBackButton,
+						hideRealm: args.hideRealm,
 						allowBackOnMasquerading: allowBackOnMasquerading,
 						showLocalBackButton: true,
 						callback: function() {
@@ -325,6 +333,7 @@ define(function(require){
 									name: 'list',
 									submodule: 'accountBrowser',
 									data: {
+										hideRealm: hideRealm,
 										accounts: _.sortBy(data.data, 'name')
 									}
 								}));
@@ -364,6 +373,7 @@ define(function(require){
 										parentId: accountId,
 										addCurrentAccount: addCurrentAccount,
 										addBackButton: addBackButton,
+										hideRealm: args.hideRealm,
 										allowBackOnMasquerading: allowBackOnMasquerading,
 										callback: function(data) {
 											var callbackData = {
@@ -393,6 +403,7 @@ define(function(require){
 				searchValue = args.searchValue,
 				addCurrentAccount = args.addCurrentAccount,
 				addBackButton = args.addBackButton,
+				hideRealm = args.hideRealm,
 				showLocalBackButton = args.showLocalBackButton,
 				allowBackOnMasquerading = args.allowBackOnMasquerading,
 				callback = args.callback,
@@ -410,6 +421,7 @@ define(function(require){
 						accounts: _.sortBy(data.data, 'name'),
 						selectedId: selectedId,
 						addBackButton: addBackButton,
+						hideRealm: hideRealm,
 						showLocalBackButton: showLocalBackButton
 					};
 
