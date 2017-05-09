@@ -77,6 +77,11 @@
 .account-browser-container .account-list-element.current-account {
 	border-color: #909099;
 }
+
+.account-browser-container.no-realm .account-list-element {
+	line-height: 40px;
+	max-height: 40px;
+}
 .account-browser-container .account-search-link {
 	border-bottom: solid 1px #c0c0c9;
 	text-align: center;
@@ -192,6 +197,10 @@
 .account-browser-container.ab-sidebar .account-children-link {
 	height: 60px;
 	width: 40px;
+}
+.account-browser-container.no-realm .account-children-link {
+	line-height: 40px;
+	max-height: 40px;
 }
 
 .account-browser-container .account-children-link > i {
