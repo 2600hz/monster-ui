@@ -2,7 +2,9 @@
 	<li class="account-list-element current-account" data-id="{{currentAccount.id}}" data-realm="{{currentAccount.realm}}" data-name="{{currentAccount.name}}">
 		<div class="account-link">
 			<div class="account-name">{{currentAccount.name}}</div>
+		{{#unless hideRealm}}
 			<div class="account-realm">{{currentAccount.realm}}</div>
+		{{/unless}}
 		</div>
 	</li>
 {{/if}}
@@ -25,7 +27,9 @@
 			<div class="account-link">
 		{{/if}}
 			<div class="account-name">{{this.name}}</div>
+		{{#unless @root.hideRealm}}
 			<div class="account-realm">{{this.realm}}</div>
+		{{/unless}}
 		</div>
 	</li>
 {{/each}}
