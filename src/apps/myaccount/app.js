@@ -935,6 +935,8 @@ define(function(require){
 				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format')) {
 					if (newData.ui_flags.numbers_format !== 'international_with_exceptions') {
 						delete params.data.ui_flags.numbers_format_exceptions;
+					} else {
+						params.data.ui_flags.numbers_format_exceptions = newData.ui_flags.numbers_format_exceptions;
 					}
 
 					// If it's set to default, then we want to delete the custom setting, so we can get properly inherit the account setting
@@ -944,15 +946,19 @@ define(function(require){
 				}
 			} else if (type === 'account') {
 				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
-				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format') && newData.ui_flags.numbers_format !== 'international_with_exceptions') {
-					delete params.data.ui_flags.numbers_format_exceptions;
+				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format')) {
+					if (newData.ui_flags.numbers_format !== 'international_with_exceptions') {
+						delete params.data.ui_flags.numbers_format_exceptions;
+					} else {
+						params.data.ui_flags.numbers_format_exceptions = newData.ui_flags.numbers_format_exceptions;
+					}
 				}
 			} else if (type === 'billing') {
 				params.data = newData;
 			}
 
-			if('language' in params.data) {
-				if(params.data.language === 'auto') {
+			if ('language' in params.data) {
+				if (params.data.language === 'auto') {
 					delete params.data.language;
 				}
 			}
@@ -970,12 +976,12 @@ define(function(require){
 				resource: type.concat('.update'),
 				data: params,
 				success: function(_data, status) {
-					if ( typeof callbackSuccess === 'function' ) {
+					if (typeof callbackSuccess === 'function') {
 						callbackSuccess(_data, status);
 					}
 				},
 				error: function(_data, status) {
-					if ( typeof callbackError === 'function' ) {
+					if (typeof callbackError === 'function') {
 						callbackError(_data, status);
 					}
 				}
