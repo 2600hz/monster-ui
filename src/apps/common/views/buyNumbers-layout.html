@@ -12,7 +12,7 @@
 						</div>
 						<div class="input-div">
 							<label>{{i18n.buyNumbers.cityInputLabel}}{{#if isPhonebookConfigured}}{{i18n.buyNumbers.cityInputLabelZipCode}}{{/if}}</label>
-							<input type="text" id="city_input" maxlength="{{#if isPhonebookConfigured}}5{{else}}3{{/if}}" />
+							<input type="text" id="city_input" maxlength="{{maxDigits}}" />
 						</div>
 					</div>
 				{{#if isPhonebookConfigured}}
