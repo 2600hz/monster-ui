@@ -849,142 +849,114 @@ define(function(require) {
 			}
 		},
 
-		numbersGetCarriersModules: function(callback) {
-			var self = this,
-				carriers = [
-					{
-						key: 'bandwidth2',
-						friendlyValue: 'bandwidth2'
-					},
-					{
-						key: 'bandwidth',
-						friendlyValue: 'bandwidth'
-					},
-					{
-						key: 'inum',
-						friendlyValue: 'inum'
-					},
-					{
-						key: 'local',
-						friendlyValue: 'local'
-					},
-					{
-						key: 'managed',
-						friendlyValue: 'managed'
-					},
-					{
-						key: 'mdn',
-						friendlyValue: 'mdn'
-					},
-					{
-						key: 'other',
-						friendlyValue: 'other'
-					},
-					{
-						key: 'reserved',
-						friendlyValue: 'reserved'
-					},
-					{
-						key: 'reserved_reseller',
-						friendlyValue: 'reserved_reseller'
-					},
-					{
-						key: 'simwood',
-						friendlyValue: 'simwood'
-					},
-					{
-						key: 'telnyx',
-						friendlyValue: 'telnyx'
-					},
-					{
-						key: 'vitelity',
-						friendlyValue: 'vitelity'
-					},
-					{
-						key: 'voip_innovations',
-						friendlyValue: 'voip_innovations'
-					}
-				];
+		numbersGetCarrierInfo: function(callback) {
+			var self = this;
 
-			if (monster.util.isSuperDuper()) {
-				carriers.push({
-					key: '_uiCustomChoice',
-					friendlyValue: self.i18n.active().numbers.numbersCarrierModule.custom
-				});
-			}
-
-			if (callback) {
-				callback && callback(carriers);
-			} else {
-				return carriers;
-			}
+			self.callApi({
+				resource: 'numbers.getCarrierInfo',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
 		},
 
-		numbersAddExternalFormatCarriers: function() {
+		numbersGetCarriersModules: function(callback) {
+			var self = this;
+
+			self.numbersGetCarrierInfo(function(data) {
+				var carriers = [];
+
+				_.each(data.usable_carriers, function(carrierName) {
+					carriers.push({
+						key: carrierName,
+						friendlyValue: carrierName
+					});
+				});
+
+				if (monster.util.isSuperDuper()) {
+					carriers.push({
+						key: '_uiCustomChoice',
+						friendlyValue: self.i18n.active().numbers.numbersCarrierModule.custom
+					});
+				}
+
+				callback && callback(carriers);
+			});
+		},
+
+		numbersAddExternalFormatCarriers: function(callback) {
 			var self = this,
 				formattedData = {
 					selectedCarrier: 'local',
-					carriers: self.numbersGetCarriersModules(),
 					isSuperDuperAdmin: monster.util.isSuperDuper()
 				};
 
-			return formattedData;
+			self.numbersGetCarriersModules(function(data) {
+				formattedData.carriers = data;
+
+				callback && callback(formattedData);
+			});
 		},
 
 		numbersAddExternalNumbers: function(accountId, callback) {
-			var self = this,
-				formattedData = self.numbersAddExternalFormatCarriers(),
-				dialogTemplate = $(monster.template(self, 'numbers-addExternal', formattedData)),
-				CUSTOM_CHOICE = '_uiCustomChoice';
+			var self = this;
 
-			monster.ui.tooltips(dialogTemplate);
+			self.numbersAddExternalFormatCarriers(function(data) {
+				var dialogTemplate = $(monster.template(self, 'numbers-addExternal', data)),
+					CUSTOM_CHOICE = '_uiCustomChoice';
 
-			dialogTemplate.find('.select-module').on('change', function() {
-				dialogTemplate.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
-			});
+				monster.ui.tooltips(dialogTemplate);
 
-			dialogTemplate.on('click', '.cancel-link', function() {
-				popup.remove();
-			});
+				dialogTemplate.find('.select-module').on('change', function() {
+					dialogTemplate.find('.custom-carrier-block').toggleClass('active', $(this).val() === CUSTOM_CHOICE);
+				});
 
-			dialogTemplate.on('click', '#add_numbers', function(ev) {
-				ev.preventDefault();
+				dialogTemplate.on('click', '.cancel-link', function() {
+					popup.remove();
+				});
 
-				var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
-					numbersData = [],
-					phoneNumber,
-					forceActivate = dialogTemplate.find('#force_activate').is(':checked'),
-					carrierName = dialogTemplate.find('.select-module').val();
+				dialogTemplate.on('click', '#add_numbers', function(ev) {
+					ev.preventDefault();
 
-				if (carrierName === CUSTOM_CHOICE) {
-					carrierName = dialogTemplate.find('#custom_carrier_value').val();
-				};
+					var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
+						numbersData = [],
+						phoneNumber,
+						forceActivate = dialogTemplate.find('#force_activate').is(':checked'),
+						carrierName = dialogTemplate.find('.select-module').val();
 
-				// Users might think a space == new line, so if they added numbers and separated each of them by a new line, we make sure to replace these by a space so our script works
-				phoneNumbers = phoneNumbers.replace(/[\n]/g, ' ');
-				phoneNumbers = phoneNumbers.replace(/[-().]/g, '').split(' ');
+					if (carrierName === CUSTOM_CHOICE) {
+						carrierName = dialogTemplate.find('#custom_carrier_value').val();
+					};
 
-				_.each(phoneNumbers, function(number) {
-					phoneNumber = number.match(/^\+(.*)$/);
+					// Users might think a space == new line, so if they added numbers and separated each of them by a new line, we make sure to replace these by a space so our script works
+					phoneNumbers = phoneNumbers.replace(/[\n]/g, ' ');
+					phoneNumbers = phoneNumbers.replace(/[-().]/g, '').split(' ');
 
-					if (phoneNumber && phoneNumber[1]) {
-						numbersData.push(number);
+					_.each(phoneNumbers, function(number) {
+						phoneNumber = number.match(/^\+(.*)$/);
+
+						if (phoneNumber && phoneNumber[1]) {
+							numbersData.push(number);
+						}
+					});
+
+					if (numbersData.length > 0) {
+						self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, carrierName, function() {
+							popup.dialog('close');
+
+							callback && callback();
+						});
+					} else {
+						monster.ui.alert(self.i18n.active().numbers.addExternal.dialog.invalidNumbers);
 					}
 				});
 
-				if (numbersData.length > 0) {
-					self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, carrierName, function() {
-						popup.dialog('close');
-
-						callback && callback();
-					});
-				} else {
-					monster.ui.alert(self.i18n.active().numbers.addExternal.dialog.invalidNumbers);
-				}
-			});
-
-			var popup = monster.ui.dialog(dialogTemplate, {
-				title: self.i18n.active().numbers.addExternal.dialog.title
+				var popup = monster.ui.dialog(dialogTemplate, {
+					title: self.i18n.active().numbers.addExternal.dialog.title
+				});
 			});
 		},
 
