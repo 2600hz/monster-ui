@@ -51,13 +51,50 @@ define(function(require){
 
 			self.assignedAccountId = params.accountId || self.accountId;
 
-			self.buyNumbersGetAvailableCountries(function(countries) {
-				args.availableCountries = countries;
+			self.buyNumbersGetData(function(data) {
+				args.availableCountries = data.countries;
+				args.carrierInfo = data.carrierInfo;
+
 				self.buyNumbersShowPopup(args, params.callbacks);
 			});
 		},
 
-		buyNumbersGetAvailableCountries: function(callback) {
+		buyNumbersGetData: function(callback) {
+			var self = this,
+				countries = {
+					'US': {
+						local: true,
+						toll_free: [
+							'80*',
+							'84*',
+							'85*',
+							'86*',
+							'87*',
+							'88*'
+						],
+						vanity: true,
+						prefix: 1,
+						name: 'United States'
+					}
+				};
+
+			self.callApi({
+				resource: 'numbers.getCarrierInfo',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					var formattedResults = {
+						carrierInfo: data.data, //{maximal_prefix_length: 7}, for debugging
+						countries: countries
+					};
+
+					callback && callback(formattedResults);
+				}
+			});
+		},
+
+		/*buyNumbersGetAvailableCountries: function(callback) {
 			var self = this;
 			// monster.request({
 			// 	resource: 'buyNumbers.listCountries',
@@ -87,16 +124,17 @@ define(function(require){
 					"name": "United States"
 				}
 			});
-		},
+		},*/
 
-		buyNumbersShowPopup: function(args, callbacks) {
+		buyNumbersShowPopup: function(args, callbacks) {console.log(args);
 			var self = this,
 				searchType = args.searchType,
 				availableCountries = args.availableCountries,
+				maxDigits = args.carrierInfo.maximal_prefix_length,
 				template = $(monster.template(self, 'buyNumbers-layout', {
-					isPhonebookConfigured: self.appFlags.isPhonebookConfigured
+					isPhonebookConfigured: self.appFlags.isPhonebookConfigured,
+					maxDigits: maxDigits
 				}));
-
 
 			args.popup = monster.ui.dialog(template, {
 				title: self.i18n.active().buyNumbers.buyDialogTitle,
@@ -116,19 +154,19 @@ define(function(require){
 			template.find('.vanity-search').hide();
 			template.find('.tollfree-search').hide();
 
-			switch(searchType) {
-				case 'tollfree':
-					self.buyNumbersRenderTollfree(args);
-					break;
+			switch (searchType) {
+			case 'tollfree':
+				self.buyNumbersRenderTollfree(args);
+				break;
 
-				case 'vanity':
-					self.buyNumbersRenderVanity(args, callbacks || {});
-					break;
+			case 'vanity':
+				self.buyNumbersRenderVanity(args, callbacks || {});
+				break;
 
-				case 'regular':
-				default:
-					self.buyNumbersRenderRegular(args);
-					break;
+			case 'regular':
+			default:
+				self.buyNumbersRenderRegular(args);
+				break;
 			};
 
 			self.buyNumbersBindEvents(args, callbacks || {});
@@ -696,11 +734,9 @@ define(function(require){
 					isSeqNumChecked = container.find('#seq_num_checkbox').prop('checked'),
 					cityInput = container.find('#city_input').val(),
 					areacode = cityInput.match(/^\d+$/) ? cityInput : container.find('#area_code_radio_div input[type="radio"]:checked').val(),
-					searchParams = (cityInput.match(/^\d{3}$/) ? self.i18n.active().buyNumbers.areaCode
-								 + " " + cityInput : selectedCity + " ("+areacode+")")
-								 + (isSeqNumChecked ? " " + monster.template(self, '!'+self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : "");
+					searchParams = areacode + (isSeqNumChecked ? ' ' + monster.template(self, '!' + self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : '');
 
-				if (self.appFlags.isPhonebookConfigured && self.appFlags.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
+				/*if (self.appFlags.isPhonebookConfigured && self.appFlags.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
 					self.buyNumbersRequestSearchAreaCodeByAddress({
 						data: {
 							address: parseInt(cityInput, 10)
@@ -718,34 +754,34 @@ define(function(require){
 							});
 
 							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
-						},
+						}
 					});
 				} else if(!areacode || (self.appFlags.selectedCountryCode === "US" && !areacode.match(/^\d{3}$/)) ) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.noInputAlert);
-				} else if( isSeqNumChecked && !(seqNumIntvalue > 1) ) {
+				} else */if (isSeqNumChecked && !(seqNumIntvalue > 1)) {
 					monster.ui.alert('error', self.i18n.active().buyNumbers.seqNumAlert);
 				} else {
-					if(isSeqNumChecked) { /***** Block Search *****/
+					if (isSeqNumChecked) { /***** Block Search *****/
 						performSearch = function(_offset, _limit, _callback) {
 							loadingNewNumbers = true;
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
 							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 							self.buyNumbersRequestSearchBlockOfNumbers({
 								data: {
-									pattern: "+"+availableCountries[self.appFlags.selectedCountryCode].prefix+areacode,
+									pattern: '+' + availableCountries[self.appFlags.selectedCountryCode].prefix + areacode,
 									size: seqNumIntvalue,
 									offset: _offset,
 									limit: _limit
 								},
 								success: function(data) {
-									if(data && data.length > 0) {
+									if (data && data.length > 0) {
 										$.each(data, function(key, value) {
 											var startNum = value.start_number,
 												endNum = value.end_number,
-												prefix = "+"+availableCountries[self.appFlags.selectedCountryCode].prefix;
+												prefix = '+' + availableCountries[self.appFlags.selectedCountryCode].prefix;
 
-											if(startNum.indexOf(prefix) === 0) { startNum = startNum.substring(prefix.length); }
-											if(endNum.indexOf(prefix) === 0) { endNum = endNum.substring(prefix.length); }
+											if (startNum.indexOf(prefix) === 0) { startNum = startNum.substring(prefix.length); }
+											if (endNum.indexOf(prefix) === 0) { endNum = endNum.substring(prefix.length); }
 
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
@@ -782,12 +818,12 @@ define(function(require){
 									limit: _limit
 								},
 								success: function(data) {
-									if(data && data.length > 0) {
+									if (data && data.length > 0) {
 										$.each(data, function(key, value) {
 											var num = value.number,
-												prefix = "+"+availableCountries[self.appFlags.selectedCountryCode].prefix;
+												prefix = '+' + availableCountries[self.appFlags.selectedCountryCode].prefix;
 
-											if(num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
+											if (num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
