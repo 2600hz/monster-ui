@@ -282,7 +282,7 @@
 			'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 			'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues' },
-			'getRecipients': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
+			'listRecipients': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 			'updateRecipients': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 			'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 			'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
