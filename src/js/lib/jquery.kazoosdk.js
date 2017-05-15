@@ -575,6 +575,7 @@
 
 			if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
 				parsedError = $.parseJSON(error.responseText);
+				parsedError.httpErrorStatus = error.status;
 			}
 
 			// Added this to be able to display more data in the UI
