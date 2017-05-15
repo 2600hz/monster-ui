@@ -765,7 +765,8 @@ define(function(require){
 						performSearch = function(_offset, _limit, _callback) {
 							loadingNewNumbers = true;
 							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
-							//resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
+							// Disable search as we don't want them to search for more than one block at a time
+							args.isSearchFunctionEnabled = false;
 							self.buyNumbersRequestSearchBlockOfNumbers({
 								data: {
 									pattern: '+' + availableCountries[self.appFlags.selectedCountryCode].prefix + areacode,
@@ -776,17 +777,15 @@ define(function(require){
 								success: function(data) {
 									if (data && data.length > 0) {
 										$.each(data, function(key, value) {
-											var startNum = value.start_number,
-												endNum = value.end_number,
+											var num = value.number,
 												prefix = '+' + availableCountries[self.appFlags.selectedCountryCode].prefix;
 
-											if (startNum.indexOf(prefix) === 0) { startNum = startNum.substring(prefix.length); }
-											if (endNum.indexOf(prefix) === 0) { endNum = endNum.substring(prefix.length); }
+											if (num.indexOf(prefix) === 0) { num = num.substring(prefix.length); }
 
 											args.displayedNumbers.push({
 												array_index: args.displayedNumbers.length,
-												number_value: startNum + "_" + value.size,
-												formatted_value: self.buyNumbersFormatNumber(startNum, self.appFlags.selectedCountryCode, endNum)
+												number_value: num,
+												formatted_value: self.buyNumbersFormatNumber(num, self.appFlags.selectedCountryCode)
 											});
 										});
 
