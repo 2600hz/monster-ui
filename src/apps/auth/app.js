@@ -991,11 +991,10 @@ define(function(require){
 		checkRecoveryId: function(recoveryId, callback) {
 			var self = this;
 
-			self.recoveryWithResetId(recoveryId, function(data) {
-				if(data.hasOwnProperty('auth_token') && data.data.hasOwnProperty('account_id')) {
+			self.recoveryWithResetId({ reset_id: recoveryId }, function(data) {
+				if (data.hasOwnProperty('auth_token') && data.data.hasOwnProperty('account_id')) {
 					callback && callback(data);
-				}
-				else {
+				} else {
 					self.renderLoginPage();
 				}
 			},
@@ -1004,22 +1003,29 @@ define(function(require){
 			});
 		},
 
-		recoveryWithResetId: function(resetId, success ,error) {
+		recoveryWithResetId: function(dataRecovery, success, error) {
 			var self = this;
 
 			self.callApi({
 				resource: 'auth.recoveryResetId',
 				data: {
 					accountId: self.accountId,
-					data: {
-						reset_id: resetId
-					}
+					data: dataRecovery,
+					generateError: false
 				},
 				success: function(data) {
 					success && success(data);
 				},
-				error: function(data) {
-					error && error(data);
+				error: function(errorPayload, data, globalHandler) {
+					if (data.status === 401 && errorPayload.data.hasOwnProperty('multi_factor_request')) {
+						self.handleMultiFactor(errorPayload.data, dataRecovery, function(augmentedDataRecovery) {
+							self.recoveryWithResetId(augmentedDataRecovery, success, error);
+						}, function() {
+							monster.util.logoutAndReload();
+						});
+					} else {
+						globalHandler(data, { generateError: true });
+					}
 				}
 			});
 		},
@@ -1092,11 +1098,9 @@ define(function(require){
 					} else if (data.status === 423) {
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
 					} else if (data.status === 401) {
-						if(errorPayload.data.hasOwnProperty('multi_factor_request')) {
-							self.handleMultiFactor(errorPayload.data, loginData, function(data) {
-								callback && callback(data);
-							}, function() {
-								monster.ui.alert('error', 'error multi factor')
+						if (errorPayload.data.hasOwnProperty('multi_factor_request')) {
+							self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
+								self.putAuth(augmentedLoginData, callback, wrongCredsCallback);
 							});
 						} else {
 							wrongCredsCallback && wrongCredsCallback();
@@ -1119,12 +1123,18 @@ define(function(require){
 		},
 
 		showDuoDialog: function(data, loginData, success, error) {
-			var self = this;
+			var self = this,
+				wasSuccessful = false;
 
 			require(['duo'], function() {
 				var template = self.getTemplate({ name: 'duo-dialog' }),
 					dialog = monster.ui.dialog(template, {
-						title: self.i18n.active().duoDialog.title
+						title: self.i18n.active().duoDialog.title,
+						onClose: function() {
+							if (!wasSuccessful) {
+								error && error();
+							}
+						}
 					});
 
 				Duo.init({
@@ -1132,9 +1142,10 @@ define(function(require){
 					sig_request: data.multi_factor_request.settings.duo_sig_request,
 					host: data.multi_factor_request.settings.duo_api_hostname,
 					submit_callback: function(form) {
+						wasSuccessful = true;
 						loginData.multi_factor_response = $(form).find('[name="sig_response"]').attr('value');
 						dialog.dialog('close').remove();
-						self.putAuth(loginData, success, error);
+						success && success(loginData);
 					}
 				});
 			});
