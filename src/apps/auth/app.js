@@ -77,24 +77,23 @@ define(function(require){
 					app.render(self.appFlags.mainContainer);
 				}, options);
 			}
-			else if(monster.config.whitelabel.hasOwnProperty('sso')) {
+			else if (monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso,
 					token = $.cookie(sso.cookie.name);
 
 				monster.config.whitelabel.logoutTimer = 0;
 
-				if(token && token.length) {
+				if (token && token.length) {
 					self.authenticateAuthToken(token, successfulAuth, function(data) {
-						if(data.error === 404) {
+						if (data.httpErrorStatus === 404) {
 							window.location = sso.no_account;
-						}
-						else {
+						} else {
+							$.cookie(sso.cookie.name, null);
 							window.location = sso.login;
 						}
 					});
-				}
-				else {
-					window.location = sso.login
+				} else {
+					window.location = sso.login;
 				}
 			}
 			else if(urlParams.hasOwnProperty('recovery')) {
