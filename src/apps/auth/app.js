@@ -85,7 +85,7 @@ define(function(require){
 
 				if (token && token.length) {
 					self.authenticateAuthToken(token, successfulAuth, function(data) {
-						if (data.httpErrorStatus === 404) {
+						if (data.httpErrorStatus === 403) {
 							window.location = sso.no_account;
 						} else {
 							$.cookie(sso.cookie.name, null);
