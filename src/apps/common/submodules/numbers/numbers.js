@@ -834,9 +834,11 @@ define(function(require) {
 			});
 		},
 
-		numbersAddFreeformNumbers: function(numbers_data, accountId, forceActivate, carrierName, callback) {
-			var self = this,
-				afterAdd = function(data) {
+		numbersAddFreeformNumbers: function(numbers_data, accountId, carrierName, state, callback) {
+			var self = this;
+
+			if (monster.util.canAddExternalNumbers()) {
+				self.numbersCreateBlockNumber(numbers_data, accountId, carrierName, state, function(data) {
 					if (data.hasOwnProperty('error')) {
 						self.numbersShowRecapAddNumbers(data);
 					} else {
@@ -844,28 +846,6 @@ define(function(require) {
 					}
 
 					callback && callback();
-				};
-
-			if (monster.util.canAddExternalNumbers()) {
-				self.numbersCreateBlockNumber(numbers_data, accountId, carrierName, function(data) {
-					// If we need to BULK activate, uncomment following
-					if (forceActivate) {
-						var validNumbers = [];
-
-						_.each(data.success, function(number) {
-							validNumbers.push(number.id);
-						});
-
-						if (validNumbers.length) {
-							self.numbersMove({ accountId: accountId, numbers: validNumbers }, function() {
-								afterAdd(data);
-							});
-						} else {
-							afterAdd(data);
-						}
-					} else {
-						afterAdd(data);
-					}
 				});
 			} else {
 				monster.ui.alert(self.i18n.active().numbers.noRightsAddNumber);
@@ -881,44 +861,62 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					var formattedData = self.numbersFormatCarriersInfo(data.data);
+
+					callback && callback(formattedData);
 				}
 			});
+		},
+
+		numbersFormatCarriersInfo: function(data) {
+			var self = this,
+				carriers = [];
+
+			data.extra = data.extra || {};
+
+			_.each(data.usable_carriers, function(carrierName) {
+				carriers.push({
+					key: carrierName,
+					friendlyValue: carrierName
+				});
+			});
+
+			if (monster.util.isSuperDuper()) {
+				carriers.push({
+					key: '_uiCustomChoice',
+					friendlyValue: self.i18n.active().numbers.numbersCarrierModule.custom
+				});
+			}
+
+			data.extra.formattedCarriers = carriers;
+
+			return data;
 		},
 
 		numbersGetCarriersModules: function(callback) {
 			var self = this;
 
 			self.numbersGetCarrierInfo(function(data) {
-				var carriers = [];
-
-				_.each(data.usable_carriers, function(carrierName) {
-					carriers.push({
-						key: carrierName,
-						friendlyValue: carrierName
-					});
-				});
-
-				if (monster.util.isSuperDuper()) {
-					carriers.push({
-						key: '_uiCustomChoice',
-						friendlyValue: self.i18n.active().numbers.numbersCarrierModule.custom
-					});
-				}
-
-				callback && callback(carriers);
+				callback && callback(data.extra.formattedCarriers);
 			});
 		},
 
-		numbersAddExternalFormatCarriers: function(callback) {
+		numbersAddExternalGetData: function(callback) {
 			var self = this,
 				formattedData = {
 					selectedCarrier: 'local',
-					isSuperDuperAdmin: monster.util.isSuperDuper()
+					isAllowedToPickCarrier: monster.util.isSuperDuper(),
+					isAllowedToPickState: true
 				};
 
-			self.numbersGetCarriersModules(function(data) {
-				formattedData.carriers = data;
+			self.numbersGetCarrierInfo(function(data) {
+				formattedData.carriers = data.extra.formattedCarriers;
+				formattedData.states = data.usable_creation_states;
+
+				// If there's only 1 state then it will be defaulted to by the back-end and we don't need to show the field
+				if (formattedData.states.length <= 1) {
+					formattedData.isAllowedToPickState = false;
+				}
 
 				callback && callback(formattedData);
 			});
@@ -927,7 +925,7 @@ define(function(require) {
 		numbersAddExternalNumbers: function(accountId, callback) {
 			var self = this;
 
-			self.numbersAddExternalFormatCarriers(function(data) {
+			self.numbersAddExternalGetData(function(data) {
 				var dialogTemplate = $(monster.template(self, 'numbers-addExternal', data)),
 					CUSTOM_CHOICE = '_uiCustomChoice';
 
@@ -947,7 +945,7 @@ define(function(require) {
 					var phoneNumbers = dialogTemplate.find('.list-numbers').val(),
 						numbersData = [],
 						phoneNumber,
-						forceActivate = dialogTemplate.find('#force_activate').is(':checked'),
+						state = dialogTemplate.find('.select-state').val(),
 						carrierName = dialogTemplate.find('.select-module').val();
 
 					if (carrierName === CUSTOM_CHOICE) {
@@ -967,7 +965,7 @@ define(function(require) {
 					});
 
 					if (numbersData.length > 0) {
-						self.numbersAddFreeformNumbers(numbersData, accountId, forceActivate, carrierName, function() {
+						self.numbersAddFreeformNumbers(numbersData, accountId, carrierName, state, function() {
 							popup.dialog('close');
 
 							callback && callback();
@@ -1130,17 +1128,22 @@ define(function(require) {
 			});
 		},
 
-		numbersCreateBlockNumber: function(numbers, accountId, carrierName, success, error) {
-			var self = this;
+		numbersCreateBlockNumber: function(numbers, accountId, carrierName, state, success, error) {
+			var self = this,
+				dataNumbers = {
+					numbers: numbers,
+					carrier_name: carrierName
+				};
+
+			if (state !== '_uiDefaultState') {
+				dataNumbers.create_with_state = state;
+			}
 
 			self.callApi({
 				resource: 'numbers.createBlock',
 				data: {
 					accountId: accountId,
-					data: {
-						numbers: numbers,
-						carrier_name: carrierName
-					},
+					data: dataNumbers,
 					generateError: false
 				},
 				success: function(data) {

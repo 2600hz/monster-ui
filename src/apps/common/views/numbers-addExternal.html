@@ -15,15 +15,18 @@
 				</div>
 			</div>
 
-			<label class="force-activate-cb control-label checkbox">
-				{{#monsterCheckbox i18n.numbers.addExternal.dialog.forceActivate.text }}
-					<input type="checkbox" name="force_activate" id="force_activate" checked />
-				{{/monsterCheckbox}}
-				<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{i18n.numbers.addExternal.dialog.forceActivate.help}}" data-placement="top" data-toggle="tooltip"></i>
-			</label>
+			<div class="customize-number-field{{#unless isAllowedToPickState}} disabled{{/unless}}">
+				<label class="popup-label" for="number_state">{{i18n.numbers.addExternal.numberState.label}}<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{i18n.numbers.addExternal.numberState.defaultHelp}}" data-placement="right" data-toggle="tooltip"></i></label>
+				<select class="select-state input-medium" id="number_state" name="number-state">
+					<option value="_uiDefaultState">{{i18n.numbers.addExternal.numberState.default }}</option>
+					{{#each @root.states}}
+						<option value="{{this}}">{{this}}</option>
+					{{/each}}
+				</select>
+			</div>
 
-			{{#if isSuperDuperAdmin}}
-				<div class="customize-carrier">
+			{{#if isAllowedToPickCarrier}}
+				<div class="customize-number-field">
 					<label class="popup-label" for="carrier_module">{{i18n.numbers.addExternal.renameCarrier.label}}</label>
 					<select class="select-module input-medium" id="carrier_module" name="carrier-module">
 						{{#select @root.selectedCarrier}}

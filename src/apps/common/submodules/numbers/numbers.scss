@@ -432,29 +432,37 @@
 	vertical-align: top;
 }
 
-#numbers_add_external .customize-carrier {
+#numbers_add_external .customize-number-field {
 	margin-top: 5px;
 }
 
-#numbers_add_external .customize-carrier label {
+#numbers_add_external .customize-number-field.disabled {
+	display: none;
+}
+
+#numbers_add_external .customize-number-field label {
 	display: inline-block;
 	margin-right: 10px;
 }
 
-#numbers_add_external .customize-carrier select {
+#numbers_add_external .customize-number-field select {
 	margin-bottom: 0
 }
 
-#numbers_add_external .customize-carrier .custom-carrier-block {
+#numbers_add_external .customize-number-field .custom-carrier-block {
 	margin-top: 5px;
 	display: none;
 }
 
-#numbers_add_external .customize-carrier .custom-carrier-block.active {
+#numbers_add_external .customize-number-field .custom-carrier-block.active {
 	display: block;
 }
 
 #add_numbers_recap_popup {
 	width: 600px;
 	padding: 15px;
+}
+
+#numbers_add_external .customize-number-field {
+	margin-top: 5px;
 }
