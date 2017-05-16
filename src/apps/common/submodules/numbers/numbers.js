@@ -730,14 +730,22 @@ define(function(require) {
 								}
 							});
 						} else {
-							monster.pub('common.accountAncestors.render', {
-								accountId: data.account_id,
-								entity: {
-									type: 'number',
-									data: {
-										id: data.number
-									}
+							self.numbersGetSubAccountNumber(data.account_id, data.number, function(dataNumber) {
+								var dataEntity = {
+									id: data.number
+								};
+
+								if (dataNumber.hasOwnProperty('used_by')) {
+									dataEntity.used_by = dataNumber.used_by;
 								}
+
+								monster.pub('common.accountAncestors.render', {
+									accountId: data.account_id,
+									entity: {
+										type: 'number',
+										data: dataEntity
+									}
+								});
 							});
 						}
 					}
@@ -777,6 +785,21 @@ define(function(require) {
 					if (val) {
 						searchListNumbers(val, usedList);
 					}
+				}
+			});
+		},
+
+		numbersGetSubAccountNumber: function(accountId, number, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'numbers.get',
+				data: {
+					accountId: accountId,
+					phoneNumber: encodeURIComponent(number)
+				},
+				success: function(data) {
+					callback && callback(data.data);
 				}
 			});
 		},
