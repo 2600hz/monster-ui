@@ -129,6 +129,14 @@
 				"headline": "Some of the numbers could not be added to the system. Here is the recap of which numbers were successfully added and those that weren't.",
 				"title": "Recap of the Add Number operation",
 				"continue": "Continue"
+			},
+
+			"__comment": "UI-2715: adding states to add external numbers dialog",
+			"__version": "4.1",
+			"numberState": {
+				"label": "State",
+				"default": "Default",
+				"defaultHelp": "By letting this option to default, it will create numbers with the default state used by the back-end."
 			}
 		},
 
