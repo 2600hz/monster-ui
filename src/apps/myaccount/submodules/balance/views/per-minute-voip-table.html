@@ -8,7 +8,7 @@
 				<th>{{ i18n.balance.toColumn }}</th>
 				<th data-breakpoints="xs">{{ i18n.balance.accountColumn }}</th>
 				<th data-type="number">{{ i18n.balance.durationColumn }}</th>
-				{{#if uiRestrictions.balance.show_credit}}
+				{{#if @root.showCredits}}
 					<th>{{ i18n.balance.amountColumn }}</th>
 				{{/if}}
 			</tr>
