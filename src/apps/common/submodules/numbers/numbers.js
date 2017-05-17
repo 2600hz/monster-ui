@@ -991,7 +991,7 @@ define(function(require) {
 				};
 
 			_.each(data.error, function(obj, phoneNumber) {
-				formattedData.errors.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber) });
+				formattedData.errors.push({ id: phoneNumber, value: monster.util.formatPhoneNumber(phoneNumber), errorMessage: obj.message });
 			});
 
 			_.each(data.success, function(obj, phoneNumber) {
