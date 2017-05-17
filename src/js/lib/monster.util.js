@@ -109,6 +109,7 @@ define(function(require){
 						shortDate: dateFormats[userDateFormat].replace('year','YY'),
 						shortTime: 'hh:mm',
 						time: 'hh:mm:ss',
+						calendarDate: (userDateFormat === 'mdy' ? 'month DD' : 'DD month') + ', year',
 						date: dateFormats[userDateFormat]
 					};
 
