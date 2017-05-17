@@ -31,7 +31,7 @@ define(function(require) {
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
-				request = args.hasOwnProperty('data') ? args.data.request : {},
+				request = args.hasOwnProperty('data') && args.data.hasOwnProperty('request') ? args.data.request : {},
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'portInfo',
@@ -93,6 +93,15 @@ define(function(require) {
 											.focus();
 								});
 
+							/*
+								If this common control is loaded in the global
+								app container, we need to remove custom classes
+								so that there is no conflict with the CSS rules
+							 */
+							if (container.hasClass('app-content-wrapper')) {
+								container.prop('class', 'app-content-wrapper');
+							}
+
 							self.portWizardBindPortInfoEvents(args);
 						});
 				};
@@ -145,6 +154,7 @@ define(function(require) {
 			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
 				self.portWizardRequestGetAttahcment({
 					data: {
+						accountId: args.data.accountId,
 						portRequestId: args.data.request.id,
 						documentName: 'bill.pdf'
 					},
@@ -1020,6 +1030,7 @@ define(function(require) {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
+										accountId: args.data.accountId,
 										portRequestId: requestId,
 										state: 'submitted'
 									},
@@ -1126,6 +1137,7 @@ define(function(require) {
 
 			self.portWizardRequestCreatePort({
 				data: {
+					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1134,6 +1146,7 @@ define(function(require) {
 							object[key] = function(callback) {
 								self.portWizardRequestCreateAttachment({
 									data: {
+										accountId: args.data.accountId,
 										portRequestId: port.id,
 										documentName: key + '.pdf',
 										data: attachment.file
@@ -1176,6 +1189,7 @@ define(function(require) {
 
 			self.portWizardRequestUpdatePort({
 				data: {
+					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1185,6 +1199,7 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestUpdateAttachment({
 										data: {
+											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1198,6 +1213,7 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestCreateAttachment({
 										data: {
+											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1233,6 +1249,7 @@ define(function(require) {
 			if (args.data.request.hasOwnProperty('id')) {
 				self.portWizardRequestDeletePort({
 					data: {
+						accountId: args.data.accountId,
 						portRequestId: args.data.request.id
 					},
 					success: function() {

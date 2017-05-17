@@ -12,48 +12,40 @@ monster.util.toFriendlyDate(timestamp[, format, user]);
 ```
 
 ### Parameters
-* `timestamp` (mandatory)
 
- Type: [Number][integer] OR [Date][date]
+###### `timestamp`: [Number][integer] OR [Date][date] (mandatory)
 
- [Gregorian timestamp][gregorian_timestamp] or JavaScript Date to transform in friendly date.
+[Gregorian timestamp][gregorian_timestamp] or JavaScript Date to transform in friendly date.
 
-* `format` (optional)
+###### `format`: [String][string_literal] (optional, default: `dateTime`)
 
- Type: [String][string_literal]
+The following strings (not case-sensitive) can be used for pre-set formats:
+* `shortDateTime`: 'MM/DD/YY - hh:mm'
+* `dateTime`: 'MM/DD/year - hh:mm:ss'
+* `shortDate`: 'MM/DD/YY'
+* `shortTime`: 'hh:mm'
+* `time`: 'hh:mm:ss',
+* `calendarDate`:'month DD, year'
+* `date`: 'MM/DD/year'
 
- The following strings (not case-sensitive) can be used for pre-set formats:
-    -   `'shortDateTime'`: 'MM/DD/YY - hh:mm'
-    -   `'dateTime'`: 'MM/DD/year - hh:mm:ss'
-    -   `shortDate`: 'MM/DD/YY'
-    -   `shortTime`: 'hh:mm'
-    -   `time`: 'hh:mm:ss'
-    -   `date`: 'MM/DD/year'
+Set of characters that will be replaced to render the date following those rules:
+* `year`: full year
+* `YY`: last two digits of the year
+* `month`: name of the month
+* `MM`: month in a two digit format
+* `day`: name of the day
+* `DD`: date of the day
+* `hh`: hours
+* `mm`: minutes
+* `ss`: seconds
+* `12h`: AM/PM suffix (if not specified, hours will be displayed in a 24h format),
+* `ordinal`: the ordinal suffix of the day (`st`, `nd`, `rd` or `th`)
 
- Default: `'dateTime'`
+Note: The date (M/D/Y, D/M/Y, or Y/M/D) and time (12h or 24h) formats will be automatically set according to the user's preferences. It is not advised to set them manually.
 
- Set of characters that will be replaced to render the date following those rules:
-    -   `year`: full year
-    -   `YY`: last two digits of the year
-    -   `month`: name of the month
-    -   `MM`: month in a two digit format
-    -   `day`: name of the day
-    -   `DD`: date of the day
-    -   `hh`: hours
-    -   `mm`: minutes
-    -   `ss`: seconds
-    -   `12h`: AM/PM suffix (if not specified, hours will be displayed in a 24h format),
-    -   `ordinal`: the ordinal suffix of the day (`st`, `nd`, `rd` or `th`)
+###### `user`: [Object][object_literal] (optional, default: `monster.apps.auth.currentUser`)
 
- Note: The date (M/D/Y, D/M/Y, or Y/M/D) and time (12h or 24h) formats will be automatically set according to the user's preferences. It is not advised to set them manually.
-
-* `user` (optional)
-
- Type: [Object][object_literal]
-
- Default: `monster.apps.auth.currentUser`
-
- The user from which to get the date and time preferences. This will be the currently logged-in user by default.
+The user from which to get the date and time preferences. This will be the currently logged-in user by default.
 
 ### Return
 This method returns a [String][string_literal] representation of a date.
