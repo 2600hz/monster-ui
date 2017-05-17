@@ -154,6 +154,7 @@ define(function(require) {
 			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
 				self.portWizardRequestGetAttahcment({
 					data: {
+						accountId: args.data.accountId,
 						portRequestId: args.data.request.id,
 						documentName: 'bill.pdf'
 					},
@@ -1029,6 +1030,7 @@ define(function(require) {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
+										accountId: args.data.accountId,
 										portRequestId: requestId,
 										state: 'submitted'
 									},
@@ -1135,6 +1137,7 @@ define(function(require) {
 
 			self.portWizardRequestCreatePort({
 				data: {
+					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1143,6 +1146,7 @@ define(function(require) {
 							object[key] = function(callback) {
 								self.portWizardRequestCreateAttachment({
 									data: {
+										accountId: args.data.accountId,
 										portRequestId: port.id,
 										documentName: key + '.pdf',
 										data: attachment.file
@@ -1185,6 +1189,7 @@ define(function(require) {
 
 			self.portWizardRequestUpdatePort({
 				data: {
+					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1194,6 +1199,7 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestUpdateAttachment({
 										data: {
+											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1207,6 +1213,7 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestCreateAttachment({
 										data: {
+											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1242,6 +1249,7 @@ define(function(require) {
 			if (args.data.request.hasOwnProperty('id')) {
 				self.portWizardRequestDeletePort({
 					data: {
+						accountId: args.data.accountId,
 						portRequestId: args.data.request.id
 					},
 					success: function() {
