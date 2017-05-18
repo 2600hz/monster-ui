@@ -252,10 +252,22 @@
 			"quantity": "Quantity",
 			"amount": "Amount"
 		},
-		"perMinuteVoip": "Per Minute",
-		"mobileData": "Mobile Data",
 		"dataUsed": "Data Used",
-		"mb": "MB"
+		"mb": "MB",
+
+		"genericLedger": {
+			"columns": {
+				"account": "Account",
+				"amount": "Amount",
+				"date": "Date",
+				"description": "Description",
+				"usage": "Usage"
+			},
+			"ledgers": {
+				"mobile_data": "Mobile Data",
+				"per-minute-voip": "Per Minute"
+			}
+		}
 	},
 
 	"servicePlan": {
