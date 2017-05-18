@@ -168,7 +168,7 @@ define(function(require){
 
 		_afterSuccessfulAuthCallback: function(data, url) {
 			var decoded = monster.util.jwt_decode(data.auth_token);
-			//console.log(data, decoded);$.error();
+
 			if (decoded.hasOwnProperty('account_id')) {
 				var cookieAuth = {
 					authToken: data.auth_token
@@ -176,8 +176,10 @@ define(function(require){
 
 				$.cookie('monster-auth', JSON.stringify(cookieAuth));
 			} else {
+				$.cookie('monster-auth', null);
 				$.cookie('monster-sso-auth', JSON.stringify(decoded));
 			}
+
 			window.location.href = url;
 		},
 
