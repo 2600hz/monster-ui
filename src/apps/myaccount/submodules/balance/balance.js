@@ -17,7 +17,7 @@ define(function(require) {
 
 		appFlags: {
 			balance: {
-				range: 1
+				range: 'monthly'
 			}
 		},
 
