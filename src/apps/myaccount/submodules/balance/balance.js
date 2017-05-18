@@ -65,7 +65,17 @@ define(function(require) {
 
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
 
-						self.balanceGetDataPerLedger('per-minute-voip', balance, function(data) {
+						self.balanceDisplayGenericTable('per-minute-voip', balance, renderData.uiRestrictions.balance.show_credit, function() {
+							monster.pub('myaccount.updateMenu', args);
+
+							monster.pub('myaccount.renderSubmodule', balance);
+
+							if (typeof argsCallback === 'function') {
+								argsCallback(balance);
+							}
+						});
+
+						/*self.balanceGetDataPerLedger('per-minute-voip', balance, function(data) {
 							self.balanceDisplayPerMinuteTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
 								monster.pub('myaccount.updateMenu', args);
 
@@ -75,7 +85,7 @@ define(function(require) {
 									argsCallback(balance);
 								}
 							}, data);
-						});
+						});*/
 					}
 				});
 			});
@@ -102,13 +112,13 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
-				self.balanceUpdateStats(template, results);
+				self.balanceUpdateStats(template, results, ledgerName);
 
 				callback && callback(results);
 			});
 		},
 
-		balanceUpdateStats: function(template, data) {
+		balanceUpdateStats: function(template, data, currentLedger) {
 			var self = this,
 				formattedData = self.balanceGetFormattedStats(data);
 
@@ -117,6 +127,10 @@ define(function(require) {
 			template.find('#data_used').html(formattedData.totalMobileData);
 
 			_.each(data.globalLedgers, function(ledger, ledgerName) {
+				if (template.find('.tab-type-ledger[data-type="' + ledgerName + '"]').length === 0) {
+					template.find('.ledger-tabs').append(self.getTemplate({ name: 'generic-tab-ledger', data: { ledgerName: ledgerName }, submodule: 'balance' }));
+				}
+
 				template.find('.tab-type-ledger[data-type="' + ledgerName + '"]').show();
 				template.find('.title-box[data-type="' + ledgerName + '"]').show();
 			});
@@ -258,50 +272,6 @@ define(function(require) {
 			});
 		},
 
-		balanceDisplayMobileTable: function(parent, showCredits, afterRender, preloadedData) {
-			var self = this,
-				template = $(self.getTemplate({ name: 'mobile-table', submodule: 'balance' })),
-				fromDate = parent.find('input.filter-from').datepicker('getDate'),
-				toDate = parent.find('input.filter-to').datepicker('getDate');
-
-			monster.ui.footable(template.find('.footable'), {
-				getData: function(filters, callback) {
-					filters = $.extend(true, filters, {
-						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate)
-					});
-
-					self.balanceMobileGetRows(parent, filters, showCredits, callback, preloadedData);
-				},
-				backendPagination: {
-					enabled: true
-				},
-				afterInitialized: function() {
-					afterRender && afterRender();
-					parent.find('.table-container').empty().append(template);
-				}
-			});
-		},
-
-		balanceMobileGetRows: function(template, filters, showCredits, callback, preloadedData) {
-			var self = this,
-				afterDataFetched = function(data) {
-					var formattedData = self.balanceFormatMobileDataTable(data, showCredits),
-						$rows = $(self.getTemplate({ name: 'mobile-rows', data: formattedData, submodule: 'balance' }));
-
-					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
-					callback && callback($rows, data);
-				};
-
-			if (preloadedData) {
-				afterDataFetched(preloadedData);
-			} else {
-				self.balanceGetDataPerLedger('mobile_data', template, function(data) {
-					afterDataFetched(data);
-				}, filters);
-			}
-		},
-
 		balanceFormatMobileDataTable: function(dataRequest, showCredits) {
 			var self = this,
 				data = {
@@ -313,50 +283,6 @@ define(function(require) {
 			});
 
 			return data;
-		},
-
-		balanceDisplayPerMinuteTable: function(parent, showCredits, afterRender, preloadedData) {
-			var self = this,
-				template = $(self.getTemplate({ name: 'per-minute-voip-table', submodule: 'balance', data: { showCredits: showCredits } })),
-				fromDate = parent.find('input.filter-from').datepicker('getDate'),
-				toDate = parent.find('input.filter-to').datepicker('getDate');
-
-			monster.ui.footable(template.find('.footable'), {
-				getData: function(filters, callback) {
-					filters = $.extend(true, filters, {
-						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate)
-					});
-
-					self.balancePerMinuteGetRows(parent, filters, showCredits, callback, preloadedData);
-				},
-				backendPagination: {
-					enabled: true
-				},
-				afterInitialized: function() {
-					afterRender && afterRender();
-					parent.find('.table-container').empty().append(template);
-				}
-			});
-		},
-
-		balancePerMinuteGetRows: function(template, filters, showCredits, callback, preloadedData) {
-			var self = this,
-				afterDataFetched = function(data) {
-					var formattedData = self.balanceFormatPerMinuteDataTable(data, showCredits),
-						$rows = $(self.getTemplate({ name: 'per-minute-voip-rows', data: formattedData, submodule: 'balance' }));
-
-					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
-					callback && callback($rows, data);
-				};
-
-			if (preloadedData) {
-				afterDataFetched(preloadedData);
-			} else {
-				self.balanceGetDataPerLedger('per-minute-voip', template, function(data) {
-					afterDataFetched(data);
-				}, filters);
-			}
 		},
 
 		balanceFormatPerMinuteDataTable: function(dataRequest, showCredits) {
@@ -394,6 +320,89 @@ define(function(require) {
 					duration: duration,
 					friendlyAmount: friendlyAmount
 				});
+			});
+
+			return data;
+		},
+
+		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender, preloadedData) {
+			var self = this,
+				customLedgers = {
+					'per-minute-voip': 'per-minute-voip-table',
+					'mobile_data': 'mobile-table'
+				},
+				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
+				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
+				fromDate = parent.find('input.filter-from').datepicker('getDate'),
+				toDate = parent.find('input.filter-to').datepicker('getDate');
+
+			monster.ui.footable(template.find('.footable'), {
+				getData: function(filters, callback) {
+					filters = $.extend(true, filters, {
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate)
+					});
+
+					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback, preloadedData);
+				},
+				backendPagination: {
+					enabled: true
+				},
+				afterInitialized: function() {
+					afterRender && afterRender();
+					parent.find('.table-container').empty().append(template);
+				}
+			});
+		},
+
+		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback, preloadedData) {
+			var self = this,
+				customLedgers = {
+					'per-minute-voip': {
+						rowsTemplate: 'per-minute-voip-rows',
+						formatFunction: 'balanceFormatPerMinuteDataTable'
+					},
+					'mobile_data': {
+						rowsTemplate: 'mobile-rows',
+						formatFunction: 'balanceFormatMobileDataTable'
+					}
+				},
+				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
+				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable',
+				afterDataFetched = function(data) {
+					var formattedData = self[formatFunction](data, showCredits),
+						$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
+
+					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+					callback && callback($rows, data);
+				};
+
+			if (preloadedData) {
+				afterDataFetched(preloadedData);
+			} else {
+				self.balanceGetDataPerLedger(ledgerName, template, function(data) {
+					afterDataFetched(data);
+				}, filters);
+			}
+		},
+
+		balanceFormatGenericDataTable: function(dataRequest, showCredits) {
+			var self = this,
+				data = {
+					transactions: [],
+					showCredits: showCredits
+				};
+
+			_.each(dataRequest.ledger, function(v) {
+				v.extra = {};
+
+				if (v.period.hasOwnProperty('end')) {
+					v.extra.date = v.period.end;
+				} else if (v.period.hasOwnProperty('start')) {
+					v.extra.date = v.period.start;
+				}
+
+				data.transactions.push(v);
 			});
 
 			return data;
@@ -678,7 +687,7 @@ define(function(require) {
 				self._balanceRenderAddCredit(args);
 			});
 
-			template.find('.tab-type-ledger').on('click', function() {
+			template.on('click', '.tab-type-ledger', function() {
 				template.find('.tab-type-ledger').removeClass('active');
 				$(this).addClass('active');
 
@@ -704,11 +713,7 @@ define(function(require) {
 
 			template.find('.table-container').empty();
 
-			if (type === 'per-minute-voip') {
-				self.balanceDisplayPerMinuteTable(template, showCredits, afterRender);
-			} else if (type === 'mobile_data') {
-				self.balanceDisplayMobileTable(template, showCredits, afterRender);
-			}
+			self.balanceDisplayGenericTable(type, template, showCredits, afterRender);
 		},
 
 		//utils
