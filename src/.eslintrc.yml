@@ -6,9 +6,11 @@ plugins:
   - promise
 env:
   browser: true
+  jquery: true
 
 globals:
   define: true
+  _: true
 
 rules:
   no-tabs: off
