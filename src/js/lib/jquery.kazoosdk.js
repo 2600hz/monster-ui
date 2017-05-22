@@ -257,7 +257,7 @@
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
 				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
-				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info'}
+				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -447,16 +447,16 @@
 	 * - authToken: [OPTIONAL]
 	**/
 	$.getKazooSdk = function(settings) {
-		if(settings && typeof settings === 'string') { settings = { apiRoot: settings }; }
-		if(settings && settings.apiRoot) {
+		if (settings && typeof settings === 'string') { settings = { apiRoot: settings }; }
+		if (settings && settings.apiRoot) {
 			var sdkMethods = $.extend({}, baseMethods);
 			$.each(sdkMethods, function() {
-				if(typeof this === 'object') { this.parent = sdkMethods; }
+				if (typeof this === 'object') { this.parent = sdkMethods; }
 			});
 			sdkMethods.defaultSettings = settings;
 			sdkMethods.request = request;
 
-			if('authToken' in settings && settings.authToken.length > 0) {
+			if ('authToken' in settings && settings.authToken.length > 0) {
 				authTokens[settings.apiRoot] = settings.authToken;
 			}
 
@@ -473,7 +473,7 @@
 							},
 							ids = $.map(methodInfo.url.match(/{([^}]+)}/g) || [], function(v) { return v.replace(/{|}/g, ''); });
 
-						if('filters' in methodSettings) {
+						if ('filters' in methodSettings) {
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
 								var valueArray = [].concat(filterValue);
 								$.each(valueArray, function(key, value) {
@@ -482,12 +482,12 @@
 							});
 						}
 
-						if(methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
-						if(methodInfo.hasOwnProperty('dataType')) { requestSettings.dataType = methodInfo.dataType; }
-						if(methodInfo.hasOwnProperty('removeMetadataAPI')) { requestSettings.removeMetadataAPI = methodInfo.removeMetadataAPI; }
-						if(methodInfo.hasOwnProperty('removeHeaders')) { requestSettings.removeHeaders = methodInfo.removeHeaders; }
+						if (methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
+						if (methodInfo.hasOwnProperty('dataType')) { requestSettings.dataType = methodInfo.dataType; }
+						if (methodInfo.hasOwnProperty('removeMetadataAPI')) { requestSettings.removeMetadataAPI = methodInfo.removeMetadataAPI; }
+						if (methodInfo.hasOwnProperty('removeHeaders')) { requestSettings.removeHeaders = methodInfo.removeHeaders; }
 
-						if(['post', 'delete', 'put', 'patch'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
+						if (['post', 'delete', 'put', 'patch'].indexOf(methodInfo.verb.toLowerCase()) >= 0) {
 							requestSettings.data.data = methodSettings.data || {};
 							delete methodSettings.data;
 						}
@@ -498,7 +498,7 @@
 						var staticValues = $.extend(true, {}, methodSettings);
 
 						$.each(ids, function(k, v) {
-							if(methodInfo.verb.toLowerCase() === 'post' && k === ids.length - 1 && !(v in methodSettings)) {
+							if (methodInfo.verb.toLowerCase() === 'post' && k === ids.length - 1 && !(v in methodSettings)) {
 								requestSettings.data[v] = requestSettings.data.data.id;
 							} else {
 								requestSettings.data[v] = staticValues[v];
@@ -544,7 +544,7 @@
 	function checkReservedKeywords(key, request) {
 		var reservedKeys = [ 'apiRoot', 'authToken', 'cache', 'url', 'dataType', 'verb', 'type', 'dataType', 'onRequestStart', 'onRequestEnd', 'onRequestEnd', 'onRequestSuccess', 'uploadProgress' ];
 
-		if(reservedKeys.indexOf(key) >= 0) {
+		if (reservedKeys.indexOf(key) >= 0) {
 			console.warn('URL Parameter "' + key + '" is overriding a core option of the AJAX request - ' + request.url);
 		}
 	}
@@ -560,12 +560,12 @@
 				beforeSend: function(jqXHR, settings) {
 					options.onRequestStart && options.onRequestStart(jqXHR, options);
 
-					if(!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf('X-Auth-Token') < 0) {
+					if (!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf('X-Auth-Token') < 0) {
 						jqXHR.setRequestHeader('X-Auth-Token', options.authToken || authTokens[options.apiRoot]);
 					}
 
 					$.each(options.headers || [], function(key, val) {
-						if(!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf(key) < 0) {
+						if (!options.hasOwnProperty('removeHeaders') || options.removeHeaders.indexOf(key) < 0) {
 							jqXHR.setRequestHeader(key, val);
 						}
 					});
@@ -575,7 +575,7 @@
 			rurlData = /{([^}]+)}/g,
 			data = $.extend({}, options.data);
 
-		if(options.hasOwnProperty('uploadProgress')) {
+		if (options.hasOwnProperty('uploadProgress')) {
 			settings.xhr = function() {
 				var xhr = new window.XMLHttpRequest();
 				//Upload progress
@@ -596,7 +596,7 @@
 
 			var parsedError = error;
 
-			if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
+			if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
 				parsedError = $.parseJSON(error.responseText);
 				parsedError.httpErrorStatus = error.status;
 			}
@@ -609,7 +609,7 @@
 
 			options.onRequestError && options.onRequestError(error, options);
 
-			if(!options.hasOwnProperty('preventCallbackError') || options.preventCallbackError === false) {
+			if (!options.hasOwnProperty('preventCallbackError') || options.preventCallbackError === false) {
 				options.error && options.error(parsedError, error, options.onRequestError);
 			}
 		};
@@ -627,31 +627,31 @@
 			delete data[name];
 		});
 
-		if(settings.type.toLowerCase() !== 'get') {
+		if (settings.type.toLowerCase() !== 'get') {
 			var postData = data.data,
 				envelopeKeys = {};
 
-			if(options.hasOwnProperty('envelopeKeys')) {
+			if (options.hasOwnProperty('envelopeKeys')) {
 				var protectedKeys = ['data', 'accept_charges'];
 
 				_.each(options.envelopeKeys, function(value, key) {
-					if(protectedKeys.indexOf(key) < 0) {
+					if (protectedKeys.indexOf(key) < 0) {
 						envelopeKeys[key] = value;
 					}
 				});
 			};
 
-			if(settings.contentType === 'application/json') {
+			if (settings.contentType === 'application/json') {
 				var payload = $.extend(true, {
 					data: data.data || {}
 				}, envelopeKeys);
 
 				// If the metadata is set, and the removeMetadataAPI key is either missing or set to false then we set the metadata
-				if(options.hasOwnProperty('uiMetadata') && (!options.hasOwnProperty('removeMetadataAPI') || options.removeMetadataAPI === false)) {
+				if (options.hasOwnProperty('uiMetadata') && (!options.hasOwnProperty('removeMetadataAPI') || options.removeMetadataAPI === false)) {
 					payload.data.ui_metadata = options.uiMetadata;
 				}
 
-				if(options.acceptCharges === true) {
+				if (options.acceptCharges === true) {
 					payload.accept_charges = true;
 				}
 
