@@ -31,7 +31,7 @@ define(function(require) {
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
-				appendTemplate = function appendTemplate() {
+				initTemplate = function initTemplate() {
 					var template = $(self.getTemplate({
 						name: 'portInfo',
 						data: {
@@ -81,29 +81,19 @@ define(function(require) {
 								.show();
 					}
 
-					container
-						.fadeOut(function() {
-							container
-								.empty()
-								.append(template)
-								.fadeIn(function() {
-									container
-										.find('#name')
-											.focus();
-								});
+					self.portWizardBindPortInfoEvents(template, args);
 
-							/*
-								If this common control is loaded in the global
-								app container, we need to remove custom classes
-								so that there is no conflict with the CSS rules
-							 */
-							if (container.hasClass('app-content-wrapper')) {
-								container.prop('class', 'app-content-wrapper');
-							}
-
-							self.portWizardBindPortInfoEvents(args);
-						});
+					return template;
 				};
+
+			/*
+				If this common control is loaded in the global
+				app container, we need to remove custom classes
+				so that there is no conflict with the CSS rules
+			 */
+			if (container.hasClass('app-content-wrapper')) {
+				container.prop('class', 'app-content-wrapper');
+			}
 
 			$.extend(true, args, {
 				data: {
@@ -115,7 +105,13 @@ define(function(require) {
 				}
 			});
 
-			appendTemplate();
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				insertTemplateCallback(initTemplate(), function() {
+					container
+						.find('#name')
+							.focus();
+				});
+			});
 		},
 
 		portWizardRenderAccountVerification: function(args) {
@@ -477,71 +473,69 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
-		portWizardBindPortInfoEvents: function(args) {
+		portWizardBindPortInfoEvents: function(template, args) {
 			var self = this,
-				container = args.container,
 				billFileData;
 
-			container
-				.find('.numbers-type')
-					.on('change', function(event) {
-						event.preventDefault();
+			template
+				.on('change', '.numbers-type', function(event) {
+					event.preventDefault();
 
-						var template;
+					var billUploadTemplate;
 
-						if (container.find('.bill-upload-wrapper').is(':empty')) {
-							template = $(self.getTemplate({
-								name: 'portInfo-billUpload',
-								submodule: 'portWizard'
-							})).css('display', 'none');
+					if (template.find('.bill-upload-wrapper').is(':empty')) {
+						billUploadTemplate = $(self.getTemplate({
+							name: 'portInfo-billUpload',
+							submodule: 'portWizard'
+						})).css('display', 'none');
 
-							template
-								.find('#bill_input')
-									.fileUpload({
-										btnClass: 'monster-button-primary monster-button-small',
-										btnText: self.i18n.active().portWizard.fileUpload.button,
-										inputOnly: true,
-										inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-										mimeTypes: self.appFlags.attachments.mimeTypes,
-										maxSize: self.appFlags.attachments.maxSize,
-										success: function(results) {
-											var actionsTemplate = $(self.getTemplate({
-												name: 'portInfo-actions',
-												submodule: 'portWizard'
-											})).css('display', 'none');
+						billUploadTemplate
+							.find('#bill_input')
+								.fileUpload({
+									btnClass: 'monster-button-primary monster-button-small',
+									btnText: self.i18n.active().portWizard.fileUpload.button,
+									inputOnly: true,
+									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+									mimeTypes: self.appFlags.attachments.mimeTypes,
+									maxSize: self.appFlags.attachments.maxSize,
+									success: function(results) {
+										var actionsTemplate = $(self.getTemplate({
+											name: 'portInfo-actions',
+											submodule: 'portWizard'
+										})).css('display', 'none');
 
-											if (container.find('.portInfo-success').length < 1) {
-												billFileData = results[0];
+										if (template.find('.portInfo-success').length < 1) {
+											billFileData = results[0];
 
-												container
-													.find('.actions')
-														.prepend(actionsTemplate);
+											template
+												.find('.actions')
+													.prepend(actionsTemplate);
 
-												container
-													.find('.portInfo-success')
-														.fadeIn();
-											}
-										},
-										error: function(errorsList) {
-											self.portWizardFileUploadErrorsHandler(errorsList);
+											template
+												.find('.portInfo-success')
+													.fadeIn();
 										}
-									});
+									},
+									error: function(errorsList) {
+										self.portWizardFileUploadErrorsHandler(errorsList);
+									}
+								});
 
-							container
-								.find('.bill-upload-wrapper')
-									.append(template);
+						template
+							.find('.bill-upload-wrapper')
+								.append(billUploadTemplate);
 
-							container
-								.find('.bill-upload')
-									.fadeIn();
-						}
-					});
+						template
+							.find('.bill-upload')
+								.fadeIn();
+					}
+				});
 
-			container
+			template
 				.on('click', '.portInfo-success', function(event) {
 					event.preventDefault();
 
-					var $form = container.find('#form_port_info'),
+					var $form = template.find('#form_port_info'),
 						formData = monster.ui.getFormData('form_port_info');
 
 					monster.ui.validate($form, {
@@ -569,7 +563,7 @@ define(function(require) {
 					}
 				});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
