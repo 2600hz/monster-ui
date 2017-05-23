@@ -395,25 +395,25 @@ define(function(require) {
 		portWizardRenderSignForm: function(args) {
 			var self = this,
 				container = args.container,
-				formType = self.portWizardGetFormType(args.data.request),
-				dataToTemplate = {
-					type: self.i18n.active().portWizard.formTypes[formType]
-				},
-				template = $(self.getTemplate({
-					name: 'signForm',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				}));
+				initTemplate = function initTemplate() {
+					var formType = self.portWizardGetFormType(args.data.request),
+						dataToTemplate = {
+							type: self.i18n.active().portWizard.formTypes[formType]
+						},
+						template = $(self.getTemplate({
+							name: 'signForm',
+							data: dataToTemplate,
+							submodule: 'portWizard'
+						}));
 
-			container
-				.fadeOut(function() {
-					container
-						.empty()
-						.append(template)
-						.fadeIn();
+					self.portWizardBindSignFormEvents(template, args);
 
-					self.portWizardBindSignFormEvents(args);
-				});
+					return template;
+				};
+
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				insertTemplateCallback(initTemplate());
+			});
 		},
 
 		portWizardRenderPortNotify: function(args) {
