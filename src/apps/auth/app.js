@@ -920,10 +920,6 @@ define(function(require){
 					else {
 						$.cookie('monster-login', null);
 					}
-
-					data.loginData = loginData;
-
-					self._afterSuccessfulAuth(data);
 				},
 				function() {
 					$('#login, #password, #account_name').parents('.input-wrap').addClass('error');
@@ -1070,17 +1066,22 @@ define(function(require){
 		},
 
 		// API Calls
-		putAuth: function(loginData, callback, wrongCredsCallback) {
-			var self = this;
+		putAuth: function(loginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs) {
+			var self = this,
+				dataPayload = $.extend(true, {
+					data: loginData,
+					generateError: false
+				}, additionalArgs || {});
 
 			self.callApi({
 				resource: 'auth.userAuth',
-				data: {
-					data: loginData,
-					generateError: false
-				},
+				data: dataPayload,
 				success: function(data, status) {
 					var ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {};
+
+					data.loginData = loginData;
+
+					self._afterSuccessfulAuth(data, pUpdateLayout);
 
 					if (ssoUser.hasOwnProperty('auth_id')) {
 						self.linkUserSSO(ssoUser.auth_id, function() {
@@ -1101,8 +1102,8 @@ define(function(require){
 					} else if (data.status === 401) {
 						if (errorPayload.data.hasOwnProperty('multi_factor_request')) {
 							self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
-								self.putAuth(augmentedLoginData, callback, wrongCredsCallback);
-							});
+								self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
+							}, wrongCredsCallback);
 						} else {
 							wrongCredsCallback && wrongCredsCallback();
 						}
@@ -1152,41 +1153,26 @@ define(function(require){
 			});
 		},
 
-		retryLogin: function(success, error) {
+		retryLogin: function(additionalArgs, success, error) {
 			var self = this,
 				loginData;
 
-			if($.cookie('monster-auth')) {
+			if ($.cookie('monster-auth')) {
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
-				if(cookieData.hasOwnProperty('credentials') && cookieData.hasOwnProperty('accountName')) {
+				if (cookieData.hasOwnProperty('credentials') && cookieData.hasOwnProperty('accountName')) {
 					loginData = {
 						credentials: cookieData.credentials,
 						account_name: cookieData.accountName
-					}
+					};
 				}
 			}
 
-			if(loginData) {
-				self.callApi({
-					resource: 'auth.userAuth',
-					data: {
-						data: loginData,
-						generateError: false
-					},
-					success: function (data, status) {
-						data.loginData = loginData;
-
-						self._afterSuccessfulAuth(data, false);
-
-						success && success(data.auth_token);
-					},
-					error: function(errorPayload, data, globalHandler) {
-						error && error();
-					}
-				});
-			}
-			else {
+			if (loginData) {
+				self.putAuth(loginData, function(data) {
+					success && success(data.auth_token);
+				}, error, false, additionalArgs);
+			} else {
 				error && error();
 			}
 		},
