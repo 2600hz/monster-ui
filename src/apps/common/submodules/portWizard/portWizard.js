@@ -318,7 +318,6 @@ define(function(require) {
 
 		portWizardRenderUploadForm: function(args) {
 			var self = this,
-				container = args.container,
 				formType = self.portWizardGetFormType(args.data.request),
 				initTemplate = function initTemplate() {
 					var dataToTemplate = {
@@ -387,14 +386,13 @@ define(function(require) {
 					return template;
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+			monster.ui.insertTemplate(args.container, function(insertTemplateCallback) {
 				insertTemplateCallback(initTemplate());
 			});
 		},
 
 		portWizardRenderSignForm: function(args) {
 			var self = this,
-				container = args.container,
 				initTemplate = function initTemplate() {
 					var formType = self.portWizardGetFormType(args.data.request),
 						dataToTemplate = {
@@ -411,7 +409,7 @@ define(function(require) {
 					return template;
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+			monster.ui.insertTemplate(args.container, function(insertTemplateCallback) {
 				insertTemplateCallback(initTemplate());
 			});
 		},
@@ -444,26 +442,25 @@ define(function(require) {
 
 		portWizardRenderSubmitPort: function(args) {
 			var self = this,
-				container = args.container,
-				dataToTemplate = {
-					request: args.data.request,
-					today: new Date()
-				},
-				template = $(self.getTemplate({
-					name: 'portSubmit',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				}));
+				initTemplate = function initTemplate() {
+					var dataToTemplate = {
+							request: args.data.request,
+							today: new Date()
+						},
+						template = $(self.getTemplate({
+							name: 'portSubmit',
+							data: dataToTemplate,
+							submodule: 'portWizard'
+						}));
 
-			container
-				.fadeOut(function() {
-					container
-						.empty()
-						.append(template)
-						.fadeIn();
+					self.portWizardBindPortSubmitEvents(template, args);
 
-					self.portWizardBindPortSubmitEvents(args);
-				});
+					return template;
+				};
+
+			monster.ui.insertTemplate(args.container, function(insertTemplateCallback) {
+				insertTemplateCallback(initTemplate());
+			});
 		},
 
 		/**************************************************
@@ -987,11 +984,10 @@ define(function(require) {
 					});
 		},
 
-		portWizardBindPortSubmitEvents: function(args) {
-			var self = this,
-				container = args.container;
+		portWizardBindPortSubmitEvents: function(template, args) {
+			var self = this;
 
-			container
+			template
 				.find('.conditions')
 					.on('change', function(event) {
 						event.preventDefault();
@@ -999,12 +995,12 @@ define(function(require) {
 						var formData = monster.ui.getFormData('form_conditions'),
 							disabled = formData.conditions.indexOf(false) > -1;
 
-						container
+						template
 							.find('.success')
 								.prop('disabled', disabled);
 					});
 
-			container
+			template
 				.find('.success')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -1025,7 +1021,7 @@ define(function(require) {
 						}));
 					});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
