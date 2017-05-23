@@ -117,7 +117,7 @@ define(function(require) {
 		portWizardRenderAccountVerification: function(args) {
 			var self = this,
 				container = args.container,
-				appendTemplate = function appendTemplate(billFileData) {
+				initTemplate = function initTemplate(billFileData) {
 					var template = $(self.getTemplate({
 						name: 'accountVerification',
 						data: {
@@ -128,39 +128,36 @@ define(function(require) {
 
 					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
 
-					container
-						.fadeOut(function() {
-							container
-								.empty()
-								.append(template)
-								.fadeIn(function() {
-									container
-										.find('#carrier')
-											.focus();
-								});
+					self.portWizardBindAccountVerificationEvents(template, args);
 
-							self.portWizardBindAccountVerificationEvents(args);
-						});
+					return template;
+				},
+				afterInsertTemplate = function() {
+					container
+						.find('#carrier')
+							.focus();
 				};
 
-			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
-				self.portWizardRequestGetAttahcment({
-					data: {
-						accountId: args.data.accountId,
-						portRequestId: args.data.request.id,
-						documentName: 'bill.pdf'
-					},
-					success: function(billFileData) {
-						args.data.attachments.bill = {
-							file: billFileData
-						};
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
+					self.portWizardRequestGetAttahcment({
+						data: {
+							accountId: args.data.accountId,
+							portRequestId: args.data.request.id,
+							documentName: 'bill.pdf'
+						},
+						success: function(billFileData) {
+							args.data.attachments.bill = {
+								file: billFileData
+							};
 
-						appendTemplate(billFileData);
-					}
-				});
-			} else {
-				appendTemplate(args.data.attachments.bill.file);
-			}
+							insertTemplateCallback(initTemplate(billFileData), afterInsertTemplate);
+						}
+					});
+				} else {
+					insertTemplateCallback(initTemplate(args.data.attachments.bill.file), afterInsertTemplate);
+				}
+			});
 		},
 
 		portWizardRenderAddNumbers: function(args) {
@@ -572,9 +569,8 @@ define(function(require) {
 					});
 		},
 
-		portWizardBindAccountVerificationEvents: function(args) {
+		portWizardBindAccountVerificationEvents: function(template, args) {
 			var self = this,
-				container = args.container,
 				formValidationRules = {
 					'bill.name': {
 						minlength: 1,
@@ -608,13 +604,13 @@ define(function(require) {
 					}
 				};
 
-			container
+			template
 				.find('.next')
 					.on('click', function(event) {
 						event.preventDefault();
 
 						var action = $(this).data('action'),
-							$form = container.find('#form_account_verification'),
+							$form = template.find('#form_account_verification'),
 							formData = monster.ui.getFormData('form_account_verification'),
 							btn = formData.bill.btn ? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus') : '';
 
@@ -648,7 +644,7 @@ define(function(require) {
 						}
 					});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
