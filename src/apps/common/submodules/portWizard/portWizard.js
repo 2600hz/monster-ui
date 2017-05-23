@@ -419,27 +419,27 @@ define(function(require) {
 		portWizardRenderPortNotify: function(args) {
 			var self = this,
 				container = args.container,
-				template = $(self.getTemplate({
-					name: 'portNotify',
-					data: {
-						request: args.data.request
-					},
-					submodule: 'portWizard'
-				}));
+				initTemplate = function initTemplate() {
+					var template = $(self.getTemplate({
+						name: 'portNotify',
+						data: {
+							request: args.data.request
+						},
+						submodule: 'portWizard'
+					}));
 
-			container
-				.fadeOut(function() {
+					self.portWizardBindPortNotifyEvents(template, args);
+
+					return template;
+				};
+
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				insertTemplateCallback(initTemplate(), function() {
 					container
-						.empty()
-						.append(template)
-						.fadeIn(function() {
-							container
-								.find('#email')
-									.focus();
-						});
-
-					self.portWizardBindPortNotifyEvents(args);
+						.find('#email')
+							.focus();
 				});
+			});
 		},
 
 		portWizardRenderSubmitPort: function(args) {
@@ -927,11 +927,10 @@ define(function(require) {
 					});
 		},
 
-		portWizardBindSignFormEvents: function(args) {
-			var self = this,
-				container = args.container;
+		portWizardBindSignFormEvents: function(template, args) {
+			var self = this;
 
-			container
+			template
 				.find('.success')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -939,7 +938,7 @@ define(function(require) {
 						self.portWizardRenderPortNotify(args);
 					});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -948,18 +947,17 @@ define(function(require) {
 					});
 		},
 
-		portWizardBindPortNotifyEvents: function(args) {
+		portWizardBindPortNotifyEvents: function(template, args) {
 			var self = this,
-				container = args.container,
 				minDate = monster.util.getBusinessDate(4),
 				defaultDate = args.data.request.hasOwnProperty('transfer_date') ? monster.util.gregorianToDate(args.data.request.transfer_date) : minDate;
 
-			monster.ui.datepicker(container.find('#transfer_date'), {
+			monster.ui.datepicker(template.find('#transfer_date'), {
 				minDate: minDate,
 				beforeShowDay: $.datepicker.noWeekends
 			}).datepicker('setDate', defaultDate);
 
-			container
+			template
 				.find('.next')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -980,7 +978,7 @@ define(function(require) {
 						}
 					});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
