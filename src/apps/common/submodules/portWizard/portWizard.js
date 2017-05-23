@@ -31,7 +31,6 @@ define(function(require) {
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
-				request = args.hasOwnProperty('data') && args.data.hasOwnProperty('request') ? args.data.request : {},
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'portInfo',
@@ -111,10 +110,7 @@ define(function(require) {
 					attachments: {},
 					request: {
 						ui_flags: {},
-						numbers: request.hasOwnProperty('numbers') ? request.numbers.reduce(function(object, value) {
-							object[value] = {};
-							return object;
-						}, {}) : {}
+						numbers: {}
 					}
 				}
 			});
