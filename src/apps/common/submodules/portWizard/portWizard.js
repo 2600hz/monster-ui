@@ -320,76 +320,76 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				formType = self.portWizardGetFormType(args.data.request),
-				dataToTemplate = {
-					type: self.i18n.active().portWizard.formTypes[formType],
-					formLink: monster.config.whitelabel.port[formType]
-				},
-				template = $(self.getTemplate({
-					name: 'uploadForm',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				})),
-				fileUploadOptions = {
-					btnClass: 'monster-button-primary monster-button-small',
-					btnText: self.i18n.active().portWizard.fileUpload.button,
-					inputOnly: true,
-					inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-					mimeTypes: self.appFlags.attachments.mimeTypes,
-					maxSize: self.appFlags.attachments.maxSize,
-					success: function(results) {
-						$.extend(true, args.data, {
-							attachments: {
-								form: results[0]
+				initTemplate = function initTemplate() {
+					var dataToTemplate = {
+							type: self.i18n.active().portWizard.formTypes[formType],
+							formLink: monster.config.whitelabel.port[formType]
+						},
+						template = $(self.getTemplate({
+							name: 'uploadForm',
+							data: dataToTemplate,
+							submodule: 'portWizard'
+						})),
+						fileUploadOptions = {
+							btnClass: 'monster-button-primary monster-button-small',
+							btnText: self.i18n.active().portWizard.fileUpload.button,
+							inputOnly: true,
+							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+							mimeTypes: self.appFlags.attachments.mimeTypes,
+							maxSize: self.appFlags.attachments.maxSize,
+							success: function(results) {
+								$.extend(true, args.data, {
+									attachments: {
+										form: results[0]
+									}
+								});
+
+								if (template.find('.uploadForm-success').length < 1) {
+									actionsTemplate = $(self.getTemplate({
+										name: 'uploadForm-actions',
+										submodule: 'portWizard'
+									})).css('display', 'none');
+
+									template
+										.find('.actions')
+											.append(actionsTemplate);
+
+									template
+										.find('.uploadForm-success')
+											.fadeIn();
+								}
+							},
+							error: function(errorsList) {
+								self.portWizardFileUploadErrorsHandler(errorsList);
 							}
-						});
+						},
+						actionsTemplate;
 
-						if (template.find('.uploadForm-success').length < 1) {
-							actionsTemplate = $(self.getTemplate({
-								name: 'uploadForm-actions',
-								submodule: 'portWizard'
-							})).css('display', 'none');
+					if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
+						fileUploadOptions.filesList = [ 'form.pdf' ];
 
-							template
-								.find('.actions')
-									.append(actionsTemplate);
+						actionsTemplate = $(self.getTemplate({
+							name: 'uploadForm-actions',
+							submodule: 'portWizard'
+						}));
 
-							template
-								.find('.uploadForm-success')
-									.fadeIn();
-						}
-					},
-					error: function(errorsList) {
-						self.portWizardFileUploadErrorsHandler(errorsList);
+						template
+							.find('.actions')
+								.append(actionsTemplate);
 					}
-				},
-				actionsTemplate;
 
-			if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
-				fileUploadOptions.filesList = [ 'form.pdf' ];
+					template
+						.find('#form_input')
+							.fileUpload(fileUploadOptions);
 
-				actionsTemplate = $(self.getTemplate({
-					name: 'uploadForm-actions',
-					submodule: 'portWizard'
-				}));
+					self.portWizardBindUploadFormEvents(template, args);
 
-				template
-					.find('.actions')
-						.append(actionsTemplate);
-			}
+					return template;
+				};
 
-			template
-				.find('#form_input')
-					.fileUpload(fileUploadOptions);
-
-			container
-				.fadeOut(function() {
-					container
-						.empty()
-						.append(template)
-						.fadeIn();
-
-					self.portWizardBindUploadFormEvents(args);
-				});
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				insertTemplateCallback(initTemplate());
+			});
 		},
 
 		portWizardRenderSignForm: function(args) {
@@ -898,11 +898,10 @@ define(function(require) {
 					});
 		},
 
-		portWizardBindUploadFormEvents: function(args) {
-			var self = this,
-				container = args.container;
+		portWizardBindUploadFormEvents: function(template, args) {
+			var self = this;
 
-			container
+			template
 				.find('.save')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -912,14 +911,14 @@ define(function(require) {
 						}));
 					});
 
-			container
+			template
 				.on('click', '.uploadForm-success', function(event) {
 					event.preventDefault();
 
 					self.portWizardRenderPortNotify(args);
 				});
 
-			container
+			template
 				.find('.cancel')
 					.on('click', function(event) {
 						event.preventDefault();
