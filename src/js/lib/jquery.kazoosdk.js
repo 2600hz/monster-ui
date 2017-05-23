@@ -343,6 +343,12 @@
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
 				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 			},
+			storage: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
+				'add': { verb: 'PUT', url: 'accounts/{accountId}/storage' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/storage' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/storage' }
+			},
 			tasks: {
 				'summary': { verb: 'GET', url: 'tasks' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/tasks' },
