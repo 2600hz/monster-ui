@@ -496,13 +496,13 @@ define(function(require){
 						var parsedError = error,
 							requestOptions = requestOptions || { generateError: true };
 
-						if('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
+						if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
-						if(error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
+						if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
 							var parsedError = error;
-							if('responseText' in error && error.responseText) {
+							if ('responseText' in error && error.responseText) {
 								parsedError = $.parseJSON(error.responseText);
 							}
 
@@ -514,34 +514,35 @@ define(function(require){
 							});
 						}
 						// If we have a 401 after being logged in, it means our session expired
-						else if(monster.util.isLoggedIn() && error.status === 401) {
+						else if (monster.util.isLoggedIn() && error.status === 401) {
 							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 							monster.error('api', error, false);
 
-							if(!requestOptions.hasOwnProperty('preventCallbackError')) {
-								// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
-								// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
-								requestOptions.preventCallbackError = true;
+							if (!requestOptions.hasOwnProperty('preventCallbackError') || requestOptions.preventCallbackError === false) {
+								// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
+								if (!requestOptions.hasOwnProperty('isRetryLoginRequest') || requestOptions.isRetryLoginRequest === false) {
+									// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
+									// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
+									requestOptions.preventCallbackError = true;
 
-								monster.apps.auth.retryLogin(function(newToken) {
-									// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-									var updatedRequestOptions = $.extend(true, requestOptions, { preventCallbackError: false, authToken: newToken });
+									monster.apps.auth.retryLogin({ isRetryLoginRequest: true }, function(newToken) {
+										// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+										var updatedRequestOptions = $.extend(true, requestOptions, { preventCallbackError: false, authToken: newToken });
 
-									monster.kazooSdk.request(updatedRequestOptions);
-								},
-								function() {
-									monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-										monster.util.logoutAndReload();
+										monster.kazooSdk.request(updatedRequestOptions);
+									},
+									function() {
+										monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+											monster.util.logoutAndReload();
+										});
 									});
-								});
-							}
-							else {
+								}
+							} else {
 								monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
 									monster.util.logoutAndReload();
 								});
 							}
-						}
-						else {
+						} else {
 							monster.error('api', error, requestOptions.generateError);
 						}
 					}
