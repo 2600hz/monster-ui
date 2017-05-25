@@ -127,23 +127,44 @@ define(function(require){
 			}
 			// Default case, we didn't find any way to log in automatically, we render the login page
 			else if(urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-				var tmp = JSON.parse(atob(decodeURIComponent(urlParams.state))),
-					url = window.location.protocol + '//' + window.location.host,
-					data = $.extend(true, {redirect_uri: url}, tmp, urlParams);
-
-				self.authenticateAuthCallback(data, function(authData) {
-					self._afterSuccessfulAuthCallback(authData, url);
+				self.getNewOAuthTokenFromURLParams(urlParams, function() {
+					// Once we set our token we refresh the page to get rid of new URL params from auth callback
+					window.location.href = window.location.protocol + '//' + window.location.host;
 				}, errorAuth);
 			}
 			else {
 				self.renderLoginPage();
 			}
 		},
-		
+
+		getNewOAuthTokenFromURLParams: function(params, success, error) {
+			var self = this,
+				tmp = JSON.parse(atob(decodeURIComponent(params.state))),
+				url = window.location.protocol + '//' + window.location.host,
+				data = $.extend(true, {redirect_uri: url}, tmp, params);
+
+			self.authenticateAuthCallback(data, function(authData) {
+				var decoded = monster.util.jwt_decode(authData.auth_token);
+
+				if (decoded.hasOwnProperty('account_id')) {
+					var cookieAuth = {
+						authToken: authData.auth_token
+					};
+
+					$.cookie('monster-auth', JSON.stringify(cookieAuth));
+				} else {
+					$.cookie('monster-auth', null);
+					$.cookie('monster-sso-auth', JSON.stringify(decoded));
+				}
+
+				success && success();
+			}, error);
+		},
+
 		authenticateAuthToken: function(authToken, callback, errorCallback) {
 			var self = this;
 
-			self.getAuth(authToken, 
+			self.getAuth(authToken,
 				function(authData) {
 					callback && callback(authData);
 				},
@@ -164,23 +185,6 @@ define(function(require){
 					errorCallback && errorCallback(error);
 				}
 			);
-		},
-
-		_afterSuccessfulAuthCallback: function(data, url) {
-			var decoded = monster.util.jwt_decode(data.auth_token);
-
-			if (decoded.hasOwnProperty('account_id')) {
-				var cookieAuth = {
-					authToken: data.auth_token
-				};
-
-				$.cookie('monster-auth', JSON.stringify(cookieAuth));
-			} else {
-				$.cookie('monster-auth', null);
-				$.cookie('monster-sso-auth', JSON.stringify(decoded));
-			}
-
-			window.location.href = url;
 		},
 
 		// We update the token with the value stored in the auth cookie.
