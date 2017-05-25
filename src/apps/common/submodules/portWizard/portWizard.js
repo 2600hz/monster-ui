@@ -61,7 +61,14 @@ define(function(require) {
 									maxSize: self.appFlags.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
-										args.data.attachments.bill = results[0];
+										self.portWizardRequestUpdateAttachment({
+											data: {
+												accountId: args.data.accountId,
+												portRequestId: args.data.request.id,
+												documentName: 'bill.pdf',
+												data: results[0].file
+											}
+										});
 									},
 									error: function(errorsList) {
 										self.portWizardFileUploadErrorsHandler(errorsList);
@@ -318,7 +325,9 @@ define(function(require) {
 
 		portWizardRenderUploadForm: function(args) {
 			var self = this,
-				formType = self.portWizardGetFormType(args.data.request),
+				data = args.data,
+				request = data.request,
+				formType = self.portWizardGetFormType(request),
 				initTemplate = function initTemplate() {
 					var dataToTemplate = {
 							type: self.i18n.active().portWizard.formTypes[formType],
@@ -337,26 +346,30 @@ define(function(require) {
 							mimeTypes: self.appFlags.attachments.mimeTypes,
 							maxSize: self.appFlags.attachments.maxSize,
 							success: function(results) {
-								$.extend(true, args.data, {
-									attachments: {
-										form: results[0]
+								self.portWizardRequestUpdateAttachment({
+									data: {
+										accountId: data.accountId,
+										portRequestId: request.id,
+										documentName: 'form.pdf',
+										data: results[0].file
+									},
+									success: function() {
+										if (template.find('.uploadForm-success').length < 1) {
+											actionsTemplate = $(self.getTemplate({
+												name: 'uploadForm-actions',
+												submodule: 'portWizard'
+											})).css('display', 'none');
+
+											template
+												.find('.actions')
+													.append(actionsTemplate);
+
+											template
+												.find('.uploadForm-success')
+													.fadeIn();
+										}
 									}
 								});
-
-								if (template.find('.uploadForm-success').length < 1) {
-									actionsTemplate = $(self.getTemplate({
-										name: 'uploadForm-actions',
-										submodule: 'portWizard'
-									})).css('display', 'none');
-
-									template
-										.find('.actions')
-											.append(actionsTemplate);
-
-									template
-										.find('.uploadForm-success')
-											.fadeIn();
-								}
 							},
 							error: function(errorsList) {
 								self.portWizardFileUploadErrorsHandler(errorsList);
@@ -364,7 +377,7 @@ define(function(require) {
 						},
 						actionsTemplate;
 
-					if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('form.pdf')) {
+					if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
 						fileUploadOptions.filesList = [ 'form.pdf' ];
 
 						actionsTemplate = $(self.getTemplate({
