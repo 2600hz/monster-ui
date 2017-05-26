@@ -2697,6 +2697,19 @@ define(function(require){
 			cb.on('success', function() {
 				toastr.success(monster.apps.core.i18n.active().clipboard.successCopy);
 			});
+		},
+
+		popupRedirect: function(url, redirectUrl, success, error) {
+			require(['popup-redirect'], function() {
+				var self = this,
+					popup = new Popup();
+
+				popup.open(url, 'oauth', {}, redirectUrl).then(function(oauthData) {
+					success && success(oauthData);
+				}, function(data) {
+					error && error(data);
+				});
+			});
 		}
 	};
 

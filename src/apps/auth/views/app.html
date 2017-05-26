@@ -14,7 +14,7 @@
                     {{#unless ssoPending}}
                         <div class="sso-buttons">
                             {{#each ssoProviders}}
-                                 <a class="sso-button sso-button-{{name}}" data-original-title="{{name}}" href="{{link_url}}">
+                                 <a class="sso-button sso-button-{{name}}" data-provider="{{name}}" data-original-title="{{name}}" href="javascript:void(0);">
                                     <i class=""><img src="apps/auth/style/oauth/{{name}}.png" width="14"></i> {{friendly_name}}
                                 </a>
                             {{/each}}

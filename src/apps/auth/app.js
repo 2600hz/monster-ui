@@ -120,9 +120,11 @@ define(function(require) {
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
 				// If it has state and code key, then it's most likely a SSO Redirect
-				self.getNewOAuthTokenFromURLParams(urlParams, function() {
+				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
-					window.location.href = window.location.protocol + '//' + window.location.host;
+					self.buildCookiesFromSSOResponse(authData, function() {
+						window.location.href = window.location.protocol + '//' + window.location.host;
+					});
 				}, errorAuth);
 			} else {
 				// Default case, we didn't find any way to log in automatically, we render the login page
@@ -137,21 +139,25 @@ define(function(require) {
 				data = $.extend(true, {redirect_uri: url}, tmp, params);
 
 			self.authenticateAuthCallback(data, function(authData) {
-				var decoded = monster.util.jwt_decode(authData.auth_token);
-
-				if (decoded.hasOwnProperty('account_id')) {
-					var cookieAuth = {
-						authToken: authData.auth_token
-					};
-
-					$.cookie('monster-auth', JSON.stringify(cookieAuth));
-				} else {
-					$.cookie('monster-auth', null);
-					$.cookie('monster-sso-auth', JSON.stringify(decoded));
-				}
-
-				success && success();
+				success && success(authData);
 			}, error);
+		},
+
+		buildCookiesFromSSOResponse: function(authData, callback) {
+			var decoded = monster.util.jwt_decode(authData.auth_token);
+
+			if (decoded.hasOwnProperty('account_id')) {
+				var cookieAuth = {
+					authToken: authData.auth_token
+				};
+
+				$.cookie('monster-auth', JSON.stringify(cookieAuth));
+			} else {
+				$.cookie('monster-auth', null);
+				$.cookie('monster-sso-auth', JSON.stringify(decoded));
+			}
+
+			callback && callback();
 		},
 
 		authenticateAuthToken: function(authToken, callback, errorCallback) {
@@ -581,9 +587,8 @@ define(function(require) {
 			});
 		},
 
-		formatSSOProviders: function() {
-			var self = this,
-				providers = monster.config.whitelabel.sso_providers || [];
+		formatSSOProviders: function(providers) {
+			var self = this;
 
 			_.each(providers, function(provider) {
 				provider.params.scope = provider.params.scopes.join(' ');
@@ -608,7 +613,7 @@ define(function(require) {
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
 				ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {},
-				ssoProviders = self.formatSSOProviders(),
+				ssoProviders = monster.config.whitelabel.sso_providers || [],
 				hasSSO = ssoUser.hasOwnProperty('auth_app_id'),
 				hasAccountId = ssoUser.hasOwnProperty('account_id'),
 				ssoPending = hasSSO && (!hasAccountId),
@@ -671,6 +676,7 @@ define(function(require) {
 
 			var request = new XMLHttpRequest();
 			request.open('GET', photoUrl);
+
 			request.setRequestHeader('Authorization', token);
 			request.responseType = 'blob';
 
@@ -734,10 +740,7 @@ define(function(require) {
 					var provider = self.findSSOPhotoUrlProvider(templateData);
 
 					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
-						var imageElm = document.createElement('img');
-						imageElm.className = 'sso-user-photo';
-						imageElm.src = ssoUser.photoUrl;
-						content.find('.sso-user-photo-div').append(imageElm);
+						self.paintSSOImgElement(content, ssoUser.photoUrl);
 					} else {
 						self.requestPhotoFromUrl(ssoUser.photoUrl, token);
 					}
@@ -745,6 +748,37 @@ define(function(require) {
 					self.findSSOPhotoUrlFromProvider(templateData, container);
 				}
 			}
+		},
+
+		addSSOConnection: function(data) {
+			console.log(data);
+		},
+
+		clickSSOProviderLogin: function(params) {
+			var self = this,
+				type = params.provider,
+				updateLayout = params.updateLayout || true,
+				forceSamePage = typeof params.forceSamePage !== 'undefined' ? params.forceSamePage : false;
+
+			self.loginToSSOProvider(type, forceSamePage, function(data) {
+				// If it uses the same page mechanism, this callback will be executed.
+				// If not, then the page is refreshed and the data will be captured by the login mechanism
+				self.buildCookiesFromSSOResponse(data);
+				//self.addSSOConnection(authData);
+
+				self.authenticateAuthToken(data.auth_token, function(authData) {
+					self._afterSuccessfulAuth(authData, updateLayout);
+				}, function(data) {
+					if (data.httpErrorStatus === 403) {
+						window.location.href = window.location.protocol + '//' + window.location.host;
+						//params.error && params.error('_no_account_linked', data);
+					} else {
+						params.error && params.error('_unknown', data);
+					}
+				});
+			}, function(errorCode) {
+				console.log(errorCode);
+			});
 		},
 
 		bindLoginBlock: function(templateData) {
@@ -763,6 +797,18 @@ define(function(require) {
 				e.preventDefault();
 
 				self.loginClick();
+			});
+
+			content.find('.sso-button').on('click', function() {
+				self.clickSSOProviderLogin({
+					provider: $(this).data('provider'),
+					forceSamePage: true,
+					error: function(errorCode, errorData) {
+						if (errorCode === '_no_account_linked') {
+
+						}
+					}
+				});
 			});
 
 			// New Design stuff
@@ -1260,6 +1306,28 @@ define(function(require) {
 			}
 
 			success(args.app);
+		},
+
+		loginToSSOProvider: function(providerName, forceSamePage, success, error) {
+			var self = this,
+				providers = _.filter(monster.config.whitelabel.sso_providers, function(provider) {
+					return provider.name === providerName;
+				}),
+				provider = providers.length ? providers[0] : '_no_provider';
+
+			if (provider !== '_no_provider') {
+				if (forceSamePage) {
+					window.location = provider.link_url;
+				} else {
+					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, function(params) {
+						self.getNewOAuthTokenFromURLParams(params, success);
+					}, function() {
+						error && error('_oAuthPopup_error');
+					});
+				}
+			} else {
+				error && error('_invalid_provider');
+			}
 		}
 	};
 
