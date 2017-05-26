@@ -1,8 +1,8 @@
-define(function(require){
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster"),
-		toastr = require("toastr");
+define(function(require) {
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster'),
+		toastr = require('toastr');
 
 	var app = {
 
@@ -34,7 +34,7 @@ define(function(require){
 		subscribe: {
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
-			'auth.initApp' : '_initApp',
+			'auth.initApp': '_initApp',
 			'auth.afterAuthenticate': '_afterSuccessfulAuth',
 			'auth.showTrialInfo': 'showTrialInfo'
 		},
@@ -65,7 +65,7 @@ define(function(require){
 				};
 
 			// First check if there is a custom authentication mechanism
-			if(monster.config.whitelabel.hasOwnProperty('authentication')) {
+			if (monster.config.whitelabel.hasOwnProperty('authentication')) {
 				self.customAuth = monster.config.whitelabel.authentication;
 
 				var options = {
@@ -76,8 +76,7 @@ define(function(require){
 				monster.apps.load(self.customAuth.name, function(app) {
 					app.render(self.appFlags.mainContainer);
 				}, options);
-			}
-			else if (monster.config.whitelabel.hasOwnProperty('sso')) {
+			} else if (monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso,
 					token = $.cookie(sso.cookie.name);
 
@@ -95,12 +94,10 @@ define(function(require){
 				} else {
 					window.location = sso.login;
 				}
-			}
-			else if(urlParams.hasOwnProperty('recovery')) {
+			} else if (urlParams.hasOwnProperty('recovery')) {
 				self.checkRecoveryId(urlParams.recovery, successfulAuth);
-			}
-			// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
-			else if($.cookie('monster-auth')) {
+			} else if ($.cookie('monster-auth')) {
+				// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 				var cookieData = $.parseJSON($.cookie('monster-auth'));
 
 				self.authenticateAuthToken(cookieData.authToken, function(data) {
@@ -111,28 +108,24 @@ define(function(require){
 
 					successfulAuth && successfulAuth(data);
 				}, errorAuth);
-			}
-			// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
-
-			//APIkey generated tokens require UserId parameter to login.
-			else if(urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
+			} else if (urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
+				// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
+				//APIkey generated tokens require UserId parameter to login.
 				self.authenticateAuthToken(urlParams.t, function(authData) {
 					authData.data.owner_id = urlParams.u;
 					successfulAuth(authData);
 				}, errorAuth);
-			}
-			// Username/password generated tokens do not require anything else to log in.
-			else if(urlParams.hasOwnProperty('t')) {
+			} else if (urlParams.hasOwnProperty('t')) {
+				// Username/password generated tokens do not require anything else to log in.
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
-			}
-			// Default case, we didn't find any way to log in automatically, we render the login page
-			else if(urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
+			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
+				// If it has state and code key, then it's most likely a SSO Redirect
 				self.getNewOAuthTokenFromURLParams(urlParams, function() {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
 					window.location.href = window.location.protocol + '//' + window.location.host;
 				}, errorAuth);
-			}
-			else {
+			} else {
+				// Default case, we didn't find any way to log in automatically, we render the login page
 				self.renderLoginPage();
 			}
 		},
@@ -192,10 +185,9 @@ define(function(require){
 		setKazooAPIToken: function(token) {
 			var self = this;
 
-			if(token) {
+			if (token) {
 				self.appFlags.connections[self.appFlags.kazooConnectionName].authToken = token;
-			}
-			else {
+			} else {
 				self._logout();
 			}
 		},
@@ -221,12 +213,11 @@ define(function(require){
 				hasConnection = self.appFlags.connections.hasOwnProperty(connectionName),
 				authToken;
 
-			if(hasConnection) {
-				if(connectionName === self.appFlags.kazooConnectionName) {
-					if(monster.config.whitelabel.hasOwnProperty('sso')) {
+			if (hasConnection) {
+				if (connectionName === self.appFlags.kazooConnectionName) {
+					if (monster.config.whitelabel.hasOwnProperty('sso')) {
 						self.updateTokenFromWhitelabelCookie();
-					}
-					else {
+					} else {
 						self.updateTokenFromMonsterCookie();
 					}
 				}
@@ -257,7 +248,7 @@ define(function(require){
 				userId: data.data.owner_id
 			};
 
-			if('apps' in data.data) {
+			if ('apps' in data.data) {
 				self.installedApps = data.data.apps;
 			} else {
 				self.installedApps = [];
@@ -271,7 +262,7 @@ define(function(require){
 				accountId: data.data.account_id
 			};
 
-			if(data.hasOwnProperty('loginData')) {
+			if (data.hasOwnProperty('loginData')) {
 				cookieAuth.credentials = data.loginData.credentials;
 				cookieAuth.accountName = data.loginData.account_name;
 			}
@@ -279,7 +270,7 @@ define(function(require){
 			$.cookie('monster-auth', JSON.stringify(cookieAuth));
 
 			// In the case of the retry login, we don't want to re-update the UI, we just want to re-update the flags set above, that's why we added this parameter.
-			if(updateLayout) {
+			if (updateLayout) {
 				$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
 				self.appFlags.mainContainer.empty();
 
@@ -334,11 +325,10 @@ define(function(require){
 			function(err, results) {
 				var defaultApp;
 
-				if(err) {
+				if (err) {
 					monster.util.logoutAndReload();
-				}
-				else {
-					if ( results.user.hasOwnProperty('require_password_update') && results.user.require_password_update ) {
+				} else {
+					if (results.user.hasOwnProperty('require_password_update') && results.user.require_password_update) {
 						self.newPassword(results.user);
 					}
 
@@ -355,9 +345,9 @@ define(function(require){
 								return fullAppList.hasOwnProperty(appId);
 							});
 
-						if(defaultAppId) {
+						if (defaultAppId) {
 							defaultApp = fullAppList[defaultAppId].name;
-						} else if(self.installedApps.length > 0) {
+						} else if (self.installedApps.length > 0) {
 							defaultApp = self.installedApps[0].name;
 						}
 
@@ -373,11 +363,11 @@ define(function(require){
 
 						self.showAnnouncement(self.originalAccount.announcement);
 
-						if('ui_flags' in results.user && results.user.ui_flags.colorblind) {
+						if ('ui_flags' in results.user && results.user.ui_flags.colorblind) {
 							$('body').addClass('colorblind');
 						}
 
-						if(monster.util.isAdmin()) {
+						if (monster.util.isAdmin()) {
 							$('#main_topbar_account_toggle_link').addClass('visible');
 						}
 
@@ -390,7 +380,7 @@ define(function(require){
 
 					// If the user or the account we're logged into has a language settings, and if it's different than
 					var loadCustomLanguage = function(language, callback) {
-						if(language !== monster.config.whitelabel.language && language !== monster.apps.defaultLanguage) {
+						if (language !== monster.config.whitelabel.language && language !== monster.apps.defaultLanguage) {
 							monster.apps.loadLocale(monster.apps.core, language, function() {
 								monster.apps.loadLocale(self, language, function() {
 									monster.config.whitelabel.language = language;
@@ -398,8 +388,7 @@ define(function(require){
 									callback && callback();
 								});
 							});
-						}
-						else {
+						} else {
 							monster.config.whitelabel.language = language;
 							callback && callback();
 						}
@@ -407,13 +396,11 @@ define(function(require){
 
 					/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
 					if not, check if the account has a default preferred language */
-					if('language' in results.user) {
+					if ('language' in results.user) {
 						loadCustomLanguage(results.user.language, afterLanguageLoaded);
-					}
-					else if('language' in results.account) {
+					} else if ('language' in results.account) {
 						loadCustomLanguage(results.account.language, afterLanguageLoaded);
-					}
-					else {
+					} else {
 						afterLanguageLoaded && afterLanguageLoaded();
 					}
 				}
@@ -424,14 +411,14 @@ define(function(require){
 			var self = this,
 				announcement = self.originalAccount.announcement || monster.config.whitelabel.announcement;
 
-			if(announcement) {
+			if (announcement) {
 				monster.ui.alert('info', announcement, null, { title: self.i18n.active().announcementTitle });
 			}
 		},
 
 		showTrialInfo: function(timeLeft) {
 			var self = this,
-				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60*60*24)) : -1,
+				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60 * 60 * 24)) : -1,
 				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
 				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
 
@@ -470,7 +457,7 @@ define(function(require){
 
 			// Update the flag of the walkthrough is they don't care about it
 			dialog.siblings().find('.ui-dialog-titlebar-close').on('click', function() {
-				updateUser && updateUser()
+				updateUser && updateUser();
 			});
 		},
 
@@ -491,14 +478,12 @@ define(function(require){
 
 		showTrialPopup: function(daysLeft) {
 			var self = this,
-				dialog,
 				alreadyUpgraded = self.uiFlags.account.get('trial_upgraded');
 
-			if(alreadyUpgraded) {
+			if (alreadyUpgraded) {
 				monster.ui.alert('info', self.i18n.active().trialPopup.alreadyUpgraded);
-			}
-			else {
-				if(daysLeft >= 0) {
+			} else {
+				if (daysLeft >= 0) {
 					monster.ui.confirm(
 						'', // Marketing content goes here
 						function() {
@@ -537,14 +522,13 @@ define(function(require){
 			var self = this;
 
 			monster.pub('myaccount.hasCreditCards', function(response) {
-				if(response) {
+				if (response) {
 					self.upgradeAccount(self.accountId, function() {
 						monster.ui.alert('info', self.i18n.active().trial.successUpgrade.content, null, {
 							title: self.i18n.active().trial.successUpgrade.title
 						});
 					});
-				}
-				else {
+				} else {
 					monster.pub('myaccount.showCreditCardTab');
 
 					toastr.error(self.i18n.active().trial.noCreditCard);
@@ -568,8 +552,8 @@ define(function(require){
 			monster.request({
 				resource: 'auth.upgradeTrial',
 				data: {
-					envelopeKeys: { 
-						id: accountId 
+					envelopeKeys: {
+						id: accountId
 					}
 				},
 				success: function(data, status) {
@@ -599,44 +583,7 @@ define(function(require){
 
 		formatSSOProviders: function() {
 			var self = this,
-				hardCodedProviders = [{
-					url: 'https://accounts.google.com/o/oauth2/auth',
-					name: 'google',
-					friendly_name: 'Google',
-					params: {
-						client_id: 'xxxxxxxxxx',
-						response_type: 'code',
-						scopes: ['openid', 'profile', 'email'],
-						include_granted_scopes: true,
-						access_type: 'offline',
-						authuser: 0
-					}
-				},
-				{
-					url: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-					name: 'microsoft',
-					friendly_name: 'Office 365',
-					params: {
-						client_id: 'xxxxxxxxxx',
-						response_type: 'code',
-						scopes: ['openid', 'profile', 'email', 'User.Read'],
-						response_mode: 'query',
-						nonce: 678910
-					}
-				},
-				{
-					url: 'https://login.salesforce.com/services/oauth2/authorize',
-					name: 'salesforce',
-					friendly_name: 'Sales Force',
-					params: {
-						client_id: 'xxxxxxxxxx',
-						response_type: 'code',
-						scopes: ['openid', 'profile', 'email', 'User.Read'],
-						response_mode: 'query',
-						nonce: 678910
-					}
-				}],
-				providers = monster.config.whitelabel.sso_providers || [];// hardCodedProviders;
+				providers = monster.config.whitelabel.sso_providers || [];
 
 			_.each(providers, function(provider) {
 				provider.params.scope = provider.params.scopes.join(' ');
@@ -680,7 +627,7 @@ define(function(require){
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
-					if(monster.config.whitelabel.custom_welcome) {
+					if (monster.config.whitelabel.custom_welcome) {
 						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
 					}
 
@@ -698,7 +645,7 @@ define(function(require){
 					dataType: '*'
 				},
 				success: function(_data) {
-					template.find('.logo-block').css('background-image', 'url(' + monster.config.api.default + 'whitelabel/' + domain + '/logo?_='+new Date().getTime()+')');
+					template.find('.logo-block').css('background-image', 'url(' + monster.config.api.default + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime() + ')');
 					loadWelcome();
 				},
 				error: function(error) {
@@ -812,14 +759,14 @@ define(function(require){
 				monster.util.logoutAndReload();
 			});
 
-			content.find('.btn-submit.login').on('click', function(e){
+			content.find('.btn-submit.login').on('click', function(e) {
 				e.preventDefault();
 
 				self.loginClick();
 			});
 
 			// New Design stuff
-			if (content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').val() !== '' ) {
+			if (content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').val() !== '') {
 				content.find('.placeholder-shift').addClass('fixed');
 			}
 
@@ -829,12 +776,11 @@ define(function(require){
 				content.find('.error-message-wrapper').find('.text').html('');
 			});
 
-			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change' , function() {
-				if( this.value !== '') {
-					$(this).next('.placeholder-shift').addClass('fixed'); 
-				}
-				else {
-					$(this).next('.placeholder-shift').removeClass('fixed'); 
+			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change', function() {
+				if (this.value !== '') {
+					$(this).next('.placeholder-shift').addClass('fixed');
+				} else {
+					$(this).next('.placeholder-shift').removeClass('fixed');
 				}
 			});
 
@@ -846,11 +792,11 @@ define(function(require){
 				var formType = $(this).data('form');
 
 				content.find('.form-container').toggleClass('hidden');
-				content.find('.form-container[data-form="'+ formType +'"]').addClass('fadeInDown');
+				content.find('.form-container[data-form="' + formType + '"]').addClass('fadeInDown');
 
 				content.find('.form-content').removeClass('hidden');
 				content.find('.reset-notification').addClass('hidden');
-			}); 
+			});
 
 			// ------------------------
 			// PASSWORD RECOVERY SUBMIT
@@ -860,16 +806,16 @@ define(function(require){
 			monster.ui.validate(form);
 
 			content.find('.recover-password').on('click', function() {
-				if ( monster.ui.valid(form) ) {
+				if (monster.ui.valid(form)) {
 					var object = monster.ui.getFormData('form_password_recovery', '.', true);
 
 					object.ui_url = window.location.href;
 
-					if ( object.hasOwnProperty('account_name') || object.hasOwnProperty('phone_number') ) {
+					if (object.hasOwnProperty('account_name') || object.hasOwnProperty('phone_number')) {
 						self.callApi({
 							resource: 'auth.recovery',
 							data: {
-								data:object,
+								data: object,
 								generateError: false
 							},
 							success: function(data, success) {
@@ -877,18 +823,17 @@ define(function(require){
 								content.find('.reset-notification').addClass('animated fadeIn').removeClass('hidden');
 							},
 							error: function(data, error, globalHandler) {
-								if ( error.status === 400) {
+								if (error.status === 400) {
 									_.keys(data.data).forEach(function(val) {
-										if ( self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val) ) {
+										if (self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val)) {
 											toastr.error(self.i18n.active().recoverPassword.toastr.error.reset[val]);
 										} else {
-											if ( data.data[val].hasOwnProperty('not_found') ) {
+											if (data.data[val].hasOwnProperty('not_found')) {
 												toastr.error(data.data[val].not_found);
 											}
 										}
 									});
-								}
-								else {
+								} else {
 									globalHandler(data);
 								}
 							}
@@ -911,17 +856,16 @@ define(function(require){
 					account_name: loginAccountName
 				};
 
-			if(loginUsername && loginPassword) {
-				self.putAuth(loginData, function (data) {
-					if($('#remember_me').is(':checked')) {
+			if (loginUsername && loginPassword) {
+				self.putAuth(loginData, function(data) {
+					if ($('#remember_me').is(':checked')) {
 						var cookieLogin = {
 							login: loginUsername,
 							accountName: loginAccountName
 						};
 
 						$.cookie('monster-login', JSON.stringify(cookieLogin), {expires: 30});
-					}
-					else {
+					} else {
 						$.cookie('monster-login', null);
 					}
 				},
@@ -930,12 +874,11 @@ define(function(require){
 					$('.error-message-wrapper').find('.text').html(self.i18n.active().invalidCredentials);
 					$('.error-message-wrapper').show();
 				});
-			}
-			else {
-				if(!loginUsername) {
+			} else {
+				if (!loginUsername) {
 					$('#login').parents('.input-wrap').addClass('error');
 				}
-				if(!loginPassword) {
+				if (!loginPassword) {
 					$('#password').parents('.input-wrap').addClass('error');
 				}
 			}
@@ -956,10 +899,10 @@ define(function(require){
 			monster.ui.validate(form);
 
 			template.find('.update-password').on('click', function() {
-				if ( monster.ui.valid(form) ) {
+				if (monster.ui.valid(form)) {
 					var formData = monster.ui.getFormData('form_password_update');
 
-					if ( formData.new_password === formData.new_password_confirmation ) {
+					if (formData.new_password === formData.new_password_confirmation) {
 						var newUserData = {
 								password: formData.new_password,
 								require_password_update: false
@@ -1246,12 +1189,12 @@ define(function(require){
 					accountId: accountId
 				},
 				success: function(_data) {
-					if(typeof success === 'function') {
+					if (typeof success === 'function') {
 						success(_data);
 					}
 				},
 				error: function(err) {
-					if(typeof error === 'function') {
+					if (typeof error === 'function') {
 						error(err);
 					}
 				}
@@ -1267,7 +1210,7 @@ define(function(require){
 					accountId: self.accountId
 				},
 				success: function(_data) {
-					callback && callback(_data.data)
+					callback && callback(_data.data);
 				}
 			});
 		},
@@ -1279,15 +1222,15 @@ define(function(require){
 				resource: 'user.get',
 				data: {
 					accountId: self.accountId,
-					userId: self.userId,
+					userId: self.userId
 				},
 				success: function(_data) {
-					if(typeof success === 'function') {
+					if (typeof success === 'function') {
 						success(_data);
 					}
 				},
 				error: function(err) {
-					if(typeof error === 'function') {
+					if (typeof error === 'function') {
 						error(err);
 					}
 				}
@@ -1295,7 +1238,7 @@ define(function(require){
 		},
 
 		// Method used to authenticate other apps
-		_initApp: function (args) {
+		_initApp: function(args) {
 			var self = this,
 				success = function(app) {
 					// If isMasqueradable flag is set in the code itself, use it, otherwise check if it's set in the DB, otherwise defaults to true
@@ -1309,17 +1252,16 @@ define(function(require){
 					return val.name === args.app.name;
 				});
 
-			if(installedApp && installedApp.api_url) {
+			if (installedApp && installedApp.api_url) {
 				args.app.apiUrl = installedApp.api_url;
-				if(args.app.apiUrl.substr(args.app.apiUrl.length-1) !== "/") {
-					args.app.apiUrl += "/";
+				if (args.app.apiUrl.substr(args.app.apiUrl.length - 1) !== '/') {
+					args.app.apiUrl += '/';
 				}
 			}
 
 			success(args.app);
 		}
-
-	}
+	};
 
 	return app;
 });
