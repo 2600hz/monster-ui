@@ -124,10 +124,7 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
-				results.parents.push({
-					id: results.account.id,
-					name: results.account.name
-				});
+				results.parents.push(results.account);
 
 				args.hasOwnProperty('success') && args.success(results.parents);
 			});
