@@ -11,6 +11,7 @@ env:
 globals:
   define: true
   _: true
+  Duo: true
 
 rules:
   no-tabs: off
