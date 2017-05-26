@@ -110,17 +110,3 @@ function joinUrl(baseUrl, url) {
         };
         return Popup;
     }());
-
-/* example on how to call */
-/*
- *         function popup(url, redirect_url, callback) {
-            var pop = new Popup();
-            pop.open(url, "oauth", {}, redirect_url).then(function(oauth) {
-                callback(oauth)
-            }, function(error) {
-                console.log(error);
-            });
-        }    
-
-*/
-     
