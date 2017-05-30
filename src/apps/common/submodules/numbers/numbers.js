@@ -1475,10 +1475,11 @@ define(function(require) {
 		numbersEditFeatures: function(args) {
 			var self = this,
 				phoneNumber = args.number,
+				noStateNeeded = args.hasOwnProperty('noStateNeeded') ? args.noStateNeeded : false,
 				isValid = false;
 
 			self.numbersGetNumber(phoneNumber, function(number) {
-				if (number.state === 'in_service') {
+				if (number.state === 'in_service' || noStateNeeded) {
 					isValid = true;
 				}
 
