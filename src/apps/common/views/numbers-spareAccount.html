@@ -1,5 +1,5 @@
 {{#each spareNumbers}}
-	<div class="number-box" data-phoneNumber="{{this.phoneNumber}}">
+	<div class="number-box" data-state="{{this.state}}" data-phoneNumber="{{this.phoneNumber}}">
 		<div class="number-options pull-right"></div>
 		<input type="checkbox"></input>
 		<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}</div>
@@ -13,6 +13,9 @@
 		</span>
 		<div class="features pull-right">
 			{{#numberFeatures features}}{{/numberFeatures}}
+			{{#compare this.state '===' 'port_in'}}
+				<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{@root.i18n.numbers.portIconHelp}}"></i>
+			{{/compare}}
 		</div>
 	</div>
 {{else}}
