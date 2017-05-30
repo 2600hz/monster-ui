@@ -21,7 +21,7 @@
 			{{/compare}}
 			<div class="numbers-wrapper">
 				{{#each usedNumbers}}
-					<div class="number-box disabled" data-phoneNumber="{{this.phoneNumber}}">
+					<div class="number-box disabled" data-state="{{this.state}}" data-phoneNumber="{{this.phoneNumber}}">
 						<div class="number-options"></div>
 
 						<div class="phone-number monster-phone-number" data-state="{{this.state}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}">{{formatPhoneNumber this.phoneNumber}}</div>
@@ -69,6 +69,9 @@
 
 						<div class="features pull-right">
 							{{#numberFeatures features}}{{/numberFeatures}}
+							{{#compare this.state '===' 'port_in'}}
+								<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{@root.i18n.numbers.portIconHelp}}"></i>
+							{{/compare}}
 						</div>
 					</div>
 				{{else}}
