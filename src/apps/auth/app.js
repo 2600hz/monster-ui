@@ -122,9 +122,9 @@ define(function(require) {
 				// If it has state and code key, then it's most likely a SSO Redirect
 				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
-					self.buildCookiesFromSSOResponse(authData, function() {
-						window.location.href = window.location.protocol + '//' + window.location.host;
-					});
+					self.buildCookiesFromSSOResponse(authData);
+
+					window.location.href = window.location.protocol + '//' + window.location.host;
 				}, errorAuth);
 			} else {
 				// Default case, we didn't find any way to log in automatically, we render the login page
@@ -143,21 +143,18 @@ define(function(require) {
 			}, error);
 		},
 
-		buildCookiesFromSSOResponse: function(authData, callback) {
+		buildCookiesFromSSOResponse: function(authData) {
 			var decoded = monster.util.jwt_decode(authData.auth_token);
 
-			if (decoded.hasOwnProperty('account_id')) {
-				var cookieAuth = {
-					authToken: authData.auth_token
-				};
+			$.cookie('monster-sso-auth', JSON.stringify(decoded));
 
-				$.cookie('monster-auth', JSON.stringify(cookieAuth));
+			if (decoded.hasOwnProperty('account_id')) {
+				$.cookie('monster-auth', JSON.stringify({ authToken: authData.auth_token }));
 			} else {
 				$.cookie('monster-auth', null);
-				$.cookie('monster-sso-auth', JSON.stringify(decoded));
 			}
 
-			callback && callback();
+			return decoded;
 		},
 
 		authenticateAuthToken: function(authToken, callback, errorCallback) {
@@ -606,29 +603,80 @@ define(function(require) {
 			return providers;
 		},
 
+		renderSSOProviderTemplate: function(container) {
+			monster.config.whitelabel.sso_providers = [{"url":"https://accounts.google.com/o/oauth2/auth","authenticate_photoUrl":false,"name":"google","friendly_name":"Google","params":{"popup": true, "client_id":"24412119-8h2t58nn70ehbshl78iqjlcvt8gd8786.apps.googleusercontent.com","response_type":"code","include_granted_scopes":true,"scope":"openid profile email","redirect_uri":"http://localhost:3000","state":"eyJjbGllbnRfaWQiOiIyNDQxMjExOS04aDJ0NThubjcwZWhic2hsNzhpcWpsY3Z0OGdkODc4Ni5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInByb3ZpZGVyIjoiZ29vZ2xlIn0="},"link_url":"https://accounts.google.com/o/oauth2/auth?client_id=24412119-8h2t58nn70ehbshl78iqjlcvt8gd8786.apps.googleusercontent.com&response_type=code&include_granted_scopes=true&scope=openid+profile+email&redirect_uri=http%3A%2F%2Flocalhost%3A3000&state=eyJjbGllbnRfaWQiOiIyNDQxMjExOS04aDJ0NThubjcwZWhic2hsNzhpcWpsY3Z0OGdkODc4Ni5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInByb3ZpZGVyIjoiZ29vZ2xlIn0%3D"},{"url":"https://login.microsoftonline.com/common/oauth2/v2.0/authorize","photoUrl":"https://graph.microsoft.com/v1.0/me/photo/$value","name":"microsoft","friendly_name":"Office 365","params":{"client_id":"2ab5382e-4b5a-440f-9e67-20e265b41c58","response_type":"code","include_granted_scopes":true,"scope":"openid profile email User.Read","redirect_uri":"http://localhost:3000","state":"eyJjbGllbnRfaWQiOiIyYWI1MzgyZS00YjVhLTQ0MGYtOWU2Ny0yMGUyNjViNDFjNTgiLCJwcm92aWRlciI6Im1pY3Jvc29mdCJ9"},"link_url":"https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=2ab5382e-4b5a-440f-9e67-20e265b41c58&response_type=code&include_granted_scopes=true&scope=openid+profile+email+User.Read&redirect_uri=http%3A%2F%2Flocalhost:3000&state=eyJjbGllbnRfaWQiOiIyYWI1MzgyZS00YjVhLTQ0MGYtOWU2Ny0yMGUyNjViNDFjNTgiLCJwcm92aWRlciI6Im1pY3Jvc29mdCJ9"},{"url":"https://login.salesforce.com/services/oauth2/authorize","authenticate_photoUrl":false,"name":"salesforce","friendly_name":"Sales Force","params":{"client_id":"3MVG9i1HRpGLXp.qZwLB6u.b4FJi5bibPWMricI6mhR5IjeRmvk9n7C29buhZ0rDSllC_f.GOKduaF8ApJenh","response_type":"code","include_granted_scopes":true,"scope":"openid api id refresh_token web","redirect_uri":"http://localhost:3000","state":"eyJjbGllbnRfaWQiOiIzTVZHOWkxSFJwR0xYcC5xWndMQjZ1LmI0RkppNWJpYlBXTXJpY0k2bWhSNUlqZVJtdms5bjdDMjlidWhaMHJEU2xsQ19mLkdPS2R1YUY4QXBKZW5oIiwicHJvdmlkZXIiOiJzYWxlc2ZvcmNlIn0="},"link_url":"https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9i1HRpGLXp.qZwLB6u.b4FJi5bibPWMricI6mhR5IjeRmvk9n7C29buhZ0rDSllC_f.GOKduaF8ApJenh&response_type=code&include_granted_scopes=true&scope=openid+api+id+refresh_token+web&redirect_uri=http%3A%2F%2Flocalhost:3000&state=eyJjbGllbnRfaWQiOiIzTVZHOWkxSFJwR0xYcC5xWndMQjZ1LmI0RkppNWJpYlBXTXJpY0k2bWhSNUlqZVJtdms5bjdDMjlidWhaMHJEU2xsQ19mLkdPS2R1YUY4QXBKZW5oIiwicHJvdmlkZXIiOiJzYWxlc2ZvcmNlIn0%3D"},{"url":"https://www.linkedin.com/uas/oauth2/authorization","name":"linkedin","friendly_name":"Linked in","params":{"client_id":"78xd6e4jp3r3gi","response_type":"code","include_granted_scopes":true,"scope":"r_emailaddress r_basicprofile","redirect_uri":"http://localhost:3000","state":"eyJjbGllbnRfaWQiOiI3OHhkNmU0anAzcjNnaSIsInByb3ZpZGVyIjoibGlua2VkaW4ifQ=="},"authenticate_photoUrl":false,"link_url":"https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=2ab5382e-4b5a-440f-9e67-20e265b41c58&response_type=code&include_granted_scopes=true&scope=openid+profile+email+User.Read&redirect_uri=https%3A%2F%2Fmonster.sandbox.2600hz.com&state=eyJjbGllbnRfaWQiOiIyYWI1MzgyZS00YjVhLTQ0MGYtOWU2Ny0yMGUyNjViNDFjNTgiLCJwcm92aWRlciI6Im1pY3Jvc29mdCJ9"}];
+			var self = this,
+				ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {},
+				dataTemplate = {
+					ssoProviders: monster.config.whitelabel.sso_providers || [],
+					ssoUser: ssoUser,
+					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
+				},
+				template = $(monster.template(self, 'sso-providers', dataTemplate));
+
+			$(container).empty();
+
+			self.bindSSOPhotoUrl(dataTemplate, template);
+
+			template.find('.kill-sso-session').on('click', function() {
+				monster.util.resetAuthCookies();
+
+				self.renderSSOProviderTemplate(container);
+			});
+
+			template.find('.sso-button').on('click', function() {
+				self.clickSSOProviderLogin({
+					provider: $(this).data('provider'),
+					forceSamePage: false,
+					error: function(errorCode, errorData, decodedData) {
+						if (errorCode === '_no_account_linked') {
+							console.log(errorCode, errorData, decodedData);
+							//window.location.href = window.location.protocol + '//' + window.location.host;
+
+							self.renderSSOProviderTemplate(container);
+						}
+					}
+				});
+			});
+
+			$(container).append(template);
+		},
+
+		bindSSOPhotoUrl: function(templateData, container) {
+			var self = this,
+				ssoUser = templateData.ssoUser,
+				content = container;
+
+			if (templateData.isUnknownKazooUser) {
+				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
+
+				if (ssoUser.hasOwnProperty('photoUrl')) {
+					var provider = self.findSSOPhotoUrlProvider(templateData);
+
+					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
+						self.paintSSOImgElement(content, ssoUser.photoUrl);
+					} else {
+						self.requestPhotoFromUrl(ssoUser.photoUrl, token, container);
+					}
+				} else {
+					self.findSSOPhotoUrlFromProvider(templateData, container);
+				}
+			}
+		},
+
 		renderLoginPage: function() {
 			var self = this,
 				container = self.appFlags.mainContainer,
 				accountName = '',
 				realm = '',
 				cookieLogin = $.parseJSON($.cookie('monster-login')) || {},
-				ssoUser = $.parseJSON($.cookie('monster-sso-auth')) || {},
-				ssoProviders = monster.config.whitelabel.sso_providers || [],
-				hasSSO = ssoUser.hasOwnProperty('auth_app_id'),
-				hasAccountId = ssoUser.hasOwnProperty('account_id'),
-				ssoPending = hasSSO && (!hasAccountId),
 				templateData = {
 					username: cookieLogin.login || '',
 					requestAccountName: (realm || accountName) ? false : true,
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
-					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false,
-					ssoProviders: ssoProviders,
-					ssoUser: ssoUser,
-					ssoPending: ssoPending,
-					hasAccountId: hasAccountId,
-					hasSSO: hasSSO
+					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
@@ -641,6 +689,8 @@ define(function(require) {
 					template.find('.powered-by-block').append($('.core-footer .powered-by'));
 				},
 				domain = window.location.hostname;
+
+			self.renderSSOProviderTemplate(template.find('.sso-providers-wrapper'));
 
 			self.callApi({
 				resource: 'whitelabel.getLogoByDomain',
@@ -666,12 +716,13 @@ define(function(require) {
 
 			imageElm.className = 'sso-user-photo';
 			imageElm.src = src;
+
 			container.find('.sso-user-photo-div').append(imageElm);
 		},
 
-		requestPhotoFromUrl: function(photoUrl, token) {
+		requestPhotoFromUrl: function(photoUrl, token, container) {
 			var self = this,
-				content = $('#auth_container'),
+				content = container,
 				defaultPhotoUrl = 'apps/auth/style/oauth/no_photo_url.png';
 
 			var request = new XMLHttpRequest();
@@ -706,7 +757,7 @@ define(function(require) {
 			_.each(ssoProviders, function(provider) {
 				if (provider.name === ssoProvider) {
 					if (provider.hasOwnProperty('photoUrl')) {
-						self.requestPhotoFromUrl(provider.photoUrl, token);
+						self.requestPhotoFromUrl(provider.photoUrl, token, container);
 					} else {
 						content.find('.sso-user-photo').src = defaultPhotoUrl;
 					}
@@ -728,28 +779,6 @@ define(function(require) {
 			return ssoProvider;
 		},
 
-		bindSSOPhotoUrl: function(templateData, container) {
-			var self = this,
-				ssoUser = templateData.ssoUser,
-				content = container;
-
-			if (templateData.ssoPending) {
-				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
-
-				if (ssoUser.hasOwnProperty('photoUrl')) {
-					var provider = self.findSSOPhotoUrlProvider(templateData);
-
-					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
-						self.paintSSOImgElement(content, ssoUser.photoUrl);
-					} else {
-						self.requestPhotoFromUrl(ssoUser.photoUrl, token);
-					}
-				} else {
-					self.findSSOPhotoUrlFromProvider(templateData, container);
-				}
-			}
-		},
-
 		addSSOConnection: function(data) {
 			console.log(data);
 		},
@@ -763,15 +792,14 @@ define(function(require) {
 			self.loginToSSOProvider(type, forceSamePage, function(data) {
 				// If it uses the same page mechanism, this callback will be executed.
 				// If not, then the page is refreshed and the data will be captured by the login mechanism
-				self.buildCookiesFromSSOResponse(data);
+				var decodedData = self.buildCookiesFromSSOResponse(data);
 				//self.addSSOConnection(authData);
 
 				self.authenticateAuthToken(data.auth_token, function(authData) {
 					self._afterSuccessfulAuth(authData, updateLayout);
 				}, function(data) {
 					if (data.httpErrorStatus === 403) {
-						window.location.href = window.location.protocol + '//' + window.location.host;
-						//params.error && params.error('_no_account_linked', data);
+						params.error && params.error('_no_account_linked', data, decodedData);
 					} else {
 						params.error && params.error('_unknown', data);
 					}
@@ -781,34 +809,22 @@ define(function(require) {
 			});
 		},
 
+		updateLayoutWithSSOUser: function(template, data) {
+			var self = this;
+
+			console.log(template, data);
+		},
+
 		bindLoginBlock: function(templateData) {
 			var self = this,
 				content = $('#auth_container');
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
-			self.bindSSOPhotoUrl(templateData, content);
-
-			content.find('.kill-sso-session').on('click', function() {
-				monster.util.logoutAndReload();
-			});
-
 			content.find('.btn-submit.login').on('click', function(e) {
 				e.preventDefault();
 
 				self.loginClick();
-			});
-
-			content.find('.sso-button').on('click', function() {
-				self.clickSSOProviderLogin({
-					provider: $(this).data('provider'),
-					forceSamePage: true,
-					error: function(errorCode, errorData) {
-						if (errorCode === '_no_account_linked') {
-
-						}
-					}
-				});
 			});
 
 			// New Design stuff
@@ -1319,7 +1335,7 @@ define(function(require) {
 				if (forceSamePage) {
 					window.location = provider.link_url;
 				} else {
-					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, function(params) {
+					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, {}, function(params) {
 						self.getNewOAuthTokenFromURLParams(params, success);
 					}, function() {
 						error && error('_oAuthPopup_error');

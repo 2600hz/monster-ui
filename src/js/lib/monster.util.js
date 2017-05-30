@@ -836,11 +836,15 @@ define(function(require){
 			return (h*3600 + m*60).toString();
 		},
 
+		resetAuthCookies: function() {
+			$.cookie('monster-auth', null);
+			$.cookie('monster-sso-auth', null);
+		},
+
 		logoutAndReload: function() {
 			var self = this;
 
-			$.cookie('monster-auth', null);
-			$.cookie('monster-sso-auth', null);
+			self.resetAuthCookies();
 
 			if(monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso;

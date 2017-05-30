@@ -35,7 +35,7 @@ function joinUrl(baseUrl, url) {
     }
 
     var Popup = (function () {
-        function Popup() {
+        function Popup(options) {
             this.$window = window;
             this.popup = null;
             this.defaults = {
@@ -44,7 +44,7 @@ function joinUrl(baseUrl, url) {
         }
         Popup.prototype.stringifyOptions = function (options) {
             var parts = [];
-            $.each(options, function (value, key) {
+            $.each(options, function (key, value) {
                 parts.push(key + '=' + value);
             });
             return parts.join(',');
@@ -52,11 +52,13 @@ function joinUrl(baseUrl, url) {
         Popup.prototype.open = function (url, name, popupOptions, redirectUri) {
             var width = popupOptions.width || 500;
             var height = popupOptions.height || 500;
+            var top = popupOptions.top || this.$window.screenY + ((this.$window.outerHeight - height) / 2.5);
+            var left = popupOptions.left || this.$window.screenX + ((this.$window.outerWidth - width) / 2);
             var options = this.stringifyOptions({
                 width: width,
                 height: height,
-                top: this.$window.screenY + ((this.$window.outerHeight - height) / 2.5),
-                left: this.$window.screenX + ((this.$window.outerWidth - width) / 2)
+                top: top,
+                left: left
             });
             var popupName = name;
             this.popup = this.$window.open(url, popupName, options);

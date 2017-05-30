@@ -2699,12 +2699,16 @@ define(function(require){
 			});
 		},
 
-		popupRedirect: function(url, redirectUrl, success, error) {
+		popupRedirect: function(url, redirectUrl, options, success, error) {
 			require(['popup-redirect'], function() {
 				var self = this,
-					popup = new Popup();
+					popup = new Popup(),
+					defaultOptions = {
+						width: 500,
+						height: 500
+					};
 
-				popup.open(url, 'oauth', {}, redirectUrl).then(function(oauthData) {
+				popup.open(url, 'oauth', $.extend(true, {}, defaultOptions, options || {}), redirectUrl).then(function(oauthData) {
 					success && success(oauthData);
 				}, function(data) {
 					error && error(data);
