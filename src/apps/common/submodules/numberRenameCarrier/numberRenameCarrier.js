@@ -20,6 +20,7 @@ define(function(require) {
 		numberRenameCarrierEdit: function(args) {
 			var self = this,
 				argsCommon = {
+					noStateNeeded: true,
 					success: function(dataNumber) {
 						self.numberRenameCarrierRender(dataNumber, args.callbacks);
 					},
