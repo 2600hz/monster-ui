@@ -94,6 +94,25 @@ define(function(require) {
 			});
 		},
 
+		formatSSOProviders: function(providers) {
+			var self = this;
+
+			_.each(providers, function(provider) {
+				provider.params.scope = provider.params.scopes.join(' ');
+				provider.params.redirect_uri = window.location.protocol + '//' + window.location.host;
+				var stateData = {
+					client_id: provider.params.client_id,
+					provider: provider.name
+				};
+				provider.params.state = btoa(JSON.stringify(stateData));
+				delete provider.params.scopes;
+
+				provider.link_url = provider.url + '?' + $.param(provider.params);
+			});
+
+			return providers;
+		},
+
 		checkURLVars: function(urlVars) {
 			var self = this;
 
