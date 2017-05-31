@@ -218,7 +218,7 @@ define(function(){
 										whitelabelData.companyName = whitelabelData.company_name;
 									}
 
-									monster.apps.auth.formatSSOProviders(whitelabelData.sso_providers);
+									monster.apps.core.formatSSOProviders(whitelabelData.sso_providers);
 
 									monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
 								}
