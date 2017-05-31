@@ -77,6 +77,14 @@ gulp.task('serve', ['build-dev'], function() {
 	gulp.watch(paths.src + '/**/*.json', ['watch:json']);
 });
 
+gulp.task('serve-prod', ['build-prod'], function() {
+	browserSync.init({
+		server: {
+			baseDir: './dist'
+		}
+	});
+});
+
 // compile our scss files to css files
 gulp.task('watch:sass', function() {
 	return gulp.src(paths.src + '/**/*.scss') // Select all the scss files
