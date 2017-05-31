@@ -36,7 +36,9 @@ define(function(require) {
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp': '_initApp',
 			'auth.afterAuthenticate': '_afterSuccessfulAuth',
-			'auth.showTrialInfo': 'showTrialInfo'
+			'auth.showTrialInfo': 'showTrialInfo',
+			'auth.loginToSSOProvider': 'loginToSSOProvider',
+			'auth.paintSSOPhoto': 'paintSSOPhoto'
 		},
 
 		load: function(callback) {
@@ -596,7 +598,12 @@ define(function(require) {
 
 			$(container).empty();
 
-			self.bindSSOPhotoUrl(dataTemplate, template);
+			if (dataTemplate.isUnknownKazooUser) {
+				self.paintSSOPhoto({
+					container: template.find('.sso-user-photo-div'),
+					ssoToken: ssoUser
+				});
+			}
 
 			template.find('.kill-sso-session').on('click', function() {
 				monster.util.resetAuthCookies();
@@ -607,12 +614,8 @@ define(function(require) {
 			template.find('.sso-button').on('click', function() {
 				self.clickSSOProviderLogin({
 					provider: $(this).data('provider'),
-					forceSamePage: false,
 					error: function(errorCode, errorData, decodedData) {
 						if (errorCode === '_no_account_linked') {
-							console.log(errorCode, errorData, decodedData);
-							//window.location.href = window.location.protocol + '//' + window.location.host;
-
 							self.renderSSOProviderTemplate(container);
 						}
 					}
@@ -622,26 +625,22 @@ define(function(require) {
 			$(container).append(template);
 		},
 
-		bindSSOPhotoUrl: function(templateData, container) {
+		paintSSOPhoto: function(args) {
 			var self = this,
-				ssoUser = templateData.ssoUser,
-				content = container;
+				container = args.container,
+				ssoAuthToken = args.ssoToken;
 
-			if (templateData.isUnknownKazooUser) {
-				var token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token;
+			if (ssoAuthToken.hasOwnProperty('photoUrl')) {
+				var provider = self.getDetailsProvider(ssoAuthToken.auth_provider);
 
-				if (ssoUser.hasOwnProperty('photoUrl')) {
-					var provider = self.findSSOPhotoUrlProvider(templateData);
-
-					if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
-						self.paintSSOImgElement(content, ssoUser.photoUrl);
-					} else {
-						self.requestPhotoFromUrl(ssoUser.photoUrl, token, container);
-					}
+				if (provider.hasOwnProperty('authenticate_photoUrl') && !provider.authenticate_photoUrl) {
+					self.paintSSOImgElement(container, ssoAuthToken.photoUrl);
 				} else {
-					self.findSSOPhotoUrlFromProvider(templateData, container);
+					self.requestPhotoFromUrl(ssoAuthToken, container);
 				}
-			}
+			}/* else {
+				self.findSSOPhotoUrlFromProvider(ssoAuthToken, container);
+			}*/
 		},
 
 		renderLoginPage: function() {
@@ -690,20 +689,22 @@ define(function(require) {
 			});
 		},
 
-		paintSSOImgElement: function(container, src) {
+		paintSSOImgElement: function(container, pSrc) {
 			var self = this,
-				imageElm = document.createElement('img');
+				imageElm = document.createElement('img'),
+				src = pSrc || 'apps/auth/style/oauth/no_photo_url.png';
 
 			imageElm.className = 'sso-user-photo';
 			imageElm.src = src;
 
-			container.find('.sso-user-photo-div').append(imageElm);
+			container.append(imageElm);
 		},
 
-		requestPhotoFromUrl: function(photoUrl, token, container) {
+		requestPhotoFromUrl: function(ssoAuthToken, container) {
 			var self = this,
 				content = container,
-				defaultPhotoUrl = 'apps/auth/style/oauth/no_photo_url.png';
+				photoUrl = ssoAuthToken.photoUrl,
+				token = ssoAuthToken.auth_app_token_type + ' ' + ssoAuthToken.auth_app_token;
 
 			var request = new XMLHttpRequest();
 			request.open('GET', photoUrl);
@@ -719,80 +720,71 @@ define(function(require) {
 					};
 					reader.readAsDataURL(request.response);
 				} else {
-					self.paintSSOImgElement(content, defaultPhotoUrl);
+					self.paintSSOImgElement(content);
 				}
 			};
+
 			request.send(null);
 		},
 
-		findSSOPhotoUrlFromProvider: function(templateData, container) {
+		/*findSSOPhotoUrlFromProvider: function(ssoAuthToken, container) {
 			var self = this,
-				ssoUser = templateData.ssoUser,
-				ssoProvider = ssoUser.auth_provider,
-				token = ssoUser.auth_app_token_type + ' ' + ssoUser.auth_app_token,
-				ssoProviders = templateData.ssoProviders,
-				content = container,
-				defaultPhotoUrl = 'style/oauth/no_photo_url.png';
+				ssoProvider = ssoAuthToken.auth_provider,
+				ssoProviders = monster.config.whitelabel.sso_providers || {};
 
 			_.each(ssoProviders, function(provider) {
 				if (provider.name === ssoProvider) {
 					if (provider.hasOwnProperty('photoUrl')) {
-						self.requestPhotoFromUrl(provider.photoUrl, token, container);
+						ssoAuthToken.photoUrl = provider.photoUrl;
+						self.requestPhotoFromUrl(ssoAuthToken, container);
 					} else {
-						content.find('.sso-user-photo').src = defaultPhotoUrl;
+						self.paintSSOImgElement(container);
 					}
 				}
 			});
-		},
+		},*/
 
-		findSSOPhotoUrlProvider: function(templateData) {
+		getDetailsProvider: function(providerName) {
 			var self = this,
-				ssoName = templateData.ssoUser.auth_provider,
-				ssoProviders = templateData.ssoProviders,
+				ssoProviders = monster.config.whitelabel.sso_providers,
 				ssoProvider = {};
 
 			_.each(ssoProviders, function(provider) {
-				if (provider.name === ssoName) {
+				if (provider.name === providerName) {
 					ssoProvider = $.extend(true, {}, provider);
 				}
 			});
-			return ssoProvider;
-		},
 
-		addSSOConnection: function(data) {
-			console.log(data);
+			return ssoProvider;
 		},
 
 		clickSSOProviderLogin: function(params) {
 			var self = this,
-				type = params.provider,
-				updateLayout = params.updateLayout || true,
-				forceSamePage = typeof params.forceSamePage !== 'undefined' ? params.forceSamePage : false;
+				//type = params.provider,
+				updateLayout = params.updateLayout || true;
 
-			self.loginToSSOProvider(type, forceSamePage, function(data) {
-				// If it uses the same page mechanism, this callback will be executed.
-				// If not, then the page is refreshed and the data will be captured by the login mechanism
-				var decodedData = self.buildCookiesFromSSOResponse(data);
-				//self.addSSOConnection(authData);
+			self.loginToSSOProvider({
+				providerName: params.provider,
+				forceSamePage: params.forceSamePage,
+				success: function(data) {
+					// If it uses the same page mechanism, this callback will be executed.
+					// If not, then the page is refreshed and the data will be captured by the login mechanism
+					var decodedData = self.buildCookiesFromSSOResponse(data);
 
-				self.authenticateAuthToken(data.auth_token, function(authData) {
-					self._afterSuccessfulAuth(authData, updateLayout);
-				}, function(data) {
-					if (data.httpErrorStatus === 403) {
-						params.error && params.error('_no_account_linked', data, decodedData);
-					} else {
-						params.error && params.error('_unknown', data);
-					}
-				});
-			}, function(errorCode) {
-				console.log(errorCode);
+					self.authenticateAuthToken(data.auth_token, function(authData) {
+						self._afterSuccessfulAuth(authData, updateLayout);
+					}, function(data) {
+						if (data.httpErrorStatus === 403) {
+							params.error && params.error('_no_account_linked', data, decodedData);
+						} else {
+							params.error && params.error('_unknown', data);
+						}
+					});
+				},
+				error: function(errorCode) {
+					console.log(errorCode);
+				}
 			});
-		},
-
-		updateLayoutWithSSOUser: function(template, data) {
-			var self = this;
-
-			console.log(template, data);
 		},
 
 		bindLoginBlock: function(templateData) {
@@ -885,6 +877,30 @@ define(function(require) {
 					}
 				}
 			});
+		},
+
+		loginToSSOProvider: function(args) {
+			var self = this,
+				providerName = args.providerName,
+				forceSamePage = args.hasOwnProperty('forceSamePage') ? args.forceSamePage : false,
+				providers = _.filter(monster.config.whitelabel.sso_providers, function(provider) {
+					return provider.name === providerName;
+				}),
+				provider = providers.length ? providers[0] : '_no_provider';
+
+			if (provider !== '_no_provider') {
+				if (forceSamePage) {
+					window.location = provider.link_url;
+				} else {
+					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, {}, function(params) {
+						self.getNewOAuthTokenFromURLParams(params, args.success);
+					}, function() {
+						args.error && args.error('_oAuthPopup_error');
+					});
+				}
+			} else {
+				args.error && args.error('_invalid_provider');
+			}
 		},
 
 		loginClick: function(data) {
@@ -1302,28 +1318,6 @@ define(function(require) {
 			}
 
 			success(args.app);
-		},
-
-		loginToSSOProvider: function(providerName, forceSamePage, success, error) {
-			var self = this,
-				providers = _.filter(monster.config.whitelabel.sso_providers, function(provider) {
-					return provider.name === providerName;
-				}),
-				provider = providers.length ? providers[0] : '_no_provider';
-
-			if (provider !== '_no_provider') {
-				if (forceSamePage) {
-					window.location = provider.link_url;
-				} else {
-					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, {}, function(params) {
-						self.getNewOAuthTokenFromURLParams(params, success);
-					}, function() {
-						error && error('_oAuthPopup_error');
-					});
-				}
-			} else {
-				error && error('_invalid_provider');
-			}
 		}
 	};
 
