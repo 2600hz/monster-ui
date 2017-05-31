@@ -3,13 +3,15 @@
 }
 
 .sso-providers .sso-user-photo-div {
-  display: table-cell;
-  width: 40px;
-  vertical-align: middle;	
+	display: table-cell;
+	width: 40px;
+	vertical-align: middle;
 }
+
 .sso-providers .sso-user-photo {
 	width:40px;
 	height:40px;
+	border-radius: 50%;
 }
 
 .sso-providers .sso-buttons .sso-button.sso-user {
@@ -54,7 +56,6 @@
 	box-shadow: none;
 	color: #FFF;
 	display: block;
-	font-family: 'Open Sans',sans-serif;
 	font-size: 14px;
 	line-height: 20px;
 	margin-top: 5px;
