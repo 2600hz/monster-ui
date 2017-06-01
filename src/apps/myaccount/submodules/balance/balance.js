@@ -824,6 +824,11 @@ define(function(require){
 					accountId: self.accountId
 				},
 				success: function(data) {
+					// Because in 4.0 the ledgers API doesn't use filters, a quick and easy hack to still force the UI to query the per-minute-voip ledger to display the charge
+					if(!data.data.hasOwnProperty('per-minute-voip')) {
+						data.data['per-minute-voip'] = {};
+					}
+
 					callback && callback(data.data);
 				}
 			});
