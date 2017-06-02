@@ -39,10 +39,8 @@ define(function(require) {
 		},
 
 		numberFeaturesMenuBindEvents: function(template, phoneNumber, afterUpdate) {
-			var self = this;
-
-			template.find('.failover-number').on('click', function() {
-				var args = {
+			var self = this,
+				args = {
 					phoneNumber: phoneNumber,
 					callbacks: {
 						success: function(data) {
@@ -50,58 +48,45 @@ define(function(require) {
 						}
 					}
 				};
+
+			template.find('.failover-number').on('click', function() {
+				// We add this at the moment of the event because in some cases, we bind the events before it's adding to a parent,
+				// which means the account-section might not be loaded yet if we bound it before the event happened.
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
 
 				monster.pub('common.failover.renderPopup', args);
 			});
 
 			template.find('.cnam-number').on('click', function() {
-				var args = {
-					phoneNumber: phoneNumber,
-					callbacks: {
-						success: function(data) {
-							afterUpdate && afterUpdate(data.data.features, template);
-						}
-					}
-				};
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
 
 				monster.pub('common.callerId.renderPopup', args);
 			});
 
 			template.find('.e911-number').on('click', function() {
-				var args = {
-					phoneNumber: phoneNumber,
-					callbacks: {
-						success: function(data) {
-							afterUpdate && afterUpdate(data.data.features, template);
-						}
-					}
-				};
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
 
 				monster.pub('common.e911.renderPopup', args);
 			});
 
 			template.find('.prepend-number').on('click', function() {
-				var args = {
-					phoneNumber: phoneNumber,
-					callbacks: {
-						success: function(data) {
-							afterUpdate && afterUpdate(data.data.features, template);
-						}
-					}
-				};
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
 
 				monster.pub('common.numberPrepend.renderPopup', args);
 			});
 
 			template.find('.rename-carrier-number').on('click', function() {
-				var args = {
-					phoneNumber: phoneNumber,
-					callbacks: {
-						success: function(data) {
-							afterUpdate && afterUpdate(data.data.features, template);
-						}
-					}
-				};
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
 
 				monster.pub('common.numberRenameCarrier.renderPopup', args);
 			});

@@ -1349,13 +1349,13 @@ define(function(require){
 			});
 		},
 
-		numbersGetNumber: function(phoneNumber, success, error) {
+		numbersGetNumber: function(phoneNumber, accountId, success, error) {
 			var self = this;
 
 			self.callApi({
 				resource: 'numbers.get',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber)
 				},
 				success: function(_data, status) {
@@ -1370,9 +1370,10 @@ define(function(require){
 		numbersEditFeatures: function(args) {
 			var self = this,
 				phoneNumber = args.number,
+				accountId = args.hasOwnProperty('accountId') ? args.accountId : self.accountId,
 				isValid = false;
 
-			self.numbersGetNumber(phoneNumber, function(number) {
+			self.numbersGetNumber(phoneNumber, accountId, function(number) {
 				if(number.state === 'in_service') {
 					isValid = true;
 				}
