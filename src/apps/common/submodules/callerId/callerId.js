@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -17,7 +17,7 @@ define(function(require){
 			var self = this,
 				argsCommon = {
 					success: function(dataNumber) {
-						self.callerIdRender(dataNumber, args.callbacks);
+						self.callerIdRender(dataNumber, args.accountId, args.callbacks);
 					},
 					number: args.phoneNumber
 				};
@@ -29,16 +29,17 @@ define(function(require){
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		callerIdRender: function(dataNumber, callbacks) {
+		callerIdRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
 				popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
 				popup,
+				accountId = pAccountId || self.accountId,
 				form = popup_html.find('#cnam');
 
 			monster.ui.validate(form, {
 				rules: {
 					'display_name': {
-						minlength:1,
+						minlength: 1,
 						maxlength: 15
 					}
 				}
@@ -47,16 +48,16 @@ define(function(require){
 			popup_html.find('.save').on('click', function(ev) {
 				ev.preventDefault();
 
-				if(monster.ui.valid(form)) {
+				if (monster.ui.valid(form)) {
 					var cnamFormData = monster.ui.getFormData('cnam');
 
 					_.extend(dataNumber, { cnam: cnamFormData });
 
-					if(cnamFormData.display_name === '') {
+					if (cnamFormData.display_name === '') {
 						delete dataNumber.cnam.display_name;
 					}
 
-					self.callerIdUpdateNumber(dataNumber.id, dataNumber,
+					self.callerIdUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
 							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 								template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
@@ -84,7 +85,7 @@ define(function(require){
 			});
 		},
 
-		callerIdUpdateNumber: function(phoneNumber, data, success, error) {
+		callerIdUpdateNumber: function(phoneNumber, accountId, data, success, error) {
 			var self = this;
 
 			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
@@ -93,7 +94,7 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
 					data: data
 				},

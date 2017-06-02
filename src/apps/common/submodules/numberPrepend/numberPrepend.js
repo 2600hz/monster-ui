@@ -1,11 +1,10 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
 		toastr = require('toastr');
 
 	var numberPrepend = {
-
 		requests: {
 		},
 
@@ -16,7 +15,7 @@ define(function(require){
 			var self = this,
 				argsCommon = {
 					success: function(dataNumber) {
-						self.numberPrependRender(dataNumber, args.callbacks);
+						self.numberPrependRender(dataNumber, args.accountId, args.callbacks);
 					},
 					number: args.phoneNumber
 				};
@@ -28,8 +27,9 @@ define(function(require){
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		numberPrependRender: function(dataNumber, callbacks) {
+		numberPrependRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
+				accountId = pAccountId || self.accountId,
 				popup_html = $(monster.template(self, 'numberPrepend-layout', dataNumber.prepend || {})),
 				popup;
 
@@ -40,7 +40,7 @@ define(function(require){
 
 				$.extend(true, dataNumber, { prepend: prependFormData });
 
-				self.numberPrependUpdateNumber(dataNumber.id, dataNumber,
+				self.numberPrependUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 							template = monster.template(self, '!' + self.i18n.active().numberPrepend.successUpdate, { phoneNumber: phoneNumber });
@@ -55,7 +55,6 @@ define(function(require){
 						callbacks.error && callbacks.error(data);
 					}
 				);
-
 			});
 
 			popup_html.find('.cancel-link').on('click', function(e) {
@@ -68,7 +67,7 @@ define(function(require){
 			});
 		},
 
-		numberPrependUpdateNumber: function(phoneNumber, data, success, error) {
+		numberPrependUpdateNumber: function(phoneNumber, accountId, data, success, error) {
 			var self = this;
 
 			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
@@ -77,7 +76,7 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
 					data: data
 				},
