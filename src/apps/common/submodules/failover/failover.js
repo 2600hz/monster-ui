@@ -17,7 +17,7 @@ define(function(require){
 			var self = this,
 				argsCommon = {
 					success: function(dataNumber) {
-						self.failoverRender(dataNumber, args.callbacks);
+						self.failoverRender(dataNumber, args.accountId, args.callbacks);
 					},
 					number: args.phoneNumber
 				};
@@ -29,12 +29,13 @@ define(function(require){
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		failoverRender: function(dataNumber, callbacks) {
+		failoverRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
+				accountId = pAccountId || self.accountId,
 				radio = '';
 
-			if('failover' in dataNumber) {
-				radio = 'e164' in dataNumber.failover ? 'number' : 'sip'
+			if ('failover' in dataNumber) {
+				radio = 'e164' in dataNumber.failover ? 'number' : 'sip';
 			}
 
 			var	tmplData = {
@@ -45,12 +46,12 @@ define(function(require){
 				popupHtml = $(monster.template(self, 'failover-dialog', tmplData)),
 				popup;
 
-			popupHtml.find('.failover-block[data-type="'+radio+'"]').addClass('selected');
-			popupHtml.find('.failover-block:not([data-type="'+radio+'"]) input').val('');
+			popupHtml.find('.failover-block[data-type="' + radio + '"]').addClass('selected');
+			popupHtml.find('.failover-block:not([data-type="' + radio + '"]) input').val('');
 
 			popupHtml.find('.failover-block input').on('keyup', function() {
 				popupHtml.find('.failover-block').removeClass('selected');
-				popupHtml.find('.failover-block:not([data-type="'+$(this).parents('.failover-block').first().data('type')+'"]) input[type="text"]').val('');
+				popupHtml.find('.failover-block:not([data-type="' + $(this).parents('.failover-block').first().data('type') + '"]) input[type="text"]').val('');
 
 				$(this).parents('.failover-block').addClass('selected');
 			});
@@ -59,16 +60,14 @@ define(function(require){
 				ev.preventDefault();
 
 				var failoverFormData = { failover: {} },
-					type = popupHtml.find('.failover-block.selected').data('type'),
-					result;
+					type = popupHtml.find('.failover-block.selected').data('type');
 
-				if(type === 'number' || type === 'sip') {
-					failoverFormData.rawInput = popupHtml.find('.failover-block[data-type="'+type+'"] input').val();
+				if (type === 'number' || type === 'sip') {
+					failoverFormData.rawInput = popupHtml.find('.failover-block[data-type="' + type + '"] input').val();
 
-					if(failoverFormData.rawInput.match(/^sip:/)) {
+					if (failoverFormData.rawInput.match(/^sip:/)) {
 						failoverFormData.failover.sip = failoverFormData.rawInput;
-					}
-					else {
+					} else {
 						failoverFormData.failover.e164 = failoverFormData.rawInput;
 					}
 
@@ -76,8 +75,8 @@ define(function(require){
 
 					_.extend(dataNumber, failoverFormData);
 
-					if(dataNumber.failover.e164 || dataNumber.failover.sip) {
-						self.failoverUpdateNumber(dataNumber.id, dataNumber,
+					if (dataNumber.failover.e164 || dataNumber.failover.sip) {
+						self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 							function(data) {
 								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 									template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
@@ -94,12 +93,10 @@ define(function(require){
 								callbacks.error && callbacks.error(data);
 							}
 						);
-					}
-					else {
+					} else {
 						monster.ui.alert(self.i18n.active().failover.invalidFailoverNumber);
 					}
-				}
-				else {
+				} else {
 					monster.ui.alert(self.i18n.active().failover.noDataFailover);
 				}
 			});
@@ -109,7 +106,7 @@ define(function(require){
 
 				delete dataNumber.failover;
 
-				self.failoverUpdateNumber(dataNumber.id, dataNumber,
+				self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 							template = monster.template(self, '!' + self.i18n.active().failover.successRemove, { phoneNumber: phoneNumber });
@@ -134,7 +131,7 @@ define(function(require){
 			});
 		},
 
-		failoverUpdateNumber: function(phoneNumber, data, success, error) {
+		failoverUpdateNumber: function(phoneNumber, accountId, data, success, error) {
 			var self = this;
 
 			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
@@ -143,17 +140,17 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
 					data: data
 				},
 				success: function(_data, status) {
-					if(typeof success === 'function') {
+					if (typeof success === 'function') {
 						success(_data);
 					}
 				},
 				error: function(_data, status) {
-					if(typeof error === 'function') {
+					if (typeof error === 'function') {
 						error(_data);
 					}
 				}

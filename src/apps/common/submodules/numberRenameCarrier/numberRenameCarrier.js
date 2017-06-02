@@ -22,7 +22,7 @@ define(function(require) {
 				argsCommon = {
 					noStateNeeded: true,
 					success: function(dataNumber) {
-						self.numberRenameCarrierRender(dataNumber, args.callbacks);
+						self.numberRenameCarrierRender(dataNumber, args.accountId, args.callbacks);
 					},
 					number: args.phoneNumber
 				};
@@ -57,8 +57,9 @@ define(function(require) {
 			return formattedData;
 		},
 
-		numberRenameCarrierRender: function(dataNumber, callbacks) {
-			var self = this;
+		numberRenameCarrierRender: function(dataNumber, pAccountId, callbacks) {
+			var self = this,
+				accountId = pAccountId || self.accountId;
 
 			monster.pub('common.numbers.getCarriersModules', function(carriers) {
 				var dataTemplate = self.numberRenameCarrierFormatData(carriers, dataNumber),
@@ -83,7 +84,7 @@ define(function(require) {
 
 					$.extend(true, dataNumber, { carrier_name: carrierName });
 
-					self.numberPrependUpdateNumber(dataNumber.id, dataNumber,
+					self.numberRenameCarrierUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
 							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 								template = monster.template(self, '!' + self.i18n.active().numberRenameCarrier.successUpdate, { phoneNumber: phoneNumber, carrierName: carrierName });
@@ -111,7 +112,7 @@ define(function(require) {
 			});
 		},
 
-		numberPrependUpdateNumber: function(phoneNumber, data, success, error) {
+		numberRenameCarrierUpdateNumber: function(phoneNumber, accountId, data, success, error) {
 			var self = this;
 
 			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
@@ -120,7 +121,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
 					data: data
 				},

@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -60,7 +60,7 @@ define(function(require){
 
 								popupHtml.find('#locality').val(results[0].address_components[1].long_name);
 								// Last component is country, before last is state, before can be county if exists or city if no county, so we had to change from 3 to length-2.
-								popupHtml.find('#region').val(results[0].address_components[length-2].short_name); 
+								popupHtml.find('#region').val(results[0].address_components[length - 2].short_name);
 							}
 						}
 					});
@@ -82,16 +82,15 @@ define(function(require){
 					var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 						template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
 
-						toastr.success(template);
+					toastr.success(template);
 
-						popup.dialog('destroy').remove();
+					popup.dialog('destroy').remove();
 
-						callbacks.success && callbacks.success(data);
+					callbacks.success && callbacks.success(data);
 				};
 
-				self.e911UpdateNumber(dataNumber.id, dataNumber, {
+				self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 					success: function(data) {
-
 						callbackSuccess(data);
 					},
 					multipleChoices: function(addresses) {
@@ -117,7 +116,7 @@ define(function(require){
 
 								_.extend(dataNumber, { e911: dataAddress });
 
-								self.e911UpdateNumber(dataNumber.id, dataNumber, {
+								self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 									success: function(data) {
 										popupAddress
 											.dialog('destroy')
@@ -149,13 +148,13 @@ define(function(require){
 					},
 					success: function(data, status) {
 						var e911Count = _.countBy(data.data.numbers, function(number) {
-							return (number.hasOwnProperty('features') && number.features.indexOf('e911') >= 0)
+							return (number.hasOwnProperty('features') && number.features.indexOf('e911') >= 0);
 						}).true;
 
 						if (e911Count > 1) {
 							delete dataNumber.e911;
 
-							self.e911UpdateNumber(dataNumber.id, dataNumber, {
+							self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 								success: function(data) {
 									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
 										template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
@@ -180,12 +179,12 @@ define(function(require){
 
 			// Fixing the position of the rotated text using its width
 			var rotatedText = popup.find('#e911_rotated_text'),
-				rotatedTextOffset = rotatedText.width()/2;
+				rotatedTextOffset = rotatedText.width() / 2;
 
-			rotatedText.css({'top': 40+rotatedTextOffset +'px', 'left': 25-rotatedTextOffset +'px'});
+			rotatedText.css({'top': 40 + rotatedTextOffset + 'px', 'left': 25 - rotatedTextOffset + 'px'});
 		},
 
-		e911UpdateNumber: function(phoneNumber, data, callbacks) {
+		e911UpdateNumber: function(phoneNumber, accountId, data, callbacks) {
 			var self = this;
 
 			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
@@ -194,7 +193,7 @@ define(function(require){
 			self.callApi({
 				resource: 'numbers.update',
 				data: {
-					accountId: self.accountId,
+					accountId: accountId,
 					phoneNumber: encodeURIComponent(phoneNumber),
 					data: data,
 					generateError: false
@@ -206,12 +205,10 @@ define(function(require){
 					if (_data.error === '400') {
 						if (data.message === 'multiple_choice') {
 							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.e911);
-						}
-						else {
+						} else {
 							callbacks.invalidAddress && callbacks.invalidAddress(_data.data.address.invalid);
 						}
-					}
-					else if (_data.error !== '402') {
+					} else if (_data.error !== '402') {
 						globalHandler(_data, { generateError: true });
 					}
 				}
