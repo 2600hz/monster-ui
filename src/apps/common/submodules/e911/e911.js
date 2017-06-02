@@ -28,16 +28,21 @@ define(function(require){
 			var self = this,
 				argsCommon = {
 					success: function(dataNumber) {
-						self.e911Render(dataNumber, args.callbacks);
+						self.e911Render(dataNumber, args.accountId, args.callbacks);
 					},
 					number: args.phoneNumber
 				};
-				
+
+			if (args.hasOwnProperty('accountId')) {
+				argsCommon.accountId = args.accountId;
+			}
+
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		e911Render: function(dataNumber, callbacks) {
+		e911Render: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
+				accountId = pAccountId || self.accountId,
 				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.e911 || {})),
 				popup;
 
@@ -140,14 +145,14 @@ define(function(require){
 				self.callApi({
 					resource: 'numbers.list',
 					data: {
-						accountId: self.accountId
+						accountId: accountId
 					},
 					success: function(data, status) {
 						var e911Count = _.countBy(data.data.numbers, function(number) {
 							return (number.hasOwnProperty('features') && number.features.indexOf('e911') >= 0)
 						}).true;
-						
-						if(e911Count > 1) {
+
+						if (e911Count > 1) {
 							delete dataNumber.e911;
 
 							self.e911UpdateNumber(dataNumber.id, dataNumber, {
