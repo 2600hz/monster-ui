@@ -148,5 +148,9 @@
 	"oauth": {
 		"logout": "logout",
 		"noLinkMsg": "We didn't find any account linked to this email address. To link your accounts together, please login to the platform with your usual credentials. You won't need to do that again."
-	}
+	},
+
+	"__comment": "Better handling of reconnect",
+	"__version": "4.1",
+	"retryLoginConfirmText": "You have been disconnected from the system. Do you want to try to reconnect?"
 }

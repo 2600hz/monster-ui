@@ -1174,9 +1174,13 @@ define(function(require) {
 			}
 
 			if (loginData) {
-				self.putAuth(loginData, function(data) {
-					success && success(data.auth_token);
-				}, error, false, additionalArgs);
+				monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
+					self.putAuth(loginData, function(data) {
+						success && success(data.auth_token);
+					}, error, false, additionalArgs);
+				}, function() {
+					monster.util.logoutAndReload();
+				});
 			} else {
 				error && error();
 			}

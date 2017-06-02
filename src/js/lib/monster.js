@@ -13,6 +13,23 @@ define(function(require){
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload');
 
+	var _privateFlags = {
+		lockRetryAttempt: false,
+		retryFunctions: [],
+		unlockRetryFunctions: function() {
+			console.log(this.retryFunctions);
+			_.each(this.retryFunctions, function(fun) {
+				fun();
+			});
+
+			this.lockRetryAttempt = false;
+			this.retryFunctions = [];
+		},
+		addRetryFunction: function(fun) {
+			this.retryFunctions.push(fun);
+		}
+	};
+
 	var monster = {
 		_channel: postal.channel('monster'),
 
@@ -483,44 +500,50 @@ define(function(require){
 		initSDK: function() {
 			var self = this;
 
-			self.kazooSdk = $.getKazooSdk(
-				{
-					apiRoot: monster.config.api.default,
-					onRequestStart: function(request, requestOptions) {
-						monster.pub('monster.requestStart');
-					},
-					onRequestEnd: function(request, requestOptions) {
-						monster.pub('monster.requestEnd');
-					},
-					onRequestError: function(error, requestOptions) {
-						var parsedError = error,
-							requestOptions = requestOptions || { generateError: true };
+			self.kazooSdk = $.getKazooSdk({
+				apiRoot: monster.config.api.default,
+				onRequestStart: function(request, requestOptions) {
+					monster.pub('monster.requestStart');
+				},
+				onRequestEnd: function(request, requestOptions) {
+					monster.pub('monster.requestEnd');
+				},
+				onRequestError: function(error, requestOptions) {
+					var parsedError = error,
+						requestOptions = requestOptions || { generateError: true };
 
-						if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
+					if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
+						parsedError = $.parseJSON(error.responseText);
+					}
+
+					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
+						var parsedError = error;
+
+						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
-						if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-							var parsedError = error;
-							if ('responseText' in error && error.responseText) {
-								parsedError = $.parseJSON(error.responseText);
-							}
+						monster.ui.charges(parsedError.data, function() {
+							requestOptions.acceptCharges = true;
+							monster.kazooSdk.request(requestOptions);
+						}, function() {
+							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
+						});
+					} else if (monster.util.isLoggedIn() && error.status === 401) {
+						// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
+						// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+						monster.error('api', error, false);
 
-							monster.ui.charges(parsedError.data, function() {
-								requestOptions.acceptCharges = true;
-								monster.kazooSdk.request(requestOptions);
-							}, function () {
-								requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
-							});
-						}
-						// If we have a 401 after being logged in, it means our session expired
-						else if (monster.util.isLoggedIn() && error.status === 401) {
-							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
-							monster.error('api', error, false);
+						// the prevent callback error key is added by our code. We want to let the system automatically attempt to relogin once before sending the error callback
+						// So to prevent the original error callback from being fired, we add that flag to the request when we attempt the request a second time
+						if (!requestOptions.hasOwnProperty('preventCallbackError') || requestOptions.preventCallbackError === false) {
+							// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
+							if (!requestOptions.hasOwnProperty('isRetryLoginRequest') || requestOptions.isRetryLoginRequest === false) {
+								if (!_privateFlags.lockRetryAttempt) {
+									// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
+									// Once the re-login is effective, we'll unlock it.
+									_privateFlags.lockRetryAttempt = true;
 
-							if (!requestOptions.hasOwnProperty('preventCallbackError') || requestOptions.preventCallbackError === false) {
-								// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
-								if (!requestOptions.hasOwnProperty('isRetryLoginRequest') || requestOptions.isRetryLoginRequest === false) {
 									// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
 									// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
 									requestOptions.preventCallbackError = true;
@@ -530,24 +553,32 @@ define(function(require){
 										var updatedRequestOptions = $.extend(true, requestOptions, { preventCallbackError: false, authToken: newToken });
 
 										monster.kazooSdk.request(updatedRequestOptions);
+
+										_privateFlags.unlockRetryFunctions();
 									},
 									function() {
 										monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
 											monster.util.logoutAndReload();
 										});
 									});
+								} else {
+									_privateFlags.addRetryFunction(function() {
+										var updatedRequestOptions = $.extend(true, requestOptions, { authToken: monster.util.getAuthToken() });
+
+										monster.kazooSdk.request(updatedRequestOptions);
+									});
 								}
-							} else {
-								monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-									monster.util.logoutAndReload();
-								});
 							}
 						} else {
-							monster.error('api', error, requestOptions.generateError);
+							monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
+								monster.util.logoutAndReload();
+							});
 						}
+					} else {
+						monster.error('api', error, requestOptions.generateError);
 					}
 				}
-			);
+			});
 		},
 
 		hasProVersion: function(app) {
