@@ -766,6 +766,7 @@ define(function(require) {
 			self.loginToSSOProvider({
 				providerName: params.provider,
 				forceSamePage: params.forceSamePage,
+				additionalScopes: params.additionalScopes,
 				success: function(data) {
 					// If it uses the same page mechanism, this callback will be executed.
 					// If not, then the page is refreshed and the data will be captured by the login mechanism
@@ -879,6 +880,22 @@ define(function(require) {
 			});
 		},
 
+		addExtraScopesToURL: function(url, newScopes) {
+			var self = this,
+				indexScope = url.indexOf('scope='),
+				newURL,
+				stringToAdd = newScopes.join('+');
+
+			if (indexScope >= 0) {
+				var index = url.indexOf('scope=') + 6;
+				newURL = url.substring(0, index) + stringToAdd + '+' + url.substring(index);
+			} else {
+				newURL = url += (url.indexOf('?') >= 0 ? '&' : '?') + 'scope=' + stringToAdd;
+			}
+
+			return newURL;
+		},
+
 		loginToSSOProvider: function(args) {
 			var self = this,
 				providerName = args.providerName,
@@ -886,13 +903,15 @@ define(function(require) {
 				providers = _.filter(monster.config.whitelabel.sso_providers, function(provider) {
 					return provider.name === providerName;
 				}),
-				provider = providers.length ? providers[0] : '_no_provider';
+				additionalScopes = args.additionalScopes || [],
+				provider = providers.length ? providers[0] : '_no_provider',
+				linkUrl = additionalScopes.length ? self.addExtraScopesToURL(provider.link_url, additionalScopes) : provider.link_url;
 
 			if (provider !== '_no_provider') {
 				if (forceSamePage) {
-					window.location = provider.link_url;
+					window.location = linkUrl;
 				} else {
-					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, {}, function(params) {
+					monster.ui.popupRedirect(linkUrl, provider.params.redirect_uri, {}, function(params) {
 						self.getNewOAuthTokenFromURLParams(params, args.success);
 					}, function() {
 						args.error && args.error('_oAuthPopup_error');
