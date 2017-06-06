@@ -213,12 +213,11 @@ define(function(){
 							successCallback = function(data, status) {
 								if (data && data.hasOwnProperty('data') && data.data.hasOwnProperty('domain') && window.location.hostname === data.data.domain.toLowerCase()) {
 									var whitelabelData = data.data;
+
 									// Merge the whitelabel info to replace the hardcoded info
 									if (whitelabelData && whitelabelData.hasOwnProperty('company_name')) {
 										whitelabelData.companyName = whitelabelData.company_name;
 									}
-
-									monster.apps.core.formatSSOProviders(whitelabelData.sso_providers);
 
 									monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
 								}
