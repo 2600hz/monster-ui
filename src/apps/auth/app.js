@@ -766,7 +766,7 @@ define(function(require) {
 			self.loginToSSOProvider({
 				providerName: params.provider,
 				forceSamePage: params.forceSamePage,
-				additionalScopes: params.additionalScopes,
+				additionalParams: params.additionalParams,
 				success: function(data) {
 					// If it uses the same page mechanism, this callback will be executed.
 					// If not, then the page is refreshed and the data will be captured by the login mechanism
@@ -896,22 +896,48 @@ define(function(require) {
 			return newURL;
 		},
 
+		getFormattedProvider: function(providerName, pAdditionalParams) {
+			var providers = monster.config.whitelabel.sso_providers || {},
+				filteredProviders = _.filter(providers, function(provider) {
+					return provider.name === providerName;
+				}),
+				provider = filteredProviders.length ? filteredProviders[0] : '_no_provider',
+				formattedProvider = $.extend(true, {}, provider),
+				additionalParams = pAdditionalParams || {};
+
+			// Add additional params to regular params
+			_.each(additionalParams, function(value, paramName) {
+				formattedProvider.params[paramName] = _.isArray(value) ? formattedProvider.params[paramName].concat(value) : value;
+			});
+
+			var stateData = {
+				client_id: formattedProvider.params.client_id,
+				provider: formattedProvider.name
+			};
+
+			formattedProvider.params.state = btoa(JSON.stringify(stateData));
+			formattedProvider.params.scope = formattedProvider.params.scopes.join(' ');
+			formattedProvider.params.redirect_uri = window.location.protocol + '//' + window.location.host;
+
+			// the real var being scope, we get rid of scopes so it's not included in the $.param
+			delete formattedProvider.params.scopes;
+
+			formattedProvider.link_url = formattedProvider.url + '?' + $.param(formattedProvider.params);
+
+			return formattedProvider;
+		},
+
 		loginToSSOProvider: function(args) {
 			var self = this,
 				providerName = args.providerName,
 				forceSamePage = args.hasOwnProperty('forceSamePage') ? args.forceSamePage : false,
-				providers = _.filter(monster.config.whitelabel.sso_providers, function(provider) {
-					return provider.name === providerName;
-				}),
-				additionalScopes = args.additionalScopes || [],
-				provider = providers.length ? providers[0] : '_no_provider',
-				linkUrl = additionalScopes.length ? self.addExtraScopesToURL(provider.link_url, additionalScopes) : provider.link_url;
+				provider = self.getFormattedProvider(providerName, args.additionalParams);
 
 			if (provider !== '_no_provider') {
 				if (forceSamePage) {
-					window.location = linkUrl;
+					window.location = provider.link_url;
 				} else {
-					monster.ui.popupRedirect(linkUrl, provider.params.redirect_uri, {}, function(params) {
+					monster.ui.popupRedirect(provider.link_url, provider.params.redirect_uri, {}, function(params) {
 						self.getNewOAuthTokenFromURLParams(params, args.success);
 					}, function() {
 						args.error && args.error('_oAuthPopup_error');
