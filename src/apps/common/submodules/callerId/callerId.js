@@ -21,7 +21,11 @@ define(function(require){
 					},
 					number: args.phoneNumber
 				};
-				
+
+			if (args.hasOwnProperty('accountId')) {
+				argsCommon.accountId = args.accountId;
+			}
+
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
