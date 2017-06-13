@@ -2726,6 +2726,7 @@ define(function(require){
 				containerSelector = '.core-absolute .full-screen-modal-container',
 				privateIsVisible = false,
 				obj = {
+					id: monster.util.randomString(4),
 					isVisible: function() {
 						return privateIsVisible;
 					},
@@ -2740,7 +2741,10 @@ define(function(require){
 							privateIsVisible = false;
 							$('#monster_content').show();
 
-							$(containerSelector).fadeOut(250);
+							$(containerSelector).fadeOut(250, function() {
+								// if is removable, remove
+								$(containerSelector).empty();
+							});
 						}
 					},
 					show: function() {
@@ -2757,8 +2761,14 @@ define(function(require){
 					}
 				};
 
+			$(document).on('keydown', function(e) {
+				if (obj.isVisible()) {
+					obj.hide();
+				}
+			});
+
 			mainTemplate.find('.close-modal').on('click', function() {
-				obj.close();
+				obj.hide();
 			});
 
 			mainTemplate.find('.modal-content')

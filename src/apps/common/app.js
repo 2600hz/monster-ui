@@ -1,7 +1,5 @@
-define(function(require){
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		monster = require('monster');
+define(function(require) {
+	var monster = require('monster');
 
 	require([
 		'./submodules/accountAncestors/accountAncestors',
@@ -25,7 +23,8 @@ define(function(require){
 		'./submodules/webphone/webphone',
 		'./submodules/portWizard/portWizard',
 		'./submodules/conferenceViewer/conferenceViewer',
-		'./submodules/numberRenameCarrier/numberRenameCarrier'
+		'./submodules/numberRenameCarrier/numberRenameCarrier',
+		'./submodules/storageSelector/storageSelector'
 	]);
 
 	var app = {
@@ -53,12 +52,13 @@ define(function(require){
 			'webphone',
 			'portWizard',
 			'conferenceViewer',
-			'numberRenameCarrier'
+			'numberRenameCarrier',
+			'storageSelector'
 		],
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -67,7 +67,7 @@ define(function(require){
 		requests: {},
 		subscribe: {},
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {

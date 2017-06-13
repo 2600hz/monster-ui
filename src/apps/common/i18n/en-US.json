@@ -1031,5 +1031,13 @@
 	"__version": "4.1",
 	"numberFeaturesMenu": {
 		"syncSuccess": "You successfully synced {{number}} with the system."
+	},
+
+	"__comment": "UI-2765",
+	"__version": "4.1",
+	"storageSelector": {
+		"mainTitle": "Your Storage Options.",
+		"subTitle": "Please select from the following storage options available on this account",
+		"select": "Use Selected Storage Option"
 	}
 }
