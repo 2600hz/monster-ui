@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -11,13 +11,17 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
 		},
 
 		requests: {
+		},
+
+		appFlags: {
+			modal: undefined
 		},
 
 		subscribe: {
@@ -27,7 +31,7 @@ define(function(require){
 			'apploader.current': '_currentApp'
 		},
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {
@@ -51,24 +55,25 @@ define(function(require){
 		},
 
 		isRendered: function() {
-			return $('#apploader').length !== 0;
+			var self = this;
+
+			return typeof self.appFlags.modal !== 'undefined';
 		},
 
 		render: function() {
 			var self = this;
 
-			if(!self.isRendered()) {
+			if (!self.isRendered()) {
 				self.getUserApps(function(appList) {
 					var template = $(monster.template(self, 'app', {
-							allowAppstore: monster.apps.auth.currentUser.priv_level === "admin",
-							defaultApp: monster.ui.formatIconApp(appList[0]),
-							apps: appList
-						}));
-
-					$('.core-absolute').append(template);
+						allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
+						defaultApp: monster.ui.formatIconApp(appList[0]),
+						apps: appList
+					}));
 
 					self.bindEvents(template, appList);
-					self.show();
+
+					self.appFlags.modal = monster.ui.fullScreenModal(template);
 				});
 			} else {
 				self.show();
@@ -238,37 +243,16 @@ define(function(require){
 		},
 
 		show: function() {
-			var self = this,
-				apploader = $('#apploader');
+			var self = this;
 
-			if (!apploader.hasClass('active')) {
-				monster.pub('myaccount.hide');
-				apploader
-					.addClass('active')
-					.fadeIn(250, function() {
-						$('#monster_content').hide();
-					});
-			}
+			self.appFlags.modal.show();
 		},
 
 		_hide: function() {
-			var self =  this,
-				apploader = $('#apploader');
+			var self = this;
 
-			if (apploader.hasClass('active')) {
-				$('#monster_content').show();
-
-				apploader
-					.removeClass('active')
-					.fadeOut(250, function() {
-						// Put the default app at the beginning of the list in the DOM
-						if (defaultAppId !== apploader.find('.right-div .app-element').first().data('id')) {
-							var defaultAppId = apploader.find('.left-div .app-element').data('id');
-
-							apploader.find('.right-div .app-list')
-								.prepend(apploader.find('.right-div .app-element[data-id="' + defaultAppId + '"]'));
-						}
-					});
+			if (self.appFlags.modal) {
+				self.appFlags.modal.hide();
 			}
 		},
 
@@ -276,18 +260,13 @@ define(function(require){
 			var self = this;
 
 			if (self.isRendered()) {
+				self.appFlags.modal.toggle();
 				var apploader = $('#apploader');
 
-				if (apploader.hasClass('active')) {
-					self._hide(apploader);
-				}
-				else {
-					self.show(apploader);
-
+				if (self.appFlags.modal.isVisible()) {
 					apploader.find('.search-query').val('').focus();
 				}
-			}
-			else {
+			} else {
 				self.render();
 			}
 		},
@@ -295,26 +274,26 @@ define(function(require){
 		/**
 		 * Gets the currently loaded app.
 		 */
-		_currentApp: function (callback) {
+		_currentApp: function(callback) {
 			var self = this,
 				apploader = $('#apploader'),
 				activeApp = apploader.find('.right-div .app-element.active'),
 				app = {};
 
-			if(activeApp.length) {
+			if (activeApp.length) {
 				//If apploader is loaded get data from document.
 				app = {
 					id: activeApp.data('id'),
 					name: activeApp.data('name')
-				}
+				};
 				callback && callback(app);
 			} else {
 				//This returns the default app, so only works when the apploader hasn't been loaded yet.
-				self.getUserApps(function (apps) {
+				self.getUserApps(function(apps) {
 					app = {
 						id: apps[0].id,
 						name: apps[0].name
-					}
+					};
 
 					callback && callback(app);
 				});
@@ -331,8 +310,8 @@ define(function(require){
 				},
 				success: function(data, status) {
 					var parallelRequest = {},
-					lang = monster.config.whitelabel.language,
-					isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase());
+						lang = monster.config.whitelabel.language,
+						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase());
 
 					_.each(data.data, function(val) {
 						var currentLang = val.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US';
@@ -348,16 +327,16 @@ define(function(require){
 									generateError: false
 								},
 								success: function(data, status) {*/
-									val.icon = monster.util.getAppIconPath(val);
+							val.icon = monster.util.getAppIconPath(val);
 
-									parallelCallback && parallelCallback(null, val);
+							parallelCallback && parallelCallback(null, val);
 								/*},
 								error: function(data, status) {
 									val.icon = null;
 									parallelCallback && parallelCallback(null, val);
 								}
 							});*/
-						}
+						};
 					});
 
 					monster.parallel(parallelRequest, function(err, results) {
@@ -367,10 +346,9 @@ define(function(require){
 							updateUserApps = false,
 							appList = [], // List of apps available for this user, to be return
 							isAppInstalled = function(app) {
-								if(app) {
-									var appUsers = _.map(app.users||[], function(val) { return val.id });
-									if (app &&
-										app.allowed_users && 
+								if (app) {
+									var appUsers = _.map(app.users || [], function(val) { return val.id; });
+									if (app && app.allowed_users && 
 										(
 											(app.allowed_users === 'all') ||
 											(app.allowed_users === 'admins' && currentUser.priv_level === 'admin') ||
@@ -384,7 +362,7 @@ define(function(require){
 
 						userApps = _.filter(userApps, function(appId) {
 							var app = allApps[appId];
-							if(isAppInstalled(app)) {
+							if (isAppInstalled(app)) {
 								var formattedApp = {
 									id: app.id,
 									name: app.name,
@@ -403,7 +381,7 @@ define(function(require){
 						});
 
 						_.each(allApps, function(app) {
-							if(userApps.indexOf(app.id) === -1 && isAppInstalled(app)) {
+							if (userApps.indexOf(app.id) === -1 && isAppInstalled(app)) {
 								var formattedApp = {
 									id: app.id,
 									name: app.name,
@@ -420,7 +398,7 @@ define(function(require){
 							}
 						});
 
-						if(updateUserApps) {
+						if (updateUserApps) {
 							monster.apps.auth.currentUser.appList = userApps;
 							self.userUpdate();
 						}
@@ -434,7 +412,7 @@ define(function(require){
 		appListUpdate: function(parent, appList, callback) {
 			var self = this,
 				domAppList = $.map(parent.find('.right-div .app-element'), function(val) { return $(val).data('id'); }),
-				sameOrder = appList.every(function(v, i) { return v.id === domAppList[i] }),
+				sameOrder = appList.every(function(v, i) { return v.id === domAppList[i]; }),
 				domDefaultAppId = parent.find('.left-div .app-element').data('id'),
 				// If the user doesn't have any app in its list, we verify that the default app is still unset
 				sameDefaultApp = appList.length ? appList[0].id === domDefaultAppId : (domDefaultAppId === undefined);
@@ -442,13 +420,12 @@ define(function(require){
 			// If new user with nothing configured, sameDefault App && sameOrder should be true
 			if (sameDefaultApp && sameOrder) {
 				callback(appList);
-			}
-			else {
+			} else {
 				var newAppList = [];
 
 				domAppList.unshift(domAppList.splice(domAppList.indexOf(domDefaultAppId), 1)[0]);
 
-				appList.forEach(function(v, i) {
+				appList.forEach(function(v) {
 					newAppList[domAppList.indexOf(v.id)] = v;
 				});
 
