@@ -62,8 +62,12 @@ define(function(require) {
 
 		render: function() {
 			var self = this;
-
-			if (!self.isRendered()) {
+			monster.pub('common.storageSelector.render', {
+				callback: function(data) {
+					console.log(data);
+				}
+			});
+			/*if (!self.isRendered()) {
 				self.getUserApps(function(appList) {
 					var template = $(monster.template(self, 'app', {
 						allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
@@ -77,7 +81,7 @@ define(function(require) {
 				});
 			} else {
 				self.show();
-			}
+			}*/
 		},
 
 		bindEvents: function(parent, appList) {

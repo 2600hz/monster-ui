@@ -1,0 +1,89 @@
+@import "../../../../css/partials/base";
+
+#storage_selector_wrapper {
+	display: block;
+	width: 700px;
+	margin: auto;
+	padding-top: 60px;
+	text-align: center;
+}
+
+#storage_selector_wrapper .main-title {
+	color: #FFF;
+	font-size: 24px;
+}
+
+#storage_selector_wrapper .sub-title {
+	color: #909099;
+	margin-top: 15px;
+}
+
+#storage_selector_wrapper .storage-options {
+	margin-top: 35px;
+}
+
+#storage_selector_wrapper .storage-choice.selected {
+	color: #C0C0C9;
+	width: 640px;
+	border: 1px solid $primary-color;
+}
+
+#storage_selector_wrapper .storage-choice.selected i {
+	display: inline-block;
+	color: $primary-color;
+}
+
+#storage_selector_wrapper .storage-choice {
+	border: 1px solid #202029;
+	background: #202029;
+	color: #505059;
+	text-align: left;
+	padding: 5px 25px;
+	height: 85px;
+	line-height: 85px;
+	margin: 10px auto;
+	width: 630px;
+}
+
+#storage_selector_wrapper .storage-choice:hover {
+	background: #26262F;
+	cursor: pointer;
+}
+
+#storage_selector_wrapper .storage-choice img {
+	margin-right: 20px;
+}
+
+#storage_selector_wrapper .storage-choice .selected-logo,
+#storage_selector_wrapper .storage-choice.selected .standard-logo {
+	display: none;
+}
+
+#storage_selector_wrapper .storage-choice .standard-logo,
+#storage_selector_wrapper .storage-choice.selected .selected-logo {
+	display: inline-block;
+}
+
+#storage_selector_wrapper .storage-choice .storage-name {
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 600;
+	float: right;
+	text-align: right;
+}
+
+#storage_selector_wrapper .storage-choice i {
+	display: none;
+	margin-right: 20px;
+	vertical-align: middle;
+}
+
+#storage_selector_wrapper #select_button {
+	margin-top: 35px;
+}
+
+#storage_selector_wrapper .cancel-link {
+	color: #A0A0A9;
+	display: block;
+	margin-top: 20px;
+}
