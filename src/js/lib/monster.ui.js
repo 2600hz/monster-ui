@@ -2714,6 +2714,56 @@ define(function(require){
 					error && error(data);
 				});
 			});
+		},
+
+		fullScreenModal: function(template) {
+			var self = this,
+				mainTemplate = $(monster.template(monster.apps.core, 'monster-full-screen-modal')),
+				containerSelector = '.core-absolute .full-screen-modal-container',
+				privateIsVisible = false,
+				obj = {
+					isVisible: function() {
+						return privateIsVisible;
+					},
+					toggle: function() {
+						privateIsVisible ? obj.hide() : obj.show();
+					},
+					close: function() {
+						obj.hide();
+					},
+					hide: function() {
+						if (privateIsVisible) {
+							privateIsVisible = false;
+							$('#monster_content').show();
+
+							$(containerSelector).fadeOut(250);
+						}
+					},
+					show: function() {
+						if (!privateIsVisible) {
+							privateIsVisible = true;
+
+							$(containerSelector).fadeIn(250, function() {
+								$('#monster_content').hide();
+							});
+						}
+					},
+					append: function(template) {
+						$(containerSelector).append(template);
+					}
+				};
+
+			mainTemplate.find('.close-modal').on('click', function() {
+				obj.close();
+			});
+
+			mainTemplate.find('.modal-content')
+						.append(template);
+
+			obj.append(mainTemplate);
+			obj.show();
+
+			return obj;
 		}
 	};
 
