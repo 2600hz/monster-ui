@@ -73,7 +73,7 @@ define(function(require) {
 
 					self.bindEvents(template, appList);
 
-					self.appFlags.modal = monster.ui.fullScreenModal(template);
+					self.appFlags.modal = monster.ui.fullScreenModal(template, { hideClose: true });
 				});
 			} else {
 				self.show();

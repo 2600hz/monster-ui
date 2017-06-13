@@ -2716,9 +2716,13 @@ define(function(require){
 			});
 		},
 
-		fullScreenModal: function(template) {
+		fullScreenModal: function(template, pArgs) {
 			var self = this,
-				mainTemplate = $(monster.template(monster.apps.core, 'monster-full-screen-modal')),
+				args = pArgs || {},
+				dataTemplate = {
+					hideClose: args.hasOwnProperty('hideClose') ? args.hideClose : false
+				},
+				mainTemplate = $(monster.template(monster.apps.core, 'monster-full-screen-modal', dataTemplate)),
 				containerSelector = '.core-absolute .full-screen-modal-container',
 				privateIsVisible = false,
 				obj = {

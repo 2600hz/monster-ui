@@ -1,7 +1,7 @@
 <div class="modal-full-screen-wrapper">
-	{{#if showClose}}
-	{{/if}}
-	<i class="icon-telicon-x-circled close-modal"></i>
+	{{#unless hideClose}}
+		<i class="icon-telicon-x-circled close-modal"></i>
+	{{/unless}}
 
 	<div class="modal-content"></div>
 </div>
