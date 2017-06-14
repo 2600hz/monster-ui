@@ -2048,7 +2048,7 @@ define(function(require){
 				parent = $('#monster_content'),
 				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
 				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
-				hasNavbar = tabs.length === 1 ?  false : true,
+				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
 				dataTemplate = {
 					hasNavbar: hasNavbar,
 					appType: appType,
@@ -2716,68 +2716,78 @@ define(function(require){
 			});
 		},
 
-		fullScreenModal: function(template, pArgs) {
+		fullScreenModal: function(paramTemplate, pArgs) {
 			var self = this,
-				args = pArgs || {},
-				dataTemplate = {
-					hideClose: args.hasOwnProperty('hideClose') ? args.hideClose : false
-				},
-				mainTemplate = $(monster.template(monster.apps.core, 'monster-full-screen-modal', dataTemplate)),
-				containerSelector = '.core-absolute .full-screen-modal-container',
-				privateIsVisible = false,
-				obj = {
-					id: monster.util.randomString(4),
-					isVisible: function() {
-						return privateIsVisible;
-					},
-					toggle: function() {
-						privateIsVisible ? obj.hide() : obj.show();
-					},
-					close: function() {
-						obj.hide();
-					},
-					hide: function() {
-						if (privateIsVisible) {
-							privateIsVisible = false;
-							$('#monster_content').show();
+				getInstance = function(pArgs) {
+					var privateIsVisible = false,
+						id = 'fullscreenmodal_' + (new Date()).getTime(),
+						args = pArgs || {},
+						dataTemplate = {
+							id: id,
+							hideClose: args.hasOwnProperty('hideClose') ? args.hideClose : false
+						},
+						destroyOnClose = args.hasOwnProperty('destroyOnClose') ? args.destroyOnClose : true,
+						modalTemplate = $(monster.template(monster.apps.core, 'monster-full-screen-modal', dataTemplate)),
+						containerSelector = '.core-absolute',
+						modalSelector = '.modal-full-screen-wrapper[data-id="' + id + '"]',
+						obj = {
+							getId: function() {
+								return id;
+							},
+							isVisible: function() {
+								return privateIsVisible;
+							},
+							toggle: function() {
+								privateIsVisible ? obj.close() : obj.open();
+							},
+							close: function() {
+								if (privateIsVisible) {
+									privateIsVisible = false;
 
-							$(containerSelector).fadeOut(250, function() {
-								// if is removable, remove
-								$(containerSelector).empty();
-							});
-						}
-					},
-					show: function() {
-						if (!privateIsVisible) {
-							privateIsVisible = true;
+									$('#monster_content').show();
 
-							$(containerSelector).fadeIn(250, function() {
-								$('#monster_content').hide();
-							});
+									$(modalSelector).fadeOut(250, function() {
+										if (destroyOnClose) {
+											$(modalSelector).remove();
+										} else {
+											$(modalSelector).hide();
+										}
+									});
+								}
+							},
+							open: function() {
+								if (!privateIsVisible) {
+									privateIsVisible = true;
+
+									$(modalSelector).fadeIn(250, function() {
+										$('#monster_content').hide();
+									});
+								}
+							}
+						};
+
+					// TODO should probably have an unclosable mode
+					$(document).on('keydown', function(e) {
+						if (obj.isVisible() && e.keyCode === 27) {
+							obj.close();
 						}
-					},
-					append: function(template) {
-						$(containerSelector).append(template);
-					}
+					});
+
+					modalTemplate.find('.close-modal').on('click', function() {
+						obj.close();
+					});
+
+					modalTemplate.find('.modal-content')
+								.append(paramTemplate);
+
+					$(containerSelector).append(modalTemplate);
+
+					obj.open();
+
+					return obj;
 				};
 
-			$(document).on('keydown', function(e) {
-				if (obj.isVisible()) {
-					obj.hide();
-				}
-			});
-
-			mainTemplate.find('.close-modal').on('click', function() {
-				obj.hide();
-			});
-
-			mainTemplate.find('.modal-content')
-						.append(template);
-
-			obj.append(mainTemplate);
-			obj.show();
-
-			return obj;
+			return getInstance(pArgs);
 		}
 	};
 

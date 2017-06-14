@@ -653,9 +653,10 @@ body,
 	margin-right: 0 !important;
 }
 
-
 /* Modal Full Screen */
-.full-screen-modal-container {
+.modal-full-screen-wrapper {
+	height: 100%;
+	background: #303039;
 	position: fixed;
 	z-index: 1000;
 	top: 0;
@@ -665,16 +666,11 @@ body,
 	height: 100%;
 }
 
-.full-screen-modal-container .modal-content {
+.modal-full-screen-wrapper .modal-content {
 	height: 100%;
 }
 
-.full-screen-modal-container .modal-full-screen-wrapper {
-	height: 100%;
-	background: #303039;
-}
-
-.full-screen-modal-container .close-modal {
+.modal-full-screen-wrapper .close-modal {
 	font-size: 27px;
 	position: absolute;
 	top: 8px;
@@ -683,7 +679,7 @@ body,
 	z-index: 10000;
 }
 
-.full-screen-modal-container .close-modal:hover {
+.modal-full-screen-wrapper .close-modal:hover {
 	cursor: pointer;
 	color: #fff;
 }

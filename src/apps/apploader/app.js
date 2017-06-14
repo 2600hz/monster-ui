@@ -62,12 +62,8 @@ define(function(require) {
 
 		render: function() {
 			var self = this;
-			monster.pub('common.storageSelector.render', {
-				callback: function(data) {
-					console.log(data);
-				}
-			});
-			/*if (!self.isRendered()) {
+
+			if (!self.isRendered()) {
 				self.getUserApps(function(appList) {
 					var template = $(monster.template(self, 'app', {
 						allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
@@ -77,11 +73,14 @@ define(function(require) {
 
 					self.bindEvents(template, appList);
 
-					self.appFlags.modal = monster.ui.fullScreenModal(template, { hideClose: true });
+					self.appFlags.modal = monster.ui.fullScreenModal(template, {
+						hideClose: true,
+						destroyOnClose: false
+					});
 				});
 			} else {
 				self.show();
-			}*/
+			}
 		},
 
 		bindEvents: function(parent, appList) {
@@ -249,14 +248,14 @@ define(function(require) {
 		show: function() {
 			var self = this;
 
-			self.appFlags.modal.show();
+			self.appFlags.modal.open();
 		},
 
 		_hide: function() {
 			var self = this;
 
 			if (self.appFlags.modal) {
-				self.appFlags.modal.hide();
+				self.appFlags.modal.close();
 			}
 		},
 
