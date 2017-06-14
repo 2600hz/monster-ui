@@ -5,34 +5,13 @@
 	</div>
 	<div class="storage-options">
 		{{#each storageChoices}}
-			<div class="storage-choice" data-id="{{id}}">
-				<i class="icon-telicon-check-circle monster-blue"></i>
-				<div class="storage-logo"></div>
-				<div class="storage-name">{{friendlyName}}</div>
+			<div class="storage-choice" data-id="{{ id }}">
+				<i class="icon-telicon-check-circle"></i>
+				<img width="160" class="standard-logo" src="apps/common/style/static/images/integrations/{{ logoBrandName }}-logo-gray.png" class="img_style"/>
+				<img width="160" class="selected-logo" src="apps/common/style/static/images/integrations/{{ logoBrandName }}-logo-color.png" class="img_style"/>
+				<div class="storage-name">{{ name }}</div>
 			</div>
 		{{/each}}
-		<div class="storage-choice selected" data-id="1234">
-			<i class="icon-telicon-check-circle"></i>
-			<img width="160" class="standard-logo" src="apps/common/style/static/images/integrations/aws-logo-gray.png" class="img_style"/>
-			<img width="160" class="selected-logo" src="apps/common/style/static/images/integrations/aws-logo-color.png" class="img_style"/>
-			<div class="storage-name">Client 'ABC' Private Storage</div>
-		</div>
-		<div class="storage-choice" data-id="5678">
-			<i class="icon-telicon-check-circle"></i>
-			<img width="160" class="standard-logo" src="apps/common/style/static/images/integrations/googledrive-logo-gray.png" class="img_style"/>
-			<img width="160" class="selected-logo" src="apps/common/style/static/images/integrations/googledrive-logo-color.png" class="img_style"/>
-			<div class="storage-name">Client 'XYZ' Private Storage</div>
-		</div>
-		<div class="storage-choice" data-id="9012">
-			<i class="icon-telicon-check-circle"></i>
-			<img width="160" src="apps/common/style/static/images/integrations/aws-logo-color.png" class="img_style"/>
-			<div class="storage-name">Master Storage (Public)</div>
-		</div>
-		<div class="storage-choice" data-id="4613">
-			<i class="icon-telicon-check-circle"></i>
-			<img width="160" src="apps/common/style/static/images/integrations/googledrive-logo-color.png" class="img_style"/>
-			<div class="storage-name">Test My AWS</div>
-		</div>
 	</div>
 
 	<div class="actions">

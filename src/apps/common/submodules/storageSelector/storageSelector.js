@@ -15,14 +15,26 @@ define(function(require) {
 			var self = this;
 
 			self.storageSelectorGetData(args, function(data) {
-				var template = $(self.getTemplate({
+				var formattedData = self.storageSelectorFormatData(data),
+					template = $(self.getTemplate({
 						name: 'list',
 						submodule: 'storageSelector',
-						data: data
+						data: formattedData
 					})),
-					modal = monster.ui.fullScreenModal(template);
-				console.log(modal);
-				self.storageSelectorBind(template, modal, args.callback);
+					modal = monster.ui.fullScreenModal(template),
+					afterSelect = function(id) {
+						var storageAttachment = {
+							id: id
+						};
+
+						if (data.hasOwnProperty('storage') && data.storage.hasOwnProperty('attachments') && data.storage.attachments.hasOwnProperty(id)) {
+							storageAttachment = $.extend(true, {}, storageAttachment, data.storage.attachments[id]);
+						}
+
+						args.callback && args.callback(storageAttachment);
+					};
+
+				self.storageSelectorBind(template, modal, afterSelect);
 			});
 		},
 
@@ -54,15 +66,26 @@ define(function(require) {
 					}
 				}
 			}, function(err, results) {
-				self.storageSelectorFormatData(results);
-
 				callback && callback(results);
 			});
 		},
 
 		storageSelectorFormatData: function(data) {
-			console.log(data);
-			return data;
+			var formattedData = {
+				storageChoices: []
+			};
+
+			if (data.hasOwnProperty('storage') && data.storage.hasOwnProperty('attachments') && !_.isEmpty(data.storage.attachments)) {
+				_.each(data.storage.attachments, function(attachment, id) {
+					formattedData.storageChoices.push({
+						id: id,
+						name: attachment.name,
+						logoBrandName: attachment.handler
+					});
+				});
+			}
+
+			return formattedData;
 		},
 
 		storageSelectorBind: function(template, modal, callback) {
@@ -87,7 +110,7 @@ define(function(require) {
 				}
 			});
 
-			template.find('.cancel').on('click', function() {
+			template.find('.cancel-link').on('click', function() {
 				modal.close();
 			});
 		}
