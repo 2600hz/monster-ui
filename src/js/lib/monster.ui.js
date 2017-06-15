@@ -2075,11 +2075,11 @@ define(function(require){
 				.empty()
 				.append(layoutTemplate);
 
-			$.extend(true, thisArg, {
-				appFlags: {
-					_menus: args.menus
-				}
-			});
+			// Changed the code here to remove the $.extend, as it doesn't override arrays properly
+			if (args.hasOwnProperty('menus')) {
+				thisArg.appFlags = thisArg.appFlags || {};
+				thisArg.appFlags._menus = args.menus;
+			}
 
 			if (hasNavbar) {
 				self.generateAppNavbar(thisArg);
