@@ -317,6 +317,11 @@
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
 			},
+			recordings: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/recordings/{resourceId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/recordings' }
+			},
 			registrations: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/registrations' }
 			},
