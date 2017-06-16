@@ -2281,6 +2281,25 @@ define(function(require){
 						var newTable = container.footable(finalOptions),
 							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
 
+						backendTemplate.find('.load-more:not(.disabled)').on('click', function() {
+							loadPaginatedRows(paginateFilters);
+						});
+
+						backendTemplate.on('click', '.load-all:not(.disabled)', function() {
+							paginateFilters.paginate = false;
+							delete paginateFilters.page_size;
+							delete paginateFilters.start_key;
+
+							finalOptions.getData(paginateFilters, function(rows, data) {
+								loadedPages = [ rows ];
+								allDataLoaded();
+
+								addRowsToBody(loadedPages);
+
+								paintPaginatedFootable();
+							});
+						});
+
 						addPageSizeComponent(container, newTable);
 
 						monster.ui.tooltips(backendTemplate);
@@ -2289,25 +2308,6 @@ define(function(require){
 					};
 
 				finalOptions.empty = monster.apps.core.i18n.active().backendPagination.empty;
-
-				container.on('click', '.load-more:not(.disabled)', function() {
-					loadPaginatedRows(paginateFilters);
-				});
-
-				container.on('click', '.load-all:not(.disabled)', function() {
-					paginateFilters.paginate = false;
-					delete paginateFilters.page_size;
-					delete paginateFilters.start_key;
-
-					finalOptions.getData(paginateFilters, function(rows, data) {
-						loadedPages = [ rows ];
-						allDataLoaded();
-
-						addRowsToBody(loadedPages);
-
-						paintPaginatedFootable();
-					});
-				});
 
 				// Finally, once everything is initialized properly, we load the first set of data.
 				loadPaginatedRows(paginateFilters, function() {
