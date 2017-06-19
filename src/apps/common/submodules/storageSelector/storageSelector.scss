@@ -31,6 +31,8 @@
 #storage_selector_wrapper .storage-choice.selected i {
 	display: inline-block;
 	color: $primary-color;
+	vertical-align: top;
+	line-height: 75px;
 }
 
 #storage_selector_wrapper .storage-choice {
@@ -38,9 +40,9 @@
 	background: #202029;
 	color: #505059;
 	text-align: left;
-	padding: 5px 25px;
-	height: 85px;
-	line-height: 85px;
+	padding: 10px 25px;
+	height: 75px;
+	line-height: 75px;
 	margin: 10px auto;
 	width: 630px;
 }
@@ -50,8 +52,10 @@
 	cursor: pointer;
 }
 
-#storage_selector_wrapper .storage-choice img {
+#storage_selector_wrapper .storage-choice .logo-style {
 	margin-right: 20px;
+	height: 75px;
+	width: 220px;
 }
 
 #storage_selector_wrapper .storage-choice .selected-logo,

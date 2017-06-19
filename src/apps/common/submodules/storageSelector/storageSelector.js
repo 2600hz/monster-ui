@@ -80,7 +80,7 @@ define(function(require) {
 					formattedData.storageChoices.push({
 						id: id,
 						name: attachment.name,
-						logoBrandName: attachment.handler
+						logoBrandName: attachment.handler === 's3' ? 'aws' : 'g-drive'
 					});
 				});
 			}

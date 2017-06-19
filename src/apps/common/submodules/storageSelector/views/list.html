@@ -7,8 +7,8 @@
 		{{#each storageChoices}}
 			<div class="storage-choice" data-id="{{ id }}">
 				<i class="icon-telicon-check-circle"></i>
-				<img width="160" class="standard-logo" src="apps/common/style/static/images/integrations/{{ logoBrandName }}-logo-gray.png" class="img_style"/>
-				<img width="160" class="selected-logo" src="apps/common/style/static/images/integrations/{{ logoBrandName }}-logo-color.png" class="img_style"/>
+				<svg class="logo-style selected-logo"><use xlink:href="#{{ logoBrandName }}--color-reverse" /></svg>
+				<svg class="logo-style standard-logo"><use xlink:href="#{{ logoBrandName }}--grey" /></svg>
 				<div class="storage-name">{{ name }}</div>
 			</div>
 		{{/each}}
