@@ -77,12 +77,20 @@ define(function(require){
 			self.displayVersion(mainTemplate);
 			self.displayLogo(mainTemplate);
 			self.displayFavicon();
+			self.loadSVG();
 
 			container.append(mainTemplate);
 
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
 			self.startSocket();
 			self.startWebphone();
+		},
+
+		loadSVG: function() {
+			var self = this,
+				svgTemplate = monster.template(self, 'svg-container');
+
+			$('.core-wrapper').append(svgTemplate);
 		},
 
 		// We need the whitelabel profile to be loaded to execute this, that's why it's in core and not in monster directly
