@@ -2281,11 +2281,17 @@ define(function(require){
 						var newTable = container.footable(finalOptions),
 							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
 
-						backendTemplate.find('.load-more:not(.disabled)').on('click', function() {
-							loadPaginatedRows(paginateFilters);
+						backendTemplate.find('.load-more:not(.disabled)').on('click', function(e) {
+							e.preventDefault();
+
+							loadPaginatedRows(paginateFilters, function() {
+								finalOptions.backendPagination.afterLoad && finalOptions.backendPagination.afterLoad();
+							});
 						});
 
-						backendTemplate.on('click', '.load-all:not(.disabled)', function() {
+						backendTemplate.find('.load-all:not(.disabled)').on('click', function(e) {
+							e.preventDefault();
+
 							paginateFilters.paginate = false;
 							delete paginateFilters.page_size;
 							delete paginateFilters.start_key;
@@ -2297,6 +2303,8 @@ define(function(require){
 								addRowsToBody(loadedPages);
 
 								paintPaginatedFootable();
+
+								finalOptions.backendPagination.afterLoad && finalOptions.backendPagination.afterLoad();
 							});
 						});
 
