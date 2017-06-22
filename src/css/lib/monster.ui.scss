@@ -507,6 +507,8 @@ i.monster-password-strength {
 	position: relative;
 	min-height: 100%;
 	background-color: $background-primary-color;
+	box-sizing: border-box;
+	padding-bottom: 15px;
 }
 
 .core-content .app-header .app-navbar-bg {
@@ -550,6 +552,15 @@ i.monster-password-strength {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 40px 20px;
+}
+
+.core-content .app-layout .app-content-wrapper.subnav-enabled {
+	background: #FFF;
+	max-width: 1238px;
+	border-left: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+	padding: 40px 20px 20px;
 }
 
 .core-content .app-layout .app-content-wrapper.fullscreen {
