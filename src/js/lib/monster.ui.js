@@ -1840,6 +1840,7 @@ define(function(require){
 				menus = thisArg.appFlags._menus,
 				parent = $('#monster-content'),
 				appHeader = parent.find('.app-header'),
+				appContent = parent.find('.app-content-wrapper'),
 				menuId = $tab.parents('.navbar-menu').data('menu_id'),
 				tabId = $tab.data('tab_id'),
 				isSubnav = $tab.parents('nav').hasClass('app-subnav'),
@@ -1908,6 +1909,8 @@ define(function(require){
 
 						// Show/hide subnav container
 						if (currentTab.hasOwnProperty('menus')) {
+							appContent.addClass('subnav-enabled');
+
 							if (appHeader.find('.app-subnav-bg').is(':hidden')) {
 								appHeader
 									.find('.app-subnav-bg')
@@ -1915,6 +1918,7 @@ define(function(require){
 							}
 						}
 						else {
+							appContent.removeClass('subnav-enabled');
 							if (appHeader.find('.app-subnav-bg').is(':visible')) {
 								appHeader
 									.find('.app-subnav-bg')
@@ -1927,7 +1931,8 @@ define(function(require){
 						.find('.app-content-wrapper')
 							.fadeOut(function() {
 								self.isTabLoadingInProgress = false;
-								$(this).empty();
+								$(this).hide()
+									.empty();
 
 								var finalArgs = {
 									parent: parent,

@@ -1535,6 +1535,28 @@ table.monster-table {
 	color: #fff;
 }
 
+
+/* Alternative Skin */
+.monster-navbar.alternative-skin .navbar-menu-item:not(:first-child) {
+	margin-left: 5px;
+}
+
+.monster-navbar.alternative-skin .navbar-menu-item-link {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-bottom: none;
+	padding: 0 15px;
+	height: 39px;
+	display: inline-block;
+
+}
+
+.monster-navbar.alternative-skin .navbar-menu-item-link.active {
+	background: #FFF;
+	border-top: 2px solid #22a5ff;
+}
+
 /************************************************************/
 /****************** MONSTER SELECT DROPDOWN *****************/
 /************************************************************/
