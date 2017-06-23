@@ -206,7 +206,7 @@ define(function(require) {
 						if (data.message === 'multiple_choice') {
 							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.e911);
 						} else {
-							callbacks.invalidAddress && callbacks.invalidAddress(_data.data.address.invalid);
+							callbacks.invalidAddress && callbacks.invalidAddress();
 						}
 					} else if (_data.error !== '402') {
 						globalHandler(_data, { generateError: true });
