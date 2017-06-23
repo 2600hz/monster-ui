@@ -2744,6 +2744,9 @@ define(function(require){
 						containerSelector = '.core-absolute',
 						modalSelector = '.modal-full-screen-wrapper[data-id="' + id + '"]',
 						obj = {
+							destroy: function() {
+								$('#' + this.getId()).empty().remove();
+							},
 							getId: function() {
 								return id;
 							},

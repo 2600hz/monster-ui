@@ -25,6 +25,7 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'apploader.destroy': '_destroy',
 			'apploader.show': 'render',
 			'apploader.hide': '_hide',
 			'apploader.toggle': '_toggle',
@@ -58,6 +59,14 @@ define(function(require) {
 			var self = this;
 
 			return typeof self.appFlags.modal !== 'undefined';
+		},
+
+		_destroy: function() {
+			var self = this;
+
+			self.appFlags.modal.destroy();
+
+			self.appFlags.modal = undefined;
 		},
 
 		render: function() {

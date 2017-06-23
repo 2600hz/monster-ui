@@ -268,7 +268,7 @@ define(function(require){
 							data: appInstallInfo
 						},
 						success: function(_data, status) {
-							$('#apploader').remove();
+							monster.pub('apploader.destroy');
 							successCallback && successCallback();
 						},
 						error: function(_data, status) {
