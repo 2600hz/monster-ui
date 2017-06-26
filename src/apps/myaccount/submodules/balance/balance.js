@@ -74,18 +74,6 @@ define(function(require) {
 								argsCallback(balance);
 							}
 						});
-
-						/*self.balanceGetDataPerLedger('per-minute-voip', balance, function(data) {
-							self.balanceDisplayPerMinuteTable(balance, renderData.uiRestrictions.balance.show_credit, function() {
-								monster.pub('myaccount.updateMenu', args);
-
-								monster.pub('myaccount.renderSubmodule', balance);
-
-								if (typeof argsCallback === 'function') {
-									argsCallback(balance);
-								}
-							}, data);
-						});*/
 					}
 				});
 			});
@@ -278,7 +266,7 @@ define(function(require) {
 					transactions: []
 				};
 
-			_.each(dataRequest.ledger, function(transaction) {
+			_.each(dataRequest.ledger.data, function(transaction) {
 				data.transactions.push(transaction);
 			});
 
@@ -292,7 +280,7 @@ define(function(require) {
 					showCredits: showCredits
 				};
 
-			_.each(dataRequest.ledger, function(v) {
+			_.each(dataRequest.ledger.data, function(v) {
 				v.metadata = v.metadata || {
 					to: '-',
 					from: '-'
@@ -325,7 +313,7 @@ define(function(require) {
 			return data;
 		},
 
-		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender, preloadedData) {
+		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
 				customLedgers = {
 					'per-minute-voip': 'per-minute-voip-table',
@@ -343,7 +331,7 @@ define(function(require) {
 						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
 
-					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback, preloadedData);
+					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
 				},
 				backendPagination: {
 					enabled: true
@@ -355,7 +343,7 @@ define(function(require) {
 			});
 		},
 
-		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback, preloadedData) {
+		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback) {
 			var self = this,
 				customLedgers = {
 					'per-minute-voip': {
@@ -368,22 +356,15 @@ define(function(require) {
 					}
 				},
 				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
-				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable',
-				afterDataFetched = function(data) {
-					var formattedData = self[formatFunction](data, showCredits),
-						$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
+				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
+
+			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
+				var formattedData = self[formatFunction](data, showCredits),
+					$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
-					callback && callback($rows, data);
-				};
-
-			if (preloadedData) {
-				afterDataFetched(preloadedData);
-			} else {
-				self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-					afterDataFetched(data);
-				}, filters);
-			}
+				callback && callback($rows, data.ledger);
+			}, filters);
 		},
 
 		balanceFormatGenericDataTable: function(dataRequest, showCredits) {
@@ -393,7 +374,7 @@ define(function(require) {
 					showCredits: showCredits
 				};
 
-			_.each(dataRequest.ledger, function(v) {
+			_.each(dataRequest.ledger.data, function(v) {
 				v.extra = {};
 
 				if (v.period.hasOwnProperty('end')) {
@@ -896,7 +877,7 @@ define(function(require) {
 					filters: filters
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					callback && callback(data);
 				}
 			});
 		},
