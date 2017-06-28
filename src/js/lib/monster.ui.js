@@ -2452,6 +2452,7 @@ define(function(require){
 		dialpad: function(args) {
 			var self = this,
 				dataToTemplate = {
+					hideKeys: args.hasOwnProperty('hideKeys') ? args.hideKeys : false,
 					dtmf: [
 						{ value: '1' },
 						{ value: '2', text: 'abc' },
@@ -2468,8 +2469,12 @@ define(function(require){
 					]
 				};
 
-			if(args.hasOwnProperty('button')) {
+			if (args.hasOwnProperty('button')) {
 				dataToTemplate.button = args.button;
+			}
+
+			if (args.hasOwnProperty('headline')) {
+				dataToTemplate.headline = args.headline;
 			}
 
 			var template = $(monster.template(monster.apps.core, 'dialpad-template', dataToTemplate));
