@@ -5,20 +5,29 @@
 			<i class="fa fa-caret-left dialbox-icon backspace"></i>
 		</div>
 	</div>
-	<div class="dialpad-container">
-	{{#each dtmf}}
-		<button class="dialpad-item" data-dtmf="{{value}}">
-			<span class="item-text">
-				{{value}}
-			</span>
-		{{#if text}}
-			<span class="item-legend">
-				{{text}}
-			</span>
-		{{/if}}
-		</button>
-	{{/each}}
-	</div>
+	{{#if headline}}
+		<div class="headline">
+			{{ headline }}
+		</div>
+	{{/if}}
+
+	{{#unless hideKeys}}
+		<div class="dialpad-container">
+		{{#each dtmf}}
+			<button class="dialpad-item" data-dtmf="{{value}}">
+				<span class="item-text">
+					{{value}}
+				</span>
+			{{#if text}}
+				<span class="item-legend">
+					{{text}}
+				</span>
+			{{/if}}
+			</button>
+		{{/each}}
+		</div>
+	{{/unless}}
+
 	{{#if button}}
 		<button class="{{button.class}} dialpad-action-button">{{button.text}}</button>
 	{{/if}}
