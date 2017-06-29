@@ -64,9 +64,10 @@ define(function(require) {
 		_destroy: function() {
 			var self = this;
 
-			self.appFlags.modal.destroy();
-
-			self.appFlags.modal = undefined;
+			if (self.appFlags.modal) {
+				self.appFlags.modal.destroy();
+				self.appFlags.modal = undefined;
+			}
 		},
 
 		render: function() {
