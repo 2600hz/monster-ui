@@ -1,0 +1,79 @@
+@import "../../../../css/partials/base";
+
+#storage_plan_manager_wrapper .empty-storage {
+	border: 1px dashed #999;
+	height: 320px;
+	text-align: center;
+}
+
+#storage_plan_manager_wrapper .empty-storage button {
+	margin-top: 25px;
+}
+
+#storage_plan_manager_wrapper .empty-storage i.main-icon {
+	margin-top: 60px;
+	font-size: 72px;
+}
+
+#storage_plan_manager_wrapper .empty-storage .main-title {
+	font-size: 18px;
+	margin-top: 40px;
+}
+
+#storage_plan_manager_wrapper .empty-storage .sub-title {
+	color: #909099;
+	margin-top: 5px;
+}
+
+#storage_plan_manager_wrapper .storage-choice .logo-header {
+	width: 165px;
+	height: 75px;
+}
+
+#storage_plan_manager_wrapper .storage-provider-wrapper button {
+	margin-right: 10px;
+}
+
+#storage_plan_manager_wrapper .storage-choice {
+	background: #FFF;
+	border: 1px solid #D0D0D9;
+	border-radius: 2px;
+	height: 75px;
+	line-height: 75px;
+	margin-top: 30px;
+	padding: 10px 25px;
+}
+
+#storage_plan_manager_wrapper .storage-choice .right-section {
+	float: right;
+	line-height: 25px;
+}
+
+#storage_plan_manager_wrapper .storage-choice .storage-name {
+	font-weight: 600;
+	margin-top: 13px;
+	text-align: right;
+}
+
+#storage_plan_manager_wrapper .storage-choice .folder-icon {
+	color: #D0D0D9;
+	font-size: 20px;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+#storage_plan_manager_wrapper .storage-choice .edit-path {
+	color: #505059;
+	cursor: pointer;
+	font-size: 20px;
+	margin-left: 10px;
+	vertical-align: middle;
+}
+
+#storage_plan_manager_wrapper .storage-choice #path {
+	margin: 0 5px;
+}
+
+#storage_plan_manager_wrapper .storage-choice .custom-path {
+	display: inline-block;
+}

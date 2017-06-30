@@ -19,6 +19,8 @@
 @import url('../submodules/conferenceViewer/conferenceViewer.css');
 @import url('../submodules/numberRenameCarrier/numberRenameCarrier.css');
 @import url('../submodules/storageSelector/storageSelector.css');
+@import url('../submodules/storagePlanManager/storagePlanManager.css');
+
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */
 .trunkstore_popup.cnam .left_image {
