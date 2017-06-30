@@ -12,6 +12,12 @@
 	background-color: $panel-background-color;
 }
 
+.monster-loading-view.app-content.no-background {
+	margin-top: 40px;
+	border: none;
+	background: transparent;
+}
+
 .monster-loading-view.app-content .title {
 	font-weight: normal;
 	margin-top: 0;
