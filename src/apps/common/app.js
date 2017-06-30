@@ -24,7 +24,8 @@ define(function(require) {
 		'./submodules/portWizard/portWizard',
 		'./submodules/conferenceViewer/conferenceViewer',
 		'./submodules/numberRenameCarrier/numberRenameCarrier',
-		'./submodules/storageSelector/storageSelector'
+		'./submodules/storageSelector/storageSelector',
+		'./submodules/storagePlanManager/storagePlanManager'
 	]);
 
 	var app = {
@@ -53,7 +54,8 @@ define(function(require) {
 			'portWizard',
 			'conferenceViewer',
 			'numberRenameCarrier',
-			'storageSelector'
+			'storageSelector',
+			'storagePlanManager'
 		],
 
 		css: [ 'app' ],

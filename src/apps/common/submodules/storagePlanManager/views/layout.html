@@ -1,0 +1,59 @@
+<div id="storage_plan_manager_wrapper">
+	{{#compare countAttachments ">" 0}}
+		{{#each plans}}
+			<div class="storage-provider-wrapper" data-plan="{{extra.type}}"{{#if extra.isConfigured}} data-path="{{params.folder_path}}"{{/if}}>
+				{{#unless @root.hideActions}}
+					{{#if extra.isConfigured}}
+						<button class="monster-button-primary choose-plan">{{ @root.i18n.storagePlanManager.changeButton }}</button>
+						<button class="monster-button-danger remove-settings">{{ @root.i18n.storagePlanManager.deleteButton }}</button>
+					{{/if}}
+				{{/unless}}
+
+				{{#if @root.displayPlanName}}
+					<div class="plan-name">{{ extra.type }}</div>
+				{{/if}}
+
+				{{#if extra.isConfigured}}
+					<div class="storage-choice">
+						<svg class="logo-header"><use xlink:href="#{{#compare extra.detailAttachment.handler "===" "s3"}}aws{{else}}g-drive{{/compare}}--color" /></svg>
+						<div class="right-section">
+							<div class="storage-name">{{ extra.detailAttachment.name }}</div>
+							<div class="folder-path-wrapper">
+								<i class="folder-icon fa fa-folder"></i>
+								<span class="folder-path">
+									<span class="base-folder">
+										{{#compare extra.detailAttachment.handler "===" "s3"}}
+											{{ extra.detailAttachment.settings.bucket}}
+										{{else}}
+											{{#compare extra.detailAttachment.handler "===" "google_drive"}}
+												{{ extra.detailAttachment.settings.folder_base_path }}
+											{{/compare}}
+										{{/compare}}
+										/
+									</span>
+									<span class="custom-path">
+										{{ params.folder_path }}
+									</span>
+								</span>
+								<i class="edit-path fa fa-cog"></i>
+							</div>
+						</div>
+					</div>
+				{{else}}
+					<div class="empty-storage">
+						<i class="icon-telicon-configuration main-icon"></i>
+						<div class="main-title">{{ @root.i18n.storagePlanManager.mainTitleWithPlans }}</div>
+						<div class="sub-title">{{ replaceVar @root.i18n.storagePlanManager.subTitleWithPlans @root.countAttachments }}</div>
+						<button class="monster-button-primary choose-plan">{{ @root.i18n.storagePlanManager.chooseButton }}</button>
+					</div>
+				{{/if}}
+			</div>
+		{{/each}}
+	{{else}}
+		<div class="empty-storage">
+			<i class="icon-telicon-configuration main-icon"></i>
+			<div class="main-title">{{ @root.i18n.storagePlanManager.mainTitleNoPlans }}</div>
+			<div class="sub-title">{{ @root.i18n.storagePlanManager.subTitleNoPlans }}</div>
+		</div>
+	{{/compare}}
+</div>

@@ -1036,5 +1036,27 @@
 		"mainTitle": "Your Storage Options.",
 		"subTitle": "Please select from the following storage options available on this account",
 		"select": "Use Selected Storage Option"
+	},
+
+	"__comment": "UI-2788",
+	"__version": "4.1",
+	"storagePlanManager": {
+		"changeButton": "Change Storage Option",
+		"deleteButton": "Remove Settings",
+		"noPlans": "No Plans Configured on this Account.",
+		"notConfigured": "This plan is not configured yet. Click here to choose a storage option.",
+		"mainTitleWithPlans": "It looks like this account doesn't have any storage configured for this plan yet.",
+		"subTitleWithPlans": "There are {{variable}} storage options detected on your account, please select one to enable this plan.",
+		"mainTitleNoPlans": "You don't have any connector configured on your account.",
+		"subTitleNoPlans": "You need to enable Integrations app (like AWS Connector or Google Drive Connector) in order to use a Storage Plan.",
+		"chooseButton": "Choose Storage Option",
+		"confirmChange": "Changing storage options will reset all your current folder configurations for storing saved files. If you choose to continue, you will have to reconfigure all the storage folders for this plan on this account.",
+		"confirmYes": "Yes, Change Storage Options",
+		"confirmTitle": "Warning! Are you sure?",
+		"confirmDelete": "Yes, Remove Setting",
+		"confirmDeleteText": "This will remove this Storage plan from this account.",
+		"confirmDeleteTitle": "Warning! Are you sure?",
+		"successUpdate": "Your Storage Settings were successfully updated!",
+		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
 	}
 }
