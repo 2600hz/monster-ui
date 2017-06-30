@@ -312,11 +312,13 @@ define(function(require){
 		insertTemplate: function($container, callback, pOptions) {
 			var coreApp = monster.apps.core,
 				options = $.extend(true, {
+					hasBackground: true,
 					title: coreApp.i18n.active().insertTemplate.title,
 					text: coreApp.i18n.active().insertTemplate.text,
 					duration: 250
 				}, pOptions),
 				dataToTemplate = {
+					hasBackground: options.hasBackground,
 					cssClass: options.cssClass,
 					title: options.title,
 					text: options.text

@@ -28,6 +28,7 @@ List of options to customize the loading view:
 * `text`: [String][string_literal] (optional) - text displayed in the loading view
 * `duration`: [Number][integer] (optional, default: `250`) - duration of the fadeIn animation for the inserted template
 * `cssClass`: [String][string_literal] (optional, default: `app-content`) - custom CSS classes for the loading view
+* `hasBackground`: [Boolean][boolean_literal] (optional, default: `true`) - show the loading spinner/text/title without any background if set to `false` (overridden by `cssClass`)
 
 ### Description
 
@@ -86,3 +87,4 @@ monster.ui.insertTemplate($target, function(callback) {
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
 [integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers
+[boolean_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Boolean_literals
