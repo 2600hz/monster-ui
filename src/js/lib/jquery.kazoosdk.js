@@ -288,6 +288,7 @@
 				'updateComment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'deleteComment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'deleteAllComments': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
+				'getTimeline': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/timeline' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
 				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' }
 			},
