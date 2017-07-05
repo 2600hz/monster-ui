@@ -1354,7 +1354,8 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.accountId,
+					reason: ''
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
