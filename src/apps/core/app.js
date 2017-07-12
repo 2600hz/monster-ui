@@ -622,21 +622,12 @@ define(function(require) {
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
 			// If there are no active requests after the timeout, then we can safely remove the spinner.
 			// We do this to avoid showing and hiding the spinner too quickly
-<<<<<<< HEAD
 			if (!self.request.counter) {
 				self.request.active = false;
 
 				self.spinner.endTimeout = setTimeout(function() {
 					if ($spinner.hasClass('active')) {
 						$spinner.removeClass('active');
-=======
-			if (!self.spinner.requestAmount) {
-				self.spinner.active = false;
-
-				self.spinner.endTimeout = setTimeout(function() {
-					if (spinner.hasClass('active')) {
-						spinner.removeClass('active');
->>>>>>> 61190a5... UI-2693: Separate spinner and request timing logic (#88)
 					}
 
 					clearTimeout(self.spinner.startTimeout);

@@ -1937,24 +1937,23 @@ define(function(require){
 								$(this).hide()
 									.empty();
 
-					self.isTabLoadingInProgress = false;
+								var finalArgs = {
+									parent: parent,
+									container: parent.find('.app-content-wrapper')
+								};
 
-					var finalArgs = {
-						parent: parent,
-						container: parent.find('.app-content-wrapper')
-					};
+								if (!_.isEmpty(args)) {
+									finalArgs.data = args;
+								}
 
-					if (!_.isEmpty(args)) {
-						finalArgs.data = args;
-					}
-
-					if (!args.hasOwnProperty('subTab')) {
-						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
-					} else {
-						var subTab = args.subTab;
-						delete args.subTab;
-						monster.ui.loadTab(thisArg, subTab, args);
-					}
+								if (!args.hasOwnProperty('subTab')) {
+									(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
+								} else {
+									var subTab = args.subTab;
+									delete args.subTab;
+									monster.ui.loadTab(thisArg, subTab, args);
+								}
+							});
 				};
 
 			if (isSubnav) {
