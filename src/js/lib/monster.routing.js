@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -15,14 +15,14 @@ define(function(require){
 				});
 			},
 			isMasqueradable = function(id) {
-				return /^[0-9a-f]{32}$/i.test(query.m) && (monster.apps.auth.currentAccount.id !== query.m);
+				return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
 			};
 
 		monster.pub('apploader.hide');
 		monster.pub('myaccount.hide');
 
 		// See if we have a 'm' query string (masquerading), and see if it's an ID, if yes, then trigger an attempt to masquerade
-		if(query && query.hasOwnProperty('m') && isMasqueradable(query.m)) {
+		if (query && query.hasOwnProperty('m') && isMasqueradable(query.m)) {
 			var accountData = { id: query.m };
 
 			monster.pub('core.triggerMasquerading', {
@@ -31,8 +31,7 @@ define(function(require){
 					renderApp();
 				}
 			});
-		}
-		else {
+		} else {
 			renderApp();
 		}
 	};
@@ -55,7 +54,7 @@ define(function(require){
 
 			this.routes.push(crossroads.addRoute(url, callback));
 
-			if(currentUrl === url) {
+			if (currentUrl === url) {
 				this.parseHash(url);
 			}
 		},
@@ -66,17 +65,16 @@ define(function(require){
 			};
 
 			this.add('apps/{appName}:?query:', function(appName, query) {
-				if(monster && monster.apps && monster.apps.auth) {
-					if(appWhitelist.hasOwnProperty(appName)) {
-						if(!appWhitelist[appName].onlyAdmins || monster.util.isAdmin()) {
+				if (monster && monster.apps && monster.apps.auth) {
+					if (appWhitelist.hasOwnProperty(appName)) {
+						if (!appWhitelist[appName].onlyAdmins || monster.util.isAdmin()) {
 							loadApp(appName, query);
 						}
-					}
-					else {
+					} else {
 						var found = false;
 
 						_.each(monster.apps.auth.installedApps, function(app) {
-							if(appName === app.name && !found) {
+							if (appName === app.name && !found) {
 								loadApp(appName, query);
 
 								found = true;
@@ -96,7 +94,7 @@ define(function(require){
 				onEvent = function(newHash, oldHash) {
 					self.parseHash(newHash, oldHash);
 				};
-			
+
 			this.addDefaultRoutes();
 
 			hasher.initialized.add(onEvent); // parse initial hash
@@ -106,8 +104,8 @@ define(function(require){
 			crossroads.ignoreState = true;
 		},
 
-		parseHash: function(newHash, oldHash) {
-			if(!newHash || newHash === '') {
+		parseHash: function(newHash) {
+			if (!newHash || newHash === '') {
 				newHash = this.getUrl();
 			}
 
