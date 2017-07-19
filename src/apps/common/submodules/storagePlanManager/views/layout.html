@@ -1,7 +1,7 @@
 <div id="storage_plan_manager_wrapper">
 	{{#compare countAttachments ">" 0}}
 		{{#each plans}}
-			<div class="storage-provider-wrapper" data-plan="{{extra.type}}"{{#if extra.isConfigured}} data-path="{{params.folder_path}}"{{/if}}>
+			<div class="storage-provider-wrapper" data-plan="{{extra.type}}"{{#if extra.isConfigured}} data-path="{{attachments.params.folder_path}}"{{/if}}>
 				{{#unless @root.hideActions}}
 					{{#if extra.isConfigured}}
 						<button class="monster-button-primary choose-plan">{{ @root.i18n.storagePlanManager.changeButton }}</button>
@@ -32,7 +32,7 @@
 										/
 									</span>
 									<span class="custom-path">
-										{{ params.folder_path }}
+										{{ attachments.params.folder_path }}
 									</span>
 								</span>
 								<i class="edit-path fa fa-cog"></i>

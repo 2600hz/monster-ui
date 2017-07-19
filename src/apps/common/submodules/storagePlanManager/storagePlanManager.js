@@ -132,8 +132,9 @@ define(function(require) {
 			self.storagePlanManagerGetStorage(function(storage) {
 				var updatedStorage = $.extend(true, {}, storage);
 
-				updatedStorage.plan.modb.types[type].params = updatedStorage.plan.modb.types[type].params || {};
-				updatedStorage.plan.modb.types[type].params.folder_path = path;
+				updatedStorage.plan.modb.types[type].attachments = updatedStorage.plan.modb.types[type].attachments || {};
+				updatedStorage.plan.modb.types[type].attachments.params = updatedStorage.plan.modb.types[type].attachments.params || {};
+				updatedStorage.plan.modb.types[type].attachments.params.folder_path = path;
 
 				self.storagePlanManagerUpdate(updatedStorage, function(newStorage) {
 					callback && callback(newStorage);
@@ -266,7 +267,6 @@ define(function(require) {
 								detailAttachment: data.storage.attachments[plan.attachments.handler]
 							};
 							formattedData.plans.push(plan);
-
 							// If we added the plan to the list, then we remove it to our array tracking the plans not found
 							if (plansNotFound.indexOf(planType) >= 0) {
 								plansNotFound.splice(plansNotFound.indexOf(planType), 1);
