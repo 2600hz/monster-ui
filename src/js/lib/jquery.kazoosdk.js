@@ -23,6 +23,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}' },
 				'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
 				'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
