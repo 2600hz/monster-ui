@@ -21,32 +21,30 @@ for(var i in appsToInclude) {
 }
 
 var getConfigRequire = function(mode, app) {
-	var	librariesToExclude = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','clipboard','crossroads','config','dependClass','ddslick', 'drop', 'fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider', 'tether', 'timepicker','toastr','touch-punch','underscore','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'];
+	var	librariesToExcludeFromAppBuild = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','clipboard','crossroads','config','dependClass','ddslick', 'drop', 'fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider', 'tether', 'timepicker','toastr','touch-punch','underscore','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'],
+		librariesToExcludeFromWhole = ['pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker'],
+		standardFilesToExclude = ['config','templates'];
 
 	if(mode === 'app') {
 		modules = [
 			{
 				name:'js/main',
-				exclude:[
-					'config',
-					'templates'
-				]
+				exclude: standardFilesToExclude
 			},
 			{
 				name: 'apps/' + app + '/app',
-				exclude: librariesToExclude,
+				exclude: librariesToExcludeFromAppBuild,
 				include: gutil.env.pro ? ['apps/' + app + '/submodules/pro/pro'] : []
 			}
 		];
 	}
 	else if(mode === 'whole') {
+		var excludeFromWhole = standardFilesToExclude.concat(librariesToExcludeFromWhole);
+
 		modules = [
 			{
 				name:'js/main',
-				exclude:[
-					'config',
-					'templates'
-				],
+				exclude: excludeFromWhole,
 				include: requireJsAppsToInclude
 			}
 		];
