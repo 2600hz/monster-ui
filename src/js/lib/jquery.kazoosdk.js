@@ -335,6 +335,15 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 			},
+			security: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/security/{resourceId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/security' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/security/{resourceId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/security/{resourceId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/security' },
+				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/security/attempts' },
+				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/security/attempts/{attemptId}' }
+			},
 			servicePlan: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
