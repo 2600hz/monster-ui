@@ -341,6 +341,7 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 			},
 			security: {
+				'listModules': { verb: 'GET', url: 'security' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/security/{resourceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/security' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/security/{resourceId}' },
