@@ -32,6 +32,10 @@
 				'promote': { verb: 'PUT', url: 'accounts/{accountId}/reseller' },
 				'demote': { verb: 'DELETE', url: 'accounts/{accountId}/reseller' }
 			},
+			apiKey: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/api_key' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/api_key' }
+			},
 			appsStore: {
 				'get': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}' },
 				'list': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store' },
