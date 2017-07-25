@@ -683,3 +683,96 @@ body,
 	cursor: pointer;
 	color: #fff;
 }
+
+/* Choice Picker */
+#monster_choices_selector_wrapper {
+	display: block;
+	width: 700px;
+	margin: auto;
+	padding-top: 60px;
+	text-align: center;
+}
+
+#monster_choices_selector_wrapper .main-title {
+	color: #FFF;
+	font-size: 24px;
+}
+
+#monster_choices_selector_wrapper .sub-title {
+	color: #909099;
+	margin-top: 15px;
+}
+
+#monster_choices_selector_wrapper .choices-options {
+	margin-top: 35px;
+}
+
+#monster_choices_selector_wrapper .choice.selected {
+	color: #C0C0C9;
+	width: 640px;
+	border: 1px solid $primary-color;
+}
+
+#monster_choices_selector_wrapper .choice.selected i {
+	display: inline-block;
+	color: $primary-color;
+	vertical-align: top;
+	line-height: 75px;
+}
+
+#monster_choices_selector_wrapper .choice {
+	border: 1px solid #202029;
+	background: #202029;
+	color: #505059;
+	text-align: left;
+	padding: 10px 25px;
+	height: 75px;
+	line-height: 75px;
+	margin: 10px auto;
+	width: 630px;
+}
+
+#monster_choices_selector_wrapper .choice:hover {
+	background: #26262F;
+	cursor: pointer;
+}
+
+#monster_choices_selector_wrapper .choice .logo-style {
+	margin-right: 20px;
+	height: 75px;
+	width: 220px;
+}
+
+#monster_choices_selector_wrapper .choice .selected-logo,
+#monster_choices_selector_wrapper .choice.selected .standard-logo {
+	display: none;
+}
+
+#monster_choices_selector_wrapper .choice .standard-logo,
+#monster_choices_selector_wrapper .choice.selected .selected-logo {
+	display: inline-block;
+}
+
+#monster_choices_selector_wrapper .choice .choice-name {
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 600;
+	float: right;
+	text-align: right;
+}
+
+#monster_choices_selector_wrapper .choice i {
+	display: none;
+	margin-right: 20px;
+	vertical-align: middle;
+}
+
+#monster_choices_selector_wrapper #select_button {
+	margin-top: 35px;
+}
+
+#monster_choices_selector_wrapper .cancel-link {
+	color: #A0A0A9;
+	display: block;
+	margin-top: 20px;
+}
