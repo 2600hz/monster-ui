@@ -2811,6 +2811,44 @@ define(function(require){
 				};
 
 			return getInstance(pArgs);
+		},
+
+		fullScreenPicker: function(args) {
+			var self = this,
+				dataTemplate = {
+					mainTitle: args.mainTitle,
+					subTitle: args.subTitle,
+					buttonText: args.buttonText,
+					choices: args.choices,
+					hasIcons: args.hasIcons || false
+				};
+
+			var template = $(monster.template(monster.apps.core, 'monster-full-screen-picker', dataTemplate)),
+				modal = monster.ui.fullScreenModal(template);
+
+			template.find('.choice').on('click', function() {
+				var isSelected = $(this).hasClass('selected');
+
+				template.find('.choice').removeClass('selected');
+
+				if (!isSelected) {
+					$(this).addClass('selected');
+				}
+			});
+
+			template.find('#select_button').on('click', function() {
+				var validId = template.find('.choice.selected').data('id');
+
+				if (validId) {
+					modal.close();
+
+					args.afterSelected && args.afterSelected(validId);
+				}
+			});
+
+			template.find('.cancel-link').on('click', function() {
+				modal.close();
+			});
 		}
 	};
 

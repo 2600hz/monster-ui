@@ -1,0 +1,23 @@
+<div id="monster_choices_selector_wrapper">
+	<div class="choice-header">
+		<div class="main-title">{{ mainTitle }}</div>
+		<div class="sub-title">{{ subTitle }}</div>
+	</div>
+	<div class="choices-options">
+		{{#each choices}}
+			<div class="choice" data-id="{{ id }}">
+				<i class="icon-telicon-check-circle"></i>
+				{{#if @root.hasIcons}}
+					<svg class="logo-style selected-logo"><use xlink:href="#{{ logoBrandName }}--color-reverse" /></svg>
+					<svg class="logo-style standard-logo"><use xlink:href="#{{ logoBrandName }}--grey" /></svg>
+				{{/if}}
+				<div class="choice-name">{{ name }}</div>
+			</div>
+		{{/each}}
+	</div>
+
+	<div class="actions">
+		<button id="select_button" class="monster-button-success">{{ buttonText }}</button>
+		<a href="javascript:void(0);" class="monster-link cancel-link">{{ i18n.cancel }}</a>
+	</div>
+</div>

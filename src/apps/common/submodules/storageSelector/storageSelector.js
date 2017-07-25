@@ -15,14 +15,15 @@ define(function(require) {
 			var self = this;
 
 			self.storageSelectorGetData(args, function(data) {
-				var formattedData = self.storageSelectorFormatData(data),
-					template = $(self.getTemplate({
-						name: 'list',
-						submodule: 'storageSelector',
-						data: formattedData
-					})),
-					modal = monster.ui.fullScreenModal(template),
-					afterSelect = function(id) {
+				var formattedData = self.storageSelectorFormatData(data);
+
+				monster.ui.fullScreenPicker({
+					mainTitle: self.i18n.active().storageSelector.mainTitle,
+					subTitle: self.i18n.active().storageSelector.subTitle,
+					buttonText: self.i18n.active().storageSelector.select,
+					choices: formattedData.storageChoices,
+					hasIcons: true,
+					afterSelected: function(id) {
 						var storageAttachment = {
 							id: id
 						};
@@ -32,9 +33,8 @@ define(function(require) {
 						}
 
 						args.callback && args.callback(storageAttachment);
-					};
-
-				self.storageSelectorBind(template, modal, afterSelect);
+					}
+				});
 			});
 		},
 
@@ -86,33 +86,6 @@ define(function(require) {
 			}
 
 			return formattedData;
-		},
-
-		storageSelectorBind: function(template, modal, callback) {
-			var self = this;
-
-			template.find('.storage-choice').on('click', function() {
-				var isSelected = $(this).hasClass('selected');
-
-				template.find('.storage-choice').removeClass('selected');
-
-				if (!isSelected) {
-					$(this).addClass('selected');
-				}
-			});
-
-			template.find('#select_button').on('click', function() {
-				var validId = template.find('.storage-choice.selected').data('id');
-
-				if (validId) {
-					modal.close();
-					callback && callback(validId);
-				}
-			});
-
-			template.find('.cancel-link').on('click', function() {
-				modal.close();
-			});
 		}
 	};
 
