@@ -4,29 +4,29 @@
 	<div class="monster-table-wrapper">
 		<div class="monster-table-header">
 			<button class="monster-button-primary port-wizard">
-				{{i18n.portApp.listing.button}}
+				{{i18n.portListing.listing.button}}
 			</button>
 		</div>
 		<table class="monster-table monster-table-spaced footable" id="submitted_ports_listing">
 			<thead>
 				<tr>
 					<th data-type="html">
-						{{toUpperCase i18n.portApp.misc.portInfo.name}}
+						{{toUpperCase i18n.portListing.misc.portInfo.name}}
 					</th>
 					<th data-type="html">
-						{{toUpperCase i18n.portApp.misc.portInfo.status}}
+						{{toUpperCase i18n.portListing.misc.portInfo.status}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.numbers}}
+						{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.dateSubmitted}}
+						{{toUpperCase i18n.portListing.misc.portInfo.dateSubmitted}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.losingCarrier}}
+						{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.submitter}}
+						{{toUpperCase i18n.portListing.misc.portInfo.submitter}}
 					</th>
 				</tr>
 			</thead>
@@ -39,7 +39,7 @@
 						</div>
 					{{#if carrier_reference_number}}
 						<div class="info">
-							{{replaceVar @root.i18n.portApp.listing.tbody.reference carrier_reference_number}}
+							{{replaceVar @root.i18n.portListing.listing.tbody.reference carrier_reference_number}}
 						</div>
 					{{/if}}
 					</td>
@@ -50,7 +50,7 @@
 							<i class="icon-telicon-prioritize"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.submitted}}
+									{{@root.i18n.portListing.misc.status.submitted}}
 								</div>
 							</div>
 						</div>
@@ -60,7 +60,7 @@
 							<i class="icon-telicon-porting"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.pending}}
+									{{@root.i18n.portListing.misc.status.pending}}
 								</div>
 							</div>
 						</div>
@@ -70,7 +70,7 @@
 							<i class="icon-telicon-calendar"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.scheduled}}
+									{{@root.i18n.portListing.misc.status.scheduled}}
 								</div>
 								<div class="info">
 									({{toFriendlyDate scheduled_date 'dateTime'}})
@@ -83,7 +83,7 @@
 							<i class="icon-telicon-check-circle"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.completed}}
+									{{@root.i18n.portListing.misc.status.completed}}
 								</div>
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 							<i class="icon-telicon-warning"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.rejected}}
+									{{@root.i18n.portListing.misc.status.rejected}}
 								</div>
 							</div>
 						</div>
@@ -103,7 +103,7 @@
 							<i class="icon-telicon-x-circled"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.canceled}}
+									{{@root.i18n.portListing.misc.status.canceled}}
 								</div>
 							</div>
 						</div>
@@ -119,7 +119,7 @@
 					{{#if carrier}}
 						{{carrier}}
 					{{else}}
-						{{@root.i18n.portApp.misc.unknownCarrier}}
+						{{@root.i18n.portListing.misc.unknownCarrier}}
 					{{/if}}
 					</td>
 					<td>
@@ -134,22 +134,22 @@
 {{#if undefinedPorts}}
 	<div class="monster-table-wrapper">
 		<h4 class="title">
-			{{i18n.portApp.listing.title}}
+			{{i18n.portListing.listing.title}}
 		</h4>
 		<table class="monster-table monster-table-spaced footable" id="unconfirmed_ports_listing">
 			<thead>
 				<tr>
 					<th data-type="html">
-						{{toUpperCase i18n.portApp.misc.portInfo.name}}
+						{{toUpperCase i18n.portListing.misc.portInfo.name}}
 					</th>
 					<th data-type="html">
-						{{toUpperCase i18n.portApp.misc.portInfo.status}}
+						{{toUpperCase i18n.portListing.misc.portInfo.status}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.numbers}}
+						{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portApp.misc.portInfo.losingCarrier}}
+						{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
 					</th>
 				</tr>
 			</thead>
@@ -162,7 +162,7 @@
 						</div>
 					{{#if carrier_reference_number}}
 						<div class="info">
-							{{replaceVar @root.i18n.portApp.listing.tbody.reference carrier_reference_number}}
+							{{replaceVar @root.i18n.portListing.listing.tbody.reference carrier_reference_number}}
 						</div>
 					{{/if}}
 					</td>
@@ -171,7 +171,7 @@
 							<i class="fa fa-refresh"></i>
 							<div class="content">
 								<div class="status">
-									{{@root.i18n.portApp.misc.status.unconfirmed}}
+									{{@root.i18n.portListing.misc.status.unconfirmed}}
 								</div>
 							</div>
 						</div>
@@ -183,7 +183,7 @@
 					{{#if carrier}}
 						{{carrier}}
 					{{else}}
-						{{@root.i18n.portApp.misc.unknownCarrier}}
+						{{@root.i18n.portListing.misc.unknownCarrier}}
 					{{/if}}
 					</td>
 				</tr>
@@ -197,13 +197,13 @@
 <div class="listing-section empty-listing">
 	<i class="icon-telicon-porting iconography"></i>
 	<h4 class="title">
-		{{i18n.portApp.listing.empty.title}}
+		{{i18n.portListing.listing.empty.title}}
 	</h4>
 	<p class="text">
-		{{i18n.portApp.listing.empty.text}}
+		{{i18n.portListing.listing.empty.text}}
 	</p>
 	<button class="monster-button-primary port-wizard">
-		{{i18n.portApp.listing.button}}
+		{{i18n.portListing.listing.button}}
 	</button>
 </div>
 {{/if}}

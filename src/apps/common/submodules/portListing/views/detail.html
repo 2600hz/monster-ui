@@ -5,7 +5,7 @@
 				<a href="javascript:void(0);" id="back">
 					<i class="icon-telicon-caret-left"></i>
 					<span>
-						{{i18n.portApp.detail.buttons.back}}
+						{{i18n.portListing.detail.buttons.back}}
 					</span>
 				</a>
 				<div class="title">
@@ -17,7 +17,7 @@
 				{{#if port.extra.lastSubmitted}}
 					<div class="control-group">
 						<label class="control-label">
-							{{i18n.portApp.misc.portInfo.dateSubmitted}}
+							{{i18n.portListing.misc.portInfo.dateSubmitted}}
 						</label>
 						<div class="controls">
 							<span class="text">
@@ -27,7 +27,7 @@
 					</div>
 					<div class="control-group">
 						<label class="control-label">
-							{{i18n.portApp.misc.portInfo.submitter}}
+							{{i18n.portListing.misc.portInfo.submitter}}
 						</label>
 						<div class="controls">
 							<div class="text">
@@ -38,14 +38,14 @@
 				{{/if}}
 					<div class="control-group">
 						<label class="control-label">
-							{{i18n.portApp.misc.portInfo.losingCarrier}}
+							{{i18n.portListing.misc.portInfo.losingCarrier}}
 						</label>
 						<div class="controls">
 							<span class="text">
 							{{#if port.carrier}}
 								{{port.carrier}}
 							{{else}}
-								{{i18n.portApp.misc.unknownCarrier}}
+								{{i18n.portListing.misc.unknownCarrier}}
 							{{/if}}
 							</span>
 						</div>
@@ -54,10 +54,10 @@
 			{{#if isSuperDuper}}
 				<div class="admin-links">
 					<a class="monster-link" id="load_wizard">
-						{{i18n.portApp.detail.links.view}}
+						{{i18n.portListing.detail.links.view}}
 					</a>
 					<a class="monster-link" id="download_attachments">
-						{{i18n.portApp.detail.links.download}}
+						{{i18n.portListing.detail.links.download}}
 					</a>
 				</div>
 			{{/if}}
@@ -70,7 +70,7 @@
 							<i class="icon-telicon-prioritize"></i>
 						</div>
 						<div class="status">
-							{{@root.i18n.portApp.misc.status.submitted}}
+							{{@root.i18n.portListing.misc.status.submitted}}
 						</div>
 					</div>
 					<div class="node small{{#compare port_state '===' 'pending'}} in-progress{{/compare}}{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} in-progress{{/compare}}{{#compare port_state '===' 'canceled'}} in-progress{{/compare}}">
@@ -78,7 +78,7 @@
 							<i class="icon-telicon-porting"></i>
 						</div>
 						<div class="status">
-							{{@root.i18n.portApp.misc.status.pending}}
+							{{@root.i18n.portListing.misc.status.pending}}
 						</div>
 					</div>
 					<div class="node small{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} warning{{/compare}}{{#compare port_state '===' 'canceled'}} error{{/compare}}">
@@ -95,12 +95,12 @@
 						</div>
 						<div class="status">
 						{{#compare port_state '===' 'rejected'}}
-							{{@root.i18n.portApp.misc.status.rejected}}
+							{{@root.i18n.portListing.misc.status.rejected}}
 						{{else}}
 						{{#compare port_state '===' 'canceled'}}
-							{{@root.i18n.portApp.misc.status.canceled}}
+							{{@root.i18n.portListing.misc.status.canceled}}
 						{{else}}
-							{{@root.i18n.portApp.misc.status.scheduled}}
+							{{@root.i18n.portListing.misc.status.scheduled}}
 						{{/compare}}
 						{{/compare}}
 						{{#compare port_state '===' 'scheduled'}}
@@ -116,7 +116,7 @@
 							<i class="icon-telicon-check-circle"></i>
 						</div>
 						<div class="status">
-							{{@root.i18n.portApp.misc.status.completed}}
+							{{@root.i18n.portListing.misc.status.completed}}
 						</div>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
 			<div>
 			{{#if isUpdatable}}
 				<button class="monster-button-primary" id="update_status">
-					{{i18n.portApp.detail.buttons.update}}
+					{{i18n.portListing.detail.buttons.update}}
 				</button>
 			{{/if}}
 			</div>
@@ -137,9 +137,9 @@
 			<div class="title">
 				{{extra.numbersAmount}} 
 			{{#compare extra.numbersAmount '===' 1}}
-				{{@root.i18n.portApp.detail.numbers.singular}}
+				{{@root.i18n.portListing.detail.numbers.singular}}
 			{{else}}
-				{{@root.i18n.portApp.detail.numbers.plural}}
+				{{@root.i18n.portListing.detail.numbers.plural}}
 			{{/compare}}
 			</div>
 			<div class="search-box">
@@ -200,7 +200,7 @@
 								{{#if title}}
 									{{title}}
 								{{else}}
-									{{@root.i18n.portApp.misc.unknownUser}}
+									{{@root.i18n.portListing.misc.unknownUser}}
 								{{/if}}
 								</div>
 								<div class="time">
@@ -211,7 +211,7 @@
 									{{content}}
 								{{#if needFix}}
 									<button class="monster-button-primary fix-port-request">
-										{{@root.i18n.portApp.detail.buttons.fix}}
+										{{@root.i18n.portListing.detail.buttons.fix}}
 									</button>
 								{{/if}}
 								</div>
@@ -228,9 +228,9 @@
 		</div>
 	{{#if extra.canComment}}
 		<div class="textarea-wrapper">
-			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portApp.detail.textarea.placeholder}}"></textarea>
+			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
 			<button class="monster-button-success" id="add_comment">
-				{{@root.i18n.portApp.detail.buttons.send}}
+				{{@root.i18n.portListing.detail.buttons.send}}
 			</button>
 		</div>
 	{{/if}}

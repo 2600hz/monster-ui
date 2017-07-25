@@ -1,7 +1,7 @@
 <form class="form-horizontal" id="form_update_status">
 	<div class="control-group">
 		<label class="control-label">
-			{{i18n.portApp.detail.dialog.label.current}}
+			{{i18n.portListing.detail.dialog.label.current}}
 		</label>
 		<div class="controls">
 			<span class="text">
@@ -11,12 +11,12 @@
 	</div>
 	<div class="control-group">
 		<label for="state" class="control-label">
-			{{i18n.portApp.detail.dialog.label.new}}
+			{{i18n.portListing.detail.dialog.label.new}}
 		</label>
 		<div class="controls">
 			<select name="state" id="state">
 				<option value="">
-				{{i18n.portApp.detail.dialog.default}}
+				{{i18n.portListing.detail.dialog.default}}
 				</option>
 			{{#each availableStates}}
 				<option value="{{value}}">
@@ -31,9 +31,9 @@
 	<div class="message-input show-link">
 		<a class="monster-link" id="add_message">
 			<i class="fa fa-plus"></i>
-			{{i18n.portApp.detail.dialog.message.link}}
+			{{i18n.portListing.detail.dialog.message.link}}
 		</a>
-		<textarea name="message" id="message" rows="3" placeholder="{{i18n.portApp.detail.dialog.message.placeholder}}"></textarea>
+		<textarea name="message" id="message" rows="3" placeholder="{{i18n.portListing.detail.dialog.message.placeholder}}"></textarea>
 	</div>
 	<div class="actions">
 		<div class="pull-right">
@@ -41,7 +41,7 @@
 				{{i18n.cancel}}
 			</button>
 			<button class="monster-button-success update" disabled="true">
-				{{i18n.portApp.detail.dialog.ok}}
+				{{i18n.portListing.detail.dialog.ok}}
 			</button>
 		</div>
 	</div>
