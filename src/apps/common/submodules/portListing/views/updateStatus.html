@@ -1,0 +1,48 @@
+<form class="form-horizontal" id="form_update_status">
+	<div class="control-group">
+		<label class="control-label">
+			{{i18n.portApp.detail.dialog.label.current}}
+		</label>
+		<div class="controls">
+			<span class="text">
+				{{currentState}}
+			</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label for="state" class="control-label">
+			{{i18n.portApp.detail.dialog.label.new}}
+		</label>
+		<div class="controls">
+			<select name="state" id="state">
+				<option value="">
+				{{i18n.portApp.detail.dialog.default}}
+				</option>
+			{{#each availableStates}}
+				<option value="{{value}}">
+					{{label}}
+				</option>
+			{{/each}}
+			</select>
+		</div>
+	</div>
+	<div class="dynamic-content">
+	</div>
+	<div class="message-input show-link">
+		<a class="monster-link" id="add_message">
+			<i class="fa fa-plus"></i>
+			{{i18n.portApp.detail.dialog.message.link}}
+		</a>
+		<textarea name="message" id="message" rows="3" placeholder="{{i18n.portApp.detail.dialog.message.placeholder}}"></textarea>
+	</div>
+	<div class="actions">
+		<div class="pull-right">
+			<button class="monster-button cancel">
+				{{i18n.cancel}}
+			</button>
+			<button class="monster-button-success update" disabled="true">
+				{{i18n.portApp.detail.dialog.ok}}
+			</button>
+		</div>
+	</div>
+</form>

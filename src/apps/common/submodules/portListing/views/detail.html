@@ -1,0 +1,239 @@
+<div class="app-content" id="port_detail_view">
+	<div class="info-panel">
+		<div class="port-section">
+			<div>
+				<a href="javascript:void(0);" id="back">
+					<i class="icon-telicon-caret-left"></i>
+					<span>
+						{{i18n.portApp.detail.buttons.back}}
+					</span>
+				</a>
+				<div class="title">
+					{{port.name}}
+				</div>
+			</div>
+			<div>
+				<form class="monster-form form-horizontal">
+				{{#if port.extra.lastSubmitted}}
+					<div class="control-group">
+						<label class="control-label">
+							{{i18n.portApp.misc.portInfo.dateSubmitted}}
+						</label>
+						<div class="controls">
+							<span class="text">
+								{{toFriendlyDate port.extra.lastSubmitted.timestamp date}}
+							</span>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							{{i18n.portApp.misc.portInfo.submitter}}
+						</label>
+						<div class="controls">
+							<div class="text">
+								{{port.extra.lastSubmitted.submitter}}
+							</div>
+						</div>
+					</div>
+				{{/if}}
+					<div class="control-group">
+						<label class="control-label">
+							{{i18n.portApp.misc.portInfo.losingCarrier}}
+						</label>
+						<div class="controls">
+							<span class="text">
+							{{#if port.carrier}}
+								{{port.carrier}}
+							{{else}}
+								{{i18n.portApp.misc.unknownCarrier}}
+							{{/if}}
+							</span>
+						</div>
+					</div>
+				</form>
+			{{#if isSuperDuper}}
+				<div class="admin-links">
+					<a class="monster-link" id="load_wizard">
+						{{i18n.portApp.detail.links.view}}
+					</a>
+					<a class="monster-link" id="download_attachments">
+						{{i18n.portApp.detail.links.download}}
+					</a>
+				</div>
+			{{/if}}
+			</div>
+			<div>
+			{{#with port}}
+				<div class="monster-statuses">
+					<div class="node small {{#compare port_state '===' 'completed'}}success{{else}}in-progress{{/compare}}">
+						<div class="iconography">
+							<i class="icon-telicon-prioritize"></i>
+						</div>
+						<div class="status">
+							{{@root.i18n.portApp.misc.status.submitted}}
+						</div>
+					</div>
+					<div class="node small{{#compare port_state '===' 'pending'}} in-progress{{/compare}}{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} in-progress{{/compare}}{{#compare port_state '===' 'canceled'}} in-progress{{/compare}}">
+						<div class="iconography">
+							<i class="icon-telicon-porting"></i>
+						</div>
+						<div class="status">
+							{{@root.i18n.portApp.misc.status.pending}}
+						</div>
+					</div>
+					<div class="node small{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} warning{{/compare}}{{#compare port_state '===' 'canceled'}} error{{/compare}}">
+						<div class="iconography">
+						{{#compare port_state '===' 'rejected'}}
+							<i class="icon-telicon-warning"></i>
+						{{else}}
+						{{#compare port_state '===' 'canceled'}}
+							<i class="icon-telicon-x-circled"></i>
+						{{else}}
+							<i class="icon-telicon-calendar"></i>
+						{{/compare}}
+						{{/compare}}
+						</div>
+						<div class="status">
+						{{#compare port_state '===' 'rejected'}}
+							{{@root.i18n.portApp.misc.status.rejected}}
+						{{else}}
+						{{#compare port_state '===' 'canceled'}}
+							{{@root.i18n.portApp.misc.status.canceled}}
+						{{else}}
+							{{@root.i18n.portApp.misc.status.scheduled}}
+						{{/compare}}
+						{{/compare}}
+						{{#compare port_state '===' 'scheduled'}}
+							<br>
+							<span class="detail">
+								({{toFriendlyDate scheduled_date}})
+							</span>
+						{{/compare}}
+						</div>
+					</div>
+					<div class="node{{#compare port_state '===' 'completed'}} success{{/compare}}">
+						<div class="iconography">
+							<i class="icon-telicon-check-circle"></i>
+						</div>
+						<div class="status">
+							{{@root.i18n.portApp.misc.status.completed}}
+						</div>
+					</div>
+				</div>
+			{{/with}}
+			</div>
+		{{#if isSuperDuper}}
+			<div>
+			{{#if isUpdatable}}
+				<button class="monster-button-primary" id="update_status">
+					{{i18n.portApp.detail.buttons.update}}
+				</button>
+			{{/if}}
+			</div>
+		{{/if}}
+		</div>
+		<div class="numbers-section">
+		{{#with port}}
+			<div class="title">
+				{{extra.numbersAmount}} 
+			{{#compare extra.numbersAmount '===' 1}}
+				{{@root.i18n.portApp.detail.numbers.singular}}
+			{{else}}
+				{{@root.i18n.portApp.detail.numbers.plural}}
+			{{/compare}}
+			</div>
+			<div class="search-box">
+				<i class="fa fa-search"></i>
+				<input type="text" class="search-query" id="numbers_search" placeholder="Search...">
+			</div>
+			<ul class="numbers-listing">
+			{{#each numbers}}
+				<li data-value="{{@key}}">
+					<div class="number-wrapper">
+						{{formatPhoneNumber @key}}
+					</div>
+				</li>
+			{{/each}}
+			</ul>
+		{{/with}}
+		</div>
+	</div>
+{{#with port}}
+	<div class="timeline-panel-wrapper justify-content-{{#if extra.canComment}}end{{else}}start{{/if}}">
+		<div class="timeline-panel">
+			<ul class="timeline">
+		{{#if extra.timeline}}
+			{{#each extra.timeline}}
+				<li class="day" data-timestamp="{{timestamp}}">
+					<div class="date">
+						{{toFriendlyDate timestamp 'calendarDate' undefined false}}
+					</div>
+					<ul class="entries">
+					{{#each entries}}
+						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{/if}}">
+							<div class="icon-wrapper">
+							{{#if status}}
+								{{#compare status '===' 'submitted'}}
+									<i class="icon-telicon-prioritize iconography"></i>
+								{{/compare}}
+								{{#compare status '===' 'pending'}}
+									<i class="icon-telicon-porting iconography"></i>
+								{{/compare}}
+								{{#compare status '===' 'scheduled'}}
+									<i class="icon-telicon-calendar iconography"></i>
+								{{/compare}}
+								{{#compare status '===' 'rejected'}}
+									<i class="icon-telicon-warning iconography"></i>
+								{{/compare}}
+								{{#compare status '===' 'completed'}}
+									<i class="icon-telicon-check-circle iconography"></i>
+								{{/compare}}
+								{{#compare status '===' 'canceled'}}
+									<i class="icon-telicon-x-circled iconography"></i>
+								{{/compare}}
+							{{else}}
+								<i class="fa fa-envelope iconography"></i>
+							{{/if}}
+							</div>
+							<div class="entry">
+								<div class="title">
+								{{#if title}}
+									{{title}}
+								{{else}}
+									{{@root.i18n.portApp.misc.unknownUser}}
+								{{/if}}
+								</div>
+								<div class="time">
+									{{toFriendlyDate timestamp 'time' undefined false}}
+								</div>
+							{{#if content}}
+								<div class="content">
+									{{content}}
+								{{#if needFix}}
+									<button class="monster-button-primary fix-port-request">
+										{{@root.i18n.portApp.detail.buttons.fix}}
+									</button>
+								{{/if}}
+								</div>
+							{{/if}}
+							</div>
+						</li>
+					{{/each}}
+					</ul>
+				</li>
+			{{/each}}
+		{{else}}
+		{{/if}}
+			</ul>
+		</div>
+	{{#if extra.canComment}}
+		<div class="textarea-wrapper">
+			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portApp.detail.textarea.placeholder}}"></textarea>
+			<button class="monster-button-success" id="add_comment">
+				{{@root.i18n.portApp.detail.buttons.send}}
+			</button>
+		</div>
+	{{/if}}
+	</div>
+{{/with}}
+</div>
