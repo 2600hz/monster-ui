@@ -4,15 +4,7 @@ define(function(require) {
 		timezone = require('monster-timezone'),
 		monster = require('monster');
 
-	var app = {
-		name: 'port',
-
-		css: [ 'app' ],
-
-		i18n: {
-			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
-		},
+	var portListing = {
 
 		// Defines API requests not included in the SDK
 		requests: {},
@@ -30,47 +22,6 @@ define(function(require) {
 			{ value: 'canceled', next: [] }
 		],
 
-		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		load: function(callback) {
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		initApp: function(callback) {
-			var self = this;
-
-			// Used to init the auth token and account id of this app
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
-		},
-
-		// Entry Point of the app
-		render: function(container) {
-			var self = this,
-				parent = $(_.isEmpty(container) ? '#monster_conent' : container);
-
-			parent.empty();
-
-			monster.ui.generateAppLayout(self, {
-				appType: 'docked',
-				menus: [
-					{
-						tabs: [
-							{
-								callback: self.renderLayout
-							}
-						]
-					}
-				]
-			});
-		},
-
 		/**************************************************
 		 *               Templates rendering              *
 		 **************************************************/
@@ -82,7 +33,8 @@ define(function(require) {
 					name: 'layout',
 					data: {
 						isSuperDuper: monster.util.isSuperDuper()
-					}
+					},
+					submodule: 'portListing'
 				}));
 
 			container
@@ -102,7 +54,8 @@ define(function(require) {
 				initTemplate = function initTemplate(results) {
 					var template = $(self.getTemplate({
 						name: 'listing',
-						data: formatDataToTemplate(results)
+						data: formatDataToTemplate(results),
+						submodule: 'portListing'
 					}));
 
 					monster.ui.footable(template.find('#submitted_ports_listing'));
@@ -110,7 +63,8 @@ define(function(require) {
 					template
 						.find('#submitted_ports_listing .footable-filtering .form-inline')
 							.prepend($(self.getTemplate({
-								name: 'listing-customSelect'
+								name: 'listing-customSelect',
+								submodule: 'portListing'
 							})));
 
 					monster.ui.footable(template.find('#unconfirmed_ports_listing'), {
@@ -119,7 +73,7 @@ define(function(require) {
 						}
 					});
 
-					self.bindRenderListingEvents(template, $.extend(true, {}, args, {
+					self.bindListingEvents(template, $.extend(true, {}, args, {
 						data: {
 							ports: _.reduce(results.ports, function(object, port) {
 								object[port.id] = port;
@@ -242,7 +196,8 @@ define(function(require) {
 							name: 'filtering',
 							data: {
 								accountName: accountName
-							}
+							},
+							submodule: 'portListing'
 						})));
 
 				monster.pub('common.accountBrowser.render', {
@@ -276,10 +231,11 @@ define(function(require) {
 				initTemplate = function initTemplate(results) {
 					var template = $(self.getTemplate({
 						name: 'detail',
-						data: formatDataToTemplate(results)
+						data: formatDataToTemplate(results),
+						submodule: 'portListing'
 					}));
 
-					self.bindRenderDetailEvents(template, $.extend(true, {}, args, {
+					self.bindDetailEvents(template, $.extend(true, {}, args, {
 						data: {
 							port: results.port
 						}
@@ -375,7 +331,8 @@ define(function(require) {
 							};
 						}),
 						request: port
-					}
+					},
+					submodule: 'portListing'
 				})),
 				dialog;
 
@@ -390,7 +347,7 @@ define(function(require) {
 				dialogClass: 'port-app-dialog'
 			});
 
-			self.bindRenderUpdateStatusEvents(dialog, args);
+			self.bindUpdateStatusEvents(dialog, args);
 		},
 
 		renderUpdateStatusDefault: function(dialog) {
@@ -400,7 +357,8 @@ define(function(require) {
 				.find('.dynamic-content')
 					.empty()
 					.append($(self.getTemplate({
-						name: 'updateStatus-default'
+						name: 'updateStatus-default',
+						submodule: 'portListing'
 					})));
 		},
 
@@ -410,7 +368,8 @@ define(function(require) {
 				portId = data.portId,
 				port = data.ports[portId],
 				template = $(self.getTemplate({
-					name: 'updateStatus-scheduled'
+					name: 'updateStatus-scheduled',
+					submodule: 'portListing'
 				})),
 				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : new Date(),
 				$timezoneSelect = template.find('#scheduled_timezone');
@@ -442,7 +401,8 @@ define(function(require) {
 						name: 'updateStatus-rejected',
 						data: {
 							reasons: self.i18n.active().portApp.detail.dialog.reason.list
-						}
+						},
+						submodule: 'portListing'
 					})));
 		},
 
@@ -450,7 +410,7 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
-		bindRenderListingEvents: function(template, args) {
+		bindListingEvents: function(template, args) {
 			var self = this;
 
 			template
@@ -520,7 +480,7 @@ define(function(require) {
 					});
 		},
 
-		bindRenderDetailEvents: function(template, args) {
+		bindDetailEvents: function(template, args) {
 			var self = this,
 				portId = args.data.portId,
 				port = args.data.port;
@@ -639,7 +599,7 @@ define(function(require) {
 					});
 		},
 
-		bindRenderUpdateStatusEvents: function(dialog, args) {
+		bindUpdateStatusEvents: function(dialog, args) {
 			var self = this;
 
 			dialog
@@ -834,7 +794,8 @@ define(function(require) {
 							.find('.timeline .day:last-child .entries')
 								.append($(self.getTemplate({
 									name: 'timeline-entry',
-									data: formattedComment
+									data: formattedComment,
+									submodule: 'portListing'
 								})));
 					} else {
 						container
@@ -844,7 +805,8 @@ define(function(require) {
 									data: {
 										timestamp: timestampOfDay,
 										entries: [ formattedComment ]
-									}
+									},
+									submodule: 'portListing'
 								})));
 					}
 
@@ -1063,5 +1025,5 @@ define(function(require) {
 		}
 	};
 
-	return app;
+	return portListing;
 });
