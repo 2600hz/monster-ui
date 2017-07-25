@@ -2744,6 +2744,8 @@ define(function(require){
 						args = pArgs || {},
 						dataTemplate = {
 							id: id,
+							cssContentId: args.cssContentId,
+							inverseBg: args.inverseBg,
 							hideClose: args.hasOwnProperty('hideClose') ? args.hideClose : false
 						},
 						destroyOnClose = args.hasOwnProperty('destroyOnClose') ? args.destroyOnClose : true,

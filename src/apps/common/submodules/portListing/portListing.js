@@ -11,7 +11,7 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {
-			'common.portListing.render': 'portListingRenderLayout'
+			'common.portListing.render': 'portListingRender'
 		},
 
 		states: [
@@ -23,6 +23,25 @@ define(function(require) {
 			{ value: 'completed', next: [] },
 			{ value: 'canceled', next: [] }
 		],
+
+		portListingRender: function(args) {
+			var self = this,
+				modal;
+
+			if (args.isMonsterApp) {
+				self.portListingRenderLayout(args);
+			} else {
+				modal = monster.ui.fullScreenModal(null, {
+					inverseBg: true,
+					contentId: 'port_app_container'
+				});
+
+				self.portListingRenderLayout({
+					container: $('.core-absolute').find('#' + modal.getId() + ' .modal-content'),
+					data: args.data
+				});
+			}
+		},
 
 		/**************************************************
 		 *               Templates rendering              *

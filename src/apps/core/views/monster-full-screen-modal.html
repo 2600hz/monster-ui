@@ -1,7 +1,7 @@
-<div id="{{id}}" class="modal-full-screen-wrapper" data-id="{{id}}">
+<div id="{{id}}" class="modal-full-screen-wrapper{{#if inverseBg}} inverse-bg{{/if}}" data-id="{{id}}">
 	{{#unless hideClose}}
 		<i class="icon-telicon-x-circled close-modal"></i>
 	{{/unless}}
 
-	<div class="modal-content"></div>
+	<div class="modal-content"{{#if cssContentId}} id="{{cssContentId}}"{{/if}}></div>
 </div>
