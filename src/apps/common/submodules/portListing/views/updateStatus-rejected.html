@@ -1,0 +1,24 @@
+<p class="info">
+	{{i18n.portListing.detail.dialog.info.rejected.one}}
+	<strong>
+		{{i18n.portListing.misc.status.rejected}}
+	</strong>
+	{{i18n.portListing.detail.dialog.info.rejected.two}}
+</p>
+<div class="control-group">
+	<label for="reason" class="control-label">
+		{{i18n.portListing.detail.dialog.label.reason}}
+	</label>
+	<div class="controls">
+		<select name="reason" id="reason">
+			<option value="">
+				{{i18n.portListing.detail.dialog.reason.default}}
+			</option>
+		{{#each reasons}}
+			<option value="{{@key}}">
+				{{label}}
+			</option>
+		{{/each}}
+		</select>
+	</div>
+</div>

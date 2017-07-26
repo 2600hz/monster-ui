@@ -838,6 +838,164 @@
 		"customCarrierName": "Custom Carrier Module Name"
 	},
 
+	"portListing": {
+		"misc": {
+			"unknownUser": "Unknown User",
+			"unknownCarrier": "Unknown Carrier",
+			"portInfo": {
+				"name": "Request Name",
+				"status": "Status",
+				"numbers": "Numbers",
+				"dateSubmitted": "Date Submitted",
+				"submitter": "Submitter",
+				"losingCarrier": "Losing Carrier"
+			},
+			"alternateStatus": {
+				"rejected": "Rejected"
+			},
+			"status": {
+				"unconfirmed": "Resume Request",
+				"submitted": "Port Requested",
+				"pending": "Submitted to Carrier",
+				"scheduled": "Scheduled by Carrier",
+				"completed": "Successful",
+				"rejected": "Rejected - Action Required",
+				"canceled": "Canceled"
+			}
+		},
+		"filtering": {
+			"title": "Accounts",
+			"hint": "Viewing"
+		},
+		"listing": {
+			"title": "Incomplete Requests - Saved for Later",
+			"customSelect": {
+				"byStatus": "View by Status",
+				"forToday": "Scheduled for Today",
+				"all": "All Port Requests"
+			},
+			"button": "New Port Request",
+			"empty": {
+				"title": "There are no active port request for this account.",
+				"text": "Hmm... this blue button seems important..."
+			},
+			"tbody": {
+				"reference": "Ref: {{variable}}"
+			}
+		},
+		"detail": {
+			"title": "Request Status",
+			"dialog": {
+				"title": "Update Port Request Status",
+				"label": {
+					"timezone": "Timezone",
+					"current": "Current Status",
+					"new": "New Status",
+					"date": "Scheduled Date",
+					"time": "Scheduled Time",
+					"reason": "Rejection Reason"
+				},
+				"select": {
+					"status": "Choose a New Status",
+					"reason": "Select a Reason for Rejection"
+				},
+				"default": "Choose a New Status",
+				"info": {
+					"default": "You are about to change the status of this port request. Please make sure you have selected the correct new status before confirming the update.",
+					"scheduled": {
+						"one": "You selected the new status as ",
+						"two": ". Please add the scheduled date and time below."
+					},
+					"rejected": {
+						"one": "You selected the new status as ",
+						"two": ". Please add the reason why."
+					}
+				},
+				"reason": {
+					"default": "Select a reason for Rejection",
+					"submitted": "Your port request looks good to go! It has been submitted to the carrier for processing on their end.",
+					"list": {
+						"type_of_service": {
+							"label": "Type of Service",
+							"text": "Service selected (Business or Residential) is incorrect according to the current carrier's records."
+						},
+						"tn_not_portable": {
+							"label": "TN not portable",
+							"text": "This means that the phone number(s) attempting to be ported are in a non-portable status with the current carrier."
+						},
+						"porting_main_btn_follow": {
+							"label": "Porting Main BTN Follow",
+							"text": "Porting BTN.  Must provide an alternate BTN from remaining numbers"
+						},
+						"passcode_pin_requried_or_invalid": {
+							"label": "Passcode/PIN Required or Invalid",
+							"text": "Indicates that a passcode/PIN was not provided or incorrect on order."
+						},
+						"account_number_invalid": {
+							"label": "Account Number Invalid",
+							"text": "This means that the account number provided on the order does not match what the carrier has on file."
+						},
+						"account_number_required": {
+							"label": "Account Number Required",
+							"text": "This means that the carrier is requiring the customer to provide their account number before approving this port."
+						},
+						"invalid_auth_name": {
+							"label": "Invalid Auth Name",
+							"text": "The carrier is indicating that the name you provided is incorrect and does not match their records."
+						},
+						"name_mismatch": {
+							"label": "Name Mismatch",
+							"text": "The business or residential name on the order does not match that of the carrier’s CSR (Customer Service Record)."
+						},
+						"carrier_freeze": {
+							"label": "Carrier Freeze",
+							"text": "The EU/Customer has (at one time) requested a freeze to be placed on the account which prevents the numbers from being ported and other account changes."
+						},
+						"btn_atn_mismatch": {
+							"label": "BTN / ATN Mismatch",
+							"text": "If the BTN provided on the order does not allow the carrier to pull up the account records, they will reject it back to us indicating the BTN is incorrect."
+						},
+						"pending_order": {
+							"label": "Pending Order",
+							"text": "A current order exists on the account.  This order must be completed or closed out."
+						},
+						"number_disconnedted_not_active": {
+							"label": "Number Disconnected / Not Active",
+							"text": "The TN or the account holding the TN is considered disconnected or inactive."
+						},
+						"address_mismatch": {
+							"label": "Address Mismatch",
+							"text": "This means that the address submitted on the order does not match the address on the losing carrier’s CSR (Customer Service Record)."
+						}
+					}
+				},
+				"message": {
+					"link": "Add a Message",
+					"placeholder": "Your message here..."
+				},
+				"ok": "Update Status"
+			},
+			"links": {
+				"view": "View Original Submission",
+				"download": "Download Attached Documents"
+			},
+			"buttons": {
+				"fix": "Fix Port Request",
+				"update": "Update Status",
+				"back": "Back to port requests",
+				"cancel": "Cancel Request",
+				"send": "Send"
+			},
+			"numbers": {
+				"singular": "Number",
+				"plural": "Numbers"
+			},
+			"textarea": {
+				"placeholder": "New Message..."
+			}
+		}
+	},
+
 	"portWizard": {
 		"loading": {
 			"title": "Saving your port request...",

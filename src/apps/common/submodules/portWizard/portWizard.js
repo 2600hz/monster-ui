@@ -93,15 +93,6 @@ define(function(require) {
 					return template;
 				};
 
-			/*
-				If this common control is loaded in the global
-				app container, we need to remove custom classes
-				so that there is no conflict with the CSS rules
-			 */
-			if (container.hasClass('app-content-wrapper')) {
-				container.prop('class', 'app-content-wrapper');
-			}
-
 			$.extend(true, args, {
 				data: {
 					attachments: {},
@@ -1291,7 +1282,7 @@ define(function(require) {
 					}
 				});
 			} else {
-				args.globalCallback();
+				args.globalCallback(args);
 			}
 		},
 

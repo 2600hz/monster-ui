@@ -1,0 +1,31 @@
+<p class="info">
+	{{i18n.portListing.detail.dialog.info.scheduled.one}}
+	<strong>
+		{{i18n.portListing.misc.status.scheduled}}
+	</strong>
+	{{i18n.portListing.detail.dialog.info.scheduled.two}}
+</p>
+<div class="control-group">
+	<label for="scheduled_date" class="control-label">
+		{{i18n.portListing.detail.dialog.label.date}}
+	</label>
+	<div class="controls">
+		<input type="text" id="scheduled_date" name="scheduled_date" readonly="true">
+	</div>
+</div>
+<div class="control-group">
+	<label for="scheduled_time" class="control-label">
+		{{i18n.portListing.detail.dialog.label.time}}
+	</label>
+	<div class="controls">
+		<input type="text" id="scheduled_time" name="scheduled_time">
+	</div>
+</div>
+<div class="control-group">
+	<label for="scheduled_timezone" class="control-label">
+		{{i18n.portListing.detail.dialog.label.timezone}}
+	</label>
+	<div class="controls">
+		<select name="scheduled_timezone" id="scheduled_timezone" data-original_value="{{defaultTimezone}}"></select>
+	</div>
+</div>
