@@ -177,14 +177,19 @@ define(function(require) {
 						if (monster.util.isSuperDuper()) {
 							// Adjusting the layout divs height to always fit the window's size
 							$(window).resize(function(e) {
-								if (container.find('.account-list-container').length) {
-									var $content = $('#monster_content'),
+								if ($('#port_app_container').find('.account-list-container').length) {
+									var $content = $('#port_app_container'),
 										$topbar = $('.core-topbar-wrapper'),
 										$accountListContainer = $content.find('.account-list-container'),
 										$accountInfo = $content.find('.account-info'),
 										$mainContent = $content.find('.listing-section-wrapper'),
-										listHeight = this.innerHeight - $topbar.outerHeight() - $accountListContainer.position().top + 'px';
-									$accountListContainer.css('height', listHeight);
+										listHeight = this.innerHeight - $accountListContainer.position().top;
+
+									if (args.isMonsterApp) {
+										listHeight -= $topbar.outerHeight();
+									}
+
+									$accountListContainer.css('height', listHeight + 'px');
 									$mainContent.css('height', this.innerHeight - $accountInfo.outerHeight() - $mainContent.position().top + 'px');
 								}
 							});
