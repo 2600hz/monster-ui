@@ -349,14 +349,9 @@ define(function(require) {
 			parent.on('click', '.account-header .action-number.port', function(e) {
 				var accountId = $(this).parents('.account-section').data('id');
 
-				monster.pub('common.port.render', {
-					accountId: accountId,
-					callbacks: {
-						success: function(numbers) {
-							displayNumberList(accountId, function(numbers) {
-								parent.find('.account-section[data-id="' + accountId + '"]').addClass('open');
-							}, true);
-						}
+				monster.pub('common.portListing.render', {
+					data: {
+						accountId: accountId
 					}
 				});
 			});
@@ -364,13 +359,9 @@ define(function(require) {
 			parent.on('click', '.actions-wrapper .action-number.port', function(e) {
 				var accountId = self.accountId;
 
-				monster.pub('common.port.render', {
-					accountId: accountId,
-					searchType: $(this).data('type'),
-					callbacks: {
-						success: function(numbers) {
-							displayNumberList(accountId, function(numbers) {}, true);
-						}
+				monster.pub('common.portListing.render', {
+					data: {
+						accountId: accountId
 					}
 				});
 			});

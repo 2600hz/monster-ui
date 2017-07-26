@@ -31,12 +31,17 @@ define(function(require) {
 			if (args.isMonsterApp) {
 				self.portListingRenderLayout(args);
 			} else {
-				modal = monster.ui.fullScreenModal(null, {
-					inverseBg: true,
-					contentId: 'port_app_container'
-				});
+				if (args.parent && args.parent.getId()) {
+					modal = args.parent;
+				} else {
+					modal = monster.ui.fullScreenModal(null, {
+						inverseBg: true,
+						cssContentId: 'port_app_container'
+					});
+				}
 
 				self.portListingRenderLayout({
+					parent: modal,
 					container: $('.core-absolute').find('#' + modal.getId() + ' .modal-content'),
 					data: args.data
 				});
@@ -360,7 +365,8 @@ define(function(require) {
 			template
 				.find('.dynamic-content')
 					.append($(self.getTemplate({
-						name: 'updateStatus-default'
+						name: 'updateStatus-default',
+						submodule: 'portListing'
 					})));
 
 			dialog = monster.ui.dialog(template, {
@@ -431,6 +437,16 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
+		portListingGlobalCallback: function(args) {
+			var self = this;
+
+			if (args.isMonsterApp) {
+				monster.pub('port.render');
+			} else {
+				self.portListingRender(args);
+			}
+		},
+
 		portListingBindListingEvents: function(template, args) {
 			var self = this;
 
@@ -441,7 +457,7 @@ define(function(require) {
 
 						monster.pub('common.portWizard.render', $.extend(true, args, {
 							globalCallback: function() {
-								self.render();
+								self.portListingGlobalCallback(args);
 							}
 						}));
 					});
@@ -495,7 +511,7 @@ define(function(require) {
 								request: args.data.ports[portId]
 							},
 							globalCallback: function() {
-								self.render();
+								self.portListingGlobalCallback(args);
 							}
 						}));
 					});
@@ -524,7 +540,7 @@ define(function(require) {
 								request: port
 							},
 							globalCallback: function() {
-								self.render();
+								self.portListingGlobalCallback(args);
 							}
 						}));
 					});
@@ -597,7 +613,7 @@ define(function(require) {
 							request: args.data.port
 						},
 						globalCallback: function() {
-							self.render();
+							self.portListingGlobalCallback(args);
 						}
 					}));
 				});
