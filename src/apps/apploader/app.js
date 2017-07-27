@@ -95,9 +95,8 @@ define(function(require) {
 
 		bindEvents: function(parent, appList) {
 			var self = this,
-				defaultDiv = parent.find('.app-default'),
 				updateAppInfo = function updateAppInfo(id) {
-					var app = appList.filter(function(v, i) { return id === v.id })[0];
+					var app = appList.filter(function(v) { return id === v.id; })[0];
 					parent.find('.app-description')
 						.find('h4')
 							.text(app.label)
@@ -116,7 +115,6 @@ define(function(require) {
 					item.addClass('ui-sortable-disabled');
 
 					$.each(parent.find('.left-div .app-element'), function(idx, el) {
-
 						if ($(el).data('id') !== itemId) {
 							$(el).remove();
 						}
@@ -144,14 +142,14 @@ define(function(require) {
 					parent.find('.app-container')
 						.addClass('dragging');
 				},
-				helper: function (event, ui) {
+				helper: function(event, ui) {
 					this.copyHelper = ui.clone().css('opacity', '0.2').insertAfter(ui);
 
 					$(this).data('copied', false);
 
 					return ui.clone();
 				},
-				stop: function () {
+				stop: function() {
 					var copied = $(this).data('copied');
 
 					$(this.copyHelper).css('opacity', '1');
@@ -162,11 +160,10 @@ define(function(require) {
 
 					this.copyHelper = null;
 
-
 					parent.find('.app-container')
 						.removeClass('dragging');
 				},
-				over: function(event, ui) {
+				over: function(event) {
 					parent.find('.right-div .ui-sortable-placeholder')
 						.hide();
 				}
@@ -174,7 +171,7 @@ define(function(require) {
 
 			parent.find('.search-query').on('keyup', function(e) {
 				var searchString = $(this).val().toLowerCase(),
-				items = parent.find('.right-div .app-element');
+					items = parent.find('.right-div .app-element');
 
 				_.each(items, function(item) {
 					var $item = $(item);
@@ -182,7 +179,7 @@ define(function(require) {
 					$item.data('search').toLowerCase().indexOf(searchString) < 0 ? $item.hide() : $item.show();
 				});
 
-				if(e.keyCode === 13 && parent.find('.right-div .app-element:visible').length === 1) {
+				if (e.keyCode === 13 && parent.find('.right-div .app-element:visible').length === 1) {
 					parent.find('.right-div .app-element:visible').trigger('click');
 				}
 			});
@@ -207,12 +204,13 @@ define(function(require) {
 				var $this = $(this),
 					appName = $this.data('name');
 
-				if(appName) {
-					if(appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
+				if (appName) {
+					if (appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
 						monster.routing.goTo('apps/' + appName);
 
-						parent.find('.right-div .app-element.active')
-							  .removeClass('active');
+						parent
+							.find('.right-div .app-element.active')
+								.removeClass('active');
 
 						if (appName !== 'appstore') {
 							$this.addClass('active');
@@ -221,8 +219,7 @@ define(function(require) {
 						self.appListUpdate(parent, appList, function(newAppList) {
 							appList = newAppList;
 						});
-					}
-					else {
+					} else {
 						toastr.error(self.i18n.active().noMasqueradingError);
 					}
 				}
@@ -243,8 +240,7 @@ define(function(require) {
 					if (target.hasClass('search-query') && target.val() !== '') {
 						target.blur();
 						target.focus();
-					}
-					else {
+					} else {
 						self.appListUpdate(parent, appList, function(newAppList) {
 							appList = newAppList;
 
@@ -361,11 +357,11 @@ define(function(require) {
 							isAppInstalled = function(app) {
 								if (app) {
 									var appUsers = _.map(app.users || [], function(val) { return val.id; });
-									if (app && app.allowed_users && 
-										(
-											(app.allowed_users === 'all') ||
-											(app.allowed_users === 'admins' && currentUser.priv_level === 'admin') ||
-											(app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
+									if (app && app.allowed_users
+										&& (
+											(app.allowed_users === 'all')
+											|| (app.allowed_users === 'admins' && currentUser.priv_level === 'admin')
+											|| (app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
 										)) {
 										return true;
 									}
