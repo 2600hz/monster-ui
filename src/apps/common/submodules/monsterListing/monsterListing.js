@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -29,7 +29,7 @@ define(function(require){
 
 			layout.find('.empty-search-row').hide();
 
-			if(container) {
+			if (container) {
 				container
 					.empty()
 					.append(layout);
@@ -40,7 +40,7 @@ define(function(require){
 				});
 			}
 
-			self.monsterListingBindEvents($.extend({}, args, { 
+			self.monsterListingBindEvents($.extend({}, args, {
 				template: layout,
 				popup: popup,
 				formattedData: formattedData
@@ -55,45 +55,38 @@ define(function(require){
 					singleSelect: args.singleSelect
 				};
 
-			switch(dataType) {
-				case 'numbers': {
-					formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
-						val.phoneNumber = key;
-						return val;
-					});
-					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'phoneNumber');
-					formattedData.templateName = 'monsterListing-numbers';
-					break;
+			if (dataType === 'numbers') {
+				formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
+					val.phoneNumber = key;
+					return val;
+				});
+				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'phoneNumber');
+				formattedData.templateName = 'monsterListing-numbers';
+			} else if (dataType === 'users') {
+				formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
+					val.name = val.first_name + ' ' + val.last_name;
+					return val;
+				});
+				if (_.isArray(args.dataList)) {
+					formattedData.dataList = _.indexBy(args.dataList, 'id');
 				}
-				case 'users': {
-					formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
-						val.name = val.first_name + ' ' + val.last_name;
-						return val;
-					});
-					if(_.isArray(args.dataList)) {
-						formattedData.dataList = _.indexBy(args.dataList, 'id');
-					}
-					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
-					formattedData.templateName = 'monsterListing-default';
-					break;
+				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
+				formattedData.templateName = 'monsterListing-default';
+			} else {
+				if (_.isArray(args.dataList)) {
+					formattedData.sortedDataList = args.dataList;
+					formattedData.dataList = _.indexBy(args.dataList, 'id');
+				} else {
+					formattedData.sortedDataList = _.toArray(args.dataList);
 				}
-				default: {
-					if(_.isArray(args.dataList)) {
-						formattedData.sortedDataList = args.dataList;
-						formattedData.dataList = _.indexBy(args.dataList, 'id');
-					} else {
-						formattedData.sortedDataList = _.toArray(args.dataList);
-					}
-					formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
-					formattedData.templateName = 'monsterListing-default';
-					break;
-				}
+				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
+				formattedData.templateName = 'monsterListing-default';
 			}
 
-			if(dataType in self.i18n.active().monsterListing) {
+			if (dataType in self.i18n.active().monsterListing) {
 				formattedData.labels = $.extend({}, self.i18n.active().monsterListing[dataType], args.labels);
 			} else {
-				formattedData.labels = $.extend({}, self.i18n.active().monsterListing['default'], args.labels);
+				formattedData.labels = $.extend({}, self.i18n.active().monsterListing.default, args.labels);
 			}
 			formattedData.labels.headline = args.singleSelect ? formattedData.labels.headlineSingle : formattedData.labels.headline;
 
@@ -113,16 +106,15 @@ define(function(require){
 			template.on('keyup', '.search-query', function() {
 				var rows = template.find('.monster-listing-box'),
 					emptySearch = template.find('.empty-search-row'),
+					currentSearch = $(this).val().toLowerCase(),
 					currentRow;
-
-				currentSearch = $(this).val().toLowerCase();
 
 				_.each(rows, function(row) {
 					currentRow = $(row);
 					currentRow.data('search').toLowerCase().indexOf(currentSearch) < 0 ? currentRow.hide() : currentRow.show();
 				});
 
-				if(rows.size() > 0) {
+				if (rows.size() > 0) {
 					rows.is(':visible') ? emptySearch.hide() : emptySearch.show();
 				}
 			});
@@ -130,7 +122,7 @@ define(function(require){
 			template.find('.monster-listing-box:not(.no-data)').on('click', function(event) {
 				var $this = $(this);
 
-				if(!$(event.target).is('input, .monster-checkbox, .monster-checkbox > *')) {
+				if (!$(event.target).is('input, .monster-checkbox, .monster-checkbox > *')) {
 					var $current_cb = $this.find('input'),
 						cb_value = $current_cb.prop('checked');
 
@@ -141,7 +133,7 @@ define(function(require){
 			});
 
 			template.find('.monster-listing-box:not(.no-data) input').on('change', function(event) {
-				if(args.singleSelect) {
+				if (args.singleSelect) {
 					template.find('.monster-listing-box').removeClass('selected');
 					$(this).parents('.monster-listing-box').addClass('selected');
 				} else {
@@ -160,12 +152,11 @@ define(function(require){
 					selectedData.push((dataList.hasOwnProperty(id) ? dataList[id] : id));
 				});
 
-				if(selectedData.length > 0) {
+				if (selectedData.length > 0) {
 					okCallback && okCallback(selectedData, remainingQuantity);
 
 					popup && popup.dialog('close').remove();
-				}
-				else {
+				} else {
 					monster.ui.alert('error', formattedData.labels.noDataSelected);
 				}
 			});

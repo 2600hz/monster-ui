@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -32,12 +32,12 @@ define(function(require){
 					noExtension: args.noExtension === true ? true : false
 				}));
 
-			if(container) {
+			if (container) {
 				args.labels = labels;
 				self.numberSelectorBindEvents($.extend({ template: layout }, args));
 				container.append(layout);
 			} else {
-				throw 'A container must be provided.';
+				throw new Error('A container must be provided.');
 			}
 		},
 
@@ -60,7 +60,7 @@ define(function(require){
 				},
 				// Handles return from spare control or from buy numbers, one being an array, the other being a map
 				addNumberCallback = function(numberList) {
-					if(numberList && !_.isEmpty(numberList)) {
+					if (numberList && !_.isEmpty(numberList)) {
 						var num = _.isArray(numberList) ? numberList[0].phoneNumber : _.keys(numberList)[0];
 
 						standardCallback(num);
@@ -81,7 +81,7 @@ define(function(require){
 			});
 
 			template.find('.number-selector-element').on('click', function() {
-				switch($(this).data('action')) {
+				switch ($(this).data('action')) {
 					case 'remove': {
 						var current = input.val();
 						input.val('');
@@ -91,7 +91,7 @@ define(function(require){
 						break;
 					}
 					case 'spare': {
-						if(customNumbers) {
+						if (customNumbers) {
 							monster.pub('common.monsterListing.render', {
 								dataList: customNumbers,
 								dataType: 'numbers',

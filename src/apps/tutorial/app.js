@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -11,7 +11,7 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: true }
 		},
@@ -36,7 +36,7 @@ define(function(require){
 			'pbxsManager.activate': '_render'
 		},
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {
@@ -54,7 +54,7 @@ define(function(require){
 			});
 		},
 
-		render: function(container){
+		render: function(container) {
 			var self = this;
 
 			self._render(container);
@@ -78,7 +78,9 @@ define(function(require){
 
 			template.find('#search').on('click', function(e) {
 				self.searchNumbers(650, 15, function(listNumbers) {
-					var results = monster.template(self, 'results', { numbers: listNumbers});
+					var results = monster.template(self, 'results', {
+						numbers: listNumbers
+					});
 
 					template
 						.find('.results')

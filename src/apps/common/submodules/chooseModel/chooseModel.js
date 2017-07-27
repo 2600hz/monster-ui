@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -35,7 +35,7 @@ define(function(require){
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var formattedData = { 
+			var formattedData = {
 					brands: []
 				},
 				families,
@@ -98,7 +98,7 @@ define(function(require){
 
 				selectedBrand = brand;
 
-				if ( !$this.hasClass('unselected') && !$this.hasClass('selected') ) {
+				if (!$this.hasClass('unselected') && !$this.hasClass('selected')) {
 					$this.addClass('selected');
 
 					$.each($this.siblings(), function(index, val) {
@@ -108,20 +108,19 @@ define(function(require){
 					templateDevice.find('.models-brand[data-brand="' + brand + '"]').show(0, function() {
 						templateDevice.find('.block-model').slideDown();
 					});
-				} else if ( $this.hasClass('unselected') ) {
+				} else if ($this.hasClass('unselected')) {
 					templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
 						templateDevice.find('.brand-box.selected').removeClass('selected').addClass('unselected');
 
 						$this.removeClass('unselected').addClass('selected');
 						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn('fast');
 					});
-
 				}
 			});
 
 			templateDevice.find('.model-box').on('click', function() {
 				var $this = $(this);
-				selectedModel = $this.data('model'),
+				selectedModel = $this.data('model');
 				selectedFamily = $this.data('family');
 
 				templateDevice.find('.model-box').removeClass('selected');
@@ -143,7 +142,7 @@ define(function(require){
 			});
 
 			templateDevice.find('.action-device').on('click', function() {
-				if(monster.ui.valid(templateDevice.find('#device_form'))) {
+				if (monster.ui.valid(templateDevice.find('#device_form'))) {
 					var formData = monster.ui.getFormData('device_form'),
 						dataDevice = {
 							device_type: 'sip_device',

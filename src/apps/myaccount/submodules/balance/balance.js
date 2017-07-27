@@ -150,7 +150,7 @@ define(function(require) {
 				}
 
 				if (data.globalLedgers.hasOwnProperty('mobile_data')) {
-					var ledger = data.globalLedgers['mobile_data'],
+					var ledger = data.globalLedgers.mobile_data,
 						bytes = monster.util.formatBytes(ledger.usage.quantity * 1000000);
 
 					formattedData.totalMobileData = bytes.value + ' ' + bytes.unit.symbol;

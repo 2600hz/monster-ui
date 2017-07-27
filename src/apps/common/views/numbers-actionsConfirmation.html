@@ -1,5 +1,5 @@
 <div id="action_confirmation">
-	{{#if delete}}
+	{{#if remove}}
 		<h4>{{i18n.numbers.dialogConfirm.delete.questionPartOne}}<span class="monster-primary-color">{{numberCount}}</span>{{i18n.numbers.dialogConfirm.delete.questionPartTwo}}</h4>
 	{{/if}}
 
@@ -37,7 +37,7 @@
 
 	<div class="actions pull-right">
 		<a class="cancel-link monster-link blue" href="javascript:void(0);">{{i18n.numbers.dialogConfirm.cancel}}</a>
-		{{#if delete}}
+		{{#if remove}}
 			<button class="monster-button monster-button-success" id="delete_action">{{i18n.numbers.dialogConfirm.delete.button}}</button>
 		{{/if}}
 

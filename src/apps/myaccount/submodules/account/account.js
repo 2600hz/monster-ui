@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -10,7 +10,7 @@ define(function(require){
 			'myaccount.account.renderContent': '_accountRenderContent'
 		},
 
-		_accountRenderContent: function(args){
+		_accountRenderContent: function(args) {
 			var self = this;
 
 			self.accountGetData(function(data) {
@@ -61,7 +61,7 @@ define(function(require){
 					}
 				},
 				success: function(listCallflows) {
-					if(listCallflows.data.length === 1) {
+					if (listCallflows.data.length === 1) {
 						self.callApi({
 							resource: 'callflow.get',
 							data: {
@@ -72,8 +72,7 @@ define(function(require){
 								callback(callflow.data);
 							}
 						});
-					}
-					else {
+					} else {
 						callback({});
 					}
 				}

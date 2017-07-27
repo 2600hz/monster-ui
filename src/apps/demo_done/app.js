@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -9,12 +9,12 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false }
 		},
 
 		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {
@@ -34,7 +34,7 @@ define(function(require){
 		},
 
 		// Entry Point of the app
-		render: function(container){
+		render: function(container) {
 			var self = this,
 				container = container || $('#monster_content');
 
@@ -68,10 +68,10 @@ define(function(require){
 
 				template.find('table tbody tr').removeClass('inactive');
 
-				if(isInactive) {
+				if (isInactive) {
 					var	id = $(this).data('id');
 
-					if(id !== '') {
+					if (id !== '') {
 						$(this).addClass('active');
 						template.find('table tbody tr:not([data-deviceid="' + id + '"])').addClass('inactive');
 					}
@@ -79,14 +79,14 @@ define(function(require){
 			});
 		},
 
-		bindSocketsEvents: function(template, globalData) {
+		bindSocketsEvents: function(template) {
 			var self = this,
 				addEvent = function(data) {
 					var formattedEvent = self.formatEvent(data),
 						eventTemplate = monster.template(self, 'event', formattedEvent);
 
-					if(formattedEvent.extra.hasOwnProperty('deviceId')) {
-						monster.ui.highlight(template.find('.device-item[data-id="'+ formattedEvent.extra.deviceId +'"]'));
+					if (formattedEvent.extra.hasOwnProperty('deviceId')) {
+						monster.ui.highlight(template.find('.device-item[data-id="' + formattedEvent.extra.deviceId + '"]'));
 					}
 
 					template.find('.list-events tbody').prepend(eventTemplate);
@@ -141,13 +141,13 @@ define(function(require){
 				formattedData = data;
 
 			formattedData.extra = {};
-console.log(data);
-			formattedData.extra.to = data['to'].substr(0, data['to'].indexOf('@'));
-			formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data['event_name']];
-			formattedData.extra.classEvent = data['event_name'] === 'CHANNEL_CREATE' ? 'info' : (data['event_name'] === 'CHANNEL_ANSWER' ? 'success' : 'error');
 
-			if('custom_channel_vars' in data && 'authorizing_type' in data['custom_channel_vars'] && data['custom_channel_vars']['authorizing_type'] === 'device') {
-				formattedData.extra.deviceId = data['custom_channel_vars']['authorizing_id'];
+			formattedData.extra.to = data.to.substr(0, data.to.indexOf('@'));
+			formattedData.extra.friendlyEvent = self.i18n.active().demo.events[data.event_name];
+			formattedData.extra.classEvent = data.event_name === 'CHANNEL_CREATE' ? 'info' : (data.event_name === 'CHANNEL_ANSWER' ? 'success' : 'error');
+
+			if ('custom_channel_vars' in data && 'authorizing_type' in data.custom_channel_vars && data.custom_channel_vars.authorizing_type === 'device') {
+				formattedData.extra.deviceId = data.custom_channel_vars.authorizing_id;
 			}
 
 			return formattedData;

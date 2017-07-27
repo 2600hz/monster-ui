@@ -1,6 +1,5 @@
-define(function(require){
-	var $ = require('jquery'),
-		_ = require('underscore'),
+define(function(require) {
+	var _ = require('underscore'),
 		monster = require('monster');
 
 	var webphone = {
@@ -54,14 +53,14 @@ define(function(require){
 				function() {
 					self.webphoneCreateUserDevice(function(device) {
 						success(device);
-					})
+					});
 				},
 				error
 			);
 		},
 
 		webphoneGetUserDevices: function(callback) {
-			var self = this
+			var self = this,
 				app = monster.apps.auth;
 
 			self.callApi({
@@ -98,15 +97,14 @@ define(function(require){
 			var self = this;
 
 			self.webphoneGetUserDevices(function(devices) {
-				if(devices.length && devices.length === 1) {
+				if (devices.length && devices.length === 1) {
 					self.webphoneGetDevice(devices[0].id, function(device) {
 						args.success && args.success(device);
 					});
-				}
-				else {
+				} else {
 					self.webphonePromptUserCreateDevice(args.success, args.error);
 				}
-			})
+			});
 		}
 	};
 

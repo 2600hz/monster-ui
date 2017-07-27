@@ -421,7 +421,7 @@ define(function(require) {
 				var listNumbers = [],
 					mapAccounts = {},
 					dataTemplate = {
-						delete: true,
+						remove: true,
 						accountList: []
 					},
 					e911ErrorMessage = '';

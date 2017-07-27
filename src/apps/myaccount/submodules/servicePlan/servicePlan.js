@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -23,88 +23,86 @@ define(function(require){
 				renderData = defaults;
 
 			monster.parallel({
-					servicePlan: function(callback) {
-						self.servicePlanGet(function success (data) {
-							var dataArray = [],
-								totalAmount = 0,
-								serviceName;
+				servicePlan: function(callback) {
+					self.servicePlanGet(function success(data) {
+						var dataArray = [],
+							totalAmount = 0,
+							serviceName;
 
-							renderData.hasServicePlan = true;
+						renderData.hasServicePlan = true;
 
-							if('items' in data.data) {
-								$.each(data.data.items, function(categoryName, category) {
-									$.each(category, function(itemName, item) {
-										var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-											monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
+						if ('items' in data.data) {
+							$.each(data.data.items, function(categoryName, category) {
+								$.each(category, function(itemName, item) {
+									var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
+										monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
 
-										if(monthlyCharges > 0) {
-											serviceName = self.i18n.active().servicePlan.titles.hasOwnProperty(itemName) ? self.i18n.active().servicePlan.titles[itemName] : monster.util.formatVariableToDisplay(itemName)
+									if (monthlyCharges > 0) {
+										serviceName = self.i18n.active().servicePlan.titles.hasOwnProperty(itemName) ? self.i18n.active().servicePlan.titles[itemName] : monster.util.formatVariableToDisplay(itemName);
 
-											dataArray.push({
-												service: serviceName,
-												rate: item.rate || 0,
-												quantity: item.quantity || 0,
-												discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + monster.util.formatPrice(discount, 2) : '',
-												monthlyCharges: monthlyCharges
-											});
+										dataArray.push({
+											service: serviceName,
+											rate: item.rate || 0,
+											quantity: item.quantity || 0,
+											discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + monster.util.formatPrice(discount, 2) : '',
+											monthlyCharges: monthlyCharges
+										});
 
-											totalAmount += monthlyCharges;
-										}
-									});
-								});
-							}
-
-							var sortByPrice = function(a, b) {
-								return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
-							}
-
-							dataArray.sort(sortByPrice);
-
-							renderData.servicePlanArray = dataArray;
-							renderData.totalAmount = totalAmount;
-
-							callback(null, data);
-						},
-						function error(data) {
-							callback(null, {});
-						});
-					},
-					subscription: function(callback) {
-						self.servicePlanGetSubscription(function success (data) {
-							renderData.hasSubscriptions = true;
-
-							renderData.dueDate = '?';
-
-							if(data.data.length > 0) {
-								// Hack to find the Active subscription
-								data.data.forEach(function(subscription) {
-									if(subscription.status === 'Active') {
-										renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'date');
-										
-										return false;
+										totalAmount += monthlyCharges;
 									}
-								})
-							}
+								});
+							});
+						}
 
-							callback(null, data);
-						},
-						function error (data) { 
-							callback(null, {});
-						});
-					}
+						var sortByPrice = function(a, b) {
+							return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
+						};
+
+						dataArray.sort(sortByPrice);
+
+						renderData.servicePlanArray = dataArray;
+						renderData.totalAmount = totalAmount;
+
+						callback(null, data);
+					},
+					function error(data) {
+						callback(null, {});
+					});
 				},
-				function(err, results) {
-					var servicePlanView = $(monster.template(self, 'servicePlan-layout', renderData));
+				subscription: function(callback) {
+					self.servicePlanGetSubscription(function success(data) {
+						renderData.hasSubscriptions = true;
 
-					self.servicePlanBindEvents(servicePlanView);
+						renderData.dueDate = '?';
 
-					monster.pub('myaccount.renderSubmodule', servicePlanView);
+						if (data.data.length > 0) {
+							// Hack to find the Active subscription
+							data.data.forEach(function(subscription) {
+								if (subscription.status === 'Active') {
+									renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'date');
 
-					if(typeof args.callback === 'function') {
-						args.callback(servicePlanView);
-					}
+									return false;
+								}
+							});
+						}
+
+						callback(null, data);
+					},
+					function error(data) {
+						callback(null, {});
+					});
 				}
-			);
+			}, function(err, results) {
+				var servicePlanView = $(monster.template(self, 'servicePlan-layout', renderData));
+
+				self.servicePlanBindEvents(servicePlanView);
+
+				monster.pub('myaccount.renderSubmodule', servicePlanView);
+
+				if (typeof args.callback === 'function') {
+					args.callback(servicePlanView);
+				}
+			});
 		},
 
 		servicePlanCleanFormData: function(module, data) {
@@ -119,7 +117,7 @@ define(function(require){
 			monster.ui.tooltips(parent);
 
 			parent.find('.action-number#download').on('click', function() {
-				window.location.href = self.apiUrl+'accounts/'+self.accountId+'/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.getAuthToken();
+				window.location.href = self.apiUrl + 'accounts/' + self.accountId + '/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.getAuthToken();
 			});
 		},
 
