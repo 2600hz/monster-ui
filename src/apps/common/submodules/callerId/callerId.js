@@ -99,12 +99,12 @@ define(function(require) {
 					data: data
 				},
 				success: function(_data, status) {
-					if(typeof success === 'function') {
+					if (typeof success === 'function') {
 						success(_data);
 					}
 				},
 				error: function(_data, status) {
-					if(typeof error === 'function') {
+					if (typeof error === 'function') {
 						error(_data);
 					}
 				}

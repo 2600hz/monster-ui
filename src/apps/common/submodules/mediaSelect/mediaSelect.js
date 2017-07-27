@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -27,8 +27,9 @@ define(function(require){
 
 			self.mediaSelectBindEvents(template);
 
-			container.empty()
-					 .append(template);
+			container
+				.empty()
+				.append(template);
 		},
 
 		mediaSelectBindEvents: function(template) {
@@ -40,9 +41,9 @@ define(function(require){
 					template.find('.upload-div').slideUp(function() {
 						template.find('.upload-toggle').removeClass('active');
 					});
-					if(newMedia) {
+					if (newMedia) {
 						var mediaSelect = template.find('.media-dropdown');
-						mediaSelect.append('<option value="'+newMedia.id+'">'+newMedia.name+'</option>');
+						mediaSelect.append('<option value="' + newMedia.id + '">' + newMedia.name + '</option>');
 						mediaSelect.val(newMedia.id);
 					}
 				};
@@ -57,7 +58,7 @@ define(function(require){
 					mediaToUpload = results[0];
 				},
 				error: function(errors) {
-					if(errors.hasOwnProperty('size') && errors.size.length > 0) {
+					if (errors.hasOwnProperty('size') && errors.size.length > 0) {
 						monster.ui.alert(self.i18n.active().mediaSelect.fileTooBigAlert);
 					}
 					template.find('.upload-div input').val('');
@@ -66,7 +67,7 @@ define(function(require){
 			});
 
 			template.find('.upload-toggle').on('click', function() {
-				if($(this).hasClass('active')) {
+				if ($(this).hasClass('active')) {
 					template.find('.upload-div').stop(true, true).slideUp();
 				} else {
 					template.find('.upload-div').stop(true, true).slideDown();
@@ -78,7 +79,7 @@ define(function(require){
 			});
 
 			template.find('.upload-submit').on('click', function() {
-				if(mediaToUpload) {
+				if (mediaToUpload) {
 					self.callApi({
 						resource: 'media.create',
 						data: {
@@ -121,7 +122,7 @@ define(function(require){
 				}
 			});
 		}
-	}
+	};
 
 	return mediaSelect;
 });

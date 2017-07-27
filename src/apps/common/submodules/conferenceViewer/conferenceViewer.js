@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -32,21 +32,19 @@ define(function(require){
 					participantsDiv = template.find('.participants-wrapper .users'),
 					moderatorsDiv = template.find('.moderators-wrapper .users');
 
-				if(formattedData.conference.participants.length) {
+				if (formattedData.conference.participants.length) {
 					_.each(formattedData.conference.participants, function(participant) {
 						participantsDiv.append(monster.template(self, 'conferenceViewer-user', participant));
 					});
-				}
-				else {
+				} else {
 					participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyParticipants }));
 				}
 
-				if(formattedData.conference.moderators.length) {
+				if (formattedData.conference.moderators.length) {
 					_.each(formattedData.conference.moderators, function(moderator) {
 						moderatorsDiv.append(monster.template(self, 'conferenceViewer-user', moderator));
 					});
-				}
-				else {
+				} else {
 					moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
 				}
 
@@ -56,7 +54,7 @@ define(function(require){
 
 				self.conferenceViewerBind(template, data, args);
 
-				args.callback && args.callback(template, formattedData)
+				args.callback && args.callback(template, formattedData);
 
 				self.conferenceViewerBindSocketEvents(conferenceId, template);
 			});
@@ -96,7 +94,7 @@ define(function(require){
 		conferenceViewerSocketReconnected: function() {
 			var self = this;
 
-			if($('.view-conference-wrapper').is(':visible')) {
+			if ($('.view-conference-wrapper').is(':visible')) {
 				var container = $('.view-conference-wrapper'),
 					conferenceId = container.data('id');
 
@@ -159,10 +157,9 @@ define(function(require){
 
 			var interval = setInterval(function() {
 				/* As long as the page is displayed */
-				if($('.view-conference-wrapper').size() > 0 && target.is(':visible')) {
+				if ($('.view-conference-wrapper').size() > 0 && target.is(':visible')) {
 					target.html(monster.util.friendlyTimer(duration++));
-				}
-				else {
+				} else {
 					clearInterval(interval);
 				}
 			}, 1000);
@@ -174,10 +171,9 @@ define(function(require){
 			var self = this,
 				$this;
 
-			if(data.participants.length + data.moderators.length > 0) {
+			if (data.participants.length + data.moderators.length > 0) {
 				self.conferenceViewerStartConference(data.duration, template);
-			}
-			else {
+			} else {
 				self.conferenceViewerStopConference(template);
 			}
 
@@ -190,7 +186,7 @@ define(function(require){
 		conferenceViewerBind: function(template, data, args) {
 			var self = this;
 
-			if(args.hasOwnProperty('backButton')) {
+			if (args.hasOwnProperty('backButton')) {
 				template.find('#back_button').on('click', function() {
 					args.backButton.onClick();
 				});
@@ -202,7 +198,7 @@ define(function(require){
 					action = $this.data('action'),
 					$parent = $this.parents('.action-user');
 
-				if($parent.hasClass('togglable')) {
+				if ($parent.hasClass('togglable')) {
 					$parent.toggleClass('active');
 				}
 
@@ -214,7 +210,7 @@ define(function(require){
 					action = $this.data('action'),
 					$parent = $this.parents('.action-user');
 
-				if($parent.hasClass('togglable')) {
+				if ($parent.hasClass('togglable')) {
 					$parent.toggleClass('active');
 				}
 
@@ -224,14 +220,13 @@ define(function(require){
 
 		conferenceViewerFormatData: function(data, args) {
 			var self = this,
-				liveData = data.conference['_read_only'],
 				formattedData = {
 					backButton: args.backButton,
 					conference: {
 						id: data.conference.id,
 						name: data.conference.name,
-						duration: data.conference['_read_only'].duration,
-						isLocked: data.conference['_read_only'].is_locked,
+						duration: data.conference._read_only.duration,
+						isLocked: data.conference._read_only.is_locked,
 						participants: [],
 						moderators: []
 					}
@@ -250,7 +245,7 @@ define(function(require){
 			var self = this,
 				str = pStr || 'unknown',
 				maxNumber = pMaxNumber || 25,
-				firstChar = str.substring(0,1),
+				firstChar = str.substring(0, 1),
 				lastChar = str.substring(str.length, 1),
 				uniqueCode = firstChar.charCodeAt(0) + lastChar.charCodeAt(0) + str.length,
 				id = uniqueCode % maxNumber;
@@ -276,19 +271,18 @@ define(function(require){
 				randomIndex = self.conferenceViewerGetNotSoRandomAvatarId(user.displayName, self.appFlags.conferenceViewer.avatarCount),
 				foundAvailableAvatar = false;
 
-			if(self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
+			if (self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
 				self.conferenceViewerAssignAvatarIdToUser(user, randomIndex);
 				foundAvailableAvatar = true;
-			}
-			else {
+			} else {
 				_.each(self.appFlags.conferenceViewer.currentConference.avatars, function(v, i) {
-					if(v !== -1 && !foundAvailableAvatar) {
+					if (v !== -1 && !foundAvailableAvatar) {
 						self.conferenceViewerAssignAvatarIdToUser(user, i);
 						foundAvailableAvatar = true;
 					}
 				});
 
-				if(!foundAvailableAvatar) {
+				if (!foundAvailableAvatar) {
 					self.appFlags.conferenceViewer.currentConference.avatars = self.conferenceViewerGetAvatarsArray().slice();
 
 					self.conferenceViewerGetNewParticipantAvatar(user);
@@ -300,7 +294,7 @@ define(function(require){
 			var self = this,
 				randomIndex,
 				alreadyUsedAvatarParticipants,
-				mapParticipants = _.indexBy(noAvatarParticipants,'participant_id'),
+				mapParticipants = _.indexBy(noAvatarParticipants, 'participant_id'),
 				defaultAvatars = self.conferenceViewerGetAvatarsArray(),
 				arrayResult = [];
 
@@ -308,7 +302,7 @@ define(function(require){
 			self.appFlags.conferenceViewer.currentConference.avatars = defaultAvatars.slice();
 
 			// while we still have participants with no avatars
-			while(noAvatarParticipants.length) {
+			while (noAvatarParticipants.length) {
 				alreadyUsedAvatarParticipants = [];
 
 				// first for all participants, we try to get their own unique avatar
@@ -316,10 +310,9 @@ define(function(require){
 					randomIndex = self.conferenceViewerGetNotSoRandomAvatarId(user.displayName, self.appFlags.conferenceViewer.avatarCount);
 
 					//if it's already used, we skip them and add them to the list to use for next loop
-					if(self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
+					if (self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
 						self.conferenceViewerAssignAvatarIdToUser(mapParticipants[user.participant_id], randomIndex);
-					}
-					else {
+					} else {
 						alreadyUsedAvatarParticipants.push(user);
 					}
 				});
@@ -327,17 +320,17 @@ define(function(require){
 				// once the first loop is done, we look at the unused avatars, and automatically assign them to participants without avatar.
 				// because we would rather have people not have their own avatar than 2 participants share the same avatar when there still are unique avatars available
 				_.each(self.appFlags.conferenceViewer.currentConference.avatars, function(v, i) {
-					if(v !== -1) {
-						if(alreadyUsedAvatarParticipants.length) {
+					if (v !== -1) {
+						if (alreadyUsedAvatarParticipants.length) {
 							self.conferenceViewerAssignAvatarIdToUser(mapParticipants[alreadyUsedAvatarParticipants[0].participant_id], i);
 							// we remove the user from the list since we assigned an avatar
-							alreadyUsedAvatarParticipants.splice(0,1);
+							alreadyUsedAvatarParticipants.splice(0, 1);
 						}
 					}
 				});
 
 				// if there still are users that haven't been assigned an avatar, we reset the list of available avatars as we have exhausted the list of unique matches
-				if(alreadyUsedAvatarParticipants.length) {
+				if (alreadyUsedAvatarParticipants.length) {
 					self.appFlags.conferenceViewer.currentConference.avatars = defaultAvatars.slice();
 				}
 
@@ -345,7 +338,7 @@ define(function(require){
 				noAvatarParticipants = alreadyUsedAvatarParticipants;
 			}
 
-			arrayResult = _.map(mapParticipants, function(v) { return v });
+			arrayResult = _.map(mapParticipants, function(v) { return v; });
 
 			return arrayResult;
 		},
@@ -355,22 +348,21 @@ define(function(require){
 				mapUsers = self.appFlags.conferenceViewer.mapUsers,
 				ownerId;
 
-			if(participant.channel && participant.channel.custom_channel_vars && participant.channel.custom_channel_vars.owner_id) {
+			if (participant.channel && participant.channel.custom_channel_vars && participant.channel.custom_channel_vars.owner_id) {
 				ownerId = participant.channel.custom_channel_vars.owner_id;
-			}
-			else if(participant.custom_channel_vars && participant.custom_channel_vars.owner_id) {
+			} else if (participant.custom_channel_vars && participant.custom_channel_vars.owner_id) {
 				ownerId = participant.custom_channel_vars.owner_id;
 			}
 
-			if(mapUsers.hasOwnProperty(ownerId)) {
+			if (mapUsers.hasOwnProperty(ownerId)) {
 				participant.displayName = mapUsers[ownerId].first_name + ' ' + mapUsers[ownerId].last_name;
-			}
-			else {
+			} else {
 				participant.displayName = participant.caller_id_name;
 			}
 
-			for(key in participant.conference_channel_vars)
+			for (var key in participant.conference_channel_vars) {
 				participant[key] = participant.conference_channel_vars[key];
+			}
 
 			return participant;
 		},
@@ -397,24 +389,23 @@ define(function(require){
 			return participant;
 		},
 
-		conferenceViewerOnNewParticipant: function(participant, callback) {
+		conferenceViewerOnNewParticipant: function(participant) {
 			var self = this,
 				container = $('.view-conference-wrapper'),
 				formattedParticipant = self.conferenceViewerFormatUser(participant),
 				userTemplate = $(monster.template(self, 'conferenceViewer-user', formattedParticipant)),
 				countUser = container.find('.conference-user-wrapper').length;
 
-			if(countUser === 0) {
+			if (countUser === 0) {
 				self.conferenceViewerStartConference();
 			}
 
 			self.conferenceViewerStartTimer(userTemplate.find('.conference-timer'), formattedParticipant.duration);
 
-			if(participant.is_moderator) {
+			if (participant.is_moderator) {
 				container.find('.moderators-wrapper .users').append(userTemplate);
 				container.find('.moderators-wrapper .empty-user-category').remove();
-			}
-			else {
+			} else {
 				container.find('.participants-wrapper .users').append(userTemplate);
 				container.find('.participants-wrapper .empty-user-category').remove();
 			}
@@ -427,14 +418,14 @@ define(function(require){
 				action = data.event,
 				container = $('.view-conference-wrapper'),
 				toasterActions = ['mute-member', 'unmute-member', 'deaf-member', 'undeaf-member', 'del-member', 'lock', 'unlock'],
-				$userDiv = container.find('.conference-user-wrapper[data-id="'+ data.participant_id + '"]'),
+				$userDiv = container.find('.conference-user-wrapper[data-id="' + data.participant_id + '"]'),
 				isModerator = $userDiv.parents('.moderators-wrapper').length,
 				$participantsDiv = container.find('.participants-wrapper .users'),
 				$moderatorsDiv = container.find('.moderators-wrapper .users'),
 				userName = $userDiv.data('name');
 
 			switch (action) {
-				case 'add-member': 
+				case 'add-member':
 					var newParticipant = self.conferenceViewerOnNewParticipant(data);
 
 					userName = newParticipant.displayName;
@@ -454,28 +445,27 @@ define(function(require){
 				case 'del-member': 
 					var avatarId = parseInt($userDiv.find('[data-avatar-id]').data('avatar-id'));
 
-					if(avatarId) {
+					if (avatarId) {
 						self.appFlags.conferenceViewer.currentConference.avatars[avatarId] = avatarId;
 					}
-					
+
 					$userDiv.remove();
 
-					if(container.find('.conference-user-wrapper').length === 0) {
+					if (container.find('.conference-user-wrapper').length === 0) {
 						self.conferenceViewerStopConference();
 					}
 
-					if(isModerator && $moderatorsDiv.find('.conference-user-wrapper').length === 0) {
+					if (isModerator && $moderatorsDiv.find('.conference-user-wrapper').length === 0) {
 						$moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
-					}
-					else if(!isModerator && $participantsDiv.find('.conference-user-wrapper').length === 0) {
+					} else if (!isModerator && $participantsDiv.find('.conference-user-wrapper').length === 0) {
 						$participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyParticipants }));
 					}
 
 					break;
-				case 'start-talking': 
+				case 'start-talking':
 					$userDiv.addClass('speaking');
 					break;
-				case 'stop-talking': 
+				case 'stop-talking':
 					$userDiv.removeClass('speaking');
 					break;
 				case 'lock':
@@ -490,7 +480,7 @@ define(function(require){
 					break
 			}
 
-			if(toasterActions.indexOf(action) >= 0) {
+			if (toasterActions.indexOf(action) >= 0) {
 				toastr.info(monster.template(self, '!' + self.i18n.active().conferenceViewer.userActions[action], { name: userName }));
 			}
 		},
@@ -510,12 +500,11 @@ define(function(require){
 			container.find('.main-conference-timer').html(self.i18n.active().conferenceViewer.notStarted);
 		},
 
-
 		conferenceViewerActionParticipant: function(action, conferenceId, participantId, callback) {
 			var self = this,
 				allowedActions = ['kick', 'mute', 'unmute', 'deaf', 'undeaf'];
 
-			if(allowedActions.indexOf(action) >= 0) {
+			if (allowedActions.indexOf(action) >= 0) {
 				self.callApi({
 					resource: 'conference.participantsAction',
 					data: {
@@ -530,8 +519,7 @@ define(function(require){
 						callback && callback(data.data);
 					}
 				});
-			}
-			else {
+			} else {
 				console.log('Conference action not allowed');
 			}
 		},
@@ -577,17 +565,15 @@ define(function(require){
 				stateActions = ['lock', 'unlock'],
 				participantsAction = ['kick', 'mute', 'unmute', 'deaf', 'undeaf'];
 
-			if(stateActions.indexOf(action) >= 0) {
+			if (stateActions.indexOf(action) >= 0) {
 				self.conferenceViewerActionStateConference(action, conferenceId, callback);
-			}
-			else if(participantsAction.indexOf(action) >= 0) {
+			} else if (participantsAction.indexOf(action) >= 0) {
 				self.conferenceViewerActionBulkParticipants(action, conferenceId, callback);
-			}
-			else {
+			} else {
 				console.log('Conference action not allowed');
 			}
 		}
-	}
+	};
 
 	return conferenceViewer;
 });

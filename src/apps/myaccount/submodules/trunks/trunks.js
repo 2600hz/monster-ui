@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -15,14 +15,12 @@ define(function(require){
 
 		_trunksRenderContent: function(args) {
 			var self = this;
-			if(args.key === 'inbound') {
+			if (args.key === 'inbound') {
 				self.trunksRenderInbound(args.callback);
-			}
-			else if(args.key === 'outbound') {
+			} else if (args.key === 'outbound') {
 				self.trunksRenderOutbound(args.callback);
-			}
-			else if(args.key === 'twoway') {
-				self.trunksRenderTwoway(args.callback)
+			} else if (args.key === 'twoway') {
+				self.trunksRenderTwoway(args.callback);
 			}
 		},
 
@@ -77,14 +75,14 @@ define(function(require){
 					max: 100,
 					range: 'min',
 					value: data.data.inbound_trunks > 0 ? data.data.inbound_trunks : 0,
-					slide: function( event, ui ) {
+					slide: function(event, ui) {
 						trunksInboundView.find('.slider-value').html(ui.value);
-						totalAmountInbound = ui.value*amountInbound;
+						totalAmountInbound = ui.value * amountInbound;
 						trunksInboundView.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
 
 						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					},
-					change: function(event, ui) {
+					change: function(event) {
 						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_inbound .ui-slider-handle').css('left'));
 					}
 				});
@@ -143,7 +141,7 @@ define(function(require){
 					max: 100,
 					range: 'min',
 					value: data.data.outbound_trunks > 0 ? data.data.outbound_trunks : 0,
-					slide: function( event, ui ) {
+					slide: function(event, ui) {
 						trunksOutboundView.find('.slider-value').html(ui.value);
 						totalAmountOutbound = ui.value * amountOutbound;
 
@@ -151,7 +149,7 @@ define(function(require){
 
 						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					},
-					change: function(event, ui) {
+					change: function(event) {
 						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_outbound .ui-slider-handle').css('left'));
 					}
 				});
@@ -210,7 +208,7 @@ define(function(require){
 					max: 100,
 					range: 'min',
 					value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
-					slide: function( event, ui ) {
+					slide: function(event, ui) {
 						trunksTwowayView.find('.slider-value').html(ui.value);
 						totalAmountTwoway = ui.value * amountTwoway;
 
@@ -218,7 +216,7 @@ define(function(require){
 
 						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					},
-					change: function(event, ui) {
+					change: function(event) {
 						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_twoway .ui-slider-handle').css('left'));
 					}
 				});
@@ -262,7 +260,7 @@ define(function(require){
 			self.callApi({
 				resource: 'limits.get',
 				data: {
-					accountId: self.accountId,
+					accountId: self.accountId
 				},
 				success: function(data, status) {
 					success && success(data, status);

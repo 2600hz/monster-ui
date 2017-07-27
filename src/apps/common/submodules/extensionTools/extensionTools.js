@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -14,7 +14,6 @@ define(function(require){
 
 		extensionToolsRenderSelect: function(args) {
 			var self = this,
-				accountId = args.accountId,
 				callbackSuccess = function(extension) {
 					args.callback(extension);
 
@@ -47,13 +46,13 @@ define(function(require){
 					_.each(callflow.numbers, function(number) {
 						parsedNumber = parseInt(number);
 
-						if(parsedNumber && parsedNumber > 0 && parsedNumber < 100000) {
+						if (parsedNumber && parsedNumber > 0 && parsedNumber < 100000) {
 							formattedData.extensions.push({ extension: parsedNumber, callflow: callflow.name || self.i18n.active().extensionTools.getNew.table.unNamedCallflow });
 						}
-					})
-				})
+					});
+				});
 
-				formattedData.extensions.sort(function(a,b) {
+				formattedData.extensions.sort(function(a, b) {
 					return a.extension > b.extension ? 1 : -1;
 				});
 
@@ -78,8 +77,8 @@ define(function(require){
 				}
 			});
 
-			template.find('#extension_number').keyup(function(event){
-				if(event.keyCode === 13){
+			template.find('#extension_number').keyup(function(event) {
+				if (event.keyCode === 13) {
 					template.find('#proceed_select_extension').click();
 				}
 			});
@@ -87,7 +86,7 @@ define(function(require){
 			template.find('#proceed_select_extension').on('click', function(e) {
 				e.preventDefault();
 
-				if(monster.ui.valid(form)) {
+				if (monster.ui.valid(form)) {
 					var dataForm = monster.ui.getFormData('select_extension_form'),
 						formattedData = self.extensionToolsSelectFormatData(dataForm);
 
@@ -99,7 +98,7 @@ define(function(require){
 		extensionToolsSelectFormatData: function(data) {
 			var formattedData;
 
-			if(data.hasOwnProperty('extension')) {
+			if (data.hasOwnProperty('extension')) {
 				formattedData = data.extension;
 			}
 

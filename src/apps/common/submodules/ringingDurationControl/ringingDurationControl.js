@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -18,15 +18,16 @@ define(function(require){
 		** endpoints: array of endpoints (containing id, name, delay and timeout)
 		** callback: callback executed once we rendered the number control
 		*/
-		ringingDurationControlRender: function(args){
+		ringingDurationControlRender: function(args) {
 			var self = this,
 				container = args.container,
 				endpoints = args.endpoints,
 				callback = args.callback,
 				template = $(monster.template(self, 'ringingDurationControl-layout', args));
 
-			container.empty()
-					 .append(template);
+			container
+				.empty()
+				.append(template);
 
 			monster.ui.tooltips(template);
 
@@ -47,22 +48,21 @@ define(function(require){
 
 		ringingDurationControlBindEvents: function(args) {
 			var self = this,
-				template = args.template,
-				endpoints = args.endpoints;
+				template = args.template;
 
 			template.find('.distribute-button').on('click', function() {
-				var sliders = template.find('.grid-time-row:not(.disabled) .slider-time');
+				var sliders = template.find('.grid-time-row:not(.disabled) .slider-time'),
 					max = sliders.first().slider('option', 'max'),
-					section = Math.floor(max/sliders.length),
+					section = Math.floor(max / sliders.length),
 					current = 0;
 				$.each(sliders, function() {
-					$(this).slider('values', [current, current+=section]);
+					$(this).slider('values', [ current, current += section ]);
 				});
 			});
 
 			template.find('.disable-row').on('change', function() {
 				var parentRow = $(this).parents('.grid-time-row');
-				if($(this).prop('checked')) {
+				if ($(this).prop('checked')) {
 					parentRow.find('.times').stop().animate({ opacity: 0 });
 					parentRow.find('.name').stop().animate({ opacity: 0.5 });
 					parentRow.addClass('disabled');
@@ -77,17 +77,18 @@ define(function(require){
 				var $this = $(this),
 					input = $this.siblings('.scale-max-input');
 
-				input.show()
-					 .focus()
-					 .select();
+				input
+					.show()
+					.focus()
+					.select();
 				$this.hide();
 			});
 
 			template.on('blur', '.grid-time-row.title .scale-max-input', function(e) {
 				var $this = $(this),
-					value = $this.val()
+					value = $this.val(),
 					intValue = parseInt($this.val());
-				if(value != $this.data('current') && !isNaN(intValue) && intValue >= 30) {
+				if (value !== $this.data('current') && !isNaN(intValue) && intValue >= 30) {
 					var displayedEndpoints = self.ringingDurationControlGetEndpoints({container: template, includeDisabled: true});
 					self.ringingDurationControlRenderSliders(template, displayedEndpoints, intValue);
 				} else {
@@ -98,9 +99,11 @@ define(function(require){
 
 			template.on('keydown', '.grid-time-row.title .scale-max-input', function(e) {
 				var charCode = (e.which) ? e.which : event.keyCode;
-				if(charCode > 57 && charCode < 96) { return false; }
-				else if(charCode === 13) { $(this).blur(); }
-				else if(charCode === 27) {
+				if (charCode > 57 && charCode < 96) {
+					return false;
+				} else if (charCode === 13) {
+					$(this).blur();
+				} else if (charCode === 27) {
 					var $this = $(this);
 					$this.val($this.data('current')).blur();
 				}
@@ -109,7 +112,7 @@ define(function(require){
 			template.on('click', '.remove-user', function() {
 				var parentRow = $(this).parents('.grid-time-row'),
 					userId = parentRow.data('id');
-				template.find('.add-user[data-id="'+userId+'"]').removeClass('in-use');
+				template.find('.add-user[data-id="' + userId + '"]').removeClass('in-use');
 				parentRow.remove();
 			});
 		},
@@ -119,12 +122,12 @@ define(function(require){
 				scaleSections = 6, //Number of 'sections' in the time scales for the sliders
 				scaleMaxSeconds = maxSeconds && maxSeconds >= 30 ? maxSeconds : 120; //Maximum of seconds, corresponding to the end of the scale
 
-			if(!maxSeconds) {
+			if (!maxSeconds) {
 				var currentMax = 0;
 				_.each(endpoints, function(endpoint) {
-					currentMax = (endpoint.delay+endpoint.timeout > currentMax) ? endpoint.delay+endpoint.timeout : currentMax;
+					currentMax = (endpoint.delay + endpoint.timeout > currentMax) ? endpoint.delay + endpoint.timeout : currentMax;
 				});
-				scaleMaxSeconds = currentMax > scaleMaxSeconds ? Math.ceil(currentMax/60)*60 : scaleMaxSeconds;
+				scaleMaxSeconds = currentMax > scaleMaxSeconds ? Math.ceil(currentMax / 60) * 60 : scaleMaxSeconds;
 			}
 
 			var sliderTooltip = function(event, ui) {
@@ -139,53 +142,55 @@ define(function(require){
 						tooltip1 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val1 + '</div></div>',
 						tooltip2 = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + val2 + '</div></div>';
 
-					template.find('.grid-time-row[data-id="'+ userId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
-					template.find('.grid-time-row[data-id="'+ userId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
+					template.find('.grid-time-row[data-id="' + userId + '"] .slider-time .ui-slider-handle').first().html(tooltip1);
+					template.find('.grid-time-row[data-id="' + userId + '"] .slider-time .ui-slider-handle').last().html(tooltip2);
 				},
 				createSlider = function(endpoint) {
-					var gridTimeRow = template.find('.grid-time-row[data-id="'+ endpoint.id +'"]'),
+					var gridTimeRow = template.find('.grid-time-row[data-id="' + endpoint.id + '"]'),
 						slider = gridTimeRow.find('.slider-time').slider({
 							range: true,
 							min: 0,
 							max: scaleMaxSeconds,
-							values: [ endpoint.delay, endpoint.delay+endpoint.timeout ],
+							values: [ endpoint.delay, endpoint.delay + endpoint.timeout ],
 							slide: sliderTooltip,
 							change: sliderTooltip,
 							create: function(event, ui) {
 								createTooltip(event, ui, endpoint.id, $(this));
-							},
+							}
 						});
-					if(gridTimeRow.hasClass('deleted')) {
+					if (gridTimeRow.hasClass('deleted')) {
 						slider.slider('disable');
 					}
 					createSliderScale(gridTimeRow);
 				},
 				createSliderScale = function(container, isHeader) {
-					var scaleContainer = container.find('.scale-container')
+					var scaleContainer = container.find('.scale-container'),
 						isHeader = isHeader || false;
 
 					scaleContainer.empty();
 
-					for(var i=1; i<=scaleSections; i++) {
-						var toAppend = '<div class="scale-element" style="width:'+(100/scaleSections)+'%;">'
-									 + (isHeader 
-								 		? (i==scaleSections 
-								 			? '<input type="text" value="'+scaleMaxSeconds+'" data-current="'+scaleMaxSeconds+'" class="scale-max-input" maxlength="3"><span class="scale-max">'
-								 			:'<span>')
-								 			+ Math.floor(i*scaleMaxSeconds/scaleSections) + ' Sec</span>' 
-							 			: '')
-									 + '</div>';
+					for (var i = 1; i <= scaleSections; i++) {
+						var toAppend = '<div class="scale-element" style="width:' + (100 / scaleSections) + '%;">'
+									+ (isHeader
+										? (i === scaleSections
+											? '<input type="text" value="' + scaleMaxSeconds + '" data-current="' + scaleMaxSeconds + '" class="scale-max-input" maxlength="3"><span class="scale-max">'
+												: '<span>')
+									+ Math.floor(i * scaleMaxSeconds / scaleSections) + ' Sec</span>'
+										: '')
+									+ '</div>';
 						scaleContainer.append(toAppend);
 					}
-					if(isHeader) {
+
+					if (isHeader) {
 						scaleContainer.append('<span>0 Sec</span>');
 					}
 				};
-		
-				_.each(endpoints, function(endpoint) {
-					createSlider(endpoint);
-				});
-				createSliderScale(template.find('.grid-time-row.title'), true);
+
+			_.each(endpoints, function(endpoint) {
+				createSlider(endpoint);
+			});
+
+			createSliderScale(template.find('.grid-time-row.title'), true);
 		},
 
 		ringingDurationControlAddEndpoint: function(args) {
@@ -203,20 +208,20 @@ define(function(require){
 					var $row = $(row),
 						values = $row.find('.slider-time').slider('values');
 
-					if(includeDisabled || !$row.hasClass('disabled')) {
+					if (includeDisabled || !$row.hasClass('disabled')) {
 						return {
 							id: $row.data('id'),
 							delay: values[0],
 							timeout: (values[1] - values[0]),
 							name: $row.find('.name').text()
-						}
+						};
 					}
 				});
 
 			args.callback && args.callback(endpoints);
 			return endpoints;
 		}
-	}
+	};
 
 	return ringingDurationControl;
 });

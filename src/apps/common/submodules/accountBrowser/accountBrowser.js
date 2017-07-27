@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -46,10 +46,11 @@ define(function(require){
 				})),
 				searchLink = layout.find('.account-search-link').remove();
 
-			if(container) {
-				container.empty()
-						 .append(layout);
-				
+			if (container) {
+				container
+					.empty()
+					.append(layout);
+
 				self.accountBrowserRenderList({
 					container: layout.find('.account-list-container'),
 					parentId: parentId,
@@ -98,8 +99,8 @@ define(function(require){
 				isLoading = false,
 				loader = $('<li class="content-centered account-list-loader"> <i class="fa fa-spinner fa-spin"></i></li>');
 
-			if(!noFocus) {
-				setTimeout(function () { template.find('.search-query').focus(); });
+			if (!noFocus) {
+				setTimeout(function() { template.find('.search-query').focus(); });
 			}
 
 			//Prevents autoclosing of dropdown on click
@@ -115,7 +116,7 @@ define(function(require){
 				var found = false;
 
 				_.each(data, function(val) {
-					if(val.toString().toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
+					if (val.toString().toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
 						found = true;
 					}
 				});
@@ -132,15 +133,14 @@ define(function(require){
 				var $this = $(this);
 
 				// Escape KEY
-				if(e.which === 27) {
+				if (e.which === 27) {
 					e.preventDefault();
-					if($this.val() !== '') {
+					if ($this.val() !== '') {
 						$this.val('');
 						template.find('.account-list-element').show();
 						searchLink.remove();
-					}
-					else {
-						$this.parents('#main_topbar_account_toggle').removeClass('open')
+					} else {
+						$this.parents('#main_topbar_account_toggle').removeClass('open');
 					}
 				}
 			});
@@ -151,10 +151,9 @@ define(function(require){
 
 				searchLink.find('.account-search-value').text(search);
 				// When they press enter, we want to trigger the global search
-				if(e.which === 13) {
+				if (e.which === 13) {
 					template.find('.account-search-link').click();
-				}
-				else if(search) {
+				} else if (search) {
 					$.each(template.find('.account-list-element'), function() {
 						var $elem = $(this),
 							data = $elem.data();
@@ -169,12 +168,12 @@ define(function(require){
 			});
 
 			// We can't bind on anything else than document for this event, since the input is disabled, it won't fire
-			if(self.appFlags.accountBrowser.documentEventInitialized === false) {
+			if (self.appFlags.accountBrowser.documentEventInitialized === false) {
 				self.appFlags.accountBrowser.documentEventInitialized = true;
 				var container = $('#main_topbar_account_toggle');
 				$(document).on('keydown', function(e) {
-					if(e.which === 13) {
-						if(container.hasClass('open') && container.find('.account-list-element').length === 0 && container.find('.account-search-link').hasClass('active')) {
+					if (e.which === 13) {
+						if (container.hasClass('open') && container.find('.account-list-element').length === 0 && container.find('.account-search-link').hasClass('active')) {
 							container.find('.account-search-link.active').trigger('click');
 						}
 					}
@@ -194,8 +193,6 @@ define(function(require){
 					parentElement = $this.parents('.account-list-element'),
 					accountId = parentElement.data('id'),
 					accountName = parentElement.data('name'),
-					parentAccountId = accountList.data('current'),
-					isSearchResult = accountList.data('search-value'),
 					isLocalBackButton = $this.hasClass('local-back');
 
 				$this.addClass('disabled');
@@ -220,15 +217,15 @@ define(function(require){
 								children: data.accounts
 							};
 
-							if(dataBackButton) {
-								if(selectedId) {
+							if (dataBackButton) {
+								if (selectedId) {
 									template.find('.account-list').scrollTop(0);
 									var pos = template.find('.account-list li.active').position().top - template.find('.account-list li:first-child').position().top;
 									template.find('.account-list').scrollTop(pos);
 								}
 
 								_.each(dataBackButton, function(account) {
-									if(account.id === accountId) {
+									if (account.id === accountId) {
 										callbackData.parentName = account.name;
 									}
 								});
@@ -237,11 +234,11 @@ define(function(require){
 							onChildrenClick && onChildrenClick(callbackData);
 						}
 					});
-				}
+				};
 
 				template.find('.account-search-link').removeClass('active').remove();
 
-				if(isLocalBackButton) {
+				if (isLocalBackButton) {
 					self.callApi({
 						resource: 'account.listParents',
 						data: {
@@ -249,26 +246,25 @@ define(function(require){
 						},
 						success: function(data, status) {
 							// if account we clicked back on has more than 2 levels in the tree, then we render the sub-accounts of it's grandfather
-							if(data.data.length > 1) {
-								renderList(data.data[data.data.length-2].id, data.data[data.data.length-1].id, data.data);
-							}
+							if (data.data.length > 1) {
+								renderList(data.data[data.data.length - 2].id, data.data[data.data.length - 1].id, data.data);
 							// otherwise, we just render the sub-accounts of the father
-							else {
-								renderList(data.data[data.data.length-1].id, null, data.data);
+							} else {
+								renderList(data.data[data.data.length - 1].id, null, data.data);
 							}
 						}
 					});
-				}
-				else {
+				} else {
 					renderList(accountId);
 				}
 			});
 
 			accountList.on('click', '.account-search-link', function() {
-				if(searchLink.hasClass('active')) {
+				if (searchLink.hasClass('active')) {
 					accountList.data('search-value', null);
-					searchLink.removeClass('active')
-							  .remove();
+					searchLink
+						.removeClass('active')
+						.remove();
 					template.find('.account-browser-search').prop('disabled', false)
 															.val('')
 															.focus();
@@ -284,8 +280,9 @@ define(function(require){
 					});
 				} else {
 					var searchValue = searchLink.find('.account-search-value').text();
-					searchLink.addClass('active')
-							  .remove();
+					searchLink
+						.addClass('active')
+						.remove();
 
 					onSearch && onSearch(searchValue);
 
@@ -312,7 +309,7 @@ define(function(require){
 			});
 
 			accountList.on('scroll', function() {
-				if(!isLoading && accountList.data('next-key') && (accountList.scrollTop() >= (accountList[0].scrollHeight - accountList.innerHeight() - 100))) {
+				if (!isLoading && accountList.data('next-key') && (accountList.scrollTop() >= (accountList[0].scrollHeight - accountList.innerHeight() - 100))) {
 					isLoading = true;
 					accountList.append(loader);
 					var searchValue = accountList.data('search-value'),
@@ -348,22 +345,21 @@ define(function(require){
 				}
 			});
 
-			if(addBackButton) {
+			if (addBackButton) {
 				accountList.on('click', '.account-previous-link', function() {
 					var currentAccountId = accountList.data('current') || self.accountId,
 						topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
 
-					if(currentAccountId !== topAccountId) {
-
+					if (currentAccountId !== topAccountId) {
 						self.callApi({
 							resource: 'account.listParents',
 							data: {
 								accountId: currentAccountId
 							},
 							success: function(data, status) {
-								if(data.data && data.data.length > 0) {
-									var accountId = data.data[data.data.length-1].id,
-										accountName = data.data[data.data.length-1].name;
+								if (data.data && data.data.length > 0) {
+									var accountId = data.data[data.data.length - 1].id,
+										accountName = data.data[data.data.length - 1].name;
 
 									template.find('.account-browser-search').prop('disabled', false)
 																			.val('');
@@ -391,7 +387,6 @@ define(function(require){
 					}
 				});
 			}
-
 		},
 
 		accountBrowserRenderList: function(args) {
@@ -409,7 +404,7 @@ define(function(require){
 				callback = args.callback,
 				topAccountId = allowBackOnMasquerading ? monster.apps.auth.originalAccount.id : self.accountId;
 
-			if(parentId === topAccountId) {
+			if (parentId === topAccountId) {
 				addBackButton = false;
 			}
 
@@ -425,15 +420,15 @@ define(function(require){
 						showLocalBackButton: showLocalBackButton
 					};
 
-				if(addCurrentAccount) {
+				if (addCurrentAccount) {
 					templateData.currentAccount = monster.apps.auth.currentAccount;
 				}
 
 				var template = $(self.getTemplate({
-									name: 'list',
-									submodule: 'accountBrowser',
-									data: templateData
-								})),
+						name: 'list',
+						submodule: 'accountBrowser',
+						data: templateData
+					})),
 					afterRender = function() {
 						hackMacChrome();
 
@@ -442,7 +437,7 @@ define(function(require){
 						list.data('search-value', searchValue || null);
 
 						callback && callback(templateData);
-					}, 
+					},
 					// For some god damn reason, the text doesn't display normally for accounts who have less than a screen of sub-accounts
 					// The css works fine on all environment except mac/chrome, where the text gets hidden.
 					// Trying to debug the code is hard because as soon as you inspect the element, the text appears again
@@ -452,30 +447,30 @@ define(function(require){
 					// Current fix is just to force the browser to re-render the element, which seems to fix the issue.
 					// So we just set the margin-left to a set value and reset it 1ms after
 					hackMacChrome = function() {
-						if (navigator.userAgent.indexOf('Mac OS X') != -1 && navigator.userAgent.toLowerCase().indexOf('chrome') != -1) {
+						if (navigator.userAgent.indexOf('Mac OS X') !== -1 && navigator.userAgent.toLowerCase().indexOf('chrome') !== -1) {
 							var oldMargin = list.css('margin-left');
-							list.css('margin-left','1px');
+							list.css('margin-left', '1px');
 
-							setTimeout(function(){
-								list.css('margin-left',oldMargin);
+							setTimeout(function() {
+								list.css('margin-left', oldMargin);
 							}, 1);
 						}
 					};
 
-				if(slide) {
-					slider.empty()
-						  .append(template);
+				if (slide) {
+					slider
+						.empty()
+						.append(template);
 
 					list.animate({ marginLeft: -list.outerWidth() }, 400, 'swing', function() {
 						list.empty()
 							.append(slider.html())
-							.css('marginLeft','0px');
+							.css('marginLeft', '0px');
 						slider.empty();
 
 						afterRender();
 					});
-				}
-				else {
+				} else {
 					list.empty()
 						.append(template);
 
@@ -507,19 +502,18 @@ define(function(require){
 				};
 
 			// Normal use case, just listing children
-			if(_.isArray(data.data)) {
+			if (_.isArray(data.data)) {
 				formattedData = data;
-			}
 			// the Search API returns 3 arrays, we merge them together and remove duplicated before continuing
-			else {
+			} else {
 				var mapAdded = {},
 					addAccounts = function(arr) {
 						_.each(arr, function(account) {
-							if(!mapAdded.hasOwnProperty(account.id)) {
+							if (!mapAdded.hasOwnProperty(account.id)) {
 								formattedData.data.push(account);
 								mapAdded[account.id] = true;
 							}
-						})
+						});
 					};
 
 				_.each(data.data, function(arrayField) {

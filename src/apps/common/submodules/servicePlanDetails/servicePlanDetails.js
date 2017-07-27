@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -27,8 +27,8 @@ define(function(require){
 				callback = args.callback,
 				accountId = args.accountId || self.accountId;
 
-			if(container) {
-				if(typeof servicePlan === 'string') {
+			if (container) {
+				if (typeof servicePlan === 'string') {
 					self.callApi({
 						resource: useOwnPlans ? 'servicePlan.get' : 'servicePlan.getAvailable',
 						data: {
@@ -43,7 +43,7 @@ define(function(require){
 					self.renderServicePlanDetails(container, servicePlan, callback);
 				}
 			} else {
-				throw "You must provide a container!";
+				throw new Error('You must provide a container!');
 			}
 		},
 
@@ -54,7 +54,7 @@ define(function(require){
 					servicePlan: {}
 				};
 
-			if(servicePlanData.hasOwnProperty('items') && !servicePlanData.hasOwnProperty('plan')) {
+			if (servicePlanData.hasOwnProperty('items') && !servicePlanData.hasOwnProperty('plan')) {
 				servicePlanData.plan = servicePlanData.items;
 			}
 
@@ -67,14 +67,14 @@ define(function(require){
 
 				_.each(objectToSort, function(item, key) {
 					formattedKey = item.hasOwnProperty('name') ? item.name : (i18nKeys.hasOwnProperty(key) ? i18nKeys[key] : key);
-					obj = { 
-						key:key,
+					obj = {
+						key: key,
 						value: formattedKey.toLowerCase()
 					};
 					keys.push(obj);
 				});
 
-				keys.sort(function(a,b) {
+				keys.sort(function(a, b) {
 					return a.value > b.value ? 1 : -1;
 				});
 
@@ -83,7 +83,7 @@ define(function(require){
 				});
 
 				return orderedObject;
-			}
+			};
 
 			servicePlanData.plan = sortObject(servicePlanData.plan);
 			_.each(servicePlanData.plan, function(item, key) {
@@ -112,45 +112,45 @@ define(function(require){
 		/* New common stuff */
 		servicePlanCustomizeGetOverrideDefault: function() {
 			var self = this,
-				 overrideOptions = {
+				overrideOptions = {
 					number_services: {
 						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
-						port: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						cnam: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						e911: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
+						port: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						cnam: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						e911: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					devices: {
-						_all: { rate: {},activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
-						ata: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						cellphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						fax: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						landline: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						mobile: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						sip_device: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						sip_uri: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						smartphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						softphone: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
+						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
+						ata: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						cellphone: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						fax: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						landline: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						mobile: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						sip_device: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						sip_uri: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						smartphone: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						softphone: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					limits: {
 						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
-						outbound_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						inbound_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						twoway_trunks: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
+						outbound_trunks: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						inbound_trunks: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						twoway_trunks: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					phone_numbers: {
 						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
-						tollfree_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						toll_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						emergency: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						caribbean: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						did_us: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						international: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
-						unknown: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
+						tollfree_us: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						toll_us: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						emergency: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						caribbean: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						did_us: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						international: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						unknown: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					users: {
 						_all: { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } },
-						user: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }, 
-						admin: { rate: {},activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
+						user: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } },
+						admin: { rate: {}, activation_charge: {}, minimum: {}, discounts: { maximum: {}, rate: {} } }
 					},
 					ui_apps: function() {
 						var obj = {};
@@ -160,7 +160,7 @@ define(function(require){
 						});
 
 						return obj;
-					}()
+					}
 				};
 
 			_.each(overrideOptions, function(category) {
@@ -183,94 +183,90 @@ define(function(require){
 				accountId = args.accountId || self.accountId;
 
 			monster.parallel({
-					current: function(callback) {
-						if(mode === 'new') {
-							callback(null, {});
-						}
-						else {
-							self.servicePlanDetailsGetCurrentSP(accountId, function(data) {
-								var response = {
-									details: data,
-									selectedPlans: {}
-								};
+				current: function(callback) {
+					if (mode === 'new') {
+						callback(null, {});
+					} else {
+						self.servicePlanDetailsGetCurrentSP(accountId, function(data) {
+							var response = {
+								details: data,
+								selectedPlans: {}
+							};
 
-								if(data && data.plans && !_.isEmpty(data.plans)) {
-									var listSP = {};
+							if (data && data.plans && !_.isEmpty(data.plans)) {
+								var listSP = {};
 
-									_.each(data.plans, function(v,k) {
-										listSP[k] = function(callback) {
-											self.servicePlanDetailsGetSP(k, accountId, false, function(detailSP) {
-												callback && callback(null, detailSP);
-											},
-											function(data) {
-												callback(null, data);
-											});
+								_.each(data.plans, function(v, k) {
+									listSP[k] = function(callback) {
+										self.servicePlanDetailsGetSP(k, accountId, false, function(detailSP) {
+											callback && callback(null, detailSP);
+										},
+										function(data) {
+											callback(null, data);
+										});
+									};
+								});
+
+								monster.parallel(listSP, function(err, results) {
+									_.each(results, function(value, plan) {
+										// if value is empty, there was an error, so we remove the service plan from the list of service plan to show
+										// Once KAZOO-4495 is done, we will be able to remove these next 3 lines, so that the service plan gets automatically deleted by the UI tool.
+										if (_.isEmpty(value)) {
+											delete results[plan];
 										}
 									});
 
-									monster.parallel(listSP, function(err, results) {
-										_.each(results, function(value, plan) {
-											// if value is empty, there was an error, so we remove the service plan from the list of service plan to show
-											// Once KAZOO-4495 is done, we will be able to remove these next 3 lines, so that the service plan gets automatically deleted by the UI tool.
-											if(_.isEmpty(value)) {
-												delete results[plan];
-											}
-										});
+									response.selectedPlans = results;
 
-										response.selectedPlans = results;
-
-										callback && callback(null, response);
-									});
-								}
-								else {
-									callback(null, response);
-								}
-							});
-						}
-					},
-					listAvailable: function(callback) {
-						self.servicePlanDetailsListSP(accountId, useOwnPlans, function(data) {
-							callback(null, data)
+									callback && callback(null, response);
+								});
+							} else {
+								callback(null, response);
+							}
 						});
 					}
 				},
-				function(err, results) {
-					var data = self.servicePlanCustomizeFormatData(results),
-						template = $(monster.template(self, 'servicePlanDetails-customizeView', data)),
-						divContainerPlan,
-						divContainerOverride;
-
-					_.each(data.selectedPlans, function(v,k) {
-						divContainerPlan = template.find('[value="'+ k + '"]:selected').parents('.customize-details-wrapper').find('.details-selected-service-plan');
-						self.servicePlanDetailsRender({ accountId: accountId, servicePlan: v, container: divContainerPlan });
+				listAvailable: function(callback) {
+					self.servicePlanDetailsListSP(accountId, useOwnPlans, function(data) {
+						callback(null, data);
 					});
-
-					_.each(data.categories, function(v,k) {
-						divContainerOverride = template.find('select[name="'+ k + '"]').parents('.customize-details-wrapper').find('.customize-override-wrapper');
-
-						self.servicePlanDetailsRenderOverride(divContainerOverride, v.overrides);
-					});
-
-					template.find('.service-plan-selector').on('change', function() {
-						var $this = $(this),
-							servicePlanId = $this.val(),
-							divContainer = $this.parents('.customize-details-wrapper').find('.details-selected-service-plan');
-
-						divContainer.empty();
-
-						if(servicePlanId !== 'none') {
-							$this.parents('.category-wrapper').addClass('has-selected');
-							self.servicePlanDetailsGetSP(servicePlanId, accountId, useOwnPlans, function(data) {
-								self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divContainer });
-							});
-						} else {
-							$this.parents('.category-wrapper').removeClass('has-selected');
-						}
-					});
-
-					args.afterRender && args.afterRender(template, data);
 				}
-			);
+			}, function(err, results) {
+				var data = self.servicePlanCustomizeFormatData(results),
+					template = $(monster.template(self, 'servicePlanDetails-customizeView', data)),
+					divContainerPlan,
+					divContainerOverride;
+
+				_.each(data.selectedPlans, function(v, k) {
+					divContainerPlan = template.find('[value="' + k + '"]:selected').parents('.customize-details-wrapper').find('.details-selected-service-plan');
+					self.servicePlanDetailsRender({ accountId: accountId, servicePlan: v, container: divContainerPlan });
+				});
+
+				_.each(data.categories, function(v, k) {
+					divContainerOverride = template.find('select[name="' + k + '"]').parents('.customize-details-wrapper').find('.customize-override-wrapper');
+
+					self.servicePlanDetailsRenderOverride(divContainerOverride, v.overrides);
+				});
+
+				template.find('.service-plan-selector').on('change', function() {
+					var $this = $(this),
+						servicePlanId = $this.val(),
+						divContainer = $this.parents('.customize-details-wrapper').find('.details-selected-service-plan');
+
+					divContainer.empty();
+
+					if (servicePlanId !== 'none') {
+						$this.parents('.category-wrapper').addClass('has-selected');
+						self.servicePlanDetailsGetSP(servicePlanId, accountId, useOwnPlans, function(data) {
+							self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divContainer });
+						});
+					} else {
+						$this.parents('.category-wrapper').removeClass('has-selected');
+					}
+				});
+
+				args.afterRender && args.afterRender(template, data);
+			});
 		},
 
 		servicePlanCustomizeFormatData: function(data) {
@@ -279,7 +275,7 @@ define(function(require){
 				formattedData = {};
 
 			_.each(data.listAvailable, function(plan) {
-				if(!formattedData.hasOwnProperty(plan.category)) {
+				if (!formattedData.hasOwnProperty(plan.category)) {
 					formattedData[plan.category] = {
 						friendlierName: plan.category,
 						plans: []
@@ -289,14 +285,14 @@ define(function(require){
 				formattedPlan = {
 					id: plan.id,
 					name: plan.name
-				}
+				};
 
-				if(data.current && data.current.details && data.current.details.hasOwnProperty('plans') && data.current.details.plans.hasOwnProperty(plan.id)) {
+				if (data.current && data.current.details && data.current.details.hasOwnProperty('plans') && data.current.details.plans.hasOwnProperty(plan.id)) {
 					formattedPlan.selected = true;
 					formattedData[plan.category].hasSelected = true;
 					formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 
-					if(data.current.details.plans[plan.id].overrides) {
+					if (data.current.details.plans[plan.id].overrides) {
 						formattedData[plan.category].overrides = data.current.details.plans[plan.id].overrides;
 					}
 				}
@@ -304,8 +300,8 @@ define(function(require){
 				formattedData[plan.category].plans.push(formattedPlan);
 			});
 
-			return { 
-				categories: formattedData, 
+			return {
+				categories: formattedData,
 				selectedPlans: data.current.selectedPlans,
 				allowedOverrides: self.servicePlanCustomizeGetOverrideDefault()
 			};
@@ -321,26 +317,25 @@ define(function(require){
 					overrides: {}
 				};
 
-			_.each(previousPlans, function(v,k) {
+			_.each(previousPlans, function(v, k) {
 				mapToDelete[k] = true;
 			});
 
 			template.find('select.service-plan-selector').each(function() {
 				var value = $(this).val();
 
-				if(value !== 'none') {
+				if (value !== 'none') {
 					// If we selected a plan we already have, we don't delete it
-					if(mapToDelete.hasOwnProperty(value)) {
+					if (mapToDelete.hasOwnProperty(value)) {
 						delete mapToDelete[value];
-					}
 					// And if we didn't have it before we add it to the plans to add
-					else {
+					} else {
 						formattedData.plansToAdd.push(value);
 					}
 				}
 			});
 
-			_.each(mapToDelete, function(v,k) {
+			_.each(mapToDelete, function(v, k) {
 				formattedData.plansToDelete.push(k);
 			});
 
@@ -351,48 +346,46 @@ define(function(require){
 					key = $this.data('key'),
 					hasFields = $this.find('[data-field]').length > 0;
 
-				if(plan !== 'none') {
+				if (plan !== 'none') {
 					formattedData.overrides[plan] = formattedData.overrides[plan] || {};
 					formattedData.overrides[plan][category] = formattedData.overrides[plan][category] || {};
 					formattedData.overrides[plan][category][key] = formattedData.overrides[plan][category][key] || {};
 
-					if(category === 'ui_apps') {
+					if (category === 'ui_apps') {
 						formattedData.overrides[plan][category][key] = {
 							enabled: true,
 							app_id: monster.appsStore[key].id,
 							name: monster.appsStore[key].i18n['en-US'].label,
 							account_id: monster.apps.auth.originalAccount.id
-						}
+						};
 					}
 
-					if(hasFields) {
+					if (hasFields) {
 						var field,
 							value,
 							subField;
 
 						$this.find('[data-field]').each(function(el) {
 							var $el = $(this);
-							field = $el.data('field'),
+							field = $el.data('field');
 							value = $el.find('.input-value').val();
 							subField = $el.data('subfield');
 
-							if(field === 'exceptions') { value = value.split(','); }
+							if (field === 'exceptions') { value = value.split(','); }
 
-							if(!subField) {
+							if (!subField) {
 								formattedData.overrides[plan][category][key][field] = value;
-							}
-							else {
+							} else {
 								formattedData.overrides[plan][category][key][field] = formattedData.overrides[plan][category][key][field] || {};
 
-								if(!field === 'discounts') {
+								if (!field === 'discounts') {
 									formattedData.overrides[plan][category][key][field][subField] = value;
-								}
-								else {
-									if(!formattedData.overrides[plan][category][key][field].hasOwnProperty('cumulative')) {
-										formattedData.overrides[plan][category][key][field]['cumulative'] = {};
+								} else {
+									if (!formattedData.overrides[plan][category][key][field].hasOwnProperty('cumulative')) {
+										formattedData.overrides[plan][category][key][field].cumulative = {};
 									}
 
-									formattedData.overrides[plan][category][key][field]['cumulative'][subField] = value;
+									formattedData.overrides[plan][category][key][field].cumulative[subField] = value;
 								}
 							}
 						});
@@ -404,8 +397,7 @@ define(function(require){
 		},
 
 		servicePlanCustomizeInternalSaveData: function(data, globalCallback) {
-			var self = this,
-				parallelFunctionsOverrides= {};
+			var self = this;
 
 			// First delete all plans to delete
 			self.servicePlanDetailsUpdateSP(data.plansToDelete, data.plansToAdd, data.accountId, function() {
@@ -430,7 +422,7 @@ define(function(require){
 			_.each(allowedOverridesFull, function(category, categoryName) {
 				mapAsCategories[categoryName] = [];
 				_.each(category, function(subCategory, key) {
-					if(key !== '_all') {
+					if (key !== '_all') {
 						mapAsCategories[categoryName].push(key);
 					}
 				});
@@ -438,29 +430,27 @@ define(function(require){
 
 			_.each(overrides, function(category, categoryName) {
 				_.each(category, function(key, keyName) {
-					if(categoryName === 'ui_apps') {
+					if (categoryName === 'ui_apps') {
 						delete allowedOverridesFull[categoryName][keyName];
 
-						overrides.ui_apps[keyName] = {}
-					}
-					else {
+						overrides.ui_apps[keyName] = {};
+					} else {
 						_.each(key, function(field, fieldName) {
-							if(fieldName === 'discounts') {
-								if(field.hasOwnProperty('cumulative')) {
+							if (fieldName === 'discounts') {
+								if (field.hasOwnProperty('cumulative')) {
 									// If it comes straight from db, it has cumulative in it so we skip it
 									overrides[categoryName][keyName][fieldName] = field.cumulative;
 									field = field.cumulative;
 								}
-								
+
 								_.each(field, function(subField, subFieldName) {
-									if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName) && allowedOverridesFull[categoryName][keyName].hasOwnProperty(fieldName)) {
+									if (allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName) && allowedOverridesFull[categoryName][keyName].hasOwnProperty(fieldName)) {
 										delete allowedOverridesFull[categoryName][keyName][fieldName][subFieldName];
 									}
 								});
-							}
-							else {
-								if(allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
-									if(fieldName === 'as') {
+							} else {
+								if (allowedOverridesFull.hasOwnProperty(categoryName) && allowedOverridesFull[categoryName].hasOwnProperty(keyName)) {
+									if (fieldName === 'as') {
 										key.asCategories = mapAsCategories[categoryName];
 									}
 
@@ -495,21 +485,20 @@ define(function(require){
 						overrides[category] = overrides[category] || {};
 						overrides[category][key] = overrides[category][key] || {};
 
-						if(hasFields) {
+						if (hasFields) {
 							var field,
 								value;
 
 							$this.find('[data-field]').each(function(el) {
-								var $el = $(this);
-								field = $el.data('field'),
-								subField = $el.data('subfield'),
+								var $el = $(this),
+									subField = $el.data('subfield');
+								field = $el.data('field');
 								value = $el.find('.input-value').val();
 
-								if(subField) {
+								if (subField) {
 									overrides[category][key][field] = overrides[category][key][field] || {};
 									overrides[category][key][field][subField] = value;
-								}
-								else {
+								} else {
 									overrides[category][key][field] = value;
 								}
 							});
@@ -529,25 +518,23 @@ define(function(require){
 					field = isKey ? '' : $this.parents('[data-field]').data('field'),
 					subField = isSubField ? $this.parents('[data-subfield]').data('subfield') : '';
 
-				if(isKey) {
+				if (isKey) {
 					delete overrides[category][key];
-				}
-				else if(isSubField) {
+				} else if (isSubField) {
 					delete overrides[category][key][field][subField];
-				}
-				else {
+				} else {
 					delete overrides[category][key][field];
 				}
 
-				if(overrides[category].hasOwnProperty(key) && overrides[category][key].hasOwnProperty(field) && _.isEmpty(overrides[category][key][field])) {
+				if (overrides[category].hasOwnProperty(key) && overrides[category][key].hasOwnProperty(field) && _.isEmpty(overrides[category][key][field])) {
 					delete overrides[category][key][field];
 				}
 
-				if(overrides[category].hasOwnProperty(key) && _.isEmpty(overrides[category][key])) {
+				if (overrides[category].hasOwnProperty(key) && _.isEmpty(overrides[category][key])) {
 					delete overrides[category][key];
 				}
 
-				if(_.isEmpty(overrides[category])) {
+				if (_.isEmpty(overrides[category])) {
 					delete overrides[category];
 				}
 
@@ -567,7 +554,7 @@ define(function(require){
 				overrides[category] = overrides[category] || {};
 				overrides[category][key] = overrides[category][key] || {};
 
-				if(field) {
+				if (field) {
 					overrides[category][key][field] = overrides[category][key][field] || {};
 
 					!subField ? overrides[category][key][field] = '' : overrides[category][key][field][subField] = '';
@@ -578,10 +565,11 @@ define(function(require){
 				self.servicePlanDetailsRenderOverride(container, overrides, cssToFocus);
 			});
 
-			container.empty()
-					 .append(template);
+			container
+				.empty()
+				.append(template);
 
-			if(cssToFocus) {
+			if (cssToFocus) {
 				template.find(cssToFocus).focus();
 			}
 		},
@@ -596,7 +584,7 @@ define(function(require){
 				dataToSave = self.servicePlanDetailsGetDataToSave(accountId, container, previousPlans);
 
 			self.servicePlanCustomizeInternalSaveData(dataToSave, function(data) {
-				if(divResult) {
+				if (divResult) {
 					self.servicePlanDetailsRender({ accountId: accountId, servicePlan: data, container: divResult });
 				}
 
@@ -635,10 +623,9 @@ define(function(require){
 					// We added this so that if the plan has been deleted, we can still continue to edit the plan normally
 					// This allow us to edit accounts that have old SP that have been deleted.
 					// Before it would just crash and wouldn't let us access the service plan selector
-					if(data && data.data && data.data.hasOwnProperty('message') && data.data.message === 'bad identifier') {
+					if (data && data.data && data.data.hasOwnProperty('message') && data.data.message === 'bad identifier') {
 						error && error({});
-					}
-					else {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
@@ -662,7 +649,7 @@ define(function(require){
 		servicePlanDetailsAddManySP: function(plans, accountId, callback) {
 			var self = this;
 
-			if(plans.length) {
+			if (plans.length) {
 				self.callApi({
 					resource: 'servicePlan.addMany',
 					data: {
@@ -675,11 +662,9 @@ define(function(require){
 						callback && callback(data.data);
 					}
 				});
-			}
-			else {
+			} else {
 				callback && callback({});
 			}
-			
 		},
 
 		servicePlanDetailsRemoveSP: function(planId, accountId, callback) {
@@ -735,7 +720,7 @@ define(function(require){
 			var self = this;
 
 			// If both arrays are empty, no need to do anything
-			if(plansToAdd.length + plansToDelete.length) {
+			if (plansToAdd.length + plansToDelete.length) {
 				self.callApi({
 					resource: 'servicePlan.update',
 					data: {
@@ -749,12 +734,11 @@ define(function(require){
 						callback && callback(data.data);
 					}
 				});
-			}
-			else {
+			} else {
 				callback && callback();
 			}
 		}
-	}
+	};
 
 	return servicePlanDetails;
 });

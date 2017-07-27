@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		toastr = require('toastr'),
@@ -34,7 +34,7 @@ define(function(require){
 
 				monster.pub('myaccount.renderSubmodule', transactionsView);
 
-				if(typeof args.callback === 'function') {
+				if (typeof args.callback === 'function') {
 					args.callback(transactionsView);
 				}
 			});
@@ -62,7 +62,7 @@ define(function(require){
 					transactionBox = current.parents('.transaction-box'),
 					expandable = transactionBox.first().find('.expandable');
 
-				transactionBox.toggleClass('open')
+				transactionBox.toggleClass('open');
 				expandable.slideToggle('fast');
 			});
 
@@ -89,7 +89,7 @@ define(function(require){
 		listTransactions: function(from, to, callback) {
 			var self = this;
 
-			if(typeof from === 'function') {
+			if (typeof from === 'function') {
 				callback = from;
 
 				var dates = monster.util.getDefaultRangeDates(self.balanceRange);
@@ -109,42 +109,39 @@ define(function(require){
 			};
 
 			monster.parallel({
-					charges: function(callback) {
-						self.transactionsGetCharges(from, to, function(dataCharges) {
-							var arrayCharges = [];
+				charges: function(callback) {
+					self.transactionsGetCharges(from, to, function(dataCharges) {
+						var arrayCharges = [];
 
-							$.each(dataCharges.data, function(k, v) {
-								// We don't want to display Balance Carry-Over anymore
-								if(v.code !== 4000) {
-									v = monster.util.formatTransaction(v, self);
+						$.each(dataCharges.data, function(k, v) {
+							// We don't want to display Balance Carry-Over anymore
+							if (v.code !== 4000) {
+								v = monster.util.formatTransaction(v, self);
 
-									arrayCharges.push(v);
+								arrayCharges.push(v);
 
-									if(v.approved) {
-										if(v.type === 'credit') {
-											defaults.amount -= parseFloat(v.amount);
-										}
-										else {
-											defaults.amount += parseFloat(v.amount);
-										}
+								if (v.approved) {
+									if (v.type === 'credit') {
+										defaults.amount -= parseFloat(v.amount);
+									} else {
+										defaults.amount += parseFloat(v.amount);
 									}
 								}
-							});
-
-							callback(null, arrayCharges);
+							}
 						});
-					}
-				},
-				function(err, results) {
-					var renderData = defaults;
 
-					renderData.listTransactions = results.charges;
-
-					renderData = self.transactionsFormatData(renderData);
-
-					callback(renderData);
+						callback(null, arrayCharges);
+					});
 				}
-			);
+			}, function(err, results) {
+				var renderData = defaults;
+
+				renderData.listTransactions = results.charges;
+
+				renderData = self.transactionsFormatData(renderData);
+
+				callback(renderData);
+			});
 		},
 
 		transactionsGetCharges: function(from, to, success, error) {

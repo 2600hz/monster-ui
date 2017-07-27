@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -31,7 +31,7 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -61,7 +61,7 @@ define(function(require){
 
 		mainContainer: '#myaccount',
 
-		load: function(callback){
+		load: function(callback) {
 			var self = this;
 
 			self.initApp(function() {
@@ -79,14 +79,14 @@ define(function(require){
 				callback: _callback
 			});
 		},
-		
+
 		getDefaultCategory: function() {
 			var self = this,
 				defaultApp = {
 					name: 'user'
 				};
 
-			if(monster.util.isMasquerading()) {
+			if (monster.util.isMasquerading()) {
 				defaultApp.name = 'account';
 			}
 
@@ -135,20 +135,20 @@ define(function(require){
 			var self = this,
 				showMyaccount = false;
 
-			if ( args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount') ) {
+			if (args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount')) {
 				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
 			} else {
 				args.restrictions = self.getDefaultRestrictions();
 			}
-			if(monster.apps.auth.currentUser.priv_level === 'user') {
+			if (monster.apps.auth.currentUser.priv_level === 'user') {
 				_.each(args.restrictions, function(restriction, tab) {
-					if(tab !== 'user' && tab !== 'errorTracker') {
+					if (tab !== 'user' && tab !== 'errorTracker') {
 						restriction.show_tab = false;
 					}
-				})
+				});
 			}
 
-			if ( !args.restrictions.hasOwnProperty('user') ) {
+			if (!args.restrictions.hasOwnProperty('user')) {
 				args.restrictions = $.extend(args.restrictions, {
 					account: {
 						show_tab: true
@@ -158,14 +158,14 @@ define(function(require){
 					},
 					user: {
 						show_tab: true
-					},
+					}
 				});
 
 				delete args.restrictions.profile;
 			}
 
-			_.each(args.restrictions, function(value, key){
-				if ( value.show_tab ) {
+			_.each(args.restrictions, function(value, key) {
+				if (value.show_tab) {
 					showMyaccount = true;
 				}
 			});
@@ -182,18 +182,18 @@ define(function(require){
 					misc: ['errorTracker']
 				},
 				_callback = function(billing, uiRestrictions) {
-					if ( _.isEmpty(billing) ) {
+					if (_.isEmpty(billing)) {
 						uiRestrictions.billing.show_tab = false;
 					}
 
 					uiRestrictions.categories = {};
 
-					for(var i in categories) {
+					for (var i in categories) {
 						var category = categories[i],
 							countDisplay = category.length;
 
 						category.forEach(function(element) {
-							if(!uiRestrictions.hasOwnProperty(element) || !uiRestrictions[element].show_tab) {
+							if (!uiRestrictions.hasOwnProperty(element) || !uiRestrictions[element].show_tab) {
 								countDisplay--;
 							}
 						});
@@ -235,7 +235,7 @@ define(function(require){
 					},
 					myaccountHtml = $(monster.template(self, 'app', dataTemplate));
 
-				if ( !monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions') ) {
+				if (!monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions')) {
 					self.callApi({
 						resource: 'account.get',
 						data: {
@@ -278,17 +278,15 @@ define(function(require){
 				requirePasswordUpdate = currentUser.hasOwnProperty('require_password_update') && currentUser.require_password_update;
 
 			// Only show information if we're not already showing a password update popup
-			if(!requirePasswordUpdate) {
-				if(currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
+			if (!requirePasswordUpdate) {
+				if (currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 					monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
-				}
 				// Only direct them to my account walkthrough if it's not a trial account
-				else if(self.hasToShowWalkthrough()) {
+				} else if (self.hasToShowWalkthrough()) {
 					self.showWalkthrough(template, function() {
 						self.updateWalkthroughFlagUser();
 					});
-				}
-				else {
+				} else {
 					self.checkCreditCard(uiRestrictions);
 				}
 			}
@@ -306,8 +304,7 @@ define(function(require){
 							name: args && args.name || monster.apps.auth.currentUser.first_name + ' ' + monster.apps.auth.currentUser.last_name,
 							showMyaccount: showMyaccount
 						},
-						navHtml = $(monster.template(self, 'nav', dataTemplate)),
-						mainContainer = $(self.mainContainer);
+						navHtml = $(monster.template(self, 'nav', dataTemplate));
 
 					/* Hack to redraw myaccount links on masquerading */
 					navLinks.find('.myaccount-common-link').remove();
@@ -329,7 +326,7 @@ define(function(require){
 				callback: function() {
 					if (toggle) {
 						/* when all the badges have been updated, display my account */
-						if(!--countBadges) {
+						if (!--countBadges) {
 							monster.pub('core.showAppName', 'myaccount');
 							self.toggle({
 								callback: callback
@@ -345,7 +342,7 @@ define(function(require){
 			var self = this,
 				myaccount = $(self.mainContainer);
 
-			if(myaccount.hasClass('myaccount-open')) {
+			if (myaccount.hasClass('myaccount-open')) {
 				self.displayUserSection();
 
 				var firstTab = myaccount.find('.myaccount-menu .myaccount-element.active').first(),
@@ -356,7 +353,7 @@ define(function(require){
 					};
 
 				if (firstTab.data('key')) {
-					args.key =  firstTab.data('key');
+					args.key = firstTab.data('key');
 				}
 
 				self.activateSubmodule(args);
@@ -365,12 +362,10 @@ define(function(require){
 					except: module
 				});
 			}
-			
 		},
 
 		bindEvents: function(container) {
 			var self = this,
-				mainContainer = $(self.mainContainer),
 				navLinks = $('#main_topbar_nav');
 
 			container.find('.myaccount-close').on('click', function() {
@@ -385,11 +380,10 @@ define(function(require){
 						module: module
 					};
 
-				if(key) {
+				if (key) {
 					args.title = self.i18n.active()[module][key + 'Title'];
 					args.key = key;
-				}
-				else {
+				} else {
 					args.title = self.i18n.active()[module].title;
 				}
 
@@ -416,17 +410,15 @@ define(function(require){
 			self._UIRestrictionsCompatibility({
 				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 				callback: function(uiRestrictions, showMyaccount) {
-					if ( showMyaccount ) {
-						if(mainContainer.hasClass('myaccount-open')) {
+					if (showMyaccount) {
+						if (mainContainer.hasClass('myaccount-open')) {
 							self.hide();
-						}
-						else {
-							if(self.hasToShowWalkthrough()) {
+						} else {
+							if (self.hasToShowWalkthrough()) {
 								self.showWalkthrough(mainContainer, function() {
 									self.updateWalkthroughFlagUser();
 								});
-							}
-							else {
+							} else {
 								self.renderDropdown(true);
 							}
 						}
@@ -450,14 +442,13 @@ define(function(require){
 					if (uiRestrictions && uiRestrictions[defaultApp.name] && uiRestrictions[defaultApp.name].show_tab === false) {
 						defaultApp.name = firstTab.data('module');
 						if (firstTab.data('key')) {
-							defaultApp.key =  firstTab.data('key');
+							defaultApp.key = firstTab.data('key');
 						}
 					}
 
-					if(myaccount.hasClass('myaccount-open')) {
+					if (myaccount.hasClass('myaccount-open')) {
 						self.hide(myaccount);
-					}
-					else {
+					} else {
 						var args = {
 							title: self.i18n.active()[defaultApp.name].title,
 							module: defaultApp.name,
@@ -484,17 +475,16 @@ define(function(require){
 		displayUserSection: function() {
 			var self = this;
 
-			if(monster.util.isMasquerading()) {
+			if (monster.util.isMasquerading()) {
 				var userTab = $('.myaccount-menu .myaccount-element[data-module="user"]');
 
 				userTab.hide();
 
-				if(userTab.hasClass('active')) {
+				if (userTab.hasClass('active')) {
 					userTab.removeClass('active');
 					$('.myaccount-menu .myaccount-element:visible').first().addClass('active');
 				}
-			}
-			else {
+			} else {
 				$('.myaccount-menu .myaccount-element[data-module="user"]').show();
 			}
 		},
@@ -502,7 +492,7 @@ define(function(require){
 		activateSubmodule: function(args) {
 			var self = this,
 				myaccount = $(self.mainContainer),
-				submodule = args.key ? myaccount.find('[data-module="'+args.module+'"][data-key="'+args.key+'"]') : myaccount.find('[data-module="'+args.module+'"]');
+				submodule = args.key ? myaccount.find('[data-module="' + args.module + '"][data-key="' + args.key + '"]') : myaccount.find('[data-module="' + args.module + '"]');
 
 			myaccount.find('.myaccount-menu .nav li').removeClass('active');
 			submodule.addClass('active');
@@ -524,7 +514,7 @@ define(function(require){
 			};
 		},
 
-		hide: function(myaccount, scrollbar) {
+		hide: function(myaccount) {
 			var self = this,
 				myaccount = myaccount || $(self.mainContainer);
 
@@ -540,14 +530,14 @@ define(function(require){
 			var self = this,
 				myaccount = $(self.mainContainer);
 
-			if(myaccount.hasClass('myaccount-open')) {
+			if (myaccount.hasClass('myaccount-open')) {
 				self.hide(myaccount);
 			}
 		},
 
 		_updateMenu: function(params) {
-			if(params.data !== undefined) {
-				var container = params.hasOwnProperty('key') ? '[data-key="'+params.key+'"] .badge' : '[data-module="'+params.module+'"] .badge';
+			if (params.data !== undefined) {
+				var container = params.hasOwnProperty('key') ? '[data-key="' + params.key + '"] .badge' : '[data-module="' + params.module + '"] .badge';
 
 				$(container).html(params.data);
 			}
@@ -559,9 +549,9 @@ define(function(require){
 			var self = this;
 
 			// If this is a sub-account of the super duper admin, has the billing tab, and is not the super duper admin itself.
-			if(monster.apps.auth.resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
+			if (monster.apps.auth.resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
 				self.hasCreditCards(function(response) {
-					if(response === false) {
+					if (response === false) {
 						self.showCreditCardTab();
 					}
 				});
@@ -611,10 +601,9 @@ define(function(require){
 			var self = this,
 				response = self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 
-			if(typeof callback === 'function') {
+			if (typeof callback === 'function') {
 				callback(response);
-			}
-			else {
+			} else {
 				return response;
 			}
 		},
@@ -634,10 +623,9 @@ define(function(require){
 			var self = this;
 
 			self.showMyAccount(function() {
-				if(monster.apps.auth.currentAccount.hasOwnProperty('trial_time_left')) {
+				if (monster.apps.auth.currentAccount.hasOwnProperty('trial_time_left')) {
 					self.renderStepByStepWalkthrough(template, callback);
-				}
-				else {
+				} else {
 					self.showGreetingWalkthrough(function() {
 						self.renderStepByStepWalkthrough(template, callback);
 					}, callback);
@@ -677,7 +665,7 @@ define(function(require){
 
 			// Update the flag of the walkthrough is they don't care about it
 			dialog.siblings().find('.ui-dialog-titlebar-close').on('click', function() {
-				callbackClose && callbackClose()
+				callbackClose && callbackClose();
 			});
 		},
 
@@ -698,7 +686,7 @@ define(function(require){
 
 		renderStepByStepWalkthrough: function(template, callback) {
 			var self = this,
-				steps =  [
+				steps = [
 					{
 						element: $('#main_topbar_myaccount')[0],
 						intro: self.i18n.active().walkthrough.steps['1'],
@@ -773,7 +761,7 @@ define(function(require){
 				}
 			});
 
-			if(monster.ui.valid(formPassword)) {
+			if (monster.ui.valid(formPassword)) {
 				callback && callback();
 			}
 		},
@@ -799,11 +787,10 @@ define(function(require){
 
 					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
 					// If the field is password, we start custom validation
-					if(formPassword.length) {
+					if (formPassword.length) {
 						self.validatePasswordForm(formPassword, callback);
-					}
 					// otherwise we don't have any validation for this field, we execute the callback
-					else {
+					} else {
 						callback && callback();
 					}
 				};
@@ -813,10 +800,10 @@ define(function(require){
 
 				closeContent();
 
-				if ( !isOpen ) {
+				if (!isOpen) {
 					var args = { link: $(this) };
 
-					if ( data.hasOwnProperty('billing') ) {
+					if (data.hasOwnProperty('billing')) {
 						args.hasEmptyCreditCardInfo = _.isEmpty(data.billing.credit_cards);
 					}
 
@@ -839,15 +826,15 @@ define(function(require){
 
 				var currentElement = $(this),
 					module = currentElement.parents('#myaccount').find('.myaccount-menu .myaccount-element.active').data('module'),
-					moduleToUpdate = currentElement.data('module');
+					moduleToUpdate = currentElement.data('module'),
 					fieldName = currentElement.data('field'),
 					newData = (function cleanFormData(moduleToUpdate, data) {
-						if ( moduleToUpdate === 'billing' ) {
+						if (moduleToUpdate === 'billing') {
 							data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
 						}
 
 						return data;
-					})(moduleToUpdate, monster.ui.getFormData('form_'+fieldName));
+					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName));
 
 				settingsValidate(fieldName, newData,
 					function() {
@@ -855,18 +842,17 @@ define(function(require){
 							function(data) {
 								var args = {
 									callback: function(parent) {
-										if(fieldName === 'credit_card') {
+										if (fieldName === 'credit_card') {
 											parent.find('.edition').hide();
 											parent.find('.uneditable').show();
-										} else if(fieldName === 'colorblind') {
+										} else if (fieldName === 'colorblind') {
 											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 										}
 
 										self.highlightField(parent, fieldName);
 
 										/* TODO USELESS? */
-										if(typeof callbackUpdate === 'function') {
-											callbackUpdate();
+										if (typeof callbackUpdate === 'function') {
 										}
 									}
 								};
@@ -880,23 +866,24 @@ define(function(require){
 		},
 
 		highlightField: function(parent, fieldName) {
-			var	link = parent.find('li[data-name='+fieldName+']');
+			var	link = parent.find('li[data-name=' + fieldName + ']');
 
 			link.find('.update').hide();
-			link.find('.changes-saved').show()
-										.fadeOut(1500, function() {
-												link.find('.update').fadeIn(500);
-										});
+			link
+				.find('.changes-saved')
+					.show()
+					.fadeOut(1500, function() {
+						link.find('.update').fadeIn(500);
+					});
 
-			link.css('background-color', '#22a5ff')
-					.animate({
+			link
+				.css('background-color', '#22a5ff')
+				.animate({
 					backgroundColor: '#f6f6f6'
-				}, 2000
-			);
+				}, 2000);
 
 			parent.find('li.settings-item .settings-item-content').hide();
 			parent.find('li.settings-item a.settings-link').show();
-
 		},
 
 		_openAccordionGroup: function(args) {
@@ -911,7 +898,7 @@ define(function(require){
 			settingsItem.find('.settings-item-content').slideDown('fast');
 
 			/* If there is no credit-card data, we skip the step that just displays the creditcard info */
-			if(settingsItem.data('name') === 'credit_card' && hasEmptyCreditCardInfo) {
+			if (settingsItem.data('name') === 'credit_card' && hasEmptyCreditCardInfo) {
 				settingsItem.find('.uneditable').hide();
 				settingsItem.find('.edition').show();
 			}

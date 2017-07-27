@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -23,51 +23,52 @@ define(function(require){
 
 			self.carrierSelectorBindEvents(template, formattedData, args.callbackAfterSave);
 
-			args.container.empty()
-						  .append(template);
+			args.container
+				.empty()
+				.append(template);
 		},
 
 		carrierSelectorFormatData: function(params) {
 			var self = this,
-				resellerString = self.i18n.active().carrierSelector['useReseller'].defaultFriendlyName,
-				resellerHelp = self.i18n.active().carrierSelector['useReseller'].defaultHelp;
+				resellerString = self.i18n.active().carrierSelector.useReseller.defaultFriendlyName,
+				resellerHelp = self.i18n.active().carrierSelector.useReseller.defaultHelp;
 
-			if(monster.config.whitelabel.hasOwnProperty('companyName') && monster.config.whitelabel.companyName.length) {
-				resellerString = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].friendlyName, { variable: monster.config.whitelabel.companyName });
-				resellerHelp = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].help, { variable: monster.config.whitelabel.companyName });
+			if (monster.config.whitelabel.hasOwnProperty('companyName') && monster.config.whitelabel.companyName.length) {
+				resellerString = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.friendlyName, { variable: monster.config.whitelabel.companyName });
+				resellerHelp = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.help, { variable: monster.config.whitelabel.companyName });
 			}
 
 			var carrierInfo = {
-					noMatchCallflow: params.noMatch,
-					type: 'useBlended',
-					choices: [
-						{
-							friendlyName: self.i18n.active().carrierSelector['useBlended'].friendlyName,
-							help: self.i18n.active().carrierSelector['useBlended'].help,
-							value: 'useBlended'
-						},
-						{
-							friendlyName: resellerString,
-							help: resellerHelp,
-							value: 'useReseller'
-						},
-						{
-							friendlyName: self.i18n.active().carrierSelector['byoc'].friendlyName,
-							help: self.i18n.active().carrierSelector['byoc'].help,
-							value: 'byoc'
-						}
-					]
-				};
+				noMatchCallflow: params.noMatch,
+				type: 'useBlended',
+				choices: [
+					{
+						friendlyName: self.i18n.active().carrierSelector.useBlended.friendlyName,
+						help: self.i18n.active().carrierSelector.useBlended.help,
+						value: 'useBlended'
+					},
+					{
+						friendlyName: resellerString,
+						help: resellerHelp,
+						value: 'useReseller'
+					},
+					{
+						friendlyName: self.i18n.active().carrierSelector.byoc.friendlyName,
+						help: self.i18n.active().carrierSelector.byoc.help,
+						value: 'byoc'
+					}
+				]
+			};
 
 			// If the branding defined its own order, honor it
-			if(monster.config.whitelabel.hasOwnProperty('carrier')) {
+			if (monster.config.whitelabel.hasOwnProperty('carrier')) {
 				var newChoices = [],
 					mapChoices = {};
 
 				// First put the choices in a map so we can access them simply
 				_.each(carrierInfo.choices, function(choice) {
 					mapChoices[choice.value] = choice;
-				})
+				});
 
 				// Create the new choices order
 				_.each(monster.config.whitelabel.carrier.choices, function(choice) {
@@ -78,28 +79,24 @@ define(function(require){
 			}
 
 			// if module is offnet, they use global carriers ("blended")
-			if(params.noMatch.flow.module === 'offnet') {
+			if (params.noMatch.flow.module === 'offnet') {
 				carrierInfo.type = 'useBlended';
-			}
-			else if(params.noMatch.flow.module === 'resources'){
+			} else if (params.noMatch.flow.module === 'resources') {
 				// if hunt_account_id is defined
-				if(params.noMatch.flow.data.hasOwnProperty('hunt_account_id')) {
+				if (params.noMatch.flow.data.hasOwnProperty('hunt_account_id')) {
 					// check if hunt_account_id = this account id which means he brings his own carrier
-					if(params.noMatch.flow.data.hunt_account_id === params.accountData.id) {
+					if (params.noMatch.flow.data.hunt_account_id === params.accountData.id) {
 						carrierInfo.type = 'byoc';
-					}
 					// else check if it's = to his resellerId, which means he uses his reseller carriers
-					else if(params.noMatch.flow.data.hunt_account_id === params.accountData.reseller_id) {
+					} else if (params.noMatch.flow.data.hunt_account_id === params.accountData.reseller_id) {
 						carrierInfo.type = 'useReseller';
-					}
 					// else it's using an accountId we don't know, so we show an error
-					else {
+					} else {
 						carrierInfo.huntError = 'wrong_hunt_id';
 						carrierInfo.type = 'useBlended';
 					}
-				}
 				// otherwise it means this accounts will setup their own carriers
-				else {
+				} else {
 					carrierInfo.type = 'byoc';
 				}
 			}
@@ -123,8 +120,9 @@ define(function(require){
 				var $this = $(this),
 					saveButton = contentHtml.find('.carrier-save');
 
-				contentHtml.find('.carrier-choice')
-						   .removeClass('selected');
+				contentHtml
+					.find('.carrier-choice')
+						.removeClass('selected');
 
 				$this.addClass('selected');
 
@@ -136,7 +134,7 @@ define(function(require){
 					carrierType = contentHtml.find('.carrier-choice.selected').data('type');
 
 				// If the carrierType isn't the same used, we need to update the document.
-				if(carrierType !== defaultType) {
+				if (carrierType !== defaultType) {
 					var callbackSuccess = function(data) {
 							defaultType = carrierType;
 							toastr.success(self.i18n.active().carrierSelector.saveSuccess);
@@ -151,12 +149,11 @@ define(function(require){
 							resellerId: paramResellerId
 						};
 
-					if(noMatchFlow.hasOwnProperty('id')) {
+					if (noMatchFlow.hasOwnProperty('id')) {
 						paramsNoMatch.callflowId = noMatchFlow.id;
 
 						self.carrierSelectorUpdateNoMatch(paramsNoMatch, callbackSuccess);
-					}
-					else {
+					} else {
 						self.carrierSelectorCreateNoMatch(paramsNoMatch, callbackSuccess);
 					}
 				}
@@ -215,10 +212,10 @@ define(function(require){
 					}
 				};
 
-			if(type !== 'useBlended') {
+			if (type !== 'useBlended') {
 				noMatchCallflow.flow.module = 'resources';
 
-				if(type === 'useReseller') {
+				if (type === 'useReseller') {
 					noMatchCallflow.flow.data.hunt_account_id = resellerId;
 				}
 			}
@@ -230,39 +227,34 @@ define(function(require){
 			var self = this,
 				params = args.data,
 				callback = args.callback,
-				type = "",
-				description = "";
+				type = '',
+				description = '';
 
 			// if module is offnet, they use global carriers ("blended")
-			if(params.noMatch.flow.module === 'offnet') {
+			if (params.noMatch.flow.module === 'offnet') {
 				type = 'useBlended';
-			}
-			else if(params.noMatch.flow.module === 'resources'){
+			} else if (params.noMatch.flow.module === 'resources') {
 				// if hunt_account_id is defined
-				if(params.noMatch.flow.data.hasOwnProperty('hunt_account_id')) {
+				if (params.noMatch.flow.data.hasOwnProperty('hunt_account_id')) {
 					// check if hunt_account_id = this account id which means he brings his own carrier
-					if(params.noMatch.flow.data.hunt_account_id === params.accountData.id) {
+					if (params.noMatch.flow.data.hunt_account_id === params.accountData.id) {
 						type = 'byoc';
-					}
 					// else check if it's = to his resellerId, which means he uses his reseller carriers
-					else if(params.noMatch.flow.data.hunt_account_id === params.accountData.reseller_id) {
+					} else if (params.noMatch.flow.data.hunt_account_id === params.accountData.reseller_id) {
 						type = 'useReseller';
-					}
 					// else it's using an accountId we don't know, so we show an error
-					else {
+					} else {
 						type = 'useBlended';
 					}
-				}
 				// otherwise it means this accounts will setup their own carriers
-				else {
+				} else {
 					type = 'byoc';
 				}
 			}
 
-			if(monster.config.whitelabel.hasOwnProperty('companyName') && type === 'useReseller') {
-				description = monster.template(self, '!'+self.i18n.active().carrierSelector['useReseller'].friendlyName, { variable: monster.config.whitelabel.companyName });
-			}
-			else {
+			if (monster.config.whitelabel.hasOwnProperty('companyName') && type === 'useReseller') {
+				description = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.friendlyName, { variable: monster.config.whitelabel.companyName });
+			} else {
 				description = self.i18n.active().carrierSelector[type].friendlyName;
 			}
 

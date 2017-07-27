@@ -41,8 +41,7 @@ define(function(require) {
 
 		// Entry Point of the app
 		render: function(container) {
-			var self = this,
-				parent = _.isEmpty(container) ? $('#monster_content') : container;
+			var self = this;
 
 			monster.ui.generateAppLayout(self, {
 				menus: [
