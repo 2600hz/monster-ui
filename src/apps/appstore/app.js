@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
@@ -11,7 +11,7 @@ define(function(require){
 
 		css: [ 'app' ],
 
-		i18n: { 
+		i18n: {
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -51,15 +51,16 @@ define(function(require){
 				self.bindEvents(template, appstoreData);
 			});
 
-			parent.empty()
-				  .append(template);
+			parent
+				.empty()
+				.append(template);
 		},
 
 		bindEvents: function(parent, appstoreData) {
 			var self = this,
 				searchInput = parent.find('.search-bar input.search-query');
 
-			setTimeout(function () { searchInput.focus(); });
+			setTimeout(function() { searchInput.focus(); });
 
 			parent.find('.app-filter').on('click', function(e) {
 				var $this = $(this),
@@ -69,10 +70,10 @@ define(function(require){
 				$this.addClass('active');
 
 				parent.find('.app-list').isotope({
-					filter: '.app-element' + (filter ? '.'+filter : '')
+					filter: '.app-element' + (filter ? '.' + filter : '')
 				});
 
-				searchInput.val('').focus();;
+				searchInput.val('').focus();
 			});
 
 			parent.find('.app-list-container').on('click', '.app-element', function(e) {
@@ -82,10 +83,10 @@ define(function(require){
 			searchInput.on('keyup', function(e) {
 				var value = $(this).val(),
 					selectedFilter = parent.find('.app-filter.active').data('filter'),
-					filter = '.app-element' + (selectedFilter ? '.'+selectedFilter : '');
+					filter = '.app-element' + (selectedFilter ? '.' + selectedFilter : '');
 
-				if(value) {
-					filter += '[data-name*="'+value+'"]';
+				if (value) {
+					filter += '[data-name*="' + value + '"]';
 				}
 
 				parent.find('.app-list').isotope({
@@ -98,87 +99,89 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					apps: function(callback) {
-						self.callApi({
-							resource: 'appsStore.list',
-							data: {
-								accountId: self.accountId,
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					},
-					account: function(callback) {
-						self.callApi({
-							resource: 'account.get',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					},
-					users: function(callback) {
-						self.callApi({
-							resource: 'user.list',
-							data: {
-								accountId: self.accountId
-							},
-							success: function(data, status) {
-								callback(null, data.data);
-							}
-						});
-					}
-				},
-				function(err, results) {
-					var parallelIconRequests = [];
-
-					results.apps.forEach(function(val, idx) {
-						if((val.hasOwnProperty('allowed_users') && val.allowed_users !== 'specific') || (val.hasOwnProperty('users') && val.users.length > 0)) {
-							val.tags ? val.tags.push("installed") : val.tags = ["installed"];
+				apps: function(callback) {
+					self.callApi({
+						resource: 'appsStore.list',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
 						}
-						var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
-
-						val.label = i18n.label;
-						val.description = i18n.description;
-						monster.ui.formatIconApp(val);
-						parallelIconRequests.push(function(parallelCallback) {
-							parallelCallback(null, monster.util.getAppIconPath(val));
-						});
-						delete val.i18n;
 					});
-
-					monster.parallel(parallelIconRequests, function(iconsErr, iconsResults) {
-						_.each(results.apps, function(app, index) {
-							app.icon = iconsResults[index];
-						});
-						callback(results);
+				},
+				account: function(callback) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						}
+					});
+				},
+				users: function(callback) {
+					self.callApi({
+						resource: 'user.list',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						}
 					});
 				}
-			);
+			},
+			function(err, results) {
+				var parallelIconRequests = [];
+
+				results.apps.forEach(function(val) {
+					if ((val.hasOwnProperty('allowed_users') && val.allowed_users !== 'specific') || (val.hasOwnProperty('users') && val.users.length > 0)) {
+						val.tags ? val.tags.push('installed') : val.tags = [ 'installed' ];
+					}
+					var i18n = val.i18n[monster.config.whitelabel.language] || val.i18n['en-US'];
+
+					val.label = i18n.label;
+					val.description = i18n.description;
+					monster.ui.formatIconApp(val);
+					parallelIconRequests.push(function(parallelCallback) {
+						parallelCallback(null, monster.util.getAppIconPath(val));
+					});
+					delete val.i18n;
+				});
+
+				monster.parallel(parallelIconRequests, function(iconsErr, iconsResults) {
+					_.each(results.apps, function(app, index) {
+						app.icon = iconsResults[index];
+					});
+					callback(results);
+				});
+			});
 		},
 
 		renderApps: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
 				template = $(monster.template(self, 'appList', {
-				apps: appList
-			}));
+					apps: appList
+				}));
 
-			parent.find('.app-list-container')
-				  .empty()
-				  .append(template);
+			parent
+				.find('.app-list-container')
+					.empty()
+					.append(template);
 
-			parent.find('.app-list').isotope({
-				getSortData : {
-					name : function ( $elem ) {
-						return $elem.find('.app-title').text();
-					}
-				},
-				sortBy : 'name'
-			});
+			parent
+				.find('.app-list')
+					.isotope({
+						getSortData: {
+							name: function($elem) {
+								return $elem.find('.app-title').text();
+							}
+						},
+						sortBy: 'name'
+					});
 		},
 
 		showAppPopup: function(appId, appstoreData) {
@@ -200,9 +203,9 @@ define(function(require){
 								description: dataI18n.description,
 								extendedDescription: dataI18n.extended_description,
 								features: dataI18n.features,
-								icon: _.find(appstoreData.apps, function(app) { return app.id === appData.id }).icon,
+								icon: _.find(appstoreData.apps, function(app) { return app.id === appData.id; }).icon,
 								screenshots: _.map(appData.screenshots || [], function(val, key) {
-									return self.apiUrl + "apps_store/" + appData.id + "/screenshot/" + key + "?auth_token=" + self.getAuthToken()
+									return self.apiUrl + 'apps_store/' + appData.id + '/screenshot/' + key + '?auth_token=' + self.getAuthToken();
 								})
 							}
 						}),
@@ -211,7 +214,7 @@ define(function(require){
 							return val.id;
 						}),
 						users = _.map(userList, function(val, key) {
-							if(selectedUsersList.indexOf(val.id) >= 0) {
+							if (selectedUsersList.indexOf(val.id) >= 0) {
 								val.selected = true;
 							}
 							return val;
@@ -225,20 +228,18 @@ define(function(require){
 								totalUsers: users.length
 							}
 						})),
-						leftContainer = template.find('.left-container'),
-						rightContainer = template.find('.right-container'),
-						userListContainer = rightContainer.find('.user-list');
+						rightContainer = template.find('.right-container');
 
-					if(!app.hasOwnProperty('allowed_users') || (app.allowed_users === 'specific' && (app.users||[]).length === 0)) {
+					if (!app.hasOwnProperty('allowed_users') || (app.allowed_users === 'specific' && (app.users || []).length === 0)) {
 						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
-					} else if(app.allowed_users === 'admins') {
+					} else if (app.allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
-					} else if(app.users && app.users.length > 0) {
+					} else if (app.users && app.users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
 						rightContainer.find('#app_popup_select_users_link').html(
-							monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
+							monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
 						);
 					}
 
@@ -278,7 +279,7 @@ define(function(require){
 				};
 
 			parent.find('#app_switch').on('change', function() {
-				if($(this).is(':checked')) {
+				if ($(this).is(':checked')) {
 					parent.find('.permissions-bloc').slideDown();
 				} else {
 					parent.find('.permissions-bloc').slideUp();
@@ -287,7 +288,7 @@ define(function(require){
 
 			parent.find('.permissions-bloc input[name="permissions"]').on('change', function(e) {
 				var allowedUsers = $(this).val();
-				if(allowedUsers === 'specific') {
+				if (allowedUsers === 'specific') {
 					parent.find('.permissions-link').show();
 				} else {
 					parent.find('.permissions-link').hide();
@@ -300,7 +301,7 @@ define(function(require){
 				parent.find('.user-list-view').show();
 				parent.find('.search-query').focus();
 
-				parent.find('.user-list').css('height',(parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight()))+'px');
+				parent.find('.user-list').css('height', (parent.find('.user-list-buttons').position().top - (parent.find('.user-list-links').position().top + parent.find('.user-list-links').outerHeight())) + 'px');
 			});
 
 			userList.on('change', 'input', function(e) {
@@ -316,15 +317,15 @@ define(function(require){
 
 			parent.find('.user-list-filter input.search-query').on('keyup', function(e) {
 				var search = $(this).val().toLowerCase();
-				if(search) {
+				if (search) {
 					$.each(userList.find('.user-list-element'), function() {
 						var $this = $(this);
-						if($this.data('name').toLowerCase().indexOf(search) >= 0) {
+						if ($this.data('name').toLowerCase().indexOf(search) >= 0) {
 							$this.show();
 						} else {
 							$this.hide();
 						}
-					})
+					});
 				} else {
 					userList.find('.user-list-element').show();
 				}
@@ -343,13 +344,13 @@ define(function(require){
 			parent.find('#user_list_save').on('click', function(e) {
 				e.preventDefault();
 				var selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users;
-				if(selectedUsers) {
+				if (selectedUsers) {
 					$.each(userList.find('input'), function() {
 						$(this).data('original', (this.checked ? 'check' : 'uncheck'));
 					});
 
 					parent.find('#app_popup_select_users_link').html(
-						monster.template(self, '!'+self.i18n.active().selectUsersLink, { selectedUsers: selectedUsers.length })
+						monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsers.length })
 					);
 
 					parent.find('.user-list-view').hide();
@@ -364,11 +365,11 @@ define(function(require){
 			});
 
 			parent.find('#appstore_popup_save').on('click', function() {
-				if(parent.find('#app_switch').is(':checked')) {
+				if (parent.find('#app_switch').is(':checked')) {
 					var allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
 						selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users || [];
 
-					if(allowedUsers === 'specific' && selectedUsers.length === 0) {
+					if (allowedUsers === 'specific' && selectedUsers.length === 0) {
 						monster.ui.alert(self.i18n.active().alerts.noUserSelected);
 					} else {
 						updateAppInstallInfo({
@@ -379,7 +380,7 @@ define(function(require){
 						},
 						function() {
 							var lang = monster.config.whitelabel.language,
-								isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length -2, 2).toUpperCase()),
+								isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
 								currentLang = app.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US',
 								appData = {
 									api_url: app.api_url,
@@ -389,18 +390,18 @@ define(function(require){
 									name: app.name
 								};
 
-							// Add source_url only if it defined 
-							if(app.hasOwnProperty('source_url')) {
+							// Add source_url only if it defined
+							if (app.hasOwnProperty('source_url')) {
 								appData.source_url = app.source_url;
 							}
 
 							// Only update variable if we're not masquerading and app isn't in installed apps yet.
-							if(!monster.util.isMasquerading() && !_.find(monster.apps.auth.installedApps, function(val) { return val.id === app.id })) {
+							if (!monster.util.isMasquerading() && !_.find(monster.apps.auth.installedApps, function(val) { return val.id === app.id; })) {
 								// Update local installedApps list by adding the new app
 								monster.apps.auth.installedApps.push(appData);
 							}
-							
-							$('#appstore_container .app-element[data-id="'+app.id+'"]').addClass('installed');
+
+							$('#appstore_container .app-element[data-id="' + app.id + '"]').addClass('installed');
 							$('#appstore_container .app-filter.active').click();
 
 							parent.closest(':ui-dialog').dialog('close');
@@ -410,12 +411,12 @@ define(function(require){
 					updateAppInstallInfo({},
 					function() {
 						// Only update variable if we're not masquerading. Otherwise it would uninstall apps for the main account as well!
-						if(!monster.util.isMasquerading()) {
+						if (!monster.util.isMasquerading()) {
 							// Remove app from local installedApp list
-							monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val, idx) { return val.id !== app.id; });
+							monster.apps.auth.installedApps = monster.apps.auth.installedApps.filter(function(val) { return val.id !== app.id; });
 						}
 
-						$('#appstore_container .app-element[data-id="'+app.id+'"]').removeClass('installed');
+						$('#appstore_container .app-element[data-id="' + app.id + '"]').removeClass('installed');
 						$('#appstore_container .app-filter.active').click();
 
 						parent.closest(':ui-dialog').dialog('close');
