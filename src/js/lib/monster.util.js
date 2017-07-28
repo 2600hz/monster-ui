@@ -1,8 +1,7 @@
-define(function(require){
-
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster"),
+define(function(require) {
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster'),
 		libphonenumber = require('libphonenumber');
 
 	var util = {
@@ -14,7 +13,7 @@ define(function(require){
 		 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
 		 * @return {Object}         Object containing the formatted data about the initial bytes value
 		 */
-		formatBytes: function (bytes, pDigits) {
+		formatBytes: function(bytes, pDigits) {
 			var base = 1000,
 				sizes = monster.apps.core.i18n.active().unitsMultiple.byte,
 				exponent = Math.floor(Math.log(bytes) / Math.log(base)),
@@ -26,8 +25,7 @@ define(function(require){
 					value: 0,
 					unit: sizes[0]
 				};
-			}
-			else {
+			} else {
 				return {
 					value: value.toFixed(digits),
 					unit: sizes[exponent]
@@ -35,11 +33,11 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian){
+		toFriendlyDate: function(pDate, format, pUser, pIsGregorian) {
 			// If Date is undefined, then we return an empty string.
 			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
 			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			if(typeof pDate !== 'undefined') {
+			if (typeof pDate !== 'undefined') {
 				var self = this,
 					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
 					i18n = monster.apps.core.i18n.active(),
@@ -47,15 +45,11 @@ define(function(require){
 					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
 					userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
 					format2Digits = function(number) {
-						if(typeof number === 'string') {
+						if (typeof number === 'string') {
 							number = parseInt(number);
 						}
 						return number < 10 ? '0'.concat(number) : number;
 					},
-					today = new Date(),
-					todayYear = today.getFullYear(),
-					todayMonth = format2Digits(today.getMonth() + 1),
-					todayDay = format2Digits(today.getDate()),
 					// date can be either a JS Date or a gregorian timestamp
 					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
 					year = date.getFullYear().toString().substr(2, 2),
@@ -104,9 +98,9 @@ define(function(require){
 						'ss': seconds
 					},
 					shortcuts = {
-						shortDateTime: dateFormats[userDateFormat].replace('year','YY') + ' hh:mm',
+						shortDateTime: dateFormats[userDateFormat].replace('year', 'YY') + ' hh:mm',
 						dateTime: dateFormats[userDateFormat] + ' - hh:mm:ss',
-						shortDate: dateFormats[userDateFormat].replace('year','YY'),
+						shortDate: dateFormats[userDateFormat].replace('year', 'YY'),
 						shortTime: 'hh:mm',
 						time: 'hh:mm:ss',
 						calendarDate: (userDateFormat === 'mdy' ? 'month DD' : 'DD month') + ', year',
@@ -117,13 +111,12 @@ define(function(require){
 					_.each(shortcuts, function(v, k) {
 						format = format.replace(k, v);
 					});
-				}
-				else {
+				} else {
 					format = dateFormats[userDateFormat] + ' - hh:mm:ss';
 				}
 
-				if(format.indexOf('hh') > -1 && format.indexOf('12h') === -1 && user12hMode) {
-					format += ' 12h'
+				if (format.indexOf('hh') > -1 && format.indexOf('12h') === -1 && user12hMode) {
+					format += ' 12h';
 				}
 
 				if (format.indexOf('12h') > -1) {
@@ -135,10 +128,9 @@ define(function(require){
 						}
 
 						suffix = i18n.calendar.suffix.pm;
-					}
-					else {
+					} else {
 						if (hours === '00') {
-							hours = 12
+							hours = 12;
 						}
 
 						suffix = i18n.calendar.suffix.am;
@@ -148,20 +140,19 @@ define(function(require){
 					patterns['12h'] = suffix;
 				}
 
-				_.each(patterns, function(v, k){
+				_.each(patterns, function(v, k) {
 					format = format.replace(k, v);
 				});
 
 				return format;
-			}
-			else {
+			} else {
 				return '';
 			}
 		},
 
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
-				regex = new RegExp(/(\d+)[\/\-](\d+)[\/\-](\d+)/),
+				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
 				dateFormats = {
 					'mdy': '$1/$2/$3',
 					'dmy': '$2/$1/$3',
@@ -169,7 +160,7 @@ define(function(require){
 				},
 				format = (dateFormat in dateFormats) ? dateFormat : null;
 
-			if(!format) {
+			if (!format) {
 				var user = monster.apps.auth.currentUser;
 				format = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy';
 			}
@@ -180,12 +171,12 @@ define(function(require){
 		gregorianToDate: function(timestamp) {
 			var formattedResponse;
 
-			if(typeof timestamp === 'string') {
+			if (typeof timestamp === 'string') {
 				timestamp = parseInt(timestamp);
 			}
 
-			if(typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp - 62167219200)*1000);
+			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
+				formattedResponse = new Date((timestamp - 62167219200) * 1000);
 			}
 
 			return formattedResponse;
@@ -195,11 +186,11 @@ define(function(require){
 			var formattedResponse;
 
 			// This checks that the parameter is an object and not null
-			if(typeof date === 'object' && date) {
+			if (typeof date === 'object' && date) {
 				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
 			}
 
-			return formattedResponse
+			return formattedResponse;
 		},
 
 		getModbID: function(id, timestamp) {
@@ -211,10 +202,9 @@ define(function(require){
 				modbString;
 
 			// Verify that the ID we got is not already a MODB ID
-			if(id.substr(0, 7) !== modbDBprefix) {
+			if (id.substr(0, 7) !== modbDBprefix) {
 				modbString = UTCYear + formattedUTCMonth + '-' + id;
-			}
-			else {
+			} else {
 				modbString = id;
 			}
 
@@ -224,18 +214,18 @@ define(function(require){
 		unixToDate: function(timestamp) {
 			var formattedResponse;
 
-			if(typeof timestamp === 'string') {
+			if (typeof timestamp === 'string') {
 				timestamp = parseInt(timestamp);
 			}
 
-			if(typeof timestamp === 'number' && !_.isNaN(timestamp)) {
+			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
 				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
-				while(timestamp > 9999999999999) {
+				while (timestamp > 9999999999999) {
 					timestamp /= 1000;
 				}
 
 				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if(timestamp < 10000000000) {
+				if (timestamp < 10000000000) {
 					timestamp *= 1000;
 				}
 
@@ -249,7 +239,7 @@ define(function(require){
 			var formattedResponse;
 
 			// This checks that the parameter is an object and not null
-			if(typeof date === 'object' && date) {
+			if (typeof date === 'object' && date) {
 				formattedResponse = parseInt(date.getTime() / 1000);
 			}
 
@@ -257,7 +247,11 @@ define(function(require){
 		},
 
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var resp = libphonenumber.parse(phoneNumber, { country: { default: 'US' } }),
+			var resp = libphonenumber.parse(phoneNumber, {
+					country: {
+						default: 'US'
+					}
+				}),
 				phoneNumber;
 
 			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
@@ -281,7 +275,11 @@ define(function(require){
 		},
 
 		getFormatPhoneNumber: function(phoneNumber) {
-			var resp = libphonenumber.parse(phoneNumber, { country: { default: 'US' } }),
+			var resp = libphonenumber.parse(phoneNumber, {
+					country: {
+						default: 'US'
+					}
+				}),
 				user = monster.apps.auth.currentUser || {},
 				account = monster.apps.auth.originalAccount || {},
 				formattedData = {
@@ -344,18 +342,18 @@ define(function(require){
 		},
 
 		randomString: function(length, _chars) {
-			var chars = _chars || "23456789abcdefghjkmnpqrstuvwxyz",
+			var chars = _chars || '23456789abcdefghjkmnpqrstuvwxyz',
 				randomString = '';
 
-			for(var i = length; i > 0; i--) {
+			for (var i = length; i > 0; i--) {
 				randomString += chars.charAt(Math.floor(Math.random() * chars.length));
 			}
 
 			return randomString;
 		},
 
-		cmp: function(a,b) {
-			return  (a > b) ? 1 : (a < b) ? -1 : 0;
+		cmp: function(a, b) {
+			return (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
 
 		/**
@@ -404,18 +402,18 @@ define(function(require){
 		formatPrice: function(value, pDecimals) {
 			var decimals = parseInt(pDecimals),
 				decimalCount = decimals >= 0 ? decimals : 2,
-				roundedValue = Math.round(Number(value)*Math.pow(10,decimalCount))/Math.pow(10,decimalCount);
-			
-			return roundedValue.toFixed( ((parseInt(value) === value) && (isNaN(decimals) || decimals < 0)) ? 0 : decimalCount );
+				roundedValue = Math.round(Number(value) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
+
+			return roundedValue.toFixed(parseInt(value) === value && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
 		},
 
-		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word. 
+		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
 		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 		formatVariableToDisplay: function(variable) {
 			var str = variable || '',
-				formattedString = str.replace(/_/g,' ');
+				formattedString = str.replace(/_/g, ' ');
 
-			formattedString = formattedString.replace(/\w\S*/, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
+			formattedString = formattedString.replace(/\w\S*/, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 
 			return formattedString;
 		},
@@ -426,7 +424,7 @@ define(function(require){
 				isSuperDuper = false,
 				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
 
-			if(account.hasOwnProperty('superduper_admin')) {
+			if (account.hasOwnProperty('superduper_admin')) {
 				isSuperDuper = account.superduper_admin;
 			}
 
@@ -439,7 +437,7 @@ define(function(require){
 				isTrial = false,
 				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
 
-			if(account.hasOwnProperty('trial_time_left')) {
+			if (account.hasOwnProperty('trial_time_left')) {
 				isTrial = true;
 			}
 
@@ -452,7 +450,7 @@ define(function(require){
 				hasRights = false,
 				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
 
-			if(account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
+			if (account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
 				hasRights = true;
 			}
 
@@ -479,13 +477,13 @@ define(function(require){
 
 			return isLoggedIn;
 		},
-		
+
 		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
 		isMasquerading: function() {
 			var self = this,
 				isMasquerading = false;
 
-			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
+			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
 				isMasquerading = monster.apps.auth.originalAccount.id !== monster.apps.auth.currentAccount.id;
 			}
 
@@ -497,7 +495,7 @@ define(function(require){
 			var self = this,
 				isReseller = false;
 
-			if(monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.originalAccount.hasOwnProperty('is_reseller')) {
+			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.originalAccount.hasOwnProperty('is_reseller')) {
 				isReseller = monster.apps.auth.originalAccount.is_reseller;
 			}
 
@@ -513,9 +511,9 @@ define(function(require){
 				hash,
 				keepHashes = pKeepHashes || false;
 
-			for(var i = 0; i < hashes.length; i++) {
+			for (var i = 0; i < hashes.length; i++) {
 				hash = hashes[i].split('=');
-				vars[hash[0]] = keepHashes ? hash[1] : (hash[1] || '').replace(/#/g , '');
+				vars[hash[0]] = keepHashes ? hash[1] : (hash[1] || '').replace(/#/g, '');
 			}
 
 			// If we were looking for a specific key, then we only return that value, otherwise, return the full map of GET parameters
@@ -578,7 +576,7 @@ define(function(require){
 			This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
 		*/
 		autoLogout: function() {
-			if(!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
+			if (!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
 				var i18n = monster.apps.core.i18n.active(),
 					timerAlert,
 					timerLogout,
@@ -593,21 +591,21 @@ define(function(require){
 						clearTimeout(timerAlert);
 						clearTimeout(timerLogout);
 
-						if(alertTriggered) {
+						if (alertTriggered) {
 							alertTriggered = false;
 
 							alertDialog.dialog('close').remove();
 						}
 
-						timerAlert=setTimeout(function() {
+						timerAlert = setTimeout(function() {
 							alertTriggered = true;
 
 							alertDialog = monster.ui.alert(i18n.alertLogout);
-						}, 60000*(wait-alertBeforeLogout));
+						}, 60000 * (wait - alertBeforeLogout));
 
-						timerLogout=setTimeout(function() {
+						timerLogout = setTimeout(function() {
 							logout();
-						}, 60000*wait);
+						}, 60000 * wait);
 					};
 
 				document.onkeypress = resetTimer;
@@ -624,7 +622,7 @@ define(function(require){
 			In last resort it will set it to 'en-US' if nothing is set above
 		*/
 		setDefaultLanguage: function() {
-			var browserLanguage = (navigator.language).replace(/-.*/,function(a){return a.toUpperCase();}),// always capitalize the second part of the navigator language
+			var browserLanguage = (navigator.language).replace(/-.*/, function(a) { return a.toUpperCase(); }), // always capitalize the second part of the navigator language
 				cookieLanguage = $.cookie('monster-auth') ? ($.parseJSON($.cookie('monster-auth'))).language : undefined,
 				defaultLanguage = browserLanguage || 'en-US';
 
@@ -632,22 +630,20 @@ define(function(require){
 
 			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
 			// Will normalize bad input from the config.js or cookie data coming directly from the database
-			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/,function(a){return a.toUpperCase();})
+			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/, function(a) { return a.toUpperCase(); });
 		},
 
 		checkVersion: function(obj, callback) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active();
 
-			if(obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
-				if(obj.ui_metadata.ui !== 'monster-ui') {
+			if (obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
+				if (obj.ui_metadata.ui !== 'monster-ui') {
 					monster.ui.confirm(i18n.olderVersion, callback);
-				}
-				else {
+				} else {
 					callback && callback();
 				}
-			}
-			else {
+			} else {
 				callback && callback();
 			}
 		},
@@ -658,8 +654,7 @@ define(function(require){
 			transaction.hasAddOns = false;
 
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if(transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
-
+			if (transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
 				var mapDiscounts = {};
 				_.each(transaction.metadata.discounts, function(discount) {
 					mapDiscounts[discount.id] = discount;
@@ -673,7 +668,7 @@ define(function(require){
 						discountName = 'discount_' + addOn.id,
 						discountItem;
 
-					if(mapDiscounts.hasOwnProperty('discountName')) {
+					if (mapDiscounts.hasOwnProperty('discountName')) {
 						discountItem = mapDiscounts[discountName];
 						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
 					}
@@ -698,23 +693,23 @@ define(function(require){
 
 			transaction.amount = parseFloat(transaction.amount).toFixed(2);
 
-			if(transaction.hasOwnProperty('code')) {
+			if (transaction.hasOwnProperty('code')) {
 				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
 
-				if(transaction.type === 'credit') {
+				if (transaction.type === 'credit') {
 					transaction.friendlyName += ' ' + app.i18n.active().transactions.refundText;
 				}
 			}
-			
-			// If status is missing or among the following list, the transaction is approved
-			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized','settled','settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
 
-			if(!transaction.approved) {
+			// If status is missing or among the following list, the transaction is approved
+			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized', 'settled', 'settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
+
+			if (!transaction.approved) {
 				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
 			}
 
 			// Our API return created but braintree returns created_at
-			transaction.created = transaction.created_at || transaction.created; 
+			transaction.created = transaction.created_at || transaction.created;
 
 			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
 
@@ -725,31 +720,29 @@ define(function(require){
 			var result = {};
 
 			$.each(accountArray, function(k, v) {
-				if(v.id === rootAccountId) {
-					if(!result[v.id]) { result[v.id] = {}; }
+				if (v.id === rootAccountId) {
+					if (!result[v.id]) { result[v.id] = {}; }
 					result[v.id].name = v.name;
 					result[v.id].realm = v.realm;
-				}
-				else {
+				} else {
 					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
 						currentAcc;
 
-					for(var i=0; i<parents.length; i++) {
-						if(!currentAcc) {
-							if(!result[parents[i]]) { result[parents[i]] = {}; }
+					for (var i = 0; i < parents.length; i++) {
+						if (!currentAcc) {
+							if (!result[parents[i]]) { result[parents[i]] = {}; }
 
 							currentAcc = result[parents[i]];
-						}
-						else {
-							if(!currentAcc.children) { currentAcc.children = {}; }
-							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
+						} else {
+							if (!currentAcc.children) { currentAcc.children = {}; }
+							if (!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
 
 							currentAcc = currentAcc.children[parents[i]];
 						}
 					}
 
-					if(!currentAcc.children) { currentAcc.children = {}; }
-					if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
+					if (!currentAcc.children) { currentAcc.children = {}; }
+					if (!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
 
 					currentAcc.children[v.id].name = v.name;
 					currentAcc.children[v.id].realm = v.realm;
@@ -764,18 +757,10 @@ define(function(require){
 				macAddress = pMacAddress.replace(regex, ''),
 				formattedMac = '';
 
-			if(macAddress.length === 12) {
-				var i = 0;
-
-				for(var c in macAddress) {
-					if((i%2 === 0) && (i !== 0)) {
-						formattedMac += ':' + macAddress[i];
-					}
-					else {
-						formattedMac += macAddress[i];
-					}
-					i++;
-				}
+			if (macAddress.length === 12) {
+				_.each(macAddress.split(''), function(char, idx) {
+					formattedMac += (idx % 2 === 0 && idx !== 0 ? ':' : '') + macAddress[idx];
+				});
 			}
 
 			return formattedMac;
@@ -792,10 +777,9 @@ define(function(require){
 			var fromDefault = new Date(),
 				toDefault = new Date();
 
-			if(range === 'monthly') {
+			if (range === 'monthly') {
 				fromDefault.setMonth(fromDefault.getMonth() - 1);
-			}
-			else {
+			} else {
 				fromDefault.setDate(fromDefault.getDate() - range);
 			}
 			fromDefault.setDate(fromDefault.getDate() + 1);
@@ -822,18 +806,18 @@ define(function(require){
 
 		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
 		timeToSeconds: function(time) {
-			var suffix = time.substring(time.length-2).toLowerCase(),
+			var suffix = time.substring(time.length - 2).toLowerCase(),
 				timeArr = time.split(':'),
-				h = parseInt(timeArr[0],10),
-				m = parseInt(timeArr[1],10);
+				hours = parseInt(timeArr[0], 10),
+				minutes = parseInt(timeArr[1], 10);
 
-			if(suffix === 'pm' && h < 12) {
-				h += 12;
-			} else if(suffix === "am" && h === 12) {
-				h = 0;
+			if (suffix === 'pm' && hours < 12) {
+				hours += 12;
+			} else if (suffix === 'am' && hours === 12) {
+				hours = 0;
 			}
 
-			return (h*3600 + m*60).toString();
+			return (hours * 3600 + minutes * 60).toString();
 		},
 
 		resetAuthCookies: function() {
@@ -846,7 +830,7 @@ define(function(require){
 
 			self.resetAuthCookies();
 
-			if(monster.config.whitelabel.hasOwnProperty('sso')) {
+			if (monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso;
 				/* this didn't work
 					$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
@@ -855,7 +839,7 @@ define(function(require){
 				window.location = sso.logout;
 			} else {
 				window.location = window.location.pathname;
-			} 
+			}
 		},
 
 		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
@@ -866,7 +850,7 @@ define(function(require){
 					var user = pUser || monster.apps.auth.currentUser,
 						value;
 
-					if(user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
+					if (user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
 						value = user.ui_help[appName][flagName];
 					}
 
@@ -888,7 +872,7 @@ define(function(require){
 					var account = pAccount || monster.apps.auth.currentAccount,
 						value;
 
-					if(account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty(appName) && account.ui_flags[appName].hasOwnProperty(flagName)) {
+					if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty(appName) && account.ui_flags[appName].hasOwnProperty(flagName)) {
 						value = account.ui_flags[appName][flagName];
 					}
 
@@ -914,11 +898,11 @@ define(function(require){
 				result = '';
 
 			// For each image, check if the path is correct based on the appPath, and if not change it
-			for(var i = 0; i < listImg.length; i++) {
+			for (var i = 0; i < listImg.length; i++) {
 				var	currentSrc = listImg[i].src;
 
 				// If it's an image belonging to an app, and the current path doesn't contain the right appPath
-				if(currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
+				if (currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
 					// We replace it by the app path and append the path of the image (we strip the name of the app, since it's already part of the appPath)
 					var newPath = app.appPath + currentSrc.substring(currentSrc.indexOf(app.name) + app.name.length, currentSrc.length);
 
@@ -926,7 +910,7 @@ define(function(require){
 				}
 			}
 
-			for(var j = 0; j < $markup.length; j++) {
+			for (var j = 0; j < $markup.length; j++) {
 				result += $markup[j].outerHTML;
 			}
 
@@ -941,37 +925,34 @@ define(function(require){
 				lowestNumber = minNumber,
 				increment = 1;
 
-			orderedArray.sort(function(a,b) {
+			orderedArray.sort(function(a, b) {
 				var parsedA = parseInt(a),
 					parsedB = parseInt(b);
 
-				if(isNaN(parsedA)) {
+				if (isNaN(parsedA)) {
 					return -1;
-				}
-				else if(isNaN(parsedB)) {
+				} else if (isNaN(parsedB)) {
 					return 1;
-				}
-				else {
+				} else {
 					return parsedA > parsedB ? 1 : -1;
 				}
 			});
-			
+
 			_.each(orderedArray, function(number) {
 				var currentNumber = parseInt(number);
 
 				// First we make sure it's a valid number, if not we move on to the next number
-				if(!isNaN(currentNumber)) {
+				if (!isNaN(currentNumber)) {
 					// If we went through this loop already, previousIterationNumber will be set to the number of the previous iteration
-					if(typeof previousIterationNumber !== 'undefined') {
+					if (typeof previousIterationNumber !== 'undefined') {
 						// If there's a gap for a number between the last number and the current number, we check if it's a valid possible number (ie, greater than minNumber)
 						// And If yes, we return it, if not we just continue
-						if(currentNumber - previousIterationNumber !== increment && previousIterationNumber >= minNumber) {
+						if (currentNumber - previousIterationNumber !== increment && previousIterationNumber >= minNumber) {
 							return previousIterationNumber + increment;
 						}
-					}
 					// else, it's the first iteration, we initialize the minValue to the first number in the ordered array
 					// only if it's greater than 1000, because we don't want to recommend lower numbers
-					else if(currentNumber > minNumber) {
+					} else if (currentNumber > minNumber) {
 						lowestNumber = currentNumber;
 					}
 					// We store current as the previous number for the next iteration
@@ -986,9 +967,9 @@ define(function(require){
 			var self = this,
 				result = [],
 				matchNode = function(node) {
-					if(node.module === module) {
-						if(!data || _.isEqual(data, node.data)) {
-							result.push(node);	
+					if (node.module === module) {
+						if (!data || _.isEqual(data, node.data)) {
+							result.push(node);
 						}
 					}
 					_.each(node.children, function(child) {
@@ -1007,7 +988,7 @@ define(function(require){
 		 * @param  {Object} account Optional account object to check from
 		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
 		 */
-		isNumberFeatureEnabled: function (feature, account) {
+		isNumberFeatureEnabled: function(feature, account) {
 			var self = this,
 				accountToCheck = account || monster.apps.auth.currentAccount,
 				hasNumbersFeatures = accountToCheck.hasOwnProperty('numbers_features');
@@ -1015,8 +996,7 @@ define(function(require){
 			if (hasNumbersFeatures) {
 				if (accountToCheck.numbers_features[feature + '_enabled']) {
 					return true;
-				}
-				else {
+				} else {
 					return false;
 				}
 			} else {
@@ -1030,8 +1010,7 @@ define(function(require){
 
 			try {
 				JSON.stringify(obj);
-			}
-			catch (e) {
+			} catch (e) {
 				return false;
 			}
 
@@ -1046,38 +1025,37 @@ define(function(require){
 				authApp = monster.apps.auth,
 				localIcons = ['accounts', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers', 'cluster', 'conferences', 'debug', 'developer', 'dialplans', 'fax', 'migration', 'mobile', 'numbers', 'operator', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting', 'tasks', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
 
-			if(localIcons.indexOf(app.name) >= 0) {
+			if (localIcons.indexOf(app.name) >= 0) {
 				response = 'css/assets/appIcons/' + app.name + '.png';
-			}
-			else {
-				response = authApp.apiUrl + 'accounts/' + authApp.accountId +'/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
+			} else {
+				response = authApp.apiUrl + 'accounts/' + authApp.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
 			}
 
 			return response;
 		},
 
 		guid: function() {
-			var r = '';
+			var result = '';
 
-			for(var n=0; n<4; n++) {
-				r = r + (Math.random().toString(16)+'000000000').substr(2,8);
+			for (var i = 0; i < 4; i++) {
+				result += (Math.random().toString(16) + '000000000').substr(2, 8);
 			}
 
-			return r;
+			return result;
 		},
 
 		getAuthToken: function(pConnectionName) {
 			var self = this,
 				authToken;
 
-			if(monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
+			if (monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
 				authToken = monster.apps.auth.getAuthTokenByConnection(pConnectionName);
 			}
-			
+
 			return authToken;
 		},
 
-		getVersion: function(callback) {
+		getVersion: function() {
 			return monster.config.developerFlags.build.version;
 		},
 
@@ -1090,7 +1068,7 @@ define(function(require){
 			   If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change, which means we wouldn't change the query sting used to get assets from any app, even monster-ui-voip...
 			   This only gets incremented when master build runs, whereas we need it to be changed when an app is built as well...
 			   Leaving this here for now, might have to just remove and forget about it eventually :/
-	
+
 				var self = this,
 				prepend = url.indexOf('?') >= 0 ? '&' : '?',
 				isDev = monster.config.developerFlags.build.type === 'development',
@@ -1119,7 +1097,7 @@ define(function(require){
 				return object;
 			},
 
-			delete: function(flagName, object) {
+			destroy: function(flagName, object) {
 				object.markers = object.markers || {};
 				object.markers.monster = object.markers.monster || {};
 
@@ -1128,11 +1106,12 @@ define(function(require){
 				return object;
 			}
 		},
-		
+
 		jwt_decode: function(Token) {
-            var base64Url = Token.split('.')[1];
-            var base64 = base64Url.replace('-', '+').replace('_', '/');
-        	return JSON.parse(window.atob(base64));
+			var base64Url = Token.split('.')[1],
+				base64 = base64Url.replace('-', '+').replace('_', '/');
+
+			return JSON.parse(window.atob(base64));
 		}
 	};
 

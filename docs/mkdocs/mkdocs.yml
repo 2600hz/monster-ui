@@ -75,5 +75,5 @@ pages:
     - 'Data Flags': 
       - 'Intro': 'docs/monster/util/dataFlags.md'
       - 'add()': 'docs/monster/util/dataFlags/add().md'
-      - 'delete()': 'docs/monster/util/dataFlags/delete().md'
+      - 'destroy()': 'docs/monster/util/dataFlags/destroy().md'
       - 'get()': 'docs/monster/util/dataFlags/get().md'

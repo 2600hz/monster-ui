@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster');
@@ -16,7 +16,7 @@ define(function(require){
 		log: function(str, force) {
 			var self = this;
 
-			if(self.printLogs || force) {
+			if (self.printLogs || force) {
 				console.log(str);
 			}
 		},
@@ -26,18 +26,17 @@ define(function(require){
 				socket = self.initializeSocket();
 
 			socket.onopen = function(data) {
-				if(self.connected === false) {
+				if (self.connected === false) {
 					self.log('Successful WebSocket connection');
 					self.connected = true;
 					self.object = socket;
 					self.initializeSocketEvents(socket);
 					monster.pub('socket.connected');
-				}
-				else {
+				} else {
 					self.log('Socket already active');
 					socket.close();
 				}
-			}
+			};
 		},
 
 		initializeSocket: function() {
@@ -58,10 +57,9 @@ define(function(require){
 			socket.onmessage = function(event) {
 				var data = JSON.parse(event.data);
 
-				if(data.action === 'reply') { 
+				if (data.action === 'reply') {
 					self.onReply(data);
-				}
-				else if(data.action === 'event') {
+				} else if (data.action === 'event') {
 					self.onEvent(data);
 				}
 			};
@@ -83,11 +81,11 @@ define(function(require){
 
 			monster.socket.unbind = function(binding, accountId, authToken, source) {
 				self.removeListener(binding, accountId, authToken, source);
-			}
+			};
 
 			monster.socket.close = function() {
 				self.close();
-			}
+			};
 		},
 
 		// Reconnect loop that retries to connect after {{startingTimeout}} ms
@@ -97,31 +95,28 @@ define(function(require){
 			var self = this,
 				timeoutDuration,
 				startingTimeout = 250,
-				maxTimeout = 1000*60,
+				maxTimeout = 1000 * 60,
 				multiplier = 2,
-				connectAttempt = function(){
-					if(!self.connected) {
+				connectAttempt = function() {
+					if (!self.connected) {
 						self.initialize();
 
-						if(timeoutDuration) {
-							if((timeoutDuration * multiplier) < maxTimeout) {
+						if (timeoutDuration) {
+							if ((timeoutDuration * multiplier) < maxTimeout) {
 								timeoutDuration *= multiplier;
-							}
-							else {
+							} else {
 								timeoutDuration = maxTimeout;
 							}
 
 							self.log('Attempting to reconnect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
-							self.log('Next try in ' + timeoutDuration/1000 + ' seconds');
-						} 
-						else {
+							self.log('Next try in ' + timeoutDuration / 1000 + ' seconds');
+						} else {
 							timeoutDuration = startingTimeout;
 
 							self.log('Attempting to connect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
 						}
 
-						
-						timeout = setTimeout(connectAttempt, timeoutDuration);
+						setTimeout(connectAttempt, timeoutDuration);
 					}
 				};
 
@@ -140,7 +135,7 @@ define(function(require){
 				onReply: onReply
 			};
 
-			return self.object.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId,  'binding': binding }}));
+			return self.object.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId, 'binding': binding }}));
 		},
 		unsubscribe: function(accountId, authToken, binding, onReply) {
 			var self = this,
@@ -150,7 +145,7 @@ define(function(require){
 				onReply: onReply
 			};
 
-			self.object.send(JSON.stringify({'action': 'unsubscribe','auth_token': authToken, 'request_id': requestId, 'data': {'binding': binding, 'account_id': accountId}}));
+			self.object.send(JSON.stringify({'action': 'unsubscribe', 'auth_token': authToken, 'request_id': requestId, 'data': {'binding': binding, 'account_id': accountId}}));
 		},
 
 		onEvent: function(data) {
@@ -164,12 +159,11 @@ define(function(require){
 
 			data.data.binding = bindingId;
 
-			if(bindingId) {
-				if(self.bindings.hasOwnProperty(bindingId)) {
+			if (bindingId) {
+				if (self.bindings.hasOwnProperty(bindingId)) {
 					executeCallbacks(self.bindings[bindingId]);
 				}
-			}
-			else {
+			} else {
 				_.each(self.bindings, function(binding) {
 					executeCallbacks(binding);
 				});
@@ -180,7 +174,7 @@ define(function(require){
 			var self = this,
 				requestId = data.request_id;
 
-			if(self.commands.hasOwnProperty(requestId)) {
+			if (self.commands.hasOwnProperty(requestId)) {
 				self.commands[requestId].onReply(data);
 				delete self.commands[requestId];
 			}
@@ -192,23 +186,21 @@ define(function(require){
 			var self = this,
 				listenersToKeep = [];
 
-			if(self.bindings.hasOwnProperty(binding)) {
+			if (self.bindings.hasOwnProperty(binding)) {
 				_.each(binding.listeners, function(listener) {
-					if(!(listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
+					if (!(listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
 						listenersToKeep.push(listener);
 					}
 				});
 			}
 
-			if(listenersToKeep.length) {
+			if (listenersToKeep.length) {
 				self.bindings[binding].listeners = listenersToKeep;
-			}
-			else {
+			} else {
 				self.unsubscribe(accountId, authToken, binding, function(result) {
-					if(result.status === 'success') {
+					if (result.status === 'success') {
 						delete self.bindings[binding];
-					}
-					else {
+					} else {
 						self.log('monster.socket: unsubscribe ' + binding + ' failed', true);
 						self.log(result);
 					}
@@ -229,28 +221,25 @@ define(function(require){
 					callback: func
 				};
 
-			if(self.bindings.hasOwnProperty(binding)) {
+			if (self.bindings.hasOwnProperty(binding)) {
 				_.each(self.bindings[binding].listeners, function(listener) {
-					if(listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
+					if (listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
 						found = true;
 					}
-				})
+				});
 
-				if(!found) {
+				if (!found) {
 					self.bindings[binding].listeners.push(newListener);
+				} else {
+					self.log('already bound!', true);
 				}
-				else {
-					self.log('already bound!', true)
-				}
-			}
-			else {
+			} else {
 				self.subscribe(accountId, authToken, binding, function(result) {
-					if(result.status === 'success') {
+					if (result.status === 'success') {
 						self.bindings[binding] = {
 							listeners: [ newListener ]
-						}
-					}
-					else {
+						};
+					} else {
 						self.log('monster.socket: subscribe ' + binding + ' failed', true);
 						self.log(result);
 					}
@@ -264,11 +253,10 @@ define(function(require){
 			privateSocket.log('No WebSockets defined', true);
 		},
 		connect: function() {
-			if(monster.config.api.hasOwnProperty('socket')) {
+			if (monster.config.api.hasOwnProperty('socket')) {
 				privateSocket.connect();
-			}
-			else {
-				privateSocket.log('No WebSocket API URL set in the config.js file', true)
+			} else {
+				privateSocket.log('No WebSocket API URL set in the config.js file', true);
 			}
 		}
 	};

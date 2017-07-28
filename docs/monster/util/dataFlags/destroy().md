@@ -1,4 +1,4 @@
-# [monster][monster].[util][util].[dataFlags][dataFlags].delete()
+# [monster][monster].[util][util].[dataFlags][dataFlags].destroy()
 
 * [Syntax](#syntax)
 * [Parameter](#parameter)
@@ -8,7 +8,7 @@
 
 ### Syntax
 ```javascript
-monster.util.dataFlags.delete(flagName, object);
+monster.util.dataFlags.destroy(flagName, object);
 ```
 
 ### Parameter

@@ -1,6 +1,5 @@
-define(function(require){
-	var $ = require('jquery'),
-		_ = require('underscore'),
+define(function(require) {
+	var _ = require('underscore'),
 		monster = require('monster'),
 		kazooWebphone = require('kazoo'),
 		toastr = require('toastr');
@@ -13,7 +12,7 @@ define(function(require){
 		log: function(str, force) {
 			var self = this;
 
-			if(self.printLogs || force) {
+			if (self.printLogs || force) {
 				console.log('MONSTER-LOG: ', str);
 			}
 		},
@@ -21,7 +20,7 @@ define(function(require){
 		init: function() {
 			var self = this;
 
-			if(monster.config.api.hasOwnProperty('socketWebphone')) {
+			if (monster.config.api.hasOwnProperty('socketWebphone')) {
 				var paramsInit = {
 					forceRTMP: false,
 					//flashContainer: 'flash_div',
@@ -36,23 +35,22 @@ define(function(require){
 				};
 
 				kazooWebphone.init(paramsInit);
-			}
-			else {
+			} else {
 				self.log('No config.js API configured for the Webphone');
 			}
 		},
 
-		login: function(args) {//device, success, error) {
+		login: function(args) {
 			var self = this,
 				realm = monster.apps.auth.originalAccount.realm,
 				device = args.device;
 
-			if(self.initialized) {
+			if (self.initialized) {
 				var kazooParams = {
 					wsUrl: monster.config.api.socketWebphone,
 					realm: realm,
 					privateIdentity: device.sip.username,
-					publicIdentity: 'sip:'+ device.sip.username + '@' + realm,
+					publicIdentity: 'sip:' + device.sip.username + '@' + realm,
 					password: device.sip.password,
 					onAccepted: function(call) {
 						args.onAccepted && args.onAccepted(call);
@@ -80,16 +78,15 @@ define(function(require){
 					//onConnecting: onConnecting,
 					//onTransfer: onTransfer,
 					//onNotified: onNotified,
-					onError: function(a) {
+					onError: function() {
 						args.onError();
-					},
+					}
 					//reconnectMaxAttempts: 3, // Unlimited autoreconnect attempts
 					//reconnectDelay: 5000 // New autoreconnect attempt every 5 seconds
 				};
 
 				kazooWebphone.register(kazooParams);
-			}
-			else {
+			} else {
 				args.error();
 				self.log('Webphone Not initialized');
 			}
@@ -153,8 +150,8 @@ define(function(require){
 			var self = this,
 				calls = self.listCalls();
 
-			for(var i in calls) {
-				if(calls[i].callId !== callId) {
+			for (var i in calls) {
+				if (calls[i].callId !== callId) {
 					kazooWebphone.hangup(calls[i].callId);
 				}
 			}
@@ -164,8 +161,8 @@ define(function(require){
 			var self = this,
 				calls = self.listCalls();
 
-			for(var i in calls) {
-				if(calls[i].callId !== callId) {
+			for (var i in calls) {
+				if (calls[i].callId !== callId) {
 					kazooWebphone.hold(calls[i].callId);
 				}
 			}
@@ -184,8 +181,8 @@ define(function(require){
 				calls = self.listCalls(),
 				response = false;
 
-			for(var i in calls) {
-				if(calls[i].callId === callId) {
+			for (var i in calls) {
+				if (calls[i].callId === callId) {
 					response = true;
 				}
 			}

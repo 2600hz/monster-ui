@@ -8,11 +8,11 @@ If it was decided to change the name "markers" to "uiFlags" for example, we coul
 ### Methods
 * [get()][get]
 * [add()][add]
-* [delete()][delete]
+* [destroy()][destroy]
 
 [monster]: ../../monster.md
 [util]: ../util.md
 
 [get]: dataFlags/get().md
 [add]: dataFlags/add().md
-[delete]: dataFlags/delete().md
+[destroy]: dataFlags/destroy().md

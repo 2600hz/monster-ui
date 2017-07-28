@@ -1,9 +1,9 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		hotkeys = require('hotkeys'),
+		bhotkeys = require('hotkeys'),
 		toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
@@ -18,11 +18,11 @@ define(function(require){
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
-			compare: function (lvalue, operator, rvalue, options) {
+			compare: function(lvalue, operator, rvalue, options) {
 				var operators, result;
 
 				if (arguments.length < 3) {
-					throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+					throw new Error('Handlerbars Helper "compare" needs 2 parameters');
 				}
 
 				if (options === undefined) {
@@ -32,19 +32,19 @@ define(function(require){
 				}
 
 				operators = {
-					'==': function (l, r) { return l == r; },
-					'===': function (l, r) { return l === r; },
-					'!=': function (l, r) { return l != r; },
-					'!==': function (l, r) { return l !== r; },
-					'<': function (l, r) { return l < r; },
-					'>': function (l, r) { return l > r; },
-					'<=': function (l, r) { return l <= r; },
-					'>=': function (l, r) { return l >= r; },
-					'typeof': function (l, r) { return typeof l == r; }
+					'==': function(a, b) { return a == b; },
+					'===': function(a, b) { return a === b; },
+					'!=': function(a, b) { return a != b; },
+					'!==': function(a, b) { return a !== b; },
+					'<': function(a, b) { return a < b; },
+					'>': function(a, b) { return a > b; },
+					'<=': function(a, b) { return a <= b; },
+					'>=': function(a, b) { return a >= b; },
+					'typeof': function(a, b) { return typeof a === b; }
 				};
 
 				if (!operators[operator]) {
-					throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+					throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
 				}
 
 				result = operators[operator](lvalue, rvalue);
@@ -64,7 +64,7 @@ define(function(require){
 				}
 			},
 
-			formatBytes: function (bytes, pDigits) {
+			formatBytes: function(bytes, pDigits) {
 				var digits = typeof pDigits === 'number' ? pDigits : undefined,
 					data = monster.util.formatBytes(bytes, digits);
 
@@ -90,7 +90,7 @@ define(function(require){
 			},
 
 			ifInArray: function(elem, list, options) {
-				if(list && list.indexOf(elem) > -1) {
+				if (list && list.indexOf(elem) > -1) {
 					return options.fn(this);
 				}
 
@@ -100,12 +100,12 @@ define(function(require){
 			monsterCheckbox: function() {
 				var templateData = {
 					cssClass: 'monster-checkbox',
-					checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+					checkbox: new Handlebars.SafeString(arguments[arguments.length - 1].fn(this))
 				};
 
-				for(var i=0; i<arguments.length-1; i++) {
-					if(_.isString(arguments[i])) {
-						switch(arguments[i]) {
+				for (var i = 0; i < arguments.length - 1; i++) {
+					if (_.isString(arguments[i])) {
+						switch (arguments[i]) {
 							case 'large-checkbox':
 							case 'checkbox-large':
 								templateData.cssClass = 'monster-checkbox-large';
@@ -127,11 +127,11 @@ define(function(require){
 			monsterRadio: function() {
 				var templateData = {
 					cssClass: 'monster-radio',
-					checkbox: new Handlebars.SafeString(arguments[arguments.length-1].fn(this))
+					checkbox: new Handlebars.SafeString(arguments[arguments.length - 1].fn(this))
 				};
 
-				for(var i=0; i<arguments.length-1; i++) {
-					if(_.isString(arguments[i]) || _.isNumber(arguments[i])) {
+				for (var i = 0; i < arguments.length - 1; i++) {
+					if (_.isString(arguments[i]) || _.isNumber(arguments[i])) {
 						switch(arguments[i]) {
 							case 'large-radio':
 							case 'radio-large':
@@ -162,7 +162,7 @@ define(function(require){
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterSlider: function (settings, options) {
+			monsterSlider: function(settings) {
 				return new Handlebars.SafeString(monster.ui.slider(settings));
 			},
 
@@ -180,7 +180,7 @@ define(function(require){
 			},
 
 			monsterText: function(type, className) {
-				var htmlContent = arguments[arguments.length-1].fn(this),
+				var htmlContent = arguments[arguments.length - 1].fn(this),
 					validTypes = ['info', 'question', 'error', 'warning'],
 					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
 					templateData = {
@@ -206,15 +206,18 @@ define(function(require){
 			},
 
 			select: function(value, options) {
-				var $el = $('<select />').html( options.fn(this) );
-				$el.find('[value="' + value + '"]').attr({'selected':'selected'});
+				var $el = $('<select />').html(options.fn(this));
+				$el.find('[value="' + value + '"]').attr({ 'selected': 'selected' });
 				return $el.html();
 			},
 
-			times: function(n, options) {
+			times: function(max, options) {
 				var ret = '';
-				for(var i = 1; i <= n; ++i)
+
+				for (var i = 1; i <= max; ++i) {
 					ret += options.fn(i);
+				}
+
 				return ret;
 			},
 
@@ -226,7 +229,7 @@ define(function(require){
 				return stringValue.toString().toLowerCase();
 			},
 
-			toUpperCase: function (stringValue) {
+			toUpperCase: function(stringValue) {
 				return stringValue.toString().toUpperCase();
 			},
 
@@ -263,9 +266,7 @@ define(function(require){
 		$coreWrapper
 			.on('click', '*[class*="monster-button"]:not(.disabled)', function(event) {
 				var $this = $(this),
-					$splash = $('<div>', {
-						class: 'monster-splash-effect'
-					}),
+					$splash = $('<div>').addClass('monster-splash-effect'),
 					offset = $this.offset(),
 					xPos = event.pageX - offset.left,
 					yPos = event.pageY - offset.top;
@@ -288,8 +289,7 @@ define(function(require){
 			_title: function(title) {
 				if (!this.options.title) {
 					title.html('&#160;');
-				}
-				else {
+				} else {
 					title.html(this.options.title);
 				}
 			}
@@ -433,18 +433,18 @@ define(function(require){
 		},
 
 		//3 types: info (blue), warning (yellow), error (red)
-		alert: function(type, content, callback, options){
-			if(typeof content === "undefined"){
+		alert: function(type, content, callback, options) {
+			if (typeof content === 'undefined') {
 				content = type;
-				type = "info";
+				type = 'info';
 			}
 
-			var coreApp = monster.apps['core'],
+			var coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
 				alertOptions = options || {},
 				templateData = {
 					content: content,
-					title: alertOptions.title || i18n.dialog[type+'Title'],
+					title: alertOptions.title || i18n.dialog[type + 'Title'],
 					data: content.data || 'No extended information.',
 					closeButtonText: alertOptions.closeButtonText || i18n.close,
 					closeButtonClass: alertOptions.closeButtonClass || 'monster-button'
@@ -453,7 +453,7 @@ define(function(require){
 				options = $.extend(
 					true,
 					{
-						onClose: function(){
+						onClose: function() {
 							callback && callback();
 						}
 					},
@@ -461,10 +461,10 @@ define(function(require){
 				),
 				dialog;
 
-			if(alertOptions.htmlContent) {
+			if (alertOptions.htmlContent) {
 				alertBox.find('.dialog-text').html(content);
 			}
-			if(alertOptions.htmlTitle && alertOptions.title) {
+			if (alertOptions.htmlTitle && alertOptions.title) {
 				alertBox.find('.dialog-header').html(alertOptions.title);
 			}
 
@@ -488,7 +488,7 @@ define(function(require){
 				}
 			}
 
-			options.dialogClass = 'monster-alert' + (options.dialogClass ? ' '+options.dialogClass : '');
+			options.dialogClass = 'monster-alert' + (options.dialogClass ? ' ' + options.dialogClass : '');
 
 			dialog = this.dialog(alertBox, options);
 
@@ -500,11 +500,11 @@ define(function(require){
 				dialog.dialog('close');
 			});
 
-			dialog.find('.json_error').css({ 'cursor': 'pointer' })
+			dialog.find('.json_error').css({ 'cursor': 'pointer' });
 
 			dialog.find('.json')
 				.css('min-width', 0)
-				.click(function(event){
+				.click(function(event) {
 					event.preventDefault();
 					dialog.find('.json_error').toggle();
 				});
@@ -515,7 +515,7 @@ define(function(require){
 		confirm: function(content, callbackOk, callbackCancel, options) {
 			var self = this,
 				dialog,
-				coreApp = monster.apps['core'],
+				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
 				confirmOptions = options || {},
 				type = confirmOptions.type || 'confirm',
@@ -541,10 +541,10 @@ define(function(require){
 				),
 				ok = false;
 
-			if(confirmOptions.htmlContent) {
+			if (confirmOptions.htmlContent) {
 				confirmBox.find('.dialog-text').html(content);
 			}
-			if(confirmOptions.htmlTitle && confirmOptions.title) {
+			if (confirmOptions.htmlTitle && confirmOptions.title) {
 				confirmBox.find('.dialog-header').html(confirmOptions.title);
 			}
 
@@ -568,7 +568,7 @@ define(function(require){
 				}
 			}
 
-			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
+			options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' ' + options.dialogClass : '');
 
 			dialog = this.dialog(confirmBox, options);
 
@@ -585,19 +585,19 @@ define(function(require){
 		},
 
 		dialog: function(content, options) {
-			var dialog = $("<div />").append(content),
-				coreApp = monster.apps['core'],
+			var dialog = $('<div />').append(content),
+				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
-				dialogType = ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) ? options.dialogType : 'classic',
-				closeBtnText = i18n['close'] || 'X';
+				dialogType = typeof options !== 'undefined' && typeof options.dialogType !== 'undefined' ? options.dialogType : 'classic',
+				closeBtnText = i18n.close || 'X';
 
-			if ( typeof options != 'undefined' && typeof options.dialogType != 'undefined' ) {
+			if (typeof options !== 'undefined' && typeof options.dialogType !== 'undefined') {
 				delete options.dialogType;
 			}
 
 			// delete options.dialogType;
 			$('input', content).keypress(function(e) {
-				if(e.keyCode == 13) {
+				if (e.keyCode === 13) {
 					e.preventDefault();
 					return false;
 				}
@@ -605,21 +605,20 @@ define(function(require){
 
 			//Unoverridable options
 			var strictOptions = {
-					show: { effect : 'fade', duration : 200 },
-					hide: { effect : 'fade', duration : 200 },
+					show: { effect: 'fade', duration: 200 },
+					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
 					close: function() {
 						$('div.popover').remove();
 						dialog.dialog('destroy');
 						dialog.remove();
 
-						if(typeof options.onClose == 'function') {
+						if (typeof options.onClose === 'function') {
 							// jQuery FREAKS out and gets into an infinite loop if the following function kicks back an error. Hence the try/catch.
 							try {
 								options.onClose();
-							}
-							catch(err) {
-								if(console && err.message && err.stack) {
+							} catch (err) {
+								if (console && err.message && err.stack) {
 									console.log(err.message);
 									console.log(err.stack);
 								}
@@ -632,14 +631,18 @@ define(function(require){
 					width: 'auto',
 					modal: true,
 					resizable: false,
-					open: function(event, ui) { if(options.hideClose) $(".ui-dialog-titlebar-close", ui.dialog | ui).hide(); }
+					open: function(event, ui) {
+						if (options.hideClose) {
+							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
+						}
+					}
 				};
 
 			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
 			options = $.extend(defaults, options || {}, strictOptions);
 			dialog.dialog(options);
 
-			switch(dialogType) {
+			switch (dialogType) {
 				case 'conference':
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
@@ -654,19 +657,17 @@ define(function(require){
 
 		charges: function(data, callbackOk, callbackCancel) {
 			var self = this,
-				dialog,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
 				formatData = function(data) {
-					var totalAmount = 0,
-						renderData = [];
+					var renderData = [];
 
 					$.each(data, function(categoryName, category) {
-						if (categoryName != 'activation_charges') {
+						if (categoryName !== 'activation_charges') {
 							$.each(category, function(itemName, item) {
 								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
 									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
-								if(monthlyCharges > 0) {
+								if (monthlyCharges > 0) {
 									renderData.push({
 										service: i18n.services.hasOwnProperty(itemName) ? i18n.services[itemName] : itemName.replace(/_/, ' '),
 										rate: item.rate.toFixed(2) || 0,
@@ -674,8 +675,6 @@ define(function(require){
 										discount: discount > 0 ? parseFloat(discount).toFixed(2) : 0,
 										monthlyCharges: monthlyCharges
 									});
-
-									totalAmount += parseFloat(monthlyCharges);
 								}
 							});
 						}
@@ -685,38 +684,9 @@ define(function(require){
 				},
 				charges = data.activation_charges ? data.activation_charges.toFixed(2) : 0,
 				template = $(monster.template(coreApp, 'dialog-charges', {
-						activation_charges: charges,
-						charges: formatData(data)
-					}
-				)),
-				// options = $.extend(
-				// 	true,
-				// 	{
-				// 		closeOnEscape: false,
-				// 		width: 'auto',
-				// 		title: i18n.confirmCharges.title,
-				// 		onClose: function() {
-				// 			ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
-				// 		}
-				// 	},
-				// 	options
-				// ),
-				ok = false;
-
-			// options.dialogClass = 'monster-confirm' + (options.dialogClass ? ' '+options.dialogClass : '');
-
-			// dialog = this.dialog(template, options);
-
-			// template.find('#confirm_button').on('click', function() {
-			// 	ok = true;
-			// 	dialog.dialog('close');
-			// });
-
-			// template.find('#cancel_button').on('click', function() {
-			// 	dialog.dialog('close');
-			// });
-
-			// return dialog;
+					activation_charges: charges,
+					charges: formatData(data)
+				}));
 
 			return self.confirm(template, callbackOk, callbackCancel, {
 				htmlContent: true,
@@ -729,7 +699,6 @@ define(function(require){
 		requestErrorDialog: function(error) {
 			var self = this,
 				coreApp = monster.apps.core,
-				i18n = coreApp.i18n.active(),
 				dataTemplate = {
 					message: error.data.message,
 					requestId: error.data.requestId,
@@ -737,20 +706,20 @@ define(function(require){
 					apiResponse: error.data.response,
 					verb: error.data.verb.toUpperCase(),
 					showReport: monster.config.whitelabel.hasOwnProperty('callReportEmail'),
-					mailToLink: "mailto:" + monster.config.whitelabel.callReportEmail
-								  + "?subject=UI Error Report "
-								  + "&body=I encountered an error in the UI. Here are the technical details:"
-								  + "%0D%0A____________________________________________________________%0D%0A"
-								  + "%0D%0A"
-								  + "%0D%0AURL: " + error.data.verb.toUpperCase() + " " + encodeURIComponent(error.data.url)
-								  + "%0D%0A"
-								  + "%0D%0AMessage: " + error.data.message
-								  + "%0D%0A"
-								  + "%0D%0ARequest ID: " + error.data.requestId								  + "%0D%0A"
-								  + "%0D%0A"
-								  + "%0D%0AAPI Response: " + error.data.response
+					mailToLink: 'mailto:' + monster.config.whitelabel.callReportEmail
+								+ '?subject=UI Error Report '
+								+ '&body=I encountered an error in the UI. Here are the technical details:'
+								+ '%0D%0A____________________________________________________________%0D%0A'
+								+ '%0D%0A'
+								+ '%0D%0AURL: ' + error.data.verb.toUpperCase() + ' ' + encodeURIComponent(error.data.url)
+								+ '%0D%0A'
+								+ '%0D%0AMessage: ' + error.data.message
+								+ '%0D%0A'
+								+ '%0D%0ARequest ID: ' + error.data.requestId								+ '%0D%0A'
+								+ '%0D%0A'
+								+ '%0D%0AAPI Response: ' + error.data.response
 				},
-				copyTextError = "Date: " + new Date() + " | URL: " + error.data.verb.toUpperCase() + " " + error.data.url + " | Message: " + error.data.message + " | API Response " + error.data.response,
+				copyTextError = 'Date: ' + new Date() + ' | URL: ' + error.data.verb.toUpperCase() + ' ' + error.data.url + ' | Message: ' + error.data.message + ' | API Response ' + error.data.response,
 				alertOptions = {
 					htmlContent: true,
 					title: error.data.customTitle,
@@ -803,18 +772,19 @@ define(function(require){
 			}, options);
 
 			// Automatically scroll to the element to let the user see the "add" animation
-			if(element.offset()) {
+			if (element.offset()) {
 				$('html, body').animate({
 					scrollTop: element.offset().top
 				}, 300);
 			}
 
 			// If the background was a gradient, only changing the background-color wouldn't work, so we hide the image temporarirly
-			element.css({
-				'background-image': 'none',
-				'background-color': options.startColor
-			})
-			.animate({
+			element
+				.css({
+					'background-image': 'none',
+					'background-color': options.startColor
+				})
+				.animate({
 					backgroundColor: options.endColor
 				}, options.timer, function() {
 					element.css({
@@ -823,8 +793,7 @@ define(function(require){
 					});
 
 					options.callback && options.callback();
-				}
-			);
+				});
 		},
 
 		tabs: function(template) {
@@ -859,10 +828,9 @@ define(function(require){
 				startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
 				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-			if(range === 'monthly') {
+			if (range === 'monthly') {
 				startDate.setMonth(startDate.getMonth() - 1);
-			}
-			else {
+			} else {
 				startDate.setDate(startDate.getDate() - initRange);
 			}
 			startDate.setDate(startDate.getDate() + 1);
@@ -880,21 +848,19 @@ define(function(require){
 			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
 			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
-				var dateMin = inputStartDate.datepicker('getDate'),
-					dateMax = inputEndDate.datepicker('getDate');
+				var dateMin = inputStartDate.datepicker('getDate');
 
-				if(input.id === 'startDate') {
+				if (input.id === 'startDate') {
 					var dateMaxRange = new Date(dateMin);
 
-					if(range === 'monthly') {
+					if (range === 'monthly') {
 						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
-					}
-					else {
+					} else {
 						dateMaxRange.setDate(dateMaxRange.getDate() + range);
 					}
 					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
-					if(dateMaxRange > today) {
+					if (dateMaxRange > today) {
 						dateMaxRange = today;
 					}
 
@@ -916,18 +882,16 @@ define(function(require){
 					var dateMaxRange = new Date(dateMin);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
-					if(range === 'monthly') {
+					if (range === 'monthly') {
 						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
-					}
-					else {
+					} else {
 						dateMaxRange.setDate(dateMaxRange.getDate() + range);
 					}
 					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
 					dateMax = dateMaxRange > today ? today : dateMaxRange;
-				}
-				else if (input.id === 'startDate') {
+				} else if (input.id === 'startDate') {
 					dateMin = new Date(2011, 0, 0);
 					dateMax = new Date();
 				}
@@ -942,15 +906,15 @@ define(function(require){
 		friendlyError: function(dataError) {
 			var self = this,
 				message = '',
-				i18n = monster.apps['core'].i18n.active();
+				i18n = monster.apps.core.i18n.active();
 
-			if(dataError && dataError.data && 'api_error' in dataError.data && 'errors' in dataError.data.api_error) {
+			if (dataError && dataError.data && 'api_error' in dataError.data && 'errors' in dataError.data.api_error) {
 				var errors = dataError.data.api_error.errors;
 
 				_.each(errors, function(error, k) {
 					message += '<b>' + i18n.error + ' ' + error.code + ': </b>' + i18n.errors[error.code];
 
-					if(k !== errors.length - 1)  {
+					if (k !== errors.length - 1) {
 						message += '<br/><br/>';
 					}
 				});
@@ -962,30 +926,31 @@ define(function(require){
 		protectField: function(field, template) {
 			var template = template || $('html'),
 				fieldId = field.attr('id'),
-				fieldName = field.attr('name'),
 				value = field.val();
 
-			$('<input data-protected="'+ fieldId +'" type="text" style="display: none;" value="'+ value +'"/>').insertBefore(field);
+			$('<input data-protected="' + fieldId + '" type="text" style="display: none;" value="' + value + '"/>').insertBefore(field);
 
 			field.on('focus', function() {
 				var $this = $(this),
 					value = $this.val();
 
 				// Setting the val to an empty string before the focus is a nice hack to have the text selection starting at the end of the string instead of the first character
-				template.find('[data-protected='+ fieldId + ']').val('')
-																   .show()
-																   .focus()
-																   .val(value);
+				template.find('[data-protected=' + fieldId + ']')
+					.val('')
+					.show()
+					.focus()
+					.val(value);
 
 				$this.hide();
 			});
 
-			template.find('[data-protected='+ fieldId + ']').on('blur', function() {
+			template.find('[data-protected=' + fieldId + ']').on('blur', function() {
 				var $this = $(this),
 					value = $this.val();
 
-				field.val(value)
-					 .show();
+				field
+					.val(value)
+					.show();
 
 				$this.hide();
 			});
@@ -995,25 +960,25 @@ define(function(require){
 			var result = {};
 
 			$.each(accountArray, function(k, v) {
-				if(v.id === rootAccountId) {
-					if(!result[v.id]) { result[v.id] = {}; }
+				if (v.id === rootAccountId) {
+					if (!result[v.id]) { result[v.id] = {}; }
 					result[v.id].name = v.name;
 					result[v.id].realm = v.realm;
 				} else {
 					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
 						currentAcc;
-					for(var i=0; i<parents.length; i++) {
-						if(!currentAcc) {
-							if(!result[parents[i]]) { result[parents[i]] = {}; }
+					for (var i = 0; i < parents.length; i++) {
+						if (!currentAcc) {
+							if (!result[parents[i]]) { result[parents[i]] = {}; }
 							currentAcc = result[parents[i]];
 						} else {
-							if(!currentAcc.children) { currentAcc.children = {}; }
-							if(!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
+							if (!currentAcc.children) { currentAcc.children = {}; }
+							if (!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
 							currentAcc = currentAcc.children[parents[i]];
 						}
 					}
-					if(!currentAcc.children) { currentAcc.children = {}; }
-					if(!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
+					if (!currentAcc.children) { currentAcc.children = {}; }
+					if (!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
 					currentAcc.children[v.id].name = v.name;
 					currentAcc.children[v.id].realm = v.realm;
 				}
@@ -1025,9 +990,9 @@ define(function(require){
 		customValidationInitialized: false,
 
 		initCustomValidation: function() {
-			var localization = monster.apps['core'].i18n.active().validation,
+			var localization = monster.apps.core.i18n.active().validation,
 				addSimpleRule = function(name, regex) {
-					$.validator.addMethod(name, function(value, element, param) {
+					$.validator.addMethod(name, function(value, element) {
 						return this.optional(element) || regex.test(value);
 					}, localization.customRules[name]);
 				},
@@ -1040,35 +1005,35 @@ define(function(require){
 			$.extend($.validator.messages, defaultMessages);
 
 			// Adding simple custom rules
-			addSimpleRule('mac', /^(?:[0-9A-F]{2}(\:|\-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i);
+			addSimpleRule('mac', /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1) {4}[0-9A-F]{2}$/i);
 			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
-			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\ ?[AP]M))$/i);
-			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
-			addSimpleRule('realm', /^[0-9A-Z\.\-]+$/i);
+			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d) {1,2}(\s?[AP]M))$/i);
+			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d) {1,2})$/i);
+			addSimpleRule('realm', /^[0-9A-Z.-]+$/i);
 			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
 			addSimpleRule('protocol', /:\/\//i);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('greaterDate', function(value, element, param) {
 				var target = _.isString(param) ? $(param) : param;
-				if ( this.settings.onfocusout ) {
-					target.unbind(".validate-greaterDate").bind("blur.validate-greaterDate", function() {
+				if (this.settings.onfocusout) {
+					target.unbind('.validate-greaterDate').bind('blur.validate-greaterDate', function() {
 						$(element).valid();
 					});
 				}
 				return monster.util.timeToSeconds(value) > monster.util.timeToSeconds(target.val());
-			}, localization.customRules['greaterDate']);
+			}, localization.customRules.greaterDate);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('checkList', function(value, element, listToCheck) {
-				if(_.isArray(listToCheck)) {
+				if (_.isArray(listToCheck)) {
 					return listToCheck.indexOf(value) < 0;
-				}
-				else if(_.isObject(listToCheck)) {
+				} else if (_.isObject(listToCheck)) {
 					return !(value in listToCheck);
+				} else {
+					return true;
 				}
-				else return true;
-			}, localization.customRules['checkList']);
+			}, localization.customRules.checkList);
 
 			// Adding advanced custom rules
 			$.validator.addMethod('regex', function(value, element, regexpr) {
@@ -1080,11 +1045,11 @@ define(function(require){
 
 		validate: function(form, options) {
 			var defaultOptions = {
-				errorClass: "monster-invalid",
-				validClass: "monster-valid"
+				errorClass: 'monster-invalid',
+				validClass: 'monster-valid'
 			};
 
-			if(!this.customValidationInitialized) {
+			if (!this.customValidationInitialized) {
 				this.initCustomValidation();
 			}
 
@@ -1103,7 +1068,7 @@ define(function(require){
 		 * To remove some elements from the toolbar, specify false as value
 		 * for the corresponding key in the defaultOptions object. To remove
 		 * all elements, set the options parameter to false.
-		 * 
+		 *
 		 * The target should be a jQuery Object as follow:
 		 * <div class="wysiwyg-container"></div>
 		 * The optional class "transparent" can be added to this container
@@ -1120,12 +1085,12 @@ define(function(require){
 			if (options) {
 				var i18n = coreApp.i18n.active().wysiwyg,
 					colorList = [
-						'ffffff','000000','eeece1','1f497d','4f81bd','c0504d','9bbb59','8064a2','4bacc6','f79646','ffff00',
-						'f2f2f2','7f7f7f','ddd9c3','c6d9f0','dbe5f1','f2dcdb','ebf1dd','e5e0ec','dbeef3','fdeada','fff2ca',
-						'd8d8d8','595959','c4bd97','8db3e2','b8cce4','e5b9b7','d7e3bc','ccc1d9','b7dde8','fbd5b5','ffe694',
-						'bfbfbf','3f3f3f','938953','548dd4','95b3d7','d99694','c3d69b','b2a2c7','92cdcd','fac08f','f2c314',
-						'a5a5a5','262626','494429','17365d','366092','953734','76923c','5f497a','31859b','e36c09','c09100',
-						'7f7f7f','0c0c0c','1d1b10','0f243e','244061','632423','4f6128','3f3151','205867','974806','7f6000'
+						'ffffff', '000000', 'eeece1', '1f497d', '4f81bd', 'c0504d', '9bbb59', '8064a2', '4bacc6', 'f79646', 'ffff00',
+						'f2f2f2', '7f7f7f', 'ddd9c3', 'c6d9f0', 'dbe5f1', 'f2dcdb', 'ebf1dd', 'e5e0ec', 'dbeef3', 'fdeada', 'fff2ca',
+						'd8d8d8', '595959', 'c4bd97', '8db3e2', 'b8cce4', 'e5b9b7', 'd7e3bc', 'ccc1d9', 'b7dde8', 'fbd5b5', 'ffe694',
+						'bfbfbf', '3f3f3f', '938953', '548dd4', '95b3d7', 'd99694', 'c3d69b', 'b2a2c7', '92cdcd', 'fac08f', 'f2c314',
+						'a5a5a5', '262626', '494429', '17365d', '366092', '953734', '76923c', '5f497a', '31859b', 'e36c09', 'c09100',
+						'7f7f7f', '0c0c0c', '1d1b10', '0f243e', '244061', '632423', '4f6128', '3f3151', '205867', '974806', '7f6000'
 					],
 					defaultOptions = {
 						fontSize: {
@@ -1258,14 +1223,14 @@ define(function(require){
 						link: {
 							weight: 70,
 							options: {
-								create: {
+								add: {
 									weight: 10,
 									title: i18n.title.createLink,
 									icon: 'fa fa-link',
 									command: 'createLink',
 									inputType: 'text'
 								},
-								delete: {
+								remove: {
 									weight: 20,
 									title: i18n.title.removeLink,
 									icon: 'fa fa-chain-broken',
@@ -1331,13 +1296,13 @@ define(function(require){
 						}
 					},
 					sortByWeight = function(node) { // Sort elements by weight and "arrayize"
-						node = _.map(node, function(v, k) { return v; });
+						node = _.map(node, function(v) { return v; });
 
-						node.sort(function(a, b){
+						node.sort(function(a, b) {
 							return a.weight > b.weight ? 1 : -1;
 						});
 
-						_.each(node, function(v, k) {
+						_.each(node, function(v) {
 							if (v.hasOwnProperty('options')) {
 								v.options = sortByWeight(v.options);
 							}
@@ -1348,30 +1313,28 @@ define(function(require){
 
 				colorList.forEach(function(hexColor, idx) {
 					defaultOptions.fontColor.options.push({ weight: ++idx * 10, args: hexColor });
-				})
+				});
 
 				options = $.extend(true, {}, defaultOptions, options);
 
 				// Remove options with value at false
-				for (var c in options) {
-					if (!options[c]) {
-						delete options[c];
+				for (var opt in options) {
+					if (!options[opt]) {
+						delete options[opt];
 						continue;
-					}
-					else if (options[c].hasOwnProperty('options')) {
-						if (_.isEmpty(options[c].options)) {
-							delete options[c];
+					} else if (options[opt].hasOwnProperty('options')) {
+						if (_.isEmpty(options[opt].options)) {
+							delete options[opt];
 							continue;
-						}
-						else {
-							_.each(options[c].options, function(v, k, l){
+						} else {
+							_.each(options[opt].options, function(v, k, list) {
 								if (!v) {
-									delete l[k];
+									delete list[k];
 								}
 							});
 
-							if (_.isEmpty(options[c].options)) {
-								delete options[c];
+							if (_.isEmpty(options[opt].options)) {
+								delete options[opt];
 								continue;
 							}
 						}
@@ -1406,8 +1369,7 @@ define(function(require){
 						this.value = '';
 						$(this).change();
 					});
-			}
-			else {
+			} else {
 				wysiwygTemplate = $(monster.template(coreApp, 'wysiwyg-template', dataTemplate));
 			}
 
@@ -1420,8 +1382,7 @@ define(function(require){
 						fileUploadError: function(reason, detail) {
 							if (reason === 'unsupported-file-type') {
 								toastr.error(detail + i18n.toastr.error.format);
-							}
-							else {
+							} else {
 								toastr.error(i18n.toastr.error.upload);
 								console.log('error uploading file', reason, detail);
 							}
@@ -1443,7 +1404,6 @@ define(function(require){
 			return formData;
 		},
 
-
 		/**
 		 * @desc Wrapper of the Jquery date picker that uses the date format settings from the logged-in user if it exists.
 		 * @param target - mandatory jQuery Object
@@ -1452,17 +1412,15 @@ define(function(require){
 		datepicker: function(target, options) {
 			var self = this,
 				datePickerFormat = 'mm/dd/yy',
-				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
-							 monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format') ?
-							 monster.apps.auth.currentUser.ui_flags.date_format : 'mdy' ;
+				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
+							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format')
+							? monster.apps.auth.currentUser.ui_flags.date_format : 'mdy';
 
-			if(userFormat === 'mdy') {
+			if (userFormat === 'mdy') {
 				datePickerFormat = 'mm/dd/yy';
-			}
-			else if(userFormat === 'dmy') {
+			} else if (userFormat === 'dmy') {
 				datePickerFormat = 'dd/mm/yy';
-			}
-			else if(userFormat === 'ymd') {
+			} else if (userFormat === 'ymd') {
 				datePickerFormat = 'yy/mm/dd';
 			}
 
@@ -1485,9 +1443,9 @@ define(function(require){
 		 */
 		timepicker: function(target, pOptions) {
 			var self = this,
-				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
-						    monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode') ?
-						    monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
+				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
+							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode')
+							? monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
 				defaultOptions = {
 					timeFormat: is12hMode ? 'g:ia' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
@@ -1596,22 +1554,22 @@ define(function(require){
 					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
 					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
 					'CELT@64000h': codecsI18n.audio['CELT@64000h'],
-					'G722': codecsI18n.audio['G722'],
-					'G729':codecsI18n.audio['G729'],
+					'G722': codecsI18n.audio.G722,
+					'G729': codecsI18n.audio.G729,
 					'G7221@16000h': codecsI18n.audio['G7221@16000h'],
 					'G7221@32000h': codecsI18n.audio['G7221@32000h'],
-					'GSM': codecsI18n.audio['GSM'],
-					'OPUS': codecsI18n.audio['OPUS'],
-					'PCMA': codecsI18n.audio['PCMA'],
-					'PCMU': codecsI18n.audio['PCMU'],
+					'GSM': codecsI18n.audio.GSM,
+					'OPUS': codecsI18n.audio.OPUS,
+					'PCMA': codecsI18n.audio.PCMA,
+					'PCMU': codecsI18n.audio.PCMU,
 					'speex@16000h': codecsI18n.audio['speex@16000h'],
-					'speex@32000h':codecsI18n.audio['speex@32000h']
+					'speex@32000h': codecsI18n.audio['speex@32000h']
 				},
 				defaultVideoList = {
-					'H261': codecsI18n.video['H261'],
-					'H263': codecsI18n.video['H263'],
-					'H264': codecsI18n.video['H264'],
-					'VP8': codecsI18n.video['VP8']
+					'H261': codecsI18n.video.H261,
+					'H263': codecsI18n.video.H263,
+					'H264': codecsI18n.video.H264,
+					'VP8': codecsI18n.video.VP8
 				},
 				mapMigrateAudioCodec = {
 					'CELT_48': 'CELT@48000h',
@@ -1624,7 +1582,7 @@ define(function(require){
 				selectedItems = [],
 				items = [],
 				getLinkedColumn = function(selectedCodecs, defaultList, mapMigrate) {
-					selectedItems = _.map(selectedCodecs, function(codec, idx) {
+					selectedItems = _.map(selectedCodecs, function(codec) {
 						return {
 							key: codec,
 							// if codec is in the default List, get its i18n, if it's not, check if it's not an outdated modem from the migrate list, if it is, take the new value and its i18n, if not, just display the codec as it is stored in the db
@@ -1641,72 +1599,70 @@ define(function(require){
 						return a.value > b.value ? 1 : -1;
 					});
 
-					return self.linkedColumns(target, items, selectedItems, options)
+					return self.linkedColumns(target, items, selectedItems, options);
 				};
 
-			if(type === 'audio') {
+			if (type === 'audio') {
 				return getLinkedColumn(selectedCodecs, defaultAudioList, mapMigrateAudioCodec);
-			}
-			else if(type === 'video') {
+			} else if (type === 'video') {
 				return getLinkedColumn(selectedCodecs, defaultVideoList, mapMigrateVideoCodec);
-			}
-			else {
+			} else {
 				console.error('This is not a valid type for our codec selector: ', type);
 			}
 		},
 
 		showPasswordStrength: function(input, options) {
-			if(input) {
+			if (input) {
 				var i18n = monster.apps.core.i18n.active(),
 					options = options || {},
-					display = options.display || "bar",
-					tooltipPosition = options.tooltipPosition || "top",
+					display = options.display || 'bar',
+					tooltipPosition = options.tooltipPosition || 'top',
 					regexes = [
 						{
-							key: "strong",
-							regex: new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$"),
-							color: "#18b309",
+							key: 'strong',
+							regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
+							color: '#18b309',
 							size: 100
 						},
 						{
-							key: "good",
-							regex: new RegExp("^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$"),
-							color: "#33db24",
+							key: 'good',
+							regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
+							color: '#33db24',
 							size: 70
 						},
 						{
-							key: "medium",
-							regex: new RegExp("^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$"),
-							color: "#ffcc33",
+							key: 'medium',
+							regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
+							color: '#ffcc33',
 							size: 50
 						},
 						{
-							key: "weak",
-							regex: new RegExp("^(?=.{6,}).*$"),
-							color: "#ff6a57",
+							key: 'weak',
+							regex: new RegExp('^(?=.{6,}).*$'),
+							color: '#ff6a57',
 							size: 40
 						},
 						{
-							key: "bad",
-							regex: new RegExp("^.+$"),
-							color: "#ff3d24",
+							key: 'bad',
+							regex: new RegExp('^.+$'),
+							color: '#ff3d24',
 							size: 20
 						},
 						{
-							key: "empty",
-							regex: new RegExp("^\\s*$"),
-							color: "#c0c0c9",
+							key: 'empty',
+							regex: new RegExp('^\\s*$'),
+							color: '#c0c0c9',
 							size: 0
 						}
 					],
 					strengthDisplay;
-				
-				switch(display) {
+
+				switch (display) {
 					case 'icon': {
-						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="'+i18n.passwordStrength.empty+'" data-placement="'+tooltipPosition+'" data-toggle="tooltip"></i>');
+						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="' + i18n.passwordStrength.empty + '" data-placement="' + tooltipPosition + '" data-toggle="tooltip"></i>');
 						input.on('keyup keypress change', function(e) {
 							$.each(regexes, function(key, val) {
-								if(val.regex.test(input.val())) {
+								if (val.regex.test(input.val())) {
 									strengthDisplay
 										.css('color', val.color)
 										.attr('data-original-title', i18n.passwordStrength[val.key])
@@ -1719,15 +1675,15 @@ define(function(require){
 					}
 					case 'bar':
 					default: {
-						strengthDisplay = $('<div class="monster-password-strength"><div><span>'+i18n.passwordStrength.empty+'</span></div></div>');
+						strengthDisplay = $('<div class="monster-password-strength"><div><span>' + i18n.passwordStrength.empty + '</span></div></div>');
 						input.on('keyup keypress change', function(e) {
 							$.each(regexes, function(key, val) {
-								if(val.regex.test(input.val())) {
+								if (val.regex.test(input.val())) {
 									strengthDisplay
 										.children('div')
 										.css({
 											backgroundColor: val.color,
-											width: val.size+'%'
+											width: val.size + '%'
 										}).children('span')
 										.html(i18n.passwordStrength[val.key]);
 									return false;
@@ -1737,14 +1693,14 @@ define(function(require){
 						break;
 					}
 				}
-				
-				if(options.container) {
+
+				if (options.container) {
 					options.container.append(strengthDisplay);
 				} else {
 					input.after(strengthDisplay);
 				}
 			} else {
-				throw 'You must provide at least one input field';
+				throw new Error('You must provide at least one input field');
 			}
 		},
 
@@ -1784,7 +1740,7 @@ define(function(require){
 		stepByStep: function(stepList, callback) {
 			var self = this,
 				coreI18n = monster.apps.core.i18n.active(),
-				steps = _.filter(stepList, function(step) { return step.element }), //Filtering out steps where the element does not exist
+				steps = _.filter(stepList, function(step) { return step.element; }), //Filtering out steps where the element does not exist
 				countSteps = steps.length,
 				isLastStep = function() {
 					// If next button is hidden, it's because we hide it when it's the last step, so it's our ghetto way to know that the step by step is at the last step...
@@ -1793,8 +1749,8 @@ define(function(require){
 
 			// If we don't already override it, add a last-step class.
 			// We use it to style the skip button (float right)
-			if(!steps[countSteps-1].hasOwnProperty('tooltipClass')) {
-				steps[countSteps-1]['tooltipClass'] = 'monster-intro-tooltip last-step';
+			if (!steps[countSteps - 1].hasOwnProperty('tooltipClass')) {
+				steps[countSteps - 1].tooltipClass = 'monster-intro-tooltip last-step';
 			}
 
 			introJs().setOptions({
@@ -1815,14 +1771,12 @@ define(function(require){
 
 				$buttons.find('.introjs-button').addClass('monster-button non-fixed');
 
-				if(isLastStep()) {
+				if (isLastStep()) {
 					$buttons.find('.introjs-skipbutton').addClass('monster-button-success');
-				}
-				else {
+				} else {
 					$buttons.find('.introjs-skipbutton').removeClass('monster-button-success');
 					$buttons.find('.introjs-nextbutton').addClass('monster-button-primary');
 				}
-				
 			})
 			.oncomplete(callback)
 			.onexit(callback)
@@ -1848,7 +1802,7 @@ define(function(require){
 				tabId = $tab.data('tab_id'),
 				isSubnav = $tab.parents('nav').hasClass('app-subnav'),
 				currentTab,
-				loadTabContent = function loadTabContent () {
+				loadTabContent = function loadTabContent() {
 					var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]');
 
 					// Add 'active' class to menu element
@@ -1874,8 +1828,7 @@ define(function(require){
 									.find('.navbar-menu-item-link')
 										.first()
 											.addClass('active');
-							}
-							else {
+							} else {
 								if (appHeader.find('.app-subnav-bg').is(':visible')) {
 									appHeader
 										.find('.app-subnav.active')
@@ -1896,8 +1849,7 @@ define(function(require){
 														$(this).addClass('active');
 													});
 											});
-								}
-								else {
+								} else {
 									appHeader
 										.find('.app-subnav.active')
 											.hide()
@@ -1919,8 +1871,7 @@ define(function(require){
 									.find('.app-subnav-bg')
 										.slideDown();
 							}
-						}
-						else {
+						} else {
 							appContent.removeClass('subnav-enabled');
 							if (appHeader.find('.app-subnav-bg').is(':visible')) {
 								appHeader
@@ -1963,8 +1914,7 @@ define(function(require){
 				tabId = $tab.parents('nav').data('tab_id');
 
 				currentTab = menus[menuId].tabs[tabId].menus[subnavMenuId].tabs[subnavTabId];
-			}
-			else {
+			} else {
 				currentTab = menus[menuId].tabs[tabId];
 			}
 
@@ -1977,8 +1927,7 @@ define(function(require){
 						container: parent.find('.app-content-wrapper'),
 						callback: loadTabContent
 					});
-				}
-				else {
+				} else {
 					loadTabContent();
 				}
 			}
@@ -2062,13 +2011,12 @@ define(function(require){
 					appId: thisArg.name
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
-				callDefaultTabCallback = function callDefaultTabCallback () {
+				callDefaultTabCallback = function callDefaultTabCallback() {
 					var context;
 
 					if (tabs[0].hasOwnProperty('menus')) {
 						context = tabs[0].menus[0].tabs[0];
-					}
-					else {
+					} else {
 						context = tabs[0];
 					}
 
@@ -2111,26 +2059,49 @@ define(function(require){
 		mask: function(target, type) {
 			var validations = {
 				phoneNumber: {
-					mask:'AZZZZZZZZZZZZZZZZ',
-					options: {translation:  {'Z': {pattern: /[0-9]/, optional: true}, 'A': {pattern: /\+/, optional: true}}}
+					mask: 'AZZZZZZZZZZZZZZZZ',
+					options: {
+						translation: {
+							'Z': {
+								pattern: /[0-9]/,
+								optional: true
+							},
+							'A': {
+								pattern: /\+/,
+								optional: true
+							}
+						}
+					}
 				},
 				macAddress: {
 					mask: 'FF:FF:FF:FF:FF:FF',
-					options: {translation: {"F": { pattern:/[A-Fa-f0-9]/ }}}
+					options: {
+						translation: {
+							'F': {
+								pattern: /[A-Fa-f0-9]/
+							}
+						}
+					}
 				},
 				extension: {
-					mask:'ZZZZZZZZZZZZZZZZ',
-					options: {translation:  {'Z': {pattern: /[0-9]/, optional: true}}}
+					mask: 'ZZZZZZZZZZZZZZZZ',
+					options: {
+						translation: {
+							'Z': {
+								pattern: /[0-9]/,
+								optional: true
+							}
+						}
+					}
 				}
-			}
+			};
 
-			if(validations.hasOwnProperty(type)) {
+			if (validations.hasOwnProperty(type)) {
 				var data = validations[type];
 
 				target.mask(data.mask, data.options);
-			}
-			else {
-				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option')
+			} else {
+				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option');
 			}
 		},
 
@@ -2145,15 +2116,15 @@ define(function(require){
 				callback = shortcut.callback,
 				adminOnly = shortcut.hasOwnProperty('adminOnly') ? shortcut.adminOnly : false;
 
-			if(!self.keyboardShortcuts.hasOwnProperty(category)) {
+			if (!self.keyboardShortcuts.hasOwnProperty(category)) {
 				self.keyboardShortcuts[category] = {
 					title: i18nShortcuts.categories.hasOwnProperty(category) ? i18nShortcuts.categories[category] : category,
 					keys: {}
-				}
+				};
 			}
 
-			if(!self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
-				if(!adminOnly || monster.util.isAdmin()) {
+			if (!self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+				if (!adminOnly || monster.util.isAdmin()) {
 					self.keyboardShortcuts[category].keys[key] = {
 						key: key,
 						title: title,
@@ -2162,9 +2133,8 @@ define(function(require){
 
 					Mousetrap.bind(key, callback, 'keyup');
 				}
-			}
-			else {
-				console.warn('a shortcut is already defined for key "'+key+'" in category "'+ category +'"');
+			} else {
+				console.warn('a shortcut is already defined for key "' + key + '" in category "' + category + '"');
 			}
 		},
 
@@ -2172,20 +2142,19 @@ define(function(require){
 			var self = this,
 				shortcuts = self.keyboardShortcuts;
 
-			if(typeof key === 'undefined') {
-				if(shortcuts.hasOwnProperty(category)) {
+			if (typeof key === 'undefined') {
+				if (shortcuts.hasOwnProperty(category)) {
 					_.each(shortcuts[category].keys, function(shortcut, key) {
 						Mousetrap.unbind(key);
 					});
 
 					delete shortcuts[category];
 				}
-			}
-			else {
-				if(self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
+			} else {
+				if (self.keyboardShortcuts.hasOwnProperty(category) && self.keyboardShortcuts[category].keys.hasOwnProperty(key)) {
 					delete self.keyboardShortcuts[category].keys[key];
 
-					if(_.isEmpty(self.keyboardShortcuts[category].keys)) {
+					if (_.isEmpty(self.keyboardShortcuts[category].keys)) {
 						delete self.keyboardShortcuts[category];
 					}
 				}
@@ -2204,7 +2173,7 @@ define(function(require){
 				finalOptions = {
 					sort: options.hasOwnProperty('sort') ? options.sort : true,
 					level: options.hasOwnProperty('level') ? options.level : 4,
-					theme: options.hasOwnProperty('theme') && validThemes.indexOf(options.theme) >= 0 ?  options.theme : 'light'
+					theme: options.hasOwnProperty('theme') && validThemes.indexOf(options.theme) >= 0 ? options.theme : 'light'
 				},
 				html = renderjson.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
 
@@ -2215,7 +2184,7 @@ define(function(require){
 
 		handleDisplayFootable: function(container, finalOptions) {
 			var self = this,
-				addRowsToBody = function(pages, callback) {
+				addRowsToBody = function(pages) {
 					container.find('tbody').empty();
 					_.each(pages, function(rows) {
 						container.find('tbody').append(rows);
@@ -2223,12 +2192,12 @@ define(function(require){
 				},
 				addPageSizeComponent = function(container, table, pPageSize, pAvailablePageSizes) {
 					var pageSize = pPageSize || finalOptions.paging.size || 10,
-						availablePageSizes = pAvailablePageSizes || [10,25,50,100],
+						availablePageSizes = pAvailablePageSizes || [ 10, 25, 50, 100 ],
 						footableInstance;
 
-					if(availablePageSizes.indexOf(parseInt(pageSize)) < 0) {
+					if (availablePageSizes.indexOf(parseInt(pageSize)) < 0) {
 						availablePageSizes.push(parseInt(pageSize));
-						availablePageSizes.sort(function(a,b) {
+						availablePageSizes.sort(function(a, b) {
 							return a > b ? 1 : -1;
 						});
 					}
@@ -2255,7 +2224,7 @@ define(function(require){
 					paginate: false
 				};
 
-			if(finalOptions.hasOwnProperty('backendPagination') && finalOptions.backendPagination.enabled) {
+			if (finalOptions.hasOwnProperty('backendPagination') && finalOptions.backendPagination.enabled) {
 				var paginateFilters = {
 						page_size: finalOptions.backendPagination.pageSize || 50
 					},
@@ -2272,7 +2241,7 @@ define(function(require){
 							loadedPages.push(rows);
 
 							filters.start_key = encodeURIComponent(data.next_start_key);
-							if(!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
+							if (!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
 								allDataLoaded();
 							}
 
@@ -2328,8 +2297,7 @@ define(function(require){
 				loadPaginatedRows(paginateFilters, function() {
 					finalOptions.afterInitialized && finalOptions.afterInitialized();
 				});
-			}
-			else if(finalOptions.hasOwnProperty('getData')) {
+			} else if (finalOptions.hasOwnProperty('getData')) {
 				finalOptions.getData(filters, function(rows, data) {
 					addRowsToBody([ rows ]);
 
@@ -2339,8 +2307,7 @@ define(function(require){
 
 					finalOptions.afterInitialized && finalOptions.afterInitialized();
 				});
-			}
-			else {
+			} else {
 				var table = container.footable(finalOptions);
 
 				addPageSizeComponent(container, table);
@@ -2376,13 +2343,12 @@ define(function(require){
 			self.handleDisplayFootable(container, finalOptions);
 		},
 
-		formatIconApp: function(app) {			
-			if(app && app.hasOwnProperty('name')) {
-				if(monster.appsStore.hasOwnProperty(app.name)) {
-					if(monster.appsStore[app.name].phase === 'beta') {
+		formatIconApp: function(app) {
+			if (app && app.hasOwnProperty('name')) {
+				if (monster.appsStore.hasOwnProperty(app.name)) {
+					if (monster.appsStore[app.name].phase === 'beta') {
 						app.extraCssClass = 'beta-overlay-icon';
-					}
-					else if(monster.appsStore[app.name].phase === 'alpha') {
+					} else if (monster.appsStore[app.name].phase === 'alpha') {
 						app.extraCssClass = 'alpha-overlay-icon';
 					}
 				}
@@ -2396,24 +2362,24 @@ define(function(require){
 			var self = this,
 				castFileToPDFString = function(file) {
 					var base64ToUint8Array = function(base64) {
-						var raw = atob(base64),
-							uint8Array = new Uint8Array(raw.length);
+							var raw = atob(base64),
+								uint8Array = new Uint8Array(raw.length);
 
-						for (var i = 0; i < raw.length; i++) {
-							uint8Array[i] = raw.charCodeAt(i);
-						}
+							for (var i = 0; i < raw.length; i++) {
+								uint8Array[i] = raw.charCodeAt(i);
+							}
 
-						return uint8Array;
-					},
-					base64Data = file.split(',')[1],
-					pdfData = base64ToUint8Array(base64Data)
+							return uint8Array;
+						},
+						base64Data = file.split(',')[1],
+						pdfData = base64ToUint8Array(base64Data);
 
 					return pdfData;
 				},
 				pdfData = castFileToPDFString(file);
 
 			// Get PDFJS library if not already initialized
-			require(['pdfjs-dist/build/pdf'], function(app){
+			require(['pdfjs-dist/build/pdf'], function() {
 				var defaultOptions = {
 						width: '100%',
 						height: '700px'
@@ -2422,15 +2388,14 @@ define(function(require){
 					iframe,
 					hasIframe = container.find('.monster-pdf-viewer-iframe').length;
 
-				if(hasIframe) {
+				if (hasIframe) {
 					iframe = container.find('.monster-pdf-viewer-iframe')[0];
 					iframe.contentWindow.PDFViewerApplication.open(pdfData);
-				}
-				else {
-					iframe = $('<iframe class="monster-pdf-viewer-iframe" src="js/vendor/pdfjs/web/viewer.html" style="width: '+ options.width + '; height: '+ options.height +';" allowfullscreen="" webkitallowfullscreen=""></iframe>')[0];
+				} else {
+					iframe = $('<iframe class="monster-pdf-viewer-iframe" src="js/vendor/pdfjs/web/viewer.html" style="width: ' + options.width + '; height: ' + options.height + ';" allowfullscreen="" webkitallowfullscreen=""></iframe>')[0];
 					iframe.onload = function() {
 						iframe.contentWindow.PDFViewerApplication.open(pdfData);
-					}
+					};
 					container.append(iframe);
 				}
 			});
@@ -2464,16 +2429,16 @@ define(function(require){
 
 			finalDropOptions.classes += ' monster-popover drop-theme-arrows';
 
-			if(options.mode === 'showOnceOnClick') {
+			if (options.mode === 'showOnceOnClick') {
 				finalDropOptions.openOn = 'click';
 				finalDropOptions.remove = false;
 			}
 
 			var dropInstance;
 
-			if(options.mode === 'showOnceOnClick') {
+			if (options.mode === 'showOnceOnClick') {
 				// if the drop is not already opened, we open it, if not we don't do anything as it will be automatically destroyed since the outside click will close the popover and that's what we want
-				if(!options.target.hasClass('drop-enabled')) {
+				if (!options.target.hasClass('drop-enabled')) {
 					dropInstance = new Drop(finalDropOptions);
 
 					dropInstance.open();
@@ -2483,8 +2448,7 @@ define(function(require){
 						dropInstance.destroy();
 					});
 				}
-			}
-			else {
+			} else {
 				dropInstance = new Drop(finalDropOptions);
 
 				removeTarget.on('remove', function() {
@@ -2563,16 +2527,16 @@ define(function(require){
 					});
 
 			template.find('.dialbox').on('keydown', function(e) {
-				if(e.keyCode === 13) {
+				if (e.keyCode === 13) {
 					template.find('.dialpad-action-button').click();
 				}
 			});
 
-			if(args.hasOwnProperty('button')) {
+			if (args.hasOwnProperty('button')) {
 				template.find('.dialpad-action-button').on('click', function(e) {
 					e.preventDefault();
 
-					if(args.button.hasOwnProperty('onClick')) {
+					if (args.button.hasOwnProperty('onClick')) {
 						args.button.onClick && args.button.onClick(template.find('.dialbox').val());
 					}
 				});
@@ -2592,14 +2556,13 @@ define(function(require){
 			var interval = setInterval(function() {
 				if (countdown) {
 					--duration;
-				}
-				else {
+				} else {
 					++duration;
 				}
 
 				target.html(monster.util.friendlyTimer(duration));
 
-				if((showOnlyWhenVisible && !target.is(':visible')) || duration === 0) {
+				if ((showOnlyWhenVisible && !target.is(':visible')) || duration === 0) {
 					clearInterval(interval);
 				}
 			}, 1000);
@@ -2621,7 +2584,7 @@ define(function(require){
 					args = pArgs || {},
 					cssToExclude = args.cssToExclude || [],
 					onClick = args.onClick,
-					template = $('<div id="'+ self.id +'"></div>');
+					template = $('<div id="' + self.id + '"></div>');
 
 				self.hide();
 
@@ -2647,14 +2610,13 @@ define(function(require){
 
 			hide: function(pArgs) {
 				var self = this,
-					args = pArgs || {},
-					cssToExclude = args.cssToExclude || [];
+					args = pArgs || {};
 
 				$('.over-monster-overlay').removeClass('over-monster-overlay');
 
 				self.isActive = false;
 
-				$('#'+ self.id +'').remove();
+				$('#' + self.id + '').remove();
 
 				args.afterHide && args.afterHide();
 			},
@@ -2692,12 +2654,11 @@ define(function(require){
 
 			monster.ui.tooltips($(template));
 
-			if(target) {
+			if (target) {
 				target.empty();
 
 				target.append(template);
-			}
-			else {
+			} else {
 				return template;
 			}
 		},
@@ -2709,7 +2670,7 @@ define(function(require){
 			var target = pTarget[0];
 
 			var cb = new Clipboard(target, {
-				text: function () {
+				text: function() {
 					return typeof value === 'function' ? value() : value;
 				}
 			});
