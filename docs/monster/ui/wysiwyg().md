@@ -46,8 +46,8 @@ If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If
     - `indent`
     - `outdent`
 * `link`
-    - `create`
-    - `delete`
+    - `add`
+    - `remove`
 * `image`
     - `upload`
     - `link`

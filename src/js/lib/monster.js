@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		postal = require('postal'),
@@ -36,7 +36,7 @@ define(function(require){
 		_fileExists: function(url, success, error) {
 			$.ajax({
 				url: url,
-				type:'HEAD',
+				type: 'HEAD',
 				error: function(status) {
 					error && error();
 				},
@@ -49,7 +49,7 @@ define(function(require){
 		_requests: {},
 
 		_cacheString: function(request) {
-			if(request.cache || request.method.toLowerCase() !== 'get') {
+			if (request.cache || request.method.toLowerCase() !== 'get') {
 				return '';
 			}
 
@@ -58,9 +58,9 @@ define(function(require){
 			return prepend + '_=' + (new Date()).getTime();
 		},
 
-		_defineRequest: function(id, request, app){
+		_defineRequest: function(id, request, app) {
 			if (request.hasOwnProperty('removeHeaders')) {
-				request.removeHeaders = $.map(request.removeHeaders, function(n,i){return n.toLowerCase();});
+				request.removeHeaders = $.map(request.removeHeaders, function(header) { return header.toLowerCase(); });
 			}
 
 			var self = this,
@@ -104,12 +104,12 @@ define(function(require){
 			this._requests[id] = settings;
 		},
 
-		request: function(options){
+		request: function(options) {
 			var self = this,
-				settings =  _.extend({}, this._requests[options.resource]);
+				settings = _.extend({}, this._requests[options.resource]);
 
-			if(!settings){
-				throw('The resource requested could not be found.', options.resource);
+			if (!settings) {
+				throw new Error('The resource requested could not be found.', options.resource);
 			}
 
 			settings.url = options.apiUrl || settings.url;
@@ -117,17 +117,17 @@ define(function(require){
 			settings.url += self._cacheString(settings);
 
 			var mappedKeys = [],
-				rurlData = /\{([^\}]+)\}/g,
+				rurlData = /\{([^}]+)\}/g,
 				data = _.extend({}, options.data || {});
 
-			settings.url = settings.url.replace(rurlData, function (m, key) {
+			settings.url = settings.url.replace(rurlData, function(v, key) {
 				if (key in data) {
 					mappedKeys.push(key);
 					return data[key];
 				}
 			});
 
-			settings.error = function requestError (error, one, two, three) {
+			settings.error = function requestError(error) {
 				var parsedError,
 					handleError = function(error, options) {
 						parsedError = error;
@@ -136,23 +136,22 @@ define(function(require){
 
 						monster.pub('monster.requestEnd');
 
-						if('response' in error && error.response) {
+						if ('response' in error && error.response) {
 							parsedError = $.parseJSON(error.response);
 						}
 
 						// If we have a 401 after being logged in, it means our session expired
-						if(monster.util.isLoggedIn() && error.status === 401) {
+						if (monster.util.isLoggedIn() && error.status === 401) {
 							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
 							monster.error('api', error, false);
 
 							monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
-						}
-						else {
+						} else {
 							// Added this to be able to display more data in the UI
 							error.monsterData = {
 								url: settings.url,
 								verb: settings.method
-							}
+							};
 
 							monster.error('api', error, generateError);
 						}
@@ -163,44 +162,44 @@ define(function(require){
 				options.error && options.error(parsedError, error, handleError);
 			};
 
-			settings.success = function requestSuccess (resp) {
+			settings.success = function requestSuccess(resp) {
 				monster.pub('monster.requestEnd');
 
 				options.success && options.success(resp);
 			};
 
 			// We delete the keys later so duplicates are still replaced
-			_.each(mappedKeys, function (name, index) {
+			_.each(mappedKeys, function(name, index) {
 				delete data[name];
 			});
 
-			if(settings.method.toLowerCase() !== 'get'){
+			if (settings.method.toLowerCase() !== 'get') {
 				var postData = data.data,
 					envelopeKeys = {};
 
-				if(data.hasOwnProperty('envelopeKeys')) {
+				if (data.hasOwnProperty('envelopeKeys')) {
 					var protectedKeys = ['data', 'accept_charges'];
 
 					_.each(data.envelopeKeys, function(value, key) {
-						if(protectedKeys.indexOf(key) < 0) {
-							envelopeKeys[key] = value
+						if (protectedKeys.indexOf(key) < 0) {
+							envelopeKeys[key] = value;
 						}
 					});
 				}
 
-				if(settings.contentType === 'application/json') {
+				if (settings.contentType === 'application/json') {
 					var payload = $.extend(true, {
 						data: data.data || {}
 					}, envelopeKeys);
 
-					if(!data.hasOwnProperty('removeMetadataAPI') || data.removeMetadataAPI === false) {
+					if (!data.hasOwnProperty('removeMetadataAPI') || data.removeMetadataAPI === false) {
 						payload.data.ui_metadata = {
 							version: monster.util.getVersion(),
 							ui: 'monster-ui'
 						};
 					}
 
-					if(options.acceptCharges === true) {
+					if (options.acceptCharges === true) {
 						payload.accept_charges = true;
 					}
 
@@ -227,20 +226,20 @@ define(function(require){
 
 		config: _.extend({
 			api: {
-				default: window.location.origin + ':8000/v2/',
+				default: window.location.origin + ':8000/v2/'
 			}
 		}, config),
 
-		css: function(href){
+		css: function(href) {
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');
 		},
 
-		domain: function(){
-			var matches = location.href.match(/^(?:https?:\/\/)*([^\/?#]+).*$/);
+		domain: function() {
+			var matches = location.href.match(/^(?:https?:\/\/)*([^/?#]+).*$/);
 			return matches.length > 1 ? matches[1] : '';
 		},
 
-		pub: function(topic, data){
+		pub: function(topic, data) {
 			postal.publish({
 				channel: 'monster',
 				topic: topic,
@@ -248,10 +247,10 @@ define(function(require){
 			});
 		},
 
-		sub: function(topic, callback, context){
+		sub: function(topic, callback, context) {
 			var sub = this._channel.subscribe(topic, callback);
 
-			if(context){
+			if (context) {
 				sub.withContext(context);
 			}
 
@@ -275,7 +274,7 @@ define(function(require){
 			return result;
 		},
 
-		template: function(app, name, data, raw, ignoreCache, ignoreSpaces){
+		template: function(app, name, data, raw, ignoreCache, ignoreSpaces) {
 			var self = this,
 				raw = raw || false,
 				ignoreCache = ignoreCache || false,
@@ -290,7 +289,7 @@ define(function(require){
 			var self = this,
 				result;
 
-			if(!raw){
+			if (!raw) {
 				var i18n = app.i18n.active();
 
 				i18n._whitelabel = monster.config.whitelabel;
@@ -298,17 +297,15 @@ define(function(require){
 				var context = _.extend({}, data || {}, { i18n: i18n });
 
 				result = _template(context);
-			}
-			else{
+			} else {
 				result = _template;
 			}
 
-			if(!ignoreSpaces) {
-				result = result.replace(/(\r\n|\n|\r|\t)/gm,'')
-							   .trim();
+			if (!ignoreSpaces) {
+				result = result.replace(/(\r\n|\n|\r|\t)/gm, '').trim();
 			}
 
-			if(name.substring(0,1) !== '!') {
+			if (name.substring(0, 1) !== '!') {
 				result = monster.util.updateImagePath(result, app);
 			}
 
@@ -322,49 +319,48 @@ define(function(require){
 
 			isParsable = isParsable && error.responseText !== '';
 
-			if(isParsable) {
+			if (isParsable) {
 				parsedError = $.parseJSON(error.responseText);
 			}
-			
+
 			var errorsI18n = monster.apps.core.i18n.active().errors,
 				errorMessage = errorsI18n.generic,
 				errorNumber = error.status > 0 ? error.status : parseInt(error.error),
 				customTitle;
 
-			if(typeof parsedError.data === 'string' && typeof parsedError.message === 'string' && errorsI18n.errorMessages.hasOwnProperty(parsedError.message)) {
+			if (typeof parsedError.data === 'string' && typeof parsedError.message === 'string' && errorsI18n.errorMessages.hasOwnProperty(parsedError.message)) {
 				errorMessage = errorsI18n.errorMessages[parsedError.message].text;
 				customTitle = errorsI18n.errorMessages[parsedError.message].title;
-			}
-			else if((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
+			} else if ((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
-					if(typeof fieldErrors !== 'string') {
+					if (typeof fieldErrors !== 'string') {
 						_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-							if(typeof fieldError === 'string' || typeof fieldError === 'number') {
+							if (typeof fieldError === 'string' || typeof fieldError === 'number') {
 								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
-							} else if(fieldErrorKey in errorsI18n.invalidData) {
+							} else if (fieldErrorKey in errorsI18n.invalidData) {
 								errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
-							} else if('message' in fieldError) {
+							} else if ('message' in fieldError) {
 								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
 							}
 						});
 					}
 				});
-			} else if((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
+			} else if ((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';
 
 				_.each(parsedError.data, function(fieldError, fieldErrorKey) {
-					if(fieldErrorKey in errorsI18n.errorMessages) {
+					if (fieldErrorKey in errorsI18n.errorMessages) {
 						errMsg += errorsI18n.errorMessages[fieldErrorKey].text + '<br>';
-					} else if(fieldError.hasOwnProperty('message')) {
+					} else if (fieldError.hasOwnProperty('message')) {
 						errMsg += fieldError.message + '<br>';
 					}
 				});
 
-				if(errMsg) { 
+				if (errMsg) {
 					errorMessage = errMsg;
 				}
-			} else if(errorsI18n.hasOwnProperty(errorNumber)) {
+			} else if (errorsI18n.hasOwnProperty(errorNumber)) {
 				errorMessage = errorsI18n[errorNumber];
 			}
 
@@ -372,11 +368,11 @@ define(function(require){
 				url = '',
 				verb = '';
 
-			if(parsedError.hasOwnProperty('request_id')) {
+			if (parsedError.hasOwnProperty('request_id')) {
 				requestId = parsedError.request_id;
 			}
 
-			if(error.hasOwnProperty('monsterData')) {
+			if (error.hasOwnProperty('monsterData')) {
 				url = error.monsterData.url;
 				verb = error.monsterData.verb;
 			}
@@ -402,22 +398,21 @@ define(function(require){
 					data: {}
 				};
 
-			if(type === 'api') {
+			if (type === 'api') {
 				monsterError.data = self.formatMonsterAPIError(data);
-				if(showDialog) {
+				if (showDialog) {
 					monster.ui.requestErrorDialog(monsterError);
 				}
-			}
-			else if(type === 'js') {
+			} else if (type === 'js') {
 				monsterError.data = {
 					title: data.message,
 					file: data.fileName,
 					line: data.lineNumber,
 					column: data.columnNumber,
 					stackTrace: data.error && data.error.hasOwnProperty('stack') ? data.error.stack : ''
-				}
+				};
 
-				if(monster.config.hasOwnProperty('developerFlags') && monster.config.developerFlags.showJSErrors && showDialog) {
+				if (monster.config.hasOwnProperty('developerFlags') && monster.config.developerFlags.showJSErrors && showDialog) {
 					monster.ui.jsErrorDialog(monsterError);
 				}
 			}
@@ -434,7 +429,7 @@ define(function(require){
 		series: async.series,
 		waterfall: async.waterfall,
 
-		shift: function(chain){
+		shift: function(chain) {
 			var next = chain.shift();
 			next && next();
 		},
@@ -443,42 +438,39 @@ define(function(require){
 			var self = this;
 
 			monster.parallel({
-					version: function(callback) {
-						$.ajax({
-							url: 'VERSION',
-							cache: false,
-							success: function(version) {
-								version = version.replace(/\n.*/g,'')
-								                 .trim();
+				version: function(callback) {
+					$.ajax({
+						url: 'VERSION',
+						cache: false,
+						success: function(version) {
+							version = version.replace(/\n.*/g, '').trim();
 
-								callback(null, version);
-							},
-							error: function() {
-								callback(null, null);
-							}
-						});
-					},
-					buildFile: function(callback) {
-						$.ajax({
-							url: 'build-config.json',
-							dataType: 'json',
-							cache: false,
-							success: function(config) {
-								callback(null, config);
-							},
-							error: function() {
-								callback(null, {});
-							}
-						});
-					}
+							callback(null, version);
+						},
+						error: function() {
+							callback(null, null);
+						}
+					});
 				},
-				function(err, results) {
-					monster.config.developerFlags.build = results.buildFile;
-					monster.config.developerFlags.build.version = results.version;
-
-					globalCallback && globalCallback(monster.config.developerFlags.build);
+				buildFile: function(callback) {
+					$.ajax({
+						url: 'build-config.json',
+						dataType: 'json',
+						cache: false,
+						success: function(config) {
+							callback(null, config);
+						},
+						error: function() {
+							callback(null, {});
+						}
+					});
 				}
-			);
+			}, function(err, results) {
+				monster.config.developerFlags.build = results.buildFile;
+				monster.config.developerFlags.build.version = results.version;
+
+				globalCallback && globalCallback(monster.config.developerFlags.build);
+			});
 		},
 
 		getScript: function(url, callback) {
@@ -487,11 +479,11 @@ define(function(require){
 			$.getScript(url, callback);
 		},
 
-		querystring: function (key) {
+		querystring: function(key) {
 			var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi'),
 				results = [],
 				match;
-			while ((match = re.exec(document.location.search)) != null){
+			while ((match = re.exec(document.location.search)) != null) {
 				results.push(match[1]);
 			}
 			return results.length ? results[0] : null;
