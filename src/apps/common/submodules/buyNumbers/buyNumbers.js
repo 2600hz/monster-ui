@@ -153,19 +153,19 @@ define(function(require) {
 			template.find('.tollfree-search').hide();
 
 			switch (searchType) {
-			case 'tollfree':
-				self.buyNumbersRenderTollfree(args);
-				break;
+				case 'tollfree':
+					self.buyNumbersRenderTollfree(args);
+					break;
 
-			case 'vanity':
-				self.buyNumbersRenderVanity(args, callbacks || {});
-				break;
+				case 'vanity':
+					self.buyNumbersRenderVanity(args, callbacks || {});
+					break;
 
-			case 'regular':
-			default:
-				self.buyNumbersRenderRegular(args);
-				break;
-			};
+				case 'regular':
+				default:
+					self.buyNumbersRenderRegular(args);
+					break;
+			}
 
 			self.buyNumbersBindEvents(args, callbacks || {});
 		},

@@ -442,7 +442,7 @@ define(function(require) {
 				case 'undeaf-member':
 					$userDiv.find('[data-action-category="deaf"]').removeClass('active');
 					break;
-				case 'del-member': 
+				case 'del-member':
 					var avatarId = parseInt($userDiv.find('[data-avatar-id]').data('avatar-id'));
 
 					if (avatarId) {
@@ -477,7 +477,7 @@ define(function(require) {
 					container.find('.conference-action[data-action="lock"]').addClass('active');
 					break;
 				default:
-					break
+					break;
 			}
 
 			if (toasterActions.indexOf(action) >= 0) {
