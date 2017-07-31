@@ -3,102 +3,102 @@
 	Created by Jean-Roch Maitre and Maxime Roux for 2600hz (jr@2600hz.com / max@2600hz.com).
 */
 
-(function () {
+(function() {
 	var kazoo = {
-		connected: false,
-		registered: false,
-		params: {}
-	},
-	private = {
-		config: {
-			paths: {
-				SIPjs: 'sip/sip.js'
-			}
+			connected: false,
+			registered: false,
+			params: {}
 		},
-		manualDisconnect: false,
-		videoRemote: undefined,
-		userAgent: {},
-		calls: {}
-	},
-	errors = {
-		serverNotReachable: {
-			key: "server_not_reachable",
-			message: "Could not reach the server."
-		},
-		unauthorized: {
-			key: "unauthorized",
-			message: "Invalid credentials."
-		},
-		forbidden: {
-			key: "forbidden",
-			message: "Forbidden."
-		},
-		disconnected: {
-			key: "disconnected",
-			message: "You have been disconnected."
-		}
-	},
-	notifications = {
-		"overriding": {
-			key: "overriding_registration",
-			message: "You have overridden an existing registration for this device."
-		},
-		"replaced": {
-			key: "replaced_registration",
-			message: "You have been disconnected: someone else has registered this device."
-		},
-		"voicemail": {
-			key: "voicemail_notification",
-			message: "You have one or more voicemail message(s)."
-		},
-		"connectivity": {
-			key: "connectivity_notification",
-			message: {
-				online: "You have recovered your connection to the network.",
-				offline: "You have lost your connection to the network."
+		privateP = {
+			config: {
+				paths: {
+					SIPjs: 'sip/sip.js'
+				}
 			},
-			status : {
-				online: "online",
-				offline: "offline"
+			manualDisconnect: false,
+			videoRemote: undefined,
+			userAgent: {},
+			calls: {}
+		},
+		errors = {
+			serverNotReachable: {
+				key: 'server_not_reachable',
+				message: 'Could not reach the server.'
+			},
+			unauthorized: {
+				key: 'unauthorized',
+				message: 'Invalid credentials.'
+			},
+			forbidden: {
+				key: 'forbidden',
+				message: 'Forbidden.'
+			},
+			disconnected: {
+				key: 'disconnected',
+				message: 'You have been disconnected.'
 			}
 		},
-		"reconnecting": {
-			key: "reconnecting_notification",
-			message: "Attempting to reconnect..."
-		},
-		"transfered": {
-			key: "transfer_notification",
-			message: "Transfer successful."
-		},
-		"default": {
-			key: "unknown_notification",
-			message: "You have received a SIP notification."
-		},
-	},
-	connectivity = {
-		isOnline: window.navigator.onLine,
-		onlineHistory: [],
-		connectivityCallback: function(onlineHistory) {},
-		onlineTimerFunction: function() {
-			if(window.navigator.onLine !== connectivity.isOnline) {
-				connectivity.isOnline = window.navigator.onLine;
-				connectivity.onlineHistory.push({
-					status: connectivity.isOnline ? notifications.connectivity.status.online : notifications.connectivity.status.offline,
-					time: new Date()
-				});
-				connectivity.connectivityCallback(connectivity.onlineHistory);
+		notifications = {
+			overriding: {
+				key: 'overriding_registration',
+				message: 'You have overridden an existing registration for this device.'
+			},
+			replaced: {
+				key: 'replaced_registration',
+				message: 'You have been disconnected: someone else has registered this device.'
+			},
+			voicemail: {
+				key: 'voicemail_notification',
+				message: 'You have one or more voicemail message(s).'
+			},
+			connectivity: {
+				key: 'connectivity_notification',
+				message: {
+					online: 'You have recovered your connection to the network.',
+					offline: 'You have lost your connection to the network.'
+				},
+				status: {
+					online: 'online',
+					offline: 'offline'
+				}
+			},
+			reconnecting: {
+				key: 'reconnecting_notification',
+				message: 'Attempting to reconnect...'
+			},
+			transfered: {
+				key: 'transfer_notification',
+				message: 'Transfer successful.'
+			},
+			default: {
+				key: 'unknown_notification',
+				message: 'You have received a SIP notification.'
 			}
 		},
-		onlineTimer: 0
-	};
+		connectivity = {
+			isOnline: window.navigator.onLine,
+			onlineHistory: [],
+			connectivityCallback: function(onlineHistory) {},
+			onlineTimerFunction: function() {
+				if (window.navigator.onLine !== connectivity.isOnline) {
+					connectivity.isOnline = window.navigator.onLine;
+					connectivity.onlineHistory.push({
+						status: connectivity.isOnline ? notifications.connectivity.status.online : notifications.connectivity.status.offline,
+						time: new Date()
+					});
+					connectivity.connectivityCallback(connectivity.onlineHistory);
+				}
+			},
+			onlineTimer: 0
+		};
 
 	function addCall(session) {
 		var callId = session.request.call_id,
 			interval = setInterval(function() {
-				++private.calls[callId].duration;
+				++privateP.calls[callId].duration;
 			}, 1000);
 
-		private.calls[callId] = {
+		privateP.calls[callId] = {
 			callId: callId,
 			duration: 0,
 			intervals: [ interval ],
@@ -116,27 +116,26 @@
 			}
 		};
 
-		bindSessionEvents(private.calls[callId].session);
+		bindSessionEvents(privateP.calls[callId].session);
 	};
 
 	function acceptCall(callId) {
-		private.calls[callId].status = 'accepted';
-		private.calls[callId].acceptedDuration = 0;
-		interval = setInterval(function() {
-			++private.calls[callId].acceptedDuration;
+		privateP.calls[callId].status = 'accepted';
+		privateP.calls[callId].acceptedDuration = 0;
+		var interval = setInterval(function() {
+			++privateP.calls[callId].acceptedDuration;
 		}, 1000);
-		private.calls[callId].intervals.push(interval);
+		privateP.calls[callId].intervals.push(interval);
 	}
 
 	function removeCall(callId) {
-		if(private.calls.hasOwnProperty(callId)) {
-			for(var i in private.calls[callId].intervals) {
-				clearInterval(private.calls[callId].intervals[i]);
+		if (privateP.calls.hasOwnProperty(callId)) {
+			for (var i in privateP.calls[callId].intervals) {
+				clearInterval(privateP.calls[callId].intervals[i]);
 			}
 
-			delete private.calls[callId];
-		}
-		else {
+			delete privateP.calls[callId];
+		} else {
 			console.log('No call to hangup');
 		}
 	};
@@ -147,16 +146,16 @@
 			firstCall;
 
 		_.each(calls, function(call) {
-			if(!firstCall) {
+			if (!firstCall) {
 				firstCall = call;
 			}
 
-			if(!foundCall && call.status === 'accepted' && !call.isOnHold) {
+			if (!foundCall && call.status === 'accepted' && !call.isOnHold) {
 				foundCall = call;
 			}
 		});
 
-		if(!foundCall) {
+		if (!foundCall) {
 			foundCall = firstCall;
 		}
 
@@ -167,7 +166,7 @@
 		var call = getActiveCall(),
 			id;
 
-		if(call) {
+		if (call) {
 			id = call.callId;
 		}
 
@@ -175,11 +174,11 @@
 	};
 
 	function findCallIdInResponse(response) {
-		var regex = /Call-ID\:\s([^\s]+)/g,
+		var regex = /Call-ID:\s([^\s]+)/g,
 			matches = regex.exec(response),
 			callId;
 
-		if(matches.length && matches[1]) {
+		if (matches.length && matches[1]) {
 			callId = matches[1];
 		}
 
@@ -189,14 +188,13 @@
 	function getSession(callId) {
 		var session;
 
-		if(!callId) {
+		if (!callId) {
 			callId = getActiveCallId();
 		}
 
-		if(private.calls.hasOwnProperty(callId)) {
-			session = private.calls[callId].session;
-		}
-		else {
+		if (privateP.calls.hasOwnProperty(callId)) {
+			session = privateP.calls[callId].session;
+		} else {
 			console.log('no valid session for the provided callId');
 		}
 
@@ -204,11 +202,11 @@
 	};
 
 	function holdAllOtherCalls(callId) {
-		var calls = private.calls;
+		var calls = privateP.calls;
 
-		if(calls) {
-			for(var i in calls) {
-				if(calls[i].callId !== callId) {
+		if (calls) {
+			for (var i in calls) {
+				if (calls[i].callId !== callId) {
 					kazoo.hold(calls[i].callId);
 				}
 			}
@@ -216,12 +214,11 @@
 	};
 
 	function kazooLoadScript(scriptSrc, callback) {
-		if(typeof require !== 'undefined') {
+		if (typeof require !== 'undefined') {
 			require([ scriptSrc ], function(thing) {
 				callback(thing);
 			});
-		}
-		else {
+		} else {
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.src = scriptSrc;
@@ -245,7 +242,7 @@
 
 		session.on('progress', function(response) {
 			console.info('progress', response);
-			if(response instanceof SIP.IncomingResponse) {
+			if (response instanceof SIP.IncomingResponse) {
 				params.onConnecting && params.onConnecting();
 			}
 		});
@@ -253,7 +250,7 @@
 		session.on('accepted', function(response) {
 			var callId = findCallIdInResponse(response);
 
-			if(callId) {
+			if (callId) {
 				acceptCall(callId);
 			}
 
@@ -267,9 +264,9 @@
 			}
 			if (arg) {
 				params.onCancel({
-					"code": arg.status_code,
-					"message": arg.reason_phrase,
-					"source": arg
+					code: arg.status_code,
+					message: arg.reason_phrase,
+					source: arg
 				});
 			} else {
 				params.onCancel();
@@ -307,12 +304,12 @@
 
 		session.on('muted', function(arg) {
 			console.info('muted', arg);
-			private.calls[sessionCallId].isMuted = true;
+			privateP.calls[sessionCallId].isMuted = true;
 		});
 
 		session.on('unmuted', function(arg) {
 			console.info('unmuted', arg);
-			private.calls[sessionCallId].isMuted = false;
+			privateP.calls[sessionCallId].isMuted = false;
 		});
 
 		session.on('bye', function(arg) {
@@ -323,14 +320,14 @@
 			kazoo.params.onHangup && kazoo.params.onHangup(sessionCallId);
 		});
 
-		session.on('hold',function(a,b,c,d) {
-			private.calls[sessionCallId].isOnHold = true;
+		session.on('hold', function() {
+			privateP.calls[sessionCallId].isOnHold = true;
 
 			kazoo.params.onHold && kazoo.params.onHold(sessionCallId);
 		});
 
-		session.on('unhold', function(a,b,c,d) {
-			private.calls[sessionCallId].isOnHold = false;
+		session.on('unhold', function() {
+			privateP.calls[sessionCallId].isOnHold = false;
 
 			kazoo.params.onUnhold && kazoo.params.onUnhold(sessionCallId);
 		});
@@ -369,25 +366,24 @@
 	}
 
 	kazoo.init = function(params) {
-		if(params.prefixScripts) {
-			for(var i in private.config.paths) {
-				private.config.paths[i] = params.prefixScripts + private.config.paths[i];
+		if (params.prefixScripts) {
+			for (var i in privateP.config.paths) {
+				privateP.config.paths[i] = params.prefixScripts + privateP.config.paths[i];
 			}
 		}
 
-		if(!window.mozRTCPeerConnection && !navigator.webkitGetUserMedia){
+		if (!window.mozRTCPeerConnection && !navigator.webkitGetUserMedia) {
 			console.log('WebRTC not supported');
-		}
-		else {
-			kazooLoadScript(private.config.paths.SIPjs, function(globalVar) {
-				if(globalVar) {
+		} else {
+			kazooLoadScript(privateP.config.paths.SIPjs, function(globalVar) {
+				if (globalVar) {
 					window.SIP = globalVar;
 				}
 
-				private.videoRemote = document.createElement('video');
-				private.videoRemote.id = 'kazooVideoRemote';
-				private.videoRemote.style.display = 'none';
-				document.getElementsByTagName('body')[0].appendChild(private.videoRemote);
+				privateP.videoRemote = document.createElement('video');
+				privateP.videoRemote.id = 'kazooVideoRemote';
+				privateP.videoRemote.style.display = 'none';
+				document.getElementsByTagName('body')[0].appendChild(privateP.videoRemote);
 
 				params.onLoaded && params.onLoaded();
 			});
@@ -397,14 +393,14 @@
 	kazoo.register = function(params) {
 		params.reconnectMaxAttempts = isNaN(params.reconnectMaxAttempts) ? -1 : parseInt(params.reconnectMaxAttempts);
 		params.reconnectDelay = isNaN(params.reconnectDelay) ? 5 : parseInt(params.reconnectDelay) || 1;
-		if(params.reconnectDelay > 60) { params.reconnectDelay = Math.ceil(params.reconnectDelay/1000); }
+		if (params.reconnectDelay > 60) { params.reconnectDelay = Math.ceil(params.reconnectDelay / 1000); }
 		kazoo.params = params;
 
-		private.userAgent = new SIP.UA({
+		privateP.userAgent = new SIP.UA({
 			uri: params.publicIdentity,
 			rel100: SIP.C.supported.SUPPORTED,
 			wsServers: [params.wsUrl],
-			authorizationUser: params.privateIdentity,
+			authorizationUser: params.privatePIdentity,
 			password: params.password,
 			traceSip: true,
 			wsServerMaxReconnection: params.reconnectMaxAttempts >= 0 ? params.reconnectMaxAttempts : 10,
@@ -412,21 +408,21 @@
 			connectionRecoveryMinInterval: 5
 		});
 
-		private.userAgent.on('connected', function(arg) {
+		privateP.userAgent.on('connected', function(arg) {
 			kazoo.connected = true;
 			console.info('connected', arg);
 		});
 
-		private.userAgent.on('disconnected', function(arg) {
-			if(!kazoo.connected) {
+		privateP.userAgent.on('disconnected', function(arg) {
+			if (!kazoo.connected) {
 				params.onError && params.onError({
 					key: errors.serverNotReachable.key,
 					message: errors.serverNotReachable.message,
 					source: arg
 				});
 			} else {
-				if(private.manualDisconnect) {
-					private.manualDisconnect = false;
+				if (privateP.manualDisconnect) {
+					privateP.manualDisconnect = false;
 				} else {
 					params.onError && params.onError({
 						key: errors.disconnected.key,
@@ -439,24 +435,23 @@
 			console.info('disconnected', arg);
 		});
 
-		private.userAgent.on('registered', function(arg) {
+		privateP.userAgent.on('registered', function(arg) {
 			kazoo.registered = true;
 			console.info('registered', arg);
 			params.onConnected && params.onConnected();
 		});
 
-		private.userAgent.on('unregistered', function(arg) {
+		privateP.userAgent.on('unregistered', function(arg) {
 			kazoo.registered = false;
 			console.info('unregistered', arg);
 		});
 
-		private.userAgent.on('registrationFailed', function(e) {
+		privateP.userAgent.on('registrationFailed', function(e) {
 			console.info('registrationFailed', e);
 			var errCode = e ? e.status_code || 0 : 0;
-			switch(e.status_code) {
+			switch (e.status_code) {
 				case 401: //Unauthorized
 				case 407: //Proxy Authentication Required
-				{
 					params.onError && params.onError({
 						key: errors.unauthorized.key,
 						message: errors.unauthorized.message,
@@ -464,9 +459,7 @@
 						source: e
 					});
 					break;
-				}
 				case 403: //Forbidden
-				{
 					params.onError && params.onError({
 						key: errors.forbidden.key,
 						message: errors.forbidden.message,
@@ -474,11 +467,10 @@
 						source: e
 					});
 					break;
-				}
 			}
 		});
 
-		private.userAgent.on('invite', function(session) {
+		privateP.userAgent.on('invite', function(session) {
 			var callId = session.request.call_id;
 
 			addCall(session);
@@ -494,7 +486,7 @@
 								video: false
 							},
 							render: {
-								remote: private.videoRemote
+								remote: privateP.videoRemote
 							}
 						}
 					});
@@ -512,69 +504,68 @@
 			params.onIncoming && params.onIncoming(incomingCall);
 		});
 
-
-		private.userAgent.on('message', function(arg) {
+		privateP.userAgent.on('message', function(arg) {
 			console.info('message', arg);
 		});
 
-		private.userAgent.on('notify', function(arg) {
+		privateP.userAgent.on('notify', function(arg) {
 			console.info('notify', arg);
 			var notificationType = arg.body.substring(0, arg.body.indexOf(':')),
 				notification = {};
 
-			switch(notificationType) {
+			switch (notificationType) {
 				case 'Overwrote': {
 					notification = {
 						key: notifications.overriding.key,
 						message: notifications.overriding.message
-					}
+					};
 					break;
 				}
 				case 'Replaced-By': {
 					notification = {
 						key: notifications.replaced.key,
 						message: notifications.replaced.message
-					}
+					};
 					break;
 				}
 				case 'Message-Account': {
 					notification = {
 						key: notifications.voicemail.key,
 						message: notifications.voicemail.message
-					}
+					};
 					break;
 				}
 				default: {
 					notification = {
-						key: notifications['default'].key,
-						message: notifications['default'].message
-					}
+						key: notifications.default.key,
+						message: notifications.default.message
+					};
 				}
 			}
 			notification.source = arg;
 			params.onNotified && params.onNotified(notification);
 		});
 
-		if(typeof params.onNotified === 'function') {
+		if (typeof params.onNotified === 'function') {
 			connectivity.connectivityCallback = function(onlineHistory) {
 				var notification = {
 					key: notifications.connectivity.key,
-					message: notifications.connectivity.message[onlineHistory[onlineHistory.length-1].status],
-					status: onlineHistory[onlineHistory.length-1].status,
-					time: onlineHistory[onlineHistory.length-1].time,
+					message: notifications.connectivity.message[onlineHistory[onlineHistory.length - 1].status],
+					status: onlineHistory[onlineHistory.length - 1].status,
+					time: onlineHistory[onlineHistory.length - 1].time,
 					history: onlineHistory
-				}
+				};
 				params.onNotified(notification);
-			}
+			};
 		}
 	};
 
 	kazoo.logout = function() {
-		private.manualDisconnect = true;
-		private.userAgent.stop();
+		privateP.manualDisconnect = true;
+		privateP.userAgent.stop();
 
-		for(var i in private.calls) {
-			removeCall(private.calls[i].callId);
+		for (var i in privateP.calls) {
+			removeCall(privateP.calls[i].callId);
 		}
 
 		connectivity.connectivityCallback = function(onlineHistory) {};
@@ -582,15 +573,15 @@
 
 	//Destination should be a sip address like: sip:1234@realm.com
 	kazoo.connect = function(destination) {
-		if(destination) {
-			var session = private.userAgent.invite(destination, {
+		if (destination) {
+			var session = privateP.userAgent.invite(destination, {
 				media: {
 					constraints: {
 						audio: true,
 						video: false
 					},
 					render: {
-						remote: private.videoRemote
+						remote: privateP.videoRemote
 					}
 				}
 			});
@@ -602,19 +593,17 @@
 	kazoo.hangup = function(callId) {
 		var session = getSession(callId);
 
-		if(session) {
-			if(session.dialog) {
+		if (session) {
+			if (session.dialog) {
 				session.bye();
-			}
-			else {
+			} else {
 				session.cancel();
 			}
 
 			removeCall(callId);
 
 			kazoo.params.onHangup && kazoo.params.onHangup(callId);
-		}
-		else {
+		} else {
 			console.log('callId not found');
 		}
 	};
@@ -623,10 +612,10 @@
 		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
-		if(session.isOnHold().local === false) {
+		if (session.isOnHold().local === false) {
 			session.hold();
 
-			private.calls[callId].isOnHold = true;
+			privateP.calls[callId].isOnHold = true;
 
 			kazoo.params.onHold && kazoo.params.onHold(callId);
 		}
@@ -636,10 +625,10 @@
 		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
-		if(session.isOnHold().local === true) {
+		if (session.isOnHold().local === true) {
 			session.unhold();
 
-			private.calls[callId].isOnHold = false;
+			privateP.calls[callId].isOnHold = false;
 
 			kazoo.params.onUnhold && kazoo.params.onUnhold(callId);
 		}
@@ -648,7 +637,7 @@
 	kazoo.transfer = function(destination, callId) {
 		var session = getSession(callId);
 
-		if(session) {
+		if (session) {
 			session.refer(destination);
 
 			kazoo.params.onTransfer && kazoo.params.onTransfer(callId);
@@ -660,11 +649,10 @@
 		var acceptedDTMF = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'],
 			session = getSession(callId);
 
-		if(session) {
-			if(acceptedDTMF.indexOf(dtmf) >= 0) {
+		if (session) {
+			if (acceptedDTMF.indexOf(dtmf) >= 0) {
 				session.dtmf(dtmf);
-			}
-			else {
+			} else {
 				console.log('dtmf not supported');
 			}
 		}
@@ -674,7 +662,7 @@
 		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
-		private.calls[callId].isMuted = true;
+		privateP.calls[callId].isMuted = true;
 
 		session.mute();
 	};
@@ -683,7 +671,7 @@
 		var callId = callId || getActiveCallId(),
 			session = getSession(callId);
 
-		private.calls[callId].isMuted = false;
+		privateP.calls[callId].isMuted = false;
 
 		session.unmute();
 	};
@@ -692,17 +680,17 @@
 		var publicCalls = [],
 			call;
 
-		for(var i in private.calls) {
+		for (var i in privateP.calls) {
 			call = {
 				callId: i,
-				isMuted: private.calls[i].isMuted,
-				isOnHold: private.calls[i].isOnHold,
-				duration: private.calls[i].duration,
-				acceptedDuration: private.calls[i].acceptedDuration,
-				callerIdName: private.calls[i].getCallerId().name,
-				callerIdNumber: private.calls[i].getCallerId().number,
-				status: private.calls[i].status
-			}
+				isMuted: privateP.calls[i].isMuted,
+				isOnHold: privateP.calls[i].isOnHold,
+				duration: privateP.calls[i].duration,
+				acceptedDuration: privateP.calls[i].acceptedDuration,
+				callerIdName: privateP.calls[i].getCallerId().name,
+				callerIdNumber: privateP.calls[i].getCallerId().number,
+				status: privateP.calls[i].status
+			};
 
 			bindCallEvents(call);
 
@@ -717,12 +705,12 @@
 	};
 
 	/*kazoo.startAutoReconnect = function() {
-		if(!kazoo.isReconnecting && 'params' in kazoo) {
+		if (!kazoo.isReconnecting && 'params' in kazoo) {
 			kazoo.isReconnecting = true;
 			kazoo.reconnectAttempt = 0;
 
 			setTimeout(function() {
-				if(kazoo.isReconnecting) {
+				if (kazoo.isReconnecting) {
 					kazoo.reconnect();
 				}
 			}, kazoo.reconnectDelay);
@@ -740,17 +728,17 @@
 			kazoo.params.onNotified({
 				key: notifications.reconnecting.key,
 				message: notifications.reconnecting.message,
-				attempt: kazoo.reconnectAttempt+=1
+				attempt: kazoo.reconnectAttempt + 1
 			});
 			setTimeout(function() { kazoo.register(kazoo.params); }, 1000);
 		}
 	};
 
 	kazoo.monitorConnectivity = function(enabled) { //True by default
-		if(enabled === false) {
+		if (enabled === false) {
 			clearInterval(connectivity.onlineTimer);
 			connectivity.onlineTimer = 0;
-		} else if(connectivity.onlineTimer === 0) {
+		} else if (connectivity.onlineTimer === 0) {
 			connectivity.onlineTimer = setInterval(connectivity.onlineTimerFunction, 100);
 		}
 	};

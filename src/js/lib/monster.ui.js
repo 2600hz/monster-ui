@@ -132,7 +132,7 @@ define(function(require) {
 
 				for (var i = 0; i < arguments.length - 1; i++) {
 					if (_.isString(arguments[i]) || _.isNumber(arguments[i])) {
-						switch(arguments[i]) {
+						switch (arguments[i]) {
 							case 'large-radio':
 							case 'radio-large':
 								templateData.cssClass = 'monster-radio-large';
@@ -468,7 +468,7 @@ define(function(require) {
 				alertBox.find('.dialog-header').html(alertOptions.title);
 			}
 
-			switch(type) {
+			switch (type) {
 				case 'warning': {
 					options.title = '<i class="fa fa-exclamation-triangle monster-yellow"></i>';
 					break;
@@ -548,7 +548,7 @@ define(function(require) {
 				confirmBox.find('.dialog-header').html(confirmOptions.title);
 			}
 
-			switch(type) {
+			switch (type) {
 				case 'warning': {
 					options.title = '<i class="fa fa-exclamation-triangle monster-yellow"></i>';
 					break;
