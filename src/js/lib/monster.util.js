@@ -1023,7 +1023,10 @@ define(function(require) {
 			var self = this,
 				response,
 				authApp = monster.apps.auth,
-				localIcons = ['accounts', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers', 'cluster', 'conferences', 'debug', 'developer', 'dialplans', 'fax', 'migration', 'mobile', 'numbers', 'operator', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting', 'tasks', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
+				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
+					'cluster', 'conferences', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
+					'migration', 'mobile', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
+					'tasks', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
 
 			if (localIcons.indexOf(app.name) >= 0) {
 				response = 'css/assets/appIcons/' + app.name + '.png';
