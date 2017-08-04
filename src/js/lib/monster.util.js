@@ -1,9 +1,12 @@
-define(function(require){
+define(function(require) {
+	var $ = require('jquery'),
+		_ = require('underscore'),
+		monster = require('monster'),
+		libphonenumber = require('libphonenumber'),
+		moment = require('moment');
 
-	var $ = require("jquery"),
-		_ = require("underscore"),
-		monster = require("monster"),
-		libphonenumber = require('libphonenumber');
+	require('moment-timezone');
+		//momentTimezone = require('moment-timezone');
 
 	var util = {
 
@@ -35,128 +38,63 @@ define(function(require){
 			}
 		},
 
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian){
+		getMomentFormat: function(pFormat, pUser) {
+			var self = this,
+				format = pFormat || 'dateTime',
+				user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
+				userHourFormat = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? '12h' : '24h',
+				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
+				dateFormats = {
+					'dmy': 'DD/MM/YYYY',
+					'mdy': 'MM/DD/YYYY',
+					'ymd': 'YYYY/MM/DD'
+				},
+				hourFormats = {
+					'12h': 'hh',
+					'24h': 'HH'
+				},
+				// map of moment formats
+				shortcuts = {
+					shortDateTime: dateFormats[userDateFormat].replace('YYYY', 'YY') + ' ' + hourFormats[userHourFormat] + ':mm',
+					dateTime: dateFormats[userDateFormat] + ' - ' + hourFormats[userHourFormat] + ':mm:ss',
+					shortDate: dateFormats[userDateFormat].replace('YYYY', 'YY'),
+					shortTime: '' + hourFormats[userHourFormat] + ':mm',
+					time: '' + hourFormats[userHourFormat] + ':mm:ss',
+					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
+					date: dateFormats[userDateFormat]
+				};
+
+			var momentFormat = shortcuts[format];
+
+			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
+			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
+				momentFormat += ' A';
+			}
+
+			return momentFormat;
+		},
+
+		toFriendlyDate: function(pDate, format, pUser, pIsGregorian, tz) {
 			// If Date is undefined, then we return an empty string.
 			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
 			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			if(typeof pDate !== 'undefined') {
+			var friendlyDate = '';
+
+			if (typeof pDate !== 'undefined') {
 				var self = this,
 					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
-					i18n = monster.apps.core.i18n.active(),
-					user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
-					user12hMode = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? true : false,
-					userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-					format2Digits = function(number) {
-						if(typeof number === 'string') {
-							number = parseInt(number);
-						}
-						return number < 10 ? '0'.concat(number) : number;
-					},
-					today = new Date(),
-					todayYear = today.getFullYear(),
-					todayMonth = format2Digits(today.getMonth() + 1),
-					todayDay = format2Digits(today.getDate()),
 					// date can be either a JS Date or a gregorian timestamp
 					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
-					year = date.getFullYear().toString().substr(2, 2),
-					fullYear = date.getFullYear(),
-					month = format2Digits(date.getMonth() + 1),
-					calendarMonth = i18n.calendar.month[date.getMonth()],
-					day = format2Digits(date.getDate()),
-					weekDay = i18n.calendar.day[date.getDay()],
-					hours = format2Digits(date.getHours()),
-					minutes = format2Digits(date.getMinutes()),
-					seconds = format2Digits(date.getSeconds()),
-					ordinal = (function oridnalSuffix(day) {
-						var digit = day % 10,
-							tens = day % 100;
+					momentFormat = self.getMomentFormat(format, pUser);
 
-						// 'st' is used with numbers ending in 1 except 11
-						if (digit === 1 && tens !== 11) {
-							return 'st';
-						}
-						// 'nd' is used with numbers ending in 2 except 12
-						if (digit === 2 && tens !== 12) {
-							return 'nd';
-						}
-						// 'rd' is used with numbers ending in 3 except 13
-						if (digit === 3 && tens !== 13) {
-							return 'rd';
-						}
-						// 'th' is used for all other numbers
-						return 'th';
-					})(day),
-					dateFormats = {
-						'dmy': 'DD/MM/year',
-						'mdy': 'MM/DD/year',
-						'ymd': 'year/MM/DD'
-					},
-					patterns = {
-						'ordinal': ordinal,
-						'year': fullYear,
-						'YY': year,
-						'month': calendarMonth,
-						'MM': month,
-						'day': weekDay,
-						'DD': day,
-						'hh': hours,
-						'mm': minutes,
-						'ss': seconds
-					},
-					shortcuts = {
-						shortDateTime: dateFormats[userDateFormat].replace('year','YY') + ' hh:mm',
-						dateTime: dateFormats[userDateFormat] + ' - hh:mm:ss',
-						shortDate: dateFormats[userDateFormat].replace('year','YY'),
-						shortTime: 'hh:mm',
-						time: 'hh:mm:ss',
-						calendarDate: (userDateFormat === 'mdy' ? 'month DD' : 'DD month') + ', year',
-						date: dateFormats[userDateFormat]
-					};
-
-				if (typeof format === 'string') {
-					_.each(shortcuts, function(v, k) {
-						format = format.replace(k, v);
-					});
+				if (tz) {
+					friendlyDate = moment(date).tz(tz).format(momentFormat);
+				} else {
+					friendlyDate = moment(date).format(momentFormat);
 				}
-				else {
-					format = dateFormats[userDateFormat] + ' - hh:mm:ss';
-				}
-
-				if(format.indexOf('hh') > -1 && format.indexOf('12h') === -1 && user12hMode) {
-					format += ' 12h'
-				}
-
-				if (format.indexOf('12h') > -1) {
-					var suffix;
-
-					if (hours >= 12) {
-						if (hours !== 12) {
-							hours -= 12;
-						}
-
-						suffix = i18n.calendar.suffix.pm;
-					}
-					else {
-						if (hours === '00') {
-							hours = 12
-						}
-
-						suffix = i18n.calendar.suffix.am;
-					}
-
-					patterns.hh = format2Digits(hours);
-					patterns['12h'] = suffix;
-				}
-
-				_.each(patterns, function(v, k){
-					format = format.replace(k, v);
-				});
-
-				return format;
 			}
-			else {
-				return '';
-			}
+
+			return friendlyDate;
 		},
 
 		parseDateString: function(dateString, dateFormat) {
