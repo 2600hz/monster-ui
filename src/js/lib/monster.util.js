@@ -319,7 +319,7 @@ define(function(require){
 				formattedData.userFormat = formattedData.internationalFormat;
 				formattedData.userFormatType = 'international';
 
-				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format')) {
+				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format') && user.ui_flags.numbers_format !== 'inherit') {
 					formattedData.userFormatType = user.ui_flags.numbers_format;
 					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
 				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
