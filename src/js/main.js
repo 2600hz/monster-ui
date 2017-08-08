@@ -5,7 +5,7 @@ require.config({
 		'async': 'js/vendor/async.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
 		'bootstrap-clickover': 'js/vendor/bootstrapx-clickover-1.0',
-		'chart': 'js/vendor/Chart.bundle.min',
+		'chart': 'js/vendor/Chart.min',
 		'card': 'js/vendor/card',
 		'chosen': 'js/vendor/jquery.chosen.min',
 		'clipboard': 'js/vendor/clipboard.min',
