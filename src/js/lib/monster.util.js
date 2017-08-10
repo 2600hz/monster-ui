@@ -61,9 +61,8 @@ define(function(require) {
 					time: '' + hourFormats[userHourFormat] + ':mm:ss',
 					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
 					date: dateFormats[userDateFormat]
-				};
-
-			var momentFormat = shortcuts[format];
+				},
+				momentFormat = shortcuts[format];
 
 			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
 			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
@@ -131,9 +130,11 @@ define(function(require) {
 		dateToGregorian: function(date) {
 			var formattedResponse;
 
-			// This checks that the parameter is an object and not null
+			// This checks that the parameter is an object and not null, or if it's a UNIX time
 			if (typeof date === 'object' && date) {
 				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
+			} else if (typeof date === 'number' && date) {
+				formattedResponse = date + 62167219200;
 			}
 
 			return formattedResponse;
@@ -736,16 +737,28 @@ define(function(require) {
 			return dates;
 		},
 
-		dateToBeginningOfGregorianDay: function(date) {
+		getTZDate: function(date, tz) {
+			return new Date(moment.tz(date, tz).unix() * 1000);
+		},
+
+		formatDateDigits: function(digit) {
+			return digit < 10 ? '0' + digit : '' + digit;
+		},
+
+		dateToBeginningOfGregorianDay: function(date, pTimezone) {
 			var self = this,
-				newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+				timezone = pTimezone || moment.tz.guess(),
+				// we do month + 1 because jsDate returns 0 for January ... 11 for December
+				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 000000', timezone).unix();
 
 			return self.dateToGregorian(newDate);
 		},
 
-		dateToEndOfGregorianDay: function(date) {
+		dateToEndOfGregorianDay: function(date, pTimezone) {
 			var self = this,
-				newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+				timezone = pTimezone || moment.tz.guess(),
+				// we do month + 1 because jsDate returns 0 for January ... 11 for December
+				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 235959', timezone).unix();
 
 			return self.dateToGregorian(newDate);
 		},
