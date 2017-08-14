@@ -1,6 +1,6 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		monster = require('monster');
 
 	var monsterListing = {
@@ -68,14 +68,14 @@ define(function(require) {
 					return val;
 				});
 				if (_.isArray(args.dataList)) {
-					formattedData.dataList = _.indexBy(args.dataList, 'id');
+					formattedData.dataList = _.keyBy(args.dataList, 'id');
 				}
 				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
 				formattedData.templateName = 'monsterListing-default';
 			} else {
 				if (_.isArray(args.dataList)) {
 					formattedData.sortedDataList = args.dataList;
-					formattedData.dataList = _.indexBy(args.dataList, 'id');
+					formattedData.dataList = _.keyBy(args.dataList, 'id');
 				} else {
 					formattedData.sortedDataList = _.toArray(args.dataList);
 				}

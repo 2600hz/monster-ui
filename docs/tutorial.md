@@ -25,7 +25,7 @@ The first lines inside this code block are usually reserved to require the diffe
 Example:
 
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		monster = require('monster'),
 		toastr = require('toastr');
 

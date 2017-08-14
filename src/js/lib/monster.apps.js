@@ -1,6 +1,6 @@
 define(function() {
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		monster = require('monster');
 
 	var apps = {

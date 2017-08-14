@@ -46,7 +46,7 @@ require.config({
 		'nicescroll': 'js/vendor/jquery.nicescroll.min',
 		'plugins': 'js/plugins',
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
-		'postal': 'js/vendor/postal-0.8.2',
+		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
@@ -56,7 +56,7 @@ require.config({
 		'timepicker': 'js/vendor/jquery.timepicker.min',
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
-		'underscore': 'js/vendor/underscore.min',
+		'lodash': 'js/vendor/lodash-4.17.4',
 		'validate': 'js/vendor/jquery.validate.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
@@ -84,7 +84,7 @@ require.config({
 		'footable': {
 			'exports': 'FooTable'
 		},
-		'underscore': {
+		'lodash': {
 			'exports': '_'
 		},
 		'kazoo': {

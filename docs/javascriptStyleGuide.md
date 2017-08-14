@@ -22,7 +22,7 @@
 1. [Type Casting & Coercion](#type-casting--coercion)
 1. [Naming Conventions](#naming-conventions)
 1. [jQuery](#jquery)
-1. [Underscore](#underscore)
+1. [Lodash](#lodash)
 
 
 ## Types
@@ -1124,9 +1124,9 @@ $sidebar.find('ul').hide();
 **[▲ back to top](#table-of-contents)**
 
 
-## Underscore
+## Lodash
 
-- Prefer using Underscore helpers when manipulating JavaScript objects (non-DOM elements).
+- Prefer using Lodash helpers when manipulating JavaScript objects (non-DOM elements).
 
 ```javascript
 var collection: {

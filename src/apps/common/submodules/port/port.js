@@ -1,6 +1,6 @@
 define(function(require){
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		fileUpload = require('fileupload'),
 		monster = require('monster'),
 		toastr = require('toastr');
@@ -1311,7 +1311,7 @@ define(function(require){
 
 					// TODO: Remove this block once KAZOO-4248 is resolved
 					if (requests.length > 1) {
-						requests = _.uniq(requests, function(val, idx) {
+						requests = _.uniqBy(requests, function(val, idx) {
 							return val.id;
 						});
 					}

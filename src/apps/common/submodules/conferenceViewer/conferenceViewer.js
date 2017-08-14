@@ -1,6 +1,6 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		monster = require('monster'),
 		toastr = require('toastr');
 
@@ -130,7 +130,7 @@ define(function(require) {
 					}
 				},
 				success: function(data) {
-					self.appFlags.conferenceViewer.mapUsers = _.indexBy(data.data, 'id');
+					self.appFlags.conferenceViewer.mapUsers = _.keyBy(data.data, 'id');
 
 					callback && callback(data.data);
 				}
@@ -294,7 +294,7 @@ define(function(require) {
 			var self = this,
 				randomIndex,
 				alreadyUsedAvatarParticipants,
-				mapParticipants = _.indexBy(noAvatarParticipants, 'participant_id'),
+				mapParticipants = _.keyBy(noAvatarParticipants, 'participant_id'),
 				defaultAvatars = self.conferenceViewerGetAvatarsArray(),
 				arrayResult = [];
 
