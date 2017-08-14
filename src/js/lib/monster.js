@@ -1,6 +1,6 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		postal = require('postal'),
 		reqwest = require('reqwest'),
 		handlebars = require('handlebars'),
@@ -251,7 +251,7 @@ define(function(require) {
 			var sub = this._channel.subscribe(topic, callback);
 
 			if (context) {
-				sub.withContext(context);
+				sub.context(context);
 			}
 
 			return sub;

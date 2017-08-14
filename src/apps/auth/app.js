@@ -1,6 +1,6 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		monster = require('monster'),
 		toastr = require('toastr');
 
@@ -345,7 +345,7 @@ define(function(require) {
 					results.account.apps = results.account.apps || {};
 
 					var afterLanguageLoaded = function() {
-						var fullAppList = _.indexBy(self.installedApps, 'id'),
+						var fullAppList = _.keyBy(self.installedApps, 'id'),
 							defaultAppId = _.find(results.user.appList || [], function(appId) {
 								return fullAppList.hasOwnProperty(appId);
 							});
@@ -356,7 +356,7 @@ define(function(require) {
 							defaultApp = self.installedApps[0].name;
 						}
 
-						monster.appsStore = _.indexBy(results.appsStore, 'name');
+						monster.appsStore = _.keyBy(results.appsStore, 'name');
 
 						self.currentUser = results.user;
 						// This account will remain unchanged, it should be used by non-masqueradable apps

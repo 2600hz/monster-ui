@@ -136,7 +136,7 @@ var requireConfig = {
 };
 
 var getConfigRequire = function(mode, app) {
-	var librariesToExclude = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','crossroads','config','datatables','dependClass','ddslick','fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider','timepicker','toastr','touch-punch','underscore','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'];
+	var librariesToExclude = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','crossroads','config','datatables','dependClass','ddslick','fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal','prettify','renderjson','reqwest','signals','slider','timepicker','toastr','touch-punch','lodash','validate','vkbeautify','wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'];
 	if(mode === 'app') {
 		modules = [
 			{

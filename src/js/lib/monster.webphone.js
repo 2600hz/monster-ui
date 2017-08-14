@@ -1,5 +1,5 @@
 define(function(require) {
-	var _ = require('underscore'),
+	var _ = require('lodash'),
 		monster = require('monster'),
 		kazooWebphone = require('kazoo'),
 		toastr = require('toastr');
