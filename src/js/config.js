@@ -1,44 +1,21 @@
 define(function(require) {
-	var type = 'dev',
-		kazooClusterId,
-		provisioner,
-		socket,
-		url;
-
-	switch (type) {
-		case 'dev':
-			url = 'https://sandbox.2600hz.com:8443/v2/';
-			provisioner = 'http://provisioner.sandbox.2600hz.com/';
-			kazooClusterId = 'aa2b36ac6a5edb290159cd1298283322';
-			socket = 'wss://sandbox.2600hz.com:5443/';
-			break;
-		case 'prod':
-			url = 'https://ui.zswitch.net/v2/';
-			provisioner = 'http://p3.zswitch.net/';
-			kazooClusterId = '8a901bea1d3297ef7d4c8d34809472c2';
-			socket = 'wss://api.zswitch.net:5443/';
-			break;
-		default:
-			break;
-	}
-
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			default: url, // could be formatted like http://api.server.net:8000/v2/
+			default: 'http://localhost:8000/v2/' // could be formatted like http://api.server.net:8000/v2/
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600Hz, add the URL in the 'provisioner' key below
-			provisioner: provisioner,
+			// provisioner: 'http://URL/2600hz-provisioner/'
 
 			// If you want to use WebSockets you need to turn Blackhole on in the back-end and then put the URL in the 'socket' key below
-			socket: socket
+			// socket: 'your_web_socket_url'
 
 			// Set Project Phonebook URL if you want to use it to search phone numbers
 			// phonebook: 'project_phonebook_url'
 		},
 
 		// The kazooClusterId is the cluster id generated when creating a cluster doc for provisioner.
-		kazooClusterId: kazooClusterId,
+		// kazooClusterId: '',
 
 		// The resellerId key is the accountId of your master account, and is needed for some reseller features
 		// For example it won't prompt for a credit card the sub-accounts that have a different resellerId than this resellerId
@@ -54,7 +31,7 @@ define(function(require) {
 			// Logout Timer (minutes before showing the logged in user that it will auto-disconnect him soon)
 			// Changing this value allows you to disable the auto-logout mechanism by setting it to 0.
 			// If you want to change the default duration (15), you can set this value with a number > 0
-			logoutTimer: 0,
+			// 		logoutTimer: 0,
 
 			// Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..)
 			// additionalLoggedInApps: ['sso'],
@@ -103,10 +80,10 @@ define(function(require) {
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
-			showAllCallflows: true,
+			// showAllCallflows: true,
 
 			// Settings this flag to true will show JS error when they happen, but in general we want to hide those so we comment it
-			showJSErrors: false
+			// showJSErrors: true
 		}
 	};
 });
