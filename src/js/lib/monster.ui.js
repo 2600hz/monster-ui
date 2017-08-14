@@ -2008,7 +2008,7 @@ define(function(require) {
 				dataTemplate = {
 					hasNavbar: hasNavbar,
 					appType: appType,
-					appId: thisArg.name
+					appId: thisArg.name.split('-').join('_')
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback() {

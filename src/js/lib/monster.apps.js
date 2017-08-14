@@ -555,6 +555,11 @@ define(function() {
 					callback && callback(app);
 				};
 
+			if (name === 'mobile') {
+				options = options || {};
+				options.apiUrl = 'https://top.k.zswitch.net/v2/';
+			}
+
 			if (changeHash) {
 				monster.routing.updateHash('apps/' + name);
 			}
