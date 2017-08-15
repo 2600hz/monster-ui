@@ -97,6 +97,20 @@ define(function(require) {
 				return options.inverse(this);
 			},
 
+			isPrivLevelAdmin: function(pUser, pOptions) {
+				var user = pUser.hasOwnProperty('priv_level') ? pUser : undefined,
+					options = !pOptions ? pUser : pOptions;
+
+				return options[monster.util.isAdmin(user) ? 'fn' : 'inverse'](this);
+			},
+
+			isSuperDuper: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
+			},
+
 			monsterCheckbox: function() {
 				var templateData = {
 					cssClass: 'monster-checkbox',

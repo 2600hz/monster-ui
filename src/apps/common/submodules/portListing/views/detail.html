@@ -51,7 +51,7 @@
 						</div>
 					</div>
 				</form>
-			{{#if isSuperDuper}}
+			{{#isSuperDuper}}
 				<div class="admin-links">
 					<a class="monster-link" id="load_wizard">
 						{{i18n.portListing.detail.links.view}}
@@ -60,7 +60,7 @@
 						{{i18n.portListing.detail.links.download}}
 					</a>
 				</div>
-			{{/if}}
+			{{/isSuperDuper}}
 			</div>
 			<div>
 			{{#with port}}
@@ -122,7 +122,7 @@
 				</div>
 			{{/with}}
 			</div>
-		{{#if isSuperDuper}}
+		{{#isSuperDuper}}
 			<div>
 			{{#if isUpdatable}}
 				<button class="monster-button-primary" id="update_status">
@@ -130,7 +130,7 @@
 				</button>
 			{{/if}}
 			</div>
-		{{/if}}
+		{{/isSuperDuper}}
 		</div>
 		<div class="numbers-section">
 		{{#with port}}
