@@ -7,6 +7,8 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 	- [compare](#compare)
 	- [debug](#debug)
 	- [ifInArray](#ifinarray)
+	- [isPrivLevelAdmin](#isprivlevelAdmin)
+	- [isSuperDuper](#issuperduper)
 	- [formatPhoneNumber](#formatphonenumber)
 	- [formatPrice](#formatprice)
 	- [monsterCheckbox](#monstercheckbox)
@@ -289,6 +291,23 @@ example.html
 ```
 Here we tick the checkbox depending on the 'VP8' video codec being in the list of available codecs.
 
+#### isPrivLevelAdmin
+This is a predetermined conditional helper letting you render content only if the privilege level of the user logged in or passed as argument is `admin`.
+
+```handlebars
+{{#isPrivLevelAdmin optionalUserObject}}
+...
+{{/isPrivLevelAdmin}}
+```
+
+#### isSuperDuper
+This is a predetermined conditional helper letting you render content only if the account logged in or passed as argument has the `superduper_admin` flag set to `true`.
+
+```handlebars
+{{#isSuperDuper optionalAccountObject}}
+...
+{{/isSuperDuper}}
+```
 
 #### monsterNumberWrapper
 This helper will generate a wrapper around a phone number that will automatically format that number based on user preferences, as well as showing a flag if the phone number was a valid phone number from a known country.
