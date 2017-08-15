@@ -57,9 +57,6 @@ define(function(require) {
 				container = args.container,
 				template = $(self.getTemplate({
 					name: 'layout',
-					data: {
-						isSuperDuper: monster.util.isSuperDuper()
-					},
 					submodule: 'portListing'
 				}));
 
@@ -295,7 +292,6 @@ define(function(require) {
 
 					return {
 						isUpdatable: unactionableStatuses.indexOf(port.port_state) < 0,
-						isSuperDuper: monster.util.isSuperDuper(),
 						port: port
 					};
 				},
