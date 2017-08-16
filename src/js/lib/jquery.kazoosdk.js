@@ -342,11 +342,10 @@
 			},
 			security: {
 				'listModules': { verb: 'GET', url: 'security' },
-				'get': { verb: 'GET', url: 'accounts/{accountId}/security/{moduleId}' },
+				'get': { verb: 'GET', url: 'accounts/{accountId}/security' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/security' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/security/{moduleId}' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/security/{moduleId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/security' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/security' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/security' },
 				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/security/attempts' },
 				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/security/attempts/{attemptId}' }
 			},
