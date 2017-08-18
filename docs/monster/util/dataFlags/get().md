@@ -12,14 +12,12 @@ monster.util.dataFlags.get(flagName, object);
 ```
 
 ### Parameter
-* `flagName` (mandatory)
 
- Type: [String][string_literal]
+###### `flagName`: [String][string_literal] (mandatory)
 
 Name of the flag we want to get the value of.
 
-* `object` (mandatory)
- Type: [Object][object_literal]
+###### `object`: [Object][object_literal] (mandatory)
 
 Object in which the flag is set.
 

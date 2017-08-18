@@ -10,17 +10,14 @@ monster.waterfall(tasks[, callback]);
 ```
 
 ### Parameters
-* `tasks` (mandatory)
 
- Type: [Array][array_literal]
+###### `tasks`: [Array][array_literal] (mandatory)
 
- An array containing functions to run. Each function is passed a `callback(err, result)` which it must call on completion with an error `err` (which can be `null`) and an optional `result` value.
+An array containing functions to run. Each function is passed a `callback(err, result)` which it must call on completion with an error `err` (which can be `null`) and an optional `result` value.
 
-* `callback(err[, result])` (optional)
+###### `callback(err[, result])`: [Function][function] (optional)
 
- Type: [Function][function]
-
- An optional callback to run once all the functions have completed. This function gets a `results` containing all the result arguments passed to the task callbacks.
+An optional callback to run once all the functions have completed. This function gets a `results` containing all the result arguments passed to the task callbacks.
 
 ### Description
 The `monster.waterfall()` method is a simple wrapper for the `async.waterfall()` method, allowing you to run each task in a serialized manner, with the ability to access the result of the previously run task. For more information, check out the [Async.js][async_waterfall] documentation.

@@ -12,14 +12,12 @@ monster.util.dataFlags.destroy(flagName, object);
 ```
 
 ### Parameter
-* `flagName` (mandatory)
 
- Type: [String][string_literal]
+###### `flagName`: [String][string_literal] (mandatory)
 
 Name of the flag we want to delete from the object.
 
-* `object` (mandatory)
- Type: [Object][object_literal]
+###### `object`: [Object][object_literal] (mandatory)
 
 Object where you want to delete the flag from
 

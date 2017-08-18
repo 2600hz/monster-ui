@@ -10,15 +10,12 @@ monster.ui.mask(target, type);
 ```
 
 ### Parameters
-* `target` (mandatory)
 
- Type: [jQuery object][jquery]
+###### `target`: [jQuery object][jquery] (mandatory)
 
- Field on which the method will be applied.
+Field on which the method will be applied.
 
-* `type` (mandatory)
-
- Type: [String][String]
+###### `type`: [String][string_literal] (mandatory)
 
 Type of mask to choose from. Available options: 'phoneNumber' (optional + followed by digits), 'macAddress' (12 hexa decimal characters), 'extension' (only digits).
 
@@ -29,5 +26,4 @@ Documentation available: https://igorescobar.github.io/jQuery-Mask-Plugin/
 [monster]: ../../monster.md
 [ui]: ../ui.md
 [jquery]: http://api.jquery.com/Types/#jQuery
-[PlainObject]: http://api.jquery.com/Types/#PlainObject
-[String]: http://api.jquery.com/Types/#String
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

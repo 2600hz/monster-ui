@@ -12,9 +12,8 @@ monster.util.formatPhoneNumber(phoneNumber);
 ```
 
 ### Parameter
-* `phoneNumber` (mandatory)
 
- Type: [String][string_literal]
+###### `phoneNumber`: [String][string_literal] (mandatory)
 
 Phone number to format.
 

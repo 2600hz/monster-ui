@@ -12,9 +12,8 @@ monster.util.getFormatPhoneNumber(phoneNumber);
 ```
 
 ### Parameter
-* `phoneNumber` (mandatory)
 
- Type: [String][string_literal]
+###### `phoneNumber`: [String][string_literal] (mandatory)
 
 Phone number to analyze and get available formats for.
 

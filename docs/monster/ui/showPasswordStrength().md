@@ -10,20 +10,17 @@ monster.ui.showPasswordStrength(input[, options]);
 ```
 
 ### Parameters
-* `input` (mandatory)
 
- Type: [jQuery object][jquery]
+###### `input`: [jQuery object][jquery] (mandatory)
 
- Input on which the method will be applied. Best suited for an input of the `password` type.
+Input on which the method will be applied. Best suited for an input of the `password` type.
 
-* `options` (optional)
+###### `options`: [Object][object_literal] (optional)
 
- Type: [Object][object_literal]
-
- Allows you to specify the following options:
-  * `container`: A [jQuery object][jquery] in which to append the password strength display. By default, it will be appended after the input.
-  * `display`: Set to 'bar' by default, this can be set to 'icon' in order to display the password strength as a color-changing lock icon (with tooltips) instead of a bar.
-  * `tooltipPosition`: When the display is set to 'icon', you can choose the position of the tooltip on the icon. Set to 'top' by default, the available positions are 'top', 'right', 'bottom', and 'left'.
+Allows you to specify the following options:
+* `container`: [jQuery object][jquery] (mandatory) - where to append the password strength display; By default, it will be appended after the input
+* `display`: `bar`|`icon` [String][string_literal] (optional, default: `bar`) - can be set to 'icon' in order to display the password strength as a color-changing lock icon (with tooltips) instead of a bar
+* `tooltipPosition`: `top`|`bottom`|`left`|`right` [String][string_literal] (optional, default: `top`) - when the display is set to 'icon', you can choose the position of the tooltip on the icon
 
 ### Description
 This method allows you to add a password strength indicator for a specific input, in the form of either a bar or an icon.
@@ -48,3 +45,4 @@ monster.ui.showPasswordStrength(yourTemplate.find(':password'), {
 
 [jquery]: http://api.jquery.com/Types/#jQuery
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

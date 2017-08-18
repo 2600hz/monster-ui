@@ -12,14 +12,12 @@ monster.util.dataFlags.add(flags, object);
 ```
 
 ### Parameter
-* `flags` (mandatory)
 
- Type: [Object][object_literal]
+###### `flags`: [Object][object_literal] (mandatory)
 
 Name of the flag we want to get the value of.
 
-* `object` (mandatory)
- Type: [Object][object_literal]
+###### `object`: [Object][object_literal] (mandatory)
 
 Object to merge the flags into.
 

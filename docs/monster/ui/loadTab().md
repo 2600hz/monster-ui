@@ -12,17 +12,14 @@ monster.ui.loadTab(thisArg, id);
 ```
 
 ### Parameters
-* `thisArg` (mandatory)
 
- Type: [Object][object_literal]
+###### `thisArg`: [Object][object_literal] (mandatory)
 
- The context of the app invoking the helper.
+The context of the app invoking the helper.
 
-* `id` (mandatory)
+###### `id`: [String][string_literal] (mandatory)
 
- Type: [String][string_literal]
-
- Unique ID referencing a navbar tab of the app.
+Unique ID referencing a navbar tab of the app.
 
 ### Description
 This helper is used to virtually trigger a click on a navbar tab so that the callback related to that tab is called. It is powerful in a sense that all the navbar animations are performed accordingly and also take into account if that tab has a `onClick` bypass callback.
