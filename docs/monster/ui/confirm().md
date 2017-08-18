@@ -13,29 +13,22 @@ monster.ui.confirm(content[, callbackOk, callbackCancel, options]);
 ```
 
 ### Parameters
-* `content` (mandatory)
 
- Type: [String][string_literal]
+###### `content`: [String][string_literal] (mandatory)
 
- Text that will be displayed inside the generate dialog window.
+Text that will be displayed inside the generate dialog window.
 
-* `callbackOk` (optional)
+###### `callbackOk`: [Function][function] (optional)
 
- Type: [Function][function]
+Function executed when the user click on the `ok` button. If not specified, clicking on the `ok` button will only close the dialog window.
 
- Function executed when the user click on the `ok` button. If not specified, clicking on the `ok` button will only close the dialog window.
+###### `callbackCancel`: [Function][function] (optional)
 
-* `callbackCancel` (optional)
+Function executed when the user click on the `cancel` button. If not specified, clicking on the `cancel` button will only close the dialog window.
 
- Type: [Function][function]
+###### `options`: [Object][object_literal] (optional)
 
- Function executed when the user click on the `cancel` button. If not specified, clicking on the `cancel` button will only close the dialog window.
-
-* `options` (optional)
-
- Type: [Object][object_literal]
-
- Let you override default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `show`, `hide` and the `close` method.
+Let you override default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `show`, `hide` and the `close` method.
 
 ### Return
 This method returns the generated dialog window as a [jQuery object][jquery].

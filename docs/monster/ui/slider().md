@@ -12,28 +12,26 @@ monster.ui.slider(target, options);
 ```
 
 ### Parameters
-* `target` (mandatory)
 
- Type: [jQuery object][jquery]
+###### `target`: [jQuery object][jquery] (mandatory)
 
-  A jQuery object inside which the slider will be inserted using the [append()][append] method.
+A jQuery object inside which the slider will be inserted using the [append()][append] method.
 
-* `options` (mandatory)
+###### `options`: [Object][object_literal] (mandatory)
 
- Type: [Object][object_literal]
+Let you specify a map of options for the slider, they are the same than for the [jQuery Slider][jquery_slider_options] method. It also takes three more custom, and optional, parameters:
 
- Let you specify a map of options for the slider, they are the same than for the [jQuery Slider][jquery_slider_options] method. It also takes three more custom, and optional, parameters:
-    - i18n: to define the text in the tooltips
-    - unit: unit of the value for the handles and limits
-    - friendlyPrint: takes the value returned by the slider and returns a different value, to make it look friendlier to the end-user
+* `i18n`: [String][string_literal] (optional) - define the text in the tooltips
+* `unit`: [String][string_literal] (optional) - unit of the value for the handles and limits
+* `friendlyPrint`: [Function][function] (optional) - takes the value returned by the slider and returns a different value, to make it look friendlier to the end-user
 
-###Return
+### Return
 This method returns the slider container as a [jQuery object][jquery].
 
 ### Description
 The `monster.ui.slider()` method allows you to generate a jQuery Slider with the look and feel of Monster UI. All the original options of the slider are available.
 
-###Examples
+### Examples
 * Create a slider with a max and min handle
 ```javascript
 var target = $('#slider'),
@@ -87,3 +85,5 @@ monster.ui.slider(target, options);
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [append]: http://api.jquery.com/append/
 [jquery_slider_options]: http://api.jqueryui.com/slider/#options
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions

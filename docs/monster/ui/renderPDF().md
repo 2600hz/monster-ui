@@ -21,25 +21,20 @@ template.find('#upload').fileUpload({
 ```
 
 ### Parameters
-* `file` (mandatory)
 
- Type: File
+###### `file`: [File][file] (mandatory)
 
- File received by a fileUpload plugin.
+File received by a fileUpload plugin.
 
-* `target` (mandatory)
+###### `target`: [jQuery object][jquery] (mandatory)
 
- Type: [jQuery object][jquery]
-
- Target in which the iframe containing the PDF will be added
+Target in which the iframe containing the PDF will be added
 
 ### Description
 This helper will take a file and show it in a container, in a PDF viewer
 
 [monster]: ../../monster.md
 [ui]: ../ui.md
+
+[file]: https://developer.mozilla.org/en-US/docs/Web/API/File
 [jquery]: http://api.jquery.com/Types/#jQuery
-[PlainObject]: http://api.jquery.com/Types/#PlainObject
-[Integer]: http://api.jquery.com/Types/#Integer
-[Boolean]: http://api.jquery.com/Types/#Boolean
-[String]: http://api.jquery.com/Types/#String

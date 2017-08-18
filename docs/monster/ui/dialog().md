@@ -13,17 +13,14 @@ monster.ui.dialog([content, options]);
 ```
 
 ### Parameters
-* `content` (optional)
 
- Type: [jQuery object][jquery]
+###### `content`: [jQuery object][jquery] (optional)
 
- HTML template that will be inserted inside the dialog window. If this parameter is omitted, an empty dialog window will be generated.
+HTML template that will be inserted inside the dialog window. If this parameter is omitted, an empty dialog window will be generated.
 
-* `options` (optional)
+###### `options`: [Object][object_literal] (optional)
 
- Type: [Object][object_literal]
-
- Let you override default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `show`, `hide` and the `close` method.
+Let you override default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `show`, `hide` and the `close` method.
 
 ### Return
 This method returns the generated dialog window as a [jQuery object][jquery].

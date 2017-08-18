@@ -24,8 +24,9 @@ The context of the app invoking the helper.
 Customize application type and menus settings with the following object properties:
 
 * `appType`: `default`|`fullscreen`|`docked` [String][string_literal] (optional, default: `default`) - define wrapper behavior
+* `forceNavbar`: [Boolean][boolean_literal] (optional, default: `false`) - render navbar even when only one tab exists
 * `menus`: [Array][array_literal] (mandatory) of [Objects][object_literal]
-    - `pull`: `left`|`right` (optional, default: `left`) - floating direction
+    - `pull`: `left`|`right` [String][string_literal] (optional, default: `left`) - floating direction
     - `tabs`: [Array][array_literal] (mandatory) of [Objects][object_literal]
         + `text`: [String][string_literal] (mandatory if more than on item in `tabs`) - tab menu label
         + `callback`: [Function][function] (mandatory if no `menus` property) - callback on click
@@ -246,3 +247,4 @@ Since only one tab was defined, no `navbar` will be rendered.
 [function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
 [array_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Array_literals
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
+[boolean_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Boolean_literals

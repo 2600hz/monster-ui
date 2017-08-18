@@ -13,30 +13,17 @@ monster.ui.highlight(element[, options]);
 ```
 
 ### Parameters
-* `element` (mandatory)
 
- Type: [jQuery object][jquery]
+###### `element`: [jQuery object][jquery] (mandatory)
 
- Target HTML element to highlight.
+Target HTML element to highlight.
 
-* `options` (optional)
+###### `options`: [Object][object_literal] (optional)
 
- Type: [Object][object_literal]
-
- Default:
- ```javascript
- 	{
-		startColor: '#22a5ff',
-		endColor: '#F2F2F2',
-		timer: 2000
-	}
- ```
-
- Lets you override the default options above and specify a callback to be executed after the highlight completely faded out.
-    - startColor: Color of the initial highlight.
-    - endColor: Color to fade to.
-    - timer: Total duration of the highlighting in milliseconds.
-    - callback: Callback executed once the fading of the highlight is complete.
+* `startColor`: [String][string_literal] (optional, default: `#22a5ff`) - color of the initial highlight
+* `endColor`: [String][string_literal] (optional, default: `#F2F2F2`) - color to fade to
+* `timer`: [Number][integer] (optional, default `2000`) - total duration of the highlight in milliseconds
+* `callback`: [Function][function] (optional) - executed once the fading of the highlight is complete
 
 ### Return
 
@@ -72,3 +59,6 @@ monster.ui.highlight(target, {
 [jquery]: http://api.jquery.com/Types/#jQuery
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [undefined]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+[integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers
+[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
