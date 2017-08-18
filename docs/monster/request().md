@@ -11,15 +11,15 @@ monster.request(options);
 ```
 
 ### Parameters
-* `options` (mandatory)
 
- Type: [Object][object_literal]
+###### `options`: [Object][object_literal] (mandatory)
 
- Set of options:
-    - `resource`: unique identifier corresponding to a request
-    - `data`: parameters to pass to the request
-    - `success`: callback on success
-    - `error`: callback on error
+List of properties:
+
+* `resource`: [String][string_literal] (mandatory) - unique identifier corresponding to a request
+* `data`: [Object][object_literal] (optional) - parameters to pass to the request
+* `success`: [Function][function] (optional) - callback on success
+* `error`: [Function][function] (optional) - callback on error
 
 ### Description
 The `monster.request()` method allows you to make requests that are not defined in the [Kazoo JavaScript SDK][kazooSdk].
@@ -94,6 +94,8 @@ var app = {
 In this example, we had to remove a set of headers using the `removeHeaders` key so the server would accept the request and also had to disable the automatic Monster Error Popup with `generateError`.
 
 [monster]: ../monster.md
+[kazooSdk]: ../kazooSdk.md
 
 [object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[kazooSdk]: ../kazooSdk.md
+[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions

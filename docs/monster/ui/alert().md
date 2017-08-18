@@ -15,29 +15,20 @@ monster.ui.alert([type, ]content[, callback, options]);
 ```
 
 ### Parameters
-* `type` (optional)
 
- Type: [String][string_literal]
+###### `type`: `info`|`warning`|`error` [String][string_literal] (optional, default: `info`)
 
- Default: `info`
+Define the style of the dialog window generated. It can take three different values (`warning`, `error` and `info`). If this parameter is not specified, the dialog window will be created with the value set to `info`.
 
- Define the style of the dialog window generated. It can take three different values (`warning`, `error` and `info`). If this parameter is not specified, the dialog window will be created with the value set to `info`.
+###### `content`: [String][string_literal] (mandatory)
 
-* `content` (mandatory)
+Text that will be displayed inside the generated dialog window.
 
- Type: [String][string_literal]
+###### `callback`: [Function][function] (optional)
 
- Text that will be displayed inside the generated dialog window.
+Function executed when the dialog window is closed.
 
-* `callback` (optional)
-
- Type: [Function][function]
-
- Function executed when the dialog window is closed.
-
-* `options` (optional)
-
- Type: [Object][object_literal]
+###### `options`: [Object][object_literal] (optional)
 
  Let you override default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `show`, `hide` and the `close` method.
 

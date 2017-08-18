@@ -12,9 +12,8 @@ monster.util.formatVariableToDisplay(string);
 ```
 
 ### Parameters
-* `string` (mandatory)
 
- Type: [String][string_literal]
+###### `string`: [String][string_literal] (mandatory)
 
 Text that will be changed into a formatted text.
 

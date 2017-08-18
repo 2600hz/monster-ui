@@ -11,10 +11,10 @@ monster.util.isAdmin([user]);
 ```
 
 ### Parameters
-* `user` (optional)
 
- Type: [Object][object_literal]
- User with the same format as an account returned by a GET on the /users/{userid} API.
+###### `user`: [Object][object_literal] (optional)
+
+User object with the same format as an account returned by a GET on the /users/{userid} API.
 
 ### Return
 This method returns a [Boolean][boolean].

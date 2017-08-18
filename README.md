@@ -42,7 +42,7 @@ npm install
 
 ### Configure
 
-In order for the UI to load the data from your server, we need to specify which API to use. For that, open the `config.js` file located in the `src/js/` folder and add the URL of your server as the value of the `default` property.
+In order for the UI to load the data from your server, we need to specify which API to use. To do so, open the `config.js` file located in `src/js/` folder and add the URL of your server as the value of the `default` property.
 
 ```javascript
 define(function(require) {
@@ -82,7 +82,11 @@ If you are using Docker containers, we made it easy for you to set up a developm
 
 This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
-It also starts by pulling your apps installed in `src/apps` before starting the server. To disable this behavior use `./serve.sh no-update`.
+It also starts by pulling your apps installed in `src/apps` before starting the server. To disable this behavior use the `no-update` flag:
+
+```shell
+./serve.sh no-update
+```
 
 ## Contributing
 

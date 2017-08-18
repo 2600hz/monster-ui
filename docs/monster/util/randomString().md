@@ -12,19 +12,14 @@ monster.util.randomString(length, chars);
 ```
 
 ### Parameters
-* `length` (mandatory)
 
- Type: [Number][integer]
+###### `length`: [Number][integer] (mandatory)
 
- Number of character to include in the output string.
+Number of character to include in the output string.
 
-* `chars` (optional)
+###### `chars`: [String][string_literal] (optional, default: `23456789abcdefghjkmnpqrstuvwxyz`)
 
- Type: [String][string_literal]
-
- Default: `'23456789abcdefghjkmnpqrstuvwxyz'`
-
- Characters to choose from when creating the output string.
+Characters to choose from when creating the output string.
 
 ### Return
 This method returns a [String][string_literal].

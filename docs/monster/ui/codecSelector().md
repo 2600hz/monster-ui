@@ -13,17 +13,8 @@ monster.ui.codecSelector([type, target, selectedItems]);
 ```
 
 ### Parameters
-* `type` (mandatory)
-Type: [String][string_literal]
 
-* `target` (mandatory)
-Type: [jQuery object][jquery]
-
-* `selectedItems` (optional)
- Type: [Array][array_literal]
-
-
-For `type`, you can set the value to either `audio` or `video`. 
+###### `type`: `audio`| `video` [String][string_literal] (mandatory)
 
 Setting the codecSelector to `audio` will give the user a list of Audio Codecs to choose from: 
 - 'OPUS'
@@ -46,8 +37,11 @@ Setting the codecSelector to `video` will give the user a list of Audio Codecs t
 - 'H263'
 - 'H264'
 
+###### `target`: [jQuery object][jquery] (mandatory)
 
 For the `target`, you can set it to any jQuery container where the selector will be painted.
+
+###### `selectedItems`: [Array][array_literal] (optional)
 
 Finally for the `selectedItems`, you can set an Array of the items you would like to have selected by the defaults in the selector.
 Example for an audio codecSelector, you could call it with : `monster.ui.codecSelector('audio', target, ['PCMU', 'G729']);`

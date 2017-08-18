@@ -248,13 +248,16 @@ define(function(require) {
 		},
 
 		sub: function(topic, callback, context) {
-			var sub = this._channel.subscribe(topic, callback);
+			if (typeof callback === 'undefined') {
+				console.warn('The topic ' + topic + ' does not have a callback');
+			} else {
+				var sub = this._channel.subscribe(topic, callback);
+				if (context) {
+					sub.context(context);
+				}
 
-			if (context) {
-				sub.context(context);
+				return sub;
 			}
-
-			return sub;
 		},
 
 		unsub: function(subscription) {

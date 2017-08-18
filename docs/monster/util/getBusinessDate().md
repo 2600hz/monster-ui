@@ -13,19 +13,14 @@ monster.util.getBusinessDate(days[, from])
 ```
 
 ### Parameters
-* `days` (mandatory)
 
- Type: [Number][integer]
+###### `days`: [Number][integer] (mandatory)
 
- Number of business days to add or remove.
+Number of business days to add or remove.
 
-* `from` (optional)
+###### `from`: [Date][date] (optional, default: `new Date()`)
 
- Type: [Date][date]
-
- Default: `new Date()`
-
- JavaScript Date instance from witch to add or remove business days.
+JavaScript Date instance from witch to add or remove business days.
 
 ### Return
 This method returns a JavaScript Date instance.

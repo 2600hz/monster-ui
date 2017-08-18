@@ -12,17 +12,14 @@ monster.util.unformatPhoneNumber(phoneNumber[, specialRule]);
 ```
 
 ### Parameters
-* `phoneNumber` (mandatory)
 
- Type: [String][string_literal] OR [Number][integer]
+###### `phoneNumber`: [String][string_literal] OR [Number][integer] (mandatory)
 
- Formated US phone number to unformat.
+Formated US phone number to unformat.
 
-* `specialRule` (optional)
+###### `specialRule`: `keepPlus` [String][string_literal] (optional)
 
- Type: [String][string_literal]
-
- Only one value: `keepPlus`. If specified, the number will keep the `+`.
+Only one value: `keepPlus`. If specified, the number will keep the `+`.
 
 ### Return
 This method returns a [String][string_literal] with the one of the following formats: `+1NPANXXXXXX`, `1NPANXXXXXX` or `NPANXXXXXX`.
