@@ -11,17 +11,14 @@ monster.parallel(tasks[, callback]);
 ```
 
 ### Parameters
-* `tasks` (mandatory)
 
- Type: [Array][array_literal] OR [Object][object_literal]
+###### `tasks`: [Array][array_literal] OR [Object][object_literal] (mandatory)
 
- An array or object containing functions to run. Each function is passed a `callback(err, result)` which it must call on completion with an error `err` (which can be `null`) and an optional `result` value.
+An array or object containing functions to run. Each function is passed a `callback(err, result)` which it must call on completion with an error `err` (which can be `null`) and an optional `result` value.
 
-* `callback(err, result)` (optional)
+###### `callback(err, result)`: [Function][function] (optional)
 
- Type: [Function][function]
-
- An optional callback to run once all the functions have completed. This function gets a `results` array (or object) containing all the result arguments passed to the task callbacks.
+An optional callback to run once all the functions have completed. This function gets a `results` array (or object) containing all the result arguments passed to the task callbacks.
 
 ### Description
 Run the `tasks` array or object of functions asynchronously, without waiting until the previous function has completed. If any of the functions pass an error to its callback, the main `callback` is immediately called with the value of the error. Once the `tasks` have completed, the results are passed to the main `callback` as an array or object.

@@ -11,49 +11,30 @@ monster.template(thisArg, name[, data, raw, ignoreCache, ignoreSpaces]);
 ```
 
 ### Parameters
-* `thisArg` (mandatory)
 
- Type: [Object][object_literal]
+###### `thisArg`: [Object][object_literal] (mandatory)
 
- `this` of the app, used for finding the template to load
+`this` of the app, used for finding the template to load
 
-* `name` (mandatory)
+###### `name`: [String][string_literal] (mandatory)
 
- Type: [String][string_literal]
+name of the template, without the file extension
 
- name of the template, without the file extension
+###### `data`: [Object][object_literal] (optional, default: `{}`)
 
-* `data` (optional)
+data to pass to the template
 
- Type: [Object][object_literal]
+###### `raw`: [Boolean][boolean_literal] (optional, default: `false`)
 
- Default: `{}`
+when set to `true`, Handlebars will not compile the template and it will be sent as is
 
- data to pass to the template
+###### `ignoreCache`: [Boolean][boolean_literal] (optional, default: `false`)
 
-* `raw` (optional)
+when set to `true`, request the template even if it was already loaded
 
- Type: [Boolean][boolean_literal]
+###### `ignoreSpaces`: [Boolean][boolean_literal] (optional, default: `false`)
 
- Default: `false`
-
- when set to `true`, Handlebars will not compile the template and it will be sent as is
-
-* `ignoreCache` (optional)
-
- Type: [Boolean][boolean_literal]
-
- Default: `false`
-
- when set to `true`, request the template even if it was already loaded
-
-* `ignoreSpaces` (optional)
-
- Type: [Boolean][boolean_literal]
-
- Default: `false`
-
- when set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template
+when set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template
 
 ### Description
 The `monster.template()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.

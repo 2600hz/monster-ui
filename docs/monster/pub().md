@@ -11,19 +11,14 @@ monster.pub(alias[, data]);
 ```
 
 ### Parameters
-* `topic` (mandatory)
 
- Type: [String][string_literal]
+###### `topic`: [String][string_literal] (mandatory)
 
- Alias for the method to publish
+Alias for the method to publish
 
-* `data` (optional)
+###### `data`: [Object][object_literal] OR [Array][array_literal] OR [String][string_literal] OR [Number][integer] OR [Function][function] (optional, default: `{}`)
 
- Type: [Object][object_literal] OR [Array][array_literal] OR [String][string_literal] OR [Number][integer] OR [Function][function]
-
- Default: `{}`
-
- Parameters passed to the method published
+Parameters passed to the method published
 
 ### Description
 The `monster.pub()` method let you publish all the methods that were exposed by other developers of Monster applications or let you access the Monster Core Apps and Monster Common Controls methods to perform common actions (see examples).
