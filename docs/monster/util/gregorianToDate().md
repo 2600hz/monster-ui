@@ -11,11 +11,10 @@ monster.util.gregorianToDate(timestamp);
 ```
 
 ### Parameter
-* `timestamp` (mandatory)
 
- Type: [Number][integer]
+###### `timestamp`: [Number][integer] (mandatory)
 
- Gregorian timestamp that will be converted to a JavaScript Date instance.
+Gregorian timestamp that will be converted to a JavaScript Date instance.
 
 ### Return
 This method returns a JavaScript Date instance.

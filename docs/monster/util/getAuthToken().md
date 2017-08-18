@@ -11,11 +11,10 @@
 monster.util.getAuthToken([connectionName]);
 ```
 ### Parameters
-* `connectionName` (optional)
- Type: [String][string_literal]
+
+###### `connectionName`: [String][string_literal] (optional)
 
 If specified, will return the value of the token of a specific connection (`connectionName`).
-
 
 ### Return
 This method returns a [String][string_literal] of the token used by the specified connection.

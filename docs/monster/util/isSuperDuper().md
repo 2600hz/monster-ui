@@ -11,10 +11,10 @@ monster.util.isSuperDuper([account]);
 ```
 
 ### Parameters
-* `account` (optional)
 
- Type: [Object][object_literal]
- Account with the same format as an account returned by a GET on the /account/{accountId} API.
+###### `account`: [Object][object_literal] (optional)
+
+Account with the same format as an account returned by a GET on the /account/{accountId} API.
 
 ### Return
 This method returns a [Boolean][boolean].

@@ -11,8 +11,8 @@
 monster.util.getUrlVars([key]);
 ```
 ### Parameters
-* `key` (optional)
- Type: [String][string_literal]
+
+###### `key`: [String][string_literal] (optional)
 
 If specified, will return the value of a specific parameter (`key`).
 

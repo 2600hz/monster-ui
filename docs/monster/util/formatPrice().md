@@ -12,17 +12,14 @@ monster.util.formatPrice(price[, decimals]);
 ```
 
 ### Parameter
-* `price` (mandatory)
 
- Type: [String][string_literal] OR [Number][integer]
+###### `price`: [String][string_literal] OR [Number][integer] (mandatory)
 
- Price to format (either a number or a string representation of a number).
+Price to format (either a number or a string representation of a number).
 
-* `decimals` (optional)
+###### `decimals`: [String][string_literal] OR [Number][integer] (optional)
 
- Type: [String][string_literal] OR [Number][integer]
-
- The number of decimals that will shown. If not specified, integer will show no decimals and floats will show two decimals.
+The number of decimals that will shown. If not specified, integer will show no decimals and floats will show two decimals.
 
 ### Return
 This method returns a [String][string_literal] representation of the provided price, showing the specified number of decimals.
