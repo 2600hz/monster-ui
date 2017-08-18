@@ -1100,7 +1100,6 @@ table.monster-table {
 
 .monster-table .footable-filtering th {
 	padding: 1em 0 2em;
-	white-space: nowrap;
 }
 
 .monster-table .footable-filtering th form {
@@ -1121,6 +1120,7 @@ table.monster-table {
 	color: #9aa2a8;
 	border-top: 1px solid $panel-border-color;
 	border-bottom: 1px solid $panel-border-color;
+	white-space: nowrap;
 }
 
 .monster-table .footable-header th:first-child {
