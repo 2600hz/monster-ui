@@ -2322,18 +2322,18 @@ define(function(require) {
 				finalOptions.empty = monster.apps.core.i18n.active().backendPagination.empty;
 
 				// Finally, once everything is initialized properly, we load the first set of data.
-				loadPaginatedRows(paginateFilters, function() {
-					finalOptions.afterInitialized && finalOptions.afterInitialized();
+				loadPaginatedRows(paginateFilters, function(data) {
+					finalOptions.afterInitialized && finalOptions.afterInitialized(data);
 				});
 			} else if (finalOptions.hasOwnProperty('getData')) {
-				finalOptions.getData(filters, function(rows, data) {
+				finalOptions.getData(filters, function(rows, data, formattedData) {
 					addRowsToBody([ rows ]);
 
 					var table = container.footable(finalOptions);
 
 					addPageSizeComponent(container, table);
 
-					finalOptions.afterInitialized && finalOptions.afterInitialized();
+					finalOptions.afterInitialized && finalOptions.afterInitialized(formattedData);
 				});
 			} else {
 				var table = container.footable(finalOptions);
