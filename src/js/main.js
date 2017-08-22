@@ -30,6 +30,7 @@ require.config({
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
 		'mask': 'js/vendor/jquery.mask',
+		'md5': 'js/vendor/md5',
 		'modernizr': 'js/vendor/modernizr-2.6.2.min',
 		'moment': 'js/vendor/moment',
 		'moment-timezone': 'js/vendor/moment-timezone',
