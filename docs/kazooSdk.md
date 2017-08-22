@@ -76,7 +76,7 @@ var kazooSdk = $.getKazooSdk({
 kazooSdk.auth.userAuth({
 	data: {
 		account_name: $('#account_name').val(),
-		credentials: $.md5($('#login').val() + ':' + $('#password').val())
+		credentials: monster.md5($('#login').val() + ':' + $('#password').val())
 	},
 	success: function(data, status) {
 		kazooSdk.account.get({

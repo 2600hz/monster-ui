@@ -953,7 +953,7 @@ define(function(require) {
 				loginUsername = $('#login').val(),
 				loginPassword = $('#password').val(),
 				loginAccountName = $('#account_name').val(),
-				hashedCreds = $.md5(loginUsername + ':' + loginPassword),
+				hashedCreds = monster.md5(loginUsername + ':' + loginPassword),
 				loginData = {
 					credentials: hashedCreds,
 					account_name: loginAccountName
