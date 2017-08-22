@@ -1,17 +1,18 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		postal = require('postal'),
-		reqwest = require('reqwest'),
-		handlebars = require('handlebars'),
 		async = require('async'),
-		form2object = require('form2object'),
-		config = require('config'),
-		kazoosdk = require('kazoosdk'),
-		chosen = require('chosen'),
 		card = require('card'),
+		chosen = require('chosen'),
+		config = require('config'),
 		ddslick = require('ddslick'),
-		fileupload = require('fileupload');
+		fileupload = require('fileupload'),
+		form2object = require('form2object'),
+		handlebars = require('handlebars'),
+		kazoosdk = require('kazoosdk'),
+		md5 = require('md5'),
+		postal = require('postal'),
+		reqwest = require('reqwest');
 
 	var _privateFlags = {
 		lockRetryAttempt: false,
@@ -580,6 +581,10 @@ define(function(require) {
 			var self = this;
 
 			return monster.config.developerFlags.build.proApps.indexOf(app.name) >= 0;
+		},
+
+		md5: function(string) {
+			return md5(string);
 		}
 	};
 
