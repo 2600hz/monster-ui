@@ -235,6 +235,11 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/menus/{menuId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/menus' }
 			},
+			metaflow: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/metaflows' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/metaflows' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/metaflows' }
+			},
 			multifactor: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/multi_factor' },
@@ -378,6 +383,7 @@
 				'add': { verb: 'PUT', url: 'accounts/{accountId}/tasks?category={category}&action={action}' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}' },
 				'start': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}' },
+				'stop': { verb: 'PATCH', url: 'accounts/{accountId}/tasks/{taskId}/stop' },
 				'getOutput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/output', type: 'text/csv', dataType: 'text' },
 				'getInput': { verb: 'GET', url: 'accounts/{accountId}/tasks/{taskId}/input', type: 'text/csv', dataType: 'text' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/tasks/{taskId}' }
