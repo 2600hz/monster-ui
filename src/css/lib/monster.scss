@@ -1156,6 +1156,10 @@ table.monster-table {
 	border-bottom: 1px solid $panel-border-color;
 }
 
+.monster-table.no-th tbody tr:first-child td {
+	border-top: 1px solid $panel-border-color;
+}
+
 .monster-table tbody tr td:first-child {
 	padding-left: 25px;
 	border-left: 1px solid $panel-border-color;
@@ -1203,9 +1207,16 @@ table.monster-table {
 }
 
 .monster-table.monster-table-skinny tbody td {
-	padding: 3px 25px 3px 0;
+	padding: 3px 10px 3px 0;
 }
 
+.monster-table.monster-table-skinny tbody tr td:last-child {
+	padding-right: 10px;
+}
+
+.monster-table.monster-table-skinny tbody tr td:first-child {
+	padding-left: 10px;
+}
 /******************** TABLE MODE: spaced ********************/
 
 .monster-table.monster-table-spaced .footable-filtering th {
