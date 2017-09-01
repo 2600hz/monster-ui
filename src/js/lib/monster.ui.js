@@ -259,7 +259,7 @@ define(function(require){
 			},
 
 			tryI18n: function(mapI18n, key) {
-				return mapI18n.hasOwnProperty(key) ? mapI18n[key] : monster.util.formatVariableToDisplay(key);
+				return monster.util.tryI18n(mapI18n, key);
 			}
 		});
 	}
