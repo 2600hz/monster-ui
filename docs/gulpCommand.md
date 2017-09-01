@@ -18,7 +18,7 @@ gulp build-app --app=<name> [--pro]
 
 ## Description
 
-Start running tasks to build the project for a development or production environment, the result of which is located in the `dist` folder, at the root level of the project.
+Build Monster UI for either development, or production environment, the result of which is located in the `dist` folder, at the root level of the project.
 
 ## Commands
 
