@@ -1074,6 +1074,10 @@ define(function(require) {
 				base64 = base64Url.replace('-', '+').replace('_', '/');
 
 			return JSON.parse(window.atob(base64));
+		},
+
+		tryI18n: function(obj, key) {
+			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
 		}
 	};
 
