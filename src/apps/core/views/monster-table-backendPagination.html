@@ -4,7 +4,9 @@
 			{{i18n.backendPagination.title}}
 		</span>
 		<button class="load-more monster-button-secondary monster-button-fit">{{i18n.backendPagination.loadMore}}</button>
-		<button class="load-all monster-button-secondary monster-button-fit">{{i18n.backendPagination.loadAll}}</button>
+		{{#if allowLoadAll}}
+			<button class="load-all monster-button-secondary monster-button-fit">{{i18n.backendPagination.loadAll}}</button>
+		{{/if}}
 	</div>
 
 	<div class="full-load">

@@ -2283,7 +2283,8 @@ define(function(require) {
 					paintPaginatedFootable = function() {
 						// If we don't re-render the backendTemplate every time, the tooltips don't show up for some reason.
 						var newTable = container.footable(finalOptions),
-							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded }));
+							allowLoadAll = finalOptions.backendPagination.hasOwnProperty('allowLoadAll') ? finalOptions.backendPagination.allowLoadAll : true,
+							backendTemplate = $(monster.template(monster.apps.core, 'monster-table-backendPagination', { isFull: isAllDataLoaded, allowLoadAll: allowLoadAll }));
 
 						backendTemplate.find('.load-more:not(.disabled)').on('click', function(e) {
 							e.preventDefault();
