@@ -334,7 +334,8 @@ define(function(require) {
 					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
 				},
 				backendPagination: {
-					enabled: true
+					enabled: true,
+					allowLoadAll: false
 				},
 				afterInitialized: function() {
 					afterRender && afterRender();
@@ -678,8 +679,8 @@ define(function(require) {
 
 		balanceDownloadActiveTable: function(template) {
 			var self = this,
-				from = new Date(template.find('#startDate').val()),
-				to = new Date(template.find('#endDate').val()),
+				from = template.find('input.filter-from').datepicker('getDate'),
+				to = template.find('input.filter-to').datepicker('getDate'),
 				dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
 				dlTo = monster.util.dateToEndOfGregorianDay(to),
 				type = template.find('.tab-type-ledger.active').data('type'),
