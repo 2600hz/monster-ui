@@ -203,7 +203,8 @@
 			ledgers: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
-				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' }
+				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -370,6 +371,14 @@
 				'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
 				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
+			},
+			servicePlanner: {
+				'getFields': { verb: 'GET', url: 'service_planner' },
+				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
