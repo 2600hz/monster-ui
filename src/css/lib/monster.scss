@@ -1200,6 +1200,10 @@ table.monster-table {
 	text-align: right;
 }
 
+.monster-table th {
+	white-space: nowrap;
+}
+
 /******************** TABLE MODE: skinny ********************/
 
 .monster-table.monster-table-skinny tbody tr {
