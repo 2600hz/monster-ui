@@ -7,9 +7,19 @@
 				<i class="fa fa-arrow-left monster-orange arrow-direction"></i>
 			{{/compare}}
 		</td>
-		<td>{{ toFriendlyDate timestamp }}</td>
-		<td>{{ formatPhoneNumber fromField }}</td>
-		<td>{{ formatPhoneNumber toField }}</td>
+		<td>{{ toFriendlyDate timestamp}}</td>
+		<td>
+			<div class="multi-line-div">{{ fromField }}</div>
+			{{#if callerIdNumber}}
+				<div class="multi-line-div">{{ callerIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
+			{{/if}}
+		</td>
+		<td>
+			<div class="multi-line-div">{{ toField }}</div>
+			{{#if calleeIdNumber}}
+				<div class="multi-line-div">{{ calleeIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
+			{{/if}}
+		</td>
 		<td>{{ accountName}}</td>
 		<td>{{ duration }}</td>
 		{{#if @root.showCredits}}

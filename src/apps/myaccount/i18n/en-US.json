@@ -176,7 +176,9 @@
 		"durationColumn": "Minutes",
 		"amountColumn": "Amount",
 		"fromColumn": "From",
+		"fromCallerColumn": "Caller-ID",
 		"toColumn": "To",
+		"toCallerColumn": "Callee-ID",
 		"directionColumn": " ",
 		"accountColumn": "Account",
 
@@ -267,7 +269,9 @@
 				"mobile_data": "Mobile Data",
 				"per-minute-voip": "Per Minute"
 			}
-		}
+		},
+
+		"cidHint": "CID"
 	},
 
 	"servicePlan": {

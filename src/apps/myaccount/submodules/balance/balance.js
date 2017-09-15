@@ -291,14 +291,16 @@ define(function(require) {
 				var duration = self.i18n.active().balance.active_call,
 					accountName = v.account.name,
 					friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
-					fromField = monster.util.formatPhoneNumber(v.metadata.from || '').replace(/@.*/, ''),
-					toField = monster.util.formatPhoneNumber(v.metadata.to || '').replace(/@.*/, '');
+					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
+					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
+					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
+					calleeIdNumber = monster.util.formatPhoneNumber(v.metadata.callee_id_number || '');
 
 				if (v.usage && v.usage.hasOwnProperty('quantity')) {
 					duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
 				}
 
-				data.transactions.push({
+				var obj = {
 					direction: v.metadata.call.direction,
 					callId: v.id,
 					timestamp: v.period.start,
@@ -307,7 +309,17 @@ define(function(require) {
 					accountName: accountName,
 					duration: duration,
 					friendlyAmount: friendlyAmount
-				});
+				};
+
+				if (callerIdNumber !== fromField) {
+					obj.callerIdNumber = callerIdNumber;
+				}
+
+				if (calleeIdNumber !== toField) {
+					obj.calleeIdNumber = calleeIdNumber;
+				}
+
+				data.transactions.push(obj);
 			});
 
 			return data;
