@@ -609,11 +609,27 @@ define(function(require) {
 							}
 						},
 						{
+							name: 'Polycom vvx 301',
+							kind: 'model',
+							regexp: 'vvx_301',
+							info: {
+								css: 'monster-ua monster-ua-polycom-vvx-301'
+							}
+						},
+						{
 							name: 'Polycom vvx 310',
 							kind: 'model',
 							regexp: 'vvx_310',
 							info: {
 								css: 'monster-ua monster-ua-polycom-vvx-310'
+							}
+						},
+						{
+							name: 'Polycom vvx 311',
+							kind: 'model',
+							regexp: 'vvx_311',
+							info: {
+								css: 'monster-ua monster-ua-polycom-vvx-311'
 							}
 						},
 						{
@@ -625,11 +641,27 @@ define(function(require) {
 							}
 						},
 						{
+							name: 'Polycom vvx 401',
+							kind: 'model',
+							regexp: 'vvx_401',
+							info: {
+								css: 'monster-ua monster-ua-polycom-vvx-401'
+							}
+						},
+						{
 							name: 'Polycom vvx 410',
 							kind: 'model',
 							regexp: 'vvx_410',
 							info: {
 								css: 'monster-ua monster-ua-polycom-vvx-410'
+							}
+						},
+						{
+							name: 'Polycom vvx 411',
+							kind: 'model',
+							regexp: 'vvx_411',
+							info: {
+								css: 'monster-ua monster-ua-polycom-vvx-411'
 							}
 						},
 						{
