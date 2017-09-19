@@ -49,6 +49,7 @@ require.config({
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
+		'randomColor': 'js/vendor/randomColor',
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
