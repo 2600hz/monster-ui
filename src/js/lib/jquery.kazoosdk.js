@@ -330,6 +330,9 @@
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
 			},
+			qubicleReports: {
+				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
+			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/recordings/{resourceId}' },
