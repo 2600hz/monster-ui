@@ -12,6 +12,8 @@ globals:
   define: true
   _: true
   Duo: true
+  Handlebars: false
+  monster: false
 
 rules:
   no-tabs: off
