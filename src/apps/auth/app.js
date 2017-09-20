@@ -1151,9 +1151,24 @@ define(function(require) {
 						monster.ui.alert('error', self.i18n.active().disabledAccount);
 					} else if (data.status === 401) {
 						if (errorPayload.data.hasOwnProperty('multi_factor_request')) {
-							self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
-								self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
-							}, wrongCredsCallback);
+							// If it's a 401 that is about requesting additional login information via MFA, we need to know if it comes from a reconnect attempt
+							// If it comes from a reconnect attempt, then we show a popup to ask them if they want to reconnect.
+							// If we don't do that and the system automatically reconnected, then the User would see a popup asking him to re-authenticate Duo without any context.
+							var handleMultifactor = function() {
+								self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
+									self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
+								}, wrongCredsCallback);
+							};
+
+							if (additionalArgs && additionalArgs.hasOwnProperty('isRetryLoginRequest') && additionalArgs.isRetryLoginRequest === true) {
+								monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
+									handleMultifactor();
+								}, function() {
+									monster.util.logoutAndReload();
+								});
+							} else {
+								handleMultifactor();
+							}
 						} else {
 							wrongCredsCallback && wrongCredsCallback();
 						}
@@ -1219,13 +1234,9 @@ define(function(require) {
 			}
 
 			if (loginData) {
-				monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
-					self.putAuth(loginData, function(data) {
-						success && success(data.auth_token);
-					}, error, false, additionalArgs);
-				}, function() {
-					monster.util.logoutAndReload();
-				});
+				self.putAuth(loginData, function(data) {
+					success && success(data.auth_token);
+				}, error, false, additionalArgs);
 			} else {
 				error && error();
 			}
