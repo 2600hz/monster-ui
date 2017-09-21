@@ -90,7 +90,12 @@ define(function(require) {
 
 			monster.parallel({
 				globalLedgers: function(callback) {
-					self.balanceListFilteredLedgers(filters, function(data) {
+					var globalFilters = {
+						created_from: filters.created_from,
+						created_to: filters.created_to
+					};
+
+					self.balanceListFilteredLedgers(globalFilters, function(data) {
 						callback(null, data);
 					});
 				},
@@ -126,10 +131,11 @@ define(function(require) {
 
 		balanceGetFormattedStats: function(data) {
 			var self = this,
+				bytes = monster.util.formatBytes(0),
 				formattedData = {
 					totalMinutes: 0,
-					totalCharges: 0,
-					totalMobileData: 0
+					totalCharges: parseFloat(0).toFixed(3),
+					totalMobileData: bytes.value + ' ' + bytes.unit.symbol
 				};
 
 			if (!_.isEmpty(data.globalLedgers)) {
@@ -144,18 +150,12 @@ define(function(require) {
 
 					// We now divide by 1 because the amount returned is negative
 					formattedData.totalCharges = parseFloat(ledger.amount / -1).toFixed(3);
-				} else {
-					formattedData.totalMinutes = 0;
-					formattedData.totalCharges = parseFloat(0).toFixed(3);
 				}
 
 				if (data.globalLedgers.hasOwnProperty('mobile_data')) {
 					var ledger = data.globalLedgers['mobile_data'],
 						bytes = monster.util.formatBytes(ledger.usage.quantity * 1000000);
 
-					formattedData.totalMobileData = bytes.value + ' ' + bytes.unit.symbol;
-				} else {
-					var bytes = monster.util.formatBytes(0);
 					formattedData.totalMobileData = bytes.value + ' ' + bytes.unit.symbol;
 				}
 			}

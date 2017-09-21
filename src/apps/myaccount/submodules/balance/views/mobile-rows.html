@@ -1,9 +1,9 @@
 {{#each transactions}}
 	<tr class="transaction-row">
-		<td data-sort-value="{{period.end}}">{{toFriendlyDate period.end "month DD, year"}}</td>
+		<td data-sort-value="{{period.end}}">{{toFriendlyDate period.end}}</td>
 		<td>{{ account.name }}</td>
 		<td>{{ formatPhoneNumber source.id }}</td>
-		<td>{{ usage.quantity }} {{usage.unit }}</td>
+		<td data-sort-value="{{usage.quantity}}">{{ usage.quantity }} {{usage.unit }}</td>
 		<td>${{ amount }}</td>
 	</tr>
 {{/each}}
