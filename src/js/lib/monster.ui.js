@@ -220,8 +220,13 @@ define(function(require){
 			},
 
 			select: function(value, options) {
-				var $el = $('<select />').html( options.fn(this) );
-				$el.find('[value="' + value + '"]').attr({'selected':'selected'});
+				var $el = $('<select />').html(options.fn(this));
+				if (!_.isArray(value)) {
+					value = [ value ];
+				}
+				_.forEach(value, function(data) {
+					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
+				});
 				return $el.html();
 			},
 
