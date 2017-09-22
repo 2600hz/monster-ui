@@ -785,7 +785,11 @@
 	"mediaSelect": {
 		"defaultLabel": "Media",
 		"emptyUploadAlert": "Empty Upload",
-		"fileTooBigAlert": "File Too Big"
+		"fileTooBigAlert": "File Too Big",
+		"shoutcastURL": "Stream URL",
+		"shoutcastURLHelp": "You can type any URL including :// (http, https, shout...)",
+		"noneLabel": "- None -",
+		"silence": "Silence"
 	},
 
 	"__comment": "UI-2279: Webphone strings",

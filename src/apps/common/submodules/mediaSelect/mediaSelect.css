@@ -13,6 +13,10 @@
 	margin-left: 10px;
 	min-width: 117px;
 }
+.monster-media-selection .shoutcast-div {
+	margin-top: 20px;
+	margin-bottom: 0;
+}
 .monster-media-selection .upload-div {
 	display: none;
 	margin-top: 20px;

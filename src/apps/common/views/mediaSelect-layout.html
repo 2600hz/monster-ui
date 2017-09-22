@@ -1,5 +1,5 @@
 <div class="monster-media-selection">
-	<div>
+	<div class="clearfix">
 		<span>{{ label }}</span>
 		<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
 			{{#select selectedOption}}
@@ -17,6 +17,12 @@
 			{{uploadLabel}}
 		</a>
 	{{/if}}
+	</div>
+	<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
+		<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
+		<div class="input controls">
+			<input type="text" class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+		</div>
 	</div>
 	<div class="upload-div">
 		<input type="file" class="upload-input" accept="audio/*">
