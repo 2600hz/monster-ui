@@ -14,21 +14,95 @@ define(function(require){
 		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
+				callback = args.callback,
+				formattedData = self.mediaSelectFormatData(args),
+				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
+
+			self.mediaSelectBindEvents(template);
+
+			container
+				.empty()
+				.append(template);
+
+			callback && callback({
+				getValue: function() {
+					return self.mediaSelectGetValue(template);
+				}
+			});
+		},
+
+		mediaSelectFormatData: function(args) {
+			var self = this,
 				defaultData = {
+					noneLabel: self.i18n.active().mediaSelect.noneLabel,
 					selectedOption: false,
 					uploadButton: true,
 					options: [],
 					name: undefined,
 					uploadLabel: self.i18n.active().upload,
-					label: self.i18n.active().mediaSelect.defaultLabel
+					label: self.i18n.active().mediaSelect.defaultLabel,
+					hasNone: true,
+					hasShoutcast: true,
+					hasSilence: true,
+					isShoutcast: false,
+					shoutcastURLInputClass: ''
 				},
 				formattedData = $.extend(true, {}, defaultData, args),
-				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
+				optionShoutcast = {
+					id: 'shoutcast',
+					name: self.i18n.active().mediaSelect.shoutcastURL
+				},
+				optionNone = {
+					id: 'none',
+					name: formattedData.noneLabel
+				},
+				optionSilence = {
+					id: 'silence_stream://300000',
+					name: self.i18n.active().mediaSelect.silence
+				},
+				isShoutcast = formattedData.selectedOption && formattedData.selectedOption.indexOf('://') >= 0 && formattedData.selectedOption !== 'silence_stream://300000',
+				options = [];
 
-			self.mediaSelectBindEvents(template);
+			if (formattedData.hasNone) {
+				options.push(optionNone);
+			}
 
-			container.empty()
-					 .append(template);
+			if (formattedData.hasSilence) {
+				options.push(optionSilence);
+			}
+
+			if (formattedData.hasShoutcast) {
+				options.push(optionShoutcast);
+			}
+
+			formattedData.options = options.concat(args.options);
+
+			if (isShoutcast) {
+				formattedData.isShoutcast = isShoutcast;
+				formattedData.shoutcastValue = formattedData.selectedOption;
+				formattedData.selectedOption = 'shoutcast';
+			}
+
+			return formattedData;
+		},
+
+		mediaSelectGetValue: function(template) {
+			var self = this,
+				response;
+
+			if (template) {
+				var val = template.find('.media-dropdown').val();
+
+				if (val === 'shoutcast') {
+					response = template.find('.shoutcast-div input').val();
+				} else {
+					response = val;
+				}
+			} else {
+				response = 'invalid_template';
+			}
+
+			return response;
 		},
 
 		mediaSelectBindEvents: function(template) {
@@ -46,6 +120,20 @@ define(function(require){
 						mediaSelect.val(newMedia.id);
 					}
 				};
+
+			template.find('.media-dropdown').on('change', function() {
+				var val = $(this).val(),
+					isShoutcast = val === 'shoutcast';
+
+				template.find('.shoutcast-div')
+						.toggleClass('hidden', !isShoutcast)
+						.find('input')
+						.val('');
+
+				if (isShoutcast) {
+					closeUploadDiv();
+				}
+			});
 
 			template.find('.upload-input').fileUpload({
 				inputOnly: true,
@@ -101,6 +189,7 @@ define(function(require){
 								},
 								success: function(data, status) {
 									closeUploadDiv(media);
+									template.find('.shoutcast-div').addClass('hidden');
 								},
 								error: function(data, status) {
 									self.callApi({
