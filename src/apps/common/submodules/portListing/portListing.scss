@@ -579,7 +579,9 @@
 }
 
 /*********************** STATUS POPUP ***********************/
-
+.port-app-dialog {
+	z-index:1001;	
+}
 .port-app-dialog #form_update_status {
 	max-width: 500px;
 	margin: 0;
