@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		moment = require('moment'),
 		timezone = require('monster-timezone'),
 		monster = require('monster');
 
@@ -724,17 +725,12 @@ define(function(require) {
 							};
 
 						if (state === 'scheduled') {
-							var date = dialog.find('#scheduled_date').datepicker('getDate'),
-								time = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight') / 60,
-								year = date.getFullYear(),
-								month = self.portListingFormat2Digits(date.getMonth()+1),
-								day = self.portListingFormat2Digits(date.getDate()),
-								hours = self.portListingFormat2Digits(Math.floor(time / 60)),
-								minutes = self.portListingFormat2Digits(time % 60),
+							var pickedDate = dialog.find('#scheduled_date').datepicker('getDate'),
+								pickedSeconds = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight'),
 								timezone = dialog.find('#scheduled_timezone').val();
 
 							patchRequestData.data.schedule_on = {
-								date_time: year + '-' + month + '-' + day + ' ' + hours + ':' + minutes,
+								date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
 								timezone: timezone
 							};
 						}
