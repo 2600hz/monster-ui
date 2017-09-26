@@ -241,21 +241,14 @@ define(function(require) {
 			},
 
 			toFriendlyDate: function(timestamp, format, user, isGregorian) {
-				// Handlebars always adds an additional argument for context, which means we make sure the argument we receive are the ones we expect
-				// If format is not a string, it's Handlebars context, so we strip it
-				if (typeof format === 'string') {
-					if (typeof user === 'object' && user.hasOwnProperty('id')) {
-						if (typeof isGregorian === 'boolean') {
-							return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
-						} else {
-							return monster.util.toFriendlyDate(timestamp, format, user);
-						}
-					} else {
-						return monster.util.toFriendlyDate(timestamp, format);
-					}
-				} else {
-					return monster.util.toFriendlyDate(timestamp);
-				}
+				// Handlebars always adds an additional argument for context, so we make sure the argument we receive are the ones we expect
+				var args = Array.prototype.slice.call(arguments).slice(0, -1),
+					timestamp = args[0],
+					format = _.isString(args[1]) ? args[1] : undefined,
+					user = _.isObject(args[2]) ? args[2] : undefined,
+					isGregorian = _.isBoolean(args[3]) ? args[3] : undefined;
+
+				return monster.util.toFriendlyDate(timestamp, format, user, isGregorian);
 			},
 
 			toLowerCase: function(stringValue) {
