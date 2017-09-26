@@ -727,7 +727,7 @@ define(function(require) {
 							var date = dialog.find('#scheduled_date').datepicker('getDate'),
 								time = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight') / 60,
 								year = date.getFullYear(),
-								month = self.portListingFormat2Digits(date.getMonth()),
+								month = self.portListingFormat2Digits(date.getMonth()+1),
 								day = self.portListingFormat2Digits(date.getDate()),
 								hours = self.portListingFormat2Digits(Math.floor(time / 60)),
 								minutes = self.portListingFormat2Digits(time % 60),
