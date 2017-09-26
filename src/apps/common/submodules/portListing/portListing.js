@@ -125,7 +125,7 @@ define(function(require) {
 						}
 
 						// determine if scheduled today for filtering purposes
-						if (port.hasOwnProperty('scheduled_at') && monster.util.gregorianToDate(port.scheduled_at).toDateString() === new Date().toDateString()) {
+						if (port.hasOwnProperty('scheduled_at') && !moment(monster.util.gregorianToDate(port.scheduled_at)).startOf('day').diff(moment().startOf('day'))) {
 							port.extra.isScheduledToday = true;
 						}
 
@@ -400,7 +400,7 @@ define(function(require) {
 					name: 'updateStatus-scheduled',
 					submodule: 'portListing'
 				})),
-				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : new Date(),
+				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : moment().toDate(),
 				$timezoneSelect = template.find('#scheduled_timezone');
 
 			monster.ui.datepicker(template.find('#scheduled_date')).datepicker('setDate', defaultDate);
@@ -796,8 +796,8 @@ define(function(require) {
 				data = args.data,
 				container = args.container,
 				user = monster.apps.auth.currentUser,
-				now = new Date(),
-				timestampOfDay = new Date().setHours(0, 0, 0, 0),
+				now = moment().toDate(),
+				timestampOfDay = moment().startOf('day').valueOf(),
 				author = user.first_name + ' ' + user.last_name;
 
 			self.portListingRequestCreateComment({
@@ -883,7 +883,7 @@ define(function(require) {
 				formattedEntries = self.portListingFormatToTimeline(entries),
 				entriesByDays = _.groupBy(formattedEntries, function(entry) {
 					// group entries by calendar days
-					return new Date(entry.timestamp).setHours(0, 0, 0, 0);
+					return moment(entry.timestampOfDay).startOf('day').valueOf();
 				}),
 				timeline = _.chain(entriesByDays).keys().map(function(timestamp) {
 					// switch to array structure for sortability purposes
