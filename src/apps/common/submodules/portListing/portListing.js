@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		moment = require('moment'),
 		timezone = require('monster-timezone'),
 		monster = require('monster');
 
@@ -124,7 +125,7 @@ define(function(require) {
 						}
 
 						// determine if scheduled today for filtering purposes
-						if (port.hasOwnProperty('scheduled_at') && monster.util.gregorianToDate(port.scheduled_at).toDateString() === new Date().toDateString()) {
+						if (port.hasOwnProperty('scheduled_at') && !moment(monster.util.gregorianToDate(port.scheduled_at)).startOf('day').diff(moment().startOf('day'))) {
 							port.extra.isScheduledToday = true;
 						}
 
@@ -399,7 +400,7 @@ define(function(require) {
 					name: 'updateStatus-scheduled',
 					submodule: 'portListing'
 				})),
-				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : new Date(),
+				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : moment().toDate(),
 				$timezoneSelect = template.find('#scheduled_timezone');
 
 			monster.ui.datepicker(template.find('#scheduled_date')).datepicker('setDate', defaultDate);
@@ -724,17 +725,12 @@ define(function(require) {
 							};
 
 						if (state === 'scheduled') {
-							var date = dialog.find('#scheduled_date').datepicker('getDate'),
-								time = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight') / 60,
-								year = date.getFullYear(),
-								month = self.portListingFormat2Digits(date.getMonth()+1),
-								day = self.portListingFormat2Digits(date.getDate()),
-								hours = self.portListingFormat2Digits(Math.floor(time / 60)),
-								minutes = self.portListingFormat2Digits(time % 60),
+							var pickedDate = dialog.find('#scheduled_date').datepicker('getDate'),
+								pickedSeconds = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight'),
 								timezone = dialog.find('#scheduled_timezone').val();
 
 							patchRequestData.data.schedule_on = {
-								date_time: year + '-' + month + '-' + day + ' ' + hours + ':' + minutes,
+								date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
 								timezone: timezone
 							};
 						}
@@ -800,8 +796,8 @@ define(function(require) {
 				data = args.data,
 				container = args.container,
 				user = monster.apps.auth.currentUser,
-				now = new Date(),
-				timestampOfDay = new Date().setHours(0, 0, 0, 0),
+				now = moment().toDate(),
+				timestampOfDay = moment().startOf('day').valueOf(),
 				author = user.first_name + ' ' + user.last_name;
 
 			self.portListingRequestCreateComment({
@@ -887,7 +883,7 @@ define(function(require) {
 				formattedEntries = self.portListingFormatToTimeline(entries),
 				entriesByDays = _.groupBy(formattedEntries, function(entry) {
 					// group entries by calendar days
-					return new Date(entry.timestamp).setHours(0, 0, 0, 0);
+					return moment(entry.timestamp).startOf('day').valueOf();
 				}),
 				timeline = _.chain(entriesByDays).keys().map(function(timestamp) {
 					// switch to array structure for sortability purposes
