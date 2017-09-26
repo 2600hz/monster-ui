@@ -883,7 +883,7 @@ define(function(require) {
 				formattedEntries = self.portListingFormatToTimeline(entries),
 				entriesByDays = _.groupBy(formattedEntries, function(entry) {
 					// group entries by calendar days
-					return moment(entry.timestampOfDay).startOf('day').valueOf();
+					return moment(entry.timestamp).startOf('day').valueOf();
 				}),
 				timeline = _.chain(entriesByDays).keys().map(function(timestamp) {
 					// switch to array structure for sortability purposes
