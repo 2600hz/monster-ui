@@ -125,7 +125,7 @@ define(function(require) {
 						}
 
 						// determine if scheduled today for filtering purposes
-						if (port.hasOwnProperty('scheduled_at') && !moment(monster.util.gregorianToDate(port.scheduled_at)).startOf('day').diff(moment().startOf('day'))) {
+						if (port.hasOwnProperty('scheduled_at') && !moment(monster.util.gregorianToDate(port.scheduled_at)).isSame(moment(), 'day')) {
 							port.extra.isScheduledToday = true;
 						}
 
@@ -404,7 +404,13 @@ define(function(require) {
 				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : moment().toDate(),
 				$timezoneSelect = template.find('#scheduled_timezone');
 
-			monster.ui.datepicker(template.find('#scheduled_date')).datepicker('setDate', defaultDate);
+			monster.ui.datepicker(template.find('#scheduled_date'), {
+				beforeShow: function(target, instance) {
+					$(target)
+						.parents('.ui-dialog')
+							.append(instance.dpDiv);
+				}
+			}).datepicker('setDate', defaultDate);
 			monster.ui.timepicker(template.find('#scheduled_time')).timepicker('setTime', defaultDate);
 
 			timezone.populateDropdown($timezoneSelect, monster.apps.auth.currentAccount.timezone);
@@ -818,7 +824,7 @@ define(function(require) {
 					var newComment = _.last(comments),
 						$lastDay = container.find('.timeline .day:last-child'),
 						formattedComment = {
-							timestamp: monster.util.gregorianToDate(newComment.timestamp).getTime(),
+							timestamp: moment(monster.util.gregorianToDate(newComment.timestamp)).valueOf(),
 							title: newComment.author,
 							content: newComment.content
 						};
@@ -858,7 +864,7 @@ define(function(require) {
 
 			_.each(comments, function(comment) {
 				timeline.push({
-					timestamp: monster.util.gregorianToDate(comment.timestamp).getTime(),
+					timestamp: moment(monster.util.gregorianToDate(comment.timestamp)).valueOf(),
 					title: comment.author,
 					content: comment.content
 				});
@@ -866,7 +872,7 @@ define(function(require) {
 
 			_.each(statuses, function(status, idx) {
 				timeline.push({
-					timestamp: monster.util.gregorianToDate(status.timestamp).getTime(),
+					timestamp: moment(monster.util.gregorianToDate(status.timestamp)).valueOf(),
 					// do not show the `Action Required` text if the status is rejected by not the most recent
 					title: self.i18n.active().portListing.misc[(statuses.length - 1 !== idx) && status.transition.new === 'rejected' ? 'alternateStatus' : 'status'][status.transition.new],
 					content: status.reason,
