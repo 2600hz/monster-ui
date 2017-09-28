@@ -385,6 +385,8 @@
 }
 
 #port_app_container .info-panel .numbers-section .numbers-listing li {
+	display: flex;
+	flex-direction: row-reverse;
 	margin-top: 5px;
 }
 
