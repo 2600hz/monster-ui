@@ -361,6 +361,43 @@
   background-image: url(../assets/models/x-lite.png);
 }
 
+/* Vtech */
+.monster-ua-vtech {
+  background-image: url(../assets/brands/vtech.png);
+}
+
+.monster-ua-vtech-vsp6xx-vsp600 {
+  background-image: url(../assets/models/vtech_vsp6xx_vsp600.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp715 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp715.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp725 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp725.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp726 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp726.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp735 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp735.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp736 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp736.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp752 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp752.jpg);
+}
+
+.monster-ua-vtech-vsp6xx-vsp754 {
+  background-image: url(../assets/models/vtech_vsp7xx_vsp754.jpg);
+}
+
 /* Yealink */
 .monster-ua-yealink {
   background-image: url(../assets/models/yealink_t2x_t22p.jpg);
