@@ -1493,12 +1493,19 @@ define(function(require){
 			}
 
 			var defaultOptions = {
-					dateFormat: datePickerFormat,
-					constraintInput: true
-				},
-				optionsDatePicker = $.extend(true, defaultOptions, options);
+				dateFormat: datePickerFormat,
+				constraintInput: true
+			};
 
-			return target.datepicker(optionsDatePicker);
+			if (target.parents('.modal-content')) {
+				defaultOptions.beforeShow = function(target, instance) {
+					$(target)
+						.parents('.modal-content')
+							.append(instance.dpDiv);
+				};
+			}
+
+			return target.datepicker(_.merge(defaultOptions, options));
 		},
 
 		/**
