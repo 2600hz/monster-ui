@@ -214,31 +214,39 @@ define(function(require) {
 		addListener: function addListener(binding, accountId, authToken, func, source) {
 			var self = this,
 				found = false,
-				newListener = {
+				listener = {
 					accountId: accountId,
 					authToken: authToken,
 					source: source,
 					callback: func
+				},
+				tryAddingListener = function(newListener) {
+					if (!self.bindings.hasOwnProperty(binding)) {
+						self.bindings[binding] = {
+							listeners: [ newListener ]
+						};
+					} else {
+						_.each(self.bindings[binding].listeners, function(listener) {
+							if (listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
+								found = true;
+							}
+						});
+
+						if (!found) {
+							self.bindings[binding].listeners.push(newListener);
+						} else {
+							self.log('already bound!', true);
+						}
+					}
 				};
 
 			if (self.bindings.hasOwnProperty(binding)) {
-				_.each(self.bindings[binding].listeners, function(listener) {
-					if (listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
-						found = true;
-					}
-				});
-
-				if (!found) {
-					self.bindings[binding].listeners.push(newListener);
-				} else {
-					self.log('already bound!', true);
-				}
+				tryAddingListener(listener);
 			} else {
-				self.bindings[binding] = {
-					listeners: [ newListener ]
-				};
 				self.subscribe(accountId, authToken, binding, function(result) {
-					if (result.status !== 'success') {
+					if (result.status === 'success') {
+						tryAddingListener(listener);
+					} else {
 						self.log('monster.socket: subscribe ' + binding + ' failed', true);
 						self.log(result);
 					}
