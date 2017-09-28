@@ -234,12 +234,11 @@ define(function(require) {
 					self.log('already bound!', true);
 				}
 			} else {
+				self.bindings[binding] = {
+					listeners: [ newListener ]
+				};
 				self.subscribe(accountId, authToken, binding, function(result) {
-					if (result.status === 'success') {
-						self.bindings[binding] = {
-							listeners: [ newListener ]
-						};
-					} else {
+					if (result.status !== 'success') {
 						self.log('monster.socket: subscribe ' + binding + ' failed', true);
 						self.log(result);
 					}
