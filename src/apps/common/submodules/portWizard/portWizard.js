@@ -639,7 +639,7 @@ define(function(require) {
 							formData = monster.ui.getFormData('form_add_numbers'),
 							newNumbers = {},
 							phoneNumber,
-							errors = false;
+							errors = [];
 
 						monster.ui.validate($form, {
 							rules: {
@@ -654,12 +654,12 @@ define(function(require) {
 							formData.numbers = formData.numbers.replace(/[-().]/g, '').split(' ');
 
 							_.each(formData.numbers, function(number) {
-								phoneNumber = number.match(/^\+(.*)$/);
+								phoneNumber = monster.util.getFormatPhoneNumber(number);
 
-								if (phoneNumber && phoneNumber[1]) {
-									newNumbers[number] = {};
+								if (phoneNumber.hasOwnProperty('e164Number')) {
+									newNumbers[phoneNumber.e164Number] = {};
 								} else {
-									errors = true;
+									errors.push(number);
 								}
 							});
 
@@ -675,9 +675,7 @@ define(function(require) {
 								.find('textarea')
 									.val('');
 
-							if (errors) {
-								toastr.warning(self.i18n.active().portWizard.toastr.warning.invalidNumbers);
-							} else {
+							if (_.isEmpty(errors)) {
 								container
 									.find('.accordion')
 										.slideUp(function() {
@@ -685,6 +683,8 @@ define(function(require) {
 												.find('.collapse')
 													.fadeIn();
 										});
+							} else {
+								toastr.warning(self.i18n.active().portWizard.toastr.warning.invalidNumbers.replace('{{variable}}', errors.join(', ')));
 							}
 
 							self.portWizardRenderAddNumbersList(args);
