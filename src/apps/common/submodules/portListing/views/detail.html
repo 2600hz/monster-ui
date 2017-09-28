@@ -148,10 +148,8 @@
 			</div>
 			<ul class="numbers-listing">
 			{{#each numbers}}
-				<li data-value="{{@key}}">
-					<div class="number-wrapper">
-						{{formatPhoneNumber @key}}
-					</div>
+				<li class="list-item" data-value="{{@key}}">
+					{{#monsterNumberWrapper @key}}{{/monsterNumberWrapper}}
 				</li>
 			{{/each}}
 			</ul>

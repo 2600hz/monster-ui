@@ -404,13 +404,7 @@ define(function(require) {
 				defaultDate = port.hasOwnProperty('scheduled_at') ? monster.util.gregorianToDate(port.scheduled_at) : moment().toDate(),
 				$timezoneSelect = template.find('#scheduled_timezone');
 
-			monster.ui.datepicker(template.find('#scheduled_date'), {
-				beforeShow: function(target, instance) {
-					$(target)
-						.parents('.ui-dialog')
-							.append(instance.dpDiv);
-				}
-			}).datepicker('setDate', defaultDate);
+			monster.ui.datepicker(template.find('#scheduled_date')).datepicker('setDate', defaultDate);
 			monster.ui.timepicker(template.find('#scheduled_time')).timepicker('setTime', defaultDate);
 
 			timezone.populateDropdown($timezoneSelect, monster.apps.auth.currentAccount.timezone);

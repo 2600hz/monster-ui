@@ -311,9 +311,21 @@
 	margin-top: 5px;
 }
 
+#port_wizard .list-wrapper .item {
+	display: flex;
+
+	align-items: center;
+	justify-content: flex-end;
+}
+
 #port_wizard .list-wrapper .item i {
 	font-size: 13px;
+	margin-left: 25px;
 	cursor: pointer;
+}
+
+#port_wizard .list-wrapper .item i:not(.warning):hover {
+	color: #22a5ff;
 }
 
 #port_wizard .list-wrapper .item.warning,
