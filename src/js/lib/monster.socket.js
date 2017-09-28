@@ -239,18 +239,12 @@ define(function(require){
 				if(!found) {
 					self.bindings[binding].listeners.push(newListener);
 				}
-				else {
-					self.log('already bound!', true)
-				}
-			}
-			else {
+			} else {
+				self.bindings[binding] = {
+					listeners: [ newListener ]
+				};
 				self.subscribe(accountId, authToken, binding, function(result) {
-					if(result.status === 'success') {
-						self.bindings[binding] = {
-							listeners: [ newListener ]
-						}
-					}
-					else {
+					if (result.status !== 'success') {
 						self.log('monster.socket: subscribe ' + binding + ' failed', true);
 						self.log(result);
 					}
