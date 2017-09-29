@@ -132,6 +132,11 @@
 	</div>
 {{/if}}
 {{#if undefinedPorts}}
+	{{#unless allOtherPorts}}
+	<button class="monster-button-primary port-wizard">
+		{{i18n.portListing.listing.button}}
+	</button>
+	{{/unless}}
 	<div class="monster-table-wrapper">
 		<h4 class="title">
 			{{i18n.portListing.listing.title}}
