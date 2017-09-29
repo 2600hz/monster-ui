@@ -8,6 +8,7 @@
 * [Using a Common control][common_controls]
 * [Adding I18n to your application][i18n]
 * [Using application flags][flags]
+* [Using Postman as a CRUD][using-postman-as-a-crud]
 * [Coding standards (Basic)][coding_standards]
 * [Coding standards (Advanced)][js_style_guide]
 * [Coding standards linting][linting]
@@ -30,3 +31,4 @@
 [test_plan]: testPlan.md
 [sdk]: kazooSdk.md
 [linting]: linting.md
+[using-postman-as-a-crud]: using-postman-as-a-crud.md
