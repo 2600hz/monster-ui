@@ -563,7 +563,20 @@ define(function(require) {
 			In last resort it will set it to 'en-US' if nothing is set above
 		*/
 		setDefaultLanguage: function() {
+<<<<<<< HEAD
 			var browserLanguage = (navigator.language).replace(/-.*/,function(a){return a.toUpperCase();}),// always capitalize the second part of the navigator language
+=======
+			var languages = [
+					'en-US',
+					'es-ES',
+					'fr-FR',
+					'nl-NL',
+					'ru-RU'
+				],
+				browserLanguage = _.find(languages, function(lang) {
+					return lang.indexOf(navigator.language) > -1;
+				}),
+>>>>>>> 09dfa6b5... OOB: Use ISO formatted language of browser
 				cookieLanguage = $.cookie('monster-auth') ? ($.parseJSON($.cookie('monster-auth'))).language : undefined,
 				defaultLanguage = browserLanguage || 'en-US';
 
