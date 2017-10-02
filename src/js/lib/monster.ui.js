@@ -1505,7 +1505,7 @@ define(function(require){
 				};
 			}
 
-			return target.datepicker(_.merge(defaultOptions, options));
+			return target.datepicker(_.extend(defaultOptions, options));
 		},
 
 		/**
