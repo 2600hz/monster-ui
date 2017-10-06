@@ -1047,7 +1047,8 @@ define(function(require) {
 						$(element).valid();
 					});
 				}
-				return monster.util.timeToSeconds(value) > monster.util.timeToSeconds(target.val());
+
+				return parseInt(monster.util.timeToSeconds(value)) > parseInt(monster.util.timeToSeconds(target.val()));
 			}, localization.customRules.greaterDate);
 
 			// Adding advanced custom rules
