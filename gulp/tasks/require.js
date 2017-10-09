@@ -21,9 +21,67 @@ for(var i in appsToInclude) {
 }
 
 var getConfigRequire = function(mode, app) {
-	var	librariesToExcludeFromAppBuild = ['async','bootstrap','bootstrap-clickover','chart','card','chosen','clipboard','crossroads','config', 'ddslick', 'drop', 'fileupload','footable','form2object','handlebars','hasher','hotkeys','introJs','isotope','jquery','jqueryui','jstz','kazoosdk','mask','modernizr','monster','monster-apps','monster-ui','monster-timezone','monster-routing','monster-ui','monster-util','mousetrap','nicescroll','plugins','papaparse','postal', 'prettify', 'renderjson','reqwest','signals', 'tether', 'timepicker','toastr','touch-punch','underscore','validate', 'vkbeautify', 'wysiwyg','pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker', 'templates'],
-		librariesToExcludeFromWhole = ['pdfjs-dist/build/pdf','pdfjs-dist/build/pdf.worker'],
-		standardFilesToExclude = ['config','templates'];
+	var	librariesToExcludeFromAppBuild = [
+			'async',
+			'bootstrap',
+			'bootstrap-clickover',
+			'card',
+			'chart',
+			'chosen',
+			'clipboard',
+			'config',
+			'crossroads',
+			'ddslick',
+			'drop',
+			'fileupload',
+			'footable',
+			'form2object',
+			'handlebars',
+			'hasher',
+			'hotkeys',
+			'introJs',
+			'isotope',
+			'jquery',
+			'jqueryui',
+			'jstz',
+			'kazoosdk',
+			'mask',
+			'modernizr',
+			'monster',
+			'monster-apps',
+			'monster-routing',
+			'monster-timezone',
+			'monster-ui',
+			'monster-util',
+			'mousetrap',
+			'nicescroll',
+			'papaparse',
+			'pdfjs-dist/build/pdf',
+			'pdfjs-dist/build/pdf.worker',
+			'plugins',
+			'postal',
+			'prettify',
+			'renderjson',
+			'reqwest',
+			'signals',
+			'templates',
+			'tether',
+			'timepicker',
+			'toastr',
+			'touch-punch',
+			'underscore',
+			'validate',
+			'vkbeautify',
+			'wysiwyg'
+		],
+		librariesToExcludeFromWhole = [
+			'pdfjs-dist/build/pdf',
+			'pdfjs-dist/build/pdf.worker'
+		],
+		standardFilesToExclude = [
+			'config',
+			'templates'
+		];
 
 	if(mode === 'app') {
 		modules = [
