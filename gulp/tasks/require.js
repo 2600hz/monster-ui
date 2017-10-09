@@ -61,6 +61,7 @@ var getConfigRequire = function(mode, app) {
 			'pdfjs-dist/build/pdf.worker',
 			'plugins',
 			'postal',
+			'randomColor',
 			'renderjson',
 			'reqwest',
 			'signals',
