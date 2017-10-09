@@ -23,6 +23,11 @@
 		<div class="input controls">
 			<input type="text" class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
 		</div>
+		<div class="shoutcast-warning">
+			{{#monsterText 'warning'}}
+				{{ i18n.mediaSelect.shoutcastURLWarning }}
+			{{/monsterText}}
+		</div>
 	</div>
 	<div class="upload-div">
 		<input type="file" class="upload-input" accept="audio/*">
