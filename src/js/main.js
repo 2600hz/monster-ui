@@ -10,7 +10,6 @@ require.config({
 		'chosen': 'js/vendor/jquery.chosen.min',
 		'clipboard': 'js/vendor/clipboard.min',
 		'config': 'js/config',
-		'cookies': 'js/vendor/js.cookie',
 		'crossroads': 'js/vendor/crossroads.min',
 		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'drop': 'js/vendor/drop',
