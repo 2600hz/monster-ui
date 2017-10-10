@@ -95,11 +95,12 @@ require.config({
 });
 
 require([
+	'jquery',
+	'monster',
+
 	'bootstrap',
 	'bootstrap-clickover',
-	'jquery',
 	'modernizr',
-	'monster',
 	'plugins',
 	'touch-punch'
 ], function($, monster) {
