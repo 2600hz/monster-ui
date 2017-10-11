@@ -5,6 +5,7 @@ define(function(require) {
 		card = require('card'),
 		chosen = require('chosen'),
 		config = require('config'),
+		Cookies = require('cookies'),
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload'),
 		form2object = require('form2object'),
@@ -233,23 +234,23 @@ define(function(require) {
 
 		cookies: {
 			set: function set(key, value, options) {
-				$.cookie(key, JSON.stringify(value), options);
+				Cookies.set(key, value, options);
 			},
 
 			get: function get(key) {
-				return $.cookie(key);
+				return this.has(key) ? Cookies.get(key) : null;
 			},
 
 			getJson: function getJson(key) {
-				return JSON.parse(this.get(key));
+				return this.has(key) ? Cookies.getJSON(key) : null;
 			},
 
 			remove: function remove(key) {
-				$.cookie(key, null);
+				Cookies.remove(key);
 			},
 
 			has: function has(key) {
-				return this.get(key) === null ? false : true;
+				return Cookies.get(key) === undefined ? false : true;
 			}
 		},
 
