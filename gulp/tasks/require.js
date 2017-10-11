@@ -30,6 +30,7 @@ var getConfigRequire = function(mode, app) {
 			'chosen',
 			'clipboard',
 			'config',
+			'cookies',
 			'crossroads',
 			'ddslick',
 			'drop',
