@@ -26,6 +26,24 @@
 			</select>
 		</div>
 	</div>
+	<div class="additional-info hide">
+		<div class="control-group">
+			<label for="winning_carrier" class="control-label">
+				{{i18n.portListing.misc.portInfo.winningCarrier}}
+			</label>
+			<div class="controls">
+				<input type="text" id="winning_carrier" name="winning_carrier"{{#if request.winning_carrier}} value="{{request.winning_carrier}}"{{/if}}>
+			</div>
+		</div>
+		<div class="control-group">
+			<label for="reference_number" class="control-label">
+				{{i18n.portListing.misc.portInfo.refNumber}}
+			</label>
+			<div class="controls">
+				<input type="text" id="reference_number" name="reference_number"{{#if request.reference_number}} value="{{request.reference_number}}"{{/if}}>
+			</div>
+		</div>
+	</div>
 	<div class="dynamic-content">
 	</div>
 	<div class="message-input show-link">
