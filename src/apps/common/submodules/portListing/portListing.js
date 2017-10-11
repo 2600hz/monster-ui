@@ -494,10 +494,11 @@ define(function(require) {
 
 						var portId = $(this).data('id');
 
-						self.portListingRenderDetail($.extend(true, {}, args, {
+						args.data.port = args.data.ports[portId];
+
+						self.portListingRenderDetail(_.merge(true, {}, args, {
 							data: {
-								portId: portId,
-								port: args.data.ports[portId]
+								portId: portId
 							}
 						}));
 					});
