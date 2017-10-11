@@ -23,7 +23,7 @@
 						{{toUpperCase i18n.portListing.misc.portInfo.dateSubmitted}}
 					</th>
 					<th>
-						{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
+						{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
 					</th>
 					<th>
 						{{toUpperCase i18n.portListing.misc.portInfo.submitter}}
@@ -37,9 +37,9 @@
 						<div class="bold">
 							{{name}}
 						</div>
-					{{#if carrier_reference_number}}
+					{{#if reference_number}}
 						<div class="info">
-							{{replaceVar @root.i18n.portListing.listing.tbody.reference carrier_reference_number}}
+							{{replaceVar @root.i18n.portListing.listing.tbody.reference reference_number}}
 						</div>
 					{{/if}}
 					</td>
@@ -116,8 +116,8 @@
 						{{toFriendlyDate extra.lastSubmitted.timestamp 'date'}}
 					</td>
 					<td>
-					{{#if carrier}}
-						{{carrier}}
+					{{#if winning_carrier}}
+						{{winning_carrier}}
 					{{else}}
 						{{@root.i18n.portListing.misc.unknownCarrier}}
 					{{/if}}
