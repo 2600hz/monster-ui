@@ -363,3 +363,7 @@
 #port_wizard .btn-wrapper h4.title {
 	margin-top: 0;
 }
+
+#port_wizard .monster-checkbox .monster-invalid {
+	bottom: -16px;
+}

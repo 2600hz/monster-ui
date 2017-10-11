@@ -50,6 +50,30 @@
 							</span>
 						</div>
 					</div>
+				{{#if port.winning_carrier}}
+					<div class="control-group">
+						<label class="control-label">
+							{{i18n.portListing.misc.portInfo.winningCarrier}}
+						</label>
+						<div class="controls">
+							<span class="text">
+								{{port.winning_carrier}}
+							</span>
+						</div>
+					</div>
+				{{/if}}
+				{{#if port.reference_number}}
+					<div class="control-group">
+						<label class="control-label">
+							{{i18n.portListing.misc.portInfo.refNumber}}
+						</label>
+						<div class="controls">
+							<span class="text">
+								{{port.reference_number}}
+							</span>
+						</div>
+					</div>
+				{{/if}}
 				</form>
 			{{#isSuperDuper}}
 				<div class="admin-links">

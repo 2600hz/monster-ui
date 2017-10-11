@@ -5,6 +5,7 @@ define(function(require) {
 		card = require('card'),
 		chosen = require('chosen'),
 		config = require('config'),
+		Cookies = require('cookies'),
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload'),
 		form2object = require('form2object'),
@@ -230,6 +231,28 @@ define(function(require) {
 				default: window.location.origin + ':8000/v2/'
 			}
 		}, config),
+
+		cookies: {
+			set: function set(key, value, options) {
+				Cookies.set(key, value, options);
+			},
+
+			get: function get(key) {
+				return this.has(key) ? Cookies.get(key) : null;
+			},
+
+			getJson: function getJson(key) {
+				return this.has(key) ? Cookies.getJSON(key) : null;
+			},
+
+			remove: function remove(key) {
+				Cookies.remove(key);
+			},
+
+			has: function has(key) {
+				return Cookies.get(key) === undefined ? false : true;
+			}
+		},
 
 		css: function(href) {
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');

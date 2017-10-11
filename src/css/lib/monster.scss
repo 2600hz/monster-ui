@@ -388,32 +388,32 @@ label[class*='monster-radio'] > i {
 label[class*='monster-radio'] > i {
 	border-radius: 20px;
 }
-/*label[class*='monster-checkbox'] > input:focus + i {
+/*label[class*='monster-checkbox'] > input:focus ~ i {
 	box-shadow: 0 0 2px 1px #0087e0;
 }*/
-label[class*='monster-checkbox'] > input:checked + i,
-label[class*='monster-radio'] > input:checked + i {
+label[class*='monster-checkbox'] > input:checked ~ i,
+label[class*='monster-radio'] > input:checked ~ i {
 	border-color: $primary-color;
 	background: $primary-color;
 }
-label[class*='monster-checkbox'] > input:checked + i:after,
-label[class*='monster-radio'] > input:checked + i:after {
+label[class*='monster-checkbox'] > input:checked ~ i::after,
+label[class*='monster-radio'] > input:checked ~ i::after {
 	opacity: 1;
 }
-label[class*='monster-checkbox'] > input:focus + i:after,
-label[class*='monster-checkbox']:hover > input + i:after,
-label[class*='monster-radio'] > input:focus + i:after,
-label[class*='monster-radio']:hover > input + i:after {
+label[class*='monster-checkbox'] > input:focus ~ i::after,
+label[class*='monster-checkbox']:hover > input ~ i::after,
+label[class*='monster-radio'] > input:focus ~ i::after,
+label[class*='monster-radio']:hover > input ~ i::after {
 	opacity: 1;
 	border-color: #c0c0c9;
 }
-label[class*='monster-checkbox'] > input:checked:focus + i:after,
-label[class*='monster-checkbox']:hover > input:checked + i:after,
-label[class*='monster-radio'] > input:checked:focus + i:after,
-label[class*='monster-radio']:hover > input:checked + i:after {
+label[class*='monster-checkbox'] > input:checked:focus ~ i::after,
+label[class*='monster-checkbox']:hover > input:checked ~ i::after,
+label[class*='monster-radio'] > input:checked:focus ~ i::after,
+label[class*='monster-radio']:hover > input:checked ~ i::after {
 	border-color: #e0e0e9;
 }
-label[class*='monster-checkbox'] > i:after {
+label[class*='monster-checkbox'] > i::after {
 	position: absolute;
 	top: 2px;
 	left: 2px;
@@ -431,7 +431,7 @@ label[class*='monster-checkbox'] > i:after {
 	border-right: none;
 	background: transparent;
 }
-label[class*="monster-radio"] > i:after {
+label[class*="monster-radio"] > i::after {
 	content: '';
 	position: absolute;
 	width: 6px;
@@ -456,12 +456,12 @@ label.monster-radio-large > i {
 	width: 20px;
 	height: 20px;
 }
-label.monster-checkbox-large > i:after {
+label.monster-checkbox-large > i::after {
 	width: 10px;
 	height: 5px;
 	border-width: 4px;
 }
-label.monster-radio-large > i:after {
+label.monster-radio-large > i::after {
 	width: 10px;
 	height: 10px;
 	top: 4px;
