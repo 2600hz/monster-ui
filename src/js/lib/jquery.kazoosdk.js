@@ -54,7 +54,8 @@
 				'recoveryResetId': { verb: 'POST', url: 'user_auth/recovery' },
 				'link': { verb: 'PUT', url: 'auth/links/{auth_id}' },
 				'unlink': { verb: 'DELETE', url: 'auth/links/{auth_id}' },
-				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' }
+				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' },
+				'impersonate': { verb: 'PUT', url: 'accounts/{accountId}/users/{userId}/user_auth' }
 			},
 			balance: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },

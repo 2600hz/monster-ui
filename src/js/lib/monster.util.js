@@ -378,6 +378,14 @@ define(function(require) {
 			return isSuperDuper;
 		},
 
+		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
+		canImpersonate: function(accountId) {
+			var self = this,
+				isDifferentAccount = monster.apps.auth.originalAccount.id !== accountId;
+
+			return monster.util.isSuperDuper() && isDifferentAccount;
+		},
+
 		// Function returning if an account is in trial or not
 		isTrial: function(pAccount) {
 			var self = this,
@@ -797,6 +805,12 @@ define(function(require) {
 			var self = this;
 
 			self.resetAuthCookies();
+
+			self.reload();
+		},
+
+		reload: function() {
+			var self = this;
 
 			if (monster.config.whitelabel.hasOwnProperty('sso')) {
 				var sso = monster.config.whitelabel.sso;
