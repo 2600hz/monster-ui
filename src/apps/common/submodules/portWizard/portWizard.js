@@ -1063,6 +1063,9 @@ define(function(require) {
 										args.globalCallback();
 									}
 								});
+							},
+							error: function() {
+								self.portWizardRenderAddNumbers(args);
 							}
 						}));
 					});
