@@ -49,7 +49,6 @@ require.config({
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
-		'plugins': 'js/plugins',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor',
@@ -88,7 +87,6 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
-		'plugins': ['jquery'],
 		'touch-punch': ['jqueryui']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
@@ -101,7 +99,6 @@ require([
 	'bootstrap',
 	'bootstrap-clickover',
 	'modernizr',
-	'plugins',
 	'touch-punch'
 ], function($, monster) {
 	$.support.cors = true;

@@ -60,7 +60,6 @@ var getConfigRequire = function(mode, app) {
 			'papaparse',
 			'pdfjs-dist/build/pdf',
 			'pdfjs-dist/build/pdf.worker',
-			'plugins',
 			'postal',
 			'randomColor',
 			'renderjson',
