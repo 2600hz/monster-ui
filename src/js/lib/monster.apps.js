@@ -161,12 +161,12 @@ define(function() {
 										monster.pub('auth.currentUserUpdatedPassword', { user: data.data, password: params.data.data.password });
 									}
 
-									var cookieData = $.parseJSON($.cookie('monster-auth'));
+									var cookieData = monster.cookies.getJson('monster-auth');
 
 									// If the language stored in the cookie is not the same as the one we have in the updated data, we update the cookie.
 									if (cookieData.language !== data.data.language) {
 										cookieData.language = data.data.language;
-										$.cookie('monster-auth', JSON.stringify(cookieData));
+										monster.cookies.set('monster-auth', cookieData);
 									}
 
 									params.success && params.success(data, status);
