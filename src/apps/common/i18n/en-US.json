@@ -848,6 +848,8 @@
 			"unknownUser": "Unknown User",
 			"unknownCarrier": "Unknown Carrier",
 			"portInfo": {
+				"winningCarrier": "Winning Carrier",
+				"refNumber": "Reference Number",
 				"name": "Request Name",
 				"status": "Status",
 				"numbers": "Numbers",

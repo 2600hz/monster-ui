@@ -649,6 +649,7 @@ define(function(require) {
 						event.preventDefault();
 
 						var state = event.target.value,
+							additionalInfoStates = ['pending', 'scheduled'],
 							okButton = dialog.find('.update');
 
 						// remove placeholder option
@@ -682,6 +683,10 @@ define(function(require) {
 						} else {
 							self.portListingRenderUpdateStatusDefault(dialog);
 						}
+
+						dialog
+							.find('.additional-info')
+								.toggle(_.includes(additionalInfoStates, state));
 					});
 			dialog
 				.find('#add_message')
@@ -718,37 +723,58 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var state = dialog.find('#state').val(),
-							reason = dialog.find('#message').val(),
+						var $form = dialog.find('#form_update_status'),
+							formData = monster.ui.getFormData('form_update_status'),
+							state = formData.state,
+							reason = formData.message,
 							patchRequestData = {
 								portRequestId: args.data.portId,
 								state: state,
 								data: {}
 							};
 
-						if (state === 'scheduled') {
-							var pickedDate = dialog.find('#scheduled_date').datepicker('getDate'),
-								pickedSeconds = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight'),
-								timezone = dialog.find('#scheduled_timezone').val();
-
-							patchRequestData.data.schedule_on = {
-								date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
-								timezone: timezone
-							};
-						}
-
-						patchRequestData.reason = reason ? encodeURIComponent(reason) : '';
-
-						self.portListingRequestPatchPortState({
-							data: patchRequestData,
-							success: function() {
-								dialog.dialog('close');
-
-								delete args.data.port;
-
-								self.portListingRenderDetail(args);
+						monster.ui.validate($form, {
+							rules: {
+								winning_carrier: {
+									required: true
+								},
+								reference_number: {
+									required: true
+								}
 							}
 						});
+
+						if (monster.ui.valid($form)) {
+							if (state === 'scheduled') {
+								var pickedDate = dialog.find('#scheduled_date').datepicker('getDate'),
+									pickedSeconds = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight'),
+									timezone = dialog.find('#scheduled_timezone').val();
+
+								patchRequestData.data.schedule_on = {
+									date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
+									timezone: timezone
+								};
+
+								patchRequestData.data.winning_carrier = formData.winning_carrier;
+								patchRequestData.data.reference_number = formData.reference_number;
+							} else if (state === 'pending') {
+								patchRequestData.data.winning_carrier = formData.winning_carrier;
+								patchRequestData.data.reference_number = formData.reference_number;
+							}
+
+							patchRequestData.reason = reason ? encodeURIComponent(reason) : '';
+
+							self.portListingRequestPatchPortState({
+								data: patchRequestData,
+								success: function() {
+									dialog.dialog('close');
+
+									delete args.data.port;
+
+									self.portListingRenderDetail(args);
+								}
+							});
+						}
 					});
 
 			dialog
