@@ -980,6 +980,9 @@
 					"link": "Add a Message",
 					"placeholder": "Your message here..."
 				},
+				"helpText" : {
+					"scheduled": "Ports happen during normal business hours and a specific time can not be guaranteed."
+				},
 				"ok": "Update Status"
 			},
 			"links": {
