@@ -231,6 +231,28 @@ define(function(require) {
 			}
 		}, config),
 
+		cookies: {
+			set: function set(key, value, options) {
+				$.cookie(key, JSON.stringify(value), options);
+			},
+
+			get: function get(key) {
+				return $.cookie(key);
+			},
+
+			getJson: function getJson(key) {
+				return JSON.parse(this.get(key));
+			},
+
+			remove: function remove(key) {
+				$.cookie(key, null);
+			},
+
+			has: function has(key) {
+				return this.get(key) === null ? false : true;
+			}
+		},
+
 		css: function(href) {
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');
 		},

@@ -579,7 +579,7 @@ define(function(require) {
 				browserLanguage = _.find(languages, function(lang) {
 					return lang.indexOf(navigator.language) > -1;
 				}),
-				cookieLanguage = $.cookie('monster-auth') ? ($.parseJSON($.cookie('monster-auth'))).language : undefined,
+				cookieLanguage = monster.cookies.has('monster-auth') ? monster.cookies.getJson('monster-auth').language : undefined,
 				defaultLanguage = browserLanguage || 'en-US';
 
 			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
@@ -789,8 +789,8 @@ define(function(require) {
 		},
 
 		resetAuthCookies: function() {
-			$.cookie('monster-auth', null);
-			$.cookie('monster-sso-auth', null);
+			monster.cookies.remove('monster-auth');
+			monster.cookies.remove('monster-sso-auth');
 		},
 
 		logoutAndReload: function() {
