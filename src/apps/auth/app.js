@@ -38,7 +38,8 @@ define(function(require) {
 			'auth.afterAuthenticate': '_afterSuccessfulAuth',
 			'auth.showTrialInfo': 'showTrialInfo',
 			'auth.loginToSSOProvider': 'loginToSSOProvider',
-			'auth.paintSSOPhoto': 'paintSSOPhoto'
+			'auth.paintSSOPhoto': 'paintSSOPhoto',
+			'auth.triggerImpersonateUser': 'triggerImpersonateUser'
 		},
 
 		load: function(callback) {
@@ -1383,6 +1384,35 @@ define(function(require) {
 			}
 
 			success(args.app);
+		},
+
+		triggerImpersonateUser: function(args) {
+			var self = this;
+
+			monster.ui.confirm(monster.template(self, '!' + self.i18n.active().confirmUserMasquerading, { userName: args.userName }), function() {
+				self.impersonateUser(args.userId, function(data) {
+					$.cookie('monster-auth', JSON.stringify({ authToken: data.auth_token }));
+					monster.util.reload();
+				});
+			});
+		},
+
+		impersonateUser: function(id, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'auth.impersonate',
+				data: {
+					userId: id,
+					accountId: self.accountId,
+					data: {
+						action: 'impersonate_user'
+					}
+				},
+				success: function(data) {
+					callback && callback(data);
+				}
+			});
 		}
 	};
 

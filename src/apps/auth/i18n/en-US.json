@@ -152,5 +152,9 @@
 
 	"__comment": "Better handling of reconnect",
 	"__version": "4.1",
-	"retryLoginConfirmText": "You have been disconnected from the system. Do you want to try to reconnect?"
+	"retryLoginConfirmText": "You have been disconnected from the system. Do you want to try to reconnect?",
+
+	"__comment": "UI-2921: adding way to impersonate a user",
+	"__version": "4.2",
+	"confirmUserMasquerading": "Are you sure you want to impersonate the following user: \"{{userName}}\"? Doing so will reload the UI entirely and you will have to log out in order to get back to your original account. Proceed anyway?"
 }
