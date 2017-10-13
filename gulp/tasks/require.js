@@ -24,7 +24,6 @@ var getConfigRequire = function(mode, app) {
 	var	librariesToExcludeFromAppBuild = [
 			'async',
 			'bootstrap',
-			'bootstrap-clickover',
 			'card',
 			'chart',
 			'chosen',
