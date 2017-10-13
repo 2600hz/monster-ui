@@ -4,7 +4,6 @@ require.config({
 	paths: {
 		'async': 'js/vendor/async.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
-		'bootstrap-clickover': 'js/vendor/bootstrapx-clickover-1.0',
 		'card': 'js/vendor/card',
 		'chart': 'js/vendor/Chart.min',
 		'chosen': 'js/vendor/jquery.chosen.min',
@@ -67,7 +66,6 @@ require.config({
 	},
 	shim: {
 		'bootstrap': ['jqueryui'],
-		'bootstrap-clickover': ['bootstrap'],
 		'card': ['jquery'],
 		'chosen': ['jquery'],
 		'crossroads': ['signals'],
@@ -100,7 +98,6 @@ require([
 	'monster',
 
 	'bootstrap',
-	'bootstrap-clickover',
 	'modernizr',
 	'plugins',
 	'touch-punch'
