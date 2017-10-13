@@ -55,7 +55,6 @@ var getConfigRequire = function(mode, app) {
 			'monster-ui',
 			'monster-util',
 			'mousetrap',
-			'nicescroll',
 			'papaparse',
 			'pdfjs-dist/build/pdf',
 			'pdfjs-dist/build/pdf.worker',
