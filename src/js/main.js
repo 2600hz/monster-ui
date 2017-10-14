@@ -44,7 +44,6 @@ require.config({
 		'monster-util': 'js/lib/monster.util',
 		'monster-webphone': 'js/lib/monster.webphone',
 		'mousetrap': 'js/vendor/mousetrap-1.5.3.min',
-		'nicescroll': 'js/vendor/jquery.nicescroll.min',
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
