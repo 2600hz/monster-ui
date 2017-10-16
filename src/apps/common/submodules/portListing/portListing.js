@@ -498,7 +498,8 @@ define(function(require) {
 
 						self.portListingRenderDetail(_.merge(true, {}, args, {
 							data: {
-								portId: portId
+								portId: portId,
+								ports: args.data.ports
 							}
 						}));
 					});
