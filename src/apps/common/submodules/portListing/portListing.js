@@ -496,7 +496,7 @@ define(function(require) {
 
 						args.data.port = args.data.ports[portId];
 
-						self.portListingRenderDetail(_.merge(true, {}, args, {
+						self.portListingRenderDetail(_.extend({}, args, {
 							data: {
 								portId: portId
 							}
