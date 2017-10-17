@@ -16,6 +16,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [isMasquerading()][is_masquerading]
 * [isSuperDuper()][is_super_duper]
 * [isWhitelabeling()][is_whitelabeling]
+* [protectSensitivePhoneNumbers()][protect_sensitive_phone_numbers]
 * [randomString()][random_string]
 * [sort()][sort]
 * [toFriendlyDate()][to_friendly_date]
@@ -41,6 +42,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [is_masquerading]: util/isMasquerading().md
 [is_super_duper]: util/isSuperDuper().md
 [is_whitelabeling]: util/isWhitelabeling().md
+[protect_sensitive_phone_numbers]: util/protectSensitivePhoneNumbers().md
 [random_string]: util/randomString().md
 [sort]: util/sort().md
 [to_friendly_date]: util/toFriendlyDate().md

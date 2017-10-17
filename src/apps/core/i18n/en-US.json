@@ -659,7 +659,8 @@
 			"@": { "title": "My Account"},
 			"shift+l": { "title": "Instant Log Out"},
 			"?": { "title": "Show Shortcuts Summary" },
-			"shift+m": { "title": "Stop Masquerading" }
+			"shift+m": { "title": "Stop Masquerading" },
+			"shift+s": { "title": "Show Fake Phone Numbers" }
 		}
 	},
 
