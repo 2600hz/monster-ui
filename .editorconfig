@@ -1,0 +1,26 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+# Indent_style (tab|space)
+indent_style = tab
+
+# Indentation Size
+indent_size = tab
+
+# Width of a single tabstop character
+tab_width = 4
+
+# Line ending file format (lf|crlf|cr)
+end_of_line = crlf
+
+# File character encoding (latin1|utf-8|utf-16be|utf-16le)
+charset = utf-8
+
+# Denotes whether whitespace is allowed at the end of lines (true|false)
+trim_trailing_whitespace = true
+
+# Denotes whether file should end with a newline (true|false)
+insert_final_newline = true

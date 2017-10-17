@@ -381,7 +381,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
 			storage: {

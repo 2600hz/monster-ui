@@ -4,7 +4,6 @@ require.config({
 	paths: {
 		'async': 'js/vendor/async.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
-		'bootstrap-clickover': 'js/vendor/bootstrapx-clickover-1.0',
 		'card': 'js/vendor/card',
 		'chart': 'js/vendor/Chart.min',
 		'chosen': 'js/vendor/jquery.chosen.min',
@@ -45,7 +44,6 @@ require.config({
 		'monster-util': 'js/lib/monster.util',
 		'monster-webphone': 'js/lib/monster.webphone',
 		'mousetrap': 'js/vendor/mousetrap-1.5.3.min',
-		'nicescroll': 'js/vendor/jquery.nicescroll.min',
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
@@ -65,7 +63,6 @@ require.config({
 	},
 	shim: {
 		'bootstrap': ['jqueryui'],
-		'bootstrap-clickover': ['bootstrap'],
 		'card': ['jquery'],
 		'chosen': ['jquery'],
 		'crossroads': ['signals'],
@@ -97,7 +94,6 @@ require([
 	'monster',
 
 	'bootstrap',
-	'bootstrap-clickover',
 	'modernizr',
 	'touch-punch'
 ], function($, monster) {

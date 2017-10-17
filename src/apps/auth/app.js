@@ -1391,7 +1391,9 @@ define(function(require) {
 
 			monster.ui.confirm(monster.template(self, '!' + self.i18n.active().confirmUserMasquerading, { userName: args.userName }), function() {
 				self.impersonateUser(args.userId, function(data) {
-					$.cookie('monster-auth', JSON.stringify({ authToken: data.auth_token }));
+					monster.cookies.set('monster-auth', {
+						authToken: data.auth_token
+					});
 					monster.util.reload();
 				});
 			});
