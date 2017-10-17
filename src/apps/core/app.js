@@ -686,6 +686,15 @@ define(function(require) {
 						}
 					},
 					{
+						adminOnly: true,
+						category: 'general',
+						key: 'shift+s',
+						title: self.i18n.active().globalShortcuts.keys['shift+s'].title,
+						callback: function() {
+							monster.util.protectSensitivePhoneNumbers();
+						}
+					},
+					{
 						category: 'general',
 						key: 'd',
 						title: self.i18n.active().globalShortcuts.keys.d.title,

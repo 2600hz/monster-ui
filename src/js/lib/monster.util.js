@@ -1101,6 +1101,91 @@ define(function(require) {
 
 		tryI18n: function(obj, key) {
 			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
+		},
+
+		// Functions used to replace displayed phone numbers by other "fake" numbers. Can be useful to generate marketing documents or screenshots with lots of data without showing sensitive information
+		protectSensitivePhoneNumbers: function() {
+			var self,
+				numbers = {},
+				logs = [],
+				printLogs = function() {
+					var str = '';
+
+					_.each(logs, function(item, index) {
+						str += index + ' - replace ' + item.oldValue + ' by ' + item.newValue + '\n';
+					});
+
+					console.log(str);
+				},
+				randomNumber = function(format) {
+					return (Math.floor(Math.random() * 9 * format) + 1 * format);
+				},
+				randomPhoneNumber = function() {
+					return '+1 555 ' + randomNumber(100) + ' ' + randomNumber(1000);
+				},
+				randomExtension = function() {
+					return '10' + randomNumber(10);
+				},
+				replacePhoneNumbers = function(element) {
+					var text = element.innerText,
+						regex = /(\+?[()\- \d]{10,})/g,
+						match = regex.exec(text);
+
+					while (match != null) {
+						var key = match[0],
+							formattedKey = monster.util.formatPhoneNumber(key);
+
+						if (!numbers.hasOwnProperty(formattedKey)) {
+							numbers[formattedKey] = randomPhoneNumber();
+						}
+
+						if (formattedKey !== key) {
+							replaceHTML(element, key, monster.util.unformatPhoneNumber(numbers[formattedKey]));
+						} else {
+							replaceHTML(element, key, numbers[key]);
+						}
+
+						match = regex.exec(text);
+					}
+				},
+				replaceExtensions = function(element) {
+					var text = element.innerText,
+						regex = /(\d{4,7})/g,
+						match = regex.exec(text);
+
+					while (match != null) {
+						var key = match[0];
+
+						if (!numbers.hasOwnProperty(key)) {
+							numbers[key] = randomExtension();
+						}
+
+						replaceHTML(element, key, numbers[key]);
+
+						match = regex.exec(text);
+					}
+				},
+				replaceHTML = function(element, oldValue, newValue) {
+					// First we need to escape the old value, since we're creating a regex out of it, we can't have special regex characters like the "+" that are often present in phone numbers
+					var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
+					// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
+						regexOldValue = new RegExp(escapedOldvalue, 'g');
+
+					// Replace all occurences of old value by the new value
+					element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
+
+					logs.push({oldValue: oldValue, newValue: newValue});
+				},
+				replaceBoth = function(element) {
+					replaceExtensions(element);
+					replacePhoneNumbers(element);
+				};
+
+			document.querySelectorAll('.number-div,.monster-phone-number-value,.phone-number').forEach(replacePhoneNumbers);
+			document.querySelectorAll('.extension').forEach(replaceExtensions);
+			document.querySelectorAll('span,.number,.sub-cell,.element-title, .multi-line-div').forEach(replaceBoth);
+
+			printLogs();
 		}
 	};
 
