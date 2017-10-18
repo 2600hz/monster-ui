@@ -958,6 +958,7 @@ define(function(require) {
 				loginPassword = $('#password').val(),
 				loginAccountName = $('#account_name').val(),
 				hashedCreds = monster.md5(loginUsername + ':' + loginPassword),
+				isRememberMeChecked = $('#remember_me').is(':checked'),
 				loginData = {
 					credentials: hashedCreds,
 					account_name: loginAccountName
@@ -965,7 +966,7 @@ define(function(require) {
 
 			if (loginUsername && loginPassword) {
 				self.putAuth(loginData, function(data) {
-					if ($('#remember_me').is(':checked')) {
+					if (isRememberMeChecked) {
 						var cookieLogin = {
 							login: loginUsername,
 							accountName: loginAccountName
