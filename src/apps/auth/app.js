@@ -953,6 +953,7 @@ define(function(require) {
 				loginUsername = $('#login').val(),
 				loginPassword = $('#password').val(),
 				loginAccountName = $('#account_name').val(),
+				isRememberMeChecked = $('#remember_me').is(':checked'),
 				hashedCreds = $.md5(loginUsername + ':' + loginPassword),
 				loginData = {
 					credentials: hashedCreds,
@@ -961,7 +962,7 @@ define(function(require) {
 
 			if (loginUsername && loginPassword) {
 				self.putAuth(loginData, function(data) {
-					if ($('#remember_me').is(':checked')) {
+					if (isRememberMeChecked) {
 						var cookieLogin = {
 							login: loginUsername,
 							accountName: loginAccountName
