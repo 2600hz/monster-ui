@@ -2,6 +2,9 @@
 The `monster.util` object contains different methods used by Monster UI and accessible through Monster apps. Those methods are used to easily perform complicated operations specific to Monster and its ecosystem.
 
 ### Methods
+
+* [canAddExternalNumbers()][can_add_external_numbers]
+* [canImpersonate()][can_impersonate]
 * [dateToGregorian()][date_to_gregorian]
 * [formatPhoneNumber()][format_phone_number]
 * [formatPrice()][format_price]
@@ -14,6 +17,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [isAdmin()][is_admin]
 * [isLoggedIn()][is_logged_in]
 * [isMasquerading()][is_masquerading]
+* [isReseller()][is_reseller]
 * [isSuperDuper()][is_super_duper]
 * [isWhitelabeling()][is_whitelabeling]
 * [protectSensitivePhoneNumbers()][protect_sensitive_phone_numbers]
@@ -27,6 +31,8 @@ The `monster.util` object contains different methods used by Monster UI and acce
 
 [monster]: ../monster.md
 
+[can_add_external_numbers]: util/canAddExternalNumbers().md
+[can_impersonate]: util/canImpersonate().md
 [dataFlags]: util/dataFlags.md
 [date_to_gregorian]: util/dateToGregorian().md
 [format_phone_number]: util/formatPhoneNumber().md
@@ -40,6 +46,7 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [is_admin]: util/isAdmin().md
 [is_logged_in]: util/isLoggedIn().md
 [is_masquerading]: util/isMasquerading().md
+[is_reseller]: util/isReseller().md
 [is_super_duper]: util/isSuperDuper().md
 [is_whitelabeling]: util/isWhitelabeling().md
 [protect_sensitive_phone_numbers]: util/protectSensitivePhoneNumbers().md
