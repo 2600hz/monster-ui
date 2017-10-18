@@ -2,7 +2,6 @@
 The `monster.util` object contains different methods used by Monster UI and accessible through Monster apps. Those methods are used to easily perform complicated operations specific to Monster and its ecosystem.
 
 ### Methods
-
 * [canAddExternalNumbers()][can_add_external_numbers]
 * [canImpersonate()][can_impersonate]
 * [dateToGregorian()][date_to_gregorian]
@@ -22,7 +21,6 @@ The `monster.util` object contains different methods used by Monster UI and acce
 * [isWhitelabeling()][is_whitelabeling]
 * [protectSensitivePhoneNumbers()][protect_sensitive_phone_numbers]
 * [randomString()][random_string]
-* [sort()][sort]
 * [toFriendlyDate()][to_friendly_date]
 * [unformatPhoneNumber()][unformat_phone_number]
 
@@ -51,6 +49,5 @@ The `monster.util` object contains different methods used by Monster UI and acce
 [is_whitelabeling]: util/isWhitelabeling().md
 [protect_sensitive_phone_numbers]: util/protectSensitivePhoneNumbers().md
 [random_string]: util/randomString().md
-[sort]: util/sort().md
 [to_friendly_date]: util/toFriendlyDate().md
 [unformat_phone_number]: util/unformatPhoneNumber().md
