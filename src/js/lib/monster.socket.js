@@ -50,6 +50,7 @@ define(function(require) {
 
 			socket.onclose = function(data) {
 				self.connected = false;
+				// We want to automatically attempt to reconnect
 				self.connect();
 				self.log('WebSocket connection closed');
 			};
@@ -256,6 +257,12 @@ define(function(require) {
 	};
 
 	var socket = {
+		isConnected: function() {
+			return privateSocket.connected;
+		},
+		isEnabled: function() {
+			return monster.config.api.hasOwnProperty('socket');
+		},
 		bind: function() {
 			privateSocket.log('No WebSockets defined', true);
 		},

@@ -17,7 +17,8 @@
 		},
 		methodsGenerator = {
 			system: {
-				'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' }
+				'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' },
+				'about': { verb: 'GET', url: 'about'}
 			},
 			account: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}' },

@@ -670,7 +670,15 @@
 		"accountId": "Account ID",
 		"authToken": "Auth Token",
 		"apiUrl": "API URL",
-		"version": "Monster Core Version"
+		"monsterVersion": "Monster Core Version",
+		"__comment": "UI-2941: Adding debug info to debug popup",
+		"__version": "4.2",
+		"webSocket": {
+			"title": "WebSocket",
+			"connected": "Connected",
+			"disconnected": "Disconnected"
+		},
+		"kazooVersion": "Kazoo Version"
 	},
 
 	"__comment": "UI-2232: Adding layer around footable so we can reuse same options everywhere easily",
