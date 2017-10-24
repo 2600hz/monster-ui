@@ -2,29 +2,52 @@
 	<table class="table table-striped">
 		<tr>
 			<td>{{ i18n.debugAccountDialog.accountName }}</td>
-			<td>{{account.name}}</td>
+			<td>{{ account.name }}</td>
 		</tr>
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.accountId }}</td>
-			<td>{{account.id}}</td>
+			<td>{{ account.id }}</td>
 		</tr>
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.authToken }}</td>
-			<td>{{authToken}}</td>
+			<td>{{ authToken }}</td>
+		</tr>
+
+		<tr>
+			<td>{{ i18n.debugAccountDialog.kazooVersion }}</td>
+			<td>{{ kazooVersion }}</td>
 		</tr>
 
 		{{#unless hideApiUrl}}
 			<tr>
 				<td>{{ i18n.debugAccountDialog.apiUrl }}</td>
-				<td>{{apiUrl}}</td>
+				<td>{{ apiUrl }}</td>
+			</tr>
+		{{/unless}}
+
+		{{#unless socket.hideInfo}}
+			<tr>
+				<td>{{ i18n.debugAccountDialog.webSocket.title }}</td>
+				<td>
+					<div class="multi-line-div">
+						{{#if socket.isConnected}}
+							<i class="fa fa-circle monster-green"></i>&nbsp;
+							{{ i18n.debugAccountDialog.webSocket.connected }}
+						{{else}}
+							<i class="fa fa-circle monster-red"></i>&nbsp;
+							{{ i18n.debugAccountDialog.webSocket.disconnected }}
+						{{/if}}
+					</div>
+					<div class="multi-line-div">{{socket.URL}}</div>
+				</td>
 			</tr>
 		{{/unless}}
 
 		<tr>
-			<td>{{ i18n.debugAccountDialog.version }}</td>
-			<td>{{version}}</td>
+			<td>{{ i18n.debugAccountDialog.monsterVersion }}</td>
+			<td>{{ version }}</td>
 		</tr>
 	</table>
 </div>

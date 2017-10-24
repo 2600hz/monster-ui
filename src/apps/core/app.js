@@ -729,18 +729,27 @@ define(function(require) {
 
 		showDebugPopup: function() {
 			var self = this,
-				acc = monster.apps.auth.currentAccount,
-				dataTemplate = {
-					account: acc,
-					authToken: self.getAuthToken(),
-					apiUrl: self.apiUrl,
-					version: monster.util.getVersion(),
-					hideApiUrl: monster.util.isWhitelabeling() && !monster.util.isSuperDuper()
-				},
-				template = monster.template(self, 'dialog-accountInfo', dataTemplate);
+				acc = monster.apps.auth.currentAccount;
 
-			monster.ui.dialog(template, {
-				title: self.i18n.active().debugAccountDialog.title
+			self.getBackEndInfo(function(infoBackend) {
+				var dataTemplate = {
+						account: acc,
+						authToken: self.getAuthToken(),
+						apiUrl: self.apiUrl,
+						version: monster.util.getVersion(),
+						hideApiUrl: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
+						socket: {
+							hideInfo: !monster.socket.isEnabled(),
+							URL: monster.config.api.socket,
+							isConnected: monster.socket.isConnected()
+						},
+						kazooVersion: infoBackend.version
+					},
+					template = monster.template(self, 'dialog-accountInfo', dataTemplate);
+
+				monster.ui.dialog(template, {
+					title: self.i18n.active().debugAccountDialog.title
+				});
 			});
 		},
 
@@ -782,6 +791,20 @@ define(function(require) {
 					};
 
 					monster.ui.addShortcut(shortcut);
+				}
+			});
+		},
+
+		getBackEndInfo: function(callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'system.about',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					callback && callback(data.data);
 				}
 			});
 		}
