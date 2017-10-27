@@ -731,26 +731,35 @@ define(function(require) {
 			var self = this,
 				acc = monster.apps.auth.currentAccount;
 
-			self.getBackEndInfo(function(infoBackend) {
+			if (!$('.debug-dialog').length) {
 				var dataTemplate = {
 						account: acc,
 						authToken: self.getAuthToken(),
 						apiUrl: self.apiUrl,
 						version: monster.util.getVersion(),
-						hideApiUrl: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
+						hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
 						socket: {
 							hideInfo: !monster.socket.isEnabled(),
 							URL: monster.config.api.socket,
 							isConnected: monster.socket.isConnected()
 						},
-						kazooVersion: infoBackend.version
+						kazooVersion: monster.config.developerFlags.kazooVersion
 					},
-					template = monster.template(self, 'dialog-accountInfo', dataTemplate);
+					template = $(monster.template(self, 'dialog-accountInfo', dataTemplate));
+
+				template.find('.copy-clipboard').each(function() {
+					var $this = $(this);
+					monster.ui.clipboard($this, function() {
+						return $this.siblings('.to-copy').html();
+					});
+				});
+
+				monster.ui.tooltips(template);
 
 				monster.ui.dialog(template, {
 					title: self.i18n.active().debugAccountDialog.title
 				});
-			});
+			}
 		},
 
 		showShortcutsPopup: function() {
@@ -791,20 +800,6 @@ define(function(require) {
 					};
 
 					monster.ui.addShortcut(shortcut);
-				}
-			});
-		},
-
-		getBackEndInfo: function(callback) {
-			var self = this;
-
-			self.callApi({
-				resource: 'system.about',
-				data: {
-					accountId: self.accountId
-				},
-				success: function(data) {
-					callback && callback(data.data);
 				}
 			});
 		}

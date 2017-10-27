@@ -349,7 +349,7 @@
 			"inbound": "Call forwarding was attempted, but failed because the forwarded user did not respond or there was a routing error during forwarding."
 		},
 		"UNSPECIFIED": {
-			
+
 			},
 		"UNALLOCATED_NUMBER": {
 			"outbound": "The number dialed is not a valid number and/or can not be reached via the requested carrier",
@@ -670,7 +670,7 @@
 		"accountId": "Account ID",
 		"authToken": "Auth Token",
 		"apiUrl": "API URL",
-		"monsterVersion": "Monster Core Version",
+		"monsterVersion": "UI Core Version",
 		"__comment": "UI-2941: Adding debug info to debug popup",
 		"__version": "4.2",
 		"webSocket": {
@@ -678,7 +678,8 @@
 			"connected": "Connected",
 			"disconnected": "Disconnected"
 		},
-		"kazooVersion": "Kazoo Version"
+		"kazooVersion": "Back-End Version",
+		"copyToClipboard": "Copy to Clipboard"
 	},
 
 	"__comment": "UI-2232: Adding layer around footable so we can reuse same options everywhere easily",

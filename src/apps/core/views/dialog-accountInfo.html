@@ -7,12 +7,18 @@
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.accountId }}</td>
-			<td>{{ account.id }}</td>
+			<td>
+				<span class="to-copy">{{ account.id }}</span>
+				<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
+			</td>
 		</tr>
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.authToken }}</td>
-			<td>{{ authToken }}</td>
+			<td>
+				<span class="to-copy">{{ authToken }}</span>
+				<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
+			</td>
 		</tr>
 
 		<tr>
@@ -20,10 +26,13 @@
 			<td>{{ kazooVersion }}</td>
 		</tr>
 
-		{{#unless hideApiUrl}}
+		{{#unless hideURLs}}
 			<tr>
 				<td>{{ i18n.debugAccountDialog.apiUrl }}</td>
-				<td>{{ apiUrl }}</td>
+				<td>
+					<span class="to-copy">{{ apiUrl }}</span>
+					<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
+				</td>
 			</tr>
 		{{/unless}}
 
@@ -40,7 +49,12 @@
 							{{ i18n.debugAccountDialog.webSocket.disconnected }}
 						{{/if}}
 					</div>
-					<div class="multi-line-div">{{socket.URL}}</div>
+					<div class="multi-line-div">
+						{{#unless hideURLs}}
+							<span class="to-copy">{{ socket.URL }}</span>
+							<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
+						{{/unless}}
+					</div>
 				</td>
 			</tr>
 		{{/unless}}
