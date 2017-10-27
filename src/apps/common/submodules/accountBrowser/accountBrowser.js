@@ -331,7 +331,7 @@ define(function(require) {
 									submodule: 'accountBrowser',
 									data: {
 										hideRealm: hideRealm,
-										accounts: _.sortBy(data.data, 'name')
+										accounts: _.sortBy(data.data, function(item) { return item.name.toLowerCase(); })
 									}
 								}));
 
@@ -413,7 +413,7 @@ define(function(require) {
 					slider = container.find('.account-list-slider'),
 					list = container.find('.account-list'),
 					templateData = {
-						accounts: _.sortBy(data.data, 'name'),
+						accounts: _.sortBy(data.data, function(item) { return item.name.toLowerCase(); }),
 						selectedId: selectedId,
 						addBackButton: addBackButton,
 						hideRealm: hideRealm,
