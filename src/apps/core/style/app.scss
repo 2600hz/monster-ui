@@ -594,22 +594,28 @@ body,
 
 /* Short cut debug account Info */
 .debug-dialog {
-	padding: 21px;
+	width: 900px;
+	padding: 20px 15px;
 }
 
 .debug-dialog table {
-	margin: 0;
+	margin: auto;
+	width: 880px !important;
 }
 
-.debug-dialog table tr > td {
+.debug-dialog table tr td:nth-child(1) {
+	font-weight: bold;
+}
+
+.debug-dialog table tr td:nth-child(2) {
 	max-width: 850px;
 	overflow-wrap: break-word;
 	white-space: initial;
 	word-break: break-all;
 }
 
-.debug-dialog table tr td:nth-child(1) {
-	font-weight: bold;
+.debug-dialog .copy-clipboard {
+	margin-left: 10px;
 }
 
 /* Backend Pagination Tables */
