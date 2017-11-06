@@ -9,7 +9,7 @@
 	"or": "OR",
 	"errorLoadingAccount": "An error occured while loading your account",
 
-	"confirmLogout": "Are you sure that you want to log out?",
+	"confirmLogout": "Are you sure that you want to sign out?",
 
 	"account": {
 		"name": "Account Name",
@@ -42,7 +42,7 @@
 			}
 		},
 		"help": {
-			"text": "You have successfully reset your password. Set your new password above, and you'll be able to log in with it the next time you use the application!"
+			"text": "You have successfully reset your password. Set your new password above, and you'll be able to sign in with it the next time you use the application!"
 		},
 		"button": {
 			"update": "Update Password"
@@ -156,5 +156,5 @@
 
 	"__comment": "UI-2921: adding way to impersonate a user",
 	"__version": "4.2",
-	"confirmUserMasquerading": "Are you sure you want to impersonate the following user: \"{{userName}}\"? Doing so will reload the UI entirely and you will have to log out in order to get back to your original account. Proceed anyway?"
+	"confirmUserMasquerading": "Are you sure you want to impersonate the following user: \"{{userName}}\"? Doing so will reload the UI entirely and you will have to sign out in order to get back to your original account. Proceed anyway?"
 }
