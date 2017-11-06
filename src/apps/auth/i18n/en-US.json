@@ -9,7 +9,7 @@
 	"or": "OR",
 	"errorLoadingAccount": "An error occured while loading your account",
 
-	"confirmLogout": "Are you sure that you want to log out?",
+	"confirmLogout": "Are you sure that you want to sign out?",
 
 	"account": {
 		"name": "Account Name",
@@ -42,7 +42,7 @@
 			}
 		},
 		"help": {
-			"text": "You have successfully reset your password. Set your new password above, and you'll be able to log in with it the next time you use the application!"
+			"text": "You have successfully reset your password. Set your new password above, and you'll be able to sign in with it the next time you use the application!"
 		},
 		"button": {
 			"update": "Update Password"
