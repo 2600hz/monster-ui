@@ -293,9 +293,7 @@ define(function(require){
 			if(!raw){
 				var i18n = app.i18n.active();
 
-				i18n._whitelabel = monster.config.whitelabel;
-
-				var context = _.extend({}, data || {}, { i18n: i18n });
+				var context = _.extend({}, data || {}, { i18n: i18n, _whitelabel: monster.config.whitelabel });
 
 				result = _template(context);
 			}
