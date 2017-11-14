@@ -176,7 +176,7 @@ define(function(require){
 		},
 
 		getActiveCall: function() {
-			return kazoo.getActiveCall();
+			return kazooWebphone.getActiveCall();
 		},
 
 		isRetrievable: function(callId) {
