@@ -124,7 +124,10 @@ define(function(require){
 						self.callApi({
 							resource: 'user.list',
 							data: {
-								accountId: self.accountId
+								accountId: self.accountId,
+								filters: {
+									paginate: false
+								}
 							},
 							success: function(data, status) {
 								callback(null, data.data);
