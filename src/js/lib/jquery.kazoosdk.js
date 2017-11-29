@@ -18,7 +18,7 @@
 		methodsGenerator = {
 			system: {
 				'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' },
-				'about': { verb: 'GET', url: 'about'}
+				'about': { verb: 'GET', url: 'about' }
 			},
 			account: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}' },
@@ -323,7 +323,8 @@
 				'updateRecipients': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
-				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' }
+				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
@@ -333,6 +334,9 @@
 				'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
+			},
+			qubicleRoles: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_roles' }
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
