@@ -1937,6 +1937,12 @@ define(function(require) {
 							finalArgs.data = args;
 						}
 
+						// Optional data coming from generateAppLayout() init in the app
+						if (currentTab.hasOwnProperty('data')) {
+							// Cannot be overriden as it is assumed the tab need this data to load
+							finalArgs.data = _.merge({}, finalArgs.data, currentTab.data);
+						}
+
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
 				};
