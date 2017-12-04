@@ -1837,7 +1837,12 @@ define(function(require) {
 				isSubnav = $tab.parents('nav').hasClass('app-subnav'),
 				currentTab,
 				loadTabContent = function loadTabContent() {
-					var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]');
+					var currentSubnav = appHeader.find('.app-subnav[data-menu_id="' + menuId + '"][data-tab_id="' + tabId + '"]'),
+						finalArgs = {
+							parent: parent,
+							container: parent.find('.app-content-wrapper')
+						},
+						subTab;
 
 					// Add 'active' class to menu element
 					if (!$tab.hasClass('active')) {
@@ -1922,21 +1927,17 @@ define(function(require) {
 
 					self.isTabLoadingInProgress = false;
 
-					var finalArgs = {
-						parent: parent,
-						container: parent.find('.app-content-wrapper')
-					};
-
-					if (!_.isEmpty(args)) {
-						finalArgs.data = args;
-					}
-
-					if (!args.hasOwnProperty('subTab')) {
-						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
-					} else {
-						var subTab = args.subTab;
+					if (args && args.hasOwnProperty('subTab')) {
+						subTab = args.subTab;
 						delete args.subTab;
 						monster.ui.loadTab(thisArg, subTab, args);
+					} else {
+						// Optional data coming form loadTab()
+						if (args && !_.isEmpty(args)) {
+							finalArgs.data = args;
+						}
+
+						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
 				};
 
