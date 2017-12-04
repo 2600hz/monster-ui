@@ -2046,7 +2046,11 @@ define(function(require) {
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback() {
-					var context;
+					var callArgs = {
+							parent: parent,
+							container: parent.find('.app-content-wrapper')
+						},
+						context;
 
 					if (tabs[0].hasOwnProperty('menus')) {
 						context = tabs[0].menus[0].tabs[0];
@@ -2054,10 +2058,11 @@ define(function(require) {
 						context = tabs[0];
 					}
 
-					context.callback.call(thisArg, {
-						parent: parent,
-						container: parent.find('.app-content-wrapper')
-					});
+					if (context.hasOwnProperty('data')) {
+						callArgs.data = context.data;
+					}
+
+					context.callback.call(thisArg, callArgs);
 				};
 
 			parent
