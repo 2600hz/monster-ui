@@ -350,12 +350,14 @@ define(function(require) {
 					text: options.text
 				},
 				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, insertTemplateCallback) {
+				appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
 					$container
 						.empty()
 						.hide()
 						.append(template)
-						.fadeIn(options.duration);
+						.fadeIn(options.duration, function() {
+							fadeInCallback && fadeInCallback();
+						});
 
 					insertTemplateCallback && insertTemplateCallback();
 				};
