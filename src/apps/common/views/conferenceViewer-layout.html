@@ -1,5 +1,10 @@
 <div class="view-conference-wrapper" data-id="{{ conference.id }}">
 	<div class="view-header clearfix">
+		{{#if backButton}}
+			<div class="back-link-wrapper">
+				<a id="back_button" class="monster-link" href="javascript:void(0);"><i class="fa fa-arrow-circle-left monster-lightgrey"></i>{{ backButton.label }}</a>
+			</div>
+		{{/if}}
 		<div class="conference-name">{{ conference.name }} (<span class="conference-duration main-conference-timer"></span>)</div>
 		<ul class="admin-actions">
 			<li data-action="lock" class="conference-action negative togglable{{#unless conference.isLocked}} active{{/unless}}" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.lock }}">
@@ -21,10 +26,6 @@
 				<i class="icon-telicon-hangup"></i>
 			</li>
 		</ul>
-
-		{{#if backButton}}
-			<button id="back_button" class="pull-right monster-button">{{ backButton.label }}</button>
-		{{/if}}
 	</div>
 
 	<div class="view-content">

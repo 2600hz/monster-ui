@@ -1556,7 +1556,7 @@ table.monster-table {
 	border-radius: 2px;
 	color: $primary-color;
 	list-style: none;
-	padding: 5px 10px 6px 10px;
+	padding: 6px 10px 5px 10px;
 }
 
 .monster-select-dropdown > .dropdown .dropdown-toggle .monster-checkbox {
@@ -1750,6 +1750,9 @@ table.monster-table {
 
 .monster-phone-number-wrapper .monster-number-flag {
 	margin-left: 10px;
+	vertical-align: middle;
+	margin-top: -6px;
+	display: inline-block;
 }
 
 .monster-phone-number-wrapper .monster-number-flag.empty img {
