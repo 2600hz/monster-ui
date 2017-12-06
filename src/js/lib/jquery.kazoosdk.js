@@ -413,6 +413,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/users/{userId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/users/{userId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
