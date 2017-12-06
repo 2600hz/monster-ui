@@ -1,4 +1,7 @@
 @import "../../../../css/partials/base";
+.view-conference-wrapper .back-link-wrapper {
+	margin-bottom: 15px;
+}
 
 .view-conference-wrapper .conference-name {
 	display: inline-block;
@@ -58,9 +61,8 @@
 }
 
 .view-conference-wrapper .title {
-	color: #999;
-	font-weight: 500;
-	text-transform: uppercase;
+	color: #333;
+	font-weight: 600;
 }
 
 .view-conference-wrapper .moderators-wrapper {
@@ -78,13 +80,13 @@
 }
 
 .view-conference-wrapper .conference-user-wrapper {
-	border: 1px solid #c0c0c9;
+	border: 1px solid #ddd;
 	background: #fff;
 	border-radius: 2px;
 	padding: 12px 12px 12px;
 	margin-right: 15px;
 	margin-top: 12px;
-	box-shadow: none;
+	box-shadow: 1px 1px 1px #c0c0c9;
 	transition: box-shadow .1s ease-out, transform .1s ease-out;
 	-webkit-transform: scale(1);
 	transform: scale(1);
@@ -112,11 +114,15 @@
 }
 
 .view-conference-wrapper .conference-user-wrapper .user-data .user-name {
-	font-size: 20px;
 	height: 24px;
+}
+
+.view-conference-wrapper .conference-user-wrapper .user-data .user-name-wrapper {
+	display: inline-block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	max-width: 125px;
 }
 
 .view-conference-wrapper .conference-user-wrapper .caller-id-number {
@@ -132,20 +138,19 @@
 .view-conference-wrapper .conference-user-wrapper .user-data .action-user {
 	cursor: pointer;
 	display: inline-block;
-	font-size: 20px;
-	min-width: 35px;
+	min-width: 30px;
+	text-align: right;
 }
 
 .view-conference-wrapper .conference-user-wrapper .user-data .action-user.hangup {
-	margin-left: -6px;
+	width: 36px;
 }
 
 .view-conference-wrapper .conference-user-wrapper .user-data .action-user i {
 	cursor: pointer;
 	color: #333;
-	font-size: 20px;
 	display: inline-block;
-	margin: 0 15px 0 0;
+	margin: 0;
 	vertical-align: middle;
 }
 
@@ -154,9 +159,9 @@
 }
 
 .view-conference-wrapper .conference-user-wrapper .user-data .duration {
-	text-align: right;
-	color: #a0a0a0;
-	margin-top: 2px;
+	margin-left: 10px;
+	vertical-align: top;
+	display: inline-block;
 }
 
 .view-conference-wrapper .conference-user-wrapper.speaking {
