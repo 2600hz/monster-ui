@@ -1100,7 +1100,7 @@ table.monster-table {
 /*********************** TABLE HEADER ***********************/
 
 .monster-table .footable-filtering th {
-	padding: 1em 0 2em;
+	padding: 0 0 2em;
 }
 
 .monster-table .footable-filtering th form {
@@ -1224,55 +1224,67 @@ table.monster-table {
 }
 /******************** TABLE MODE: spaced ********************/
 
-.monster-table.monster-table-spaced .footable-filtering th {
-	padding: 0 0 1em;
+.monster-table-wrapper-spaced .monster-table .footable-filtering th {
+	padding: 0;
 }
 
-.monster-table.monster-table-spaced .footable-header {
+.monster-table-wrapper-spaced .monster-table thead {
+	vertical-align: bottom;
+}
+
+.monster-table-wrapper-spaced .monster-table .footable-header {
 	background-color: transparent;
 }
 
-.monster-table.monster-table-spaced .footable-header th {
+.monster-table-wrapper-spaced .monster-table .footable-header th {
 	border: 0;
+	color: #777;
+	font-weight: 600;
 }
 
-.monster-table.monster-table-spaced {
-	border-spacing: 0 1em;
+.monster-table-wrapper-spaced .monster-table {
+	border-spacing: 0 0.5em;
 }
 
-.monster-table.monster-table-spaced tbody td {
+.monster-table-wrapper-spaced .monster-table tbody td {
 	border-top: 1px solid $panel-border-color;
 }
 
-.monster-table.monster-table-spaced tbody tr td:first-child {
+.monster-table-wrapper-spaced .monster-table tbody tr {
+	box-shadow: 1px 1px 1px $panel-border-color;
+}
+
+.monster-table-wrapper-spaced .monster-table tbody tr td:first-child {
 	border-top-left-radius: 2px;
 	border-bottom-left-radius: 2px;
 }
 
-.monster-table.monster-table-spaced tbody tr td:last-child {
+.monster-table-wrapper-spaced .monster-table tbody tr td:last-child {
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
 
 /************************** WRAPPER *************************/
-
-.monster-table-wrapper {
+[class*='monster-table-wrapper'] {
 	position: relative;
 }
 
-.monster-table-wrapper .monster-table-header {
+[class*='monster-table-wrapper'] .monster-table-header {
 	position: absolute;
 	z-index: 20;
-	top: 1em;
 }
 
-.monster-table-wrapper .monster-table-header > * {
+[class*='monster-table-wrapper'] .monster-table-header > * {
 	display: block;
 	float: left;
 }
 
-.monster-table-wrapper .monster-table-header > *:not(:first-child) {
+[class*='monster-table-wrapper'] .monster-table-header > *:not(:first-child) {
 	margin-left: 15px;
+}
+
+.monster-table-wrapper-spaced .monster-table-header {
+	margin-top: 0.5em;
 }
 
 /************************************************************/
