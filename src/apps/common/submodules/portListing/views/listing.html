@@ -1,13 +1,13 @@
 {{#if hasPorts}}
 <div class="listing-section">
 {{#if allOtherPorts}}
-	<div class="monster-table-wrapper">
+	<div class="monster-table-wrapper-spaced">
 		<div class="monster-table-header">
 			<button class="monster-button-primary port-wizard">
 				{{i18n.portListing.listing.button}}
 			</button>
 		</div>
-		<table class="monster-table monster-table-spaced footable" id="submitted_ports_listing">
+		<table class="monster-table footable" id="submitted_ports_listing">
 			<thead>
 				<tr>
 					<th data-type="html">
@@ -137,11 +137,11 @@
 		{{i18n.portListing.listing.button}}
 	</button>
 	{{/unless}}
-	<div class="monster-table-wrapper">
+	<div class="monster-table-wrapper-spaced">
 		<h4 class="title">
 			{{i18n.portListing.listing.title}}
 		</h4>
-		<table class="monster-table monster-table-spaced footable" id="unconfirmed_ports_listing">
+		<table class="monster-table footable" id="unconfirmed_ports_listing">
 			<thead>
 				<tr>
 					<th data-type="html">
