@@ -390,10 +390,14 @@ define(function(require) {
 			_.each(dataRequest.ledger.data, function(v) {
 				v.extra = {};
 
-				if (v.period.hasOwnProperty('end')) {
-					v.extra.date = v.period.end;
-				} else if (v.period.hasOwnProperty('start')) {
-					v.extra.date = v.period.start;
+				if (v.hasOwnProperty('period')) {
+					if (v.period.hasOwnProperty('end')) {
+						v.extra.date = v.period.end;
+					} else if (v.period.hasOwnProperty('start')) {
+						v.extra.date = v.period.start;
+					}
+				} else {
+					v.extra.date = undefined;
 				}
 
 				data.transactions.push(v);
