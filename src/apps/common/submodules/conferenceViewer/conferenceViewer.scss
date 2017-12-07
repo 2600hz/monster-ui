@@ -16,48 +16,23 @@
 	margin-left: 18px;
 	margin-bottom: 0;
 }
-.view-conference-wrapper .admin-actions li {
-	display: inline-block;
-	padding: 0 6px;
-	cursor: pointer;
-	margin-left: 4px;
-	margin-right: 4px;
-	color: #f0f0f9;
-	font-size: 20px;
-	background: #33db24;
-	width: 24px;
-	height: 36px;
-	border-radius: 30px;
-	vertical-align: middle;
-	position: relative;
-	transition: background .2s ease-out;
-	-webkit-transition: background .2s ease-out;
+
+.view-conference-wrapper .admin-actions [data-action="kick"] {
+	padding-top: 4px;
+	padding-bottom: 0px;
+	padding-left: 11px;
+	padding-right: 11px;
+	height: 32px;
 }
 
-.view-conference-wrapper .admin-actions li.negative {
-	background: #ff3d24;
-}
-
-.view-conference-wrapper .admin-actions li.togglable.active {
-	display: inline-block;
-}
-
-.view-conference-wrapper .admin-actions li.togglable {
-	display: none;
-}
-
-.view-conference-wrapper .admin-actions li i {
-	position: absolute;
-	color: #FFF;
-	color: #f0f0f9;
-	top: 7px;
-	left: 11px;
-	cursor: pointer;
-}
-
-.view-conference-wrapper .admin-actions li[data-action="kick"] i {
+.view-conference-wrapper .admin-actions [data-action="kick"] i {
 	left: 9px;
 	top: 9px;
+}
+
+.view-conference-wrapper .admin-actions > button,
+.view-conference-wrapper .admin-actions > .btn-group {
+	margin-right: 10px;
 }
 
 .view-conference-wrapper .title {
@@ -128,7 +103,6 @@
 .view-conference-wrapper .conference-user-wrapper .caller-id-number {
 	margin-top: -4px;
 	color: #a0a0a0;
-	font-style: italic;
 }
 
 .view-conference-wrapper .conference-user-wrapper .user-data .user-actions {
@@ -175,4 +149,9 @@
 	margin-right: 20px;
 	height: 70px;
 	width: 70px;
+	border-radius: 35px;
+	line-height: 70px;
+	text-align: center;
+	color: #fff;
+	font-size: 32px;
 }
