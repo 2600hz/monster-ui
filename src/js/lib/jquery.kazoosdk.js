@@ -333,7 +333,8 @@
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
-				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
+				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/roles' }
 			},
 			qubicleRoles: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_roles' }
