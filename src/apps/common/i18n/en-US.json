@@ -556,8 +556,9 @@
 			"lock": "The conference is now locked",
 			"unlock": "The conference has been unlocked"
 		},
-		"emptyModerators": "There are currently no moderators in the conference",
-		"emptyParticipants": "There are currently no participants in the conference",
+		"empty": "Empty",
+		"emptyModerators": "There are currently no moderators active in this conference",
+		"emptyParticipants": "There are currently no participants active in this conference",
 		"notStarted": "Not Started",
 		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
 	},
