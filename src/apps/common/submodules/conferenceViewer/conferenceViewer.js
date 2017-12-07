@@ -33,7 +33,7 @@ define(function(require) {
 						participantsDiv.append(monster.template(self, 'conferenceViewer-user', participant));
 					});
 				} else {
-					participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyParticipants }));
+					participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants }));
 				}
 
 				if (formattedData.conference.moderators.length) {
@@ -41,7 +41,7 @@ define(function(require) {
 						moderatorsDiv.append(monster.template(self, 'conferenceViewer-user', moderator));
 					});
 				} else {
-					moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
+					moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators }));
 				}
 
 				if (formattedData.conference.moderators.length + formattedData.conference.participants.length === 0) {
@@ -357,9 +357,9 @@ define(function(require) {
 					}
 
 					if (isModerator && moderatorsCount === 0) {
-						$moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
+						$moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators }));
 					} else if (!isModerator && participantsCount === 0) {
-						$participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyParticipants }));
+						$participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants }));
 					}
 
 					if (moderatorsCount + participantsCount === 0) {

@@ -3,6 +3,10 @@
 	margin-bottom: 15px;
 }
 
+.view-conference-wrapper #back_button {
+	font-size: 12px;
+}
+
 .view-conference-wrapper .conference-name {
 	display: inline-block;
 	float: left;
@@ -46,12 +50,7 @@
 }
 
 .view-conference-wrapper .empty-user-category {
-	border: 1px solid #c0c0c9;
-	background: #fff;
-	border-radius: 2px;
 	margin-top: 12px;
-	padding: 17px 17px 12px;
-	text-align: center;
 }
 
 .view-conference-wrapper .conference-user-wrapper {

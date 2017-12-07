@@ -645,6 +645,75 @@ label[class*='monster-radio'].prepend-label > span {
 	background: blue;
 }
 
+
+/************************************************************/
+/********************* MONSTER PANEL TEXT *******************/
+/************************************************************/
+.monster-panel-text {
+	box-shadow: 1px 1px 1px #aaa;
+	width: 320px;
+	border-left-width: 4px;
+	border-left-style: solid;
+}
+
+.monster-panel-text .monster-panel-text-header {
+	padding: 12px 20px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+.monster-panel-text .monster-panel-text-header .title-text-wrapper {
+	float: left;
+	font-weight: 700;
+	color: #333;
+	text-transform: uppercase;
+	width: 250px;
+}
+
+.monster-panel-text .monster-panel-text-header .icon-wrapper {
+	float: left;
+}
+
+.monster-panel-text .monster-panel-text-header .icon-wrapper i {
+	font-size: 18px;
+	margin-right: 14px;
+	vertical-align: bottom;
+}
+
+.monster-panel-text .monster-panel-text-content {
+	background: #FFF;
+	display: inline-block;
+	padding: 15px 20px;
+}
+
+@mixin color-panel($color) {
+	border-left-color: $color;
+
+	.monster-panel-text-header {
+		background: lighten($color, 30%);
+		border-bottom-color: $color;
+	}
+
+	.monster-panel-text-header i {
+		color: $color;
+	}
+}
+
+.monster-panel-text[data-type="info"] {
+	@include color-panel($primary-color);
+}
+
+.monster-panel-text[data-type="warning"] {
+	@include color-panel($warning-color);
+}
+
+.monster-panel-text[data-type="danger"] {
+	@include color-panel($danger-color);
+}
+
+.monster-panel-text[data-type="success"] {
+	@include color-panel($success-color);
+}
 /************************************************************/
 /************************** WIZARD **************************/
 /************************************************************/
