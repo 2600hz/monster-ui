@@ -161,8 +161,8 @@ h1 {
 
 /***************** TYPES ****************/
 .monster-button-primary {
-	color: darken($primary-color, 25%);
-	border-color: darken($primary-color, 10%);
+	color: darken($primary-color, 30%);
+	border-color: darken($primary-color, 20%);
 	background: $primary-color;
 }
 .monster-button-secondary {
@@ -174,8 +174,8 @@ h1 {
 	background: #F9F9F9;
 }
 .monster-button-success {
-	color: darken($success-color, 25%);
-	border-color: darken($success-color, 10%);
+	color: darken($success-color, 30%);
+	border-color: darken($success-color, 20%);
 	background: $success-color;
 }
 .monster-button-warning {
@@ -272,6 +272,7 @@ h1 {
 			user-select: none;
 
 	-webkit-touch-callout: none;
+	vertical-align: middle;
 }
 
 .monster-switch.disabled {
@@ -315,9 +316,6 @@ h1 {
 	border-radius: 15px;
 	background: $background-primary-color;
 }
-.monster-switch > input:focus + span {
-	box-shadow: 0 0 2px 0 #0087e0;
-}
 .monster-switch > input:checked + span {
 	padding-right: 34px;
 	color: #FFF;
@@ -327,12 +325,12 @@ h1 {
 .monster-switch > input:not(:checked) + span {
 	padding-left: 34px;
 }
-.monster-switch > input:checked ~ span span:first-child {
-	visibility: visible;
-}
+.monster-switch > input:checked ~ span span:first-child,
 .monster-switch > input:not(:checked) ~ span span:last-child {
 	visibility: visible;
+	min-width: 10px;
 }
+
 .monster-switch > span span {
 	display: block;
 	visibility: hidden;
@@ -1117,12 +1115,12 @@ table.monster-table {
 }
 
 .monster-table .footable-header th {
-	font-weight: normal;
+	font-weight: 600;
 	height: 37px;
 	padding-right: 10px;
 	text-align: left;
 	text-transform: uppercase;
-	color: #9aa2a8;
+	color: #777;
 	border-top: 1px solid $panel-border-color;
 	border-bottom: 1px solid $panel-border-color;
 	white-space: nowrap;
@@ -1566,7 +1564,7 @@ table.monster-table {
 /****************** MONSTER SELECT DROPDOWN *****************/
 /************************************************************/
 
-.monster-select-dropdown > .dropdown {
+[class*="monster-select-dropdown"] > .dropdown {
 	line-height: 14px;
 	border: 1px solid $primary-color;
 	border-radius: 2px;
@@ -1575,49 +1573,64 @@ table.monster-table {
 	padding: 6px 10px 5px 10px;
 }
 
-.monster-select-dropdown > .dropdown .dropdown-toggle .monster-checkbox {
+[class*="monster-select-dropdown"] > .dropdown .dropdown-toggle .monster-checkbox {
 	min-height: 13px;
 }
 
-.monster-select-dropdown > .dropdown .dropdown-toggle {
+[class*="monster-select-dropdown"] > .dropdown .dropdown-toggle {
 	vertical-align: middle;
 }
 
-.monster-select-dropdown > .dropdown .dropdown-toggle i {
+[class*="monster-select-dropdown"] > .dropdown .dropdown-toggle i {
 	color: $primary-color;
 	vertical-align: middle;
 }
 
-.monster-select-dropdown > .dropdown.open {
+[class*="monster-select-dropdown"] > .dropdown.open {
 	background: $primary-color;
 	color: #FFF;
 }
 
-.monster-select-dropdown > .dropdown.open .dropdown-toggle,
-.monster-select-dropdown > .dropdown.open .dropdown-toggle i {
+[class*="monster-select-dropdown"] > .dropdown.open .dropdown-toggle,
+[class*="monster-select-dropdown"] > .dropdown.open .dropdown-toggle i {
 	color: #FFF;
 }
 
-.monster-select-dropdown > .dropdown .dropdown-menu li a {
+[class*="monster-select-dropdown"] > .dropdown .dropdown-menu li a {
 	padding: 10px 15px;
 }
 
-.monster-select-dropdown .icon-telicon-caret-down {
+[class*="monster-select-dropdown"] .icon-telicon-caret-down {
 	margin-left: 20px;
 }
 
-.monster-select-dropdown .dropdown-menu {
+[class*="monster-select-dropdown"] .dropdown-menu {
 	margin-top: 10px;
 }
 
-.monster-select-dropdown label[class*="monster-checkbox"] > i,
-.monster-select-dropdown label[class*="monster-radio"] > i {
+[class*="monster-select-dropdown"] label[class*="monster-checkbox"] > i,
+[class*="monster-select-dropdown"] label[class*="monster-radio"] > i {
 	border: 1px solid $primary-color;
 }
 
-.monster-select-dropdown .open label[class*="monster-checkbox"] > i,
-.monster-select-dropdown .open label[class*="monster-radio"] > i {
+[class*="monster-select-dropdown"] .open label[class*="monster-checkbox"] > i,
+[class*="monster-select-dropdown"] .open label[class*="monster-radio"] > i {
 	border: 1px solid #FFF;
+}
+
+.monster-select-dropdown-full > .dropdown {
+	color: darken($primary-color, 30%);
+	border-color: darken($primary-color, 20%);
+	background: $primary-color;
+}
+
+.monster-select-dropdown-full > .dropdown .dropdown-toggle,
+.monster-select-dropdown-full > .dropdown .dropdown-toggle i {
+	color: darken($primary-color, 30%);
+}
+
+.monster-select-dropdown-full > .dropdown .dropdown-menu li > a:hover {
+	color: #FFF;
 }
 
 /************************************************************/
