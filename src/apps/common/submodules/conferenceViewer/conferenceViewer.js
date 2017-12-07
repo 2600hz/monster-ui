@@ -2,19 +2,15 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		toastr = require('toastr');
+		toastr = require('toastr'),
+		randomColor = require('randomColor');
 
 	var conferenceViewer = {
 
 		requests: {},
 
 		appFlags: {
-			conferenceViewer: {
-				avatarCount: 25,
-				currentConference: {
-					avatars: []
-				}
-			}
+			conferenceViewer: {}
 		},
 
 		subscribe: {
@@ -46,6 +42,10 @@ define(function(require) {
 					});
 				} else {
 					moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
+				}
+
+				if (formattedData.conference.moderators.length + formattedData.conference.participants.length === 0) {
+					template.find('.admin-actions button').addClass('disabled');
 				}
 
 				self.conferenceViewerStartTimers(template, formattedData.conference);
@@ -208,13 +208,16 @@ define(function(require) {
 			template.find('.conference-action').on('click', function() {
 				var $this = $(this),
 					action = $this.data('action'),
+					isDisabled = $this.hasClass('disabled'),
 					$parent = $this.parents('.action-user');
 
 				if ($parent.hasClass('togglable')) {
 					$parent.toggleClass('active');
 				}
 
-				self.conferenceViewerActionConference(action, data.conference.id);
+				if (!isDisabled) {
+					self.conferenceViewerActionConference(action, data.conference.id);
+				}
 			});
 		},
 
@@ -232,121 +235,22 @@ define(function(require) {
 					}
 				};
 
-			self.conferenceViewerFormatUsers(data.participants);
+			data.participants = self.conferenceViewerFormatUsers(data.participants);
 
 			_.each(data.participants, function(participant) {
 				participant.is_moderator ? formattedData.conference.moderators.push(participant) : formattedData.conference.participants.push(participant);
 			});
 
+			formattedData.conference.disabledActions = formattedData.conference.participants.length + formattedData.conference.moderators.length === 0;
+
 			return formattedData;
 		},
 
-		conferenceViewerGetNotSoRandomAvatarId: function(pStr, pMaxNumber) {
-			var self = this,
-				str = pStr || 'unknown',
-				maxNumber = pMaxNumber || 25,
-				firstChar = str.substring(0, 1),
-				lastChar = str.substring(str.length, 1),
-				uniqueCode = firstChar.charCodeAt(0) + lastChar.charCodeAt(0) + str.length,
-				id = uniqueCode % maxNumber;
-
-			return id;
-		},
-
-		conferenceViewerAssignAvatarIdToUser: function(user, id) {
-			var self = this;
-
-			user.avatarId = self.appFlags.conferenceViewer.currentConference.avatars[id];
-			self.appFlags.conferenceViewer.currentConference.avatars[id] = -1;
-		},
-
-		conferenceViewerGetAvatarsArray: function() {
-			var self = this;
-
-			return _.range(self.appFlags.conferenceViewer.avatarCount);
-		},
-
-		conferenceViewerGetNewParticipantAvatar: function(user) {
-			var self = this,
-				randomIndex = self.conferenceViewerGetNotSoRandomAvatarId(user.displayName, self.appFlags.conferenceViewer.avatarCount),
-				foundAvailableAvatar = false;
-
-			if (self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
-				self.conferenceViewerAssignAvatarIdToUser(user, randomIndex);
-				foundAvailableAvatar = true;
-			} else {
-				_.each(self.appFlags.conferenceViewer.currentConference.avatars, function(v, i) {
-					if (v !== -1 && !foundAvailableAvatar) {
-						self.conferenceViewerAssignAvatarIdToUser(user, i);
-						foundAvailableAvatar = true;
-					}
-				});
-
-				if (!foundAvailableAvatar) {
-					self.appFlags.conferenceViewer.currentConference.avatars = self.conferenceViewerGetAvatarsArray().slice();
-
-					self.conferenceViewerGetNewParticipantAvatar(user);
-				}
-			}
-		},
-
-		conferenceViewerPopulateAvatars: function(noAvatarParticipants) {
-			var self = this,
-				randomIndex,
-				alreadyUsedAvatarParticipants,
-				mapParticipants = _.keyBy(noAvatarParticipants, 'participant_id'),
-				defaultAvatars = self.conferenceViewerGetAvatarsArray(),
-				arrayResult = [];
-
-			// Initialize array with all avatars
-			self.appFlags.conferenceViewer.currentConference.avatars = defaultAvatars.slice();
-
-			// while we still have participants with no avatars
-			while (noAvatarParticipants.length) {
-				alreadyUsedAvatarParticipants = [];
-
-				// first for all participants, we try to get their own unique avatar
-				_.each(noAvatarParticipants, function(user) {
-					randomIndex = self.conferenceViewerGetNotSoRandomAvatarId(user.displayName, self.appFlags.conferenceViewer.avatarCount);
-
-					//if it's already used, we skip them and add them to the list to use for next loop
-					if (self.appFlags.conferenceViewer.currentConference.avatars[randomIndex] !== -1) {
-						self.conferenceViewerAssignAvatarIdToUser(mapParticipants[user.participant_id], randomIndex);
-					} else {
-						alreadyUsedAvatarParticipants.push(user);
-					}
-				});
-
-				// once the first loop is done, we look at the unused avatars, and automatically assign them to participants without avatar.
-				// because we would rather have people not have their own avatar than 2 participants share the same avatar when there still are unique avatars available
-				_.each(self.appFlags.conferenceViewer.currentConference.avatars, function(v, i) {
-					if (v !== -1) {
-						if (alreadyUsedAvatarParticipants.length) {
-							self.conferenceViewerAssignAvatarIdToUser(mapParticipants[alreadyUsedAvatarParticipants[0].participant_id], i);
-							// we remove the user from the list since we assigned an avatar
-							alreadyUsedAvatarParticipants.splice(0, 1);
-						}
-					}
-				});
-
-				// if there still are users that haven't been assigned an avatar, we reset the list of available avatars as we have exhausted the list of unique matches
-				if (alreadyUsedAvatarParticipants.length) {
-					self.appFlags.conferenceViewer.currentConference.avatars = defaultAvatars.slice();
-				}
-
-				// we need to re run the algorithm on the users that we didn't assign an avatar to
-				noAvatarParticipants = alreadyUsedAvatarParticipants;
-			}
-
-			arrayResult = _.map(mapParticipants, function(v) { return v; });
-
-			return arrayResult;
-		},
-
-		conferenceViewerFormatParticipant: function(participant) {
+		conferenceViewerFormatParticipant: function(oldParticipant) {
 			var self = this,
 				mapUsers = self.appFlags.conferenceViewer.mapUsers,
-				ownerId;
+				ownerId,
+				participant = $.extend(true, {}, oldParticipant);
 
 			if (participant.channel && participant.channel.custom_channel_vars && participant.channel.custom_channel_vars.owner_id) {
 				ownerId = participant.channel.custom_channel_vars.owner_id;
@@ -356,8 +260,12 @@ define(function(require) {
 
 			if (mapUsers.hasOwnProperty(ownerId)) {
 				participant.displayName = mapUsers[ownerId].first_name + ' ' + mapUsers[ownerId].last_name;
+				participant.initials = mapUsers[ownerId].first_name.charAt(0) + mapUsers[ownerId].last_name.charAt(0);
+				participant.backgroundColor = randomColor();
 			} else {
 				participant.displayName = participant.caller_id_name;
+				participant.initials = '?';
+				participant.backgroundColor = randomColor({ hue: 'monochrome', luminosity: 'light' });
 			}
 
 			for (var key in participant.conference_channel_vars) {
@@ -372,10 +280,8 @@ define(function(require) {
 				formattedData = [];
 
 			_.each(participants, function(participant) {
-				self.conferenceViewerFormatParticipant(participant);
+				formattedData.push(self.conferenceViewerFormatParticipant(participant));
 			});
-
-			formattedData = self.conferenceViewerPopulateAvatars(participants);
 
 			return formattedData;
 		},
@@ -383,10 +289,7 @@ define(function(require) {
 		conferenceViewerFormatUser: function(participant) {
 			var self = this;
 
-			self.conferenceViewerFormatParticipant(participant);
-			self.conferenceViewerGetNewParticipantAvatar(participant);
-
-			return participant;
+			return self.conferenceViewerFormatParticipant(participant);
 		},
 
 		conferenceViewerOnNewParticipant: function(participant) {
@@ -402,13 +305,15 @@ define(function(require) {
 
 			self.conferenceViewerStartTimer(userTemplate.find('.conference-timer'), formattedParticipant.duration);
 
-			if (participant.is_moderator) {
+			if (formattedParticipant.is_moderator) {
 				container.find('.moderators-wrapper .users').append(userTemplate);
 				container.find('.moderators-wrapper .empty-user-category').remove();
 			} else {
 				container.find('.participants-wrapper .users').append(userTemplate);
 				container.find('.participants-wrapper .empty-user-category').remove();
 			}
+
+			container.find('.admin-actions button').removeClass('disabled');
 
 			return formattedParticipant;
 		},
@@ -443,22 +348,22 @@ define(function(require) {
 					$userDiv.find('[data-action-category="deaf"]').removeClass('active');
 					break;
 				case 'del-member':
-					var avatarId = parseInt($userDiv.find('[data-avatar-id]').data('avatar-id'));
-
-					if (avatarId) {
-						self.appFlags.conferenceViewer.currentConference.avatars[avatarId] = avatarId;
-					}
-
 					$userDiv.remove();
+					var moderatorsCount = $moderatorsDiv.find('.conference-user-wrapper').length,
+						participantsCount = $participantsDiv.find('.conference-user-wrapper').length;
 
 					if (container.find('.conference-user-wrapper').length === 0) {
 						self.conferenceViewerStopConference();
 					}
 
-					if (isModerator && $moderatorsDiv.find('.conference-user-wrapper').length === 0) {
+					if (isModerator && moderatorsCount === 0) {
 						$moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyModerators }));
-					} else if (!isModerator && $participantsDiv.find('.conference-user-wrapper').length === 0) {
+					} else if (!isModerator && participantsCount === 0) {
 						$participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { text: self.i18n.active().conferenceViewer.emptyParticipants }));
+					}
+
+					if (moderatorsCount + participantsCount === 0) {
+						container.find('.admin-actions button').addClass('disabled');
 					}
 
 					break;
@@ -469,12 +374,12 @@ define(function(require) {
 					$userDiv.removeClass('speaking');
 					break;
 				case 'lock':
-					container.find('.conference-action[data-action="lock"]').removeClass('active');
-					container.find('.conference-action[data-action="unlock"]').addClass('active');
+					container.find('.conference-action[data-action="lock"]').addClass('hidden');
+					container.find('.conference-action[data-action="unlock"]').removeClass('hidden');
 					break;
 				case 'unlock':
-					container.find('.conference-action[data-action="unlock"]').removeClass('active');
-					container.find('.conference-action[data-action="lock"]').addClass('active');
+					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
+					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
 					break;
 				default:
 					break;
