@@ -2,9 +2,7 @@
 /************************************************************/
 /***************** MONSTER MEDIA SELECTION ******************/
 /************************************************************/
-.monster-media-selection {
-	margin-left: 40px;
-}
+
 .monster-media-selection .media-dropdown {
 	margin-bottom: 0px;
 	margin-left: 10px
@@ -17,6 +15,11 @@
 	margin-top: 20px;
 	margin-bottom: 0;
 }
+
+.monster-media-selection .shoutcast-warning {
+	margin-top: 20px;
+}
+
 .monster-media-selection .upload-div {
 	display: none;
 	margin-top: 20px;
@@ -44,4 +47,29 @@
 	margin: 0;
 	padding: 6px;
 	width: 140px;
+}
+
+/* Tabs skin */
+.monster-media-selection.monster-media-tabs-skin .upload-div {
+	display: block;
+}
+
+.monster-media-selection.monster-media-tabs-skin .label-media-selection {
+	display: block;
+}
+
+.monster-media-selection.monster-media-tabs-skin select.media-dropdown,
+.monster-media-selection.monster-media-tabs-skin [data-tab="use_existing"] input {
+	box-sizing: border-box;
+	margin: 0;
+	height: 40px;
+	width: 100%;
+}
+
+.monster-media-selection.monster-media-tabs-skin .upload-div .file-upload > input {
+	width: 200px;
+}
+
+.monster-media-selection.monster-media-tabs-skin .upload-div {
+	margin-top: 0;
 }

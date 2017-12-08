@@ -520,7 +520,9 @@
 		"shoutcastURLHelp": "You can type any URL including :// (http, https, shout...)",
 		"noneLabel": "- None -",
 		"silence": "Silence",
-		"shoutcastURLWarning": "WARNING: If the stream selected here attempts to be played, and is unavailable, the call may fail completely. Please make sure the stream you use is available 24/7."
+		"shoutcastURLWarning": "WARNING: If the stream selected here attempts to be played, and is unavailable, the call may fail completely. Please make sure the stream you use is available 24/7.",
+		"useExistingMedia": "Use Existing Media",
+		"uploadNewMedia": "Upload New Media"
 	},
 
 	"__comment": "UI-2279: Webphone strings",

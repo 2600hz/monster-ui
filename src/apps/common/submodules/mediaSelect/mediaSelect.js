@@ -16,9 +16,7 @@ define(function(require) {
 				container = args.container,
 				callback = args.callback,
 				formattedData = self.mediaSelectFormatData(args),
-				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
-
-			self.mediaSelectBindEvents(template);
+				template = self.mediaSelectGetSkinnedTemplate(args, formattedData);
 
 			container
 				.empty()
@@ -26,7 +24,7 @@ define(function(require) {
 
 			callback && callback({
 				getValue: function() {
-					return self.mediaSelectGetValue(template);
+					return self.mediaSelectGetValue(template, args);
 				}
 			});
 		},
@@ -40,7 +38,7 @@ define(function(require) {
 					options: [],
 					name: undefined,
 					uploadLabel: self.i18n.active().upload,
-					label: self.i18n.active().mediaSelect.defaultLabel,
+					label: args.hasOwnProperty('label') ? args.label : self.i18n.active().mediaSelect.defaultLabel,
 					hasNone: true,
 					hasShoutcast: true,
 					hasSilence: true,
@@ -86,6 +84,22 @@ define(function(require) {
 			return formattedData;
 		},
 
+		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
+			var self = this,
+				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
+				template;
+
+			if (skin === 'default') {
+				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
+				self.mediaSelectBindDefaultTemplate(template);
+			} else if (skin === 'tabs') {
+				template = $(monster.template(self, 'mediaSelect-tabs-layout', formattedData));
+				self.mediaSelectBindTabsTemplate(template);
+			}
+
+			return template;
+		},
+
 		mediaSelectGetValue: function(template) {
 			var self = this,
 				response;
@@ -105,40 +119,12 @@ define(function(require) {
 			return response;
 		},
 
-		mediaSelectBindEvents: function(template) {
-			var self = this,
-				mediaToUpload,
-				closeUploadDiv = function(newMedia) {
-					mediaToUpload = undefined;
-					template.find('.upload-div input').val('');
-					template.find('.upload-div').slideUp(function() {
-						template.find('.upload-toggle').removeClass('active');
-					});
-					if (newMedia) {
-						var mediaSelect = template.find('.media-dropdown');
-						mediaSelect.append('<option value="' + newMedia.id + '">' + newMedia.name + '</option>');
-						mediaSelect.val(newMedia.id);
-					}
-				};
-
-			template.find('.media-dropdown').on('change', function() {
-				var val = $(this).val(),
-					isShoutcast = val === 'shoutcast';
-
-				template.find('.shoutcast-div')
-						.toggleClass('hidden', !isShoutcast)
-						.find('input')
-						.val('');
-
-				if (isShoutcast) {
-					closeUploadDiv();
-				}
-			});
+		mediaSelectBindCommon: function(template, mediaToUpload, callbackAfterSave) {
+			var self = this;
 
 			template.find('.upload-input').fileUpload({
 				inputOnly: true,
 				wrapperClass: 'file-upload input-append',
-				//btnText: self.i18n.active().vmboxes.popupSettings.greeting.audioUploadButton,
 				btnClass: 'monster-button',
 				maxSize: 5,
 				success: function(results) {
@@ -151,18 +137,6 @@ define(function(require) {
 					template.find('.upload-div input').val('');
 					mediaToUpload = undefined;
 				}
-			});
-
-			template.find('.upload-toggle').on('click', function() {
-				if ($(this).hasClass('active')) {
-					template.find('.upload-div').stop(true, true).slideUp();
-				} else {
-					template.find('.upload-div').stop(true, true).slideDown();
-				}
-			});
-
-			template.find('.upload-cancel').on('click', function() {
-				closeUploadDiv();
 			});
 
 			template.find('.upload-submit').on('click', function() {
@@ -188,8 +162,13 @@ define(function(require) {
 									data: mediaToUpload.file
 								},
 								success: function(data, status) {
-									closeUploadDiv(media);
 									template.find('.shoutcast-div').addClass('hidden');
+									if (media) {
+										var mediaSelect = template.find('.media-dropdown');
+										mediaSelect.append('<option value="' + media.id + '">' + media.name + '</option>');
+										mediaSelect.val(media.id);
+									}
+									callbackAfterSave && callbackAfterSave(media);
 								},
 								error: function(data, status) {
 									self.callApi({
@@ -209,6 +188,62 @@ define(function(require) {
 					monster.ui.alert(self.i18n.active().mediaSelect.emptyUploadAlert);
 				}
 			});
+
+			template.find('.media-dropdown').on('change', function() {
+				var val = $(this).val(),
+					isShoutcast = val === 'shoutcast';
+
+				template.find('.shoutcast-div')
+						.toggleClass('hidden', !isShoutcast)
+						.find('input')
+						.val('');
+			});
+		},
+
+		mediaSelectBindDefaultTemplate: function(template) {
+			var self = this,
+				mediaToUpload,
+				closeUploadDiv = function(newMedia) {
+					mediaToUpload = undefined;
+					template.find('.upload-div input').val('');
+					template.find('.upload-div').slideUp(function() {
+						template.find('.upload-toggle').removeClass('active');
+					});
+				};
+
+			template.find('.media-dropdown').on('change', function() {
+				var val = $(this).val(),
+					isShoutcast = val === 'shoutcast';
+
+				if (isShoutcast) {
+					closeUploadDiv();
+				}
+			});
+
+			template.find('.upload-toggle').on('click', function() {
+				if ($(this).hasClass('active')) {
+					template.find('.upload-div').stop(true, true).slideUp();
+				} else {
+					template.find('.upload-div').stop(true, true).slideDown();
+				}
+			});
+
+			template.find('.upload-cancel').on('click', function() {
+				closeUploadDiv();
+			});
+
+			self.mediaSelectBindCommon(template, mediaToUpload, function(media) {
+				closeUploadDiv(media);
+			});
+		},
+
+		mediaSelectBindTabsTemplate: function(template) {
+			var self = this,
+				mediaToUpload;
+
+			monster.ui.fancyTabs(template.find('.monster-tab-wrapper'));
+
+			self.mediaSelectBindCommon(template, mediaToUpload);
 		}
 	};
 
