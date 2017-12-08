@@ -1,0 +1,54 @@
+<div class="monster-media-selection monster-media-tabs-skin">
+	<div class="monster-tab-wrapper">
+		<nav class="monster-navbar monster-tab-navbar">
+			<ul class="navbar-menu">
+				<li class="navbar-menu-item">
+					<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="use_existing">
+						{{ i18n.mediaSelect.useExistingMedia }}
+					</a>
+				</li>
+				<li class="navbar-menu-item">
+					<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="upload_new">
+						{{ i18n.mediaSelect.uploadNewMedia }}
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="monster-tab-content" data-tab="use_existing">
+			<div class="control-group">
+				<label class="control-label" for="{{ name }}">{{ label }}</label>
+				<div class="controls">
+					<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
+						{{#select selectedOption}}
+							{{#each options}}
+								<option value="{{id}}">{{name}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+			</div>
+
+			<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
+				<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
+				<div class="input controls">
+					<input type="text" class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+				</div>
+
+				<div class="shoutcast-warning">
+					{{#monsterPanelText i18n.warning 'warning' 'fill-width'}}
+						{{ i18n.mediaSelect.shoutcastURLWarning }}
+					{{/monsterPanelText}}
+				</div>
+			</div>
+		</div>
+
+		<div class="monster-tab-content" data-tab="upload_new">
+			<label class="control-label" for="input_media_upload">{{ i18n.mediaSelect.uploadNewMedia }}</label>
+			<div class="upload-div">
+				<input type="file" class="upload-input" accept="audio/*">
+				<button type="button" class="monster-button-primary non-fixed upload-action upload-submit"><i class="fa fa-upload"></i></button>
+			</div>
+		</div>
+	</div>
+</div>

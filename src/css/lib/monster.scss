@@ -651,15 +651,22 @@ label[class*='monster-radio'].prepend-label > span {
 /************************************************************/
 .monster-panel-text {
 	box-shadow: 1px 1px 1px #aaa;
-	width: 320px;
+	box-sizing: border-box;
 	border-left-width: 4px;
 	border-left-style: solid;
+	width: 320px;
+}
+
+.monster-panel-text.fill-width {
+	width: 100%;
 }
 
 .monster-panel-text .monster-panel-text-header {
 	padding: 12px 20px;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
+	border-top-width: 1px;
+	border-top-style: solid;
 }
 
 .monster-panel-text .monster-panel-text-header .title-text-wrapper {
@@ -667,7 +674,7 @@ label[class*='monster-radio'].prepend-label > span {
 	font-weight: 700;
 	color: #333;
 	text-transform: uppercase;
-	width: 250px;
+	width: 245px;
 }
 
 .monster-panel-text .monster-panel-text-header .icon-wrapper {
@@ -691,7 +698,7 @@ label[class*='monster-radio'].prepend-label > span {
 
 	.monster-panel-text-header {
 		background: lighten($color, 30%);
-		border-bottom-color: $color;
+		border-color: $color;
 	}
 
 	.monster-panel-text-header i {
@@ -1974,4 +1981,23 @@ table.monster-table {
 
 #jsoneditor pre {
 	margin-bottom: 0;
+}
+
+/***********************************************/
+/****************MONSTER TABS ******************/
+/***********************************************/
+.monster-tab-wrapper .monster-tab-content {
+	display: none;
+}
+
+.monster-tab-wrapper .monster-tab-navbar {
+	border-bottom: 1px solid #CCC;
+}
+
+.monster-tab-wrapper .monster-tab-content.active {
+	display: block;
+}
+
+.monster-tab-wrapper .monster-tab-content {
+	padding: 25px 0px 10px;
 }

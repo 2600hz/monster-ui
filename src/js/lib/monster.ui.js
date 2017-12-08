@@ -212,7 +212,7 @@ define(function(require) {
 					validTypes = ['info', 'success', 'danger', 'warning'],
 					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
 					templateData = {
-						className: className || '',
+						className: typeof className === 'string' ? className : '',
 						title: title,
 						content: new Handlebars.SafeString(htmlContent)
 					},
@@ -850,6 +850,38 @@ define(function(require) {
 
 				template.find('.tabs-section[data-section="' + section + '"]').show();
 				$this.parents('.tabs-main-selector').addClass('active');
+			});
+		},
+
+		// Takes a properly formatted HTML div and automatically display the first tab and selects it.
+		// Clicking on the nav-item will bring the correct tab content and hide the others
+		fancyTabs: function(template) {
+			template.find('.navbar-menu .navbar-menu-item-link').first().addClass('active');
+			template.find('.monster-tab-content').first().addClass('active');
+
+			template.find('.navbar-menu-item-link').on('click', function(event) {
+				event.preventDefault();
+
+				var $this = $(this),
+					tabAnimationInProgress = false,
+					renderTabContent = function() {
+						if (!tabAnimationInProgress) {
+							tabAnimationInProgress = true;
+
+							template.find('.navbar-menu-item-link').removeClass('active');
+							template.find('.monster-tab-content').removeClass('active').hide();
+							$this.addClass('active');
+
+							template.find('.monster-tab-content[data-tab="' + $this.data('tab') + '"]').fadeIn(function() {
+								$(this).addClass('active');
+
+								tabAnimationInProgress = false;
+							});
+						}
+					};
+
+				// I put it in a function as we might want to do things later where we prevent it from happening etc...
+				renderTabContent();
 			});
 		},
 
