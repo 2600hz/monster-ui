@@ -360,7 +360,7 @@ define(function(require) {
 			var str = variable || '',
 				formattedString = str.replace(/_/g, ' ');
 
-			formattedString = formattedString.replace(/\w\S*/, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+			formattedString = formattedString.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 
 			return formattedString;
 		},
