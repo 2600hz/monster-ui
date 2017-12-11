@@ -33,6 +33,7 @@ var getConfigRequire = function(mode, app) {
 			'crossroads',
 			'ddslick',
 			'drop',
+			'file-saver',
 			'fileupload',
 			'footable',
 			'form2object',
@@ -105,7 +106,7 @@ var getConfigRequire = function(mode, app) {
 		];
 	}
 
-	var config = {  
+	var config = {
 		dir: paths.require, // direction
 		appDir: paths.tmp, // origin
 		baseUrl:'./',

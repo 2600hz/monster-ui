@@ -14,15 +14,17 @@ globals:
   Duo: true
   Handlebars: false
   monster: false
+  saveAs: false
+  FooTable: false
 
 rules:
   no-tabs: off
   indent: [ "error", "tab", { "SwitchCase": 1 }]
-  semi: 
+  semi:
     - error
     - always
   keyword-spacing: ["error"]
-  space-before-function-paren: 
+  space-before-function-paren:
     - error
     - never
   one-var: off
@@ -39,12 +41,12 @@ rules:
     - {
       #Allow unused variable if they are requires or self-references as they are useful in future. Also allow charts because they are used globally but linter can't pick up on that.
       varsIgnorePattern:
-        "_|self|toastr|chosen|.*[cC]hart",
+        "_|self|toastr|chosen|FileSaver|.*[cC]hart",
       #Allow arguments called status or data to be unused (They are required as arguments to the callbacks provided to monster#request()
         argsIgnorePattern:
         "status|_status|data|_data|e"
       }
-  operator-linebreak: 
+  operator-linebreak:
     - error
     - before
   #Deprecated rule.
