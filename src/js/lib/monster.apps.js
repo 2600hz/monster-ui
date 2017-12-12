@@ -151,6 +151,7 @@ define(function() {
 							};
 							break;
 						case 'user.update':
+						case 'user.patch':
 							// If we're updating the user we're logged in with
 							if (params.data.userId === monster.apps.auth.userId) {
 								successCallback = function(data, status) {
