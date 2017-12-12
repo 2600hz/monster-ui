@@ -11,6 +11,7 @@ table.footable.monster-table th.footable-sortable > span.fooicon {
 
 table.footable.monster-table .form-control {
 	border-color: $panel-border-color;
+	z-index: 0;
 }
 
 table.footable.monster-table .footable-filtering-search .input-group {
