@@ -316,6 +316,7 @@
 				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues' },
+				'listAllRecipients': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/recipients' },
 				'listRecipients': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'updateRecipients': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
@@ -330,7 +331,8 @@
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
-				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' }
+				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/roles' }
 			},
 			qubicleRoles: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_roles' }
