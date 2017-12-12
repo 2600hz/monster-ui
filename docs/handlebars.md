@@ -15,6 +15,7 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 	- [monsterRadio](#monsterradio)
 	- [monsterSignalIndicator](#monstersignalindicator)
 	- [monsterSwitch](#monsterswitch)
+	- [monsterPanelText](#monsterpaneltext)
 	- [monsterText](#monstertext)
 	- [replaceVar](#replacevar)
 	- [toFriendlyDate](#tofriendlydate)
@@ -197,7 +198,35 @@ You can also provide parameters to define a label, set its positioning, and set 
 {{/monsterCheckbox}}
 ```
 
-#### monsterText
+#### monsterPanelText
+This helper is a re-design of the monsterText wrapper. It allows developer to display "informational" messages nicely.
+
+There are a few parameters available to customize this helper.
+
+First one is the `title`, this new panel includes a section for a title. You should use a short text like "Warning!" or "Information".
+
+The second parameter is the `style`. There are 4 different styles for this panel, `info` (blue), `success` (green), `warning` (yellow), `dange`" (red).
+
+Finally you can add a `className` as a third parameter. This is helpful if you need to customize the helper yourself. You can also use `fill-width` as a class name to automatically fill the parent's div width with the helper. Without that it will be set to a fixed size.
+
+Here are some examples on how to use this helper.
+
+```handlebars
+{{#monsterPanelText 'Warning!' 'warning' 'fill-width'}}
+	You should see a warning message here!
+{{/monsterPanelText}}
+{{#monsterPanelText 'Help' 'info'}}
+	<p>This is an informational message</p>
+{{/monsterPanelText}}
+{{#monsterPanelText 'Error!' 'danger' 'fill-width'}}
+	You should see an error message here
+{{/monsterPanelText}}
+{{#monsterPanelText 'Congratulations!' 'success' 'fill-width'}}
+	You should see a success message here
+{{/monsterPanelText}}
+```
+
+#### monsterText (obsolete, use monsterPanelText where possible)
 This helper allows you to generate a wrapper around your text, with a pre-set design used in many different places in the Monster-UI, so it looks consistent with the rest of the UI.
 
 First argument is optional and defaults to 'info'. Choices are 'info', 'question', 'error', 'warning'. Error will display a wrapper of the red color, Warning will display a wrapper of the yellow color, and question will show a question mark instead of the standard info icon.
