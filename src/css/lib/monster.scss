@@ -1552,7 +1552,7 @@ table.monster-table {
 /************************************************************/
 
 .monster-navbar {
-	height: 40px;
+	height: 32px;
 }
 
 .monster-navbar .separator {
@@ -1564,7 +1564,7 @@ table.monster-table {
 
 .monster-navbar .navbar-menu {
 	float: left;
-	height: 40px;
+	height: 32px;
 	margin: 0;
 }
 
@@ -1585,8 +1585,8 @@ table.monster-table {
 }
 
 .monster-navbar .navbar-menu-item-link {
-	line-height: 40px;
-	padding: 11px 0 9px;
+	line-height: 32px;
+	padding: 0 0 4px 0;
 	color: $font-primary-color;
 	border-bottom: 3px solid transparent;
 }
