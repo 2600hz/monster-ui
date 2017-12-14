@@ -1,108 +1,140 @@
-<div id="auth_container" class="login-background">
-    <div class="intro">
-        <div class="content">
-            <div class="logo logo-block"></div>
-            <h1 class="welcome-message">{{ i18n.welcome }}</h1>
-        </div>
-    </div>
+<div id="auth_app_container">
+	<div class="app-content">
+		<div class="intro">
+			<div class="content">
+				<div class="logo logo-block"></div>
+				<h3 class="welcome-message">
+					{{ i18n.welcome }}
+				</h3>
+			</div>
+			<div class="social">
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-facebook-official"></i>
+				</a>
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-twitter"></i>
+				</a>
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-linkedin-square"></i>
+				</a>
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-github"></i>
+				</a>
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-google-plus"></i>
+				</a>
+				<a href="javascript:void(0);" class="social-link">
+					<i class="fa fa-youtube"></i>
+				</a>
+			</div>
+		</div>
 
-    <!-- Sign-In Form -->
-    <div class="form-container animated" data-form="login">
-        <form id="form_login">
-            <div class="sso-providers-wrapper"></div>
-           
-            <div class="error-message-wrapper monster-orange">
-                <span class="icon"><i class="fa fa-warning monster-orange"></i></span>
-                <div class="text"></div>
-            </div>
+		<!-- Sign-In Form -->
+		<div class="form-container" data-form="login">
+			<form id="form_login">
+				<h3>
+					{{ i18n.login.buttonText }}
+				</h3>
+				<div class="error-message-wrapper monster-orange">
+					<span class="icon">
+						<i class="fa fa-warning monster-orange"></i>
+					</span>
+					<div class="text"></div>
+				</div>
+				<div class="control-group">
+					<label for="login" class="control-label">
+						{{i18n.username}}
+					</label>
+					<div class="controls">
+						<input type="text" id="login" name="login" value="{{username}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="password" class="control-label">
+						{{i18n.password}}
+					</label>
+					<div class="controls">
+						<input type="password" id="password" name="password" value="{{password}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="account_name" class="control-label">
+						{{i18n.account.name}}
+					</label>
+					<div class="controls">
+						<input type="text" id="account_name" name="account_name" value="{{accountName}}">
+					</div>
+				</div>
+				<div class="alt-actions">
+					{{#monsterCheckbox i18n.rememberMe}}
+						<input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}}>
+					{{/monsterCheckbox}}
+					{{#unless hidePasswordRecovery}}
+						<a href="javascript:void(0);" class="form-toggle" data-form="forgot_info">
+							{{ i18n.forgotPassword }}
+						</a>
+					{{/unless}}
+				</div>
+				<button class="btn-submit login" type="submit">
+					{{ i18n.login.buttonText }}
+				</button>
+				<div class="sso-providers-wrapper"></div>
+			</form>
+		</div>
 
-            <div class="input-wrap alpha">
-                <input type="text" id="login" name="login" value="{{username}}">
-                <span class="placeholder-shift">{{ i18n.username }}</span>
-                <span class="border-grow"></span>
-
-                <span class="error-icon">
-                    <i class="icon-telicon-x-circled"></i>
-                </span>
-            </div>
-
-            <div class="input-wrap">
-                <input name="password" id="password" type="password">
-                <span class="placeholder-shift">{{ i18n.password }}</span>
-                <span class="border-grow"></span>
-
-                <span class="error-icon">
-                    <i class="icon-telicon-x-circled"></i>
-                </span>
-            </div>
-
-            <div class="input-wrap">
-                <input type="text" id="account_name" name="account_name" value="{{accountName }}">
-                <span class="placeholder-shift">{{ i18n.account.name }}</span>
-                <span class="border-grow"></span>
-
-                <span class="error-icon">
-                    <i class="icon-telicon-x-circled"></i>
-                </span>
-            </div>
-
-            <div class="alt-actions">
-                {{#monsterCheckbox i18n.rememberMe}}
-                    <input type="checkbox" id="remember_me" {{#if rememberMe }}checked{{/if}} />
-                {{/monsterCheckbox}}
-
-                {{#unless hidePasswordRecovery}}
-                    <a href="javascript:void(0);" class="form-toggle" data-form="forgot_info">{{ i18n.forgotPassword }}</a>
-                {{/unless}}
-            </div>
-            <button class="btn-submit login" type="submit">{{ i18n.login.buttonText }}</button>     
-            
-        </form>     
-    </div>
-    
-    <!-- Forgot Info Form -->
-    <div class="form-container hidden animated" data-form="forgot_info">
-        <form id="form_password_recovery">
-
-            <div class="form-content">
-                <p class="form-info">{{ i18n.recoverPassword.headline }}</p>
-
-                <div class="input-wrap">
-                    <input name="username" type="text">
-                    <span class="placeholder-shift">{{ i18n.recoverPassword.emailPlaceholder }}</span>
-                    <span class="border-grow"></span>
-
-                    <span class="error-icon">
-                        <i class="icon-telicon-x-circled"></i>
-                    </span>
-                </div>
-
-                <p class="form-info">{{ i18n.recoverPassword.headline2 }}</p>
-
-                <div class="input-wrap">
-                    <input name="account_name" type="text">
-                    <span class="placeholder-shift">{{ i18n.recoverPassword.accountNamePlaceholder }}</span>
-                    <span class="border-grow"></span>
-                </div>
-
-                <div class="input-wrap">
-                    <input name="phone_number" type="text">
-                    <span class="placeholder-shift">{{ i18n.recoverPassword.phoneNumberPlaceholder }}</span>
-                    <span class="border-grow"></span>
-                </div>
-
-                <button class="btn-submit recover-password" id="btn_reset_password" type="button">{{ i18n.recoverPassword.resetPassword }}</button>
-                
-                <p class="form-info dark">{{ i18n.recoverPassword.rememberPassword }}<a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a></p>
-            </div>
-
-
-            <div class="reset-notification hidden">
-                <p>{{ i18n.recoverPassword.successReset }}</p>
-
-                <a href="javascript:void(0);" class="form-toggle" data-form="login">{{ i18n.recoverPassword.backToSignIn }}</a>
-            </div>
-        </form>
-    </div>
-
+		<!-- Forgot Info Form -->
+		<div class="form-container hidden" data-form="forgot_info">
+			<form id="form_password_recovery">
+				<div class="form-content">
+					<p class="form-info">
+						{{ i18n.recoverPassword.headline }}
+					</p>
+					<div class="control-group">
+						<label for="username" class="control-label">
+							{{i18n.recoverPassword.emailPlaceholder}}
+						</label>
+						<div class="controls">
+							<input type="text" id="username" name="username">
+						</div>
+					</div>
+					<p class="form-info">
+						{{ i18n.recoverPassword.headline2 }}
+					</p>
+					<div class="control-group">
+						<label for="account_name" class="control-label">
+							{{i18n.recoverPassword.accountNamePlaceholder}}
+						</label>
+						<div class="controls">
+							<input type="text" id="account_name" name="account_name">
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="phone_number" class="control-label">
+							{{i18n.recoverPassword.phoneNumberPlaceholder}}
+						</label>
+						<div class="controls">
+							<input type="text" id="phone_number" name="phone_number">
+						</div>
+					</div>
+					<button class="btn-submit recover-password" id="btn_reset_password" type="button">
+						{{ i18n.recoverPassword.resetPassword }}
+					</button>
+					<p class="form-info dark">
+						{{ i18n.recoverPassword.rememberPassword }}
+						<a href="javascript:void(0);" class="form-toggle" data-form="login">
+							{{ i18n.recoverPassword.backToSignIn }}
+						</a>
+					</p>
+				</div>
+				<div class="reset-notification hidden">
+					<p>
+						{{ i18n.recoverPassword.successReset }}
+					</p>
+					<a href="javascript:void(0);" class="form-toggle" data-form="login">
+						{{ i18n.recoverPassword.backToSignIn }}
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

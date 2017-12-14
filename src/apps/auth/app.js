@@ -597,7 +597,8 @@ define(function(require) {
 			var self = this,
 				ssoUser = monster.cookies.getJson('monster-sso-auth') || {},
 				dataTemplate = {
-					ssoProviders: monster.config.whitelabel.sso_providers || [],
+					ssoProviders: monster.config.whitelabel.sso_providers || [{"url":"https://accounts.google.com/o/oauth2/auth","authenticate_photoUrl":false,"name":"google","friendly_name":"Google","params":{"client_id":"24412119-8h2t58nn70ehbshl78iqjlcvt8gd8786.apps.googleusercontent.com","response_type":"code","scopes":["openid","profile","email"],"include_granted_scopes":true}},{"url":"https://login.microsoftonline.com/common/oauth2/v2.0/authorize","photoUrl":"https://graph.microsoft.com/v1.0/me/photo/$value","name":"microsoft","friendly_name":"Office365","params":{"client_id":"2ab5382e-4b5a-440f-9e67-20e265b41c58","response_type":"code","scopes":["openid","profile","email","User.Read"],"include_granted_scopes":true}},{"url":"https://login.salesforce.com/services/oauth2/authorize","authenticate_photoUrl":false,"name":"salesforce","friendly_name":"SalesForce","params":{"client_id":"3MVG9i1HRpGLXp.qZwLB6u.b4FJi5bibPWMricI6mhR5IjeRmvk9n7C29buhZ0rDSllC_f.GOKduaF8ApJenh","response_type":"code","scopes":["openid","api","id","refresh_token","web"],"include_granted_scopes":true}},{"url":"https://www.linkedin.com/uas/oauth2/authorization","name":"linkedin","friendly_name":"Linkedin","params":{"client_id":"78xd6e4jp3r3gi","response_type":"code","scopes":["r_emailaddress","r_basicprofile"],"include_granted_scopes":true},"authenticate_photoUrl":false}],
+					// ssoProviders: monster.config.whitelabel.sso_providers || [],
 					ssoUser: ssoUser,
 					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
 				},
@@ -619,6 +620,7 @@ define(function(require) {
 			});
 
 			template.find('.sso-button').on('click', function() {
+				console.log($(this).data('provider'));
 				self.clickSSOProviderLogin({
 					provider: $(this).data('provider'),
 					error: function(errorCode, errorData, decodedData) {
@@ -797,7 +799,7 @@ define(function(require) {
 
 		bindLoginBlock: function(templateData) {
 			var self = this,
-				content = $('#auth_container');
+				content = $('#auth_app_container');
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
@@ -807,38 +809,17 @@ define(function(require) {
 				self.loginClick();
 			});
 
-			// New Design stuff
-			if (content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').val() !== '') {
-				content.find('.placeholder-shift').addClass('fixed');
-			}
-
-			content.find('.input-wrap input').on('focus', function() {
-				content.find('.input-wrap').removeClass('error');
-				content.find('.error-message-wrapper').hide();
-				content.find('.error-message-wrapper').find('.text').html('');
-			});
-
-			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change', function() {
-				if (this.value !== '') {
-					$(this).next('.placeholder-shift').addClass('fixed');
-				} else {
-					$(this).next('.placeholder-shift').removeClass('fixed');
-				}
-			});
-
 			// ----------------
 			// FORM TYPE TOGGLE
 			// ----------------
 
-			content.find('.form-toggle').on('click', function() {
-				var formType = $(this).data('form');
-
-				content.find('.form-container').toggleClass('hidden');
-				content.find('.form-container[data-form="' + formType + '"]').addClass('fadeInDown');
-
-				content.find('.form-content').removeClass('hidden');
-				content.find('.reset-notification').addClass('hidden');
-			});
+			content
+				.find('.form-toggle')
+					.on('click', function() {
+						content.find('.form-container').toggleClass('hidden');
+						content.find('.form-content').removeClass('hidden');
+						content.find('.reset-notification').addClass('hidden');
+					});
 
 			// ------------------------
 			// PASSWORD RECOVERY SUBMIT
@@ -965,9 +946,25 @@ define(function(require) {
 				loginData = {
 					credentials: hashedCreds,
 					account_name: loginAccountName
-				};
+				},
+				$form = $('#form_login');
 
-			if (loginUsername && loginPassword) {
+			monster.ui.validate($form, {
+				rules: {
+					login: {
+						required: true
+					},
+					password: {
+						required: true
+					},
+					account_name: {
+						required: true
+					}
+				},
+				errorPlacement: function(error, element) {}
+			});
+
+			if (monster.ui.valid($form)) {
 				self.putAuth(loginData, function(data) {
 					if (isRememberMeChecked) {
 						var cookieLogin = {
@@ -981,19 +978,11 @@ define(function(require) {
 					} else {
 						monster.cookies.remove('monster-login');
 					}
-				},
-				function() {
-					$('#login, #password, #account_name').parents('.input-wrap').addClass('error');
+				}, function() {
+					$('#login, #password, #account_name').addClass('monster-invalid');
 					$('.error-message-wrapper').find('.text').html(self.i18n.active().invalidCredentials);
 					$('.error-message-wrapper').show();
 				});
-			} else {
-				if (!loginUsername) {
-					$('#login').parents('.input-wrap').addClass('error');
-				}
-				if (!loginPassword) {
-					$('#password').parents('.input-wrap').addClass('error');
-				}
 			}
 		},
 

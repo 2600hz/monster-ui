@@ -1,6 +1,22 @@
 .sso-providers {
-	margin-bottom: 20px;
+	margin-top: 25px;
 }
+
+.sso-providers .sso-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.sso-providers .sso-buttons .sso-button {
+	width: 172px;
+	margin-top:  6px;
+	color: #303039;
+	border-color: #909099;
+	font-size: 14px;
+}
+
+/* Unknown Kazoo User */
 
 .sso-providers .sso-user-photo-div {
 	display: table-cell;
@@ -47,71 +63,6 @@
 	margin-right: 5px;
 }
 
-.sso-providers .sso-buttons {
-	margin-top: 0px;
-}
-
-.sso-providers .sso-buttons .sso-button {
-	background: #22a5ff;
-	box-shadow: none;
-	color: #FFF;
-	display: block;
-	font-size: 14px;
-	line-height: 20px;
-	margin-top: 5px;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	text-align: left;
-}
-
-.sso-providers .sso-buttons .sso-button:hover {
-	color: #FFF !important;
-	outline: 0 !important;
-}
-
-.sso-providers .sso-buttons .sso-button-google {
-	background-color: #d84a38
-}
-
-.sso-providers .sso-buttons .sso-button-google:not(.sso-user):hover {
-	background-color: #bb2413;
-}
-
-.sso-providers .sso-buttons .sso-button-salesforce {
-	background-color: #4d90fe
-}
-
-.sso-providers .sso-buttons .sso-button-salesforce:not(.sso-user):hover {
-	background-color: #0362fd;
-}
-
-.sso-providers .sso-buttons .sso-button-microsoft {
-	background-color: #852b99
-}
-
-.sso-providers .sso-buttons .sso-button-microsoft:not(.sso-user):hover {
-	background-color: #6d1b81;
-}
-
-.sso-providers .sso-buttons .sso-button-linkedin {
-    background-color: #0073b2
-}
-
-.sso-providers .sso-buttons .sso-button-linkedin:not(.sso-user):hover {
-    background-color: #0693e0;
-}
-
-.sso-providers .sso-buttons .sso-button i,
-.sso-providers .login-form .form-title i {
-	padding-right: 5px;
-	padding-left: 5px;
-	margin-right: 3px;
-}
-
-.sso-providers text-left {
-	text-align: left;
-}
-
 .sso-providers .sso-logout {
 	color: #FFF !important;
 	display: table-cell;
@@ -121,7 +72,6 @@
 	line-height: 12px;
 	padding-right: 5px;
 }
-
 
 .sso-providers .sso-logout img {
 	vertical-align: middle;
