@@ -1,14 +1,14 @@
 .sso-providers {
-	margin-top: 25px;
+	margin-top: 30px;
 }
 
-.sso-providers .sso-buttons {
+.sso-buttons {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
-.sso-providers .sso-buttons .sso-button {
+.sso-buttons .sso-button {
 	width: 172px;
 	margin-top:  6px;
 	color: #303039;
@@ -18,19 +18,23 @@
 
 /* Unknown Kazoo User */
 
-.sso-providers .sso-user-photo-div {
+.sso-unknownUser {
+	margin-bottom: 20px;
+}
+
+.sso-unknownUser .sso-user-photo-div {
 	display: table-cell;
 	width: 40px;
 	vertical-align: middle;
 }
 
-.sso-providers .sso-user-photo {
+.sso-unknownUser .sso-user-photo {
 	width:40px;
 	height:40px;
 	border-radius: 50%;
 }
 
-.sso-providers .sso-buttons .sso-button.sso-user {
+.sso-unknownUser .sso-buttons .sso-button.sso-user {
 	display: table;
 	width: 100%;
 	padding-left: 5px;
@@ -39,31 +43,31 @@
 	padding-bottom:5px;
 }
 
-.sso-providers .sso-user-info {
+.sso-unknownUser .sso-user-info {
 	display: table-cell;
 	padding-left: 5px;
 }
 
-.sso-providers .sso-user-info .upper-info {
+.sso-unknownUser .sso-user-info .upper-info {
 	display: table;
 	width: 100%;
 }
 
-.sso-providers .sso-user-info .upper-info > div {
+.sso-unknownUser .sso-user-info .upper-info > div {
 	display: table-cell;
 }
 
-.sso-providers .user-not-linked {
+.sso-unknownUser .user-not-linked {
 	background: #ffcc33;
 	margin-top: 10px;
 	padding: 2px 10px;
 }
 
-.sso-providers .user-not-linked i {
+.sso-unknownUser .user-not-linked i {
 	margin-right: 5px;
 }
 
-.sso-providers .sso-logout {
+.sso-unknownUser .sso-logout {
 	color: #FFF !important;
 	display: table-cell;
 	text-align: right;
@@ -73,11 +77,11 @@
 	padding-right: 5px;
 }
 
-.sso-providers .sso-logout img {
+.sso-unknownUser .sso-logout img {
 	vertical-align: middle;
 }
 
-.sso-providers .kill-sso-session {
+.sso-unknownUser .kill-sso-session {
 	color: #FFF !important;
 	font-size: 12px;
 	line-height: 12px;

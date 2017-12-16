@@ -109,8 +109,7 @@
 		"accountNamePlaceholder": "Account Name",
 		"phoneNumberPlaceholder": "Phone Number",
 		"resetPassword": "Reset Password",
-		"rememberPassword": "Remember your password?",
-		"backToSignIn": "Back to Sign In"
+		"rememberPassword": "Remember your password?"
 	},
 
 	"__comment": "UI-1874: new trial greeting mechanism",

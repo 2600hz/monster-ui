@@ -593,45 +593,64 @@ define(function(require) {
 			});
 		},
 
-		renderSSOProviderTemplate: function(container) {
+		renderSSOProviderTemplate: function(pContainer) {
 			var self = this,
+				container = pContainer || $('.sso-providers-wrapper'),
 				ssoUser = monster.cookies.getJson('monster-sso-auth') || {},
 				dataTemplate = {
-					ssoProviders: monster.config.whitelabel.sso_providers || [{"url":"https://accounts.google.com/o/oauth2/auth","authenticate_photoUrl":false,"name":"google","friendly_name":"Google","params":{"client_id":"24412119-8h2t58nn70ehbshl78iqjlcvt8gd8786.apps.googleusercontent.com","response_type":"code","scopes":["openid","profile","email"],"include_granted_scopes":true}},{"url":"https://login.microsoftonline.com/common/oauth2/v2.0/authorize","photoUrl":"https://graph.microsoft.com/v1.0/me/photo/$value","name":"microsoft","friendly_name":"Office365","params":{"client_id":"2ab5382e-4b5a-440f-9e67-20e265b41c58","response_type":"code","scopes":["openid","profile","email","User.Read"],"include_granted_scopes":true}},{"url":"https://login.salesforce.com/services/oauth2/authorize","authenticate_photoUrl":false,"name":"salesforce","friendly_name":"SalesForce","params":{"client_id":"3MVG9i1HRpGLXp.qZwLB6u.b4FJi5bibPWMricI6mhR5IjeRmvk9n7C29buhZ0rDSllC_f.GOKduaF8ApJenh","response_type":"code","scopes":["openid","api","id","refresh_token","web"],"include_granted_scopes":true}},{"url":"https://www.linkedin.com/uas/oauth2/authorization","name":"linkedin","friendly_name":"Linkedin","params":{"client_id":"78xd6e4jp3r3gi","response_type":"code","scopes":["r_emailaddress","r_basicprofile"],"include_granted_scopes":true},"authenticate_photoUrl":false}],
-					// ssoProviders: monster.config.whitelabel.sso_providers || [],
-					ssoUser: ssoUser,
+					ssoProviders: monster.config.whitelabel.sso_providers || [],
 					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
 				},
 				template = $(monster.template(self, 'sso-providers', dataTemplate));
 
-			$(container).empty();
+			template
+				.find('.sso-button')
+					.on('click', function() {
+						self.clickSSOProviderLogin({
+							provider: $(this).data('provider'),
+							error: function(errorCode) {
+								errorCode === '_no_account_linked' && self.renderSSOProviderTemplate(container);
+							}
+						});
+					});
 
-			if (dataTemplate.isUnknownKazooUser) {
+			container
+				.empty()
+				.append(template);
+		},
+
+		renderSSOUnknownUserTemplate: function(pContainer) {
+			var self = this,
+				container = pContainer || $('.sso-unknownUser-wrapper'),
+				ssoUser = monster.cookies.getJson('monster-sso-auth') || {},
+				dataToTemplate = {
+					ssoUser: ssoUser,
+					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
+				},
+				template = $(self.getTemplate({
+					name: 'sso-unknownUser',
+					data: dataToTemplate
+				}));
+
+			if (dataToTemplate.isUnknownKazooUser) {
 				self.paintSSOPhoto({
 					container: template.find('.sso-user-photo-div'),
 					ssoToken: ssoUser
 				});
 			}
 
-			template.find('.kill-sso-session').on('click', function() {
-				monster.util.resetAuthCookies();
+			template
+				.find('.kill-sso-session')
+					.on('click', function() {
+						monster.util.resetAuthCookies();
 
-				self.renderSSOProviderTemplate(container);
-			});
+						self.renderSSOUnknownUserTemplate();
+						self.renderSSOProviderTemplate();
+					});
 
-			template.find('.sso-button').on('click', function() {
-				console.log($(this).data('provider'));
-				self.clickSSOProviderLogin({
-					provider: $(this).data('provider'),
-					error: function(errorCode, errorData, decodedData) {
-						if (errorCode === '_no_account_linked') {
-							self.renderSSOProviderTemplate(container);
-						}
-					}
-				});
-			});
-
-			$(container).append(template);
+			container
+				.empty()
+				.append(template);
 		},
 
 		paintSSOPhoto: function(args) {
@@ -679,6 +698,7 @@ define(function(require) {
 				domain = window.location.hostname;
 
 			self.renderSSOProviderTemplate(template.find('.sso-providers-wrapper'));
+			self.renderSSOUnknownUserTemplate(template.find('.sso-unknownUser-wrapper'));
 
 			self.callApi({
 				resource: 'whitelabel.getLogoByDomain',

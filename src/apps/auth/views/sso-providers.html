@@ -1,38 +1,9 @@
 {{#if ssoProviders}}
-	<div class="sso-providers">
-		<p>
-			{{i18n.alternativeSignIn}}
-		</p>
-		{{#if isUnknownKazooUser}}
-			<div class="sso-buttons">
-				<div class="sso-user sso-button sso-button-{{ssoUser.auth_provider}} btn-block text-left">
-					<div class="sso-user-photo-div"></div>
-					<div class="sso-user-info">
-						<div class="upper-info">
-							<div class="text-left">
-								{{ssoUser.displayName}}
-							</div>
-							<div class="sso-logout">
-								<a href="javascript:void(0);" class="kill-sso-session">
-									<i class="sso-logout">
-										<img src="apps/auth/style/oauth/{{ssoUser.auth_provider}}.png" width="14">
-									</i>
-									{{ i18n.oauth.logout }}
-								</a>
-							</div>
-						</div>
-						<div class="text-left">
-							{{ssoUser.email}}
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="user-not-linked">
-				<i class="fa fa-info-circle"></i>
-				{{ i18n.oauth.noLinkMsg }}
-			</div>
-		{{else}}
+	{{#unless isUnknownKazooUser}}
+		<div class="sso-providers">
+			<p>
+				{{i18n.alternativeSignIn}}
+			</p>
 			<div class="sso-buttons">
 				{{#each ssoProviders}}
 					<button class="monster-button-secondary sso-button sso-button-{{name}}" data-provider="{{name}}" data-original-title="{{name}}">
@@ -43,6 +14,6 @@
 					</button>
 				{{/each}}
 			</div>
-		{{/if}}
-	</div>
+		</div>
+	{{/unless}}
 {{/if}}
