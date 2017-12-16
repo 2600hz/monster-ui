@@ -55,6 +55,16 @@
 	background-color: $font-primary-color;
 	position: relative;
 }
+#auth_app_container .intro::after {
+	display: block;
+	content: '';
+	background-color: #303039;
+	position: absolute;
+	right: -120px;
+	height: 100%;
+	width: 240px;
+	transform: skew(-6deg);
+}
 #auth_app_container .intro .content {
 	position: absolute;
 	top: 25%;
