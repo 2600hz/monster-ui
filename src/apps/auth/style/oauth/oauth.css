@@ -16,7 +16,8 @@
 	font-size: 14px;
 }
 
-.sso-buttons .sso-button .svg-tag {
+.sso-buttons .sso-button .svg-tag,
+.sso-logout .svg-tag {
 	width: 1em;
 	height: 1em;
 	vertical-align: middle;
@@ -59,10 +60,6 @@
 	width: 100%;
 }
 
-.sso-unknownUser .sso-user-info .upper-info > div {
-	display: table-cell;
-}
-
 .sso-unknownUser .user-not-linked {
 	background: #ffcc33;
 	margin-top: 10px;
@@ -80,6 +77,7 @@
 	font-style: italic;
 	line-height: 12px;
 	padding-right: 5px;
+	padding-left: 5px;
 }
 
 .sso-unknownUser .sso-logout img {

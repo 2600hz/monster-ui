@@ -10,7 +10,20 @@
 					<div class="sso-logout">
 						<a href="javascript:void(0);" class="kill-sso-session" data-provider="{{ssoUser.auth_provider}}">
 							<i class="sso-logout">
-								<img src="apps/auth/style/oauth/{{ssoUser.auth_provider}}.png" width="14">
+								<svg class="svg-tag">
+									{{#compare ssoUser.auth_provider "===" "google"}}
+										<use xlink:href="#sso-google--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "microsoft"}}
+										<use xlink:href="#sso-office365--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "salesforce"}}
+										<use xlink:href="#sso-salesforce--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "linkedin"}}
+										<use xlink:href="#sso-linkedin--color" />
+									{{/compare}}
+								</svg>
 							</i>
 							{{ i18n.oauth.logout }}
 						</a>
