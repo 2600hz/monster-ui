@@ -8,7 +8,20 @@
 				{{#each ssoProviders}}
 					<button class="monster-button-secondary sso-button sso-button-{{name}}" data-provider="{{name}}" data-original-title="{{name}}">
 						<i>
-							<img src="apps/auth/style/oauth/{{name}}.png" width="18">
+							<svg class="svg-tag">
+							{{#compare name "===" "google"}}
+								<use xlink:href="#sso-google--color" />
+							{{/compare}}
+							{{#compare name "===" "microsoft"}}
+								<use xlink:href="#sso-office365--color" />
+							{{/compare}}
+							{{#compare name "===" "salesforce"}}
+								<use xlink:href="#sso-salesforce--color" />
+							{{/compare}}
+							{{#compare name "===" "linkedin"}}
+								<use xlink:href="#sso-linkedin--color" />
+							{{/compare}}
+							</svg>
 						</i>
 						{{friendly_name}}
 					</button>

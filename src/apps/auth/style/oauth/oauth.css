@@ -16,6 +16,12 @@
 	font-size: 14px;
 }
 
+.sso-buttons .sso-button .svg-tag {
+	width: 1em;
+	height: 1em;
+	vertical-align: middle;
+}
+
 /* Unknown Kazoo User */
 
 .sso-unknownUser {
