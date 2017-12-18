@@ -854,7 +854,7 @@ define(function(require) {
 			content
 				.find('.form-toggle')
 					.on('click', function() {
-						content.find('.form-container').toggleClass('hidden');
+						content.find('.flip-container').toggleClass('flipped');
 						content.find('.form-content').removeClass('hidden');
 						content.find('.reset-notification').addClass('hidden');
 					});

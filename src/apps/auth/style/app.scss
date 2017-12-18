@@ -8,6 +8,9 @@
 	bottom: 0;
 	left: 0;
 	background-color: $primary-color;
+
+	// for Edge
+	overflow-y: hidden;
 }
 
 #auth_app_container .app-content {
@@ -64,11 +67,13 @@
 	height: 100%;
 	width: 240px;
 	transform: skew(-6deg);
+	z-index: 0;
 }
 #auth_app_container .intro .content {
 	position: absolute;
 	top: 25%;
 	left: 8em;
+	z-index: 1;
 }
 #auth_app_container .logo {
 	width: 210px;
@@ -112,24 +117,65 @@
 	   FORM CONTAINERS/FORMS
 =====================================
 */
-#auth_app_container .form-container {
+#auth_app_container .sign-in {
 	margin: 0 auto;
 	width: 41%;
 	float: right;
 	height: 100vh;
 	position: relative;
-	z-index: 1;
 }
-#auth_app_container form {
-	padding: 30px;
-	width: 360px;
-	background: $white;
-	margin: 0;
+#auth_app_container .flip-container {
 	position: relative;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
+
+	width: 420px;
+	height: 447px;
+}
+#auth_app_container .flip-container.flipped .flipper {
+	-webkit-transform: rotateY(180deg);
+	-moz-transform: rotateY(180deg);
+	-o-transform: rotateY(180deg);
+	transform: rotateY(180deg);
+}
+#auth_app_container .flipper {
+	-webkit-transition: 0.6s;
+	-webkit-transform-style: preserve-3d;
+
+	-moz-transition: 0.6s;
+	-moz-transform-style: preserve-3d;
+
+	-o-transition: 0.6s;
+	-o-transform-style: preserve-3d;
+
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+#auth_app_container form {
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-o-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	padding: 30px;
+	width: 360px;
+	background: $white;
+	margin: 0;
+}
+
+#auth_app_container #form_password_recovery {
+	-webkit-transform: rotateY(180deg);
+	-moz-transform: rotateY(180deg);
+	-o-transform: rotateY(180deg);
+	transform: rotateY(180deg);
 }
 #auth_app_container form h3 {
 	margin: 0 0 20px 0;

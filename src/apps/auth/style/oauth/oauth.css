@@ -68,7 +68,6 @@
 }
 
 .sso-unknownUser .sso-logout {
-	color: #FFF !important;
 	display: table-cell;
 	text-align: right;
 	font-size: 12px;
@@ -82,7 +81,6 @@
 }
 
 .sso-unknownUser .kill-sso-session {
-	color: #FFF !important;
 	font-size: 12px;
 	line-height: 12px;
 	text-align: right;
