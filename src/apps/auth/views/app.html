@@ -7,26 +7,15 @@
 					{{ i18n.welcome }}
 				</h3>
 			</div>
+		{{#if social}}
 			<div class="social">
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-facebook-official"></i>
+			{{#each social}}
+				<a href="{{url}}" target="_blank" class="social-link">
+					<i class="{{iconClass}}"></i>
 				</a>
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-twitter"></i>
-				</a>
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-linkedin-square"></i>
-				</a>
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-github"></i>
-				</a>
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-google-plus"></i>
-				</a>
-				<a href="javascript:void(0);" class="social-link">
-					<i class="fa fa-youtube"></i>
-				</a>
+			{{/each}}
 			</div>
+		{{/if}}
 		</div>
 
 		<!-- Sign-In Form -->

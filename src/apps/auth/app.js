@@ -17,6 +17,14 @@ define(function(require) {
 		},
 
 		appFlags: {
+			socialIcons: {
+				facebook: 'fa fa-facebook-official',
+				twitter: 'fa fa-twitter',
+				linkedin: 'fa fa-linkedin-square',
+				github: 'fa fa-github',
+				googleplus: 'fa fa-google-plus',
+				youtube: 'fa fa-youtube'
+			},
 			kazooConnectionName: 'kazooAPI',
 			mainContainer: undefined,
 			isAuthentified: false,
@@ -683,6 +691,16 @@ define(function(require) {
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
+					social: _.isEmpty(monster.config.whitelabel.social)
+						? []
+						: _.transform(monster.config.whitelabel.social, function(array, value, key) {
+							if (value.hasOwnProperty('url') && value.url !== '' && self.appFlags.socialIcons.hasOwnProperty(key)) {
+								array.push({
+									url: value.url,
+									iconClass: self.appFlags.socialIcons[key]
+								});
+							}
+						}, []),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
 				template = $(monster.template(self, 'app', templateData)),
