@@ -1891,7 +1891,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						contentWrapperClass,
+						contentWrapperClass = '',
 						subTab;
 
 					// Add 'active' class to menu element
