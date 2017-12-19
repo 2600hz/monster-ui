@@ -1877,7 +1877,7 @@ define(function(require) {
 		onNavbarTabClick: function(thisArg, $tab, pArgs) {
 			var self = this,
 				args = pArgs || {},
-				menus = thisArg.appFlags._menus,
+				menus = thisArg.appFlags._layout.menus,
 				parent = $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				appContent = parent.find('.app-content-wrapper'),
@@ -1891,6 +1891,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
+						contentWrapperClass,
 						subTab;
 
 					// Add 'active' class to menu element
@@ -1992,6 +1993,17 @@ define(function(require) {
 							finalArgs.data = _.merge({}, finalArgs.data, currentTab.data);
 						}
 
+						// Override content wrapper type if specified at the tab level
+						if (currentTab.hasOwnProperty('contentWrapperType')) {
+							contentWrapperClass = ' ' + currentTab.contentWrapperType;
+						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
+							contentWrapperClass = ' ' + thisArg.appFlags._layout.appType;
+						}
+
+						parent
+							.find('.app-content-wrapper')
+								.prop('class', 'app-content-wrapper' + contentWrapperClass + ' with-navbar');
+
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
 				};
@@ -2031,7 +2043,7 @@ define(function(require) {
 			var self = this,
 				parent = $('#monster_content'),
 				appHeader = parent.find('.app-header'),
-				menus = thisArg.appFlags._menus,
+				menus = thisArg.appFlags._layout.menus,
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
 				subnavTemplate = monster.template(monster.apps.core, 'monster-app-subnav', { menus: menus }),
 				hasSubnav = $.trim($(subnavTemplate).find('.app-subnav-wrapper').html()),
@@ -2092,27 +2104,36 @@ define(function(require) {
 		generateAppLayout: function(thisArg, args) {
 			var self = this,
 				parent = $('#monster_content'),
-				appType = args.hasOwnProperty('appType') ? args.appType : 'default',
 				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
+				context = (function(args, tabs) {
+					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
+				})(args, tabs),
 				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
 				dataTemplate = {
 					hasNavbar: hasNavbar,
-					appType: appType,
+					appType: (function(args, context, hasNavbar) {
+						var type = [];
+
+						if (context.hasOwnProperty('contentWrapperType')) {
+							type.push(context.contentWrapperType);
+						} else if (args.hasOwnProperty('appType')) {
+							type.push(args.appType);
+						}
+
+						if (hasNavbar) {
+							type.push('with-navbar');
+						}
+
+						return type ? type.join(' ') : 'default';
+					})(args, context, hasNavbar),
 					appId: thisArg.name.split('-').join('_')
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
 				callDefaultTabCallback = function callDefaultTabCallback() {
 					var callArgs = {
-							parent: parent,
-							container: parent.find('.app-content-wrapper')
-						},
-						context;
-
-					if (tabs[0].hasOwnProperty('menus')) {
-						context = tabs[0].menus[0].tabs[0];
-					} else {
-						context = tabs[0];
-					}
+						parent: parent,
+						container: parent.find('.app-content-wrapper')
+					};
 
 					if (context.hasOwnProperty('data')) {
 						callArgs.data = context.data;
@@ -2128,7 +2149,7 @@ define(function(require) {
 			// Changed the code here to remove the $.extend, as it doesn't override arrays properly
 			if (args.hasOwnProperty('menus')) {
 				thisArg.appFlags = thisArg.appFlags || {};
-				thisArg.appFlags._menus = args.menus;
+				thisArg.appFlags._layout = args;
 			}
 
 			if (hasNavbar) {

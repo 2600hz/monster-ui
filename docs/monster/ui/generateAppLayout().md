@@ -32,6 +32,7 @@ Customize application type and menus settings with the following object properti
         + `callback`: [Function][function] (mandatory if no `menus` property) - callback on click
         + `onClick`: [Function][function] (optional) - execute before `callback`
         + `menus`: [Array][array_literal] (optional) of [Objects][object_literal] - same structure as parent `menus`
+        + `contentWrapperType`: `fullscreen`|`docked` [String][string_literal] (optional) - define wrapper behavior for this tab
 
 ### Description
 
