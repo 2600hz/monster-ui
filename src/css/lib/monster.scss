@@ -105,13 +105,13 @@ h1 {
 	position: relative;
 	overflow: hidden;
 	min-width: 120px;
-	padding: 6px 15px;
+	padding: 8px 15px;
 	letter-spacing: .02em;
-	color: #909099;
+	color: #707079;
 	border: solid 1px;
-	border-color: #c0c0c9;
+	border-color: #CCC;
 	border-radius: 2px;
-	background: transparent;
+	background: $white-lilac;
 	cursor: pointer;
 }
 
@@ -152,7 +152,6 @@ h1 {
 
 .monster-button-fit {
 	min-width: auto;
-	padding: 5px 15px;
 }
 
 .monster-button-fit i {
@@ -347,7 +346,6 @@ h1 {
 /************************************************************/
 /*********** INPUT & CHECKBOXES & RADIOS ********************/
 /************************************************************/
-
 input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
 	box-shadow: none;
 	border-color: $primary-color;
@@ -395,7 +393,7 @@ label[class*='monster-radio'] > i {
 }*/
 label[class*='monster-checkbox'] > input:checked ~ i,
 label[class*='monster-radio'] > input:checked ~ i {
-	border-color: $primary-color;
+	border: 1px solid #777;
 	background: $primary-color;
 }
 label[class*='monster-checkbox'] > input:checked ~ i::after,
