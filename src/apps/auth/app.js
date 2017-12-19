@@ -854,9 +854,27 @@ define(function(require) {
 			content
 				.find('.form-toggle')
 					.on('click', function() {
-						content.find('.flip-container').toggleClass('flipped');
-						content.find('.form-content').removeClass('hidden');
-						content.find('.reset-notification').addClass('hidden');
+						var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+							type = $(this).parents('form').data('type'),
+							front = type === 'login' ? $('#form_login') : $('#form_password_recovery'),
+							back = type === 'login' ? $('#form_password_recovery') : $('#form_login');
+
+						front
+							.addClass('animated flipOutY')
+							.one(animationEnd, function() {
+								front
+									.hide()
+									.removeClass('animated flipOutY');
+								back
+									.show()
+									.addClass('animated flipInY')
+									.one(animationEnd, function() {
+										back.removeClass('animated flipInY');
+									});
+
+								content.find('.form-content').removeClass('hidden');
+								content.find('.reset-notification').addClass('hidden');
+							});
 					});
 
 			// ------------------------

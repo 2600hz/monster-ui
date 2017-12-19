@@ -14,7 +14,6 @@
 }
 
 #auth_app_container .app-content {
-	max-width: 1320px;
 	margin: 0 auto;
 	position: relative;
 }
@@ -124,58 +123,16 @@
 	height: 100vh;
 	position: relative;
 }
-#auth_app_container .flip-container {
+#auth_app_container .form-container {
 	position: relative;
 	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
-
-	width: 420px;
-	height: 447px;
-}
-#auth_app_container .flip-container.flipped .flipper {
-	-webkit-transform: rotateY(180deg);
-	-moz-transform: rotateY(180deg);
-	-o-transform: rotateY(180deg);
-	transform: rotateY(180deg);
-}
-#auth_app_container .flipper {
-	-webkit-transition: 0.6s;
-	-webkit-transform-style: preserve-3d;
-
-	-moz-transition: 0.6s;
-	-moz-transform-style: preserve-3d;
-
-	-o-transition: 0.6s;
-	-o-transform-style: preserve-3d;
-
-	transition: 0.6s;
-	transform-style: preserve-3d;
-
-	position: relative;
 }
 #auth_app_container form {
-	-webkit-backface-visibility: hidden;
-	-moz-backface-visibility: hidden;
-	-o-backface-visibility: hidden;
-	backface-visibility: hidden;
-
-	position: absolute;
-	top: 0;
-	left: 0;
-
 	padding: 30px;
-	width: 360px;
+	max-width: 360px;
 	background: $white;
 	margin: 0;
-}
-
-#auth_app_container #form_password_recovery {
-	-webkit-transform: rotateY(180deg);
-	-moz-transform: rotateY(180deg);
-	-o-transform: rotateY(180deg);
-	transform: rotateY(180deg);
 }
 #auth_app_container form h3 {
 	margin: 0 0 20px 0;
@@ -186,6 +143,13 @@
 	width: 100%;
 	height: 32px;
 	box-shadow: none;
+}
+#auth_app_container #form_login,
+#auth_app_container #form_password_recovery {
+	animation-duration: 0.1s;
+}
+#auth_app_container #form_password_recovery {
+	display: none;
 }
 #auth_app_container .reset-notification p {
 	/*display: none;*/
@@ -306,11 +270,6 @@
 	}
 	#auth_app_container .intro .social {
 		display: none;
-	}
-	#auth_app_container .sign-in .flip-container {
-		top: 0;
-		transform: none;
-		margin: 0 auto;
 	}
 }
 
