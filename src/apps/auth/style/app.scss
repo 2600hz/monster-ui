@@ -262,14 +262,22 @@
 	#auth_app_container .intro .content .welcome-message {
 		margin-left: auto;
 		margin-right: auto;
+		padding: 0 10px;
+	}
+	#auth_app_container .intro .social {
+		display: none;
 	}
 	#auth_app_container .sign-in {
 		width: 100%;
 		float: none;
 		height: auto;
 	}
-	#auth_app_container .intro .social {
-		display: none;
+	#auth_app_container .sign-in .form-container {
+		top: 0;
+		transform: none;
+	}
+	#auth_app_container .sign-in .form-container form {
+		margin: 0 auto;
 	}
 }
 
