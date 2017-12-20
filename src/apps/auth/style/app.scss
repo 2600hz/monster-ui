@@ -1,101 +1,157 @@
 @import "../../../css/partials/base";
 @import "oauth/oauth.css";
 
-#auth_container.login-background {
+#auth_app_container {
 	position: absolute;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background: url(static/images/bg.svg) no-repeat center center #303039;
-	background-size: cover;
+	background-color: $primary-color;
+
+	// for Edge
+	overflow-y: hidden;
 }
 
-#auth_container .error-message-wrapper {
+#auth_app_container .app-content {
+	margin: 0 auto;
+	position: relative;
+}
+
+#auth_app_container .error-message-wrapper {
 	display: none;
 }
 
-#auth_container .error-message-wrapper .text {
+#auth_app_container .error-message-wrapper .text {
 	margin-left: 5px;
 	display: inline-block;
 	margin-bottom: 10px;
 }
 
-#auth_container ::selection {
+#auth_app_container ::selection {
 	background: #00B8FF;
 	color: #ffffff;
 }
-#auth_container ::-moz-selection {
+#auth_app_container ::-moz-selection {
 	background: #00B8FF;
 	color: #ffffff;
 }
-#auth_container a {
+#auth_app_container a {
 	text-decoration: none;
 }
-#auth_container a:focus {
+#auth_app_container a:focus {
 	outline: none;
 }
-#auth_container .hidden {
+#auth_app_container .hidden {
 	display: none;
 }
-/* 
-===================================== 
-	   LOGO AND INTRO TEXT                
-===================================== 
+/*
+=====================================
+	   LOGO AND INTRO TEXT
+=====================================
 */
-#auth_container .intro {
-	margin: 0 auto;
-	width: 60%;
+#auth_app_container .intro {
+	width: 59%;
 	float: left;
 	height: 100vh;
-}
-#auth_container .intro .content {
+	background-color: $font-primary-color;
 	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
 }
-#auth_container .logo {
+#auth_app_container .intro::after {
+	display: block;
+	content: '';
+	background-color: #303039;
+	position: absolute;
+	right: -120px;
+	height: 100%;
+	width: 240px;
+	transform: skew(-6deg);
+	z-index: 0;
+}
+#auth_app_container .intro .content {
+	position: absolute;
+	top: 25%;
+	left: 8em;
+	z-index: 1;
+}
+#auth_app_container .logo {
 	width: 210px;
 	height: 50px;
 	background: url('../img/kazoo-logo.svg');
 	background-repeat: no-repeat;
 	background-position: center;
-	margin: 0 auto;
 }
-#auth_container .intro h1 {
-	text-align: center;
-	color: #ffffff;
-	font-weight: 300;
-	letter-spacing: .015em;
-	margin-top: 25px;
-	font-size: 34px;
+#auth_app_container .intro h3 {
+	color: $white;
+	font-weight: lighter;
+	max-width: 375px;
+	line-height: 1.1em;
+	margin: 20px 0 0 0;
 }
-/* 
-===================================== 
-	   FORM CONTAINERS/FORMS                 
-===================================== 
+
+#auth_app_container .social {
+	position: absolute;
+	bottom: 8%;
+	left: 8em;
+}
+
+#auth_app_container .social .social-link {
+	font-size: 1.5em;
+}
+
+#auth_app_container .social .social-link:not(:first-child) {
+	margin-left: 18px;
+}
+
+#auth_app_container .social .social-link i {
+	color: $manatee;
+}
+
+#auth_app_container .social .social-link:hover i {
+	color: $primary-color;
+}
+
+/*
+=====================================
+	   FORM CONTAINERS/FORMS
+=====================================
 */
-#auth_container .form-container {
+#auth_app_container .sign-in {
 	margin: 0 auto;
-	width: 40%;
+	width: 41%;
 	float: right;
 	height: 100vh;
+	position: relative;
 }
-#auth_container form {
-	padding: 20px;
-	width: 300px;
-	border-radius: 2px;
-	background: #202029;
-	margin: 0 auto 0 20px;
+#auth_app_container .form-container {
 	position: relative;
 	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
-#auth_container .reset-notification p {
+#auth_app_container form {
+	padding: 30px;
+	max-width: 360px;
+	background: $white;
+	margin: 0;
+}
+#auth_app_container form h3 {
+	margin: 0 0 20px 0;
+	font-weight: normal;
+}
+#auth_app_container form input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 32px;
+	box-shadow: none;
+}
+#auth_app_container #form_login,
+#auth_app_container #form_password_recovery {
+	animation-duration: 0.1s;
+}
+#auth_app_container #form_password_recovery {
+	display: none;
+}
+#auth_app_container .reset-notification p {
 	/*display: none;*/
 	color: #c0c0c9;
 	margin-top: 0;
@@ -103,80 +159,7 @@
 	font-size: 15px;
 	text-align: center;
 }
-#auth_container .input-wrap {
-	position: relative;
-	height: 40px;
-	width: 100%;
-	margin: 25px 0;
-}
-#auth_container .input-wrap.alpha {
-	margin-top: 15px;
-}
-#auth_container .input-wrap input {
-	border: none;
-	border-bottom: 1px solid #808089;
-	box-shadow: none;
-	color: #e0e0e9;
-	background: transparent;
-	height: 30px;
-	margin-top: 10px;
-	line-height: 45px;
-	width: 100%;
-	font-size: 15px;
-	padding: 0;
-	letter-spacing: .02em;
-	-webkit-transition: border 0.2s;
-	-moz-transition: 	border 0.2s;
-	-o-transition: 		border 0.2s;
-	-ms-transition: 	border 0.2s;
-	transition: 		border 0.2s;
-}
-#auth_container .input-wrap input:focus {
-	outline: none;
-}
-#auth_container .input-wrap .placeholder-shift {
-	position: absolute;
-	top: 14px;
-	left: 0;
-	color: #909099;
-	font-size: 15px;
-	pointer-events: none;
-	-webkit-transition: all 0.2s ease-out;
-	-moz-transition: 	all 0.2s ease-out;
-	-o-transition: 		all 0.2s ease-out;
-	-ms-transition: 	all 0.2s ease-out;
-	transition: 		all 0.2s ease-out;
-}
-#auth_container .input-wrap input:focus + .placeholder-shift {
-	top: -12px;
-	font-size: 12px;
-	color: $primary-color;
-	letter-spacing: .02em;
-}
-#auth_container .input-wrap .placeholder-shift.fixed {
-	top: -12px;
-	font-size: 12px;
-	letter-spacing: .02em;
-	color: #808089;
-}
-#auth_container .input-wrap .border-grow {
-	position: absolute;
-	display: block;
-	bottom: -1px;
-	width: 0;
-	height: 2px;
-	background: $primary-color;
-	-webkit-transition: width 0.2s ease-out;
-	-moz-transition: 	width 0.2s ease-out;
-	-o-transition: 		width 0.2s ease-out;
-	-ms-transition: 	width 0.2s ease-out;
-	transition: 		width 0.2s ease-out;
-}
-#auth_container .input-wrap input:focus + .placeholder-shift + .border-grow {
-	width: 100%;
-	height: 2px;
-}
-#auth_container .btn-submit {
+#auth_app_container .btn-submit {
 	width: 100%;
 	border-radius: 2px;
 	border: none;
@@ -190,31 +173,30 @@
 	-ms-transition: 	all 0.2s ease-in;
 	transition: 		all 0.2s ease-in;
 }
-#auth_container .btn-submit:hover,
-#auth_container .btn-submit:focus {
+#auth_app_container .btn-submit:hover,
+#auth_app_container .btn-submit:focus {
 	color: #ffffff;
 	background: #57bcff;
 	outline: none;
 }
-#auth_container .form-info {
-	margin-top: 0;
-	font-size: 13px;
-	color: #c0c0c9;
+#auth_app_container .form-info {
+	margin-bottom: 20px;
+	color: #202029;
 }
-#auth_container .form-info.dark {
+#auth_app_container .form-info.dark {
 	color: #808089;
 	text-align: center;
 	margin: 16px 0 0;
 }
-#auth_container .form-info.dark .form-toggle {
+#auth_app_container .form-info.dark .form-toggle {
 	margin-top: 4px;
 }
-#auth_container .alt-actions {
+#auth_app_container .alt-actions {
 	font-size: 13px;
 	color: #808089;
 	padding: 10px 0 16px;
 }
-#auth_container .form-toggle {
+#auth_app_container .form-toggle {
 	text-align: center;
 	display: block;
 	font-size: 13px;
@@ -222,111 +204,84 @@
 	margin: 0 auto;
 	cursor: pointer;
 }
-#auth_container .form-toggle:hover,
-#auth_container .form-toggle:focus {
+#auth_app_container .form-toggle:hover,
+#auth_app_container .form-toggle:focus {
 	text-decoration: underline;
 }
-#auth_container .alt-actions .monster-checkbox {
+#auth_app_container .alt-actions .monster-checkbox {
 	display: inline-block;
 }
-#auth_container .alt-actions .form-toggle {
+#auth_app_container .alt-actions .form-toggle {
 	display: inline-block;
 	float: right;
 }
-/* 
-===================================== 
-	FORM INPUTS WITH .error CLASS                 
-===================================== 
+/*
+=====================================
+	FORM INPUTS WITH .error CLASS
+=====================================
 */
-#auth_container .input-wrap.error * {
+#auth_app_container .input-wrap.error * {
 	color: #ff3d24;
 }
-#auth_container .input-wrap.error > .placeholder-shift.fixed {
+#auth_app_container .input-wrap.error > .placeholder-shift.fixed {
 	color: #ff3d24;
 }
-#auth_container .error-icon {
-	visibility: hidden;
-	position: absolute;
-	right: 0;
-	top: 15px;
-	webkit-transform: 	scale(.25);
-	ms-transform: 		scale(.25);
-	transform: 			scale(.25);
-	-webkit-transition: transform .2s ease-out;
-	-moz-transition: 	transform .2s ease-out;
-	-o-transition: 		transform .2s ease-out;
-	-ms-transition: 	transform .2s ease-out;
-	transition: 		transform .2s ease-out;
-}
-#auth_container .input-wrap.error .error-icon {
-	visibility: visible;
-	webkit-transform: 	scale(1);
-	ms-transform: 		scale(1);
-	transform: 			scale(1);
-}
-#auth_container .input-wrap.error > .border-grow {
-	position: absolute;
-	display: block;
-	bottom: -1px;
-	width: 100%;
-	height: 2px;
-	background: #ff3d24;
-	-webkit-transition: all 0.2s ease-out;
-	-moz-transition: 	all 0.2s ease-out;
-	-o-transition: 		all 0.2s ease-out;
-	-ms-transition: 	all 0.2s ease-out;
-	transition: 		all 0.2s ease-out;
-}
 
-@media screen and (max-width: 968px) {
-
-	/* Hack, we still need to fix height of html/body not filling full page */
-	#auth_container .form-container {
-		height: auto !important;
-		background: #202029;
+@media screen and (max-width: 1024px) {
+	#auth_app_container {
+		overflow: auto;
 	}
-
-	#auth_container.login-background {
-		background: #202029;
-	}
-
-	#auth_container .intro {
-		margin: 0 auto;
-		display: block;
+	#auth_app_container .intro {
 		width: 100%;
+		float: none;
 		height: 200px;
+		position: relative;
 	}
-	#auth_container .intro .content {
+	#auth_app_container .intro::after {
 		display: block;
+		content: '';
+		background-color: #303039;
+		position: absolute;
+		transform: skew(0, -6deg);
+		z-index: 0;
+		top: 140px;
+		left: 0;
+		width: 100%;
+		height: 240px;
+	}
+	#auth_app_container .intro .content {
 		position: relative;
 		top: 50%;
-		-webkit-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
+		left: 0;
 		transform: translateY(-50%);
+		text-align: center;
 	}
-	#auth_container .form-container {
-		display: block;
-		width: 100%;
-		height: calc(100vh - 200px);
+	#auth_app_container .intro .content .logo {
+		margin: 0 auto;
 	}
-	#auth_container .form-container.hidden {
+	#auth_app_container .intro .content .welcome-message {
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0 10px;
+	}
+	#auth_app_container .intro .social {
 		display: none;
 	}
-
-	#auth_container form {
-		width: 50%;
-		margin: 20px auto 0;
-		display: block;
-		position: relative;
-		top: 0%;
-		-webkit-transform: translateY(0%);
-		-ms-transform: translateY(0%);
-		transform: translateY(0%);
+	#auth_app_container .sign-in {
+		width: 100%;
+		float: none;
+		height: auto;
 	}
-
+	#auth_app_container .sign-in .form-container {
+		top: 0;
+		transform: none;
+	}
+	#auth_app_container .sign-in .form-container form {
+		margin: 0 auto;
+	}
 }
 
-#auth_container .powered-by-block {
+#auth_app_container .powered-by-block {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
@@ -335,14 +290,14 @@
 	font-size: 12px;
 	color: #606069;
 }
-#auth_container .powered-by-block .tag-version {
+#auth_app_container .powered-by-block .tag-version {
 	margin-left: 5px;
 }
-#auth_container .powered-by-block a,
-#auth_container .powered-by-block a:hover,
-#auth_container .powered-by-block a:active,
-#auth_container .powered-by-block a:visited,
-#auth_container .powered-by-block a:focus {
+#auth_app_container .powered-by-block a,
+#auth_app_container .powered-by-block a:hover,
+#auth_app_container .powered-by-block a:active,
+#auth_app_container .powered-by-block a:visited,
+#auth_app_container .powered-by-block a:focus {
 	color: #646469;
 	text-decoration: none;
 }

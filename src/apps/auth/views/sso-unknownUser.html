@@ -1,0 +1,43 @@
+{{#if isUnknownKazooUser}}
+	<div class="sso-unknownUser">
+		<div class="sso-user btn-block text-left">
+			<div class="sso-user-photo-div"></div>
+			<div class="sso-user-info">
+				<div class="upper-info">
+					<div class="text-left">
+						{{ssoUser.displayName}}
+					</div>
+					<div class="sso-logout">
+						<a href="javascript:void(0);" class="kill-sso-session" data-provider="{{ssoUser.auth_provider}}">
+							<i class="sso-logout">
+								<svg class="svg-tag">
+									{{#compare ssoUser.auth_provider "===" "google"}}
+										<use xlink:href="#sso-google--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "microsoft"}}
+										<use xlink:href="#sso-office365--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "salesforce"}}
+										<use xlink:href="#sso-salesforce--color" />
+									{{/compare}}
+									{{#compare ssoUser.auth_provider "===" "linkedin"}}
+										<use xlink:href="#sso-linkedin--color" />
+									{{/compare}}
+								</svg>
+							</i>
+							{{ i18n.oauth.logout }}
+						</a>
+					</div>
+				</div>
+				<div class="text-left">
+					{{ssoUser.email}}
+				</div>
+			</div>
+		</div>
+
+		<div class="user-not-linked">
+			<i class="fa fa-info-circle"></i>
+			{{ i18n.oauth.noLinkMsg }}
+		</div>
+	</div>
+{{/if}}
