@@ -22,7 +22,7 @@ define(function(require) {
 				twitter: 'fa fa-twitter',
 				linkedin: 'fa fa-linkedin-square',
 				github: 'fa fa-github',
-				googleplus: 'fa fa-google-plus',
+				google: 'fa fa-google-plus',
 				youtube: 'fa fa-youtube'
 			},
 			kazooConnectionName: 'kazooAPI',
@@ -706,7 +706,7 @@ define(function(require) {
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
 					if (monster.config.whitelabel.custom_welcome) {
-						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
+						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome || '').replace(/\r?\n/g, '<br />'));
 					}
 
 					container.append(template);
@@ -714,6 +714,18 @@ define(function(require) {
 					template.find('.powered-by-block').append($('.core-footer .powered-by'));
 				},
 				domain = window.location.hostname;
+
+			if (monster.config.whitelabel.hasOwnProperty('brandColor')) {
+				template.css('background-color', monster.config.whitelabel.brandColor);
+
+				template.find('.social-link').on('mouseover', function() {
+					$(this).find('i').css('color', monster.config.whitelabel.brandColor);
+				});
+
+				template.find('.social-link').on('mouseout', function() {
+					$(this).find('i').removeAttr('style');
+				});
+			}
 
 			self.renderSSOProviderTemplate(template.find('.sso-providers-wrapper'));
 			self.renderSSOUnknownUserTemplate(template.find('.sso-unknownUser-wrapper'));
