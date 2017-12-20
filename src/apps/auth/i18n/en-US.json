@@ -1,8 +1,9 @@
 {
-	"welcome": "Your Unified Communications Platform",
+	"welcome": "One Unified Communications Platform to Rule Them All.",
 	"password": "Password",
 	"rememberMe": "Remember me",
-	"forgotPassword": "Forgot Info?",
+	"forgotPassword": "Forgot your info?",
+	"alternativeSignIn": "Or sign in using:",
 	"username": "Username",
 	"registerMessage": "Use one account for all your services",
 	"registerLink": "Register",
@@ -102,14 +103,13 @@
 			}
 		},
 		"successReset": "An email has been sent to the address you provided. Please check that email for temporary credentials that you can use to access your account. Once signed in, you will need to change/update your password.",
-		"headline": "In order to recover your password, please enter your Email/Username:",
+		"headline": "In order to recover your password, please enter your email/username:",
 		"emailPlaceholder": "Email/Username",
 		"headline2": "And one of the following (only one is required):",
 		"accountNamePlaceholder": "Account Name",
 		"phoneNumberPlaceholder": "Phone Number",
 		"resetPassword": "Reset Password",
-		"rememberPassword": "Remember your password?",
-		"backToSignIn": "Back to Sign In"
+		"rememberPassword": "Remember your password?"
 	},
 
 	"__comment": "UI-1874: new trial greeting mechanism",

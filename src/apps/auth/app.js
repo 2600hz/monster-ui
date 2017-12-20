@@ -17,6 +17,14 @@ define(function(require) {
 		},
 
 		appFlags: {
+			socialIcons: {
+				facebook: 'fa fa-facebook-official',
+				twitter: 'fa fa-twitter',
+				linkedin: 'fa fa-linkedin-square',
+				github: 'fa fa-github',
+				google: 'fa fa-google-plus',
+				youtube: 'fa fa-youtube'
+			},
 			kazooConnectionName: 'kazooAPI',
 			mainContainer: undefined,
 			isAuthentified: false,
@@ -593,43 +601,64 @@ define(function(require) {
 			});
 		},
 
-		renderSSOProviderTemplate: function(container) {
+		renderSSOProviderTemplate: function(pContainer) {
 			var self = this,
+				container = pContainer || $('.sso-providers-wrapper'),
 				ssoUser = monster.cookies.getJson('monster-sso-auth') || {},
 				dataTemplate = {
 					ssoProviders: monster.config.whitelabel.sso_providers || [],
-					ssoUser: ssoUser,
 					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
 				},
 				template = $(monster.template(self, 'sso-providers', dataTemplate));
 
-			$(container).empty();
+			template
+				.find('.sso-button')
+					.on('click', function() {
+						self.clickSSOProviderLogin({
+							provider: $(this).data('provider'),
+							error: function(errorCode) {
+								errorCode === '_no_account_linked' && self.renderSSOProviderTemplate(container);
+							}
+						});
+					});
 
-			if (dataTemplate.isUnknownKazooUser) {
+			container
+				.empty()
+				.append(template);
+		},
+
+		renderSSOUnknownUserTemplate: function(pContainer) {
+			var self = this,
+				container = pContainer || $('.sso-unknownUser-wrapper'),
+				ssoUser = monster.cookies.getJson('monster-sso-auth') || {},
+				dataToTemplate = {
+					ssoUser: ssoUser,
+					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
+				},
+				template = $(self.getTemplate({
+					name: 'sso-unknownUser',
+					data: dataToTemplate
+				}));
+
+			if (dataToTemplate.isUnknownKazooUser) {
 				self.paintSSOPhoto({
 					container: template.find('.sso-user-photo-div'),
 					ssoToken: ssoUser
 				});
 			}
 
-			template.find('.kill-sso-session').on('click', function() {
-				monster.util.resetAuthCookies();
+			template
+				.find('.kill-sso-session')
+					.on('click', function() {
+						monster.util.resetAuthCookies();
 
-				self.renderSSOProviderTemplate(container);
-			});
+						self.renderSSOUnknownUserTemplate();
+						self.renderSSOProviderTemplate();
+					});
 
-			template.find('.sso-button').on('click', function() {
-				self.clickSSOProviderLogin({
-					provider: $(this).data('provider'),
-					error: function(errorCode, errorData, decodedData) {
-						if (errorCode === '_no_account_linked') {
-							self.renderSSOProviderTemplate(container);
-						}
-					}
-				});
-			});
-
-			$(container).append(template);
+			container
+				.empty()
+				.append(template);
 		},
 
 		paintSSOPhoto: function(args) {
@@ -662,12 +691,22 @@ define(function(require) {
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
+					social: _.isEmpty(monster.config.whitelabel.social)
+						? []
+						: _.transform(monster.config.whitelabel.social, function(array, value, key) {
+							if (value.hasOwnProperty('url') && value.url !== '' && self.appFlags.socialIcons.hasOwnProperty(key)) {
+								array.push({
+									url: value.url,
+									iconClass: self.appFlags.socialIcons[key]
+								});
+							}
+						}, []),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
 					if (monster.config.whitelabel.custom_welcome) {
-						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
+						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome || '').replace(/\r?\n/g, '<br />'));
 					}
 
 					container.append(template);
@@ -676,7 +715,20 @@ define(function(require) {
 				},
 				domain = window.location.hostname;
 
+			if (monster.config.whitelabel.hasOwnProperty('brandColor')) {
+				template.css('background-color', monster.config.whitelabel.brandColor);
+
+				template.find('.social-link').on('mouseover', function() {
+					$(this).find('i').css('color', monster.config.whitelabel.brandColor);
+				});
+
+				template.find('.social-link').on('mouseout', function() {
+					$(this).find('i').removeAttr('style');
+				});
+			}
+
 			self.renderSSOProviderTemplate(template.find('.sso-providers-wrapper'));
+			self.renderSSOUnknownUserTemplate(template.find('.sso-unknownUser-wrapper'));
 
 			self.callApi({
 				resource: 'whitelabel.getLogoByDomain',
@@ -797,7 +849,7 @@ define(function(require) {
 
 		bindLoginBlock: function(templateData) {
 			var self = this,
-				content = $('#auth_container');
+				content = $('#auth_app_container');
 
 			content.find(templateData.username !== '' ? '#password' : '#login').focus();
 
@@ -807,38 +859,35 @@ define(function(require) {
 				self.loginClick();
 			});
 
-			// New Design stuff
-			if (content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').val() !== '') {
-				content.find('.placeholder-shift').addClass('fixed');
-			}
-
-			content.find('.input-wrap input').on('focus', function() {
-				content.find('.input-wrap').removeClass('error');
-				content.find('.error-message-wrapper').hide();
-				content.find('.error-message-wrapper').find('.text').html('');
-			});
-
-			content.find('.input-wrap input[type="text"], input[type="password"], input[type="email"]').on('change', function() {
-				if (this.value !== '') {
-					$(this).next('.placeholder-shift').addClass('fixed');
-				} else {
-					$(this).next('.placeholder-shift').removeClass('fixed');
-				}
-			});
-
 			// ----------------
 			// FORM TYPE TOGGLE
 			// ----------------
 
-			content.find('.form-toggle').on('click', function() {
-				var formType = $(this).data('form');
+			content
+				.find('.form-toggle')
+					.on('click', function() {
+						var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+							type = $(this).parents('form').data('type'),
+							front = type === 'login' ? $('#form_login') : $('#form_password_recovery'),
+							back = type === 'login' ? $('#form_password_recovery') : $('#form_login');
 
-				content.find('.form-container').toggleClass('hidden');
-				content.find('.form-container[data-form="' + formType + '"]').addClass('fadeInDown');
+						front
+							.addClass('animated flipOutY')
+							.one(animationEnd, function() {
+								front
+									.hide()
+									.removeClass('animated flipOutY');
+								back
+									.show()
+									.addClass('animated flipInY')
+									.one(animationEnd, function() {
+										back.removeClass('animated flipInY');
+									});
 
-				content.find('.form-content').removeClass('hidden');
-				content.find('.reset-notification').addClass('hidden');
-			});
+								content.find('.form-content').removeClass('hidden');
+								content.find('.reset-notification').addClass('hidden');
+							});
+					});
 
 			// ------------------------
 			// PASSWORD RECOVERY SUBMIT
@@ -965,9 +1014,25 @@ define(function(require) {
 				loginData = {
 					credentials: hashedCreds,
 					account_name: loginAccountName
-				};
+				},
+				$form = $('#form_login');
 
-			if (loginUsername && loginPassword) {
+			monster.ui.validate($form, {
+				rules: {
+					login: {
+						required: true
+					},
+					password: {
+						required: true
+					},
+					account_name: {
+						required: true
+					}
+				},
+				errorPlacement: function(error, element) {}
+			});
+
+			if (monster.ui.valid($form)) {
 				self.putAuth(loginData, function(data) {
 					if (isRememberMeChecked) {
 						var cookieLogin = {
@@ -981,19 +1046,11 @@ define(function(require) {
 					} else {
 						monster.cookies.remove('monster-login');
 					}
-				},
-				function() {
-					$('#login, #password, #account_name').parents('.input-wrap').addClass('error');
+				}, function() {
+					$('#login, #password, #account_name').addClass('monster-invalid');
 					$('.error-message-wrapper').find('.text').html(self.i18n.active().invalidCredentials);
 					$('.error-message-wrapper').show();
 				});
-			} else {
-				if (!loginUsername) {
-					$('#login').parents('.input-wrap').addClass('error');
-				}
-				if (!loginPassword) {
-					$('#password').parents('.input-wrap').addClass('error');
-				}
 			}
 		},
 
