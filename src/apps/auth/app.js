@@ -705,8 +705,8 @@ define(function(require) {
 				},
 				template = $(monster.template(self, 'app', templateData)),
 				loadWelcome = function() {
-					if (monster.config.whitelabel.custom_welcome) {
-						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome || '').replace(/\r?\n/g, '<br />'));
+					if (monster.config.whitelabel.custom_welcome_message) {
+						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
 					}
 
 					container.append(template);
