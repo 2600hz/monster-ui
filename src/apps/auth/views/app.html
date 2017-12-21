@@ -69,36 +69,36 @@
 					<div class="sso-providers-wrapper"></div>
 				</form>
 				<!-- Forgot Info Form -->
-				<form id="form_password_recovery" data-type="recovery">
+				<form id="form_password_recovery" data-type="recovery" autocomplete="on">
 					<div class="form-content">
 						<p class="form-info">
 							{{ i18n.recoverPassword.headline }}
 						</p>
 						<div class="control-group">
-							<label for="username" class="control-label">
+							<label for="recover_username" class="control-label">
 								{{i18n.recoverPassword.emailPlaceholder}}
 							</label>
 							<div class="controls">
-								<input type="text" id="username" name="username">
+								<input type="text" id="recover_username" name="username">
 							</div>
 						</div>
 						<p class="form-info">
 							{{ i18n.recoverPassword.headline2 }}
 						</p>
 						<div class="control-group">
-							<label for="account_name" class="control-label">
+							<label for="recover_account_name" class="control-label">
 								{{i18n.recoverPassword.accountNamePlaceholder}}
 							</label>
 							<div class="controls">
-								<input type="text" id="account_name" name="account_name">
+								<input type="text" id="recover_account_name" name="account_name">
 							</div>
 						</div>
 						<div class="control-group">
-							<label for="phone_number" class="control-label">
+							<label for="recover_phone_number" class="control-label">
 								{{i18n.recoverPassword.phoneNumberPlaceholder}}
 							</label>
 							<div class="controls">
-								<input type="text" id="phone_number" name="phone_number">
+								<input type="text" id="recover_phone_number" name="phone_number">
 							</div>
 						</div>
 						<button class="btn-submit recover-password" id="btn_reset_password" type="button">
