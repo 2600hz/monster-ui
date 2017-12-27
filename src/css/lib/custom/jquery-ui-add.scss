@@ -113,10 +113,11 @@
 
 /************** DATEPICKER **************/
 .ui-datepicker {
-	margin-top: 2px;
-	border: none;
+	margin-top: 5px;
+	border-color: $input-border-color;
 	border-radius: 2px;
-	background: #303039;
+	box-shadow: 1px 1px 2px $input-border-color;
+	background: $white;
 }
 .ui-datepicker-calendar thead {
 	color: #808089;
@@ -124,22 +125,27 @@
 .ui-datepicker-calendar .ui-state-default {
 	font-weight: 600;
 	text-align: center;
-	color: #c0c0c9;
+	color: #555;
 	border-color: transparent;
 	background: transparent;
 }
 .ui-datepicker-calendar .ui-state-default.ui-state-active {
 	font-weight: 600;
-	color: $primary-color;
-	border-color: $primary-color;
+	font-weight: 600;
+	background: $primary-color;
+	border-radius: 2px;
+	color: $white;
 }
 .ui-datepicker-calendar .ui-state-default.ui-state-hover {
-	border-color: #202029;
-	background-color: #202029;
+	border-color: $primary-color;
 }
 .ui-datepicker-header {
 	border: none;
 	background: inherit;
+	color: #333;
+}
+.ui-datepicker th {
+	font-weight: 600;
 }
 .ui-datepicker-prev .ui-icon,
 .ui-datepicker-next .ui-icon {
@@ -163,8 +169,10 @@
 	left: 8px;
 	border-top: none;
 	border-right: none;
+	border-color: #333;
 }
 .ui-datepicker-next .ui-icon:after {
+	border-color: #333;
 	right: 8px;
 	border-bottom: none;
 	border-left: none;

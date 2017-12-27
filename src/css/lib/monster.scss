@@ -105,7 +105,7 @@ h1 {
 	position: relative;
 	overflow: hidden;
 	min-width: 120px;
-	padding: 8px 15px;
+	padding: 6px 15px;
 	letter-spacing: .02em;
 	color: #707079;
 	border: solid 1px;
@@ -1639,12 +1639,13 @@ table.monster-table {
 /************************************************************/
 
 [class*="monster-select-dropdown"] > .dropdown {
-	line-height: 14px;
 	border: 1px solid $primary-color;
 	border-radius: 2px;
 	color: $primary-color;
+	line-height: 16px;
 	list-style: none;
-	padding: 6px 10px 5px 10px;
+	min-height: 20px;
+	padding: 6px 10px 7px 10px;
 }
 
 [class*="monster-select-dropdown"] > .dropdown .dropdown-toggle .monster-checkbox {
@@ -1653,6 +1654,7 @@ table.monster-table {
 
 [class*="monster-select-dropdown"] > .dropdown .dropdown-toggle {
 	vertical-align: middle;
+	line-height: 13px;
 }
 
 [class*="monster-select-dropdown"] > .dropdown .dropdown-toggle i {
@@ -1675,7 +1677,11 @@ table.monster-table {
 }
 
 [class*="monster-select-dropdown"] .icon-telicon-caret-down {
-	margin-left: 20px;
+	margin-left: 15px;
+}
+
+[class*="monster-select-dropdown"] .fa-caret-down {
+	margin-left: 15px;
 }
 
 [class*="monster-select-dropdown"] .dropdown-menu {
@@ -1705,6 +1711,29 @@ table.monster-table {
 
 .monster-select-dropdown-full > .dropdown .dropdown-menu li > a:hover {
 	color: #FFF;
+}
+
+.monster-select-dropdown-neutral > .dropdown {
+	color: #333;
+	border-color: $input-border-color;
+	background: $white;
+}
+
+.monster-select-dropdown-neutral > .dropdown.open {
+	background: $white;
+	border-color: $primary-color;
+}
+
+.monster-select-dropdown-neutral > .dropdown.open .dropdown-toggle,
+.monster-select-dropdown-neutral > .dropdown.open .dropdown-toggle i {
+	color: $primary-color;
+	border-color: $primary-color;
+}
+
+.monster-select-dropdown-neutral > .dropdown .dropdown-toggle,
+.monster-select-dropdown-neutral > .dropdown .dropdown-toggle i {
+	color: #555;
+	border-color: #555;
 }
 
 /************************************************************/
