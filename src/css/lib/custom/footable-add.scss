@@ -1,6 +1,6 @@
 @import "../../partials/base";
 
-table.footable.monster-table td.footable-sortable > span.fooicon, 
+table.footable.monster-table td.footable-sortable > span.fooicon,
 table.footable.monster-table th.footable-sortable > span.fooicon {
 	margin-left: 10px;
 	margin-top: 0;
@@ -19,19 +19,17 @@ table.footable.monster-table .footable-filtering-search .input-group {
 }
 
 table.footable.monster-table .footable-filtering-search input {
-	border-right: none;
+	border-color: $french-gray !important;
 	box-shadow: none;
 }
 
 table.footable.monster-table .footable-filtering-search input:focus {
 	box-shadow: none !important;
-	border-color: $panel-border-color !important;
 }
 
 table.footable.monster-table .footable-filtering-search button.btn-primary {
-	background: #FFF !important;
-	border: 1px solid $panel-border-color;
-	border-left: none !important;
+	background: $white-lilac !important;
+	border: 1px solid $french-gray;
 	box-shadow: none;
 	color: #888 !important;
 }
@@ -39,8 +37,7 @@ table.footable.monster-table .footable-filtering-search button.btn-primary {
 table.footable.monster-table .footable-filtering-search button.btn-primary:hover,
 table.footable.monster-table .footable-filtering-search button.btn-primary:focus,
 table.footable.monster-table .footable-filtering-search button.btn-primary:active {
-	border-color: $panel-border-color !important;
-	border-left: none !important;
+	border-color: $french-gray !important;
 }
 
 table.footable.monster-table .footable-filtering .btn.dropdown-toggle {

@@ -1,7 +1,11 @@
+@import "../../partials/base";
+
 .chosen-container .chosen-drop {
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
 	        box-sizing: border-box;
+
+	border-color: $primary-color;
 
 	width: 220px;
 }
@@ -15,13 +19,17 @@
 	width: inherit;
 	height: 30px;
 
-	border: 1px solid #ccc;
+	border: 1px solid $input-border-color;
 	border-radius: 2px;
 	background: #fff;
 	box-shadow: none;
 }
 .chosen-container.chosen-with-drop .chosen-single {
+	border-color: $primary-color;
 	background: #fff;
+}
+.chosen-container .chosen-results li.highlighted {
+	background: $primary-color;
 }
 .chosen-container .chosen-single div b {
 	position: relative;
@@ -40,7 +48,7 @@
 	     -o-transform: translateY(-50%);
 	        transform: translateY(-50%);
 
-	border-width: 6px 3px 0;
+	border-width: 6px 4px 0;
 	border-style: solid;
 	border-color: #000 transparent;
 }
