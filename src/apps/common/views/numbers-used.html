@@ -28,15 +28,6 @@
 							{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
 						</div>
 
-						<div class="locality">
-							{{#if this.isoCountry }}
-								<span class="flag"><img src="css/assets/flags/24/{{ this.isoCountry }}.png" height="24" width="24"></img></span>
-							{{/if}}
-							{{#if this.friendlyLocality }}
-								<span class="city">{{ this.friendlyLocality }}</span>
-							{{/if}}
-						</div>
-
 						<div class="used-by">
 							{{#compare ../../viewType '!==' 'pbx'}}
 								{{ this.friendlyUsedBy }}
