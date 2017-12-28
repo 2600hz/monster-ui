@@ -85,11 +85,6 @@ define(function(require) {
 		numbersFormatNumber: function(value) {
 			var self = this;
 
-			if ('locality' in value) {
-				value.isoCountry = value.locality.country || '';
-				value.friendlyLocality = 'city' in value.locality ? value.locality.city + ('state' in value.locality ? ', ' + value.locality.state : '') : '';
-			}
-
 			if ('used_by' in value) {
 				value.friendlyUsedBy = self.i18n.active().numbers[value.used_by];
 			}

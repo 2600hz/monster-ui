@@ -3,14 +3,6 @@
 		<div class="number-options pull-right"></div>
 		<input type="checkbox"></input>
 		<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}</div>
-		<span class="locality">
-			{{#if this.isoCountry }}
-				<span class="flag"><img src="css/assets/flags/24/{{ this.isoCountry }}.png" height="24" width="24"></img></span>
-			{{/if}}
-			{{#if this.friendlyLocality }}
-				<span class="city">{{ this.friendlyLocality }}</span>
-			{{/if}}
-		</span>
 		<div class="features pull-right">
 			{{#numberFeatures features}}{{/numberFeatures}}
 			{{#compare this.state '===' 'port_in'}}
