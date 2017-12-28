@@ -2028,3 +2028,40 @@ table.monster-table {
 .monster-tab-wrapper .monster-tab-content {
 	padding: 25px 0px 10px;
 }
+
+
+/***********************************************/
+/*************** MONSTER BADGES ****************/
+/***********************************************/
+[class*="monster-badge"] {
+	background: #d5d5d9;
+	border-radius: 10px;
+	color: #666;
+	font-weight: 500;
+	padding: 0 10px;
+}
+
+.monster-badge-primary {
+	background: $primary-color;
+	color: #FFF;
+}
+
+.monster-badge-success {
+	background: $success-color;
+	color: #FFF;
+}
+
+.monster-badge-danger {
+	background: $danger-color;
+	color: #FFF;
+}
+
+.monster-badge-warning {
+	background: $warning-color;
+	color: #FFF;
+}
+
+.monster-badge-neutral {
+	background: #d5d5d9;
+	color: #666;
+}
