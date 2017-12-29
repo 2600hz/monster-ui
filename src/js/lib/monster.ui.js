@@ -1367,8 +1367,8 @@ define(function(require) {
 							title: i18n.title.macro,
 							command: 'insertHtml',
 							options: false,
-							ante: '<b>{{',
-							post: '}}</b>'
+							ante: '{{',
+							post: '}}'
 						}
 					},
 					sortByWeight = function(node) { // Sort elements by weight and "arrayize"
