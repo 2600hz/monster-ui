@@ -703,17 +703,7 @@ define(function(require) {
 						}, []),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
-				template = $(monster.template(self, 'app', templateData)),
-				loadWelcome = function() {
-					if (monster.config.whitelabel.custom_welcome_message) {
-						template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
-					}
-
-					container.append(template);
-					self.bindLoginBlock(templateData);
-					template.find('.powered-by-block').append($('.core-footer .powered-by'));
-				},
-				domain = window.location.hostname;
+				template = $(monster.template(self, 'app', templateData));
 
 			if (monster.config.whitelabel.hasOwnProperty('brandColor')) {
 				template.css('background-color', monster.config.whitelabel.brandColor);
@@ -730,6 +720,26 @@ define(function(require) {
 			self.renderSSOProviderTemplate(template.find('.sso-providers-wrapper'));
 			self.renderSSOUnknownUserTemplate(template.find('.sso-unknownUser-wrapper'));
 
+			self.renderLogo(template, function() {
+				if (monster.config.whitelabel.custom_welcome_message) {
+					template.find('.welcome-message').empty().html((monster.config.whitelabel.custom_welcome_message || '').replace(/\r?\n/g, '<br />'));
+				}
+
+				container.append(template);
+				self.bindLoginBlock(templateData);
+				template.find('.powered-by-block').append($('.core-footer .powered-by'));
+			});
+		},
+
+		renderLogo: function(template, callback) {
+			var self = this,
+				domain = window.location.hostname,
+				fillLogo = function(url) {
+					var formattedURL = url.indexOf('/') === 0 ? url.substr(1, url.length) : url;
+					formattedURL = formattedURL.indexOf('src/') === 0 ? formattedURL.substr(4, formattedURL.length) : formattedURL;
+					template.find('.logo-block').css('background-image', 'url(' + formattedURL + ')');
+				};
+
 			self.callApi({
 				resource: 'whitelabel.getLogoByDomain',
 				data: {
@@ -738,12 +748,17 @@ define(function(require) {
 					dataType: '*'
 				},
 				success: function(_data) {
-					template.find('.logo-block').css('background-image', 'url(' + monster.config.api.default + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime() + ')');
-					loadWelcome();
+					fillLogo(monster.config.api.default + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime());
+					callback();
 				},
 				error: function(error) {
-					template.find('.logo-block').css('background-image', 'url("apps/auth/style/static/images/logo.svg")');
-					loadWelcome();
+					if (monster.config.whitelabel.hasOwnProperty('logoPath') && monster.config.whitelabel.logoPath.length) {
+						fillLogo(monster.config.whitelabel.logoPath);
+					} else {
+						fillLogo('apps/auth/style/static/images/logo.svg');
+					}
+
+					callback();
 				}
 			});
 		},
