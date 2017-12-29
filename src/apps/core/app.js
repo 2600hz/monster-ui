@@ -530,7 +530,12 @@ define(function(require) {
 		displayLogo: function(container) {
 			var self = this,
 				domain = window.location.hostname,
-				apiUrl = monster.config.api.default;
+				apiUrl = monster.config.api.default,
+				fillLogo = function(url) {
+					var formattedURL = url.indexOf('/') === 0 ? url.substr(1, url.length) : url;
+					formattedURL = formattedURL.indexOf('src/') === 0 ? formattedURL.substr(4, formattedURL.length) : formattedURL;
+					container.find('#main_topbar_brand').css('background-image', 'url(' + formattedURL + ')');
+				};
 
 			self.callApi({
 				resource: 'whitelabel.getLogoByDomain',
@@ -540,10 +545,14 @@ define(function(require) {
 					dataType: '*'
 				},
 				success: function(_data) {
-					container.find('#main_topbar_brand').css('background-image', 'url(' + apiUrl + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime() + ')');
+					fillLogo(apiUrl + 'whitelabel/' + domain + '/logo?_=' + new Date().getTime());
 				},
 				error: function(error) {
-					container.find('#main_topbar_brand').css('background-image', 'url("apps/core/style/static/images/logo.svg")');
+					if (monster.config.whitelabel.hasOwnProperty('logoPath') && monster.config.whitelabel.logoPath.length) {
+						fillLogo(monster.config.whitelabel.logoPath);
+					} else {
+						fillLogo('apps/core/style/static/images/logo.svg');
+					}
 				}
 			});
 		},

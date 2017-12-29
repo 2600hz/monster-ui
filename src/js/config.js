@@ -53,6 +53,9 @@ define(function(require) {
 			// Company Name, used in many places in the UI
 			companyName: '2600Hz',
 
+			// Hardcoded logo to override default Kazoo Logo
+			// logoPath: 'apps/core/style/static/images/HClogo.png',
+
 			nav: {
 				// Link used when user click on the top-right interrogation mark
 				help: 'http://wiki.2600hz.com'
