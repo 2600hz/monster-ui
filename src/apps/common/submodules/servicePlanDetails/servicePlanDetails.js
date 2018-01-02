@@ -142,7 +142,7 @@ define(function(require) {
 					overrideOptions.ledgers = {};
 
 					_.each(data.ledgers, function(item) {
-						overrideOptions.ledgers[item.id] = { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } };
+						overrideOptions.ledgers[item.name] = { rate: {}, activation_charge: {}, minimum: {}, exceptions: {}, as: {}, discounts: { maximum: {}, rate: {} } };
 					});
 				}
 
