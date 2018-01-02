@@ -531,6 +531,11 @@ i.monster-password-strength {
 	padding: 18px 20px 0;
 }
 
+.core-content .app-layout.fullscreen .app-header .app-navbar-wrapper,
+.core-content .app-layout.docked .app-header .app-navbar-wrapper {
+	max-width: none;
+}
+
 .core-content .app-header .app-navbar {
 	clear: both;
 }
@@ -569,11 +574,11 @@ i.monster-password-strength {
 	padding: 40px 20px 20px;
 }
 
-.core-content .app-layout .app-content-wrapper.fullscreen {
+.core-content .app-layout.fullscreen .app-content-wrapper {
 	max-width: none;
 }
 
-.core-content .app-layout .app-content-wrapper.docked {
+.core-content .app-layout.docked .app-content-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -583,7 +588,7 @@ i.monster-password-strength {
 	padding: 0;
 }
 
-.core-content .app-layout .app-content-wrapper.docked.with-navbar {
+.core-content .app-layout.docked.with-navbar .app-content-wrapper {
 	position: relative;
 }
 

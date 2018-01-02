@@ -1367,8 +1367,8 @@ define(function(require) {
 							title: i18n.title.macro,
 							command: 'insertHtml',
 							options: false,
-							ante: '<b>{{',
-							post: '}}</b>'
+							ante: '{{',
+							post: '}}'
 						}
 					},
 					sortByWeight = function(node) { // Sort elements by weight and "arrayize"
@@ -1891,7 +1891,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						contentWrapperClass = '',
+						appLayoutClass = 'app-layout',
 						subTab;
 
 					// Add 'active' class to menu element
@@ -1993,16 +1993,16 @@ define(function(require) {
 							finalArgs.data = _.merge({}, finalArgs.data, currentTab.data);
 						}
 
-						// Override content wrapper type if specified at the tab level
-						if (currentTab.hasOwnProperty('contentWrapperType')) {
-							contentWrapperClass = ' ' + currentTab.contentWrapperType;
+						// Override layout type if specified at the tab level
+						if (currentTab.hasOwnProperty('layout')) {
+							appLayoutClass += ' ' + currentTab.layout;
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							contentWrapperClass = ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
 						}
 
 						parent
-							.find('.app-content-wrapper')
-								.prop('class', 'app-content-wrapper' + contentWrapperClass + ' with-navbar');
+							.find('.app-layout')
+								.prop('class', appLayoutClass + ' with-navbar');
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
@@ -2111,21 +2111,15 @@ define(function(require) {
 				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
 				dataTemplate = {
 					hasNavbar: hasNavbar,
-					appType: (function(args, context, hasNavbar) {
-						var type = [];
-
-						if (context.hasOwnProperty('contentWrapperType')) {
-							type.push(context.contentWrapperType);
+					layout: (function(args, context) {
+						if (context.hasOwnProperty('layout')) {
+							return context.layout;
 						} else if (args.hasOwnProperty('appType')) {
-							type.push(args.appType);
+							return args.appType;
+						} else {
+							return 'default';
 						}
-
-						if (hasNavbar) {
-							type.push('with-navbar');
-						}
-
-						return type ? type.join(' ') : 'default';
-					})(args, context, hasNavbar),
+					})(args, context),
 					appId: thisArg.name.split('-').join('_')
 				},
 				layoutTemplate = args.hasOwnProperty('template') ? args.template : monster.template(monster.apps.core, 'monster-app-layout', dataTemplate),
