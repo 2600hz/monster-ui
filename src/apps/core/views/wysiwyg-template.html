@@ -1,49 +1,53 @@
-<div class="wysiwyg-toolbar" id="wysiwyg_toolbar_{{id}}" data-role="editor-toolbar" data-target="#wysiwyg_editor_{{id}}">
-{{#each tools}}
-	<div class="btn-group">
-	{{#if options}}
-		{{#if title}}
-			<a class="btn dropdown-toggle" data-toggle="dropdown" title="{{title}}">
-			{{#if icon}}
-				<i class="{{icon}}"></i>
-			{{else}}
-				{{title}}
-			{{/if}}
-				<b class="caret"></b>
-			</a>
-			<ul class="dropdown-menu{{#compare command '===' 'foreColor'}} color-menu{{/compare}}">
-			{{#each options}}
-				{{#if text}}<li>{{/if}}
-					<a{{#if icon}} class="btn"{{/if}} data-edit="{{#if command}}{{command}}{{else}}{{../command}}{{/if}}{{#if args}} {{#if ../ante}}{{{../ante}}}{{/if}}{{args}}{{#if ../post}}{{{../post}}}{{/if}}{{/if}}" title="{{title}}">{{#if icon}}<i class="{{icon}}"></i>{{/if}}{{#if text}}{{text}}{{/if}}</a>
-				{{#if text}}</li>{{/if}}
-			{{/each}}
-			</ul>
-		{{else}}
-			{{#each options}}
-				<a class="btn{{#compare inputType '===' 'file'}} wysiwyg-upload{{/compare}}{{#compare inputType '===' 'text'}} dropdown-toggle" data-toggle="dropdown{{/compare}}" data-edit="{{command}}" title="{{title}}">
+<div class="wysiwyg-toolbar-wrapper">
+	<div class="wysiwyg-toolbar" id="wysiwyg_toolbar_{{id}}" data-role="editor-toolbar" data-target="#wysiwyg_editor_{{id}}">
+	{{#each tools}}
+		<div class="btn-group">
+		{{#if options}}
+			{{#if title}}
+				<a class="btn dropdown-toggle" data-toggle="dropdown" title="{{title}}">
+				{{#if icon}}
 					<i class="{{icon}}"></i>
-				{{#compare inputType '!==' 'file'}}
+				{{else}}
+					{{title}}
+				{{/if}}
+					<b class="caret"></b>
 				</a>
-				{{/compare}}
+				<ul class="dropdown-menu{{#compare command '===' 'foreColor'}} color-menu{{/compare}}">
+				{{#each options}}
+					{{#if text}}<li>{{/if}}
+						<a{{#if icon}} class="btn"{{/if}} data-edit="{{#if command}}{{command}}{{else}}{{../command}}{{/if}}{{#if args}} {{#if ../ante}}{{{../ante}}}{{/if}}{{args}}{{#if ../post}}{{{../post}}}{{/if}}{{/if}}" title="{{title}}">{{#if icon}}<i class="{{icon}}"></i>{{/if}}{{#if text}}{{text}}{{/if}}</a>
+					{{#if text}}</li>{{/if}}
+				{{/each}}
+				</ul>
+			{{else}}
+				{{#each options}}
+					<a class="btn{{#compare inputType '===' 'file'}} wysiwyg-upload{{/compare}}{{#compare inputType '===' 'text'}} dropdown-toggle" data-toggle="dropdown{{/compare}}" data-edit="{{command}}" title="{{title}}">
+						<i class="{{icon}}"></i>
+					{{#compare inputType '!==' 'file'}}
+					</a>
+					{{/compare}}
 
-				{{#compare inputType '===' 'text'}}
-					<div class="dropdown-menu input-append">
-						<input type="text" class="span2" placeholder="{{@root.i18n.wysiwyg.placeholder.url}}" data-edit="{{command}}">
-						<button class="btn" type="button">{{@root.i18n.add}}</button>
-					</div>
-				{{/compare}}
-				{{#compare inputType '===' 'file'}}
-					<input type="file" data-edit="{{command}}">
-				</a>
-				{{/compare}}
-			{{/each}}
+					{{#compare inputType '===' 'text'}}
+						<div class="dropdown-menu input-append">
+							<input type="text" class="span2" placeholder="{{@root.i18n.wysiwyg.placeholder.url}}" data-edit="{{command}}">
+							<button class="btn" type="button">{{@root.i18n.add}}</button>
+						</div>
+					{{/compare}}
+					{{#compare inputType '===' 'file'}}
+						<input type="file" data-edit="{{command}}">
+					</a>
+					{{/compare}}
+				{{/each}}
+			{{/if}}
+		{{else}}
+			<a class="btn" data-edit="{{command}}" title="{{title}}">
+				<i class="{{icon}}"></i>
+			</a>
 		{{/if}}
-	{{else}}
-		<a class="btn" data-edit="{{command}}" title="{{title}}">
-			<i class="{{icon}}"></i>
-		</a>
-	{{/if}}
+		</div>
+	{{/each}}
 	</div>
-{{/each}}
 </div>
-<div class="wysiwyg-editor" id="wysiwyg_editor_{{id}}"></div>
+<div class="wysiwyg-editor-wrapper">
+	<div class="wysiwyg-editor" id="wysiwyg_editor_{{id}}"></div>
+</div>
