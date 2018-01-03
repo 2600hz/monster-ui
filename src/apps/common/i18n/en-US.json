@@ -544,7 +544,8 @@
 				"userUnMute": "Unmute",
 				"userDeaf": "Deaf",
 				"userUndeaf": "Undeaf",
-				"userKick": "Kick"
+				"userKick": "Kick",
+				"add": "Invite Participants"
 			}
 		},
 		"moderators": "Moderators",
@@ -562,7 +563,20 @@
 		"emptyModerators": "There are currently no moderators active in this conference",
 		"emptyParticipants": "There are currently no participants active in this conference",
 		"notStarted": "Not Started",
-		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data..."
+		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data...",
+
+		"addEndpointDialog": {
+			"users": "Users",
+			"devices": "Devices",
+			"title": "Add people to this Conference",
+			"subTitle": "Select people in the dropdown below",
+			"add": "Add",
+			"help": {
+				"title": "Info",
+				"content": "You can select multiple users or endpoints from this list. Just start typing the name of the user or the device to find it in the list and press enter to select it, repeat until you're done and click on \"Add\" to have the system invite these people to this conference!"
+			},
+			"successAdd": "You successfully invited people to this conference!"
+		}
 	},
 
 	"__comment": "UI-2554: Add a way to customize carrier used by number",

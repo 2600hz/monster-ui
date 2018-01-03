@@ -1,0 +1,28 @@
+<div id="add_endpoint_conference_dialog">
+	<div class="title" autofocus>{{i18n.conferenceViewer.addEndpointDialog.subTitle}}</div>
+
+	<div class="select-wrapper">
+		<select multiple id="select_endpoints">
+			<optgroup label="{{i18n.conferenceViewer.addEndpointDialog.users}}">
+				{{#each users}}
+					<option value="{{id}}">{{first_name}} {{last_name}}</option>
+				{{/each}}
+			</optgroup>
+			<optgroup label="{{i18n.conferenceViewer.addEndpointDialog.devices}}">
+				{{#each devices}}
+					<option value="{{id}}">{{name}}</option>
+				{{/each}}
+			</optgroup>
+		</select>
+	</div>
+
+	<div class="help-wrapper">
+		{{#monsterPanelText i18n.conferenceViewer.addEndpointDialog.help.title 'info' 'fill-width'}}
+			{{i18n.conferenceViewer.addEndpointDialog.help.content}}
+		{{/monsterPanelText}}
+	</div>
+
+	<div class="actions clearfix">
+		<button class="monster-button-success pull-right" type="button" id="add">{{i18n.conferenceViewer.addEndpointDialog.add}}</button>
+	</div>
+</div>
