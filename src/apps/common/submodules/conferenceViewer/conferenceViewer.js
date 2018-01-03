@@ -3,6 +3,7 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		toastr = require('toastr'),
+		chosen = require('chosen'),
 		randomColor = require('randomColor');
 
 	var conferenceViewer = {
@@ -24,24 +25,28 @@ define(function(require) {
 
 			self.conferenceViewerGetData(conferenceId, function(data) {
 				var formattedData = self.conferenceViewerFormatData(data, args),
-					template = $(monster.template(self, 'conferenceViewer-layout', formattedData)),
+					template = $(self.getTemplate({
+						name: 'layout',
+						submodule: 'conferenceViewer',
+						data: formattedData
+					})),
 					participantsDiv = template.find('.participants-wrapper .users'),
 					moderatorsDiv = template.find('.moderators-wrapper .users');
 
 				if (formattedData.conference.participants.length) {
 					_.each(formattedData.conference.participants, function(participant) {
-						participantsDiv.append(monster.template(self, 'conferenceViewer-user', participant));
+						participantsDiv.append(self.getTemplate({ name: 'user', submodule: 'conferenceViewer', data: participant }));
 					});
 				} else {
-					participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants }));
+					participantsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants } }));
 				}
 
 				if (formattedData.conference.moderators.length) {
 					_.each(formattedData.conference.moderators, function(moderator) {
-						moderatorsDiv.append(monster.template(self, 'conferenceViewer-user', moderator));
+						moderatorsDiv.append(self.getTemplate({ name: 'user', submodule: 'conferenceViewer', data: moderator }));
 					});
 				} else {
-					moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators }));
+					moderatorsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators } }));
 				}
 
 				if (formattedData.conference.moderators.length + formattedData.conference.participants.length === 0) {
@@ -216,7 +221,7 @@ define(function(require) {
 				}
 
 				if (!isDisabled) {
-					self.conferenceViewerActionConference(action, data.conference.id);
+					self.conferenceViewerActionConference(action, data.conference);
 				}
 			});
 		},
@@ -296,7 +301,7 @@ define(function(require) {
 			var self = this,
 				container = $('.view-conference-wrapper'),
 				formattedParticipant = self.conferenceViewerFormatUser(participant),
-				userTemplate = $(monster.template(self, 'conferenceViewer-user', formattedParticipant)),
+				userTemplate = $(self.getTemplate({ name: 'user', submodule: 'conferenceViewer', data: formattedParticipant })),
 				countUser = container.find('.conference-user-wrapper').length;
 
 			if (countUser === 0) {
@@ -357,9 +362,9 @@ define(function(require) {
 					}
 
 					if (isModerator && moderatorsCount === 0) {
-						$moderatorsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators }));
+						$moderatorsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators } }));
 					} else if (!isModerator && participantsCount === 0) {
-						$participantsDiv.append(monster.template(self, 'conferenceViewer-emptyCategory', { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants }));
+						$participantsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants } }));
 					}
 
 					if (moderatorsCount + participantsCount === 0) {
@@ -386,7 +391,7 @@ define(function(require) {
 			}
 
 			if (toasterActions.indexOf(action) >= 0) {
-				toastr.info(monster.template(self, '!' + self.i18n.active().conferenceViewer.userActions[action], { name: userName }));
+				toastr.info(self.getTemplate({ name: '!' + self.i18n.active().conferenceViewer.userActions[action], submodule: 'conferenceViewer', data: { name: userName } }));
 			}
 		},
 
@@ -465,18 +470,94 @@ define(function(require) {
 			});
 		},
 
-		conferenceViewerActionConference: function(action, conferenceId, callback) {
+		conferenceViewerAddParticipantsData: function(conferenceId, data, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'conference.action',
+				data: {
+					accountId: self.accountId,
+					conferenceId: conferenceId,
+					data: {
+						action: 'dial',
+						data: data
+					}
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		conferenceViewerActionConference: function(action, conference, callback) {
 			var self = this,
 				stateActions = ['lock', 'unlock'],
 				participantsAction = ['kick', 'mute', 'unmute', 'deaf', 'undeaf'];
 
-			if (stateActions.indexOf(action) >= 0) {
-				self.conferenceViewerActionStateConference(action, conferenceId, callback);
+			if (action === 'add') {
+				self.conferenceViewerAddParticipantsDialog(conference);
+			} else if (stateActions.indexOf(action) >= 0) {
+				self.conferenceViewerActionStateConference(action, conference.id, callback);
 			} else if (participantsAction.indexOf(action) >= 0) {
-				self.conferenceViewerActionBulkParticipants(action, conferenceId, callback);
+				self.conferenceViewerActionBulkParticipants(action, conference.id, callback);
 			} else {
 				console.log('Conference action not allowed');
 			}
+		},
+
+		conferenceViewerAddParticipantsDialog: function(conference) {
+			var self = this;
+
+			self.conferenceViewerGetAddEndpointsData(function(data) {
+				var formattedData = self.conferenceViewerFormatAddParticipants(data),
+					template = $(self.getTemplate({ name: 'addEndpointDialog', submodule: 'conferenceViewer', data: formattedData }));
+
+				template.find('#select_endpoints').chosen({ search_contains: true, width: '100%' });
+
+				template.find('#add').on('click', function(e) {
+					e.preventDefault();
+
+					var data = {
+						endpoints: template.find('#select_endpoints').val(),
+						caller_id_name: conference.name
+					};
+
+					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
+						toastr.success(self.i18n.active().conferenceViewer.addEndpointDialog.successAdd);
+					});
+				});
+
+				monster.ui.dialog(template, { title: self.i18n.active().conferenceViewer.addEndpointDialog.title });
+			});
+		},
+
+		conferenceViewerGetAddEndpointsData: function(callback) {
+			var self = this;
+
+			monster.parallel({
+				devices: function(callback) {
+					self.callApi({
+						resource: 'device.list',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							callback && callback(null, data.data);
+						}
+					});
+				},
+				users: function(callback) {
+					callback(null, self.appFlags.conferenceViewer.mapUsers);
+				}
+			}, function(err, results) {
+				callback && callback(results);
+			});
+		},
+
+		conferenceViewerFormatAddParticipants: function(data) {
+			var self = this;
+
+			return data;
 		}
 	};
 

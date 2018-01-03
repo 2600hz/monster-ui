@@ -13,11 +13,17 @@
 	font-size: 24px;
 	line-height: 36px;
 }
-	
-.view-conference-wrapper .admin-actions {
+
+.view-conference-wrapper .other-actions {
 	display: inline-block;
 	float: left;
 	margin-left: 18px;
+}
+
+.view-conference-wrapper .admin-actions {
+	display: inline-block;
+	float: left;
+	margin-left: 10px;
 	margin-bottom: 0;
 }
 
@@ -153,4 +159,31 @@
 	text-align: center;
 	color: #fff;
 	font-size: 32px;
+}
+
+#add_endpoint_conference_dialog {
+	padding: 15px;
+	width: 600px;
+}
+
+#add_endpoint_conference_dialog .title {
+	font-size: 16px;
+	font-weight: 600;
+	color: $primary-color;
+}
+
+#add_endpoint_conference_dialog > div:not(:first-child) {
+	margin-top: 25px;
+}
+
+#add_endpoint_conference_dialog div.actions {
+	margin-top: 30px;
+}
+
+#add_endpoint_conference_dialog .chosen-drop {
+	width: 100%;
+}
+
+#add_endpoint_conference_dialog .chosen-choices .search-field input {
+	width: 200px !important;
 }
