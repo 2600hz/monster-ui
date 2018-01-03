@@ -278,12 +278,20 @@ define(function(require) {
 				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
-					data: limits
+					data: limits,
+					generateError: false
 				},
 				success: function(data, status) {
 					success && success(data, status);
 				},
-				error: function(data, status) {
+				error: function(data, status, globalHandler) {
+					if (data.httpErrorStatus !== 402) {
+						globalHandler(data, { generateError: true });
+
+						error && error(data, status);
+					}
+				},
+				onChargesCancelled: function(data, status) {
 					error && error(data, status);
 				}
 			});
