@@ -104,7 +104,7 @@ define(function(require) {
 					conferenceId = container.data('id');
 
 				toastr.info(self.i18n.active().conferenceViewer.refreshWebsocket);
-				self.conferenceViewerRender({ container: container, id: conferenceId });
+				self.conferenceViewerGet({ container: container, id: conferenceId });
 			}
 		},
 
@@ -523,11 +523,15 @@ define(function(require) {
 					};
 
 					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
-						toastr.success(self.i18n.active().conferenceViewer.addEndpointDialog.successAdd);
+						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toastr immediately instead of in the callback for now.
 					});
+
+					toastr.success(self.i18n.active().conferenceViewer.addEndpointDialog.successAdd);
+
+					popup.dialog('close');
 				});
 
-				monster.ui.dialog(template, { title: self.i18n.active().conferenceViewer.addEndpointDialog.title });
+				var popup = monster.ui.dialog(template, { title: self.i18n.active().conferenceViewer.addEndpointDialog.title });
 			});
 		},
 
