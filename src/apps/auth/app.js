@@ -674,9 +674,7 @@ define(function(require) {
 				} else {
 					self.requestPhotoFromUrl(ssoAuthToken, container);
 				}
-			}/* else {
-				self.findSSOPhotoUrlFromProvider(ssoAuthToken, container);
-			}*/
+			}
 		},
 
 		renderLoginPage: function() {
@@ -800,23 +798,6 @@ define(function(require) {
 
 			request.send(null);
 		},
-
-		/*findSSOPhotoUrlFromProvider: function(ssoAuthToken, container) {
-			var self = this,
-				ssoProvider = ssoAuthToken.auth_provider,
-				ssoProviders = monster.config.whitelabel.sso_providers || {};
-
-			_.each(ssoProviders, function(provider) {
-				if (provider.name === ssoProvider) {
-					if (provider.hasOwnProperty('photoUrl')) {
-						ssoAuthToken.photoUrl = provider.photoUrl;
-						self.requestPhotoFromUrl(ssoAuthToken, container);
-					} else {
-						self.paintSSOImgElement(container);
-					}
-				}
-			});
-		},*/
 
 		getDetailsProvider: function(providerName) {
 			var self = this,
