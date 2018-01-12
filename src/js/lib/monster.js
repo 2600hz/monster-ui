@@ -226,11 +226,14 @@ define(function(require) {
 			error: []
 		},
 
-		config: _.extend({
-			api: {
-				default: window.location.origin + ':8000/v2/'
+		config: function() {
+			if (!config.hasOwnProperty('api') || !config.api.hasOwnProperty('default')) {
+				config.api = config.api || {};
+				config.api.default = window.location.protocol + '//' + window.location.hostname + ':8000/v2/';
 			}
-		}, config),
+
+			return config;
+		}(),
 
 		cookies: {
 			set: function set(key, value, options) {
