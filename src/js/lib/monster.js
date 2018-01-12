@@ -225,11 +225,14 @@ define(function(require){
 			error: []
 		},
 
-		config: _.extend({
-			api: {
-				default: window.location.origin + ':8000/v2/',
+		config: function() {
+			if (!config.hasOwnProperty('api') || !config.api.hasOwnProperty('default')) {
+				config.api = config.api || {};
+				config.api.default = window.location.protocol + '//' + window.location.hostname + ':8000/v2/';
 			}
-		}, config),
+
+			return config;
+		}(),
 
 		css: function(href){
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');
@@ -321,7 +324,7 @@ define(function(require){
 			if(isParsable) {
 				parsedError = $.parseJSON(error.responseText);
 			}
-			
+
 			var errorsI18n = monster.apps.core.i18n.active().errors,
 				errorMessage = errorsI18n.generic,
 				errorNumber = error.status > 0 ? error.status : parseInt(error.error),
@@ -357,7 +360,7 @@ define(function(require){
 					}
 				});
 
-				if(errMsg) { 
+				if(errMsg) {
 					errorMessage = errMsg;
 				}
 			} else if(errorsI18n.hasOwnProperty(errorNumber)) {
