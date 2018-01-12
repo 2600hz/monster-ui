@@ -2,7 +2,7 @@ define(function(require) {
 	return {
 		api: {
 			// The default API URL defines what API is used to log in to your back-end
-			default: 'http://localhost:8000/v2/' // could be formatted like http://api.server.net:8000/v2/
+			// default: 'http://localhost:8000/v2/' // if you don't set this value, Monster will automatically use your current hostname + ':8000/v2' as the default API URL.
 
 			// If you have provisioner turned on in your install and can use the one provided by 2600Hz, add the URL in the 'provisioner' key below
 			// provisioner: 'http://URL/2600hz-provisioner/'
