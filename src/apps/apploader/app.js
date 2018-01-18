@@ -84,7 +84,7 @@ define(function(require) {
 						template = $(monster.template(self, 'appList', {
 							defaultApp: appList[0],
 							apps: appList,
-							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && monster.config.whitelabel.showAppstoreInDropdown
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin'
 						}));
 
 						$('#appList').empty().append(template);
