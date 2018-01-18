@@ -46,14 +46,18 @@ define(function(require) {
 				template = $(monster.template(self, 'app')),
 				parent = container || $('#monster_content');
 
-			self.loadData(function(appstoreData) {
-				self.renderApps(template, appstoreData);
-				self.bindEvents(template, appstoreData);
-			});
+			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
+				self.loadData(function(appstoreData) {
+					self.renderApps(template, appstoreData);
+					self.bindEvents(template, appstoreData);
+				});
 
-			parent
-				.empty()
-				.append(template);
+				parent
+					.empty()
+					.append(template);
+			} else {
+				toastr.error(self.i18n.active().appStoreDisabled);
+			}
 		},
 
 		bindEvents: function(parent, appstoreData) {

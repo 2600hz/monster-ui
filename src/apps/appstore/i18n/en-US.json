@@ -30,5 +30,9 @@
 	},
 	"__comment": "UI-1190: Updating the way apps are turned on/off",
 	"__version": "v3.20_s2",
-	"ok": "OK"
+	"ok": "OK",
+
+	"__comment": "UI-1190: Updating the way apps are turned on/off",
+	"__version": "v3.20_s2",
+	"appStoreDisabled": "It looks like the App Store has been disabled for this account. Contact your administrator for more information."
 }
