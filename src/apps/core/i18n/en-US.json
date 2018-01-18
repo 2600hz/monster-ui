@@ -1002,5 +1002,9 @@
 		"YE": "Yemen",
 		"ZM": "Zambia",
 		"ZW": "Zimbabwe"
-	}
+	},
+
+	"__comment": "UI-2996: add layer to check if app is masqueradable in routing",
+	"__version": "4.1",
+	"appMasqueradingError": "Sorry but this app is only usable with the account you signed in with. Please go back at your account level to use this app normally."
 }
