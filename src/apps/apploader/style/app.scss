@@ -291,3 +291,102 @@
 		margin-top: 15px !important;
 	}
 }
+
+/************************************************************/
+/*********************** App List ***************************/
+/************************************************************/
+
+/* CREDIT: Andor Nagy */
+/* SOURCE: http://codepen.io/andornagy/pen/xhiJH */
+
+#appList {
+	width: 150px;
+	background-color: #303039;
+}
+
+#appList,
+#appList ul {
+	padding:0;
+	margin:0;
+	list-style: none;
+	position: relative;
+}
+
+#appList li {
+	display:inline-block;
+	background-color: #303039;
+}
+
+#appList a {
+	display:block;
+	padding:0 10px;
+	color: #c0c0c9;
+	font-size: 14px;
+	line-height: 60px;
+	text-decoration:none;
+}
+
+#appList a > i{
+	vertical-align: middle;
+	color: #c0c0c9;
+}
+
+#appList a:hover {
+	color: #22A5FF;
+}
+
+/* Hide Dropdowns by Default */
+#appList, #appList ul {
+	display: none;
+	position: absolute;
+	top: 67px; /* the height of the main #apploader including border */
+	z-index : 200;
+}
+
+/* Display Dropdowns on Hover */
+#main_topbar_apploader:hover #appList,
+#appList li:hover > ul {
+	display:block;
+}
+
+/* First Tier Dropdown */
+#appList li {
+	width: 150px;
+	float:none;
+	display:list-item;
+	position: relative;
+	z-index : 200;
+}
+
+#appList li a{
+	line-height:40px;
+}
+
+/* Second, Third and more Tiers	*/
+#appList li ul li {
+	position: relative;
+	top: -60px;
+	left: -151px;
+	min-height: 40px;
+	border-right: 1px solid #202029;
+	z-index : 200;
+}
+
+#appList li ul li > a{
+	font-size: 12px;
+	line-height: 20px;
+}
+
+#appList li ul li > a:hover {
+	color: #c0c0c9;
+}
+
+#appList a[data-name="appstore"] {
+	border-top: 1px solid #202029;
+	color: #fff;
+}
+
+#appList a[data-name="appstore"]:hover {
+	color: #22A5FF;
+}
+

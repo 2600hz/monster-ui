@@ -64,7 +64,8 @@ define(function(require) {
 					jiraFeedback: {
 						enabled: monster.config.whitelabel.hasOwnProperty('jiraFeedback') && monster.config.whitelabel.jiraFeedback.enabled === true,
 						url: monster.config.whitelabel.hasOwnProperty('jiraFeedback') ? monster.config.whitelabel.jiraFeedback.url : ''
-					}
+					},
+					useDropdownApploader: monster.config.whitelabel.useDropdownApploader
 				},
 				mainTemplate = $(monster.template(self, 'app', dataTemplate));
 
@@ -265,7 +266,9 @@ define(function(require) {
 				self.onRequestEnd(spinner);
 			});
 
-			container.find('#main_topbar_apploader_link').on('click', function(e) {
+			// Different functionality depending on whether default apploader or dropdown apploader to be opened
+			var eventType = monster.config.whitelabel.useDropdownApploader ? 'mouseover' : 'click';
+			container.find('#main_topbar_apploader_link').on(eventType, function(e) {
 				e.preventDefault();
 				monster.pub('apploader.toggle');
 			});

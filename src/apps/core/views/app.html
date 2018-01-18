@@ -17,7 +17,9 @@
 				</div>
 			</li>
 			<li id="main_topbar_apploader">
-				<a href="javascript:void(0);" class="links" id="main_topbar_apploader_link" data-original-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip">
+        <ul id="appList">
+        </ul>
+        <a href="javascript:void(0);" class="links" id="main_topbar_apploader_link" {{#unless useDropdownApploader}}data-original-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip"{{/unless}}>
 					<i class="icon-telicon-apps"></i>
 				</a>
 			</li>

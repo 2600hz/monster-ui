@@ -58,7 +58,11 @@ define(function(require) {
 		isRendered: function() {
 			var self = this;
 
-			return typeof self.appFlags.modal !== 'undefined';
+			if (monster.config.whitelabel.useDropdownApploader) {
+				return $('#apploader').length !== 0;
+			} else {
+				return typeof self.appFlags.modal !== 'undefined';
+			}
 		},
 
 		_destroy: function() {
@@ -71,22 +75,36 @@ define(function(require) {
 		},
 
 		render: function() {
-			var self = this;
+			var self = this,
+				template;
 
 			if (!self.isRendered()) {
 				self.getUserApps(function(appList) {
-					var template = $(monster.template(self, 'app', {
-						allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
-						defaultApp: monster.ui.formatIconApp(appList[0]),
-						apps: appList
-					}));
+					if (monster.config.whitelabel.useDropdownApploader) {
+						template = $(monster.template(self, 'appList', {
+							defaultApp: appList[0],
+							apps: appList,
+							useDropdownApploader: true,
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && monster.config.whitelabel.showAppstoreInDropdown
+						}));
+						$('#appList').empty().append(template);
+					} else {
+						template = $(monster.template(self, 'app', {
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
+							defaultApp: monster.ui.formatIconApp(appList[0]),
+							apps: appList
+						}));
+					}
 
 					self.bindEvents(template, appList);
 
-					self.appFlags.modal = monster.ui.fullScreenModal(template, {
-						hideClose: true,
-						destroyOnClose: false
-					});
+					if (!monster.config.whitelabel.useDropdownApploader) {
+						self.appFlags.modal = monster.ui.fullScreenModal(template, {
+							hideClose: true,
+							destroyOnClose: false
+						});
+					}
+
 				});
 			} else {
 				self.show();
@@ -94,15 +112,32 @@ define(function(require) {
 		},
 
 		bindEvents: function(parent, appList) {
-			var self = this,
-				updateAppInfo = function updateAppInfo(id) {
-					var app = appList.filter(function(v) { return id === v.id; })[0];
-					parent.find('.app-description')
-						.find('h4')
-							.text(app.label)
-						.addBack().find('p')
-							.text(app.description);
-				};
+			var self = this;
+
+			if (monster.config.whitelabel.useDropdownApploader) {
+				parent.find('.appSelector').on('click', function() {
+					var $this = $(this),
+						appName = $this.data('name');
+
+					if (appName) {
+						monster.apps.load(appName, function(app) {
+							app.render();
+							monster.pub('core.showAppName', appName);
+							monster.pub('myaccount.hide');
+						});
+					}
+				});
+				return;
+			}
+		
+			updateAppInfo = function updateAppInfo(id) {
+				var app = appList.filter(function(v) { return id === v.id; })[0];
+				parent.find('.app-description')
+					.find('h4')
+						.text(app.label)
+					.addBack().find('p')
+						.text(app.description);
+			};
 
 			setTimeout(function() { parent.find('.search-query').focus(); });
 
@@ -254,14 +289,46 @@ define(function(require) {
 		show: function() {
 			var self = this;
 
-			self.appFlags.modal.open();
+			if (monster.config.whitelabel.useDropdownApploader) {
+				apploader = $('#apploader');
+
+				if (!apploader.hasClass('active')) {
+					monster.pub('myaccount.hide');
+					apploader
+						.addClass('active')
+						.fadeIn(250, function() {
+							$('#monster-content').hide();
+						});
+				}
+			} else {
+				self.appFlags.modal.open();
+			}
 		},
 
 		_hide: function() {
 			var self = this;
 
-			if (self.appFlags.modal) {
-				self.appFlags.modal.close();
+			if (monster.config.whitelabel.useDropdownApploader) {
+				apploader = $('#apploader');
+
+					if (apploader.hasClass('active')) {
+						$('#monster-content').show();
+						apploader
+							.removeClass('active')
+							.fadeOut(250, function() {
+								// Put the default app at the beginning of the list in the DOM
+								if (defaultAppId !== apploader.find('.right-div .app-element').first().data('id')) {
+									var defaultAppId = apploader.find('.left-div .app-element').data('id');
+									apploader.find('.right-div .app-list')
+										.prepend(apploader.find('.right-div .app-element[data-id="' + defaultAppId + '"]'));
+								}
+							});
+					}
+
+			} else {
+				if (self.appFlags.modal) {
+					self.appFlags.modal.close();
+				}
 			}
 		},
 
