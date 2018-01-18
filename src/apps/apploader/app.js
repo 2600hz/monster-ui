@@ -58,7 +58,11 @@ define(function(require) {
 		isRendered: function() {
 			var self = this;
 
-			return typeof self.appFlags.modal !== 'undefined';
+			if (monster.config.whitelabel.useDropdownApploader) {
+				return $('.app-list-dropdown-wrapper').length !== 0;
+			} else {
+				return typeof self.appFlags.modal !== 'undefined';
+			}
 		},
 
 		_destroy: function() {
@@ -71,36 +75,64 @@ define(function(require) {
 		},
 
 		render: function() {
-			var self = this;
+			var self = this,
+				template;
 
 			if (!self.isRendered()) {
 				self.getUserApps(function(appList) {
-					var template = $(monster.template(self, 'app', {
-						allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
-						defaultApp: monster.ui.formatIconApp(appList[0]),
-						apps: appList
-					}));
+					if (monster.config.whitelabel.useDropdownApploader) {
+						template = $(monster.template(self, 'appList', {
+							defaultApp: appList[0],
+							apps: appList,
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin'
+						}));
 
-					self.bindEvents(template, appList);
+						$('#appList').empty().append(template);
 
-					self.appFlags.modal = monster.ui.fullScreenModal(template, {
-						hideClose: true,
-						destroyOnClose: false
-					});
+						self.bindDropdownApploaderEvents(template);
+					} else {
+						template = $(monster.template(self, 'app', {
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
+							defaultApp: monster.ui.formatIconApp(appList[0]),
+							apps: appList
+						}));
+
+						self.bindEvents(template, appList);
+
+						self.appFlags.modal = monster.ui.fullScreenModal(template, {
+							hideClose: true,
+							destroyOnClose: false
+						});
+					}
 				});
 			} else {
 				self.show();
 			}
 		},
 
+		bindDropdownApploaderEvents: function(parent) {
+			var self = this;
+
+			parent.find('.appSelector').on('click', function() {
+				var $this = $(this),
+					appName = $this.data('name');
+
+				if (appName) {
+					monster.routing.goTo('apps/' + appName);
+				}
+			});
+		},
+
 		bindEvents: function(parent, appList) {
 			var self = this,
 				updateAppInfo = function updateAppInfo(id) {
 					var app = appList.filter(function(v) { return id === v.id; })[0];
+
 					parent.find('.app-description')
-						.find('h4')
+							.find('h4')
 							.text(app.label)
-						.addBack().find('p')
+							.addBack()
+							.find('p')
 							.text(app.description);
 				};
 
@@ -254,14 +286,18 @@ define(function(require) {
 		show: function() {
 			var self = this;
 
-			self.appFlags.modal.open();
+			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
+				self.appFlags.modal.open();
+			}
 		},
 
 		_hide: function() {
 			var self = this;
 
-			if (self.appFlags.modal) {
-				self.appFlags.modal.close();
+			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
+				if (self.appFlags.modal) {
+					self.appFlags.modal.close();
+				}
 			}
 		},
 
@@ -269,11 +305,13 @@ define(function(require) {
 			var self = this;
 
 			if (self.isRendered()) {
-				self.appFlags.modal.toggle();
-				var apploader = $('#apploader');
+				if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
+					self.appFlags.modal.toggle();
+					var apploader = $('#apploader');
 
-				if (self.appFlags.modal.isVisible()) {
-					apploader.find('.search-query').val('').focus();
+					if (self.appFlags.modal.isVisible()) {
+						apploader.find('.search-query').val('').focus();
+					}
 				}
 			} else {
 				self.render();

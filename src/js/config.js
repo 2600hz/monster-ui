@@ -79,7 +79,10 @@ define(function(require) {
 			jiraFeedback: {
 				enabled: false,
 				url: ''
-			}
+			},
+
+			// If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default.
+			//useDropdownApploader: true,
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
