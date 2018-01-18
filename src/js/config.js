@@ -83,6 +83,9 @@ define(function(require) {
 
 			// If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default.
 			//useDropdownApploader: true,
+
+			// The appstore is exposed to admins by default. If set to false, it will be hidden for all users.
+			// hideAppStore: true
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app

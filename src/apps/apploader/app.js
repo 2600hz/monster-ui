@@ -84,7 +84,7 @@ define(function(require) {
 						template = $(monster.template(self, 'appList', {
 							defaultApp: appList[0],
 							apps: appList,
-							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin'
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore
 						}));
 
 						$('#appList').empty().append(template);
@@ -92,7 +92,7 @@ define(function(require) {
 						self.bindDropdownApploaderEvents(template);
 					} else {
 						template = $(monster.template(self, 'app', {
-							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin',
+							allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore,
 							defaultApp: monster.ui.formatIconApp(appList[0]),
 							apps: appList
 						}));
