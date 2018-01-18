@@ -664,14 +664,6 @@ define(function(require) {
 						}
 					},
 					{
-						category: 'general',
-						key: '#',
-						title: self.i18n.active().globalShortcuts.keys['#'].title,
-						callback: function() {
-							monster.pub('apploader.toggle');
-						}
-					},
-					{
 						adminOnly: true,
 						category: 'general',
 						key: 'a',
@@ -731,6 +723,17 @@ define(function(require) {
 						}
 					}
 				];
+
+			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
+				shortcuts.push({
+					category: 'general',
+					key: '#',
+					title: self.i18n.active().globalShortcuts.keys['#'].title,
+					callback: function() {
+						monster.pub('apploader.toggle');
+					}
+				});
+			}
 
 			_.each(shortcuts, function(shortcut) {
 				monster.ui.addShortcut(shortcut);

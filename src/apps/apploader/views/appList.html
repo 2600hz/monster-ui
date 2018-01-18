@@ -1,21 +1,24 @@
-{{#each apps}}
-<li>
-	<a href="#" class="appSelector" data-name="{{this.name}}" data-id="{{this.id}}">{{this.label}}</a>
-	<ul>
+<div class="app-list-dropdown-wrapper">
+	{{#each apps}}
 		<li>
-			<a>
-				{{#if this.description}}
-					{{this.description}}
-				{{else}}
-					{{i18n.noDescription}}
-				{{/if}}
-			</a>
+			<a href="javascript:void(0);" class="appSelector" data-name="{{this.name}}" data-id="{{this.id}}">{{this.label}}</a>
+			<ul>
+				<li>
+					<a>
+						{{#if this.description}}
+							{{this.description}}
+						{{else}}
+							{{i18n.noDescription}}
+						{{/if}}
+					</a>
+				</li>
+			</ul>
 		</li>
-	</ul>
-</li>
-{{/each}}
-{{#if allowAppstore}}
-<li>
-	<a href="#" class="appSelector" data-name="appstore">{{i18n.appstore.button}}</a>
-</li>
-{{/if}}
+	{{/each}}
+
+	{{#if allowAppstore}}
+		<li>
+			<a href="#" class="appSelector" data-name="appstore">{{i18n.appstore.button}}</a>
+		</li>
+	{{/if}}
+</div>
