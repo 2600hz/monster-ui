@@ -3,26 +3,31 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		crossroads = require('crossroads'),
+		toastr = require('toastr'),
 		hasher = require('hasher');
 
 	var loadApp = function(appName, query) {
 		var renderApp = function() {
-				monster.apps.load(appName, function(loadedApp) {
-					monster.pub('core.showAppName', appName);
-					$('#monster_content').empty();
+				if (!monster.util.isMasquerading() || monster.appsStore[appName].masqueradable === true) {
+					monster.pub('apploader.hide');
+					monster.pub('myaccount.hide');
 
-					loadedApp.render();
-				});
+					monster.apps.load(appName, function(loadedApp) {
+						monster.pub('core.showAppName', appName);
+						$('#monster_content').empty();
+
+						loadedApp.render();
+					});
+				} else {
+					toastr.error(monster.apps.core.i18n.active().appMasqueradingError);
+				}
 			},
-			isMasqueradable = function(id) {
+			isAccountIDMasqueradable = function(id) {
 				return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
 			};
 
-		monster.pub('apploader.hide');
-		monster.pub('myaccount.hide');
-
 		// See if we have a 'm' query string (masquerading), and see if it's an ID, if yes, then trigger an attempt to masquerade
-		if (query && query.hasOwnProperty('m') && isMasqueradable(query.m)) {
+		if (query && query.hasOwnProperty('m') && isAccountIDMasqueradable(query.m)) {
 			var accountData = { id: query.m };
 
 			monster.pub('core.triggerMasquerading', {
