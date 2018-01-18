@@ -1,6 +1,9 @@
 {
 	"skeleton": {
-		"description": "Feel free to update the HTML template located in /apps/skeleton/views/layout.html. The Javascript to manage this app is located in /apps/skeleton/app.js.",
-		"welcome": "Welcome {{variable}} to the Skeleton App"
+		"title": "Hello World, {{variable}}",
+		"description": {
+			"part1": "Feel free to update the HTML template located in /src/apps/skeleton/views/layout.html.",
+			"part2": "The JavaScript to manage this application is located in /src/apps/skeleton/app.js."
+		}
 	}
 }

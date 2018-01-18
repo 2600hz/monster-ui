@@ -9,8 +9,7 @@ define(function(require) {
 		css: [ 'app' ],
 
 		i18n: {
-			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
+			'en-US': { customCss: false }
 		},
 
 		// Defines API requests not included in the SDK
@@ -18,6 +17,9 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {},
+
+		// Data specific to this app (e.g. store, defaults...)
+		appFlags: {},
 
 		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
 		load: function(callback) {
@@ -40,35 +42,21 @@ define(function(require) {
 		},
 
 		// Entry Point of the app
-		render: function(container) {
-			var self = this;
-
-			monster.ui.generateAppLayout(self, {
-				menus: [
-					{
-						tabs: [
-							{
-								callback: self.renderWelcome
-							}
-						]
-					}
-				]
-			});
-		},
-
-		renderWelcome: function(pArgs) {
+		render: function() {
 			var self = this,
-				args = pArgs || {},
-				parent = args.container || $('#skeleton_app_container .app-content-wrapper'),
-				template = $(monster.template(self, 'layout', { user: monster.apps.auth.currentUser }));
+				parent = $('#monster_content'),
+				template = $(self.getTemplate({
+					name: 'hello-world',
+					data: {
+						user: monster.apps.auth.currentUser
+					}
+				}));
 
 			parent
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-				});
+				.empty()
+				.hide()
+				.append(template)
+				.fadeIn(250);
 		}
 	};
 
