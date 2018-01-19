@@ -1,0 +1,27 @@
+{
+	"name": "skeleton",
+	"i18n": {
+		"en-US": {
+			"label": "Skeleton App",
+			"description": "This folder contains the required file structure",
+			"extended_description": "This skeleton folder contains all the files required for your app to be added to the app store and loaded correctly by Monster UI.",
+			"features": [
+			]
+		}
+	},
+	"tags": [
+	],
+	"icon": "",
+	"api_url": "",
+	"author": "",
+	"version": "",
+	"license": "",
+	"price": 0,
+	"screenshots": [
+	],
+	"urls": {
+		"documentation": "{documentation_url}",
+		"howto": "{howto_video_url}"
+	},
+	"pvt_type": "app"
+}
