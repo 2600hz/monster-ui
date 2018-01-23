@@ -1140,6 +1140,7 @@ define(function(require) {
 		 * @desc prepend a WYSIWYG in 'target'
 		 * @param target - mandatory jQuery Object
 		 * @param options - optional JavaScript Object or JavaScript Boolean
+		 * @param data - optional Content to display into the editor
 		 *
 		 * To remove some elements from the toolbar, specify false as value
 		 * for the corresponding key in the defaultOptions object. To remove
@@ -1150,10 +1151,11 @@ define(function(require) {
 		 * The optional class "transparent" can be added to this container
 		 * to change the background of the toolbar.
 		 */
-		wysiwyg: function(target, options) {
+		wysiwyg: function(target, options, data) {
 			var self = this,
 				options = _.isBoolean(options) ? options : options || {},
 				id = Date.now(),
+				cssId = '#wysiwyg_editor_' + id,
 				coreApp = monster.apps.core,
 				dataTemplate = { id: id },
 				wysiwygTemplate;
@@ -1451,7 +1453,7 @@ define(function(require) {
 
 			target
 				.prepend(wysiwygTemplate)
-				.find('#wysiwyg_editor_' + id)
+				.find(cssId)
 					.wysiwyg({
 						toolbarSelector: '#wysiwyg_toolbar_' + id,
 						activeToolbarClass: 'selected',
@@ -1465,7 +1467,11 @@ define(function(require) {
 						}
 					});
 
-			return target.find('#wysiwyg_editor_' + id);
+			if (data) {
+				target.find(cssId).html(data);
+			} else {
+				return target.find(cssId);
+			}
 		},
 
 		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
