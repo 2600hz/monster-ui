@@ -1158,7 +1158,30 @@ define(function(require) {
 				cssId = '#wysiwyg_editor_' + id,
 				coreApp = monster.apps.core,
 				dataTemplate = { id: id },
-				wysiwygTemplate;
+				wysiwygTemplate,
+				/**
+				 * Replace global CSS selectors to limit their scope to the wysiwyg editor only.
+				 * Selectors handled:
+				 * 	`html,body`
+				 * 	`*`
+				 * @param  {String} data Content to be sanitized
+				 * @return {String}      Sanitized content
+				 */
+				sanitizeData = function sanitizeData(data) {
+					if (data.indexOf(cssId) > -1) {
+						// unobfuscate the universal selector
+						data = data.replace(new RegExp(cssId + ' \\*', 'g'), '*');
+						// unobfuscate `html,body` selector specificly
+						data = data.replace(new RegExp(cssId, 'g'), 'html,body');
+					} else {
+						// obfuscate the universal selector
+						data = data.replace(/html,body/g, cssId);
+						// obfuscate `html,body` selector
+						data = data.replace(/\*\n?{/g, cssId + ' *{');
+					}
+
+					return data;
+				};
 
 			if (options) {
 				var i18n = coreApp.i18n.active().wysiwyg,
@@ -1435,6 +1458,17 @@ define(function(require) {
 					});
 				}
 
+				wysiwygTemplate.find('a.btn[data-edit="html"]')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var content = wysiwygTemplate.find(cssId).html();
+
+						wysiwygTemplate
+							.find(cssId)
+								.html(sanitizeData(content));
+					});
+
 				// Handle the behavior of the creatLink dropdown menu
 				wysiwygTemplate.find('.dropdown-menu input')
 					.on('click', function() {
@@ -1468,7 +1502,7 @@ define(function(require) {
 					});
 
 			if (data) {
-				target.find(cssId).html(data);
+				target.find(cssId).html(sanitizeData(data));
 			} else {
 				return target.find(cssId);
 			}
