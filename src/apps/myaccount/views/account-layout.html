@@ -214,5 +214,52 @@
 				</div>
 			</div>
 		</li>
+
+		<!--Preflows-->
+		<li class="settings-item clearfix" data-name="account_preflow">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.account.preflowTitle }}</span>
+				<span class="description">
+				{{#if account.preflow.always}}
+					{{#each callflow}}
+						{{#compare ../account.preflow.always '===' this.id}} {{this.title}} {{/compare}}
+					{{/each}}
+				{{else}}
+					{{i18n.account.none}}
+				{{/if}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog fa-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_account_preflow">
+							<div class="control-group">
+								<label class="control-label" for="account_preflow">{{ i18n.account.preflow }}</label>
+								<div class="controls">
+									<select id="account_preflow" name="preflow.always">
+										<option value="none">{{i18n.account.none}}</option>
+										{{#each callflow}}
+										<option value="{{this.id}}" {{#compare ../account.preflow.always '===' this.id}} selected{{/compare}}>{{this.title}}</option>
+										{{/each}}
+									</select>
+									<i class="help-popover fa fa-question-circle" data-original-title="{{i18n.account.preflowHelp}}" data-placement="right" data-toggle="tooltip"></i>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="account" data-field="account_preflow">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
 	</ul>
 </div>

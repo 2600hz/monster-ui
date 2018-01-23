@@ -77,6 +77,11 @@
 		"accountName": "Account Name",
 		"accountId": "Account ID",
 
+		"none": "No Preflow",
+		"preflow": "Preflow",
+		"preflowTitle": "Preflow",
+		"preflowHelp": "A preflow is a callflow that is used before any callflow under this account",
+
 		"accountRealm": "Account Realm",
 
 		"technicalContact": "Technical Contact",
