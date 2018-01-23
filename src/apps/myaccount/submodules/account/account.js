@@ -79,6 +79,46 @@ define(function(require) {
 			});
 		},
 
+		accountGetCallflows: function(callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'callflow.list',
+				data: {
+					accountId: self.accountId,
+					filters: {
+						paginate: 'false'
+					}
+				},
+				success: function(data, status) {
+					// Parse callflows into displayable format
+					var formattedList = [];
+
+					_.each(data.data, function(callflow) {
+						var listNumbers = (callflow.numbers || '-').toString(),
+							isFeatureCode = callflow.featurecode !== false && !_.isEmpty(callflow.featurecode);
+
+						if(!isFeatureCode) {
+							if(callflow.name) {
+								callflow.description = listNumbers;
+								callflow.title = callflow.name;
+							} else {
+								callflow.title = listNumbers;
+							}
+
+							formattedList.push(callflow);
+						}
+					});
+
+					formattedList.sort(function(a, b) {
+						return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+					});
+
+					callback && callback(formattedList);
+				}
+			});
+		},
+
 		accountGetData: function(globalCallback) {
 			var self = this;
 
@@ -96,6 +136,11 @@ define(function(require) {
 				},
 				noMatch: function(callback) {
 					self.accountGetNoMatch(function(data) {
+						callback && callback(null, data);
+					});
+				},
+				callflow: function(callback) {
+					self.accountGetCallflows(function(data) {
 						callback && callback(null, data);
 					});
 				},

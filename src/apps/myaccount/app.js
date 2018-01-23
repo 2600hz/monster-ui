@@ -940,6 +940,10 @@ define(function(require) {
 						params.data.ui_flags.numbers_format_exceptions = newData.ui_flags.numbers_format_exceptions;
 					}
 				}
+				// Remove preflow when user sets it to be none
+				if(params.data.preflow && params.data.preflow.always && params.data.preflow.always === 'none') {
+					delete params.data.preflow.always;
+				}
 			} else if (type === 'billing') {
 				params.data = newData;
 			}
