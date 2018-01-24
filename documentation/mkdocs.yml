@@ -7,38 +7,37 @@ pages:
 		- step 1
 		- step 1
 		- step 3
-	- Docs:
-		- Installation:
-			- set up monster ui
-			- set up monster apps
-		- Quick Start:
-			- provisioner app store (appstore)
-			- form validation (validation)
-			- make requests (api)
+	- Installation:
+		- set up monster ui
+		- set up monster apps
+		- environments
+	- Quick Start:
+		- provisioner app store (appstore)
+		- form validation (validation)
+		- make requests (api)
 
-			- environments
-			- file structure
-			- rendering templates
-		- Advanced Guides:
-			- templates in depth (handlebars)
-			- context (flags)
-			- common controls (commonControls)
-			- handling translation (internationalization)
-			- subscription hooks (events)
+		- file structure
+		- rendering templates
+	- Advanced Guides:
+		- templates in depth (handlebars)
+		- context (flags)
+		- common controls (commonControls)
+		- handling translation (internationalization)
+		- subscription hooks (events)
 
-			- submodules
-			- external requests
-			- websockets
-		- References:
-			- monster:
-				- this (monster)
-				- ui (ui)
-				- util (util)
-			- kazoo sdk (kazooSdk)
-			- build system (gulpCommand)
-			- using postman (using-postman-as-a-crud)
-		- Contributing:
-			- set up linter (linting)
-			- coding standars
-				- javascript (javascriptStleGuide)
-				- everything else (codingStandards)
+		- submodules
+		- external requests
+		- websockets
+	- Contributing:
+		- set up linter (linting)
+		- coding standars:
+			- javascript (javascriptStleGuide)
+			- everything else (codingStandards)
+	- References:
+		- core methods:
+			- monster (monster)
+			- monster.ui (ui)
+			- monster.util (util)
+		- kazoo sdk (kazooSdk)
+		- build system (gulpCommand)
+		- using postman (using-postman-as-a-crud)

@@ -1,10 +1,12 @@
 # Monster UI
 
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container.*
+
 * [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Configure](#configure)
-    - [Build](#build)
+	- [Prerequisites](#prerequisites)
+	- [Install](#install)
+	- [Configure](#configure)
+	- [Build](#build)
 * [Using Docker](#using-docker)
 * [Contributing](#contributing)
 * [Authors](#authors)
@@ -12,65 +14,84 @@
 
 ## Getting Started
 
-*These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
+Learn how to set up Monster UI and hook it up to a Kazoo server.
+
+> **Note:**
+>
+> To follow this guide, you will need a Kazoo server up and running; if you need the installation steps for Kazoo, head over to [the documentation](https://docs.2600hz.com/sysadmin/doc/intro/read_me_first/).
 
 ### Prerequisites
 
-* [node](https://nodejs.org/en/download/) >= 4.5.0
-* [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
-* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 3.9.1
+|  | minimum version required |
+| :---: | :---: |
+| [node](https://nodejs.org/en/download/) | 4.5.0 |
+| [npm](https://docs.npmjs.com/getting-started/installing-node) | 3.10.6 |
+| [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) | 3.9.1 |
 
 ### Install
 
-Clone the official `monster-ui` repository:
+Clone the official [Monster UI](https://github.com/2600hz/monster-ui) repository:
 
-```
-git clone https://github.com/2600hz/monster-ui.git monster-ui
+```shell
+git clone https://github.com/2600hz/monster-ui.git
 ```
 
 Go to the project's folder:
 
-```
+```shell
 cd monster-ui
 ```
 
 Install dependencies:
 
-```
+```shell
 npm install
 ```
 
 ### Configure
 
-In order for the UI to load the data from your server, we need to specify which API to use. To do so, open the `config.js` file located in `src/js/` folder and add the URL of your server as the value of the `default` property.
+In order for Monster UI to load the data from your server, we need to hook up your Kazoo server with it. To do so, open the `config.js` file and set the API URL as the value of the `default` property:
+
+`src/js/config.js`
 
 ```javascript
-define(function(require) {
-
-  return {
-    api: {
-      // The default API URL defines what API is used to log in to your back-end
-      default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
-
-      ...
-    },
-
-    ...
-  };
-});
+{
+  api: {
+    // The default API URL defines what API is used to log in to your back-end
+    default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
+  }
+}
 ```
+
+> **Note:**
+>
+> Do not forget to add a trailing slash to the API URL or else none of the requests will go through.
 
 ### Build
 
-Use the `gulp` command to build and launch the web server
+#### For production
 
+To build for a production environment:
+
+```shell
+gulp build-prod
 ```
+
+The packaged version of Monster UI will be located in the `dist` folder.
+
+#### For development
+
+Use the `gulp` command to build for a development environment and launch a web server:
+
+```shell
 gulp
 ```
 
-Access your development environment at `http://localhost:3000/`
+Access your development environment at `http://localhost:3000/`.
 
-*For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+> **Note:**
+>
+> For more information on how to use the `gulp` command, head to the [dedicated documentation](docs/gulpCommand.md).
 
 ## Using Docker
 
