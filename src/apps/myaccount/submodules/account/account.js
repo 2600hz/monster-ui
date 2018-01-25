@@ -2,19 +2,19 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		timezone = require('monster-timezone');
+		timezone = require('monster-timezone'),
 		toastr = require('toastr');
 
 	var account = {
 
 		requests: {
-			'accounts.access_lists.get' : {
+			'accounts.access_lists.get': {
 				verb: 'GET',
 				url: 'accounts/{account_id}/access_lists'
 			},
-			'accounts.access_lists.post' : {
+			'accounts.access_lists.post': {
 				verb: 'POST',
-				url: 'accounts/{account_id}/access_lists',
+				url: 'accounts/{account_id}/access_lists'
 			}
 		},
 		subscribe: {
@@ -38,7 +38,7 @@ define(function(require) {
 						accessList = data.data.cidrs;
 						var order = data.data.order;
 						$settingsItem.find('.total-cidrs').text(accessList.length);
-						if(order === 'deny,allow') {
+						if (order === 'deny,allow') {
 							$settingsItem.find('.first-cidr').text(self.i18n.active().account.denyFirst);
 						} else if (order === 'allow,deny') {
 							$settingsItem.find('.first-cidr').text(self.i18n.active().account.allowFirst);
@@ -55,11 +55,6 @@ define(function(require) {
 		renderEditAccessListForm: function(parent) {
 			var self = this,
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
-			closeBillingSetting = function() {
-				$settingsItem.removeClass('open');
-				$settingsItem.find('.settings-item-content').hide();
-				$settingsItem.find('a.settings-link').show();
-			};
 
 			monster.request({
 				resource: 'accounts.access_lists.get',
@@ -71,8 +66,8 @@ define(function(require) {
 						var allowOrDeny = data.data.order;
 					}
 
-					if((typeof allowOrDeny !== 'undefined') && (allowOrDeny !== null) && allowOrDeny) {
-						if(allowOrDeny === 'allow,deny') {
+					if ((typeof allowOrDeny !== 'undefined') && (allowOrDeny !== null) && allowOrDeny) {
+						if (allowOrDeny === 'allow,deny') {
 							$settingsItem.find('#account_deny_allow_order').val('allow,deny');
 						} else if (allowOrDeny === 'deny,allow') {
 							$settingsItem.find('#account_deny_allow_order').val('deny,allow');
@@ -83,7 +78,7 @@ define(function(require) {
 					}
 
 					//load cidrs into access list
-					if(data.data.cidrs && (data.data.cidrs !== undefined) && (data.data.cidrs.length != 0)) {
+					if (data.data.cidrs && (data.data.cidrs !== undefined) && (data.data.cidrs.length !== 0)) {
 						//parse access list
 						var displayAccessList = '' + data.data.cidrs[0];
 						displayAccessList.append;
@@ -123,7 +118,7 @@ define(function(require) {
 
 		accountBindEvents: function(template, data) {
 			var self = this;
-			editAccountId = self.accountId;
+			var editAccountId = self.accountId;
 
 			timezone.populateDropdown(template.find('#account_timezone'), data.account.timezone);
 			template.find('#account_timezone').chosen({ search_contains: true, width: '220px' });
@@ -155,7 +150,7 @@ define(function(require) {
 				var cidrData = {
 					order: order
 				};
-				if (JSON.stringify(accessListText) != JSON.stringify([''])) {
+				if (JSON.stringify(accessListText) !== JSON.stringify([''])) {
 					cidrData.cidrs = accessListText;
 				} else {
 					cidrData.cidrs = [];
