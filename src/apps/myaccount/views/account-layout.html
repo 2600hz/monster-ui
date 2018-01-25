@@ -219,11 +219,7 @@
 			<a class="settings-link clearfix">
 				<span class="title">
 					{{ i18n.account.accessListTitle }}
-					{{ #if accessList.length }}
-						(<span class="total-cidrs">{{accessList.length}}</span>)
-					{{ else }}
-						{{ i18n.account.empty }}
-					{{ /if }}
+					(<span class="total-cidrs">{{accessList.length}}</span>)
 				</span>
 				<div class="description" id="listDescription">
 					<ul>

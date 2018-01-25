@@ -94,7 +94,7 @@
 		"cidrsNotConfigured": "Access list is currently not configured.",
 		"allowFirst": "Allow",
 		"denyFirst": "Deny",
-                "empty": "(Empty)",
+		"errorDuplicate": "Could not update access list, please remove duplicate CIDRs",	
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",
