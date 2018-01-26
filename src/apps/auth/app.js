@@ -617,7 +617,10 @@ define(function(require) {
 						self.clickSSOProviderLogin({
 							provider: $(this).data('provider'),
 							error: function(errorCode) {
-								errorCode === '_no_account_linked' && self.renderSSOProviderTemplate(container);
+								if (errorCode === '_no_account_linked') {
+									self.renderSSOUnknownUserTemplate();
+									self.renderSSOProviderTemplate(container);
+								}
 							}
 						});
 					});
