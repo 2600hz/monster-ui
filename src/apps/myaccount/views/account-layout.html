@@ -261,5 +261,55 @@
 				</div>
 			</div>
 		</li>
+		<!-- Access List -->
+		{{#if allowAccessList}}
+			<li class="settings-item clearfix" data-name="accountsmanager_access_list">
+				<a class="settings-link clearfix">
+					<span class="title">
+						{{ i18n.account.accessListTitle }}
+						(<span class="total-cidrs">{{accessList.length}}</span>)
+					</span>
+					<div class="description" id="listDescription">
+						<ul>
+							<li class="first-cidr"></li>
+						</ul>
+					</div>
+					<span class="update">
+						<i class="fa fa-cog fa-small"></i>
+						<span class="text">{{ i18n.editSettings }}</span>
+					</span>
+					<span class="changes-saved">{{ i18n.changesSaved }}</span>
+				</a>
+				<div class="settings-item-content">
+					<div class="row-fluid">
+						<div class="span12">
+							<form class="form-horizontal" id="form_account_list">
+								<div class="control-group">
+									<label class="control-label" for="account_deny_allow_order">{{ i18n.account.denyAllowOrder }}</label>
+									<div class="controls">
+										<select id="account_deny_allow_order" name="deny_allow_order">
+											<option value="allow,deny">{{i18n.account.allow}}</option>
+											<option value="deny,allow"}>{{i18n.account.deny}}</option>
+										</select>
+									</div>
+								</div>
+								<div id="form_accountsmanager_access_list" class="control-group">
+									<label class="control-label" for="form_accountsmanager_access_list">{{ i18n.account.accessListTitle }}</label>
+									<div class="controls">
+										<textarea id="access-list-input"></textarea>
+									</div>
+								</div>
+								<div class="action-group clearfix">
+									<div class="action-bar">
+										<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+										<button type="button" class="monster-button-success saveList">{{ i18n.saveChanges }}</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</li>
+		{{/if}}
 	</ul>
 </div>

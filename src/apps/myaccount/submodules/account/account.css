@@ -5,3 +5,38 @@
 .account-content-wrapper #form_numbers_format .group-for-exceptions.active {
 	display: block;
 }
+
+/***** Access List *****/
+#form_accountsmanager_access_list {
+	position: relative;
+}
+
+#form_accountsmanager_access_list form {
+	margin-bottom: 0px;
+}
+
+#form_accountsmanager_access_list .access-list {
+	margin: 0;
+	list-style: none;
+	display: inline-block;
+	min-width: 296px;
+}
+
+#form_accountsmanager_access_list textarea {
+	margin: 0px;
+	min-height: 200px;
+}
+
+#cidr-help {
+	vertical-align: top;
+}
+
+#form_accountsmanager_access_list .access-list-btn-div {
+	padding-top: 5px;
+	margin-top: 10px;
+	border-top: solid 1px #ccc;
+}
+
+#form_accountsmanager_access_list .access-list-btn-div button {
+	width: 100%;
+}
