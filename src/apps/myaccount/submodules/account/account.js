@@ -6,17 +6,6 @@ define(function(require) {
 		toastr = require('toastr');
 
 	var account = {
-
-		requests: {
-			'accounts.access_lists.get': {
-				verb: 'GET',
-				url: 'accounts/{account_id}/access_lists'
-			},
-			'accounts.access_lists.post': {
-				verb: 'POST',
-				url: 'accounts/{account_id}/access_lists'
-			}
-		},
 		subscribe: {
 			'myaccount.account.renderContent': '_accountRenderContent'
 		},
@@ -26,10 +15,10 @@ define(function(require) {
 				editAccountId = self.accountId,
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
-			monster.request({
-				resource: 'accounts.access_lists.get',
+			self.callApi({
+				resource: 'accessList.get',
 				data: {
-					account_id: editAccountId
+					accountId: editAccountId
 				},
 				success: function(data, status) {
 					// Declare empty array for type safety as access lists API returns no data.data property when there are no CIDRs.
@@ -56,10 +45,10 @@ define(function(require) {
 			var self = this,
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
-			monster.request({
-				resource: 'accounts.access_lists.get',
+			self.callApi({
+				resource: 'accessList.get',
 				data: {
-					account_id: self.accountId
+					accountId: self.accountId
 				},
 				success: function(data, status) {
 					if (Object.getOwnPropertyNames(data.data).length !== 0) {
@@ -157,10 +146,10 @@ define(function(require) {
 					cidrData.cidrs = [];
 				}
 
-				monster.request({
-					resource: 'accounts.access_lists.post',
+				self.callApi({
+					resource: 'accessList.post',
 					data: {
-						account_id: editAccountId,
+						accountId: editAccountId,
 						data: cidrData,
 						removeMetadataAPI: true
 					},
