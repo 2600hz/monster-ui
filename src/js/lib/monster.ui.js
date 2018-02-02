@@ -227,7 +227,7 @@ define(function(require) {
 			},
 
 			monsterNumberWrapper: function(number) {
-				return monster.ui.getTemplatePhoneNumber(number);
+				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
 			replaceVar: function(stringValue, variable) {
