@@ -10,9 +10,8 @@ pages:
 	- Installation:
 		- set up monster ui
 		- set up monster apps
-		- environments
 	- Quick Start:
-		- provisioner app store (appstore)
+		- provision database (appstore)
 		- form validation (validation)
 		- make requests (api)
 
@@ -31,8 +30,8 @@ pages:
 	- Contributing:
 		- set up linter (linting)
 		- coding standars:
+			- index (codingStandards)
 			- javascript (javascriptStleGuide)
-			- everything else (codingStandards)
 	- References:
 		- core methods:
 			- monster (monster)

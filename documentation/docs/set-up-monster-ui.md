@@ -81,4 +81,4 @@ Access your development environment at `http://localhost:3000/`.
 
 ## Next steps
 
-* [Set Up Monster Apps](): Learn how to add Monster applications to your local install.
+* [Set Up Monster Apps](): Learn how to add Monster applications to your install.
