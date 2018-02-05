@@ -116,6 +116,15 @@ define(function(require) {
 
 			settings.url = options.apiUrl || settings.url;
 
+			if ('filters' in options.data) {
+				$.each(options.data.filters, function(filterKey, filterValue) {
+					var valueArray = [].concat(filterValue);
+					$.each(valueArray, function(key, value) {
+						settings.url += (settings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+					});
+				});
+			}
+
 			settings.url += self._cacheString(settings);
 
 			var mappedKeys = [],
