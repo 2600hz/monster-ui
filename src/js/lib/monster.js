@@ -116,7 +116,7 @@ define(function(require) {
 
 			settings.url = options.apiUrl || settings.url;
 
-			if ('filters' in options.data) {
+			if (options.data && 'filters' in options.data) {
 				$.each(options.data.filters, function(filterKey, filterValue) {
 					var valueArray = [].concat(filterValue);
 					$.each(valueArray, function(key, value) {
