@@ -854,8 +854,8 @@ define(function(require) {
 					user.ui_help[appName] = user.ui_help[appName] || {};
 					delete user.ui_help[appName][flagName];
 
-					if (_.isEmpty(user.ui_flags[appName])) {
-						delete user.ui_flags[appName];
+					if (_.isEmpty(user.ui_help[appName])) {
+						delete user.ui_help[appName];
 					}
 
 					return user;
