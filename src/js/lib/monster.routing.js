@@ -8,7 +8,7 @@ define(function(require) {
 
 	var loadApp = function(appName, query) {
 		var renderApp = function() {
-				if (!monster.util.isMasquerading() || monster.appsStore[appName].masqueradable === true) {
+				if (appName === 'appstore' || !monster.util.isMasquerading() || monster.appsStore[appName].masqueradable === true) {
 					monster.pub('apploader.hide');
 					monster.pub('myaccount.hide');
 
