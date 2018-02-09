@@ -846,6 +846,19 @@ define(function(require) {
 					user.ui_help[appName][flagName] = value;
 
 					return user;
+				},
+				destroy: function(appName, flagName, pUser) {
+					var user = pUser || monster.apps.auth.currentUser;
+
+					user.ui_help = user.ui_help || {};
+					user.ui_help[appName] = user.ui_help[appName] || {};
+					delete user.ui_help[appName][flagName];
+
+					if (_.isEmpty(user.ui_flags[appName])) {
+						delete user.ui_flags[appName];
+					}
+
+					return user;
 				}
 			},
 
@@ -866,6 +879,19 @@ define(function(require) {
 					account.ui_flags = account.ui_flags || {};
 					account.ui_flags[appName] = account.ui_flags[appName] || {};
 					account.ui_flags[appName][flagName] = value;
+
+					return account;
+				},
+				destroy: function(appName, flagName, pAccount) {
+					var account = pAccount || monster.apps.auth.currentAccount;
+
+					account.ui_flags = account.ui_flags || {};
+					account.ui_flags[appName] = account.ui_flags[appName] || {};
+					delete account.ui_flags[appName][flagName];
+
+					if (_.isEmpty(account.ui_flags[appName])) {
+						delete account.ui_flags[appName];
+					}
 
 					return account;
 				}
