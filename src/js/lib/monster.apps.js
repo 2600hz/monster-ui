@@ -43,6 +43,9 @@ define(function() {
 					},
 					get: function(flagName, user) {
 						return monster.util.uiFlags.user.get(app.name, flagName, user);
+					},
+					destroy: function(flagName, user) {
+						return monster.util.uiFlags.user.destroy(app.name, flagName, user);
 					}
 				},
 				account: {
@@ -51,6 +54,9 @@ define(function() {
 					},
 					get: function(flagName, account) {
 						return monster.util.uiFlags.account.get(app.name, flagName, account);
+					},
+					destroy: function(flagName, account) {
+						return monster.util.uiFlags.account.destroy(app.name, flagName, account);
 					}
 				}
 			};
