@@ -86,7 +86,10 @@ define(function(require) {
 			//useDropdownApploader: true,
 
 			// The appstore is exposed to admins by default. If set to false, it will be hidden for all users.
-			// hideAppStore: true
+			// hideAppStore: true,
+
+			// If set to true, will hide creation of new accounts
+			// hideNewAccountCreation: true
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
