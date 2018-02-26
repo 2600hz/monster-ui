@@ -689,6 +689,7 @@ label[class*='monster-radio'].prepend-label > span {
 
 .monster-panel-text .monster-panel-text-content {
 	background: #FFF;
+	box-sizing: border-box;
 	display: inline-block;
 	padding: 15px 20px;
 }
