@@ -692,6 +692,7 @@ label[class*='monster-radio'].prepend-label > span {
 	box-sizing: border-box;
 	display: inline-block;
 	padding: 15px 20px;
+	width: 100%;
 }
 
 @mixin color-panel($color) {
