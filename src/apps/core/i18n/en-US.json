@@ -1006,5 +1006,15 @@
 
 	"__comment": "UI-2996: add layer to check if app is masqueradable in routing",
 	"__version": "4.1",
-	"appMasqueradingError": "Sorry but this app is only usable with the account you signed in with. Please go back at your account level to use this app normally."
+	"appMasqueradingError": "Sorry but this app is only usable with the account you signed in with. Please go back at your account level to use this app normally.",
+
+	"__comment": "UI-3013: add better feedback of broken WS connection",
+	"__version": "4.1",
+	"brokenWebSocketsWarning": {
+		"successReconnect": "You are now properly reconnected to the WebSockets server.",
+		"title": "No WebSockets Connection",
+		"content1": "The WebSockets Connection is not working.",
+		"content2": "Please check that your Internet connection and your firewall are working as expected, as we can not display the current application without a proper connection to the WebSockets server.",
+		"content3": "We'll automatically refresh the application once the connection works properly..."
+	}
 }

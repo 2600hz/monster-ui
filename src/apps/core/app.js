@@ -22,7 +22,10 @@ define(function(require) {
 			'core.showAppName': 'showAppName',
 			'core.triggerMasquerading': 'triggerMasquerading',
 			'core.restoreMasquerading': 'restoreMasquerading',
-			'core.initializeShortcuts': 'initializeShortcuts'
+			'core.initializeShortcuts': 'initializeShortcuts',
+			'socket.connected': 'refreshIfWebSocketsApp',
+			'socket.disconnected': 'onSocketDisconnected',
+			'core.showWarningDisconnectedSockets': 'showWarningSockets'
 		},
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
@@ -817,6 +820,43 @@ define(function(require) {
 					monster.ui.addShortcut(shortcut);
 				}
 			});
+		},
+
+		// If current app needs websockets, and the socket just reconnected, we refresh the app to display the correct data
+		refreshIfWebSocketsApp: function() {
+			var self = this,
+				currentApp = monster.apps[monster.apps.getActiveApp()];
+
+			if (currentApp && currentApp.hasOwnProperty('requiresWebSockets') && currentApp.requiresWebSockets === true) {
+				$('.warning-socket-wrapper').remove();
+				currentApp.render();
+
+				toastr.success(self.i18n.active().brokenWebSocketsWarning.successReconnect);
+			}
+		},
+
+		onSocketDisconnected: function() {
+			var self = this,
+				currentApp = monster.apps[monster.apps.getActiveApp()];
+
+			if (currentApp && currentApp.hasOwnProperty('requiresWebSockets') && currentApp.requiresWebSockets === true) {
+				self.showWarningSockets();
+			}
+		},
+
+		// Show a warning displaying that WebSockets are not connected properly
+		showWarningSockets: function(pArgs) {
+			var self = this,
+				args = pArgs || {},
+				templateWarning = $(self.getTemplate({
+					name: 'warning-disconnectedSocket'
+				}));
+
+			$('#monster_content').empty().append(templateWarning);
+
+			if (args.hasOwnProperty('callback')) {
+				args.callback && args.callback();
+			}
 		}
 	};
 
