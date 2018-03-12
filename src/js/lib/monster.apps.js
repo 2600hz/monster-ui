@@ -93,6 +93,18 @@ define(function() {
 				monster.socket.unbind(params.binding, accountId, authToken, app.name);
 			};
 
+			app.enforceWebSocketsConnection = function(args) {
+				app.requiresWebSockets = true;
+
+				if (monster.socket.isConnected()) {
+					args.callback();
+				} else {
+					monster.pub('core.showWarningDisconnectedSockets', {
+						callback: args.error
+					});
+				}
+			};
+
 			app.callApi = function(params) {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
