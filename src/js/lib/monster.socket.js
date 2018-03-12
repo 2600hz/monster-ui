@@ -50,6 +50,7 @@ define(function(require){
 			var self = this;
 
 			socket.onclose = function(data) {
+				monster.pub('socket.disconnected');
 				self.connected = false;
 				self.connect();
 				self.log('WebSocket connection closed');
@@ -96,6 +97,7 @@ define(function(require){
 		connect: function() {
 			var self = this,
 				timeoutDuration,
+				delayBeforeConnect = 0,
 				startingTimeout = 250,
 				maxTimeout = 1000*60,
 				multiplier = 2,
@@ -125,7 +127,7 @@ define(function(require){
 					}
 				};
 
-			connectAttempt();
+			setTimeout(connectAttempt, delayBeforeConnect);
 		},
 
 		object: {},
@@ -202,15 +204,16 @@ define(function(require){
 
 			if(listenersToKeep.length) {
 				self.bindings[binding].listeners = listenersToKeep;
-			}
-			else {
+			} else {
+				// We remove it regardless of the results, because if an error happened on the WS side, we still would want to rebind the event on reconnect,
+				// and if the binding still exists it will prevent the UI from rebinding this event
+				delete self.bindings[binding];
+
 				self.unsubscribe(accountId, authToken, binding, function(result) {
-					if(result.status === 'success') {
-						delete self.bindings[binding];
-					}
-					else {
+					self.log(result);
+
+					if (result.status !== 'success') {
 						self.log('monster.socket: unsubscribe ' + binding + ' failed', true);
-						self.log(result);
 					}
 				});
 			}

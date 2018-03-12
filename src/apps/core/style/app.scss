@@ -781,3 +781,17 @@ body,
 	display: block;
 	margin-top: 20px;
 }
+
+/* Warning sockets disconnected */
+.warning-socket-wrapper {
+	display: flex;
+	height: 100%;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+.warning-socket-content {
+	padding-bottom: 100px;
+	width: 600px;
+}
