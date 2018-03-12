@@ -792,6 +792,9 @@ body,
 }
 
 .warning-socket-content {
-	padding-bottom: 100px;
+	margin-bottom: 100px;
+	padding: 15px;
 	width: 600px;
+	background: white;
+	border: 1px solid $error-color;
 }

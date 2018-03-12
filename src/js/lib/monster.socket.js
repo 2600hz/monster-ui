@@ -267,6 +267,12 @@ define(function(require){
 	};
 
 	var socket = {
+		isConnected: function() {
+			return privateSocket.connected;
+		},
+		isEnabled: function() {
+			return monster.config.api.hasOwnProperty('socket');
+		},
 		bind: function() {
 			privateSocket.log('No WebSockets defined', true);
 		},
