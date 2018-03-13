@@ -795,6 +795,15 @@ body,
 	margin-bottom: 100px;
 	padding: 15px;
 	width: 600px;
-	background: white;
-	border: 1px solid $error-color;
+	background: #f0f0f0;
+	border: 1px dashed $error-color;
+	border-radius: 10px;
+}
+
+.warning-socket-content .fa-warning {
+	margin-right: 5px;
+}
+
+.warning-socket-content .fa-spinner {
+	margin-left: 5px;
 }
