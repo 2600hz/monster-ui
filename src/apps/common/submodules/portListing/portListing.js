@@ -488,8 +488,8 @@ define(function(require) {
 					});
 
 			template
-				.find('#submitted_ports_listing .listing-item')
-					.on('click', function(event) {
+				.find('#submitted_ports_listing')
+					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
 
 						var portId = $(this).data('id');
@@ -503,8 +503,8 @@ define(function(require) {
 					});
 
 			template
-				.find('#unconfirmed_ports_listing .listing-item')
-					.on('click', function(event) {
+				.find('#unconfirmed_ports_listing')
+					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
 
 						var portId = $(this).data('id');
