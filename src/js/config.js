@@ -86,7 +86,10 @@ define(function(require) {
 			//useDropdownApploader: true,
 
 			// The appstore is exposed to admins by default. If set to false, it will be hidden for all users.
-			// hideAppStore: true
+			// hideAppStore: true,
+
+			// Setting to true allows users to tick 'send credentials to user' on creation of a user. Setting to false hides this checkbox.
+			// showSendUserEmailOnCreation: false
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
