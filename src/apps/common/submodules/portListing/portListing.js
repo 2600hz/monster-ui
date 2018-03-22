@@ -372,7 +372,6 @@ define(function(require) {
 					})));
 
 			dialog = monster.ui.dialog(template, {
-				appendTo: args.container,
 				title: self.i18n.active().portListing.detail.dialog.title,
 				dialogClass: 'port-app-dialog'
 			});
