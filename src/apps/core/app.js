@@ -538,8 +538,7 @@ define(function(require) {
 				domain = window.location.hostname,
 				apiUrl = monster.config.api.default,
 				fillLogo = function(url) {
-					var formattedURL = url.indexOf('/') === 0 ? url.substr(1, url.length) : url;
-					formattedURL = formattedURL.indexOf('src/') === 0 ? formattedURL.substr(4, formattedURL.length) : formattedURL;
+					var formattedURL = url.indexOf('src/') === 0 ? url.substr(4, url.length) : url;
 					container.find('#main_topbar_brand').css('background-image', 'url(' + formattedURL + ')');
 				};
 
