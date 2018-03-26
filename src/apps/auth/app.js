@@ -736,8 +736,7 @@ define(function(require) {
 			var self = this,
 				domain = window.location.hostname,
 				fillLogo = function(url) {
-					var formattedURL = url.indexOf('/') === 0 ? url.substr(1, url.length) : url;
-					formattedURL = formattedURL.indexOf('src/') === 0 ? formattedURL.substr(4, formattedURL.length) : formattedURL;
+					var formattedURL = url.indexOf('src/') === 0 ? url.substr(4, url.length) : url;
 					template.find('.logo-block').css('background-image', 'url(' + formattedURL + ')');
 				};
 
