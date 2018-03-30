@@ -111,6 +111,7 @@ define(function(){
 					//Handling special cases:
 					switch(params.resource) {
 						case 'account.update':
+						case 'account.patch':
 							if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 								successCallback = function(data, status) {
 									monster.apps.auth.currentAccount = data.data;
