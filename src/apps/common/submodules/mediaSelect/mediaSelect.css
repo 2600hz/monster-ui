@@ -49,6 +49,11 @@
 	width: 140px;
 }
 
+.monster-media-selection .upload-div .file-upload button {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
 /* Tabs skin */
 .monster-media-selection.monster-media-tabs-skin .upload-div {
 	display: block;
