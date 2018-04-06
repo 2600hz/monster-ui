@@ -779,7 +779,7 @@ define(function(require) {
 				callback && callback(self.appFlags.servicePlanDetails.planFields);
 			} else {
 				self.callApi({
-					resource: 'servicePlanner.getFields',
+					resource: 'servicePlan.getFields',
 					data: {
 						accountId: self.accountId
 					},
