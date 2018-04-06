@@ -381,10 +381,10 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 				'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
+				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
+				'getFields': { verb: 'GET', url: 'service_plans/editable' }
 			},
 			servicePlanner: {
-				'getFields': { verb: 'GET', url: 'service_planner' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
