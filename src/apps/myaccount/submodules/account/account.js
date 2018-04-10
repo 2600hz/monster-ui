@@ -111,14 +111,14 @@ define(function(require) {
 			var editAccountId = self.accountId;
 
 			timezone.populateDropdown(template.find('#account_timezone'), data.account.timezone);
-			template.find('#account_timezone').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#account_timezone'));
 
 			//Temporary button design fix until we redesign the Accounts Manager
 			template.find('#accountsmanager_carrier_save')
 					.removeClass('btn btn-success')
 					.addClass('monster-button-success');
 
-			template.find('#numbers_format_exceptions').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#numbers_format_exceptions'));
 
 			template.find('[name="ui_flags.numbers_format"]').on('change', function() {
 				template.find('.group-for-exceptions').toggleClass('active', template.find('[name="ui_flags.numbers_format"]:checked').val() === 'international_with_exceptions');

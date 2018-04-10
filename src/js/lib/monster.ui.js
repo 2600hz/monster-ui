@@ -343,6 +343,22 @@ define(function(require) {
 	}
 
 	var ui = {
+
+		/**
+		 * Chosen plugin wrapper used to apply the same default options
+		 * @param  {jQuery Object} $target  <select> tag to call chosen on
+		 * @param  {JavaScript Object} pOptions Map of options for chosen
+		 */
+		chosen: function($target, pOptions) {
+			var self = this,
+				options = _.merge({
+					search_contains: true,
+					width: '220px'
+				}, pOptions);
+
+			$target.chosen(options);
+		},
+
 		/**
 		 * Show a loading view if a request starts before inoking the callback
 		 * to insert a template in the container once all requests finish
