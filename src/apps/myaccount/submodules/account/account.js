@@ -2,19 +2,101 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		timezone = require('monster-timezone');
+		timezone = require('monster-timezone'),
+		toastr = require('toastr');
 
 	var account = {
-
 		subscribe: {
 			'myaccount.account.renderContent': '_accountRenderContent'
+		},
+
+		refreshAccessListHeader: function(parent) {
+			var self = this,
+				editAccountId = self.accountId,
+				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
+
+			self.callApi({
+				resource: 'accessList.get',
+				data: {
+					accountId: editAccountId
+				},
+				success: function(data, status) {
+					// Declare empty array for type safety as access lists API returns no data.data property when there are no CIDRs.
+					var accessList = [];
+					if (Object.getOwnPropertyNames(data.data).length !== 0) {
+						accessList = data.data.cidrs;
+						var order = data.data.order;
+						$settingsItem.find('.total-cidrs').text(accessList.length);
+						if (order === 'deny,allow') {
+							$settingsItem.find('.first-cidr').text(self.i18n.active().account.denyFirst);
+						} else if (order === 'allow,deny') {
+							$settingsItem.find('.first-cidr').text(self.i18n.active().account.allowFirst);
+						} else {
+						//account does not have cidrs or order defined
+							$settingsItem.find('.total-cidrs').text(accessList.length);
+							$settingsItem.find('.first-cidr').text(self.i18n.active().account.cidrsNotConfigured);
+						}
+					}
+				}
+			});
+		},
+
+		renderEditAccessListForm: function(parent) {
+			var self = this,
+				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
+
+			self.callApi({
+				resource: 'accessList.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					if (Object.getOwnPropertyNames(data.data).length !== 0) {
+						var allowOrDeny = data.data.order;
+					}
+
+					if ((typeof allowOrDeny !== 'undefined') && (allowOrDeny !== null) && allowOrDeny) {
+						if (allowOrDeny === 'allow,deny') {
+							$settingsItem.find('#account_deny_allow_order').val('allow,deny');
+						} else if (allowOrDeny === 'deny,allow') {
+							$settingsItem.find('#account_deny_allow_order').val('deny,allow');
+						}
+					} else {
+						//allow,deny is default allow/deny order
+						$settingsItem.find('#account_deny_allow_order').val('allow,deny');
+					}
+
+					//load cidrs into access list
+					if (data.data.cidrs && (data.data.cidrs !== undefined) && (data.data.cidrs.length !== 0)) {
+						//parse access list
+						var displayAccessList = '' + data.data.cidrs[0];
+						displayAccessList.append;
+						for (var i = 1; i < data.data.cidrs.length; i++) {
+							displayAccessList += '\n';
+							displayAccessList += data.data.cidrs[i];
+						}
+						//find access list text area and populate
+						$settingsItem.find('#access-list-input').val(displayAccessList);
+					} else {
+						$settingsItem.find('#access-list-input').val('');
+					}
+				},
+				error: function(data, status) {
+
+				}
+			});
+
+			self.refreshAccessListHeader(parent);
 		},
 
 		_accountRenderContent: function(args) {
 			var self = this;
 
 			self.accountGetData(function(data) {
+				data.allowAccessList = monster.config.whitelabel.allowAccessList;
 				var accountTemplate = $(monster.template(self, 'account-layout', data));
+
+				self.renderEditAccessListForm(accountTemplate);
 
 				self.accountBindEvents(accountTemplate, data);
 
@@ -26,19 +108,59 @@ define(function(require) {
 
 		accountBindEvents: function(template, data) {
 			var self = this;
+			var editAccountId = self.accountId;
 
 			timezone.populateDropdown(template.find('#account_timezone'), data.account.timezone);
-			template.find('#account_timezone').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#account_timezone'));
 
 			//Temporary button design fix until we redesign the Accounts Manager
 			template.find('#accountsmanager_carrier_save')
 					.removeClass('btn btn-success')
 					.addClass('monster-button-success');
 
-			template.find('#numbers_format_exceptions').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#numbers_format_exceptions'));
 
 			template.find('[name="ui_flags.numbers_format"]').on('change', function() {
 				template.find('.group-for-exceptions').toggleClass('active', template.find('[name="ui_flags.numbers_format"]:checked').val() === 'international_with_exceptions');
+			});
+
+			//saving the access list settings
+			template.find('li[data-name="accountsmanager_access_list"] .saveList').click(function() {
+				var order = $('#account_deny_allow_order').val(),
+					accessListText = $.trim($('#access-list-input').val()).split('\n');
+
+				//is this a valid list of cidrs?
+				var isValidCidrList = self.validateCidrList(accessListText);
+				//if not valid, tell user and return
+				if (!isValidCidrList) {
+					return;
+				}
+
+				//if access list is empty, don't put cidrs in post request
+				var cidrData = {
+					order: order
+				};
+				if (JSON.stringify(accessListText) !== JSON.stringify([''])) {
+					cidrData.cidrs = accessListText;
+				} else {
+					cidrData.cidrs = [];
+				}
+
+				self.callApi({
+					resource: 'accessList.post',
+					data: {
+						accountId: editAccountId,
+						data: cidrData,
+						removeMetadataAPI: true
+					},
+					success: function() {
+						self.refreshAccessListHeader(template);
+						toastr.success(self.i18n.active().account.postCidrSuccess);
+					},
+					error: function() {
+
+					}
+				});
 			});
 
 			monster.ui.tooltips(template);
@@ -105,6 +227,35 @@ define(function(require) {
 			}, function(err, results) {
 				self.accountFormatData(results, globalCallback);
 			});
+		},
+
+		validateCidrList: function(cidrList) {
+			var self = this;
+			// Handle the case where there are no cidrs.
+			// This is allowed as it means the user has cleared their access list.
+			if (cidrList.length === 1 && cidrList[0] === '') {
+				console.log('corrrect');
+				return true;
+			}
+
+			// Make sure the array does not contain duplicates
+			if (new Set(cidrList).size !== cidrList.length) {
+				toastr.error(self.i18n.active().account.errorDuplicate);
+				return false;
+			}
+
+			//cidr regex
+			var cidrRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$/;
+			//check the cidr list line by line, see if each line is a cidr
+			for (var i = 0; i < cidrList.length; i++) {
+				if (!cidrRegex.test(cidrList[i])) {
+					toastr.error(self.i18n.active().account.accessListInvalid);
+					return false;
+				}
+			}
+
+			//if looped through and all the lines match a cidr, return true
+			return true;
 		},
 
 		accountFormatData: function(data, globalCallback) {

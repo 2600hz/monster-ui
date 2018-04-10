@@ -512,7 +512,9 @@ define(function(require) {
 				var formattedData = self.conferenceViewerFormatAddParticipants(data),
 					template = $(self.getTemplate({ name: 'addEndpointDialog', submodule: 'conferenceViewer', data: formattedData }));
 
-				template.find('#select_endpoints').chosen({ search_contains: true, width: '100%' });
+				monster.ui.chosen(template.find('#select_endpoints'), {
+					width: '100%'
+				});
 
 				template.find('#add').on('click', function(e) {
 					e.preventDefault();

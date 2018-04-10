@@ -408,11 +408,7 @@ define(function(require) {
 
 			timezone.populateDropdown($timezoneSelect, monster.apps.auth.currentAccount.timezone);
 
-			$timezoneSelect
-				.chosen({
-					search_contains: true,
-					width: '220px'
-				});
+			monster.ui.chosen($timezoneSelect);
 
 			dialog
 				.find('.dynamic-content')

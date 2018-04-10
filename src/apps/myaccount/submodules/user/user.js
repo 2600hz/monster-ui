@@ -61,10 +61,10 @@ define(function(require) {
 			var self = this;
 
 			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone || 'inherit', {inherit: self.i18n.active().defaultTimezone});
-			template.find('#user_timezone').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#user_timezone'));
 			monster.ui.showPasswordStrength(template.find('#password'));
 
-			template.find('#numbers_format_exceptions').chosen({ search_contains: true, width: '220px' });
+			monster.ui.chosen(template.find('#numbers_format_exceptions'));
 
 			template.find('[name="ui_flags.numbers_format"]').on('change', function() {
 				template.find('.group-for-exceptions').toggleClass('active', template.find('[name="ui_flags.numbers_format"]:checked').val() === 'international_with_exceptions');
