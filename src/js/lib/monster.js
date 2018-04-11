@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		async = require('async'),
 		card = require('card'),
-		chosen = require('chosen'),
 		config = require('config'),
 		Cookies = require('cookies'),
 		ddslick = require('ddslick'),

@@ -3,6 +3,7 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
+		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
 		toastr = require('toastr'),
 		validate = require('validate'),
