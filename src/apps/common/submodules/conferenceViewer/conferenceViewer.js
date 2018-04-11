@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		toastr = require('toastr'),
-		chosen = require('chosen'),
 		randomColor = require('randomColor');
 
 	var conferenceViewer = {
