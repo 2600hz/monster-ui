@@ -86,6 +86,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/callflows/{callflowId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/callflows/{callflowId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/callflows/{callflowId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/callflows' },
 				'searchByNameAndNumber': { verb: 'GET', url: 'accounts/{accountId}/search?t=callflow&q=name_and_number&v={value}' },
