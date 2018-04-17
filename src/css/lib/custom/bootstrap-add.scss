@@ -217,6 +217,9 @@ i[data-toggle="tooltip"] {
 	margin-right: 5px;
 	margin-left: 5px;
 }
+.tooltip {
+	pointer-events: none;
+}
 
 /*************** CLICKOVER **************/
 .clickover .popover-title {
