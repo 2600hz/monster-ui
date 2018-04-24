@@ -80,6 +80,16 @@ define(function(require) {
 				enabled: false,
 				url: ''
 			}
+			// If set to true, will allow the user to modify access_lists from the account settings page.
+			// allowAccessList: true
+			// If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default.
+			//useDropdownApploader: true,
+
+			// The appstore is exposed to admins by default. If set to false, it will be hidden for all users.
+			// hideAppStore: true,
+
+			// If set to true, will hide creation of new accounts
+			// hideNewAccountCreation: true
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app

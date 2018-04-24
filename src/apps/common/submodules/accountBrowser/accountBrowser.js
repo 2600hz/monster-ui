@@ -37,7 +37,7 @@ define(function(require) {
 				dataTemplate = {
 					customClass: args.customClass || 'ab-sidebar',
 					hideRealm: hideRealm,
-					addAccountEnabled: (typeof onNewAccountClick === 'function')
+					addAccountEnabled: !monster.config.whitelabel.hideNewAccountCreation && (typeof onNewAccountClick === 'function')
 				},
 				layout = $(self.getTemplate({
 					name: 'layout',
@@ -108,9 +108,11 @@ define(function(require) {
 				e.stopPropagation();
 			});
 
-			template.find('.account-list-add').on('click', function() {
-				onNewAccountClick && onNewAccountClick();
-			});
+			if (!monster.config.whitelabel.hideNewAccountCreation) {
+				template.find('.account-list-add').on('click', function() {
+					onNewAccountClick && onNewAccountClick();
+				});
+			}
 
 			var findElemInData = function(searchString, data) {
 				var found = false;
