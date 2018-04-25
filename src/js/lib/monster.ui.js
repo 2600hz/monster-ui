@@ -112,6 +112,13 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
+			isReseller: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			},
+
 			monsterCheckbox: function() {
 				var templateData = {
 					cssClass: 'monster-checkbox',
