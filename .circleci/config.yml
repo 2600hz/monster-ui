@@ -9,6 +9,7 @@ jobs:
 
     steps:
     - checkout
+    - run: sudo pip install PyYAML
     - run: ./scripts/validate_mkdocs.py
     - run: npm install
     - run: gulp
