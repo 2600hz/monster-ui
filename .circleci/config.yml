@@ -14,4 +14,4 @@ jobs:
     - run: ./scripts/reconcile_docs_to_index.bash
     - run: npm install gulp-cli
     - run: npm install gulp -D
-    - run: gulp
+    - run: ./node_modules/gulp/bin/gulp.js build-prod
