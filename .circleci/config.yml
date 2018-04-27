@@ -11,5 +11,6 @@ jobs:
     - checkout
     - run: sudo pip install PyYAML
     - run: ./scripts/validate_mkdocs.py
+    - run: ./scripts/reconcile_docs_to_index.bash
     - run: npm install
     - run: gulp
