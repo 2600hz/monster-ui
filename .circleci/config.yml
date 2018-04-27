@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    shell: /bin/bash --login
+    environment:
+      TZ: "/usr/share/zoneinfo/UTC"
+    docker:
+    - image: circleci/python:3.6.5-jessie-node
+
+    steps:
+    - checkout
+    - run: ./scripts/validate_mkdocs.py
+    - run: npm install
+    - run: gulp
