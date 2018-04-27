@@ -12,5 +12,6 @@ jobs:
     - run: sudo pip install PyYAML
     - run: ./scripts/validate_mkdocs.py
     - run: ./scripts/reconcile_docs_to_index.bash
-    - run: npm install
+    - run: npm install gulp-cli -g
+    - run: npm install gulp -D
     - run: gulp
