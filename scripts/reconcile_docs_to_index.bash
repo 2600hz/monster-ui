@@ -17,7 +17,7 @@ function check_index {
     fi
 }
 
-docs=$(find docs \( -path 'doc/mkdocs' \) -prune -o -type f -regex ".+\.md$")
+docs=$(find docs \( -path 'docs/mkdocs' \) -prune -o -type f -regex ".+\.md$")
 for doc in $docs; do
     ((doc_count+=1))
     check_index $doc
