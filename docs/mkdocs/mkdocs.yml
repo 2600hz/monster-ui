@@ -33,7 +33,6 @@ pages:
     - 'docs/monster/waterfall().md'
   - 'monster.ui':
     - 'Intro': 'docs/monster/ui.md'
-    - 'docs/monster/ui/table.md'
     - 'docs/monster/ui/alert().md'
     - 'docs/monster/ui/codecSelector().md'
     - 'docs/monster/ui/confirm().md'
@@ -70,10 +69,9 @@ pages:
     - 'docs/monster/util/isSuperDuper().md'
     - 'docs/monster/util/isWhitelabeling().md'
     - 'docs/monster/util/randomString().md'
-    - 'docs/monster/util/sort().md'
     - 'docs/monster/util/toFriendlyDate().md'
     - 'docs/monster/util/unformatPhoneNumber().md'
-    - 'Data Flags': 
+    - 'Data Flags':
       - 'Intro': 'docs/monster/util/dataFlags.md'
       - 'add()': 'docs/monster/util/dataFlags/add().md'
       - 'destroy()': 'docs/monster/util/dataFlags/destroy().md'
