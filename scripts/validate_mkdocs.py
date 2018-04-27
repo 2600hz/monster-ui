@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from __future__ import print_function
 
-import yaml, os.path, sys
+import yaml, os.path, sys, functools
 
 # from https://stackoverflow.com/questions/5574702/how-to-print-to-stderr-in-python
 def eprint(*args, **kwargs):
@@ -25,9 +25,9 @@ def parse_page_string(errors_detected, page):
 def parse_page(errors_detected, page):
     "parse a page for existence"
     if isinstance(page, dict):
-        return reduce(parse_page_dict, page.items(), errors_detected)
+        return functools.reduce(parse_page_dict, page.items(), errors_detected)
     elif isinstance(page, list):
-        return reduce(parse_page, page, errors_detected)
+        return functools.reduce(parse_page, page, errors_detected)
     elif isinstance(page, str):
         return parse_page_string(errors_detected, page)
     else:
