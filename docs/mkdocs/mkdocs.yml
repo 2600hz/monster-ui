@@ -1,7 +1,4 @@
 site_name: UI Development
-theme_dir: 2600Hz_theme
-pages:
-- 'index.md'
 
 pages:
 - 'index.md'
@@ -21,9 +18,15 @@ pages:
   - 'Coding standards linting': 'docs/linting.md'
   - 'How to use the validation in your UI': 'docs/validation.md'
   - 'Gulp command': 'docs/gulpCommand.md'
+  - 'Using Postman as a CRUD': 'docs/using-postman-as-a-crud.md'
+  - 'Known Issues': 'docs/knownIssues.md'
+  - 'KazooCon': 'docs/kazoocon.md'
+  - 'Test Plan': 'docs/testPlan.md'
+  - 'Summary': 'docs/summary.md'
 - 'Monster Helpers':
   - 'monster':
     - 'Intro': 'docs/monster.md'
+    - 'docs/monster/getTemplate().md'
     - 'docs/monster/parallel().md'
     - 'docs/monster/pub().md'
     - 'docs/monster/request().md'
@@ -32,7 +35,6 @@ pages:
     - 'docs/monster/waterfall().md'
   - 'monster.ui':
     - 'Intro': 'docs/monster/ui.md'
-    - 'docs/monster/ui/table.md'
     - 'docs/monster/ui/alert().md'
     - 'docs/monster/ui/codecSelector().md'
     - 'docs/monster/ui/confirm().md'
@@ -42,6 +44,7 @@ pages:
     - 'docs/monster/ui/getFormData().md'
     - 'docs/monster/ui/highlight().md'
     - 'docs/monster/ui/insertTemplate().md'
+    - 'docs/monster/ui/loadTab().md'
     - 'docs/monster/ui/mask().md'
     - 'docs/monster/ui/protectField().md'
     - 'docs/monster/ui/renderJSON().md'
@@ -54,6 +57,8 @@ pages:
     - 'docs/monster/ui/wysiwyg().md'
   - 'monster.util':
     - 'Intro': 'docs/monster/util.md'
+    - 'docs/monster/util/canAddExternalNumbers().md'
+    - 'docs/monster/util/canImpersonate().md'
     - 'docs/monster/util/dateToGregorian().md'
     - 'docs/monster/util/formatPhoneNumber().md'
     - 'docs/monster/util/formatPrice().md'
@@ -66,14 +71,18 @@ pages:
     - 'docs/monster/util/isAdmin().md'
     - 'docs/monster/util/isLoggedIn().md'
     - 'docs/monster/util/isMasquerading().md'
+    - 'docs/monster/util/isReseller().md'
     - 'docs/monster/util/isSuperDuper().md'
     - 'docs/monster/util/isWhitelabeling().md'
+    - 'docs/monster/util/protectSensitivePhoneNumbers().md'
     - 'docs/monster/util/randomString().md'
-    - 'docs/monster/util/sort().md'
     - 'docs/monster/util/toFriendlyDate().md'
     - 'docs/monster/util/unformatPhoneNumber().md'
-    - 'Data Flags': 
+    - 'Data Flags':
       - 'Intro': 'docs/monster/util/dataFlags.md'
       - 'add()': 'docs/monster/util/dataFlags/add().md'
       - 'destroy()': 'docs/monster/util/dataFlags/destroy().md'
       - 'get()': 'docs/monster/util/dataFlags/get().md'
+  - 'skeleton':
+    - 'docs/skeleton/method().md'
+    - 'docs/skeleton/object.md'
