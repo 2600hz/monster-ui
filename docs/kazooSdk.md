@@ -50,6 +50,19 @@ Note that each of these settings, if provided, will override the similar ones se
 
 You can also include custom settings that you will then handle using the `options` parameter in the callbacks defined when initializing the SDK (`onRequestStart`, `onRequestEnd`, `onRequestSuccess`, `onRequestError`). You can see such a custom setting (`generateError`) in the example below.
 
+##### Content Type Exceptions
+###### `multipart/mixed`
+
+If the API endpoint you are working with accepts this content type, your payload need to be an array of objects, with the objects following this structure:
+
+
+Key | Description | Type | Default | Required
+--- | ----------- | ---- | ------- | --------
+`headers` | List of headers of the part, `key` being the header type and `value` the header content | `Object()` | | `false`
+`body` | Body of the part | `String()` | | `true`
+
+The boundary will be handled internally by the SDK so you do not have to specify it.
+
 ##### Usage example
 ```javascript
 // Note that this example requires the jQuery-MD5 plugin
