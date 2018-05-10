@@ -163,6 +163,9 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}' }
 			},
 			faxes: {
+				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
 
@@ -718,6 +721,29 @@
 				}
 
 				postData = JSON.stringify(payload);
+			} else if (settings.contentType === 'multipart/mixed') {
+				var boundary = 'multipart-message-boundary',
+					craftMessage = function craftMessage() {
+						var message = '';
+
+						data.data.forEach(function(part) {
+							message += '--' + boundary + '\r\n';
+
+							for (var header in part.headers) {
+								message += header + ': ' + part.headers[header] + '\r\n';
+							}
+
+							message += '\r\n' + part.body + '\r\n\r\n';
+						});
+
+						message += '--' + boundary + '--';
+
+						return message;
+					};
+
+				settings.contentType += '; boundary=' + boundary;
+
+				postData = craftMessage();
 			}
 
 			settings = $.extend(settings, {
