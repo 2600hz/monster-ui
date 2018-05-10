@@ -163,6 +163,9 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/notifications/smtplog/{logId}' }
 			},
 			faxes: {
+				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
 
