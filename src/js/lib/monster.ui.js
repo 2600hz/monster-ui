@@ -698,17 +698,16 @@ define(function(require) {
 					width: 'auto',
 					modal: true,
 					resizable: false,
+					// If a fullscreen modal is in use, append the dialog to it by default
+					appendTo: options && !options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')
+						? $('.core-absolute .modal-full-screen-wrapper:visible')
+						: undefined,
 					open: function(event, ui) {
 						if (options.hideClose) {
 							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
 						}
 					}
 				};
-
-			// When a fullscreen modal is in use, use it as container for the popup
-			if (!options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')) {
-				options.appendTo = $('.core-absolute .modal-full-screen-wrapper:visible');
-			}
 
 			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
 			options = $.extend(defaults, options || {}, strictOptions);
