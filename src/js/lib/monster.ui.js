@@ -658,13 +658,12 @@ define(function(require){
 					width: 'auto',
 					modal: true,
 					resizable: false,
+					// If a fullscreen modal is in use, append the dialog to it by default
+					appendTo: options && !options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')
+						? $('.core-absolute .modal-full-screen-wrapper:visible')
+						: undefined,
 					open: function(event, ui) { if(options.hideClose) $(".ui-dialog-titlebar-close", ui.dialog | ui).hide(); }
 				};
-
-			// When a fullscreen modal is in use, use it as container for the popup
-			if (!options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')) {
-				options.appendTo = $('.core-absolute .modal-full-screen-wrapper:visible');
-			}
 
 			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
 			options = $.extend(defaults, options || {}, strictOptions);
@@ -1135,7 +1134,7 @@ define(function(require){
 		 * To remove some elements from the toolbar, specify false as value
 		 * for the corresponding key in the defaultOptions object. To remove
 		 * all elements, set the options parameter to false.
-		 * 
+		 *
 		 * The target should be a jQuery Object as follow:
 		 * <div class="wysiwyg-container"></div>
 		 * The optional class "transparent" can be added to this container
@@ -1484,7 +1483,7 @@ define(function(require){
 		datepicker: function(target, options) {
 			var self = this,
 				datePickerFormat = 'mm/dd/yy',
-				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
+				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') &&
 							 monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format') ?
 							 monster.apps.auth.currentUser.ui_flags.date_format : 'mdy' ;
 
@@ -1524,7 +1523,7 @@ define(function(require){
 		 */
 		timepicker: function(target, pOptions) {
 			var self = this,
-				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') && 
+				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') &&
 						    monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode') ?
 						    monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
 				defaultOptions = {
@@ -1739,7 +1738,7 @@ define(function(require){
 						}
 					],
 					strengthDisplay;
-				
+
 				switch(display) {
 					case 'icon': {
 						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="'+i18n.passwordStrength.empty+'" data-placement="'+tooltipPosition+'" data-toggle="tooltip"></i>');
@@ -1776,7 +1775,7 @@ define(function(require){
 						break;
 					}
 				}
-				
+
 				if(options.container) {
 					options.container.append(strengthDisplay);
 				} else {
@@ -1861,7 +1860,7 @@ define(function(require){
 					$buttons.find('.introjs-skipbutton').removeClass('monster-button-success');
 					$buttons.find('.introjs-nextbutton').addClass('monster-button-primary');
 				}
-				
+
 			})
 			.oncomplete(callback)
 			.onexit(callback)
@@ -2416,7 +2415,7 @@ define(function(require){
 			self.handleDisplayFootable(container, finalOptions);
 		},
 
-		formatIconApp: function(app) {			
+		formatIconApp: function(app) {
 			if(app && app.hasOwnProperty('name')) {
 				if(monster.appsStore.hasOwnProperty(app.name)) {
 					if(monster.appsStore[app.name].phase === 'beta') {
