@@ -17,6 +17,11 @@ define(function(require) {
 
 		appFlags: {
 			balance: {
+				digits: {
+					availableCreditsBadge: 2,
+					callChargesBadge: 3,
+					perMinuteTableAmount: 4
+				},
 				range: 'monthly'
 			}
 		},
@@ -28,7 +33,7 @@ define(function(require) {
 				self.balanceGet(function(data) {
 					var argsBadge = {
 						module: 'balance',
-						data: self.i18n.active().currencyUsed + parseFloat(data.data.balance).toFixed(2),
+						data: self.i18n.active().currencyUsed + parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 						callback: args.callback
 					};
 
@@ -44,7 +49,7 @@ define(function(require) {
 			monster.parallel({
 				balance: function(callback) {
 					self.balanceGet(function(data) {
-						var amount = parseFloat(data.data.balance).toFixed(2);
+						var amount = parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge);
 
 						callback(null, amount);
 					});
@@ -134,7 +139,7 @@ define(function(require) {
 				bytes = monster.util.formatBytes(0),
 				formattedData = {
 					totalMinutes: 0,
-					totalCharges: parseFloat(0).toFixed(3),
+					totalCharges: 0,
 					totalMobileData: bytes.value + ' ' + bytes.unit.symbol
 				};
 
@@ -149,7 +154,7 @@ define(function(require) {
 					}
 
 					// We now divide by 1 because the amount returned is negative
-					formattedData.totalCharges = parseFloat(ledger.amount / -1).toFixed(3);
+					formattedData.totalCharges = parseFloat(ledger.amount / -1).toFixed(self.appFlags.balance.digits.callChargesBadge);
 				}
 
 				if (data.globalLedgers.hasOwnProperty('mobile_data')) {
@@ -198,7 +203,7 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = data.balance.balance.toFixed(2) || '0.00',
+				amount = (data.balance.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
@@ -241,7 +246,7 @@ define(function(require) {
 					addCreditDialog = $(self.getTemplate({ name: 'addCreditDialog', data: templateData, submodule: 'balance' })),
 					dataUpdate = {
 						module: self.name,
-						data: parseFloat(data.amount).toFixed(2)
+						data: parseFloat(data.amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge)
 					};
 
 				monster.pub('myaccount.updateMenu', dataUpdate);
@@ -290,7 +295,7 @@ define(function(require) {
 
 				var duration = self.i18n.active().balance.active_call,
 					accountName = v.account.name,
-					friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(3),
+					friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(self.appFlags.balance.digits.perMinuteTableAmount),
 					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
 					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
 					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
@@ -670,7 +675,7 @@ define(function(require) {
 			template.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {
-						var formattedAmount = parseFloat(amount).toFixed(2),
+						var formattedAmount = parseFloat(amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 							newAmount = self.i18n.active().currencyUsed + formattedAmount,
 							argsEvent = {
 								module: 'balance',
