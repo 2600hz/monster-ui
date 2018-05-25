@@ -211,8 +211,11 @@ define(function(require) {
 					$item.data('search').toLowerCase().indexOf(searchString) < 0 ? $item.hide() : $item.show();
 				});
 
-				if (e.keyCode === 13 && searchString.length >= 3) {
-					parent.find('.right-div .app-element:visible').trigger('click');
+				if (e.keyCode === 13) {
+					parent
+						.find('.right-div .app-element:visible')
+							.first()
+								.click();
 				}
 			});
 
