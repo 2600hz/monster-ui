@@ -20,7 +20,7 @@ define(function(require) {
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
-					perMinuteTableAmount: 3
+					perMinuteTableAmount: 4
 				},
 				range: 'monthly'
 			}
