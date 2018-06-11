@@ -944,6 +944,14 @@ define(function(require) {
 				params.data = newData;
 			}
 
+			if (newData.hasOwnProperty('caller_id_options') && newData.caller_id_options.hasOwnProperty('outbound_privacy') && newData.caller_id_options.outbound_privacy === 'inherit') {
+				delete params.data.caller_id_options.outbound_privacy;
+
+				if (_.isEmpty(params.data.caller_id_options)) {
+					delete params.data.caller_id_options;
+				}
+			}
+
 			if ('language' in params.data) {
 				if (params.data.language === 'auto') {
 					delete params.data.language;
