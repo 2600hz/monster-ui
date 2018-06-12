@@ -350,6 +350,21 @@ define(function(require) {
 		initializeHandlebarsHelper();
 	}
 
+	/**
+	 * Determine the container of jQUery dialogs:
+	 * - a fullScreenModal if one is visible
+	 * - the monster app container otherwise
+	 */
+	function getDialogAppendTo() {
+		var $coreWrapper = $('.core-wrapper'),
+			$coreContent = $coreWrapper.find('.core-content'),
+			$coreAbsolute = $coreWrapper.find('.core-absolute');
+
+		return $coreAbsolute.find('.modal-full-screen-wrapper').is('visible')
+			? $coreAbsolute.find('.modal-full-screen-wrapper:visible')
+			: $coreContent;
+	}
+
 	var ui = {
 
 		/**
