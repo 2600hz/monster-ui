@@ -539,7 +539,10 @@ define(function(require) {
 							callback && callback();
 						}
 					},
-					options
+					options,
+					{
+						appendTo: getDialogAppendTo()
+					}
 				),
 				dialog;
 
@@ -619,7 +622,10 @@ define(function(require) {
 							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
 						}
 					},
-					options
+					options,
+					{
+						appendTo: getDialogAppendTo()
+					}
 				),
 				ok = false;
 
@@ -687,6 +693,7 @@ define(function(require) {
 
 			//Unoverridable options
 			var strictOptions = {
+					appendTo: getDialogAppendTo(),
 					show: { effect: 'fade', duration: 200 },
 					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
@@ -713,10 +720,6 @@ define(function(require) {
 					width: 'auto',
 					modal: true,
 					resizable: false,
-					// If a fullscreen modal is in use, append the dialog to it by default
-					appendTo: options && !options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')
-						? $('.core-absolute .modal-full-screen-wrapper:visible')
-						: undefined,
 					open: function(event, ui) {
 						if (options.hideClose) {
 							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
