@@ -327,6 +327,21 @@ define(function(require){
 		initializeHandlebarsHelper();
 	}
 
+	/**
+	 * Determine the container of jQUery dialogs:
+	 * - a fullScreenModal if one is visible
+	 * - the monster app container otherwise
+	 */
+	function getDialogAppendTo() {
+		var $coreWrapper = $('.core-wrapper'),
+			$coreContent = $coreWrapper.find('.core-content'),
+			$coreAbsolute = $coreWrapper.find('.core-absolute');
+
+		return $coreAbsolute.find('.modal-full-screen-wrapper').is('visible')
+			? $coreAbsolute.find('.modal-full-screen-wrapper:visible')
+			: $coreContent;
+	}
+
 	var ui = {
 		/**
 		 * Show a loading view if a request starts before inoking the callback
@@ -483,7 +498,10 @@ define(function(require){
 							callback && callback();
 						}
 					},
-					options
+					options,
+					{
+						appendTo: getDialogAppendTo()
+					}
 				),
 				dialog;
 
@@ -563,7 +581,10 @@ define(function(require){
 							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
 						}
 					},
-					options
+					options,
+					{
+						appendTo: getDialogAppendTo()
+					}
 				),
 				ok = false;
 
@@ -631,8 +652,9 @@ define(function(require){
 
 			//Unoverridable options
 			var strictOptions = {
-					show: { effect : 'fade', duration : 200 },
-					hide: { effect : 'fade', duration : 200 },
+					appendTo: getDialogAppendTo(),
+					show: { effect: 'fade', duration: 200 },
+					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
 					close: function() {
 						$('div.popover').remove();
