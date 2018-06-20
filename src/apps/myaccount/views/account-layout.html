@@ -155,6 +155,51 @@
 			</div>
 		</li>
 
+		<li class="settings-item clearfix" data-name="account_outbound_privacy">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.account.outbound_privacy.type }}</span>
+				<span class="description">
+					{{#if account.caller_id_options.outbound_privacy}}
+						{{tryI18n i18n.account.outbound_privacy account.caller_id_options.outbound_privacy}}
+					{{else}}
+						{{i18n.account.outbound_privacy.inherit}}
+					{{/if}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_account_outbound_privacy">
+							<div class="control-group">
+								<label class="control-label" for="account_outbound_privacy">{{ i18n.account.outbound_privacy.type }}</label>
+								<div class="controls">
+									<select id="outbound_privacy" name="caller_id_options.outbound_privacy">
+										<option value="inherit"{{#compare account.caller_id_options.outbound_privacy "===" "inherit"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.inherit }}</option>
+										<option value="none"{{#compare account.caller_id_options.outbound_privacy "===" "none"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.none }}</option>
+										<option value="number"{{#compare account.caller_id_options.outbound_privacy "===" "number"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.number }}</option>
+										<option value="name"{{#compare account.caller_id_options.outbound_privacy "===" "name"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.name }}</option>
+										<option value="full"{{#compare account.caller_id_options.outbound_privacy "===" "full"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.full }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="account" data-field="account_outbound_privacy">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+
+
 		<li class="settings-item clearfix" data-name="numbers_format">
 			<a class="settings-link clearfix">
 				<span class="title">{{ i18n.numbersFormat.title }}</span>
