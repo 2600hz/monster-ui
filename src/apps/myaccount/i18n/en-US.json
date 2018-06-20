@@ -68,6 +68,14 @@
 			"dmy": "Day/Month/Year",
 			"mdy": "Month/Day/Year",
 			"ymd": "Year/Month/Day"
+		},
+		"outbound_privacy": {
+			"type": "Caller-ID privacy ",
+			"inherit": "Default",
+			"none": "None",
+			"number": "Number",
+			"name": "Name",
+			"full": "Full"
 		}
 	},
 
@@ -88,7 +96,15 @@
 		"userLanguage": "Language",
 		"__comment": "UI-966: Added common control to select carrier in myaccount",
 		"__version": "v3.20_s0",
-		"carrierTitle": "Carrier Settings"
+		"carrierTitle": "Carrier Settings",
+		"outbound_privacy": {
+			"type": "Caller-ID privacy ",
+			"inherit": "Default",
+			"none": "None",
+			"number": "Number",
+			"name": "Name",
+			"full": "Full"
+		}
 	},
 
 	"__comment": "UI-2596: Adding format choices to phone numbers",
