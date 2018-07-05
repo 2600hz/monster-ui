@@ -328,18 +328,24 @@ define(function(require){
 	}
 
 	/**
-	 * Determine the container of jQUery dialogs:
-	 * - a fullScreenModal if one is visible
-	 * - the monster app container otherwise
+	 * Determine the container of jQuery dialogs following this order:
+	 * - visible fullScreenModal
+	 * - myaccount submodule when open
+	 * - currently open app
 	 */
 	function getDialogAppendTo() {
 		var $coreWrapper = $('.core-wrapper'),
 			$coreContent = $coreWrapper.find('.core-content'),
-			$coreAbsolute = $coreWrapper.find('.core-absolute');
+			$coreAbsolute = $coreWrapper.find('.core-absolute'),
+			$myAccount = $coreAbsolute.find('#myaccount');
 
-		return $coreAbsolute.find('.modal-full-screen-wrapper').is('visible')
-			? $coreAbsolute.find('.modal-full-screen-wrapper:visible')
-			: $coreContent;
+		if ($coreAbsolute.find('.modal-full-screen-wrapper').is(':visible')) {
+			return $coreAbsolute.find('.modal-full-screen-wrapper:visible');
+		} else if ($myAccount.is(':visible')) {
+			return $myAccount.find('.myaccount-dialog-container');
+		} else {
+			return $coreContent;
+		}
 	}
 
 	var ui = {
