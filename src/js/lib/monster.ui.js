@@ -365,7 +365,7 @@ define(function(require) {
 		if ($coreAbsolute.find('.modal-full-screen-wrapper').is(':visible')) {
 			return $coreAbsolute.find('.modal-full-screen-wrapper:visible');
 		} else if ($myAccount.is(':visible')) {
-			return $myAccount;
+			return $myAccount.find('.myaccount-dialog-container');
 		} else {
 			return $coreContent;
 		}

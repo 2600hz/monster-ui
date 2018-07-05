@@ -520,6 +520,7 @@ define(function(require) {
 
 			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
 			myaccount.find('.myaccount-right .myaccount-content').empty();
+			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
 			$('#monster_content').show();
 
