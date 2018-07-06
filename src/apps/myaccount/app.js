@@ -59,6 +59,18 @@ define(function(require) {
 			'myaccount.renderDropdown': 'clickMyAccount'
 		},
 
+		appFlags: {
+			common: {
+				outboundPrivacy: [
+					'inherit',
+					'none',
+					'number',
+					'name',
+					'full'
+				]
+			}
+		},
+
 		mainContainer: '#myaccount',
 
 		load: function(callback) {

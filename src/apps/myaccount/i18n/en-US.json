@@ -1,4 +1,20 @@
 {
+	"myAccountApp": {
+		"common": {
+			"outboundPrivacy": {
+				"label": "Caller-ID privacy",
+				"tooltip": "Determines what appears as Caller-ID for offnet outbound calls.",
+				"values": {
+					"inherit": "- Default -",
+					"none": "Hide nothing",
+					"number": "Hide number only",
+					"name": "Hide name only",
+					"full": "Hide name and number"
+				}
+			}
+		}
+	},
+
 	"hello": "Hello",
 	"signout": "Sign Out",
 	"myaccount": "Account",
@@ -68,14 +84,6 @@
 			"dmy": "Day/Month/Year",
 			"mdy": "Month/Day/Year",
 			"ymd": "Year/Month/Day"
-		},
-		"outbound_privacy": {
-			"type": "Caller-ID privacy ",
-			"inherit": "Default",
-			"none": "None",
-			"number": "Number",
-			"name": "Name",
-			"full": "Full"
 		}
 	},
 
@@ -102,7 +110,7 @@
 		"cidrsNotConfigured": "Access list is currently not configured.",
 		"allowFirst": "Allow",
 		"denyFirst": "Deny",
-		"errorDuplicate": "Could not update access list, please remove duplicate CIDRs",	
+		"errorDuplicate": "Could not update access list, please remove duplicate CIDRs",
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",
