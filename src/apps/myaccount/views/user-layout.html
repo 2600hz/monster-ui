@@ -125,12 +125,12 @@
 						<li>
 						{{#compare user.ui_flags.date_format '===' 'dmy'}}
 							{{ i18n.user.dateFormats.dmy }}
-						{{else}} 
+						{{else}}
 							{{#compare user.ui_flags.date_format '===' 'ymd'}}
 								{{ @root.i18n.user.dateFormats.ymd }}
 							{{else}}
 								{{ @root.i18n.user.dateFormats.mdy }}
-							{{/compare}} 
+							{{/compare}}
 						{{/compare}}
 						</li>
 						<li>
@@ -233,12 +233,10 @@
 
 		<li class="settings-item clearfix" data-name="user_outbound_privacy">
 			<a class="settings-link clearfix">
-				<span class="title">{{ i18n.user.outbound_privacy.type }}</span>
+				<span class="title">{{ i18n.myAccountApp.common.outboundPrivacy.label }}</span>
 				<span class="description">
 					{{#if user.caller_id_options.outbound_privacy}}
-						{{tryI18n i18n.user.outbound_privacy user.caller_id_options.outbound_privacy}}
-					{{else}}
-						{{i18n.user.outbound_privacy.inherit}}
+						{{tryI18n i18n.myAccountApp.common.outboundPrivacy.values user.caller_id_options.outbound_privacy}}
 					{{/if}}
 				</span>
 				<span class="update">
@@ -252,14 +250,16 @@
 					<div class="span12">
 						<form class="form-horizontal" id="form_user_outbound_privacy">
 							<div class="control-group">
-								<label class="control-label" for="user_outbound_privacy">{{ i18n.user.outbound_privacy.type }}</label>
+								<label class="control-label" for="user_outbound_privacy">{{ i18n.myAccountApp.common.outboundPrivacy.label }}</label>
 								<div class="controls">
-									<select id="outbound_privacy" name="caller_id_options.outbound_privacy">
-										<option value="inherit"{{#compare user.caller_id_options.outbound_privacy "===" "inherit"}} selected{{/compare}}>{{ i18n.user.outbound_privacy.inherit }}</option>
-										<option value="none"{{#compare user.caller_id_options.outbound_privacy "===" "none"}} selected{{/compare}}>{{ i18n.user.outbound_privacy.none }}</option>
-										<option value="number"{{#compare user.caller_id_options.outbound_privacy "===" "number"}} selected{{/compare}}>{{ i18n.user.outbound_privacy.number }}</option>
-										<option value="name"{{#compare user.caller_id_options.outbound_privacy "===" "name"}} selected{{/compare}}>{{ i18n.user.outbound_privacy.name }}</option>
-										<option value="full"{{#compare user.caller_id_options.outbound_privacy "===" "full"}} selected{{/compare}}>{{ i18n.user.outbound_privacy.full }}</option>
+									<select name="caller_id_options.outbound_privacy" id="user_outbound_privacy">
+									{{#select user.caller_id_options.outbound_privacy}}
+										{{#each outboundPrivacy}}
+											<option value="{{key}}">
+												{{value}}
+											</option>
+										{{/each}}
+									{{/select}}
 									</select>
 								</div>
 							</div>
