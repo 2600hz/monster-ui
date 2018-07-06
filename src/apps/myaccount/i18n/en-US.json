@@ -1,4 +1,20 @@
 {
+	"myAccountApp": {
+		"common": {
+			"outboundPrivacy": {
+				"label": "Caller-ID Privacy",
+				"tooltip": "Determines what appears as Caller-ID for offnet outbound calls.",
+				"values": {
+					"inherit": "- Default -",
+					"none": "Hide nothing",
+					"number": "Hide number only",
+					"name": "Hide name only",
+					"full": "Hide name and number"
+				}
+			}
+		}
+	},
+
 	"hello": "Hello",
 	"signout": "Sign Out",
 	"myaccount": "Account",
@@ -68,14 +84,6 @@
 			"dmy": "Day/Month/Year",
 			"mdy": "Month/Day/Year",
 			"ymd": "Year/Month/Day"
-		},
-		"outbound_privacy": {
-			"type": "Caller-ID privacy ",
-			"inherit": "Default",
-			"none": "None",
-			"number": "Number",
-			"name": "Name",
-			"full": "Full"
 		}
 	},
 
@@ -90,6 +98,19 @@
 		"technicalContact": "Technical Contact",
 		"technicalContactEmail": "Technical Contact Email",
 		"technicalContactNumber": "Phone Number",
+
+		"accessListTitle": "Access List",
+		"newCidr": "Add a new CIDR",
+		"denyAllowOrder": "Order",
+		"deny": "Deny",
+		"allow": "Allow",
+		"cidrs": "CIDRs",
+		"postCidrSuccess": "You successfully updated the access list.",
+		"accessListInvalid": "Could not update access list, cannot contain invalid CIDRs",
+		"cidrsNotConfigured": "Access list is currently not configured.",
+		"allowFirst": "Allow",
+		"denyFirst": "Deny",
+		"errorDuplicate": "Could not update access list, please remove duplicate CIDRs",
 
 		"timezoneTitle": "Timezone & Language",
 		"userTimezone": "Timezone",

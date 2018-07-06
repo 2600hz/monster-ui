@@ -157,12 +157,10 @@
 
 		<li class="settings-item clearfix" data-name="account_outbound_privacy">
 			<a class="settings-link clearfix">
-				<span class="title">{{ i18n.account.outbound_privacy.type }}</span>
+				<span class="title">{{ i18n.myAccountApp.common.outboundPrivacy.label }}</span>
 				<span class="description">
 					{{#if account.caller_id_options.outbound_privacy}}
-						{{tryI18n i18n.account.outbound_privacy account.caller_id_options.outbound_privacy}}
-					{{else}}
-						{{i18n.account.outbound_privacy.inherit}}
+						{{tryI18n i18n.myAccountApp.common.outboundPrivacy.values account.caller_id_options.outbound_privacy}}
 					{{/if}}
 				</span>
 				<span class="update">
@@ -176,14 +174,18 @@
 					<div class="span12">
 						<form class="form-horizontal" id="form_account_outbound_privacy">
 							<div class="control-group">
-								<label class="control-label" for="account_outbound_privacy">{{ i18n.account.outbound_privacy.type }}</label>
+								<label for="account_outbound_privacy" class="control-label">
+									{{i18n.myAccountApp.common.outboundPrivacy.label}}
+								</label>
 								<div class="controls">
-									<select id="outbound_privacy" name="caller_id_options.outbound_privacy">
-										<option value="inherit"{{#compare account.caller_id_options.outbound_privacy "===" "inherit"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.inherit }}</option>
-										<option value="none"{{#compare account.caller_id_options.outbound_privacy "===" "none"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.none }}</option>
-										<option value="number"{{#compare account.caller_id_options.outbound_privacy "===" "number"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.number }}</option>
-										<option value="name"{{#compare account.caller_id_options.outbound_privacy "===" "name"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.name }}</option>
-										<option value="full"{{#compare account.caller_id_options.outbound_privacy "===" "full"}} selected{{/compare}}>{{ i18n.account.outbound_privacy.full }}</option>
+									<select name="caller_id_options.outbound_privacy" id="account_outbound_privacy">
+									{{#select account.caller_id_options.outbound_privacy}}
+										{{#each outboundPrivacy}}
+											<option value="{{key}}">
+												{{value}}
+											</option>
+										{{/each}}
+									{{/select}}
 									</select>
 								</div>
 							</div>

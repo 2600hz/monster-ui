@@ -261,6 +261,13 @@ define(function(require) {
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
 
+			data.outboundPrivacy = _.map(self.appFlags.common.outboundPrivacy, function(strategy) {
+				return {
+					key: strategy,
+					value: self.i18n.active().myAccountApp.common.outboundPrivacy.values[strategy]
+				};
+			});
+
 			if (!(data.account.hasOwnProperty('ui_flags') && data.account.ui_flags.hasOwnProperty('numbers_format'))) {
 				data.account.ui_flags = data.account.ui_flags || {};
 				data.account.ui_flags.numbers_format = 'international';
