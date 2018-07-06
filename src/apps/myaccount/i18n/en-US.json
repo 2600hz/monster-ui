@@ -2,7 +2,7 @@
 	"myAccountApp": {
 		"common": {
 			"outboundPrivacy": {
-				"label": "Caller-ID privacy",
+				"label": "Caller-ID Privacy",
 				"tooltip": "Determines what appears as Caller-ID for offnet outbound calls.",
 				"values": {
 					"inherit": "- Default -",
