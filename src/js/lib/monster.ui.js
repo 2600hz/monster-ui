@@ -353,8 +353,8 @@ define(function(require) {
 	/**
 	 * Determine the container of jQuery dialogs following this order:
 	 * - visible fullScreenModal
-	 * - myaccount submodule when open
-	 * - currently open app
+	 * - open myaccount submodule
+	 * - current app
 	 */
 	function getDialogAppendTo() {
 		var $coreWrapper = $('.core-wrapper'),
@@ -364,7 +364,7 @@ define(function(require) {
 
 		if ($coreAbsolute.find('.modal-full-screen-wrapper').is(':visible')) {
 			return $coreAbsolute.find('.modal-full-screen-wrapper:visible');
-		} else if ($myAccount.is(':visible')) {
+		} else if ($myAccount.hasClass('myaccount-open')) {
 			return $myAccount.find('.myaccount-dialog-container');
 		} else {
 			return $coreContent;
