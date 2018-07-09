@@ -30,7 +30,11 @@ define(function(require) {
 		numberPrependRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
 				accountId = pAccountId || self.accountId,
-				popup_html = $(monster.template(self, 'numberPrepend-layout', dataNumber.prepend || {})),
+				popup_html = $(self.getTemplate({
+					name: 'layout',
+					data: dataNumber.prepend || {},
+					submodule: 'numberPrepend'
+				})),
 				popup;
 
 			popup_html.find('.save').on('click', function(ev) {

@@ -90,10 +90,18 @@ define(function(require) {
 				template;
 
 			if (skin === 'default') {
-				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: formattedData,
+					submodule: 'mediaSelect'
+				}));
 				self.mediaSelectBindDefaultTemplate(template);
 			} else if (skin === 'tabs') {
-				template = $(monster.template(self, 'mediaSelect-tabs-layout', formattedData));
+				template = $(self.getTemplate({
+					name: 'tabs-layout',
+					data: formattedData,
+					submodule: 'mediaSelect'
+				}));
 				self.mediaSelectBindTabsTemplate(template);
 			}
 

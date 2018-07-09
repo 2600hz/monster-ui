@@ -31,7 +31,11 @@ define(function(require) {
 
 		callerIdRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
-				popup_html = $(monster.template(self, 'callerId-layout', dataNumber.cnam || {})),
+				popup_html = $(self.getTemplate({
+					name: 'layout',
+					data: dataNumber.cnam || {},
+					submodule: 'callerId'
+				})),
 				popup,
 				accountId = pAccountId || self.accountId,
 				form = popup_html.find('#cnam');
@@ -59,10 +63,12 @@ define(function(require) {
 
 					self.callerIdUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
-							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-								template = monster.template(self, '!' + self.i18n.active().callerId.successCnam, { phoneNumber: phoneNumber });
-
-							toastr.success(template);
+							toastr.success(self.getTemplate({
+								name: '!' + self.i18n.active().callerId.successCnam,
+								data: {
+									phoneNumber: monster.util.formatPhoneNumber(data.data.id)
+								}
+							}));
 
 							popup.dialog('destroy').remove();
 

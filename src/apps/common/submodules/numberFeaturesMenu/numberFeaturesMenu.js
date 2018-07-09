@@ -17,7 +17,13 @@ define(function(require) {
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
 				features = self.numberFeaturesMenuGetFeatures(numberData),
-				template = $(monster.template(self, 'numberFeaturesMenu-dropdown', { features: features }));
+				template = $(self.getTemplate({
+					name: 'dropdown',
+					data: {
+						features: features
+					},
+					submodule: 'numberFeaturesMenu'
+				}));
 
 			self.numberFeaturesMenuBindEvents(template, phoneNumber, args.afterUpdate);
 
@@ -100,7 +106,12 @@ define(function(require) {
 				}
 
 				self.numbersSyncOne(phoneNumber, accountId, function() {
-					toastr.success(monster.template(self, '!' + self.i18n.active().numberFeaturesMenu.syncSuccess, { number: monster.util.formatPhoneNumber(phoneNumber) }));
+					toastr.success(self.getTemplate({
+						name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
+						data: {
+							number: monster.util.formatPhoneNumber(phoneNumber)
+						}
+					}));
 				});
 			});
 		},

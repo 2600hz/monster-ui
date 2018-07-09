@@ -23,13 +23,17 @@ define(function(require) {
 					extension: self.i18n.active().numberSelector.extensionLink,
 					hideNumber: false
 				}, args.labels),
-				layout = $(monster.template(self, 'numberSelector-layout', {
-					labels: labels,
-					inputName: args.inputName || '',
-					number: args.number,
-					noSpare: args.noSpare === true ? true : false,
-					noBuy: args.noBuy === true ? true : false,
-					noExtension: args.noExtension === true ? true : false
+				layout = $(self.getTemplate({
+					name: 'layout',
+					data: {
+						labels: labels,
+						inputName: args.inputName || '',
+						number: args.number,
+						noSpare: args.noSpare === true ? true : false,
+						noBuy: args.noBuy === true ? true : false,
+						noExtension: args.noExtension === true ? true : false
+					},
+					submodule: 'numberSelector'
 				}));
 
 			if (container) {

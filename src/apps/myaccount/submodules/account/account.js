@@ -94,7 +94,11 @@ define(function(require) {
 
 			self.accountGetData(function(data) {
 				data.allowAccessList = monster.config.whitelabel.allowAccessList;
-				var accountTemplate = $(monster.template(self, 'account-layout', data));
+				var accountTemplate = $(self.getTemplate({
+					name: 'layout',
+					data: data,
+					submodule: 'account'
+				}));
 
 				self.renderEditAccessListForm(accountTemplate);
 

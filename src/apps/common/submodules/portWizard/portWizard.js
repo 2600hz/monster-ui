@@ -684,7 +684,12 @@ define(function(require) {
 													.fadeIn();
 										});
 							} else {
-								toastr.warning(self.i18n.active().portWizard.toastr.warning.invalidNumbers.replace('{{variable}}', errors.join(', ')));
+								toastr.warning(self.getTemplate({
+									name: '!' + self.i18n.active().portWizard.toastr.warning.invalidNumbers,
+									data: {
+										variable: errors.join(', ')
+									}
+								}));
 							}
 
 							self.portWizardRenderAddNumbersList(args);
@@ -1123,19 +1128,32 @@ define(function(require) {
 		},
 
 		portWizardFileUploadErrorsHandler: function(errorsList) {
-			var self = this,
-				mimeTypes = self.appFlags.attachments.mimeTypes,
-				maxSize = self.appFlags.attachments.maxSize,
-				fileTypes;
+			var self = this;
 
 			_.each(errorsList, function(files, type) {
 				_.each(files, function(file) {
 					if (type === 'mimeTypes') {
-						fileTypes = mimeTypes.map(function(value) { return (/[^/]*$/.exec(value)[0]).toUpperCase(); }).join(', ');
-
-						toastr.warning(file + self.i18n.active().portWizard.toastr.warning.mimeTypes.replace('{{variable}}', fileTypes));
+						toastr.warning(self.getTemplate({
+							name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
+							data: {
+								variable: _
+									.chain(self.appFlags.attachments.mimeTypes)
+									.map(function(value) {
+										return /[^/]*$/
+											.exec(value)[0]
+											.toUpperCase();
+									})
+									.join(', ')
+									.value()
+							}
+						}));
 					} else if (type === 'size') {
-						toastr.warning(file + self.i18n.active().portWizard.toastr.warning.size.replace('{{variable}}', maxSize));
+						toastr.warning(self.getTemplate({
+							name: '!' + self.i18n.active().portWizard.toastr.warning.size,
+							data: {
+								variable: self.appFlags.attachments.maxSize
+							}
+						}));
 					}
 				});
 			});

@@ -23,7 +23,11 @@ define(function(require) {
 						dataToTemplate = $.extend(true, self.accountAncestorsFormatDataToTemplate(args.entity, account), {
 							parents: accounts
 						}),
-						template = monster.template(self, 'accountAncestors', dataToTemplate),
+						template = $(self.getTemplate({
+							name: 'layout',
+							data: dataToTemplate,
+							submodule: 'accountAncestors'
+						})),
 						popup = monster.ui.dialog(template, {
 							title: self.accountAncestorsGeneratePopupTitle(args.entity, account)
 						});

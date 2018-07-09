@@ -527,11 +527,12 @@ define(function(require) {
 				if (creditsToAdd) {
 					self.balanceAddCredits(creditsToAdd,
 						function() {
-							var dataToastr = {
-								amount: self.i18n.active().currencyUsed + creditsToAdd
-							};
-
-							toastr.success(monster.template(self, '!' + self.i18n.active().balance.creditsAdded, dataToastr));
+							toastr.success(self.getTemplate({
+								name: '!' + self.i18n.active().balance.creditsAdded,
+								data: {
+									amount: self.i18n.active().currencyUsed + creditsToAdd
+								}
+							}));
 
 							if (typeof params.callback === 'function') {
 								self.balanceGet(function(data) {

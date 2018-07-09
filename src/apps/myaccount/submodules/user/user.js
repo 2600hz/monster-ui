@@ -31,7 +31,11 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				var formattedData = self.userLayoutFormatData(results),
-					userTemplate = $(monster.template(self, 'user-layout', formattedData));
+					userTemplate = $(self.getTemplate({
+						name: 'layout',
+						data: formattedData,
+						submodule: 'user'
+					}));
 
 				self.userBindingEvents(userTemplate, results);
 

@@ -4,30 +4,25 @@ define(function(require) {
 		monster = require('monster'),
 		toastr = require('toastr');
 
-	require([
-		'./submodules/account/account',
-		'./submodules/balance/balance',
-		'./submodules/billing/billing',
-		'./submodules/servicePlan/servicePlan',
-		'./submodules/transactions/transactions',
-		'./submodules/trunks/trunks',
-		'./submodules/user/user',
-		'./submodules/errorTracker/errorTracker'
-	]);
+	var appSubmodules = [
+		'account',
+		'balance',
+		'billing',
+		'errorTracker',
+		'servicePlan',
+		'transactions',
+		'trunks',
+		'user'
+	];
+
+	require(_.map(appSubmodules, function(name) {
+		return './subModules/' + name + '/' + name;
+	}));
 
 	var app = {
 		name: 'myaccount',
 
-		subModules: [
-			'account',
-			'balance',
-			'billing',
-			'servicePlan',
-			'transactions',
-			'trunks',
-			'user',
-			'errorTracker'
-		],
+		subModules: appSubmodules,
 
 		css: [ 'app' ],
 
@@ -245,7 +240,10 @@ define(function(require) {
 				var dataTemplate = {
 						restrictions: uiRestrictions
 					},
-					myaccountHtml = $(monster.template(self, 'app', dataTemplate));
+					myaccountHtml = $(self.getTemplate({
+						name: 'app',
+						data: dataTemplate
+					}));
 
 				if (!monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions')) {
 					self.callApi({
@@ -316,7 +314,10 @@ define(function(require) {
 							name: args && args.name || monster.apps.auth.currentUser.first_name + ' ' + monster.apps.auth.currentUser.last_name,
 							showMyaccount: showMyaccount
 						},
-						navHtml = $(monster.template(self, 'nav', dataTemplate));
+						navHtml = $(self.getTemplate({
+							name: 'nav',
+							data: dataTemplate
+						}));
 
 					/* Hack to redraw myaccount links on masquerading */
 					navLinks.find('.myaccount-common-link').remove();
@@ -664,7 +665,9 @@ define(function(require) {
 
 		showGreetingWalkthrough: function(callback, callbackClose) {
 			var self = this,
-				popup = $(monster.template(self, 'walkthrough-greetingsDialog'));
+				popup = $(self.getTemplate({
+					name: 'walkthrough-greetingsDialog'
+				}));
 
 			popup.find('#start_walkthrough').on('click', function() {
 				dialog.dialog('close').remove();
@@ -684,7 +687,9 @@ define(function(require) {
 
 		showEndWalkthrough: function(callback) {
 			var self = this,
-				popup = $(monster.template(self, 'walkthrough-endDialog'));
+				popup = $(self.getTemplate({
+					name: 'walkthrough-endDialog'
+				}));
 
 			popup.find('#end_walkthrough').on('click', function() {
 				dialog.dialog('close').remove();

@@ -43,7 +43,11 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
-					var billingTemplate = $(monster.template(self, 'billing-layout', results));
+					var billingTemplate = $(self.getTemplate({
+						name: 'billing-layout',
+						data: results,
+						submodule: 'billing'
+					}));
 
 					self.billingBindEvents(billingTemplate, results);
 

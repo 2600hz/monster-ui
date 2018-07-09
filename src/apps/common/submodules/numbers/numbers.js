@@ -52,9 +52,21 @@ define(function(require) {
 				data.viewType = viewType;
 				data = self.numbersFormatData(data);
 
-				var numbersView = $(monster.template(self, 'numbers-layout', data)),
-					spareView = $(monster.template(self, 'numbers-spare', data)),
-					usedView = $(monster.template(self, 'numbers-used', data));
+				var numbersView = $(self.getTemplate({
+						name: 'layout',
+						data: data,
+						submodule: 'numbers'
+					})),
+					spareView = $(self.getTemplate({
+						name: 'spare',
+						data: data,
+						submodule: 'numbers'
+					})),
+					usedView = $(self.getTemplate({
+						name: 'used',
+						data: data,
+						submodule: 'numbers'
+					}));
 
 				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
@@ -214,7 +226,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="spare"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-spareAccount', { viewType: dataNumbers.viewType, spareNumbers: spareNumbers }))
+										.append($(self.getTemplate({
+											name: 'spareAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												spareNumbers: spareNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + spareNumbers.length + ')');
@@ -224,10 +243,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-usedAccount', {
-											viewType: dataNumbers.viewType,
-											usedNumbers: usedNumbers
-										}))
+										.append($(self.getTemplate({
+											name: 'usedAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												usedNumbers: usedNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + usedNumbers.length + ')');
@@ -479,7 +502,11 @@ define(function(require) {
 				if (e911ErrorMessage) {
 					monster.ui.alert('error', e911ErrorMessage);
 				} else {
-					var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+					var dialogTemplate = $(self.getTemplate({
+							name: 'actionsConfirmation',
+							data: dataTemplate,
+							submodule: 'numbers'
+						})),
 						requestData = {
 							numbers: listNumbers,
 							accountId: self.accountId
@@ -588,7 +615,11 @@ define(function(require) {
 
 				dataTemplate.numberCount = listNumbers.length;
 
-				var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'actionsConfirmation',
+						data: dataTemplate,
+						submodule: 'numbers'
+					})),
 					requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
@@ -792,7 +823,10 @@ define(function(require) {
 
 		numbersShowRecapAddNumbers: function(data) {
 			var self = this,
-				addRecapTemplate = $(monster.template(self, 'numbers-addExternalResults')),
+				addRecapTemplate = $(self.getTemplate({
+					name: 'addExternalResults',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -912,7 +946,11 @@ define(function(require) {
 			var self = this;
 
 			self.numbersAddExternalGetData(function(data) {
-				var dialogTemplate = $(monster.template(self, 'numbers-addExternal', data)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'addExternal',
+						data: data,
+						submodule: 'numbers'
+					})),
 					CUSTOM_CHOICE = '_uiCustomChoice';
 
 				monster.ui.tooltips(dialogTemplate);
@@ -969,7 +1007,10 @@ define(function(require) {
 
 		numbersShowDeletedNumbers: function(data) {
 			var self = this,
-				deleteRecapTemplate = $(monster.template(self, 'numbers-deleteConfirmation')),
+				deleteRecapTemplate = $(self.getTemplate({
+					name: 'deleteConfirmation',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -999,7 +1040,11 @@ define(function(require) {
 
 		numbersPaintSpare: function(parent, dataNumbers, callback) {
 			var self = this,
-				template = monster.template(self, 'numbers-spare', dataNumbers);
+				template = $(self.getTemplate({
+					name: 'spare',
+					data: dataNumbers,
+					submodule: 'spare'
+				}));
 
 			parent
 				.find('.list-numbers[data-type="spare"]')

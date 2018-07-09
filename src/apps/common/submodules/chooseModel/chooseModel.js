@@ -76,7 +76,11 @@ define(function(require) {
 				selectedBrand,
 				selectedFamily,
 				selectedModel,
-				templateDevice = $(monster.template(self, 'chooseModel-provisioner', dataTemplate));
+				templateDevice = $(self.getTemplate({
+					name: 'provisioner',
+					data: dataTemplate,
+					submodule: 'chooseModel'
+				}));
 
 			monster.ui.validate(templateDevice.find('#device_form'), {
 				rules: {
@@ -127,7 +131,9 @@ define(function(require) {
 
 				$this.addClass('selected');
 
-				templateDevice.find('.actions .selection').text(monster.template(self, '!' + self.i18n.active().chooseModel.deviceSelected, { brand: selectedBrand, model: selectedModel }));
+				templateDevice
+					.find('.actions .selection')
+						.text(monster.template(self, '!' + self.i18n.active().chooseModel.deviceSelected, { brand: selectedBrand, model: selectedModel }));
 				templateDevice.find('.block-footer').slideDown(function() {
 					$('html, body').animate({ scrollTop: templateDevice.find('div.block-device-info div.title-bar').offset().top }, function() {
 						templateDevice.find('#name').focus();

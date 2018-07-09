@@ -22,7 +22,11 @@ define(function(require) {
 				popup;
 
 			self.extensionToolsSelectData(function(data) {
-				var template = $(monster.template(self, 'extensionTools-getNewDialog', data));
+				var template = $(self.getTemplate({
+					name: 'getNewDialog',
+					data: data,
+					submodule: 'extensionTools'
+				}));
 
 				monster.ui.footable(template.find('.footable'));
 				self.extensionToolsSelectBindEvents(template, callbackSuccess, data);

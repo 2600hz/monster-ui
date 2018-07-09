@@ -93,7 +93,11 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
-				var servicePlanView = $(monster.template(self, 'servicePlan-layout', renderData));
+				var servicePlanView = $(self.getTemplate({
+					name: 'layout',
+					data: renderData,
+					submodule: 'servicePlan'
+				}));
 
 				self.servicePlanBindEvents(servicePlanView);
 

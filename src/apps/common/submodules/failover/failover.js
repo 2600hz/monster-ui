@@ -43,7 +43,11 @@ define(function(require) {
 					failover: dataNumber.failover,
 					phoneNumber: dataNumber.id
 				},
-				popupHtml = $(monster.template(self, 'failover-dialog', tmplData)),
+				popupHtml = $(self.getTemplate({
+					name: 'dialog',
+					data: tmplData,
+					submodule: 'failover'
+				})),
 				popup;
 
 			popupHtml.find('.failover-block[data-type="' + radio + '"]').addClass('selected');
