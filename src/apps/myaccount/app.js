@@ -16,7 +16,7 @@ define(function(require) {
 	];
 
 	require(_.map(appSubmodules, function(name) {
-		return './subModules/' + name + '/' + name;
+		return './submodules/' + name + '/' + name;
 	}));
 
 	var app = {
