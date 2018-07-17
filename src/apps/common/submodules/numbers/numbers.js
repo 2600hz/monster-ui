@@ -52,9 +52,21 @@ define(function(require) {
 				data.viewType = viewType;
 				data = self.numbersFormatData(data);
 
-				var numbersView = $(monster.template(self, 'numbers-layout', data)),
-					spareView = $(monster.template(self, 'numbers-spare', data)),
-					usedView = $(monster.template(self, 'numbers-used', data));
+				var numbersView = $(self.getTemplate({
+						name: 'layout',
+						data: data,
+						submodule: 'numbers'
+					})),
+					spareView = $(self.getTemplate({
+						name: 'spare',
+						data: data,
+						submodule: 'numbers'
+					})),
+					usedView = $(self.getTemplate({
+						name: 'used',
+						data: data,
+						submodule: 'numbers'
+					}));
 
 				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
@@ -214,7 +226,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="spare"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-spareAccount', { viewType: dataNumbers.viewType, spareNumbers: spareNumbers }))
+										.append($(self.getTemplate({
+											name: 'spareAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												spareNumbers: spareNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + spareNumbers.length + ')');
@@ -224,10 +243,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-usedAccount', {
-											viewType: dataNumbers.viewType,
-											usedNumbers: usedNumbers
-										}))
+										.append($(self.getTemplate({
+											name: 'usedAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												usedNumbers: usedNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + usedNumbers.length + ')');
@@ -479,7 +502,11 @@ define(function(require) {
 				if (e911ErrorMessage) {
 					monster.ui.alert('error', e911ErrorMessage);
 				} else {
-					var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+					var dialogTemplate = $(self.getTemplate({
+							name: 'actionsConfirmation',
+							data: dataTemplate,
+							submodule: 'numbers'
+						})),
 						requestData = {
 							numbers: listNumbers,
 							accountId: self.accountId
@@ -538,7 +565,13 @@ define(function(require) {
 							self.numbersShowDeletedNumbers(data);
 
 							self.numbersPaintSpare(parent, dataNumbers, function() {
-								//var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
+								// var template = self.getTemplate({
+								// 	name: '!' + self.i18n.active().numbers.successDelete,
+								// 	data: {
+								// 		count: countDelete
+								// 	},
+								// 	submodule: 'numbers'
+								// });
 
 								//toastr.success(template);
 							});
@@ -588,7 +621,11 @@ define(function(require) {
 
 				dataTemplate.numberCount = listNumbers.length;
 
-				var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'actionsConfirmation',
+						data: dataTemplate,
+						submodule: 'numbers'
+					})),
 					requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
@@ -668,7 +705,11 @@ define(function(require) {
 									count: countMove,
 									accountName: accountName
 								},
-								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
+								template = self.getTemplate({
+									name: '!' + self.i18n.active().numbers.successMove,
+									data: dataTemplate,
+									submodule: 'numbers'
+								});
 
 							dialogTemplate.parent().parent().remove();
 
@@ -710,7 +751,14 @@ define(function(require) {
 									});
 								} else {
 									var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-										template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
+										template = self.getTemplate({
+											name: '!' + self.i18n.active().numbers[type],
+											data: {
+												number: data.number,
+												accountName: section.data('name')
+											},
+											submodule: 'numbers'
+										});
 
 									toastr.warning(template);
 								}
@@ -792,7 +840,10 @@ define(function(require) {
 
 		numbersShowRecapAddNumbers: function(data) {
 			var self = this,
-				addRecapTemplate = $(monster.template(self, 'numbers-addExternalResults')),
+				addRecapTemplate = $(self.getTemplate({
+					name: 'addExternalResults',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -912,7 +963,11 @@ define(function(require) {
 			var self = this;
 
 			self.numbersAddExternalGetData(function(data) {
-				var dialogTemplate = $(monster.template(self, 'numbers-addExternal', data)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'addExternal',
+						data: data,
+						submodule: 'numbers'
+					})),
 					CUSTOM_CHOICE = '_uiCustomChoice';
 
 				monster.ui.tooltips(dialogTemplate);
@@ -969,7 +1024,10 @@ define(function(require) {
 
 		numbersShowDeletedNumbers: function(data) {
 			var self = this,
-				deleteRecapTemplate = $(monster.template(self, 'numbers-deleteConfirmation')),
+				deleteRecapTemplate = $(self.getTemplate({
+					name: 'deleteConfirmation',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -999,7 +1057,11 @@ define(function(require) {
 
 		numbersPaintSpare: function(parent, dataNumbers, callback) {
 			var self = this,
-				template = monster.template(self, 'numbers-spare', dataNumbers);
+				template = $(self.getTemplate({
+					name: 'spare',
+					data: dataNumbers,
+					submodule: 'spare'
+				}));
 
 			parent
 				.find('.list-numbers[data-type="spare"]')
@@ -1476,7 +1538,13 @@ define(function(require) {
 					if (args.hasOwnProperty('error')) {
 						args.error('invalid');
 					} else {
-						var message = monster.template(self, '!' + self.i18n.active().numbers.notInService, { variable: monster.util.formatPhoneNumber(number.id) });
+						var message = self.getTemplate({
+							name: '!' + self.i18n.active().numbers.notInService,
+							data: {
+								variable: monster.util.formatPhoneNumber(number.id)
+							},
+							submodule: 'numbers'
+						});
 
 						monster.ui.alert('warning', message);
 					}
@@ -1486,7 +1554,13 @@ define(function(require) {
 				if (args.hasOwnProperty('error')) {
 					args.error('errorGetNumber');
 				} else {
-					var message = monster.template(self, '!' + self.i18n.active().numbers.errorFetchingNumber, { variable: monster.util.formatPhoneNumber(phoneNumber) });
+					var message = self.getTemplate({
+						name: '!' + self.i18n.active().numbers.errorFetchingNumber,
+						data: {
+							variable: monster.util.formatPhoneNumber(phoneNumber)
+						},
+						submodule: 'numbers'
+					});
 
 					monster.ui.alert(message);
 				}

@@ -41,7 +41,12 @@ define(function(require) {
 			// Get the initial dynamic data we need before displaying the app
 			self.listDevices(function(data) {
 				// Load the data in a Handlebars template
-				var demoTemplate = $(monster.template(self, 'layout', { devices: data }));
+				var demoTemplate = $(self.getTemplate({
+					name: 'layout',
+					data: {
+						devices: data
+					}
+				}));
 
 				// Bind UI and Socket events
 				self.bindUIEvents(demoTemplate);
@@ -83,7 +88,10 @@ define(function(require) {
 			var self = this,
 				addEvent = function(data) {
 					var formattedEvent = self.formatEvent(data),
-						eventTemplate = monster.template(self, 'event', formattedEvent);
+						eventTemplate = $(self.getTemplate({
+							name: 'event',
+							data: formattedEvent
+						}));
 
 					if (formattedEvent.extra.hasOwnProperty('deviceId')) {
 						monster.ui.highlight(template.find('.device-item[data-id="' + formattedEvent.extra.deviceId + '"]'));

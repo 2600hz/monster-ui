@@ -12,7 +12,11 @@ define(function(require) {
 		_errorTrackerRenderContent: function(args) {
 			var self = this,
 				dataTemplate = self.errorTrackerFormatData(monster.logs.error),
-				listErrorTemplates = $(monster.template(self, 'errorTracker-layout', dataTemplate));
+				listErrorTemplates = $(self.getTemplate({
+					name: 'layout',
+					data: dataTemplate,
+					submodule: 'errorTracker'
+				}));
 
 			self.errorTrackerBindEvents(listErrorTemplates);
 

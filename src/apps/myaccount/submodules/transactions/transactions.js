@@ -19,8 +19,16 @@ define(function(require) {
 			var self = this;
 
 			self.listTransactions(function(data) {
-				var transactionsView = $(monster.template(self, 'transactions-layout', data)),
-					listTransactionsView = monster.template(self, 'transactions-list', data),
+				var transactionsView = $(self.getTemplate({
+						name: 'layout',
+						data: data,
+						submodule: 'transactions'
+					})),
+					listTransactionsView = $(self.getTemplate({
+						name: 'list',
+						data: data,
+						submodule: 'transactions'
+					})),
 					optionsDatePicker = {
 						container: transactionsView,
 						range: self.transactionsRange
@@ -73,7 +81,12 @@ define(function(require) {
 				self.listTransactions(from, to, function(data) {
 					var listTransactions = parent.find('.list-transactions').empty();
 
-					listTransactions.append(monster.template(self, 'transactions-list', data));
+					listTransactions
+						.append($(self.getTemplate({
+							name: 'list',
+							data: data,
+							submodule: 'transactions'
+						})));
 
 					parent.find('.expandable').hide();
 

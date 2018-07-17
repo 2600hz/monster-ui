@@ -129,9 +129,13 @@ define(function(require) {
 			var self = this,
 				searchType = args.searchType,
 				maxDigits = args.carrierInfo.maximal_prefix_length,
-				template = $(monster.template(self, 'buyNumbers-layout', {
-					isPhonebookConfigured: self.appFlags.isPhonebookConfigured,
-					maxDigits: maxDigits
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: {
+						isPhonebookConfigured: self.appFlags.isPhonebookConfigured,
+						maxDigits: maxDigits
+					},
+					submodule: 'buyNumbers'
 				}));
 
 			args.popup = monster.ui.dialog(template, {
@@ -283,7 +287,13 @@ define(function(require) {
 							container
 								.find('#check_numbers_div .unavailable-div .unavailable-numbers')
 									.empty()
-									.append(monster.template(self, 'buyNumbers-unavailableNumbers', {numbers: unavailableNumbers}));
+									.append($(self.getTemplate({
+										name: 'unavailableNumbers',
+										data: {
+											numbers: unavailableNumbers
+										},
+										submodule: 'buyNumbers'
+									})));
 						} else {
 							container.find('#check_numbers_div').hide();
 							purchaseNumbers();
@@ -531,8 +541,15 @@ define(function(require) {
 			// 		var tollfreePrefixes = availableCountries[data.selectedData.value].toll_free,
 			// 			radioGroup = container.find('#tollfree_radio_group');
 
-			// 		radioGroup.empty()
-			// 				  .append(monster.template(self, 'buyNumbers-tollfree', {tollfreePrefixes: tollfreePrefixes}));
+					// .radioGroup
+					// 	.empty()
+					// 	.append($(self.getTemplate({
+					// 	  	name: 'tolfree',
+					// 	  	data: {
+					// 	  		tollfreePrefixes: tollfreePrefixes
+					// 	  	},
+					// 	  	submodule: 'buyNumbers'
+					// 	  })));
 
 			// 		radioGroup.find('input:radio:first').prop('checked', true);
 			// 	}
@@ -542,7 +559,13 @@ define(function(require) {
 
 			radioGroup
 				.empty()
-				.append(monster.template(self, 'buyNumbers-tollfree', {tollfreePrefixes: tollfreePrefixes}));
+				.append($(self.getTemplate({
+					name: 'tollfree',
+					data: {
+						tollfreePrefixes: tollfreePrefixes
+					},
+					submodule: 'buyNumbers'
+				})));
 
 			radioGroup.find('input:radio:first').prop('checked', true);
 			/************************************************************************************************/
@@ -568,7 +591,11 @@ define(function(require) {
 
 				performSearch = function(_offset, _limit, _callback) {
 					loadingNewNumbers = true;
-					resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
+					resultDiv
+						.append($(self.getTemplate({
+							name: 'loadingNumbers',
+							submodule: 'buyNumbers'
+						})));
 					resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 					self.buyNumbersRequestSearchNumbers({
 						data: {
@@ -700,7 +727,13 @@ define(function(require) {
 						areaCodesDiv = container.find('#area_code_radio_div');
 					areaCodesDiv
 						.empty()
-						.append(monster.template(self, 'buyNumbers-areaCodes', {areaCodes: areaCodes}))
+						.append($(self.getTemplate({
+							name: 'areaCodes',
+							data: {
+								areaCodes: areaCodes
+							},
+							submodule: 'buyNumbers'
+						})))
 						.find('input:radio:first').prop('checked', true);
 					areaCodes.length > 1 ? areaCodesDiv.slideDown() : areaCodesDiv.slideUp();
 					event.stopPropagation();
@@ -738,7 +771,10 @@ define(function(require) {
 					isSeqNumChecked = container.find('#seq_num_checkbox').prop('checked'),
 					cityInput = container.find('#city_input').val(),
 					areacode = cityInput.match(/^\d+$/) ? cityInput : container.find('#area_code_radio_div input[type="radio"]:checked').val(),
-					searchParams = areacode + (isSeqNumChecked ? ' ' + monster.template(self, '!' + self.i18n.active().buyNumbers.seqNumParamLabel, { sequentialNumbers: seqNumIntvalue }) : '');
+					searchParams = areacode + (isSeqNumChecked
+						? ' ' + self.i18n.active().buyNumbers.seqNumParamLabel.replace('{{sequentialNumbers}}', seqNumIntvalue)
+						: ''
+					);
 
 				/*if (self.appFlags.isPhonebookConfigured && self.appFlags.selectedCountryCode === 'US' && cityInput.match(/^\d{5}$/)) {
 					self.buyNumbersRequestSearchAreaCodeByAddress({
@@ -768,7 +804,11 @@ define(function(require) {
 					if (isSeqNumChecked) { /***** Block Search *****/
 						performSearch = function(_offset, _limit, _callback) {
 							loadingNewNumbers = true;
-							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
+							resultDiv
+								.append($(self.getTemplate({
+									name: 'loadingNumbers',
+									submodule: 'buyNumbers'
+								})));
 							// Disable search as we don't want them to search for more than one block at a time
 							args.isSearchFunctionEnabled = false;
 							self.buyNumbersRequestSearchBlockOfNumbers({
@@ -811,7 +851,11 @@ define(function(require) {
 					} else { /***** Regular Search *****/
 						performSearch = function(_offset, _limit, _callback) {
 							loadingNewNumbers = true;
-							resultDiv.append(monster.template(self, 'buyNumbers-loadingNumbers', {}));
+							resultDiv
+								.append($(self.getTemplate({
+									name: 'loadingNumbers',
+									submodule: 'buyNumbers'
+								})));
 							resultDiv[0].scrollTop = resultDiv[0].scrollHeight;
 
 							self.buyNumbersRequestSearchNumbers({
@@ -936,10 +980,14 @@ define(function(require) {
 		buyNumbersRefreshSelectedNumbersList: function(args) {
 			var self = this,
 				container = args.container,
-				selectedNumbersList = monster.template(self, 'buyNumbers-selectedNumbers', {
-					numbers: args.selectedNumbers,
-					isSingleSelect: args.singleSelect
-				}),
+				selectedNumbersList = $(self.getTemplate({
+					name: 'selectedNumbers',
+					data: {
+						numbers: args.selectedNumbers,
+						isSingleSelect: args.singleSelect
+					},
+					submodule: 'buyNumbers'
+				})),
 				totalNumbers = self.buyNumbersGetTotalNumbers(args.selectedNumbers),
 				textAdded;
 
@@ -954,7 +1002,13 @@ define(function(require) {
 		buyNumbersRefreshDisplayedNumbersList: function(args) {
 			var self = this,
 				container = args.container,
-				searchResultsList = monster.template(self, 'buyNumbers-searchResults', { numbers: args.displayedNumbers }),
+				searchResultsList = $(self.getTemplate({
+					name: 'searchResults',
+					data: {
+						numbers: args.displayedNumbers
+					},
+					submodule: 'buyNumbers'
+				})),
 				resultDiv = container.find('#search_result_div .left-div');
 
 			resultDiv.empty().append(searchResultsList);

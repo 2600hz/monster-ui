@@ -390,7 +390,12 @@ define(function(require) {
 			}
 
 			if (toasterActions.indexOf(action) >= 0) {
-				toastr.info(self.getTemplate({ name: '!' + self.i18n.active().conferenceViewer.userActions[action], submodule: 'conferenceViewer', data: { name: userName } }));
+				toastr.info(self.getTemplate({
+					name: '!' + self.i18n.active().conferenceViewer.userActions[action],
+					data: {
+						name: userName
+					}
+				}));
 			}
 		},
 
