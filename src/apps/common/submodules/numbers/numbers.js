@@ -565,7 +565,13 @@ define(function(require) {
 							self.numbersShowDeletedNumbers(data);
 
 							self.numbersPaintSpare(parent, dataNumbers, function() {
-								//var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
+								// var template = self.getTemplate({
+								// 	name: '!' + self.i18n.active().numbers.successDelete,
+								// 	data: {
+								// 		count: countDelete
+								// 	},
+								// 	submodule: 'numbers'
+								// });
 
 								//toastr.success(template);
 							});
@@ -699,7 +705,11 @@ define(function(require) {
 									count: countMove,
 									accountName: accountName
 								},
-								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
+								template = self.getTemplate({
+									name: '!' + self.i18n.active().numbers.successMove,
+									data: dataTemplate,
+									submodule: 'numbers'
+								});
 
 							dialogTemplate.parent().parent().remove();
 
@@ -741,7 +751,14 @@ define(function(require) {
 									});
 								} else {
 									var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-										template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
+										template = self.getTemplate({
+											name: '!' + self.i18n.active().numbers[type],
+											data: {
+												number: data.number,
+												accountName: section.data('name')
+											},
+											submodule: 'numbers'
+										});
 
 									toastr.warning(template);
 								}
@@ -1521,7 +1538,13 @@ define(function(require) {
 					if (args.hasOwnProperty('error')) {
 						args.error('invalid');
 					} else {
-						var message = monster.template(self, '!' + self.i18n.active().numbers.notInService, { variable: monster.util.formatPhoneNumber(number.id) });
+						var message = self.getTemplate({
+							name: '!' + self.i18n.active().numbers.notInService,
+							data: {
+								variable: monster.util.formatPhoneNumber(number.id)
+							},
+							submodule: 'numbers'
+						});
 
 						monster.ui.alert('warning', message);
 					}
@@ -1531,7 +1554,13 @@ define(function(require) {
 				if (args.hasOwnProperty('error')) {
 					args.error('errorGetNumber');
 				} else {
-					var message = monster.template(self, '!' + self.i18n.active().numbers.errorFetchingNumber, { variable: monster.util.formatPhoneNumber(phoneNumber) });
+					var message = self.getTemplate({
+						name: '!' + self.i18n.active().numbers.errorFetchingNumber,
+						data: {
+							variable: monster.util.formatPhoneNumber(phoneNumber)
+						},
+						submodule: 'numbers'
+					});
 
 					monster.ui.alert(message);
 				}

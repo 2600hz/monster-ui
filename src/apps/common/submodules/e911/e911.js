@@ -84,7 +84,13 @@ define(function(require) {
 
 				var callbackSuccess = function callbackSuccess(data) {
 					var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-						template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+						template = self.getTemplate({
+							name: '!' + self.i18n.active().e911.successE911,
+							data: {
+								phoneNumber: phoneNumber
+							},
+							submodule: 'e911'
+						});
 
 					toastr.success(template);
 
@@ -165,7 +171,13 @@ define(function(require) {
 							self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 								success: function(data) {
 									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-										template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+										template = self.getTemplate({
+											name: '!' + self.i18n.active().e911.successE911,
+											data: {
+												phoneNumber: phoneNumber
+											},
+											submodule: 'e911'
+										});
 
 									toastr.success(template);
 

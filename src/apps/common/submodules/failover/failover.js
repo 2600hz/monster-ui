@@ -83,7 +83,13 @@ define(function(require) {
 						self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 							function(data) {
 								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-									template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
+									template = self.getTemplate({
+										name: '!' + self.i18n.active().failover.successFailover,
+										data: {
+											phoneNumber: phoneNumber
+										},
+										submodule: 'failover'
+									});
 
 								toastr.success(template);
 
@@ -113,7 +119,13 @@ define(function(require) {
 				self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().failover.successRemove, { phoneNumber: phoneNumber });
+							template = self.getTemplate({
+								name: '!' + self.i18n.active().failover.successRemove,
+								data: {
+									phoneNumber: phoneNumber
+								},
+								submodule: 'failover'
+							});
 
 						toastr.success(template);
 

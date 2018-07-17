@@ -440,7 +440,12 @@ define(function(require) {
 			var self = this,
 				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60 * 60 * 24)) : -1,
 				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
-				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
+				template = $(self.getTemplate({
+					name: 'trial-message',
+					data: {
+						daysLeft: daysLeft
+					}
+				}));
 
 			template.find('.links').on('click', function() {
 				self.showTrialPopup(daysLeft);
@@ -463,7 +468,9 @@ define(function(require) {
 					monster.pub('auth.continueTrial');
 				};
 
-			var popup = $(monster.template(self, 'trial-greetingsDialog'));
+			var popup = $(self.getTemplate({
+				name: 'trial-greetingsDialog'
+			}));
 
 			popup.find('#acknowledge').on('click', function() {
 				dialog.dialog('close').remove();
@@ -513,7 +520,12 @@ define(function(require) {
 							monster.pub('auth.continueTrial');
 						},
 						{
-							title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
+							title: self.getTemplate({
+								name: '!' + self.i18n.active().trialPopup.mainMessage,
+								data: {
+									variable: daysLeft
+								}
+							}),
 							cancelButtonText: self.i18n.active().trialPopup.closeButton,
 							confirmButtonText: self.i18n.active().trialPopup.upgradeButton,
 							confirmButtonClass: 'monster-button-primary',
@@ -609,7 +621,10 @@ define(function(require) {
 					ssoProviders: monster.config.whitelabel.sso_providers || [],
 					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
 				},
-				template = $(monster.template(self, 'sso-providers', dataTemplate));
+				template = $(self.getTemplate({
+					name: 'sso-providers',
+					data: dataTemplate
+				}));
 
 			template
 				.find('.sso-button')
@@ -704,7 +719,10 @@ define(function(require) {
 						}, []),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
-				template = $(monster.template(self, 'app', templateData));
+				template = $(self.getTemplate({
+					name: 'app',
+					data: templateData
+				}));
 
 			if (monster.config.whitelabel.hasOwnProperty('brandColor')) {
 				template.css('background-color', monster.config.whitelabel.brandColor);
@@ -1060,7 +1078,9 @@ define(function(require) {
 
 		newPassword: function(userData) {
 			var self = this,
-				template = $(monster.template(self, 'dialogPasswordUpdate')),
+				template = $(self.getTemplate({
+					name: 'dialogPasswordUpdate'
+				})),
 				form = template.find('#form_password_update'),
 				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
 
@@ -1209,7 +1229,12 @@ define(function(require) {
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
 						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'date'),
-							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
+							errorMessage = self.getTemplate({
+								name: '!' + self.i18n.active().expiredTrial,
+								data: {
+									date: date
+								}
+							});
 
 						monster.ui.alert('warning', errorMessage);
 					} else if (data.status === 423) {
@@ -1448,7 +1473,12 @@ define(function(require) {
 		triggerImpersonateUser: function(args) {
 			var self = this;
 
-			monster.ui.confirm(monster.template(self, '!' + self.i18n.active().confirmUserMasquerading, { userName: args.userName }), function() {
+			monster.ui.confirm(self.getTemplate({
+				name: '!' + self.i18n.active().confirmUserMasquerading,
+				data: {
+					userName: args.userName
+				}
+			}), function() {
 				self.impersonateUser(args.userId, function(data) {
 					monster.cookies.set('monster-auth', {
 						authToken: data.auth_token

@@ -87,7 +87,14 @@ define(function(require) {
 					self.numberRenameCarrierUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
 							var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-								template = monster.template(self, '!' + self.i18n.active().numberRenameCarrier.successUpdate, { phoneNumber: phoneNumber, carrierName: carrierName });
+								template = self.getTemplate({
+									name: '!' + self.i18n.active().numberRenameCarrier.successUpdate,
+									data: {
+										phoneNumber: phoneNumber,
+										carrierName: carrierName
+									},
+									submodule: 'numberRenameCarrier'
+								});
 
 							toastr.success(template);
 

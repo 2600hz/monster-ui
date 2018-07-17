@@ -133,7 +133,14 @@ define(function(require) {
 
 				templateDevice
 					.find('.actions .selection')
-						.text(monster.template(self, '!' + self.i18n.active().chooseModel.deviceSelected, { brand: selectedBrand, model: selectedModel }));
+						.text(self.getTemplate({
+							name: '!' + self.i18n.active().chooseModel.deviceSelected,
+							data: {
+								brand: selectedBrand,
+								model: selectedModel
+							},
+							submodule: 'chooseModel'
+						}));
 				templateDevice.find('.block-footer').slideDown(function() {
 					$('html, body').animate({ scrollTop: templateDevice.find('div.block-device-info div.title-bar').offset().top }, function() {
 						templateDevice.find('#name').focus();

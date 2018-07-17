@@ -47,7 +47,13 @@ define(function(require) {
 				self.numberPrependUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().numberPrepend.successUpdate, { phoneNumber: phoneNumber });
+							template = self.getTemplate({
+								name: '!' + self.i18n.active().numberPrepend.successUpdate,
+								data: {
+									phoneNumber: phoneNumber
+								},
+								submodule: 'numberPrepend'
+							});
 
 						toastr.success(template);
 

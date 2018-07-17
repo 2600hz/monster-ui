@@ -70,7 +70,10 @@ define(function(require) {
 					},
 					useDropdownApploader: monster.config.whitelabel.useDropdownApploader
 				},
-				mainTemplate = $(monster.template(self, 'app', dataTemplate));
+				mainTemplate = $(self.getTemplate({
+					name: 'app',
+					data: dataTemplate
+				}));
 
 			document.title = monster.config.whitelabel.applicationTitle;
 
@@ -92,7 +95,9 @@ define(function(require) {
 
 		loadSVG: function() {
 			var self = this,
-				svgTemplate = monster.template(self, 'svg-container');
+				svgTemplate = $(self.getTemplate({
+					name: 'svg-container'
+				}));
 
 			$('.core-wrapper').append(svgTemplate);
 		},
@@ -151,7 +156,11 @@ define(function(require) {
 				monster.ui.formatIconApp(myaccount);
 
 				if (currentApp.is(':empty')) {
-					currentApp.append(monster.template(self, 'current-app', myaccount));
+					currentApp
+						.append($(self.getTemplate({
+							name: 'current-app',
+							data: myaccount
+						})));
 
 					navbar
 						.find('#main_topbar_current_app_name')
@@ -164,7 +173,10 @@ define(function(require) {
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
 						currentApp
 							.empty()
-							.append(monster.template(self, 'current-app', myaccount));
+							.append($(self.getTemplate({
+								name: 'current-app',
+								data: myaccount
+							})));
 
 						navbar
 							.find('#main_topbar_current_app_name')
@@ -186,14 +198,21 @@ define(function(require) {
 				if (appName === 'appstore') {
 					currentApp.empty();
 				} else if (currentApp.is(':empty')) {
-					currentApp.append(monster.template(self, 'current-app', defaultApp));
+					currentApp
+						.append($(self.getTemplate({
+							name: 'current-app',
+							data: defaultApp
+						})));
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
 				} else {
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
 						currentApp
 							.empty()
-							.append(monster.template(self, 'current-app', defaultApp));
+							.append($(self.getTemplate({
+								name: 'current-app',
+								data: defaultApp
+							})));
 
 						navbar.find('#main_topbar_current_app_name').fadeIn(100);
 					});
@@ -386,7 +405,12 @@ define(function(require) {
 				allowBackOnMasquerading: true,
 				onSearch: function(searchValue) {
 					if (searchValue) {
-						var template = monster.template(self, 'accountToggle-search', { searchValue: searchValue });
+						var template = $(self.getTemplate({
+							name: 'accountToggle-search',
+							data: {
+								searchValue: searchValue
+							}
+						}));
 
 						mainContainer.find('.current-account-container').html(template);
 					} else {
@@ -454,7 +478,12 @@ define(function(require) {
 					});
 					$('#main_topbar_account_toggle').addClass('masquerading');
 
-					toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
+					toastr.info(self.getTemplate({
+						name: '!' + self.i18n.active().triggerMasquerading,
+						data: {
+							accountName: account.name
+						}
+					}));
 
 					monster.pub('core.changedAccount');
 
@@ -762,7 +791,10 @@ define(function(require) {
 						},
 						kazooVersion: monster.config.developerFlags.kazooVersion
 					},
-					template = $(monster.template(self, 'dialog-accountInfo', dataTemplate));
+					template = $(self.getTemplate({
+						name: 'dialog-accountInfo',
+						data: dataTemplate
+					}));
 
 				template.find('.copy-clipboard').each(function() {
 					var $this = $(this);
@@ -783,7 +815,12 @@ define(function(require) {
 			if (!$('.shortcuts-dialog').length) {
 				var self = this,
 					shortcuts = monster.ui.getShortcuts(),
-					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts });
+					shortcutsTemplate = $(self.getTemplate({
+						name: 'shortcuts',
+						data: {
+							categories: shortcuts
+						}
+					}));
 
 				monster.ui.dialog(shortcutsTemplate, {
 					title: self.i18n.active().globalShortcuts.popupTitle,
