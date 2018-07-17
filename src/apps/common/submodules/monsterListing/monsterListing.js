@@ -16,10 +16,20 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				formattedData = self.monsterListingFormatData(args),
-				layout = $(monster.template(self, 'monsterListing-layout', formattedData.labels)),
+				layout = $(self.getTemplate({
+					name: 'layout',
+					data: formattedData.labels,
+					submodule: 'monsterListing'
+				})),
 				popup;
 
-			layout.find('.grid-content').append(monster.template(self, formattedData.templateName, formattedData));
+			layout
+				.find('.grid-content')
+					.append($(self.getTemplate({
+						name: formattedData.templateName,
+						data: formattedData,
+						submodule: 'monsterListing'
+					})));
 
 			monster.ui.tooltips(layout, {
 				options: {
@@ -61,7 +71,7 @@ define(function(require) {
 					return val;
 				});
 				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'phoneNumber');
-				formattedData.templateName = 'monsterListing-numbers';
+				formattedData.templateName = 'numbers';
 			} else if (dataType === 'users') {
 				formattedData.sortedDataList = _.map(args.dataList, function(val, key) {
 					val.name = val.first_name + ' ' + val.last_name;
@@ -71,7 +81,7 @@ define(function(require) {
 					formattedData.dataList = _.keyBy(args.dataList, 'id');
 				}
 				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
-				formattedData.templateName = 'monsterListing-default';
+				formattedData.templateName = 'default';
 			} else {
 				if (_.isArray(args.dataList)) {
 					formattedData.sortedDataList = args.dataList;
@@ -80,7 +90,7 @@ define(function(require) {
 					formattedData.sortedDataList = _.toArray(args.dataList);
 				}
 				formattedData.sortedDataList = _.sortBy(formattedData.sortedDataList, 'name');
-				formattedData.templateName = 'monsterListing-default';
+				formattedData.templateName = 'default';
 			}
 
 			if (dataType in self.i18n.active().monsterListing) {

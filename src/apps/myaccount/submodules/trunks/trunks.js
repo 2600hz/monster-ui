@@ -66,7 +66,11 @@ define(function(require) {
 						amountInbound: amountInbound.toFixed(2),
 						totalAmountInbound: totalAmountInbound.toFixed(2)
 					},
-					trunksInboundView = $(monster.template(self, 'trunks-inbound', dataTemplate));
+					trunksInboundView = $(self.getTemplate({
+						name: 'inbound',
+						data: dataTemplate,
+						submodule: 'trunks'
+					}));
 
 				monster.ui.tooltips(trunksInboundView);
 
@@ -132,7 +136,11 @@ define(function(require) {
 						amountOutbound: amountOutbound.toFixed(2),
 						totalAmountOutbound: totalAmountOutbound.toFixed(2)
 					},
-					trunksOutboundView = $(monster.template(self, 'trunks-outbound', dataTemplate));
+					trunksOutboundView = $(self.getTemplate({
+						name: 'outbound',
+						data: dataTemplate,
+						submodule: 'trunks'
+					}));
 
 				monster.ui.tooltips(trunksOutboundView);
 
@@ -199,7 +207,11 @@ define(function(require) {
 						amountTwoway: amountTwoway.toFixed(2),
 						totalAmountTwoway: totalAmountTwoway.toFixed(2)
 					},
-					trunksTwowayView = $(monster.template(self, 'trunks-twoway', dataTemplate));
+					trunksTwowayView = $(self.getTemplate({
+						name: 'twoway',
+						data: dataTemplate,
+						submodule: 'trunks'
+					}));
 
 				monster.ui.tooltips(trunksTwowayView);
 

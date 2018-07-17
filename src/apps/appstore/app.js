@@ -43,7 +43,9 @@ define(function(require) {
 
 		render: function(container) {
 			var self = this,
-				template = $(monster.template(self, 'app')),
+				template = $(self.getTemplate({
+					name: 'app'
+				})),
 				parent = container || $('#monster_content');
 
 			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
@@ -170,8 +172,11 @@ define(function(require) {
 		renderApps: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
-				template = $(monster.template(self, 'appList', {
-					apps: appList
+				template = $(self.getTemplate({
+					name: 'appList',
+					data: {
+						apps: appList
+					}
 				}));
 
 			parent
@@ -226,13 +231,16 @@ define(function(require) {
 							}
 							return val;
 						}),
-						template = $(monster.template(self, 'appPopup', {
-							isWhitelabeling: monster.util.isWhitelabeling(),
-							app: app,
-							users: users,
-							i18n: {
-								selectedUsers: selectedUsersLength,
-								totalUsers: users.length
+						template = $(self.getTemplate({
+							name: 'appPopup',
+							data: {
+								isWhitelabeling: monster.util.isWhitelabeling(),
+								app: app,
+								users: users,
+								i18n: {
+									selectedUsers: selectedUsersLength,
+									totalUsers: users.length
+								}
 							}
 						})),
 						rightContainer = template.find('.right-container');
@@ -245,9 +253,14 @@ define(function(require) {
 					} else if (app.users && app.users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
-						rightContainer.find('#app_popup_select_users_link').html(
-							monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
-						);
+						rightContainer
+							.find('#app_popup_select_users_link')
+								.html(self.getTemplate({
+									name: '!' + self.i18n.active().selectUsersLink,
+									data: {
+										selectedUsers: selectedUsersLength
+									}
+								}));
 					}
 
 					self.bindPopupEvents(template, app, appstoreData);
@@ -356,9 +369,14 @@ define(function(require) {
 						$(this).data('original', (this.checked ? 'check' : 'uncheck'));
 					});
 
-					parent.find('#app_popup_select_users_link').html(
-						monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsers.length })
-					);
+					parent
+						.find('#app_popup_select_users_link')
+							.html(self.getTemplate({
+								name: '!' + self.i18n.active().selectUsersLink,
+								data: {
+									selectedUsers: selectedUsers.length
+								}
+							}));
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();

@@ -30,7 +30,11 @@ define(function(require) {
 		numberPrependRender: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
 				accountId = pAccountId || self.accountId,
-				popup_html = $(monster.template(self, 'numberPrepend-layout', dataNumber.prepend || {})),
+				popup_html = $(self.getTemplate({
+					name: 'layout',
+					data: dataNumber.prepend || {},
+					submodule: 'numberPrepend'
+				})),
 				popup;
 
 			popup_html.find('.save').on('click', function(ev) {
@@ -43,7 +47,13 @@ define(function(require) {
 				self.numberPrependUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().numberPrepend.successUpdate, { phoneNumber: phoneNumber });
+							template = self.getTemplate({
+								name: '!' + self.i18n.active().numberPrepend.successUpdate,
+								data: {
+									phoneNumber: phoneNumber
+								},
+								submodule: 'numberPrepend'
+							});
 
 						toastr.success(template);
 
