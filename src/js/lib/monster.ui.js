@@ -3018,7 +3018,30 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Wrapper for toast notification library
+	 * @param  {Object} args
+	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
+	 * @param  {String} args.message  Message to display in toast
+	 * @param  {Object} args.options  Toast notification library options
+	 */
+	function toast(pArgs) {
+		var args = _.isObject(pArgs)
+			? pArgs
+			: {};
+		var type = args.hasOwnProperty('type')
+			? args.type
+			: 'info';
+		try {
+			toastr[type](args.message, args.title, args.options);
+		} catch (error) {
+			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
+		}
+	}
+
 	initialize();
+
+	ui.toast = toast;
 
 	return ui;
 });
