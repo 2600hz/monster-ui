@@ -58,7 +58,10 @@ define(function(require) {
 					.empty()
 					.append(template);
 			} else {
-				toastr.error(self.i18n.active().appStoreDisabled);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().appStoreDisabled
+				});
 			}
 		},
 

@@ -336,7 +336,10 @@ define(function(require) {
 								if (monster.apps[currentApp].isMasqueradable) {
 									monster.apps[currentApp].render();
 								} else {
-									toastr.warning(self.i18n.active().noMasqueradingAllowed);
+									monster.ui.toast({
+										type: 'warning',
+										message: self.i18n.active().noMasqueradingAllowed
+									});
 									monster.apps.apploader.render();
 								}
 							}
@@ -432,7 +435,10 @@ define(function(require) {
 										if (monster.apps[currentApp].isMasqueradable) {
 											monster.apps[currentApp].render();
 										} else {
-											toastr.warning(self.i18n.active().noMasqueradingAllowed);
+											monster.ui.toast({
+												type: 'warning',
+												message: self.i18n.active().noMasqueradingAllowed
+											});
 											monster.apps.apploader.render();
 										}
 									}
@@ -478,12 +484,15 @@ define(function(require) {
 					});
 					$('#main_topbar_account_toggle').addClass('masquerading');
 
-					toastr.info(self.getTemplate({
-						name: '!' + self.i18n.active().triggerMasquerading,
-						data: {
-							accountName: account.name
-						}
-					}));
+					monster.ui.toast({
+						type: 'info',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().triggerMasquerading,
+							data: {
+								accountName: account.name
+							}
+						})
+					});
 
 					monster.pub('core.changedAccount');
 
@@ -534,7 +543,10 @@ define(function(require) {
 			monster.pub('myaccount.renderNavLinks');
 			$('#main_topbar_account_toggle').removeClass('masquerading');
 
-			toastr.info(self.i18n.active().restoreMasquerading);
+			monster.ui.toast({
+				type: 'info',
+				message: self.i18n.active().restoreMasquerading
+			});
 
 			monster.pub('core.changedAccount');
 
@@ -867,7 +879,10 @@ define(function(require) {
 				$('.warning-socket-wrapper').remove();
 				currentApp.render();
 
-				toastr.success(self.i18n.active().brokenWebSocketsWarning.successReconnect);
+				monster.ui.toast({
+					type: 'success',
+					message: self.i18n.active().brokenWebSocketsWarning.successReconnect
+				});
 			}
 		},
 

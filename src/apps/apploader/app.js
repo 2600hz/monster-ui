@@ -261,7 +261,10 @@ define(function(require) {
 							appList = newAppList;
 						});
 					} else {
-						toastr.error(self.i18n.active().noMasqueradingError);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().noMasqueradingError
+						});
 					}
 				}
 			});

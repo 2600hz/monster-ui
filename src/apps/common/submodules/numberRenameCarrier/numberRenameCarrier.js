@@ -96,7 +96,10 @@ define(function(require) {
 									submodule: 'numberRenameCarrier'
 								});
 
-							toastr.success(template);
+							monster.ui.toast({
+								type: 'success',
+								message: template
+							});
 
 							popup.dialog('destroy').remove();
 

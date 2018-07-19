@@ -793,7 +793,10 @@ define(function(require) {
 								$(this).empty();
 							});
 
-							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
+							monster.ui.toast({
+								type: 'error',
+								message: self.i18n.active().buyNumbers.zipCodeDoesNotExist
+							});
 						}
 					});
 				} else if (!areacode || (self.appFlags.selectedCountryCode === 'US' && !areacode.match(/^\d{3}$/)) ) {

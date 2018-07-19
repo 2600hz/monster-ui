@@ -269,7 +269,10 @@ define(function(require) {
 				self.installedApps = data.data.apps;
 			} else {
 				self.installedApps = [];
-				toastr.error(self.i18n.active().toastrMessages.appListError);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().toastrMessages.appListError
+				});
 			}
 
 			// We store the language so we can load the right language before having to query anything in our back-end. (no need to query account, user etc)
@@ -563,7 +566,10 @@ define(function(require) {
 				} else {
 					monster.pub('myaccount.showCreditCardTab');
 
-					toastr.error(self.i18n.active().trial.noCreditCard);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().trial.noCreditCard
+					});
 				}
 			});
 		},
@@ -933,10 +939,16 @@ define(function(require) {
 								if (error.status === 400) {
 									_.keys(data.data).forEach(function(val) {
 										if (self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val)) {
-											toastr.error(self.i18n.active().recoverPassword.toastr.error.reset[val]);
+											monster.ui.toast({
+												type: 'error',
+												message: self.i18n.active().recoverPassword.toastr.error.reset[val]
+											});
 										} else {
 											if (data.data[val].hasOwnProperty('not_found')) {
-												toastr.error(data.data[val].not_found);
+												monster.ui.toast({
+													type: 'error',
+													message: data.data[val].not_found
+												});
 											}
 										}
 									});
@@ -946,7 +958,10 @@ define(function(require) {
 							}
 						});
 					} else {
-						toastr.error(self.i18n.active().recoverPassword.toastr.error.missing);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().recoverPassword.toastr.error.missing
+						});
 					}
 				}
 			});
@@ -1106,11 +1121,17 @@ define(function(require) {
 							},
 							success: function(data, status) {
 								popup.dialog('close').remove();
-								toastr.success(self.i18n.active().passwordUpdate.toastr.success.update);
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().passwordUpdate.toastr.success.update
+								});
 							}
 						});
 					} else {
-						toastr.error(self.i18n.active().passwordUpdate.toastr.error.password);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().passwordUpdate.toastr.error.password
+						});
 					}
 				}
 			});
@@ -1171,11 +1192,17 @@ define(function(require) {
 					auth_id: authId
 				},
 				success: function(data) {
-					toastr.success(self.i18n.active().ssoSuccessUnlinking);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().ssoSuccessUnlinking
+					});
 					callback && callback(data.data);
 				},
 				error: function(data) {
-					toastr.error(self.i18n.active().ssoFailedUnlinking);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().ssoFailedUnlinking
+					});
 					callback && callback(data.data);
 				}
 			});
@@ -1190,11 +1217,17 @@ define(function(require) {
 					auth_id: authId
 				},
 				success: function(data) {
-					toastr.success(self.i18n.active().ssoSuccessLinking);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().ssoSuccessLinking
+					});
 					callback && callback(data.data);
 				},
 				error: function(data) {
-					toastr.error(self.i18n.active().ssoFailedLinking);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().ssoFailedLinking
+					});
 					callback && callback(data.data);
 				}
 			});

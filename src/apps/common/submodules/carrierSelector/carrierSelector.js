@@ -141,7 +141,10 @@ define(function(require) {
 				if (carrierType !== defaultType) {
 					var callbackSuccess = function(data) {
 							defaultType = carrierType;
-							toastr.success(self.i18n.active().carrierSelector.saveSuccess);
+							monster.ui.toast({
+								type: 'success',
+								message: self.i18n.active().carrierSelector.saveSuccess
+							});
 							contentHtml.find('.hunt-error').remove();
 							$this.addClass('disabled');
 

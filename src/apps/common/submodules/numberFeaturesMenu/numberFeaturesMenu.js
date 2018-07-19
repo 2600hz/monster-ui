@@ -106,12 +106,15 @@ define(function(require) {
 				}
 
 				self.numbersSyncOne(phoneNumber, accountId, function() {
-					toastr.success(self.getTemplate({
-						name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
-						data: {
-							number: monster.util.formatPhoneNumber(phoneNumber)
-						}
-					}));
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
+							data: {
+								number: monster.util.formatPhoneNumber(phoneNumber)
+							}
+						})
+					});
 				});
 			});
 		},

@@ -604,7 +604,10 @@ define(function(require) {
 							link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
 						});
 
-						toastr.error(self.i18n.active().billing.missingCard);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().billing.missingCard
+						});
 					}
 				});
 			});

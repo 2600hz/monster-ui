@@ -92,7 +92,10 @@ define(function(require) {
 							submodule: 'e911'
 						});
 
-					toastr.success(template);
+					monster.ui.toast({
+						type: 'success',
+						message: template
+					});
 
 					popup.dialog('destroy').remove();
 
@@ -179,7 +182,10 @@ define(function(require) {
 											submodule: 'e911'
 										});
 
-									toastr.success(template);
+									monster.ui.toast({
+										type: 'success',
+										message: template
+									});
 
 									popup.dialog('destroy').remove();
 

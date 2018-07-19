@@ -387,7 +387,10 @@ define(function(require) {
 			function syncNumbers(accountId) {
 				self.numbersSyncUsedBy(accountId, function(numbers) {
 					displayNumberList(accountId, function(numbers) {
-						toastr.success(self.i18n.active().numbers.sync.success);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().numbers.sync.success
+						});
 					}, true);
 				});
 			};
@@ -573,7 +576,10 @@ define(function(require) {
 								// 	submodule: 'numbers'
 								// });
 
-								//toastr.success(template);
+								// monster.ui.toast({
+								// 	type: 'success',
+								// 	message: template
+								// });
 							});
 						});
 					});
@@ -713,7 +719,10 @@ define(function(require) {
 
 							dialogTemplate.parent().parent().remove();
 
-							toastr.success(template);
+							monster.ui.toast({
+								type: 'success',
+								message: template
+							});
 						});
 					});
 				});
@@ -760,7 +769,10 @@ define(function(require) {
 											submodule: 'numbers'
 										});
 
-									toastr.warning(template);
+									monster.ui.toast({
+										type: 'warning',
+										message: template
+									});
 								}
 							});
 						} else {
@@ -879,7 +891,10 @@ define(function(require) {
 					if (data.hasOwnProperty('error')) {
 						self.numbersShowRecapAddNumbers(data);
 					} else {
-						toastr.success(self.i18n.active().numbers.addExternal.successAdd);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().numbers.addExternal.successAdd
+						});
 					}
 
 					callback && callback();
@@ -1125,7 +1140,10 @@ define(function(require) {
 					if (_data.hasOwnProperty('data') && _data.data.hasOwnProperty('cause') && _data.data.cause === 'account_disabled' && _data.data.hasOwnProperty('number')) {
 						success && success(_data.data);
 					} else {
-						toastr.error(self.i18n.active().numbers.numberNotFound);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().numbers.numberNotFound
+						});
 					}
 				}
 			});

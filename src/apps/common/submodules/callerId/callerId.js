@@ -63,12 +63,15 @@ define(function(require) {
 
 					self.callerIdUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
-							toastr.success(self.getTemplate({
-								name: '!' + self.i18n.active().callerId.successCnam,
-								data: {
-									phoneNumber: monster.util.formatPhoneNumber(data.data.id)
-								}
-							}));
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().callerId.successCnam,
+									data: {
+										phoneNumber: monster.util.formatPhoneNumber(data.data.id)
+									}
+								})
+							});
 
 							popup.dialog('destroy').remove();
 

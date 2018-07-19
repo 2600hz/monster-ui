@@ -91,7 +91,10 @@ define(function(require) {
 										submodule: 'failover'
 									});
 
-								toastr.success(template);
+								monster.ui.toast({
+									type: 'success',
+									message: template
+								});
 
 								popup.dialog('destroy').remove();
 
@@ -127,7 +130,10 @@ define(function(require) {
 								submodule: 'failover'
 							});
 
-						toastr.success(template);
+						monster.ui.toast({
+							type: 'success',
+							message: template
+						});
 
 						popup.dialog('destroy').remove();
 

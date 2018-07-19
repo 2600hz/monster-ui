@@ -55,7 +55,10 @@ define(function(require) {
 								submodule: 'numberPrepend'
 							});
 
-						toastr.success(template);
+						monster.ui.toast({
+							type: 'success',
+							message: template
+						});
 
 						popup.dialog('destroy').remove();
 

@@ -56,7 +56,10 @@ define(function(require) {
 						monster.pub('common.storageSelector.render', {
 							callback: function(attachment) {
 								self.storagePlanManagerUpdatePlan(type, attachment, function(updatedStorage) {
-									toastr.success(self.i18n.active().storagePlanManager.successUpdate);
+									monster.ui.toast({
+										type: 'success',
+										message: self.i18n.active().storagePlanManager.successUpdate
+									});
 
 									if (!hasExistingPlan && args.hasOwnProperty('onAdd')) {
 										args.onAdd(updatedStorage);
@@ -119,7 +122,10 @@ define(function(require) {
 				self.storagePlanManagerSavePath(type, customPath, function(data) {
 					template.attr('data-path', customPath);
 					template.find('.custom-path').empty().html(customPath);
-					toastr.success(self.i18n.active().storagePlanManager.successPathUpdate);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().storagePlanManager.successPathUpdate
+					});
 				});
 			});
 
