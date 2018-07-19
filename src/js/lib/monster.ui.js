@@ -1545,9 +1545,15 @@ define(function(require) {
 						activeToolbarClass: 'selected',
 						fileUploadError: function(reason, detail) {
 							if (reason === 'unsupported-file-type') {
-								toastr.error(detail + i18n.toastr.error.format);
+								toast({
+									type: 'error',
+									message: detail + i18n.toastr.error.format
+								});
 							} else {
-								toastr.error(i18n.toastr.error.upload);
+								toast({
+									type: 'error',
+									message: i18n.toastr.error.upload
+								});
 								console.log('error uploading file', reason, detail);
 							}
 						}
@@ -2433,7 +2439,10 @@ define(function(require) {
 					loadedPages = [],
 					isAllDataLoaded = false,
 					allDataLoaded = function() {
-						//toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
+						// toast({
+						// 	type: 'success',
+						// 	message: monster.apps.core.i18n.active().backendPagination.allDataLoaded
+						// });
 						finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
 
 						isAllDataLoaded = true;
@@ -2879,7 +2888,10 @@ define(function(require) {
 			});
 
 			cb.on('success', function() {
-				toastr.success(monster.apps.core.i18n.active().clipboard.successCopy);
+				toast({
+					type: 'success',
+					message: monster.apps.core.i18n.active().clipboard.successCopy
+				});
 			});
 		},
 
