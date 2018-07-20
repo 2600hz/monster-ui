@@ -3036,6 +3036,7 @@ define(function(require) {
 	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
 	 * @param  {String} args.message  Message to display in toast
 	 * @param  {Object} args.options  Toast notification library options
+	 * @return {jQuery}               Toast element
 	 */
 	function toast(pArgs) {
 		var args = _.isObject(pArgs)
@@ -3045,7 +3046,7 @@ define(function(require) {
 			? args.type
 			: 'info';
 		try {
-			toastr[type](args.message, args.title, args.options);
+			return toastr[type](args.message, args.title, args.options);
 		} catch (error) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
