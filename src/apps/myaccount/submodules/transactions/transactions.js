@@ -1,7 +1,6 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		toastr = require('toastr'),
 		monster = require('monster');
 
 	var transactions = {

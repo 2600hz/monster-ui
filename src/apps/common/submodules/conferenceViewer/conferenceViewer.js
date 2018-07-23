@@ -2,7 +2,6 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		toastr = require('toastr'),
 		randomColor = require('randomColor');
 
 	var conferenceViewer = {
@@ -535,7 +534,7 @@ define(function(require) {
 					};
 
 					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
-						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toastr immediately instead of in the callback for now.
+						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toast immediately instead of in the callback for now.
 					});
 
 					monster.ui.toast({

@@ -26,10 +26,9 @@ Example:
 
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
-jQuery, _, monster and toastr should already be loaded most of the time, but this will allow you to access those variables.
+jQuery, _, and monster should already be loaded most of the time, but this will allow you to access those variables.
 
 Once the list of dependencies has been created, we create an "app" object, that will contain all the JS functions of your app, and also some attributes needed by monster.
 
@@ -76,7 +75,7 @@ This object contains all the required attributes for a Monster-UI app to work. L
 The is is a string with the name of your app. It needs to match the name of the folder of this app.
 
 ##### i18n
-This is a map representing the supported languages. You can learn more about i18n [here][i18n]. The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English. The only option for each language key is the `customCss` one, which allows the framework to automatically import CSSi18n files if the user's language has this option enabled. 
+This is a map representing the supported languages. You can learn more about i18n [here][i18n]. The formatting is always a combination of the language and the country, like "en-US", "fr-FR". Note that the "en-US" key is mandatory, since we require all the Monster-UI apps to be available in English. The only option for each language key is the `customCss` one, which allows the framework to automatically import CSSi18n files if the user's language has this option enabled.
 
 		```json
 		i18n: {
@@ -101,7 +100,7 @@ If you need to call a Kazoo API or if you want to learn more about using the Kaz
 ##### Subscribe
 This is a map representing the events that your app will listen to. It allows other Monster-UI apps to interact with your applications if you want to enable that. Most of the time, this should remain empty, since your app will not need to interact with any other Monster-UI apps.
 
-Adding an event is really simple, for example let's say I have a function that gives me the information of a user: 
+Adding an event is really simple, for example let's say I have a function that gives me the information of a user:
 
 `getUser: function(args) { ... }`
 

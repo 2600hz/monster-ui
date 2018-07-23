@@ -5,7 +5,7 @@ define(function(require) {
 		Handlebars = require('handlebars'),
 		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
-		toastr = require('toastr'),
+		Toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
 		timepicker = require('timepicker'),
@@ -3046,7 +3046,7 @@ define(function(require) {
 			? args.type
 			: 'info';
 		try {
-			return toastr[type](args.message, args.title, args.options);
+			return Toastr[type](args.message, args.title, args.options);
 		} catch (error) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
