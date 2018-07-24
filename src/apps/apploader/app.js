@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var app = {
 		name: 'apploader',
@@ -261,7 +260,10 @@ define(function(require) {
 							appList = newAppList;
 						});
 					} else {
-						toastr.error(self.i18n.active().noMasqueradingError);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().noMasqueradingError
+						});
 					}
 				}
 			});

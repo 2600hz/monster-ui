@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var numberPrepend = {
 		requests: {
@@ -55,7 +54,10 @@ define(function(require) {
 								submodule: 'numberPrepend'
 							});
 
-						toastr.success(template);
+						monster.ui.toast({
+							type: 'success',
+							message: template
+						});
 
 						popup.dialog('destroy').remove();
 

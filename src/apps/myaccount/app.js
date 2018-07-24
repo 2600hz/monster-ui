@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var appSubmodules = [
 		'account',
@@ -604,7 +603,10 @@ define(function(require) {
 							link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
 						});
 
-						toastr.error(self.i18n.active().billing.missingCard);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().billing.missingCard
+						});
 					}
 				});
 			});

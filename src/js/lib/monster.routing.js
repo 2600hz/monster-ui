@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		crossroads = require('crossroads'),
-		toastr = require('toastr'),
 		hasher = require('hasher');
 
 	var loadApp = function(appName, query) {
@@ -19,7 +18,10 @@ define(function(require) {
 						loadedApp.render();
 					});
 				} else {
-					toastr.error(monster.apps.core.i18n.active().appMasqueradingError);
+					monster.ui.toast({
+						type: 'error',
+						message: monster.apps.core.i18n.active().appMasqueradingError
+					});
 				}
 			},
 			isAccountIDMasqueradable = function(id) {

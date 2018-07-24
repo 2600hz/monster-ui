@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var buyNumbers = {
 
@@ -793,7 +792,10 @@ define(function(require) {
 								$(this).empty();
 							});
 
-							toastr.error(self.i18n.active().buyNumbers.zipCodeDoesNotExist);
+							monster.ui.toast({
+								type: 'error',
+								message: self.i18n.active().buyNumbers.zipCodeDoesNotExist
+							});
 						}
 					});
 				} else if (!areacode || (self.appFlags.selectedCountryCode === 'US' && !areacode.match(/^\d{3}$/)) ) {

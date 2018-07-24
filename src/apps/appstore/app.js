@@ -2,7 +2,6 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		toastr = require('toastr'),
 		isotope = require('isotope');
 
 	var app = {
@@ -58,7 +57,10 @@ define(function(require) {
 					.empty()
 					.append(template);
 			} else {
-				toastr.error(self.i18n.active().appStoreDisabled);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().appStoreDisabled
+				});
 			}
 		},
 

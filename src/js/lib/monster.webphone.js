@@ -1,8 +1,7 @@
 define(function(require) {
 	var _ = require('lodash'),
 		monster = require('monster'),
-		kazooWebphone = require('kazoo'),
-		toastr = require('toastr');
+		kazooWebphone = require('kazoo');
 
 	var privateWebphone = {
 		initialized: false,

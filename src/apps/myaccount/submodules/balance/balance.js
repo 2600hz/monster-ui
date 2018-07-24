@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var balance = {
 
@@ -527,12 +526,15 @@ define(function(require) {
 				if (creditsToAdd) {
 					self.balanceAddCredits(creditsToAdd,
 						function() {
-							toastr.success(self.getTemplate({
-								name: '!' + self.i18n.active().balance.creditsAdded,
-								data: {
-									amount: self.i18n.active().currencyUsed + creditsToAdd
-								}
-							}));
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().balance.creditsAdded,
+									data: {
+										amount: self.i18n.active().currencyUsed + creditsToAdd
+									}
+								})
+							});
 
 							if (typeof params.callback === 'function') {
 								self.balanceGet(function(data) {
@@ -559,7 +561,10 @@ define(function(require) {
 								thresholdAlertsContent
 									.slideUp(function() {
 										thresholdAlerts = false;
-										toastr.success(self.i18n.active().balance.thresholdAlertsCancelled);
+										monster.ui.toast({
+											type: 'success',
+											message: self.i18n.active().balance.thresholdAlertsCancelled
+										});
 									});
 							});
 						}
@@ -586,7 +591,10 @@ define(function(require) {
 							if (dataAlerts.threshold) {
 								self.balanceUpdateThreshold(dataAlerts.threshold, function() {
 									parent.dialog('close');
-									toastr.success(self.i18n.active().balance.thresholdAlertsEnabled);
+									monster.ui.toast({
+										type: 'success',
+										message: self.i18n.active().balance.thresholdAlertsEnabled
+									});
 								});
 							} else {
 								monster.ui.alert(self.i18n.active().balance.invalidAmount);
@@ -605,7 +613,10 @@ define(function(require) {
 							autoRechargeContent
 								.slideUp(function() {
 									autoRecharge = false;
-									toastr.success(self.i18n.active().balance.autoRechargeCancelled);
+									monster.ui.toast({
+										type: 'success',
+										message: self.i18n.active().balance.autoRechargeCancelled
+									});
 								});
 						});
 					} else {
@@ -632,7 +643,10 @@ define(function(require) {
 					if (dataTopUp.threshold && dataTopUp.amount) {
 						self.balanceUpdateTopUp(dataTopUp, function() {
 							parent.dialog('close');
-							toastr.success(self.i18n.active().balance.autoRechargeEnabled);
+							monster.ui.toast({
+								type: 'success',
+								message: self.i18n.active().balance.autoRechargeEnabled
+							});
 						});
 					} else {
 						monster.ui.alert(self.i18n.active().balance.invalidAmount);

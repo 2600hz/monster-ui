@@ -5,7 +5,7 @@ define(function(require) {
 		Handlebars = require('handlebars'),
 		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
-		toastr = require('toastr'),
+		Toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
 		timepicker = require('timepicker'),
@@ -1545,9 +1545,15 @@ define(function(require) {
 						activeToolbarClass: 'selected',
 						fileUploadError: function(reason, detail) {
 							if (reason === 'unsupported-file-type') {
-								toastr.error(detail + i18n.toastr.error.format);
+								toast({
+									type: 'error',
+									message: detail + i18n.toastr.error.format
+								});
 							} else {
-								toastr.error(i18n.toastr.error.upload);
+								toast({
+									type: 'error',
+									message: i18n.toastr.error.upload
+								});
 								console.log('error uploading file', reason, detail);
 							}
 						}
@@ -2433,7 +2439,10 @@ define(function(require) {
 					loadedPages = [],
 					isAllDataLoaded = false,
 					allDataLoaded = function() {
-						//toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
+						// toast({
+						// 	type: 'success',
+						// 	message: monster.apps.core.i18n.active().backendPagination.allDataLoaded
+						// });
 						finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
 
 						isAllDataLoaded = true;
@@ -2879,7 +2888,10 @@ define(function(require) {
 			});
 
 			cb.on('success', function() {
-				toastr.success(monster.apps.core.i18n.active().clipboard.successCopy);
+				toast({
+					type: 'success',
+					message: monster.apps.core.i18n.active().clipboard.successCopy
+				});
 			});
 		},
 
@@ -3018,7 +3030,31 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Wrapper for toast notification library
+	 * @param  {Object} args
+	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
+	 * @param  {String} args.message  Message to display in toast
+	 * @param  {Object} args.options  Toast notification library options
+	 * @return {jQuery}               Toast element
+	 */
+	function toast(pArgs) {
+		var args = _.isObject(pArgs)
+			? pArgs
+			: {};
+		var type = args.hasOwnProperty('type')
+			? args.type
+			: 'info';
+		try {
+			return Toastr[type](args.message, args.title, args.options);
+		} catch (error) {
+			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
+		}
+	}
+
 	initialize();
+
+	ui.toast = toast;
 
 	return ui;
 });
