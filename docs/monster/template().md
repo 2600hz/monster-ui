@@ -87,7 +87,10 @@ var app = {
             success: function(data) {
                 var toastrTemplate = monster.template(self, '!' + self.i18n.active().toastr.success.userCreate, { name: data.name });
 
-                 toastr.success(toastrTemplate);
+                 monster.ui.toast({
+                 	type: 'success',
+                 	message: toastrTemplate
+                 });
             },
             error: function(data) {
                 var alertTemplate = monster.template(self, '!' + self.i18n.active().alert.error.createUser, { type: data.type });

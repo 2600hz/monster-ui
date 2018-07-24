@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var callerId = {
 
@@ -63,12 +62,15 @@ define(function(require) {
 
 					self.callerIdUpdateNumber(dataNumber.id, accountId, dataNumber,
 						function(data) {
-							toastr.success(self.getTemplate({
-								name: '!' + self.i18n.active().callerId.successCnam,
-								data: {
-									phoneNumber: monster.util.formatPhoneNumber(data.data.id)
-								}
-							}));
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().callerId.successCnam,
+									data: {
+										phoneNumber: monster.util.formatPhoneNumber(data.data.id)
+									}
+								})
+							});
 
 							popup.dialog('destroy').remove();
 

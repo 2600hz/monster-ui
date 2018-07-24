@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var portWizard = {
 
@@ -684,12 +683,15 @@ define(function(require) {
 													.fadeIn();
 										});
 							} else {
-								toastr.warning(self.getTemplate({
-									name: '!' + self.i18n.active().portWizard.toastr.warning.invalidNumbers,
-									data: {
-										variable: errors.join(', ')
-									}
-								}));
+								monster.ui.toast({
+									type: 'warning',
+									message: self.getTemplate({
+										name: '!' + self.i18n.active().portWizard.toastr.warning.invalidNumbers,
+										data: {
+											variable: errors.join(', ')
+										}
+									})
+								});
 							}
 
 							self.portWizardRenderAddNumbersList(args);
@@ -1133,27 +1135,33 @@ define(function(require) {
 			_.each(errorsList, function(files, type) {
 				_.each(files, function(file) {
 					if (type === 'mimeTypes') {
-						toastr.warning(self.getTemplate({
-							name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
-							data: {
-								variable: _
-									.chain(self.appFlags.attachments.mimeTypes)
-									.map(function(value) {
-										return /[^/]*$/
-											.exec(value)[0]
-											.toUpperCase();
-									})
-									.join(', ')
-									.value()
-							}
-						}));
+						monster.ui.toast({
+							type: 'warning',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
+								data: {
+									variable: _
+										.chain(self.appFlags.attachments.mimeTypes)
+										.map(function(value) {
+											return /[^/]*$/
+												.exec(value)[0]
+												.toUpperCase();
+										})
+										.join(', ')
+										.value()
+								}
+							})
+						});
 					} else if (type === 'size') {
-						toastr.warning(self.getTemplate({
-							name: '!' + self.i18n.active().portWizard.toastr.warning.size,
-							data: {
-								variable: self.appFlags.attachments.maxSize
-							}
-						}));
+						monster.ui.toast({
+							type: 'warning',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
+								data: {
+									variable: self.appFlags.attachments.maxSize
+								}
+							})
+						});
 					}
 				});
 			});

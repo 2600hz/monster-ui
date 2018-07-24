@@ -30,59 +30,62 @@ The `monster.template()` method allows you to request templates simply by specif
 * Load template with no data into the DOM
 ```javascript
 var app = {
-    render: function(parent) {
-        var self = this,
-            template = $(monster.getTemplate({ app: self, name: 'app'}));
+	render: function(parent) {
+		var self = this,
+			template = $(monster.getTemplate({ app: self, name: 'app'}));
 
-        parent
-            .empty()
-            .append(template);
-    }
+		parent
+			.empty()
+			.append(template);
+	}
 };
 ```
 * Load template with data into the DOM
 ```javascript
 var app = {
-    render: function(parent) {
-        var self = this;
+	render: function(parent) {
+		var self = this;
 
-        self.getUserData(self.userId, function(userData) {
-            var dataToTemplate = {
-                    userId: self.userId,
-                    userData: userData
-                },
-                template = $(monster.getTemplate({ app: self, name: 'app', data: dataToTemplate}));
+		self.getUserData(self.userId, function(userData) {
+			var dataToTemplate = {
+					userId: self.userId,
+					userData: userData
+				},
+				template = $(monster.getTemplate({ app: self, name: 'app', data: dataToTemplate}));
 
-            parent
-                .empty()
-                .append(template);
-        });
-    }
+			parent
+				.empty()
+				.append(template);
+		});
+	}
 };
 ```
 * Load a string template in a Toastr Notification or Monster Alert
 ```javascript
 var app = {
-    renderUserCreate: function(args) {
-        var self = this,
-            userData = args.data.user;
+	renderUserCreate: function(args) {
+		var self = this,
+			userData = args.data.user;
 
-        self.requestCreateUser({
-            data: {
-                user: userData
-            },
-            success: function(data) {
-                var toastrTemplate = monster.getTemplate({app: self, name: '!' + self.i18n.active().toastr.success.userCreate, data: { name: data.name }});
+		self.requestCreateUser({
+			data: {
+				user: userData
+			},
+			success: function(data) {
+				var toastrTemplate = monster.getTemplate({app: self, name: '!' + self.i18n.active().toastr.success.userCreate, data: { name: data.name }});
 
-                 toastr.success(toastrTemplate);
-            },
-            error: function(data) {
-                var alertTemplate = monster.getTemplate({app: self, name: '!' + self.i18n.active().alert.error.createUser, data: { type: data.type }});
+				 monster.ui.toast({
+					type: 'success',
+					message: toastrTemplate
+				 });
+			},
+			error: function(data) {
+				var alertTemplate = monster.getTemplate({app: self, name: '!' + self.i18n.active().alert.error.createUser, data: { type: data.type }});
 
-                monster.ui.alert('error', alertTemplate);
-            }
-        });
-    }
+				monster.ui.alert('error', alertTemplate);
+			}
+		});
+	}
 };
 ```
 

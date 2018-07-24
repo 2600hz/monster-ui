@@ -2,7 +2,6 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		toastr = require('toastr'),
 		randomColor = require('randomColor');
 
 	var conferenceViewer = {
@@ -102,7 +101,10 @@ define(function(require) {
 				var container = $('.view-conference-wrapper'),
 					conferenceId = container.data('id');
 
-				toastr.info(self.i18n.active().conferenceViewer.refreshWebsocket);
+				monster.ui.toast({
+					type: 'info',
+					message: self.i18n.active().conferenceViewer.refreshWebsocket
+				});
 				self.conferenceViewerGet({ container: container, id: conferenceId });
 			}
 		},
@@ -390,12 +392,15 @@ define(function(require) {
 			}
 
 			if (toasterActions.indexOf(action) >= 0) {
-				toastr.info(self.getTemplate({
-					name: '!' + self.i18n.active().conferenceViewer.userActions[action],
-					data: {
-						name: userName
-					}
-				}));
+				monster.ui.toast({
+					type: 'info',
+					message: self.getTemplate({
+						name: '!' + self.i18n.active().conferenceViewer.userActions[action],
+						data: {
+							name: userName
+						}
+					})
+				});
 			}
 		},
 
@@ -529,10 +534,13 @@ define(function(require) {
 					};
 
 					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
-						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toastr immediately instead of in the callback for now.
+						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toast immediately instead of in the callback for now.
 					});
 
-					toastr.success(self.i18n.active().conferenceViewer.addEndpointDialog.successAdd);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().conferenceViewer.addEndpointDialog.successAdd
+					});
 
 					popup.dialog('close');
 				});

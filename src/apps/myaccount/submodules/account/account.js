@@ -2,8 +2,7 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		timezone = require('monster-timezone'),
-		toastr = require('toastr');
+		timezone = require('monster-timezone');
 
 	var account = {
 		subscribe: {
@@ -159,7 +158,10 @@ define(function(require) {
 					},
 					success: function() {
 						self.refreshAccessListHeader(template);
-						toastr.success(self.i18n.active().account.postCidrSuccess);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().account.postCidrSuccess
+						});
 					},
 					error: function() {
 
@@ -244,7 +246,10 @@ define(function(require) {
 
 			// Make sure the array does not contain duplicates
 			if (new Set(cidrList).size !== cidrList.length) {
-				toastr.error(self.i18n.active().account.errorDuplicate);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().account.errorDuplicate
+				});
 				return false;
 			}
 
@@ -253,7 +258,10 @@ define(function(require) {
 			//check the cidr list line by line, see if each line is a cidr
 			for (var i = 0; i < cidrList.length; i++) {
 				if (!cidrRegex.test(cidrList[i])) {
-					toastr.error(self.i18n.active().account.accessListInvalid);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().account.accessListInvalid
+					});
 					return false;
 				}
 			}

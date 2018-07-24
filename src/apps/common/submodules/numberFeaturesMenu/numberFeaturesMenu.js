@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var numbersFeatuesMenu = {
 
@@ -106,12 +105,15 @@ define(function(require) {
 				}
 
 				self.numbersSyncOne(phoneNumber, accountId, function() {
-					toastr.success(self.getTemplate({
-						name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
-						data: {
-							number: monster.util.formatPhoneNumber(phoneNumber)
-						}
-					}));
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
+							data: {
+								number: monster.util.formatPhoneNumber(phoneNumber)
+							}
+						})
+					});
 				});
 			});
 		},
