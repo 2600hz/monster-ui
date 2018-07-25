@@ -1,0 +1,1020 @@
+﻿{
+	"poweredBy": "Powered by ",
+	"error": "Fehler",
+	"olderVersion": "Die Daten, die Sie zu aktualisieren versuchen, wurden anscheinend außerhalb dieser UI erstellt. Dennoch fortfahren?",
+	"errors": {
+		"generic": "Unbekannter Serverfehler, versuchen Sie es in Kürze wieder!",
+		"genericLabel": "API-Antwort",
+		"401": "Ungültige Anmeldedaten. Prüfen Sie Benutzernamen und Kennwort.",
+		"403": "Zugriff verweigert.",
+		"500": "Interner Serverfehler. Wenden Sie sich an den Administrator.",
+		"invalidData": {
+			"errorLabel": "Ungültige Daten:",
+			"required": "Das Feld „{{field}}“ ist erforderlich.",
+			"minimum": "Der Wert für das Feld „{{field}}“ muss mindestens {{value}} betragen.",
+			"maximum": "Der Wert für das Feld „{{field}}“ darf nicht größer als {{value}} sein.",
+			"minLength": "Die Zeichenfolge für das Feld „{{field}}“ muss mindestens {{value}} Zeichen lang sein.",
+			"maxLength": "Die Zeichenfolge für das Feld „{{field}}“ darf nicht länger als {{value}} Zeichen sein.",
+			"enum:": "Der Wert für das Feld „{{field}}“ wurde in der Liste der akzeptablen Werte nicht gefunden.",
+			"minItems": "Die Liste für das Feld „{{field}}“ muss mindestens {{value}} Elemente enthalten.",
+			"maxItems": "Die Liste für das Feld „{{field}}“ darf nicht mehr als {{value}} Elemente enthalten.",
+			"minProperties": "Das Objekt für das Feld „{{field}}“ hat nicht genügend untergeordnete Elemente.",
+			"uniqueItems": "Die Liste für das Feld „{{field}}“ muss eindeutig sein.",
+			"pattern": "Der Wert für das Feld „{{field}}“ stimmt nicht mit dem Muster „{{value}}“ überein.",
+			"divisibleBy": "Der Wert für das Feld „{{field}}“ ist nicht durch {{value}} teilbar.",
+			"disallow": "Der Wert für das Feld „{{field}}“ ist unzulässig.",
+			"type": "Der Wert für das Feld „{{field}}“ muss vom Typ „{{value}}“ sein.",
+			"unique": "Der Wert für das Feld „{{field}}“ muss eindeutig sein.",
+			"forbidden": "Der Wert für das Feld „{{field}}“ kann nicht aktualisiert werden.",
+			"__comment": "UI-883 (v3.19_s1): Lokalisierung für service_restriction-Fehler hinzugefügt",
+			"service_restriction": "Das Guthaben reicht nicht für den Kauf der Nummer „{{field}}“ aus ({{value}} USD).",
+			"__comment": "UI-1882: Fehlerbehandlung für zu großen Upload hinzufügen",
+			"__version": "3.22",
+			"maxSize": "Der Inhalt für das Feld „{{field}}“ darf nicht größer als {{value}} Byte sein."
+		},
+		"__comment": "UI-951 (v3.20_s0): Lokalisierung für einige 500- und 409-Fehler hinzugefügt",
+		"errorMessages": {
+			"datastore_conflict": {
+				"text": "Aufgrund eines Konfliktes bei Datenbankdokumenten ist ein Fehler aufgetreten. Versuchen Sie es noch einmal. Sollte der Fehler weiterhin auftreten, wenden Sie sich an Ihren Administrator.",
+				"title": "Datenspeicherkonflikt"
+			},
+			"account_has_descendants": {
+				"text": "Ein Account mit Sub-Accounts kann nicht gelöscht werden.",
+				"title": "Account hat Nachfolger"
+			},
+			"no_payment_token": {
+				"text": "Ihre Rechnungsinformationen sind anscheinend ungültig, weshalb diese Anwendung nicht wie beabsichtigt funktioniert. Wechseln Sie in Ihre Account-Einstellungen und vergewissern Sie sich, dass die Kreditkarte gültig ist.",
+				"title": "Kreditkarte ungültig"
+			},
+			"account_billing_invalid": {
+				"text": "Ihre Rechnungsinformationen sind anscheinend ungültig, weshalb diese Anwendung nicht wie beabsichtigt funktioniert. Bitten Sie einen Administrator dieses Problem zu beheben.",
+				"title": "Rechnungsinformationen ungültig"
+			}
+		}
+	},
+	"apps": "Apps",
+	"add": "Hinzufügen",
+	"alertLogout": "Ihre aktuelle Sitzung läuft in Kürze ab, und Sie werden aufgrund von Inaktivität abgemeldet. Bewegen Sie den Mauszeiger, wenn Sie angemeldet bleiben möchten.",
+	"cancel": "Abbrechen",
+	"change": "Ändern",
+	"chargeReminder" : {
+		"line1": "Bei Änderungen wird Ihre hinterlegte Kreditkarte sofort belastet. Wenn Sie laufende Services ändern, werden neu anfallende Gebühren anteilig gemäß Ihrem Rechnungszyklus abgerechnet.",
+		"line2": "Möchten Sie wirklich fortfahren?"
+	},
+	"close" : "Schließen",
+	"conferencingLogo": "Konferenzschaltung",
+	"csv": "CSV",
+	"currencyUsed": "USD",
+	"delete": "Löschen",
+	"dialog" : {
+		"showError": "Fehler anzeigen",
+		"confirm": "Bestätigen",
+		"confirmOk": "OK",
+		"confirmCancel" : "Abbrechen",
+		"confirmTitle" : "Bestätigung",
+		"errorTitle": "Hoppla! Irgendetwas ist schief gelaufen.",
+		"infoTitle": "Infos",
+		"warningTitle": "Warnung!"
+	},
+	"disabled": "Deaktiviert",
+	"download": "Herunterladen",
+	"enabled": "Aktiviert",
+	"endDate": "Ende:",
+	"examplePhoneNumber": "+1 (415) 482-9912",
+	"filter": "Filter",
+	"info": "Infos",
+	"next": "Weiter",
+	"on": "Ein",
+	"off": "Aus",
+	"show": "Anzeigen",
+	"hide": "Verbergen",
+	"paging": {
+		"first": "Erste",
+		"previous": "Zurück",
+		"next": "Weiter",
+		"last": "Letzte"
+	},
+	"pdf": "PDF",
+	"previous": "Zurück",
+	"remove": "Entfernen",
+	"save": "Speichern",
+	"saveChanges": "Änderungen speichern",
+	"search": "Suchen…",
+	"select": "Auswählen",
+	"startDate": "Start:",
+	"submit": "Senden",
+	"table" : {
+		"search": "Suchen…",
+		"empty" : "Tabelle enthält keine Daten",
+		"processing" : "In Bearbeitung …",
+		"showEntries": "Show _MENU_ entries",
+		"startEndTotal": "Showing _START_ to _END_ of _TOTAL_ entries",
+		"zeroRecords": "Keine Treffer",
+		"loading": "Wird geladen…",
+		"filtered": "(aus _MAX_ total entries gefiltert)",
+		"infoEmpty": ""
+	},
+	"unexpectedError": "Unerwarteter Fehler, versuchen Sie es erneut!",
+	"update": "Aktualisieren",
+	"upload": "Hochladen",
+	"validation": {
+		"defaultRules": {
+			"required": "Pflichtfeld",
+			"remote": "Korrigieren Sie dieses Feld.",
+			"email": "Geben Sie eine gültige E-Mail-Adresse ein.",
+			"url": "Geben Sie eine gültige URL ein.",
+			"date": "Geben Sie ein gültiges Datum ein.",
+			"dateISO": "Geben Sie ein gültiges Datum (ISO) ein.",
+			"number": "Geben Sie eine gültige Nummer ein.",
+			"digits": "Geben Sie nur Ziffern ein.",
+			"creditcard": "Geben Sie eine gültige Kreditkartennummer ein.",
+			"equalTo": "Geben Sie denselben Wert erneut ein.",
+			"maxlength": "Geben Sie nicht mehr als {0} Zeichen ein.",
+			"minlength": "Geben Sie mindestens {0} Zeichen ein.",
+			"rangelength": "Geben Sie einen Wert ein, der zwischen {0} und {1} Zeichen lang ist.",
+			"range": "Geben Sie einen Wert zwischen {0} und {1} ein.",
+			"max": "Geben Sie einen Wert kleiner oder gleich {0} ein.",
+			"min": "Geben Sie einen Wert größer oder gleich {0} ein."
+		},
+		"customRules": {
+			"hexadecimal": "Geben Sie nur hexadezimale Ziffern sein",
+			"checkList": "Existiert bereits",
+			"mac": "Geben Sie eine gültige MAC-Adresse ein.",
+			"ipv4": "Geben Sie eine gültige IPv4-Adresse ein.",
+			"time12h": "Geben Sie eine gültige Uhrzeit im 12-Stunden-AM/PM-Format ein.",
+			"greaterDate": "Der Startzeitpunkt muss vor dem Endzeitpunkt liegen.",
+			"realm": "Geben Sie alphanumerische Zeichen, Punkte oder Schrägstriche ein.",
+			"__comment": "UI-1335: Validierungsregel für das 24-Stunden-Format hinzugefügt",
+			"__version": "v3.20_s3",
+			"time24h": "Geben Sie eine gültige Uhrzeit im 24-Stunden-Format ein.",
+			"__comment": "UI-2654: Protokollregeln hinzugefügt",
+			"__version": "v4.1",
+			"protocol": "Fügen Sie die Zeichenfolge „://“ ein."
+		},
+		"required": "Erforderlich."
+	},
+	"warning": "Warnung!",
+	"confirmCharges": {
+		"title": "Gebührenbestätigung",
+		"oneTimeFee": "Einmalige Gebühr",
+		"detail": "Hier sehen Sie aktualisierte Informationen zu den monatlichen Kosten, die Ihrem Account für diesen Service in Rechnung gestellt werden:",
+		"rate": "Preis",
+		"quantity": "Menge",
+		"discount": "Rabatt",
+		"monthlyCharges": "Monatliche Kosten",
+		"amount": "{{variable}} USD"
+	},
+	"languages": {
+		"auto": "Standard",
+		"americanEnglish": "Englisch (en-US)",
+		"frenchFrench": "Französisch (fr-FR)",
+		"russianRussian": "Russisch (ru-RU)",
+		"__comment": "Spanisch zur Sprachauswahlliste in Mein Account hinzugefügt",
+		"__version": "v3.22",
+		"spainSpanish": "Spanisch (es-ES)"
+	},
+	"services": {
+		"cnam": "CNAM",
+		"did_us": "US-DIDs",
+		"e911": "E911",
+		"inbound_cnam": "Eingehender CNAM",
+		"inbound_trunk": "Eingehende Trunks",
+		"inbound_trunks": "Eingehende Trunks",
+		"port": "Port",
+		"sip_devices": "SIP-Geräte",
+		"sip_device": "SIP-Geräte",
+		"tollfree_us": "US gebührenfrei",
+		"twoway_trunk": "2-Wege-Trunks",
+		"twoway_trunks": "2-Wege-Trunks",
+		"outbound_trunk": "Ausgehende Trunks",
+		"outbound_trunks": "Ausgehende Trunks",
+		"user": "Benutzer"
+	},
+	"wysiwyg": {
+		"toastr": {
+			"error": {
+				"format": " ist kein unterstütztes Format",
+				"upload": "Fehler beim Hochladen der Datei"
+			}
+		},
+		"title": {
+			"fontSize": "Schriftgröße",
+
+			"bold": "Fett (Strg/Cmd+B)",
+			"italic": "Kursiv (Strg/Cmd+I)",
+			"underline": "Unterstrichen (Strg/Cmd+U)",
+			"strikethrough" : "Durchgestrichen",
+
+			"fontColor": "Schriftfarbe",
+
+			"alignment": "Ausrichtung",
+			"alignLeft": "Links ausrichten (Strg/Cmd+L)",
+			"center": "Zentriert (Strg/Cmd+E)",
+			"alignRight": "Rechts ausrichten (Strg/Cmd+R)",
+			"justify": "Blocksatz (Strg/Cmd+J)",
+
+			"list": "Liste",
+
+			"bulletList": "Aufzählung",
+			"numberList": "Nummerierung",
+
+			"reduceIndent": "Einzug verringern (Umschalt+Tab)",
+			"indent": "Einzug (Tab)",
+
+			"createLink": "Hyperlink",
+			"removeLink": "Hyperlink entfernen",
+
+			"upload": "Bild einfügen (oder per Ziehen und Ablegen)",
+
+			"undo": "Rückgängig (Strg/Cmd+Z)",
+			"redo": "Wiederholen (Strg/Cmd+Y)",
+
+			"horizontalRule": "Horizontales Lineal",
+
+			"toggleViewMode": "Anzeigemodus ein/aus",
+
+			"macro": "Makro"
+		},
+		"text": {
+			"big": "Groß",
+			"normal": "Normal",
+			"small" : "Klein"
+		},
+		"placeholder": {
+			"url": "URL"
+		}
+	},
+	"calendar": {
+		"suffix": {
+			"am": "AM",
+			"pm": "PM"
+		},
+		"day": {
+			"0": "Sonntag",
+			"1": "Montag",
+			"2": "Dienstag",
+			"3": "Mittwoch",
+			"4": "Donnerstag",
+			"5": "Freitag",
+			"6": "Samstag"
+		},
+		"month": {
+			"0": "Januar",
+			"1": "Februar",
+			"2": "März",
+			"3": "April",
+			"4": "Mai",
+			"5": "Juni",
+			"6": "Juli",
+			"7": "August",
+			"8": "September",
+			"9": "Oktober",
+			"10": "November",
+			"11": "Dezember"
+		}
+	},
+	"insertTemplate": {
+		"title": "Informationen werden geladen...",
+		"text": "Das kann einen Augenblick dauern."
+	},
+	"__comment": "UI-735: Allgemeines Steuerelement für Codec/verlinkte Spalte hinzugefügt",
+	"__version": "v3.20_s0",
+	"linkedColumns": {
+		"available": "Verfügbar",
+		"selected": "Ausgewählt"
+	},
+	"codecs": {
+		"audio": {
+			"OPUS": "OPUS",
+			"CELT@32000h": "Siren @ 32 kHz",
+			"G7221@32000h": "G722.1 @ 32 kHz",
+			"G7221@16000h": "G722.1 @ 16 kHz",
+			"G722": "G722",
+			"speex@32000h": "Speex @ 32 kHz",
+			"speex@16000h": "Speex @ 16 kHz",
+			"PCMU": "G711u / PCMU – 64 kbps (n.v.)",
+			"PCMA": "G711a / PCMA – 64 kbps (andere)",
+			"G729":"G729 – 8 kbps (erfordert Lizenz)",
+			"GSM":"GSM",
+			"CELT@48000h": "Siren (HD) @ 48 kHz",
+			"CELT@64000h": "Siren (HD) @ 64 kHz"
+		},
+		"video": {
+			"VP8": "VP8",
+			"H264": "H264",
+			"H263": "H263",
+			"H261": "H261"
+		}
+	},
+	"__comment": "UI-1014: Neudesign von Mein Account",
+	"__version": "v3.20_s0",
+	"refresh": "Aktualisieren",
+
+	"__comment": "UI-1177: In Hauptnummer besser „Zuweisung aufheben“ anstatt „Entfernen“ sagen",
+	"__version": "v3.20_s2",
+	"unassign": "Zuweisung aufheben",
+
+	"__comment": "UI-1074: Neues Fehler-Pop-up",
+	"__version": "v3.20_s2",
+	"advancedErrorDialog": {
+		"title": "Hoppla!",
+		"viewDetails": "Weitere Informationen",
+		"requestId": "Anfrage-ID",
+		"apiUrl": "API-URL",
+		"verb": "API-Type",
+		"__comment": " Funktion „Fehler melden“ hinzufügen",
+		"__version": "v4.0",
+		"report": "Fehler per E-Mail melden",
+		"__comment": " Funktion „In Zwischenablage kopieren“ hinzufügen",
+		"__version": "v4.0",
+		"copyToClipboard": "In Zwischenablage kopieren"
+	},
+
+	"javascriptErrorDialog": {
+		"title": "Ein unbehandelter Javascript-Fehler wird angezeigt…",
+		"message": "Meldung",
+		"line": "Zeile",
+		"column": "Spalte",
+		"stackTrace": "Stack-Trace",
+		"file": "Dateiname"
+	},
+
+	"__comment": "UI-553: Mehr Hilfe in Bezug auf Ursachen für einen Verbindungsverlust",
+	"__version": "v3.20_s3",
+	"hangupCauses": {
+		"SUCCESS": {
+			"inbound": "Der Anruf wurde an eine andere Nummer weitergeleitet"
+		},
+		"NO_RESPONSE": {
+			"inbound": "Es wurde vergeblich versucht, den Anruf weiterzuleiten. Keine Antwort vom Zielbenutzer oder Weiterleitungsfehler."
+		},
+		"UNSPECIFIED": {
+
+			},
+		"UNALLOCATED_NUMBER": {
+			"outbound": "Die gewählte Nummer ist ungültig oder über den angeforderten Anbieter nicht erreichbar.",
+			"inbound": "In der Regel bei einem Nebenstellenanlagen-Konnektor. Weist darauf hin, dass das Gerät auf Kundenseite falsch konfiguriert ist oder die Nummer gerade nicht verwendet wird."
+		},
+		"NO_ROUTE_TRANSIT_NET": {
+		},
+		"NO_ROUTE_DESTINATION": {
+			"outbound": "Die gewählte Nummer ist ungültig oder über den angeforderten Anbieter nicht erreichbar.",
+			"inbound": "In der Regel bei einem Nebenstellenanlagen-Konnektor. Weist darauf hin, dass das Gerät auf Kundenseite falsch konfiguriert ist."
+		},
+		"CHANNEL_UNACCEPTABLE": {
+		},
+		"CALL_AWARDED_DELIVERED": {
+		},
+		"NORMAL_CLEARING": {
+			"inbound": "Alles OK. Der Anruf wurde ordnungsgemäß beendet",
+			"outbound": "Alles OK. Der Anruf wurde ordnungsgemäß beendet"
+		},
+		"USER_BUSY": {
+			"inbound": "Dafür kann es zwei Möglichkeiten geben – Kürzer als 1 Sekunde: Die Telefonnummer war besetzt oder nicht erreichbar. Länger als 1 Sekunde: Der Endbenutzer hat den eingehenden Anruf während des Klingelns abgewiesen."
+		},
+		"NO_USER_RESPONSE": {
+		},
+		"NO_ANSWER": {
+		},
+		"SUBSCRIBER_ABSENT": {
+		},
+		"CALL_REJECTED": {
+			"outbound": "Der Anbieter, über den versucht wurde, den Anruf zu tätigen, unterstützt keine Anrufe in die gewünschte Zielregion. Oder der Anbieter hatte nicht genügend Kapazitäten frei, um den Anruf durchzustellen. Oder es lag ein anderes, nicht allzu schlimmes Problem vor. Man sollte versuchen, den nächsten in der Liste aufgeführten Anbieter zu verwenden. Dieser Fehler bedeutet NICHT, dass ein Netzausfall oder -problem vorliegt – es ist einfach nur so, dass nicht jeder Anbieter alle Regionen auf der ganzen Welt abdeckt.",
+			"inbound": "Bei kürzer als 1 Sekunde: Beim Telefon ist die „Bitte nicht stören“-Funktion lokal aktiviert oder alle Leitungen sind belegt. Bei länger als 1 Sekunde: Der Telefonbenutzer hat den Anruf durch Drücken von „Ablehnen“ abgelehnt."
+		},
+		"NUMBER_CHANGED": {
+		},
+		"REDIRECTION_TO_NEW_DESTINATION": {
+			"inbound": "Dafür kann es zwei Möglichkeiten geben – Kürzer als 1 Sekunde: Beim Telefon ist lokal die Anrufweiterleitung konfiguriert. Diese sollte deaktiviert werden. Länger als 1 Sekunde: Beim Telefon ist lokal die Funktion „Anrufweiterleitung, wenn keine Antwort“ konfiguriert. Diese sollte deaktiviert werden."
+		},
+		"EXCHANGE_ROUTING_ERROR": {
+			"outbound": "Der Anbieter, über den versucht wurde, den Anruf zu tätigen, unterstützt keine Anrufe in die gewünschte Zielregion. Oder der Anbieter hatte nicht genügend Kapazitäten frei, um den Anruf durchzustellen. Oder es lag ein anderes, nicht allzu schlimmes Problem vor. Man sollte versuchen, den nächsten in der Liste aufgeführten Anbieter zu verwenden. Dieser Fehler bedeutet NICHT, dass ein Netzausfall oder -problem vorliegt – es ist einfach nur so, dass nicht jeder Anbieter alle Regionen auf der ganzen Welt abdeckt.",
+			"inbound": "In der Regel bei einem Nebenstellenanlagen-Konnektor. Weist darauf hin, dass das Gerät auf Kundenseite falsch konfiguriert ist."
+		},
+		"DESTINATION_OUT_OF_ORDER": {
+		},
+		"INVALID_NUMBER_FORMAT": {
+		},
+		"FACILITY_REJECTED": {
+		},
+		"RESPONSE_TO_STATUS_ENQUIRY": {
+		},
+		"NORMAL_UNSPECIFIED": {
+		},
+		"NORMAL_CIRCUIT_CONGESTION": {
+		},
+		"NETWORK_OUT_OF_ORDER": {
+			"outbound": "Der Anbieter, über den versucht wurde, den Anruf zu tätigen, unterstützt keine Anrufe in die gewünschte Zielregion. Oder der Anbieter hatte nicht genügend Kapazitäten frei, um den Anruf durchzustellen. Oder es lag ein anderes, nicht allzu schlimmes Problem vor. Man sollte versuchen, den nächsten in der Liste aufgeführten Anbieter zu verwenden. Dieser Fehler bedeutet NICHT, dass ein Netzausfall oder -problem vorliegt – es ist einfach nur so, dass nicht jeder Anbieter alle Regionen auf der ganzen Welt abdeckt.",
+			"inbound": "In der Regel bei einem Nebenstellenanlagen-Konnektor. Weist darauf hin, dass das Gerät auf Kundenseite falsch konfiguriert ist."
+		},
+		"NORMAL_TEMPORARY_FAILURE": {
+			"outbound": "Der Anbieter, über den versucht wurde, den Anruf zu tätigen, unterstützt keine Anrufe in die gewünschte Zielregion. Oder der Anbieter hatte nicht genügend Kapazitäten frei, um den Anruf durchzustellen. Oder es lag ein anderes vorübergehendes Problem vor. Man sollte versuchen, den nächsten in der Liste aufgeführten Anbieter zu verwenden. Dieser Fehler bedeutet NICHT, dass ein Netzausfall oder -problem vorliegt – es ist einfach nur so, dass nicht jeder Anbieter alle Regionen auf der ganzen Welt abdeckt.",
+			"inbound": "Das dürfte nicht vorkommen. Das ist ein Hinweis, dass ein Fehler vorliegt."
+		},
+		"SWITCH_CONGESTION": {
+		},
+		"ACCESS_INFO_DISCARDED": {
+		},
+		"REQUESTED_CHAN_UNAVAIL": {
+		},
+		"FACILITY_NOT_SUBSCRIBED": {
+		},
+		"OUTGOING_CALL_BARRED": {
+		},
+		"INCOMING_CALL_BARRED": {
+		},
+		"BEARERCAPABILITY_NOTAUTH": {
+		},
+		"BEARERCAPABILITY_NOTAVAIL": {
+		},
+		"SERVICE_UNAVAILABLE": {
+		},
+		"BEARERCAPABILITY_NOTIMPL": {
+		},
+		"CHAN_NOT_IMPLEMENTED": {
+		},
+		"FACILITY_NOT_IMPLEMENTED": {
+		},
+		"SERVICE_NOT_IMPLEMENTED": {
+		},
+		"INVALID_CALL_REFERENCE": {
+		},
+		"INCOMPATIBLE_DESTINATION": {
+			"outbound": "Der Anbieter hat einen bestimmten Codec oder eine bestimmte Verschlüsselung verlangt, die von uns nicht angeboten wird. Daher konnte der Anruf nicht getätigt werden. Das gleiche kann auch passieren, wenn eine Faxverbindung angefordert wird, aber T38 nicht verfügbar ist.",
+			"inbound": "Der Anbieter hat einen bestimmten Codec oder eine bestimmte Verschlüsselung verlangt, die von uns nicht angeboten wird. Daher konnte der Anruf nicht getätigt werden. Das gleiche kann auch passieren, wenn eine Faxverbindung angefordert wird, aber T38 nicht verfügbar ist."
+		},
+		"INVALID_MSG_UNSPECIFIED": {
+		},
+		"MANDATORY_IE_MISSING": {
+		},
+		"MESSAGE_TYPE_NONEXIST": {
+		},
+		"WRONG_MESSAGE": {
+		},
+		"IE_NONEXIST": {
+		},
+		"INVALID_IE_CONTENTS": {
+		},
+		"WRONG_CALL_STATE": {
+			"outbound": "Der Fehler liegt auf Anbieterseite vor oder ein gehosteter Service ist falsch konfiguriert. Es sollte ein Supportticket erstellt werden.",
+			"inbound": "Der Benutzer hat versucht, eine Nebenstelle anzuwählen, aber aufgelegt, bevor die Verbindung hergestellt werden konnte ODER das System hat Schwierigkeiten, die Anrufe des Benutzers zu verarbeiten."
+		},
+		"RECOVERY_ON_TIMER_EXPIRE": {
+			"outbound": "Der Fehler liegt auf Anbieterseite vor oder ein gehosteter Service ist falsch konfiguriert. Es sollte ein Supportticket erstellt werden.",
+			"inbound": "Das Netzwerk oder die Firewall des Remotebenutzers hat unsere Rufanfrage blockiert."
+		},
+		"MANDATORY_IE_LENGTH_ERROR": {
+		},
+		"PROTOCOL_ERROR": {
+		},
+		"INTERWORKING": {
+		},
+		"ORIGINATOR_CANCEL": {
+			"inbound": "Der Anrufer hat aufgelegt, bevor der Teilnehmer abnehmen konnte (also während das Telefon noch geklingelt hat)"
+		},
+		"CRASH": {
+		},
+		"SYSTEM_SHUTDOWN": {
+		},
+		"LOSE_RACE": {
+			"inbound": "Der Anruf ging bei mehreren Telefonen gleichzeitig ein und ein anderes Telefon wurde vor diesem abgehoben."
+		},
+		"MANAGER_REQUEST": {
+		},
+		"BLIND_TRANSFER": {
+		},
+		"ATTENDED_TRANSFER": {
+			"inbound": "Dieses Segment war der „Aushandlungsteil“ des Vermittlungsversuchs. Das heißt, in diesem Teil des Anrufs hat der vermittelnde Teilnehmer den Empfänger gefragt, ob er den Anruf annehmen möchte (in etwa so: „Hallo Andreas, ich habe hier Herrn Meier in der Leitung. Möchtest du rangehen?“)"
+		},
+		"ALLOTTED_TIMEOUT": {
+		},
+		"USER_CHALLENGE": {
+		},
+		"MEDIA_TIMEOUT": {
+			"inbound": "Das Gespräch wurde unvermittelt durch ein Netzwerk- oder Firewallproblem beendet."
+		},
+		"PICKED_OFF": {
+		},
+		"USER_NOT_REGISTERED": {
+		},
+		"PROGRESS_TIMEOUT": {
+			"outbound": "Wir haben viele Sekunden gewartet, dass der Anbieter den angeforderten Anruf durchstellt, aber keine Reaktion erhalten. Das weist in der Regel darauf hin, dass der Anbieter zu lange nach einer Leitung für die Anrufabwicklung gesucht hat. Wenn so etwas öfters vorkommt, sollte ein Supportticket erstellt werden.",
+			"inbound": "Das Netzwerk oder die Firewall des Remotebenutzers hat unsere Rufanfrage blockiert."
+		},
+		"GATEWAY_DOWN": {
+		}
+	},
+
+	"__comment": "UI-243: Prüfung, ob Kennwort sicher ist, hinzugefügt",
+	"__version": "v3.20_s4",
+	"passwordStrength": {
+		"strong": "Stark",
+		"good": "Gut",
+		"medium": "OK",
+		"weak": "Schwach",
+		"bad": "Ungenügend",
+		"empty": "Kennwort eingeben"
+	},
+
+	"__comment": "UI-1388: Meldung für den Fall eines 401-Fehlers hinzugefügt",
+	"__version": "3.20",
+	"invalidCredentialsMessage": "Ihre Sitzung ist abgelaufen. Schließen Sie dieses Pop-up-Fenster, um zurück auf die Anmeldeseite zu gelangen.",
+
+	"__comment": "UI-901: Zusammenfassung über Löschung von Nummern hinzugefügt",
+	"__version": "3.20",
+	"monsterResults": {
+		"titles": {
+			"success": "Erfolg",
+			"error": "Fehler"
+		}
+	},
+	"__comment": "UI-1474: Name der Mein Konto-App wird angezeigt, wenn das Dropdown geöffnet ist, und Klickereignis entsprechend aktualisiert",
+	"__version": "v3.20_s5",
+	"controlCenter": "Steuerzentrale",
+	"__comment": "UI-343: Fortschrittsbalken für Upload hinzugefügt",
+	"__version": "v3.20_s5",
+	"uploadProgressTitle": "Dateien werden hochgeladen …",
+	"__comment": "UI-1499: Standardoption für Zeitzonenauswahl zu Account hinzugefügt",
+	"__version": "v3.20_s5",
+	"defaultTimezone": "- Standard Account/Benutzer -",
+
+	"__comment": "UI-1421: Walkthrough für Monster hinzugefügt",
+	"__version": "3.21",
+	"stepByStep": {
+		"nextLabel": "Weiter",
+		"prevLabel": "Zurück",
+		"skipLabel": "Überspringen",
+		"doneLabel": "Fertig"
+	},
+
+	"__comment": "UI-1772: Internationalisierungs-Unterstützung für das jQuery-Timepicker-Plug-in hinzugefügt",
+	"__version": "3.22",
+	"timepicker": {
+		"am": "AM",
+		"pm": "PM",
+		"AM": "AM",
+		"PM": "PM",
+		"decimal": ".",
+		"min": "Min.",
+		"hr": "Std.",
+		"hrs": "Std."
+	},
+
+	"__comment": "CM-150: Internationalisierung für ausführliche Timer hinzugefügt",
+	"__version": "3.22",
+	"friendlyTimer": {
+		"minutesAnd": "Minuten und",
+		"hours": "Stunden",
+		"seconds": "Sekunden",
+		"__comment": "UI-2570: Kurzer ausführlicher Timer hinzugefügt",
+		"__version": "4.0",
+		"minute": "Minute",
+		"minutes": "Minuten",
+		"second": "Zweite",
+		"hour": "Stunde"
+	},
+
+	"__comment": "UI-1779: Account-Umschalter hinzugefügt",
+	"__version": "3.22",
+	"accountToggle": {
+		"currentAccountLabel": "Durchsuchen",
+		"toggleTooltip": "Account wechseln",
+		"__comment": "UI-2092: Suchlabel hinzugefügt",
+		"__version": "3.22",
+		"breadcrumbSearchResults": "Suchergebnisse für „{{variable}}“"
+	},
+	"triggerMasquerading": "Der Account „{{accountName}}“ wird nun maskiert.",
+	"restoreMasquerading": "Maskierung ist deaktiviert.",
+
+	"__comment": "UI-1814: Warnung für App hinzugefügt, dass Maskierung nicht möglich ist",
+	"__version": "3.22",
+	"noMasqueradingAllowed": "Sie werden auf Ihre „Apps“-Seite weitergeleitet, weil die von Ihnen verwendete App keinen Wechsel zwischen Accounts unterstützt.",
+
+	"__comment": "OOB: Nur Kazoo-APIs erlauben, Benutzer automatisch bei einem Authentifizierungsfehler abzumelden (ungültiges/abgelaufenes Token)",
+	"__version": "3.22",
+	"authenticationIssue": "Während des Vorgangs ist ein Authentifizierungsfehler aufgetreten!",
+
+	"__comment": "UI-1847: Wenn ein Benutzer versucht, sich bei einem abgelaufenen Account anzumelden, wird eine entsprechende Meldung angezeigt",
+	"__version": "3.23",
+	"expiredTrial": "Ihr Testzugang ist am {{date}} abgelaufen. Wenden Sie sich an den Vertrieb, wenn Sie die App weiterhin nutzen möchten.",
+	"disabledAccount": "Ihr Account wurde deaktiviert.",
+
+	"__comment": "UI-1972: Wrapper für jQuery-UI-Schieberegler erstellt",
+	"__version": "3.22",
+	"unitsMultiple": {
+		"byte": [
+			{
+				"symbol": "Byte",
+				"multiple": "Byte"
+			},
+			{
+				"symbol": "kB",
+				"multiple": "Kilobyte"
+			},
+			{
+				"symbol": "MB",
+				"multiple": "Megabyte"
+			},
+			{
+				"symbol": "GB",
+				"multiple": "Gigabyte"
+			},
+			{
+				"symbol": "TB",
+				"multiple": "Terabyte"
+			},
+			{
+				"symbol": "PB",
+				"multiple": "Petabyte"
+			},
+			{
+				"symbol": "EB",
+				"multiple": "Exabyte"
+			},
+			{
+				"symbol": "ZB",
+				"multiple": "Zettabyte"
+			},
+			{
+				"symbol": "YB",
+				"multiple": "Yottabyte"
+			}
+		]
+	},
+
+	"__comment": "UI-2033: Shortcuts zu Monster hinzugefügt",
+	"__version": "3.22",
+	"globalShortcuts": {
+		"categories": {
+			"general": "Globale Shortcuts",
+			"apps": "Zur Anwendung",
+			"appSpecific": "Aktuelle Anwendung"
+		},
+		"popupTitle": "Tastaturkürzel-Übersicht",
+		"keys": {
+			"a": { "title": "Account wechseln" },
+			"d": { "title": "Erweiterte Account-Infos" },
+			"r": { "title": "App aktualisieren" },
+			"#": { "title": "App-Loader" },
+			"@": { "title": "Mein Account"},
+			"shift+l": { "title": "Sofort abmelden"},
+			"?": { "title": "Shortcut-Übersicht anzeigen" },
+			"shift+m": { "title": "Maskierung beenden" },
+			"shift+s": { "title": "Gefälschte Telefonnummern anzeigen" }
+		}
+	},
+
+	"debugAccountDialog": {
+		"title": "Account-Infos debuggen",
+		"accountName": "Account-Name",
+		"accountId": "Account-ID",
+		"authToken": "Auth-Token",
+		"apiUrl": "API-URL",
+		"monsterVersion": "UI-Core-Version",
+		"__comment": "UI-2941: Debuginfos zum Debug-Pop-up hinzugefügt",
+		"__version": "4.2",
+		"webSocket": {
+			"title": "WebSocket",
+			"connected": "Verbunden",
+			"disconnected": "Verbindung getrennt"
+		},
+		"kazooVersion": "Back-End-Version",
+		"copyToClipboard": "In Zwischenablage kopieren"
+	},
+
+	"__comment": "UI-2232: Layer hinzugefügt, um einige Optionen leichter an anderer Stelle zu verwenden",
+	"__version": "3.22",
+	"footable": {
+		"search": "Suche",
+		"format": "{PF}-{PL} von {TR}"
+	},
+
+	"__comment": "UI-2382: Steuerelement für Back-End-Seitennumerierung hinzugefügt",
+	"__version": "4.0",
+	"backendPagination": {
+		"loadMore": "Mehr laden",
+		"loadAll": "Alle laden",
+		"title": "Noch mehr Ergebnisse sind in der Datenbank verfügbar",
+		"help": "Diese Tabelle verwendet Daten aus einer Datenbank, in der Nachschlagevorgänge kostenintensiv sind. Die Daten, die von dieser Tabelle dargestellt werden, bilden nur eine kleine Teilmenge der verfügbaren Daten. Wenn Sie trotzdem mehr Daten haben möchten, klicken Sie auf „Mehr laden“. Oder klicken Sie auf „Alle laden“, wenn Sie sämtliche Daten abrufen möchten. Bei großen Datenbanken kann dieser Vorgang mehrere Minuten in Anspruch nehmen.",
+		"allDataLoaded": "Sie haben sämtliche Zeilen geladen, die für diese Tabelle zur Verfügung stehen. Daher sind Lade-Schaltflächen nun deaktiviert.",
+		"empty": "Keine Ergebnisse. Klicken Sie auf die oben gezeigten Lade-Schaltflächen, um die Suche auszuweiten.",
+		"emptyForSure": "Keine Ergebnisse.",
+		"entireDataSetLoaded": "Alle verfügbaren Daten wurden geladen."
+	},
+
+	"__comment": "UI-2425: Nummernfunktionen, Monster.UI.Helper",
+	"__version": "v4.0",
+	"iconNumberFeatures": {
+		"e911": {
+			"label": "E911",
+			"tooltip": "E911"
+		},
+		"failover": {
+			"label": "Failover",
+			"tooltip": "Failover"
+		},
+		"callerId": {
+			"label": "Anrufer-ID"
+		},
+		"prepend": {
+			"label": "Voranstellen",
+			"tooltip": "Voranstellen"
+		},
+
+		"outbound_cnam": {
+			"tooltip": "Ausgehender CNAM"
+		},
+		"inbound_cnam": {
+			"tooltip": "Eingehender CNAM"
+		},
+		"local": {
+			"tooltip": "Lokal"
+		},
+		"port": {
+			"tooltip": "Port"
+		},
+		"mobile": {
+			"tooltip": "Mobil"
+		}
+	},
+	"__comment": "UI-2492: Anzeige einer Erfolgsmeldung beim Kopieren in die Zwischenablage",
+	"__version": "v4.0",
+	"clipboard": {
+		"successCopy": "Erfolgreich in die Zwischenablage kopiert!"
+	},
+
+	"__comment": "UI-2516: Benutzern wird erlaubt, mehr Entitäten anzuzeigen",
+	"__version": "v4.0",
+	"tablePageSize": {
+		"show": "Anzeigen",
+		"entries": "Einträge",
+		"ten": "10",
+		"twentyFive": "25",
+		"fifty": "50",
+		"hundred": "100"
+	},
+
+	"__comment": "UI-2596: Hinzufügen von ISO-Ländern zur Internationalisierung",
+	"__version": "4.1",
+	"monsterCountries": {
+		"AF": "Afghanistan",
+		"AX": "Alandinseln",
+		"AL": "Albanien",
+		"DZ": "Algerien",
+		"AS": "Amerikanisch-Samoa",
+		"AD": "Andorra",
+		"AO": "Angola",
+		"AI": "Anguilla",
+		"AQ": "Antarktika",
+		"AG": "Antigua und Barbuda",
+		"AR": "Argentinien",
+		"AM": "Armenien",
+		"AW": "Aruba",
+		"AU": "Australien",
+		"AT": "Österreich",
+		"AZ": "Aserbaidschan",
+		"BS": "Bahamas",
+		"BH": "Bahrain",
+		"BD": "Bangladesch",
+		"BB": "Barbados",
+		"BY": "Weißrussland",
+		"BE": "Belgien",
+		"BZ": "Belize",
+		"BJ": "Benin",
+		"BM": "Bermuda",
+		"BT": "Bhutan",
+		"BO": "Bolivien",
+		"BA": "Bosnien-Herzegowina",
+		"BW": "Botswana",
+		"BV": "Bouvetinsel",
+		"BR": "Brasilien",
+		"IO": "Britisches Territorium im Indischen Ozean",
+		"BN": "Sultanat Brunei Darussalam",
+		"BG": "Bulgarien",
+		"BF": "Burkina Faso",
+		"BI": "Burundi",
+		"KH": "Kambodscha",
+		"CM": "Kamerun",
+		"CA": "Kanada",
+		"CV": "Kap Verde",
+		"KY": "Kaimaninseln",
+		"CF": "Zentralafrikanische Republik",
+		"TD": "Tschad",
+		"CL": "Chile",
+		"CN": "China",
+		"CX": "Weihnachtsinsel",
+		"CC": "Kokosinseln",
+		"CO": "Kolumbien",
+		"KM": "Komoren",
+		"CG": "Kongo",
+		"CD": "Kongo, Demokratische Republik",
+		"CK": "Cookinseln",
+		"CR": "Costa Rica",
+		"CI": "Elfenbeinküste",
+		"HR": "Kroatien",
+		"CU": "Kuba",
+		"CY": "Zypern",
+		"CZ": "Tschechische Republik",
+		"DK": "Dänemark",
+		"DJ": "Djibouti",
+		"DM": "Dominica",
+		"DO": "Dominikanische Republik",
+		"EC": "Ecuador",
+		"EG": "Ägypten",
+		"SV": "El Salvador",
+		"GQ": "Äquatorialguinea",
+		"ER": "Eritrea",
+		"EE": "Estland",
+		"ET": "Äthiopien",
+		"FK": "Falklandinseln (Malwinen)",
+		"FO": "Färöer-Inseln",
+		"FJ": "Fidschi",
+		"FI": "Finnland",
+		"FR": "Frankreich",
+		"GF": "Französisch-Guayana",
+		"PF": "Französisch-Polynesien",
+		"TF": "Französische Gebiete im südlichen Indischen Ozean",
+		"GA": "Gabun",
+		"GM": "Gambia",
+		"GE": "Georgien",
+		"DE": "Deutschland",
+		"GH": "Ghana",
+		"GI": "Gibraltar",
+		"GR": "Griechenland",
+		"GL": "Grönland",
+		"GD": "Grenada",
+		"GP": "Guadeloupe",
+		"GU": "Guam",
+		"GT": "Guatemala",
+		"GG": "Guernsey",
+		"GN": "Guinea",
+		"GW": "Guinea-Bissau",
+		"GY": "Guyana",
+		"HT": "Haiti",
+		"HM": "Heard und McDonaldinseln",
+		"VA": "Heiliger Stuhl (Vatikanstadt)",
+		"HN": "Honduras",
+		"HK": "Hongkong",
+		"HU": "Ungarn",
+		"IS": "Island",
+		"IN": "Indien",
+		"ID": "Indonesien",
+		"IR": "Iran, Islamische Republik",
+		"IQ": "Irak",
+		"IE": "Irland",
+		"IM": "Insel Man",
+		"IL": "Israel",
+		"IT": "Italien",
+		"JM": "Jamaika",
+		"JP": "Japan",
+		"JE": "Jersey",
+		"JO": "Jordanien",
+		"KZ": "Kasachstan",
+		"KE": "Kenia",
+		"KI": "Kiribati",
+		"KR": "Korea",
+		"KW": "Kuwait",
+		"KG": "Kirgisistan",
+		"LA": "Laos, Demokratische Volksrepublik",
+		"LV": "Lettland",
+		"LB": "Libanon",
+		"LS": "Lesotho",
+		"LR": "Liberia",
+		"LY": "Libysch-Arabische Dschamahirija",
+		"LI": "Liechtenstein",
+		"LT": "Litauen",
+		"LU": "Luxemburg",
+		"MO": "Macau",
+		"MK": "Mazedonien, Ehemalige jugoslawische Republik",
+		"MG": "Madagaskar",
+		"MW": "Malawi",
+		"MY": "Malaysia",
+		"MV": "Malediven",
+		"ML": "Mali",
+		"MT": "Malta",
+		"MH": "Marshallinseln",
+		"MQ": "Martinique",
+		"MR": "Mauretanien",
+		"MU": "Mauritius",
+		"YT": "Mayotte",
+		"MX": "Mexiko",
+		"FM": "Mikronesien, Föderierte Staaten von",
+		"MD": "Moldawien (Republik Moldau)",
+		"MC": "Monaco",
+		"MN": "Mongolei",
+		"ME": "Montenegro",
+		"MS": "Montserrat",
+		"MA": "Marokko",
+		"MZ": "Mosambik",
+		"MM": "Myanmar",
+		"NA": "Namibia",
+		"NR": "Nauru",
+		"NP": "Nepal",
+		"NL": "Niederlande",
+		"AN": "Niederländische Antillen",
+		"NC": "Neukaledonien",
+		"NZ": "Neuseeland",
+		"NI": "Nicaragua",
+		"NE": "Niger",
+		"NG": "Nigeria",
+		"NU": "Niue",
+		"NF": "Norfolkinsel",
+		"MP": "Nördliche Marianen",
+		"NO": "Norwegen",
+		"OM": "Oman",
+		"PK": "Pakistan",
+		"PW": "Palau",
+		"PS": "Palästinensische Gebiete, Besetzt",
+		"PA": "Panama",
+		"PG": "Papua-Neuguinea",
+		"PY": "Paraguay",
+		"PE": "Peru",
+		"PH": "Philippinen",
+		"PN": "Pitcairninseln",
+		"PL": "Polen",
+		"PT": "Portugal",
+		"PR": "Puerto Rico",
+		"QA": "Katar",
+		"RE": "Réunion",
+		"RO": "Rumänien",
+		"RU": "Russische Föderation",
+		"RW": "Ruanda",
+		"BL": "St. Barthélemy",
+		"SH": "St. Helena",
+		"KN": "St. Kitts und Nevis",
+		"LC": "St. Lucia",
+		"MF": "St. Martin",
+		"PM": "St. Pierre und Miquelon",
+		"VC": "St. Vincent und die Grenadinen",
+		"WS": "Samoa",
+		"SM": "San Marino",
+		"ST": "São Tomé und Príncipe",
+		"SA": "Saudi-Arabien",
+		"SN": "Senegal",
+		"RS": "Serbien",
+		"SC": "Seychellen",
+		"SL": "Sierra Leone",
+		"SG": "Singapur",
+		"SK": "Slowakei",
+		"SI": "Slowenien",
+		"SB": "Salomonen",
+		"SO": "Somalia",
+		"ZA": "Südafrika",
+		"GS": "Südgeorgien und Sandwich-Inseln",
+		"ES": "Spanien",
+		"LK": "Sri Lanka",
+		"SD": "Sudan",
+		"SR": "Surinam",
+		"SJ": "Svalbard und Jan Mayen",
+		"SZ": "Swasiland",
+		"SE": "Schweden",
+		"CH": "Schweiz",
+		"SY": "Syrien, Arabische Republik",
+		"TW": "Taiwan",
+		"TJ": "Tadschikistan",
+		"TZ": "Tansania",
+		"TH": "Thailand",
+		"TL": "Timor-Leste",
+		"TG": "Togo",
+		"TK": "Tokelau",
+		"TO": "Tonga",
+		"TT": "Trinidad und Tobago",
+		"TN": "Tunesien",
+		"TR": "Türkei",
+		"TM": "Turkmenistan",
+		"TC": "Turks- und Caicosinseln",
+		"TV": "Tuvalu",
+		"UG": "Uganda",
+		"UA": "Ukraine",
+		"AE": "Vereinigte Arabische Emirate",
+		"GB": "Großbritannien",
+		"US": "USA",
+		"UM": "Kleinere Amerikanische Überseeinseln",
+		"UY": "Uruguay",
+		"UZ": "Usbekistan",
+		"VU": "Vanuatu",
+		"VE": "Venezuela",
+		"VN": "Vietnam",
+		"VG": "Jungferninseln, Britische",
+		"VI": "Jungferninseln, Amerikanische",
+		"WF": "Wallis und Futuna",
+		"EH": "Westsahara",
+		"YE": "Jemen",
+		"ZM": "Sambia",
+		"ZW": "Simbabwe"
+	},
+
+	"__comment": "UI-2996: Layer hinzugefügt, um zu überprüfen, ob eine App beim Weiterleiten maskiert werden kann",
+	"__version": "4.1",
+	"appMasqueradingError": "Diese App kann leider nur mit dem Account genutzt werden, mit dem Sie angemeldet sind. Wenn Sie diese App ganz normal verwenden möchten, begeben sich Sie bitte zurück auf die Ebene Ihres Accounts.",
+
+	"__comment": "UI-3013: Bessere Rückmeldung bezüglich unterbrochener WS-Verbindungen hinzugefügt",
+	"__version": "4.1",
+	"brokenWebSocketsWarning": {
+		"successReconnect": "Ihre Verbindung zum WebSockets-Server wurde korrekt wiederhergestellt.",
+		"title": "Keine WebSockets-Verbindung",
+		"content1": "Die WebSockets-Verbindung funktioniert nicht.",
+		"content2": "Bitte prüfen Sie nach, ob Ihre Internetverbindung und Ihre Firewall korrekt funktionieren, da wir die aktuelle Anwendung ohne eine korrekte Verbindung mit dem WebSockets-Server nicht anzeigen können.",
+		"content3": "Sobald die Verbindung wieder steht, werden wir die Anwendung automatisch aktualisieren..."
+	}
+}

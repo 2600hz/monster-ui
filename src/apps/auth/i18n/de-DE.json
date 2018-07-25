@@ -1,0 +1,160 @@
+﻿{
+	"welcome": "Ihre Unified Communications-Plattform.",
+	"password": "Kennwort",
+	"rememberMe": "Kennwort speichern",
+	"forgotPassword": "Haben Sie Ihre Infos vergessen?",
+	"alternativeSignIn": "Oder melden Sie sich an mittels:",
+	"username": "Benutzername",
+	"registerMessage": "Einen Account für alle Services verwenden",
+	"registerLink": "Registrieren",
+	"or": "ODER",
+	"errorLoadingAccount": "Beim Laden Ihres Accounts ist ein Fehler aufgetreten",
+
+	"confirmLogout": "Möchten Sie sich wirklich abmelden?",
+
+	"account": {
+		"name": "Account-Name",
+		"namePlaceholder": "Firmenname",
+		"realm": "Account-Bereich",
+		"realmPlaceholder": "Account-Bereich"
+	},
+
+	"login":{
+		"buttonText": "Anmelden"
+	},
+
+	"conferenceLogin": {
+		"userTab": "Benutzer",
+		"adminTab": "Administrator",
+		"headerLabel": "Konferenzanmeldung",
+		"pinLabel": "PIN-Nummer",
+		"nameLabel": "Name",
+		"callInLabel": "Ihre Einwahlnummer",
+		"optionalSplitter": "Optional",
+		"buttonLabel": "Konferenz beitreten"
+	},
+
+	"passwordUpdate": {
+		"title": "Kennwort ändern",
+		"label": {
+			"password": {
+				"new": "Neues Kennwort",
+				"confirmation": "Neues Kennwort bestätigen"
+			}
+		},
+		"help": {
+			"text": "Sie haben Ihr Kennwort erfolgreich zurückgesetzt. Legen Sie Ihr neues Kennwort oben fest, dann können Sie sich damit anmelden, wenn Sie das nächste Mal diese Anwendung nutzen!"
+		},
+		"button": {
+			"update": "Kennwort ändern"
+		},
+		"toastr": {
+			"success": {
+				"update": "Ihr Kennwort wurde geändert"
+			},
+			"error": {
+				"password": "Das eingegebene Kennwort stimmt nicht. Bitte geben Sie Ihr neues Kennwort ein"
+			}
+		}
+	},
+
+	"toastrMessages": {
+		"appListError": "Beim Laden Ihrer Anwendungsliste ist ein Fehler aufgetreten."
+	},
+
+	"__comment": "UI-1666: Anzahl der verbleibenden Tage in Account anzeigen",
+	"__version": "3.22",
+	"trialDaysLeft": "Testversion läuft in {{variable}} Tagen ab",
+	"trialExpired": "Testversion abgelaufen!",
+	"trialPopup": {
+		"title": "Status der Testversion",
+		"closeButton": "Testversion fortsetzen",
+		"upgradeButton": "Jetzt upgraden",
+		"mainMessage": "Willkommen zurück in Ihrer Testversion. Sie haben noch {{variable}} Tage übrig, um die Plattform auszuprobieren.",
+		"trialExpired": "Ihre Testversion ist abgelaufen. Bitte klicken Sie auf „Upgrade“, um die Plattform weiterhin zu verwenden.",
+		"alreadyUpgraded": "Willkommen zurück in Ihrer Testversion. Sie haben bereits ein Upgrade für Ihren Account angefordert. Sobald das Upgrade aktiviert wurde, werden Sie per E-Mail benachrichtigt!"
+	},
+
+	"__comment": "UI-1787: Upgrade von Testversion-Accounts",
+	"__version": "3.22",
+	"trial": {
+		"noCreditCard": "Bitte versuchen Sie nach Eingabe Ihrer Kreditkarteninformationen erneut, ein Upgrade vorzunehmen …",
+		"successUpgrade": {
+			"content": "Sobald Ihre Bestellung bearbeitet wurde, erhalten Sie eine E-Mail mit Anweisungen, wie Sie sich in Ihrem neuen Account anmelden können. Sollten Sie in der Zwischenzeit Fragen haben, wenden Sie sich bitte an sales@2600hz.com, und Sie erhalten Hilfe.",
+			"title": "Vielen Dank für Ihre Bestellung!"
+		}
+	},
+
+	"__comment": "UI-1848: neuer Prozess zur Kennwortwiederherstellung",
+	"__version": "3.23",
+	"recoverPassword": {
+		"toastr": {
+			"success": {
+				"reset": "Eine E-Mail wurde an die von Ihnen genannte Adresse gesendet. In dieser E-Mail finden Sie temporäre Anmeldedaten, mit denen Sie auf Ihren Account zugreifen können. Nachdem Sie sich angemeldet haben, müssen Sie Ihr Kennwort ändern/aktualisieren."
+			},
+			"error": {
+				"reset": {
+					"account_name": "Der angegebene Account-Name konnte nicht gefunden werden",
+					"account_realm": "Der angegebene Account-Bereich konnte nicht gefunden werden",
+					"phone_number": "Die angegebene Telefonnummer konnte nicht gefunden werden",
+					"username": "Der angegebene Benutzername konnte nicht gefunden werden"
+				},
+				"missing": "Bitte geben Sie einen Account-Namen oder eine Telefonnummer ein, die mit Ihrem Account verknüpft sind"
+			}
+		},
+		"successReset": "Eine E-Mail wurde an die von Ihnen genannte Adresse gesendet. In dieser E-Mail finden Sie temporäre Anmeldedaten, mit denen Sie auf Ihren Account zugreifen können. Nachdem Sie sich angemeldet haben, müssen Sie Ihr Kennwort ändern/aktualisieren.",
+		"headline": "Um Ihr Kennwort wiederherzustellen, geben Sie bitte Ihre E-Mail-Adresse und Ihren Benutzernamen ein:",
+		"emailPlaceholder": "E-Mail-Adresse/Benutzername",
+		"headline2": "Und eine der folgenden Informationen (nur eine nötig):",
+		"accountNamePlaceholder": "Account-Name",
+		"phoneNumberPlaceholder": "Telefonnummer",
+		"resetPassword": "Kennwort zurücksetzen",
+		"rememberPassword": "Ihr Kennwort speichern?"
+	},
+
+	"__comment": "UI-1874: neuer Grußmechanismus bei Testversion",
+	"__version": "4.0",
+	"trialGreetingsDialog": {
+		"title": "Willkommen auf der Plattform!",
+		"content": "Der Schritt-für-Schritt-Assistent wird Sie mit der Plattform vertraut machen, sodass Sie die Telefonanlage Ihres Unternehmens einrichten können.",
+		"go": "Los"
+	},
+
+	"__comment": "UI-1995: Neuer Ankündigungsmechanismus",
+	"__version": "3.22",
+	"announcementTitle": "Ankündigung",
+
+	"__comment": "UI-2463: Neuer Ankündigungsmechanismus",
+	"__version": "4.0",
+	"invalidCredentials": "Ungültige Anmeldeinformationen",
+
+	"__comment": "UI-2552: Duo-Integration wird hinzugefügt",
+	"__version": "4.1",
+	"duoDialog": {
+		"title": "Mehrstufige Authentifizierung"
+	},
+	"multiFactor": {
+		"error": "Die Informationen, die vom Plugin für mehrstufige Authentifizierung gesendet wurden, sind ungültig."
+	},
+	"__comment": "UI-2422: Duo-Integration wird hinzugefügt",
+	"__version": "4.1",
+	"ssoSuccessLinking": "Wir haben Ihren SSO-Account erfolgreich mit Ihrem Kazoo-Account verknüpft.",
+	"ssoFailedLinking": "Wir konnten Ihren SSO-Account nicht mit Ihrem Kazoo-Account verknüpfen.",
+	"ssoSuccessUnlinking": "Wir haben die Verknüpfung Ihres SSO-Accounts mit Ihrem Kazoo-Account erfolgreich aufgehoben.",
+	"ssoFailedUnlinking": "Wir konnten Ihren SSO-Account nicht mit Ihrem Kazoo-Account verknüpfen.",
+
+	"__comment": "OAuth2: Hinzufügung von i18n für OAuth-Anpassungen",
+	"__version": "4.1",
+	"oauth": {
+		"logout": "Abmelden",
+		"noLinkMsg": "Wir konnten keinen Account finden, der mit dieser E-Mail-Adresse verknüpft ist. Bitte melden Sie sich mit Ihren üblichen Anmeldeinformationen in der Plattform an, um Ihre Accounts miteinander zu verknüpfen. Diesen Vorgang brauchen Sie nur ein Mal durchzuführen."
+	},
+
+	"__comment": "Wiederherstellen der Verbindung wird leichter",
+	"__version": "4.1",
+	"retryLoginConfirmText": "Ihre Verbindung zum System wurde getrennt. Möchten Sie die Verbindung wiederherstellen?",
+
+	"__comment": "UI-2921: Möglichkeit zum Annehmen der Identität von Benutzern hinzugefügt",
+	"__version": "4.2",
+	"confirmUserMasquerading": "Möchten Sie wirklich die Identität des Benutzers „{{userName}}“ annehmen? Wenn ja, wird die Benutzeroberfläche komplett neu geladen und Sie müssen Sie erneut anmelden, um wieder in Ihren ursprünglichen Account zu gelangen. Vorgang trotzdem fortsetzen?"
+}
