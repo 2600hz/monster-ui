@@ -1,4 +1,4 @@
-﻿{
+{
 	"poweredBy": "Powered by ",
 	"error": "Fehler",
 	"olderVersion": "Die Daten, die Sie zu aktualisieren versuchen, wurden anscheinend außerhalb dieser UI erstellt. Dennoch fortfahren?",
@@ -169,6 +169,7 @@
 		"americanEnglish": "Englisch (en-US)",
 		"frenchFrench": "Französisch (fr-FR)",
 		"russianRussian": "Russisch (ru-RU)",
+		"germanGerman": "Deutsch (de-DE)",
 		"__comment": "Spanisch zur Sprachauswahlliste in Mein Account hinzugefügt",
 		"__version": "v3.22",
 		"spainSpanish": "Spanisch (es-ES)"
