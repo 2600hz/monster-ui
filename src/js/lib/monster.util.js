@@ -196,7 +196,7 @@ define(function(require) {
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
 			var resp = libphonenumber.parse(phoneNumber, {
 					country: {
-						default: 'US'
+						'default': 'US'
 					}
 				}),
 				phoneNumber;
@@ -224,7 +224,7 @@ define(function(require) {
 		getFormatPhoneNumber: function(phoneNumber) {
 			var resp = libphonenumber.parse(phoneNumber, {
 					country: {
-						default: 'US'
+						'default': 'US'
 					}
 				}),
 				user = monster.apps.auth.currentUser || {},
@@ -578,6 +578,7 @@ define(function(require) {
 		*/
 		setDefaultLanguage: function() {
 			var languages = [
+					'de-DE',
 					'en-US',
 					'es-ES',
 					'fr-FR',

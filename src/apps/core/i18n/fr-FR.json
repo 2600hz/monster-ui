@@ -132,7 +132,7 @@
 		"required":"Requis."
 	},
 	"warning":"Attention!",
-	
+
 	"confirmCharges": {
 		"title":"Confirmation de frais",
 		"oneTimeFee": "Frais unique",
@@ -148,6 +148,7 @@
 		"americanEnglish":"Anglais (en-US)",
 		"frenchFrench":"Français (fr-FR)",
 		"russianRussian": "Russe (ru-RU)",
+		"germanGerman": "Allemand (de-DE)",
 		"spainSpanish": "Espagnol (es-ES)"
 	},
 	"services": {

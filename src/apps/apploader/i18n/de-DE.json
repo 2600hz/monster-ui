@@ -1,0 +1,25 @@
+﻿{
+	"defaultApp": {
+		"title": "Standard-App",
+		"label": "Wenn Sie eine Standard-App festgelegt haben, landen Sie nach der Anmeldung direkt in dieser App."
+	},
+	"noDefaultApp": {
+		"label": "Keine Standard-App ausgewählt"
+	},
+	"appDescription": {
+		"title": "Festlegen einer Standard-App",
+		"label": "Wenn Sie Ihre Standard-App festlegen oder ändern möchten, ziehen Sie einfach die gewünschte App in den dafür vorgesehenen Bereich."
+	},
+	"searchQuery": {
+		"placeholder": "Apps suchen"
+	},
+	"appstore": {
+		"button": "App Exchange"
+	},
+	"appList": {
+		"title": "Ihre Apps"
+	},
+	"__comment": "UI-1814: Warnung für App hinzugefügt, dass Maskierung nicht möglich ist",
+	"__version": "3.22",
+	"noMasqueradingError": "Diese App kann leider nur mit dem Account genutzt werden, mit dem Sie angemeldet sind. Wenn Sie diese App ganz normal verwenden möchten, begeben sich Sie bitte zurück auf die Ebene Ihres Accounts."
+}
