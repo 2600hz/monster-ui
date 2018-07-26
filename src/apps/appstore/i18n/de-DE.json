@@ -1,0 +1,43 @@
+﻿{
+	"description": "Beschreibung",
+	"featuresTitle": "Funktionsmerkmale:",
+	"undefinedFeatures": "Liste der Funktionsmerkmale wird in Kürze veröffentlicht...",
+	"author": "Autor",
+	"version": "Version",
+	"license": "Lizenz",
+	"price": "Preis",
+	"free": "Kostenlos",
+	"save": "Speichern",
+	"filters": {
+		"all": "Alle Apps",
+		"installed": "Eigene Apps",
+		"reseller": "Reseller-Apps",
+		"carrier": "Netzanbieter-Apps",
+		"developer": "Entwickler-Apps",
+		"endUser": "Endbenutzer-Apps",
+		"reporting": "Reporting-Apps",
+		"integration": "Integrationen",
+		"admin": "Admin-Apps",
+		"systemAdmin": "Systemadmin-Apps"
+	},
+	"permissions": {
+		"title": "Wer kann diese App verwenden?",
+		"all": "Alle Benutzer",
+		"admins": "Nur Admins",
+		"specific": "Bestimmte Benutzer"
+	},
+	"selectedUsers": "Ausgewählte Benutzer",
+	"selectAll": "Alle auswählen",
+	"unselectAll": "Auswahl aufheben",
+	"selectUsersLink": "Ausgewählte Benutzer ({{selectedUsers}})",
+	"alerts": {
+		"noUserSelected": "Sie müssen mindestens einen Benutzer für diese App auswählen.<br><br>Wenn Sie nicht möchten, dass diese App von Benutzern verwendet wird, können Sie sie deaktivieren."
+	},
+	"__comment": "UI-1190: Aktualisierung der Art und Weise, wie Apps aktiviert/deaktiviert werden",
+	"__version": "v3.20_s2",
+	"ok": "OK",
+
+	"__comment": "UI-1190: Aktualisierung der Art und Weise, wie Apps aktiviert/deaktiviert werden",
+	"__version": "v3.20_s2",
+	"appStoreDisabled": "Anscheinend wurde der App-Store für diesen Account deaktiviert. Weitere Informationen dazu erhalten Sie von Ihrem Administrator."
+}

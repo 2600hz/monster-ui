@@ -169,6 +169,7 @@
 		"americanEnglish": "English (en-US)",
 		"frenchFrench": "French (fr-FR)",
 		"russianRussian": "Russian (ru-RU)",
+		"germanGerman": "German (de-DE)",
 		"__comment": "Add Spanish to the list of selectable languages in My Account",
 		"__version": "v3.22",
 		"spainSpanish": "Spanish (es-ES)"
