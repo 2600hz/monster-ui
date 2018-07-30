@@ -14,6 +14,15 @@ define(function() {
 		monsterizeApp: function(app, callback) {
 			var self = this;
 
+			app.css = _
+				.chain([
+					'app',
+					_.isArray(app.css) ? app.css : []
+				])
+				.flatten()
+				.uniq()
+				.value();
+
 			_.each(app.requests, function(request, id) {
 				monster._defineRequest(id, request, app);
 			});
