@@ -22,6 +22,13 @@ define(function() {
 				.flatten()
 				.uniq()
 				.value();
+			app.i18n = _
+				.chain({})
+				.set(monster.defaultLanguage, {
+					customCss: false
+				})
+				.merge(_.isPlainObject(app.i18n) ? app.i18n : {})
+				.value();
 
 			_.each(app.requests, function(request, id) {
 				monster._defineRequest(id, request, app);
