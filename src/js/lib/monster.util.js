@@ -192,11 +192,15 @@ define(function(require) {
 
 			return formattedResponse;
 		},
+		
+		getDefaultCountry: function() {
+			return monster.config.whitelabel.defaultCountry || 'US';
+		},
 
 		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
 			var resp = libphonenumber.parse(phoneNumber, {
 					country: {
-						'default': 'US'
+						'default': self.getDefaultCountry()
 					}
 				}),
 				phoneNumber;
@@ -224,7 +228,7 @@ define(function(require) {
 		getFormatPhoneNumber: function(phoneNumber) {
 			var resp = libphonenumber.parse(phoneNumber, {
 					country: {
-						'default': 'US'
+						'default': self.getDefaultCountry()
 					}
 				}),
 				user = monster.apps.auth.currentUser || {},
