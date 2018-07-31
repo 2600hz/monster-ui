@@ -46,8 +46,6 @@ define(function(require) {
 		initApp: function(callback) {
 			var self = this;
 
-			self.isMasqueradable = false;
-
 			monster.pub('auth.initApp', {
 				app: self,
 				callback: callback

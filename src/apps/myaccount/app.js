@@ -79,8 +79,6 @@ define(function(require) {
 			var self = this;
 
 			self.initApp(function() {
-				self.render();
-
 				callback && callback(self);
 			});
 		},

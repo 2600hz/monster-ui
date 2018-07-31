@@ -3,6 +3,11 @@ define(function() {
 		_ = require('lodash'),
 		monster = require('monster');
 
+	var baseApps = [
+		'auth',
+		'core'
+	];
+
 	var apps = {
 		// Global var used to show the loading gif
 		uploadProgress: {
@@ -29,6 +34,21 @@ define(function() {
 				})
 				.merge(_.isPlainObject(app.i18n) ? app.i18n : {})
 				.value();
+
+			if (!_.includes(baseApps, app.name)) {
+				app.initApp = _.flow(
+					_.partial(_.set, { app: app }, 'callback'),
+					_.partial(monster.pub, 'auth.initApp')
+				);
+				app.load = function(callback) {
+					app.initApp(function() {
+						if (app.name === 'myaccount') {
+							app.render();
+						}
+						callback && callback(app);
+					});
+				};
+			}
 
 			_.each(app.requests, function(request, id) {
 				monster._defineRequest(id, request, app);
