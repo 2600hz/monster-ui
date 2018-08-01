@@ -44,7 +44,7 @@ define(function(require) {
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
 					var billingTemplate = $(self.getTemplate({
-						name: 'billing-layout',
+						name: 'layout',
 						data: results,
 						submodule: 'billing'
 					}));
