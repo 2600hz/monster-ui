@@ -220,10 +220,16 @@ define(function(require) {
 							generateError: false
 						},
 						success: function(data, status) {
-							callback(null, data);
+							callback(null, data.data);
 						},
-						error: function(parsedError, error) {
-							callback(null, parsedError);
+						error: function(parsedError, error, globalHandler) {
+							if (error.status === 404) {
+								callback(null, {});
+							} else {
+								globalHandler(error, {
+									generateError: true
+								});
+							}
 						}
 					});
 				},
@@ -302,8 +308,8 @@ define(function(require) {
 				data.account.ui_flags.numbers_format = 'international';
 			}
 
-			if (data.accessLists.status === 'error' && data.accessLists.error === '404') {
-				// Disable access lists if the kazoo module is unreachable
+			if (_.isEmpty(data.accessLists)) {
+				// Disable access lists when the kazoo module is unreachable
 				data.allowAccessList = false;
 			} else if (whitelabel.hasOwnProperty('allowAccessList')) {
 				// Enable/Disable access lists following config.js configuration
