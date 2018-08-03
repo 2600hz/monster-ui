@@ -15,7 +15,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: editAccountId
 				},
@@ -45,7 +45,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -92,14 +92,15 @@ define(function(require) {
 			var self = this;
 
 			self.accountGetData(function(data) {
-				data.allowAccessList = monster.config.whitelabel.allowAccessList;
 				var accountTemplate = $(self.getTemplate({
 					name: 'layout',
 					data: data,
 					submodule: 'account'
 				}));
 
-				self.renderEditAccessListForm(accountTemplate);
+				if (data.allowAccessList) {
+					self.renderEditAccessListForm(accountTemplate);
+				}
 
 				self.accountBindEvents(accountTemplate, data);
 
@@ -150,7 +151,7 @@ define(function(require) {
 				}
 
 				self.callApi({
-					resource: 'accessList.post',
+					resource: 'accessLists.update',
 					data: {
 						accountId: editAccountId,
 						data: cidrData,
@@ -211,6 +212,27 @@ define(function(require) {
 			var self = this;
 
 			monster.parallel({
+				accessLists: function(callback) {
+					self.callApi({
+						resource: 'accessLists.get',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						},
+						error: function(parsedError, error, globalHandler) {
+							if (error.status === 404) {
+								callback(null, {});
+							} else {
+								globalHandler(error, {
+									generateError: true
+								});
+							}
+						}
+					});
+				},
 				account: function(callback) {
 					self.callApi({
 						resource: 'account.get',
@@ -272,6 +294,7 @@ define(function(require) {
 
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
+			var whitelabel = monster.config.whitelabel;
 
 			data.outboundPrivacy = _.map(self.appFlags.common.outboundPrivacy, function(strategy) {
 				return {
@@ -283,6 +306,16 @@ define(function(require) {
 			if (!(data.account.hasOwnProperty('ui_flags') && data.account.ui_flags.hasOwnProperty('numbers_format'))) {
 				data.account.ui_flags = data.account.ui_flags || {};
 				data.account.ui_flags.numbers_format = 'international';
+			}
+
+			if (_.isEmpty(data.accessLists)) {
+				// Disable access lists when the kazoo module is unreachable
+				data.allowAccessList = false;
+			} else if (whitelabel.hasOwnProperty('allowAccessList')) {
+				// Enable/Disable access lists following config.js configuration
+				data.allowAccessList = whitelabel.allowAccessList;
+			} else {
+				data.allowAccessList = false;
 			}
 
 			globalCallback && globalCallback(data);
