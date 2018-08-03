@@ -20,9 +20,9 @@
 				'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' },
 				'about': { verb: 'GET', url: 'about' }
 			},
-			accessList: {
+			accessLists: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/access_lists' },
-				'post': { verb: 'POST', url: 'accounts/{accountId}/access_lists' }
+				'update': { verb: 'POST', url: 'accounts/{accountId}/access_lists' }
 			},
 			account: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}' },

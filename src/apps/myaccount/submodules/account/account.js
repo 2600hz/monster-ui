@@ -15,7 +15,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: editAccountId
 				},
@@ -45,7 +45,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -151,7 +151,7 @@ define(function(require) {
 				}
 
 				self.callApi({
-					resource: 'accessList.post',
+					resource: 'accessLists.update',
 					data: {
 						accountId: editAccountId,
 						data: cidrData,
@@ -214,7 +214,7 @@ define(function(require) {
 			monster.parallel({
 				accessLists: function(callback) {
 					self.callApi({
-						resource: 'accessList.get',
+						resource: 'accessLists.get',
 						data: {
 							accountId: self.accountId,
 							generateError: false
