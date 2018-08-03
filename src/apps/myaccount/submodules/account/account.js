@@ -92,14 +92,15 @@ define(function(require) {
 			var self = this;
 
 			self.accountGetData(function(data) {
-				data.allowAccessList = monster.config.whitelabel.allowAccessList;
 				var accountTemplate = $(self.getTemplate({
 					name: 'layout',
 					data: data,
 					submodule: 'account'
 				}));
 
-				self.renderEditAccessListForm(accountTemplate);
+				if (data.allowAccessList) {
+					self.renderEditAccessListForm(accountTemplate);
+				}
 
 				self.accountBindEvents(accountTemplate, data);
 
@@ -211,6 +212,21 @@ define(function(require) {
 			var self = this;
 
 			monster.parallel({
+				accessLists: function(callback) {
+					self.callApi({
+						resource: 'accessList.get',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: function(data, status) {
+							callback(null, data);
+						},
+						error: function(parsedError, error) {
+							callback(null, parsedError);
+						}
+					});
+				},
 				account: function(callback) {
 					self.callApi({
 						resource: 'account.get',
@@ -272,6 +288,7 @@ define(function(require) {
 
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
+			var whitelabel = monster.config.whitelabel;
 
 			data.outboundPrivacy = _.map(self.appFlags.common.outboundPrivacy, function(strategy) {
 				return {
@@ -283,6 +300,16 @@ define(function(require) {
 			if (!(data.account.hasOwnProperty('ui_flags') && data.account.ui_flags.hasOwnProperty('numbers_format'))) {
 				data.account.ui_flags = data.account.ui_flags || {};
 				data.account.ui_flags.numbers_format = 'international';
+			}
+
+			if (data.accessLists.status === 'error' && data.accessLists.error === '404') {
+				// Disable access lists if the kazoo module is unreachable
+				data.allowAccessList = false;
+			} else if (whitelabel.hasOwnProperty('allowAccessList')) {
+				// Enable/Disable access lists following config.js configuration
+				data.allowAccessList = whitelabel.allowAccessList;
+			} else {
+				data.allowAccessList = false;
 			}
 
 			globalCallback && globalCallback(data);
