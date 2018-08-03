@@ -435,7 +435,15 @@ define(function(require) {
 				announcement = self.originalAccount.announcement || monster.config.whitelabel.announcement;
 
 			if (announcement) {
-				monster.ui.alert('info', announcement, null, { title: self.i18n.active().announcementTitle });
+				monster.ui.alert(
+					'info',
+					announcement,
+					null,
+					{
+						title: self.i18n.active().announcementTitle,
+						isPersistent: true
+					}
+				);
 			}
 		},
 
