@@ -351,12 +351,15 @@ define(function(require) {
 	}
 
 	/**
-	 * Determine the container of jQuery dialogs following this order:
+	 * Determine the container of jQuery dialogs in the following order:
 	 * - visible fullScreenModal
 	 * - open myaccount submodule
+	 * - absolute container if isPersistent
 	 * - current app
+	 * @param  {Boolean} isPersistent Keep it open when switching apps
+	 * @return {jQuery}               Container of the dialog
 	 */
-	function getDialogAppendTo() {
+	function getDialogAppendTo(isPersistent) {
 		var $coreWrapper = $('.core-wrapper'),
 			$coreContent = $coreWrapper.find('.core-content'),
 			$coreAbsolute = $coreWrapper.find('.core-absolute'),
@@ -366,6 +369,8 @@ define(function(require) {
 			return $coreAbsolute.find('.modal-full-screen-wrapper:visible');
 		} else if ($myAccount.hasClass('myaccount-open')) {
 			return $myAccount.find('.myaccount-dialog-container');
+		} else if (isPersistent) {
+			return $coreAbsolute;
 		} else {
 			return $coreContent;
 		}
@@ -545,10 +550,7 @@ define(function(require) {
 							callback && callback();
 						}
 					},
-					options,
-					{
-						appendTo: getDialogAppendTo()
-					}
+					options
 				),
 				dialog;
 
@@ -628,10 +630,7 @@ define(function(require) {
 							ok ? callbackOk && callbackOk() : callbackCancel && callbackCancel();
 						}
 					},
-					options,
-					{
-						appendTo: getDialogAppendTo()
-					}
+					options
 				),
 				ok = false;
 
@@ -699,7 +698,7 @@ define(function(require) {
 
 			//Unoverridable options
 			var strictOptions = {
-					appendTo: getDialogAppendTo(),
+					appendTo: getDialogAppendTo(options.isPersistent),
 					show: { effect: 'fade', duration: 200 },
 					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
