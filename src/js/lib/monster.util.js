@@ -8,6 +8,17 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
+	var supportedCurrencyCodes = {
+		USD: {
+			symbol: '$',
+			position: 'ante'
+		},
+		EUR: {
+			symbol: '€',
+			position: 'post'
+		}
+	};
+
 	var util = {
 
 		/**
@@ -344,14 +355,6 @@ define(function(require) {
 			}
 
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
-		formatPrice: function(value, pDecimals) {
-			var decimals = parseInt(pDecimals),
-				decimalCount = decimals >= 0 ? decimals : 2,
-				roundedValue = Math.round(Number(value) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
-
-			return roundedValue.toFixed(parseInt(value) === value && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
 		},
 
 		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
@@ -1215,6 +1218,52 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Decimaland currency formatting for prices
+	 * @param  {Object}  args
+	 * @param  {Number}  args.price        Price to format
+	 * @param  {Number}  args.decimals     Decimals for `price`
+	 * @param  {Boolean} args.withCurrency Determine currency inclusion
+	 * @return {String}                    String representation
+	 *
+	 * If `decimals` is not specified, integers will show no decimals while
+	 * floats will show two decimals
+	 */
+	function formatPrice(args) {
+		var price = args.price;
+		var decimals = parseInt(args.decimals);
+		var withCurrency = _.isBoolean(args.withCurrency)
+			? args.withCurrency
+			: true;
+		var decimalCount = decimals >= 0
+			? decimals
+			: 2;
+		var roundedPrice = Math.round(Number(price) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
+		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
+		var addCurrency = function(value) {
+			var currencyCode = monster.config.hasOwnProperty('currencyCode')
+				? monster.config.currencyCode
+				: 'USD';
+			var codeData = supportedCurrencyCodes.hasOwnProperty(currencyCode);
+			var ret;
+			if (_.isUndefined(codeData)) {
+				throw new Error('Currency code ' + currencyCode + ' is not supported.');
+			} else {
+				if (codeData.position === 'ante') {
+					ret = codeData.symbol + fixedPrice;
+				} else if (codeData.position === 'post') {
+					ret = fixedPrice + ' ' + codeData.symbol;
+				}
+			}
+			return ret;
+		};
+		return withCurrency
+			? addCurrency(fixedPrice)
+			: fixedPrice;
+	}
+
+	util.formatPrice = formatPrice;
 
 	return util;
 });
