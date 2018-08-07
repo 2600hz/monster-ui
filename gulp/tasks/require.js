@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var rjs = require('requirejs');
 var helpers = require('../helpers/helpers.js');
 var clean = require('gulp-clean');
@@ -122,33 +121,65 @@ var getConfigRequire = function(mode, app) {
 	return config;
 };
 
-gulp.task('require', function(cb) {
-	runSequence('build-require', 'move-require', 'clean-require', cb);
-});
+gulp.task(
+	'build-require',
+	function(cb){
+		rjs.optimize(getConfigRequire('whole'), function(buildResponse){
+			cb();
+		}, cb);
+	}
+);
 
-gulp.task('require-app', function(cb) {
-	runSequence('build-require-app', 'move-require', 'clean-require', cb);
-});
+gulp.task(
+	'build-require-app',
+	function(cb){
+		rjs.optimize(getConfigRequire('app', gutil.env.app), function(buildResponse){
+			cb();
+		}, cb);
+	}
+);
 
-
-gulp.task('build-require', function(cb){
-	rjs.optimize(getConfigRequire('whole'), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('build-require-app', function(cb){
-	rjs.optimize(getConfigRequire('app', gutil.env.app), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('clean-require', function() {
-	return gulp.src(paths.require, {read: false})
+gulp.task(
+	'clean-require',
+	function() {
+		return gulp
+			.src(paths.require, {read: false})
 			.pipe(clean());
-});
+	}
+);
 
-gulp.task('move-require', ['clean-tmp'], function() {
-	return gulp.src(paths.require  + '/**/*')
-		.pipe(gulp.dest(paths.tmp));
-});
+gulp.task(
+	'move-require',
+	gulp.series(
+		'clean-tmp',
+		function() {
+			return gulp
+				.src(paths.require  + '/**/*')
+				.pipe(gulp.dest(paths.tmp));
+		}
+	)
+);
+
+gulp.task(
+	'require',
+	gulp.series(
+		'build-require',
+		'move-require',
+		'clean-require',
+		function(done) {
+			done();
+		}
+	)
+);
+
+gulp.task(
+	'require-app',
+	gulp.series(
+		'build-require-app',
+		'move-require',
+		'clean-require',
+		function(done) {
+			done();
+		}
+	)
+);
