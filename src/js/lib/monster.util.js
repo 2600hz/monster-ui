@@ -649,7 +649,12 @@ define(function(require) {
 						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
 						rate: addOn.amount,
 						quantity: addOn.quantity,
-						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+						discount: discount > 0
+							? '-' + monster.util.formatPrice({
+								price: discount,
+								decimals: 2
+							})
+							: '',
 						monthly_charges: addOn.monthly_charges
 					});
 				});
@@ -1245,7 +1250,7 @@ define(function(require) {
 			var currencyCode = monster.config.hasOwnProperty('currencyCode')
 				? monster.config.currencyCode
 				: 'USD';
-			var codeData = supportedCurrencyCodes.hasOwnProperty(currencyCode);
+			var codeData = supportedCurrencyCodes[currencyCode];
 			var ret;
 			if (_.isUndefined(codeData)) {
 				throw new Error('Currency code ' + currencyCode + ' is not supported.');
@@ -1263,7 +1268,23 @@ define(function(require) {
 			: fixedPrice;
 	}
 
+	/**
+	 * Return the symbol of the currency used
+	 * @return {String} Symbol of currency
+	 */
+	function getCurrencySymbol() {
+		var currencyCode = monster.config.hasOwnProperty('currencyCode')
+			? monster.config.currencyCode
+			: 'USD';
+		var codeData = supportedCurrencyCodes[currencyCode];
+		if (_.isUndefined(codeData)) {
+			throw new Error('Currency code ' + currencyCode + ' is not supported');
+		}
+		return codeData.symbol;
+	}
+
 	util.formatPrice = formatPrice;
+	util.getCurrencySymbol = getCurrencySymbol;
 
 	return util;
 });
