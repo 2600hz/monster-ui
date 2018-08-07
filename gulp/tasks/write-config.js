@@ -26,42 +26,50 @@ var writeFile = function(fileName, content) {
 		};
 	};
 
-gulp.task('write-config-prod', function() {
-	var mainFileName = paths.tmp + '/build-config.json',
-		content = {
-			type: 'production',
-			preloadedApps: helpers.getAppsToInclude()
-		};
+gulp.task(
+	'write-config-prod',
+	function() {
+		var mainFileName = paths.tmp + '/build-config.json',
+			content = {
+				type: 'production',
+				preloadedApps: helpers.getAppsToInclude()
+			};
 
-	writeFile(mainFileName, content);
+		writeFile(mainFileName, content);
 
-	writeBulkAppsConfig();
+		writeBulkAppsConfig();
 
-	return gulp.src(mainFileName);
-});
+		return gulp.src(mainFileName);
+	}
+);
 
-gulp.task('write-config-dev', function() {
-	var fileName = paths.tmp + '/build-config.json',
-		content = {
-			type: 'development',
-			preloadedApps: []
-		};
+gulp.task(
+	'write-config-dev',
+	function() {
+		var fileName = paths.tmp + '/build-config.json',
+			content = {
+				type: 'development',
+				preloadedApps: []
+			};
 
-	writeFile(fileName, content);
+		writeFile(fileName, content);
 
-	writeBulkAppsConfig();
+		writeBulkAppsConfig();
 
-	return gulp.src(fileName);
-});
+		return gulp.src(fileName);
+	}
+);
 
+gulp.task(
+	'write-config-app',
+	function() {
+		var fileName = paths.app + 'app-build-config.json',
+			content = {
+				version: gutil.env.pro ? 'pro' : 'standard'
+			};
 
-gulp.task('write-config-app', function() {
-	var fileName = paths.app + 'app-build-config.json',
-		content = {
-			version: gutil.env.pro ? 'pro' : 'standard'
-		};
+		writeFile(fileName, content);
 
-	writeFile(fileName, content);
-
-	return gulp.src(fileName);
-});
+		return gulp.src(fileName);
+	}
+);
