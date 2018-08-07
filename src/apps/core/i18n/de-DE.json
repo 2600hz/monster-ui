@@ -26,8 +26,6 @@
 			"type": "Der Wert für das Feld „{{field}}“ muss vom Typ „{{value}}“ sein.",
 			"unique": "Der Wert für das Feld „{{field}}“ muss eindeutig sein.",
 			"forbidden": "Der Wert für das Feld „{{field}}“ kann nicht aktualisiert werden.",
-			"__comment": "UI-883 (v3.19_s1): Lokalisierung für service_restriction-Fehler hinzugefügt",
-			"service_restriction": "Das Guthaben reicht nicht für den Kauf der Nummer „{{field}}“ aus ({{value}} USD).",
 			"__comment": "UI-1882: Fehlerbehandlung für zu großen Upload hinzufügen",
 			"__version": "3.22",
 			"maxSize": "Der Inhalt für das Feld „{{field}}“ darf nicht größer als {{value}} Byte sein."
@@ -64,7 +62,6 @@
 	"close" : "Schließen",
 	"conferencingLogo": "Konferenzschaltung",
 	"csv": "CSV",
-	"currencyUsed": "USD",
 	"delete": "Löschen",
 	"dialog" : {
 		"showError": "Fehler anzeigen",
@@ -161,8 +158,7 @@
 		"rate": "Preis",
 		"quantity": "Menge",
 		"discount": "Rabatt",
-		"monthlyCharges": "Monatliche Kosten",
-		"amount": "{{variable}} USD"
+		"monthlyCharges": "Monatliche Kosten"
 	},
 	"languages": {
 		"auto": "Standard",

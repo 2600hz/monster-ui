@@ -1,4 +1,4 @@
-﻿{
+{
 	"accountBrowser": {
 		"missingInfo": "Fehlende Informationen",
 		"addAccount": "Neuen Account hinzufügen",
@@ -281,7 +281,7 @@
 		"confirmInfoMsg2": "Ihre hinterlegte Kreditkarte wird sofort für regelmäßig anfallende Services belastet. Gebühren werden für Ihren Abrechnungszyklus anteilig berechnet.",
 		"vanitySearchLabel": "Lokale oder gebührenfreie Vanity-Nummer suchen:",
 		"vanitySearchInfo1": "Sie können nach einer beliebigen Kombination aus Ziffern und Buchstaben suchen.",
-		"vanitySearchInfo2": "Wenn Sie eine bestimmte Nummer nicht finden, können Sie uns gerne eine Anfrage senden. Wir schauen dann alle Datenbanken nach der von Ihnen gesuchten Nummer durch. Für die Anforderung einer speziellen Nummer wird eine einmalige Gebühr in Höhe von $20 berechnet.",
+		"vanitySearchInfo2": "Wenn Sie eine bestimmte Nummer nicht finden, können Sie uns gerne eine Anfrage senden. Wir schauen dann alle Datenbanken nach der von Ihnen gesuchten Nummer durch.",
 		"sendRequest": "Suchanfrage senden",
 		"to": "bis",
 		"partialPurchaseFailure": "Die folgenden Nummern konnten nicht gekauft werden:",

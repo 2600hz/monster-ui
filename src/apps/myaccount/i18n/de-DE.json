@@ -1,4 +1,4 @@
-﻿{
+{
 	"hello": "Hallo!",
 	"signout": "Abmelden",
 	"myaccount": "Account",
@@ -102,7 +102,7 @@
 		"cidrsNotConfigured": "Die Zugriffsliste ist derzeit nicht konfiguriert.",
 		"allowFirst": "Zulassen",
 		"denyFirst": "Ablehnen",
-		"errorDuplicate": "Die Zugriffsliste konnte nicht aktualisiert werden. Bitte entfernen Sie doppelt vorhandene CIDRs",	
+		"errorDuplicate": "Die Zugriffsliste konnte nicht aktualisiert werden. Bitte entfernen Sie doppelt vorhandene CIDRs",
 
 		"timezoneTitle": "Zeitzone und Sprache",
 		"userTimezone": "Zeitzone",
@@ -160,8 +160,6 @@
 		"outboundTitle": "Limits für Trunking in Ausgangsrichtung",
 		"inboundTitle": "Limits für Trunking in Eingangsrichtung",
 		"inboundCalling": "Unbegrenzte Trunks in Eingangsrichtung",
-		"simultaneousTwoway": "$_Variable__/month",
-		"simultaneousInbound": "$_Variable__/month",
 		"perMonth": "/month",
 		"quantity": "Neues Limit festlegen",
 		"trunks": "Trunks",
@@ -192,7 +190,6 @@
 
 		"title": "Nutzungsgebühren",
 		"payPerMinute": "Bei einer minutenweisen Abrechnung brauchen Sie nur für die Telefonate zu zahlen, die Sie getätigt haben. Hinterlegen Sie dazu als erstes Geld in Ihrem Account, dann können Sie Ihre Telefonnutzung minutenweise abrechnen lassen.",
-		"currentBalance": "Ihr aktueller Saldo: USD",
 		"amount": "Betrag",
 		"addCredit": "Guthaben aufstocken",
 		"invalidAmount": "Bei dem Betrag, den Sie eingegeben haben, liegt ein Fehler vor. Bitte achten Sie bei der Eingabe von Zahlen darauf, nur Ziffern, Punkte und ein Komma zu verwenden.",

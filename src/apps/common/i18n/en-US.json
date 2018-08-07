@@ -281,7 +281,7 @@
 		"confirmInfoMsg2": "Your on-file credit card will immediately be charged for recurring services. Charges will be pro-rated for your billing cycle.",
 		"vanitySearchLabel": "Search a Local or Tollfree Vanity Number:",
 		"vanitySearchInfo1": "You can search for any combination of numbers or letters.",
-		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want. There would be a onetime $20 fee for requesting a special number.",
+		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want.",
 		"sendRequest": "Send us a request",
 		"to": "to",
 		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:",

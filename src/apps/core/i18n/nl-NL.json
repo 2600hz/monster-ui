@@ -26,9 +26,7 @@
 "disallow": "De waarde van het veld \"{{field}}\" is niet toegestaan.",
 "type": "De waarde van het veld \"{{field}}\" moet van het \"{{value}}\" type zijn.",
 "unique": "De waarde van het veld \"{{field}}\" moet uniek zijn.",
-"forbidden": "De waarde van het veld \"{{field}}\" kan niet worden bijgewerkt.",
-"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
-"service_restriction": "Niet genoeg krediet om het nummer te kopen \"{{field}}\" (${{value}})."
+"forbidden": "De waarde van het veld \"{{field}}\" kan niet worden bijgewerkt."
 },
 "__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
 "errorMessages": {
@@ -49,7 +47,6 @@
 "close" : "Sluiten",
 "conferencingLogo": "Conferencing",
 "csv": "CSV",
-"currencyUsed": "$",
 "delete": "Verwijder",
 "dialog" : {
 "showError": "Toon Fout",
@@ -131,7 +128,7 @@
 "warning": "Waarschuwing!",
 "confirmCharges": {
 "title": "Kosten Overzicht",
-"withChargesPartOne": "U betaald een ${{variable}}",
+"withChargesPartOne": "U betaald een {{variable}}",
 "withChargesPartTwo": "eenmalige {{variable}}. ",
 "withoutCharges": "Er zijn geen {{variable}}.",
 "detail": "Een overzicht van de maandelijkste kosten voor deze service:",
@@ -140,7 +137,6 @@
 "quantity": "Aantal",
 "discount": "Korting",
 "monthlyCharges": "Maandelijkste bijdrage",
-"amount": "${{variable}}",
 "actions": "Klik op OK om te bevestigen of op Annuleren om te annuleren."
 },
 "languages": {

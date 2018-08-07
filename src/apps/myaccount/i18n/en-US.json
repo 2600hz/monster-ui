@@ -168,8 +168,6 @@
 		"outboundTitle": "Outbound Trunking Limits",
 		"inboundTitle": "Inbound Trunking Limits",
 		"inboundCalling": "Unlimited Inbound Trunks",
-		"simultaneousTwoway": "$_Variable__/month",
-		"simultaneousInbound": "$_Variable__/month",
 		"perMonth": "/month",
 		"quantity": "Set New Limit",
 		"trunks": "Trunks",
@@ -200,7 +198,6 @@
 
 		"title": "Usage Charges",
 		"payPerMinute": "Pay-per-minute allows you to pay only for what you use. Deposit money into your account to get started, then pay-as-you-go for usage.",
-		"currentBalance": "Your current balance: $",
 		"amount": "Amount",
 		"addCredit": "Add Credit",
 		"invalidAmount": "There is an error with the amount you typed! Please make sure to type a number using only digits '.' or ','",
