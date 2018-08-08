@@ -89,13 +89,13 @@ function getConfigRequire(mode, app) {
 	} else if(mode === 'whole') {
 		excludeFromWhole = standardFilesToExclude.concat(librariesToExcludeFromWhole);
 
-		appsToInclude.forEach(function(app) {
-			requireJsAppsToInclude.push('apps/' + app + '/app');
-
+		requireJsAppsToInclude = appsToInclude.reduce(function(acc, app) {
+			acc.push('apps/' + app + '/app');
 			if(proApps.indexOf(app) >= 0) {
-				requireJsAppsToInclude.push('apps/' + app + '/submodules/pro/pro');
+				acc.push('apps/' + app + '/submodules/pro/pro');
 			}
-		});
+			return acc;
+		}, []);
 
 		modules = [
 			{
