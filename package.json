@@ -31,7 +31,7 @@
     "gulp-concat-css": "^2.3.0",
     "gulp-declare": "^0.3.0",
     "gulp-eslint": "^3.0.1",
-    "gulp-handlebars": "^4.0.0",
+    "gulp-handlebars": "^5.0.2",
     "gulp-jshint": "^2.0.4",
     "gulp-json-editor": "^2.2.1",
     "gulp-livereload": "^3.8.1",
