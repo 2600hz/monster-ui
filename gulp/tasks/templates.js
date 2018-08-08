@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var handlebars = require('gulp-handlebars');
 var wrap = require('gulp-wrap');
 var declare = require('gulp-declare');
@@ -11,13 +10,13 @@ var path = require('path');
 var paths = require('../paths.js');
 var helpers = require('../helpers/helpers.js');
 
-var tmpAppsHTML = [],
-	appsToInclude = helpers.getAppsToInclude();
+var tmpAppsHTML = [];
+var appsToInclude = helpers.getAppsToInclude();
 
-for(var i in appsToInclude) {
-	tmpAppsHTML.push(paths.tmp + '/apps/' + appsToInclude[i] + '/views/*.html');
-	tmpAppsHTML.push(paths.tmp + '/apps/' + appsToInclude[i] + '/submodules/*/views/*.html');
-}
+appsToInclude.forEach(function(app) {
+	tmpAppsHTML.push(paths.tmp + '/apps/' + app + '/views/*.html');
+	tmpAppsHTML.push(paths.tmp + '/apps/' + app + '/submodules/*/views/*.html');
+});
 
 var pathsTemplates = {
 	whole: {
@@ -26,15 +25,19 @@ var pathsTemplates = {
 		concatName: 'templates-compiled.js'
 	},
 	app: {
-		src: [paths.app + 'views/*.html', paths.app + '/submodules/*/views/*.html'],
+		src: [
+			paths.app + 'views/*.html',
+			paths.app + '/submodules/*/views/*.html'
+		],
 		dest: paths.app + 'views/',
 		concatName: 'templates.js'
 	}
 };
 
-gulp.task('compile-templates', function(){
+function compileTemplates() {
 	var mode = gutil.env.app ? 'app' : 'whole';
-	return gulp.src(pathsTemplates[mode].src)
+	return gulp
+		.src(pathsTemplates[mode].src)
 		.pipe(handlebars({
 			handlebars: require('handlebars')
 		}))
@@ -60,43 +63,55 @@ gulp.task('compile-templates', function(){
 		}))
 		.pipe(concat(pathsTemplates[mode].concatName))
 		.pipe(gulp.dest(pathsTemplates[mode].dest));
-});
+}
+
+// Concats the existing templates.js with the compiledTemplates
+function concatTemplatesWhole() {
+	var existingFile = 'templates.js';
+	return gulp
+		.src([
+			pathsTemplates['whole'].dest + existingFile,
+			pathsTemplates['whole'].dest + pathsTemplates['whole'].concatName
+		])
+		.pipe(concat(existingFile))
+		.pipe(gulp.dest(pathsTemplates['whole'].dest));
+}
+
+function cleanTemplateWhole() {
+	var filesToClean = (pathsTemplates['whole'].src).concat(pathsTemplates['whole'].dest + pathsTemplates['whole'].concatName);
+	return gulp
+		.src(filesToClean, {
+			read: false
+		})
+		.pipe(clean());
+}
+
+function concatJsApp() {
+	var appFile = 'app.js';
+	return gulp
+		.src([
+			paths.app + appFile,
+			pathsTemplates.app.dest + pathsTemplates.app.concatName
+		])
+		.pipe(concat(appFile))
+		.pipe(gulp.dest(paths.app));
+}
+
+function cleanTemplatesApp() {
+	var filesToClean = (pathsTemplates['app'].src).concat(pathsTemplates['app'].dest + pathsTemplates['app'].concatName);
+	return gulp
+		.src(filesToClean, {
+			read: false
+		})
+		.pipe(clean());
+}
+
 
 /*******************************************************************************************************************************/
 /************************************************* WHOLE SPECIFIC **************************************************************/
-gulp.task('templates', function(cb) {
-	runSequence('compile-templates', 'concat-templates-whole', 'clean-template-whole', cb);
-});
+gulp.task('templates', gulp.series(compileTemplates, concatTemplatesWhole, cleanTemplateWhole));
 
-// Concats the existing templates.js with the compiledTemplates
-gulp.task('concat-templates-whole', function() {
-	var existingFile = 'templates.js';
-	return gulp.src([pathsTemplates['whole'].dest + existingFile, pathsTemplates['whole'].dest + pathsTemplates['whole'].concatName])
-		.pipe(concat(existingFile))
-		.pipe(gulp.dest(pathsTemplates['whole'].dest));
-});
-
-gulp.task('clean-template-whole', function() {
-	var filesToClean = (pathsTemplates['whole'].src).concat(pathsTemplates['whole'].dest + pathsTemplates['whole'].concatName);
-	return gulp.src(filesToClean, {read: false})
-		.pipe(clean());
-});
 
 /*******************************************************************************************************************************/
 /************************************************* APP SPECIFIC ****************************************************************/
-gulp.task('templates-app', function(cb) {
-	runSequence('compile-templates', 'concat-js-app', 'clean-templates-app', cb);
-});
-
-gulp.task('concat-js-app', function() {
-	var appFile = 'app.js';
-	return gulp.src([ paths.app + appFile, pathsTemplates.app.dest + pathsTemplates.app.concatName])
-		.pipe(concat(appFile))
-		.pipe(gulp.dest(paths.app));
-});
-
-gulp.task('clean-templates-app', function() {
-	var filesToClean = (pathsTemplates['app'].src).concat(pathsTemplates['app'].dest + pathsTemplates['app'].concatName);
-	return gulp.src(filesToClean, {read: false})
-		.pipe(clean());
-});
+gulp.task('templates-app', gulp.series(compileTemplates, concatJsApp, cleanTemplatesApp));

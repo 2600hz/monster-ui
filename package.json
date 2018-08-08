@@ -40,7 +40,6 @@
     "gulp-wrap": "^0.13.0",
     "handlebars": "^4.0.11",
     "require-dir": "^0.3.2",
-    "requirejs": "^2.3.5",
-    "run-sequence": "^1.2.2"
+    "requirejs": "^2.3.5"
   }
 }

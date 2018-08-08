@@ -5,17 +5,14 @@ var gutil = require('gulp-util');
 
 var pathToThisFile = __dirname;
 var root = path.dirname(pathToThisFile);
-var distPath = root + '/dist/',
-	tmpPath = root + '/tmp',
-	requirePath = root + '/distRequired',
-	srcPath = root + '/src',
-	distDevPath = root + '/distDev';
-
-var appPath = 'null';
-
-if(gutil.env.app) {
-	appPath = tmpPath + '/apps/' + gutil.env.app + '/';
-}
+var distPath = root + '/dist/';
+var tmpPath = root + '/tmp';
+var requirePath = root + '/distRequired';
+var srcPath = root + '/src';
+var distDevPath = root + '/distDev';
+var appPath = gutil.env.app
+	? tmpPath + '/apps/' + gutil.env.app + '/'
+	: 'null';
 
 module.exports = {
 	src: srcPath,

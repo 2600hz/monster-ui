@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
 var concatCss = require('gulp-concat-css');
 var cleanCSS = require('gulp-clean-css');
@@ -10,41 +9,43 @@ var paths = require('../paths.js');
 var helpers = require('../helpers/helpers.js');
 
 var concatCssPaths = [ paths.tmp + '/css/style.css'];
-	appsToInclude = helpers.getAppsToInclude();
+var appsToInclude = helpers.getAppsToInclude();
+var concatName = 'style.css';
+var cssDest = paths.tmp + '/css/';
 
-for(var i in appsToInclude) {
-	concatCssPaths.push(paths.tmp +'/apps/'+ appsToInclude[i] +'/style/*.css');
-}
-
-gulp.task('css', function(cb) {
-	runSequence('concat-css', 'minify-css', cb);
+appsToInclude.forEach(function(app) {
+	concatCssPaths.push(paths.tmp +'/apps/'+ app +'/style/*.css');
 });
-
-var concatName = 'style.css',
-	cssDest = paths.tmp + '/css/';
-
-gulp.task('concat-css', function() {
-	return gulp.src(concatCssPaths)
-				.pipe(concatCss(concatName))
-				.pipe(gulp.dest(cssDest))
-});
-
-gulp.task('minify-css', function() {
-	return gulp.src(cssDest + concatName)
-		.pipe(cleanCSS())
-		.pipe(gulp.dest(cssDest));
-});
-
-gulp.task('minify-css-app', function() {
-		return gulp.src(paths.app +'/style/app.css')
-			.pipe(cleanCSS())
-			.pipe(gulp.dest(paths.app + '/style'));
-});
-
 
 // compile our scss files to css files
-gulp.task('sass', function() {
-	return gulp.src(paths.tmp + '/**/*.scss') // Select all the scss files
+function compileSass() {
+	return gulp
+		.src(paths.tmp + '/**/*.scss') // Select all the scss files
 		.pipe(sass().on('error', sass.logError)) // compile them using the sass plug-in
 		.pipe(gulp.dest(paths.tmp)) // move them to the dist folder
-});
+}
+
+function minifyCssApp() {
+	return gulp
+		.src(paths.app +'/style/app.css')
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(paths.app + '/style'));
+}
+
+function minifyCss() {
+	return gulp
+		.src(cssDest + concatName)
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(cssDest));
+}
+
+function concatAllCss() {
+	return gulp
+		.src(concatCssPaths)
+		.pipe(concatCss(concatName))
+		.pipe(gulp.dest(cssDest))
+}
+
+gulp.task('css', gulp.series(concatAllCss, minifyCss));
+gulp.task('minify-css-app', minifyCssApp);
+gulp.task('sass', compileSass);

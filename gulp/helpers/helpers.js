@@ -20,22 +20,16 @@ module.exports = {
 		return apps;
 	},
 	getAppsToInclude: function() {
-		var apps = getDirectories(paths.src + '/apps'),
-			appsToExclude = getAppsToExclude(),
-			filteredApps = [];
+		var apps = getDirectories(paths.src + '/apps');
+		var appsToExclude = getAppsToExclude();
 
-		for(var i in apps) {
-			if(appsToExclude.indexOf(apps[i]) < 0) {
-				filteredApps.push(apps[i]);
-			}
-		}
-		return filteredApps;
+		return apps.filter(function(app) {
+			return appsToExclude.indexOf(app) < 0;
+		});
 	},
 	getProApps: function() {
-		var apps = [];
-		if(gutil.env.pro && gutil.env.pro.length) {
-			var apps = gutil.env.pro.split(',');
-		}
-		return apps;
+		return gutil.env.pro && gutil.env.pro.length
+			? gutil.env.pro.split(',')
+			: [];
 	}
 };

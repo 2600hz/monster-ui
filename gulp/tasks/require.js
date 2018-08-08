@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var rjs = require('requirejs');
 var helpers = require('../helpers/helpers.js');
 var clean = require('gulp-clean');
@@ -8,78 +7,72 @@ var gutil = require('gulp-util');
 var paths = require('../paths.js');
 
 
-var requireJsAppsToInclude = [],
-	appsToInclude = helpers.getAppsToInclude(),
-	proApps = helpers.getProApps();
-
-for(var i in appsToInclude) {
-	requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/app');
-
-	if(proApps.indexOf(appsToInclude[i]) >= 0) {
-		requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/submodules/pro/pro');
-	}
-}
-
-var getConfigRequire = function(mode, app) {
+function getConfigRequire(mode, app) {
 	var	librariesToExcludeFromAppBuild = [
-			'async',
-			'bootstrap',
-			'card',
-			'chart',
-			'chosen',
-			'clipboard',
-			'config',
-			'cookies',
-			'crossroads',
-			'ddslick',
-			'drop',
-			'file-saver',
-			'fileupload',
-			'footable',
-			'form2object',
-			'handlebars',
-			'hasher',
-			'hotkeys',
-			'introJs',
-			'isotope',
-			'jquery',
-			'jqueryui',
-			'jstz',
-			'kazoosdk',
-			'lodash',
-			'mask',
-			'modernizr',
-			'monster',
-			'monster-apps',
-			'monster-routing',
-			'monster-timezone',
-			'monster-ui',
-			'monster-util',
-			'mousetrap',
-			'papaparse',
-			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker',
-			'postal',
-			'randomColor',
-			'renderjson',
-			'reqwest',
-			'signals',
-			'templates',
-			'tether',
-			'timepicker',
-			'toastr',
-			'touch-punch',
-			'validate',
-			'wysiwyg'
-		],
-		librariesToExcludeFromWhole = [
-			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker'
-		],
-		standardFilesToExclude = [
-			'config',
-			'templates'
-		];
+		'async',
+		'bootstrap',
+		'card',
+		'chart',
+		'chosen',
+		'clipboard',
+		'config',
+		'cookies',
+		'crossroads',
+		'ddslick',
+		'drop',
+		'file-saver',
+		'fileupload',
+		'footable',
+		'form2object',
+		'handlebars',
+		'hasher',
+		'hotkeys',
+		'introJs',
+		'isotope',
+		'jquery',
+		'jqueryui',
+		'jstz',
+		'kazoosdk',
+		'lodash',
+		'mask',
+		'modernizr',
+		'monster',
+		'monster-apps',
+		'monster-routing',
+		'monster-timezone',
+		'monster-ui',
+		'monster-util',
+		'mousetrap',
+		'papaparse',
+		'pdfjs-dist/build/pdf',
+		'pdfjs-dist/build/pdf.worker',
+		'postal',
+		'randomColor',
+		'renderjson',
+		'reqwest',
+		'signals',
+		'templates',
+		'tether',
+		'timepicker',
+		'toastr',
+		'touch-punch',
+		'validate',
+		'wysiwyg'
+	];
+	var librariesToExcludeFromWhole = [
+		'pdfjs-dist/build/pdf',
+		'pdfjs-dist/build/pdf.worker'
+	];
+	var standardFilesToExclude = [
+		'config',
+		'templates'
+	];
+	var appsToInclude = helpers.getAppsToInclude();
+	var proApps = helpers.getProApps();
+	var requireJsAppsToInclude;
+	var excludeFromWhole;
+	var modules;
+	var config;
 
 	if(mode === 'app') {
 		modules = [
@@ -93,9 +86,16 @@ var getConfigRequire = function(mode, app) {
 				include: gutil.env.pro ? ['apps/' + app + '/submodules/pro/pro'] : []
 			}
 		];
-	}
-	else if(mode === 'whole') {
-		var excludeFromWhole = standardFilesToExclude.concat(librariesToExcludeFromWhole);
+	} else if(mode === 'whole') {
+		excludeFromWhole = standardFilesToExclude.concat(librariesToExcludeFromWhole);
+
+		appsToInclude.forEach(function(app) {
+			requireJsAppsToInclude.push('apps/' + app + '/app');
+
+			if(proApps.indexOf(app) >= 0) {
+				requireJsAppsToInclude.push('apps/' + app + '/submodules/pro/pro');
+			}
+		});
 
 		modules = [
 			{
@@ -106,7 +106,7 @@ var getConfigRequire = function(mode, app) {
 		];
 	}
 
-	var config = {
+	config = {
 		dir: paths.require, // direction
 		appDir: paths.tmp, // origin
 		baseUrl:'./',
@@ -120,35 +120,34 @@ var getConfigRequire = function(mode, app) {
 	};
 
 	return config;
-};
+}
 
-gulp.task('require', function(cb) {
-	runSequence('build-require', 'move-require', 'clean-require', cb);
-});
-
-gulp.task('require-app', function(cb) {
-	runSequence('build-require-app', 'move-require', 'clean-require', cb);
-});
-
-
-gulp.task('build-require', function(cb){
-	rjs.optimize(getConfigRequire('whole'), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('build-require-app', function(cb){
-	rjs.optimize(getConfigRequire('app', gutil.env.app), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('clean-require', function() {
-	return gulp.src(paths.require, {read: false})
-			.pipe(clean());
-});
-
-gulp.task('move-require', ['clean-tmp'], function() {
-	return gulp.src(paths.require  + '/**/*')
+function moveRequire() {
+	return gulp
+		.src(paths.require  + '/**/*')
 		.pipe(gulp.dest(paths.tmp));
-});
+}
+
+function cleanRequire() {
+	return gulp
+		.src(paths.require, {
+			allowEmpty: true,
+			read: false
+		})
+		.pipe(clean());
+}
+
+function buildRequireApp(done) {
+	rjs.optimize(getConfigRequire('app', gutil.env.app), function(buildResponse){
+		done();
+	}, done);
+}
+
+function buildRequire(done) {
+	rjs.optimize(getConfigRequire('whole'), function(buildResponse){
+		done();
+	}, done);
+}
+
+gulp.task('require', gulp.series(buildRequire, 'clean-tmp', moveRequire, cleanRequire));
+gulp.task('require-app', gulp.series(buildRequireApp, 'clean-tmp', moveRequire, cleanRequire));
