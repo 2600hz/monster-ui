@@ -678,8 +678,8 @@
 							"text": "This means that the phone number(s) attempting to be ported are in a non-portable status with the current carrier."
 						},
 						"porting_main_btn_follow": {
-							"label": "Porting Main BTN Follow",
-							"text": "Porting BTN.  Must provide an alternate BTN from remaining numbers"
+							"label": "Porting Main BTN",
+							"text": "Porting BTN. Must provide an alternate BTN from remaining numbers on account."
 						},
 						"passcode_pin_requried_or_invalid": {
 							"label": "Passcode/PIN Required or Invalid",
