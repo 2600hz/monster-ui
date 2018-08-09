@@ -47,7 +47,7 @@ define(function(require) {
 											discount: discount > 0
 												? '- ' + monster.util.formatPrice({
 													price: discount,
-													decimals: 2
+													digits: 2
 												})
 												: '',
 											monthlyCharges: monthlyCharges

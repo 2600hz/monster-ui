@@ -34,7 +34,7 @@ define(function(require) {
 						module: 'balance',
 						data: monster.util.formatPrice({
 							price: data.data.balance,
-							decimals: self.appFlags.balance.digits.availableCreditsBadge
+							digits: self.appFlags.balance.digits.availableCreditsBadge
 						}),
 						callback: args.callback
 					};
@@ -164,7 +164,7 @@ define(function(require) {
 					// We now divide by 1 because the amount returned is negative
 					formattedData.totalCharges = monster.util.formatPrice({
 						price: ledger.amount / -1,
-						decimals: self.appFlags.balance.digits.callChargesBadge
+						digits: self.appFlags.balance.digits.callChargesBadge
 					});
 				}
 
@@ -326,7 +326,7 @@ define(function(require) {
 					duration: duration,
 					friendlyAmount: monster.util.formatPrice({
 						price: v.amount,
-						decimals: self.appFlags.balance.digits.perMinuteTableAmount
+						digits: self.appFlags.balance.digits.perMinuteTableAmount
 					})
 				};
 
@@ -709,7 +709,7 @@ define(function(require) {
 					callback: function(amount) {
 						var newAmount = monster.util.formatPrice({
 								price: amount,
-								decimals: self.appFlags.balance.digits.availableCreditsBadge
+								digits: self.appFlags.balance.digits.availableCreditsBadge
 							}),
 							argsEvent = {
 								module: 'balance',

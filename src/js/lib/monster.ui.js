@@ -81,7 +81,7 @@ define(function(require) {
 			formatPrice: function(price, decimals, withCurrency) {
 				return monster.util.formatPrice({
 					price: price,
-					decimals: decimals,
+					digits: decimals,
 					withCurrency: withCurrency
 				});
 			},
