@@ -652,7 +652,7 @@ define(function(require) {
 						discount: discount > 0
 							? '-' + monster.util.formatPrice({
 								price: discount,
-								decimals: 2
+								digits: 2
 							})
 							: '',
 						monthly_charges: addOn.monthly_charges
@@ -1225,27 +1225,30 @@ define(function(require) {
 	};
 
 	/**
-	 * Decimaland currency formatting for prices
+	 * Decimal and currency formatting for prices
 	 * @param  {Object}  args
-	 * @param  {Number}  args.price        Price to format
-	 * @param  {Number}  args.decimals     Decimals for `price`
-	 * @param  {Boolean} args.withCurrency Determine currency inclusion
-	 * @return {String}                    String representation
+	 * @param  {Number}  args.price        Price to format (number or string
+	 *                                     representation of a number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the
+	 *                                     decimal point.
+	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
+	 * @return {String}                    String representation of `price`.
 	 *
-	 * If `decimals` is not specified, integers will show no decimals while
-	 * floats will show two decimals
+	 * If `digits` is not specified, integers will have no digits and floating
+	 * numbers with at least one significant number after the decimal point
+	 * will have two digits.
 	 */
 	function formatPrice(args) {
-		var price = args.price;
-		var decimals = parseInt(args.decimals);
+		var price = Number(args.price);
+		var digits = parseInt(args.digits);
 		var withCurrency = _.isBoolean(args.withCurrency)
 			? args.withCurrency
 			: true;
-		var decimalCount = decimals >= 0
-			? decimals
+		var digitsCount = digits >= 0
+			? digits
 			: 2;
-		var roundedPrice = Math.round(Number(price) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
-		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
+		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
+		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
 		var addCurrency = function(value) {
 			var currencyCode = monster.config.hasOwnProperty('currencyCode')
 				? monster.config.currencyCode

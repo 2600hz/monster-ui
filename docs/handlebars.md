@@ -158,8 +158,8 @@ This helper will search for the following strings and replace them by the corres
 * 12h: use the 12h format (if not specified, the 24h format is used)
 
 #### formatPrice
-The formatPrice helper can display a price with the proper amount of decimals as well as the currency used by the UI. It's useful because prices can have a various number of decimals, but should be displayed in a consistent way.
-The example below will round off the price to two (2) decimals, and display it with two (2) decimals even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
+The formatPrice helper can display a price with the proper amount of digits after the decimal point as well as the currency used by the UI. It's useful because prices can have a various number of digits, but should be displayed in a consistent way.
+The example below will round off the price to two (2) digits, and display it with two (2) digits even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
 
 ```handlebars
 <div class="item-row">
