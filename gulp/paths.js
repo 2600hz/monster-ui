@@ -3,20 +3,18 @@ import { env } from 'gulp-util';
 
 const pathToThisFile = __dirname;
 const root = dirname(pathToThisFile);
-const dist = root + '/dist/';
-const tmp = root + '/tmp';
-const require = root + '/distRequired';
-const src = root + '/src';
-const distDev = root + '/distDev';
-const app = env.app
+const distPath = root + '/dist/';
+const tmpPath = root + '/tmp';
+const requirePath = root + '/distRequired';
+const srcPath = root + '/src';
+const distDevPath = root + '/distDev';
+const appPath = env.app
 	? tmp + '/apps/' + env.app + '/'
 	: 'null';
 
-module.exports = {
-	app,
-	dist,
-	distDev,
-	require,
-	src,
-	tmp
-};
+export const app = appPath;
+export const dist = distPath;
+export const distDev = distDevPath;
+export const require = requirePath;
+export const src = srcPath;
+export const tmp = tmpPath;

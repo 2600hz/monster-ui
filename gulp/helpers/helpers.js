@@ -1,7 +1,7 @@
 import { join } from 'path';
 import fs from 'fs';
 import { env } from 'gulp-util';
-import paths from '../paths.js';
+import { src } from '../paths.js';
 
 const getAppsToExclude = () => ['demo_done', 'skeleton', 'tutorial'];
 
@@ -11,7 +11,7 @@ const getDirectories = pathToParse => fs
 		.statSync(join(pathToParse, file))
 		.isDirectory());
 
-export const listAllApps = () => getDirectories(paths.src + '/apps');
+export const listAllApps = () => getDirectories(src + '/apps');
 
 export const getAppsToInclude = () => listAllApps()
 	.filter(app => !getAppsToExclude().includes(app));
