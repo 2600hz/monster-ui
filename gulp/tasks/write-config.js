@@ -1,70 +1,66 @@
-var gulp = require('gulp');
-var fs = require('fs');
-var gutil = require('gulp-util');
-var jeditor = require('gulp-json-editor');
+import gulp from 'gulp';
+import fs from 'fs';
+import { env } from 'gulp-util';
+import jeditor from 'gulp-json-editor';
+import { app, tmp } from '../paths.js';
+import {
+	getAppsToInclude,
+	getProApps,
+	listAllApps
+} from '../helpers/helpers.js';
 
-var paths = require('../paths');
-var helpers = require('../helpers/helpers.js');
-
-function writeFile(fileName, content) {
-	var json = JSON.stringify(content);
-
+const writeFile = (fileName, content) => {
+	const json = JSON.stringify(content);
 	fs.writeFileSync(fileName, json);
-}
+};
 
-function writeBulkAppsConfig() {
-	var apps = helpers.listAllApps();
-	var fileName;
-	var content;
+const writeBulkAppsConfig = () => {
+	let fileName;
+	let content;
 
-	for(var i in apps) {
-		fileName = paths.tmp + '/apps/' + apps[i] + '/app-build-config.json';
+	listAllApps().forEach(item => {
+		fileName = tmp + '/apps/' + item + '/app-build-config.json';
 		content = {
-			version: helpers.getProApps().indexOf(apps[i]) >= 0 ? 'pro' : 'standard'
+			version: getProApps().includes(item)
+				? 'pro'
+				: 'standard'
 		};
-
 		writeFile(fileName, content);
-	}
-}
+	});
+};
 
-function writeConfigProd() {
-	var mainFileName = paths.tmp + '/build-config.json';
-	var content = {
+const writeConfigProd = () => {
+	const mainFileName = tmp + '/build-config.json';
+	const content = {
 		type: 'production',
-		preloadedApps: helpers.getAppsToInclude()
+		preloadApps: getAppsToInclude()
 	};
-
 	writeFile(mainFileName, content);
-
 	writeBulkAppsConfig();
-
 	return gulp.src(mainFileName);
-}
+};
 
-function writeConfigDev() {
-	var fileName = paths.tmp + '/build-config.json';
-	var content = {
-		type: 'development',
-		preloadedApps: []
+const writeConfigDev = () => {
+	const fileName = tmp + '/build-config.json';
+	const content = {
+		version: env.pro
+			? 'pro'
+			: 'standard'
 	};
-
 	writeFile(fileName, content);
-
-	writeBulkAppsConfig();
-
 	return gulp.src(fileName);
-}
+};
 
-function writeConfigApp() {
-	var fileName = paths.app + 'app-build-config.json';
-	var content = {
-		version: gutil.env.pro ? 'pro' : 'standard'
+const writeConfigApp = () => {
+	const fileName = app + 'app-build-config.json';
+	const content = {
+		version: env.pro
+			? 'pro'
+			: 'standard'
 	};
-
 	writeFile(fileName, content);
-
 	return gulp.src(fileName);
-}
+};
 
 gulp.task('write-config-prod', writeConfigProd);
 gulp.task('write-config-dev', writeConfigDev);

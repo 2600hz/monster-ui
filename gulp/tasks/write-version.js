@@ -1,15 +1,12 @@
-var gulp = require('gulp');
-var fs = require('fs');
-var paths = require('../paths');
-var package = require('../../package.json');
+import gulp from 'gulp';
+import { writeFileSync } from 'fs';
+import { tmp } from '../paths';
+import { version } from '../../package.json';
 
-function writeVersion() {
-	var version = package.version;
-	var fileName = paths.tmp + '/VERSION';
-
-	fs.writeFileSync(fileName, version);
-
+const writeVersion = () => {
+	let fileName = tmp + '/VERSION';
+	writeFileSync(fileName, version);
 	return gulp.src(fileName);
-}
+};
 
 gulp.task('write-version', writeVersion);

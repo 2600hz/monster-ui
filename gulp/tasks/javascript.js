@@ -1,36 +1,29 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var eslint = require('gulp-eslint');
+import gulp from 'gulp';
+import uglify from 'gulp-uglify';
+import eslint from 'gulp-eslint';
+import { app, src, tmp } from '../paths.js';
 
-var paths = require('../paths.js');
+const minifyJs = () => gulp
+	.src([
+		tmp + '/js/main.js',
+		tmp + '/js/templates.js'
+	])
+	.pipe(uglify())
+	.pipe(gulp.dest(tmp + '/js/'));
 
-function minifyJs() {
-	return gulp
-		.src([
-			paths.tmp + '/js/main.js',
-			paths.tmp + '/js/templates.js'
-		])
-		.pipe(uglify())
-		.pipe(gulp.dest(paths.tmp + '/js/'));
-}
+const minifyJsApp = () => gulp
+	.src(app + 'app.js')
+	.pipe(uglify())
+	.pipe(gulp.dest(app));
 
-function minifyJsApp() {
-	return gulp
-		.src(paths.app + 'app.js')
-		.pipe(uglify())
-		.pipe(gulp.dest(paths.app));
-}
-
-function lint() {
-	return gulp
-		.src([
-			paths.src + '/**/*.js',
-			'!'+ paths.src + '/js/vendor/**/*.js',
-			'!'+ paths.src + '/js/lib/kazoo/dependencies/**/*.js'
-		])
-		.pipe(eslint())
-		.pipe(eslint.format());
-}
+const lint = () => gulp
+	.src([
+		src + '/**/*.js',
+		'!'+ src + '/js/vendor/**/*.js',
+		'!'+ src + '/js/lib/kazoo/dependencies/**/*.js'
+	])
+	.pipe(eslint())
+	.pipe(eslint.format());
 
 gulp.task('minify-js', minifyJs);
 gulp.task('minify-js-app', minifyJsApp);

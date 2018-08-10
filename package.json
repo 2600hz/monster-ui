@@ -18,6 +18,8 @@
   "homepage": "https://github.com/2600hz/monster-ui#readme",
   "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.6",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^6.2.1",

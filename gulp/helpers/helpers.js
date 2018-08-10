@@ -1,35 +1,21 @@
-var path = require('path');
-var fs = require('fs');
-var gutil = require('gulp-util');
-var paths = require('../paths.js')
+import { join } from 'path';
+import fs from 'fs';
+import { env } from 'gulp-util';
+import paths from '../paths.js';
 
-function getAppsToExclude() {
-	return ['tutorial', 'skeleton', 'demo_done'];
-}
+const getAppsToExclude = () => ['demo_done', 'skeleton', 'tutorial'];
 
-function getDirectories(pathToParse) {
-	return fs.readdirSync(pathToParse).filter(function(file) {
-		return fs.statSync(path.join(pathToParse, file)).isDirectory();
-	});
-}
+const getDirectories = pathToParse => fs
+	.readdirSync(pathToParse)
+	.filter(file => fs
+		.statSync(join(pathToParse, file))
+		.isDirectory());
 
-module.exports = {
-	listAllApps: function() {
-		var apps = getDirectories(paths.src + '/apps');
+export const listAllApps = () => getDirectories(paths.src + '/apps');
 
-		return apps;
-	},
-	getAppsToInclude: function() {
-		var apps = getDirectories(paths.src + '/apps');
-		var appsToExclude = getAppsToExclude();
+export const getAppsToInclude = () => listAllApps()
+	.filter(app => !getAppsToExclude().includes(app));
 
-		return apps.filter(function(app) {
-			return appsToExclude.indexOf(app) < 0;
-		});
-	},
-	getProApps: function() {
-		return gutil.env.pro && gutil.env.pro.length
-			? gutil.env.pro.split(',')
-			: [];
-	}
-};
+export const getProApps = () => env.pro && env.pro.length
+	? env.pro.split(',')
+	: [];
