@@ -77,8 +77,8 @@ const getConfigRequire = () => ({
 	preserveLicenseComments:false,
 	removeCombined:true,
 	/**
-	 * Prevent optimization because we don't want to minify congi.js and there
-	 * isn't a way to single it out, we should optimizw with gulp later.
+	 * Prevent optimization because we don't want to minify config.js and there
+	 * is no way to single it out, we should optimize with gulp later.
 	 * @type {String}
 	 */
 	optimize: 'none',
@@ -135,4 +135,5 @@ gulp.task('require', gulp.series(
 	buildRequire,
 	'clean-tmp',
 	moveRequire,
-	cleanRequire));
+	cleanRequire
+));

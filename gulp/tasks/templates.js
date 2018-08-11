@@ -71,10 +71,10 @@ const concatTemplatesWhole = () => gulp
 	.pipe(concat('templates.js'))
 	.pipe(gulp.dest(pathsTemplates.whole.dest));
 
-const cleanTemplateWhole = () => gulp
+const cleanTemplates = () => gulp
 	.src([
-		...pathsTemplates.whole.src,
-		pathsTemplates.whole.dest + pathsTemplates.whole.concatName
+		...pathsTemplates[mode].src,
+		pathsTemplates[mode].dest + pathsTemplates[mode].concatName
 	], {
 		read: false
 	})
@@ -88,22 +88,13 @@ const concatJsApp = () => gulp
 	.pipe(concat('app.js'))
 	.pipe(gulp.dest(app));
 
-const cleanTemplatesApp = () => gulp
-	.src([
-		...pathsTemplates.app.src,
-		pathsTemplates.app.dest + pathsTemplates.app.concatName
-	], {
-		read: false
-	})
-	.pipe(clean());
-
 gulp.task('templates', gulp.series(
 	compileTemples,
 	concatTemplatesWhole,
-	cleanTemplateWhole
+	cleanTemplates
 ));
 gulp.task('templates-app', gulp.series(
 	compileTemples,
 	concatJsApp,
-	cleanTemplatesApp
+	cleanTemplates
 ));

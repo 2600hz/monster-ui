@@ -24,10 +24,7 @@ const buildProd = gulp.series(
 	'css', // takes all the apps provided up top and concatenate and minify them
 	'write-config-prod', // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
 	'write-version', // writes version file to display in monster
-	'clean-folders', // moves tmp to dist and removes tmp after that
-	done => {
-		done();
-	}
+	'clean-folders' // moves tmp to dist and removes tmp after that
 );
 
 const buildDev = gulp.series(
@@ -36,17 +33,8 @@ const buildDev = gulp.series(
 	'sass',
 	'write-config-dev',
 	'write-version', // writes version file to display in monster
-	'clean-folders',
-	done => {
-		done();
-	}
+	'clean-folders'
 );
-
-gulp.task('build-prod', buildProd);
-gulp.task('serve-prod', gulp.series(buildProd, serve));
-
-gulp.task('build-dev', buildDev);
-gulp.task('serve-dev', gulp.series(buildDev, serve));
 
 gulp.task('build-app', gulp.series(
 	'move-files-to-tmp', // moves all files but css to dist
@@ -58,6 +46,13 @@ gulp.task('build-app', gulp.series(
 	'write-config-app', // add flags if needed, like pro/lite version
 	'clean-folders'
 ));
+
+gulp.task('build-dev', buildDev);
+gulp.task('serve-dev', gulp.series(buildDev, serve));
+
+gulp.task('build-prod', buildProd);
+gulp.task('serve-prod', gulp.series(buildProd, serve));
+
 gulp.task('build-all', gulp.series(buildDev, 'move-dist-dev', buildProd));
 
 gulp.task('default', gulp.series('serve-dev'));

@@ -9,7 +9,7 @@ const requirePath = root + '/distRequired';
 const srcPath = root + '/src';
 const distDevPath = root + '/distDev';
 const appPath = env.app
-	? tmp + '/apps/' + env.app + '/'
+	? tmpPath + '/apps/' + env.app + '/'
 	: 'null';
 
 export const app = appPath;
