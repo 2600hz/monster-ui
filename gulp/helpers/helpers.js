@@ -1,6 +1,6 @@
 import { join } from 'path';
 import fs from 'fs';
-import { env } from 'gulp-util';
+import parser from 'yargs-parser';
 import { src } from '../paths.js';
 
 const getAppsToExclude = () => ['demo_done', 'skeleton', 'tutorial'];
@@ -10,6 +10,8 @@ const getDirectories = pathToParse => fs
 	.filter(file => fs
 		.statSync(join(pathToParse, file))
 		.isDirectory());
+
+export const env = parser(process.argv.slice(2));
 
 export const listAllApps = () => getDirectories(src + '/apps');
 

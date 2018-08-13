@@ -3,11 +3,10 @@ import handlebars from 'gulp-handlebars';
 import wrap from 'gulp-wrap';
 import declare from 'gulp-declare';
 import concat from 'gulp-concat';
-import { env } from 'gulp-util';
 import clean from 'gulp-clean';
 import { sep } from 'path';
 import { app, tmp } from '../paths.js';
-import { getAppsToInclude } from '../helpers/helpers.js';
+import { env, getAppsToInclude } from '../helpers/helpers.js';
 
 const mode = env.app
 	? 'app'

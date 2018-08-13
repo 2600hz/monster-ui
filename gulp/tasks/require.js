@@ -1,9 +1,8 @@
 import gulp from 'gulp';
 import rjs from 'requirejs';
 import clean from 'gulp-clean';
-import { env } from 'gulp-util';
 import { require, tmp } from '../paths.js';
-import { getProApps, getAppsToInclude } from '../helpers/helpers.js';
+import { env, getProApps, getAppsToInclude } from '../helpers/helpers.js';
 import { cleanTmp } from './clean-move.js';
 
 const standardFilesToExclude = [

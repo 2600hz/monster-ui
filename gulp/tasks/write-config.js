@@ -1,9 +1,9 @@
 import gulp from 'gulp';
 import fs from 'fs';
-import { env } from 'gulp-util';
 import jeditor from 'gulp-json-editor';
 import { app, tmp } from '../paths.js';
 import {
+	env,
 	getAppsToInclude,
 	getProApps,
 	listAllApps
