@@ -2,47 +2,61 @@ import gulp from 'gulp';
 import clean from 'gulp-clean';
 import { dist, distDev, src, tmp } from '../paths.js';
 
-const cleanTmp = () => gulp
+export const cleanTmp = () => gulp
 	.src(tmp, {
 		allowEmpty: true,
 		read: false
 	})
 	.pipe(clean());
 
-const cleanDistDev = () => gulp
-	.src(distDev, {
-		allowEmpty: true,
-		read: false
-	})
-	.pipe(clean());
+/**
+ * cleanTmp
+ * moveFilesToTmp
+ *
+ * Moves all files to tmp folder
+ */
+export const moveFilesToTmp = gulp.series(
+	cleanTmp,
+	() => gulp
+		.src(src + '/**/*')
+		.pipe(gulp.dest(tmp))
+);
 
-const cleanDist = () => gulp
-	.src(dist, {
-		allowEmpty: true,
-		read: false
-	})
-	.pipe(clean());
+/**
+ * cleanDistDev
+ * moveDistDev
+ */
+export const moveDistDev = gulp.series(
+	() => gulp
+		.src(distDev, {
+			allowEmpty: true,
+			read: false
+		})
+		.pipe(clean()),
+	() => gulp
+		.src(dist + '/**/*')
+		.pipe(gulp.dest(distDev))
+);
 
-const moveBuiltFilesDist = () => gulp
-	.src([
-		tmp + '/**/*',
-		'!' + tmp + '**/*.scss'
-	])
-	.pipe(gulp.dest(dist));
-
-const moveFilesToTmp = () => gulp
-	.src(src + '/**/*')
-	.pipe(gulp.dest(tmp));
-
-const moveDistDev = () => gulp
-	.src(dist + '/**/*')
-	.pipe(gulp.dest(distDev));
-
-gulp.task('clean-tmp', cleanTmp);
-gulp.task('move-files-to-tmp', gulp.series(cleanTmp, moveFilesToTmp));
-gulp.task('move-dist-dev', gulp.series(cleanDistDev, moveDistDev));
-gulp.task('clean-folders', gulp.series(
-	cleanDist,
-	moveBuiltFilesDist,
+/**
+ * cleanDist
+ * moveBuiltFilesDist
+ * cleanTmp
+ *
+ * Moves tmp to dist and removes tmp after that
+ */
+export const cleanFolders = gulp.series(
+	() => gulp
+		.src(dist, {
+			allowEmpty: true,
+			read: false
+		})
+		.pipe(clean()),
+	() => gulp
+		.src([
+			tmp + '/**/*',
+			'!' + tmp + '**/*.scss'
+		])
+		.pipe(gulp.dest(dist)),
 	cleanTmp
-));
+);

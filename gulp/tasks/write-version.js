@@ -3,10 +3,11 @@ import { writeFileSync } from 'fs';
 import { tmp } from '../paths';
 import { version } from '../../package.json';
 
-const writeVersion = () => {
-	let fileName = tmp + '/VERSION';
+/**
+ * Writes version file to display in monster
+ */
+export default () => {
+	const fileName = tmp + '/VERSION';
 	writeFileSync(fileName, version);
 	return gulp.src(fileName);
 };
-
-gulp.task('write-version', writeVersion);

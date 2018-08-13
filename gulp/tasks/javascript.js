@@ -3,7 +3,11 @@ import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
 import { app, src, tmp } from '../paths.js';
 
-const minifyJs = () => gulp
+/**
+ * Minifies js/main.js, we don't use the optimizer from requirejs as we don't
+ * want to minify config.js
+ */
+export const minifyJs = () => gulp
 	.src([
 		tmp + '/js/main.js',
 		tmp + '/js/templates.js'
@@ -11,12 +15,18 @@ const minifyJs = () => gulp
 	.pipe(uglify())
 	.pipe(gulp.dest(tmp + '/js/'));
 
-const minifyJsApp = () => gulp
+/**
+ * Minifies app.js
+ */
+export const minifyJsApp = () => gulp
 	.src(app + 'app.js')
 	.pipe(uglify())
 	.pipe(gulp.dest(app));
 
-const lint = () => gulp
+/**
+ * Show linting error
+ */
+export const lint = () => gulp
 	.src([
 		src + '/**/*.js',
 		'!'+ src + '/js/vendor/**/*.js',
@@ -24,7 +34,3 @@ const lint = () => gulp
 	])
 	.pipe(eslint())
 	.pipe(eslint.format());
-
-gulp.task('minify-js', minifyJs);
-gulp.task('minify-js-app', minifyJsApp);
-gulp.task('lint', lint);

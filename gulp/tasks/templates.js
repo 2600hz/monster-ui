@@ -31,7 +31,7 @@ const pathsTemplates = {
 	}
 };
 
-const compileTemples = () => gulp
+const compileTemplates = () => gulp
 	.src(pathsTemplates[mode].src)
 	.pipe(handlebars({
 		handlebars: require('handlebars')
@@ -63,14 +63,6 @@ const compileTemples = () => gulp
 	.pipe(concat(pathsTemplates[mode].concatName))
 	.pipe(gulp.dest(pathsTemplates[mode].dest));
 
-const concatTemplatesWhole = () => gulp
-	.src([
-		pathsTemplates.whole.dest + 'templates.js',
-		pathsTemplates.whole.dest + pathsTemplates.whole.concatName
-	])
-	.pipe(concat('templates.js'))
-	.pipe(gulp.dest(pathsTemplates.whole.dest));
-
 const cleanTemplates = () => gulp
 	.src([
 		...pathsTemplates[mode].src,
@@ -80,21 +72,42 @@ const cleanTemplates = () => gulp
 	})
 	.pipe(clean());
 
-const concatJsApp = () => gulp
-	.src([
-		app + 'app.js',
-		pathsTemplates.app.dest + pathsTemplates.app.concatName
-	])
-	.pipe(concat('app.js'))
-	.pipe(gulp.dest(app));
+/**
+ * compileTemplates
+ * concatTemplatesWhole
+ * cleanTemplates
+ *
+ * Get all the apps .html files and pre-compile them with handlebars, then
+ * append it to template.js
+ */
+export const templates = gulp.series(
+	compileTemplates,
+	() => gulp
+		.src([
+			pathsTemplates.whole.dest + 'templates.js',
+			pathsTemplates.whole.dest + pathsTemplates.whole.concatName
+		])
+		.pipe(concat('templates.js'))
+		.pipe(gulp.dest(pathsTemplates.whole.dest)),
+	cleanTemplates
+);
 
-gulp.task('templates', gulp.series(
-	compileTemples,
-	concatTemplatesWhole,
+/**
+ * compuileTemplates
+ * concatJsApp
+ * cleamTemplates
+ *
+ * Gets all apps .html templates and pre-compile them with handlebars, then
+ * append it to templates.js, also removes all the .html files from the folder
+ */
+export const templatesApp = gulp.series(
+	compileTemplates,
+	() => gulp
+		.src([
+			app + 'app.js',
+			pathsTemplates.app.dest + pathsTemplates.app.concatName
+		])
+		.pipe(concat('app.js'))
+		.pipe(gulp.dest(app)),
 	cleanTemplates
-));
-gulp.task('templates-app', gulp.series(
-	compileTemples,
-	concatJsApp,
-	cleanTemplates
-));
+);

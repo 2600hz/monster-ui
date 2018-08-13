@@ -1,10 +1,22 @@
 import gulp from 'gulp';
-import requireDir from 'require-dir';
 import { create } from 'browser-sync';
+import require from './gulp/tasks/require.js';
+import writeVersion from './gulp/tasks/write-version.js';
+import { lint, minifyJs, minifyJsApp } from './gulp/tasks/javascript.js';
+import { templates, templatesApp } from './gulp/tasks/templates.js';
+import { compileSass, css, minifyCssApp } from './gulp/tasks/style.js';
+import {
+	writeConfigProd,
+	writeConfigDev,
+	writeConfigApp
+} from './gulp/tasks/write-config.js';
+import {
+	cleanFolders,
+	moveDistDev,
+	moveFilesToTmp
+} from './gulp/tasks/clean-move.js';
 
 const server = create();
-
-requireDir('./gulp/tasks', { recurse: true });
 
 const serve = done => {
 	server.init({
@@ -16,36 +28,38 @@ const serve = done => {
 }
 
 const buildProd = gulp.series(
-	'move-files-to-tmp', // moves all files to tmp
-	'sass', // compiles all scss files into css and moves them to dist
-	'templates', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js,
-	'require', // from dist, run the optimizer and output it into dist
-	'minify-js', // minifies js/main.js, we don't use the optimize from requirejs as we don't want to minify config.js
-	'css', // takes all the apps provided up top and concatenate and minify them
-	'write-config-prod', // writes a config file for monster to know which apps have been minified so it doesn't reload the assets
-	'write-version', // writes version file to display in monster
-	'clean-folders' // moves tmp to dist and removes tmp after that
+	moveFilesToTmp,
+	compileSass,
+	templates,
+	require,
+	minifyJs,
+	css,
+	writeConfigProd,
+	writeVersion,
+	cleanFolders
 );
 
 const buildDev = gulp.series(
-	'move-files-to-tmp',
-	//'lint', // Show linting error
-	'sass',
-	'write-config-dev',
-	'write-version', // writes version file to display in monster
-	'clean-folders'
+	moveFilesToTmp,
+	// lint,
+	compileSass,
+	writeConfigDev,
+	writeVersion,
+	cleanFolders
 );
 
-gulp.task('build-app', gulp.series(
-	'move-files-to-tmp', // moves all files but css to dist
-	'sass', // compiles all scss files into css and moves them to dist
-	'templates-app', // gets all the apps html templates and pre-compile them with handlebars, then append it to templates.js, also removes all the html files from the folder
-	'require', // require whole directory, skipping all the optimizing of the core modules, but focusing on the specific app
-	'minify-js-app', // minifies app.js
-	'minify-css-app', // uglifies app.css
-	'write-config-app', // add flags if needed, like pro/lite version
-	'clean-folders'
-));
+const buildApp = gulp.series(
+	moveFilesToTmp,
+	compileSass,
+	templatesApp,
+	require,
+	minifyJsApp,
+	minifyCssApp,
+	writeConfigApp,
+	cleanFolders
+);
+
+gulp.task('build-app', buildApp);
 
 gulp.task('build-dev', buildDev);
 gulp.task('serve-dev', gulp.series(buildDev, serve));
@@ -53,6 +67,6 @@ gulp.task('serve-dev', gulp.series(buildDev, serve));
 gulp.task('build-prod', buildProd);
 gulp.task('serve-prod', gulp.series(buildProd, serve));
 
-gulp.task('build-all', gulp.series(buildDev, 'move-dist-dev', buildProd));
+gulp.task('build-all', gulp.series(buildDev, moveDistDev, buildProd));
 
-gulp.task('default', gulp.series('serve-dev'));
+export default gulp.series('serve-dev');

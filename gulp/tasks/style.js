@@ -15,26 +15,35 @@ const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
 	tmp + '/css/style.css'
 ]);
 
-const compileSass = () => gulp
-	.src(tmp + '/**/*.scss')
-	.pipe(sass().on('error', sass.logError))
-	.pipe(gulp.dest(tmp));
+/**
+ * concatAllCss
+ * minifyCss
+ *
+ * Takes all the apps provided up top and concatenate and minify them
+ */
+export const css = gulp.series(
+	() => gulp
+		.src(concatCssPaths)
+		.pipe(concatCss(concatName))
+		.pipe(gulp.dest(cssDest)),
+	() => gulp
+		.src(cssDest + concatName)
+		.pipe(cleanCss())
+		.pipe(gulp.dest(cssDest))
+);
 
-const minifyCssApp = () => gulp
+/**
+ * Uglifies app.css
+ */
+export const minifyCssApp = () => gulp
 	.src(app + '/style/app.css')
 	.pipe(cleanCss())
 	.pipe(gulp.dest(app + 'style'));
 
-const minifyCss = () => gulp
-	.src(cssDest + concatName)
-	.pipe(cleanCss())
-	.pipe(gulp.dest(cssDest));
-
-const concatAllCss = () => gulp
-	.src(concatCssPaths)
-	.pipe(concatCss(concatName))
-	.pipe(gulp.dest(cssDest));
-
-gulp.task('css', gulp.series(concatAllCss, minifyCss));
-gulp.task('minify-css-app', minifyCssApp);
-gulp.task('sass', compileSass);
+/**
+ * Compiles all .scss files into .css and moves them to dist folder
+ */
+export const compileSass = () => gulp
+	.src(tmp + '/**/*.scss')
+	.pipe(sass().on('error', sass.logError))
+	.pipe(gulp.dest(tmp));

@@ -4,6 +4,7 @@ import clean from 'gulp-clean';
 import { env } from 'gulp-util';
 import { require, tmp } from '../paths.js';
 import { getProApps, getAppsToInclude } from '../helpers/helpers.js';
+import { cleanTmp } from './clean-move.js';
 
 const standardFilesToExclude = [
 	'config',
@@ -114,26 +115,31 @@ const getConfigRequire = () => ({
 		]
 });
 
-const moveRequire = () => gulp
-	.src(require  + '/**/*')
-	.pipe(gulp.dest(tmp));
-
-const cleanRequire = () => gulp
-	.src(require, {
-		allowEmpty: true,
-		read: false
-	})
-	.pipe(clean());
-
-const buildRequire = done => {
-	rjs.optimize(getConfigRequire(), function(buildResponse){
-		done();
-	}, done);
-};
-
-gulp.task('require', gulp.series(
-	buildRequire,
-	'clean-tmp',
-	moveRequire,
-	cleanRequire
-));
+/**
+ * buildRequire
+ * cleanTmp
+ * moveRequire
+ * cleanRequire
+ *
+ * For `whole`: from dist, run the optimizer and output it into dist
+ *
+ * For `app`: require whole directory, skipping all the optimizing of the core
+ * modules, but focusing on the specific app
+ */
+export default gulp.series(
+	 done => {
+		rjs.optimize(getConfigRequire(), function(buildResponse){
+			done();
+		}, done);
+	},
+	cleanTmp,
+	() => gulp
+		.src(require  + '/**/*')
+		.pipe(gulp.dest(tmp)),
+	() => gulp
+		.src(require, {
+			allowEmpty: true,
+			read: false
+		})
+		.pipe(clean())
+);

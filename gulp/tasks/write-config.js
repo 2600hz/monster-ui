@@ -29,7 +29,11 @@ const writeBulkAppsConfig = () => {
 	});
 };
 
-const writeConfigProd = () => {
+/**
+ * Writes a config file for monster to know which apps have been minified so it
+ * doesn't reload the assets
+ */
+export const writeConfigProd = () => {
 	const mainFileName = tmp + '/build-config.json';
 	const content = {
 		type: 'production',
@@ -40,7 +44,7 @@ const writeConfigProd = () => {
 	return gulp.src(mainFileName);
 };
 
-const writeConfigDev = () => {
+export const writeConfigDev = () => {
 	const fileName = tmp + '/build-config.json';
 	const content = {
 		version: env.pro
@@ -51,7 +55,10 @@ const writeConfigDev = () => {
 	return gulp.src(fileName);
 };
 
-const writeConfigApp = () => {
+/**
+ * Add flags if needed, like pro/lite version
+ */
+export const writeConfigApp = () => {
 	const fileName = app + 'app-build-config.json';
 	const content = {
 		version: env.pro
@@ -61,7 +68,3 @@ const writeConfigApp = () => {
 	writeFile(fileName, content);
 	return gulp.src(fileName);
 };
-
-gulp.task('write-config-prod', writeConfigProd);
-gulp.task('write-config-dev', writeConfigDev);
-gulp.task('write-config-app', writeConfigApp);
