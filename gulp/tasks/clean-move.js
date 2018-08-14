@@ -1,5 +1,6 @@
 import gulp from 'gulp';
-import clean from 'gulp-clean';
+import del from 'del';
+import vinylPaths from 'vinyl-paths';
 import { dist, distDev, src, tmp } from '../paths.js';
 
 export const cleanTmp = () => gulp
@@ -7,7 +8,7 @@ export const cleanTmp = () => gulp
 		allowEmpty: true,
 		read: false
 	})
-	.pipe(clean());
+	.pipe(vinylPaths(del));
 
 /**
  * cleanTmp
@@ -32,7 +33,7 @@ export const moveDistDev = gulp.series(
 			allowEmpty: true,
 			read: false
 		})
-		.pipe(clean()),
+		.pipe(vinylPaths(del)),
 	() => gulp
 		.src(dist + '/**/*')
 		.pipe(gulp.dest(distDev))
@@ -51,7 +52,7 @@ export const cleanFolders = gulp.series(
 			allowEmpty: true,
 			read: false
 		})
-		.pipe(clean()),
+		.pipe(vinylPaths(del)),
 	() => gulp
 		.src([
 			tmp + '/**/*',

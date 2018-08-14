@@ -1,6 +1,7 @@
 import gulp from 'gulp';
 import rjs from 'requirejs';
-import clean from 'gulp-clean';
+import del from 'del';
+import vinylPaths from 'vinyl-paths';
 import { require, tmp } from '../paths.js';
 import { env, getProApps, getAppsToInclude } from '../helpers/helpers.js';
 import { cleanTmp } from './clean-move.js';
@@ -140,5 +141,5 @@ export default gulp.series(
 			allowEmpty: true,
 			read: false
 		})
-		.pipe(clean())
+		.pipe(vinylPaths(del))
 );

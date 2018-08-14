@@ -21,13 +21,13 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.6",
+    "del": "^3.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^2.3.1",
     "gulp": "^4.0.0",
     "gulp-cached": "^1.1.1",
-    "gulp-clean": "^0.3.2",
     "gulp-clean-css": "^3.9.0",
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.1.0",
@@ -41,6 +41,7 @@
     "gulp-wrap": "^0.13.0",
     "handlebars": "^4.0.11",
     "requirejs": "^2.3.5",
+    "vinyl-paths": "^2.1.0",
     "yargs-parser": "^10.1.0"
   }
 }

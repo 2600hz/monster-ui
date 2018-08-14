@@ -2,7 +2,6 @@ import gulp from 'gulp';
 import sass from 'gulp-sass';
 import concatCss from 'gulp-concat-css';
 import cleanCss from 'gulp-clean-css';
-import clean from 'gulp-clean';
 import { app, tmp } from '../paths.js';
 import { getAppsToInclude } from '../helpers/helpers.js';
 

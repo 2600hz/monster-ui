@@ -3,7 +3,8 @@ import handlebars from 'gulp-handlebars';
 import wrap from 'gulp-wrap';
 import declare from 'gulp-declare';
 import concat from 'gulp-concat';
-import clean from 'gulp-clean';
+import del from 'del';
+import vinylPaths from 'vinyl-paths';
 import { sep } from 'path';
 import { app, tmp } from '../paths.js';
 import { env, getAppsToInclude } from '../helpers/helpers.js';
@@ -69,7 +70,7 @@ const cleanTemplates = () => gulp
 	], {
 		read: false
 	})
-	.pipe(clean());
+	.pipe(vinylPaths(del));
 
 /**
  * compileTemplates
