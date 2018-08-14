@@ -38,7 +38,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^4.0.1",
     "gulp-uglify": "^2.1.2",
-    "gulp-wrap": "^0.13.0",
+    "gulp-wrap": "^0.14.0",
     "handlebars": "^4.0.11",
     "requirejs": "^2.3.5",
     "vinyl-paths": "^2.1.0",
