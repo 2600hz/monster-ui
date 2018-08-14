@@ -32,7 +32,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.1.0",
     "gulp-declare": "^0.3.0",
-    "gulp-eslint": "^3.0.1",
+    "gulp-eslint": "^5.0.0",
     "gulp-handlebars": "^5.0.2",
     "gulp-json-editor": "^2.2.1",
     "gulp-rename": "^1.2.2",
