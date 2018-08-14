@@ -16,7 +16,7 @@
 
 ### Prerequisites
 
-* [node](https://nodejs.org/en/download/) >= 4.5.0
+* [node](https://nodejs.org/en/download/) >= 6.9.0
 * [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
 * [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 4.0.0
 
