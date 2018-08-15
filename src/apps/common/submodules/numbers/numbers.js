@@ -111,6 +111,9 @@ define(function(require) {
 					usedNumbers: []
 				},
 				templateData = {
+					hideBuyNumbers: monster.config.whitelabel.hasOwnProperty('hideBuyNumbers')
+						? monster.config.whitelabel.hideBuyNumbers
+						: false,
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
 					canAddExternalNumbers: monster.util.canAddExternalNumbers(),
