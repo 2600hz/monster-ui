@@ -32,7 +32,10 @@ define(function(require) {
 				self.balanceGet(function(data) {
 					var argsBadge = {
 						module: 'balance',
-						data: self.i18n.active().currencyUsed + parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+						data: monster.util.formatPrice({
+							price: data.data.balance,
+							digits: self.appFlags.balance.digits.availableCreditsBadge
+						}),
 						callback: args.callback
 					};
 
@@ -57,14 +60,20 @@ define(function(require) {
 				monster.pub('myaccount.UIRestrictionsCompatibility', {
 					restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 					callback: function(uiRestrictions) {
-						var renderData = $.extend(true, {}, { uiRestrictions: uiRestrictions, amount: results.balance });
+						var renderData = $.extend(true, {}, {
+							currencySymbol: monster.util.getCurrencySymbol(),
+							uiRestrictions: uiRestrictions,
+							amount: results.balance
+						});
 
 						renderData.uiRestrictions.balance.show_header = (renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false) ? false : true;
 
 						var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
 							args = {
 								module: 'balance',
-								data: self.i18n.active().currencyUsed + renderData.amount
+								data: monster.util.formatPrice({
+									price: renderData.amount
+								})
 							};
 
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
@@ -153,7 +162,10 @@ define(function(require) {
 					}
 
 					// We now divide by 1 because the amount returned is negative
-					formattedData.totalCharges = parseFloat(ledger.amount / -1).toFixed(self.appFlags.balance.digits.callChargesBadge);
+					formattedData.totalCharges = monster.util.formatPrice({
+						price: ledger.amount / -1,
+						digits: self.appFlags.balance.digits.callChargesBadge
+					});
 				}
 
 				if (data.globalLedgers.hasOwnProperty('mobile_data')) {
@@ -228,6 +240,7 @@ define(function(require) {
 			}
 
 			var templateData = {
+				currencySymbol: monster.util.getCurrencySymbol(),
 				amount: amount,
 				threshold: thresholdData,
 				topup: topupData
@@ -294,7 +307,6 @@ define(function(require) {
 
 				var duration = self.i18n.active().balance.active_call,
 					accountName = v.account.name,
-					friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(self.appFlags.balance.digits.perMinuteTableAmount),
 					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
 					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
 					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
@@ -312,7 +324,10 @@ define(function(require) {
 					toField: toField,
 					accountName: accountName,
 					duration: duration,
-					friendlyAmount: friendlyAmount
+					friendlyAmount: monster.util.formatPrice({
+						price: v.amount,
+						digits: self.appFlags.balance.digits.perMinuteTableAmount
+					})
 				};
 
 				if (callerIdNumber !== fromField) {
@@ -531,7 +546,9 @@ define(function(require) {
 								message: self.getTemplate({
 									name: '!' + self.i18n.active().balance.creditsAdded,
 									data: {
-										amount: self.i18n.active().currencyUsed + creditsToAdd
+										amount: monster.util.formatPrice({
+											price: creditsToAdd
+										})
 									}
 								})
 							});
@@ -690,15 +707,17 @@ define(function(require) {
 			template.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {
-						var formattedAmount = parseFloat(amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
-							newAmount = self.i18n.active().currencyUsed + formattedAmount,
+						var newAmount = monster.util.formatPrice({
+								price: amount,
+								digits: self.appFlags.balance.digits.availableCreditsBadge
+							}),
 							argsEvent = {
 								module: 'balance',
 								data: newAmount
 							};
 
 						monster.pub('myaccount.updateMenu', argsEvent);
-						template.find('#amount').html(formattedAmount);
+						template.find('#amount').html(newAmount);
 					}
 				};
 

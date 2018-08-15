@@ -3,16 +3,18 @@
 	{{#if activation_charges}}
 		<div class="section">
 			<div class="title-box pull-right">
-				<div class="value">{{replaceVar i18n.confirmCharges.amount activation_charges}}</div>
+				<div class="value">
+					{{formatPrice activation_charges}}
+				</div>
 			</div>
-			<div class="title-block">{{i18n/confirmCharges.oneTimeFee}}</div>
+			<div class="title-block">{{i18n.confirmCharges.oneTimeFee}}</div>
 		</div>
 	{{/if}}
 	{{#if charges}}
 		<div class="section">
 			<div class="charges-info">
 				<i class="fa fa-exclamation-triangle pull-left"></i>
-				<span>{{i18n/confirmCharges.detail}}</span>
+				<span>{{i18n.confirmCharges.detail}}</span>
 			</div>
 			<div class="charges-list">
 			{{#each charges}}
@@ -21,11 +23,19 @@
 						<tr>
 							<td>{{quantity}}</td>
 							<td>x</td>
-							<td>{{replaceVar @root.i18n.confirmCharges.amount rate}}</td>
+							<td>{{formatPrice rate}}</td>
 							<td>-</td>
-							<td>{{#if discount}}{{replaceVar @root.i18n.confirmCharges.amount discount}}{{else}}{{discount}}{{/if}}</td>
+							<td>
+							{{#if discount}}
+								{{formatPrice discount}}
+							{{else}}
+								{{discount}}
+							{{/if}}
+							</td>
 							<td>=</td>
-							<td>{{replaceVar @root.i18n.confirmCharges.amount monthlyCharges}}</td>
+							<td>
+								{{formatPrice monthlyCharges}}
+							</td>
 						</tr>
 						<tr>
 							<th>{{service}}</th>

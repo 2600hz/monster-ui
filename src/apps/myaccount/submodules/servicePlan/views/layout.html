@@ -12,7 +12,7 @@
 				</div>
 				<div class="title-box pull-right">
 					<div class="value">
-						{{ i18n.currencyUsed }}{{ formatPrice totalAmount 2 }}
+						{{ formatPrice totalAmount 2 }}
 					</div>
 					<div class="title">
 						{{ i18n.servicePlan.dueAmount }}
@@ -46,10 +46,10 @@
 						<tr>
 							<td></td>
 							<td>{{ this.service }}</td>
-							<td>{{ @root.i18n.currencyUsed }}{{ formatPrice this.rate 2 }}</td>
+							<td>{{ formatPrice this.rate 2 }}</td>
 							<td>{{ this.quantity }}</td>
 							<td>{{ this.discount }}</td>
-							<td>{{ @root.i18n.currencyUsed }}{{ formatPrice this.monthlyCharges 2 }}</td>
+							<td>{{ formatPrice this.monthlyCharges 2 }}</td>
 							<td></td>
 						</tr>
 					{{else}}

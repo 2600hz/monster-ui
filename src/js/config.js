@@ -24,6 +24,16 @@ define(function(require) {
 		// If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it:
 		// disableBraintree: true,
 
+		/**
+		 * ISO 4217 currency code for which your billing system is configured
+		 * for that will be used throughout the UI to display prices using the
+		 * corresponding currency symbol
+		 * @type {String}
+		 * Default: USD
+		 * Supported: EUR, USD
+		 */
+		// currencyCode: 'USD',
+
 		// Contains all the flags that are whitelabel-able via the Branding app.
 		// Setting them in the config file will set the defaults if you don't use any whitelabel
 		// If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document

@@ -26,9 +26,7 @@
 			"disallow": "La valeur du champ \"{{field}}\" n'est pas autorisée.",
 			"type": "La valeur du champ \"{{field}}\" doit être du type \"{{value}}\".",
 			"unique": "La valeur du champ \"{{field}}\" doit être unique.",
-			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée.",
-			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
-			"service_restriction": "Crédit insuffisant pour acheter le numéro \"{{field}}\" (${{value}})."
+			"forbidden": "La valeur du champ \"{{field}}\" ne peut pas être modifiée."
 		},
 		"__comment": "UI-951 (v3.20_s0): adding i18n for some 500 & 409 errors",
 		"errorMessages": {
@@ -48,7 +46,6 @@
 	"close":"Fermer",
 	"conferencingLogo":"Conférences",
 	"csv":"CSV",
-	"currencyUsed":"$",
 	"delete": "Supprimer",
 	"dialog":{
 		"showError":"Détails erreur",
@@ -140,8 +137,7 @@
 		"rate":"Taux",
 		"quantity":"Quantité",
 		"discount": "Réduction",
-		"monthlyCharges":"Frais mensuels",
-		"amount": "${{variable}}"
+		"monthlyCharges":"Frais mensuels"
 	},
 	"languages":{
 		"auto":"Par Défaut",
