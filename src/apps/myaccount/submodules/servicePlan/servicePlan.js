@@ -44,7 +44,12 @@ define(function(require) {
 											service: serviceName,
 											rate: item.rate || 0,
 											quantity: item.quantity || 0,
-											discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + monster.util.formatPrice(discount, 2) : '',
+											discount: discount > 0
+												? '- ' + monster.util.formatPrice({
+													price: discount,
+													digits: 2
+												})
+												: '',
 											monthlyCharges: monthlyCharges
 										});
 

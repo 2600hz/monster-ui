@@ -78,8 +78,12 @@ define(function(require) {
 				return monster.util.formatPhoneNumber(phoneNumber);
 			},
 
-			formatPrice: function(price, decimals) {
-				return monster.util.formatPrice(price, decimals);
+			formatPrice: function(price, decimals, withCurrency) {
+				return monster.util.formatPrice({
+					price: price,
+					digits: decimals,
+					withCurrency: withCurrency
+				});
 			},
 
 			formatVariableToDisplay: function(variable) {

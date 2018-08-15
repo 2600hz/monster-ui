@@ -91,7 +91,9 @@ define(function(require) {
 
 					parent.find('.start-date .value').html(data.billingStartDate);
 					parent.find('.end-date .value').html(data.billingEndDate);
-					parent.find('.total-amount .value').html(self.i18n.active().currencyUsed + data.amount);
+					parent.find('.total-amount .value').html(monster.util.formatPrice({
+						price: data.amount
+					}));
 				});
 			});
 		},

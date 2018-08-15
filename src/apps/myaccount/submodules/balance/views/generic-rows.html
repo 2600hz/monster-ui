@@ -4,6 +4,6 @@
 		<td>{{ account.name }}</td>
 		<td>{{ description }}</td>
 		<td>{{ usage.quantity }} {{usage.unit }}</td>
-		<td>${{ amount }}</td>
+		<td>{{formatPrice amount }}</td>
 	</tr>
 {{/each}}

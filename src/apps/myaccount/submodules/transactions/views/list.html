@@ -20,7 +20,7 @@
 				{{/unless}}
 			</div>
 			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{ @root.i18n.currencyUsed }}{{#compare this.type "===" "credit"}}-{{/compare}}{{ this.amount }}</div>
+			<div class="price">{{#compare this.type "===" "credit"}}-{{/compare}} {{formatPrice this.amount }}</div>
 		</div>
 		{{#if this.hasAddOns}}
 			<div class="expandable">
@@ -42,10 +42,10 @@
 								<tr>
 									<td></td>
 									<td>{{ service }}</td>
-									<td>{{ @root.i18n.currencyUsed }}{{ rate }}</td>
+									<td>{{formatPrice rate }}</td>
 									<td>{{ quantity }}</td>
 									<td>{{ discount }}</td>
-									<td>{{ @root.i18n.currencyUsed }}{{ monthly_charges }}</td>
+									<td>{{formatPrice monthly_charges }}</td>
 									<td></td>
 								</tr>
 							{{/services}}

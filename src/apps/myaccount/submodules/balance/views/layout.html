@@ -4,7 +4,7 @@
 			{{#if uiRestrictions.balance.show_credit}}
 			<div class="title-box-group">
 				<div class="title-box">
-					<div class="value">{{ i18n.currencyUsed }}<span id="amount">{{amount}}</span></div>
+					<div class="value"><span id="amount">{{formatPrice amount}}</span></div>
 					<div class="title">{{ i18n.balance.availableCredits }}</div>
 				</div>
 				<div class="title-box primary-box" id="add_credits">
@@ -13,7 +13,7 @@
 				</div>
 			</div>
 			<div data-type="per-minute-voip" class="title-box pull-right">
-				<div class="value">{{ i18n.currencyUsed }}<span id="call_charges"></span></div>
+				<div class="value"><span id="call_charges"></span></div>
 				<div class="title">{{ i18n.balance.callCharges }}</div>
 			</div>
 			{{/if}}

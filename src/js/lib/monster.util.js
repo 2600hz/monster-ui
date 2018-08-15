@@ -8,6 +8,17 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
+	var supportedCurrencyCodes = {
+		USD: {
+			symbol: '$',
+			position: 'ante'
+		},
+		EUR: {
+			symbol: '€',
+			position: 'post'
+		}
+	};
+
 	var util = {
 
 		/**
@@ -346,14 +357,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		formatPrice: function(value, pDecimals) {
-			var decimals = parseInt(pDecimals),
-				decimalCount = decimals >= 0 ? decimals : 2,
-				roundedValue = Math.round(Number(value) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
-
-			return roundedValue.toFixed(parseInt(value) === value && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
-		},
-
 		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
 		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 		formatVariableToDisplay: function(variable) {
@@ -646,7 +649,12 @@ define(function(require) {
 						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
 						rate: addOn.amount,
 						quantity: addOn.quantity,
-						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+						discount: discount > 0
+							? '-' + monster.util.formatPrice({
+								price: discount,
+								digits: 2
+							})
+							: '',
 						monthly_charges: addOn.monthly_charges
 					});
 				});
@@ -1215,6 +1223,71 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Decimal and currency formatting for prices
+	 * @param  {Object}  args
+	 * @param  {Number}  args.price        Price to format (number or string
+	 *                                     representation of a number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the
+	 *                                     decimal point.
+	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
+	 * @return {String}                    String representation of `price`.
+	 *
+	 * If `digits` is not specified, integers will have no digits and floating
+	 * numbers with at least one significant number after the decimal point
+	 * will have two digits.
+	 */
+	function formatPrice(args) {
+		var price = Number(args.price);
+		var digits = parseInt(args.digits);
+		var withCurrency = _.isBoolean(args.withCurrency)
+			? args.withCurrency
+			: true;
+		var digitsCount = digits >= 0
+			? digits
+			: 2;
+		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
+		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
+		var addCurrency = function(value) {
+			var currencyCode = monster.config.hasOwnProperty('currencyCode')
+				? monster.config.currencyCode
+				: 'USD';
+			var codeData = supportedCurrencyCodes[currencyCode];
+			var ret;
+			if (_.isUndefined(codeData)) {
+				throw new Error('Currency code ' + currencyCode + ' is not supported.');
+			} else {
+				if (codeData.position === 'ante') {
+					ret = codeData.symbol + fixedPrice;
+				} else if (codeData.position === 'post') {
+					ret = fixedPrice + ' ' + codeData.symbol;
+				}
+			}
+			return ret;
+		};
+		return withCurrency
+			? addCurrency(fixedPrice)
+			: fixedPrice;
+	}
+
+	/**
+	 * Return the symbol of the currency used
+	 * @return {String} Symbol of currency
+	 */
+	function getCurrencySymbol() {
+		var currencyCode = monster.config.hasOwnProperty('currencyCode')
+			? monster.config.currencyCode
+			: 'USD';
+		var codeData = supportedCurrencyCodes[currencyCode];
+		if (_.isUndefined(codeData)) {
+			throw new Error('Currency code ' + currencyCode + ' is not supported');
+		}
+		return codeData.symbol;
+	}
+
+	util.formatPrice = formatPrice;
+	util.getCurrencySymbol = getCurrencySymbol;
 
 	return util;
 });

@@ -93,7 +93,6 @@
 
 		"title": "Par Minute",
 		"payPerMinute": "Le paiement à la minute vous permet de ne payer que ce que vous utilisez. Déposez de l'argent sur votre compte pour commencer et payer en fonction de votre utilisation ensuite.",
-		"currentBalance": "Balance actuelle: $",
 		"amount": "Montant",
 		"invalidAmount": "Le montant de crédits à rajouter est invalide!",
 		"creditsAdded": "Vous venez d'ajouter {{amount}} à votre balance!",

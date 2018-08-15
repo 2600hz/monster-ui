@@ -200,7 +200,7 @@
 		"confirmInfoMsg2":"Votre carte de crédit sera directement chargée pour les services récurrents (Les frais seront calculés au pro rata pour votre cycle actuel).",
 		"vanitySearchLabel":"Chercher un numéro local, vert ou personnalisable:",
 		"vanitySearchInfo1":"Vous pouvez entrer n'importe quelle combinaison de chiffres et de lettres.",
-		"vanitySearchInfo2":"Si vous ne trouvez pas un numéro et souhaitez vraiment l'avoir, vous pouvez nous contacter et nous rechercherons dans toutes les bases de données disponibles. Une charge de $20 sera appliquée pour une telle requête.",
+		"vanitySearchInfo2":"Si vous ne trouvez pas un numéro et souhaitez vraiment l'avoir, vous pouvez nous contacter et nous rechercherons dans toutes les bases de données disponibles.",
 		"sendRequest":"Envoyer une requête",
 		"to":"à",
 		"partialPurchaseFailure":"Désolé, les numéros suivants n'ont pas pu être achetés :",
