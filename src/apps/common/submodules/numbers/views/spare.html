@@ -15,6 +15,7 @@
 		</span>
 
 		{{#compare viewType '===' 'pbx'}}
+			{{#unless hideBuyNumbers}}
 			<ul class="nav buy-numbers-dropdown">
 				<li class="dropdown">
 					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
@@ -25,6 +26,7 @@
 					</ul>
 				</li>
 			</ul>
+			{{/unless}}
 			{{#unless hidePort}}
 				<a href="#" id="port_numbers" class="action-number port"><i class="fa fa-external-link monster-primary-color"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 			{{/unless}}
@@ -47,6 +49,7 @@
 						{{#if ../canAddExternalNumbers}}
 							<a href="javascript:void(0);" id="add_external_number" class="action-number add-external help-popover" data-original-title="{{ @root.i18n.numbers.addExternal.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-plus"></i><span class="action-text">{{ @root.i18n.numbers.addExternal.label }}</span></a>
 						{{/if}}
+					{{#unless @root.hideBuyNumbers}}
 						<ul class="nav buy-numbers-dropdown">
 							<li class="dropdown">
 								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
@@ -57,6 +60,7 @@
 								</ul>
 							</li>
 						</ul>
+					{{/unless}}
 						{{#unless ../hidePort}}
 							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
 						{{/unless}}
