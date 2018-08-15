@@ -90,6 +90,9 @@ define(function(require) {
 
 			// If set to true, will hide creation of new accounts
 			// hideNewAccountCreation: true
+
+			// Remove the ability to buy phone numbers throughout the entire UI
+			// hideBuyNumbers: true
 		},
 		developerFlags: {
 			// Setting this flag to true will show all restricted callflows in the Callflows app
