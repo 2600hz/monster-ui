@@ -15,6 +15,7 @@
 * [How to use the validation in your UI][validation]
 * [How to write/update a test plan for your app][test_plan]
 * [How to use the JavaScript Kazoo SDK][sdk]
+* [Configure your Monster UI install ][configure]
 
 [tutorial]: tutorial.md
 [api]: api.md
@@ -32,3 +33,4 @@
 [sdk]: kazooSdk.md
 [linting]: linting.md
 [using-postman-as-a-crud]: using-postman-as-a-crud.md
+[configure]: configuration.md
