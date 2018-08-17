@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		async = require('async'),
 		card = require('card'),
-		config = require('config'),
 		Cookies = require('cookies'),
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload'),
@@ -234,14 +233,18 @@ define(function(require) {
 			error: []
 		},
 
-		config: function() {
-			if (!config.hasOwnProperty('api') || !config.api.hasOwnProperty('default')) {
-				config.api = config.api || {};
-				config.api.default = window.location.protocol + '//' + window.location.hostname + ':8000/v2/';
-			}
-
+		config: (function(config) {
+			var getValue = function(node, key, check, preset) {
+				return node.hasOwnProperty(key) && check(node[key])
+					? node[key]
+					: preset;
+			};
+			config.api = getValue(config, 'api', _.isObject, {});
+			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
+			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
+			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
 			return config;
-		}(),
+		}(require('config'))),
 
 		cookies: {
 			set: function set(key, value, options) {
