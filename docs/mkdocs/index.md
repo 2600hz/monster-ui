@@ -1,53 +1,96 @@
-# Monster UI Application Development
+# [Monster UI](https://docs.2600hz.com/ui/) &middot; [![GitHub license](https://img.shields.io/badge/license-MPL%201.1-blue.svg)](LICENSE) [![CircleCI branch](https://img.shields.io/circleci/project/github/2600hz/monster-ui/master.svg)](https://circleci.com/gh/2600hz/monster-ui)
 
-Required Softwares:
+The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
-- Node >= 4.5.0 (from their website)
-- NPM >= 3.10.6 (npm install -g npm)
-- GULP >= 3.9.1 (npm install -g gulp)
+## Getting Started
 
-After cloning a fresh repo, you'll want to run
+*These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
 
-- npm install
+### Prerequisites
 
-which will initialize all the node dependencies for gulp
+* [node](https://nodejs.org/en/download/) >= 4.5.0
+* [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
+* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 3.9.1
 
-Once that's done, you can just run
+### Install
 
-- gulp
+Clone the official `monster-ui` repository:
 
-which will build the website, build the css files from scss files and serve it to a webbrowser.
+```
+git clone https://github.com/2600hz/monster-ui.git monster-ui
+```
 
+Go to the project's folder:
 
-If you are using Docker, this will setup a local dev server:
+```
+cd monster-ui
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
+### Configure
+
+In order for the UI to load the data from your server, we need to specify which API to use. To do so, open the `config.js` file located in `src/js/` folder and add the URL of your server as the value of the `default` property.
+
+```javascript
+define({
+    api: {
+    	'default': 'http://my.kazoo.server/'
+    }
+  }
+});
+```
+
+*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration)*.
+
+### Build
+
+Use the `gulp` command to build and launch the web server
+
+```
+gulp
+```
+
+Access your development environment at `http://localhost:3000/`
+
+*For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+
+## Using Docker
+
+If you are using Docker containers, we made it easy for you to set up a development environment. You will just need to clone the `monster-ui` repository and add your API URL to the `config.js` file as explained in the [Install](#install) and [Configure](#configure) sections. After that, execute our custom `serve.sh` script (made by [**Pierre Fenoll**](https://github.com/fenollp)) in your Docker container:
 
 ```shell
 ./serve.sh
 ```
 
-If you install all the separate apps via GIT as submodules in the /monster-ui/src/apps folder and then run `gulp build-prod`, all the apps code (JS/HTML/CSS) will be concatenated together and minified
+This script will install `npm` and `gulp`, as well as the `npm` dependencies and finally run the `gulp` command. You will be able to access the development environment at `http://localhost:3000/`.
 
-Reach us at #2600hz for Feedback
+It also starts by pulling your apps installed in `src/apps` before starting the server. To disable this behavior use the `no-update` flag:
 
+```shell
+./serve.sh no-update
+```
 
-Build Pro version
+## Contributing
 
-Some apps might have a pro version. If that's the case, and you want to build it with the "pro" assets you need to specify the name of the app in the pro flag.
+1. [Fork it!](https://github.com/2600hz/monster-ui/fork)
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
 
+## Authors
 
-	gulp build-prod --pro=test1,test2,test3
+[2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
 
+* [**Joris Tirado**](https://github.com/azefiel)
 
-Build Pro version app level
+See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
 
+## License
 
-	gulp build-prod
-
-
-with core only, then add the app repo to /apps and
-
-
-	gulp-build-app --app=test1 --pro
-
-
-
+This project is licensed under the Mozilla Public License - see the [LICENSE](LICENSE) file for details.

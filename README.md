@@ -1,14 +1,6 @@
-# Monster UI
+# [Monster UI](https://docs.2600hz.com/ui/) &middot; [![GitHub license](https://img.shields.io/badge/license-MPL%201.1-blue.svg)](LICENSE) [![CircleCI branch](https://img.shields.io/circleci/project/github/2600hz/monster-ui/master.svg)](https://circleci.com/gh/2600hz/monster-ui)
 
-* [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Configure](#configure)
-    - [Build](#build)
-* [Using Docker](#using-docker)
-* [Contributing](#contributing)
-* [Authors](#authors)
-* [License](#license)
+The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ## Getting Started
 
@@ -95,7 +87,6 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 
 [2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
 
-* [**Jean-Roch Maitre**](https://github.com/JRMaitre)
 * [**Joris Tirado**](https://github.com/azefiel)
 
 See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
