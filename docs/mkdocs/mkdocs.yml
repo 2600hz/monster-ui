@@ -19,10 +19,7 @@ pages:
   - 'How to use the validation in your UI': 'docs/validation.md'
   - 'Gulp command': 'docs/gulpCommand.md'
   - 'Using Postman as a CRUD': 'docs/using-postman-as-a-crud.md'
-  - 'Known Issues': 'docs/knownIssues.md'
-  - 'KazooCon': 'docs/kazoocon.md'
-  - 'Test Plan': 'docs/testPlan.md'
-  - 'Summary': 'docs/summary.md'
+  - 'Configure your Monster UI install': 'docs/configuration.md'
 - 'Monster Helpers':
   - 'monster':
     - 'Intro': 'docs/monster.md'
