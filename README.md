@@ -45,20 +45,15 @@ npm install
 In order for the UI to load the data from your server, we need to specify which API to use. To do so, open the `config.js` file located in `src/js/` folder and add the URL of your server as the value of the `default` property.
 
 ```javascript
-define(function(require) {
-
-  return {
+define({
     api: {
-      // The default API URL defines what API is used to log in to your back-end
-      default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
-
-      ...
-    },
-
-    ...
-  };
+    	'default': 'http://my.kazoo.server/'
+    }
+  }
 });
 ```
+
+*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration)*.
 
 ### Build
 

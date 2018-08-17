@@ -1,26 +1,29 @@
 # config.js
+This file lets you connect your different backend services to Monster UI and exposes other options like whitelabeling that can be set here for entire UI.
 
 ## Example
+This minimal, almost working example will get you up an running in no time. You just need to hook up your Kazoo server at `api.default` and you should be good to go.
+
 ```js
 define({
-  api: {
-    'default': 'https://my.kazoo.server/v2/'
-  },
-  whitelabel: {
-    companyName: '2600Hz',
-    applicationTitle: 'Monster UI',
-    callReportEmail: 'support@2600hz.com',
-    nav: {
-      help: 'http://wiki.2600hz.com'
-    },
-    port: {
-      loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
-      resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
-    }
+	api: {
+		'default': 'https://my.kazoo.server/v2/'
+	},
+	whitelabel: {
+		companyName: '2600Hz',
+		applicationTitle: 'Monster UI',
+		callReportEmail: 'support@2600hz.com',
+		nav: {
+			help: 'http://wiki.2600hz.com'
+		},
+		port: {
+			loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
+			resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
+		}
 });
 ```
 
-## Configurable
+## Settings
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
@@ -69,7 +72,7 @@ Key | Description | Type | Default | Required
 `port` | In the Port Manager, we use a LOA Form link. By changing this attribute, you'll change the default link. If any user has a whitelabel profile set via the Branding app, he can override that value. | `Object` | | `false`
 `port.loa` | | `String` | | `false`
 `port.resporg` | | `String` | | `false`
-`preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false | `false`
+`preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 
 ### developerFlags
