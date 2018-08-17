@@ -4,7 +4,7 @@
 ```js
 define({
   api: {
-    'default': 'https://ui.zswitch.net/v2/'
+    'default': 'https://my.kazoo.server/v2/'
   },
   whitelabel: {
     companyName: '2600Hz',
@@ -20,7 +20,7 @@ define({
 });
 ```
 
-## Configuration
+## Configurable
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
