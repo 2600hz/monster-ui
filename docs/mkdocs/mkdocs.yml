@@ -1,28 +1,24 @@
 site_name: UI Development
 
-docs_dir: docs
-
 pages:
 - 'index.md'
-- 'Building an App':
-  - 'docs/tutorial.md'
-  - 'docs/appstore.md'
-  - 'docs/internationalization.md'
+- 'docs/tutorial.md'
+- 'Quick Guides':
+  - 'docs/configuration.md'
   - 'docs/api.md'
-  - 'docs/kazooSdk.md'
+  - 'docs/appstore.md'
+  - 'docs/gulpCommand.md'
+  - 'docs/validation.md'
+  - 'docs/internationalization.md'
+- 'Advanced Guides':
   - 'docs/monster.md'
   - 'docs/handlebars.md'
   - 'docs/events.md'
   - 'docs/commonControls.md'
   - 'docs/flags.md'
-  - 'docs/codingStandards.md'
-  - 'docs/javascriptStyleGuide.md'
-  - 'docs/linting.md'
-  - 'docs/validation.md'
-  - 'docs/gulpCommand.md'
+  - 'docs/kazooSdk.md'
   - 'docs/using-postman-as-a-crud.md'
-  - 'docs/configuration.md'
-- 'Monster Helpers':
+- 'References':
   - 'monster':
     - 'docs/monster/getTemplate().md'
     - 'docs/monster/parallel().md'
@@ -84,3 +80,7 @@ pages:
   - 'skeleton':
     - 'docs/skeleton/method().md'
     - 'docs/skeleton/object.md'
+- 'Contributing':
+  - 'docs/codingStandards.md'
+  - 'docs/javascriptStyleGuide.md'
+  - 'docs/linting.md'
