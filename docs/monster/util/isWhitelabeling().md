@@ -1,3 +1,5 @@
+title: isWhitelabeling()
+
 # [monster][monster].[util][util].isWhitelabeling()
 
 * [Syntax](#syntax)
@@ -18,7 +20,7 @@ This method checks if the UI is currently using a branding profile or not
 
 ### Examples
 ```javascript
-if(monster.util.isWhitelabeling()) { 
+if(monster.util.isWhitelabeling()) {
 	self.loadNewSkin();
 	// do something if user is using a branded UI
 };

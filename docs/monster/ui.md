@@ -1,3 +1,5 @@
+title: Intro
+
 # [monster][monster].ui
 The `monster.ui` object contains different methods used to easily render common UI elements in apps with Monster UI look and feel and helps keep an unified UI.
 

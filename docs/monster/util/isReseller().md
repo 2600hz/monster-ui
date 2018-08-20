@@ -1,3 +1,5 @@
+title: isReseller()
+
 # [monster][monster].[util][util].isReseller()
 
 * [Syntax](#syntax)
@@ -24,7 +26,7 @@ This method checks if an account is a reseller or not. A reseller account is an 
 
 ### Examples
 ```javascript
-if(monster.util.isReseller()) { 
+if(monster.util.isReseller()) {
 	// do something if account is a reseller
 };
 ```

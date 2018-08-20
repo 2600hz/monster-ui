@@ -1,3 +1,5 @@
+title: getAuthToken()
+
 # [monster][monster].[util][util].getAuthToken()
 
 * [Syntax](#syntax)

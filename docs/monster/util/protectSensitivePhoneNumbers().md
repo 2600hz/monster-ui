@@ -1,3 +1,5 @@
+title: protectSensitivePhoneNumbers()
+
 # [monster][monster].[util][util].protectSensitivePhoneNumbers()
 
 * [Syntax](#syntax)
@@ -28,7 +30,7 @@ We have added a shortcut for this function in Monster, press `?` to find the ass
 * Replace phone numbers displayed in a page.
 ```javascript
 monster.util.protectSensitivePhoneNumbers()
-// output: 
+// output:
 0 - replace (415) 123-7900 by +1 555 942 9464
 1 - replace (415) 123-7965 by +1 555 712 8859
 2 - replace (415) 123-7944 by +1 555 619 1779

@@ -1,3 +1,5 @@
+title: getTemplate()
+
 # [monster][monster].getTemplate()
 
 * [Syntax](#syntax)

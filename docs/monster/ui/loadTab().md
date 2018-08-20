@@ -1,3 +1,5 @@
+title: loadTab()
+
 # [monster][monster].[ui][ui].loadTab()
 The `monster.ui.loadTab()` method programmatically loads the navbar tab corresponding to the tab ID passed as argument.
 

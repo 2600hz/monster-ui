@@ -1,3 +1,5 @@
+title: template()
+
 # [monster][monster].template()
 
 * [Syntax](#syntax)

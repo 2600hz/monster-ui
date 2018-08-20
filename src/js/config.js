@@ -7,14 +7,14 @@
  * good to go.
  *
  * For a full list and description of configurable options, head over to:
- * https://docs.2600hz.com/ui/docs/configuration
+ * https://docs.2600hz.com/ui/docs/configuration/
  */
 define({
 	api: {
 		'default': 'http://my.kazoo.server/'
 	},
 	whitelabel: {
-		conpanyName: '2600Hz',
+		companyName: '2600Hz',
 		applicationTitle: 'Monster UI',
 		callReportEmail: 'support@2600hz.com',
 		nav: {

@@ -1,3 +1,5 @@
+title: formatVariableToDisplay()
+
 # [monster][monster].[util][util].formatVariableToDisplay()
 
 * [Syntax](#syntax)

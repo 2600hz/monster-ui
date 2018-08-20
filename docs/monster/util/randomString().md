@@ -1,3 +1,5 @@
+title: randomString()
+
 # [monster][monster].[util][util].randomString()
 
 * [Syntax](#syntax)

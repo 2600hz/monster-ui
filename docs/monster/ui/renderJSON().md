@@ -1,3 +1,5 @@
+title: renderJSON()
+
 # [monster][monster].[ui][ui].renderJSON()
 
 * [Syntax](#syntax)

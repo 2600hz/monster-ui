@@ -1,3 +1,5 @@
+title: isMasquerading()
+
 # [monster][monster].[util][util].isMasquerading()
 
 * [Syntax](#syntax)
@@ -18,7 +20,7 @@ This method checks if the current session is using the account that was used to 
 
 ### Examples
 ```javascript
-if(monster.util.isMasquerading()) { 
+if(monster.util.isMasquerading()) {
 	// do something specific for users who are using a sub-account.
 };
 ```

@@ -1,3 +1,5 @@
+title: timepicker()
+
 # [monster][monster].[ui][ui].timepicker()
 
 * [Syntax](#syntax)
