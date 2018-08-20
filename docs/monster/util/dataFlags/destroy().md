@@ -1,3 +1,5 @@
+title: destroy()
+
 # [monster][monster].[util][util].[dataFlags][dataFlags].destroy()
 
 * [Syntax](#syntax)

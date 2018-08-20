@@ -1,3 +1,5 @@
+title: slider()
+
 # [monster][monster].[ui][ui].slider()
 
 * [Syntax](#syntax)

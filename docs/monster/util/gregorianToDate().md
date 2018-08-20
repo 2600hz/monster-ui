@@ -1,3 +1,5 @@
+title: gregorianToDate()
+
 # [monster][monster].[util][util].gregorianToDate()
 
 * [Syntax](#syntax)

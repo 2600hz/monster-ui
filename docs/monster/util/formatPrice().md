@@ -1,3 +1,5 @@
+title: formatPrice()
+
 # [monster][monster].[util][util].formatPrice()
 
 * [Syntax](#syntax)

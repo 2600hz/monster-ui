@@ -1,3 +1,5 @@
+title: tooltips()
+
 # [monster][monster].[ui][ui].tooltips()
 
 * [Syntax](#syntax)
@@ -14,7 +16,7 @@ monster.ui.tooltips(target[, args]);
 
 ###### `target`: [jQuery object][jquery] (mandatory)
 
-Template on which the method will be applied. It will automatically find the tooltips field and add an event so that when a user mouseover it, it shows a tooltip. 
+Template on which the method will be applied. It will automatically find the tooltips field and add an event so that when a user mouseover it, it shows a tooltip.
  This helper allows us to lazy-load the tooltips instead of loading them all at once when we first load the template, which could be heavy on the browser.
 
 ###### `args`: [Object][object_literal] (optional, default: `{}`)

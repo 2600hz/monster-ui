@@ -1,3 +1,5 @@
+title: canImpersonate()
+
 # [monster][monster].[util][util].canImpersonate()
 
 * [Syntax](#syntax)
@@ -24,7 +26,7 @@ We only let super duper admins impersonate users from subaccounts. If you're not
 
 ### Examples
 ```javascript
-if(monster.util.canImpersonate('123412341234123412341234')) { 
+if(monster.util.canImpersonate('123412341234123412341234')) {
 	// do something if user can impersonate
 };
 ```

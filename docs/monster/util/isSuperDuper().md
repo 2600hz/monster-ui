@@ -1,3 +1,5 @@
+title: isSuperDuper()
+
 # [monster][monster].[util][util].isSuperDuper()
 
 * [Syntax](#syntax)
@@ -24,7 +26,7 @@ This method checks if a user is currently logged in on a Superduper account. By 
 
 ### Examples
 ```javascript
-if(monster.util.isSuperDuper()) { 
+if(monster.util.isSuperDuper()) {
 	// do something if user is on a superduper account
 };
 ```

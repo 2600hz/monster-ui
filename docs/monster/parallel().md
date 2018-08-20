@@ -1,3 +1,5 @@
+title: parallel()
+
 # [monster][monster].parallel()
 
 * [Syntax](#syntax)

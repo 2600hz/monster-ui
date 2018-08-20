@@ -1,3 +1,5 @@
+title: datepicker()
+
 # [monster][monster].[ui][ui].datepicker()
 
 * [Syntax](#syntax)

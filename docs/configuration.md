@@ -1,3 +1,5 @@
+title: Configure your Monster UI install
+
 # config.js
 This file lets you connect your different backend services to Monster UI and exposes other options like whitelabeling that can be set here for entire UI.
 

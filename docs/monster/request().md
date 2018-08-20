@@ -1,3 +1,5 @@
+title: request()
+
 # [monster][monster].request()
 
 * [Syntax](#syntax)

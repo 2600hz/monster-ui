@@ -1,3 +1,5 @@
+title: highlight()
+
 # [monster][monster].[ui][ui].highlight()
 The `monster.ui.highlight()` method quickly highlights an element then fades it back to normal, from blue to gray by default.
 

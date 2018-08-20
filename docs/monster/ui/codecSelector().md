@@ -1,3 +1,5 @@
+title: codecSelector()
+
 # [monster][monster].[ui][ui].codecSelector()
 The `monster.ui.codecSelector()` method generates a selector for audio/video codecs.
 
@@ -16,7 +18,7 @@ monster.ui.codecSelector([type, target, selectedItems]);
 
 ###### `type`: `audio`| `video` [String][string_literal] (mandatory)
 
-Setting the codecSelector to `audio` will give the user a list of Audio Codecs to choose from: 
+Setting the codecSelector to `audio` will give the user a list of Audio Codecs to choose from:
 - 'OPUS'
 - 'CELT@32000h'
 - 'G7221@32000h'

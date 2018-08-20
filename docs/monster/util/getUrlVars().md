@@ -1,3 +1,5 @@
+title: getUrlVars()
+
 # [monster][monster].[util][util].getUrlVars()
 
 * [Syntax](#syntax)

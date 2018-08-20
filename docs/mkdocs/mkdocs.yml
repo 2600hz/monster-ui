@@ -1,28 +1,29 @@
 site_name: UI Development
 
+docs_dir: docs
+
 pages:
 - 'index.md'
 - 'Building an App':
-  - 'Tutorial': 'docs/tutorial.md'
-  - 'Add your app to the App Store': 'docs/appstore.md'
-  - 'Adding I18n to your application': 'docs/internationalization.md'
-  - 'Using Kazoo APIs': 'docs/api.md'
-  - 'How to use the JavaScript Kazoo SDK': 'docs/kazooSdk.md'
-  - 'Using Monster methods': 'docs/monster.md'
-  - 'Using Handlebars for your templates': 'docs/handlebars.md'
-  - 'Using Monster Events': 'docs/events.md'
-  - 'Using a Common control': 'docs/commonControls.md'
-  - 'Using application flags': 'docs/flags.md'
-  - 'Coding standards (Basic)': 'docs/codingStandards.md'
-  - 'Coding standards (Advanced)': 'docs/javascriptStyleGuide.md'
-  - 'Coding standards linting': 'docs/linting.md'
-  - 'How to use the validation in your UI': 'docs/validation.md'
-  - 'Gulp command': 'docs/gulpCommand.md'
-  - 'Using Postman as a CRUD': 'docs/using-postman-as-a-crud.md'
-  - 'Configure your Monster UI install': 'docs/configuration.md'
+  - 'docs/tutorial.md'
+  - 'docs/appstore.md'
+  - 'docs/internationalization.md'
+  - 'docs/api.md'
+  - 'docs/kazooSdk.md'
+  - 'docs/monster.md'
+  - 'docs/handlebars.md'
+  - 'docs/events.md'
+  - 'docs/commonControls.md'
+  - 'docs/flags.md'
+  - 'docs/codingStandards.md'
+  - 'docs/javascriptStyleGuide.md'
+  - 'docs/linting.md'
+  - 'docs/validation.md'
+  - 'docs/gulpCommand.md'
+  - 'docs/using-postman-as-a-crud.md'
+  - 'docs/configuration.md'
 - 'Monster Helpers':
   - 'monster':
-    - 'Intro': 'docs/monster.md'
     - 'docs/monster/getTemplate().md'
     - 'docs/monster/parallel().md'
     - 'docs/monster/pub().md'
@@ -31,7 +32,7 @@ pages:
     - 'docs/monster/template().md'
     - 'docs/monster/waterfall().md'
   - 'monster.ui':
-    - 'Intro': 'docs/monster/ui.md'
+    - 'docs/monster/ui.md'
     - 'docs/monster/ui/alert().md'
     - 'docs/monster/ui/codecSelector().md'
     - 'docs/monster/ui/confirm().md'
@@ -53,7 +54,7 @@ pages:
     - 'docs/monster/ui/validate().md'
     - 'docs/monster/ui/wysiwyg().md'
   - 'monster.util':
-    - 'Intro': 'docs/monster/util.md'
+    - 'docs/monster/util.md'
     - 'docs/monster/util/canAddExternalNumbers().md'
     - 'docs/monster/util/canImpersonate().md'
     - 'docs/monster/util/dateToGregorian().md'
@@ -75,11 +76,11 @@ pages:
     - 'docs/monster/util/randomString().md'
     - 'docs/monster/util/toFriendlyDate().md'
     - 'docs/monster/util/unformatPhoneNumber().md'
-    - 'Data Flags':
-      - 'Intro': 'docs/monster/util/dataFlags.md'
-      - 'add()': 'docs/monster/util/dataFlags/add().md'
-      - 'destroy()': 'docs/monster/util/dataFlags/destroy().md'
-      - 'get()': 'docs/monster/util/dataFlags/get().md'
+    - 'dataFlags':
+      - 'docs/monster/util/dataFlags.md'
+      - 'docs/monster/util/dataFlags/add().md'
+      - 'docs/monster/util/dataFlags/destroy().md'
+      - 'docs/monster/util/dataFlags/get().md'
   - 'skeleton':
     - 'docs/skeleton/method().md'
     - 'docs/skeleton/object.md'

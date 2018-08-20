@@ -1,3 +1,5 @@
+title: generateAppLayout()
+
 # [monster][monster].[ui][ui].generateAppLayout()
 
 ![](images/generateAppLayout-preview.png)

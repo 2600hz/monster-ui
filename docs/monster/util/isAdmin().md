@@ -1,3 +1,5 @@
+title: isAdmin()
+
 # [monster][monster].[util][util].isAdmin()
 
 * [Syntax](#syntax)
@@ -24,7 +26,7 @@ This method checks if a user is currently logged in as an admin user.
 
 ### Examples
 ```javascript
-if(monster.util.isAdmin()) { 
+if(monster.util.isAdmin()) {
 	// do something if user is an admin
 };
 ```

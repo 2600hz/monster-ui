@@ -1,3 +1,5 @@
+title: protectField()
+
 # [monster][monster].[ui][ui].protectField()
 
 * [Syntax](#syntax)
