@@ -1,3 +1,5 @@
+title: How to use the validation in your UI
+
 # Using validation in Monster-UI
 
 Validation in Monster-UI is done using the [jQuery Validation plugin][jquery_validation_plugin]. Their documentation is very complete, and it is strongly advised that you take look at it to have a better understanding of how it works.
@@ -8,7 +10,7 @@ In this document, we will go over the basics of validation in Monster-UI, and th
 
 First, validation is done on html forms, so you need to make sure that all the fields that you want to validate are nested in a `<form>` tag.
 
-Then, you need to set up validation on your form, by using the _monster.ui.validate(form, options)_ method. This will activate the validation on the provided form.  
+Then, you need to set up validation on your form, by using the _monster.ui.validate(form, options)_ method. This will activate the validation on the provided form.
 Note: You should not call directly the _validate(options)_ method from the plugin, it will be called by the _monster.ui.validate(form, options)_ method.
 
 ```
@@ -26,7 +28,7 @@ Finally, you can use the _monster.ui.valid(form)_ to "run" the validation. This 
 	}
 ```
 
-In addition, the validation process will append a label element after each invalid field, with the class 'monster-invalid'. You can use this class to customize these labels within your application. If you do so, make sure to namespace it with a container id from your template so that you don't affect other apps.  
+In addition, the validation process will append a label element after each invalid field, with the class 'monster-invalid'. You can use this class to customize these labels within your application. If you do so, make sure to namespace it with a container id from your template so that you don't affect other apps.
 The content and position of these labels can be customized using the validate options, as detailed [below](#other-options).
 
 ### Standard validation rules
@@ -52,7 +54,7 @@ Some of the basic validation rules can be defined directly inside the html, usin
 
 ##### Through the _monster.ui.validate_ method
 
-The _monster.ui.validate_ method has an option parameter that can contain a _rules_. This object should be a map with input names as keys and maps of rules as value.  
+The _monster.ui.validate_ method has an option parameter that can contain a _rules_. This object should be a map with input names as keys and maps of rules as value.
 Let's say we want an required input that contains digits only, and an optional input that contains an URL. Here's what it would look like:
 ```
 <form id="demoapp_form">

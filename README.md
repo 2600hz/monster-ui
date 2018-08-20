@@ -75,6 +75,12 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 ./serve.sh no-update
 ```
 
+## Documentation
+
+You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/ui/).
+
+The documentation is stored on this repository (`/docs`) which allows you to easily improve it or add new pages when making PRs against the core of Monster UI.
+
 ## Contributing
 
 1. [Fork it!](https://github.com/2600hz/monster-ui/fork)

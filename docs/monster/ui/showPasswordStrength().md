@@ -1,3 +1,5 @@
+title: showPasswordStrength()
+
 # [monster][monster].[ui][ui].showPasswordStrength()
 
 * [Syntax](#syntax)

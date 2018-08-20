@@ -1,3 +1,5 @@
+title: add()
+
 # [monster][monster].[util][util].[dataFlags][dataFlags].add()
 
 * [Syntax](#syntax)
@@ -34,7 +36,7 @@ var user = {
 	last_name: 'Maitre'
 }
 
-monster.util.dataFlags.add({'source': 'smartpbx', 'version': '0.1'}, user); 
+monster.util.dataFlags.add({'source': 'smartpbx', 'version': '0.1'}, user);
 
 /* would return
 {

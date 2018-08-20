@@ -1,3 +1,5 @@
+title: insertTemplate()
+
 # [monster][monster].[ui][ui].insertTemplate()
 
 * [Syntax](#syntax)

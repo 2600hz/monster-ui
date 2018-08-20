@@ -1,3 +1,5 @@
+title: dialog()
+
 # [monster][monster].[ui][ui].dialog()
 The `monster.ui.dialog()` method generates a dialog window with the look and feel of Monster UI.
 

@@ -1,3 +1,5 @@
+title: pub()
+
 # [monster][monster].pub()
 
 * [Syntax](#syntax)

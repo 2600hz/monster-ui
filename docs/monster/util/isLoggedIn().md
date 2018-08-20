@@ -1,3 +1,5 @@
+title: isLoggedIn()
+
 # [monster][monster].[util][util].isLoggedIn()
 
 * [Syntax](#syntax)
@@ -18,8 +20,8 @@ This method checks if a user is currently logged in and returns a boolean as a r
 
 ### Examples
 ```javascript
-if(monster.util.isLoggedIn()) { 
-	// do something if user is logged in 
+if(monster.util.isLoggedIn()) {
+	// do something if user is logged in
 };
 ```
 

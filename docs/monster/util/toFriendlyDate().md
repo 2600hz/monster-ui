@@ -1,3 +1,5 @@
+title: toFriendlyDate()
+
 # [monster][monster].[util][util].toFriendlyDate()
 
 * [Syntax](#syntax)

@@ -1,3 +1,5 @@
+title: canAddExternalNumbers()
+
 # [monster][monster].[util][util].canAddExternalNumbers()
 
 * [Syntax](#syntax)
@@ -24,7 +26,7 @@ We only let accounts with the key `wnm_allow_additions` set to `true` add "exter
 
 ### Examples
 ```javascript
-if(monster.util.canAddExternalNumbers() { 
+if(monster.util.canAddExternalNumbers() {
 	// do something if user are allowed to add external numbers
 };
 ```

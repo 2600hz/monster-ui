@@ -1,3 +1,5 @@
+title: series()
+
 # [monster][monster].series()
 
 * [Syntax](#syntax)

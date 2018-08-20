@@ -1,3 +1,5 @@
+title: renderPDF()
+
 # [monster][monster].[ui][ui].renderPDF()
 
 * [Syntax](#syntax)

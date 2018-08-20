@@ -1,3 +1,5 @@
+title: get()
+
 # [monster][monster].[util][util].[dataFlags][dataFlags].get()
 
 * [Syntax](#syntax)

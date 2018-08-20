@@ -1,3 +1,5 @@
+title: getFormData()
+
 # [monster][monster].[ui][ui].getFormData()
 
 * [Syntax](#syntax)

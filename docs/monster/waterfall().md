@@ -1,3 +1,5 @@
+title: waterfall()
+
 # [monster][monster].waterfall()
 
 * [Syntax](#syntax)

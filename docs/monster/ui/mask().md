@@ -1,3 +1,5 @@
+title: mask()
+
 # [monster][monster].[ui][ui].mask()
 
 * [Syntax](#syntax)

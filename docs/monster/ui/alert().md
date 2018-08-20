@@ -1,3 +1,5 @@
+title: alert()
+
 # [monster][monster].[ui][ui].alert()
 The `monster.ui.alert()` method generates a customizable dialog window with three distinctive styles.
 
