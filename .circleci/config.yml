@@ -1,17 +1,13 @@
 version: 2
 jobs:
   build:
-    shell: /bin/bash --login
-    environment:
-      TZ: "/usr/share/zoneinfo/UTC"
     docker:
-    - image: circleci/python:3.6.5-jessie-node
-
+      - image: circleci/python:3.6.5-jessie-node
     steps:
-    - checkout
-    - run: sudo pip install PyYAML
-    - run: ./scripts/validate_mkdocs.py
-    - run: ./scripts/reconcile_docs_to_index.bash
-    - run: npm install gulp-cli
-    - run: npm install gulp -D
-    - run: ./node_modules/gulp/bin/gulp.js build-prod
+      - checkout
+      - run: sudo pip install PyYAML
+      - run: ./scripts/validate_mkdocs.py
+      - run: ./scripts/reconcile_docs_to_index.bash
+      - run: npm install gulp-cli
+      - run: npm install gulp -D
+      - run: ./node_modules/gulp/bin/gulp.js build-prod
