@@ -13,16 +13,24 @@ jobs:
       - image: circleci/node:carbon
     steps:
       - checkout
-      - run: sudo npm install --global npm@latest
-      - run: sudo npm install --global gulp-cli
+      - run:
+          name: Update npm to latest
+          command: sudo npm install --global npm@latest
+      - run:
+          name: Install gulp-cli globally
+          command: sudo npm install --global gulp-cli
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run:
+          name: Install dependencies from package.json
+          command: npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - run: gulp build-prod
+      - run:
+          name: Run a production build
+          command: gulp build-prod
 
 workflows:
   version: 2
