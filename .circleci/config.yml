@@ -2,12 +2,22 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.5-jessie-node
+      - image: circleci/python:3.6.5
     steps:
       - checkout
       - run: sudo pip install PyYAML
       - run: ./scripts/validate_mkdocs.py
       - run: ./scripts/reconcile_docs_to_index.bash
+  mkdocs:
+    docker:
+      - image: circleci/node:4.5.0
+    steps:
+      - checkout
       - run: npm install gulp-cli
       - run: npm install gulp -D
       - run: ./node_modules/gulp/bin/gulp.js build-prod
+workflows:
+  version: 2
+  build_and_mkdocs:
+    - mkdocs
+    - build
