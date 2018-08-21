@@ -10,7 +10,7 @@ jobs:
       - run: ./scripts/reconcile_docs_to_index.bash
   build:
     docker:
-      - image: circleci/node:4.5.0
+      - image: circleci/node:carbon
     steps:
       - checkout
       - run: npm install gulp-cli
