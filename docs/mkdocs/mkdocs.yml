@@ -48,7 +48,6 @@ pages:
     - 'docs/monster/ui/validate().md'
     - 'docs/monster/ui/wysiwyg().md'
   - 'monster.util':
-    - 'docs/monster/util.md'
     - 'docs/monster/util/canAddExternalNumbers().md'
     - 'docs/monster/util/canImpersonate().md'
     - 'docs/monster/util/dateToGregorian().md'

@@ -8,12 +8,13 @@ monster.util.formatPrice(args);
 ```
 
 ### Parameters
+`args` is a mandatory `Object` parameter with the following properties:
+
 Key | Description | Type | Default | Required
 --- | --- | --- | --- | ---
-`args` | | `Object` | | `true`
-`args.price` | Price to format (number or string representation of a number). | `Number`, `String` | | `true`
-`args.decimals` | Number of digits to appear after the decimal point (if not specified, integers will have no digits and floating numbers with at least one significant number after the decimal point will have two digits). | `Number` | `2` | `false`
-`args.withCurrency` | Hide/show currency symbol. | `Boolean` | `true` | `false`
+`price` | Price to format (number or string representation of a number). | `Number`, `String` | | `true`
+`decimals` | Number of digits to appear after the decimal point (if not specified, integers will have no digits and floating numbers with at least one significant number after the decimal point will have two digits). | `Number` | `2` | `false`
+`withCurrency` | Hide/show currency symbol. | `Boolean` | `true` | `false`
 
 ### Return value
 A `String` representation of `price` showing the specified number of digits as well as the currency symbol.

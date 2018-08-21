@@ -8,13 +8,14 @@ monster.request(options);
 ```
 
 ### Parameters
+`options` is a mandatory `Object` parameter with the following properties:
+
 Key | Description | Type | Default | Require
 :-: | --- | :-: | :-: | :-:
-`options` | | `Object` | | `true`
-`options.resource` | Unique identifier corresponding to a request. | `Object` | | `true`
-`options.data` | Parameters to pass to the request. | `Object` | | `false`
-`options.success` | Callback on success. | `Function` | | `false`
-`options.error` | Callback on error. | `Function` | | `false`
+`resource` | Unique identifier corresponding to a request. | `Object` | | `true`
+`data` | Parameters to pass to the request. | `Object` | | `false`
+`success` | Callback on success. | `Function` | | `false`
+`error` | Callback on error. | `Function` | | `false`
 
 ## Description
 The `monster.request()` method allows you to make requests that are not defined in the [Kazoo JavaScript SDK][kazooSdk].
