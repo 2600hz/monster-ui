@@ -13,6 +13,7 @@ jobs:
       - image: circleci/node:carbon
     steps:
       - checkout
+      - run: sudo npm install --global npm@latest
       - run: sudo npm install --global gulp-cli
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
