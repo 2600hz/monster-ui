@@ -28,6 +28,7 @@ pages:
     - 'docs/monster/template().md'
     - 'docs/monster/waterfall().md'
   - 'monster.ui':
+    - 'docs/monster/ui/alert().md'
     - 'docs/monster-ui/codecSelector().md'
     - 'docs/monster-ui/confirm().md'
     - 'docs/monster-ui/datepicker().md'
