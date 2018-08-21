@@ -15,13 +15,14 @@ jobs:
       - checkout
       - run: sudo npm install --global gulp-cli
       - restore_cache:
-        key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
       - run: npm install
       - save_cache:
-        key: dependency-cache-{{ checksum "package.json" }}
-        paths:
-          - ./node_modules
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
       - run: gulp build-prod
+
 workflows:
   version: 2
   mkdocs_and_build:
