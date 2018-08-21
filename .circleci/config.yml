@@ -1,17 +1,39 @@
 version: 2
 jobs:
-  build:
-    shell: /bin/bash --login
-    environment:
-      TZ: "/usr/share/zoneinfo/UTC"
+  mkdocs:
     docker:
-    - image: circleci/python:3.6.5-jessie-node
-
+      - image: circleci/python:3.7.0
     steps:
-    - checkout
-    - run: sudo pip install PyYAML
-    - run: ./scripts/validate_mkdocs.py
-    - run: ./scripts/reconcile_docs_to_index.bash
-    - run: npm install gulp-cli
-    - run: npm install gulp -D
-    - run: ./node_modules/gulp/bin/gulp.js build-prod
+      - checkout
+      - run: sudo pip install PyYAML
+      - run: ./scripts/validate_mkdocs.py
+      - run: ./scripts/reconcile_docs_to_index.bash
+  build:
+    docker:
+      - image: circleci/node:carbon
+    steps:
+      - checkout
+      - run:
+          name: Update npm to latest
+          command: sudo npm install --global npm@latest
+      - run:
+          name: Install gulp-cli globally
+          command: sudo npm install --global gulp-cli
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies from package.json
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run a production build
+          command: gulp build-prod
+workflows:
+  version: 2
+  mkdocs_and_build:
+    jobs:
+      - mkdocs
+      - build
