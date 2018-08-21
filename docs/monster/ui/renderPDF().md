@@ -1,42 +1,39 @@
 title: renderPDF()
 
-# [monster][monster].[ui][ui].renderPDF()
+# monster.ui.renderPDF()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
-
-
-### Syntax
+## Syntax
 ```javascript
-monster.ui.renderPDF(file, target[, args]);
-
-// Example
-template.find('#upload').fileUpload({
-	inputOnly: true,
-	wrapperClass: 'file-upload input-append',
-	btnClass: 'monster-button',
-	success: function(results) {
-		monster.ui.renderPDF(results[0].file, template.find('.pdf-container'));
-	}
-});
+monster.ui.renderPDF(file, target[, options]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`file` | File received by a fileUpload plugin. | `File` | | `true`
+`target` | Target in which the iframe containing the PDF will be added. | `jQuery` | | `true`
+`options` | | `Object`([#/options](#options)) | | `false`
 
-###### `file`: [File][file] (mandatory)
+#### options
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`width` | Width of the iframe. | `String` | `100%` | `false`
+`height` | Height of the iframe. | `String` | `700px` | `false`
 
-File received by a fileUpload plugin.
-
-###### `target`: [jQuery object][jquery] (mandatory)
-
-Target in which the iframe containing the PDF will be added
-
-### Description
+## Description
 This helper will take a file and show it in a container, in a PDF viewer
 
-[monster]: ../../monster.md
-[ui]: ../ui.md
-
-[file]: https://developer.mozilla.org/en-US/docs/Web/API/File
-[jquery]: http://api.jquery.com/Types/#jQuery
+## Example
+### Preview an uploaded file
+```javascript
+template
+  .find('#upload')
+    .fileUpload({
+      inputOnly: true,
+      wrapperClass: 'file-upload input-append',
+      btnClass: 'monster-button',
+      success: function(results) {
+        monster.ui.renderPDF(results[0].file, template.find('.pdf-container'));
+      }
+    });
+```

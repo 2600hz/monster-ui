@@ -1,31 +1,19 @@
 title: mask()
 
-# [monster][monster].[ui][ui].mask()
+# monster.ui.mask()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
-
-### Syntax
+## Syntax
 ```javascript
 monster.ui.mask(target, type);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`target` | Field on which the method will be applied. | `jQuery` | | `true`
+`type` | Type of mask to apply. | `String('phoneNumber' | 'macAddress')` | | `true`
 
-###### `target`: [jQuery object][jquery] (mandatory)
+## Description
+This helper is a wrapper over the [jQuery Mark plugin][mark-plugin].
 
-Field on which the method will be applied.
-
-###### `type`: [String][string_literal] (mandatory)
-
-Type of mask to choose from. Available options: 'phoneNumber' (optional + followed by digits), 'macAddress' (12 hexa decimal characters), 'extension' (only digits).
-
-### Description
-This helper uses the mask jQuery plug-in that forces the users to input only the selected characters.
-Documentation available: https://igorescobar.github.io/jQuery-Mask-Plugin/
-
-[monster]: ../../monster.md
-[ui]: ../ui.md
-[jquery]: http://api.jquery.com/Types/#jQuery
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+[mark-plugin]: https://igorescobar.github.io/jQuery-Mask-Plugin/

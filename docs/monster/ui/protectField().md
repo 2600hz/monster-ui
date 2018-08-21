@@ -1,32 +1,19 @@
 title: protectField()
 
-# [monster][monster].[ui][ui].protectField()
-
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
+# monster.ui.protectField()
 
 ![](http://i.imgur.com/0c0QP2X.png)
 
-### Syntax
+## Syntax
 ```javascript
 monster.ui.protectField(field[, template]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`field` | Input on which the method will be applied. The type of the input needs to be `password`. | `jQuery` | | `true`
+`template` | Let you specify a container where the element passed as the `field` parameter is. If this parameter is omitted, the default value of `$(html)` will be used. | `jQuery` | `$('html')` | `false`
 
-###### `field`: [jQuery object][jquery] (mandatory)
-
-Input on which the method will be applied. The type of the input needs to be `password`.
-
-###### `template`: [jQuery object][jquery] (optional, default: `$(html)`)
-
-Let you specify a container where the element passed as the `field` parameter is. If this parameter is omitted, the default value of `$(html)` will be used.
-
-### Description
+## Description
 This method allow the user to see the value of a password input when this input is on focus.
-
-[monster]: ../../monster.md
-[ui]: ../ui.md
-
-[jquery]: http://api.jquery.com/Types/#jQuery

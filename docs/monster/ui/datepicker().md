@@ -1,32 +1,22 @@
 title: datepicker()
 
-# [monster][monster].[ui][ui].datepicker()
+# monster.ui.datepicker()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
-
-
-### Syntax
+## Syntax
 ```javascript
 monster.ui.datepicker(target[, options]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`target` | Input on which the method will be applied. | `jQuery` | | `true`
+`options` | Let you override default options that can be found on the [jQuery UI Datepicker Widget][datepicker] page.  | `Object` | | `false`
 
-###### `target`: [jQuery object][jquery] (mandatory)
+### Return value
+A `jQuery` object representing the datepicker widget.
 
-Input on which the method will be applied.
-
-###### `options`: [Object][object_literal] (optional)
-
-Let you specify a map of options for the Date Picker. You can consult the full list here: http://api.jqueryui.com/datepicker/
-
-### Description
+## Description
 This helper will transform a field into a jQuery Date Picker. It will automatically use the date format that the user has chosen in his Monster-UI Settings.
 
-[monster]: ../../monster.md
-[ui]: ../ui.md
-
-[jquery]: http://api.jquery.com/Types/#jQuery
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
+[datepicker]: http://api.jqueryui.com/datepicker/

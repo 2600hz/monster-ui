@@ -21,8 +21,8 @@ Key | Description | Type | Default | Required
 `args.ignoreCache` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
 `args.ignoreSpaces` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
 
-### Return Value
-A string representation of the template.
+### Return value
+A `String` representation of the template.
 
 ## Description
 The `monster.template()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.

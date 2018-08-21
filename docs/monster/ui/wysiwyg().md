@@ -1,18 +1,11 @@
 title: wysiwyg()
 
-# [monster][monster].[ui][ui].wysiwyg()
+# monster.ui.wysiwyg()
 The `monster.ui.wysiwyg()` function generates a WYSIWYG from a set of customizable options and insert it inside a jQuery object.
-
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Return](#return)
-* [Description](#description)
-* [Customization](#customization)
-* [Examples](#examples)
 
 ![WYSIWYG](http://i.imgur.com/xiQh04l.png)
 
-### Syntax
+## Syntax
 ```javascript
 monster.ui.wysiwyg(target[, options]);
 ```
@@ -26,6 +19,7 @@ A jQuery object inside which the WYSIWYG will be inserted using the [prepend()][
 ###### `options`: [Object][object_literal] | [Boolean][boolean_literal] (optional)
 
 If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If it is a JavaScript object, it can be used to add new options or override existing options available by default listed below:
+
 * `fontSize`
     - `small`
     - `normal`
@@ -61,9 +55,9 @@ If this parameter is set to `false`, no toolbar will be added to the WYSIWYG. If
 * `macro` *disabled by default*
 
 ### Return
-This method returns the WYSIWYG editor container as a [jQuery object][jquery].
+A jQuery object representing the WYSIWYG widget.
 
-### Description
+## Description
 The `monster.ui.wysiwyg()` method adds a configurable WYSIWYG inside a container specified by the `target` parameter. The options in the toolbar can be removed and new ones can be added easily.
 
 For the default CSS styles to apply, the wysiwyg container specified as the `target` parameter needs to have the CSS class `wysiwyg-container` as follow:
@@ -79,7 +73,7 @@ var target = $(document.getElementsByClassName('wysiwyg-container'));
 monster.ui.wysiwyg(target);
 ```
 
-### Customization
+## Customization
 Here is the structure of the different types of options, how they will be rendered and the description of each field:
 
 ![Dropdown button](http://i.imgur.com/rRfr9VI.png)
@@ -178,43 +172,54 @@ When defining an option containing the `args` key, you can specify parameters be
 ##### inputType
 The `inputType` key is specifically used in grouped buttons that need an input to render an HTML tag (`<a>` and `<img>`). The two values handled are `text` and `file`, and they will set the input type in the DOM. If `text` is used, clicking on the button will prompt a dropdown with an input, if `file` is used, the browser will prompt the user to upload an image from their computer.
 
-### Examples
-* Remove some elements from the toolbar
+## Examples
+### Remove some elements from the toolbar
 ```javascript
-var target = $(document.getElementsByClassName('wysiwyg-container')),
-    overrideOptions = {
-        fontSize: {
-            options: {
-                small: false
-            }
-        },
-        fontEffect: {
-            options: {
-                strikethrough: false,
-                underline: false
-            }
-        },
-        fontColor: false,
-        list: false,
-        horizontalRule: false
-    };
+var target = $(document.getElementsByClassName('wysiwyg-container'));
+var overrideOptions = {
+  fontSize: {
+    options: {
+      small: false
+    }
+  },
+  fontEffect: {
+    options: {
+      strikethrough: false,
+        underline: false
+    }
+  },
+  fontColor: false,
+  list: false,
+  horizontalRule: false
+};
 
 monster.ui.wysiwyg(target, overrideOptions);
 ```
 
-* Add macro
+### Add macro
 ```javascript
-var target = $(document.getElementsByClassName('wysiwyg-container')),
-    options = {
-        macro: {
-            options: [
-                { weight: 1, text: "Title", args: "title" },
-                { weight: 2, text: "Last name", args: "last_name" },
-                { weight: 3, text: "Conference's date", args: "conference_date" },
-                { weight: 4, text: "Conference's time", args: "conference_start_time" }
-            ]
-        }
-    };
+var target = $(document.getElementsByClassName('wysiwyg-container'));
+var options = {
+  macro: {
+    options: [{
+      weight: 1,
+      text: "Title",
+      args: "title"
+    }, {
+      weight: 2,
+      text: "Last name",
+      args: "last_name"
+    }, {
+      weight: 3,
+      text: "Conference's date",
+      args: "conference_date"
+    }, {
+      weight: 4,
+      text: "Conference's time",
+      args: "conference_start_time"
+    }]
+  }
+};
 
 monster.ui.wysiwyg(target, options);
 ```
@@ -224,53 +229,52 @@ By default, macros will be bold and inserted between a couple of pair of curly b
 
 If you want to change the surrounding elements of the macro, you need to use the `ante` and `post` keys and specify it as their value like shown below:
 ```javascript
-var target = $(document.getElementsByClassName('wysiwyg-container')),
-    options = {
-        macro: {
-            options: [ ... ],
-            ante: "[",
-            post: "]"
-        }
-    };
+var target = $(document.getElementsByClassName('wysiwyg-container'));
+var options = {
+  macro: {
+    options: [ ... ],
+    ante: "[",
+    post: "]"
+  }
+};
 
 monster.ui.wysiwyg(target, options);
 ```
 Now the macro will only be surrounded by a single pair of square brackets.
 
-* Add new option to remove all formating from the current selection
+### Add new option to remove all formating from the current selection
 ```javascript
-var target = $(document.getElementsByClassName('wysiwyg-container')),
-    newOption = {
-        removeFormat: {
-            weight: 25,
-            title: 'Remove format',
-            icon: 'icon-eraser',
-            command: 'removeFormat'
-        }
-    };
+var target = $(document.getElementsByClassName('wysiwyg-container'));
+var newOption = {
+  removeFormat: {
+    weight: 25,
+    title: 'Remove format',
+    icon: 'icon-eraser',
+    command: 'removeFormat'
+  }
+};
 
 monster.ui.wysiwyg(target, newOptions);
 ```
 
-* Change color model to RGB
+### Change color model to RGB
 ```javascript
-var target = $(document.getElementByClassName('wysiwyg-container')),
-    overrideColorOption = {
-        fontColor: {
-            options: ['255,255,255', '0,0,0', '238,236,225', '...'],
-            ante: 'rgb(',
-            post: ')'
-        }
-    }
+var target = $(document.getElementByClassName('wysiwyg-container'));
+var overrideColorOption = {
+  fontColor: {
+    options: [
+      '255,255,255',
+      '0,0,0',
+      '238,236,225',
+      '...'
+    ],
+    ante: 'rgb(',
+    post: ')'
+  }
+}
 ```
 By default, the colors are defined using the hexadecimal color model and the `ante` key has the value of #.
 
-[monster]: ../../monster.md
-[ui]: ../ui.md
-
-[jquery]: http://api.jquery.com/Types/#jQuery
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
 [prepend]: http://api.jquery.com/prepend/
 [font_awesome]: http://fortawesome.github.io/Font-Awesome/3.2.1/icons/
 [exec_command]: https://developer.mozilla.org/en-US/docs/Web/API/document.execCommand
-[boolean_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Boolean_literals
