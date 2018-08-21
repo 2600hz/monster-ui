@@ -1,103 +1,98 @@
 title: request()
 
-# [monster][monster].request()
+# monster.request()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.request(options);
 ```
 
 ### Parameters
+`options` is a mandatory `Object` parameter with the following properties:
 
-###### `options`: [Object][object_literal] (mandatory)
+Key | Description | Type | Default | Require
+:-: | --- | :-: | :-: | :-:
+`resource` | Unique identifier corresponding to a request. | `Object` | | `true`
+`data` | Parameters to pass to the request. | `Object` | | `false`
+`success` | Callback on success. | `Function` | | `false`
+`error` | Callback on error. | `Function` | | `false`
 
-List of properties:
-
-* `resource`: [String][string_literal] (mandatory) - unique identifier corresponding to a request
-* `data`: [Object][object_literal] (optional) - parameters to pass to the request
-* `success`: [Function][function] (optional) - callback on success
-* `error`: [Function][function] (optional) - callback on error
-
-### Description
+## Description
 The `monster.request()` method allows you to make requests that are not defined in the [Kazoo JavaScript SDK][kazooSdk].
 
 To specify the options of the request, add an entry in the `requests` object at the root level of the application. The key needs to be a unique identifier that will be used to call the API. By default, the `apiRoot` is `monster.config.api.default`.
 
-### Examples
-* Delete a device on the provisioner
+## Examples
+### Delete a device on the provisioner
 ```javascript
-var app = {
-    // Defines API requests not included in the SDK
-    requests: {
-        'provisioner.devices.delete': {
-            apiRoot: monster.config.api.provisioner,
-            url: 'devices/{accountId}/{macAddress}',
-            verb: 'DELETE'
-        }
-    },
+var monster = require('monster');
 
-    requestDeleteDevices: function(args) {
-        monster.request({
-            resource: 'provisioner.devices.delete',
-            data: {
-                accountId: args.data.accountId,
-                macAddress: args.data.macAddress
-            },
-            success: function(data, status) {
-                args.hasOwnProperty('success') && args.success();
-            },
-            error: function(data, status) {
-                args.hasOwnProperty('error') && args.error();
-            }
-        });
+var app = {
+  // Define API requests not included in the SDK
+  requests: {
+    'provisioner.devices.delete': {
+      apiRoot: monster.config.api.provisioner,
+      url: 'devices/{accountId}/{macAddress}',
+      verb: 'DELETE'
     }
+  }
 };
+
+function requestDeleteDevice(args) {
+  monster.request({
+    resource: 'provisioner.devices.delete',
+    data: {
+      accountId: args.accountId,
+      macAddress: args.maccAddress
+    },
+    success: function() {
+      args.hasOwnProperty('success') && args.success();
+    },
+    error: function() {
+      args.hasOwnProperty('error') && args.error();
+    }
+  });
+}
+
+// Do something with `requestDeleteDevice`
 ```
-* Use Google Maps Geocoding API to get information about a ZIP code:
+### Use Google Maps Geocoding API to get information about a ZIP code:
 ```javascript
 var app = {
-    //Defines API requests not included in the SDK
-    requests: {
-        'google.geocode.zipCode': {
-            apiRoot: 'https://maps.googleapis.com/',
-            url: 'maps/api/geocode/json?components=country:{country}|postal_code:{zipCode}',
-            verb: 'GET',
-            generateError: false,
-            removeHeaders: [
-                'X-Kazoo-Cluster-ID',
-                'X-Auth-Token',
-                'Content-Type'
-            ]
-        }
-    },
-
-    requestGetAddressFromZipCode: function(args) {
-        monster.request({
-            resource: 'google.geocode.zipCode',
-            data: {
-                country: args.data.country,
-                zipCode: args.data.zipCode
-            },
-            success: function(data, status) {
-                args.hasOwnProperty('success') && args.success(data.results);
-            },
-            error: function(data, status) {
-                args.hasOwnProperty('error') && args.error();
-            }
-        });
+  //Defines API requests not included in the SDK
+  requests: {
+    'google.geocode.zipCode': {
+      apiRoot: 'https://maps.googleapis.com/',
+      url: 'maps/api/geocode/json?components=country:{country}|postal_code:{zipCode}',
+      verb: 'GET',
+      generateError: false,
+      removeHeaders: [
+        'X-Kazoo-Cluster-ID',
+        'X-Auth-Token',
+        'Content-Type'
+      ]
     }
+  }
 };
+
+function requestGetAddressFromZipCode(args) {
+  monster.request({
+    resource: 'google.geocode.zipCode',
+    data: {
+      country: args.country,
+      zipCode: args.zipCode
+    },
+    success: function(data, status) {
+      args.hasOwnProperty('success') && args.success(data.results);
+    },
+    error: function(data, status) {
+      args.hasOwnProperty('error') && args.error();
+    }
+  });
+}
+
+// Do something with `requestGetAddressFromZipCode`
 ```
 In this example, we had to remove a set of headers using the `removeHeaders` key so the server would accept the request and also had to disable the automatic Monster Error Popup with `generateError`.
 
-[monster]: ../monster.md
 [kazooSdk]: ../kazooSdk.md
-
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
-[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions
