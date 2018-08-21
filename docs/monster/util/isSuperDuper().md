@@ -1,30 +1,24 @@
 title: isSuperDuper()
 
-# [monster][monster].[util][util].isSuperDuper()
+# monster.util.isSuperDuper()
 
-* [Syntax](#syntax)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.isSuperDuper([account]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`account` | Account with the same format as an account returned by a GET on the /account/{accountId} API. | `Object` | | `false`
 
-###### `account`: [Object][object_literal] (optional)
+### Return value
+A `Boolean` indicating whether or not the logged in account is a super duper account.
 
-Account with the same format as an account returned by a GET on the /account/{accountId} API.
-
-### Return
-This method returns a [Boolean][boolean].
-
-### Description
+## Description
 This method checks if a user is currently logged in on a Superduper account. By default it will check the current account. If you specify an account, the helper will return whether or not the account specified is a superduper account or not.
 
-### Examples
+## Example
 ```javascript
 if(monster.util.isSuperDuper()) {
 	// do something if user is on a superduper account

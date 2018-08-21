@@ -1,38 +1,26 @@
 title: isAdmin()
 
-# [monster][monster].[util][util].isAdmin()
+# monster.util.isAdmin()
 
-* [Syntax](#syntax)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.isAdmin([user]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`user` | User object with the same format as an account returned by a GET on the /users/{userid} API. | `Object` | | `false`
 
-###### `user`: [Object][object_literal] (optional)
+### Return value
+A `Boolean` indication whether or not the current or specified user is an admin.
 
-User object with the same format as an account returned by a GET on the /users/{userid} API.
-
-### Return
-This method returns a [Boolean][boolean].
-
-### Description
+## Description
 This method checks if a user is currently logged in as an admin user.
 
-### Examples
+## Example
 ```javascript
 if(monster.util.isAdmin()) {
 	// do something if user is an admin
 };
 ```
-
-[monster]: ../../monster.md
-[util]: ../util.md
-
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#Boolean_literals

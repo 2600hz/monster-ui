@@ -1,61 +1,47 @@
 title: add()
 
-# [monster][monster].[util][util].[dataFlags][dataFlags].add()
+# monster.util.dataFlags.add()
 
-* [Syntax](#syntax)
-* [Parameter](#parameter)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.dataFlags.add(flags, object);
 ```
 
-### Parameter
+### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`flags` | Name of the flag we want to get the value of. | `Object` | | `true`
+`object` | Object to merge the flags into. | `Object` | | `true`
 
-###### `flags`: [Object][object_literal] (mandatory)
+### Return value
+The updated `object` (to allow for chaining, as the object itself is already updated by reference)
 
-Name of the flag we want to get the value of.
-
-###### `object`: [Object][object_literal] (mandatory)
-
-Object to merge the flags into.
-
-### Return
-The updated object (to allow for chaining, as the object itself is already updated by reference)
-
-### Description
+## Description
 Allows developer to add flags in object before saving them in database.
 
-### Examples
+## Examples
+### Add flags to a user object
 ```javascript
 var user = {
-	first_name: 'JR',
-	last_name: 'Maitre'
+	first_name: 'John',
+	last_name: 'Doe'
 }
 
-monster.util.dataFlags.add({'source': 'smartpbx', 'version': '0.1'}, user);
+monster.util.dataFlags.add({
+  source: 'smartpbx',
+  version: '0.1'
+}, user);
 
-/* would return
+/* returns
 {
-	first_name: 'JR',
-	last_name: 'Maitre',
-	markers: {
-		monster: {
-			source: 'smartpbx',
-			version: '0.1'
-		}
-	}
-};
+  first_name: 'John',
+  last_name: 'Doe',
+  markers: {
+    monster: {
+      source: 'smartpbx',
+      version: '0.1'
+    }
+  }
+}
 */
 ```
-
-
-[monster]: ../../../monster.md
-[util]: ../../util.md
-[dataFlags]: ../dataFlags.md
-
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

@@ -1,42 +1,32 @@
 title: randomString()
 
-# [monster][monster].[util][util].randomString()
+# monster.util.randomString()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.randomString(length, chars);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`length` | Number of character to include in the output string. | `Number` | | `true`
+`chars` | Characters to choose from when creating the output string. | `String` | `23456789abcdefghjkmnpqrstuvwxyz` | `false`
 
-###### `length`: [Number][integer] (mandatory)
+### Return value
+A `String` representing a random suit of `length` characters.
 
-Number of character to include in the output string.
-
-###### `chars`: [String][string_literal] (optional, default: `23456789abcdefghjkmnpqrstuvwxyz`)
-
-Characters to choose from when creating the output string.
-
-### Return
-This method returns a [String][string_literal].
-
-### Description
+## Description
 This method generates a string of `length` random characters chosen from either the `chars` parameter or `23456789abcdefghjkmnpqrstuvwxyz` by default.
 
-### Examples
-* Generate a random string of 5 characters
+## Examples
+### Generate a random string of 5 characters
 ```javascript
 monster.util.randomString(5);
 // output: 'xh3re'
 ```
 
-* Generate a random string of 4 digits only
+### Generate a random string of 4 digits only
 ```javascript
 monster.util.randomString(4, '1234567890');
 // output: '6557'

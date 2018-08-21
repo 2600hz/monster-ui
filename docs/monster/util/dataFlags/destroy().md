@@ -1,61 +1,48 @@
 title: destroy()
 
-# [monster][monster].[util][util].[dataFlags][dataFlags].destroy()
+# monster.util.dataFlags.destroy()
 
-* [Syntax](#syntax)
-* [Parameter](#parameter)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.dataFlags.destroy(flagName, object);
 ```
 
-### Parameter
+### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`flagName` | Name of the flag we want to delete from the object. | `String` | | `true`
+`object` | Object where you want to delete the flag from. | `Object` | | `true`
 
-###### `flagName`: [String][string_literal] (mandatory)
+### Return value
+The updated `object` (to allow for chaining, as the object itself is already updated by reference)
 
-Name of the flag we want to delete from the object.
-
-###### `object`: [Object][object_literal] (mandatory)
-
-Object where you want to delete the flag from
-
-### Return
-The updated object (to allow for chaining, as the object itself is already updated by reference)
-
-### Description
+## Description
 The method deletes the property `flagName` from the object and return the updated object.
 
-### Examples
+## Examples
+### Remove a flag from a user object
 ```javascript
 var user = {
-	first_name: 'JR',
-	last_name: 'Maitre',
+  first_name: 'John',
+  last_name: 'Doe',
+  markers: {
+    monster: {
+      source: 'smartpbx',
+      version: '0.1'
+    }
+  }
+};
+
+monster.util.dataFlags.destroy('source', user);
+/* returns
+{
+	first_name: 'John',
+	last_name: 'Doe',
 	markers: {
 		monster: {
-			source: 'smartpbx'
-		}
-	}
-}
-
-monster.util.dataFlags.delete('source', user); //  => returns 'smartpbx';
-/*
-{
-	first_name: 'JR',
-	last_name: 'Maitre',
-	markers: {
-		monster: {}
+      version: '0.1'
+    }
 	}
 }
 */
 ```
-
-[monster]: ../../../monster.md
-[util]: ../../util.md
-[dataFlags]: ../dataFlags.md
-
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals

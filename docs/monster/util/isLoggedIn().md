@@ -1,31 +1,21 @@
 title: isLoggedIn()
 
-# [monster][monster].[util][util].isLoggedIn()
+# monster.util.isLoggedIn()
 
-* [Syntax](#syntax)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.isLoggedIn();
 ```
 
-### Return
-This method returns a [Boolean][boolean].
+### Return value
+A `Boolean` indicating whether or not the current user is logged.
 
-### Description
+## Description
 This method checks if a user is currently logged in and returns a boolean as a result.
 
-### Examples
+## Example
 ```javascript
 if(monster.util.isLoggedIn()) {
 	// do something if user is logged in
 };
 ```
-
-[monster]: ../../monster.md
-[util]: ../util.md
-
-[boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#Boolean_literals

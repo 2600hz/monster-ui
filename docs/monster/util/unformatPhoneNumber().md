@@ -1,64 +1,52 @@
 title: unformatPhoneNumber()
 
-# [monster][monster].[util][util].unformatPhoneNumber()
+# monster.util.unformatPhoneNumber()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.unformatPhoneNumber(phoneNumber[, specialRule]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`phoneNumber` | Formated US phone number to unformat. | `String`, `Number` | | `true`
+`specialRule` | If specified, the number will keep the `+`. | `String('keepPlus')` | | `false`
 
-###### `phoneNumber`: [String][string_literal] OR [Number][integer] (mandatory)
+### Return value
+A `String` representation of `phoneNumber` in one of the following format:
 
-Formated US phone number to unformat.
+* `+1NPANXXXXXX`
+* `1NPANXXXXXX`
+* `NPANXXXXXX`.
 
-###### `specialRule`: `keepPlus` [String][string_literal] (optional)
-
-Only one value: `keepPlus`. If specified, the number will keep the `+`.
-
-### Return
-This method returns a [String][string_literal] with the one of the following formats: `+1NPANXXXXXX`, `1NPANXXXXXX` or `NPANXXXXXX`.
-
-### Description
+## Description
 The `monster.util.unformatPhoneNumber()` method is used to easily unformat US phone numbers. If the phone number to unformat contains `+1`, you can choose to keep it by specifying the `specialRule` parameter.
 
-### Examples
-* Unformat phone number with `+1`
+## Examples
+### Unformat phone number with `+1`
 ```javascript
-var phoneNumber = '+1 (415) 123-4567',
-    unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber);
+var phoneNumber = '+1 (415) 123-4567';
+var unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber);
 
 console.log(unformattedPhoneNUmber);
 // output: "14151234567"
 ```
 
-* Unformat phone number without `+1`
+### Unformat phone number without `+1`
 ```javascript
-var phoneNumber = '(415) 123-4567',
-    unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber);
+var phoneNumber = '(415) 123-4567';
+var unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber);
 
 console.log(unformattedPhoneNUmber);
 // output: "4151234567"
 ```
 
-* Unformat phone number and keep `+`
+### Unformat phone number and keep `+`
 ```javascript
-var phoneNumber = '+1 (415) 123-4567',
-    unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber, 'keepPlus');
+var phoneNumber = '+1 (415) 123-4567';
+var unformattedPhoneNUmber = monster.util.unformatPhoneNumber(phoneNumber, 'keepPlus');
 
 console.log(unformattedPhoneNUmber);
 // output: "+14151234567"
 ```
-
-[monster]: ../../monster.md
-[util]: ../util.md
-
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
-[integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers

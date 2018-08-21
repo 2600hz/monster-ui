@@ -1,45 +1,36 @@
 title: getAuthToken()
 
-# [monster][monster].[util][util].getAuthToken()
+# monster.util.getAuthToken()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.getAuthToken([connectionName]);
 ```
+
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`connectionName` | If specified, will return the value of the token of a specific connection. | `String` | | `false`
 
-###### `connectionName`: [String][string_literal] (optional)
+### Return value
+A `String` representing the authentication token used by the specified connection.
 
-If specified, will return the value of the token of a specific connection (`connectionName`).
-
-### Return
-This method returns a [String][string_literal] of the token used by the specified connection.
-
-### Description
+## Description
 This method returns a token linked to a connection given in parameter, and if no connection is specified, it will use the Kazoo connection.
 
-### Examples
+## Examples
+### Before being logged in to Kazoo
 ```javascript
-
-Before being logged in to Kazoo.
-	monster.util.getAuthToken(); // returns undefined;
-
-After being logged in.
-	monster.util.getAuthToken(); // returns 'd1jhkodj2n1odj12d1.d21dkj21kod12.d21d12d1212', example of a token returned by kazoo
-
-monster.util.getAuthToken('myConnection'); // returns the token stored in your connection if you created one. This is an advanced use case and shouldn't be used at the moment.
-
+monster.util.getAuthToken();
+// output: undefined;
 ```
 
-[monster]: ../../monster.md
-[util]: ../util.md
+### After being logged in
+```javascript
+monster.util.getAuthToken();
+// output: 'd1jhkodj2n1odj12d1.d21dkj21kod12.d21d12d1212', example of a token returned by kazoo
 
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
+monster.util.getAuthToken('myConnection');
+// returns the token stored in your connection if you created one.
+// This is an advanced use case and shouldn't be used at the moment.
+```

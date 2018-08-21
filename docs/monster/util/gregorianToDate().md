@@ -1,30 +1,19 @@
 title: gregorianToDate()
 
-# [monster][monster].[util][util].gregorianToDate()
+# monster.util.gregorianToDate()
 
-* [Syntax](#syntax)
-* [Parameter](#parameter)
-* [Return](#return)
-* [Description](#description)
-
-### Syntax
+## Syntax
 ```javascript
 monster.util.gregorianToDate(timestamp);
 ```
 
-### Parameter
+### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`timestamp` | Number representing of a Gregorian timestamp. | `Number` | | `true`
 
-###### `timestamp`: [Number][integer] (mandatory)
+### Return value
+A `Date` instance.
 
-Gregorian timestamp that will be converted to a JavaScript Date instance.
-
-### Return
-This method returns a JavaScript Date instance.
-
-### Description
+## Description
 The `monster.util.gregorianToDate()` method converts a Gregorian timestamp to a JavaScript Date.
-
-[monster]: ../../monster.md
-[util]: ../util.md
-
-[integer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Integers
