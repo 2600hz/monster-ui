@@ -13,9 +13,15 @@ jobs:
       - image: circleci/node:carbon
     steps:
       - checkout
-      - run: npm install --global gulp-cli
-      - run: npm install gulp -D
-      - run: ./node_modules/gulp/bin/gulp.js build-prod
+      - run:
+        name: setup gulp
+        command: npm install --global gulp-cli
+      - run:
+        name: install repo dependencies
+        command: npm install
+      - run:
+        name: run build for prod
+        command: gulp build-prod
 workflows:
   version: 2
   mkdocs_and_build:
