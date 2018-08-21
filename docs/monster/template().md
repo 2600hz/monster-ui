@@ -1,111 +1,80 @@
 title: template()
 
-# [monster][monster].template()
+# monster.template()
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Description](#description)
-* [Examples](#examples)
+This method is used internally to load core templates and should not be used by regular apps.
 
-### Syntax
+## Syntax
 ```javascript
 monster.template(thisArg, name[, data, raw, ignoreCache, ignoreSpaces]);
 ```
 
 ### Parameters
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`thisArg` | `this` of the app, used for finding the template to load. | `Object` | | `true`
+`name` | Name of the template, without the file extension. | `String` | | `true`
+`data` | Data to pass to the template. | `Object` | `{}` | `false`
+`raw` | When set to `true`, Handlebars will not compile the template and it will be sent as is. | `Boolean` | `false` | `false`
+`ignoreCache` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
+`ignoreSpaces` | When set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template. | `Boolean` | `false` | `false`
 
-###### `thisArg`: [Object][object_literal] (mandatory)
-
-`this` of the app, used for finding the template to load
-
-###### `name`: [String][string_literal] (mandatory)
-
-name of the template, without the file extension
-
-###### `data`: [Object][object_literal] (optional, default: `{}`)
-
-data to pass to the template
-
-###### `raw`: [Boolean][boolean_literal] (optional, default: `false`)
-
-when set to `true`, Handlebars will not compile the template and it will be sent as is
-
-###### `ignoreCache`: [Boolean][boolean_literal] (optional, default: `false`)
-
-when set to `true`, request the template even if it was already loaded
-
-###### `ignoreSpaces`: [Boolean][boolean_literal] (optional, default: `false`)
-
-when set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template
-
-### Description
+## Description
 The `monster.template()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.
 
-### Examples
-* Load template with no data into the DOM
+## Examples
+### Load template with no data into the DOM
 ```javascript
-var app = {
-    render: function(parent) {
-        var self = this,
-            template = $(monster.template(self, 'app'));
+function renderApp(container) {
+  var template = $(monster.template(app, 'app'));
 
-        parent
-            .empty()
-            .append(template);
-    }
-};
+  container
+    .empty
+    .append(template);
+}
 ```
-* Load template with data into the DOM
+### Load template with data into the DOM
 ```javascript
-var app = {
-    render: function(parent) {
-        var self = this;
+function renderApp(container) {
+  var userId = app.userId;
 
-        self.getUserData(self.userId, function(userData) {
-            var dataToTemplate = {
-                    userId: self.userId,
-                    userData: userData
-                },
-                template = $(monster.template(self, 'app', dataToTemplate));
+  getUserData(userId, function(userData) {
+    var dataToTemplate = {
+      userId: userId,
+      userData: userData
+    };
+    var template = $(monster.template(app, 'app', dataToTemplate));
 
-            parent
-                .empty()
-                .append(template);
-        });
-    }
-};
+    container
+        .empty()
+        .append(template);
+  });
+}
 ```
-* Load a string template in a Toastr Notification or Monster Alert
+### Load a string template in a Toastr Notification or Monster Alert
 ```javascript
-var app = {
-    renderUserCreate: function(args) {
-        var self = this,
-            userData = args.data.user;
+function renderUserCreate(userData) {
+  requestCreateUser({
+    data: {
+      user: userData
+    },
+    success: function(data) {
+      var message = monster.template(app, '!' + app.i18n.active().toastr.success.userCreate, {
+        name: data.name
+      });
 
-        self.requestCreateUser({
-            data: {
-                user: userData
-            },
-            success: function(data) {
-                var toastrTemplate = monster.template(self, '!' + self.i18n.active().toastr.success.userCreate, { name: data.name });
+      monster.ui.toast({
+        type: 'success',
+        message: message
+      });
+    },
+    error: function(data) {
+      var message = monster.template(app, '!' + app.i18n.active().alert.error.createUser, {
+        type: data.type
+      });
 
-                 monster.ui.toast({
-                 	type: 'success',
-                 	message: toastrTemplate
-                 });
-            },
-            error: function(data) {
-                var alertTemplate = monster.template(self, '!' + self.i18n.active().alert.error.createUser, { type: data.type });
-
-                monster.ui.alert('error', alertTemplate);
-            }
-        });
+      monster.ui.alert('error', message);
     }
-};
+  });
+}
 ```
-
-[monster]: ../monster.md
-
-[object_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals
-[string_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#String_literals
-[boolean_literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Boolean_literals

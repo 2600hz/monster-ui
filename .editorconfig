@@ -25,7 +25,7 @@ trim_trailing_whitespace = true
 # Denotes whether file should end with a newline (true|false)
 insert_final_newline = true
 
-[*.yml]
+[*.{yml,md}]
 indent_style = space
 indent_size = 2
 tab_width = 2
