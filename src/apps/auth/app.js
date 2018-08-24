@@ -1105,7 +1105,10 @@ define(function(require) {
 					name: 'dialogPasswordUpdate'
 				})),
 				form = template.find('#form_password_update'),
-				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
+				popup = monster.ui.dialog(template, {
+					isPersistent: true,
+					title: self.i18n.active().passwordUpdate.title
+				});
 
 			monster.ui.validate(form);
 
