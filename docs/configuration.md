@@ -81,6 +81,8 @@ Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `loa` | Link to LOA document downloaded by users on port request submission. | `String` | | `false`
 `resporg` | Link to RespOrg document downloaded by users on port request submission. | `String` | | `false`
+`carriers` | List of losing carriers to select from on port request submission. | `Array` | | `false`
+`carriers.[]` | Name of losing carrier (should be unique). | `String` | | `false`
 
 ### `developerFlags`
 
