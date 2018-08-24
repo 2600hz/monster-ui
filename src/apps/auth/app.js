@@ -544,6 +544,9 @@ define(function(require) {
 						}
 					);
 				} else {
+					// We persist (isPersistent: true)this dialog because users
+					//  are not supposed to be able to use the platform until
+					//  they upgrade their account.
 					monster.ui.alert(
 						'error',
 						'', // Marketing content goes here
@@ -551,6 +554,7 @@ define(function(require) {
 							self.handleUpgradeClick();
 						},
 						{
+							isPersistent: true,
 							closeOnEscape: false,
 							title: self.i18n.active().trialPopup.trialExpired,
 							closeButtonText: self.i18n.active().trialPopup.upgradeButton,
