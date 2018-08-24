@@ -38,7 +38,7 @@ Key | Description | Type | Default | Required
 `whitelabel` | Contains all the flags that are whitelabel-able via the Branding app. Setting them in the config file will set the defaults if you don't use any whitelabel. If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document. | `Object`([#/whitelabel](#whitelabel)) | | `true`
 
 
-### api
+### `api`
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
@@ -47,7 +47,7 @@ Key | Description | Type | Default | Required
 `provisioner` | If you have provisioner turned on in your install and can use the one provided by 2600Hz, set it up here | `String` | | `false`
 `socket` | If you want to use WebSockets you need to turn Blackhole on in the back-end and then set it up here | `String` | | `false`
 
-### whitelabel
+### `whitelabel`
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
@@ -71,13 +71,18 @@ Key | Description | Type | Default | Required
 `nav` | | `Object` | | `false`
 `nav.help` | Link used when user click on the top-right interrogation mark | `Object` | | `false`
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
-`port` | In the Port Manager, we use a LOA Form link. By changing this attribute, you'll change the default link. If any user has a whitelabel profile set via the Branding app, he can override that value. | `Object` | | `false`
-`port.loa` | | `String` | | `false`
-`port.resporg` | | `String` | | `false`
+`port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 
-### developerFlags
+#### `port`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`loa` | Link to LOA document downloaded by users on port request submission. | `String` | | `false`
+`resporg` | Link to RespOrg document downloaded by users on port request submission. | `String` | | `false`
+
+### `developerFlags`
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
