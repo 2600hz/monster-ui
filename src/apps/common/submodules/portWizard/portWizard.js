@@ -117,9 +117,7 @@ define(function(require) {
 				initTemplate = function initTemplate(billFileData) {
 					var template = $(self.getTemplate({
 						name: 'accountVerification',
-						data: {
-							request: args.data.request
-						},
+						data: formatDataToTemplate(args.data.request),
 						submodule: 'portWizard'
 					}));
 
@@ -128,6 +126,18 @@ define(function(require) {
 					self.portWizardBindAccountVerificationEvents(template, args);
 
 					return template;
+				},
+				formatDataToTemplate = function formatDataToTemplate(request) {
+					var carriers = _.get(monster, 'config.whitelabel.port.carriers'),
+						data = {
+							request: request
+						};
+
+					if (!(_.isUndefined(carriers) || _.isEmpty(carriers))) {
+						data.carriers = carriers;
+					}
+
+					return data;
 				},
 				afterInsertTemplate = function() {
 					container
@@ -584,9 +594,9 @@ define(function(require) {
 						});
 
 						if (monster.ui.valid($form)) {
-							$.extend(true, args.data.request, {
+							_.merge(args.data.request, {
 								ui_flags: formData.ui_flags,
-								bill: $.extend(true, formData.bill, {
+								bill: _.assign(formData.bill, {
 									btn: btn
 								})
 							});

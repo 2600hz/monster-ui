@@ -15,7 +15,17 @@
 					{{i18n.portWizard.accountVerification.form.label.carrier}}
 				</label>
 				<div class="controls">
+				{{#if carriers}}
+					<select name="bill.carrier" id="carrier">
+					{{#select request.bill.carrier}}
+						{{#each carriers}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+					</select>
+				{{else}}
 					<input type="text" id="carrier" name="bill.carrier" value="{{request.bill.carrier}}">
+				{{/if}}
 				</div>
 			</div>
 			<div class="control-group">
