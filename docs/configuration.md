@@ -1,27 +1,26 @@
 title: Configure your Monster UI install
 
 # config.js
-This file lets you connect your different backend services to Monster UI and exposes other options like whitelabeling that can be set here for entire UI.
+Monster UI is highly configurable through a single file located at `src/js/config.js`. This file lets you connect your different backend services to Monster UI and exposes other settings, like whitelabeling, that can be set for the entire UI.
 
 ## Example
-This minimal, almost working example will get you up an running in no time. You just need to hook up your Kazoo server at `api.default` and you should be good to go.
+This minimal, working example is designed to get you up and running in no time if Monster UI is installed on the same server running Kazoo and the APIs are accessible at the default location (`:8000/v2/`).
+
+If that is not the case, you will need to hook up your Kazoo server with the [`api.'default'`](#api) property and you should be good to go.
 
 ```js
 define({
-	api: {
-		'default': 'https://my.kazoo.server/v2/'
-	},
-	whitelabel: {
-		companyName: '2600Hz',
-		applicationTitle: 'Monster UI',
-		callReportEmail: 'support@2600hz.com',
-		nav: {
-			help: 'http://wiki.2600hz.com'
-		},
-		port: {
-			loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
-			resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
-		}
+  whitelabel: {
+    companyName: '2600Hz',
+    applicationTitle: 'Monster UI',
+    callReportEmail: 'support@2600hz.com',
+    nav: {
+      help: 'http://wiki.2600hz.com'
+    },
+    port: {
+      loa: 'http://ui.zswitch.net/Editable.LOA.Form.pdf',
+      resporg: 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'
+    }
 });
 ```
 
@@ -42,7 +41,7 @@ Key | Description | Type | Default | Required
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
-`default` | The default API URL defines what API is used to log in to your back-end | `String` | `window.location.protocol` + `//` + `window.location.hostname` + `:8000/v2/` | `false`
+`'default'` | The default API URL defines what API is used to log in to your back-end | `String` | `window.location.protocol` + `//` + `window.location.hostname` + `:8000/v2/` | `false`
 `phonebook` | Set Project Phonebook URL if you want to use it to search phone numbers | `String` | | `false`
 `provisioner` | If you have provisioner turned on in your install and can use the one provided by 2600Hz, set it up here | `String` | | `false`
 `socket` | If you want to use WebSockets you need to turn Blackhole on in the back-end and then set it up here | `String` | | `false`
