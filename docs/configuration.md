@@ -4,7 +4,7 @@ title: Configure your Monster UI install
 Monster UI is highly configurable through a single file located at `src/js/config.js`. This file lets you connect your different backend services to Monster UI and exposes other settings, like whitelabeling, that can be set for the entire UI.
 
 ## Example
-This minimal, working example is designed to get you up and running in no time if Monster UI is installed on the same server running Kazoo and the APIs are accessible at the default location (`:8000/v2/`).
+This minimal, working example is designed to get you up and running in no time when Monster UI is installed on the same server running Kazoo and the APIs are accessible at the default location (`:8000/v2/`).
 
 If that is not the case, you will need to hook up your Kazoo server with the [`api.'default'`](#api) property and you should be good to go.
 
