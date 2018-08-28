@@ -41,13 +41,13 @@ In order for the UI to load the data from your server, we need to specify which 
 ```javascript
 define({
     api: {
-    	'default': 'http://my.kazoo.server/'
+      'default': 'http://my.kazoo.server/'
     }
   }
 });
 ```
 
-*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration)*.
+*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration/)*.
 
 ### Build
 
