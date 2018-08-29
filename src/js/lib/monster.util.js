@@ -1300,7 +1300,7 @@ define(function(require) {
 				? util.gregorianToDate(pDate)
 				: util.unixToDate(pDate);
 		var format = util.getMomentFormat(pFormat, pUser);
-		if (tz) {
+		if (!_.isNull(moment.tz.zones(tz))) {
 			return moment(date).tz(tz).format(format);
 		}
 		if (_.get(monster, 'apps.auth.currentUser.timezone', false)) {
