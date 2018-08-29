@@ -35,6 +35,8 @@ A `String` representation of a date.
 ## Description
 This method formats a Gregorian/Unix timestamp or a `Date` instance into a string representation of the corresponding date. The format of this representation can be customized by specifying the `format` parameter.
 
+By default, the timezone of the specified or logged in user will be used to format the date. If that timezone is not set, then the account timezone will be used. If not set, the browser's timezone will be used as a last resort.
+
 ## Examples
 ### Create a friendly date
 ```javascript

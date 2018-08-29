@@ -1268,7 +1268,7 @@ define(function(require) {
 	}
 
 	/**
-	 * Formats a Gregorian timestamp/JavaScript Date into a String
+	 * Formats a Gregorian/Unix timestamp or Date instances into a String
 	 * representation of the corresponding date.
 	 * @param  {Date|String} pDate   Representation of the date to format.
 	 * @param  {String} pFormat      Tokens to format the date with.
@@ -1281,6 +1281,11 @@ define(function(require) {
 	 * If pDate is undefined then return an empty string. Useful for form which
 	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
 	 * would display NaN/NaN/NaN in Firefox for example.
+	 *
+	 * By default, the timezone of the specified or logged in user will be used
+	 * to format the date. If that timezone is not set, then the account
+	 * timezone will be used. If not set, the browser’s timezone will be used as
+	 * a last resort.
 	 */
 	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, tz) {
 		if (_.isUndefined(pDate)) {
@@ -1298,7 +1303,17 @@ define(function(require) {
 		if (tz) {
 			return moment(date).tz(tz).format(format);
 		}
-		return moment(date).format(format);
+		if (_.get(monster, 'apps.auth.currentUser.timezone', false)) {
+			return moment(date)
+				.tz(monster.apps.auth.currentUser.timezone)
+				.format(format);
+		}
+		if (_.get(monster, 'apps.auth.currentAccount.timezone', false)) {
+			return moment(date)
+				.tz(monster.apps.auth.currentAccount.timezone)
+				.format(format);
+		}
+		return moment(date).tz(moment.tz.guess()).format(format);
 	}
 
 	util.formatPrice = formatPrice;
