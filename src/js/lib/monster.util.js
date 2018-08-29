@@ -1303,12 +1303,12 @@ define(function(require) {
 		if (!_.isNull(moment.tz.zones(tz))) {
 			return moment(date).tz(tz).format(format);
 		}
-		if (_.get(monster, 'apps.auth.currentUser.timezone', false)) {
+		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
 			return moment(date)
 				.tz(monster.apps.auth.currentUser.timezone)
 				.format(format);
 		}
-		if (_.get(monster, 'apps.auth.currentAccount.timezone', false)) {
+		if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
 			return moment(date)
 				.tz(monster.apps.auth.currentAccount.timezone)
 				.format(format);
