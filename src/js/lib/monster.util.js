@@ -83,29 +83,6 @@ define(function(require) {
 			return momentFormat;
 		},
 
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian, tz) {
-			// If Date is undefined, then we return an empty string.
-			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
-			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			var friendlyDate = '';
-
-			if (typeof pDate !== 'undefined') {
-				var self = this,
-					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
-					// date can be either a JS Date or a gregorian timestamp
-					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
-					momentFormat = self.getMomentFormat(format, pUser);
-
-				if (tz) {
-					friendlyDate = moment(date).tz(tz).format(momentFormat);
-				} else {
-					friendlyDate = moment(date).format(momentFormat);
-				}
-			}
-
-			return friendlyDate;
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -622,7 +599,11 @@ define(function(require) {
 			transaction.hasAddOns = false;
 
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if (transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
+			if (transaction.hasOwnProperty('metadata')
+				&& transaction.metadata.hasOwnProperty('add_ons')
+				&& transaction.metadata.hasOwnProperty('discounts')
+				&& !(transaction.metadata.add_ons.length === 0
+				&& transaction.metadata.discounts.length === 0)) {
 				var mapDiscounts = {};
 				_.each(transaction.metadata.discounts, function(discount) {
 					mapDiscounts[discount.id] = discount;
@@ -1286,8 +1267,43 @@ define(function(require) {
 		return codeData.symbol;
 	}
 
+	/**
+	 * Formats a Gregorian timestamp/JavaScript Date into a String
+	 * representation of the corresponding date.
+	 * @param  {Date|String} pDate   Representation of the date to format.
+	 * @param  {String} pFormat      Tokens to format the date with.
+	 * @param  {Object} pUser        Specific user to use for formatting.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
+	 *                                gregorian format.
+	 * @param  {String} tz           Timezone to format the date with.
+	 * @return {String}              Representation of the formatted date.
+	 *
+	 * If pDate is undefined then return an empty string. Useful for form which
+	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
+	 * would display NaN/NaN/NaN in Firefox for example.
+	 */
+	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, tz) {
+		if (_.isUndefined(pDate)) {
+			return '';
+		}
+		var isGregorian = _.isBoolean(pIsGregorian)
+			? pIsGregorian
+			: true;
+		var date = _.isDate(pDate)
+			? pDate
+			: isGregorian
+				? util.gregorianToDate(pDate)
+				: util.unixToDate(pDate);
+		var format = util.getMomentFormat(pFormat, pUser);
+		if (tz) {
+			return moment(date).tz(tz).format(format);
+		}
+		return moment(date).format(format);
+	}
+
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.toFriendlyDate = toFriendlyDate;
 
 	return util;
 });

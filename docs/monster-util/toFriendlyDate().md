@@ -4,71 +4,61 @@ title: toFriendlyDate()
 
 ## Syntax
 ```javascript
-monster.util.toFriendlyDate(timestamp[, format, user]);
+monster.util.toFriendlyDate(date, format[, user, isGregorian, timezone]);
 ```
 
-## Parameters
+### Parameters
 Key | Description | Type | Default | Required
-:-: | --- | :-: | :-: | :-:
-`timestamp` | Gregorian timestamp or JavaScript Date to transform in friendly date. | `Date`, `String` | | `true`
-`format` | Type of format for `timestamp`. | `String('shortDateTime' | 'dateTime' | 'shortDate' | 'shortTime' | 'time' | 'calendarDate' | 'date')` | `dateTime` | `false`
-`user` | The user from which to get the date and time preferences. This will be the currently logged-in user by default. | `Object` | `monster.apps.auth.currentUser` | `false`
+:-: | :-- | :-: | :-: | :-:
+`date` | A `Date` instance, Gregorian or Unix timestamp representing the date to format. | `Date`, `Number` | | `true`
+`format` | | `String`([#format](#format)) | `dateTime` | `false`
+`user` | Specific user to get the format settings from. | `Object` | `monster.apps.auth.currentUser` | `false`
+`isGregorian` | Indicates whether or not a Gregorian or Unix timestamp is expected (overridden if `date` is of type `Date`).  | `Boolean` | `true` | `false`
+`timezone` | Specific timezone identifier to use for the formatting. | `String` | `monster.apps.auth.currentUser.timezone` | `false`
 
-The following strings (not case-sensitive) can be used for pre-set formats:
+#### `format`
+Shortcuts corresponding to pre-sets of Moment.js [date](https://momentjs.com/docs/#year-month-and-day-tokens) and [time](https://momentjs.com/docs/#hour-minute-second-millisecond-and-offset-tokens) tokens:
 
-* `shortDateTime`: `MM/DD/YY - hh:mm`
-* `dateTime`: `MM/DD/year - hh:mm:ss`
+* `calendarDate`:`MMMM DD, YYYY`
+* `date`: `MM/DD/YYYY`
+* `dateTime`: `MM/DD/YYYY - hh:mm:ss`
 * `shortDate`: `MM/DD/YY`
+* `shortDateTime`: `MM/DD/YY - hh:mm`
 * `shortTime`: `hh:mm`
-* `time`: `hh:mm:ss`,
-* `calendarDate`:`month DD, year`
-* `date`: `MM/DD/year`
+* `time`: `hh:mm:ss`
 
-Set of characters that will be replaced to render the date following those rules:
-
-* `year`: full year
-* `YY`: last two digits of the year
-* `month`: name of the month
-* `MM`: month in a two digit format
-* `day`: name of the day
-* `DD`: date of the day
-* `hh`: hours
-* `mm`: minutes
-* `ss`: seconds
-* `12h`: AM/PM suffix (if not specified, hours will be displayed in a 24h format),
-* `ordinal`: the ordinal suffix of the day (`st`, `nd`, `rd` or `th`)
-
-Note: The date (`M/D/Y`, `D/M/Y`, or `Y/M/D`) and time (`12h` or `24h`) formats will be automatically set according to the user's preferences. It is not advised to set them manually.
+> Note: Date tokens order (`M/D/Y`, `D/M/Y` or `Y/M/D`) and time format(`12h` or `24h`) will be automatically set according to the user's preferences.
 
 ### Return value
 A `String` representation of a date.
 
 ## Description
-This method formats a Gregorian timestamp or a JavaScript Date into a string representation of the corresponding date. This representation can be customized by specifying the `format` parameter.
+This method formats a Gregorian/Unix timestamp or a `Date` instance into a string representation of the corresponding date. The format of this representation can be customized by specifying the `format` parameter.
 
 ## Examples
 ### Create a friendly date
 ```javascript
-var date = new Date(2015, 2, 24);
+var date = new Date(2000, 0, 1, 14, 10, 0);
 
-console.log(monster.util.toFriendlyDate(date));
-// output: "24/03/2015 - 00:00:00"
+// let's assume our currently logged in user has set their time and date display
+// settings to Day/Month/Year and 24 hour mode
+
+monster.util.toFriendlyDate(date);
+// output: "01/01/2000 - 14:10:00"
 ```
 
 ### Create a friendly date with custom formats
 ```javascript
-var jsDate = new Date(2015, 2, 24);
-var gregorianTimestamp = monster.util.dateToGregorian(jsDate);
-var timeDate = monster.util.toFriendlyDate(gregorianTimestamp, 'time - date');
-var shortDate = monster.util.toFriendlyDate(jsDate, 'shortDate');
-var verbose = monster.util.toFriendlyDate(gregorianTimestamp, 'day, DDordinal of month year');
+var date = new Date(2000, 0, 1, 14, 10, 0);
 
-console.log(timeDate);
-// output: "00:00:00 - 24/03/2015"
+monster.util.toFriendlyDate(date, 'shortDate');
+// output: "01/01/00"
 
-console.log(shortDate);
-// output: "24/03/15"
+monster.util.toFriendlyDate(date, 'time');
+// output: "14:10:00"
 
-console.log(verbose);
-// output: "Tuesday, 24th of March 2015"
+var gregorian = monster.util.dateToGregorian(date);
+
+monster.util.toFriendlyDate(gregorian);
+// output: "01/01/2000 - 14:10:00"
 ```
