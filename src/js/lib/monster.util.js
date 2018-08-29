@@ -66,20 +66,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		gregorianToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp - 62167219200) * 1000);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToGregorian: function(date) {
 			var formattedResponse;
 
@@ -94,7 +80,7 @@ define(function(require) {
 		},
 
 		getModbID: function(id, timestamp) {
-			var jsDate = monster.util.gregorianToDate(timestamp),
+			var jsDate = gregorianToDate(timestamp),
 				UTCYear = jsDate.getUTCFullYear() + '',
 				UTCMonth = jsDate.getUTCMonth() + 1,
 				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
@@ -1301,6 +1287,21 @@ define(function(require) {
 	}
 
 	/**
+	 * Converts Gregorian timestamps into Date instaces
+	 * @param  {Number} pTimestamp Gregorian timestamp
+	 * @return {Date}           Converted Date instance
+	 */
+	function gregorianToDate(pTimestamp) {
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		return new Date((_.floor(timestamp) - 62167219200) * 1000);
+	}
+
+	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
 	 * representation of the corresponding date.
 	 * @param  {Date|String} pDate   Representation of the date to format.
@@ -1330,7 +1331,7 @@ define(function(require) {
 		var date = _.isDate(pDate)
 			? pDate
 			: isGregorian
-				? util.gregorianToDate(pDate)
+				? gregorianToDate(pDate)
 				: util.unixToDate(pDate);
 		var format = getMomentFormat(pFormat, pUser);
 		if (!_.isNull(moment.tz.zone(tz))) {
@@ -1351,6 +1352,7 @@ define(function(require) {
 
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.gregorianToDate = gregorianToDate;
 	util.toFriendlyDate = toFriendlyDate;
 
 	return util;
