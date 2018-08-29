@@ -48,41 +48,6 @@ define(function(require) {
 			}
 		},
 
-		getMomentFormat: function(pFormat, pUser) {
-			var self = this,
-				format = pFormat || 'dateTime',
-				user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
-				userHourFormat = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? '12h' : '24h',
-				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-				dateFormats = {
-					'dmy': 'DD/MM/YYYY',
-					'mdy': 'MM/DD/YYYY',
-					'ymd': 'YYYY/MM/DD'
-				},
-				hourFormats = {
-					'12h': 'hh',
-					'24h': 'HH'
-				},
-				// map of moment formats
-				shortcuts = {
-					shortDateTime: dateFormats[userDateFormat].replace('YYYY', 'YY') + ' ' + hourFormats[userHourFormat] + ':mm',
-					dateTime: dateFormats[userDateFormat] + ' - ' + hourFormats[userHourFormat] + ':mm:ss',
-					shortDate: dateFormats[userDateFormat].replace('YYYY', 'YY'),
-					shortTime: '' + hourFormats[userHourFormat] + ':mm',
-					time: '' + hourFormats[userHourFormat] + ':mm:ss',
-					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
-					date: dateFormats[userDateFormat]
-				},
-				momentFormat = shortcuts[format];
-
-			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
-			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
-				momentFormat += ' A';
-			}
-
-			return momentFormat;
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -1268,6 +1233,74 @@ define(function(require) {
 	}
 
 	/**
+	 * Determine the date format from a specific or current user's settings
+	 * @private
+	 * @param  {String} pFormat Specific format for the user
+	 * @param  {Object} pUser   Specific user to get format from
+	 * @return {String}         Computed representation of the format
+	 */
+	function getMomentFormat(pFormat, pUser) {
+		var format = _.isString(pFormat)
+			? pFormat
+			: 'dateTime';
+		var user = _.isObject(pUser)
+			? pUser
+			: _.get(monster, 'apps.auth.currentUser', {});
+		var hourFormat = _.get(user, 'ui_flags.twelve_hours_mode', false)
+			? '12h'
+			: '24h';
+		var dateFormat = _.get(user, 'ui_flags.date_format', 'mdy');
+		var dateFormats = {
+			dmy: 'DD/MM/YYYY',
+			mdy: 'MM/DD/YYYY',
+			ymd: 'YYYY/MM/DD'
+		};
+		var hourFormats = {
+			'12h': 'hh',
+			'24h': 'HH'
+		};
+		var shortcuts = {
+			calendarDate: (dateFormat === 'mdy'
+				? 'MMMM DD'
+				: 'DD MMMM'
+			) + ', YYYY',
+			date: dateFormats[dateFormat],
+			dateTime: dateFormats[dateFormat]
+				.concat(
+					' - ',
+					hourFormats[hourFormat],
+					':mm:ss'
+				),
+			shortDate: dateFormats[dateFormat].replace('YYYY', 'YY'),
+			shortDateTime: dateFormats[dateFormat]
+				.replace('YYYY', 'YY')
+				.concat(
+					' ',
+					hourFormats[hourFormat],
+					':mm'
+				),
+			shortTime: '' + hourFormats[hourFormat] + ':mm',
+			time: '' + hourFormats[hourFormat] + ':mm:ss'
+		};
+		if (!_.includes(_.keys(shortcuts), format)) {
+			throw new Error('`format` must be one of '.concat(
+				_.keys(shortcuts).join(', '),
+				' or undefined'
+			));
+		}
+		if (hourFormat === '12h'
+			&& _.includes([
+				'shortDateTime',
+				'dateTime',
+				'shortTime',
+				'time'
+			], format)) {
+			return shortcuts[format] + ' A';
+		}
+		return shortcuts[format];
+	}
+
+	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
 	 * representation of the corresponding date.
 	 * @param  {Date|String} pDate   Representation of the date to format.
@@ -1299,8 +1332,8 @@ define(function(require) {
 			: isGregorian
 				? util.gregorianToDate(pDate)
 				: util.unixToDate(pDate);
-		var format = util.getMomentFormat(pFormat, pUser);
-		if (!_.isNull(moment.tz.zones(tz))) {
+		var format = getMomentFormat(pFormat, pUser);
+		if (!_.isNull(moment.tz.zone(tz))) {
 			return moment(date).tz(tz).format(format);
 		}
 		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
