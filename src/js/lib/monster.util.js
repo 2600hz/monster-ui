@@ -999,28 +999,6 @@ define(function(require) {
 			return result.length > 1 ? result : result[0];
 		},
 
-		/**
-		 * Determine if a number feature is enalbed on the current account
-		 * @param  {String} feature Number feature to check if it is enabled (e.g. e911, cnam)
-		 * @param  {Object} account Optional account object to check from
-		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
-		 */
-		isNumberFeatureEnabled: function(feature, account) {
-			var self = this,
-				accountToCheck = account || monster.apps.auth.currentAccount,
-				hasNumbersFeatures = accountToCheck.hasOwnProperty('numbers_features');
-
-			if (hasNumbersFeatures) {
-				if (accountToCheck.numbers_features[feature + '_enabled']) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		},
-
 		// Check if the object is parsable or not
 		isJSON: function(obj) {
 			var self = this;
@@ -1286,8 +1264,32 @@ define(function(require) {
 		return codeData.symbol;
 	}
 
+	/**
+	 * Determine if a specific number feature is enabled on the current account
+	 * @param  {String}  feature  Feature to check (e.g. e911, cnam)
+	 * @param  {Object}  pAccount Account object to check from (optional)
+	 * @return {Boolean}          Indicate whether or not the feature is enabled
+	 *
+	 * The check is made against a flag in the account document but it can be
+	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
+	 * none of those flags are set, it will return `true` by default.
+	 */
+	function isNumberFeatureEnabled(feature, pAccount) {
+		return monster.config.whitelabel.disableNumbersFeatures
+			? false
+			: _.get(
+				pAccount || monster.apps.auth.currentAccount,
+				'numbers_features.'.concat(
+					feature,
+					'_enabled'
+				),
+				true
+			);
+	}
+
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	return util;
 });
