@@ -19,7 +19,7 @@ A `Date` instance.
 * `'timestamp' is not a valid Number`: `timestamp` is `NaN` or of a type other than `Number`
 
 ## Description
-The `monster.util.gregorianToDate()` method converts Gregorian timestamps into `Date`instances.
+The `monster.util.gregorianToDate()` method converts a Gregorian timestamp into a `Date` instance.
 
 To preserve legacy behavior, if `timestamp` is of type `String` the method will try to coerce it into a `Number` but it is not recommended to rely on this behavior.
 

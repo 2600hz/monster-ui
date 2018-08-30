@@ -97,30 +97,6 @@ define(function(require) {
 			return modbString;
 		},
 
-		unixToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
-				while (timestamp > 9999999999999) {
-					timestamp /= 1000;
-				}
-
-				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if (timestamp < 10000000000) {
-					timestamp *= 1000;
-				}
-
-				formattedResponse = new Date(timestamp);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToUnix: function(date) {
 			var formattedResponse;
 
@@ -1287,7 +1263,7 @@ define(function(require) {
 	}
 
 	/**
-	 * Converts Gregorian timestamps into Date instaces
+	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance
 	 */
@@ -1332,7 +1308,7 @@ define(function(require) {
 			? pDate
 			: isGregorian
 				? gregorianToDate(pDate)
-				: util.unixToDate(pDate);
+				: unixToDate(pDate);
 		var format = getMomentFormat(pFormat, pUser);
 		if (!_.isNull(moment.tz.zone(tz))) {
 			return moment(date).tz(tz).format(format);
@@ -1350,10 +1326,43 @@ define(function(require) {
 		return moment(date).tz(moment.tz.guess()).format(format);
 	}
 
+	/**
+	 * Converts a Unix timestamp into a Date instance
+	 * @param  {Number} pTimestamp Unix timestamp
+	 * @return {Date}           Converted Date instance
+	 *
+	 * Sometimes Unix times are defined with more precision, such as with the
+	 * /legs API which returns channel created time in microseconds, so we need
+	 * need to remove this extra precision to use the Date constructor.
+	 *
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
+	 * get milliseconds in order to use the Date constructor.
+	 */
+	function unixToDate(pTimestamp) {
+		var max = 9999999999999;
+		var min = 10000000000;
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		while (timestamp > max || timestamp < min) {
+			if (timestamp > max) {
+				timestamp /= 1000;
+			}
+			if (timestamp < min) {
+				timestamp *= 1000;
+			}
+		}
+		return new Date(timestamp);
+	}
+
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.gregorianToDate = gregorianToDate;
 	util.toFriendlyDate = toFriendlyDate;
+	util.unixToDate = unixToDate;
 
 	return util;
 });
