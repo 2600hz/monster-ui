@@ -69,6 +69,7 @@ pages:
     - 'docs/monster-util/protectSensitivePhoneNumbers().md'
     - 'docs/monster-util/randomString().md'
     - 'docs/monster-util/toFriendlyDate().md'
+    - 'docs/monster-util/unixToDate().md'
     - 'docs/monster-util/unformatPhoneNumber().md'
     - 'dataFlags':
       - 'docs/monster-util/dataFlags.md'
