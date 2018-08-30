@@ -58,6 +58,7 @@ Key | Description | Type | Default | Required
 `applicationTitle` | Application title, displayed in the browser tab | `String` | | `false`
 `callReportEmail` | E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified. This address can either be set here in the config file, or through the Branding app. | `String` | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
+`disableNumbersFeatures` | Indicates whether or not number features (e.g. e911, cnam) are configurable through the UI. | `Boolean` | `false` |`false`
 `hideAppStore` | The appstore is exposed to admins by default. If set to false, it will be hidden for all users. | `Boolean` | `false` | `false`
 `hideBuyNumbers` | Remove the ability to buy phone numbers throughout the entire UI | `Boolean` | `false` | `false`
 `hideNewAccountCreation` | If set to true, will hide creation of new accounts | `Boolean` | `false` | `false`
